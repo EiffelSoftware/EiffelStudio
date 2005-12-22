@@ -4,21 +4,21 @@ indexing
 			a particle system. The runtime is O (n log n) where n is the number of particles.
 			The method was first proposed in:
 			"A Hierarchical O(n log n) force calculation algorithm", J. Barnes and P. Hut, Nature, v. 324 (1986)
-			
+
 			To calculate the force on a_particle an EG_QUAD_TREE (node) is traversed where force is either
 
 				traverse (node):
-					1. if node is a leaf	
+					1. if node is a leaf
 						force := n_body_force (a_particle, node.particle)
 					2. size of node region / distance between a_particle and center of mass of node < theta
 						force := n_body_force (a_particle, node.center_of_mass_particle)
 					3. none of the above
 						for all children c of node
 							force := force + traverse (c)
-						
+
 			The larger theta the better the runtime but also the higher the error since center_of_mass_particle
 			is only an approximation of all the particle in the children of node.
-			
+
 				]"
 	author: "Benno Baumgartner"
 	date: "$Date$"
@@ -26,21 +26,21 @@ indexing
 
 deferred class
 	EG_PARTICLE_SIMULATION_BH [G -> NUMERIC]
-	
+
 inherit
 	EG_PARTICLE_SIMULATION [G]
 		redefine
 			default_create,
 			set_particles
 		end
-	
+
 	EV_MODEL_DOUBLE_MATH
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 		ensure then
 			set: theta = 0.25
 		end
-		
+
 feature -- Element change.
-	
+
 	set_particles (a_particles: like particles) is
 			-- Set `particles' to `a_particles' and build `quad_tree'.
 		do
@@ -61,7 +61,7 @@ feature -- Element change.
 		ensure then
 			quad_tree_exists: quad_tree /= Void
 		end
-		
+
 	set_theta (a_theta: like theta) is
 			-- Set `theta' to `a_theta'.
 		require
@@ -71,9 +71,9 @@ feature -- Element change.
 		ensure
 			set: theta = a_theta
 		end
-	
+
 feature -- Access
-	
+
 	quad_tree: EG_QUAD_TREE
 			-- The quad tree to traverse.
 
@@ -82,13 +82,13 @@ feature -- Access
 
 	last_theta_average: DOUBLE
 			-- The average theta value on last call to `force'.
-			
+
 feature {NONE} -- Implementation
 
 	theta_count: INTEGER
 			-- Number of times theta was below 1.0
 
-	n_body_force_solver (a_particle: EG_PARTICLE): G is
+	n_body_force_solver (a_particle: like particle_type): G is
 			-- Solve n_nody_force O(log n) best case O(n) worste case.
 		do
 			last_theta_average := 0.0
@@ -98,8 +98,8 @@ feature {NONE} -- Implementation
 				last_theta_average := last_theta_average / theta_count
 			end
 		end
-		
-	traverse_tree (node: EG_QUAD_TREE; a_particle: EG_PARTICLE): G is
+
+	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): G is
 			-- Traverse `node' and calculate force with `a_particle'.
 		local
 			r: DOUBLE
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 				d := region.width.max (region.height)
 					-- proportion between distance and size
 				prop := d/r
-				
+
 				if prop < 1.0 then
 					last_theta_average := last_theta_average + prop
 					theta_count := theta_count + 1
@@ -163,12 +163,12 @@ feature {NONE} -- Implementation
 		ensure
 			Result_exists: Result /= Void
 		end
-		
+
 	build_quad_tree is
 			-- Build `quad_tree' from `particles'. O(n log n)
 		local
 			l_particles: like particles
-			l_item: EG_PARTICLE
+			l_item: like particle_type
 			world_size: EV_RECTANGLE
 			maxx, minx, maxy, miny, x, y: INTEGER
 		do
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 		ensure
 			build: quad_tree /= Void
 		end
-		
+
 invariant
 	quad_tree_exists: quad_tree /= Void
 

@@ -2218,6 +2218,18 @@ feature -- Element change
 			item_set: item (a_column, a_row) = a_item
 		end
 
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `Current'.
+		do
+
+			if (drawable.tooltip.is_empty) or (not a_tooltip.is_equal (tooltip)) then
+					-- Do not set the tooltip if already set.
+				drawable.set_tooltip (a_tooltip)
+			end
+			tooltip := a_tooltip.twin
+		end
+
 feature -- Removal
 
 	remove_column (a_column: INTEGER) is
@@ -4991,17 +5003,6 @@ feature {NONE} -- Event handling
 			if mouse_wheel_actions_internal /= Void and then not mouse_wheel_actions_internal.is_empty then
 				mouse_wheel_actions_internal.call ([a_value])
 			end
-		end
-
-	set_tooltip (a_tooltip: STRING) is
-			-- Assign `a_tooltip' to `Current'.
-		do
-
-			if (drawable.tooltip.is_empty) or (not a_tooltip.is_equal (tooltip)) then
-					-- Do not set the tooltip if already set.
-				drawable.set_tooltip (a_tooltip)
-			end
-			tooltip := a_tooltip.twin
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation

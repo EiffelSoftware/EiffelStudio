@@ -3,20 +3,20 @@ indexing
 			EG_FORCE_DIRECTED_LAYOUT is a force directed layout using a spring particle system and
 			a Barnes and Hut solver. The complexity is therfore O(n log n) where n is the number of
 			linkables.
-			
-			Links between nodes behave as if they where springs. 
+
+			Links between nodes behave as if they where springs.
 				The higher `stiffness' the stronger the springs.
-				
-			All nodes are repulsing each other from each other as if they where magnets with same polarity. 
+
+			All nodes are repulsing each other from each other as if they where magnets with same polarity.
 				The higher `electrical_repulsion' the stronger the repulsion.
-				
-			All nodes fall into the center. 
-				The position of the center is (`center_x', `center_y') and the higher `center_attraction' 
+
+			All nodes fall into the center.
+				The position of the center is (`center_x', `center_y') and the higher `center_attraction'
 				the faster the nodes fall into the center.
-				
+
 			`theta' is the error variable for Barnes and Hut where 0 is low error and slow calculation and
 				100 is high error and fast calculation.
-				
+
 				]"
 	author: "Benno Baumgartner"
 	date: "$Date$"
@@ -24,22 +24,22 @@ indexing
 
 class
 	EG_FORCE_DIRECTED_LAYOUT
-	
+
 inherit
 	EG_LAYOUT
 		redefine
 			default_create,
 			layout
 		end
-		
+
 	EV_MODEL_DOUBLE_MATH
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -51,39 +51,39 @@ feature {NONE} -- Initialization
 			theta :=  25
 			create stop_actions
 		end
-		
+
 feature -- Status report
-			
+
 	is_stopped: BOOLEAN
 			-- Is stopped?
-			
+
 feature -- Access
 
 	center_attraction: INTEGER
 			-- Attraction of the center in percent.
-			
+
 	center_x: INTEGER
 			-- X position of the center.
-			
+
 	center_y: INTEGER
 			-- Y position of the center.
-		
+
 	stiffness: INTEGER
 			-- Stiffness of the links in percent.
-		
+
 	electrical_repulsion: INTEGER
 			-- Electrical repulsion between nodes in percent.
-			
+
 	stop_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when the layouting stops.
-	
+
 	move_threshold: DOUBLE
 			-- Call `stop_actions' if no node moved
 			-- for more then `move_threshold'.
-			
+
 	theta: INTEGER
 			-- Error variable for Barnes and Hut.
-			
+
 	last_theta_average: DOUBLE
 			-- Average theta value after last call to `layout'.
 
@@ -110,7 +110,7 @@ feature -- Element change
 				set_electrical_repulsion (100)
 			end
 		end
-		
+
 	set_move_threshold (d: INTEGER) is
 			-- Set `move_threshold' to `d'.
 		do
@@ -118,7 +118,7 @@ feature -- Element change
 		ensure
 			set: move_threshold = d
 		end
-		
+
 	set_theta (a_theta: INTEGER) is
 			-- Set `theta' to `a_theta'.
 		require
@@ -156,7 +156,7 @@ feature -- Element change
 		ensure
 			set: electrical_repulsion = a_value
 		end
-		
+
 	set_center (ax, ay: INTEGER) is
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
@@ -165,18 +165,18 @@ feature -- Element change
 		ensure
 			set: center_x = ax and center_y = ay
 		end
-		
+
 feature -- Basic operations
-		
+
 	reset is
 			-- Set `is_stopped' to False.
 		do
 			is_stopped := False
 			iterations := 0
 		ensure
-			set: not is_stopped 
+			set: not is_stopped
 		end
-		
+
 	stop is
 			-- Set `is_stopped' to True, call `stop_actions'.
 		do
@@ -198,12 +198,12 @@ feature -- Basic operations
 					last_theta_average := 0.0
 					theta_count := 0
 
-					layout_linkables (world.nodes, 1, void)
-					
+					layout_linkables (world.nodes, 1, Void)
+
 					if max_move < move_threshold * world.scale_factor ^ 0.5 and iterations > 10 then
 						is_stopped := True
 						stop_actions.call (Void)
-					else					
+					else
 						iterations := iterations + 1
 					end
 					if theta_count > 0 then
@@ -219,10 +219,10 @@ feature {NONE} -- Implementation
 
 	max_move: INTEGER
 			-- Maximal move in x and y direction of a node.
-			
+
 	theta_count: INTEGER
 			-- Theta count.
-			
+
 	iterations: INTEGER
 			-- Number of iterations
 
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 							-- Initialize particle solvers
 					spring_particle := new_spring_particle_solver (l_linkables)
 					spring_energy := new_spring_energy_solver (l_linkables)
-					
+
 						-- solve system
 					from
 						i := 1
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 						i > nb
 					loop
 						l_item := l_linkables.i_th (i)
-						
+
 						if not l_item.is_fixed then
 								-- Calculate spring force
 							l_force := spring_particle.force (l_item)
@@ -274,19 +274,19 @@ feature {NONE} -- Implementation
 								-- Update statistic
 							last_theta_average := last_theta_average + spring_particle.last_theta_average
 							theta_count := theta_count + 1
-								
+
 								-- Calculate spring energy
 							recursive_energy (l_item, spring_energy)
-						
+
 								-- Move item
 							dx := (l_item.dt * l_item.dx).truncated_to_integer
 							dy := (l_item.dt * l_item.dy).truncated_to_integer
-							
+
 							move := dx.abs + dy.abs
 							if move > max_move then
 								max_move := move
 							end
-					
+
 							l_item.set_x_y (l_item.x + dx, l_item.y + dy)
 							l_item.set_delta (0, 0)
 						end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	recursive_energy (a_node: EG_LINKABLE_FIGURE; solver: EG_SPRING_ENERGY) is
 			-- Calculate spring energy for `a_node'
 		local
@@ -304,12 +304,12 @@ feature {NONE} -- Implementation
 			l_dt: DOUBLE
 		do
 			l_dt := a_node.dt
-			
+
 			a_node.set_dt (0)
 			l_initial_energy := solver.force (a_node)
 			last_theta_average := last_theta_average + solver.last_theta_average
 			theta_count := theta_count + 1
-			
+
 			l_dt := (l_dt * 2)
 			a_node.set_dt (l_dt)
 			l_energy := solver.force (a_node)
@@ -329,8 +329,8 @@ feature {NONE} -- Implementation
 				theta_count := theta_count + 1
 			end
 		end
-		
-	new_spring_particle_solver (particles: LIST [EG_PARTICLE]): EG_SPRING_PARTICLE is
+
+	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_PARTICLE is
 			-- Create a new spring particle solver for `particles' and initialize it.
 		require
 			particles_exist: particles /= Void
@@ -341,9 +341,9 @@ feature {NONE} -- Implementation
 			l_center_attraction := center_attraction / 25
 			l_stiffness := ((stiffness / 300) * 0.5).max (0.0001) / world.scale_factor
 			l_electrical_repulsion := (1 + electrical_repulsion * 400) * (world.scale_factor ^ 1.5)
-			
+
 			create Result.make_with_particles (particles)
-			
+
 			Result.set_center (center_x, center_y)
 			Result.set_center_attraction (l_center_attraction)
 			Result.set_electrical_repulsion (l_electrical_repulsion)
@@ -352,8 +352,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result_exists: Result /= Void
 		end
-		
-	new_spring_energy_solver (particles: LIST [EG_PARTICLE]): EG_SPRING_ENERGY is
+
+	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_ENERGY is
 			-- Create a new spring energy solver for `particles' and initialize it.
 		require
 			particles_exist: particles /= Void
@@ -364,9 +364,9 @@ feature {NONE} -- Implementation
 			l_center_attraction := center_attraction / 25
 			l_stiffness := ((stiffness / 300) * 0.5).max (0.0001) / world.scale_factor
 			l_electrical_repulsion := (1 + electrical_repulsion * 400) * (world.scale_factor ^ 1.5)
-			
+
 			create Result.make_with_particles (particles)
-			
+
 			Result.set_center (center_x, center_y)
 			Result.set_center_attraction (l_center_attraction)
 			Result.set_electrical_repulsion (l_electrical_repulsion)

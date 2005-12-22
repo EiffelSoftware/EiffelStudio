@@ -17,20 +17,20 @@ inherit
 		redefine
 			is_equal
 		end
-		
-	SHARED_EDITOR_DATA		
+
+	SHARED_EDITOR_DATA
 		redefine
 			is_equal
 		end
 
 create
 	make_from_relative_pos,
-	make_from_character_pos, 
+	make_from_character_pos,
 	make_from_integer
 
 feature -- Initialization
 
-	make_from_relative_pos (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text) is
+	make_from_relative_pos (a_line: like line; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text) is
 			-- Create a cursor for `text', at position given by
 			-- `a_line', `a_token' and `pos'.
 		do
@@ -62,7 +62,7 @@ feature -- Initialization
 			ch_num_valid: ch_num >= 1
 		local
 			pos: INTEGER
-			cline: EDITOR_LINE
+			cline: like line
 			t: EDITOR_TOKEN
 			stop: BOOLEAN
 		do
@@ -82,7 +82,7 @@ feature -- Initialization
 						t := cline.first_token
 					else
 --! FIXME EA: To detect problem with search & replace...
-						debug ("EDITOR") 
+						debug ("EDITOR")
 							io.error.put_string ("%N EDITOR WARNING: Attempted to move cursor further than end of file.%N")
 							io.error.put_string ("   Position: "+ ch_num.out + "   Text length: " + text.text_length.out + "%N")
 						end
@@ -98,7 +98,7 @@ feature -- Initialization
 					-- position in file exists, therefore t exists.
 			end
 			make_from_relative_pos (cline, t, pos, text)
-		end	
+		end
 
 feature -- Access
 
@@ -210,7 +210,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_line (a_line: EDITOR_LINE) is
+	set_line (a_line: like line) is
 			-- Make `a_line' the new value of `line'.
 		require
 			a_line_exists: a_line /= Void
@@ -218,7 +218,7 @@ feature -- Element change
 			line := a_line
 			y_in_lines := line.index
 			update_current_char
-		end	
+		end
 
 	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
 			-- Make `a_token' be the new value for `token'.
@@ -308,7 +308,7 @@ feature -- Element change
 				before_goal: remaining_ch > 0
 			end
 			if current_token /= Void then
-					-- We stopped in a token. Now we look in the token. 
+					-- We stopped in a token. Now we look in the token.
 				token := current_token
 				tab ?= token
 				if tab /= Void then
@@ -506,7 +506,7 @@ feature -- Cursor movement
 						from
 							internal_go_right_char
 						until
-							(not char_is_blank(item)) or else bound_reached 
+							(not char_is_blank(item)) or else bound_reached
 						loop
 							internal_go_right_char
 						end
@@ -549,12 +549,12 @@ feature -- Cursor movement
 			go_right_char
 			go_end_word
 		end
-		
+
 	go_to_position (a_position: INTEGER) is
 			-- Move `Current' to `a_position' of the text
 		local
 			pos: INTEGER
-			cline: EDITOR_LINE
+			cline: like line
 			t: EDITOR_TOKEN
 			stop: BOOLEAN
 		do
@@ -585,12 +585,12 @@ feature -- Cursor movement
 			y_in_lines := cline.index
 			set_current_char (t, pos)
 		end
- 
+
 	char_is_separator (char: CHARACTER): BOOLEAN is
 			-- Is `char' considered a word separator?
 		do
 			Result := char_is_blank (char) or else
-					additional_separators.has (char) 
+					additional_separators.has (char)
 		end
 
 	char_is_blank (char: CHARACTER): BOOLEAN is
@@ -598,7 +598,7 @@ feature -- Cursor movement
 		do
 			Result := char = ' ' or char = '%T'
 		end
-			
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation
 
 	text: SELECTABLE_TEXT
 		-- Whole text displayed.
-		
+
 	additional_separators: ARRAY [CHARACTER] is
 			-- separators other than blank spaces and brackets/parenthesis
 			-- for word by word selection

@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EV_MODEL_PROJECTOR
-	
+
 inherit
 	ANY
 		export
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_world (a_world: EV_MODEL_WORLD) is
+	make_with_world (a_world: like world) is
 			-- Create with `a_world'.
 		require
 			a_world_not_void: a_world /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_world (a_world: EV_MODEL_WORLD) is
+	set_world (a_world: like world) is
 			-- Set `world' to `a_world'.
 		require
 			a_world_exists: a_world /= Void

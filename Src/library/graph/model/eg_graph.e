@@ -9,13 +9,13 @@ indexing
 
 class
 	EG_GRAPH
-	
+
 inherit
 	ANY
 		redefine
 			default_create
 		end
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -27,21 +27,21 @@ feature {NONE} -- Initialization
 			node_add_actions.compare_objects
 			link_add_actions.compare_objects
 			cluster_add_actions.compare_objects
-			
+
 			create link_remove_actions
 			create node_remove_actions
 			create cluster_remove_actions
 			link_remove_actions.compare_objects
 			node_remove_actions.compare_objects
 			cluster_remove_actions.compare_objects
-			
+
 			create nodes.make (0)
 			create clusters.make (0)
 			create links.make (0)
 		end
 
 feature -- Access
-	
+
 	flat_nodes: like nodes is
 			-- All nodes in the graph.
 		do
@@ -49,7 +49,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	flat_clusters: like clusters is
 			-- All clusters in the graph.
 		do
@@ -57,7 +57,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	flat_links: like links is
 			-- All links in the graph.
 		do
@@ -68,14 +68,14 @@ feature -- Access
 
 feature -- Status report
 
-	has_node (a_node: EG_NODE): BOOLEAN is
+	has_node (a_node: like node_type): BOOLEAN is
 			-- Is `a_node' part of the model?
 		require
 			a_node_not_void: a_node /= Void
 		do
 			Result := nodes.has (a_node)
 		end
-		
+
 	has_link (a_link: EG_LINK): BOOLEAN is
 			-- Is `a_link' part of the model?
 		require
@@ -83,11 +83,11 @@ feature -- Status report
 		do
 			Result := links.has (a_link)
 		end
-		
+
 	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN is
 			-- Is `a_linkable' part of the model?
 		local
-			node: EG_NODE
+			node: like node_type
 			cluster: EG_CLUSTER
 		do
 			node ?= a_linkable
@@ -100,7 +100,7 @@ feature -- Status report
 				end
 			end
 		end
-		
+
 	has_cluster (a_cluster: EG_CLUSTER): BOOLEAN is
 			-- Is `a_cluster' part of the model?
 		require
@@ -108,13 +108,13 @@ feature -- Status report
 		do
 			Result := clusters.has (a_cluster)
 		end
-		
+
 	is_empty: BOOLEAN is
 			-- Is `Current' empty?
 		do
 			Result := links.is_empty and then nodes.is_empty and then clusters.is_empty
 		end
-		
+
 
 feature -- Element change
 
@@ -130,7 +130,7 @@ feature -- Element change
 		ensure
 			has_a_node: has_node (a_node)
 		end
-		
+
 	add_link (a_link: EG_LINK) is
 			-- Add `a_link' to the model.
 		require
@@ -145,7 +145,7 @@ feature -- Element change
 		ensure
 			has_a_link: has_link (a_link)
 		end
-		
+
 	add_cluster (a_cluster: EG_CLUSTER) is
 			-- Add `a_cluster' to the model.
 		require
@@ -159,7 +159,7 @@ feature -- Element change
 		ensure
 			has_cluster: has_cluster (a_cluster)
 		end
-		
+
 	remove_link (a_link: EG_LINK) is
 			-- Remove `a_link' from the model.
 		require
@@ -180,7 +180,7 @@ feature -- Element change
 			link_removed_from_source: a_link.source /= Void implies not a_link.source.links.has (a_link)
 			link_removed_from_target: a_link.target /= Void implies not a_link.target.links.has (a_link)
 		end
-		
+
 	remove_node (a_node: EG_NODE) is
 			-- Remove `a_node' from the model.
 		require
@@ -196,7 +196,7 @@ feature -- Element change
 			not_has_a_node: not has_node (a_node)
 			removed_from_cluster: a_node.cluster /= Void implies not a_node.cluster.flat_linkables.has (a_node)
 		end
-		
+
 	remove_cluster (a_cluster: EG_CLUSTER) is
 			-- Remove `a_cluster' from the model.
 		require
@@ -255,38 +255,43 @@ feature -- Element change
 		ensure
 			wiped_out: flat_links.is_empty and flat_nodes.is_empty and flat_clusters.is_empty
 		end
-		
+
 feature -- Events
 
 	node_add_actions: EG_NODE_ACTION
 			-- Called when a node is added to the model.
-			
+
 	node_remove_actions: EG_NODE_ACTION
 			-- Called when a node was removed from the model.
-			
+
 	link_add_actions: EG_LINK_ACTION
 			-- Called when a link is added to the model.
-			
+
 	link_remove_actions: EG_LINK_ACTION
 			-- Called when a link is removed from the model.
-			
+
 	cluster_add_actions: EG_CLUSTER_ACTION
 			-- Called when a cluster is added to the model.
-			
+
 	cluster_remove_actions: EG_CLUSTER_ACTION
 			-- Called when a cluster is removed from the model.
 
 feature {EG_FIGURE_WORLD} -- Implementation
 
-	nodes: ARRAYED_LIST [EG_NODE]
+	nodes: ARRAYED_LIST [like node_type]
 			-- All nodes in the graph.
-	
+
 	clusters: ARRAYED_LIST [EG_CLUSTER]
 			-- All clusters in the graph.
-	
+
 	links: ARRAYED_LIST [EG_LINK]
 			-- All links in the graph.
-			
+
+	node_type: EG_NODE is
+			-- Type of nodes in `nodes'.
+		do
+		end
+
 feature {EG_ITEM} -- Implementation
 
 	remove_all (a_cluster: EG_CLUSTER) is
@@ -295,7 +300,7 @@ feature {EG_ITEM} -- Implementation
 			a_cluster /= Void
 		local
 			l_cluster: EG_CLUSTER
-			l_node: EG_NODE
+			l_node: like node_type
 			l_linkables: ARRAYED_LIST [EG_LINKABLE]
 			i: INTEGER
 		do
@@ -307,7 +312,7 @@ feature {EG_ITEM} -- Implementation
 			loop
 				l_cluster ?= l_linkables.i_th (i)
 				if l_cluster /= Void then
-					remove_all (l_cluster)	
+					remove_all (l_cluster)
 				else
 					l_node ?= l_linkables.i_th (i)
 					remove_links (l_node.links)
@@ -332,7 +337,7 @@ feature {EG_ITEM} -- Implementation
 				a_links.forth
 			end
 		end
-		
+
 invariant
 	nodes_not_void: nodes /= Void
 	clusters_not_void: clusters /= Void

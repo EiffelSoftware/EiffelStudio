@@ -6,7 +6,7 @@ indexing
 		coordinates 0x0 in the passed drawable. All drawing Performed in the drawable is
 		clipped to `width', `height' of Current. Note that the dimensions of the drawable area are
 		undefined, but are always be greater than `width' and `height'.
-			
+
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			default_create
 			expose_actions.extend (an_agent)
 		end
-		
+
 feature -- Status setting
 
 	set_required_width (a_required_width: INTEGER) is
@@ -48,7 +48,7 @@ feature -- Status setting
 		ensure
 			required_width_set: required_width = a_required_width
 		end
-		
+
 feature -- Element change
 
 	expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
@@ -60,7 +60,7 @@ feature -- Element change
 			not_void: Result /= Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_DRAWABLE_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_GRID_DRAWABLE_ITEM_I} implementation.make (Current)
 		end
-			
+
 end
 
 --|----------------------------------------------------------------

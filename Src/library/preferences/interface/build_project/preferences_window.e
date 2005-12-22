@@ -663,6 +663,7 @@ feature {NONE} -- Implementation
 			l_color: COLOR_PREFERENCE
 			l_array: ARRAY_PREFERENCE
 			l_shortcut: SHORTCUT_PREFERENCE
+			l_text: STRING_PREFERENCE
 			
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
@@ -674,14 +675,18 @@ feature {NONE} -- Implementation
 			l_bool ?= l_resource
 			if l_bool /= Void then
 					-- Boolean
-				create l_bool_widget.make_with_resource (l_resource)
+				create l_bool_widget.make_with_resource (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				grid.set_item (4, row_index, l_bool_widget.change_item_widget)				
 				grid.item (4, row_index).set_data (l_bool_widget)
 			else
 				if l_resource.generating_resource_type.is_equal ("TEXT") then
 						-- Text
-					create l_edit_widget.make_with_resource (l_resource)
+					l_text ?= l_resource
+					check
+						l_text_not_void: l_text /= Void
+					end
+					create l_edit_widget.make_with_resource (l_text)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					grid.set_item (4, row_index, l_edit_widget.change_item_widget)				
 					grid.item (4, row_index).set_data (l_edit_widget)
@@ -689,7 +694,7 @@ feature {NONE} -- Implementation
 					l_array ?= l_resource
 					if l_array /= Void then
 							-- Choice
-						create l_choice_widget.make_with_resource (l_resource)
+						create l_choice_widget.make_with_resource (l_array)
 						l_choice_widget.change_actions.extend (agent on_preference_changed)
 						grid.set_item (4, row_index, l_choice_widget.change_item_widget)
 						grid.item (4, row_index).set_data (l_choice_widget)
@@ -698,7 +703,7 @@ feature {NONE} -- Implementation
 					l_font ?= l_resource
 					if l_font /= Void then
 							-- Font
-						create l_font_widget.make_with_resource (l_resource)
+						create l_font_widget.make_with_resource (l_font)
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
 						grid.set_item (4, row_index, l_font_widget.change_item_widget)
@@ -708,7 +713,7 @@ feature {NONE} -- Implementation
 						l_color ?= l_resource
 						if l_color /= Void then
 								-- Color
-							create l_color_widget.make_with_resource (l_resource)
+							create l_color_widget.make_with_resource (l_color)
 							l_color_widget.change_actions.extend (agent on_preference_changed)
 							l_color_widget.set_caller (Current)
 							grid.set_item (4, row_index, l_color_widget.change_item_widget)
@@ -717,7 +722,7 @@ feature {NONE} -- Implementation
 							l_shortcut ?= l_resource
 							if l_shortcut /= Void then
 									-- Shortcut
-								create l_shortcut_widget.make_with_resource (l_resource)
+								create l_shortcut_widget.make_with_resource (l_shortcut)
 								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
 								grid.set_item (4, row_index, l_shortcut_widget.change_item_widget)				
 								grid.item (4, row_index).set_data (l_shortcut_widget)

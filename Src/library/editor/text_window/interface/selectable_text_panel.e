@@ -193,7 +193,7 @@ feature {NONE} -- Handle mouse clicks
 			cursors_set: cursors /= Void
 		local
 			old_l_number	: INTEGER
-			stop, l_cursor: TEXT_CURSOR
+			stop, l_cursor: like cursor_type
 		do
 			l_cursor := text_displayed.cursor
 			old_l_number := l_cursor.y_in_lines
@@ -280,7 +280,7 @@ feature {NONE} -- Handle mouse clicks
 		local
 			l_num,
 			l_click_count: INTEGER
-			l_cursor: TEXT_CURSOR
+			l_cursor: like cursor_type
 		do			
 			if button = 1 then
 				l_click_count := click_count
@@ -412,7 +412,7 @@ feature {NONE} -- Handle mouse clicks
 			i					: INTEGER
 			cur,
 			l_cursor,
-			selection_cursor	: TEXT_CURSOR
+			selection_cursor	: like cursor_type
 		do
 			l_cursor := text_displayed.cursor
 			selection_cursor := text_displayed.selection_cursor

@@ -6,7 +6,7 @@ indexing
 						All elements in the group are rotated around the center
 						of the EV_FIGURE_GROUP. A EV_FIGURE can only be grouped
 						in one group at the same time.
-						
+
 					]"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -14,7 +14,7 @@ indexing
 
 class
 	EV_MODEL_GROUP
-	
+
 inherit
 	EV_MODEL
 		undefine
@@ -32,7 +32,7 @@ inherit
 			validate,
 			bounding_box
 		end
-	
+
 	ARRAYED_LIST [EV_MODEL]
 		rename
 			make as list_make
@@ -56,7 +56,7 @@ inherit
 			swap,
 			has
 		end
-		
+
 	EV_MODEL_SINGLE_POINTED
 		undefine
 			default_create
@@ -66,7 +66,10 @@ create
 	default_create,
 	make_with_point,
 	make_with_position
-	
+
+create {EV_MODEL_GROUP}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -75,7 +78,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_MODEL}
 			create point_array.make (1)
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
-			
+
 			list_make (initiale_size)
 			create lookup_table.make (initiale_size)
 
@@ -86,7 +89,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	angle: DOUBLE is
 			-- `Current' has to be rotated around (`x',`y') for -`angle'
 			-- to be in upright position.
@@ -95,19 +98,19 @@ feature -- Access
 		ensure then
 			Result_equal_current_angle: Result = current_angle
 		end
-		
+
 	point_x: INTEGER is
 			-- x position of `point'.
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_y: INTEGER is
 			-- y position of `point'.
 		do
 			Result := point_array.item (0).y
 		end
-		
+
 	deep_elements: LIST [EV_MODEL] is
 			-- All elements in `Current' and in its subgroups.
 		local
@@ -132,7 +135,7 @@ feature -- Access
 		end
 
 feature -- Status report
-		
+
 	is_rotatable: BOOLEAN is
 			-- Is this figure group rotatable?
 		local
@@ -155,7 +158,7 @@ feature -- Status report
 				Result := True
 			end
 		end
-	
+
 	is_scalable: BOOLEAN is
 			-- Is this figure group scalable?
 		local
@@ -178,7 +181,7 @@ feature -- Status report
 				Result := True
 			end
 		end
-		
+
 	is_transformable: BOOLEAN is
 			-- Is this figure group transformable?
 		local
@@ -201,10 +204,10 @@ feature -- Status report
 				Result := True
 			end
 		end
-		
+
 	is_grouped: BOOLEAN
 			-- Is grouped?
-			
+
 	has (v: like item): BOOLEAN is
 			-- Does current include `v'?
 			-- (based on v.id)
@@ -263,7 +266,7 @@ feature -- Status report
 					end
 				end
 				i := i + 1
-			end	
+			end
 		end
 
 	update_rectangle: EV_RECTANGLE is
@@ -317,7 +320,7 @@ feature -- Element change
 			center.set_x (a_x)
 			is_center_valid := True
 		end
-		
+
 	set_y (a_y: INTEGER) is
 			-- Set `y' to `an_y'.
 		local
@@ -352,7 +355,7 @@ feature -- Element change
 			center.set (a_x, a_y)
 			is_center_valid := True
 		end
-		
+
 	set_point_position (a_x, a_y: INTEGER) is
 			-- Set position of `point' to (`a_x', `a_y').
 		local
@@ -368,7 +371,7 @@ feature -- Element change
 				center_invalidate
 			end
 		end
-		
+
 	ungroup is
 			-- Ungroup all `figures'.
 		require
@@ -391,7 +394,7 @@ feature -- Element change
 			none_is_in_a_group: not there_exists (agent {EV_MODEL}.is_in_group)
 			center_is_invalid: not is_center_valid
 		end
-	
+
 	regroup is
 			-- Group the `figures' in the group.
 		require
@@ -413,7 +416,7 @@ feature -- Element change
 			all_grouped: for_all (agent {EV_MODEL}.is_in_group)
 			center_is_invalid: not is_center_valid
 		end
-		
+
 	send_backward (a_figure: EV_MODEL) is
 			-- Send `a_figure' one layer backwards.
 		require
@@ -422,14 +425,14 @@ feature -- Element change
 			if first /= a_figure then
 				start
 				search (a_figure)
-				swap (index - 1)	
+				swap (index - 1)
 			end
 			full_redraw
 		ensure
 			a_figure_in_group: a_figure.group = Current
 			a_figure_in_current: has (a_figure)
 		end
-		
+
 	bring_forward (a_figure: EV_MODEL) is
 			-- Bring `a_figure' one layer forwards.
 		require
@@ -445,17 +448,17 @@ feature -- Element change
 			a_figure_in_group: a_figure.group = Current
 			a_figure_in_current: has (a_figure)
 		end
-		
+
 	send_to_back (a_figure: EV_MODEL) is
 			-- Send `a_figure' to the bottom most layer.
 		require
 			a_figure_in_figures: has (a_figure)
 		do
-			if first /= a_figure then	
+			if first /= a_figure then
 				start
 				search (a_figure)
 				remove
-				put_front (a_figure)	
+				put_front (a_figure)
 			end
 			full_redraw
 		ensure
@@ -463,7 +466,7 @@ feature -- Element change
 			a_figure_in_group: a_figure.group = Current
 			a_figure_in_current: has (a_figure)
 		end
-		
+
 	bring_to_front (a_figure: EV_MODEL) is
 			-- Bring `a_figure' to the top most layer
 		require
@@ -490,9 +493,9 @@ feature -- Element change
 		ensure then
 			angle_equal_an_angle: angle = old angle + an_angle
 		end
-		
+
 feature -- List change
-	
+
 	insert (fig: like item; i: INTEGER) is
 			-- Add `fig' to the group.
 		do
@@ -529,7 +532,7 @@ feature -- List change
 			item.unreference_group
 			lookup_table.remove (item.id)
 			Precursor {ARRAYED_LIST} (fig)
-			
+
 			if fig /= Void then
 				fig.set_group (Current)
 				lookup_table.put (fig, fig.id)
@@ -562,7 +565,7 @@ feature -- List change
 			-- Remove `fig' from the group.
 		do
 			if has (fig) then
-				fig.unreference_group		
+				fig.unreference_group
 				lookup_table.remove (fig.id)
 			end
 			Precursor {ARRAYED_LIST} (fig)
@@ -612,7 +615,7 @@ feature -- List change
 			invalidate
 			full_redraw
 		end
-		
+
 	append (s: SEQUENCE [EV_MODEL]) is
 			-- Append a copy of `s'.
 		local
@@ -640,7 +643,7 @@ feature -- List change
 			invalidate
 			full_redraw
 		end
-		
+
 	make_from_array (a: ARRAY [EV_MODEL]) is
 			-- Create list from array `a'.
 		local
@@ -661,8 +664,8 @@ feature -- List change
 			center_invalidate
 			invalidate
 			full_redraw
-		end 
-		
+		end
+
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
@@ -679,7 +682,7 @@ feature -- List change
 			item_in_group: (old item).group = Current
 			i_th_in_group: i_th (i).group = Current
 		end
-		
+
 feature -- Status settings
 
 	invalidate is
@@ -799,7 +802,7 @@ feature -- Events
 				internal_bounding_box := Result.twin
 			end
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Figure group
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -821,17 +824,17 @@ feature {EV_MODEL_GROUP} -- Figure group
 				loop
 					l_area.item (i).recursive_transform (a_transformation)
 					i := i + 1
-				end				
+				end
 			end
 			invalidate
 			is_center_valid := False
 		end
 
 feature {NONE} -- Implementation
-	
+
 	current_angle: DOUBLE
 			-- The rotating angle.
-	
+
 	set_center is
 			-- Set x and y such that they are in the
 			-- center of the group.
@@ -846,10 +849,10 @@ feature {NONE} -- Implementation
 			end
 			is_center_valid := True
 		end
-			
+
 	initiale_size: INTEGER is 10
 			-- Initialize size of `Current'.
-	
+
 	change_group (other: like Current) is
 			-- Change group of all figures in `other' to Current.
 			-- Used by `merge_left' and `merge_right'.
@@ -876,10 +879,10 @@ feature {NONE} -- Implementation
 				w.full_redraw
 			end
 		end
-		
+
 	lookup_table: HASH_TABLE [EV_MODEL, INTEGER]
 			-- Lookup table to search faster.
-			
+
 	insert_list_to_table (list: like Current) is
 			-- Insert list element to lookup_table.
 		do
@@ -894,11 +897,11 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	
+
 	is_grouped_implies_all_grouped: is_grouped implies for_all (agent {EV_MODEL}.is_in_group)
 	angle_equal_current_angle: angle = current_angle
 	not_is_grouped_implies_angel_equals_zero: not is_grouped implies (angle = 0)
-	
+
 end -- class EV_MODEL_GROUP
 
 --|----------------------------------------------------------------

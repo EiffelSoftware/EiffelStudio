@@ -253,7 +253,7 @@ feature -- Basic Operations
 		local
 			l_token, cursor_token: EDITOR_TOKEN
 			end_loop: BOOLEAN
-			l_cursor: EDITOR_CURSOR
+			l_cursor: like cursor
 		do
 			l_cursor := cursor
 			cursor_token := l_cursor.token.previous

@@ -99,7 +99,7 @@ feature {EV_ANY} -- Implementation
 			implementation := create {EV_POSTSCRIPT_DRAWABLE_IMP}.make (Current)
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_POSTSCRIPT_DRAWABLE_IMP
 		

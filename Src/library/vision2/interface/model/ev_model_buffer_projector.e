@@ -25,7 +25,7 @@ inherit
 		rename
 			drawable as drawable_in_the_cell
 		end
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -33,7 +33,7 @@ inherit
 
 create
 	make_with_buffer
-	
+
 feature {NONE} -- Initialization
 
 	make_with_buffer (
@@ -66,15 +66,15 @@ feature -- Access
 	offset_x: INTEGER is
 			-- Everyting is drawen offset_x pixels to the right.
 		do
-			Result := -drawable_position.x 
+			Result := -drawable_position.x
 		end
-		
+
 	offset_y: INTEGER is
 			-- Everyting is drawen offset_y pixels to bottom.
 		do
-			Result := -drawable_position.y 
+			Result := -drawable_position.y
 		end
-		
+
 	world_as_pixmap (a_border: INTEGER): EV_PIXMAP is
 			-- Image of the `world' with `a_border'.
 		require
@@ -101,7 +101,7 @@ feature -- Access
 				project_figure_group_full (world)
 			end
 			world.validate
-			
+
 			Result ?= drawable
 			set_drawable_position (old_drawable_position)
 			drawable := old_drawable
@@ -114,9 +114,9 @@ feature -- Access
 			drawable := old_drawable
 			full_project
 		end
-		
+
 	is_world_too_large: BOOLEAN
-		
+
 feature -- Element change
 
 	change_area_position (a_x, a_y: INTEGER) is
@@ -132,9 +132,13 @@ feature -- Element change
 			end
 			update
 		end
-		
+
+feature -- Status report
+
+	buffer_used: BOOLEAN is True
+
 feature {EV_MODEL_WORLD_CELL} -- Element change
-		
+
 	simulate_mouse_move (ax, ay: INTEGER) is
 			-- Let `Current' behave as if pointer was moved to `ax', `ay'
 		do
@@ -228,7 +232,7 @@ feature -- Display updates
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_paint (x, y, w, h: INTEGER) is
@@ -251,7 +255,7 @@ feature {NONE} -- Implementation
 			drawable_position.set (buffer_bounds.x, buffer_bounds.y)
 			project_rectangle (buffer_bounds)
 		end
-		
+
 	resize_buffer (a_x, a_y, area_width, area_height: INTEGER) is
 			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
 			-- the size given by `area_width' and `area_height'.
@@ -259,7 +263,7 @@ feature {NONE} -- Implementation
 			buffer: EV_PIXMAP
 		do
 			buffer ?= drawable
-			if 
+			if
 				buffer /= Void
 					and then
 				(buffer.width < area_width * Buffer_scale_factor
@@ -270,12 +274,12 @@ feature {NONE} -- Implementation
 			end
 			move_buffer
 			update
-		end		
-	
+		end
+
 	buffer_covers_area: BOOLEAN is
 			-- Is `area' still in the surface covered by buffer ?
 		do
-			Result := 
+			Result :=
 				area_x > drawable_position.x
 					and then
 				area_x + area.width < drawable_position.x + drawable.width
@@ -290,7 +294,7 @@ feature {NONE} -- Implementation
 		once
 			Result := agent recenter_area
 		end
-		
+
 	recenter_area is
 			-- Move buffer so that `area' is at its center.
 		do
@@ -299,14 +303,10 @@ feature {NONE} -- Implementation
 			end
 			ev_application.idle_actions.prune_all (recenter_agent)
 		end
-		
+
 	area_centered: BOOLEAN
 			-- Is `area' showing the central part of `drawable', i.e. the buffer ?
 
-feature {NONE} -- Constants 		
-
-	buffer_used: BOOLEAN is True	
-	
 invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 

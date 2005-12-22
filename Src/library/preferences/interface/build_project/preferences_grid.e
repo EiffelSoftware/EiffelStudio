@@ -586,6 +586,8 @@ feature {NONE} -- Implementation
 			l_color: COLOR_PREFERENCE
 			l_array: ARRAY_PREFERENCE
 			l_shortcut: SHORTCUT_PREFERENCE
+			l_text: STRING_PREFERENCE
+
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
 			l_choice_widget: CHOICE_PREFERENCE_WIDGET
@@ -595,20 +597,24 @@ feature {NONE} -- Implementation
 		do
 			l_bool ?= a_pref
 			if l_bool /= Void then
-				create l_bool_widget.make_with_resource (a_pref)
+				create l_bool_widget.make_with_resource (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				Result := l_bool_widget.change_item_widget
 				Result.set_data (l_bool_widget)
 			else
 				if a_pref.generating_resource_type.is_equal ("TEXT") then
-					create l_edit_widget.make_with_resource (a_pref)
+					l_text ?= a_pref
+					check
+						l_text_not_void: l_text /= Void
+					end
+					create l_edit_widget.make_with_resource (l_text)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					Result := l_edit_widget.change_item_widget
 					Result.set_data (l_edit_widget)
 				elseif a_pref.generating_resource_type.is_equal ("COMBO") then
 					l_array ?= a_pref
 					if l_array /= Void then
-						create l_choice_widget.make_with_resource (a_pref)
+						create l_choice_widget.make_with_resource (l_array)
 						l_choice_widget.change_actions.extend (agent on_preference_changed)
 						Result := l_choice_widget.change_item_widget
 						Result.set_data (l_choice_widget)
@@ -616,7 +622,7 @@ feature {NONE} -- Implementation
 				else
 					l_font ?= a_pref
 					if l_font /= Void then
-						create l_font_widget.make_with_resource (a_pref)
+						create l_font_widget.make_with_resource (l_font)
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
 						l_font := l_font.twin
@@ -626,7 +632,7 @@ feature {NONE} -- Implementation
 					else
 						l_color ?= a_pref
 						if l_color /= Void then
-							create l_color_widget.make_with_resource (a_pref)
+							create l_color_widget.make_with_resource (l_color)
 							l_color_widget.change_actions.extend (agent on_preference_changed)
 							l_color_widget.set_caller (Current)
 							Result := l_color_widget.change_item_widget
@@ -634,7 +640,7 @@ feature {NONE} -- Implementation
 						else
 							l_shortcut ?= a_pref
 							if l_shortcut /= Void then
-								create l_shortcut_widget.make_with_resource (a_pref)
+								create l_shortcut_widget.make_with_resource (l_shortcut)
 								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
 								Result := l_shortcut_widget.change_item_widget
 								Result.set_data (l_shortcut_widget)
@@ -837,6 +843,7 @@ feature {NONE} -- Implementation
 			l_color: COLOR_PREFERENCE
 			l_array: ARRAY_PREFERENCE
 			l_shortcut: SHORTCUT_PREFERENCE
+			l_text: STRING_PREFERENCE
 
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
@@ -848,57 +855,61 @@ feature {NONE} -- Implementation
 			l_bool ?= l_resource
 			if l_bool /= Void then
 					-- Boolean
-				create l_bool_widget.make_with_resource (l_resource)
+				create l_bool_widget.make_with_resource (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				a_row.set_item (4, l_bool_widget.change_item_widget)
 				a_row.item (4).set_data (l_bool_widget)
 			elseif l_resource.generating_resource_type.is_equal ("TEXT") then
+				l_text ?= l_resource
+				check
+					l_text_not_void: l_text /= Void
+				end
 					-- Text
-				create l_edit_widget.make_with_resource (l_resource)
+				create l_edit_widget.make_with_resource (l_text)
 				l_edit_widget.change_actions.extend (agent on_preference_changed)
 				a_row.set_item (4, l_edit_widget.change_item_widget)
 				a_row.item (4).set_data (l_edit_widget)
 			elseif l_resource.generating_resource_type.is_equal ("COMBO") then
 				l_array ?= l_resource
 				if l_array /= Void then
-						-- Choice
-				create l_choice_widget.make_with_resource (l_resource)
-				l_choice_widget.change_actions.extend (agent on_preference_changed)
-				a_row.set_item (4, l_choice_widget.change_item_widget)
-				a_row.item (4).set_data (l_choice_widget)
-			else
-				l_font ?= l_resource
-				if l_font /= Void then
-						-- Font
-					create l_font_widget.make_with_resource (l_resource)
-					l_font_widget.change_actions.extend (agent on_preference_changed)
-					l_font_widget.set_caller (Current)
-					a_row.set_item (4, l_font_widget.change_item_widget)
-					a_row.item (4).set_data (l_font_widget)
---					a_row.set_height (l_font.value.height.max (default_row_height))
+							-- Choice
+					create l_choice_widget.make_with_resource (l_array)
+					l_choice_widget.change_actions.extend (agent on_preference_changed)
+					a_row.set_item (4, l_choice_widget.change_item_widget)
+					a_row.item (4).set_data (l_choice_widget)
 				else
-					l_color ?= l_resource
-					if l_color /= Void then
-							-- Color
-						create l_color_widget.make_with_resource (l_resource)
-						l_color_widget.change_actions.extend (agent on_preference_changed)
-						l_color_widget.set_caller (Current)
-						a_row.set_item (4, l_color_widget.change_item_widget)
-						a_row.item (4).set_data (l_color_widget)
+					l_font ?= l_resource
+					if l_font /= Void then
+							-- Font
+						create l_font_widget.make_with_resource (l_font)
+						l_font_widget.change_actions.extend (agent on_preference_changed)
+						l_font_widget.set_caller (Current)
+						a_row.set_item (4, l_font_widget.change_item_widget)
+						a_row.item (4).set_data (l_font_widget)
+	--					a_row.set_height (l_font.value.height.max (default_row_height))
 					else
-						l_shortcut ?= l_resource
-						if l_shortcut /= Void then
-								-- Shortcut
-							create l_shortcut_widget.make_with_resource (l_resource)
-							l_shortcut_widget.change_actions.extend (agent on_preference_changed)
-							a_row.set_item (4, l_shortcut_widget.change_item_widget)
-							a_row.item (4).set_data (l_shortcut_widget)
+						l_color ?= l_resource
+						if l_color /= Void then
+								-- Color
+							create l_color_widget.make_with_resource (l_color)
+							l_color_widget.change_actions.extend (agent on_preference_changed)
+							l_color_widget.set_caller (Current)
+							a_row.set_item (4, l_color_widget.change_item_widget)
+							a_row.item (4).set_data (l_color_widget)
+						else
+							l_shortcut ?= l_resource
+							if l_shortcut /= Void then
+									-- Shortcut
+								create l_shortcut_widget.make_with_resource (l_shortcut)
+								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
+								a_row.set_item (4, l_shortcut_widget.change_item_widget)
+								a_row.item (4).set_data (l_shortcut_widget)
+							end
 						end
 					end
 				end
 			end
 		end
-	end
 
 
 	clear_edit_widget is

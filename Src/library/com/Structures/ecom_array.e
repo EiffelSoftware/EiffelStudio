@@ -28,7 +28,9 @@ inherit
 		export
 			{NONE} all
 			{ECOM_ARRAY} lower, upper, subarray
-			{ANY} area, array_item, count, valid_index, compare_objects, compare_references, object_comparison
+			{ANY}
+				area, array_item, count, valid_index, compare_objects, 
+				compare_references, object_comparison, changeable_comparison_criterion
 		redefine
 			discard_items
 		end

@@ -224,6 +224,26 @@ feature -- Status setting
 			is_displayed: is_displayed
 		end
 
+	enable_select is
+			-- Select `Current' in `parent_i'.
+		do
+			internal_update_selection (True)
+			set_internal_is_selected (True)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
+		end
+
+	disable_select is
+			-- Deselect `Current' from `parent_i'.
+		do
+			internal_update_selection (False)
+			set_internal_is_selected (False)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
+		end
+
 	ensure_visible is
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
@@ -499,26 +519,6 @@ feature {EV_GRID_I} -- Implementation
 			unparent
 		ensure
 			parent_i_unset: parent_i = Void
-		end
-
-	enable_select is
-			-- Select `Current' in `parent_i'.
-		do
-			internal_update_selection (True)
-			set_internal_is_selected (True)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
-		end
-
-	disable_select is
-			-- Deselect `Current' from `parent_i'.
-		do
-			internal_update_selection (False)
-			set_internal_is_selected (False)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
 		end
 
 	destroy is

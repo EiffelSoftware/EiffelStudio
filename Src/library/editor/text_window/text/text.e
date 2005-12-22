@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Basic, read only text. The text is made of a sequence of EDITOR_LINEs, 
+		Basic, read only text. The text is made of a sequence of EDITOR_LINEs,
 		which are themselves sequences of EDITOR_TOKENs.
 		These lines and tokens are built from a string by an EDITOR_SCANNER.
 	]"
@@ -11,7 +11,7 @@ class
 	TEXT
 
 inherit
-	B_345_TREE [EDITOR_LINE]
+	B_345_TREE
 		rename
 			first_data as first_line,
 			last_data as last_line,
@@ -23,18 +23,19 @@ inherit
 			{NONE} append_line, prepend_line, set_first_data,
 			set_last_data, wipe_out, make
 		redefine
-			make
+			make,
+			first_line
 		end
 
 	TEXT_OBSERVER_MANAGER
 		redefine
 			make, recycle
 		end
-		
-	DOCUMENT_TYPE_MANAGER	
-		
-	SHARED_EDITOR_DATA	
-		
+
+	DOCUMENT_TYPE_MANAGER
+
+	SHARED_EDITOR_DATA
+
 create
 	make
 
@@ -75,10 +76,12 @@ feature -- Reinitialization
 			reading_text_finished := False
 			current_string := Void
 			current_pos := 0
-			on_text_reset		
+			on_text_reset
 		end
 
 feature -- Access
+
+	first_line: EDITOR_LINE
 
 	current_line: like line
 		-- current line
@@ -111,7 +114,7 @@ feature -- Access
 		do
 			Result := internal_tabulation_size
 		end
-		
+
 feature -- Status Setting
 
 	set_first_read_block_size (a_size: INTEGER) is
@@ -122,14 +125,14 @@ feature -- Status Setting
 		do
 			 first_read_block_size := a_size
 		end
-		
+
 	set_tabulation_size (a_size: INTEGER) is
 			-- Set thet tabulation size.  Overrides preferences default value.
 		require
 			a_size_big_enough: a_size > 0
 		do
 			internal_tabulation_size := a_size
-		end		
+		end
 
 	highlight_line (a_line: INTEGER) is
 			-- Highlight line.  Do not move cursor to this line.
@@ -137,17 +140,17 @@ feature -- Status Setting
 		do
 			go_i_th (a_line)
 			current_line.set_highlighted (True)
-		end	
-		
+		end
+
 	unhighlight_line (a_line: INTEGER) is
 			-- Highlight line.  Do not move cursor to this line.
 		require
 		do
 			go_i_th (a_line)
 			current_line.set_highlighted (False)
-		end	
+		end
 
-feature -- Query 
+feature -- Query
 
 	after: BOOLEAN is
 			-- Is the `current_line' beyond the end of the text ?
@@ -183,7 +186,7 @@ feature -- Query
 			line_not_void: a_line /= Void
 		do
 			from
-				start				
+				start
 				Result := 1
 			until
 				a_line = current_line or after
@@ -225,9 +228,9 @@ feature -- Element Change
 			-- Update line tokens
 		require
 			line_index_valid: a_line > 0 and a_line <= number_of_lines
-		do			
+		do
 			line (a_line).update_token_information
-		end		
+		end
 
 feature -- Status report
 
@@ -248,7 +251,7 @@ feature -- Search
 	search_string (searched_string: STRING) is
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
-			-- set to True and `found_string_line' & 
+			-- set to True and `found_string_line' &
 			-- `found_string_character_position' are set.
 		require
 			text_is_not_empty: not is_empty
@@ -292,11 +295,11 @@ feature -- Search
 	found_string_character_position: INTEGER
 			-- Position of the first character within the line of the last string.
 			-- Valid only if `successful_search' is set.
-	
+
 	found_string_total_character_position: INTEGER
 			-- Position of the first character within the complete text.
 			-- Valid only if `successful_search' is set.
-	
+
 	successful_search: BOOLEAN
 			-- Was the last call to `search_string' successful?
 
@@ -391,13 +394,13 @@ feature {NONE} -- Text Loading
 					else
 						j := 0
 					end
-	
+
 						-- prepare next iteration
 					lines_read := lines_read + 1
 				end
-	
+
 				on_text_block_loaded (False)
-	
+
 				if j = 0 then
 						-- We have finished reading the file, so we remove
 						-- ourself from the idle actions.
@@ -421,7 +424,7 @@ feature {NONE} -- Text Loading
 			lexer_has_right_tab_size: editor_preferences.tabulation_spaces = lexer.tab_size
 		do
 			if line_image.is_empty then
-				create Result.make_empty_line			    
+				create Result.make_empty_line
 			else
 				lexer.execute (line_image)
 				create Result.make_from_lexer (lexer)
@@ -453,7 +456,7 @@ feature {NONE} -- Implementation
 		do
 		   	Result := current_class.scanner
 		end
-				
+
 	current_string: STRING
 			-- string to be loaded
 
@@ -465,7 +468,7 @@ feature {NONE} -- Private Constants
 	Lines_read_per_idle_action: INTEGER is 25
 		-- Number of lines read each time finish_reading_file
 		-- is called on an idle action.
-		
+
 	internal_tabulation_size: INTEGER
 		-- Size of tabulation
 

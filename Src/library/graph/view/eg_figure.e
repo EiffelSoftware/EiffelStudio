@@ -9,16 +9,18 @@ deferred class
 
 inherit
 	EV_MODEL_MOVE_HANDLE
+		undefine
+			new_filled_list
 		redefine
 			world,
 			default_create
 		end
-		
+
 	EG_XML_STORABLE
 		undefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -29,7 +31,7 @@ feature {NONE} -- Initialization
 			extend (name_label)
 			is_center_valid := True
 		end
-		
+
 	initialize is
 			-- Initialize `Current' (synchronize with model).
 		require
@@ -55,13 +57,13 @@ feature -- Access
 
 	model: EG_ITEM
 			-- The model for `Current'
-	
+
 	world: EG_FIGURE_WORLD is
 			-- The world `Current' is part of.
 		do
 			Result ?= Precursor {EV_MODEL_MOVE_HANDLE}
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		local
@@ -80,7 +82,7 @@ feature -- Access
 	is_label_shown_string: STRING is "IS_LABEL_SHOWN"
 	name_string: STRING is "NAME"
 		-- XML String constants.
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -125,10 +127,10 @@ feature -- Status report
 		do
 			Result := name_label.is_show_requested
 		end
-		
+
 	is_update_required: BOOLEAN
 			-- Is an update required?
-			
+
 feature -- Element change
 
 	recycle is
@@ -139,7 +141,7 @@ feature -- Element change
 				model.name_change_actions.prune_all (agent on_name_change)
 			end
 		end
-		
+
 feature -- Status setting
 
 	enable_selected is
@@ -149,7 +151,7 @@ feature -- Status setting
 		ensure
 			selected: is_selected
 		end
-		
+
 	disable_selected is
 			-- Disable select.
 		do
@@ -168,7 +170,7 @@ feature -- Status setting
 		ensure
 			is_label_shown: is_label_shown
 		end
-		
+
 	hide_label is
 			-- Hide name label.
 		require
@@ -179,7 +181,7 @@ feature -- Status setting
 		ensure
 			not_is_lable_shown: not is_label_shown
 		end
-		
+
 	request_update is
 			-- Set `is_update_required' to True.
 		do
@@ -222,7 +224,7 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 			-- | Redefine in subclass if you want make changes to the text.
@@ -233,7 +235,7 @@ feature {NONE} -- Implementation
 		do
 			name_label.set_text (a_text)
 		end
-		
+
 invariant
 	name_label_not_void: name_label /= Void
 

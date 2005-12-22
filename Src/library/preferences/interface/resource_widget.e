@@ -14,9 +14,9 @@ feature {NONE} -- Initialization
 			-- Create			
 		do
 			create change_actions
-		end		
+		end
 
-	make_with_resource (a_resource: PREFERENCE) is
+	make_with_resource (a_resource: like resource) is
 			-- Make with values from `a_resource'.
 		require
 			resource_not_void: a_resource /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			make
 		ensure
 			has_resource: resource /= Void
-		end		
+		end
 
 feature -- Access
 
@@ -41,7 +41,7 @@ feature -- Access
 	graphical_type: STRING is
 			-- Graphical type identifier.
 		deferred
-		end		
+		end
 
 feature -- Basic operations
 
@@ -51,14 +51,14 @@ feature -- Basic operations
 			resource_not_void: new_resource /= Void
 		do
 			resource := new_resource
-			
+
 			if change_item_widget = Void then
 				build_change_item_widget
 			end
 		ensure
 			resource_set: resource = new_resource
 		end
-		
+
 	set_caller (a_caller: like caller) is
 			-- Set the view this widget belongs to.
 		require
@@ -67,8 +67,8 @@ feature -- Basic operations
 			caller := a_caller
 		ensure
 			caller_set: caller = a_caller
-		end		
-			
+		end
+
 	destroy is
 			-- Destroy all graphical objects.
 		do
@@ -76,36 +76,36 @@ feature -- Basic operations
 				change_item_widget.destroy
 			end
 		end
-		
+
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
 		do
 			change_actions.call ([resource])
-		end		
-		
+		end
+
 	update_resource is
 			-- Update the changes made in `change_item_widget' to `resource'.
 		deferred
-		end		
-		
+		end
+
 	reset is
 			-- Reset resource to default value if any
-		do			
+		do
 			if resource.has_default_value then
 				reset
 			end
-		end		
-	
+		end
+
 	show is
 			-- Show the widget in its editable state
-		deferred			
-		end		
-		
+		deferred
+		end
+
 feature -- Actions
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `resource' changes, after call to `update_changes'.		
-		
+
 feature {NONE} -- Implementation
 
 	build_change_item_widget is

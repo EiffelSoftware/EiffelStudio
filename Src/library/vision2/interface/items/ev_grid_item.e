@@ -12,12 +12,12 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 	REFACTORING_HELPER
 		undefine
 			copy, default_create
 		end
-	
+
 	EV_DESELECTABLE
 		redefine
 			implementation,
@@ -61,7 +61,7 @@ feature -- Access
 		ensure
 			row_not_void: Result /= Void
 		end
-		
+
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -73,7 +73,7 @@ feature -- Access
 		ensure
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
-		
+
 	virtual_y_position: INTEGER is
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -86,7 +86,7 @@ feature -- Access
 			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
-		
+
 	horizontal_indent: INTEGER is
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
 			-- This may not be set, but the value is determined by the current tree structure
@@ -147,7 +147,7 @@ feature -- Access
 		do
 			Result := implementation.tooltip
 		end
-		
+
 	required_width: INTEGER is
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
@@ -209,12 +209,12 @@ feature -- Status setting
 		ensure
 			tooltip_assigned: a_tooltip = tooltip
 		end
-		
+
 feature -- Actions
 
 	activate is
 			-- Setup `Current' for interactive in-place editing of `Current'.
-			-- Activation is usually achieved by connecting an agent  to 
+			-- Activation is usually achieved by connecting an agent  to
 			-- {EV_GRID}.pointer_double_press_actions' that calls `activate'.
 			-- Will call `activate_action' of `Current' to setup the in-place editing.
 			-- The default behavior of the activation can be overriden in {EV_GRID}.item_activate_actions,
@@ -226,7 +226,7 @@ feature -- Actions
 		do
 			implementation.activate
 		end
-        
+
 	deactivate is
 			-- Cleanup from previous call to `activate'.
 		require
@@ -244,7 +244,7 @@ feature -- Actions
 		do
 			implementation.redraw
 		end
-		
+
 feature -- Status report
 
 	is_parented: BOOLEAN is
@@ -266,7 +266,7 @@ feature {NONE} -- Contract Support
 				foreground_color = Void and background_color = Void and tooltip = Void
 		end
 
-feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	implementation: EV_GRID_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.
@@ -280,7 +280,7 @@ feature {EV_GRID_I} -- Implementation
 		require
 			parented: is_parented
 			popup_window_not_void: popup_window /= Void
-			popup_window_not_destroyed: not popup_window.is_destroyed	
+			popup_window_not_destroyed: not popup_window.is_destroyed
 		do
 			-- By default do nothing, redefined by descendants.
 		ensure

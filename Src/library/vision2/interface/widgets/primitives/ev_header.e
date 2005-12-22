@@ -5,7 +5,7 @@ indexing
 
 class
 	EV_HEADER
-	
+
 inherit
 	EV_PRIMITIVE
 		undefine
@@ -14,14 +14,14 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_ITEM_LIST [EV_HEADER_ITEM]
 		undefine
 			is_in_default_state
 		redefine
 			implementation
 		end
-		
+
 	EV_FONTABLE
 		undefine
 			is_in_default_state,
@@ -29,7 +29,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER
 		undefine
 			is_equal,
@@ -37,7 +37,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_HEADER_ACTION_SEQUENCES
 		undefine
 			is_equal
@@ -76,7 +76,7 @@ feature -- Contract support
 		do
 			Result := False
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -86,7 +86,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_FONTABLE} and Precursor {EV_ITEM_PIXMAP_SCALER}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_HEADER_I
 		-- Responsible for interaction with native graphics toolkit.

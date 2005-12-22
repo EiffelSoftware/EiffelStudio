@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	tree: B_345_TREE [like Current]
+	tree: B_345_TREE
 
 	key: TREE_KEY [like Current]
 		-- Tree Key of Current

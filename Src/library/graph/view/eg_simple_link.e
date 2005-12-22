@@ -13,10 +13,13 @@ inherit
 			default_create,
 			xml_node_name
 		end
-	
+
 create
 	make_with_model
-	
+
+create {EG_SIMPLE_LINK}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -44,14 +47,14 @@ feature {NONE} -- Initialization
 				prune_all (line)
 				extend (reflexive)
 			end
-			
+
 			disable_moving
 			disable_scaling
 			disable_rotating
 
 			update
 		end
-		
+
 feature -- Access
 
 	xml_node_name: STRING is
@@ -59,13 +62,13 @@ feature -- Access
 		do
 			Result := "EG_SIMPLE_LINK"
 		end
-		
+
 	arrow_size: INTEGER is
 			-- Size of the arrow.
 		do
 			Result := line.arrow_size
 		end
-	
+
 feature -- Element change
 
 	set_arrow_size (i: INTEGER) is
@@ -91,10 +94,10 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				if source /= Void and then target /= Void then
 					p1 := line.point_array.item (0)
 					p2 := line.point_array.item (1)
-					
+
 					p1.set (source.port_x, source.port_y)
 					p2.set (target.port_x, target.port_y)
-					
+
 					an_angle := line_angle (p1.x_precise, p1.y_precise, p2.x_precise, p2.y_precise)
 					source.update_edge_point (p1, an_angle)
 					an_angle := pi + an_angle
@@ -108,7 +111,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					p2.set (target.port_x, target.port_y)
 					target.update_edge_point (p2, 0)
 				end
-				
+
 				line.invalidate
 				line.center_invalidate
 				if is_label_shown then
@@ -125,7 +128,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-	
+
 feature {NONE} -- Implementation
 
 	set_is_selected (an_is_selected: like is_selected) is
@@ -133,13 +136,13 @@ feature {NONE} -- Implementation
 		do
 			is_selected := an_is_selected
 		end
-			
+
 	line: EV_MODEL_LINE
 			-- The line representing the link.
-			
+
 	reflexive: EV_MODEL_ELLIPSE
 			-- The ellipse used when link `is_reflexive'.
-			
+
 	on_is_directed_change is
 			-- `model'.`is_directed' changed.
 		do
@@ -151,10 +154,18 @@ feature {NONE} -- Implementation
 			line.invalidate
 			line.center_invalidate
 		end
-		
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 invariant
 	line_not_void: line /= Void
-			
+
 end -- class EG_SIMPLE_LINK
 
 --|----------------------------------------------------------------

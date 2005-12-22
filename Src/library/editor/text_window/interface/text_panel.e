@@ -195,7 +195,7 @@ feature -- Status Setting
 			icons_set: icons = a_icons
 		end
 
-	set_text (a_text: TEXT; a_filename: STRING) is
+	set_text (a_text: like text_displayed; a_filename: STRING) is
 			-- Set `text_displayed' to `text'.  If text is associated to a file store then
 			-- `a_filename' should be that file.
 		require
@@ -1501,6 +1501,19 @@ feature -- Implementation
 			text_displayed.set_changed (True, False)
 			date_of_file_when_loaded := file_date_ticks
 		end
+
+feature {NONE} -- Implementation
+
+	line_type: EDITOR_LINE is
+			-- Type of a line.
+		do
+		end
+
+	cursor_type: TEXT_CURSOR is
+			-- Type of a cursor.
+		do
+		end
+
 
 invariant
 	offset_view: editor_viewport.y_offset >= 0

@@ -11,8 +11,10 @@ class
 
 inherit
 	EV_MODEL_WIDGET_PROJECTOR
+		rename
+			widget as pixmap
 		redefine
-			widget,
+			pixmap,
 			project_rectangle
 		end
 
@@ -22,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_world: EV_MODEL_WORLD; a_pixmap: EV_PIXMAP) is
+	make (a_world: EV_MODEL_WORLD; a_pixmap: like pixmap) is
 			-- Create with `a_world' and `a_pixmap'.
 		require
 			a_world_not_void: a_world /= Void
@@ -33,7 +35,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (
 		a_world: EV_MODEL_WORLD;
-		a_buffer, a_pixmap: EV_PIXMAP) is
+		a_buffer: EV_PIXMAP; a_pixmap: like pixmap) is
 			-- Create with `a_world', `a_pixmap' and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void
@@ -49,14 +51,14 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	widget: EV_PIXMAP
+	pixmap: EV_PIXMAP
 			-- Drawable widget to draw to.
 
 	project_rectangle (u: EV_RECTANGLE) is
 			-- Project area under `u' and flush pixmap.
 		do
 			Precursor (u)
-			widget.flush
+			pixmap.flush
 		end
 
 end -- class EV_MODEL_PIXMAP_PROJECTOR

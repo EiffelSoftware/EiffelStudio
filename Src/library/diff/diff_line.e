@@ -7,7 +7,7 @@ indexing
 deferred class
 	DIFF_LINE
 
-feature {DIFF_LINE} -- Initialization
+feature {NONE} -- Initialization
 
 	feature make(a_src_index: INTEGER; a_dst_index: INTEGER) is
 			-- Create a match index pair.

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Find texts that contain certain string, Regular expression based."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +9,7 @@ class
 feature -- Initialization
 
 	make (a_texts: like texts) is
-			--
+			-- Set `texts' with `a_texts'.
 		require
 			a_texts_attached: a_texts /= Void
 		do
@@ -23,7 +23,7 @@ feature -- Access
 	texts: ARRAYED_LIST [like last_searched]
 			-- Texts search in.
 
-	texts_found: like texts
+	texts_found: like texts is
 			-- Texts found in `texts'
 		require
 			is_search_launched: is_search_launched
@@ -49,8 +49,8 @@ feature -- Behavior
 		require
 			a_str_attached: a_str /= Void
 		do
-			create texts_found.make (0)
-			create found_indexs_in_texts. make (0)
+			create texts_found_internal.make (0)
+			create found_indexs_in_texts.make (0)
 			is_search_launched := true
 			last_searched := a_str
 		ensure
@@ -67,6 +67,5 @@ feature {NONE} -- Implementation
 
 invariant
 	texts_not_void: texts /= Void
-
 
 end

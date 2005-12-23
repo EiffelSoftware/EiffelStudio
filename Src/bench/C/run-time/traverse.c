@@ -466,10 +466,17 @@ rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+#ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	referers_target = target;
 	result = matching (internal_find_referers, result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
+#else
+	EIF_EO_STORE_LOCK;
+	referers_target = target;
+	result = matching (internal_find_referers, result_type);
+	EIF_EO_STORE_UNLOCK;
+#endif
 	return result;
 }
 
@@ -487,10 +494,17 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+#ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	instance_type = type;
 	result = matching (internal_find_instance_of, result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
+#else
+	EIF_EO_STORE_LOCK;
+	instance_type = type;
+	result = matching (internal_find_instance_of, result_type);
+	EIF_EO_STORE_UNLOCK;
+#endif
 	return result;
 }
 
@@ -507,9 +521,15 @@ rt_public EIF_REFERENCE find_all_instances (EIF_INTEGER result_type)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+#ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	result = matching (internal_find_all_instances, result_type);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
+#else
+	EIF_EO_STORE_LOCK;
+	result = matching (internal_find_all_instances, result_type);
+	EIF_EO_STORE_UNLOCK;
+#endif
 	return result;
 }
 

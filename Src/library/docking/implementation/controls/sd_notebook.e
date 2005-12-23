@@ -309,6 +309,10 @@ feature {NONE}  -- Implementation
 		do
 			dragging_tab := a_tab
 			enable_capture
+
+			debug ("larry")
+				print ("%NSD_NOTEBOOK on_tab_dragging enable capture")
+			end
 		end
 
 	dragging_tab: SD_NOTEBOOK_TAB
@@ -317,7 +321,13 @@ feature {NONE}  -- Implementation
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
+			dragging_tab := Void
 			disable_capture
+
+
+			debug ("larry")
+				print ("%NSD_NOTEBOOK on_pointer_release disable capture    dragging_tab := Void? " + (dragging_tab = Void).out)
+			end
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -326,32 +336,40 @@ feature {NONE}  -- Implementation
 			l_in_tabs: BOOLEAN
 			l_target_tab: SD_NOTEBOOK_TAB
 		do
-			from
-				internal_tabs.start
-			until
-				internal_tabs.after or l_in_tabs
-			loop
-				if internal_tabs.item /= dragging_tab then
-					if tab_has_x_y (internal_tabs.item, a_screen_x, a_screen_y)  then
-						l_in_tabs := True
-						internal_tab_box.start
-						internal_tab_box.search (internal_tabs.item)
-						l_target_tab := internal_tabs.item
-						internal_tab_box.swap (internal_tab_box.index_of (dragging_tab, 1))
-						internal_tab_box.disable_item_expand (dragging_tab)
-						internal_tab_box.disable_item_expand (l_target_tab)
-					end
-				else
-					if tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
-						l_in_tabs := True
-					end
+
+			if dragging_tab /= Void then
+				debug ("larry")
+					print ("%NSD_NOTEBOOK on_pointer_motion ~~~~~~~~~~~~~   dragging_tab := Void? " + (dragging_tab = Void).out)
 				end
-				internal_tabs.forth
+
+				from
+					internal_tabs.start
+				until
+					internal_tabs.after or l_in_tabs
+				loop
+					if internal_tabs.item /= dragging_tab then
+						if tab_has_x_y (internal_tabs.item, a_screen_x, a_screen_y)  then
+							l_in_tabs := True
+							internal_tab_box.start
+							internal_tab_box.search (internal_tabs.item)
+							l_target_tab := internal_tabs.item
+							internal_tab_box.swap (internal_tab_box.index_of (dragging_tab, 1))
+							internal_tab_box.disable_item_expand (dragging_tab)
+							internal_tab_box.disable_item_expand (l_target_tab)
+						end
+					else
+						if tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
+							l_in_tabs := True
+						end
+					end
+					internal_tabs.forth
+				end
+				if not l_in_tabs then
+					disable_capture
+					tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
+				end
 			end
-			if not l_in_tabs then
-				disable_capture
-				tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
-			end
+
 		end
 
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is

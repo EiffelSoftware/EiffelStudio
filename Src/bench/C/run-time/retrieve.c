@@ -743,10 +743,8 @@ rt_private void correct_object_mismatch (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
 	EIF_GET_CONTEXT
-#ifdef ISE_GC
 	volatile EIF_BOOLEAN collecting = gc_ison ();
 	volatile EIF_BOOLEAN asserting = c_check_assert (EIF_FALSE);
-#endif
 	jmp_buf exenv;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);

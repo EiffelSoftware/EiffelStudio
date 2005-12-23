@@ -99,7 +99,6 @@ feature {NONE} -- Implementation
 		local
 			l_params: like checked_parameter_types
 			l_item: EC_CHECKED_TYPE
-			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
 			i: INTEGER
 		do
 			l_params := checked_parameter_types

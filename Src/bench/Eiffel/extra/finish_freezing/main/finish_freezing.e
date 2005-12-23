@@ -31,16 +31,16 @@ feature -- Initialization
 			if not retried then
 					-- Location defaults to the current directory
 				location := current_working_directory
-	
+
 					-- if location has been specified, update it
 				location_index := index_of_word_option ("location")
 				if location_index /= 0 and then argument_count >= location_index + 1 then
 					location := argument (location_index + 1)
 				end
-				
+
 					-- if generate_only is specified then only generate makefile
 				gen_only := index_of_word_option ("generate_only") /= 0
-			
+
 					-- Map `location' if it is a network path if needed
 				if location.substring (1, 2).is_equal ("\\") then
 					create unc_mapper.make (location)
@@ -49,12 +49,12 @@ feature -- Initialization
 						location := unc_mapper.access_name + "\"
 					end
 				end
-				
+
 					-- Change the working directory if needed
 				if not location.is_equal (current_working_directory) then
-					change_working_directory (location)				
+					change_working_directory (location)
 				end
-	
+
 				set_option_sign ('-')
 				create translator.make (mapped_path)
 
@@ -71,7 +71,7 @@ feature -- Initialization
 				unc_mapper.destroy
 				unc_mapper := Void
 			end
- 
+
 			if not gen_only then
 				if translator = Void then
 					l_msg := "Internal error during Makefile translation preparation.%N%N%
@@ -117,7 +117,7 @@ feature -- Initialization
 
 feature -- Access
 
-	translator: MAKEFILE_TRANSLATOR		
+	translator: MAKEFILE_TRANSLATOR
 			-- used to translate Makefile.SH into Makefile
 
 	env: EXECUTION_ENVIRONMENT is

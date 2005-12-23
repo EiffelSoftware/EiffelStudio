@@ -891,6 +891,7 @@ feature -- Code generation
 			if creation_type.is_expanded then
 					-- Box expanded object.
 				il_code_generator.generate_metamorphose (creation_type.type)
+				il_code_generator.generate_load_address (creation_type.type)
 			end
 
 			if a_has_arguments then
@@ -900,7 +901,13 @@ feature -- Code generation
 				l_nb_args := 1
 			end
 
-			if a_class_type.is_generated_as_single_type then
+			if creation_type.is_expanded then
+				il_code_generator.method_body.put_call ({MD_OPCODES}.Call,
+					feature_token (creation_type.implementation_id,
+						creation_type.associated_class.feature_of_rout_id
+						(a_class_type.associated_class.feature_of_feature_id (a_feature_id).rout_id_set.first).feature_id),
+					l_nb_args, False)
+			elseif a_class_type.is_generated_as_single_type then
 				il_code_generator.method_body.put_call ({MD_OPCODES}.Callvirt,
 					feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			else

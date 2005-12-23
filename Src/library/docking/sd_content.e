@@ -263,16 +263,17 @@ feature -- Actions
 			end
 			Result := internal_close_request_actions
 		end
-	
+
 	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Drop actions.
-	
+
 feature -- Command
 
 	close is
 			-- Destroy `Current', only destroy zone. Prune Current from SD_DOCKING_MANAGER.
 		do
 			state.close
+			docking_manager.contents.start
 			docking_manager.contents.prune (Current)
 		end
 
@@ -320,12 +321,12 @@ feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,
 		do
 			Result := internal_state
 		end
-	
+
 	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 feature {SD_DOCKING_MANAGER_AGENTS}
-	
+
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set docking manager
 		require
@@ -366,7 +367,7 @@ feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 		end
 
 feature {NONE}  -- Implemention.
-			
+
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 

@@ -6,6 +6,7 @@ co %DEFAULT_CVS_TAG/Src/bench/Eiffel Eiffel
 co %DEFAULT_CVS_TAG/Src/common Eiffel\common
 co %DEFAULT_CVS_TAG/Src/dotnet dotnet
 cd tools
+co %DEFAULT_CVS_TAG/Src/tools/eiffel_make eiffel_make
 co %DEFAULT_CVS_TAG/Src/tools/compliance_checker compliance_checker
 cdd %EIFFEL_SRC
 
@@ -236,6 +237,18 @@ iff not exist finish_freezing.exe then
 	CANCEL
 endiff
 move finish_freezing.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile emake
+cdd %EIFFEL_SRC\tools\eiffel_make
+clean_project
+finalize emake.ace
+fff
+cleanup_eiffel emake.exe
+iff not exist emake.exe then
+	remtrace Could not finalize a new emake
+	CANCEL
+endiff
+move emake.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile quick_finalize
 cdd %EIFFEL_SRC\Eiffel\extra\quick_c_compilation

@@ -742,6 +742,9 @@
 										</Extension>
 									</ProgId>
 								</Component>
+								<Component Id="emake.exe" Guid="B97B86CD-F816-4e7c-97E3-0A101E346AF9">
+									<File Id="emake.exe" Name="emake.exe" />
+								</Component>
 								<Component Id="FINISH1.EXE" Guid="371AC489-A5B5-4CD9-AC82-59F6C2EB2EEC">
 									<File Id="finish_freezing.exe" Name="FINISH~1.EXE" LongName="finish_freezing.exe" KeyPath="yes" />
 								</Component>

@@ -24,7 +24,7 @@ feature
 	type: LIKE_CURRENT_I is
 			-- Current type
 		once
-			create Result -- := context.current_type;
+			create Result
 		end
 
 	is_current: BOOLEAN is

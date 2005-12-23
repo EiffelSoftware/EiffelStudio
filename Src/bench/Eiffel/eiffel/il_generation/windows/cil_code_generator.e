@@ -2705,7 +2705,7 @@ feature -- IL Generation
 			start_new_body (l_meth_token)
 			create_object (current_class_type.implementation_id)
 			if current_class_type.is_expanded then
-					-- Box expanded object
+					-- Box expanded object.
 				generate_metamorphose (current_class_type.type)
 			end
 			if is_generic then
@@ -2713,6 +2713,10 @@ feature -- IL Generation
 				generate_argument (nb)
 				method_body.put_call ({MD_OPCODES}.callvirt,
 					current_module.ise_set_type_token, 1, False)
+			end
+			if current_class_type.is_expanded then
+					-- Take address of expanded object.
+				generate_load_address (current_class_type.type)
 			end
 			duplicate_top
 			if nb > 0 then
@@ -2724,13 +2728,19 @@ feature -- IL Generation
 					i := i + 1
 				end
 			end
-			method_body.put_call ({MD_OPCODES}.callvirt,
-				feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
-				nb, False)
+			if current_class_type.is_expanded then
+				method_body.put_call ({MD_OPCODES}.Call,
+					feature_token (current_class_type.implementation_id,
+						current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, False)
+			else
+				method_body.put_call ({MD_OPCODES}.callvirt,
+					feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
+					nb, False)
+			end
 			fixme ("Generate class invariant check (if enabled).")
 			if current_class_type.is_expanded then
-					-- Unbox expanded object
-				generate_unmetamorphose (current_class_type.type)
+					-- Load expanded object value.
+				generate_load_from_address (current_class_type.type)
 			end
 			generate_return (True)
 			store_locals (l_meth_token)

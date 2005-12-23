@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CREATE_FEAT 
+class CREATE_FEAT
 
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code,
+			created_in, generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init, is_explicit
 		end
 
@@ -34,7 +34,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (f_id, f_rout_id: INTEGER; a_class: CLASS_C) is
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 				-- in `type_set' than testing if it is already
 				-- present or not and then insert it.
 			System.type_set.force (f_rout_id)
-			
+
 				-- Add it to current class too for IL code generation.
 			if System.il_generation then
 				a_class.extend_type_set (f_rout_id)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			feature_id_set: feature_id = f_id
 			routine_id_set: routine_id = f_rout_id
 		end
-		
+
 feature -- Access
 
 	feature_id: INTEGER
@@ -176,12 +176,12 @@ feature -- IL code generation
 			generate_il_type
 
 				-- Evaluate the computed type and create a corresponding object type.
-			il_generator.generate_current
+			il_generator.generate_current_as_reference
 			il_generator.create_type
-			
+
 			l_type_feature := context.class_type.
 				associated_class.anchored_features.item (routine_id)
-				
+
 			il_generator.generate_check_cast (Void,
 				context.real_type (l_type_feature.type.actual_type.type_i))
 		end
@@ -196,11 +196,22 @@ feature -- IL code generation
 			l_type_feature := context.class_type.
 				associated_class.anchored_features.item (routine_id)
 
-			il_generator.generate_current
+			il_generator.generate_current_as_reference
 			l_decl_type := il_generator.implemented_type (l_type_feature.origin_class_id,
 				context.current_type)
 			il_generator.generate_feature_access (l_decl_type,
 				l_type_feature.origin_feature_id, 0, True, True)
+		end
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'
+		local
+			saved_class_type: CLASS_TYPE
+		do
+			saved_class_type := context.class_type
+			context.set_class_type (other)
+			Result := context.real_type (other.associated_class.feature_of_rout_id (routine_id).type.actual_type.type_i)
+			context.set_class_type (saved_class_type)
 		end
 
 feature -- Byte code generation
@@ -335,7 +346,7 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -360,7 +371,7 @@ feature -- Genericity
 					gen_type ?= table.first.type
 
 					if gen_type /= Void then
-						gen_type.generate_cid_array (buffer, 
+						gen_type.generate_cid_array (buffer,
 												final_mode, True, idx_cnt)
 					else
 						buffer.put_type_id (table.first.feature_type_id)
@@ -377,7 +388,7 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy: INTEGER
@@ -424,7 +435,7 @@ feature -- Genericity
 					buffer.put_string (");")
 					buffer.put_new_line
 					dummy := idx_cnt.next
-					
+
 						-- Side effect. This is not nice but
 						-- unavoidable.
 						-- Mark routine id used
@@ -497,5 +508,5 @@ feature -- Genericity
 
 invariant
 	inserted_in_type_set: System.type_set.has (routine_id)
-	
+
 end -- class CREATE_FEAT

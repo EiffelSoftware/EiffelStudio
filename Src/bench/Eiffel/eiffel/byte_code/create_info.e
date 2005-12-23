@@ -3,14 +3,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class CREATE_INFO 
+deferred class CREATE_INFO
 
 inherit
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
 		end
-		
+
 	BYTE_CONST
 		export
 			{NONE} all
@@ -20,9 +20,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	COMPILER_EXPORTER
-	
+
 feature -- C code generation
 
 	analyze is
@@ -47,7 +47,7 @@ feature -- C code generation
 			buffer_not_void: buffer /= Void
 		deferred
 		end
-		
+
 feature -- IL code generation
 
 	generate_il is
@@ -59,7 +59,16 @@ feature -- IL code generation
 			-- Generate byte code to load creation type.
 		deferred
 		end
-		
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'
+		require
+			other_not_void: other /= Void
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -76,7 +85,7 @@ feature -- Generic conformance
 		do
 			Result := False
 		end
-		
+
 	generate_start (node: BYTE_NODE) is
 			-- Generate new block if necessary for
 			-- `node'.
@@ -122,10 +131,10 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_cid_array (buffer: GENERATION_BUFFER; 
+	generate_cid_array (buffer: GENERATION_BUFFER;
 						final_mode: BOOLEAN; idx_cnt: COUNTER) is
 			-- Generate mode dependent sequence of type id's 
-			-- separated by commas. 'idx_cnt' holds the 
+			-- separated by commas. 'idx_cnt' holds the
 			-- index in the array for this entry.
 		require
 			valid_file: buffer /= Void
@@ -133,10 +142,10 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; 
+	generate_cid_init (buffer: GENERATION_BUFFER;
 					   final_mode: BOOLEAN; idx_cnt: COUNTER) is
-			-- Generate mode dependent initialization of 
-			-- cid array. 'idx_cnt' holds the index in the 
+			-- Generate mode dependent initialization of
+			-- cid array. 'idx_cnt' holds the index in the
 			-- array for this entry.
 		require
 			valid_file: buffer /= Void

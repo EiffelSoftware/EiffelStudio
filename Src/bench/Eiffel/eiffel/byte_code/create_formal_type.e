@@ -63,14 +63,14 @@ feature -- IL code generation
 				-- Compute actual type of Current formal.
 			formal ?= type
 			formal.generate_gen_type_il (il_generator, True)
-			
+
 				-- Evaluate the type and create a corresponding object type.
-			il_generator.generate_current
+			il_generator.generate_current_as_reference
 			il_generator.create_type
-			
+
 			il_generator.generate_check_cast (Void, context.real_type (formal))
 		end
-		
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is

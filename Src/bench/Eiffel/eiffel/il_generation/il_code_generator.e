@@ -165,6 +165,12 @@ feature -- Variables access
 		deferred
 		end
 
+	generate_current_as_reference is
+			-- Generate access to `Current' in its reference form.
+			-- (I.e. box value type object if required.)
+		deferred
+		end
+
 	generate_result is
 			-- Generate access to `Result'.
 		deferred
@@ -934,6 +940,24 @@ feature -- Convenience
 	generate_call_on_void_target_exception is
 			-- Generate call on void target exception.
 		deferred
+		end
+
+	context_type (node: CALL_ACCESS_B): CL_TYPE_I is
+			-- Context type of a `node'.
+		require
+			node_not_void: node /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	real_type (type_i: TYPE_I): TYPE_I is
+			-- `type_i' evaluated in the current context.
+		require
+			type_i_not_void: type_i /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Generic conformance

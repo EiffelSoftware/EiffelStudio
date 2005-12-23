@@ -787,6 +787,7 @@ feature {NONE} -- Type description
 			-- Generate call to creation routine from ROOT_CLASS
 		local
 			a_class: CLASS_C
+			root_class_type: CLASS_TYPE
 			root_feat: FEATURE_I
 			l_decl_type: CL_TYPE_I
 		do
@@ -796,11 +797,12 @@ feature {NONE} -- Type description
 			then
 					-- Update the root class info
 				a_class := system.root_class.compiled_class
+				root_class_type := a_class.actual_type.type_i.associated_class_type
 				root_feat := a_class.feature_table.item (System.creation_name)
 				l_decl_type := cil_generator.implemented_type (root_feat.written_in,
-					a_class.types.first.type)
+					root_class_type.type)
 				cil_generator.define_entry_point (
-					a_class.types.first.implementation_id,
+					root_class_type,
 					l_decl_type.associated_class_type,
 					root_feat.written_feature_id, root_feat.has_arguments)
 			end

@@ -833,14 +833,14 @@ feature -- Code generation
 		end
 
 	define_entry_point
-			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
+			(creation_type: CLASS_TYPE; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
 			a_has_arguments: BOOLEAN)
 		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_class_type'.
 		require
 			is_generated: is_generated
-			positive_creation_type_id: creation_type_id > 0
+			creation_type_not_void: creation_type /= Void
 			a_class_type_not_void: a_class_type /= Void
 			positive_feature_id: a_feature_id > 0
 		local
@@ -887,7 +887,11 @@ feature -- Code generation
 			end
 
 				-- Create root object and call creation procedure.
-			il_code_generator.method_body.put_newobj (constructor_token (creation_type_id), 0)
+			il_code_generator.method_body.put_newobj (constructor_token (creation_type.implementation_id), 0)
+			if creation_type.is_expanded then
+					-- Box expanded object.
+				il_code_generator.generate_metamorphose (creation_type.type)
+			end
 
 			if a_has_arguments then
 					-- Generate conversion from the command line arguments

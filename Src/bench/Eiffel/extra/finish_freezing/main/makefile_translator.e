@@ -54,7 +54,7 @@ feature -- Initialization
 
 				lib_extension := options.get_string ("intermediate_file_ext", "lib").twin
 				lib_extension.prepend_character ('.')
-	
+
 				check_for_il
 				quick_compilation := options.get_boolean ("quick_compilation", True)
 				if quick_compilation and not is_il_code then
@@ -62,7 +62,7 @@ feature -- Initialization
 					io.default_output.flush
 					launch_quick_compilation
 				end
-				
+
 				smart_checking := options.get_boolean ("smart_checking", True)
 				if compiler.is_equal ("msc") and smart_checking then
 						-- Visual Studio C compiler.
@@ -109,13 +109,13 @@ feature -- Status report
 
 feature -- Access
 
-	makefile_sh: PLAIN_TEXT_FILE	
+	makefile_sh: PLAIN_TEXT_FILE
 			-- Makefile.SH to read from
 
-	makefile: PLAIN_TEXT_FILE	
+	makefile: PLAIN_TEXT_FILE
 			-- Makefile to create
 
-	options: RESOURCE_TABLE		
+	options: RESOURCE_TABLE
 			-- Options read from config.eif
 
 	dependent_directories, system_dependent_directories,
@@ -126,16 +126,16 @@ feature -- Access
 			-- Is the current compilation a quick one?
 
 	smart_checking: BOOLEAN
-			-- Does the current compilation require that environment variables 
+			-- Does the current compilation require that environment variables
 			-- are automatically set for Visual Studio (i.e. should we run vcvars32.bat)?
 
-	delete_next: BOOLEAN		
+	delete_next: BOOLEAN
 			-- Is the next line to be deleted?
 
-	externals: BOOLEAN		
+	externals: BOOLEAN
 			-- Is the application using externals?
 
-	precompile: BOOLEAN		
+	precompile: BOOLEAN
 			-- Is this a precompilation?
 
 	concurrent: BOOLEAN
@@ -144,15 +144,15 @@ feature -- Access
 	multithreaded: BOOLEAN
 			-- Is this a multithreaded application?
 
-	appl: STRING			
+	appl: STRING
 			-- Application name
-			
-	platform: STRING			
+
+	platform: STRING
 			-- ISE_PLATFORM environment variable
-	
+
 	compiler: STRING
 			-- ISE_C_COMPILER environment variable		
-			
+
 	uses_precompiled: BOOLEAN
 
 	directory_separator: STRING
@@ -192,11 +192,35 @@ feature -- Execution
 			-- run the make utility on the generated Makefile
 		local
 			command: STRING
+			eiffel_make: STRING
 		do
 				-- the command to execute the make utility on this platform
 			command := options.get_string ("make", Void)
 			subst_eiffel (command)
-			env.system (command)
+
+				-- Launch building of `E1\estructure.h' in case it is not built
+			env.system (command + " E1\estructure.h")
+
+				-- Launch distributed make.
+			eiffel_make := eiffel_dir.twin
+			eiffel_make.append_character (operating_environment.directory_separator)
+			eiffel_make.append ("studio")
+			eiffel_make.append_character (operating_environment.directory_separator)
+			eiffel_make.append ("spec")
+			eiffel_make.append_character (operating_environment.directory_separator)
+			eiffel_make.append (platform)
+			eiffel_make.append_character (operating_environment.directory_separator)
+			eiffel_make.append ("bin")
+			eiffel_make.append_character (operating_environment.directory_separator)
+			eiffel_make.append ("emake.exe")
+
+			eiffel_make.append (" -target %"")
+			eiffel_make.append (env.current_working_directory)
+			eiffel_make.append ("%" -make %"")
+			eiffel_make.append (command)
+			eiffel_make.append ("%"")
+
+			env.system (eiffel_make)
 		end
 
 feature {NONE} -- Translation
@@ -282,7 +306,7 @@ feature {NONE} -- Translation
 					end
 
 					env.change_working_directory (dir)
-				
+
 					translate_makefile (False)
 
 					env.change_working_directory (options.get_string ("updir", ".."))
@@ -475,7 +499,7 @@ feature {NONE} -- Translation
 					end
 
 					if lastline.substring_index (".SUFFIXES", 1) /= 0 then
-						lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj")) 
+						lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj"))
 					end
 				end
 
@@ -521,7 +545,7 @@ feature {NONE} -- Translation
 						io.put_new_line
 					end
 				end
-				
+
 				subst_continuation (lastline)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
@@ -602,7 +626,7 @@ feature {NONE} -- Translation
 				end
 			end
 
-			if not is_il_code then 
+			if not is_il_code then
 				read_next
 				read_next
 
@@ -610,7 +634,7 @@ feature {NONE} -- Translation
 				makefile.put_string (appl_exe)
 
 				if shared_library_pos /= 0 then
-					makefile.put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")				
+					makefile.put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")
 				end
 
 				makefile.put_new_line
@@ -735,7 +759,7 @@ feature {NONE} -- Translation
 					end
 					makefile.put_string ("$(MAKE)")
 					makefile.put_string (" ")
-	
+
 					if is_emain then
 						makefile.put_string (options.get_string ("emain_obj_text", Void))
 					else
@@ -743,7 +767,7 @@ feature {NONE} -- Translation
 						makefile.put_string (".")
 						makefile.put_string (options.get_string ("intermediate_file_ext", Void))
 					end
-	
+
 					if not is_emain then
 						makefile.put_string (" $(END_TEST)")
 					end
@@ -769,7 +793,7 @@ feature {NONE} -- Translation
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
-			
+
 			read_next -- On windows, we skip the OBJECTS=..., it is done after
 			--read_next
 
@@ -779,7 +803,7 @@ feature {NONE} -- Translation
 				makefile.put_string (options.get_string ("objects_text", Void))
 			until
 				dependent_directories.after
-			loop		
+			loop
 				dir := dependent_directories.item
 				makefile.put_string (dir)
 				makefile.put_string (directory_separator)
@@ -799,7 +823,7 @@ feature {NONE} -- Translation
 				makefile.put_string (options.get_string ("c_objects_text", Void))
 			until
 				object_dependent_directories.after
-			loop		
+			loop
 				dir := object_dependent_directories.item
 				makefile.put_string (dir)
 				makefile.put_string (directory_separator)
@@ -914,7 +938,7 @@ feature {NONE} -- Translation
 			debug ("progress")
 				io.put_string ("%Tchange%N")
 			end
-			
+
 			lastline := makefile_sh.last_string.twin
 
 			debug ("translate_line_change")
@@ -937,9 +961,9 @@ feature {NONE} -- Translation
 			lastline.replace_substring_all (".cpp.o:", options.get_string ("cppobj_text", Void))
 			lastline.replace_substring_all (".o ", options.get_string ("obj_text", Void))
 			if lastline.substring_index (".SUFFIXES", 1) /= 0 then
-				lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj")) 
+				lastline.replace_substring_all (".o", options.get_string ("obj_text", ".obj"))
 			end
-			
+
 			-- replace .o:
 			replacement := options.get_string ("intermediate_file_ext", Void).twin
 			replacement.prepend (".")
@@ -971,7 +995,7 @@ feature {NONE} -- Translation
 				dir := dependent_directories.item
 
 				selected_object := options.get_string ("objects__text", Void).twin
-				
+
 				lastline.replace_substring_all ("$obj", selected_object)
 
 				if precompile then
@@ -1054,7 +1078,7 @@ feature {NONE} -- Translation
 			end
 
 			precompile_libs := get_libs (lastline)
-			
+
 			-- precompile or make application?
 			if precompile then
 				if options.has ("precompile") then
@@ -1082,7 +1106,7 @@ feature {NONE} -- Translation
 			subst_objects_redirection (lastline)
 
 			if options.has ("sharedlibs") then
-				lastline.replace_substring_all ("$sharedlibs", options.get_string ("sharedlibs", Void))	
+				lastline.replace_substring_all ("$sharedlibs", options.get_string ("sharedlibs", Void))
 			else
 				lastline.replace_substring_all ("$sharedlibs", "$(SHAREDLIBS)")
 			end
@@ -1129,7 +1153,7 @@ feature {NONE} -- Translation
 			lastline.replace_substring_all (".a", lib_extension)
 			makefile.put_string (lastline)
 			makefile.put_new_line
-			
+
 			read_next
 			makefile.put_string (makefile_sh.last_string)
 			makefile.put_new_line
@@ -1175,7 +1199,7 @@ feature {NONE} -- Translation
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
-				
+
 			makefile.put_new_line
 			makefile.put_new_line
 
@@ -1187,7 +1211,7 @@ feature {NONE} -- Translation
 			makefile.put_new_line
 
 -- DEF_FILE= appl.def
-			if options.has ("cecil_def") then 
+			if options.has ("cecil_def") then
 				lastline := options.get_string ("cecil_def", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
@@ -1209,7 +1233,7 @@ feature {NONE} -- Translation
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
-	
+
 				-- SHARED_CECIL_OBJECT
 			if uses_precompiled then
 				makefile.put_character ('%T')
@@ -1225,7 +1249,7 @@ feature {NONE} -- Translation
 			makefile.put_string ("SHARED_FLAGS = $(LDSHAREDFLAGS)")
 
 				-- SHAREDFLAGS
-			if options.has ("cecil_dynlib") then 
+			if options.has ("cecil_dynlib") then
 				makefile.put_string (" \%N")
 				lastline := options.get_string ("cecil_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
@@ -1239,7 +1263,7 @@ feature {NONE} -- Translation
 			read_next
 			makefile.put_string (makefile_sh.last_string)
 			makefile.put_string (" $(DEF_FILE)")
-			makefile.put_new_line 
+			makefile.put_new_line
 
 				-- $(RM) "$(SHARD_CECIL)"
 			read_next
@@ -1332,7 +1356,7 @@ feature {NONE} -- Translation
 				previous_line := lastline
 				lastline := makefile_sh.last_string.twin
 			end
-				
+
 			if uses_precompiled then
 				makefile.put_character ('%T')
 				makefile.put_string (precompile_libs)
@@ -1347,7 +1371,7 @@ feature {NONE} -- Translation
 
 				-- DYNLIBSHAREDFLAGS
 			makefile.put_string ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
-			if options.has ("system_dynlib") then 
+			if options.has ("system_dynlib") then
 				makefile.put_string (" \%N")
 				lastline := options.get_string ("system_dynlib", Void).twin
 				lastline.replace_substring_all ("$appl", appl)
@@ -1361,7 +1385,7 @@ feature {NONE} -- Translation
 			read_next
 			makefile.put_string (makefile_sh.last_string)
 			makefile.put_string (" $(DEF_FILE)")
-			makefile.put_new_line 
+			makefile.put_new_line
 
 -- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
@@ -1522,7 +1546,7 @@ feature {NONE}	-- substitutions
 				line.append (options.get_string ("continuation", Void))
 			end
 		end
-		
+
 	subst_intermediate (line: STRING) is
 			-- replace all occurrences of ?obj#.obj with ?obj#.lib in `line' starting with "all"
 		local
@@ -1540,7 +1564,7 @@ feature {NONE}	-- substitutions
 			line.replace_substring_all (".o", lib_extension)
 
 			start := 1
-			
+
 			if line.substring_index (options.get_string ("emain_text", Void), start) > 0 then
 				start := line.substring_index (options.get_string ("intermediate_file_ext", Void), start)
 				check
@@ -1556,14 +1580,14 @@ feature {NONE}	-- substitutions
 			debug ("subst")
 				io.put_string ("%Tsubst_precomp_libs%N")
 			end
-			
+
 			if uses_precompiled then
 				line.replace_substring_all ("$precompilelibs", precompiled_libs)
 			else
 				line.replace_substring_all ("$precompilelibs", "")
 			end
 		end
-		
+
 	subst_precomp_libs_command (line: STRING; precompiled_libs: STRING) is
 			-- replace all occurrences of $precompile_libs_command with the neccessary commands for a precompiled library
 		local
@@ -1589,14 +1613,14 @@ feature {NONE}	-- substitutions
 					lib := libs.substring (1, lib_start_pos).twin
 					command.append (options.get_string ("precomp_lib_command_text", Void))
 					command.replace_substring_all ("$precompiled_library", lib)
-					
+
 					libs.remove_head (lib_start_pos)
 					lib_start_pos := libs.substring_index (" ", 1)
 				end
 
 				command.append (options.get_string ("precomp_lib_command_text", Void))
 				command.replace_substring_all ("$precompiled_library", libs)
-				
+
 				line.replace_substring_all ("$precompile_libs_command", command)
 			else
 				line.replace_substring_all ("$precompile_libs_command", "")
@@ -1623,7 +1647,7 @@ feature {NONE} -- Implementation
 		local
 			wordstart: INTEGER
 			wordlength: INTEGER
-			word, replacement: STRING		
+			word, replacement: STRING
 		do
 			debug ("implementation")
 				io.put_string("%Tsearch_and_replace%N")
@@ -1639,14 +1663,14 @@ feature {NONE} -- Implementation
 				wordstart = 0
 			loop
 				replacement := Void
-				
+
 				word := get_word_to_replace (line, wordstart)
 				wordlength := word.count
 
 				strip_parenthesis (word)
 				word.to_lower
 				replacement := get_replacement (word)
-				
+
 				if replacement /= Void then
 					if
 						wordstart > 2 and then line.item (wordstart-1) = '\' and then
@@ -1694,7 +1718,7 @@ feature {NONE} -- Implementation
 				wordend := wordstart + 1
 				create Result.make (10)
 			until
-				wordend > line.count 
+				wordend > line.count
 				or else line.item (wordend) = ' '
 				or line.item (wordend) = '/'
 				or line.item (wordend) = '\'
@@ -1717,7 +1741,7 @@ feature {NONE} -- Implementation
 				io.put_string("%Tget_replacement%N")
 			end
 
-			if options.has (word) then			
+			if options.has (word) then
 				replacement := options.get_string (word, Void).twin
 				if not replacement.is_equal("$(INCLUDE_PATH)") then
 					search_and_replace (replacement)
@@ -1744,7 +1768,7 @@ feature {NONE} -- Implementation
 		end
 
 	get_libs (line_to_search: STRING): STRING is
-			-- look for precompiled libraries, also checks 
+			-- look for precompiled libraries, also checks
 			-- if application uses concurrent Eiffel or multithreading mechanism
 		local
 			line: STRING
@@ -1758,7 +1782,7 @@ feature {NONE} -- Implementation
 			debug ("implementation")
 				io.put_string ("%Tget_libs%N")
 			end
-			
+
 			line := line_to_search.twin
 
 			from
@@ -1795,7 +1819,7 @@ feature {NONE} -- Implementation
 						io.put_new_line
 					end
 				end
-				
+
 				-- set concurrent if application uses concurrent Eiffel
 				if line.substring_index ("$concurrent_prefix", 1) > 0 then
 						concurrent := True
@@ -1809,7 +1833,7 @@ feature {NONE} -- Implementation
 
 				if precomp_lib_start > 0 then
 					uses_precompiled := True
-					next_precomp_lib := line.substring (1, precomp_lib_start - 2) 
+					next_precomp_lib := line.substring (1, precomp_lib_start - 2)
 					from
 					until
 						next_precomp_lib.item (1) > ' '
@@ -1827,7 +1851,7 @@ feature {NONE} -- Implementation
 					Result.append (next_precomp_lib)
 				end
 			end
-			
+
 			search_and_replace (Result)
 		end
 
@@ -1921,5 +1945,5 @@ feature {NONE} -- Implementation
 				io.put_new_line
 			end
 		end
-		
+
 end -- class MAKEFILE_TRANSLATOR

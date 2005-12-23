@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			loop
 				pcre_re.match (texts.item)
 				if pcre_re.has_matched then
-					texts_found.extend (texts.item)
+					texts_found_internal.extend (texts.item)
 					found_indexs_in_texts_internal.extend (texts.index)
 				end
 				texts.forth

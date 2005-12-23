@@ -198,8 +198,11 @@ feature -- Execution
 			command := options.get_string ("make", Void)
 			subst_eiffel (command)
 
-				-- Launch building of `E1\estructure.h' in case it is not built
-			env.system (command + " E1\estructure.h")
+				-- Launch building of `E1\estructure.h' in case it is not built and we are not
+				-- in .NET mode
+			if not is_il_code then
+				env.system (command + " E1\estructure.h")
+			end
 
 				-- Launch distributed make.
 			eiffel_make := eiffel_dir.twin

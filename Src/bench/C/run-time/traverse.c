@@ -665,6 +665,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 #endif
 	match_stack (&oms_set, action_fnptr);
 #else
+#ifdef ISE_GC
 	for (i = 0; i < hec_saved_list.count; i++)
 		match_simple_stack(hec_saved_list.threads.sstack[i], action_fnptr);
 	for (i = 0; i < hec_stack_list.count; i++)
@@ -674,11 +675,11 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		match_stack(loc_set_list.threads.sstack[i], action_fnptr);
 	for (i = 0; i < loc_stack_list.count; i++)
 		match_stack(loc_stack_list.threads.sstack[i], action_fnptr);
-
 	match_stack(&global_once_set, action_fnptr);
 
 	for (i = 0; i < once_set_list.count; i++)
 		match_simple_stack(once_set_list.threads.sstack[i], action_fnptr);
+#endif
 #endif
 
 		/* Now `l_found' is properly populated so let's create

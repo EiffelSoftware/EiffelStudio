@@ -161,6 +161,7 @@ feature {NONE} -- Implementation
 			l_dirs: ARRAYED_LIST [STRING]
 			l_dir_name: STRING
 			l_name: DIRECTORY_NAME
+			l_makefile: FILE_NAME
 			l_dir: DIRECTORY
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
@@ -211,7 +212,13 @@ feature {NONE} -- Implementation
 			loop
 				l_name := target.twin
 				l_name.extend (l_sorted_list.item_for_iteration)
-				actions.extend (agent compile_directory (l_name))
+				create l_makefile.make_from_string (l_name)
+				l_makefile.set_file_name ("Makefile")
+				create l_file.make (l_makefile)
+				if l_file.exists then
+						-- Only process directories which have a Makefile.
+					actions.extend (agent compile_directory (l_name))
+				end
 				l_sorted_list.forth
 			end
 

@@ -5827,7 +5827,7 @@ feature -- Convenience
 			-- `type_i' evaluated in the current context.
 		do
 			Result := byte_context.real_type (type_i)
-			if current_class_type.is_expanded then
+			if current_class_type.is_expanded and then byte_context.class_type /= current_class_type then
 				Result := Result.created_in (current_class_type)
 			end
 		end

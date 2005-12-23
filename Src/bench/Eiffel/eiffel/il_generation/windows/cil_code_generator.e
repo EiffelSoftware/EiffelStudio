@@ -643,13 +643,13 @@ feature -- Generation Structure
 		end
 
 	define_entry_point
-			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
+			(creation_type: CLASS_TYPE; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
 			a_has_arguments: BOOLEAN)
 		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_type_id'.
 		require
-			positive_creation_type_id: creation_type_id > 0
+			creation_type_not_void: creation_type /= Void
 			a_class_type_not_void: a_class_type /= Void
 			positive_feature_id: a_feature_id > 0
 		local
@@ -658,7 +658,7 @@ feature -- Generation Structure
 			l_cur_mod := current_module
 			current_module := main_module
 			current_class_type := a_class_type
-			main_module.define_entry_point (creation_type_id, a_class_type,
+			main_module.define_entry_point (creation_type, a_class_type,
 				a_feature_id, a_has_arguments)
 			current_module := l_cur_mod
 		end
@@ -3690,6 +3690,21 @@ feature -- Variables access
 			method_body.put_opcode ({MD_OPCODES}.Ldarg_0)
 		end
 
+	generate_current_as_reference is
+			-- Generate access to `Current' in its reference form.
+			-- (I.e. box value type object if required.)
+		local
+			type_i: TYPE_I
+		do
+			generate_current
+			if current_class_type.is_expanded then
+					-- Box expanded object.
+				type_i := current_class_type.type
+				generate_load_from_address (type_i)
+				generate_metamorphose (type_i)
+			end
+		end
+
 	generate_result is
 			-- Generate access to `Result'.
 		do
@@ -4979,11 +4994,7 @@ feature -- Assertions
 				method_body.put_opcode ({MD_OPCODES}.ldc_i4_0);
 				method_body.put_opcode ({MD_OPCODES}.ceq)
 			else
-				generate_current
-				if current_class_type.is_expanded then
-					generate_load_from_address (current_class_type.type)
-					generate_metamorphose (current_class_type.type)
-				end
+				generate_current_as_reference
 				internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
 					"GetType", Normal_type, <<>>, System_type_class_name, False)
 				put_integer_32_constant (level)
@@ -5801,6 +5812,26 @@ feature -- Convenience
 				static_type, <<>>, Void, False)
 		end
 
+	context_type (node: CALL_ACCESS_B): CL_TYPE_I is
+			-- Context type of a `node'.
+		local
+			saved_class_type: CLASS_TYPE
+		do
+			saved_class_type := byte_context.class_type
+			byte_context.set_class_type (current_class_type)
+			Result ?= node.context_type
+			byte_context.set_class_type (saved_class_type)
+		end
+
+	real_type (type_i: TYPE_I): TYPE_I is
+			-- `type_i' evaluated in the current context.
+		do
+			Result := byte_context.real_type (type_i)
+			if current_class_type.is_expanded then
+				Result := Result.created_in (current_class_type)
+			end
+		end
+
 feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
@@ -5867,7 +5898,7 @@ feature -- Generic conformance
 				-- want to assign the computed type.
 				-- Second object is the array containing the type array.
 				-- Last, we push current object to the stack.
-			generate_current
+			generate_current_as_reference
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_conformance_class_name,
 				"compute_type", Static_type, <<type_info_class_name, type_class_name,

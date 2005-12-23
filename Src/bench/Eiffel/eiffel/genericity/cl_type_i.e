@@ -8,27 +8,28 @@ class CL_TYPE_I
 inherit
 	TYPE_I
 		redefine
-			is_reference,
-			is_expanded,
-			is_separate,
-			is_valid,
-			is_explicit,
-			is_external,
-			same_as,
 			c_type,
 			conforms_to_array,
-			generated_id,
+			created_in,
 			generate_cid,
-			make_gen_type_byte_code,
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
 			generate_expanded_creation,
 			generate_expanded_initialization,
+			generated_id,
+			generic_derivation,
 			instantiated_description,
 			instantiation_in,
-			generic_derivation,
-			is_generated_as_single_type
+			is_expanded,
+			is_explicit,
+			is_external,
+			is_generated_as_single_type,
+			is_reference,
+			is_separate,
+			is_valid,
+			make_gen_type_byte_code,
+			same_as
 		end
 
 	SHARED_IL_CASING
@@ -119,6 +120,15 @@ feature -- Access
 			-- Instantation of Current in `other'
 		do
 			Result := Current
+		end
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'.
+		do
+			Result := Current
+			if cr_info /= Void then
+				Result := cr_info.created_in (other)
+			end
 		end
 
 	il_type_name (a_prefix: STRING): STRING is

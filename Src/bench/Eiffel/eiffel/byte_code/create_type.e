@@ -3,17 +3,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CREATE_TYPE 
+class CREATE_TYPE
 
 inherit
 	CREATE_INFO
 		redefine
-			generate, generate_cid, is_explicit
+			created_in, generate, generate_cid, is_explicit
 		end
 
 create
 	make
-	
+
 feature	{NONE} -- Initialization
 
 	make (t: like type) is
@@ -43,7 +43,7 @@ feature -- C code generation
 				context.add_dftype_current
 			end
 		end
-	
+
 	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
 			-- Generate creation type id.
 		local
@@ -74,13 +74,13 @@ feature -- C code generation
 			l_tuple_type: TUPLE_TYPE_I
 			l_is_tuple: BOOLEAN
 		do
-				
+
 			l_buffer := context.buffer
 			l_final_mode := not context.workbench_mode
 			l_cl_type := type_to_create
 			l_tuple_type ?= l_cl_type
 			l_is_tuple := l_tuple_type /= Void
-			
+
 			if l_final_mode and not l_is_tuple then
 				l_buffer.put_string ("RTLNS(")
 				generate_type_id (l_buffer, l_final_mode)
@@ -90,7 +90,7 @@ feature -- C code generation
 				l_cl_type.associated_class_type.skeleton.generate_size (l_buffer)
 			else
 				if l_is_tuple then
-					l_buffer.put_string ("RTLNTS(")	
+					l_buffer.put_string ("RTLNTS(")
 				else
 					l_buffer.put_string ("RTLN(")
 				end
@@ -125,12 +125,21 @@ feature -- IL code generation
 		do
 			cl_type_i ?= context.creation_type (type)
 			il_generator.create_object (cl_type_i.implementation_id)
+			if cl_type_i.is_expanded then
+					-- Box expanded object.
+				il_generator.generate_metamorphose (cl_type_i)
+			end
 
 			gen_type_i ?= cl_type_i
 			if gen_type_i /= Void then
 				il_generator.duplicate_top
 				gen_type_i.generate_gen_type_il (il_generator, True)
 				il_generator.assign_computed_type
+			end
+
+			if cl_type_i.is_expanded then
+					-- Unbox boxed object.
+				il_generator.generate_unmetamorphose (cl_type_i)
 			end
 		end
 
@@ -139,8 +148,14 @@ feature -- IL code generation
 		local
 			cl_type_i: CL_TYPE_I
 		do
-			cl_type_i ?= context.creation_type (type)		
+			cl_type_i ?= context.creation_type (type)
 			cl_type_i.generate_gen_type_il (il_generator, True)
+		end
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'
+		do
+			Result := type
 		end
 
 feature -- Byte code generation
@@ -171,7 +186,7 @@ feature -- Generic conformance
 		do
 			Result := type.is_explicit
 		end
-		
+
 	generate_gen_type_conversion (node : BYTE_NODE) is
 
 		local

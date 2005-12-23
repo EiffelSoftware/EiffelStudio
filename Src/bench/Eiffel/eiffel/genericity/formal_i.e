@@ -204,9 +204,14 @@ feature -- Generic conformance for IL
 				-- in descendant class.
 			l_formal := l_gen_type.base_class.formal_at_position (position)
 			il_generator.generate_current
-			l_decl_type := il_generator.implemented_type (l_formal.origin_class_id,
-				context.current_type)
-			il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, 0, True, True)
+			if context.class_type.is_expanded then
+					-- Call the feature directly.
+				il_generator.generate_feature_access (l_gen_type, l_formal.feature_id, 0, True, False)
+			else
+					-- Call the feature from the parent.
+				l_decl_type := il_generator.implemented_type (l_formal.origin_class_id,	context.current_type)
+				il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, 0, True, True)
+			end
 		end
 
 feature {NONE} -- Code generation

@@ -4,11 +4,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	CREATE_CURRENT 
+	CREATE_CURRENT
 
 inherit
 	CREATE_INFO
 		redefine
+			created_in,
 			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init
 		end
@@ -42,10 +43,18 @@ feature -- Il code generation
 
 	generate_il is
 			-- Generate byte code for like Current creation type.
+		local
+			cl_type_i: CL_TYPE_I
 		do
-			il_generator.generate_current
-			il_generator.create_like_object
-			il_generator.generate_check_cast (Void, context.current_type)
+			cl_type_i := context.current_type
+			if cl_type_i.is_expanded then
+					-- Create type directly.
+				(create {CREATE_TYPE}.make (cl_type_i)).generate_il
+			else
+				il_generator.generate_current
+				il_generator.create_like_object
+				il_generator.generate_check_cast (Void, cl_type_i)
+			end
 		end
 
 	generate_il_type is
@@ -53,6 +62,12 @@ feature -- Il code generation
 		do
 			il_generator.generate_current
 			il_generator.load_type
+		end
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'
+		do
+			Result := other.type
 		end
 
 feature -- Byte code generation
@@ -84,7 +99,7 @@ feature -- Generic conformance
 			ba.append_short_integer (Like_current_type)
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -93,7 +108,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER

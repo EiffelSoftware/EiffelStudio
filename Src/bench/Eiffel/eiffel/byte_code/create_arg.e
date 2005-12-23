@@ -4,12 +4,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	CREATE_ARG 
+	CREATE_ARG
 
 inherit
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code,
+			created_in, generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init
 		end
 
@@ -86,13 +86,19 @@ feature -- IL code generation
 		do
 			internal_generate_il (False)
 		end
-	
+
 	generate_il_type is
 			-- Generate IL code to load type of argument creation type.
 			-- Take the dynamic type of the argument if possible,
 			-- otherwise take its static type.
 		do
 			internal_generate_il (True)
+		end
+
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'
+		do
+			Result := type_to_create.created_in (other)
 		end
 
 feature {NONE} -- IL code generation
@@ -106,19 +112,19 @@ feature {NONE} -- IL code generation
 		do
 			l_is_formal := is_formal
 			if l_is_formal then
-				l_formal_info := create_formal_type	
+				l_formal_info := create_formal_type
 				l_type := l_formal_info.type
 			else
 				l_type := type_to_create
 			end
 			creation_label := Il_label_factory.new_label
 			end_label := Il_label_factory.new_label
-			
+
 			il_generator.generate_argument (position)
 			il_generator.put_default_value (l_type)
 			il_generator.generate_binary_operator ({IL_CONST}.il_eq)
 			il_generator.branch_on_false (creation_label)
-			
+
 				-- Object is null, we are therefore creating an object of
 				-- the declared type.
 			if a_is_for_type then
@@ -135,9 +141,9 @@ feature {NONE} -- IL code generation
 				end
 			end
 			il_generator.branch_to (end_label)
-			
+
 			il_generator.mark_label (creation_label)
-			
+
 				-- Object is not null, so we put it on top of stack and call
 				-- the runtime feature that knows how to create an object
 				-- of the same type as another object.
@@ -149,7 +155,7 @@ feature {NONE} -- IL code generation
 			end
 
 			il_generator.mark_label (end_label)
-			
+
 			if not a_is_for_type then
 				il_generator.generate_check_cast (Void, l_type)
 			end
@@ -216,7 +222,7 @@ feature -- Generic conformance
 			ba.append_short_integer (position)
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -225,7 +231,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER

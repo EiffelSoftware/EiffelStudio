@@ -88,6 +88,17 @@ feature -- Access
 			Result := instantiation_in (other)
 		end
 
+	created_in (other: CLASS_TYPE): TYPE_I is
+			-- Resulting type of Current as if it was used to create object in `other'.
+		require
+			other_not_void: other /= Void
+			other_is_generic: has_formal implies other.is_generic
+		do
+			Result := Current
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	generic_derivation: TYPE_I is
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I

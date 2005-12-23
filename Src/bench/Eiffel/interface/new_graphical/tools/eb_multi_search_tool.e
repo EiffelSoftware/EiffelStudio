@@ -225,7 +225,7 @@ feature {NONE} -- Initialization
 			option_and_replace_all_box.disable_item_expand (vbox)
 
 			replace_button.set_minimum_width (layout_constants.default_button_width)
-			replace_button.set_minimum_width (layout_constants.default_button_width)
+			replace_all_click_button.set_minimum_width (layout_constants.default_button_width)
 			search_button.set_minimum_width (layout_constants.default_button_width)
 
 			replace_button.disable_sensitive

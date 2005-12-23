@@ -2447,7 +2447,15 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 		new_cell->status = RTU_INDIRECTION;
 		new_cell->u.rtu_obj = new_hector;
 		new_cell->offset = (char *) location - (char *) object;
-		old_cell = rt_info->rt_list;
+		if (rt_info->rt_status == DROPPED) {
+				/* We need to reset `old_cell' and not use the value from
+				 * `rt_info->rt_list because it contained a type information, not
+				 * a pointer to another cell.
+				 */
+			old_cell = NULL;
+		} else {
+			old_cell = rt_info->rt_list;
+		}
 		new_cell->next = old_cell;
 		rt_info->rt_list = new_cell;
 		rt_info->rt_status = UNSOLVED;

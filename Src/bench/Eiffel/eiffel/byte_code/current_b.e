@@ -21,11 +21,11 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_I is
+	type: LIKE_CURRENT_I is
 			-- Current type
-		do
-			Result := context.current_type;
-		end;
+		once
+			create Result -- := context.current_type;
+		end
 
 	is_current: BOOLEAN is
 			-- This is an access to Current

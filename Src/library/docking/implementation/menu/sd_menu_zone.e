@@ -209,16 +209,24 @@ feature {NONE} -- Agents
 	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle redraw drag area.
 		local
-			i, l_height : INTEGER
+			i, l_interval : INTEGER
 		do
-			l_height := internal_drag_area.height
+			if not is_vertical then
+				l_interval := internal_drag_area.height
+			else
+				l_interval := internal_drag_area.width
+			end
 			internal_drag_area.clear
 			from
 				i := 2
 			until
-				i > l_height - 3
+				i > l_interval - 3
 			loop
-				internal_drag_area.draw_pixmap (4, i, bar_dot)
+				if not is_vertical then
+					internal_drag_area.draw_pixmap (4, i, bar_dot)
+				else
+					internal_drag_area.draw_pixmap (i, 4, bar_dot)
+				end
 				i := i + 4
 			end
 		end
@@ -284,23 +292,39 @@ feature {NONE} -- Implmentation
 			a_item_not_void: a_item /= Void
 		local
 			l_tool_bar: EV_TOOL_BAR
+			l_item: EV_TOOL_BAR_ITEM
+			l_ev_sep: EV_TOOL_BAR_SEPARATOR
+			l_sd_sep: SD_TOOL_BAR_SEPARATOR
+			l_hbox: EV_HORIZONTAL_BOX
 		do
 			debug ("larry")
 				io.put_string ("%N SD_MENU_ZONE extend a_item")
 			end
-			if not internal_tool_bar_items.has (a_item) then
-				internal_tool_bar_items.extend (a_item)
-			end
-
+			l_item := a_item
+			l_ev_sep ?= l_item
 			if is_vertical then
-				create l_tool_bar
-				l_tool_bar.extend (a_item)
-				extend_hor_ver_box (l_tool_bar)
+				if l_ev_sep = Void then
+					create l_tool_bar
+					l_tool_bar.extend (l_item)
+					extend_hor_ver_box (l_tool_bar)
+				else
+					create l_hbox
+					create l_sd_sep.make (background_color_internal, not is_vertical, internal_shared.separator_width)
+					l_hbox.extend (l_sd_sep)
+					extend_hor_ver_box (l_hbox)
+				end
 			else
-				internal_horizontal_bar.extend (a_item)
+				if l_ev_sep = Void then
+					internal_horizontal_bar.extend (l_item)
+				else
+					create l_hbox
+					create l_sd_sep.make (background_color_internal, not is_vertical, internal_shared.separator_width)
+					l_hbox.extend (l_sd_sep)
+					extend_hor_ver_box (l_hbox)
+					create internal_horizontal_bar
+					extend_hor_ver_box (internal_horizontal_bar)
+				end
 			end
-		ensure
-			extended: not is_vertical implies internal_horizontal_bar.has (a_item)
 		end
 
 	internal_pointer_pressed: BOOLEAN
@@ -348,99 +372,63 @@ feature {NONE} -- Drawing.
 			l_blue := background_color_internal.blue * 0.95
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (0, 0)
-			else
-				bar_dot.draw_point (0, 0)
-			end
+			bar_dot.draw_point (0, 0)
 
 			l_red := background_color_internal.red * 0.83
 			l_green := background_color_internal.green * 0.83
 			l_blue := background_color_internal.blue * 0.83
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (0, 1)
-			else
-				bar_dot.draw_point (1, 0)
-			end
+			bar_dot.draw_point (0, 1)
 
 			l_red := background_color_internal.red * 0.94
 			l_green := background_color_internal.green * 0.94
 			l_blue := background_color_internal.blue * 0.94
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (0, 2)
-			else
-				bar_dot.draw_point (2, 0)
-			end
+			bar_dot.draw_point (0, 2)
 
 			l_red := background_color_internal.red * 0.80
 			l_green := background_color_internal.green * 0.80
 			l_blue := background_color_internal.blue * 0.80
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (1, 0)
-			else
-				bar_dot.draw_point (0, 1)
-			end
+			bar_dot.draw_point (1, 0)
 
 			l_red := 1 - background_color_internal.red * 0.45
 			l_green := 1 - background_color_internal.green * 0.45
 			l_blue := 1 - background_color_internal.blue * 0.45
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (1, 1)
-			else
-				bar_dot.draw_point (1, 1)
-			end
+			bar_dot.draw_point (1, 1)
 
 			l_red := 1
 			l_green := 1
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (1, 2)
-			else
-				bar_dot.draw_point (2, 1)
-			end
+			bar_dot.draw_point (1, 2)
 
 			l_red := background_color_internal.red * 0.97
 			l_green := background_color_internal.green * 0.97
 			l_blue := background_color_internal.blue * 0.96
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (2, 0)
-			else
-				bar_dot.draw_point (0, 2)
-			end
+			bar_dot.draw_point (2, 0)
 
 			l_red := 1
 			l_green := 1
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (2, 1)
-			else
-				bar_dot.draw_point (1, 2)
-			end
+			bar_dot.draw_point (2, 1)
 
 			l_red := 1
 			l_green := 1
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not is_vertical then
-				bar_dot.draw_point (2, 2)
-			else
-				bar_dot.draw_point (2, 2)
-			end
+			bar_dot.draw_point (2, 2)
 		end
 
 invariant

@@ -203,6 +203,8 @@ feature -- Constants
 	Focuse_border_width: INTEGER is 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
+	separator_width: INTEGER is 6
+
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.
 

@@ -298,7 +298,11 @@ rt_public Malloc_t eiffel_malloc (size_t nbytes)
 	return ret;
 #else	/* LMALLOC_CHECK */
 #ifdef BOEHM_GC
+#ifdef EIF_THREADS
+	return (Malloc_t) GC_malloc_uncollectable (nbytes);
+#else
 	return (Malloc_t) GC_malloc (nbytes);
+#endif
 #else
 	return (Malloc_t) malloc (nbytes);
 #endif
@@ -327,7 +331,11 @@ rt_public Malloc_t eiffel_calloc (size_t nelem, size_t elsize)
 #else	/* LMALLOC_CHECK */
 #ifdef BOEHM_GC
 	Malloc_t allocated;
+#ifdef EIF_THREADS
+	allocated = (Malloc_t) GC_malloc_uncollectable (nelem * elsize);
+#else
 	allocated = (Malloc_t) GC_malloc (nelem * elsize);
+#endif
 	memset(allocated, 0, nelem * elsize);
 	return allocated;
 #else

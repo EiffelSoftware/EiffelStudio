@@ -144,6 +144,12 @@ feature -- Variables access
 		do
 		end
 
+	generate_current_as_reference is
+			-- Generate access to `Current' in its reference form.
+			-- (I.e. box value type object if required.)
+		do
+		end
+
 	generate_result is
 			-- Generate access to `Result'.
 		do

@@ -758,6 +758,16 @@ feature -- Convenience
 		do
 		end
 
+	context_type (node: CALL_ACCESS_B): CL_TYPE_I is
+			-- Context type of a `node'.
+		do
+		end
+
+	real_type (type_i: TYPE_I): TYPE_I is
+			-- `type_i' evaluated in the current context.
+		do
+		end
+
 feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is

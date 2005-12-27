@@ -10,6 +10,8 @@ md library
 cd library
 remtrace base
 co $DEFAULT_CVS_TAG/Src/library/base base
+remtrace diff
+co $DEFAULT_CVS_TAG/Src/library/diff diff
 remtrace encryption
 co $DEFAULT_CVS_TAG/Src/library/encryption encryption
 remtrace editor

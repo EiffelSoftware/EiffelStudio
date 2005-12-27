@@ -199,7 +199,6 @@ feature {NONE} -- Implementation
 			w_imp ?= item.implementation
 			w_imp.store_minimum_size
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (w_imp.c_object, item_width, item_height)
-			update_request_size
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is

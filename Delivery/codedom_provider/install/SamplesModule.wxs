@@ -14,7 +14,7 @@
 					<File Id='ValidationAspx' Name='valid.asp' LongName='validation.aspx'/>
 				</Component>
 
-				<Directory Id='CodeBehind' Name='code_behind'>
+				<Directory Id='CodeBehind' Name='code' LongName='code_behind'>
 					<Component Id='CodeBehindFiles' Guid='{6C49E7AC-8F5B-4700-AF62-7EC172FF013E}'>
 						<File Id='Ace' Name='ace.ace' />
 						<File Id='EfaParser' Name='efa_pa.e' LongName='efa_parser.e' />
@@ -27,9 +27,9 @@
 						<File Id='BotRigGif' Name='bot_rig.gif' />
 						<File Id='CenLefGif' Name='cen_lef.gif' />
 						<File Id='CenRigGif' Name='cen_rig.gif' />
-						<File Id='CenLineGif' Name='center_line.gif' />
-						<File Id='MinuGif' Name='minus.gif' />
-						<File Id='PlusGif' Name='plus.gif' />
+						<File Id='CenLineGif' Name='center.gif' LongName='center_line.gif' />
+						<File Id='PlusPng' Name='plus.png' />
+						<File Id='MinusPng' Name='minus.png' />
 						<File Id='TopLefGif' Name='top_lef.gif' />
 						<File Id='TopMidGif' Name='top_mid.gif' />
 						<File Id='TopRigGif' Name='top_rig.gif' />

@@ -70,7 +70,7 @@ feature -- Status report
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			first_body_index: INTEGER;
+			first_real_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			first_type: CLASS_TYPE
@@ -105,10 +105,10 @@ feature -- Status report
 					if entry.used then
 						if system_i.class_type_of_id (entry.type_id).conform_to (first_type) then
 							if found then
-								Result := not (entry.body_index = first_body_index)
+								Result := not (entry.real_body_index = first_real_body_index)
 							else
 								found := True
-								first_body_index := entry.body_index
+								first_real_body_index := entry.real_body_index
 							end
 						end
 					end

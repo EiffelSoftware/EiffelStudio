@@ -40,47 +40,56 @@ default
 cluster
 	all build2:		"$EIFFEL_SRC\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version"; "gobo_16"; "exml"; 
+			".svn"; "object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "demo_version"; "gobo_16"; "exml"; 
 		default
 			assertion (no)
 		end
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "gelint"; "test"; 
+			".svn"; "hact"; "se"; "ve"; "base"; "other"; "gelint"; "test"; 
 		default
 			assertion (no)
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			".svn";
+		end
 
 	all vision2:	"$EIFFEL_SRC\library\vision2"
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "gtk2"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e"; "ev_notebook.e";
+			".svn"; "new_figures"; "gtk"; "gtk2"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e"; "ev_notebook.e";
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "desc"; 
+			".svn"; "table_eiffel3"; "desc"; 
 		default
 			assertion (no)
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"xml_implementation"; 
+			".svn"; "xml_implementation"; 
 		end
 		
 	all eifp_reader: "$EIFFEL_SRC\dotnet\VisualStudio\tools\eifp_reader"
 		exclude
-			"cvs"
+			".svn"
 		end
 
 	all patterns: "$EIFFEL_SRC\library\patterns"
+		exclude
+			".svn"
+		end
 
 	all ast:		"$EIFFEL_SRC\Eiffel\common"
+		exclude
+			".svn"
+		end
 
 	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
 		exclude

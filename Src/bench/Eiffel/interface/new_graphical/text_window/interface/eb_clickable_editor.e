@@ -502,6 +502,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			token_pos	: INTEGER
 			bkst		: BREAKABLE_STONE
 			old_offset	: INTEGER
+			l_line		: INTEGER
 		do
 			if not (ctrled_key or else mouse_copy_cut) then
 				if not text_displayed.is_empty then
@@ -531,6 +532,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								else
 									invalidate_line (text_displayed.cursor.y_in_lines, False)
 								end
+								l_line := text_displayed.current_line_number
 								cur.set_current_char (cur.token, 1)
 								text_displayed.cursor.make_from_character_pos (cur.x_in_characters, l_number, text_displayed)
 								text_displayed.selection_cursor.make_from_character_pos (cur.x_in_characters + cur.token.length, l_number, text_displayed)
@@ -547,6 +549,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								set_pick_and_drop_status (pnd_pick)
 
 								invalidate_line (l_number, True)
+								invalidate_line (l_line, True)
 							else
 								Result := Void
 							end

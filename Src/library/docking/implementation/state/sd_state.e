@@ -7,13 +7,13 @@ deferred class
 	SD_STATE
 
 feature -- Properties
-	
+
 	docking_manager: SD_DOCKING_MANAGER is
 			-- `internal_docking_manager'.
 		do
-			Result := internal_docking_manager	
+			Result := internal_docking_manager
 		end
-		
+
 	content: like internal_content is
 			-- `internal_content'.
 		do
@@ -67,7 +67,7 @@ feature -- Properties
 		end
 
 feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
-	
+
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set `internal_docking_manager'.
 		require
@@ -77,7 +77,7 @@ feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
-		
+
 	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			-- `titles' is content name. `a_container' is zone parent.
 		require
@@ -120,7 +120,7 @@ feature -- Commands
 		local
 			l_state: SD_STATE_VOID
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 			zone.close
 			internal_docking_manager.zones.prune_zone_by_content (internal_content)
 			internal_docking_manager.command.remove_empty_split_area
@@ -297,10 +297,10 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
-			
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

@@ -135,7 +135,7 @@ feature {NONE} -- Agents
 			l_tab_group: like tab_group
 		do
 			l_tab_group := tab_group
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			from
 				l_tab_group.start
 			until

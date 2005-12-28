@@ -41,6 +41,7 @@ feature {NONE} -- Initlization
 			internal_border.set_border_width (internal_shared.border_width)
 			internal_border.set_border_color (internal_shared.border_color)
 			internal_border.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
+			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
 
 			main_box.extend (internal_border)
 
@@ -247,7 +248,7 @@ feature -- Access
 			end
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
-			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
+--			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
 			on_expose
 
 		ensure
@@ -268,7 +269,7 @@ feature -- Access
 			end
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (internal_shared.border_color)
-			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
+--			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
 			on_expose
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable

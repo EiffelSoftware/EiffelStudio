@@ -119,6 +119,16 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
+	tool_tip_color: EV_COLOR is
+			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
+		local
+			l_text_box: EV_TEXT_FIELD
+		once
+			create l_text_box
+			Result :=  l_text_box.background_color
+--			Result := (create {EV_STOCK_COLORS}).yellow
+		end
+
 	border_width: INTEGER is 1
 			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
 

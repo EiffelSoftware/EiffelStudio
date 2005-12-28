@@ -59,7 +59,7 @@ feature -- Basic operation
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
-			
+
 	on_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer motion.
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation functions.
 	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer in
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			if not caller_in_current_area or not caller_in_single_row then
 				if internal_menu_dock_mediator.caller.is_floating then
 					internal_menu_dock_mediator.caller.dock
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation arrtibutes
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-	
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

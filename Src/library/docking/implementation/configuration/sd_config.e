@@ -71,7 +71,7 @@ feature -- Save/Open inner container data.
 			create l_facility
 			l_config_data ?=  l_facility.retrieved (l_reader, True)
 			check l_config_data /= Void end
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			-- First clear all areas.
 			clear_up_containers
 			check not internal_docking_manager.query.inner_container_main.full end

@@ -108,11 +108,14 @@ feature -- Redefine.
 			l_old_spliter: EV_SPLIT_AREA
 			l_new_container: EV_SPLIT_AREA
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 
 			if zone.parent /= Void then
 				zone.parent.prune (zone)
 			end
+			internal_docking_manager.command.unlock_update
+
+			internal_docking_manager.command.lock_update (Void, True)
 
 			if a_multi_dock_area.full then
 				l_old_stuff := a_multi_dock_area.item
@@ -160,7 +163,7 @@ feature -- Redefine.
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_width_height: INTEGER
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 			Precursor {SD_STATE} (a_direction)
 			-- Change current content's zone to a SD_AUTO_HIDE_ZONE.
 			internal_docking_manager.zones.prune_zone (zone)
@@ -185,7 +188,7 @@ feature -- Redefine.
 			if l_orignal_multi_dock_area.has (zone) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
 				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
 			else
-				internal_docking_manager.command.lock_update
+				internal_docking_manager.command.lock_update (zone, False)
 				create l_floating_state.make (a_x, a_y, internal_docking_manager)
 				l_floating_state.set_size (zone.width, zone.height)
 				dock_at_top_level (l_floating_state.inner_container)
@@ -201,21 +204,24 @@ feature -- Redefine.
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Redefine.
 		local
-			l_docking_zone: SD_DOCKING_ZONE
-			a_tab_zone: SD_TAB_ZONE
+			l_same_window: BOOLEAN
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 
-			l_docking_zone ?= a_target_zone
-			if l_docking_zone /= Void then
-				change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
+			l_same_window := internal_docking_manager.query.is_zone_in_same_window (zone, a_target_zone)
+
+			if zone.parent /= Void then
+				zone.parent.prune (zone)
 			end
-			a_tab_zone ?= a_target_zone
-			if a_tab_zone /= Void then
-				change_zone_split_area_to_tab_zone (a_tab_zone, a_direction)
+
+			if not l_same_window then
+				internal_docking_manager.command.unlock_update
+				internal_docking_manager.command.lock_update (a_target_zone, False)
 			end
-			internal_docking_manager.query.inner_container (a_target_zone).update_title_bar
+
+			change_zone_split_area_to_zone (a_target_zone, a_direction)
 			internal_docking_manager.command.unlock_update
+
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
 		end
@@ -226,7 +232,7 @@ feature -- Redefine.
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 			internal_docking_manager.zones.prune_zone (zone)
 			l_orignal_direction := a_target_zone.state.direction
 			create l_tab_state.make (internal_content, a_target_zone, l_orignal_direction)
@@ -244,7 +250,7 @@ feature -- Redefine.
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 			internal_docking_manager.zones.prune_zone (zone)
 			l_orignal_direction := a_target_zone.state.direction
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
@@ -286,64 +292,7 @@ feature -- Redefine.
 
 feature {NONE} -- Implementation
 
-	change_zone_split_area_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_direction: INTEGER) is
-			-- Change zone split area to tab zone.
-		require
-			a_target_zone_not_void: a_target_zone /= Void
-		local
-			l_new_split_area: EV_SPLIT_AREA
-			l_target_parent_spliter_position: INTEGER
-			l_target_parent_split: EV_SPLIT_AREA
-			l_target_zone_parent: EV_CONTAINER
-		do
-			internal_docking_manager.command.lock_update
-			-- First, remove current zone from old parent split area.
-			if zone.parent /= Void then
-				zone.parent.prune (zone)
-			end
-			 l_target_zone_parent := a_target_zone.parent
-			 l_target_parent_split ?= a_target_zone.parent
-
-			 if l_target_parent_split /= Void then
-			 	l_target_parent_spliter_position := l_target_parent_split.split_position
-			 end
-			a_target_zone.parent.prune (a_target_zone)
-
-			-- Then, insert current zone to new split area base on  `a_direction'.
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
-			end
-			if zone.parent/= Void then
-				zone.parent.prune (zone)
-			end
-			if a_target_zone.parent /= Void then
-				a_target_zone.parent.prune (a_target_zone)
-			end
-			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
-				l_new_split_area.set_first (zone)
-				l_new_split_area.set_second (a_target_zone)
-			else
-				l_new_split_area.set_first (a_target_zone)
-				l_new_split_area.set_second (zone)
-			end
-			l_target_zone_parent.extend (l_new_split_area)
-			 if l_target_parent_split /= Void and l_target_parent_split.full then
-			 	if l_target_parent_spliter_position >= l_target_parent_split.minimum_split_position and
-			 		l_target_parent_spliter_position <= l_target_parent_split.maximum_split_position then
-			 		l_target_parent_split.set_split_position (l_target_parent_spliter_position)
-			 	end
-			 end
-			l_new_split_area.set_proportion (0.5)
-
-			internal_docking_manager.query.inner_container (zone).remove_empty_split_area
-			internal_docking_manager.command.unlock_update
-		ensure
-			changed:
-		end
-
-	change_zone_split_area_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER) is
+	change_zone_split_area_to_zone (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Change zone parent split area to docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -354,10 +303,6 @@ feature {NONE} -- Implementation
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
 			-- First, remove current zone from old parent split area.	
-			if zone.parent /= Void then
-				zone.parent.prune (zone)
-			end
-
 			l_target_zone_parent := a_target_zone.parent
 			if a_target_zone.parent /= Void then
 				-- Remember target zone parent split position.

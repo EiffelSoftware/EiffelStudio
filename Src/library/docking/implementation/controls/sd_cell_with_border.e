@@ -16,7 +16,10 @@ class
 inherit
 	EV_CELL
 		rename
-			extend as extend_cell
+			extend as extend_cell,
+			has as has_cell,
+			count as count_cell,
+			wipe_out as wipe_out_cell
 		end
 
 create
@@ -62,6 +65,24 @@ feature -- Command
 			internal_cell.extend  (a_widget)
 		ensure
 			added: internal_cell.has (a_widget)
+		end
+
+	count: INTEGER is
+			-- How many widgets?
+		do
+			Result := internal_cell.count
+		end
+
+	has (a_widget: EV_WIDGET): BOOLEAN is
+			-- If has a_widget?
+		do
+			Result := internal_cell.has (a_widget)
+		end
+
+	wipe_out is
+			-- Wipe out.
+		do
+			internal_cell.wipe_out
 		end
 
 	set_show_border (a_direction: INTEGER; a_show: BOOLEAN) is

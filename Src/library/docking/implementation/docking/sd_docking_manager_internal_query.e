@@ -10,7 +10,7 @@ create
 	make
 
 feature {NONE}  -- Initlization
-	
+
 	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
@@ -42,10 +42,20 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title (a_title: STRING): SD_CONTENT is
-			-- Content by `a_title'.
+	content_by_title (a_unique_title: STRING): SD_CONTENT is
+			-- Content by a_title.
 		require
-			a_title_not_void: a_title /= Void
+			a_title_not_void: a_unique_title /= Void
+		do
+			Result := content_by_title_for_restore (a_unique_title)
+		ensure
+			not_void: Result /= Void
+		end
+
+	content_by_title_for_restore (a_unique_title: STRING): SD_CONTENT is
+			-- Content by a_unique_title. Result = Void if not found.
+		require
+			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -55,16 +65,14 @@ feature -- Querys
 			until
 				l_contents.after or Result /= Void
 			loop
-				if l_contents.item.unique_title.is_equal (a_title) then
+				if l_contents.item.unique_title.is_equal (a_unique_title) then
 					Result := l_contents.item
 				end
 				l_contents.forth
 			end
-		ensure
-			not_void: Result /= Void
 		end
 
-	inner_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
+	inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -122,7 +130,7 @@ feature -- Querys
 			l_center_area: EV_WIDGET
 		do
 			l_center_area := internal_docking_manager.main_container.center_area
-			create Result.make (l_center_area.x_position, l_center_area.y_position + 
+			create Result.make (l_center_area.x_position, l_center_area.y_position +
 				internal_docking_manager.internal_auto_hide_panel_top.height, l_center_area.width, l_center_area.height)
 		ensure
 			not_void: Result /= Void
@@ -150,9 +158,32 @@ feature -- Querys
 			end
 		end
 
+	find_window_by_zone (a_zone: EV_WIDGET): EV_WINDOW is
+			-- Find a window which can lock_update.
+		require
+			a_zone_not_void: a_zone /= Void
+		local
+			l_main_container: SD_MULTI_DOCK_AREA
+		do
+			l_main_container := internal_docking_manager.query.inner_container (a_zone)
+			if l_main_container.parent_floating_zone = Void then
+				Result := internal_docking_manager.main_window
+			else
+				Result := l_main_container.parent_floating_zone
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	is_zone_in_same_window (a_zone_one, a_zone_two: SD_ZONE): BOOLEAN is
+			-- If a_zone_one and a_zone_two in same window?
+		do
+			Result := find_window_by_zone (a_zone_one) = find_window_by_zone (a_zone_two)
+		end
+
 feature {NONE} -- Implemnetation
-	
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
-	
+
 end

@@ -33,7 +33,7 @@ feature -- Command
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Current, False)
 			main_area := internal_docking_manager.query.inner_container (Current)
 			if not is_maximized then
 				main_area_widget := main_area.item
@@ -55,7 +55,7 @@ feature -- Command
 	close is
 			-- Close window.
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Current, False)
 			if is_maximized then
 				main_area.wipe_out
 				main_area.extend (main_area_widget)
@@ -71,7 +71,7 @@ feature -- Command
 			l_split_area: EV_SPLIT_AREA
 		do
 			if is_maximized then
-				internal_docking_manager.command.lock_update
+				internal_docking_manager.command.lock_update (Current, False)
 				main_area.wipe_out
 				internal_parent.extend (Current)
 				main_area.extend (main_area_widget)

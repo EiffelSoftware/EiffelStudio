@@ -85,26 +85,32 @@ feature -- Basic operation
 		local
 			l_item : MSR_TEXT_ITEM
 			class_i: CLASS_I
+			l_string: STRING
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
 				class_i ?= l_item.data
 				if class_i /= Void then
 					if is_class_i_editing (class_i) and search_tool.check_class_succeed and not search_tool.is_item_source_changed (l_item) then
+						l_string := actual_replacement (l_item)
 						if l_item.end_index_in_unix_text + 1 = l_item.start_index_in_unix_text then
 							editor.text_displayed.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
 							editor.deselect_all
 							if not actual_replacement (l_item).is_empty then
 								search_tool.set_changed_by_replace (true)
-								editor.text_displayed.insert_string (actual_replacement (l_item))
+								editor.text_displayed.insert_string (l_string)
 								search_tool.set_changed_by_replace (true)
+								if not l_string.is_empty then
+									editor.select_region (l_item.start_index_in_unix_text, l_item.start_index_in_unix_text + l_string.count)
+								end
 							end
 						else
 							editor.select_region (l_item.start_index_in_unix_text, l_item.end_index_in_unix_text + 1)
 							if editor.has_selection then
 								search_tool.set_changed_by_replace (true)
-								if not actual_replacement (l_item).is_empty then
-									editor.replace_selection (actual_replacement (l_item))
+								if not l_string.is_empty then
+									editor.replace_selection (l_string)
+									editor.select_region (l_item.start_index_in_unix_text, l_item.start_index_in_unix_text + l_string.count)
 								else
 									editor.text_displayed.delete_selection
 								end

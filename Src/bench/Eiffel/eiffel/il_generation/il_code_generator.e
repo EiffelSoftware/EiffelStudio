@@ -146,6 +146,16 @@ feature -- Object creation
 		deferred
 		end
 
+	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
+			-- Initialize an expanded variable of type `variable_class_type' assuming
+			-- that its address is currently on the evaluation stack.
+		require
+			variable_class_type_not_void: variable_class_type /= Void
+			variable_class_type_is_expanded: variable_class_type.is_expanded
+			variable_class_type_is_internal: not variable_class_type.is_external
+		deferred
+		end
+
 feature -- IL stack managment
 
 	duplicate_top is
@@ -201,6 +211,13 @@ feature -- Variables access
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0
+		deferred
+		end
+
+	generate_type_feature_call (f: TYPE_FEATURE_I) is
+			-- Generate a call to a type feature `f' on current.
+		require
+			f_not_void: f /= Void
 		deferred
 		end
 

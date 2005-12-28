@@ -3678,6 +3678,79 @@ feature -- Object creation
 				False)
 		end
 
+	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
+			-- Initialize an expanded variable of type `variable_class_type' assuming
+			-- that its address is currently on the evaluation stack.
+		local
+			creation_procedure: FEATURE_I
+		do
+			creation_procedure := variable_class_type.associated_class.creation_feature
+			if creation_procedure /= Void then
+					-- Duplicate current to call creation procedure.
+				duplicate_top
+			end
+				-- Initialize inner expanded attributes.
+			method_body.put_call ({MD_OPCODES}.call, constructor_token (variable_class_type.implementation_id), 0, False)
+				-- Call creation procedure (if any).
+			if creation_procedure /= Void then
+				generate_feature_access (variable_class_type.type, creation_procedure.feature_id, 0, False, False)
+			end
+		end
+
+feature {IL_MODULE} -- Initialization of expanded attributes
+
+	initialize_expanded_attributes (class_type: CLASS_TYPE) is
+			-- Initialize expanded attributes of `class_type'
+			-- assuming that a reference or a pointer to the object
+			-- of type `class_type' is on the stack.
+		require
+			class_type_not_void: class_type /= Void
+		local
+			attribute_type: CL_TYPE_I
+			desc: EXPANDED_DESC
+			skeleton: SKELETON
+		do
+			from
+				skeleton := class_type.skeleton
+				skeleton.go_expanded
+			until
+				skeleton.off or else skeleton.item.level /= skeleton.expanded_level
+			loop
+				desc ?= skeleton.item
+				attribute_type := desc.cl_type_i
+				if attribute_type.is_true_expanded and then not attribute_type.is_external then
+					duplicate_top
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.ldflda, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
+					initialize_expanded_variable (attribute_type.associated_class_type)
+				end
+				skeleton.forth
+			end
+		end
+
+	is_initialization_required (class_type: CLASS_TYPE): BOOLEAN is
+			-- Is initialization of class attributes is required for `class_type'?
+		require
+			class_type_not_void: class_type /= Void
+		local
+			attribute_type: CL_TYPE_I
+			desc: EXPANDED_DESC
+			skeleton: SKELETON
+		do
+			from
+				skeleton := class_type.skeleton
+				skeleton.go_expanded
+			until
+				Result or else skeleton.off or else skeleton.item.level /= skeleton.expanded_level
+			loop
+				desc ?= skeleton.item
+				attribute_type := desc.cl_type_i
+				Result := attribute_type.is_true_expanded and then
+					(attribute_type.base_class.creation_feature /= Void or else
+					is_initialization_required (attribute_type.associated_class_type))
+				skeleton.forth
+			end
+		end
+
 feature -- IL stack managment
 
 	duplicate_top is
@@ -3808,6 +3881,34 @@ feature -- Variables access
 			method_body.put_call ({MD_OPCODES}.Call,
 				implementation_feature_token (type_i.implementation_id, a_feature_id),
 				nb, is_function)
+		end
+
+	generate_type_feature_call (f: TYPE_FEATURE_I) is
+			-- Generate a call to a type feature `f' on current.
+		local
+			target_type: CL_TYPE_I
+			target_feature_id: INTEGER
+			target_routine_id: INTEGER
+			anchored_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
+		do
+			generate_current
+			target_type := current_class_type.type
+			if target_type.is_expanded then
+					-- Call feature directly.
+				target_routine_id := f.rout_id_set.first
+				anchored_features := target_type.base_class.anchored_features
+				anchored_features.search (target_routine_id)
+				if anchored_features.found then
+					target_feature_id := anchored_features.found_item.feature_id
+				else
+					target_feature_id := target_type.base_class.generic_features.item (target_routine_id).feature_id
+				end
+			else
+					-- Call feature using parent type.
+				target_type := implemented_type (f.origin_class_id, target_type)
+				target_feature_id := f.origin_feature_id
+			end
+			generate_feature_access (target_type, target_feature_id, 0, True, True)
 		end
 
 	put_type_token (a_type_id: INTEGER) is

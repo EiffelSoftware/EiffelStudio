@@ -138,7 +138,7 @@ feature -- IL code generation
 			end
 
 			if cl_type_i.is_expanded then
-					-- Unbox boxed object.
+					-- Load value of a value type object.
 				il_generator.generate_unmetamorphose (cl_type_i)
 			end
 		end

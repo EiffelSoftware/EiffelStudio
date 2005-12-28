@@ -185,33 +185,18 @@ feature -- Generic conformance for IL
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
-		local
-			l_gen_type: GEN_TYPE_I
-			l_decl_type: CL_TYPE_I
-			l_formal: TYPE_FEATURE_I
 		do
-			l_gen_type ?= context.current_type
-
 				-- We must be in a generic class otherwise having a formal creation
 				-- does not make sense.
 			check
-				l_gen_type_not_void: l_gen_type /= Void
+				generic_class: context.current_type.base_class.is_generic
 			end
 
 				-- Generate call to feature, defined in every descendant of
-				-- generic class represented by `l_gen_type', that will
+				-- the current generic class, that will
 				-- create the corresponding runtime type associated with formal
 				-- in descendant class.
-			l_formal := l_gen_type.base_class.formal_at_position (position)
-			il_generator.generate_current
-			if context.class_type.is_expanded then
-					-- Call the feature directly.
-				il_generator.generate_feature_access (l_gen_type, l_formal.feature_id, 0, True, False)
-			else
-					-- Call the feature from the parent.
-				l_decl_type := il_generator.implemented_type (l_formal.origin_class_id,	context.current_type)
-				il_generator.generate_feature_access (l_decl_type, l_formal.origin_feature_id, 0, True, True)
-			end
+			il_generator.generate_type_feature_call (context.current_type.base_class.formal_at_position (position))
 		end
 
 feature {NONE} -- Code generation

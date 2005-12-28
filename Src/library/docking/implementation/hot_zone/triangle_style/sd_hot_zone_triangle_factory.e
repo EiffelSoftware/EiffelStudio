@@ -1,5 +1,8 @@
 indexing
-	description: "Factory that produce all transparent feedback style feedbacks"
+	description: "[
+		Factory that produce all new style feedback hot zones, which have indicators and
+		transparent feedback.
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 

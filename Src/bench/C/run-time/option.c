@@ -110,6 +110,8 @@ rt_private struct 	prof_rusage	*init_date;
 rt_private double 	       init_date;
 #elif defined(EIF_WINDOWS)
 rt_private SYSTEMTIME 	*init_date;
+#else
+rt_private time_t *init_date;
 #endif  /* HAS_GERUSAGE */
 
 #define EIF_TRACE_LOCK
@@ -172,7 +174,10 @@ struct prof_info {
 	SYSTEMTIME	*this_total_time;
 	SYSTEMTIME	*all_total_time;
 	SYSTEMTIME	*descendent_time;
-
+#else
+	time_t *this_total_time;
+	time_t *all_total_time;
+	time_t *descendent_time;
 #endif /* HAS_GERUSAGE */
 				int		is_running;			/* Is the feature running? */
 											/* Needed for recursives */
@@ -381,6 +386,15 @@ struct prof_info {
 								}\
 							}
 
+#else /* No implementation available. */
+#define record_time(x)
+#define new_prof_info(x) x = NULL
+#define free_prof_info(x)
+#define check_existance(x)
+#define zero_time(x)
+#define add_time(x,y,z)
+#define subtract_time(x,y,z)
+#define subtract_gc_time(x,y)
 #endif /* HAS_GETRUSAGE */
 
 /* Structure for H table of features.
@@ -685,9 +699,12 @@ void exitprf(void)
 						percentage = 100.0 * compute_percentage (features[j].all_total_time, execution_time);
 #elif defined(EIF_WINDOWS)
 						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
+#else
+						percentage = 100.0;
 #endif
 						
-						fprintf(prof_output, "[%lu]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
+						fprintf(prof_output, "[%lu]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n",
+								(unsigned long) index,
 #ifdef HAS_GETRUSAGE
 		    					(real_time(features[j].all_total_time)) / 1000000.,
 								(real_time(features[j].descendent_time)) / 1000000.,
@@ -697,6 +714,9 @@ void exitprf(void)
 #elif defined(EIF_WINDOWS)
 								real_time(features[j].all_total_time),
 								real_time(features[j].descendent_time),
+#else
+								0.0,
+								0.0,
 #endif /* HAS_GETRUSAGE */
 		    					features[j].number_of_calls,
 								percentage,

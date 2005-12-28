@@ -35,9 +35,11 @@
 /* Specific setup for VXWORKS port */
 #ifdef VXWORKS
 #include <vxWorks.h>
+/*
 #define CUSTOM
 #define NEED_HASH_H
 #define NEED_TIMER_H
+*/
 #endif
 
 /* Are we using ISE GC? By default, yes. */

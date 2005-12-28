@@ -1,5 +1,5 @@
 indexing
-	description: "SD_HOT_ZONE when pointer in SD_MULTI_DOCK_AREA."
+	description: "SD_HOT_ZONE for SD_DOCKING_ZONE."
 	date: "$Date$"
 	revision: "$Revision$"
 

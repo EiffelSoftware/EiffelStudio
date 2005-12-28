@@ -49,7 +49,7 @@ feature -- Command
 		do
 			 internal_notebook.set_show_maximized (a_max)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_select_tab is
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			main_area := internal_docking_manager.query.inner_container (Current)
 			if not is_maximized then
 				main_area_widget := main_area.item

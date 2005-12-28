@@ -42,7 +42,7 @@ feature {NONE} -- Initlization
 			auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 
 			create internal_tab_stub.make (internal_content, a_direction)
-	
+
 			debug ("larry")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
 			end
@@ -213,7 +213,7 @@ feature -- Redefine.
 	stick (a_direction: INTEGER) is
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			internal_docking_manager.command.remove_auto_hide_zones
 			internal_docking_manager.command.recover_normal_state
 
@@ -267,7 +267,7 @@ feature -- Redefine.
 	show is
 			-- Redefine.
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			if is_hide then
 				auto_hide_panel.tab_stubs.extend (internal_tab_stub)
 			end

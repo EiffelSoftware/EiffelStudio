@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			from
 				texts.start
 			until
-				texts.after or pcre_re.is_compiled
+				texts.after or not pcre_re.is_compiled
 			loop
 				pcre_re.match (texts.item)
 				if pcre_re.has_matched then

@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			if a_caller.is_floating then
 				internal_last_floating := True
 			end
-			
-			
+
+
 		ensure
 			set: docking_manager = a_docking_manager
 			a_caller_set: a_caller = caller
@@ -56,7 +56,7 @@ feature -- Docking issues.
 			if not l_in_four_side then
 
 				if not internal_last_floating then
-					docking_manager.command.lock_update
+					docking_manager.command.lock_update (Void, True)
 					caller.float
 					docking_manager.command.unlock_update
 				end
@@ -75,7 +75,7 @@ feature -- Docking issues.
 		local
 			l_docking_manager: SD_DOCKING_MANAGER
 		do
-			l_docking_manager := docking_manager 
+			l_docking_manager := docking_manager
 			notify_row (l_docking_manager.menu_container.top)
 			notify_row (l_docking_manager.menu_container.bottom)
 			notify_row (l_docking_manager.menu_container.left)
@@ -89,7 +89,7 @@ feature -- Access
 
 	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 feature {NONE} -- Implementation
 
 	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 
 	internal_top_hot_zone, internal_bottom_hot_zone, internal_left_hot_zone, internal_right_hot_zone: SD_MENU_HOT_ZONE
 			-- Four area hot zone.
-			
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

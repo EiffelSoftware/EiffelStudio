@@ -35,7 +35,6 @@ feature {NONE}  -- Initlization
 			create internal_tool_bar
 			create internal_auto_hide_indicator
 
---			extend_horizontal_box (create {EV_CELL})  -- For test
 			extend_horizontal_box (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
@@ -49,16 +48,22 @@ feature {NONE}  -- Initlization
 feature -- Redefine
 
 	extend (a_widget: EV_WIDGET) is
-			-- Redefine
+			-- Extend a_widget.
+		require
+			a_widget_not_void: a_widget /= Void
 		do
 			finish
 			put_left (a_widget)
+		ensure
+			extended: has (a_widget) and index_of (a_widget, 1) = count - 1
 		end
 
 feature -- Command
 
-	hide_show_tabs (a_width: INTEGER) is
+	resize_tabs (a_width: INTEGER) is
 			-- Hide/show tabs base on space.
+		require
+			a_width_valid: a_width >= 0
 		local
 			l_tabs: ARRAYED_LIST [EV_WIDGET]
 		do
@@ -84,50 +89,90 @@ feature -- Command
 					item.show
 					ignore_resize := True
 				end
-
 				forth
-
 			end
 			ignore_resize := False
+		ensure
+			enable_resize: ignore_resize = False
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
 		local
-
 			l_app: EV_ENVIRONMENT
 		do
 			if is_displayed then
 				if not ignore_resize then
 					create l_app
-					l_app.application.idle_actions.extend_kamikaze (agent hide_show_tabs (a_width))
+					l_app.application.idle_actions.extend_kamikaze (agent resize_tabs (a_width))
 				end
 			end
+		ensure
+			action_extended: True
 		end
 
-feature {NONE}  -- Implementation
+feature {NONE}  -- Implementation functions
 
 	on_tab_hide_indicator_selected is
 			-- Handle tab hide indicator selection event.
 		local
 			l_dialog: SD_NOTEBOOK_HIDE_TAB_DIALOG
+			l_tabs: like all_tabs
 		do
 			create l_dialog.make (internal_notebook)
-			l_dialog.set_position (internal_tool_bar.screen_x, internal_tool_bar.screen_y)
+
 			from
 				internal_tabs_not_shown.start
 			until
 				internal_tabs_not_shown.after
 			loop
-				l_dialog.extend (internal_tabs_not_shown.item)
-
+				l_dialog.extend_hide_tab (internal_tabs_not_shown.item)
 				internal_tabs_not_shown.forth
 			end
+
+			from
+				l_tabs := all_tabs
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				if l_tabs.item.is_displayed then
+					l_dialog.extend_shown_tab (l_tabs.item)
+				end
+
+				l_tabs.forth
+			end
+			l_dialog.init
+			set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
 			l_dialog.show
-			l_dialog.enable_capture
 		end
 
-	ignore_resize: BOOLEAN
+	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER) is
+			-- Set dialog position base on screen size.
+		require
+			a_dialog_not_void: a_dialog /= Void
+		local
+			l_screen: SD_SCREEN
+			l_rect: EV_RECTANGLE
+		do
+			create l_screen
+			create l_rect.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.virtual_width, l_screen.virtual_height)
+			if l_rect.has_x_y (a_dialog.width + a_prefer_x, a_dialog.height + a_prefer_y) then
+				-- If enough space set position base on left top corner.
+				a_dialog.set_position (a_prefer_x, a_prefer_y)
+			elseif l_rect.has_x_y (a_prefer_x, a_prefer_y + a_dialog.height) then
+				-- If enough space set position base on right top corner.
+				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y)
+			elseif l_rect.has_x_y (a_prefer_x + a_dialog.width, a_prefer_y - a_dialog.height) then
+				-- If enough space set position base on left bottom corner.
+				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
+			elseif l_rect.has_x_y (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height) then
+				-- If enough space set positon base on right bottom corner.
+				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height)
+			else
+				check not_possible_in_this_case: False end
+			end
+		end
 
 	on_drop_actions (a_any: ANY) is
 			-- Handle drop actions.
@@ -152,21 +197,22 @@ feature {NONE}  -- Implementation
 				end
 				forth
 			end
-
+		ensure
+			not_void: Result /= Void
 		end
 
 	updates_tabs_not_shown (a_width: INTEGER) is
 			-- Calculate `internal_tabs_not_shown' base on a_width.
+		require
+			a_width_valid: a_width >= 0
 		local
 			l_total_width: INTEGER
 			l_enough: BOOLEAN
 			l_tabs: like all_tabs
-
 		do
 			create internal_tabs_not_shown.make (1)
 			if not is_empty then
 				l_total_width := total_prefered_width
-
 				if l_total_width > a_width then
 					l_total_width := l_total_width + internal_tool_bar.minimum_width
 					l_tabs := all_tabs
@@ -188,9 +234,9 @@ feature {NONE}  -- Implementation
 					end
 				end
 			end
-
 			show_hide_indicator (a_width)
-
+		ensure
+			updated: internal_tabs_not_shown /= old internal_tabs_not_shown
 		end
 
 	show_hide_indicator (a_width: INTEGER) is
@@ -211,6 +257,9 @@ feature {NONE}  -- Implementation
 			else
 				internal_tool_bar.hide
 			end
+		ensure
+			setted: internal_tabs_not_shown.count > 0 implies internal_tool_bar.is_displayed
+			setted: internal_tabs_not_shown.count = 0 implies not internal_tool_bar.is_displayed
 		end
 
 	total_prefered_width: INTEGER is
@@ -227,7 +276,8 @@ feature {NONE}  -- Implementation
 				Result := Result + l_tabs.item.prefered_size
 				l_tabs.forth
 			end
---			Result := Result + internal_shared.highlight_tail_width
+		ensure
+			valid: Result >= 0
 		end
 
 	find_only_tab_shown: SD_NOTEBOOK_TAB is
@@ -262,7 +312,10 @@ feature {NONE}  -- Implementation
 			not_void: Result /= Void
 		end
 
-feature {NONE}  -- Implementation
+feature {NONE}  -- Implementation attributes
+
+	ignore_resize: BOOLEAN
+			-- Ignore resize actions when executing `resize_tabs'?
 
 	internal_tool_bar: EV_TOOL_BAR
 			-- Tool bar which hold `internal_auto_hide_indicator'.
@@ -285,6 +338,7 @@ feature {NONE}  -- Implementation
 invariant
 
 	internal_shared_not_void: internal_shared /= Void
+	internal_docking_manager_not_void: internal_docking_manager /= Void
 	internal_tool_bar_not_void: internal_tool_bar /= Void
 	internal_auto_hide_indicator_not_void: internal_auto_hide_indicator /= Void
 

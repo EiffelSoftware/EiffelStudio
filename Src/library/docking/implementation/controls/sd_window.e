@@ -40,7 +40,9 @@ feature {NONE} -- Initlization
 			internal_vertical_box.extend (internal_title_bar)
 			internal_vertical_box.disable_item_expand (internal_title_bar)
 
-			create {EV_HORIZONTAL_BOX} internal_border_box
+--			create internal_border_box
+			create internal_border_box.make
+			internal_border_box.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 			internal_vertical_box.extend (internal_border_box)
 
@@ -133,10 +135,10 @@ feature -- Basic operation
 		do
 			if a_focus then
 				title_bar.enable_focus_color
-				internal_border_box.set_background_color (internal_shared.focused_color)
+				internal_border_box.set_border_color (internal_shared.focused_color)
 			else
 				title_bar.disable_focus_color
-				internal_border_box.set_background_color (internal_shared.non_focused_color)
+				internal_border_box.set_border_color (internal_shared.non_focused_color)
 			end
 		end
 
@@ -186,17 +188,6 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
---	pointer_double_press_title_bar_actions: like internal_pointer_double_press_title_bar_actions is
---			-- `internal_pointer_double_press_title_bar_actions'
---		do
---			if internal_pointer_double_press_title_bar_actions = Void then
---				create internal_pointer_double_press_title_bar_actions
---			end
---			Result := internal_pointer_double_press_title_bar_actions
---		ensure
---			not_void: Result /= Void
---		end
-
 feature {NONE} -- Implemention
 
 	close is
@@ -233,14 +224,6 @@ feature {NONE} -- Implemention
 		do
 		end
 
---	on_pointer_double_press is
---			-- Handle pointer double press.
---		do
---			if internal_pointer_double_press_title_bar_actions /= Void then
---				internal_pointer_double_press_title_bar_actions.call ([])
---			end
---		end
-
 feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
@@ -261,7 +244,8 @@ feature {NONE} -- Implementation
 	internal_vertical_box: EV_VERTICAL_BOX
 			-- Vertical box to hold SD_TITLE_BAR and user_widget.
 
-	internal_border_box: EV_BOX
+--	internal_border_box: EV_CELL
+	internal_border_box: SD_CELL_WITH_BORDER
 			-- Box for border highlight.
 
 invariant

@@ -52,7 +52,7 @@ feature -- Redefine.
 			l_split_area: EV_SPLIT_AREA
 			l_main_container_widget: EV_WIDGET
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
@@ -116,7 +116,7 @@ feature -- Redefine.
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_tab_zone: SD_TAB_ZONE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 
 			l_zones := inner_container.zones
 			from
@@ -143,7 +143,7 @@ feature -- Redefine.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (zone, False)
 			l_zones := inner_container.zones
 			from
 				l_zones.start

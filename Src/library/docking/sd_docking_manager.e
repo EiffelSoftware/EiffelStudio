@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
 			create menu_manager.make (Current)
 			create l_app
---			l_app.application.focus_in_actions.extend (agent agents.on_widget_pointer_press)
 			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
@@ -201,7 +200,8 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_WINDOW,
 	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE,
 	  SD_TAB_STUB, SD_MULTI_DOCK_AREA, SD_DOCKING_MANAGER_AGENTS,
-	  SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES} -- Library internals querys.
+	  SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES,
+	  SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK} -- Library internals querys.
 
 	query: SD_DOCKING_MANAGER_QUERY
 			-- Manager helper Current for querys.

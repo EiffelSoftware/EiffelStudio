@@ -60,7 +60,7 @@ feature -- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 				create l_docking_state.make (internal_content, direction, (internal_docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
 			else
@@ -78,7 +78,7 @@ feature -- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 			create l_docking_state.make (internal_content, a_direction, 0)
 			l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 			change_state (l_docking_state)
@@ -92,7 +92,7 @@ feature -- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			create l_auto_hide_state.make (internal_content, a_direction)
 			change_state (l_auto_hide_state)
 			internal_docking_manager.command.unlock_update
@@ -106,7 +106,7 @@ feature -- Redefine.
 			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (Void, True)
 			create l_floating_state.make (a_x, a_y, internal_docking_manager)
 			create l_docking_state.make (internal_content, direction, 0)
 			l_docking_state.dock_at_top_level (l_floating_state.inner_container)
@@ -121,7 +121,7 @@ feature -- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, a_target_zone.state.direction)
 			change_state (l_tab_state)
 			internal_docking_manager.command.unlock_update
@@ -134,7 +134,7 @@ feature -- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 			create l_tab_state.make (internal_content, a_target_zone, a_target_zone.state.direction)
 			change_state (l_tab_state)
 			internal_docking_manager.command.unlock_update

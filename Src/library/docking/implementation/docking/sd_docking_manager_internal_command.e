@@ -10,13 +10,14 @@ create
 	make
 
 feature {NONE}  -- Initlization
-	
+
 	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
+--			create internal_lock_update_window.make_default
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -32,11 +33,19 @@ feature -- Commands
 			internal_docking_manager.agents.on_resize (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height)
 		end
 
-	lock_update is
+	lock_update (a_zone: EV_WIDGET; a_main_window: BOOLEAN) is
 			-- Lock window update.
+		require
+			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
+			only_lock_one_window: lock_call_time > 0 implies find_window (a_zone) = last_locked_window
 		do
-			if (create {EV_ENVIRONMENT}).application.locked_window = Void then
-				internal_docking_manager.main_window.lock_update
+			if lock_call_time = 0 then
+				if a_main_window then
+					last_locked_window := internal_docking_manager.main_window
+				else
+					last_locked_window := internal_docking_manager.query.find_window_by_zone (a_zone)
+				end
+				last_locked_window.lock_update
 			end
 			lock_call_time := lock_call_time + 1
 		end
@@ -44,11 +53,12 @@ feature -- Commands
 	unlock_update is
 			-- Unlock window update.
 		do
-			remove_empty_split_area
-			update_title_bar
+
 			lock_call_time := lock_call_time - 1
 			if lock_call_time = 0 then
-				internal_docking_manager.main_window.unlock_update
+				last_locked_window.unlock_update
+				remove_empty_split_area
+				update_title_bar
 			end
 		end
 
@@ -144,26 +154,41 @@ feature -- Commands
 				end
 					l_inner_container_snapshot.forth
 			end
-		end		
+		end
 
 feature -- Contract Support
-	
+
 	is_main_inner_container (a_container: SD_MULTI_DOCK_AREA): BOOLEAN is
 			-- If `a_container' is main contianer?
 		do
 			Result := internal_docking_manager.query.is_main_inner_container (a_container)
 		end
-		
-feature {NONE}  -- Implementation
-	
+
+	last_locked_window: EV_WINDOW
+			-- Window which be locked update.
+
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
-			
+
+	find_window (a_zone: EV_WIDGET): EV_WINDOW is
+			-- Function wrapper for contract support.
+		require
+			a_zone_not_void: a_zone /= Void
+		do
+			Result := internal_docking_manager.query.find_window_by_zone (a_zone)
+		end
+
+feature {NONE}  -- Implementation
+
+--	internal_lock_update_window: DS_HASH_TABLE [EV_WINDOW, INTEGER]
+--			-- Which window is locked at 2nd's call time.
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
 invariant
-	
+
+--	internal_lock_update_window_not_void: internal_lock_update_window /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 
 end

@@ -144,12 +144,9 @@ feature -- Properties
 			-- Set `text'.
 		require
 			a_text_not_void: a_text /= Void
-		local
-			l_width: INTEGER
 		do
 			text := a_text
-			l_width := internal_text_drawing_area.font.string_width (text)
-			internal_text_drawing_area.set_minimum_width (l_width)
+			set_width_with_font
 			on_expose
 		ensure
 			set: a_text = text
@@ -189,6 +186,7 @@ feature -- Properties
 				else
 					create l_text_color.make_with_rgb (1, 1, 1)
 				end
+--				internal_text_drawing_area.font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 				internal_text_drawing_area.set_foreground_color (l_text_color)
 				internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
 			else
@@ -200,9 +198,11 @@ feature -- Properties
 				else
 					create l_text_color.make_with_rgb (1, 1, 1)
 				end
+				internal_text_drawing_area.font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
 				internal_text_drawing_area.set_foreground_color (l_text_color)
 				internal_tail_drawing_area.set_minimum_width (1)
 			end
+			set_width_with_font
 			on_expose
 		ensure
 			set: is_selected = a_selected
@@ -215,6 +215,7 @@ feature {NONE}  -- Implmentation for drag action
 		do
 			internal_pointer_pressed := True
 			enable_capture
+
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -290,6 +291,17 @@ feature {NONE}  -- Implementation agents
 			end
 		end
 
+feature {NONE}  -- Implementation functions.
+
+	set_width_with_font is
+			-- Set `internal_text_drawing_area' width with it's font.
+		local
+			l_width: INTEGER
+		do
+			l_width := internal_text_drawing_area.font.string_width (text)
+			internal_text_drawing_area.set_minimum_width (l_width)
+		end
+
 feature {NONE}  -- Implementation attributes
 
 	internal_pixmap_drawing_area: EV_DRAWING_AREA
@@ -300,9 +312,6 @@ feature {NONE}  -- Implementation attributes
 
 	internal_tail_drawing_area: EV_DRAWING_AREA
 			-- Tail area which show color change gradually.
-
---	golbal_pointer_release_action: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
---			-- Application level pointer release actions.
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which contain `internal_pixmap_drawing
@@ -322,7 +331,5 @@ invariant
 	internal_pixmap_drawing_area_not_void: internal_pixmap_drawing_area /= Void
 	internal_text_drawing_area_not_void: internal_text_drawing_area /= Void
 	internal_tail_drawing_area_not_void: internal_tail_drawing_area /= Void
-
---	golbal_pointer_release_action_not_void: golbal_pointer_release_action /= Void
 
 end

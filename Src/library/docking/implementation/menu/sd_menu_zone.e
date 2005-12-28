@@ -78,14 +78,9 @@ feature -- Basic operation
 				-- Change to vertical
 			end
 			is_vertical := not is_vertical
-			debug ("larry")
-				io.put_string ("%N SD_MENU_ZONE change direction &&&&&&&&&&&&&&&&&&&&&&&&&&")
-				io.put_string ("Manu is here%N")
-			end
+
 			extend (content)
-			debug ("larry")
-				io.put_string ("%N SD_MENU_ZONE change direction after")
-			end
+
 		ensure
 			direction_changed: old is_vertical /= is_vertical
 		end

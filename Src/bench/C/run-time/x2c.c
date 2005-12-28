@@ -14,7 +14,6 @@
 doc:<file name="x2c.c" header="x2c.h" version="$Id$" summary="Convert .x file into compilable .c files">
 */
 
-#include "eif_eiffel.h"
 #include "x2c.h"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf

@@ -125,6 +125,12 @@ feature -- Object creation
 		do
 		end
 
+	initialize_expanded_variable (variable_class_type: CLASS_TYPE) is
+			-- Initialize an expanded variable of type `variable_class_type' assuming
+			-- that its address is currently on the evaluation stack.
+		do
+		end
+
 feature -- IL stack managment
 
 	duplicate_top is
@@ -171,6 +177,11 @@ feature -- Variables access
 			nb: INTEGER; is_function: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
+		do
+		end
+
+	generate_type_feature_call (f: TYPE_FEATURE_I) is
+			-- Generate a call to a type feature `f' on current.
 		do
 		end
 

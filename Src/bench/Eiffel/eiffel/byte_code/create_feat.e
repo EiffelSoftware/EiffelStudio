@@ -170,7 +170,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for an anchored creation type.
 		local
-			l_type_feature: TYPE_FEATURE_I
+			target_type: TYPE_I
 		do
 				-- Generate call to feature that will give the type we want to create.
 			generate_il_type
@@ -179,28 +179,21 @@ feature -- IL code generation
 			il_generator.generate_current_as_reference
 			il_generator.create_type
 
-			l_type_feature := context.class_type.
-				associated_class.anchored_features.item (routine_id)
+			target_type := il_generator.real_type (context.class_type.associated_class.anchored_features.item
+				(routine_id).type.actual_type.type_i)
+			if target_type.is_expanded then
+					-- Load value of a value type object.
+				il_generator.generate_unmetamorphose (target_type)
+			end
 
-			il_generator.generate_check_cast (Void,
-				context.real_type (l_type_feature.type.actual_type.type_i))
+			il_generator.generate_check_cast (Void, target_type)
 		end
 
 	generate_il_type is
 			-- Generate IL code to load type of anchored creation type.
-		local
-			l_decl_type: CL_TYPE_I
-			l_type_feature: TYPE_FEATURE_I
 		do
 				-- Generate call to feature that will give the type we want to create.
-			l_type_feature := context.class_type.
-				associated_class.anchored_features.item (routine_id)
-
-			il_generator.generate_current_as_reference
-			l_decl_type := il_generator.implemented_type (l_type_feature.origin_class_id,
-				context.current_type)
-			il_generator.generate_feature_access (l_decl_type,
-				l_type_feature.origin_feature_id, 0, True, True)
+			il_generator.generate_type_feature_call (context.class_type.associated_class.anchored_features.item (routine_id))
 		end
 
 	created_in (other: CLASS_TYPE): TYPE_I is

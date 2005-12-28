@@ -169,7 +169,7 @@ typedef unsigned int		uintptr_t;
 #elif defined(VXWORKS)
 typedef int intptr_t;
 typedef unsigned int uintptr_t;
-#elif
+#else
 #include <stdint.h>
 #endif
 #endif

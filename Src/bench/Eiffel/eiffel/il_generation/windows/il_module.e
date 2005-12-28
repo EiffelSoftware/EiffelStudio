@@ -1356,7 +1356,14 @@ feature -- Metadata description
 						0, False)
 				end
 
+				if il_code_generator.is_initialization_required (class_type) then
+					il_code_generator.generate_current
+					il_code_generator.initialize_expanded_attributes (class_type)
+					il_code_generator.pop
+				end
+
 				il_code_generator.generate_return (False)
+				il_code_generator.store_locals (l_meth_token)
 				method_writer.write_current_body
 
 			end

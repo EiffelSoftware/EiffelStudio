@@ -141,6 +141,18 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
+feature -- Element change
+
+	set_accelerator (a_accel: EV_ACCELERATOR) is
+			-- Set `accelerator' with `a_accel'.
+		require
+			a_accel_attached: a_accel /= Void
+		do
+			accelerator := a_accel
+		ensure
+			accelerator_not_void: accelerator = a_accel
+		end
+
 feature {NONE} -- Implementation
 
 	set_selected (a_selected: BOOLEAN)is

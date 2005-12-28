@@ -570,6 +570,19 @@ feature -- Action
 			end
 		end
 
+	prepare_search is
+			-- Show the search tool and set focus to the search text field and fill the search field with selection.
+		local
+			l_clickable_editor: EB_CLICKABLE_EDITOR
+		do
+			l_clickable_editor ?= editor
+			if l_clickable_editor /= Void then
+				l_clickable_editor.search
+			else
+				show_and_set_focus
+			end
+		end
+
 feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
 
 	check_class_succeed: BOOLEAN

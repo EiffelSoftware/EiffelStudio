@@ -189,6 +189,11 @@ feature -- Generation
 				il_generator.mark_label (end_of_assertion)
 			end
 
+				-- Initialize local variables (if required)
+			if not local_list.is_empty then
+				initialize_locals (local_list)
+			end
+
 			if a_body.compound /= Void then
 				a_body.compound.process (Current)
 				il_generator.flush_sequence_points (context.class_type)
@@ -480,6 +485,53 @@ feature {NONE} -- Implementation
 					il_generator.put_nameless_local_info (local_list.item, i)
 					i := i + 1
 					local_list.forth
+				end
+			end
+		end
+
+	initialize_locals (local_list: LINKED_LIST [TYPE_I]) is
+			-- Generate code to initialize local variables of the current routine
+			-- taking their types from `local_list'.
+		require
+			is_valid: is_valid
+			local_list_not_void: local_list /= Void
+			local_list_not_empty: not local_list.is_empty
+		local
+			routine_as: ROUTINE_AS
+			id_list: ARRAYED_LIST [INTEGER]
+			rout_locals: EIFFEL_LIST [TYPE_DEC_AS]
+			local_type: CL_TYPE_I
+			i: INTEGER
+		do
+			routine_as ?= context.current_feature.body.body.content
+			if routine_as /= Void and then routine_as.locals /= Void then
+					-- `local_list' is in the same order as `routine_as.locals'
+					-- so this is easy to find for each element of `local_list'
+					-- its name in `routine_as.locals'.
+				rout_locals := routine_as.locals
+				from
+					rout_locals.start
+					local_list.start
+					i := 1
+				until
+					rout_locals.after
+				loop
+					from
+						id_list := rout_locals.item.id_list
+						id_list.start
+					until
+						id_list.after
+					loop
+						local_type ?= il_generator.real_type (local_list.item)
+						if local_type /= Void and then local_type.is_true_expanded and then not local_type.is_external then
+							il_generator.generate_local_address (i)
+							il_generator.initialize_expanded_variable (local_type.associated_class_type)
+						end
+						i := i + 1
+						local_list.forth
+						id_list.forth
+					end
+					rout_locals.forth
 				end
 			end
 		end

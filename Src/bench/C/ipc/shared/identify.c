@@ -28,6 +28,11 @@
 #include "ipcvms.h"		/* only affects VMS */
 #endif
 #include <string.h>
+#ifdef I_SYS_TIMES
+#include <sys/times.h>
+#elif defined(I_SYS_TIME)
+#include <sys/times.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "eif_logfile.h"

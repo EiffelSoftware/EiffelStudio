@@ -165,7 +165,11 @@ typedef unsigned int		uintptr_t;
 #endif
 
 #else
-#ifndef EIF_SOLARIS
+#ifdef EIF_SOLARIS
+#elif defined(VXWORKS)
+typedef int intptr_t;
+typedef unsigned int uintptr_t;
+#elif
 #include <stdint.h>
 #endif
 #endif

@@ -686,10 +686,12 @@ feature {NONE} -- Implementation
 				end
 				search_tool.show_and_set_focus
 			end
-			if not text_displayed.selection_is_empty then
+			if not text_displayed.is_empty and then not text_displayed.selection_is_empty then
 				search_tool.set_current_searched (text_displayed.selected_string)
 			end
-			check_cursor_position
+			if not text_displayed.is_empty then
+				check_cursor_position
+			end
 		end
 
 	display_breakpoint_number (bp_number: INTEGER) is

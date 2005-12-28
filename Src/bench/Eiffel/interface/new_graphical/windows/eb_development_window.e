@@ -586,6 +586,8 @@ feature {NONE} -- Initialization
 			-- in `left_tools' or `bottom_tools'.
 		local
 			show_cmd: EB_SHOW_TOOL_COMMAND
+			l_accel: EV_ACCELERATOR
+			l_shortcut_preference: SHORTCUT_PREFERENCE
 		do
 			lock_update
 				-- Build the features tool
@@ -634,10 +636,14 @@ feature {NONE} -- Initialization
 			add_recyclable (windows_tool)
 
 				-- Build the search tool
-			create {EB_MULTI_SEARCH_TOOL}search_tool.make (Current)
+			create search_tool.make (Current)
 			search_tool.attach_to_explorer_bar (right_panel)
 			bottom_tools.extend (search_tool.explorer_bar_item)
 			create show_cmd.make (Current, search_tool.explorer_bar_item)
+			l_shortcut_preference := preferences.editor_data.shortcuts.item ("show_search_panel")
+			create l_accel.make_with_key_combination (l_shortcut_preference.key, l_shortcut_preference.is_ctrl, l_shortcut_preference.is_alt, l_shortcut_preference.is_shift)
+			l_accel.actions.extend (agent search_tool.prepare_search)
+			show_cmd.set_accelerator (l_accel)
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (search_tool)
@@ -2523,7 +2529,7 @@ feature -- Tools & Controls
 
 	cluster_tool: EB_CLUSTER_TOOL
 
-	search_tool: EB_SEARCH_TOOL
+	search_tool: EB_MULTI_SEARCH_TOOL
 
 	features_tool: EB_FEATURES_TOOL
 

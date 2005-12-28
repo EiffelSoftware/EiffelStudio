@@ -817,10 +817,10 @@ feature -- Keybord shortcuts Customization
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
 			create Result.make (10)
-			Result.put (<<"False", "Ctrl", "False", key_strings.item (Key_space).twin>>, "autocomplete")
+			Result.put (<<"False", "True", "False", key_strings.item (Key_space).twin>>, "autocomplete")
 			Result.put (<<"False", "True", "True", key_strings.item (Key_space).twin>>, "class_autocomplete")
 			Result.put (<<"False", "True", "False", key_strings.item (Key_f).twin>>, "show_search_panel")
-			Result.put (<<"False", "False", "False", key_strings.item (Key_h).twin>>, "show_search_and_replace_panel")
+			Result.put (<<"False", "True", "False", key_strings.item (Key_h).twin>>, "show_search_and_replace_panel")
 			Result.put (<<"False", "False", "False", key_strings.item (Key_F3).twin>>, "search_selection")
 			Result.put (<<"False", "False", "True", key_strings.item (Key_F3).twin>>, "search_last")
 			Result.put (<<"False", "True", "False", key_strings.item (key_F3).twin>>, "search_backward")

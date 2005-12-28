@@ -59,6 +59,7 @@ feature -- IL code generation
 			-- Generate IL code for a formal creation type.
 		local
 			formal: FORMAL_I
+			target_type: TYPE_I
 		do
 				-- Compute actual type of Current formal.
 			formal ?= type
@@ -68,7 +69,12 @@ feature -- IL code generation
 			il_generator.generate_current_as_reference
 			il_generator.create_type
 
-			il_generator.generate_check_cast (Void, context.real_type (formal))
+			target_type := il_generator.real_type (formal)
+			if target_type.is_expanded then
+					-- Load value of a value type object.
+				il_generator.generate_unmetamorphose (target_type)
+			end
+			il_generator.generate_check_cast (Void, target_type)
 		end
 
 feature -- Byte code generation

@@ -16,7 +16,7 @@
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
-#ifndef __VMS
+#if !defined(__VMS) && !defined(VXWORKS)
 #include <sys/param.h>		/* For NOFILE */
 #endif /* not VMS */
 

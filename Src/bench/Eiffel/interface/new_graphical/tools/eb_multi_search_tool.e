@@ -947,10 +947,17 @@ feature {NONE} -- Build interface
 			l_scope := l_pre.init_scope
 			if l_scope.is_equal ("Current Editor") then
 				current_editor_button.enable_select
+				toggle_scope_detail (current_editor_button)
 			elseif l_scope.is_equal ("Whole Project") then
 				whole_project_button.enable_select
+				toggle_scope_detail (whole_project_button)
 			elseif l_scope.is_equal ("Custom") then
 				custom_button.enable_select
+				toggle_scope_detail (custom_button)
+			else
+				check
+					default_xml_not_correctly_done: false
+				end
 			end
 		end
 

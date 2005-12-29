@@ -192,6 +192,12 @@ feature -- Constants
 	Title_bar_height: INTEGER is 16
 			-- Size of zone's title bar.
 
+	Zone_minmum_width: INTEGER is
+			-- Minmum width of a zone.
+		once
+			Result := Title_bar_height * 3
+		end
+
 	Menu_size: INTEGER is 23
 			-- Size of menu.
 
@@ -214,6 +220,7 @@ feature -- Constants
 			-- Border width of a zone. This is width show focus color surround a zone.
 
 	separator_width: INTEGER is 6
+			-- Separator width used by SD_MENU_ZONE.
 
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.

@@ -93,6 +93,8 @@ feature {NONE} -- Initlization
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
 
 			resize_actions.extend (agent internal_notebook.on_resize)
+
+			set_minimum_width (internal_shared.zone_minmum_width)
 		end
 
 feature -- Query

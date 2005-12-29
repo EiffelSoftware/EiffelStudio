@@ -86,6 +86,7 @@ feature -- Save/Open inner container data.
 
 			internal_docking_manager.command.resize
 			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.update_title_bar
 		end
 
 feature {NONE} -- Implementation for save config.

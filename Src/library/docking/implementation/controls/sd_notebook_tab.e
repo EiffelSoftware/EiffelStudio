@@ -114,6 +114,9 @@ feature -- Command
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
 		do
+			debug ("larry")
+				print ("%N SD_NOTEBOOK_TAB on_resize a_width is: " + a_width.out + "%Ttext width is " + internal_text_drawing_area.width.out)
+			end
 			on_expose
 		end
 
@@ -316,8 +319,8 @@ feature {NONE}  -- Implementation attributes
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which contain `internal_pixmap_drawing
 
-	internal_border: SD_CELL_WITH_BORDER
-			-- Border.
+--	internal_border: SD_CELL_WITH_BORDER
+--			-- Border.
 
 	internal_shared: SD_SHARED
 			-- All singletons.

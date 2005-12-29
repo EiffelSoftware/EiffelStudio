@@ -90,7 +90,7 @@ feature -- Command
 						check l_title_zone /= Void end
 						--  l_zone should not have stick button.
 						l_title_zone.set_show_stick (False)
-	
+
 						if only_one_zone_displayed.is_maximized then
 							l_title_zone.set_show_normal_max (True)
 							extend_title_bar
@@ -111,7 +111,7 @@ feature -- Command
 					internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
 					internal_floating_state.docking_manager.zones.zones.prune (Current)
 					destroy
-				end				
+				end
 			end
 
 		end
@@ -196,13 +196,13 @@ feature -- Properties
 		local
 			l_container: EV_CONTAINER
 		do
-			zone_display_count := 0			
+			zone_display_count := 0
 			if internal_inner_container.readable then
 				l_container ?= internal_inner_container.item
 				if l_container /= Void then
 					only_one_zone_displayed := Void
 					count_zone_display (l_container)
-				end				
+				end
 			end
 		end
 
@@ -284,13 +284,13 @@ feature {NONE} -- Implementation
 				check must_zone_or_split: l_split /= Void end
 				l_container ?= l_split.first
 				count_zone_display (l_container)
-				l_container := Void
 
+				l_container := Void
 				l_container ?= l_split.second
 				count_zone_display (l_container)
 			end
 		end
-	
+
 	set_all_title_bar (a_widget: EV_WIDGET) is
 			-- Set all zones' title bar in `Current' show normal\max.
 		require
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 				l_zone.set_show_normal_max (True)
 			end
 		end
-		
+
 	zone_display_count: INTEGER
 			-- How many zones are displayed?
 

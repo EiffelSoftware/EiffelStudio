@@ -3,7 +3,7 @@ indexing
 	author: "Stephanie Balzer"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 --********************************************************************************--
 --	Open questions:
 --
@@ -18,7 +18,7 @@ feature -- Access
 
 	root_object: ANY
 			-- Starting point of graph traversing
-	
+
 	object_action: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Action called on every object in object graph
 
@@ -26,13 +26,13 @@ feature -- Access
 			-- List referencing objects of object graph that have been visited in `traverse'.
 
 feature -- Status report
-			
+
 	is_root_object_set: BOOLEAN is
 			-- Is starting point of graph traversing set?
 		do
 			Result := root_object /= Void
 		end
-			
+
 	is_object_action_set: BOOLEAN is
 			-- Is procedure to call on every object set?
 		do
@@ -63,7 +63,57 @@ feature -- Element change
 
 feature -- Basic operations
 
-	traverse is
+	frozen traverse is
+			-- Traverse object structure starting at 'root_object' and call object_action
+			-- on every object in the graph.
+			--| Redefine `internal_traverse' if you need to change the implementation.
+		require
+			root_object_available: is_root_object_set
+		local
+			l_int: INTERNAL
+			retried, l_has_lock: BOOLEAN
+		do
+			if not retried then
+				create l_int
+				l_int.lock_marking
+				l_has_lock := True
+				internal_traverse
+				l_int.unlock_marking
+			else
+				if l_has_lock then
+					l_int.unlock_marking
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	wipe_out is
+			-- Clear current to default values
+		do
+			visited_objects := Void
+			object_action := Void
+			root_object := Void
+		ensure
+			visited_objects_reset: visited_objects = Void
+			object_action_not_set: not is_object_action_set
+			root_object_not_set: not is_root_object_set
+		end
+
+feature {NONE} -- Implementation
+
+	new_dispenser: DISPENSER [ANY] is
+			-- New dispenser to use for storing visited objects.
+		deferred
+		ensure
+			new_dispenser_not_void: Result /= Void
+		end
+
+	default_size: INTEGER is 200
+			-- Default size for containers used during object traversal
+
+	internal_traverse is
 			-- Traverse object structure starting at 'root_object' and call object_action
 			-- on every object in the graph.
 		require
@@ -168,7 +218,7 @@ feature -- Basic operations
 				-- Unmark all objects.
 			from
 				i := 0
-				nb := l_visited.count				
+				nb := l_visited.count
 				l_arr := l_visited
 				l_spec := l_arr.area
 				l_arr := Void
@@ -182,29 +232,5 @@ feature -- Basic operations
 				-- Set `visited_objects'.
 			visited_objects := l_visited
 		end
-		
-	wipe_out is
-			-- Clear current to default values
-		do
-			visited_objects := Void
-			object_action := Void
-			root_object := Void
-		ensure
-			visited_objects_reset: visited_objects = Void
-			object_action_not_set: not is_object_action_set
-			root_object_not_set: not is_root_object_set
-		end
-		
-feature {NONE} -- Implementation
-
-	new_dispenser: DISPENSER [ANY] is
-			-- New dispenser to use for storing visited objects.
-		deferred
-		ensure
-			new_dispenser_not_void: Result /= Void
-		end
-
-	default_size: INTEGER is 200
-			-- Default size for containers used during object traversal
 
 end

@@ -191,7 +191,7 @@ shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lm'
 sharedlibversion='.5.6'
-sharedlink='ld'
+sharedlink='ldppc'
 suffix='.a'
 wkeiflib='wkbench'
 

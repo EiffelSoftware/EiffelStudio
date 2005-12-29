@@ -55,7 +55,7 @@ feature -- Redefine
 				caller.state.move_to_tab_zone (l_tab_zone)
 				Result := True
 			end
-			internal_shared.feedback.reaset_feedback_clearing
+			internal_shared.feedback.reset_feedback_clearing
 		end
 
 end

@@ -229,6 +229,7 @@ feature -- Redefine
 					change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
 				end
 				internal_docking_manager.command.unlock_update
+				internal_docking_manager.command.update_title_bar
 			end
 
 		ensure then

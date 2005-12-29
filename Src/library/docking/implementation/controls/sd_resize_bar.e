@@ -64,7 +64,7 @@ feature {NONE} -- Agents
 					debug ("larry")
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
-					internal_shared.feedback.draw_shadow_rectangle (screen_x, screen_y, width, height)
+					internal_shared.feedback.draw_line_area (screen_x, screen_y, width, height)
 					if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right  then
 						last_screen_pointer_position := screen_x
 					else
@@ -112,7 +112,7 @@ feature {NONE} -- Agents
 					else
 						last_screen_pointer_position := screen_boundary.right
 					end
-					internal_shared.feedback.draw_shadow_rectangle (last_screen_pointer_position, screen_y, width, height)
+					internal_shared.feedback.draw_line_area (last_screen_pointer_position, screen_y, width, height)
 				else
 					if a_screen_y > screen_boundary.top and a_screen_y < screen_boundary.bottom then
 						last_screen_pointer_position := a_screen_y
@@ -121,7 +121,7 @@ feature {NONE} -- Agents
 					elseif a_screen_y >= screen_boundary.bottom then
 						last_screen_pointer_position := screen_boundary.bottom
 					end
-					internal_shared.feedback.draw_shadow_rectangle (screen_x, last_screen_pointer_position, width, height)
+					internal_shared.feedback.draw_line_area (screen_x, last_screen_pointer_position, width, height)
 				end
 			end
 		end
@@ -158,9 +158,9 @@ feature {NONE}  -- Implemenetation
 			-- Clear the graph last drawn on the screen.
 		do
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				internal_shared.feedback.draw_shadow_rectangle (last_screen_pointer_position, screen_y, width, height)
+				internal_shared.feedback.draw_line_area (last_screen_pointer_position, screen_y, width, height)
 			else
-				internal_shared.feedback.draw_shadow_rectangle (screen_x, last_screen_pointer_position, width, height)
+				internal_shared.feedback.draw_line_area (screen_x, last_screen_pointer_position, width, height)
 			end
 		end
 

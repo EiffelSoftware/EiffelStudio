@@ -93,6 +93,32 @@ rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENC
 rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 
 /*
+doc:	<routine name="eif_lock_marking" export="public">
+doc:		<summary>Prevent 2 threads from using the EO_STORE marking facilities at the same time: this is the locking.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
+rt_public void eif_lock_marking (void)
+{
+	RT_GET_CONTEXT
+	EIF_EO_STORE_LOCK;
+}
+
+/*
+doc:	<routine name="eif_unlock_marking" export="public">
+doc:		<summary>Prevent 2 threads from using the EO_STORE marking facilities at the same time: this is the unlocking.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
+rt_public void eif_unlock_marking (void)
+{
+	RT_GET_CONTEXT
+	EIF_EO_STORE_UNLOCK;
+}
+
+/*
 doc:	<routine name="account_attributes" export="private">
 doc:		<summary>Account for types of attributes of dynamic type `dtype'.</summary>
 doc:		<param name="dtype" type="int16">Dynamic type from which we want to know the types of its attributes.</param>

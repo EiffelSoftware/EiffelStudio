@@ -30,7 +30,7 @@ feature -- Code generation
 			else
 				l_args := c_byte_code.argument_types
 			end
-			
+
 			internal_generate_access (c_byte_code.external_name, Void, c_byte_code.argument_count, l_ret_type, l_args)
 			l_buffer.put_character (';')
 			l_buffer.put_new_line
@@ -79,11 +79,11 @@ feature {NONE} -- Implementation
 				l_header.put_string ("extern ")
 				if return_type > 0 then
 					l_header.put_string (Names_heap.item (return_type))
+					l_header.put_character (' ')
 				else
 					a_ret_type.c_type.generate (l_header)
 				end
 
-				l_header.put_character (' ')
 				l_header.put_string (external_name)
 				l_header.put_character ('(')
 				from
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 				l_header.put_string (");")
 				l_header.put_new_line
 			end
-			
+
 			if a_ret_type.is_boolean then
 				l_buffer.put_string ("EIF_TEST")
 			end

@@ -179,7 +179,7 @@ feature -- Status report
 		require
 			object_not_void: obj /= Void
 		do
-			Result := Marked_objects.contains (obj)
+			Result := marked_objects.contains (obj)
 		end
 
 feature -- Access
@@ -1018,25 +1018,43 @@ feature -- Measurement
 feature -- Marking
 
 	mark (obj: ANY) is
-			-- Mark `obj'.
+			-- Mark object `obj'.
+			-- To be thread safe, make sure to call this feature when you
+			-- have the marking lock that you acquire using `lock_marking'.
 		require
 			object_not_void: obj /= Void
 			object_not_marked: not is_marked (obj)
 		do
-			Marked_objects.add (obj, obj)
+			marked_objects.add (obj, obj)
 		ensure
 			marked: is_marked (obj)
 		end
 
 	unmark (obj: ANY) is
-			-- Unmark `obj'.
+			-- Unmark object `obj'.
+			-- To be thread safe, make sure to call this feature when you
+			-- have the marking lock that you acquire using `lock_marking'.
 		require
 			object_not_void: obj /= Void
 			object_marked: is_marked (obj)
 		do
-			Marked_objects.remove (obj)
+			marked_objects.remove (obj)
 		ensure
 			not_marked: not is_marked (obj)
+		end
+
+	lock_marking is
+			-- Get a lock on `mark' and `unmark' routine so that 2 threads cannot `mark' and
+			-- `unmark' at the same time.
+		do
+			-- Nothing to be done, because `marked_objects' is per thread.
+		end
+
+	unlock_marking is
+			-- Release a lock on `mark' and `unmark', so that another thread can
+			-- use `mark' and `unmark'.
+		do
+			-- Nothing to be done, because `marked_objects' is per thread.
 		end
 
 feature {NONE} -- Cached data

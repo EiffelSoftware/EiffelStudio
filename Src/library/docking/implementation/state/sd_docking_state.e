@@ -80,11 +80,14 @@ feature -- Redefine.
 		do
 			create internal_shared
 			a_titles.start
-			l_content := internal_docking_manager.query.content_by_title (a_titles.item)
-			make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)
-			a_container.extend (zone)
-			change_state (Current)
-			direction := a_direction
+			l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
+			-- If we don't find SD_CONTENT, ignore it.
+			if l_content /= Void then
+				make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)
+				a_container.extend (zone)
+				change_state (Current)
+				direction := a_direction
+			end
 		end
 
 	record_state is

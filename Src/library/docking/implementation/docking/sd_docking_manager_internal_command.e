@@ -17,7 +17,6 @@ feature {NONE}  -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
---			create internal_lock_update_window.make_default
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end

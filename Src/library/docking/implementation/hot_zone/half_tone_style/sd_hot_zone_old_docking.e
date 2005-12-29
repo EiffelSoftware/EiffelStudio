@@ -16,16 +16,18 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make (a_zone: SD_DOCKING_ZONE) is
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
 		do
 			internal_zone := a_zone
+			create internal_shared
 			set_rectangle (create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
+		ensure
+			set: internal_zone = a_zone
 		end
-
-	internal_zone: SD_DOCKING_ZONE
 
 feature -- Redefine
 
@@ -33,70 +35,97 @@ feature -- Redefine
 			-- Redefine
 		local
 			l_half_height, l_half_width: INTEGER
+			l_left, l_top, l_width, l_height: INTEGER
 		do
-			l_half_height := (internal_zone.height * 0.5).ceiling
-			l_half_width := (internal_zone.width * 0.5).ceiling
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_rectangle (internal_rectangle_top.left, internal_rectangle_top.top, internal_zone.width, l_half_height, internal_shared.line_width)
+			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
+				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
+					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+
 				Result := True
-			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_rectangle (internal_rectangle_bottom.left, internal_rectangle_bottom.bottom - l_half_height, internal_zone.width, l_half_height, internal_shared.line_width)
-				Result := True
-			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_rectangle (internal_rectangle_left.left, internal_rectangle_left.top, l_half_width, internal_zone.height, internal_shared.line_width)
-				Result := True
-			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_rectangle (internal_rectangle_right.right - l_half_width, internal_rectangle_right.top, l_half_width, internal_zone.height, internal_shared.line_width)
-				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_rectangle (internal_zone.screen_x, internal_zone.screen_y, internal_zone.width, internal_zone.height, internal_shared.line_width)
-				Result :=True
+
+				l_half_height := (internal_zone.height * 0.5).ceiling
+				l_half_width := (internal_zone.width * 0.5).ceiling
+				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+					l_left := internal_rectangle_top.left
+					l_top := internal_rectangle_top.top
+					l_width := internal_zone.width
+					l_height := l_half_height
+					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_up)
+				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+					l_left := internal_rectangle_top.left
+					l_top := internal_rectangle_bottom.bottom - l_half_height
+					l_width := internal_zone.width
+					l_height := l_half_height
+					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_down)
+				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+					l_left := internal_rectangle_top.left
+					l_top := internal_rectangle_top.top
+					l_width := l_half_width
+					l_height := internal_zone.height
+					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_left)
+				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+					l_left := internal_rectangle_right.right - l_half_width
+					l_top := internal_rectangle_top.top
+					l_width := l_half_width
+					l_height := internal_zone.height
+					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_right)
+				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+					l_left := internal_zone.screen_x
+					l_top := internal_zone.screen_y
+					l_width := internal_zone.width
+					l_height := internal_zone.height
+					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_center)
+				end
+
+				internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
 			end
 		end
 
-	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
 			-- Redefine
+		local
+			l_docking_zone: SD_DOCKING_ZONE
 		do
+			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
+				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
+					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 
-		end
+				Result := True
 
-	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
-			-- Redefine
-		do
-
+				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+					l_docking_zone ?= internal_zone
+					check must_be_docking_zone: l_docking_zone /= Void end
+					caller.content.state.move_to_docking_zone (l_docking_zone)
+				end
+			end
+			internal_shared.feedback.reaset_feedback_clearing
 		end
 
 	clear_indicator is
 			-- Redefine
 		do
-
+			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_DOCKING_ZONE): BOOLEAN is
+	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		do
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
-				Result := True
-			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
-				Result := True
-			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
-				Result := True
-			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
-				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				caller.content.state.move_to_docking_zone (internal_zone)
-				Result := True
-			end
 		end
 
-	drawn: BOOLEAN
-			-- If alreay drawn the feedback rectangle which represent the window area.
+	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+			-- Redefine
+		do
+		end
 
-feature -- Access
+feature {NONE} -- Implementation
 
 	set_rectangle (a_rect: EV_RECTANGLE) is
 			-- Set the rectangle which allow user to dock.
@@ -108,7 +137,7 @@ feature -- Access
 		do
 			l_width := (a_rect.width * {SD_HOT_ZONE_OLD_MAIN}.hot_zone_size_proportion).ceiling
 			create internal_rectangle_left.make (a_rect.left , a_rect.top, l_width, a_rect.height)
-			create internal_rectangle_right.make (a_rect.right - l_width, a_rect.top, l_width, l_height)
+			create internal_rectangle_right.make (a_rect.right - l_width, a_rect.top, l_width, a_rect.height)
 
 			l_height := (a_rect.height * {SD_HOT_ZONE_OLD_MAIN}.hot_zone_size_proportion).ceiling
 			create internal_rectangle_top.make (a_rect.left, a_rect.top, a_rect.width, l_height)
@@ -122,14 +151,15 @@ feature -- Access
 				and internal_rectangle_left /= Void and internal_rectangle_right /= Void
 		end
 
-
-feature {NONE} -- Implementation
+	internal_zone: SD_ZONE
+			-- Caller
 
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center: EV_RECTANGLE
 			-- Five rectangle areas which allow user dock a window in this zone.
 
 invariant
 
+	internal_shared_not_void: internal_shared /= Void
 	rectangle_not_void: internal_rectangle_left /= Void and internal_rectangle_right /= Void and internal_rectangle_top /= Void and internal_rectangle_bottom /= Void and internal_rectangle_center /= Void
-	
+
 end

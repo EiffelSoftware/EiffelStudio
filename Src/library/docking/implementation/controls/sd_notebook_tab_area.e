@@ -62,38 +62,38 @@ feature -- Command
 
 	resize_tabs (a_width: INTEGER) is
 			-- Hide/show tabs base on space.
-		require
-			a_width_valid: a_width >= 0
 		local
 			l_tabs: ARRAYED_LIST [EV_WIDGET]
 		do
-			ignore_resize := True
-			updates_tabs_not_shown (a_width)
-			l_tabs := internal_tabs_not_shown.twin
-			from
-				l_tabs.start
-			until
-				l_tabs.after
-			loop
-				l_tabs.item.hide
+			if a_width >= 0 then
+				ignore_resize := True
+				updates_tabs_not_shown (a_width)
+				l_tabs := internal_tabs_not_shown.twin
+				from
+					l_tabs.start
+				until
+					l_tabs.after
+				loop
+					l_tabs.item.hide
 
-				l_tabs.forth
-			end
-
-			from
-				start
-			until
-				after
-			loop
-				if not l_tabs.has (item) and item /= internal_tool_bar then
-					item.show
-					ignore_resize := True
+					l_tabs.forth
 				end
-				forth
+
+				from
+					start
+				until
+					after
+				loop
+					if not l_tabs.has (item) and item /= internal_tool_bar then
+						item.show
+						ignore_resize := True
+					end
+					forth
+				end
+				ignore_resize := False
 			end
-			ignore_resize := False
 		ensure
-			enable_resize: ignore_resize = False
+			enable_resize: a_width >= 0 implies ignore_resize = False
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is

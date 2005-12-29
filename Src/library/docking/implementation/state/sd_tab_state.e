@@ -121,24 +121,27 @@ feature -- Redefine
 			until
 				a_titles.after
 			loop
-				l_content := internal_docking_manager.query.content_by_title (a_titles.item)
-				if l_first_tab then
-					create l_docking_state.make_for_tab_zone (l_content, a_container, a_direction)
-					l_content.change_state (l_docking_state)
-					l_docking_state.set_direction (a_direction)
-					l_first_tab := False
-				elseif not l_third_time then
- 					create l_tab_state.make (l_content, l_docking_state.zone, direction)
-					l_content.change_state (l_tab_state)
-					l_tab_state.set_direction (a_direction)
-					l_third_time := True
-				elseif l_third_time then
-					create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone, direction)
-					l_content.change_state (l_tab_state)
-					l_tab_state.set_direction (a_direction)
+				l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
+				if l_content /= Void then
+					if l_first_tab then
+						create l_docking_state.make_for_tab_zone (l_content, a_container, a_direction)
+						l_content.change_state (l_docking_state)
+						l_docking_state.set_direction (a_direction)
+						l_first_tab := False
+					elseif not l_third_time then
+	 					create l_tab_state.make (l_content, l_docking_state.zone, direction)
+						l_content.change_state (l_tab_state)
+						l_tab_state.set_direction (a_direction)
+						l_third_time := True
+					elseif l_third_time then
+						create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone, direction)
+						l_content.change_state (l_tab_state)
+						l_tab_state.set_direction (a_direction)
+					end
 				end
 				a_titles.forth
 			end
+--			update_last_content_state
 		ensure then
 			restored:
 		end
@@ -433,7 +436,7 @@ feature {NONE}  -- Implementation functions.
 			internal_docking_manager.command.unlock_update
 		end
 
-	change_zone_split_area_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER) is
+	change_zone_split_area_to_docking_zone (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Change zone split area to docking zone.
 			-- This routine copy from SD_DOCKING_STATE, only change internal_zone to tab_zone.
 		require
@@ -577,21 +580,6 @@ feature {NONE}  -- Implementation functions.
 		ensure
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
 		end
-
---	move_tab_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
---			-- Move selected tab to `a_target_zone'.
---		require
---			a_target_zone_not_void: a_target_zone /= Void
---		local
---			l_tab_state: SD_TAB_STATE
---			l_orignal_direction: INTEGER
---		do
---			l_orignal_direction := a_target_zone.state.direction
---			tab_zone.prune (internal_content)
---			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
---			change_state (l_tab_state)
---			update_last_content_state
---		end
 
 	dock_whole_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Dock whole zone at top of  `a_multi_dock_area'

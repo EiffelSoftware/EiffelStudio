@@ -189,14 +189,16 @@ feature -- Basic operations
 		require
 			line_width_valid: line_width > 0
 		do
-			-- Draw window area, top one.
-			draw_shadow_rectangle (left, top, width, line_width)
-			-- Draw window area, bottom one.
-			draw_shadow_rectangle (left, top + height - line_width, width, line_width)
-			-- Draw window area, left one.
-			draw_shadow_rectangle (left, top, line_width, height)
-			-- Draw window area, right one.
-			draw_shadow_rectangle (left + width - line_width, top, line_width, height)
+			if internal_last_feedback_left /= 0 and internal_last_feedback_top /= 0
+				and internal_last_feedback_width /= 0 and internal_last_feedback_height /= 0 then
+				clear_last_feedback
+			end
+			internal_last_feedback_left := left
+			internal_last_feedback_top := top
+			internal_last_feedback_width := width
+			internal_last_feedback_height := height
+
+			draw_rectangle_internal (left, top, width, height, line_width)
 		end
 
 	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER) is
@@ -291,6 +293,92 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
+
+feature {NONE} -- Implementation for draw_rectangle
+
+	draw_rectangle_internal_top (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+			-- Draw a vertical line on the screen.
+		do
+			if last_half_tone_pixmap_top = Void or
+				last_half_tone_pixmap_top.width /= a_width or last_half_tone_pixmap_top.height /= a_height then
+				last_half_tone_pixmap_top := half_tone_pixmap (a_width, a_height)
+			end
+			screen.set_invert_mode
+			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_top)
+		end
+		
+	draw_rectangle_internal_bottom (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+			-- Draw a vertical line on the screen.
+		do
+			if last_half_tone_pixmap_bottom = Void or
+				last_half_tone_pixmap_bottom.width /= a_width or last_half_tone_pixmap_bottom.height /= a_height then
+				last_half_tone_pixmap_bottom := half_tone_pixmap (a_width, a_height)
+			end
+			screen.set_invert_mode
+			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_bottom)
+		end
+
+	draw_rectangle_internal_left (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+			-- Draw a vertical line on the screen.
+		do
+			if last_half_tone_pixmap_left = Void or
+				last_half_tone_pixmap_left.width /= a_width or last_half_tone_pixmap_left.height /= a_height then
+				last_half_tone_pixmap_left := half_tone_pixmap (a_width, a_height)
+			end
+			screen.set_invert_mode
+			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_left)
+		end
+
+	draw_rectangle_internal_right (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+			-- Draw a vertical line on the screen.
+		do
+			if last_half_tone_pixmap_right = Void or
+				last_half_tone_pixmap_right.width /= a_width or last_half_tone_pixmap_right.height /= a_height then
+				last_half_tone_pixmap_right := half_tone_pixmap (a_width, a_height)
+			end
+			screen.set_invert_mode
+			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_right)
+		end
+
+	last_half_tone_pixmap_top, last_half_tone_pixmap_bottom, last_half_tone_pixmap_left, last_half_tone_pixmap_right: EV_PIXMAP
+			-- Pixmap last dran for `draw_rectangle'.
+
+feature -- For clear rectangle when drawing half-tone pixmap
+
+	internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height: INTEGER
+
+	clear_last_feedback is
+			-- Clear last drawn feedback rectangle.
+		do
+			draw_rectangle_internal (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height, internal_shared.line_width)
+
+		end
+
+	reaset_feedback_clearing is
+			-- Redefine
+		do
+			if internal_last_feedback_top /= 0 and internal_last_feedback_left /=0
+				and internal_last_feedback_width /= 0 and internal_last_feedback_height /= 0 then
+				clear_last_feedback
+				internal_last_feedback_top := 0
+				internal_last_feedback_left := 0
+				internal_last_feedback_width := 0
+				internal_last_feedback_height := 0
+			end
+
+		end
+
+	draw_rectangle_internal (left, top, width, height, line_width: INTEGER) is
+		do
+			-- Draw window area, top one.
+			draw_rectangle_internal_top (left, top, width, line_width)
+			-- Draw window area, bottom one.
+			draw_rectangle_internal_bottom (left, top + height - line_width, width, line_width)
+			-- Draw window area, left one.
+			draw_rectangle_internal_left (left, top + line_width, line_width, height - 2 * line_width)
+			-- Draw window area, right one.
+			draw_rectangle_internal_right (left + width - line_width, top + line_width, line_width, height - 2 * line_width)
+		end
 
 invariant
 

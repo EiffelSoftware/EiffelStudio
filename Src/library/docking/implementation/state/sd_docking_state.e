@@ -155,6 +155,7 @@ feature -- Redefine.
 				a_multi_dock_area.restore_spliter_position (l_old_spliter)
 			end
 			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
@@ -200,67 +201,42 @@ feature -- Redefine.
 				internal_docking_manager.command.remove_empty_split_area
 				internal_docking_manager.command.unlock_update
 			end
+			internal_docking_manager.command.update_title_bar
 		ensure then
 --			floated: old zone.parent /= zone.parent
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Redefine.
-		local
-			l_same_window: BOOLEAN
 		do
 			internal_docking_manager.command.lock_update (zone, False)
-
-			l_same_window := internal_docking_manager.query.is_zone_in_same_window (zone, a_target_zone)
 
 			if zone.parent /= Void then
 				zone.parent.prune (zone)
 			end
 
-			if not l_same_window then
-				internal_docking_manager.command.unlock_update
-				internal_docking_manager.command.lock_update (a_target_zone, False)
-			end
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 
 			change_zone_split_area_to_zone (a_target_zone, a_direction)
 			internal_docking_manager.command.unlock_update
-
+			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.update_title_bar
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
 			-- Redefine.
-		local
-			l_tab_state: SD_TAB_STATE
-			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.command.lock_update (zone, False)
-			internal_docking_manager.zones.prune_zone (zone)
-			l_orignal_direction := a_target_zone.state.direction
-			create l_tab_state.make (internal_content, a_target_zone, l_orignal_direction)
-			l_tab_state.set_direction (l_orignal_direction)
-			internal_docking_manager.command.remove_empty_split_area
-			change_state (l_tab_state)
-			internal_docking_manager.command.unlock_update
+			move_to_zone_internal (a_target_zone)
 		ensure then
 			state_changed: content.state /= Current
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
 			-- Redefine.
-		local
-			l_tab_state: SD_TAB_STATE
-			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.command.lock_update (zone, False)
-			internal_docking_manager.zones.prune_zone (zone)
-			l_orignal_direction := a_target_zone.state.direction
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
-			change_state (l_tab_state)
-			l_tab_state.set_direction (l_orignal_direction)
-			internal_docking_manager.command.remove_empty_split_area
-			internal_docking_manager.command.unlock_update
+			move_to_zone_internal (a_target_zone)
 		ensure then
 			state_changed: content.state /= Current
 		end
@@ -294,6 +270,35 @@ feature -- Redefine.
 			-- Redefine.
 
 feature {NONE} -- Implementation
+
+	move_to_zone_internal (a_target_zone: SD_ZONE) is
+			-- Move to a zone.
+		local
+			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
+			l_docking_zone: SD_DOCKING_ZONE
+			l_tab_zone: SD_TAB_ZONE
+		do
+			internal_docking_manager.command.lock_update (zone, False)
+			internal_docking_manager.zones.prune_zone (zone)
+			l_orignal_direction := a_target_zone.state.direction
+
+			l_docking_zone ?= a_target_zone
+			l_tab_zone ?= a_target_zone
+			internal_docking_manager.command.lock_update (a_target_zone, False)
+			if l_docking_zone /= Void then
+				create l_tab_state.make (internal_content, l_docking_zone, l_orignal_direction)
+			else
+				check only_allow_two_type_zone: l_tab_zone /= Void end
+				create l_tab_state.make_with_tab_zone (internal_content, l_tab_zone, l_orignal_direction)
+			end
+			internal_docking_manager.command.unlock_update
+			l_tab_state.set_direction (l_orignal_direction)
+			internal_docking_manager.command.remove_empty_split_area
+			change_state (l_tab_state)
+			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.update_title_bar
+		end
 
 	change_zone_split_area_to_zone (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Change zone parent split area to docking zone.

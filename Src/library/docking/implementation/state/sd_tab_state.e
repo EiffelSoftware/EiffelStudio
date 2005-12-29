@@ -149,13 +149,14 @@ feature -- Redefine
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Redefine.
 		do
-			internal_docking_manager.command.lock_update (zone, False)
+			internal_docking_manager.command.lock_update (a_multi_dock_area, False)
 			if zone.is_drag_title_bar then
 				dock_whole_at_top_level (a_multi_dock_area)
 			else
 				dock_tab_at_top_level (a_multi_dock_area)
 			end
 			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
@@ -216,16 +217,20 @@ feature -- Redefine
 			if not zone.is_drag_title_bar then
 				tab_zone.prune (internal_content)
 				create l_docking_state.make (internal_content, a_direction, tab_zone.width)
+				internal_docking_manager.command.unlock_update
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
+				internal_docking_manager.command.lock_update (zone, False)
 				update_last_content_state
+				internal_docking_manager.command.unlock_update
 			else
 				l_docking_zone ?= a_target_zone
 				if l_docking_zone /= Void then
 					change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
 				end
+				internal_docking_manager.command.unlock_update
 			end
-			internal_docking_manager.command.unlock_update
+
 		ensure then
 			parent_changed:
 		end
@@ -426,13 +431,13 @@ feature {NONE}  -- Implementation functions.
 			else
 				l_content := content
 				tab_zone.prune (l_content)
+				internal_docking_manager.command.unlock_update
 				create l_docking_state.make (l_content, {SD_DOCKING_MANAGER}.dock_left, {SD_SHARED}.title_bar_height)
 				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 				l_content.change_state (l_docking_state)
-
+				internal_docking_manager.command.lock_update (zone, False)
 				update_last_content_state
 			end
-			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.unlock_update
 		end
 
@@ -678,6 +683,7 @@ feature {NONE}  -- Implementation functions.
 					end
 				end
 				zone.destroy
+				internal_docking_manager.command.update_title_bar
 			end
 		ensure
 			updated: tab_zone.count = 1 implies tab_zone.last_content.state /= Current

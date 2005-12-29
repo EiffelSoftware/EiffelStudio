@@ -17,6 +17,7 @@ feature {NONE}  -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
+			create locked_windows.make_default
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -36,28 +37,41 @@ feature -- Commands
 			-- Lock window update.
 		require
 			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
-			only_lock_one_window: lock_call_time > 0 implies find_window (a_zone) = last_locked_window
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			if lock_call_time = 0 then
-				if a_main_window then
-					last_locked_window := internal_docking_manager.main_window
+				create l_env
+				if l_env.application.locked_window /= Void then
+					-- We should ignore these lock window update calls.
+					ignore_update := True
 				else
-					last_locked_window := internal_docking_manager.query.find_window_by_zone (a_zone)
+					lock_update_internal (a_zone, a_main_window)
 				end
-				last_locked_window.lock_update
+			else
+				if not ignore_update then
+					lock_update_internal (a_zone, a_main_window)
+				end
 			end
 			lock_call_time := lock_call_time + 1
+
 		end
+
+	ignore_update: BOOLEAN
 
 	unlock_update is
 			-- Unlock window update.
 		do
-
 			lock_call_time := lock_call_time - 1
 			if lock_call_time = 0 then
-				last_locked_window.unlock_update
-				remove_empty_split_area
-				update_title_bar
+				if not ignore_update then
+					unlock_update_internal
+				end
+				ignore_update := False
+			else
+				if not ignore_update then
+					unlock_update_internal
+				end
 			end
 		end
 
@@ -163,8 +177,8 @@ feature -- Contract Support
 			Result := internal_docking_manager.query.is_main_inner_container (a_container)
 		end
 
-	last_locked_window: EV_WINDOW
-			-- Window which be locked update.
+--	last_locked_window: EV_WINDOW
+--			-- Window which be locked update.
 
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
@@ -179,15 +193,60 @@ feature -- Contract Support
 
 feature {NONE}  -- Implementation
 
---	internal_lock_update_window: DS_HASH_TABLE [EV_WINDOW, INTEGER]
---			-- Which window is locked at 2nd's call time.
+	lock_update_internal (a_zone: EV_WIDGET; a_main_window: BOOLEAN) is
+			-- Lock window update.
+		require
+			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
+		local
+			l_lock_window: EV_WINDOW
+		do
+			if lock_call_time = 0 then
+				if a_main_window then
+					locked_windows.force_last (internal_docking_manager.main_window, 0)
+				else
+					locked_windows.force_last (internal_docking_manager.query.find_window_by_zone (a_zone), 0)
+				end
+				locked_windows.item (0).lock_update
+			else
+				if a_main_window then
+					l_lock_window := internal_docking_manager.main_window
+				else
+					l_lock_window := find_window(a_zone)
+				end
+				if  l_lock_window /= locked_windows.last then
+					locked_windows.last.unlock_update
+					locked_windows.force_last (l_lock_window, lock_call_time)
+					locked_windows.last.lock_update
+				end
+			end
+		end
+
+	unlock_update_internal is
+			-- Unlock window update.
+		do
+			if lock_call_time = 0 then
+				locked_windows.last.unlock_update
+				locked_windows.remove (0)
+				check no_windows_in_locked_window: locked_windows.count = 0 end
+			else
+				if locked_windows.has (lock_call_time) then
+					locked_windows.item (lock_call_time).unlock_update
+					locked_windows.remove (lock_call_time)
+					locked_windows.last.lock_update
+				end
+			end
+			remove_empty_split_area
+		end
+
+	locked_windows: DS_HASH_TABLE [EV_WINDOW, INTEGER]
+			-- Which window is locked. Works like a stack. Used by lock_update and unlock_update.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
 invariant
 
---	internal_lock_update_window_not_void: internal_lock_update_window /= Void
+	locked_windows_not_void: locked_windows /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 
 end

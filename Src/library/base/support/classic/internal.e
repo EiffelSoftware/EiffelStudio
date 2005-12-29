@@ -710,7 +710,9 @@ feature -- Measurement
 feature -- Marking
 
 	mark (obj: ANY) is
-			-- Mark object `obj'
+			-- Mark object `obj'.
+			-- To be thread safe, make sure to call this feature when you
+			-- have the marking lock that you acquire using `lock_marking'.
 		require
 			object_not_void: obj /= Void
 			object_not_marked: not is_marked (obj)
@@ -721,7 +723,9 @@ feature -- Marking
 		end
 
 	unmark (obj: ANY) is
-			-- Unmark object `obj'
+			-- Unmark object `obj'.
+			-- To be thread safe, make sure to call this feature when you
+			-- have the marking lock that you acquire using `lock_marking'.
 		require
 			object_not_void: obj /= Void
 			object_marked: is_marked (obj)
@@ -729,6 +733,24 @@ feature -- Marking
 			c_unmark ($obj)
 		ensure
 			is_not_marked: not is_marked (obj)
+		end
+
+	lock_marking is
+			-- Get a lock on `mark' and `unmark' routine so that 2 threads cannot `mark' and
+			-- `unmark' at the same time.
+		external
+			"C use %"eif_traverse.h%""
+		alias
+			"eif_lock_marking"
+		end
+
+	unlock_marking is
+			-- Release a lock on `mark' and `unmark', so that another thread can
+			-- use `mark' and `unmark'.
+		external
+			"C use %"eif_traverse.h%""
+		alias
+			"eif_unlock_marking"
 		end
 
 feature {NONE} -- Cached data

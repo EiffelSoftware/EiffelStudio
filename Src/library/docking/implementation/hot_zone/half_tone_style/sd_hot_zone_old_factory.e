@@ -12,7 +12,7 @@ inherit
 feature -- Factory method
 
 	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE is
-			-- Facotry method
+			-- Redefine
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			l_tab_zone: SD_TAB_ZONE
@@ -32,24 +32,24 @@ feature -- Factory method
 		end
 
 	hot_zone_main (a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
-			--
+			-- Redefine
 		do
-			Result := create {SD_HOT_ZONE_OLD_MAIN}.make (a_docking_manager)
+			Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
 		end
 
 
 feature {NONE}-- Implementation
 
 	hot_zone_docking (a_zone: SD_DOCKING_ZONE): SD_HOT_ZONE_OLD_DOCKING is
-			--
+			-- Hot zone for SD_DOCKING_ZONE.
 		do
 			create Result.make (a_zone)
 		end
 
 	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_OLD_TAB is
-			--
+			-- Hot zone for SD_TAB_ZONE.
 		do
-			create Result
+			create Result.make (a_zone)
 		end
 
 end

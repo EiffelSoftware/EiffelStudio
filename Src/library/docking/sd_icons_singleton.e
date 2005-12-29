@@ -271,4 +271,48 @@ feature -- Center indicators
 			Result :=  l_temp
 		end
 
+feature -- Old half-tone style icons.
+
+	drag_pointer_up: EV_CURSOR is
+			-- When user drag a zone, pointer showed at top area.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	drag_pointer_down: EV_CURSOR is
+			-- When user drag a zone, pointer showed at top area.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	drag_pointer_left: EV_CURSOR is
+			-- When user drag a zone, pointer showed at top area.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	drag_pointer_right: EV_CURSOR is
+			-- When user drag a zone, pointer showed at top area.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	drag_pointer_center: EV_CURSOR is
+			-- When user drag a zone, pointer showed at top area.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	drag_pointer_float: EV_CURSOR is
+			-- When user drag a zone, pointer showed when should float.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 end

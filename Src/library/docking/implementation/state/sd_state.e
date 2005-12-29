@@ -87,8 +87,6 @@ feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		deferred
-		ensure
-			set: direction = a_direction
 		end
 
 feature -- Commands

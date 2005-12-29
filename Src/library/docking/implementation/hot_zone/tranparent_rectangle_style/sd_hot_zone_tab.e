@@ -1,41 +1,44 @@
 indexing
-	description: "SD_HOT_ZONE for SD_TAB_ZONE."
+	description: "SD_HOT_ZONEs for SD_TAB_ZONEs."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_HOT_ZONE_OLD_TAB
+	SD_HOT_ZONE_TAB
 
 inherit
-	SD_HOT_ZONE_OLD_DOCKING
+	SD_HOT_ZONE_DOCKING
 		rename
-			make as make_docking
+			make as make_docking,
+			internal_zone as internal_zone_docking
 		redefine
 			apply_change
 		end
+
 create
 	make
 
-feature {NONE}  -- Initlization
+feature {NONE} -- Initlization
 
-	make (a_tab_zone: SD_TAB_ZONE) is
-			-- Creation method
+	make (a_zone: SD_TAB_ZONE; a_rect: EV_RECTANGLE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
+			-- Creation method.
 		require
-			not_void: a_tab_zone /= Void
+			a_zone_not_void: a_zone /= Void
+			a_rect_not_void: a_rect /= Void
+			a_docker_mediator_not_void: a_docker_mediator /= Void
 		do
 			create internal_shared
-			internal_zone := a_tab_zone
-			set_rectangle (create {EV_RECTANGLE}.make (a_tab_zone.screen_x, a_tab_zone.screen_y, a_tab_zone.width, a_tab_zone.height))
+			internal_mediator := a_docker_mediator
+			internal_zone := a_zone
+			set_rectangle (a_rect)
 		ensure
-			set: internal_zone = a_tab_zone
+			set: internal_mediator =  a_docker_mediator
 		end
 
 feature -- Redefine
 
 	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
 			-- Redefine.
-		local
-			l_tab_zone: SD_TAB_ZONE
 		do
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
@@ -50,12 +53,18 @@ feature -- Redefine
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				Result := True
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				l_tab_zone ?= internal_zone
-				check must_be_tab_zone: l_tab_zone /= Void end
-				caller.state.move_to_tab_zone (l_tab_zone)
+				caller.state.move_to_tab_zone (internal_zone)
 				Result := True
 			end
-			internal_shared.feedback.reaset_feedback_clearing
 		end
+
+feature {NONE} -- Implementation
+
+	internal_zone: SD_TAB_ZONE
+			-- Caller.
+
+invariant
+
+	internal_zone_not_void: internal_zone /= Void
 
 end

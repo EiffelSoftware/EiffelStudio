@@ -322,7 +322,9 @@ feature {NONE} -- Implementation for open config.
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
-				l_split ?= l_multi_dock_area.item
+				if l_multi_dock_area.readable then
+					l_split ?= l_multi_dock_area.item
+				end
 				if l_split /= Void then
 					open_inner_container_data_split_position (l_datas.item, l_split)
 				end
@@ -471,19 +473,25 @@ feature {NONE} -- Implementation for open config.
 			l_split, l_split_2: EV_SPLIT_AREA
 		do
 			if a_config_data.is_split_area then
-				if a_split.minimum_split_position <= a_config_data.split_position and a_split.maximum_split_position >= a_config_data.split_position then
+				if a_split.minimum_split_position <= a_config_data.split_position
+					 and a_split.maximum_split_position >= a_config_data.split_position
+					 	and a_split.full then
+					-- a_split may be not full, because when restore client programer may not
+					-- supply SD_CONTENT which existed when last saving config.
 					a_split.set_split_position (a_config_data.split_position)
 				end
 
 				if a_config_data.children_left.is_split_area then
 					l_split ?= a_split.first
-					check l_split /= Void end
-					open_inner_container_data_split_position (a_config_data.children_left, l_split)
+					if l_split /= Void then
+						open_inner_container_data_split_position (a_config_data.children_left, l_split)
+					end
 				end
 				if a_config_data.children_right.is_split_area then
 					l_split_2 ?= a_split.second
-					check l_split_2 /= Void end
-					open_inner_container_data_split_position (a_config_data.children_right, l_split_2)
+					if l_split_2 /= Void then
+						open_inner_container_data_split_position (a_config_data.children_right, l_split_2)
+					end
 				end
 			end
 		end
@@ -517,11 +525,14 @@ feature {NONE} -- Implementation for open config.
 			until
 				a_data.after
 			loop
-				l_content := internal_docking_manager.query.content_by_title ((a_data.item[1]).out)
-				create l_auto_hide_state.make (l_content, a_direction)
-				create l_list.make (1)
-				l_list.extend ((a_data.item[1]).out)
-				l_auto_hide_state.restore (l_list, l_panel, a_direction)
+				l_content := internal_docking_manager.query.content_by_title_for_restore ((a_data.item[1]).out)
+				-- If we don't find SD_CONTENT last saved, ignore it.
+				if l_content /= Void then
+					create l_auto_hide_state.make (l_content, a_direction)
+					create l_list.make (1)
+					l_list.extend ((a_data.item[1]).out)
+					l_auto_hide_state.restore (l_list, l_panel, a_direction)
+				end
 				a_data.forth
 			end
 		end

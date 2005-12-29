@@ -77,10 +77,12 @@ feature {NONE}
 
 	internal_zone: SD_ZONE
 			-- SD_ZONE which `Current' belong to.
-			
+
 	internal_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator which Current is managed by.
 invariant
 
 	type_valid: type = {SD_SHARED}.type_editor or type = {SD_SHARED}.type_normal
+	internal_shared_not_void: internal_shared /= Void
+
 end

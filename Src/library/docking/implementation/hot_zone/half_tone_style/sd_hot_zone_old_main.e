@@ -78,7 +78,7 @@ feature  -- Redefine
 				Result := True
 			end
 
-			internal_shared.feedback.reaset_feedback_clearing
+			internal_shared.feedback.reset_feedback_clearing
 		end
 
 	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

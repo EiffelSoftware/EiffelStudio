@@ -106,7 +106,7 @@ feature -- Redefine
 					caller.content.state.move_to_docking_zone (l_docking_zone)
 				end
 			end
-			internal_shared.feedback.reaset_feedback_clearing
+			internal_shared.feedback.reset_feedback_clearing
 		end
 
 	clear_indicator is

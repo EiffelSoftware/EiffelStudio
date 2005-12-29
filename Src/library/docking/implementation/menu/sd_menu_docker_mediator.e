@@ -118,10 +118,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			debug ("larry")
-				internal_shared.feedback.draw_red_rectangle (internal_top_hot_zone.area_managed.left, internal_top_hot_zone.area_managed.top, internal_top_hot_zone.area_managed.width, internal_top_hot_zone.area_managed.height)
-				internal_shared.feedback.draw_red_rectangle (internal_bottom_hot_zone.area_managed.left, internal_bottom_hot_zone.area_managed.top, internal_bottom_hot_zone.area_managed.width, internal_bottom_hot_zone.area_managed.height)
-				internal_shared.feedback.draw_red_rectangle (internal_left_hot_zone.area_managed.left, internal_left_hot_zone.area_managed.top, internal_left_hot_zone.area_managed.width, internal_left_hot_zone.area_managed.height)
-				internal_shared.feedback.draw_red_rectangle (internal_right_hot_zone.area_managed.left, internal_right_hot_zone.area_managed.top, internal_right_hot_zone.area_managed.width, internal_right_hot_zone.area_managed.height)
+--				internal_shared.feedback.draw_red_rectangle (internal_top_hot_zone.area_managed.left, internal_top_hot_zone.area_managed.top, internal_top_hot_zone.area_managed.width, internal_top_hot_zone.area_managed.height)
+--				internal_shared.feedback.draw_red_rectangle (internal_bottom_hot_zone.area_managed.left, internal_bottom_hot_zone.area_managed.top, internal_bottom_hot_zone.area_managed.width, internal_bottom_hot_zone.area_managed.height)
+--				internal_shared.feedback.draw_red_rectangle (internal_left_hot_zone.area_managed.left, internal_left_hot_zone.area_managed.top, internal_left_hot_zone.area_managed.width, internal_left_hot_zone.area_managed.height)
+--				internal_shared.feedback.draw_red_rectangle (internal_right_hot_zone.area_managed.left, internal_right_hot_zone.area_managed.top, internal_right_hot_zone.area_managed.width, internal_right_hot_zone.area_managed.height)
 			end
 		ensure
 			changed:

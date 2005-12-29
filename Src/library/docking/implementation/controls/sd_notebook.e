@@ -115,7 +115,7 @@ feature -- Command
 			end
 			notify_tab (tab_by_content (a_content))
 			internal_tab_box.resize_tabs (internal_tab_box.width)
-			selection_actions.call ([])
+--			selection_actions.call ([])
 		ensure
 			selectd: selected_item = a_content
 		end

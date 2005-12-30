@@ -615,6 +615,7 @@ feature {NONE} -- Implementation: Deep equality
 							// Nothing to compare so they are equal.
 						Result = true;
 					} else {
+						Type attribute_type = source_array.GetType ().GetElementType ();
 						for
 							(i = source_array.GetLowerBound (0);
 							i <= source_array.GetUpperBound (0);
@@ -623,7 +624,7 @@ feature {NONE} -- Implementation: Deep equality
 							source_attribute = source_array.GetValue (i);
 							target_attribute = target_array.GetValue (i);
 
-							Result = sub_internal_deep_equal (
+							Result = sub_internal_deep_equal (attribute_type,
 								source_attribute, target_attribute, traversed_objects);
 
 							if (!Result) {
@@ -651,7 +652,7 @@ feature {NONE} -- Implementation: Deep equality
 						// FIXME: we should store a `type_id' instead in the object for which
 						// comparison will always make sense.
 					if (!(source_attribute is RT_TYPE)) {
-						Result = sub_internal_deep_equal (
+						Result = sub_internal_deep_equal (attribute.FieldType,
 							source_attribute, target_attribute, traversed_objects);
 
 						if (!Result) {
@@ -678,6 +679,7 @@ feature {NONE} -- Implementation: Deep equality
 	}
 
 	private static bool sub_internal_deep_equal (
+		Type attribute_type,
 		object source_attribute,
 		object target_attribute,
 		Hashtable traversed_objects
@@ -692,8 +694,13 @@ feature {NONE} -- Implementation: Deep equality
 			Result = target_attribute == null;
 		} else if (target_attribute == null) {
 			Result = false;
-		} else if (source_attribute.GetType ().IsValueType) {
-			Result = target_attribute.Equals (source_attribute);
+		} else if (attribute_type.IsValueType) {
+				// Continue deep equality test for Eiffel types
+			if (source_attribute is EIFFEL_TYPE_INFO) {
+				Result = internal_deep_equal (source_attribute, target_attribute, traversed_objects);
+			} else {
+				Result = target_attribute.Equals (source_attribute);
+			}
 		} else if (traversed_objects.Contains (source_attribute)) {
 			Result = target_attribute == traversed_objects [source_attribute];
 		} else {

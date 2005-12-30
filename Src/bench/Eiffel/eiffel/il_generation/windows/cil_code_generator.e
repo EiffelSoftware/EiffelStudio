@@ -3744,9 +3744,7 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 			loop
 				desc ?= skeleton.item
 				attribute_type := desc.cl_type_i
-				Result := attribute_type.is_true_expanded and then
-					(attribute_type.base_class.creation_feature /= Void or else
-					is_initialization_required (attribute_type.associated_class_type))
+				Result := attribute_type.is_true_expanded and then not attribute_type.is_external
 				skeleton.forth
 			end
 		end
@@ -4992,6 +4990,45 @@ feature -- Array manipulation
 					end
 				end
 				method_body.put_opcode (l_opcode)
+			end
+		end
+
+	generate_array_initialization (actual_generic: CLASS_TYPE) is
+			-- Initialize native array with actual parameter type
+			-- `actual_generic' on the top of the stack.
+		local
+			enter_loop_label: IL_LABEL
+			continue_loop_label: IL_LABEL
+			local_number: INTEGER
+		do
+			if actual_generic.type.is_true_expanded and then not actual_generic.is_external then
+					-- Initialize elements with their default values:
+					-- int i = array.count;
+					-- while (i != 0) {
+					--   i--;
+					--   array [i].ctor ();
+					-- }
+				enter_loop_label := create_label
+				continue_loop_label := create_label
+				byte_context.add_local (int32_c_type)
+				local_number := byte_context.local_list.count
+				put_dummy_local_info (int32_c_type, local_number)
+				duplicate_top
+				generate_array_count
+				generate_local_assignment (local_number)
+				branch_to (enter_loop_label)
+				mark_label (continue_loop_label)
+				duplicate_top
+				generate_local (local_number)
+				put_integer_8_constant (1)
+				generate_binary_operator (il_minus)
+				duplicate_top
+				generate_local_assignment (local_number)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
+				method_body.put_call ({MD_OPCODES}.call, constructor_token (actual_generic.implementation_id), 0, False)
+				mark_label (enter_loop_label)
+				generate_local (local_number)
+				branch_on_true (continue_loop_label)
 			end
 		end
 

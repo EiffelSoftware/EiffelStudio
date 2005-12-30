@@ -4,22 +4,27 @@ indexing
 	revision: "$Revision$"
 
 class
-	UNDO_REMOVE_TRAILING_BLANK_CMD
-	
+	UNDO_DELETE_STRINGS_CMD
+
 inherit
 	UNDO_CMD
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialization 
+	make (a_text: EDITABLE_TEXT) is
+			-- Initialization
+		require
+			a_text_attached: a_text /= Void
 		do
 			create undo_remove_trailing_blank_list.make
+			text := a_text
+		ensure
+			text_not_void: text = a_text
 		end
-		
+
 feature -- Transformation
 
 	add (urc: UNDO_DELETE_CMD) is
@@ -27,7 +32,7 @@ feature -- Transformation
 		do
 			undo_remove_trailing_blank_list.extend (urc)
 		end
-		
+
 feature -- Status report
 
 	converse : BOOLEAN
@@ -38,8 +43,8 @@ feature -- Status change
 	set_converse (b: BOOLEAN) is
 			-- Set `converse' with `b'.
 		do
-			converse := b	
-		end		
+			converse := b
+		end
 
 feature -- Basic Operations
 
@@ -62,7 +67,7 @@ feature -- Basic Operations
 				actual_redo
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	actual_undo is
@@ -77,7 +82,7 @@ feature {NONE} -- Implementation
 				undo_remove_trailing_blank_list.back
 			end
 		end
-		
+
 	actual_redo is
 			-- Actual redo
 		do
@@ -88,13 +93,16 @@ feature {NONE} -- Implementation
 			loop
 				undo_remove_trailing_blank_list.item.redo
 				undo_remove_trailing_blank_list.forth
-			end	
-		end		
+			end
+		end
 
 	undo_remove_trailing_blank_list: LINKED_LIST [UNDO_DELETE_CMD]
 
+	text: EDITABLE_TEXT
+
 invariant
-	
+
 	undo_list_not_void: undo_remove_trailing_blank_list /= Void
+	text_not_void: text /= Void
 
 end

@@ -1,6 +1,7 @@
 indexing
 	description	: "[
-		Given a directory, call the make utility on all subdirectories if a `Makefile' exists,
+		Given a directory, call the make utility on all subdirectories if a `Makefile' exists
+		and without a `finished' file (which shows that compilation has already been done),
 		and if make is successful, then call make on the directory if a Makefile exists.
 
 		Since it is applied to Eiffel generated F_code/W_code and that the compilation in E1
@@ -157,11 +158,15 @@ feature {NONE} -- Implementation
 
 	process is
 			-- Call make
+		require
+			target_not_void: target /= Void
+			target_not_empty: not target.is_empty
+			make_utility_not_void: make_utility /= Void
+			make_utility_not_empty: not make_utility.is_empty
 		local
 			l_dirs: ARRAYED_LIST [STRING]
 			l_dir_name: STRING
 			l_name: DIRECTORY_NAME
-			l_makefile: FILE_NAME
 			l_dir: DIRECTORY
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
@@ -205,28 +210,19 @@ feature {NONE} -- Implementation
 			create l_sorter.make (create {DIRECTORY_SORTER})
 			l_sorted_list.sort (l_sorter)
 
+				-- Process additions of found directories.
 			from
 				l_sorted_list.start
 			until
 				l_sorted_list.after
 			loop
-				l_name := target.twin
-				l_name.extend (l_sorted_list.item_for_iteration)
-				create l_makefile.make_from_string (l_name)
-				l_makefile.set_file_name ("Makefile")
-				create l_file.make (l_makefile)
-				if l_file.exists then
-						-- Only process directories which have a Makefile.
-					actions.extend (agent compile_directory (l_name))
-				end
+				insert_directory (l_sorted_list.item_for_iteration)
 				l_sorted_list.forth
 			end
 
 			if l_has_e1 then
 					-- We excluded E1 from `l_sorted_list' to ensure it would be last in the list.
-				l_name := target.twin
-				l_name.extend ("E1")
-				actions.extend (agent compile_directory (l_name))
+				insert_directory ("E1")
 			end
 
 			l_min := number_of_cpu.min (actions.count)
@@ -283,17 +279,53 @@ feature {NONE} -- Implementation
 			target_not_empty: not target.is_empty
 			a_dir_not_void: a_dir /= Void
 			a_dir_not_empty: not a_dir.is_empty
+			make_utility_not_void: make_utility /= Void
+			make_utility_not_empty: not make_utility.is_empty
 		local
 			l_process: PROCESS
 		do
 			l_process := process_launcher (make_utility, Void, a_dir)
-			l_process.set_has_console (False)
 			l_process.launch
 			Result := l_process.last_operation_successful
 			if Result then
 				l_process.wait_for_exit
 				Result := l_process.exit_code = 0
 			end
+		end
+
+	insert_directory (a_dir: STRING) is
+			-- Insert processing of `a_dir' subdirectory of `target' into `actions'
+			-- if it has a `Makefile' and no `finished' file showing that it has not yet
+			-- been processed.
+		require
+			a_dir_not_void: a_dir /= Void
+			a_dir_not_empty: not a_dir.is_empty
+			make_utility_not_void: make_utility /= Void
+			make_utility_not_empty: not make_utility.is_empty
+		local
+			l_name: DIRECTORY_NAME
+			l_makefile, l_finished: FILE_NAME
+			l_file: RAW_FILE
+		do
+			l_name := target.twin
+			l_name.extend (a_dir)
+			create l_makefile.make_from_string (l_name)
+			l_makefile.set_file_name (makefile_name)
+			create l_file.make (l_makefile)
+			if l_file.exists then
+					-- Only process directories which have a Makefile.
+				l_name := target.twin
+				l_name.extend (a_dir)
+				create l_finished.make_from_string (l_name)
+				l_finished.set_file_name (finished_name)
+				create l_file.make (l_finished)
+				if not l_file.exists then
+						-- Only process directories which do not have a `finished' file, which shows
+						-- that the directory needs to be processed.
+					actions.extend (agent compile_directory (l_name))
+				end
+			end
+
 		end
 
 	compute_number_of_cpu (a_result: TYPED_POINTER [INTEGER]) is
@@ -310,5 +342,15 @@ feature {NONE} -- Implementation
 				}
 			]"
 		end
+
+feature {NONE} -- Constants
+
+	makefile_name: STRING is "Makefile"
+	finished_name: STRING is "finished"
+			-- Constants for file names.
+
+invariant
+	actions_not_void: actions /= Void
+	failed_actions_not_void: failed_actions /= Void
 
 end -- class EIFFEL_MAKE

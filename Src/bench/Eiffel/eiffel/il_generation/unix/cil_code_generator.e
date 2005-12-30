@@ -420,6 +420,12 @@ feature -- Array manipulation
 		do
 		end
 
+	generate_array_initialization (actual_generic: CLASS_TYPE) is
+			-- Initialize native array with actual parameter type
+			-- `actual_generic' on the top of the stack.
+		do
+		end
+
 	generate_array_creation (a_type_id: INTEGER) is
 			-- Create a new NATIVE_ARRAY [A] where `a_type_id' corresponds
 			-- to type id of `A'.

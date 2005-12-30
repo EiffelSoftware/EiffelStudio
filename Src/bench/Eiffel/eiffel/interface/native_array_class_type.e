@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class NATIVE_ARRAY_CLASS_TYPE 
+class NATIVE_ARRAY_CLASS_TYPE
 
 inherit
 	CLASS_TYPE
@@ -18,9 +18,9 @@ inherit
 	SHARED_IL_CODE_GENERATOR
 
 	IL_CONST
-	
+
 	PREDEFINED_NAMES
-	
+
 create
 	make
 
@@ -102,7 +102,7 @@ feature -- IL code generation
 						-- Most likely it is a formal. We do not handle this
 						-- case correctly yet.
 					generic_type_id := system.system_object_class.compiled_class.
-						types.first.static_type_id	
+						types.first.static_type_id
 				end
 				Il_generator.generate_array_write_preparation (generic_type_id)
 			end
@@ -121,6 +121,7 @@ feature -- IL code generation
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
 			type_kind: INTEGER
+			generic_type: CLASS_TYPE
 			generic_type_id: INTEGER
 		do
 			gen_param := first_generic
@@ -131,14 +132,15 @@ feature -- IL code generation
 			gen_param ?= array_type.true_generics.item (1)
 			cl_type ?= gen_param
 			if cl_type /= Void then
-				generic_type_id := cl_type.associated_class_type.static_type_id
+				generic_type := cl_type.associated_class_type
 			else
 					-- Most likely it is a formal. We do not handle this
 					-- case correctly yet.
-				generic_type_id := system.system_object_class.compiled_class.
-					types.first.static_type_id	
+				generic_type := system.system_object_class.compiled_class.
+					types.first
 				l_formal ?= gen_param
 			end
+			generic_type_id := generic_type.static_type_id
 
 			if not l_param_is_expanded then
 				inspect
@@ -195,8 +197,9 @@ feature -- IL code generation
 					il_generator.generate_check_cast (Void, array_type)
 				else
 					il_generator.generate_array_creation (generic_type_id)
+					il_generator.generate_array_initialization (generic_type)
 				end
-				
+
 			when count_name_id then
 				il_generator.generate_array_count
 

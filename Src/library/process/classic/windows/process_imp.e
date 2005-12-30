@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			end
 
 			hidden := False
-			has_console := True
+			separate_console := False
 			last_error := Void
 			last_output := Void
 			create prc_launcher.make (command_line, working_directory)
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 				working_directory := Void
 			end
 			hidden := False
-			has_console := True
+			separate_console := False
 			last_error := Void
 			last_output := Void
 			create prc_launcher.make (command_line, working_directory)
@@ -167,7 +167,7 @@ feature	-- Control
 					prc_launcher.run_hidden
 				end
 
-				prc_launcher.set_has_console (has_console)
+				prc_launcher.set_separate_console (separate_console)
 
 				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
 					l_in_fname := ""

@@ -121,10 +121,10 @@ feature -- Control
 				--(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream or
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 
-			if has_console then
+			if separate_console then
 				spawn_with_flags (cmd_line, working_directory, create_new_console)
 			else
-				spawn_with_flags (cmd_line, working_directory, create_no_window)
+				spawn_with_flags (cmd_line, working_directory, 0)
 			end
 
 			last_operation_successful := last_launch_successful
@@ -369,12 +369,12 @@ feature -- Control
 			end
 		end
 
-	set_has_console (b: BOOLEAN) is
+	set_separate_console (b: BOOLEAN) is
 			--
 		do
-			has_console := b
+			separate_console := b
 		ensure
-			has_console_set: has_console = b
+			separate_console_set: separate_console = b
 		end
 
 feature -- Status reporting
@@ -493,8 +493,8 @@ feature {NONE} -- Implementation
 
 	is_error_same_as_output: BOOLEAN
 
-	has_console: BOOLEAN
-			-- Will process be launched with a console?
+	separate_console: BOOLEAN
+			-- Will process be launched with a new console instead of inheriting parent's console?
 			-- Only has effects on Windows
 
 	startup_info: WEL_STARTUP_INFO is

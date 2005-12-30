@@ -768,14 +768,6 @@ feature -- Access
 			Result := current_type.base_class
 		end
 
-	instantiation_of (type: TYPE_I): TYPE_I is
-			-- Instantiation of `type' in `class_type'.
-		require
-			class_type_exists: class_type /= Void
-		do
-			Result := type.instantiation_in (class_type)
-		end
-
 	constrained_type (type: TYPE_I): TYPE_I is
 			-- Constrained type
 		require
@@ -810,7 +802,7 @@ feature -- Access
 			valid_class_type: class_type /= Void
 		do
 			Result := constrained_type (type)
-			Result := instantiation_of (Result)
+			Result := Result.instantiation_in (class_type)
 		ensure
 			not Result.is_formal
 		end

@@ -14,8 +14,6 @@ feature {PROCESS} -- Control
 			process_launcher_not_void: process_launcher /= Void
 			timer_destroyed: destroyed
 		deferred
-		ensure
-			timer_not_destroyed: not destroyed
 		end
 
 	destroy is

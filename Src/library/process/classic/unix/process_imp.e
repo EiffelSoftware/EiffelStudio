@@ -325,7 +325,7 @@ feature{NONE} -- Initialization
 			out_thread := Void
 			err_thread := Void
 			hidden := False
-			has_console := True
+			separate_console := False
 			last_error := Void
 			last_output := Void
 			buffer_size := initial_buffer_size
@@ -343,7 +343,7 @@ feature{NONE} -- Initialization
 			out_thread_set: out_thread = Void
 			err_thread_set: err_thread = Void
 			hidden_set: hidden = False
-			has_console_set: has_console = True
+			separate_console_set: not separate_console
 			last_error_set: last_error = Void
 			last_output_set: last_output = Void
 			buffer_size_set: buffer_size = initial_buffer_size

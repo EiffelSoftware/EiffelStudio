@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			process_not_launched: not launched
 			process_not_terminated: not force_terminated
 			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			has_console_on_windows: platform.is_windows implies has_console
+			separate_console_on_windows: platform.is_windows implies not separate_console
 			buffer_size_positive: buffer_size > 0
 			operation_succcessful: last_operation_successful
 			init_succeeded: initialization_successful
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			process_not_launched: not launched
 			process_not_terminated: not force_terminated
 			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			has_console_on_windows: platform.is_windows implies has_console
+			separate_console_on_windows: platform.is_windows implies not separate_console
 			buffer_size_positive: buffer_size > 0
 			operation_succcessful: last_operation_successful
 			init_succeeded: initialization_successful
@@ -313,16 +313,16 @@ feature -- Status setting
 			hidden_flag_set: hidden = h
 		end
 
-	set_has_console (b: BOOLEAN) is
-			-- Set `has_console' with `b'.
+	set_separate_console (b: BOOLEAN) is
+			-- Set `separate_console' with `b'.
 			-- Has effects on Windows.
 		require
 			process_not_running: not is_running
 			on_windows: platform.is_windows
 		do
-			has_console := b
+			separate_console := b
 		ensure
-			has_console_set: has_console = b
+			separate_console_set: separate_console = b
 		end
 
 
@@ -474,8 +474,8 @@ feature -- Status report
 			-- e.g., no console window will prompt out.
 			-- Has effects on Windows.
 
-	has_console: BOOLEAN
-			-- Will process be launched with a console?
+	separate_console: BOOLEAN
+			-- Will process be launched with a new console instead of inheriting parent's console?
 			-- Has effects on Windows.
 
 	command_line: STRING

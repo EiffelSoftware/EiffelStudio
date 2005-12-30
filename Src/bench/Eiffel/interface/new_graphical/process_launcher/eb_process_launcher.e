@@ -209,7 +209,7 @@ feature -- Control
 				prc.redirect_output_to_agent (output_handler)
 				if platform_constants.is_windows then
 					prc.set_hidden (is_hidden)
-					prc.set_has_console (False)
+					prc.set_separate_console (False)
 				end
 			else
 				prc.cancel_error_redirection
@@ -217,7 +217,7 @@ feature -- Control
 				prc.cancel_output_redirection
 				if platform_constants.is_windows then
 					prc.set_hidden (False)
-					prc.set_has_console (True)
+					prc.set_separate_console (True)
 				end
 
 			end

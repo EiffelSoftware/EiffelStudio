@@ -275,12 +275,12 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 			current_status := unsymbol
 		end
-		
+
 	record_remove_trailing_blank (s: STRING) is
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
-			undo_rtb_cmd: UNDO_REMOVE_TRAILING_BLANK_CMD
-			convers_undo_rtb_cmd: UNDO_REMOVE_TRAILING_BLANK_CMD
+			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
+			convers_undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
 			undo_delete_cmd: UNDO_DELETE_CMD
 		do
 			if not undo_list.is_empty or not redo_list.is_empty then
@@ -290,15 +290,15 @@ feature {EDITABLE_TEXT} -- Element change
 					end
 					if not redo_list.is_empty then
 						undo_rtb_cmd ?= redo_list.first
-					end					
+					end
 				end
 				if undo_rtb_cmd = Void then
-					create undo_rtb_cmd.make
+					create undo_rtb_cmd.make (text)
 				end
 				create undo_delete_cmd.make_from_string (text.cursor, s, text)
 				undo_rtb_cmd.add(undo_delete_cmd)
 				if current_status /= remove_trailing_blank then
-						-- Add real remove command to undo list and converse remove command to redo list.
+						-- Add real remove command to undo list and converse remove command to redo list.	
 					if not undo_list.is_empty then
 						item.bind_to_next
 						undo_list.put_front (undo_rtb_cmd)
@@ -313,7 +313,30 @@ feature {EDITABLE_TEXT} -- Element change
 				end
 				notify_observers
 			end
-		end		
+		end
+
+	record_uncomment (s: STRING) is
+			-- Update `Current' as `s' has just been removed at cursor position.
+		local
+			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
+			undo_delete_cmd: UNDO_DELETE_CMD
+		do
+			if current_status = uncomment then
+				if not undo_list.is_empty then
+					undo_rtb_cmd ?= item
+				end
+			end
+			if undo_rtb_cmd = Void then
+				create undo_rtb_cmd.make (text)
+				undo_list.put_front (undo_rtb_cmd)
+			end
+			create undo_delete_cmd.make_from_string (text.cursor, s, text)
+			undo_rtb_cmd.add(undo_delete_cmd)
+			if current_status /= uncomment then
+				current_status := uncomment
+			end
+			notify_observers
+		end
 
 feature {EDITABLE_TEXT} -- Basic operations
 
@@ -419,7 +442,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 				redo_list.remove
 			end
 		end
-		
+
 feature {EDITABLE_TEXT} -- Mark management
 
 	set_mark is
@@ -449,13 +472,13 @@ feature {EDITABLE_TEXT} -- Mark management
 		do
 			mark_enabled := True
 		end
-	
+
 	mark_enabled: BOOLEAN
 			-- Is it possible to set a mark?
 
 	has_mark: BOOLEAN
 			-- Has a position in the stack been marked?
-	
+
 	marked_cmd: UNDO_CMD
 			-- Marked command.
 
@@ -484,10 +507,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	move, insert_char, delete_char, insert_eol, 
-	replace, replace_selection, replace_all, 
+	move, insert_char, delete_char, insert_eol,
+	replace, replace_selection, replace_all,
 	back_delete, back_delete_combo, cut_selection,
-	paste, symbol, unsymbol, remove_trailing_blank : INTEGER is unique
+	paste, symbol, unsymbol, remove_trailing_blank, uncomment : INTEGER is unique
 
 feature -- Observer pattern
 

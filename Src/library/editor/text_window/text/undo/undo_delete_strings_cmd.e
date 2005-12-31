@@ -72,7 +72,11 @@ feature {NONE} -- Implementation
 
 	actual_undo is
 			-- Actual undo
+		local
+			x_in_characters, y_in_lines : INTEGER
 		do
+			x_in_characters := text.cursor.x_in_characters
+			y_in_lines := text.cursor.y_in_lines
 			from
 				undo_remove_trailing_blank_list.finish
 			until
@@ -81,11 +85,16 @@ feature {NONE} -- Implementation
 				undo_remove_trailing_blank_list.item.undo
 				undo_remove_trailing_blank_list.back
 			end
+			text.cursor.make_from_character_pos (x_in_characters, y_in_lines, text)
 		end
 
 	actual_redo is
 			-- Actual redo
+		local
+			x_in_characters, y_in_lines : INTEGER
 		do
+			x_in_characters := text.cursor.x_in_characters
+			y_in_lines := text.cursor.y_in_lines
 			from
 				undo_remove_trailing_blank_list.start
 			until
@@ -94,6 +103,7 @@ feature {NONE} -- Implementation
 				undo_remove_trailing_blank_list.item.redo
 				undo_remove_trailing_blank_list.forth
 			end
+			text.cursor.make_from_character_pos (x_in_characters, y_in_lines, text)
 		end
 
 	undo_remove_trailing_blank_list: LINKED_LIST [UNDO_DELETE_CMD]

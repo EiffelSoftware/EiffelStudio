@@ -637,9 +637,11 @@ feature {UNDO_CMD} -- Operations on selected text
 			start_pos	: INTEGER
 			end_pos		: INTEGER
 			y_line		: INTEGER
+			l_cursor	: INTEGER
+			l_line_modified: BOOLEAN	-- The line cursor at is modified.
 		do
 			on_text_edited (True)
-
+			l_cursor := cursor.x_in_characters
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 
 			start_pos := start_selection.x_in_characters
@@ -657,6 +659,9 @@ feature {UNDO_CMD} -- Operations on selected text
 
 					-- Add the commentary symbol in front of the line
 				line_image.prepend (symbol)
+				if ln = cursor.line then
+					l_line_modified := true
+				end
 
 					-- Rebuild line from the lexer.
 				lexer.set_in_verbatim_string (False)
@@ -701,6 +706,9 @@ feature {UNDO_CMD} -- Operations on selected text
 
 					-- Add the commentary symbol in front of the line
 				line_image.prepend(symbol)
+				if ln = cursor.line then
+					l_line_modified := true
+				end
 
 					-- Rebuild line from the lexer.
 				lexer.set_in_verbatim_string (False)
@@ -727,6 +735,9 @@ feature {UNDO_CMD} -- Operations on selected text
 				end
 				end_selection.set_x_in_characters(end_pos + symbol.count)
 			end
+			if l_line_modified then
+				cursor.set_x_in_characters (l_cursor + symbol.count)
+			end
 		end
 
 	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING) is
@@ -745,8 +756,11 @@ feature {UNDO_CMD} -- Operations on selected text
 			symbol_length	: INTEGER		-- number of characters in `symbol'
 			start_pos	: INTEGER
 			end_pos		: INTEGER
+			l_cursor: INTEGER
+			l_line_modified: BOOLEAN	-- The line cursor at is modified.
 		do
 			on_text_edited (True)
+			l_cursor := cursor.x_in_characters
 
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 
@@ -764,6 +778,9 @@ feature {UNDO_CMD} -- Operations on selected text
 
 					-- Remove the commentary symbol in front of the line (if any)
 				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
+					if ln = cursor.line then
+						l_line_modified := true
+					end
 					record_modified_line (ln)
 
 					line_image := line_image.substring(symbol_length + 1, line_image.count)
@@ -805,7 +822,9 @@ feature {UNDO_CMD} -- Operations on selected text
 					-- Remove the commentary symbol in front of the line (if any)
 				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
 					record_modified_line (ln)
-
+					if ln = cursor.line then
+						l_line_modified := true
+					end
 					line_image := line_image.substring(symbol_length + 1, line_image.count)
 					unsymboled_lines.extend (ln.index)
 						-- Rebuild line from the lexer.	
@@ -826,8 +845,11 @@ feature {UNDO_CMD} -- Operations on selected text
 					if ln = start_selection.line then
 						start_selection.set_x_in_characters((start_pos - symbol_length).max (1))
 					end
-					end_selection.set_x_in_characters((end_pos - symbol_length).max(1))
+					end_selection.set_x_in_characters((end_pos - symbol_length).max (1))
 				end
+			end
+			if l_line_modified then
+				cursor.set_x_in_characters ((l_cursor - symbol_length).max (1))
 			end
 		end
 

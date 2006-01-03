@@ -90,7 +90,7 @@ feature -- Hanlde pointer events
 			l_floating_zone ?= caller
 			if not changed and l_floating_zone /= Void then
 				l_floating_zone.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
 				end
 			end
@@ -213,12 +213,12 @@ feature {NONE} -- Implementation functions
 
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type.out + " caller.type " + caller.type.out)
 			end
 			if internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type = caller.type  then
 				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager))
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 				end
 			end

@@ -56,7 +56,7 @@ feature -- Command
 			internal_vertical_box.forth
 		end
 
-	disable_item_expand (a_label: SD_NOTEBOOK_HIDE_TAB_LABEL) is
+	disable_item_expand (a_label: SD_CONTENT_LABEL) is
 			-- Do not expand `an_item' to occupy available spare space.
 		do
 			internal_vertical_box.disable_item_expand (a_label)
@@ -67,7 +67,7 @@ feature -- Command
 		require
 			not_void: a_widget /= Void
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			internal_vertical_box.extend (a_widget)
 			l_label ?= a_widget
@@ -78,7 +78,7 @@ feature -- Command
 	set_focus is
 			-- Redefine
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 			l_found: BOOLEAN
 		do
 			Precursor {EV_CELL}
@@ -103,13 +103,13 @@ feature -- Command
 			end
 		end
 
-	set_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set size of `internal_scroll_area'.
-		require
-			size_valid: a_width >= 0 and a_height >= 0
-		do
-			internal_scroll_area.set_minimum_size (a_width, a_height)
-		end
+--	set_size (a_width: INTEGER; a_height: INTEGER) is
+--			-- Set size of `internal_scroll_area'.
+--		require
+--			size_valid: a_width >= 0 and a_height >= 0
+--		do
+--			internal_scroll_area.set_minimum_size (a_width, a_height)
+--		end
 
 	show_scroll_bar is
 			-- Show scroll bar.
@@ -141,7 +141,7 @@ feature -- Query
 			Result := internal_vertical_box.index
 		end
 
-	index_of (a_label: SD_NOTEBOOK_HIDE_TAB_LABEL): INTEGER is
+	index_of (a_label: SD_CONTENT_LABEL): INTEGER is
 			-- Index of a_label.
 		do
 			Result := internal_vertical_box.index_of (a_label, 1)
@@ -153,16 +153,16 @@ feature -- Query
 			Result := shown_labels.count
 		end
 
-	has (a_label: SD_NOTEBOOK_HIDE_TAB_LABEL): BOOLEAN is
+	has (a_label: SD_CONTENT_LABEL): BOOLEAN is
 			-- If current has a_label?
 		do
 			Result := internal_vertical_box.has (a_label)
 		end
 
-	shown_labels: ARRAYED_LIST [SD_NOTEBOOK_HIDE_TAB_LABEL] is
+	shown_labels: ARRAYED_LIST [SD_CONTENT_LABEL] is
 			-- Shown labels.
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			create Result.make (1)
 			from
@@ -181,10 +181,10 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	current_focus_label: SD_NOTEBOOK_HIDE_TAB_LABEL is
+	current_focus_label: SD_CONTENT_LABEL is
 			-- Label which is Current focused.
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			from
 				internal_vertical_box.start
@@ -202,7 +202,7 @@ feature -- Query
 			end
 		end
 
-	item: SD_NOTEBOOK_HIDE_TAB_LABEL is
+	item: SD_CONTENT_LABEL is
 			-- Label at current index.
 		do
 			Result ?= internal_vertical_box.item
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation functions
 	on_focus_out is
 			-- Handle focus out actions.
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			from
 				internal_vertical_box.start
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation functions
 	on_key_press (a_key: EV_KEY) is
 			-- Handle key press
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			inspect
 				a_key.code
@@ -306,12 +306,12 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_label_enable_color (a_label: SD_NOTEBOOK_HIDE_TAB_LABEL) is
+	on_label_enable_color (a_label: SD_CONTENT_LABEL) is
 			-- Handle a_label enable color action.
 		require
 			a_label_not_void: a_label /= Void
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			from
 				internal_vertical_box.start
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation functions
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion.
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			from
 				internal_vertical_box.start
@@ -359,8 +359,8 @@ feature {NONE} -- Implementation functions
 		require
 			shown_count_valid: label_shown_count > 1
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
-			l_shown_labels: ARRAYED_LIST [SD_NOTEBOOK_HIDE_TAB_LABEL]
+			l_label: SD_CONTENT_LABEL
+			l_shown_labels: ARRAYED_LIST [SD_CONTENT_LABEL]
 		do
 			l_label := current_focus_label
 			l_label.disable_focus_color
@@ -377,8 +377,8 @@ feature {NONE} -- Implementation functions
 		require
 			shown_count_valid: label_shown_count > 1
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
-			l_shown_labels: ARRAYED_LIST [SD_NOTEBOOK_HIDE_TAB_LABEL]
+			l_label: SD_CONTENT_LABEL
+			l_shown_labels: ARRAYED_LIST [SD_CONTENT_LABEL]
 		do
 			l_label := current_focus_label
 			l_label.disable_focus_color

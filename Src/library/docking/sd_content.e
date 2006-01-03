@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 			create l_state.make (Current)
 			internal_state := l_state
-			internal_type := {SD_SHARED}.type_normal
+			internal_type := {SD_SHARED}.type_tool
 
 			long_title := ""
 			short_title := ""
@@ -150,7 +150,7 @@ feature -- Set
 	set_type (a_type: INTEGER) is
 			-- Set `internal_type'.
 		require
-			a_type_valid: a_type = {SD_SHARED}.type_normal or a_type = {SD_SHARED}.type_editor
+			a_type_valid: a_type = {SD_SHARED}.type_tool or a_type = {SD_SHARED}.type_editor
 		do
 			internal_type := a_type
 		end
@@ -158,12 +158,11 @@ feature -- Set
 	set_focus is
 			-- Set focus to `Current'.
 		do
-			if internal_focus_in_actions /= Void and docking_manager.property.last_focus_content /= Current then
-				internal_focus_in_actions.call ([])
-				if state.zone /= Void then
-					state.zone.on_focus_in (Current)
-					docking_manager.property.set_last_focus_content (Current)
+			if docking_manager.property.last_focus_content /= Current then
+				if internal_focus_in_actions /= Void then
+					internal_focus_in_actions.call ([])
 				end
+				state.set_focus (Current)
 			end
 		end
 
@@ -314,7 +313,7 @@ feature -- States report
 
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,
 		 SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
-		 SD_DOCKING_MANAGER_COMMAND} -- State
+		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG} -- State
 
 	state: like internal_state is
 			-- Current state

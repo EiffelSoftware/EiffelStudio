@@ -86,6 +86,8 @@ feature -- Access
 			Result := allow_window_to_back_cell.item
 		end
 
+feature  -- Colors
+
 	non_focused_color: EV_COLOR is
 			-- Non focuse color. Used by SD_TITLE_BAR...
 		local
@@ -163,7 +165,7 @@ feature -- Contract Support
 	type_valid (a_type: INTEGER): BOOLEAN is
 			-- If `a_type' valid?
 		do
-			Result := a_type = type_editor or a_type = type_normal
+			Result := a_type = type_editor or a_type = type_tool
 		end
 
 feature -- Constants
@@ -183,7 +185,7 @@ feature -- Constants
 	Resize_bar_width_height: INTEGER is 5
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
 
-	Type_normal: INTEGER is 1
+	Type_tool: INTEGER is 1
 			-- Normal hot zones which normal zones have.
 
 	Type_editor: INTEGER is 2
@@ -233,6 +235,9 @@ feature -- Constants
 
 	drawing_area_icons_start_y: INTEGER is 2
 			-- When drawing area draw a icon, start y position.
+
+	Padding_width: INTEGER is 6
+			-- Padding width used by whold system.
 
 feature {NONE} -- Implementation
 

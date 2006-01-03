@@ -60,7 +60,7 @@ feature  -- Agents
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
 			internal_docking_manager.command.remove_auto_hide_zones

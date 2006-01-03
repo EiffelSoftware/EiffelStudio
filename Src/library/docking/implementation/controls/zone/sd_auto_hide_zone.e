@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
 				a_screen_boundary.set_top (internal_docking_manager.query.container_rectangle_screen.top)
 			end
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
 			end
 		end
@@ -146,11 +146,11 @@ feature {NONE} -- Implementation
 					internal_docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
 				end
 			else
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE before set zone height: " + height.out + " " + ($Current).out)
 				end
 				internal_docking_manager.zones.set_zone_size (Current, width, height + a_delta)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE after set zone height: " + height.out)
 				end
 				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_bottom then

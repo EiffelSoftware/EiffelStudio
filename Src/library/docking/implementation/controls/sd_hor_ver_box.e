@@ -27,7 +27,9 @@ inherit
 			prune_all as prune_all_vertical_box,
 			set_background_color as set_background_color_vertical_box,
 			background_color as background_color_vertical_box,
-			set_border_width as set_border_width_vertical_box
+			set_border_width as set_border_width_vertical_box,
+			set_padding_width as set_padding_width_vertical_box,
+			padding_width as padding_width_vertical_box
 		end
 
 create
@@ -281,12 +283,32 @@ feature -- Redefine
 		end
 
 	set_border_width (a_width: INTEGER) is
-			-- Redefine.
+			-- Redefine
 		do
 			if internal_vertical_style then
 				set_border_width_vertical_box (a_width)
 			else
 				horizontal_box.set_border_width (a_width)
+			end
+		end
+
+	set_padding_width (a_width: INTEGER) is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				set_padding_width_vertical_box (a_width)
+			else
+				horizontal_box.set_padding_width (a_width)
+			end
+		end
+
+	padding_width: INTEGER is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				Result := padding_width_vertical_box
+			else
+				Result := horizontal_box.padding_width
 			end
 		end
 

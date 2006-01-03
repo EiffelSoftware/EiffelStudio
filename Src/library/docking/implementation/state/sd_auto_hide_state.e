@@ -13,7 +13,8 @@ inherit
 			close,
 			stick,
 			change_title,
-			hide
+			hide,
+			set_focus
 		end
 
 create
@@ -43,7 +44,7 @@ feature {NONE} -- Initlization
 
 			create internal_tab_stub.make (internal_content, a_direction)
 
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
 			end
 			internal_tab_stub.pointer_enter_actions.extend (agent show)
@@ -112,7 +113,7 @@ feature {NONE} -- Auto hide functions.
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion actions pruned")
 				end
 			end
@@ -127,7 +128,7 @@ feature {NONE} -- Auto hide functions.
 		do
 			if not internal_tab_stub.has_recursive (a_widget) and not zone.has_recursive (a_widget) then
 				pointer_outside := True
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion pointer_outside := True " + a_screen_x.out + " " + a_screen_y.out)
 				end
 			else
@@ -200,8 +201,15 @@ feature {NONE} -- Auto hide attributes.
 
 feature -- Redefine.
 
+	set_focus (a_content: SD_CONTENT) is
+			-- Redefine
+		do
+			show
+			Precursor {SD_STATE} (a_content)
+		end
+
 	close is
-			-- Redefine.
+			-- Redefine
 		do
 			Precursor {SD_STATE}
 			close_internal
@@ -226,7 +234,7 @@ feature -- Redefine.
 		end
 
  	change_title (a_title: STRING; a_content: SD_CONTENT) is
-			-- Redefine.
+			-- Redefine
 		do
 			internal_tab_stub.set_text (a_title)
 		ensure then
@@ -422,7 +430,7 @@ feature {NONE} -- Implementation functions.
 					end
 					if width_height > zone.minimum_height then
 						internal_docking_manager.fixed_area.set_item_height (zone, width_height)
-						debug ("larry")
+						debug ("docking")
 							io.put_string ("%N SD_AUTO_HIDE_STATE show width_height " + width_height.out)
 						end
 					end

@@ -61,7 +61,7 @@ feature {NONE} -- Agents
 					resizing := True
 					create screen_boundary
 					resize_source.start_resize_operation (Current, screen_boundary)
-					debug ("larry")
+					debug ("docking")
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
 					internal_shared.feedback.draw_line_area (screen_x, screen_y, width, height)

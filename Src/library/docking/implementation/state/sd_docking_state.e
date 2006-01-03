@@ -116,7 +116,7 @@ feature -- Redefine.
 			if zone.parent /= Void then
 				zone.parent.prune (zone)
 			end
-			internal_docking_manager.command.unlock_update
+
 
 			internal_docking_manager.command.lock_update (Void, True)
 
@@ -130,9 +130,9 @@ feature -- Redefine.
 			end
 
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {EV_HORIZONTAL_SPLIT_AREA} l_new_container
+				create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
 			else
-				create {EV_VERTICAL_SPLIT_AREA} l_new_container
+				create {SD_VERTICAL_SPLIT_AREA} l_new_container
 			end
 
 			a_multi_dock_area.extend (l_new_container)
@@ -156,6 +156,7 @@ feature -- Redefine.
 			end
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
+			internal_docking_manager.command.unlock_update
 			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
@@ -323,9 +324,9 @@ feature {NONE} -- Implementation
 			check not l_target_zone_parent.full end
 			-- Then, insert current zone to new split area base on  `a_direction'.
 			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
+				create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
 			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
+				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
 			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
 				l_new_split_area.set_first (zone)
@@ -342,6 +343,7 @@ feature {NONE} -- Implementation
 				l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
 			end
 			l_new_split_area.set_proportion (0.5)
+			set_direction (a_target_zone.state.direction)
 			internal_docking_manager.command.remove_empty_split_area
 		ensure
 			changed:

@@ -9,7 +9,9 @@ class
 inherit
 	EV_HORIZONTAL_BOX
 		rename
-			extend as extend_horizontal_box
+			extend as extend_horizontal_box,
+			swap as swap_horizontal_box,
+			has as has_horizontal_box
 		end
 
 create
@@ -25,6 +27,10 @@ feature {NONE}  -- Initlization
 		do
 			default_create
 			create internal_shared
+--			set_border_width (internal_shared.border_width)
+--			set_background_color (internal_shared.border_color)
+			set_background_color ((create {EV_STOCK_COLORS}).black)
+
 			internal_notebook := a_notebook
 			internal_docking_manager := a_docking_manager
 
@@ -35,7 +41,12 @@ feature {NONE}  -- Initlization
 			create internal_tool_bar
 			create internal_auto_hide_indicator
 
+			create internal_tab_box
+			extend_horizontal_box (internal_tab_box)
+			disable_item_expand (internal_tab_box)
+
 			extend_horizontal_box (internal_tool_bar)
+			disable_item_expand (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
 			internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (0))
@@ -52,10 +63,11 @@ feature -- Redefine
 		require
 			a_widget_not_void: a_widget /= Void
 		do
-			finish
-			put_left (a_widget)
+			internal_tab_box.extend (a_widget)
+			internal_tab_box.disable_item_expand (a_widget)
+			resize_tabs (width)
 		ensure
-			extended: has (a_widget) and index_of (a_widget, 1) = count - 1
+			extended: internal_tab_box.has (a_widget)
 		end
 
 feature -- Command
@@ -63,7 +75,7 @@ feature -- Command
 	resize_tabs (a_width: INTEGER) is
 			-- Hide/show tabs base on space.
 		local
-			l_tabs: ARRAYED_LIST [EV_WIDGET]
+			l_tabs, l_all_tabs: ARRAYED_LIST [EV_WIDGET]
 		do
 			if a_width >= 0 then
 				ignore_resize := True
@@ -78,17 +90,17 @@ feature -- Command
 
 					l_tabs.forth
 				end
-
+				l_all_tabs := all_tabs.twin
 				from
-					start
+					l_all_tabs.start
 				until
-					after
+					l_all_tabs.after
 				loop
-					if not l_tabs.has (item) and item /= internal_tool_bar then
-						item.show
+					if not l_tabs.has (l_all_tabs.item) and l_all_tabs.item /= internal_tool_bar then
+						l_all_tabs.item.show
 						ignore_resize := True
 					end
-					forth
+					l_all_tabs.forth
 				end
 				ignore_resize := False
 			end
@@ -109,6 +121,23 @@ feature -- Command
 			end
 		ensure
 			action_extended: True
+		end
+
+	swap (a_tab, a_tab_2: SD_NOTEBOOK_TAB) is
+			-- Swap position of tabs
+		require
+			has: has (a_tab) and has (a_tab_2)
+		do
+			internal_tab_box.go_i_th (internal_tab_box.index_of (a_tab, 1))
+			internal_tab_box.swap (internal_tab_box.index_of (a_tab_2, 1))
+			internal_tab_box.disable_item_expand (a_tab)
+			internal_tab_box.disable_item_expand (a_tab_2)
+		end
+
+	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN is
+			-- Has a_tab ?
+		do
+			Result := internal_tab_box.has (a_tab)
 		end
 
 feature {NONE}  -- Implementation functions
@@ -187,15 +216,16 @@ feature {NONE}  -- Implementation functions
 		do
 			create Result.make (1)
 			from
-				start
+				internal_tab_box.start
 			until
-				after
+				internal_tab_box.after
 			loop
-				l_temp_tab ?= item
-				if l_temp_tab /= Void then
-					Result.extend (l_temp_tab)
-				end
-				forth
+				l_temp_tab ?= internal_tab_box.item
+				check only_has_tab: l_temp_tab /= Void end
+--				if l_temp_tab /= Void then
+				Result.extend (l_temp_tab)
+--				end
+				internal_tab_box.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -258,7 +288,8 @@ feature {NONE}  -- Implementation functions
 				internal_tool_bar.hide
 			end
 		ensure
-			setted: internal_tabs_not_shown.count > 0 implies internal_tool_bar.is_displayed
+			-- When there is not enough space to show `internal_tool_bar', follow contract broken.
+--			setted: internal_tabs_not_shown.count > 0 implies internal_tool_bar.is_displayed
 			setted: internal_tabs_not_shown.count = 0 implies not internal_tool_bar.is_displayed
 		end
 
@@ -329,14 +360,22 @@ feature {NONE}  -- Implementation attributes
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook which Current belong to.
 
+	internal_border: SD_CELL_WITH_BORDER
+			-- Border with cell.
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
+
+	internal_tab_box: EV_HORIZONTAL_BOX
+			-- Box which contain all tabs.
 
 	internal_shared: SD_SHARED
 			-- All singletons.
 
 invariant
 
+	internal_tab_box_not_void: internal_tab_box /= Void
+	internal_border_not_void: internal_border /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 	internal_tool_bar_not_void: internal_tool_bar /= Void

@@ -103,7 +103,7 @@ feature -- Basic operation
 		require
 			a_dragged_item_not_void: a_dragged_item /= Void
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_MENU_ROW start_drag")
 			end
 			create internal_item_positions_except_current.make (0)
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					--#################### Test
-					debug ("larry")
+					debug ("docking")
 						io.put_string ("%N SD_MENU_ROW test " + internal_item_positions_except_current.item.out)
 					end
 					--#################### Test	

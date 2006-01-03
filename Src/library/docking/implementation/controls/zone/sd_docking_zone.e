@@ -96,7 +96,7 @@ feature {NONE} -- For redocker.
 	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Create a SD_DOCKER_MEDIATOR, start hanlde pointer motion.
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
 			create docker_mediator.make (Current, internal_docking_manager)
@@ -120,7 +120,7 @@ feature {NONE} -- For redocker.
 		do
 			if docker_mediator /= Void then
 				docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N hot zone for docking ! yeah~" + a_screen_x.out + " " + a_screen_y.out)
 				end
 			end

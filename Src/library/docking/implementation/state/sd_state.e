@@ -103,9 +103,21 @@ feature -- Commands
 		deferred
 		end
 
+	set_focus (a_content: SD_CONTENT) is
+			-- Set focus.
+		require
+			has_content: has (a_content)
+		do
+			if zone /= Void then
+				zone.on_focus_in (a_content)
+				docking_manager.property.set_last_focus_content (content)
+			end
+		end
+
 	show is
 			-- Handle show zone.
 		do
+
 		end
 
 	hide is
@@ -181,6 +193,14 @@ feature {SD_CONTENT} -- SD_CONTENT called functions.
 		end
 
 feature  -- States report
+
+	has (a_content: SD_CONTENT): BOOLEAN is
+			-- If Current has `a_content'?
+		require
+			a_content_not_void: a_content /= Void
+		do
+			Result := internal_content = a_content
+		end
 
 	content_void: BOOLEAN is
 			-- If current a_content void?
@@ -277,7 +297,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_STATE top_split_position: a_spliter.minimum_split_position " + a_spliter.minimum_split_position.out + " a_spliter.maximum_split_position " + a_spliter.maximum_split_position.out)
 				io.put_string ("%N                      Result: " + Result.out)
 			end

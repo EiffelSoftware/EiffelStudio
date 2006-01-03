@@ -366,16 +366,42 @@ feature {NONE} -- Implementation functions.
 					l_tab_group.after
 				loop
 					l_tab_group.item.set_text_size (tab_groups_max_size.item)
-
+					update_separators (l_tab_group.index = 1, l_tab_group.index = l_tab_group.count, l_tab_group.item)
 					l_tab_group.forth
-				end
-
-				debug ("larry")
-					io.put_string ("%N SD_AUTO_HIDE_PANEL group max size " + tab_groups_max_size.item.out)
 				end
 
 				tab_groups.forth
 				tab_groups_max_size.forth
+			end
+		end
+
+	update_separators (a_first, a_last: BOOLEAN; a_tab: SD_TAB_STUB) is
+			-- Update separetor
+		do
+			if a_first then
+				if is_vertical then
+					a_tab.set_draw_separator_top (True)
+				else
+					a_tab.set_draw_separator_left (True)
+				end
+			end
+			inspect
+				internal_direction
+			when {SD_DOCKING_MANAGER}.dock_top then
+				a_tab.set_draw_separator_right (False)
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				a_tab.set_draw_separator_right (False)
+			when {SD_DOCKING_MANAGER}.dock_left then
+				a_tab.set_draw_separator_bottom (False)
+			when {SD_DOCKING_MANAGER}.dock_right then
+				a_tab.set_draw_separator_bottom (False)
+			end
+			if a_last then
+				if is_vertical then
+					a_tab.set_draw_separator_bottom (True)
+				else
+					a_tab.set_draw_separator_right (True)
+				end
 			end
 		end
 
@@ -522,7 +548,7 @@ feature {NONE} -- Impelementation attributes.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

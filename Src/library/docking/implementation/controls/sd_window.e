@@ -48,6 +48,7 @@ feature {NONE} -- Initlization
 
 			extend (internal_vertical_box)
 			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
+			internal_border_box.set_border_color (internal_shared.border_color)
 		ensure
 			extended: has (internal_vertical_box)
 			extended: internal_vertical_box.has (internal_title_bar)
@@ -138,7 +139,7 @@ feature -- Basic operation
 				internal_border_box.set_border_color (internal_shared.focused_color)
 			else
 				title_bar.disable_focus_color
-				internal_border_box.set_border_color (internal_shared.non_focused_color)
+				internal_border_box.set_border_color (internal_shared.border_color)
 			end
 		end
 

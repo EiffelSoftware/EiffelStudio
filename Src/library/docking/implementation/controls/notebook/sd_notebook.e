@@ -45,8 +45,13 @@ feature {NONE}  -- Initlization
 			create l_helper
 
 			internal_tab_box.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.auto_hide_panel_lightness))
-			extend_vertical_box (internal_tab_box)
-			disable_item_expand (internal_tab_box)
+			create internal_border_for_tab_area.make
+			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
+			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
+			internal_border_for_tab_area.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
+			extend_vertical_box (internal_border_for_tab_area)
+
+			internal_border_for_tab_area.extend (internal_tab_box)
 
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
@@ -69,7 +74,7 @@ feature -- Command
 			if a_focus then
 				internal_border_box.set_background_color (internal_shared.focused_color)
 			else
-				internal_border_box.set_background_color (internal_shared.non_focused_color)
+				internal_border_box.set_background_color (internal_shared.border_color)
 			end
 		end
 
@@ -115,6 +120,7 @@ feature -- Command
 			end
 			notify_tab (tab_by_content (a_content))
 			internal_tab_box.resize_tabs (internal_tab_box.width)
+
 --			selection_actions.call ([])
 		ensure
 			selectd: selected_item = a_content
@@ -135,7 +141,6 @@ feature -- Command
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)
-			internal_tab_box.disable_item_expand (l_tab)
 			select_item (a_content)
 		end
 
@@ -169,18 +174,18 @@ feature -- Command
 			a_position_valid: a_position = tab_top or a_position = tab_bottom
 		do
 			start
-			search (internal_tab_box)
+			search (internal_border_for_tab_area)
 			inspect
 				a_position
 			when tab_top then
 				if index /= 1 then
 					swap (1)
-					disable_item_expand (internal_tab_box)
+					disable_item_expand (internal_border_for_tab_area)
 				end
 			when tab_bottom then
 				if index /= 2 then
 					swap (2)
-					disable_item_expand (internal_tab_box)
+					disable_item_expand (internal_border_for_tab_area)
 				end
 			end
 		end
@@ -311,7 +316,7 @@ feature {NONE}  -- Implementation
 			dragging_tab := a_tab
 			enable_capture
 
-			debug ("larry")
+			debug ("docking")
 				print ("%NSD_NOTEBOOK on_tab_dragging enable capture")
 			end
 		end
@@ -326,7 +331,7 @@ feature {NONE}  -- Implementation
 			disable_capture
 
 
-			debug ("larry")
+			debug ("docking")
 				print ("%NSD_NOTEBOOK on_pointer_release disable capture    dragging_tab := Void? " + (dragging_tab = Void).out)
 			end
 		end
@@ -352,9 +357,9 @@ feature {NONE}  -- Implementation
 							internal_tab_box.search (internal_tabs.item)
 							l_target_tab := internal_tabs.item
 							internal_docking_manager.command.lock_update (Current, False)
-							internal_tab_box.swap (internal_tab_box.index_of (dragging_tab, 1))
-							internal_tab_box.disable_item_expand (dragging_tab)
-							internal_tab_box.disable_item_expand (l_target_tab)
+
+							internal_tab_box.swap (dragging_tab, internal_tabs.item)
+							internal_tab_box.resize_tabs (internal_tab_box.width)
 							on_resize (0, 0, width, height)
 							internal_docking_manager.command.unlock_update
 						end
@@ -364,7 +369,7 @@ feature {NONE}  -- Implementation
 					internal_tabs.forth
 				end
 
-				debug ("larry")
+				debug ("docking")
 					print ("%NSD_NOTEBOOK on_pointer_motion l_in_tabs ? " + l_in_tabs.out)
 				end
 
@@ -443,6 +448,9 @@ feature {NONE}  -- Implementation
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
+	internal_border_for_tab_area: SD_CELL_WITH_BORDER
+			-- Border box
+
 feature -- Emumeration
 
 	tab_top: INTEGER is 1
@@ -452,6 +460,7 @@ feature -- Emumeration
 
 invariant
 
+	internal_border_for_tab_area_not_void: internal_border_for_tab_area /= Void
 	tab_drag_actions_not_void: tab_drag_actions /= Void
 	internal_contents_not_void: internal_contents /= Void
 	internal_tabs_no_void: internal_tabs /= Void

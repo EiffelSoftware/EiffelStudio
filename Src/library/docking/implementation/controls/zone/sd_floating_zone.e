@@ -45,6 +45,9 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_floating_state_not_void: a_floating_state /= Void
+		local
+			l_acceler_test: EV_ACCELERATOR
+			l_test_key: EV_KEY
 		do
 			internal_floating_state := a_floating_state
 			internal_docking_manager := a_floating_state.docking_manager
@@ -65,7 +68,24 @@ feature {NONE} -- Initlization
 			create internal_inner_container.make (internal_docking_manager)
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
-			accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
+			if internal_floating_state.docking_manager.query.golbal_accelerators /= Void then
+				accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
+				set_title ("Ted")
+				create l_test_key.make_with_code ({EV_KEY_CONSTANTS}.key_a)
+				create l_acceler_test.make_with_key_combination (l_test_key, False, False, False)
+				l_acceler_test.actions.extend (agent on_test_del_it)
+				accelerators.extend (l_acceler_test)
+			end
+		end
+
+	on_test_del_it is
+			-- FIXIT:
+			-- Why dialog don't response to accelerators? But EV_TITLED_WINDOW works?
+		local
+			l_test: EV_INFORMATION_DIALOG
+		do
+			create l_test.make_with_text ("Test in SD_FLOATING_ZONE")
+			l_test.show
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config
@@ -371,7 +391,7 @@ feature {NONE} -- Agents
 		do
 			if a_button = 1 and docker_mediator /= Void then
 				disable_capture
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_FLOATING_ZONE: yeah, released! ")
 				end
 				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)

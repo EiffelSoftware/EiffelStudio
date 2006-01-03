@@ -45,25 +45,28 @@ feature -- Saturation
 		end
 
 	draw_color_change_gradually (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR) is
-			-- Draw color changed gradually on `a_drawing_area'.
+			-- Draw color changed gradually on `a_drawing_area' from start x position.
+		do
+			draw_color_change_gradually_from (a_drawing_area, 0, a_color, a_drawing_area.background_color)
+		end
+
+	draw_color_change_gradually_from (a_drawing_area: EV_DRAWING_AREA; a_start_x: INTEGER; a_start_color, a_to_color: EV_COLOR) is
+			-- Draw color changed gradually on `a_drawing_area' from a_start_x.
 		local
 			l_count: INTEGER
 			l_pixmap: EV_PIXMAP
-			l_color: EV_COLOR
 		do
 			if a_drawing_area.width >0 and a_drawing_area.height > 0 then
 				from
-					create l_pixmap.make_with_size (a_drawing_area.width, a_drawing_area.height)
-					l_color := a_drawing_area.background_color
-					a_drawing_area.clear
+					create l_pixmap.make_with_size (a_drawing_area.width - a_start_x, a_drawing_area.height)
 				until
-					l_count > a_drawing_area.width
+					l_count >= l_pixmap.width
 				loop
-					l_pixmap.set_foreground_color (color_mix (a_color, l_color, (1 - l_count / l_pixmap.width)))
+					l_pixmap.set_foreground_color (color_mix (a_start_color, a_to_color, (1 - l_count / l_pixmap.width)))
 					l_pixmap.draw_segment (l_count, 0, l_count, l_pixmap.height)
 					l_count := l_count + 1
 				end
-				a_drawing_area.draw_pixmap (0, 0, l_pixmap)
+				a_drawing_area.draw_pixmap (a_start_x, 0, l_pixmap)
 			end
 		end
 
@@ -126,7 +129,17 @@ feature -- Saturation
 				j := j + 1
 			end
 		end
-		
+
+	text_color_by (a_background_color: EV_COLOR): EV_COLOR is
+			-- Text color calculated base on a_background_color.
+		do
+			if a_background_color.lightness > 0.5 then
+				Result := (create {EV_STOCK_COLORS}).black
+			else
+				Result := (create {EV_STOCK_COLORS}).white
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	color_mix (a_first_color, a_second_color: EV_COLOR; a_percent: REAL): EV_COLOR is

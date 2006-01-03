@@ -34,9 +34,12 @@ feature {NONE} -- Initlization
 			Precursor {SD_NOTEBOOK}	(a_docking_manager)
 
 			create internal_top_box
-			prune_vertical_box (internal_tab_box)
+			prune_vertical_box (internal_border_for_tab_area)
 			start
-			put_left (internal_top_box)
+			put_left (internal_border_for_tab_area)
+			internal_border_for_tab_area.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
+			internal_border_for_tab_area.wipe_out
+			internal_border_for_tab_area.extend (internal_top_box)
 			internal_top_box.extend (internal_tab_box)
 
 			create custom_area
@@ -95,7 +98,7 @@ feature -- Command
 			-- Redefine
 		do
 			start
-			search (internal_top_box)
+			search (internal_border_for_tab_area)
 			inspect
 				a_position
 			when tab_top then
@@ -109,7 +112,7 @@ feature -- Command
 
 				end
 			end
-			disable_item_expand (internal_top_box)
+			disable_item_expand (internal_border_for_tab_area)
 		end
 
 	set_show_maximized (a_maximized: BOOLEAN) is
@@ -165,10 +168,10 @@ feature {NONE}  -- Implementation
 			-- Tool bar has `internal_normal_max_button', `internal_close_button'.
 
 	internal_normal_max_button: EV_TOOL_BAR_BUTTON
-			-- Normal\max button.
+			-- Normal\max button
 
 	internal_close_button: EV_TOOL_BAR_BUTTON
-			-- Close button.
+			-- Close button
 
 invariant
 

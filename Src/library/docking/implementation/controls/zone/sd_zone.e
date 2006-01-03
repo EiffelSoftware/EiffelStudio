@@ -164,7 +164,7 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 			content.focus_out_actions.call ([])
 		end
 
-feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT}  -- Focus in
+feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE}  -- Focus in
 
 	on_focus_in (a_content: SD_CONTENT) is
 			-- Handle focus in.

@@ -53,16 +53,16 @@ feature -- Redefine.
 			l_main_container_widget: EV_WIDGET
 		do
 			internal_docking_manager.command.lock_update (a_multi_dock_area, False)
-
+			set_all_zones_direction (direction)
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
 			internal_zone.destroy
 			if 	direction	= {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
-				l_split_area := create {EV_HORIZONTAL_SPLIT_AREA}
+				l_split_area := create {SD_HORIZONTAL_SPLIT_AREA}
 			else
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
-				l_split_area := create {EV_VERTICAL_SPLIT_AREA}
+				l_split_area := create {SD_VERTICAL_SPLIT_AREA}
 			end
 			l_main_container_widget := internal_docking_manager.query.inner_container_main.item
 			internal_docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget)
@@ -80,6 +80,7 @@ feature -- Redefine.
 			end
 			internal_docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget)
 			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.update_title_bar
 		end
 
 	record_state is
@@ -200,6 +201,22 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
+	set_all_zones_direction (a_direction: INTEGER) is
+			-- Set all zones direction.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+		do
+			l_zones := inner_container.zones
+			from
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_zones.item.state.set_direction (a_direction)
+				l_zones.forth
+			end
+		end
+
 	change_zone_split_area_whole_content (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Change whole floating zone contents to `a_target_zone'.
 		require
@@ -230,9 +247,9 @@ feature {NONE} -- Implementation
 			inner_container.wipe_out
 
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				l_spliter := create {EV_HORIZONTAL_SPLIT_AREA}
+				l_spliter := create {SD_HORIZONTAL_SPLIT_AREA}
 			else
-				l_spliter := create {EV_VERTICAL_SPLIT_AREA}
+				l_spliter := create {SD_VERTICAL_SPLIT_AREA}
 			end
 
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_top then

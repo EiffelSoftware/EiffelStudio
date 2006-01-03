@@ -46,7 +46,7 @@ feature {NONE} -- Initlization
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_height, l_bottom_width, l_bottom_height)
 			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - l_left_height // 2, l_left_width, l_left_height)
 			create right_rectangle.make (l_area.right - l_right_width, l_area.top + l_area.height // 2 - l_right_height // 2, l_right_width, l_right_height)
-			type := {SD_SHARED}.type_normal
+			type := {SD_SHARED}.type_tool
 		ensure
 			set: a_docker_mediator = internal_mediator
 			set: internal_docking_manager = a_docking_manager
@@ -82,7 +82,7 @@ feature  -- Redefine
 
 			l_floating_zone ?= caller
 			if not Result and  l_floating_zone = Void then
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N caller: " + caller.out)
 				end
 				caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)

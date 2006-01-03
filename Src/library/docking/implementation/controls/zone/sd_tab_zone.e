@@ -312,7 +312,7 @@ feature {NONE} -- Agents for docker
 			-- Handle pointer release.
 		do
 			if internal_docker_mediator /= Void then
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_TAB_ZONE Handle pointer release.")
 				end
 				disable_capture

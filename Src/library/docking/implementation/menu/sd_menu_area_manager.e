@@ -166,7 +166,7 @@ feature {NONE} -- Implementation functions.
 			end
 			l_new_row.extend (internal_menu_dock_mediator.caller)
 			internal_docking_manager.command.resize
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
 			end
 		ensure

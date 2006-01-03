@@ -7,7 +7,7 @@ class
 	SD_TAB_STUB
 
 inherit
-	EV_CELL
+	SD_HOR_VER_BOX
 
 create
 	make
@@ -21,47 +21,68 @@ feature {NONE} -- Initlization
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		local
-
+			l_cell: EV_CELL
 		do
 			create internal_shared
-			default_create
 
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+				init (True)
 				create internal_box.init (True)
 			else
+				init (False)
 				create internal_box.init (False)
 			end
-
 			content := a_content
 			create internal_drawing_area
 			internal_drawing_area.expose_actions.extend (agent on_redraw)
-			internal_drawing_area.set_minimum_size (a_content.pixmap.minimum_width, a_content.pixmap.minimum_height)
 
-			create internal_label.make_with_text (a_content.short_title)
-
-			create internal_border.make
-			internal_border.set_border_style (a_direction)
-			internal_border.set_border_color (internal_shared.border_color)
-			internal_border.set_border_width (internal_shared.border_width)
-			extend (internal_border)
-
-			internal_border.extend (internal_box)
-
+			extend (internal_box)
 			internal_box.extend (internal_drawing_area)
 			internal_box.disable_item_expand (internal_drawing_area)
-			internal_box.extend (internal_label)
 
-			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
 
 			internal_docking_manager := a_content.docking_manager
+
+			set_padding_width (internal_shared.padding_width)
+
+			is_show_text := True
+			init_separator (a_direction)
+			set_text (a_content.short_title)
+			create l_cell
+			internal_drawing_area.set_background_color (l_cell.background_color)
+			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
 		ensure
 			set: content = a_content
-			set: internal_label.text.is_equal (a_content.short_title)
-			actions_added: internal_label.pointer_enter_actions.count = 1 and internal_drawing_area.pointer_enter_actions.count = 1
-			label_added: internal_box.has (internal_label)
 			drawing_area_added: internal_box.has (internal_drawing_area)
 			set: internal_docking_manager = a_content.docking_manager
+		end
+
+	init_separator (a_direction: INTEGER) is
+			-- Initialization base on `a_direction'
+		require
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+		do
+			inspect
+				a_direction
+			when {SD_DOCKING_MANAGER}.dock_top then
+				set_draw_separator_left (True)
+				set_draw_separator_bottom (True)
+				set_draw_separator_right (True)
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				set_draw_separator_left (True)
+				set_draw_separator_top (True)
+				set_draw_separator_right (True)
+			when {SD_DOCKING_MANAGER}.dock_left then
+				set_draw_separator_top (True)
+				set_draw_separator_right (True)
+				set_draw_separator_bottom (True)
+			when {SD_DOCKING_MANAGER}.dock_right then
+				set_draw_separator_top (True)
+				set_draw_separator_left (True)
+				set_draw_separator_bottom (True)
+			end
 		end
 
 feature -- Query
@@ -69,40 +90,32 @@ feature -- Query
 	text: STRING is
 			-- Title.
 		do
-			Result := internal_label.text
+			Result := internal_text
 		end
 
 	text_width: INTEGER is
-			-- Width of title.
+			-- Width of title. Used for calculate max size in tab group.
 		do
-			Result := internal_label.minimum_width
+			Result := internal_drawing_area.font.string_width (internal_text)
 		end
+
+	text_size: INTEGER
+			-- Width/Height `internal_text' should extend to. It's max size in tab group.
 
 	content: SD_CONTENT
 			-- Which content current is represent.
 
 feature -- Command
 
-	set_show_text (a_show: BOOLEAN) is
-			-- If `a_show' True, show title. Vice visa.
-		do
-			if a_show then
-				internal_box.start
-				if not internal_box.has (internal_label) then
-					internal_box.extend (internal_label)
-				end
-			else
-				internal_box.start
-				if internal_box.has (internal_label) then
-					internal_box.prune_all (internal_label)
-				end
-			end
-		end
-
 	set_text (a_text: STRING) is
 			-- Set `title'.
 		do
-			internal_label.set_text (a_text)
+			internal_text := a_text
+			set_text_size (internal_drawing_area.font.string_width (a_text))
+			update_size_internal
+			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+		ensure
+			set: internal_text = a_text
 		end
 
 	set_text_size (a_size: INTEGER) is
@@ -110,11 +123,9 @@ feature -- Command
 		require
 			a_size_valid: a_size > 0
 		do
-			if internal_box.is_vertical then
-				internal_label.set_minimum_height (a_size)
-			else
-				internal_label.set_minimum_width (a_size)
-			end
+			text_size := a_size
+		ensure
+			set: text_size = a_size
 		end
 
 	set_auto_hide_panel (a_panel: SD_AUTO_HIDE_PANEL) is
@@ -126,6 +137,56 @@ feature -- Command
 		ensure
 			set: auto_hide_panel = a_panel
 		end
+
+feature -- Properties
+
+	set_draw_separator_top (a_draw: BOOLEAN) is
+			-- Set `is_draw_separator_top'.
+		do
+			is_draw_separator_top := a_draw
+		ensure
+			set: is_draw_separator_top = a_draw
+		end
+
+	set_draw_separator_bottom (a_draw: BOOLEAN) is
+			-- Set `is_draw_separator_bottom'.
+		do
+			is_draw_separator_bottom := a_draw
+		ensure
+			set: is_draw_separator_bottom = a_draw
+		end
+
+	set_draw_separator_left (a_draw: BOOLEAN) is
+			-- Set `is_draw_separator_left'.
+		do
+			is_draw_separator_left := a_draw
+		ensure
+			set: is_draw_separator_left = a_draw
+		end
+
+	set_draw_separator_right (a_draw: BOOLEAN) is
+			-- Set `is_draw_separator_right'.
+		do
+			is_draw_separator_right := a_draw
+		ensure
+			set: is_draw_separator_right = a_draw
+		end
+
+	is_draw_separator_top, is_draw_separator_bottom, is_draw_separator_left, is_draw_separator_right: BOOLEAN
+			-- Draw separator at top/botoom/left/right?
+
+	set_show_text (a_show: BOOLEAN) is
+			-- If `a_show' True, show title. Vice visa.
+		do
+			is_show_text := a_show
+			update_size_internal
+			on_redraw (0, 0, internal_drawing_area.width, internal_drawing_area.height)
+		ensure
+			set: is_show_text = a_show
+		end
+
+	is_show_text: BOOLEAN
+			-- Draw text on `internal_drawing_area'?
 
 feature {NONE} -- Agents
 
@@ -156,16 +217,90 @@ feature {NONE} -- Agents
 			-- Handle redraw.
 		do
 			internal_drawing_area.clear
-			internal_drawing_area.draw_pixmap (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, content.pixmap)
+
+			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_pixmap_internal, content.pixmap)
+			if is_show_text then
+				internal_drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+				internal_drawing_area.draw_text_top_left (start_x_text_internal, start_y_text_internal, internal_text)
+			end
+
+			internal_drawing_area.set_foreground_color (internal_shared.border_color)
+			if is_draw_separator_top then
+				internal_drawing_area.draw_segment (0, 0, internal_drawing_area.width - 1, 0)
+			end
+			if is_draw_separator_bottom then
+				internal_drawing_area.draw_segment (0, internal_drawing_area.height - 1, internal_drawing_area.width - 1, internal_drawing_area.height - 1)
+			end
+			if is_draw_separator_left then
+				internal_drawing_area.draw_segment (0, 0, 0, internal_drawing_area.height - 1)
+			end
+			if is_draw_separator_right then
+				internal_drawing_area.draw_segment (internal_drawing_area.width - 1, 0, internal_drawing_area.width - 1, internal_drawing_area.height - 1)
+			end
 		end
 
 feature {NONE} -- Implementation
 
+	update_size_internal is
+			-- Update minmum size base on direction and `is_show_text'.
+		local
+			l_size: INTEGER
+		do
+			if is_vertical then
+				l_size := padding_width + content.pixmap.height + padding_width
+				if is_show_text then
+					l_size := l_size + text_size + padding_width
+				end
+				internal_drawing_area.set_minimum_height (l_size)
+			else
+				l_size := padding_width + content.pixmap.width + padding_width
+				if is_show_text then
+					l_size := l_size + text_size + padding_width
+				end
+				internal_drawing_area.set_minimum_width (l_size)
+			end
+		end
+
+	start_x_pixmap_internal: INTEGER is
+			-- Start x position when `on_draw' draw pixmap.
+		do
+			if is_draw_separator_left then
+				Result := Result + 1
+			end
+			Result := Result + padding_width
+		end
+
+	start_y_pixmap_internal: INTEGER is
+			-- Start y position when `on_draw' draw pixmap.
+		do
+			if is_draw_separator_top then
+				Result := Result + 1
+			end
+			Result := Result + padding_width
+		end
+
+	start_x_text_internal: INTEGER is
+			-- Start x position when `on_draw' draw text.
+		do
+			if not is_vertical then
+				Result := start_x_pixmap_internal + content.pixmap.width + padding_width
+			else
+				Result := start_x_pixmap_internal
+			end
+		end
+
+	start_y_text_internal: INTEGER is
+			-- Start y position when `on_draw' draw text.
+		do
+			if not is_vertical then
+				Result := start_y_pixmap_internal
+			else
+				Result := start_y_pixmap_internal + content.pixmap.height + padding_width
+			end
+		end
+
 	internal_box: SD_HOR_VER_BOX
 			-- Box contain `internal_drawing_area' and `internal_label'.
-
-	internal_border: SD_CELL_WITH_BORDER
-			-- Border
 
 	tab_group: ARRAYED_LIST [SD_TAB_STUB] is
 			-- Tab group `Current' belong to.
@@ -179,8 +314,8 @@ feature {NONE} -- Implementation
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area draw `internal_pixmap'.
 
-	internal_label: EV_LABEL
-			-- Lable which has title.
+	internal_text: STRING
+			-- Text on `internal_drawing_area'.
 
 	internal_shared: SD_SHARED
 			-- All singletons.
@@ -192,6 +327,5 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 	internal_drawing_area_not_void: internal_drawing_area /= Void
-	internal_label_not_void: internal_label /= Void
 
 end

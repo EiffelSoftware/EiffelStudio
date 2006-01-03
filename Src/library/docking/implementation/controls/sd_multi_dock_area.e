@@ -112,7 +112,7 @@ feature -- Query
 			check l_widget /= Void end
 			Result := has_recursive (l_widget)
 		end
-	
+
 	zones: ARRAYED_LIST [SD_ZONE] is
 			-- All zones in Current.
 		do
@@ -121,7 +121,7 @@ feature -- Query
 				zones_recursive (item, Result)
 			end
 		end
-	
+
 	zones_recursive (a_widget: EV_WIDGET; a_list: like zones) is
 			-- Add all zones in `a_widget' to `a_list'.
 		require
@@ -140,7 +140,7 @@ feature -- Query
 				zones_recursive (l_container.second, a_list)
 			end
 		end
-		
+
 	parent_floating_zone: SD_FLOATING_ZONE
 			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 
@@ -157,8 +157,12 @@ feature {NONE} -- Implementation
 	 	do
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
-				set_all_title_bar (l_split_area.first)
-				set_all_title_bar (l_split_area.second)
+				if l_split_area.first /= Void then
+					set_all_title_bar (l_split_area.first)
+				end
+				if l_split_area.second /= Void then
+					set_all_title_bar (l_split_area.second)
+				end
 			end
 			l_title_bar_removeable ?= a_widget
 			if l_title_bar_removeable /= Void then
@@ -172,16 +176,16 @@ feature {NONE} -- Implementation
 					l_title_bar_removeable.set_show_stick (False)
 				end
 			end
-			
+
 			l_zone ?= a_widget
 			if l_zone /= Void then
 				if internal_docking_manager.property.last_focus_content /= Void and then l_zone.has (internal_docking_manager.property.last_focus_content) then
 					l_zone.set_title_bar_focus_color (True)
 				else
 					l_zone.set_title_bar_focus_color (False)
-				end					
+				end
 			end
-		
+
 	 	end
 
 	remove_empty_split_area_imp (a_split_area: EV_SPLIT_AREA) is
@@ -244,7 +248,7 @@ feature {NONE} -- Implementation
 
 			if l_temp_spliter /= Void then
 				l_spliter_position := l_temp_spliter.split_position
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_MULTI_DOCK_AREA l_spliter_position" + l_spliter_position.out)
 				end
 			end
@@ -294,7 +298,7 @@ feature {NONE} -- Implementation
 
 			if a_spliter.full then
 				spliters.extend ([a_spliter, a_spliter.split_position])
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: save " + a_spliter.split_position.out)
 				end
 			end
@@ -324,7 +328,7 @@ feature {NONE} -- Implementation
 
 			if a_spliter.full then
 				l_spliter_position := spliters.item.integer_item (2)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: open " + l_spliter_position.out)
 				end
 				-- Check
@@ -333,7 +337,7 @@ feature {NONE} -- Implementation
 
 				check a_spliter.full end
 
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: max " + a_spliter.maximum_split_position.out + " min " + a_spliter.minimum_split_position.out)
 				end
 				if l_spliter_position >= a_spliter.minimum_split_position and l_spliter_position <= a_spliter.maximum_split_position then
@@ -353,7 +357,7 @@ feature {NONE} -- Implementation attributes
 
 	internal_shared: SD_SHARED
 			-- All singletons.
-	
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 end

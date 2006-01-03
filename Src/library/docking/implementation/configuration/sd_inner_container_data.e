@@ -87,7 +87,7 @@ feature -- Tab and Docking datas.
 		end
 
 	is_horizontal_split_area: BOOLEAN
-			---If Current is a spliter, if Current is EV_HORIZONTAL_SPLIT_AREA?
+			---If Current is a spliter, if Current is SD_HORIZONTAL_SPLIT_AREA?
 
 	set_is_horizontal_split_area (a_value: BOOLEAN) is
 			-- Set `is_horizontal_split_area'.

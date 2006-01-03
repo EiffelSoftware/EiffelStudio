@@ -65,7 +65,7 @@ feature -- Factory method.
 					if a_style = {SD_SHARED}.type_editor then
 						Result := create {SD_TITLE_BAR}.make
 						Result.hide
-					elseif a_style = {SD_SHARED}.type_normal then
+					elseif a_style = {SD_SHARED}.type_tool then
 						create Result.make
 					end
 				end
@@ -80,7 +80,7 @@ feature -- Factory method.
 			if internal_style = style_all_same then
 				create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
 			elseif internal_style = style_different then
-				if a_content.type = {SD_SHARED}.type_normal then
+				if a_content.type = {SD_SHARED}.type_tool then
 					create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
 				elseif a_content.type = {SD_SHARED}.type_editor then
 					Result := create {SD_DOCKING_ZONE_UPPER}.make (a_content)
@@ -98,7 +98,7 @@ feature -- Factory method.
 				create Result.make (a_content, a_target_zone)
 			elseif internal_style = style_different then
 			    check style_valid: style_valid (a_content.type) end
-				if a_content.type = {SD_SHARED}.type_normal then
+				if a_content.type = {SD_SHARED}.type_tool then
 					create Result.make (a_content, a_target_zone)
 				elseif a_content.type = {SD_SHARED}.type_editor then
 					Result := create {SD_TAB_ZONE_UPPER}.make (a_content, a_target_zone)

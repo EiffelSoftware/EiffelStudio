@@ -169,6 +169,15 @@ feature -- Commands
 			end
 		end
 
+	on_zone_navigation is
+			-- User request to show zone navigation.
+		local
+			l_dialog: SD_ZONE_NAVIGATION_DIALOG
+		do
+			create l_dialog.make (internal_docking_manager)
+			l_dialog.show_relative_to_window (internal_docking_manager.main_window)
+		end
+
 feature -- Contract Support
 
 	is_main_inner_container (a_container: SD_MULTI_DOCK_AREA): BOOLEAN is
@@ -176,9 +185,6 @@ feature -- Contract Support
 		do
 			Result := internal_docking_manager.query.is_main_inner_container (a_container)
 		end
-
---	last_locked_window: EV_WINDOW
---			-- Window which be locked update.
 
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
@@ -225,14 +231,18 @@ feature {NONE}  -- Implementation
 			-- Unlock window update.
 		do
 			if lock_call_time = 0 then
-				locked_windows.last.unlock_update
+				if not locked_windows.last.is_destroyed then
+					locked_windows.last.unlock_update
+				end
 				locked_windows.remove (0)
 				check no_windows_in_locked_window: locked_windows.count = 0 end
 			else
 				if locked_windows.has (lock_call_time) then
 					locked_windows.item (lock_call_time).unlock_update
 					locked_windows.remove (lock_call_time)
-					locked_windows.last.lock_update
+					if not locked_windows.last.is_destroyed then
+						locked_windows.last.lock_update
+					end
 				end
 			end
 			remove_empty_split_area

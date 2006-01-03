@@ -22,7 +22,8 @@ inherit
 			content_count_valid,
 			is_dock_at_top,
 			show,
-			hide
+			hide,
+			has
 		end
 create
 	make,
@@ -217,11 +218,11 @@ feature -- Redefine
 			if not zone.is_drag_title_bar then
 				tab_zone.prune (internal_content)
 				create l_docking_state.make (internal_content, a_direction, tab_zone.width)
-				internal_docking_manager.command.unlock_update
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (zone, False)
 				update_last_content_state
+				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			else
 				l_docking_zone ?= a_target_zone
@@ -321,9 +322,7 @@ feature -- States report
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN is
-			--
-		require
-			a_content_not_void: a_content /= Void
+			-- Redefine
 		do
 			Result := tab_zone.has (a_content)
 		end
@@ -456,6 +455,7 @@ feature {NONE}  -- Implementation functions.
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 			-- First, remove current internal_zone from old parent split area.	
 			if  tab_zone.parent /= Void then
 				l_old_zone_parent_type := tab_zone.parent.generating_type
@@ -474,9 +474,9 @@ feature {NONE}  -- Implementation functions.
 			check not l_target_zone_parent.full end
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
 			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
+				create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
 			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
+				create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
 			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
 				l_new_split_area.set_first (tab_zone)
@@ -494,6 +494,7 @@ feature {NONE}  -- Implementation functions.
 				end
 			end
 			internal_docking_manager.query.inner_container (tab_zone).remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 		ensure
 			changed: a_target_zone.parent.has (tab_zone)
 		end
@@ -604,9 +605,9 @@ feature {NONE}  -- Implementation functions.
 			end
 
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				create {EV_HORIZONTAL_SPLIT_AREA} l_new_container
+				create {SD_HORIZONTAL_SPLIT_AREA} l_new_container
 			else
-				create {EV_VERTICAL_SPLIT_AREA} l_new_container
+				create {SD_VERTICAL_SPLIT_AREA} l_new_container
 			end
 
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then

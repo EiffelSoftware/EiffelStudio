@@ -33,7 +33,8 @@ feature {NONE}  -- Initlization
 			create internal_tab_labels.make (1)
 
 			extend_dialog (internal_vertical_box)
-
+			internal_vertical_box.set_border_width (internal_shared.border_width)
+			internal_vertical_box.set_padding_width (internal_shared.padding_width)
 			internal_vertical_box.extend (internal_text_box)
 			internal_vertical_box.disable_item_expand (internal_text_box)
 
@@ -50,6 +51,7 @@ feature {NONE}  -- Initlization
 			internal_label_box.focus_out_actions.extend (agent on_focus_out)
 
 			enable_border
+			enable_user_resize
 		ensure
 			set: internal_notebook = a_note_book
 			extended: has_dialog (internal_vertical_box) and internal_vertical_box.has (internal_text_box)
@@ -143,7 +145,7 @@ feature {NONE} -- Implementation agents.
 		local
 			l_search_result: ARRAYED_LIST [INTEGER]
 			l_passed_first: BOOLEAN
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			if internal_text_box.text.is_equal ("") then
 				from
@@ -186,7 +188,7 @@ feature {NONE} -- Implementation agents.
 	on_label_box_key_press (a_key: EV_KEY) is
 			-- Handle `internal_label_box' tab key press.
 		local
-			l_label: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_label: SD_CONTENT_LABEL
 		do
 			inspect
 				a_key.code
@@ -221,11 +223,11 @@ feature {NONE} -- Implementation functions.
 				set_height (l_max_height)
 				internal_label_box.show_scroll_bar
 			end
-			-- FIXIT: How to get border width of a window? And why uncomment follow 3 lines, probles will happen?
+			-- FIXIT: How to get border width of a window? And why uncomment follow 3 lines, problems will happen?
 --			create l_popup_window
 --			l_popup_window.enable_border
 --			set_width (internal_label_box.prefered_width + l_popup_window.minimum_width)
-			set_width (internal_label_box.prefered_width + 6)
+			set_width (internal_label_box.prefered_width + 6 + internal_shared.border_width * 2)
 		end
 
 	extend_tab_imp (a_tab: SD_NOTEBOOK_TAB; a_show: BOOLEAN) is
@@ -233,9 +235,9 @@ feature {NONE} -- Implementation functions.
 		require
 			not_void: a_tab /= Void
 		local
-			l_tab_indicator: SD_NOTEBOOK_HIDE_TAB_LABEL
+			l_tab_indicator: SD_CONTENT_LABEL
 		do
-			create l_tab_indicator.make (not a_show)
+			create l_tab_indicator.make (not a_show, internal_label_box)
 			l_tab_indicator.set_pixmap (a_tab.pixmap)
 			l_tab_indicator.set_text (a_tab.text)
 
@@ -247,7 +249,7 @@ feature {NONE} -- Implementation functions.
 --			extended: old internal_label_box.count = internal_label_box.count - 1
 		end
 
-	find_tab_by_label (a_label: SD_NOTEBOOK_HIDE_TAB_LABEL): SD_NOTEBOOK_TAB is
+	find_tab_by_label (a_label: SD_CONTENT_LABEL): SD_NOTEBOOK_TAB is
 			-- Find a tab by a_label.
 		require
 			a_label_not_void: a_label /= Void
@@ -312,7 +314,7 @@ feature {NONE}  --Implementation attributes.
 	internal_shared: SD_SHARED
 			-- All singletons.
 
-	max_screen_height_proportion: REAL is 0.66
+	max_screen_height_proportion: REAL is 0.50
 			-- Max proprotion of height base on screen.
 
 invariant

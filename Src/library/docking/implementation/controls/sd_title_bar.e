@@ -237,15 +237,13 @@ feature -- Access
 			-- Enable focus color.
 		local
 			l_text_color: EV_COLOR
+			l_color_helper: SD_COLOR_HELPER
 		do
+			create l_color_helper
 			is_focus_color_enable := True
 
 			internal_drawing_area.set_background_color (hightlight_color)
-			if hightlight_color.lightness > 0.5 then
-				create l_text_color.make_with_rgb (0, 0, 0)
-			else
-				create l_text_color.make_with_rgb (1, 1, 1)
-			end
+			l_text_color := l_color_helper.text_color_by (hightlight_color)
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
 --			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
@@ -259,17 +257,15 @@ feature -- Access
 			-- Disable focus color.
 		local
 			l_text_color: EV_COLOR
+			l_color_helper: SD_COLOR_HELPER
 		do
+			create l_color_helper
 			is_focus_color_enable := False
 			internal_drawing_area.set_background_color (hightlight_gray_color)
-			if hightlight_gray_color.lightness > 0.5 then
-				create l_text_color.make_with_rgb (0, 0, 0)
-			else
-				create l_text_color.make_with_rgb (1, 1, 1)
-			end
+
+			l_text_color := l_color_helper.text_color_by (hightlight_gray_color)
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (internal_shared.border_color)
---			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
 			on_expose
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable

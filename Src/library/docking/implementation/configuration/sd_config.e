@@ -34,7 +34,7 @@ feature -- Save/Open inner container data.
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N ================= SD_CONFIG_MEDIATOR save config ===============")
 			end
 
@@ -86,6 +86,7 @@ feature -- Save/Open inner container data.
 
 			internal_docking_manager.command.resize
 			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
 		end
 
@@ -110,7 +111,7 @@ feature {NONE} -- Implementation for save config.
 				l_zone.save_content_title (a_config_data)
 				a_config_data.set_state (l_zone.content.state.generating_type)
 				a_config_data.set_direction (l_zone.content.state.direction)
-				debug ("larry")
+				debug ("docking")
 					io.put_string ("%N SD_DOCKING_MANAGER zone")
 					io.put_string ("%N  zone: " + l_zone.content.unique_title)
 				end
@@ -123,10 +124,10 @@ feature {NONE} -- Implementation for save config.
 			a_split_area_not_void: a_split_area /= Void
 			a_config_data_not_void: a_config_data /= Void
 		local
-			l_hor: EV_HORIZONTAL_SPLIT_AREA
+			l_hor: SD_HORIZONTAL_SPLIT_AREA
 			l_temp: SD_INNER_CONTAINER_DATA
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_DOCKING_MANAGER ")
 				io.put_string ("%N  split area first : " + (a_split_area.first /= Void).out)
 				io.put_string ("%N  split area second: " + (a_split_area.second /= Void).out)
@@ -440,7 +441,7 @@ feature {NONE} -- Implementation for open config.
 		do
 			-- If it's a zone.
 			if not a_config_data.is_split_area then
-				debug ("larry")
+				debug ("docking")
 					a_config_data.titles.start
 					io.put_string ("%N SD_CONFIG_MEDIATOR open_inner_container_data " + a_config_data.titles.item + " " + a_config_data.state)
 				end
@@ -452,9 +453,9 @@ feature {NONE} -- Implementation for open config.
 				l_state.restore (a_config_data.titles, a_container, a_config_data.direction)
 			else	-- If it's a split_area
 				if a_config_data.is_horizontal_split_area then
-					create {EV_HORIZONTAL_SPLIT_AREA} l_temp_spliter
+					create {SD_HORIZONTAL_SPLIT_AREA} l_temp_spliter
 				else
-					create {EV_VERTICAL_SPLIT_AREA} l_temp_spliter
+					create {SD_VERTICAL_SPLIT_AREA} l_temp_spliter
 				end
 				a_container.extend (l_temp_spliter)
 				-- Go on recurisve.

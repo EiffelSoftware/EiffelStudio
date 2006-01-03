@@ -150,7 +150,7 @@ feature -- Basic operation
 		local
 			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_MENU_ZONE extend IGNINIDNIGDIG START")
 			end
 			content := a_content
@@ -167,7 +167,7 @@ feature -- Basic operation
 
 				l_items.forth
 			end
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_MENU_ZONE extend IGNINIDNIGDIG END")
 			end
 		ensure
@@ -292,7 +292,7 @@ feature {NONE} -- Implmentation
 			l_sd_sep: SD_TOOL_BAR_SEPARATOR
 			l_hbox: EV_HORIZONTAL_BOX
 		do
-			debug ("larry")
+			debug ("docking")
 				io.put_string ("%N SD_MENU_ZONE extend a_item")
 			end
 			l_item := a_item

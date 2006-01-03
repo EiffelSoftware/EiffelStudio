@@ -49,7 +49,7 @@ feature -- Commands
 	set_type (a_type: INTEGER) is
 			-- Set `type'.
 		require
-			a_type_valid: a_type = {SD_SHARED}.type_normal or a_type = {SD_SHARED}.type_editor
+			a_type_valid: a_type = {SD_SHARED}.type_tool or a_type = {SD_SHARED}.type_editor
 		do
 			type := a_type
 		ensure
@@ -82,7 +82,7 @@ feature {NONE}
 			-- Docker mediator which Current is managed by.
 invariant
 
-	type_valid: type = {SD_SHARED}.type_editor or type = {SD_SHARED}.type_normal
+	type_valid: type = {SD_SHARED}.type_editor or type = {SD_SHARED}.type_tool
 	internal_shared_not_void: internal_shared /= Void
 
 end

@@ -1,10 +1,13 @@
 indexing
-	description: "On SD_NOTEBOOK_TAB_AREA when show auto hide zones."
+	description: "[
+			A lable have pixmap and text.
+			Used by SD_NOTEBOOK_TAB_AREA when show auto hide zones, and SD_ZONE_NAVIGATION_DIALOG.
+																					]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_NOTEBOOK_HIDE_TAB_LABEL
+	SD_CONTENT_LABEL
 
 inherit
 	EV_HORIZONTAL_BOX
@@ -14,8 +17,10 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_bold_label: BOOLEAN) is
+	make (a_bold_label: BOOLEAN; a_focus_widget: EV_WIDGET) is
 			-- Creation method.
+		require
+			a_focus_widget_not_void: a_focus_widget /= Void
 		do
 			default_create
 			create internal_shared
@@ -42,8 +47,10 @@ feature {NONE}  -- Initlization
 
 			internal_pixmap_area.expose_actions.extend (agent on_expose)
 			set_minimum_height (internal_shared.title_bar_height)
+			internal_focus_widget := a_focus_widget
 		ensure
 			has: has (internal_pixmap_area) and has (internal_label)
+			set: internal_focus_widget = a_focus_widget
 		end
 
 feature -- Command
@@ -148,7 +155,7 @@ feature -- Implementation
 	on_pointer_enter is
 			-- Handle pointer enter.
 		do
-			if parent.has_focus then
+			if internal_focus_widget.has_focus then
 				enable_focus_color
 			else
 				enable_non_focus_color
@@ -165,13 +172,15 @@ feature -- Implementation
 
 	set_text_color_internal (a_background_color: EV_COLOR) is
 			-- Set `internal_label' color base on a_background_color.
+		local
+			l_color_helper: SD_COLOR_HELPER
 		do
-			if a_background_color.lightness > 0.5 then
-				internal_label.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			else
-				internal_label.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-			end
+			create l_color_helper
+			internal_label.set_foreground_color (l_color_helper.text_color_by (a_background_color))
 		end
+
+	internal_focus_widget: EV_WIDGET
+			-- Widget which we care it whether it has focus.
 
 	internal_label: EV_LABEL
 			-- Label which hold `text'.

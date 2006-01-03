@@ -83,7 +83,7 @@ feature -- Initialization
 			large_enough: n > 0
 		do
 			array_make (1, n)
-		end	
+		end
 
 	extend_block (n: INTEGER) is
 			-- Extend current to `n' elements.
@@ -210,7 +210,7 @@ feature
 			loop
 				Result := array_item(i).used
 				i := i + 1
-			end;	
+			end;
 		end
 
 	final_table_size: INTEGER is
@@ -230,9 +230,9 @@ feature
 		do
 			Result := type_id = array_item (binary_search (type_id)).type_id
 		end
-			
+
 	goto (type_id: INTEGER) is
-			-- Move cursor to the first entry of type_id `type_id' 
+			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an effective class (non-deferred).
 		require
 			positive: type_id > 0
@@ -311,7 +311,7 @@ feature
 				i := min_type_id;
 				nb := max_type_id;
 				index := lower
-				j := 0 
+				j := 0
 			until
 				i > nb
 			loop
@@ -362,7 +362,7 @@ feature
 				i := min_type_id;
 				nb := max_type_id;
 				index := lower
-				j := 0 
+				j := 0
 			until
 				i > nb
 			loop
@@ -467,7 +467,7 @@ feature -- Iteration
 		do
 			position := pos
 		end
-		
+
 	position: INTEGER
 			-- Actual position in the POLY_TABLE
 
@@ -501,7 +501,7 @@ feature -- Insertion
 			o_max := other.max_position
 			nb := i + o_max
 			max_position := nb
-			
+
 			if (nb > upper) then
 				increase_size (nb - i)
 			end
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 		local
 			up, down : INTEGER
 			x: INTEGER
-			temp: T 
+			temp: T
 		do
 				-- Define the pivot value as the first element of table
 			x := array_item (min).type_id
@@ -618,7 +618,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 				loop
 					up := up + 1
 				end
-			
+
 					-- Decrement down until it selects the first element
 					-- lesser than or equal to the pivot
 				from
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 			put (temp, min)
 			Result := down
 		end
-			
+
 feature {NONE} -- Implementation
 
 	binary_search (type_id: INTEGER): INTEGER is

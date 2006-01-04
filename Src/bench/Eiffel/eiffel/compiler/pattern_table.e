@@ -1,6 +1,6 @@
 -- Table of patterns
 
-class PATTERN_TABLE 
+class PATTERN_TABLE
 
 inherit
 
@@ -76,8 +76,7 @@ feature
 			loop
 				info := info_array.item_for_iteration
 				assoc_class := info.associated_class
-				if assoc_class /= Void then
-						-- Classes could be removed
+				if assoc_class /= Void and info.pattern.is_valid then
 					from
 						types := info.associated_class.types
 						types.start
@@ -173,7 +172,7 @@ feature -- Generation
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%
 				%#include %"eif_interp.h%"%N%N")
-	
+
 			buffer.start_c_specific_code
 
 			generate_pattern (buffer)

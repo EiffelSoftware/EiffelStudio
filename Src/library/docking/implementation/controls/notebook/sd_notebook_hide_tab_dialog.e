@@ -211,7 +211,7 @@ feature {NONE} -- Implementation functions.
 		local
 			l_max_height: INTEGER
 			l_screen: EV_SCREEN
---			l_popup_window: EV_POPUP_WINDOW
+			l_popup_window: EV_POPUP_WINDOW
 		do
 			create l_screen
 			l_max_height := (l_screen.height * max_screen_height_proportion).ceiling
@@ -223,11 +223,12 @@ feature {NONE} -- Implementation functions.
 				set_height (l_max_height)
 				internal_label_box.show_scroll_bar
 			end
-			-- FIXIT: How to get border width of a window? And why uncomment follow 3 lines, problems will happen?
---			create l_popup_window
---			l_popup_window.enable_border
---			set_width (internal_label_box.prefered_width + l_popup_window.minimum_width)
-			set_width (internal_label_box.prefered_width + 6 + internal_shared.border_width * 2)
+			-- FIXIT: How to get border width of a window?
+			create l_popup_window
+			l_popup_window.enable_border
+			if not is_destroyed then
+				set_width (internal_label_box.prefered_width + l_popup_window.minimum_width * 2)
+			end
 		end
 
 	extend_tab_imp (a_tab: SD_NOTEBOOK_TAB; a_show: BOOLEAN) is

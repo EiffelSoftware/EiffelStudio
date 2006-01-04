@@ -17,11 +17,12 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make (a_top: BOOLEAN) is
 			-- Creation method.
 		do
 			default_create
 			create internal_shared
+			internal_draw_border_at_top := a_top
 			set_padding_width (internal_shared.padding_width)
 			create internal_drawing_area
 			extend (internal_drawing_area)
@@ -36,9 +37,10 @@ feature {NONE}  -- Initlization
 			create pixmap
 			create select_actions
 			create drag_actions
-			internal_text_color := internal_shared.non_focused_color
 			init_actions
 			resize_actions.extend (agent on_resize)
+		ensure
+			set: internal_draw_border_at_top = a_top
 		end
 
 	init_actions is
@@ -111,13 +113,13 @@ feature -- Query
 			Result := internal_drawing_area.minimum_width
 		end
 
-feature -- Properties
-
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions.
 
 	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag tab actions.
+
+feature -- Properties
 
 	text: STRING
 			-- Text shown on Current.
@@ -153,7 +155,7 @@ feature -- Properties
 	is_selected: BOOLEAN
 			-- If Current tab selected?
 
-	set_selected (a_selected: BOOLEAN) is
+	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
 			-- Set `selected'.
 		local
 			l_color_helper: SD_COLOR_HELPER
@@ -162,14 +164,15 @@ feature -- Properties
 			is_selected := a_selected
 			create l_color_helper
 			if a_selected then
-				internal_drawing_area.set_background_color (internal_shared.focused_color)
-				internal_text_color := l_color_helper.text_color_by (internal_shared.focused_color)
+				if a_focused then
+					internal_drawing_area.set_background_color (internal_shared.focused_color)
+				else
+					internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
+				end
 				l_font := internal_drawing_area.font
 				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
-
 			else
 				internal_drawing_area.set_background_color (internal_shared.non_focused_color)
-				internal_text_color := l_color_helper.text_color_by (internal_shared.non_focused_color)
 				l_font := internal_drawing_area.font
 				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
 			end
@@ -187,20 +190,13 @@ feature {NONE}  -- Implmentation for drag action
 		do
 			internal_pointer_pressed := True
 			enable_capture
-
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
-			debug ("docking")
-				io.put_string ("%N SD_NOTEBOOK_TAB on_pointer_release")
-				print ("%N SD_NOTEBOOK_TAB on_pointer_release disable capture")
-			end
-
 			internal_pointer_pressed := False
 			disable_capture
-
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -209,9 +205,6 @@ feature {NONE}  -- Implmentation for drag action
 			if internal_pointer_pressed then
 				internal_pointer_pressed := False
 				disable_capture
-				debug ("docking")
-					print ("%N SD_NOTEBOOK_TAB on_pointer motion, after disable capture")
-				end
 				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
 
@@ -248,20 +241,20 @@ feature {NONE}  -- Implementation agents
 			l_helper: SD_COLOR_HELPER
 		do
 			internal_drawing_area.clear
---			if not internal_has_tab_before then
---				internal_drawing_area.set_foreground_color (internal_shared.border_color)
---				internal_drawing_area.draw_segment (start_x_separator_before_internal, 0, start_x_separator_before_internal, height)
---			end
 			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, 2, pixmap)
-
-			internal_drawing_area.set_foreground_color (internal_text_color)
+			create l_helper
+			internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_drawing_area.background_color))
 			internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, internal_start_y_position, text, a_width)
 			if is_selected then
-				create l_helper
-				l_helper.draw_color_change_gradually_from (internal_drawing_area, start_x_tail_internal, internal_shared.focused_color, internal_shared.non_focused_color)
+				l_helper.draw_color_change_gradually_from (internal_drawing_area, start_x_tail_internal, internal_drawing_area.background_color, internal_shared.non_focused_color)
 			end
 			internal_drawing_area.set_foreground_color (internal_shared.border_color)
 			internal_drawing_area.draw_segment (start_x_separator_after_internal, 0, start_x_separator_after_internal, height)
+			if internal_draw_border_at_top then
+				internal_drawing_area.draw_segment (0, 0, internal_drawing_area.width - 1, 0)
+			else
+				internal_drawing_area.draw_segment (0, internal_drawing_area.height - 1, internal_drawing_area.width - 1, internal_drawing_area.height - 1)
+			end
 		end
 
 feature {NONE}  -- Implementation functions.
@@ -318,9 +311,6 @@ feature {NONE}  -- Implementation functions.
 
 feature {NONE}  -- Implementation attributes
 
-	internal_text_color: EV_COLOR
-			-- Color of `text'
-
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area for pixmap.
 
@@ -333,16 +323,17 @@ feature {NONE}  -- Implementation attributes
 	internal_has_tab_before, internal_has_tab_after: BOOLEAN
 			-- If before/after Current, there is a tab?
 
+	internal_draw_border_at_top: BOOLEAN
+			-- If draw border at top?
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 
 invariant
 
-	internal_text_color_not_void: internal_text_color /= Void
 	internal_shared_not_void: internal_shared /= Void
 	select_actions_not_void: select_actions /= Void
 	drag_actions_not_void: drag_actions /= Void
-
 	internal_drawing_area_not_void: internal_drawing_area /= Void
 
 end

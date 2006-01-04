@@ -41,6 +41,7 @@ feature {NONE} -- Initlization
 			internal_border_for_tab_area.wipe_out
 			internal_border_for_tab_area.extend (internal_top_box)
 			internal_top_box.extend (internal_tab_box)
+			internal_tab_box.set_gap (True)
 
 			create custom_area
 			internal_top_box.extend (custom_area)

@@ -99,6 +99,17 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
+	non_focused_color_lightness: EV_COLOR is
+			-- Lighter `non_focused_color'.
+		local
+			l_helper: SD_COLOR_HELPER
+			l_cell: EV_CELL
+		once
+			create l_helper
+			create l_cell
+			Result := l_helper.build_color_with_lightness (l_cell.background_color, Auto_hide_panel_lightness)
+		end
+
 	focused_color: EV_COLOR is
 			-- Focused color. Used by SD_TITLE_BAR...
 		local

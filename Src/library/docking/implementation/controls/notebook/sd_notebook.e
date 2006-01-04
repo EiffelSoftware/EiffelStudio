@@ -44,7 +44,7 @@ feature {NONE}  -- Initlization
 			create internal_tab_box.make (Current, internal_docking_manager)
 			create l_helper
 
-			internal_tab_box.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.auto_hide_panel_lightness))
+			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_border_for_tab_area.make
 			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
@@ -52,6 +52,7 @@ feature {NONE}  -- Initlization
 			extend_vertical_box (internal_border_for_tab_area)
 
 			internal_border_for_tab_area.extend (internal_tab_box)
+			internal_tab_box.set_gap (False)
 
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
@@ -73,8 +74,10 @@ feature -- Command
 		do
 			if a_focus then
 				internal_border_box.set_background_color (internal_shared.focused_color)
+				notify_tab (tab_by_content (selected_item), True)
 			else
 				internal_border_box.set_background_color (internal_shared.border_color)
+				notify_tab (tab_by_content (selected_item), False)
 			end
 		end
 
@@ -118,7 +121,7 @@ feature -- Command
 				internal_cell.replace (a_content.user_widget)
 
 			end
-			notify_tab (tab_by_content (a_content))
+			notify_tab (tab_by_content (a_content), True)
 			internal_tab_box.resize_tabs (internal_tab_box.width)
 
 --			selection_actions.call ([])
@@ -135,7 +138,7 @@ feature -- Command
 			l_tab: SD_NOTEBOOK_TAB
 		do
 			internal_contents.extend (a_content)
-			create l_tab.make
+			create l_tab.make (internal_tab_box.is_gap_at_top)
 			internal_tabs.extend (l_tab)
 			l_tab.set_drop_actions (a_content.drop_actions)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
@@ -384,7 +387,7 @@ feature {NONE}  -- Implementation
 			-- Handle notebook tab selected.
 		do
 			select_item (content_by_tab (a_tab))
-			notify_tab (a_tab)
+			notify_tab (a_tab, True)
 			selection_actions.call ([])
 		end
 
@@ -400,7 +403,7 @@ feature {NONE}  -- Implementation
 			not_void: Result /= Void
 		end
 
-	notify_tab (a_except: SD_NOTEBOOK_TAB) is
+	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN) is
 			-- Disable all tabs selection except a_except. Select a_except.
 		do
 			from
@@ -409,9 +412,9 @@ feature {NONE}  -- Implementation
 				internal_tabs.after
 			loop
 				if internal_tabs.item = a_except then
-					internal_tabs.item.set_selected (True)
+					internal_tabs.item.set_selected (True, a_focus)
 				else
-					internal_tabs.item.set_selected (False)
+					internal_tabs.item.set_selected (False, a_focus)
 				end
 
 				internal_tabs.forth

@@ -6,9 +6,6 @@ indexing
 
 class SD_HEXER
 
-obsolete
-	"Beurk Beurk Beurk"
-
 inherit
 
 	PLATFORM

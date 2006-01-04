@@ -41,9 +41,13 @@ feature {NONE}  -- Initlization
 			create internal_tool_bar
 			create internal_auto_hide_indicator
 
+
+			create internal_gap_box
+			extend_horizontal_box (internal_gap_box)
+
 			create internal_tab_box
-			extend_horizontal_box (internal_tab_box)
-			disable_item_expand (internal_tab_box)
+			internal_gap_box.extend (internal_tab_box)
+			disable_item_expand (internal_gap_box)
 
 			extend_horizontal_box (internal_tool_bar)
 			disable_item_expand (internal_tool_bar)
@@ -71,6 +75,25 @@ feature -- Redefine
 		end
 
 feature -- Command
+
+	set_gap (a_top: BOOLEAN) is
+			-- Set gap at top if a_top is True.
+		do
+			if internal_gap_box.has (internal_gap) then
+				internal_gap_box.prune (internal_gap)
+			end
+			create internal_gap
+			internal_gap.set_background_color (internal_shared.non_focused_color_lightness)
+			internal_gap.set_minimum_height (internal_shared.auto_hide_panel_gap_size)
+			if a_top then
+				internal_gap_box.start
+				internal_gap_box.put_left (internal_gap)
+			else
+				internal_gap_box.extend (internal_gap)
+			end
+		ensure
+			set: internal_gap_box.has (internal_gap)
+		end
 
 	resize_tabs (a_width: INTEGER) is
 			-- Hide/show tabs base on space.
@@ -134,10 +157,26 @@ feature -- Command
 			internal_tab_box.disable_item_expand (a_tab_2)
 		end
 
+feature -- Query
+
 	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN is
 			-- Has a_tab ?
 		do
 			Result := internal_tab_box.has (a_tab)
+		end
+
+	is_gap_at_top: BOOLEAN is
+			-- If gap at top?
+		require
+			has_gap: gap_setted
+		do
+			Result := internal_gap_box.first = internal_gap
+		end
+
+	gap_setted: BOOLEAN is
+			-- If gap area setted?
+		do
+			Result := internal_gap_box.has (internal_gap)
 		end
 
 feature {NONE}  -- Implementation functions
@@ -360,11 +399,14 @@ feature {NONE}  -- Implementation attributes
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook which Current belong to.
 
-	internal_border: SD_CELL_WITH_BORDER
-			-- Border with cell.
+	internal_gap: EV_CELL
+			-- Gap in `internal_gap_box'.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
+
+	internal_gap_box: EV_VERTICAL_BOX
+			-- Gap box for `internal_tab_box'.
 
 	internal_tab_box: EV_HORIZONTAL_BOX
 			-- Box which contain all tabs.
@@ -375,7 +417,7 @@ feature {NONE}  -- Implementation attributes
 invariant
 
 	internal_tab_box_not_void: internal_tab_box /= Void
-	internal_border_not_void: internal_border /= Void
+	internal_gap_box_not_void: internal_gap_box /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 	internal_tool_bar_not_void: internal_tool_bar /= Void

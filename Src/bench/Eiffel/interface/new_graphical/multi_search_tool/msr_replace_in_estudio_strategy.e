@@ -28,6 +28,11 @@ inherit
 			default_create
 		end
 
+	EB_SAVE_FILE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -135,18 +140,12 @@ feature {NONE} -- Implementation
 			-- a_item is one of these items.
 		local
 			class_i: CLASS_I
-			file: PLAIN_TEXT_FILE
 		do
 			class_i ?= a_item.data
 			if class_i /= Void then
-				create file.make (class_i.file_name.out)
-				file.open_write
-				if file.is_writable then
-					file.putstring (a_item.source_text)
-						-- Notify Eiffel Studio.
-					editor.dev_window.eiffel_system.workbench.change_class (class_i)
-				end
-				file.close
+				save (class_i.file_name.out, a_item.source_text)
+					-- Notify Eiffel Studio.
+				editor.dev_window.eiffel_system.workbench.change_class (class_i)
 			end
 		end
 

@@ -48,6 +48,25 @@ feature
 			end;
 		end;
 
+	is_valid: BOOLEAN is
+			-- Is `Current' valid?
+		local
+			n, i: INTEGER;
+		do
+			Result := result_type.is_valid
+			if Result then
+				from
+					i := 1
+					n := argument_count
+				until
+					i > n or else not Result
+				loop
+					Result := argument_types.item (i).is_valid
+					i := i + 1
+				end
+			end
+		end
+
 	is_equal (other: PATTERN): BOOLEAN is
 			-- Is `other' equal to Current ?
 		local

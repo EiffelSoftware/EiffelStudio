@@ -154,7 +154,7 @@ feature -- Code generation
 			l_min_used: INTEGER
 		do
 			l_min_used := min_used
-			goto_used (l_min_used)
+			goto (l_min_used)
 			internal_generate (buffer, 0, final_table_size, l_min_used, max_used)
 		end
 
@@ -181,7 +181,7 @@ feature -- Code generation
 				l_rout_id := rout_id
 				rout_id := real_rout_id
 				l_min_used := min_used
-				goto_used (l_min_used)
+				goto (l_min_used)
 					-- We do `l_min_used - 1' for the offset because in compiler
 					-- IDs starts at 1, but at runtime they start at 0.
 				internal_generate (buffer, l_min_used - 1, system.type_id_counter.value,
@@ -202,10 +202,14 @@ feature -- Code generation
 			entry: ENTRY
 			system_i: like system
 		do
-			goto_used (type_id)
-			system_i := System
-			from
+			system_i := system
+			if not system_i.poofter_finalization then
+				goto_used (type_id)
 				i := position
+			else
+				i := lower
+			end
+			from
 				first_type := system_i.class_type_of_id (type_id)
 				nb := max_position
 			until

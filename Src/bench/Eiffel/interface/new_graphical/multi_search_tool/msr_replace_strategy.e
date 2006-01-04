@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 						if c = '\' then
 							if i > j then
 								if ref <= a_text_item.captured_submatches.count then
-									a_string.append (a_text_item.captured_submatches.i_th (i))
+									a_string.append (a_text_item.captured_submatches.i_th (ref))
 								end
 							else
 								a_string.append_character (c)

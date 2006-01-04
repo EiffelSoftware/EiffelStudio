@@ -23,8 +23,6 @@ feature {NONE} -- Initlization
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 			a_docking_manager_not_void: a_docking_manager /= Void
-		local
-			l_helper: SD_COLOR_HELPER
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
@@ -41,8 +39,7 @@ feature {NONE} -- Initlization
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
 			create tab_groups
 
-			create l_helper
-			set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
+			set_background_color (internal_shared.non_focused_color_lightness)
 		ensure
 			set: internal_direction = a_direction
 			set: internal_docking_manager = a_docking_manager

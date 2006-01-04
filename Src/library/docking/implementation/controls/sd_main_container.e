@@ -24,15 +24,15 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			create l_helper
-			left_top.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			right_top.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			left_bottom.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			right_bottom.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
+			left_top.set_background_color (internal_shared.non_focused_color_lightness)
+			right_top.set_background_color (internal_shared.non_focused_color_lightness)
+			left_bottom.set_background_color (internal_shared.non_focused_color_lightness)
+			right_bottom.set_background_color (internal_shared.non_focused_color_lightness)
 
-			gap_area_top.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			gap_area_bottom.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			gap_area_left.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
-			gap_area_right.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
+			gap_area_top.set_background_color (internal_shared.non_focused_color_lightness)
+			gap_area_bottom.set_background_color (internal_shared.non_focused_color_lightness)
+			gap_area_left.set_background_color (internal_shared.non_focused_color_lightness)
+			gap_area_right.set_background_color (internal_shared.non_focused_color_lightness)
 
 		end
 

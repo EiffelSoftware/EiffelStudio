@@ -586,7 +586,6 @@ feature {NONE} -- Implementation
 			l_color: COLOR_PREFERENCE
 			l_array: ARRAY_PREFERENCE
 			l_shortcut: SHORTCUT_PREFERENCE
-			l_text: STRING_PREFERENCE
 
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
@@ -603,11 +602,7 @@ feature {NONE} -- Implementation
 				Result.set_data (l_bool_widget)
 			else
 				if a_pref.generating_resource_type.is_equal ("TEXT") then
-					l_text ?= a_pref
-					check
-						l_text_not_void: l_text /= Void
-					end
-					create l_edit_widget.make_with_resource (l_text)
+					create l_edit_widget.make_with_resource (a_pref)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					Result := l_edit_widget.change_item_widget
 					Result.set_data (l_edit_widget)

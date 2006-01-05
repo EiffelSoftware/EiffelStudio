@@ -49,7 +49,7 @@ feature -- Commands
 	Run_project_cmd: EB_EXEC_DEBUG_CMD is
 			-- Command to run a system.
 		once
-			create Result.make (debugger_manager)
+			create Result.make (eb_debugger_manager)
 			Result.disable_sensitive
 		end
 

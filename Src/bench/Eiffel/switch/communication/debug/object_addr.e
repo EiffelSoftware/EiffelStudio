@@ -25,7 +25,7 @@ feature -- Access
 		do
 			Result := hector_addr (addr)
 		end
-		
+
 	update_kept_objects_addresses is
 		do
 			update_addresses
@@ -51,7 +51,7 @@ feature -- Access
 				io.error.put_new_line
 			end
 		end
-	
+
 	is_object_kept (h_addr: STRING): BOOLEAN is
 			-- Is `h_addr' a known hector address?
 		require
@@ -67,11 +67,9 @@ feature -- Updating
 			addr_table.wipe_out
 		end
 
-	keep_only_objects (kept_addrs: SET [STRING]) is
+	keep_only_objects (kept_addrs: LIST [STRING]) is
 			-- Keep references to `kept_addrs' and ask user application
 			-- to wean the other adopted objects not used anymore.
-		require
-			kept_addrs_exists: kept_addrs /= Void
 		local
 			addresses: SPECIAL [STRING];
 			i, addr_table_count: INTEGER;
@@ -84,10 +82,10 @@ feature -- Updating
 				i >= addr_table_count
 			loop
 				h_addr := addr_table.item (addresses.item (i));
-				if not kept_addrs.has (h_addr) then
+				if kept_addrs = Void or else not kept_addrs.has (h_addr) then
 					forget_obj (h_addr);
 					addr_table.remove (addresses.item (i))
-				end;
+				end
 				i := i + 1
 			end
 		end
@@ -122,7 +120,7 @@ feature {NONE} -- Implementation
 		do
 			send_rqst_3 (Rqst_access, In_address, 0, hex_to_pointer (h_addr));
 			Result := c_tread
-	
+
 			debug ("HECTOR")
 				io.error.put_string ("Hector: ");
 				io.error.put_string (h_addr);

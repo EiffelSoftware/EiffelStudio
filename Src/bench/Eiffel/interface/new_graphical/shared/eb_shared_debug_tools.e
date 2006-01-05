@@ -9,7 +9,13 @@ class
 
 feature -- Status report
 
-	debugger_manager: EB_DEBUGGER_MANAGER is
+	debugger_manager: DEBUGGER_MANAGER is
+			-- Manager in charge of debugging operations.
+		once
+			Result := eb_debugger_manager
+		end
+
+	eb_debugger_manager: EB_DEBUGGER_MANAGER is
 			-- Manager in charge of debugging operations.
 		once
 			create Result.make
@@ -17,4 +23,4 @@ feature -- Status report
 			debugger_manager_not_void: Result /= Void
 		end
 
-end -- class EB_SHARED_DEBUG_TOOLS
+end

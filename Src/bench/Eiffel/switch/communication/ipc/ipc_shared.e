@@ -134,6 +134,11 @@ feature {NONE} -- Inspection constants
 	Out_result: INTEGER is 1
 			-- Ask for result of already called once function
 
+	Out_index: INTEGER is 2
+			-- Ask for result of already called once function
+			
+	Out_data: INTEGER is 3
+			-- Ask for result of already called once function			
 
 feature {APPLICATION_STATUS} -- Implementation
 
@@ -185,9 +190,5 @@ feature {NONE} -- For workbench responses.
 	Rep_dead: INTEGER is 5
 	Rep_stopped: INTEGER is 6
 
-	sent_jobs: HASH_TABLE [STRING, STRING] is
-		once
-			create Result.make (10)
-		end
 
 end

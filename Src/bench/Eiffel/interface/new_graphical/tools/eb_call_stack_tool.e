@@ -16,10 +16,10 @@ inherit
 
 	EB_RECYCLABLE
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
+--	SHARED_APPLICATION_EXECUTION
+--		export
+--			{NONE} all
+--		end
 
 	IPC_SHARED
 		export
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 			box.extend (box2)
 			box.disable_item_expand (box2)
-			if Application.status /= Void then
+			if eb_debugger_manager.application_is_executing then
 				display_stop_cause (False)
 			end
 			exception.remove_text
@@ -307,11 +307,14 @@ feature -- Access
 feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
+		local
+			s: APPLICATION_STATUS
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
-			if application.status.current_thread_id /= tid then
-				application.status.set_current_thread_id (tid)
-				application.status.reload_current_call_stack
+			s := eb_debugger_manager.application.status
+			if s.current_thread_id /= tid then
+				s.set_current_thread_id (tid)
+				s.reload_current_call_stack
 				update
 			end
 		end
@@ -352,15 +355,15 @@ feature -- Status setting
 	update is
 			-- Refresh `Current's display.
 		local
-			l_status: APPLICATION_STATUS
+			l_is_stopped: BOOLEAN
 		do
 			cancel_process_real_update_on_idle
 			request_clean_stack_grid
-			l_status := application.status
-			if l_status /= Void then
-				display_stop_cause (l_status.is_stopped)
+			if eb_debugger_manager.application_is_executing then
+				l_is_stopped := eb_debugger_manager.application_is_stopped
+				display_stop_cause (l_is_stopped)
 				refresh_threads_info
-				process_real_update_on_idle (l_status.is_stopped)
+				process_real_update_on_idle (l_is_stopped)
 			else
 				display_stop_cause (False)
 				display_box_thread (False)
@@ -445,7 +448,7 @@ feature {NONE} -- Grid Implementation
 				if l_row /= Void then
 					level := level_from_row (l_row)
 					if level > 0 then
-						elem ?= application.status.current_call_stack.i_th (level)
+						elem ?= eb_debugger_manager.application.status.current_call_stack.i_th (level)
 						if
 							elem /= Void and then
 							elem.dynamic_class /= Void and then
@@ -499,8 +502,8 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			request_clean_stack_grid
-			if Application.is_running then
-				l_status := application.status
+			if eb_debugger_manager.application_is_executing then
+				l_status := eb_debugger_manager.application.status
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
@@ -511,7 +514,7 @@ feature {NONE} -- Implementation
 				then
 					clean_stack_grid
 					stack := l_status.current_call_stack
-					if stack /= Void then
+					if stack /= Void and then not stack.is_empty then
 						save_call_stack_cmd.enable_sensitive
 						from
 							stack.start
@@ -548,7 +551,7 @@ feature {NONE} -- Implementation
 		local
 			m: STRING
 		do
-			if not Application.is_running then
+			if not eb_debugger_manager.application_is_executing then
 				stop_cause.set_text (Interface_names.l_System_launched)
 				exception.remove_text
 				exception.remove_tooltip
@@ -558,7 +561,7 @@ feature {NONE} -- Implementation
 				exception.remove_tooltip
 			else -- Application is stopped.
 				create m.make (100)
-				inspect application.status.reason
+				inspect eb_debugger_manager.application.status.reason
 				when Pg_step then
 					stop_cause.set_text (Interface_names.l_Stepped)
 					m.append (Interface_names.l_Stepped)
@@ -590,7 +593,7 @@ feature {NONE} -- Implementation
 					stop_cause.set_text (Interface_names.l_Unknown_status)
 					m.append (Interface_names.l_Unknown_status)
 				end
-				Debugger_manager.debugging_window.status_bar.display_message ( first_line_of (m) )
+				Eb_debugger_manager.debugging_window.status_bar.display_message ( first_line_of (m) )
 			end
 		end
 
@@ -614,16 +617,18 @@ feature {NONE} -- Implementation
 			create dlg
 			dlg.set_exception_tag (exception_tag_text)
 			dlg.set_exception_message (exception_message_text)
-			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+			dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
 
 	refresh_threads_info is
 			-- Refresh thread info according to debugger data
 		local
 			ctid: INTEGER
+			s: APPLICATION_STATUS
 		do
-			if application.status.all_thread_ids_count > 1 then
-				ctid := application.status.current_thread_id
+			s := eb_debugger_manager.application.status
+			if s.all_thread_ids_count > 1 then
+				ctid := s.current_thread_id
 				thread_id.set_text ("0x" + ctid.to_hex_string)
 				thread_id.set_data (ctid)
 				display_box_thread (True)
@@ -659,8 +664,9 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			create Result.make (100)
-			l_status := Application.status
-			if not Application.is_dotnet then
+			fixme ("check how to get rid of the condition is_dotnet")
+			l_status := eb_debugger_manager.Application.status
+			if not eb_debugger_manager.Application.is_dotnet then
 				Result.append ("Code: ")
 				Result.append (l_status.exception_code.out)
 				Result.append (" (")
@@ -690,8 +696,8 @@ feature {NONE} -- Implementation
 		local
 			dotnet_status: APPLICATION_STATUS_DOTNET
 		do
-			if application.is_dotnet then
-				dotnet_status ?= application.status
+			dotnet_status ?= eb_debugger_manager.application.status
+			if dotnet_status /= Void then
 				if dotnet_status.exception_occurred then
 					Result := dotnet_status.exception_to_string
 				else
@@ -706,7 +712,7 @@ feature {NONE} -- Implementation
 	on_element_drop (st: CALL_STACK_STONE) is
 			-- Change stack level to the one described by `st'.
 		do
-			debugger_manager.launch_stone (st)
+			Eb_debugger_manager.launch_stone (st)
 		end
 
 	attach_element_to_row (elem: CALL_STACK_ELEMENT; level: INTEGER; a_row: EV_GRID_ROW) is
@@ -727,6 +733,7 @@ feature {NONE} -- Implementation
 			l_obj_address_info: STRING
 			l_extra_info: STRING
 			glab: EV_GRID_LABEL_ITEM
+			app_exec: APPLICATION_EXECUTION
 		do
 			create l_tooltip.make (10)
 
@@ -777,8 +784,9 @@ feature {NONE} -- Implementation
 				a_row.set_data (-1) -- This is not a valid Eiffel call stack element.
 			end
 
+			app_exec := eb_debugger_manager.Application
 				--| Tooltip addition
-			l_nb_stack := Application.status.current_call_stack.count
+			l_nb_stack := app_exec.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
 			l_tooltip.append_string ("%N   + break index = " + l_breakindex_info)
 			l_tooltip.append_string ("%N   + address     = <" + l_obj_address_info + ">")
@@ -800,8 +808,8 @@ feature {NONE} -- Implementation
 			a_row.set_item (3, glab)
 
 				--| Set GUI behavior
-			refresh_stack_grid_row (a_row, Application.current_execution_stack_number)
-			if level = Application.current_execution_stack_number then
+			refresh_stack_grid_row (a_row, app_exec.current_execution_stack_number)
+			if level = app_exec.current_execution_stack_number then
 				arrowed_level := level
 			end
 		end
@@ -841,7 +849,7 @@ feature {NONE} -- Implementation
 		do
 			create st.make (level)
 			if st.is_valid then
-				debugger_manager.launch_stone (st)
+				Eb_debugger_manager.launch_stone (st)
 			end
 		end
 
@@ -919,7 +927,7 @@ feature {NONE} -- Implementation
 			fd.save_actions.extend (agent save_call_stack_to_file (fd))
 			create l_env
 			l_dir := l_env.current_working_directory
-			fd.show_modal_to_window (Debugger_manager.debugging_window.window)
+			fd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			l_env.change_working_directory (l_dir)
 		end
 
@@ -938,7 +946,7 @@ feature {NONE} -- Implementation
 				create fn.make_create_read_write (fd.file_name)
 				create stt.make
 					--| We generate the call stack.
-				Application.status.current_call_stack.display_stack (stt)
+				eb_debugger_manager.Application.status.current_call_stack.display_stack (stt)
 					--| We put it in the file.
 				fn.put_string (stt.image)
 				fn.close
@@ -948,7 +956,7 @@ feature {NONE} -- Implementation
 			else
 					-- The file name was probably incorrect (not creatable).
 				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))
-				wd.show_modal_to_window (Debugger_manager.debugging_window.window)
+				wd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			end
 		rescue
 			retried := True
@@ -959,7 +967,7 @@ feature {NONE} -- Implementation
 		local
 			th_tools: ES_DBG_THREADS_TOOL
 		do
-			th_tools := debugger_manager.threads_tool
+			th_tools := Eb_debugger_manager.threads_tool
 			if not th_tools.shown then
 				th_tools.show
 				th_tools.widget.set_focus
@@ -977,7 +985,7 @@ feature {NONE} -- Implementation
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do
-			l_status := Application.status
+			l_status := eb_debugger_manager.Application.status
 			if l_status /= Void and then l_status.is_stopped then
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then
@@ -1097,7 +1105,7 @@ feature {NONE} -- Implementation: set stack depth command
 			dialog.set_default_cancel_button (cancelb)
 			dialog.show_actions.extend (agent element_nb.set_focus)
 
-			dialog.show_modal_to_window (Debugger_manager.debugging_window.window)
+			dialog.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
 
 	set_as_default: EV_CHECK_BUTTON

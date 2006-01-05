@@ -14,10 +14,10 @@ inherit
 			mini_pixmap,
 			new_mini_toolbar_item
 		end
-	
+
 	EB_CONSTANTS
 
-	EB_SHARED_DEBUG_TOOLS	
+	EB_SHARED_DEBUG_TOOLS
 
 create
 	make
@@ -59,7 +59,7 @@ feature -- Access
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- No big pixmap is necessary.
 		do
-			
+
 		end
 
 	menu_name: STRING is
@@ -81,7 +81,7 @@ feature -- Status report
 	associated_window: EV_WINDOW is
 			-- Window to which the child dialogs will be modeless to.
 		do
-			Result := debugger_manager.debugging_window.window
+			Result := Eb_debugger_manager.debugging_window.window
 		end
 
 feature {EB_PRETTY_PRINT_DIALOG} -- Status report

@@ -22,11 +22,11 @@ inherit
 
 	SHARED_FORMAT_INFO
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 create
 	make
-	
+
 feature -- Status setting
 
 	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
@@ -55,7 +55,7 @@ feature -- Status setting
 					end
 					consumed_type := l_ext_class.external_consumed_type
 					if consumed_type /= Void then
-						consumed_types.put (consumed_type, new_stone.class_i.name)	
+						consumed_types.put (consumed_type, new_stone.class_i.name)
 					end
 				end
 				set_feature (new_stone.e_feature)
@@ -68,18 +68,21 @@ feature -- Status setting
 feature -- Formatting
 
 	show_debugged_line is
-			-- Update arrows in formatter and ensure that arrows is visible. 
+			-- Update arrows in formatter and ensure that arrows is visible.
 		local
 			stel: EIFFEL_CALL_STACK_ELEMENT
 			l_line: INTEGER
 		do
 			if displayed and selected and not must_format then
 				if associated_feature /= Void then
-					if Application.is_running and then Application.is_stopped then
-						stel  ?= Application.status.current_call_stack_element
-						if 
-							stel /= Void and then stel.routine /= Void 
-							and then stel.routine.body_index = associated_feature.body_index 
+					if
+						eb_debugger_manager.application_is_executing
+						and then eb_debugger_manager.application_is_stopped
+					then
+						stel  ?= eb_debugger_manager.application.status.current_call_stack_element
+						if
+							stel /= Void and then stel.routine /= Void
+							and then stel.routine.body_index = associated_feature.body_index
 						then
 							l_line := stel.break_index
 							if l_line > 0 then
@@ -105,13 +108,13 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_flat, 1)
 			Result.put (Pixmaps.Icon_format_flat, 2)
 		end
- 
+
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showflat
 		end
- 
+
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -125,7 +128,7 @@ feature {NONE} -- Properties
 
 	formatted_text: STRUCTURED_TEXT
 			-- Actual formatted text, if any.
-			
+
 	consumed_type: CONSUMED_TYPE
 			-- .NET consumed type contain this feature if external.
 
@@ -134,7 +137,7 @@ feature {NONE} -- Properties
  		do
  			Result := True
  		end
-	
+
 feature {NONE} -- Implementation
 
 	on_breakable_drop (st: BREAKABLE_STONE) is
@@ -160,7 +163,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_with_breakable
-				if not is_dotnet_mode then			
+				if not is_dotnet_mode then
 					formatted_text := rout_flat_context_text (associated_feature)
 				else
 					set_is_without_breakable

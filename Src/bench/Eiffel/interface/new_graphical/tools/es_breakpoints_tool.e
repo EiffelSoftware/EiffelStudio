@@ -17,7 +17,7 @@ inherit
 
 	EB_RECYCLABLE
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 		export
 			{NONE} all
 		end
@@ -216,8 +216,10 @@ feature -- Events
 	update is
 			-- Refresh `Current's display.
 		do
-			grid.request_delayed_clean
-			refresh_breakpoints_info
+			if eb_debugger_manager.application_initialized then
+				grid.request_delayed_clean
+				refresh_breakpoints_info
+			end
 		end
 
 	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
@@ -297,6 +299,7 @@ feature {NONE} -- Implementation
 			lab: EV_GRID_LABEL_ITEM
 			f_list: LIST[E_FEATURE]
 			col: EV_COLOR
+			app_exec: APPLICATION_EXECUTION
 		do
 			if shown then
 				class_color := preferences.editor_data.class_text_color
@@ -304,21 +307,21 @@ feature {NONE} -- Implementation
 				condition_color := preferences.editor_data.string_text_color
 
 				col := preferences.editor_data.comments_text_color
-
+				app_exec := eb_debugger_manager.application
 				grid.call_delayed_clean
-				if not application.has_breakpoints then
+				if not app_exec.has_breakpoints then
 					grid.insert_new_row (1)
 					create lab.make_with_text ("No breakpoints")
 					lab.set_foreground_color (col)
 					grid.set_item (1, 1, lab)
 				else
 					if not breakpoints_separated_by_status then
-						if application.has_breakpoints then
-							f_list := application.features_with_breakpoint_set
+						if app_exec.has_breakpoints then
+							f_list := app_exec.features_with_breakpoint_set
 							insert_bp_features_list (f_list, Void, True, True)
 						end
 					else
-						if application.has_enabled_breakpoints then
+						if app_exec.has_enabled_breakpoints then
 							row := grid.extended_new_row
 							row.set_background_color (bg_separator_color)
 							create lab.make_with_text ("Enabled")
@@ -327,11 +330,11 @@ feature {NONE} -- Implementation
 							row.set_item (2, create {EV_GRID_ITEM})
 							row.set_item (3, create {EV_GRID_ITEM})
 
-							f_list := application.features_with_breakpoint_set
+							f_list := app_exec.features_with_breakpoint_set
 							insert_bp_features_list (f_list, row, True, False)
 							row.expand
 						end
-						if application.has_disabled_breakpoints then
+						if app_exec.has_disabled_breakpoints then
 							row := grid.extended_new_row
 							row.set_background_color (bg_separator_color)
 							create lab.make_with_text ("Disabled")
@@ -340,7 +343,7 @@ feature {NONE} -- Implementation
 							row.set_item (2, create {EV_GRID_ITEM})
 							row.set_item (3, create {EV_GRID_ITEM})
 
-							f_list := application.features_with_breakpoint_set
+							f_list := app_exec.features_with_breakpoint_set
 							insert_bp_features_list (f_list, row, False, True)
 							row.expand
 						end
@@ -370,6 +373,7 @@ feature {NONE} -- Impl bp
 			has_bp: BOOLEAN
 --			cs: CLASSI_STONE
 			cs: CLASSC_STONE
+			app_exec: APPLICATION_EXECUTION
 		do
 				--| Prepare data .. mainly sorting
 			from
@@ -390,6 +394,7 @@ feature {NONE} -- Impl bp
 			end
 
 				--| Process insertion
+			app_exec := debugger_manager.application
 			from
 				table.start
 				r := 1
@@ -407,11 +412,11 @@ feature {NONE} -- Impl bp
 				loop
 					f := stwl.item
 					if display_enabled and display_disabled then
-						bp_list := application.breakpoints_set_for (f)
+						bp_list := app_exec.breakpoints_set_for (f)
 					elseif display_enabled then
-						bp_list := Application.breakpoints_enabled_for (f)
+						bp_list := app_exec.breakpoints_enabled_for (f)
 					else
-						bp_list := Application.breakpoints_disabled_for (f)
+						bp_list := app_exec.breakpoints_disabled_for (f)
 					end
 					has_bp := not bp_list.is_empty
 					stwl.forth
@@ -470,13 +475,15 @@ feature {NONE} -- Impl bp
 			i: INTEGER
 			fs: FEATURE_STONE
 			bp: BREAKPOINT
+			app_exec: APPLICATION_EXECUTION
 		do
+			app_exec := eb_debugger_manager.application
 			if display_enabled and display_disabled then
-				bp_list := application.breakpoints_set_for (f)
+				bp_list := app_exec.breakpoints_set_for (f)
 			elseif display_enabled then
-				bp_list := Application.breakpoints_enabled_for (f)
+				bp_list := app_exec.breakpoints_enabled_for (f)
 			elseif display_disabled then
-				bp_list := Application.breakpoints_disabled_for (f)
+				bp_list := app_exec.breakpoints_disabled_for (f)
 			end
 			if not bp_list.is_empty then
 				sr := a_row.subrow_count + 1
@@ -503,8 +510,8 @@ feature {NONE} -- Impl bp
 				loop
 					i := bp_list.item
 
-					if application.is_breakpoint_set (f, i) then
-						bp := application.debug_info.breakpoint (f, i)
+					if app_exec.is_breakpoint_set (f, i) then
+						bp := app_exec.debug_info.breakpoint (f, i)
 						if not first_bp then
 							s.append_string (", ")
 						else
@@ -536,14 +543,18 @@ feature {NONE} -- Impl bp
 
 						s.append_string (i.out)
 						if bp.has_condition then
-							s.append_string ("*")
+							if bp.is_disabled then
+								s.append_string (Disabled_conditional_bp_symbol)
+							else
+								s.append_string (Conditional_bp_symbol)
+							end
 							create lab.make_with_text (bp.condition.expression)
 							lab.set_tooltip (lab.text)
 							lab.set_font (condition_font)
 							subrow.subrow (ir).set_item (3, lab)
 						else
 							if bp.is_disabled then
-								s.append_string ("-")
+								s.append_string (Disabled_bp_symbol)
 							else
 								subrow.subrow (ir).set_item (3, create {EV_GRID_ITEM})
 							end
@@ -579,6 +590,10 @@ feature {NONE} -- Impl bp
 		end
 
 feature {NONE} -- Implementation, cosmetic
+
+	Disabled_bp_symbol: STRING is "-"
+	Conditional_bp_symbol: STRING is "*"
+	Disabled_conditional_bp_symbol: STRING is "*-"
 
 	Breakable_icons: EB_SHARED_PIXMAPS_12 is
 		once

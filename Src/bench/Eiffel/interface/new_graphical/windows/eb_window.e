@@ -35,11 +35,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-		
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -51,7 +46,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -79,7 +74,7 @@ feature {NONE} -- Initialization
 			create help_engine.make
 
 			window.focus_in_actions.extend (agent window_manager.set_focused_window (Current))
-		
+
 			initialized := True
 		end
 
@@ -147,7 +142,7 @@ feature -- Access
 
 			create sep
 			Result.extend (sep)
-		
+
 			create item.make_with_text (Interface_names.m_New_window)
 			item.select_actions.extend (agent window_manager.create_window)
 			Result.extend (item)
@@ -176,7 +171,7 @@ feature -- Status setting
 			if not equal (title, a_title) then
 				title := a_title
 				window.set_title (a_title)
-				
+
 					-- By default, the minimized title is the title.
 				set_minimized_title (a_title)
 
@@ -290,8 +285,8 @@ feature -- Window management / Status Setting
 				Exit_application_cmd.set_already_confirmed (False)
 				l_window := Current
 				if
-					application.is_running and then
-					debugger_manager.debugging_window = l_window
+					Debugger_manager.application_is_executing and then
+					Eb_debugger_manager.debugging_window = l_window
 				then
 					Exit_application_cmd.set_already_confirmed (True)
 					if Window_manager.development_windows_count > 1 then
@@ -396,7 +391,7 @@ feature {NONE} -- Menus initializations
 		ensure
 			edit_menu_created: edit_menu /= Void
 		end
-	
+
 	build_tools_menu is
 			-- Create and build `tools_menu'
 		local
@@ -431,7 +426,7 @@ feature {NONE} -- Menus initializations
 		ensure
 			tools_menu_created: tools_menu /= Void
 		end
-	
+
 	build_window_menu is
 			-- Create and build `edit_menu'
 		do
@@ -440,7 +435,7 @@ feature {NONE} -- Menus initializations
 		ensure
 			window_menu_created: window_menu /= Void
 		end
-	
+
 	build_help_menu is
 			-- Create and build `help_menu'
 		local
@@ -477,7 +472,7 @@ feature {NONE} -- Menus initializations
 				-- About
 			create menu_item.make_with_text (Interface_names.m_About)
 			create about_cmd
-			menu_item.select_actions.extend (agent about_cmd.execute) 
+			menu_item.select_actions.extend (agent about_cmd.execute)
 			help_menu.extend (menu_item)
 		ensure
 			help_menu_created: help_menu /= Void

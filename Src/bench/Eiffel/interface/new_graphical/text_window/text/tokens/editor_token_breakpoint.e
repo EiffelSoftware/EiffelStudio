@@ -21,7 +21,7 @@ inherit
 			Pixmaps as Shared_pixmaps
 		end
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 create
 	make
@@ -105,9 +105,9 @@ feature -- Miscellaneous
 			-- Hide Current
 		do
 			width := 0
-		end		
+		end
 
-	pixmap: EV_PIXMAP is 
+	pixmap: EV_PIXMAP is
 			-- Graphical representation of the breakable mark.
 			-- 10 different representations whether the breakpoint
 			-- is enabled, disabled or not set , whether it has a condition or not,
@@ -117,11 +117,13 @@ feature -- Miscellaneous
 			status: APPLICATION_STATUS
 			pebble_routine: E_FEATURE
 			pebble_index: INTEGER
-			index: INTEGER 	-- index in the pixmap array. 
+			index: INTEGER 	-- index in the pixmap array.
 							--  1 = not stopped version
 							--  2 = stopped version.
+			app_exec: APPLICATION_EXECUTION
 		do
-			status := application.status
+			app_exec := Eb_debugger_manager.application
+			status := app_exec.status
 			pebble_routine := pebble.routine
 			pebble_index := pebble.index
 
@@ -137,8 +139,8 @@ feature -- Miscellaneous
 				index := 1
 			end
 
-			inspect Application.breakpoint_status (pebble_routine, pebble_index)
-			when 0 then 
+			inspect app_exec.breakpoint_status (pebble_routine, pebble_index)
+			when 0 then
 				pixmaps := icons.icon_group_bp_slot
 			when 1 then
 				pixmaps := icons.icon_group_bp_enabled
@@ -159,7 +161,7 @@ feature -- Miscellaneous
 		end
 
 	editor_preferences: EB_EDITOR_DATA is
-			-- 
+			--
 		once
 			Result ?= editor_preferences_cell.item
 		end
@@ -173,7 +175,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 
 invariant
 		breakpoint_is_first: previous = Void

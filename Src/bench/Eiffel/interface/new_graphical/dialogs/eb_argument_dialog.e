@@ -1,5 +1,5 @@
 indexing
-	description:	
+	description:
 		"Popup dialog to enter new arguments, modify existing ones and launch system with%
 		%chosen argument."
 	date: "$Date$"
@@ -17,21 +17,21 @@ inherit
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
-		end		
+		end
 
 	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
-		end	
-		
+		end
+
 	EB_SHARED_DEBUG_TOOLS
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
-		end	
+		end
 
 	EB_DEBUGGER_OBSERVER
 		export
@@ -46,7 +46,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_window: EB_DEVELOPMENT_WINDOW; cmd: PROCEDURE [ANY, TUPLE]) is
@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 		require
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
-		do		
+		do
 			make_with_title ("Execution Control")
 			set_icon_pixmap (pixmaps.icon_dialog_window)
-			Debugger_manager.observers.extend (Current)
+			Eb_debugger_manager.observers.extend (Current)
 			run := cmd
-			
+
 				-- Build Dialog GUI
 			create arguments_control.make (Current, False)
 			extend (execution_frame)
@@ -82,17 +82,17 @@ feature {NONE} -- Initialization
 			hbox.extend (arguments_control)
 			hbox.set_border_width (Layout_constants.Small_border_size)
 			hbox.set_padding (Layout_constants.Small_padding_size)
-			
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
-			
+
 			create b.make_with_text (interface_names.b_ok)
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			vbox.disable_item_expand (b)
 			b.select_actions.extend (agent on_ok)
-			
+
 			create b.make_with_text (interface_names.b_cancel)
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute)
-				
+
 				create run_and_close_button.make_with_text ("Run & Close")
 				vbox.extend (run_and_close_button)
 				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
@@ -131,7 +131,7 @@ feature -- GUI
 			-- Button to run system.
 
 feature -- Status Setting
-	
+
 	update is
 			-- Update.
 		do
@@ -151,7 +151,7 @@ feature {NONE} -- Actions
 		do
 			arguments_control.store_arguments (Void)
 			hide
-		end	
+		end
 
 feature {NONE} -- Properties
 
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		do
 			arguments_control.set_focus
 		end
-		
+
 	on_run_button_key_press (key: EV_KEY) is
 			-- Key was pressed whilst button had focus.
 		do
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			arguments_control.store_arguments (Void)
 			run.call (Void)
 		end
-		
+
 	execute_and_close is
 		do
 			arguments_control.store_arguments (Void)
@@ -205,35 +205,35 @@ feature {NONE} -- Observing event handling.
 			-- Action to take when the application is killed.
 		do
 			if not run_button.is_sensitive then
-				run_button.enable_sensitive				
+				run_button.enable_sensitive
 			end
 			if not run_and_close_button.is_sensitive then
-				run_and_close_button.enable_sensitive				
+				run_and_close_button.enable_sensitive
 			end
 		end
-	
+
 	on_application_launched is
 			-- Action to take when the application is launched.
 		do
 			if run_button.is_sensitive then
-				run_button.disable_sensitive				
+				run_button.disable_sensitive
 			end
 			if run_and_close_button.is_sensitive then
-				run_and_close_button.disable_sensitive				
+				run_and_close_button.disable_sensitive
 			end
 		end
-		
+
 	on_application_stopped is
 			-- Action to take when the application is stopped.
 		do
 			if not run_button.is_sensitive then
-				run_button.enable_sensitive				
+				run_button.enable_sensitive
 			end
 			if not run_and_close_button.is_sensitive then
-				run_and_close_button.enable_sensitive				
+				run_and_close_button.enable_sensitive
 			end
 		end
-		
+
 invariant
 	argument_control_not_void: arguments_control /= Void
 

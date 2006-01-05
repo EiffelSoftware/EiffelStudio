@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Command to stop the execution of the debugged application."
 	author: "Xavier Rousselot"
 	date: "$Date$"
@@ -17,12 +17,10 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_APPLICATION_EXECUTION
-
 	EB_SHARED_WINDOW_MANAGER
 
 	EB_SHARED_DEBUG_TOOLS
-	
+
 	EB_SHARED_PREFERENCES
 
 create
@@ -44,7 +42,7 @@ feature -- Formatting
 	execute is
 			-- Pause the execution.
 		do
-			if Application /= Void and then Application.is_running then
+			if eb_debugger_manager.application_is_executing then
 				ask_and_kill
 			end
 		end
@@ -91,7 +89,7 @@ feature {NONE} -- Implementation
 		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
-			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string, 
+			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string,
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again,
 					preferences.preferences)
 			cd.set_ok_action (agent kill)
@@ -102,10 +100,10 @@ feature {NONE} -- Implementation
 	kill is
 			-- Effectively kill the application.
 		require
-			valid_application: Application /= Void and then Application.is_running
+			valid_application: eb_debugger_manager.application_is_executing
 		do
-			if Application /= Void and then Application.is_running then
-				Application.kill
+			if eb_debugger_manager.application_is_stopped then
+				eb_debugger_manager.Application.kill
 			end
 		end
 

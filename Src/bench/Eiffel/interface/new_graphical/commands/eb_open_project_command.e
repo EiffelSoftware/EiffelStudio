@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	PROJECT_CONTEXT
 		export
 			{NONE} all
@@ -41,16 +36,16 @@ inherit
 			{NONE} all
 		end
 
-	EB_GRAPHICAL_ERROR_MANAGER		
+	EB_GRAPHICAL_ERROR_MANAGER
 		export
 			{NONE} all
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 
 create
@@ -76,7 +71,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- License managment
-	
+
 	license_checked: BOOLEAN is True
 			-- Is the license checked.
 
@@ -201,7 +196,7 @@ feature {NONE} -- Project Initialization
 			wd: EV_WARNING_DIALOG
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			l_display_system_info: BOOLEAN
-		do	
+		do
 				-- Retrieve the project
 			Eiffel_project.make (project_dir)
 
@@ -209,13 +204,13 @@ feature {NONE} -- Project Initialization
 				if Eiffel_project.manager.is_created then
 					Eiffel_project.manager.on_project_close
 				end
-				
+
 				if Eiffel_project.is_incompatible then
 					if Eiffel_project.ace_file_path /= Void then
 							-- Ace file included in the header of the .epr file...we can recompile if needed.
 						create cd.make_initialized (
 							2, preferences.dialog_data.confirm_convert_project_string,
-							Warning_messages.w_Project_incompatible_version (project_dir.name, version_number, 
+							Warning_messages.w_Project_incompatible_version (project_dir.name, version_number,
 								Eiffel_project.incompatible_version_number),
 							Interface_names.l_Discard_convert_project_dialog,
 							preferences.preferences
@@ -224,7 +219,7 @@ feature {NONE} -- Project Initialization
 						cd.show_modal_to_window (parent_window)
 					else
 							-- Ace file NOT included in the header of the .epr file...we can't do much
-						msg := Warning_messages.w_Project_incompatible (project_dir.name, version_number, 
+						msg := Warning_messages.w_Project_incompatible (project_dir.name, version_number,
 							Eiffel_project.incompatible_version_number)
 						create wd.make_with_text (msg)
 						wd.show_modal_to_window (parent_window)
@@ -268,21 +263,20 @@ feature {NONE} -- Project Initialization
 				end
 				window_manager.display_message (title)
 				Recent_projects_manager.save_environment
-	
+
 				--| IEK With project session handling this code is no longer needed, remove when fully integrated.
 				if l_display_system_info then
 						-- We print text in the project_tool text concerning the system
 						-- because we were successful retrieving the project without
 						-- errors or conversion.
 					output_manager.display_system_info
-				end			
+				end
 			end
 		end
 
 	init_project is
 			-- Initialize project.
 		do
-			Application.set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
 		end
 
 feature {NONE} -- Project directory access
@@ -291,7 +285,7 @@ feature {NONE} -- Project directory access
 			-- Location of the project directory.
 
 	project_file: PROJECT_EIFFEL_FILE
-			-- Location of the file where all the information 
+			-- Location of the file where all the information
 			-- about the current project are saved.
 
 	choose_again: BOOLEAN
@@ -317,13 +311,13 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-	
+
 	internal_parent_window: EV_WINDOW
 			-- Parent window if any, Void if none.
-	
+
 	valid_file_name (file_name: STRING): STRING is
 			-- Generate a valid file name from `file_name'
-			--| Useful when the file name is a directory with a 
+			--| Useful when the file name is a directory with a
 			--| directory separator at the end.
 		require
 			file_name_not_void: file_name /= Void
@@ -335,10 +329,10 @@ feature {NONE} -- Implementation
 				Result := file_name.twin
 				Result.remove (file_name.count)
 			else
-				Result := file_name	
+				Result := file_name
 			end
 		end
-		
+
 	recompile_project (a_directory_name: STRING; an_ace_file_name: STRING) is
 			-- Create a new project
 		local

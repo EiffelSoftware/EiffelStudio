@@ -6,13 +6,6 @@ indexing
 deferred class APPLICATION_EXECUTION_IMP
 
 inherit
-	ANY
-
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-			{ANY} Application
-		end
 
 	SHARED_EIFFEL_PROJECT
 		export
@@ -22,11 +15,18 @@ inherit
 	SHARED_DEBUG
 		export
 			{NONE} all
+			{ANY} Application
 		end
 
 	SHARED_EIFFEL_PROJECT
-	
+
 	REFACTORING_HELPER
+
+	DEBUG_VALUE_EXPORTER
+
+	EB_CONSTANTS
+
+	VALUE_TYPES
 
 feature {NONE} -- Initialization
 
@@ -35,11 +35,18 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Access
+
+	debugger_manager: DEBUGGER_MANAGER is
+		do
+			Result := Application.debugger_manager
+		end
+
 feature -- recycling data
 
 	recycle is
 		do
-			Debugged_object_manager.reset			
+			Debugged_object_manager.reset
 		end
 
 feature -- Properties
@@ -90,12 +97,10 @@ feature {APPLICATION_EXECUTION} -- Execution
 			successful_app_is_not_stopped: Application.is_running implies not Application.is_stopped
 		end
 
-	keep_only_objects (kept_objects: SET [STRING]) is
-		require
-			kept_objects_not_void: kept_objects /= Void
+	keep_only_objects (kept_objects: LIST [STRING]) is
 		deferred
 		end
-		
+
 	continue_ignoring_kept_objects is
 			-- Continue the running of the application
 			-- before any debugger's operation occurred
@@ -126,7 +131,7 @@ feature {APPLICATION_EXECUTION} -- Execution
 			not_stopped: not Application.is_stopped
 		deferred
 		end
-		
+
 	kill is
 			-- Ask the application to terminate itself.
 		require
@@ -138,7 +143,23 @@ feature {APPLICATION_EXECUTION} -- Execution
 		do
 		end
 
+feature -- Change
+
+	apply_critical_stack_depth (d: INTEGER) is
+			-- Call stack depth at which we warn the user against a possible stack overflow.
+			-- -1 never warns the user.
+		require
+			valid_depth: d = -1 or d > 0
+		do
+		end
+
 feature -- Query
+
+	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+		require
+			flist_not_empty: flist /= Void and then not flist.is_empty
+		deferred
+		end
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		require

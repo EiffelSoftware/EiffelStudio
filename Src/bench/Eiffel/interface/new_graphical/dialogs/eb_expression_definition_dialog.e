@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_DEBUG_TOOLS
 		export
 			{NONE} all
@@ -76,7 +71,7 @@ feature {NONE} -- Initialization
 			set_expression_mode
 			disable_all
 		end
-		
+
 	stick_with_current_object: BOOLEAN
 			-- Do we stick to object mode ?
 			-- i.e: disable other context/class mode
@@ -86,10 +81,10 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
 		do
-			stick_with_current_object := True			
+			stick_with_current_object := True
 			make
 			on_object_radio.enable_select
 			address_field.set_text (oa)
@@ -102,8 +97,8 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -114,11 +109,11 @@ feature {NONE} -- Initialization
 			set_object_name_mode
 			disable_all_but_object_radios
 		end
-		
+
 	make_with_expression_on_object	(oa: STRING; a_exp: STRING) is
 		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
 			valid_expression: a_exp /= Void and then not a_exp.is_empty
 		do
 			make_with_object (oa)
@@ -130,8 +125,8 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: Application.is_running and Application.is_stopped
-			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -206,7 +201,7 @@ feature {NONE} -- Graphical initialization and changes
 
 			create context_radio.make_with_text (Interface_names.l_Current_context)
 			context_radio.select_actions.extend (agent event_context_radio_selected)
-			
+
 				--| Create and set up the text fields.
 			create class_field
 			create address_field
@@ -218,8 +213,8 @@ feature {NONE} -- Graphical initialization and changes
 			object_name_field.change_actions.extend (agent on_object_name_changed)
 			expression_field.change_actions.extend (agent on_expression_changed)
 			if
-				not application.is_running or
-				not Application.is_stopped
+				eb_debugger_manager.application_is_executing
+				and then eb_debugger_manager.application_is_stopped
 			then
 				on_object_radio.disable_sensitive
 				as_object_radio.disable_sensitive
@@ -322,7 +317,7 @@ feature {NONE} -- Graphical initialization and changes
 			hb.extend (create {EV_CELL})
 			cnt.extend (hb)
 			cnt.disable_item_expand (hb)
-			
+
 			dialog.extend (cnt)
 
 				--| Finish setting up the dialog.
@@ -336,7 +331,7 @@ feature {NONE} -- Graphical initialization and changes
 
 	set_expression_mode is
 		do
-			if 
+			if
 				expression_or_name_cell /= Void
 				and then expression_frame.parent = Void
 			then
@@ -346,8 +341,8 @@ feature {NONE} -- Graphical initialization and changes
 
 	set_object_name_mode is
 		do
-			if 
-				expression_or_name_cell /= Void 
+			if
+				expression_or_name_cell /= Void
 				and then object_name_frame.parent = Void
 			then
 				expression_or_name_cell.replace (object_name_frame)
@@ -451,7 +446,7 @@ feature {NONE} -- Event handling
 			class_field.disable_sensitive
 			set_focus (expression_field)
 		end
-		
+
 	on_object_name_changed is
 			-- User changed the object name.
 		do
@@ -460,7 +455,7 @@ feature {NONE} -- Event handling
 			else
 				ok_button.enable_sensitive
 			end
-		end		
+		end
 
 	on_expression_changed is
 			-- User changed the expression.
@@ -482,6 +477,7 @@ feature {NONE} -- Event handling
 			wd: EV_WARNING_DIALOG
 			oe: STRING
 			do_not_close_dialog: BOOLEAN
+			app_exec: APPLICATION_EXECUTION
 		do
 			if modified_expression = Void then
 				if class_radio.is_selected then
@@ -519,7 +515,7 @@ feature {NONE} -- Event handling
 				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.
 					t := address_field.text.as_upper
-					if 
+					if
 						t.item (1).is_equal ('0')
 						and then t.item (2).is_equal ('X')
 						and t.count > 2
@@ -527,10 +523,10 @@ feature {NONE} -- Event handling
 						t := t.substring (3, t.count)
 					end
 					t.prepend ("0x")
+					app_exec := eb_debugger_manager.application
 					if
-						application.is_running and
-						application.is_stopped and then
-						application.is_valid_object_address (t)
+						app_exec.is_running and then app_exec.is_stopped
+						and then app_exec.is_valid_object_address (t)
 					then
 						o := debugged_object_manager.debugged_object (t, 0, 0)
 						if as_object_radio.is_selected then
@@ -544,7 +540,7 @@ feature {NONE} -- Event handling
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 							wd.show_modal_to_window (dialog)
 						else
-							Application.status.keep_object (t)
+							app_exec.status.keep_object (t)
 						end
 					else
 						set_focus (address_field)
@@ -651,7 +647,7 @@ feature {NONE} -- Implementation
 				w.set_focus
 			end
 		end
-		
+
 
 	modified_expression: EB_EXPRESSION
 			-- Expression that is being edited, if any.

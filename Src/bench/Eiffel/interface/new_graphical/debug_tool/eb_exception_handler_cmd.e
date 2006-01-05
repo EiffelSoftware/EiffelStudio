@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Command to manage exception handling."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-
 	execute is
 			-- Pause the execution.
 		local
@@ -45,18 +44,20 @@ feature -- Formatting
 			bt: EV_BUTTON
 			lb: EV_LABEL
 			dialog: ES_EXCEPTION_HANDLER_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
-			if application.is_dotnet then
+			app_exec := Eb_debugger_manager.application
+			if app_exec.is_dotnet then
 				create dialog
-				dialog.set_handler (application.exceptions_handler)
+				dialog.set_handler (app_exec.exceptions_handler)
 				dlg := dialog
-			else		
+			else
 				create dlg
 				dlg.set_title ("Exceptions handler")
 				dlg.set_icon_pixmap (pixmaps.icon_dialog_window)
 
 				create vb
-				
+
 				vb.set_padding_width (5)
 				vb.set_border_width (5)
 				create lb.make_with_text ("Not yet available for classic system")
@@ -68,18 +69,6 @@ feature -- Formatting
 				dlg.extend (vb)
 			end
 			dlg.show_relative_to_window (window_manager.last_focused_window.window)
-		end
-		
-	on_click (dlg: EV_DIALOG; bt: EV_BUTTON) is
-		do
-			application.exceptions_handler.ignore_external_exceptions (not Application.exceptions_handler.ignoring_external_exception)
-			if Application.exceptions_handler.ignoring_external_exception then
-				dlg.set_title ("Is ignoring external exceptions")				
-				bt.set_text ("Catch external exception")
-			else
-				dlg.set_title ("Is catching external exceptions")				
-				bt.set_text ("Ignore external exception")
-			end		
 		end
 
 feature {NONE} -- Attributes

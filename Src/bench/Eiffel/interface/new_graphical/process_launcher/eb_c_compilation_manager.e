@@ -90,7 +90,7 @@ feature{NONE}  -- Actions
 		do
 			data_storage.reset_output_byte_count
 			data_storage.reset_error_byte_count
-			debugger_manager.on_compile_start
+			eb_debugger_manager.on_compile_start
 			window_manager.on_c_compilation_start
 			c_compilation_output_manager.clear
 			c_compilation_output_manager.force_display
@@ -100,7 +100,7 @@ feature{NONE}  -- Actions
 	synchronize_on_c_compilation_exit is
 			-- Synchronize when c compiler exits.
 		do
-			debugger_manager.on_compile_stop
+			eb_debugger_manager.on_compile_stop
 			window_manager.on_c_compilation_stop
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
 			state_message_timer.set_interval (0)

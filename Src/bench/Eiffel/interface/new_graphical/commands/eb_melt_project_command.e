@@ -18,11 +18,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -102,7 +97,7 @@ feature {NONE} -- Compilation implementation
 	reset_debugger is
 			-- Kill the application, if it is running.
 		do
-			Debugger_manager.on_compile_start
+			Eb_debugger_manager.on_compile_start
 		end
 
 	compile is
@@ -164,7 +159,7 @@ feature {NONE} -- Compilation implementation
 				output_text.add_string (Interface_names.e_compilation_failed)
 			end
 			output_manager.process_text (output_text)
-			Debugger_manager.on_compile_stop
+			Eb_debugger_manager.on_compile_stop
 
 			if dynamic_lib_window_is_valid and then dynamic_lib_window.is_visible then
 				dynamic_lib_window.refresh
@@ -338,7 +333,7 @@ feature {NONE} -- Execution
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if
-				not Application.is_running
+				not Debugger_manager.application_is_executing
 			then
 				compile_and_run
 			else

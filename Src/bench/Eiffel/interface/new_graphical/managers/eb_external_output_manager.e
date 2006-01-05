@@ -10,11 +10,6 @@ class
 inherit
 	EB_OUTPUT_MANAGER
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

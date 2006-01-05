@@ -438,7 +438,7 @@ feature -- Stone management
 			-- Assign `a_stone' as new stone.
 		do
 			history_manager.extend (a_stone)
-			debugger_manager.set_stone (a_stone)
+			Eb_debugger_manager.set_stone (a_stone)
 			feature_view.set_stone (a_stone)
 			class_view.set_stone (a_stone)
 			if has_case then

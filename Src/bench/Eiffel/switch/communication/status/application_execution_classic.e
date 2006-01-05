@@ -9,7 +9,8 @@ inherit
 
 	APPLICATION_EXECUTION_IMP
 		redefine
-			make
+			make,
+			apply_critical_stack_depth
 		end
 
 	OBJECT_ADDR
@@ -20,15 +21,15 @@ inherit
 	IPC_SHARED
 		export
 			{NONE} all
-		end		
-	
-create {SHARED_APPLICATION_EXECUTION}
+		end
+
+create {APPLICATION_EXECUTION}
 	make
-	
-feature {SHARED_APPLICATION_EXECUTION} -- Initialization
-	
+
+feature {APPLICATION_EXECUTION} -- Initialization
+
 	make is
-			-- 
+			--
 		do
 			Precursor
 		end
@@ -40,7 +41,7 @@ feature -- Properties
 		do
 			Result ?= Application.status
 		end
-			
+
 feature {APPLICATION_EXECUTION} -- Properties
 
 	is_valid_object_address (addr: STRING): BOOLEAN is
@@ -48,8 +49,8 @@ feature {APPLICATION_EXECUTION} -- Properties
 			-- (i.e Does bench know about it)
 		do
 			Result := is_object_kept (addr)
-		end			
-			
+		end
+
 feature -- Execution
 
 	run (args, cwd: STRING) is
@@ -89,7 +90,7 @@ feature -- Execution
 	interrupt is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
-		do	
+		do
 			quit_request.make (Rqst_interrupt)
 			quit_request.send
 		end
@@ -99,7 +100,7 @@ feature -- Execution
 			-- which will stop at the next breakable line number
 			-- in order to record the new breakpoint(s) before
 			-- automatically resuming its execution.
-		do	
+		do
 			quit_request.make (Rqst_new_breakpoint)
 			quit_request.send
 		end
@@ -108,9 +109,9 @@ feature -- Execution
 			-- Ask the application to terminate itself.
 		do
 			Application.process_termination
-			
+
 			quit_request.make (Rqst_kill)
-			quit_request.send;		
+			quit_request.send;
 
 				-- Don't wait until the next event loop to
 				-- to process the actual termination of the application.
@@ -122,9 +123,9 @@ feature -- Execution
 			loop
 			end
 		ensure then
-			app_is_not_running: not Application.is_running			
-		end		
-			
+			app_is_not_running: not Application.is_running
+		end
+
 	process_termination is
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
@@ -132,7 +133,73 @@ feature -- Execution
 			release_all_objects
 		end
 
+feature -- Change
+
+	apply_critical_stack_depth (d: INTEGER) is
+			-- Call stack depth at which we warn the user against a possible stack overflow.
+			-- -1 never warns the user.
+		do
+			if status /= Void and then status.is_stopped then
+				send_rqst_3_integer (Rqst_overflow_detection, 0, 0, d)
+			end
+		end
+
 feature -- Query
+
+	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+		local
+			i: INTEGER
+			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
+			once_r: ONCE_REQUEST
+			odv: ABSTRACT_DEBUG_VALUE
+			l_feat: E_FEATURE
+			l_addr: STRING
+			l_class: CLASS_C
+		do
+			l_addr := a_addr
+			l_class := a_cl
+			from
+				create once_r.make
+--				once_r := Application.debug_info.Once_request
+				i := 1
+				create Result.make (i, i + flist.count - 1)
+				flist.start
+			until
+				flist.after
+			loop
+				l_feat := flist.item
+				if once_r.already_called (l_feat) then
+					fixme ("[
+								JFIAT: update the runtime to avoid evaluate the once
+								For now, we evaluate the once function as any expression
+								which is not very smart/efficient
+							]")
+--					odv := once_r.once_result (l_feat)
+--					l_item := debug_value_to_tree_item (odv)
+					if l_feat.argument_count > 0 then
+						create err_dv.make_with_name  (l_feat.name)
+						err_dv.set_message ("Could not evaluate once with arguments...")
+						odv := err_dv
+					else
+						odv := once_r.once_eval_result (l_addr, l_feat, l_class)
+						if odv /= Void then
+							odv.set_name (l_feat.name)
+						else
+							create err_dv.make_with_name  (l_feat.name)
+							err_dv.set_message ("Could not retrieve information (once is being called or once failed)")
+						end
+					end
+				else
+					create err_dv.make_with_name  (l_feat.name)
+					err_dv.set_message (Interface_names.l_Not_yet_called)
+					err_dv.set_display_kind (Void_value)
+					odv := err_dv
+				end
+				Result.put (odv, i)
+				i := i + 1
+				flist.forth
+			end
+		end
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		do
@@ -151,11 +218,11 @@ feature {RUN_REQUEST} -- Implementation
 
 	invoke_launched_command (successful: BOOLEAN) is
 			-- Process after the launch of the application according
-			-- to `successful' and the execute `application_launch_command'. 
+			-- to `successful' and the execute `application_launch_command'.
 		do
 		end
-		
-feature {APPLICATION_STATUS} 
+
+feature {APPLICATION_STATUS}
 
 	quit_request: EWB_REQUEST is
 		once

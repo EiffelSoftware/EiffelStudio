@@ -1064,13 +1064,4 @@ feature {EWB_REQUEST, SHARED_DEBUG}
 	breakpoints: BREAK_LIST
 			-- list of all breakpoints set, disabled and recently switched.
 
-feature -- Access
-
-	Once_request: ONCE_REQUEST is
-			-- Facilities to inspect whether a once routine
-			-- has already been called
-		once
-			create Result.make
-		end
-
-end -- class DEBUG_INFO
+end

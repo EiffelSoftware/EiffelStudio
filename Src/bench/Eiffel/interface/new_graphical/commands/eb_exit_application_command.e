@@ -12,7 +12,7 @@ inherit
 	PROJECT_CONTEXT
 		export {NONE} all end
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 		export {NONE} all end
 
 	EB_SHARED_MANAGERS
@@ -86,8 +86,8 @@ feature {NONE} -- Callbacks
 			-- Exit the application
 		do
 				-- If an application was being debugged, kill it.
-			if Application.is_running then
-				Application.kill
+			if Eb_debugger_manager.application_is_executing then
+				Eb_debugger_manager.application.kill
 			end
 				-- If we are going to kill the application, we'd better warn project observers that the project will
 				-- soon be unloaded before EiffelStudio is destroyed.
@@ -111,7 +111,7 @@ feature {NONE} -- Callbacks
 		local
 			cd: EV_CONFIRMATION_DIALOG
 		do
-			if Application.is_running then
+			if Eb_debugger_manager.application_is_executing then
 				already_confirmed := True
 				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
 				cd.button ("OK").select_actions.extend (agent confirm_and_exit)

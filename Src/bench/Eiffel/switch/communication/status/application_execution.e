@@ -10,9 +10,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EXEC_MODES
-	
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -23,24 +23,17 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
-	
 	REFACTORING_HELPER
 
 create {SHARED_APPLICATION_EXECUTION}
@@ -49,7 +42,6 @@ create {SHARED_APPLICATION_EXECUTION}
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize current.
 		do
 			create debug_info.make
 			displayed_string_size := preferences.misc_data.default_displayed_string_size
@@ -66,7 +58,19 @@ feature {NONE} -- Initialization
 				max_evaluation_duration = preferences.debug_tool_data.max_evaluation_duration
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
-		
+
+feature {SHARED_APPLICATION_EXECUTION} -- Initialization
+
+	set_debugger_manager (dbg_mnger: like debugger_manager) is
+			-- Initialize current.
+		do
+			debugger_manager := dbg_mnger
+		end
+
+feature -- Access
+
+	debugger_manager: DEBUGGER_MANAGER
+
 feature -- Recylcing
 
 	on_resumed is
@@ -87,7 +91,7 @@ feature -- execution mode
 	is_classic: BOOLEAN is
 			-- Is this application a classic system ?
 		require
-			system_defined: Eiffel_system.workbench.system_defined			
+			system_defined: Eiffel_system.workbench.system_defined
 		do
 			Result := not is_dotnet
 		end
@@ -95,43 +99,28 @@ feature -- execution mode
 	is_dotnet: BOOLEAN is
 			-- Is this application a dotnet system ?
 		require
-			system_defined: Eiffel_system.workbench.system_defined			
+			system_defined: Eiffel_system.workbench.system_defined
 		do
 			Result := Eiffel_system.System.il_generation
 		end
 
 feature -- load and save
-	
-	load_debug_info is
-			-- Load debug information (so far only the breakpoints)
-		local
-			load_filename: FILE_NAME
-		do
-			create load_filename.make
-			load_filename.set_directory (Workbench_generation_path)
-			load_filename.set_file_name (Debug_info_name)
-			load_filename.add_extension (Debug_info_extension)
 
+	load_debug_info_from (load_filename: FILE_NAME) is
+			-- Load debug information (so far only the breakpoints)
+		do
 			if debug_info = Void then
 				create debug_info.make
 			end
 			debug_info.load (load_filename)
 
 			implementation.load_system_dependent_debug_info
-
 			resynchronize_breakpoints
 		end
 
-	save_debug_info is
+	save_debug_info_into (save_filename: FILE_NAME) is
 			-- Save debug information (so far only the breakpoints)
-		local
-			save_filename: FILE_NAME
 		do
-			create save_filename.make
-			save_filename.set_directory (Workbench_generation_path)
-			save_filename.set_file_name (Debug_info_name)
-			save_filename.add_extension (Debug_info_extension)
-		
 			if debug_info = Void then
 				create debug_info.make
 			end
@@ -143,22 +132,55 @@ feature -- load and save
 
 feature -- Execution event callbacks
 
+	on_application_before_launching is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
+		do
+			set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
+			set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
+			set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
+			Debugger_manager.on_application_before_launching
+		end
+
 	on_application_launched is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_launched
 		end
-		
+
+	on_application_before_resuming is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
+		do
+			Debugger_manager.on_application_before_resuming
+		end
+
+	on_application_resumed is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
+		do
+			on_resumed
+			Debugger_manager.on_application_resumed
+		end
+
 	on_application_before_stopped is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_before_stopped
 		end
 
 	on_application_just_stopped is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_just_stopped
 		end
 
 	on_application_quit is
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_quit
 		end
@@ -167,7 +189,7 @@ feature -- Properties
 
 	status: APPLICATION_STATUS
 			-- Status of the running application
-		
+
 --	termination_command: E_CMD
 --			-- Command executed after application has been terminated
 --			-- (is_running will be false after executing this command)
@@ -209,6 +231,8 @@ feature -- Properties
 
 	is_running: BOOLEAN is
 			-- Is the application running?
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Result := status /= Void
 		ensure
@@ -218,6 +242,7 @@ feature -- Properties
 	is_stopped: BOOLEAN is
 			-- Is the application stopped in its execution?
 		require
+			Debugger_manager_not_void: debugger_manager /= Void
 			is_running: is_running
 		do
 			Result := status.is_stopped
@@ -258,6 +283,8 @@ feature -- Properties
 
 	has_breakpoints: BOOLEAN is
 			-- Does the program have some breakpoints (enabled or disabled) ?
+		require
+			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Result := debug_info.has_breakpoints
 		end
@@ -273,13 +300,13 @@ feature -- Properties
 		do
 			Result := debug_info.has_disabled_breakpoints
 		end
-		
+
 feature -- Query
-		
+
 	max_evaluation_duration: INTEGER
 			-- Maximum number of seconds to wait before cancelling an evaluation.
 			-- A negative value means no cancellation will be done.
-			
+
 feature -- Exception handling
 
 	exceptions_handler: DBG_EXCEPTION_HANDLER
@@ -308,7 +335,7 @@ feature -- Access
 			is_stopped: is_stopped
 		local
 			ecs: EIFFEL_CALL_STACK
-		do	
+		do
 			ecs := status.current_call_stack
 			if ecs /= Void then
 				Result := ecs.count
@@ -331,9 +358,9 @@ feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_APP
 		do
 			debug_info.restore
 			implementation.process_termination
-			
+
 			on_application_quit
-			
+
 			status := Void --| then is_running = False  (status /= Void)
 			current_execution_stack_number := 1
 debug ("DEBUGGER_TRACE")
@@ -405,8 +432,8 @@ feature -- Element change
 	set_breakpoint_status (f: E_FEATURE; i: INTEGER; bp_status: INTEGER) is
 			-- Set  status of  `i'-th breakpoint of `f', on bench side.
 			-- DO NOT NOTIFY application of change if application
-			-- is running. 
-			-- 
+			-- is running.
+			--
 			-- Possible value of `bp_status' are taken from DEBUG_INFO class:
 			-- bp_status =  Breakpoint_not_set <=> the breakpoint is not set,
 			-- bp_status =  Breakpoint_set, Breakpoint_condition_set <=> the breakpoint is set,
@@ -465,10 +492,10 @@ feature -- Access
 	has_conditional_stop (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Does breakpoint located at (`f', `i') have a condition ?
 		require
-			valid_breakpoint: is_breakpoint_set (f, i)			
+			valid_breakpoint: is_breakpoint_set (f, i)
 		do
 			Result := condition (f, i) /= Void
-		end	
+		end
 
 	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
 			-- Make the breakpoint located at (`f',`i') unconditional.
@@ -554,7 +581,7 @@ feature -- Removal
 		require
 			non_void_f: f /= Void
 		do
-			debug_info.remove_breakpoints_in_feature(f)		
+			debug_info.remove_breakpoints_in_feature(f)
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -566,7 +593,7 @@ feature -- Removal
 		require
 			non_void_f: f /= Void
 		do
-			debug_info.disable_breakpoints_in_feature(f)		
+			debug_info.disable_breakpoints_in_feature(f)
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -579,7 +606,7 @@ feature -- Removal
 			non_void_f: f /= Void
 		do
 			if f.is_debuggable then
-				debug_info.enable_breakpoints_in_feature(f)		
+				debug_info.enable_breakpoints_in_feature(f)
 				if is_running and then not is_stopped then
 					-- If the application is running (and not stopped), we
 					-- must notify it to take the new breakpoint into account.
@@ -593,7 +620,7 @@ feature -- Removal
 			non_void_f: f /= Void
 			debuggable: f.is_debuggable
 		do
-			debug_info.enable_first_breakpoint_of_feature (f)		
+			debug_info.enable_first_breakpoint_of_feature (f)
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -605,7 +632,7 @@ feature -- Removal
 		require
 			non_void_c: c /= Void
 		do
-			debug_info.enable_first_breakpoints_in_class (c)		
+			debug_info.enable_first_breakpoints_in_class (c)
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -650,9 +677,9 @@ feature -- Removal
 		end
 
 	disable_all_breakpoints is
-			-- disable all enabled breakpoints 
+			-- disable all enabled breakpoints
 		do
-			debug_info.disable_all_breakpoints	
+			debug_info.disable_all_breakpoints
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -661,9 +688,9 @@ feature -- Removal
 		end
 
 	enable_all_breakpoints is
-			-- enable all enabled breakpoints 
+			-- enable all enabled breakpoints
 		do
-			debug_info.enable_all_breakpoints	
+			debug_info.enable_all_breakpoints
 			if is_running and then not is_stopped then
 				-- If the application is running (and not stopped), we
 				-- must notify it to take the new breakpoint into account.
@@ -681,7 +708,7 @@ feature -- Removal
 					-- Need to individually remove the breakpoints
 					-- since the sent_bp must be updated to
 					-- not stop.
-				debug_info.remove_all_breakpoints	
+				debug_info.remove_all_breakpoints
 				if not is_stopped then
 					-- If the application is running (and not stopped), we
 					-- must notify it to take the new breakpoint into account.
@@ -707,6 +734,7 @@ feature -- Execution
 			application_exists: exists
 			non_negative_interrupt: interrupt_number >= 0
 		do
+			on_application_before_launching
 			implementation.run (args, cwd)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
@@ -721,25 +749,30 @@ feature -- Execution
 		require
 			is_running: is_running
 		do
+			debug ("debugger_trace_cache")
+				print (generator + ".release_all_but_kept_object %N")
+			end
 			implementation.keep_only_objects (status.kept_objects)
 		end
 
 	continue is
-			-- Continue the running of the application and keep the 
-			-- objects addresses in `kept_objects'. Objects that are not in 
-			-- `kept_objects' will be removed and will be not under the 
+			-- Continue the running of the application and keep the
+			-- objects addresses in `kept_objects'. Objects that are not in
+			-- `kept_objects' will be removed and will be not under the
 			-- control of bench. Therefore, these addresses cannot be
 			-- referenced the next time we stop the application.
 		require
 			is_running: is_running
 			is_stopped: is_stopped
-			non_void_keep_objects: status.kept_objects /= Void
 			non_negative_interrupt: interrupt_number >= 0
 		do
+			debug ("debugger_trace")
+				print (generator + ".continue %N")
+			end
 			release_all_but_kept_object
 			continue_ignoring_kept_objects
 		end
-		
+
 	continue_ignoring_kept_objects is
 			-- Continue the running of the application
 			-- before any debugger's operation occurred
@@ -749,6 +782,9 @@ feature -- Execution
 			is_stopped: is_stopped
 			non_negative_interrupt: interrupt_number >= 0
 		do
+			debug ("debugger_trace")
+				print (generator + ".continue_ignoring_kept_objects %N")
+			end
 			implementation.continue_ignoring_kept_objects
 		end
 
@@ -758,7 +794,7 @@ feature -- Execution
 		require
 			app_is_running: is_running
 			not_stopped: not is_stopped
-		do	
+		do
 			implementation.interrupt
 		end
 
@@ -770,10 +806,10 @@ feature -- Execution
 		require
 			app_is_running: is_running
 			not_stopped: not is_stopped
-		do	
+		do
 			implementation.notify_newbreakpoint
 		end
-		
+
 	kill is
 			-- Ask the application to terminate itself.
 		require
@@ -783,6 +819,13 @@ feature -- Execution
 		end
 
 feature -- Query
+
+	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+		require
+			flist_not_empty: flist /= Void and then not flist.is_empty
+		do
+			Result := implementation.onces_values (flist, a_addr, a_cl)
+		end
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		require
@@ -828,6 +871,7 @@ feature -- Setting
 			valid_depth: d = -1 or d > 0
 		do
 			critical_stack_depth := d
+			implementation.apply_critical_stack_depth (d)
 		end
 
 	set_displayed_string_size (i: like displayed_string_size) is
@@ -843,7 +887,7 @@ feature -- Setting
 	set_current_execution_stack_number (i: INTEGER) is
 			-- Set the `current_execution_stack_number' to `i'.
 			--| If `current_execution_stack_number' is greater than
-			--| the number of stack elements then 
+			--| the number of stack elements then
 			--| `current_execution_stack_number' will be set
 			--| to the last element.
 		require
@@ -873,12 +917,12 @@ feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
 			if is_classic then
 				create {APPLICATION_STATUS_CLASSIC} status.make
 			elseif is_dotnet then
-				create {APPLICATION_STATUS_DOTNET} status.make				
+				create {APPLICATION_STATUS_DOTNET} status.make
 			end
 		ensure
 			is_running: is_running
 		end
-		
+
 	destroy_status is
 		require
 			is_running: is_running
@@ -888,10 +932,10 @@ feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
 			is_not_running: not is_running
 		end
 
-feature {SHARED_DEBUG, STOPPOINTS_STATUS, OPEN_PROJECT, QUIT_PROJECT, SHARED_APPLICATION_EXECUTION}
+feature {SHARED_DEBUG, SHARED_APPLICATION_EXECUTION, ES_BREAKPOINTS_TOOL}
 
 	debug_info: DEBUG_INFO
-	
+
 feature -- Implementation
 
 	implementation: APPLICATION_EXECUTION_IMP is
@@ -902,7 +946,7 @@ feature -- Implementation
 				create {APPLICATION_EXECUTION_CLASSIC} Result.make
 			end
 		end
-		
+
 	imp_dotnet: APPLICATION_EXECUTION_DOTNET is
 		require
 			is_dotnet

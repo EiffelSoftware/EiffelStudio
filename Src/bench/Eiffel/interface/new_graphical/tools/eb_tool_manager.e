@@ -35,7 +35,7 @@ inherit
 		redefine
 			recycle
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
@@ -195,15 +195,15 @@ feature {NONE} -- Initialization
 			build_project_toolbar
 			toolbars_area.extend (project_toolbar)
 			toolbars_area.disable_item_expand (project_toolbar)
-			
+
 			view_menu.put_front (build_toolbar_menu)
 		end
-	
+
 	build_general_toolbar is
 			-- Set up the general toolbar (New, Save, Search, Shell, Undo, Redo, ...).
 		deferred
 		end
-	
+
 	build_address_toolbar is
 			-- Set up the address toolbar (Back, Forward, Current, Class name, feature name, ...).
 		deferred
@@ -260,7 +260,7 @@ feature {NONE} -- Menus initializations
 
 				-- Explorer Bar
 			view_menu.extend (build_explorer_bar_menu)
-	
+
 				-- Separator
 			create menu_sep
 			view_menu.extend (menu_sep)
@@ -346,11 +346,11 @@ feature -- Access
 
 	left_tools: ARRAYED_LIST [EB_EXPLORER_BAR_ITEM]
 			-- Tools under management that can be put in the left bar.
-	
+
 	bottom_tools: ARRAYED_LIST [EB_EXPLORER_BAR_ITEM]
 			-- Tools under management that can be put on the right, below
 			-- the editor.
-			
+
 	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			-- Status bar.
 
@@ -375,7 +375,7 @@ feature -- Status setting
 feature -- Memory management
 
 	destroy_imp is
-			-- Recycle `Current', and leave it in an unstable state, 
+			-- Recycle `Current', and leave it in an unstable state,
 			-- so that we know whether we are really not referenced any more.
 		do
 			toolbars_area.wipe_out
@@ -401,7 +401,7 @@ feature -- Memory management
 feature {EB_DEBUGGER_MANAGER} -- Explorer bars
 
 	left_panel: EB_EXPLORER_BAR
-			-- Left panel: contains one of the item of `left_tools': the favorites, 
+			-- Left panel: contains one of the item of `left_tools': the favorites,
 			-- the clusters tree, the features tree, ... or Void if it
 			-- contains nothing and is not displayed.
 
@@ -482,7 +482,7 @@ feature -- Explorer bar handling.
 		do
 			if
 				(a_bar.parent = Void) and
-				(not other_bar (a_bar).is_maximized) and 
+				(not other_bar (a_bar).is_maximized) and
 				a_bar.is_show_requested
 			then
 				if a_bar = left_panel then
@@ -498,7 +498,7 @@ feature -- Explorer bar handling.
 						panel.set_second (right_panel)
 					end
 				end
-				
+
 				if panel.full then
 					update_expanded_state_of_panel
 					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
@@ -534,7 +534,7 @@ feature -- Explorer bar handling.
 					end
 				else
 					if Editor_left_side_cell.item then
-						panel.set_first (right_panel)	
+						panel.set_first (right_panel)
 					else
 						panel.set_second (right_panel)
 					end
@@ -545,7 +545,7 @@ feature -- Explorer bar handling.
 				end
 			end
 		end
-		
+
 	update_expanded_state_of_panel is
 			-- If `panel' `is_full', update expanded status of widgets
 			-- based on `editor_left_side_cell'. This must be performed
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation / Commands
 			-- Save the apparence of the project toolbar in the registry (or in .es5rc)
 		do
 			if project_customizable_toolbar.changed then
-				debugger_manager.save_interface (project_customizable_toolbar)
+				Eb_debugger_manager.save_interface (project_customizable_toolbar)
 			end
 		end
 
@@ -694,17 +694,17 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
-	
+
 	Default_colors: EV_STOCK_COLORS is
 			-- Default Vision2 colors.
-		once	
+		once
 			create Result
 		end
-	
+
 	editor_left_side_cell: CELL [BOOLEAN] is
 			-- Is Editor and associated tools displayed on left side of window?
 		once
 			create Result.put (preferences.misc_data.editor_left_side)
 		end
-		
+
 end -- class EB_TOOL_MANAGER

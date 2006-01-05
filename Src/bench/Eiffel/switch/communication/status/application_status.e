@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Status information about the running application - current routine,%
 		%current object, ..."
 	date: "$Date$"
@@ -9,21 +9,22 @@ indexing
 deferred class APPLICATION_STATUS
 
 inherit
-	ANY
 
 	SHARED_DEBUG
 		export
 			{NONE} all
 		end
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
+
 	IPC_SHARED
 		export
 			{NONE} all
 			{ANY} Pg_break, Pg_interrupt,
-				Pg_raise, Pg_viol 
+				Pg_raise, Pg_viol
 		end
 	SHARED_APPLICATION_EXECUTION
 		export
@@ -33,7 +34,7 @@ inherit
 --creation {APPLICATION_STATUS_EXPORTER}
 --
 --	do_nothing
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -47,27 +48,89 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize Current
 		do
-			create kept_objects.make
-			kept_objects.compare_objects
-			
+			create_kept_objects
+
 			reset_call_stack_list
 		end
 
 feature -- Objects kept from session to session
 
-	kept_objects: LINKED_SET [STRING]
+	create_kept_objects is
+		do
+			create objects_keeper.make (20)
+			objects_keeper.compare_objects
+		end
+
+	objects_keeper: HASH_TABLE [INTEGER, STRING]
+
+	kept_objects: LIST [STRING] is
 			-- Objects represented by their address that should be kept during the execution.
-			
+		do
+			if not objects_keeper.is_empty then
+				debug
+					print (generator + ".kept_objets : " + objects_keeper.count.out + " items%N")
+				end
+				create {ARRAYED_LIST [STRING]} Result.make (objects_keeper.count)
+				from
+					objects_keeper.start
+				until
+					objects_keeper.after
+				loop
+					debug ("debugger_trace_cache")
+						print ("KeptObjects -> " + objects_keeper.key_for_iteration
+							+ " : " + objects_keeper.item_for_iteration.out + "%N")
+					end
+					Result.extend (objects_keeper.key_for_iteration)
+					objects_keeper.forth
+				end
+			end
+		end
+
+	clear_kept_objects is
+		do
+			objects_keeper.wipe_out
+		end
+
 	keep_object (add: STRING) is
 			-- Add object identified by `add' to `kept_objects'
 		require
 			address_not_empty: add /= Void and then not add.is_empty
+		local
+			nb: INTEGER
 		do
-			kept_objects.extend (add)
+			nb := objects_keeper.item (add)
+			objects_keeper.force (nb + 1, add)
+
+			debug ("debugger_trace_cache")
+				print ("keep_object ("+ add +") " + nb.out + " -> " + objects_keeper.item (add).out + "%N")
+			end
+		end
+
+	release_object (add: STRING) is
+		require
+			address_not_empty: add /= Void and then not add.is_empty
+--			kept_objects.has (add)
+		local
+			nb: INTEGER
+		do
+			nb := objects_keeper.item (add)
+			if nb > 1 then
+				objects_keeper.force (nb - 1, add)
+			else
+				objects_keeper.remove (add)
+			end
+			debug ("debugger_trace_cache")
+				print ("release_object ("+ add +") " + nb.out + "-> " + objects_keeper.item (add).out + "%N")
+			end
+		end
+
+	keep_object_for_gui	(add: STRING) is
+		do
+			keep_object (add)
 		end
 
 feature -- Call Stack List management
-	
+
 	reset_call_stack_list is
 			-- Reset `call_stack_list' or create it
 		do
@@ -90,7 +153,7 @@ feature -- Callstack
 			ecs := new_current_callstack_with (stack_max_depth)
 			set_call_stack (current_thread_id, ecs)
 		end
-		
+
 feature {NONE} -- CallStack Impl
 
 	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
@@ -126,17 +189,17 @@ feature -- Values
 	object_address: STRING
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
-			
+
 	exception_occurred: BOOLEAN is
 		deferred
 		end
-		
+
 	exception_code: INTEGER
 			-- Exception code if any
 
 	exception_tag: STRING
 			-- Exception tag if any
-			
+
 	exception_message: STRING is
 			-- Exception message if any
 		require
@@ -144,17 +207,24 @@ feature -- Values
 		deferred
 		end
 
+feature -- Query
+
+	reason_is_overflow: BOOLEAN is
+		do
+			Result := reason = pg_overflow
+		end
+
 feature -- Call Stack related
 
 	current_call_stack: EIFFEL_CALL_STACK
 			-- Current Call Stack regarding Thread Id.
-			
+
 	get_current_call_stack is
 			-- set `current_call_stack' value
 		do
 			current_call_stack := call_stack (current_thread_id)
 		end
-		
+
 	stack_max_depth: INTEGER
 			-- Maximum number of stack elements that we retrieve from the application.
 
@@ -165,17 +235,17 @@ feature -- Call Stack element related
 		do
 			Result := current_call_stack.i_th (Application.current_execution_stack_number)
 		end
-			
+
 feature -- Thread related access
 
 	current_thread_id: INTEGER
 			-- Thread ID of the Current call stack.
-	
+
 	all_thread_ids: ARRAY [INTEGER]
 			-- All available threads' ids
-			
+
 	all_thread_ids_count: INTEGER
-	
+
 	thread_name (id: like current_thread_id): STRING is
 		do
 		end
@@ -183,7 +253,7 @@ feature -- Thread related access
 	thread_priority (id: like current_thread_id): INTEGER is
 		do
 		end
-		
+
 feature -- Thread related change
 
 	set_call_stack (tid: INTEGER; ecs: like current_call_stack) is
@@ -199,7 +269,7 @@ feature -- Thread related change
 	refresh_current_thread_id is
 			-- Get fresh value of Thread ID from debugger
 		deferred
-		end		
+		end
 
 	set_current_thread_id (tid: INTEGER) is
 			-- Set current thread id, and refresh `current_call_stack'
@@ -207,9 +277,9 @@ feature -- Thread related change
 			id_valid: tid > 0
 		do
 			current_thread_id := tid
-			get_current_call_stack			
+			get_current_call_stack
 		end
-		
+
 	set_thread_ids (a: ARRAY [INTEGER]) is
 			-- set thread's ids with `a'
 		require
@@ -236,8 +306,8 @@ feature {NONE} -- Call stack implementation
 		ensure
 			Result /= Void implies tid > 0
 		end
-	
-	call_stack_list: HASH_TABLE [like current_call_stack, INTEGER]	
+
+	call_stack_list: HASH_TABLE [like current_call_stack, INTEGER]
 			-- Call Stack list, associating Call Stack and their Thread Id.
 
 feature -- Access
@@ -259,7 +329,7 @@ feature -- Access
 				reason = Pg_new_breakpoint or else
 				reason = Pg_step
 		ensure
-			true_implies_correct_reason: 
+			true_implies_correct_reason:
 				Result implies (reason = Pg_break) or else
 						(reason = Pg_interrupt) or else
 						(reason = Pg_raise) or else
@@ -269,7 +339,7 @@ feature -- Access
 		end
 
 	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN is
-			-- Is the program stopped at the given index in the given feature ? 
+			-- Is the program stopped at the given index in the given feature ?
 			-- Returns False when the couple ('f','index') cannot be found on the stack.
 			--         or is on the stack but not currently active.
 			-- Returns True when the couple ('f','index') is active (i.e is the current
@@ -284,9 +354,9 @@ feature -- Access
 				if l_ccs /= Void and then not l_ccs.is_empty then
 					current_execution_stack_number := Application.current_execution_stack_number
 					stack_elem ?= l_ccs.i_th (Application.current_execution_stack_number)
-					Result := stack_elem /= Void 
-							and then f_body_index = stack_elem.body_index 
-							and then index = stack_elem.break_index 
+					Result := stack_elem /= Void
+							and then f_body_index = stack_elem.body_index
+							and then index = stack_elem.break_index
 				end
 			end
 		end
@@ -303,13 +373,13 @@ feature -- Access
 				l_ccs := current_call_stack
 				if l_ccs /= Void and then not l_ccs.is_empty then
 					stack_elem ?= l_ccs.i_th (1)
-					Result := stack_elem /= Void 
-							and then f_body_index = stack_elem.body_index 
+					Result := stack_elem /= Void
+							and then f_body_index = stack_elem.body_index
 							and then index = stack_elem.break_index
 				end
 			end
 		end
-		
+
 	has_valid_call_stack: BOOLEAN is
 			-- Has a valid callstack ?
 		do
@@ -319,12 +389,12 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	has_valid_current_eiffel_call_stack_element: BOOLEAN is
 			-- Is current call stack element a valid Eiffel Call Stack Element ?
 		do
-			Result := current_eiffel_call_stack_element /= Void	
-		end		
+			Result := current_eiffel_call_stack_element /= Void
+		end
 
 feature -- Update
 
@@ -332,7 +402,7 @@ feature -- Update
 			-- Update data which need update after application is really stopped
 		do
 		end
-		
+
 feature -- Setting
 
 	set_is_stopped (b: BOOLEAN) is
@@ -440,7 +510,7 @@ feature -- Output
 				end
 			end
 		end
-	
+
 	display_exception (st: STRUCTURED_TEXT) is
 			-- Display exception in `st'.
 		require

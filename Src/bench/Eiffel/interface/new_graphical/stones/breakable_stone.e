@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	BREAKABLE_STONE 
+	BREAKABLE_STONE
 
 inherit
 	STONE
@@ -37,7 +37,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (e_feature: E_FEATURE; break_index: INTEGER) is
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			routine := e_feature
 			index := break_index
 		end -- make
- 
+
 feature -- Properties
 
 	routine: E_FEATURE
@@ -93,7 +93,7 @@ feature -- Access
 		do
 			Result := routine.feature_signature
 		end
- 
+
 	header: STRING is
 		do
 			Result := "Stop point in " + routine.name + " at line " + index.out
@@ -165,8 +165,8 @@ feature -- Basic operations
 
 					-- "Run to breakpoint"
 				create item.make_with_text (Interface_names.m_Run_to_this_point)
-				item.select_actions.extend (agent debugger_manager.set_debugging_window (conv_dev))
-				item.select_actions.extend (agent (debugger_manager.debug_run_cmd).process_breakable (Current))
+				item.select_actions.extend (agent Eb_debugger_manager.set_debugging_window (conv_dev))
+				item.select_actions.extend (agent (Eb_debugger_manager.debug_run_cmd).process_breakable (Current))
 				menu.extend (item)
 			end
 
@@ -200,7 +200,7 @@ feature -- Basic operations
 			Layout_constants.set_default_size_for_button (cancelb)
 			create tf
 			create lab
-			
+
 				-- Layout all widgets
 			hb.extend (create {EV_CELL})
 			hb.extend (okb)
@@ -213,7 +213,7 @@ feature -- Basic operations
 			vb.extend (hb)
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
-			
+
 				-- Set up actions
 			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
 			cancelb.select_actions.extend (agent d.destroy)
@@ -253,13 +253,13 @@ feature -- Basic operations
 			Layout_constants.set_default_size_for_button (cancelb)
 			create tf
 			create lab
-			
+
 				-- Update widgets.
 			expr := Application.condition (f, pos)
 			if expr /= Void then
 				tf.set_text (expr.expression)
 			end
-			
+
 				-- Layout all widgets
 			hb.extend (create {EV_CELL})
 			hb.extend (okb)
@@ -274,7 +274,7 @@ feature -- Basic operations
 			vb.extend (hb)
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
-			
+
 				-- Set up actions
 			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
 			removeb.select_actions.extend (agent remove_condition_from_breakpoint (f, pos))
@@ -310,7 +310,7 @@ feature -- Basic operations
 					a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
 				end
 			else
-				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text)) 
+				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text))
 			end
 		end
 

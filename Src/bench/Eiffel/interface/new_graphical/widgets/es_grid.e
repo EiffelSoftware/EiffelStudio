@@ -458,32 +458,14 @@ feature {NONE} -- Borders drawing
 
 feature -- column resizing access
 
-	last_column_use_all_width_enabled: BOOLEAN
-
-	ensure_last_column_use_all_width is
-		local
-			last_col: EV_GRID_COLUMN
-			last_col_minimal_width, col_left_x: INTEGER
+	enable_last_column_use_all_width is
 		do
-			if last_column_use_all_width_enabled then
-				if not implementation.is_header_item_resizing then
-					debug
-						print (generator + ".ensure_last_column_use_all_width %N")
-					end
-					if row_count > 0 and column_count > 0 then
-						last_col := column (column_count)
-						last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
-						col_left_x := (last_col.virtual_x_position - virtual_x_position)
-						if col_left_x + last_col_minimal_width < viewable_width then
-							resize_actions.block
-							virtual_size_changed_actions.block
-							last_col.set_width (viewable_width - col_left_x)-- - 1)
-							virtual_size_changed_actions.resume
-							resize_actions.resume
-						end
-					end
-				end
-			end
+			last_column_use_all_width_enabled := True
+		end
+
+	disable_last_column_use_all_width is
+		do
+			last_column_use_all_width_enabled := False
 		end
 
 	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
@@ -506,6 +488,34 @@ feature -- column resizing access
 		end
 
 feature {NONE} -- column resizing impl
+
+	last_column_use_all_width_enabled: BOOLEAN
+
+	ensure_last_column_use_all_width is
+		local
+			last_col: EV_GRID_COLUMN
+			last_col_minimal_width, col_left_x: INTEGER
+		do
+			if last_column_use_all_width_enabled then
+				if not implementation.is_header_item_resizing then
+					debug
+						print (generator + ".ensure_last_column_use_all_width %N")
+					end
+					if row_count > 0 and column_count > 0 then
+						last_col := column (column_count)
+						last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
+						col_left_x := (last_col.virtual_x_position - virtual_x_position)
+						if col_left_x + last_col_minimal_width < viewable_width then
+							resize_actions.block
+							virtual_size_changed_actions.block
+							last_col.set_width (viewable_width - col_left_x)
+							virtual_size_changed_actions.resume
+							resize_actions.resume
+						end
+					end
+				end
+			end
+		end
 
 	delayed_columns_auto_resizing: ES_DELAYED_ACTION
 

@@ -25,33 +25,33 @@ create
 
 feature {NONE}
 
-	make_with_address (add: STRING; dtype: CLASS_C; ot: like tool) is
+	make_with_address (add: STRING; dtype: CLASS_C; g: like parent_grid) is
 		require
 			add /= Void
 		do
-			make (ot)
+			make_with_grid (g)
 			object_dynamic_class := dtype
 			object_is_special_value := object_dynamic_class.is_special
 			set_object_address (add)
 		end
 
-	make_with_call_stack_element (elem: EIFFEL_CALL_STACK_ELEMENT; ot: like tool) is
+	make_with_call_stack_element (elem: EIFFEL_CALL_STACK_ELEMENT; g: like parent_grid) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		require
 			elem_not_void: elem /= Void
 		do
-			make_with_address (elem.object_address, elem.dynamic_class, ot)
+			make_with_address (elem.object_address, elem.dynamic_class, g)
 		end
 
-	make_with_dump_value (dumpvalue: DUMP_VALUE; ot: like tool) is
+	make_with_dump_value (dumpvalue: DUMP_VALUE; g: like parent_grid) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		require
 			dumpvalue_not_void: dumpvalue /= Void
 		do
 			last_dump_value := dumpvalue
-			make_with_address (dumpvalue.address, dumpvalue.dynamic_class, ot)
+			make_with_address (dumpvalue.address, dumpvalue.dynamic_class, g)
 		end
 
 feature -- Recycling
@@ -116,11 +116,11 @@ feature -- Query
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
-				get_last_dump_value			
+				get_last_dump_value
 			end
 			Result := last_dump_value.generating_type_representation
 		end
-		
+
 	get_last_dump_value is
 		do
 			last_dump_value := associated_dump_value
@@ -152,7 +152,7 @@ feature -- Graphical changes
 				end
 				set_value (object_value)
 				set_type (object_type_representation)
-				set_address (object_address)				
+				set_address (object_address)
 				set_pixmap (Pixmaps.Icon_object_symbol)
 				row.ensure_expandable
 				expand_actions.extend (agent on_row_expand)

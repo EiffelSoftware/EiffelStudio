@@ -532,7 +532,7 @@ feature {NONE} -- Implementation, mouse_button_events
 				)
 				actions_called := True
 			end
-			if interface.is_dockable then
+			if not is_destroyed and then interface.is_dockable then
 				dragable_press (
 				t.integer_item (1),
 				t.integer_item (2),
@@ -543,7 +543,7 @@ feature {NONE} -- Implementation, mouse_button_events
 				-- `widget_source_being_dragged' is not Void, if a docking
 				-- transport just started. There is no need to now call
 				-- `pnd_press' as docking will override drag and drop.
-			if not is_dock_executing then
+			if not is_destroyed and not is_dock_executing then
 				pnd_press (
 					t.integer_item (1),
 					t.integer_item (2),

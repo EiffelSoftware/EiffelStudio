@@ -29,7 +29,7 @@ inherit
 		end
 
 create
-	make
+	make, make_with_hidden
 
 feature {NONE} -- Initialization
 
@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 			-- New view.
 		do
 			default_create
-			preferences := a_preferences
-			parent_window := Current
+			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
 			root_node_text := "Preferences root"
 			set_size (640, 460)
 			set_title ("Preferences")

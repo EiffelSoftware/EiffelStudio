@@ -29,7 +29,7 @@ inherit
 		end
 
 create
-	make
+	make, make_with_hidden
 
 feature {NONE} -- Initialization
 
@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 			-- New view.
 		do
 			default_create
-			preferences := a_preferences
-			parent_window := Current
+			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
 			set_size (640, 460)
 			set_title (preferences_title)
 			create grid
@@ -281,7 +280,7 @@ feature {NONE} -- Events
 		do
 			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)
 			if not resized_columns_list.item (4) then
-				grid.column (4).set_width (l_width)
+				grid.column (4).set_width (l_width.max (0))
 			end
 		end
 

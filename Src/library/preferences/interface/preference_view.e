@@ -21,11 +21,25 @@ feature -- Initialization
 			parent_window := a_parent_window
 		ensure
 			preferences_set: preferences = a_preferences
-		end	
+		end
+
+	make_with_hidden (a_preferences: like preferences; a_parent_window: like parent_window; a_show_hidden_flag: BOOLEAN) is
+			-- Create with `a_preferences' 
+			-- and show hidden preferences if `a_show_hidden_flag' is True.
+		require
+			preferences_not_void: a_preferences /= Void
+			parent_window_not_void: a_parent_window /= Void
+		do
+			show_hidden_preferences := a_show_hidden_flag
+			make (a_preferences, a_parent_window)
+		ensure
+			preferences_set: preferences = a_preferences
+			hidden_set: show_hidden_preferences = a_show_hidden_flag
+		end
 
 feature -- Access
 
-	parent_window: EV_TITLED_WINDOW
+	parent_window: EV_WINDOW
 			-- Parent window.  Used to display this view relative to.
 
 	resource_widget (a_resource: PREFERENCE): PREFERENCE_WIDGET is
@@ -33,8 +47,8 @@ feature -- Access
 		require
 			resource_not_void: a_resource /= Void
 		do
-			if resource_widgets.has (a_resource.generating_resource_type) then				
-				Result := resource_widgets.item (a_resource.generating_resource_type)					
+			if resource_widgets.has (a_resource.generating_resource_type) then
+				Result := resource_widgets.item (a_resource.generating_resource_type)
 				Result.set_resource (a_resource)
 			end
 		ensure
@@ -54,7 +68,7 @@ feature -- Status Setting
 			show_hidden_preferences := a_flag
 		ensure
 			value_set: show_hidden_preferences = a_flag
-		end		
+		end
 
 feature -- Commands
 
@@ -63,12 +77,12 @@ feature -- Commands
 		require
 			resource_widget_not_void: a_resource_widget /= Void
 		do
-			if not resource_widgets.has (a_resource_widget.graphical_type) then				
-				resource_widgets.put (a_resource_widget, a_resource_widget.graphical_type)	
+			if not resource_widgets.has (a_resource_widget.graphical_type) then
+				resource_widgets.put (a_resource_widget, a_resource_widget.graphical_type)
 			end
 		ensure
 			is_registered: resource_widgets.has (a_resource_widget.graphical_type)
-		end	
+		end
 
 feature {NONE} -- Implementation
 
@@ -80,7 +94,7 @@ feature {NONE} -- Implementation
 			l_frw: FONT_PREFERENCE_WIDGET
 			l_crw: COLOR_PREFERENCE_WIDGET
 			l_cw: CHOICE_PREFERENCE_WIDGET
-		once			
+		once
 			create Result.make (4)
 			Result.compare_objects
 			create l_brw.make
@@ -91,16 +105,16 @@ feature {NONE} -- Implementation
 			Result.put (l_brw, l_brw.graphical_type)
 			Result.put (l_srw, l_srw.graphical_type)
 			Result.put (l_frw, l_frw.graphical_type)
-			Result.put (l_crw, l_crw.graphical_type)			
+			Result.put (l_crw, l_crw.graphical_type)
 			Result.put (l_cw, l_cw.graphical_type)
 		ensure
 			resource_widgets_not_void: Result /= Void
-		end	
+		end
 
 	preferences: PREFERENCES
 			-- Preferences
 invariant
 	has_preferences: preferences /= Void
 	has_parent_window: parent_window /= Void
-			
+
 end -- class PREFERENCE_VIEW

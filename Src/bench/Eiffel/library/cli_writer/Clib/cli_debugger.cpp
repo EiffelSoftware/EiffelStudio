@@ -75,7 +75,7 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 /*
  * Private function declaration
  */
-extern EIF_INTEGER dbg_icdc_continue (void*, BOOL);
+rt_private EIF_INTEGER dbg_icdc_continue (void*, BOOL);
 
 /*
 //////////////////////////////////////////////////
@@ -97,6 +97,13 @@ rt_private EIF_POINTER estudio_callback_event;
 #define LOCKED_VALUE_IS_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) == v)
 #define LOCKED_VALUE_IS_NOT_EQUAL(a,v) (InterlockedExchangeAdd ((LONG*) &a, 0) != v)
 
+rt_private volatile LONG dbg_state ;
+#define LOCKED_DBG_STATE_VALUE LOCKED_VALUE(dbg_state)
+#define LOCKED_DBG_STATE_IS_EQUAL(v) (LOCKED_VALUE_IS_EQUAL(dbg_state, v))
+#define LOCKED_DBG_STATE_IS_NOT_EQUAL(v) (LOCKED_VALUE_IS_NOT_EQUAL(dbg_state, v))
+#define LOCKED_DBG_STATE_SET_VALUE(v) LOCKED_SET_VALUE(dbg_state, v)
+#define LOCKED_DBG_STATE_INCREMENT  LOCKED_INCREMENT_VALUE(dbg_state)
+
 rt_private Callback_ids dbg_last_callback_id;
 #define LOCKED_DBG_CB_ID_VALUE LOCKED_VALUE(dbg_last_callback_id)
 #define LOCKED_DBG_CB_ID_SET_VALUE(v) LOCKED_SET_VALUE(dbg_last_callback_id, v)
@@ -108,15 +115,15 @@ rt_private UINT dbg_timer;
 #define LOCKED_DBG_TIMER_IS_NOT_SET LOCKED_VALUE_IS_EQUAL(dbg_timer,0)
 #define LOCKED_DBG_TIMER_SET_VALUE(v) LOCKED_SET_VALUE(dbg_timer, v)
 
-rt_private BOOL dbg_exit_process_occurred;
-#define LOCKED_DBG_EXIT_PROCESS_OCCURRED LOCKED_VALUE(dbg_exit_process_occurred)
-#define LOCKED_DBG_EXIT_PROCESS_NOTIFY LOCKED_SET_VALUE(dbg_exit_process_occurred, true)
-#define LOCKED_DBG_EXIT_PROCESS_RESET LOCKED_SET_VALUE(dbg_exit_process_occurred, false)
-
 rt_private BOOL dbg_start_timer_requested;
 #define LOCKED_DBG_START_TIMER_REQUESTED LOCKED_VALUE(dbg_start_timer_requested)
 #define LOCKED_DBG_START_TIMER_REQUEST LOCKED_SET_VALUE(dbg_start_timer_requested, true)
 #define LOCKED_DBG_START_TIMER_RESET LOCKED_SET_VALUE(dbg_start_timer_requested, false)
+
+rt_private BOOL dbg_exit_process_occurred;
+#define LOCKED_DBG_EXIT_PROCESS_OCCURRED LOCKED_VALUE(dbg_exit_process_occurred)
+#define LOCKED_DBG_EXIT_PROCESS_NOTIFY LOCKED_SET_VALUE(dbg_exit_process_occurred, true)
+#define LOCKED_DBG_EXIT_PROCESS_RESET LOCKED_SET_VALUE(dbg_exit_process_occurred, false)
 
 rt_private BOOL dbg_estudio_notification_processing;
 #define INSIDE_ESTUDIO_NOTIFICATION LOCKED_VALUE(dbg_estudio_notification_processing)
@@ -138,13 +145,6 @@ rt_private UINT dbg_keep_synchro;
 #define LOCKED_DBG_STOP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 0)
 #define LOCKED_DBG_SYNCHRO_IS_ON LOCKED_VALUE_IS_EQUAL(dbg_keep_synchro, 1)
 #define LOCKED_DBG_SYNCHRO_IS_OFF LOCKED_VALUE_IS_EQUAL(dbg_keep_synchro, 0)
-
-rt_private volatile LONG dbg_state ;
-#define LOCKED_DBG_STATE_VALUE LOCKED_VALUE(dbg_state)
-#define LOCKED_DBG_STATE_IS_EQUAL(v) (LOCKED_VALUE_IS_EQUAL(dbg_state, v))
-#define LOCKED_DBG_STATE_IS_NOT_EQUAL(v) (LOCKED_VALUE_IS_NOT_EQUAL(dbg_state, v))
-#define LOCKED_DBG_STATE_SET_VALUE(v) LOCKED_SET_VALUE(dbg_state, v)
-#define LOCKED_DBG_STATE_INCREMENT  LOCKED_INCREMENT_VALUE(dbg_state)
 
 rt_private void reset_variables() {
 	/* Reset variables used in the synchro */
@@ -324,7 +324,6 @@ rt_public void reset_dbg_cb_info() {
 	}
 }
 
-
 /*
 //////////////////////////////////////////////////
 /// Synchro managing using SuspendThread       ///
@@ -334,6 +333,7 @@ rt_public void reset_dbg_cb_info() {
 rt_private void dbg_close_estudio_thread_handle () {
 	DBGTRACE_HR("[ES] CloseHandle of thread : handle = ", (HRESULT)estudio_thread_handle);	
 	CloseHandle (estudio_thread_handle);
+	estudio_thread_handle = (HANDLE) 0;
 }
 
 rt_public void dbg_init_estudio_thread_handle () {
@@ -361,6 +361,7 @@ rt_public void dbg_init_estudio_thread_handle () {
 	CHECK(fSuccess == 0, "Ensure: DuplicateHandle failed !!")
 }
 
+#ifdef DBGTRACE_ENABLED
 rt_private void dbg_suspend_estudio_thread () {
 	DWORD result;
 	result = SuspendThread (estudio_thread_handle);
@@ -372,18 +373,19 @@ rt_private void dbg_resume_estudio_thread () {
 	result = ResumeThread (estudio_thread_handle);
 	ENSURE((result > (DWORD) 0), "Error during dbg_resume_estudio_thread");
 }
-#define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
+#endif
+
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
 #define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
 
+#ifdef DBGTRACE_ENABLED
 #define DBG_SUSPEND_ESTUDIO_THREAD_DEBUG dbg_suspend_estudio_thread ();
 #define DBG_RESUME_ESTUDIO_THREAD_DEBUG  dbg_resume_estudio_thread (); 
+#else
 #define DBG_SUSPEND_ESTUDIO_THREAD SuspendThread(estudio_thread_handle)
 #define DBG_RESUME_ESTUDIO_THREAD ResumeThread (estudio_thread_handle) 
-/*
-#define DBG_SUSPEND_ESTUDIO_THREAD 
-#define DBG_RESUME_ESTUDIO_THREAD
-*/
+#endif
+
 
 /*
 //////////////////////////////////////////////////

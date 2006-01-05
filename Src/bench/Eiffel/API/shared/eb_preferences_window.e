@@ -34,7 +34,7 @@ inherit
 		end
 
 create
-	make
+	make, make_with_hidden
 
 feature -- Access
 

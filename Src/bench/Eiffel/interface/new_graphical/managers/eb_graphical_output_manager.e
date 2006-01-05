@@ -10,7 +10,7 @@ class
 inherit
 	EB_OUTPUT_MANAGER
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 		export
 			{NONE} all
 		end
@@ -176,8 +176,8 @@ feature -- Basic Operations / Information message
 		do
 				-- Build the text
 			create st.make
-			if Application.is_running then
-				Application.status.display_status (st)
+			if eb_debugger_manager.application_is_executing then
+				eb_debugger_manager.Application.status.display_status (st)
 			else
 				st.add_string ("System not launched")
 				st.add_new_line
@@ -196,21 +196,23 @@ feature -- Basic Operations / Information message
 			st: STRUCTURED_TEXT
 			enabled_bps: BOOLEAN
 			disabled_bps: BOOLEAN
+			app_exec: APPLICATION_EXECUTION
 		do
 				-- Build text.
 			create st.make
-			if  not Application.has_breakpoints then
+			app_exec := eb_debugger_manager.application
+			if  not app_exec.has_breakpoints then
 				st.add_string ("No breakpoints.")
 				st.add_new_line
 			else
-				enabled_bps := Application.has_enabled_breakpoints
-				disabled_bps := Application.has_disabled_breakpoints
+				enabled_bps := app_exec.has_enabled_breakpoints
+				disabled_bps := app_exec.has_disabled_breakpoints
 
 				if enabled_bps then
 					st.add_string ("Enabled breakpoints:")
 					st.add_new_line
 					st.add_new_line
-					display_filtered_breakpoints (st, Application.features_with_breakpoint_set, True)
+					display_filtered_breakpoints (st, app_exec.features_with_breakpoint_set, True)
 					if disabled_bps then
 						st.add_new_line
 						st.add_string ("-------------")
@@ -222,7 +224,7 @@ feature -- Basic Operations / Information message
 					st.add_string ("Disabled breakpoints:")
 					st.add_new_line
 					st.add_new_line
-					display_filtered_breakpoints (st, Application.features_with_breakpoint_set, False)
+					display_filtered_breakpoints (st, app_exec.features_with_breakpoint_set, False)
 				end
 			end
 			st.add_new_line
@@ -274,6 +276,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			bp_list: LIST [INTEGER]
 			first_bp, has_bp: BOOLEAN
+			app_exec: APPLICATION_EXECUTION
 		do
 			from
 				create table.make (5)
@@ -291,6 +294,7 @@ feature {NONE} -- Implementation
 				stwl.extend (f)
 				routine_list.forth
 			end
+			app_exec := eb_debugger_manager.application
 			from
 				table.start
 			until
@@ -306,9 +310,9 @@ feature {NONE} -- Implementation
 				loop
 					f := stwl.item
 					if display_enabled then
-						bp_list := Application.breakpoints_enabled_for (f)
+						bp_list := app_exec.breakpoints_enabled_for (f)
 					else
-						bp_list := Application.breakpoints_disabled_for (f)
+						bp_list := app_exec.breakpoints_disabled_for (f)
 					end
 					has_bp := not bp_list.is_empty
 					stwl.forth
@@ -324,9 +328,9 @@ feature {NONE} -- Implementation
 					loop
 						f := stwl.item
 						if display_enabled then
-							bp_list := Application.breakpoints_enabled_for (f)
+							bp_list := app_exec.breakpoints_enabled_for (f)
 						else
-							bp_list := Application.breakpoints_disabled_for (f)
+							bp_list := app_exec.breakpoints_disabled_for (f)
 						end
 						if not bp_list.is_empty then
 							st.add_indent
@@ -344,8 +348,8 @@ feature {NONE} -- Implementation
 								else
 									first_bp := False
 								end
-								if application.is_breakpoint_set (f, i) then
-									st.add_breakpoint_index (f, i, Application.has_conditional_stop (f, i))
+								if app_exec.is_breakpoint_set (f, i) then
+									st.add_breakpoint_index (f, i, app_exec.has_conditional_stop (f, i))
 								end
 								bp_list.forth
 							end

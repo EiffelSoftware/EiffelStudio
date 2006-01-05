@@ -10,9 +10,9 @@ class
 inherit
 	ABSTRACT_DEBUG_VALUE
 
-create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ES_OBJECTS_GRID_LINE}
+create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ES_OBJECTS_GRID_LINE, APPLICATION_EXECUTION_IMP}
 	make_with_name
-	
+
 feature {NONE} -- Initialization
 
 	make_with_name (a_name: STRING) is
@@ -28,7 +28,7 @@ feature -- change
 		do
 			message := a_msg
 		end
-		
+
 	set_display_kind (a_kind: like display_kind) is
 		do
 			display_kind := a_kind
@@ -36,7 +36,7 @@ feature -- change
 
 feature -- Access
 
-	message: STRING 
+	message: STRING
 			-- Information message to display in object tool
 
 	display_message: STRING is
@@ -62,9 +62,9 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
+	append_type_and_value (st: STRUCTURED_TEXT) is
 			-- Append type and value of Current to `st'.
-		do 
+		do
 			st.add_string (display_message)
 		end
 
@@ -87,23 +87,23 @@ feature {NONE} -- Output
 		do
 			Result := display_message
 		end
-		
+
 feature -- Output
 
 	expandable: BOOLEAN is False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
-			-- List of all sub-items of `Current'. 
+			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
 			-- (sorted by name)
 		do
 			Result := Void
 		end
-		
+
 	display_kind: like kind
-		
+
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.

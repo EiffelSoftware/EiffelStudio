@@ -10,8 +10,6 @@ deferred class
 inherit
 	EB_FORMATTER
 
-	SHARED_APPLICATION_EXECUTION
-
 feature -- Properties
 
 	associated_feature: E_FEATURE
@@ -35,7 +33,7 @@ feature -- Status setting
 			else
 				associated_feature := Void
 				feature_cmd := Void
-				if 
+				if
 					selected and then
 					not widget.is_displayed
 				then

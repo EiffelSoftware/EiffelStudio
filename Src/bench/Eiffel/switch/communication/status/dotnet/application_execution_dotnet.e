@@ -27,12 +27,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
-		export
-			{NONE} all
-		end
-
-	ICOR_EXPORTER -- debug trace purpose
+	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
 		end
@@ -52,10 +47,10 @@ inherit
 			{NONE} all
 		end
 
-create {SHARED_APPLICATION_EXECUTION}
+create {APPLICATION_EXECUTION}
 	make
 
-feature {SHARED_APPLICATION_EXECUTION} -- Initialization
+feature {APPLICATION_EXECUTION} -- Initialization
 
 	make is
 			-- Create Current
@@ -221,7 +216,7 @@ feature -- Execution
 			app: STRING
 		do
 			reload_dotnet_debug_info_if_needed
-			Eifnet_debugger.initialize_debugger_session (debugger_manager.debugging_window)
+			Eifnet_debugger.initialize_debugger_session (debugger_manager.windows_handle)
 			if Eifnet_debugger.is_debugging then
 				app := Eiffel_system.application_name (True)
 
@@ -338,6 +333,75 @@ feature -- Execution
 		end
 
 feature -- Query
+
+	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+		local
+			l_class: CLASS_C
+			l_feat: E_FEATURE
+			i: INTEGER
+			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
+			exc_dv: EXCEPTION_DEBUG_VALUE
+			odv: ABSTRACT_DEBUG_VALUE
+			icdv: ICOR_DEBUG_VALUE
+			l_icdframe: ICOR_DEBUG_FRAME
+			l_eifnet_debugger: like eifnet_debugger
+		do
+			l_eifnet_debugger := Eifnet_debugger
+			l_icdframe := l_eifnet_debugger.current_stack_icor_debug_frame
+			from
+				i := 1
+				create Result.make (i, i + flist.count - 1)
+				flist.start
+			until
+				flist.after
+			loop
+					--| Get the once's value
+				l_feat := flist.item
+				check l_feat.type /= Void end
+				if l_feat.argument_count > 0 then
+					create err_dv.make_with_name  (l_feat.name)
+					err_dv.set_message ("Could not evaluate once with arguments...")
+					odv := err_dv
+				else
+					l_class := l_feat.written_class
+					icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
+					if l_eifnet_debugger.last_once_available then
+						if not l_eifnet_debugger.last_once_already_called then
+							create err_dv.make_with_name  (l_feat.name)
+							err_dv.set_message (Interface_names.l_Not_yet_called)
+							err_dv.set_display_kind (Void_value)
+							odv := err_dv
+						elseif l_eifnet_debugger.last_once_failed then
+							create exc_dv.make_with_name (l_feat.name)
+							exc_dv.set_tag ("An exception occurred during the once execution")
+							exc_dv.set_exception_value (debug_value_from_icdv (icdv, Void))
+--							err_dv.set_display_kind (Exception_message_value)
+							odv := exc_dv
+						elseif icdv /= Void then
+							odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
+							odv.set_name (l_feat.name)
+						else
+								--| This case occurs when we enter into the once's code
+								--| then the once is Called
+								--| but the once's data are not yet initialized and set
+								--| then the once' value is not yet available
+							create err_dv.make_with_name  (l_feat.name)
+							err_dv.set_message ("Could not retrieve information (once is being called)")
+							err_dv.set_display_kind (Void_value)
+							odv := err_dv
+						end
+					else
+						create err_dv.make_with_name  (l_feat.name)
+						err_dv.set_message (Interface_names.l_Not_yet_called)
+						err_dv.set_display_kind (Void_value)
+						odv := err_dv
+					end
+				end
+				Result.put (odv, i)
+				i := i + 1
+				flist.forth
+			end
+		end
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		local
@@ -1168,7 +1232,7 @@ feature -- Call stack related
 
 feature -- Object Keeper
 
-	keep_only_objects (a_addresses: SET [STRING]) is
+	keep_only_objects (a_addresses: LIST [STRING]) is
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Eifnet_debugger.keep_only_objects (a_addresses)

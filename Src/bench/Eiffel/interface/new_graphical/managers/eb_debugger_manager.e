@@ -8,7 +8,11 @@ class
 	EB_DEBUGGER_MANAGER
 
 inherit
-	SHARED_APPLICATION_EXECUTION
+
+	DEBUGGER_MANAGER
+		redefine
+			make
+		end
 
 	EB_CONSTANTS
 
@@ -16,17 +20,10 @@ inherit
 
 	EB_SHARED_GRAPHICAL_COMMANDS
 
-	IPC_SHARED
-		export
-			{NONE} all
-		end
-
-	DEBUG_EXT
-		export
-			{NONE} all
-		end
 
 	EB_SHARED_PREFERENCES
+
+	PROJECT_CONTEXT
 
 create
 	make
@@ -36,6 +33,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
+			Precursor
 			create debug_run_cmd.make
 			can_debug := True
 			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
@@ -262,6 +260,46 @@ feature -- Access
 			watch_tool_list.prune_all (wt)
 		end
 
+feature -- File access
+
+	load_debug_info is
+			-- Load debug information (so far only the breakpoints)
+		local
+			load_filename: FILE_NAME
+		do
+			create load_filename.make
+			load_filename.set_directory (Workbench_generation_path)
+			load_filename.set_file_name (Debug_info_name)
+			load_filename.add_extension (Debug_info_extension)
+
+			Application.load_debug_info_from (load_filename)
+		end
+
+	save_debug_info is
+			-- Save debug information (so far only the breakpoints)
+		local
+			save_filename: FILE_NAME
+		do
+			create save_filename.make
+			save_filename.set_directory (Workbench_generation_path)
+			save_filename.set_file_name (Debug_info_name)
+			save_filename.add_extension (Debug_info_extension)
+
+			Application.save_debug_info_into (save_filename)
+		end
+
+feature -- GUI Access
+
+	windows_handle: POINTER is
+		local
+			w_impl: EV_WINDOW_IMP
+		do
+			w_impl ?= debugging_window.window.implementation
+			if w_impl /= Void then
+				Result := w_impl.wel_item
+			end
+		end
+
 feature {NONE} -- watch tool numbering
 
 	new_watch_tool_number: INTEGER is
@@ -288,6 +326,24 @@ feature -- Status report
 			-- -1 means display all elements.
 
 feature -- Access
+
+	debugger_message (m: STRING) is
+		local
+			context_output_tool: EB_OUTPUT_TOOL
+			st: STRUCTURED_TEXT
+		do
+			if debugging_window /= Void and then debugging_window.context_tool /= Void then
+				context_output_tool := debugging_window.context_tool.output_view
+				if context_output_tool /= Void then
+					create st.make
+					st.add_string (m)
+					st.add_new_line
+					context_output_tool.process_text (st)
+--					context_output_tool.scroll_to_end
+				end
+			end
+			window_manager.display_message (m)
+		end
 
 	toggle_display_breakpoints is
 			-- Show or hide the breakpoint tool
@@ -358,8 +414,6 @@ feature -- Status setting
 
 	set_maximum_stack_depth (nb: INTEGER) is
 			-- Set the maximum number of stack elements to be displayed to `nb'.
-		require
-			valid_nb: nb = -1 or nb > 0
 		local
 			pos: INTEGER
 			cst: CALL_STACK_STONE
@@ -564,8 +618,11 @@ feature -- Status setting
 			end
 
 			if debugging_window.panel.full then
-				debugging_window.panel.set_split_position (debug_splitter_position.
-						max (debugging_window.panel.minimum_split_position))
+				debugging_window.panel.set_split_position (
+					debug_splitter_position
+						.max (debugging_window.panel.minimum_split_position)
+						.min (debugging_window.panel.maximum_split_position)
+					)
 			end
 
 			debug ("DEBUGGER_INTERFACE")
@@ -710,16 +767,45 @@ feature -- Status setting
 
 feature -- Debugging events
 
+	relaunch_application is
+			-- Quickly relaunch the application.
+		require
+			stopped: Application.status /= Void and then Application.status.is_stopped
+		do
+			Application.continue
+			if Application.is_running and then not Application.is_stopped then
+				Application.on_application_resumed
+			else
+				debug ("debugger_trace")
+					print ("Application is stopped, but it should not")
+				end
+			end
+		end
+
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		do
 			debugging_window.context_tool.launch_stone (st)
 		end
 
+	on_application_before_launching is
+			-- Application is about to be launched.
+		do
+		end
+
 	on_application_launched is
 			-- Application has just been launched.
 		do
-			Window_manager.display_message (Interface_names.E_running)
+			debug("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_launched %N")
+			end
+
+			if Application.execution_mode = Application.No_stop_points then
+				Window_manager.display_message (Interface_names.e_Running_no_stop_points)
+			else
+				Window_manager.display_message (Interface_names.e_Running)
+			end
+
 			Application.status.set_max_depth (maximum_stack_depth)
 				-- Test whether application was really launched.
 			output_manager.clear
@@ -749,6 +835,9 @@ feature -- Debugging events
 
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_launched : done%N")
+			end
 		end
 
 	on_application_before_stopped is
@@ -760,7 +849,7 @@ feature -- Debugging events
 			call_stack_elem	: CALL_STACK_ELEMENT
 		do
 			debug("debugger_trace_synchro")
-				io.put_string(generator + "a.on_application_before_stopped %N")
+				io.put_string (generator + ".on_application_before_stopped %N")
 			end
 			status := Application.status
 			if status /= Void and then Application.is_stopped then
@@ -783,19 +872,20 @@ feature -- Debugging events
 			else
 					-- Before receiving and updating stack info
 			end
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_before_stopped : done%N")
+			end
 		end
 
 	on_application_just_stopped is
 			-- Application was just stopped (by a breakpoint, ...).
-		require
-			application.is_running
 		local
 			st: CALL_STACK_STONE
 			stt: STRUCTURED_TEXT
 			cd: EV_CONFIRMATION_DIALOG
 		do
 			debug ("debugger_trace_synchro")
-				io.put_string (generator + ".on_application_just_stopped%N")
+				io.put_string (generator + ".on_application_just_stopped : start%N")
 			end
 			Window_manager.display_message (Interface_names.E_paused)
 			Application.set_current_execution_stack_number (1)
@@ -851,7 +941,7 @@ feature -- Debugging events
 				observers.item.on_application_stopped
 				observers.forth
 			end
-			if Application.status.reason = Pg_overflow then
+			if Application.status.reason_is_overflow then
 				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent relaunch_application>>)
 				cd.show_modal_to_window (debugging_window.window)
 			end
@@ -859,6 +949,15 @@ feature -- Debugging events
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
 			end
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_just_stopped : done%N")
+			end
+		end
+
+	on_application_before_resuming is
+		do
+			objects_tool.record_grids_layout
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
 
 	on_application_resumed is
@@ -869,7 +968,11 @@ feature -- Debugging events
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_resumed%N")
 			end
-			Window_manager.display_message (Interface_names.E_running)
+			if Application.execution_mode = Application.No_stop_points then
+				Window_manager.display_message (Interface_names.e_Running_no_stop_points)
+			else
+				Window_manager.display_message (Interface_names.e_Running)
+			end
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
@@ -877,9 +980,6 @@ feature -- Debugging events
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
-
-				-- Reset
-			Application.on_resumed
 
 				-- Fill in the threads tool.
 			threads_tool.update
@@ -893,6 +993,10 @@ feature -- Debugging events
 
 			create stt.make
 			stt.add_string ("Application is running")
+			if Application.execution_mode = Application.No_stop_points then
+				stt.add_string (" (ignoring breakpoints)")
+			end
+
 			stt.add_new_line
 			output_manager.process_text (stt)
 			window_manager.quick_refresh_all_margins
@@ -908,11 +1012,18 @@ feature -- Debugging events
 				observers.item.on_application_launched
 				observers.forth
 			end
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_resumed : done%N")
+			end
 		end
 
 	on_application_quit is
 			-- Application just quit.
 		do
+			debug("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_quit %N")
+			end
+
 			if Application /= Void and then Application.is_running then
 				disable_debugging_commands (False)
 				Window_manager.display_message (Interface_names.E_not_running)
@@ -928,7 +1039,7 @@ feature -- Debugging events
 				output_manager.display_system_info
 
 				if application.is_running then
-					Application.status.kept_objects.wipe_out
+					Application.status.clear_kept_objects
 				end
 
 				from
@@ -951,6 +1062,9 @@ feature -- Debugging events
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
 				set_critical_stack_depth_cmd.enable_sensitive
+			end
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_quit : done%N")
 			end
 		end
 
@@ -1089,8 +1203,6 @@ feature {NONE} -- Implementation
 
 	no_stop_cmd: EB_EXEC_NO_STOP_CMD
 			-- Run without stop points command.
-
-
 
 	init_commands is
 			-- Create a new project toolbar.
@@ -1271,20 +1383,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	relaunch_application is
-			-- Quickly relaunch the application.
-		require
-			stopped: Application.status /= Void and then Application.status.is_stopped
-		local
-			rqst: EWB_REQUEST
-		do
-			create rqst.make (rqst_cont)
-			rqst.send_breakpoints
-			Application.status.set_is_stopped (False)
-			rqst.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
-			on_application_resumed
-		end
-
 	change_critical_stack_depth is
 			-- Display a dialog that lets the user change the critical stack depth.
 		require
@@ -1395,9 +1493,6 @@ feature {NONE} -- Implementation
 			close_dialog
 			preferences.debugger_data.critical_stack_depth_preference.set_value (nb)
 			Application.set_critical_stack_depth (nb)
-			if Application.status /= Void and then Application.status.is_stopped then
-				send_rqst_3_integer (Rqst_overflow_detection, 0, 0, nb)
-			end
 		end
 
 	initialize_debugging_window is

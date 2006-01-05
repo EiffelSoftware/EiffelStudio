@@ -14,18 +14,13 @@ inherit
 			new_mini_toolbar_item
 		end
 
-	ATTR_REQUEST -- To be able to modify special values bounds!! (Beurk)
-		rename
-			make as attr_request_make
-		export
-			{NONE} all
-		end
+	SHARED_DEBUG
 
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
 		end
-		
+
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all
@@ -47,7 +42,7 @@ feature -- Initialization
 			tool := a_tool
 			for_tool := True
 		end
-				
+
 feature -- Access
 
 	menu_name: STRING is
@@ -180,7 +175,7 @@ feature {EB_PRETTY_PRINT_DIALOG}
 
 	slice_max: INTEGER
 			-- Maximum index of displayed attributes in special objects.
-			
+
 feature {NONE} -- Implementation
 
 	Cst_field_label_width: INTEGER is 70
@@ -203,7 +198,7 @@ feature {NONE} -- Implementation
 
 	get_slice_limits (def: BOOLEAN; obj: ES_OBJECTS_GRID_LINE) is
 			-- Display a dialog box to enter new slice limits
-			-- as default values if `def', 
+			-- as default values if `def',
 			-- as object specific values otherwise,
 			-- and fill slice_min and slice_max accordingly.
 			-- if not `def', either `address' or `dv' should be specified.
@@ -231,7 +226,7 @@ feature {NONE} -- Implementation
 			create maincont
 			maincont.set_border_width (Cst_border_width)
 			maincont.set_padding (Cst_padding_width)
-			
+
 			get_effective := False
 
 				--| Get the current slices values
@@ -253,14 +248,14 @@ feature {NONE} -- Implementation
 					--| String display size
 				create tf_disp_str_size.make_with_text (application.displayed_string_size.out)
 				tf_disp_str_size.set_minimum_width (Cst_field_label_width)
-	
+
 				create hbox
 				create label.make_with_text (Interface_names.l_Max_displayed_string_size)
 				label.align_text_left
 				hbox.extend (label)
 				extend_no_expand (hbox, tf_disp_str_size)
 				extend_no_expand (maincont, hbox)
-			
+
 					--| Separator
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
@@ -276,7 +271,7 @@ feature {NONE} -- Implementation
 					slice_min := obj.object_spec_lower
 					slice_max := obj.object_spec_capacity - 1 --| FIXME jfiat:  why not object_spec_upper ?
 				else
-					check 
+					check
 						shoud_not_occurred: False
 					end
 				end
@@ -292,7 +287,7 @@ feature {NONE} -- Implementation
 
 			if tf_disp_str_size /= Void then
 				tf_disp_str_size.return_actions.extend (agent tf_minf.set_focus)
-			end			
+			end
 
 				--| Buttons.
 			create okb.make_with_text (Interface_names.b_Ok)
@@ -391,7 +386,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 					io.put_string ("Objects grid item found%N")
 					io.put_string ("Capacity: " + obj_grid_item.object_spec_capacity.out + "%N")
 				end
-				
+
 				get_slice_limits_on_target (obj_grid_item)
 				if get_effective then
 					spec_cap := obj_grid_item.object_spec_capacity
@@ -402,7 +397,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_set_limits (lower, upper: INTEGER) is

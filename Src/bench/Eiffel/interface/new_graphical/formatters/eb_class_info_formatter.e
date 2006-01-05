@@ -10,8 +10,6 @@ deferred class
 inherit
 	EB_FORMATTER
 
-	SHARED_APPLICATION_EXECUTION
-
 	SHARED_FORMAT_INFO
 
 feature -- Properties
@@ -44,7 +42,7 @@ feature -- Status setting
 				associated_class := Void
 				class_cmd := Void
 				reset_display
-				if 
+				if
 					selected and then
 					not widget.is_displayed
 				then
@@ -85,7 +83,7 @@ feature -- Status setting
 			is_dotnet_mode := a_flag
 		ensure
 			mode_is_flag: is_dotnet_mode = a_flag
-		end	
+		end
 
 feature -- Formatting
 
@@ -170,9 +168,9 @@ feature {NONE} -- Implementation
 			if associated_class /= Void then
 				Result.append (associated_class.name)
 			else
-				
+
 			end
-			
+
 			Result.append (Interface_names.l_Three_dots)
 		end
 

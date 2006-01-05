@@ -102,7 +102,7 @@ feature {DBG_EVALUATOR} -- Interface
 			once_r: ONCE_REQUEST
 		do
 				--| Classic
-			once_r := debug_info.once_request
+			once_r := Once_request
 			if once_r.already_called (f) then
 				if a_addr /= Void or a_target /= Void then
 					evaluate_function (a_addr, a_target, Void, f, params)
@@ -159,6 +159,15 @@ feature {NONE} -- Parameters operation
 			end
 			dmp.classic_send_value
 			send_rqst_0 (Rqst_metamorphose)
+		end
+
+feature -- Implementation
+
+	Once_request: ONCE_REQUEST is
+			-- Facilities to inspect whether a once routine
+			-- has already been called
+		once
+			create Result.make
 		end
 
 end

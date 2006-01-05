@@ -10,11 +10,6 @@ class
 inherit
 	EB_OUTPUT_MANAGER
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -34,14 +29,14 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_WINDOW_MANAGER
 
 create
 	default_create
 
 feature -- Basic Operations
-		
+
 	force_display is
 			-- Make the output tools visible (to ensure the user sees what we print).
 		do
@@ -54,7 +49,7 @@ feature -- Basic Operations
 				managed_output_tools.forth
 			end
 		end
-		
+
 	scroll_to_end is
 			-- Make all output tools scroll to the bottom.
 		do
@@ -80,37 +75,37 @@ feature -- Basic Operations
 				managed_output_tools.forth
 			end
 		end
-				
+
 	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
 			-- Print `text' in all output tools.
 		local
-			eo: EB_C_COMPILATION_OUTPUT_TOOL		
-		do			
+			eo: EB_C_COMPILATION_OUTPUT_TOOL
+		do
 			from
 				managed_output_tools.start
 			until
 				managed_output_tools.after
 			loop
 				eo ?= managed_output_tools.item
-				if eo /= Void then					
+				if eo /= Void then
 					eo.process_block_text (text)
 				end
 				managed_output_tools.forth
 			end
-			scroll_to_end			
+			scroll_to_end
 		end
-		
+
 	process_text (st: STRUCTURED_TEXT) is
 			-- Print `st' on all output tools.
-		do		
-		end		
+		do
+		end
 
 feature -- Basic Operations / Information message
-	
+
 	clear_and_process_text (st: STRUCTURED_TEXT) is
 		do
 		end
-		
+
 	display_system_info is
 		do
 		end
@@ -142,7 +137,7 @@ feature -- Element change
 	extend (an_output_tool: EB_OUTPUT_TOOL) is
 			-- Add this output tool to the list of managed output tools.
 		do
-			managed_output_tools.extend (an_output_tool)	
+			managed_output_tools.extend (an_output_tool)
 		end
 
 	prune (an_output_tool: EB_OUTPUT_TOOL) is

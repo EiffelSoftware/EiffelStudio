@@ -6,18 +6,18 @@ indexing
 
 class
 	DEBUG_VALUE_KEEPER
-	
+
 inherit
 	ICOR_EXPORTER
 
 create {SHARED_DEBUG_VALUE_KEEPER}
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
 		do
-			initialize			
+			initialize
 		end
 
 feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- Operation
@@ -52,7 +52,7 @@ feature -- Access
 				keep_dotnet_value (ddv)
 			end
 		end
-		
+
 	keep_dotnet_value (ddv: EIFNET_ABSTRACT_DEBUG_VALUE) is
 		require
 			ddv /= Void
@@ -67,14 +67,14 @@ feature -- Access
 					end
 				end
 			end
-		end		
+		end
 
 	know_about (l_k: STRING): BOOLEAN is
 			-- Has a Debug Value object address by `l_k'
 		do
 			if debug_value_kept /= Void then
 				if debug_value_kept.valid_key (l_k) then
-					Result := debug_value_kept.has (l_k)				
+					Result := debug_value_kept.has (l_k)
 				end
 			end
 		end
@@ -89,11 +89,11 @@ feature -- Access
 			end
 		ensure
 			Result /= Void
-		end		
+		end
 
 feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 
-	keep_only (l_addresses: SET [STRING]) is
+	keep_only (l_addresses: LIST [STRING]) is
 			-- Clean all the value except the one from l_addresses
 		local
 			l_add: STRING
@@ -105,16 +105,16 @@ feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 					debug_value_kept.after
 				loop
 					l_add := debug_value_kept.key_for_iteration
-					if not l_addresses.has (l_add) then
+					if l_addresses = Void or else not l_addresses.has (l_add) then
 						debug_value_kept.remove (l_add)
 					end
 					debug_value_kept.forth
 				end
 			end
 		end
-		
+
 feature {NONE} -- restricted access
-	
+
 	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, STRING]
 
 end

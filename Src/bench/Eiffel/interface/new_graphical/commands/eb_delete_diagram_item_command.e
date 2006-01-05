@@ -54,7 +54,7 @@ feature -- Initialization
 			make_context_diagram (a_target)
 			window := a_window
 		end
-		
+
 feature -- Access
 
 	execute is
@@ -96,7 +96,7 @@ feature -- Access
 	name: STRING is "Delete_item"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-			
+
 feature {NONE} -- Implementation
 
 	drop_class (st: CLASSI_STONE) is
@@ -155,10 +155,10 @@ feature {NONE} -- Implementation
 			l_links: LIST [EG_LINK]
 		do
 			if not retried then
-				if Application.is_running then
-					Application.kill
+				if eb_debugger_manager.application_is_executing then
+					eb_debugger_manager.application.kill
 				end
-				Debugger_manager.disable_debug
+				Eb_debugger_manager.disable_debug
 				create file.make (class_i.file_name)
 				if
 					file.exists and then
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Application.resynchronize_breakpoints
+				eb_debugger_manager.application.resynchronize_breakpoints
 				window_manager.synchronize_all
 			end
 			if could_not_delete then
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			-- Remove `cluster_i' from the system.
 		do
 			tool.reset_history
-			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}	
+			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
 		end
 
 	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
@@ -216,20 +216,20 @@ feature {NONE} -- Implementation
 			ancestor := link.model.ancestor
 			if ancestor /= Void and then descendant /= Void then
 				ctm := descendant.code_generator
-				
+
 				e_item ?= a_stone.source.model
 				check
 					e_item_not_void: e_item /= Void
 				end
 				e_item.disable_needed_on_diagram
-				
+
 				tool.history.do_named_undoable (
 					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name),
 					agent remove_ancestor (ctm, ancestor.name, e_item),
 					agent add_ancestor (ctm, ancestor.name, e_item))
 			end
 		end
-		
+
 	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
 			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
 		do
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 				a_link.disable_needed_on_diagram
 			end
 		end
-		
+
 	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
 			--Add ancestor with `a_name' and show `a_link' if succesfull.
 		do
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 				a_link.enable_needed_on_diagram
 			end
 		end
-		
+
 	execute_with_client_stone (a_stone: CLIENT_STONE) is
 			-- Delete feature in `a_stone'.
 		local
@@ -266,9 +266,9 @@ feature {NONE} -- Implementation
 				dial := delete_client_link_dialog
 				dial.set_strings (a_stone.source.feature_names)
 				dial.show_modal_to_window (window.window)
-				if 
+				if
 					not dial.cancelled and then
-					not dial.selected_item.is_empty 
+					not dial.selected_item.is_empty
 				then
 					names := dial.selected_items
 					from
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 							selected_features.extend (l_item)
 						end
 						names.forth
-					end	
+					end
 				else
 					cancelled := True
 				end
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING): FEATURE_AS is
 			-- Feature with `a_name' in `a_list' or Void if none.
 		require
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				a_list.forth
 			end
 		end
-		
+
 	delete_features (a_features: LIST [FEATURE_AS]; a_link: EIFFEL_CLIENT_SUPPLIER_FIGURE) is
 			-- Delete features in `a_features'.
 		require
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 					l_model := a_link.model
 					if a_link.model.features.count = a_features.count then
 						l_model.disable_needed_on_diagram
-						
+
 						history.register_named_undoable (
 							interface_names.t_diagram_delete_client_link_cmd (fne.feature_name (a_features.first)),
 							agent remove_features_and_link (ctm, a_features, l_model),
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 						l_client := l_model.client
 						l_client.remove_queries (a_features)
 						l_model.synchronize
-						
+
 						history.register_named_undoable (
 							interface_names.t_diagram_delete_client_link_cmd (fne.feature_name (a_features.first)),
 							agent remove_features (ctm, a_features, l_model, l_client),
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	remove_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
 			-- Remove `a_features' from `a_ctm' and remove `a_features' from `a_client'.
 		do
@@ -359,8 +359,8 @@ feature {NONE} -- Implementation
 				a_client.remove_queries (a_features)
 				a_link.synchronize
 			end
-		end 
-		
+		end
+
 	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
 			-- Reinclude `code' to `a_ctm' and add `a_features' to `a_link'.
 		do
@@ -369,8 +369,8 @@ feature {NONE} -- Implementation
 				a_client.add_queries (a_features)
 				a_link.synchronize
 			end
-		end 
-	
+		end
+
 	remove_features_and_link (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK) is
 			-- Remove `a_features' from `a_ctm' and disable `a_link' in diagram.
 		do
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 				a_link.disable_needed_on_diagram
 			end
 		end
-		
+
 	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK) is
 			-- Reinclude `code' to `a_ctm' and enable `a_link' on diagram.
 		do
@@ -397,5 +397,5 @@ feature {NONE} -- Implementation
 
 	explain_dialog: EB_INFORMATION_DIALOG
 			-- Dialog explaining how to use `Current'.
-			
+
 end -- class EB_DELETE_DIAGRAM_ITEM_COMMAND

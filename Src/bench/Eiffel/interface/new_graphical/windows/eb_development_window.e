@@ -67,7 +67,6 @@ inherit
 
 
 		-- Shared tools & contexts
-	SHARED_APPLICATION_EXECUTION
 
 	SHARED_EIFFEL_PROJECT
 
@@ -402,31 +401,35 @@ feature {NONE} -- Initialization
 
 	set_up_accelerators is
 			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
+		local
+			cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 		do
 				--| Accelerators related to toolbarable_commands
 			from
-				toolbarable_commands.start
+				cmds := toolbarable_commands
+				cmds.start
 			until
-				toolbarable_commands.after
+				cmds.after
 			loop
-				if toolbarable_commands.item.accelerator /= Void then
-					window.accelerators.extend (toolbarable_commands.item.accelerator)
+				if cmds.item.accelerator /= Void then
+					window.accelerators.extend (cmds.item.accelerator)
 				end
-				toolbarable_commands.forth
+				cmds.forth
 			end
 
 				--| Accelerators related to debugging toolbarable_commands
 			from
-				debugger_manager.toolbarable_commands.start
+				cmds := Eb_debugger_manager.toolbarable_commands
+				cmds.start
 			until
-				debugger_manager.toolbarable_commands.after
+				cmds.after
 			loop
 				if
-					debugger_manager.toolbarable_commands.item.accelerator /= Void
+					cmds.item.accelerator /= Void
 				then
-					window.accelerators.extend (debugger_manager.toolbarable_commands.item.accelerator)
+					window.accelerators.extend (cmds.item.accelerator)
 				end
-				debugger_manager.toolbarable_commands.forth
+				cmds.forth
 			end
 		end
 
@@ -835,7 +838,7 @@ feature -- Pulldown Menus
 	update_debug_menu is
 			-- Update debug menu
 		do
-			debugger_manager.update_debugging_tools_menu_from (Current)
+			Eb_debugger_manager.update_debugging_tools_menu_from (Current)
 		end
 
 feature -- Modifiable menus
@@ -912,7 +915,7 @@ feature -- Update
 		local
 			conv_mit: EB_COMMAND_MENU_ITEM
 		do
-			debug_menu := debugger_manager.new_debug_menu
+			debug_menu := Eb_debugger_manager.new_debug_menu
 			from
 				debug_menu.start
 			until
@@ -925,7 +928,7 @@ feature -- Update
 				debug_menu.forth
 			end
 				--| Debugging tools menu
-			debugging_tools_menu := debugger_manager.new_debugging_tools_menu
+			debugging_tools_menu := Eb_debugger_manager.new_debugging_tools_menu
 			debug_menu.extend (create {EV_MENU_SEPARATOR})
 			debug_menu.extend (debugging_tools_menu)
 			update_debug_menu
@@ -1100,7 +1103,7 @@ feature -- Graphical Interface
 
 				-- Generate the toolbar.
 			create hbox
-			project_customizable_toolbar := debugger_manager.new_toolbar
+			project_customizable_toolbar := Eb_debugger_manager.new_toolbar
 			hbox.extend (project_customizable_toolbar.widget)
 			hbox.disable_item_expand (project_customizable_toolbar.widget)
 
@@ -2508,7 +2511,10 @@ feature -- Window management
 				-- we ensure that future windows may use exactly the same layout.
 				-- If the debugger is displayed, the previous layout is already saved,
 				-- and this is the one that must be used, as only one debugger is ever displayed.
-			if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
+			if
+				(Eb_debugger_manager.application_is_executing and Eb_debugger_manager.debugging_window /= Current)
+				or not Eb_debugger_manager.application_is_executing
+			then
 				a_window_data.save_left_panel_layout (left_panel.save_to_resource)
 				a_window_data.save_right_panel_layout (right_panel.save_to_resource)
 				a_window_data.save_left_panel_width (panel.split_position)
@@ -2682,8 +2688,11 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 			if not is_destroying then
 				is_destroying := True
 					-- If a launched application is still running, kill it.
-				if Application.is_running and then debugger_manager.debugging_window = Current then
-					Application.kill
+				if
+					Eb_debugger_manager.application_is_executing
+					and then Eb_debugger_manager.debugging_window = Current
+				then
+					Eb_debugger_manager.Application.kill
 				else
 					development_window_data.save_left_panel_layout (left_panel.save_to_resource)
 					development_window_data.save_right_panel_layout (right_panel.save_to_resource)
@@ -2748,6 +2757,7 @@ feature {NONE} -- Implementation
 			l_short_formatter: EB_SHORT_FORMATTER
 			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
 			l_main_formatter: EB_CLASS_TEXT_FORMATTER
+			app_exec: APPLICATION_EXECUTION
 		do
 				-- the text does not change if the text was saved with syntax errors
 			cur_wid := window
@@ -2766,10 +2776,11 @@ feature {NONE} -- Implementation
 			conv_ace ?= a_stone
 			ef_stone ?= a_stone
 			if conv_brkstone /= Void then
-				if Application.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-					Application.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+				app_exec := Debugger_manager.application
+				if app_exec.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
+					app_exec.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				else
-					Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+					app_exec.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			elseif conv_errst /= Void then
@@ -3937,13 +3948,13 @@ feature{EB_TOOL}
 	system_info_cmd: EB_STANDARD_CMD is
 			-- Command to display information about the system (root class,...)
 		do
-			Result := debugger_manager.system_info_cmd
+			Result := Eb_debugger_manager.system_info_cmd
 		end
 
 	display_error_help_cmd: EB_ERROR_INFORMATION_CMD is
 			-- Command to pop up a dialog giving help on compilation errors.
 		do
-			Result := debugger_manager.display_error_help_cmd
+			Result := Eb_debugger_manager.display_error_help_cmd
 		end
 
 	send_stone_to_context_cmd: EB_STANDARD_CMD
@@ -3955,7 +3966,7 @@ feature{EB_TOOL}
 	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
 			-- Command to display the eac browser
 		do
-			Result := Debugger_manager.eac_browser_cmd
+			Result := Eb_debugger_manager.eac_browser_cmd
 		end
 
 	show_favorites_menu_item: EV_MENU_ITEM

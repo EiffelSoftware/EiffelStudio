@@ -10,7 +10,7 @@ class
 inherit
 	EV_TITLED_WINDOW
 		export
-			{EV_ANY, EV_ANY_I, EIFNET_DEBUGGER_SYNCHRO} implementation
+			{EV_ANY, EV_ANY_I, EB_DEBUGGER_MANAGER} implementation
 		end
 
 create

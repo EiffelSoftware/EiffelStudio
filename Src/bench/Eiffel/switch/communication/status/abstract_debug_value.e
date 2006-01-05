@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Abstract notion of value during the execution of the application.";
 	date: "$Date$";
 	revision: "$Revision $"
@@ -20,8 +20,8 @@ inherit
 	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
 		undefine
 			is_equal
-		end	
-		
+		end
+
 	COMPARABLE
 
 	VALUE_TYPES
@@ -30,16 +30,16 @@ inherit
 		undefine
 			is_equal
 		end
-		
+
 	SK_CONST
 		undefine
 			is_equal
 		end
-		
+
 	REFACTORING_HELPER
 		undefine
 			is_equal
-		end	
+		end
 
 feature -- Properties
 
@@ -48,10 +48,10 @@ feature -- Properties
 
 	name: STRING
 			-- Name of attribute or argument or local
-			
+
 	is_external_type: BOOLEAN
 			-- Is this value an instance of an external type ?
-			-- which means whose information are not completly known 
+			-- which means whose information are not completly known
 			-- by the compiler
 
 feature {NONE} -- Internal Properties
@@ -59,7 +59,7 @@ feature {NONE} -- Internal Properties
 	e_class: CLASS_C;
 			-- Class where attribute is defined
 			-- (Void for if not attribute)
-			
+
 feature -- Access
 
 	dynamic_class: CLASS_C is
@@ -121,14 +121,14 @@ feature -- Output
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
+	append_type_and_value (st: STRUCTURED_TEXT) is
 			-- Append type and value of Current to `st'.
 		require
 			valid_st: st /= Void;
 			valid_name: name /= Void
-		deferred 
+		deferred
 		end;
-		
+
 feature {NONE} -- Computed Value access
 
 	append_value (st: STRUCTURED_TEXT) is
@@ -158,7 +158,7 @@ feature -- Output
 			-- Generated on demand.
 		deferred
 		end
-		
+
 	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- sort `children' and return it.
 		do
@@ -205,7 +205,7 @@ feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 			item_number = n
 		end
 
-feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE} -- Setting
+feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE, APPLICATION_EXECUTION_IMP} -- Setting
 
 	set_name (n: like name) is
 			-- Set `name' to `n'.
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end
-		
+
 feature {NONE} -- Constants
 
 	NONE_representation: STRING is "NONE = Void"
@@ -262,7 +262,7 @@ feature {NONE} -- Constants
 
 	Equal_sign_str: STRING is " = "
 
-	Is_unknown: STRING is " = Unknown"		
+	Is_unknown: STRING is " = Unknown"
 
 invariant
 

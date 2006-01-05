@@ -14,11 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -50,12 +45,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
+
 create
 	make,
 	make_with_parent
@@ -79,7 +74,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- License managment
-	
+
 	license_checked: BOOLEAN is True
 			-- Is the license checked.
 
@@ -129,7 +124,7 @@ feature -- Project initialization
 					end
 					curr_directory.readentry
 				end
-				
+
 				if ask_confirmation and then epr_file_name /= Void then
 					create epr_full_file_name.make_from_string (dir)
 					epr_full_file_name.set_file_name (epr_file_name)
@@ -181,8 +176,6 @@ feature {NONE} -- Implementation
 					msg := Interface_names.t_New_project.twin
 					msg.append (": ")
 					msg.append (project_dir.name)
-
-					Application.set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
 				end
 			else
 					-- We were unable to complete the task due to an error
@@ -215,7 +208,7 @@ feature {NONE} -- Implementation
 	make_new_project is
 			-- Create a new project
 		do
-			
+
 		end
 
 	build_deleting_dialog is
@@ -279,7 +272,7 @@ feature {NONE} -- Implementation
 
 	on_delete_directory (deleted_files: ARRAYED_LIST [STRING]) is
 			-- The files in `deleted_files' have just been deleted.
-			-- Display 
+			-- Display
 		local
 			ise_directory_utils: ISE_DIRECTORY_UTILITIES
 			deleted_file_pathname: STRING
@@ -294,7 +287,8 @@ feature {NONE} -- Implementation
 				deleting_dialog_label_exists: deleting_dialog_label /= Void
 			end
 			deleting_dialog_label.set_text (deleted_file_pathname)
-			process_events_and_idle
+			deleting_dialog_label.refresh_now
+			ev_application.process_events
 		end
 
 	on_cancel_operation: BOOLEAN is
@@ -302,7 +296,7 @@ feature {NONE} -- Implementation
 		do
 			Result := cancel_button_pushed
 		end
-	
+
 	on_cancel_button_pushed is
 			-- The user has just pushed the "Cancel" in the deleting dialog.
 		do
@@ -362,10 +356,10 @@ feature {NONE} -- Callbacks
 		ensure
 			Result_not_void: Result /= Void
 		end
-	
+
 	internal_parent_window: EV_WINDOW
 			-- Parent window if any, Void if none.
-	
+
 feature {NONE} -- Implementation / Private attributes
 
 	project_dir: PROJECT_DIRECTORY
@@ -392,9 +386,9 @@ feature {NONE} -- Implementation / Private constants.
 	Minimum_height_of_Deleting_dialog: INTEGER is 2
 			-- Minimum height of the deleting dialog in characters.
 
-	Path_ellipsis_width: INTEGER is 
+	Path_ellipsis_width: INTEGER is
 			-- Maximum number of characters per item.
-		once	
+		once
 			Result := Minimum_width_of_Deleting_dialog - 10
 		end
 

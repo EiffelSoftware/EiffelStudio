@@ -1,5 +1,5 @@
 indexing
-	description:	
+	description:
 		"Set execution format."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,18 +15,16 @@ inherit
 		end
 
 	EB_SHARED_INTERFACE_TOOLS
-		export 
-			{NONE} all 
+		export
+			{NONE} all
 		end
-	
+
 	EXEC_MODES
 
 	EB_CONSTANTS
 
-	SHARED_APPLICATION_EXECUTION
-
 	EB_SHARED_WINDOW_MANAGER
-	
+
 feature {NONE} -- Initialization
 
 	make (a_manager: like debugger_manager) is
@@ -112,7 +110,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
-			if not Application.is_running then
+			if not debugger_manager.application_is_executing then
 					-- The application was not launched for some reason
 					-- (a compilation was running, the user didn't want to launch it after all,...)
 				debugger_manager.set_debugging_window (Void)
@@ -181,7 +179,7 @@ feature {NONE} -- Implementation
 			-- Basic tooltip (without the key shortcut).
 		deferred
 		end
-		
+
 	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Show the arguments dialog box when the user right clicks the button.
 		local
@@ -189,7 +187,7 @@ feature {NONE} -- Implementation
 			window: EB_DEVELOPMENT_WINDOW
 			dev: EV_WINDOW
 		do
-			if a_button = 3 and is_sensitive then		
+			if a_button = 3 and is_sensitive then
 				window ?= window_manager.last_focused_window
 				if window /= Void then
 					dev := window.window

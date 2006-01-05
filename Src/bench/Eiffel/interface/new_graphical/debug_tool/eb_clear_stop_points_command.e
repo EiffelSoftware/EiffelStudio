@@ -11,17 +11,15 @@ inherit
 			new_toolbar_item,
 			tooltext
 		end
-		
-	EB_SHARED_DEBUG_TOOLS
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PROJECT
 
 	EB_SHARED_MANAGERS
 
 	EB_CONSTANTS
-	
+
 	EB_SHARED_PREFERENCES
 
 feature -- Access
@@ -81,14 +79,15 @@ feature -- Events
 			f: E_FEATURE
 			body_index: INTEGER
 			id: EV_INFORMATION_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
 			f := bs.routine
 			if f.is_debuggable then
 				body_index := bs.body_index
 				index := bs.index
-
-				Application.remove_breakpoint (f, index)
-				if Application.error_in_bkpts then
+				app_exec := Debugger_manager.application
+				app_exec.remove_breakpoint (f, index)
+				if app_exec.error_in_bkpts then
 					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -102,12 +101,14 @@ feature -- Events
 		local
 			f: E_FEATURE
 			id: EV_INFORMATION_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
 			f := fs.e_feature
-			if f /= Void and then f.is_debuggable and then Application.has_breakpoint_set (f) then
-				Application.remove_breakpoints_in_feature (f)
+			app_exec := Debugger_manager.application
+			if f /= Void and then f.is_debuggable and then app_exec.has_breakpoint_set (f) then
+				app_exec.remove_breakpoints_in_feature (f)
 
-				if Application.error_in_bkpts then
+				if app_exec.error_in_bkpts then
 					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -121,12 +122,14 @@ feature -- Events
 		local
 			id: EV_INFORMATION_DIALOG
 			conv_fst: FEATURE_STONE
+			app_exec: APPLICATION_EXECUTION
 		do
 			conv_fst ?= cs
 			if conv_fst = Void then
-				Application.remove_breakpoints_in_class (cs.e_class)
-	
-				if Application.error_in_bkpts then
+				app_exec := Debugger_manager.application
+				app_exec.remove_breakpoints_in_class (cs.e_class)
+
+				if app_exec.error_in_bkpts then
 					create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -141,8 +144,10 @@ feature -- Execution
 			-- Execute with confirmation dialog.
 		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
-			if Application.has_breakpoints then
+			app_exec := Debugger_manager.application
+			if app_exec.has_breakpoints then
 				create cd.make_initialized (
 					2, preferences.dialog_data.confirm_clear_breakpoints_string,
 					Warning_messages.w_Clear_breakpoints, Interface_names.l_Dont_ask_me_again,
@@ -150,7 +155,7 @@ feature -- Execution
 				)
 				cd.set_ok_action (agent clear_breakpoints)
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				
+
 					-- Update output tools
 				debugger_manager.notify_breakpoints_changes
 			end
@@ -191,14 +196,16 @@ feature {NONE} -- Implementation
 			-- Execute with confirmation dialog.
 		local
 			id: EV_INFORMATION_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
-			Application.clear_debugging_information
-			if Application.error_in_bkpts then
+			app_exec := Debugger_manager.application
+			app_exec.clear_debugging_information
+			if app_exec.error_in_bkpts then
 				create id.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 				id.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
 				-- Update output tools
-			debugger_manager.notify_breakpoints_changes
+			Debugger_manager.notify_breakpoints_changes
 		end
 
 end -- class EB_CLEAR_STOP_POINTS_COMMAND

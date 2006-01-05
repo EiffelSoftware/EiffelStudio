@@ -227,13 +227,16 @@ feature {NONE} -- Implementation
 
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
+		local
+			app_exec: APPLICATION_EXECUTION
 		do
-			if Application.is_breakpoint_enabled (st.routine, st.index) then
-				Application.remove_breakpoint (st.routine, st.index)
+			app_exec := Eb_debugger_manager.application
+			if app_exec.is_breakpoint_enabled (st.routine, st.index) then
+				app_exec.remove_breakpoint (st.routine, st.index)
 			else
-				Application.set_breakpoint (st.routine, st.index)
+				app_exec.set_breakpoint (st.routine, st.index)
 			end
-			debugger_manager.notify_breakpoints_changes
+			Eb_debugger_manager.notify_breakpoints_changes
 		end
 
 	drop_class (st: CLASSI_STONE) is

@@ -13,8 +13,6 @@ inherit
 			tooltext
 		end
 
-	SHARED_APPLICATION_EXECUTION
-	
 	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PROJECT
@@ -80,19 +78,21 @@ feature -- Update
 			f: E_FEATURE
 			body_index: INTEGER
 			wd: EV_INFORMATION_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
 			f := bs.routine
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				Application.enable_breakpoint (f, index)
+				app_exec := eb_debugger_manager.application
+				app_exec.enable_breakpoint (f, index)
 
-				if Application.error_in_bkpts then
+				if app_exec.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 
-				Debugger_manager.notify_breakpoints_changes
+				Eb_debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -108,19 +108,21 @@ feature -- Update
 		local
 			f: E_FEATURE
 			wd: EV_WARNING_DIALOG
+			app_exec: APPLICATION_EXECUTION
 		do
 			f := fs.e_feature
 			if f.is_debuggable then
-				if application.has_disabled_breakpoints then
-					Application.enable_breakpoints_in_feature (f)
+				app_exec := Eb_debugger_manager.application
+				if app_exec.has_disabled_breakpoints then
+					app_exec.enable_breakpoints_in_feature (f)
 				end
-				Application.enable_first_breakpoint_of_feature (f)				
+				app_exec.enable_first_breakpoint_of_feature (f)
 
-				if Application.error_in_bkpts then
+				if app_exec.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Debugger_manager.notify_breakpoints_changes
+				Eb_debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -129,18 +131,20 @@ feature -- Update
 		local
 			wd: EV_INFORMATION_DIALOG
 			conv_fst: FEATURE_STONE
+			app_exec: APPLICATION_EXECUTION
 		do
 			conv_fst ?= cs
 				-- If a feature stone was dropped, it is handled by the drop_feature feature.
 			if conv_fst = Void then
-				Application.enable_first_breakpoints_in_class (cs.e_class)
-	
-				if Application.error_in_bkpts then
+				app_exec := eb_debugger_manager.application
+				app_exec.enable_first_breakpoints_in_class (cs.e_class)
+
+				if app_exec.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 
-				Debugger_manager.notify_breakpoints_changes
+				Eb_debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -149,8 +153,8 @@ feature -- Execution
 	execute is
 			-- Enable all breakpoints in the application.
 		do
-			Application.enable_all_breakpoints
-			Debugger_manager.notify_breakpoints_changes
+			Eb_debugger_manager.Application.enable_all_breakpoints
+			Eb_debugger_manager.notify_breakpoints_changes
 		end
 
 feature {NONE} -- Implementation
@@ -164,7 +168,7 @@ feature {NONE} -- Implementation
 --		local
 --			body_index: INTEGER
 		do
-			Application.enable_breakpoints_in_feature (f)
+			Eb_debugger_manager.Application.enable_breakpoints_in_feature (f)
 --| FIXME ARNAUD
 --			body_index := f.body_index
 --			tool_supervisor.feature_tool_mgr.show_stoppoint (body_index, 1)

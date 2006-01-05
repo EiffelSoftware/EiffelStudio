@@ -21,11 +21,16 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_DEBUG_TOOLS
+		export
+			{NONE} all
+		end
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
+
 	DEBUGGING_UPDATE_ON_IDLE
 		redefine
 			update,
@@ -43,31 +48,31 @@ feature {NONE} -- Initialization
 			box: EV_VERTICAL_BOX
 		do
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color) 
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color)
 
 			create box
 			box.set_padding (3)
-			
+
 			create grid
 			grid.enable_single_row_selection
 			grid.enable_border
 			grid.set_column_count_to (3)
-			grid.column (1).set_title ("id")
-			grid.column (2).set_title ("name")
-			grid.column (3).set_title ("priority")
+			grid.column (1).set_title ("Id")
+			grid.column (2).set_title ("Name")
+			grid.column (3).set_title ("Priority")
 
 			grid.pointer_double_press_actions.force_extend (agent on_row_double_clicked)
 			grid.set_auto_resizing_column (1, True)
 			grid.set_auto_resizing_column (2, True)
-			
+
 			box.extend (grid)
-			
+
 			create_update_on_idle_agent
 
 			grid.build_delayed_cleaning
 			widget := box
 		end
-		
+
 --	build_mini_toolbar is
 --			-- Build the associated tool bar
 --		do
@@ -105,7 +110,7 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
-	title: STRING is 
+	title: STRING is
 			-- Title of the tool.
 		do
 			Result := "Threads" -- Interface_names.t_Call_stack_tool
@@ -153,17 +158,12 @@ feature -- Status setting
 		end
 
 	set_callstack_thread (tid: INTEGER) is
-		local
-			development_window: EB_DEVELOPMENT_WINDOW
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
 			if application.status.current_thread_id /= tid then
 				application.status.set_current_thread_id (tid)
 				application.status.reload_current_call_stack
-				development_window ?= manager
-				if development_window /= Void then
-					development_window.debugger_manager.set_current_thread_id (tid)
-				end
+				Debugger_manager.set_current_thread_id (tid)
 			end
 		end
 
@@ -175,7 +175,7 @@ feature -- Status setting
 	update is
 			-- Refresh `Current's display.
 		local
-			l_status: APPLICATION_STATUS			
+			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
 			request_clean_threads_info
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			if Application.is_running then
 				l_status := application.status
 				if dbg_was_stopped then
-					l_status.update_on_stopped_state					
+					l_status.update_on_stopped_state
 				end
 				refresh_threads_info
 			end
@@ -232,19 +232,19 @@ feature {NONE} -- Implementation
 		do
 			grid.call_delayed_clean
 		end
-		
+
 	request_clean_threads_info is
 		do
 			grid.request_delayed_clean
 		end
-		
+
 	refresh_threads_info is
 			-- Refresh thread info according to debugger data
 		local
 			r: INTEGER
 			row: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
-			
+
 			tid: INTEGER
 			i: INTEGER
 			arr: ARRAY [INTEGER]
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 						if tid = l_status.current_thread_id then
 							row.set_background_color (row_highlight_bg_color)
 						end
-						
+
 						s := l_status.thread_name (tid)
 						if s /= Void then
 							create lab.make_with_text (s)
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 							create lab.make_with_text ("")
 						end
 						row.set_item (2, lab)
-						
+
 						prio := l_status.thread_priority (tid)
 						if prio > 0 then
 							create lab.make_with_text (prio.out)
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 							create lab.make_with_text ("")
 						end
 						row.set_item (3, lab)
-						
+
 						row.set_data (tid)
 						r := r + 1
 						i := i + 1
@@ -302,8 +302,8 @@ feature {NONE} -- Implementation
 				create lab.make_with_text ("Sorry no information available on Threads for now")
 				grid.set_item (1, 1, lab)
 			end
-			grid.request_columns_auto_resizing			
-		end		
+			grid.request_columns_auto_resizing
+		end
 
 feature {NONE} -- Implementation, cosmetic
 

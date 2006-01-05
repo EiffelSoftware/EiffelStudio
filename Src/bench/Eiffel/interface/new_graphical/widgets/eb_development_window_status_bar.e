@@ -16,13 +16,8 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	SHARED_EIFFEL_PROJECT
-		export
-			{NONE} all
-		end
 
-	SHARED_APPLICATION_EXECUTION
+	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
@@ -31,9 +26,9 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EB_SHARED_PREFERENCES
-	
+
 	EB_DEBUGGER_OBSERVER
 		export
 			{NONE} all
@@ -68,8 +63,8 @@ feature {NONE} -- Initialization
 			end
 			if mg.is_project_loaded then
 				on_project_loaded
-				if application.status /= Void then
-					if application.status.is_stopped then
+				if eb_debugger_manager.application_is_executing then
+					if eb_debugger_manager.application_is_stopped then
 						on_application_stopped
 					else
 						on_application_launched
@@ -93,8 +88,8 @@ feature {NONE} -- Initialization
 			mg.load_agents.extend (load_agent)
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
-			
-			debugger_manager.observers.extend (Current)
+
+			eb_debugger_manager.observers.extend (Current)
 		end
 
 	build_interface is
@@ -114,7 +109,7 @@ feature {NONE} -- Initialization
 			create debugger_cell
 			create debugger_icon.make_with_size (16, 16)
 			create edition_icon.make_with_size (16, 16)
-				
+
 				-- Set widget properties.
 			project_label.align_text_center
 			label.align_text_left
@@ -125,7 +120,7 @@ feature {NONE} -- Initialization
 			project_label.set_tooltip (Interface_names.e_Project_name)
 			coordinate_label.set_tooltip (Interface_names.e_Cursor_position)
 			debugger_icon.clear
-			
+
 				-- Organize widgets.
 			create vp
 			vp.extend (label)
@@ -134,14 +129,14 @@ feature {NONE} -- Initialization
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (vp)
 			widget.extend (f)
-			
+
 			create f
 			f.set_minimum_width (100)
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (progress_bar)
 			widget.extend (f)
 			widget.disable_item_expand (f)
-			
+
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (project_label)
@@ -180,7 +175,7 @@ feature {NONE} -- Initialization
 			f.extend (debugger_cell)
 			widget.extend (f)
 			widget.disable_item_expand (f)
-			
+
 				-- Initialize timers.
 			create running_timer.make_with_interval (0)
 			running_timer.actions.extend (agent update_running_icon)
@@ -253,13 +248,13 @@ feature {EB_RECYCLER} -- Status setting
 		local
 			mg: EB_PROJECT_MANAGER
 		do
-			debugger_manager.observers.prune_all (Current)
-			
+			eb_debugger_manager.observers.prune_all (Current)
+
 			mg := Eiffel_project.manager
 			mg.create_agents.prune_all (create_agent)
 
 			mg.load_agents.prune_all (load_agent)
-			
+
 			mg.close_agents.prune_all (close_agent)
 			mg.edition_agents.prune_all (edition_agent)
 			mg.compile_start_agents.prune_all (compile_start_agent)
@@ -300,10 +295,10 @@ feature {NONE} -- Implementation: widgets
 
 	project_label: EV_LABEL
 			-- Label that gives the name of the current project.
-	
+
 	coordinate_label: EV_LABEL
 			-- Label that gives the current position in the editor.
-	
+
 	compilation_icon: EV_PIXMAP
 			-- Pixmap that represents the current compilation status.
 
@@ -374,8 +369,8 @@ feature {NONE} -- Implementation: event handling
 			else
 				on_project_updated
 			end
-			if application.status /= Void then
-				if application.status.is_stopped then
+			if eb_debugger_manager.application_is_executing then
+				if eb_debugger_manager.application_is_stopped then
 					on_application_stopped
 				else
 					on_application_launched

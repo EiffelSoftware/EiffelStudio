@@ -20,7 +20,7 @@ inherit
 			default_create
 		end
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 		undefine
 			default_create
 		end
@@ -29,12 +29,12 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_WINDOW_MANAGER
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
 			Result.set_font (Preferences.editor_data.font)
 		end
-		
+
 	No_text_background_color: EV_COLOR is
 		do
 --			create Result.make_with_8_bit_rgb (255, 255, 255)
@@ -146,15 +146,15 @@ feature -- Slice limits
 		do
 			Result := slice_min_ref.item
 		end
-		
+
 	slice_max: INTEGER is
 		do
 			Result := slice_max_ref.item
-		end		
+		end
 
 	slice_min_ref: INTEGER_REF
 	slice_max_ref: INTEGER_REF
-	
+
 feature -- Status Setting
 
 	is_stone_valid (st: OBJECT_STONE): BOOLEAN is
@@ -162,10 +162,10 @@ feature -- Status Setting
 		do
 			Result := st /= Void and then parent.accepts_stone (st)
 		end
-		
+
 	current_object: OBJECT_STONE
 			-- Object `Current' is displaying.
-			
+
 	is_destroyed: BOOLEAN is
 			-- Is `dialog' destroyed?
 		do
@@ -177,10 +177,10 @@ feature -- Status Setting
 		do
 			Result := current_object /= Void
 		end
-		
+
 	current_dump_value: DUMP_VALUE
 			-- DUMP_VALUE `Current' is displaying.		
-		
+
 feature -- Status setting
 
 	raise is
@@ -193,14 +193,14 @@ feature -- Status setting
 			-- Give a new object to `Current' and refresh the display.
 		require
 			stone_valid: is_stone_valid (st)
-			is_running: Application.is_running
+			is_running: eb_debugger_manager.application_is_executing
 		local
 			l_item: EV_ANY
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
 			current_dump_value := Void
 			current_object := st
-			
+
 			l_item := st.ev_item
 			if l_item /= Void then
 				l_dv ?= l_item.data
@@ -208,19 +208,19 @@ feature -- Status setting
 					current_dump_value := l_dv.dump_value
 				end
 			end
-			
-			Application.status.keep_object (st.object_address)
+
+			eb_debugger_manager.Application.status.keep_object (st.object_address)
 			retrieve_dump_value
 			refresh
 		end
-		
+
 	retrieve_dump_value is
 			-- Retrieve `current_dump_value' from `current_object'.
 		require
 			has_current_object: has_object
 		do
 			if current_dump_value = Void then
-				current_dump_value := Application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
+				current_dump_value := eb_debugger_manager.Application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
 			end
 		end
 
@@ -235,7 +235,10 @@ feature -- Status setting
 		do
 			editor.remove_text
 			editor.enable_edit
-			if application.is_running and then Application.is_stopped then
+			if 
+				eb_debugger_manager.application_is_executing 
+				and then eb_debugger_manager.application_is_stopped 
+			then
 				if has_object then
 					retrieve_dump_value
 					if current_dump_value /= Void then
@@ -278,7 +281,7 @@ feature -- Status setting
 		require
 			not is_destroyed
 		do
-			clean_dialog_data			
+			clean_dialog_data
 			dialog.destroy
 			dialog := Void
 			parent.remove_dialog (Current)
@@ -296,7 +299,7 @@ feature {NONE} -- Implementation
 		do
 			current_dump_value := Void
 			current_object := Void
-		end		
+		end
 
 	text: STRUCTURED_TEXT
 			-- Text that is displayed in the editor.
@@ -311,13 +314,13 @@ feature {NONE} -- Event handling
 		do
 			upper_slice_field.set_focus
 		end
-		
+
 	return_pressed_in_upper_slice_field is
 			-- Called by `return_actions' of `lower_slice_field'.
 		do
 			set_slice_selected
 		end
-	
+
 	set_slice_selected is
 			-- Called by `select_actions' of `set_slice_button'.
 		local
@@ -328,10 +331,10 @@ feature {NONE} -- Event handling
 			valid := True
 			if lower_slice_field.text.is_integer then
 				lower := lower_slice_field.text.to_integer
-			else				
+			else
 				create error_dialog.make_with_text (warning_messages.w_not_an_integer)
 				error_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
-				valid := False			
+				valid := False
 				if lower_slice_field.text_length /= 0 then
 					lower_slice_field.select_all
 				end
@@ -344,7 +347,7 @@ feature {NONE} -- Event handling
 				error_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
 				valid := False
 				if upper_slice_field.text_length /= 0 then
-					upper_slice_field.select_all	
+					upper_slice_field.select_all
 				end
 				upper_slice_field.set_focus
 			end
@@ -360,7 +363,7 @@ feature {NONE} -- Event handling
 				refresh
 			end
 		end
-	
+
 	auto_slice_selected is
 			-- Called by `select_actions' of `auto_set_slice_button'.
 		do
@@ -370,12 +373,12 @@ feature {NONE} -- Event handling
 				slice_min_ref.set_item (0)
 				slice_max_ref.set_item (-1)
 				refresh
-				
-				set_limits (0, current_dump_value.last_string_representation_length - 1)			
+
+				set_limits (0, current_dump_value.last_string_representation_length - 1)
 				upper_slice_field.set_text (slice_max.out)
 			end
 		end
-	
+
 	word_wrap_toggled is
 			-- Called by `select_actions' of `word_wrap_button'.
 		do
@@ -393,11 +396,11 @@ feature {NONE} -- Event handling
 		do
 			set_stone (st)
 		end
-		
+
 	close_action is
 			-- Close dialog
 		do
-			clean_dialog_data			
+			clean_dialog_data
 			dialog.destroy
 			dialog := Void
 			parent.remove_dialog (Current)

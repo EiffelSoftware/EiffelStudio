@@ -11,8 +11,6 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	SHARED_APPLICATION_EXECUTION
-
 	ARGUMENTS
 
 	EB_SHARED_PREFERENCES
@@ -61,7 +59,7 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
-		
+
 	prepare (an_app: EV_APPLICATION) is
 			-- Build graphical compiler
 		require
@@ -73,10 +71,10 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			compile_index: INTEGER
 			open_project: EB_OPEN_PROJECT_COMMAND
 			an_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
-			
+
 			an_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
 			a_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
-			
+
 			a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			first_window: EB_DEVELOPMENT_WINDOW
 			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
@@ -88,31 +86,31 @@ feature {NONE} -- Implementation (preparation of all widgets)
 					--| `error_window' as a TERM_WINDOW.
 					--| Also note that `error_window' is a
 					--| once-function!!
-		
+
 					-- Create and setup the output manager / Error displayer
 				create an_output_manager
 				set_output_manager (an_output_manager)
 				create an_external_output_manager
-				set_external_output_manager (an_external_output_manager)				
+				set_external_output_manager (an_external_output_manager)
 				create a_c_compilation_output_manager
 				set_c_compilation_output_manager (a_c_compilation_output_manager)
-				
+
 				Eiffel_project.set_error_displayer (an_output_manager)
-		
+
 					-- Create and setup the degree output window.
 				if not preferences.development_window_data.graphical_output_disabled then
 					create a_graphical_degree_output.make_with_output_manager (output_manager)
 					Eiffel_project.set_degree_output (a_graphical_degree_output)
 				end
-		
+
 					-- Create and setup the recent projects manager
 				create a_recent_projects_manager.make
 				set_recent_projects_manager (a_recent_projects_manager)
-		
+
 					-- Create a development window
 				window_manager.create_window
 				first_window := window_manager.last_created_window
-		
+
 				mode.set_item (False)
 				project_index := index_of_word_option ("project")
 				if project_index /= 0 then
@@ -133,7 +131,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 						end
 					end
 				end
-				
+
 					-- Register help engine
 				an_app.set_help_engine (create {EB_HELP_ENGINE}.make)
 			end
@@ -154,7 +152,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			create project_dialog.make_default
 			project_dialog.show_modal_to_window (first_window.window)
 		end
-		
+
 	create_project (a_directory_name: STRING; an_ace_file_name: STRING; compilation_flag: BOOLEAN) is
 			-- Create a new project
 		local
@@ -189,15 +187,15 @@ feature {NONE} -- Exception handling
 		end
 
 	parent_for_dialog: EV_WINDOW is
-			-- Retrieve or create a parent for `show_modal_to_window'	 
-		local	 
-			dev_window: EB_DEVELOPMENT_WINDOW	 
-		do	 
-			dev_window := Window_manager.last_focused_development_window	 
-			if dev_window /= Void then	 
-				Result := dev_window.window	 
-			else	 
-				create Result	 
+			-- Retrieve or create a parent for `show_modal_to_window'	
+		local
+			dev_window: EB_DEVELOPMENT_WINDOW
+		do
+			dev_window := Window_manager.last_focused_development_window
+			if dev_window /= Void then
+				Result := dev_window.window
+			else
+				create Result
 			end
 		end
 
@@ -237,5 +235,5 @@ feature {NONE} -- Exception handling
 			create error_dlg.make (trace)
 			error_dlg.show_modal_to_window (parent_for_dialog)
 		end
-		
+
 end -- class ES_GRAPHIC

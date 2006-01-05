@@ -18,8 +18,6 @@ inherit
 
 	EXEC_MODES
 
-	SHARED_APPLICATION_EXECUTION
-
 	SHARED_EIFFEL_PROJECT
 
 create
@@ -53,7 +51,7 @@ feature -- Access
 
 	text_area: EB_SMART_EDITOR
 			-- Text Editor.
-			
+
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
@@ -86,7 +84,7 @@ feature -- Status setting
 feature -- Basic operation
 
 	refresh is
-			-- Synchronize display with current stone 
+			-- Synchronize display with current stone
 		do
 			text_area.load_file (development_window.file_name)
 		end
@@ -112,7 +110,7 @@ feature -- Basic operation
 			-- reload the edited file
 		do
 			text_area.reload
-		end	
+		end
 
 feature -- Memory management
 

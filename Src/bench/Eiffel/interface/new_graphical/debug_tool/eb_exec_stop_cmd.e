@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Command to pause the execution of the debugged application."
 	author: "Xavier Rousselot"
 	date: "$Date$"
@@ -17,7 +17,7 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -41,11 +41,10 @@ feature -- Formatting
 			-- Pause the execution.
 		do
 			if
-				Application /= Void and then
-				Application.is_running and then
-				not Application.is_stopped
+				eb_debugger_manager.application_is_executing and then
+				not eb_debugger_manager.application_is_stopped
 			then
-				Application.interrupt
+				eb_debugger_manager.application.interrupt
 			end
 		end
 

@@ -25,14 +25,14 @@ create
 
 feature {NONE}
 
-	make_with_value (dv: ABSTRACT_DEBUG_VALUE; ot: like tool) is
+	make_with_value (dv: ABSTRACT_DEBUG_VALUE; g: like parent_grid) is
 		require
 			dv /= Void
 		local
 			conv_abs_ref: ABSTRACT_REFERENCE_VALUE
 			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
 		do
-			make (ot)
+			make_with_grid (g)
 			conv_abs_ref ?= dv
 			if conv_abs_ref /= Void then
 				object_address := conv_abs_ref.address
@@ -59,7 +59,7 @@ feature -- Recycling
 			internal_associated_dump_value := Void
 			object := Void
 		end
-		
+
 feature -- Properties
 
 	object: ABSTRACT_DEBUG_VALUE
@@ -77,7 +77,7 @@ feature -- Properties
 		end
 
 	object_spec_capacity: INTEGER
-	
+
 feature -- Object stone
 
 	get_object_stone_properties is
@@ -104,25 +104,25 @@ feature -- Object stone
 								internal_object_stone_accept_cursor := fost.stone_cursor
 								internal_object_stone_deny_cursor := fost.X_stone_cursor
 								internal_object_stone := fost
-							else								
+							else
 								create fst.make (feat)
 								internal_object_stone_accept_cursor := fst.stone_cursor
 								internal_object_stone_deny_cursor := fst.X_stone_cursor
 								internal_object_stone := fst
 							end
-						end						
+						end
 					end
 				end
 			end
 		end
-	
+
 feature -- Related line if precised
 
 	set_related_line (v: like related_line) is
 		do
 			related_line := v
 		end
-	
+
 	related_line: ES_OBJECTS_GRID_LINE
 
 feature -- Query
@@ -170,7 +170,7 @@ feature -- Query
 				internal_associated_dump_value := Result
 			end
 		end
-		
+
 	internal_associated_dump_value: like associated_dump_value
 
 feature -- Graphical changes
@@ -194,7 +194,7 @@ feature -- Graphical changes
 				else --| dv /= Void |--
 					set_name (dv.name)
 					set_address (dv.address)
-					
+
 					last_dump_value := Void
 					if dv.kind = Error_message_value then
 						dmdv ?= dv

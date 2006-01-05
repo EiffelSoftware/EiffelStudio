@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	ES_OBJECTS_TOOL
 
 inherit
@@ -25,11 +25,6 @@ inherit
 		end
 
 	EB_RECYCLABLE
-		export
-			{NONE} all
-		end
-
-	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
 		end
@@ -55,6 +50,11 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
 		end
@@ -88,83 +88,21 @@ feature {NONE} -- Initialization
 	build_interface is
 			-- Build all the tool's widgets.
 		local
-			esgrid: ES_OBJECTS_GRID
 			l_box: EV_HORIZONTAL_BOX
 		do
 				--| Build interface
-				
+
 			create displayed_objects.make
-				--| Stack obj grid
-			create esgrid.make_with_name ("Stack objects")
-			esgrid.set_column_count_to (4)
-			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (150)
-			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
-			esgrid.column (col_address_index).set_width (80)
-			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
-			esgrid.column (col_value_index).set_width (150)
-			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
-			esgrid.column (col_type_index).set_width (200)
-			
-				-- Set scrolling preferences.
-			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
-			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
-			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
-			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
-				agent esgrid.set_mouse_wheel_scroll_size)
-			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
-				agent esgrid.set_mouse_wheel_scroll_full_page)
-			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
-				agent esgrid.set_scrolling_common_line_count)
-
-			esgrid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
-			esgrid.item_drop_actions.extend (agent on_drop_stack_element)
-			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
-			esgrid.row_select_actions.extend (agent on_stack_objects_row_selected)
-			
-
-			stack_objects_grid := esgrid
-
-				--| Debugged obj grid
-			create esgrid.make_with_name ("Debugged objects")
-			esgrid.set_column_count_to (4)
-			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (150)
-			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
-			esgrid.column (col_address_index).set_width (80)
-			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
-			esgrid.column (col_value_index).set_width (150)
-			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
-			esgrid.column (col_type_index).set_width (200)
-
-				-- Set scrolling preferences.
-			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
-			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
-			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
-			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
-				agent esgrid.set_mouse_wheel_scroll_size)
-			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
-				agent esgrid.set_mouse_wheel_scroll_full_page)
-			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
-				agent esgrid.set_scrolling_common_line_count)
-
-
-			esgrid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
-			esgrid.item_drop_actions.extend (agent on_add_debugged_object)
-			esgrid.key_press_actions.extend (agent debugged_object_key_action)
-			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
-			esgrid.row_select_actions.extend (agent on_debugged_objects_row_selected)
-			esgrid.row_deselect_actions.extend (agent on_debugged_objects_row_deselected)
-			
-			debugged_objects_grid := esgrid
+			create_stack_objects_grid
+			create_debugged_objects_grid
 
 			create split
-			
+
 				-- The `stack_objects_grid' and `debugged_objects_grid' are
 				-- inserted into a temporary box to provide a padding of one pixel
 				-- so that it appears that they have a border. This makes the distinction
 				-- between the edges of the control and the split area more pronounced.
-				
+
 			create l_box
 			l_box.set_border_width (1)
 			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
@@ -179,16 +117,64 @@ feature {NONE} -- Initialization
 			expand_args := True
 			expand_locals := True
 			widget := split
-			
-				--| Stack objects grid layout
-			initialize_stack_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference)
 
-				--| Debugged objects grid layout
+				--| objects grid layout
+			initialize_stack_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference)
 			initialize_debugged_objects_grid_layout (preferences.debug_tool_data.is_debugged_grid_layout_managed_preference)
-			
+
 				--| Initialize various agent and special mecanisms
 			init_delayed_cleaning_mecanism
 			create_update_on_idle_agent
+		end
+
+	initialize_objects_grid (esgrid: ES_OBJECTS_GRID) is
+		do
+			esgrid.set_objects_grid_item_function (agent get_object_display_item)
+			esgrid.set_columns_layout ( 4, 1,
+					<<
+						[1, 150, "Name"],
+						[2, 80, "Address"],
+						[3, 150, "Value"],
+						[4, 200, "Type"],
+						[5, -1, "Context ..."]
+					>>
+				)
+
+				-- Set scrolling preferences.
+			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_full_page)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+				agent esgrid.set_scrolling_common_line_count)
+
+			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
+		end
+
+	create_stack_objects_grid is
+		do
+				--| Stack obj grid
+			create stack_objects_grid.make_with_name ("Stack objects")
+			initialize_objects_grid (stack_objects_grid)
+			stack_objects_grid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
+			stack_objects_grid.item_drop_actions.extend (agent on_drop_stack_element)
+			stack_objects_grid.row_select_actions.extend (agent on_stack_objects_row_selected)
+
+		end
+
+	create_debugged_objects_grid is
+		do
+				--| Debugged obj grid
+			create debugged_objects_grid.make_with_name ("Debugged objects")
+			initialize_objects_grid (debugged_objects_grid)
+			debugged_objects_grid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
+			debugged_objects_grid.item_drop_actions.extend (agent on_add_debugged_object)
+			debugged_objects_grid.key_press_actions.extend (agent debugged_object_key_action)
+			debugged_objects_grid.row_select_actions.extend (agent on_debugged_objects_row_selected)
+			debugged_objects_grid.row_deselect_actions.extend (agent on_debugged_objects_row_deselected)
 		end
 
 	build_mini_toolbar is
@@ -221,6 +207,10 @@ feature {NONE} -- Initialization
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
+
+				--| Attach the slices_cmd to the objects grid
+			stack_objects_grid.set_slices_cmd (slices_cmd)
+			debugged_objects_grid.set_slices_cmd (slices_cmd)
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -234,7 +224,7 @@ feature {NONE} -- Initialization
 			end
 			if header_box = Void then
 				build_header_box
-			end			
+			end
 			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, False, header_box, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -254,14 +244,14 @@ feature {NONE} -- Initialization
 			create notebook_item.make_with_info (nb, widget, title, header_box, mini_toolbar)
 			nb.extend (notebook_item)
 			notebook_item.drop_actions.extend (agent add_debugged_object)
-			notebook_item.drop_actions.extend (agent drop_stack_element)			
+			notebook_item.drop_actions.extend (agent drop_stack_element)
 		end
-	
+
 feature -- Access
 
 	mini_toolbar: EV_TOOL_BAR
 			-- Associated mini tool bar.
-			
+
 	header_box: EV_HORIZONTAL_BOX
 			-- Associated header box
 
@@ -298,14 +288,14 @@ feature {NONE} -- Notebook item's behavior
 		ensure
 			header_box /= Void implies header_box.is_empty
 		end
-		
+
 	build_header_box is
 		do
 			create header_box
 		ensure
 			header_box /= Void
 		end
-		
+
 	update_header_box (dbg_stopped: BOOLEAN) is
 		require
 			header_box /= Void
@@ -323,7 +313,7 @@ feature {NONE} -- Notebook item's behavior
 			sep.set_minimum_width (30)
 			hbox.extend (sep)
 			hbox.disable_item_expand (sep)
-			if 
+			if
 				Application.is_running
 			then
 				if Application.is_stopped and then dbg_stopped then
@@ -333,7 +323,7 @@ feature {NONE} -- Notebook item's behavior
 							create lab.make_with_text ("{")
 							hbox.extend (lab)
 							hbox.disable_item_expand (lab)
-							
+
 							create clab.make_with_text (ecse.dynamic_class.name_in_upper)
 							create l_cstone.make (ecse.dynamic_class)
 							clab.set_pebble (l_cstone)
@@ -342,11 +332,11 @@ feature {NONE} -- Notebook item's behavior
 							clab.set_foreground_color (preferences.editor_data.class_text_color)
 							hbox.extend (clab)
 							hbox.disable_item_expand (clab)
-							
+
 							create lab.make_with_text ("}.")
 							hbox.extend (lab)
 							hbox.disable_item_expand (lab)
-							
+
 							create flab.make_with_text (ecse.routine_name)
 							create l_fstone.make (ecse.routine)
 							flab.set_pebble (l_fstone)
@@ -371,10 +361,10 @@ feature {NONE} -- Notebook item's behavior
 				hbox.extend (lab)
 				hbox.disable_item_expand (lab)
 			end
-			
+
 			hbox.extend (create {EV_CELL})
 		end
-		
+
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 	get_object_display_item (addr: STRING): ES_OBJECTS_GRID_LINE is
@@ -398,45 +388,13 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 				Result := Void
 			end
 		end
-	
+
 feature -- Properties setting
 
-	hexadecimal_mode_enabled: BOOLEAN
-
 	set_hexadecimal_mode (v: BOOLEAN) is
-		local
-			i: INTEGER
 		do
-			hexadecimal_mode_enabled := v
-				--| update : Stack objects grid
-			from
-				i := 1
-			until
-				i > stack_objects_grid.row_count
-			loop
-				propagate_hexadecimal_mode (stack_objects_grid.row (i))
-				i := i + 1
-			end
-
-				--| update : Objects grid
-			from
-				i := 1
-			until
-				i > debugged_objects_grid.row_count
-			loop
-				propagate_hexadecimal_mode (debugged_objects_grid.row (i))
-				i := i + 1
-			end
-		end
-
-	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
-		local
-			l_eb_t: ES_OBJECTS_GRID_LINE
-		do
-			l_eb_t ?= t.data
-			if l_eb_t /= Void then
-				l_eb_t.update_value
-			end
+			stack_objects_grid.set_hexadecimal_mode (v)
+			debugged_objects_grid.set_hexadecimal_mode (v)
 		end
 
 feature {NONE} -- Row actions	
@@ -475,7 +433,7 @@ feature -- Change
 					if application.status.is_stopped then
 						stack_objects_grid.call_delayed_clean
 						build_stack_objects_grid
-						
+
 						debugged_objects_grid.call_delayed_clean
 						build_debugged_objects_grid
 					end
@@ -517,6 +475,9 @@ feature -- Change
 			l_status := application.status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
+			else
+				stack_objects_grid.reset_layout_recorded_values
+				debugged_objects_grid.reset_layout_recorded_values
 			end
 		end
 
@@ -539,12 +500,12 @@ feature -- Change
 			manager := a_manager
 			set_explorer_bar (an_explorer_bar)
 		end
-	
+
 feature -- Status report
 
 	can_refresh: BOOLEAN
 			-- Should we display the trees when a stone is set?
-	
+
 feature -- Memory management
 
 	recycle is
@@ -568,11 +529,11 @@ feature -- Memory management
 			stack_objects_grid.call_delayed_clean
 			debugged_objects_grid.call_delayed_clean
 
-			debugged_objects_grid.reset_layout_recorded_values
-			stack_objects_grid.reset_layout_recorded_values
+			debugged_objects_grid.reset_layout_manager
+			stack_objects_grid.reset_layout_manager
 			clean_header_box
 		end
-	
+
 feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 
 	set_cleaning_delay (ms: INTEGER) is
@@ -585,7 +546,7 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 			end
 			if debugged_objects_grid.delayed_cleaning_exists then
 				debugged_objects_grid.set_cleaning_delay (cleaning_delay)
-			end		
+			end
 		ensure
 			cleaning_delay = ms
 		end
@@ -601,10 +562,17 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 				debugged_objects_grid.build_delayed_cleaning
 				debugged_objects_grid.set_cleaning_delay (cleaning_delay)
 				debugged_objects_grid.set_delayed_cleaning_action (agent action_clean_debugged_objects_grid)
-			end			
+			end
 		end
 
 feature {NONE} -- grid Layout Implementation
+
+	keep_object_reference_fixed (addr: STRING) is
+		do
+			if debugger_manager.application_is_executing then
+				application.status.keep_object_for_gui (addr)
+			end
+		end
 
 	cleaning_delay: INTEGER
 		-- Number of milliseconds waited before clearing debug output.
@@ -612,17 +580,21 @@ feature {NONE} -- grid Layout Implementation
 		-- for normal debug usage as it is only cleared immediately before
 		-- being rebuilt, unless the timer period has been exceeded.
 
+	current_stack_class_feature_identification: STRING is
+		do
+			Result := current_stack_element.class_name + "." + current_stack_element.routine_name
+		end
+
 feature {NONE} -- Stack grid Layout Implementation
 
 	stack_objects_grid_empty: BOOLEAN
 
 	action_clean_stack_objects_grid is
 		do
-			record_stack_layout
 			internal_locals_row := Void
 			internal_arguments_row := Void
 			internal_result_row := Void
-			
+
 			if not stack_objects_grid_empty then
 				stack_objects_grid.default_clean
 				stack_objects_grid_empty := True
@@ -656,23 +628,16 @@ feature {NONE} -- Stack grid Layout Implementation
 	expand_locals: BOOLEAN
 			-- Should the "Locals" tree item be expanded?
 
-feature {NONE} -- Grid layout Implementation
-
 	initialize_stack_objects_grid_layout (pv: BOOLEAN_PREFERENCE) is
 		require
 			not is_stack_objects_grid_layout_initialized
 			stack_objects_grid.layout_manager = Void
-		local
-			l_grid: ES_OBJECTS_GRID
 		do
-			l_grid := stack_objects_grid
-			l_grid.initialize_layout_management (pv)
+			stack_objects_grid.initialize_layout_management (pv)
 			check
-				l_grid.layout_manager /= Void
+				stack_objects_grid.layout_manager /= Void
 			end
-			l_grid.layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
-			l_grid.layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
-			l_grid.layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
+			stack_objects_grid.layout_manager.set_global_identification_agent (agent current_stack_class_feature_identification)
 			is_stack_objects_grid_layout_initialized := True
 		end
 
@@ -684,33 +649,28 @@ feature {NONE} -- debugged grid Layout Implementation
 		require
 			not is_debugged_objects_grid_layout_initialized
 			debugged_objects_grid.layout_manager = Void
-		local
-			l_grid: ES_OBJECTS_GRID
 		do
-			l_grid := debugged_objects_grid
-			l_grid.initialize_layout_management (pv)
+			debugged_objects_grid.initialize_layout_management (pv)
 			check
-				l_grid.layout_manager /= Void
+				debugged_objects_grid.layout_manager /= Void
 			end
-			l_grid.layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
-			l_grid.layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
-			l_grid.layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
+			debugged_objects_grid.layout_manager.set_global_identification_agent (agent current_stack_class_feature_identification)
+
 			is_debugged_objects_grid_layout_initialized := True
 		end
 
 	is_debugged_objects_grid_layout_initialized: BOOLEAN
 
 	debugged_objects_grid_empty: BOOLEAN
-	
+
 	action_clean_debugged_objects_grid is
 		do
-			record_objects_layout
 			if not debugged_objects_grid_empty then
 				debugged_objects_grid.default_clean
 				debugged_objects_grid_empty := True
 			end
 		ensure
-			debugged_objects_grid_cleaned: debugged_objects_grid_empty	
+			debugged_objects_grid_cleaned: debugged_objects_grid_empty
 		end
 
 	record_objects_layout is
@@ -721,6 +681,14 @@ feature {NONE} -- debugged grid Layout Implementation
 			if debugged_objects_grid.row_count > 0 then
 				debugged_objects_grid.record_layout
 			end
+		end
+
+feature -- grid Layout access
+
+	record_grids_layout is
+		do
+			record_stack_layout
+			record_objects_layout
 		end
 
 feature {NONE} -- Commands Implementation
@@ -774,7 +742,7 @@ feature {NONE} -- Implementation
 			end
 			on_debugged_objects_row_deselected (Void) -- reset toolbar buttons
 		end
-	
+
 feature {NONE} -- Current objects grid Implementation
 
 	debugged_objects_grid: ES_OBJECTS_GRID
@@ -806,7 +774,7 @@ feature {NONE} -- Current objects grid Implementation
 				if not Application.current_call_stack_is_empty then
 					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
 					if value /= Void then
-						create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, Current)
+						create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, debugged_objects_grid)
 					end
 				end
 			else
@@ -814,7 +782,7 @@ feature {NONE} -- Current objects grid Implementation
 				check
 					cse /= Void
 				end
-				create {ES_OBJECTS_GRID_ADDRESS_LINE} current_object.make_with_call_stack_element (cse, Current)
+				create {ES_OBJECTS_GRID_ADDRESS_LINE} current_object.make_with_call_stack_element (cse, debugged_objects_grid)
 			end
 			if current_object /= Void then
 				current_object.set_display (display_first)
@@ -834,7 +802,7 @@ feature {NONE} -- Current objects grid Implementation
 			add_displayed_objects_to_grid (debugged_objects_grid)
 			if debugged_objects_grid.row_count > 0 then
 					--| be sure the grid is redrawn, and the first row is visible
-				debugged_objects_grid.row (1).ensure_visible
+--				debugged_objects_grid.row (1).ensure_visible
 				debugged_objects_grid.row (1).redraw
 			end
 			debugged_objects_grid.restore_layout
@@ -857,7 +825,7 @@ feature {NONE} -- Current objects grid Implementation
 				displayed_objects.forth
 			end
 		end
-		
+
 feature {NONE} -- Impl : Debugged objects grid specifics
 
 	debugged_object_key_action (k: EV_KEY) is
@@ -920,19 +888,19 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 						abstract_value ?= grid_data_from_widget (l_item)
 							--| FIXME jfiat : check if it is safe to use a Value ?
 						if abstract_value /= Void then
-							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, Current)
+							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, debugged_objects_grid)
 						end
 					else
 						conv_spec ?= grid_data_from_widget (l_item)
 						if conv_spec /= Void then
-							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, Current)
+							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, debugged_objects_grid)
 						end
 					end
 				end
 				if n_obj = Void then
-					create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
+					create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, debugged_objects_grid)
 				end
-				
+
 				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
 				Application.status.keep_object (a_stone.object_address)
 				displayed_objects.extend (n_obj)
@@ -942,7 +910,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				n_obj.row.enable_select
 			end
 		end
-		
+
 	remove_dropped_debugged_object (ost: OBJECT_STONE) is
 		local
 			row: EV_GRID_ROW
@@ -970,13 +938,13 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					glines.after
 				loop
 					line := glines.item
-					check 
+					check
 						line /= Void
 						line.row /= Void
 					end
-					if 
+					if
 						is_removable_debugged_object_row (line.row)
-						and then is_removable_debugged_object_address (line.object_address) 
+						and then is_removable_debugged_object_address (line.object_address)
 					then
 						remove_debugged_object_line (line)
 					end
@@ -1028,7 +996,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 			Result := Result and then is_removable_debugged_object_address (ost.object_address)
 		end
-		
+
 	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN is
 		do
 			Result := row.parent_row = Void
@@ -1046,8 +1014,8 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					displayed_objects.forth
 				end
 			end
-		end		
-	
+		end
+
 feature {NONE} -- Impl : Stack objects grid
 
 	stack_objects_grid: ES_OBJECTS_GRID
@@ -1062,15 +1030,12 @@ feature {NONE} -- Impl : Stack objects grid
 	build_stack_objects_grid is
 		require
 			stack_objects_grid_empty: stack_objects_grid_empty
-		local
-			row: EV_GRID_ROW
 		do
 			stack_objects_grid_empty := False
 			build_stack_info (stack_objects_grid)
 			build_stack_objects (stack_objects_grid)
 			if stack_objects_grid.row_count > 0 then
-				row := stack_objects_grid.row (1)
-				row.ensure_visible
+--				stack_objects_grid.row (1).ensure_visible
 			end
 		end
 
@@ -1135,10 +1100,10 @@ feature {NONE} -- Impl : Stack objects grid
 			if application.is_dotnet and then application.status.exception_occurred then
 				dotnet_status ?= application.status
 				check dotnet_status /= Void end
-				
+
 					--| Details
 				exception_row := a_target_grid.extended_new_row
-				glab := folder_label_item (Cst_exception_raised_text)
+				glab := a_target_grid.folder_label_item (Cst_exception_raised_text)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.icon_debugger_exception)
 				exception_row.set_item (1, glab)
 				create glab
@@ -1153,7 +1118,7 @@ feature {NONE} -- Impl : Stack objects grid
 				l_exception_tag := dotnet_status.exception_message
 				if l_exception_tag /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := name_label_item ("Tag")
+					glab := a_target_grid.name_label_item ("Tag")
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 					row.set_item (1, glab)
 					create es_glab
@@ -1165,19 +1130,19 @@ feature {NONE} -- Impl : Stack objects grid
 				l_exception_class_detail := dotnet_status.exception_class_name
 				if l_exception_class_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := name_label_item ("Class")
+					glab := a_target_grid.name_label_item ("Class")
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_class_detail)
 					a_target_grid.grid_cell_set_text (es_glab, l_exception_class_detail)
-					row.set_item (2, es_glab)						
+					row.set_item (2, es_glab)
 				end
 					--| Module
 				l_exception_module_detail := dotnet_status.exception_module_name
 				if l_exception_module_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := name_label_item ("Module")
+					glab := a_target_grid.name_label_item ("Module")
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 					row.set_item (1, glab)
 					create es_glab
@@ -1190,7 +1155,7 @@ feature {NONE} -- Impl : Stack objects grid
 				l_exception_message := dotnet_status.exception_to_string
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := name_label_item ("Nota")
+					glab := a_target_grid.name_label_item ("Nota")
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 					row.set_item (1, glab)
 					create es_glab
@@ -1204,7 +1169,7 @@ feature {NONE} -- Impl : Stack objects grid
 				exc_dv := dotnet_status.exception_debug_value
 				if exc_dv /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					attach_debug_value_to_grid_row (row, exc_dv)
+					a_target_grid.attach_debug_value_to_grid_row (row, exc_dv)
 				end
 			end
 		end
@@ -1224,18 +1189,18 @@ feature {NONE} -- Impl : Stack objects grid
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			glab: EV_GRID_LABEL_ITEM
-			r: INTEGER			
+			r: INTEGER
 		do
 			if cse.has_result then
 				internal_result_row := a_target_grid.extended_new_row
-				glab := folder_label_item (Interface_names.l_result)
+				glab := a_target_grid.folder_label_item (Interface_names.l_result)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
 				internal_result_row.set_item (1, glab)
 				dv := cse.result_value
 				if dv /= Void then
 					internal_result_row.insert_subrows (1, 1)
 					r := internal_result_row.index + 1
-					attach_debug_value_to_grid_row (a_target_grid.row (r), dv)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), dv)
 				end
 			else
 				internal_result_row := Void
@@ -1254,7 +1219,7 @@ feature {NONE} -- Impl : Stack objects grid
 			list := cse.arguments
 			if list /= Void and then not list.is_empty then
 				internal_arguments_row := a_target_grid.extended_new_row
-				glab := folder_label_item (Interface_names.l_Arguments)
+				glab := a_target_grid.folder_label_item (Interface_names.l_Arguments)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
 				internal_arguments_row.set_item (1, glab)
 				from
@@ -1264,7 +1229,7 @@ feature {NONE} -- Impl : Stack objects grid
 				until
 					list.after
 				loop
-					attach_debug_value_to_grid_row (a_target_grid.row (r), list.item)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), list.item)
 					r := r + 1
 					list.forth
 				end
@@ -1283,11 +1248,11 @@ feature {NONE} -- Impl : Stack objects grid
 			list: LIST [ABSTRACT_DEBUG_VALUE]
 			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
 			dbg_nb: INTEGER
-			r: INTEGER			
+			r: INTEGER
 		do
 			list := cse.locals
 			if list /= Void and then not list.is_empty then
-				glab := folder_label_item (Interface_names.l_Locals)
+				glab := a_target_grid.folder_label_item (Interface_names.l_Locals)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
 				internal_locals_row := a_target_grid.extended_new_row
 				internal_locals_row.set_item (1, glab)
@@ -1311,7 +1276,7 @@ feature {NONE} -- Impl : Stack objects grid
 				until
 					i > dbg_nb
 				loop
-					attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i)
 					r := r + 1
 					i := i + 1
 				end
@@ -1332,7 +1297,7 @@ feature {NONE} -- Impl : Stack objects grid
 		do
 			drop_stack_element (st)
 		end
-		
+
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.
 		do
@@ -1373,7 +1338,7 @@ feature {NONE} -- Impl : Stack objects grid
 			else
 			end
 		end
-		
+
 feature {NONE} -- Debugged objects grid Implementation
 
 	current_object: ES_OBJECTS_GRID_LINE
@@ -1396,30 +1361,10 @@ feature {NONE} -- Debugged objects grid Implementation
 	display_first_special: BOOLEAN
 			-- Memorize the display parameters of the current object.
 			-- Was declared in ES_OBJECTS_TOOL as synonym of `display_first', `display_first_attributes' and `display_first_onces'.
-	
+
 feature {NONE} -- Constants
 
 	Left_address_delim: STRING is " <"
 	Right_address_delim: STRING is ">"
-
-
-feature {NONE} -- Grid related Constants
-
-	Col_pixmap_index: INTEGER is 1
-	Col_name_index: INTEGER is 1
-	Col_value_index: INTEGER is 2
-	Col_type_index: INTEGER is 3
-	Col_address_index: INTEGER is 4
-	Col_context_index: INTEGER is 5
-
-	Col_titles: ARRAY [STRING] is
-		do
-			create Result.make (1, 5)
-			Result.put ("Name", Col_name_index)
-			Result.put ("Address", Col_address_index)
-			Result.put ("Value", Col_value_index)
-			Result.put ("Type", Col_type_index)
-			Result.put ("Context ...", Col_context_index)
-		end
 
 end

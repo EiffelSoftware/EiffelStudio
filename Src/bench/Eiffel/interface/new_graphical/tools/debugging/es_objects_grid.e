@@ -10,7 +10,12 @@ class
 inherit
 	ES_GRID
 		redefine
-			initialize, grid_menu
+			initialize, grid_menu, row_type
+		end
+
+	EB_SHARED_DEBUG_TOOLS
+		undefine
+			default_create, copy
 		end
 
 create
@@ -26,10 +31,17 @@ feature {NONE} -- Initialization
 			enable_single_row_selection
 			enable_border
 		end
-		
+
 	initialize is
 		do
 			Precursor {ES_GRID}
+
+			col_pixmap_index := 1
+			col_name_index := 1
+			col_value_index := 2
+			col_type_index := 3
+			col_address_index := 4
+			col_context_index := 5
 
 			enable_tree
 			enable_row_height_fixed
@@ -43,14 +55,170 @@ feature {NONE} -- Initialization
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
+
+			create_kept_object_references
 		end
-		
+
+feature {NONE} -- GRID Customization
+
+	row_type: ES_OBJECTS_GRID_ROW is do end
+		-- Type used for row objects.
+		-- May be redefined by EV_GRID descendents.		
+
 feature -- Properties
 
 	name: STRING
 			-- associated name to identify the related grid.
 
-feature -- Access
+	col_pixmap_index: INTEGER
+
+	col_name_index: INTEGER
+	col_value_index: INTEGER
+	col_type_index: INTEGER
+	col_address_index: INTEGER
+	col_context_index: INTEGER
+
+	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
+
+feature -- Number formatting
+
+	hexadecimal_mode_enabled: BOOLEAN
+
+	set_hexadecimal_mode (v: BOOLEAN) is
+		local
+			i: INTEGER
+		do
+			hexadecimal_mode_enabled := v
+				--| update objects grid
+			from
+				i := 1
+			until
+				i > row_count
+			loop
+				propagate_hexadecimal_mode (row (i))
+				i := i + 1
+			end
+		end
+
+	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
+		local
+			l_eb_t: ES_OBJECTS_GRID_LINE
+		do
+			l_eb_t ?= t.data
+			if l_eb_t /= Void then
+				l_eb_t.update_value
+			end
+		end
+
+feature -- Change
+
+	set_columns_layout (
+				a_cols_count: INTEGER;
+				a_col_pixmap_index: INTEGER;
+				a_col_details: ARRAY [TUPLE [INTEGER, INTEGER, STRING]] --| name, address, value, type, context
+				) is
+		require
+			a_col_details.count = 5
+		local
+			i: INTEGER
+		do
+			set_column_count_to (a_cols_count)
+			col_pixmap_index := a_col_pixmap_index
+
+			from
+				i := a_col_details.lower
+			until
+				i > a_col_details.upper
+			loop
+				set_column_layout (a_col_details[i])
+				i := i + 1
+			end
+		end
+
+	set_column_layout (t: TUPLE [INTEGER, INTEGER, STRING]) is
+			-- Index, width, title
+		local
+			c,w: INTEGER
+			s: STRING
+		do
+			c := t.integer_item (1)
+			inspect c
+			when 1 then
+				col_name_index := c
+			when 2 then
+				col_address_index := c
+			when 3 then
+				col_value_index := c
+			when 4 then
+				col_type_index := c
+			when 5 then
+				col_context_index := c
+			else
+			end
+			w := t.integer_item (2)
+			if w > 0 then
+				column (c).set_width (w)
+				s ?= t.item (3)
+				column (c).set_title (s)
+			end
+		end
+
+	set_slices_cmd (v: like slices_cmd) is
+		do
+			slices_cmd := v
+		end
+
+feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
+
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE) is
+		require
+			dv /= Void
+		local
+			litem: ES_OBJECTS_GRID_VALUE_LINE
+		do
+			create litem.make_with_value (dv, Current)
+			if a_line /= Void then
+				litem.set_related_line (a_line)
+			end
+			litem.attach_to_row (a_row)
+		end
+
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+		require
+			dv /= Void
+		do
+			attach_debug_value_from_line_to_grid_row (a_row, dv, Void)
+		end
+
+	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_LINE is
+		require
+			a_row /= Void
+		do
+			Result ?= a_row.data
+		end
+
+	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
+		require
+			valid_address: add /= Void
+		do
+			if objects_grid_item_function /= Void then
+				Result := objects_grid_item_function.item ([add])
+			end
+		ensure
+			valid_result: Result /= Void implies (
+					Result.object_address /= Void
+					and then add.is_equal (Result.object_address)
+				)
+		end
+
+	objects_grid_item_function: FUNCTION [ANY, TUPLE [STRING], ES_OBJECTS_GRID_LINE]
+
+	set_objects_grid_item_function (fct: like objects_grid_item_function) is
+		do
+			objects_grid_item_function := fct
+		end
+
+feature -- Menu
 
 	grid_menu: EV_MENU is
 		local
@@ -74,11 +242,11 @@ feature -- Query
 	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY is
 			-- Return pebble which may be contained in `a_cell'
 		do
-				--| Nota: At this point we could try to return 
+				--| Nota: At this point we could try to return
 				--| special stone depending of the clicked cell
 			Result := grid_pebble_from_row (a_cell.row)
 		end
-		
+
 	grid_pebble_from_row (a_row: EV_GRID_ROW): ANY is
 			-- Return pebble which may be contained in `a_row'
 		local
@@ -93,12 +261,12 @@ feature -- Query
 		end
 
 feature {NONE} -- Actions implementation
-		
+
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
 		do
-			if 
+			if
 				not ev_application.ctrl_pressed
-				and a_item /= Void 
+				and a_item /= Void
 			then
 				Result := grid_pebble_from_cell (a_item)
 			end
@@ -127,7 +295,7 @@ feature {NONE} -- Actions implementation
 				end
 			end
 		end
-		
+
 	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
 		local
 			ei: ES_OBJECTS_GRID_CELL
@@ -139,7 +307,7 @@ feature {NONE} -- Actions implementation
 				end
 			end
 		end
-		
+
 	on_row_expand (a_row: EV_GRID_ROW) is
 		require
 			a_row /= Void
@@ -152,7 +320,7 @@ feature {NONE} -- Actions implementation
 				ctler.call_expand_actions (a_row)
 				process_columns_auto_resizing
 			end
-			request_columns_auto_resizing			
+			request_columns_auto_resizing
 		end
 
 	on_row_collapse (a_row: EV_GRID_ROW) is
@@ -204,10 +372,124 @@ end
 			end
 		end
 
+feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
+
+	create_kept_object_references is
+		do
+			create kept_object_references.make
+			kept_object_references.compare_objects
+		end
+
+	kept_object_references: LINKED_SET [STRING]
+
+	clear_kept_object_references is
+		do
+			release_object_references (kept_object_references)
+			kept_object_references.wipe_out
+		end
+
+	release_object_references (kobjs: LIST [STRING]) is
+		local
+			st: APPLICATION_STATUS
+		do
+			if debugger_manager.application_is_executing then
+				st := debugger_manager.application.status
+				from
+					kobjs.start
+				until
+					kobjs.after
+				loop
+					st.release_object (kobjs.item)
+					kobjs.forth
+				end
+			end
+		end
+
+	keep_object_in_debugger_for_gui_need (add: STRING) is
+		do
+			if not kept_object_references.has (add) then
+				Kept_object_references.extend (add)
+				debugger_manager.application.status.keep_object_for_gui (add)
+			end
+		end
+
+feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
+
+	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY) is
+		do
+			debug ("es_grid_layout")
+				print ("DIFF:: " + grid_objects_id_name_from_row (a_row)
+					+ " => old=[" + a_val.out + "] new=["
+					+ grid_objects_id_value_from_row (a_row, False).out + "]%N")
+			end
+			a_row.set_background_color (Highlight_different_value_bg_color)
+		end
+
+	row_is_ready_for_grid_objects_identification (a_row: EV_GRID_ROW): BOOLEAN is
+		do
+			if a_row.parent /= Void then
+				if Col_name_index <= a_row.count then
+					Result := a_row.item (Col_name_index) /= Void
+				end
+			end
+		end
+
+	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING is
+		local
+			lab: EV_GRID_LABEL_ITEM
+		do
+			if a_row.parent /= Void then
+				if Col_name_index <= a_row.count then
+					lab ?= a_row.item (Col_name_index)
+					if lab /= Void then
+						Result := lab.text
+					end
+				end
+			end
+		end
+
+	grid_objects_id_value_from_row (a_row: EV_GRID_ROW; is_recording_layout: BOOLEAN): ANY is
+		local
+			lab: EV_GRID_LABEL_ITEM
+			s: STRING
+			line: like object_line_from_row
+			addr: STRING
+		do
+			if a_row.parent /= Void then
+				line ?= object_line_from_row (a_row)
+				if line /= Void then
+					addr := line.object_address
+					if addr /= Void then
+						s := addr.twin
+						if is_recording_layout then
+							keep_object_in_debugger_for_gui_need (addr)
+							fixme ("We should 'adopt' the object in order to be sure the address value will stay the same")
+						end
+					end
+				end
+				if s = Void then
+					if Col_value_index <= a_row.count then
+						s := ""
+						lab ?= a_row.item (Col_value_index)
+						if lab /= Void then
+							s.append_string (lab.text)
+						end
+--						if Col_address_index <= a_row.count then
+--							lab ?= a_row.item (Col_address_index)
+--							if lab /= Void then
+--								s.append_string (lab.text)
+--							end
+--						end
+					end
+				end
+			end
+			Result := s
+		end
+
 feature -- Layout manager
 
 	layout_preference: BOOLEAN_PREFERENCE
-	
+
 	on_layout_preferenced_changed is
 		do
 			if layout_preference.value then
@@ -220,7 +502,7 @@ feature -- Layout manager
 				end
 			end
 		end
-	
+
 	initialize_layout_management (v: BOOLEAN_PREFERENCE) is
 		require
 			layout_manager_void: layout_manager = Void
@@ -230,8 +512,12 @@ feature -- Layout manager
 			create layout_manager.make (Current, name)
 			if layout_preference /= Void then
 				layout_preference.change_actions.extend (agent on_layout_preferenced_changed)
-				on_layout_preferenced_changed				
+				on_layout_preferenced_changed
 			end
+			layout_manager.set_row_is_ready_for_identification_agent (agent row_is_ready_for_grid_objects_identification)
+			layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
+			layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
+			layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
 		end
 
 	reset_layout_recorded_values is
@@ -239,13 +525,15 @@ feature -- Layout manager
 			if layout_manager /= Void then
 				layout_manager.reset_layout_recorded_values
 			end
+			clear_kept_object_references
 		end
 
-	clear_layout_manager is
+	reset_layout_manager is
 		do
 			if layout_manager /= Void then
 				layout_manager.wipe_out
 			end
+			clear_kept_object_references
 		end
 
 	enable_layout_management is
@@ -253,9 +541,9 @@ feature -- Layout manager
 			if layout_manager /= Void then
 				layout_manager.enable
 				is_layout_managed := True
-				if 
+				if
 					layout_preference /= Void
-					and then layout_preference.value /= is_layout_managed 
+					and then layout_preference.value /= is_layout_managed
 				then
 					layout_preference.set_value (is_layout_managed)
 				end
@@ -268,9 +556,9 @@ feature -- Layout manager
 				layout_manager.disable
 			end
 			is_layout_managed := False
-			if 
+			if
 				layout_preference /= Void
-				and then layout_preference.value /= is_layout_managed 
+				and then layout_preference.value /= is_layout_managed
 			then
 				layout_preference.set_value (is_layout_managed)
 			end
@@ -281,17 +569,79 @@ feature -- Layout manager
 	layout_manager: ES_OBJECTS_GRID_LAYOUT_MANAGER
 
 	record_layout is
+		local
+			old_kept: like kept_object_references
 		do
 			if is_layout_managed and layout_manager /= Void then
+					--| Pre recording
+				old_kept := kept_object_references
+				create_kept_object_references
+
+					--| Recording
 				layout_manager.record
+
+					--| Post recording
+				release_object_references (old_kept)
 			end
 		end
-		
+
 	restore_layout is
 		do
 			if is_layout_managed and layout_manager /= Void then
 				layout_manager.restore
 			end
 		end
+
+feature -- Graphical look
+
+	Title_font: EV_FONT is
+		once
+			create Result
+			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+		end
+
+	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+		do
+			create Result
+			grid_cell_set_text (Result, s)
+			Result.set_foreground_color (folder_row_fg_color)
+		end
+
+	name_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+		do
+			create Result
+			grid_cell_set_text (Result, s)
+		end
+
+	folder_row_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (60,60,190)
+		end
+
+	object_folder_row_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (60,60,190)
+		end
+
+	slice_row_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (210, 160, 160)
+		end
+
+	disabled_row_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (190, 190, 190)
+		end
+
+	error_row_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (190, 130, 130)
+		end
+
+	Highlight_different_value_bg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (255,210,210)
+		end
+
 
 end

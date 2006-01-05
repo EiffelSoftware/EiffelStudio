@@ -1,4 +1,4 @@
-indexing	
+indexing
 	description: "Tool that evaluates expressions in the debugger"
 	author: "$Author$"
 	date: "$Date$"
@@ -17,7 +17,7 @@ inherit
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap, 
+			pixmap,
 			close
 		end
 
@@ -56,7 +56,7 @@ inherit
 			{NONE} all
 		end
 
-create 
+create
 	make_with_title
 
 feature {NONE} -- Initialization
@@ -81,17 +81,16 @@ feature {NONE} -- Initialization
 			create esgrid.make_with_name ("Watches")
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
-			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
-			esgrid.column (col_name_index).set_width (150)
-			esgrid.column (col_address_index).set_title (col_titles @ col_address_index)
-			esgrid.column (col_address_index).set_width (80)
-			esgrid.column (col_value_index).set_title (col_titles @ col_value_index)
-			esgrid.column (col_value_index).set_width (150)
-			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
-			esgrid.column (col_type_index).set_width (100)
-			esgrid.column (col_context_index).set_title (col_titles @ col_context_index)
-			esgrid.column (col_context_index).set_width (200)
-			
+			esgrid.set_columns_layout ( 5, 1,
+					<<
+						[1, 150, "Expression"],
+						[2, 80, "Address"],
+						[3, 150, "Value"],
+						[4, 100, "Type"],
+						[5, 200, "Context"]
+					>>
+				)
+
 				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
 			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
@@ -102,7 +101,7 @@ feature {NONE} -- Initialization
 				agent esgrid.set_mouse_wheel_scroll_full_page)
 			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
 				agent esgrid.set_scrolling_common_line_count)
-				
+
 			esgrid.row_select_actions.extend (agent on_row_selected)
 			esgrid.row_deselect_actions.extend (agent on_row_deselected)
 			esgrid.drop_actions.extend (agent on_element_drop)
@@ -111,7 +110,7 @@ feature {NONE} -- Initialization
 
 			watches_grid := esgrid
 			initialize_watches_grid_layout (preferences.debug_tool_data.is_watches_grids_layout_managed_preference)
-			
+
 			create_update_on_idle_agent
 		end
 
@@ -122,14 +121,14 @@ feature {NONE} -- Initialization
 			scmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar
-			
+
 			create scmd.make
 			scmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_open_menu)
 			scmd.set_tooltip ("Open Watch tool menu")
 			scmd.add_agent (agent open_watch_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
-			
+
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_new_expression)
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
@@ -177,8 +176,8 @@ feature {NONE} -- Initialization
 			move_up_cmd.set_tooltip ("Move item up")
 			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
 			tbb := move_up_cmd.new_mini_toolbar_item
-			mini_toolbar.extend (tbb)			
-			
+			mini_toolbar.extend (tbb)
+
 			create move_down_cmd.make
 			move_down_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_mini_down)
 			move_down_cmd.set_tooltip ("Move item down")
@@ -186,6 +185,8 @@ feature {NONE} -- Initialization
 			tbb := move_down_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
+				--| Attach the slices_cmd to the objects grid
+			watches_grid.set_slices_cmd (slices_cmd)
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -217,7 +218,7 @@ feature {NONE} -- Initialization
 		end
 
 feature {EB_DEBUGGER_MANAGER} -- Closing
-		
+
 	close is
 		do
 			Precursor
@@ -225,7 +226,7 @@ feature {EB_DEBUGGER_MANAGER} -- Closing
 				unattach_from_notebook
 			end
 		end
-	
+
 feature -- Access
 
 	mini_toolbar: EV_TOOL_BAR
@@ -253,7 +254,7 @@ feature -- Access
 
 	can_refresh: BOOLEAN
 			-- Should we display data when a stone is set?
-			
+
 feature -- Change
 
 	set_title (a_title: like title) is
@@ -267,33 +268,10 @@ feature -- Change
 
 feature -- Properties setting
 
-	hexadecimal_mode_enabled: BOOLEAN
-
 	set_hexadecimal_mode (v: BOOLEAN) is
-		local
-			i: INTEGER
 		do
-			hexadecimal_mode_enabled := v
-				--| update : Stack objects grid
-			from
-				i := 1
-			until
-				i > watches_grid.row_count
-			loop
-				propagate_hexadecimal_mode (watches_grid.row (i))
-				i := i + 1
-			end
+			watches_grid.set_hexadecimal_mode (v)
 		end
-
-	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
-		local
-			l_eb_t: ES_OBJECTS_GRID_LINE
-		do
-			l_eb_t ?= t.data
-			if l_eb_t /= Void then
-				l_eb_t.update_value
-			end
-		end		
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
@@ -333,9 +311,9 @@ feature -- Status setting
 			if can_refresh then
 				cst ?= a_stone
 				if cst /= Void and then application.is_stopped then
-					if 
+					if
 						not Application.is_dotnet
-						or else not Application.imp_dotnet.callback_notification_processing 
+						or else not Application.imp_dotnet.callback_notification_processing
 					then
 						refresh_context_expressions
 					end
@@ -400,7 +378,7 @@ feature -- Status setting
 			manager := a_manager
 			set_explorer_bar (an_explorer_bar)
 		end
-	
+
 feature -- Memory management
 
 	recycle is
@@ -412,6 +390,7 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			recycle_expressions
+			watches_grid.reset_layout_manager
 			clean_watched_grid
 		end
 
@@ -447,7 +426,7 @@ feature {NONE} -- add new expression from the grid
 		local
 			glab: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
 		do
-			if 
+			if
 				new_expression_row = Void
 				or else new_expression_row.is_destroyed
 				or else new_expression_row.parent = Void
@@ -455,7 +434,7 @@ feature {NONE} -- add new expression from the grid
 				new_expression_row := watches_grid.extended_new_row
 				create glab.make_with_text ("...")
 				grid_cell_set_tooltip (glab, "Click here to add a new expression")
-				
+
 				new_expression_row.set_item (1, glab)
 				glab.pointer_double_press_actions.force_extend (agent glab.activate)
 				glab.apply_actions.extend (agent add_new_expression_for_context)
@@ -493,24 +472,24 @@ feature {NONE} -- Event handling
 				create m
 				create mi.make_with_text_and_action ("Create new watch", agent open_new_created_watch_tool)
 				m.extend (mi)
-				if debugger_manager.watch_tool_list.count > 1 then
-					create mi.make_with_text_and_action ("Close " + title, agent debugger_manager.close_watch_tool (Current))
+				if Eb_debugger_manager.watch_tool_list.count > 1 then
+					create mi.make_with_text_and_action ("Close " + title, agent Eb_debugger_manager.close_watch_tool (Current))
 					m.extend (mi)
 				end
 
 				m.show_at (w, ax, ay)
 			end
 		end
-	
+
 	open_new_created_watch_tool is
 		local
 			wt: like Current
 		do
 			if notebook_item /= Void then
-				debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent)
-				wt := debugger_manager.watch_tool_list.last
+				Eb_debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent)
+				wt := Eb_debugger_manager.watch_tool_list.last
 				if wt /= Void then
-					if 
+					if
 						wt.notebook_item /= Void
 						and then wt.notebook_item.tab /= Void
 					then
@@ -528,7 +507,7 @@ feature {NONE} -- Event handling
 			ce: EB_EDITOR
 			l_text: STRING
 		do
-			ce := debugger_manager.debugging_window.current_editor
+			ce := Eb_debugger_manager.debugging_window.current_editor
 			if ce /= Void and then ce.has_selection then
 				l_text := ce.string_selection
 				if l_text.has ('%N') then
@@ -541,7 +520,7 @@ feature {NONE} -- Event handling
 				create dlg.make_new_expression
 			end
 			dlg.set_callback (agent add_expression_with_dialog (dlg))
-			dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+			dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
 
 	edit_expression is
@@ -567,7 +546,7 @@ feature {NONE} -- Event handling
 						check expr /= Void end
 						create dlg.make_with_expression (expr)
 						dlg.set_callback (agent refresh_expression (expr))
-						dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+						dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 					end
 					rows.forth
 				end
@@ -615,7 +594,7 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
+
 	move_processing: BOOLEAN
 
 	move_selected (grid: ES_OBJECTS_GRID; offset: INTEGER) is
@@ -654,10 +633,10 @@ feature {NONE} -- Event handling
 					end
 				end
 				move_processing := False
-				ensure_last_row_is_new_expression_row				
+				ensure_last_row_is_new_expression_row
 			end
 		end
-		
+
 	is_removable (a: ANY): BOOLEAN is
 		do
 			Result := True
@@ -667,7 +646,7 @@ feature {NONE} -- Event handling
 		do
 			remove_selected
 		end
-		
+
 	remove_selected is
 			-- Remove the selected expressions from the list.
 		local
@@ -700,10 +679,10 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
-	remove_expression_row (row: EV_GRID_ROW) is		
+
+	remove_expression_row (row: EV_GRID_ROW) is
 		local
-			l_item: like watched_item_from			
+			l_item: like watched_item_from
 		do
 			l_item ?= watched_item_from (row)
 			watched_items.prune_all (l_item)
@@ -716,7 +695,7 @@ feature {NONE} -- Event handling
 		local
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
-			fost: FEATURED_OBJECT_STONE			
+			fost: FEATURED_OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
 		do
@@ -745,7 +724,7 @@ feature {NONE} -- Event handling
 			end
 			if dlg /= Void then
 				dlg.set_callback (agent add_expression_with_dialog (dlg))
-				dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+				dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 			end
 		end
 
@@ -788,7 +767,7 @@ feature {NONE} -- Event handling
 				edit_expression_cmd.disable_sensitive
 				toggle_state_of_expression_cmd.disable_sensitive
 				move_up_cmd.disable_sensitive
-				move_down_cmd.disable_sensitive				
+				move_down_cmd.disable_sensitive
 			end
 		end
 
@@ -850,7 +829,7 @@ feature {NONE} -- Event handling
 					expand_selected_rows (watches_grid)
 				when {EV_KEY_CONSTANTS}.key_left then
 					collapse_selected_rows (watches_grid)
-				when {EV_KEY_CONSTANTS}.key_enter then					
+				when {EV_KEY_CONSTANTS}.key_enter then
 					if
 						not ev_application.ctrl_pressed
 						and not ev_application.alt_pressed
@@ -862,7 +841,7 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
+
 	string_key_pressed (s: STRING) is
 			-- A key was pressed in `watches_grid'.
 		local
@@ -873,18 +852,18 @@ feature {NONE} -- Event handling
 			if
 				not ev_application.ctrl_pressed
 				and not ev_application.alt_pressed
-			then			
+			then
 				rows := grid_selected_top_rows (watches_grid)
 				if not rows.is_empty then
 					row := rows.first
-					if 
-						col_name_index <= row.count
+					if
+						watches_grid.col_name_index <= row.count
 					then
-						empty_expression_cell ?= row.item (col_name_index)
+						empty_expression_cell ?= row.item (watches_grid.col_name_index)
 						if empty_expression_cell /= Void then
 							if s.is_equal ("%N") then
 								empty_expression_cell.activate
-							else								
+							else
 								empty_expression_cell.activate_with_string (s)
 							end
 						end
@@ -892,7 +871,7 @@ feature {NONE} -- Event handling
 				end
 			end
 		end
-		
+
 	enter_key_pressed (a_grid: ES_OBJECTS_GRID) is
 			-- A [enter] key was pressed in `watches_grid'.
 		local
@@ -904,21 +883,21 @@ feature {NONE} -- Event handling
 				not ev_application.ctrl_pressed
 				and not ev_application.alt_pressed
 				and not ev_application.shift_pressed
-			then					
+			then
 				rows := grid_selected_top_rows (watches_grid)
 				if not rows.is_empty then
 					row := rows.first
-					if 
-						col_name_index <= row.count
+					if
+						watches_grid.col_name_index <= row.count
 					then
-						expression_cell ?= row.item (col_name_index)
+						expression_cell ?= row.item (watches_grid.col_name_index)
 						if expression_cell /= Void then
 							expression_cell.activate
 						end
-					end					
+					end
 				end
 			end
-		end		
+		end
 
 	add_expression_with_dialog (dlg: EB_EXPRESSION_DEFINITION_DIALOG) is
 			-- Add a new expression defined by `dlg'.
@@ -960,8 +939,8 @@ feature {NONE} -- Event handling
 			watched_items.extend (expr_item)
 
 			if expr_item /= Void and then expr_item.row /= Void then
-				if 
-					not expr_item.compute_grid_display_done 
+				if
+					not expr_item.compute_grid_display_done
 					and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))
 				then
 					expr_item.compute_grid_display
@@ -971,14 +950,14 @@ feature {NONE} -- Event handling
 				expr_item.row.enable_select
 			end
 		end
-		
+
 feature {NONE} -- Event handling on notebook item
 
 	on_notebook_item_pointer_button_pressed (ax, ay, ab: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 		require
 			notebook_item /= Void
 		do
-			if 
+			if
 				ab = 3
 				and then not Ev_application.ctrl_pressed
 				and then not Ev_application.shift_pressed
@@ -1019,20 +998,35 @@ feature {NONE} -- Implementation: internal data
 feature -- Grid management
 
 	watches_grid_empty: BOOLEAN
-	
+
 	clean_watched_grid is
 		do
 			if not watches_grid_empty then
-				if record_layout_on_next_clean then
-					watches_grid.record_layout
-					record_layout_on_next_clean := False
-				end
+--				if record_layout_on_next_clean then
+--					watches_grid.record_layout
+--					record_layout_on_next_clean := False
+--				end
 				watches_grid.remove_and_clear_all_rows
 				watches_grid_empty := True
 			end
 		end
-		
-feature {NONE} -- Grid layout Implementation
+
+	record_grid_layout is
+		do
+			if process_record_layout_on_next_recording_request then
+				watches_grid.record_layout
+				process_record_layout_on_next_recording_request := False
+			end
+		end
+
+feature {NONE} -- grid Layout Implementation
+
+	keep_object_reference_fixed (addr: STRING) is
+		do
+			if debugger_manager.application_is_executing then
+				application.status.keep_object_for_gui (addr)
+			end
+		end
 
 	initialize_watches_grid_layout (pv: BOOLEAN_PREFERENCE) is
 		require
@@ -1046,15 +1040,17 @@ feature {NONE} -- Grid layout Implementation
 			check
 				l_grid.layout_manager /= Void
 			end
-			l_grid.layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
-			l_grid.layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
-			l_grid.layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
+
+--			l_grid.layout_manager.set_row_is_ready_for_identification_agent (agent l_grid.row_is_ready_for_grid_objects_identification)
+--			l_grid.layout_manager.set_identification_agent (agent l_grid.grid_objects_id_name_from_row)
+--			l_grid.layout_manager.set_value_agent (agent l_grid.grid_objects_id_value_from_row)
+--			l_grid.layout_manager.set_on_difference_callback (agent l_grid.grid_objects_on_difference_cb)
 			is_grid_layout_initialized := True
 		end
 
 	is_grid_layout_initialized: BOOLEAN
 
-	record_layout_on_next_clean: BOOLEAN
+	process_record_layout_on_next_recording_request: BOOLEAN
 
 feature -- Access
 
@@ -1081,7 +1077,7 @@ feature -- Access
 			end
 			a_item.refresh
 		end
-		
+
 feature -- Update
 
 	update is
@@ -1093,6 +1089,8 @@ feature -- Update
 			l_status := Application.status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
+			else
+				watches_grid.reset_layout_recorded_values
 			end
 		end
 
@@ -1110,12 +1108,12 @@ feature {NONE} -- Implementation
 				eval := True
 			end
 			watches_grid.remove_selection
-			if 
-				watches_grid.row_count > 0 
+			if
+				watches_grid.row_count > 0
 				and not eval
-				and record_layout_on_next_clean
+				and process_record_layout_on_next_recording_request
 			then
-				record_layout_on_next_clean := False
+				process_record_layout_on_next_recording_request := False
 				watches_grid.record_layout
 			end
 
@@ -1151,7 +1149,7 @@ feature {NONE} -- Implementation
 			if eval then
 				watches_grid.restore_layout
 			end
-			record_layout_on_next_clean := eval
+			process_record_layout_on_next_recording_request := eval
 		end
 
 	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM is
@@ -1175,10 +1173,10 @@ feature {NONE} -- Implementation
 			expr /= Void
 			a_grid /= Void
 		do
-			create Result.make_with_expression (expr, Current)
+			create Result.make_with_expression (expr, a_grid)
 			add_watched_item_to_grid (Result, a_grid)
 		end
-		
+
 	add_watched_item_to_grid (witem: like watched_item_from; a_grid: ES_OBJECTS_GRID) is
 		require
 			witem /= Void
@@ -1188,8 +1186,8 @@ feature {NONE} -- Implementation
 				witem.unattach
 			end
 			witem.attach_to_row (a_grid.extended_new_row)
-			ensure_last_row_is_new_expression_row			
-		end		
+			ensure_last_row_is_new_expression_row
+		end
 
 	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM) is
 			--
@@ -1198,7 +1196,7 @@ feature {NONE} -- Implementation
 			w_dlg: EB_INFORMATION_DIALOG
 		do
 			create w_dlg.make_with_text (txt)
-			w_dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+			w_dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
 
 	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE is
@@ -1282,25 +1280,6 @@ feature {NONE} -- Implementation
 	Unevaluated: STRING is ""
 			-- String that is displayed in the "expression" column when an expression was not evaluated.
 			--	expressions.count = watches_grid.row_count
-
-feature {NONE} -- Grid related Constants
-
-	Col_pixmap_index: INTEGER is 1
-	Col_name_index: INTEGER is 1
-	Col_value_index: INTEGER is 2
-	Col_type_index: INTEGER is 3
-	Col_address_index: INTEGER is 4
-	Col_context_index: INTEGER is 5
-
-	Col_titles: ARRAY [STRING] is
-		do
-			create Result.make (1, 5)
-			Result.put ("Expression", Col_name_index)
-			Result.put ("Address", Col_address_index)
-			Result.put ("Value", Col_value_index)
-			Result.put ("Type", Col_type_index)
-			Result.put ("Context", Col_context_index)
-		end	
 
 invariant
 

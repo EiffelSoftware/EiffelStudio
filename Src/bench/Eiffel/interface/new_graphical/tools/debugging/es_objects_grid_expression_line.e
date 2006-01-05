@@ -34,11 +34,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_expression (exp: EB_EXPRESSION; ot: like tool) is
+	make_with_expression (exp: EB_EXPRESSION; g: like parent_grid) is
 		require
 			exp /= Void
 		do
-			make (ot)
+			make_with_grid (g)
 			set_expression (exp)
 			if expression.is_evaluated then
 				expression_evaluator := expression.expression_evaluator
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-		
+
 feature -- Recycling
 
 	recycle is
@@ -71,7 +71,7 @@ feature -- Recycling
 			end
 			evaluation_requested := False
 			refresh_requested := False
-		end		
+		end
 
 feature -- Refresh management
 
@@ -89,7 +89,7 @@ feature -- Refresh management
 			else
 				refresh
 			end
-		ensure		
+		ensure
 			refresh_not_requested: not refresh_requested
 		end
 
@@ -101,7 +101,7 @@ feature -- Refresh management
 			object_address := Void
 			object_dynamic_class := Void
 
-			if 
+			if
 				not evaluation_requested --| i.e: evaluate only on `grid_display_compute'
 				and then expression.is_evaluated
 			then
@@ -148,11 +148,11 @@ feature -- change properties
 		do
 			Precursor (a_item)
 			if expression.evaluation_disabled then
-				a_item.set_foreground_color (tool.disabled_row_fg_color)
+				a_item.set_foreground_color (parent_grid.disabled_row_fg_color)
 			elseif expression.error_occurred then
-				a_item.set_foreground_color (tool.error_row_fg_color)
+				a_item.set_foreground_color (parent_grid.error_row_fg_color)
 			else
-				a_item.set_foreground_color (row.parent.foreground_color)
+				a_item.set_foreground_color (parent_grid.parent.foreground_color)
 			end
 		end
 
@@ -264,7 +264,7 @@ feature -- Graphical changes
 			r: EV_GRID_ROW
 		do
 			r := a_item.row
-			
+
 			new_text := a_item.text
 			if new_text /= Void then
 				new_text.left_adjust
@@ -275,7 +275,7 @@ feature -- Graphical changes
 						set_title (expression.name)
 					end
 				else
-					if 
+					if
 						new_text.is_empty
 					then
 						a_item.set_text (expression.expression)
@@ -330,11 +330,11 @@ feature -- Graphical changes
 			create dlg.make (l_tag, txt)
 			dlg.set_title_and_label ("Watch tool :: error message", "Error message :")
 			dlg.show_modal_to_window (parent_window_from (row.parent.parent))
-		end		
-		
-	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM; 
+		end
+
+	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM;
 				check_if_row_selected: BOOLEAN;
-				ax, ay, abutton: INTEGER; 
+				ax, ay, abutton: INTEGER;
 				ax_tilt, ay_tilt, apressure: DOUBLE;
 				ascreen_x, ascreen_y: INTEGER
 			) is
@@ -343,15 +343,15 @@ feature -- Graphical changes
 		local
 			r: EV_GRID_ROW
 		do
-			if 
+			if
 				abutton = 1
 				and not ev_application.ctrl_pressed
 				and not ev_application.shift_pressed
 				and not ev_application.alt_pressed
 			then
 				r := a_item.row
-				if 	
-					r /= Void 
+				if
+					r /= Void
 					and then (not check_if_row_selected or else r.is_selected)
 				then
 					a_item.activate
@@ -370,7 +370,7 @@ feature -- Graphical changes
 		do
 			if not compute_grid_display_done and not refresh_requested then
 				if evaluation_requested then
-					process_evaluation 
+					process_evaluation
 				elseif row /= Void then
 					check
 						not evaluation_requested
@@ -394,7 +394,7 @@ feature -- Graphical changes
 
 					if expression.evaluation_disabled then
 						set_expression_info ("Disabled")
-						set_expression_result_address (Void)					
+						set_expression_result_address (Void)
 						set_expression_result ("")
 						set_pixmap (Pixmaps.Icon_expression_disabled)
 					elseif not expression.is_evaluated then
@@ -424,7 +424,7 @@ feature -- Graphical changes
 
 							if expression_evaluator.has_error_exception then
 								set_error_pixmap (pixmaps.small_pixmaps.icon_dbg_error)
-							elseif expression_evaluator.has_error_expression 
+							elseif expression_evaluator.has_error_expression
 								or expression_evaluator.has_error_syntax then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							elseif expression_evaluator.has_error_evaluation then

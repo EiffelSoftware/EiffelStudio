@@ -640,6 +640,7 @@ feature -- Actions on all windows
 		local
 			l_managed_windows: like managed_windows
 			cv_dev: EB_DEVELOPMENT_WINDOW
+			pb: EB_PERCENT_PROGRESS_BAR
 		do
 			from
 					-- Make a twin of the list incase window is destroyed during
@@ -652,8 +653,10 @@ feature -- Actions on all windows
 			loop
 				cv_dev ?= l_managed_windows.item
 				if cv_dev /= Void and then not cv_dev.destroyed then
-					cv_dev.status_bar.progress_bar.reset
-					cv_dev.status_bar.progress_bar.set_value (a_value)
+					pb := cv_dev.status_bar.progress_bar
+					pb.reset
+					pb.set_value (a_value)
+					pb.refresh_now
 				end
 				l_managed_windows.forth
 			end

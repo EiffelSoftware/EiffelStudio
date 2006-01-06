@@ -73,7 +73,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			filter_text_box.change_actions.extend (agent update_matches)
-			set_show_hidden_preferences (True)
 		end
 
 feature -- Status Setting

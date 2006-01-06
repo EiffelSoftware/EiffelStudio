@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that ..."
-	author: ""
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +41,7 @@ feature -- Status
 		deferred
 		end
 
-feature -- File access
+feature -- Debug info access
 
 	load_debug_info is
 			-- Load debug information (so far only the breakpoints)
@@ -67,6 +67,21 @@ feature -- File access
 			save_filename.add_extension (Debug_info_extension)
 
 			Application.save_debug_info_into (save_filename)
+		end
+
+
+feature -- Breakpoints access
+
+	resynchronize_breakpoints is
+			-- Resychronize the breakpoints (for instance after a compilation).
+		do
+			Application.resynchronize_breakpoints
+		end
+
+	has_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints (enabled or disabled) ?
+		do
+			Result := Application.debug_info.has_breakpoints
 		end
 
 feature -- Access
@@ -129,7 +144,6 @@ feature -- Change
 		ensure
 			not can_debug
 		end
-
 
 feature -- Debugging events
 

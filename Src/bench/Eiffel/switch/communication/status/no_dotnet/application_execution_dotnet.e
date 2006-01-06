@@ -11,13 +11,13 @@ inherit
 			make
 		end
 
-create {SHARED_APPLICATION_EXECUTION}
+create {APPLICATION_EXECUTION}
 	make
-	
-feature {SHARED_APPLICATION_EXECUTION} -- Initialization
-	
+
+feature {APPLICATION_EXECUTION} -- Initialization
+
 	make is
-			-- 
+			--
 		do
 		end
 
@@ -26,7 +26,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 	load_dotnet_debug_info is
 			-- Load debug information (so far only the breakpoints)
 		do
-		end		
+		end
 
 feature -- Properties
 
@@ -35,7 +35,7 @@ feature -- Properties
 		do
 			Result ?= Application.status
 		end
-		
+
 feature {APPLICATION_EXECUTION} -- Properties
 
 	is_valid_object_address (addr: STRING): BOOLEAN is
@@ -44,29 +44,33 @@ feature {APPLICATION_EXECUTION} -- Properties
 		do
 		end
 
-	keep_only_objects (kept_objects: SET [STRING]) is
+	keep_only_objects (kept_objects: LIST [STRING]) is
 			-- (export status {APPLICATION_EXECUTION})
 		do
 		end
-		
+
 	continue_ignoring_kept_objects is
 		do
 		end
-		
+
 feature -- access
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		do
 		end
-		
+
 	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
 		do
-		end		
+		end
+
+	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+		do
+		end
 
 feature -- Trigger eStudio done
 
 	callback_notification_processing: BOOLEAN is False
-	
+
 feature -- Bridge to Debugger
 
 	exception_occurred: BOOLEAN is
@@ -79,7 +83,7 @@ feature -- Bridge to Debugger
 	exception_message: STRING is
 		do
 		end
-		
+
 	exception_class_name: STRING is
 		do
 		end
@@ -97,7 +101,7 @@ feature -- Bridge to Debugger
 
 	eifnet_debugger: EIFNET_DEBUGGER
 			-- Access to the Dotnet Debugger
-	
+
 feature -- Execution
 
 	run (args, cwd: STRING) is
@@ -112,9 +116,9 @@ feature -- Execution
 		end
 
 	continue (kept_objects: LINKED_SET [STRING]) is
-			-- Continue the running of the application and keep the 
-			-- objects addresses in `kept_objects'. Objects that are not in 
-			-- `kept_objects' will be removed and will be not under the 
+			-- Continue the running of the application and keep the
+			-- objects addresses in `kept_objects'. Objects that are not in
+			-- `kept_objects' will be removed and will be not under the
 			-- control of bench. Therefore, these addresses cannot be
 			-- referenced the next time we stop the application.
 		do
@@ -123,7 +127,7 @@ feature -- Execution
 	interrupt is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
-		do	
+		do
 		end
 
 	notify_newbreakpoint is
@@ -132,7 +136,7 @@ feature -- Execution
 			-- in order to record the new breakpoint(s) before
 			-- automatically resuming its execution.
 		do
-		end		
+		end
 
 	kill is
 			-- Ask the application to terminate itself.

@@ -21,7 +21,7 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PARSER
 
@@ -33,7 +33,7 @@ inherit
 feature -- Initialization
 
 	make (project_dir: PROJECT_DIRECTORY) is
-			-- An Eiffel Project has already been created. 
+			-- An Eiffel Project has already been created.
 			-- We just create the basic structure to enable the retrieving.
 		require
 			not_initialized: not initialized
@@ -64,25 +64,25 @@ feature -- Initialization
 		deletion_agent: PROCEDURE [ANY, TUPLE]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
 	) is
-			-- Create an Eiffel Project. 
+			-- Create an Eiffel Project.
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occurred you must exit from
 			-- application.).
 			--
 			-- Arguments:
 			-- ----------
-			-- project_dir: 
+			-- project_dir:
 			--   Project directory.
 			--
 			-- deletion_requested:
 			--   Should the files present in `project_dir' be removed?
 			--
-			-- deletion_agent: 
-			--   Agent called each time `Deletion_agent_efficiency' files are deleted. 
+			-- deletion_agent:
+			--   Agent called each time `Deletion_agent_efficiency' files are deleted.
 			--   You can set it to `Void' if you don't need any feedback.
 			--
-			-- cancel_agent: 
-			--   Agent called each time `Deletion_agent_efficiency' files are deleted. 
+			-- cancel_agent:
+			--   Agent called each time `Deletion_agent_efficiency' files are deleted.
 			--   Make it return `True' to cancel the operation.
 		require
 			not_initialized: not initialized
@@ -207,14 +207,14 @@ feature -- Access
 			-- Can we compile?
 		do
 			Result := not is_read_only and then
-				(System = Void or else not System.is_precompiled) and then 
+				(System = Void or else not System.is_precompiled) and then
 				initialized and then
 				ace.file_name /= Void and then
 				error_displayer /= Void and then
 				not is_compiling
 		ensure
 			yes_if_ok: Result implies not is_read_only and then
-					initialized and then 
+					initialized and then
 					ace.file_name /= Void and then
 					error_displayer /= Void and then
 					not is_compiling
@@ -228,7 +228,7 @@ feature -- Access
 
 	freezing_occurred: BOOLEAN is
 			-- Did the system have to freeze during melting?
-			-- (True, if new externals are introduce or a 
+			-- (True, if new externals are introduce or a
 			-- new derivation of SPECIAL was made).
 		do
 			Result := Workbench.system_defined and then
@@ -254,7 +254,7 @@ feature -- Access
 		local
 --			proj_dir: PROJECT_DIRECTORY
 --			p: PROJECT_EIFFEL_FILE
-		do	
+		do
 				-- The next two lines commented out by Manus, 23 Aug 98
 				-- Reason: the way how to do the check is incorrect, we need
 				-- to review it completely.
@@ -289,16 +289,16 @@ feature -- Error status
 		do
 			Result := error_status = file_error_status
 		ensure
-			saved_implies: Result implies 
-						error_status = file_error_status 
+			saved_implies: Result implies
+						error_status = file_error_status
 		end
 
 	incomplete_project: BOOLEAN is
 		do
 			Result := error_status = incomplete_project_status
 		ensure
-			saved_implies: Result implies 
-						error_status = incomplete_project_status 
+			saved_implies: Result implies
+						error_status = incomplete_project_status
 		end
 
 	save_error: BOOLEAN is
@@ -307,7 +307,7 @@ feature -- Error status
 			Result := error_status = save_error_status or
 					error_status = precomp_save_error_status
 		ensure
-			saved_implies: Result implies 
+			saved_implies: Result implies
 						(error_status = save_error_status or
 						error_status = precomp_save_error_status)
 		end
@@ -318,23 +318,23 @@ feature -- Error status
 		do
 			Result := error_status = Precomp_save_error_status
 		ensure
-			saved_implies: Result implies 
-						error_status = Precomp_save_error_status 
+			saved_implies: Result implies
+						error_status = Precomp_save_error_status
 		end
 
 	retrieval_error: BOOLEAN is
 			-- Was the project retrieved successful?
 		do
-			Result := 
+			Result :=
 				error_status = retrieve_corrupt_error_status or else
 				error_status = retrieve_interrupt_error_status or else
 				error_status = retrieve_incompatible_error_status
-			
+
 		ensure
-			correct_error: Result implies 
+			correct_error: Result implies
 						error_status = retrieve_corrupt_error_status or else
 						error_status = retrieve_interrupt_error_status or else
-						error_status = retrieve_incompatible_error_status 
+						error_status = retrieve_incompatible_error_status
 		end
 
 	retrieval_interrupted: BOOLEAN is
@@ -342,10 +342,10 @@ feature -- Error status
 		require
 			retrieval_error: retrieval_error
 		do
-			Result := error_status = retrieve_interrupt_error_status 
+			Result := error_status = retrieve_interrupt_error_status
 		ensure
-			correct_error: Result implies 
-						error_status = retrieve_interrupt_error_status 
+			correct_error: Result implies
+						error_status = retrieve_interrupt_error_status
 		end
 
 	is_corrupted: BOOLEAN is
@@ -353,20 +353,20 @@ feature -- Error status
 		require
 			retrieval_error: retrieval_error
 		do
-			Result := error_status = retrieve_corrupt_error_status 
+			Result := error_status = retrieve_corrupt_error_status
 		ensure
-			correct_error: Result implies 
-						error_status = retrieve_corrupt_error_status 
+			correct_error: Result implies
+						error_status = retrieve_corrupt_error_status
 		end
 
 	incompatible_version_number: STRING is
 			-- Incompatible version number of project
-		require	
+		require
 			is_project_incompatible: is_incompatible
 		once
 			create Result.make (0)
 		end
-		
+
 	ace_file_path: STRING
 			-- Path for the ace file as written in the header of each .epr file
 			-- Used when the project can be retrieved.
@@ -379,16 +379,16 @@ feature -- Error status
 		require
 			retrieval_error: retrieval_error
 		do
-			Result := error_status = retrieve_incompatible_error_status 
+			Result := error_status = retrieve_incompatible_error_status
 		ensure
-			correct_error: Result implies 
-						error_status = retrieve_incompatible_error_status 
+			correct_error: Result implies
+						error_status = retrieve_incompatible_error_status
 		end
 
 feature -- Status report
 
 	degree_output: DEGREE_OUTPUT is
-			-- Degree output messages during compilation 
+			-- Degree output messages during compilation
 			-- (By default it redirects output compilation
 			-- messages to io.)
 		do
@@ -431,10 +431,10 @@ feature -- Status setting
 	set_filter_path (f_path: STRING) is
 			-- Set filter_path to `f_path'.
 		require
-			valid_arg: f_path /= Void 
+			valid_arg: f_path /= Void
 		do
 			if not f_path.is_equal (filter_path) then
-				filter_path.make_from_string ( 
+				filter_path.make_from_string (
 					environ.interpreted_string (f_path).twin)
 			end
 		end
@@ -442,7 +442,7 @@ feature -- Status setting
 	set_profile_path (p_path: STRING) is
 			-- Set profile_path to `p_path'.
 		require
-			valid_arg: p_path /= Void 
+			valid_arg: p_path /= Void
 		do
 			if not p_path.is_equal (profile_path) then
 				profile_path.make_from_string (
@@ -453,7 +453,7 @@ feature -- Status setting
 	set_tmp_directory (t_path: STRING) is
 			-- Set tmp_directory to `t_path'.
 		require
-			valid_args: t_path /= Void 
+			valid_args: t_path /= Void
 		do
 			if not t_path.is_equal (tmp_directory) then
 				tmp_directory.wipe_out
@@ -473,17 +473,17 @@ feature -- Update
 				Workbench.recompile
 			end
 			if successful then
-				if Application.has_breakpoints then
+				if Debugger_manager.has_breakpoints then
 					Degree_output.put_resynchronizing_breakpoints_message
-					Application.resynchronize_breakpoints
-				end				
+					Debugger_manager.resynchronize_breakpoints
+				end
 			end
 		end
 
 	melt is
 			-- Incremental recompilation of Eiffel project.
 			-- Raise error messages if necessary if unsuccessful. Otherwize,
-			-- save the project and link driver to precompiled library 
+			-- save the project and link driver to precompiled library
 			-- (if it exists).
 		require
 			able_to_compile: able_to_compile
@@ -499,16 +499,16 @@ feature -- Update
 						link_driver
 					end
 
-					if Application.has_breakpoints then
+					if Debugger_manager.has_breakpoints then
 						Degree_output.put_resynchronizing_breakpoints_message
-						Application.resynchronize_breakpoints
+						Debugger_manager.resynchronize_breakpoints
 					end
 					if
 						not manager.is_project_loaded and then
 						workbench.has_compilation_started
 					then
 						manager.on_project_loaded
-					end		
+					end
 				elseif exit_on_error and then exit_agent /= Void then
 					exit_agent.call (Void)
 				end
@@ -526,7 +526,7 @@ feature -- Update
 		rescue
 				-- Reset `is_compiling' as if we are here, it means that an internal
 				-- error occurred
-			is_compiling_ref.set_item (False)	
+			is_compiling_ref.set_item (False)
 		end
 
 	quick_melt is
@@ -536,8 +536,8 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			if not Compilation_modes.is_precompiling then
-				if 
-					System_defined and then 
+				if
+					System_defined and then
 					Ace.successful and then
 					not Ace.date_has_changed
 				then
@@ -553,7 +553,7 @@ feature -- Update
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
 			freezing_occurred_if_successful: system /= Void and then
-					freezing_occurred implies successful 
+					freezing_occurred implies successful
 		end
 
 	freeze is
@@ -568,7 +568,7 @@ feature -- Update
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-			successful_implies_freezing_occurred: 
+			successful_implies_freezing_occurred:
 					successful implies (freezing_occurred or else workbench.system.il_generation)
 		end
 
@@ -606,7 +606,7 @@ feature -- Update
 			-- depending on the value `workbench_mode'
 		local
 			path: STRING
-			l_cmd: STRING			
+			l_cmd: STRING
 		do
 			if workbench_mode then
 				path := Workbench_generation_path
@@ -614,7 +614,7 @@ feature -- Update
 				path := Final_generation_path
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
-			l_cmd.append (" -silent")			
+			l_cmd.append (" -silent")
 			invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
 
@@ -659,18 +659,18 @@ feature -- Update
 					workbench.has_compilation_started
 				then
 					manager.on_project_loaded
-				end		
+				end
 			end
 		ensure
 			was_saved: successful and then not error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-			successful_implies_freezing_occurred: successful implies freezing_occurred 
+			successful_implies_freezing_occurred: successful implies freezing_occurred
 		rescue
 				-- Reset `is_compiling' as if we are here, it means that an internal
 				-- error occurred
 			is_compiling_ref.set_item (False)
 		end
-	
+
 	finalize_precompile (licensed: BOOLEAN; keep_assertions: BOOLEAN) is
 			-- precompile eiffel project and then finalize it (i.e generate
 			-- optimize C code for workbench mode).
@@ -755,7 +755,7 @@ feature -- Output
 				Comp_system.server_controler.wipe_out
 				saved_workbench := workbench
 				create file_name.make_from_string (Project_directory.name);
-				if Compilation_modes.is_precompiling then 
+				if Compilation_modes.is_precompiling then
 					file_name.set_file_name (dot_workbench)
 				else
 					file_name.set_file_name (System.name)
@@ -932,7 +932,7 @@ feature {NONE} -- Retrieval
 					Comp_system.server_controler.init
 					set_il_parsing (Comp_system.il_generation)
 					Universe.update_cluster_paths
-					
+
 					check_permissions
 
 					if not error_occurred then
@@ -943,7 +943,7 @@ feature {NONE} -- Retrieval
 			end
 		ensure
 			initialized_if_no_error: not error_occurred implies initialized
-			error_implies_ret_or_rw: error_occurred implies 
+			error_implies_ret_or_rw: error_occurred implies
 								retrieval_error or else
 								read_write_error
 		end
@@ -990,7 +990,7 @@ feature {NONE} -- Implementation
 	Retrieve_interrupt_error_status: INTEGER is 10
 	Save_error_status: INTEGER is 11
 	Precomp_save_error_status: INTEGER is 12
-	
+
 	error_status: INTEGER is
 			-- Give last error status.
 		do
@@ -1060,7 +1060,7 @@ feature {E_PROJECT, PRECOMP_R} -- Implementation
 feature {NONE} -- Implementation
 
 	Deletion_agent_efficiency: INTEGER is 50
-		-- When deleting a directory, the callback function is called 
+		-- When deleting a directory, the callback function is called
 		-- each time `Deletion_agent_efficiency' files are deleted
 		--
 		-- Set this value to 1 for a better look, a to 50 for better

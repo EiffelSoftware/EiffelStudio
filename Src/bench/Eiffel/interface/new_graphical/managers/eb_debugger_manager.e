@@ -1,6 +1,6 @@
 indexing
 	description: "Shared object that manages all debugging actions."
-	author: "Xavier Rousselot"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor
+			create implementation
+
 			create debug_run_cmd.make
 			can_debug := True
 			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
@@ -261,13 +263,8 @@ feature -- Access
 feature -- GUI Access
 
 	windows_handle: POINTER is
-		local
-			w_impl: EV_WINDOW_IMP
 		do
-			w_impl ?= debugging_window.window.implementation
-			if w_impl /= Void then
-				Result := w_impl.wel_item
-			end
+			Result := implementation.ev_window_win32_handle (debugging_window.window)
 		end
 
 feature {NONE} -- watch tool numbering
@@ -1491,5 +1488,9 @@ feature {NONE} -- MSIL system implementation
 
 	dll_type: STRING is "dll"
 			-- DLL type constant for MSIL system
+
+feature {NONE} -- specific implementation
+
+	implementation: EB_DEBUGGER_MANAGER_IMP
 
 end -- class EB_DEBUGGER_MANAGER

@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Eb_debugger_manager.application.resynchronize_breakpoints
+				Eb_debugger_manager.resynchronize_breakpoints
 				Window_manager.synchronize_all
 			end
 			if could_not_delete then
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 			Eb_debugger_manager.disable_debug
 			manager.remove_cluster_i (cluster_i)
-			Eb_debugger_manager.application.resynchronize_breakpoints
+			Eb_debugger_manager.resynchronize_breakpoints
 			Window_manager.synchronize_all
 			could_not_delete := False
 		end

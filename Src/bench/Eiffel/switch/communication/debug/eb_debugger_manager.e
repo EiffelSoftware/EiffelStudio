@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			create implementation
 
 			can_debug := True
-			if not eiffel_system.workbench.eiffel_project.batch_mode then
+			if not eiffel_project.batch_mode then
 					--| When compiling in batch mode with the graphical "ec"
 				create debug_run_cmd.make
 				maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth

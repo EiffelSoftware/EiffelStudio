@@ -34,16 +34,17 @@ feature {NONE} -- Initialization
 			Precursor
 			create implementation
 
-			create debug_run_cmd.make
 			can_debug := True
-			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
-			init_commands
+			if not eiffel_system.workbench.eiffel_project.batch_mode then
+					--| When compiling in batch mode with the graphical "ec"
+				create debug_run_cmd.make
+				maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
+				objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
+				debug_splitter_position := preferences.debug_tool_data.main_splitter_position
 
-			objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
-			debug_splitter_position := preferences.debug_tool_data.main_splitter_position
-
-			create watch_tool_list.make
-
+				init_commands
+				create watch_tool_list.make
+			end
 			create observers.make (10)
 		end
 

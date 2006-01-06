@@ -8,23 +8,26 @@ class
 
 inherit
 	TYPED_PREFERENCE [BOOLEAN]
+		redefine
+			set_value
+		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
-	
+
 feature -- Access
-			
+
 	string_value: STRING is
 			-- String representation of `value'.		
 		do
 			Result := value.out
-		end	
-		
+		end
+
 	string_type: STRING is
 			-- String description of this resource type.
 		once
 			Result := "BOOLEAN"
-		end	
+		end
 
 feature -- Query
 
@@ -36,7 +39,17 @@ feature -- Query
 			l_string := a_string.twin
 			l_string.to_lower
 			Result := l_string.is_equal ("true") or l_string.is_equal ("false")
-		end	
+		end
+
+feature -- settings
+
+	set_value (a_value: BOOLEAN) is
+			-- Set the value.
+		do
+			if value /= a_value then
+				Precursor (a_value)
+			end
+		end
 
 feature {PREFERENCES} -- Access
 
@@ -52,11 +65,11 @@ feature -- Status Setting
 			-- Parse the string value `a_value' and set `value'.
 		local
 			l_value: STRING
-		do			
+		do
 			l_value := a_value.twin
 			l_value.to_lower
 			set_value (l_value.is_equal ("true"))
-		end	
+		end
 
 feature {NONE} -- Implementation
 

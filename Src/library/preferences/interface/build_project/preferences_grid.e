@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 			grid.column (2).set_title (l_type)
 			grid.column (3).set_title (l_status)
 			grid.column (4).set_title (l_literal_value)
---			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
---			grid.key_press_actions.extend (agent on_grid_key_pressed)			
+			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
+			grid.key_press_actions.extend (agent on_grid_key_pressed)
 			enable_tree_view
 
 				-- Agents
@@ -71,8 +71,29 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			acc: EV_ACCELERATOR
 		do
-			filter_text_box.change_actions.extend (agent update_matches)
+				--| Toggle hidden preferences display on/off
+			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_h), True, False, True)
+			acc.actions.extend (agent toggle_hiddens)
+			accelerators.extend (acc)
+
+				--| Ctrl+Tab -> toggle flat/structured
+			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab), True, False, False)
+			acc.actions.extend (agent toggle_view)
+			accelerators.extend (acc)
+
+				--| When escape is press, close the dialog
+			set_default_cancel_button (close_button)
+
+				--| Make sure to have the grid focused when dialog is shown
+				--| this way, we can use only keyboard.
+			show_actions.extend (agent on_show)
+
+				--|
+			filter_text_box.change_actions.extend (agent request_update_matches)
+
 		end
 
 feature -- Status Setting
@@ -101,6 +122,13 @@ feature -- Status Setting
 
 feature {NONE} -- Events
 
+	on_show is
+		do
+			if grid.is_displayed then
+				grid.set_focus
+			end
+		end
+
 	on_close is
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
@@ -112,29 +140,69 @@ feature {NONE} -- Events
 	on_preference_changed (a_pref: PREFERENCE) is
 			-- Set the resource value to the newly entered value in the edit item.
 		local
-			l_default_item: EV_GRID_LABEL_ITEM
+			l_row: EV_GRID_ROW
 		do
 			if not grid.selected_rows.is_empty then
-				l_default_item ?= grid.selected_rows.first.item (3)
+				l_row := grid.selected_rows.first
+				preference_changed_on_row (a_pref, l_row, False)
+			end
+		end
 
-				if a_pref.is_default_value then
-					l_default_item.set_text (p_default_value)
-					l_default_item.set_font (default_font)
-				else
-					l_default_item.set_text (user_value)
-					l_default_item.set_font (non_default_font)
-				end
+	preference_changed_on_row (a_pref: PREFERENCE; a_row: EV_GRID_ROW; a_update_value: BOOLEAN) is
+			-- Set the resource value to the newly entered value in the edit item.
+		local
+			l_default_item: EV_GRID_LABEL_ITEM
+			l_selected_row: EV_GRID_ROW
+		do
+			if not grid.selected_rows.is_empty then
+				l_selected_row := grid.selected_rows.first
+			end
 
-				if a_pref.is_auto then
-					l_default_item.set_text (l_default_item.text + " (" + auto_value + ")")
-				end
+			l_default_item ?= a_row.item (3)
+
+			if a_pref.is_default_value then
+				l_default_item.set_text (p_default_value)
+				l_default_item.set_font (default_font)
+			else
+				l_default_item.set_text (user_value)
+				l_default_item.set_font (non_default_font)
+			end
+			if a_pref.is_auto then
+				l_default_item.set_text (l_default_item.text + " (" + auto_value + ")")
+			end
+
+			if a_update_value then
+				a_row.set_item (4, preference_value_column (a_pref))
+			end
+
+			if l_selected_row.parent /= Void and then not l_selected_row.is_selected then
+				l_selected_row.enable_select
 			end
 		end
 
 	on_preference_changed_externally (a_pref: PREFERENCE) is
 			-- Set the resource value to the newly entered value NOT changed in the edit item.
+		local
+			nb: INTEGER
+			r: INTEGER
+			l_row: EV_GRID_ROW
+			l_pref: PREFERENCE
 		do
-			if grid.row_count > 0 then
+			nb := grid.row_count
+			if nb > 0 then
+					--| Find the parent row
+				from
+					r := 1
+				until
+					r > nb or l_row /= Void
+				loop
+					l_pref ?= grid.row (r).data
+					if l_pref /= Void and then l_pref.name.is_equal (a_pref.name) then
+						l_row := grid.row (r)
+						preference_changed_on_row (a_pref, l_row, True)
+					end
+					r := r + 1
+				end
 				--rebuild
 			end
 		end
@@ -246,14 +314,29 @@ feature {NONE} -- Events
 	on_grid_key_pressed (k: EV_KEY) is
 			-- An key was pressed
 		local
+			l_pref: PREFERENCE
 			l_preference_widget: PREFERENCE_WIDGET
+			l_row: EV_GRID_ROW
 		do
 			if k /= Void then
 				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					if not grid.selected_rows.is_empty then
-						l_preference_widget ?= grid.selected_rows.first.item (4).data
-						if l_preference_widget /= Void then
-							l_preference_widget.show
+						l_row :=  grid.selected_rows.first
+						l_pref ?= l_row.data
+						if l_pref /= Void then
+							check l_row.count >= 4 end
+							if l_row.count >= 4 and then l_row.item (4) /= Void then
+								l_preference_widget ?= l_row.item (4).data
+								if l_preference_widget /= Void then
+									l_preference_widget.show
+								end
+							end
+						elseif l_row.is_expandable then
+							if l_row.is_expanded then
+								l_row.collapse
+							else
+								l_row.expand
+							end
 						end
 					end
 				end
@@ -329,6 +412,9 @@ feature {NONE} -- Implementation
 			l_grid_label: EV_GRID_LABEL_ITEM
 			l_pref: PREFERENCE
 		do
+			status_label.set_text ("Building tree view ...")
+			status_label.refresh_now
+
 				-- Retrieve known preferences
 			l_known_pref_hash := preferences.resources
 
@@ -436,10 +522,7 @@ feature {NONE} -- Implementation
 					end
 					l_sorted_preferences.back
 				end
-				if grid.row_count > 0 then
-					grid.column (1).resize_to_content
-					grid.column (1).set_width (grid.column (1).width + column_border_space)
-				end
+				update_grid_columns
 			end
 		end
 
@@ -451,6 +534,9 @@ feature {NONE} -- Implementation
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
 			l_pref: PREFERENCE
 		do
+			status_label.set_text ("Building flat view ...")
+			status_label.refresh_now
+
 			grid_remove_and_clear_all_rows (grid)
 
 				-- Retrieve known preferences				
@@ -484,11 +570,14 @@ feature {NONE} -- Implementation
 	rebuild is
 			-- Rebuild entire grid
 		do
+			grid.clear
+			grid.set_row_count_to (0)
 			if grid.is_tree_enabled then
 				build_structured
 			else
 				build_flat
 			end
+			update_status_bar
 		end
 
 	add_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE) is
@@ -514,7 +603,9 @@ feature {NONE} -- Implementation
 				a_row.insert_subrow (a_row.subrow_count + 1)
 				l_row := a_row.subrow (a_row.subrow_count)
 			end
-			a_pref.change_actions.extend (display_update_agent)
+			if not a_pref.change_actions.has (display_update_agent) then
+				a_pref.change_actions.extend (display_update_agent)
+			end
 			l_row.set_data (a_pref)
 			l_row.select_actions.extend (agent show_resource_description (a_pref))
 
@@ -523,6 +614,9 @@ feature {NONE} -- Implementation
 			l_row.set_item (2, preference_type_column (a_pref))
 			l_row.set_item (3, preference_status_column (a_pref))
 			l_row.set_item (4, preference_value_column (a_pref))
+			if a_pref.is_hidden then
+				l_row.item (1).set_foreground_color (hidden_fg_color)
+			end
 		end
 
 	node_expanded (a_row: EV_GRID_ROW) is
@@ -649,87 +743,37 @@ feature {NONE} -- Implementation
 		local
 			l_column: EV_GRID_COLUMN
 			l_resource: PREFERENCE
+			w: INTEGER
+			nb: INTEGER
 		do
-			if grid.row_count > 0 then
+			nb := grid.row_count
+			if nb > 0 then
 				grid.row (1).enable_select
 				l_column := grid.column (1)
 				if not resized_columns_list.item (1) then
-					l_column.resize_to_content
-					l_column.set_width (l_column.width + column_border_space)
+					w := l_column.required_width_of_item_span (1, nb)
+					l_column.set_width (w + column_border_space)
 				end
 				l_column := grid.column (2)
 				if not resized_columns_list.item (2) then
-					l_column.resize_to_content
-					l_column.set_width (l_column.width + column_border_space)
+					w := l_column.required_width_of_item_span (1, nb)
+					l_column.set_width (w + column_border_space)
 				end
 				l_column := grid.column (3)
 				if not resized_columns_list.item (3) then
-					l_column.resize_to_content
-					l_column.set_width (l_column.width + column_border_space)
+					w := l_column.required_width_of_item_span (1, nb)
+					l_column.set_width (w + column_border_space)
 				end
 				on_window_resize
 				l_resource ?= grid.row (1).data
 				if l_resource /= Void then
 					show_resource_description (l_resource)
 				end
+				if grid.is_displayed and grid.is_sensitive then
+					grid.set_focus
+				end
 			end
 		end
-
---	rebuild_right_list is
---			-- Rebuild right list.  This is used to update the values shown for the currently visible preferences
---			-- in case they have been changed external to this window.
---		local		
---			grid_default_item,
---			grid_value_label_item: EV_GRID_LABEL_ITEM
---			grid_value_drawable_item: EV_GRID_DRAWABLE_ITEM
---			l_resource: PREFERENCE			
---			curr_row: INTEGER
---		do			
---			from
---				visible_preferences.start
---				curr_row := 1
---			until
---				visible_preferences.after
---			loop
---				l_resource := visible_preferences.item
---				grid_default_item ?= grid.row (curr_row).item (3)
---				if grid_default_item /= Void and then l_resource.is_default_value then
---					grid_default_item.set_text (p_default_value)
---					grid_default_item.set_font (default_font)	
---				else
---					grid_default_item.set_text (user_value)
---					grid_default_item.set_font (non_default_font)
---				end
---				if l_resource.is_auto then
---					grid_default_item.set_text (grid_default_item.text + "(" + auto_value + ")")
---				end
---				grid_value_label_item ?= grid.row (curr_row).item (4)
---				if grid_value_label_item /= Void then				
---					grid_value_label_item.set_text (l_resource.string_value)
---				else					
---					grid_value_drawable_item ?= grid.row (curr_row).item (4)
---					if grid_value_drawable_item /= Void then					
---						grid_value_drawable_item.redraw
---					end
---				end
---				curr_row := curr_row + 1
---				
---				visible_preferences.forth
---			end
---		end
-
---	wipe_out_visible_preference_change_action is
---			-- Wipe out the change action setup to notify Current about a change from outside
---		do
---			from	
---				visible_preferences.start
---			until
---				visible_preferences.after
---			loop
---				visible_preferences.item.change_actions.prune_all (display_update_agent)
---				visible_preferences.forth
---			end
---		end		
 
 	toggle_view is
 			-- Toggle voew
@@ -739,6 +783,13 @@ feature {NONE} -- Implementation
 			else
 				enable_tree_view
 			end
+		end
+
+	toggle_hiddens is
+			-- Show/hide hiddens preferences
+		do
+			set_show_hidden_preferences (not show_hidden_preferences)
+			rebuild
 		end
 
 	enable_flat_view is
@@ -778,6 +829,7 @@ feature {NONE} -- Implementation
 			else
 				status_label.set_text (matches.count.out + " matches of " + preferences.resources.count.out + " total preferences")
 			end
+			status_label.refresh_now
 		end
 
 feature {NONE} -- Implementation
@@ -838,69 +890,43 @@ feature {NONE} -- Implementation
 			l_shortcut: SHORTCUT_PREFERENCE
 			l_text: STRING_PREFERENCE
 
-			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
-			l_edit_widget: STRING_PREFERENCE_WIDGET
-			l_choice_widget: CHOICE_PREFERENCE_WIDGET
-			l_font_widget: FONT_PREFERENCE_WIDGET
-			l_color_widget: COLOR_PREFERENCE_WIDGET
-			l_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET
+			l_pref_widget: PREFERENCE_WIDGET
 		do
 			l_bool ?= l_resource
 			if l_bool /= Void then
-					-- Boolean
-				create l_bool_widget.make_with_resource (l_bool)
-				l_bool_widget.change_actions.extend (agent on_preference_changed)
-				a_row.set_item (4, l_bool_widget.change_item_widget)
-				a_row.item (4).set_data (l_bool_widget)
+				create {BOOLEAN_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_bool)
 			elseif l_resource.generating_resource_type.is_equal ("TEXT") then
 				l_text ?= l_resource
-				check
-					l_text_not_void: l_text /= Void
-				end
-					-- Text
-				create l_edit_widget.make_with_resource (l_text)
-				l_edit_widget.change_actions.extend (agent on_preference_changed)
-				a_row.set_item (4, l_edit_widget.change_item_widget)
-				a_row.item (4).set_data (l_edit_widget)
+				check l_text_not_void: l_text /= Void end
+				create {STRING_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_text)
 			elseif l_resource.generating_resource_type.is_equal ("COMBO") then
 				l_array ?= l_resource
 				if l_array /= Void then
-							-- Choice
-					create l_choice_widget.make_with_resource (l_array)
-					l_choice_widget.change_actions.extend (agent on_preference_changed)
-					a_row.set_item (4, l_choice_widget.change_item_widget)
-					a_row.item (4).set_data (l_choice_widget)
+					create {CHOICE_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_array)
 				else
 					l_font ?= l_resource
 					if l_font /= Void then
-							-- Font
-						create l_font_widget.make_with_resource (l_font)
-						l_font_widget.change_actions.extend (agent on_preference_changed)
-						l_font_widget.set_caller (Current)
-						a_row.set_item (4, l_font_widget.change_item_widget)
-						a_row.item (4).set_data (l_font_widget)
-	--					a_row.set_height (l_font.value.height.max (default_row_height))
+						create {FONT_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_font)
+--						a_row.set_height (l_font.value.height.max (default_row_height))
 					else
 						l_color ?= l_resource
 						if l_color /= Void then
-								-- Color
-							create l_color_widget.make_with_resource (l_color)
-							l_color_widget.change_actions.extend (agent on_preference_changed)
-							l_color_widget.set_caller (Current)
-							a_row.set_item (4, l_color_widget.change_item_widget)
-							a_row.item (4).set_data (l_color_widget)
+							create {COLOR_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_color)
+
 						else
 							l_shortcut ?= l_resource
 							if l_shortcut /= Void then
-									-- Shortcut
-								create l_shortcut_widget.make_with_resource (l_shortcut)
-								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
-								a_row.set_item (4, l_shortcut_widget.change_item_widget)
-								a_row.item (4).set_data (l_shortcut_widget)
+								create {SHORTCUT_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_shortcut)
 							end
 						end
 					end
 				end
+			end
+			if l_pref_widget /= Void then
+				l_pref_widget.change_actions.extend (agent on_preference_changed)
+				l_pref_widget.set_caller (Current)
+				a_row.set_item (4, l_pref_widget.change_item_widget)
+				a_row.item (4).set_data (l_pref_widget)
 			end
 		end
 
@@ -949,12 +975,6 @@ feature {NONE} -- Implementation
 			g.selected_rows.count = 0
 		end
 
---	visible_preferences: ARRAYED_LIST [PREFERENCE] is
---			-- List of the preferences currently in view.
---		once
---			create Result.make (10)
---		end
-
 feature {NONE} -- Filtering
 
 	filter_text: STRING is
@@ -964,6 +984,39 @@ feature {NONE} -- Filtering
 			if not grid.is_tree_enabled then
 				Result.append (filter_text_box.text)
 			end
+		end
+
+	update_matches_timeout: EV_TIMEOUT
+
+	request_update_matches is
+		require
+			in_flat_mode: not grid.is_tree_enabled
+		do
+			cancel_delayed_update_matches
+			if update_matches_timeout = Void then
+				create update_matches_timeout
+				update_matches_timeout.actions.extend_kamikaze (agent delayed_update_matches)
+			end
+			update_matches_timeout.set_interval (700)
+		end
+
+	update_matches_requested: BOOLEAN is
+		do
+			Result := update_matches_timeout /= Void
+		end
+
+	cancel_delayed_update_matches is
+		do
+			if update_matches_timeout /= Void then
+				update_matches_timeout.destroy
+				update_matches_timeout := Void
+			end
+		end
+
+	delayed_update_matches is
+		do
+			cancel_delayed_update_matches
+			update_matches
 		end
 
 	update_matches is
@@ -977,6 +1030,9 @@ feature {NONE} -- Filtering
 			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
 		do
+			status_label.set_text ("Updating the view ...")
+			status_label.refresh_now
+
 			matches.wipe_out
 
 			l_known_pref_hash := preferences.resources
@@ -986,29 +1042,33 @@ feature {NONE} -- Filtering
 			l_sorted_preferences.append (create {ARRAYED_LIST [STRING]}.make_from_array (l_known_pref_hash.current_keys))
 			l_sorted_preferences.sort
 
-			l_pref_count := l_sorted_preferences.count
-			if l_pref_count > matches.capacity then
-				matches.resize (l_pref_count)
-			end
-			l_match_text := filter_text
-
-			from
-				l_sorted_preferences.start
-			until
-				l_sorted_preferences.after
-			loop
-				l_preference := l_known_pref_hash.item (l_sorted_preferences.item)
-				if (l_preference.name.has_substring (l_match_text)) and then
-					(show_hidden_preferences or
-					(not show_hidden_preferences and then not l_preference.is_hidden))
-				then
-					matches.extend (l_preference)
+			if not update_matches_requested then
+				l_pref_count := l_sorted_preferences.count
+				if l_pref_count > matches.capacity then
+					matches.resize (l_pref_count)
 				end
-				l_sorted_preferences.forth
+				l_match_text := filter_text
+
+				from
+					l_sorted_preferences.start
+				until
+					l_sorted_preferences.after
+				loop
+					l_preference := l_known_pref_hash.item (l_sorted_preferences.item)
+					if (l_preference.name.has_substring (l_match_text)) and then
+						(show_hidden_preferences or
+						(not show_hidden_preferences and then not l_preference.is_hidden))
+					then
+						matches.extend (l_preference)
+					end
+					l_sorted_preferences.forth
+				end
+				if not update_matches_requested then
+					grid.set_row_count_to (matches.count)
+					grid.clear
+					update_status_bar
+				end
 			end
-			grid.set_row_count_to (matches.count)
-			grid.clear
-			update_status_bar
 		end
 
 	matches: ARRAYED_LIST [PREFERENCE] is
@@ -1022,18 +1082,20 @@ feature {NONE} -- Filtering
 		local
 			l_preference: PREFERENCE
 		do
-			l_preference := matches.i_th (y)
-			inspect x
-			when 1 then
-				Result := preference_name_column (l_preference)
-			when 2 then
-				Result := preference_type_column (l_preference)
-			when 3 then
-				Result := preference_status_column (l_preference)
-			when 4 then
-				Result := preference_value_column (l_preference)
-			else
-				-- Should not get here.
+			if matches.valid_index (y) then
+				l_preference := matches.i_th (y)
+				inspect x
+				when 1 then
+					Result := preference_name_column (l_preference)
+				when 2 then
+					Result := preference_type_column (l_preference)
+				when 3 then
+					Result := preference_status_column (l_preference)
+				when 4 then
+					Result := preference_value_column (l_preference)
+				else
+					-- Should not get here.
+				end
 			end
 		end
 
@@ -1059,6 +1121,11 @@ feature {NONE} -- Private attributes
 		once
 			create Result
 			Result.set_weight ((create {EV_FONT_CONSTANTS}).weight_bold)
+		end
+
+	hidden_fg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (127, 127, 127)
 		end
 
 	grid: EV_GRID

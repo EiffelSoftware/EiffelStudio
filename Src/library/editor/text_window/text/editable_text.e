@@ -356,6 +356,52 @@ feature -- Basic Operations
 			cursor := l_cursor
 		end
 
+	remove_trailing_fake_blanks is
+			-- Remove trailing fake (inserted automatically) blanks,
+			-- this will be recorded in history stack, but invisible to user.
+		local
+			l_token, cursor_token: EDITOR_TOKEN
+			end_loop: BOOLEAN
+			l_cursor: like cursor
+		do
+			l_cursor := cursor
+			cursor_token := l_cursor.token.previous
+			from
+				start
+			until
+				after
+			loop
+				from
+					l_token := current_line.eol_token.previous
+					end_loop := false
+				until
+					l_token = Void or end_loop
+				loop
+					if l_token.is_blank then
+						if l_token.is_fake then
+							if l_token.previous /= Void then
+								l_token.previous.set_next_token (l_token.next)
+							end
+							l_token.next.set_previous_token (l_token.previous)
+							create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
+							history.record_remove_trailing_blank (l_token.image)
+						else
+							end_loop := true
+						end
+					else
+						end_loop := true
+					end
+					if not end_loop then
+						l_token := l_token.previous
+					end
+				end
+				current_line.update_token_information
+				forth
+			end
+			cursor := l_cursor
+		end
+
+
 	insert_char (c: CHARACTER) is
 			-- Insert `c' at the cursor position.
 			-- Delete selection if any.
@@ -417,6 +463,7 @@ feature -- Basic Operations
 				history.record_insert_eol ("")
 			end
 			insert_eol_at_cursor_pos
+			mark_fake_trailing_blank (cursor.line, 1)
 			ignore_cursor_moves := False
 			history.record_move
 			if has_selection then
@@ -1639,9 +1686,47 @@ feature {UNDO_CMD} -- Basic Text changes
 			cursor.set_x_in_characters (char_pos)
 		end
 
-	feature {NONE} -- Implementation
+feature {NONE} -- Implementation
 
-remove_white_spaces is
+	mark_fake_trailing_blank (a_line: EDITOR_LINE; a_number: INTEGER) is
+			-- Mark all trailing blanks as fake ones among `a_number' lines
+			-- starts from `a_line'.
+		require
+			a_line_attached: a_line /= Void
+			a_number_not_negative: a_number >= 0
+		local
+			l_line: EDITOR_LINE
+			i: INTEGER
+			l_token: EDITOR_TOKEN
+			end_loop: BOOLEAN
+		do
+			from
+				l_line := a_line
+				i := 0
+			until
+				i >= a_number or l_line = Void
+			loop
+				from
+					l_token := l_line.eol_token.previous
+					end_loop := false
+				until
+					l_token = Void or end_loop
+				loop
+					if l_token.is_blank then
+						l_token.set_is_fake (true)
+					else
+						end_loop := true
+					end
+					if not end_loop then
+						l_token := l_token.previous
+					end
+				end
+				l_line := l_line.next
+				i := i + 1
+			end
+		end
+
+	remove_white_spaces is
 			-- Remove all consecutive blank spaces on current line
 			-- starting from `cursor' position.
 			-- Undo command will be bound to next inserted

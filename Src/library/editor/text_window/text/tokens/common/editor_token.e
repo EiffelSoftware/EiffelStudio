@@ -10,16 +10,16 @@ deferred class
 inherit
 	EV_FONT_CONSTANTS
 		export
-			{NONE} all		
+			{NONE} all
 		end
-		
+
 	SHARED_EDITOR_FONT
 		rename
 			line_height as height
 		end
 
 	SHARED_EDITOR_DATA
-		
+
 feature -- Access
 
 	image: STRING
@@ -51,7 +51,7 @@ feature -- Status Report
 			-- Is this a blank token?
 		do
 			Result := False
-		end		
+		end
 
 	is_feature_start: BOOLEAN is
 		do
@@ -62,6 +62,9 @@ feature -- Status Report
 
 	is_highlighted: BOOLEAN
 			-- Is current highlighted?
+
+	is_fake: BOOLEAN
+			-- Is current fake?
 
 feature -- Status setting
 
@@ -79,15 +82,23 @@ feature -- Status setting
 			value_set: is_selectable = a_flag
 		end
 
+	set_is_fake (a_fake: BOOLEAN) is
+			-- Set `is_fake' to `a_fake'.
+		do
+			is_fake := a_fake
+		ensure
+			value_set: is_fake = a_fake
+		end
+
 feature -- Visitor
 
 	process (a_visitor: TOKEN_VISITOR) is
-			-- 
+			--
 		require
 			visitor_not_void: a_visitor /= Void
 		do
 			a_visitor.process_basic_token (image)
-		end		
+		end
 
 feature -- Linkable functions
 
@@ -133,7 +144,7 @@ feature -- Display
 			-- at the coordinates (`position',`d_y')
 		deferred
 		end
-		
+
 	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc' at the coordinates (`x',`d_y')
 		deferred
@@ -163,7 +174,7 @@ feature -- Display
 			-- Highlight
 		do
 			is_highlighted := True
-		end		
+		end
 
 feature -- Width & height
 
@@ -171,7 +182,7 @@ feature -- Width & height
 			-- Width in pixel of the entire token.
 		deferred
 		end
-	
+
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
@@ -193,7 +204,7 @@ feature -- Width & height
 
 	update_width is
 			-- update value of `width'
-		do	
+		do
 		end
 
 feature {EDITOR_TOKEN} -- Properties used to display the token
@@ -205,7 +216,7 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 
 	background_color: EV_COLOR is
 		do
-			if is_highlighted then				
+			if is_highlighted then
 				Result := editor_preferences.highlight_color
 			else
 				Result := editor_preferences.normal_background_color
@@ -221,11 +232,11 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 		do
 			Result := editor_preferences.selection_background_color
 		end
-	
+
 	focus_out_selected_background_color: EV_COLOR is
 		do
-			Result := editor_preferences.focus_out_selection_background_color	
-		end		
+			Result := editor_preferences.focus_out_selection_background_color
+		end
 
 feature -- Implementation of clickable and editable text
 
@@ -258,7 +269,7 @@ feature -- Implementation of clickable and editable text
 		end
 
 invariant
-	image_not_void: image /= Void	
+	image_not_void: image /= Void
 	width_positive_or_null: width >= 0
 	previous = Void implies position = 0
 

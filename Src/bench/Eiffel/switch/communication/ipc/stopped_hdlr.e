@@ -144,7 +144,6 @@ feature -- Execution
 
 					need_to_resend_bp := True
 					need_to_stop := True
-					print ("stop : " + stopping_reason.out + " %N")
 
 					if stopping_reason = Pg_break then
 							--| debuggee stopped on a Breakpoint
@@ -156,13 +155,10 @@ feature -- Execution
 
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
-						print ("break %N")
 						if application.is_breakpoint_set (cse.routine, cse.break_index) then
-							print ("breakpoint %N")
 							expr := Application.condition (cse.routine, cse.break_index)
 							if expr /= Void then
 									--| if the breakpoint is conditional, tests the condition.
-								print ("Condition="+ expr.expression +" %N")
 								expr.evaluate
 								evaluator := expr.expression_evaluator
 								need_to_stop := evaluator.error_occurred or else evaluator.final_result_is_true_boolean_value
@@ -171,7 +167,6 @@ feature -- Execution
 							end
 						end
 					end
-					print ("need_to_stop : " + need_to_stop.out + " %N")
 					if need_to_stop then
 							--| Now that we know the debuggee will be really stopped
 							--| Let get the effective call stack (not the dummy)

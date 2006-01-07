@@ -696,6 +696,9 @@ feature -- Syntax completion
 				end_line_tokens := et
 				restore_tokens_properties_one_line (ln)
 				history.record_move
+				if line_nb < number_of_lines then
+					mark_fake_trailing_blank (line (line_nb + 1), to_be_inserted.occurrences ('%N'))
+				end
 			end
 		end
 
@@ -717,6 +720,7 @@ feature {NONE}-- click information update
 				begin_line_tokens.after or else tok = Void or else stop
 			loop
 				if begin_line_tokens.item.image.is_equal (tok.image) then
+					tok.set_is_fake (begin_line_tokens.item.is_fake)
 					tc ?= tok
 						-- skip token if commented
 					if tc = Void then
@@ -737,6 +741,9 @@ feature {NONE}-- click information update
 					tok := tok.next
 					begin_line_tokens.forth
 				else
+					if begin_line_tokens.item.is_blank and then tok.is_blank then
+						tok.set_is_fake (begin_line_tokens.item.is_fake)
+					end
 					stop := True
 				end
 			end
@@ -748,6 +755,7 @@ feature {NONE}-- click information update
 				end_line_tokens.after or else tok = Void or else stop
 			loop
 				if end_line_tokens.item.image.is_equal (tok.image) then
+					tok.set_is_fake (end_line_tokens.item.is_fake)
 					tc ?= tok
 						-- skip token if commented
 					if tc = Void then
@@ -768,6 +776,9 @@ feature {NONE}-- click information update
 					tok := tok.previous
 					end_line_tokens.forth
 				else
+					if end_line_tokens.item.is_blank and then tok.is_blank then
+						tok.set_is_fake (end_line_tokens.item.is_fake)
+					end
 					stop := True
 				end
 			end

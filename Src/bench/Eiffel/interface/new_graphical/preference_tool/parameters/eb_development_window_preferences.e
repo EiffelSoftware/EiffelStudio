@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end	
+		end
 
 feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 
@@ -60,7 +60,7 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 
 	is_minimized: BOOLEAN
 			-- Is the development window minimized?
-		
+
 
 	left_panel_use_explorer_style: BOOLEAN is
 			-- Should there be only one tool in the left panel?
@@ -89,7 +89,7 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 	show_general_toolbar: BOOLEAN is
 			-- Show the general toolbar (New, Save, Cut, ...)?
 		do
-			Result := show_general_toolbar_preference.value 
+			Result := show_general_toolbar_preference.value
 		end
 
 	show_text_in_general_toolbar: BOOLEAN is
@@ -121,69 +121,69 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 		do
 			Result := show_search_options_preference.value
 		end
-		
+
 	general_toolbar_layout: ARRAY [STRING] is
 			-- Toolbar organization
 		do
 			Result := general_toolbar_layout_preference.value
 		end
-		
+
 	max_history_size: INTEGER is
 			-- Maximum number of items displayed in the history (in the address combo boxes).
 		do
 			Result := max_history_size_preference.value
 		end
-		
+
 	use_animated_icons: BOOLEAN is
 			-- Should window status bar use animated icons?
 		do
 			Result := use_animated_icons_preference.value
-		end		
-	 
+		end
+
 	remember_completion_list_size: BOOLEAN is
-			-- 
+			--
 		do
 			Result := remember_completion_list_size_preference.value
 		end
-		
+
 	completion_list_width: INTEGER is
-			-- 
+			--
 		do
 			Result := completion_list_width_preference.value
 		end
-	
+
 	completion_list_height: INTEGER is
-			-- 
-		do			
+			--
+		do
 			Result := completion_list_height_preference.value
 		end
 
 	progress_bar_color: EV_COLOR is
-			-- 
+			--
 		do
-			Result := progress_bar_color_preference.value	
+			Result := progress_bar_color_preference.value
 		end
-		
+
 	ctrl_right_click_receiver: STRING is
-			-- 
+			--
 		do
 			Result := ctrl_right_click_receiver_preference.selected_value
-		end	
+		end
 
 	class_completion: BOOLEAN is
-			-- 
+			--
 		do
 			Result := class_completion_preference.value
-		end		
-	
+		end
+
 	dock_tracking: BOOLEAN is
-			-- 
+			--
 		do
 			Result := dock_tracking_preference.value
 		end
-	
+
 	last_browsed_cluster_directory: STRING is
-			-- 
+			--
 		do
 			Result := last_browsed_cluster_directory_preference.value
 		end
@@ -202,10 +202,10 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	show_eiffel_studio_debug_preference: BOOLEAN_PREFERENCE
  			-- Should Eiffel Studio Debug menu be shown?
-	
+
 	show_debug_menu_with_accelerator_preference: BOOLEAN_PREFERENCE
 			-- When `show_eiffel_studio_debug_preference' is Ture, whether show eiffel studio debug menu by accelerator?
-	
+
 	width_preference: INTEGER_PREFERENCE
 			-- Width for the development window
 
@@ -250,34 +250,34 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	show_search_options_preference: BOOLEAN_PREFERENCE
 			-- Are search tool options displayed ?
-			
+
 	general_toolbar_layout_preference: ARRAY_PREFERENCE
-			-- 
+			--
 
 	max_history_size_preference: INTEGER_PREFERENCE
 
 	remember_completion_list_size_preference: BOOLEAN_PREFERENCE
-		
+
 	completion_list_width_preference: INTEGER_PREFERENCE
-	
+
 	completion_list_height_preference: INTEGER_PREFERENCE
 
 	progress_bar_color_preference: COLOR_PREFERENCE
 
-	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE	
+	ctrl_right_click_receiver_preference: ARRAY_PREFERENCE
 
 	class_completion_preference: BOOLEAN_PREFERENCE
 
 	dock_tracking_preference: BOOLEAN_PREFERENCE
 
-	last_browsed_cluster_directory_preference: STRING_PREFERENCE	
+	last_browsed_cluster_directory_preference: STRING_PREFERENCE
 
 	context_unified_stone_preference: BOOLEAN_PREFERENCE
 
-	graphical_output_disabled_preference: BOOLEAN_PREFERENCE			
-		
-	use_animated_icons_preference: BOOLEAN_PREFERENCE	
-		
+	graphical_output_disabled_preference: BOOLEAN_PREFERENCE
+
+	use_animated_icons_preference: BOOLEAN_PREFERENCE
+
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER) is
@@ -334,12 +334,12 @@ feature -- Element change
 		end
 
 	save_show_search_options (a_show_options: BOOLEAN) is
-			-- 
+			--
 		do
 			show_search_options_preference.set_value (a_show_options)
 			preferences.save_resource (show_search_options_preference)
 		end
-		
+
 	save_completion_list_size (a_width, a_height: INTEGER) is
 			-- Save the size of the completion list
 		do
@@ -347,18 +347,18 @@ feature -- Element change
 			completion_list_height_preference.set_value (a_height)
 			preferences.save_resource (completion_list_width_preference)
 			preferences.save_resource (completion_list_height_preference)
-		end		
-		
+		end
+
 feature -- Basic operations
 
 	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
-			-- Retreive the general toolbar using the available commands in `command_pool' 
+			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
 		end
 
 feature {NONE} -- Preference Strings
-	
+
 	show_eiffel_studio_debug_menu: STRING is "interface.development_window.show_eiffel_studio_debug_menu"
 	show_debug_menu_with_accelerator: STRING is "interface.development_window.show_debug_menu_with_accelerator"
 	width_string: STRING is "interface.development_window.width"
@@ -387,7 +387,7 @@ feature {NONE} -- Preference Strings
 	dock_tracking_string: STRING is "interface.development_window.dock_tracking"
 	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
-	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"	
+	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
 
 feature {NONE} -- Implementation
@@ -395,10 +395,10 @@ feature {NONE} -- Implementation
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER	
-		do		
-			create l_manager.make (preferences, "development_window")	
-		
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "development_window")
+
 			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 490)
 			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 500)
 			x_position_preference := l_manager.new_integer_resource_value (l_manager, x_position_string, 10)
@@ -413,21 +413,21 @@ feature {NONE} -- Implementation
 			show_text_in_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_text_in_general_toolbar_string, False)
 			show_all_text_in_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_general_toolbar_string, False)
 			show_address_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_address_toolbar_string, True)
-			show_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_project_toolbar_string, False)			
-			show_search_options_preference := l_manager.new_boolean_resource_value (l_manager, search_tool_show_options_string, True)	
+			show_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_project_toolbar_string, False)
+			show_search_options_preference := l_manager.new_boolean_resource_value (l_manager, search_tool_show_options_string, True)
 			max_history_size_preference := l_manager.new_integer_resource_value (l_manager, max_history_size_string, 10)
 			remember_completion_list_size_preference := l_manager.new_boolean_resource_value (l_manager, remember_completion_list_size_string, True)
 			completion_list_height_preference := l_manager.new_integer_resource_value (l_manager, completion_list_height_string, 100)
 			completion_list_width_preference := l_manager.new_integer_resource_value (l_manager, completion_list_width_string, 80)
 			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
-			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"[new_window];editor;context;new_editor;new_context;external">>)	
+			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"[new_window];editor;context;new_editor;new_context;external">>)
 			ctrl_right_click_receiver_preference.set_is_choice (True)
 			class_completion_preference := l_manager.new_boolean_resource_value (l_manager, class_completion_string, True)
 			dock_tracking_preference := l_manager.new_boolean_resource_value (l_manager, dock_tracking_string, True)
 			last_browsed_cluster_directory_preference := l_manager.new_string_resource_value (l_manager, last_browsed_cluster_directory_string, "")
 			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
-			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
-			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)			
+			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)
+			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)
 			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
 			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_resource_value (l_manager, show_debug_menu_with_accelerator, True)
 		end
@@ -450,9 +450,9 @@ invariant
 	show_text_in_general_toolbar_preference_not_void: show_text_in_general_toolbar_preference /= Void
 	show_all_text_in_general_toolbar_preference_not_void: show_all_text_in_general_toolbar_preference /= Void
 	show_address_toolbar_preference_not_void: show_address_toolbar_preference /= Void
-	show_project_toolbar_preference_not_void: show_project_toolbar_preference /= Void	
+	show_project_toolbar_preference_not_void: show_project_toolbar_preference /= Void
 	show_search_options_preference_not_void: show_search_options_preference /= Void
 	general_toolbar_layout_preference_not_void: general_toolbar_layout_preference /= Void
 	max_history_size_preference_not_void: max_history_size_preference /= Void
-	
+
 end -- class EB_DEVELOPMENT_WINDOW_PREFERENCES

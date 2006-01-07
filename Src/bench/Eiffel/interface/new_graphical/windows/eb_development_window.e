@@ -2338,10 +2338,14 @@ feature -- Resource Update
 					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
 				end
 			end
+				-- Remove trailing blanks.
 			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
 				editor_tool.text_area.text_displayed.remove_trailing_blanks
-				editor_tool.text_area.refresh_now
+			else
+				editor_tool.text_area.text_displayed.remove_trailing_fake_blanks
 			end
+			editor_tool.text_area.refresh_now
+
 			if editor_tool.text_area.open_backup then
 				create dial.make_with_text(Warning_messages.w_save_backup)
 				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)

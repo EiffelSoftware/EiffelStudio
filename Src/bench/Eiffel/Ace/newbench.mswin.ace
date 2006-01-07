@@ -81,7 +81,7 @@ default
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("il_info_trace")
-	disabled_debug ("larry")
+	disabled_debug ("docking")
 	disabled_debug ("lex_output")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("log_exceptions")
@@ -128,7 +128,6 @@ default
 
 cluster
 	override:		"$EIFFEL_SRC\Eiffel\override"
-
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude

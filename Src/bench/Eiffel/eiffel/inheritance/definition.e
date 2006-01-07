@@ -5,19 +5,19 @@ indexing
 	revision: "$Revision$"
 
 class
-	DEFINITION 
+	DEFINITION
 
 inherit
 	FEATURE_ADAPTATION
 		redefine
 			check_redeclaration
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-		
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -33,7 +33,7 @@ feature -- Status Report
 		do
 			Result := True
 		end
-		
+
 feature -- Checking
 
 	check_adaptation (feat_tbl: FEATURE_TABLE) is
@@ -86,7 +86,7 @@ feature -- Checking
 					-- context of `feat_tbl' and take care of possible
 					-- redeclarations of anchored types.
 				feature_i.solve_types (tbl)
-				
+
 					-- Signature checking
 				new_feature.check_signature (feature_i, tbl)
 
@@ -127,10 +127,7 @@ feature -- Checking
 							-- attribute. If possible, take the same given
 							-- during a previous compilation
 						old_attribute ?= old_tbl.item_id (l_attribute.feature_name_id)
-						if 	old_attribute /= Void
-							and then
-							old_attribute.has_function_origin
-						then
+						if old_attribute /= Void and then old_attribute.has_function_origin then
 							new_rout_id := old_attribute.rout_id_set.first
 						else
 							new_rout_id := l_attribute.new_rout_id

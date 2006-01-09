@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			convertors := co
 			features := f
 			invariant_part := inv
+			internal_invariant := inv
 			has_externals := he
 			if
 				invariant_part /= Void and then
@@ -98,6 +99,7 @@ feature {NONE} -- Initialization
 			obsolete_message_set: obsolete_message = o
 			has_externals_set: has_externals = he
 			end_keyword_not_void: end_keyword = ed
+			internal_invariant_set: internal_invariant = inv
 		end
 
 feature -- Visitor
@@ -130,15 +132,28 @@ feature -- Roundtrip
 	obsolete_keyword: KEYWORD_AS
 			-- keyword "obsolete" associated with this class	
 
-	header_mark: CLASS_HEADER_MARK_AS
-			-- Header mark of this class
+	frozen_keyword,
+	expanded_keyword,
+	deferred_keyword,
+	separate_keyword,
+	external_keyword: KEYWORD_AS
+			-- Keywords that may appear in header mark
 
-	set_header_mark (k_as: CLASS_HEADER_MARK_AS) is
-			-- Set `header_mark' with `k_as'.
+	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_separate_keyword, a_external_keyword: KEYWORD_AS) is
+			-- Set header marks of a class.
 		do
-			header_mark := k_as
+			frozen_keyword := a_frozen_keyword
+			expanded_keyword := a_expanded_keyword
+			deferred_keyword := a_deferred_keyword
+			separate_keyword := a_separate_keyword
+			external_keyword := a_external_keyword
 		ensure
-			header_mark_set: header_mark = k_as
+			header_mark_set:
+				(frozen_keyword = a_frozen_keyword) and
+				(expanded_keyword = a_expanded_keyword) and
+				(deferred_keyword = a_deferred_keyword) and
+				(separate_keyword = a_separate_keyword) and
+				(external_keyword = a_external_keyword)
 		end
 
 	set_class_keyword (k_as: KEYWORD_AS) is
@@ -179,6 +194,8 @@ feature -- Roundtrip
 
 	internal_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Internal formal generic parameter list
+
+	internal_invariant: like invariant_part
 
 feature -- Attributes
 
@@ -316,22 +333,28 @@ feature -- Status report
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if top_indexes /= Void then
-				Result := top_indexes.start_location
+			if a_list = Void then
+				if top_indexes /= Void then
+					Result := top_indexes.complete_start_location (a_list)
+				else
+					Result := class_name.complete_start_location (a_list)
+				end
 			else
-				Result := class_name.start_location
+				Result := a_list.i_th (1).complete_start_location (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := end_keyword
+			if a_list = Void then
+				Result := end_keyword.complete_end_location (a_list)
+			else
+				Result := a_list.last.complete_end_location (a_list)
+			end
 		end
 
 feature {EIFFEL_PARSER} -- Element change
@@ -522,5 +545,5 @@ feature {COMPILER_EXPORTER} -- Setting
 
 invariant
 	convertors_valid: convertors /= Void implies not convertors.is_empty
-	
+
 end -- class CLASS_AS

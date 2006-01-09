@@ -68,24 +68,26 @@ feature -- Roundtrip
 	internal_keys: EIFFEL_LIST [STRING_AS]
 			-- Internal debug keys			
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if keys /= Void then
-				Result := keys.start_location
-			elseif compound /= Void then
-				Result := compound.start_location
+			if a_list = Void then
+				if keys /= Void then
+					Result := keys.complete_start_location (a_list)
+				elseif compound /= Void then
+					Result := compound.complete_start_location (a_list)
+				else
+					Result := end_keyword.complete_start_location (a_list)
+				end
 			else
-				Result := end_keyword
+				Result := debug_keyword.complete_start_location (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := end_keyword
+			Result := end_keyword.complete_end_location (a_list)
 		end
 
 feature -- Access

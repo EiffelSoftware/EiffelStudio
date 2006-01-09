@@ -45,18 +45,20 @@ feature -- Attribute
 	feature_name: FEATURE_NAME
 			-- Feature name to address
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := feature_name.start_location
+			if a_list = Void then
+				Result := feature_name.complete_start_location (a_list)
+			else
+				Result := address_symbol.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := feature_name.end_location
+			Result := feature_name.complete_end_location (a_list)
 		end
 
 feature -- Comparison

@@ -50,21 +50,23 @@ feature -- Access
 	tuple: TUPLE_AS
 			-- Tuple for addition custom attribute settings.
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := creation_expr.start_location
+			Result := creation_expr.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if tuple /= Void then
-				Result := tuple.end_location
+			if a_list = Void then
+				if tuple /= Void then
+					Result := tuple.complete_end_location (a_list)
+				else
+					Result := creation_expr.complete_end_location (a_list)
+				end
 			else
-				Result := creation_expr.end_location
+				Result := end_keyword.complete_end_location (a_list)
 			end
 		end
 

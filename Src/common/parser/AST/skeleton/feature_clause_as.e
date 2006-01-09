@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients; f: like features; l: like feature_location) is
+	initialize (c: like clients; f: like features; l: like feature_location; ep: INTEGER) is
 			-- Create a new FEATURE_CLAUSE AST node.
 		require
 			f_not_void: f /= Void
@@ -25,10 +25,12 @@ feature {NONE} -- Initialization
 			clients := c
 			features := f
 			feature_location := l
+			feature_clause_end_position := ep - 1
 		ensure
 			clients_set: clients = c
 			features_set: features = f
 			feature_location_set: feature_location = l
+			feature_clause_end_position_set: feature_clause_end_position = ep - 1
 		end
 
 feature -- Visitor
@@ -38,6 +40,10 @@ feature -- Visitor
 		do
 			v.process_feature_clause_as (Current)
 		end
+
+feature -- Roundtrip
+
+	feature_clause_end_position: INTEGER
 
 feature -- Attributes
 
@@ -50,26 +56,28 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_AS]
 			-- Features
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			Result := feature_location
 		end
-		
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if not features.is_empty then
-				Result := features.end_location
-			elseif clients /= Void then
-				Result := clients.end_location
+			if a_list = Void then
+				if not features.is_empty then
+					Result := features.end_location
+				elseif clients /= Void then
+					Result := clients.end_location
+				else
+					Result := feature_location
+				end
 			else
-				Result := feature_location
+				create Result.make (0, 0, feature_clause_end_position, 0)
 			end
 		end
-		
+
 feature -- Comments
 
 	comment (class_text: STRING): STRING is
@@ -191,10 +199,10 @@ feature -- Access
 		end
 
 	has_equiv_declaration (other: like Current): BOOLEAN is
-			-- Has this feature clause a declaration equivalent to `other' 
+			-- Has this feature clause a declaration equivalent to `other'
 			-- feature clause? i.e. `feature {CLIENTS}'
-			--| NB: The comments are NOT considered for the moment, since 
-			--| comments are not an attribute, but are to be retrieved from 
+			--| NB: The comments are NOT considered for the moment, since
+			--| comments are not an attribute, but are to be retrieved from
 			--| the file that contains the source code.
 		do
 			if other = Void then
@@ -210,7 +218,7 @@ feature -- Access
 		require
 			valid_other: other /= Void
 		do
-			Result := 
+			Result :=
 				equivalent (clients, other.clients) and then
 				equivalent (features, other.features)
 		end

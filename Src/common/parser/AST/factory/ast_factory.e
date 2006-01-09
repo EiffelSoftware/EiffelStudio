@@ -176,11 +176,6 @@ feature -- Roundtrip: New AST node
 			create Result.initialize (t_as, c, l, co, p, n)
 		end
 
-	new_class_header_mark_as (f_as, e_as, d_as, s_as, ex_as: KEYWORD_AS): CLASS_HEADER_MARK_AS is
-			-- New CLASS_HEADER_MARK AST node.
-		do
-		end
-
 feature -- Number AST creation
 
 	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
@@ -205,7 +200,7 @@ feature -- Number AST creation
 				a_psr.report_invalid_type_for_integer_error (a_type, buffer)
 			end
 				-- Remember original token
-			token_value := buffer
+			token_value := buffer.twin
 				-- Remove underscores (if any) without breaking
 				-- original token
 			if token_value.has ('_') then
@@ -213,12 +208,12 @@ feature -- Number AST creation
 				token_value.prune_all ('_')
 			end
 			if token_value.is_number_sequence then
-				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as)
+				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			elseif
 				token_value.item (1) = '0' and then
 				token_value.item (2).lower = 'x'
 			then
-				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as)
+				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			end
 			if Result = Void or else not Result.is_initialized then
 				if sign_symbol = '-' then
@@ -229,7 +224,7 @@ feature -- Number AST creation
 					a_psr.report_integer_too_large_error (buffer)
 				end
 					-- Dummy code (for error recovery) follows:
-				Result := new_integer_as (a_type, False, "0", Void, s_as)
+				Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)
 			end
 			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
@@ -260,7 +255,7 @@ feature -- Number AST creation
 			else
 				l_buffer := buffer
 			end
-			Result := new_real_as (a_type, buffer, l_buffer, s_as)
+			Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
 
@@ -358,14 +353,14 @@ feature -- Roundtrip: leaf_as
 		end
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
-			-- New KEYWORD AST node	all Eiffel symbols except "[" and "]"
+			-- New symbol AST node	all Eiffel symbols except "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
 		do
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
-			-- New KEYWORD AST node	only for symbol "[" and "]"
+			-- New symbol AST node	only for symbol "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
 			a_code_is_squre: a_code = {EIFFEL_TOKENS}.te_lsqure or a_code = {EIFFEL_TOKENS}.te_rsqure
@@ -430,6 +425,24 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
+	new_break_as (a_scn: EIFFEL_SCANNER) is
+			-- NEw BREAK_AS node
+		do
+		end
+
+	new_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
+			-- New COMMENT_AS node
+		require
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
+			n_non_negative: n >= 0
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.is_empty
+		do
+		end
+
+
 feature -- Access
 
 	new_access_assert_as (f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): ACCESS_ASSERT_AS is
@@ -472,19 +485,19 @@ feature -- Access
 			end
 		end
 
-	new_address_current_as (other: CURRENT_AS): ADDRESS_CURRENT_AS is
+	new_address_current_as (other: CURRENT_AS; a_as: SYMBOL_AS): ADDRESS_CURRENT_AS is
 			-- New ADDRESS_CURRENT AST node
 		do
 			if other /= Void then
-				create Result.make_from_other (other)
+				create Result.initialize (other, a_as)
 			end
 		end
 
-	new_address_result_as (other: RESULT_AS): ADDRESS_RESULT_AS is
+	new_address_result_as (other: RESULT_AS; a_as: SYMBOL_AS): ADDRESS_RESULT_AS is
 			-- New ADDRESS_RESULT AST node
 		do
 			if other /= Void then
-				create Result.make_from_other (other)
+				create Result.initialize (other, a_as)
 			end
 		end
 
@@ -1167,11 +1180,11 @@ feature -- Access
 			end
 		end
 
-	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS): FEATURE_CLAUSE_AS is
+	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
 			-- New FEATURE_CLAUSE AST node
 		do
 			if f /= Void and l /= Void then
-				create Result.initialize (c, f, l)
+				create Result.initialize (c, f, l, ep)
 			end
 		end
 
@@ -1215,7 +1228,7 @@ feature -- Access
 			end
 		end
 
-	new_filled_id_as (l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
 			-- New empty ID AST node.
 		require
 			l_non_negative: l >= 0
@@ -1225,6 +1238,17 @@ feature -- Access
 		do
 			create Result.make (s)
 			Result.set_position (l, c, p, s)
+		end
+
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
+			-- New empty ID AST node.
+		require
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
+			s_non_negative: s >= 0
+		do
+			Result := new_filled_id_as (a_scn, l, c, p, s)
 		end
 
 	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS is
@@ -1293,19 +1317,21 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 
@@ -1430,11 +1456,12 @@ feature -- Access
 			end
 		end
 
-	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS): REAL_AS is
+	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS is
 			-- New REAL AST node
 		do
 			if v /= Void then
 				create Result.make (t, v)
+				Result.set_position (l, c, p, n)
 			end
 		end
 

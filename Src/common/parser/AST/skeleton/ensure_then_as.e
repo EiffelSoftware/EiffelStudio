@@ -11,7 +11,7 @@ inherit
 			make as ensure_make
 		redefine
 			process,
-			is_then
+			is_then, complete_end_location
 		end
 
 create
@@ -45,5 +45,23 @@ feature -- Properties
 
 	is_then: BOOLEAN is True
 			-- Is the assertion list an "ensure then" part ?
+
+feature -- Roundtrip/Location		
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				if assertions /= Void then
+					Result := assertions.complete_end_location (a_list)
+				else
+					Result := null_location
+				end
+			else
+				if full_assertion_list /= Void then
+					Result := full_assertion_list.complete_end_location (a_list)
+				else
+					Result := then_keyword.complete_end_location (a_list)
+				end
+			end
+		end
 
 end -- class ENSURE_THEN_AS

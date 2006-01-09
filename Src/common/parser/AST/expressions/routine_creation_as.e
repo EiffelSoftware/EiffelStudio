@@ -10,9 +10,6 @@ deferred class
 inherit
 	EXPR_AS
 
---create
---	initialize
-
 feature {NONE} -- Initialization
 
 	initialize (t: like target; f: like feature_name; o: like operands; ht: BOOLEAN) is
@@ -86,29 +83,6 @@ feature -- Roundtrip
 
 	internal_operands : EIFFEL_LIST [OPERAND_AS]
 			-- Internal list of operands used by the feature when called.
-
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			if target /= Void then
-				Result := target.start_location
-			end
-			if Result = Void or else Result.is_null then
-				Result := feature_name.start_location
-			end
-		end
-
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			if operands /= Void then
-				Result := operands.end_location
-			else
-				Result := feature_name.end_location
-			end
-		end
 
 feature -- Comparison
 

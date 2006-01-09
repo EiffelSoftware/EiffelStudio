@@ -45,7 +45,7 @@ inherit
 			new_create_creation_as, new_bang_creation_as,
 			new_create_creation_expr_as,new_bang_creation_expr_as,
 			new_bracket_as,
-			new_assigner_mark_as, new_typed_char_as, new_class_header_mark_as,
+			new_assigner_mark_as, new_typed_char_as,
 			new_integer_value, new_real_value,
 			set_buffer, append_text_to_buffer, append_string_to_buffer,
 			new_internal_match_list, extend_internal_match_list, clear_internal_match_list,
@@ -56,7 +56,9 @@ inherit
 			new_keyword_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
 			new_infix_keyword_as, new_precursor_keyword_as, new_prefix_keyword_as, new_once_string_keyword_as,
 			new_symbol_as, new_square_symbol_as, new_separator_as, new_separator_as_with_data,
-			new_new_line_as_with_data, new_new_line_as, new_comment_as, new_comment_as_with_data
+			new_new_line_as_with_data, new_new_line_as, new_comment_as, new_comment_as_with_data,
+			new_break_as, new_break_as_with_data,
+			new_filled_id_as_with_existing_stub
 		end
 
 feature -- Buffer operation
@@ -205,11 +207,6 @@ feature -- Roundtrip: New node
 		do
 		end
 
-	new_class_header_mark_as (f_as, e_as, d_as, s_as, ex_as: KEYWORD_AS): CLASS_HEADER_MARK_AS is
-			-- New CLASS_HEADER_MARK AST node.
-		do
-		end
-
 	new_bracket_as (t: EXPR_AS; o: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): BRACKET_AS is
 			-- New BRACKET AST node
 		do
@@ -219,6 +216,11 @@ feature -- Roundtrip: leaf_as
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node
+		do
+		end
+
+	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+			-- New KEYWORD AST node, but don't extend `internal_match_list'.
 		do
 		end
 
@@ -297,6 +299,16 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
+	new_break_as (a_scn: EIFFEL_SCANNER) is
+			-- NEw BREAK_AS node
+		do
+		end
+
+	new_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
+			-- New COMMENT_AS node
+		do
+		end
+
 feature -- Access
 
 	new_assigner_call_as (t: EXPR_AS; s: EXPR_AS; a_as: SYMBOL_AS): ASSIGNER_CALL_AS is
@@ -329,12 +341,12 @@ feature -- Access
 		do
 		end
 
-	new_address_current_as (other: CURRENT_AS): ADDRESS_CURRENT_AS is
+	new_address_current_as (other: CURRENT_AS; a_as: SYMBOL_AS): ADDRESS_CURRENT_AS is
 			-- New ADDRESS_CURRENT AST node
 		do
 		end
 
-	new_address_result_as (other: RESULT_AS): ADDRESS_RESULT_AS is
+	new_address_result_as (other: RESULT_AS; a_as: SYMBOL_AS): ADDRESS_RESULT_AS is
 			-- New ADDRESS_RESULT AST node
 		do
 		end
@@ -727,7 +739,7 @@ feature -- Access
 		do
 		end
 
-	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS): FEATURE_CLAUSE_AS is
+	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
 			-- New FEATURE_CLAUSE AST node
 		do
 		end
@@ -757,7 +769,12 @@ feature -- Access
 		do
 		end
 
-	new_filled_id_as (l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
+			-- New empty ID AST node.
+		do
+		end
+
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
 			-- New empty ID AST node.
 		do
 		end
@@ -797,12 +814,12 @@ feature -- Access
 		do
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 		end
@@ -888,7 +905,7 @@ feature -- Access
 		do
 		end
 
-	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS): REAL_AS is
+	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS is
 			-- New REAL AST node
 		do
 		end

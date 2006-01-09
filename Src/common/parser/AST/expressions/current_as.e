@@ -9,6 +9,8 @@ class CURRENT_AS
 
 inherit
 	ACCESS_AS
+		undefine
+			text
 		redefine
 			is_equivalent
 		end

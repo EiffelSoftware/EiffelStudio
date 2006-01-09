@@ -41,4 +41,38 @@ feature -- Roundtrip
 	tilda_symbol: SYMBOL_AS
 			-- Symbol "~" or "}~" associated with this structure
 
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if target /= Void then
+				Result := target.complete_start_location (a_list)
+			end
+			if Result = Void or else Result.is_null then
+				if a_list /= Void then
+						-- Roundtrip mode
+					Result := tilda_symbol.complete_start_location (a_list)
+				else
+					Result := feature_name.complete_start_location (a_list)
+				end
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				if operands /= Void then
+					Result := operands.complete_end_location (a_list)
+				else
+					Result := feature_name.complete_end_location (a_list)
+				end
+			else
+				if internal_operands /= Void then
+					Result := internal_operands.complete_end_location (a_list)
+				else
+					Result := feature_name.complete_end_location (a_list)
+				end
+			end
+		end
+
 end

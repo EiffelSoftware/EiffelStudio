@@ -86,33 +86,62 @@ feature -- Roundtrip
 	indexing_clause: INDEXING_CLAUSE_AS
 			-- Indexing clause in this structure
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if arguments /= Void then
-				Result := arguments.start_location
-			elseif type /= Void then
-				Result := type.start_location
-			elseif content /= Void then
-				Result := content.start_location
+			if a_list = Void then
+				if arguments /= Void then
+					Result := arguments.complete_start_location (a_list)
+				elseif type /= Void then
+					Result := type.complete_start_location (a_list)
+				elseif content /= Void then
+					Result := content.complete_start_location (a_list)
+				else
+					Result := null_location
+				end
 			else
-				Result := null_location
+				if internal_arguments /= Void then
+					Result := internal_arguments.complete_start_location (a_list)
+				elseif colon_symbol /= Void then
+					Result := colon_symbol.complete_start_location (a_list)
+				else
+					Result := is_keyword.complete_start_location (a_list)
+				end
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if content /= Void then
-				Result := content.end_location
-			elseif type /= Void then
-				Result := type.end_location
-			elseif arguments /= Void then
-				Result := arguments.end_location
+			if a_list = Void then
+				if content /= Void then
+					Result := content.complete_end_location (a_list)
+				elseif type /= Void then
+					Result := type.complete_end_location (a_list)
+				elseif arguments /= Void then
+					Result := arguments.complete_end_location (a_list)
+				else
+					Result := null_location
+				end
 			else
-				Result := null_location
+				if is_routine then
+					Result := content.complete_end_location (a_list)
+				elseif is_constant then
+					if indexing_clause /= Void then
+						Result := indexing_clause.complete_end_location (a_list)
+					else
+						Result := content.complete_end_location (a_list)
+					end
+				else
+						-- Attribute case
+					if indexing_clause /= Void then
+						Result := indexing_clause.complete_end_location (a_list)
+					elseif assigner /= Void then
+						Result := assigner.complete_end_location (a_list)
+					else
+						Result := type.complete_end_location (a_list)
+					end
+				end
 			end
 		end
 
@@ -200,6 +229,24 @@ feature -- Type check, byte code and dead code removal
 	is_unique: BOOLEAN is
 		do
 			Result := content /= Void and then content.is_unique
+		end
+
+	is_routine: BOOLEAN is
+			-- Is current body a routine?
+		local
+			l_routine: ROUTINE_AS
+		do
+			l_routine ?= content
+			Result := l_routine /= Void
+		end
+
+	is_constant: BOOLEAN is
+			-- Is current body a constant?
+		local
+			l_constant: CONSTANT_AS
+		do
+			l_constant ?= content
+			Result := l_constant /= Void
 		end
 
 feature -- New feature description

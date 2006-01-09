@@ -10,7 +10,7 @@ class NESTED_AS
 inherit
 	CALL_AS
 		redefine
-			is_equivalent, start_location, end_location
+			is_equivalent
 		end
 
 create
@@ -54,18 +54,16 @@ feature -- Attributes
 	message: CALL_AS
 			-- Message send to the target
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := target.start_location
+			Result := target.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- End location of Current
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := message.end_location
+			Result := message.complete_end_location (a_list)
 		end
 
 feature -- Comparison

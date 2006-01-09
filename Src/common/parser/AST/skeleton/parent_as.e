@@ -124,22 +124,19 @@ feature -- Roundtrip
 	internal_selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Internal select clause
 
+feature -- Roundtrip/Location
 
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := type.start_location
+			Result := type.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if end_keyword /= Void then
-				Result := end_keyword
+				Result := end_keyword.complete_end_location (a_list)
 			else
-				Result := type.end_location
+				Result := type.complete_end_location (a_list)
 			end
 		end
 

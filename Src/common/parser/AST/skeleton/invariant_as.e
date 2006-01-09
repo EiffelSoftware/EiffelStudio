@@ -62,25 +62,35 @@ feature -- Attribute
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if assertion_list /= Void then
-				Result := assertion_list.start_location
+			if a_list = Void then
+				if assertion_list /= Void then
+					Result := assertion_list.complete_start_location (a_list)
+				else
+					Result := null_location
+				end
 			else
-				Result := null_location
+				Result := invariant_keyword.complete_start_location (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if assertion_list /= Void then
-				Result := assertion_list.end_location
+			if a_list = Void then
+				if assertion_list /= Void then
+					Result := assertion_list.complete_end_location (a_list)
+				else
+					Result := null_location
+				end
 			else
-				Result := null_location
+				if full_assertion_list /= Void then
+					Result := full_assertion_list.complete_end_location (a_list)
+				else
+					Result := invariant_keyword.complete_end_location (a_list)
+				end
 			end
 		end
 

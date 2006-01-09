@@ -13,7 +13,7 @@ feature -- Filter
 			-- Filter out all incomplete tagged assertions (in form of "tag:")
 			-- from `a_list', and return a list that only contains complete tagged assertions.
 		do
-			if a_list = Void then
+			if a_list = Void or else a_list.is_empty then
 				Result := Void
 			else
 				create Result.make (a_list.count)

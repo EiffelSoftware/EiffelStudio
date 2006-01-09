@@ -77,14 +77,12 @@ feature -- Roundtrip
 	token_buffer2: STRING
 			-- Buffer for verbatim string tokens
 
-	l_line, l_column: INTEGER
-	l_position: INTEGER
-	l_i, l_j: INTEGER
 	l_verbatim_start_position: INTEGER
+
 	l_string_start_position: INTEGER
-	is_matching_comment: BOOLEAN
-	l_c: CHARACTER
-	l_temp: STRING
+
+	last_assign_index: INTEGER
+			-- Last index in `match_list' for "assign" keyword (or maybe assign identifier)
 
 feature -- Access
 
@@ -306,7 +304,26 @@ feature {NONE} -- Implementation
 			if l_count > maximum_string_length then
 				report_too_long_string (text)
 			else
-				last_id_as_value := ast_factory.new_filled_id_as (line, column, position, l_count)
+				last_id_as_value := ast_factory.new_filled_id_as (Current, line, column, position, l_count)
+				if last_id_as_value /= Void then
+					append_text_to_string (last_id_as_value)
+				end
+			end
+		end
+
+	process_id_as_with_existing_stub (a_index: INTEGER) is
+			-- Process current token which is an identifier and whose leaf stub has been inserted into `match_list'.
+			-- For example, an "assign" keyword is later recognized as an identifier.
+			-- Used for roundtrip.
+		local
+			l_count: INTEGER
+		do
+			l_count := text_count
+				-- Note: Identifiers are converted to lower-case.
+			if l_count > maximum_string_length then
+				report_too_long_string (text)
+			else
+				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, line, column, position, l_count, a_index)
 				if last_id_as_value /= Void then
 					append_text_to_string (last_id_as_value)
 				end
@@ -466,16 +483,8 @@ feature {NONE} -- Implementation
 
 feature -- Case Mode
 
-	Case_sensitive: BOOLEAN
+	Case_sensitive: BOOLEAN is False
 			-- Is code case sensitive?
-
-	set_case_sensitive (b: BOOLEAN) is
-			-- Set `Case_sensitive' with `b'.
-		do
-			Case_sensitive := b
-		ensure
-			Case_sensitive_set: Case_sensitive = b
-		end
 
 feature {NONE} -- Constants
 

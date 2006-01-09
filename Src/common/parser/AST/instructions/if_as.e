@@ -73,18 +73,20 @@ feature -- Attributes
 	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := condition.start_location
+			if a_list = Void then
+				Result := condition.complete_start_location (a_list)
+			else
+				Result := if_keyword.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := end_keyword
+			Result := end_keyword.complete_end_location (a_list)
 		end
 
 feature -- Access

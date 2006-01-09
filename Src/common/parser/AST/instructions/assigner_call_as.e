@@ -49,18 +49,16 @@ feature -- Attributes
 	source: EXPR_AS
 			-- Source of the assignment
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := target.start_location
+			Result := target.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := source.end_location
+			Result := source.complete_end_location (a_list)
 		end
 
 feature -- Comparison

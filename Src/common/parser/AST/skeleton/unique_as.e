@@ -8,6 +8,8 @@ class UNIQUE_AS
 
 inherit
 	ATOMIC_AS
+		undefine
+			text
 		redefine
 			is_unique, is_equivalent
 		end

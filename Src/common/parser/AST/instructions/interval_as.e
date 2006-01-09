@@ -11,7 +11,7 @@ class INTERVAL_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, start_location, end_location
+			is_equivalent
 		end
 
 create
@@ -55,21 +55,19 @@ feature -- Attributes
 			-- Upper bound
 			-- Void if constant rather than interval
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := lower.start_location
+			Result := lower.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if upper /= Void then
-				Result := upper.end_location
+				Result := upper.complete_end_location (a_list)
 			else
-				Result := lower.end_location
+				Result := lower.complete_end_location (a_list)
 			end
 		end
 

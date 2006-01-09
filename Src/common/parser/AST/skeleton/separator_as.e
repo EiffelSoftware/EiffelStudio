@@ -9,6 +9,9 @@ class
 
 inherit
 	LEAF_AS
+		redefine
+			text
+		end
 
 create
 	make, make_with_data
@@ -20,8 +23,8 @@ feature -- Initialization
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			set_shared_text (a_scn)
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, text.count)
+			set_internal_text (a_scn.text)
+			make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	make_with_data (a_text: STRING; l, c, p, s: INTEGER) is
@@ -31,7 +34,7 @@ feature -- Initialization
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
-			set_text (a_text)
+			set_internal_text (a_text.string)
 			make_with_location (l, c, p, s)
 		end
 
@@ -39,6 +42,12 @@ feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is
 		do
+		end
+
+	text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of this token
+		do
+			Result := internal_text
 		end
 
 feature -- Visitor
@@ -57,7 +66,15 @@ feature -- Comparison
 
 feature{NONE} -- Implementation
 
-	code: INTEGER
-		-- Symbol code	
+	set_internal_text (s: STRING) is
+			-- Set `internal_text' with `s'.
+		do
+			internal_text := s
+		ensure
+			internal_text_set: internal_text = s
+		end
+
+	internal_text: STRING
+			-- Literal string
 
 end

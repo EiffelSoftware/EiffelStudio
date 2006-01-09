@@ -48,18 +48,24 @@ feature -- Attributes
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := expressions.start_location
+			if a_list = Void then
+				Result := expressions.complete_start_location (a_list)
+			else
+				Result := larray.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := expressions.end_location
+			if a_list = Void then
+				Result := expressions.complete_end_location (a_list)
+			else
+				Result := rarray.complete_end_location (a_list)
+			end
 		end
 
 feature -- Comparison

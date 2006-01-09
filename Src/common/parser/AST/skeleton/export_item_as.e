@@ -40,18 +40,16 @@ feature -- Attributes
 	features: FEATURE_SET_AS
 			-- Feature set
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := clients.start_location
+			Result := clients.complete_start_location (a_list)
 		end
-		
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := features.end_location
+			Result := features.complete_end_location (a_list)
 		end
 
 feature -- Comparison

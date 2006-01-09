@@ -10,31 +10,29 @@ class
 inherit
 	EIFFEL_LIST [TYPE_AS]
 		redefine
-			start_location, end_location
+			complete_start_location, complete_end_location
 		end
-	
+
 create
 	make, make_filled
 
-feature -- Access
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if opening_bracket_location /= Void then
+			if a_list = Void and then opening_bracket_location /= Void then
 				Result := opening_bracket_location
 			else
-				Result := Precursor {EIFFEL_LIST}
+				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if closing_bracket_location /= Void then
+			if a_list = Void and then closing_bracket_location /= Void then
 				Result := closing_bracket_location
 			else
-				Result := Precursor {EIFFEL_LIST}
+				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
 		end
 
@@ -50,7 +48,7 @@ feature -- Setting
 			opening_bracket_location_set: opening_bracket_location = a_opener
 			closing_bracket_location_set: closing_bracket_location = a_closer
 		end
-		
+
 feature {NONE} -- Implementation: Access
 
 	opening_bracket_location: LOCATION_AS

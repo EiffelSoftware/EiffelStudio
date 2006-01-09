@@ -64,27 +64,26 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if tag /= Void then
-				Result := tag.start_location
+				Result := tag.complete_start_location (a_list)
 			else
-				Result := expr.start_location
+				Result := expr.complete_start_location (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- End location of Current
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if expr = Void then
-				Result := tag.end_location
+			if expr /= Void then
+				Result := expr.complete_end_location (a_list)
+			elseif a_list /= Void and then colon_symbol /= Void then
+				Result := colon_symbol.complete_end_location (a_list)
 			else
-				Result := expr.end_location
+				Result := tag.complete_end_location (a_list)
 			end
-
 		end
 
 feature -- Comparison

@@ -39,23 +39,27 @@ feature -- Attributes
 
 feature -- Location
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
-		do
-			Result := expr.start_location
-		end
-
-	end_location: LOCATION_AS is
-			-- End location of Current
-		do
-			Result := expr.end_location
-		end
-
 	operator_location: LOCATION_AS is
 			-- Location of operator
 		do
 			fixme ("Need to store operator location")
 			Result := start_location
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				Result := expr.complete_start_location (a_list)
+			else
+				Result :=operator.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := expr.complete_end_location (a_list)
 		end
 
 feature -- Properties

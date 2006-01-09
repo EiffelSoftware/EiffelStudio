@@ -36,21 +36,6 @@ feature -- Visitor
 			v.process_indexing_clause_as (Current)
 		end
 
-feature -- Roundtrip
-
-	indexing_keyword: KEYWORD_AS
-	end_keyword: KEYWORD_AS
-		-- keyword(s) that can appear in this structure.
-
-	set_indexing_keyword (k_as: KEYWORD_AS) is
-			-- Set `indexing_keyword' with `k_as'.
-		do
-			indexing_keyword := k_as
-		ensure
-			indexing_keyword_set: indexing_keyword = k_as
-		end
-
-
 feature -- Access
 
 	description: STRING is

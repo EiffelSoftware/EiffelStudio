@@ -11,25 +11,27 @@ inherit
 			has_like, is_loose
 		end
 
-	LEAF_AS
+	LOCATION_AS
+		rename
+			make as make_with_location
+		end
 
 create
---	make_from_other,
 	make
 
 feature{NONE} -- Initialization
 
-	make (other: LOCATION_AS; c_as: KEYWORD_AS) is
+	make (other: LOCATION_AS; l_as: KEYWORD_AS) is
 			-- Create new LIKE_CURRENT AST node.
 		local
-			k_as: KEYWORD_AS
+			c_as: KEYWORD_AS
 		do
-			make_from_other (other)
-			k_as ?= other
-			like_keyword := k_as
+			c_as ?= other
+			like_keyword := l_as
 			current_keyword := c_as
+			make_from_other (other)
 		ensure
-			current_keyword_set: current_keyword = c_as
+			like_keyword_set: like_keyword = l_as
 		end
 
 feature -- Visitor
@@ -68,5 +70,22 @@ feature -- Output
 
 	dump: STRING is "like Current"
 			-- Dump trace
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				Result := Current
+			else
+				Result := like_keyword.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := current_keyword.complete_end_location (a_list)
+		end
+
 
 end -- class LIKE_CUR_AS

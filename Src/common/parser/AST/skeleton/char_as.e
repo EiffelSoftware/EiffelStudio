@@ -7,6 +7,9 @@ class CHAR_AS
 
 inherit
 	ATOMIC_AS
+		undefine
+			text
+		end
 
 	LEAF_AS
 

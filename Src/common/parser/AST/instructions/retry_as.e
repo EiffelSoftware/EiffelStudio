@@ -10,6 +10,9 @@ class RETRY_AS
 
 inherit
 	INSTRUCTION_AS
+		undefine
+			text
+		end
 
 	KEYWORD_AS
 		undefine

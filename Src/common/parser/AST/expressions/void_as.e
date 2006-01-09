@@ -8,6 +8,9 @@ class
 
 inherit
 	EXPR_AS
+		undefine
+			text
+		end
 
 	KEYWORD_AS
 		undefine

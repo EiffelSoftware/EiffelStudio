@@ -42,4 +42,28 @@ feature -- Visitor
 			v.process_bang_creation_as (Current)
 		end
 
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				if type /= Void then
+					Result := type.complete_start_location (a_list)
+				else
+					Result := target.complete_start_location (a_list)
+				end
+			else
+				Result := lbang_symbol.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if call /= Void then
+				Result := call.complete_end_location (a_list)
+			else
+				Result := target.complete_end_location (a_list)
+			end
+		end
+
 end

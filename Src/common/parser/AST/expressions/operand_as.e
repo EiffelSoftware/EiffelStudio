@@ -59,31 +59,33 @@ feature -- Attributes
 	expression: EXPR_AS
 			-- Object expression given at routine object evaluation
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if class_type /= Void then
-				Result := class_type.start_location
+				Result := class_type.complete_start_location (a_list)
+			elseif question_mark_symbol /= Void and then a_list /= Void then
+				Result := question_mark_symbol.complete_start_location (a_list)
 			elseif target /= Void then
-				Result := target.start_location
+				Result := target.complete_start_location (a_list)
 			elseif expression /= Void then
-				Result := expression.start_location
+				Result := expression.complete_start_location (a_list)
 			else
 				Result := null_location
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if class_type /= Void then
-				Result := class_type.end_location
+				Result := class_type.complete_end_location (a_list)
+			elseif question_mark_symbol /= Void and then a_list /= Void then
+				Result := question_mark_symbol.complete_end_location (a_list)
 			elseif target /= Void then
-				Result := target.end_location
+				Result := target.complete_end_location (a_list)
 			elseif expression /= Void then
-				Result := expression.end_location
+				Result := expression.complete_end_location (a_list)
 			else
 				Result := null_location
 			end

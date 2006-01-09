@@ -89,23 +89,31 @@ feature -- Roundtrip
 	internal_parameters: EIFFEL_LIST [EXPR_AS]
 			-- Internal list of parameters			
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := precursor_keyword
+			Result := precursor_keyword.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if parameters /= Void then
-				Result := parameters.end_location
-			elseif parent_base_class /= Void then
-				Result := parent_base_class.start_location
+			if a_list = Void then
+				if parameters /= Void then
+					Result := parameters.complete_end_location (a_list)
+				elseif parent_base_class /= Void then
+					Result := parent_base_class.complete_start_location (a_list)
+				else
+					Result := precursor_keyword.complete_end_location (a_list)
+				end
 			else
-				Result := precursor_keyword
+				if internal_parameters /= Void then
+					Result := internal_parameters.complete_end_location (a_list)
+				elseif parent_base_class /= Void then
+					Result := parent_base_class.complete_end_location (a_list)
+				else
+					Result := precursor_keyword.complete_end_location (a_list)
+				end
 			end
 		end
 

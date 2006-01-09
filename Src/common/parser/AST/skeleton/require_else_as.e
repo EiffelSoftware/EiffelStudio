@@ -11,7 +11,7 @@ inherit
 			make as require_make
 		redefine
 			process,
-			is_else
+			is_else, complete_end_location
 		end
 
 create
@@ -45,5 +45,24 @@ feature -- Properties
 
 	is_else: BOOLEAN is True
 			-- Is the assertion list a require else?
+
+feature -- Roundtrip/Location
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				if assertions /= Void then
+					Result := assertions.complete_end_location (a_list)
+				else
+					Result := null_location
+				end
+			else
+				if full_assertion_list /= Void then
+					Result := full_assertion_list.complete_end_location (a_list)
+				else
+					Result := else_keyword.complete_end_location (a_list)
+				end
+			end
+		end
 
 end -- class REQUIRE_ELSE_AS

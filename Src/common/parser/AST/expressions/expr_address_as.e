@@ -53,18 +53,24 @@ feature -- Properties
 	expr: EXPR_AS
 			-- Expression to address
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := expr.start_location
+			if a_list = Void then
+				Result := expr.complete_start_location (a_list)
+			else
+				Result := address_symbol.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := expr.end_location
+			if a_list = Void then
+				Result := expr.complete_end_location (a_list)
+			else
+				Result := rparan_symbol.complete_end_location (a_list)
+			end
 		end
 
 feature -- Comparison

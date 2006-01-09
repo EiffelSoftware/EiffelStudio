@@ -7,6 +7,8 @@ class DEFERRED_AS
 
 inherit
 	ROUT_BODY_AS
+		undefine
+			text
 		redefine
 			is_deferred, has_instruction, index_of_instruction,
 			is_equivalent

@@ -36,18 +36,16 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_NAME]
 			-- List of feature names
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := features.start_location
+			Result := features.complete_start_location (a_list)
 		end
-		
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := features.end_location
+			Result := features.complete_end_location (a_list)
 		end
 
 feature -- Comparison
@@ -60,5 +58,5 @@ feature -- Comparison
 
 invariant
 	features_not_void: features /= Void
-			
+
 end -- class FEATURE_LIST_AS

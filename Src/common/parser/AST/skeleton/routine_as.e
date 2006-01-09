@@ -101,34 +101,46 @@ feature -- Attributes
 
 feature -- Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	body_start_position: INTEGER
+			-- Position at the start of the main body (after the comments and obsolete clause)
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if obsolete_message /= Void then
-				Result := obsolete_message.start_location
-			elseif precondition /= Void then
-				Result := precondition.start_location
-			elseif locals /= Void then
-				Result := locals.start_location
-			elseif not routine_body.start_location.is_null then
-				Result := routine_body.start_location
-			elseif postcondition /= Void then
-				Result := postcondition.start_location
-			elseif rescue_clause /= Void then
-				Result := rescue_clause.start_location
+			if a_list = Void then
+				if obsolete_message /= Void then
+					Result := obsolete_message.complete_start_location (a_list)
+				elseif precondition /= Void then
+					Result := precondition.complete_start_location (a_list)
+				elseif locals /= Void then
+					Result := locals.complete_start_location (a_list)
+				elseif not routine_body.complete_start_location (a_list).is_null then
+					Result := routine_body.complete_start_location (a_list)
+				elseif postcondition /= Void then
+					Result := postcondition.complete_start_location (a_list)
+				elseif rescue_clause /= Void then
+					Result := rescue_clause.complete_start_location (a_list)
+				else
+					Result := end_keyword.complete_start_location (a_list)
+				end
 			else
-				Result := end_keyword
+				if obsolete_keyword /= Void then
+					Result := obsolete_keyword.complete_start_location (a_list)
+				elseif precondition /= Void then
+					Result := precondition.complete_start_location (a_list)
+				elseif locals /= Void then
+					Result := locals.complete_start_location (a_list)
+				else
+					Result := routine_body.complete_start_location (a_list)
+				end
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := end_keyword
+			Result := end_keyword.complete_end_location (a_list)
 		end
-
-	body_start_position: INTEGER
-			-- Position at the start of the main body (after the comments and obsolete clause)
 
 feature -- Properties
 

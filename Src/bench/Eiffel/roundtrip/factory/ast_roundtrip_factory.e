@@ -27,7 +27,6 @@ inherit
 			new_unique_as,
 			new_void_as,
 			new_filled_id_as,
-			new_class_header_mark_as,
 
 			reverse_extend_separator,
 			extend_pre_as,
@@ -57,7 +56,11 @@ inherit
 			new_bin_and_then_as,
 			new_bin_or_else_as,
 			new_integer_value,
-			new_real_value
+			new_real_value,
+			new_tagged_as,
+			new_break_as,
+			new_break_as_with_data,
+			new_filled_id_as_with_existing_stub
 		end
 
 feature -- Buffer operation
@@ -97,22 +100,46 @@ feature -- Match list maintaining
 		end
 
 	extend_internal_match_list (a_match: LEAF_AS) is
-			-- Extend `a_list' with `a_match'.
+			-- Extend `internal_match_list' with `a_match'.
 		require else
 			internal_match_list: internal_match_list /= Void
 			a_match_not_void: a_match /= Void
 		do
-			a_match.set_index (internal_match_list.count + 1)
-			if internal_match_list.capacity = internal_match_list.count + 1 then
+			if internal_match_list.capacity = internal_match_list.count then
 				internal_match_list.grow (internal_match_list.capacity + 5000)
 			end
 			internal_match_list.extend (a_match)
+			a_match.set_index (internal_match_list.count)
+		end
+
+	extend_internal_match_list_with_stub (a_text: STRING; a_match: LEAF_AS) is
+			-- Extend `internal_match_list' withc `a_text'.
+		local
+			l_stub: LEAF_STUB_AS
+		do
+			if internal_match_list.capacity = internal_match_list.count then
+				internal_match_list.grow (internal_match_list.capacity + 5000)
+			end
+			create l_stub.make (a_text, a_match)
+			l_stub.set_index (internal_match_list.count + 1)
+			internal_match_list.extend (l_stub)
+			a_match.set_index (internal_match_list.count)
 		end
 
 	clear_internal_match_list is
 			-- Set `internal_match_list' with Void to detach the reference to `match_list'.
 		do
 			internal_match_list := Void
+		end
+
+	replace_match_list_item (i: INTEGER; a_leaf: LEAF_AS) is
+			-- Replace `i'-th item in `internal_match' by `a_leaf'.
+		require else
+			a_leaf_not_void: a_leaf /= Void
+			index_valid: i >= 1 and i <= internal_match_list.count
+		do
+			internal_match_list.go_i_th (i)
+			internal_match_list.replace (a_leaf)
 		end
 
 feature
@@ -126,16 +153,8 @@ feature
 			if a_type /= Void then
 				l_type := a_type.actual_type
 			end
-			if l_type /= Void then
-				if not l_type.is_integer and not l_type.is_natural then
-					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
---				a_psr.report_invalid_type_for_integer_error (a_type, buffer)
-			end
 				-- Remember original token
-			token_value := buffer
+			token_value := buffer.twin
 				-- Remove underscores (if any) without breaking
 				-- original token
 			if token_value.has ('_') then
@@ -143,24 +162,14 @@ feature
 				token_value.prune_all ('_')
 			end
 			if token_value.is_number_sequence then
-				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as)
+				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			elseif
 				token_value.item (1) = '0' and then
 				token_value.item (2).lower = 'x'
 			then
-				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as)
+				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			end
-			if Result = Void or else not Result.is_initialized then
-				if sign_symbol = '-' then
-						-- Add `-' for a better reporting.
-					buffer.precede ('-')
-					a_psr.report_integer_too_small_error (buffer)
-				else
-					a_psr.report_integer_too_large_error (buffer)
-				end
-					-- Dummy code (for error recovery) follows:
-				Result := new_integer_as (a_type, False, "0", Void, s_as)
-			end
+
 			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
 
@@ -172,21 +181,13 @@ feature
 			if a_type /= Void then
 				l_type := a_type.actual_type
 			end
-			if l_type /= Void then
-				if not l_type.is_real_32 and not l_type.is_real_64 then
-					a_psr.report_invalid_type_for_real_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
---				a_psr.report_invalid_type_for_real_error (a_type, buffer)
-			end
 			if is_signed and sign_symbol = '-' then
 				l_buffer := buffer.twin
 				buffer.precede ('-')
 			else
 				l_buffer := buffer
 			end
-			Result := new_real_as (a_type, buffer, l_buffer, s_as)
+			Result := new_real_as (a_type, buffer, a_psr.text, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
 
@@ -197,9 +198,8 @@ feature -- Roundtrip
 		require else
 			a_text_not_void: a_text /= Void
 		do
-			create Result.initialize (c, l, co, p, 1)
-			Result.set_text (a_text.string)
-			extend_internal_match_list (Result)
+			create Result.initialize (c, l, co, p, a_text.count)
+			extend_internal_match_list_with_stub (a_text.string, Result)
 		end
 
 	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
@@ -208,8 +208,7 @@ feature -- Roundtrip
 			a_text_not_void: a_text /= Void
 		do
 			create Result.initialize (t_as, c, l, co, p, n)
-			Result.set_text (a_text.string)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_text.string, Result)
 		end
 
 feature -- Roundtrip
@@ -246,14 +245,6 @@ feature -- Roundtrip
 			a_list.extend_post_as_list (l_as)
 		end
 
-feature -- Roundtrip
-
-	new_class_header_mark_as (f_as, e_as, d_as, s_as, ex_as: KEYWORD_AS): CLASS_HEADER_MARK_AS is
-			-- New CLASS_HEADER_MARK AST node.
-		do
-			create Result.make (f_as, e_as, d_as, s_as, ex_as)
-		end
-
 feature -- Access
 
 	new_bin_and_then_as (l, r: EXPR_AS; k_as, s_as: KEYWORD_AS): BIN_AND_THEN_AS is
@@ -277,8 +268,7 @@ feature -- Access
 		do
 			if s /= Void then
 				create Result.initialize (s, l, c, p, n)
-				Result.set_text (buf.string)
-				extend_internal_match_list (Result)
+				extend_internal_match_list_with_stub (buf.string, Result)
 			end
 		end
 
@@ -287,51 +277,57 @@ feature -- Access
 		do
 			if s /= Void and marker /= Void then
 				create Result.initialize (s, marker, is_indentable, l, c, p, n)
-				Result.set_text (buf.string)
-				extend_internal_match_list (Result)
+				extend_internal_match_list_with_stub (buf.string, Result)
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
-				Result.set_text (buf.string)
+				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list (Result)
+				extend_internal_match_list_with_stub (buf.string, Result)
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
-				Result.set_text (buf.string)
+				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list (Result)
+				extend_internal_match_list_with_stub (buf.string, Result)
 			end
 		end
 
-	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS): REAL_AS is
+	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS is
 			-- New REAL AST node
 		do
 			if v /= Void then
 				create Result.make (t, v)
-				Result.set_text (buf.string)
+				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list (Result)
+				extend_internal_match_list_with_stub (buf.string, Result)
 			end
 		end
 
-	new_filled_id_as (l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
 		do
 
 			create Result.make (s)
 			Result.set_position (l, c, p, s)
-			Result.set_text (Result)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
+		end
+
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
+			-- New empty ID AST node.
+		do
+			create Result.make (s)
+			Result.set_position (l, c, p, s)
+			Result.set_index (a_index)
 		end
 
 	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS is
@@ -343,64 +339,62 @@ feature -- Access
 			create Result.make (l_cnt)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 			a_scn.append_text_substring_to_string (1, l_cnt, Result)
-			Result.set_text (a_scn.text)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_void_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): VOID_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_unique_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): UNIQUE_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_retry_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RETRY_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_result_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RESULT_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_boolean_as (b: BOOLEAN; l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): BOOL_AS is
 		do
 			create Result.initialize (b, l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_current_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): CURRENT_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_deferred_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): DEFERRED_AS is
 		do
 			create Result.make_with_location (l, c, p, s)
-			Result.set_shared_text (a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
 		end
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node
 		do
 			create Result.make (a_code, a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_scn.text, Result)
+		end
+
+	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+			-- New KEYWORD AST node, but don't extend `internal_match_list'.
+		do
+			create Result.make (a_code, a_scn)
 		end
 
 	new_creation_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
@@ -443,7 +437,7 @@ feature -- Access
 			-- New KEYWORD AST node
 		do
 			create Result.make_with_data ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (a_text.string, Result)
 		end
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
@@ -513,6 +507,31 @@ feature -- Access
 		do
 			create c_as.make_with_data (a_text.string, l, c, p, n)
 			extend_internal_match_list (c_as)
+		end
+
+	new_break_as (a_scn: EIFFEL_SCANNER) is
+			-- NEw BREAK_AS node
+		local
+			b_as: BREAK_AS
+		do
+			create b_as.make (a_scn)
+			extend_internal_match_list (b_as)
+		end
+
+	new_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
+			-- New COMMENT_AS node
+		local
+			b_as: BREAK_AS
+		do
+			create b_as.make_with_data (a_text.string, l, c, p, n)
+			extend_internal_match_list (b_as)
+		end
+
+feature
+	new_tagged_as (t: ID_AS; e: EXPR_AS; s_as: SYMBOL_AS): TAGGED_AS is
+			-- New TAGGED AST node
+		do
+			create Result.initialize (t, e, s_as)
 		end
 
 end

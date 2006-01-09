@@ -11,25 +11,27 @@ class
 inherit
 	AST_ROUNDTRIP_ITERATOR
 		redefine
-			process_keyword_as ,
-			process_symbol_as ,
-			process_separator_as ,
-			process_new_line_as ,
-			process_comment_as ,
-			process_bool_as ,
-			process_char_as ,
-			process_result_as ,
-			process_retry_as ,
-			process_unique_as ,
-			process_deferred_as ,
-			process_void_as ,
-			process_string_as ,
-			process_verbatim_string_as ,
-			process_current_as ,
-			process_integer_as ,
-			process_real_as ,
-			process_id_as ,
-			process_bit_const_as
+			process_keyword_as,
+			process_symbol_as,
+			process_separator_as,
+			process_new_line_as,
+			process_comment_as,
+			process_bool_as,
+			process_char_as,
+			process_typed_char_as,
+			process_result_as,
+			process_retry_as,
+			process_unique_as,
+			process_deferred_as,
+			process_void_as,
+			process_string_as,
+			process_verbatim_string_as,
+			process_current_as,
+			process_integer_as,
+			process_real_as,
+			process_id_as,
+			process_bit_const_as,
+			process_break_as
 		end
 create
 	make,
@@ -48,7 +50,7 @@ feature {NONE} -- Initialization
 	make_with_default_context is
 			-- Initialize and create context of type `ROUNDTRIP_STRING_LIST_CONTEXT'.
 		do
-			create {ROUNDTRIP_STRING_LIST_CONTEXT}context.make
+			make (create {ROUNDTRIP_STRING_LIST_CONTEXT}.make)
 		end
 
 feature -- Context setting
@@ -64,6 +66,12 @@ feature -- Context setting
 		end
 
 feature -- Roundtrip: process leaf
+
+	process_break_as (l_as: BREAK_AS) is
+			-- Process `l_as'.
+		do
+			put_string (l_as)
+		end
 
 	process_keyword_as (l_as: KEYWORD_AS) is
 			-- Process `l_as'.
@@ -102,6 +110,13 @@ feature -- Roundtrip: process leaf
 
 	process_char_as (l_as: CHAR_AS) is
 		do
+			put_string (l_as)
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.type)
 			put_string (l_as)
 		end
 
@@ -198,7 +213,7 @@ feature{NONE} -- Implementation
 			if last_index < l_as.index - 1 then
 				process_before_leaves (l_as.index)
 			end
-			context.add_string (l_as.text)
+			context.add_string (l_as.text (match_list))
 			last_index := l_as.index
 		end
 

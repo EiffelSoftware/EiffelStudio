@@ -12,7 +12,10 @@ inherit
 			has_like, is_loose
 		end
 
-	LEAF_AS
+	LOCATION_AS
+		rename
+			make as make_with_location
+		end
 
 create
 	make
@@ -72,6 +75,22 @@ feature
 			-- through DEGREE 4.
 		do
 			create {UNEVALUATED_LIKE_TYPE} Result.make_current
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				Result := Current
+			else
+				Result := like_keyword.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := current_keyword.complete_end_location (a_list)
 		end
 
 feature -- Output

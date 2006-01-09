@@ -531,10 +531,12 @@ if System.class_of_id (class_id) /= Void then
 				-- Save index left by the temporary ast server into the
 				-- class information.
 			l_class_info.set_index (Tmp_ast_server.index.twin)
-			invariant_info := Tmp_ast_server.invariant_info
-			if invariant_info /= Void then
-				l_class_info.set_invariant_info (Tmp_ast_server.invariant_info)
-				Tmp_inv_ast_server.force (invariant_info, class_id)
+			if ast_b.invariant_part /= Void then
+				invariant_info := Tmp_ast_server.invariant_info
+				if invariant_info /= Void then
+					l_class_info.set_invariant_info (Tmp_ast_server.invariant_info)
+					Tmp_inv_ast_server.force (invariant_info, class_id)
+				end
 			end
 
 				-- Put class information in class information table for

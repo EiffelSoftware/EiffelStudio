@@ -68,18 +68,21 @@ feature -- Properties
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := name.start_location
+			if a_list /= Void and then reference_expanded_keyword /= Void then
+					-- Roundtrip mode
+				Result := reference_expanded_keyword.complete_start_location (a_list)
+			else
+				Result := name.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := name.end_location
+			Result := name.complete_end_location (a_list)
 		end
 
 feature -- Comparison

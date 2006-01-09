@@ -46,18 +46,20 @@ feature -- Attributes
 	bits_symbol: ID_AS
 			-- Bits value
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := bits_symbol.start_location
+			if a_list = Void then
+				Result := bits_symbol.complete_start_location (a_list)
+			else
+				Result := bit_keyword.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := bits_symbol.end_location
+			Result := bits_symbol.complete_end_location (a_list)
 		end
 
 feature -- Comparison

@@ -225,7 +225,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_CONSTANT is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
 		require else
 			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
@@ -235,7 +235,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_CONSTANT is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
 		require else
 			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)

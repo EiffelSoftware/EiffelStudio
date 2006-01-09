@@ -2,10 +2,12 @@ class EXTERNAL_LANG_AS
 
 inherit
 	AST_EIFFEL
+		undefine
+			text
 		redefine
 			is_equivalent
 		end
-		
+
 	LEAF_AS
 
 	EXTERNAL_CONSTANTS
@@ -22,7 +24,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_WORKBENCH		
+	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
@@ -155,7 +157,7 @@ feature {NONE} -- Implementation
 				ext_language_name := image.substring (1, pos)
 				ext_language_name.to_upper
 
-					-- Validity check on language name 
+					-- Validity check on language name
 				if ext_language_name.is_equal ("C") then
 					valid_language_name := True
 				elseif ext_language_name.is_equal ("C++") then
@@ -255,12 +257,12 @@ feature {NONE} -- Implementation
 							elseif special_type.is_equal (dll32_string) then
 								create dll_ext
 								dll_ext.set_type (dll32_type)
-								dll_ext.set_index (dll_index) 
+								dll_ext.set_index (dll_index)
 								extension := dll_ext
 							elseif special_type.is_equal (dllwin32_string) then
 								create dll_ext
 								dll_ext.set_type (dllwin32_type)
-								dll_ext.set_index (dll_index) 
+								dll_ext.set_index (dll_index)
 								extension := dll_ext
 							elseif is_cpp_extension then
 								create {CPP_EXTENSION_AS} extension
@@ -307,7 +309,7 @@ feature {NONE} -- Implementation
 					else
 						signature_part.append (image.substring (1, pos - 1))
 						signature_part.right_adjust
-	
+
 							-- Only unprocessed part is kept in `image'
 						image.remove_head (pos - 1)
 					end

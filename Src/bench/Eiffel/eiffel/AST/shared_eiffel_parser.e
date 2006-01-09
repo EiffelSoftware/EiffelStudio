@@ -94,7 +94,7 @@ feature {NONE} -- Internal parsers
 	il_eiffel_parser: EIFFEL_PARSER is
 			-- IL Eiffel parser.
 		once
-			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
+			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
 			Result.set_il_parser
 		ensure
 			il_eiffel_parser_not_void: Result /= Void

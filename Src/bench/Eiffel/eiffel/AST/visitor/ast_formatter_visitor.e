@@ -85,11 +85,6 @@ feature {NONE} -- Implementation: Access
 
 feature -- Roundtrip
 
-	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
-			-- Process `l_as'.
-		do
-		end
-
 	process_none_id_as (l_as: NONE_ID_AS) is
 			-- Process `l_as'.
 		do
@@ -129,13 +124,13 @@ feature -- Roundtrip
 	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
 			-- Process `l_as'.
 		do
-			l_as.creation_expr_process (Current)
+			process_creation_expr_as (l_as)
 		end
 
 	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
 			-- Process `l_as'.
 		do
-			l_as.creation_expr_process (Current)
+			process_creation_expr_as (l_as)
 		end
 
 feature -- Roundtrip
@@ -161,6 +156,11 @@ feature -- Roundtrip
 		end
 
 	process_comment_as (l_as: COMMENT_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_break_as (l_as: BREAK_AS) is
 			-- Process `l_as'.
 		do
 		end

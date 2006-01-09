@@ -31,9 +31,7 @@ feature {NONE} -- Initialization
 			n_not_void: n /= Void
 		do
 			class_name := n
-				-- We don't need the following line because `class_name' comes from Identifier_as_upper which has already
-				-- been uppered if `case_sensitive' is False. (Jason)
---			class_name.to_upper
+			class_name.to_upper
 			internal_generics := g
 			is_expanded := a_is_exp
 			is_separate := a_is_sep
@@ -93,21 +91,37 @@ feature -- Roundtrip
 	internal_generics: TYPE_LIST_AS
 			-- Internal possible generical parameters
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := class_name.start_location
+			if a_list = Void then
+				Result := class_name.complete_start_location (a_list)
+			else
+				if expanded_keyword /= Void then
+					Result := expanded_keyword.complete_start_location (a_list)
+				elseif separate_keyword /= Void then
+					Result := separate_keyword.complete_start_location (a_list)
+				else
+					Result := class_name.complete_start_location (a_list)
+				end
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- End location of Current
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if generics /= Void then
-				Result := generics.end_location
+			if a_list = Void then
+				if generics /= Void then
+					Result := generics.complete_end_location (a_list)
+				else
+					Result := class_name.complete_end_location (a_list)
+				end
 			else
-				Result := class_name.end_location
+				if internal_generics /= Void then
+					Result := internal_generics.complete_end_location (a_list)
+				else
+					Result := class_name.complete_end_location (a_list)
+				end
 			end
 		end
 

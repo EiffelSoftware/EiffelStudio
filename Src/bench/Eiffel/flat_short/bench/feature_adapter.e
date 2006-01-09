@@ -113,12 +113,12 @@ feature -- Element change
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
 									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0),
-								True, create {LOCATION_AS}.make_null)
+								True, create {KEYWORD_AS}.make_null)
 						elseif source_feature.is_prefix then
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
 									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0),
-								False, create {LOCATION_AS}.make_null)
+								False, create {KEYWORD_AS}.make_null)
 						elseif source_feature.alias_name /= Void then
 							create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
 								create {ID_AS}.initialize (source_feature.feature_name),
@@ -135,7 +135,7 @@ feature -- Element change
 								create {ID_AS}.initialize (source_feature.feature_name))
 						end
 						if source_feature.is_frozen then
-							f_name.set_frozen_location (create {LOCATION_AS}.make_null)
+							f_name.set_frozen_keyword (create {KEYWORD_AS}.make_null)
 						end
 						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);

@@ -3,10 +3,7 @@ indexing
 					Roundtrip visitor to simply iterate an AST tree and do nothing
 					Usage:
 						1. Invoke `set_parsed_class' with a roundtrip-parsed CLASS_AS instance.
-						2. (If you want) Invoke `set_start_position' and `set_end_position' to specify
-						   the part that you want to iterate. If `start_position' and `end_position' is not
-						   set, whole class will be iterated.
-						3. Invoke process_ast_node with a AST node (it must be included within the CLASS_AS you set
+						2. Invoke process_ast_node with a AST node (it must be included within the CLASS_AS you set
 						   using `set_parsed_class') to iterate.
 				]"
 	author: ""
@@ -27,9 +24,16 @@ feature -- AST process
 	process_ast_node (a_node: AST_EIFFEL) is
 			-- Process `a_node'.
 			-- Note: `a_node' must be included in `parsed_class'.
+		require
+			parsed_not_void: parsed_class /= Void
+			match_list_not_void: match_list /= Void
 		do
+			start_index := match_list.item_by_start_position (a_node.complete_start_position (match_list)).index
+			last_index := start_index - 1
 			safe_process (a_node)
-			process_left_leaves
+			if will_process_left_leaves then
+				process_left_leaves
+			end
 		end
 
 feature -- Access
@@ -45,69 +49,11 @@ feature -- Access
 	end_index: INTEGER
 			-- Start and end item index in `match_list'.
 
-	start_position: INTEGER
-			-- Position (in source text) where this visitor should start
+	match_list: LEAF_AS_LIST
+			-- List of tokens
 
-	end_position: INTEGER
-			-- Position (in source text) where this visitor should stop
-
-	start_index_from_position (pos: INTEGER): INTEGER is
-			-- Index of item in `match_list' that starts from position `pos'.
-			-- Return 0 if no item suffices.
-		local
-			done: BOOLEAN
-		do
-			from
-				match_list.start
-				Result := 0
-			until
-				match_list.after or done
-			loop
-				if match_list.item.position = pos then
-					done := True
-					Result := match_list.index
-				else
-					match_list.forth
-				end
-			end
-		end
-
-	end_index_from_position (pos: INTEGER): INTEGER is
-			-- Index of item in `match_list' that ends with position `pos'.
-			-- Return 0 if no item suffices.
-		local
-			done: BOOLEAN
-		do
-			from
-				match_list.start
-				Result := 0
-			until
-				match_list.after or done
-			loop
-				if match_list.item.end_position = pos then
-					done := True
-					Result := match_list.index
-				else
-					match_list.forth
-				end
-			end
-		end
-
-	valid_start_position (pos: INTEGER): BOOLEAN is
-			-- Is one-based `pos' a valid start postion in `parsed_class'.
-		require
-			parsed_class_set: parsed_class /= Void
-		do
-			Result := start_index_from_position (pos) > 0
-		end
-
-	valid_end_position (pos: INTEGER): BOOLEAN is
-			-- Is one-based `pos' a valid end postion in `parsed_class'.
-		require
-			parsed_class_set: parsed_class /= Void
-		do
-			Result := end_index_from_position (pos) > 0
-		end
+	will_process_left_leaves: BOOLEAN
+			-- Will left ast nodes be processed?
 
 feature -- Settings
 
@@ -115,45 +61,31 @@ feature -- Settings
 			-- Set `parsed_class' with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			a_class.match_list /= Void
 		do
 			parsed_class := a_class
-			match_list := a_class.match_list
-			start_position := 1
-			end_position := match_list.last.end_position
 			last_index := 0
 			start_index := 1
-			end_index := match_list.count
 		ensure
 			parsed_class_set: parsed_class = a_class
-			match_list_set: match_list = a_class.match_list
 		end
 
-	set_start_position (pos: INTEGER) is
-			-- 	Set `start_position' with `pos'.
-			-- `pos' is one-based.			
+	set_match_list (a_list: LEAF_AS_LIST) is
+			-- Set `match_list' with `a_list'.
 		require
-			parsed_class_set: parsed_class /= Void
-			pos_valid: valid_start_position (pos)
+			a_list_not_void: a_list /= Void
 		do
-			start_position := pos
-			start_index := start_index_from_position (pos)
-			last_index := start_index - 1
+			match_list := a_list
+			end_index := match_list.count
 		ensure
-			start_position_set: start_position = pos
+			match_list_set: match_list = a_list
 		end
 
-	set_end_position (pos: INTEGER) is
-			-- Set `end_position' with `pos'.
-			-- `pos' is one-based.
-		require
-			parsed_class_set: parsed_class /= Void
-			pos_valid: valid_end_position (pos)
+	set_will_process_left_leaves (b: BOOLEAN) is
+			-- Set `will_process_left_leaves' with `b'.
 		do
-			end_position := pos
-			end_index := end_index_from_position (pos)
+			will_process_left_leaves := b
 		ensure
-			end_position_set: end_position = pos
+			will_process_left_leaves_set: will_process_left_leaves = b
 		end
 
 feature -- Roundtrip: process leaf
@@ -161,54 +93,72 @@ feature -- Roundtrip: process leaf
 	process_keyword_as (l_as: KEYWORD_AS) is
 			-- Process `l_as'.
 		do
+			last_index := l_as.index
 		end
 
 	process_symbol_as (l_as: SYMBOL_AS) is
 			-- Process `l_as'.
 		do
+			last_index := l_as.index
 		end
 
 	process_separator_as (l_as: SEPARATOR_AS) is
 			-- Process `l_as'.
 		do
+			last_index := l_as.index
 		end
 
 	process_new_line_as (l_as: NEW_LINE_AS) is
 			-- Process `l_as'.
 		do
+			last_index := l_as.index
 		end
 
 	process_comment_as (l_as: COMMENT_AS) is
 			-- Process `l_as'.
 		do
+			last_index := l_as.index
+		end
+
+	process_break_as (l_as: BREAK_AS) is
+			-- Process `l_as'.			
+		do
+			last_index := l_as.index
 		end
 
 	process_bool_as (l_as: BOOL_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_char_as (l_as: CHAR_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_result_as (l_as: RESULT_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_retry_as (l_as: RETRY_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_unique_as (l_as: UNIQUE_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_deferred_as (l_as: DEFERRED_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_void_as (l_as: VOID_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_string_as (l_as: STRING_AS) is
@@ -217,6 +167,7 @@ feature -- Roundtrip: process leaf
 				safe_process (l_as.once_string_keyword)
 			end
 			safe_process (l_as.type)
+			last_index := l_as.index
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
@@ -225,43 +176,38 @@ feature -- Roundtrip: process leaf
 				safe_process (l_as.once_string_keyword)
 			end
 			safe_process (l_as.type)
+			last_index := l_as.index
 		end
 
 	process_current_as (l_as: CURRENT_AS) is
 		do
+			last_index := l_as.index
 		end
 
 	process_integer_as (l_as: INTEGER_AS) is
 		do
 			safe_process (l_as.constant_type)
 			safe_process (l_as.sign_symbol)
+			last_index := l_as.index
 		end
 
 	process_real_as (l_as: REAL_AS) is
 		do
 			safe_process (l_as.constant_type)
 			safe_process (l_as.sign_symbol)
+			last_index := l_as.index
 		end
 
 	process_id_as (l_as: ID_AS) is
 		do
-		end
-
-	process_bit_const_as (l_as: BIT_CONST_AS) is
-		do
-			safe_process (l_as.value)
+			last_index := l_as.index
 		end
 
 feature
 
-	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
-			-- Process `l_as'.
+	process_bit_const_as (l_as: BIT_CONST_AS) is
 		do
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.deferred_keyword)
-			safe_process (l_as.expanded_keyword)
-			safe_process (l_as.separate_keyword)
-			safe_process (l_as.external_keyword)
+			safe_process (l_as.value)
 		end
 
 	process_none_id_as (l_as: NONE_ID_AS) is
@@ -532,7 +478,10 @@ feature
 
 	process_variant_as (l_as: VARIANT_AS) is
 		do
-			process_tagged_as (l_as)
+			safe_process (l_as.variant_keyword)
+			safe_process (l_as.tag)
+			safe_process (l_as.colon_symbol)
+			safe_process (l_as.expr)
 		end
 
 	process_un_strip_as (l_as: UN_STRIP_AS) is
@@ -750,37 +699,21 @@ feature
 		end
 
 	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
-		local
-			f_as: KEYWORD_AS
 		do
-			if l_as.is_frozen then
-				f_as ?= l_as.frozen_location
-				safe_process (f_as)
-			end
+			safe_process (l_as.frozen_keyword)
 			safe_process (l_as.infix_prefix_keyword)
 			safe_process (l_as.alias_name)
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
-		local
-			f_as: KEYWORD_AS
 		do
-			if l_as.is_frozen then
-				f_as ?= l_as.frozen_location
-				safe_process (f_as)
-			end
+			safe_process (l_as.frozen_keyword)
 			safe_process (l_as.feature_name)
 		end
 
 	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
-		local
-			f_as: KEYWORD_AS
 		do
-			if l_as.is_frozen then
-				f_as ?= l_as.frozen_location
-				safe_process (f_as)
-			end
-
+			safe_process (l_as.frozen_keyword)
 			safe_process (l_as.feature_name)
 			if l_as.alias_name /= Void then
 				safe_process (l_as.alias_keyword)
@@ -849,6 +782,7 @@ feature
 			safe_process (l_as.if_keyword)
 			safe_process (l_as.condition)
 			safe_process (l_as.then_keyword)
+			safe_process (l_as.compound)
 			safe_process (l_as.elsif_list)
 			safe_process (l_as.else_keyword)
 			safe_process (l_as.else_part)
@@ -920,7 +854,11 @@ feature
 			s: STRING_AS
 		do
 			safe_process (l_as.internal_top_indexes)
-			safe_process (l_as.header_mark)
+			safe_process (l_as.frozen_keyword)
+			safe_process (l_as.deferred_keyword)
+			safe_process (l_as.expanded_keyword)
+			safe_process (l_as.separate_keyword)
+			safe_process (l_as.external_keyword)
 			safe_process (l_as.class_keyword)
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
@@ -933,7 +871,7 @@ feature
 			safe_process (l_as.creators)
 			safe_process (l_as.convertors)
 			safe_process (l_as.features)
-			safe_process (l_as.invariant_part)
+			safe_process (l_as.internal_invariant)
 			safe_process (l_as.internal_bottom_indexes)
 			safe_process (l_as.end_keyword)
 		end
@@ -1111,8 +1049,6 @@ feature
 
 feature{NONE} -- Implementation
 
-	match_list: LEAF_AS_LIST
-
 	process_before_leaves (ind: INTEGER) is
 			-- Process all leaves in `match_list' before index `ind'.
 		require
@@ -1149,6 +1085,4 @@ feature{NONE} -- Implementation
 				end
 			end
 		end
-
 end
-

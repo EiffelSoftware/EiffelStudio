@@ -41,18 +41,16 @@ feature -- Attributes
 	call: CALL_AS
 			-- Call instruction
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := call.start_location
+			Result := call.complete_start_location (a_list)
 		end
-		
-	end_location: LOCATION_AS is
-			-- End location of Current
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := call.end_location
+			Result := call.complete_end_location (a_list)
 		end
 
 feature -- Comparison

@@ -8,9 +8,6 @@ class
 
 inherit
 	EXPR_AS
-		redefine
-			start_location, end_location
-		end
 
 create
 	make
@@ -50,22 +47,26 @@ feature -- Access
 
 feature -- Location
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
-		do
-			Result := target.start_location
-		end
-
-	end_location: LOCATION_AS is
-			-- End location of Current
-		do
-			Result := operands.last.end_location
-		end
-
 	left_bracket_location: LOCATION_AS is
 			-- Location of a left bracket
 		do
 			Result := operands.first.start_location
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := target.complete_start_location (a_list)
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				Result := operands.complete_end_location (a_list)
+			else
+				Result := rbracket_symbol.complete_end_location (a_list)
+			end
 		end
 
 feature -- Comparison

@@ -171,9 +171,7 @@ feature -- Parsing
 			filename := a_file.name
 			ast_factory.new_internal_match_list (initial_match_list_size)
 			yyparse
-			if root_node /= Void then
-				root_node.set_match_list (ast_factory.internal_match_list)
-			end
+			match_list := ast_factory.internal_match_list
 			ast_factory.clear_internal_match_list
 			reset
 		rescue
@@ -192,14 +190,17 @@ feature -- Parsing
 			yy_load_input_buffer
 			ast_factory.new_internal_match_list (initial_match_list_size)
 			yyparse
-			if root_node /= Void then
-				root_node.set_match_list (ast_factory.internal_match_list)
-			end
+			match_list := ast_factory.internal_match_list
 			ast_factory.clear_internal_match_list
 			reset
 		rescue
 			reset
 		end
+
+feature -- Roundtrip
+
+	match_list: LEAF_AS_LIST
+			-- List of all tokens used for roundtrip
 
 feature -- Access: result nodes
 
@@ -242,6 +243,9 @@ feature -- Access
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in current feature declaration
 			-- or in an invariant
+
+	feature_clause_end_position: INTEGER
+			-- End of a feature clause
 
 feature -- Removal
 
@@ -320,6 +324,13 @@ feature {NONE} -- Implementation
 	feature_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for an Eiffel feature.
 			-- IL only
+
+	frozen_keyword,
+	expanded_keyword,
+	deferred_keyword,
+	separate_keyword,
+	external_keyword: KEYWORD_AS
+			-- Keywords that may appear in header mark of a class
 
 feature {NONE} -- Counters
 
@@ -581,87 +592,6 @@ feature {NONE} -- Type factory
 				end
 			end
 		end
-
-feature {NONE} -- Basic type factory
-
---	new_integer_value (sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
---			-- Create a new integer constant value
---		require
---			buffer_not_void: buffer /= Void
---			valid_sign: ("%U+-").has (sign_symbol)
---		local
---			l_type: TYPE_A
---			token_value: STRING
---		do
---			if a_type /= Void then
---				l_type := a_type.actual_type
---			end
---			if l_type /= Void then
---				if not l_type.is_integer and not l_type.is_natural then
---					report_invalid_type_for_integer_error (a_type, buffer)
---				end
---			elseif a_type /= Void then
---					-- A type was specified but did not result in a valid type
---				report_invalid_type_for_integer_error (a_type, buffer)
---			end
---				-- Remember original token
---			token_value := buffer
---				-- Remove underscores (if any) without breaking
---				-- original token
---			if token_value.has ('_') then
---				token_value := token_value.twin
---				token_value.prune_all ('_')
---			end
---			if token_value.is_number_sequence then
---				Result := ast_factory.new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as)
---			elseif
---				token_value.item (1) = '0' and then
---				token_value.item (2).lower = 'x'
---			then
---				Result := ast_factory.new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as)
---			end
---			if Result = Void or else not Result.is_initialized then
---				if sign_symbol = '-' then
---						-- Add `-' for a better reporting.
---					buffer.precede ('-')
---					report_integer_too_small_error (buffer)
---				else
---					report_integer_too_large_error (buffer)
---				end
---					-- Dummy code (for error recovery) follows:
---				Result := ast_factory.new_integer_as (a_type, False, "0", Void, s_as)
---			end
---			Result.set_position (line, column, position, buffer.count)
---		end
---
---	new_real_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS is
---			-- Create a new real constant value.
---		require
---			buffer_not_void: buffer /= Void
---		local
---			l_type: TYPE_A
---			l_buffer: STRING
---		do
---			if a_type /= Void then
---				l_type := a_type.actual_type
---			end
---			if l_type /= Void then
---				if not l_type.is_real_32 and not l_type.is_real_64 then
---					report_invalid_type_for_real_error (a_type, buffer)
---				end
---			elseif a_type /= Void then
---					-- A type was specified but did not result in a valid type
---				report_invalid_type_for_real_error (a_type, buffer)
---			end
---			if is_signed and sign_symbol = '-' then
---				l_buffer := buffer.twin
---				buffer.precede ('-')
---			else
---				l_buffer := buffer
---			end
---			Result := ast_factory.new_real_as (a_type, buffer, l_buffer, s_as)
---			Result.set_position (line, column, position, buffer.count)
---		end
 
 feature {NONE} -- Instruction factory
 

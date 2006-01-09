@@ -8,6 +8,9 @@ class STRING_AS
 
 inherit
 	ATOMIC_AS
+		undefine
+			text
+
 		redefine
 			is_equivalent
 		end

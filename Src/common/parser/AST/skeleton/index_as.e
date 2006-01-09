@@ -51,18 +51,20 @@ feature -- Attributes
 	index_list: EIFFEL_LIST [ATOMIC_AS]
 			-- Indexes
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := tag.start_location
+			if tag /= Void then
+				Result := tag.complete_start_location (a_list)
+			else
+				Result := index_list.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := index_list.end_location
+			Result := index_list.complete_end_location (a_list)
 		end
 
 feature -- Comparison

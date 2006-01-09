@@ -44,29 +44,35 @@ feature -- Attributes
 	feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Feature list
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			if clients /= Void then
-				Result := clients.start_location
-			elseif feature_list /= Void then
-				Result := feature_list.start_location
+			if a_list = Void then
+				if clients /= Void then
+					Result := clients.complete_start_location (a_list)
+				elseif feature_list /= Void then
+					Result := feature_list.complete_start_location (a_list)
+				else
+					Result := null_location
+				end
 			else
-				Result := null_location
+				Result := create_creation_keyword.complete_start_location (a_list)
 			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if feature_list /= Void then
-				Result := feature_list.end_location
+				Result := feature_list.complete_end_location (a_list)
 			elseif clients /= Void then
-				Result := clients.end_location
-			else
+				Result := clients.complete_end_location (a_list)
+			elseif a_list = Void then
+					-- Non-roundtrip mode
 				Result := null_location
+			else
+					-- Roundtrip mode
+				Result := create_creation_keyword.complete_end_location (a_list)
 			end
 		end
 

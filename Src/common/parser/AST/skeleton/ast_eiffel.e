@@ -54,21 +54,23 @@ feature -- Access
 
 feature -- Location
 
-	start_location: LOCATION_AS is
+	frozen start_location: LOCATION_AS is
 			-- Starting point for current construct.
-		deferred
+		do
+			Result := complete_start_location (Void)
 		ensure
 			start_location_not_void: Result /= Void
 		end
 
-	end_location: LOCATION_AS is
+	frozen end_location: LOCATION_AS is
 			-- Ending point for current construct.
-		deferred
+		do
+			Result := complete_end_location (Void)
 		ensure
 			end_location_not_void: Result /= Void
 		end
 
-	start_position: INTEGER is
+	frozen start_position: INTEGER is
 			-- Starting position for current construct.
 		do
 			Result := start_location.position
@@ -76,12 +78,256 @@ feature -- Location
 			start_position_non_negative: Result >= 0
 		end
 
-	end_position: INTEGER is
+	frozen end_position: INTEGER is
 			-- End position for current construct
 		do
 			Result := end_location.final_position
 		ensure
 			end_position_non_negative: Result >= 0
+		end
+
+feature -- Roundtrip
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+			-- Absolute start location for current construct
+		deferred
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+			-- Absolute end location for current construct
+		deferred
+		end
+
+	frozen complete_start_position (a_list: LEAF_AS_LIST): INTEGER is
+			-- Absolute start position for current construct
+		do
+			Result := complete_start_location (a_list).position
+		end
+
+	frozen complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
+			-- Absolute end position for current construct
+		do
+			Result := complete_end_location (a_list).final_position
+		end
+
+	original_text (a_list: LEAF_AS_LIST): STRING is
+			-- Original text of `Current' AST structure
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := a_list.original_text (complete_start_position (a_list), complete_end_position (a_list))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	original_text_count (a_list: LEAF_AS_LIST): INTEGER is
+			-- Count in bytes of original text of `Current' AST structure
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := complete_end_position (a_list) - complete_start_position (a_list) + 1
+		end
+
+	text (a_list: LEAF_AS_LIST): STRING is
+			-- Text (with modification applied, if any) of `Current' AST structure
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := a_list.text (complete_start_position (a_list), complete_end_position (a_list))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	text_count (a_list: LEAF_AS_LIST): INTEGER is
+			-- Count in bytes of text (with all modification, if any, applied to)
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := text (a_list).count
+		end
+
+	can_add_text (a_pos: INTEGER; a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can `a_text' be added at `a_pos' of `Current' AST structure?
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := a_pos >= 1 and a_pos <= original_text_count (a_list) and
+					 a_list.valid_add_position (complete_start_position (a_list) + a_pos - 1)
+		end
+
+	add_text (a_text: STRING; a_pos: INTEGER; a_list: LEAF_AS_LIST) is
+			-- Add `a_text' at `a_pos' position from start of `Current' AST structure.
+		require
+			a_list_not_void: a_list /= Void
+			a_text_not_void: a_text /= Void
+			can_add_text: can_add_text (a_pos, a_list)
+		do
+			a_list.put_add (complete_start_position (a_list) + a_pos - 1,  a_text)
+		end
+
+	can_remove_text (start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can text from `start_pos' to `end_pos' be removed?
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_start_pos: INTEGER
+		do
+			l_start_pos := complete_start_position (a_list)
+			Result := start_pos >=1 and end_pos >=1 and end_pos <= original_text_count (a_list) and
+					 a_list.valid_del_position (l_start_pos + start_pos - 1, l_start_pos + end_pos - 1)
+		end
+
+	can_remove_all_text (a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can all text of `Current' node be removed?
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := can_remove_text (1, original_text_count (a_list), a_list)
+		end
+
+	remove_text (start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST) is
+			-- Remove text of `current' AST node from `start_pos' to `end_pos'.
+		require
+			a_list_not_void: a_list /= Void
+			position_valid: can_remove_text (start_pos, end_pos, a_list)
+		local
+			l_start_pos: INTEGER
+		do
+			l_start_pos := complete_start_position (a_list)
+			a_list.put_del (l_start_pos + start_pos - 1, l_start_pos + end_pos - 1)
+		end
+
+	remove_all_text (a_list: LEAF_AS_LIST) is
+			-- Remove all text of `currnt' AST node.
+		require
+			a_list_not_void: a_list /= Void
+			can_remove: can_remove_text (1, original_text_count (a_list), a_list)
+		do
+			remove_text (1, original_text_count (a_list), a_list)
+		end
+
+	can_replace_text (start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can text from `start_pos' to `end_pos' of `current' AST node be replaced by some other text?
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result :=  can_add_text (start_pos, a_list) and can_remove_text (start_pos, end_pos, a_list)
+		end
+
+	can_replace_all_text (a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can all text of `Current' node be replaced by some other text?
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := can_replace_text (1, original_text_count (a_list), a_list)
+		end
+
+	replace_text (a_text: STRING; start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST) is
+			-- Replace text from `start_pos' to `end_pos' of `current' AST node by `a_text'.
+		require
+			a_text_not_void: a_text /= Void
+			position_valid: can_replace_text (start_pos, end_pos, a_list)
+		local
+			l_start_pos: INTEGER
+		do
+			l_start_pos := complete_start_position (a_list)
+			a_list.put_replace (l_start_pos + start_pos - 1, l_start_pos + end_pos - 1, a_text)
+		end
+
+	replace_all_text (a_text: STRING; a_list: LEAF_AS_LIST) is
+			-- Replace all text of current node with `a_text'.
+		require
+			a_text_not_void: a_text /= Void
+			a_list_not_void: a_list /= Void
+			can_replace: can_replace_text (1, original_text_count (a_list), a_list)
+		do
+			replace_text (a_text, 1, original_text_count (a_list), a_list)
+		end
+
+	sub_text (start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST): STRING is
+			-- Text from `start_pos' to `end_pos' of `current' AST node
+		require
+			a_list_not_void: a_list /= Void
+			position_valid: start_pos >= 1 and end_pos <= original_text_count (a_list) and start_pos <= end_pos
+		local
+			l_start_pos: INTEGER
+		do
+			l_start_pos := complete_start_position (a_list)
+			Result := a_list.text (l_start_pos + start_pos -1, l_start_pos + end_pos - 1)
+		end
+
+	sub_original_text (start_pos, end_pos: INTEGER; a_list: LEAF_AS_LIST): STRING is
+			-- Original text from `start_pos' to `end_pos' of `current' AST node
+		require
+			a_list_not_void: a_list /= Void
+			position_valid: start_pos >= 1 and end_pos <= original_text_count (a_list) and start_pos <= end_pos
+		local
+			l_start_pos: INTEGER
+		do
+			l_start_pos := complete_start_position (a_list)
+			Result := a_list.original_text (l_start_pos + start_pos - 1, l_start_pos + end_pos - 1)
+		end
+
+	can_replace_subtext (old_str: STRING; is_case_sensitive: BOOLEAN; a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can all occurrances of `old_str' in original text of `current' AST node be replaced by some other string?
+		require
+			old_str_not_void: old_str /= Void
+			old_str_not_empty: not old_str.is_empty
+			a_list_not_void: a_list /= Void
+		local
+			l_str: STRING
+			l_index: INTEGER
+			l_count: INTEGER
+			l_old_str: STRING
+		do
+			l_str := original_text (a_list)
+			if not is_case_sensitive then
+				l_str.to_lower
+				l_old_str := old_str.as_lower
+			else
+				l_old_str := old_str
+			end
+			l_count := l_old_str.count
+			from
+				l_index := l_str.substring_index (l_old_str, 1)
+				Result := True
+			until
+				l_index = 0 or not Result
+			loop
+				Result := can_replace_text (l_index, l_index + l_count - 1, a_list)
+				l_index := l_str.substring_index (l_old_str, l_index + l_count)
+			end
+		end
+
+	replace_subtext (old_str, new_str: STRING; is_case_sensitive: BOOLEAN; a_list: LEAF_AS_LIST) is
+			-- Replace all `old_str' by `new_str' in original text of `current' AST node.
+		require
+			old_str_not_void: old_str /= Void
+			old_str_not_empty: not old_str.is_empty
+			a_list_not_void: a_list /= Void
+			subtext_replacable: can_replace_subtext (old_str, is_case_sensitive, a_list)
+		local
+			l_str: STRING
+			l_index: INTEGER
+			l_count: INTEGER
+			l_old_str: STRING
+		do
+			l_str := original_text (a_list)
+			if not is_case_sensitive then
+				l_str.to_lower
+				l_old_str := old_str.as_lower
+			else
+				l_old_str := old_str
+			end
+			l_count := old_str.count
+			from
+				l_index := l_str.substring_index (l_old_str, 1)
+			until
+				l_index = 0
+			loop
+				replace_text (new_str, l_index, l_index + l_count - 1, a_list)
+				l_index := l_str.substring_index (l_old_str, l_index + l_count)
+			end
 		end
 
 feature {NONE} -- Constants

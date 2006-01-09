@@ -47,28 +47,6 @@ feature -- Roundtrip
 			-- Assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			if assertions /= Void then
-				Result := assertions.start_location
-			else
-				Result := null_location
-			end
-		end
-
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			if assertions /= Void then
-				Result := assertions.end_location
-			else
-				Result := null_location
-			end
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

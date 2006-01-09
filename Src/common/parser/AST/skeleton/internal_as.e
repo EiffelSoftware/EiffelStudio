@@ -28,28 +28,6 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			if compound /= Void then
-				Result := compound.start_location
-			else
-				Result := null_location
-			end
-		end
-		
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			if compound /= Void then
-				Result := compound.end_location
-			else
-				Result := null_location
-			end
-		end
-
 feature -- test for empty body
 
 	is_empty : BOOLEAN is
@@ -107,10 +85,10 @@ feature -- Access
 		end
 
 feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication
-	
+
 	set_compound (c: like compound) is
 		do
 			compound := c
-		end;	
-	
+		end;
+
 end -- class INTERNAL_AS

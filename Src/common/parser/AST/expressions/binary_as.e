@@ -7,10 +7,7 @@ deferred class BINARY_AS
 
 inherit
 	EXPR_AS
-		redefine
-			start_location, end_location
-		end
-
+	
 feature {NONE} -- Initialization
 
 	initialize (l: like left; r: like right; o: like operator) is
@@ -43,23 +40,23 @@ feature -- Roundtrip
 
 feature -- Location
 
-	start_location: LOCATION_AS is
-			-- Start location of Current
-		do
-			Result := left.start_location
-		end
-
-	end_location: LOCATION_AS is
-			-- End location of Current
-		do
-			Result := right.end_location
-		end
-
 	operator_location: LOCATION_AS is
 			-- Location of operator
 		do
 			fixme ("This is not precise enough, we ought to have the precise location.")
 			Result := left.end_location
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := left.complete_start_location (a_list)
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := right.complete_end_location (a_list)
 		end
 
 feature -- Properties

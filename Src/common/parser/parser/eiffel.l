@@ -33,22 +33,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
 
+-- Breaks
 
--- Comments
-
-"--".*	{			
-				ast_factory.new_comment_as (Current)
-			}
-
-
--- Separators
-
-[ \t\r]+ {					
-					ast_factory.new_separator_as (Current)
-				}
-\n+	{					
-					ast_factory.new_new_line_as (Current)
-	}
+([ \t\r\n]|"--".*)+ { ast_factory.new_break_as (Current) }
 
 -- Symbols
 
@@ -222,6 +209,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [aA][sS][sS][iI][gG][nN] {				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ASSIGN, Current)
+				if last_keyword_as_value /= Void then
+					last_assign_index := last_keyword_as_value.index
+				end
 				last_token := TE_ASSIGN
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE] {
@@ -402,103 +392,13 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
 				last_token := TE_ONCE_STRING
 			}
-[oO][nN][cC][eE][ \t\r\n]+/\"	{				
-				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
-				last_token := TE_ONCE_STRING			
-				from
-					l_i := 5
-					l_j := 5
-					l_line := line
-					l_column := column + 4
-					l_position := position + 4
-				until
-					l_i > text_count
-				loop
-					if text.item (l_i) = '%N' then							
-							if l_j < l_i then
-								ast_factory.new_separator_as_with_data (text_substring (l_j, l_i-1),  l_line, l_column, l_position, l_i - l_j)
-							end
-							ast_factory.new_new_line_as_with_data ("%N",  l_line, l_column + (l_i - l_j), l_position + (l_i - l_j), 1)			
-							l_line := l_line + 1
-							l_column := 1
-							l_position := l_position + (l_i - l_j) + 1
-							l_j := l_i + 1
-					end
-					l_i := l_i + 1
-				end
-				l_i := text_count
-				if l_j <= l_i then					
-					ast_factory.new_separator_as_with_data (text_substring (l_j, l_i),  l_line, l_column, l_position, l_i - l_j + 1)						
-				end
-			}
 [oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{				
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
-				last_token := TE_ONCE_STRING
-			from
-				l_position := position + 4
-				l_line := line
-				l_column := column + 4
-				l_i := 5
-				l_j := 5
-				is_matching_comment := False
-			until
-				l_i > text_count
-			loop
-				l_c := text.item (l_i)
-				if is_matching_comment then
-					if l_c = '%N' then
-						l_temp := text.substring (l_j, l_i - 1) 											
-						ast_factory.new_comment_as_with_data (l_temp,  l_line, l_column, l_position, l_i - l_j) 				
-  					ast_factory.new_new_line_as_with_data ("%N",  l_line, l_column + (l_i - l_j), l_position + (l_i - l_j), 1)
-						l_position := l_position + (l_i - l_j) + 1
-						l_line := l_line + 1
-						l_column := 1
-						is_matching_comment := False
-						l_i := l_i + 1
-						l_j := l_i
-					else
-						l_i := l_i + 1											
-					end
-				else
-					if l_c = '-' then
-						if l_i + 1 <= text_count and then text.item (l_i) = '-' then
-							if l_j < l_i then									
-							  l_temp := text.substring (l_j, l_i - 1)	
-								ast_factory.new_separator_as_with_data (l_temp,  l_line, l_column, l_position, l_i - l_j) 					
-							end
-							is_matching_comment := True
-							l_column := l_column + (l_i - l_j)
-							l_position := l_position + (l_i - l_j)
-							l_j := l_i
-							l_i := l_i + 2
-						end
-					else	
-						if l_c = '%N' then
-							if l_j < l_i then								
-								l_temp := text.substring (l_j, l_i - 1) 							
-  							ast_factory.new_separator_as_with_data (l_temp,  l_line, l_column, l_position, l_i - l_j) 							
-  							ast_factory.new_new_line_as_with_data ("%N",  l_line, l_column + (l_i - l_j), l_position + (l_i - l_j), 1)
-								l_position := l_position + 	(l_i - l_j + 1)
-							else								
-								ast_factory.new_new_line_as_with_data ("%N",  l_line, l_column, l_position, 1)
-								l_position := l_position + 	1							
-							end	
-							l_line := l_line + 1
-							l_column := 1	
-							l_i := l_i + 1
-							l_j := l_i						
-						else
-							l_i := l_i + 1				
-						end
-					end
-				end
-			end		
-			l_i := text_count
-			if l_j <= l_i then  				
-				l_temp := text.substring (l_j, l_i)	
-  				ast_factory.new_separator_as_with_data (l_temp,  l_line, l_column, l_position, l_i - l_j + 1) 
-			end
+					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
+				ast_factory.new_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
+				last_token := TE_ONCE_STRING			
 			}
+
 [oO][nN][cC][eE]	{				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
 				last_token := TE_ONCE
@@ -610,7 +510,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ID
 				process_id_as
 			}
-
 
 -- Bits
 

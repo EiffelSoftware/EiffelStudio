@@ -9,11 +9,8 @@ deferred class
 inherit
 	CALL_AS
 		redefine
-			is_equivalent, start_location, end_location
+			is_equivalent
 		end
-
---create
---	initialize
 
 feature {NONE} -- Initialization
 
@@ -46,24 +43,6 @@ feature -- Access
 			-- Routine call: it is an instance of ACCESS_INV_AS because
 			-- only procedure and functions are valid and no export validation
 			-- is made.
-
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Start location of Current
-		do
-			Result := type.start_location
-		end
-
-	end_location: LOCATION_AS is
-			-- End location of Current
-		do
-			if call /= Void then
-				Result := call.end_location
-			else
-				Result := type.end_location
-			end
-		end
 
 feature -- Comparison
 

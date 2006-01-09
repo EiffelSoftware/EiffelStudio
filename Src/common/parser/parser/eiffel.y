@@ -99,8 +99,6 @@ create
 
 %type <PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
 %type <PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
-%type <CLASS_HEADER_MARK_AS> Header_mark
-%type <KEYWORD_AS> Frozen_mark External_mark
 %type <IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
 %type <PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
 %type <AGENT_TARGET_TRIPLE> Agent_target
@@ -298,7 +296,7 @@ Class_declaration:
 						if $7 /= Void then
 							root_node.set_obsolete_keyword ($7.first)
 						end
-						root_node.set_header_mark ($2)
+						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
 						root_node.set_class_keyword ($3)
 				end
 			}
@@ -306,6 +304,7 @@ Class_declaration:
 
 End_inheritance_pos: { inheritance_end_position := position } ;
 End_features_pos: { features_end_position := position } ;
+End_feature_clause_pos: { feature_clause_end_position := position };
 
 -- Indexing
 
@@ -448,7 +447,9 @@ Header_mark: Frozen_mark External_mark
 				is_deferred := False
 				is_expanded := False
 				is_separate := False
-				$$ := ast_factory.new_class_header_mark_as ($1, Void, Void, Void, $2)
+				deferred_keyword := Void
+				expanded_keyword := Void
+				separate_keyword := Void
 			}
 	|	TE_DEFERRED External_mark
 			{
@@ -456,27 +457,38 @@ Header_mark: Frozen_mark External_mark
 				is_deferred := True
 				is_expanded := False
 				is_separate := False
-				$$ := ast_factory.new_class_header_mark_as (Void, Void, $1, Void, $2)
+
+				frozen_keyword := Void
+				deferred_keyword := $1
+				expanded_keyword := Void
+				separate_keyword := Void
 			}
 	|	Frozen_mark TE_EXPANDED External_mark
 			{
 				is_deferred := False
 				is_expanded := True
 				is_separate := False
-				$$ := ast_factory.new_class_header_mark_as ($1, $2, Void, Void, $3)
+				
+				deferred_keyword := Void
+				expanded_keyword := $2
+				separate_keyword := Void
 			}
 	|	Frozen_mark TE_SEPARATE External_mark
 			{
 				is_deferred := False
 				is_expanded := False
 				is_separate := True
-				$$ := ast_factory.new_class_header_mark_as ($1, Void, Void, $2, $3)
+
+				deferred_keyword := Void
+				expanded_keyword := Void
+				separate_keyword := $2
 			}
 	;
 
 Frozen_mark: -- Empty
 			{
 				is_frozen_class := False
+				frozen_keyword := Void
 			}
 	|	TE_FROZEN
 			{
@@ -486,19 +498,20 @@ Frozen_mark: -- Empty
 					-- previous one, since line numbers are
 					-- emitted.
 				is_frozen_class := True
-				$$ := $1
+				frozen_keyword := $1
 			}
 	;
 
 External_mark: -- Empty
 			{
 				is_external_class := False
+				external_keyword := Void
 			}
 	|	TE_EXTERNAL
 			{
 				if il_parser then
 					is_external_class := True
-					$$ := $1
+					external_keyword := $1
 				else
 						-- Trigger a syntax error.
 					raise_error
@@ -549,12 +562,12 @@ Feature_clause_list: Feature_clause
 			}
 	;
 
-Feature_clause: Feature_client_clause
+Feature_clause: Feature_client_clause End_feature_clause_pos
 			{ $$ := ast_factory.new_feature_clause_as ($1,
-				ast_factory.new_eiffel_list_feature_as (0), fclause_pos) }
-	|	Feature_client_clause { add_counter } Feature_declaration_list
+				ast_factory.new_eiffel_list_feature_as (0), fclause_pos, feature_clause_end_position) }
+	|	Feature_client_clause { add_counter } Feature_declaration_list End_feature_clause_pos
 			{
-				$$ := ast_factory.new_feature_clause_as ($1, $3, fclause_pos)
+				$$ := ast_factory.new_feature_clause_as ($1, $3, fclause_pos,  feature_clause_end_position)
 				remove_counter
 			}
 	;
@@ -563,9 +576,11 @@ Feature_client_clause: TE_FEATURE
 			{
 				fclause_pos := $1 
 				if $1 /= Void then
-					fclause_pos.set_position (line, column, position, 8)
+						-- Originally, it was 8, I changed it to 7 (Jason)
+					fclause_pos.set_position (line, column, position, 7)
 				else
-					fclause_pos := ast_factory.new_location_as (line, column, position, 8)  
+						-- Originally, it was 8, I changed it to 7 (Jason)
+					fclause_pos := ast_factory.new_location_as (line, column, position, 7)
 				end
 				
 			}
@@ -666,7 +681,7 @@ New_feature: Extended_feature_name
 			{
 				$$ := $2
 				if $$ /= Void then
-					$$.set_frozen_location ($1)
+					$$.set_frozen_keyword ($1)
 				end
 			}
 	;
@@ -1022,6 +1037,10 @@ Convert_feature: Feature_name TE_LPARAN TE_LCURLY Type_list TE_RCURLY TE_RPARAN
 		{
 				-- False because this is not a conversion feature used as a creation
 				-- procedure.
+			if $4 /= Void then
+				ast_factory.extend_pre_as ($4, $3)
+				ast_factory.extend_post_as ($4, $5)
+			end
 			$$ := ast_factory.new_convert_feat_as (False, $1, $4, Void, Void, $2)
 		}
 	;
@@ -1175,6 +1194,7 @@ Identifier_list: Identifier_as_lower
 				if $$ /= Void and $1 /= Void then
 					Names_heap.put ($1)
 					$$.reverse_extend (Names_heap.found_item)
+					ast_factory.reverse_extend_identifier ($$.id_list, $1)
 					ast_factory.reverse_extend_separator ($$.id_list, $3)
 				end
 			}
@@ -2290,21 +2310,11 @@ Factor: TE_VOID
 			}
 	|	TE_ADDRESS TE_CURRENT
 			{ 
-				temp_address_current_as := ast_factory.new_address_current_as ($2) 
-				if temp_address_current_as /= Void then
-					temp_address_current_as.set_address_symbol ($1)
-					temp_address_current_as.set_current_keyword ($2)
-				end
-				$$ := temp_address_current_as
+				$$ := ast_factory.new_address_current_as ($2, $1) 
 			}
 	|	TE_ADDRESS TE_RESULT
 			{ 
-				temp_address_result_as := ast_factory.new_address_result_as ($2) 
-				if temp_address_result_as /= Void then
-					temp_address_result_as.set_address_symbol ($1)
-					temp_address_result_as.set_result_keyword ($2)
-				end
-				$$ := temp_address_result_as
+				$$ := ast_factory.new_address_result_as ($2, $1) 
 			}
 	|	Bracket_target
 			{ $$ := $1 }
@@ -2329,6 +2339,7 @@ Qualified_factor:
 	;
 
 Typed_expression:	Typed
+					 
 			{ $$ := ast_factory.new_type_expr_as ($1) }
 	|	Typed_nosigned_integer
 			{ $$ := $1 }
@@ -2502,29 +2513,23 @@ Expression_list: Expression
 
 Identifier_as_upper: TE_ID
 			{
-				if $1 /= Void then
-					if not case_sensitive then
-						$1.to_upper
-					end
-					$1.set_is_class_name (True)
+				if not case_sensitive and $1 /= Void then
+					$1.to_upper		
 				end
 				$$ := $1
 			}
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as
+				process_id_as_with_existing_stub (last_assign_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 
-				if last_id_as_value /= Void then
-					if not case_sensitive then
-						last_id_as_value.to_upper
-					end
-					last_id_as_value.set_is_class_name (True)
+				if not case_sensitive and last_id_as_value /= Void then
+					last_id_as_value.to_upper
 				end
 				$$ := last_id_as_value
 			}
@@ -2540,7 +2545,7 @@ Identifier_as_lower: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as
+				process_id_as_with_existing_stub (last_assign_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,

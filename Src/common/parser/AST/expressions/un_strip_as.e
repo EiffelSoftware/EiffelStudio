@@ -49,18 +49,27 @@ feature -- Attributes
 	id_list: CONSTRUCT_LIST [INTEGER]
 			-- Attribute list
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := null_location
+			if a_list = Void then
+				Result := null_location
+			else
+				Result := operator.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		local
+			l_id_list: IDENTIFIER_LIST
 		do
-			Result := null_location
+			if a_list = Void then
+				Result := null_location
+			else
+				l_id_list ?= id_list
+				Result := l_id_list.id_list.complete_end_location (a_list)
+			end
 		end
 
 feature -- Comparison

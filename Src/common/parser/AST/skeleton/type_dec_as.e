@@ -72,18 +72,23 @@ feature -- Access
 			Result_not_empty: not Result.is_empty
 		end
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		local
+			l_id_list: IDENTIFIER_LIST
 		do
-			Result := type.start_location
+			if a_list = Void then
+				Result := type.complete_start_location (a_list)
+			else
+				l_id_list ?= id_list
+				Result := l_id_list.id_list.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := type.end_location
+			Result := type.complete_end_location (a_list)
 		end
 
 feature -- Comparison

@@ -9,6 +9,9 @@ class
 
 inherit
 	LEAF_AS
+		redefine
+			text
+		end
 
 create
 	make, make_with_data
@@ -20,7 +23,6 @@ feature -- Initialization
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			set_text (new_line_text)
 			make_with_location (a_scn.line, a_scn.column, a_scn.position, 1)
 		end
 
@@ -31,7 +33,6 @@ feature -- Initialization
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
-			set_text (a_text)
 			make_with_location (l, c, p, s)
 		end
 
@@ -39,6 +40,12 @@ feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is
 		do
+		end
+
+	text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of this token
+		do
+			Result := "%N"
 		end
 
 feature -- Visitor
@@ -53,17 +60,6 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 		do
 			Result := is_equal (other)
-		end
-
-feature{NONE} -- Implementation
-
-	code: INTEGER
-		-- Symbol code	
-
-	new_line_text: STRING is
-			-- Text of new-line.
-		once
-			Result := "%N"
 		end
 
 end

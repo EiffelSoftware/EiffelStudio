@@ -9,8 +9,8 @@ class
 
 inherit
 	CREATION_EXPR_AS
-		rename
-			process as creation_expr_process
+		redefine
+			process
 		end
 
 create
@@ -37,5 +37,25 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_create_creation_expr_as (Current)
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				Result := type.complete_start_location (a_list)
+			else
+				Result := create_keyword.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if call /= Void then
+				Result := call.complete_end_location (a_list)
+			else
+				Result := type.complete_end_location (a_list)
+			end
 		end
 end

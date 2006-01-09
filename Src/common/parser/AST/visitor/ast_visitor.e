@@ -8,13 +8,6 @@ deferred class
 
 feature -- Roundtrip
 
-	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_none_id_as (l_as: NONE_ID_AS) is
 			-- Process `l_as'.
 		require
@@ -102,6 +95,13 @@ feature -- Roundtrip
 		end
 
 	process_comment_as (l_as: COMMENT_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_break_as (l_as: BREAK_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void

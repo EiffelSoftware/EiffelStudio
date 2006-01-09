@@ -38,4 +38,31 @@ feature -- Roundtrip
 	do_keyword: KEYWORD_AS
 			-- Keyword "do" associated with this structure
 
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if a_list = Void then
+				if compound /= Void then
+					Result := compound.complete_start_location (a_list)
+				else
+					Result := null_location
+				end
+			else
+				Result := do_keyword.complete_start_location (a_list)
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if compound /= Void then
+				Result := compound.complete_end_location (a_list)
+			elseif a_list = Void then
+					-- Non-roundtrip mode
+				Result := null_location
+			else
+				Result := do_keyword.complete_end_location (a_list)
+			end
+		end
+
 end -- class DO_AS

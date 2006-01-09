@@ -10,6 +10,8 @@ inherit
 	AST_EIFFEL
 		undefine
 			number_of_breakpoint_slots
+		redefine
+			text
 		end
 
 	LOCATION_AS
@@ -17,46 +19,35 @@ inherit
 			make as make_with_location
 		end
 
-feature -- Location
+feature -- Roundtrip/Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			Result := Current
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			Result := Current
 		end
 
 feature -- Roundtrip
 
-	text: STRING
-			-- Literal text of this token
+	text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of this token, which is stored in `a_list'
+		require else
+			a_list_can_be_void: a_list = Void
+		do
+			check
+				a_list_not_void: a_list /= Void
+				index_valid: index > 0 and index <= a_list.count
+				type_correct: a_list.i_th (index).generating_type.is_equal ("LEAF_STUB_AS")
+			end
+			Result := a_list.i_th (index).text (Void)
+		end
 
 	index: INTEGER
 			-- Index in `match_list', a structure to store all tokens (including breaks and comments).
-
-	set_shared_text (a_scn: EIFFEL_SCANNER) is
-			-- Set `text' with `a_scn'.text.
-			-- This facility will be used later, but for now, it is the same as `set_text'.
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-			set_text (a_scn.text)
-		end
-
-	set_text (a_text: like text) is
-			-- Set `text' with `a_text'.
-		require
-			a_text_not_void: a_text /= Void
-		do
-			text := a_text
-		ensure
-			text_set: text = a_text
-		end
 
 	set_index (i: INTEGER) is
 			-- Set `index' with `i'.

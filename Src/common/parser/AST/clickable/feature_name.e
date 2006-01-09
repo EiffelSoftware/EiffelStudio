@@ -69,31 +69,14 @@ feature -- Stoning
 		deferred
 		end
 
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			Result := frozen_location
-			if Result = Void or else Result.is_null then
-				Result := internal_name.start_location
-			end
-		end
-		
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			Result := internal_name.end_location
-		end
-
 feature -- Status report
 
 	is_frozen: BOOLEAN is
 			-- Is the name of the feature frozen?
 		do
-			Result := frozen_location /= Void
+			Result := frozen_keyword /= Void
 		ensure
-			definition: Result = (frozen_location /= Void)
+			definition: Result = (frozen_keyword /= Void)
 		end
 
 	is_infix: BOOLEAN is
@@ -191,14 +174,14 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
-	set_frozen_location (l: LOCATION_AS) is
+	set_frozen_keyword (l: KEYWORD_AS) is
 			-- Set location of the associated "frozen" keyword to `l'.
 		require
 			l_not_void: l /= Void
 		do
-			frozen_location := l
+			frozen_keyword := l
 		ensure
-			frozen_location_set: frozen_location = l
+			frozen_keyword_set: frozen_keyword = l
 		end
 
 feature -- Comparison
@@ -209,8 +192,8 @@ feature -- Comparison
 
 feature {NONE} -- Location
 
-	frozen_location: LOCATION_AS
-			-- Location of the keyword "frozen" (if any)
+	frozen_keyword: KEYWORD_AS
+			-- Keyword "frozen" (if any)
 
 feature {NONE} -- Implementation: helper functions
 

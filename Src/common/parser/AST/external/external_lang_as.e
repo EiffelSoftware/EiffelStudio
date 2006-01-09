@@ -8,6 +8,8 @@ class
 
 inherit
 	AST_EIFFEL
+		undefine
+			text
 		redefine
 			is_equivalent
 		end
@@ -63,5 +65,5 @@ feature {NONE} -- Implementation
 		do
 			-- do nothing
 		end
-		
+
 end -- class EXTERNAL_LANG_AS

@@ -59,21 +59,29 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := expr.start_location
+			if a_list = Void then
+				Result := expr.complete_start_location (a_list)
+			else
+				Result := elseif_keyword.complete_start_location (a_list)
+			end
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
 			if compound /= Void then
-				Result := compound.end_location
+				Result := compound.complete_end_location (a_list)
 			else
-				Result := expr.end_location
+				if a_list = Void then
+						-- Non-roundtrip mode
+					Result := expr.complete_end_location (a_list)
+				else
+						-- Roundtrip mode
+					Result := then_keyword.complete_end_location (a_list)
+				end
 			end
 		end
 

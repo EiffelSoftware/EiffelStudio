@@ -9,10 +9,25 @@ class
 inherit
 	EXPR_AS
 
-	LEAF_AS
+	LOCATION_AS
 
 create
-	make_from_other
+	initialize
+
+feature{NONE} -- Initialization
+
+	initialize (c_as: like current_keyword; a_as: like address_symbol) is
+			-- Create new ADDRESS_CURRENT AST node.
+		require
+			c_as_not_void: c_as /= Void
+		do
+			current_keyword := c_as
+			address_symbol := a_as
+			make_from_other (current_keyword)
+		ensure
+			current_keyword_set: current_keyword = c_as
+			address_symbol_set: address_symbol = a_as
+		end
 
 feature -- Visitor
 
@@ -30,20 +45,20 @@ feature -- Roundtrip
 	current_keyword: KEYWORD_AS
 			-- Keyword "current" associated with this structure
 
-	set_address_symbol (s_as: SYMBOL_AS) is
-			-- Set `address_symbol' with `s_as'.
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			address_symbol := s_as
-		ensure
-			address_symbol_set: address_symbol = s_as
+			if a_list = Void then
+				Result := Current
+			else
+				Result := address_symbol.complete_start_location (a_list)
+			end
 		end
 
-	set_current_keyword (k_as: KEYWORD_AS) is
-			-- Set `current_keyword' with `k_as'.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			current_keyword := k_as
-		ensure
-			current_keyword_set: current_keyword = k_as
+			Result := Current
 		end
 
 feature -- Comparison

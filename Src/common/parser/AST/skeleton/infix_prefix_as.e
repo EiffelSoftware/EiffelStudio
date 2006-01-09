@@ -12,7 +12,7 @@ inherit
 			is_binary as is_infix,
 			is_unary as is_prefix
 		export
-			{AST_VISITOR} frozen_location
+			{AST_VISITOR} frozen_keyword
 		redefine
 			alias_name,
 			is_equivalent,
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (op: STRING_AS; inf: BOOLEAN; l: LOCATION_AS) is
+	initialize (op: STRING_AS; inf: BOOLEAN; l:KEYWORD_AS) is
 			-- Create a new INFIX AST node.
 			-- `inf' is `is_infix', `l' is a start location.
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			alias_name := op
 			create internal_name.initialize (get_internal_alias_name)
 			internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
-			infix_prefix_keyword ?= l
+			infix_prefix_keyword := l
 		end
 
 feature -- Visitor
@@ -106,6 +106,29 @@ feature -- Conveniences
 			else
 				Result := visual_name < infix_feature.visual_name
 			end
+		end
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			if frozen_keyword /= Void then
+				Result := frozen_keyword.complete_start_location (a_list)
+			end
+			if Result = Void or else Result.is_null then
+				if a_list = Void then
+						-- Non-roundtrip mode
+					Result := internal_name.complete_start_location (a_list)
+				else
+						-- Roundtrip mode
+					Result := infix_prefix_keyword.complete_start_location (a_list)
+				end
+			end
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := internal_name.complete_end_location (a_list)
 		end
 
 invariant

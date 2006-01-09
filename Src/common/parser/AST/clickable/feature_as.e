@@ -74,24 +74,30 @@ feature -- Access
 
 feature -- Location
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			Result := feature_names.start_location
-		end
-
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			Result := body.end_location
-			if Result.is_null then
-				Result := feature_names.end_location
-			end
-		end
-
 	next_position: INTEGER
 			-- Position for the following construct after current.
 			-- Useful to extract comments of an attribute
+
+feature -- Roundtrip/Location
+
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := feature_names.complete_start_location (a_list)
+		end
+
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+		do
+			Result := body.complete_end_location (a_list)
+			if Result.is_null then
+				if a_list = Void then
+						-- Non-roundtrip mode
+					Result := feature_names.complete_end_location (a_list)
+				else
+						-- Roundtrip mode
+					Result := create{LOCATION_AS}.make (0, 0, next_position - 1, 0)
+				end
+			end
+		end
 
 feature -- Property
 

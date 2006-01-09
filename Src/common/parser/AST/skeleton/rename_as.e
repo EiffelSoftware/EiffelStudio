@@ -53,18 +53,16 @@ feature -- Attributes
 	new_name: FEATURE_NAME
 			-- New name
 
-feature -- Location
+feature -- Roundtrip
 
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
+	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := old_name.start_location
+			Result := old_name.complete_start_location (a_list)
 		end
 
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
+	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := new_name.end_location
+			Result := new_name.complete_end_location (a_list)
 		end
 
 feature -- Comparison

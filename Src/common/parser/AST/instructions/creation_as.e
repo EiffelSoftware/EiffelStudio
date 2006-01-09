@@ -45,28 +45,6 @@ feature -- Attributes
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
-feature -- Location
-
-	start_location: LOCATION_AS is
-			-- Starting point for current construct.
-		do
-			if type /= Void then
-				Result := type.start_location
-			else
-				Result := target.start_location
-			end
-		end
-
-	end_location: LOCATION_AS is
-			-- Ending point for current construct.
-		do
-			if call /= Void then
-				Result := call.end_location
-			else
-				Result := target.end_location
-			end
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

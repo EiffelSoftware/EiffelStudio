@@ -25,9 +25,8 @@ feature{NONE} -- Initialization
 			a_code_valid: keyword_valid (a_code)
 			a_scn_not_void: a_scn /= Void
 		do
-			set_shared_text (a_scn)
 			code := a_code
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, text.count)
+			make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	make_with_data (a_code: INTEGER; a_text: STRING; l, c, p, s: INTEGER) is
@@ -40,7 +39,6 @@ feature{NONE} -- Initialization
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
-			set_text (a_text)
 			code := a_code
 			make_with_location (l, c, p, s)
 		end
@@ -467,7 +465,7 @@ feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 		do
-			Result := is_equal (other)
+			Result := code = other.code
 		end
 
 feature -- Implemenation

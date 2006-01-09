@@ -933,6 +933,7 @@ feature -- Recompilation
 			l_il_env: IL_ENVIRONMENT
 		do
 			debug ("timing")
+				print_memory_statistics
 				create d1.make_now
 			end
 
@@ -995,6 +996,7 @@ feature -- Recompilation
 					print ("Degree 5 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
 					print ("%N")
+					print_memory_statistics
 					create d1.make_now
 				end
 
@@ -1074,6 +1076,7 @@ end
 					print ("Degree 4 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
 					print ("%N")
+					print_memory_statistics
 					create d1.make_now
 				end
 
@@ -1093,6 +1096,7 @@ end
 					print ("Degree 3 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
 					print ("%N")
+					print_memory_statistics
 					create d1.make_now
 				end
 
@@ -1114,11 +1118,35 @@ end
 					--| someone removed an inheritance link to DISPOSABLE.
 				reset_disposable_descendants
 
+				debug ("Timing")
+					create d2.make_now
+					print ("After degreee 3 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					print_memory_statistics
+					create d1.make_now
+				end
 					-- Melt the changed features
 				melt
 
+				debug ("Timing")
+					create d2.make_now
+					print ("Degree 2 duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					print_memory_statistics
+					create d1.make_now
+				end
 					-- Finalize a successful compilation
 				finish_compilation
+				debug ("Timing")
+					create d2.make_now
+					print ("Server storing duration: ")
+					print (d2.relative_duration (d1).fine_seconds_count)
+					print ("%N")
+					print_memory_statistics
+					create d1.make_now
+				end
 
 					-- Produce the update file
 				if not il_generation and then not freeze then
@@ -1129,13 +1157,14 @@ end
 debug ("VERBOSE")
 	io.error.put_string ("Saving melted.eif%N")
 end
-				end
-				debug ("Timing")
-					create d2.make_now
-					print ("Degree 2/1 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					create d1.make_now
+					debug ("Timing")
+						create d2.make_now
+						print ("Melted file generation duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
 				end
 			elseif
 				System.creation_name = Void and then
@@ -1162,6 +1191,7 @@ end
 					print ("Degree -1 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
 					print ("%N")
+					print_memory_statistics
 				end
 			end
 			if il_generation and then (private_melt or else not degree_minus_1.is_empty) and not il_quick_finalization then
@@ -1171,6 +1201,7 @@ end
 					print ("Degree 1 duration: ")
 					print (d2.relative_duration (d1).fine_seconds_count)
 					print ("%N")
+					print_memory_statistics
 				end
 				Degree_minus_1.wipe_out
 			end
@@ -2218,6 +2249,7 @@ feature -- Final mode generation
 						print ("Degree -2/-3 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
 						print ("%N")
+						print_memory_statistics
 						create d1.make_now
 					end
 				else
@@ -2254,6 +2286,7 @@ feature -- Final mode generation
 						print ("Degree -2 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
 						print ("%N")
+						print_memory_statistics
 						create d1.make_now
 					end
 
@@ -2267,6 +2300,7 @@ feature -- Final mode generation
 							print ("Dead code removal duration: ")
 							print (d2.relative_duration (d1).fine_seconds_count)
 							print ("%N")
+							print_memory_statistics
 							create d1.make_now
 						end
 						deg_output.put_end_dead_code_removal_message
@@ -2293,6 +2327,7 @@ feature -- Final mode generation
 						print ("Degree -3 duration: ")
 						print (d2.relative_duration (d1).fine_seconds_count)
 						print ("%N")
+						print_memory_statistics
 					end
 
 					generate_main_finalized_eiffel_files
@@ -4352,6 +4387,21 @@ feature -- Debug purpose
 				end
 				i := i + 1
 			end
+		end
+
+feature {NONE} -- Conveniences.
+
+	print_memory_statistics is
+			-- Print memory statistics on standard output.
+		local
+			l_mem: MEMORY
+			l_mem_info: MEM_INFO
+		do
+			create l_mem
+			l_mem_info := l_mem.memory_statistics ({MEM_CONST}.eiffel_memory)
+			print ("Total memory is " + l_mem_info.total.out + "%N")
+			print ("Used memory is " + (l_mem_info.used + l_mem_info.overhead).out + "%N")
+			print ("Free memory is " + l_mem_info.free.out + "%N%N")
 		end
 
 feature {NONE} -- External features

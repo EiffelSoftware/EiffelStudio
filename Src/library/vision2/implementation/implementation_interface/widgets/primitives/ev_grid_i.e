@@ -654,9 +654,20 @@ feature -- Pick and Drop
 
 	veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
 			-- Intermediary function used for pebble vetoing.
+		local
+			a_item_target: like item_target
 		do
-			Result := (drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble)) or else
-				(item_drop_actions_internal /= Void and then item_accepts_pebble (item_target, a_pebble))
+				-- Check to see if any of the drop actions accept `a_pebble', first starting with the grid actions.
+			Result := drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble)
+			if not Result then
+					-- Check the actions on the individual item target if available.
+				a_item_target := item_target
+				if a_item_target /= Void then
+					Result :=
+						(a_item_target.implementation.drop_actions_internal /= Void and then item_target.drop_actions.accepts_pebble (a_pebble))
+						or else item_accepts_pebble (a_item_target, a_pebble)
+				end
+			end
 		end
 
 	set_accept_cursor (a_cursor: EV_CURSOR) is
@@ -855,9 +866,21 @@ feature -- Status setting
 			selection_on_click_enabled: is_selection_on_click_enabled
 		end
 
+	enable_selection_on_single_button_click is
+			-- Enable selection handling of items when clicked upon via mouse button `1'.
+			-- This is useful for implementing Contextual Menus where the selection may need
+			-- to remain unchanged when using mouse button `3' for instance.
+		do
+			enable_selection_on_click
+			is_selection_on_single_button_click_enabled := True
+		ensure
+			selection_on_single_click_enabled: is_selection_on_single_button_click_enabled and then is_selection_on_click_enabled
+		end
+
 	disable_selection_on_click is
 			-- Disable selection handling when items are clicked upon.
 		do
+			is_selection_on_single_button_click_enabled := False
 			is_selection_on_click_enabled := False
 		ensure
 			selection_on_click_disabled: not is_selection_on_click_enabled
@@ -1765,6 +1788,10 @@ feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
 			-- Will an item be selected if clicked upon by the user?
+
+	is_selection_on_single_button_click_enabled: BOOLEAN
+			-- Will an item be selected if clicked upon via mouse button `1' only.
+			-- Mouse buttons `1' and `2' will leave selection unchanged.
 
 	is_selection_keyboard_handling_enabled: BOOLEAN
 			-- May an item be selected via the keyboard?
@@ -4238,7 +4265,11 @@ feature {NONE} -- Event handling
 					end
 				end
 			end
-			if not ignore_selection_handling and then is_selection_on_click_enabled then
+			if
+				not ignore_selection_handling and then
+				is_selection_on_click_enabled and then
+				(not is_selection_on_single_button_click_enabled or else (is_selection_on_single_button_click_enabled and a_button = 1))
+			then
 				if
 					selected_item /= Void and then
 					selected_item.is_selected and then

@@ -2279,15 +2279,14 @@ feature -- Removal
 
 			if a_col_i.is_displayed then
 				displayed_column_count := displayed_column_count - 1
+				header.go_i_th (a_column)
+				header.remove
 			end
 
 			update_index_of_first_item_dirty_row_flags (a_column)
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
-
-			header.go_i_th (a_column)
-			header.remove
 
 			set_horizontal_computation_required (a_column)
 			redraw_client_area

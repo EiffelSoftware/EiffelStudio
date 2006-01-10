@@ -2540,10 +2540,11 @@ feature -- Removal
 				i > l_column_count
 			loop
 				current_column := columns.i_th (i)
-
-					-- Now remove associated header item
-				header.go_i_th (1)
-				header.remove
+				if current_column.is_displayed then
+						-- Now remove associated header item.
+					header.go_i_th (1)
+					header.remove
+				end
 				current_column.unparent
 				i := i + 1
 			end

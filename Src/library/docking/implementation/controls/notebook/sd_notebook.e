@@ -138,7 +138,7 @@ feature -- Command
 			l_tab: SD_NOTEBOOK_TAB
 		do
 			internal_contents.extend (a_content)
-			create l_tab.make (internal_tab_box.is_gap_at_top)
+			create l_tab.make (Current, internal_tab_box.is_gap_at_top, internal_docking_manager)
 			internal_tabs.extend (l_tab)
 			l_tab.set_drop_actions (a_content.drop_actions)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
@@ -213,12 +213,58 @@ feature -- Command
 			internal_tab_box.on_resize (a_x, a_y, a_width, a_height)
 		end
 
+	set_content_position (a_content: SD_CONTENT; a_index: INTEGER) is
+			--
+		require
+			has: has (a_content)
+			valid: a_index > 0 and a_index <= contents.count
+		local
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			debug ("docking")
+				print ("%NSD_NOTEBOOK set_content_position a_content is: " + a_content.unique_title + " a_index is:" + a_index.out )
+			end
+			if contents.i_th (a_index) /= a_content then
+				l_tab := tab_by_content (a_content)
+				internal_tab_box.set_tab_position (l_tab, a_index)
+
+				internal_contents.start
+				internal_contents.prune (a_content)
+				internal_contents.go_i_th (a_index)
+				internal_contents.put_left (a_content)
+
+				internal_tabs.start
+				internal_tabs.prune (l_tab)
+				internal_tabs.go_i_th (a_index)
+				internal_tabs.put_left (l_tab)
+
+			end
+		ensure
+			set: contents.i_th (a_index) = a_content
+		end
+
 feature -- Query
 
+	contents: ARRAYED_LIST [SD_CONTENT] is
+			-- All contents in Current.
+		do
+			Result := internal_contents.twin
+		ensure
+			not_void: Result /= Void
+		end
+
 	index_of (a_content: SD_CONTENT): INTEGER is
-			-- Index of `a_widget'
+			-- Index of a_widget
 		do
 			Result := internal_contents.index_of (a_content, 1)
+		end
+
+	index_of_tab (a_tab: SD_NOTEBOOK_TAB): INTEGER is
+			-- Index of a_tab
+		require
+			has: has_tab (a_tab)
+		do
+			Result := internal_tab_box.index_of (a_tab)
 		end
 
 	has (a_content: SD_CONTENT): BOOLEAN is
@@ -310,6 +356,33 @@ feature -- Query
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
 
+	tabs_shown: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
+			-- Tabs which is currently shown.
+		local
+			l_tabs: like internal_tabs
+		do
+			create Result.make (1)
+			l_tabs := internal_tabs.twin
+			from
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				if l_tabs.item.is_displayed then
+					Result.extend (l_tabs.item)
+				end
+				l_tabs.forth
+			end
+		end
+
+	tab_area: EV_RECTANGLE is
+			-- Tab area
+		do
+			create Result.make (internal_tab_box.screen_x, internal_tab_box.screen_y, internal_tab_box.width, internal_tab_box.height)
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE}  -- Implementation
 
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB) is
@@ -344,24 +417,29 @@ feature {NONE}  -- Implementation
 		local
 			l_in_tabs: BOOLEAN
 			l_target_tab: SD_NOTEBOOK_TAB
+			l_tabs_snapshot: like internal_tabs
 		do
 			-- FIXIT: This function should not be called on GTK.
 			-- 		  So actually this if clause is should not needed.
 			if dragging_tab /= Void then
 				from
-					internal_tabs.start
+					l_tabs_snapshot := internal_tabs.twin
+					l_tabs_snapshot.start
 				until
-					internal_tabs.after or l_in_tabs
+					l_tabs_snapshot.after or l_in_tabs
 				loop
-					if internal_tabs.item /= dragging_tab then
-						if tab_has_x_y (internal_tabs.item, a_screen_x, a_screen_y)  then
+					if l_tabs_snapshot.item /= dragging_tab then
+						if tab_has_x_y (l_tabs_snapshot.item, a_screen_x, a_screen_y)  then
 							l_in_tabs := True
 							internal_tab_box.start
-							internal_tab_box.search (internal_tabs.item)
-							l_target_tab := internal_tabs.item
+							internal_tab_box.search (l_tabs_snapshot.item)
+							l_target_tab := l_tabs_snapshot.item
 							internal_docking_manager.command.lock_update (Current, False)
 
-							internal_tab_box.swap (dragging_tab, internal_tabs.item)
+							swap_tabs_and_contents (dragging_tab, l_tabs_snapshot.item)
+
+							internal_tab_box.swap (dragging_tab, l_tabs_snapshot.item)
+
 							internal_tab_box.resize_tabs (internal_tab_box.width)
 							on_resize (0, 0, width, height)
 							internal_docking_manager.command.unlock_update
@@ -369,11 +447,7 @@ feature {NONE}  -- Implementation
 					elseif tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
 						l_in_tabs := True
 					end
-					internal_tabs.forth
-				end
-
-				debug ("docking")
-					print ("%NSD_NOTEBOOK on_pointer_motion l_in_tabs ? " + l_in_tabs.out)
+					l_tabs_snapshot.forth
 				end
 
 				if not l_in_tabs then
@@ -428,6 +502,30 @@ feature {NONE}  -- Implementation
 		do
 			create l_rect.make (a_tab.screen_x, a_tab.screen_y, a_tab.width, a_tab.height)
 			Result := l_rect.has_x_y (a_screen_x, a_screen_y)
+		end
+
+	swap_tabs_and_contents (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB) is
+			-- Swap order of a_tab_1 and a_tab_2.
+		require
+			nor_equal: a_tab_1 /= a_tab_2
+			has: internal_tabs.has (a_tab_1) and internal_tab_box.has (a_tab_1)
+			has: internal_tabs.has (a_tab_2) and internal_tab_box.has (a_tab_2)
+		local
+			l_index_1, l_index_2: INTEGER
+		do
+			l_index_1 := internal_tab_box.index_of (a_tab_1)
+			l_index_2 := internal_tab_box.index_of (a_tab_2)
+			check index_valid: l_index_1 <= internal_tabs.count and l_index_1 /= 0 end
+			check index_valid: l_index_2 <= internal_tabs.count and l_index_2 /= 0 end
+			internal_tabs.go_i_th (l_index_1)
+			internal_tabs.swap (l_index_2)
+
+			internal_contents.go_i_th (l_index_1)
+			internal_contents.swap (l_index_2)
+		ensure
+			not_changed: old internal_contents.count = internal_contents.count
+--			swapped: old internal_tab_box.index_of (a_tab_1) /= internal_tab_box.index_of (a_tab_1)
+--			swapped: old internal_tab_box.index_of (a_tab_2) /= internal_tab_box.index_of (a_tab_2)
 		end
 
 	internal_contents: ARRAYED_LIST [SD_CONTENT]

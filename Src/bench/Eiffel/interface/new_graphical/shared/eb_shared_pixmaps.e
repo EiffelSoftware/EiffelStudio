@@ -570,6 +570,13 @@ feature -- Icons
 			Result := build_classic_pixmap ("save")
 		end
 
+	Icon_save_all: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("save_all")
+		end
+
 	Icon_save_measure: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("save_measure")
@@ -618,6 +625,13 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("new_development_tool")
+		end
+
+	Icon_new_tab: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_tab")
 		end
 
 	Icon_new_editor: ARRAY [EV_PIXMAP] is
@@ -1374,18 +1388,11 @@ feature {NONE} -- Implementation
 			Result.put ([12, 3], "icon_external_frozen_feature")
 			Result.put ([12, 4], "icon_obsolete_feature")
 			Result.put ([12, 5], "icon_frozen_feature")
-			Result.put ([12,6], "icon_format_assigners_color")
-			Result.put ([12,7], "icon_format_creator_callers_color")
-			Result.put ([12,8], "icon_preference_root")
-			Result.put ([12,9], "icon_preference_folder")
-			Result.put ([12,10], "icon_other_feature")
-			Result.put ([12,11], "icon_reset_view_color")
-			Result.put ([12,12], "icon_format_creators_color")
-			Result.put ([12,13], "icon_format_invariants_color")
-			Result.put ([12,14], "icon_add_new_external_cmd")
-			Result.put ([12,15], "icon_input_to_process")
+			Result.put ([12, 14], "icon_add_new_external_cmd")
+			Result.put ([12, 15], "icon_input_to_process")
+			Result.put ([12, 16], "icon_save_all_color")
+			Result.put ([13, 1], "icon_new_tab_color")
 			Result.compare_objects
 		end
-
 end
 

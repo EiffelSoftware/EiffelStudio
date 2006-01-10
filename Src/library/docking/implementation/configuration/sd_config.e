@@ -44,7 +44,7 @@ feature -- Save/Open inner container data.
 			save_all_inner_containers_data (l_config_data)
 
 			-- Second save auto hide zones data.
-			save_auto_hide_zone_config (l_config_data.auto_hide_zones_data)
+			save_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
 
 			save_menu_datas (l_config_data.menu_datas)
 
@@ -78,7 +78,7 @@ feature -- Save/Open inner container data.
 			open_all_inner_containers_data (l_config_data)
 
 			-- Restore auto hide zone.
-			open_auto_hide_zone_data (l_config_data.auto_hide_zones_data)
+			open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
 
 			open_menu_datas (l_config_data.menu_datas)
 
@@ -157,55 +157,52 @@ feature {NONE} -- Implementation for save config.
 		end
 
 
-	save_auto_hide_zone_config (a_data: SD_AUTO_HIDE_ZONE_DATA)is
+	save_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA)is
 			-- Save auto hide zones config data.
 		require
 			a_data_not_void: a_data /= Void
 		do
-			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs, a_data.zone_bottom, True)
-			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs, a_data.zone_left, False)
-			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs, a_data.zone_right, False)
-			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs, a_data.zone_top, True)
+			save_one_auto_hide_panel_data (a_data, {SD_DOCKING_MANAGER}.dock_top)
+			save_one_auto_hide_panel_data (a_data, {SD_DOCKING_MANAGER}.dock_bottom)
+			save_one_auto_hide_panel_data (a_data, {SD_DOCKING_MANAGER}.dock_left)
+			save_one_auto_hide_panel_data (a_data, {SD_DOCKING_MANAGER}.dock_right)
 		end
 
-	save_one_auto_hide_panel_data (a_stubs: ARRAYED_LIST [SD_TAB_STUB]; a_target: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_horizontal: BOOLEAN) is
+	save_one_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA; a_direction: INTEGER) is
 			-- Save one auto hide panel tab stub config data.
 		require
-			a_stubs_not_void: a_stubs /= Void
-			a_target_not_void: a_target /= Void
+			not_void: a_data /= Void
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		local
-			l_title: STRING
-			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_auto_hide: SD_AUTO_HIDE_ZONE
-			l_width_height: INTEGER
+			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
+			l_tab_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TAB_STUB]]
+			l_one_group_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
+			l_one_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
+			l_auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
+			l_tab_groups := l_auto_hide_panel.tab_groups
 			from
-				a_stubs.start
+				l_tab_groups.start
 			until
-				a_stubs.after
+				l_tab_groups.after
 			loop
-				l_title := a_stubs.item.content.unique_title
-				-- Find out zone's width/height.
-				l_zones := internal_docking_manager.zones.zones
+				create l_one_group_data.make (1)
 				from
-					l_zones.start
+					l_one_group := l_tab_groups.item
+					l_one_group.start
 				until
-					l_zones.after
+					l_one_group.after
 				loop
-					l_auto_hide ?= l_zones.item
-					if l_auto_hide /= Void then
-						if l_auto_hide.content.unique_title.is_equal (l_title) then
-							if a_horizontal then
-								l_width_height := l_auto_hide.content.user_widget.width
-							else
-								l_width_height := l_auto_hide.content.user_widget.height
-							end
-						end
-					end
-					l_zones.forth
+					l_auto_hide_state ?= l_one_group.item.content.state
+					check not_void: l_auto_hide_state /= Void end
+					l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height])
+
+					l_one_group.forth
 				end
-				a_target.extend ([l_title, l_width_height])
-				a_stubs.forth
+				a_data.add_zone_group_data (a_direction, l_one_group_data)
+				l_tab_groups.forth
 			end
 		end
 
@@ -316,10 +313,13 @@ feature {NONE} -- Implementation for open config.
 				l_datas.after
 			loop
 				if l_datas.index = 1 then
-					open_inner_container_data (l_datas.item, internal_docking_manager.query.inner_container_main)
+					if l_datas.item /= Void then
+						open_inner_container_data (l_datas.item, internal_docking_manager.query.inner_container_main)
+					end
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
 					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager)
+					l_floating_state.set_size (l_datas.item.width, l_datas.item.height)
 					open_inner_container_data (l_datas.item, l_floating_state.inner_container)
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
@@ -355,6 +355,10 @@ feature {NONE} -- Implementation for open config.
 					save_inner_container_data (l_inner_containers.item.item, l_data)
 					l_data.set_screen_x (l_inner_containers.item.screen_x)
 					l_data.set_screen_y (l_inner_containers.item.screen_y)
+					if l_inner_containers.item.parent_floating_zone /= Void then
+						l_data.set_width (l_inner_containers.item.parent_floating_zone.width)
+						l_data.set_height (l_inner_containers.item.parent_floating_zone.height)
+					end
 				else
 					l_data := Void
 				end
@@ -371,7 +375,7 @@ feature {NONE} -- Implementation for open config.
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_menu_zones: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
 		do
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (False)
 			l_all_main_containers := internal_docking_manager.inner_containers
 			from
 				l_all_main_containers.start
@@ -441,10 +445,6 @@ feature {NONE} -- Implementation for open config.
 		do
 			-- If it's a zone.
 			if not a_config_data.is_split_area then
-				debug ("docking")
-					a_config_data.titles.start
-					io.put_string ("%N SD_CONFIG_MEDIATOR open_inner_container_data " + a_config_data.titles.item + " " + a_config_data.state)
-				end
 				create l_internal
 				l_type_id := l_internal.dynamic_type_from_string (a_config_data.state)
 				check a_type_exist: l_type_id /= -1 end
@@ -498,19 +498,19 @@ feature {NONE} -- Implementation for open config.
 			end
 		end
 
-	open_auto_hide_zone_data (a_data: SD_AUTO_HIDE_ZONE_DATA) is
+	open_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA) is
 			-- Open all auto hide zone datas.
 		require
 			a_data_not_void: a_data /= Void
 		do
-			open_one_auto_hide_panel (a_data.zone_bottom, {SD_DOCKING_MANAGER}.dock_bottom)
-			open_one_auto_hide_panel (a_data.zone_left, {SD_DOCKING_MANAGER}.dock_left)
-			open_one_auto_hide_panel (a_data.zone_right, {SD_DOCKING_MANAGER}.dock_right)
-			open_one_auto_hide_panel (a_data.zone_top, {SD_DOCKING_MANAGER}.dock_top)
+			open_one_auto_hide_panel_data (a_data.bottom, {SD_DOCKING_MANAGER}.dock_bottom)
+			open_one_auto_hide_panel_data (a_data.left, {SD_DOCKING_MANAGER}.dock_left)
+			open_one_auto_hide_panel_data (a_data.right, {SD_DOCKING_MANAGER}.dock_right)
+			open_one_auto_hide_panel_data (a_data.top, {SD_DOCKING_MANAGER}.dock_top)
 		end
 
-	open_one_auto_hide_panel (a_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_direction: INTEGER) is
-			--
+	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER]]]; a_direction: INTEGER) is
+			-- Open one SD_AUTO_HIDE_PANEL's data.
 		require
 			a_data_not_void: a_data /= Void
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
@@ -519,7 +519,9 @@ feature {NONE} -- Implementation for open config.
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: SD_CONTENT
 			l_panel: SD_AUTO_HIDE_PANEL
-			l_list: ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
+			l_list_for_state: ARRAYED_LIST [STRING]
+			l_tab_group: ARRAYED_LIST [SD_CONTENT]
 		do
 			l_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 			from
@@ -527,16 +529,39 @@ feature {NONE} -- Implementation for open config.
 			until
 				a_data.after
 			loop
-				l_content := internal_docking_manager.query.content_by_title_for_restore ((a_data.item[1]).out)
-				-- If we don't find SD_CONTENT last saved, ignore it.
-				if l_content /= Void then
-					create l_auto_hide_state.make (l_content, a_direction)
-					create l_list.make (1)
-					l_list.extend ((a_data.item[1]).out)
-					l_auto_hide_state.restore (l_list, l_panel, a_direction)
+				create l_tab_group.make (1)
+				l_list := a_data.item
+				from
+					create l_list_for_state.make (1)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_list_for_state.extend ((l_list.item[1]).out)
+						l_list.forth
+					end
+					l_list.start
+				until
+					l_list.after
+				loop
+					l_content := internal_docking_manager.query.content_by_title_for_restore ((l_list.item[1]).out)
+					-- If we don't find SD_CONTENT last saved, ignore it.
+					if l_content /= Void then
+						create l_auto_hide_state.make (l_content, a_direction)
+						l_auto_hide_state.restore (l_list_for_state, l_panel, a_direction)
+						l_auto_hide_state.set_width_height (l_list.item.integer_32_item (2))
+						l_tab_group.extend (l_content)
+					end
+					l_list.forth
 				end
+				if l_tab_group.count > 1 then
+					l_panel.set_tab_group (l_tab_group)
+				end
+
 				a_data.forth
 			end
+
 		end
 
 	open_menu_datas (a_menu_datas: ARRAYED_LIST [SD_MENU_DATA]) is

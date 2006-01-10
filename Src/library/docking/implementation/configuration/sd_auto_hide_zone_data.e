@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_AUTO_HIDE_ZONE_DATA
+	SD_AUTO_HIDE_PANEL_DATA
 
 create
 	make
@@ -13,50 +13,145 @@ feature {NONE} -- Initlization
 
 	make is
 			-- Creation method.
+		local
+			l_top, l_bottom, l_left, l_right: like internal_panel_data
 		do
-			create internal_zone_bottom.make(1)
-			create internal_zone_left.make (1)
-			create internal_zone_right.make (1)
-			create internal_zone_top.make (1)
+--			create internal_zone_bottom.make(1)
+--			create internal_zone_left.make (1)
+--			create internal_zone_right.make (1)
+--			create internal_zone_top.make (1)
+			create internal_panel_datas.make (4)
+			create l_top.make (1)
+			create l_bottom.make (1)
+			create l_left.make (1)
+			create l_right.make (1)
+			internal_panel_datas.extend (l_top)
+			internal_panel_datas.extend (l_bottom)
+			internal_panel_datas.extend (l_left)
+			internal_panel_datas.extend (l_right)
 		end
 
 feature -- Properties
 
-	zone_top: like internal_zone_top is
-			-- `internal_zone_top'.
+	top: like internal_panel_data is
+			-- Top SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_zone_top
+			Result := internal_panel_datas.i_th (1)
+		ensure
+			not_void: Result /= Void
 		end
 
-	zone_bottom: like internal_zone_bottom is
-			-- `internal_zone_bottom'.
+	bottom: like internal_panel_data is
+			-- Bottom SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_zone_bottom
+			Result := internal_panel_datas.i_th (2)
+		ensure
+			not_void: Result /= Void
 		end
 
-	zone_left: like internal_zone_left is
-			-- `internal_zone_left'.
+	left: like internal_panel_data is
+			-- Left SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_zone_left
+			Result := internal_panel_datas.i_th (3)
+		ensure
+			not_void: Result /= Void
 		end
 
-	zone_right: like internal_zone_right is
-			-- `internal_zone_right'.
+	right: like internal_panel_data is
+			-- Right SD_AUTO_HIDE_PANEL data.
 		do
-			Result := internal_zone_right
+			Result := internal_panel_datas.i_th (4)
+		ensure
+			not_void: Result /= Void
 		end
+
+	add_zone_group_data (a_direction: INTEGER; a_data: like internal_tab_group) is
+			-- Add a group data to `internal_zone_top' or `internal_zone_bottom' or `internal_zone_left' or `internal_zone_right'.
+		require
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			not_void: a_data /= Void
+		local
+			l_data: like internal_panel_data
+		do
+			inspect
+				a_direction
+			when {SD_DOCKING_MANAGER}.dock_top then
+				l_data := internal_panel_datas.i_th (1)
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				l_data := internal_panel_datas.i_th (2)
+			when {SD_DOCKING_MANAGER}.dock_left then
+				l_data := internal_panel_datas.i_th (3)
+			when {SD_DOCKING_MANAGER}.dock_right then
+				l_data := internal_panel_datas.i_th (4)
+			end
+			l_data.extend (a_data)
+		ensure
+			has:
+		end
+
+--	add_zone_top_group_data (a_group_data: like internal_tab_group) is
+--			-- Add a group data to `internal_zone_top'.
+--		require
+--			not_void: a_group_data /= Void
+--		do
+--			internal_zone_top.extend (a_group_data)
+--		ensure
+--			added: internal_zone_top.has (a_group_data)
+--		end
+--
+--	add_zone_bottom_group_data (a_group_data: like internal_tab_group) is
+--			-- Add a group data to `internal_zone_bottom'.
+--		require
+--			not_void: a_group_data /= Void
+--		do
+--			internal_zone_bottom.extend (a_group_data)
+--		ensure
+--			added: internal_zone_bottom.has (a_group_data)
+--		end
+--
+--	add_zone_left_group_data (a_group_data: like internal_tab_group) is
+--			-- Add a group data to `internal_zone_left'.
+--		require
+--			not_void: a_group_data /= Void
+--		do
+--			internal_zone_left.extend (a_group_data)
+--		ensure
+--			added: internal_zone_left.has (a_group_data)
+--		end
+--
+--	add_zone_right_group_data (a_group_data: like internal_tab_group) is
+--			-- Add a group data to `internal_zone_right'.
+--		require
+--			not_void: a_group_data /= Void
+--		do
+--			internal_zone_right.extend (a_group_data)
+--		ensure
+--			added: internal_zone_right.has (a_group_data)
+--		end
 
 feature {NONE} -- Implementation
 
-	internal_zone_top, internal_zone_bottom, internal_zone_left, internal_zone_right: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
-			-- Four auto hide tab stubs area config data.
+	internal_panel_datas: ARRAYED_LIST [like internal_panel_data]
+			-- Four auto hide tab stubs area config data. 1st is top one, 2nd is bottom one, 3rd is left one, 4th is right one.
+
+	internal_panel_data: ARRAYED_LIST [like internal_tab_group] is
+			--
 			-- In tuple, first argument is title of content. second is width/height of zone.
+		require
+			False
+		do
+		end
+
+	internal_tab_group: ARRAYED_LIST [TUPLE [STRING, INTEGER]] is
+			-- Anchor type
+		require
+			False
+		do
+		end
 
 invariant
 
-	internal_zone_top_not_void: internal_zone_top /= Void
-	internal_zone_bottom_not_void: internal_zone_bottom /= Void
-	internal_zone_left_not_void: internal_zone_left /= Void
-	internal_zone_right_not_void: internal_zone_right /= Void
+	internal_panel_datas_not_void: internal_panel_datas /= Void
 
 end

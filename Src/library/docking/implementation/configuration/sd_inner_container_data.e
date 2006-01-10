@@ -103,16 +103,39 @@ feature -- Floating datas.
 			-- Set `screen_x'.
 		do
 			screen_x := a_screen_x
+		ensure
+			set: screen_x = a_screen_x
 		end
 
 	set_screen_y (a_screen_y: INTEGER) is
 			-- Set `screen_y'.
 		do
 			screen_y := a_screen_y
+		ensure
+			set: screen_y = a_screen_y
 		end
 
 	screen_x, screen_y: INTEGER
-			-- When `Current' is SD_FLOATING_ZONE data, screen x y position of SD_FLOATING_ZONE.
+			-- When Current is SD_FLOATING_ZONE data, screen x y position of SD_FLOATING_ZONE.
+
+	set_width (a_width: INTEGER) is
+			-- Set `width'.
+		do
+			width := a_width
+		ensure
+			set: width = a_width
+		end
+
+	set_height (a_height: INTEGER) is
+			-- Set `height'.
+		do
+			height := a_height
+		ensure
+			set: height = a_height
+		end
+
+	width, height: INTEGER
+			-- When Current is SD_FLOATING_ZONE data, width height of SD_FLOATING_ZONE.	
 
 feature -- Common properties
 

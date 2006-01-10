@@ -35,7 +35,7 @@ feature -- Properties
 			a_data_set: a_data = internal_inner_container_datas
 		end
 
-	auto_hide_zones_data: like internal_auto_hide_zones_data is
+	auto_hide_panels_datas: like internal_auto_hide_zones_data is
 			--
 		do
 			Result := internal_auto_hide_zones_data
@@ -48,7 +48,7 @@ feature {NONE}  -- Implementation
 
 	internal_inner_container_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
 
-	internal_auto_hide_zones_data: SD_AUTO_HIDE_ZONE_DATA
+	internal_auto_hide_zones_data: SD_AUTO_HIDE_PANEL_DATA
 
 --	internal_inner_container_void: BOOLEAN
 end

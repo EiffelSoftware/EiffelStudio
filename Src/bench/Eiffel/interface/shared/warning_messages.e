@@ -1077,10 +1077,10 @@ feature -- Warning messages
 
 	w_No_system_defined: STRING is "No system was defined.%N"
 
-	w_Finalizing_running: STRING is "Finalizing is on progress, start Eiffel compilation%N%
-								    %will terminate current finalizing.%NContinue?"
+	w_Finalizing_running: STRING is "Finalizing is in progress, start Eiffel compilation%N%
+								    %may terminate current finalizing.%NContinue?"
 
-	w_Freezing_running: STRING is "Freezing is on process, start Eiffel compilation%N%
+	w_Freezing_running: STRING is "Freezing is in progress, start Eiffel compilation%N%
 								  %may terminate currernt freezing.%NContinue?"
 
 	w_cannot_clear_when_c_compilation_running: STRING is "Please clear this window after c compilation has exited."

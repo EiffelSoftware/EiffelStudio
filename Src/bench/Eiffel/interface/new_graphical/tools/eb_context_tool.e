@@ -39,6 +39,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PIXMAPS
+
 create
 	make
 
@@ -103,10 +105,9 @@ feature {NONE} -- Initialization
 			notebook.extend (warning_output_view.widget)
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
 			notebook.set_item_text (external_output_view.widget, interface_names.l_Tab_external_output)
-			notebook.set_item_text (c_compilation_output_view.widget, "C output")
-			notebook.set_item_text (error_output_view.widget,	"Errors")
-			notebook.set_item_text (warning_output_view.widget,	"Warnings")
-
+			notebook.set_item_text (c_compilation_output_view.widget, interface_names.l_Tab_c_output)
+			notebook.set_item_text (error_output_view.widget,	interface_names.l_Tab_error_output)
+			notebook.set_item_text (warning_output_view.widget,	interface_names.l_Tab_warning_output)
 			if has_case then
 				notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
 			end
@@ -355,16 +356,16 @@ feature -- Status setting
 
 			if sit = output_view.widget and then output_view.widget.is_displayed then
 				output_view.set_focus
-			elseif sit = external_output_view.widget and then external_output_view.widget.is_displayed then
-				external_output_view.set_focus
-			elseif sit = c_compilation_output_view.widget and then c_compilation_output_view.widget.is_displayed then
-				c_compilation_output_view.set_focus
 			elseif has_case and then sit = editor.widget and then editor.widget.is_displayed then
 				editor.set_focus
 			elseif sit = class_view.widget and then class_view.widget.is_displayed then
 				class_view.set_focus
 			elseif sit = feature_view.widget and then feature_view.widget.is_displayed then
 				feature_view.set_focus
+			elseif sit = external_output_view.widget and then external_output_view.widget.is_displayed then
+				external_output_view.set_focus
+			elseif sit = c_compilation_output_view.widget and then c_compilation_output_view.widget.is_displayed then
+				c_compilation_output_view.set_focus
 			elseif sit = error_output_view.widget and then error_output_view.widget.is_displayed then
 				error_output_view.set_focus
 			elseif sit = warning_output_view.widget and then warning_output_view.widget.is_displayed then
@@ -471,6 +472,61 @@ feature -- Stone management
 				end
 			end
 			launch_stone (a_stone)
+		end
+
+feature -- C output pixmap management
+
+	start_c_output_pixmap_timer is
+			-- Start timer to draw pixmap animation on c output panel
+		do
+			c_output_timer_counter := 1
+			c_output_pixmap_timer.set_interval (300)
+		end
+
+	stop_c_output_pixmap_timer is
+			-- Stop timer to draw pixmap animation on c output panel
+		do
+			c_output_pixmap_timer.set_interval (0)
+			draw_pixmap_on_tab (c_output_panel_tab, Void)
+		end
+
+	c_output_timer_counter: INTEGER
+			-- Counter to indicate which pixmap should be displayed
+
+	c_output_pixmap_timer: EV_TIMEOUT is
+			-- Timer to draw c output pixmap
+		once
+			Create Result
+			Result.set_interval (0)
+			Result.actions.extend (agent on_draw_c_output_pixmap)
+		end
+
+	on_draw_c_output_pixmap is
+			-- Draw pixmap animation for C output.
+		do
+			draw_pixmap_on_tab (c_output_panel_tab, Icon_compiling.item (c_output_timer_counter))
+			c_output_timer_counter := c_output_timer_counter + 1
+			if c_output_timer_counter > 4 then
+				c_output_timer_counter := 1
+			end
+		end
+
+	draw_pixmap_on_tab (a_tab: EV_NOTEBOOK_TAB; a_pixmap: EV_PIXMAP) is
+			-- Draw `a_pixmap' on `a_tab'.
+			-- If `a_pixmap' is Void, clear any existing pixmap on `a_tab'.
+		require
+			a_tab_not_void: a_tab /= Void
+		do
+			a_tab.remove_pixmap
+			if a_pixmap /= Void then
+				a_tab.set_pixmap (a_pixmap)
+			end
+		end
+
+	c_output_panel_tab: EV_NOTEBOOK_TAB is
+			-- Notebook tab for C output
+		do
+			Result := notebook.item_tab (c_compilation_output_view.widget)
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Private stone management

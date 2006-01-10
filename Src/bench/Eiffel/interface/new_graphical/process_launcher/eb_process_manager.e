@@ -120,8 +120,6 @@ feature -- Execution
 			terminate_external_command
 		end
 
-
-
 	confirm_process_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
 			-- Confirm if user want to terminate running c compilation.
 		require
@@ -132,18 +130,17 @@ feature -- Execution
 			if is_c_compilation_running then
 				if is_freezing_running then
 					create cd.make_initialized (
-						3, preferences.dialog_data.confirm_on_terminate_freezing_string,
+						2, preferences.dialog_data.confirm_on_terminate_freezing_string,
 						Warning_messages.w_Freezing_running, Interface_names.l_Discard_terminate_freezing,
 						preferences.preferences)
 				elseif is_finalizing_running then
 					create cd.make_initialized (
-						3, preferences.dialog_data.confirm_on_terminate_finalizing_string,
+						2, preferences.dialog_data.confirm_on_terminate_finalizing_string,
 						Warning_messages.w_Finalizing_running, Interface_names.l_Discard_terminate_finalizing,
 						preferences.preferences)
 				end
 				if cd /= Void then
 					cd.set_ok_action (ok_agent)
-					cd.set_no_action (no_agent)
 					cd.show_modal_to_window (a_window)
 				end
 			end
@@ -155,46 +152,86 @@ feature -- Execution
 			a_window_not_void: a_window /= Void
 		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
-			head, msg: STRING
-			prc_count: INTEGER
-			discard_msg: STRING
-		do
-			head := "The following "
-			msg := "running:%N"
-			if is_freezing_running then
-				msg := msg + " - freezing%N"
-				prc_count := prc_count + 1
-			end
-			if is_finalizing_running then
-				msg := msg + " - finalizing%N"
-				prc_count := prc_count + 1
-			end
-			if is_external_command_running then
-				msg := msg + " - external command"
-				prc_count := prc_count + 1
-			end
-			msg := msg + "%N%NDo you want to terminate "
-			discard_msg := "Do not ask again, and always terminate "
-			if prc_count > 1 then
-				head.append ("are ")
-				msg := msg + "them"
-				discard_msg := discard_msg + "them"
-			else
-				head.append ("is ")
-				msg := msg + "it"
-				discard_msg := discard_msg + "it"
-			end
+			l_output: STRING
+			l_output2: STRING
+			l_discard_msg: STRING
+			l_cnt: INTEGER
+			l_and_str: STRING
+			l_link_verb: STRING
+			l_sub_str: STRING
+			l_comma_str: STRING
 
-			msg := msg +" before exit?"
-			msg.prepend (head)
-			if prc_count > 0 then
+		do
+			if is_process_running then
+				l_cnt := 0
+				if is_c_compilation_running then
+					l_cnt := l_cnt + 1
+				end
+				if is_external_command_running then
+					l_cnt := l_cnt + 1
+				end
+				if l_cnt = 2 then
+					l_and_str := once "and "
+					l_link_verb := once "are "
+					l_sub_str := once "They need "
+					l_comma_str := once ", "
+				else
+					l_and_str := ""
+					l_link_verb := once "is "
+					l_sub_str := once "It needs "
+					l_comma_str := once ""
+				end
+
+				create l_output.make (100)
+				if is_c_compilation_running then
+					l_output.append (once "a C complication ")
+				end
+				l_output.append (l_and_str)
+				if is_external_command_running then
+					l_output.append (once "an external command ")
+				end
+				l_output.append (l_link_verb)
+				l_output.append (once "currently running.%N")
+				l_output.append (l_sub_str)
+				l_output.append (once "to be terminated before EiffelStudio can exit.%N%N")
+
+				create l_output2.make (100)
+				if is_c_compilation_running then
+					l_output2.append ("cancel C compilation")
+				end
+				l_output2.append (l_comma_str)
+				if is_external_command_running then
+					l_output2.append ("Terminate external command")
+				end
+				l_output2.append (once " and exit?%N")
+
+				create l_discard_msg.make (100)
+				l_discard_msg.append (once "Do not ask again, and always ")
+				if is_c_compilation_running then
+					l_discard_msg.append (once "cancel C compilation")
+				end
+				l_discard_msg.append (l_comma_str)
+
+				if is_external_command_running then
+					l_discard_msg.append (once "terminate external command")
+				end
+				l_discard_msg.append (" when exiting.")
+
+				if l_output.item (1).is_lower then
+					l_output.put (l_output.item (1).as_upper, 1)
+				end
+				if l_output2.item (1).is_lower then
+					l_output2.put (l_output2.item (1).as_upper, 1)
+				end
+				l_output.append (l_output2)
+
 				create cd.make_initialized (
-					3, preferences.dialog_data.confirm_on_terminate_process_string,
-					msg, discard_msg,
+					2, preferences.dialog_data.confirm_on_terminate_process_string,
+					l_output, l_discard_msg,
 					preferences.preferences)
 				cd.set_ok_action (ok_agent)
-				cd.set_no_action (no_agent)
 				cd.show_modal_to_window (a_window)
+
 			end
 		end
 
@@ -207,12 +244,11 @@ feature -- Execution
 		do
 			if is_external_command_running then
 				create cd.make_initialized (
-					3, preferences.dialog_data.confirm_on_terminate_external_command_string,
+					2, preferences.dialog_data.confirm_on_terminate_external_command_string,
 					Warning_messages.w_external_command_running_in_development_window,
 					Interface_names.l_Discard_terminate_external_command,
 					preferences.preferences)
 					cd.set_ok_action (ok_agent)
-					cd.set_no_action (no_agent)
 					cd.show_modal_to_window (a_window)
 			end
 		end

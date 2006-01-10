@@ -9,7 +9,7 @@ deferred class
 
 inherit
 	ERROR_DISPLAYER
-	
+
 
 feature -- Basic Operations / Generic purpose
 
@@ -17,14 +17,19 @@ feature -- Basic Operations / Generic purpose
 			-- Clear the window.
 		deferred
 		end
-			
+
 	process_text (st: STRUCTURED_TEXT) is
 			-- Print `st' on all output tools.
 		deferred
-		end		
+		end
 
 	clear_and_process_text (st: STRUCTURED_TEXT) is
 			-- Clear window and print `st' on all output tools.
+		deferred
+		end
+
+	scroll_to_end is
+			-- Scroll to end of text.
 		deferred
 		end
 

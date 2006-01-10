@@ -2728,6 +2728,24 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 			end
 		end
 
+feature -- C output pixmap management
+
+	start_c_output_pixmap_timer is
+			-- Start timer to draw c output pixmap.
+		do
+			if context_tool /= Void then
+				context_tool.start_c_output_pixmap_timer
+			end
+		end
+
+	stop_c_output_pixmap_timer is
+			-- Stop timer to draw c output pixmap.
+		do
+			if context_tool /= Void then
+				context_tool.stop_c_output_pixmap_timer
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	set_stone_after_check (a_stone: STONE) is
@@ -3884,12 +3902,6 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	melt_cmd: EB_MELT_PROJECT_COMMAND
 			-- Command to start compilation.
-
---	freeze_cmd: EB_FREEZE_PROJECT_COMMAND
---			-- Command to Freeze the project.
---
---	finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
---			-- Command to Finalize the project.
 
 feature{EB_TOOL, EB_C_COMPILER_LAUNCHER}
 

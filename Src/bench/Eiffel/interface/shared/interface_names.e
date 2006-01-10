@@ -120,7 +120,7 @@ feature -- Button texts
 	b_Raise_all: STRING is						"Raise Windows"
 	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
 	b_Minimize_all: STRING is					"Minimize All"
-	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
+	b_Terminate_c_compilation: STRING is 		"Terminate C compilation"
 	b_Expand_all: STRING is 					"Expand All"
 	b_Collapse_all: STRING is 					"Collapse All"
 
@@ -491,9 +491,9 @@ feature -- Label texts
 	l_Discard_save_before_compile_dialog: STRING is	"Do not ask again, and always save files before compiling"
 	l_Discard_starting_dialog: STRING is "Don't show this dialog at startup"
 	l_Discard_replace_all_warning_dialog: STRING is "Dont ask me again and always replace all"
-	l_Discard_terminate_freezing: STRING is "Do not ask again, and always terminate freezing."
+	l_Discard_terminate_freezing: STRING is "Do not ask again, and always terminate freezing when needed."
 	l_Discard_terminate_external_command: STRING is "Do not ask again, and always terminate running external command."
-	l_Discard_terminate_finalizing: STRING is "Do not ask again, and always terminate finalizing."
+	l_Discard_terminate_finalizing: STRING is "Do not ask again, and always terminate finalizing when needed."
 	l_Display_call_stack_warning: STRING is	"Display a warning when the call stack depth reaches:"
 	l_Displayed_buttons_text: STRING is "Displayed buttons"
 	l_Dont_ask_me_again: STRING is		"Do not ask me again"
@@ -649,7 +649,10 @@ feature -- Label texts
 	l_Windows_only: STRING is			"(Windows only)"
 	l_Workbench_mode: STRING is 		"Workbench mode"
 	l_Working_formatter: STRING is		"Extracting "
-	l_Tab_external_output: STRING is    "External output"
+	l_Tab_external_output: STRING is    "External Output"
+	l_Tab_C_output: STRING is    		"C Output"
+	l_Tab_warning_output: STRING is    	"Warnings"
+	l_Tab_error_output: STRING is    	"Errors"
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class "
@@ -870,11 +873,12 @@ feature -- Description texts
 	e_Check_exports: STRING is			"Check the validity of the library definition"
 	e_Compilation_failed: STRING is		"Eiffel compilation failed"
 	e_Compilation_succeeded: STRING is	"Eiffel compilation succeeded"
-	e_C_compilation_failed: STRING is 	"C compilation failed"
-	e_C_compilation_launch_failed: STRING is "C compilation launch failed"
-	e_C_compilation_terminated: STRING is "C compilation has been terminated by user"
-	e_C_compilation_successed: STRING is "C compilation successed"
-	e_C_compilation_running: STRING is  "C compilation on progress"
+	e_C_compilation_failed: STRING is 	"Background C compilation failed"
+	e_C_compilation_launch_failed: STRING is "Background C compilation launch failed"
+	e_C_compilation_terminated: STRING is "Background C compilation has been terminated by user"
+	e_C_compilication_launched: STRING is "Background C compilation launched"
+	e_C_compilation_succeeded: STRING is "Background C compilation succeeded"
+	e_C_compilation_running: STRING is  "Background C compilation in progress"
 	e_Compiling: STRING is				"System is being compiled"
 	e_Cursor_position: STRING is		"Cursor position (line:column)"
 	e_Diagram_hole: STRING is			"Please drop a class or a cluster on this button %N%
@@ -946,7 +950,7 @@ feature -- Description texts
 	e_Undo: STRING is					"Undo"
 	e_Up_to_date: STRING is				"Executable is up-to-date"
 	e_Unify_stone: STRING is			"Link the context tool to the other components"
-	e_Terminate_c_compilation: STRING is "Terminate running C compilation"
+	e_Terminate_c_compilation: STRING is "Terminate current C compilation in progress"
 
 feature -- Wizard texts
 

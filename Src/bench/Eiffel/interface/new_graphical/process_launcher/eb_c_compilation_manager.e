@@ -25,6 +25,8 @@ inherit
 
 	EB_SHARED_FLAGS
 
+	EB_SHARED_PREFERENCES
+
 
 feature{NONE}	-- Initialization
 
@@ -36,7 +38,6 @@ feature{NONE}	-- Initialization
 			set_buffer_size (initial_buffer_size)
 			set_time_interval (initial_time_interval)
 			set_output_handler (agent output_dispatch_handler (?))
-			set_error_handler (agent error_dispatch_handler (?))
 
 			set_on_start_handler (agent on_start)
 			set_on_exit_handler (agent on_exit)
@@ -93,8 +94,12 @@ feature{NONE}  -- Actions
 			eb_debugger_manager.on_compile_start
 			window_manager.on_c_compilation_start
 			c_compilation_output_manager.clear
-			c_compilation_output_manager.force_display
+			if preferences.development_window_data.c_output_panel_prompted then
+				c_compilation_output_manager.force_display
+			end
 			state_message_timer.set_interval (initial_time_interval)
+			display_message_on_main_output (interface_names.e_C_compilication_launched, True)
+			window_manager.for_all_development_windows (agent start_pixmap_animation_timer (?))
 		end
 
 	synchronize_on_c_compilation_exit is
@@ -104,6 +109,19 @@ feature{NONE}  -- Actions
 			window_manager.on_c_compilation_stop
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
 			state_message_timer.set_interval (0)
+			window_manager.for_all_development_windows (agent stop_pixmap_animation_timer (?))
+		end
+
+	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+			-- Start pixmap animation on `a_dev_window'.
+		do
+			a_dev_window.start_c_output_pixmap_timer
+		end
+
+	stop_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+			-- Stop pixmap animation on `a_dev_window'.
+		do
+			a_dev_window.stop_c_output_pixmap_timer
 		end
 
 	on_start is
@@ -119,9 +137,11 @@ feature{NONE}  -- Actions
 			if launched then
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
+					display_message_on_main_output (Interface_names.e_c_compilation_failed, True)
 					show_compilation_error_dialog
 				else
-					window_manager.display_message (Interface_names.e_c_compilation_successed)
+					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
+					display_message_on_main_output (Interface_names.e_c_compilation_succeeded, True)
 				end
 			end
 		end
@@ -136,6 +156,7 @@ feature{NONE}  -- Actions
 		do
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
+			display_message_on_main_output (Interface_names.e_C_compilation_launch_failed, True)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
 		end
 
@@ -145,9 +166,30 @@ feature{NONE}  -- Actions
 			data_storage.wipe_out
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_c_compilation_terminated)
+			display_message_on_main_output (Interface_names.e_C_compilation_terminated, True)
 		end
 
 feature{NONE} -- Implementation
+
+	display_message_on_main_output (a_msg: STRING; a_suffix: BOOLEAN) is
+			-- Display `a_msg' on main output panel.
+			-- If `a_suffix' is True, add ".%N" to end of `a_msg'.
+		require
+			a_msg_not_void: a_msg /= Void
+			a_msg_not_emtpy: not a_msg.is_empty
+		local
+			l_str: STRUCTURED_TEXT
+		do
+			create l_str.make
+			l_str.add_string (a_msg)
+			if a_suffix then
+				l_str.add_char ('.')
+				l_str.add_new_line
+			end
+			output_manager.process_text (l_str)
+			output_manager.scroll_to_end
+		end
+
 
 	open_console is
 			-- Open a command line console if c-compilation failed.

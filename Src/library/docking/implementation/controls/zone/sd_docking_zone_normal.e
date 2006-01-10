@@ -38,7 +38,7 @@ feature	{NONE} -- Initlization
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
 				end
-				window.title_bar.custom_area.extend (a_content.mini_toolbar)
+				window.title_bar.extend_custom_area (a_content.mini_toolbar)
 			end
 			window.close_request_actions.extend (agent on_close_request)
 			window.stick_actions.extend (agent stick)
@@ -62,7 +62,7 @@ feature {SD_CONTENT}
 			-- Redefine.
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (True)
 			window.set_focus_color (True)
 		end
 
@@ -111,13 +111,19 @@ feature -- Command
 feature -- Query
 
 	title: STRING is
-			-- Title.
+			-- Redefine
 		do
 			Result := window.title_bar.title
 		end
 
+	title_area: EV_RECTANGLE is
+			-- Refedine
+		do
+			create Result.make (window.title_bar.screen_x, window.title_bar.screen_y, window.title_bar.width, window.title_bar.height)
+		end
+
 	is_maximized: BOOLEAN is
-			-- Redefine.
+			-- Redefine
 		do
 			Result := window.title_bar.is_max
 		end

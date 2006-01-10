@@ -54,6 +54,7 @@ feature {NONE} -- Initlization
 			internal_close_button.set_pixmap (internal_shared.icons.close)
 			internal_tool_bar.extend (internal_normal_max_button)
 			internal_tool_bar.extend (internal_close_button)
+			internal_tool_bar.set_background_color (internal_shared.non_focused_color_lightness)
 
 			internal_top_box.extend (internal_tool_bar)
 			internal_top_box.disable_item_expand (internal_tool_bar)

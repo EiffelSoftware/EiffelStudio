@@ -16,6 +16,7 @@ inherit
 			is_maximized,
 			set_max,
 			set_title_bar_focus_color
+--			save_content_title
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -63,7 +64,6 @@ feature {NONE} -- Initlization
 			create internal_shared_not_used
 			internal_docking_manager := a_content.docking_manager
 			default_create
-			create contents.make (1)
 			create internal_notebook.make (internal_docking_manager)
 			internal_notebook.set_minimum_size (0, 0)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_bottom)
@@ -78,7 +78,7 @@ feature {NONE} -- Initlization
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
 				end
-				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
+				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
 			end
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
@@ -108,6 +108,14 @@ feature -- Query
 	is_drag_title_bar: BOOLEAN
 			-- If user dragging title bar?
 
+	title_area: EV_RECTANGLE is
+			-- Title bar area.
+		do
+			create Result.make (internal_title_bar.screen_x, internal_title_bar.screen_y, internal_title_bar.width, internal_title_bar.height)
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Command
 
 	extend (a_content: SD_CONTENT) is
@@ -123,9 +131,9 @@ feature -- Command
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
 				end
-				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
+				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
 			else
-				internal_title_bar.custom_area.wipe_out
+				internal_title_bar.wipe_out_custom_area
 			end
 		end
 
@@ -191,13 +199,14 @@ feature -- Command
 			end
 		end
 
---	destroy is
---			-- Redefine.
---		do
----- FIXIT: can't redefine destroy?
---			internal_notebook.destroy
---			Precursor {EV_VERTICAL_BOX}
---		end
+	set_content_position (a_content: SD_CONTENT; a_index: INTEGER) is
+			-- Set a_content's position to a_index.
+		require
+			has: has (a_content)
+			valid: a_index > 0 and a_index <= contents.count
+		do
+			internal_notebook.set_content_position (a_content, a_index)
+		end
 
 feature {SD_TAB_STATE} -- Internal issues.
 
@@ -225,7 +234,7 @@ feature {NONE} -- Agents for user
 			-- Redefine.
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (True)
 			internal_title_bar.enable_focus_color
 			internal_notebook.set_focus_color (True)
 
@@ -277,9 +286,9 @@ feature {NONE} -- Agents for docker
 					if l_content.mini_toolbar.parent /= Void then
 						l_content.mini_toolbar.parent.prune (l_content.mini_toolbar)
 					end
-					internal_title_bar.custom_area.extend (l_content.mini_toolbar)
+					internal_title_bar.extend_custom_area (l_content.mini_toolbar)
 				else
-					internal_title_bar.custom_area.wipe_out
+					internal_title_bar.wipe_out_custom_area
 				end
 				if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
 					l_content.internal_focus_in_actions.call ([])
@@ -299,6 +308,7 @@ feature {NONE} -- Agents for docker
 		do
 			is_drag_title_bar := True
 			create internal_docker_mediator.make (Current, internal_docking_manager)
+			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			enable_capture
 			l_tab_state ?= content.state
@@ -329,6 +339,7 @@ feature {NONE} -- Agents for docker
 			-- Handle notebook drag actions.
 		do
 			create internal_docker_mediator.make (Current, internal_docking_manager)
+			internal_docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 			enable_capture
 		end
@@ -347,6 +358,14 @@ feature {NONE} -- Agents for docker
 			-- Handle pointer drop.
 		do
 
+		end
+
+	on_cancel_dragging is
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+		do
+			disable_capture
+			internal_docker_mediator := Void
+			is_drag_title_bar := False
 		end
 
 feature {NONE} -- Implementation

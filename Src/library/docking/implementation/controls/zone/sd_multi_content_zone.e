@@ -29,8 +29,11 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	contents: ARRAYED_LIST [SD_CONTENT]
+	contents: ARRAYED_LIST [SD_CONTENT] is
 			-- SD_CONTENTs managed by `Current'.
+		do
+			Result := internal_notebook.contents
+		end
 
 	count: INTEGER is
 			-- How many SD_CONTENT in `Current'?
@@ -42,11 +45,31 @@ feature -- Query
 			-- Last content when there is only one widget.
 		require
 --			only_one_content: only_one_content
+		local
+			l_contents: like contents
 		do
-			contents.start
-			Result := contents.item
+			l_contents := contents
+			l_contents.start
+			Result := l_contents.item
 		ensure
 			not_void: Result /= Void
+		end
+
+	tabs_shown: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER] is
+			-- Tabs which is shown.
+		local
+			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+		do
+			create Result.make_default
+			l_tabs ?= internal_notebook.tabs_shown
+			from
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				Result.force_last (l_tabs.item, internal_notebook.index_of_tab (l_tabs.item))
+				l_tabs.forth
+			end
 		end
 
 feature -- Command
@@ -54,13 +77,10 @@ feature -- Command
 	extend (a_content: SD_CONTENT) is
 			-- Redefine
 		do
---			disable_on_select_tab
-			contents.extend (a_content)
 			internal_notebook.extend (a_content)
 			internal_notebook.set_item_text (a_content, a_content.short_title)
 			internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
 			internal_notebook.select_item (a_content)
---			enable_on_select_tab
 		ensure then
 			extended: contents.has (a_content)
 			internal_notebook.has (a_content)
@@ -73,10 +93,7 @@ feature -- Command
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
---			disable_on_select_tab
-			contents.prune_all (a_content)
 			internal_notebook.prune (a_content)
---			enable_on_select_tab
 		ensure
 			pruned: not has (a_content)
 			pruned: not internal_notebook.has (a_content)
@@ -86,14 +103,17 @@ feature {SD_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- Redefine.
+		local
+			l_contents: like contents
 		do
+			l_contents := contents
 			from
-				contents.start
+				l_contents.start
 			until
-				contents.after
+				l_contents.after
 			loop
-				a_config_data.add_title (contents.item.unique_title)
-				contents.forth
+				a_config_data.add_title (l_contents.item.unique_title)
+				l_contents.forth
 			end
 		end
 
@@ -120,7 +140,6 @@ feature -- States report
 	has (a_content: SD_CONTENT): BOOLEAN is
 			-- Redefine.
 		do
-			contents.start
 			Result := contents.has (a_content)
 		end
 
@@ -143,6 +162,4 @@ feature {NONE} -- Implementation
 	internal_notebook: SD_NOTEBOOK
 			-- Container which `Current' in.
 
---	internal_diable_on_select_tab: BOOLEAN
---			-- If `Current' pruning a zone?
 end

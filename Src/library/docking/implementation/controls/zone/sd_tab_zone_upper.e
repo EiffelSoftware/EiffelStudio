@@ -15,7 +15,8 @@ inherit
 			on_normal_max_window,
 			recover_to_normal_state,
 			is_maximized,
-			set_max
+			set_max,
+			title_area
 		end
 create
 	make
@@ -31,15 +32,20 @@ feature {NONE} -- Initlization
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 
 			internal_notebook.tab_double_click_actions.extend (agent on_normal_max_window)
-
 		end
 
 feature -- Query
 
 	is_maximized: BOOLEAN is
-			-- Redefine.
+			-- Redefine
 		do
 			Result := internal_notebook.is_maximized
+		end
+
+	title_area: EV_RECTANGLE is
+			-- Redefine
+		do
+			Result := internal_notebook.tab_area
 		end
 
 feature -- Command

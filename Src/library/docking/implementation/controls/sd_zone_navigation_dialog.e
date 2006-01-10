@@ -15,12 +15,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_is_shift_pressed: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
+			is_shift_pressed := a_is_shift_pressed
 			default_create
 			internal_docking_manager := a_docking_manager
 			tools_box.set_max_size (internal_max_width // 2, internal_max_height)
@@ -29,8 +30,8 @@ feature {NONE} -- Initialization
 			add_all_content_label
 			key_release_actions.extend (agent on_key_release)
 			key_press_actions.extend (agent on_key_press)
-
 		ensure
+			set: is_shift_pressed = a_is_shift_pressed
 			set: internal_docking_manager = a_docking_manager
 		end
 
@@ -52,7 +53,7 @@ feature {NONE} -- Initialization
 			l_label: SD_CONTENT_LABEL
 			l_pass_first_editor: BOOLEAN
 		do
-			l_contents := internal_docking_manager.contents
+			l_contents := internal_docking_manager.property.contents_by_click_order
 			from
 				l_contents.start
 			until
@@ -61,15 +62,14 @@ feature {NONE} -- Initialization
 				create l_label.make (False, Current)
 				l_label.set_data (l_contents.item)
 				l_label.enable_color_actions.extend (agent on_label_enable_focus_color (l_label))
+				l_label.pointer_button_press_actions.force_extend (agent select_label_and_destroy)
 				l_label.set_pixmap (l_contents.item.pixmap)
 				l_label.set_text (l_contents.item.short_title)
 				if l_contents.item.type = {SD_SHARED}.type_tool then
 					tools_box.extend (l_label)
---					tools_box.disable_item_expand (l_label)
 				else
 					check only_two_type: l_contents.item.type = {SD_SHARED}.type_editor end
 					files_box.extend (l_label)
---					files_box.disable_item_expand (l_label)
 					if not l_pass_first_editor then
 						focus_label (l_label)
 						l_pass_first_editor := True
@@ -80,18 +80,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	focus_label (a_label: SD_CONTENT_LABEL) is
-			-- Enable a_label's focus color, and update `full_title''s text.
-		local
-			l_content: SD_CONTENT
-		do
-			l_content ?= a_label.data
-			check not_void: l_content /= Void end
-			a_label.enable_focus_color
-			full_title.set_text (l_content.long_title)
-		end
+feature {NONE} -- Agents
 
 	on_label_enable_focus_color (a_label: SD_CONTENT_LABEL) is
 			-- Handle a_label focus color enabled.
@@ -99,7 +88,6 @@ feature {NONE} -- Implementation
 			a_label_not_void: a_label /= Void
 		local
 			l_lables: like labels
---			l_content: SD_CONTENT
 		do
 			l_lables := labels
 			from
@@ -110,30 +98,19 @@ feature {NONE} -- Implementation
 				if l_lables.item /= a_label then
 					l_lables.item.disable_focus_color
 				else
---					l_content ?= a_label.data
---					check not_void: l_content /= Void end
 					focus_label (a_label)
-					debug ("docking")
-						print ("%NSD_ZONE_NAVIGATION_DIALOG on_label_enable_focus_color.")
-					end
 				end
-
 				l_lables.forth
 			end
 		end
 
 	on_key_release (a_key: EV_KEY) is
 			-- Handle key release.
-		local
-			l_content: SD_CONTENT
 		do
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_ctrl then
-				l_content ?= selected_label.data
-				check not_void: l_content /= Void end
-				l_content.set_focus
-				destroy
+				select_label_and_destroy
 			when {EV_KEY_CONSTANTS}.key_shift then
 				is_shift_pressed := False
 			else
@@ -177,6 +154,30 @@ feature {NONE} -- Implementation
 			else
 
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	focus_label (a_label: SD_CONTENT_LABEL) is
+			-- Enable a_label's focus color, and update `full_title''s text.
+		local
+			l_content: SD_CONTENT
+		do
+			l_content ?= a_label.data
+			check not_void: l_content /= Void end
+			a_label.enable_focus_color
+			full_title.set_text (l_content.long_title)
+		end
+
+	select_label_and_destroy is
+			-- Select a_label and destroy Current.
+		local
+			l_content: SD_CONTENT
+		do
+			l_content ?= selected_label.data
+			check not_void: l_content /= Void end
+			l_content.set_focus
+			destroy
 		end
 
 	find_label_at_side (a_right: BOOLEAN): SD_CONTENT_LABEL is

@@ -47,7 +47,7 @@ feature {NONE} -- Initlization
 			internal_vertical_box.extend (internal_border_box)
 
 			extend (internal_vertical_box)
-			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
+			set_minimum_size (internal_shared.Zone_minmum_width, internal_shared.title_bar_height)
 			internal_border_box.set_border_color (internal_shared.border_color)
 		ensure
 			extended: has (internal_vertical_box)

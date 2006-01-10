@@ -15,9 +15,28 @@ feature {NONE}  -- Initlization
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
+		local
+			l_key: EV_KEY
+			l_acc: EV_ACCELERATOR
+			l_window: EV_TITLED_WINDOW
 		do
 			internal_docking_manager := a_docking_manager
 			create locked_windows.make_default
+
+			-- Initialize zone navigation accelerator key.
+			create l_key.make_with_code ({EV_KEY_CONSTANTS}.key_tab)
+			create l_acc.make_with_key_combination (l_key, True, False, False)
+			l_acc.actions.extend (agent on_zone_navigation (False))
+			l_window ?= internal_docking_manager.main_window
+			if l_window /= Void then
+				l_window.accelerators.extend (l_acc)
+			end
+
+			create l_acc.make_with_key_combination (l_key, True, False, True)
+			l_acc.actions.extend (agent on_zone_navigation (True))
+			if l_window /= Void then
+				l_window.accelerators.extend (l_acc)
+			end
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -111,11 +130,12 @@ feature -- Commands
 			end
 		end
 
-	remove_auto_hide_zones is
+	remove_auto_hide_zones (a_animation: BOOLEAN) is
 			-- Remove all auto hide zones in `zones'.
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 			l_zones_snapshot: ARRAYED_LIST [SD_ZONE]
+			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
 			l_zones_snapshot := internal_docking_manager.zones.zones.twin
 			from
@@ -125,14 +145,20 @@ feature -- Commands
 			loop
 				l_auto_hide_zone ?= l_zones_snapshot.item
 				if l_auto_hide_zone /= Void then
-					internal_docking_manager.zones.zones.prune (l_auto_hide_zone)
-					l_auto_hide_zone.content.state.record_state
-					internal_docking_manager.fixed_area.prune (l_auto_hide_zone)
+					if not a_animation then
+						internal_docking_manager.zones.zones.prune (l_auto_hide_zone)
+						l_auto_hide_zone.content.state.record_state
+						internal_docking_manager.fixed_area.prune (l_auto_hide_zone)
+					else
+						l_auto_hide_state ?= l_auto_hide_zone.content.state
+						check not_void: l_auto_hide_state /= Void end
+						l_auto_hide_state.close_animation
+					end
 				end
 				l_zones_snapshot.forth
 			end
 		ensure
-			no_auto_hide_zone_left: internal_docking_manager.fixed_area.count = 1
+--			no_auto_hide_zone_left: internal_docking_manager.fixed_area.count = 1
 		end
 
 	recover_normal_state is
@@ -169,12 +195,12 @@ feature -- Commands
 			end
 		end
 
-	on_zone_navigation is
+	on_zone_navigation (is_shift_pressed: BOOLEAN) is
 			-- User request to show zone navigation.
 		local
 			l_dialog: SD_ZONE_NAVIGATION_DIALOG
 		do
-			create l_dialog.make (internal_docking_manager)
+			create l_dialog.make (is_shift_pressed, internal_docking_manager)
 			l_dialog.show_relative_to_window (internal_docking_manager.main_window)
 		end
 

@@ -38,11 +38,10 @@ feature -- Command
 			destroy_extra_area
 		end
 
-	set_area (a_tect: EV_RECTANGLE) is
+	set_area (a_rect: EV_RECTANGLE) is
 			-- Set feedback area.
 		do
-			set_position (a_tect.left, a_tect.top)
-			set_size (a_tect.width, a_tect.height)
+			set_area_internal (a_rect)
 			destroy_extra_area
 		end
 
@@ -52,7 +51,7 @@ feature -- Command
 			a_top_rect_not_void: a_top_rect /= Void
 			a_bottom_rect_not_void: a_bottom_rect /= Void
 		do
-			set_area (a_top_rect)
+			set_area_internal (a_top_rect)
 
 			if internal_extra_rect = Void then
 				create internal_extra_rect.make
@@ -63,6 +62,13 @@ feature -- Command
 		end
 
 feature {NONE} -- Implementation
+
+	set_area_internal (a_rect: EV_RECTANGLE) is
+			-- Set feedback area, not destroy `internal_extra_area'.
+		do
+			set_position (a_rect.left, a_rect.top)
+			set_size (a_rect.width, a_rect.height)
+		end
 
 	destroy_extra_area is
 			-- Destroy extra area.

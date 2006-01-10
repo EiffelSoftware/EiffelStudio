@@ -47,7 +47,7 @@ feature  -- Agents
 					else
 						l_auto_hide_zone ?= internal_docking_manager.property.last_focus_content.state.zone
 						if l_auto_hide_zone = Void then
-							internal_docking_manager.command.remove_auto_hide_zones
+							internal_docking_manager.command.remove_auto_hide_zones (True)
 						else
 							l_auto_hide_zone.set_title_bar_focus_color (True)
 						end
@@ -63,7 +63,7 @@ feature  -- Agents
 			debug ("docking")
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (False)
 			internal_docking_manager.menu_container.set_minimum_size (0, 0)
 			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
 			internal_docking_manager.query.inner_container_main.set_minimum_size (0, 0)

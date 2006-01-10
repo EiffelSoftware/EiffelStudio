@@ -52,7 +52,7 @@ feature -- Redefine
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 				l_tab_zone ?= internal_zone
 				check must_be_tab_zone: l_tab_zone /= Void end
-				caller.state.move_to_tab_zone (l_tab_zone)
+				caller.state.move_to_tab_zone (l_tab_zone, 0)
 				Result := True
 			end
 			internal_shared.feedback.reset_feedback_clearing

@@ -12,7 +12,9 @@ inherit
 			make as make_docking,
 			internal_zone as internal_zone_docking
 		redefine
-			apply_change
+			apply_change,
+			set_rectangle,
+			update_for_pointer_position_feedback
 		end
 
 create
@@ -53,15 +55,86 @@ feature -- Redefine
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				Result := True
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.move_to_tab_zone (internal_zone)
+				caller.state.move_to_tab_zone (internal_zone, 0)
 				Result := True
+			else
+				from
+					internal_tab_area.start
+				until
+					internal_tab_area.after or Result
+				loop
+					if internal_tab_area.item_for_iteration.has_x_y (a_screen_x, a_screen_y) then
+						Result := True
+						debug ("docking")
+							print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
+						end
+						caller.state.move_to_tab_zone (internal_zone, internal_tab_area.key_for_iteration)
+					end
+					internal_tab_area.forth
+				end
 			end
+		end
+
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- Redefine.
+		local
+
+			l_item: EV_RECTANGLE
+		do
+			from
+				internal_tab_area.start
+			until
+				internal_tab_area.after or Result
+			loop
+				l_item := internal_tab_area.item_for_iteration
+				if l_item.has_x_y (a_screen_x, a_screen_y) then
+					Result := True
+					internal_shared.feedback.draw_transparency_rectangle (l_item.x, l_item.y, l_item.width, l_item.height)
+				end
+				internal_tab_area.forth
+			end
+
+			if not Result then
+				Result := Precursor {SD_HOT_ZONE_DOCKING} (a_screen_x, a_screen_y)
+			end
+
 		end
 
 feature {NONE} -- Implementation
 
+	set_rectangle (a_rect: EV_RECTANGLE) is
+			-- Redefine
+		local
+			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
+			l_rect: EV_RECTANGLE
+		do
+
+			l_tabs := internal_zone.tabs_shown
+			create internal_tab_area.make (1)
+			from
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				create l_rect.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
+				internal_tab_area.force_last (l_rect, l_tabs.key_for_iteration)
+				l_tabs.forth
+			end
+
+			internal_rectangle := a_rect
+			create internal_rectangle_left.make (internal_rectangle.left + internal_rectangle.width // 2 - pixmap_center_width // 2 - pixmap_corner_width, internal_rectangle.top + internal_rectangle.height // 2 - pixmap_corner_width // 2, pixmap_corner_width, pixmap_corner_width)
+			create internal_rectangle_right.make (internal_rectangle_left.left + pixmap_corner_width + pixmap_center_width - 1, internal_rectangle_left.top, pixmap_corner_width, pixmap_corner_width)
+			create internal_rectangle_top.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top - pixmap_corner_width + 1, pixmap_corner_width, pixmap_corner_width)
+			create internal_rectangle_bottom.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top + pixmap_corner_width - 2, pixmap_corner_width, pixmap_corner_width)
+			create internal_rectangle_center.make (internal_rectangle_left.right, internal_rectangle_top.bottom, internal_rectangle_right.left - internal_rectangle_left.right, internal_rectangle_bottom.top - internal_rectangle_top.bottom)
+			internal_rectangle_title_area := internal_zone.title_area
+		end
+
 	internal_zone: SD_TAB_ZONE
 			-- Caller.
+
+	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER]
+			-- Tab area's rectangle
 
 invariant
 

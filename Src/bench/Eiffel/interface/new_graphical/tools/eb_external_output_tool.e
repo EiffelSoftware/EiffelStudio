@@ -162,6 +162,11 @@ feature{NONE} -- Initialization
 			console.set_font (preferences.editor_data.font)
 			console.disable_edit
 
+			console.drop_actions.extend (agent drop_class)
+			console.drop_actions.extend (agent drop_feature)
+			console.drop_actions.extend (agent drop_cluster)
+			console.drop_actions.extend (agent drop_breakable)
+
 			terminate_btn.set_pixmap (Pixmaps.icon_exec_quit.item (1))
 			terminate_btn.set_tooltip (f_terminate_command_button)
 			terminate_btn.select_actions.extend (agent on_terminate_process)
@@ -172,6 +177,10 @@ feature{NONE} -- Initialization
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
+			state_label.drop_actions.extend (agent drop_class)
+			state_label.drop_actions.extend (agent drop_feature)
+			state_label.drop_actions.extend (agent drop_cluster)
+			state_label.drop_actions.extend (agent drop_breakable)
 
 			run_btn.set_pixmap (Pixmaps.icon_run.item (1))
 			run_btn.set_tooltip (f_start_command_button)
@@ -181,10 +190,20 @@ feature{NONE} -- Initialization
 			cmd_lst.change_actions.extend (agent on_cmd_lst_text_change)
 			cmd_lst.set_text ("")
 
+			cmd_lst.drop_actions.extend (agent drop_class)
+			cmd_lst.drop_actions.extend (agent drop_feature)
+			cmd_lst.drop_actions.extend (agent drop_cluster)
+			cmd_lst.drop_actions.extend (agent drop_breakable)
+
 			edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
 
 			input_field.key_press_actions.extend (agent on_key_pressed_in_input_field (?))
+
+			input_field.drop_actions.extend (agent drop_class)
+			input_field.drop_actions.extend (agent drop_feature)
+			input_field.drop_actions.extend (agent drop_cluster)
+			input_field.drop_actions.extend (agent drop_breakable)
 
 			send_input_btn.set_pixmap (icon_input_to_process)
 			send_input_btn.set_tooltip (f_send_input_button)
@@ -198,6 +217,18 @@ feature{NONE} -- Initialization
 			l_ev_cmd_lbl.set_text (l_command)
 			l_ev_output_lbl.set_text (l_output)
 			l_ev_input_lbl.set_text (l_input)
+			l_ev_cmd_lbl.drop_actions.extend (agent drop_class)
+			l_ev_cmd_lbl.drop_actions.extend (agent drop_feature)
+			l_ev_cmd_lbl.drop_actions.extend (agent drop_cluster)
+			l_ev_cmd_lbl.drop_actions.extend (agent drop_breakable)
+			l_ev_output_lbl.drop_actions.extend (agent drop_class)
+			l_ev_output_lbl.drop_actions.extend (agent drop_feature)
+			l_ev_output_lbl.drop_actions.extend (agent drop_cluster)
+			l_ev_output_lbl.drop_actions.extend (agent drop_breakable)
+			l_ev_input_lbl.drop_actions.extend (agent drop_class)
+			l_ev_input_lbl.drop_actions.extend (agent drop_feature)
+			l_ev_input_lbl.drop_actions.extend (agent drop_cluster)
+			l_ev_input_lbl.drop_actions.extend (agent drop_breakable)
 
 			synchronize_command_list (Void)
 			if external_launcher.is_launch_session_over then
@@ -297,14 +328,10 @@ feature -- Basic operation
 		do
 			if cmd_lst.is_displayed and then cmd_lst.is_sensitive then
 				cmd_lst.set_focus
-			end
-		end
-
-	set_cmd_lst_focus is
-			--
-		do
-			if cmd_lst.is_displayed and then cmd_lst.is_sensitive then
-				cmd_lst.set_focus
+			else
+				if input_field.is_displayed and then input_field.is_sensitive then
+					input_field.set_focus
+				end
 			end
 		end
 
@@ -358,6 +385,9 @@ feature -- Basic operation
 				end
 				if not text_set then
 					cmd_lst.set_text (str)
+				end
+				if not cmd_lst.text.is_empty then
+					cmd_lst.select_all
 				end
 			end
 		end
@@ -484,23 +514,23 @@ feature{NONE} -- Actions
 			e_cmd: EB_EXTERNAL_COMMAND
 			temp_cmd: EB_EXTERNAL_COMMAND
 		do
-				create str.make_from_string (cmd_lst.text)
-				str.left_adjust
-				str.right_adjust
-				if not str.is_empty then
-					e_cmd := corresponding_external_command
-					if e_cmd /= Void then
-						wd := e_cmd.working_directory
-						if wd = Void then
-							wd := ""
-						end
-						create temp_cmd.make_and_run_only (e_cmd.external_command, wd)
-						print_command_name (e_cmd.external_command)
-					else
-						create temp_cmd.make_and_run_only (str, "")
-						print_command_name (str)
+			create str.make_from_string (cmd_lst.text)
+			str.left_adjust
+			str.right_adjust
+			if not str.is_empty then
+				e_cmd := corresponding_external_command
+				if e_cmd /= Void then
+					wd := e_cmd.working_directory
+					if wd = Void then
+						wd := ""
 					end
+					create temp_cmd.make_and_run_only (e_cmd.external_command, wd)
+					print_command_name (e_cmd.external_command)
+				else
+					create temp_cmd.make_and_run_only (str, "")
+					print_command_name (str)
 				end
+			end
 		end
 
 	on_input_to_process (str: STRING) is
@@ -524,18 +554,13 @@ feature{NONE} -- Actions
 		local
 			str: STRING
 			found: BOOLEAN
-			lt: EV_LIST_ITEM
 		do
 			if input_field.text /= Void then
 				create str.make_from_string (input_field.text)
 			else
 				str :=""
 			end
-			str.append_character ('%N')
-			input_field.set_text ("")
-			on_input_to_process (str)
-			str.left_adjust
-			str.right_adjust
+			on_input_to_process (str + "%N")
 			if not str.is_empty then
 				from
 					input_field.start
@@ -544,20 +569,19 @@ feature{NONE} -- Actions
 					input_field.after or found
 				loop
 					if str.is_equal (input_field.item.text) then
-						found := False
+						found := True
 					end
 					input_field.forth
 				end
 				if not found then
-					create lt.make_with_text (str)
-					input_field.put_front (lt)
+					input_field.put_front (create {EV_LIST_ITEM}.make_with_text (str))
 					if input_field.count > 10 then
 						input_field.go_i_th (input_field.count)
 						input_field.remove
 					end
-
 				end
 			end
+			input_field.set_text ("")
 		end
 
 	on_key_pressed_in_input_field (key: EV_KEY) is

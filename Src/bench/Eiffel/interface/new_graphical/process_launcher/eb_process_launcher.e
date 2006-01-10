@@ -177,7 +177,6 @@ feature -- Control
 			-- If `redirection_needed', redirect input, output and error of process.
 		require
 			output_handler_set: output_handler /= Void
-			error_handler_set: error_handler /= Void
 			command_line_not_null: command_line /= Void
 			command_line_not_empty: not command_line.is_empty
 			working_dir_not_null: working_directory /= Void
@@ -205,8 +204,8 @@ feature -- Control
 			create out_thread.make (prc_imp)
 			if redirection_needed then
 				prc.redirect_input_to_stream
-				prc.redirect_error_to_agent (error_handler)
 				prc.redirect_output_to_agent (output_handler)
+				prc.redirect_error_to_same_as_output
 				if platform_constants.is_windows then
 					prc.set_hidden (is_hidden)
 					prc.set_separate_console (False)
@@ -275,7 +274,7 @@ feature -- Control
 	terminate is
 			-- Terminate child process.
 		do
-			if launched and then (not has_exited) then
+			if is_running then
 				prc.terminate_tree
 			end
 		ensure

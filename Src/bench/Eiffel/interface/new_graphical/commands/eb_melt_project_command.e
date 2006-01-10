@@ -107,10 +107,9 @@ feature {NONE} -- Compilation implementation
 		do
 			if not Eiffel_project.is_compiling then
 				reset_debugger
-				output_manager.clear
 				Window_manager.on_compile
 				perform_compilation
-
+				display_eiffel_compilation_status
 				if Eiffel_project.successful then
 						-- If a freezing already occurred (due to a new external
 						-- or new derivation of SPECIAL), no need to freeze again.
@@ -135,30 +134,38 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
+	display_eiffel_compilation_status is
+			-- Display status of eiffel compilation.
+		local
+			output_text: STRUCTURED_TEXT
+		do
+			create output_text.make
+			if Workbench.successful then
+				output_text.add_string (Interface_names.E_compilation_succeeded)
+				output_text.add_new_line
+			else
+				output_text.add_string (Interface_names.e_compilation_failed)
+				output_text.add_new_line
+			end
+			output_manager.process_text (output_text)
+		end
+
 	tool_resynchronization is
 			-- Resynchronize class, feature and system tools.
 			-- Clear the format_context buffers.
-		local
-			output_text: STRUCTURED_TEXT
 		do
 				-- Clear the format_context buffers.
 			clear_format_tables
 			window_manager.display_message_and_percentage (Interface_names.d_Resynchronizing_tools, 0)
 			window_manager.synchronize_all
-			create output_text.make
 			if Workbench.successful then
-
-				if not eiffel_project.freezing_occurred then
-					output_text.add_string (Interface_names.E_compilation_succeeded)
-				end
 				if not process_manager.is_c_compilation_running then
 					window_manager.display_message (Interface_names.E_compilation_succeeded)
 				end
 			else
 				window_manager.display_message (Interface_names.E_compilation_failed)
-				output_text.add_string (Interface_names.e_compilation_failed)
 			end
-			output_manager.process_text (output_text)
+			output_manager.scroll_to_end
 			Eb_debugger_manager.on_compile_stop
 
 			if dynamic_lib_window_is_valid and then dynamic_lib_window.is_visible then
@@ -180,9 +187,6 @@ feature {NONE} -- Compilation implementation
 			output_text.add_new_line
 
 			if start_c_compilation and then Eiffel_project.freezing_occurred then
-				output_text.add_string ("Background C compilation launched.")
-				output_text.add_new_line
-					-- Display message.
 				output_manager.process_text (output_text)
 				Eiffel_project.call_finish_freezing (True)
 			end

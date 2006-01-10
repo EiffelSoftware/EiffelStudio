@@ -684,6 +684,13 @@ feature -- Actions on all windows
 				if cv_dev /= Void and then not cv_dev.destroyed then
 					if cv_dev.status_bar.message.is_empty then
 						cv_dev.status_bar.display_message (mess)
+						state_message_waiting_count := 0
+					else
+						state_message_waiting_count := state_message_waiting_count + 1
+						if state_message_waiting_count > max_waiting_count then
+							state_message_waiting_count := 0
+							cv_dev.status_bar.display_message (mess)
+						end
 					end
 				end
 				l_managed_windows.forth
@@ -785,12 +792,11 @@ feature {NONE} -- Exit implementation
 	quit is
 			-- Destroy the last development window.
 		do
-			if process_manager.is_c_compilation_running then
+			if process_manager.is_process_running then
 				process_manager.confirm_process_termination_for_quiting (agent kill_process_and_confirm_quit, Void, last_focused_development_window.window)
 			else
 				Exit_application_cmd.ask_confirmation
 			end
-
 		end
 
 feature -- Events
@@ -1474,5 +1480,12 @@ feature {EB_WINDOW} -- Implementation / Private Constants
 	Notify_changed_window: INTEGER is 0
 		-- Notification constant for `notify_observers'.
 
+feature{NONE} -- Implementation
+
+	state_message_waiting_count: INTEGER
+			-- Times that we have been waiting for displaying a c compilation message.
+
+	max_waiting_count: INTEGER is 100
+			-- Max value of `state_message_waiting_count'
 
 end -- EB_WINDOW_MANAGER

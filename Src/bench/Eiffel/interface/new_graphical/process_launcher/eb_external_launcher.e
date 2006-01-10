@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 			set_buffer_size (initial_buffer_size)
 			set_time_interval (initial_time_interval)
 			set_output_handler (agent output_dispatch_handler (?))
-			set_error_handler (agent error_dispatch_handler (?))
+--			set_error_handler (agent error_dispatch_handler (?))
 
 			set_on_start_handler (agent on_start)
 			set_on_exit_handler (agent on_exit)

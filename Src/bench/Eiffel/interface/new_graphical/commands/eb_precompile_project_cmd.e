@@ -81,7 +81,6 @@ feature {NONE} -- Implementation
 				output_text.add_new_line
 					-- Display message.
 				output_manager.process_text (output_text)
-
 				Eiffel_project.call_finish_freezing (True)
 
 				if finalize_precompile then

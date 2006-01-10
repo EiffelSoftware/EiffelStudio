@@ -10,7 +10,7 @@ class
 inherit
 	EB_OUTPUT_TOOL
 		redefine
-			make,  drop_breakable, drop_class, drop_feature, drop_cluster,
+			make,
 			process_text, clear, recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin
 		end
@@ -100,6 +100,10 @@ feature{NONE} -- Initialization
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
+			output_text.drop_actions.extend (agent drop_class)
+			output_text.drop_actions.extend (agent drop_feature)
+			output_text.drop_actions.extend (agent drop_cluster)
+			output_text.drop_actions.extend (agent drop_breakable)
 			output_text.set_foreground_color (preferences.editor_data.normal_text_color)
 			output_text.set_background_color (preferences.editor_data.normal_background_color)
 			output_text.set_font (preferences.editor_data.font)
@@ -154,26 +158,6 @@ feature -- Basic operation
 
 	process_text (st: STRUCTURED_TEXT) is
 			-- Display `st' on the console.
-		do
-		end
-
-	drop_breakable (st: BREAKABLE_STONE) is
-			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
-		do
-		end
-
-	drop_class (st: CLASSI_STONE) is
-			-- Drop `st' in the context tool and pop the `class info' tab.
-		do
-		end
-
-	drop_feature (st: FEATURE_STONE) is
-			-- Drop `st' in the context tool and pop the `feature info' tab.
-		do
-		end
-
-	drop_cluster (st: CLUSTER_STONE) is
-			-- Drop `st' in the context tool.
 		do
 		end
 

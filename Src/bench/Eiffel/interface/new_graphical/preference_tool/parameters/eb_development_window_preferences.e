@@ -198,6 +198,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			Result := graphical_output_disabled_preference.value
 		end
 
+	c_output_panel_prompted: BOOLEAN is
+		do
+			Result := c_output_panel_prompted_preference.value
+		end
+
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	show_eiffel_studio_debug_preference: BOOLEAN_PREFERENCE
@@ -277,6 +283,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	graphical_output_disabled_preference: BOOLEAN_PREFERENCE
 
 	use_animated_icons_preference: BOOLEAN_PREFERENCE
+
+	c_output_panel_prompted_preference: BOOLEAN_PREFERENCE
+			-- Should C output panel prompt out when c compilation starts?
 
 feature -- Element change
 
@@ -389,6 +398,7 @@ feature {NONE} -- Preference Strings
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
+	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
 
 feature {NONE} -- Implementation
 
@@ -430,6 +440,7 @@ feature {NONE} -- Implementation
 			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)
 			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
 			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_resource_value (l_manager, show_debug_menu_with_accelerator, True)
+			c_output_panel_prompted_preference := l_manager.new_boolean_resource_value (l_manager, c_output_panel_prompted_string, False)
 		end
 
 	preferences: PREFERENCES

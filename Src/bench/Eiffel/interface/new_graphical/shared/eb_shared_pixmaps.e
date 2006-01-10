@@ -8,7 +8,7 @@ class
 
 inherit
 	EV_STOCK_PIXMAPS
-	
+
 	EB_SHARED_PIXMAP_FACTORY
 
 feature -- Access
@@ -20,7 +20,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	large_pixmaps: EB_SHARED_PIXMAPS_32 is
 			-- Shared large pixmaps
 		once
@@ -71,7 +71,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_preference_folder")
 		end
-		
+
 	Icon_preference_window: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_preference_window")
@@ -141,7 +141,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_format_clients_color")
 		end
-		
+
 	Icon_format_suppliers: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_format_suppliers_color")
@@ -201,12 +201,12 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_format_interface_color")
 		end
-		
+
 	Icon_frozen_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_frozen_feature")
 		end
-		
+
 	Icon_obsolete_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_obsolete_feature")
@@ -221,7 +221,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_static_object_symbol")
 		end
-		
+
 	Icon_external_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_external_symbol")
@@ -230,18 +230,18 @@ feature -- Icons
 	Icon_static_external_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_static_external_symbol")
-		end		
+		end
 
 	Icon_once_objects: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_once_symbol")
 		end
-		
+
 	Icon_once_obsolete_objects: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_once_obsolete_symbol")
 		end
-		
+
 	Icon_once_frozen_objects: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_once_frozen_symbol")
@@ -251,12 +251,12 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_attribute_symbol")
 		end
-		
+
 	Icon_obsolete_attribute: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_attribute_obsolete_symbol")
 		end
-		
+
 	Icon_frozen_attribute: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_attribute_frozen_symbol")
@@ -266,7 +266,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_deferred_feature")
 		end
-		
+
 	Icon_deferred_obsolete_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_deferred_obsolete_feature")
@@ -276,7 +276,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_external_feature")
 		end
-		
+
 	Icon_external_frozen_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_external_frozen_feature")
@@ -286,7 +286,7 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_external_obsolete_feature")
 		end
-		
+
 	Icon_other_feature: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_other_feature")
@@ -331,7 +331,7 @@ feature -- Icons
 		once
 			Result := small_pixmaps.icon_nothing
 		end
-		
+
 	Icon_compilation_succeeded: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_compiled")
@@ -521,7 +521,7 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("search")
 		end
-	
+
 	Icon_editor: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -752,8 +752,8 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("no_stop")
-		end	
-		
+		end
+
 	Icon_back: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -921,32 +921,32 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("display_labels")
 		end
-		
+
 	Icon_display_uml: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("uml")
 		end
-		
+
 	Icon_display_clusters: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("display_cluster")
 		end
-		
+
 	Icon_remove_anchor: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("remove_anchor")
 		end
-		
+
 	Icon_toggle_force_directed: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("toggle_force")
 		end
-		
+
 	Icon_force_settings: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("force_settings")
 		end
-		
+
 
 	Icon_toggle_clusters: ARRAY [EV_PIXMAP] is
 		once
@@ -957,12 +957,12 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("class_header")
 		end
-		
+
 	Icon_toggle_quality: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("toggle_quality")
 		end
-		
+
 
 	Icon_super_cluster: ARRAY [EV_PIXMAP] is
 		once
@@ -978,7 +978,7 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("delete_view")
 		end
-		
+
 	Icon_reset_view: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("reset_view")
@@ -1043,7 +1043,7 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("zoom_out")
 		end
-		
+
 	Icon_fit_to_screen: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("fit_to_screen")
@@ -1053,17 +1053,17 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("select_depth")
 		end
-		
+
 	Icon_display_legend: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("display_legend")
 		end
-		
+
 	Icon_pin_legend_open: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_pin_open_color")
 		end
-		
+
 	Icon_pin_legend_closed: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_pin_closed_color")
@@ -1088,7 +1088,7 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("sorter")
 		end
-		
+
 	Icon_bon_anchor: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_anchor")
@@ -1133,36 +1133,33 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("word_wrap")
 		end
-		
+
 	Icon_auto_slice_limits_color: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("auto_slice_limits")
 		end
-		
+
 	Icon_input_to_process: EV_PIXMAP is
-			-- 
+			--
 		once
 			Result := pixmap_file_content ("icon_input_to_process")
 		end
-		
+
 	Icon_add_new_external_cmd: EV_PIXMAP is
-			-- 
+			--
 		once
 			Result := pixmap_file_content ("icon_add_new_external_cmd")
 		end
-		
-	
-		
-		
+
 feature -- Reading
 
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
 			-- Build an array of pixmaps. The first pixmap is the
-			-- colored pixmap, others are for future expansion such as large icons 
+			-- colored pixmap, others are for future expansion such as large icons
 			--
 			-- `pixmap_name' is the core name of the pixmap.
 		do
-				-- Read the pixmaps 
+				-- Read the pixmaps
 			create Result.make (1,1)
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 		ensure
@@ -1180,7 +1177,7 @@ feature {NONE} -- Implementation
 
 	pixmap_width: INTEGER is 16
 		-- Width in pixels of generated factory image
-		
+
 	pixmap_height: INTEGER is 16
 		-- Height in pixels of generated factory image
 
@@ -1367,7 +1364,7 @@ feature {NONE} -- Implementation
 			Result.put ([11, 9], "icon_pin_open_color")
 			Result.put ([11, 10], "icon_pin_closed_color")
 			Result.put ([11, 11], "icon_arrow_empty")
-			Result.put ([11, 12], "icon_force_settings_color")	
+			Result.put ([11, 12], "icon_force_settings_color")
 			Result.put ([11, 13], "icon_deferred_obsolete_feature")
 			Result.put ([11, 14], "icon_attribute_obsolete_symbol")
 			Result.put ([11, 15], "icon_attribute_frozen_symbol")
@@ -1385,8 +1382,8 @@ feature {NONE} -- Implementation
 			Result.put ([12,11], "icon_reset_view_color")
 			Result.put ([12,12], "icon_format_creators_color")
 			Result.put ([12,13], "icon_format_invariants_color")
-			Result.put ([12,14], "icon_input_to_process")
-			Result.put ([12,15], "icon_add_new_external_cmd")
+			Result.put ([12,14], "icon_add_new_external_cmd")
+			Result.put ([12,15], "icon_input_to_process")
 			Result.compare_objects
 		end
 

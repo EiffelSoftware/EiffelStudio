@@ -125,9 +125,6 @@ feature {NONE} -- Implementation
 			output_text.add_new_line
 
 			if start_c_compilation then
-					output_text.add_string ("Background C compilation launched.")
-					output_text.add_new_line
-
 				if not Eiffel_project.is_final_code_optimal then
 					create output_text.make
 					output_text.add_string ("Warning: the finalized system might not be optimal")
@@ -141,7 +138,6 @@ feature {NONE} -- Implementation
 				end
 					-- Display message.
 				output_manager.process_text (output_text)
-
 				Eiffel_project.call_finish_freezing (False)
 			end
 

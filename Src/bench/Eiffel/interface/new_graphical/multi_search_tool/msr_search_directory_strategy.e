@@ -122,7 +122,7 @@ feature -- Basic operations
 						create l_file.make (string_formatter.extend_file_path (path, l_directory.lastentry).out)
 						if l_file.exists then
 							if l_file.is_directory and then is_subdirectory_searched then
-								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry)) is
+								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry)) 
 								if case_sensitive then 
 									directory_strategy.set_case_sensitive 
 								else 

@@ -508,7 +508,11 @@ rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_numbe
 	
 	if (new_value == NULL) {
 		/* access the object through its hector address */
+#ifdef ISE_GC
 		object = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) arg_addr))));
+#else
+		object = (EIF_REFERENCE) (arg_addr);
+#endif
 		attr_number = arg_attr_number;	
 	} else {
 		/* second call, get the new value and call the function */
@@ -548,7 +552,11 @@ rt_private void inspect(int s, Opaque *what)
 	switch (what->op_first) {		/* First value describes request */
 	case IN_H_ADDR:					/* Hector address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
+#ifdef ISE_GC
 		obj_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
+#else
+		obj_inspect((EIF_OBJ) addr);
+#endif
 		return;
 	case IN_BIT_ADDR:				/* Bit address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
@@ -556,7 +564,11 @@ rt_private void inspect(int s, Opaque *what)
 		return;
 	case IN_STRING_ADDR:		/* String object inspection (hector addr) */
 		addr = (char *) what->op_third;		/* long -> (char *) */
+#ifdef ISE_GC
 		string_inspect((EIF_OBJ)(&(eif_access((EIF_OBJ) addr))));
+#else
+		obj_inspect((EIF_OBJ) addr);
+#endif
 		return;
 	case IN_ADDRESS:				/* Address inspection */
 		addr = (char *) what->op_third;		/* long -> (char *) */
@@ -1346,7 +1358,11 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 				o_ref = (char *) ((char **)object + attr_number);
 
 				/* access the object through its hector address */
+#ifdef ISE_GC
 				new_object_attr = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+#else
+				new_object_attr = (EIF_REFERENCE) (new_value->it_ref);
+#endif
 				*(EIF_REFERENCE *)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced as `object' */
 				RTAR(object, new_object_attr);
@@ -1440,7 +1456,11 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, str
 				return 2;
 			default: /* Object reference */
 				/* access the object through its hector address */
+#ifdef ISE_GC
 				new_object_attr = eif_access((EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref)))));
+#else
+				new_object_attr = (EIF_REFERENCE) (new_value->it_ref);
+#endif
 				*(EIF_REFERENCE *)o_ref = new_object_attr;
 				/* inform the GC that new_value is now referrenced is `object' */
 				RTAR(object, new_object_attr);

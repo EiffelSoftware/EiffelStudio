@@ -14,7 +14,10 @@ inherit
 
 create
 	make
-	
+
+create {CLICK_LIST}
+	make_filled
+
 feature -- Access
 
 	item_by_node (a_node: CLICKABLE_AST): CLICK_AST is

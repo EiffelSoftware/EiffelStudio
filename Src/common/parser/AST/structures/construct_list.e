@@ -14,6 +14,9 @@ inherit
 create
 	make
 
+create {CONSTRUCT_LIST}
+	make_filled
+
 feature -- Special insertion
 
 	reverse_extend (v: T) is
@@ -24,5 +27,5 @@ feature -- Special insertion
 			area.put (v, capacity - count - 1)
 			set_count (count + 1)
 		end
-		
+
 end

@@ -101,16 +101,22 @@ feature -- Querys
 			-- Contract support. If a_area is first one in `inner_containers'.
 		require
 			a_area_not_void: a_area /= Void
+		local
+			l_areas: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
-			internal_docking_manager.inner_containers.start
-			Result := internal_docking_manager.inner_containers.item = a_area
+			l_areas := internal_docking_manager.inner_containers
+			l_areas.start
+			Result := l_areas.item = a_area
 		end
 
 	inner_container_main: SD_MULTI_DOCK_AREA is
 			-- Container in main window.
+		local
+			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
-			internal_docking_manager.inner_containers.start
-			Result := internal_docking_manager.inner_containers.item
+			l_containers := internal_docking_manager.inner_containers
+			l_containers.start
+			Result := l_containers.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -125,7 +131,7 @@ feature -- Querys
 		end
 
 	container_rectangle: EV_RECTANGLE is
-			-- Rectangle area of the `fixed_area'.
+			-- Rectangle area of `center_area'
 		local
 			l_center_area: EV_WIDGET
 		do
@@ -134,6 +140,15 @@ feature -- Querys
 				internal_docking_manager.internal_auto_hide_panel_top.height, l_center_area.width, l_center_area.height)
 		ensure
 			not_void: Result /= Void
+		end
+
+	fixed_area_rectangle: EV_RECTANGLE is
+			-- Rectangle area of `fixed_area'
+		local
+			l_widget: EV_WIDGET
+		do
+			l_widget := internal_docking_manager.fixed_area
+			create Result.make (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height)
 		end
 
 	container_rectangle_screen: EV_RECTANGLE is

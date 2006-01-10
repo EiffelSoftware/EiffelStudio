@@ -17,6 +17,7 @@ feature -- Initlization
 			a_caller_not_void: a_caller /= Void
 		local
 			l_screen: SD_SCREEN
+			l_env: EV_ENVIRONMENT
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
@@ -26,7 +27,13 @@ feature -- Initlization
 			caller := a_caller
 			create l_screen
 
+			-- FIXIT: Only when use SD_HOT_ZONE_TRIANGLE_FACTORY, follow line is needed.
 			orignal_screen := l_screen.sub_pixmap (create {EV_RECTANGLE}.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.width, l_screen.height))
+
+			create cancel_actions
+			internal_key_press_function := agent on_key_press
+			create l_env
+			l_env.application.key_press_actions.extend (internal_key_press_function)
 		ensure
 			set: caller = a_caller
 			set: internal_docking_manager = a_docking_manager
@@ -45,10 +52,10 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	capture_enabled: like tracing is
-			-- If tracing pointer motion?
+	capture_enabled: like is_tracing is
+			-- If is_tracing pointer motion?
 		do
-			Result := tracing
+			Result := is_tracing
 		end
 
 	caller: SD_ZONE
@@ -59,7 +66,7 @@ feature -- Hanlde pointer events
 	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER) is
 			-- Begin to trace mouss positions.
 		do
-			tracing := True
+			is_tracing := True
 			generate_hot_zones
 			offset_x := a_offset_x
 			offset_y := a_offset_y
@@ -67,16 +74,29 @@ feature -- Hanlde pointer events
 			set: offset_x = a_offset_x and offset_y = a_offset_y
 		end
 
+	cancel_tracing_pointer is
+			-- Cancel is_tracing pointer, user may press Escape key?
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			is_tracing := False
+			clear_all_indicator
+			internal_shared.feedback.clear
+
+			create l_env
+			l_env.application.key_press_actions.prune_all (internal_key_press_function)
+			cancel_actions.call ([])
+		ensure
+			not_tracing: is_tracing = False
+		end
+
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER) is
-			-- Stop tracing mouse positions.
+			-- Stop is_tracing mouse positions.
 		local
 			changed: BOOLEAN
 			l_floating_zone: SD_FLOATING_ZONE
 		do
-			tracing := False
-			clear_all_indicator (a_screen_x, a_screen_y)
-			internal_shared.feedback.clear
-
+			cancel_tracing_pointer
 
 			from
 				hot_zones.start
@@ -96,17 +116,19 @@ feature -- Hanlde pointer events
 			end
 
 		ensure
-			not_tracing: tracing = False
+			not_tracing: is_tracing = False
 		end
 
 	is_tracing_pointer: BOOLEAN is
-			-- If `Current' tracing pointer motion?
+			-- If `Current' is_tracing pointer motion?
 		do
-			Result := tracing
+			Result := is_tracing
 		end
 
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
 			-- When user dragging something for docking, show hot zone which allow to dock.
+		require
+			is_tracing: is_tracing
 		local
 			l_drawed: BOOLEAN
 		do
@@ -157,9 +179,16 @@ feature -- Hanlde pointer events
 				hot_zones.forth
 			end
 		end
+feature -- Query
 
 	screen_x, screen_y: INTEGER
 			-- Current pointer position.
+
+	is_tracing: BOOLEAN
+			-- Whether is is_tracing pointer events.
+
+	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Handle user canel dragging event.
 
 feature {SD_HOT_ZONE} -- Hot zone infos.
 
@@ -191,7 +220,15 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 
 feature {NONE} -- Implementation functions
 
-	clear_all_indicator (a_screen_x, a_screen_y: INTEGER) is
+	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
+			-- Handle user press Escape key to canel event.
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+				cancel_tracing_pointer
+			end
+		end
+
+	clear_all_indicator is
 			-- Clear all indicators.
 		do
 			from
@@ -213,15 +250,13 @@ feature {NONE} -- Implementation functions
 
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
-			debug ("docking")
-				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type.out + " caller.type " + caller.type.out)
-			end
-			if internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type = caller.type  then
-				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager))
+
+--			if internal_shared.hot_zone_factory.hot_zone_main (caller, internal_docking_manager).type = caller.type  then
+				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (caller, internal_docking_manager))
 				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 				end
-			end
+--			end
 		ensure
 			hot_zones_created: hot_zones /= Void
 		end
@@ -298,9 +333,6 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
-	tracing: BOOLEAN
-			-- Whether is tracing pointer events.
-
 	hot_zones: ACTIVE_LIST [SD_HOT_ZONE]
 			-- Hot zones.
 
@@ -313,9 +345,12 @@ feature {NONE} -- Implementation attributes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 
+	internal_key_press_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
+			-- Golbal key press action.
 invariant
 
 	internal_shared_not_void: internal_shared /= Void
 	hot_zones_not_void: hot_zones /= Void
+	cancel_actions_not_void: cancel_actions /= Void
 
 end

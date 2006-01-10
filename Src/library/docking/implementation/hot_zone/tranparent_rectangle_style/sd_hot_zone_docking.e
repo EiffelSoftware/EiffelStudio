@@ -50,7 +50,7 @@ feature -- Redefine
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
 				caller.state.move_to_docking_zone (internal_zone)
 				Result := True
 			end
@@ -73,6 +73,9 @@ feature -- Redefine
 				Result := True
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
+				Result := True
+			elseif internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_title_area)
 				Result := True
 			end
 		end
@@ -133,7 +136,7 @@ feature {NONE} -- Implementation functions.
 				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_bottom then
 				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
-			elseif a_rect = internal_rectangle_center then
+			elseif a_rect = internal_rectangle_center or a_rect = internal_rectangle_title_area then
 				create l_top_rect.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height - internal_shared.title_bar_height)
 				create l_bottom_rect.make (internal_rectangle.left + internal_shared.title_bar_height, internal_rectangle.bottom - internal_shared.title_bar_height, internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 				internal_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_bottom_rect)
@@ -185,6 +188,7 @@ feature {NONE} -- Implementation functions.
 			create internal_rectangle_top.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top - pixmap_corner_width + 1, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_bottom.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top + pixmap_corner_width - 2, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_center.make (internal_rectangle_left.right, internal_rectangle_top.bottom, internal_rectangle_right.left - internal_rectangle_left.right, internal_rectangle_bottom.top - internal_rectangle_top.bottom)
+			internal_rectangle_title_area := internal_zone.title_area
 		ensure
 			set: a_rect = internal_rectangle
 			left_rectangle_created: internal_rectangle_left /= Void
@@ -208,7 +212,7 @@ feature {NONE} -- Implementation attributes.
 	internal_rectangle: EV_RECTANGLE
 			-- Rectangle which allow user to dock.
 
-	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center: EV_RECTANGLE
+	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center, internal_rectangle_title_area: EV_RECTANGLE
 			-- Five rectangle areas which allow user dock a window in this zone.
 
 invariant

@@ -31,7 +31,7 @@ feature -- Factory method
 			result_not_void: Result /= Void
 		end
 
-	hot_zone_main (a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
+	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
 			-- Redefine
 		do
 			Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)

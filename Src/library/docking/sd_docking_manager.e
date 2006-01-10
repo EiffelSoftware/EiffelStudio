@@ -24,11 +24,11 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			create tab_drop_actions
-			init_managers
+
 
 			top_container := a_container
 			main_window := a_window
-
+init_managers
 			init_widget_structure
 			init_auto_hide_panel
 
@@ -48,26 +48,8 @@ feature {NONE} -- Initialization
 			create l_app
 			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
 
-			init_zone_navigation
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
-		end
-
-	init_zone_navigation is
-			-- Initialize zone navigation accelerator key.
-		local
-			l_key: EV_KEY
-			l_acc: EV_ACCELERATOR
-			l_window: EV_TITLED_WINDOW
-		do
-			create l_key.make_with_code ({EV_KEY_CONSTANTS}.key_tab)
-			create l_acc.make_with_key_combination (l_key, True, False, False)
-			l_acc.actions.extend (agent command.on_zone_navigation)
-			l_window ?= main_window
-			if l_window /= Void then
-				l_window.accelerators.extend (l_acc)
-			end
-
 		end
 
 	init_widget_structure is
@@ -221,7 +203,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE,
 	  SD_TAB_STUB, SD_MULTI_DOCK_AREA, SD_DOCKING_MANAGER_AGENTS,
 	  SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES,
-	  SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK} -- Library internals querys.
+	  SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK, SD_ZONE_NAVIGATION_DIALOG} -- Library internals querys.
 
 	query: SD_DOCKING_MANAGER_QUERY
 			-- Manager helper Current for querys.
@@ -242,7 +224,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKE
 	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_WINDOW, SD_MENU_DOCKER_MEDIATOR,
 	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS,
 	 SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND,
-	 SD_DOCKING_MANAGER_ZONES} -- Library internal attributes.
+	 SD_DOCKING_MANAGER_ZONES, SD_NOTEBOOK_TAB_AREA, SD_NOTEBOOK_TAB} -- Library internal attributes.
 
 	menu_container: SD_MENU_CONTAINER
 			-- Container for menus on four sides.
@@ -256,7 +238,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKE
 	top_container: EV_CONTAINER
 			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area.	
 
-	inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
+	inner_containers: ARRAYED_SET [SD_MULTI_DOCK_AREA]
 			-- All containers.
 
 	main_container: SD_MAIN_CONTAINER

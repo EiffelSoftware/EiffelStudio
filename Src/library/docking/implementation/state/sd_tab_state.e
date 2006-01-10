@@ -253,7 +253,7 @@ feature -- Redefine
 --			whole_floated:
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Redefine.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -279,7 +279,7 @@ feature -- Redefine
 				end
 				l_tab_state.select_tab (internal_content)
 			else
-				move_tab_to_zone (a_target_zone)
+				move_tab_to_zone (a_target_zone, a_index)
 			end
 			internal_docking_manager.command.unlock_update
 		ensure then
@@ -293,7 +293,7 @@ feature -- Redefine
 			if zone.is_drag_title_bar then
 				move_whole_to_docking_zone (a_target_zone)
 			else
-				move_tab_to_zone (a_target_zone)
+				move_tab_to_zone (a_target_zone, 0)
 			end
 			internal_docking_manager.command.unlock_update
 		ensure then
@@ -557,10 +557,11 @@ feature {NONE}  -- Implementation functions.
 --			moved: old a_target_zone.parent.has (tab_zone)
 		end
 
-	move_tab_to_zone (a_target_zone: SD_ZONE) is
+	move_tab_to_zone (a_target_zone: SD_ZONE; a_index: INTEGER) is
 			-- Move one tab from a tab zone to a docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
+			valid: a_index > 0
 		local
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
@@ -579,12 +580,14 @@ feature {NONE}  -- Implementation functions.
 			else
 				check only_docking_zone_or_tab_zone: l_tab_zone /= Void end
 				create l_tab_state.make_with_tab_zone (internal_content, l_tab_zone, l_orignal_direction)
+				l_tab_zone.set_content_position (internal_content, a_index)
 			end
 
 			l_tab_state.set_direction (l_orignal_direction)
 			change_state (l_tab_state)
 			update_last_content_state
 		ensure
+--			has: a_target_zone.has (content)
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
 		end
 

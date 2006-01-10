@@ -117,7 +117,6 @@ feature -- Commands
 	show is
 			-- Handle show zone.
 		do
-
 		end
 
 	hide is
@@ -134,6 +133,7 @@ feature -- Commands
 			zone.close
 			internal_docking_manager.zones.prune_zone_by_content (internal_content)
 			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 			create l_state.make (internal_content)
 			change_state (l_state)
@@ -164,7 +164,7 @@ feature -- Commands
 		do
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Move to a tab zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -213,7 +213,7 @@ feature  -- States report
 		require
 			a_titles_not_void: a_titles /= Void
 		do
-			Result := a_titles.count = 1
+			Result := a_titles.count >= 1
 		end
 
 	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN is

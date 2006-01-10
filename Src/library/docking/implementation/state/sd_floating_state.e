@@ -130,7 +130,7 @@ feature -- Redefine.
 					l_tab_zone ?= a_target_zone.content.state.zone
 					check l_tab_zone /= Void end
 				else
-					l_zones.item.state.move_to_tab_zone (l_tab_zone)
+					l_zones.item.state.move_to_tab_zone (l_tab_zone, 0)
 				end
 				l_zones.forth
 			end
@@ -139,7 +139,7 @@ feature -- Redefine.
 			internal_docking_manager.command.unlock_update
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Redefine.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -151,7 +151,7 @@ feature -- Redefine.
 			until
 				l_zones.after
 			loop
-				l_zones.item.state.move_to_tab_zone (a_target_zone)
+				l_zones.item.state.move_to_tab_zone (a_target_zone, 0)
 				l_zones.forth
 			end
 
@@ -184,7 +184,7 @@ feature -- Command
 		end
 
 	set_size (a_width, a_height: INTEGER) is
-			-- Set flaoting zone size.
+			-- Set floating zone size.
 		do
 			internal_zone.set_size (a_width, a_height)
 		end

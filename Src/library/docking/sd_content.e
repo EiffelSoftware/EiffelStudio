@@ -221,7 +221,7 @@ feature -- Set Position
 		do
 			l_tab_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
-				state.move_to_tab_zone (l_tab_zone)
+				state.move_to_tab_zone (l_tab_zone, 0)
 			else
 				l_docking_zone ?= a_content.state.zone
 				check l_docking_zone /= Void end

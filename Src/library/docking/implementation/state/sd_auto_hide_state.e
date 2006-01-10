@@ -62,9 +62,9 @@ feature {NONE} -- Initlization
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		do
 			make (a_content, a_direction)
-			width_height := a_width_height
+			width_height := max_size_by_zone (a_width_height)
 		ensure
-			set: width_height = a_width_height
+			set: width_height = max_size_by_zone (a_width_height)
 		end
 
 	make_with_friend (a_content:SD_CONTENT; a_friend: SD_CONTENT) is
@@ -83,18 +83,23 @@ feature {NONE} -- Auto hide functions.
 		do
 			if pointer_outside and not zone.has_focus then
 				remove_close_timer
+				close_animation
 			end
 		ensure
 --			timer_wipe_out: old internal_close_timer.actions.count = 0
 			timer_void: pointer_outside and not zone.has_focus implies internal_close_timer = Void
 		end
 
-	remove_moving_timer is
+	remove_moving_timer (a_open: BOOLEAN) is
 			-- Remove `internal_moving_timer'.
 		do
 			if internal_moving_timer /= Void then
 				internal_moving_timer.actions.wipe_out
 				internal_moving_timer := Void
+			end
+			if not a_open then
+				internal_docking_manager.zones.prune_zone (zone)
+				internal_docking_manager.fixed_area.prune (zone)
 			end
 		ensure
 --			timer_wipe_out: old internal_moving_timer.actions.count = 0
@@ -109,7 +114,7 @@ feature {NONE} -- Auto hide functions.
 			if internal_close_timer /= Void then
 				internal_close_timer.actions.wipe_out
 				internal_close_timer := Void
-				internal_docking_manager.zones.prune_zone (zone)
+
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
@@ -141,43 +146,86 @@ feature {NONE} -- Auto hide functions.
 				pointer_outside = False
 		end
 
-	on_timer_for_moving  is
+	on_timer_for_moving (a_open: BOOLEAN) is
 			-- Use timer to play a animation.
+		do
+			if a_open then
+				open_moving_internal
+			else
+				close_moving_internal
+			end
+		ensure
+			final_position_set:
+		end
+
+	open_moving_internal is
+			-- Zone open animation.
 		do
 			inspect
 				direction
 			when {SD_DOCKING_MANAGER}.dock_left then
 				if zone.x_position + show_step >= final_position then
-					remove_moving_timer
+					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_x_position (zone, final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position + show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_right then
 				if zone.x_position - show_step <= final_position then
-					remove_moving_timer
+					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_x_position (zone, final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position - show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_top then
 				if zone.y_position + show_step >= final_position then
-					remove_moving_timer
+					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_y_position (zone, final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position + show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_bottom then
 				if zone.y_position - show_step <= final_position then
-					remove_moving_timer
+					remove_moving_timer (True)
 					internal_docking_manager.fixed_area.set_item_y_position (zone, final_position)
 				else
 					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position - show_step)
 				end
 			end
-		ensure
-			final_position_set:
 		end
+
+	close_moving_internal is
+			-- Zone close animation.
+		do
+			inspect
+				direction
+			when {SD_DOCKING_MANAGER}.dock_left then
+				if zone.x_position - show_step <= final_position then
+					remove_moving_timer (False)
+				else
+					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position - show_step)
+				end
+			when {SD_DOCKING_MANAGER}.dock_right then
+				if zone.x_position + show_step >= final_position then
+					remove_moving_timer (False)
+				else
+					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position + show_step)
+				end
+			when {SD_DOCKING_MANAGER}.dock_top then
+				if zone.y_position - show_step <= final_position then
+					remove_moving_timer (False)
+				else
+					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position - show_step)
+				end
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				if zone.y_position + show_step >= final_position then
+					remove_moving_timer (False)
+				else
+					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position + show_step)
+				end
+			end
+		end
+
 
 feature {NONE} -- Auto hide attributes.
 
@@ -222,7 +270,7 @@ feature -- Redefine.
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
 			internal_docking_manager.command.lock_update (Void, True)
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (False)
 			internal_docking_manager.command.recover_normal_state
 
 			stick_zones (a_direction)
@@ -257,14 +305,15 @@ feature -- Redefine.
 			else
 				width_height := zone.height
 			end
+			remove_moving_timer (False)
 			remove_close_timer
-			remove_moving_timer
+
 		ensure then
 			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
 				implies width_height = zone.width
 			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
 				implies width_height = zone.height
-			timer_removed: internal_moving_timer = Void and internal_close_timer = Void
+			timer_removed: internal_close_timer = Void
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -292,7 +341,7 @@ feature -- Redefine.
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			if not is_hide then
-				internal_docking_manager.command.remove_auto_hide_zones
+				internal_docking_manager.command.remove_auto_hide_zones (False)
 				-- Change to SD_STATE_VOID.... wait for user call show.... then back to speciall state.
 				create l_state.make (internal_content)
 				l_tab_group := auto_hide_panel.tab_group (internal_tab_stub)
@@ -305,12 +354,53 @@ feature -- Redefine.
 			end
 		end
 
+feature -- Command
+
+	close_animation is
+			-- Close window animation.
+		local
+			l_rect: EV_RECTANGLE
+		do
+			remove_moving_timer (True)
+			remove_close_timer
+			if internal_docking_manager.zones.has_zone_by_content (internal_content) then
+				l_rect := internal_docking_manager.query.fixed_area_rectangle
+				if direction = {SD_DOCKING_MANAGER}.dock_left then
+					final_position := l_rect.left - zone.width
+				elseif direction = {SD_DOCKING_MANAGER}.dock_right then
+					final_position := l_rect.right
+				elseif direction = {SD_DOCKING_MANAGER}.dock_top then
+					final_position := l_rect.top - zone.height
+				elseif direction = {SD_DOCKING_MANAGER}.dock_bottom then
+					final_position := l_rect.bottom
+				end
+			end
+			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				width_height := zone.width
+			else
+				width_height := zone.height
+			end
+			create internal_moving_timer
+			internal_moving_timer.actions.extend (agent on_timer_for_moving (False))
+			internal_moving_timer.set_interval (10)
+		end
+
 feature -- Query
 
 	is_hide: BOOLEAN is
 			-- If current Hide?
 		do
 			Result := not auto_hide_panel.tab_stubs.has (internal_tab_stub)
+		end
+
+	is_width_height_valid (a_width_height: INTEGER): BOOLEAN is
+			-- If a_width_height valid?
+		do
+			if direction  = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				Result := a_width_height <= (internal_docking_manager.fixed_area.width * 0.8).ceiling
+			else
+				Result := a_width_height <= (internal_docking_manager.fixed_area.height * 0.8).ceiling
+			end
 		end
 
 feature {NONE} -- Implementation functions.
@@ -376,14 +466,11 @@ feature {NONE} -- Implementation functions.
 	close_internal is
 			-- Prune internal widgets.
 		local
-			l_env: EV_ENVIRONMENT
+--			l_env: EV_ENVIRONMENT
 		do
-			if internal_close_timer /= Void then
-				internal_close_timer.actions.wipe_out
-				internal_close_timer := Void
-			end
-			create l_env
-			l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
+ 			remove_close_timer
+--			create l_env
+--			l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
 
 			-- Remove tab stub from the SD_AUTO_HIDE_PANEL
 			auto_hide_panel.tab_stubs.start
@@ -397,9 +484,10 @@ feature {NONE} -- Implementation functions.
 			l_env: EV_ENVIRONMENT
 		do
 			if not internal_docking_manager.zones.has_zone_by_content (internal_content) then
+				width_height := max_size_by_zone (width_height)
 				create zone.make (internal_content, direction)
 				-- Before add the zone to the fixed area, first clear the other zones in the area except the main_container.
-				internal_docking_manager.command.remove_auto_hide_zones
+				internal_docking_manager.command.remove_auto_hide_zones (False)
 
 				internal_docking_manager.zones.add_zone (zone)
 				create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
@@ -411,7 +499,7 @@ feature {NONE} -- Implementation functions.
 				internal_docking_manager.fixed_area.extend (zone)
 
 				create internal_moving_timer
-				internal_moving_timer.actions.extend (agent on_timer_for_moving)
+				internal_moving_timer.actions.extend (agent on_timer_for_moving (True))
 				internal_moving_timer.set_interval (10)
 
 				create l_rect.make (internal_docking_manager.fixed_area.x_position, internal_docking_manager.fixed_area.y_position,
@@ -449,6 +537,28 @@ feature {NONE} -- Implementation functions.
 					final_position := l_rect.bottom - zone.height
 				end
 			end
+		end
+
+	max_size_by_zone (a_width_height: INTEGER): INTEGER is
+			-- Caculate max size
+		require
+			valid: a_width_height >= 0
+		do
+			if direction  = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				if (a_width_height <= (internal_docking_manager.fixed_area.width * 0.8).ceiling) then
+					Result := a_width_height
+				else
+					Result := (internal_docking_manager.fixed_area.width * 0.8).ceiling
+				end
+			else
+				if (a_width_height <= (internal_docking_manager.fixed_area.height * 0.8).ceiling) then
+					Result := a_width_height
+				else
+					Result := (internal_docking_manager.fixed_area.height * 0.8).ceiling
+				end
+			end
+		ensure
+			valid: is_width_height_valid (Result)
 		end
 
 feature {NONE} -- Implementation attributes.

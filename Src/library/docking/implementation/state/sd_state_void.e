@@ -116,7 +116,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -153,7 +153,7 @@ feature -- Redefine.
 				l_tab_zone ?= relative.state.zone
 				l_docking_zone ?= relative.state.zone
 				if l_tab_zone /= Void then
-					move_to_tab_zone (l_tab_zone)
+					move_to_tab_zone (l_tab_zone, 0)
 				elseif l_docking_zone /= Void then
 					move_to_docking_zone (l_docking_zone)
 				end

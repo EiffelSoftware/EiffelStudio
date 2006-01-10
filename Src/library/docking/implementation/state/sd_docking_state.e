@@ -234,10 +234,13 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Redefine.
 		do
 			move_to_zone_internal (a_target_zone)
+			if a_index > 0 and a_index <= a_target_zone.contents.count then
+				a_target_zone.set_content_position (content, a_index)
+			end
 		ensure then
 			state_changed: content.state /= Current
 		end

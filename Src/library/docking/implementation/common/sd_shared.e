@@ -208,7 +208,7 @@ feature -- Constants
 	Zone_minmum_width: INTEGER is
 			-- Minmum width of a zone.
 		once
-			Result := Title_bar_height * 3
+			Result := Title_bar_height * 5
 		end
 
 	Menu_size: INTEGER is 23
@@ -232,7 +232,7 @@ feature -- Constants
 	Focuse_border_width: INTEGER is 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
-	separator_width: INTEGER is 6
+	Separator_width: INTEGER is 6
 			-- Separator width used by SD_MENU_ZONE.
 
 	Highlight_tail_width: INTEGER is 30
@@ -241,10 +241,10 @@ feature -- Constants
 	Hide_tab_indicator_size: INTEGER is 20
 			-- Hide tab indicator size. Hide tabs are tabs in SD_NOTEBOOK_TAB_AREA.
 
-	drawing_area_icons_start_x: INTEGER is 0
+	Drawing_area_icons_start_x: INTEGER is 0
 			-- When drawing area draw a icon, start x position.
 
-	drawing_area_icons_start_y: INTEGER is 2
+	Drawing_area_icons_start_y: INTEGER is 2
 			-- When drawing area draw a icon, start y position.
 
 	Padding_width: INTEGER is 6

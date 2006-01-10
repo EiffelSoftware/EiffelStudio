@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 		do
 			if is_vertical then
-				l_size := padding_width + content.pixmap.height + padding_width
+				l_size := content.pixmap.height + padding_width
 				if is_show_text then
 					l_size := l_size + text_size + padding_width
 				end
@@ -276,7 +276,9 @@ feature {NONE} -- Implementation
 			if is_draw_separator_top then
 				Result := Result + 1
 			end
-			Result := Result + padding_width
+			if is_vertical then
+				Result := Result + padding_width
+			end
 		end
 
 	start_x_text_internal: INTEGER is

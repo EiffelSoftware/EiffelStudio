@@ -11,7 +11,8 @@ inherit
 		rename
 			extend as extend_horizontal_box,
 			swap as swap_horizontal_box,
-			has as has_horizontal_box
+			has as has_horizontal_box,
+			index_of as index_of_horizontal_box
 		end
 
 create
@@ -39,8 +40,10 @@ feature {NONE}  -- Initlization
 			end
 
 			create internal_tool_bar
+			internal_tool_bar.set_background_color ((create {EV_STOCK_COLORS}).red)
+--			internal_tool_bar.set_background_color (internal_shared.non_focused_color_lightness)
+--			set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_auto_hide_indicator
-
 
 			create internal_gap_box
 			extend_horizontal_box (internal_gap_box)
@@ -55,6 +58,8 @@ feature {NONE}  -- Initlization
 			internal_tool_bar.extend (internal_auto_hide_indicator)
 			internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (0))
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
+
+			set_minimum_width (0)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 			set: internal_notebook = a_notebook
@@ -98,10 +103,22 @@ feature -- Command
 	resize_tabs (a_width: INTEGER) is
 			-- Hide/show tabs base on space.
 		local
-			l_tabs, l_all_tabs: ARRAYED_LIST [EV_WIDGET]
+			l_tabs, l_all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 		do
 			if a_width >= 0 then
 				ignore_resize := True
+				l_all_tabs := all_tabs.twin
+--				from
+--					l_all_tabs.start
+--				until
+--					l_all_tabs.after
+--				loop
+--					if a_width - internal_tool_bar.width >= 0 then
+--						l_all_tabs.item.on_expose_with_width  (a_width - internal_tool_bar.width)
+--					end
+--					l_all_tabs.forth
+--				end
+
 				updates_tabs_not_shown (a_width)
 				l_tabs := internal_tabs_not_shown.twin
 				from
@@ -113,13 +130,14 @@ feature -- Command
 
 					l_tabs.forth
 				end
-				l_all_tabs := all_tabs.twin
+
 				from
 					l_all_tabs.start
 				until
 					l_all_tabs.after
 				loop
-					if not l_tabs.has (l_all_tabs.item) and l_all_tabs.item /= internal_tool_bar then
+--					if not l_tabs.has (l_all_tabs.item) and l_all_tabs.item /= internal_tool_bar then
+					if not l_tabs.has (l_all_tabs.item) then
 						l_all_tabs.item.show
 						ignore_resize := True
 					end
@@ -157,6 +175,24 @@ feature -- Command
 			internal_tab_box.disable_item_expand (a_tab_2)
 		end
 
+	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER) is
+			-- Set tab position.
+		require
+			has: has (a_tab)
+			valid: a_index > 0 and a_index <= all_tabs.count
+		do
+			debug ("docking")
+				print ("%NSD_NOTEBOOK_TAB_AREA set_tab_position index is: " + a_index.out)
+			end
+			internal_tab_box.prune (a_tab)
+			internal_tab_box.go_i_th (a_index)
+			internal_tab_box.put_left (a_tab)
+--			internal_tab_box.swap (internal_tab_box.index_of (a_tab, 1))
+		ensure
+			set: internal_tab_box.i_th (a_index) = a_tab
+			not_changed: old internal_tab_box.count =  internal_tab_box.count
+		end
+
 feature -- Query
 
 	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN is
@@ -168,15 +204,43 @@ feature -- Query
 	is_gap_at_top: BOOLEAN is
 			-- If gap at top?
 		require
-			has_gap: gap_setted
+			has_gap: is_gap_setted
 		do
 			Result := internal_gap_box.first = internal_gap
 		end
 
-	gap_setted: BOOLEAN is
+	is_gap_setted: BOOLEAN is
 			-- If gap area setted?
 		do
 			Result := internal_gap_box.has (internal_gap)
+		end
+
+	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER is
+			-- Index of a_tab in all tabs.
+		do
+			Result := internal_tab_box.index_of (a_tab, 1)
+		end
+
+	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
+			-- All tabs in Current.
+		local
+			l_temp_tab: SD_NOTEBOOK_TAB
+		do
+			create Result.make (1)
+			from
+				internal_tab_box.start
+			until
+				internal_tab_box.after
+			loop
+				l_temp_tab ?= internal_tab_box.item
+				check only_has_tab: l_temp_tab /= Void end
+--				if l_temp_tab /= Void then
+				Result.extend (l_temp_tab)
+--				end
+				internal_tab_box.forth
+			end
+		ensure
+			not_void: Result /= Void
 		end
 
 feature {NONE}  -- Implementation functions
@@ -248,28 +312,6 @@ feature {NONE}  -- Implementation functions
 			internal_docking_manager.tab_drop_actions.call ([a_any, internal_notebook.selected_item])
 		end
 
-	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
-			-- All tabs in Current.
-		local
-			l_temp_tab: SD_NOTEBOOK_TAB
-		do
-			create Result.make (1)
-			from
-				internal_tab_box.start
-			until
-				internal_tab_box.after
-			loop
-				l_temp_tab ?= internal_tab_box.item
-				check only_has_tab: l_temp_tab /= Void end
---				if l_temp_tab /= Void then
-				Result.extend (l_temp_tab)
---				end
-				internal_tab_box.forth
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
 	updates_tabs_not_shown (a_width: INTEGER) is
 			-- Calculate `internal_tabs_not_shown' base on a_width.
 		require
@@ -302,6 +344,11 @@ feature {NONE}  -- Implementation functions
 						l_tabs.back
 					end
 				end
+				if l_enough then
+					internal_one_not_enough_space := False
+				else
+					internal_one_not_enough_space := True
+				end
 			end
 			show_hide_indicator (a_width)
 		ensure
@@ -320,7 +367,7 @@ feature {NONE}  -- Implementation functions
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then
 					-- Only show one tab now.
 					if a_width - internal_tool_bar.width >= 0 then
-						find_only_tab_shown.set_width (a_width - internal_tool_bar.width)
+						find_only_tab_shown.set_width_not_enough_space (a_width - internal_tool_bar.width)
 					end
 				end
 			else
@@ -383,6 +430,9 @@ feature {NONE}  -- Implementation functions
 		end
 
 feature {NONE}  -- Implementation attributes
+
+	internal_one_not_enough_space: BOOLEAN
+			-- If current space not enough to draw selected tab?
 
 	ignore_resize: BOOLEAN
 			-- Ignore resize actions when executing `resize_tabs'?

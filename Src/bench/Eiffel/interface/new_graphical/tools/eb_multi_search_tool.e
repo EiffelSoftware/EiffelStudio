@@ -113,6 +113,7 @@ feature {NONE} -- Initialization
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 			create search_button.make_with_text_and_action (interface_names.b_search, agent search_button_clicked)
+			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent search_button_clicked))
 			search_button.disable_sensitive
 			hbox.extend (search_button)
 			hbox.disable_item_expand (search_button)
@@ -129,6 +130,7 @@ feature {NONE} -- Initialization
 
 
 			create replace_button.make_with_text_and_action (interface_names.b_replace, agent replace_current)
+			replace_button.key_press_actions.extend (agent handle_enter_on_button (?, agent replace_current))
 
 			create replace_text.make (0)
 
@@ -211,6 +213,7 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (search_backward_button)
 
 			create replace_all_click_button.make_with_text_and_action (interface_names.b_replace_all, agent confirm_and_replace_all)
+			replace_all_click_button.key_press_actions.extend (agent handle_enter_on_button (?, agent confirm_and_replace_all))
 			create vbox
 			vbox.extend (replace_all_click_button)
 			vbox.disable_item_expand (replace_all_click_button)
@@ -562,10 +565,10 @@ feature -- Action
 			if not hindered then
 				if not is_current_editor_searched then
 					create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
-					cd.set_ok_action (agent replace_all)
+					cd.set_ok_action (agent extend_and_run_loaded_action (agent replace_all))
 					cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				else
-					replace_all
+					extend_and_run_loaded_action (agent replace_all)
 				end
 			end
 		end
@@ -620,7 +623,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
 	--					end
 					end
 				else
-					Result := true
+--					Result := true
 				end
 			end
 		end
@@ -1112,6 +1115,14 @@ feature {NONE} -- Actions handler
 			end
 		end
 
+	handle_enter_on_button (a_key: EV_KEY; a_pro: PROCEDURE [ANY, TUPLE]) is
+			-- Handle enter on buttons.
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				a_pro.apply
+			end
+		end
+
 	toggle_search_report is
 			-- Hide report if it is shown, show it if it is hidden.
 		do
@@ -1353,16 +1364,18 @@ feature {NONE} -- Search perform
 			class_i: CLASS_I
 			file_name: FILE_NAME
 			class_name: STRING
+			class_stone: CLASSI_STONE
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
 				currently_searched := a_word
-				class_name := ""
-				if manager.class_name /= Void then
-					class_i := manager.eiffel_universe.class_named (manager.class_name, manager.cluster)
+				class_stone ?= manager.stone
+				if class_stone /= Void then
+					class_i := class_stone.class_i
 					file_name:= class_i.file_name
-					class_name := manager.class_name
+					class_name := class_i.name
 				else
+					class_name := ""
 					create file_name.make
 				end
 				if editor.text_displayed.reading_text_finished then
@@ -1397,18 +1410,20 @@ feature {NONE} -- Search perform
 			class_i: CLASS_I
 			file_name: FILE_NAME
 			class_name: STRING
+			class_stone: CLASSI_STONE
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_searched := keyword_field.text
-			class_name := "Not a class"
-			if manager.class_name /= Void then
-				class_i := manager.eiffel_universe.class_named (manager.class_name, manager.cluster)
+			class_stone ?= manager.stone
+			if class_stone /= Void then
+				class_i := class_stone.class_i
 				file_name := class_i.file_name
 				if not is_main_editor then
 					create file_name.make_from_string ("-")
 				end
-				class_name := manager.class_name
+				class_name := class_i.name
 			else
+				class_name := "Not a class"
 				create file_name.make
 			end
 			if not editor.is_empty then
@@ -1441,17 +1456,20 @@ feature {NONE} -- Search perform
 			class_i: CLASS_I
 			file_name: FILE_NAME
 			class_name: STRING
+			class_stone: CLASSI_STONE
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if currently_searched /= Void and then not currently_searched.is_empty then
 					-- search is possible but the search box is not shown
 					-- default options
 				currently_searched := keyword_field.text
-				if manager.class_name /= Void then
-					class_i := manager.eiffel_universe.class_named (manager.class_name, manager.cluster)
+				class_stone ?= manager.stone
+				if class_stone /= Void then
+					class_i := class_stone.class_i
 					file_name := class_i.file_name
-					class_name := manager.class_name
+					class_name := class_i.name
 				else
+					class_name := "Not a class"
 					create file_name.make
 				end
 				if not editor.is_empty then
@@ -2185,6 +2203,7 @@ feature {NONE} -- Implementation
 			if check_class_succeed then
 				loaded_actions.extend (a_pro)
 				block_actions
+				blocking_actions_times := blocking_actions_times + 1
 				from
 					loaded_actions.start
 				until
@@ -2198,7 +2217,12 @@ feature {NONE} -- Implementation
 						loop_end := true
 					end
 				end
-				resume_actions
+				if blocking_actions_times <= 1 then
+					resume_actions
+					blocking_actions_times := 0
+				else
+					blocking_actions_times := blocking_actions_times - 1
+				end
 			end
 		end
 
@@ -2521,6 +2545,9 @@ feature {NONE} -- Implementation
 			search_button.select_actions.block
 			replace_button.select_actions.block
 			replace_all_click_button.select_actions.block
+			search_button.key_press_actions.block
+			replace_button.key_press_actions.block
+			replace_all_click_button.key_press_actions.block
 		end
 
 	resume_actions is
@@ -2542,6 +2569,12 @@ feature {NONE} -- Implementation
 			search_button.select_actions.resume
 			replace_button.select_actions.resume
 			replace_all_click_button.select_actions.resume
+			search_button.key_press_actions.resume
+			replace_button.key_press_actions.resume
+			replace_all_click_button.key_press_actions.resume
 		end
+
+	blocking_actions_times: INTEGER
+			-- Blocking actions?
 
 end -- class EB_MULTI_SEARCH_TOOL

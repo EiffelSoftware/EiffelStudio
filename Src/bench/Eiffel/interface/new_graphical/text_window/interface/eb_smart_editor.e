@@ -454,7 +454,12 @@ feature {NONE} -- Handle keystrokes
 	key_not_handled_action is
 			-- Apply default key processing.
 		do
-			completion_mode := completion_bckp
+				-- "if" clause Prevents completion_mode from losing its status when it is larger than 0.
+				-- When completion_mode is larger than 0, it implies that we are at the number of completion_mode
+				-- deep of completion.
+			if completion_mode = 0 then
+				completion_mode := completion_bckp
+			end
 		end
 
 	basic_cursor_move (action: PROCEDURE[like cursor_type,TUPLE]) is

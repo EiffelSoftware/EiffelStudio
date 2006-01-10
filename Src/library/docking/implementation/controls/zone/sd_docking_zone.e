@@ -52,8 +52,15 @@ feature -- Command
 feature -- Query
 
 	title: STRING is
-			--
+			-- Title
 		deferred
+		end
+
+	title_area: EV_RECTANGLE is
+			-- Title area
+		deferred
+		ensure
+			not_void: Result /= Void
 		end
 
 	is_parent_split: BOOLEAN is
@@ -100,6 +107,7 @@ feature {NONE} -- For redocker.
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
 			create docker_mediator.make (Current, internal_docking_manager)
+			docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
 			enable_capture
@@ -124,6 +132,13 @@ feature {NONE} -- For redocker.
 					io.put_string ("%N hot zone for docking ! yeah~" + a_screen_x.out + " " + a_screen_y.out)
 				end
 			end
+		end
+
+	on_cancel_dragging is
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+		do
+			disable_capture
+			docker_mediator := Void
 		end
 
 	docker_mediator: SD_DOCKER_MEDIATOR

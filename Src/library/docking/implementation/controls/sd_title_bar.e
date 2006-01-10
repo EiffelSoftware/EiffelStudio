@@ -53,6 +53,7 @@ feature {NONE} -- Initlization
 			create l_zero_size_container
 			container.extend (l_zero_size_container)
 
+
 			create internal_highlight_area_before
 			internal_highlight_area_before.set_minimum_width (4)
 			internal_highlight_area_before.expose_actions.force_extend (agent on_expose)
@@ -129,7 +130,7 @@ feature {NONE} -- Initlization
 
 		end
 
-feature -- Access
+feature -- Command
 
 	set_title (a_title: STRING) is
 			-- Set the title on the title bar.
@@ -140,14 +141,6 @@ feature -- Access
 			on_expose
 		ensure
 			set: internal_title = a_title
-		end
-
-	title: STRING is
-			-- Title.
-		do
-			Result := internal_title
-		ensure
-			not_void: Result /= Void
 		end
 
 	set_stick (a_stick: BOOLEAN) is
@@ -163,9 +156,6 @@ feature -- Access
 			set: a_stick = is_stick
 		end
 
-	is_stick: BOOLEAN
-			-- If current sticked?
-
 	set_max (a_max: BOOLEAN) is
 			-- Set `is_max'.
 		do
@@ -178,9 +168,6 @@ feature -- Access
 		ensure
 			set: is_max = a_max
 		end
-
-	is_max: BOOLEAN
-			-- If current maximized?
 
 	set_show_normal_max (a_show: BOOLEAN) is
 			-- Set show normal\max button?
@@ -204,12 +191,6 @@ feature -- Access
 
 		end
 
-	is_show_normal_max: BOOLEAN is
-			-- Show normal\max button?
-		do
-			Result := internal_tool_bar.has (normal_max)
-		end
-
 	set_show_stick (a_show: BOOLEAN) is
 			-- Set show stick button.
 		do
@@ -227,12 +208,6 @@ feature -- Access
 			set: a_show = internal_tool_bar.has (stick)
 		end
 
-	is_show_stick: BOOLEAN is
-			-- Show stick button?
-		do
-			Result := internal_tool_bar.has (stick)
-		end
-
 	enable_focus_color is
 			-- Enable focus color.
 		local
@@ -246,7 +221,6 @@ feature -- Access
 			l_text_color := l_color_helper.text_color_by (hightlight_color)
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
---			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
 			on_expose
 
 		ensure
@@ -271,11 +245,52 @@ feature -- Access
 			is_focus_color_enable_set: not is_focus_color_enable
 		end
 
+	extend_custom_area (a_widget: EV_WIDGET) is
+			-- Extend `custom_area' with a_widget
+		do
+			custom_area.extend (a_widget)
+--			internal_
+		ensure
+			extended: custom_area.has (a_widget)
+		end
+
+	wipe_out_custom_area is
+			-- Wipe out custom area.
+		do
+			custom_area.wipe_out
+		ensure
+			wiped_out: custom_area.count = 0
+		end
+
+feature -- Query
+
+	title: STRING is
+			-- Title.
+		do
+			Result := internal_title
+		ensure
+			not_void: Result /= Void
+		end
+	is_stick: BOOLEAN
+			-- If current sticked?
+
+	is_max: BOOLEAN
+			-- If current maximized?
+
+	is_show_normal_max: BOOLEAN is
+			-- Show normal\max button?
+		do
+			Result := internal_tool_bar.has (normal_max)
+		end
+
+	is_show_stick: BOOLEAN is
+			-- Show stick button?
+		do
+			Result := internal_tool_bar.has (stick)
+		end
+
 	is_focus_color_enable: BOOLEAN
 			-- If show highlight color now?
-
-	custom_area: EV_HORIZONTAL_BOX
-			-- Contains custom widget.
 
 feature -- Actions
 
@@ -409,38 +424,41 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
+	custom_area: EV_HORIZONTAL_BOX
+			-- Contains custom widget.
+
 	internal_border: SD_CELL_WITH_BORDER
 			-- Internal border
 
 	internal_highlight_area_before, internal_highlight_area_after: EV_DRAWING_AREA
 			-- Hightlight area at beginning and end.
 
-	set_all_custom_area_background_color (a_colorizable: EV_COLORIZABLE) is
-			-- Set all custom area widgets background color.
-		local
-			l_container: EV_CONTAINER
-			l_widgets: LINEAR [EV_WIDGET]
-		do
-			l_container ?= a_colorizable
-			if l_container /= Void then
-				l_widgets := l_container.linear_representation
-				from
-					l_widgets.start
-				until
-					l_widgets.after
-				loop
-					set_all_custom_area_background_color (l_widgets.item)
-					l_widgets.forth
-				end
-			end
-			if a_colorizable /= Void then
-				if is_focus_color_enable then
-					a_colorizable.set_background_color (hightlight_color)
-				else
-					a_colorizable.set_background_color (hightlight_gray_color)
-				end
-			end
-		end
+--	set_all_custom_area_background_color (a_colorizable: EV_COLORIZABLE) is
+--			-- Set all custom area widgets background color.
+--		local
+--			l_container: EV_CONTAINER
+--			l_widgets: LINEAR [EV_WIDGET]
+--		do
+--			l_container ?= a_colorizable
+--			if l_container /= Void then
+--				l_widgets := l_container.linear_representation
+--				from
+--					l_widgets.start
+--				until
+--					l_widgets.after
+--				loop
+--					set_all_custom_area_background_color (l_widgets.item)
+--					l_widgets.forth
+--				end
+--			end
+--			if a_colorizable /= Void then
+--				if is_focus_color_enable then
+--					a_colorizable.set_background_color (hightlight_color)
+--				else
+--					a_colorizable.set_background_color (hightlight_gray_color)
+--				end
+--			end
+--		end
 
 	internal_title: STRING
 			-- Internal_title

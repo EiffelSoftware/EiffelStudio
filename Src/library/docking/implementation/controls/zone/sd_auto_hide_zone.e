@@ -78,7 +78,7 @@ feature	{NONE} -- Initlization
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
 				end
-				window.title_bar.custom_area.extend (a_content.mini_toolbar)
+				window.title_bar.extend_custom_area (a_content.mini_toolbar)
 			end
 			create resize_bar.make (a_direction, Current)
 
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-			
+
 feature {NONE} -- For user docking
 
 	on_focus_in (a_content: SD_CONTENT)is
@@ -194,7 +194,7 @@ feature -- Command
 				window.title_bar.disable_focus_color
 			end
 		end
-		
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

@@ -52,7 +52,7 @@ feature -- Redefine
 			-- Redefine
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones (True)
 			internal_notebook.set_focus_color (True)
 		end
 
@@ -96,6 +96,12 @@ feature -- Redefine
 			-- Redefine
 		do
 			Result := internal_notebook.item_text (internal_content)
+		end
+
+	title_area: EV_RECTANGLE is
+			-- Refedine
+		do
+			Result := internal_notebook.tab_area
 		end
 
 feature {NONE} -- Implementation

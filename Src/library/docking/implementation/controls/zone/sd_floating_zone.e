@@ -128,7 +128,7 @@ feature -- Command
 					end
 				else
 					-- No widget in `Current'.
-					internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
+					internal_floating_state.docking_manager.command.prune_inner_container (internal_inner_container)
 					internal_floating_state.docking_manager.zones.zones.prune (Current)
 					destroy
 				end
@@ -174,7 +174,7 @@ feature -- Properties
 	type: INTEGER is
 			-- Redefine.
 		do
-			Result := internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type
+			Result := {SD_SHARED}.type_tool
 		end
 
 	state: SD_STATE is
@@ -340,6 +340,9 @@ feature {NONE} -- Agents
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Forward pointer motion actions to docker mediator.
 		do
+			debug ("docking")
+				print ("%NSD_FLOATING_ZONE on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
+			end
 			docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 		end
 
@@ -383,6 +386,7 @@ feature {NONE} -- Agents
 				pointer_press_offset_y := a_screen_y - screen_y
 				enable_capture
 				create docker_mediator.make (Current, internal_docking_manager)
+				docker_mediator.cancel_actions.extend (agent on_cancel_dragging)
 				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 		end
 
@@ -397,6 +401,13 @@ feature {NONE} -- Agents
 				docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				docker_mediator := Void
 			end
+		end
+
+	on_cancel_dragging is
+			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
+		do
+			disable_capture
+			docker_mediator := Void
 		end
 
 end

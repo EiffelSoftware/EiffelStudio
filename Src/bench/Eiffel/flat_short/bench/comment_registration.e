@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Registration of comments for AST structures.";
 	date: "$Date$";
 	revision: "$Revision $"
@@ -14,7 +14,7 @@ inherit
 	COMPILER_EXPORTER
 
 create
-	
+
 	make
 
 feature {NONE} -- Initialization
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create class_comments.make (class_c.class_id, 20);
 			class_ast := ast
 		ensure
-			set: class_ast = ast	
+			set: class_ast = ast
 		end;
 
 feature -- Access
@@ -75,7 +75,7 @@ feature {AST_EIFFEL} -- Element change
 		do
 			comments := eiffel_file.current_feature_clause_comments;
 			if comments /= Void then
-				class_comments.put (comments, feature_clause.feature_location.final_position);
+				class_comments.put (comments, feature_clause.feature_keyword.final_position);
 			end
 		end;
 

@@ -244,7 +244,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_CREATE
 			}
 [cC][rR][eE][aA][tT][iI][oO][nN]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_CREATION, Current)
 				last_keyword_as_value := ast_factory.new_creation_keyword_as (line, column, position, 8, Current)
 				last_token := TE_CREATION				
 			}
@@ -273,7 +272,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ELSEIF
 			}
 [eE][nN][dD]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_END, Current)
 				last_keyword_as_value := ast_factory.new_end_keyword_as (line, column, position, 3, Current)
 				last_token := TE_END
 			}
@@ -306,7 +304,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_FROM
 			}
 [fF][rR][oO][zZ][eE][nN]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_FROZEN, Current)
 				last_keyword_as_value := ast_factory.new_frozen_keyword_as (line, column, position, 6, Current)
 				last_token := TE_FROZEN
 			}
@@ -323,7 +320,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_INDEXING
 			}
 [iI][nN][fF][iI][xX]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_INFIX, Current)
 				last_keyword_as_value := ast_factory.new_infix_keyword_as (line, column, position, 5, Current)
 				last_token := TE_INFIX
 			}
@@ -417,12 +413,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_OR
 			}
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_PRECURSOR, Current)
 				last_keyword_as_value := ast_factory.new_precursor_keyword_as (line, column, position, 9, Current)
 				last_token := TE_PRECURSOR
 			}
 [pP][rR][eE][fF][iI][xX]	{				
---				last_keyword_as_value := ast_factory.new_keyword_as (TE_PREFIX, Current)
 				last_keyword_as_value := ast_factory.new_prefix_keyword_as (line, column, position, 6, Current)
 				last_token := TE_PREFIX
 			}

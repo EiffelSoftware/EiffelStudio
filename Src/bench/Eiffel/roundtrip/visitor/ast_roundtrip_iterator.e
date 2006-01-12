@@ -1094,11 +1094,19 @@ feature
 			-- Process all BREAK AST nodes.
 		require
 			match_list_not_void: match_list /= Void
+			leading_leaves_not_processed: not will_process_leading_leaves
 		local
 			l_break: BREAK_AS
+			l_start_index, l_end_index, l_last_index: INTEGER
 		do
+			l_start_index := start_index
+			l_end_index := end_index
+			l_last_index := last_index
 			from
 				match_list.start
+				start_index := 1
+				last_index := 0
+				end_index := match_list.count
 			until
 				match_list.after
 			loop
@@ -1108,6 +1116,9 @@ feature
 				end
 				match_list.forth
 			end
+			start_index := l_start_index
+			end_index := l_end_index
+			last_index := l_last_index
 		end
 
 feature{NONE} -- Implementation

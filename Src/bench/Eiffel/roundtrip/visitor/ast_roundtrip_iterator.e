@@ -2,9 +2,13 @@ indexing
 	description: "[
 					Roundtrip visitor to simply iterate an AST tree and do nothing
 					Usage:
-						1. Invoke `set_parsed_class' with a roundtrip-parsed CLASS_AS instance.
-						2. Invoke process_ast_node with a AST node (it must be included within the CLASS_AS you set
-						   using `set_parsed_class') to iterate.
+						There are two things that you have to do:
+							1. invoke `set_parsed_class' to set on which class this visitor should work
+							2. invoke `set_match_list' bacause a LEAF_AS_LIST is needed for roundtrip visiting
+						And two things you may need to do:
+							1. invoke `set_will_process_leading_leaves' to let the visitor process leading breaks and optional semicolons
+							2. invoke `set_will_process_trailing_leaves' to let the visitor process trailing breaks
+						or you can call `setup' to do all the things at one time.
 				]"
 	author: ""
 	date: ""
@@ -29,11 +33,10 @@ feature -- AST process
 			match_list_not_void: match_list /= Void
 		do
 			start_index := match_list.item_by_start_position (a_node.complete_start_position (match_list)).index
+			end_index := match_list.item_by_end_position (a_node.complete_end_position (match_list)).index
 			last_index := start_index - 1
 			safe_process (a_node)
-			if will_process_left_leaves then
-				process_left_leaves
-			end
+			process_trailing_leaves
 		end
 
 feature -- Access
@@ -52,10 +55,25 @@ feature -- Access
 	match_list: LEAF_AS_LIST
 			-- List of tokens
 
-	will_process_left_leaves: BOOLEAN
-			-- Will left ast nodes be processed?
+	will_process_leading_leaves: BOOLEAN
+			-- Will leading ast nodes (BREAK_AS or SYMBOL_AS:optional semicolon) be processed?	
+
+	will_process_trailing_leaves: BOOLEAN
+			-- Will trailing ast nodes (BREAK_AS) be processed?
 
 feature -- Settings
+
+	setup (a_class: CLASS_AS; a_list: LEAF_AS_LIST; will_process_leading, will_process_trailing: BOOLEAN) is
+			-- Setup environment for roundtrip visit.
+		require
+			a_class_not_void: a_class /= Void
+			a_list_not_void: a_list /= Void
+		do
+			set_parsed_class (a_class)
+			set_match_list (a_list)
+			set_will_process_leading_leaves (will_process_leading)
+			set_will_process_trailing_leaves (will_process_trailing)
+		end
 
 	set_parsed_class (a_class: CLASS_AS) is
 			-- Set `parsed_class' with `a_class'.
@@ -80,12 +98,20 @@ feature -- Settings
 			match_list_set: match_list = a_list
 		end
 
-	set_will_process_left_leaves (b: BOOLEAN) is
-			-- Set `will_process_left_leaves' with `b'.
+	set_will_process_leading_leaves (b: BOOLEAN) is
+			-- Set `will_process_leading_leaves' with `b'.
 		do
-			will_process_left_leaves := b
+			will_process_leading_leaves := b
 		ensure
-			will_process_left_leaves_set: will_process_left_leaves = b
+			will_process_leading_leaves_set: will_process_leading_leaves = b
+		end
+
+	set_will_process_trailing_leaves (b: BOOLEAN) is
+			-- Set `will_process_trailing_leaves' with `b'.
+		do
+			will_process_trailing_leaves := b
+		ensure
+			will_process_trailing_leaves_set: will_process_trailing_leaves = b
 		end
 
 feature -- Roundtrip: process leaf
@@ -93,71 +119,84 @@ feature -- Roundtrip: process leaf
 	process_keyword_as (l_as: KEYWORD_AS) is
 			-- Process `l_as'.
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_symbol_as (l_as: SYMBOL_AS) is
 			-- Process `l_as'.
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_separator_as (l_as: SEPARATOR_AS) is
 			-- Process `l_as'.
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_new_line_as (l_as: NEW_LINE_AS) is
 			-- Process `l_as'.
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_comment_as (l_as: COMMENT_AS) is
 			-- Process `l_as'.
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_break_as (l_as: BREAK_AS) is
 			-- Process `l_as'.			
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_bool_as (l_as: BOOL_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_char_as (l_as: CHAR_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_result_as (l_as: RESULT_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_retry_as (l_as: RETRY_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_unique_as (l_as: UNIQUE_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_deferred_as (l_as: DEFERRED_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_void_as (l_as: VOID_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
@@ -167,6 +206,7 @@ feature -- Roundtrip: process leaf
 				safe_process (l_as.once_string_keyword)
 			end
 			safe_process (l_as.type)
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
@@ -176,11 +216,13 @@ feature -- Roundtrip: process leaf
 				safe_process (l_as.once_string_keyword)
 			end
 			safe_process (l_as.type)
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_current_as (l_as: CURRENT_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
@@ -188,6 +230,7 @@ feature -- Roundtrip: process leaf
 		do
 			safe_process (l_as.constant_type)
 			safe_process (l_as.sign_symbol)
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
@@ -195,11 +238,13 @@ feature -- Roundtrip: process leaf
 		do
 			safe_process (l_as.constant_type)
 			safe_process (l_as.sign_symbol)
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
 	process_id_as (l_as: ID_AS) is
 		do
+			process_leading_leaves (l_as.index)
 			last_index := l_as.index
 		end
 
@@ -308,7 +353,7 @@ feature
 		local
 			feature_keyword: LEAF_AS
 		do
-			feature_keyword ?= l_as.feature_location
+			feature_keyword ?= l_as.feature_keyword
 			safe_process (feature_keyword)
 			safe_process (l_as.clients)
 			safe_process (l_as.features)
@@ -460,13 +505,12 @@ feature
 
 	process_operand_as (l_as: OPERAND_AS) is
 		do
+			safe_process (l_as.class_type)
 			if l_as.question_mark_symbol /= Void then
 				l_as.question_mark_symbol.process (Current)
-			else
-				safe_process (l_as.class_type)
-				safe_process (l_as.target)
-				safe_process (l_as.expression)
 			end
+			safe_process (l_as.target)
+			safe_process (l_as.expression)
 		end
 
 	process_tagged_as (l_as: TAGGED_AS) is
@@ -486,12 +530,10 @@ feature
 
 	process_un_strip_as (l_as: UN_STRIP_AS) is
 		local
-			k_as: KEYWORD_AS
 			i_as: IDENTIFIER_LIST
 		do
-			k_as ?= l_as.operator
 			i_as ?= l_as.id_list
-			safe_process (k_as)
+			safe_process (l_as.strip_keyword)
 			safe_process (i_as.id_list)
 		end
 
@@ -1041,48 +1083,74 @@ feature
 
 	process_type_a (a_type: TYPE_A) is
 		do
-			-- a_type.append_to (ctxt.text)
 			check
-				why_here: False
+				should_not_arrive_here: False
+			end
+		end
+
+feature
+
+	process_all_break_as is
+			-- Process all BREAK AST nodes.
+		require
+			match_list_not_void: match_list /= Void
+		local
+			l_break: BREAK_AS
+		do
+			from
+				match_list.start
+			until
+				match_list.after
+			loop
+				l_break ?= match_list.item
+				if l_break /= Void then
+					l_break.process (Current)
+				end
+				match_list.forth
 			end
 		end
 
 feature{NONE} -- Implementation
 
-	process_before_leaves (ind: INTEGER) is
-			-- Process all leaves in `match_list' before index `ind'.
+	process_leading_leaves (ind: INTEGER) is
+			-- Process all not-processed leading leaves in `match_list' before index `ind'.
 		require
 			valid_index: ind >= start_index and then ind <= end_index
-			valid_new_index: ind > last_index
 		local
 			i: INTEGER
 		do
-			from
-				i := last_index + 1
-			until
-				i = ind
-			loop
-				match_list.i_th (i).process (Current)
-				i := i + 1
-			end
-			last_index := ind - 1
-		end
-
-	process_left_leaves is
-			-- Process all leaves in `match_list' after `last_index'.
-		local
-			l_count: INTEGER
-		do
-			l_count := end_index
-			if last_index < l_count then
-				from
-					last_index := last_index + 1
-				until
-					last_index > l_count
-				loop
-					match_list.i_th (last_index).process (Current)
-					last_index := last_index + 1
+			if will_process_leading_leaves then
+				if ind > last_index + 1 then
+					from
+						i := last_index + 1
+					until
+						i = ind
+					loop
+						match_list.i_th (i).process (Current)
+						i := i + 1
+					end
 				end
 			end
 		end
+
+	process_trailing_leaves is
+			-- Process all trailing leaves in `match_list' after `last_index'.
+		local
+			l_count: INTEGER
+		do
+			if will_process_trailing_leaves then
+				l_count := end_index
+				if last_index < l_count then
+					from
+						last_index := last_index + 1
+					until
+						last_index > l_count
+					loop
+						match_list.i_th (last_index).process (Current)
+						last_index := last_index + 1
+					end
+				end
+			end
+		end
+
 end

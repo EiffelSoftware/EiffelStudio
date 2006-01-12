@@ -163,4 +163,125 @@ feature -- Status report
 				and then redefining /= Void and then not redefining.is_empty
 		end
 
+feature -- Roundtrip/Item removal
+
+	can_remove_items (rename_items, export_items, undefine_items, redefine_items, select_items: LIST [INTEGER]; a_list: LEAF_AS_LIST): BOOLEAN is
+			-- Can items indicated by `rename_items', `export_items', `undefine_items', `redefine_items' and `select_items'
+			-- be removed from current AST node?
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_all_removed: BOOLEAN
+			l_all_removed_list: ARRAYED_LIST [BOOLEAN]
+			l_clause_list: ARRAYED_LIST [EIFFEL_LIST[AST_EIFFEL]]
+			l_remove_list: ARRAYED_LIST [LIST [INTEGER]]
+		do
+			l_clause_list := inherit_clauses
+			l_remove_list := to_be_removed_items (rename_items, export_items, undefine_items, redefine_items, select_items)
+			l_all_removed_list := inherit_clauses_status
+			from
+				l_remove_list.start
+				l_clause_list.start
+				l_all_removed_list.start
+				l_all_removed := True
+				Result := True
+			until
+				l_remove_list.after or not Result
+			loop
+				Result := (l_remove_list.item /= Void implies l_clause_list.item /= Void) and then l_clause_list.item.valid_remove_items (l_remove_list.item)
+				if l_remove_list.item /= Void and Result then
+					l_all_removed_list.put (l_clause_list.item.count = l_remove_list.item.count)
+					l_all_removed := l_all_removed and l_all_removed_list.item
+					if l_all_removed_list.item then
+						Result := l_clause_list.item.can_remove_all_text (a_list)
+					else
+						Result := l_clause_list.item.can_remove_items (l_remove_list.item, a_list)
+					end
+				end
+				l_remove_list.forth
+				l_clause_list.forth
+				l_all_removed_list.forth
+			end
+			if Result then
+				Result := (l_all_removed and end_keyword /= Void) implies end_keyword.can_remove_all_text (a_list)
+			end
+		end
+
+	remove_items (rename_items, export_items, undefine_items, redefine_items, select_items: LIST [INTEGER]; a_list: LEAF_AS_LIST) is
+			-- Remove items indicated by `rename_items', `export_items', `undefine_items', `redefine_items' and `select_items'
+			-- from current AST node?
+		require
+			a_list_not_void: a_list /= Void
+			items_valid: can_remove_items (rename_items, export_items, undefine_items, redefine_items, select_items, a_list)
+		local
+			l_all_removed: BOOLEAN
+			l_all_removed_list: ARRAYED_LIST [BOOLEAN]
+			l_clause_list: ARRAYED_LIST [EIFFEL_LIST[AST_EIFFEL]]
+			l_remove_list: ARRAYED_LIST [LIST [INTEGER]]
+		do
+			l_clause_list := inherit_clauses
+			l_remove_list := to_be_removed_items (rename_items, export_items, undefine_items, redefine_items, select_items)
+			l_all_removed_list := inherit_clauses_status
+			from
+				l_remove_list.start
+				l_clause_list.start
+				l_all_removed_list.start
+				l_all_removed := True
+			until
+				l_remove_list.after
+			loop
+				if l_remove_list.item /= Void and l_clause_list.item /= Void then
+					l_all_removed_list.put (l_clause_list.item.count = l_remove_list.item.count)
+					l_all_removed := l_all_removed and l_all_removed_list.item
+					if l_all_removed_list.item then
+						l_clause_list.item.remove_all_text (a_list)
+					else
+						l_clause_list.item.remove_items (l_remove_list.item, a_list)
+					end
+				end
+				l_remove_list.forth
+				l_clause_list.forth
+				l_all_removed_list.forth
+			end
+			if l_all_removed and end_keyword /= Void then
+				end_keyword.remove_all_text (a_list)
+			end
+		end
+
+feature{NONE} -- Roundtrip/Implementation
+
+	inherit_clauses: ARRAYED_LIST [EIFFEL_LIST[AST_EIFFEL]] is
+			-- List of all inherit clauses
+		do
+			create Result.make (5)
+			Result.extend (internal_renaming)
+			Result.extend (internal_exports)
+			Result.extend (internal_undefining)
+			Result.extend (internal_redefining)
+			Result.extend (internal_selecting)
+		end
+
+	inherit_clauses_status: ARRAYED_LIST [BOOLEAN] is
+			-- List to indicate whether certain inherit clause is Void
+		do
+			create Result.make (5)
+			Result.extend (internal_renaming = Void)
+			Result.extend (internal_exports = Void)
+			Result.extend (internal_undefining = Void)
+			Result.extend (internal_redefining = Void)
+			Result.extend (internal_selecting = Void)
+		end
+
+	to_be_removed_items (rename_items, export_items, undefine_items, redefine_items, select_items: LIST [INTEGER]): ARRAYED_LIST [LIST[INTEGER]] is
+			-- List of index of items which are to be removed
+		do
+			create Result.make (5)
+			Result.extend (rename_items)
+			Result.extend (export_items)
+			Result.extend (undefine_items)
+			Result.extend (redefine_items)
+			Result.extend (select_items)
+		end
+
+
 end -- class PARENT_AS

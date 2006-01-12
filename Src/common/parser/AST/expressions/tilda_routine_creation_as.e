@@ -41,6 +41,14 @@ feature -- Roundtrip
 	tilda_symbol: SYMBOL_AS
 			-- Symbol "~" or "}~" associated with this structure
 
+	set_tilda_symbol (a_symbol: SYMBOL_AS) is
+			-- Set `tilda_symbol' with `a_symbol'.
+		do
+			tilda_symbol := a_symbol
+		ensure
+			tilda_symbol_set: tilda_symbol = a_symbol
+		end
+
 feature -- Roundtrip/Location
 
 	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is

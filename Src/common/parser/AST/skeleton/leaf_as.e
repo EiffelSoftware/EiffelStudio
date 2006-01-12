@@ -38,11 +38,6 @@ feature -- Roundtrip
 		require else
 			a_list_can_be_void: a_list = Void
 		do
-			check
-				a_list_not_void: a_list /= Void
-				index_valid: index > 0 and index <= a_list.count
-				type_correct: a_list.i_th (index).generating_type.is_equal ("LEAF_STUB_AS")
-			end
 			Result := a_list.i_th (index).text (Void)
 		end
 

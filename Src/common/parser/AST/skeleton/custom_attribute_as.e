@@ -41,6 +41,15 @@ feature -- Visitor
 feature -- Roundtrip
 
 	end_keyword: KEYWORD_AS
+			-- Keyword "end" in current AST node
+
+	set_end_keyword (a_keyword: KEYWORD_AS) is
+			--- Set `end_keyword' with `a_keyword'.
+		do
+			end_keyword := a_keyword
+		ensure
+			end_keyword_set: end_keyword = a_keyword
+		end
 
 feature -- Access
 

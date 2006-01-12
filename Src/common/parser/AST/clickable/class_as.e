@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (n: like class_name;
-			ext_name: STRING;
+			ext_name: STRING_AS;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
@@ -202,7 +202,7 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class name
 
-	external_class_name: STRING
+	external_class_name: STRING_AS
 			-- External_name of class if `is_external'.
 
 	obsolete_message: STRING_AS
@@ -344,7 +344,7 @@ feature -- Roundtrip/Location
 					Result := class_name.complete_start_location (a_list)
 				end
 			else
-				Result := a_list.i_th (1).complete_start_location (a_list)
+				Result := a_list.first.complete_start_location (a_list)
 			end
 		end
 

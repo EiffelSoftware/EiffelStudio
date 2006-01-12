@@ -60,6 +60,31 @@ feature -- Roundtrip
 			separator_list.reverse_extend (l_as)
 		end
 
+	valid_remove_items (item_list: LIST [INTEGER]): BOOLEAN is
+			-- Are items in `item_list' valid to be removed?
+			-- e.g. items are not duplicated in `item_list' and item index are not too small or too large.
+		require
+			item_list /= Void
+		local
+			l_list: ARRAYED_LIST [INTEGER]
+			l_item: INTEGER
+		do
+			create l_list.make (item_list.count)
+			from
+				item_list.start
+				Result := True
+			until
+				item_list.after or not Result
+			loop
+				l_item := item_list.item
+				Result := l_item >= 1 and l_item <= count and not l_list.has (l_item)
+				if Result then
+					l_list.extend (l_item)
+					item_list.forth
+				end
+			end
+		end
+
 	can_remove_items (item_list: LIST [INTEGER]; a_list: LEAF_AS_LIST): BOOLEAN is
 			-- Can items specified in `item_list' be removed?
 		require
@@ -72,33 +97,35 @@ feature -- Roundtrip
 			l_index: INTEGER
 			l_sep_index: INTEGER
 		do
-			l_list := sorted_remove_items (item_list)
-			Result := True
-			create l_sep_list.make (l_list.count)
-			check
-				separator_valid: separator_list /= Void implies separator_list.count = count - 1
-			end
-			l_cnt := 0
-			if separator_list /= Void then
-				l_cnt := separator_list.count
-			end
-			from
-				l_list.start
-			until
-				l_list.after or not Result
-			loop
-				l_index := l_list.item
-				Result := i_th (l_index).can_remove_all_text (a_list)
-				if Result then
-					if l_cnt > 0 then
-						l_sep_index := last_to_be_removed_separator (l_index, l_sep_list)
-						Result := Result and separator_list.i_th (l_sep_index).can_remove_all_text (a_list)
-						if Result and not l_sep_list.has (l_sep_index) then
-							l_sep_list.extend (l_sep_index)
+			Result := valid_remove_items (item_list)
+			if Result then
+				l_list := sorted_remove_items (item_list)
+				create l_sep_list.make (l_list.count)
+				check
+					separator_valid: separator_list /= Void implies separator_list.count = count - 1
+				end
+				l_cnt := 0
+				if separator_list /= Void then
+					l_cnt := separator_list.count
+				end
+				from
+					l_list.start
+				until
+					l_list.after or not Result
+				loop
+					l_index := l_list.item
+					Result := l_index <= count and then i_th (l_index).can_remove_all_text (a_list)
+					if Result then
+						if l_cnt > 0 then
+							l_sep_index := last_to_be_removed_separator (l_index, l_sep_list)
+							Result := Result and separator_list.i_th (l_sep_index).can_remove_all_text (a_list)
+							if Result and not l_sep_list.has (l_sep_index) then
+								l_sep_list.extend (l_sep_index)
+							end
 						end
 					end
+					l_list.forth
 				end
-				l_list.forth
 			end
 		end
 
@@ -139,6 +166,8 @@ feature -- Roundtrip
 			end
 		end
 
+
+
 feature{NONE} -- Roundtrip/Implementation
 
 	sorted_remove_items (item_list: LIST [INTEGER]): SORTED_TWO_WAY_LIST [INTEGER] is
@@ -146,6 +175,7 @@ feature{NONE} -- Roundtrip/Implementation
 		require
 			item_list_not_void: item_list /= Void
 			item_list_not_empty: not item_list.is_empty
+			items_valid: valid_remove_items (item_list)
 		do
 			create Result.make
 			from
@@ -153,9 +183,7 @@ feature{NONE} -- Roundtrip/Implementation
 			until
 				item_list.after
 			loop
-				if not Result.has (item_list.item) then
-					Result.put_front (item_list.item)
-				end
+				Result.put_front (item_list.item)
 				item_list.forth
 			end
 			Result.sort

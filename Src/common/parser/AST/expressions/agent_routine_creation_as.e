@@ -46,6 +46,22 @@ feature -- Roundtrip
 	dot_symbol: SYMBOL_AS
 			-- Symbol "." associated with this structure
 
+	set_agent_keyword (a_keyword: KEYWORD_AS) is
+			-- Set `agent_keyword' with `a_keyword'.
+		do
+			agent_keyword := a_keyword
+		ensure
+			agent_keyword_set: agent_keyword = a_keyword
+		end
+
+	set_dot_symbol (a_symbol: SYMBOL_AS) is
+			-- Set `dot_symbol' with `a_symbol'.
+		do
+			dot_symbol := a_symbol
+		ensure
+			dot_symbol_set: dot_symbol = a_symbol
+		end
+
 feature -- Roundtrip/Location
 
 	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is

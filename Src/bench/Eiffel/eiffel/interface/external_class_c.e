@@ -82,7 +82,7 @@ feature -- Initialization
 					-- Create abstract syntax tree.
 				create l_ast.initialize (
 					create {ID_AS}.make (10),
-					external_class.dotnet_name,
+					create {STRING_AS}.initialize (external_class.dotnet_name, 0, 0, 0, 0),
 					is_deferred,
 					is_expanded,
 					False,	-- is_separate

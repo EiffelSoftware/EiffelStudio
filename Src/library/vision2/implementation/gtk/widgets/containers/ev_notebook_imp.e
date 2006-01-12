@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision notebook. GTK implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_NOTEBOOK_IMP
-	
+
 inherit
 	EV_NOTEBOOK_I
 		undefine
@@ -17,7 +17,7 @@ inherit
 			interface,
 			replace
 		end
-		
+
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
@@ -27,12 +27,12 @@ inherit
 			remove_i_th,
 			needs_event_box
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface
 		end
-	  
+
 	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
 
 create
@@ -41,9 +41,9 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
-	
+
 	make (an_interface: like interface) is
-			-- Create a fixed widget. 
+			-- Create a fixed widget.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
@@ -110,7 +110,7 @@ feature -- Access
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			
+
 			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
 
 			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
@@ -130,7 +130,7 @@ feature -- Access
 		end
 
 	item_pixmap (an_item: like item): EV_PIXMAP is
-			-- 
+			--
 		local
 			item_imp: EV_WIDGET_IMP
 			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
@@ -173,15 +173,15 @@ feature -- Status report
 				check
 					p_has_eif_object: imp /= Void
 				end
-	
+
 				Result ?= imp.interface
-	
+
 				check
 					imp_has_interface: Result /= Void
 				end
 			end
 		end
-			
+
 	selected_item_index: INTEGER is
 			-- Page index of selected item
 		do
@@ -210,7 +210,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	set_tab_position (a_tab_position: INTEGER) is
 			-- Display tabs at `a_position'.
 		local
@@ -241,8 +241,8 @@ feature -- Status setting
 				visual_widget,
 				{EV_GTK_EXTERNALS}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
 			)
-		end	
-	
+		end
+
 feature -- Element change
 
 	remove_i_th (i: INTEGER) is
@@ -276,7 +276,7 @@ feature -- Element change
 		do
 			item_imp ?= an_item.implementation
 			a_cs := a_text
-			
+
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
@@ -304,13 +304,15 @@ feature -- Element change
 				-- We already have a pixmap present so we remove it
 				{EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
 			end
-			a_pix_imp ?= a_pixmap.implementation
-			a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
-			a_pix := {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pixbuf)
-			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+			if a_pixmap /= Void then
+				a_pix_imp ?= a_pixmap.implementation
+				a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
+				a_pix := {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pixbuf)
+				{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
+				{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
+				{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+			end
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -325,7 +327,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 			end
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	selected_item_index_internal: INTEGER

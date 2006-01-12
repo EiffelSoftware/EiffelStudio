@@ -15,6 +15,15 @@ inherit
 			make, extend
 		end
 
+	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		undefine
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -296,9 +305,12 @@ feature{NONE} -- Implementation
 		require
 			start_pos_less_or_equal_than_end_pos: start_pos <= end_pos
 			position_in_range: position_in_range (start_pos) and position_in_range (end_pos)
+		local
+			l_index: INTEGER
 		do
 			if text_buffer = Void then
 				create text_buffer.make (byte_count)
+				l_index := index
 				from
 					start
 				until
@@ -307,6 +319,7 @@ feature{NONE} -- Implementation
 					text_buffer.append (item.text (Void))
 					forth
 				end
+				index := l_index
 			end
 			Result := text_buffer.substring (start_pos, end_pos)
 		ensure

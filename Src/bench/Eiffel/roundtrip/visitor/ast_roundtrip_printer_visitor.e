@@ -30,7 +30,6 @@ inherit
 			process_integer_as,
 			process_real_as,
 			process_id_as,
-			process_bit_const_as,
 			process_break_as
 		end
 create
@@ -70,126 +69,128 @@ feature -- Roundtrip: process leaf
 	process_break_as (l_as: BREAK_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_keyword_as (l_as: KEYWORD_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_symbol_as (l_as: SYMBOL_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_separator_as (l_as: SEPARATOR_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_new_line_as (l_as: NEW_LINE_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_comment_as (l_as: COMMENT_AS) is
 			-- Process `l_as'.
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_bool_as (l_as: BOOL_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_char_as (l_as: CHAR_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_typed_char_as (l_as: TYPED_CHAR_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.type)
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_result_as (l_as: RESULT_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_retry_as (l_as: RETRY_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_unique_as (l_as: UNIQUE_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_deferred_as (l_as: DEFERRED_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_void_as (l_as: VOID_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_string_as (l_as: STRING_AS) is
 		do
-			if l_as.is_once_string then
-				safe_process (l_as.once_string_keyword)
-			end
-			safe_process (l_as.type)
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
 		do
-			if l_as.is_once_string then
-				safe_process (l_as.once_string_keyword)
-			end
-			safe_process (l_as.type)
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_current_as (l_as: CURRENT_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_integer_as (l_as: INTEGER_AS) is
 		do
-			safe_process (l_as.constant_type)
-			safe_process (l_as.sign_symbol)
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_real_as (l_as: REAL_AS) is
 		do
-			safe_process (l_as.constant_type)
-			safe_process (l_as.sign_symbol)
+			Precursor (l_as)
 			put_string (l_as)
 		end
 
 	process_id_as (l_as: ID_AS) is
 		do
+			Precursor (l_as)
 			put_string (l_as)
-		end
-
-	process_bit_const_as (l_as: BIT_CONST_AS) is
-		do
-			safe_process (l_as.value)
 		end
 
 feature
@@ -210,11 +211,7 @@ feature{NONE} -- Implementation
 		require
 			l_as_in_list: l_as.index >= start_index and then l_as.index <= end_index
 		do
-			if last_index < l_as.index - 1 then
-				process_before_leaves (l_as.index)
-			end
 			context.add_string (l_as.text (match_list))
-			last_index := l_as.index
 		end
 
 invariant

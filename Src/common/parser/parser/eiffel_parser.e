@@ -4519,11 +4519,11 @@ end
 
 				fclause_pos := yyvs12.item (yyvsp12) 
 				if yyvs12.item (yyvsp12) /= Void then
-						-- Originally, it was 8, I changed it to 7 (Jason)
+						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
 					fclause_pos.set_position (line, column, position, 7)
 				else
 						-- Originally, it was 8, I changed it to 7 (Jason)
-					fclause_pos := ast_factory.new_location_as (line, column, position, 7)
+					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
 				end
 				
 			
@@ -17295,10 +17295,15 @@ debug ("GEYACC")
 end
 
 				yyval68 := ast_factory.new_static_access_as (yyvs79.item (yyvsp79), yyvs2.item (yyvsp2), yyvs89.item (yyvsp89), yyvs12.item (yyvsp12), yyvs4.item (yyvsp4));
-				if has_syntax_warning and yyvs79.item (yyvsp79) /= Void then
+				if has_syntax_warning and (yyvs12.item (yyvsp12) /= Void or yyvs79.item (yyvsp79) /= Void) then
+					if yyvs12.item (yyvsp12) /= Void then
+						ast_location := yyvs12.item (yyvsp12).start_location
+					else
+						ast_location := yyvs79.item (yyvsp79).start_location
+					end
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make (yyvs79.item (yyvsp79).start_location.line,
-							yyvs79.item (yyvsp79).start_location.column, filename, "Remove the `feature' keyword."))
+						create {SYNTAX_WARNING}.make (ast_location.line,
+							ast_location.column, filename, "Remove the `feature' keyword."))
 				end
 			
 if yy_parsing_status = yyContinue then

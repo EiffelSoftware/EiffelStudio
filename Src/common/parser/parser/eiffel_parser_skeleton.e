@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 	initial_has_old_verbatim_strings_warning: BOOLEAN
 			-- Value of `has_old_verbatim_strings_warning' when parser was started
 
-	fclause_pos: LOCATION_AS
+	fclause_pos: KEYWORD_AS
 			-- To memorize the beginning of a feature clause
 
 	fbody_pos: INTEGER
@@ -331,6 +331,9 @@ feature {NONE} -- Implementation
 	separate_keyword,
 	external_keyword: KEYWORD_AS
 			-- Keywords that may appear in header mark of a class
+
+	ast_location: LOCATION_AS
+			-- Temp location
 
 feature {NONE} -- Counters
 
@@ -392,14 +395,14 @@ feature {NONE} -- Actions
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
-			ext_name: STRING
+			ext_name: STRING_AS
 		do
 			if n2 /= Void then
 				if not il_parser then
 						-- Trigger a syntax error.
 					raise_error
 				else
-					ext_name := n2.value
+					ext_name := n2
 				end
 			end
 			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,

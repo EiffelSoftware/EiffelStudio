@@ -576,11 +576,11 @@ Feature_client_clause: TE_FEATURE
 			{
 				fclause_pos := $1 
 				if $1 /= Void then
-						-- Originally, it was 8, I changed it to 7 (Jason)
+						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
 					fclause_pos.set_position (line, column, position, 7)
 				else
 						-- Originally, it was 8, I changed it to 7 (Jason)
-					fclause_pos := ast_factory.new_location_as (line, column, position, 7)
+					fclause_pos := ast_factory.new_feature_keyword_as (line, column, position, 7, Current)
 				end
 				
 			}
@@ -2402,10 +2402,15 @@ Old_a_static_call:
 		TE_FEATURE Typed TE_DOT Identifier_as_lower Parameters
 			{
 				$$ := ast_factory.new_static_access_as ($2, $4, $5, $1, $3);
-				if has_syntax_warning and $2 /= Void then
+				if has_syntax_warning and ($1 /= Void or $2 /= Void) then
+					if $1 /= Void then
+						ast_location := $1.start_location
+					else
+						ast_location := $2.start_location
+					end
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($2.start_location.line,
-							$2.start_location.column, filename, "Remove the `feature' keyword."))
+						create {SYNTAX_WARNING}.make (ast_location.line,
+							ast_location.column, filename, "Remove the `feature' keyword."))
 				end
 			}
 	;

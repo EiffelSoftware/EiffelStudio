@@ -60,7 +60,7 @@ feature -- Access
 			end
 		end
 
-	new_class_as (n: ID_AS; ext_name: STRING;
+	new_class_as (n: ID_AS; ext_name: STRING_AS;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];

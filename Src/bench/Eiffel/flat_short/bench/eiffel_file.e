@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Content of an eiffel file made up of a list of eiffel_lines. %
 		%Store the next feature_clause_as and feature_as structures%
 		%in order to extract comments of the analyzed feature%
@@ -66,7 +66,7 @@ end
 			-- `start_feat_pos' and `end_feat_pos'.
 		require
 			valid_file_name: a_file_name /= Void
-			positive_positions: start_feat_pos > 0 and then	
+			positive_positions: start_feat_pos > 0 and then
 						end_feat_pos > 0
 		local
 			file: PLAIN_TEXT_FILE
@@ -99,7 +99,7 @@ end
 		end
 
 feature -- Properties
-	
+
 	current_feature: FEATURE_AS
 			-- Currently analyzed feature
 
@@ -107,7 +107,7 @@ feature -- Properties
 			-- Currently analyzed feature clause
 
 	file_end_position: INTEGER
-			-- End position of file 
+			-- End position of file
 			-- (after last end keyword in order to ignore
 			-- comments at the end of the class).
 
@@ -154,20 +154,20 @@ feature -- Setting for comments
 feature -- Output
 
 	current_feature_clause_comments: EIFFEL_COMMENTS is
-			-- Comments for `current_feature_clause' 
+			-- Comments for `current_feature_clause'
 		require
 			valid_current_feature_clause: current_feature_clause /= Void
 		local
 			start_pos: INTEGER
 		do
 			if not is_empty then
-				start_pos := current_feature_clause.feature_location.final_position;
+				start_pos := current_feature_clause.feature_keyword.final_position;
 				Result := extract_comments_from (start_pos, end_position);
 			end
 		end
 
 	current_feature_comments: EIFFEL_COMMENTS is
-			-- Comments for `current_feature' 
+			-- Comments for `current_feature'
 		require
 			valid_current_feature: current_feature /= Void
 		local
@@ -194,9 +194,9 @@ feature {NONE} -- Implementation
 			not_empty: not is_empty;
 			positive_positions: start_pos > 0 and then end_pos > 0;
 			valid_positions: end_pos >= start_pos;
-			within_end_file: end_pos <= file_end_position and then	
+			within_end_file: end_pos <= file_end_position and then
 						start_pos >= i_th (1).start_position
-		local 
+		local
 			e_line: EIFFEL_LINE
 			finished: BOOLEAN
 			comment: CELL2 [STRING, INTEGER]
@@ -242,7 +242,7 @@ end
 				if e_line.end_position >= end_pos then
 					finished := True
 				else
-					comment := e_line.comment;	
+					comment := e_line.comment;
 					if comment /= Void then
 						if comment.item2 >= end_pos then
 							finished := True
@@ -265,16 +265,16 @@ end
 			if next_feature /= Void then
 				Result := next_feature.start_position
 			elseif next_feature_clause /= Void then
-				Result := next_feature_clause.feature_location.final_position
+				Result := next_feature_clause.feature_keyword.final_position
 			else
 				Result := file_end_position
 			end
 		ensure
-			check_next_feature: next_feature /= Void implies 
+			check_next_feature: next_feature /= Void implies
 						Result = next_feature.start_position
 			check_next_feature_clause: next_feature = Void and then
-							next_feature_clause /= Void implies 
-						Result = next_feature_clause.feature_location.final_position
+							next_feature_clause /= Void implies
+						Result = next_feature_clause.feature_keyword.final_position
 			check_file_end_position: next_feature = Void and then next_feature_clause = Void
 							implies Result = file_end_position
 			positive_result: Result >= 0 and then Result <= file_end_position
@@ -298,6 +298,6 @@ feature -- Debug
 		end
 
 invariant
-	not_before: not off 
+	not_before: not off
 
 end -- class EIFFEL_FILE

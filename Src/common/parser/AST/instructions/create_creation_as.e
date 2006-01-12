@@ -32,6 +32,14 @@ feature -- Roundtrip
 	create_keyword: KEYWORD_AS
 			-- Keyword "create" associated with this structure
 
+	set_create_keyword (a_keyword: KEYWORD_AS) is
+			-- Set `create_keyword' with `a_keyword'.
+		do
+			create_keyword := a_keyword
+		ensure
+			create_keyword_set: create_keyword = a_keyword
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

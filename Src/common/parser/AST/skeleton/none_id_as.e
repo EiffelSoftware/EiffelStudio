@@ -10,7 +10,8 @@ class
 inherit
 	ID_AS
 		redefine
-			process
+			process,
+			text
 		end
 
 create
@@ -23,4 +24,15 @@ feature -- Visitor
 		do
 			v.process_none_id_as (Current)
 		end
+
+feature -- Roundtrip
+
+	text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of this token, which is stored in `a_list'
+		do
+				-- In view of roundtrip parser, text of a NONE_ID_AS is empty because this
+				-- node is not in source code.
+			Result := ""
+		end
+
 end

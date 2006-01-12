@@ -27,6 +27,9 @@ feature -- Filter
 					end
 					a_list.forth
 				end
+				if Result.is_empty then
+					Result := Void
+				end
 			end
 		end
 

@@ -268,6 +268,18 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
+	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+			-- New KEYWORD AST node for keyword "feature".
+		require
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
+			s_non_negative: s >= 0
+			a_scn_not_void: a_scn /= Void
+		do
+			create Result.make_with_location (l, c, p, s)
+		end
+
 	new_creation_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "creation'
 		require
@@ -769,7 +781,7 @@ feature -- Access
 			end
 		end
 
-	new_class_as (n: ID_AS; ext_name: STRING;
+	new_class_as (n: ID_AS; ext_name: STRING_AS;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
@@ -1180,7 +1192,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
+	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: KEYWORD_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
 			-- New FEATURE_CLAUSE AST node
 		do
 			if f /= Void and l /= Void then
@@ -1577,9 +1589,9 @@ feature -- Access
 	new_tagged_as (t: ID_AS; e: EXPR_AS; s_as: SYMBOL_AS): TAGGED_AS is
 			-- New TAGGED AST node
 		do
-			if e /= Void then
+--			if e /= Void then
 				create Result.initialize (t, e, s_as)
-			end
+--			end
 		end
 
 	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): TUPLE_AS is
@@ -1646,7 +1658,7 @@ feature -- Access
 			end
 		end
 
-	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: AST_EIFFEL): UN_STRIP_AS is
+	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: KEYWORD_AS): UN_STRIP_AS is
 			-- New UN_STRIP AST node
 		do
 			if i /= Void then

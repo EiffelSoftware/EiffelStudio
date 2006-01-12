@@ -19,22 +19,22 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; o: AST_EIFFEL) is
+	initialize (i: like id_list; o: KEYWORD_AS) is
 			-- Create a new UN_STRIP AST node.
 		require
 			i_not_void: i /= Void
 		do
 			id_list := i
-			operator := o
+			strip_keyword := o
 		ensure
 			id_list_set: id_list = i
-			operator_set: operator = o
+			strip_keyword_set: strip_keyword = o
 		end
 
 feature -- Roundtrip
 
-	operator: AST_EIFFEL
-			-- Operator node.
+	strip_keyword: AST_EIFFEL
+			-- Keyword "strip"
 
 feature -- Visitor
 
@@ -56,7 +56,7 @@ feature -- Roundtrip/Location
 			if a_list = Void then
 				Result := null_location
 			else
-				Result := operator.complete_start_location (a_list)
+				Result := strip_keyword.complete_start_location (a_list)
 			end
 		end
 

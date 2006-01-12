@@ -33,6 +33,22 @@ feature -- Roundtrip
 	lbang_symbol, rbang_symbol: SYMBOL_AS
 			-- Symbol "!" associated with this structure
 
+	set_lbang_symbol (a_symbol: SYMBOL_AS) is
+			--- Set `lbang_symbol' with `a_symbol'.
+		do
+			lbang_symbol := a_symbol
+		ensure
+			lbang_symbol_set: lbang_symbol = a_symbol
+		end
+
+	set_rbang_symbol (a_symbol: SYMBOL_AS) is
+			--- Set `rbang_symbol' with `a_symbol'.
+		do
+			rbang_symbol := a_symbol
+		ensure
+			rbang_symbol_set: rbang_symbol = a_symbol
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is

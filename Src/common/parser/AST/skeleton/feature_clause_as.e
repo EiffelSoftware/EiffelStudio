@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients; f: like features; l: like feature_location; ep: INTEGER) is
+	initialize (c: like clients; f: like features; l: like feature_keyword; ep: INTEGER) is
 			-- Create a new FEATURE_CLAUSE AST node.
 		require
 			f_not_void: f /= Void
@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 		do
 			clients := c
 			features := f
-			feature_location := l
+			feature_keyword := l
 			feature_clause_end_position := ep - 1
 		ensure
 			clients_set: clients = c
 			features_set: features = f
-			feature_location_set: feature_location = l
+			feature_keyword_set: feature_keyword = l
 			feature_clause_end_position_set: feature_clause_end_position = ep - 1
 		end
 
@@ -47,7 +47,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	feature_location: LOCATION_AS
+	feature_keyword: KEYWORD_AS
 			-- Position after `feature' keyword.
 
 	clients: CLIENT_AS
@@ -60,7 +60,7 @@ feature -- Roundtrip
 
 	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
 		do
-			Result := feature_location
+			Result := feature_keyword
 		end
 
 	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
@@ -71,7 +71,7 @@ feature -- Roundtrip
 				elseif clients /= Void then
 					Result := clients.end_location
 				else
-					Result := feature_location
+					Result := feature_keyword
 				end
 			else
 				create Result.make (0, 0, feature_clause_end_position, 0)
@@ -87,7 +87,7 @@ feature -- Comments
 		local
 			end_pos, real_pos: INTEGER
 		do
-			end_pos := feature_location.final_position
+			end_pos := feature_keyword.final_position
 				-- `end_position' might not be up-to-date, so that we may look
 				-- after the end of the file. Case were new class text is shorter
 				-- than the previous text of the compiled version.
@@ -254,6 +254,6 @@ feature {COMPILER_EXPORTER} -- Setting
 
 invariant
 	features_not_void: features /= Void
-	feature_location_not_void: feature_location /= Void
+	feature_location_not_void: feature_keyword /= Void
 
 end -- class FEATURE_CLAUSE_AS

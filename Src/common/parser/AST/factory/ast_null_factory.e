@@ -58,7 +58,8 @@ inherit
 			new_symbol_as, new_square_symbol_as, new_separator_as, new_separator_as_with_data,
 			new_new_line_as_with_data, new_new_line_as, new_comment_as, new_comment_as_with_data,
 			new_break_as, new_break_as_with_data,
-			new_filled_id_as_with_existing_stub
+			new_filled_id_as_with_existing_stub,
+			new_feature_keyword_as
 		end
 
 feature -- Buffer operation
@@ -216,6 +217,11 @@ feature -- Roundtrip: leaf_as
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node
+		do
+		end
+
+	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+			-- New KEYWORD AST node for keyword "feature".
 		do
 		end
 
@@ -507,7 +513,7 @@ feature -- Access
 		do
 		end
 
-	new_class_as (n: ID_AS; ext_name: STRING;
+	new_class_as (n: ID_AS; ext_name: STRING_AS;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
@@ -739,7 +745,7 @@ feature -- Access
 		do
 		end
 
-	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: LOCATION_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
+	new_feature_clause_as (c: CLIENT_AS; f: EIFFEL_LIST [FEATURE_AS]; l: KEYWORD_AS; ep: INTEGER): FEATURE_CLAUSE_AS is
 			-- New FEATURE_CLAUSE AST node
 		do
 		end
@@ -1017,7 +1023,7 @@ feature -- Access
 		do
 		end
 
-	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: AST_EIFFEL): UN_STRIP_AS is
+	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: KEYWORD_AS): UN_STRIP_AS is
 			-- New UN_STRIP AST node
 		do
 		end

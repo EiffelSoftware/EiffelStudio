@@ -18,7 +18,7 @@ indexing
 
 class
 	CLASS_TEXT_MODIFIER
- 
+
 inherit
 	ANY
 		redefine
@@ -59,29 +59,29 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_MANAGERS
 		undefine
 			default_create
 		end
-		
+
 	FEATURE_CLAUSE_NAMES
 		undefine
 			default_create
 		end
-		
+
 	SHARED_INST_CONTEXT
 		undefine
 			default_create
 		end
-	
+
 create
 	make_with_tool,
 	make
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 		end
 
 	make (a_class: CLASS_I) is
-			-- 
+			--
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -121,19 +121,19 @@ feature {NONE} -- Initialization
 			a_class_assigned: a_class = class_i
 			a_tool_assigned: a_tool = context_editor
 		end
-		
+
 feature -- Access
 
 	last_feature_as: FEATURE_AS
 			-- AST of last added feature.
-			
+
 	last_removed_code: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
 			-- List of code and positions that has been removed.
-			
+
 
 	last_added_code: ARRAYED_LIST [TUPLE[STRING, INTEGER]]
 			-- List of added code and position.
-			
+
 	class_as: CLASS_AS
 			-- Current class AST.
 
@@ -156,7 +156,7 @@ feature -- Status report
 
 	extend_from_diagram_successful: BOOLEAN
 			-- Was last call to `extend_feature_from_diagram_with_wizard' successful?
-			
+
 	class_modified_outside_diagram: BOOLEAN
 
 feature -- Status setting
@@ -217,7 +217,7 @@ feature -- Status setting
 				date := class_file.date
 			end
 		end
-		
+
 feature -- Element change
 
 	insert_code (a_text: STRING) is
@@ -245,7 +245,7 @@ feature -- Element change
 		ensure
 			is_modified: is_modified
 		end
-		
+
 	replace_code (new_code: STRING; start_pos, end_pos: INTEGER) is
 			-- Replace code between `start_pos' and `end_pos' with `new_code'.
 		require
@@ -267,7 +267,7 @@ feature -- Element change
 		do
 			Result := text.substring (start_pos, end_pos)
 		end
-		
+
 	index_of (c: CHARACTER; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `c' at or after `start';
 			-- 0 if none.
@@ -277,7 +277,7 @@ feature -- Element change
 			if start <= text.count + 1 then
 				Result := text.index_of (c, start)
 			end
-		end 
+		end
 
 feature -- Modification (Add/Remove feature)
 
@@ -289,7 +289,7 @@ feature -- Modification (Add/Remove feature)
 			-- generates the feature.
 			-- Sets `last_feature_as' if everything was successful.
 		do
-			
+
 			last_feature_as := Void
 			prepare_for_modification
 			if valid_syntax then
@@ -360,7 +360,7 @@ feature -- Modification (Add/Remove feature)
 				commit_modification
 			end
 		end
-		
+
 	remove_features (data: LIST [FEATURE_AS]) is
 			-- Remove features in `data', store removed.
 		require
@@ -420,17 +420,17 @@ feature -- Modification (Add/Remove feature)
 							check f_name /= Void end
 							if name_index = names.count then
 									-- `f_name' is last.
-								name_start_position := actual_feature_as.start_position + 
+								name_start_position := actual_feature_as.start_position +
 									feat_code.last_index_of (',', feat_code.count) - 1
-								name_end_position := actual_feature_as.start_position + 
+								name_end_position := actual_feature_as.start_position +
 									feat_code.index_of (':', 1) - 1
 								feat_code := code (name_start_position, name_end_position - 1)
 								remove_code (name_start_position, name_end_position - 1)
 								reparse
 							else
 								tmp := feat_code.substring_index (l_item.feature_name, 1)
-								name_start_position := actual_feature_as.start_position + tmp 
-								name_end_position := actual_feature_as.start_position + 
+								name_start_position := actual_feature_as.start_position + tmp
+								name_end_position := actual_feature_as.start_position +
 									feat_code.index_of (',', tmp) + 1
 								feat_code := code (name_start_position, name_end_position)
 								remove_code (name_start_position, name_end_position)
@@ -443,7 +443,7 @@ feature -- Modification (Add/Remove feature)
 				commit_modification
 			end
 		end
-			
+
 	undelete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
 			-- Reinclude code in `data'.
 		require
@@ -479,9 +479,9 @@ feature -- Modification (Add/Remove feature)
 				commit_modification
 			end
 		end
-		
+
 	delete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
-			-- 
+			--
 		local
 			class_file: PLAIN_TEXT_FILE
 			l_item: TUPLE [STRING, INTEGER]
@@ -520,7 +520,7 @@ feature -- Modification (Add/Remove feature)
 				commit_modification
 			end
 		end
-	
+
 	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
 			-- Complete steps for adding a supplier of `preset_type'.
 		require
@@ -599,7 +599,7 @@ feature -- Modification (Add/Remove feature)
 				context_editor.development_window.window.set_pointer_style (context_editor.Default_pixmaps.Standard_cursor)
 			end
 		end
-		
+
 	extend_feature_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD) is
 			-- Add feature described in `fcw' to the class.
 		require
@@ -648,7 +648,7 @@ feature -- Modification (Add/Remove feature)
 					warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 					warning_dialog := Void
 					invalidate_text
-				end					
+				end
 			end
 		end
 
@@ -839,7 +839,7 @@ feature -- Modification (Add/Remove feature)
 --				remove_code (class_as.generics_start_position + 1, class_as.generics_end_position + 1)
 --			end
 --		end
-		
+
 feature -- Modification (Change class name)
 
 	set_class_name_declaration (a_name, a_generics: STRING) is
@@ -900,7 +900,7 @@ feature {NONE} -- Implementation
 
 	text: STRING
 			-- Current class text.
-			
+
 	is_unix_file: BOOLEAN
 			-- is current file a unix file ?
 			-- (i.e. is "%N" line separator ?)	
@@ -983,7 +983,7 @@ feature {NONE} -- Implementation
 			first_character := a_attribute.item (1)
 			if first_character = 'a' or first_character = 'e' or first_character = 'i' or
 				first_character = 'o' or first_character = 'u' then
-				
+
 				preposition := "an_"
 			else
 				preposition := "a_"
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 	feature_insert_position (f: FEATURE_CLAUSE_AS): INTEGER is
 			-- Insertion position for `f'.
 		do
-			Result := f.feature_location.final_position
+			Result := f.feature_keyword.final_position
 			Result := index_of ('%N', Result) + 1
 			Result := index_of ('%N', Result) + 1
 		end
@@ -1063,7 +1063,7 @@ feature {NONE} -- Implementation
 						c := l.item.comment (text)
 						c.prune_all_trailing ('%R')
 						if not lcs.has (c) then
-							insertion_position := l.item.feature_location.position
+							insertion_position := l.item.feature_keyword.position
 						end
 						l.forth
 					end
@@ -1181,13 +1181,13 @@ feature {NONE} -- Implementation
 			-- Date of last modification on `class_i' by `Current'.
 
 	context_editor: EB_CONTEXT_EDITOR
-			-- 
+			--
 
 	warning_dialog: EV_WARNING_DIALOG
 			-- Window that warns user of incorrect syntax or file modification.
-			
+
 	invalidate_text is
-			-- Errors were found during last parsing. 
+			-- Errors were found during last parsing.
 			-- Class text will have to be reloaded.
 		do
 			text := Void
@@ -1206,7 +1206,7 @@ feature {NONE} -- Implementation
 				extend_from_diagram_successful := True
 				extend_feature_on_diagram_with_wizard (fcw)
 			else
-				extend_from_diagram_successful := False	
+				extend_from_diagram_successful := False
 			end
 		end
 
@@ -1238,7 +1238,7 @@ feature {NONE} -- Implementation
 				date := class_file.date
 				class_modified_outside_diagram := True
 			end
-			
+
 			prepare_for_modification
 			if valid_syntax then
 				if fcw.generate_setter_procedure then
@@ -1261,7 +1261,7 @@ feature {NONE} -- Implementation
 						if inv /= Void then
 							extend_invariant (inv)
 							reparse
-						end	
+						end
 						if valid_syntax then
 							commit_modification
 						else
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 				invalidate_text
 			end
 		end
-		
+
 	extend_invariant (a_inv: STRING) is
 			-- Add `a_inv' to end of invariant.
 		require
@@ -1313,7 +1313,7 @@ feature {NONE} -- Implementation
 				insert_code (a_inv)
 			end
 		end
-		
+
 	put_class_modified_outside_diagram_warning is
 			-- Inform user, that class was modified outside diagram.
 		local

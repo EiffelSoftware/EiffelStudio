@@ -267,7 +267,7 @@ feature -- Preference
 	get_resource_value_direct (a_name: STRING): STRING is
 		obsolete "use get_preference_value_direct instead of get_resource_value_direct"
 		do
-			Result := get_resource_value_direct (a_name)
+			Result := get_preference_value_direct (a_name)
 		end
 
 	set_preference (a_name: STRING; a_preference: PREFERENCE) is

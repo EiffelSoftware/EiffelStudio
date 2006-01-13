@@ -7,7 +7,7 @@ indexing
 			In between sessions the preference will be saved in an underlying data store. To such data
 			store implementation are provided by default, one for saving to the Windows Registry and
 			one for saving to an XML file on disk. To use a different store, such as a database one
-			must create a new class which implements the methods in PREFERENCE_STRUCTURE_I.
+			must create a new class which implements the methods in PREFERENCES_STORAGE_I.
 
 			Regardless of the underlying data store used the preferences are managed in the same way.
 			There are 3 levels of control provided for such management:
@@ -33,10 +33,10 @@ indexing
 			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_WINDOW. You may implement
 			your own style interface by implementing PREFERENCE_VIEW.
 
-			You may also add your own application specific resources by implementing PREFERENCE, and may
-			provide a graphical widget to view or edit this resource by implementing PREFERENCE_WIDGET
+			You may also add your own application specific preferences by implementing PREFERENCE, and may
+			provide a graphical widget to view or edit this preference by implementing PREFERENCE_WIDGET
 			and then registering this widget to the PREFERENCES through the
-			`register_resource_widget' procedure.
+			`register_preference_widget' procedure.
 		]"
 	author: ""
 	date: "$Date$"
@@ -54,11 +54,48 @@ inherit
 		end
 
 create
+	make_with_storage,
+	make_with_defaults_and_storage,
 	make,
 	make_with_location,
 	make_with_defaults_and_location
 
 feature {NONE} -- Initialization
+
+	make_with_storage (a_storage: PREFERENCES_STORAGE_I) is
+			-- Create preferences based on underlyin storage engine `a_storage'.
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			preferences_storage := a_storage
+			session_values := preferences_storage.session_values
+			create managers.make (2)
+			managers.compare_objects
+			create preferences.make (2)
+		ensure
+			has_session_values: session_values /= Void
+			has_preferences_storage: preferences_storage /= Void
+			managers_not_void: managers /= Void
+			preferences_not_void: preferences /= Void
+			default_values_not_void: default_values /= Void
+		end
+
+	make_with_defaults_and_storage (a_defaults: ARRAY [STRING]; a_storage: PREFERENCES_STORAGE_I) is
+			-- Create preferences and initialize values from those in `a_defaults',
+			-- using `a_storage' as preferences underlying storage engine.
+		require
+			default_not_void: a_defaults /= Void
+			a_storage_not_void: a_storage /= Void
+		do
+			make_with_storage (a_storage)
+			load_defaults (a_defaults)
+		ensure
+			has_session_values: session_values /= Void
+			has_preferences_storage: preferences_storage /= Void
+			managers_not_void: managers /= Void
+			preferences_not_void: preferences /= Void
+			default_values_not_void: default_values /= Void
+		end
 
 	make is
 			-- This creation routine creates a location to store and retrieve preferences			
@@ -68,18 +105,7 @@ feature {NONE} -- Initialization
 			-- care exactly where the preferences are stored and have no file containing default values for the
 			-- application preferences.
 		do
-			create resource_structure.make_empty (Current)
-			session_values := resource_structure.session_values
-			create managers.make (2)
-			managers.compare_objects
-			create resources.make (2)
-			create default_values.make (2)
-		ensure
-			has_session_values: session_values /= Void
-			has_resource_structure: resource_structure /= Void
-			managers_not_void: managers /= Void
-			resource_not_void: resources /= Void
-			default_values_not_void: default_values /= Void
+			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_empty)
 		end
 
 	make_with_location (a_location: STRING) is
@@ -92,18 +118,7 @@ feature {NONE} -- Initialization
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
 		do
-			create resource_structure.make_with_location (Current, a_location)
-			session_values := resource_structure.session_values
-			create managers.make (2)
-			managers.compare_objects
-			create resources.make (2)
-			create default_values.make (2)
-		ensure
-			has_session_values: session_values /= Void
-			has_resource_structure: resource_structure /= Void
-			managers_not_void: managers /= Void
-			resource_not_void: resources /= Void
-			default_values_not_void: default_values /= Void
+			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_with_location (a_location))
 		end
 
 	make_with_defaults_and_location (a_defaults: ARRAY [STRING]; a_location: STRING) is
@@ -118,34 +133,33 @@ feature {NONE} -- Initialization
 			default_not_void: a_defaults /= Void
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
-		local
-			i, nb: INTEGER
-			l_default: STRING
 		do
-			create resource_structure.make_with_location (Current, a_location)
-			session_values := resource_structure.session_values
-			create managers.make (2)
-			managers.compare_objects
-			create resources.make (2)
-			create default_values.make (2)
+			make_with_location (a_location)
+			load_defaults (a_defaults)
+		end
+
+	load_defaults (a_defaults: ARRAY [STRING]) is
+			-- Initialize values from those in `a_defaults'.
+		require
+			default_not_void: a_defaults /= Void
+		local
+			l_defaults: ARRAY [STRING]
+			i, nb: INTEGER
+			def: STRING
+		do
 			from
-				i := a_defaults.lower
-				nb := a_defaults.upper + 1
+				l_defaults := a_defaults
+				i := l_defaults.lower
+				nb := l_defaults.upper + 1
 			until
 				i = nb
 			loop
-				l_default := a_defaults.item (i)
-				if l_default /= Void and then not l_default.is_empty then
-					extract_default_values (l_default)
+				def := l_defaults.item (i)
+				if def /= Void and then not def.is_empty then
+					extract_default_values (def)
 				end
 				i := i + 1
 			end
-		ensure
-			has_session_values: session_values /= Void
-			has_resource_structure: resource_structure /= Void
-			managers_not_void: managers /= Void
-			resource_not_void: resources /= Void
-			default_values_not_void: default_values /= Void
 		end
 
 feature -- Access
@@ -169,7 +183,7 @@ feature -- Status Setting
 feature -- Manager
 
 	new_manager (a_namespace: STRING): PREFERENCE_MANAGER is
-			-- Create a new resource manager with namespace `a_namespace'.
+			-- Create a new preference manager with namespace `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
 			namespace_not_empty: not a_namespace.is_empty
@@ -216,95 +230,125 @@ feature {PREFERENCE_MANAGER} -- Element change
 			has_manager: managers.has (a_manager.namespace)
 		end
 
-feature -- Resource
+feature -- Preference
 
-	get_resource (a_name: STRING): PREFERENCE is
-			-- Fetch the resource with `a_name'.
+	get_preference (a_name: STRING): PREFERENCE is
+			-- Fetch the preference with `a_name'.
 		require
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
-			has_resource: has_resource (a_name)
+			has_preference: has_preference (a_name)
 		do
-			Result := resources.item (a_name)
+			Result := preferences.item (a_name)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	get_resource_value_direct (a_name: STRING): STRING is
-			-- Fetch the resource string value with `a_name' directly from the underlying datastore.
-			-- Ignore values currently in `session_values' and `resources'.  Use this if the
-			-- resource value has been changed externally and you need the updated value.
-			-- If you are going to do this you must prepend the resource type name to the front of the resource
-			-- since that is how it will have been saved.  Return Void if no resource found.
+	get_resource (a_name: STRING): PREFERENCE is
+		obsolete "use get_preference instead of get_resource"
+		do
+			Result := get_preference (a_name)
+		end
+
+	get_preference_value_direct (a_name: STRING): STRING is
+			-- Fetch the preference string value with `a_name' directly from the underlying datastore.
+			-- Ignore values currently in `session_values' and `preferences'.  Use this if the
+			-- preference value has been changed externally and you need the updated value.
+			-- If you are going to do this you must prepend the preference type name to the front of the preference
+			-- since that is how it will have been saved.  Return Void if no preference found.
 		require
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 		do
-			Result := resource_structure.get_resource_value (a_name)
+			Result := preferences_storage.get_preference_value (a_name)
 		end
 
-	set_resource (a_name: STRING; a_resource: PREFERENCE) is
-			-- Override current value of resource with `a_name' in `resources'?
+	get_resource_value_direct (a_name: STRING): STRING is
+		obsolete "use get_preference_value_direct instead of get_resource_value_direct"
+		do
+			Result := get_resource_value_direct (a_name)
+		end
+
+	set_preference (a_name: STRING; a_preference: PREFERENCE) is
+			-- Override current value of preference with `a_name' in `preferences'?
 		require
 			name_not_void: a_name /= Void
-			has_resource (a_name)
+			has_preference (a_name)
 		do
-			resources.replace (a_resource, a_name)
+			preferences.replace (a_preference, a_name)
 		end
 
-	has_resource (a_name: STRING):BOOLEAN is
-			-- Does Current contain a resource with `a_name'?
+	has_preference (a_name: STRING): BOOLEAN is
+			-- Does Current contain a preference with `a_name'?
 		require
 			name_not_void: a_name /= Void
 		do
-			Result := resources.has (a_name)
+			Result := preferences.has (a_name)
 		end
 
-	save_resource (a_resource: PREFERENCE) is
-			-- Save `a_resource' to underlying data store.
+	has_resource (a_name: STRING): BOOLEAN is
+		obsolete "use has_preference instead of has_resource"
+		do
+			Result := has_preference (a_name)
+		end
+
+	save_preference (a_preference: PREFERENCE) is
+			-- Save `a_preference' to underlying data store.
 		require
-			resource_not_void: a_resource /= Void
+			preference_not_void: a_preference /= Void
 		do
 			if save_defaults_to_store then
-				resource_structure.save_resource (a_resource)
+				preferences_storage.save_preference (a_preference)
 			else
-				if not a_resource.is_default_value then
-					resource_structure.save_resource (a_resource)
+				if not a_preference.is_default_value then
+					preferences_storage.save_preference (a_preference)
 				else
-					resource_structure.remove_resource (a_resource)
+					preferences_storage.remove_preference (a_preference)
 				end
 			end
+		end
+
+	save_resource (a_preference: PREFERENCE) is
+		obsolete "use save_preference instead of save_resource"
+		do
+			save_preference (a_preference)
+		end
+
+	save_preferences is
+			-- Commit all changes by saving the underlying data store.  Only save preferences
+			-- which are not using the default value.
+		do
+			preferences_storage.save_preferences (preferences.linear_representation, True)
 		end
 
 	save_resources is
-			-- Commit all changes by saving the underlying data store.  Only save resources
-			-- which are not using the default value.
+		obsolete "use save_preferences instead of save_resources"
 		do
-			resource_structure.save_resources (resources.linear_representation, True)
+			save_preferences
 		end
 
 	restore_defaults is
-			-- Restore all resources which have associated default values to their default values.
+			-- Restore all preferences which have associated default values to their default values.
 		local
-			l_resource: PREFERENCE
+			l_preference: PREFERENCE
 		do
 			from
-				resources.start
+				preferences.start
 			until
-				resources.after
+				preferences.after
 			loop
-				l_resource := resources.item_for_iteration
-				if l_resource.has_default_value and then not l_resource.is_default_value then
-					l_resource.reset
+				l_preference := preferences.item_for_iteration
+				if l_preference.has_default_value and then not l_preference.is_default_value then
+					l_preference.reset
 				end
-				resources.forth
+				preferences.forth
 			end
-			save_resources
+			save_preferences
 		ensure
-			all_resources_default: True
+			all_preferences_default: True
 		end
 
-feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STRUCTURE_IMP} -- Implementation
+feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN, BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
@@ -313,21 +357,27 @@ feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STR
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 
-	resources: HASH_TABLE [PREFERENCE, STRING]
-			-- Resources part of Current.
+	preferences: HASH_TABLE [PREFERENCE, STRING]
+			-- Preferences part of Current.
+
+	resources: like preferences is
+		obsolete "use preferences instead of resources"
+		do
+			Result := preferences
+		end
 
 feature {NONE} -- Implementation
 
 	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING]
 			-- Managers.		
 
-	resource_structure: PREFERENCE_STRUCTURE
-			-- Underlying resource structure.
+	preferences_storage: PREFERENCES_STORAGE_I
+			-- Underlying preference storage.
 
 	extract_default_values (a_default_file_name: STRING) is
-			-- Extract from the default file the default values.  If a resource however exists in `resources'
+			-- Extract from the default file the default values.  If a preference however exists in `preferences'
 			-- (i.e. saved in a previous session), then take this one instead.  Therefore the resulting list of
-			-- known resources is a combination of defaults and user defined values.
+			-- known preferences is a combination of defaults and user defined values.
 		require
 			default_file_name_not_void: a_default_file_name /= Void
 			default_file_name_not_empty: not a_default_file_name.is_empty
@@ -461,6 +511,6 @@ feature {NONE} -- Implementation
 
 invariant
 	has_session_values: session_values /= Void
-	has_resource_structure: resource_structure /= Void
+	has_preferences_storage: preferences_storage /= Void
 
 end -- class PREFERENCES

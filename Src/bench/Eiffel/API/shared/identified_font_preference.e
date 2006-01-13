@@ -11,17 +11,17 @@ inherit
 		redefine
 			set_value
 		end
-	
+
 	EV_FONT_CONSTANTS
 		undefine
 			is_equal
 		end
-		
+
 	EV_SHARED_SCALE_FACTORY
 		undefine
 			default_create
 		end
-		
+
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
@@ -31,7 +31,7 @@ feature -- Access
 			-- String representation of `value'.		
 		do
 			Result := generated_value
-		end	
+		end
 
 feature -- Status Setting
 
@@ -52,7 +52,7 @@ feature -- Status Setting
 			-- String description of this resource type.
 		once
 			Result := "IDENTIFIED_FONT"
-		end	
+		end
 
 feature -- Query
 
@@ -63,12 +63,12 @@ feature -- Query
 			s: STRING
 		do
 			s := a_string.twin
-			Result := s.occurrences ('-') = 4			
+			Result := s.occurrences ('-') = 4
 		end
 
 feature {PREFERENCES} -- Access
 
-	generating_resource_type: STRING is
+	generating_preference_type: STRING is
 			-- The generating type of the resource for graphical representation.
 		once
 			Result := "IDENTIFIED_FONT"
@@ -79,9 +79,9 @@ feature {NONE} -- Implementation
 	face: STRING
 		-- Font faces
 
-	shape, 
-	weight, 
-	height, 
+	shape,
+	weight,
+	height,
 	family: INTEGER
 		-- Attributes
 
@@ -110,12 +110,12 @@ feature {NONE} -- Implementation
 							set_family (s.substring (i + 1, s.count))
 						end
 					end
-				end				
+				end
 				internal_value := font_factory.registered_font (create {EV_FONT}.make_with_values (family, weight, shape, height))
 				internal_value.font.set_height_in_points (height)
 				internal_value.font.preferred_families.extend (face)
 				set_value (internal_value)
-			end			
+			end
 		end
 
 	generated_value: STRING is

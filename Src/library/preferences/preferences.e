@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 			create managers.make (2)
 			managers.compare_objects
 			create preferences.make (2)
+			create default_values.make (2)
 		ensure
 			has_session_values: session_values /= Void
 			has_preferences_storage: preferences_storage /= Void

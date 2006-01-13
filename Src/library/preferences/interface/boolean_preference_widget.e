@@ -1,5 +1,5 @@
 indexing
-	description	: "Default widget for viewing and editing boolean resources.  A combo box with two values ('True' and 'False')"
+	description	: "Default widget for viewing and editing boolean preferences.  A combo box with two values ('True' and 'False')"
 	date		: "$Date$"
 	revision	: "$Revision$ and "	
 
@@ -9,14 +9,14 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource,
+			preference,
 			change_item_widget,
 			update_changes
 		end
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Access
 
@@ -31,9 +31,9 @@ feature -- Access
 feature -- Status Setting
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		do
-			resource.set_value_from_string (change_item_widget.text)
+			preference.set_value_from_string (change_item_widget.text)
 			Precursor {PREFERENCE_WIDGET}
 		end
 
@@ -45,8 +45,8 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 		
-	update_resource is
-			-- Updates resource.
+	update_preference is
+			-- Updates preference.
 		do
 		end		
 
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 			change_item_widget.set_item_strings (<<"True", "False">>)
-			change_item_widget.set_text (resource.value.out)
+			change_item_widget.set_text (preference.value.out)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)
 		end
 
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			change_item_widget.combo_box.disable_edit
 			change_item_widget.combo_box.focus_out_actions.resume
 			change_item_widget.combo_box.select_actions.block
-			if resource.value then
+			if preference.value then
 				change_item_widget.combo_box.i_th (1).enable_select		
 			else
 				change_item_widget.combo_box.i_th (2).enable_select	
@@ -77,8 +77,8 @@ feature {NONE} -- Implementation
 			change_item_widget.combo_box.set_focus
 		end
 
-	resource: BOOLEAN_PREFERENCE
-			-- Actual resource.	
+	preference: BOOLEAN_PREFERENCE
+			-- Actual preference.	
 	
 	last_selected_value: BOOLEAN
 			-- Last selected value in the combo widget.

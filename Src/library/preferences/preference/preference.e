@@ -85,10 +85,10 @@ feature -- Status setting
 feature -- Access
 
 	name: STRING
-			-- Name of the resource as it appears in the resource file.
+			-- Name of the preference as it appears in the preference file.
 
 	description: STRING
-			-- Description of what the resource is all about.
+			-- Description of what the preference is all about.
 
 	default_value: STRING is
 			-- Value to be used for default.
@@ -101,7 +101,7 @@ feature -- Access
 		end
 
 	string_value: STRING is
-			-- String value for this resource.
+			-- String value for this preference.
 		require
 			has_value: has_value
 		deferred
@@ -110,17 +110,17 @@ feature -- Access
 		end		
 
 	string_type: STRING is
-			-- String description of this resource type.
+			-- String description of this preference type.
 		deferred
 		ensure
 			string_type_not_void: Result /= Void
 		end		
 
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
+	generating_preference_type: STRING is
+			-- The generating type of the preference for graphical representation.
 		deferred
 		ensure
-			generating_resource_type_not_void: Result /= Void
+			generating_preference_type_not_void: Result /= Void
 		end	
 
 	manager: PREFERENCE_MANAGER
@@ -132,18 +132,18 @@ feature -- Access
 feature -- Query
 		
 	has_value: BOOLEAN is
-			-- Does this resource have a value to use?
+			-- Does this preference have a value to use?
 		deferred
 		end
 		
 	has_default_value: BOOLEAN is
-			-- Does this resource have a default value to use?
+			-- Does this preference have a default value to use?
 		do
 			Result := default_value /= Void	or auto_preference /= Void
 		end		
 
 	is_default_value: BOOLEAN is
-			-- Is this resource value the same as the default value?
+			-- Is this preference value the same as the default value?
 		do
 			if has_default_value then
 				Result := string_value.as_lower.is_equal (default_value.as_lower)
@@ -154,7 +154,7 @@ feature -- Query
 			-- Should Current be hidden from user view?
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?
+			-- Is `a_string' valid for this preference type to convert into a value?
 		require
 			string_not_void: a_string /= Void
 		deferred

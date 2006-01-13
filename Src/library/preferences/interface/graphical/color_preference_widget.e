@@ -1,5 +1,5 @@
 indexing
-	description	: "Default widget for viewing and editing color resources."
+	description	: "Default widget for viewing and editing color preferences."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -9,22 +9,22 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource, 
-			set_resource,
+			preference, 
+			set_preference,
 			change_item_widget,
 			update_changes
 		end
 		
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Status Setting
 	
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		do
-			Precursor (new_resource)
+			Precursor (new_preference)
 		end
 		
 feature -- Access
@@ -35,8 +35,8 @@ feature -- Access
 			Result := "COLOR"
 		end	
 		
-	resource: COLOR_PREFERENCE
-			-- Actual resource.
+	preference: COLOR_PREFERENCE
+			-- Actual preference.
 
 	last_selected_value: EV_COLOR
 			-- The last selected value in the choice dialog.
@@ -49,11 +49,11 @@ feature {PREFERENCE_VIEW} -- Commands
 	change is
 			-- Change the value.
 		require
-			resource_exists: resource /= Void
+			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
 			create color_tool
-			color_tool.set_color (resource.value)
+			color_tool.set_color (preference.value)
 			color_tool.ok_actions.extend (agent update_changes)
 			color_tool.show_modal_to_window (caller.parent_window)
 		end 
@@ -61,7 +61,7 @@ feature {PREFERENCE_VIEW} -- Commands
 feature {NONE} -- Commands
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		require else
 			color_selected : color_tool.color /= Void
 		local
@@ -70,16 +70,16 @@ feature {NONE} -- Commands
 			color := color_tool.color
 			last_selected_value := color
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end	
 			Precursor {PREFERENCE_WIDGET}
 		end
 		
-	update_resource is
-			-- Updates resource.
+	update_preference is
+			-- Updates preference.
 		do
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end	
 		end		
 
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			change_item_widget.expose_actions.extend (agent on_color_item_exposed (?))
-			change_item_widget.set_data (resource)			
+			change_item_widget.set_data (preference)			
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end	
 
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 		do
 			change
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end
 		end		
 
@@ -119,12 +119,12 @@ feature {NONE} -- Implementation
 				area.set_foreground_color (change_item_widget.parent.focused_selection_color)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (20, 1, resource.string_value)					
+				area.draw_text_top_left (20, 1, preference.string_value)					
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (20, 1, resource.string_value)					
+				area.draw_text_top_left (20, 1, preference.string_value)					
 			end			
 			
 				-- Draw the little color box border
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			area.draw_rectangle (1, l_y, 12, 12)
 			
 				-- Draw the little color box internal color
-			area.set_foreground_color (resource.value)
+			area.set_foreground_color (preference.value)
 			area.fill_rectangle (2, l_y + 1, 10, 10)			
 		end		
 

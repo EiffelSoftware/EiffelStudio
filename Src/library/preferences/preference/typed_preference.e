@@ -12,7 +12,7 @@ inherit
 feature {NONE} --Initialization
 
 	make (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: G) is
-			-- New resource with `a_name' and `a_value'.
+			-- New preference with `a_name' and `a_value'.
 		require
 			manager_not_void: a_manager /= Void
 			name_not_void: a_name /= Void
@@ -30,7 +30,7 @@ feature {NONE} --Initialization
 		end
 
 	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: STRING) is
-			-- Create resource and set value based on string value `a_value'.
+			-- Create preference and set value based on string value `a_value'.
 		require
 			manager_not_void: a_manager /= Void
 			name_not_void: a_name /= Void

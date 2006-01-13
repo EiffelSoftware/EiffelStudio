@@ -1,5 +1,5 @@
 indexing
-	description	: "Boolean resource."
+	description	: "Boolean preference."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -24,7 +24,7 @@ feature -- Access
 		end
 
 	string_type: STRING is
-			-- String description of this resource type.
+			-- String description of this preference type.
 		once
 			Result := "BOOLEAN"
 		end
@@ -32,7 +32,7 @@ feature -- Access
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?
+			-- Is `a_string' valid for this preference type to convert into a value?
 		local
 			l_string: STRING
 		do
@@ -53,8 +53,8 @@ feature -- settings
 
 feature {PREFERENCES} -- Access
 
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
+	generating_preference_type: STRING is
+			-- The generating type of the preference for graphical representation.
 		once
 			Result := "BOOLEAN"
 		end

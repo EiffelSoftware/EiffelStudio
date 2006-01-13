@@ -1,6 +1,6 @@
 indexing
 	description	: "[
-		Default widget for viewing and editing ARRAY resources for which there must be only one selected value.
+		Default widget for viewing and editing ARRAY preferences for which there must be only one selected value.
 		]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -11,8 +11,8 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource,
-			set_resource,
+			preference,
+			set_preference,
 			change_item_widget,
 			update_changes,
 			reset
@@ -20,12 +20,12 @@ inherit
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Access
 	
 	change_item_widget: EV_GRID_COMBO_ITEM
-			-- Widget to change the value of this resource.
+			-- Widget to change the value of this preference.
 
 	graphical_type: STRING is
 			-- Graphical type identfier
@@ -35,12 +35,12 @@ feature -- Access
 
 feature -- Status Setting
 	
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		require else
-			resource_is_choice: new_resource.is_choice
+			preference_is_choice: new_preference.is_choice
 		do
-			Precursor (new_resource)
+			Precursor (new_preference)
 			check
 				change_item_widget_created: change_item_widget /= Void
 			end
@@ -55,7 +55,7 @@ feature -- Status Setting
 feature {NONE} -- Command
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		local
 			l_value,
 			l_item: STRING
@@ -65,26 +65,26 @@ feature {NONE} -- Command
 				create l_value.make_empty
 				l_cnt := 1
 			until
-				l_cnt > resource.value.count
+				l_cnt > preference.value.count
 			loop
-				l_item := resource.value.item (l_cnt)
+				l_item := preference.value.item (l_cnt)
 				if change_item_widget.text.is_equal (l_item) then
 					l_value.append_character ('[')
 					l_value.append (l_item)
 					l_value.append_character (']')
-					resource.set_selected_index (l_cnt)
+					preference.set_selected_index (l_cnt)
 				else
 					l_value.append (l_item)
 				end
 				l_cnt := l_cnt + 1				
 				l_value.append_character (';')
 			end
-			resource.set_value_from_string (l_value)			
+			preference.set_value_from_string (l_value)			
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_resource is
-			--	Update resource.	
+	update_preference is
+			--	Update preference.	
 		do			
 		end		
 
@@ -92,20 +92,20 @@ feature {NONE} -- Command
 			-- Reset.
 		do
 			Precursor {PREFERENCE_WIDGET}
-			set_resource (resource)
+			set_preference (preference)
 		end		
 
 feature {NONE} -- Implementation
 
-	resource: ARRAY_PREFERENCE
-			-- Actual resource.
+	preference: ARRAY_PREFERENCE
+			-- Actual preference.
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
 		do		
 			create change_item_widget			
-			change_item_widget.set_item_strings (resource.value)
-			change_item_widget.set_text (resource.selected_value)			
+			change_item_widget.set_item_strings (preference.value)
+			change_item_widget.set_text (preference.selected_value)			
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)		
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 		end
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	activate_combo is
 			-- Activate the combo
 		do
-			if resource.selected_index > 0 then
+			if preference.selected_index > 0 then
 				change_item_widget.activate
 				change_item_widget.combo_box.focus_out_actions.block
 				change_item_widget.combo_box.disable_edit

@@ -133,7 +133,7 @@ feature {NONE} -- Events
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
-			preferences.save_resources
+			preferences.save_preferences
 			hide
 		end
 
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 
 				-- Retrieve known preferences
-			l_known_pref_hash := preferences.resources
+			l_known_pref_hash := preferences.preferences
 
 			if not l_known_pref_hash.is_empty then
 				create l_pref_hash.make (l_known_pref_hash.count)
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 			grid_remove_and_clear_all_rows (grid)
 
 				-- Retrieve known preferences				
-			l_known_pref_hash := preferences.resources
+			l_known_pref_hash := preferences.preferences
 
 			if not l_known_pref_hash.is_empty then
 
@@ -827,7 +827,7 @@ feature {NONE} -- Implementation
 			if grid.is_tree_enabled then
 				status_label.set_text (grid.row_count.out + " preferences")
 			else
-				status_label.set_text (matches.count.out + " matches of " + preferences.resources.count.out + " total preferences")
+				status_label.set_text (matches.count.out + " matches of " + preferences.preferences.count.out + " total preferences")
 			end
 			status_label.refresh_now
 		end
@@ -1035,7 +1035,7 @@ feature {NONE} -- Filtering
 
 			matches.wipe_out
 
-			l_known_pref_hash := preferences.resources
+			l_known_pref_hash := preferences.preferences
 				-- Alphabetically sort the known preferences first
 			create l_sorted_preferences.make
 			l_sorted_preferences.compare_objects

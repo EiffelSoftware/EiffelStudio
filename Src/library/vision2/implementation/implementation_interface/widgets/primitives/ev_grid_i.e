@@ -3913,13 +3913,17 @@ feature {NONE} -- Drawing implementation
 		local
 			header_index: INTEGER
 		do
-			header_index := header.index_of (header_item, 1)
 			is_header_item_resizing := False
+			header_index := header.index_of (header_item, 1)
 			if is_resizing_divider_enabled then
-				remove_resizing_line
+					remove_resizing_line
 			end
-			set_horizontal_computation_required (header_index)
-			redraw_from_column_to_end (columns @ header_index)
+				-- If `header_index' is `0' then the header item must be hidden and explicit call
+				-- to {EV_GRID_COLUMN}.set_width has been made.
+			if header_index > 0 then
+				set_horizontal_computation_required (header_index)
+				redraw_from_column_to_end (columns @ header_index)
+			end
 		end
 
 	draw_resizing_line (position: INTEGER) is

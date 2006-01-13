@@ -61,8 +61,14 @@ feature {NONE} -- Initialization
 			resize_actions.force_extend (agent on_window_resize)
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
 			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
+			grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (1))
+			grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (2))
+			grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (3))
+			grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (4))
 			display_update_agent := agent on_preference_changed_externally
 			view_toggle_button.select_actions.extend (agent toggle_view)
+
+			flat_sorting_info := Name_sorting_mode
 		end
 
 	user_initialization is
@@ -93,7 +99,6 @@ feature {NONE} -- Initialization
 
 				--|
 			filter_text_box.change_actions.extend (agent request_update_matches)
-
 		end
 
 feature -- Status Setting
@@ -385,6 +390,23 @@ feature {NONE} -- Events
 			end
 		end
 
+	on_header_single_clicked (col_index: INTEGER) is
+			-- Header was single-clicked.
+		do
+			if grid.header.pointed_divider_index = 0 then
+				if not grid.is_tree_enabled then
+					if col_index /= Value_sorting_mode then
+						if col_index = flat_sorting_info.abs then
+							flat_sorting_info := - flat_sorting_info
+						else
+							flat_sorting_info := col_index
+						end
+						rebuild
+					end
+				end
+			end
+		end
+
 	on_header_resize is
 			-- Header was double-clicked.
 		local
@@ -404,7 +426,6 @@ feature {NONE} -- Implementation
 			-- Fill with preferences structured hierarchically.
 		local
 			l_pref_hash: HASH_TABLE [EV_GRID_ROW, STRING]
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
 			l_pref_name,
 			l_pref_parent_name,
 			l_pref_parent_full_name,
@@ -412,7 +433,7 @@ feature {NONE} -- Implementation
 			l_pref_parent_short_name: STRING
 			l_node_count,
 			l_index: INTEGER
-			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
+			l_sorted_preferences: LIST [PREFERENCE]
 			l_split_string: LIST [STRING]
 			l_row: EV_GRID_ROW
 			l_grid_label: EV_GRID_LABEL_ITEM
@@ -421,17 +442,11 @@ feature {NONE} -- Implementation
 			status_label.set_text ("Building tree view ...")
 			status_label.refresh_now
 
-				-- Retrieve known preferences
-			l_known_pref_hash := preferences.preferences
+				-- Alphabetically sort the known preferences
+			l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences)
 
-			if not l_known_pref_hash.is_empty then
-				create l_pref_hash.make (l_known_pref_hash.count)
-
-					-- Alphabetically sort the known preferences
-				create l_sorted_preferences.make
-				l_sorted_preferences.compare_objects
-				l_sorted_preferences.append (create {ARRAYED_LIST [STRING]}.make_from_array (l_known_pref_hash.current_keys))
-				l_sorted_preferences.sort
+			if not l_sorted_preferences.is_empty then
+				create l_pref_hash.make (l_sorted_preferences.count)
 
 					-- Traverse the preferences in the system
 				from
@@ -439,7 +454,8 @@ feature {NONE} -- Implementation
 				until
 					l_sorted_preferences.before
 				loop
-					l_pref_name := l_sorted_preferences.item
+					l_pref := l_sorted_preferences.item
+					l_pref_name := l_pref.name
 					if l_pref_name.has ('.') then
 						  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
 						l_pref_parent_full_name := l_pref_name.substring (1, l_pref_name.last_index_of ('.', l_pref_name.count) - 1)
@@ -492,7 +508,6 @@ feature {NONE} -- Implementation
 						end
 						if not l_pref_hash.has (l_pref_parent_full_name) then
 								-- Here we build parent at root, i.e. 'a' of 'a.b', and child 'b'.
-							l_pref := l_known_pref_hash.item (l_pref_name.twin)
 							if l_pref /= Void and then show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
 								create l_grid_label.make_with_text (formatted_name (l_pref_parent_full_name))
 								grid.set_item (1, grid.row_count + 1, l_grid_label)
@@ -508,10 +523,9 @@ feature {NONE} -- Implementation
 							l_prev_parent_name := Void
 						else
 								-- We reach the end of building parent, so here we build 'c'.
-							l_pref := l_known_pref_hash.item (l_pref_name.twin)
 							if l_pref /= Void and then show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
 								l_row ?= l_pref_hash.item (l_pref_parent_full_name)
-								create l_grid_label.make_with_text (formatted_name (short_preference_name (l_pref_name.twin)))
+								create l_grid_label.make_with_text (formatted_name (short_preference_name (l_pref_name)))
 								add_preference_row (l_row, l_pref)
 								l_row.expand_actions.extend (agent node_expanded (l_row))
 							end
@@ -535,9 +549,7 @@ feature {NONE} -- Implementation
 	build_flat is
 			-- Fill with preferences no structure, flat list.
 		local
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
-			l_pref_name: STRING
-			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
+			l_sorted_preferences: LIST [PREFERENCE]
 			l_pref: PREFERENCE
 		do
 			status_label.set_text ("Building flat view ...")
@@ -545,31 +557,109 @@ feature {NONE} -- Implementation
 
 			grid_remove_and_clear_all_rows (grid)
 
-				-- Retrieve known preferences				
-			l_known_pref_hash := preferences.preferences
+				-- Retrieve known preferences
+			l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences)
 
-			if not l_known_pref_hash.is_empty then
-
-					-- Alphabetically sort the known preferences
-				create l_sorted_preferences.make
-				l_sorted_preferences.compare_objects
-				l_sorted_preferences.append (create {ARRAYED_LIST [STRING]}.make_from_array (l_known_pref_hash.current_keys))
-				l_sorted_preferences.sort
-
+			if not l_sorted_preferences.is_empty then
 					-- Traverse the preferences in the system and add to grid list
 				from
 					l_sorted_preferences.start
 				until
 					l_sorted_preferences.after
 				loop
-					l_pref_name := l_sorted_preferences.item
-					l_pref := l_known_pref_hash.item (l_pref_name)
-					if show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
-						add_preference_row (Void, l_pref)
-					end
+					l_pref := l_sorted_preferences.item
+					add_preference_row (Void, l_pref)
 					l_sorted_preferences.forth
 				end
 				update_grid_columns
+			end
+		end
+
+	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN): LIST [PREFERENCE] is
+			-- Sorted known preferences using criteria `a_sorting_info'.
+			-- Exclude hidden preferences when `a_show_hidden' is False.
+		local
+			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
+			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
+			c: CURSOR
+			l_pref_index, l_pref_name: STRING
+			l_pref: PREFERENCE
+			l_sorting_up: BOOLEAN
+			l_sorting_criteria: INTEGER
+		do
+			l_known_pref_hash := preferences.preferences
+			if not l_known_pref_hash.is_empty then
+				l_sorting_up := a_sorting_info > 0
+				l_sorting_criteria := a_sorting_info.abs
+
+					-- Alphabetically sort the known preferences
+				from
+					c := l_known_pref_hash.cursor
+					create l_sorted_preferences.make
+					l_sorted_preferences.compare_objects
+					l_known_pref_hash.start
+				until
+					l_known_pref_hash.after
+				loop
+
+					inspect l_sorting_criteria
+					when Name_sorting_mode then --| Pref name
+						l_pref_index := l_known_pref_hash.key_for_iteration
+					when Type_sorting_mode then --| type name
+						l_pref := l_known_pref_hash.item_for_iteration
+						l_pref_index := l_pref.string_type + "@" + l_pref.name
+					when Status_sorting_mode then --| type name
+						l_pref := l_known_pref_hash.item_for_iteration
+						l_pref_index := ""
+						if l_pref.is_default_value then
+							l_pref_index.append_string (p_default_value)
+						else
+							l_pref_index.append_string (user_value)
+						end
+						if l_pref.is_auto then
+							l_pref_index.append_string (auto_value)
+						end
+						l_pref_index.append_string ("@" + l_pref.name)
+					else
+						check False end
+					end
+					l_sorted_preferences.extend (l_pref_index)
+					l_known_pref_hash.forth
+				end
+				l_known_pref_hash.go_to (c)
+				l_sorted_preferences.sort
+
+				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
+					-- Traverse the preferences in the system and add to grid list
+				from
+					if l_sorting_up then
+						l_sorted_preferences.start
+					else
+						l_sorted_preferences.finish
+					end
+				until
+					l_sorted_preferences.off
+				loop
+					inspect l_sorting_criteria
+					when Name_sorting_mode then --| Pref name
+						l_pref_name := l_sorted_preferences.item
+					when Type_sorting_mode, Status_sorting_mode then --| type name
+						l_pref_index := l_sorted_preferences.item
+						l_pref_name := l_pref_index.substring (l_pref_index.index_of ('@', 1) + 1, l_pref_index.count)
+					else
+						check False end
+					end
+
+					l_pref := l_known_pref_hash.item (l_pref_name)
+					if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then
+						Result.extend (l_pref)
+					end
+					if l_sorting_up then
+						l_sorted_preferences.forth
+					else
+						l_sorted_preferences.back
+					end
+				end
 			end
 		end
 
@@ -638,10 +728,9 @@ feature {NONE} -- Implementation
 		end
 
 	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
-			--
 		do
+			create Result
 			if a_pref.name /= Void then
-				create Result
 				if show_full_preference_name then
 					Result.set_text (a_pref.name)
 				else
@@ -650,13 +739,16 @@ feature {NONE} -- Implementation
 			else
 				Result.set_text ("")
 			end
+		ensure
+			Result /= Void
 		end
 
 	preference_type_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
-			--
 		do
 			create Result
 			Result.set_text (a_pref.string_type)
+		ensure
+			Result /= Void
 		end
 
 	preference_status_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
@@ -674,6 +766,8 @@ feature {NONE} -- Implementation
 			if a_pref.is_auto then
 				Result.set_text (Result.text + " (" + auto_value + ")")
 			end
+		ensure
+			Result /= Void
 		end
 
 	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
@@ -718,7 +812,6 @@ feature {NONE} -- Implementation
 						create l_font_widget.make_with_preference (l_font)
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
-						l_font := l_font.twin
 						Result := l_font_widget.change_item_widget
 						Result.set_data (l_font_widget)
 --						a_row.set_height (l_font.value.height.max (default_row_height))
@@ -949,6 +1042,8 @@ feature {NONE} -- Implementation
 			name_not_void: a_name /= Void
 		do
 			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
+		ensure
+			a_name /= Result
 		end
 
 	formatted_name (a_name: STRING): STRING is
@@ -957,6 +1052,8 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (a_name)
 			Result.replace_substring_all ("_", " ")
 			Result.replace_substring (Result.item (1).upper.out, 1, 1)
+		ensure
+			a_name /= Result
 		end
 
 	grid_remove_and_clear_all_rows (g: EV_GRID) is
@@ -981,16 +1078,17 @@ feature {NONE} -- Implementation
 			g.selected_rows.count = 0
 		end
 
-feature {NONE} -- Filtering
+feature {NONE} -- Sorting
 
-	filter_text: STRING is
-			-- Match text
-		do
-			create Result.make_empty
-			if not grid.is_tree_enabled then
-				Result.append (filter_text_box.text)
-			end
-		end
+	flat_sorting_info: INTEGER
+			-- Sorting criteria when sorting known preferences
+
+	Name_sorting_mode: INTEGER is 1
+	Type_sorting_mode: INTEGER is 2
+	Status_sorting_mode: INTEGER is 3
+	Value_sorting_mode: INTEGER is 4
+
+feature {NONE} -- Filtering
 
 	update_matches_timeout: EV_TIMEOUT
 
@@ -1033,38 +1131,37 @@ feature {NONE} -- Filtering
 			l_match_text: STRING
 			l_pref_count: INTEGER
 			l_preference: PREFERENCE
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
-			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
+			l_sorted_preferences: LIST [PREFERENCE]
 		do
 			status_label.set_text ("Updating the view ...")
 			status_label.refresh_now
 
 			matches.wipe_out
 
-			l_known_pref_hash := preferences.preferences
-				-- Alphabetically sort the known preferences first
-			create l_sorted_preferences.make
-			l_sorted_preferences.compare_objects
-			l_sorted_preferences.append (create {ARRAYED_LIST [STRING]}.make_from_array (l_known_pref_hash.current_keys))
-			l_sorted_preferences.sort
+				--| Sort the known preferences
+			if grid.is_tree_enabled then
+					--| pref name sorting
+				l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences)
+			else
+				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences)
+			end
 
 			if not update_matches_requested then
 				l_pref_count := l_sorted_preferences.count
 				if l_pref_count > matches.capacity then
 					matches.resize (l_pref_count)
 				end
-				l_match_text := filter_text
+				if not grid.is_tree_enabled then
+					l_match_text := filter_text_box.text
+				end
 
 				from
 					l_sorted_preferences.start
 				until
 					l_sorted_preferences.after
 				loop
-					l_preference := l_known_pref_hash.item (l_sorted_preferences.item)
-					if (l_preference.name.has_substring (l_match_text)) and then
-						(show_hidden_preferences or
-						(not show_hidden_preferences and then not l_preference.is_hidden))
-					then
+					l_preference := l_sorted_preferences.item
+					if l_match_text = Void or else l_preference.name.has_substring (l_match_text) then
 						matches.extend (l_preference)
 					end
 					l_sorted_preferences.forth

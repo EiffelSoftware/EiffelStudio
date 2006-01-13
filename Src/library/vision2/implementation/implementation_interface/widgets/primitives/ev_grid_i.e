@@ -4282,7 +4282,7 @@ feature {NONE} -- Event handling
 					last_selected_item := selected_item.implementation
 					shift_key_start_item := Void
 				else
-					handle_newly_selected_item (selected_item)
+					handle_newly_selected_item (selected_item, a_button)
 				end
 			end
 		end
@@ -4819,7 +4819,7 @@ feature {NONE} -- Event handling
 						then
 							last_selected_item.disable_select
 						end
-						handle_newly_selected_item (a_sel_item)
+						handle_newly_selected_item (a_sel_item, 0)
 						if is_row_selection_enabled then
 							last_selected_row := a_sel_item.row.implementation
 						end
@@ -4832,7 +4832,7 @@ feature {NONE} -- Event handling
 	shift_key_start_item: EV_GRID_ITEM
 		-- Item where initial selection began from.
 
-	handle_newly_selected_item (a_item: EV_GRID_ITEM) is
+	handle_newly_selected_item (a_item: EV_GRID_ITEM; a_button: INTEGER) is
 			-- Handle selection for newly selected `a_item'.
 		local
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
@@ -4952,7 +4952,7 @@ feature {NONE} -- Event handling
 						last_selected_item := a_item.implementation
 					end
 					l_remove_selection := False
-				elseif is_ctrl_pressed then
+				elseif is_ctrl_pressed or else (a_button = 3 and then a_item /= Void and then a_item.is_selected) then
 					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
 					shift_key_start_item := Void
 					l_remove_selection := False

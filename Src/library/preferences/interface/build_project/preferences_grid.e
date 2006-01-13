@@ -581,7 +581,6 @@ feature {NONE} -- Implementation
 		local
 			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
-			c: CURSOR
 			l_pref_index, l_pref_name: STRING
 			l_pref: PREFERENCE
 			l_sorting_up: BOOLEAN
@@ -594,7 +593,6 @@ feature {NONE} -- Implementation
 
 					-- Alphabetically sort the known preferences
 				from
-					c := l_known_pref_hash.cursor
 					create l_sorted_preferences.make
 					l_sorted_preferences.compare_objects
 					l_known_pref_hash.start
@@ -626,7 +624,6 @@ feature {NONE} -- Implementation
 					l_sorted_preferences.extend (l_pref_index)
 					l_known_pref_hash.forth
 				end
-				l_known_pref_hash.go_to (c)
 				l_sorted_preferences.sort
 
 				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)

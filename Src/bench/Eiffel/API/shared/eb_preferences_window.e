@@ -14,8 +14,8 @@ inherit
 			make,
 			hide,
 			on_close,
-			add_resource_change_item,
-			set_resource_to_default,
+			add_preference_change_item,
+			set_preference_to_default,
 			on_preference_changed
 		end
 
@@ -39,37 +39,37 @@ create
 feature -- Access
 
 	make (a_preferences: like view_preferences; a_parent_window: like parent_window) is
-			-- New window.  Redefined to register EiffelStudio specific resource widgets for
-			-- special resource types.
+			-- New window.  Redefined to register EiffelStudio specific preference widgets for
+			-- special preference types.
 		do
 			set_root_icon (icon_preference_root)
 			set_folder_icon (icon_preference_folder)
 			Precursor {PREFERENCES_GRID} (a_preferences, a_parent_window)
 			set_icon_pixmap (icon_preference_window)
-			register_resource_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
+			register_preference_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			close_request_actions.extend (agent on_close)
 		end
 
-	add_resource_change_item (l_resource: PREFERENCE; a_row: EV_GRID_ROW) is
-			-- Add the correct resource change widget item at `a_row' of `grid'
+	add_preference_change_item (l_preference: PREFERENCE; a_row: EV_GRID_ROW) is
+			-- Add the correct preference change widget item at `a_row' of `grid'
 		local
 			l_id_font: IDENTIFIED_FONT_PREFERENCE
 			l_font_widget: IDENTIFIED_FONT_PREFERENCE_WIDGET
 		do
-			l_id_font ?= l_resource
+			l_id_font ?= l_preference
 			if l_id_font /= Void then
-				create l_font_widget.make_with_resource (l_id_font)
+				create l_font_widget.make_with_preference (l_id_font)
 				l_font_widget.set_caller (Current)
-				l_font_widget.change_actions.extend (agent on_preference_changed (l_resource))
+				l_font_widget.change_actions.extend (agent on_preference_changed (l_preference))
 				a_row.set_item (4, l_font_widget.change_item_widget)
 				a_row.item (4).set_data (l_font_widget)
 			else
-				Precursor {PREFERENCES_GRID} (l_resource, a_row)
+				Precursor {PREFERENCES_GRID} (l_preference, a_row)
 			end
 		end
 
-	set_resource_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
-			-- Set the resource value to the original default.
+	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+			-- Set the preference value to the original default.
 		local
 			l_label_item: EV_GRID_LABEL_ITEM
 			l_font: IDENTIFIED_FONT_PREFERENCE

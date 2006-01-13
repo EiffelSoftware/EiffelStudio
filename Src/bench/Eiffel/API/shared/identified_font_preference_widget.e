@@ -1,5 +1,5 @@
 indexing
-	description	: "Default widget for viewing and editing font resources."
+	description	: "Default widget for viewing and editing font preferences."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -9,7 +9,7 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource,
+			preference,
 			change_item_widget,
 			update_changes
 		end
@@ -21,7 +21,7 @@ inherit
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Access
 
@@ -31,8 +31,8 @@ feature -- Access
 			Result := "IDENTIFIED_FONT"
 		end
 
-	resource: IDENTIFIED_FONT_PREFERENCE
-			-- Actual resource.
+	preference: IDENTIFIED_FONT_PREFERENCE
+			-- Actual preference.
 
 	last_selected_value: EV_IDENTIFIED_FONT
 
@@ -51,12 +51,12 @@ feature {PREFERENCE_VIEW} -- Commands
 	change is
 			-- Change the value.
 		require
-			resource_exists: resource /= Void
+			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
 				-- Create Font Tool.
 			create font_tool
-			font_tool.set_font (resource.value.font)
+			font_tool.set_font (preference.value.font)
 
 			font_tool.ok_actions.extend (agent update_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
@@ -69,18 +69,18 @@ feature {NONE} -- Commands
 		do
 			last_selected_value := font_factory.registered_font (font_tool.font)
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 				change_item_widget.set_font (last_selected_value.font)
-				change_item_widget.set_text (resource.string_value)
+				change_item_widget.set_text (preference.string_value)
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_resource is
+	update_preference is
 			--
 		do
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end
 		end
 
@@ -91,8 +91,8 @@ feature {NONE} -- Implementation
 		do
 
 			create change_item_widget
-			change_item_widget.set_text (resource.string_value)
-			change_item_widget.set_font (resource.value.font)
+			change_item_widget.set_text (preference.string_value)
+			change_item_widget.set_font (preference.value.font)
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			change
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end
 		end
 

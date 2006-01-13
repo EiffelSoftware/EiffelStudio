@@ -104,6 +104,12 @@ feature -- Status Setting
 			show_full_preference_name := a_flag
 		end
 
+	set_show_full_resource_name	(a_flag: BOOLEAN) is
+		obsolete "use set_show_full_preference_name instead of set_show_full_resource_name ."
+		do
+			set_show_full_resource_name (a_flag)
+		end
+
 	set_root_icon (a_icon: EV_PIXMAP) is
 			-- Set the root node icon
 		require

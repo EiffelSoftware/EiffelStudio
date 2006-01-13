@@ -1,5 +1,5 @@
 indexing
-	description	: "Array resource."
+	description	: "Array preference."
 	date		: "$Date:"
 	revision	: "$Revision$"
 
@@ -40,7 +40,7 @@ feature -- Access
 		end	
 
 	string_type: STRING is
-			-- String description of this resource type.
+			-- String description of this preference type.
 		once
 			Result := "LIST"			
 		end	
@@ -114,15 +114,15 @@ feature -- Query
 			-- Is this preference a single choice or the full list?
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?		
+			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
 			Result := a_string /= Void
 		end		
 
 feature {PREFERENCES} -- Access
 
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
+	generating_preference_type: STRING is
+			-- The generating type of the preference for graphical representation.
 		do
 			if is_choice then
 				Result := "COMBO"

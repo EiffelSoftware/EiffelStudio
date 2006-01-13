@@ -42,17 +42,17 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Parent window.  Used to display this view relative to.
 
-	resource_widget (a_resource: PREFERENCE): PREFERENCE_WIDGET is
-			-- Return the widget required to display `a_resource'.
+	preference_widget (a_preference: PREFERENCE): PREFERENCE_WIDGET is
+			-- Return the widget required to display `a_preference'.
 		require
-			resource_not_void: a_resource /= Void
+			preference_not_void: a_preference /= Void
 		do
-			if resource_widgets.has (a_resource.generating_resource_type) then
-				Result := resource_widgets.item (a_resource.generating_resource_type)
-				Result.set_resource (a_resource)
+			if preference_widgets.has (a_preference.generating_preference_type) then
+				Result := preference_widgets.item (a_preference.generating_preference_type)
+				Result.set_preference (a_preference)
 			end
 		ensure
-			has_result_if_known: resource_widgets.has (a_resource.generating_resource_type) implies Result /= Void
+			has_result_if_known: preference_widgets.has (a_preference.generating_preference_type) implies Result /= Void
 		end
 
 feature -- Query
@@ -72,22 +72,22 @@ feature -- Status Setting
 
 feature -- Commands
 
-	register_resource_widget (a_resource_widget: PREFERENCE_WIDGET) is
-			-- Register `a_resource_widget'.
+	register_preference_widget (a_preference_widget: PREFERENCE_WIDGET) is
+			-- Register `a_preference_widget'.
 		require
-			resource_widget_not_void: a_resource_widget /= Void
+			preference_widget_not_void: a_preference_widget /= Void
 		do
-			if not resource_widgets.has (a_resource_widget.graphical_type) then
-				resource_widgets.put (a_resource_widget, a_resource_widget.graphical_type)
+			if not preference_widgets.has (a_preference_widget.graphical_type) then
+				preference_widgets.put (a_preference_widget, a_preference_widget.graphical_type)
 			end
 		ensure
-			is_registered: resource_widgets.has (a_resource_widget.graphical_type)
+			is_registered: preference_widgets.has (a_preference_widget.graphical_type)
 		end
 
 feature {NONE} -- Implementation
 
-	resource_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING] is
-			-- Hash table of resource widgets identified by the type of resource associated with the widget.
+	preference_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING] is
+			-- Hash table of preference widgets identified by the type of preference associated with the widget.
 		local
 			l_brw: BOOLEAN_PREFERENCE_WIDGET
 			l_srw: STRING_PREFERENCE_WIDGET
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			Result.put (l_crw, l_crw.graphical_type)
 			Result.put (l_cw, l_cw.graphical_type)
 		ensure
-			resource_widgets_not_void: Result /= Void
+			preference_widgets_not_void: Result /= Void
 		end
 
 	preferences: PREFERENCES

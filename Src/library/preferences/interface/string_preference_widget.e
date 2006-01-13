@@ -1,7 +1,7 @@
 indexing
 	description	: "[
-		Default widget for viewing and editing resources represented in string
-		format (i.e. STRING, INTEGER and ARRAY resources).
+		Default widget for viewing and editing preferences represented in string
+		format (i.e. STRING, INTEGER and ARRAY preferences).
 		]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -12,7 +12,7 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			set_resource,
+			set_preference,
 			change_item_widget,
 			update_changes,
 			reset
@@ -20,12 +20,12 @@ inherit
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Access
 	
 	change_item_widget: EV_GRID_EDITABLE_ITEM
-			-- Widget to change the value of this resource.
+			-- Widget to change the value of this preference.
 
 	graphical_type: STRING is
 			-- Graphical type identfier
@@ -35,17 +35,17 @@ feature -- Access
 
 feature -- Status Setting
 	
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		local
 			tmpstr: STRING
 		do
-			Precursor (new_resource)
+			Precursor (new_preference)
 			check 
 				change_item_widget_created: change_item_widget /= Void
 			end
 			
-			tmpstr := new_resource.string_value
+			tmpstr := new_preference.string_value
 		end
 
 	show is
@@ -57,22 +57,22 @@ feature -- Status Setting
 feature {NONE} -- Command
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		do
-			resource.set_value_from_string (change_item_widget.text)
+			preference.set_value_from_string (change_item_widget.text)
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_resource is
-			-- Updates resource.
+	update_preference is
+			-- Updates preference.
 		local
 			int: INTEGER_PREFERENCE
 			str: STRING_PREFERENCE
 			list: ARRAY_PREFERENCE
 		do
-			int ?= resource
-			str ?= resource
-			list ?= resource
+			int ?= preference
+			str ?= preference
+			list ?= preference
 			if int /= Void then
 				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
 					int.set_value (change_item_widget.text.to_integer)
@@ -90,7 +90,7 @@ feature {NONE} -- Command
 			-- Reset
 		do
 			Precursor {PREFERENCE_WIDGET}
-			change_item_widget.set_text (resource.default_value)
+			change_item_widget.set_text (preference.default_value)
 		end
 
 feature {NONE} -- Implementation
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.set_text (resource.string_value)
+			change_item_widget.set_text (preference.string_value)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 		
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
             int: INTEGER_PREFERENCE
         do
             Result := True
-            int ?= resource
+            int ?= preference
             if int /= Void and then not a_text.is_integer then
                 Result := False
             end

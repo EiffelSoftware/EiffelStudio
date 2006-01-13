@@ -98,10 +98,10 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_show_full_resource_name (a_flag: BOOLEAN) is
-			-- Set 'show_full_resource_name'
+	set_show_full_preference_name (a_flag: BOOLEAN) is
+			-- Set 'show_full_preference_name'
 		do
-			show_full_resource_name := a_flag
+			show_full_preference_name := a_flag
 		end
 
 	set_root_icon (a_icon: EV_PIXMAP) is
@@ -138,7 +138,7 @@ feature {NONE} -- Events
 		end
 
 	on_preference_changed (a_pref: PREFERENCE) is
-			-- Set the resource value to the newly entered value in the edit item.
+			-- Set the preference value to the newly entered value in the edit item.
 		local
 			l_row: EV_GRID_ROW
 		do
@@ -149,7 +149,7 @@ feature {NONE} -- Events
 		end
 
 	preference_changed_on_row (a_pref: PREFERENCE; a_row: EV_GRID_ROW; a_update_value: BOOLEAN) is
-			-- Set the resource value to the newly entered value in the edit item.
+			-- Set the preference value to the newly entered value in the edit item.
 		local
 			l_default_item: EV_GRID_LABEL_ITEM
 			l_selected_row: EV_GRID_ROW
@@ -181,7 +181,7 @@ feature {NONE} -- Events
 		end
 
 	on_preference_changed_externally (a_pref: PREFERENCE) is
-			-- Set the resource value to the newly entered value NOT changed in the edit item.
+			-- Set the preference value to the newly entered value NOT changed in the edit item.
 		local
 			nb: INTEGER
 			r: INTEGER
@@ -207,8 +207,8 @@ feature {NONE} -- Events
 			end
 		end
 
-	set_resource_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
-			-- Set the resource value to the original default.
+	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+			-- Set the preference value to the original default.
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
 			l_combo_item: EV_GRID_COMBO_ITEM
@@ -239,7 +239,7 @@ feature {NONE} -- Events
 						l_color_item.redraw
 					else
 						l_label_item ?= a_item.row.item (1)
-						if l_label_item /= Void and then a_pref.generating_resource_type.is_equal ("FONT") then
+						if l_label_item /= Void and then a_pref.generating_preference_type.is_equal ("FONT") then
 								-- Font label item
 							l_font ?= a_pref
 							l_label_item ?= a_item.row.item (4)
@@ -284,7 +284,7 @@ feature {NONE} -- Events
 						-- The right clicked preference matches the selection in the grid
 					create l_popup_menu
 					create l_menu_item.make_with_text ("Restore Default")
-					l_menu_item.select_actions.extend (agent set_resource_to_default (a_item, a_pref))
+					l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
 					l_popup_menu.extend (l_menu_item)
 					l_popup_menu.show
 				end
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 							l_pref := l_known_pref_hash.item (l_pref_name.twin)
 							if l_pref /= Void and then show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
 								l_row ?= l_pref_hash.item (l_pref_parent_full_name)
-								create l_grid_label.make_with_text (formatted_name (short_resource_name (l_pref_name.twin)))
+								create l_grid_label.make_with_text (formatted_name (short_preference_name (l_pref_name.twin)))
 								add_preference_row (l_row, l_pref)
 								l_row.expand_actions.extend (agent node_expanded (l_row))
 							end
@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 		do
 --			grid.enable_row_height_fixed
 --			grid.disable_row_height_fixed
---			selected_resource_name := a_pref_name
+--			selected_preference_name := a_pref_name
 --			wipe_out_visible_preference_change_action
 --			visible_preferences.wipe_out	
 
@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 				a_pref.change_actions.extend (display_update_agent)
 			end
 			l_row.set_data (a_pref)
-			l_row.select_actions.extend (agent show_resource_description (a_pref))
+			l_row.select_actions.extend (agent show_preference_description (a_pref))
 
 				-- Add Items
 			l_row.set_item (1, preference_name_column (a_pref))
@@ -636,10 +636,10 @@ feature {NONE} -- Implementation
 		do
 			if a_pref.name /= Void then
 				create Result
-				if show_full_resource_name then
+				if show_full_preference_name then
 					Result.set_text (a_pref.name)
 				else
-					Result.set_text (formatted_name (short_resource_name (a_pref.name)))
+					Result.set_text (formatted_name (short_preference_name (a_pref.name)))
 				end
 			else
 				Result.set_text ("")
@@ -688,20 +688,20 @@ feature {NONE} -- Implementation
 		do
 			l_bool ?= a_pref
 			if l_bool /= Void then
-				create l_bool_widget.make_with_resource (l_bool)
+				create l_bool_widget.make_with_preference (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				Result := l_bool_widget.change_item_widget
 				Result.set_data (l_bool_widget)
 			else
-				if a_pref.generating_resource_type.is_equal ("TEXT") then
-					create l_edit_widget.make_with_resource (a_pref)
+				if a_pref.generating_preference_type.is_equal ("TEXT") then
+					create l_edit_widget.make_with_preference (a_pref)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					Result := l_edit_widget.change_item_widget
 					Result.set_data (l_edit_widget)
-				elseif a_pref.generating_resource_type.is_equal ("COMBO") then
+				elseif a_pref.generating_preference_type.is_equal ("COMBO") then
 					l_array ?= a_pref
 					if l_array /= Void then
-						create l_choice_widget.make_with_resource (l_array)
+						create l_choice_widget.make_with_preference (l_array)
 						l_choice_widget.change_actions.extend (agent on_preference_changed)
 						Result := l_choice_widget.change_item_widget
 						Result.set_data (l_choice_widget)
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 				else
 					l_font ?= a_pref
 					if l_font /= Void then
-						create l_font_widget.make_with_resource (l_font)
+						create l_font_widget.make_with_preference (l_font)
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
 						l_font := l_font.twin
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 					else
 						l_color ?= a_pref
 						if l_color /= Void then
-							create l_color_widget.make_with_resource (l_color)
+							create l_color_widget.make_with_preference (l_color)
 							l_color_widget.change_actions.extend (agent on_preference_changed)
 							l_color_widget.set_caller (Current)
 							Result := l_color_widget.change_item_widget
@@ -727,7 +727,7 @@ feature {NONE} -- Implementation
 						else
 							l_shortcut ?= a_pref
 							if l_shortcut /= Void then
-								create l_shortcut_widget.make_with_resource (l_shortcut)
+								create l_shortcut_widget.make_with_preference (l_shortcut)
 								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
 								Result := l_shortcut_widget.change_item_widget
 								Result.set_data (l_shortcut_widget)
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 			-- Update the grid columns widths and borders depending on current display type
 		local
 			l_column: EV_GRID_COLUMN
-			l_resource: PREFERENCE
+			l_preference: PREFERENCE
 			w: INTEGER
 			nb: INTEGER
 		do
@@ -765,9 +765,9 @@ feature {NONE} -- Implementation
 					l_column.set_width (w + column_border_space)
 				end
 				on_window_resize
-				l_resource ?= grid.row (1).data
-				if l_resource /= Void then
-					show_resource_description (l_resource)
+				l_preference ?= grid.row (1).data
+				if l_preference /= Void then
+					show_preference_description (l_preference)
 				end
 				if grid.is_displayed and grid.is_sensitive then
 					grid.set_focus
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation
 			grid.set_dynamic_content_function (agent dynamic_content_function)
 			grid.enable_partial_dynamic_content
 			filter_box.enable_sensitive
-			set_show_full_resource_name (True)
+			set_show_full_preference_name (True)
 			build_flat
 			update_matches
 			view_toggle_button.set_text (once "Tree View")
@@ -815,7 +815,7 @@ feature {NONE} -- Implementation
 			grid.enable_tree
 			grid.disable_dynamic_content
 			filter_box.disable_sensitive
-			set_show_full_resource_name (False)
+			set_show_full_preference_name (False)
 			build_structured
 			update_status_bar
 			view_toggle_button.set_text (once "Flat View")
@@ -860,28 +860,28 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	show_resource_description (a_resource: PREFERENCE) is
-			-- Show selected list resource in edit widget.
+	show_preference_description (a_preference: PREFERENCE) is
+			-- Show selected list preference in edit widget.
 		require
-			resource_not_void: a_resource /= Void
+			preference_not_void: a_preference /= Void
 		local
 			l_text: STRING
 		do
-			if a_resource.description /= Void then
-				l_text := a_resource.description
+			if a_preference.description /= Void then
+				l_text := a_preference.description
 			else
 				l_text := no_description_text
 			end
 
-			if a_resource.restart_required then
+			if a_preference.restart_required then
 				description_text.set_text (l_text + once " (REQUIRES RESTART)")
 			else
 				description_text.set_text (l_text)
 			end
 		end
 
-	add_resource_change_item (l_resource: PREFERENCE; a_row: EV_GRID_ROW) is
-			-- Add the correct resource change widget item at `row_index' of `grid'.
+	add_preference_change_item (l_preference: PREFERENCE; a_row: EV_GRID_ROW) is
+			-- Add the correct preference change widget item at `row_index' of `grid'.
 		local
 			l_bool: BOOLEAN_PREFERENCE
 			l_font: FONT_PREFERENCE
@@ -892,31 +892,31 @@ feature {NONE} -- Implementation
 
 			l_pref_widget: PREFERENCE_WIDGET
 		do
-			l_bool ?= l_resource
+			l_bool ?= l_preference
 			if l_bool /= Void then
-				create {BOOLEAN_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_bool)
-			elseif l_resource.generating_resource_type.is_equal ("TEXT") then
-				l_text ?= l_resource
+				create {BOOLEAN_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_bool)
+			elseif l_preference.generating_preference_type.is_equal ("TEXT") then
+				l_text ?= l_preference
 				check l_text_not_void: l_text /= Void end
-				create {STRING_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_text)
-			elseif l_resource.generating_resource_type.is_equal ("COMBO") then
-				l_array ?= l_resource
+				create {STRING_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_text)
+			elseif l_preference.generating_preference_type.is_equal ("COMBO") then
+				l_array ?= l_preference
 				if l_array /= Void then
-					create {CHOICE_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_array)
+					create {CHOICE_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_array)
 				else
-					l_font ?= l_resource
+					l_font ?= l_preference
 					if l_font /= Void then
-						create {FONT_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_font)
+						create {FONT_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_font)
 --						a_row.set_height (l_font.value.height.max (default_row_height))
 					else
-						l_color ?= l_resource
+						l_color ?= l_preference
 						if l_color /= Void then
-							create {COLOR_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_color)
+							create {COLOR_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_color)
 
 						else
-							l_shortcut ?= l_resource
+							l_shortcut ?= l_preference
 							if l_shortcut /= Void then
-								create {SHORTCUT_PREFERENCE_WIDGET} l_pref_widget.make_with_resource (l_shortcut)
+								create {SHORTCUT_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_shortcut)
 							end
 						end
 					end
@@ -937,8 +937,8 @@ feature {NONE} -- Implementation
 			description_text.set_text (once "")
 		end
 
-	short_resource_name (a_name: STRING): STRING is
-			-- The short, non-unique name of a resource
+	short_preference_name (a_name: STRING): STRING is
+			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
 		do
@@ -1101,8 +1101,8 @@ feature {NONE} -- Filtering
 
 feature {NONE} -- Private attributes
 
-	show_full_resource_name: BOOLEAN
-			-- Show the full name of the resource in the list?
+	show_full_preference_name: BOOLEAN
+			-- Show the full name of the preference in the list?
 
 	root_icon: EV_PIXMAP
 			-- Icon for root node

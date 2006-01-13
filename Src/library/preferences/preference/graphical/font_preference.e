@@ -1,5 +1,5 @@
 indexing
-	description	: "Font resource."
+	description	: "Font preference."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -44,7 +44,7 @@ feature -- Status Setting
 		end
 
 	string_type: STRING is
-			-- String description of this resource type.
+			-- String description of this preference type.
 		once
 			Result := "FONT"
 		end	
@@ -52,7 +52,7 @@ feature -- Status Setting
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?
+			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
 		local
 			s: STRING
@@ -63,8 +63,8 @@ feature -- Query
 
 feature {PREFERENCES} -- Access
 
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
+	generating_preference_type: STRING is
+			-- The generating type of the preference for graphical representation.
 		once
 			Result := "FONT"
 		end

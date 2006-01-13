@@ -1,5 +1,5 @@
 indexing
-	description	: "Color resource."
+	description	: "Color preference."
 	date		: "$Date$"
 	revision	: "$Revision$"
  
@@ -25,7 +25,7 @@ feature -- Access
 		end	
 		
 	string_type: STRING is
-			-- String description of this resource type.
+			-- String description of this preference type.
 		once
 			Result := "COLOR"
 		end
@@ -33,7 +33,7 @@ feature -- Access
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?
+			-- Is `a_string' valid for this preference type to convert into a value?
 			-- String must conform to the following structure: "xxx;xxx;xxx" where xxx represents
 			-- an integer value between 0 and 255.
 		local
@@ -63,8 +63,8 @@ feature -- Query
 	
 feature {PREFERENCES} -- Access
 
-	generating_resource_type: STRING is
-			-- The generating type of the resource for graphical representation.
+	generating_preference_type: STRING is
+			-- The generating type of the preference for graphical representation.
 		once
 			Result := "COLOR"
 		end	

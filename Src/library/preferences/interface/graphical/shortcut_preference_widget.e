@@ -1,6 +1,6 @@
 indexing
 	description	: "[
-		Default widget for viewing and editing key shortcut resources.
+		Default widget for viewing and editing key shortcut preferences.
 		]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -11,7 +11,7 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			set_resource,
+			set_preference,
 			change_item_widget,
 			update_changes,
 			reset
@@ -21,12 +21,12 @@ inherit
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Access
 
 	change_item_widget: EV_GRID_EDITABLE_ITEM
-			-- Widget to change the value of this resource.
+			-- Widget to change the value of this preference.
 
 	graphical_type: STRING is
 			-- Graphical type identfier
@@ -36,17 +36,17 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		local
 			tmpstr: STRING
 		do
-			Precursor (new_resource)
+			Precursor (new_preference)
 			check
 				change_item_widget_created: change_item_widget /= Void
 			end
 
-			tmpstr := new_resource.string_value
+			tmpstr := new_preference.string_value
 		end
 
 	show is
@@ -58,20 +58,20 @@ feature -- Status Setting
 feature {NONE} -- Command
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		do
 			if valid_shortcut_text then
-				resource.set_value_from_string (converted_saveable_string (change_item_widget.text))
+				preference.set_value_from_string (converted_saveable_string (change_item_widget.text))
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_resource is
-			-- Updates resource.
+	update_preference is
+			-- Updates preference.
 		local
 			sc: SHORTCUT_PREFERENCE
 		do
-			sc ?= resource
+			sc ?= preference
 			if sc /= Void then
 				if not change_item_widget.text.is_empty then
 					sc.set_value_from_string (change_item_widget.text)
@@ -82,11 +82,11 @@ feature {NONE} -- Command
 	reset is
 			-- Reset
 		local
-			l_resource: SHORTCUT_PREFERENCE
+			l_preference: SHORTCUT_PREFERENCE
 		do
 			Precursor {PREFERENCE_WIDGET}
-			l_resource ?= resource
-			change_item_widget.set_text (l_resource.display_string)
+			l_preference ?= preference
+			change_item_widget.set_text (l_preference.display_string)
 		end
 
 feature {NONE} -- Implementation
@@ -94,12 +94,12 @@ feature {NONE} -- Implementation
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
 		local
-			l_resource: SHORTCUT_PREFERENCE
+			l_preference: SHORTCUT_PREFERENCE
 		do
-			l_resource ?= resource
+			l_preference ?= preference
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.set_text (l_resource.display_string)
+			change_item_widget.set_text (l_preference.display_string)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			l_key: STRING
 			l_pref: SHORTCUT_PREFERENCE
 		do
-			l_pref ?= resource
+			l_pref ?= preference
 			valid_shortcut_text := False
 			if l_pref /= Void then
 				if l_pref.shortcut_keys.has (a_key.code) then

@@ -1,6 +1,6 @@
 indexing
-	description	: "Abstaction for a widget representing a particular resource.%
-		%Used for reading and writing resource values.  Actual interface is `change_item_widget'. To%
+	description	: "Abstaction for a widget representing a particular preference.%
+		%Used for reading and writing preference values.  Actual interface is `change_item_widget'. To%
 		%create an custom interface redefine this."
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -16,15 +16,15 @@ feature {NONE} -- Initialization
 			create change_actions
 		end
 
-	make_with_resource (a_resource: like resource) is
-			-- Make with values from `a_resource'.
+	make_with_preference (a_preference: like preference) is
+			-- Make with values from `a_preference'.
 		require
-			resource_not_void: a_resource /= Void
+			preference_not_void: a_preference /= Void
 		do
-			set_resource (a_resource)
+			set_preference (a_preference)
 			make
 		ensure
-			has_resource: resource /= Void
+			has_preference: preference /= Void
 		end
 
 feature -- Access
@@ -33,10 +33,10 @@ feature -- Access
 			-- Widget to change the item.
 
 	caller: PREFERENCE_VIEW
-			-- Caller view to which this resource widget currently belongs.
+			-- Caller view to which this preference widget currently belongs.
 
-	resource: PREFERENCE
-			-- Actual resource associated to the widget.
+	preference: PREFERENCE
+			-- Actual preference associated to the widget.
 
 	graphical_type: STRING is
 			-- Graphical type identifier.
@@ -45,18 +45,18 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		require
-			resource_not_void: new_resource /= Void
+			preference_not_void: new_preference /= Void
 		do
-			resource := new_resource
+			preference := new_preference
 
 			if change_item_widget = Void then
 				build_change_item_widget
 			end
 		ensure
-			resource_set: resource = new_resource
+			preference_set: preference = new_preference
 		end
 
 	set_caller (a_caller: like caller) is
@@ -78,20 +78,20 @@ feature -- Basic operations
 		end
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.
+			-- Update the changes made in `change_item_widget' to `preference'.
 		do
-			change_actions.call ([resource])
+			change_actions.call ([preference])
 		end
 
-	update_resource is
-			-- Update the changes made in `change_item_widget' to `resource'.
+	update_preference is
+			-- Update the changes made in `change_item_widget' to `preference'.
 		deferred
 		end
 
 	reset is
-			-- Reset resource to default value if any
+			-- Reset preference to default value if any
 		do
-			if resource.has_default_value then
+			if preference.has_default_value then
 				reset
 			end
 		end
@@ -104,7 +104,7 @@ feature -- Basic operations
 feature -- Actions
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
-			-- Actions to be performed when `resource' changes, after call to `update_changes'.		
+			-- Actions to be performed when `preference' changes, after call to `update_changes'.		
 
 feature {NONE} -- Implementation
 

@@ -1,5 +1,5 @@
 indexing
-	description	: "Default widget for viewing and editing font resources."
+	description	: "Default widget for viewing and editing font preferences."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -9,22 +9,22 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource, 
-			set_resource,
+			preference, 
+			set_preference,
 			change_item_widget,
 			update_changes
 		end
 
 create
 	make,
-	make_with_resource
+	make_with_preference
 
 feature -- Status Setting
 	
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
+	set_preference (new_preference: like preference) is
+			-- Set the preference.
 		do
-			Precursor (new_resource)
+			Precursor (new_preference)
 		end
 
 feature -- Access
@@ -35,8 +35,8 @@ feature -- Access
 			Result := "FONT"
 		end	
 
-	resource: FONT_PREFERENCE
-			-- Actual resource.
+	preference: FONT_PREFERENCE
+			-- Actual preference.
 
 	last_selected_value: EV_FONT
 			-- Value last selected by user.
@@ -49,12 +49,12 @@ feature {PREFERENCE_VIEW} -- Commands
 	change is
 			-- Change the value.
 		require
-			resource_exists: resource /= Void
+			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
 				-- Create Font Tool.
 			create font_tool
-			font_tool.set_font (resource.value)
+			font_tool.set_font (preference.value)
 
 			font_tool.ok_actions.extend (agent update_changes)
 			font_tool.cancel_actions.extend (agent cancel_changes)
@@ -71,11 +71,11 @@ feature {NONE} -- Commands
 			last_selected_value := font_tool.font
 			l_font := last_selected_value.twin
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
-				l_font := resource.value.twin
+				preference.set_value (last_selected_value)
+				l_font := preference.value.twin
 				l_font.set_height_in_points (default_font_height)
 				change_item_widget.set_font (l_font)
-				change_item_widget.set_text (resource.string_value)
+				change_item_widget.set_text (preference.string_value)
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
@@ -86,11 +86,11 @@ feature {NONE} -- Commands
 			last_selected_value := Void
 		end
 
-	update_resource is
-			-- Update resource to reflect recently chosen value
+	update_preference is
+			-- Update preference to reflect recently chosen value
 		do
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)	
+				preference.set_value (last_selected_value)	
 			end
 		end		
 
@@ -108,9 +108,9 @@ feature {NONE} -- Implementation
 			l_font: EV_FONT
 		do
 			create change_item_widget
-			change_item_widget.set_text (resource.string_value)
+			change_item_widget.set_text (preference.string_value)
 			
-			l_font := resource.value.twin
+			l_font := preference.value.twin
 			l_font.set_height_in_points (default_font_height)
 			change_item_widget.set_font (l_font)
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)

@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 			-- New view.
 		do
 			default_create
+			flat_sorting_info := Name_sorting_mode
+
 			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
 			set_size (640, 460)
 			set_title (preferences_title)
@@ -44,31 +46,31 @@ feature {NONE} -- Initialization
 			default_row_height := grid.row_height
 			grid.enable_single_row_selection
 			grid_container.extend (grid)
-			grid.set_item (4, 1, Void)
+			grid.set_column_count_to (4)
 			grid.column (1).set_title (l_name)
 			grid.column (2).set_title (l_type)
 			grid.column (3).set_title (l_status)
 			grid.column (4).set_title (l_literal_value)
-			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
-			grid.key_press_actions.extend (agent on_grid_key_pressed)
 			enable_tree_view
 
 				-- Agents
-			close_button.select_actions.extend (agent on_close)
-			close_request_actions.extend (agent on_close)
-			restore_button.select_actions.extend (agent on_restore)
-			description_text.key_press_actions.extend (agent on_description_key_pressed)
-			resize_actions.force_extend (agent on_window_resize)
+			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
+			grid.key_press_actions.extend (agent on_grid_key_pressed)
+
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
 			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
 			grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (1))
 			grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (2))
 			grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (3))
 			grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (4))
+
+			close_button.select_actions.extend (agent on_close)
+			close_request_actions.extend (agent on_close)
+			restore_button.select_actions.extend (agent on_restore)
+			description_text.key_press_actions.extend (agent on_description_key_pressed)
+			resize_actions.force_extend (agent on_window_resize)
 			display_update_agent := agent on_preference_changed_externally
 			view_toggle_button.select_actions.extend (agent toggle_view)
-
-			flat_sorting_info := Name_sorting_mode
 		end
 
 	user_initialization is
@@ -96,6 +98,9 @@ feature {NONE} -- Initialization
 				--| Make sure to have the grid focused when dialog is shown
 				--| this way, we can use only keyboard.
 			show_actions.extend (agent on_show)
+
+				--| Icons
+			build_filter_icons
 
 				--|
 			filter_text_box.change_actions.extend (agent request_update_matches)
@@ -129,6 +134,22 @@ feature -- Status Setting
 			icon_not_void: a_icon /= Void
 		do
 			folder_icon := a_icon
+		end
+
+	set_filter_icon_up (a_icon: EV_PIXMAP) is
+			-- Set the grid's header arrow up icon
+		require
+			icon_not_void: a_icon /= Void
+		do
+			icon_up := a_icon
+		end
+
+	set_filter_icon_down (a_icon: EV_PIXMAP) is
+			-- Set the grid's header arrow down icon
+		require
+			icon_not_void: a_icon /= Void
+		do
+			icon_down := a_icon
 		end
 
 feature {NONE} -- Events
@@ -399,6 +420,9 @@ feature {NONE} -- Events
 						if col_index = flat_sorting_info.abs then
 							flat_sorting_info := - flat_sorting_info
 						else
+							if grid.column_count >= flat_sorting_info.abs then
+								grid.column (flat_sorting_info.abs).header_item.remove_pixmap
+							end
 							flat_sorting_info := col_index
 						end
 						rebuild
@@ -439,6 +463,10 @@ feature {NONE} -- Implementation
 			l_grid_label: EV_GRID_LABEL_ITEM
 			l_pref: PREFERENCE
 		do
+			if grid.column_count >= flat_sorting_info.abs then
+				grid.column (flat_sorting_info.abs).header_item.remove_pixmap
+			end
+
 			status_label.set_text ("Building tree view ...")
 			status_label.refresh_now
 
@@ -552,6 +580,14 @@ feature {NONE} -- Implementation
 			l_sorted_preferences: LIST [PREFERENCE]
 			l_pref: PREFERENCE
 		do
+			if flat_sorting_info.abs <= grid.column_count then
+				if flat_sorting_info > 0 then
+					grid.column (flat_sorting_info).header_item.set_pixmap (icon_up)
+				else
+					grid.column (flat_sorting_info.abs).header_item.set_pixmap (icon_down)
+				end
+			end
+
 			status_label.set_text ("Building flat view ...")
 			status_label.refresh_now
 
@@ -1229,7 +1265,47 @@ feature {NONE} -- Private attributes
 		end
 
 	grid: EV_GRID
-		-- Grid	
+		-- Grid
+
+
+	icon_up: EV_PIXMAP
+
+	icon_down: EV_PIXMAP
+
+	build_filter_icons is
+		local
+			w,h: INTEGER
+			bc: EV_COLOR
+		do
+			w := 16
+			h := 16
+
+			bc := (create {EV_STOCK_COLORS}).Default_background_color
+
+			if icon_up = Void then
+				create icon_up.make_with_size (w, h)
+				icon_up.set_background_color (bc)
+				icon_up.clear
+				icon_up.fill_polygon (<<
+							create {EV_COORDINATE}.make_precise (0.2 * w, 0.2 * h),
+							create {EV_COORDINATE}.make_precise (0.8 * w, 0.2 * h),
+							create {EV_COORDINATE}.make_precise (0.5 * w, 0.6 * h)
+						>>)
+			end
+			if icon_down = Void then
+				create icon_down.make_with_size (w, h)
+				icon_down.set_background_color (bc)
+				icon_down.clear
+				icon_down.fill_polygon (<<
+					create {EV_COORDINATE}.make_precise (0.2 * w, 0.6 * h),
+					create {EV_COORDINATE}.make_precise (0.8 * w, 0.6 * h),
+					create {EV_COORDINATE}.make_precise (0.5 * w, 0.2 * h)
+						>>)
+			end
+		ensure
+			icon_up /= Void
+			icon_down /= Void
+		end
 
 	column_border_space: INTEGER is 3
 		-- Padding space for column content

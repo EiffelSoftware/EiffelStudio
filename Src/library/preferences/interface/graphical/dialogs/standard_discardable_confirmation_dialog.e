@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make_initialized (button_count: INTEGER; res_name: STRING;
 				confirmation_text: STRING; check_label: STRING; app_prefs: PREFERENCES) is
 			-- Initialize `Current' based on these values.
-			-- `res_name' is the name of the boolean resource corresponding
+			-- `res_name' is the name of the boolean preference corresponding
 			-- to this dialog.
 			-- See `buttons_count', `confirmation_message_label', `check_button_label'
 			-- for information on the other parameters.
@@ -30,15 +30,15 @@ feature {NONE} -- Initialization
 			valid_confirmation_text: confirmation_text /= Void
 			valid_check_label: check_label /= Void
 		do
-			preferences := app_prefs 
+			preferences := app_prefs
 			buttons_count := button_count
-			resource_name := res_name
+			preference_name := res_name
 			confirmation_message_label := confirmation_text
 			check_button_label := check_label
 			default_create
 		ensure
 			status_set: buttons_count = button_count and
-						res_name.is_equal (resource_name) and
+						res_name.is_equal (preference_name) and
 						confirmation_text.is_equal (confirmation_message_label) and
 						check_label.is_equal (check_button_label)
 		end
@@ -50,7 +50,7 @@ feature -- Access
 		local
 			l_pref: BOOLEAN_PREFERENCE
 		do
-			l_pref ?= preferences.get_resource (resource_name)
+			l_pref ?= preferences.get_preference (preference_name)
 			Result := l_pref /= Void and then not l_pref.value
 		end
 
@@ -63,19 +63,19 @@ feature -- Access
 	confirmation_message_label: STRING
 			-- Main explanatory label displayed in the dialog.
 
-	resource_name: STRING
-			-- Name of the resource relative to `Current' in the preferences.
+	preference_name: STRING
+			-- Name of the preference relative to `Current' in the preferences.
 
 feature -- Basic operations
 
-	is_boolean_resource (s: STRING): BOOLEAN is
-			-- Does `s' represent a boolean resource?
+	is_boolean_preference (s: STRING): BOOLEAN is
+			-- Does `s' represent a boolean preference?
 		require
 			valid_string: s /= Void and not s.is_empty
 		local
 			r: BOOLEAN_PREFERENCE
 		do
-			r ?= preferences.get_resource (s)
+			r ?= preferences.get_preference (s)
 			Result := r /= Void
 		end
 
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		local
 			l_pref: BOOLEAN_PREFERENCE
 		do
-			l_pref ?= preferences.get_resource (resource_name)
+			l_pref ?= preferences.get_preference (preference_name)
 			if l_pref /= Void then
 				l_pref.set_value (not checked)
 			end
@@ -96,8 +96,8 @@ feature {NONE} -- Implementation
 
 invariant
 	valid_attributes:
-			resource_name /= Void and then
-			is_boolean_resource (resource_name) and
+			preference_name /= Void and then
+			is_boolean_preference (preference_name) and
 			buttons_count > 0 and buttons_count < 4 and
 			check_button_label /= Void and
 			confirmation_message_label /= Void

@@ -952,7 +952,7 @@ feature {NONE} -- Implementation
 				fn.close
 					--| Save the path to the preferences.
 				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (fd.file_path)
-				preferences.preferences.save_resource (preferences.debug_tool_data.last_saved_stack_path_preference)
+				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).
 				create wd.make_with_text (Warning_messages.w_Not_creatable (fd.file_name))

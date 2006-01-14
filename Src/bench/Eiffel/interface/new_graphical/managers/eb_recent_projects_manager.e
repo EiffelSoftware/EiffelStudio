@@ -97,14 +97,14 @@ feature -- Basic operations
 		local
 			l_value: STRING
 		do
-			l_value := preferences.preferences.get_resource_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
+			l_value := preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
 			if l_value /= Void then
 				preferences.recent_projects_data.last_opened_projects_preference.set_value_from_string (l_value)
 			end
 		end
 
 	load_recent_projects (projects: ARRAY [STRING]) is
-			-- 
+			--
 		local
 			i: INTEGER
 			l_project_name: FILE_NAME
@@ -118,7 +118,7 @@ feature -- Basic operations
 					create l_project_name.make_from_string (projects @ i)
 					if not recent_projects.has (l_project_name) then
 						recent_projects.extend (create {FILE_NAME}.make_from_string (l_project_name))
-					end					
+					end
 					i := i + 1
 				end
 			end
@@ -179,5 +179,5 @@ feature {NONE} -- Observer pattern / Implementation
 				Result := 10
 			end
 		end
-	
+
 end -- class EB_RECENT_PROJECTS_MANAGER

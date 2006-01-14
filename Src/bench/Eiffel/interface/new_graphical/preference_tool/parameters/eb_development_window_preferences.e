@@ -295,8 +295,8 @@ feature -- Element change
 		do
 			width_preference.set_value (a_width)
 			height_preference.set_value (a_height)
-			preferences.save_resource (width_preference)
-			preferences.save_resource (height_preference)
+			preferences.save_preference (width_preference)
+			preferences.save_preference (height_preference)
 		end
 
 	save_window_state (a_minimized, a_maximized: BOOLEAN) is
@@ -305,7 +305,7 @@ feature -- Element change
 			is_minimized := a_minimized
 
 			is_maximized_preference.set_value (a_maximized)
-			preferences.save_resource (is_maximized_preference)
+			preferences.save_preference (is_maximized_preference)
 		end
 
 	save_position (a_x, a_y: INTEGER) is
@@ -314,8 +314,8 @@ feature -- Element change
 		do
 			x_position_preference.set_value (a_x)
 			y_position_preference.set_value (a_y)
-			preferences.save_resource (x_position_preference)
-			preferences.save_resource (y_position_preference)
+			preferences.save_preference (x_position_preference)
+			preferences.save_preference (y_position_preference)
 		end
 
 	save_left_panel_width (a_width: INTEGER) is
@@ -323,7 +323,7 @@ feature -- Element change
 			-- Call `commit_save' to have the changes actually saved.
 		do
 			left_panel_width_preference.set_value (a_width)
-			preferences.save_resource (left_panel_width_preference)
+			preferences.save_preference (left_panel_width_preference)
 		end
 
 	save_left_panel_layout (a_layout: ARRAY [STRING]) is
@@ -331,7 +331,7 @@ feature -- Element change
 			-- Call `commit_save' to have the changes actually saved.
 		do
 			left_panel_layout_preference.set_value (a_layout)
-			preferences.save_resource (left_panel_width_preference)
+			preferences.save_preference (left_panel_width_preference)
 		end
 
 	save_right_panel_layout (a_layout: ARRAY [STRING]) is
@@ -339,14 +339,14 @@ feature -- Element change
 			-- Call `commit_save' to have the changes actually saved.
 		do
 			right_panel_layout_preference.set_value (a_layout)
-			preferences.save_resource (right_panel_layout_preference)
+			preferences.save_preference (right_panel_layout_preference)
 		end
 
 	save_show_search_options (a_show_options: BOOLEAN) is
 			--
 		do
 			show_search_options_preference.set_value (a_show_options)
-			preferences.save_resource (show_search_options_preference)
+			preferences.save_preference (show_search_options_preference)
 		end
 
 	save_completion_list_size (a_width, a_height: INTEGER) is
@@ -354,8 +354,8 @@ feature -- Element change
 		do
 			completion_list_width_preference.set_value (a_width)
 			completion_list_height_preference.set_value (a_height)
-			preferences.save_resource (completion_list_width_preference)
-			preferences.save_resource (completion_list_height_preference)
+			preferences.save_preference (completion_list_width_preference)
+			preferences.save_preference (completion_list_height_preference)
 		end
 
 feature -- Basic operations
@@ -409,38 +409,38 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "development_window")
 
-			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 490)
-			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 500)
-			x_position_preference := l_manager.new_integer_resource_value (l_manager, x_position_string, 10)
-			y_position_preference := l_manager.new_integer_resource_value (l_manager, y_position_string, 10)
-			is_maximized_preference := l_manager.new_boolean_resource_value (l_manager, is_maximized_string, False)
-			left_panel_use_explorer_style_preference := l_manager.new_boolean_resource_value (l_manager, left_panel_use_explorer_style_string, True)
-			left_panel_width_preference := l_manager.new_integer_resource_value (l_manager, left_panel_width_string, 100)
-			left_panel_layout_preference := l_manager.new_array_resource_value (l_manager, left_panel_layout_string, <<"Features", "visible", "0", "0", "0", "100", "Clusters", "visible", "0", "0", "0", "100">>)
-			right_panel_layout_preference := l_manager.new_array_resource_value (l_manager, right_panel_layout_string, <<"Search", "visible", "0", "0", "0", "200", "Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
-			general_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, general_toolbar_layout_string, <<"New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden">>)
-			show_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_general_toolbar_string, True)
-			show_text_in_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_text_in_general_toolbar_string, False)
-			show_all_text_in_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_general_toolbar_string, False)
-			show_address_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_address_toolbar_string, True)
-			show_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_project_toolbar_string, False)
-			show_search_options_preference := l_manager.new_boolean_resource_value (l_manager, search_tool_show_options_string, True)
-			max_history_size_preference := l_manager.new_integer_resource_value (l_manager, max_history_size_string, 10)
-			remember_completion_list_size_preference := l_manager.new_boolean_resource_value (l_manager, remember_completion_list_size_string, True)
-			completion_list_height_preference := l_manager.new_integer_resource_value (l_manager, completion_list_height_string, 100)
-			completion_list_width_preference := l_manager.new_integer_resource_value (l_manager, completion_list_width_string, 80)
-			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
-			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"[new_window];editor;context;new_editor;new_context;external">>)
+			width_preference := l_manager.new_integer_preference_value (l_manager, width_string, 490)
+			height_preference := l_manager.new_integer_preference_value (l_manager, height_string, 500)
+			x_position_preference := l_manager.new_integer_preference_value (l_manager, x_position_string, 10)
+			y_position_preference := l_manager.new_integer_preference_value (l_manager, y_position_string, 10)
+			is_maximized_preference := l_manager.new_boolean_preference_value (l_manager, is_maximized_string, False)
+			left_panel_use_explorer_style_preference := l_manager.new_boolean_preference_value (l_manager, left_panel_use_explorer_style_string, True)
+			left_panel_width_preference := l_manager.new_integer_preference_value (l_manager, left_panel_width_string, 100)
+			left_panel_layout_preference := l_manager.new_array_preference_value (l_manager, left_panel_layout_string, <<"Features", "visible", "0", "0", "0", "100", "Clusters", "visible", "0", "0", "0", "100">>)
+			right_panel_layout_preference := l_manager.new_array_preference_value (l_manager, right_panel_layout_string, <<"Search", "visible", "0", "0", "0", "200", "Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
+			general_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, general_toolbar_layout_string, <<"New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden">>)
+			show_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_general_toolbar_string, True)
+			show_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_general_toolbar_string, False)
+			show_all_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_general_toolbar_string, False)
+			show_address_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_address_toolbar_string, True)
+			show_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_project_toolbar_string, False)
+			show_search_options_preference := l_manager.new_boolean_preference_value (l_manager, search_tool_show_options_string, True)
+			max_history_size_preference := l_manager.new_integer_preference_value (l_manager, max_history_size_string, 10)
+			remember_completion_list_size_preference := l_manager.new_boolean_preference_value (l_manager, remember_completion_list_size_string, True)
+			completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, completion_list_height_string, 100)
+			completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, completion_list_width_string, 80)
+			progress_bar_color_preference := l_manager.new_color_preference_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
+			ctrl_right_click_receiver_preference := l_manager.new_array_preference_value (l_manager, ctrl_right_click_receiver_string, <<"[new_window];editor;context;new_editor;new_context;external">>)
 			ctrl_right_click_receiver_preference.set_is_choice (True)
-			class_completion_preference := l_manager.new_boolean_resource_value (l_manager, class_completion_string, True)
-			dock_tracking_preference := l_manager.new_boolean_resource_value (l_manager, dock_tracking_string, True)
-			last_browsed_cluster_directory_preference := l_manager.new_string_resource_value (l_manager, last_browsed_cluster_directory_string, "")
-			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
-			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)
-			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)
-			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
-			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_resource_value (l_manager, show_debug_menu_with_accelerator, True)
-			c_output_panel_prompted_preference := l_manager.new_boolean_resource_value (l_manager, c_output_panel_prompted_string, False)
+			class_completion_preference := l_manager.new_boolean_preference_value (l_manager, class_completion_string, True)
+			dock_tracking_preference := l_manager.new_boolean_preference_value (l_manager, dock_tracking_string, True)
+			last_browsed_cluster_directory_preference := l_manager.new_string_preference_value (l_manager, last_browsed_cluster_directory_string, "")
+			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
+			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
+			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
+			show_eiffel_studio_debug_preference := l_manager.new_boolean_preference_value (l_manager, show_eiffel_studio_debug_menu, False)
+			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_preference_value (l_manager, show_debug_menu_with_accelerator, True)
+			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
 		end
 
 	preferences: PREFERENCES

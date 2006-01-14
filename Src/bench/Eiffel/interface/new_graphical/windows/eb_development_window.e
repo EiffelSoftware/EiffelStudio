@@ -2473,7 +2473,7 @@ feature -- Window management
 		do
 			save_layout_to_window_data (development_window_data)
 				-- Commit saves
-			preferences.preferences.save_resources
+			preferences.preferences.save_preferences
 		end
 
 	save_layout_to_session (a_session: ES_SESSION) is
@@ -2712,7 +2712,7 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				hide
 
 					-- Commit saves
-				preferences.preferences.save_resources
+				preferences.preferences.save_preferences
 
 				toolbars_area.wipe_out
 				address_manager.recycle

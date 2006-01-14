@@ -2054,25 +2054,25 @@ feature {NONE} -- Destroy behavior.
 		do
 			l_pre := preferences.search_tool_data
 			l_pre.init_incremental_preference.set_value (is_incremental_search)
-			preferences.preferences.save_resource (l_pre.init_incremental_preference)
+			preferences.preferences.save_preference (l_pre.init_incremental_preference)
 
 			l_pre.init_match_case_preference.set_value (is_case_sensitive)
-			preferences.preferences.save_resource (l_pre.init_match_case_preference)
+			preferences.preferences.save_preference (l_pre.init_match_case_preference)
 
 			l_pre.init_only_compiled_classes_preference.set_value (only_compiled_class_searched)
-			preferences.preferences.save_resource (l_pre.init_only_compiled_classes_preference)
+			preferences.preferences.save_preference (l_pre.init_only_compiled_classes_preference)
 
 			l_pre.init_search_backwards_preference.set_value (search_backward_button.is_selected)
-			preferences.preferences.save_resource (l_pre.init_search_backwards_preference)
+			preferences.preferences.save_preference (l_pre.init_search_backwards_preference)
 
 			l_pre.init_subclusters_preference.set_value (is_sub_cluster_searched)
-			preferences.preferences.save_resource (l_pre.init_subclusters_preference)
+			preferences.preferences.save_preference (l_pre.init_subclusters_preference)
 
 			l_pre.init_use_regular_expression_preference.set_value (is_regular_expression_used)
-			preferences.preferences.save_resource (l_pre.init_use_regular_expression_preference)
+			preferences.preferences.save_preference (l_pre.init_use_regular_expression_preference)
 
 			l_pre.init_whole_word_preference.set_value (is_whole_word_matched)
-			preferences.preferences.save_resource (l_pre.init_whole_word_preference)
+			preferences.preferences.save_preference (l_pre.init_whole_word_preference)
 
 			if is_current_editor_searched then
 				l_pre.init_scope_preference.set_selected_index (1)
@@ -2081,7 +2081,7 @@ feature {NONE} -- Destroy behavior.
 			elseif is_customized then
 				l_pre.init_scope_preference.set_selected_index (3)
 			end
-			preferences.preferences.save_resource (l_pre.init_scope_preference)
+			preferences.preferences.save_preference (l_pre.init_scope_preference)
 		end
 
 	recycle is

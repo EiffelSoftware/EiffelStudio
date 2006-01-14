@@ -104,16 +104,16 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER
 		do
 			create l_manager.make (preferences, "tools.search_tool")
-			init_incremental_preference := l_manager.new_boolean_resource_value (l_manager, init_incremental_string, true)
-			init_match_case_preference := l_manager.new_boolean_resource_value (l_manager, init_match_case_string, false)
-			init_use_regular_expression_preference := l_manager.new_boolean_resource_value (l_manager, init_use_regular_expression_string, true)
-			init_whole_word_preference := l_manager.new_boolean_resource_value (l_manager, init_whole_word_string, false)
-			init_search_backwards_preference := l_manager.new_boolean_resource_value (l_manager, init_search_backwards_string, false)
+			init_incremental_preference := l_manager.new_boolean_preference_value (l_manager, init_incremental_string, True)
+			init_match_case_preference := l_manager.new_boolean_preference_value (l_manager, init_match_case_string, False)
+			init_use_regular_expression_preference := l_manager.new_boolean_preference_value (l_manager, init_use_regular_expression_string, True)
+			init_whole_word_preference := l_manager.new_boolean_preference_value (l_manager, init_whole_word_string, False)
+			init_search_backwards_preference := l_manager.new_boolean_preference_value (l_manager, init_search_backwards_string, False)
 
-			init_scope_preference := l_manager.new_array_resource_value (l_manager, init_scope_string, <<"Current Editor","Whole Project","Custom">>)
+			init_scope_preference := l_manager.new_array_preference_value (l_manager, init_scope_string, <<"Current Editor","Whole Project","Custom">>)
 			init_scope_preference.set_is_choice (True)
-			init_only_compiled_classes_preference := l_manager.new_boolean_resource_value (l_manager, init_only_compiled_classes_string, false)
-			init_subclusters_preference := l_manager.new_boolean_resource_value (l_manager, init_subclusters_string, true)
+			init_only_compiled_classes_preference := l_manager.new_boolean_preference_value (l_manager, init_only_compiled_classes_string, False)
+			init_subclusters_preference := l_manager.new_boolean_preference_value (l_manager, init_subclusters_string, True)
 		end
 
 	preferences: PREFERENCES

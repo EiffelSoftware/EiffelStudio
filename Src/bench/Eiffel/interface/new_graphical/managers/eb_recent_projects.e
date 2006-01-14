@@ -59,8 +59,8 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER	
 		do		
 			create l_manager.make (preferences, "recent_projects")	
-			last_opened_projects_preference := l_manager.new_array_resource_value (l_manager, last_opened_projects_string, <<>>)
-			keep_n_projects_preference := l_manager.new_integer_resource_value (l_manager, keep_n_projects_String, 10)
+			last_opened_projects_preference := l_manager.new_array_preference_value (l_manager, last_opened_projects_string, <<>>)
+			keep_n_projects_preference := l_manager.new_integer_preference_value (l_manager, keep_n_projects_String, 10)
 		end
 
 	preferences: PREFERENCES

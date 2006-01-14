@@ -560,8 +560,8 @@ feature -- Status setting
 				debug ("DEBUGGER_INTERFACE")
 					io.put_string("Searching resource%N")
 				end
-				rl ?= preferences.preferences.get_resource (preferences.debug_tool_data.left_debug_layout_string)
-				rr ?= preferences.preferences.get_resource (preferences.debug_tool_data.right_debug_layout_string)
+				rl ?= preferences.preferences.get_preference (preferences.debug_tool_data.left_debug_layout_string)
+				rr ?= preferences.preferences.get_preference (preferences.debug_tool_data.right_debug_layout_string)
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string("Found resource%N")

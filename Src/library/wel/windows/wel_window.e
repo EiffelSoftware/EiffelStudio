@@ -2424,7 +2424,10 @@ feature {NONE} -- Externals
 
 	cwel_get_message_pos: INTEGER is
 		external
-			"C (): DWORD"
+			"[
+				C signature (): DWORD
+				use <windows.h>
+			]"
 		alias
 			"GetMessagePos"
 		end

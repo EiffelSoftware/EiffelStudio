@@ -1,5 +1,5 @@
 indexing
-	description	: "Default widget for viewing and editing color resources."
+	description	: "Default widget for viewing and editing color preferences."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -9,14 +9,14 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource, 
+			preference, 
 			change_item_widget,
 			update_changes
 		end
 		
 create
 	make,
-	make_with_resource
+	make_with_preference
 		
 feature -- Access
 
@@ -26,8 +26,8 @@ feature -- Access
 			Result := "DIRECTORY"
 		end	
 		
-	resource: DIRECTORY_RESOURCE
-			-- Actual resource.
+	preference: DIRECTORY_RESOURCE
+			-- Actual preference.
 
 	last_selected_value: DIRECTORY_NAME
 
@@ -44,7 +44,7 @@ feature {PREFERENCE_VIEW} -- Commands
 	change is
 			-- Change the value.
 		require
-			resource_exists: resource /= Void
+			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
 			create directory_tool
@@ -55,23 +55,23 @@ feature {PREFERENCE_VIEW} -- Commands
 feature {NONE} -- Commands
 
 	update_changes is
-			-- Update the changes made in `change_item_widget' to `resource'.		
+			-- Update the changes made in `change_item_widget' to `preference'.		
 		local
 			directory: STRING
 		do
 			directory := directory_tool.directory
 			create last_selected_value.make_from_string (directory)
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end	
 			Precursor {PREFERENCE_WIDGET}
 		end
 		
-	update_resource is
+	update_preference is
 			-- 
 		do
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end	
 		end		
 
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			change_item_widget.expose_actions.extend (agent on_directory_item_exposed (?))
-			change_item_widget.set_data (resource)			
+			change_item_widget.set_data (preference)			
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		do
 			change
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)
+				preference.set_value (last_selected_value)
 			end
 		end		
 
@@ -102,12 +102,12 @@ feature {NONE} -- Implementation
 				area.set_foreground_color (change_item_widget.parent.focused_selection_color)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (5, 1, resource.string_value)					
+				area.draw_text_top_left (5, 1, preference.string_value)					
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (5, 1, resource.string_value)					
+				area.draw_text_top_left (5, 1, preference.string_value)					
 			end			
 		end		
 

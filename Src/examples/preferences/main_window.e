@@ -49,18 +49,18 @@ feature -- Preference Testing
 			df.preferred_families.extend ("helvetica")
 
 			l_manager := basic_preferences.new_manager ("examples")
-			ir := l_factory.new_integer_resource_value (l_manager, "examples.my_integer_preference", 10)
-			ar := l_factory.new_array_resource_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
-			fr := l_factory.new_font_resource_value (l_manager, "examples.my_font_preference", df)
-			sr := l_factory.new_string_resource_value (l_manager, "examples.my_string_preference", "a string")
-			sr := l_factory.new_string_resource_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
+			ir := l_factory.new_integer_preference_value (l_manager, "examples.my_integer_preference", 10)
+			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
+			fr := l_factory.new_font_preference_value (l_manager, "examples.my_font_preference", df)
+			sr := l_factory.new_string_preference_value (l_manager, "examples.my_string_preference", "a string")
+			sr := l_factory.new_string_preference_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
 
 			l_manager := basic_preferences.new_manager ("display")
-			br := l_factory.new_boolean_resource_value (l_manager, "display.fullscreen_at_startup", True)
-			cr := l_factory.new_color_resource_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 2, 136))
+			br := l_factory.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
+			cr := l_factory.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 2, 136))
 
 			l_manager := basic_preferences.new_manager ("graphics")
-			br := l_factory.new_boolean_resource_value (l_manager, "graphics.use_maximum_resolution", True)
+			br := l_factory.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 		end
 
 	initialize_custom_preferences is
@@ -75,12 +75,12 @@ feature -- Preference Testing
 			create custom_preferences.make
 
 			create l_manager.make (custom_preferences, "display")
-			br := l_manager.new_boolean_resource_value (l_manager, "display.fullscreen_at_startup", True)
-			cr := l_manager.new_color_resource_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 128, 0))
-			dr := l_manager.new_directory_resource_value ("display.driver_location", create {DIRECTORY_NAME}.make_from_string ("C:\A Directory Location"))
+			br := l_manager.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
+			cr := l_manager.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 128, 0))
+			dr := l_manager.new_directory_preference_value ("display.driver_location", create {DIRECTORY_NAME}.make_from_string ("C:\A Directory Location"))
 
 			create l_manager.make (custom_preferences, "graphics")
-			br := l_manager.new_boolean_resource_value (l_manager, "graphics.use_maximum_resolution", True)
+			br := l_manager.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 		end
 
 	preference_window: PREFERENCES_GRID

@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			l_filename: FILE_NAME
 		do
 				-- Retrieve known preferences
-			l_known_pref_hash := preferences.resources
+			l_known_pref_hash := preferences.preferences
 			
 			if not l_known_pref_hash.is_empty then				
 				create l_pref_hash.make (l_known_pref_hash.count)					
@@ -106,67 +106,67 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_container (parent_resource: STRING) is
+	fill_container (parent_preference: STRING) is
 			-- Show parent preferences.
 		require
-			parent_not_void: parent_resource /= Void
+			parent_not_void: parent_preference /= Void
 		local		
-			l_resource: PREFERENCE
-			l_resources: HASH_TABLE [PREFERENCE, STRING]
+			l_preference: PREFERENCE
+			l_preferences: HASH_TABLE [PREFERENCE, STRING]
 			l_row_index: INTEGER
 		do
 			grid.wipe_out
 			grid.set_item (2, 1, Void)
-			parent_title_label.set_text (parent_resource)
+			parent_title_label.set_text (parent_preference)
 				-- Retrieve known preferences
-			l_resources := preferences.resources
+			l_preferences := preferences.preferences
 			from
-				l_resources.start
+				l_preferences.start
 				l_row_index := 1
 			until
-				l_resources.after
+				l_preferences.after
 			loop
-				l_resource := l_resources.item_for_iteration
-				if l_resource.name.substring (1, parent_resource.count).is_equal (parent_resource) then					
-					show_resource_in_container (l_resource, l_row_index)	
+				l_preference := l_preferences.item_for_iteration
+				if l_preference.name.substring (1, parent_preference.count).is_equal (parent_preference) then					
+					show_preference_in_container (l_preference, l_row_index)	
 				end
 				l_row_index := l_row_index + 1
-				l_resources.forth
+				l_preferences.forth
 			end
 		end		
 		
-	show_resource_in_container (a_resource: PREFERENCE; a_row_index: INTEGER) is
-				-- Show selected list resource in main container.
+	show_preference_in_container (a_preference: PREFERENCE; a_row_index: INTEGER) is
+				-- Show selected list preference in main container.
 		require
-			resource_not_void: a_resource /= Void
+			preference_not_void: a_preference /= Void
 		local
-			l_resource_widget: PREFERENCE_WIDGET
+			l_preference_widget: PREFERENCE_WIDGET
 			l_dr: DIRECTORY_RESOURCE
 			l_cr: COLOR_PREFERENCE	
 			l_br: BOOLEAN_PREFERENCE		
 		do
-			l_dr ?= a_resource
+			l_dr ?= a_preference
 			if l_dr = Void then
-				l_cr ?= a_resource
+				l_cr ?= a_preference
 				if l_cr /= Void then
-					create {COLOR_PREFERENCE_WIDGET} l_resource_widget.make_with_resource (l_cr)						
-					l_resource_widget.set_caller (Current)
-					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
-					grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+					create {COLOR_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_cr)						
+					l_preference_widget.set_caller (Current)
+					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
+					grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
 				else
-					l_br ?= a_resource
+					l_br ?= a_preference
 					if l_br /= Void then
-						create {BOOLEAN_PREFERENCE_WIDGET} l_resource_widget.make_with_resource (l_br)						
-						l_resource_widget.set_caller (Current)
-						grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
-						grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+						create {BOOLEAN_PREFERENCE_WIDGET} l_preference_widget.make_with_preference (l_br)						
+						l_preference_widget.set_caller (Current)
+						grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
+						grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
 					end
 				end
 			else
-				create {DIRECTORY_RESOURCE_WIDGET} l_resource_widget.make_with_resource (l_dr)
-				l_resource_widget.set_caller (Current)
-				grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
-				grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+				create {DIRECTORY_RESOURCE_WIDGET} l_preference_widget.make_with_preference (l_dr)
+				l_preference_widget.set_caller (Current)
+				grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_preference.name))
+				grid.set_item (2, a_row_index, l_preference_widget.change_item_widget)
 			end									
 			
 			grid.column (1).set_title ("Preference Name")
@@ -181,7 +181,7 @@ feature {NONE} -- Events
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
-			preferences.save_resources
+			preferences.save_preferences
 			destroy
 		end 
 
@@ -203,14 +203,14 @@ feature {NONE} -- Events
 			l_confirmation_dialog.show_modal_to_window (parent_window)
 			if l_confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				preferences.restore_defaults
-				fill_container (selected_resource_name)
+				fill_container (selected_preference_name)
 			end
 		end		
 		
 feature {NONE} -- Private Attributes
 
-	selected_resource_name: STRING
-			-- Selected resource
+	selected_preference_name: STRING
+			-- Selected preference
 
 	padding_width: INTEGER is 3
 			-- Column padding width

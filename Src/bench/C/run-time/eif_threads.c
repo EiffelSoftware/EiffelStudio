@@ -1279,7 +1279,9 @@ rt_shared pid_t eif_thread_fork(void) {
 	pid_t result = (pid_t) 0;
 
 		/* Synchronize GC, so that only current thread is the one allowed to perform a fork. */
+#ifdef ISE_GC
 	eif_synchronize_gc (rt_globals);
+#endif
 
 		/* EMC using as far as we know only Linux and Solaris, that's the two fork we are taking
 		 * care of. Not that for Solaris, we us `fork1()' which only forks the current thread, not
@@ -1296,6 +1298,7 @@ rt_shared pid_t eif_thread_fork(void) {
 			/* Reinitialize our global lists to let the GC think that there
 			 * is only one running thread. */
 		memset (&rt_globals_list, 0, sizeof (struct stack_list));
+#ifdef ISE_GC
 		memset (&loc_stack_list, 0, sizeof (struct stack_list));
 		memset (&loc_set_list, 0, sizeof (struct stack_list));
 		memset (&once_set_list, 0, sizeof (struct stack_list));
@@ -1318,11 +1321,14 @@ rt_shared pid_t eif_thread_fork(void) {
 #ifdef WORKBENCH
 		load_stack_in_gc (&opstack_list, &op_stack);
 #endif
+#endif
 
 		CHECK("Only one thread", rt_globals_list.count == 1);
 	}
 
+#ifdef ISE_GC
 	eif_unsynchronize_gc (rt_globals);
+#endif
 	return result;
 }
 

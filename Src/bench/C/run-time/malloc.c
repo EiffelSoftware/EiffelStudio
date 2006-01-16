@@ -441,7 +441,7 @@ doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_private void boehm_dispose (union overhead *header)
+rt_private void boehm_dispose (union overhead *header, GC_PTR cd)
 	/* Record `dispose' routine fro Boehm GC. */
 {
 	uint32 dtype;
@@ -505,7 +505,7 @@ rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint3
 			GC_is_valid_displacement((EIF_REFERENCE)(header + 1));
 #endif
 			if (has_dispose) {
-				GC_register_finalizer(header, &boehm_dispose, 0, 0, 0);
+				GC_register_finalizer(header, (void (*) (void*, void*)) &boehm_dispose, NULL, NULL, NULL);
 			}
 #endif
 			UNDISCARD_BREAKPOINTS
@@ -744,12 +744,12 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 		}
 	}
 
-#endif /* ISE_GC */
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
 	/* NOTREACHED, to avoid C compilation warning. */
 	return NULL;
+#endif /* ISE_GC */
 }
 
 /*
@@ -820,12 +820,11 @@ rt_public EIF_REFERENCE emalloc_as_old(uint32 ftype)
 		}
 	}
 
-#endif /* ISE_GC */
-
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
 	/* NOTREACHED, to avoid C compilation warning. */
 	return NULL;
+#endif /* ISE_GC */
 }
 
 /*

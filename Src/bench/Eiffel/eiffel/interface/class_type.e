@@ -1111,7 +1111,6 @@ feature -- Byte code generation
 
 					-- Initialization of the byte code context
 				byte_context.init (Current)
-				--byte_context.set_class_type (Current)
 
 				feat_tbl := associated_class.feature_table
 			until
@@ -1243,7 +1242,7 @@ feature -- Skeleton generation
 				skeleton.generate_type_array
 
 					-- Generate expanded generic type arrays
-				Byte_context.set_class_type (Current)
+				Byte_context.init (Current)
 				skeleton.generate_generic_type_arrays (type_id)
 
 				if byte_context.final_mode then

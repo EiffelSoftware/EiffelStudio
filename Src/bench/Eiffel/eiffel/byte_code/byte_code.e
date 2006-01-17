@@ -497,7 +497,7 @@ feature -- Inherited Assertions
 				if has_assertion then
 					--! Has assertion
 					inh_c := System.class_of_id (inh_f.written_in)
-					ct := inh_c.meta_type (Context.class_type)
+					ct := inh_c.meta_type (Context.original_class_type)
 					byte_code := System.byte_server.disk_item (inh_f.body_index)
 					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code)

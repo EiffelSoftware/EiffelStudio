@@ -18,7 +18,7 @@ feature
 		do
 			Result := Current
 		end
-		
+
 	is_inlined_current: BOOLEAN is True
 			-- Current is the inlined current register.
 
@@ -64,22 +64,24 @@ feature -- Register and code generation
 	print_register is
 		local
 			inlined_feature: INLINED_FEAT_B
-			current_type: CLASS_TYPE
+			context_class_type: CLASS_TYPE
+			written_class_type: CLASS_TYPE
 			current_reg: REGISTRABLE
 		do
 			--Context.current_register.print_register
 			--System.remover.inliner.inlined_feature.current_reg.print_register
 			inlined_feature := System.remover.inliner.inlined_feature
 
-			current_type := Context.class_type
+			written_class_type := Context.class_type
+			context_class_type := Context.context_class_type
 			current_reg := Context.inlined_current_register
 
-			Context.set_class_type (inlined_feature.caller_type)
+			Context.restore_class_type_context
 			Context.set_inlined_current_register (Void)
 
 			inlined_feature.current_reg.print_register
 
-			Context.set_class_type (current_type)
+			Context.change_class_type_context (context_class_type, written_class_type)
 			Context.set_inlined_current_register (current_reg)
 
 		end;

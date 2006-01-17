@@ -29,12 +29,12 @@ inherit
 	EV_SIZEABLE_CONTAINER_IMP
 		undefine
 			ev_set_minimum_width, ev_set_minimum_height, ev_set_minimum_size,
-			initialize_sizeable 
+			initialize_sizeable
 		redefine
-			compute_minimum_width, compute_minimum_height, 
+			compute_minimum_width, compute_minimum_height,
 			compute_minimum_size, interface
 		end
-		
+
 	EV_DOCKABLE_TARGET_IMP
 		redefine
 			interface
@@ -44,13 +44,13 @@ inherit
 		redefine
 			interface, initialize
 		end
-		
+
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		redefine
 			interface,
 			on_left_button_double_click
 		end
-	
+
 	WEL_IMAGELIST_TOOL_BAR
 		rename
 			make as wel_make, insert_button as wel_insert_button,
@@ -66,9 +66,9 @@ inherit
 		undefine
 			set_width, set_height, on_mouse_move, on_left_button_down,
 			on_middle_button_down, on_right_button_down, on_left_button_up,
-			on_middle_button_up, on_right_button_up, 
+			on_middle_button_up, on_right_button_up,
 			on_left_button_double_click, on_middle_button_double_click,
-			on_right_button_double_click, on_key_up, on_key_down, 
+			on_right_button_double_click, on_key_up, on_key_down,
 			on_kill_focus, on_desactivate, on_set_focus, on_set_cursor,
 			on_char, show, hide, on_size, x_position, y_position,
 			on_sys_key_down, default_process_message, on_sys_key_up,
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	bar: EV_INTERNAL_TOOL_BAR_IMP is
 			-- WEL container of `Current'
 		do
@@ -153,7 +153,7 @@ feature -- Access
 			point: WEL_POINT
 		do
 			if is_show_requested then
-				if wel_parent /= Void then	
+				if wel_parent /= Void then
 					rect := bar.window_rect
 					create point.make (rect.x, rect.y)
 					point.screen_to_client (bar.parent)
@@ -178,7 +178,7 @@ feature -- Access
 			point: WEL_POINT
 		do
 			if is_show_requested then
-				if wel_parent /= Void then	
+				if wel_parent /= Void then
 					rect := bar.window_rect
 					create point.make (rect.x, rect.y)
 					point.screen_to_client (bar.parent)
@@ -190,7 +190,7 @@ feature -- Access
 				Result := child_cell.x
 			end
 		end
-		
+
 	is_show_requested: BOOLEAN is
 			-- Is `Current' displayed in its parent?
 		do
@@ -210,7 +210,7 @@ feature -- Status report
 		do
 			Result := flag_set (bar.style, Ws_visible)
 		end
-		
+
 	has_vertical_button_style: BOOLEAN is
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
@@ -254,14 +254,14 @@ feature -- Status setting
 				update_buttons (interface, 1, count)
 			end
 		end
-		
+
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
 			if not has_vertical_button_style then
 				set_style (default_style)
 				update_buttons (interface, 1, count)
-			end	
+			end
 		end
 
 	destroy is
@@ -313,7 +313,7 @@ feature -- Status setting
 				loop
 					item_imp := list.item
 					if flag then
-						item_imp.disable_sensitive 
+						item_imp.disable_sensitive
 					else
 						if not item_imp.internal_non_sensitive then
 							item_imp.enable_sensitive
@@ -325,7 +325,7 @@ feature -- Status setting
 			end
 		ensure
 			cursor_not_moved: old ev_children.index = ev_children.index
-		end	
+		end
 
 feature -- Element change
 
@@ -359,21 +359,21 @@ feature -- Element change
 			if button.has_pixmap then
 				button.set_pixmap_in_parent
 				but.set_bitmap_index (button.image_index)
-			elseif separator_button = Void then	
+			elseif separator_button = Void then
 					-- Now special handling to ensure that the toolbar buttons are displayed
 					-- at the minimum size of their `text' by addition of an image list with
 					-- small pixmaps.
 				button.set_pixmap_in_parent
 				but.set_bitmap_index (-1)
 			end
-			
+
 				-- Also take care of toggled state if a toggle button.
 			if toggle_button /= Void and then toggle_button.is_selected then
 				but.set_state  ({WEL_TB_STATE_CONSTANTS}.Tbstate_checked | {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
 			end
-			
+
 				-- If we are a separator then there is no need to handle the text.
-			if separator_button = Void then	
+			if separator_button = Void then
 					-- Then, the text of the button.
 				button_text := button.text -- Speed optimization
 				if not button_text.is_empty then
@@ -392,7 +392,7 @@ feature -- Element change
 						--| we only add the empty text when there are children already with text.
 					if a_child_has_text then
 						add_strings (<<" ">>)
-						but.set_string_index (last_string_index)	
+						but.set_string_index (last_string_index)
 					end
 				end
 			end
@@ -413,7 +413,7 @@ feature -- Element change
 				notify_change (2 + 1, Current)
 			end
 		end
-		
+
 	remove_item (button: EV_TOOL_BAR_ITEM_IMP) is
 			-- Remove `button' from `current'.
 		local
@@ -478,11 +478,11 @@ feature -- Basic operation
 
 	internal_reset_button (but: EV_TOOL_BAR_ITEM_IMP) is
 			-- XX To update XX
-			-- This function is used each time we change an attribute of a 
-			-- button as the text or the pixmap. Yet, it should only be a 
-			-- Temporary implementation. For now, no message is available to 
+			-- This function is used each time we change an attribute of a
+			-- button as the text or the pixmap. Yet, it should only be a
+			-- Temporary implementation. For now, no message is available to
 			-- change the text of a button. But this implementation should
-			-- be changed as soon as windows allow a more direct way to 
+			-- be changed as soon as windows allow a more direct way to
 			-- change an attribute.
 		local
 			an_index: INTEGER
@@ -490,7 +490,7 @@ feature -- Basic operation
 		do
 				-- Flag `is_in_reset_button' to `True', preventing resizing occurring.
 			is_in_reset_button := True
-			
+
 			if application_imp.locked_window = Void then
 				locked_in_here := True
 				lock_window_update
@@ -504,12 +504,12 @@ feature -- Basic operation
 			is_in_reset_button := False
 			notify_change (2 + 1, Current)
 		end
-		
+
 	is_in_reset_button: BOOLEAN
 		-- Is `internal_reset_button' currently executing?
 		-- Used to prevent sizing notifications from occurring during `internal_reset_button' which
 		-- calls `remove_item' followed by `insert_item'.
-		
+
 	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
 			-- Is `Current' at position `x_pos', `y_pos' a dockable source?
 		local
@@ -545,7 +545,7 @@ feature -- Basic operation
 		do
 			pre_drop_it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			
+
 			if pre_drop_it /= Void and then pre_drop_it.is_dockable and button = 1 and not is_dock_executing then
 				item_is_dockable_source := True
 				start_docking (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y, pre_drop_it.interface)
@@ -574,7 +574,7 @@ feature -- Basic operation
 					pnd_item_source.pnd_press (
 						x_pos, y_pos, button, pt.x, pt.y)
 				end
-	
+
 				if item_is_pnd_source_at_entry = item_is_pnd_source then
 					pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
@@ -583,12 +583,12 @@ feature -- Basic operation
 				interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
-					
+
 			post_drop_it ?= find_item_at_position (x_pos, y_pos)
 
 				-- If there is an item where the button press was recieved,
 				-- and it has not changed from the start of this procedure
-				-- then call `pointer_button_press_actions'. 
+				-- then call `pointer_button_press_actions'.
 				--| Internal_propagate_pointer_press in
 				--| EV_MULTI_COLUMN_LIST_IMP has a fuller explanation.
 			if not item_press_actions_called then
@@ -616,7 +616,7 @@ feature -- Basic operation
 				pt.x, pt.y])
 			end
 		end
-		
+
 feature {EV_ANY_I}
 
 	update_for_pick_and_drop (starting: BOOLEAN) is
@@ -632,8 +632,8 @@ feature {EV_ANY_I}
 				ev_children.forth
 			end
 		end
-		
-	
+
+
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 
 	button_associated_with_id (command_id: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
@@ -670,15 +670,15 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 				-- Assign button associated with `command_id' to but.
 			but := button_associated_with_id (command_id)
 
-				-- Update the state of the toggle button 
+				-- Update the state of the toggle button
 				-- (if it's a toggle button)
 			toggle_but ?= but
 			if toggle_but /= Void then
 				toggle_but.update_selected (button_checked  (command_id))
 			end
-			
+
 			radio_button ?= but
-			
+
 			if radio_button /= Void and radio_button.is_sensitive then
 				radio_button.update_radio_states
 				if radio_button.selected_peer = radio_button.interface then
@@ -720,10 +720,10 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 		ensure
 			imagelists_not_void: default_imagelist /= Void and hot_imagelist /= Void
 		end
-		
+
 	has_false_image_list: BOOLEAN
 		-- Is an image list associated with `Current' due to an item with a pixmap?
-		
+
 	enable_false_image_list is
 			-- Ensure `has_false_image_list' is `True'.
 		do
@@ -731,7 +731,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 		ensure
 			enabled: has_false_image_list = True
 		end
-		
+
 	disable_false_image_list is
 			-- Ensure `has_false_image_list' is `False'.
 		do
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 			end
 			ev_children.go_to (a_cursor)
 		end
-	
+
 	children_with_text: INTEGER is
 			-- Does a child of `Current' have a text set?
 		local
@@ -871,7 +871,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	wel_set_parent (a_parent: WEL_WINDOW) is
-			-- Assign `a_parent' as the parent of `Current'. 
+			-- Assign `a_parent' as the parent of `Current'.
 		do
 			bar.set_parent (a_parent)
 		end
@@ -911,8 +911,8 @@ feature {NONE} -- WEL Implementation
 		local
 			it: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
-			it ?= find_item_at_position (x_pos, y_pos)  
-			if it /= Void then 
+			it ?= find_item_at_position (x_pos, y_pos)
+			if it /= Void then
 				disable_default_processing
 			end
 			Precursor {EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP} (keys, x_pos, y_pos)
@@ -931,11 +931,11 @@ feature {NONE} -- WEL Implementation
 		end
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
-		
+
 	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
-   			-- By default there is no background  
+   			-- By default there is no background
 		do
  			if exists then
 				create Result.make_solid (wel_background_color)
@@ -1025,7 +1025,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 				end
 			end
 		end
-		
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	insertion_position: INTEGER is
@@ -1047,7 +1047,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 				Result := count + 1
 			end
 		end
-		
+
 	block_selection_for_docking is
 			-- Ensure that a tool bar button is not selected as a
 			-- result of the transport ending.
@@ -1080,7 +1080,7 @@ feature {NONE} -- Implementation
 			button_rectangle := button_rect (internal_get_index (but))
 			window_rectangle := window_rect
 			b := bar
-			Result := b.window_rect.top + 
+			Result := b.window_rect.top +
 			((b.window_rect.height - button_rectangle.height)//2) - 1
 		end
 

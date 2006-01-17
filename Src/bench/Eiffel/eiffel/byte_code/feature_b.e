@@ -11,7 +11,7 @@ inherit
 	CALL_ACCESS_B
 		redefine
 			is_feature, set_parameters,
-			parameters, enlarged, context_type,
+			parameters, enlarged, enlarged_on, context_type,
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
@@ -76,8 +76,22 @@ feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
 			-- Process current element.
+		local
+			c: CL_TYPE_I
+			f: FEATURE_I
+			a: ACCESS_B
 		do
-			v.process_feature_b (Current)
+				-- Ensure the feature is not redeclared into attribute
+			c ?= context_type
+			f := c.base_class.feature_of_rout_id (routine_id)
+			if f.is_attribute then
+					-- Create new byte node and process it instead of the current one
+				a := f.access (real_type (type))
+				a.set_parent (parent)
+				a.process (v)
+			else
+				v.process_feature_b (Current)
+			end
 		end
 
 feature -- Access
@@ -145,19 +159,40 @@ feature -- Access
 			end
 		end
 
-	enlarged: FEATURE_B is
+	enlarged: CALL_ACCESS_B is
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
+		do
+			Result := enlarged_on (context_type)
+		end
+
+	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
+			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
 			feature_bl: FEATURE_BL
+			c: CL_TYPE_I
+			f: FEATURE_I
+			a: CALL_ACCESS_B
 		do
-			if context.final_mode then
-				create feature_bl
-			else
-				create {FEATURE_BW} feature_bl.make
+				-- Ensure the feature is not redeclared into attribute
+			c ?= real_type (type_i)
+			if c /= Void then
+				f := c.base_class.feature_of_rout_id (routine_id)
 			end
-			feature_bl.fill_from (Current)
-			Result := feature_bl
+			if f /= Void and then f.is_attribute then
+					-- Create new byte node and process it instead of the current one
+				a ?= f.access (real_type (type))
+				a.set_parent (parent)
+				Result := a.enlarged
+			else
+				if context.final_mode then
+					create feature_bl
+				else
+					create {FEATURE_BW} feature_bl.make
+				end
+				feature_bl.fill_from (Current)
+				Result := feature_bl
+			end
 		end
 
 feature -- Context type
@@ -285,7 +320,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: FEATURE_B is
+	inlined_byte_code: ACCESS_B is
 		local
 			inlined_feat_b: INLINED_FEAT_B
 			inline: BOOLEAN
@@ -293,9 +328,13 @@ feature -- Inlining
 			type_i: TYPE_I
 			cl_type: CL_TYPE_I
 			bc: STD_BYTE_CODE
-			old_c_t: CLASS_TYPE
 			l_rout_table: ROUT_TABLE
 			l_body_index: INTEGER
+			entry: ROUT_ENTRY
+			f: FEATURE_I
+			a: ACCESS_B
+			context_class_type: CLASS_TYPE
+			written_class_type: CLASS_TYPE
 		do
 			if not is_once then
 				type_i := context_type
@@ -308,7 +347,8 @@ feature -- Inlining
 							-- Only if it is implemented that we can inline it.
 						if l_rout_table.is_implemented then
 							inliner := System.remover.inliner
-							l_body_index := l_rout_table.item.body_index
+							entry := l_rout_table.item
+							l_body_index := entry.body_index
 							inline := inliner.inline (type, l_body_index)
 						end
 					end
@@ -316,24 +356,38 @@ feature -- Inlining
 			end
 
 			if inline then
-					-- Creation of a special node for the entire
-					-- feature (descendant of STD_BYTE_CODE)
-				inliner.set_current_feature_inlined
-				if cl_type.base_class.is_special then
-					create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
+					-- Ensure the feature is not redeclared into attribute or external routine
+				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
+				if f.is_attribute or else f.is_external then
+						-- Create new byte node and process it instead of the current one
+					a := f.access (real_type (type))
+					a.set_parent (parent)
+					a.set_parameters (parameters)
+					Result := a.inlined_byte_code
 				else
-					create inlined_feat_b
+						-- Creation of a special node for the entire
+						-- feature (descendant of STD_BYTE_CODE)
+					inliner.set_current_feature_inlined
+					if cl_type.base_class.is_special then
+						create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
+					else
+						create inlined_feat_b
+					end
+					inlined_feat_b.fill_from (Current)
+					bc ?= Byte_server.disk_item (l_body_index)
+
+					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
+					context_class_type := system.class_type_of_id (entry.type_id)
+					written_class_type := context_class_type.associated_class.implemented_type (f.written_in, context_class_type.type).associated_class_type
+					inlined_feat_b.set_context_type (context_class_type, written_class_type)
+
+					Context.change_class_type_context (context_class_type, written_class_type)
+					bc := bc.pre_inlined_code
+					Context.restore_class_type_context
+
+					inlined_feat_b.set_inlined_byte_code (bc)
+					Result := inlined_feat_b
 				end
-				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (l_body_index)
-
-				old_c_t := Context.class_type
-				Context.set_class_type (current_class_type)
-				bc := bc.pre_inlined_code
-				Context.set_class_type (old_c_t)
-
-				inlined_feat_b.set_inlined_byte_code (bc)
-				Result := inlined_feat_b
 			else
 				Result := Current
 				if parameters /= Void then

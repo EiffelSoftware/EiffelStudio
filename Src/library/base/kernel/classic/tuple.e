@@ -9,12 +9,12 @@ class
 
 inherit
 	HASHABLE
-	
+
 	MISMATCH_CORRECTOR
 		redefine
 			correct_mismatch
 		end
-	
+
 create
 	default_create, make
 
@@ -51,7 +51,7 @@ feature -- Access
 			when Reference_code then Result := eif_reference_item ($Current, index)
 			end
 		end
-	
+
 	reference_item (index: INTEGER): ANY is
 			-- Reference item at `index'.
 		require
@@ -60,7 +60,7 @@ feature -- Access
 		do
 			Result := eif_reference_item ($Current, index)
 		end
-		
+
 	boolean_item (index: INTEGER): BOOLEAN is
 			-- Boolean item at `index'.
 		require
@@ -186,20 +186,20 @@ feature -- Access
 		do
 			Result := eif_real_32_item ($Current, index)
 		end
-		
+
 feature -- Status report
 
 	hash_code: INTEGER is
 			-- Hash code value
-		local 
-			i, nb, l_hash: INTEGER 
-			l_key: HASHABLE 
-		do 
+		local
+			i, nb, l_hash: INTEGER
+			l_key: HASHABLE
+		do
 			from
 				i := 1
 				nb := count
 			until
-				i > nb 
+				i > nb
 			loop
 				inspect eif_item_type($Current, i)
 				when boolean_code then l_hash := eif_boolean_item ($Current, i).hash_code
@@ -217,19 +217,19 @@ feature -- Status report
 				when integer_32_code then l_hash := eif_integer_32_item ($Current, i).hash_code
 				when integer_64_code then l_hash := eif_integer_64_item ($Current, i).hash_code
 				when reference_code then
-					l_key ?= eif_reference_item ($Current, i) 
-					if l_key /= Void then 
+					l_key ?= eif_reference_item ($Current, i)
+					if l_key /= Void then
 						l_hash := l_key.hash_code
 					else
 						l_hash := 0
 					end
 				end
-				Result := Result + l_hash * internal_primes.i_th (i) 
-				i := i + 1 
-			end 
+				Result := Result + l_hash * internal_primes.i_th (i)
+				i := i + 1
+			end
 				-- Ensure it is a positive value.
 			Result := Result.hash_code
-		end 
+		end
 
 	valid_index (k: INTEGER): BOOLEAN is
 			-- Is `k' a valid key?
@@ -277,7 +277,7 @@ feature -- Status report
 				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
 				when integer_32_code then l_i32 ?= v; Result := l_i32 /= Void
 				when integer_64_code then l_i64 ?= v; Result := l_i64 /= Void
-				when Reference_code then
+				when Reference_code then	
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
 					create l_int
@@ -286,7 +286,7 @@ feature -- Status report
 				end
 			end
 		end
-		
+
 	count: INTEGER is
 			-- Number of element in Current.
 		do
@@ -346,7 +346,7 @@ feature -- Element change
 		do
 			eif_put_reference_item_with_object ($Current, index, $v)
 		end
-		
+
 	put_boolean (v: BOOLEAN; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -355,7 +355,7 @@ feature -- Element change
 		do
 			eif_put_boolean_item ($Current, index, v)
 		end
-		
+
 	put_character (v: CHARACTER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -364,7 +364,7 @@ feature -- Element change
 		do
 			eif_put_character_item ($Current, index, v)
 		end
-		
+
 	put_wide_character (v: WIDE_CHARACTER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -373,7 +373,7 @@ feature -- Element change
 		do
 			eif_put_wide_character_item ($Current, index, v)
 		end
-		
+
 	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -382,7 +382,7 @@ feature -- Element change
 		do
 			eif_put_real_64_item ($Current, index, v)
 		end
-		
+
 	put_real_32, put_real (v: REAL; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -391,7 +391,7 @@ feature -- Element change
 		do
 			eif_put_real_32_item ($Current, index, v)
 		end
-		
+
 	put_pointer (v: POINTER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -409,7 +409,7 @@ feature -- Element change
 		do
 			eif_put_natural_8_item ($Current, index, v)
 		end
-		
+
 	put_natural_16 (v: NATURAL_16; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -427,7 +427,7 @@ feature -- Element change
 		do
 			eif_put_natural_32_item ($Current, index, v)
 		end
-		
+
 	put_natural_64 (v: NATURAL_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -445,7 +445,7 @@ feature -- Element change
 		do
 			eif_put_integer_32_item ($Current, index, v)
 		end
-		
+
 	put_integer_8 (v: INTEGER_8; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -454,7 +454,7 @@ feature -- Element change
 		do
 			eif_put_integer_8_item ($Current, index, v)
 		end
-		
+
 	put_integer_16 (v: INTEGER_16; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -463,7 +463,7 @@ feature -- Element change
 		do
 			eif_put_integer_16_item ($Current, index, v)
 		end
-		
+
 	put_integer_64 (v: INTEGER_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -1042,7 +1042,7 @@ feature -- Retrieval
 				Precursor {MISMATCH_CORRECTOR}
 			end
 		end
-		
+
 feature -- Access
 
 	item_code (index: INTEGER): NATURAL_8 is
@@ -1107,7 +1107,7 @@ feature {NONE} -- Implementation
 
 	internal_primes: PRIMES is
 			-- For quick access to prime numbers.
-		once 
+		once
 			create Result
 		end
 

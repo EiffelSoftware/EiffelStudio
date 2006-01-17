@@ -39,13 +39,13 @@ feature -- Access
 		do
 			Result := n
 		end
-	
+
 	assembly_id: INTEGER is
 			-- Assembly containing type
 		do
 			Result := i
 		end
-		
+
 	is_by_ref: BOOLEAN is
 			-- Is current type a byref one?
 		do
@@ -61,12 +61,12 @@ feature -- Setting
 		ensure
 			is_by_ref_set: is_by_ref
 		end
-		
+
 feature {NONE} -- Access
 
 	n: STRING
 			-- Internal data for `name'.
-			
+
 	i: INTEGER
 			-- Internal data for `assembly_id'.
 

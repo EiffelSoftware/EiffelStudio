@@ -6,7 +6,7 @@ class INLINED_FEAT_B
 inherit
 	FEATURE_BL
 		redefine
-			enlarged, analyze_on, generate_metamorphose_end, 
+			enlarged, analyze_on, generate_metamorphose_end,
 			generate_end, fill_from,
 			generate_parameters,
 			unanalyze, perused,
@@ -27,6 +27,12 @@ feature
 
 	temporary_parameters: ARRAY [BOOLEAN];
 
+	context_type_id: INTEGER
+			-- Class type ID of the class type from which the feature is called
+
+	written_type_id: INTEGER
+			-- Class type ID of the class type where the feature is written
+
 	fill_from (f: FEATURE_B) is
 		do
 			feature_name_id := f.feature_name_id;
@@ -37,7 +43,20 @@ feature
 			if parameters /= Void then
 				parameters := parameters.inlined_byte_code
 			end
-			
+		end
+
+	set_context_type (context_class_type, written_class_type: CLASS_TYPE) is
+			-- Set a class type on which the feature is called
+			-- and a class type where the feature is written in.
+		require
+			context_class_type_not_void: context_class_type /= Void
+			written_class_type_not_void: written_class_type /= Void
+		do
+			context_type_id := context_class_type.type_id
+			written_type_id := written_class_type.type_id
+		ensure
+			context_type_id_set: context_type_id = context_class_type.type_id
+			written_type_id_set: written_type_id = written_class_type.type_id
 		end
 
 	enlarged: INLINED_FEAT_B is
@@ -45,10 +64,12 @@ feature
 			local_inliner: INLINER
 		do
 			Result := Current
-			enlarge_parameters;
+			enlarge_parameters
 
 			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current);
+			local_inliner.set_inlined_feature (Current)
+			Context.change_class_type_context
+				(system.class_type_of_id (context_type_id), system.class_type_of_id (written_type_id))
 
 			compound := byte_code.compound;
 			if compound /= Void then
@@ -56,11 +77,11 @@ feature
 				saved_compound := compound.deep_twin
 			else
 				saved_compound := Void
-			end;
+			end
 
-			local_inliner.set_inlined_feature (Void);
+			Context.restore_class_type_context
+			local_inliner.set_inlined_feature (Void)
 		end
-
 
 	free_register is
             -- Free registers
@@ -84,12 +105,12 @@ feature
 	analyze_on (reg: REGISTRABLE) is
 		local
 			result_type: TYPE_I;
-			old_current_class_type: CLASS_TYPE;
 			reg_type: TYPE_C;
 			local_is_current_temporary: BOOLEAN;
 			a: ATTRIBUTE_BL;
 			access: ACCESS_EXPR_B
 			local_inliner: INLINER
+			cl_type_i: CL_TYPE_I
 		do
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg);
@@ -97,12 +118,12 @@ feature
 			reg_type := reg.c_type;
 
 				-- Instantiation of the result type (used by INLINED_RESULT_B)
-			type := real_type (type);
+			type := real_type (type)
 			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current);
+			local_inliner.set_inlined_feature (Current)
 
-			old_current_class_type := Context.class_type;
-			Context.set_class_type (current_class_type);
+			cl_type_i ?= context_type
+			Context.change_class_type_context (cl_type_i.associated_class_type, current_class_type)
 
 			-- current_reg := get_current_register (reg_type);
 			local_is_current_temporary := reg.is_temporary or reg.is_predefined;
@@ -112,7 +133,7 @@ feature
 			else
 				-- We have to check if `Current' is an attribute. A much nicer way
 				-- would be to define a feature in REGISTRABLE which would indicate
-				-- whether the register can be used during inlining, and to 
+				-- whether the register can be used during inlining, and to
 				-- redefine it in the appropriate descendants.
 
 				a ?= reg;
@@ -122,8 +143,8 @@ feature
 						local_is_current_temporary := current_reg.is_temporary
 					end
 				else
-					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the 
-					-- feature is an infixed routine). The attribute is stored in 
+					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the
+					-- feature is an infixed routine). The attribute is stored in
 					-- field `expr'.
 					access ?= reg;
 					if access /= Void then
@@ -173,8 +194,8 @@ feature
 
 			local_inliner.set_inlined_feature (Void);
 
-			Context.set_class_type (old_current_class_type);
-			Context.set_inlined_current_register (Void);
+			Context.restore_class_type_context
+			Context.set_inlined_current_register (Void)
 		end
 
 	argument_type (pos: INTEGER): TYPE_I is
@@ -188,7 +209,8 @@ feature -- Generation
 	generate_parameters (gen_reg: REGISTRABLE) is
 		local
 			expr: EXPR_B;
-			current_t: CLASS_TYPE
+			context_class_type: CLASS_TYPE
+			written_class_type: CLASS_TYPE
 			buf: GENERATION_BUFFER
 			local_inliner: INLINER
 			p: like parameters
@@ -249,12 +271,12 @@ feature -- Generation
 					-- Set the value of the result register to the default
 				reset_register_value (byte_code.result_type, result_reg)
 			end;
-				
-			caller_type := Context.class_type;
-			current_t := current_class_type;
 
-			Context.set_class_type (current_t);
-			Context.set_inlined_current_register (current_reg);
+			context_class_type := system.class_type_of_id (context_type_id)
+			written_class_type := system.class_type_of_id (written_type_id)
+
+			Context.change_class_type_context (context_class_type, written_class_type)
+			Context.set_inlined_current_register (current_reg)
 
 			if not is_current_temporary then
 
@@ -263,20 +285,19 @@ feature -- Generation
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
-				
-				Context.set_class_type (caller_type);
-				Context.set_inlined_current_register (Void);
-				
-				gen_reg.print_register;
-				buf.put_character (';');
-				buf.put_new_line
-				
-				buf.put_new_line
-				
-				Context.set_class_type (current_t);
-				Context.set_inlined_current_register (current_reg);
 
-			end;
+				Context.restore_class_type_context
+				Context.set_inlined_current_register (Void)
+
+				gen_reg.print_register
+				buf.put_character (';')
+				buf.put_new_line
+
+				buf.put_new_line
+
+				Context.change_class_type_context (context_class_type, written_class_type)
+				Context.set_inlined_current_register (current_reg)
+			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
 				buf.put_character ('{')
@@ -298,7 +319,7 @@ feature -- Generation
 				end
 				buf.put_new_line
 			end
-			
+
 			if compound /= Void then
 				compound.generate
 			end
@@ -314,18 +335,16 @@ feature -- Generation
 				end
 			end
 
-			Context.set_inlined_current_register (Void);
-
 			buf.put_string ("/* END INLINED CODE */");
 			buf.put_new_line;
 
 			buf.put_character ('}');
 			buf.put_new_line;
 
-			Context.set_class_type (caller_type);
-			caller_type := Void;
+			Context.restore_class_type_context
+			Context.set_inlined_current_register (Void)
 
-			local_inliner.set_inlined_feature (Void);
+			local_inliner.set_inlined_feature (Void)
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I) is
@@ -354,11 +373,6 @@ feature -- Registers
 	result_reg: REGISTER;
 
 	Current_reg: REGISTRABLE;
-
-feature -- Type information
-
-	caller_type: CLASS_TYPE
-		-- Caller type
 
 feature {NONE}
 
@@ -426,7 +440,7 @@ feature {NONE} -- Registers
 							if p /= Void then
 									-- We have a parameter.
 								expr := p.expression;
-									-- If the rest fails, at least local_reg will be this, 
+									-- If the rest fails, at least local_reg will be this,
 									-- which includes the ATTRIBUTE_BL case.
 								local_reg := expr.register;
 									-- Do we have a local (LOCAL_BL)?
@@ -434,8 +448,8 @@ feature {NONE} -- Registers
 									local_reg := expr;
 									is_param_temporary_reg := True
 								else
-										-- We might have a nested call: `a.b.c.d'. The 
-										-- register we're looking for is d's, but we have to 
+										-- We might have a nested call: `a.b.c.d'. The
+										-- register we're looking for is d's, but we have to
 										-- traverse the nested calls first:
 									nest ?= expr;
 									if nest /= Void then

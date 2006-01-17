@@ -1102,12 +1102,9 @@ feature -- Class info
 			class_interface: CLASS_INTERFACE
 			parent_type: CL_TYPE_I
 			parents: FIXED_LIST [CL_TYPE_A]
-			l_class_type: CLASS_TYPE
 			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 			l_type: CL_TYPE_I
 		do
-			l_class_type := byte_context.class_type
-
 			l_native_array ?= class_type
 			if l_native_array /= Void then
 				external_class_mapping.put (class_type.type, l_native_array.il_type_name)
@@ -1130,19 +1127,13 @@ feature -- Class info
 			until
 				parents.after
 			loop
-				byte_context.set_class_type (class_type)
-				parent_type ?= byte_context.real_type (parents.item.type_i)
+				parent_type ?= byte_context.real_type_in (parents.item.type_i, class_type)
 				pars.force (parent_type.associated_class_type.class_interface)
 				parents.forth
 			end
 
 			class_interface.set_parents (pars)
 			class_type.set_class_interface (class_interface)
-
-				-- Restore byte context if any.
-			if l_class_type /= Void then
-				byte_context.set_class_type (l_class_type)
-			end
 		end
 
 	generate_class_attributes (class_type: CLASS_TYPE) is
@@ -1915,15 +1906,13 @@ feature -- Features info
 						-- Generate local definition signature using the parent
 						-- signature. We do not do it on the parent itself because
 						-- its `feature_id' is not appropriate in `current_class_type'.
-					Byte_context.set_class_type (class_type)
 					duplicated_feature := local_feature.duplicate
 					if duplicated_feature.is_routine then
 						proc ?= duplicated_feature
 						proc.set_arguments (inherited_feature.arguments)
 					end
 					duplicated_feature.set_type (inherited_feature.type, inherited_feature.assigner_name_id)
-					generate_feature (duplicated_feature, False, False, False)
-					Byte_context.set_class_type (current_class_type)
+					implementation_generate_feature (duplicated_feature, False, False, False, False, class_type)
 				end
 			elseif not is_single_class then
 				generate_feature (local_feature, False, False, False)
@@ -2012,15 +2001,11 @@ feature -- Features info
 			l_naming_convention: BOOLEAN
 			l_is_single_class: BOOLEAN
 			l_is_static: BOOLEAN
-			l_current_class_type: CLASS_TYPE
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := actual_class_type_token (a_type_id)
 			l_feat := l_class_type.associated_class.feature_of_feature_id (a_feature_id)
 			l_is_single_class := l_class_type.is_generated_as_single_type
-
-			l_current_class_type := byte_context.class_type
-			byte_context.set_class_type (l_class_type)
 
 			l_is_attribute := l_feat.is_attribute
 			l_is_c_external := l_feat.is_c_external
@@ -2042,7 +2027,7 @@ feature -- Features info
 			create l_signature.make (0, l_parameter_count)
 			l_signature.compare_references
 
-			l_return_type := result_type (l_feat)
+			l_return_type := result_type_in (l_feat, l_class_type)
 			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
 				l_field_sig := field_sig
 				l_field_sig.reset
@@ -2087,7 +2072,7 @@ feature -- Features info
 					until
 						l_feat_arg.after
 					loop
-						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+						l_type_i := argument_actual_type_in (l_feat_arg.item.actual_type.type_i, l_class_type)
 						set_signature_type (l_meth_sig, l_type_i)
 						l_signature.put (l_type_i.static_type_id, i + 1)
 						i := i + 1
@@ -2185,13 +2170,6 @@ feature -- Features info
 					last_non_recorded_feature_token := l_meth_token
 				end
 			end
-
-				-- Restore context.
-			if l_current_class_type /= Void then
-				byte_context.set_class_type (l_current_class_type)
-			else
-				byte_context.set_class_type (current_class_type)
-			end
 		end
 
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override_or_c_external: BOOLEAN) is
@@ -2199,15 +2177,16 @@ feature -- Features info
 		require
 			feat_not_void: feat /= Void
 		do
-			implementation_generate_feature (feat, in_interface, is_static, is_override_or_c_external, False)
+			implementation_generate_feature (feat, in_interface, is_static, is_override_or_c_external, False, byte_context.class_type)
 		end
 
 	implementation_generate_feature (
-			feat: FEATURE_I; in_interface, is_static, is_override_or_c_external, is_empty: BOOLEAN)
+			feat: FEATURE_I; in_interface, is_static, is_override_or_c_external, is_empty: BOOLEAN; signature_declaration_type: CLASS_TYPE)
 		is
-			-- Generate interface `feat' description.
+			-- Generate interface `feat' description using for `signature_declaration_type' for signature evaluation.
 		require
 			feat_not_void: feat /= Void
+			signature_declaration_type_not_void: signature_declaration_type /= Void
 		local
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
@@ -2239,7 +2218,7 @@ feature -- Features info
 			create l_signature.make (0, l_parameter_count)
 			l_signature.compare_references
 
-			l_return_type := result_type (feat)
+			l_return_type := result_type_in (feat, signature_declaration_type)
 			l_is_attribute_generated_as_field := ((is_single_class and not current_class_type.is_expanded and not is_override_or_c_external) or
 				(not in_interface and is_static)) and l_is_attribute
 			if l_is_attribute_generated_as_field then
@@ -2287,7 +2266,7 @@ feature -- Features info
 					until
 						l_feat_arg.after
 					loop
-						l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+						l_type_i := argument_actual_type_in (l_feat_arg.item.actual_type.type_i, signature_declaration_type)
 						set_signature_type (l_meth_sig, l_type_i)
 						l_signature.put (l_type_i.static_type_id, i + 1)
 						i := i + 1
@@ -2536,6 +2515,33 @@ feature -- Features info
 			feature_i_not_viod: feature_i /= Void
 		do
 			Result := argument_actual_type (feature_i.type.actual_type.type_i)
+		ensure
+			result_not_void: Result /= Void
+			void_if_procedure: not feature_i.has_return_value implies Result.is_void
+		end
+
+	argument_actual_type_in (a_type: TYPE_I; class_type: CLASS_TYPE): TYPE_I is
+			-- Compute real type of `a_type' in `class_type'.
+		require
+			a_type_not_void: a_type /= Void
+			class_type_not_void: class_type /= Void
+		do
+			if a_type.is_none then
+				Result := System.any_class.compiled_class.types.first.type
+			else
+				Result := byte_context.real_type_in (a_type, class_type)
+			end
+		ensure
+			valid_result: Result /= Void
+		end
+
+	result_type_in (feature_i: FEATURE_I; class_type: CLASS_TYPE): TYPE_I is
+			-- Actual type of a result of feature `feature_i' in `class_type'
+		require
+			feature_i_not_viod: feature_i /= Void
+			class_type_not_void: class_type /= Void
+		do
+			Result := argument_actual_type_in (feature_i.type.actual_type.type_i, class_type)
 		ensure
 			result_not_void: Result /= Void
 			void_if_procedure: not feature_i.has_return_value implies Result.is_void
@@ -3047,7 +3053,7 @@ feature -- IL Generation
 					-- Load a value of the object.
 				generate_load_from_address (type_i)
 					-- Now it has to be converted to a ... (see below)
-				if result_type (feat).is_expanded then
+				if result_type_in (feat, current_class_type).is_expanded then
 						-- ... unboxed value.
 						-- (Already done.)
 				else
@@ -3183,10 +3189,8 @@ feature -- IL Generation
 					-- We have to generate body of `inh_feat' in context of
 					-- `parent_type' in order to correctly evaluate its
 					-- signature in current context.
-				Byte_context.set_class_type (parent_type)
-				generate_feature (inh_feat, False, False, True)
-				l_return_type := result_type (inh_feat)
-				Byte_context.set_class_type (current_class_type)
+				implementation_generate_feature (inh_feat, False, False, True, False, parent_type)
+				l_return_type := result_type_in (inh_feat, parent_type)
 
 					-- We need to restore the name right away.
 				inh_feat.set_feature_name_id (l_name_id, inh_feat.alias_name_id)
@@ -5964,22 +5968,20 @@ feature -- Convenience
 
 	context_type (node: CALL_ACCESS_B): CL_TYPE_I is
 			-- Context type of a `node'.
-		local
-			saved_class_type: CLASS_TYPE
 		do
-			saved_class_type := byte_context.class_type
-			byte_context.set_class_type (current_class_type)
+			debug ("fixme")
+				fixme ("Remove this feature")
+			end
 			Result ?= node.context_type
-			byte_context.set_class_type (saved_class_type)
 		end
 
 	real_type (type_i: TYPE_I): TYPE_I is
 			-- `type_i' evaluated in the current context.
 		do
-			Result := byte_context.real_type (type_i)
-			if current_class_type.is_expanded and then byte_context.class_type /= current_class_type then
-				Result := Result.created_in (current_class_type)
+			debug ("fixme")
+				fixme ("Remove this feature")
 			end
+			Result := byte_context.real_type (type_i)
 		end
 
 feature -- Generic conformance
@@ -6828,19 +6830,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

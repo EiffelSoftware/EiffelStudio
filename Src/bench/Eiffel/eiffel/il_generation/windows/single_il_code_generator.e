@@ -16,10 +16,10 @@ inherit
 		redefine
 			make
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create processed_tbl.make (20)
 			create rout_ids_tbl.make (50)
 		end
-		
+
 feature {NONE} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is True
@@ -37,8 +37,8 @@ feature {NONE} -- Access
 
 	rout_ids_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 			-- Table of FEATURE_I indexed by routine IDs, to quickly find out
-			-- if a FEATURE_I with a given routine ID has already been generated 
-			-- in `currrent_class_type'. If so, a MethodImpl is defined on 
+			-- if a FEATURE_I with a given routine ID has already been generated
+			-- in `currrent_class_type'. If so, a MethodImpl is defined on
 			-- generated routine. Otherwise, we have to traverse `current_select_tbl'
 			-- to find associated FEATURE_I and generate a new feature.
 
@@ -67,7 +67,7 @@ feature -- IL Generation
 				-- Reset data
 			rout_ids_tbl.wipe_out
 			processed_tbl.wipe_out
-		
+
 				-- Initialize implementation.
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := actual_class_type_token (current_type_id)
@@ -81,7 +81,7 @@ feature -- IL Generation
 			main_parent := class_c.main_parent
 			generate_il_type_features (class_c, class_type, class_c.generic_features)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features)
-			
+
 			class_interface := class_type.class_interface
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_main_parent (class_type)
@@ -104,7 +104,7 @@ feature -- IL Generation
 
 				-- Generate features.
 			generate_il_features (class_c, class_type,
-				agent generate_method_impl, 
+				agent generate_method_impl,
 				agent generate_local_feature,
 				agent generate_inherited_feature,
 				agent generate_type_feature)
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 				features.forth
 			end
 		end
-	
+
 	generate_il_first_parent_implementation
 			(class_interface: CLASS_INTERFACE; class_c: CLASS_C;
 			class_type: CLASS_TYPE)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 								mark_as_treated (feat)
 							else
 								if
-									not inh_feat.is_attribute and 
+									not inh_feat.is_attribute and
 									not main_parent.simple_conform_to (feat.written_class)
 								then
 										-- Case of local renaming or implicit
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 						generate_feature (feat, False, True, False)
 						generate_feature_code (feat, True)
 					end
-	
+
 						-- Generate local definition of `feat' which
 						-- calls static definition.
 					if inh_feat /= Void then
@@ -433,22 +433,20 @@ feature {NONE} -- Implementation
 								-- Generate local definition signature using the parent
 								-- signature. We do not do it on the parent itself because
 								-- its `feature_id' is not appropriate in `current_class_type'.
-							Byte_context.set_class_type (class_type)
 							dup_feat := feat.duplicate
 							if dup_feat.is_routine then
 								proc ?= dup_feat
 								proc.set_arguments (inh_feat.arguments)
 							end
 							dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
-							generate_feature (dup_feat, False, False, False)
-							Byte_context.set_class_type (current_class_type)
+							implementation_generate_feature (dup_feat, False, False, False, False, class_type)
 						else
 							generate_feature (feat, False, False, False)
 						end
 					else
 						generate_feature (feat, False, False, False)
 					end
-					
+
 					if not is_replicated then
 							-- We call locally above generated static feature
 						generate_feature_il (feat,
@@ -496,7 +494,7 @@ feature {NONE} -- Implementation
 			feat_is_deferred: feat.is_deferred
 			class_type_not_void: class_type /= Void
 		do
-			implementation_generate_feature (feat, False, False, False, True)
+			implementation_generate_feature (feat, False, False, False, True, current_class_type)
 			generate_empty_body (feat)
 
 			if inh_feat /= Void then
@@ -525,15 +523,13 @@ feature {NONE} -- Implementation
 							-- Generate local definition signature using the parent
 							-- signature. We do not do it on the parent itself because
 							-- its `feature_id' is not appropriate in `current_class_type'.
-						Byte_context.set_class_type (class_type)
 						dup_feat := feat.duplicate
 						if dup_feat.is_routine then
 							proc ?= dup_feat
 							proc.set_arguments (inh_feat.arguments)
 						end
 						dup_feat.set_type (inh_feat.type, inh_feat.assigner_name_id)
-						generate_feature (dup_feat, False, False, False)
-						Byte_context.set_class_type (current_class_type)
+						implementation_generate_feature (dup_feat, False, False, False, False, class_type)
 					else
 						generate_feature (feat, False, False, False)
 					end

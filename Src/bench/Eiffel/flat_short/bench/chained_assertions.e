@@ -1,5 +1,7 @@
 indexing
 	description: "List of routine assertions defined in precursor features. See end of class for more info."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -221,77 +223,36 @@ feature -- Debug
 		end
 
 indexing
-	description: "[
-		Due to a bug in the compiler sometime eventhough we should check pre/postconditions
-		of a routine `f' in class C, we don't. To circumvent that, we know when this case
-		happen and therefore we know which assertions are going to be checked or not. Knowing
-		this enable us to display or to hide the breakpoint in the flat format which is consistent
-		with our code generation.
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-		This happen in the following case:
-
-			deferred class
-				A
-			feature
-				f is
-					require
-						False
-					deferred
-					ensure
-						False
-					end
-			end
-
-			class B
-			feature
-				f is
-					require
-						True
-					do
-					ensure
-						True
-					end
-			end
-
-			class C
-			inherit A B
-			end
-
-		In the context of C the flat of `f' is:
-
-			f is
-				require -- from A
-					False
-				require else -- from B
-					True
-				do
-				ensure -- from A
-					False
-				ensure then -- from B
-					True
-				end
-
-		However our code generation does not regenerate the code in the context of C,
-		and we keep the definition of `f' from B. Therefore there is no way to check
-		inherited assertions from A. So the flat will generate the following 
-		breakable position which corresponds to our code generation:
-
-			f is
-				require -- from A
-					False
-				require else -- from B
-		O			True
-				do
-				ensure -- from A
-					False
-				ensure then -- from B
-		O			True
-		O		end
-
-		To find out this case, it is enough to look at the definition of body_index of `f' in C and 
-		check if an inherited assertion as the same. If it does, it means that no new body have been
-		added.
-	
-	]"
 
 end	-- class CHAINED_ASSERTIONS

@@ -267,10 +267,13 @@ feature -- Status
 				found := current_area.item (i).feature_id = feature_id
 				i := i + 1
 			end
-			if not found then
-				position := nb
-			else
+			if found then
 				position := i - 1
+			else
+				position := nb + 1
+				check
+					position = count
+				end
 			end
 		end
 

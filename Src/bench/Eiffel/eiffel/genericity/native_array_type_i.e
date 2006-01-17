@@ -10,7 +10,7 @@ class
 
 inherit
 	ONE_GEN_TYPE_I
-	
+
 create
 	make
 
@@ -45,9 +45,29 @@ feature -- Access
 			deep_il_element_type_not_void: Result /= Void
 		end
 
+	type_a: NATIVE_ARRAY_TYPE_A is
+		local
+			i: INTEGER
+			array: ARRAY [TYPE_A]
+			l_meta: like meta_generic
+		do
+			from
+				l_meta := meta_generic
+				i := l_meta.count
+				create array.make (1, i)
+			until
+				i = 0
+			loop
+				array.put (l_meta.item (i).type_a, i)
+				i := i - 1
+			end
+			create Result.make (class_id, array)
+			Result.set_mark (declaration_mark)
+		end
+
 invariant
 	il_generation: System.il_generation
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

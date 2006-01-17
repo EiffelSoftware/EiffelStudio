@@ -1663,6 +1663,10 @@ feature -- Skeleton processing
 		local
 			class_type: CLASS_TYPE
 			new_skeleton, old_skeleton: SKELETON
+			class_types: SPECIAL [CLASS_TYPE]
+			i: INTEGER
+			n: INTEGER
+			generic_class_type: CLASS_TYPE
 		do
 			from
 				types.start
@@ -1691,6 +1695,27 @@ feature -- Skeleton processing
 						loop
 							clients.item.melt_all
 							clients.forth
+						end
+							-- Recompile generic derivations that depend on `class_type' as
+							-- `clients' does not include them.
+						from
+							class_types := system.class_types
+							i := class_types.lower
+							n := class_types.upper
+						until
+							i > n
+						loop
+							generic_class_type := class_types [i]
+							if generic_class_type /= Void and then generic_class_type.type.has_actual (class_type.type) then
+								debug ("to_implement")
+									to_implement ("Recompilation could be done on a per-class-type rather than per-class basis.")
+								end
+								if generic_class_type.associated_class.has_externals then
+									system.set_freeze
+								end
+								generic_class_type.associated_class.melt_all
+							end
+							i := i + 1
 						end
 					end
 					Degree_1.insert_class (Current)
@@ -3338,7 +3363,7 @@ end
 				end
 
 					-- Propagation along the filters since we have a new type
-				update_filter_types (new_class_type, filters)
+				update_filter_types (new_class_type)
 				if new_class_type.is_expanded then
 						-- Propagate to all parent filters to ensure that
 						-- all the required class types are registered
@@ -3348,7 +3373,7 @@ end
 					until
 						parents_classes.after
 					loop
-						update_filter_types (new_class_type, parents_classes.item.filters)
+						parents_classes.item.update_filter_anchored_types (new_class_type)
 						parents_classes.forth
 					end
 				end
@@ -3426,15 +3451,17 @@ end
 			new_type_not_void: Result /= Void
 		end
 
-	update_filter_types (new_class_type: CLASS_TYPE; class_filters: like filters) is
-			-- Update all types associated with `class_filters' using `new_class_type'.
+	update_filter_types (new_class_type: CLASS_TYPE) is
+			-- Update all types associated with `filters' using `new_class_type'.
 		require
 			new_class_type_not_void: new_class_type /= Void
-			class_filters_not_void: class_filters /= Void
+			filters_not_void: filters /= Void
 		local
+			class_filters: like filters
 			filter: CL_TYPE_I
 			class_filters_cursor: CURSOR
 		do
+			class_filters := filters
 				-- Propagation along the filters since we have a new type
 				-- Clean the filters. Some of the filters can be obsolete
 				-- if the base class has been removed from the system
@@ -3459,6 +3486,51 @@ debug ("GENERICITY")
 	io.error.put_new_line
 end
 				filter.base_class.update_types (filter)
+				class_filters.go_to (class_filters_cursor)
+				class_filters.forth
+			end
+		end
+
+feature {CLASS_C} -- Incrementality
+
+	update_filter_anchored_types (new_class_type: CLASS_TYPE) is
+			-- Update all anchored types associated with `filters' using `new_class_type'.
+		require
+			new_class_type_not_void: new_class_type /= Void
+			new_class_type_is_expanded: new_class_type.is_expanded
+			filters_not_void: filters /= Void
+		local
+			class_filters: like filters
+			filter: CL_TYPE_I
+			class_filters_cursor: CURSOR
+		do
+			class_filters := filters
+				-- Propagation along the filters since we have a new type
+				-- Clean the filters. Some of the filters can be obsolete
+				-- if the base class has been removed from the system
+			class_filters.clean
+			from
+				class_filters.start
+			until
+				class_filters.after
+			loop
+					-- We need to store cursor position because when you
+					-- have an expanded class used as a reference or vice versa
+					-- and that this class has some `like Current' then
+					-- we are going to traverse recursively the `filters' list.
+				class_filters_cursor := class_filters.cursor
+					-- Instantiation of the filter with `data'
+				filter := class_filters.item.anchor_instantiation_in (new_class_type)
+				if filter.base_class.lace_class /= system.native_array_class implies not filter.has_formal then
+debug ("GENERICITY")
+	io.error.put_string ("Propagation of ")
+	filter.trace
+	io.error.put_string ("propagation to ")
+	io.error.put_string (filter.base_class.name)
+	io.error.put_new_line
+end
+					filter.base_class.update_types (filter)
+				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
 			end
@@ -3522,7 +3594,7 @@ feature -- Type evaluation
 					-- is generic, otherwise for the most general case where
 					-- `written_class' is not generic it will take a long
 					-- time to go through the inheritance hierarchy.
-				if generics  = Void then
+				if written_class.generics = Void then
 					Result := written_class.types.first.type
 				else
 					cl_type_a := current_type.type_a

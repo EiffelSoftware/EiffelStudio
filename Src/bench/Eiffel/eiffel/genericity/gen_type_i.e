@@ -13,6 +13,7 @@ inherit
 		rename
 			make as old_make
 		redefine
+			anchor_instantiation_in,
 			description,
 			dump,
 			duplicate,
@@ -21,6 +22,7 @@ inherit
 			generate_gen_type_il,
 			generic_derivation,
 			generate_cid,
+			has_actual,
 			has_formal,
 			has_true_formal,
 			il_type_name,
@@ -143,6 +145,30 @@ feature -- Status Report
 			loop
 				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
 				true_gen.put (l_true.item (i).complete_instantiation_in (other), i)
+				i := i + 1
+			end
+		end
+
+	anchor_instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
+			-- Instantation of `like Current' parts of Current in `other'
+		local
+			i, count: INTEGER
+			l_meta, meta_gen: like meta_generic
+			l_true, true_gen: like true_generics
+		do
+			from
+				Result := duplicate
+				l_meta := meta_generic
+				l_true := true_generics
+				meta_gen := Result.meta_generic
+				true_gen := Result.true_generics
+				i := 1
+				count := l_meta.count
+			until
+				i > count
+			loop
+				meta_gen.put (l_meta.item (i).anchor_instantiation_in (other), i)
+				true_gen.put (l_true.item (i).anchor_instantiation_in (other), i)
 				i := i + 1
 			end
 		end
@@ -598,6 +624,27 @@ feature -- Comparison
 						and then is_expanded = gen_type_i.is_expanded
 						and then is_separate = gen_type_i.is_separate
 						and then meta_generic.same_as (gen_type_i.meta_generic)
+			end
+		end
+
+	has_actual (type: CL_TYPE_I): BOOLEAN is
+			-- Is `type' an (possibly nested) actual parameter of this type?
+		local
+			i: INTEGER
+			p: ARRAY [TYPE_I]
+			cl_type_i: CL_TYPE_I
+		do
+			from
+				p := meta_generic
+				i := p.lower
+			until
+				i > p.upper or else Result
+			loop
+				cl_type_i ?= p [i]
+				if cl_type_i /= Void then
+					Result := cl_type_i.same_as (type) or else cl_type_i.has_actual (type)
+				end
+				i := i + 1
 			end
 		end
 

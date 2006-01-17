@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	ONE_GEN_TYPE_I
-	
+
 inherit
 	GEN_TYPE_I
 		rename
@@ -16,11 +16,15 @@ inherit
 		export
 			{ONE_GEN_TYPE_I} old_gen_make
 		undefine
-			il_type_name
+			il_type_name, type_a
 		redefine
-			same_as, duplicate, instantiation_in, generic_derivation
+			anchor_instantiation_in,
+			duplicate,
+			instantiation_in,
+			generic_derivation,
+			same_as
 		end
-		
+
 	REFACTORING_HELPER
 		undefine
 			is_equal
@@ -45,7 +49,7 @@ feature {NONE} -- Initialization
 				true_generics.put (a_type.type_i, 1)
 			end
 		end
-		
+
 feature -- Comparison
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -109,6 +113,17 @@ feature -- Status report
 			end
 		end
 
+	anchor_instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
+			-- Instantation of `like Current' parts of Current in `other'
+		do
+			if system.il_generation then
+				Result := duplicate
+				Result.meta_generic.put (meta_generic.item (1).anchor_instantiation_in (other), 1)
+			else
+				Result := Precursor {GEN_TYPE_I} (other)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	Object_type: CL_TYPE_I is
@@ -123,7 +138,7 @@ feature {NONE} -- Implementation
 		ensure
 			object_type_not_void: Result /= Void
 		end
-		
+
 invariant
 	aliasing: system.il_generation implies
 		((true_generics /= Void and meta_generic /= Void) implies true_generics = meta_generic)

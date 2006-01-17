@@ -12,10 +12,11 @@ inherit
 		rename
 			make as old_make
 		undefine
+			anchor_instantiation_in,
 			is_equal, generate_cid, il_type_name, generate_cid_array,
 			generate_cid_init, is_anchored, is_explicit, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
-			has_formal, same_as, make_gen_type_byte_code, duplicate,
+			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
 			debug_output, complete_instantiation_in, generic_derivation
 		redefine
@@ -30,7 +31,7 @@ inherit
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, generate_cecil_value, dump
 		redefine
-			is_feature_pointer, type_a, description, sk_value,
+			is_feature_pointer, description, sk_value,
 			element_type, tuple_code,
 			name
 		end

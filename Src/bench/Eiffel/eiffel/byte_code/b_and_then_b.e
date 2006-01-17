@@ -82,7 +82,7 @@ feature -- Enlarging
 			if l_is_normal then
 					-- Normal code transformation.
 				create l_b_and_thn_bl
-				l_b_and_thn_bl.init (access.enlarged)
+				l_b_and_thn_bl.init (access.enlarged_on (left.type))
 				l_b_and_thn_bl.set_left (left)
 				l_b_and_thn_bl.set_right (right)
 				Result := l_b_and_thn_bl

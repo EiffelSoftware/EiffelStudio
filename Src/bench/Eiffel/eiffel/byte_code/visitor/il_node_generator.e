@@ -238,6 +238,7 @@ feature -- Generation
 			inh_assert.wipe_out
 
 			il_generator.put_debug_info (a_body.end_location)
+			il_generator.flush_sequence_points (context.class_type)
 			generate_il_return (a_body)
 
 			il_generator := Void
@@ -2051,7 +2052,10 @@ feature {NONE} -- Visitors
 			generate_il_start_assignment (a_node.target)
 
 				-- Get types
-			l_target_type := context.creation_type (a_node.target.type)
+			l_target_type := a_node.target.type
+			if l_target_type.is_formal then
+				l_target_type := context.creation_type (l_target_type)
+			end
 			l_source_type := il_generator.real_type (a_node.source.type)
 			check
 				target_type_not_void: l_target_type /= Void
@@ -3656,7 +3660,10 @@ feature {NONE} -- Implementation: Feature calls
 			l_local: INTEGER
 			l_out_label, l_end_label: IL_LABEL
 		do
-			if a_node.feature_name_id = {PREDEFINED_NAMES}.out_name_id then
+			if
+				a_node.feature_name_id = {PREDEFINED_NAMES}.out_name_id or else
+				a_node.feature_name_id = {PREDEFINED_NAMES}.tagged_out_name_id
+			then
 					-- Since `out' is virtual in ANY, we need to perform
 					-- a dynamic dispatch when we handle an Eiffel class.
 				l_out_label := il_generator.create_label
@@ -3693,7 +3700,7 @@ feature {NONE} -- Implementation: Feature calls
 				-- Generate Eiffel STRING object from SYSTEM_STRING object
 			il_generator.put_manifest_string_from_system_string_local (l_local)
 
-			if a_node.feature_name_id = {PREDEFINED_NAMES}.out_name_id then
+			if l_end_label /= Void then
 				il_generator.mark_label (l_end_label)
 			end
 		end
@@ -3728,8 +3735,8 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 
 				-- Unbox result if required
-			if il_generator.real_type (a_result_type).is_expanded then
-				il_generator.generate_unmetamorphose (il_generator.real_type (a_result_type))
+			if a_result_type.is_expanded then
+				il_generator.generate_unmetamorphose (a_result_type)
 			end
 
 				-- Cast result back to proper type

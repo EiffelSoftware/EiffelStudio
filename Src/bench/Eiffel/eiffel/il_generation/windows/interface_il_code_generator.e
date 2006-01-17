@@ -398,7 +398,12 @@ feature -- IL Generation
 			l_is_method_impl_generated: BOOLEAN
 			implementation_class_id: INTEGER
 			implementation_feature_id: INTEGER
+			old_class_type: CLASS_TYPE
 		do
+			if feat.access_in /= byte_context.current_type.class_id then
+				old_class_type := byte_context.class_type
+				byte_context.set_class_type (system.class_of_id (feat.access_in).meta_type (current_class_type))
+			end
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
 					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else is_local_signature_changed (feat)
@@ -438,6 +443,9 @@ feature -- IL Generation
 							current_class_type.type).associated_class_type.implementation_id,
 							feat.written_feature_id)
 				end
+			end
+			if old_class_type /= Void then
+				byte_context.set_class_type (old_class_type)
 			end
 		end
 

@@ -614,7 +614,6 @@ feature -- IL code generation
 			l_native_array_type: CL_TYPE_I
 			l_element_type: TYPE_I
 			l_index, l_element: INTEGER
-			l_class_type: CLASS_TYPE
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
 				-- Get `native_array' field info.
@@ -624,13 +623,10 @@ feature -- IL code generation
 			end
 
 				-- Let's evaluate type of NATIVE_ARRAY			
-			l_class_type := Byte_context.class_type
-			Byte_context.set_class_type (Current)
-			l_native_array_type ?= Byte_context.real_type (l_native_array.type.actual_type.type_i)
+			l_native_array_type ?= Byte_context.real_type_in (l_native_array.type.actual_type.type_i, Current)
 			check
 				l_native_array_type_not_void: l_native_array_type /= Void
 			end
-			Byte_context.set_class_type (l_class_type)
 
 				-- Call feature from NATIVE_ARRAY
 			l_native_array_class_type ?= l_native_array_type.associated_class_type

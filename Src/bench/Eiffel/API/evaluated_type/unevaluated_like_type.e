@@ -1,5 +1,7 @@
 indexing
 	description: "Like types that have not been evaluated (has not gone past Degree 4)."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision $"
 
@@ -132,5 +134,37 @@ invariant
 	non_void_anchor: anchor /= Void
 	is_like_current_implies_current_anchor: is_like_current
 				implies anchor.is_equal (Like_current)
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 end -- class UNEVALUATED_LIKE_TYPE

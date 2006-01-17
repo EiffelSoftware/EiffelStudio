@@ -1159,13 +1159,11 @@ feature -- Metadata description
 			i: INTEGER
 			l_parents: ARRAY [INTEGER]
 			l_parent_class: CLASS_C
-			l_class_type: CLASS_TYPE
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
 			reference_type_a: CL_TYPE_A
 			interface_class_type: CLASS_TYPE
 		do
-			l_class_type := byte_context.class_type
 			parents := class_c.parents
 			from
 				create l_list.make (parents.count)
@@ -1178,8 +1176,7 @@ feature -- Metadata description
 					-- We need to reset context at each iteration because calls to
 					-- `xxx_class_type_token' might trigger a recursive call to `update_parents'
 					-- thus changing the context.
-				byte_context.set_class_type (class_type)
-				parent_type ?= byte_context.real_type (parents.item.type_i)
+				parent_type ?= byte_context.real_type_in (parents.item.type_i, class_type)
 				l_parent_type := parent_type.associated_class_type
 				l_has_an_eiffel_parent := l_has_an_eiffel_parent or else not l_parent_type.is_external
 				id := l_parent_type.static_type_id
@@ -1307,11 +1304,6 @@ feature -- Metadata description
 				single_inheritance_token := actual_class_type_token (l_single_inheritance_parent_id)
 				single_inheritance_parent_id := l_single_inheritance_parent_id
 			end
-
-				-- Restore byte context if any.
-			if l_class_type /= Void then
-				byte_context.set_class_type (l_class_type)
-			end
 		end
 
 	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
@@ -1398,8 +1390,7 @@ feature -- Local saving
 				until
 					a_local_types.after
 				loop
-					set_signature_type (l_sig,
-						il_code_generator.argument_actual_type (a_local_types.item.first))
+					set_signature_type (l_sig, a_local_types.item.first)
 					a_local_types.forth
 				end
 

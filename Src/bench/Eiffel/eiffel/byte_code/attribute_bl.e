@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged access to an Eiffel attribute
 
-class ATTRIBUTE_BL  
+class ATTRIBUTE_BL
 
 inherit
 	ATTRIBUTE_B
@@ -20,7 +20,7 @@ inherit
 
 	SHARED_DECLARATIONS
 
-feature 
+feature
 
 	parent: NESTED_B
 			-- Parent of the current call
@@ -36,7 +36,7 @@ feature
 
 	basic_register: REGISTRABLE
 			-- Register used to store the metamorphosed simple type
-	
+
 	set_register (r: REGISTRABLE) is
 			-- Set current register to `r'
 		do
@@ -46,7 +46,7 @@ feature
 	free_register is
 			-- Free registers
 		do
-			Precursor {ATTRIBUTE_B}	
+			Precursor {ATTRIBUTE_B}
 			if basic_register /= Void then
 				basic_register.free_register
 			end
@@ -66,7 +66,7 @@ debug
 io.error.put_string ("Out attribute_bl%N")
 end
 		end
-	
+
 	analyze_on (reg: REGISTRABLE) is
 			-- Analyze access to attribute on `reg'
 		local
@@ -176,7 +176,7 @@ end
 					-- The access is polymorphic, which means the offset
 					-- is not a constant and has to be computed.
 				table_name := Encoder.table_name (routine_id)
-				
+
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
 				buf.put_string (" + ")
@@ -192,7 +192,7 @@ end
 				buf.put_character ('-')
 				buf.put_integer (array_index)
 				buf.put_character (']')
-				
+
 					-- Mark attribute offset table used.
 				Eiffel_table.mark_used (routine_id)
 					-- Remember external attribute offset declaration
@@ -204,7 +204,7 @@ end
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
-				offset_class_type.skeleton.generate_offset (buf, attribute_id, False)
+				offset_class_type.skeleton.generate_offset (buf, real_feature_id (typ.base_class), False)
 			end
 			buf.put_character (')')
 --			if not (reg.is_predefined or reg.register /= No_register) then

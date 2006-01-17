@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision: "
 
 class
-	EXTERNAL_BW 
+	EXTERNAL_BW
 
 inherit
 	EXTERNAL_BL
@@ -24,7 +24,7 @@ feature -- Initialization
 		do
 			need_invariant := True
 		end
-	
+
 feature -- Access
 
 	need_invariant: BOOLEAN
@@ -97,7 +97,7 @@ feature -- Code generation
 
 			buf.put_character ('(')
 			real_type (type).c_type.generate_function_cast (buf, argument_types)
-			if	
+			if
 				Compilation_modes.is_precompiling or else
 				l_typ.base_class.is_precompiled
 			then
@@ -106,7 +106,7 @@ feature -- Code generation
 				else
 					buf.put_string ("RTWPF(")
 				end
-				r_id := l_typ.base_class.feature_table.item_id (feature_name_id).rout_id_set.first
+				r_id := routine_id
 				rout_info := System.rout_info_table.item (r_id)
 				buf.put_class_id (rout_info.origin)
 				buf.put_string (gc_comma)
@@ -119,12 +119,12 @@ feature -- Code generation
 				end
 				buf.put_static_type_id (l_typ.associated_class_type.static_type_id)
 				buf.put_string (gc_comma)
-				buf.put_integer (real_feature_id)
+				buf.put_integer (real_feature_id (l_typ.base_class))
 			end
 			buf.put_string (gc_comma)
 			if not is_nested then
 				if is_static_call then
-						-- Use dynamic type of `static_class_type' instead 
+						-- Use dynamic type of `static_class_type' instead
 						-- of dynamic type of Current.
 					buf.put_string ("RTUD(");
 					buf.put_static_type_id (l_typ.associated_class_type.static_type_id)

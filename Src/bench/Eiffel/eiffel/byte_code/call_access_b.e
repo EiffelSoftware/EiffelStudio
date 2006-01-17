@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	ACCESS_B
+		redefine
+			enlarged
+		end
 
 	SHARED_NAMES_HEAP
 		export
@@ -49,6 +52,23 @@ feature -- Access
 	precursor_type : CL_TYPE_I
 			-- Type of parent in a precursor call if any.
 
+	enlarged: CALL_ACCESS_B is
+			-- Redefined only for type check
+		do
+			Result := Current
+		end
+
+	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
+			-- Enlarged byte node evaluated in the context of `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+		do
+				-- Fallback to default implementation.
+			Result := enlarged
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Setting
 
 	set_precursor_type (p_type : CL_TYPE_I) is
@@ -69,7 +89,7 @@ feature -- Byte code generation
 		do
 		end
 
-	real_feature_id: INTEGER is
+	real_feature_id (context_class: CLASS_C): INTEGER is
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
 			-- But also for generic derivation which contains an expanded type
@@ -82,7 +102,7 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_I
 			gen: GEN_TYPE_I
 		do
-			Result := feature_id
+			Result := context_class.feature_of_rout_id (routine_id).feature_id
 			if precursor_type = Void then
 				instant_context_type := context_type
 				if

@@ -35,6 +35,7 @@ feature -- Initialization
 			create onces.make (5)
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
+			create {LINKED_STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]} class_type_stack.make
 		end
 
 feature -- Access
@@ -63,11 +64,24 @@ feature -- Access
 			-- Current class type in which byte code is processed
 
 	class_type: CLASS_TYPE
-			-- The class type which we are generating
-			--| will be changed for assertion chaining
+			-- Context class type with the code which we are generating
+			--| will be changed for assertion chaining, inlining, etc.
+
+	context_class_type: CLASS_TYPE
+			-- Class type for which the code is being generated;
+			-- it is changed for inlining
 
 	original_class_type: CLASS_TYPE
-			-- class type we are generating
+			-- Class type we are generating
+
+	is_class_type_changed: BOOLEAN is
+			-- Is `class_type' changed to the type, unrelated to `original_class_type'?
+			-- (See also: `change_class_type_contrext'.)
+		do
+			Result := not class_type_stack.is_empty
+		ensure
+			definition: Result = not class_type_stack.is_empty
+		end
 
 	buffer: GENERATION_BUFFER
 			-- Buffer used for code generation
@@ -771,43 +785,64 @@ feature -- Access
 			Result := current_type.base_class
 		end
 
-	constrained_type (type: TYPE_I): TYPE_I is
-			-- Constrained type
+	constrained_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+			-- Constrained type `type' in the context of `context_class_type'
 		require
-			curent_type_exists: current_type /= Void
+			type_not_void: type /= Void
+			context_type_not_void: context_type /= Void
 		local
+			context_type_i: CL_TYPE_I
 			formal: FORMAL_I
 			formal_position: INTEGER
 			reference_i: REFERENCE_I
 		do
 			Result := type
 			if Result.is_formal then
+				context_type_i := context_type.type
 				formal ?= Result
 				check
-					current_type.meta_generic /= Void
+					context_type_i.meta_generic /= Void
 				end
 				formal_position := formal.position
-				Result := current_type.meta_generic.item (formal_position)
+				Result := context_type_i.meta_generic.item (formal_position)
 				reference_i ?= Result
 				if reference_i /= Void then
-					Result := current_type.base_class.constraint
-													(formal_position).type_i
+					Result := context_type_i.base_class.constraint (formal_position).type_i
 				end
 			end
 		ensure
-			not_formal: not Result.is_formal
+			result_not_void: Result /= Void
+			result_not_formal: not Result.is_formal
+		end
+
+	real_type_in (type: TYPE_I; context_type: CLASS_TYPE): TYPE_I is
+			-- Type `type' as seen in `context_type'
+		require
+			type_not_void: type /= Void
+			context_type_not_void: context_type /= Void
+		do
+			Result := constrained_type_in (type, context_type).instantiation_in (context_type)
+		ensure
+			result_not_void: Result /= Void
+			result_not_formal: not Result.is_formal
 		end
 
 	real_type (type: TYPE_I): TYPE_I is
-			-- Convenience
+			-- Type `type' written in `class_type' as seen in `context_class_type'
 		require
-			good_argument: type /= Void
-			valid_class_type: class_type /= Void
+			type_not_void: type /= Void
+			class_type_not_void: class_type /= Void
+			context_class_type_not_void: context_class_type /= Void
 		do
-			Result := constrained_type (type)
-			Result := Result.instantiation_in (class_type)
+			if context_class_type = class_type then
+				Result := real_type_in (type, class_type)
+			else
+				Result := constrained_type_in (type, class_type).type_a.instantiation_in
+					(context_class_type.type.type_a, class_type.type.class_id).type_i
+			end
 		ensure
-			not Result.is_formal
+			result_not_void: Result /= Void
+			result_not_formal: not Result.is_formal
 		end
 
 	creation_type (type: TYPE_I): TYPE_I is
@@ -828,25 +863,33 @@ feature -- Access
 		end
 
 	init (t: CLASS_TYPE) is
-			-- Initialization of byte context.
-			-- Check to see if class type has inherited
-			-- assertions. If it does not then set
-			-- has_inherited_assertion to False. Otherwize,
-			-- set has_inherited_assertion to True.
+			-- Initialize byte context with `t'.
+		require
+			t_not_void: t /= Void
 		do
-			set_class_type (t)
+			class_type_stack.wipe_out
 			original_class_type := t
-			--if System.Redef_feat_server.has (associated_class.id) then
-				--has_inherited_assertion := True
-			--else
-				--has_inherited_assertion := False
-			--end
+			context_class_type := t
+			set_class_type (t)
+		ensure
+			original_class_type_set: original_class_type = t
+			context_class_type_set: context_class_type = t
+			class_type_set: class_type = t
+			not_is_class_type_changed: not is_class_type_changed
+		end
+
+	is_ancestor (other: CLASS_TYPE): BOOLEAN is
+			-- Is `other' an ancestor of `context_class_type'?
+		do
+			Result := context_class_type.type.type_a.is_conformant_to (other.type.type_a)
 		end
 
 	set_class_type (t: CLASS_TYPE) is
-			-- Assign `t' to class_type.
+			-- Assign `t' to `class_type'.
 		require
-			good_argument: t /= Void
+			t_not_void: t /= Void
+			context_class_type_not_void: context_class_type /= Void
+			is_ancestor: is_ancestor (t)
 		do
 			class_type := t
 			current_type := t.type
@@ -865,6 +908,44 @@ feature -- Access
 			else
 				is_once_call_optimized := True
 			end
+		ensure
+			class_type_set: class_type = t
+		end
+
+	change_class_type_context (new_context_class_type: CLASS_TYPE; new_written_class_type: CLASS_TYPE) is
+			-- Change the current `class_type' to `new_written_class_type',
+			-- not related to `original_class_type', but to `new_context_class_type'.
+			-- (Multiple calls to this feature are allowed and should
+			-- be paired with the calls to `restore_class_type_context').
+		require
+			new_context_class_type_not_void: new_context_class_type /= Void
+			new_written_class_type_not_void: new_written_class_type /= Void
+		do
+			class_type_stack.put (create {PAIR [CLASS_TYPE, CLASS_TYPE]}.make (context_class_type, class_type))
+			context_class_type := new_context_class_type
+			set_class_type (new_written_class_type)
+		ensure
+			class_type_set: class_type = new_written_class_type
+			context_class_type_set: context_class_type = new_context_class_type
+			is_class_type_changed: is_class_type_changed
+		end
+
+	restore_class_type_context is
+			-- Restore the state of context to the one before the
+			-- earlier call to `change_class_type_context'.
+		require
+			is_class_type_changed: is_class_type_changed
+		local
+			previous_context: PAIR [CLASS_TYPE, CLASS_TYPE]
+		do
+				-- Remove stack item before calling `set_class_type'
+			previous_context := class_type_stack.item
+			class_type_stack.remove
+			context_class_type := previous_context.first
+			set_class_type (previous_context.second)
+		ensure
+			context_class_type_set: context_class_type = old class_type_stack.item.first
+			class_type_set: class_type = old class_type_stack.item.second
 		end
 
 	set_current_feature (f: FEATURE_I) is
@@ -1502,6 +1583,7 @@ feature -- Clearing
 		do
 			class_type := Void
 			byte_code := Void
+			class_type_stack.wipe_out
 		end
 
 	clear_feature_data is
@@ -1542,6 +1624,7 @@ feature -- Clearing
 			end
 				-- Wipe out once manifest strings records.
 			once_manifest_string_table.wipe_out
+			class_type_stack.wipe_out
 		ensure
 			global_onces_is_empty: workbench_mode implies global_onces.is_empty
 			onces_is_empty: workbench_mode implies onces.is_empty
@@ -1554,6 +1637,7 @@ feature -- Clearing
 			global_onces.wipe_out
 			onces.wipe_out
 			once_manifest_string_count_table.wipe_out
+			class_type_stack.wipe_out
 		ensure
 			global_onces_is_empty: global_onces.is_empty
 			onces_is_empty: onces.is_empty
@@ -1621,12 +1705,18 @@ feature -- Inlining
 			inlined_current_register := r
 		end
 
+feature {NONE} -- Implementation
+
+	class_type_stack: STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]
+			-- Class types saved due to the context change by `change_class_type_context'
+
 invariant
 	global_onces_not_void: global_onces /= Void
 	onces_not_void: onces /= Void
 	once_manifest_string_count_table_not_void: once_manifest_string_count_table /= Void
 	once_manifest_string_table_not_void: once_manifest_string_table /= Void
 	class_type_valid_with_current_type: class_type /= Void implies class_type.type = current_type
+	class_type_stack_not_void: class_type_stack /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

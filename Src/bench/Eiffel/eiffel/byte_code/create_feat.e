@@ -200,13 +200,8 @@ feature -- IL code generation
 
 	created_in (other: CLASS_TYPE): TYPE_I is
 			-- Resulting type of Current as if it was used to create object in `other'
-		local
-			saved_class_type: CLASS_TYPE
 		do
-			saved_class_type := context.class_type
-			context.set_class_type (other)
-			Result := context.real_type (other.associated_class.feature_of_rout_id (routine_id).type.actual_type.type_i)
-			context.set_class_type (saved_class_type)
+			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type.actual_type.type_i, other)
 		end
 
 feature -- Byte code generation

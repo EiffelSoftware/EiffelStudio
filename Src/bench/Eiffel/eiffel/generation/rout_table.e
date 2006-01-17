@@ -72,7 +72,7 @@ feature -- Status report
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			first_real_body_index: INTEGER;
+			first_real_body_index, first_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			first_type: CLASS_TYPE
@@ -107,10 +107,12 @@ feature -- Status report
 					if entry.used then
 						if system_i.class_type_of_id (entry.type_id).conform_to (first_type) then
 							if found then
-								Result := not (entry.real_body_index = first_real_body_index)
+								Result := entry.real_body_index /= first_real_body_index or
+									entry.body_index /= first_body_index
 							else
 								found := True
 								first_real_body_index := entry.real_body_index
+								first_body_index := entry.body_index
 							end
 						end
 					end
@@ -406,19 +408,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

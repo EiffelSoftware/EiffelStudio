@@ -56,8 +56,7 @@ feature {NONE} -- Implementation
 			l_instant_context_type ?= a_node.context_type
 			l_base_class := l_instant_context_type.base_class
 			if l_base_class.is_precompiled then
-				l_rout_info := system.rout_info_table.item (l_base_class.feature_table.item_id (
-					a_node.attribute_name_id).rout_id_set.first)
+				l_rout_info := system.rout_info_table.item (a_node.routine_id)
 				ba.append_integer (l_rout_info.origin)
 				ba.append_integer (l_rout_info.offset)
 			else

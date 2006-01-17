@@ -191,16 +191,13 @@ feature -- from ENTRY
 		require
 			is_generic : is_generic
 		local
-			l_class_type: CLASS_TYPE
 			l_type: TYPE_I
 		do
 				-- In order to generate proper type description for current entry we need to
 				-- evaluate `type' in the context of `type_id', otherwise it is possible that
 				-- we would not find the associated class type of `l_type' and therefore generate
 				-- an incorrect type specification (Cf eweasel bug about storable).
-			l_class_type := System.class_type_of_id (type_id)
-			context.set_class_type (l_class_type)
-			l_type := context.creation_type (type)
+			l_type := type.complete_instantiation_in (System.class_type_of_id (type_id))
 			l_type.generate_cid (buffer, final_mode, False)
 		end
 

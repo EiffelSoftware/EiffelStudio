@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			a_storage_not_void: a_storage /= Void
 		do
 			preferences_storage := a_storage
+			preferences_storage.initialize_with_preferences (Current)
 			session_values := preferences_storage.session_values
 			create managers.make (2)
 			managers.compare_objects

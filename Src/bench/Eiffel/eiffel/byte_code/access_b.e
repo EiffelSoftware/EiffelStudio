@@ -10,7 +10,7 @@ deferred class ACCESS_B
 inherit
 	CALL_B
 		redefine
-			free_register, print_register,
+			enlarged, free_register, print_register,
 			has_gcable_variable, propagate, generate, unanalyze,
 			optimized_byte_node, inlined_byte_code
 		end
@@ -39,18 +39,24 @@ feature -- Access
 			a_parent: NESTED_B
 		do
 			if parent = Void then
-				Result := context.current_type
+				Result := like_current_i
 			elseif is_message then
 				Result := parent.target.type
 			else
 				a_parent := parent.parent
 				if a_parent = Void then
-					Result := context.current_type
+					Result := like_current_i
 				else
 					Result := a_parent.target.type
 				end
 			end
 			Result := Context.real_type (Result)
+		end
+
+	enlarged: ACCESS_B is
+			-- Redefined only for type check
+		do
+			Result := Current
 		end
 
 	sub_enlarged (p: NESTED_BL): ACCESS_B is
@@ -501,6 +507,14 @@ feature -- Inlining
 			-- Redefined for type check
 		do
 			Result := Current
+		end
+
+feature {NONE} -- Implementation
+
+	like_current_i: LIKE_CURRENT_I is
+			-- Type of "Current".
+		once
+			create Result
 		end
 
 indexing

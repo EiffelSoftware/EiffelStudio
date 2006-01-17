@@ -65,12 +65,6 @@ feature -- Settings
 			right := r
 		end
 
-	set_access (a: CALL_ACCESS_B) is
-			-- Set `access' to `a'
-		do
-			access := a
-		end
-
 	set_attachment (a: TYPE_I) is
 			-- Set `attachment' to `a'.
 		do

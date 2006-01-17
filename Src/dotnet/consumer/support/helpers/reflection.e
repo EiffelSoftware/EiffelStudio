@@ -86,7 +86,6 @@ feature -- Status Report
 			a_type_not_void: a_type /= Void
 		local
 			l_type: EC_CHECKED_TYPE
-			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
 		do
 			l_type := checked_type (a_type)
 			Result := l_type.is_eiffel_compliant

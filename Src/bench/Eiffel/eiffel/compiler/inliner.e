@@ -122,14 +122,13 @@ feature {NONE} -- Implementation
 				--  * CONSTANT_I
 				-- For INVARIANT_FEAT_I, EXTERNAL_I and CONSTANT_I, the current feature
 				-- won't be called because their version of `inlined_byte_code' does
-				-- not call this computation. Only for EXTERNAL_I, ONCE_PROC_I and DEF_PROC_I, we
+				-- not call this computation. Only for ONCE_PROC_I and DEF_PROC_I, we
 				-- have to do a special check, and since the information is in BYTE_CODE
 				-- we can do it easily in order to avoid the inlining.
 			if
 				byte_code /= Void and then
 				not byte_code.is_deferred and then
-				not byte_code.is_once and then
-				not byte_code.is_external
+				not byte_code.is_once
 			then
 				Result := (a_return_type = Void or else not (a_return_type.is_true_expanded
 					or else a_return_type.is_bit)) and then (byte_code.rescue_clause = Void)

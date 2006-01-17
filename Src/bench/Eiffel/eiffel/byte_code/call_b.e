@@ -10,8 +10,8 @@ inherit
 			enlarged, is_simple_expr, optimized_byte_node,
 			inlined_byte_code, pre_inlined_code
 		end;
-	
-feature 
+
+feature
 
 	parent: NESTED_B;
 			-- Parent node
@@ -46,7 +46,7 @@ feature
 			-- or a call on a predefined target and with predefined arguments.
 		deferred
 		end;
-		
+
 	is_constant: BOOLEAN is
 			-- Is Current a call to a constant?
 		do
@@ -61,10 +61,10 @@ feature
 			-- Does current call really need a target to be performed?
 			-- E.g. not (a constant or a static external)
 		do
-			Result := True	
+			Result := True
 		end
 
-	enlarged: like Current is
+	enlarged: CALL_B is
 			-- Redefined only for type check
 		do
 			Result := Current;

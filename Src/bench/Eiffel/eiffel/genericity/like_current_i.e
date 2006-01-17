@@ -9,6 +9,8 @@ class LIKE_CURRENT_I
 
 inherit
 	TYPE_I
+		rename
+			anchor_instantiation_in as instantiation_in
 		redefine
 			description,
 			generate_gen_type_il,

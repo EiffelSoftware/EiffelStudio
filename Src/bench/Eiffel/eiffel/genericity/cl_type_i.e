@@ -10,6 +10,7 @@ class CL_TYPE_I
 inherit
 	TYPE_I
 		redefine
+			anchor_instantiation_in,
 			c_type,
 			conforms_to_array,
 			created_in,
@@ -120,6 +121,12 @@ feature -- Access
 
 	instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
 			-- Instantation of Current in `other'
+		do
+			Result := Current
+		end
+
+	anchor_instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
+			-- Instantation of `like Current' parts of Current in `other'
 		do
 			Result := Current
 		end
@@ -373,6 +380,14 @@ feature -- Status
 					and then other_cl_type.is_separate = is_separate
 					and then other_cl_type.meta_generic = Void
 					and then other_cl_type.true_generics = Void
+		end
+
+	has_actual (type: CL_TYPE_I): BOOLEAN is
+			-- Is `type' an (possibly nested) actual parameter of this type?
+		require
+			non_void_type: type /= Void
+		do
+				-- False here.
 		end
 
 feature -- Setting

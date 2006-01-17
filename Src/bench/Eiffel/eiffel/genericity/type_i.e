@@ -90,6 +90,18 @@ feature -- Access
 			Result := instantiation_in (other)
 		end
 
+	anchor_instantiation_in (other: CLASS_TYPE): TYPE_I is
+			-- Instantation of `like Current' parts of Current in `other'
+		require
+			other_not_void: other /= Void
+			other_is_expanded: other.is_expanded
+		do
+			Result := Current
+		ensure
+			result_not_void: Result /= Void
+			result_not_anchored: not Result.is_anchored
+		end
+
 	created_in (other: CLASS_TYPE): TYPE_I is
 			-- Resulting type of Current as if it was used to create object in `other'.
 		require

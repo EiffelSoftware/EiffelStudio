@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged access to an Eiffel feature
 
-class FEATURE_BL 
+class FEATURE_BL
 
 inherit
 	FEATURE_B
@@ -18,7 +18,7 @@ inherit
 
 	SHARED_DECLARATIONS
 
-feature 
+feature
 
 	parent: NESTED_BL
 			-- Parent of access
@@ -66,7 +66,7 @@ debug
 io.error.put_string ("Out feature_bl%N")
 end
 		end
-	
+
 	analyze_on (reg: REGISTRABLE) is
 			-- Analyze feature call on `reg'
 		local
@@ -88,7 +88,7 @@ end
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-					-- We need it only when a metamorphose occurs or if we 
+					-- We need it only when a metamorphose occurs or if we
 					-- are handling BIT objects.
 				create tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
@@ -213,7 +213,7 @@ end
 			end
 			buf.put_character (')')
 		end
-		
+
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate feature call in a `typ' context
 		local
@@ -228,11 +228,12 @@ end
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
 			is_deferred := False
+			type_c := real_type (type).c_type
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				is_deferred := True
 				buf.put_character ('(')
-				real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
+				type_c.generate_function_cast (buf, <<"EIF_REFERENCE">>)
 				buf.put_string (" RTNR)")
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
@@ -240,8 +241,8 @@ end
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (routine_id)
 				buf.put_character ('(')
-				real_type (type).c_type.generate_function_cast (buf, argument_types)
-				
+				type_c.generate_function_cast (buf, argument_types)
+
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
 				buf.put_string (table_name)
@@ -272,7 +273,6 @@ end
 
 				if rout_table.is_implemented then
 					internal_name := rout_table.feature_name
-					type_c := real_type (type).c_type
 
 					if is_once and then context.is_once_call_optimized then
 							-- Routine contracts (require, ensure, invariant) should not be checked
@@ -282,9 +282,7 @@ end
 					end
 
 					local_argument_types := argument_types
-					if
-						not (rout_table.item.written_type_id = Context.original_class_type.type_id)
-					then
+					if rout_table.item.written_type_id /= Context.original_class_type.type_id then
 							-- Remember extern routine declaration
 						Extern_declarations.add_routine_with_signature (type_c,
 								internal_name, local_argument_types)
@@ -292,21 +290,19 @@ end
 							Extern_declarations.add_once (type_c, body_index, is_process_relative)
 						end
 					end
-
-					buf.put_character ('(')
-					type_c.generate_function_cast (buf, local_argument_types)
-					buf.put_string (internal_name)
-					buf.put_character (')')
 				else
 						-- Call to a deferred feature without implementation
 					is_deferred := True
-					buf.put_character ('(')
-					real_type (type).c_type.generate_function_cast (buf, <<"EIF_REFERENCE">>)
-					buf.put_string (" RTNR)")
+					internal_name := "RTNR"
+					local_argument_types := <<"EIF_REFERENCE">>
 				end
+				buf.put_character ('(')
+				type_c.generate_function_cast (buf, local_argument_types)
+				buf.put_string (internal_name)
+				buf.put_character (')')
 			end
 		end
-		
+
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
 		local

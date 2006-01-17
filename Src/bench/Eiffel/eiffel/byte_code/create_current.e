@@ -48,7 +48,7 @@ feature -- Il code generation
 		local
 			cl_type_i: CL_TYPE_I
 		do
-			cl_type_i := context.current_type
+			cl_type_i := context.original_class_type.type
 			if cl_type_i.is_expanded then
 					-- Create type directly.
 				(create {CREATE_TYPE}.make (cl_type_i)).generate_il

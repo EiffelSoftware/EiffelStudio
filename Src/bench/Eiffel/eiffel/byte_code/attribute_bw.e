@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarge node for attribute access in workbench mode
 
-class ATTRIBUTE_BW 
+class ATTRIBUTE_BW
 
 inherit
 
@@ -30,7 +30,7 @@ feature
 			end;
 		end;
 
-	
+
 	is_polymorphic: BOOLEAN is True;
 			-- Is the attribute access polymorphic ?
 
@@ -74,7 +74,7 @@ feature
 				else
 					buf.put_string ("RTWPA(");
 				end;
-				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first;
+				r_id := routine_id
 				rout_info := System.rout_info_table.item (r_id);
 				buf.put_class_id (rout_info.origin)
 				buf.put_string (gc_comma);
@@ -87,7 +87,7 @@ feature
 				end;
 				buf.put_static_type_id (typ.associated_class_type.static_type_id)
 				buf.put_string (gc_comma);
-				buf.put_integer (real_feature_id);
+				buf.put_integer (real_feature_id (typ.base_class));
 			end;
 			buf.put_string (gc_comma);
 			if is_nested then
@@ -102,7 +102,7 @@ feature
 			  buf.exdent;
 			end;
 		end;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

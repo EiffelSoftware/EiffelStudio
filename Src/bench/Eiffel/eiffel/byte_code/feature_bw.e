@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged node for Eiffel feature call in workbench mode
 
-class FEATURE_BW 
+class FEATURE_BW
 
 inherit
 
@@ -17,8 +17,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	is_polymorphic: BOOLEAN is
 			-- Is the feature call polymorphic ?
@@ -86,7 +86,7 @@ feature
 			real_type (type).c_type.generate_function_cast (buf, argument_types);
 			base_class := typ.base_class;
 
-			if 
+			if
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
@@ -95,7 +95,7 @@ feature
 				else
 					buf.put_string ("RTWPF(");
 				end;
-				r_id := base_class.feature_table.item_id (feature_name_id).rout_id_set.first;
+				r_id := routine_id
 				rout_info := System.rout_info_table.item (r_id);
 				buf.put_class_id (rout_info.origin)
 				buf.put_string (gc_comma);
@@ -108,12 +108,12 @@ feature
 				end;
 				buf.put_static_type_id (typ.associated_class_type.static_type_id);
 				buf.put_string (gc_comma);
-				buf.put_integer (real_feature_id);
+				buf.put_integer (real_feature_id (typ.base_class))
 			end;
 			buf.put_string (gc_comma);
 			if not is_nested then
 				if precursor_type /= Void then
-						-- Use dynamic type of parent instead 
+						-- Use dynamic type of parent instead
 						-- of dynamic type of Current.
 					buf.put_string ("RTUD(");
 

@@ -246,7 +246,7 @@ feature {NONE} -- Visitors
 						ba.append (bc_attribute_inv)
 						ba.append_raw_string (a_node.attribute_name)
 					end
-					ba.append_integer (a_node.real_feature_id)
+					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
 					ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
 				end
 				ba.append_uint32_integer (l_type.sk_value)
@@ -700,7 +700,7 @@ feature {NONE} -- Visitors
 				ba.append (bc_current)
 				l_cl_type ?= context.real_type (a_node.static_class_type)
 				ba.append (bc_extern)
-				ba.append_integer (a_node.real_feature_id)
+				ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
 				l_type_id := l_cl_type.associated_class_type.static_type_id - 1
 				ba.append_short_integer (l_type_id)
 				ba.append_short_integer (l_type_id)
@@ -1802,7 +1802,7 @@ feature {NONE} -- Implementation
 				end
 				l_associated_class := l_cl_type.base_class
 				if l_associated_class.is_precompiled then
-					r_id := l_associated_class.feature_table.item_id (a_node.feature_name_id).rout_id_set.first
+					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
 					if a_node.is_first or flag then
 						ba.append (precomp_code_first)
@@ -1820,7 +1820,7 @@ feature {NONE} -- Implementation
 						ba.append (code_next)
 						ba.append_raw_string (a_node.feature_name)
 					end
-					ba.append_integer (a_node.real_feature_id)
+					ba.append_integer (a_node.real_feature_id (l_cl_type.base_class))
 					ba.append_short_integer (l_cl_type.associated_class_type.static_type_id - 1)
 					make_precursor_byte_code (a_node)
 				end

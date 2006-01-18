@@ -59,7 +59,7 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #include "rt_except.h"
 #include "rt_timer.h"
 #include "eif_misc.h"
-#include "eif_tools.h"		/* For hashcode() */
+#include "rt_tools.h"		/* For hashcode() */
 #include "rt_main.h"
 #include "rt_dir.h"
 #include <stdio.h>

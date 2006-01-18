@@ -44,7 +44,7 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 #include "rt_cecil.h"
 #include "eif_hector.h"
 #include "rt_struct.h"
-#include "eif_tools.h"
+#include "rt_tools.h"
 #include "eif_eiffel.h"				/* Need string header */
 #include "rt_macros.h"
 #include "rt_lmalloc.h"

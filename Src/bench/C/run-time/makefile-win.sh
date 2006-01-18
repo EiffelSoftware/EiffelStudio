@@ -1111,15 +1111,15 @@ $(INDIR)\store.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hecto
 $(INDIR)\retrieve.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
 			eif_local.h eif_malloc.h eif_plug.h eif_retrieve.h eif_size.h eif_struct.h
 
-$(INDIR)\hash.$obj : include/rt_hash.h eif_tools.h
+$(INDIR)\hash.$obj : include/rt_hash.h include/rt_tools.h
 
 $(INDIR)\traverse.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h include\rt_hashin.h eif_hector.h \
 			eif_local.h eif_malloc.h eif_plug.h eif_size.h eif_store.h eif_struct.h \
 			eif_traverse.h
 
-$(INDIR)\hashin.$obj : include\rt_hashin.h eif_malloc.h eif_tools.h
+$(INDIR)\hashin.$obj : include\rt_hashin.h eif_malloc.h include/rt_tools.h
 
-$(INDIR)\tools.$obj : eif_tools.h
+$(INDIR)\tools.$obj : include/rt_tools.h
 
 $(INDIR)\internal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h \
@@ -1135,7 +1135,7 @@ $(INDIR)\copy.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h ei
 
 $(INDIR)\equal.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_equal.h eif_except.h eif_file.h \
 			eif_garcol.h eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h \
-			include\rt_search.h eif_size.h eif_struct.h eif_tools.h eif_traverse.h
+			include\rt_search.h eif_size.h eif_struct.h include/rt_tools.h eif_traverse.h
 
 $(INDIR)\lmalloc.$obj : eif_garcol.h eif_malloc.h eif_plug.h eif_struct.h
 
@@ -1154,7 +1154,7 @@ $(INDIR)\hector.$obj : eif_cecil.h eif_except.h eif_garcol.h eif_hector.h eif_ma
 
 $(INDIR)\cecil.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_file.h eif_garcol.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_size.h eif_struct.h \
-			eif_tools.h
+			include/rt_tools.h
 
 $(INDIR)\bits.$obj : eif_bits.h eif_cecil.h eif_except.h eif_garcol.h eif_local.h eif_malloc.h \
 			eif_plug.h eif_struct.h
@@ -1175,7 +1175,7 @@ $(INDIR)\memory.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hect
 
 $(INDIR)\argv.$obj : eif_malloc.h eif_plug.h
 
-$(INDIR)\search.$obj : include\rt_search.h eif_tools.h
+$(INDIR)\search.$obj : include\rt_search.h include/rt_tools.h
 
 $(INDIR)\debug.$obj : eif_cecil.h eif_copy.h eif_debug.h eif_except.h eif_garcol.h include\rt_hashin.h \
 			eif_hector.h eif_local.h eif_malloc.h eif_out.h eif_plug.h eif_sig.h \

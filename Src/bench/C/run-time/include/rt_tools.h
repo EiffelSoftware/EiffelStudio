@@ -37,12 +37,13 @@
 #ifndef _rt_tools_h_
 #define _rt_tools_h_
 
-#include "eif_tools.h"
+#include "eif_portable.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+extern EIF_INTEGER hashcode(register char *s, register EIF_INTEGER count);
 extern size_t nprime(size_t n);				/* Find first prime above a given number */
 extern size_t prime(size_t n);					/* Test whether a number is prime or not */
 

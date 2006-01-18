@@ -96,6 +96,13 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
+	tool_bar_indicator: EV_PIXMAP is
+			-- Indicator for SD_TITLE_BAR, when there is nor enough space to show custom widget.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Side indicators
 
 	arrow_indicator_up: EV_PIXMAP is

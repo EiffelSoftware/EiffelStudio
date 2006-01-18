@@ -455,7 +455,7 @@ feature {NONE} -- Implementation functions.
 				l_tab_group.forth
 			end
 			if l_tab_group.count > 1 then
-				l_tab_state.select_tab (internal_content)
+				l_tab_state.select_tab (internal_content, True)
 			end
 			auto_hide_panel.tab_groups.start
 			auto_hide_panel.tab_groups.prune (l_tab_group)

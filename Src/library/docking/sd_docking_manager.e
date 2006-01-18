@@ -25,10 +25,10 @@ feature {NONE} -- Initialization
 			create internal_shared
 			create tab_drop_actions
 
-
 			top_container := a_container
 			main_window := a_window
-init_managers
+
+			init_managers
 			init_widget_structure
 			init_auto_hide_panel
 

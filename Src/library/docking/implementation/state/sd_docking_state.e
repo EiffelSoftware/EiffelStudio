@@ -219,9 +219,10 @@ feature -- Redefine.
 			internal_docking_manager.command.lock_update (a_target_zone, False)
 
 			change_zone_split_area_to_zone (a_target_zone, a_direction)
-			internal_docking_manager.command.unlock_update
-			internal_docking_manager.command.unlock_update
 			internal_docking_manager.command.update_title_bar
+			internal_docking_manager.command.unlock_update
+			internal_docking_manager.command.unlock_update
+
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
 		end

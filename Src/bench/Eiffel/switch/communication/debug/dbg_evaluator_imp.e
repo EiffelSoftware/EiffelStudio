@@ -13,7 +13,7 @@ class
 inherit
 	REFACTORING_HELPER
 
-	COMPILER_EXPORTER	
+	COMPILER_EXPORTER
 
 	SHARED_BYTE_CONTEXT
 		rename
@@ -24,7 +24,7 @@ inherit
 		export
 			{ANY} Application
 			{NONE} all
-		end	
+		end
 
 	SHARED_WORKBENCH
 		export
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			evaluator := a_evaluator
 			init
 		end
-		
+
 	evaluator: DBG_EVALUATOR
 			-- For now, it is used while we don't redesign DBG_EVALUATOR
 
@@ -75,7 +75,7 @@ feature -- Status
 		do
 			Result := error & cst_error_evaluation_aborted /= 0
 		end
-			
+
 	error_message: STRING is
 		local
 			details: TUPLE [INTEGER, STRING]
@@ -110,7 +110,7 @@ feature -- Status
 	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING]]
 			-- List of [Code, Tag, Message]
 			-- Error's message if any otherwise Void
-			
+
 	notify_error (a_code: INTEGER; a_msg: STRING) is
 		require
 			a_code /= 0
@@ -118,7 +118,7 @@ feature -- Status
 			error := error | a_code
 			error_messages.extend ([a_code, a_msg])
 		end
-		
+
 	notify_error_evaluation	(a_msg: STRING) is
 		do
 			notify_error (cst_error_occurred, a_msg)
@@ -141,7 +141,7 @@ feature {NONE} -- Error code id
 			Result.force ("Unable to get target object", Cst_error_unable_to_get_target_object)
 			Result.force ("Error during parameters preparation", Cst_error_occurred_during_parameters_preparation)
 		end
-	
+
 feature {NONE} -- reversed bridge
 
 	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
@@ -151,13 +151,13 @@ feature {NONE} -- reversed bridge
 
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 		deferred
 		end
 
 	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
-				a_feature_name, a_external_name: STRING; 
+				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -179,7 +179,7 @@ feature {DBG_EVALUATOR} -- Interface
 			f.written_class.types.count <= 1
 			f_is_once: f.associated_feature_i.is_once
 		deferred
-		end	
+		end
 
 	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
 			-- Associated _REF classtype for type `cl'
@@ -237,15 +237,13 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 			params /= Void and then not params.is_empty
 		local
 			dmp: DUMP_VALUE
-			bak_ct: CLASS_TYPE
 			bak_cc: CLASS_C
 		do
 				--| Prepare parameters ...
-			bak_ct := Byte_context.class_type
 			bak_cc := System.current_class
 			if dt /= Void then
 				System.set_current_class (dt.associated_class)
-				Byte_context.set_class_type (dt)
+				Byte_context.change_class_type_context (dt, dt)
 			end
 			parameters_init (params.count)
 			from
@@ -280,8 +278,8 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 				end
 				params.forth
 			end
-			if bak_ct /= Void then
-				Byte_context.set_class_type (bak_ct)				
+			if dt /= Void then
+				Byte_context.restore_class_type_context
 			end
 			if bak_cc /= Void then
 				System.set_current_class (bak_cc)
@@ -320,14 +318,14 @@ feature {NONE} -- Implementation
 						l_cl_type_a := ctype.type.type_a
 						Result := l_cl_type_a.find_class_type (l_f_class_c).type_i.associated_class_type
 					end
-				end				
+				end
 			end
 		end
 
 feature -- Access
 
 	last_result_value: DUMP_VALUE
-	
+
 	last_result_static_type: CLASS_C
 
 	prepare_evaluation (trv: DUMP_VALUE; trs: CLASS_C) is

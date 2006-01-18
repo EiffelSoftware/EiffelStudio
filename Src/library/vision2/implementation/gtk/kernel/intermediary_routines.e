@@ -331,17 +331,23 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 			p: POINTER
 		do
+
 			widget ?= eif_id_object (a_object_id)
 			if widget /= Void then
 				if
-					widget.gdk_events_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum) = {EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
+					(widget.gdk_events_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum) = {EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum and then widget.has_focus)
 					or else widget.gtk_widget_imp_at_pointer_position = widget
-					or else widget.has_capture
+					or else widget.has_focus
 						-- Gtk will propagate motion events for ALL gtk widgets directly underneath the mouse pointer
 						-- We only want the one directly beneath the mouse pointer
 						-- We need to test for motion hint widgets so that the mouse pointer is not queried, at present
 						-- this is only gtk drawing area
 				then
+					if widget.app_implementation.pointer_motion_actions_internal /= Void then
+						widget.app_implementation.pointer_motion_actions_internal.call (
+							[widget.interface, a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y]
+						)
+					end
 					widget.pointer_motion_actions_internal.call
 						([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 				end

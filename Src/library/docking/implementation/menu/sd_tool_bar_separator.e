@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Tool bar seperator can show horizontal or vertically."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -113,8 +112,5 @@ feature {NONE} -- Implementation
 		end
 
 	indent: INTEGER is 3
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end

@@ -117,7 +117,7 @@ feature -- Redefine.
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_tab_zone: SD_TAB_ZONE
 		do
-			internal_docking_manager.command.lock_update (zone, False)
+			internal_docking_manager.command.lock_update (a_target_zone, False)
 
 			l_zones := inner_container.zones
 			from

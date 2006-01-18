@@ -41,7 +41,6 @@ feature {NONE} -- Initlization
 			internal_border.set_border_width (internal_shared.border_width)
 			internal_border.set_border_color (internal_shared.border_color)
 			internal_border.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
-			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
 
 			main_box.extend (internal_border)
 
@@ -72,10 +71,12 @@ feature {NONE} -- Initlization
 			l_zero_size_container.disable_item_expand (internal_highlight_area_after)
 
 			create custom_area
+			custom_area.set_minimum_height (internal_shared.title_bar_height)
 			l_zero_size_container.extend (custom_area)
 			l_zero_size_container.disable_item_expand (custom_area)
 
 			l_zero_size_container.set_minimum_width (0)
+			l_zero_size_container.resize_actions.extend (agent on_zero_size_container_resize)
 
 			create stick
 			stick.set_pixmap (internal_shared.icons.unstick)
@@ -188,7 +189,6 @@ feature -- Command
 			end
 		ensure
 			set: a_show = internal_tool_bar.has (normal_max)
-
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
@@ -216,6 +216,7 @@ feature -- Command
 		do
 			create l_color_helper
 			is_focus_color_enable := True
+			hightlight_color := internal_shared.focused_color
 
 			internal_drawing_area.set_background_color (hightlight_color)
 			l_text_color := l_color_helper.text_color_by (hightlight_color)
@@ -225,6 +226,23 @@ feature -- Command
 
 		ensure
 			is_focus_color_enable_set: is_focus_color_enable
+		end
+
+	enable_non_focus_active_color is
+			-- Enable non-focused active color.
+		local
+			l_text_color: EV_COLOR
+			l_color_helper: SD_COLOR_HELPER
+		do
+			create l_color_helper
+			is_focus_color_enable := True
+			hightlight_color := internal_shared.non_focused_title_color
+
+			internal_drawing_area.set_background_color (internal_shared.non_focused_title_color)
+			l_text_color := l_color_helper.text_color_by (internal_shared.non_focused_title_color)
+			internal_drawing_area.set_foreground_color (l_text_color)
+			internal_border.set_border_color (hightlight_color)
+			on_expose
 		end
 
 	disable_focus_color is
@@ -248,10 +266,11 @@ feature -- Command
 	extend_custom_area (a_widget: EV_WIDGET) is
 			-- Extend `custom_area' with a_widget
 		do
+			internal_custom_widget := a_widget
+
 			custom_area.extend (a_widget)
---			internal_
 		ensure
-			extended: custom_area.has (a_widget)
+			set: internal_custom_widget = a_widget
 		end
 
 	wipe_out_custom_area is
@@ -340,6 +359,60 @@ feature -- Actions
 
 feature {NONE} -- Agents
 
+	on_mini_tool_bar_indicator_clicked is
+			--
+		local
+			l_dialog: SD_MINI_TOOL_BAR_DIALOG
+			l_helper: SD_POSITION_HELPER
+		do
+			create l_dialog.make (internal_custom_widget)
+			create l_helper.make
+			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
+			l_dialog.show
+			l_dialog.set_focus
+		end
+
+	on_zero_size_container_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			--
+		do
+			if not ignore_resize and then internal_custom_widget /= Void then
+				ignore_resize := True
+				if a_width >= internal_highlight_area_before.minimum_width + internal_drawing_area.minimum_width + internal_highlight_area_after.minimum_width + internal_custom_widget.minimum_width then
+					if internal_tool_bar.has (mini_tool_bar_indicator) then
+						internal_tool_bar.prune (mini_tool_bar_indicator)
+						if not custom_area.has (internal_custom_widget) then
+							custom_area.wipe_out
+							if internal_custom_widget.parent /= Void then
+								internal_custom_widget.parent.prune (internal_custom_widget)
+							end
+							custom_area.extend (internal_custom_widget)
+						end
+					end
+				else
+						-- Remove `internal_custom_widget' , add `mini_tool_bar_indicator' to `internal_tool_bar'.
+					custom_area.wipe_out
+
+					if mini_tool_bar_indicator = Void then
+						create mini_tool_bar_indicator
+						mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+						mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
+					end
+
+					--FIXIT: who set parent?
+					if mini_tool_bar_indicator.parent /= Void then
+						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
+					end
+
+					internal_tool_bar.start
+					check not_before: not internal_tool_bar.before end
+					internal_tool_bar.put_left (mini_tool_bar_indicator)
+				end
+				ignore_resize := False
+			end
+		end
+
+	ignore_resize: BOOLEAN
+
 	on_stick_select is
 			-- Notify clients when user click stick button.
 		do
@@ -424,7 +497,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	custom_area: EV_HORIZONTAL_BOX
+	custom_area: EV_CELL
 			-- Contains custom widget.
 
 	internal_border: SD_CELL_WITH_BORDER
@@ -433,32 +506,9 @@ feature {NONE} -- Implementation
 	internal_highlight_area_before, internal_highlight_area_after: EV_DRAWING_AREA
 			-- Hightlight area at beginning and end.
 
---	set_all_custom_area_background_color (a_colorizable: EV_COLORIZABLE) is
---			-- Set all custom area widgets background color.
---		local
---			l_container: EV_CONTAINER
---			l_widgets: LINEAR [EV_WIDGET]
---		do
---			l_container ?= a_colorizable
---			if l_container /= Void then
---				l_widgets := l_container.linear_representation
---				from
---					l_widgets.start
---				until
---					l_widgets.after
---				loop
---					set_all_custom_area_background_color (l_widgets.item)
---					l_widgets.forth
---				end
---			end
---			if a_colorizable /= Void then
---				if is_focus_color_enable then
---					a_colorizable.set_background_color (hightlight_color)
---				else
---					a_colorizable.set_background_color (hightlight_gray_color)
---				end
---			end
---		end
+	internal_custom_widget: EV_WIDGET
+			-- Custom widget which is setted by client programmer.
+
 
 	internal_title: STRING
 			-- Internal_title
@@ -474,6 +524,8 @@ feature {NONE} -- Implementation
 			-- Minimize and maxmize button
 	close: EV_TOOL_BAR_BUTTON
 			-- Close button
+	mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON
+			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'.
 
 	internal_shared: SD_SHARED
 			-- All singletons

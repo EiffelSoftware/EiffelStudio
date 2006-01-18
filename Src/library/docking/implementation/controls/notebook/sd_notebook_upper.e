@@ -2,8 +2,8 @@
 	description: "A notebook show mini tool bar and tabs at top."
 	appearance:
 		"[
-			  _______  _______  _______     _______________    _
-			_/ tab_1 \/_tab_2_\/_tab_3_\___|_mini tool bar_|__|X|
+			  _______  _______  _______                        _
+			_/ tab_1 \/_tab_2_\/_tab_3_\______________________|X|
 			|                              						|
 			|         selected_item          					|
 			|                                					|
@@ -54,7 +54,9 @@ feature {NONE} -- Initlization
 			internal_close_button.set_pixmap (internal_shared.icons.close)
 			internal_tool_bar.extend (internal_normal_max_button)
 			internal_tool_bar.extend (internal_close_button)
-			internal_tool_bar.set_background_color (internal_shared.non_focused_color_lightness)
+
+--			internal_tool_bar.set_background_color (internal_shared.non_focused_color_lightness)
+--			internal_tool_bar.set_background_color ((create {EV_STOCK_COLORS}).red)
 
 			internal_top_box.extend (internal_tool_bar)
 			internal_top_box.disable_item_expand (internal_tool_bar)

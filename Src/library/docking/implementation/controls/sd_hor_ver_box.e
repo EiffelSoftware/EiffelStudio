@@ -56,12 +56,16 @@ feature {NONE} -- Initlization
 
 	init_horizontal_style is
 			-- If internal_vertical_style false, add horizontal box.
+		require
+			horizontal: not internal_vertical_style
 		do
 			-- First change the style, so the horizontal_box can be added in.
 			internal_vertical_style := not internal_vertical_style
 			extend (horizontal_box)
 			-- Then change the style back.
 			internal_vertical_style := not internal_vertical_style
+		ensure
+			horizontal: not internal_vertical_style
 		end
 
 feature -- Basic operations

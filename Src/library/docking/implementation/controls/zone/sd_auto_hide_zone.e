@@ -39,7 +39,7 @@ inherit
 			set_background_color,
 			background_color
 		redefine
-			set_title_bar_focus_color
+			set_title_bar_selection_color
 		end
 
 	SD_RESIZE_SOURCE
@@ -185,10 +185,10 @@ feature -- Query
 
 feature -- Command
 
-	set_title_bar_focus_color (a_focus: BOOLEAN) is
+	set_title_bar_selection_color (a_selection: BOOLEAN) is
 			-- Redefine.
 		do
-			if a_focus then
+			if a_selection then
 				window.title_bar.enable_focus_color
 			else
 				window.title_bar.disable_focus_color

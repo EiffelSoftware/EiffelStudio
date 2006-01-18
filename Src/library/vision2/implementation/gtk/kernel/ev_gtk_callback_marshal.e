@@ -15,7 +15,7 @@ inherit
 			copy,
 			is_equal
 		end
-		
+
 	EV_GTK_KEY_CONVERSION
 		undefine
 			default_create
@@ -35,7 +35,7 @@ inherit
 
 create
 	default_create
-	
+
 
 feature {NONE} -- Initialization
 
@@ -64,7 +64,7 @@ feature {EV_ANY_IMP} -- Access
 		do
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
-		
+
 	motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER):like internal_motion_tuple is
 			-- Return a motion tuple from given arguments.
 		do
@@ -77,17 +77,27 @@ feature {EV_ANY_IMP} -- Access
 			Result.put_integer (a_6, 6)
 			Result.put_integer (a_7, 7)
 		end
-		
-	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER):like internal_dimension_tuple is
+
+	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER): like internal_dimension_tuple is
 			-- Return a dimension tuple from given arguments.
 		do
 			Result := internal_dimension_tuple
 			Result.put_integer (a_1, 1)
 			Result.put_integer (a_2, 2)
 			Result.put_integer (a_3, 3)
-			Result.put_integer (a_4, 4)	
+			Result.put_integer (a_4, 4)
 		end
-		
+
+	key_tuple (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN): like internal_key_tuple is
+			-- Return a key tuple from given arguments.
+		do
+			Result := internal_key_tuple
+			Result.put_reference (a_key, 1)
+			Result.put_reference (a_key_string, 2)
+			Result.put_boolean (a_key_press, 3)
+		end
+
+
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
@@ -104,7 +114,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					-- If no arguments are available then a Void tuple is returned
 				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 				event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
-	
+
 				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
 				then
 					Result := motion_tuple (
@@ -136,7 +146,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 	--				Gdk_proximity_out_enum
 	--			then
 	--				Result := Void  -- This used to be empty_tuple but now 'call' can take Void values.
-	
+
 				elseif event_type = {EV_GTK_ENUMS}.Gdk_expose_enum
 				then
 					p := {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
@@ -159,7 +169,7 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 					]
-	
+
 				elseif event_type = {EV_GTK_ENUMS}.Gdk_button_release_enum
 				then
 						-- gdk_event type GdkEventButton
@@ -209,8 +219,7 @@ feature {EV_ANY_IMP}
 			if valid_gtk_code (keyval) then
 				create key.make_with_code (key_code_from_gtk (keyval))
 			end
-			
-			Result := [key, a_key_string, a_key_press]
+			Result := key_tuple (key, a_key_string, a_key_press)
 		end
 
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
@@ -242,7 +251,7 @@ feature {EV_ANY_IMP}
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
-		
+
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
@@ -259,13 +268,13 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args) + 1, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
 			-- Column is zero based in gtk.
 		end
-		
-	is_destroyed: BOOLEAN			
+
+	is_destroyed: BOOLEAN
 
 feature {EV_APPLICATION_IMP} -- Destruction
 
 	destroy is
-			-- Disconnect the 
+			-- Disconnect the
 		do
 			--c_ev_gtk_callback_marshal_destroy
 			is_destroyed := True
@@ -307,25 +316,31 @@ feature {NONE} -- Implementation
 feature {NONE} -- Tuple optimizations.
 
 	internal_dimension_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
-			-- Once function used for global access of motion tuple.
+			-- Once function used for global access of dimension tuple.
 		once
 			Result := [0, 0, 0, 0]
 		end
 
 	internal_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
-			-- 
+			-- Once function used for global access of motion tuple.
 		once
 			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
+		end
+
+	internal_key_tuple: TUPLE [EV_KEY, STRING, BOOLEAN] is
+			-- Once function used for global access of key tuple.
+		once
+			Result := [Void, Void, False]
 		end
 
 feature {EV_ANY_IMP} -- Tuple optimizations
 
 	pointer_tuple: TUPLE [POINTER] is
-			-- 
+			--
 		once
 			Result := [Default_pointer]
 		end
-	
+
 	integer_tuple: TUPLE [INTEGER] is
 		once
 			Result := [0]
@@ -335,7 +350,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations
 		once
 			Result := [0, default_pointer]
 		end
-		
+
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
@@ -361,7 +376,7 @@ feature {NONE} -- Externals
 		end
 
 feature {EV_ANY_IMP} -- Externals
-		
+
 	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
 		c_object_dispose_address: POINTER) is
 				-- Store Eiffel object_id in `gtk_object'.
@@ -389,7 +404,7 @@ feature {EV_ANY_IMP} -- Externals
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect_true"
 		end
-		
+
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_timeout_connect
@@ -398,7 +413,7 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
 		end
-		
+
 	frozen c_ev_gtk_callback_marshal_delayed_agent_call
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Call `an_agent' after `a_delay'.

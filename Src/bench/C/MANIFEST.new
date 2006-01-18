@@ -55,9 +55,7 @@ ipc/Makefile.SH
 ipc/app
 ipc/app/Jmakefile
 ipc/app/Makefile.SH
-ipc/app/app_connect.c
 ipc/app/app_listen.c
-ipc/app/app_main.c
 ipc/app/app_proto.c
 ipc/app/proto.h
 ipc/app/app_server.c

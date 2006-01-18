@@ -1765,7 +1765,7 @@ rt_private void free_unused (void)
 /*
 doc:	<routine name="chunk_free" return_type="int" export="private">
 doc:		<summary>FIXME</summary>
-doc:		<param name="ck" type="struct chunk *">FIXME<param>
+doc:		<param name="ck" type="struct chunk *">FIXME</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */

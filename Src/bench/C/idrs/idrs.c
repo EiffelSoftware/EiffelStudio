@@ -50,7 +50,7 @@ doc:		<param name="addr" type="char *">Address of serializing buffer.</param>
 doc:		<param name="length" type="size_t">Length of serializing buffer.</param>
 doc:		<param name="i_op" type="int">Type of operation wanted.</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_private void idr_create(IDR *idrs, char *addr, size_t len, int i_op)
@@ -66,7 +66,7 @@ doc:	<routine name="idr_destroy" export="private">
 doc:		<summary>Release the memory used by the IDR stream.</summary>
 doc:		<param name="idrs" type="IDR *">IDR structure managing the stream.</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_private void idr_destroy(IDR *idrs)
@@ -85,7 +85,7 @@ doc:		<param name="idrs" type="IDR *">IDR structure managing the stream.</param>
 doc:		<param name="pos" type="size_t">Set current position of `idrs' to `pos'.</param>
 doc:		<return>TRUE if `pos' is valid, FALSE otherwise.</return>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_shared bool_t idr_setpos(IDR *idrs, size_t pos)
@@ -105,7 +105,7 @@ doc:		<param name="idrf" type="IDRF *">IDR filtering pair.</param>
 doc:		<param name="size" type="size_t">Size of IDR buffers.</param>
 doc:		<return>0 if ok, -1 for failure.</return>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_shared int idrf_create(IDRF *idrf, size_t size)
@@ -138,7 +138,7 @@ doc:	<routine name="idrf_destroy" export="shared">
 doc:		<summary>Release the memory used by the IDR streams.</summary>
 doc:		<param name="idrf" type="IDRF *">IDR filtering pair.</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_shared void idrf_destroy(IDRF *idrf)
@@ -152,7 +152,7 @@ doc:	<routine name="idrf_reset_pos" export="shared">
 doc:		<summary>This routine should be called before any IDR operation, in order to reposition the memory streams.</summary>
 doc:		<param name="idrf" type="IDRF *">IDR filtering pair.</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_shared void idrf_reset_pos(IDRF *idrf)
@@ -160,3 +160,7 @@ rt_shared void idrf_reset_pos(IDRF *idrf)
 	(void) idr_setpos(&idrf->i_encode, 0);
 	(void) idr_setpos(&idrf->i_decode, 0);
 }
+
+/*
+doc:</file>
+*/

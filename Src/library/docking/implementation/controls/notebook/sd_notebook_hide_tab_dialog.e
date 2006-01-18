@@ -105,7 +105,7 @@ feature {NONE} -- Implementation agents.
 			when {EV_KEY_CONSTANTS}.Key_enter then
 				if internal_label_box.current_focus_label /= Void then
 					l_selected_tab := find_tab_by_label (internal_label_box.current_focus_label)
-					internal_notebook.select_item (internal_notebook.content_by_tab (l_selected_tab))
+					internal_notebook.select_item (internal_notebook.content_by_tab (l_selected_tab), True)
 					l_stop := True
 				end
 				destroy
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation agents.
 		require
 			a_index_valid: a_index > 0 and a_index <= internal_tab_labels.count
 		do
-			internal_notebook.select_item (internal_notebook.content_by_tab (internal_tab_labels.i_th (a_index)))
+			internal_notebook.select_item (internal_notebook.content_by_tab (internal_tab_labels.i_th (a_index)), True)
 			destroy
 		ensure
 			destroyed: is_destroyed

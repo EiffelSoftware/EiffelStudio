@@ -53,20 +53,31 @@ feature -- Saturation
 	draw_color_change_gradually_from (a_drawing_area: EV_DRAWING_AREA; a_start_x: INTEGER; a_start_color, a_to_color: EV_COLOR) is
 			-- Draw color changed gradually on `a_drawing_area' from a_start_x.
 		local
+			l_rect: EV_RECTANGLE
+		do
+			create l_rect.make (a_start_x, 0, a_drawing_area.width - a_start_x, a_drawing_area.height)
+			draw_color_change_gradually_in_area (a_drawing_area, l_rect, a_start_color, a_to_color)
+		end
+
+	draw_color_change_gradually_in_area (a_drawing_area: EV_DRAWING_AREA; a_area: EV_RECTANGLE; a_start_color, a_to_color: EV_COLOR) is
+			--
+		require
+			not_void: a_area /= Void
+		local
 			l_count: INTEGER
 			l_pixmap: EV_PIXMAP
 		do
-			if a_drawing_area.width >0 and a_drawing_area.height > 0 then
+			if a_area.width >0 and a_area.height > 0 then
 				from
-					create l_pixmap.make_with_size (a_drawing_area.width - a_start_x, a_drawing_area.height)
+					create l_pixmap.make_with_size (a_area.width, a_area.height)
 				until
 					l_count >= l_pixmap.width
 				loop
 					l_pixmap.set_foreground_color (color_mix (a_start_color, a_to_color, (1 - l_count / l_pixmap.width)))
-					l_pixmap.draw_segment (l_count, 0, l_count, l_pixmap.height)
+					l_pixmap.draw_segment (l_count, a_area.top, l_count, a_area.bottom)
 					l_count := l_count + 1
 				end
-				a_drawing_area.draw_pixmap (a_start_x, 0, l_pixmap)
+				a_drawing_area.draw_pixmap (a_area.left, a_area.top, l_pixmap)
 			end
 		end
 

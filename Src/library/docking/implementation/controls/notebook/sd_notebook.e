@@ -44,7 +44,7 @@ feature {NONE}  -- Initlization
 			create internal_tab_box.make (Current, internal_docking_manager)
 			create l_helper
 
-			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
+--			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_border_for_tab_area.make
 			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
@@ -81,6 +81,14 @@ feature -- Command
 			end
 		end
 
+	set_active_color (a_focus: BOOLEAN) is
+			-- Set tab selection color to focus color or non-focus color.
+		do
+			if selected_item /= Void then
+				tab_by_content (selected_item).set_selection_color (a_focus)
+			end
+		end
+
 	set_item_text (a_content: SD_CONTENT; a_text: STRING) is
 			-- Assign `a_text' to label of `an_item'.
 		require
@@ -109,7 +117,7 @@ feature -- Command
 			set:
 		end
 
-	select_item (a_content: SD_CONTENT) is
+	select_item (a_content: SD_CONTENT; a_focus: BOOLEAN) is
 			-- Select `a_widget' and show it.
 		require
 			has: has (a_content)
@@ -119,12 +127,10 @@ feature -- Command
 					a_content.user_widget.parent.prune (a_content.user_widget)
 				end
 				internal_cell.replace (a_content.user_widget)
-
 			end
-			notify_tab (tab_by_content (a_content), True)
+			notify_tab (tab_by_content (a_content), a_focus)
 			internal_tab_box.resize_tabs (internal_tab_box.width)
 
---			selection_actions.call ([])
 		ensure
 			selectd: selected_item = a_content
 		end
@@ -144,10 +150,10 @@ feature -- Command
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)
-			select_item (a_content)
+			select_item (a_content, True)
 		end
 
-	prune (a_content: SD_CONTENT) is
+	prune (a_content: SD_CONTENT; a_focus: BOOLEAN) is
 			-- Prune `a_widget'.
 		require
 			has: has (a_content)
@@ -165,8 +171,10 @@ feature -- Command
 				internal_contents.back
 			end
 
-			select_item (internal_contents.item)
-			selection_actions.call ([])
+			select_item (internal_contents.item, a_focus)
+			if a_focus then
+				selection_actions.call ([])
+			end
 		ensure
 			pruned: not has (a_content)
 		end
@@ -460,7 +468,7 @@ feature {NONE}  -- Implementation
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle notebook tab selected.
 		do
-			select_item (content_by_tab (a_tab))
+			select_item (content_by_tab (a_tab), True)
 			notify_tab (a_tab, True)
 			selection_actions.call ([])
 		end

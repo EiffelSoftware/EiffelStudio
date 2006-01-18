@@ -99,6 +99,17 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
+	non_focused_title_color: EV_COLOR is
+			-- Non focused color of window title bar.
+		local
+			l_system_color: SD_SYSTEM_COLOR
+		once
+			create l_system_color
+			Result := l_system_color.non_focused_selection_title_color
+		ensure
+			not_void: Result /= Void
+		end
+
 	non_focused_color_lightness: EV_COLOR is
 			-- Lighter `non_focused_color'.
 		local
@@ -209,6 +220,12 @@ feature -- Constants
 			-- Minmum width of a zone.
 		once
 			Result := Title_bar_height * 5
+		end
+
+	Zone_minmum_height: INTEGER is
+			-- Minmum height of a zone.
+		once
+			Result := Title_bar_height
 		end
 
 	Menu_size: INTEGER is 23

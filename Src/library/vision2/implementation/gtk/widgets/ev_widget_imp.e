@@ -89,6 +89,11 @@ feature {NONE} -- Initialization
 				-- We need to hookup the motion actions to provide app imp with motion actions
 			l_motion_actions := pointer_motion_actions
 
+			if is_parentable then
+				real_signal_connect (a_event_widget, once "map-event", agent (l_gtk_marshal).on_widget_show (a_c_object), Void)
+					-- We need the map event to correctly set the cursor if available.
+			end
+
 
 			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
@@ -574,6 +579,9 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- `Current' has been mapped on to the screen.
 		do
 			-- By default do nothing as this is redefined by descendants such as window and split area that need it.
+			if pointer_style /= Void then
+				internal_set_pointer_style (pointer_style)
+			end
 		end
 
 feature {NONE} -- Implementation

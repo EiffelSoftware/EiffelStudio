@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_DRAWING_AREA_IMP
 
 inherit
@@ -15,9 +15,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface,
-			set_background_color,
-			clear_rectangle
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -58,21 +56,23 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-		end	
+		end
 
 	initialize is
 			-- Initialize `Current'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
-				-- This means that when the drawing area is resized, only the new portions are redrawn
+				-- When false, this means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
-			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
+			disable_double_buffering
 			disable_tabable_to
 			disable_tabable_from
-			
+
+			real_set_background_color (c_object, background_color)
+
 				-- Initialize tooltip.
-			internal_tooltip := ""		
+			internal_tooltip := ""
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
@@ -85,6 +85,18 @@ feature -- Status report
 			-- Is Current able to be tabbed from?
 
 feature -- Status setting
+
+	enable_double_buffering is
+			-- Allow `Current' to have all exposed area double buffered.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, True)
+		end
+
+	disable_double_buffering is
+			-- Disable double buffering for exposed areas.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
+		end
 
 	enable_tabable_to is
 			-- Make `is_tabable_to' `True'.
@@ -135,7 +147,7 @@ feature {NONE} -- Implementation
 					update_tooltip_window
 					tooltip_repeater.set_interval (0)
 				end
-			end	
+			end
 		end
 
 	reset_tooltip_position: BOOLEAN
@@ -156,7 +168,7 @@ feature {NONE} -- Implementation
 					tooltip_initial_x := a_screen_x + a_x
 					tooltip_initial_y := a_screen_y + a_y
 					reset_tooltip_position := False
-				end			
+				end
 				l_show_tooltips := True
 			else
 				show_tooltips_if_activated := False
@@ -182,7 +194,7 @@ feature {NONE} -- Implementation
 
 	show_tooltips_if_activated: BOOLEAN
 		-- Should tooltips be shown if activated?
-		
+
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
 
@@ -213,7 +225,7 @@ feature {NONE} -- Implementation
 				update_tooltip (True)
 			else
 				update_tooltip (False)
-			end	
+			end
 		end
 
 	tooltip: STRING is
@@ -228,34 +240,7 @@ feature {NONE} -- Implementation
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 			-- Should default key processing be allowed for `a_key'.
 		do
-			Result := a_key.is_arrow or else (not is_tabable_from and a_key.code = App_implementation.Key_constants.key_tab)
-		end
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `background_color'.
-		local
-			color_struct: POINTER
-			a_success: BOOLEAN
-		do
-			if internal_background_color /= a_color then
-				internal_background_color := a_color
-				color_struct := app_implementation.reusable_color_struct
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)	
-			end
-		end
-
-	clear_rectangle (x, y, a_width, a_height: INTEGER) is
-			-- Erase rectangle specified with `background_color'.
-		do
-			if drawable /= default_pointer then
-				--| FIXME IEK Find a way so that gtk can do background clearing implicitly without having to repaint the background each time.
-				--{EV_GTK_EXTERNALS}.gdk_window_clear_area (drawable, x, y, a_width, a_height)
-				Precursor {EV_DRAWABLE_IMP} (x, y , a_width, a_height)
-			end
+			Result := a_key.is_arrow or else (not is_tabable_from and a_key.code = {EV_KEY_CONSTANTS}.key_tab)
 		end
 
 	redraw is
@@ -277,10 +262,10 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)				
+				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
 			end
 		end
-		
+
 	clear_and_redraw is
 			-- Clear `Current' and redraw.
 		do
@@ -298,9 +283,7 @@ feature {NONE} -- Implementation
 	flush is
 			-- Redraw the screen immediately.
 		do
-			if drawable /= NULL and then is_displayed then
-				{EV_GTK_EXTERNALS}.gdk_window_process_updates (drawable, False)
-			end
+			refresh_now
 		end
 
 	update_if_needed is
@@ -317,9 +300,12 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
 		end
 
-	mask: POINTER
+	mask: POINTER is
 			-- Mask of Current, which is always NULL.
-		
+		do
+			-- Not applicable for drawing area
+		end
+
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	call_expose_actions (a_x, a_y, a_width, a_height: INTEGER) is
@@ -351,7 +337,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	Gdk_events_mask: INTEGER is
@@ -370,7 +356,7 @@ feature {NONE} -- Implementation
 			update_tooltip (False)
 			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
 		end
-		
+
 	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
@@ -378,10 +364,10 @@ feature {NONE} -- Implementation
 				-- Make sure the tooltip is hidden if any button events occur.
 			update_tooltip (False)
 			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) and then (a_button = 1 and then a_button <= 3) then
-					-- As a button has been pressed on the drawing area then 
+					-- As a button has been pressed on the drawing area then
 				set_focus
 			end
-			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)		
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	interface: EV_DRAWING_AREA
@@ -397,7 +383,7 @@ feature {NONE} -- Implementation
 				gc := NULL
 			end
 		end
-		
+
 	dispose is
 			-- Clean up
 		do
@@ -406,7 +392,7 @@ feature {NONE} -- Implementation
 				gc := NULL
 			end
 			Precursor {EV_PRIMITIVE_IMP}
-		end	
+		end
 
 end -- class EV_DRAWING_AREA_IMP
 

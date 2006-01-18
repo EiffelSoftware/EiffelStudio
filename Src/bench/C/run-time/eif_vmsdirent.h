@@ -1,12 +1,14 @@
 /*
-**  Header file for VMS readdir() routines.
-**  Written by Rich $alz, <rsalz@bbn.com> in August, 1990.
-**  This code has no copyright.
-**
-**  You must #include <descrip.h> before this file.
+	description: "[
+			Header file for VMS readdir() routines.
+			Written by Rich $alz, <rsalz@bbn.com> in August, 1990.
+			This code has no copyright.
+			You must #include <descrip.h> before this file.
+			12-NOV-1990 added d_namlen field -GJC@MITECH.COM
+			]"
+	date:		"$Date$"
+	revision:	"$Revision$"
 */
-
-/* 12-NOV-1990 added d_namlen field -GJC@MITECH.COM */
 
 #ifndef _eif_vmsdirent_h_
 #define _eif_vmsdirent_h_

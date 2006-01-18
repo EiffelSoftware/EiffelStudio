@@ -51,7 +51,7 @@ feature {EV_ANY_I} -- Access
 
 				-- Remove floating state.
 			{EV_GTK_EXTERNALS}.object_ref (l_c_object)
-			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)		
+			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)
 
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
@@ -171,12 +171,12 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				a_signal_name.item,
 				l_agent,
 				invoke_after_handler
-			)			
+			)
 		end
 
 	last_signal_connection_id: INTEGER
 			-- GTK signal connection id of the most recent `signal_connect'.
-		
+
 feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN is
@@ -230,7 +230,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Redefined by descendents.
 		end
 
-feature {EV_ANY_I} -- Access
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 	visual_widget: POINTER is
 			-- Pointer to the widget viewed by user.
@@ -245,7 +245,7 @@ feature {EV_ANY_I} -- Access
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	App_implementation: EV_APPLICATION_IMP is
-			-- 
+			--
 		local
 			env: EV_ENVIRONMENT
 		once
@@ -255,7 +255,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 				Result_not_void: Result /= Void
 			end
 		end
-		
+
 feature -- Measurement
 
 	NULL: POINTER is

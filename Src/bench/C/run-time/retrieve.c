@@ -4508,7 +4508,7 @@ doc:		<param name="object" type="EIF_REFERENCE">Object for which we are retrievi
 doc:		<param name="new_flags" type="uint32">New flags of `object' in retrieving system.</param>
 doc:		<param name="old_flags" type="uint32">Flags of `object' in storing system.</param>
 doc:		<param name="expanded_offset" type="long">Offset in `object' from where data should be retrieved.</param>
-doc:		<return>NULL when there is no mismatch, otherwise a SPECIAL containing the old data for the `object' in the storing system.<return>
+doc:		<return>NULL when there is no mismatch, otherwise a SPECIAL containing the old data for the `object' in the storing system.</return>
 doc:		<thread_safety>Safe using thread safe routines and per thread data.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>

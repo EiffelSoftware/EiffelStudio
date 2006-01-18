@@ -69,6 +69,7 @@ feature {NONE} -- Initialization
 			a_c_object: POINTER
 			app_imp: like app_implementation
 			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
+			l_motion_actions: like pointer_motion_actions
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
 			app_imp := app_implementation
@@ -85,6 +86,10 @@ feature {NONE} -- Initialization
 			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
 			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (l_gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
 
+				-- We need to hookup the motion actions to provide app imp with motion actions
+			l_motion_actions := pointer_motion_actions
+
+
 			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
@@ -100,9 +105,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			-- Used for pointer button release events
 		do
 			if a_button >= 1 and a_button <= 3 then
-				app_implementation.pointer_button_release_actions.call ([interface, a_button, a_screen_x, a_screen_y])
-				if pointer_button_release_actions /= Void then
-					pointer_button_release_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				if app_implementation.pointer_button_release_actions_internal /= Void then
+					app_implementation.pointer_button_release_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
+				end
+				if pointer_button_release_actions_internal /= Void then
+					pointer_button_release_actions_internal.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 				end
 			end
 		end
@@ -150,14 +157,18 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 							end
 						end
 						if temp_key_string /= Void then
-							app_implementation.key_press_string_actions.call ([interface, temp_key_string])
+							if app_implementation.key_press_string_actions_internal /= Void then
+								app_implementation.key_press_string_actions_internal.call ([interface, temp_key_string])
+							end
 							key_press_string_actions_internal.call ([temp_key_string])
 						end
 					end
 				else
 						-- The event is a key release event.
 					if a_key /= Void then
-						app_implementation.key_release_actions.call ([interface, a_key])
+						if app_implementation.key_release_actions_internal /= Void then
+							app_implementation.key_release_actions.call ([interface, a_key])
+						end
 						if key_release_actions_internal /= Void then
 							key_release_actions_internal.call ([a_key])
 						end
@@ -186,12 +197,16 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 			if a_has_focus then
-				app_implementation.focus_in_actions.call ([interface])
+				if app_implementation.focus_in_actions_internal /= Void then
+					app_implementation.focus_in_actions_internal.call ([interface])
+				end
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.call (Void)
 				end
 			else
-				app_implementation.focus_out_actions.call ([interface])
+				if app_implementation.focus_out_actions_internal /= Void then
+					app_implementation.focus_out_actions_internal.call ([interface])
+				end
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
 				end
@@ -246,13 +261,17 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			if a_button = 4 and mouse_wheel_delta > 0 then
 					-- This is for scrolling up
-				app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
+				if app_implementation.mouse_wheel_actions_internal /= Void then
+					app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
+				end
 				if mouse_wheel_actions_internal /= Void then
 					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
 				end
 			elseif a_button = 5 and mouse_wheel_delta > 0 then
 					-- This is for scrolling down
-				app_implementation.mouse_wheel_actions.call ([interface, - mouse_wheel_delta])
+				if app_implementation.mouse_wheel_actions_internal /= Void then
+					app_implementation.mouse_wheel_actions_internal.call ([interface, - mouse_wheel_delta])
+				end
 				if mouse_wheel_actions_internal /= Void then
 					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
 				end
@@ -260,12 +279,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if a_button >= 1 and then a_button <= 3 then
 				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-					app_implementation.pointer_button_press_actions.call ([interface, t.integer_item (3), t.integer_item (7), t.integer_item (8)])
+					if app_implementation.pointer_button_press_actions_internal /= Void then
+						app_implementation.pointer_button_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+					end
 					if pointer_button_press_actions_internal /= Void then
 						pointer_button_press_actions_internal.call (t)
 					end
 				elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-					app_implementation.pointer_double_press_actions.call ([interface, t.integer_item (3), t.integer_item (7), t.integer_item (8)])
+					if app_implementation.pointer_double_press_actions_internal /= Void then
+						app_implementation.pointer_double_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+					end
 					if pointer_double_press_actions_internal /= Void then
 						pointer_double_press_actions_internal.call (t)
 					end
@@ -633,7 +656,7 @@ feature {NONE} -- Implementation
 	in_resize_event: BOOLEAN
 			-- Is `interface.resize_actions' being executed?
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_WIDGET
 

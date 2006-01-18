@@ -1,43 +1,49 @@
 indexing
-	description: 
+	description:
 		"EiffelVision application, GTK+ implementation."
 	status: "See notice at end of class"
 	keywords: "application"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	EV_APPLICATION_IMP
-	
+
 inherit
 	EV_APPLICATION_I
 			export
-				{EV_PICK_AND_DROPABLE_IMP} captured_widget
+				{EV_PICK_AND_DROPABLE_IMP}
+					captured_widget
+				{EV_INTERMEDIARY_ROUTINES}
+					pointer_motion_actions_internal,
+					pointer_button_press_actions_internal,
+					pointer_double_press_actions_internal,
+					pointer_button_release_actions_internal
 			end
-		
+
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 
 	EV_GTK_EVENT_STRINGS
 
-create 
+create
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
 		local
 			locale_str: STRING
 		do
 			base_make (an_interface)
-			
+
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
 --			end
 
 			--put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
-			
+
 			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
 
 			gtk_is_launchable := gtk_init_check
@@ -50,21 +56,21 @@ feature {NONE} -- Initialization
 				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
-			
+
 				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
-				
+
 				gtk_dependent_initialize
 				create window_oids.make
-	
+
 				tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
 				{EV_GTK_EXTERNALS}.object_ref (tooltips)
 				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
-				
+
 					-- Initialize the marshal object.
 				create gtk_marshal
-				
+
 					-- Initialize the dependent routines object
 				create gtk_dependent_routines
 					-- Uncomment for Gtk 2.x only
@@ -82,13 +88,13 @@ feature {NONE} -- Initialization
 		do
 			if gtk_is_launchable then
 				gtk_dependent_launch_initialize
-				main_loop		
+				main_loop
 					-- Unhook marshal object.
-				gtk_marshal.destroy			
+				gtk_marshal.destroy
 			end
 			--{EV_GTK_EXTERNALS}.g_mem_profile
-		end	
-		
+		end
+
 	main_loop is
 			-- Our main loop		
 		local
@@ -98,10 +104,10 @@ feature {NONE} -- Initialization
 			l_window_list: like windows
 		do
 			from
-			until 
+			until
 				l_is_destroyed
 			loop
-				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then		
+				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
 						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
 						-- All pending resizing has been performed at this point.
 					l_is_destroyed := is_destroyed
@@ -111,17 +117,16 @@ feature {NONE} -- Initialization
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
 					end
-					
+
 					if not l_is_destroyed then
 						if idle_actions_pending then
 							call_idle_actions
 						else
 								-- Block loop by running a gmain loop iteration with blocking enabled.
 							events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
-						end					
+						end
 					else
 						-- Application has been flagged to be destroyed so we hide any existing windows.
-						-- Hide any existing Windows
 						l_window_list := windows
 						from
 							l_window_list.start
@@ -129,13 +134,13 @@ feature {NONE} -- Initialization
 							l_window_list.after
 						loop
 							l_window_list.item.hide
-							l_window_list.forth	
+							l_window_list.forth
 						end
 					end
 				end
 			end
 		end
-		
+
 feature {EV_ANY_IMP} -- Access
 
 	idle_actions_pending: BOOLEAN is
@@ -144,13 +149,13 @@ feature {EV_ANY_IMP} -- Access
 			Result := internal_idle_actions.count > 0 or else
 						(idle_actions_internal /= Void and then idle_actions_internal.count > 0)
 		end
-		
+
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
 
 	gtk_dependent_routines: EV_GTK_DEPENDENT_ROUTINES
 		-- Object used for exporting gtk version dependent routines to independent implementation
-		
+
 	call_idle_actions is
 			-- Execute idle actions
 		do
@@ -182,7 +187,7 @@ feature -- Access
 			Result := (keyboard_modifier_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_shift_mask_enum)).to_boolean
 		end
 
-	window_oids: LINKED_LIST [INTEGER] 
+	window_oids: LINKED_LIST [INTEGER]
 			-- Global list of window object ids.
 
 	windows: LINEAR [EV_WINDOW] is
@@ -212,30 +217,25 @@ feature -- Access
 			end
 			window_oids.go_to (cur)
 		end
-		
-	key_constants: EV_KEY_CONSTANTS is
-		once
-			create Result	
-		end
 
 feature -- Basic operation
 
 	process_events_until_stopped is
-			-- Process all events until one event is received 
+			-- Process all events until one event is received
 			-- by `widget'.
 		local
 			main_not_running: INTEGER
 		do
 			from
 				stop_processing_requested := False
-			until 
+			until
 				stop_processing_requested
 			loop
 					-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
 				main_not_running := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
-		
+
 	stop_processing is
 			-- Exit `process_events_until_stopped'.
 		local
@@ -256,7 +256,7 @@ feature -- Basic operation
 			main_not_running: INTEGER
 		do
 			from
-			until 
+			until
 				{EV_GTK_EXTERNALS}.gtk_events_pending = 0
 			loop
 					main_not_running := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
@@ -291,7 +291,7 @@ feature -- Status setting
 			tooltip_delay := a_delay
 			if gtk_is_launchable then
 				{EV_GTK_EXTERNALS}.gtk_tooltips_set_delay (tooltips, a_delay)
-			end		
+			end
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
@@ -324,7 +324,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			end
 			interface.pick_actions.call ([a_pebble])
 		end
-		
+
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
@@ -348,7 +348,7 @@ feature -- Implementation
 		do
 			is_in_transport := True
 		end
-		
+
 	disable_is_in_transport is
 			-- Set `is_in_transport' to False.
 		require
@@ -378,7 +378,7 @@ feature -- Implementation
 		do
 			set_debug_mode (0)
 		end
-		
+
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	gtk_is_launchable: BOOLEAN
@@ -404,19 +404,19 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (default_gtk_window)
 		end
-		
+
 	default_window: EV_WINDOW is
 			-- Default Window used for creation of agents and holder of clipboard widget.
 		once
 			create Result
 		end
-		
+
 	default_window_imp: EV_WINDOW_IMP is
 			--
 		once
 			Result ?= default_window.implementation
 		end
-		
+
 	default_font_height: INTEGER is
 			--
 		local
@@ -425,7 +425,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
-		
+
 	default_font_ascent: INTEGER is
 			--
 		local
@@ -434,7 +434,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
-		
+
 	default_font_descent: INTEGER is
 			--
 		local
@@ -443,12 +443,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
-		
-	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
+
+	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
 		once
 			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
-		
+
 	fg_color: POINTER is
 			-- Default allocated background color.
 		local
@@ -457,7 +457,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
-		
+
 	bg_color: POINTER is
 			-- Default allocate foreground color.
 		local
@@ -510,7 +510,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 		-- Temp coordinate values for origin of Pick and Drop.
 
 	set_x_y_origin (a_x_origin, a_y_origin: INTEGER) is
-			-- 
+			--
 		do
 			x_origin := a_x_origin
 			y_origin := a_y_origin
@@ -521,7 +521,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 		-- Position of pointer on previous PND draw.
 
 	set_old_pointer_x_y_origin (a_old_pointer_x, a_old_pointer_y: INTEGER) is
-			-- 
+			--
 		do
 			old_pointer_x := a_old_pointer_x
 			old_pointer_y := a_old_pointer_y
@@ -540,7 +540,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 		do
 			grab_callback_connection_id := a_grab
 		end
-		
+
 	grab_callback_connection_id: INTEGER
 			-- GTK signal connection id for motion-notify-event.
 			-- (Used to trigger a global user input grab)
@@ -581,7 +581,7 @@ feature {NONE} -- External implementation
 		external
 			"C | <unistd.h>"
 		end
-	
+
 	gtk_init is
 		external
 			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""

@@ -10,9 +10,9 @@ MAKE = $make
 MV = ren
 RM = del
 
-OBJECTS = names.$obj sizes.$obj commands.$obj
+OBJECTS = names.$obj commands.$obj
 
-MT_OBJECTS = MTnames.$obj MTsizes.$obj MTcommands.$obj
+MT_OBJECTS = MTnames.$obj MTcommands.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
@@ -34,7 +34,4 @@ MTnames.$obj: names.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTcommands.$obj: commands.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
-
-MTsizes.$obj: sizes.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

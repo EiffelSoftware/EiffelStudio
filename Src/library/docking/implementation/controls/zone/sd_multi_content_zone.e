@@ -77,23 +77,25 @@ feature -- Command
 	extend (a_content: SD_CONTENT) is
 			-- Redefine
 		do
-			internal_notebook.extend (a_content)
-			internal_notebook.set_item_text (a_content, a_content.short_title)
-			internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
-			internal_notebook.select_item (a_content)
+			if not contents.has (a_content) then
+				internal_notebook.extend (a_content)
+				internal_notebook.set_item_text (a_content, a_content.short_title)
+				internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
+				internal_notebook.select_item (a_content, True)
+			end
 		ensure then
 			extended: contents.has (a_content)
 			internal_notebook.has (a_content)
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
-	prune (a_content: SD_CONTENT) is
+	prune (a_content: SD_CONTENT; a_focus: BOOLEAN) is
 			-- Prune `a_content' from `Current'.
 		require
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
-			internal_notebook.prune (a_content)
+			internal_notebook.prune (a_content, a_focus)
 		ensure
 			pruned: not has (a_content)
 			pruned: not internal_notebook.has (a_content)

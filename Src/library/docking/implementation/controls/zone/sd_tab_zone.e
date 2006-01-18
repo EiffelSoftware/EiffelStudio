@@ -15,8 +15,8 @@ inherit
 			on_normal_max_window,
 			is_maximized,
 			set_max,
-			set_title_bar_focus_color
---			save_content_title
+			set_title_bar_selection_color,
+			set_non_focus_selection_color
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -95,6 +95,7 @@ feature {NONE} -- Initlization
 			resize_actions.extend (agent internal_notebook.on_resize)
 
 			set_minimum_width (internal_shared.zone_minmum_width)
+			set_minimum_height (internal_shared.zone_minmum_height)
 		end
 
 feature -- Query
@@ -189,23 +190,35 @@ feature -- Command
 			internal_title_bar.set_max (a_max)
 		end
 
-	set_title_bar_focus_color (a_focus: BOOLEAN) is
-			-- Redefine.
+	set_title_bar_selection_color (a_selection: BOOLEAN) is
+			-- Redefine
 		do
-			if a_focus then
+			if a_selection then
 				internal_title_bar.enable_focus_color
+				internal_notebook.set_active_color (True)
 			else
 				internal_title_bar.disable_focus_color
 			end
+		end
+
+	set_non_focus_selection_color is
+			-- Redefine
+		do
+			internal_title_bar.enable_non_focus_active_color
+			internal_notebook.set_active_color (False)
 		end
 
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER) is
 			-- Set a_content's position to a_index.
 		require
 			has: has (a_content)
-			valid: a_index > 0 and a_index <= contents.count
+			valid: a_index > 0
 		do
-			internal_notebook.set_content_position (a_content, a_index)
+			if a_index >= contents.count then
+				internal_notebook.set_content_position (a_content, contents.count)
+			else
+				internal_notebook.set_content_position (a_content, a_index)
+			end
 		end
 
 feature {SD_TAB_STATE} -- Internal issues.
@@ -216,17 +229,16 @@ feature {SD_TAB_STATE} -- Internal issues.
 			Result := internal_notebook.selected_item_index
 		end
 
-	select_item (a_content: SD_CONTENT) is
+	select_item (a_content: SD_CONTENT; a_focus: BOOLEAN) is
 			-- Select `a_item' on the notebook.
 		require
 			a_content_not_void: a_content /= Void
 			has (a_content)
 		do
-			internal_notebook.select_item (a_content)
+			internal_notebook.select_item (a_content, a_focus)
 		ensure
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
-
 
 feature {NONE} -- Agents for user
 
@@ -239,7 +251,7 @@ feature {NONE} -- Agents for user
 			internal_notebook.set_focus_color (True)
 
 			if a_content /= Void then
-				internal_notebook.select_item (a_content)
+				internal_notebook.select_item (a_content, True)
 			end
 		ensure then
 			title_bar_focus: internal_title_bar.is_focus_color_enable
@@ -279,22 +291,20 @@ feature {NONE} -- Agents for docker
 		local
 			l_content: SD_CONTENT
 		do
---			if not internal_diable_on_select_tab then
-				l_content := contents.i_th (internal_notebook.selected_item_index)
-				internal_title_bar.set_title (l_content.long_title)
-				if l_content.mini_toolbar /= Void then
-					if l_content.mini_toolbar.parent /= Void then
-						l_content.mini_toolbar.parent.prune (l_content.mini_toolbar)
-					end
-					internal_title_bar.extend_custom_area (l_content.mini_toolbar)
-				else
-					internal_title_bar.wipe_out_custom_area
+			l_content := contents.i_th (internal_notebook.selected_item_index)
+			internal_title_bar.set_title (l_content.long_title)
+			if l_content.mini_toolbar /= Void then
+				if l_content.mini_toolbar.parent /= Void then
+					l_content.mini_toolbar.parent.prune (l_content.mini_toolbar)
 				end
-				if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
-					l_content.internal_focus_in_actions.call ([])
-				end
-				internal_docking_manager.property.set_last_focus_content (l_content)
---			end
+				internal_title_bar.extend_custom_area (l_content.mini_toolbar)
+			else
+				internal_title_bar.wipe_out_custom_area
+			end
+			if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
+				l_content.internal_focus_in_actions.call ([])
+			end
+			internal_docking_manager.property.set_last_focus_content (l_content)
 		ensure
 --			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
 --			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies

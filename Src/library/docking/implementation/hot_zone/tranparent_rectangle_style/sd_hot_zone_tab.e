@@ -54,8 +54,8 @@ feature -- Redefine
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.move_to_tab_zone (internal_zone, 0)
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.move_to_tab_zone (internal_zone, internal_zone.contents.count + 1)
 				Result := True
 			else
 				from

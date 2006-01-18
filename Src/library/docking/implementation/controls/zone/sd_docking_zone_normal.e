@@ -11,10 +11,11 @@ inherit
 		redefine
 			set_max,
 			is_maximized,
-			set_title_bar_focus_color,
+			set_title_bar_selection_color,
 			on_focus_in,
 			on_focus_out,
-			on_normal_max_window
+			on_normal_max_window,
+			set_non_focus_selection_color
 		end
 create
 	make
@@ -51,6 +52,7 @@ feature	{NONE} -- Initlization
 			extend_cell (window)
 
 			set_minimum_width (internal_shared.zone_minmum_width)
+			set_minimum_height (internal_shared.zone_minmum_height)
 		ensure
 			set: internal_docking_manager = a_content.docking_manager
 			added: has_cell (window)
@@ -92,14 +94,20 @@ feature -- Command
 			window.title_bar.set_max (a_max)
 		end
 
-	set_title_bar_focus_color (a_focus: BOOLEAN) is
+	set_title_bar_selection_color (a_selection: BOOLEAN) is
 			-- Redefine.
 		do
-			if a_focus then
+			if a_selection then
 				window.title_bar.enable_focus_color
 			else
 				window.title_bar.disable_focus_color
 			end
+		end
+
+	set_non_focus_selection_color is
+			-- Set title bar non-focuse color.
+		do
+			window.title_bar.enable_non_focus_active_color
 		end
 
 	stick is

@@ -76,15 +76,9 @@ feature -- Hanlde pointer events
 
 	cancel_tracing_pointer is
 			-- Cancel is_tracing pointer, user may press Escape key?
-		local
-			l_env: EV_ENVIRONMENT
-		do
-			is_tracing := False
-			clear_all_indicator
-			internal_shared.feedback.clear
 
-			create l_env
-			l_env.application.key_press_actions.prune_all (internal_key_press_function)
+		do
+			clear_up
 			cancel_actions.call ([])
 		ensure
 			not_tracing: is_tracing = False
@@ -96,7 +90,7 @@ feature -- Hanlde pointer events
 			changed: BOOLEAN
 			l_floating_zone: SD_FLOATING_ZONE
 		do
-			cancel_tracing_pointer
+			clear_up
 
 			from
 				hot_zones.start
@@ -219,6 +213,19 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 			-- Offset y of `caller' when user start dragging.
 
 feature {NONE} -- Implementation functions
+
+	clear_up is
+			-- Clear up all resources.
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			is_tracing := False
+			clear_all_indicator
+			internal_shared.feedback.clear
+
+			create l_env
+			l_env.application.key_press_actions.prune_all (internal_key_press_function)
+		end
 
 	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
 			-- Handle user press Escape key to canel event.

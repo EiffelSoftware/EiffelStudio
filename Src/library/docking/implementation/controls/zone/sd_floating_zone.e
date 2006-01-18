@@ -55,8 +55,6 @@ feature {NONE} -- Initlization
 			create internal_shared_zone
 			default_create
 			create internal_vertical_box
-			internal_vertical_box.set_border_width (2)
-			internal_vertical_box.set_background_color ((create {EV_STOCK_COLORS}).grey)
 			extend_dialog (internal_vertical_box)
 			create internal_title_bar.make
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
@@ -76,6 +74,8 @@ feature {NONE} -- Initlization
 				l_acceler_test.actions.extend (agent on_test_del_it)
 				accelerators.extend (l_acceler_test)
 			end
+			focus_in_actions.extend (agent on_dialog_focus_in)
+			focus_out_actions.extend (agent on_dialog_focus_out)
 		end
 
 	on_test_del_it is
@@ -252,9 +252,19 @@ feature {NONE} -- Implementation
 	pointer_press_offset_x, pointer_press_offset_y: INTEGER
 			-- When user clicked title bar, x y offset.
 
+	all_zones: ARRAYED_LIST [SD_ZONE] is
+			-- All zones in Current.
+		do
+			create Result.make (1)
+			if inner_container.readable then
+				all_zones_in_current (inner_container.item, Result)
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 	all_zones_in_current (a_widget: EV_WIDGET; a_zones: ARRAYED_LIST [SD_ZONE]) is
-			-- Prune all zone in `Current'
+			-- Find all zones in Current.
 		require
 			a_widget_not_void: a_widget /= Void
 			a_zones_not_void: a_zones /= Void
@@ -337,6 +347,37 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Agents
 
+	on_dialog_focus_in is
+			-- Handle Current dialog focus in actions.
+		local
+			l_last_zone: SD_ZONE
+			l_zones: like all_zones
+		do
+			l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
+			if not has_recursive (l_last_zone) then
+				l_zones := all_zones
+				if l_zones.count > 0 then
+					l_zones.first.on_focus_in (l_zones.first.content)
+					internal_docking_manager.property.set_last_focus_content (l_zones.first.content)
+				end
+			else
+				l_last_zone.set_title_bar_selection_color (True)
+			end
+			internal_title_bar.enable_focus_color
+		end
+
+	on_dialog_focus_out is
+			-- Handle Current dialog focus out actions.
+		local
+			l_last_zone: SD_ZONE
+		do
+			l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
+			if has_recursive (l_last_zone) then
+				internal_title_bar.enable_non_focus_active_color
+				l_last_zone.set_non_focus_selection_color
+			end
+		end
+
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Forward pointer motion actions to docker mediator.
 		do
@@ -354,7 +395,7 @@ feature {NONE} -- Agents
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			create l_zones.make (1)
-			all_zones_in_current (inner_container.item, l_zones)
+			l_zones := all_zones
 			from
 				l_zones.start
 			until

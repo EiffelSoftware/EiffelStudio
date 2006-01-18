@@ -9,7 +9,8 @@ class
 inherit
 	SD_HOT_ZONE_TAB
 		redefine
-			update_feedback
+			update_feedback,
+			apply_change
 		end
 create
 	make
@@ -43,10 +44,40 @@ feature {NONE} -- Redefine
 			end
 		end
 
---	set_rectangle (a_rect: EV_RECTANGLE) is
---			-- Redefine
---		do
---
---		end
+	apply_change (a_screen_x: INTEGER; a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+			-- Redefine
+		do
+			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+				Result := True
+			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+				Result := True
+			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+				Result := True
+			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+				Result := True
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+				caller.state.move_to_tab_zone (internal_zone, internal_zone.contents.count + 1)
+				Result := True
+			else
+				from
+					internal_tab_area.start
+				until
+					internal_tab_area.after or Result
+				loop
+					if internal_tab_area.item_for_iteration.has_x_y (a_screen_x, a_screen_y) then
+						Result := True
+						debug ("docking")
+							print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
+						end
+						caller.state.move_to_tab_zone (internal_zone, internal_tab_area.key_for_iteration)
+					end
+					internal_tab_area.forth
+				end
+			end
+		end
 
 end

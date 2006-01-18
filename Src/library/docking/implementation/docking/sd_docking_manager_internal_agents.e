@@ -17,6 +17,8 @@ feature {NONE}  -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			internal_docking_manager := a_docking_manager
+			internal_docking_manager.main_window.focus_out_actions.extend (agent on_main_window_focus_out)
+			internal_docking_manager.main_window.focus_in_actions.extend (agent on_main_window_focus_in)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -49,7 +51,7 @@ feature  -- Agents
 						if l_auto_hide_zone = Void then
 							internal_docking_manager.command.remove_auto_hide_zones (True)
 						else
-							l_auto_hide_zone.set_title_bar_focus_color (True)
+							l_auto_hide_zone.set_title_bar_selection_color (True)
 						end
 					end
 				end
@@ -104,6 +106,38 @@ feature  -- Agents
 			a_content.set_docking_manager (internal_docking_manager)
 		ensure
 			set: a_content.docking_manager = internal_docking_manager
+		end
+
+	on_main_window_focus_out is
+			-- Handle window lost focus event.
+		local
+			l_content: SD_CONTENT
+			l_zone: SD_ZONE
+		do
+			l_content := internal_docking_manager.property.last_focus_content
+			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
+			if internal_docking_manager.main_container.has_recursive (l_zone) then
+				l_zone.set_non_focus_selection_color
+			end
+			debug ("docking")
+				print ("%NSD_DOCKING_MANAGER_AGENTS on_main_window_focus_out ")
+			end
+		end
+
+	on_main_window_focus_in is
+			-- Handle window get focus event.
+		local
+			l_content: SD_CONTENT
+			l_zone: SD_ZONE
+		do
+			l_content := internal_docking_manager.property.last_focus_content
+			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
+			if internal_docking_manager.main_container.has_recursive (l_zone) then
+				l_zone.set_title_bar_selection_color (True)
+			end
+			debug ("docking")
+				print ("%NSD_DOCKING_MANAGER_AGENTS on_main_window_focus_in ")
+			end
 		end
 
 feature -- Contract support

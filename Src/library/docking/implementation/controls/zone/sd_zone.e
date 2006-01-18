@@ -72,9 +72,12 @@ feature -- Command
 		do
 			if is_maximized then
 				internal_docking_manager.command.lock_update (Current, False)
-				main_area.wipe_out
-				internal_parent.extend (Current)
-				main_area.extend (main_area_widget)
+				if internal_parent /= main_area then
+					main_area.wipe_out
+					internal_parent.extend (Current)
+					main_area.extend (main_area_widget)
+				end
+
 				main_area := Void
 
 				l_split_area ?= internal_parent
@@ -93,8 +96,13 @@ feature -- Command
 		do
 		end
 
-	set_title_bar_focus_color (a_focus: BOOLEAN) is
+	set_title_bar_selection_color (a_focus: BOOLEAN) is
 			-- Set title bar focuse color.
+		do
+		end
+
+	set_non_focus_selection_color is
+			-- Set title bar non-focuse color.
 		do
 		end
 
@@ -164,7 +172,7 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 			content.focus_out_actions.call ([])
 		end
 
-feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE}  -- Focus in
+feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
 
 	on_focus_in (a_content: SD_CONTENT) is
 			-- Handle focus in.

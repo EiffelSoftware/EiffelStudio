@@ -40,9 +40,9 @@ feature {NONE} -- Initlization
 			internal_vertical_box.extend (internal_title_bar)
 			internal_vertical_box.disable_item_expand (internal_title_bar)
 
---			create internal_border_box
 			create internal_border_box.make
 			internal_border_box.set_border_style ({SD_DOCKING_MANAGER}.dock_top)
+			internal_border_box.set_show_border ({SD_DOCKING_MANAGER}.dock_top, True)
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 			internal_vertical_box.extend (internal_border_box)
 

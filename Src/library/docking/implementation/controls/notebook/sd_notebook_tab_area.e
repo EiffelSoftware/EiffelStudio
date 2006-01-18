@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that manage tabs on SD_NOTEBOOK. A decorator."
+	description: "Objects that manage tabs on SD_NOTEBOOK."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,9 +28,6 @@ feature {NONE}  -- Initlization
 		do
 			default_create
 			create internal_shared
---			set_border_width (internal_shared.border_width)
---			set_background_color (internal_shared.border_color)
-			set_background_color ((create {EV_STOCK_COLORS}).black)
 
 			internal_notebook := a_notebook
 			internal_docking_manager := a_docking_manager
@@ -40,17 +37,11 @@ feature {NONE}  -- Initlization
 			end
 
 			create internal_tool_bar
-			internal_tool_bar.set_background_color ((create {EV_STOCK_COLORS}).red)
---			internal_tool_bar.set_background_color (internal_shared.non_focused_color_lightness)
---			set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_auto_hide_indicator
 
-			create internal_gap_box
-			extend_horizontal_box (internal_gap_box)
-
 			create internal_tab_box
-			internal_gap_box.extend (internal_tab_box)
-			disable_item_expand (internal_gap_box)
+			extend_horizontal_box (internal_tab_box)
+			disable_item_expand (internal_tab_box)
 
 			extend_horizontal_box (internal_tool_bar)
 			disable_item_expand (internal_tool_bar)
@@ -60,6 +51,7 @@ feature {NONE}  -- Initlization
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
 			set_minimum_width (0)
+			set_minimum_height (internal_shared.zone_minmum_height + 3)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 			set: internal_notebook = a_notebook
@@ -84,20 +76,9 @@ feature -- Command
 	set_gap (a_top: BOOLEAN) is
 			-- Set gap at top if a_top is True.
 		do
-			if internal_gap_box.has (internal_gap) then
-				internal_gap_box.prune (internal_gap)
-			end
-			create internal_gap
-			internal_gap.set_background_color (internal_shared.non_focused_color_lightness)
-			internal_gap.set_minimum_height (internal_shared.auto_hide_panel_gap_size)
-			if a_top then
-				internal_gap_box.start
-				internal_gap_box.put_left (internal_gap)
-			else
-				internal_gap_box.extend (internal_gap)
-			end
+			is_gap_at_top := a_top
 		ensure
-			set: internal_gap_box.has (internal_gap)
+			set: is_gap_at_top = a_top
 		end
 
 	resize_tabs (a_width: INTEGER) is
@@ -108,16 +89,6 @@ feature -- Command
 			if a_width >= 0 then
 				ignore_resize := True
 				l_all_tabs := all_tabs.twin
---				from
---					l_all_tabs.start
---				until
---					l_all_tabs.after
---				loop
---					if a_width - internal_tool_bar.width >= 0 then
---						l_all_tabs.item.on_expose_with_width  (a_width - internal_tool_bar.width)
---					end
---					l_all_tabs.forth
---				end
 
 				updates_tabs_not_shown (a_width)
 				l_tabs := internal_tabs_not_shown.twin
@@ -136,7 +107,6 @@ feature -- Command
 				until
 					l_all_tabs.after
 				loop
---					if not l_tabs.has (l_all_tabs.item) and l_all_tabs.item /= internal_tool_bar then
 					if not l_tabs.has (l_all_tabs.item) then
 						l_all_tabs.item.show
 						ignore_resize := True
@@ -152,12 +122,14 @@ feature -- Command
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
 		local
-			l_app: EV_ENVIRONMENT
+--			l_app: EV_ENVIRONMENT
 		do
 			if is_displayed then
 				if not ignore_resize then
-					create l_app
-					l_app.application.idle_actions.extend_kamikaze (agent resize_tabs (a_width))
+--					create l_app
+--					l_app.application.idle_actions.extend_kamikaze (agent resize_tabs (a_width))
+--FIXIT: Ask Manu about: Actually I like handle resize action not on idle, because it looks better than handle it on idle,
+					resize_tabs (a_width)
 				end
 			end
 		ensure
@@ -187,7 +159,6 @@ feature -- Command
 			internal_tab_box.prune (a_tab)
 			internal_tab_box.go_i_th (a_index)
 			internal_tab_box.put_left (a_tab)
---			internal_tab_box.swap (internal_tab_box.index_of (a_tab, 1))
 		ensure
 			set: internal_tab_box.i_th (a_index) = a_tab
 			not_changed: old internal_tab_box.count =  internal_tab_box.count
@@ -201,19 +172,8 @@ feature -- Query
 			Result := internal_tab_box.has (a_tab)
 		end
 
-	is_gap_at_top: BOOLEAN is
+	is_gap_at_top: BOOLEAN
 			-- If gap at top?
-		require
-			has_gap: is_gap_setted
-		do
-			Result := internal_gap_box.first = internal_gap
-		end
-
-	is_gap_setted: BOOLEAN is
-			-- If gap area setted?
-		do
-			Result := internal_gap_box.has (internal_gap)
-		end
 
 	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER is
 			-- Index of a_tab in all tabs.
@@ -234,9 +194,7 @@ feature -- Query
 			loop
 				l_temp_tab ?= internal_tab_box.item
 				check only_has_tab: l_temp_tab /= Void end
---				if l_temp_tab /= Void then
 				Result.extend (l_temp_tab)
---				end
 				internal_tab_box.forth
 			end
 		ensure
@@ -250,6 +208,7 @@ feature {NONE}  -- Implementation functions
 		local
 			l_dialog: SD_NOTEBOOK_HIDE_TAB_DIALOG
 			l_tabs: like all_tabs
+			l_helper: SD_POSITION_HELPER
 		do
 			create l_dialog.make (internal_notebook)
 
@@ -275,35 +234,9 @@ feature {NONE}  -- Implementation functions
 				l_tabs.forth
 			end
 			l_dialog.init
-			set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
+			create l_helper.make
+			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y)
 			l_dialog.show
-		end
-
-	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER) is
-			-- Set dialog position base on screen size.
-		require
-			a_dialog_not_void: a_dialog /= Void
-		local
-			l_screen: SD_SCREEN
-			l_rect: EV_RECTANGLE
-		do
-			create l_screen
-			create l_rect.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.virtual_width, l_screen.virtual_height)
-			if l_rect.has_x_y (a_dialog.width + a_prefer_x, a_dialog.height + a_prefer_y) then
-				-- If enough space set position base on left top corner.
-				a_dialog.set_position (a_prefer_x, a_prefer_y)
-			elseif l_rect.has_x_y (a_prefer_x, a_prefer_y + a_dialog.height) then
-				-- If enough space set position base on right top corner.
-				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y)
-			elseif l_rect.has_x_y (a_prefer_x + a_dialog.width, a_prefer_y - a_dialog.height) then
-				-- If enough space set position base on left bottom corner.
-				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
-			elseif l_rect.has_x_y (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height) then
-				-- If enough space set positon base on right bottom corner.
-				a_dialog.set_position (a_prefer_x - a_dialog.width, a_prefer_y - a_dialog.height)
-			else
-				check not_possible_in_this_case: False end
-			end
 		end
 
 	on_drop_actions (a_any: ANY) is
@@ -358,7 +291,9 @@ feature {NONE}  -- Implementation functions
 	show_hide_indicator (a_width: INTEGER) is
 			-- Show hide indicator base on `internal_tabs_not_shown''s count.
 		local
-			l_tabs: like all_tabs
+			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+--			l_tabs: like all_tabs -- FIXIT: If uselike, then 'l_tabs.item.set_enough_space' will not clickable.
+			l_only_tab: SD_NOTEBOOK_TAB
 		do
 			l_tabs := all_tabs
 			if internal_tabs_not_shown.count > 0 then
@@ -366,11 +301,23 @@ feature {NONE}  -- Implementation functions
 				internal_tool_bar.show
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then
 					-- Only show one tab now.
-					if a_width - internal_tool_bar.width >= 0 then
-						find_only_tab_shown.set_width_not_enough_space (a_width - internal_tool_bar.width)
+					l_only_tab := find_only_tab_shown
+					if a_width - internal_tool_bar.width >= 0 and a_width - internal_tool_bar.width < l_only_tab.prefered_size then
+						l_only_tab.set_width_not_enough_space (a_width - internal_tool_bar.width)
 					end
 				end
-			else
+			end
+			if l_tabs.count - 1 /= internal_tabs_not_shown.count then
+				from
+					l_tabs.start
+				until
+					l_tabs.after
+				loop
+					l_tabs.item.set_enough_space
+					l_tabs.forth
+				end
+			end
+			if internal_tabs_not_shown.count = 0 then
 				internal_tool_bar.hide
 			end
 		ensure
@@ -449,14 +396,8 @@ feature {NONE}  -- Implementation attributes
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook which Current belong to.
 
-	internal_gap: EV_CELL
-			-- Gap in `internal_gap_box'.
-
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
-
-	internal_gap_box: EV_VERTICAL_BOX
-			-- Gap box for `internal_tab_box'.
 
 	internal_tab_box: EV_HORIZONTAL_BOX
 			-- Box which contain all tabs.
@@ -467,7 +408,6 @@ feature {NONE}  -- Implementation attributes
 invariant
 
 	internal_tab_box_not_void: internal_tab_box /= Void
-	internal_gap_box_not_void: internal_gap_box /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 	internal_tool_bar_not_void: internal_tool_bar /= Void

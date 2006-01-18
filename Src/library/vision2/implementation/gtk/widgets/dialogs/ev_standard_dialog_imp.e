@@ -22,7 +22,7 @@ inherit
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
-	
+
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 		local
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			Precursor {EV_GTK_WINDOW_IMP}	
+			Precursor {EV_GTK_WINDOW_IMP}
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 		end
@@ -90,7 +90,7 @@ feature -- Status setting
 			set_blocking_window (a_window)
 			block
 			set_blocking_window (Void)
-			
+
 			if not is_destroyed and then not was_modal then
 				disable_modal
 			end
@@ -123,14 +123,14 @@ feature {NONE} -- Implementation
 			-- `a_key' has either been pressed or released
 		do
 			if a_key /= Void then
-				if a_key.code = app_implementation.Key_constants.key_escape then
+				if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
 					on_cancel
 				else
-					if a_key.code = app_implementation.Key_constants.key_enter then
+					if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 						on_ok
 					end
 				end
-			end				
+			end
 		end
 
 	block is
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	enable_closeable is
 			-- Set the window to be closeable by the user
 		local
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 				close_fct
 			)
 		end
-		
+
 	call_close_request_actions is
 			-- Call `on_cancel' if user wants to quit dialog.
 		do
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		-- Has the user explicitly cancelled the dialog.
 
 	interface: EV_STANDARD_DIALOG
-	
+
 	has_wm_decorations: BOOLEAN is
 			-- Does 'Current' have Window Manager decorations?
 		do

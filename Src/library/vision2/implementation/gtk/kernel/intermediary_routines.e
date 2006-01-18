@@ -341,7 +341,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 						-- Gtk will propagate motion events for ALL gtk widgets directly underneath the mouse pointer
 						-- We only want the one directly beneath the mouse pointer
 						-- We need to test for motion hint widgets so that the mouse pointer is not queried, at present
-						-- this is only gtk drawing area
+						-- this is only gtk drawing area, this is to prevent a backlog of pointer motion events from being fired.
 				then
 					if widget.app_implementation.pointer_motion_actions_internal /= Void then
 						widget.app_implementation.pointer_motion_actions_internal.call (

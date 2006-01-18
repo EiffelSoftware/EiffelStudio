@@ -93,12 +93,12 @@ feature -- Evaluation
 							Debugged_object_manager.class_c_at_address (context_address),
 							Debugged_object_manager.class_type_at_address (context_address)
 						)
-	
+
 				elseif on_class then
 					set_context_data (Void, context_class, Void)
 				end
 
-				if 
+				if
 					(on_context and context_feature = Void)
 					or (on_class and context_class = Void)
 				then
@@ -120,10 +120,10 @@ feature -- Evaluation
 				if not l_error_occurred then
 						--| Initializing
 					clean_temp_data
-	
+
 						--| concrete evaluation
 					process_expression_evaluation (expression_byte_node)
-	
+
 						--| Process result
 					if tmp_result_value /= Void then
 						final_result_value := tmp_result_value
@@ -146,13 +146,13 @@ feature -- Evaluation
 				end
 			end
 		end
-		
+
 	reset_error is
 		do
 			Precursor
 			error_handler.wipe_out
 		end
-		
+
 	clean_temp_data is
 			-- Clean temporary data used for evaluation
 		do
@@ -160,7 +160,7 @@ feature -- Evaluation
 			tmp_result_value := Void
 			tmp_target := Void
 		end
-		
+
 feature {NONE} -- EXPR_B evaluation
 
 	process_expression_evaluation (a_expr_b: EXPR_B) is
@@ -186,7 +186,7 @@ feature {NONE} -- EXPR_B evaluation
 
 			l_binary_b: BINARY_B
 			l_unary_b: UNARY_B
-			
+
 			l_void_b: VOID_B
 
 			l_value_i: VALUE_I
@@ -245,7 +245,7 @@ feature {NONE} -- EXPR_B evaluation
 				evaluate_value_i (l_value_i)
 			end
 		end
-	
+
 	standalone_evaluation_expr_b (a_expr_b: EXPR_B): DUMP_VALUE is
 		require
 			a_expr_b /= Void
@@ -258,16 +258,16 @@ feature {NONE} -- EXPR_B evaluation
 			l_tmp_result_value_backup := tmp_result_value
 			l_tmp_target_backup := tmp_target
 			l_tmp_result_static_type_backup	:= tmp_result_static_type
-			
+
 			evaluate_expr_b (a_expr_b)
 			Result := tmp_result_value
-			
+
 				-- Restore
 			tmp_result_value := l_tmp_result_value_backup
 			tmp_target := l_tmp_target_backup
 			tmp_result_static_type := l_tmp_result_static_type_backup
-		end	
-		
+		end
+
 	evaluate_void_b	(a_void_b: VOID_B) is
 			-- Evaluate Void keyword value
 		local
@@ -278,7 +278,7 @@ feature {NONE} -- EXPR_B evaluation
 			tmp_result_value := Void
 			create tmp_result_value.make_void (Void)
 		end
-		
+
 	evaluate_manifest_value (a_expr_b: EXPR_B) is
 			-- Manifest value, that is to say STRING manisfest value,
 			-- since the INTEGER and so on value are handled by the parser
@@ -292,7 +292,7 @@ feature {NONE} -- EXPR_B evaluation
 					--| NotYetReady |--
 				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
 			end
-		end		
+		end
 
 	evaluate_value_i (a_value_i: VALUE_I) is
 		local
@@ -313,16 +313,16 @@ feature {NONE} -- EXPR_B evaluation
 				l_string ?= a_value_i
 				tmp_result_value := string_to_dump_value (l_string.string_value)
 			elseif a_value_i.is_boolean		then
-				tmp_result_value := boolean_to_dump_value (a_value_i.boolean_value)				
+				tmp_result_value := boolean_to_dump_value (a_value_i.boolean_value)
 			elseif a_value_i.is_character	then
 				l_char ?= a_value_i
-				tmp_result_value := character_to_dump_value (l_char.character_value)				
+				tmp_result_value := character_to_dump_value (l_char.character_value)
 			elseif a_value_i.is_real_32		then
 				l_real ?= a_value_i
-				tmp_result_value := real_to_dump_value (l_real.real_32_value)				
+				tmp_result_value := real_to_dump_value (l_real.real_32_value)
 			elseif a_value_i.is_real_64		then
 				l_real ?= a_value_i
-				tmp_result_value := double_to_dump_value (l_real.real_64_value)				
+				tmp_result_value := double_to_dump_value (l_real.real_64_value)
 --			elseif a_value_i.is_bit			then
 			else
 				notify_error_not_implemented (a_value_i.generator + Cst_error_not_yet_ready)
@@ -383,24 +383,24 @@ feature {NONE} -- EXPR_B evaluation
 			-- Evaluate unary_b expression
 		local
 			l_un_minus_b: UN_MINUS_B
-			l_un_plus_b: UN_PLUS_B			
+			l_un_plus_b: UN_PLUS_B
 			l_un_not_b: UN_NOT_B
 		do
 			l_un_not_b ?= a_unary_b
 			if l_un_not_b /= Void then
-				evaluate_nested_b (l_un_not_b.nested_b)				
+				evaluate_nested_b (l_un_not_b.nested_b)
 			else
 				l_un_minus_b ?= a_unary_b
 				if l_un_minus_b /= Void then
-					evaluate_nested_b (l_un_minus_b.nested_b)				
+					evaluate_nested_b (l_un_minus_b.nested_b)
 				else
 					l_un_plus_b ?= a_unary_b
 					if l_un_plus_b /= Void then
-						evaluate_nested_b (l_un_plus_b.nested_b)				
+						evaluate_nested_b (l_un_plus_b.nested_b)
 					else
 						notify_error_not_implemented (a_unary_b.generator + " = UNARY_B" + Cst_error_not_yet_ready)
 					end
-				end				
+				end
 			end
 		end
 
@@ -434,7 +434,7 @@ feature {NONE} -- EXPR_B evaluation
 						else
 							l_result_b ?= a_access_b
 							if l_result_b /= Void then
-								evaluate_result_b (l_result_b)						
+								evaluate_result_b (l_result_b)
 							else
 								l_current_b ?= a_access_b
 								if l_current_b /= Void then
@@ -453,7 +453,7 @@ feature {NONE} -- EXPR_B evaluation
 											notify_error_not_implemented (a_access_b.generator + " = ACCESS_B" + Cst_error_not_yet_ready)
 	--									end	
 									end
-								end		
+								end
 							end
 						end
 					end
@@ -470,28 +470,28 @@ feature {NONE} -- EXPR_B evaluation
 			l_message: CALL_B
 		do
 			l_tmp_target_backup := tmp_target
-			
+
 			l_target := a_nested_b.target
 			l_target_value := standalone_evaluation_expr_b (l_target)
-			
+
 			if not error_occurred then
 				tmp_target := l_target_value
 				l_message := a_nested_b.message
 				l_message_value := standalone_evaluation_expr_b (l_message)
-				
+
 				if not error_occurred then
-					tmp_result_value := l_message_value					
+					tmp_result_value := l_message_value
 				end
 			end
 			tmp_target := l_tmp_target_backup
 		end
-		
+
 	evaluate_routine_creation_b (a_routine_creation_b: ROUTINE_CREATION_B) is
 		local
 		do
 			notify_error_not_implemented (a_routine_creation_b.generator + " = agent creation " + Cst_error_not_yet_ready)
 		end
-		
+
 	evaluate_creation_expr_b (a_creation_expr_b: CREATION_EXPR_B) is
 		local
 			retried: BOOLEAN
@@ -536,7 +536,7 @@ feature {NONE} -- EXPR_B evaluation
 					notify_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready)
 				else
 					notify_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready
-						+ " for " + l_type_to_create.name )					
+						+ " for " + l_type_to_create.name )
 				end
 			end
 		rescue
@@ -558,12 +558,12 @@ feature {NONE} -- EXPR_B evaluation
 				evaluate_attribute_b (l_attribue_b)
 			elseif a_call_access_b.is_external then
 				l_external_b ?= a_call_access_b
-				evaluate_external_b (l_external_b)				
+				evaluate_external_b (l_external_b)
 			else
 				notify_error_not_implemented (a_call_access_b.generator + " = CALL_ACCESS_B"+ Cst_error_not_yet_ready)
 			end
 		end
-	
+
 	evaluate_feature_b (a_feature_b: FEATURE_B) is
 		local
 			fi: FEATURE_I
@@ -578,9 +578,9 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				cl := system.class_of_id (a_feature_b.written_in)
 			end
-			
+
 			if cl = Void then
-				notify_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target +
 						Cst_feature_name_left_limit + a_feature_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
@@ -592,7 +592,7 @@ feature {NONE} -- EXPR_B evaluation
 				end
 				if ef /= Void then
 					fi := ef.associated_feature_i
-			
+
 					if fi.is_once then
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
 						if tmp_target /= Void then
@@ -602,7 +602,7 @@ feature {NONE} -- EXPR_B evaluation
 						end
 					elseif fi.is_constant then
 						evaluate_constant (ef)
-					elseif fi.is_function then					
+					elseif fi.is_function then
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
 						if tmp_target /= Void then
@@ -616,7 +616,7 @@ feature {NONE} -- EXPR_B evaluation
 							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
 						else
 							evaluate_attribute (context_address, Void, ef)
-						end							
+						end
 					else
 						notify_error_not_implemented (a_feature_b.generator +  Cst_error_other_than_func_cst_once_not_available)
 					end
@@ -625,7 +625,7 @@ feature {NONE} -- EXPR_B evaluation
 				end
 			end
 		end
-		
+
 	evaluate_external_b	(a_external_b: EXTERNAL_B) is
 		local
 			fi: FEATURE_I
@@ -640,9 +640,9 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				cl := system.class_of_id (a_external_b.written_in)
 			end
-			
+
 			if cl = Void then
-				notify_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target +
 						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
@@ -656,7 +656,7 @@ feature {NONE} -- EXPR_B evaluation
 					if tmp_result_value = Void then
 							-- FIXME: What about static ? check ...
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
-					end						
+					end
 				else
 					fi := ef.associated_feature_i
 					if fi.is_external then
@@ -677,10 +677,10 @@ feature {NONE} -- EXPR_B evaluation
 						end
 					else
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
-					end					
+					end
 				end
 			end
-		end		
+		end
 
 	parameter_values_from_parameters_b (a_params: BYTE_LIST [EXPR_B]): ARRAYED_LIST [DUMP_VALUE] is
 		local
@@ -721,7 +721,7 @@ feature {NONE} -- EXPR_B evaluation
 				notify_error_evaluation (Cst_error_call_on_void_target)
 			else
 				ef := cl.feature_with_name (a_attribute_b.attribute_name)
-	
+
 				if tmp_target /= Void then
 					evaluate_attribute (tmp_target.value_address, tmp_target, ef)
 				else
@@ -729,7 +729,7 @@ feature {NONE} -- EXPR_B evaluation
 				end
 			end
 		end
-		
+
 	parameter_evaluation (a_expr_b: EXPR_B): DUMP_VALUE is
 		require
 			a_expr_b /= Void
@@ -738,24 +738,24 @@ feature {NONE} -- EXPR_B evaluation
 			l_expr_b: EXPR_B
 			l_tmp_target_backup: like tmp_target
 		do
-			
+
 			l_param_b ?= a_expr_b
 			if l_param_b /= Void then
 				l_expr_b := l_param_b.expression
 			else
 				l_expr_b := a_expr_b
 			end
-			
+
 			l_tmp_target_backup := tmp_target
-			tmp_target := Void 
+			tmp_target := Void
 				--| in case of parameter, there is not target except the top one
 			Result := standalone_evaluation_expr_b (l_expr_b)
-			tmp_target := l_tmp_target_backup			
+			tmp_target := l_tmp_target_backup
 
 			if Result = Void then
 				notify_error_evaluation (a_expr_b.generator + Cst_error_evaluating_parameter)
 			end
-		end		
+		end
 
 	evaluate_local_b (l_local_b: LOCAL_B) is
 		local
@@ -774,7 +774,7 @@ feature {NONE} -- EXPR_B evaluation
 			if cf = Void then
 				check
 					False -- Shouldn't occur.
-				end			
+				end
 			else
 				dv :=  cse.locals.i_th (l_local_b.position)
 				tmp_result_value := dv.dump_value
@@ -782,7 +782,7 @@ feature {NONE} -- EXPR_B evaluation
 				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
 			end
 		end
-		
+
 	evaluate_argument_b (l_argument_b: ARGUMENT_B) is
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
@@ -800,14 +800,14 @@ feature {NONE} -- EXPR_B evaluation
 			if cf = Void then
 				check
 					False -- Shouldn't occur.
-				end			
+				end
 			else
 				dv :=  cse.arguments.i_th (l_argument_b.position)
 				tmp_result_value := dv.dump_value
 				tmp_result_static_type := tmp_result_value.dynamic_class
 				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
 			end
-		end		
+		end
 
 	evaluate_result_b (l_result_b: RESULT_B) is
 		local
@@ -826,7 +826,7 @@ feature {NONE} -- EXPR_B evaluation
 			if cf = Void then
 				check
 					False -- Shouldn't occur.
-				end			
+				end
 			else
 				dv := cse.result_value
 				if dv /= Void then
@@ -834,10 +834,10 @@ feature {NONE} -- EXPR_B evaluation
 					if cf.type /= Void then
 						tmp_result_static_type := cf.type.associated_class
 					end
-				end			
+				end
 			end
 		end
-		
+
 	evaluate_current_b (l_current_b: CURRENT_B) is
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
@@ -859,7 +859,7 @@ feature {NONE} -- EXPR_B evaluation
 				tmp_result_static_type := context_class
 			end
 		end
-		
+
 feature {NONE} -- Concrete evaluation
 
 	prepare_evaluation is
@@ -867,12 +867,12 @@ feature {NONE} -- Concrete evaluation
 		do
 			Dbg_evaluator.set_last_variables (tmp_result_value, tmp_result_static_type)
 		end
-	
+
 	retrieve_evaluation is
 			-- Get the effective evaluation's result and info
 		do
 			tmp_result_value       := Dbg_evaluator.last_result_value
-			tmp_result_static_type := Dbg_evaluator.last_result_static_type			
+			tmp_result_static_type := Dbg_evaluator.last_result_static_type
 			if Dbg_evaluator.error_evaluation_message /= Void then
 				notify_error_evaluation (Dbg_evaluator.error_evaluation_message)
 			end
@@ -892,7 +892,7 @@ feature {NONE} -- Concrete evaluation
 		end
 
 	evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
-			-- 
+			--
 		require
 			feature_not_void: f /= Void
 --			f_is_once: f.is_once
@@ -910,7 +910,7 @@ feature {NONE} -- Concrete evaluation
 			is_constant: f.is_constant
 		local
 			cv_cst_i: CONSTANT_I
-		do		
+		do
 			cv_cst_i ?= f.associated_feature_i
 			if cv_cst_i /= Void then
 				evaluate_value_i (cv_cst_i.value)
@@ -925,7 +925,7 @@ feature {NONE} -- Concrete evaluation
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
-				notify_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target +
 						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
 					)
 			else
@@ -941,7 +941,7 @@ feature {NONE} -- Concrete evaluation
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
-				notify_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target +
 						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
 					)
 			else
@@ -952,7 +952,7 @@ feature {NONE} -- Concrete evaluation
 		end
 
 	evaluate_function_with_name (a_target: DUMP_VALUE;
-				a_feature_name, a_external_name: STRING; 
+				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -978,8 +978,8 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
 	tmp_target: DUMP_VALUE
 
 	tmp_result_value: DUMP_VALUE
-	
-	tmp_result_static_type: CLASS_C	
+
+	tmp_result_static_type: CLASS_C
 
 feature -- Context
 
@@ -991,7 +991,7 @@ feature -- Context
 		once
 			Result := System.Any_class.compiled_class.feature_named ("default_create")
 		end
-	
+
 feature -- Change Context
 
 	init_context_with_current_callstack is
@@ -1004,7 +1004,7 @@ feature -- Change Context
 			if cse = Void then
 				notify_error_expression (Cst_error_during_context_preparation)
 			else
-					--| Cse can be Void if the application raised an exception 
+					--| Cse can be Void if the application raised an exception
 					--| at the very beginning of the execution (for instance under dotnet)
 				context_address := cse.object_address
 				ecse ?= cse
@@ -1018,7 +1018,7 @@ feature -- Change Context
 				end
 			end
 		end
-		
+
 	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type) is
 		require
 --			f_not_void: f /= Void
@@ -1029,7 +1029,7 @@ feature -- Change Context
 			c_t_i: CL_TYPE_I
 		do
 			if c /= Void then
-				if 
+				if
 					f /= context_feature
 				then
 					context_feature := f
@@ -1058,12 +1058,12 @@ feature -- Change Context
 				if l_reset_byte_node then
 						--| this means we will recompute the EXPR_B value according to the new context				
 					reset_expression_byte_node
-				end				
+				end
 			end
 		end
 
 feature -- Access
-	
+
 	expression_byte_node: EXPR_B is
 		do
 			Result := internal_expression_byte_node
@@ -1080,14 +1080,13 @@ feature -- Access
 			old_context_class: like context_class
 			old_context_class_type: like context_class_type
 			old_int_expression_byte_note: like internal_expression_byte_node
-			bak_context_class_type: CLASS_TYPE
 		do
 				--| Backup current context and values
 			old_context_feature := context_feature
 			old_context_class := context_class
-			old_context_class_type := context_class_type			
+			old_context_class_type := context_class_type
 			old_int_expression_byte_note := internal_expression_byte_node
-			
+
 				--| Removed any potential error due to previous evaluation
 			error_handler.wipe_out
 
@@ -1098,21 +1097,20 @@ feature -- Access
 				--| Get expression_byte_node
 			get_expression_byte_node
 			if expression_byte_node /= Void then
-				bak_context_class_type := Byte_context.class_type
 				if context_class_type /= Void then
-					Byte_context.set_class_type (context_class_type)
+					Byte_context.change_class_type_context (context_class_type, context_class_type)
 				end
 				Result := expression_byte_node.type.is_boolean
-				if bak_context_class_type /= Void then
-					Byte_context.set_class_type (bak_context_class_type)
+				if context_class_type /= Void then
+					Byte_context.restore_class_type_context
 				end
 			end
-			
+
 				--| FIXME JFIAT: check in which cases we call the is_condition
 				--| to see if it is pertinent to save.restore data ...			
-			if 
-				old_context_class = Void 
-				and old_context_class_type = Void 
+			if
+				old_context_class = Void
+				and old_context_class_type = Void
 				and old_context_feature = Void
 				and old_int_expression_byte_note = Void
 			then
@@ -1127,7 +1125,7 @@ feature -- Access
 					old_context_class := context_class
 				end
 				set_context_data (old_context_feature, old_context_class, old_context_class_type)
-				internal_expression_byte_node := old_int_expression_byte_note				
+				internal_expression_byte_node := old_int_expression_byte_note
 			end
 		end
 
@@ -1166,7 +1164,7 @@ feature {NONE} -- Implementation
 			context_class_not_void: context_class /= Void
 		local
 			retried: BOOLEAN
-			
+
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			f_as: FEATURE_AS
 			l_byte_code: BYTE_CODE
@@ -1180,21 +1178,21 @@ feature {NONE} -- Implementation
 
 					debug ("debugger_trace_eval_data")
 						print (generator + ".get_expression_byte_node from ["+dbg_expression.expression+"]%N")
-						print ("%T%T on_context: " + on_context.out +"%N")					
+						print ("%T%T on_context: " + on_context.out +"%N")
 						print ("%T%T on_class  : " + on_class.out +"%N")
 						print ("%T%T on_object : " + on_object.out +"%N")
 						if context_class /= Void then
 							print ("%T%T context_class : " + context_class.name_in_upper +"%N")
 						end
 						if context_address /= Void then
-							print ("%T%T context_address : " + context_address.out +"%N")						
+							print ("%T%T context_address : " + context_address.out +"%N")
 						end
 						if context_feature /= Void then
 							print ("%T%T context_feature : " + context_feature.feature_name +"%N")
 						end
 					end
-						--| If we want to recompute the `expression_byte_node', 
-						--| we need to call `reset_expression_byte_nod' 
+						--| If we want to recompute the `expression_byte_node',
+						--| we need to call `reset_expression_byte_nod'
 
 					if context_class /= Void then
 						ast_context.clear_all
@@ -1211,17 +1209,17 @@ feature {NONE} -- Implementation
 						System.set_current_class (context_class)
 
 						bak_byte_code := Byte_context.byte_code
-			
+
 						if on_context and then context_feature /= Void then
 								--| Locals
 							f_as := context_feature.body
 
 							Ast_context.set_current_feature (context_feature)
-			
+
 								--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
 							Byte_context.set_byte_code (l_byte_code)
-							
+
 							l_ct_locals := locals_builder.local_table (context_feature, f_as)
 							if l_ct_locals /= Void then
 									--| if it failed .. let's continue anyway for now
@@ -1268,7 +1266,7 @@ feature {NONE} -- Implementation
 				feature_checker.init (ast_context)
 				feature_checker.expression_type_check_and_code (context_feature, exp)
 				Ast_context.set_is_ignoring_export (False)
-				
+
 				if error_handler.has_error then
 					type_check_succeed := True
 					notify_error_list_expression_and_tag (error_handler.error_list)
@@ -1278,7 +1276,7 @@ feature {NONE} -- Implementation
 					Result ?= feature_checker.last_byte_node
 				end
 			else
-				ast_context.set_is_ignoring_export (False)				
+				ast_context.set_is_ignoring_export (False)
 				if not type_check_succeed then
 					notify_error_expression (Cst_error_type_checking_failed)
 				end
@@ -1296,7 +1294,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	reset_expression_byte_node is
 		do
 			internal_expression_byte_node := Void
@@ -1309,44 +1307,44 @@ feature {NONE} -- Dump value helpers
 	string_to_dump_value (v: STRING): DUMP_VALUE is
 			-- Convert a string value `v' to the corresponding DUMP_VALUE
 		do
-			create Result.make_manifest_string (v, system.string_class.compiled_class)			
+			create Result.make_manifest_string (v, system.string_class.compiled_class)
 		end
-		
+
 	integer_32_to_dump_value (v: INTEGER): DUMP_VALUE is
 			-- Convert a INTEGER value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_integer_32 (v, system.integer_32_class.compiled_class)						
+			create Result.make_integer_32 (v, system.integer_32_class.compiled_class)
 		end
-		
+
 	integer_64_to_dump_value (v: INTEGER_64): DUMP_VALUE is
 			-- Convert a INTEGER_64 value `v' to the corresponding DUMP_VALUE		
 		do
-			create Result.make_integer_64 (v, system.integer_64_class.compiled_class)						
-		end	
-		
+			create Result.make_integer_64 (v, system.integer_64_class.compiled_class)
+		end
+
 	boolean_to_dump_value (v: BOOLEAN): DUMP_VALUE is
 			-- Convert a BOOLEAN value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_boolean (v, system.boolean_class.compiled_class)						
-		end	
-		
+			create Result.make_boolean (v, system.boolean_class.compiled_class)
+		end
+
 	character_to_dump_value (v: CHARACTER): DUMP_VALUE is
 			-- Convert a CHARACTER value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_character (v, system.character_class.compiled_class)						
-		end			
-	
+			create Result.make_character (v, system.character_class.compiled_class)
+		end
+
 	real_to_dump_value (v: REAL): DUMP_VALUE is
 			-- Convert a REAL value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_real (v, system.real_32_class.compiled_class)						
+			create Result.make_real (v, system.real_32_class.compiled_class)
 		end
-		
+
 	double_to_dump_value (v: DOUBLE): DUMP_VALUE is
 			-- Convert a DOUBLE value `v' to the corresponding DUMP_VALUE	
 		do
-			create Result.make_double (v, system.real_64_class.compiled_class)						
-		end		
+			create Result.make_double (v, system.real_64_class.compiled_class)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

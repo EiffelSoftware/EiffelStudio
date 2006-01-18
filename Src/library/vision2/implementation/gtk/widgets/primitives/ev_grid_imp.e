@@ -174,7 +174,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			a_r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_gdk_color)
 			a_g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_gdk_color)
 			a_b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_gdk_color)
-			{EV_GTK_EXTERNALS}.object_unref (a_widget)
+			{EV_GTK_EXTERNALS}.gtk_widget_destroy (a_widget)
 			create Result
 			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end

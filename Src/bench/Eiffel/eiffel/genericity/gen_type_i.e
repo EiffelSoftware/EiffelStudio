@@ -131,21 +131,34 @@ feature -- Status Report
 			i, count: INTEGER
 			l_meta, meta_gen: like meta_generic
 			l_true, true_gen: like true_generics
+			old_meta_gen, new_meta_gen: TYPE_I
+			old_true_gen, new_true_gen: TYPE_I
 		do
 			from
-				Result := duplicate
 				l_meta := meta_generic
 				l_true := true_generics
-				meta_gen := Result.meta_generic
-				true_gen := Result.true_generics
 				i := 1
 				count := l_meta.count
 			until
 				i > count
 			loop
-				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
-				true_gen.put (l_true.item (i).complete_instantiation_in (other), i)
+				old_meta_gen := l_meta.item (i)
+				new_meta_gen := old_meta_gen.instantiation_in (other)
+				old_true_gen := l_true.item (i)
+				new_true_gen := old_true_gen.complete_instantiation_in (other)
+				if old_meta_gen /= new_meta_gen or else old_true_gen /= new_true_gen then
+					if Result = Void then
+						Result := duplicate
+						meta_gen := Result.meta_generic
+						true_gen := Result.true_generics
+					end
+					meta_gen.put (new_meta_gen, i)
+					true_gen.put (new_true_gen, i)
+				end
 				i := i + 1
+			end
+			if Result = Void then
+				Result := Current
 			end
 		end
 
@@ -658,19 +671,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

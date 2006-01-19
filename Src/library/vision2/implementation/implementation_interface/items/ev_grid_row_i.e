@@ -86,13 +86,11 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
 	set_subrow_index (a_subrow_index: INTEGER) is
 			-- Set the index of row in parent row.
-		require
-			a_index_greater_than_zero: a_subrow_index > 0
 		do
 			subrow_index := a_subrow_index
 		ensure
 			index_set: subrow_index = a_subrow_index
-			indexes_equivalent: parent_row_i.subrows.i_th (subrow_index) = Current
+			indexes_equivalent: a_subrow_index > 0 implies parent_row_i.subrows.i_th (subrow_index) = Current
 			index_less_than_row_count: subrow_index <= parent_row_i.subrow_count
 		end
 

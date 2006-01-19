@@ -30,18 +30,6 @@ inherit
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	connect_button_press_switch is
-			-- Connect `button_press_switch' to its event sources.
-		do
-			if not button_press_switch_is_connected then
-				signal_connect (event_widget, App_implementation.button_press_event_string, agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate, False)
-				button_press_switch_is_connected := True
-			end
-		end
-
-	button_press_switch_is_connected: BOOLEAN
-			-- Is `button_press_switch' connected to its event source.
-
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -79,14 +67,15 @@ feature {NONE} -- Implementation
 					0 -- guint32 time
 				)
 				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
-				App_implementation.enable_debugger				
-			end	
+				App_implementation.enable_debugger
+			end
 		end
 
 	has_capture: BOOLEAN is
 			-- Does Current have the keyboard and mouse event capture?
 		do
-			Result := has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
+			Result := has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM) or else
+				has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
 		end
 
 feature -- Implementation
@@ -140,7 +129,7 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then gtk_widget_imp_at_pointer_position = Current 
+			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then gtk_widget_imp_at_pointer_position = Current
 			and then not App_implementation.is_in_transport then
 				start_transport (
 					a_x,
@@ -233,7 +222,7 @@ feature -- Implementation
 					App_implementation.set_grab_callback_connection_id (last_signal_connection_id)
 
 					enable_capture
-					
+
 					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
 						-- Set correct accept cursor
 						if accept_cursor /= Void then
@@ -380,14 +369,14 @@ feature -- Implementation
 					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
 				end
 				{EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
-				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
+				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)
 			end
-			
+
 			App_implementation.set_pnd_signal_ids (l_motion_notify_connection_id, l_leave_notify_connection_id, l_enter_notify_connection_id)
-			
+
 				-- Make sure 'in_transport' returns False before firing any drop actions.
 			App_implementation.on_drop (pebble)
-			
+
 				-- Call appropriate action sequences
 			if
 				able_to_transport (a_button)
@@ -406,10 +395,10 @@ feature -- Implementation
 			if pick_ended_actions_internal /= Void then
 				pick_ended_actions_internal.call ([target])
 			end
-			
+
 			if not is_destroyed then
 				enable_transport
-				interface.pointer_motion_actions.resume				
+				interface.pointer_motion_actions.resume
 			end
 
 			post_drop_steps (a_button)
@@ -457,7 +446,7 @@ feature -- Implementation
 
 	add_grab_cb is
 			-- Disconnect callback that called us and `enable_capture'.
-		do	
+		do
 			check
 				grab_callback_connected: grab_callback_connection_id > 0
 			end
@@ -502,7 +491,7 @@ feature -- Implementation
 			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 			a_row_imp: EV_PND_DEFERRED_ITEM
-			pnd_targets: ARRAYED_LIST [INTEGER] 
+			pnd_targets: ARRAYED_LIST [INTEGER]
 		do
 			a_wid_imp ?= gtk_widget_imp_at_pointer_position
 			if a_wid_imp /= Void and then has_struct_flag (a_wid_imp.c_object, {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) then
@@ -518,7 +507,7 @@ feature -- Implementation
 					if a_row_imp /= Void and then pnd_targets.has (a_row_imp.interface.object_id) then
 						Result := a_row_imp.interface
 					end
-				end				
+				end
 			end
 		end
 
@@ -528,7 +517,7 @@ feature -- Implementation
 			create Result
 			interface.init_drop_actions (Result)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	x_origin: INTEGER is
@@ -544,13 +533,13 @@ feature {NONE} -- Implementation
 		end
 
 	old_pointer_x: INTEGER is
-			-- 
+			--
 		do
 			Result := app_implementation.old_pointer_x
 		end
-		
+
 	old_pointer_y: INTEGER is
-			-- 
+			--
 		do
 			Result := app_implementation.old_pointer_y
 		end

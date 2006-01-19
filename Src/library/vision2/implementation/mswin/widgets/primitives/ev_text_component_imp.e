@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
-			interface		
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -25,7 +25,7 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
- 
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- `Result' is height of font used by `Current'.
 		deferred
 		end
-		
+
 feature -- Status report
 
 	is_editable: BOOLEAN is
@@ -60,7 +60,7 @@ feature -- Status report
 		do
 			Result := not read_only
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Status report
 
 	caret_position: INTEGER is
@@ -135,7 +135,7 @@ feature {EV_ANY_I}-- element change
 		end
 
 	append_text (txt:STRING) is
-			-- Append 'txt' to text of `Current'. 
+			-- Append 'txt' to text of `Current'.
 		local
 			temp_text: STRING
 			previous_caret_position: INTEGER
@@ -170,7 +170,7 @@ feature {EV_ANY_I}-- element change
 			screen_dc.get
 			screen_dc.select_font ((create {WEL_SHARED_FONTS}).gui_font)
 			extent := screen_dc.string_size ("W")
-			screen_dc.unselect_font 
+			screen_dc.unselect_font
 			screen_dc.quick_release
 			Result := extent.width
 		end
@@ -187,7 +187,7 @@ feature {EV_ANY_I} -- Resizing
 feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) text between 
+			-- Select (hilight) text between
 			-- 'start_pos' and 'end_pos'
 		local
 			new_lines_to_start: INTEGER
@@ -209,7 +209,7 @@ feature -- Basic operation
 	paste (index: INTEGER) is
 			-- Insert string which is in Clipboard at
 			-- `index' postion in text.
-			-- If Clipboard is empty, it does nothing. 
+			-- If Clipboard is empty, it does nothing.
 		local
 			pos: INTEGER
 		do
@@ -272,7 +272,7 @@ feature {NONE} -- Deferred features
 		end
 
 	clip_paste is
-			-- Paste at current caret position 
+			-- Paste at current caret position
 			-- content of clipboard.
 		deferred
 		end
@@ -305,7 +305,7 @@ feature {NONE} -- Deferred features
 				create Result.make_rgb (0, 0, 0)
 			end
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
@@ -331,7 +331,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 		do
 			override_context_menu := True
 		end
-		
+
 	enable_context_menu is
 			-- Assign `False' to `override_context_menu'.
 		do
@@ -344,14 +344,14 @@ feature {NONE} -- Implementation
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
-			
+
 			if msg = ({WEL_WINDOW_CONSTANTS}.Wm_contextmenu) then
 				allow_pick_and_drop
 			else
 				Precursor {EV_PRIMITIVE_IMP} (msg, wparam, lparam)
 			end
 		end
-		
+
 	allow_pick_and_drop is
 			-- Override context menu on `Current' if pick and drop
 			-- should be handled instead. We must handle two cases :-
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			Result := edit_control.text
 			edit_control.destroy
 		end
-		
+
 feature {NONE} -- interface
 
 	interface: EV_TEXT_COMPONENT

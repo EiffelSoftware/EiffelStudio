@@ -94,7 +94,6 @@ feature {NONE} -- Initialization
 					-- We need the map event to correctly set the cursor if available.
 			end
 
-
 			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
@@ -578,7 +577,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_widget_mapped is
 			-- `Current' has been mapped on to the screen.
 		do
-			-- By default do nothing as this is redefined by descendants such as window and split area that need it.
 			if pointer_style /= Void then
 				internal_set_pointer_style (pointer_style)
 			end

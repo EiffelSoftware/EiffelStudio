@@ -79,16 +79,13 @@ feature -- Visitor
 		local
 			c: CL_TYPE_I
 			f: FEATURE_I
-			a: ACCESS_B
 		do
 				-- Ensure the feature is not redeclared into attribute
 			c ?= context_type
 			f := c.base_class.feature_of_rout_id (routine_id)
 			if f.is_attribute then
 					-- Create new byte node and process it instead of the current one
-				a := f.access (real_type (type))
-				a.set_parent (parent)
-				a.process (v)
+				byte_node (f).process (v)
 			else
 				v.process_feature_b (Current)
 			end
@@ -172,7 +169,6 @@ feature -- Access
 			feature_bl: FEATURE_BL
 			c: CL_TYPE_I
 			f: FEATURE_I
-			a: CALL_ACCESS_B
 		do
 				-- Ensure the feature is not redeclared into attribute
 			c ?= real_type (type_i)
@@ -181,9 +177,7 @@ feature -- Access
 			end
 			if f /= Void and then f.is_attribute then
 					-- Create new byte node and process it instead of the current one
-				a ?= f.access (real_type (type))
-				a.set_parent (parent)
-				Result := a.enlarged
+				Result ?= byte_node (f).enlarged
 			else
 				if context.final_mode then
 					create feature_bl
@@ -332,7 +326,6 @@ feature -- Inlining
 			l_body_index: INTEGER
 			entry: ROUT_ENTRY
 			f: FEATURE_I
-			a: ACCESS_B
 			context_class_type: CLASS_TYPE
 			written_class_type: CLASS_TYPE
 		do
@@ -360,10 +353,7 @@ feature -- Inlining
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 				if f.is_attribute or else f.is_external then
 						-- Create new byte node and process it instead of the current one
-					a := f.access (real_type (type))
-					a.set_parent (parent)
-					a.set_parameters (parameters)
-					Result := a.inlined_byte_code
+					Result := byte_node (f).inlined_byte_code
 				else
 						-- Creation of a special node for the entire
 						-- feature (descendant of STD_BYTE_CODE)
@@ -454,25 +444,51 @@ feature -- Inlining
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	byte_node (f: FEATURE_I): ACCESS_B is
+			-- Byte node for the context feature `f'
+		require
+			f_not_void: f /= Void
+			f_not_internal_routine: f.is_attribute or f.is_external
+		local
+			p: like parent
+		do
+			Result := f.access (real_type (type))
+			p := parent
+			if p /= Void then
+				Result.set_parent (p)
+				if p.message = Current then
+					p.set_message (Result)
+				else
+					check p.target = Current end
+					p.set_target (Result)
+				end
+			end
+			Result.set_parameters (parameters)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

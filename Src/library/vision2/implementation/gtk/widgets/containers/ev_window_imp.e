@@ -83,11 +83,11 @@ feature  -- Access
 
 	item: EV_WIDGET
 			-- Current item.
-	
+
  	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have.
-			
+
 	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have.
@@ -120,7 +120,7 @@ feature -- Status setting
 			-- Ensure no border is displayed around `Current'.
 		do
 		end
-	
+
 	internal_enable_border is
 			-- Ensure a border is displayed around `Current'.
 		do
@@ -153,7 +153,7 @@ feature -- Status setting
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
 		end
-		
+
 	show is
 			-- Map the Window to the screen.
 		do
@@ -169,7 +169,7 @@ feature -- Status setting
 
 	is_positioned: BOOLEAN
 		-- Has the Window been previously positioned on screen?
-		
+
 	call_show_actions: BOOLEAN
 		-- Should the show actions be called?
 
@@ -225,7 +225,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
 			a_geometry.memory_free
 			maximum_width := max_width
-		end 
+		end
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
@@ -238,7 +238,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
 			a_geometry.memory_free
 			maximum_height := max_height
-		end 
+		end
 
 	set_title (new_title: STRING) is
 			-- Set `title' to `new_title'.
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 				previous_y_position := a_y_pos
 				if move_actions_internal /= Void then
 					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (previous_x_position, previous_y_position, a_width, a_height))
-				end	
+				end
 			end
 		end
 
@@ -356,15 +356,15 @@ feature {NONE} -- Implementation
 			a_focus_widget: EV_WIDGET_IMP
 			a_gtk_focus_widget: POINTER
 		do
-			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)	
+			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
 				-- Fire the widget events.
 			a_gtk_focus_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (c_object)
 			if a_gtk_focus_widget /= default_pointer then
 				a_focus_widget ?= eif_object_from_gtk_object (a_gtk_focus_widget)
 			end
-			
-			if a_focus_widget /= Void and a_key /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
-				if a_focus_widget.default_key_processing_blocked (a_key) then
+
+			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
+				if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
 						-- Block event from losing focus should the widget want to keep it.
 					l_app_imp := app_implementation
 					if a_key_press then
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 					else
 						a_cs := l_app_imp.key_release_event_string
 					end
-					{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)				
+					{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 				end
 				a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 			end
@@ -394,14 +394,14 @@ feature {NONE} -- Implementation
 
 			maximum_width := interface.maximum_dimension
 			maximum_height := interface.maximum_dimension
-			
+
 			signal_connect_true (once "delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
 
 			enable_user_resize
 			default_height := -1
 			default_width := -1
-			
+
 			app_imp := app_implementation
 			on_key_event_intermediary_agent := agent (app_imp.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			signal_connect (c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 				--| "button-press-event" is a special case, see below.
 
 			real_signal_connect (c_object, once "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			Precursor {EV_CONTAINER_IMP}
 					-- Set appropriate WM decorations
@@ -420,20 +420,20 @@ feature {NONE} -- Implementation
 			end
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
 		end
-		
+
 	client_area: POINTER is
 			-- Pointer to the widget that is treated as the main holder of the client area within the window.
 		do
 			Result := c_object
 		end
-	
+
 	initialize_client_area is
 			-- Initialize the client area of 'Current'.
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do
 			vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_widget_show (vbox)
 			{EV_GTK_EXTERNALS}.gtk_container_add (client_area, vbox)
 			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
@@ -456,9 +456,9 @@ feature {EV_ACCELERATOR_IMP} -- Implementation
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
-			
+
 feature {EV_ANY_I} -- Implementation
-		
+
 	lock_update is
 			-- Lock drawing updates for `Current'
 		do
@@ -466,10 +466,10 @@ feature {EV_ANY_I} -- Implementation
 --			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
 --			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
-		
+
 	event_mask: INTEGER
 		-- Current events mask of GdkWindow
-		
+
 	unlock_update is
 			-- Restore drawing updates for `Current'
 		do
@@ -487,7 +487,7 @@ feature {EV_INTERMEDIARY_ROUTINES}
 				close_request_actions_internal.call (Void)
 			end
 		end
-			
+
 feature {EV_CLIPBOARD_IMP} -- Implementation
 
 	hbox: POINTER

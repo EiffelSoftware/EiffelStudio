@@ -149,9 +149,8 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		require
 			a_state_valid: a_state >= {EV_GTK_EXTERNALS}.gtk_state_normal_enum and a_state <= {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
 		local
-			a_widget, a_widget_path, a_class_path: POINTER
-			a_style: POINTER
-			a_color, a_gdk_color, a_gc, a_gc_values: POINTER
+			a_widget, a_style: POINTER
+			a_gdk_color: POINTER
 			a_r, a_g, a_b: INTEGER
 		do
 			a_widget := {EV_GTK_EXTERNALS}.gtk_menu_item_new

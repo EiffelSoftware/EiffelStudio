@@ -366,7 +366,6 @@ feature -- Inlining
 					inlined_feat_b.fill_from (Current)
 					bc ?= Byte_server.disk_item (l_body_index)
 
-					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 					context_class_type := system.class_type_of_id (entry.type_id)
 					written_class_type := context_class_type.associated_class.implemented_type (f.written_in, context_class_type.type).associated_class_type
 					inlined_feat_b.set_context_type (context_class_type, written_class_type)

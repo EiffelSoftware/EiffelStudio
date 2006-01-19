@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision cell, GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_CELL_IMP
-	
+
 inherit
 	EV_CELL_I
 		undefine
@@ -20,10 +20,9 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			replace,
-			needs_event_box
+			replace
 		end
-		
+
 	EV_DOCKABLE_TARGET_IMP
 		redefine
 			interface
@@ -34,13 +33,11 @@ create
 
 feature -- initialization
 
-	needs_event_box: BOOLEAN is do Result := True end
-
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 		end
 
 feature -- Access

@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			else
 				if not is_destroyed then
 					{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
-				end		
+				end
 			end
 		end
 
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		end
 
 	window_position_enum: INTEGER is
-			-- GtkWindow positioning enum. 
+			-- GtkWindow positioning enum.
 		do
 			if blocking_window /= Void then
 				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			-- Request that `Current' be displayed when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_show_now (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation

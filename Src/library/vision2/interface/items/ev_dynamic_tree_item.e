@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 
 	time_msec (now: TYPED_POINTER [INTEGER]) is
 		external
-			"C inline use <sys/types.h>, <sys/timeb.h>"
+			"C inline use <sys/types.h>, <time.h>, <sys/timeb.h>"
 		alias
 			"[
 				{

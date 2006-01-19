@@ -12,13 +12,13 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM]
 		redefine
 			interface,
 			initialize
 		end
-	
+
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
@@ -28,7 +28,7 @@ inherit
 			on_button_release,
 			button_press_switch
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -64,7 +64,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (visual_widget, True)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-			
+
 				-- Add our dummy column to the end to match Windows implementation
 			create dummy_item
 			dummy_imp ?= dummy_item.implementation
@@ -73,11 +73,10 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
 			resize_model (100)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, dummy_imp.c_object, 0)
-			
+
 			set_pixmaps_size (16, 16)
 
-			connect_button_press_switch
-			pointer_button_release_actions.call (Void)			
+			pointer_button_release_actions.call (Void)
 
 			set_is_initialized (True)
 		end
@@ -90,7 +89,7 @@ feature -- Initialization
 			a_type_array: MANAGED_POINTER
 			i: INTEGER
 			list_store: POINTER
-		do		
+		do
 			create a_type_array.make ((a_columns) * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 			from
 				i := 1
@@ -102,13 +101,13 @@ feature -- Initialization
 			end
 
 			list_store :=  {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns, a_type_array.item)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (visual_widget, list_store)
 			model_count := a_columns
 		end
 
 feature
-	
+
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
@@ -168,7 +167,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 			if item_resize_tuple /= Void then
 					-- We should only call resize actions after the start actions have been called.
 				call_item_resize_end_actions := True
-				item_resize_actions.call (item_resize_tuple)				
+				item_resize_actions.call (item_resize_tuple)
 			end
 		end
 
@@ -188,7 +187,7 @@ feature {NONE} -- Implementation
 			a_cursor: like cursor
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
-			if gdkwin /= default_pointer then		
+			if gdkwin /= default_pointer then
 				from
 					a_cursor := cursor
 					start
@@ -234,7 +233,7 @@ feature {NONE} -- Implementation
 			-- Call the item resize end actions.
 		do
 			item_has_resized
-			item_resize_tuple := Void			
+			item_resize_tuple := Void
 		end
 
 	model_count: INTEGER
@@ -248,7 +247,7 @@ feature {NONE} -- Implementation
 		end
 
 	destroy is
-			-- 
+			--
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 		end

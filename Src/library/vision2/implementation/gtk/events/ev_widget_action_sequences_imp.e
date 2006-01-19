@@ -26,7 +26,7 @@ feature -- Event handling
 					App_implementation.motion_notify_event_string,
 					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (object_id, ?, ?, ?, ?, ?, ?, ?),
 					App_implementation.default_translate,
-					False
+					True
 				)
 		end
 
@@ -62,7 +62,7 @@ feature -- Event handling
 			create Result
 			signal_connect (
 				event_widget,
-				App_implementation.enter_notify_event_string, 
+				App_implementation.enter_notify_event_string,
 				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
 				App_implementation.default_translate,
 				False
@@ -152,10 +152,10 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	event_widget: POINTER is
-			-- Pointer to the gtk event widget 
+			-- Pointer to the gtk event widget
 		deferred
 		end
-		
+
 
 end
 

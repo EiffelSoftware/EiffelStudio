@@ -180,15 +180,6 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			end
 		end
 
-	connect_button_press_switch_intermediary (a_c_object: POINTER) is
-			-- Connect button switch
-		local
-			a_widget: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_widget.connect_button_press_switch
-		end
-
 	button_press_switch_intermediary (a_c_object: POINTER; a_type: INTEGER;	a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER) is

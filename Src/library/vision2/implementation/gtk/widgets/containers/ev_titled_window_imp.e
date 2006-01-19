@@ -18,7 +18,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_WINDOW_IMP
 		redefine
 			interface,
@@ -28,7 +28,7 @@ inherit
 			initialize,
 			initialize_client_area
 		end
-		
+
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
 		export {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
 			minimize_actions_internal,
@@ -40,7 +40,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (an_interface: like interface) is
 			-- Create the titled window.
 		do
@@ -85,7 +85,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 					is_maximized := False
 					if minimize_actions_internal /= Void then
 						minimize_actions_internal.call (Void)
-					end					
+					end
 				end
 			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
 				if not is_maximized then
@@ -93,7 +93,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 					is_minimized := False
 					if maximize_actions_internal /= Void then
 						maximize_actions_internal.call (Void)
-					end					
+					end
 				end
 
 			else
@@ -140,14 +140,14 @@ feature {NONE} -- Accelerators
 		do
 			acc_imp ?= an_accel.implementation
 			acc_imp.add_accel (Current)
-			
+
 			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
 				a_property := once "gtk-menu-bar-accel"
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
 					-- This is a value that is highly unlikely to be used
 				a_origin := once "Vision2"
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
 			end
 		end
 
@@ -170,11 +170,11 @@ feature -- Access
 			else
 				Result := title
 			end
-		end 
+		end
 
 	icon_pixmap: EV_PIXMAP
 			-- Window icon.
-	
+
 	icon_mask: EV_PIXMAP
 			-- Transparency mask for `icon_pixmap'.
 
@@ -257,7 +257,7 @@ feature -- Element change
 			end
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	has_wm_decorations: BOOLEAN is

@@ -193,9 +193,9 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	value_changed_handler is
 			-- Called when `value' changes.
 		do
-				if change_actions_internal /= Void then
-					change_actions_internal.call ([value])
-				end
+			if change_actions_internal /= Void then
+				change_actions_internal.call ([value])
+			end
 		end
 
 invariant

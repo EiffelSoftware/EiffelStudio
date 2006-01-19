@@ -969,24 +969,6 @@ feature -- Convenience
 		deferred
 		end
 
-	context_type (node: CALL_ACCESS_B): CL_TYPE_I is
-			-- Context type of a `node'.
-		require
-			node_not_void: node /= Void
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	real_type (type_i: TYPE_I): TYPE_I is
-			-- `type_i' evaluated in the current context.
-		require
-			type_i_not_void: type_i /= Void
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
 feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
@@ -1034,19 +1016,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

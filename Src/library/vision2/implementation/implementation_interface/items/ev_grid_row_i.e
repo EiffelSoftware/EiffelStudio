@@ -86,6 +86,8 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
 	set_subrow_index (a_subrow_index: INTEGER) is
 			-- Set the index of row in parent row.
+		require
+			subrow_index_not_negative: a_subrow_index >= 0
 		do
 			subrow_index := a_subrow_index
 		ensure

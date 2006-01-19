@@ -477,7 +477,7 @@ feature {NONE} -- Implemention
 					l_feat_name := l_feat_name.twin
 					check
 						l_feat_valid_count: l_feat_name.count > 4
-						has_setter: l_feat_name.substring (1, 4).is_equal ("Set_")
+						has_setter: l_feat_name.substring (1, 4).is_equal ("get_")
 					end
 					l_feat_name.remove_head (4)
 				end

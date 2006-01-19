@@ -45,7 +45,7 @@ inherit
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM_PARENT
 
 create
@@ -54,7 +54,7 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
-	
+
 	scrollable_area: POINTER
 		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
 
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			previous_selected_item_imp: EV_TREE_NODE_IMP
 		do
 			a_selected_item := selected_item
-			
+
 			if a_selected_item /= previous_selected_item then
 				if previous_selected_item /= Void then
 					previous_selected_item_imp ?= previous_selected_item.implementation
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call (Void)
 					end
-				end	
+				end
 				if a_selected_item /= Void then
 					a_selected_item_imp ?= a_selected_item.implementation
 					if a_selected_item_imp.select_actions_internal /= Void then
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			end
 			previous_selected_item := a_selected_item
 		end
-	
+
 	visual_widget: POINTER is
 			-- Visible widget on screen.
 		do
@@ -124,16 +124,16 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
-			
+
 			initialize_model
 
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
@@ -150,10 +150,10 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
 			a_gtk_c_str := "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
-			
+
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
-			
+
 			real_signal_connect (tree_view, "row-collapsed", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), Void)
 			real_signal_connect (tree_view, "row-expanded", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?), Void)
 
@@ -162,7 +162,6 @@ feature {NONE} -- Initialization
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 			initialize_pixmaps
-			connect_button_press_switch
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
@@ -256,7 +255,7 @@ feature -- Status report
 		do
 			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
-			
+
 			if a_tree_path_list /= NULL then
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_tree_node_imp := node_from_tree_path (a_tree_path)
@@ -287,7 +286,7 @@ feature -- Status report
 				i := i + 1
 			end
 			Result ?= a_tree_node.implementation
-		end		
+		end
 
 	selected: BOOLEAN is
 			-- Is one item selected?
@@ -343,8 +342,8 @@ feature -- Implementation
 			end
 			real_signal_connect (
 				event_widget,
-				"button-press-event", 
-				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
+				"button-press-event",
+				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
@@ -374,14 +373,14 @@ feature -- Implementation
 				child_array.go_i_th (i)
 				if child_array.item /= Void then
 					a_tree_node_imp ?= child_array.item.implementation
-					a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator					
+					a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator
 				end
 				i := i + 1
 			end
 			child_array.go_to (a_cursor)
 			update_pnd_connection (a_enable_flag)
 		end
-		
+
 	update_pnd_connection (a_enable: BOOLEAN) is
 			-- Update the PND connection status for `Current'.
 		do
@@ -392,8 +391,8 @@ feature -- Implementation
 			elseif not a_enable and pebble = Void then
 				disable_transport_signals
 				is_transport_enabled := False
-			end			
-		end		
+			end
+		end
 
 	start_transport_filter (
 			a_type: INTEGER
@@ -408,7 +407,7 @@ feature -- Implementation
 			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
 				pnd_row_imp := Void
 			end
-			
+
 			if pnd_row_imp /= Void or else pebble /= Void then
 				Precursor (
 				a_type,
@@ -444,9 +443,9 @@ feature -- Implementation
 			if pebble_function /= Void then
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
-			end		
+			end
 		end
-	
+
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
@@ -494,7 +493,7 @@ feature -- Implementation
 					App_implementation.set_x_y_origin (
 						pnd_row_imp.pick_x + (a_screen_x - a_x),
 						pnd_row_imp.pick_y +
-						(a_screen_y - a_y) + 
+						(a_screen_y - a_y) +
 						((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
 					)
 				end
@@ -511,10 +510,10 @@ feature -- Implementation
 					end
 				elseif mode_is_pick_and_drop and not is_destroyed then
 						signal_emit_stop (event_widget, "button-press-event")
-				end				
+				end
 			end
 			App_implementation.set_x_y_origin (0, 0)
-			last_pointed_target := Void	
+			last_pointed_target := Void
 
 			if pebble_function /= Void then
 				if pnd_row_imp /= Void then
@@ -536,9 +535,9 @@ feature -- Implementation
 
 			pnd_row_imp := Void
 		end
-		
+
 feature {EV_TREE_NODE_IMP}
-		
+
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
 			-- Returns the row index at relative coordinate `a_y'.
 		local
@@ -580,16 +579,16 @@ feature {NONE} -- Implementation
 		local
 			tree_item_imp: EV_TREE_NODE_IMP
 			a_path: POINTER
-		do	
+		do
 			tree_item_imp ?= an_item.implementation
 			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (tree_store, tree_item_imp.list_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
-			
+
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
-		
+
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
 			-- Add 's' to 'Current'
 		do
@@ -603,14 +602,14 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			
+
 			child_array.go_i_th (i)
-			child_array.put_left (v)	
+			child_array.put_left (v)
 
 			item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
 			update_row_pixmap (item_imp)
 			item_imp.remove_internal_text
-			
+
 			if item_imp.is_transport_enabled_iterator then
 				update_pnd_connection (True)
 			end
@@ -649,7 +648,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
 				Result := a_cs.string
 			else
-				Result := once ""
+				Result := ""
 			end
 		end
 
@@ -695,10 +694,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
-			
+
 			a_gtk_c_str := "vertical-separator"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
-			
+
 			a_gtk_c_str := "height"
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
@@ -717,7 +716,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 	tree_view: POINTER
 			-- Pointer to the gtktree widget.
-			
+
 feature {NONE} -- Implementation
 
 	pixmaps_size_changed is
@@ -727,7 +726,7 @@ feature {NONE} -- Implementation
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			--| For now, do nothing.
 		end
-			
+
 	new_tree_store: POINTER is
 			-- New instance of a tree store.
 		external

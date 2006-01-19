@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
 		local
-			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			a_event_widget: POINTER
 			a_c_object: POINTER
 			app_imp: like app_implementation
@@ -93,13 +92,13 @@ feature {NONE} -- Initialization
 				real_signal_connect (a_event_widget, once "map-event", agent (l_gtk_marshal).on_widget_show (a_c_object), Void)
 					-- We need the map event to correctly set the cursor if available.
 			end
-
-			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
-			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
-			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
-			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
-				connect_button_press_switch
-			end
+			signal_connect (
+				a_event_widget,
+				app_imp.button_press_event_string,
+				agent (l_gtk_marshal).button_press_switch_intermediary (a_c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				app_imp.default_translate,
+				False
+			)
 			set_is_initialized (True)
 		end
 

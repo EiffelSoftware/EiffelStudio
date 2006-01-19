@@ -973,6 +973,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			hash_code := -1
 			unparent
 			parent_row_i := Void
+			subrow_index := 0
 			index := 0
 		ensure
 			parent_i_void: parent_i = Void

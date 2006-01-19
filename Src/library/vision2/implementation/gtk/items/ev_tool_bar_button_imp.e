@@ -66,13 +66,11 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
 			{EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
-			
+
 				-- Initialize gtk events
 			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
-
-			create tooltip.make (0)
 			set_is_initialized (True)
 		end
 
@@ -93,7 +91,7 @@ feature -- Access
 			a_txt := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
 			if a_txt /= Default_pointer then
 				create a_cs.share_from_pointer (a_txt)
-				Result := a_cs.string				
+				Result := a_cs.string
 			else
 				Result := ""
 			end
@@ -102,8 +100,18 @@ feature -- Access
 	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 
-	tooltip: STRING
+	tooltip: STRING is
 			-- Tooltip use for describing `Current'.
+		do
+			if internal_tooltip /= Void then
+				Result := internal_tooltip.twin
+			else
+				Result := ""
+			end
+		end
+
+	internal_tooltip: STRING
+		-- Tooltip for `Current'.
 
 feature -- Element change
 
@@ -138,7 +146,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			tooltip := a_text.twin
+			internal_tooltip := a_text.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,
@@ -163,12 +171,12 @@ feature -- Element change
 		end
 
 	enable_sensitive is
-			-- 
-		local			
+			--
+		local
 			l_pointer_over_widget: BOOLEAN
 			a_pointer_position: EV_COORDINATE
 		do
-			Precursor {EV_SENSITIVE_IMP}		
+			Precursor {EV_SENSITIVE_IMP}
 			--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
 				l_pointer_over_widget := Current = gtk_widget_imp_at_pointer_position
@@ -176,7 +184,7 @@ feature -- Element change
 					a_pointer_position := pnd_screen.pointer_position
 					pnd_screen.set_pointer_position (a_pointer_position.x + width + 10, a_pointer_position.y + height + 10)
 					pnd_screen.set_pointer_position (a_pointer_position.x, a_pointer_position.y)
-				end				
+				end
 			end
 		end
 
@@ -193,7 +201,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			in_select_actions_call := False
 		end
-		
+
 	in_select_actions_call: BOOLEAN
 		-- Is `Current' in the process of having its select actions called
 

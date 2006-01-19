@@ -3741,7 +3741,9 @@ feature {NONE} -- Implementation: Editor commands
 				l_node := features_tool.tree.retrieve_item_recursively_by_data (a_feature, true)
 				if l_node /= Void then
 					l_node.enable_select
-					features_tool.tree.ensure_item_visible (l_node)
+					if features_tool.tree.is_displayed then
+						features_tool.tree.ensure_item_visible (l_node)
+					end
 				else
 					if l_selected_node /= Void then
 						l_selected_node.disable_select

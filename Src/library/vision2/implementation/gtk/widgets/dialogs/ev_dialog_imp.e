@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			if a_key /= Void and then not (App_implementation.is_in_transport and then app_implementation.captured_widget /= Void) then
 				a_key_code := a_key.code
 
-				if a_key_code = Key_constants.Key_escape and then
+				if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then
 					default_cancel_button /= Void then
 						-- We now check if `default_cancel_button' is sensitive
 						-- as we only call its select_actions if it is sensitive.
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 						default_cancel_button.select_actions.call (Void)
 					end
 	
-				elseif a_key_code = Key_constants.Key_enter and then
+				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
 					current_push_button /= Void then
 					if current_push_button.is_sensitive and not current_push_button.has_focus then
 							-- Enter key pressed and `current_push_button' is

@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_ITEM_IMP
 
 inherit
@@ -38,6 +38,18 @@ inherit
 
 feature {NONE} -- Initialization
 
+	connect_button_press_switch is
+			-- Connect `button_press_switch' to its event sources.
+		do
+			if not button_press_switch_is_connected then
+				signal_connect (event_widget, App_implementation.button_press_event_string, agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate, False)
+				button_press_switch_is_connected := True
+			end
+		end
+
+	button_press_switch_is_connected: BOOLEAN
+			-- Is `button_press_switch' connected to its event source.
+
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -61,8 +73,8 @@ feature {NONE} -- Initialization
 					pointer_double_press_actions_internal.call (t)
 				end
 			end
-        	end
-		
+        end
+
 feature -- Access
 
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
@@ -106,7 +118,7 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			item_parent_imp := a_parent
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM

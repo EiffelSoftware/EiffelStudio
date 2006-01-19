@@ -32,6 +32,7 @@ inherit
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is do Result := False end
+		-- An event box does not need to be created for `Current'.
 
 	initialize is
 		do

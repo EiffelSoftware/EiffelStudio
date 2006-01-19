@@ -181,7 +181,7 @@ feature -- IL code generation
 			il_generator.generate_current_as_reference
 			il_generator.create_type
 
-			target_type := il_generator.real_type (context.class_type.associated_class.anchored_features.item
+			target_type := context.real_type (context.class_type.associated_class.anchored_features.item
 				(routine_id).type.actual_type.type_i)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
@@ -505,19 +505,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

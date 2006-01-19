@@ -14,10 +14,10 @@ inherit
 		export
 			{EV_INTERMEDIARY_ROUTINES} show_actions_internal
 		end
-		
+
 	EV_ANY_IMP
 
-		undefine 
+		undefine
 			dispose,
 			destroy
 		end
@@ -41,7 +41,7 @@ feature -- Event handling
 			-- Attach to GTK "map-event" signal.
 		do
 			create Result
-			real_signal_connect (c_object, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), Void)
+			real_signal_connect (c_object, once "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), Void)
 		end
 
 end

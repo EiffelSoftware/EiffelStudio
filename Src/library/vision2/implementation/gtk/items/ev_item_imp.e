@@ -40,9 +40,12 @@ feature {NONE} -- Initialization
 
 	connect_button_press_switch is
 			-- Connect `button_press_switch' to its event sources.
+		local
+			app_imp: like app_implementation
 		do
 			if not button_press_switch_is_connected then
-				signal_connect (event_widget, App_implementation.button_press_event_string, agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate, False)
+				app_imp := app_implementation
+				signal_connect (event_widget, App_imp.button_press_event_string, agent (app_imp.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_imp.default_translate, False)
 				button_press_switch_is_connected := True
 			end
 		end

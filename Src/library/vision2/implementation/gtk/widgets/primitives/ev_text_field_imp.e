@@ -3,17 +3,17 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TEXT_FIELD_IMP
-	
+
 inherit
 	EV_TEXT_FIELD_I
 		redefine
 			interface,
 			hide_border
 		end
-	
+
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
@@ -23,7 +23,7 @@ inherit
 			on_key_event,
 			set_minimum_width_in_characters
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -77,7 +77,7 @@ feature -- Status setting
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (entry_widget, (nb + 1) * maximum_character_width, -1)
 		end
-	
+
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
@@ -95,7 +95,7 @@ feature -- Status setting
 			a_cs := App_implementation.c_string_from_eiffel_string (txt)
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 		end
-	
+
 	prepend_text (txt: STRING) is
 			-- Prepend `txt' to the end of the text.
 		local
@@ -104,12 +104,12 @@ feature -- Status setting
 			a_cs := App_implementation.c_string_from_eiffel_string (txt)
 			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 		end
-		
+
 	set_capacity (len: INTEGER) is
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
-	
+
 	capacity: INTEGER is
 			-- Return the maximum number of characters that the
 			-- user may enter.
@@ -136,7 +136,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result
 			real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
-		
+
 feature -- Status report
 
 	is_editable: BOOLEAN is
@@ -185,7 +185,7 @@ feature -- status settings
 			-- Hide the border of `Current'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_has_frame (entry_widget, False)
-		end	
+		end
 
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
@@ -225,7 +225,7 @@ feature -- Basic operation
 		end
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (highlight) the text between 
+			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
 			if a_timeout_imp = Void then
@@ -240,7 +240,7 @@ feature -- Basic operation
 				-- Hack to ensure text field is selected when called from change actions
 			if not last_key_backspace and then change_actions_internal /= Void and then change_actions_internal.state = change_actions_internal.blocked_state and then end_pos = text.count then
 				a_timeout_imp.interface.actions.extend (agent select_from_start_pos (start_pos, end_pos))
-				a_timeout_imp.set_interval_kamikaze (0)			
+				a_timeout_imp.set_interval_kamikaze (0)
 			end
 		end
 
@@ -280,7 +280,7 @@ feature -- Basic operation
 
 	cut_selection is
 			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
+			-- the text and putting it in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
 			-- nothing.
@@ -298,10 +298,10 @@ feature -- Basic operation
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the string which is in the 
+			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
-			-- If the Clipboard is empty, it does nothing. 
+			-- If the Clipboard is empty, it does nothing.
 		do
 			insert_text_at_position (clipboard_content, index)
 		end
@@ -339,7 +339,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				in_change_action := False
 				stored_text := text
 			end
-			
+
 		end
 
 	in_change_action: BOOLEAN
@@ -354,19 +354,19 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_key_press then
 				if a_key /= Void then
 					if a_key.code = {EV_KEY_CONSTANTS}.key_back_space then
-						last_key_backspace := True	
+						last_key_backspace := True
 					else
 						last_key_backspace := False
 					end
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- A pointer on the text field
-		
+
 	visual_widget: POINTER is
 			-- Pointer to the widget shown on screen.
 		do
@@ -381,7 +381,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 
 invariant
 	entry_widget_set: entry_widget /= NULL
-	
+
 end -- class EV_TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------

@@ -73,26 +73,26 @@ feature -- Attributes
 	alias_name_id: INTEGER
 			-- Alias name ID in NAMES_HEAP.
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := language_name.complete_start_location (a_list)
+				Result := language_name.first_token (a_list)
 			else
-				Result := external_keyword.complete_start_location (a_list)
+				Result := external_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := language_name.complete_end_location (a_list)
+				Result := language_name.last_token (a_list)
 			else
 				if alias_name_literal /= Void then
-					Result := alias_name_literal.complete_end_location (a_list)
+					Result := alias_name_literal.last_token (a_list)
 				else
-					Result := language_name.complete_end_location (a_list)
+					Result := language_name.last_token (a_list)
 				end
 			end
 		end

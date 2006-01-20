@@ -70,21 +70,21 @@ feature -- Properties
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list /= Void and then reference_expanded_keyword /= Void then
 					-- Roundtrip mode
-				Result := reference_expanded_keyword.complete_start_location (a_list)
+				Result := reference_expanded_keyword.first_token (a_list)
 			else
-				Result := name.complete_start_location (a_list)
+				Result := name.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := name.complete_end_location (a_list)
+			Result := name.last_token (a_list)
 		end
 
 feature -- Comparison

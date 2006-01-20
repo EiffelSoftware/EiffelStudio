@@ -55,19 +55,19 @@ feature -- Location
 			Result := operands.first.start_location
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := target.complete_start_location (a_list)
+			Result := target.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := operands.complete_end_location (a_list)
+				Result := operands.last_token (a_list)
 			else
-				Result := rbracket_symbol.complete_end_location (a_list)
+				Result := rbracket_symbol.last_token (a_list)
 			end
 		end
 

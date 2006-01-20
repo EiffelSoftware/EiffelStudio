@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			if l_count > maximum_string_length then
 				report_too_long_string (text)
 			else
-				last_id_as_value := ast_factory.new_filled_id_as (Current, line, column, position, l_count)
+				last_id_as_value := ast_factory.new_filled_id_as (Current)
 				if last_id_as_value /= Void then
 					append_text_to_string (last_id_as_value)
 				end
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			if l_count > maximum_string_length then
 				report_too_long_string (text)
 			else
-				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, line, column, position, l_count, a_index)
+				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if last_id_as_value /= Void then
 					append_text_to_string (last_id_as_value)
 				end

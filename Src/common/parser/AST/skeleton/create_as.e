@@ -47,35 +47,35 @@ feature -- Attributes
 	feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Feature list
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if clients /= Void then
-					Result := clients.complete_start_location (a_list)
+					Result := clients.first_token (a_list)
 				elseif feature_list /= Void then
-					Result := feature_list.complete_start_location (a_list)
+					Result := feature_list.first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
-				Result := create_creation_keyword.complete_start_location (a_list)
+				Result := create_creation_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if feature_list /= Void then
-				Result := feature_list.complete_end_location (a_list)
+				Result := feature_list.last_token (a_list)
 			elseif clients /= Void then
-				Result := clients.complete_end_location (a_list)
+				Result := clients.last_token (a_list)
 			elseif a_list = Void then
 					-- Non-roundtrip mode
-				Result := null_location
+				Result := Void
 			else
 					-- Roundtrip mode
-				Result := create_creation_keyword.complete_end_location (a_list)
+				Result := create_creation_keyword.last_token (a_list)
 			end
 		end
 

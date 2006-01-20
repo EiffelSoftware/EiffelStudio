@@ -47,20 +47,20 @@ feature -- Roundtrip
 	result_keyword: KEYWORD_AS
 			-- Keyword "result" associated with this structure
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := Current
+				Result := result_keyword.first_token (a_list)
 			else
-				Result := address_symbol.complete_start_location (a_list)
+				Result := address_symbol.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := Current
+			Result := result_keyword.last_token (a_list)
 		end
 
 feature -- Comparison

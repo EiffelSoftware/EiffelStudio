@@ -43,16 +43,16 @@ feature -- Attributes
 	features: FEATURE_SET_AS
 			-- Feature set
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := clients.complete_start_location (a_list)
+			Result := clients.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := features.complete_end_location (a_list)
+			Result := features.last_token (a_list)
 		end
 
 feature -- Comparison

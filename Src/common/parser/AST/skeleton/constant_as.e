@@ -43,16 +43,16 @@ feature -- Attributes
 	value: ATOMIC_AS
 			-- Constant value
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := value.complete_start_location (a_list)
+			Result := value.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := value.complete_end_location (a_list)
+			Result := value.last_token (a_list)
 		end
 
 feature -- Properties

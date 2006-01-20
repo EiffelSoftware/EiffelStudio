@@ -9,6 +9,9 @@ class BITS_SYMBOL_AS
 
 inherit
 	TYPE_AS
+		redefine
+			first_token, last_token
+		end
 
 create
 	initialize
@@ -46,20 +49,26 @@ feature -- Attributes
 	bits_symbol: ID_AS
 			-- Bits value
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := bits_symbol.complete_start_location (a_list)
-			else
-				Result := bit_keyword.complete_start_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
+					Result := bits_symbol.first_token (a_list)
+				else
+					Result := bit_keyword.first_token (a_list)
+				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := bits_symbol.complete_end_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := bits_symbol.last_token (a_list)
+			end
 		end
 
 feature -- Comparison

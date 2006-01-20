@@ -21,7 +21,7 @@ feature -- Access
 			Result := 1
 		end
 
-feature {INTERNAL_AS, AST_FORMATTER_VISITOR} -- Status report
+feature {INTERNAL_AS, AST_FORMATTER_VISITOR, AST_ROUNDTRIP_ITERATOR} -- Status report
 
 	starts_with_parenthesis: BOOLEAN is
 			-- Is the first format item a "(".

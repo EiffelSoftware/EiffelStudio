@@ -49,7 +49,7 @@ inherit
 			new_assigner_mark_as, new_typed_char_as,
 			new_integer_value, new_real_value,
 			set_buffer, append_text_to_buffer, append_string_to_buffer,
-			new_internal_match_list, extend_internal_match_list, clear_internal_match_list,
+			new_internal_match_list, clear_internal_match_list,
 			reverse_extend_separator, reverse_extend_identifier, extend_pre_as, extend_post_as,
 			new_agent_routine_creation_as,
 			new_constraint_triple, new_alias_triple, new_agent_target_triple,
@@ -84,11 +84,6 @@ feature -- Roundtrip: Match list maintaining
 
 	new_internal_match_list (l_size: INTEGER) is
 			-- New match list
-		do
-		end
-
-	extend_internal_match_list (a_match: LEAF_AS) is
-			-- Extend `internal_match_list' with `a_match'.
 		do
 		end
 
@@ -221,6 +216,11 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
+	new_semicolon_symbol_as (a_scn: EIFFEL_SCANNER): SYMBOL_AS is
+			-- New symbol AST node for ";"
+		do
+		end
+
 	new_feature_keyword_as (l, c, p, s:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "feature".
 		do
@@ -231,32 +231,32 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_creation_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "creation'
 		do
 		end
 
-	new_end_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "end'
 		do
 		end
 
-	new_frozen_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "frozen'
 		do
 		end
 
-	new_infix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "infix'
 		do
 		end
 
-	new_precursor_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "precursor'
 		do
 		end
 
-	new_prefix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "prefix'
 		do
 		end
@@ -494,7 +494,7 @@ feature -- Access
 		do
 		end
 
-	new_boolean_as (b: BOOLEAN; l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): BOOL_AS is
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS is
 			-- New BOOLEAN AST node
 		do
 		end
@@ -566,7 +566,7 @@ feature -- Access
 		do
 		end
 
-	new_current_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): CURRENT_AS is
+	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS is
 			-- New CURRENT AST node
 		do
 		end
@@ -581,7 +581,7 @@ feature -- Access
 		do
 		end
 
-	new_deferred_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): DEFERRED_AS is
+	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS is
 			-- New DEFERRED AST node
 		do
 		end
@@ -776,12 +776,12 @@ feature -- Access
 		do
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
 			-- New empty ID AST node.
 		do
 		end
 
-	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
 			-- New empty ID AST node.
 		do
 		end
@@ -932,12 +932,12 @@ feature -- Access
 		do
 		end
 
-	new_result_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RESULT_AS is
+	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS is
 			-- New RESULT AST node
 		do
 		end
 
-	new_retry_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RETRY_AS is
+	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS is
 			-- New RETRY AST node
 		do
 		end
@@ -989,7 +989,7 @@ feature -- Access
 		do
 		end
 
-	new_type_dec_as (i: CONSTRUCT_LIST [INTEGER]; t: TYPE_AS; c_as, s_as: SYMBOL_AS): TYPE_DEC_AS is
+	new_type_dec_as (i: CONSTRUCT_LIST [INTEGER]; t: TYPE_AS; c_as: SYMBOL_AS): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		do
 		end
@@ -1029,7 +1029,7 @@ feature -- Access
 		do
 		end
 
-	new_unique_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): UNIQUE_AS is
+	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS is
 			-- New UNIQUE AST node
 		do
 		end
@@ -1044,7 +1044,7 @@ feature -- Access
 		do
 		end
 
-	new_void_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): VOID_AS is
+	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS is
 			-- New VOID AST node
 		do
 		end

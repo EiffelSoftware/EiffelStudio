@@ -58,25 +58,56 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_AS]
 			-- Features
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- First token in current AST node
 		do
-			Result := feature_keyword
+			Result := feature_keyword.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Last token in current AST node
 		do
 			if a_list = Void then
 				if not features.is_empty then
-					Result := features.end_location
+					Result := features.last_token (a_list)
 				elseif clients /= Void then
-					Result := clients.end_location
+					Result := clients.last_token (a_list)
 				else
-					Result := feature_keyword
+					Result := feature_keyword.last_token (a_list)
 				end
 			else
-				create Result.make (0, 0, feature_clause_end_position, 0)
+				Result := a_list.item_by_end_position (feature_clause_end_position)
+			end
+		end
+
+feature -- Roundtrip/Comments
+
+	feature_comment (a_list: LEAF_AS_LIST): STRING is
+			-- First line of comments on `Current'
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_end_index: INTEGER
+			l_leaf: LEAF_AS
+			l_cmt_list: EIFFEL_COMMENT_LIST
+			l_cmt: EIFFEL_COMMENTS
+		do
+			if features = Void or features.is_empty then
+				l_leaf := a_list.item_by_end_position (feature_clause_end_position)
+				check l_leaf /= Void end
+				l_end_index := l_leaf.index - 1
+			else
+				l_end_index := features.first_token (a_list).index - 1
+			end
+			check first_token (a_list).index + 1 <= l_end_index end
+			l_cmt_list := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
+			l_cmt := l_cmt_list.string_list
+			if l_cmt.is_empty then
+				create Result.make (0)
+			else
+				Result := l_cmt.first
 			end
 		end
 

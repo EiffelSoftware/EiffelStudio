@@ -47,20 +47,20 @@ feature -- Attribute
 	feature_name: FEATURE_NAME
 			-- Feature name to address
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := feature_name.complete_start_location (a_list)
+				Result := feature_name.first_token (a_list)
 			else
-				Result := address_symbol.complete_start_location (a_list)
+				Result := address_symbol.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := feature_name.complete_end_location (a_list)
+			Result := feature_name.last_token (a_list)
 		end
 
 feature -- Comparison

@@ -584,7 +584,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 246")
 end
 				
-				last_keyword_as_value := ast_factory.new_creation_keyword_as (line, column, position, 8, Current)
+				last_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
 				last_token := TE_CREATION				
 			
 when 50 then
@@ -595,7 +595,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 250")
 end
 				
-				last_current_as_value := ast_factory.new_current_as (line, column, position, 7, Current)
+				last_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			
 when 51 then
@@ -617,7 +617,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 258")
 end
 				
-				last_deferred_as_value := ast_factory.new_deferred_as (line, column, position, 8, Current)
+				last_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED			
 			
 when 53 then
@@ -661,7 +661,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 274")
 end
 				
-				last_keyword_as_value := ast_factory.new_end_keyword_as (line, column, position, 3, Current)
+				last_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			
 when 57 then
@@ -716,7 +716,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 294")
 end
 				
-				last_bool_as_value := ast_factory.new_boolean_as (False, line, column, position, 5, Current)
+				last_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			
 when 62 then
@@ -749,7 +749,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 306")
 end
 				
-				last_keyword_as_value := ast_factory.new_frozen_keyword_as (line, column, position, 6, Current)
+				last_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			
 when 65 then
@@ -793,7 +793,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 322")
 end
 				
-				last_keyword_as_value := ast_factory.new_infix_keyword_as (line, column, position, 5, Current)
+				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
 				last_token := TE_INFIX
 			
 when 69 then
@@ -994,7 +994,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 415")
 end
 				
-				last_keyword_as_value := ast_factory.new_precursor_keyword_as (line, column, position, 9, Current)
+				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			
 when 86 then
@@ -1005,7 +1005,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 419")
 end
 				
-				last_keyword_as_value := ast_factory.new_prefix_keyword_as (line, column, position, 6, Current)
+				last_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
 				last_token := TE_PREFIX
 			
 when 87 then
@@ -1071,7 +1071,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 443")
 end
 					
-				last_result_as_value := ast_factory.new_result_as (line, column, position, 6, Current)
+				last_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			
 when 93 then
@@ -1082,7 +1082,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 447")
 end
 				
-				last_retry_as_value := ast_factory.new_retry_as (line, column, position, 5, Current)
+				last_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			
 when 94 then
@@ -1137,7 +1137,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 467")
 end
 				
-				last_bool_as_value := ast_factory.new_boolean_as (True, line, column, position, 4, Current)
+				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			
 when 99 then
@@ -1159,7 +1159,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 475")
 end
 				
-				last_unique_as_value := ast_factory.new_unique_as (line, column, position, 6, Current)
+				last_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			
 when 101 then
@@ -1192,7 +1192,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 487")
 end
 				
-				last_void_as_value := ast_factory.new_void_as (line, column, position, 4, Current)
+				last_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			
 when 104 then

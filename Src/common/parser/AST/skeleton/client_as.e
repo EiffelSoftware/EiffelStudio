@@ -42,16 +42,32 @@ feature -- Attributes
 	clients: EIFFEL_LIST [ID_AS]
 			-- Client list
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := clients.complete_start_location (a_list)
+			Result := clients.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := clients.complete_end_location (a_list)
+			Result := clients.last_token (a_list)
+		end
+
+feature -- Roundtrip
+
+	is_client_list_empty: BOOLEAN is
+			-- Is client list empty? e.g. in form of {}
+			--|If a client list is in form of {}, a NONE_ID_AS object will be inserted
+			--|into the list automatically. Because it is not in source code, we must
+			--|deal with it specially.
+		local
+			l_none_id: NONE_ID_AS
+		do
+			if clients.count = 1 then
+				l_none_id ?= clients.first
+				Result := l_none_id /= Void
+			end
 		end
 
 feature -- Comparison

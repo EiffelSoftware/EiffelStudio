@@ -72,23 +72,17 @@ feature -- Roundtrip
 			-- Process `l_as'.
 		do
 		end
-
-	process_separator_as (l_as: SEPARATOR_AS) is
-			-- Process `l_as'.
-		do
-		end
-
-	process_new_line_as (l_as: NEW_LINE_AS) is
-			-- Process `l_as'.
-		do
-		end
-
-	process_comment_as (l_as: COMMENT_AS) is
-			-- Process `l_as'.
-		do
-		end
-
 	process_break_as (l_as: BREAK_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
 			-- Process `l_as'.
 		do
 		end
@@ -753,25 +747,31 @@ feature {NONE} -- Implementation
 				-- Nothing to be done
 		end
 
+	process_type_list_as (l_as: TYPE_LIST_AS) is
+			-- Process `l_as'.
+		do
+			process_eiffel_list (l_as)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -48,51 +48,35 @@ feature -- Roundtrip
 	dot_symbol: SYMBOL_AS
 			-- Symbol "." associated with this structure
 
-	set_agent_keyword (a_keyword: KEYWORD_AS) is
-			-- Set `agent_keyword' with `a_keyword'.
-		do
-			agent_keyword := a_keyword
-		ensure
-			agent_keyword_set: agent_keyword = a_keyword
-		end
+feature -- Roundtrip/Token
 
-	set_dot_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `dot_symbol' with `a_symbol'.
-		do
-			dot_symbol := a_symbol
-		ensure
-			dot_symbol_set: dot_symbol = a_symbol
-		end
-
-feature -- Roundtrip/Location
-
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if target /= Void then
-					Result := target.complete_start_location (a_list)
+					Result := target.first_token (a_list)
 				end
 				if Result = Void or else Result.is_null then
-					Result := feature_name.complete_start_location (a_list)
+					Result := feature_name.first_token (a_list)
 				end
 			else
-				Result := agent_keyword.complete_start_location (a_list)
+				Result := agent_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if operands /= Void then
-					Result := operands.complete_end_location (a_list)
+					Result := operands.last_token (a_list)
 				else
-					Result := feature_name.complete_end_location (a_list)
+					Result := feature_name.last_token (a_list)
 				end
 			else
 				if internal_operands /= Void then
-					Result := internal_operands.complete_end_location (a_list)
+					Result := internal_operands.last_token (a_list)
 				else
-					Result := feature_name.complete_end_location (a_list)
+					Result := feature_name.last_token (a_list)
 				end
 			end
 		end

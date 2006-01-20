@@ -110,27 +110,27 @@ feature -- Conveniences
 			end
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if frozen_keyword /= Void then
-				Result := frozen_keyword.complete_start_location (a_list)
+				Result := frozen_keyword.first_token (a_list)
 			end
 			if Result = Void or else Result.is_null then
 				if a_list = Void then
 						-- Non-roundtrip mode
-					Result := internal_name.complete_start_location (a_list)
+					Result := internal_name.first_token (a_list)
 				else
 						-- Roundtrip mode
-					Result := infix_prefix_keyword.complete_start_location (a_list)
+					Result := infix_prefix_keyword.first_token (a_list)
 				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := internal_name.complete_end_location (a_list)
+			Result := internal_name.last_token (a_list)
 		end
 
 invariant

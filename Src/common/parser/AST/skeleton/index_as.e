@@ -53,20 +53,20 @@ feature -- Attributes
 	index_list: EIFFEL_LIST [ATOMIC_AS]
 			-- Indexes
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if tag /= Void then
-				Result := tag.complete_start_location (a_list)
+				Result := tag.first_token (a_list)
 			else
-				Result := index_list.complete_start_location (a_list)
+				Result := index_list.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := index_list.complete_end_location (a_list)
+			Result := index_list.last_token (a_list)
 		end
 
 feature -- Comparison

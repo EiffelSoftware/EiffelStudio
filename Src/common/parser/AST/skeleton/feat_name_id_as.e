@@ -84,21 +84,21 @@ feature -- Comparison
 			end
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if frozen_keyword /= Void then
-				Result := frozen_keyword.complete_start_location (a_list)
+				Result := frozen_keyword.first_token (a_list)
 			end
 			if Result = Void or else Result.is_null then
-				Result := feature_name.complete_start_location (a_list)
+				Result := feature_name.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := feature_name.complete_end_location (a_list)
+			Result := feature_name.last_token (a_list)
 		end
 
 invariant

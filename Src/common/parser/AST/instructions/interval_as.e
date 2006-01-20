@@ -57,19 +57,19 @@ feature -- Attributes
 			-- Upper bound
 			-- Void if constant rather than interval
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := lower.complete_start_location (a_list)
+			Result := lower.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if upper /= Void then
-				Result := upper.complete_end_location (a_list)
+				Result := upper.last_token (a_list)
 			else
-				Result := lower.complete_end_location (a_list)
+				Result := lower.last_token (a_list)
 			end
 		end
 

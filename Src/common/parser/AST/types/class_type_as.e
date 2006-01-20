@@ -11,7 +11,7 @@ inherit
 	TYPE_AS
 		redefine
 			has_formal_generic, has_like, is_loose,
-			is_equivalent, start_location, end_location
+			is_equivalent, first_token, last_token
 		end
 
 	CLICKABLE_AST
@@ -90,36 +90,42 @@ feature -- Roundtrip
 	internal_generics: TYPE_LIST_AS
 			-- Internal possible generical parameters
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := class_name.complete_start_location (a_list)
+				Result := class_name.first_token (a_list)
 			else
-				if expanded_keyword /= Void then
-					Result := expanded_keyword.complete_start_location (a_list)
+				if lcurly_symbol /= Void then
+					Result := lcurly_symbol.first_token (a_list)
+				elseif expanded_keyword /= Void then
+					Result := expanded_keyword.first_token (a_list)
 				elseif separate_keyword /= Void then
-					Result := separate_keyword.complete_start_location (a_list)
+					Result := separate_keyword.first_token (a_list)
 				else
-					Result := class_name.complete_start_location (a_list)
+					Result := class_name.first_token (a_list)
 				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if generics /= Void then
-					Result := generics.complete_end_location (a_list)
+					Result := generics.last_token (a_list)
 				else
-					Result := class_name.complete_end_location (a_list)
+					if rcurly_symbol /= Void then
+						Result := rcurly_symbol.last_token (a_list)
+					else
+						Result := class_name.last_token (a_list)
+					end
 				end
 			else
 				if internal_generics /= Void then
-					Result := internal_generics.complete_end_location (a_list)
+					Result := internal_generics.last_token (a_list)
 				else
-					Result := class_name.complete_end_location (a_list)
+					Result := class_name.last_token (a_list)
 				end
 			end
 		end

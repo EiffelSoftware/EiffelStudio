@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; t: like type; c_as, s_as: SYMBOL_AS) is
+	initialize (i: like id_list; t: like type; c_as: SYMBOL_AS) is
 			-- Create a new TYPE_DEC AST node.
 		require
 			i_not_void: i /= Void
@@ -31,12 +31,10 @@ feature {NONE} -- Initialization
 			id_list := i
 			type := t
 			colon_symbol := c_as
-			semicolon_symbol := s_as
 		ensure
 			id_list_set: id_list = i
 			type_set: type = t
 			colon_symbol_set: colon_symbol = c_as
-			semicolon_symbol_set: semicolon_symbol = s_as
 		end
 
 feature -- Visitor
@@ -51,9 +49,6 @@ feature -- Roundtrip
 
 	colon_symbol: SYMBOL_AS
 		-- Symbol colon associated with this structure
-
-	semicolon_symbol: SYMBOL_AS
-		-- Symbol semicolon associated with this structure
 
 feature -- Access
 
@@ -74,23 +69,25 @@ feature -- Access
 			Result_not_empty: not Result.is_empty
 		end
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- First token in current AST node
 		local
 			l_id_list: IDENTIFIER_LIST
 		do
 			if a_list = Void then
-				Result := type.complete_start_location (a_list)
+				Result := type.first_token (a_list)
 			else
 				l_id_list ?= id_list
-				Result := l_id_list.id_list.complete_start_location (a_list)
+				Result := l_id_list.id_list.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Last token in current AST node
 		do
-			Result := type.complete_end_location (a_list)
+			Result := type.last_token (a_list)
 		end
 
 feature -- Comparison

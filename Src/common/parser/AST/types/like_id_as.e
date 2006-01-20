@@ -11,7 +11,7 @@ class
 inherit
 	TYPE_AS
 		redefine
-			has_like, is_loose
+			has_like, is_loose, first_token, last_token
 		end
 
 create
@@ -50,20 +50,26 @@ feature -- Attributes
 	anchor: ID_AS
 			-- Anchor name
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := anchor.complete_start_location (a_list)
-			else
-				Result := like_keyword.complete_start_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
+					Result := anchor.first_token (a_list)
+				else
+					Result := like_keyword.first_token (a_list)
+				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := anchor.complete_end_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := anchor.last_token (a_list)
+			end
 		end
 
 feature -- Comparison

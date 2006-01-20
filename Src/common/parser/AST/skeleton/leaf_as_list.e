@@ -1,5 +1,18 @@
 indexing
-	description: "AST leaf list for roundtrip parser"
+	description: "[
+					AST leaf list for roundtrip parser.
+				    It is a list to store terminals (or leaves) in a source file. When a file gets parsed, every token
+				    is stored in this list, so it is a tokenized source file.
+
+					Storage:
+					    There are two kinds of terminals:
+						 1. terminals that are not attached in AST: breaks (including comments, spaces and new-line characters and semicolons
+						 2. terminals that are attached in AST: all other terminals, like keywords, identifiers and symbols except semicolons
+
+						For every symbol terminal (both attached and non-attached), a `SYMBOL_STUB_AS' object is stored in list,
+						For every other attached terminal, a `LEAF_STUB_AS' object is stored in list.
+						For a break, a `BREAK_AS' object is stored in list.
+				  ]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -34,6 +47,7 @@ feature{NONE} -- Initialization
 	make (n: INTEGER) is
 		do
 			Precursor (n)
+			modifier_applied := True
 		end
 
 feature
@@ -45,158 +59,6 @@ feature
 			leaf_position_valid: v.position > 0
 		do
 			Precursor (v)
-		end
-
-feature -- Operations/ Add and del
-
-	put_add (pos: INTEGER; a_text: STRING) is
-			-- Add `a_text' after position `pos'.
-		require
-			pos_not_removed: valid_add_position (pos)
-			text_not_void: a_text /= Void
-		do
-			modifier_list.extend (create {ROUNDTRIP_ADDITION_MODIFIER}.make (pos, modifier_list.count, a_text))
-		end
-
-	put_del (start_pos, end_pos: INTEGER) is
-			-- Remove `text' in `a_list' from `start_pos' to `end_pos'.
-		require
-			valid_del_position: valid_del_position (start_pos, end_pos)
-		do
-			modifier_list.extend (create {ROUNDTRIP_DELETION_MODIFIER}.make (start_pos, end_pos, modifier_list.count))
-		end
-
-	put_replace (start_pos, end_pos: INTEGER; a_text: STRING) is
-			-- Replace text in `a_list' from `start_pos' to `end_pos' with `a_text'.
-		require
-			can_add: valid_add_position (start_pos)
-			can_del: valid_del_position (start_pos, end_pos)
-			text_not_void: a_text /= Void
-		do
-			put_add (start_pos, a_text)
-			put_del (start_pos, end_pos)
-		end
-
-feature -- Status reporting
-
-	byte_count: INTEGER is
-			-- Number in bytes of characters in `Current'.
-		do
-			if is_empty then
-				Result := 0
-			else
-				Result := last.end_position
-			end
-		end
-
-	valid_add_position (a_pos: INTEGER): BOOLEAN is
-			-- Is `pos' a valid position for add?
-			-- e.g. `pos' has not been removed.
-		do
-			Result := position_in_range (a_pos)
-			if Result then
-				from
-					modifier_list.start
-				until
-					modifier_list.after or not Result
-				loop
-					Result := modifier_list.item.can_add (a_pos)
-					modifier_list.forth
-				end
-			end
-		end
-
-	valid_del_position (start_pos, end_pos: INTEGER): BOOLEAN is
-			-- Can text in `a_list' from `start_pos' to `end_pos' be deleted?
-		require
-			start_pos_less_or_equal_than_end_pos: start_pos <= end_pos
-		do
-			Result := position_in_range (start_pos) and position_in_range (end_pos)
-			if Result then
-				from
-					modifier_list.start
-				until
-					modifier_list.after or not Result
-				loop
-					Result := modifier_list.item.can_del (start_pos, end_pos)
-					modifier_list.forth
-				end
-			end
-		end
-
-	position_in_range (pos: INTEGER): BOOLEAN is
-			-- Is `pos' in range?
-		do
-			Result := (pos >= 1) and then (pos <= byte_count)
-		end
-
-	text (start_pos, end_pos: INTEGER): STRING is
-			-- Text with all registered modification applied to from `start_pos' to `end_pos'
-		require
-			start_pos_less_or_equal_than_end_pos: start_pos <= end_pos
-			position_in_range: position_in_range (start_pos) and position_in_range (end_pos)
-		local
-			l_index: INTEGER
-			l_sp: INTEGER
-			done: BOOLEAN
-			l_str: STRING
-		do
-			create Result.make (end_pos - start_pos + 1)
-			if
-				modifier_list.is_empty or else
-				(region_before (start_pos, end_pos, modifier_list.first.start_position, modifier_list.first.end_position) or
-				 region_after (start_pos, end_pos, modifier_list.last.start_position, modifier_list.last.end_position)
-				)
-			then
-				Result := text_in_region (start_pos, end_pos)
-			else
-				from
-					modifier_list.start
-					done := False
-					l_index := start_pos
-					create l_str.make (100)
-				until
-					done or modifier_list.after
-				loop
-					l_sp := modifier_list.item.start_position
-					if l_sp <= end_pos then
-						if l_index < l_sp then
-							Result.append (text_in_region (l_index, l_sp - 1))
-							l_index := l_sp
-						end
-						modifier_list.item.modify (Result)
-						l_index := modifier_list.item.modified_index
-						if l_index > end_pos then
-							done := True
-						end
-					end
-					modifier_list.forth
-				end
-				if l_index <= end_pos then
-					Result.append (text_in_region (l_index, end_pos))
-				end
-			end
-		end
-
-	all_text: STRING is
-			-- -- Text with all registered modification applied
-		do
-			Result := text (1, byte_count)
-		end
-
-	original_text (start_pos, end_pos: INTEGER): STRING is
-			-- Original text from `start_pos' to `end_pos'
-		require
-			start_pos_less_or_equal_than_end_pos: start_pos <= end_pos
-			position_in_range: position_in_range (start_pos) and position_in_range (end_pos)
-		do
-			Result := text_in_region (start_pos, end_pos)
-		end
-
-	all_original_text: STRING is
-			-- Original text in `Current'
-		do
-			Result := original_text (1, byte_count)
 		end
 
 feature -- Item searching
@@ -217,7 +79,7 @@ feature -- Item searching
 				l_left > l_right or done
 			loop
 				l_middle := (l_left + l_right) // 2
-				l_pos := i_th (l_middle).start_position
+				l_pos := i_th (l_middle).complete_start_position (Current)
 				if l_pos = start_pos then
 					Result := i_th (l_middle)
 					done := True
@@ -245,7 +107,7 @@ feature -- Item searching
 				l_left > l_right or done
 			loop
 				l_middle := (l_left + l_right) // 2
-				l_pos := i_th (l_middle).end_position
+				l_pos := i_th (l_middle).complete_end_position (Current)
 				if l_pos = end_pos then
 					Result := i_th (l_middle)
 					done := True
@@ -274,8 +136,8 @@ feature -- Item searching
 				l_left > l_right or done
 			loop
 				l_middle := (l_left + l_right) // 2
-				l_start_pos := i_th (l_middle).start_position
-				l_end_pos := i_th (l_middle).end_position
+				l_start_pos := i_th (l_middle).complete_start_position (Current)
+				l_end_pos := i_th (l_middle).complete_end_position (Current)
 
 				if a_pos >= l_start_pos and a_pos <= l_end_pos then
 					Result := i_th (l_middle)
@@ -288,80 +150,591 @@ feature -- Item searching
 			end
 		end
 
+feature -- Leading/trailing separator
+
+feature -- Region validity
+
+	valid_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid?
+		require
+			a_region_not_void: a_region /= Void
+		do
+			Result := a_region.start_index > 0 and a_region.end_index >= a_region.start_index and a_region.end_index <= count
+		end
+
+	valid_text_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid to get text?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_list: like active_modifier_list
+		do
+			l_list := active_modifier_list
+			if l_list.is_empty then
+				Result := True
+			else
+				Result := l_list.for_all (agent {ERT_REGION_MODIFIER}.is_text_available (a_region))
+			end
+		end
+
+	valid_append_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid to append some text to?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_list: like active_modifier_list
+		do
+			l_list := active_modifier_list
+			if l_list.is_empty then
+				Result := True
+			else
+				Result := l_list.for_all (agent {ERT_REGION_MODIFIER}.can_append (a_region))
+			end
+		end
+
+	valid_prepend_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid to prepend some text to?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_list: like active_modifier_list
+		do
+			l_list := active_modifier_list
+			if l_list.is_empty then
+				Result := True
+			else
+				Result := l_list.for_all (agent {ERT_REGION_MODIFIER}.can_prepend (a_region))
+			end
+		end
+
+	valid_replace_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid to be replaced by some other text?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_list: like active_modifier_list
+		do
+			l_list := active_modifier_list
+			if l_list.is_empty then
+				Result := True
+			else
+				Result := l_list.for_all (agent {ERT_REGION_MODIFIER}.can_replace (a_region))
+			end
+		end
+
+	valid_remove_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+			-- Is `a_region' valid to be removed?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_list: like active_modifier_list
+		do
+			l_list := active_modifier_list
+			if l_list.is_empty then
+				Result := True
+			else
+				Result := l_list.for_all (agent {ERT_REGION_MODIFIER}.can_remove (a_region))
+			end
+		end
+
+feature -- Text modification
+
+	prepend_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+			-- Prepend `a_text' to `a_region'.
+			-- A prepend modifier will be registered.
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_prepend_region: valid_prepend_region (a_region)
+			all_existing_modifiers_applied: modifier_applied
+		local
+			l_modifier: ERT_PREPEND_REGION_MODIFIER
+		do
+			create l_modifier.make (modifier_list.count + 1, a_region, a_text)
+			register_modifier (l_modifier)
+			l_modifier.apply (Current)
+		end
+
+	append_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+			-- Append `a_text' to `a_region'.
+			-- An append modifier will be registered.			
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_append_region: valid_append_region (a_region)
+			all_existing_modifiers_applied: modifier_applied
+		local
+			l_modifier: ERT_APPEND_REGION_MODIFIER
+		do
+			create l_modifier.make (modifier_list.count + 1, a_region, a_text)
+			register_modifier (l_modifier)
+			l_modifier.apply (Current)
+		end
+
+	replace_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+			-- Prepend `a_region' by `a_text'.
+			-- A replace modifier will be registered.			
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_replace_region: valid_replace_region (a_region)
+			all_existing_modifiers_applied: modifier_applied
+		local
+			l_modifier: ERT_REPLACE_REGION_MODIFIER
+		do
+			create l_modifier.make (modifier_list.count + 1, a_region, a_text)
+			register_modifier (l_modifier)
+			l_modifier.apply (Current)
+		end
+
+	remove_region (a_region: ERT_TOKEN_REGION) is
+			-- Remove `a_region'.
+			-- A remove modifier will be registered.			
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_remove_region: valid_remove_region (a_region)
+			all_existing_modifiers_applied: modifier_applied
+		local
+			l_modifier: ERT_REMOVE_REGION_MODIFIER
+		do
+			create l_modifier.make (modifier_list.count + 1, a_region)
+			register_modifier (l_modifier)
+			l_modifier.apply (Current)
+		end
+
+feature -- Text status
+
+	is_text_modified (a_region: ERT_TOKEN_REGION): BOOLEAN is
+			-- Has text in `a_region' been modified?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		do
+			Result := active_modifier_list.for_all (agent {ERT_REGION_MODIFIER}.is_region_disjoint (a_region))
+		end
+
+feature -- Text
+
+	original_text (a_region: ERT_TOKEN_REGION): STRING is
+			-- Original text of `a_region'
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			i: INTEGER
+		do
+			create Result.make (256)
+			from
+				i := a_region.start_index
+			until
+				i > a_region.end_index
+			loop
+				Result.append (i_th (i).literal_text (Void))
+				i := i + 1
+			end
+		end
+
+	original_text_count (a_region: ERT_TOKEN_REGION): INTEGER is
+			-- Original text count of `a_region'
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			i: INTEGER
+		do
+			from
+				i := a_region.start_index
+				Result := 0
+			until
+				i > a_region.end_index
+			loop
+				Result := Result + i_th (i).literal_text (Void).count
+				i := i + 1
+			end
+		end
+
+	text (a_region: ERT_TOKEN_REGION): STRING is
+			-- Text (with all modifications, if any, applied) of `a_region'
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_text_region: valid_text_region (a_region)
+		local
+			i: INTEGER
+			l_end: INTEGER
+			l_str: STRING
+		do
+			create Result.make (256)
+			from
+				i := a_region.start_index
+				l_end := a_region.end_index
+			until
+				i > l_end
+			loop
+				l_str := final_token_text (i)
+				if not l_str.is_empty then
+					Result.append (l_str)
+				end
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	text_count (a_region: ERT_TOKEN_REGION): INTEGER is
+			-- Text (with all modifications, if any, applied) count of `a_region'
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+			valid_text_region: valid_text_region (a_region)
+		do
+			Result := text (a_region).count
+		ensure
+			Result_non_negative: Result >= 0
+		end
+
+feature -- Text/Separator
+
+	has_leading_separator (a_region: ERT_TOKEN_REGION): BOOLEAN is
+			-- Is there any separator structure (break or semicolon) appears before `a_region'?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		do
+			if a_region.start_index > 1 then
+				Result := i_th (a_region.start_index - 1).is_separator
+			else
+				Result := False
+			end
+		end
+
+	has_trailing_separator (a_region: ERT_TOKEN_REGION): BOOLEAN is
+			-- Is there any separator structure (break or semicolon) appears after `a_region'?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		do
+			if a_region.end_index < count then
+				Result := i_th (a_region.end_index + 1).is_separator
+			else
+				Result := False
+			end
+		end
+
+	has_comment (a_region: ERT_TOKEN_REGION): BOOLEAN is
+			-- Is there any comment within `a_region'?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			i: INTEGER
+			l_cnt: INTEGER
+			l_break: BREAK_AS
+		do
+			from
+				i := a_region.start_index
+				l_cnt := a_region.end_index
+				Result := False
+			until
+				i > l_cnt or not Result
+			loop
+				l_break ?= i_th (i)
+				if l_break /= Void then
+					Result := l_break.has_comment
+				end
+				i := i + 1
+			end
+		end
+
+feature -- Modifier operation
+
+	modifier_count: INTEGER is
+			-- Count of registered modifiers
+		do
+			Result := modifier_list.count
+		ensure
+			Result_non_negative: Result >= 0
+		end
+
+	modifier (i: INTEGER): ERT_REGION_MODIFIER is
+			-- `i'-th registered modifier
+		require
+			valid_i: i >0 and i <= modifier_count
+		do
+			Result := modifier_list.i_th (i)
+		ensure
+			Result_set: Result = modifier_list.i_th (i)
+		end
+
+
+	remove_last_modifier is
+			-- Remove last registered modifier.
+		require
+			modifiers_not_applied: not modifier_applied
+		do
+			if not modifier_list.is_empty then
+				modifier_list.finish
+				modifier_list.remove
+			end
+		end
+
+	undo_modifications is
+			-- Undo all applied modifications to text.
+		require
+			all_existing_modifiers_applied: modifier_applied
+		do
+			active_modifier_list.wipe_out
+			active_prepend_modifier_list.wipe_out
+			active_append_modifier_list.wipe_out
+			token_text_table.clear_all
+			if not modifier_list.is_empty then
+				modifier_list.do_all (agent {ERT_REGION_MODIFIER}.reset_applied)
+			end
+			modifier_applied := False
+		ensure
+			active_modifier_list_set: active_modifier_list.is_empty
+			active_prepend_modifier_list_set: active_prepend_modifier_list.is_empty
+			active_append_modifier_list_set: active_append_modifier_list.is_empty
+			modifier_not_applied: not modifier_applied
+		end
+
+	redo_modifications is
+			-- Redo all registered modifications to text.
+		require
+			modifiers_not_applied: not modifier_applied
+		do
+			if not modifier_list.is_empty then
+				modifier_list.do_all (agent {ERT_REGION_MODIFIER}.apply (Current))
+			end
+			modifier_applied := True
+		ensure
+			modifier_applied: modifier_applied
+		end
+
+	modifier_applied: BOOLEAN
+			-- Have all modifiers been applied to current?
+
+	is_modifier_registered (a_modifier: ERT_REGION_MODIFIER): BOOLEAN is
+			-- Is `a_modifier' registered?
+		require
+			a_modifier_not_void: a_modifier /= Void
+		do
+			Result := modifier_list.has (a_modifier)
+		end
+
+feature -- Comment extraction
+
+	extract_comment (a_region: ERT_TOKEN_REGION): EIFFEL_COMMENT_LIST is
+			-- Extract all comments from `a_region'.
+			-- Only comments in `original_text' will be extracted.
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			i: INTEGER
+			n: INTEGER
+			l_break: BREAK_AS
+			l_cmt_list: EIFFEL_COMMENT_LIST
+		do
+			create Result.make
+			from
+				i := a_region.start_index
+				n := a_region.end_index
+			until
+				i > n
+			loop
+				l_break ?= i_th (i)
+				if l_break /= Void then
+					l_cmt_list := l_break.extract_comment
+					if not l_cmt_list.is_empty then
+						Result.finish
+						Result.merge_right (l_cmt_list)
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature{NONE} -- Implementation
 
-	modifier_list: SORTED_TWO_WAY_LIST [ROUNDTRIP_MODIFIER] is
-			-- List where all modification to `Current' are stored
+	modifier_list: LINKED_LIST [ERT_REGION_MODIFIER] is
+			-- List of modifiers
 		do
 			if internal_modifier_list = Void then
 				create internal_modifier_list.make
 			end
 			Result := internal_modifier_list
-		end
-
-	internal_modifier_list: like modifier_list
-			-- Internal list where all modification to `Current' are stored		
-
-	text_in_region (start_pos, end_pos: INTEGER): STRING is
-			-- Original string in `Current' from `start_pos' to `end_pos'
-		require
-			start_pos_less_or_equal_than_end_pos: start_pos <= end_pos
-			position_in_range: position_in_range (start_pos) and position_in_range (end_pos)
-		local
-			l_index: INTEGER
-		do
-			if text_buffer = Void then
-				create text_buffer.make (byte_count)
-				l_index := index
-				from
-					start
-				until
-					after
-				loop
-					text_buffer.append (item.text (Void))
-					forth
-				end
-				index := l_index
-			end
-			Result := text_buffer.substring (start_pos, end_pos)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	text_buffer: STRING
-			-- Buffer used to reproduce origianl source code
-
-	valid_region (start_pos, end_pos: INTEGER): BOOLEAN is
-			-- Is region from `start_pos' to `end_pos' a valid region within `Current'?
-		do
-			Result := position_in_range (start_pos) and position_in_range (end_pos) and start_pos <= end_pos
-		end
-
-	region_before (start_pos1, end_pos1, start_pos2, end_pos2: INTEGER): BOOLEAN is
-			-- Is region from `start_pos1' to `end_pos1' before region from `start_pos2' to `end_pos2'?
+	register_modifier (a_modifier: ERT_REGION_MODIFIER) is
+			-- Register `a_modifier' in current.
 		require
-			region_valid: valid_region (start_pos1, end_pos1) and valid_region (start_pos2, end_pos2)
+			a_modifier_not_void: a_modifier /= Void
 		do
-			Result := end_pos1 < start_pos2
+			check
+				not modifier_list.has (a_modifier)
+			end
+			modifier_list.extend (a_modifier)
 		end
 
-	region_after (start_pos1, end_pos1, start_pos2, end_pos2: INTEGER): BOOLEAN is
-			-- Is region from `start_pos1' to `end_pos1' after region from `start_pos2' to `end_pos2'?
+feature{ERT_REGION_MODIFIER} -- Implementation
+
+	active_modifier_list: like modifier_list is
+			-- List of active modifiers
+		do
+			if internal_active_modifier_list = Void then
+				create internal_active_modifier_list.make
+			end
+			Result := internal_active_modifier_list
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	active_prepend_modifier_list: SORTED_TWO_WAY_LIST [ERT_PREPEND_REGION_MODIFIER] is
+			-- List of active prepend modifiers
+		do
+			if internal_prepend_modifier_list = Void then
+				create internal_prepend_modifier_list.make
+			end
+			Result := internal_prepend_modifier_list
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	active_append_modifier_list: SORTED_TWO_WAY_LIST [ERT_APPEND_REGION_MODIFIER] is
+			-- List of active prepend modifiers
+		do
+			if internal_append_modifier_list = Void then
+				create internal_append_modifier_list.make
+			end
+			Result := internal_append_modifier_list
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	set_token_text (a_index: INTEGER; a_text: STRING) is
+			-- Set text of `a_index'-th token with `a_text'.
 		require
-			region_valid: valid_region (start_pos1, end_pos1) and valid_region (start_pos2, end_pos2)
+			valid_index: valid_index (a_index)
+			a_text_not_void: a_text /= Void
 		do
-			Result := start_pos1 > end_pos2
+			token_text_table.force (a_text, a_index)
+		ensure
+			token_text_set: token_text_table.has (a_index) and token_text_table.item (a_index).is_equal (a_text)
 		end
 
-	region_overlapped (start_pos1, end_pos1, start_pos2, end_pos2: INTEGER): BOOLEAN is
-			-- Is region from `start_pos1' to `end_pos1' overlapped with region from `start_pos2' to `end_pos2'?
+feature{NONE} -- Implementation
+
+	final_token_text (a_index: INTEGER): STRING is
+			-- Final text of a token specified by `a_index' with all modification applied, if any.
 		require
-			region_valid: valid_region (start_pos1, end_pos1) and valid_region (start_pos2, end_pos2)
+			valid_index: valid_index (a_index)
+		local
+			l_prepended, l_appended: STRING
 		do
-			Result := not region_before (start_pos1, end_pos1, start_pos2, end_pos2) and
-					 not region_after (start_pos1, end_pos1, start_pos2, end_pos2)
+			create Result.make (100)
+			l_prepended := prepended_token_text (a_index)
+			if not l_prepended.is_empty then
+				Result.append (l_prepended)
+			end
+			if token_text_table.has (a_index) then
+				Result.append (token_text_table.item (a_index))
+			else
+				Result.append (i_th (a_index).literal_text (Void))
+			end
+			l_appended := appended_token_text (a_index)
+			if not l_appended.is_empty then
+				Result.append (l_appended)
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
+	prepended_token_text (a_index: INTEGER): STRING is
+			--	All prepended text of token specified by `a_index'
+		require
+			valid_index: valid_index (a_index)
+		local
+			l_list: like active_prepend_modifier_list
+		do
+			l_list := active_prepend_modifier_list
+			if l_list.is_empty or else l_list.first.start_index > a_index then
+				Result := ""
+			else
+				from
+					l_list.start
+					create Result.make (100)
+				until
+					l_list.after or l_list.item.start_index > a_index
+				loop
+					if l_list.item.is_prepended_to (a_index) then
+						Result.append (l_list.item.text)
+					end
+					l_list.forth
+				end
+			end
+		end
+
+	appended_token_text (a_index: INTEGER): STRING is
+			--	All appended text of token specified by `a_index'
+		require
+			valid_index: valid_index (a_index)
+		local
+			l_list: like active_append_modifier_list
+		do
+			l_list := active_append_modifier_list
+			if l_list.is_empty or else l_list.first.end_index > a_index then
+				Result := ""
+			else
+				from
+					l_list.start
+					create Result.make (100)
+				until
+					l_list.after or l_list.item.end_index > a_index
+				loop
+					if l_list.item.is_appended_to (a_index) then
+						Result.append (l_list.item.text)
+					end
+					l_list.forth
+				end
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	internal_modifier_list: like modifier_list
+			-- List of modifiers
+
+	internal_active_modifier_list: like active_modifier_list
+			-- List of active modifiers
+
+	internal_token_text_table: like token_text_table
+			-- Hashtable to store all tokens whose text has been changed
+
+	internal_prepend_modifier_list: like active_prepend_modifier_list
+			-- List of active prepend modifiers
+
+	internal_append_modifier_list: like active_append_modifier_list
+			-- List of active append modifiers
+
+	token_text_table: HASH_TABLE [STRING, INTEGER] is
+			-- Hashtable to store all tokens whose text has been changed
+		do
+			if internal_token_text_table = Void then
+				create internal_token_text_table.make (100)
+			end
+			Result := internal_token_text_table
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

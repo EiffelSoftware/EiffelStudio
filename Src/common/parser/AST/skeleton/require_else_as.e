@@ -13,7 +13,7 @@ inherit
 			make as require_make
 		redefine
 			process,
-			is_else, complete_end_location
+			is_else, last_token
 		end
 
 create
@@ -48,21 +48,21 @@ feature -- Properties
 	is_else: BOOLEAN is True
 			-- Is the assertion list a require else?
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if assertions /= Void then
-					Result := assertions.complete_end_location (a_list)
+					Result := assertions.last_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if full_assertion_list /= Void then
-					Result := full_assertion_list.complete_end_location (a_list)
+					Result := full_assertion_list.last_token (a_list)
 				else
-					Result := else_keyword.complete_end_location (a_list)
+					Result := else_keyword.last_token (a_list)
 				end
 			end
 		end

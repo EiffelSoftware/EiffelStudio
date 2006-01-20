@@ -12,8 +12,6 @@ inherit
 	AST_EIFFEL
 		undefine
 			number_of_breakpoint_slots
-		redefine
-			text
 		end
 
 	LOCATION_AS
@@ -21,26 +19,33 @@ inherit
 			make as make_with_location
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := Current
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := Current
 		end
 
 feature -- Roundtrip
 
-	text (a_list: LEAF_AS_LIST): STRING is
-			-- Literal text of this token, which is stored in `a_list'
-		require else
-			a_list_can_be_void: a_list = Void
+	is_separator: BOOLEAN is
+			-- Is current leaf AST node a separator (break or semicolon)?
 		do
-			Result := a_list.i_th (index).text (Void)
+		end
+
+feature -- Roundtrip
+
+	literal_text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of current AST node
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := a_list.i_th (index).literal_text (Void)
 		end
 
 	index: INTEGER

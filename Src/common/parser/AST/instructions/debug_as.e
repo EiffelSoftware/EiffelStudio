@@ -70,26 +70,26 @@ feature -- Roundtrip
 	internal_keys: EIFFEL_LIST [STRING_AS]
 			-- Internal debug keys			
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if keys /= Void then
-					Result := keys.complete_start_location (a_list)
+					Result := keys.first_token (a_list)
 				elseif compound /= Void then
-					Result := compound.complete_start_location (a_list)
+					Result := compound.first_token (a_list)
 				else
-					Result := end_keyword.complete_start_location (a_list)
+					Result := end_keyword.first_token (a_list)
 				end
 			else
-				Result := debug_keyword.complete_start_location (a_list)
+				Result := debug_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := end_keyword.complete_end_location (a_list)
+			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Access

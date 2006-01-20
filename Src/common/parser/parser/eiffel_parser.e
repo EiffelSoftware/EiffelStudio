@@ -3158,8 +3158,8 @@ debug ("GEYACC")
 end
 
 				yyval95 := yyvs95.item (yyvsp95)
-				if yyval95 /= Void then
-					ast_factory.extend_pre_as (yyval95, yyvs12.item (yyvsp12))
+				if yyval95 /= Void and yyvs12.item (yyvsp12) /= Void then
+					yyval95.set_indexing_keyword (yyvs12.item (yyvsp12))
 				end				
 				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
@@ -3220,8 +3220,8 @@ debug ("GEYACC")
 end
 
 				yyval95 := ast_factory.new_indexing_clause_as (0)
-				if yyval95 /= Void then
-					ast_factory.extend_pre_as (yyval95, yyvs12.item (yyvsp12))
+				if yyval95 /= Void and yyvs12.item (yyvsp12) /= Void then
+					yyval95.set_indexing_keyword (yyvs12.item (yyvsp12))
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -3294,8 +3294,12 @@ end
 
 				yyval95 := ast_factory.new_indexing_clause_as (0)
 				if yyval95 /= Void then
-					ast_factory.extend_pre_as (yyval95, yyvs12.item (yyvsp12 - 1))
-					ast_factory.extend_post_as (yyval95, yyvs12.item (yyvsp12))
+					if yyvs12.item (yyvsp12 - 1) /= Void then
+						yyval95.set_indexing_keyword (yyvs12.item (yyvsp12 - 1))
+					end
+					if yyvs12.item (yyvsp12) /= Void then	
+						yyval95.set_end_keyword (yyvs12.item (yyvsp12))
+					end
 				end		
 		
 if yy_parsing_status = yyContinue then
@@ -3334,8 +3338,12 @@ end
 
 				yyval95 := yyvs95.item (yyvsp95)
 				if yyval95 /= Void then
-					ast_factory.extend_pre_as (yyval95, yyvs12.item (yyvsp12 - 1))
-					ast_factory.extend_post_as (yyval95, yyvs12.item (yyvsp12))
+					if yyvs12.item (yyvsp12 - 1) /= Void then
+						yyval95.set_indexing_keyword (yyvs12.item (yyvsp12 - 1))
+					end
+					if yyvs12.item (yyvsp12) /= Void then	
+						yyval95.set_end_keyword (yyvs12.item (yyvsp12))
+					end
 				end				
 				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
@@ -4957,7 +4965,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-
+yyval4 := yyvs4.item (yyvsp4) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvs4.put (yyval4, yyvsp4)
@@ -5805,9 +5813,9 @@ end
 
 					-- Function with arguments
 				if yyvs17.item (yyvsp17) = Void then
-					yyval34 := ast_factory.new_body_as (yyvs102.item (yyvsp102), yyvs79.item (yyvsp79), Void, yyvs74.item (yyvsp74), Void, yyvs12.item (yyvsp12), Void, yyvs95.item (yyvsp95))
+					yyval34 := ast_factory.new_body_as (yyvs102.item (yyvsp102), yyvs79.item (yyvsp79), Void, yyvs74.item (yyvsp74), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), Void, yyvs95.item (yyvsp95))
 				else
-					yyval34 := ast_factory.new_body_as (yyvs102.item (yyvsp102), yyvs79.item (yyvsp79), yyvs17.item (yyvsp17).second, yyvs74.item (yyvsp74), Void, yyvs12.item (yyvsp12), yyvs17.item (yyvsp17).first, yyvs95.item (yyvsp95))
+					yyval34 := ast_factory.new_body_as (yyvs102.item (yyvsp102), yyvs79.item (yyvsp79), yyvs17.item (yyvsp17).second, yyvs74.item (yyvsp74), yyvs4.item (yyvsp4), yyvs12.item (yyvsp12), yyvs17.item (yyvsp17).first, yyvs95.item (yyvsp95))
 				end				
 				feature_indexes := yyvs95.item (yyvsp95)
 			
@@ -6500,7 +6508,7 @@ debug ("GEYACC")
 end
 
 				yyval99 := ast_factory.new_eiffel_list_rename_as (0)
-				if yyval99 /= Void then
+				if yyval99 /= Void and yyvs12.item (yyvsp12) /= Void then
 					ast_factory.extend_pre_as (yyval99, yyvs12.item (yyvsp12))
 				end
 			
@@ -6539,7 +6547,7 @@ debug ("GEYACC")
 end
 
 				yyval99 := yyvs99.item (yyvsp99)
-				if yyval99 /= Void then
+				if yyval99 /= Void and yyvs12.item (yyvsp12) /= Void then
 					ast_factory.extend_pre_as (yyval99, yyvs12.item (yyvsp12))
 				end				
 				remove_counter
@@ -6786,7 +6794,7 @@ end
 				else
 					yyval88 := yyvs88.item (yyvsp88)
 				end
-				if yyval88 /= Void then
+				if yyval88 /= Void and yyvs12.item (yyvsp12) /= Void then
 					ast_factory.extend_pre_as (yyval88, yyvs12.item (yyvsp12))
 				end
 				remove_counter
@@ -6844,9 +6852,9 @@ debug ("GEYACC")
 end
 
 				yyval88 := ast_factory.new_eiffel_list_export_item_as (0)
-				if yyval88 /= Void then
+				if yyval88 /= Void and yyvs12.item (yyvsp12) /= Void then
 					ast_factory.extend_pre_as (yyval88, yyvs12.item (yyvsp12))
-				end			
+				end
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
@@ -7605,7 +7613,7 @@ debug ("GEYACC")
 end
 
 			yyval92 := ast_factory.new_eiffel_list_feature_name (0)
-			if yyval92 /= Void then
+			if yyval92 /= Void and yyvs12.item (yyvsp12) /= Void then
 				ast_factory.extend_pre_as (yyval92, yyvs12.item (yyvsp12))
 			end
 		
@@ -7644,7 +7652,7 @@ debug ("GEYACC")
 end
 
 yyval92 := yyvs92.item (yyvsp92) 
-				if yyval92 /= Void then
+				if yyval92 /= Void and yyvs12.item (yyvsp12) /= Void then
 					ast_factory.extend_pre_as (yyval92, yyvs12.item (yyvsp12))
 				end
 			
@@ -8084,7 +8092,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval80 := ast_factory.new_type_dec_as (yyvs20.item (yyvsp20), yyvs79.item (yyvsp79), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval80 := ast_factory.new_type_dec_as (yyvs20.item (yyvsp20), yyvs79.item (yyvsp79), yyvs4.item (yyvsp4 - 1)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
 	yyvsp80 := yyvsp80 -1
@@ -10503,8 +10511,6 @@ end
 				yyval101 := yyvs101.item (yyvsp101)
 				if yyval101 /= Void then
 					yyval101.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
-					ast_factory.extend_pre_as (yyval101, yyvs4.item (yyvsp4 - 1))
-					ast_factory.extend_post_as (yyval101, yyvs4.item (yyvsp4))			
 				end
 			
 if yy_parsing_status = yyContinue then
@@ -11595,7 +11601,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval16 := ast_factory.new_keyword_instruction_list_pair (yyvs12.item (yyvsp12),yyvs15.item (yyvsp15)) 
+yyval16 := ast_factory.new_keyword_instruction_list_pair (yyvs12.item (yyvsp12), yyvs15.item (yyvsp15)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp16 := yyvsp16 + 1

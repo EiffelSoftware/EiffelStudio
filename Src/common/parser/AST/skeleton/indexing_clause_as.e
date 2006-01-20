@@ -11,7 +11,7 @@ class
 inherit
 	EIFFEL_LIST [INDEX_AS]
 		redefine
-			process, make
+			process, make, first_token, last_token
 		end
 
 create
@@ -36,6 +36,32 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_indexing_clause_as (Current)
+		end
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- First token in current AST node
+		do
+			if a_list = Void then
+				Result := Precursor{EIFFEL_LIST} (a_list)
+			else
+				Result := indexing_keyword.first_token (a_list)
+			end
+		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+			-- Last token in current AST node
+		do
+			if a_list = Void then
+				Result := Precursor{EIFFEL_LIST} (a_list)
+			else
+				if end_keyword = Void then
+					Result := Precursor (a_list)
+				else
+					Result := end_keyword.last_token (a_list)
+				end
+			end
 		end
 
 feature -- Access
@@ -369,6 +395,30 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		end
+
+feature -- Roundtrip
+
+	indexing_keyword: KEYWORD_AS
+			-- Keyword "indexing" associated with current AST node
+
+	end_keyword: KEYWORD_AS
+			-- Keyword "end" associated with current AST node
+
+	set_indexing_keyword (a_keyword: KEYWORD_AS) is
+			-- Set `indexing_keyword' with `a_keyword'.
+		do
+			indexing_keyword := a_keyword
+		ensure
+			indexing_keyword_set: indexing_keyword = a_keyword
+		end
+
+	set_end_keyword (a_keyword: KEYWORD_AS) is
+			-- Set `end_keyword' with `a_keyword'.
+		do
+			end_keyword := a_keyword
+		ensure
+			end_keyword_set: end_keyword = a_keyword
 		end
 
 indexing

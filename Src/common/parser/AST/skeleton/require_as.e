@@ -50,32 +50,32 @@ feature -- Properties
 
 feature -- Roundtrip/Location
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if assertions /= Void then
-					Result := assertions.complete_start_location (a_list)
+					Result := assertions.first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
-				Result := require_keyword.complete_start_location (a_list)
+				Result := require_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if assertions /= Void then
-					Result := assertions.complete_end_location (a_list)
+					Result := assertions.last_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if full_assertion_list /= Void then
-					Result := full_assertion_list.complete_end_location (a_list)
+					Result := full_assertion_list.last_token (a_list)
 				else
-					Result := require_keyword.complete_end_location (a_list)
+					Result := require_keyword.last_token (a_list)
 				end
 			end
 		end

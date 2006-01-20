@@ -50,23 +50,23 @@ feature -- Attributes
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := expressions.complete_start_location (a_list)
+				Result := expressions.first_token (a_list)
 			else
-				Result := larray.complete_start_location (a_list)
+				Result := larray.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := expressions.complete_end_location (a_list)
+				Result := expressions.last_token (a_list)
 			else
-				Result := rarray.complete_end_location (a_list)
+				Result := rarray.last_token (a_list)
 			end
 		end
 

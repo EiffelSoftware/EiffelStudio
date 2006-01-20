@@ -45,14 +45,6 @@ feature -- Roundtrip
 	end_keyword: KEYWORD_AS
 			-- Keyword "end" in current AST node
 
-	set_end_keyword (a_keyword: KEYWORD_AS) is
-			--- Set `end_keyword' with `a_keyword'.
-		do
-			end_keyword := a_keyword
-		ensure
-			end_keyword_set: end_keyword = a_keyword
-		end
-
 feature -- Access
 
 	creation_expr: CREATION_EXPR_AS
@@ -61,23 +53,23 @@ feature -- Access
 	tuple: TUPLE_AS
 			-- Tuple for addition custom attribute settings.
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := creation_expr.complete_start_location (a_list)
+			Result := creation_expr.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if tuple /= Void then
-					Result := tuple.complete_end_location (a_list)
+					Result := tuple.last_token (a_list)
 				else
-					Result := creation_expr.complete_end_location (a_list)
+					Result := creation_expr.last_token (a_list)
 				end
 			else
-				Result := end_keyword.complete_end_location (a_list)
+				Result := end_keyword.last_token (a_list)
 			end
 		end
 

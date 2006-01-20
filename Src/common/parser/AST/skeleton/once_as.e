@@ -45,30 +45,30 @@ feature -- Properties
 	is_once: BOOLEAN is True
 			-- Is the current routine body a once one ?
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if compound /= Void then
-					Result := compound.complete_start_location (a_list)
+					Result := compound.first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
-				Result := once_keyword.complete_start_location (a_list)
+				Result := once_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if compound /= Void then
-				Result := compound.complete_end_location (a_list)
+				Result := compound.last_token (a_list)
 			elseif a_list = Void then
 					-- Non-roundtrip mode
-				Result := null_location
+				Result := Void
 			else
-				Result := once_keyword.complete_end_location (a_list)
+				Result := once_keyword.last_token (a_list)
 			end
 		end
 

@@ -9,7 +9,7 @@ deferred class BINARY_AS
 
 inherit
 	EXPR_AS
-	
+
 feature {NONE} -- Initialization
 
 	initialize (l: like left; r: like right; o: like operator) is
@@ -49,16 +49,16 @@ feature -- Location
 			Result := left.end_location
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := left.complete_start_location (a_list)
+			Result := left.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := right.complete_end_location (a_list)
+			Result := right.last_token (a_list)
 		end
 
 feature -- Properties

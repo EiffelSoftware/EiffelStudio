@@ -51,26 +51,26 @@ feature -- Attributes
 	id_list: CONSTRUCT_LIST [INTEGER]
 			-- Attribute list
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := null_location
+				Result := Void
 			else
-				Result := strip_keyword.complete_start_location (a_list)
+				Result := strip_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		local
 			l_id_list: IDENTIFIER_LIST
 		do
 			if a_list = Void then
-				Result := null_location
+				Result := Void
 			else
 				l_id_list ?= id_list
-				Result := l_id_list.id_list.complete_end_location (a_list)
+				Result := l_id_list.id_list.last_token (a_list)
 			end
 		end
 

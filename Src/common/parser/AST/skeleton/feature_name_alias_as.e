@@ -23,8 +23,8 @@ inherit
 			process,
 			set_is_binary,
 			set_is_unary,
-			complete_start_location,
-			complete_end_location
+			first_token,
+			last_token
 		end
 
 create
@@ -133,27 +133,27 @@ feature -- Status setting
 			internal_is_binary := False
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if frozen_keyword /= Void then
-				Result := frozen_keyword.complete_start_location (a_list)
+				Result := frozen_keyword.first_token (a_list)
 			end
 			if Result = Void or else Result.is_null then
-				Result := feature_name.complete_start_location (a_list)
+				Result := feature_name.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := alias_name.complete_end_location (a_list)
+				Result := alias_name.last_token (a_list)
 			else
 				if convert_keyword /= Void then
-					Result := convert_keyword.complete_end_location (a_list)
+					Result := convert_keyword.last_token (a_list)
 				else
-					Result := alias_name.complete_end_location (a_list)
+					Result := alias_name.last_token (a_list)
 				end
 			end
 		end

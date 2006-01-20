@@ -82,28 +82,21 @@ feature -- Roundtrip
 		deferred
 		end
 
-	process_separator_as (l_as: SEPARATOR_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_new_line_as (l_as: NEW_LINE_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_comment_as (l_as: COMMENT_AS) is
-			-- Process `l_as'.
-		require
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_break_as (l_as: BREAK_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
 			-- Process `l_as'.
 		require
 			non_void_as: l_as /= Void
@@ -942,7 +935,14 @@ feature {AST_EIFFEL} -- Clickable visitor
 		deferred
 		end
 
-feature {AST_EIFFEL} -- COmpiled type
+	process_type_list_as (l_as: TYPE_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+feature {AST_EIFFEL} -- Compiled type
 
 	process_type_a (a_type: TYPE_A) is
 		require

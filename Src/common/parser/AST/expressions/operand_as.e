@@ -61,35 +61,35 @@ feature -- Attributes
 	expression: EXPR_AS
 			-- Object expression given at routine object evaluation
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if class_type /= Void then
-				Result := class_type.complete_start_location (a_list)
+				Result := class_type.first_token (a_list)
 			elseif question_mark_symbol /= Void and then a_list /= Void then
-				Result := question_mark_symbol.complete_start_location (a_list)
+				Result := question_mark_symbol.first_token (a_list)
 			elseif target /= Void then
-				Result := target.complete_start_location (a_list)
+				Result := target.first_token (a_list)
 			elseif expression /= Void then
-				Result := expression.complete_start_location (a_list)
+				Result := expression.first_token (a_list)
 			else
-				Result := null_location
+				Result := Void
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if class_type /= Void then
-				Result := class_type.complete_end_location (a_list)
+				Result := class_type.last_token (a_list)
 			elseif question_mark_symbol /= Void and then a_list /= Void then
-				Result := question_mark_symbol.complete_end_location (a_list)
+				Result := question_mark_symbol.last_token (a_list)
 			elseif target /= Void then
-				Result := target.complete_end_location (a_list)
+				Result := target.last_token (a_list)
 			elseif expression /= Void then
-				Result := expression.complete_end_location (a_list)
+				Result := expression.last_token (a_list)
 			else
-				Result := null_location
+				Result := Void
 			end
 		end
 

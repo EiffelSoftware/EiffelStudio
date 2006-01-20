@@ -114,17 +114,6 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	match_list: LEAF_AS_LIST
-			-- List where all terminals of this class are stored
-
-	set_match_list (a_list: LEAF_AS_LIST) is
-			-- Set `match_list' with `a_list'.
-		do
-			match_list := a_list
-		ensure
-			match_list_set: match_list = a_list
-		end
-
 	alias_keyword: KEYWORD_AS
 			-- keyword "alias" associated with this class
 
@@ -181,6 +170,23 @@ feature -- Roundtrip
 			obsolete_keyword := k_as
 		ensure
 			obsolete_keyword_set: obsolete_keyword = k_as
+		end
+
+	first_header_mark: KEYWORD_AS is
+			-- First header mark keyword,
+			-- Void if no one appears.
+		do
+			if frozen_keyword /= Void then
+				Result :=frozen_keyword
+			elseif deferred_keyword /= Void then
+				Result := deferred_keyword
+			elseif expanded_keyword /= Void then
+				Result :=expanded_keyword
+			elseif separate_keyword /= Void then
+				Result :=separate_keyword
+			elseif external_keyword /= Void then
+				Result := external_keyword
+			end
 		end
 
 feature -- Roundtrip
@@ -335,27 +341,48 @@ feature -- Status report
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		local
+			l_break: BREAK_AS
 		do
 			if a_list = Void then
 				if top_indexes /= Void then
-					Result := top_indexes.complete_start_location (a_list)
+					Result := top_indexes.first_token (a_list)
 				else
-					Result := class_name.complete_start_location (a_list)
+					Result := class_name.first_token (a_list)
 				end
 			else
-				Result := a_list.first.complete_start_location (a_list)
+				l_break ?= a_list.first.first_token (a_list)
+				if l_break /= Void then
+					Result := l_break
+				else
+					if internal_top_indexes /= Void then
+						Result :=internal_top_indexes.first_token (a_list)
+					else
+						Result := first_header_mark.first_token (a_list)
+						if Result = Void then
+							Result :=class_keyword.first_token (a_list)
+						end
+					end
+				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		local
+			l_break: BREAK_AS
 		do
 			if a_list = Void then
-				Result := end_keyword.complete_end_location (a_list)
+				Result := end_keyword.last_token (a_list)
 			else
-				Result := a_list.last.complete_end_location (a_list)
+				l_break ?= a_list.last.last_token (a_list)
+				if l_break /= Void then
+					Result := l_break
+				else
+					Result := end_keyword.last_token (a_list)
+				end
 			end
 		end
 

@@ -12,7 +12,7 @@ class
 inherit
 	LEAF_AS
 		redefine
-			text
+			literal_text
 		end
 
 create
@@ -20,54 +20,53 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_text: STRING; a_leaf: LEAF_AS) is
+	make (a_text: STRING; l, c, p, n: INTEGER) is
 			--
 		require
 			a_text_not_void: a_text /= Void
-			a_leaf_not_void: a_leaf /= Void
+			l_non_negative: l >= 0
+			c_non_negative: c >= 0
+			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
-			literal_text := a_text
-			make_from_other (a_leaf)
+			internal_text := a_text
+			set_position (l, c, p, n)
 		ensure
-			literal_text_set: literal_text = a_text
+			internal_text_set: internal_text = a_text
 		end
 
 feature
 
-	text (a_list: LEAF_AS_LIST): STRING is
-		do
-			Result := literal_text
-		end
-
-	literal_text: STRING
+	internal_text: STRING
 			-- Literal text in code
+
+	literal_text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of current AST node
+		require else
+			a_list_can_be_void: a_list = Void
+		do
+			Result := internal_text
+		end
 
 feature
 
 	is_equivalent (other: like Current): BOOLEAN is
 		do
-			check
-				should_not_arrive_here: False
-			end
+			Result := internal_text.is_equal (other.internal_text)
 		end
 
 	process (v: AST_VISITOR) is
 			-- Visitor feature.
 		do
-			check
-				should_not_arrive_here: False
-			end
+			v.process_leaf_stub_as (Current)
 		end
 
 	number_of_breakpoint_slots: INTEGER is
 		do
-			check
-				should_not_arrive_here: False
-			end
 		end
 
 invariant
-	literal_text_not_void: literal_text /= Void
+	internal_text_not_void: internal_text /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

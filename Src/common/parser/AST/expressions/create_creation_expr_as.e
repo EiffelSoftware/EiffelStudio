@@ -33,14 +33,6 @@ feature -- Roundtrip
 	create_keyword: KEYWORD_AS
 			-- Keyword "create" associated with this structure
 
-	set_create_keyword (a_keyword: KEYWORD_AS) is
-			--- Set `create_keyword' with `a_keyword'.
-		do
-			create_keyword := a_keyword
-		ensure
-			create_keyword_set: create_keyword = a_keyword
-		end
-
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -49,23 +41,23 @@ feature -- Visitor
 			v.process_create_creation_expr_as (Current)
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := type.complete_start_location (a_list)
+				Result := type.first_token (a_list)
 			else
-				Result := create_keyword.complete_start_location (a_list)
+				Result := create_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if call /= Void then
-				Result := call.complete_end_location (a_list)
+				Result := call.last_token (a_list)
 			else
-				Result := type.complete_end_location (a_list)
+				Result := type.last_token (a_list)
 			end
 		end
 indexing

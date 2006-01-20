@@ -25,7 +25,7 @@ feature -- Initialization
 			-- Create an email with the 'header_from' and the 'header_to'.
 		require
 			needed_info: header_from /= Void
-						 and then header_to /= Void 
+						 and then header_to /= Void
 		do
 			create headers.make (3)
 			add_header_entry (H_from, header_from)
@@ -37,7 +37,7 @@ feature {NONE} -- Basic operations.
 	transfer (resource: PROTOCOL_RESOURCE) is
 			-- Used when the mailer will receive an email from 'resource'.
 		do
-			
+
 		end
 
 feature -- Basic operations
@@ -77,22 +77,22 @@ feature -- Basic operations
 				if Default_headers.has (header_key) then
 					a_header.enable_contains_addresses
 				end
-			end		
+			end
 		end
 
 	remove_header_entry (header_key, header_entry: STRING) is
 			-- Remove 'header_entry' from header 'header_key'.
 		require
 			header_exists: headers.has (header_key)
-			header_entry_exists: 
+			header_entry_exists:
 					(headers.item (header_key)). entries.has (header_entry)
 		local
-			a_header: HEADER			
+			a_header: HEADER
 		do
 			a_header:= headers.item (header_key)
 			a_header.entries.prune (header_entry)
 		ensure
-			header_entry_no_longer_exists: 
+			header_entry_no_longer_exists:
 					not (headers.item (header_key)). entries.has (header_entry)
 		end
 

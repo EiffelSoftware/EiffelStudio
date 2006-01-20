@@ -212,11 +212,6 @@ cluster
 			".svn"; "xml_implementation"; "graphical"; 
 		end
 
-	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
-		exclude
-			".svn"; 
-		end
-
 external
 
 	include_path:

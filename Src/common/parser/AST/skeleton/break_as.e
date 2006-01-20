@@ -12,7 +12,7 @@ class
 inherit
 	LEAF_AS
 		redefine
-			text
+			is_separator, literal_text
 		end
 
 create
@@ -47,17 +47,92 @@ feature -- Access
 		do
 		end
 
-	text (a_list: LEAF_AS_LIST): STRING is
-			-- Literal text of this token
-		do
-			Result := internal_text
-		end
-
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
 		do
 			v.process_break_as (Current)
+		end
+
+feature -- Separator
+
+	is_separator: BOOLEAN is
+			-- Is current leaf AST node a separator (break or semicolon)?
+		do
+			Result := True
+		end
+
+feature -- Text
+
+	literal_text (a_list: LEAF_AS_LIST): STRING is
+			-- Literal text of current AST node
+		require else
+			a_list_can_be_void: a_list = Void
+		do
+			Result := internal_text
+		end
+
+feature -- Comment extraction
+
+	has_comment: BOOLEAN is
+			-- Doese current node has comment?
+		do
+			Result := internal_text.index_of ('-', 1) > 0
+		end
+
+	extract_comment: EIFFEL_COMMENT_LIST is
+			-- Extract comment lines in current.
+		local
+			l, c, p, n: INTEGER
+			l_own_line: BOOLEAN
+			l_cmt_start: CHARACTER
+			l_new_line: CHARACTER
+			l_in_comment: BOOLEAN
+			l_c: CHARACTER
+			i: INTEGER
+			l_comment_start: INTEGER
+		do
+			l_cmt_start := '-'
+			l_new_line := '%N'
+			l_own_line := column = 1
+			l := line
+			c := column
+			p := 1
+			n := location_count
+			i := 1
+			from
+				create Result.make
+				l_in_comment := False
+			until
+				i > n
+			loop
+				l_c := internal_text.item (i)
+				if l_in_comment then
+					if l_c = l_new_line then
+						Result.extend (create{EIFFEL_COMMENT_LINE}.make (internal_text.substring (l_comment_start, i - 1), l, c, position + l_comment_start - 1, l_own_line, index, l_comment_start))
+						l_in_comment := False
+						l := l + 1
+						c := 1
+						l_own_line := True
+					end
+				else
+					if l_c = l_cmt_start then
+						check internal_text.item (i + 1) = l_cmt_start end
+						l_comment_start := i
+						l_in_comment := True
+						i := i + 1
+					elseif l_c = l_new_line then
+						l := l + 1
+						c := 1
+						l_own_line := True
+					else
+						c := c + 1
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Comparison

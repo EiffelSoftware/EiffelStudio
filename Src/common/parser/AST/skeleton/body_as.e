@@ -88,60 +88,60 @@ feature -- Roundtrip
 	indexing_clause: INDEXING_CLAUSE_AS
 			-- Indexing clause in this structure
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if arguments /= Void then
-					Result := arguments.complete_start_location (a_list)
+					Result := arguments.first_token (a_list)
 				elseif type /= Void then
-					Result := type.complete_start_location (a_list)
+					Result := type.first_token (a_list)
 				elseif content /= Void then
-					Result := content.complete_start_location (a_list)
+					Result := content.first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if internal_arguments /= Void then
-					Result := internal_arguments.complete_start_location (a_list)
+					Result := internal_arguments.first_token (a_list)
 				elseif colon_symbol /= Void then
-					Result := colon_symbol.complete_start_location (a_list)
+					Result := colon_symbol.first_token (a_list)
 				else
-					Result := is_keyword.complete_start_location (a_list)
+					Result := is_keyword.first_token (a_list)
 				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if content /= Void then
-					Result := content.complete_end_location (a_list)
+					Result := content.last_token (a_list)
 				elseif type /= Void then
-					Result := type.complete_end_location (a_list)
+					Result := type.last_token (a_list)
 				elseif arguments /= Void then
-					Result := arguments.complete_end_location (a_list)
+					Result := arguments.last_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if is_routine then
-					Result := content.complete_end_location (a_list)
+					Result := content.last_token (a_list)
 				elseif is_constant then
 					if indexing_clause /= Void then
-						Result := indexing_clause.complete_end_location (a_list)
+						Result := indexing_clause.last_token (a_list)
 					else
-						Result := content.complete_end_location (a_list)
+						Result := content.last_token (a_list)
 					end
 				else
 						-- Attribute case
 					if indexing_clause /= Void then
-						Result := indexing_clause.complete_end_location (a_list)
+						Result := indexing_clause.last_token (a_list)
 					elseif assigner /= Void then
-						Result := assigner.complete_end_location (a_list)
+						Result := assigner.last_token (a_list)
 					else
-						Result := type.complete_end_location (a_list)
+						Result := type.last_token (a_list)
 					end
 				end
 			end

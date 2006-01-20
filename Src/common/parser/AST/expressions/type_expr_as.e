@@ -39,16 +39,16 @@ feature -- Visitor
 			v.process_type_expr_as (Current)
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := type.complete_start_location (a_list)
+			Result := type.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := type.complete_end_location (a_list)
+			Result := type.last_token (a_list)
 		end
 
 feature -- Comparison

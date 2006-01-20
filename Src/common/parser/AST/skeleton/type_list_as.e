@@ -12,51 +12,59 @@ class
 inherit
 	EIFFEL_LIST [TYPE_AS]
 		redefine
-			complete_start_location, complete_end_location
+			first_token, last_token, process
 		end
 
 create
 	make, make_filled
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void and then opening_bracket_location /= Void then
-				Result := opening_bracket_location
+			if opening_bracket_as /= Void then
+				Result := opening_bracket_as.first_token (a_list)
 			else
 				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void and then closing_bracket_location /= Void then
-				Result := closing_bracket_location
+			if closing_bracket_as /= Void then
+				Result := closing_bracket_as.last_token (a_list)
 			else
 				Result := Precursor {EIFFEL_LIST} (a_list)
 			end
+		end
+
+feature -- Visitor
+
+	process (a_visitor: AST_VISITOR) is
+			-- Process current node.
+		do
+			a_visitor.process_type_list_as (Current)
 		end
 
 feature -- Setting
 
-	set_positions (a_opener, a_closer: LOCATION_AS) is
+	set_positions (a_opener, a_closer: SYMBOL_AS) is
 			-- Set `start_location' and `end_location' with `a_opener' and `a_closer'
 			-- if not Void, nothing otherwise
 		do
-			opening_bracket_location := a_opener
-			closing_bracket_location := a_closer
+			opening_bracket_as := a_opener
+			closing_bracket_as := a_closer
 		ensure
-			opening_bracket_location_set: opening_bracket_location = a_opener
-			closing_bracket_location_set: closing_bracket_location = a_closer
+			opening_bracket_as_set: opening_bracket_as = a_opener
+			closing_bracket_as_set: closing_bracket_as = a_closer
 		end
 
-feature {NONE} -- Implementation: Access
+feature
 
-	opening_bracket_location: LOCATION_AS
+	opening_bracket_as: SYMBOL_AS
 			-- Location of `[' if present.
 
-	closing_bracket_location: LOCATION_AS;
+	closing_bracket_as: SYMBOL_AS;
 			-- Location of `]' if present.
 
 indexing
@@ -65,19 +73,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

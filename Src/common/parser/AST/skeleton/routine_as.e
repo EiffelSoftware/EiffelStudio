@@ -106,42 +106,42 @@ feature -- Location
 	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments and obsolete clause)
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if obsolete_message /= Void then
-					Result := obsolete_message.complete_start_location (a_list)
+					Result := obsolete_message.first_token (a_list)
 				elseif precondition /= Void then
-					Result := precondition.complete_start_location (a_list)
+					Result := precondition.first_token (a_list)
 				elseif locals /= Void then
-					Result := locals.complete_start_location (a_list)
-				elseif not routine_body.complete_start_location (a_list).is_null then
-					Result := routine_body.complete_start_location (a_list)
+					Result := locals.first_token (a_list)
+				elseif not routine_body.first_token (a_list).is_null then
+					Result := routine_body.first_token (a_list)
 				elseif postcondition /= Void then
-					Result := postcondition.complete_start_location (a_list)
+					Result := postcondition.first_token (a_list)
 				elseif rescue_clause /= Void then
-					Result := rescue_clause.complete_start_location (a_list)
+					Result := rescue_clause.first_token (a_list)
 				else
-					Result := end_keyword.complete_start_location (a_list)
+					Result := end_keyword.first_token (a_list)
 				end
 			else
 				if obsolete_keyword /= Void then
-					Result := obsolete_keyword.complete_start_location (a_list)
+					Result := obsolete_keyword.first_token (a_list)
 				elseif precondition /= Void then
-					Result := precondition.complete_start_location (a_list)
+					Result := precondition.first_token (a_list)
 				elseif locals /= Void then
-					Result := locals.complete_start_location (a_list)
+					Result := locals.first_token (a_list)
 				else
-					Result := routine_body.complete_start_location (a_list)
+					Result := routine_body.first_token (a_list)
 				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := end_keyword.complete_end_location (a_list)
+			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Properties

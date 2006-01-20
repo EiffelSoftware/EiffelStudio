@@ -40,11 +40,6 @@ feature -- Roundtrip: Match list maintaining
 		do
 		end
 
-	extend_internal_match_list (a_match: LEAF_AS) is
-			-- Extend `internal_match_list' with `a_match'.
-		do
-		end
-
 	clear_internal_match_list is
 			-- Set `internal_match_list' with Void.
 		do
@@ -281,76 +276,52 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_location (l, c, p, s)
 		end
 
-	new_creation_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "creation'
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_end_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "end'
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_frozen_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "frozen'
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_infix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "infix'
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_precursor_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "precursor'.
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_prefix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "prefix'.
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): KEYWORD_AS is
@@ -366,14 +337,14 @@ feature -- Roundtrip: leaf_as
 		end
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
-			-- New symbol AST node	all Eiffel symbols except "[" and "]"
+			-- New symbol AST node for all Eiffel symbols except ";", "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
 		do
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
-			-- New symbol AST node	only for symbol "[" and "]"
+			-- New symbol AST node only for symbol "[" and "]"
 		require
 			a_scn_not_void: a_scn /= Void
 			a_code_is_squre: a_code = {EIFFEL_TOKENS}.te_lsqure or a_code = {EIFFEL_TOKENS}.te_rsqure
@@ -744,16 +715,12 @@ feature -- Access
 			create Result.initialize (a, t, r, c, c_as, k_as, a_as, i_as)
 		end
 
-	new_boolean_as (b: BOOLEAN; l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): BOOL_AS is
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS is
 			-- New BOOLEAN AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.initialize (b, l, c, p, s)
+			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_case_as (i: EIFFEL_LIST [INTERVAL_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; w_as, t_as: KEYWORD_AS): CASE_AS is
@@ -857,16 +824,12 @@ feature -- Access
 			end
 		end
 
-	new_current_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): CURRENT_AS is
+	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS is
 			-- New CURRENT AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_custom_attribute_as (c: CREATION_EXPR_AS; t: TUPLE_AS; k_as: KEYWORD_AS): CUSTOM_ATTRIBUTE_AS is
@@ -885,16 +848,12 @@ feature -- Access
 			end
 		end
 
-	new_deferred_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): DEFERRED_AS is
+	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS is
 			-- New DEFERRED AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_do_as (c: EIFFEL_LIST [INSTRUCTION_AS]; k_as: KEYWORD_AS): DO_AS is
@@ -1241,27 +1200,24 @@ feature -- Access
 			end
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
 			-- New empty ID AST node.
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
+			a_scn_not_void: a_scn /= Void
+		local
+			l_count: INTEGER
 		do
-			create Result.make (s)
-			Result.set_position (l, c, p, s)
+			l_count := a_scn.text_count
+			create Result.make (l_count)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_count)
 		end
 
-	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
 			-- New empty ID AST node.
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
+			a_scn_not_void: a_scn /= Void
 		do
-			Result := new_filled_id_as (a_scn, l, c, p, s)
+			Result := new_filled_id_as (a_scn)
 		end
 
 	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS is
@@ -1498,28 +1454,20 @@ feature -- Access
 			create Result.make (a, k_as, l_as)
 		end
 
-	new_result_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RESULT_AS is
+	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS is
 			-- New RESULT AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-	new_retry_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RETRY_AS is
+	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS is
 			-- New RETRY AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_reverse_as (t: ACCESS_AS; s: EXPR_AS; a_as: SYMBOL_AS): REVERSE_AS is
@@ -1590,9 +1538,7 @@ feature -- Access
 	new_tagged_as (t: ID_AS; e: EXPR_AS; s_as: SYMBOL_AS): TAGGED_AS is
 			-- New TAGGED AST node
 		do
---			if e /= Void then
-				create Result.initialize (t, e, s_as)
---			end
+			create Result.initialize (t, e, s_as)
 		end
 
 	new_tuple_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): TUPLE_AS is
@@ -1603,11 +1549,11 @@ feature -- Access
 			end
 		end
 
-	new_type_dec_as (i: CONSTRUCT_LIST [INTEGER]; t: TYPE_AS; c_as, s_as: SYMBOL_AS): TYPE_DEC_AS is
+	new_type_dec_as (i: CONSTRUCT_LIST [INTEGER]; t: TYPE_AS; c_as: SYMBOL_AS): TYPE_DEC_AS is
 			-- New TYPE_DEC AST node
 		do
 			if i /= Void and t /= Void then
-				create Result.initialize (i, t, c_as, s_as)
+				create Result.initialize (i, t, c_as)
 			end
 		end
 
@@ -1667,16 +1613,12 @@ feature -- Access
 			end
 		end
 
-	new_unique_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): UNIQUE_AS is
+	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS is
 			-- New UNIQUE AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 	new_variant_as (t: ID_AS; e: EXPR_AS; k_as: KEYWORD_AS; s_as: SYMBOL_AS): VARIANT_AS is
@@ -1702,16 +1644,12 @@ feature -- Access
 			end
 		end
 
-	new_void_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): VOID_AS is
+	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS is
 			-- New VOID AST node
 		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
 			a_scn_not_void: a_scn /= Void
 		do
-			create Result.make_with_location (l, c, p, s)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 indexing

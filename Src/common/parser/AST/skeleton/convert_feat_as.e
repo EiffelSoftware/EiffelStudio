@@ -71,22 +71,22 @@ feature -- Access
 	conversion_types: TYPE_LIST_AS
 			-- Types to which we can either convert to or from.
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := feature_name.complete_start_location (a_list)
+			Result := feature_name.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := conversion_types.complete_end_location (a_list)
+				Result := conversion_types.last_token (a_list)
 			else
 				if rparan_symbol /= Void then
-					Result := rparan_symbol.complete_end_location (a_list)
+					Result := rparan_symbol.last_token (a_list)
 				else
-					Result := conversion_types.complete_end_location (a_list)
+					Result := conversion_types.last_token (a_list)
 				end
 			end
 		end

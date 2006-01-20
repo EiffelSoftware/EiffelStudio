@@ -304,8 +304,7 @@ Class_declaration:
 
 End_inheritance_pos: { inheritance_end_position := position } ;
 End_features_pos: { features_end_position := position } ;
-End_feature_clause_pos: { feature_clause_end_position := position };
-
+End_feature_clause_pos: { feature_clause_end_position := position };							 
 -- Indexing
 
 
@@ -320,8 +319,8 @@ Indexing: -- Empty
 		Index_list
 			{
 				$$ := $3
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
+				if $$ /= Void and $1 /= Void then
+					$$.set_indexing_keyword ($1)
 				end				
 				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
@@ -330,8 +329,8 @@ Indexing: -- Empty
 			--- { $$ := Void }
 			{
 				$$ := ast_factory.new_indexing_clause_as (0)
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
+				if $$ /= Void and $1 /= Void then
+					$$.set_indexing_keyword ($1)
 				end
 			}
 	;
@@ -343,8 +342,12 @@ Dotnet_indexing: -- Empty
 		{
 				$$ := ast_factory.new_indexing_clause_as (0)
 				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $2)
+					if $1 /= Void then
+						$$.set_indexing_keyword ($1)
+					end
+					if $2 /= Void then	
+						$$.set_end_keyword ($2)
+					end
 				end		
 		}
 	|	TE_INDEXING
@@ -357,8 +360,12 @@ Dotnet_indexing: -- Empty
 			{
 				$$ := $3
 				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $4)
+					if $1 /= Void then
+						$$.set_indexing_keyword ($1)
+					end
+					if $4 /= Void then	
+						$$.set_end_keyword ($4)
+					end
 				end				
 				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
@@ -648,7 +655,7 @@ Feature_declaration_list: Feature_declaration
 	;
 
 ASemi: -- Empty
-	|	TE_SEMICOLON
+	|	TE_SEMICOLON { $$ := $1 }
 	;
 
 Feature_declaration: { add_counter } New_feature_list { remove_counter } Declaration_body Optional_semicolons
@@ -790,9 +797,9 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Function with arguments
 				if $4 = Void then
-					$$ := ast_factory.new_body_as ($1, $3, Void, $7, Void, $5, Void, $6)
+					$$ := ast_factory.new_body_as ($1, $3, Void, $7, $2, $5, Void, $6)
 				else
-					$$ := ast_factory.new_body_as ($1, $3, $4.second, $7, Void, $5, $4.first, $6)
+					$$ := ast_factory.new_body_as ($1, $3, $4.second, $7, $2, $5, $4.first, $6)
 				end				
 				feature_indexes := $6
 			}
@@ -898,14 +905,14 @@ Rename: TE_RENAME
 			--- { $$ := Void }
 			{
 				$$ := ast_factory.new_eiffel_list_rename_as (0)
-				if $$ /= Void then
+				if $$ /= Void and $1 /= Void then
 					ast_factory.extend_pre_as ($$, $1)
 				end
 			}
 	|	TE_RENAME { add_counter } Rename_list
 			{
 				$$ := $3
-				if $$ /= Void then
+				if $$ /= Void and $1 /= Void then
 					ast_factory.extend_pre_as ($$, $1)
 				end				
 				remove_counter
@@ -946,7 +953,7 @@ New_exports: TE_EXPORT { add_counter } New_export_list
 				else
 					$$ := $3
 				end
-				if $$ /= Void then
+				if $$ /= Void and $1 /= Void then
 					ast_factory.extend_pre_as ($$, $1)
 				end
 				remove_counter
@@ -955,9 +962,9 @@ New_exports: TE_EXPORT { add_counter } New_export_list
 			--- { $$ := Void }
 			{
 				$$ := ast_factory.new_eiffel_list_export_item_as (0)
-				if $$ /= Void then
+				if $$ /= Void and $1 /= Void then
 					ast_factory.extend_pre_as ($$, $1)
-				end			
+				end
 			}
 	;
 
@@ -1079,13 +1086,13 @@ Undefine: TE_UNDEFINE
 			--- { $$ := Void }
 		{
 			$$ := ast_factory.new_eiffel_list_feature_name (0)
-			if $$ /= Void then
+			if $$ /= Void and $1 /= Void then
 				ast_factory.extend_pre_as ($$, $1)
 			end
 		}
 	|	TE_UNDEFINE Feature_list
 			{ $$ := $2 
-				if $$ /= Void then
+				if $$ /= Void and $1 /= Void then
 					ast_factory.extend_pre_as ($$, $1)
 				end
 			}
@@ -1176,7 +1183,7 @@ Entity_declaration_list: Entity_declaration_group
 	;
 
 Entity_declaration_group: { add_counter } Identifier_list { remove_counter } TE_COLON Type ASemi
-			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4, $6) }
+			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4) }
 	;
 
 Identifier_list: Identifier_as_lower
@@ -1321,7 +1328,7 @@ Instruction: Instruction_impl Optional_semicolons
 	;
 
 Optional_semicolons: -- Empty
-	|	Optional_semicolons TE_SEMICOLON
+	| Optional_semicolons TE_SEMICOLON
 	;
 
 Instruction_impl: Creation
@@ -1493,8 +1500,6 @@ Generics_opt: -- Empty
 				$$ := $2
 				if $$ /= Void then
 					$$.set_positions ($1, $3)
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $3)			
 				end
 			}
 	;
@@ -1710,7 +1715,7 @@ Elseif_part: TE_ELSEIF Expression TE_THEN Compound
 	;
 
 Else_part: TE_ELSE Compound 
-			{ $$ := ast_factory.new_keyword_instruction_list_pair ($1,$2) }
+			{ $$ := ast_factory.new_keyword_instruction_list_pair ($1, $2) }
 	;
 
 Multi_branch: TE_INSPECT Expression When_part_list_opt TE_END

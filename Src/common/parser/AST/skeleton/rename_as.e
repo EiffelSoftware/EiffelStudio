@@ -55,16 +55,16 @@ feature -- Attributes
 	new_name: FEATURE_NAME
 			-- New name
 
-feature -- Roundtrip
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := old_name.complete_start_location (a_list)
+			Result := old_name.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := new_name.complete_end_location (a_list)
+			Result := new_name.last_token (a_list)
 		end
 
 feature -- Comparison

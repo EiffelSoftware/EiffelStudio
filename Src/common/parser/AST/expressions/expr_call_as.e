@@ -40,16 +40,16 @@ feature -- Attributes
 	call: CALL_AS
 			-- Expression call
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := call.complete_start_location (a_list)
+			Result := call.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := call.complete_end_location (a_list)
+			Result := call.last_token (a_list)
 		end
 
 feature -- Comparison

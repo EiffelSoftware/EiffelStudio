@@ -64,34 +64,34 @@ feature -- Attribute
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if assertion_list /= Void then
-					Result := assertion_list.complete_start_location (a_list)
+					Result := assertion_list.first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
-				Result := invariant_keyword.complete_start_location (a_list)
+				Result := invariant_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if assertion_list /= Void then
-					Result := assertion_list.complete_end_location (a_list)
+					Result := assertion_list.last_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if full_assertion_list /= Void then
-					Result := full_assertion_list.complete_end_location (a_list)
+					Result := full_assertion_list.last_token (a_list)
 				else
-					Result := invariant_keyword.complete_end_location (a_list)
+					Result := invariant_keyword.last_token (a_list)
 				end
 			end
 		end

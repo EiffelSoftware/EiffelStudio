@@ -51,16 +51,16 @@ feature -- Attributes
 	source: EXPR_AS
 			-- Source of the assignment
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := target.complete_start_location (a_list)
+			Result := target.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := source.complete_end_location (a_list)
+			Result := source.last_token (a_list)
 		end
 
 feature -- Comparison

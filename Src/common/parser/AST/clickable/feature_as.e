@@ -45,12 +45,14 @@ feature {NONE} -- Initialization
 			indexes := i
 			id := an_id
 			next_position := a_pos
+			set_break_included (True)
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
 			indexes_set: indexes = i
 			id_set: id = an_id
 			next_position_set: next_position = a_pos
+			break_included_set: break_included
 		end
 
 feature -- Visitor
@@ -80,24 +82,61 @@ feature -- Location
 			-- Position for the following construct after current.
 			-- Useful to extract comments of an attribute
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	break_included: BOOLEAN
+			-- Is trailing break included when `last_token' is computed?
+			-- This will affect result of `last_token' and `comment' if
+			-- curernt feature is a constant or an attribute.
+
+	set_break_included (b: BOOLEAN) is
+			-- Set `break_included' with `b'.
 		do
-			Result := feature_names.complete_start_location (a_list)
+			break_included := b
+		ensure
+			break_included_set: break_included = b
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := body.complete_end_location (a_list)
-			if Result.is_null then
-				if a_list = Void then
-						-- Non-roundtrip mode
-					Result := feature_names.complete_end_location (a_list)
-				else
-						-- Roundtrip mode
-					Result := create{LOCATION_AS}.make (0, 0, next_position - 1, 0)
+			Result := feature_names.first_token (a_list)
+		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list = Void then
+				Result := body.last_token (a_list)
+				if Result = Void or else Result.is_null then
+					Result := feature_names.last_token (a_list)
 				end
+			else
+				if break_included and (is_attribute or is_constant) then
+					Result := a_list.item_by_end_position (next_position - 1)
+				else
+					Result := body.last_token (a_list)
+				end
+			end
+		end
+
+feature -- Roundtrip/Comment
+
+	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
+			-- Associated comment of current feature
+			-- Result affected by `bread_included'.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_routine: ROUTINE_AS
+			l_end_index: INTEGER
+		do
+			if is_constant or is_attribute then
+				Result := a_list.extract_comment (token_region (a_list)).string_list
+			else
+				l_routine ?= body.content
+				check l_routine /= Void end
+				l_end_index := l_routine.first_token (a_list).index - 1
+				check first_token (a_list).index <= l_end_index end
+				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index)).string_list
 			end
 		end
 
@@ -133,6 +172,15 @@ feature -- Property
 					Result := rout.is_deferred
 				end
 			end
+		end
+
+	is_constant: BOOLEAN is
+			-- Does Current AST represent a constant?
+		local
+			l_constant: CONSTANT_AS
+		do
+			l_constant ?= body.content
+			Result := l_constant /= Void
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

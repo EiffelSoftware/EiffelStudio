@@ -36,22 +36,6 @@ feature -- Roundtrip
 	lbang_symbol, rbang_symbol: SYMBOL_AS
 			-- Symbol "!" associated with this structure
 
-	set_lbang_symbol (a_symbol: SYMBOL_AS) is
-			--- Set `lbang' with `a_symbol'.
-		do
-			lbang_symbol := a_symbol
-		ensure
-			lbang_symbol_set: lbang_symbol = a_symbol
-		end
-
-	set_rbang_symbol (a_symbol: SYMBOL_AS) is
-			--- Set `rbang' with `a_symbol'.
-		do
-			rbang_symbol := a_symbol
-		ensure
-			rbang_symbol_set: rbang_symbol = a_symbol
-		end
-
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -60,27 +44,27 @@ feature -- Visitor
 			v.process_bang_creation_as (Current)
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if type /= Void then
-					Result := type.complete_start_location (a_list)
+					Result := type.first_token (a_list)
 				else
-					Result := target.complete_start_location (a_list)
+					Result := target.first_token (a_list)
 				end
 			else
-				Result := lbang_symbol.complete_start_location (a_list)
+				Result := lbang_symbol.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if call /= Void then
-				Result := call.complete_end_location (a_list)
+				Result := call.last_token (a_list)
 			else
-				Result := target.complete_end_location (a_list)
+				Result := target.last_token (a_list)
 			end
 		end
 

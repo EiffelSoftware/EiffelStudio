@@ -125,6 +125,22 @@ feature --
 			-- Do nothing
 		end
 
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if lcurly_symbol /= Void then
+				Result := lcurly_symbol.first_token (a_list)
+			end
+		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if rcurly_symbol /= Void then
+				Result := rcurly_symbol.first_token (a_list)
+			end
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

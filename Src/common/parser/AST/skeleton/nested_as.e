@@ -56,16 +56,16 @@ feature -- Attributes
 	message: CALL_AS
 			-- Message send to the target
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := target.complete_start_location (a_list)
+			Result := target.first_token (a_list)
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := message.complete_end_location (a_list)
+			Result := message.last_token (a_list)
 		end
 
 feature -- Comparison

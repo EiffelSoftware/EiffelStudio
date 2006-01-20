@@ -43,44 +43,41 @@ feature -- Roundtrip
 	tilda_symbol: SYMBOL_AS
 			-- Symbol "~" or "}~" associated with this structure
 
-	set_tilda_symbol (a_symbol: SYMBOL_AS) is
-			-- Set `tilda_symbol' with `a_symbol'.
-		do
-			tilda_symbol := a_symbol
-		ensure
-			tilda_symbol_set: tilda_symbol = a_symbol
-		end
+feature -- Roundtrip/Token
 
-feature -- Roundtrip/Location
-
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if target /= Void then
-				Result := target.complete_start_location (a_list)
+			if a_list /= Void and lparan_symbol /= Void then
+					-- Roundtrip mode
+				Result := lparan_symbol.first_token (a_list)
+			else
+				if target /= Void then
+					Result := target.first_token (a_list)
+				end
 			end
 			if Result = Void or else Result.is_null then
 				if a_list /= Void then
 						-- Roundtrip mode
-					Result := tilda_symbol.complete_start_location (a_list)
+					Result := tilda_symbol.first_token (a_list)
 				else
-					Result := feature_name.complete_start_location (a_list)
+					Result := feature_name.first_token (a_list)
 				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if operands /= Void then
-					Result := operands.complete_end_location (a_list)
+					Result := operands.last_token (a_list)
 				else
-					Result := feature_name.complete_end_location (a_list)
+					Result := feature_name.last_token (a_list)
 				end
 			else
 				if internal_operands /= Void then
-					Result := internal_operands.complete_end_location (a_list)
+					Result := internal_operands.last_token (a_list)
 				else
-					Result := feature_name.complete_end_location (a_list)
+					Result := feature_name.last_token (a_list)
 				end
 			end
 		end

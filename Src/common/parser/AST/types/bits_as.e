@@ -9,6 +9,9 @@ class BITS_AS
 
 inherit
 	TYPE_AS
+		redefine
+			first_token, last_token
+		end
 
 create
 	initialize
@@ -44,20 +47,26 @@ feature -- Attributes
 	bits_value: INTEGER_AS
 			-- Bits value
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := bits_value.complete_start_location (a_list)
-			else
-				Result := bit_keyword.complete_start_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
+					Result := bits_value.first_token (a_list)
+				else
+					Result := bit_keyword.first_token (a_list)
+				end
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := bits_value.complete_end_location (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := bits_value.last_token (a_list)
+			end
 		end
 
 feature -- Comparison

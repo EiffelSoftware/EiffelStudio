@@ -244,11 +244,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_CREATE
 			}
 [cC][rR][eE][aA][tT][iI][oO][nN]	{				
-				last_keyword_as_value := ast_factory.new_creation_keyword_as (line, column, position, 8, Current)
+				last_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
 				last_token := TE_CREATION				
 			}
 [cC][uU][rR][rR][eE][nN][tT]	{				
-				last_current_as_value := ast_factory.new_current_as (line, column, position, 7, Current)
+				last_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			}
 [dD][eE][bB][uU][gG]	{				
@@ -256,7 +256,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_DEBUG
 			}
 [dD][eE][fF][eE][rR][rR][eE][dD]	{				
-				last_deferred_as_value := ast_factory.new_deferred_as (line, column, position, 8, Current)
+				last_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED			
 			}
 [dD][oO]	{				
@@ -272,7 +272,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_ELSEIF
 			}
 [eE][nN][dD]	{				
-				last_keyword_as_value := ast_factory.new_end_keyword_as (line, column, position, 3, Current)
+				last_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			}
 [eE][nN][sS][uU][rR][eE]	{				
@@ -292,7 +292,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_EXTERNAL
 			}
 [fF][aA][lL][sS][eE]	{				
-				last_bool_as_value := ast_factory.new_boolean_as (False, line, column, position, 5, Current)
+				last_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			}
 [fF][eE][aA][tT][uU][rR][eE]	{				
@@ -304,7 +304,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_FROM
 			}
 [fF][rR][oO][zZ][eE][nN]	{				
-				last_keyword_as_value := ast_factory.new_frozen_keyword_as (line, column, position, 6, Current)
+				last_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			}
 [iI][fF]	{				
@@ -320,7 +320,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_INDEXING
 			}
 [iI][nN][fF][iI][xX]	{				
-				last_keyword_as_value := ast_factory.new_infix_keyword_as (line, column, position, 5, Current)
+				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
 				last_token := TE_INFIX
 			}
 [iI][nN][hH][eE][rR][iI][tT]	{				
@@ -413,11 +413,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_OR
 			}
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	{				
-				last_keyword_as_value := ast_factory.new_precursor_keyword_as (line, column, position, 9, Current)
+				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			}
 [pP][rR][eE][fF][iI][xX]	{				
-				last_keyword_as_value := ast_factory.new_prefix_keyword_as (line, column, position, 6, Current)
+				last_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
 				last_token := TE_PREFIX
 			}
 [rR][eE][dD][eE][fF][iI][nN][eE]	{				
@@ -441,11 +441,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_RESCUE
 			}
 [rR][eE][sS][uU][lL][tT]	{					
-				last_result_as_value := ast_factory.new_result_as (line, column, position, 6, Current)
+				last_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			}
 [rR][eE][tT][rR][yY]	{				
-				last_retry_as_value := ast_factory.new_retry_as (line, column, position, 5, Current)
+				last_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			}
 [sS][eE][lL][eE][cC][tT]	{				
@@ -465,7 +465,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_THEN
 			}
 [tT][rR][uU][eE]	{				
-				last_bool_as_value := ast_factory.new_boolean_as (True, line, column, position, 4, Current)
+				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			}
 [uU][nN][dD][eE][fF][iI][nN][eE]	{				
@@ -473,7 +473,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_UNDEFINE
 			}
 [uU][nN][iI][qQ][uU][eE]	{				
-				last_unique_as_value := ast_factory.new_unique_as (line, column, position, 6, Current)
+				last_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			}
 [uU][nN][tT][iI][lL]	{				
@@ -485,7 +485,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_VARIANT
 			}
 [vV][oO][iI][dD] {				
-				last_void_as_value := ast_factory.new_void_as (line, column, position, 4, Current)
+				last_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			}
 [wW][hH][eE][nN]	{				

@@ -9,6 +9,9 @@ class NONE_TYPE_AS
 
 inherit
 	TYPE_AS
+		redefine
+			first_token, last_token
+		end
 
 create
 	initialize
@@ -35,16 +38,31 @@ feature -- Roundtrip
 	class_name_literal: ID_AS
 			-- Class name literal
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := null_location
+			if a_list = Void then
+				Result := Void
+			else
+				Result := Precursor (a_list)
+				if Result = Void then
+					Result := class_name_literal.first_token (a_list)
+				end
+			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := null_location
+			if a_list = Void then
+				Result := Void
+			else
+				Result := Precursor (a_list)
+				if Result = Void then
+					Result := class_name_literal.last_token (a_list)
+				end
+			end
+
 		end
 
 feature -- Comparison

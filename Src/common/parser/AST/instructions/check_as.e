@@ -66,24 +66,24 @@ feature -- Roundtrip
 			-- Assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if check_list /= Void then
-					Result := check_list.complete_start_location (a_list)
+					Result := check_list.first_token (a_list)
 				else
-					Result := end_keyword.complete_start_location (a_list)
+					Result := end_keyword.first_token (a_list)
 				end
 			else
-				Result := check_keyword.complete_start_location (a_list)
+				Result := check_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := end_keyword.complete_end_location (a_list)
+			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Access

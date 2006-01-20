@@ -66,25 +66,25 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Expression
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if tag /= Void then
-				Result := tag.complete_start_location (a_list)
+				Result := tag.first_token (a_list)
 			else
-				Result := expr.complete_start_location (a_list)
+				Result := expr.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if expr /= Void then
-				Result := expr.complete_end_location (a_list)
+				Result := expr.last_token (a_list)
 			elseif a_list /= Void and then colon_symbol /= Void then
-				Result := colon_symbol.complete_end_location (a_list)
+				Result := colon_symbol.last_token (a_list)
 			else
-				Result := tag.complete_end_location (a_list)
+				Result := tag.last_token (a_list)
 			end
 		end
 

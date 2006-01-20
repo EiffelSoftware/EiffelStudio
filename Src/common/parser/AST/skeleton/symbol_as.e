@@ -12,7 +12,7 @@ class
 inherit
 	LEAF_AS
 		redefine
-			text
+			is_separator
 		end
 
 create
@@ -52,47 +52,12 @@ feature -- Access
 		do
 		end
 
-	text (a_list: LEAF_AS_LIST): STRING is
-			-- Literal text of this token
-		do
-			inspect
-				code
-			 when {EIFFEL_TOKENS}.te_semicolon then Result := ";"
-			 when {EIFFEL_TOKENS}.te_colon then Result := ":"
-			 when {EIFFEL_TOKENS}.te_comma then Result := ","
-			 when {EIFFEL_TOKENS}.te_dotdot then Result := ".."
-			 when {EIFFEL_TOKENS}.te_question then Result := "?"
-			 when {EIFFEL_TOKENS}.te_tilde then Result := "~"
-			 when {EIFFEL_TOKENS}.te_curlytilde then Result := "}~"
-			 when {EIFFEL_TOKENS}.te_dot then Result := "."
-			 when {EIFFEL_TOKENS}.te_address then Result := "$"
-			 when {EIFFEL_TOKENS}.te_assignment then Result := ":="
-			 when {EIFFEL_TOKENS}.te_accept then Result := "?="
-			 when {EIFFEL_TOKENS}.te_eq then Result := "="
-			 when {EIFFEL_TOKENS}.te_lt then Result := "<"
- 			 when {EIFFEL_TOKENS}.te_gt then Result := ">"
-			 when {EIFFEL_TOKENS}.te_le then Result := "<="
- 			 when {EIFFEL_TOKENS}.te_ge then Result := ">="
-			 when {EIFFEL_TOKENS}.te_ne then Result := "/="
-			 when {EIFFEL_TOKENS}.te_lparan then Result := "("
-			 when {EIFFEL_TOKENS}.te_rparan then Result := ")"
-			 when {EIFFEL_TOKENS}.te_lcurly then Result := "{"
- 			 when {EIFFEL_TOKENS}.te_rcurly then Result := "}"
-			 when {EIFFEL_TOKENS}.te_lsqure then Result := "["
- 			 when {EIFFEL_TOKENS}.te_rsqure then Result := "]"
-			 when {EIFFEL_TOKENS}.te_plus then Result := "+"
-			 when {EIFFEL_TOKENS}.te_minus then Result := "-"
-			 when {EIFFEL_TOKENS}.te_star then Result := "*"
-			 when {EIFFEL_TOKENS}.te_slash then Result := "/"
-			 when {EIFFEL_TOKENS}.te_power then Result := "^"
-			 when {EIFFEL_TOKENS}.te_constrain then Result := "->"
-			 when {EIFFEL_TOKENS}.te_bang then Result := "!"
-			 when {EIFFEL_TOKENS}.te_larray then Result := "<<"
-			 when {EIFFEL_TOKENS}.te_rarray then Result := ">>"
-			 when {EIFFEL_TOKENS}.te_div then Result := "//"
-			 when {EIFFEL_TOKENS}.te_mod then Result := "\\"
-			end
+feature -- Roundtrip
 
+	is_separator: BOOLEAN is
+			-- Is current leaf AST node a separator (break or semicolon)?
+		do
+			Result := is_semicolon
 		end
 
 feature -- Status report

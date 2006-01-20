@@ -62,154 +62,6 @@ feature -- Roundtrip
 			separator_list.reverse_extend (l_as)
 		end
 
-	valid_remove_items (item_list: LIST [INTEGER]): BOOLEAN is
-			-- Are items in `item_list' valid to be removed?
-			-- e.g. items are not duplicated in `item_list' and item index are not too small or too large.
-		require
-			item_list /= Void
-		local
-			l_list: ARRAYED_LIST [INTEGER]
-			l_item: INTEGER
-		do
-			create l_list.make (item_list.count)
-			from
-				item_list.start
-				Result := True
-			until
-				item_list.after or not Result
-			loop
-				l_item := item_list.item
-				Result := l_item >= 1 and l_item <= count and not l_list.has (l_item)
-				if Result then
-					l_list.extend (l_item)
-					item_list.forth
-				end
-			end
-		end
-
-	can_remove_items (item_list: LIST [INTEGER]; a_list: LEAF_AS_LIST): BOOLEAN is
-			-- Can items specified in `item_list' be removed?
-		require
-			item_list_not_void: item_list /= Void
-			item_list_not_empty: not item_list.is_empty
-		local
-			l_list: SORTED_TWO_WAY_LIST [INTEGER]
-			l_sep_list: ARRAYED_LIST [INTEGER]
-			l_cnt: INTEGER
-			l_index: INTEGER
-			l_sep_index: INTEGER
-		do
-			Result := valid_remove_items (item_list)
-			if Result then
-				l_list := sorted_remove_items (item_list)
-				create l_sep_list.make (l_list.count)
-				check
-					separator_valid: separator_list /= Void implies separator_list.count = count - 1
-				end
-				l_cnt := 0
-				if separator_list /= Void then
-					l_cnt := separator_list.count
-				end
-				from
-					l_list.start
-				until
-					l_list.after or not Result
-				loop
-					l_index := l_list.item
-					Result := l_index <= count and then i_th (l_index).can_remove_all_text (a_list)
-					if Result then
-						if l_cnt > 0 then
-							l_sep_index := last_to_be_removed_separator (l_index, l_sep_list)
-							Result := Result and separator_list.i_th (l_sep_index).can_remove_all_text (a_list)
-							if Result and not l_sep_list.has (l_sep_index) then
-								l_sep_list.extend (l_sep_index)
-							end
-						end
-					end
-					l_list.forth
-				end
-			end
-		end
-
-	remove_items (item_list: LIST [INTEGER]; a_list: LEAF_AS_LIST) is
-			-- Remove all items specified in `item_list'.
-		require
-			item_list_not_void: item_list /= Void
-			item_list_not_empty: not item_list.is_empty
-			items_can_be_removed: can_remove_items (item_list, a_list)
-		local
-			l_list: SORTED_TWO_WAY_LIST [INTEGER]
-			l_sep_list: ARRAYED_LIST [INTEGER]
-			l_cnt: INTEGER
-			l_index: INTEGER
-			l_sep_index: INTEGER
-		do
-			l_list := sorted_remove_items (item_list)
-			create l_sep_list.make (l_list.count)
-			l_cnt := 0
-			if separator_list /= Void then
-				l_cnt := separator_list.count
-			end
-			from
-				l_list.start
-			until
-				l_list.after
-			loop
-				l_index := l_list.item
-				i_th (l_index).remove_all_text (a_list)
-				if l_cnt > 0 then
-					l_sep_index := last_to_be_removed_separator (l_index, l_sep_list)
-					if not l_sep_list.has (l_sep_index) then
-						l_sep_list.extend (l_sep_index)
-						separator_list.i_th (l_sep_index).remove_all_text (a_list)
-					end
-				end
-				l_list.forth
-			end
-		end
-
-
-
-feature{NONE} -- Roundtrip/Implementation
-
-	sorted_remove_items (item_list: LIST [INTEGER]): SORTED_TWO_WAY_LIST [INTEGER] is
-			-- Sorted `item_list'
-		require
-			item_list_not_void: item_list /= Void
-			item_list_not_empty: not item_list.is_empty
-			items_valid: valid_remove_items (item_list)
-		do
-			create Result.make
-			from
-				item_list.start
-			until
-				item_list.after
-			loop
-				Result.put_front (item_list.item)
-				item_list.forth
-			end
-			Result.sort
-		end
-
-	last_to_be_removed_separator (attached_position: INTEGER; removed_separator_list: LIST [INTEGER]): INTEGER is
-			-- Last separator that should be removed
-		require
-			attached_position_valid: attached_position >= 1 and attached_position <= count
-			removed_separator_list_valid: removed_separator_list /= Void
-		do
-			if attached_position < count then
-				Result := attached_position
-			else
-				from
-					Result := attached_position - 1
-				until
-					Result = 1 or not removed_separator_list.has (Result)
-				loop
-					Result := Result - 1
-				end
-			end
-		end
-
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -237,23 +89,23 @@ feature -- Access
 			end
 		end
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if not is_empty then
-					Result := area.item (0).complete_start_location (a_list)
+					Result := area.item (0).first_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if pre_as_list /= Void and then not pre_as_list.is_empty then
-					Result := pre_as_list.complete_start_location (a_list)
+					Result := pre_as_list.first_token (a_list)
 				elseif not is_empty then
-					Result := i_th (1).complete_start_location (a_list)
+					Result := i_th (1).first_token (a_list)
 				elseif post_as_list /= Void and then not post_as_list.is_empty then
-					Result := post_as_list.i_th (1).complete_start_location (a_list)
+					Result := post_as_list.i_th (1).first_token (a_list)
 				else
 					check
 						should_not_arrive_here: False
@@ -262,21 +114,21 @@ feature -- Roundtrip/Location
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
 				if not is_empty then
-					Result := area.item (count - 1).complete_end_location (a_list)
+					Result := area.item (count - 1).last_token (a_list)
 				else
-					Result := null_location
+					Result := Void
 				end
 			else
 				if post_as_list /= Void and then not post_as_list.is_empty then
-					Result := post_as_list.complete_end_location (a_list)
+					Result := post_as_list.last_token (a_list)
 				elseif not is_empty then
-					Result := i_th (count).complete_end_location (a_list)
+					Result := i_th (count).last_token (a_list)
 				elseif pre_as_list /= Void and then not pre_as_list.is_empty then
-					Result := pre_as_list.i_th (pre_as_list.count).complete_end_location (a_list)
+					Result := pre_as_list.i_th (pre_as_list.count).last_token (a_list)
 				else
 					check
 						should_not_arrive_here: False

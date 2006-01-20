@@ -13,14 +13,9 @@ inherit
 	AST_FACTORY
 		redefine
 			new_internal_match_list,
-			extend_internal_match_list,
 			clear_internal_match_list,
-
 			new_keyword_as,
 			new_symbol_as,
-			new_separator_as,
-			new_new_line_as,
-			new_comment_as,
 			new_current_as,
 			new_deferred_as,
 			new_boolean_as,
@@ -37,9 +32,6 @@ inherit
 
 			new_character_as, new_typed_char_as,
 			set_buffer, append_text_to_buffer,
-			new_separator_as_with_data,
-			new_comment_as_with_data,
-			new_new_line_as_with_data,
 			new_once_string_keyword_as,
 			new_square_symbol_as,
 			new_creation_keyword_as,
@@ -114,17 +106,15 @@ feature -- Match list maintaining
 			a_match.set_index (internal_match_list.count)
 		end
 
-	extend_internal_match_list_with_stub (a_text: STRING; a_match: LEAF_AS) is
-			-- Extend `internal_match_list' withc `a_text'.
-		local
-			l_stub: LEAF_STUB_AS
+	extend_internal_match_list_with_stub (a_match: LEAF_AS; a_stub: LEAF_STUB_AS) is
+			-- Extend `internal_match_list' with stub `a_stub',
+			-- and set index in `a_match'.
 		do
 			if internal_match_list.capacity = internal_match_list.count then
 				internal_match_list.grow (internal_match_list.capacity + 5000)
 			end
-			create l_stub.make (a_text, a_match)
-			l_stub.set_index (internal_match_list.count + 1)
-			internal_match_list.extend (l_stub)
+			a_stub.set_index (internal_match_list.count + 1)
+			internal_match_list.extend (a_stub)
 			a_match.set_index (internal_match_list.count)
 		end
 
@@ -201,7 +191,7 @@ feature -- Roundtrip
 			a_text_not_void: a_text /= Void
 		do
 			create Result.initialize (c, l, co, p, a_text.count)
-			extend_internal_match_list_with_stub (a_text.string, Result)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
 		end
 
 	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
@@ -210,7 +200,7 @@ feature -- Roundtrip
 			a_text_not_void: a_text /= Void
 		do
 			create Result.initialize (t_as, c, l, co, p, n)
-			extend_internal_match_list_with_stub (a_text.string, Result)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
 		end
 
 feature -- Roundtrip
@@ -270,7 +260,7 @@ feature -- Access
 		do
 			if s /= Void then
 				create Result.initialize (s, l, c, p, n)
-				extend_internal_match_list_with_stub (buf.string, Result)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -279,7 +269,7 @@ feature -- Access
 		do
 			if s /= Void and marker /= Void then
 				create Result.initialize (s, marker, is_indentable, l, c, p, n)
-				extend_internal_match_list_with_stub (buf.string, Result)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -290,7 +280,7 @@ feature -- Access
 				create Result.make_from_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list_with_stub (buf.string, Result)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -301,7 +291,7 @@ feature -- Access
 				create Result.make_from_hexa_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list_with_stub (buf.string, Result)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -312,23 +302,29 @@ feature -- Access
 				create Result.make (t, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				extend_internal_match_list_with_stub (buf.string, Result)
+				extend_internal_match_list_with_stub (Result, create {LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
+		local
+			l_count: INTEGER
+			l, c, p: INTEGER
 		do
-
-			create Result.make (s)
-			Result.set_position (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			l := a_scn.line
+			c := a_scn.column
+			p := a_scn.position
+			l_count := a_scn.text_count
+			create Result.make (l_count)
+			Result.set_position (l, c, p, l_count)
+			extend_internal_match_list_with_stub (Result, create {LEAF_STUB_AS}.make (a_scn.text, l, c, p, l_count))
 		end
 
-	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; l, c, p, s: INTEGER; a_index: INTEGER): ID_AS is
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
 			-- New empty ID AST node.
 		do
-			create Result.make (s)
-			Result.set_position (l, c, p, s)
+			create Result.make (a_scn.text_count)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			Result.set_index (a_index)
 		end
 
@@ -341,56 +337,56 @@ feature -- Access
 			create Result.make (l_cnt)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 			a_scn.append_text_substring_to_string (1, l_cnt, Result)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_void_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): VOID_AS is
+	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_unique_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): UNIQUE_AS is
+	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_retry_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RETRY_AS is
+	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_result_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): RESULT_AS is
+	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_boolean_as (b: BOOLEAN; l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): BOOL_AS is
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS is
 		do
-			create Result.initialize (b, l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_current_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): CURRENT_AS is
+	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
-	new_deferred_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): DEFERRED_AS is
+	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS is
 		do
-			create Result.make_with_location (l, c, p, s)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node
 		do
 			create Result.make (a_code, a_scn)
-			extend_internal_match_list_with_stub (a_scn.text, Result)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
 	new_keyword_as_without_extending_list (a_code:INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
@@ -399,37 +395,37 @@ feature -- Access
 			create Result.make (a_code, a_scn)
 		end
 
-	new_creation_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "creation'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_creation, a_scn)
 		end
 
-	new_end_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_end_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "end'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_end, a_scn)
 		end
 
-	new_frozen_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "frozen'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_frozen, a_scn)
 		end
 
-	new_infix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_infix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "infix'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_infix, a_scn)
 		end
 
-	new_precursor_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "precursor'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_precursor, a_scn)
 		end
 
-	new_prefix_keyword_as (l, c, p, s: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node for keyword "prefix'
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_prefix, a_scn)
@@ -439,76 +435,20 @@ feature -- Access
 			-- New KEYWORD AST node
 		do
 			create Result.make_with_data ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
-			extend_internal_match_list_with_stub (a_text.string, Result)
+			extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (a_text.string, l, c, p, n))
 		end
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
 			-- New KEYWORD AST node		
 		do
 			create Result.make (a_code, a_scn)
-			extend_internal_match_list (Result)
+			extend_internal_match_list_with_stub (Result, create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
 			-- New KEYWORD AST node	only for symbol "[" and "]"
 		do
 			Result := new_symbol_as (a_code, a_scn)
-		end
-
-	new_separator_as (a_scn: EIFFEL_SCANNER) is
-			-- New KEYWORD AST node		
-		local
-			s_as: SEPARATOR_AS
-		do
-			create s_as.make (a_scn)
-			extend_internal_match_list (s_as)
-		end
-
-	new_separator_as_with_data (a_text: STRING; l, c, p, s: INTEGER) is
-			-- New  KEYWORD AST node
-		local
-			s_as: SEPARATOR_AS
-		do
-			create s_as.make_with_data (a_text, l, c, p, s)
-			extend_internal_match_list (s_as)
-		end
-
-
-	new_new_line_as (a_scn: EIFFEL_SCANNER) is
-			-- New KEYWORD AST node		
-		local
-			n_as: NEW_LINE_AS
-		do
-			create n_as.make (a_scn)
-			extend_internal_match_list (n_as)
-		end
-
-	new_new_line_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
-			-- New KEYWORD AST node		
-		local
-			n_as: NEW_LINE_AS
-		do
-			create n_as.make_with_data (a_text.string, l, c, p, n)
-			extend_internal_match_list (n_as)
-		end
-
-
-	new_comment_as (a_scn: EIFFEL_SCANNER) is
-			-- New COMMENT_AS node
-		local
-			c_as: COMMENT_AS
-		do
-			create c_as.make (a_scn)
-			extend_internal_match_list (c_as)
-		end
-
-	new_comment_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
-			-- New COMMENT_AS node
-		local
-			c_as: COMMENT_AS
-		do
-			create c_as.make_with_data (a_text.string, l, c, p, n)
-			extend_internal_match_list (c_as)
 		end
 
 	new_break_as (a_scn: EIFFEL_SCANNER) is

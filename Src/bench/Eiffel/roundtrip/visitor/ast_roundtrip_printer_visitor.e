@@ -15,9 +15,6 @@ inherit
 		redefine
 			process_keyword_as,
 			process_symbol_as,
-			process_separator_as,
-			process_new_line_as,
-			process_comment_as,
 			process_bool_as,
 			process_char_as,
 			process_typed_char_as,
@@ -32,7 +29,8 @@ inherit
 			process_integer_as,
 			process_real_as,
 			process_id_as,
-			process_break_as
+			process_break_as,
+			process_symbol_stub_as
 		end
 create
 	make,
@@ -89,21 +87,7 @@ feature -- Roundtrip: process leaf
 			put_string (l_as)
 		end
 
-	process_separator_as (l_as: SEPARATOR_AS) is
-			-- Process `l_as'.
-		do
-			Precursor (l_as)
-			put_string (l_as)
-		end
-
-	process_new_line_as (l_as: NEW_LINE_AS) is
-			-- Process `l_as'.
-		do
-			Precursor (l_as)
-			put_string (l_as)
-		end
-
-	process_comment_as (l_as: COMMENT_AS) is
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
 			-- Process `l_as'.
 		do
 			Precursor (l_as)

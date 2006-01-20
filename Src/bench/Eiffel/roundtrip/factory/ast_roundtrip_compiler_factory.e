@@ -27,13 +27,9 @@ inherit
 	AST_COMPILER_FACTORY
 		undefine
 			new_internal_match_list,
-			extend_internal_match_list,
 			clear_internal_match_list,
 			new_keyword_as,
 			new_symbol_as,
-			new_separator_as,
-			new_new_line_as,
-			new_comment_as,
 			new_current_as,
 			new_deferred_as,
 			new_boolean_as,
@@ -88,6 +84,7 @@ feature -- Roundtrip
 				create Result.make_from_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -100,6 +97,7 @@ feature -- Roundtrip
 				create Result.make_from_hexa_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
+				extend_internal_match_list_with_stub (Result, create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -148,7 +146,6 @@ feature -- Roundtrip
 				Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)
 			end
 			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
-			extend_internal_match_list_with_stub (buffer.string, Result)
 		end
 
 indexing

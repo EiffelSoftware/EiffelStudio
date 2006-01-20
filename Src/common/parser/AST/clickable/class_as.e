@@ -346,6 +346,7 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		local
 			l_break: BREAK_AS
+			l_header: KEYWORD_AS
 		do
 			if a_list = Void then
 				if top_indexes /= Void then
@@ -361,8 +362,10 @@ feature -- Roundtrip/Token
 					if internal_top_indexes /= Void then
 						Result :=internal_top_indexes.first_token (a_list)
 					else
-						Result := first_header_mark.first_token (a_list)
-						if Result = Void then
+						l_header := first_header_mark
+						if l_header /= Void then
+							Result := l_header.first_token (a_list)
+						else
 							Result :=class_keyword.first_token (a_list)
 						end
 					end
@@ -581,19 +584,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

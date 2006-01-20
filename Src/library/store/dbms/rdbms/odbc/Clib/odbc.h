@@ -1,4 +1,4 @@
-/*
+ /*
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1995, Interactive Software Engineering Inc.
@@ -151,6 +151,7 @@ typedef void *          SQLPOINTER;
 #define DB_SIZEOF_MONEY                 sizeof(double)
 #define DB_SIZEOF_REAL                  sizeof(float)
 #define DB_SIZEOF_DOUBLE                sizeof(double)
+#define DB_SIZEOF_DATE					sizeof(TIMESTAMP_STRUCT)
 // Added by Jacques
 #define DB_REP_LEN					128+1
 
@@ -159,9 +160,11 @@ typedef void *          SQLPOINTER;
 #define ODBC_CATALOG_COL        1
 #define ODBC_CATALOG_TAB        2
 #define ODBC_CATALOG_PROC       3
-#define ODBC_TIME		0
-#define ODBC_DATE		1
-#define ODBC_TIMESTAMP		2
+#define ODBC_PK					4
+#define ODBC_FK					5
+#define ODBC_TIME				0
+#define ODBC_DATE				1
+#define ODBC_TIMESTAMP			2
 
 
 /* Raises an "Out of memory" exception
@@ -265,12 +268,13 @@ extern void odbc_close_cursor (int no_des);
 extern int odbc_next_row (int no_des);
 extern int odbc_support_proc();
 extern int odbc_support_create_proc();
+extern int odbc_support_information_schema();
 extern char * odbc_driver_name();
 extern int odbc_insensitive_upper();
 extern int odbc_insensitive_lower();
 extern int odbc_sensitive_mixed();
 extern int odbc_insensitive_mixed();
-extern void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, char *value);
+extern void odbc_set_parameter(int no_desc, int seri, int dir, int eifType, int collen, int value_count, void *value);
 extern void odbc_set_col_flag(int no_desc);
 extern void odbc_set_tab_flag(int no_desc);
 extern void odbc_set_proc_flag(int no_desc);
@@ -282,7 +286,7 @@ extern void odbc_set_qualifier(char *qfy);
 extern void odbc_set_owner(char *owner);
 extern void odbc_unset_catalog_flag(int no_desc);
 extern char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int sec, int type);
-extern char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int sec, int type);
+extern char *odbc_stru_of_date(int year, int month, int day, int hour, int minute, int sec, int frac, int type);
 extern char *odbc_str_from_str(char *ptr);
 extern void odbc_connect (char *name, char *passwd, char *dsn);
 extern void odbc_disconnect ();
@@ -320,6 +324,7 @@ extern void odbc_clear_error ();
 extern int odbc_c_type(int odbc_type);
 extern void odbc_disp_c_type();
 extern void odbc_disp_rec(int no_des);
+extern void odbc_get_col_desc (int no_desc, int index);
 
 /*****************************************************************/
 /*                                                               */

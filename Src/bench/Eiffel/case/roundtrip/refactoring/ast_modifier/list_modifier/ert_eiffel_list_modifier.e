@@ -86,8 +86,6 @@ feature -- Modification apply
 
 	can_apply: BOOLEAN is
 			-- Can all registered modifications be applied?
-		local
-			i: INTEGER
 		do
 			compute_modification
 			Result := modifier_list.for_all (agent {ERT_LIST_ITEM_MODIFIER}.can_apply)

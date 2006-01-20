@@ -147,22 +147,17 @@ feature -- Roundtrip
 		do
 		end
 
-	process_separator_as (l_as: SEPARATOR_AS) is
-			-- Process `l_as'.
-		do
-		end
-
-	process_new_line_as (l_as: NEW_LINE_AS) is
-			-- Process `l_as'.
-		do
-		end
-
-	process_comment_as (l_as: COMMENT_AS) is
-			-- Process `l_as'.
-		do
-		end
-
 	process_break_as (l_as: BREAK_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
 			-- Process `l_as'.
 		do
 		end
@@ -2196,6 +2191,12 @@ feature {NONE} -- Implementation
 	process_type_a (a_type: TYPE_A) is
 		do
 			a_type.append_to (ctxt.text)
+		end
+
+	process_type_list_as (l_as: TYPE_LIST_AS) is
+			-- Process `l_as'.
+		do
+			process_eiffel_list (l_as)
 		end
 
 feature {NONE} -- Implementation: helpers

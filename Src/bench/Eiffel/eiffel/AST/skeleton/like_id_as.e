@@ -51,20 +51,20 @@ feature -- Attributes
 	anchor: ID_AS
 			-- Anchor name
 
-feature -- Roundtrip/Location
+feature -- Roundtrip/Token
 
-	complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			if a_list = Void then
-				Result := anchor.complete_start_location (a_list)
+				Result := anchor.first_token (a_list)
 			else
-				Result := like_keyword.complete_start_location (a_list)
+				Result := like_keyword.first_token (a_list)
 			end
 		end
 
-	complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := anchor.complete_end_location (a_list)
+			Result := anchor.last_token (a_list)
 		end
 
 feature -- Comparison

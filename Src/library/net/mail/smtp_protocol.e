@@ -177,7 +177,7 @@ feature {NONE} -- Basic operations
 
 	send_mails	is
 		do
-			header_from:= memory_resource.header (H_from).unique_entry
+			header_from:= extracted_email (memory_resource.header (H_from).unique_entry)
 			sub_header:= ""
 			set_recipients
 			build_sub_header
@@ -194,27 +194,38 @@ feature {NONE} -- Basic operations
 		do
 			if not bcc_mode then
 				a_header:= memory_resource.header (H_to)
-				recipients:= a_header.entries.twin
-				a_header:= memory_resource.header (H_cc)
+				create recipients.make (a_header.entries.count)
 				if a_header /= Void then
-					from 
+					from
 						a_header.entries.start
 					until
 						a_header.entries.after
 					loop
-						recipients.extend (a_header.entries.item)
+						recipients.extend (extracted_email (a_header.entries.item))
 						a_header.entries.forth
 					end
 				end
+				a_header:= memory_resource.header (H_cc)
 			else
-				recipients:= memory_resource.header (H_bcc).entries
+				a_header := memory_resource.header (H_bcc)
+				create recipients.make (a_header.entries.count)
+			end
+			if a_header /= Void then
+				from
+					a_header.entries.start
+				until
+					a_header.entries.after
+				loop
+					recipients.extend (extracted_email (a_header.entries.item))
+					a_header.entries.forth
+				end
 			end
 		end
 
 	build_sub_header is
 			-- Build the header of the message in 'sub_header'.
 		do
-			from 
+			from
 				memory_resource.headers.start
 			until
 				memory_resource.headers.after
@@ -222,7 +233,7 @@ feature {NONE} -- Basic operations
 				add_sub_header (memory_resource.headers.key_for_iteration)
 				memory_resource.headers.forth
 			end
-			sub_header.append ("%R%N")			
+			sub_header.append ("%R%N")
 		end
 
 	add_sub_header (sub_header_key: STRING) is
@@ -236,7 +247,7 @@ feature {NONE} -- Basic operations
 			a_header: HEADER
 		do
 			a_header:= memory_resource.header (sub_header_key)
-			from 
+			from
 				a_header.entries.start
 			until
 				a_header.entries.after
@@ -263,7 +274,7 @@ feature {NONE} -- Basic operations
 
 			send_command (Mail_from + "<" + header_from + ">", Ok)
 			if not error then
-				from 
+				from
 					recipients.start
 				until
 					recipients.after
@@ -320,6 +331,24 @@ feature {NONE} -- Implementation
 	disable_bcc_mode is
 		do
 			bcc_mode:= False
+		end
+
+	extracted_email (a_text: STRING): STRING is
+			-- Extract email address from `a_text'.
+		require
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.is_empty
+		local
+			l_pos1, l_pos2: INTEGER
+		do
+			Result := a_text
+			l_pos1 := a_text.index_of ('<', 1)
+			if l_pos1 > 1 then
+				l_pos2 := a_text.index_of ('>', l_pos1)
+				if l_pos2 > l_pos1 then
+					Result := a_text.substring (l_pos1 + 1,  l_pos2 - 1)
+				end
+			end
 		end
 
 end -- class SMTP_PROTOCOL

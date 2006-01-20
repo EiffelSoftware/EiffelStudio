@@ -9,6 +9,13 @@ indexing
 							1. invoke `set_will_process_leading_leaves' to let the visitor process leading breaks and optional semicolons
 							2. invoke `set_will_process_trailing_leaves' to let the visitor process trailing breaks
 						or you can call `setup' to do all the things at one time.
+					Note: 1. Always `call process_ast_node' to process an AST node, do not use process_xxx directly.
+						  2. `process_leading_leaves' and `process_trailing_leaves' are designed to deal with
+						  	 non-attached terminals (For more information, see `LEAF_AS_LIST') to make sure they can be
+						  	 processed correctly. Before we process every attached terminal, we check if there is any
+						  	 non-attached terminal that has not been processed, if so, we process those terminals first. And after we
+						  	 have process the last attached-terminal, we check any non-attached terminals have been left, if so,
+						  	 we process thoes as well.
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -132,29 +139,22 @@ feature -- Roundtrip: process leaf
 			last_index := l_as.index
 		end
 
-	process_separator_as (l_as: SEPARATOR_AS) is
-			-- Process `l_as'.
-		do
-			process_leading_leaves (l_as.index)
-			last_index := l_as.index
-		end
-
-	process_new_line_as (l_as: NEW_LINE_AS) is
-			-- Process `l_as'.
-		do
-			process_leading_leaves (l_as.index)
-			last_index := l_as.index
-		end
-
-	process_comment_as (l_as: COMMENT_AS) is
-			-- Process `l_as'.
-		do
-			process_leading_leaves (l_as.index)
-			last_index := l_as.index
-		end
-
 	process_break_as (l_as: BREAK_AS) is
 			-- Process `l_as'.			
+		do
+			process_leading_leaves (l_as.index)
+			last_index := l_as.index
+		end
+
+	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+			-- Process `l_as'.
+		do
+			process_leading_leaves (l_as.index)
+			last_index := l_as.index
+		end
+
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
+			-- Process `l_as'.
 		do
 			process_leading_leaves (l_as.index)
 			last_index := l_as.index
@@ -352,11 +352,8 @@ feature
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
-		local
-			feature_keyword: LEAF_AS
 		do
-			feature_keyword ?= l_as.feature_keyword
-			safe_process (feature_keyword)
+			safe_process (l_as.feature_keyword)
 			safe_process (l_as.clients)
 			safe_process (l_as.features)
 		end
@@ -502,7 +499,9 @@ feature
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
 		do
+			safe_process (l_as.indexing_keyword)
 			process_eiffel_list (l_as)
+			safe_process (l_as.end_keyword)
 		end
 
 	process_operand_as (l_as: OPERAND_AS) is
@@ -890,7 +889,6 @@ feature
 			safe_process (id_list.id_list)
 			safe_process (l_as.colon_symbol)
 			safe_process (l_as.type)
-			safe_process (l_as.semicolon_symbol)
 		end
 
 	process_class_as (l_as: CLASS_AS) is
@@ -933,53 +931,69 @@ feature
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.like_keyword)
 			safe_process (l_as.anchor)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.like_keyword)
 			safe_process (l_as.current_keyword)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.reference_expanded_keyword)
 			safe_process (l_as.name)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.formal_para)
 			safe_process (l_as.constrain_symbol)
 			safe_process (l_as.constraint)
 			safe_process (l_as.creation_feature_list)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.expanded_keyword)
 			safe_process (l_as.separate_keyword)
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.class_name_literal)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_bits_as (l_as: BITS_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.bit_keyword)
 			safe_process (l_as.bits_value)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
 		do
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.bit_keyword)
 			safe_process (l_as.bits_symbol)
+			safe_process (l_as.rcurly_symbol)
 		end
 
 	process_rename_as (l_as: RENAME_AS) is
@@ -1090,10 +1104,17 @@ feature
 			end
 		end
 
+	process_type_list_as (l_as: TYPE_LIST_AS) is
+		do
+			safe_process (l_as.opening_bracket_as)
+			process_eiffel_list (l_as)
+			safe_process (l_as.closing_bracket_as)
+		end
+
 feature
 
 	process_all_break_as is
-			-- Process all BREAK AST nodes.
+			-- Process all BREAK AST nodes in `match_list'.
 		require
 			match_list_not_void: match_list /= Void
 			leading_leaves_not_processed: not will_process_leading_leaves

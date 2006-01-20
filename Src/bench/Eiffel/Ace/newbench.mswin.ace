@@ -316,11 +316,6 @@ cluster
 			".svn"; 
 		end
 
-	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
-		exclude
-			".svn"; 
-		end
-
 	all diff:		"$EIFFEL_SRC\library\diff"
 		exclude
 			".svn"; 

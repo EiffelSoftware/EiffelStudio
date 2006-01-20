@@ -799,11 +799,6 @@ feature -- External
 			Result := odbc_support_proc
 		end
 
-	support_information_schema: INTEGER is
-		do
-			Result := odbc_support_information_schema
-		end
-
 feature {NONE} -- External features
 
 	odbc_get_error_message: POINTER is
@@ -1056,11 +1051,6 @@ feature {NONE} -- External features
 		end
 
 	odbc_support_proc: INTEGER is
-		external
-			"C use %"odbc.h%""
-		end
-
-	odbc_support_information_schema: INTEGER is
 		external
 			"C use %"odbc.h%""
 		end

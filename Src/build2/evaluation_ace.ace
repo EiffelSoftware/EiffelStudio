@@ -85,11 +85,6 @@ cluster
 			"error_handler.e"; "syntax_error.e"; 
 		end
 
-	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
-		exclude
-			".svn"; 
-		end
-
 external
 
 	include_path:

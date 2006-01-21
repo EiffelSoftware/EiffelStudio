@@ -84,31 +84,23 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Comments
 
-	feature_comment (a_list: LEAF_AS_LIST): STRING is
+	feature_clause_comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
 			-- First line of comments on `Current'
 		require
 			a_list_not_void: a_list /= Void
 		local
 			l_end_index: INTEGER
 			l_leaf: LEAF_AS
-			l_cmt_list: EIFFEL_COMMENT_LIST
-			l_cmt: EIFFEL_COMMENTS
 		do
-			if features = Void or features.is_empty then
+			if features = Void or else features.is_empty then
 				l_leaf := a_list.item_by_end_position (feature_clause_end_position)
 				check l_leaf /= Void end
-				l_end_index := l_leaf.index - 1
+				l_end_index := l_leaf.index
 			else
 				l_end_index := features.first_token (a_list).index - 1
 			end
 			check first_token (a_list).index + 1 <= l_end_index end
-			l_cmt_list := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
-			l_cmt := l_cmt_list.string_list
-			if l_cmt.is_empty then
-				create Result.make (0)
-			else
-				Result := l_cmt.first
-			end
+			Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
 		end
 
 feature -- Comments
@@ -284,7 +276,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		do
 			clients := c
 		end
-
+		
 invariant
 	features_not_void: features /= Void
 	feature_location_not_void: feature_keyword /= Void
@@ -295,19 +287,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

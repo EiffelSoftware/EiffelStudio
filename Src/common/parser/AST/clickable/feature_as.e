@@ -130,13 +130,13 @@ feature -- Roundtrip/Comment
 			l_end_index: INTEGER
 		do
 			if is_constant or is_attribute then
-				Result := a_list.extract_comment (token_region (a_list)).string_list
+				Result := a_list.extract_comment (token_region (a_list))
 			else
 				l_routine ?= body.content
 				check l_routine /= Void end
 				l_end_index := l_routine.first_token (a_list).index - 1
 				check first_token (a_list).index <= l_end_index end
-				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index)).string_list
+				Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index))
 			end
 		end
 
@@ -388,19 +388,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

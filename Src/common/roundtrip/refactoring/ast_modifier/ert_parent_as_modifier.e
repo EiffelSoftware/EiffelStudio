@@ -182,7 +182,7 @@ feature{NONE} -- Initialization
 			l_sep_list.extend (",")
 			l_sep_list.extend (",")
 
-			l_head_list.extend ("%N%T%Trenaming")
+			l_head_list.extend ("%N%T%Trename")
 			l_head_list.extend ("%N%T%Texport")
 			l_head_list.extend ("%N%T%Tundefine")
 			l_head_list.extend ("%N%T%Tredefine")

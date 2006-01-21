@@ -80,7 +80,7 @@ feature -- Comment extraction
 			Result := internal_text.index_of ('-', 1) > 0
 		end
 
-	extract_comment: EIFFEL_COMMENT_LIST is
+	extract_comment: EIFFEL_COMMENTS is
 			-- Extract comment lines in current.
 		local
 			l, c, p, n: INTEGER
@@ -91,6 +91,8 @@ feature -- Comment extraction
 			l_c: CHARACTER
 			i: INTEGER
 			l_comment_start: INTEGER
+			l_str: STRING
+			l_is_imp: BOOLEAN
 		do
 			l_cmt_start := '-'
 			l_new_line := '%N'
@@ -109,7 +111,18 @@ feature -- Comment extraction
 				l_c := internal_text.item (i)
 				if l_in_comment then
 					if l_c = l_new_line then
-						Result.extend (create{EIFFEL_COMMENT_LINE}.make (internal_text.substring (l_comment_start, i - 1), l, c, position + l_comment_start - 1, l_own_line, index, l_comment_start))
+						l_is_imp := False
+						if l_comment_start + 2 <= i - 1 then
+							l_str := internal_text.substring (l_comment_start + 2, i - 1)
+							if l_str.item (1) = '|' then
+								l_is_imp := True
+								l_str.remove (1)
+							end
+							l_str.replace_substring_all ("%R", "")
+						else
+							l_str := ""
+						end
+						Result.extend (create{EIFFEL_COMMENT_LINE}.make_with_data (l_str, l, c, position + l_comment_start - 1, l_own_line, l_is_imp, index, l_comment_start))
 						l_in_comment := False
 						l := l + 1
 						c := 1
@@ -164,19 +177,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

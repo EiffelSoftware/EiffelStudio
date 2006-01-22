@@ -23,9 +23,9 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 			-- Process user entries
-		do 
+		do
 			build_finish
 			launch_operations
 			send_errors
@@ -35,7 +35,7 @@ feature -- basic Operations
 				-- clause `first_window.is_destroyed' is thus not met but can be commented.
 			entries_changed := False
 			current_application.destroy
-				-- 
+				--
 		end
 
 	display_state_text is
@@ -60,19 +60,19 @@ feature -- basic Operations
 
 	final_message: STRING is "All files have been successfully Generated !!!"
 
-	pixmap_icon_location: FILE_NAME is 
+	pixmap_icon_location: FILE_NAME is
 			--
 		do
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
 
-	build_finish is 
+	build_finish is
 			-- Build user entries.
 		do
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
-			create progress 
+			create progress
 			progress.set_minimum_height (20)
 			progress.set_minimum_width (100)
 			create progress_text
@@ -109,7 +109,7 @@ feature -- basic Operations
 			li := wizard_information.table_list
 				-- 2 classes are generated for a db table.
 			total := li.count
-			if wizard_information.new_project then	
+			if wizard_information.new_project then
 				total := total + 8
 				if is_oracle (wizard_information.dbms_code) then
 					total := total - 1
@@ -148,20 +148,20 @@ feature -- basic Operations
 			end
 			generate_access_class
 			copy_class ("db_specific_tables_access_use")
-			
+
 				-- Modified by Cedric R.
 			if wizard_information.new_project then
 				generate_ace_file
-				load_management_classes	
-				load_example_classes	
+				load_management_classes
+				load_example_classes
 				if wizard_information.vision_example then
 					generate_db_interface_class
 				else
-					generate_repositories	
+					generate_repositories
 					generate_example
-				end				
+				end
 				if to_compile then
-					progress_text.set_text (" Preparing for Compilation ...")		
+					progress_text.set_text (" Preparing for Compilation ...")
 					if is_oracle (wizard_information.dbms_code) then
 						create ebench_launcher.make ("ace_mswin_oracle.ace", wizard_information.location, wizard_information.project_name)
 					else
@@ -174,7 +174,7 @@ feature -- basic Operations
 			end
 		rescue
 			b:= TRUE
-			retry 
+			retry
 		end
 
 
@@ -286,7 +286,7 @@ feature {NONE} -- Processing
 				-- Add error handling.
 			end
 		end
-		
+
 	generate_class (rep: DB_REPOSITORY; class_number: INTEGER; generation_type: INTEGER) is
 			-- Generate class according to class whose name is `s'.
 		require
@@ -502,7 +502,7 @@ feature {NONE} -- Processing
 					new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","")
 				else
 					new_s.replace_substring_all ("<FL_TAG_PRECOMPILED>","--")
-				end			
+				end
 				fi.close
 				create f_name.make_from_string (wizard_information.location)
 				f_name.extend (name)
@@ -545,7 +545,7 @@ feature {NONE} -- Processing
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
 			s: STRING
-			example_generator: EXAMPLE_GENERATOR 
+			example_generator: EXAMPLE_GENERATOR
 			root_generator: ROOT_GENERATOR
 			rescued: BOOLEAN
 		do
@@ -560,7 +560,7 @@ feature {NONE} -- Processing
 				create fi.make_open_read_append (f_name)
 				fi.put_string (s)
 				fi.close
-				
+
 				notify_user ("Generating Root Class...")
 				create f1.make_from_string (wizard_information.location)
 				f_name := clone (f1)
@@ -585,7 +585,7 @@ feature {NONE} -- Processing
 			rescued := True
 			retry
 		end
-	
+
 	generate_db_interface_class is
 			-- Generate the interface class enabling the graphic HCI to access data from the database.
 		local
@@ -617,7 +617,7 @@ feature {NONE} -- Processing
 			rescued := True
 			retry
 		end
-			
+
 	replace_interface_tags (s: STRING) is
 			-- Replace the tags to match the user's given information (in MY_DB_INFO). Added by Cedric R.
 		local
@@ -631,8 +631,8 @@ feature {NONE} -- Processing
 			if is_oracle (wizard_information.dbms_code) then
 				s.replace_substring_all ("<FL_HANDLE>", "ORACLE")
 			elseif is_odbc (wizard_information.dbms_code) then
-				s.replace_substring_all ("<FL_HANDLE>", "ODBC")				
-			end 
+				s.replace_substring_all ("<FL_HANDLE>", "ODBC")
+			end
 			replace_db_connection_tags (s)
 		end
 
@@ -644,7 +644,7 @@ feature {NONE} -- Processing
 			s.replace_substring_all ("<TAG_PASSWORD>", wizard_information.password)
 			s.replace_substring_all ("<TAG_DATA_SOURCE>", wizard_information.data_source)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	repositories: ARRAYED_LIST [DB_REPOSITORY]
@@ -686,15 +686,15 @@ feature {NONE} -- Implementation
 
 	Id_code_tag: STRING is "<IC>"
 		-- Tag representing ID code.
-		
+
 	To_create_htable_tag: STRING is "<CH>"
 		-- Tag representing content of hash table enabling
 		-- to create table rows.
-		
+
 	To_delete_htable_tag: STRING is "<DH>"
 		-- Tag representing content of hash table enabling
 		-- to delete table rows.
-		
+
 	Container_type: INTEGER is 1
 		-- Type of generation for `generate_class':
 		-- class to generate carries values of corresponding database table rows.
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 
 	table_constraints_generator: TABLE_CONSTRAINTS_GENERATOR
 		-- Generates specific table constraints description.
-		
+
 	retrieve_resource_file_content (file_name: STRING): STRING is
 			-- Return content of resource file named `file_name'.
 		require
@@ -741,7 +741,7 @@ feature {NONE} -- Implementation
 			rescued := True
 			retry
 		end
-		
+
 	generate_file (file_name, file_content: STRING) is
 			-- Generate `file_name' at location indicated by the
 			-- user. Fill file with `file_content'.
@@ -769,7 +769,7 @@ feature {NONE} -- Implementation
 			rescued := True
 			retry
 		end
-		
+
 	copy_file (name, extension, destination: STRING) is
 			-- Copy resource class whose name is `name' and `extension'
 			-- to `destination'.

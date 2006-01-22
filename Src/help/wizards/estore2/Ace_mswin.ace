@@ -29,19 +29,22 @@ cluster
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"desc"; "table_eiffel3"; 
+			"desc"; "table_eiffel3"; ".svn"
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "gtk2"; "test"; 
+			"gtk"; "gtk2"; "test"; ".svn"
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			".svn"
+		end
 
 	all wizard_tool:		"$EIFFEL_SRC\library\wizard"
 		exclude
-			"CVS"; "unix"; 
+			".svn"; "unix"; 
 		end
 
 	time:		"$EIFFEL_SRC\library\time"
@@ -52,19 +55,22 @@ cluster
 
 	all store:		"$EIFFEL_SRC\library\store"
 		exclude
-			"CVS"; "dataview"; "dbms"; 
+			".svn"; "dataview"; "dbms"; 
 		end
 
 	store_support:		"$EIFFEL_SRC\library\store\dbms\support"
 
 	store_oracle:		"$EIFFEL_SRC\library\store\dbms\rdbms\oracle"
 		exclude
-			"oracle55.e"; 
+			"oracle.e"; 
 		end
 
 	store_odbc:		"$EIFFEL_SRC\library\store\dbms\rdbms\odbc"
 
 	all eldora:		"$EIFFEL_SRC\library\eldora"
+		exclude
+			".svn"
+		end
 
 external
 

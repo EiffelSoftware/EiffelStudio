@@ -39,7 +39,7 @@ feature -- Status report
 		do
 			Result := table_name /= Void
 		end
-		
+
 	scope_tables_set: BOOLEAN is
 			-- Are scope tables set?
 		do
@@ -48,7 +48,7 @@ feature -- Status report
 
 	generated: BOOLEAN
 			-- Have constraint definitions been generated?
-	
+
 feature -- Access
 
 	id_name: STRING is
@@ -56,20 +56,30 @@ feature -- Access
 		require
 			generated: generated
 		do
-			if id_constraint /= Void then
-				Result := id_constraint.column_name
-				Result.to_lower
-				to_initcap (Result)
+			if is_oracle (dbms_code) then
+				if id_constraint /= Void then
+					Result := id_constraint.column_name
+					Result.to_lower
+					to_initcap (Result)
+				else
+					Result := No_id
+				end
 			else
-				Result := No_id
+				if odbc_id_constraint /= Void then
+					Result := odbc_id_constraint.column_name
+					Result.to_lower
+					to_initcap (Result)
+				else
+					Result := No_id
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
-		end			
-			
+		end
+
 	to_create_htable: STRING is
 			-- Definition of hash table representing the
-			-- list of associated necessary tables and the  
+			-- list of associated necessary tables and the
 			-- linking foreign keys.
 		require
 			generated: generated
@@ -77,7 +87,7 @@ feature -- Access
 			Result := to_create_ht
 		ensure
 			result_not_void: Result /= Void
-		end			
+		end
 
 	to_delete_htable: STRING is
 			-- Definition of hash table representing the
@@ -89,7 +99,7 @@ feature -- Access
 			Result := to_delete_ht
 		ensure
 			result_not_void: Result /= Void
-		end			
+		end
 
 feature -- Basic operations
 
@@ -139,10 +149,10 @@ feature {NONE} -- Implementation
 
 	table_name: STRING
 			-- Table name.
-	
+
 	scope_tables: ARRAYED_LIST [STRING]
 			-- Names of tables seen by the table.
-	
+
 	constraint_information (constraint_id: STRING): USER_CONS_COLUMNS is
 			-- Constraint information of constraint with `constraint_id'.
 			-- Returns `Void' if attribute concerned is not unique.
@@ -150,13 +160,17 @@ feature {NONE} -- Implementation
 			res_list: ARRAYED_LIST [USER_CONS_COLUMNS]
 			q: STRING
 		do
-			create Result.make
-			q := select_with_constraint_name (constraint_id)
-			res_list := db_manager (dbms_code).load_list_with_select (q, Result)
-			if res_list.count = 1 then
-				Result := res_list.first
+			if is_oracle (dbms_code) then
+				create Result.make
+				q := select_with_constraint_name (constraint_id)
+				res_list := db_manager (dbms_code).load_list_with_select (q, Result)
+				if res_list.count = 1 then
+					Result := res_list.first
+				else
+					Result := Void
+				end
 			else
-				Result := Void
+
 			end
 		ensure
 			coherent: Result /= Void implies constraint_id.is_equal (Result.constraint_name)
@@ -185,7 +199,7 @@ feature {NONE} -- Implementation
 			Result := "Select * from USER_CONS_COLUMNS where constraint_name = '"
 					+ cons_name + "'"
 		end
-		
+
 	select_with_type_and_table (c_type, table: STRING): STRING is
 			-- Select query on table USER_CONSTRAINTS qualified
 			-- by 'constraint_type' and 'table_name'.
@@ -211,18 +225,23 @@ feature {NONE} -- Implementation
 	id_constraint: USER_CONS_COLUMNS
 			-- Constraint description containing `id_name'.
 
+	odbc_id_constraint: ODBC_CONS_COLUMN
+			-- Constraint description containing `id_name'.
+
 	to_create_ht: STRING
 			-- `to_create_htable' implementation.
-			
+
 	to_delete_ht: STRING
 			-- `to_delete_htable' implementation.
-			
+
 	generate_to_create_ht is
 			-- Generate description of `to_create_htable'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
 			cons_descr: USER_CONS_COLUMNS
 			fkey_n, table_n: STRING
+			fk_list: ARRAYED_LIST [ODBC_FOREIGN_KEY_RESULT]
+			fk, fkitem: ODBC_FOREIGN_KEY_RESULT
 		do
 			if is_oracle (dbms_code) then
 				cons_list := constraints_from_type_and_table (Oracle_fkey_type, table_name)
@@ -239,7 +258,7 @@ feature {NONE} -- Implementation
 					fkey_n := cons_descr.column_name
 					fkey_n.to_lower
 					to_initcap (fkey_n)
-					to_create_ht.append ("%T%T%TResult.extend (" + fkey_n)
+					to_create_ht.append ("%T%T%TResult.force (" + fkey_n)
 					cons_descr := constraint_information (cons_list.item.r_constraint_name)
 					table_n := cons_descr.table_name
 					table_n.to_lower
@@ -248,7 +267,28 @@ feature {NONE} -- Implementation
 					cons_list.forth
 				end
 			else
-				to_create_ht := Odbc_message
+				create fk.make
+				fk_list := db_manager (dbms_code).load_list_with_select ("SqlForeignKeys (" + table_name + ")", fk)
+
+				to_create_ht := "create Result.make (" + fk_list.count.out + ")%N"
+				from
+					fk_list.start
+				until
+					fk_list.after
+				loop
+					fkitem := fk_list.item
+					fkey_n := fkitem.fkcolumn_name
+					fkey_n.to_lower
+					to_initcap (fkey_n)
+
+					table_n := fkitem.pktable_name
+					table_n.to_lower
+					to_initcap (table_n)
+
+					to_create_ht.append ("%T%T%TResult.force (" + fkey_n)
+					to_create_ht.append (", tables." + table_n + ")%N")
+					fk_list.forth
+				end
 			end
 		end
 
@@ -256,6 +296,8 @@ feature {NONE} -- Implementation
 			-- Generate `id_name'.
 		local
 			cons_list: ARRAYED_LIST [USER_CONSTRAINTS]
+			pk_list: ARRAYED_LIST [ODBC_PRIMARY_KEY_RESULT]
+			pk: ODBC_PRIMARY_KEY_RESULT
 		do
 				-- Assume that there is no ID constraint.
 			id_constraint := Void
@@ -268,6 +310,16 @@ feature {NONE} -- Implementation
 				if not cons_list.is_empty then
 					id_constraint := constraint_information (cons_list.first.constraint_name)
 				end
+			else
+				create pk.make
+				pk_list := db_manager (dbms_code).load_list_with_select ("SqlPrimaryKeys (" + table_name + ")", pk)
+				check
+					Result_not_void: pk_list /= Void
+					Unique_result: pk_list.count <= 1
+				end
+				if not pk_list.is_empty then
+					create odbc_id_constraint.make (pk_list.first.table_name, pk_list.first.column_name)
+				end
 			end
 		end
 
@@ -278,6 +330,8 @@ feature {NONE} -- Implementation
 			cons_descr: USER_CONS_COLUMNS
 			item: USER_CONSTRAINTS
 			table_n, fkey_n: STRING
+			fk_list: ARRAYED_LIST [ODBC_FOREIGN_KEY_RESULT]
+			fk, fkitem: ODBC_FOREIGN_KEY_RESULT
 		do
 			if is_oracle (dbms_code) then
 				if id_constraint /= Void then
@@ -301,7 +355,7 @@ feature {NONE} -- Implementation
 						fkey_n := cons_descr.column_name
 						fkey_n.to_lower
 						to_initcap (fkey_n)
-						to_delete_ht.append ("%T%T%TResult.extend (tables." + table_n
+						to_delete_ht.append ("%T%T%TResult.force (tables." + table_n
 								+ "_description." + fkey_n)
 						to_initcap (table_n)
 						to_delete_ht.append (", tables." + table_n + ")%N")
@@ -311,12 +365,34 @@ feature {NONE} -- Implementation
 					to_delete_ht := "create Result.make (0)%N"
 				end
 			else
-				to_delete_ht := Odbc_message
+				if odbc_id_constraint /= Void then
+					create fk.make
+					fk_list := db_manager (dbms_code).load_list_with_select ("SqlForeignKeysPrimary (" + table_name + ")", fk)
+					to_delete_ht := "create Result.make (" + fk_list.count.out + ")%N"
+					from
+						fk_list.start
+					until
+						fk_list.after
+					loop
+						fkitem := fk_list.item
+						table_n := fkitem.fktable_name
+						table_n.to_lower
+						to_initcap (table_n)
+
+						fkey_n := fkitem.fkcolumn_name
+						fkey_n.to_lower
+						to_initcap (fkey_n)
+
+						to_delete_ht.append ("%T%T%TResult.force (tables." + table_n
+								+ "_description." + fkey_n)
+						to_delete_ht.append (", tables." + table_n + ")%N")
+						fk_list.forth
+					end
+				else
+					to_delete_ht := "create Result.make (0)%N"
+				end
 			end
 		end
-
-	Odbc_message: STRING is "-- Please enter definition here.%N"
-			-- Message for ODBC.
 
 	No_id: STRING is "No_id"
 			-- No ID value.

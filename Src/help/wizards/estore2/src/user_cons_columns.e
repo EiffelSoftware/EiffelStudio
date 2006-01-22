@@ -19,7 +19,7 @@ feature -- Initialization
 			create owner.make (30)
 			create constraint_name.make (30)
 			create table_name.make (30)
-			create column_name.make (4000)
+			create column_name.make (4000)			
 		end
 
 feature -- Implementation

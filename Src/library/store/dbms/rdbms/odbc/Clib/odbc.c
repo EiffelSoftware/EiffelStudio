@@ -325,25 +325,30 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 {
 	ODBCSQLDA *dap=odbc_descriptor[no_desc];
 	//short colNum;
-	int i, j;
+	int i, j, is_as_primary = 0;
+	size_t order_count, buf_count;
 	//int type;
 	//SWORD indColName;
 	//SWORD tmpNullable;
 	//int bufSize;
 	//char *dataBuf;
 
-	char tmpBuf[DB_MAX_TABLE_LEN];
+#define COMPARED_LENGTH	9
+
+	char tmpBuf[DB_MAX_TABLE_LEN + 1];
 	char sqltab[30];
 	char sqlcol[30];
 	char sqlproc[30];
 	char sqlpk[30];
 	char sqlfk[30];
+	char sqlfk_as_primary[30];
 
 	strcpy(sqltab, "sqltables");
 	strcpy(sqlcol, "sqlcolumns");
 	strcpy(sqlproc, "sqlprocedu");
 	strcpy(sqlpk, "sqlprimary");
 	strcpy(sqlfk, "sqlforeign");
+	strcpy(sqlfk_as_primary, "sqlforeignkeysprimary");
 
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
@@ -358,17 +363,17 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 
 
 	flag[no_desc] = ODBC_SQL;
+	order_count = strlen(order);
+	buf_count = (DB_MAX_TABLE_LEN > order_count ? order_count : DB_MAX_TABLE_LEN);
 
-
-	if (strlen(order) >= 9)
-	{
-		memcpy(tmpBuf, order, 9);
-		tmpBuf[10] = '\0';
-		change_to_low(tmpBuf, 10);
-		if (memcmp(tmpBuf, sqltab, 9) == 0)
+	if (order_count >= COMPARED_LENGTH) {
+		memcpy(tmpBuf, order, buf_count);
+		tmpBuf[buf_count] = '\0';
+		change_to_low(tmpBuf, buf_count);
+		if (memcmp(tmpBuf, sqltab, COMPARED_LENGTH) == 0)
 		{
 			flag[no_desc] = ODBC_CATALOG_TAB;
-			for (i=9; order[i] != '(' && order[i] != '\0'; i++);
+			for (i=COMPARED_LENGTH; order[i] != '(' && order[i] != '\0'; i++);
 			if (order[i] == '(')
 				i++;
 			j = i;
@@ -400,10 +405,10 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 		}
 		else
 		{
-			if (memcmp(tmpBuf, sqlcol, 9) == 0)
+			if (memcmp(tmpBuf, sqlcol, COMPARED_LENGTH) == 0)
 			{
 				flag[no_desc] = ODBC_CATALOG_COL;
-				for (i=9; order[i] != '(' && order[i] != '\0'; i++);
+				for (i=COMPARED_LENGTH; order[i] != '(' && order[i] != '\0'; i++);
 				if (order[i] == '(')
 					i++;
 				j = i;
@@ -422,10 +427,10 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 			}
 			else
 			{
-				if (memcmp(tmpBuf, sqlproc, 9) == 0)
+				if (memcmp(tmpBuf, sqlproc, COMPARED_LENGTH) == 0)
 				{
 					flag[no_desc] = ODBC_CATALOG_PROC;
-					for (i=9; order[i] != '(' && order[i] != '\0'; i++);
+					for (i=COMPARED_LENGTH; order[i] != '(' && order[i] != '\0'; i++);
 					if (order[i] == '(')
 						i++;
 					j = i;
@@ -446,10 +451,10 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 				}
 				else
 				{
-					if (memcmp(tmpBuf, sqlpk, 9) == 0)
+					if (memcmp(tmpBuf, sqlpk, COMPARED_LENGTH) == 0)
 					{
 						flag[no_desc] = ODBC_PK;
-						for (i=9; order[i] != '(' && order[i] != '\0'; i++);
+						for (i=COMPARED_LENGTH; order[i] != '(' && order[i] != '\0'; i++);
 						if (order[i] == '(')
 							i++;
 						j = i;
@@ -466,12 +471,11 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 						else
 							rc = SQLPrimaryKeys(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0);
 					}
-					else
-					{
-						if (memcmp(tmpBuf, sqlfk, 9) == 0)
-						{
+					else {
+						if (memcmp(tmpBuf, sqlfk, COMPARED_LENGTH) == 0) {
+							is_as_primary = (memcmp(tmpBuf, sqlfk_as_primary, 21) ? 0 : 1);
 							flag[no_desc] = ODBC_FK;
-							for (i=9; order[i] != '(' && order[i] != '\0'; i++);
+							for (i=COMPARED_LENGTH; order[i] != '(' && order[i] != '\0'; i++);
 							if (order[i] == '(')
 								i++;
 							j = i;
@@ -480,14 +484,15 @@ void odbc_init_order (int no_desc, char *order, int argNum)
 								i = j;
 							else
 								i++;
-							for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++)
+							for (j=0; order[i] != ')' && order[i] != '\0' && order[i] != '\''; i++, j++) {
 								tmpBuf[j] = order[i];
-								tmpBuf[j] = '\0';
-							if (j){
-								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0, NULL, 0, tmpBuf, 0);
 							}
-							else{
-								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+							tmpBuf[j] = '\0';
+								/* Now let's find what type of primary keys we are looking for. */
+							if (is_as_primary) {
+								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, SQL_NTS, NULL, 0, NULL, 0, NULL, 0);
+							} else {
+								rc = SQLForeignKeys(hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0, NULL, 0, tmpBuf, SQL_NTS);
 							}
 						}
 					}

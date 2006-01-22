@@ -56,9 +56,8 @@ feature -- Basic operations
 			-- Printable representation of current object.
 		do
 			Result := ""
-<A:A:A>			if <AN:L> /= Void then
-				Result.append ("<AN:I>: " + <AN:L>.out + "%N")
-			end
+<A:A:A>			
+			Result.append ("<AN:I>: " + <AN:L>.out + "%N")			
 </A>		end
 
 end -- class CODES

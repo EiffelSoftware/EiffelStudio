@@ -442,7 +442,7 @@ feature -- Text/Separator
 				l_cnt := a_region.end_index
 				Result := False
 			until
-				i > l_cnt or not Result
+				i > l_cnt or Result
 			loop
 				l_break ?= i_th (i)
 				if l_break /= Void then
@@ -558,6 +558,52 @@ feature -- Comment extraction
 					end
 				end
 				i := i + 1
+			end
+		end
+
+feature -- Status reporting
+
+	if_all_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN is
+			-- Do all tokens in `a_region' satisfy `test'?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_start_index: INTEGER
+			l_end_index: INTEGER
+		do
+			from
+				l_start_index := a_region.start_index
+				l_end_index := a_region.end_index
+				Result := True
+			until
+				l_start_index > l_end_index or not Result
+			loop
+				test.call ([i_th (l_start_index)])
+				Result := test.last_result
+				l_start_index := l_start_index + 1
+			end
+		end
+
+	if_any_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN is
+			-- Does any token in `a_region' satisfy `test'?
+		require
+			a_region_not_void: a_region /= Void
+			valid_region: valid_region (a_region)
+		local
+			l_start_index: INTEGER
+			l_end_index: INTEGER
+		do
+			from
+				l_start_index := a_region.start_index
+				l_end_index := a_region.end_index
+				Result := False
+			until
+				l_start_index > l_end_index or Result
+			loop
+				test.call ([i_th (l_start_index)])
+				Result := test.last_result
+				l_start_index := l_start_index + 1
 			end
 		end
 

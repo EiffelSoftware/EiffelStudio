@@ -176,8 +176,8 @@
 							<File Id="custom_manager_e" LongName="custom_manager.e" Name="CUSTOM~1.E" />
 							<File Id="custom_preference_dialog_e" LongName="custom_preference_dialog.e" Name="CUSTOM~2.E" />
 							<File Id="custom_preference_dialog_imp_e" LongName="custom_preference_dialog_imp.e" Name="CUSTOM~3.E" />
-							<File Id="directory_resource_e" LongName="directory_resource.e" Name="DIRECT~1.E" />
-							<File Id="directory_resource_widget_e" LongName="directory_resource_widget.e" Name="DIRECT~2.E" />
+							<File Id="directory_preference_e" LongName="directory_preference.e" Name="DIRECT~1.E" />
+							<File Id="directory_preference_widget_e" LongName="directory_preference_widget.e" Name="DIRECT~2.E" />
 							<File Id="display_png" Name="display.png" />
 							<File Id="graphics_png" Name="graphics.png" />
 							<File Id="interface_names_e" LongName="interface_names.e" Name="INTERF~1.E" />
@@ -1176,16 +1176,16 @@
 					</Directory>
 					<Directory Id="preferences1" Name="PREFER~1" LongName="preferences" >
 						<Component Id="preferences1" Guid="a8c545dc-7dc0-4e7f-8664-99a0dcf08495" >
-							<File Id="preferences_e" LongName="preferences.e" Name="PREFER~2.E" />
-							<File Id="preference_resource_manager_e" LongName="preference_resource_manager.e" Name="PREFER~1.E" />
+							<File Id="preferences_e" LongName="preferences.e" Name="PREFER~1.E" />
+							<File Id="preference_manager_e" LongName="preference_manager.e" Name="PREFER~2.E" />
 						</Component>
 						<Directory Id="directory0" LongName="interface" Name="INTERF~1">
 							<Component Id="component1" Guid="76ff3584-803c-4412-a72f-e30909845b76" >
 								<File Id="basic_preference_factory_e" LongName="basic_preference_factory.e" Name="BASIC_~1.E" />
-								<File Id="boolean_resource_widget_e" LongName="boolean_resource_widget.e" Name="BOOLEA~1.E" />
+								<File Id="boolean_preference_widget_e" LongName="boolean_preference_widget.e" Name="BOOLEA~1.E" />
 								<File Id="preference_view_e" LongName="preference_view.e" Name="PREFER~1.E" />
-								<File Id="resource_widget_e" LongName="resource_widget.e" Name="RESOUR~1.E" />
-								<File Id="string_resource_widget_e" LongName="string_resource_widget.e" Name="STRING~1.E" />
+								<File Id="preference_widget_e" LongName="preference_widget.e" Name="PREFER~2.E" />
+								<File Id="string_preference_widget_e" LongName="string_preference_widget.e" Name="STRING~1.E" />
 							</Component>
 							<Directory Id="directory1" LongName="build_project" Name="BUILD_~1">
 								<Component Id="component2" Guid="7a80c241-625c-48bb-a36d-cc2614ad4b6f" >
@@ -1203,8 +1203,8 @@
 							<Directory Id="directory2" LongName="graphical" Name="GRAPHI~1">
 								<Component Id="component3" Guid="78308e1c-d490-477a-bb00-aab65d2c28a8" >
 									<File Id="choice_preference_widget_e" LongName="choice_preference_widget.e" Name="CHOICE~1.E" />
-									<File Id="color_resource_widget_e" LongName="color_resource_widget.e" Name="COLOR_~1.E" />
-									<File Id="font_resource_widget_e" LongName="font_resource_widget.e" Name="FONT_R~1.E" />
+									<File Id="color_preference_widget_e" LongName="color_preference_widget.e" Name="COLOR_~1.E" />
+									<File Id="font_preference_widget_e" LongName="font_preference_widget.e" Name="FONT_P~1.E" />
 									<File Id="graphical_preference_factory_e" LongName="graphical_preference_factory.e" Name="GRAPHI~1.E" />
 									<File Id="shortcut_preference_widget_e" LongName="shortcut_preference_widget.e" Name="SHORTC~1.E" />
 								</Component>
@@ -1216,39 +1216,48 @@
 								</Directory>
 							</Directory>
 						</Directory>
-						<Directory Id="directory4" LongName="registry_implementation" Name="REGIST~1">
-							<Component Id="component5" Guid="94f71333-f534-482b-9285-4c73219ff8ab" >
-								<File Id="resource_structure_imp_e" LongName="resource_structure_imp.e" Name="RESOUR~1.E" />
-							</Component>
-						</Directory>
-						<Directory Id="directory5" Name="resource">
+						<Directory Id="directory5" LongName="preference" Name="PREFER~1" >
 							<Component Id="component6" Guid="d5ad3542-5c38-4d80-8ade-f16bf2082029" >
-								<File Id="array_resource_e" LongName="array_resource.e" Name="ARRAY_~1.E" />
-								<File Id="boolean_resource_e" LongName="boolean_resource.e" Name="BOOLEA~1.E" />
-								<File Id="integer_resource_e" LongName="integer_resource.e" Name="INTEGE~1.E" />
-								<File Id="resource_e" Name="resource.e" />
-								<File Id="resource_factory_e" LongName="resource_factory.e" Name="RESOUR~1.E" />
-								<File Id="string_resource_e" LongName="string_resource.e" Name="STRING~1.E" />
-								<File Id="typed_resource_e" LongName="typed_resource.e" Name="TYPED_~1.E" />
+								<File Id="array_preference_e" LongName="array_preference.e" Name="ARRAY_~1.E" />
+								<File Id="boolean_preference_e" LongName="boolean_preference.e" Name="BOOLEA~1.E" />
+								<File Id="integer_preference_e" LongName="integer_preference.e" Name="INTEGE~1.E" />
+								<File Id="preference_e" LongName="preference.e" Name="PREFER~1.E" />
+								<File Id="preference_factory_e" LongName="preference_factory.e" Name="RESOUR~1.E" />
+								<File Id="string_preference_e" LongName="string_preference.e" Name="STRING~1.E" />
+								<File Id="typed_preference_e" LongName="typed_preference.e" Name="TYPED_~1.E" />
 							</Component>
 							<Directory Id="directory6" LongName="graphical" Name="GRAPHI~1">
 								<Component Id="component7" Guid="96085214-5d96-428b-830f-cc031180ce0d" >
-									<File Id="color_resource_e" LongName="color_resource.e" Name="COLOR_~1.E" />
-									<File Id="font_resource_e" LongName="font_resource.e" Name="FONT_R~1.E" />
+									<File Id="color_preference_e" LongName="color_preference.e" Name="COLOR_~1.E" />
+									<File Id="font_preference_e" LongName="font_preference.e" Name="FONT_P~1.E" />
 									<File Id="shortcut_preference_e" LongName="shortcut_preference.e" Name="SHORTC~1.E" />
 								</Component>
 							</Directory>
 						</Directory>
-						<Directory Id="directory7" LongName="structure" Name="STRUCT~1">
-							<Component Id="component8" Guid="6ff58bf0-3a7a-46d3-89f5-53dc48228046" >
-								<File Id="resource_structure_e" LongName="resource_structure.e" Name="RESOUR~1.E" />
-								<File Id="resource_structure_i_e" LongName="resource_structure_i.e" Name="RESOUR~2.E" />
+						<Directory Id="directory7" Name="storage" >
+							<Component Id="component0" Guid="22bef7c4-9e43-4460-a36c-82bf36e96b45">
+								<File Id="file0" LongName="preferences_storage_i.e" Name="PREFER~1.E" />
 							</Component>
-						</Directory>
-						<Directory Id="directory8" LongName="xml_implementation" Name="XML_IM~1">
-							<Component Id="component9" Guid="3fb2486b-79e8-47bc-b5d1-ae7a33bdcff1" >
-								<File Id="resource_structure_imp_e2" LongName="resource_structure_imp.e" Name="RESOUR~1.E" />
-							</Component>
+							<Directory Id="directory10" Name="registry">
+								<Component Id="component5" Guid="ad712b9b-db7c-4644-8b72-48b617bc302c">
+									<File Id="file8" LongName="preference_storage_registry.e" Name="PREFER~1.E" />
+								</Component>
+							</Directory>
+							<Directory Id="directory21" LongName="registry_implementation" Name="REGIST~1">
+								<Component Id="component10" Guid="96c77dcf-73d7-42be-946a-95f5603f0702">
+									<File Id="file16" LongName="preferences_storage_default.e" Name="PREFER~1.E" />
+								</Component>
+							</Directory>
+							<Directory Id="directory32" Name="xml">
+								<Component Id="component15" Guid="99819d2d-17ca-4388-92ed-6ddb7f83bcf0">
+									<File Id="file24" LongName="preference_storage_xml.e" Name="PREFER~1.E" />
+								</Component>
+							</Directory>
+							<Directory Id="directory43" LongName="xml_implementation" Name="XML_IM~1">
+								<Component Id="component20" Guid="8e1ddae4-d012-4260-91fb-8d18093e2f3c">
+									<File Id="file32" LongName="preferences_storage_default.e" Name="PREFER~1.E" />
+								</Component>
+							</Directory>
 						</Directory>
 					</Directory>
 					<Directory Id="process" Name="process">

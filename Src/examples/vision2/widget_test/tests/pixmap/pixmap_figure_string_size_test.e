@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that demonstrate `string_size' of EV_FONT on an EV_PIXMAP."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	Usage: "[
 		Select desired font, and enter text for testing. Selecting
 		the `Show Bounds' button causes bounding rectangles and corresponding
@@ -195,7 +197,19 @@ feature {NONE} -- Implementation
 	string_width, string_height, string_left_offset, string_right_offset: EV_FIGURE_TEXT
 		-- Figures to display textual representations of bounding offsets.
 	
-	figure_offset: INTEGER is 100
+	figure_offset: INTEGER is 100;
 		-- Offset of figure text from move handle.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class PIXMAP_FIGURE_STRING_SIZE_TEST

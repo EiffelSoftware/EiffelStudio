@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that create extendible controls for EV_TOOL_BAR"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +68,19 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	initial_text: STRING is ""
+	initial_text: STRING is "";
 			-- Initial text for new items.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class TOOL_BAR_EXTENDIBLE_CONTROLS

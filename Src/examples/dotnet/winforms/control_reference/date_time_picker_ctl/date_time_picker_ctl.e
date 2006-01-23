@@ -3,6 +3,8 @@ indexing
 		Date time picker sample.
 		Show how to use and how to configure the DATE_TIME_PICKER control.
 	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	
 class
 	DATE_TIME_PICKER_CTL
@@ -391,5 +393,17 @@ invariant
 	non_void_error_max: error_max /= Void
 	non_void_dtp_max_date: dtp_max_date /= Void
 	non_void_chk_show_up_down: chk_show_up_down /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class DATE_TIME_PICKER_CTL

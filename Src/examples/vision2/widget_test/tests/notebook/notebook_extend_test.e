@@ -1,6 +1,8 @@
 indexing
 	description: "Objects that demonstrate adding items%
 		%to EV_NTOEBOOK."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +31,19 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	notebook: EV_NOTEBOOK
+	notebook: EV_NOTEBOOK;
 		-- Widget that test is to be performed on.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class NOTEBOOK_EXTEND_TEST

@@ -1,6 +1,8 @@
 indexing
 	description: "Objects that display how many times a tab has been selected%
 		%in an EV_NOTEBOOK"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,7 +62,19 @@ feature {NONE} -- Implementation
 			notebook.set_item_text (notebook.selected_item, (current_value + 1).out)
 		end
 	
-	notebook: EV_NOTEBOOK
+	notebook: EV_NOTEBOOK;
 		-- Widget that test is to be performed on.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class NOTEBOOK_SELECTION_ACTIONS_TEST

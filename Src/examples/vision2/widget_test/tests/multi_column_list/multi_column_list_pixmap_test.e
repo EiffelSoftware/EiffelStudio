@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	pixmaps_required: "1"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +48,19 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	multi_column_list: EV_MULTI_COLUMN_LIST
+	multi_column_list: EV_MULTI_COLUMN_LIST;
 		-- Widget that test is to performed on.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class MULTI_COLUMN_LIST_PIXMAP_TEST

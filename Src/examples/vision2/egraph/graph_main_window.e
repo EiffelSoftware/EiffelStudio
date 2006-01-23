@@ -1,5 +1,7 @@
 indexing
 	description: "Main window for the Eiffel Graph example"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -664,6 +666,18 @@ feature {NONE} -- Implementation
 			pix.set_with_named_file ("Xnode.png")
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class GRAPH_MAIN_WINDOW
 

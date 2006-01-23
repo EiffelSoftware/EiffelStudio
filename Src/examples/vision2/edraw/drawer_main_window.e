@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that is the main window for the Eiffel Draw example."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -767,6 +769,18 @@ feature {NONE} -- Text constants
 	menu_edit_select_all: STRING is "&Select all"
 	menu_edit_deselect_all: STRING is "&Deselect all"
 	menu_edit_invert_selection: STRING is "&Invert selection"
-	menu_edit_delete_selected: STRING is "Del&ete selected"
+	menu_edit_delete_selected: STRING is "Del&ete selected";
 	
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
 end -- class DRAWER_MAIN_WINDOW

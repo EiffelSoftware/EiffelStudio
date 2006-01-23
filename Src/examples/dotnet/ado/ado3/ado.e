@@ -11,6 +11,8 @@ indexing
 		For example, you might use the DataReader to show the results of a search list 
 		in a web page. 
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	note: "[
 		Translated from Microsoft .NET Framework SDK samples from location
 		FrameworkSDK\Samples\QuickStart\howto\samples\adoplus\adooverview3
@@ -88,7 +90,19 @@ feature -- Access
 	connection : DATA_SQL_CONNECTION
 			-- ADO.NET SQL connection object
 
-	command : DATA_SQL_COMMAND
+	command : DATA_SQL_COMMAND;
 			-- ADO.NET SQL command object
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class ADO

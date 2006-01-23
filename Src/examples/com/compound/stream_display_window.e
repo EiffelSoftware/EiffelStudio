@@ -1,5 +1,7 @@
 indexing
 	description: "Window that displays the content of a stream"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 
 class
 	STREAM_DISPLAY_WINDOW
@@ -103,22 +105,17 @@ feature {NONE} -- Implementation
 invariant
 	non_void_stream: stream /= Void
 
-end -- class STREAM_DISPLAY_WINDOW
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelCOM: library of reusable components for ISE Eiffel.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---| Based on WINE library, copyright (C) Object Tools, 1996-2001.
---| Modifications and extensions: copyright (C) ISE, 2001.
---|
---| Interactive Software Engineering Inc.
---| ISE Building
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support: http://support.eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+
+end -- class STREAM_DISPLAY_WINDOW
 

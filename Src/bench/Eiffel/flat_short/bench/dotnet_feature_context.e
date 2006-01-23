@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$1.0 $"
-	
+
 class
 	DOTNET_FEATURE_CONTEXT
 
@@ -23,7 +23,7 @@ inherit
 		redefine
 			initialize
 		end
-	
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 		do
-			class_i ?= a_feature.associated_class.lace_class
+			class_i ?= a_feature.written_class.lace_class
 			if class_i /= Void then
 				class_c ?= class_i.compiled_class
 			end
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		ensure
 			has_eiffel_class: class_i /= Void
 		end
-		
+
 	make_from_entity (a_entity: CONSUMED_ENTITY; c: CONSUMED_TYPE; a_ci: CLASS_I) is
 			-- Initialize Current from .NET feature entity 'a_entity'.
 		require
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 		do
 			class_i ?= a_ci
 			if class_i /= Void then
-				class_c ?= class_i.compiled_class				
+				class_c ?= class_i.compiled_class
 			end
 			format_make (c)
 			current_feature := a_entity
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			end
 		rescue
 			retried := True
-			retry		
+			retry
 		end
 
 feature -- Property
@@ -123,7 +123,7 @@ feature {NONE} -- Property
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]
 			-- The arguments for the feature being formatted.
-			
+
 	return_type: CONSUMED_REFERENCED_TYPE
 			-- Return value of feature.
 
@@ -157,7 +157,7 @@ feature -- Execution
 				prev_class := System.current_class
 				prev_cluster := Inst_context.cluster
 				execution_error := False
-				ast.format (Current)				
+				ast.format (Current)
 				System.set_current_class (prev_class)
 				Inst_context.set_cluster (prev_cluster)
 			end
@@ -170,7 +170,7 @@ feature -- Element change
 		do
 			use_dotnet_name_only := True
 		end
-		
+
 	prepare_for_feature (a_dn_entity: CONSUMED_ENTITY) is
 			-- Prepare for formatting of feature found in 'dn_entity'.
 		require
@@ -192,7 +192,7 @@ feature -- Element change
 			current_feature_not_void: current_feature /= Void
 			declared_type_not_void: declared_type /= Void
 		end
-		
+
 	put_normal_feature is
 			-- Format feature
 		local
@@ -217,7 +217,7 @@ feature -- Element change
 				-- Feature should be clickable
 				l_feature ?= class_c.feature_table.item (name_of_current_feature).
 					api_feature (class_c.class_id)
-			end		
+			end
 			if l_is_str then
 				text.add_string ("%"")
 			end
@@ -229,7 +229,7 @@ feature -- Element change
 				if
 					not use_dotnet_name_only and
 					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
-				then				
+				then
 					text.add_char (',')
 					text.add_new_line
 					text.add_indent
@@ -245,7 +245,7 @@ feature -- Element change
 				if
 					not use_dotnet_name_only and
 					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
-				then				
+				then
 					text.add_char (',')
 					text.add_new_line
 					text.add_indent
@@ -310,7 +310,7 @@ feature {NONE} -- Element Change
 				loop
 					l_c_arg := arguments.item (l_cnt)
 					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
-					
+
 					if not use_dotnet_name_only and l_char_count > 60 then
 						text.add_new_line
 						text.add_indents (4)
@@ -319,20 +319,20 @@ feature {NONE} -- Element Change
 					text.add (create {LOCAL_TEXT}.make (l_c_arg.eiffel_name))
 					text.add_char (':')
 					text.add_space
-					
+
 					if class_i.is_compiled then
 						l_ext ?= class_i.compiled_class
 						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
 						l_type_a.format (Current)
 					else
 						text.add_class (l_c_class)
-					end				
-					
+					end
+
 					if l_cnt < arguments.count then
 						text.add_char (';')
 						text.add_space
 					end
-					
+
 					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 +
 						l_c_class.name.count
 					l_ext := Void
@@ -354,7 +354,7 @@ feature {NONE} -- Element Change
 				end
 			end
 		end
-		
+
 	put_comments is
 			-- Feature comments from XML.
 		local
@@ -370,12 +370,12 @@ feature {NONE} -- Element Change
 		do
 			create l_parsed_arguments.make_empty
 			l_constructor ?= current_feature
-			
+
 			if l_constructor /= Void then
 					-- Feature is a constructor so add constructor suffix.
 				l_parsed_arguments.append ("#ctor")
 			end
-			
+
 			if arguments /= Void then
 					-- Feature has arguments so append to 'l_parsed_arguments'.
 				from
@@ -399,14 +399,14 @@ feature {NONE} -- Element Change
 			elseif l_parsed_arguments.is_empty then
 				create l_parsed_arguments.make_empty
 			end
-			
+
 			if is_inherited then
 					-- Retrieve .NET member name depending upon if inherited.	
 				l_namespace_name := class_i.type_from_consumed_type (declared_type).external_name
 			else
 				l_namespace_name := consumed_t.dotnet_name
 			end
-			
+
 			if l_constructor /= Void then
 					-- Return constructor member type information.
 				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_parsed_arguments)
@@ -419,9 +419,9 @@ feature {NONE} -- Element Change
 						-- Return any other member type information.
 					l_dotnet_name := current_feature.dotnet_name
 					l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_dotnet_name + l_parsed_arguments)
-				end	
+				end
 			end
-			
+
 			-- Tell if feature is overloaded and or static
 			if class_c /= Void and then class_c.has_feature_table then
 				l_overloaded_names := class_c.feature_table.overloaded_names
@@ -468,16 +468,16 @@ feature {NONE} -- Element Change
 					text.add_new_line
 					text.add_indents (3)
 					text.add_comment ("-- ")
-					text.add_comment (l_summary.item)	
+					text.add_comment (l_summary.item)
 					l_summary.forth
 				end
-				
+
 					-- Arguments comments.
 				l_parameter_information := l_member_info.parameters
 				if not l_parameter_information.is_empty then
 					put_argument_comments (l_parameter_information)
-				end	
-	
+				end
+
 				l_return_info := parse_summary (l_member_info.returns)
 				if not l_return_info.is_empty then
 						-- Return Type comments.	
@@ -509,7 +509,7 @@ feature {NONE} -- Element Change
 				put_new_line
 			end
 		end
-	
+
 	put_origin_comment is
 			-- Put the 'from (CLASS)' if feature is declared in ancestor where 'CLASS' is
 			-- ancestor class.
@@ -521,8 +521,8 @@ feature {NONE} -- Element Change
 				text.add_class (class_i.type_from_consumed_type (declared_type))
 				text.add_char (')')
 			end
-		end		
-	
+		end
+
 	put_argument_comments (a_param_info: ARRAYED_LIST [PARAMETER_INFORMATION]) is
 			-- Put the parameter information comments in the feature documentation.
 		require
@@ -541,7 +541,7 @@ feature {NONE} -- Element Change
 			if a_param_info.count > 1 then
 				text.add_comment ("-- Arguments:")
 			else
-				text.add_comment ("-- Argument:")			
+				text.add_comment ("-- Argument:")
 			end
 			l_max_count := max_length (a_param_info)
 			from
@@ -585,8 +585,8 @@ feature {NONE} -- Element Change
 				l_next_line := False
 				a_param_info.forth
 			end
-		end			
-				
+		end
+
 	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
 				-- Strip 'a_summary' of all unwanted whites space
 			require
@@ -629,7 +629,7 @@ feature {NONE} -- Element Change
 		require
 			string_not_void: a_string /= Void
 		do
-			Result := a_string.substring (a_string.index_of ('_', 1) + 1, a_string.count)	
+			Result := a_string.substring (a_string.index_of ('_', 1) + 1, a_string.count)
 		end
 
 	feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
@@ -641,7 +641,7 @@ feature {NONE} -- Element Change
 			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 		do
 			l_entities := a_consumed_type.flat_entities
-			from 
+			from
 				l_entities.start
 			until
 				l_entities.after or Result /= Void
@@ -658,7 +658,7 @@ feature {NONE} -- Element Change
 				Result := creation_routine_from_type (a_consumed_type, a_feature)
 			end
 		end
-		
+
 	creation_routine_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed constructor.
 		require
@@ -699,19 +699,19 @@ feature {NONE} -- Element Change
 		do
 			l_properties := a_consumed_type.properties
 			if l_properties /= Void then
-				from 
+				from
 					l_counter := 1
 				until
 					l_counter > l_properties.count or Result /= Void
 				loop
-					if 	
-						l_properties.item (l_counter).getter /= Void and 
-						l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name) 
+					if
+						l_properties.item (l_counter).getter /= Void and
+						l_properties.item (l_counter).getter.eiffel_name.is_equal (a_feature.name)
 					then
 						Result := l_properties.item (l_counter).getter
 					elseif
-						l_properties.item (l_counter).setter /= Void and 
-						l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name) 
+						l_properties.item (l_counter).setter /= Void and
+						l_properties.item (l_counter).setter.eiffel_name.is_equal (a_feature.name)
 					then
 						Result := l_properties.item (l_counter).setter
 					end
@@ -757,7 +757,7 @@ feature {NONE} -- Implementation
 		local
 			l_max: INTEGER
 		do
-			from 
+			from
 			 	a_list.start
 			until
 				a_list.after
@@ -785,19 +785,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

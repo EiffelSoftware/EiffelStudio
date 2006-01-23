@@ -140,6 +140,29 @@ feature -- Roundtrip/Comment
 			end
 		end
 
+feature -- Roundtrip/Trailing break
+
+	trailing_break_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION is
+			-- Break region after an attribute or a constant
+		require
+			a_list_not_void: a_list /= Void
+			only_for_attribute_or_constant: is_attribute or is_constant
+		local
+			l_break_included: BOOLEAN
+			l_end_index1, l_end_index2: INTEGER
+		do
+			l_break_included := break_included
+			set_break_included (False)
+			l_end_index1 := last_token (a_list).index
+			set_break_included (True)
+			l_end_index2 := last_token (a_list).index
+			set_break_included (l_break_included)
+			check
+				index_valid: l_end_index1 + 1 <= l_end_index2 - 1
+			end
+			create Result.make (l_end_index1 + 1, l_end_index2 - 1)
+		end
+
 feature -- Property
 
 	is_feature: BOOLEAN is True

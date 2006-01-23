@@ -37,9 +37,6 @@ feature{NONE} -- Implementation
 
 feature
 
-	internal_text: STRING
-			-- Literal text in code
-
 	literal_text (a_list: LEAF_AS_LIST): STRING is
 			-- Literal text of current AST node
 		require else
@@ -52,7 +49,7 @@ feature
 
 	is_equivalent (other: like Current): BOOLEAN is
 		do
-			Result := internal_text.is_equal (other.internal_text)
+			Result := literal_text (Void).is_equal (other.literal_text (Void))
 		end
 
 	process (v: AST_VISITOR) is
@@ -65,8 +62,14 @@ feature
 		do
 		end
 
+feature{NONE} -- Implementation
+
+	internal_text: STRING
+			-- Literal text in code
+
+
 invariant
-	internal_text_not_void: internal_text /= Void
+	literal_text_not_void: literal_text (Void) /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -74,19 +77,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

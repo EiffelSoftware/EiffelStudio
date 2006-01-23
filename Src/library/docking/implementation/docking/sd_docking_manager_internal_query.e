@@ -1,5 +1,7 @@
 indexing
 	description: "Docking manager queries."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -198,7 +200,21 @@ feature -- Querys
 
 feature {NONE} -- Implemnetation
 
-	internal_docking_manager: SD_DOCKING_MANAGER
+	internal_docking_manager: SD_DOCKING_MANAGER;
 			-- Docking manager which Current belong to.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that contain all the icons used by this memory analyzer"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -116,6 +118,20 @@ feature -- Icons' Names
 			-- Icon name
 	icon_new_filter_class_name: STRING is "icon_new_filter_class_name"
 			-- Icon name
-	icon_new_filter_class_name_X: STRING is "icon_new_filter_class_name_X"
+	icon_new_filter_class_name_X: STRING is "icon_new_filter_class_name_X";
 			-- Icon name			
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 end

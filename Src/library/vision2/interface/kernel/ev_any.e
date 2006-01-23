@@ -8,7 +8,8 @@ indexing
 		%EV_ANY's descendants provide a common interface across all%N%
 		%platforms while EV_ANY_I's descendants provide any necessary%N%
 		%platform specific implementation."
-	status: "See notice at end of class"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	keywords: "interface, base, root, any"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -238,41 +239,19 @@ invariant
 	default_create_called: default_create_called
 
 indexing
-	bridge_pattern: "[
-	 The "bridge pattern" as used in Vision2
-	
-	 The bridge pattern is described in the Design Patterns book (Gamma et al.).
-	 It provides a way to separate interface from implementation so that the two
-	 can be structured differently.
-	 The bridge pattern comes at the cost of a high maintenence overhead as any
-	 change to the interface must be duplicated in the implementation interface.
-	 The implementation interface should really be generated from the interface.
-	
-	 The following features of the bridge pattern are not used in Eiffel Vision.
-	 - Hiding of proprietary implementation through delivery of interface source
-	   but only compiled implementations. (Not applicable in Eiffel)
-	 - Protection of clients from relinking due to implementation changes.
-	   (Not applicable in Eiffel)
-	 - Sharing an implementation object among interface objects.
-	 - Delaying creation of implementation object.
-	]"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 
 end -- class EV_ANY
-
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
 

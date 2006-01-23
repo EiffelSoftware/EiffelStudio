@@ -3,6 +3,7 @@ indexing
 		%the user selects a command item from a menu, when a control %
 		%sends a notification message to its parent window, or when an %
 		%accelerator keystroke is translated."
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,22 +94,19 @@ feature {NONE} -- Externals
 			"GET_WM_COMMAND_HWND"
 		end
 
-end -- class WEL_COMMAND_MESSAGE
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class WEL_COMMAND_MESSAGE
 

@@ -1,5 +1,7 @@
 indexing
 	description: "Polyline"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,4 +87,20 @@ feature {NONE} -- Externals
 invariant
 	at_least_one_line: points.count>0
 	points_with_the_image: image.points_within_the_image(points)
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+
+
 end -- class GD_POLYLINE

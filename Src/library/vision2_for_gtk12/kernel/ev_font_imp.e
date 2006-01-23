@@ -1,5 +1,6 @@
 indexing
 	description: "Eiffel Vision font. GTK implementation."
+	legal: "See notice at end of class."
 	note:
 		"Does not inherit from EV_ANY_IMP because c_object is not a %N%
 		%GTK object. (type is GdkFont)",
@@ -10,7 +11,7 @@ indexing
 		%Of these attributes, only family, weight, slant and pixel_size %N%
 		%are relevant to EiffelVision., %N%
  		%See: http://developer.gnome.org/doc/API/gdk/gdk-fonts.html"
-	status: "See notice at end of class"
+	status: "See notice at end of class."
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -599,22 +600,19 @@ invariant
 	c_object_not_null: is_initialized implies c_object /= default_pointer
 	full_name_not_void: is_initialized implies full_name /= Void
 	
-end -- class EV_FONT_IMP
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class EV_FONT_IMP
 

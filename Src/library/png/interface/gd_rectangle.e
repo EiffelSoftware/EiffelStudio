@@ -1,5 +1,7 @@
 indexing
 	description: "Rectangle"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +19,7 @@ creation
 
 feature -- Initialization
 
-	make (im: GD_IMAGE;a_color_index:INTEGER; x1,y1,x2,y2) is
+	make (im: GD_IMAGE;a_color_index:INTEGER; x1,y1,x2,y2: INTEGER) is
 		do
 			image := im
 			color_index := a_color_index
@@ -53,4 +55,16 @@ feature {NONE} -- Externals
 invariant
 	point1_inside_the_image:image.coordinates_within_the_image(upper_left_x,upper_left_y)
 	point2_inside_the_image:image.coordinates_within_the_image(bottom_right_x,bottom_right_y)
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
 end -- class GD_RECTANGLE

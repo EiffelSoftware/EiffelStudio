@@ -2,6 +2,8 @@ indexing
 	description: "[
 		Read only text with cursor and selection.
 	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Etienne Amodeo"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -340,5 +342,19 @@ invariant
 --	selection_cursor_exists: not is_empty implies selection_cursor /= Void
 	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 	
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 end -- class SELECTABLE_TEXT
 	

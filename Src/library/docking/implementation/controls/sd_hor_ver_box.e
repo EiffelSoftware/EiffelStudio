@@ -1,5 +1,7 @@
 indexing
 	description: "EV_BOX that wrapper EV_HORIZONTAL_BOX and EV_VERTICAL_BOX. Actually this is EV_VERTICAL_BOX contain a EV_HORIZONTAL_BOX."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -321,7 +323,21 @@ feature {NONE} -- Implementation
 	internal_vertical_style: BOOLEAN
 			-- If current box show vertically? Otherwise is show horizontally.
 
-	horizontal_box: EV_HORIZONTAL_BOX
+	horizontal_box: EV_HORIZONTAL_BOX;
 			-- Horizontal box in the Current when show horizontally.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

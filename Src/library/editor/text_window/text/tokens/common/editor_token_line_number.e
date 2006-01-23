@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that ..."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -190,5 +192,19 @@ feature {MARGIN_WIDGET} -- Implementation
  				-- Display the text.
  			draw_text_top_left (l_pos, d_y, text_to_be_drawn, device)			
 		end
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class EDITOR_TOKEN_LINE_NUMBER

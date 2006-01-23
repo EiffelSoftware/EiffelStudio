@@ -1,5 +1,7 @@
 indexing
 	description: "Undo command for comment and indent."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Etienne Amodeo"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,5 +70,19 @@ invariant
 	end_selection_not_void: end_selection /= Void
 	symbol_not_void: symbol /= Void
 	text_not_void: text /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class UNDO_SYMBOL_SELECTION_CMD

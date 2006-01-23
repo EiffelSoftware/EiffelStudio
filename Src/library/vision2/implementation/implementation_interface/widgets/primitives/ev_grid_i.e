@@ -3,6 +3,8 @@ indexing
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		Implementation Interface.
 			]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -5568,22 +5570,19 @@ invariant
 	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
-end
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end
 

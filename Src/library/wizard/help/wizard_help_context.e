@@ -2,6 +2,8 @@ indexing
 	description: "Wizard help context sent to help engine%
 				%Made of a URL and a base address.%
 				%The URL is relative to the base address."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 
 class
 	WIZARD_HELP_CONTEXT
@@ -36,21 +38,19 @@ invariant
 
 	valid_url: is_valid_url (url)
 
-end -- class WIZARD_HELP_CONTEXT
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelWizard: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support: http://support.eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class WIZARD_HELP_CONTEXT
 

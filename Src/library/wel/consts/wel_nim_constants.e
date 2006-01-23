@@ -1,5 +1,7 @@
 indexing
 	description: "NIM constants used for notification to the taskbar."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +32,7 @@ feature -- Access
 			-- shortcut menu, but the user presses ESC to cancel it, use NIM_SETFOCUS
 			-- to return focus to the taskbar notification area.
 
-	nim_setversion: INTEGER is 4
+	nim_setversion: INTEGER is 4;
 			-- Version 5.0. Instructs the taskbar to behave according to the version
 			-- number specified in the uVersion member of the structure pointed to
 			-- by lpdata. This message allows you to specify whether you want the
@@ -38,5 +40,19 @@ feature -- Access
 			-- that found with earlier Shell versions. The default value for uVersion
 			-- is zero, indicating that the original Windows 95 notify icon behavior
 			-- should be used. For details, see the Remarks section.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

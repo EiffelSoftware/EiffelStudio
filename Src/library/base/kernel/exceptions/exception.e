@@ -1,5 +1,7 @@
 indexing
 	description: "Exception object for EiffelVision, will be replaced when exception objects are available"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +33,24 @@ feature -- Access
 	tag: STRING
 		-- Exception tag of `Current'
 
-	trace_as_string: STRING
+	trace_as_string: STRING;
 		-- Exception trace represented as a string
+
+indexing
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+
 
 end

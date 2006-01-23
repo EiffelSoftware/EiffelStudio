@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that provide access to constants loaded from files."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +50,21 @@ feature -- Access
 			create Result.put ("png")
 		end
 
-	preference_window_icon: STRING is "icon_preference_window"
+	preference_window_icon: STRING is "icon_preference_window";
 		-- Base name of the file that contains the icon of the preferences window.
 	
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 end -- class CONSTANTS

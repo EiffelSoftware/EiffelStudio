@@ -3,6 +3,8 @@ indexing
 			A lable have pixmap and text.
 			Used by SD_NOTEBOOK_TAB_AREA when show auto hide zones, and SD_ZONE_NAVIGATION_DIALOG.
 																					]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -197,5 +199,19 @@ invariant
 	internal_pixmap_area_not_void: internal_pixmap_area /= Void
 	internal_label_not_void: internal_label /= Void
 	enable_color_actions_not_void: enable_color_actions /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

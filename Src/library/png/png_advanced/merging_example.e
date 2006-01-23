@@ -1,5 +1,7 @@
 indexing
 	description: "Example which shows some application of the merging facilities."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +43,22 @@ feature -- Implementation
 
 	ellipse1,ellipse2: GD_ELLIPSE
 
-	merger: GD_COPIER
+	merger: GD_COPIER;
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+
 
 end -- class MERGING_EXAMPLE

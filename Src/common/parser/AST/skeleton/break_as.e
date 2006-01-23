@@ -116,7 +116,6 @@ feature -- Comment extraction
 							l_str := internal_text.substring (l_comment_start + 2, i - 1)
 							if l_str.item (1) = '|' then
 								l_is_imp := True
-								l_str.remove (1)
 							end
 							l_str.replace_substring_all ("%R", "")
 						else

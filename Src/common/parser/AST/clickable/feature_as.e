@@ -158,9 +158,9 @@ feature -- Roundtrip/Trailing break
 			l_end_index2 := last_token (a_list).index
 			set_break_included (l_break_included)
 			check
-				index_valid: l_end_index1 + 1 <= l_end_index2 - 1
+				index_valid: l_end_index1 + 1 <= l_end_index2
 			end
-			create Result.make (l_end_index1 + 1, l_end_index2 - 1)
+			create Result.make (l_end_index1 + 1, l_end_index2)
 		end
 
 feature -- Property

@@ -170,6 +170,7 @@ feature{NONE} -- Initialization
 			i: INTEGER
 			l_modifier: ERT_BASIC_EIFFEL_LIST_MODIFIER
 			l_empty_modifier: ERT_EMPTY_EIFFEL_LIST_MODIFIER
+			l_inherit_clause_name: AST_EIFFEL
 		do
 			create inherit_clause_modifier.make (5)
 			create inherit_clause.make (5)
@@ -202,6 +203,11 @@ feature{NONE} -- Initialization
 				if inherit_clause.i_th (i) = Void then
 					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
 					l_empty_modifier.set_header (l_head_list.i_th (i))
+					l_modifier := l_empty_modifier
+				elseif inherit_clause.i_th (i).is_empty then
+					l_inherit_clause_name := inherit_clause.i_th (i).pre_as_list.i_th (1)
+					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
+					l_empty_modifier.set_header ("")
 					l_modifier := l_empty_modifier
 				else
 					l_modifier := create{ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i), match_list)

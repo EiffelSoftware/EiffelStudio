@@ -785,7 +785,6 @@
 									<File Id="eif_dir.h" Name="eif_dir.h" />
 									<File Id="eif_eiffel.h" Name="EIF_EI~1.H" LongName="eif_eiffel.h" />
 									<File Id="eif_equal.h" Name="EIF_EQ~1.H" LongName="eif_equal.h" />
-									<File Id="eif_err_msg.h" Name="EIF_ER~2.H" LongName="eif_err_msg.h" />
 									<File Id="eif_error.h" Name="EIF_ER~1.H" LongName="eif_error.h" />
 									<File Id="eif_except.h" Name="EIF_EX~1.H" LongName="eif_except.h" />
 									<File Id="eif_file.h" Name="eif_file.h" />
@@ -816,10 +815,8 @@
 									<File Id="eif_sig.h" Name="eif_sig.h" />
 									<File Id="eif_size.h" Name="eif_size.h" />
 									<File Id="eif_store.h" Name="EIF_ST~1.H" LongName="eif_store.h" />
-									<File Id="eif_str.h" Name="eif_str.h" />
 									<File Id="eif_struct.h" Name="EIF_ST~2.H" LongName="eif_struct.h" />
 									<File Id="eif_threads.h" Name="EIF_TH~1.H" LongName="eif_threads.h" />
-									<File Id="eif_tools.h" Name="EIF_TO~1.H" LongName="eif_tools.h" />
 									<File Id="eif_traverse.h" Name="EIF_TR~1.H" LongName="eif_traverse.h" />
 									<File Id="eif_types.h" Name="EIF_TY~1.H" LongName="eif_types.h" />
 									<File Id="eif_umain.h" Name="EIF_UM~1.H" LongName="eif_umain.h" />

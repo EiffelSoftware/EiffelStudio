@@ -6,6 +6,8 @@ indexing
 			version was presented by Peter R. Sibbald in Communications of the
 			ACM, volume 35, number 4, April 1992 (Technical Correspondance).
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -300,5 +302,22 @@ feature {NONE} -- Implementation
 invariant
 	deltas_not_void: deltas /= Void
 	deltas_valid: deltas.count <= max_ascii_character_value + 1
+
+indexing
+	library:	"EiffelBase: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+
 
 end

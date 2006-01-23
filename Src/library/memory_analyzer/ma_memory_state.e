@@ -1,5 +1,7 @@
 indexing
 	description: "Represent a memory state, it contain the informations of all type names and the count of them."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -155,7 +157,21 @@ feature {NONE} -- Implementation
 			-- the founded item by routine found_type 
 	state: TUPLE [STRING, INTEGER]
 	
-	objects_states: ARRAYED_LIST [like state] 
+	objects_states: ARRAYED_LIST [like state]; 
 			-- the count the objects, first argument is type name, second argument is the object instances count
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

@@ -1,5 +1,7 @@
 indexing
 	description: "This are objects that are used internaly by the diff algorithm to store a list of indices that are a match."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +31,21 @@ feature -- Access
 	index_dst: INTEGER
 			-- The destination index of the link.
 
-	next: DIFF_INDEX_LINK
+	next: DIFF_INDEX_LINK;
 			-- The next link (or void if none)
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

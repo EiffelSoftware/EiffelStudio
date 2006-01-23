@@ -1,5 +1,6 @@
 indexing
 	description: "Rich edit styles."
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,29 +39,26 @@ feature -- Access
 			-- Draws text and objects in a vertical direction.
 			-- Available for Asian-languages only.
 
-	Es_ex_nocalloleinit: INTEGER is 16777216
+	Es_ex_nocalloleinit: INTEGER is 16777216;
 			-- Prevents the control from calling the OleInitialize function
 			-- when created. This window style is useful only in dialog 
 			-- templates because CreateWindowEx does not accept this style.
 			--
 			-- Declared in Windows as ES_EX_NOCALLOLEINIT
 
-end -- class WEL_RICH_EDIT_STYLE_CONSTANTS
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class WEL_RICH_EDIT_STYLE_CONSTANTS
 

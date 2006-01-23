@@ -1,5 +1,7 @@
 indexing
 	description: "Implementation of a SQL Statement"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	names: SQL_statement, query
 	author: "$Author$"
 	date: "$Date$"
@@ -828,5 +830,19 @@ invariant
 	described_when_executed: is_executed implies is_described
 	always_eof_unless_is_query: (is_executed and then not is_query) implies eof
 	row_data_filled: row_data_filled implies (row_data /= Void and row_data.count = column_count)
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class OCI_STATEMENT

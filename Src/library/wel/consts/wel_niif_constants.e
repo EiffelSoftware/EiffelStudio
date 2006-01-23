@@ -5,6 +5,8 @@ indexing
 		It is placed to the left of the title. If the szInfoTitle member is zero-length,
 		the icon is not shown.
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +34,21 @@ feature -- Access
 	niif_icon_mask: INTEGER is 0xF
 			-- Version 6.0. Reserved.
 
-	niif_nosound: INTEGER is 0x10
+	niif_nosound: INTEGER is 0x10;
 			-- Version 6.0. Do not play the associated sound. Applies only to balloon ToolTips.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

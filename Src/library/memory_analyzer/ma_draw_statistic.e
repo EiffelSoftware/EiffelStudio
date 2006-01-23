@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that used for draw graphics whihch are the datas about memory useage."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -173,4 +175,18 @@ invariant
 	inner_graph_height_valid: inner_graph_height >= 0 and inner_graph_height <= graph_height
 	graph_width_valid: graph_width >= 0 and graph_width <= 1000
 	graph_height_valid: graph_height >= 0 and graph_height <= 200
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 end

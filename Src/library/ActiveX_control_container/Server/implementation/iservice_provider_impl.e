@@ -1,5 +1,7 @@
 indexing
 	description: "Implemented `IServiceProvider' Interface."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,8 +42,22 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	m_service_provider: ISERVICE_PROVIDER_IMPL_PROXY 
+	m_service_provider: ISERVICE_PROVIDER_IMPL_PROXY; 
 			-- IServiceProvider interface of site.
 			
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
 end -- ISERVICE_PROVIDER_IMPL
 

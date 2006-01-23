@@ -1,5 +1,7 @@
 indexing
 	description: "Arc"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,5 +69,21 @@ feature {NONE} -- Externals
 invariant
 	color_index_possible: color_index >=0 and color_index <=255 and then 
 								  color_index <= image.color_index_bound
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
+
+
 
 end -- class GD_ARC

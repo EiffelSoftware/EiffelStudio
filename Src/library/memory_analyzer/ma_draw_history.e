@@ -1,5 +1,7 @@
 indexing
 	description: "Draw history of the memory useage."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -222,5 +224,19 @@ invariant
 	bottom_interval_set: bottom_interval /= 0
 	graph_used_history_not_void: graph_used_history /= Void
 	graph_overhead_history_not_void: graph_overhead_history /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

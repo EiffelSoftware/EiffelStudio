@@ -1,5 +1,7 @@
 indexing
 	description	: "Objects that represent the cursor of a text viewer"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author		: "Christophe Bonnard [ bonnard@bigfoot.com ] / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -496,5 +498,19 @@ invariant
 	y_in_lines_positive_or_null		: y_in_lines >= 0
 	pos_in_token_positive			: pos_in_token > 0
 	whole_text_not_void				: whole_text /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class VIEWER_CURSOR

@@ -4,6 +4,8 @@ indexing
 			create new preferences and values.  Use PREFERENCE_MANAGER to manipulate PREFERENCE objects in your
 			code.
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,5 +78,19 @@ feature -- Commands
 		do
 			Result := new_preference (preferences, a_manager, a_name, a_fallback_value)
 		end
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class PREFERENCE_FACTORY

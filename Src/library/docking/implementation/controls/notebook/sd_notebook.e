@@ -1,5 +1,7 @@
 indexing
 	description: "A EV_NOTEBOOK with it's own tabs, not use native Windows tab control."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -574,5 +576,19 @@ invariant
 	internal_contents_not_void: internal_contents /= Void
 	internal_tabs_no_void: internal_tabs /= Void
 	internal_contents_internal_tabs_count_equal: internal_tabs.count = internal_contents.count
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

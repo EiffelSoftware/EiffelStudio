@@ -1,5 +1,7 @@
 indexing
 	description: "Help engine, displays help context, Windows implementation"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 
 class
 	WIZARD_HELP_ENGINE_IMP
@@ -74,24 +76,22 @@ feature {NONE} -- Implementation
 	hh_handler: WIZARD_HTML_HELP_HANDLER
 			-- Control content of Microsoft HTML Help
 
-	Generic_error_message: STRING is "Could not display the help topic, please check your Eiffel installation."
+	Generic_error_message: STRING is "Could not display the help topic, please check your Eiffel installation.";
 			-- Error message displayed when topic could not be displayed
 
-end -- class WIZARD_HELP_ENGINE
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelWizard: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support: http://support.eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class WIZARD_HELP_ENGINE
 

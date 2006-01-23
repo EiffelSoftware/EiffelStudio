@@ -3,6 +3,8 @@ indexing
 		%May the memory analyzer communicate with other program which can surround the target debugged application%
 		% and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which% 
 		%we care."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -426,6 +428,20 @@ invariant
 	main_book_has_tab_object_grid: main_book.has (tab_object_grid)
 	main_book_has_tab_object_graph: main_book.has (tab_object_graph)
 	main_book_has_tab_states_compare: main_book.has (tab_states_compare)	
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end -- class MA_WINDOW
 

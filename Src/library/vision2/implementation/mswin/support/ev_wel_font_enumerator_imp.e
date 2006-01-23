@@ -5,6 +5,7 @@ indexing
 		Note: Do not use more than one instance of this class at the same
 			time. Nested enumerations are not supported.
 		]"
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,25 +88,22 @@ feature {NONE} -- Basic operations
 			log_fonts.put (elf.log_font, face_found)
 		end
 
-	internal_font_faces: ARRAYED_LIST [STRING]
+	internal_font_faces: ARRAYED_LIST [STRING];
 			-- Font faces found on the current system.		
 
-end -- class EV_WEL_FONT_ENUMERATOR_IMP
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
---|----------------------------------------------------------------
---| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
---| Duplication and distribution prohibited.  May be used only with
---| ISE Eiffel, under terms of user license.
---| Contact Eiffel Software for any other use.
---|
---| Interactive Software Engineering Inc.
---| dba Eiffel Software
---| 356 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Contact us at: http://www.eiffel.com/general/email.html
---| Customer support: http://support.eiffel.com
---| For latest info on our award winning products, visit:
---|	http://www.eiffel.com
---|----------------------------------------------------------------
+
+
+
+end -- class EV_WEL_FONT_ENUMERATOR_IMP
 

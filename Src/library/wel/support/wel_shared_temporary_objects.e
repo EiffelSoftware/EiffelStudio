@@ -7,6 +7,8 @@ indexing
 		it prevents memory allocation through the creation of new objects. This can improve performace in
 		systems where such access is performed many times in a short space of time.
 			]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -53,8 +55,22 @@ feature -- Access
 			end
 		end
 		
-	maximum_buffered_string_size: INTEGER is 10000
+	maximum_buffered_string_size: INTEGER is 10000;
 		-- Maximum size of string permitting a shared WEL_STRING object to 
 		-- be returned by `wel_string_restricted'.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+
+
 
 end

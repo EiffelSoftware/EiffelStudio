@@ -1,6 +1,8 @@
 indexing
 	description: "Objects that test an EV_VIEWPORT by allowing%
 		% you to adjust the offset."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,7 +51,19 @@ feature {NONE} -- Implementation
 	viewport: EV_VIEWPORT
 		-- Widget that test is to be performed on.
 	
-	test_button, reset_button: EV_BUTTON
+	test_button, reset_button: EV_BUTTON;
 		-- Buttons used to test and reset state of `viewport'.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class VIEWPORT_OFFSET_TEST

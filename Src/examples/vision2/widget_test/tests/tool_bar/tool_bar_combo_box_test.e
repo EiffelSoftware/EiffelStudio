@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that simulate an EV_COMBO_BOX in an EV_TOOL_BAR"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	pixmaps_required: "1, 2"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +63,19 @@ feature {NONE} -- Implementation
 	left_bar, right_bar: EV_TOOL_BAR
 		-- Tool bars used for simulation of a larger toolbar.
 	
-	combo_box: EV_COMBO_BOX
+	combo_box: EV_COMBO_BOX;
 		-- Combo box used between `left_bar' and `right_bar'.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class TOOL_BAR_COMBO_BOX_TEST

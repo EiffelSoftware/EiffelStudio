@@ -1,5 +1,7 @@
 indexing
 	description: "Multi Documents sample."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 
 class
 	MAIN_FORM
@@ -206,6 +208,18 @@ invariant
 	non_void_components: components /= Void
 	non_void_main_menu: main_menu /= Void
 	non_void_status_bar: status_bar /= Void
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- Class MAIN_FORM
 

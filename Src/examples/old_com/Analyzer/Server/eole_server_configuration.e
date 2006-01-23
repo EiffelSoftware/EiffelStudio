@@ -1,5 +1,7 @@
 indexing
 	description: "Server configuration constants"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,9 +40,21 @@ feature -- Access
 			-- Major version namber
 			-- Should be filled by user
 
-	minor_version_number: INTEGER is 0
+	minor_version_number: INTEGER is 0;
 			-- Minor version number
 			-- Should be filled by user
+
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
 
 end -- class EOLE_SERVER_CONFIGURATION

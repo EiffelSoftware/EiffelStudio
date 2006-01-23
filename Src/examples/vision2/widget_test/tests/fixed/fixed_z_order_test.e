@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that demonstrate z order in EV_FIXED."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -62,7 +64,19 @@ feature {NONE} -- Implementation
 	fixed: EV_FIXED
 		-- Widget that test is to be performed on.
 	
-	button1, button2, button3: EV_BUTTON
+	button1, button2, button3: EV_BUTTON;
 		-- Widgets used to show the operation of `fixed'.
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class FIXED_Z_ORDER_TEST

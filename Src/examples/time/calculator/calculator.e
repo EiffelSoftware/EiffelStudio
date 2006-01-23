@@ -1,6 +1,7 @@
 indexing
 	description: "Simple calculator for date"
-	status: "See notice at end of class"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 	access: date, time
@@ -89,23 +90,19 @@ feature -- Access
 	add_month: ADD_MONTH
 	add_year: ADD_YEAR
 	add_week: ADD_WEEK
-	set_date: SET_DATE
+	set_date: SET_DATE;
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class CALCULATOR 
-
---|----------------------------------------------------------------
---| EiffelTime: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support: http://support.eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
 

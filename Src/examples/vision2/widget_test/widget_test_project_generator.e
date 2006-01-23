@@ -3,6 +3,8 @@ indexing
 		Objects that generate stand alone widget tests which
 			may be compiled by a user.
 		]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -215,7 +217,19 @@ feature {NONE} -- Implementation
 			a_class_text.insert_string (new, temp_index)
 		end
 		
-	current_generation_directory: DIRECTORY
+	current_generation_directory: DIRECTORY;
 		-- Directory in which to perform generation
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- class WIDGET_TEST_PROJECT_GENERATOR

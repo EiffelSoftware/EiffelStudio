@@ -1,5 +1,7 @@
 indexing
 	description:"Represent a list of CUSTOMER"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	
 class
 	CUSTOMER_LIST
@@ -30,5 +32,17 @@ feature -- Initialization
 			create l_customer.make_with_data ("2", "M", "Mickael Senior", "JORDAN", "15 ", create {SYSTEM_DATE_TIME}.make (1979, 11, 25))
 			i := list.add (l_customer)
 		end
+
+indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end -- Class CUSTOMER_LIST

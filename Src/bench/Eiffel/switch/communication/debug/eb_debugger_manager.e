@@ -71,6 +71,32 @@ feature -- Access
 
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 
+	debugging_feature_as: FEATURE_AS is
+			-- Debugging feature.
+		local
+			l_feature_stone : FEATURE_STONE
+		do
+			if application.is_running and then application.is_stopped and not application.current_call_stack_is_empty then
+				l_feature_stone ?= first_valid_call_stack_stone
+				if l_feature_stone /= Void and then l_feature_stone.e_feature /= Void then
+					Result := l_feature_stone.e_feature.ast
+				end
+			end
+		end
+
+	debugging_class_c: CLASS_C is
+			-- Debugging feature.
+		local
+			l_class_stone : CLASSC_STONE
+		do
+			if application.is_running and then application.is_stopped and not application.current_call_stack_is_empty then
+				l_class_stone ?= first_valid_call_stack_stone
+				if l_class_stone /= Void then
+					Result := l_class_stone.e_class
+				end
+			end
+		end
+
 	new_toolbar: EB_TOOLBAR is
 			-- Toolbar containing all debugging commands.
 		do

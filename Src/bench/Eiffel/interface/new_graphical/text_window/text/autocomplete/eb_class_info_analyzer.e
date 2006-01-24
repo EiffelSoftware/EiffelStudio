@@ -51,7 +51,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EB_TOKEN_TOOLKIT
 		export
 			{NONE} all
@@ -298,7 +298,7 @@ feature {NONE} -- Click ast exploration
 						if last_syntax_error = Void then
 							current_class_as := Tmp_ast_server.item (c.class_id)
 						end
-					else					
+					else
 						last_syntax_error := Void
 						prev_class := System.current_class
 						System.set_current_class (c)
@@ -310,14 +310,14 @@ feature {NONE} -- Click ast exploration
 					current_class_as := c.most_recent_ast
 				end
 			end
-			
+
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False)
 				retried := True
 				retry
 			end
-		end		
+		end
 
 feature {NONE}-- Clickable/Editable implementation
 
@@ -339,7 +339,7 @@ feature {NONE}-- Clickable/Editable implementation
 						index_min := index_max
 					else
 						from
-							
+
 						until
 							index_min >= index_max - 1
 						loop
@@ -371,7 +371,7 @@ feature {NONE}-- Clickable/Editable implementation
 									create {CLASSI_STONE} Result.make (class_i)
 								end
 							end
-						end	
+						end
 					end
 				end
 			end
@@ -491,7 +491,7 @@ feature {NONE}-- Clickable/Editable implementation
 					elseif l_current_class_c.has_feature_table then
 						Result := l_current_class_c.feature_with_name (name)
 					end
-					if Result = Void then		
+					if Result = Void then
 						processed_type := type_of_local_entity_named (name)
 						if processed_type = Void then
 							processed_type := type_of_constants_or_reserved_word (current_token)
@@ -502,9 +502,9 @@ feature {NONE}-- Clickable/Editable implementation
 							type := Result.type
 							if type.is_formal then
 								formal ?= type
-								if 
+								if
 									processed_type /= Void and then
-									processed_type.has_generics and then 
+									processed_type.has_generics and then
 									processed_type.generics.valid_index (formal.position)
 								then
 									processed_type := processed_type.generics @ (formal.position)
@@ -545,9 +545,9 @@ feature {NONE}-- Clickable/Editable implementation
 							type := Result.type
 							if type.is_formal then
 								formal ?= type
-								if 
+								if
 									processed_type /= Void and then
-									processed_type.has_generics and then 
+									processed_type.has_generics and then
 									processed_type.generics.valid_index (formal.position)
 								then
 									processed_type := processed_type.generics @ (formal.position)
@@ -562,7 +562,7 @@ feature {NONE}-- Clickable/Editable implementation
 						end
 					end
 				end
-				go_to_next_token			
+				go_to_next_token
 				if token_image_is_same_as_word (current_token, Opening_parenthesis) then
 					skip_parenthesis ('(', ')')
 					go_to_next_token
@@ -621,7 +621,7 @@ feature {NONE}-- Implementation
 	instruction_part: INTEGER is unique
 
 	local_part: INTEGER is unique
-	
+
 	no_interesting_part: INTEGER is unique
 
 	find_expression_start is
@@ -712,7 +712,7 @@ feature {NONE}-- Implementation
 			par_cnt: INTEGER
 			stop: BOOLEAN
 		do
-				-- first, we check that the expression can be analyzed, i.e. there is a sequence 
+				-- first, we check that the expression can be analyzed, i.e. there is a sequence
 				-- sub_expression infix sub_expression ...
 				-- we store those sub_expression in `expression_table'
 			from
@@ -738,7 +738,7 @@ feature {NONE}-- Implementation
 						exp.after or else not is_known_prefix (exp.item)
 					loop
 --| FIXME ? 						-- as for all known prefix the returned type equals to the base type,
-							-- we forget about them 
+							-- we forget about them
 						exp.forth
 					end
 					create sub_exp.make
@@ -827,7 +827,7 @@ feature {NONE}-- Implementation
 					if not error then
 						expression_table.extend (sub_exp)
 						infix_expected := True
-					end	
+					end
 				end
 			end
 			error := error or else not infix_expected
@@ -975,7 +975,7 @@ feature {NONE}-- Implementation
 									type := l_current_class_c.actual_type
 									if
 										type /= Void and then
-										type.has_generics and then 
+										type.has_generics and then
 										type.generics.valid_index (formal.position)
 									then
 										type := type.generics @ (formal.position)
@@ -1010,9 +1010,9 @@ feature {NONE}-- Implementation
 								if processed_feature /= Void and then processed_feature.type /= Void then
 									if processed_feature.type.is_formal then
 										formal ?= processed_feature.type
-										if 
+										if
 											type /= Void and then
-											type.has_generics and then 
+											type.has_generics and then
 											type.generics.valid_index (formal.position)
 										then
 											type := type.generics @ (formal.position)
@@ -1087,7 +1087,7 @@ feature {NONE}-- Implementation
 						if Result.is_formal then
 							formal ?= Result
 							if formal /= Void and then a_type.has_generics and then a_type.generics.valid_index (formal.position) then
-								Result := a_type.generics @ (formal.position)							
+								Result := a_type.generics @ (formal.position)
 							end
 						end
 					end
@@ -1118,12 +1118,12 @@ feature {NONE}-- Implementation
 					if l_current_class_c.has_feature_table then
 						current_feature := l_current_class_c.feature_with_name (current_feature_as.feature_name)
 					end
-					
-					if current_feature /= Void then								
+
+					if current_feature /= Void then
 						if current_token /= Void and then current_line /= Void then
-							Local_analyzer.build_entities_list (current_line, current_token)
-							entities_list := local_analyzer.found_locals_list													
-							
+							set_up_local_analyzer (current_line, current_token)
+							entities_list := local_analyzer.found_locals_list
+
 							name_id := Names_heap.id_of (name)
 							if name_id > 0 and not entities_list.is_empty then
 									-- There is a `name_id' corresponding to `name' so let's
@@ -1151,7 +1151,7 @@ feature {NONE}-- Implementation
 									entities_list.forth
 								end
 							end
-						end					
+						end
 					end
 				end
 			end
@@ -1209,7 +1209,7 @@ feature {NONE}-- Implementation
 				end
 			end
 --| FIXME: Missing manifest arrays and strings
-		end	
+		end
 
 feature {NONE}-- Implementation
 
@@ -1232,7 +1232,7 @@ feature {NONE}-- Implementation
 					-- Save compiler context
 				l_class_c := system.current_class
 				l_cluster := inst_context.cluster
-				
+
 					-- Set new compiler context
 				system.set_current_class (a_current_class)
 				inst_context.set_cluster (a_current_class.cluster)
@@ -1258,7 +1258,7 @@ feature {NONE}-- Implementation
 			end
 			retry
 		end
-	
+
 	after_searched_token: BOOLEAN is
 			-- is `current_token' after `searched_token' ?
 			-- True if current_token is Void
@@ -1266,7 +1266,7 @@ feature {NONE}-- Implementation
 			if current_token = Void then
 				Result := True
 			else
-				Result := (current_line.index > searched_line.index) or else 
+				Result := (current_line.index > searched_line.index) or else
 					((current_line.index = searched_line.index) and then (current_token.position > searched_token.position))
 			end
 		end
@@ -1300,7 +1300,7 @@ feature {NONE}-- Implementation
 				loop
 					if current_token.is_text and then not is_comment (current_token) then
 							-- it is a text token
-	
+
 						if uncomplete_string then
 								-- a string is split on several lines
 								-- we skip its beginning
@@ -1352,7 +1352,7 @@ feature {NONE}-- Implementation
 			end
 			if current_token = Void then
 				current_line := Void
-			end			
+			end
 		end
 
 	go_to_next_token is
@@ -1435,7 +1435,7 @@ feature {NONE}-- Implementation
 			end
 			if current_token = Void then
 				current_line := Void
-			end			
+			end
 		end
 
 	skip_parenthesis (opening_char, closing_char: CHARACTER) is
@@ -1481,7 +1481,7 @@ feature {NONE} -- Implementation
 		end
 
 	current_class_i: CLASS_I
-			-- current class 
+			-- current class
 
 	platform_is_windows: BOOLEAN is
 			-- Is the current platform Windows?
@@ -1491,8 +1491,32 @@ feature {NONE} -- Implementation
 
 	local_analyzer: EB_LOCAL_ENTITIES_FINDER is
 			--
+		do
+			Result := local_analyzer_cell.item
+		ensure
+			local_analyzer_not_void: Result /= Void
+		end
+
+	local_analyzer_cell: CELL [EB_LOCAL_ENTITIES_FINDER] is
+		local
+			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_TEXT
 		once
-			create Result.make
+			create Result
+			create l_analyzer.make
+			Result.put (l_analyzer)
+		end
+
+	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN) is
+			-- Set up local analyzer.
+		local
+			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_TEXT
+		do
+			l_analyzer ?= local_analyzer
+			if l_analyzer = Void then
+				create l_analyzer.make
+				local_analyzer_cell.put (l_analyzer)
+			end
+			l_analyzer.build_entities_list (a_line, a_token)
 		end
 
 feature {NONE} -- Implementation
@@ -1532,7 +1556,7 @@ feature {NONE} -- Implementation
 					index_min := index_max
 				else
 					from
-						
+
 					until
 						index_min >= index_max - 1
 					loop
@@ -1546,7 +1570,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				Result := index_min
-			end			
+			end
 		end
 
 feature {SMART_TEXT} -- Constants
@@ -1556,38 +1580,38 @@ feature {SMART_TEXT} -- Constants
 			Result := <<"True", "False">>
 		end
 
-	feature_call_separators: ARRAY [STRING] is 
+	feature_call_separators: ARRAY [STRING] is
 		once
 			Result := <<".", "~">>
 		end
 
-	unwanted_symbols: ARRAY [STRING] is 
+	unwanted_symbols: ARRAY [STRING] is
 		once
 			Result := <<".", "(", "{", "[", "]", "}", ")", "$">>
 		end
 
-	feature_body_keywords: ARRAY [STRING] is 
+	feature_body_keywords: ARRAY [STRING] is
 		once
 			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "recue", "unique", "is">>
 		end
 
-	feature_contract_keywords: ARRAY [STRING] is 
+	feature_contract_keywords: ARRAY [STRING] is
 		once
 			Result := <<"require", "ensure">>
 		end
 
-	feature_executable_keywords: ARRAY [STRING] is 
+	feature_executable_keywords: ARRAY [STRING] is
 		once
 			Result := <<"do", "once", "rescue">>
 		end
 
-	feature_local_keywords: ARRAY [STRING] is 
+	feature_local_keywords: ARRAY [STRING] is
 		once
 			Result := <<"local">>
 		end
 
-	
-	special_keywords: ARRAY [STRING] is 
+
+	special_keywords: ARRAY [STRING] is
 		once
 			Result := <<"create", "precursor">>
 		end
@@ -1600,7 +1624,7 @@ feature {SMART_TEXT} -- Constants
 	closing_separators: ARRAY [STRING] is
 		once
 			Result := <<":=", "?=", ";", ",">>
-		end 
+		end
 
 	infix_groups: LINKED_LIST[ARRAY[STRING]] is
 			-- list of operators groups, sorted by priority
@@ -1615,7 +1639,7 @@ feature {SMART_TEXT} -- Constants
 			Result.extend (<<"xor">>)
 			Result.extend (<<"or">>)
 			Result.extend (<<"implies">>)
-		end 
+		end
 
 invariant
 
@@ -1628,19 +1652,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

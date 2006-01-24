@@ -17,7 +17,8 @@ inherit
 
 create
 	default_create,
-	make_with_text
+	make_with_text,
+	make_with_text_and_provider
 
 feature -- Query
 
@@ -26,10 +27,10 @@ feature -- Query
 			Precursor
 			text_field.enable_edit
 			if text_field.text_length > 0 then
-				text_field.select_all				
+				text_field.select_all
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

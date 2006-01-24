@@ -240,6 +240,9 @@ feature -- Graphical changes
 			is_attached_to_row: row /= Void
 		local
 			gedit: ES_OBJECTS_GRID_EXPRESSION_CELL
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+			l_class_c: CLASS_C
+			l_feature_as: FEATURE_AS
 		do
 			title := v
 			if Col_expression_index > 0 and Col_expression_index <= row.count then
@@ -248,12 +251,24 @@ feature -- Graphical changes
 			if gedit = Void then
 				create gedit
 				grid_cell_set_text (gedit, v)
+
 				gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
 				gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, True, ?,?,?,?,?,?,?,?))
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
 				apply_cell_expression_text_properties_on (gedit)
 
 				row.set_item (Col_expression_index, gedit)
+
+				if expression.context_class /= Void then
+					l_class_c := expression.context_class
+				else
+					l_class_c := eb_debugger_manager.debugging_class_c
+					l_feature_as := eb_debugger_manager.debugging_feature_as
+				end
+				if l_class_c /= Void then
+					create l_provider.make (l_class_c, l_feature_as, True, False)
+					gedit.set_completion_possibilities_provider (l_provider)
+				end
 			end
 			gedit.set_text (v)
 		end
@@ -478,19 +493,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

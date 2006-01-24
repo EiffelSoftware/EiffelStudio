@@ -205,10 +205,14 @@ feature {NONE} -- Graphical initialization and changes
 			context_radio.select_actions.extend (agent event_context_radio_selected)
 
 				--| Create and set up the text fields.
-			create class_field
+			create class_field.make
+			create expression_field.make
 			create address_field
-			create expression_field
 			create object_name_field
+
+
+
+			setup_completion_possibilities_providers
 
 			class_field.disable_sensitive
 			address_field.disable_sensitive
@@ -599,12 +603,33 @@ feature {NONE} -- Event handling
 			set_focus (focused_widget)
 		end
 
+feature {NONE} -- Code completion.
+
+	expression_field_provider : EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+
+	class_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+
+	setup_completion_possibilities_providers is
+			-- Setup code completion possiblilities providers.
+		require
+			expression_field_attached: expression_field /= Void
+			class_field_attached: class_field /= Void
+		do
+			create expression_field_provider.make (Void, Void, true, false)
+			expression_field_provider.set_code_completable (expression_field)
+			expression_field.set_completion_possibilities_provider (expression_field_provider)
+
+			create class_provider.make (Void, Void, false, true)
+			class_field.set_completion_possibilities_provider (class_provider)
+			class_provider.set_code_completable (class_field)
+		end
+
 feature {NONE} -- Widgets
 
-	expression_field: EV_TEXT_FIELD
+	expression_field: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Text field that contains the expression.
 
-	class_field: EV_TEXT_FIELD
+	class_field: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Text field that contains the context class name.
 
 	address_field: EV_TEXT_FIELD
@@ -684,19 +709,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

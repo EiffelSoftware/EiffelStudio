@@ -10,26 +10,35 @@ class
 	ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
 
 inherit
-	EV_GRID_EDITABLE_ITEM
+	EB_CODE_COMPLETABLE_GRID_EDITABLE_ITEM
 		redefine
 			activate_action, deactivate, make_with_text,
 			initialize_actions
 		end
 
 create
-	make_with_text
+	make_with_text,
+	make_with_text_and_provider
 
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
+			-- Create `Current' and assign `a_text' to `text'
 		do
 			empty_text := a_text
-			Precursor (empty_text)
+			default_create
+			set_text (a_text)
 			create apply_actions
 		end
-		
+
+	make_with_text_and_provider (a_text: STRING; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+		do
+			make_with_text (empty_text)
+			completion_possibilities_provider := a_provider
+		end
+
 	empty_text: STRING
-		
+
 feature -- Query
 
 	use_text: STRING
@@ -59,7 +68,7 @@ feature -- Query
 			end
 			set_text (empty_text)
 		end
-		
+
 	apply_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Action to perform when applying the changes
 

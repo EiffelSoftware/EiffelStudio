@@ -12,7 +12,7 @@ class
 inherit
 	EB_CLASS_INFO_ANALYZER
 		redefine
-			reset			
+			reset
 		end
 
 	EB_SHARED_PREFERENCES
@@ -67,7 +67,7 @@ feature -- Analysis preparation
 		local
 			token, prev, next: EDITOR_TOKEN
 			tfs: EDITOR_TOKEN_FEATURE_START
-			line: EIFFEL_EDITOR_LINE			
+			line: EIFFEL_EDITOR_LINE
 		do
 			from
 				line := a_line
@@ -85,14 +85,14 @@ feature -- Analysis preparation
 
 							-- If a string is written one several lines (more than 2 in fact),
 							-- it will be made of several token, some of which may not be
-							-- string tokens (those like % .... % ) 
+							-- string tokens (those like % .... % )
 						if split_string then
 							split_string := False
 						elseif token.image @ token.image.count /= '%"' then
 							split_string := True
 						else
 								-- It might be an operator name
-							token.set_pos_in_text (pos_in_file)						
+							token.set_pos_in_text (pos_in_file)
 						end
 					else
 						if not split_string then
@@ -117,7 +117,7 @@ feature -- Analysis preparation
 								end
 								features_position.forth
 							else
-								token.set_pos_in_text (pos_in_file)						
+								token.set_pos_in_text (pos_in_file)
 							end
 						end
 					end
@@ -135,7 +135,7 @@ feature -- Analysis preparation
 		end
 
 	update is
-			-- update class text information 
+			-- update class text information
 		do
 			build_features_arrays
 			reset_positions_and_indexes
@@ -165,7 +165,7 @@ feature -- Status
 		do
 			file_standard_is_windows := value
 		end
-		
+
 	feature_containing_cursor (a_cursor: TEXT_CURSOR): FEATURE_AS is
 			-- Feature containing current cursor if exits.
 			-- If not void returns.
@@ -192,7 +192,7 @@ feature {NONE} -- Retrieve information from text
 				loop
 					invariant_index := invariant_index.min (invariant_assertion_list.item.start_position)
 					invariant_assertion_list.forth
-				end				
+				end
 			end
 			if current_class_as.features /= Void and then features_position.count > 0 then
 				features_index := features_position @ 1
@@ -200,7 +200,7 @@ feature {NONE} -- Retrieve information from text
 				features_index := invariant_index
 			end
 		end
-		
+
 feature -- Retrieve information from ast
 
 	build_features_arrays is
@@ -217,7 +217,7 @@ feature -- Retrieve information from ast
 		do
 			feature_clauses := current_class_as.features
 			if feature_clauses /= Void then
-				from 
+				from
 					feature_clauses.start
 				until
 					feature_clauses.after
@@ -229,7 +229,7 @@ feature -- Retrieve information from ast
 				end
 				create features_position.make (size)
 				create features_ast.make (size)
-				from 
+				from
 					feature_clauses.start
 				until
 					feature_clauses.after
@@ -304,13 +304,13 @@ feature -- Click list update
 				loop
 					invariant_index := invariant_index.min (invariant_assertion_list.item.start_position)
 					invariant_assertion_list.forth
-				end				
+				end
 			end
 			if current_class_as.features /= Void and then features_position.count > 0 then
 				features_index := features_position @ 1
 			else
 				features_index := invariant_index
-			end			
+			end
 			from
 				content.start
 				line := content.current_line
@@ -330,7 +330,7 @@ feature -- Click list update
 
 							-- If a string is written one several lines (more than 2 in fact),
 							-- it will be made of several token, some of which may not be
-							-- string tokens (those like % .... % ) 
+							-- string tokens (those like % .... % )
 						if token.image @ token.image.count /= '%"' then
 							from
 								if token.next /= Void then
@@ -348,7 +348,7 @@ feature -- Click list update
 								token /= Void
 							until
 								is_string (token) or token = Void
-							loop								
+							loop
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file
 									token := token.next
@@ -404,8 +404,8 @@ feature -- Click list update
 				else
 					token := Void
 				end
-			end							
-		end		
+			end
+		end
 
 feature {NONE} -- Private Access : indexes
 
@@ -429,35 +429,35 @@ feature -- Basic Operations
 			cursor_not_void: cursor /= Void
 		local
 			token				: EDITOR_TOKEN
-			feat_table			: E_FEATURE_TABLE 
+			feat_table			: E_FEATURE_TABLE
 			feat				: E_FEATURE
 			cls_c				: CLASS_C
 			crtrs				: HASH_TABLE [EXPORT_I, STRING]
 			externals			: ARRAYED_LIST [E_FEATURE]
 			show_any_features	: BOOLEAN
 			l_current_class_c	: CLASS_C
-		do			
+		do
 			create insertion
 			insertion.put ("")
 			is_create := False
 			is_static := False
-			create completion_possibilities.make (1, 30)			
+			create completion_possibilities.make (1, 30)
 			cp_index := 1
-			initialize_context				
+			initialize_context
 			if current_class_i /= Void and then current_class_i.is_compiled then
 				l_current_class_c := current_class_i.compiled_class
 				token := cursor.token
 				if token /= Void then
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
-					
+
 					if exploring_current_class then
-						local_analyzer.build_entities_list (cursor.line, token)
+						set_up_local_analyzer (cursor.line, token)
 						add_names_to_completion_list (Local_analyzer, l_current_class_c)
 						local_analyzer.reset
 					end
-				end			
-	
-					-- Build the completion list based on data mined from 
+				end
+
+					-- Build the completion list based on data mined from
 				if cls_c /= Void and then cls_c.has_feature_table then
 					feat_table := cls_c.api_feature_table
 					if is_create then
@@ -469,12 +469,12 @@ feature -- Basic Operations
 							until
 								crtrs.after
 							loop
-								if 
+								if
 									feat_table.has (crtrs.key_for_iteration) and then
 									crtrs.item_for_iteration.is_exported_to (l_current_class_c)
 								then
 									add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
-								end								
+								end
 								crtrs.forth
 							end
 						end
@@ -491,7 +491,7 @@ feature -- Basic Operations
 								externals.after
 							loop
 							feat := externals.item
-							if 
+							if
 								(exploring_current_class or else feat.is_exported_to (l_current_class_c)) and then
 								(show_any_features or else not feat.written_class.name_in_upper.is_equal (Any_name))
 							then
@@ -519,7 +519,7 @@ feature -- Basic Operations
 						end
 					end
 				end
-				
+
 					-- Reset and sort matches
 				reset_after_search
 				if cp_index = 1 then
@@ -582,7 +582,7 @@ feature -- Basic Operations
 			old_token: like a_token
 			old_position: INTEGER
 			l_swapped: BOOLEAN
-		do			
+		do
 			token := a_token
 			if token /= Void then
 					-- Restore faked cursor position so we can complete before '.'
@@ -591,11 +591,11 @@ feature -- Basic Operations
 					old_position := cursor.pos_in_token
 					cursor.go_left_char
 					token := cursor.token
-					l_swapped := True					
+					l_swapped := True
 				end
-			end	
-		
-			exploring_current_class := False				
+			end
+
+			exploring_current_class := False
 			if can_attempt_auto_complete_from_token (token) then
 				if token.is_text then
 						-- The cursor is in a text token so we complete based upon the previous token.					
@@ -607,7 +607,7 @@ feature -- Basic Operations
 							is_static := static_call_before_position (cursor.line, prev_token)
 							is_parenthesized := parenthesized_before_position (cursor.line, prev_token, cursor)
 						elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class, True, two_back)	
+							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class, True, two_back)
 						elseif prev_token.is_text and not two_back then
 							gone_back_two := True
 							Result := class_c_to_complete_from (prev_token, cursor, a_compiled_class, True, True)
@@ -625,7 +625,7 @@ feature -- Basic Operations
 							-- Context unknown, assume current class
 						exploring_current_class := True
 					end
-					
+
 				end
 			end
 			if l_swapped = True then
@@ -633,10 +633,10 @@ feature -- Basic Operations
 					-- User is completing before '.'
 				cursor.set_current_char (old_token, old_position)
 				token := cursor.token
-			end				
-			
+			end
+
 			if Result = Void then
-				if exploring_current_class then								
+				if exploring_current_class then
 					Result := a_compiled_class
 				elseif prev_token /= Void and not is_create and not is_static and not is_parenthesized then
 					current_feature_as := feature_containing (prev_token, cursor.line)
@@ -658,9 +658,9 @@ feature -- Basic Operations
 					end
 				elseif is_static or is_parenthesized then
 					Result := found_class
-				end					
+				end
 			end
-			
+
 			if not recurse then
 				calculate_insertion (cursor, token)
 			end
@@ -679,7 +679,7 @@ feature -- Basic Operations
 						-- The cursor is in a text token so we complete based upon the previous token unless the cursor
 						-- is somewhere inside this token..
 					prev_token := token.previous
-					
+
 					if prev_token /= Void and cursor.pos_in_token = 1 then
 						if prev_token.is_text and then token_image_is_in_array (prev_token, Feature_call_separators) then
 								-- Previous token is a separator so take there is no insertion term
@@ -710,7 +710,7 @@ feature -- Basic Operations
 									l_char := prev_token.image.item (prev_token.image.count)
 									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
 											-- Previous token is an Eiffel identifier
-										insertion.put (prev_token.image)		
+										insertion.put (prev_token.image)
 									end
 								end
 --							elseif prev_token.is_blank then
@@ -726,7 +726,7 @@ feature -- Basic Operations
 									l_char := prev_token.image.item (prev_token.image.count)
 									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
 											-- Previous token is an Eiffel identifier
-										insertion.put (prev_token.image)		
+										insertion.put (prev_token.image)
 									end
 								end
 									-- Uncomment to have 'a' be replaced when completing '(|a.b.c)'
@@ -737,14 +737,14 @@ feature -- Basic Operations
 --										insertion_remainder := token.image.count		
 --									end
 --								end
-							end	
+							end
 						end
 					elseif cursor.pos_in_token > 1 then
 							-- Cursor is current in a token at `cursor.pos_in_token'
 						if not token.is_blank then
 								-- Happens when completing 'a.bb|bbbb.c'						
 							insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-							insertion_remainder := token.length - (cursor.pos_in_token - 1)							
+							insertion_remainder := token.length - (cursor.pos_in_token - 1)
 						else
 							-- Happens when completing 'if | then'
 						end
@@ -762,7 +762,7 @@ feature -- Basic Operations
 								-- Previous token is an Eiffel identifier
 								-- Happens when completing 'p|'
 							insertion.put (prev_token.image)
-							insertion_remainder := 0		
+							insertion_remainder := 0
 						else
 								-- Happens when completing ')|.b.c'
 						end
@@ -788,14 +788,14 @@ feature -- Class names completion
 			class_name			: EB_CLASS_FOR_COMPLETION
 			name_name			: EB_NAME_FOR_COMPLETION
 			cnt, i				: INTEGER
-		do			
+		do
 			create insertion
 			insertion.put ("")
 			is_create := False
 			class_completion_possibilities := Void
 			if workbench.is_already_compiled and then (not workbench.is_compiling) and then cursor.token /= Void then
 				token := cursor.token.previous
-				if 
+				if
 					(token.image.is_equal (Opening_brace) or token.image.is_equal (colon)) and then can_attempt_auto_complete_from_token (token)
 				then
 					show_all := True
@@ -839,13 +839,13 @@ feature -- Class names completion
 						end
 					end
 					clusters.forth
-				end			
-				
+				end
+
 				cnt := class_list.count
 				if current_class_as /= Void and then current_class_as.generics /= Void then
 					create class_completion_possibilities.make (1, current_class_as.generics.count + cnt)
 					from
-						current_class_as.generics.start						
+						current_class_as.generics.start
 					until
 						current_class_as.generics.after
 					loop
@@ -853,17 +853,17 @@ feature -- Class names completion
 						class_list.put_front (name_name)
 						current_class_as.generics.forth
 					end
-				end								
-				
+				end
+
 				if cnt > 0 then
 					if class_completion_possibilities = Void then
-						create class_completion_possibilities.make (1, cnt)	
+						create class_completion_possibilities.make (1, cnt)
 					else
 						cnt := class_list.count
 					end
 					from
 						i := 1
-						class_list.start							
+						class_list.start
 					until
 						i > cnt
 					loop
@@ -911,7 +911,7 @@ feature -- Completion access
 		do
 			Result := insertion.item.count
 		end
-	
+
 	insertion_remainder: INTEGER
 			-- The number of characters in the insertion remaining from the cursor position to the
 			-- end of the token
@@ -929,7 +929,7 @@ feature {NONE} -- Private Status
 
 	is_static: BOOLEAN
 			-- was auto-complete called after "feature {class}" ?
-			
+
 	is_parenthesized: BOOLEAN
 			-- was auto-complete called after parenthesis "(feature.function_call)." ?
 
@@ -1054,21 +1054,21 @@ feature {NONE} -- Completion implementation
 						Result := type_of_local_entity_named (name)
 						if Result = Void then
 							Result := type_of_constants_or_reserved_word (current_token)
-						end						
+						end
 					else
 							-- Found feature						
 						error := True
 						Result := feat.type
 					end
-					
+
 					if Result /= Void then
 						if Result.is_like and then Result.actual_type.is_formal then
 								-- Get type from like formal
 							Result := Result.actual_type
-						end	
+						end
 						if Result.is_formal then
 							formal ?= Result
-							Result := type_from_formal_type (l_current_class_c, formal)	
+							Result := type_from_formal_type (l_current_class_c, formal)
 						end
 						error := False
 					end
@@ -1088,7 +1088,7 @@ feature {NONE} -- Completion implementation
 				end
 			until
 				error or else after_searched_token
-			loop				
+			loop
 				name := current_token.image.as_lower
 				processed_class := Result.associated_class
 				error := True
@@ -1099,14 +1099,14 @@ feature {NONE} -- Completion implementation
 							type := feat.type
 							if type.is_formal then
 								formal ?= type
-								if 
+								if
 									Result /= Void and then
-									Result.has_generics and then 
+									Result.has_generics and then
 									Result.generics.valid_index (formal.position)
 								then
 									Result := Result.generics.item (formal.position)
 									error := False
-								end	
+								end
 							else
 								Result := type
 								error := False
@@ -1114,7 +1114,7 @@ feature {NONE} -- Completion implementation
 						end
 					end
 				end
-				go_to_next_token			
+				go_to_next_token
 				if token_image_is_same_as_word (current_token, "(") then
 					skip_parenthesis ('(', ')')
 					go_to_next_token
@@ -1131,14 +1131,14 @@ feature {NONE} -- Completion implementation
 	type_from_formal_type (a_class_c: CLASS_C; a_formal: FORMAL_A): TYPE_A is
 			-- For `_a_class_c' get actual type of `a_formal'.
 		do
-			if 
+			if
 				a_class_c /= Void and then
-				a_class_c.generics /= Void and then 
+				a_class_c.generics /= Void and then
 				a_class_c.generics.valid_index (a_formal.position)
 			then
 				Result := a_class_c.constraint (a_formal.position)
-			end			
-		end		
+			end
+		end
 
 	add_names_to_completion_list (a_analyser: EB_LOCAL_ENTITIES_FINDER; a_current: CLASS_C) is
 			-- Adds locals and arguments to completion list and adds 'Current' based on `a_current'
@@ -1152,23 +1152,23 @@ feature {NONE} -- Completion implementation
 			insert_in_completion_possibilities (l_basic)
 			if a_analyser.has_return_type then
 				create l_basic.make_with_name ("Result")
-				insert_in_completion_possibilities (l_basic)					
+				insert_in_completion_possibilities (l_basic)
 			end
 			if preferences.editor_data.show_any_features then
 				create l_basic.make_with_name ("Void")
 				insert_in_completion_possibilities (l_basic)
 			end
-			
+
 			l_names := a_analyser.found_names
 			if l_names /= Void and then not l_names.is_empty then
-				from	
+				from
 					l_names.start
 				until
 					l_names.after
 				loop
 					create l_basic.make_with_name (l_names.item)
 					insert_in_completion_possibilities (l_basic)
-					
+
 					l_names.forth
 				end
 			end
@@ -1192,7 +1192,7 @@ feature {NONE} -- Completion implementation
 					l_feature.put ((l_feature @ 1).upper, 1)
 				end
 				insert_in_completion_possibilities (l_feature)
-			end			
+			end
 		end
 
 	matches (str, pat: STRING): BOOLEAN is
@@ -1259,7 +1259,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			completion_possibilities.put (name, cp_index)
 			cp_index := cp_index + 1
 		end
-		
+
 	cp_index: INTEGER
 
 	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): FEATURE_AS is
@@ -1289,7 +1289,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 				if features_ast.valid_cursor_index (index) and index > 0 then
 					Result := features_ast @ index
 				end
-			end			
+			end
 			current_token := token
 			current_line := line
 		end
@@ -1329,7 +1329,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 				end
 			end
 			current_token := token
-			current_line := line			
+			current_line := line
 		end
 
 	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
@@ -1355,7 +1355,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 					elseif token_image_is_same_as_word (current_token, Closing_brace) then
 						par_cnt:= par_cnt + 1
 					end
-				end				
+				end
 				go_to_next_token
 				error := error or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
 				if not error then
@@ -1363,28 +1363,28 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 				end
 			end
 			current_token := token
-			current_line := line			
+			current_line := line
 		end
-		
+
 	parenthesized_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_cursor: TEXT_CURSOR): BOOLEAN is
 			-- Is feature call made on parenthesized expression?  If so determine type of parenthesized expression and put in
 			-- `found_class'.  If cannot evaluate expression `found_class' will be Void.
 		local
 			line: EDITOR_LINE
-			token, 
+			token,
 			par_token: EDITOR_TOKEN
 			par_cnt: INTEGER
 			blnk: EDITOR_TOKEN_BLANK
 			type: TYPE_A
 		do
 			line := current_line
-			token := a_token			
+			token := a_token
 			if token_image_is_same_as_word (token, closing_parenthesis) then
 				Result := True
 				from
 	        		par_cnt := 1
 				until
-					token = Void or par_cnt = 0	
+					token = Void or par_cnt = 0
 	 			loop
 					token := token.previous
 					if token_image_is_same_as_word (token , closing_parenthesis) then
@@ -1393,8 +1393,8 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 						par_cnt := par_cnt - 1
 	 				end
 				end
- 
-	 			if token /= Void then -- token = "(" 
+
+	 			if token /= Void then -- token = "("
 	 				par_token := token
 	 				from
 						blnk ?= token.previous
@@ -1404,7 +1404,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 						token := blnk
 						blnk ?= token.previous
 					end
-						-- token.previous is not blank : either feature name or line or expression beginning 
+						-- token.previous is not blank : either feature name or line or expression beginning
 					if is_beginning_of_expression (token.previous) then
 						token := par_token
 					else
@@ -1414,7 +1414,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 	            if token /= Void then
 	            	current_feature_as := feature_containing (token, a_cursor.line)
 	            	type := type_from (token, a_cursor.line)
-	            	if type /= Void then	            		
+	            	if type /= Void then
 		            	found_class := type.associated_class
 		            end
 	            end
@@ -1422,7 +1422,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 		end
 
 	Any_name: STRING is "ANY";
-				
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

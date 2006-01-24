@@ -13,11 +13,7 @@ inherit
 		redefine
 			interface,
 			default_style,
-			compute_minimum_size,
-			compute_minimum_height,
-			compute_minimum_width,
 			make,
-			frame_width, border_width,
 			initialize
 		end
 
@@ -42,7 +38,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			make_child (application_imp.silly_main_window, "")
 		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -59,66 +55,9 @@ feature {NONE} -- Implementation
 			-- Default style of `Current'.
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
-			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings 
-		end
-		
-	compute_minimum_width is
-			-- Recompute the minimum width of `Current'.
-		local
-			mw: INTEGER
-		do
-			if item /= Void then
-				mw := item.minimum_width
-			end
-			if user_can_resize then
-				mw := mw + 2 * window_frame_width
-			elseif is_border_enabled then
-				mw := mw + 2 * dialog_window_frame_height
-			end
-			ev_set_minimum_width (mw)
+			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings
 		end
 
-	compute_minimum_height is
-			-- Recompute the minimum height of `Current'.
-		local
-			mh: INTEGER
-		do
-			if item /= Void then
-				mh := item.minimum_height
-			end
-			if user_can_resize then
-				mh := mh + 2 * window_frame_width
-			elseif is_border_enabled then
-				mh := mh + 2 * dialog_window_frame_height
-			end
-			ev_set_minimum_height (mh)
-		end
-
-	compute_minimum_size is
-			-- Recompute the minimum size of `Current'.
-		local
-			mw, mh: INTEGER
-		do
-			if item /= Void then
-				mw := item.minimum_width
-				mh := item.minimum_height
-			end
-			if user_can_resize then
-				mw := mw + 2 * window_frame_width
-				mh := mh + 2 * window_frame_width
-			elseif is_border_enabled then
-				mw := mw + 2 * dialog_window_frame_height
-				mh := mh + 2 * dialog_window_frame_height
-			end
-			ev_set_minimum_size (mw, mh)
-		end
-		
-	frame_width: INTEGER is 0
-			-- `Result' is frame width of `Current'.
-	
-	border_width: INTEGER is 0
-			-- `Result' is border width of `Current'.
-	
 feature  -- Implementation
 
 	interface: EV_POPUP_WINDOW;

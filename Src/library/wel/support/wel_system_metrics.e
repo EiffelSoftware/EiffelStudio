@@ -213,7 +213,7 @@ feature -- Status report
 	title_bar_height: INTEGER is
 			-- Height of bitmaps contained in title bar
 		do
-			Result := cwin_get_system_metrics (Sm_cysize)
+			Result := cwin_get_system_metrics (sm_cycaption)
 		end
 
 	vertical_scroll_bar_arrow_width: INTEGER is

@@ -205,15 +205,29 @@ feature -- Status report
 		end
 
 	title_bar_width: INTEGER is
-			-- Width of bitmaps contained in title bar
+			-- Width of bitmap contained in title bar.
+		obsolete
+			"Use title_bar_image_width instead"
 		do
 			Result := cwin_get_system_metrics (Sm_cxsize)
 		end
 
-	title_bar_height: INTEGER is
-			-- Height of bitmaps contained in title bar
+	title_bar_image_width: INTEGER is
+			-- Width of bitmap contained in title bar.
 		do
-			Result := cwin_get_system_metrics (sm_cycaption)
+			Result := cwin_get_system_metrics (Sm_cxsize)
+		end
+
+	title_bar_image_height: INTEGER is
+			-- Height of bitmap contained in title bar.
+		do
+			Result := cwin_get_system_metrics (sm_cysize)
+		end
+
+	title_bar_height: INTEGER is
+			-- Height of title bar.
+		do
+			Result := cwin_get_system_metrics (Sm_cycaption)
 		end
 
 	vertical_scroll_bar_arrow_width: INTEGER is

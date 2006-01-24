@@ -221,8 +221,7 @@ feature -- Access
 						-- the coordinate of the top left corner of the window within
 						-- the screen, we need to add the the frame and the border
 						-- to get the right screen coordinates for Current.
-						-- The `-1' value was added by empiric experience to get right results.
-					Result := Result + l_wind.frame_width + l_wind.border_width - 1
+					Result := Result + l_wind.frame_width
 				end
 			end
 		end
@@ -243,8 +242,7 @@ feature -- Access
 						-- the screen, we need to add the title bar if any, the frame,
 						-- and the menu bar if any to get the right screen coordinates
 						-- for Current.
-						-- The `+1' value was added by empiric experience to get right results.
-					Result := Result + l_wind.title_height + l_wind.frame_height + 1
+					Result := Result + l_wind.title_height + l_wind.frame_height
 					if l_wind.has_menu then
 						Result := Result + l_wind.menu_bar_height
 					end

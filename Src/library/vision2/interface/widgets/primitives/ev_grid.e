@@ -814,6 +814,18 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
+	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+			-- Row indexes that are currently viewable in the grid in its present state.
+			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
+			-- would be 1, 11, 12, 13, 14, ...
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_row_indexes
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result

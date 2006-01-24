@@ -440,6 +440,7 @@ feature {NONE} -- add new expression from the grid
 				new_expression_row.set_item (1, glab)
 				glab.pointer_double_press_actions.force_extend (agent glab.activate)
 				glab.apply_actions.extend (agent add_new_expression_for_context)
+				set_up_complete_possibilities_provider (glab)
 			elseif new_expression_row.index < watches_grid.row_count then
 				grid_move_to_end_of_grid (new_expression_row)
 			end
@@ -1094,6 +1095,17 @@ feature -- Update
 			else
 				watches_grid.reset_layout_recorded_values
 			end
+		end
+
+feature {NONE} -- Auto-completion
+
+	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL) is
+			-- Set up code completion possibilities.
+		local
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+		do
+			create l_provider.make (Void, Void, true, true)
+			a_item.set_completion_possibilities_provider (l_provider)
 		end
 
 feature {NONE} -- Implementation

@@ -180,7 +180,8 @@ feature -- Basic operations
 		local
 			d: EV_DIALOG
 			okb, cancelb: EV_BUTTON
-			tf: EV_TEXT_FIELD
+			tf: EB_CODE_COMPLETABLE_TEXT_FIELD
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 			lab: EV_LABEL
 			fr: EV_FRAME
 			vb: EV_VERTICAL_BOX
@@ -200,8 +201,13 @@ feature -- Basic operations
 			create cancelb.make_with_text (Interface_names.B_cancel)
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cancelb)
-			create tf
+			create tf.make
 			create lab
+
+				-- Code completion
+			create l_provider.make (f.associated_class, f.ast, true, false)
+			tf.set_completion_possibilities_provider (l_provider)
+			l_provider.set_code_completable (tf)
 
 				-- Layout all widgets
 			hb.extend (create {EV_CELL})
@@ -334,19 +340,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

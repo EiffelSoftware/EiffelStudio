@@ -80,6 +80,11 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EB_SHARED_DEBUG_TOOLS
+		undefine
+			default_create, copy, is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make_with_grid (g: like parent_grid) is

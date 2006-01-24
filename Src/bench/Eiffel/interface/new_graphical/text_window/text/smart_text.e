@@ -461,10 +461,11 @@ feature -- Completion-clickable initialization / update
 		end
 
 	prepare_class_name_complete is
-			-- Use `click_tool' to determine whether there is some
-			-- name to be completed at `cursor' position.
+			-- Determine whether there is some
+			-- name to be completed at cursor position and set
+			-- `auto_complete_is_possible' accordingly.
 			-- If it is, strings that can possibly be used for completion
-			-- are available in `class_completion_possibilities'.
+			-- are available in `completion_possibilities'.
 		do
 			history.record_move
 			auto_complete_possible := False

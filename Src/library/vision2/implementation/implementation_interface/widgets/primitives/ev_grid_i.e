@@ -387,6 +387,21 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
+	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+			-- Row indexes that are currently viewable in the grid in its present state.
+			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
+			-- would be 1, 11, 12, 13, 14, ...
+		do
+			perform_vertical_computation
+			if visible_indexes_to_row_indexes /= Void then
+				Result := visible_indexes_to_row_indexes.twin
+			else
+				create Result.make (0)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	pixels_displayed_after_final_row: INTEGER is
 			-- Height in pixels displayed after the final row of `Current'.
 			-- If `is_vertical_overdraw_enabled' this is `viewable_height' less the final row height.
@@ -3270,7 +3285,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 
 	visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
 		-- Row index of each visible row in `Current' in order.
-		-- For example, if the first node is a non exapnded tree that has 10 subrows, the contents
+		-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 		-- would be 1, 11, 12, 13, 14, ...
 		-- Note that the row indexes are 1 based.
 

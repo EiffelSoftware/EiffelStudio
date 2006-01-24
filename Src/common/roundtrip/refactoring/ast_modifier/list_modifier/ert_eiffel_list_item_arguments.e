@@ -47,7 +47,7 @@ feature -- Setting
 			if a_text = Void then
 				leading_text := ""
 			else
-				leading_text := a_text
+				leading_text := a_text.twin
 			end
 		ensure
 			leading_text_set: (a_text = Void implies leading_text.is_empty) and (a_text /= Void implies leading_text.is_equal (a_text))
@@ -59,7 +59,7 @@ feature -- Setting
 			if a_text = Void then
 				trailing_text := ""
 			else
-				trailing_text := a_text
+				trailing_text := a_text.twin
 			end
 		ensure
 			trailing_text_set: (a_text = Void implies trailing_text.is_empty) and (a_text /= Void implies trailing_text.is_equal (a_text))
@@ -72,6 +72,5 @@ feature -- Setting
 			set_leading_text (a_leading_text)
 			set_trailing_text (a_trailing_text)
 		end
-
 
 end

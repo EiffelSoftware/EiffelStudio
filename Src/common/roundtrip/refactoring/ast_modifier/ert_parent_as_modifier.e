@@ -38,30 +38,47 @@ feature -- Applicability
 		local
 			i: INTEGER
 		do
+			Result := True
 			from
 				i := 1
-				Result := True
 			until
 				i > 5 or not Result
 			loop
-				if inherit_clause_modifier.i_th (i).is_empty then
-					if inherit_clause.i_th (i) /= Void then
-						Result := inherit_clause.i_th (i).can_replace_text (match_list)
-					end
-				else
-					Result := inherit_clause_modifier.i_th (i).can_apply
-				end
+				Result := can_inherit_clause_apply (i)
 				i := i + 1
 			end
 			if Result then
-				if is_end_keyword_needed then
-					if parent_ast.end_keyword = Void then
-						Result := parent_ast.can_append_text (match_list)
-					end
-				else
-					if parent_ast.end_keyword /= Void then
-						Result := parent_ast.end_keyword.can_replace_text (match_list)
-					end
+				Result := can_end_keyword_modification_apply
+			end
+		end
+
+	can_inherit_clause_apply (a_clause: INTEGER): BOOLEAN is
+			-- Can modifications done on `a_clause'-th inherit clause be applied?
+		require
+			a_clause_valid: valid_clause (a_clause)
+		do
+			if
+				inherit_clause_modifier.i_th (a_clause).is_empty and
+				not inherit_clause_has_comment (a_clause) and
+				inherit_clause.i_th (a_clause) /= Void
+			then
+				Result := inherit_clause.i_th (a_clause).can_replace_text (match_list)
+			else
+				Result := inherit_clause_modifier.i_th (a_clause).can_apply
+			end
+		end
+
+	can_end_keyword_modification_apply: BOOLEAN is
+			-- Can modifications done on "end" keyword of `parent_as' be applied?
+		do
+			Result := True
+			if is_end_keyword_needed then
+				if parent_ast.end_keyword = Void then
+					Result := parent_ast.can_append_text (match_list)
+				end
+			else
+				if parent_ast.end_keyword /= Void then
+					Result := parent_ast.end_keyword.can_replace_text (match_list)
 				end
 			end
 		end
@@ -76,12 +93,16 @@ feature -- Applicability
 			until
 				i > 5
 			loop
-				if inherit_clause_modifier.i_th (i).is_empty then
-					if inherit_clause.i_th (i) /= Void then
-						inherit_clause.i_th (i).replace_text ("", match_list)
-					end
+				if
+					inherit_clause_modifier.i_th (i).is_empty and
+					not inherit_clause_has_comment (i) and
+					inherit_clause.i_th (i) /= Void
+				then
+					inherit_clause.i_th (i).replace_text ("", match_list)
 				else
-					inherit_clause_modifier.i_th (i).apply
+					if not (inherit_clause.i_th (i) = Void and inherit_clause_modifier.i_th (i).is_empty) then
+						inherit_clause_modifier.i_th (i).apply
+					end
 				end
 				i := i + 1
 			end
@@ -162,6 +183,27 @@ feature -- Inherit clause indicators
 
 feature{NONE} -- Initialization
 
+	inherit_clause_has_comment (a_clause: INTEGER): BOOLEAN is
+			-- Does `a_clause'-th inherit clause has comment?
+		require
+			a_clause_valid: valid_clause (a_clause)
+		local
+			l_leaf: LEAF_AS
+		do
+			if inherit_clause.i_th (a_clause) = Void then
+				Result := False
+			else
+				l_leaf := next_inherit_clause_start_token (a_clause)
+				if l_leaf = Void then
+					Result := False
+				else
+					Result := match_list.has_comment (
+						create{ERT_TOKEN_REGION}.make (inherit_clause.i_th (a_clause).first_token (match_list).index,
+													  l_leaf.first_token (match_list).index - 1))
+				end
+			end
+		end
+
 	initialize is
 			-- Initialize
 		local
@@ -202,12 +244,15 @@ feature{NONE} -- Initialization
 			loop
 				if inherit_clause.i_th (i) = Void then
 					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
-					l_empty_modifier.set_header (l_head_list.i_th (i))
+					l_empty_modifier.set_header_text (l_head_list.i_th (i))
+					if is_footer_needed then
+						l_empty_modifier.set_footer_text ("%N%T%T")
+					end
 					l_modifier := l_empty_modifier
 				elseif inherit_clause.i_th (i).is_empty then
 					l_inherit_clause_name := inherit_clause.i_th (i).pre_as_list.i_th (1)
 					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
-					l_empty_modifier.set_header ("")
+					l_empty_modifier.set_header_ast (l_inherit_clause_name)
 					l_modifier := l_empty_modifier
 				else
 					l_modifier := create{ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i), match_list)
@@ -224,6 +269,7 @@ feature{NONE} -- Initialization
 		local
 			i: INTEGER
 		do
+			is_footer_needed := False
 			from
 				i := a_clause - 1
 				Result :=  Void
@@ -231,6 +277,10 @@ feature{NONE} -- Initialization
 				i < 1 or (Result /= Void)
 			loop
 				Result := inherit_clause.i_th (i)
+				if Result /= Void and then inherit_clause_has_comment (i) then
+					Result := match_list.i_th (inherit_clause.i_th (i).last_token (match_list).index + 1)
+					is_footer_needed := True
+				end
 				i := i - 1
 			end
 			if Result = Void then
@@ -240,11 +290,46 @@ feature{NONE} -- Initialization
 			Result_not_void: Result /= Void
 		end
 
+	is_footer_needed: BOOLEAN
+
+	next_inherit_clause_start_token (a_clause: INTEGER): LEAF_AS is
+			--
+		require
+			a_clause_valid: valid_clause (a_clause)
+		local
+			i: INTEGER
+		do
+			from
+				i := a_clause + 1
+			until
+				i > 5 or Result /= Void
+			loop
+				if inherit_clause.i_th (i) /= Void then
+					Result := inherit_clause.i_th (i).first_token (match_list)
+				end
+				i := i + 1
+			end
+			if Result = Void then
+				Result := parent_ast.end_keyword
+			end
+		end
+
+
 	is_end_keyword_needed: BOOLEAN is
 			-- Is "end" keyword needed?
 			-- If no inherit presents, "end" keyword is not needed, otherwise, needed.
+		local
+			i: INTEGER
 		do
-			Result := not inherit_clause_modifier.for_all (agent {ERT_BASIC_EIFFEL_LIST_MODIFIER}.is_empty)
+			from
+				i := 1
+				Result := False
+			until
+				i > 5 or Result
+			loop
+				Result := not inherit_clause_modifier.i_th (i).is_empty or else inherit_clause_has_comment (i)
+				i := i + 1
+			end
 		end
 
 feature{NONE} -- Implementation

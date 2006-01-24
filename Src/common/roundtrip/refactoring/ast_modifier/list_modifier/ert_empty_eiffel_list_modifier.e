@@ -27,18 +27,16 @@ feature
 			a_list_not_void: a_list /= Void
 		do
 			attached_ast := a_attached_ast
-			create modifier_list.make
-			header := ""
-			footer := ""
 			match_list := a_list
 			is_prepended := a_prepend
+			create prepend_modifier_list.make
+			create append_modifier_list.make
 			counter := 1
-			modifier_list.extend (create{ERT_EXISTING_ITEM_MODIFIER}.make (attached_ast, Void, 0, counter, a_list))
-			counter := counter + 1
+			separator := ""
+			leading_text := ""
+			trailing_text := ""
 		ensure
 			a_attached_ast_set: attached_ast = a_attached_ast
-			header_set: header.is_equal ("")
-			footer_set: footer.is_equal ("")
 			is_prepended_set: is_prepended = a_prepend
 		end
 
@@ -47,64 +45,124 @@ feature -- Applicability
 	can_apply: BOOLEAN is
 			-- Can current modifier be applied?
 		do
+			Result := True
+			if header_text /= Void and then header_ast /= Void then
+				Result := header_ast.can_replace_text (match_list)
+			end
+			if footer_text /= Void and then footer_ast /= Void then
+				Result := footer_ast.can_replace_text (match_list)
+			end
+			if Result then
+				if is_prepended then
+					Result := attached_ast.can_prepend_text (match_list)
+				else
+					Result := attached_ast.can_append_text (match_list)
+				end
+			end
+		end
+
+	concatenate_modifier_list (dest, sour: like prepend_modifier_list) is
+			-- Concatenate `sour' to `dest'.
+		do
+			from
+				sour.start
+			until
+				sour.after
+			loop
+				dest.extend (sour.item)
+				sour.forth
+			end
+		end
+
+
+	merge_modifier_list: like prepend_modifier_list is
+			-- Merge `prepend_modifier_list' and `append_modifier_list'.
+		do
+			create Result.make
 			if is_prepended then
-				Result := attached_ast.can_prepend_text (match_list)
+				concatenate_modifier_list (Result, append_modifier_list)
+				concatenate_modifier_list (Result, prepend_modifier_list)
 			else
-				Result := attached_ast.can_append_text (match_list)
+				concatenate_modifier_list (Result, prepend_modifier_list)
+				concatenate_modifier_list (Result, append_modifier_list)
+			end
+		end
+
+	compute_modification (a_modifier_list: like prepend_modifier_list) is
+			-- Computer separators.
+		require
+			a_modifier_list_not_void: a_modifier_list /= Void
+		local
+			i, j: INTEGER
+			l_modifier: ERT_LIST_ITEM_MODIFIER
+		do
+			if not a_modifier_list.is_empty then
+				if has_separator then
+					if is_prepended then
+						i := 2
+						j := a_modifier_list.count
+						a_modifier_list.first.set_is_separator_needed (False)
+						a_modifier_list.first.set_arguments (separator, leading_text, trailing_text)
+					else
+						i := 1
+						j := a_modifier_list.count - 1
+						a_modifier_list.last.set_is_separator_needed (False)
+						a_modifier_list.last.set_arguments (separator, leading_text, trailing_text)
+					end
+				else
+					i := 1
+					j := a_modifier_list.count
+				end
+				from
+				until
+					i > j
+				loop
+					l_modifier := a_modifier_list.i_th (i)
+					l_modifier.set_is_separator_needed (has_separator)
+					l_modifier.set_arguments (separator, leading_text, trailing_text)
+					i := i + 1
+				end
+			end
+
+			if header_text /= Void and header_ast = Void then
+				if is_prepended then
+				    create {ERT_PREPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, header_text, i, counter, match_list)
+					a_modifier_list.extend (l_modifier)
+				else
+					create {ERT_APPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, header_text, i, counter, match_list)
+					a_modifier_list.put_front (l_modifier)
+				end
+				l_modifier.set_is_separator_needed (False)
+				l_modifier.set_arguments ("", "", "")
+			end
+
+			if footer_text /= Void and footer_ast = Void then
+				if is_prepended then
+				    create {ERT_PREPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, footer_text, i, counter, match_list)
+					a_modifier_list.put_front (l_modifier)
+				else
+					create {ERT_APPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, footer_text, i, counter, match_list)
+					a_modifier_list.extend (l_modifier)
+				end
+				l_modifier.set_is_separator_needed (False)
+				l_modifier.set_arguments ("", "", "")
 			end
 		end
 
 	apply is
 			-- Apply current modifier.
 		local
-			i, j, k: INTEGER
-			l_cnt: INTEGER
-			l_modifier: ERT_LIST_ITEM_MODIFIER
+			l_modifier_list: like prepend_modifier_list
 		do
-			if is_prepended then
-				if not footer.is_empty then
-					attached_ast.prepend_text (footer, match_list)
-				end
-			else
-				if not header.is_empty then
-					attached_ast.append_text (header, match_list)
-				end
+			l_modifier_list := merge_modifier_list
+			compute_modification (l_modifier_list)
+			if header_text /= Void and then header_ast /= Void then
+				header_ast.replace_text (header_text, match_list)
 			end
-
-			from
-				l_cnt := modifier_list.count - 1
-				k := 1
-				if is_prepended then
-					i := l_cnt
-					j := -1
-				else
-					i := 2
-					j := 1
-				end
-			until
-				k > l_cnt
-			loop
-				l_modifier := modifier_list.i_th (i)
-				if has_separator and then k < l_cnt then
-					modifier_list.i_th (i).set_is_separator_needed (True)
-				else
-					modifier_list.i_th (i).set_is_separator_needed (False)
-				end
-				modifier_list.i_th (i).set_arguments (separator, leading_text, trailing_text)
-				l_modifier.apply
-				i := i + j
-				k := k + 1
+			if footer_text /= Void and then footer_ast /= Void then
+				footer_ast.replace_text (footer_text, match_list)
 			end
-
-			if is_prepended then
-				if not header.is_empty then
-					attached_ast.prepend_text (header, match_list)
-				end
-			else
-				if not footer.is_empty then
-					attached_ast.append_text (footer, match_list)
-				end
-			end
+			l_modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.apply)
 			applied := True
 		end
 
@@ -112,41 +170,56 @@ feature
 
 	prepend_item (item_text: STRING; i: INTEGER) is
 			-- Not applicable.
+		require else
+			i_is_zero: i = 0
 		do
+			if is_prepended then
+				prepend_modifier_list.extend (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
+			else
+				prepend_modifier_list.put_front (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
+			end
+			counter := counter + 1
 		end
 
 	append_item (item_text: STRING; i: INTEGER) is
 			-- Not applicable.
+		require else
+			i_is_zero: i = 0
 		do
+			if is_prepended then
+				prepend_modifier_list.put_front (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
+			else
+				prepend_modifier_list.extend (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
+			end
+			counter := counter + 1
 		end
 
 	replace_item (item_text: STRING; i: INTEGER) is
-			-- Not applicable.
+			-- Not applicable.			
 		do
+			check
+				not_applicable: False
+			end
 		end
 
 	remove_item (i: INTEGER) is
 			-- Not applicable.
 		do
+			check
+				not_applicable: False
+			end
 		end
 
 	prepend_first_item (item_text: STRING) is
 			-- Not applicable.
 		do
+			prepend_item (item_text, 0)
 		end
 
 	append_last_item (item_text: STRING) is
 			-- Register a append operation on the last item in `eiffel_list'.
-		local
-			l_modifier: ERT_ADDED_ITEM_MODIFIER
 		do
-			if is_prepended then
-				l_modifier := create {ERT_PREPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, 0, counter, match_list)
-			else
-				l_modifier := create {ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, 0, counter, match_list)
-			end
-			counter := counter + 1
-			modifier_list.extend (l_modifier)
+			append_item (item_text, 0)
 		end
 
 feature -- Status reporting
@@ -154,39 +227,7 @@ feature -- Status reporting
 	is_empty: BOOLEAN is
 			-- Is current empty?
 		do
-			Result := modifier_list.count = 1
-		end
-
-feature -- Access
-
-	header: STRING
-			-- Header text which appears before list items
-
-	footer: STRING
-			-- Footer text which appears after list items
-
-	set_header (a_header: STRING) is
-			-- Set `header' with `a_header'.
-		do
-			if a_header = Void then
-				header := ""
-			else
-				header := a_header.twin
-			end
-		ensure
-			header_set: (a_header = Void implies header.is_empty) and (a_header /= Void implies header.is_equal (a_header))
-		end
-
-	set_footer (a_footer: STRING) is
-			-- Set `footer' with `a_footer'.
-		do
-			if a_footer = Void then
-				footer := ""
-			else
-				footer := a_footer.twin
-			end
-		ensure
-			footer_set: (a_footer = Void implies footer.is_empty) and (a_footer /= Void implies footer.is_equal (a_footer))
+			Result := prepend_modifier_list.is_empty and append_modifier_list.is_empty
 		end
 
 feature{NONE} -- Implementation
@@ -194,8 +235,11 @@ feature{NONE} -- Implementation
 	attached_ast: AST_EIFFEL
 			-- AST structure to which text of current list is attached.
 
-	modifier_list: SORTED_TWO_WAY_LIST [ERT_LIST_ITEM_MODIFIER]
-			-- List of regisitered modifiers
+	prepend_modifier_list: LINKED_LIST [ERT_LIST_ITEM_MODIFIER]
+			-- List of regisitered prepend modifiers
+
+	append_modifier_list: LINKED_LIST [ERT_LIST_ITEM_MODIFIER]
+			-- List of regisitered append modifiers
 
 	counter: INTEGER
 			-- Internal counter for modifier index
@@ -206,8 +250,8 @@ feature{NONE} -- Implementation
 
 invariant
 	attached_ast_not_void: attached_ast /= Void
-	modifier_list_not_void: modifier_list /= Void
-	header_not_void: header /= Void
-	footer_not_void: footer /= Void
-
+	trailing_text_not_void: trailing_text /= Void
+	leading_text_not_void: leading_text /= Void
+	separator_not_void: separator /= Void
+	
 end

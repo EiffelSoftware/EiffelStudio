@@ -27,40 +27,13 @@ feature{NONE} -- Implementation
 			match_list := a_match_list
 			initialize_modifier_list
 			counter := 1
+			header_ast := Void
+			header_text := Void
+			footer_ast := Void
+			footer_text := Void
 		end
 
 feature -- Modification apply
-
-	compute_modification is
-			-- Compute modification.
-		local
-			i: INTEGER
-			l_cnt: INTEGER
-			l_modifier: ERT_LIST_ITEM_MODIFIER
-		do
-			from
-				i := 1
-				l_cnt := modifier_list.count
-			until
-				i > l_cnt
-			loop
-				l_modifier := modifier_list.i_th (i)
-				if has_separator then
-					if l_modifier.is_removed then
-						l_modifier.set_is_separator_needed (False)
-					else
-						if is_last_item (i) then
-							l_modifier.set_is_separator_needed (False)
-						else
-							l_modifier.set_is_separator_needed (True)
-						end
-					end
-				else
-					l_modifier.set_is_separator_needed (False)
-				end
-				i := i + 1
-			end
-		end
 
 	apply is
 			-- Apply all registered modifications
@@ -68,11 +41,11 @@ feature -- Modification apply
 			i: INTEGER
 			l_cnt: INTEGER
 		do
+			l_cnt := modifier_list.count
 			modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.set_arguments (separator, leading_text, trailing_text))
 			original_item_list.do_all (agent {ERT_EXISTING_ITEM_MODIFIER}.apply)
 			from
 				i := 1
-				l_cnt := modifier_list.count
 			until
 				i > l_cnt
 			loop
@@ -81,14 +54,45 @@ feature -- Modification apply
 				end
 				i := i + 1
 			end
+			if header_text /= Void then
+				if header_ast /= Void then
+					header_ast.replace_text (header_text, match_list)
+				else
+					eiffel_list.prepend_text (header_text, match_list)
+				end
+			end
+			if footer_text /= Void then
+				if footer_ast /= Void then
+					footer_ast.replace_text (footer_text, match_list)
+				else
+					eiffel_list.append_text (footer_text, match_list)
+				end
+			end
 			applied := True
 		end
 
 	can_apply: BOOLEAN is
 			-- Can all registered modifications be applied?
 		do
+			Result := True
 			compute_modification
-			Result := modifier_list.for_all (agent {ERT_LIST_ITEM_MODIFIER}.can_apply)
+			if header_text /= Void then
+				if header_ast /= Void then
+					Result := header_ast.can_replace_text (match_list)
+				else
+					Result := eiffel_list.can_prepend_text (match_list)
+				end
+			end
+			if Result then
+				Result := modifier_list.for_all (agent {ERT_LIST_ITEM_MODIFIER}.can_apply)
+			end
+			if Result and footer_text /= Void then
+				if footer_ast /= Void then
+					Result := footer_ast.can_replace_text (match_list)
+				else
+					Result := eiffel_list.can_append_text (match_list)
+				end
+			end
 		end
 
 feature -- Modifier register
@@ -229,6 +233,37 @@ feature{NONE} -- Initialization
 			end
 		end
 
+	compute_modification is
+			-- Compute modification.
+		local
+			i: INTEGER
+			l_cnt: INTEGER
+			l_modifier: ERT_LIST_ITEM_MODIFIER
+		do
+			from
+				i := 1
+				l_cnt := modifier_list.count
+			until
+				i > l_cnt
+			loop
+				l_modifier := modifier_list.i_th (i)
+				if has_separator then
+					if l_modifier.is_removed then
+						l_modifier.set_is_separator_needed (False)
+					else
+						if is_last_item (i) then
+							l_modifier.set_is_separator_needed (False)
+						else
+							l_modifier.set_is_separator_needed (True)
+						end
+					end
+				else
+					l_modifier.set_is_separator_needed (False)
+				end
+				i := i + 1
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	modifier_list: SORTED_TWO_WAY_LIST [ERT_LIST_ITEM_MODIFIER]
@@ -242,5 +277,8 @@ feature{NONE} -- Implementation
 
 invariant
 	eiffel_list_not_void: eiffel_list /= Void
-
+	trailing_text_not_void: trailing_text /= Void
+	leading_text_not_void: leading_text /= Void
+	separator_not_void: separator /= Void
+	
 end

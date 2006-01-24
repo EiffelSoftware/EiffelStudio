@@ -106,9 +106,4 @@ feature -- Status reporting
 	text: STRING
 			-- Text of current item
 
-invariant
-	separator_not_void: separator /= Void
-	leading_text_not_void: leading_text /= Void
-	trailing_text_not_void: trailing_text /= Void
-
 end

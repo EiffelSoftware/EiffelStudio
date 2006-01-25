@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 					if Result.item (j) = '}' then
 						if j - 1 >= i then
 							if interpreted then
-								s2 := Execution_environment.get (Result.substring (i, j - 1));
+								s2 := variable_value (Result.substring (i, j - 1));
 							else
 								create s2.make (15);
 								s2.append ("$(");
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 					else
 						if j >= i then
 							if interpreted then
-								s2 := Execution_environment.get (Result.substring (i, j));
+								s2 := variable_value (Result.substring (i, j));
 							else
 								create s2.make (15);
 								s2.append ("$(");
@@ -143,6 +143,14 @@ feature {NONE} -- Implementation
 		ensure
 			good_result: Result /= Void;
 		end;
+	
+	variable_value (a_name: STRING): STRING is
+			-- Value of variable `a_name', if any.
+		require
+			attached_name: a_name /= Void
+		do
+			Result := Execution_environment.get (a_name)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

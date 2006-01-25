@@ -833,12 +833,22 @@ feature -- Access
 			type_not_void: type /= Void
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: context_class_type /= Void
+		local
+			cl_type_i: CL_TYPE_I
 		do
-			if context_class_type = class_type then
+				-- Avoid instantiating types if possible
+			cl_type_i ?= type
+			if cl_type_i /= Void and then cl_type_i.is_standalone then
+					-- Standalone class type
+				Result := cl_type_i
+			elseif cl_type_i = Void and then type.is_anchored then
+					-- "like Current"
+				Result := context_class_type.type
+			elseif context_class_type = class_type then
 				Result := real_type_in (type, class_type)
 			else
 				Result := constrained_type_in (type, class_type).type_a.instantiation_in
-					(context_class_type.type.type_a, class_type.type.class_id).type_i
+						(context_class_type.type.type_a, class_type.type.class_id).type_i
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -882,6 +892,12 @@ feature -- Access
 			-- Is `other' an ancestor of `context_class_type'?
 		do
 			Result := context_class_type.type.type_a.is_conformant_to (other.type.type_a)
+		end
+
+	is_written_context: BOOLEAN is
+			-- Does current context match the context where the code is written?
+		do
+			Result := context_class_type = class_type
 		end
 
 	set_class_type (t: CLASS_TYPE) is

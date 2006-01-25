@@ -291,9 +291,9 @@ feature {NONE} -- Actions implementation
 				else
 					inspect k.code
 					when {EV_KEY_CONSTANTS}.key_page_up then
-						scrolling_behavior.scroll_rows (+1, True)
+						scrolling_behavior.scroll_page (+1)
 					when {EV_KEY_CONSTANTS}.key_page_down then
-						scrolling_behavior.scroll_rows (-1, True)
+						scrolling_behavior.scroll_page (-1)
 					else
 					end
 				end

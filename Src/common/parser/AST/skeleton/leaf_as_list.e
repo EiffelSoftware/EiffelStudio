@@ -25,7 +25,8 @@ class
 inherit
 	ARRAYED_LIST [LEAF_AS]
 		export
-			{ANY}grow
+			{ANY}grow, count, capacity,i_th, valid_index, first, last
+			{NONE}all
 		redefine
 			make, extend
 		end

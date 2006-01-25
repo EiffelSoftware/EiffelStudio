@@ -35,7 +35,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Breaks
 
-([ \t\r\n]|"--".*)+ { ast_factory.new_break_as (Current) }
+([ \t\r\n]|"--".*)+ { ast_factory.create_break_as (Current) }
 
 -- Symbols
 
@@ -391,7 +391,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{				
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
-				ast_factory.new_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
+				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
 				last_token := TE_ONCE_STRING			
 			}
 

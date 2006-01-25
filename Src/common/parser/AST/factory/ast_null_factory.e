@@ -49,16 +49,15 @@ inherit
 			new_assigner_mark_as, new_typed_char_as,
 			new_integer_value, new_real_value,
 			set_buffer, append_text_to_buffer, append_string_to_buffer,
-			new_internal_match_list, clear_internal_match_list,
+			create_match_list,
 			reverse_extend_separator, reverse_extend_identifier, extend_pre_as, extend_post_as,
 			new_agent_routine_creation_as,
 			new_constraint_triple, new_alias_triple, new_agent_target_triple,
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
 			new_keyword_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
 			new_infix_keyword_as, new_precursor_keyword_as, new_prefix_keyword_as, new_once_string_keyword_as,
-			new_symbol_as, new_square_symbol_as, new_separator_as, new_separator_as_with_data,
-			new_new_line_as_with_data, new_new_line_as, new_comment_as, new_comment_as_with_data,
-			new_break_as, new_break_as_with_data,
+			new_symbol_as, new_square_symbol_as, 
+			create_break_as, create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
 			new_feature_keyword_as
 		end
@@ -82,13 +81,8 @@ feature -- Buffer operation
 
 feature -- Roundtrip: Match list maintaining
 
-	new_internal_match_list (l_size: INTEGER) is
+	create_match_list (l_size: INTEGER) is
 			-- New match list
-		do
-		end
-
-	clear_internal_match_list is
-			-- Set `internal_match_list' with Void.
 		do
 		end
 
@@ -306,12 +300,12 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_break_as (a_scn: EIFFEL_SCANNER) is
+	create_break_as (a_scn: EIFFEL_SCANNER) is
 			-- NEw BREAK_AS node
 		do
 		end
 
-	new_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
+	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
 			-- New COMMENT_AS node
 		do
 		end
@@ -1055,19 +1049,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1121,23 +1121,24 @@ feature
 		local
 			l_break: BREAK_AS
 			l_start_index, l_end_index, l_last_index: INTEGER
+			l_index: INTEGER
 		do
 			l_start_index := start_index
 			l_end_index := end_index
 			l_last_index := last_index
 			from
-				match_list.start
+				l_index := 1
 				start_index := 1
 				last_index := 0
 				end_index := match_list.count
 			until
-				match_list.after
+				l_index > end_index
 			loop
-				l_break ?= match_list.item
+				l_break ?= match_list.i_th (l_index)
 				if l_break /= Void then
 					l_break.process (Current)
 				end
-				match_list.forth
+				l_index := l_index + 1
 			end
 			start_index := l_start_index
 			end_index := l_end_index
@@ -1193,19 +1194,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

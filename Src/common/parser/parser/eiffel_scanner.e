@@ -50,7 +50,7 @@ yy_set_line_column
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 38")
 end
- ast_factory.new_break_as (Current) 
+ ast_factory.create_break_as (Current) 
 when 2 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -945,7 +945,7 @@ end
 				
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
-				ast_factory.new_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
+				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
 				last_token := TE_ONCE_STRING			
 			
 when 82 then

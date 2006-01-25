@@ -14,7 +14,7 @@ inherit
 			complete_instantiation_in,
 			generated_id, is_explicit, generate_gen_type_il,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code, is_reference, is_expanded
+			make_gen_type_byte_code, is_reference, is_expanded, is_standalone
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -91,6 +91,9 @@ feature -- Status report
 			-- Is the type a formal type ?
 
 	is_explicit: BOOLEAN is False
+
+	is_standalone: BOOLEAN is False
+			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
 
 	has_true_formal, has_formal: BOOLEAN is True
 			-- Has the type formal in its structure ?
@@ -231,19 +234,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

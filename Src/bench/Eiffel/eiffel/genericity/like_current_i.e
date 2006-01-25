@@ -22,6 +22,7 @@ inherit
 			is_anchored,
 			is_explicit,
 			is_formal,
+			is_standalone,
 			same_as
 		end
 
@@ -81,6 +82,9 @@ feature -- Status report
 	is_explicit: BOOLEAN is False
 			-- Is type fixed at compile time without anchors or formals?
 
+	is_standalone: BOOLEAN is False
+			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
+
 	is_anchored: BOOLEAN is True
 			-- Does type contain anchored type?
 
@@ -91,10 +95,10 @@ feature -- Status report
 			-- Instantiation of Current in context of `other'.
 		do
 			Result := other.type
-			if not Result.is_expanded then
-					-- Record creation information.
-				Result := Result.duplicate
-				Result.set_cr_info (create_info)
+				-- "like Current" creation info should be already set.
+			check
+				cr_info_set: Result.is_expanded or else Result.cr_info /= Void
+				cr_info_is_like_current: Result.is_expanded or else Result.cr_info.same_type (create_info)
 			end
 		end
 

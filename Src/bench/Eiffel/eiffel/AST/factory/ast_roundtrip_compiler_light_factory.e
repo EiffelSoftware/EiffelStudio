@@ -1,19 +1,20 @@
 indexing
 	description: "[
 					Roundtrip compiler factory
-					It will generate `match_list' during parsing.
+					It doesn't generate `match_list' during parsing.
+					Use `EIFFEL_ROUNDTRIP_SCANNER' to generate `match_list' later.
+					Or use `AST_ROUNDTRIP_COMPILER_FACTORY' to do parsing and `match_list' generating
+					at the same time.
 					]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	AST_ROUNDTRIP_COMPILER_FACTORY
+	AST_ROUNDTRIP_COMPILER_LIGHT_FACTORY
 
 inherit
-	AST_ROUNDTRIP_FACTORY
+	AST_ROUNDTRIP_LIGHT_FACTORY
 		undefine
 			new_integer_as,
 			new_integer_hexa_as,
@@ -85,7 +86,6 @@ feature -- Roundtrip
 				Result.set_sign_symbol (s_as)
 				match_list_count := match_list_count + 1
 				Result.set_index (match_list_count)
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
 
@@ -100,40 +100,7 @@ feature -- Roundtrip
 				Result.set_sign_symbol (s_as)
 				match_list_count := match_list_count + 1
 				Result.set_index (match_list_count)
-				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
 		end
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 
 end

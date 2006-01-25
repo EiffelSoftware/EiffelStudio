@@ -58,6 +58,8 @@ feature {NONE} -- Initialization
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
 
+			enable_selection_on_single_button_click
+
 			create_kept_object_references
 		end
 
@@ -305,7 +307,7 @@ feature {NONE} -- Actions implementation
 			if ab = 1 then
 				ei ?= a_item
 				if ei /= Void then
-					grid_activate (ei)
+					ei.activate
 				end
 			end
 		end

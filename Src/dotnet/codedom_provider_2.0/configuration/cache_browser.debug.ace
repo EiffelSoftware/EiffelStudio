@@ -1,0 +1,87 @@
+system
+	"EiffelSoftware.CodeDom.CacheBrowser"
+
+root
+	ANY
+
+default
+	multithreaded (no)
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Base")
+ 	assertion (require)
+ 	msil_generation (yes)
+ 	il_verifiable (yes)
+ 	cls_compliant (yes)
+ 	line_generation (yes)
+ 	dotnet_naming_convention (yes)
+ 	msil_generation_type ("dll")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+ 	use_all_cluster_name_as_namespace (yes)
+ 	use_cluster_name_as_namespace (no)
+	msil_use_optimized_precompile (yes)
+  	version ("5.6.1102.0")
+	debug ("log_exceptions")
+ 	msil_clr_version ("v1.1.4322")
+
+cluster 
+	cache_browser:		"$EIFFEL_SRC\dotnet\codedom_provider\cache_browser"
+	
+	all common:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
+		exclude
+			".svn"; 
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
+ 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
+ 		exclude
+ 			".svn";
+  		default
+ 			namespace ("EiffelSoftware.Library.Emitter")
+ 		end
+ 
+ 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
+ 		exclude
+ 			".svn"; "example"; "classic";
+  		default
+ 			namespace ("EiffelSoftware.Library.Helpers")
+ 		end
+ 
+	all compliance_checker:	"$EIFFEL_SRC\tools\compliance_checker\engine"
+		exclude
+			".svn"; "reporting";
+  		default
+ 			namespace ("EiffelSoftware.Library.ComplianceChecker")
+		end
+
+assembly
+	"System.Configuration.Install":	"$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"
+		prefix
+			"CONFIG_INSTALL_"
+		end
+
+	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
+
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
+
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\system.drawing.dll"
+		prefix
+			"DRAWING_"
+		end
+
+	"System.Windows.Forms":	"$ISE_DOTNET_FRAMEWORK\system.windows.forms.dll"
+		prefix
+			"WINFORMS_"
+		end
+
+end -- system EiffelSoftware.CodeDom.CacheBrowser
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

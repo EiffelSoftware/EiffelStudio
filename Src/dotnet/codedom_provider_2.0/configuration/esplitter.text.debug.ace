@@ -1,0 +1,51 @@
+system
+	"esplit"
+
+root
+	CODE_ES_APPLICATION: make
+
+default
+	multithreaded (no)
+	assertion (all)
+	msil_generation (yes)
+	line_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (no)
+	msil_generation_type ("exe")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	console_application (yes)
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.Vision2")
+	msil_use_optimized_precompile (yes)
+  	version ("5.6.1102.0")
+ 	msil_clr_version ("v1.1.4322")
+
+cluster
+	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\splitter"
+		exclude
+			".svn"; "bin"; "gui";
+		default
+			namespace ("EiffelSoftware.Esplit")
+		end
+
+	tools_common: "$EIFFEL_SRC\dotnet\codedom_provider\tools\common"
+		exclude
+			".svn";
+		default
+			namespace ("EiffelSoftware.Library.Tools")
+		end
+
+	all eclop:		"$ECLOP\eclop"
+		exclude
+			".svn";
+		default
+			namespace ("Eclop")
+		visible
+			COMMAND_LINE_SYNTAX
+			end
+			COMMAND_LINE_PARSER
+			end
+		end
+end

@@ -1,0 +1,171 @@
+"General"
+{
+"VisualStudioVer" = "7.1"
+"FileVer" = "2.5.1316.0"
+"ProjectIdGuid" = "{488C2513-2ED3-4202-98D3-5AE0997950AB}"
+}
+"Configurations"
+{
+"AssemblyName" = "nmap"
+"DefaultNamespace" = ""
+"OutputType" = "windows"
+"DotnetNamingConvention" = "true"
+"ClusterNamespaceFormat" = "name"
+"TargetCLRVersion" = "default"
+"PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_studio_debug\\EiffelSoftware.CodeDom.Vision2"
+"UseOptimizedPrecompile" = "true"
+"AssemblyTitle" = ""
+"AssemblyDescription" = ""
+"AssemblyCompany" = ""
+"AssemblyProduct" = ""
+"AssemblyTrademark" = ""
+"AssemblyCopyright" = ""
+"AssemblyVersion" = "2.0.1.1402"
+"AssemblyCulture" = "Neutral, n/a"
+"AssemblyOriginatorKeyFile" = "${EIFFEL_SRC}\\dotnet\\helpers\\isekey.snk"
+"AssemblyKeyContainerName" = "${EIFFEL_SRC}\\dotnet\\helpers\\isekey.snk"
+    "ConfigDependent"
+    {
+        "Debug"
+        {
+        "RootClass" = "NM_APPLICATION"
+        "CreationRoutine" = "make_and_launch"
+        "ConditionalCompilationSymbols" = ""
+        "OptimizeCode" = "false"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ClassesPerModule" = "5"
+        "CompileUnmanagedLibrary" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "true"
+        "EvalPreconditions" = "true"
+        "EvalPostconditions" = "true"
+        "EvalChecks" = "true"
+        "EvalLoops" = "true"
+        "EvalInvariants" = "true"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        }
+        "Release"
+        {
+        "RootClass" = "NM_APPLICATION"
+        "CreationRoutine" = "make_and_launch"
+        "ConditionalCompilationSymbols" = ""
+        "OptimizeCode" = "true"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ClassesPerModule" = "5"
+        "CompileUnmanagedLibrary" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "true"
+        "EvalPreconditions" = "false"
+        "EvalPostconditions" = "false"
+        "EvalChecks" = "false"
+        "EvalLoops" = "false"
+        "EvalInvariants" = "false"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        }
+    }
+}
+"References"
+{
+}
+"ProjectCluster"
+{
+"Name" = ""
+"ClusterNamespace" = ""
+"ExcludedItems" = ""
+"HideFolders" = "bin;obj"
+"UseDefaultAssertions" = "false"
+"DiscardAssertions" = "true"
+"EvalPreconditions" = "true"
+"EvalPostconditions" = "false"
+"EvalLoops" = "false"
+"EvalChecks" = "false"
+"EvalInvariants" = "false"
+    "SubClusters"
+    {
+        "root_cluster"
+        {
+        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\tools\\name_mapper"
+        "ClusterNamespace" = "EiffelSoftware.NameMapper"
+        "Library" = "false"
+        "Recursive" = "false"
+        "ExcludedItems" = "CVS;bin;text"
+        "HideFolders" = ""
+        "UseDefaultAssertions" = "true"
+        "DiscardAssertions" = "true"
+        "EvalPreconditions" = "false"
+        "EvalPostconditions" = "false"
+        "EvalLoops" = "false"
+        "EvalChecks" = "false"
+        "EvalInvariants" = "false"
+        }
+        "tools_common"
+        {
+        "HintPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\tools\\common"
+        "ClusterNamespace" = "EiffelSoftware.Library.Tools"
+        "Library" = "false"
+        "Recursive" = "false"
+        "ExcludedItems" = ""
+        "HideFolders" = ""
+        "UseDefaultAssertions" = "true"
+        "DiscardAssertions" = "true"
+        "EvalPreconditions" = "false"
+        "EvalPostconditions" = "false"
+        "EvalLoops" = "false"
+        "EvalChecks" = "false"
+        "EvalInvariants" = "false"
+        }
+    }
+    "Files"
+    {
+    }
+}
+"Clusters"
+{
+    "thread"
+    {
+    "HintPath" = "${EIFFEL_SRC}\\library\\thread"
+    "ClusterNamespace" = "EiffelSoftware.Library.Thread"
+    "Library" = "false"
+    "Recursive" = "true"
+    "ExcludedItems" = "CVS;classic"
+    "HideFolders" = ""
+    "UseDefaultAssertions" = "true"
+    "DiscardAssertions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalPostconditions" = "false"
+    "EvalLoops" = "false"
+    "EvalChecks" = "false"
+    "EvalInvariants" = "false"
+    }
+    "thread_net"
+    {
+    "HintPath" = "${EIFFEL_SRC}\\library.net\\thread"
+    "ClusterNamespace" = "EiffelSoftware.Library.ThreadNet"
+    "Library" = "false"
+    "Recursive" = "true"
+    "ExcludedItems" = "CVS"
+    "HideFolders" = ""
+    "UseDefaultAssertions" = "true"
+    "DiscardAssertions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalPostconditions" = "false"
+    "EvalLoops" = "false"
+    "EvalChecks" = "false"
+    "EvalInvariants" = "false"
+    }
+}
+"OtherFilesAndFolders"
+{
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

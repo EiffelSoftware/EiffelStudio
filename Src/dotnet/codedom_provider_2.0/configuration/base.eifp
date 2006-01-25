@@ -1,0 +1,160 @@
+"General"
+{
+"VisualStudioVer" = "7.1"
+"FileVer" = "2.5.1316.0"
+"ProjectIdGuid" = "{045EEDE9-577B-4957-A88C-8E61C3B133ED}"
+}
+"Configurations"
+{
+"AssemblyName" = "EiffelSoftware.CodeDom.Base"
+"DefaultNamespace" = ""
+"OutputType" = "precompiled"
+"DotnetNamingConvention" = "true"
+"ClusterNamespaceFormat" = "name"
+"TargetCLRVersion" = "default"
+"PrecompiledLibrary" = ""
+"UseOptimizedPrecompile" = "true"
+"AssemblyTitle" = ""
+"AssemblyDescription" = ""
+"AssemblyCompany" = ""
+"AssemblyProduct" = ""
+"AssemblyTrademark" = ""
+"AssemblyCopyright" = ""
+"AssemblyVersion" = "2.0.1.1402"
+"AssemblyCulture" = "Neutral, n/a"
+"AssemblyOriginatorKeyFile" = "${EIFFEL_SRC}\\dotnet\\helpers\\isekey.snk"
+"AssemblyKeyContainerName" = "${EIFFEL_SRC}\\dotnet\\helpers\\isekey.snk"
+    "ConfigDependent"
+    {
+        "Debug"
+        {
+        "RootClass" = "ANY"
+        "CreationRoutine" = ""
+        "ConditionalCompilationSymbols" = ""
+        "OptimizeCode" = "false"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ClassesPerModule" = "5"
+        "CompileUnmanagedLibrary" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "true"
+        "EvalPreconditions" = "true"
+        "EvalPostconditions" = "false"
+        "EvalChecks" = "false"
+        "EvalLoops" = "false"
+        "EvalInvariants" = "false"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        }
+        "Release"
+        {
+        "RootClass" = "ANY"
+        "CreationRoutine" = ""
+        "ConditionalCompilationSymbols" = ""
+        "OptimizeCode" = "true"
+        "GenerateCLSCompliantCode" = "true"
+        "GenerateVerifiableCode" = "true"
+        "ClassesPerModule" = "5"
+        "CompileUnmanagedLibrary" = "true"
+        "ShowCompilerWarnings" = "true"
+        "RegisterForCOMInterop" = "false"
+        "GenerateDebugInfo" = "true"
+        "EvalPreconditions" = "false"
+        "EvalPostconditions" = "false"
+        "EvalChecks" = "false"
+        "EvalLoops" = "false"
+        "EvalInvariants" = "false"
+        "IncludePaths" = ""
+        "ObjectFiles" = ""
+        }
+    }
+}
+"References"
+{
+    "Assembly"
+    {
+    "Name" = "mscorlib"
+    "ClassPrefix" = ""
+    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\mscorlib.dll"
+    "CopyLocal" = "false"
+    }
+    "Assembly"
+    {
+    "Name" = "System"
+    "ClassPrefix" = "SYSTEM_DLL_"
+    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.dll"
+    "CopyLocal" = "false"
+    }
+    "Assembly"
+    {
+    "Name" = "System.Xml"
+    "ClassPrefix" = "XML_"
+    "HintPath" = "..\\..\\..\\..\\..\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\System.Xml.dll"
+    "CopyLocal" = "false"
+    }
+}
+"ProjectCluster"
+{
+"Name" = ""
+"ClusterNamespace" = ""
+"ExcludedItems" = ""
+"HideFolders" = "bin;obj"
+"UseDefaultAssertions" = "false"
+"DiscardAssertions" = "true"
+"EvalPreconditions" = "true"
+"EvalPostconditions" = "false"
+"EvalLoops" = "false"
+"EvalChecks" = "false"
+"EvalInvariants" = "false"
+    "SubClusters"
+    {
+    }
+    "Files"
+    {
+    }
+}
+"Clusters"
+{
+    "base"
+    {
+    "HintPath" = "${EIFFEL_SRC}\\library\\base"
+    "ClusterNamespace" = "EiffelSoftware.Library.Base"
+    "Library" = "true"
+    "Recursive" = "true"
+    "ExcludedItems" = "table_eiffel3;desc;classic"
+    "HideFolders" = ""
+    "UseDefaultAssertions" = "true"
+    "DiscardAssertions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalPostconditions" = "false"
+    "EvalLoops" = "false"
+    "EvalChecks" = "false"
+    "EvalInvariants" = "false"
+    }
+    "base_net"
+    {
+    "HintPath" = "${EIFFEL_SRC}\\library.net\\base"
+    "ClusterNamespace" = "EiffelSoftware.Library.BaseNet"
+    "Library" = "true"
+    "Recursive" = "true"
+    "ExcludedItems" = ""
+    "HideFolders" = ""
+    "UseDefaultAssertions" = "true"
+    "DiscardAssertions" = "true"
+    "EvalPreconditions" = "false"
+    "EvalPostconditions" = "false"
+    "EvalLoops" = "false"
+    "EvalChecks" = "false"
+    "EvalInvariants" = "false"
+    }
+}
+"OtherFilesAndFolders"
+{
+}
+"ProjStartupServices"
+{
+}
+"Globals"
+{
+}

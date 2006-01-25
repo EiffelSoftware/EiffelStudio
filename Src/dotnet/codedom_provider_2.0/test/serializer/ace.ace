@@ -1,0 +1,85 @@
+system
+	"codedom_serializer"
+
+root 
+	ECDS_APPLICATION (root_cluster): "make_and_launch"
+
+default
+	msil_generation (yes)
+	msil_clr_version ("v1.1.4322")
+	msil_generation_type ("exe")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_use_optimized_precompile (yes)
+	dotnet_naming_convention (yes)
+	assertion (no)
+	console_application (no)
+	line_generation (no)
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\test\serializer\provider")
+
+cluster 
+		-- The application
+	all root_cluster: "$EIFFEL_SRC\dotnet\codedom_provider\test\serializer\gui"
+		exclude
+			"CVS"; "EIFGEN";
+		end
+
+	library "base":		"$EIFFEL_SRC\library\base"
+		exclude
+			"CVS"; "classic"; "desc"; "table_eiffel3"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	library "base_net":		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+		-- WEL
+	library wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"spec"; "clib"; "classic"; "CVS";
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	library wel_net:		"$EIFFEL_SRC\library.net\wel"
+		exclude
+			"CVS";
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	library vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "ev_pixmap_imp_delegate.e"; "CVS"
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	library vision2_net:		"$EIFFEL_SRC\library.net\vision2"
+		exclude
+			"CVS"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+external
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+end

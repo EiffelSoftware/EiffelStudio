@@ -80,14 +80,20 @@ feature -- Visitor
 			c: CL_TYPE_I
 			f: FEATURE_I
 		do
-				-- Ensure the feature is not redeclared into attribute
-			c ?= context_type
-			f := c.base_class.feature_of_rout_id (routine_id)
-			if f.is_attribute then
-					-- Create new byte node and process it instead of the current one
-				byte_node (f).process (v)
-			else
+			if not context.is_written_context then
+					-- Ensure the feature is not redeclared into attribute.
+				c ?= context_type
+				f := c.base_class.feature_of_rout_id (routine_id)
+				if not f.is_attribute then
+					f := Void
+				end
+			end
+			if f = Void then
+					-- Process feature as an internal routine.
 				v.process_feature_b (Current)
+			else
+					-- Create new byte node and process it instead of the current one.
+				byte_node (f).process (v)
 			end
 		end
 
@@ -170,15 +176,18 @@ feature -- Access
 			c: CL_TYPE_I
 			f: FEATURE_I
 		do
-				-- Ensure the feature is not redeclared into attribute
-			c ?= real_type (type_i)
-			if c /= Void then
-				f := c.base_class.feature_of_rout_id (routine_id)
+			if not context.is_written_context then
+					-- Ensure the feature is not redeclared into attribute.
+				c ?= real_type (type_i)
+				if c /= Void then
+					f := c.base_class.feature_of_rout_id (routine_id)
+					if not f.is_attribute then
+						f := Void
+					end
+				end
 			end
-			if f /= Void and then f.is_attribute then
-					-- Create new byte node and process it instead of the current one
-				Result ?= byte_node (f).enlarged
-			else
+			if f = Void then
+					-- Process feature as an internal routine.
 				if context.final_mode then
 					create feature_bl
 				else
@@ -186,6 +195,9 @@ feature -- Access
 				end
 				feature_bl.fill_from (Current)
 				Result := feature_bl
+			else
+					-- Create new byte node and process it instead of the current one.
+				Result ?= byte_node (f).enlarged
 			end
 		end
 

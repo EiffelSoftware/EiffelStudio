@@ -11,7 +11,8 @@ deferred class
 inherit
 	ACCESS_B
 		redefine
-			enlarged
+			enlarged,
+			enlarged_on
 		end
 
 	SHARED_NAMES_HEAP
@@ -60,13 +61,9 @@ feature -- Access
 
 	enlarged_on (type_i: TYPE_I): CALL_ACCESS_B is
 			-- Enlarged byte node evaluated in the context of `type_i'.
-		require
-			type_i_not_void: type_i /= Void
 		do
 				-- Fallback to default implementation.
 			Result := enlarged
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Setting
@@ -102,7 +99,13 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_I
 			gen: GEN_TYPE_I
 		do
-			Result := context_class.feature_of_rout_id (routine_id).feature_id
+			if context.is_written_context then
+					-- Code is processed in the context where it is written
+				Result := feature_id
+			else
+					-- Code is processed in the context different from the one where it is written
+				Result := context_class.feature_of_rout_id (routine_id).feature_id
+			end
 			if precursor_type = Void then
 				instant_context_type := context_type
 				if

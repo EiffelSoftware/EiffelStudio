@@ -67,10 +67,14 @@ feature -- Initialization
 		do
 			Precursor
 			token_buffer.clear_all
+			token_buffer2.clear_all
 			verbatim_marker.clear_all
 		end
 
 feature -- Roundtrip
+
+	match_list: LEAF_AS_LIST
+			-- List of all tokens used for roundtrip
 
 	initial_match_list_size: INTEGER is 1000
 			-- Initial size of `match_list'.
@@ -79,8 +83,10 @@ feature -- Roundtrip
 			-- Buffer for verbatim string tokens
 
 	l_verbatim_start_position: INTEGER
+			-- Start position of verbatim string being scanned
 
 	l_string_start_position: INTEGER
+			-- Start position of regular string being scanned	
 
 	last_assign_index: INTEGER
 			-- Last index in `match_list' for "assign" keyword (or maybe assign identifier)
@@ -508,19 +514,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

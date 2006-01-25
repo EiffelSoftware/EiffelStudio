@@ -84,19 +84,6 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	break_included: BOOLEAN
-			-- Is trailing break included when `last_token' is computed?
-			-- This will affect result of `last_token' and `comment' if
-			-- curernt feature is a constant or an attribute.
-
-	set_break_included (b: BOOLEAN) is
-			-- Set `break_included' with `b'.
-		do
-			break_included := b
-		ensure
-			break_included_set: break_included = b
-		end
-
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
 			Result := feature_names.first_token (a_list)
@@ -116,6 +103,21 @@ feature -- Roundtrip/Token
 					Result := body.last_token (a_list)
 				end
 			end
+		end
+
+feature{NONE} -- Roundtrip/Break token inclusion
+
+	break_included: BOOLEAN
+			-- Is trailing break included when `last_token' is computed?
+			-- This will affect result of `last_token' and `comment' if
+			-- curernt feature is a constant or an attribute.
+
+	set_break_included (b: BOOLEAN) is
+			-- Set `break_included' with `b'.
+		do
+			break_included := b
+		ensure
+			break_included_set: break_included = b
 		end
 
 feature -- Roundtrip/Comment

@@ -170,10 +170,9 @@ feature -- Parsing
 			input_buffer := File_buffer
 			yy_load_input_buffer
 			filename := a_file.name
-			ast_factory.new_internal_match_list (initial_match_list_size)
+			ast_factory.create_match_list (initial_match_list_size)
 			yyparse
-			match_list := ast_factory.internal_match_list
-			ast_factory.clear_internal_match_list
+			match_list := ast_factory.match_list
 			reset
 		rescue
 			reset
@@ -189,20 +188,14 @@ feature -- Parsing
 			reset_nodes
 			create input_buffer.make (a_string)
 			yy_load_input_buffer
-			ast_factory.new_internal_match_list (initial_match_list_size)
+			ast_factory.create_match_list (initial_match_list_size)
 			yyparse
-			match_list := ast_factory.internal_match_list
-			ast_factory.clear_internal_match_list
+			match_list := ast_factory.match_list
 			reset
 		rescue
 			reset
 		end
-
-feature -- Roundtrip
-
-	match_list: LEAF_AS_LIST
-			-- List of all tokens used for roundtrip
-
+		
 feature -- Access: result nodes
 
 	root_node: CLASS_AS
@@ -636,19 +629,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

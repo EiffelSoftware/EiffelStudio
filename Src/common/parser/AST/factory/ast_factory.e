@@ -33,20 +33,29 @@ feature -- Buffer operation
 
 feature -- Roundtrip: Match list maintaining
 
-	new_internal_match_list (l_size: INTEGER) is
-			-- New match list
+	match_list: LEAF_AS_LIST
+			-- List of LEAF_AS nodes.
+
+	match_list_count: INTEGER
+			-- Number of elements in `internal_match_list'
+
+	create_match_list (l_size: INTEGER) is
+			-- Create a new `match_list' with initial `l_size'.
 		require
 			l_size_positive: l_size > 0
 		do
 		end
 
-	clear_internal_match_list is
-			-- Set `internal_match_list' with Void.
+	extend_match_list (a_match: LEAF_AS) is
+			-- Extend `internal_match_list' with `a_match'.
 		do
 		end
 
-	internal_match_list: LEAF_AS_LIST
-			-- List of LEAF_AS nodes.
+	extend_match_list_with_stub (a_stub: LEAF_STUB_AS) is
+			-- Extend `match_list' with stub `a_stub',
+			-- and set index in `a_match'.
+		do
+		end
 
 feature -- Roundtrip
 
@@ -70,7 +79,7 @@ feature -- Roundtrip
 		do
 		end
 
-feature -- Roundtrip: New AST node
+feature -- Access
 
 	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS is
 			-- New AGENT_ROUTINE_CREATION AST node.
@@ -352,69 +361,12 @@ feature -- Roundtrip: leaf_as
 			create Result.make_with_data (a_code, a_scn.line, a_scn.column, a_scn.position, 1)
 		end
 
-	new_separator_as (a_scn: EIFFEL_SCANNER) is
-			-- New KEYWORD AST node		
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-		end
-
-	new_separator_as_with_data (a_text: STRING; l, c, p, s: INTEGER) is
-			-- New  KEYWORD AST node
-		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			s_non_negative: s >= 0
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
-		do
-		end
-
-	new_new_line_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
-			-- New KEYWORD AST node		
-		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			n_non_negative: n >= 0
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
-		do
-		end
-
-	new_new_line_as (a_scn: EIFFEL_SCANNER) is
-			-- New KEYWORD AST node		
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-		end
-
-	new_comment_as (a_scn: EIFFEL_SCANNER) is
-			-- New COMMENT_AS node
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-		end
-
-	new_comment_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
-			-- New COMMENT_AS node
-		require
-			l_non_negative: l >= 0
-			c_non_negative: c >= 0
-			p_non_negative: p >= 0
-			n_non_negative: n >= 0
-			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
-		do
-		end
-
-	new_break_as (a_scn: EIFFEL_SCANNER) is
+	create_break_as (a_scn: EIFFEL_SCANNER) is
 			-- NEw BREAK_AS node
 		do
 		end
 
-	new_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
+	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
 			-- New COMMENT_AS node
 		require
 			l_non_negative: l >= 0
@@ -1658,19 +1610,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

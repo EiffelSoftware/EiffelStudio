@@ -1092,11 +1092,6 @@ feature
 			safe_process (l_as.rparan_symbol)
 		end
 
-	process_use_list_as (l_as: USE_LIST_AS) is
-		do
-			process_eiffel_list (l_as)
-		end
-
 	process_type_a (a_type: TYPE_A) is
 		do
 			check

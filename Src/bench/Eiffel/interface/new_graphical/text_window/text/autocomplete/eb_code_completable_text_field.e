@@ -589,13 +589,6 @@ feature {NONE} -- Implementation
 				then
 					Result := true
 				end
-
-				debug ("Auto_completion")
-					print ("Fixme: EB_CODE_COMPLETABLE_TEXT_FIELD activating key only for testing. Remove following code.%N")
-				end
-				if a_key.code = 81 then
-					Result := true
-				end
 			end
 		end
 

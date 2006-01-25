@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><Project_settings xsi="http://www.w3.org/1999/XMLSchema-instance">
+<Project_type>1</Project_type>
+<Project_name>EIFFEL_CODEDOM_PROVIDER_ADMIN_TOOL</Project_name>
+<Project_location>E:\Sources\dotnet\codedom_provider\tools\manager</Project_location>
+<Main_window_class_name>MAIN_WINDOW</Main_window_class_name>
+<Application_class_name>APPLICATION</Application_class_name>
+<Complete_project>False</Complete_project>
+<Group_locals>True</Group_locals>
+<Generate_debugging_output>False</Generate_debugging_output>
+<Attributes_local>Optimal</Attributes_local>
+<Rebuild_ace_file>True</Rebuild_ace_file>
+<Load_constants_from_file>False</Load_constants_from_file>
+<Constants_class_name>ECDM_CONSTANTS</Constants_class_name>
+</Project_settings>

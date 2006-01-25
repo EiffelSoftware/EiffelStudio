@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represents a GRID containing Object values (for debugging)"
+	description: "Objects that represents a enhanced GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -44,8 +44,7 @@ feature {NONE} -- Initialization
 			header.pointer_button_press_actions.extend (agent on_header_clicked)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
-			mouse_wheel_scroll_size := 3 --| default value
-			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
+			create scrolling_behavior.make (Current)
 			key_press_actions.extend (agent on_key_pressed)
 
 			build_delayed_last_column_auto_resizing
@@ -68,15 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- properties
 
-	mouse_wheel_scroll_size: INTEGER
-			-- Number of rows to scroll if we are not on a page by page scrolling.
-
-	mouse_wheel_scroll_full_page: BOOLEAN
-			-- Should we scroll by page rather by a fixed amount of rows?
-
-	scrolling_common_line_count: INTEGER
-			-- On a page by page scrolling, number of rows that will be common
-			-- between the two pages.
+	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
 
 	border_enabled: BOOLEAN
 			-- Is border enabled ?
@@ -96,155 +87,190 @@ feature -- Change
 			set_border_enabled (False)
 		end
 
-	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
-			-- Set the mouse wheel scroll page mode
+	set_mouse_wheel_scroll_size (i: INTEGER) is
 		do
-			mouse_wheel_scroll_full_page := v
-		ensure
-			mouse_wheel_scroll_full_page_set: mouse_wheel_scroll_full_page = v
+			scrolling_behavior.set_mouse_wheel_scroll_size (i)
 		end
 
-	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size) is
-			-- Set the mouse wheel scroll size
-		require
-			v_positive: v > 0
+	set_mouse_wheel_scroll_full_page (b: BOOLEAN) is
 		do
-			mouse_wheel_scroll_size	:= v
-		ensure
-			mouse_wheel_scroll_size_set: mouse_wheel_scroll_size = v
+			scrolling_behavior.set_mouse_wheel_scroll_full_page (b)
 		end
 
-	set_scrolling_common_line_count (v: like scrolling_common_line_count) is
-			-- Set `scrolling_common_line_count' with `v'.
+	set_scrolling_common_line_count (i: INTEGER) is
 		do
-			scrolling_common_line_count := v
-		ensure
-			scrolling_common_line_count_set: scrolling_common_line_count = v
+			scrolling_behavior.set_scrolling_common_line_count (i)
 		end
 
-feature -- Grid item Activation
+feature {NONE} -- Scrolling : initialization
 
-	grid_activate (a_item: EV_GRID_ITEM) is
-		require
-			a_item /= Void
-		do
-			a_item.activate
-		end
-
-feature -- Scrolling
-
-	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
-		local
-			vy_now, vy, l_visible_count: INTEGER
-			l_visible_rows: ARRAYED_LIST [INTEGER]
-			l_viewable_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
-			l_first_row: EV_GRID_ROW
-		do
-			if is_displayed then
-				l_visible_rows := visible_row_indexes
-				if l_visible_rows.is_empty then
-						-- Nothing to be done, since no rows are visible
-				else
-					vy_now := virtual_y_position
-					if is_full_page_scrolling then
-						if a_step < 0 then
-								-- We are scrolling down.
-							if scrolling_common_line_count < l_visible_rows.count then
-								vy := row (l_visible_rows.i_th (
-									l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
-							else
-									-- Cannot go below, go to the last element.
-								vy := row (l_visible_rows.last).virtual_y_position
-							end
-						else
-								-- We are scrolling up
-							fixme ("[
-								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-								from the implementation, we should instead use APIs from either EV_GRID or
-								EV_GRID_ROW when they become available.
-								The defensive programing style here is to protect ourself from the changes in the
-								data we used.
-								]")
-							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-							if l_viewable_row_indexes /= Void then
-								l_visible_count := viewable_height // row_height - scrolling_common_line_count
-								l_first_row := row (l_visible_rows.first)
-								l_viewable_row_indexes.start
-								l_viewable_row_indexes.search (l_first_row.index)
-								if not l_viewable_row_indexes.exhausted then
-									if l_visible_count < l_viewable_row_indexes.index then
-										vy := row (l_viewable_row_indexes.i_th (
-											l_viewable_row_indexes.index - l_visible_count)).virtual_y_position
-									else
-											-- We reached the top.
-										vy := 0
-									end
-								else
-										-- We could not find the item. This is not right.
-									vy := vy_now - a_step * l_visible_count * row_height
-								end
-							else
-									-- We could not use `visible_indexes_to_row_indexes' to get the right
-									-- information. Use an approximation that only works when there is no
-									-- tree in the grid.
-								vy := vy_now - a_step * l_visible_count * row_height
-							end
-						end
-					else
-						if a_step < 0 then
-								-- We are scrolling down.
-							if mouse_wheel_scroll_size < l_visible_rows.count then
-								vy := row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
-							else
-									-- Do nothing.
-								vy := vy_now
-							end
-						else
-								-- We are scrolling up
-							fixme ("[
-								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-								from the implementation, we should instead use APIs from either EV_GRID or
-								EV_GRID_ROW when they become available.
-								The defensive programing style here is to protect ourself from the changes in the
-								data we used.
-								]")
-							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-							if l_viewable_row_indexes /= Void then
-								l_first_row := row (l_visible_rows.first)
-								l_viewable_row_indexes.start
-								l_viewable_row_indexes.search (l_first_row.index)
-								if not l_viewable_row_indexes.exhausted then
-									if mouse_wheel_scroll_size < l_viewable_row_indexes.index then
-										vy := row (l_viewable_row_indexes.i_th (
-											l_viewable_row_indexes.index - mouse_wheel_scroll_size)).virtual_y_position
-									else
-											-- We reached the top.
-										vy := 0
-									end
-								else
-										-- We could not find the item. This is not right.
-									vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
-								end
-							else
-									-- We could not use `visible_indexes_to_row_indexes' to get the right
-									-- information. Use an approximation that only works when there is no
-									-- tree in the grid.
-								vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
-							end
-						end
-					end
-						-- Code below do the adjustment to the type of scrolling decided by user.
-					if vy_now /= vy then
-						if vy < 0 then
-							vy := 0
-						else
-							vy := vy.min (maximum_virtual_y_position)
-						end
-						set_virtual_position (virtual_x_position, vy)
-					end
-				end
-			end
-		end
+--	init_scrolling is
+--		do
+--			mouse_wheel_scroll_size := 3 --| default value
+--			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
+--		end
+--
+--feature -- Scrolling : properties
+--
+--	mouse_wheel_scroll_size: INTEGER
+--			-- Number of rows to scroll if we are not on a page by page scrolling.
+--
+--	mouse_wheel_scroll_full_page: BOOLEAN
+--			-- Should we scroll by page rather by a fixed amount of rows?
+--
+--	scrolling_common_line_count: INTEGER
+--			-- On a page by page scrolling, number of rows that will be common
+--			-- between the two pages.
+--
+--feature -- Scrolling : change
+--
+--	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
+--			-- Set the mouse wheel scroll page mode
+--		do
+--			mouse_wheel_scroll_full_page := v
+--		ensure
+--			mouse_wheel_scroll_full_page_set: mouse_wheel_scroll_full_page = v
+--		end
+--
+--	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size) is
+--			-- Set the mouse wheel scroll size
+--		require
+--			v_positive: v > 0
+--		do
+--			mouse_wheel_scroll_size	:= v
+--		ensure
+--			mouse_wheel_scroll_size_set: mouse_wheel_scroll_size = v
+--		end
+--
+--	set_scrolling_common_line_count (v: like scrolling_common_line_count) is
+--			-- Set `scrolling_common_line_count' with `v'.
+--		do
+--			scrolling_common_line_count := v
+--		ensure
+--			scrolling_common_line_count_set: scrolling_common_line_count = v
+--		end
+--
+--feature -- Scrolling
+--
+--	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
+--		local
+--			vy_now, vy, l_visible_count: INTEGER
+--			l_visible_rows: ARRAYED_LIST [INTEGER]
+--			l_viewable_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+--			l_first_row: EV_GRID_ROW
+--		do
+--			if is_displayed then
+--				l_visible_rows := visible_row_indexes
+--				if l_visible_rows.is_empty then
+--						-- Nothing to be done, since no rows are visible
+--				else
+--					vy_now := virtual_y_position
+--					if is_full_page_scrolling then
+--						if a_step < 0 then
+--								-- We are scrolling down.
+--							if scrolling_common_line_count < l_visible_rows.count then
+--								vy := row (l_visible_rows.i_th (
+--									l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
+--							else
+--									-- Cannot go below, go to the last element.
+--								vy := row (l_visible_rows.last).virtual_y_position
+--							end
+--						else
+--								-- We are scrolling up
+--							fixme ("[
+--								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
+--								from the implementation, we should instead use APIs from either EV_GRID or
+--								EV_GRID_ROW when they become available.
+--								The defensive programing style here is to protect ourself from the changes in the
+--								data we used.
+--								]")
+--							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
+--							if l_viewable_row_indexes /= Void then
+--								l_visible_count := viewable_height // row_height - scrolling_common_line_count
+--								l_first_row := row (l_visible_rows.first)
+--								l_viewable_row_indexes.start
+--								l_viewable_row_indexes.search (l_first_row.index)
+--								if not l_viewable_row_indexes.exhausted then
+--									if l_visible_count < l_viewable_row_indexes.index then
+--										vy := row (l_viewable_row_indexes.i_th (
+--											l_viewable_row_indexes.index - l_visible_count)).virtual_y_position
+--									else
+--											-- We reached the top.
+--										vy := 0
+--									end
+--								else
+--										-- We could not find the item. This is not right.
+--									vy := vy_now - a_step * l_visible_count * row_height
+--								end
+--							else
+--									-- We could not use `visible_indexes_to_row_indexes' to get the right
+--									-- information. Use an approximation that only works when there is no
+--									-- tree in the grid.
+--								vy := vy_now - a_step * l_visible_count * row_height
+--							end
+--						end
+--					else
+--						if a_step < 0 then
+--								-- We are scrolling down.
+--							if mouse_wheel_scroll_size < l_visible_rows.count then
+--								vy := row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
+--							else
+--									-- Do nothing.
+--								vy := vy_now
+--							end
+--						else
+--								-- We are scrolling up
+--							fixme ("[
+--								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
+--								from the implementation, we should instead use APIs from either EV_GRID or
+--								EV_GRID_ROW when they become available.
+--								The defensive programing style here is to protect ourself from the changes in the
+--								data we used.
+--								]")
+--							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
+--							if l_viewable_row_indexes /= Void then
+--								l_first_row := row (l_visible_rows.first)
+--								l_viewable_row_indexes.start
+--								l_viewable_row_indexes.search (l_first_row.index)
+--								if not l_viewable_row_indexes.exhausted then
+--									if mouse_wheel_scroll_size < l_viewable_row_indexes.index then
+--										vy := row (l_viewable_row_indexes.i_th (
+--											l_viewable_row_indexes.index - mouse_wheel_scroll_size)).virtual_y_position
+--									else
+--											-- We reached the top.
+--										vy := 0
+--									end
+--								else
+--										-- We could not find the item. This is not right.
+--									vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+--								end
+--							else
+--									-- We could not use `visible_indexes_to_row_indexes' to get the right
+--									-- information. Use an approximation that only works when there is no
+--									-- tree in the grid.
+--								vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+--							end
+--						end
+--					end
+--						-- Code below do the adjustment to the type of scrolling decided by user.
+--					if vy_now /= vy then
+--						if vy < 0 then
+--							vy := 0
+--						else
+--							vy := vy.min (maximum_virtual_y_position)
+--						end
+--						set_virtual_position (virtual_x_position, vy)
+--					end
+--				end
+--			end
+--		end
+--
+--feature {NONE} -- Scrolling : Action implementation
+--
+--	on_mouse_wheel_action (a_step: INTEGER) is
+--		do
+--			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
+--		end
 
 feature {NONE} -- Actions implementation
 
@@ -265,18 +291,13 @@ feature {NONE} -- Actions implementation
 				else
 					inspect k.code
 					when {EV_KEY_CONSTANTS}.key_page_up then
-						scroll_rows (+1, True)
+						scrolling_behavior.scroll_rows (+1, True)
 					when {EV_KEY_CONSTANTS}.key_page_down then
-						scroll_rows (-1, True)
+						scrolling_behavior.scroll_rows (-1, True)
 					else
 					end
 				end
 			end
-		end
-
-	on_mouse_wheel_action (a_step: INTEGER) is
-		do
-			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
 		end
 
 	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
@@ -684,7 +705,7 @@ feature -- Delayed cleaning
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.cancel
+			delayed_cleaning.cancel_request
 		end
 
 	set_cleaning_delay (v: INTEGER) is
@@ -704,8 +725,8 @@ feature -- Delayed cleaning
 									agent default_clean,
 									cleaning_delay
 							)
-				delayed_cleaning.set_starting_delayed_action (agent disable_sensitive)
-				delayed_cleaning.set_ending_delayed_action (agent enable_sensitive)
+				delayed_cleaning.set_on_request_start_action (agent disable_sensitive)
+				delayed_cleaning.set_on_request_end_action (agent enable_sensitive)
 			end
 		end
 
@@ -733,19 +754,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

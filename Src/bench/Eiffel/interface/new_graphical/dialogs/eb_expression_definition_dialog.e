@@ -218,6 +218,7 @@ feature {NONE} -- Graphical initialization and changes
 			address_field.disable_sensitive
 			object_name_field.change_actions.extend (agent on_object_name_changed)
 			expression_field.change_actions.extend (agent on_expression_changed)
+			expression_field.focus_in_actions.extend (agent on_expression_focus)
 			if
 				eb_debugger_manager.application_is_executing
 				and then eb_debugger_manager.application_is_stopped
@@ -473,6 +474,30 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	on_expression_focus is
+			-- Expression text field gets focus.
+		local
+			l_class_name: STRING
+			l_class_c: CLASS_C
+			l_list: LIST [CLASS_I]
+		do
+			if class_radio.is_selected then
+				l_class_name := class_field.text
+				l_class_name.to_upper
+				l_list := eiffel_universe.classes_with_name (l_class_name)
+				if l_list /= Void and then not l_list.is_empty and then l_list.first.is_compiled then
+					l_class_c := l_list.first.compiled_class
+					create expression_field_provider.make (l_class_c, Void, True)
+					expression_field.set_completion_possibilities_provider (expression_field_provider)
+					expression_field_provider.set_code_completable (expression_field)
+				else
+					expression_field.set_completion_possibilities_provider (Void)
+				end
+			else
+				setup_completion_possibilities_providers
+			end
+		end
+
 	on_ok_pressed is
 			-- User pressed the "OK" button.
 		local
@@ -619,10 +644,12 @@ feature {NONE} -- Code completion.
 			expression_field_provider.set_code_completable (expression_field)
 			expression_field.set_completion_possibilities_provider (expression_field_provider)
 
-			create class_provider.make (Void, Void, false)
-			class_field.set_completing_feature (false)
-			class_field.set_completion_possibilities_provider (class_provider)
-			class_provider.set_code_completable (class_field)
+			if class_provider = Void then
+				create class_provider.make (Void, Void, false)
+				class_field.set_completing_feature (false)
+				class_field.set_completion_possibilities_provider (class_provider)
+				class_provider.set_code_completable (class_field)
+			end
 		end
 
 feature {NONE} -- Widgets

@@ -43,6 +43,7 @@ feature -- Modification apply
 		do
 			l_cnt := modifier_list.count
 			modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.set_arguments (separator, leading_text, trailing_text))
+			compute_modification
 			original_item_list.do_all (agent {ERT_EXISTING_ITEM_MODIFIER}.apply)
 			from
 				i := 1
@@ -280,5 +281,5 @@ invariant
 	trailing_text_not_void: trailing_text /= Void
 	leading_text_not_void: leading_text /= Void
 	separator_not_void: separator /= Void
-	
+
 end

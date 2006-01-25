@@ -275,8 +275,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 					-- Shift x pos back so it fits on the screen
 				Result := Result - (list_width - right_space)
 			end
-			print ("Screen virtual right : " + screen.virtual_right.out + "%N")
-			print ("Calculating x position : " + Result.out + "%N")
 		end
 
 	calculate_completion_list_y_position: INTEGER is
@@ -336,8 +334,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			else
 				Result := Result - preferred_height - height
 			end
-			print ("Screen virtual bottom : " + screen.virtual_bottom.out + "%N")
-			print ("Calculating y position : " + Result.out + "%N")
 		end
 
 	calculate_completion_list_height: INTEGER is
@@ -391,7 +387,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 					Result := upper_space
 				end
 			end
-			print ("Calculating height : " + Result.out + "%N")
 		end
 
 	calculate_completion_list_width: INTEGER is
@@ -403,7 +398,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 					-- Calculate correct size to fit
 				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
 			end
-			print ("Calculating width : " + Result.out + "%N")
 		end
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection

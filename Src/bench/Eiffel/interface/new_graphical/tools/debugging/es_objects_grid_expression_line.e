@@ -266,7 +266,7 @@ feature -- Graphical changes
 					l_feature_as := eb_debugger_manager.debugging_feature_as
 				end
 				if l_class_c /= Void then
-					create l_provider.make (l_class_c, l_feature_as, True, False)
+					create l_provider.make (l_class_c, l_feature_as, expression.context_class /= Void)
 					gedit.set_completion_possibilities_provider (l_provider)
 				end
 			end

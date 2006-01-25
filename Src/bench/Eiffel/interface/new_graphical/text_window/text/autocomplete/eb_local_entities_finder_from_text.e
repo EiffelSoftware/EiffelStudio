@@ -42,11 +42,12 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN; a_class_c: CLASS_C) is
 			-- Build list of locals and argument types (`found_entities') corresponding to a position
 			-- in a text defined by `line' and `token'.		
 		do
 			reset
+			set_up_parser (a_class_c)
 			build_local_entities_list (line, token)
 			build_argument_entities_list (line, token)
 			found_entities := found_locals_list
@@ -102,6 +103,27 @@ feature -- Access
 			-- Does feature have a return type?
 
 feature {NONE} -- Implementation
+
+	set_up_parser (a_class: CLASS_C) is
+			-- Set up formal generic parameters for `entity_declaration_parser'.
+		local
+			formal_dec_list: EIFFEL_LIST [FORMAL_DEC_AS]
+		do
+			if a_class /= Void then
+				formal_dec_list := a_class.generics
+				if formal_dec_list /= Void then
+					from
+						entity_declaration_parser.formal_parameters.wipe_out
+						formal_dec_list.start
+					until
+						formal_dec_list.after
+					loop
+						entity_declaration_parser.formal_parameters.extend (formal_dec_list.item.twin)
+						formal_dec_list.forth
+					end
+				end
+			end
+		end
 
 	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
 			-- Build list of local types corresponding to a position a text defined by `line' and `token'.

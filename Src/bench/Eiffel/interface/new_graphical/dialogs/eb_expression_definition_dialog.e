@@ -615,11 +615,12 @@ feature {NONE} -- Code completion.
 			expression_field_attached: expression_field /= Void
 			class_field_attached: class_field /= Void
 		do
-			create expression_field_provider.make (Void, Void, true, false)
+			create expression_field_provider.make (Void, Void, false)
 			expression_field_provider.set_code_completable (expression_field)
 			expression_field.set_completion_possibilities_provider (expression_field_provider)
 
-			create class_provider.make (Void, Void, false, true)
+			create class_provider.make (Void, Void, false)
+			class_field.set_completing_feature (false)
 			class_field.set_completion_possibilities_provider (class_provider)
 			class_provider.set_code_completable (class_field)
 		end

@@ -451,7 +451,7 @@ feature -- Basic Operations
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
 
 					if exploring_current_class then
-						set_up_local_analyzer (cursor.line, token)
+						set_up_local_analyzer (cursor.line, token, l_current_class_c)
 						add_names_to_completion_list (Local_analyzer, l_current_class_c)
 						local_analyzer.reset
 					end

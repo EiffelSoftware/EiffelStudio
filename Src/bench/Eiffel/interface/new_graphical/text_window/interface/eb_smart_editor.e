@@ -21,9 +21,7 @@ inherit
 		redefine
 			handle_extended_key,
 			handle_extended_ctrled_key,
-			handle_character, reset,
-			on_mouse_button_down,
-			on_double_click,
+			handle_character,
 			process_text, load_file,
 			load_text, reload,
 			initialize_customizable_commands,
@@ -31,11 +29,37 @@ inherit
 			text_displayed,
 			recycle	,
 			file_loading_setup,
-			key_not_handled_action,
 			on_text_saved,
 			on_text_back_to_its_last_saved_state,
 			on_key_down,
 			make
+		end
+
+	CODE_COMPLETABLE
+		export
+			{NONE} all
+		undefine
+			default_create,
+			shifted_key,
+			ctrled_key,
+			alt_key,
+			unwanted_characters,
+			refresh
+		redefine
+			can_complete,
+			exit_complete_mode,
+			handle_tab_action,
+			complete_feature_call,
+			on_key_pressed,
+			calculate_completion_list_width
+		end
+
+	EB_COMPLETION_POSSIBILITIES_PROVIDER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			prepare_completion
 		end
 
 create
@@ -48,10 +72,10 @@ feature {NONE} -- Initialize
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (a_dev_window)
 
-				-- Create timeout for completion list.
-			create completion_timeout.make_with_interval (1500)
-			completion_timeout.actions.extend (agent complete_feature_name)
-			completion_timeout.actions.block
+				-- Initialize code completion.
+			initialize_code_complete
+			set_completion_possibilities_provider (Current)
+			set_code_completable (Current)
 		end
 
 feature -- Content change
@@ -158,35 +182,17 @@ feature -- Search
 feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 
 	complete_feature_name is
-			-- Autocomplete feature name before cursor.
-		local
-			add_point: BOOLEAN
+			-- Complete feature name.
 		do
-			if not is_completing then
-				is_completing := True
-				completion_timeout.actions.block
-				if click_and_complete_is_active and then not has_selection then
-					text_displayed.prepare_auto_complete (add_point)
-					if text_displayed.completion_possibilities /= Void then
-						completion_mode := completion_mode + 1
-						show_completion_list (True)
-					end
-				end
-				check_cursor_position
-				is_completing := False
-			end
+			set_completing_feature (true)
+			complete_code
 		end
 
 	complete_class_name is
-			-- Autocomplete class name before cursor.
+			-- Complete class name.
 		do
-			if not has_selection then
-				text_displayed.prepare_class_name_complete
-				if text_displayed.class_completion_possibilities /= Void then
-					show_completion_list (False)
-				end
-			end
-			check_cursor_position
+			set_completing_feature (false)
+			complete_code
 		end
 
 	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
@@ -213,24 +219,6 @@ feature -- Autocomplete
 			end
 		end
 
-	choices: EB_COMPLETION_CHOICE_WINDOW is
-			-- Completion choice window for show feature and class completion options.
-		once
-			create Result.make
-		end
-
-	position_completion_choice_window is
-			-- Reposition the completion choice window
-		require
-			choices_not_void: choices /= Void
-		do
-			choices.set_size (calculate_completion_list_width, calculate_completion_list_height)
-			choices.set_position (calculate_completion_list_x_position, calculate_completion_list_y_position)
-		end
-
-	completion_timeout: EV_TIMEOUT
-			-- Timeout for showing completion list
-
 feature {NONE} -- Text loading
 
 	string_loading_setup, file_loading_setup is
@@ -241,13 +229,6 @@ feature {NONE} -- Text loading
 			process_click_tool_error
 		end
 
-	reset is
-			-- Make the editor ready to load a new content.
-		do
-			Precursor {EB_CLICKABLE_EDITOR}
-			completion_mode := 0
-		end
-
 	on_text_back_to_its_last_saved_state is
 			-- Reset click tool when back to the saved state
 		do
@@ -256,22 +237,6 @@ feature {NONE} -- Text loading
 				text_displayed.update_click_list (dev_window.stone, True)
 				text_displayed.clear_syntax_error
 			end
-		end
-
-feature {NONE} -- Process Vision2 events
-
-	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Process single click on mouse buttons.
-		do
-			completion_mode := 0
-			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
-		end
-
-	on_double_click (abs_x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Process double clicks on mouse buttons
-		do
-			completion_mode := 0
-			Precursor {EB_CLICKABLE_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
@@ -363,59 +328,59 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 		do
 			code := ev_key.code
 			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
-			if code = Key_tab and then completion_mode > 0 then
+			if not is_completing and then code = Key_tab and then allow_tab_selecting then
 					-- Tab action
-				run_if_editable (agent tab_action)
-			elseif code = Key_enter and then not has_selection then
-					-- Return/Enter key action
-				completion_mode := 0
-				if is_editable then
-					token := text_displayed.cursor.token
-					if token /= Void then
-						if latest_typed_word_is_keyword then
-							t ?= token.previous
-							if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
-								text_displayed.complete_syntax (previous_token_image, True, True)
-								syntax_completed := text_displayed.syntax_completed
-								latest_typed_word_is_keyword := false
-							end
-						else
-							t ?= token.previous
-							if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
-								text_displayed.complete_syntax (keyword_image (t), False, True)
-								syntax_completed := text_displayed.syntax_completed
-							end
-						end
-					end
-
-					if syntax_completed then
-						check_cursor_position
-						refresh_now
-					else
-						Precursor {EB_CLICKABLE_EDITOR} (ev_key)
-					end
-				else
-					display_not_editable_warning_message
-				end
-			elseif code = key_period then
-					-- case: .				
-				Precursor (ev_key)
-				if auto_complete_after_dot and then not shifted_key then
-					completing_automatically := True
-					completion_timeout.reset_count
-					completion_timeout.actions.resume
+				handle_tab_action
+			elseif not is_completing and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
+				trigger_completion
+				debug ("Auto_completion")
+					print ("Completion triggered.%N")
 				end
 			else
-				if completion_mode > 0 then
-					if code /= Key_back_space then
-						completion_bckp := completion_mode
-						completion_mode := 0
+				block_completion
+				debug ("Auto_completion")
+					print ("Completion blocked.%N")
+				end
+				if code = Key_enter and then not has_selection then
+						-- Return/Enter key action
+					if is_editable then
+						token := text_displayed.cursor.token
+						if token /= Void then
+							if latest_typed_word_is_keyword then
+								t ?= token.previous
+								if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
+									text_displayed.complete_syntax (previous_token_image, True, True)
+									syntax_completed := text_displayed.syntax_completed
+									latest_typed_word_is_keyword := false
+								end
+							else
+								t ?= token.previous
+								if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
+									text_displayed.complete_syntax (keyword_image (t), False, True)
+									syntax_completed := text_displayed.syntax_completed
+								end
+							end
+						end
+
+						if syntax_completed then
+							check_cursor_position
+							refresh_now
+						else
+							Precursor {EB_CLICKABLE_EDITOR} (ev_key)
+						end
+					else
+						display_not_editable_warning_message
 					end
+				elseif code = key_period then
+						-- case: .				
 					Precursor (ev_key)
-					completion_bckp := 0
+					if auto_complete_after_dot and then not shifted_key then
+						completing_automatically := True
+						completion_timeout.reset_count
+						completion_timeout.actions.resume
+					end
 				else
 					Precursor (ev_key)
-					completion_mode := 0
 				end
 			end
 			auto_point := switch_auto_point xor auto_point
@@ -453,76 +418,13 @@ feature {NONE} -- Handle keystrokes
 
 	completion_bckp: INTEGER
 
-	key_not_handled_action is
-			-- Apply default key processing.
-		do
-				-- "if" clause Prevents completion_mode from losing its status when it is larger than 0.
-				-- When completion_mode is larger than 0, it implies that we are at the number of completion_mode
-				-- deep of completion.
-			if completion_mode = 0 then
-				completion_mode := completion_bckp
-			end
-		end
-
-	basic_cursor_move (action: PROCEDURE[like cursor_type,TUPLE]) is
+	basic_cursor_move (action: PROCEDURE [like cursor_type,TUPLE]) is
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char.
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (action)
 			switch_auto_point := False
-		end
-
-	tab_action is
-			-- Process push on tab key when in auto_complete mode.
-		require
-			text_displayed_not_void: text_displayed /= Void
-		local
-			x,y: INTEGER
-			cursor: like cursor_type
-		do
-			from
-				cursor := text_displayed.cursor
-			until
-				cursor.item = '(' or cursor.item = ';' or cursor.item = ')' or cursor.item = '%N'
-			loop
-				cursor.go_right_char
-			end
-			if cursor.item /= '%N' then
-				if cursor.item = ')' then
-					if has_selection then
-						disable_selection
-					end
-					completion_mode := (completion_mode - 1).max (0)
-					cursor.go_right_char
-				else
-					if cursor.item = ';' then
-						text_displayed.replace_char (',')
-					end
-					cursor.go_right_char
-					from
-						x := cursor.x_in_characters
-						y := cursor.y_in_lines
-					until
-						cursor.item = ';' or cursor.item = ')' or else cursor.token = cursor.line.eol_token
-					loop
-						cursor.go_right_char
-					end
-					text_displayed.selection_cursor.make_from_character_pos (cursor.x_in_characters, cursor.y_in_lines, text_displayed)
-					cursor.set_y_in_lines (y)
-					cursor.set_x_in_characters (x)
-					if not has_selection and not cursor.is_equal (text_displayed.selection_cursor) then
-						text_displayed.enable_selection
-						show_selection (False)
-					end
-				end
-			else
-				completion_mode := (completion_mode - 1).max (0)
-				handle_extended_key (create {EV_KEY}.make_with_code (key_tab))
-			end
-
-			invalidate_cursor_rect (True)
-			check_cursor_position
 		end
 
 feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
@@ -541,79 +443,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			invalidate_cursor_rect (False)
 			resume_cursor_blinking
 			set_focus
-		end
-
-	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
-			-- Insert `cmp' in the editor and switch to completion mode.
-			-- If `is_feature_signature' then try to complete arguments and remove the type.
-			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
-		local
-			completed: STRING
-			ind: INTEGER
-			lp: INTEGER
-		do
-			auto_point := False
-			if is_feature_signature then
-				completed := cmp.twin
-				ind := completed.last_index_of (':', completed.count)
-				lp := completed.last_index_of (')', completed.count)
-				if ind > 0 and ind > lp then
-					completed.keep_head (ind - 1)
-				end
-			else
-				completed := cmp
-			end
-			if completed.is_empty then
-				completion_mode := (completion_mode - 1).max (0)
-				if appended_character /= '%U' then
-					text_displayed.insert_char (appended_character)
-				end
-				--history.unbind_current_item_to_next
-			else
-				text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder)
-				if is_feature_signature then
-					if completed.last_index_of (')',completed.count) = completed.count then
-						tab_action
-					else
-						completion_mode := (completion_mode - 1).max (0)
-						switch_auto_point := False
-						if appended_character = '%U' then
-							auto_point := True
-							auto_point_token := text_displayed.cursor.token
-						else
-							auto_point := False
-							auto_point_token := Void
-						end
-					end
-				else
-					completion_mode := (completion_mode - 1).max (0)
-				end
-			end
-			refresh
-		end
-
-	complete_class_from_window (completed: STRING; appended_character: CHARACTER; remainder: INTEGER) is
-			-- Insert `completed' in the editor.
-		local
-			i: INTEGER
-		do
-			if remainder > 0 then
-				from
-					i := 0
-				until
-					i = remainder
-				loop
-					text_displayed.delete_char
-					i := i + 1
-				end
-			end
-			if not completed.is_empty then
-				text_displayed.insert_string (completed)
-			end
-			if appended_character /= '%U' then
-				text_displayed.insert_char (appended_character)
-			end
-			refresh
 		end
 
 	insert_character_from_completion_dialog (a_character: CHARACTER) is
@@ -788,9 +617,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			end
 		end
 
-	completion_border_size: INTEGER is 75
-			-- Size in pixels that the completion list can go to (virtual border)
-
 feature {NONE} -- Autocomplete implementation
 
 	on_key_down (ev_key: EV_KEY)is
@@ -798,39 +624,6 @@ feature {NONE} -- Autocomplete implementation
 			completion_timeout.actions.block
 			Precursor (ev_key)
 		end
-
-	show_completion_list (is_feature: BOOLEAN) is
-			-- Show list of possible features after a point.
-		do
-			if is_feature then
-				choices.initialize_for_features
-					(
-						Current,
-						text_displayed.feature_name_part_to_be_completed,
-						text_displayed.feature_name_part_to_be_completed_remainder,
-						text_displayed.completion_possibilities,
-						completing_word
-					)
-			else
-				choices.initialize_for_classes
-					(
-						Current,
-						text_displayed.feature_name_part_to_be_completed,
-						text_displayed.feature_name_part_to_be_completed_remainder,
-						text_displayed.class_completion_possibilities
-					)
-			end
-			if choices.is_displayed then
-				choices.hide
-			end
-			if choices.show_needed then
-				position_completion_choice_window
-				choices.show
-			end
-		end
-
-	completion_mode: INTEGER
-			-- Are we in auto_complete mode?
 
 	auto_point: BOOLEAN
 			-- Should autocomplete add `.' next time it is called?
@@ -840,9 +633,6 @@ feature {NONE} -- Autocomplete implementation
 
 	auto_point_token: EDITOR_TOKEN
 			-- Point where autocomplete should add a period.
-
-	is_completing: BOOLEAN
-			-- Is completion currently being processed?
 
 feature {NONE} -- syntax completion
 
@@ -1065,7 +855,361 @@ feature -- Memory management
 			completion_timeout := Void
 		end
 
-feature {NONE} -- Implementation	
+feature {NONE} -- Possiblilities provider
+
+	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+			-- Completions proposals found by `prepare_auto_complete'
+		do
+			Result := text_displayed.click_tool.completion_possibilities
+		end
+
+	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+			-- Completions proposals found by `prepare_auto_complete'
+		do
+			Result := text_displayed.click_tool.class_completion_possibilities
+		end
+
+	insertion: STRING is
+			-- Strings to be partially completed : the first one is the dot or tilda if there is one
+			-- the second one is the feature name to be completed
+		do
+			Result := text_displayed.click_tool.insertion.item
+		end
+
+	insertion_remainder: INTEGER is
+			-- The number of characters in the insertion remaining from the cursor position to the
+			-- end of the token
+		do
+			Result := text_displayed.click_tool.insertion_remainder
+		end
+
+	prepare_completion is
+			-- Prepare completion
+		do
+			Precursor
+			if completing_feature and then click_and_complete_is_active and then not has_selection then
+				text_displayed.prepare_auto_complete (false)
+			elseif not completing_feature and then not has_selection then
+				text_displayed.prepare_class_name_complete
+			end
+		end
+
+feature {NONE} -- Code completable implementation
+
+	current_line: EIFFEL_EDITOR_LINE is
+			-- Line of current cursor.
+			-- Every query is not guarenteed the same object.
+		do
+			Result := text_displayed.cursor.line
+			if Result = Void then
+				create Result.make_empty_line
+			end
+		end
+
+	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
+			-- Can completing by these keys?
+		local
+			l_shortcut_pref: SHORTCUT_PREFERENCE
+		do
+			if a_key /= Void then
+				if
+					a_key.code = {EV_KEY_CONSTANTS}.key_period and
+					not a_ctrl and
+					not a_alt and
+					not a_shift
+				then
+					Result := true
+					set_completing_feature (true)
+				end
+
+				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
+				check l_shortcut_pref /= Void end
+				if
+					a_key.code = l_shortcut_pref.key.code and
+					a_ctrl = l_shortcut_pref.is_ctrl and
+					a_alt = l_shortcut_pref.is_alt and
+					a_shift = l_shortcut_pref.is_shift
+				then
+					Result := true
+					set_completing_feature (true)
+				end
+
+				l_shortcut_pref := preferences.editor_data.shortcuts.item ("class_autocomplete")
+				check l_shortcut_pref /= Void end
+				if
+					a_key.code = l_shortcut_pref.key.code and
+					a_ctrl = l_shortcut_pref.is_ctrl and
+					a_alt = l_shortcut_pref.is_alt and
+					a_shift = l_shortcut_pref.is_shift
+				then
+					Result := true
+					set_completing_feature (false)
+				end
+			end
+		end
+
+	handle_tab_action is
+			-- Handle tab action.
+		do
+			run_if_editable (agent tab_action)
+			run_if_editable (agent invalidate_cursor_rect (True))
+			run_if_editable (agent check_cursor_position)
+		end
+
+	go_to_start_of_selection is
+			-- Move cursor to the start of the selection if possible.
+		do
+			if text_displayed.cursor /= text_displayed.selection_start then
+				if text_displayed.selection_end.y_in_lines = text_displayed.selection_start.y_in_lines then
+					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.selection_start.token, text_displayed.selection_start.pos_in_token, text_displayed)
+				else
+					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.current_line.first_token, 1, text_displayed)
+				end
+			end
+			disable_selection
+		end
+
+	go_to_end_of_selection is
+			-- Move cursor to the end of selection
+		do
+			if text_displayed.cursor /= text_displayed.selection_end then
+				if text_displayed.selection_end.y_in_lines = text_displayed.selection_start.y_in_lines then
+					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.selection_end.token, text_displayed.selection_end.pos_in_token, text_displayed)
+				else
+					text_displayed.cursor.make_from_relative_pos (text_displayed.current_line, text_displayed.current_line.eol_token, 1, text_displayed)
+				end
+			end
+			disable_selection
+		end
+
+	go_to_start_of_line is
+			-- Move cursor to the start of a line
+			-- where tab switching to next feature argument should function.
+		do
+			if has_selection then
+				disable_selection
+			end
+			text_displayed.cursor.go_start_line
+		end
+
+	go_to_end_of_line is
+			-- Move cursor to the start of a line.
+		do
+			if has_selection then
+				disable_selection
+			end
+			text_displayed.cursor.go_end_line
+		end
+
+	go_right_char is
+			-- Go to right character.
+		do
+			text_displayed.cursor.go_right_char_no_down_line
+		end
+
+	move_cursor_to (a_token: EDITOR_TOKEN; a_line: like current_line) is
+			-- Move cursor to `a_token' which is in `a_line'.
+		do
+			if has_selection then
+				disable_selection
+			end
+			text_displayed.cursor.make_from_relative_pos (a_line, a_token, 1, text_displayed)
+		end
+
+	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line) is
+			-- Select from the start position of `a_start_token' to the start position of `a_end_token'.
+		do
+			text_displayed.selection_cursor.make_from_relative_pos (a_start_line, a_start_token, 1, text_displayed)
+			text_displayed.cursor.make_from_relative_pos (a_end_line, a_end_token, 1, text_displayed)
+			text_displayed.enable_selection
+		end
+
+	allow_tab_selecting: BOOLEAN is
+			-- Allow tab selecting?
+		local
+			l_current_line: like current_line
+			l_current_token: EDITOR_TOKEN
+			l_has_left_brace_ahead, l_has_right_brace_following, l_has_right_brace_ahead, seperator_ahead: BOOLEAN
+		do
+			if has_selection implies text_displayed.selection_start.y_in_lines = text_displayed.selection_end.y_in_lines then
+				l_current_line := current_line
+				from
+					l_current_line.start
+				until
+					l_current_line.after or l_current_line.item = text_displayed.cursor.token
+				loop
+					if l_current_line.item.is_text and then l_current_line.item.image.is_equal ("(") then
+						l_has_left_brace_ahead := true
+					end
+					if l_current_line.item.is_text and then l_current_line.item.image.is_equal (")") then
+						l_has_right_brace_ahead := true
+					end
+					if l_current_line.item.is_text and then (l_current_line.item.image.is_equal (",") or else l_current_line.item.image.is_equal (";")) then
+						seperator_ahead := true
+					end
+					l_current_line.forth
+				end
+
+				from
+					l_current_token := current_token_in_line (l_current_line)
+				until
+					l_current_token = Void or else l_current_token = l_current_line.eol_token
+				loop
+					if l_current_token.image.is_equal (")") then
+						l_has_right_brace_following := true
+					end
+					l_current_token := l_current_token.next
+				end
+				Result := l_has_left_brace_ahead or (l_has_right_brace_following and seperator_ahead) or l_has_right_brace_ahead
+			end
+		end
+
+	current_token_in_line (a_line: like current_line): EDITOR_TOKEN is
+			-- Token of the cursor.
+		do
+			Result := text_displayed.cursor.token
+		end
+
+	selection_start_token_in_line (a_line: like current_line): EDITOR_TOKEN is
+			-- Start token in the selection.
+		do
+			if text_displayed.cursor.y_in_lines = text_displayed.selection_start.y_in_lines then
+				Result := text_displayed.selection_start.token
+			else
+				Result := current_line.first_token
+			end
+		end
+
+	selection_end_token_in_line (a_line: like current_line): EDITOR_TOKEN is
+			-- Token after end of selection.
+		do
+			if text_displayed.cursor.y_in_lines = text_displayed.selection_end.y_in_lines then
+				Result := text_displayed.selection_end.token
+			else
+				Result := current_line.eol_token
+			end
+		end
+
+	show_possible_selection is
+			-- Show possible selection
+		do
+			text_displayed.enable_selection
+			if has_selection then
+				show_selection (False)
+			end
+		end
+
+	key_press_actions: EV_KEY_ACTION_SEQUENCE is
+			-- Actions to be performed when a keyboard key is pressed.
+		do
+			Result := editor_drawing_area.key_press_actions
+		end
+
+	delete_char is
+			-- Delete char.
+		do
+			text_displayed.delete_char
+		end
+
+	back_delete_char is
+			-- Back delete character.
+		do
+			text_displayed.back_delete_char
+		end
+
+	insert_string (a_str: STRING) is
+			-- Insert `a_str' at cursor position.
+		do
+			text_displayed.insert_string (a_str)
+		end
+
+	insert_char (a_char: CHARACTER) is
+			-- Insert `a_char' at cursor position.
+		do
+			text_displayed.insert_char (a_char)
+		end
+
+	replace_char (a_char: CHARACTER) is
+			-- Replace current char with `a_char'.
+		do
+			text_displayed.replace_char (a_char)
+		end
+
+	resume_focus_in_actions is
+			-- Resume focus in actions
+			-- (export status {EB_CODE_COMPLETION_WINDOW})
+		do
+			editor_drawing_area.focus_in_actions.resume
+		end
+
+	block_focus_in_actions is
+			-- Block focus in actions
+			-- (export status {EB_CODE_COMPLETION_WINDOW})
+		do
+			editor_drawing_area.focus_in_actions.block
+		end
+
+	block_focus_out_actions is
+			-- Block focus out actions.
+			-- (export status {EB_CODE_COMPLETION_WINDOW})
+		do
+			editor_drawing_area.focus_out_actions.block
+		end
+
+	resume_focus_out_actions is
+			-- Resume focus out actions.
+			-- (export status {EB_CODE_COMPLETION_WINDOW})
+		do
+			editor_drawing_area.focus_out_actions.resume
+		end
+
+	save_cursor_position is
+			-- Save cursor position for retrieving.
+		do
+			saved_cursor := text_displayed.cursor.twin
+		end
+
+	retrieve_cursor_position is
+			-- Retrieve cursor position from saving.
+		do
+			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
+		end
+
+	saved_cursor: EDITOR_CURSOR
+
+	complete_feature_call (completed: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
+			--
+		do
+			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+		end
+
+
+	select_from_cursor_to_saved is
+			-- Select from cursor position to saved cursor position
+		do
+			check saved_cursor /= Void end
+			text_displayed.selection_cursor.make_from_character_pos (text_displayed.cursor.x_in_characters, text_displayed.cursor.y_in_lines, text_displayed)
+			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
+			text_displayed.enable_selection
+		end
+
+	end_of_line: BOOLEAN is
+			--
+		do
+			Result := text_displayed.cursor.token = text_displayed.cursor.line.eol_token
+		end
+
+	current_char: CHARACTER is
+			-- Current character, to the right of the cursor.
+		do
+			Result := text_displayed.cursor.item
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Do nothing.
+			-- We do it in `handle_extended_key'
+		do
+		end
 
 	completing_automatically: BOOLEAN
 			-- Is completion being shown automatically?
@@ -1075,7 +1219,7 @@ feature {NONE} -- Implementation
 			-- Note: Word completion is based on context.
 			-- Completing without context is considered completing (pressing CTRL+SPACE for a feature list of Current).
 			-- Completing with context (a_var.f..., a_v...) is completing a word.
-		require
+		require else
 			text_is_fully_loaded: text_is_fully_loaded
 		local
 			l_text: like text_displayed
@@ -1099,7 +1243,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			completing_automatically := False
-		ensure
+		ensure then
 			completing_automatically_reset: completing_automatically = False
 		end
 
@@ -1112,19 +1256,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

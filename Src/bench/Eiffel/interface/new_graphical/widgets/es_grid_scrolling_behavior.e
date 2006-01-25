@@ -13,8 +13,6 @@ inherit
 
 	EV_SHARED_APPLICATION
 
-	REFACTORING_HELPER
-
 create
 	make
 

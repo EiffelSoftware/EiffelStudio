@@ -31,6 +31,7 @@ inherit
 			is_equal,
 			is_explicit,
 			is_identical,
+			is_standalone,
 			is_valid,
 			make_gen_type_byte_code,
 			meta_generic,
@@ -223,6 +224,24 @@ feature -- Status Report
 					Result := l_true.item (i).is_explicit
 					i := i + 1
 				end
+			end
+		end
+
+	is_standalone: BOOLEAN is
+			-- Is type standalone, i.e. does not depend on formal generic or acnhored type?
+		local
+			i: INTEGER
+			l_true: like true_generics
+		do
+			Result := True
+			from
+				l_true := true_generics
+				i := l_true.count
+			until
+				i <= 0 or else not Result
+			loop
+				Result := l_true.item (i).is_standalone
+				i := i - 1
 			end
 		end
 

@@ -14,7 +14,7 @@ inherit
 		undefine
 			anchor_instantiation_in,
 			is_equal, generate_cid, il_type_name, generate_cid_array,
-			generate_cid_init, is_anchored, is_explicit, is_valid,
+			generate_cid_init, is_anchored, is_explicit, is_standalone, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
 			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
@@ -156,19 +156,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

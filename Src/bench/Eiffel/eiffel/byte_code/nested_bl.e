@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Enlarged byte code for nested call
 
-class NESTED_BL 
+class NESTED_BL
 
 inherit
 	NESTED_B
@@ -13,8 +13,8 @@ inherit
 			set_register, register, set_parent, parent, propagate,
 			unanalyze, generate, analyze, allocates_memory
 		end
-	
-feature 
+
+feature
 
 	register: REGISTRABLE
 			-- In which register the expression is stored
@@ -27,7 +27,7 @@ feature
 
 	parent: NESTED_BL
 			-- Parent of current node
-	
+
 	set_parent (p: NESTED_BL) is
 			-- Set `parent' to `p'
 		do
@@ -79,7 +79,7 @@ feature
 					(r = No_register implies not target.type.is_basic)
 					and
 					(r = No_register implies context.propagate_no_register)
-					and 
+					and
 					not context.has_invariant
 				then
 					register := r
@@ -223,12 +223,14 @@ feature
 			-- Analyze expression
 		local
 			msg_target: ACCESS_B
+			access_expr_b: ACCESS_EXPR_B
 		do
 debug
 io.error.put_string ("In nested_bl%N")
 end
 			msg_target := message.target
 			if parent = Void then
+				access_expr_b ?= target
 					-- If we are at the top of the tree hierarchy, then
 					-- this has never been analyzed. If the access has
 					-- no parameters, then it will be expanded in-line.
@@ -239,6 +241,8 @@ end
 						-- of the expression, which we cannot do--RAM. This
 						-- of course applies only when the current call is a
 						-- polymorphic one...
+						-- Check also that target is not a parenthesized expression
+						-- that could enclose an attribute, a polymorphic call, etc.
 				and then
 					-- This test leads to an optimization for t.f (ref).
 					-- The generated_code was E_f (E_t (l[0]), ref)
@@ -255,6 +259,8 @@ end
 					(target.is_attribute
 					or
 					target.is_polymorphic
+					or
+					access_expr_b /= Void
 					or
 					msg_target.is_polymorphic)
 				then
@@ -332,7 +338,7 @@ end
 					-- This is the first call. Generate the target.
 				target.generate
 					-- generate a hook
-				if target.is_feature then 
+				if target.is_feature then
 					generate_frozen_debugger_hook_nested
 				end
 						-- Generate a call on an entity stored in `target'
@@ -388,19 +394,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

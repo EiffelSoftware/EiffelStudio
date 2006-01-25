@@ -56,7 +56,7 @@ feature -- change
 				on_mouse_wheel_action_agent := agent on_mouse_wheel_action
 			end
 			grid.mouse_wheel_actions.extend (on_mouse_wheel_action_agent)
-			on_mouse_wheel_action := True
+			mouse_wheel_enabled := True
 		end
 
 	disable_mouse_wheel is
@@ -66,7 +66,7 @@ feature -- change
 			if on_mouse_wheel_action_agent /= Void then
 				grid.mouse_wheel_actions.prune_all (on_mouse_wheel_action_agent)
 			end
-			on_mouse_wheel_action := False
+			mouse_wheel_enabled := False
 		end
 
 	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is

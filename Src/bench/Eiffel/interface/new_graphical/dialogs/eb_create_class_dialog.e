@@ -73,7 +73,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			buttons_box: EV_HORIZONTAL_BOX
 			identification_frame, properties_frame, parents_frame: EV_FRAME
 			cluster_label, name_label, file_label, creation_label: EV_LABEL
-			cancel_b: EV_BUTTON	-- Button to discard the class 
+			cancel_b: EV_BUTTON	-- Button to discard the class
 			bbox: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			sz: INTEGER
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			vb.extend (cluster_list)
 			vb.set_border_width (Layout_constants.Small_border_size)
 			identification_frame.extend (vb)
-			
+
 			create vb
 			create bbox
 			bbox.enable_homogeneous
@@ -217,7 +217,7 @@ feature {NONE} -- Initialization
 feature -- Status Report
 
 	cancelled: BOOLEAN
-			-- Was `Current' closed by discarding the dialog 
+			-- Was `Current' closed by discarding the dialog
 			-- (by clicking the Cancel button for example)?
 
 	class_i: CLASS_I
@@ -225,7 +225,7 @@ feature -- Status Report
 
 	cluster: CLUSTER_I
 			-- Selected cluster
-			
+
 	is_deferred: BOOLEAN
 			-- Is new class deferred?
 
@@ -257,11 +257,11 @@ feature -- Basic operations
 			call ("NEW_CLASS_" + new_class_counter.item.out)
 			new_class_counter.put (new_class_counter.item + 1)
 		end
-		
+
 	call (class_n: STRING) is
 			-- Create a new dialog with `class_n' as preset class name.
 		require
-			valid_args: class_n /= Void 
+			valid_args: class_n /= Void
 		local
 			str: STRING
 			clus_list: ARRAYED_LIST [CLUSTER_I]
@@ -272,7 +272,7 @@ feature -- Basic operations
 				cluster := target_cluster
 			end
 			str := class_n.as_upper
-			class_entry.set_text (str)	
+			class_entry.set_text (str)
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.is_empty then
 				from
@@ -322,7 +322,7 @@ feature {NONE} -- Access
 	change_cluster is
 			-- Howdy Howdy
 		local
-			clu: CLUSTER_I 
+			clu: CLUSTER_I
 			wd: EV_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 				i.set_data (clus)
 				if not clus.sub_clusters.is_empty then
 					fill_subclusters (i)
-				end	
+				end
 				sub_clusters.forth
 			end
 		end
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			-- Create a new class
 		local
 			f_name: FILE_NAME
-			file: RAW_FILE -- Windows specific 
+			file: RAW_FILE -- Windows specific
 			base_name: STRING
 			wd: EV_WARNING_DIALOG
 			cd: EV_CONFIRMATION_DIALOG
@@ -613,8 +613,8 @@ feature {NONE} -- Implementation
 							output.put_string (in_buf)
 						else
 							output.put_string (in_buf)
-							if in_buf.item (in_buf.count) /= '%N' then 
-									-- Add a carriage return like `vi' if there's none at the end 
+							if in_buf.item (in_buf.count) /= '%N' then
+									-- Add a carriage return like `vi' if there's none at the end
 								output.put_new_line
 							end
 						end
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 				--| Make sure the currently selected item is visible
 			curr_selected_item := cluster_list.selected_item
 			if curr_selected_item /= Void then
-				cluster_list.ensure_item_visible (curr_selected_item)			
+				cluster_list.ensure_item_visible (curr_selected_item)
 			end
 
 				--| Make sure the text in the class entry is entirely visible
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 				wd.show_modal_to_window (Current)
 			end
 		end
-		
+
 	update_file_entry is
 			-- Update the file name according to the class name.
 		local
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 				is_deferred := False
 			end
 		end
-		
+
 	on_creation_check is
 			-- User selected or unselected the `creation procedure' check box.
 		do
@@ -788,7 +788,9 @@ feature {NONE} -- Implementation
 	on_focus_in is
 			-- When the parents list has the focus, we disable the default push button.
 		do
-			remove_default_push_button
+			if default_push_button /= Void then
+				remove_default_push_button
+			end
 		end
 
 	on_focus_out is
@@ -805,20 +807,20 @@ feature {NONE} -- Vision2 widgets
 
 	create_button: EV_BUTTON
 			-- Button to create the class
-			
+
 	cluster_list: EV_TREE
 			-- List of all available clusters.
 
 	class_entry: EV_TEXT_FIELD
 			-- Text field in which the user will type the name of the class
-			
+
 	file_entry: EV_TEXT_FIELD
 			-- Text field in which the user may type the file name of the class.
 
 	creation_entry: EV_TEXT_FIELD
 			-- Text field in which the user may type the (main) creation procedure of the class.
 
-	parents_list: EV_ADD_REMOVE_LIST
+	parents_list: EB_ADD_REMOVE_CLASS_LIST
 			-- List in which the user enters the class parents.
 
 	deferred_check: EV_CHECK_BUTTON
@@ -840,7 +842,7 @@ feature {NONE} -- Constants
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (250)
 		end
-		
+
 	Cluster_list_minimum_height: INTEGER is
 			-- Minimum height for the cluster list.
 		do

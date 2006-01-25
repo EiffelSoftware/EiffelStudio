@@ -90,16 +90,16 @@ feature -- Basic operation
 				context_feature_as := eb_debugger_manager.debugging_feature_as
 			end
 			current_feature_as := context_feature_as
+			watching_line := text_field.current_line
 			if context_class_c /= Void then
 				current_class_name := context_class_c.name
 				cluster_name := context_class_c.cluster.cluster_name
-				watching_line := text_field.current_line
 				if provide_features then
 					build_completion_list
 				end
-				if provide_classes then
-					build_class_completion_list
-				end
+			end
+			if provide_classes then
+				build_class_completion_list
 			end
 		end
 

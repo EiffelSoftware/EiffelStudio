@@ -63,10 +63,10 @@ feature -- System name access
 	app_name_field: EV_TEXT_FIELD
 			-- Text field for putting name of application
 
-	root_class_field: EV_TEXT_FIELD
+	root_class_field: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Root class of System.
 
-	root_creation_field: EV_TEXT_FIELD
+	root_creation_field: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Name of creation procedure of System.
 
 	precompiled_combo: EV_COMBO_BOX
@@ -80,7 +80,7 @@ feature -- Generation type
 	generation_combo: EV_COMBO_BOX
 			-- Selected generation type.
 			-- Only enabled at project creation time.
-			
+
 	standard_code: INTEGER is 1
 	msil_code: INTEGER is 2
 feature -- Assertion access
@@ -305,6 +305,41 @@ feature {NONE} -- Filling
 			end
 		end
 
+	on_root_creation_field_focused is
+			-- Root creation field focused.
+			-- We set completion possibilities provider according to class field.
+		local
+			l_class_name: STRING
+			l_class_c: CLASS_C
+			l_list: LIST [CLASS_I]
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+		do
+			l_class_name := root_class_field.text
+			l_class_name.to_upper
+			l_list := universe.classes_with_name (l_class_name)
+			if l_list /= Void and then not l_list.is_empty and then l_list.first.is_compiled then
+				l_class_c := l_list.first.compiled_class
+				create l_provider.make (l_class_c, Void, True)
+				root_creation_field.set_completion_possibilities_provider (l_provider)
+				l_provider.set_code_completable (root_creation_field)
+			else
+				root_creation_field.set_completion_possibilities_provider (Void)
+			end
+		end
+
+	set_up_provider (a_completable: CODE_COMPLETABLE) is
+			-- Set up `a_completable' as class name completable.
+		require
+			a_completable_attached: a_completable /= Void
+		local
+			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
+		do
+			create l_provider.make (Void, Void, True)
+			a_completable.set_completing_feature (false)
+			a_completable.set_completion_possibilities_provider (l_provider)
+			l_provider.set_code_completable (a_completable)
+		end
+
 feature {NONE} -- Filling AST
 
 	store_precompiled (root_ast: ACE_SD) is
@@ -327,7 +362,7 @@ feature {NONE} -- Filling AST
 				create v.make (new_id_sd (title, True))
 				create d_option.initialize (pre, v)
 				root_ast.defaults.extend (d_option)
-				
+
 				if msil_widgets_enabled then
 					create fopt.make ({FREE_OPTION_SD}.msil_use_optimized_precompile)
 					if use_optimized_precompile_check.is_selected then
@@ -412,7 +447,7 @@ feature -- Initialization
 	reset is
 			-- Set graphical elements to their default value.
 		do
-			Precursor {EB_SYSTEM_TAB}		
+			Precursor {EB_SYSTEM_TAB}
 			app_name_field.remove_text
 			disable_select (check_check)
 			disable_select (require_check)
@@ -452,7 +487,7 @@ feature {NONE} -- Initialization
 		do
 			system_window := top
 			tab_make
-			
+
 			default_create
 			set_border_width (Layout_constants.Small_border_size)
 			set_padding (Layout_constants.Tiny_padding_size)
@@ -484,7 +519,8 @@ feature {NONE} -- Initialization
 				-- Root class entry
 			create label.make_with_text ("Root class: ")
 			label.align_text_left
-			create root_class_field
+			create root_class_field.make
+			set_up_provider (root_class_field)
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			item_box.extend (label)
@@ -494,7 +530,8 @@ feature {NONE} -- Initialization
 				-- Root creation procedure entry
 			create label.make_with_text ("Creation procedure name: ")
 			label.align_text_left
-			create root_creation_field
+			create root_creation_field.make
+			root_creation_field.focus_in_actions.extend (agent on_root_creation_field_focused)
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			item_box.extend (label)
@@ -594,7 +631,7 @@ feature {NONE} -- Initialization
 			check_check := new_check_button (vbox, "check", False)
 			require_check := new_check_button (vbox, "require", False)
 			hbox.extend (vbox)
-			
+
 			create vbox
 			ensure_check := new_check_button (vbox, "ensure", False)
 			loop_check := new_check_button (vbox, "loop", False)
@@ -603,10 +640,10 @@ feature {NONE} -- Initialization
 			create vbox
 			invariant_check := new_check_button (vbox, "class invariant", False)
 			hbox.extend (vbox)
-			
+
 			Result.extend (hbox)
 		end
-		
+
 	precompiled_library_frame (st: STRING): EV_FRAME is
 			-- Create a frame containing all options
 		require
@@ -619,7 +656,7 @@ feature {NONE} -- Initialization
 			create Result.make_with_text (st)
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
-			vbox.set_padding (Layout_constants.Small_border_size)			
+			vbox.set_padding (Layout_constants.Small_border_size)
 			create hbox
 			create label.make_with_text ("Location: ")
 			hbox.extend (label)
@@ -628,7 +665,7 @@ feature {NONE} -- Initialization
 			hbox.extend (precompiled_combo)
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
-			use_optimized_precompile_check := new_check_button (vbox, "Use optimized precompiled library", False)			
+			use_optimized_precompile_check := new_check_button (vbox, "Use optimized precompiled library", False)
 			vbox.disable_item_expand (use_optimized_precompile_check)
 			msil_specific_widgets.extend (use_optimized_precompile_check)
 			widgets_set_before_has_compilation_started.extend (use_optimized_precompile_check)
@@ -637,7 +674,7 @@ feature {NONE} -- Initialization
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 
 feature {NONE} -- Standard precompiled libraries
 
@@ -709,19 +746,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

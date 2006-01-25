@@ -95,7 +95,15 @@ feature -- change
 
 feature -- Scrolling
 
+	scroll_page (a_step: INTEGER) is
+			-- Scroll `a_step' pages
+		do
+			scroll_rows (a_step, True)
+		end
+
 	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
+			-- Scroll `a_step' rows
+			-- or `a_step' page if `is_full_page_scrolling' is True
 		local
 			vy_now, vy, l_visible_count: INTEGER
 			l_visible_rows: ARRAYED_LIST [INTEGER]

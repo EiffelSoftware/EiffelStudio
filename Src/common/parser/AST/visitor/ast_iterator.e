@@ -737,11 +737,6 @@ feature {NONE} -- Implementation
 			l_as.conversion_types.process (Current)
 		end
 
-	process_use_list_as (l_as: USE_LIST_AS) is
-		do
-				-- Nothing to be done
-		end
-
 	process_void_as (l_as: VOID_AS) is
 		do
 				-- Nothing to be done

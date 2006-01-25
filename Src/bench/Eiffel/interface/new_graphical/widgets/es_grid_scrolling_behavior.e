@@ -200,12 +200,14 @@ feature -- Scrolling
 
 feature {NONE} -- Scrolling : Action implementation
 
+	on_mouse_wheel_action_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
+			-- Agent representing `agent on_mouse_wheel_action' .
+
 	on_mouse_wheel_action (a_step: INTEGER) is
+			-- Action called on mouse wheel event
 		do
 			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
 		end
-
-	on_mouse_wheel_action_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

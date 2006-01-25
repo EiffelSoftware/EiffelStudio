@@ -1121,7 +1121,7 @@ feature {NONE}-- Implementation
 
 					if current_feature /= Void then
 						if current_token /= Void and then current_line /= Void then
-							set_up_local_analyzer (current_line, current_token)
+							set_up_local_analyzer (current_line, current_token, l_current_class_c)
 							entities_list := local_analyzer.found_locals_list
 
 							name_id := Names_heap.id_of (name)
@@ -1506,7 +1506,7 @@ feature {NONE} -- Implementation
 			Result.put (l_analyzer)
 		end
 
-	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN) is
+	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_class_c: CLASS_C) is
 			-- Set up local analyzer.
 		local
 			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_TEXT
@@ -1516,7 +1516,7 @@ feature {NONE} -- Implementation
 				create l_analyzer.make
 				local_analyzer_cell.put (l_analyzer)
 			end
-			l_analyzer.build_entities_list (a_line, a_token)
+			l_analyzer.build_entities_list (a_line, a_token, a_class_c)
 		end
 
 feature {NONE} -- Implementation

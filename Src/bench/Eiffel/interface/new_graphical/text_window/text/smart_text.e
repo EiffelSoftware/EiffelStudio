@@ -537,6 +537,8 @@ feature -- Completion-clickable initialization / update
 					i := i + 1
 				end
 			end
+			completed.replace_substring_all (";", ",")
+			completed.replace_substring_all ("#", "# ")
 			insert_string (completed)
 
 			if appended_character /= '%U' then

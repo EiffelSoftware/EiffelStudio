@@ -14,7 +14,8 @@ feature {NONE} -- Initialization
 		require
 			key_press_actions_attached: key_press_actions /= Void
 		do
-			key_press_actions.extend (agent key_pressed)
+			key_press_actions.extend (agent on_key_pressed)
+			set_completing_feature (true)
 			can_complete_by_key := agent can_complete
 			create completion_timeout.make_with_interval (default_timer_interval)
 			completion_timeout.actions.extend (agent complete_code)
@@ -33,14 +34,15 @@ feature -- Access
 		end
 
 	completion_possibilities_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER
+			-- Possibilities provider.
 
 	can_complete_by_key : FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
 			-- EV_KEY can activate text completion?
 
 feature {NONE} -- Access
 
-	current_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN is
-			--
+	current_token_in_line (a_line: like current_line): EDITOR_TOKEN is
+			-- Token at or behind cursor position
 		require
 			a_line_attached: a_line /= Void
 		deferred
@@ -48,7 +50,7 @@ feature {NONE} -- Access
 			current_token_in_line_not_void: Result /= Void
 		end
 
-	selection_start_token_in_line (a_line: EDITOR_LINE) : EDITOR_TOKEN is
+	selection_start_token_in_line (a_line: like current_line) : EDITOR_TOKEN is
 			-- Start token in the selection.
 		require
 			has_selection: has_selection
@@ -57,7 +59,7 @@ feature {NONE} -- Access
 			selection_start_token_in_line_not_void: Result /= Void
 		end
 
-	selection_end_token_in_line (a_line: EDITOR_LINE) : EDITOR_TOKEN is
+	selection_end_token_in_line (a_line: like current_line) : EDITOR_TOKEN is
 			-- Token after end of selection.
 		require
 			has_selection: has_selection
@@ -110,6 +112,14 @@ feature -- Status change
 		do
 		end
 
+	set_completing_feature (a_completing_feature: BOOLEAN) is
+			-- Set `completing_feature' with `a_completing_feature'.
+		do
+			completing_feature := a_completing_feature
+		ensure
+			completing_feature_set: completing_feature = a_completing_feature
+		end
+
 feature -- Status report
 
 	is_completing: BOOLEAN
@@ -128,11 +138,8 @@ feature -- Status report
 	discard_feature_signature: BOOLEAN
 			-- Discard feature signature?
 
-	completing_feature: BOOLEAN is
-			-- Is completing feature?
-		do
-			Result := completion_possibilities_provider.provide_features
-		end
+	completing_feature: BOOLEAN
+			-- Completing feature? Otherwise completing classes.
 
 feature {NONE} -- Status report
 
@@ -145,16 +152,16 @@ feature {NONE} -- Status report
 		end
 
 	completing_word: BOOLEAN is
-			--
+			-- Is in completing word mode?
 		deferred
 		end
 
 	end_of_line: BOOLEAN is
-			--
+			-- Is cursor at the end of the line.
 		deferred
 		end
 
-	start_of_line (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN is
+	start_of_line (a_token: EDITOR_TOKEN; a_line: like current_line): BOOLEAN is
 			-- Is `a_token' start of `a_line'?
 		do
 			if a_token /= Void then
@@ -225,8 +232,11 @@ feature -- Cursor
 		deferred
 		end
 
-	move_cursor_to (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE)is
+	move_cursor_to (a_token: EDITOR_TOKEN; a_line: like current_line)is
 			-- Move cursor to `a_token' which is in `a_line'.
+		require
+			a_token_attached: a_token /= Void
+			a_line_attached: a_line /= Void
 		deferred
 		end
 
@@ -237,13 +247,6 @@ feature -- Cursor
 
 	retrieve_cursor_position is
 			-- Retrieve cursor position from saving.
-		deferred
-		end
-
-feature {NONE} -- History operation
-
-	history_bind_to_next_item is
-			-- Possible history operation.
 		deferred
 		end
 
@@ -264,7 +267,7 @@ feature -- Selection
 		deferred
 		end
 
-	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN; a_end_line: EDITOR_LINE) is
+	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line) is
 			-- Select from the start position of `a_start_token' to the start position of `a_end_token'.
 		deferred
 		end
@@ -275,7 +278,7 @@ feature -- Tab actions
 			-- Process push on tab key when in auto_complete mode.
 			-- Select the closest argument of a feature.
 		local
-			l_line: EDITOR_LINE
+			l_line: like current_line
 			l_cur_token, l_end_token, l_start_token, l_save_token: EDITOR_TOKEN
 			l_found_start: BOOLEAN
 			l_selected: BOOLEAN
@@ -295,7 +298,7 @@ feature -- Tab actions
 				go_to_start_of_line
 				l_jumped := true
 			else
-				if not between_seperator (current_token_in_line (l_line), l_line) then
+				if not between_seperator (current_token_in_line (l_line), l_line) and not seperator_following (l_line) then
 					l_cur_token := find_previous_start_token (l_line)
 				end
 			end
@@ -324,11 +327,6 @@ feature -- Tab actions
 				if start_of_line (l_cur_token, l_line) then
 					l_is_start := true
 				end
-					-- Replace ";" with ",".
---				if l_cur_token.image.is_equal (";") then
---					move_cursor_to (l_cur_token, l_line)
---					replace_char (',')
---				end
 					-- Discard blank tokens.
 				from
 				until
@@ -350,6 +348,7 @@ feature -- Tab actions
 								l_end_token := l_line.eol_token
 							end
 						select_region_between_token (l_start_token, l_line, l_end_token, l_line)
+						show_possible_selection
 						l_selected := true
 					else
 						go_to_end_of_line
@@ -376,7 +375,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 			ind: INTEGER
 			lp: INTEGER
 		do
---			auto_point := False
 			if is_feature_signature then
 				completed := cmp.twin
 				ind := completed.last_index_of (':', completed.count)
@@ -384,7 +382,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 				if ind > 0 and ind > lp then
 					completed.keep_head (ind - 1)
 				end
-				if discard_feature_signature then
+				if discard_feature_signature and completed.has ('(') then
 					completed.keep_head (completed.index_of ('(', 1) - 1)
 				end
 			else
@@ -397,18 +395,10 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 				--history.unbind_current_item_to_next
 			else
 				complete_feature_call (completed, is_feature_signature, appended_character, remainder)
+				show_possible_selection
 				if is_feature_signature then
 					if completed.last_index_of (')',completed.count) = completed.count then
 						tab_action
-					else
---						switch_auto_point := False
---						if appended_character = '%U' then
---							auto_point := True
---							auto_point_token := text_displayed.cursor.token
---						else
---							auto_point := False
---							auto_point_token := Void
---						end
 					end
 				end
 			end
@@ -447,7 +437,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 			if completion_possibilities_provider.insertion /= Void and then not completion_possibilities_provider.insertion.is_empty then --  valid_index (1) and then not click_tool.insertion.item (1).is_empty then
 				if completed.item (1) = ' ' then
 					back_delete_char
-					history_bind_to_next_item
 				end
 			end
 			save_cursor_position
@@ -517,7 +506,6 @@ feature -- Basic operation
 			l_height := calculate_completion_list_height
 			l_x := calculate_completion_list_x_position
 			l_y := calculate_completion_list_y_position
-			print ("Placing window (x, y, width, height) at : (" + l_x.out + ", " + l_y.out + ", " + l_width.out + ", " + l_height.out + ")%N")
 			choices.set_size (l_width, l_height)
 			choices.set_position (l_x, l_y)
 		end
@@ -533,7 +521,7 @@ feature -- Basic operation
 		end
 
 	set_focus is
-			--
+			-- Set focus.
 		deferred
 		end
 
@@ -606,6 +594,12 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code complete window.
  		deferred
  		end
 
+ 	handle_tab_action is
+ 			-- Handle tab action.
+ 		do
+ 			tab_action
+ 		end
+
 	calculate_completion_list_x_position: INTEGER is
 			-- Determine the x position to display the completion list
 		deferred
@@ -623,14 +617,14 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 
 feature -- Trigger completion
 
-	key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY) is
 			-- If `a_key' can activate text completion, activate it.
 		require
 			a_key_attached: a_key /= Void
 		do
 			if not is_completing then
 				if a_key.code = {EV_KEY_CONSTANTS}.key_tab and allow_tab_selecting then
-					tab_action
+					handle_tab_action
 				end
 				if can_complete_by_key.item ([a_key, ctrled_key, alt_key, shifted_key]) then
 					trigger_completion
@@ -681,7 +675,7 @@ feature -- Trigger completion
 feature {NONE}
 
 	show_completion_list (is_feature: BOOLEAN) is
-			--
+			-- Show completion window.
 		do
 			if is_feature then
 				choices.initialize_for_features
@@ -712,19 +706,8 @@ feature {NONE}
 		end
 
 	prepare_auto_complete is
-			-- Determine whether there is some
-			-- name to be completed at cursor position and set
-			-- `auto_complete_is_possible' accordingly.
-			-- If it is, strings that can possibly be used for completion
-			-- are available in `completion_possibilities'.
+			-- Prepare possibilities in provider.
 		do
---			if completing_feature then
---				completion_possibilities_provider.set_provide_features (true)
---				completion_possibilities_provider.set_provide_classes (false)
---			else
---				completion_possibilities_provider.set_provide_features (false)
---				completion_possibilities_provider.set_provide_classes (true)
---			end
 			completion_possibilities_provider.prepare_completion
 		end
 
@@ -764,7 +747,7 @@ feature {NONE} -- Timer
 
 feature {NONE} -- Implementation
 
-	between_seperator (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE) : BOOLEAN is
+	between_seperator (a_token: EDITOR_TOKEN; a_line: like current_line) : BOOLEAN is
 			-- Is cursor before `a_token' between seperators?
 		require
 			a_token_attached: a_token /= Void
@@ -778,7 +761,18 @@ feature {NONE} -- Implementation
 			Result := Result and (l_cur_token = Void or else l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (")") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = a_line.eol_token)
 		end
 
-	skip_pairs (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
+	seperator_following (a_line: like current_line) : BOOLEAN is
+			-- Is cursor before a seperator?
+		require
+			a_line_attached: a_line /= Void
+		local
+			l_cur_token: EDITOR_TOKEN
+		do
+			l_cur_token := current_token_in_line (a_line)
+			Result := l_cur_token.image.is_equal (")") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";") or l_cur_token = a_line.eol_token
+		end
+
+	skip_pairs (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
 			-- Skip tokens from `a_token' that are and between pairs of `a_left' and `a_right'.
 			-- i.e "[INETEGER, STRING]" where `a_token' is "[", `a_left' is "[", `a_right' is "]", "]" is returned.
 		require
@@ -798,7 +792,7 @@ feature {NONE} -- Implementation
 			loop
 				if l_token.image.is_equal (a_left) then
 					l_pair_count := l_pair_count + 1
-				elseif l_token.image.is_equal (a_right) then
+				elseif l_pair_count /= 0 and then l_token.image.is_equal (a_right) then
 					l_pair_count := l_pair_count - 1
 				end
 				l_token := l_token.next
@@ -810,14 +804,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	skip_pairs_backward (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
+	skip_pairs_backward (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
 			-- Skip backwards tokens from `a_token' that are and between pairs of `a_left' and `a_right'.
 			-- i.e "[INETEGER, STRING]" where `a_token' is "]", `a_left' is "[", `a_right' is "]", "[" is returned.
 		require
 			a_token_attached: a_token /= Void
 			a_line_attached: a_line /= Void
 			a_left_and_a_right_attached: a_left /= Void and a_right /= Void
-			a_token_same_as_a_left: a_token.image.is_equal (a_left)
+			a_token_same_as_a_left: a_token.image.is_equal (a_right)
 		local
 			l_token: EDITOR_TOKEN
 			l_pair_count: INTEGER
@@ -830,7 +824,7 @@ feature {NONE} -- Implementation
 			loop
 				if l_token.image.is_equal (a_right) then
 					l_pair_count := l_pair_count + 1
-				elseif l_token.image.is_equal (a_left) then
+				elseif l_pair_count /= 0 and then l_token.image.is_equal (a_left) then
 					l_pair_count := l_pair_count - 1
 				end
 				l_token := l_token.previous
@@ -842,7 +836,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_end_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_know_right_brace: BOOLEAN): EDITOR_TOKEN is
+	find_end_token (a_token: EDITOR_TOKEN; a_line: like current_line; a_know_right_brace: BOOLEAN): EDITOR_TOKEN is
 			-- Find end token from `a_token' in `a_line' for selection that is triggered by tab.
 		local
 			l_cur_token: EDITOR_TOKEN
@@ -854,10 +848,6 @@ feature {NONE} -- Implementation
 			until
 				l_cur_token = Void or else (pair_counted = 0 and ((a_know_right_brace and l_cur_token.image.is_equal (")")) or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";"))) or l_cur_token = a_line.eol_token
 			loop
---				if l_cur_token.image.is_equal (";") then
---					set_caret_position (token_position (l_cur_token, a_line))
---					replace_char (',')
---				end
 				if l_cur_token.image.is_equal ("(") then
 					if not a_know_right_brace then
 						l_cur_token := skip_pairs (l_cur_token, a_line, "(", ")")
@@ -877,7 +867,7 @@ feature {NONE} -- Implementation
 			Result := l_cur_token
 		end
 
-	find_previous_start_token (a_line: EDITOR_LINE): EDITOR_TOKEN is
+	find_previous_start_token (a_line: like current_line): EDITOR_TOKEN is
 			-- Find start token for selection caused by tab action.
 		local
 			l_cur_token: EDITOR_TOKEN
@@ -887,9 +877,9 @@ feature {NONE} -- Implementation
 			until
 				l_cur_token = Void or else l_cur_token.image.is_equal ("(") or l_cur_token.image.is_equal (",") or l_cur_token.image.is_equal (";")
 			loop
-				if l_cur_token.image.is_equal ("[") then
+				if l_cur_token.image.is_equal ("]") then
 					l_cur_token := skip_pairs_backward (l_cur_token, a_line, "[", "]")
-				elseif l_cur_token.image.is_equal ("{") then
+				elseif l_cur_token.image.is_equal ("}") then
 					l_cur_token := skip_pairs_backward (l_cur_token, a_line, "{", "}")
 				end
 				l_cur_token := l_cur_token.previous
@@ -897,7 +887,7 @@ feature {NONE} -- Implementation
 			Result := l_cur_token
 		end
 
-	find_selection_start_in_selection (a_line: EDITOR_LINE): EDITOR_TOKEN is
+	find_selection_start_in_selection (a_line: like current_line): EDITOR_TOKEN is
 			-- Find in selection start token for selection caused by tab action.
 		require
 			has_selection: has_selection

@@ -1104,7 +1104,7 @@ feature {NONE} -- Auto-completion
 		local
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 		do
-			create l_provider.make (Void, Void, true, true)
+			create l_provider.make (Void, Void, false)
 			a_item.set_completion_possibilities_provider (l_provider)
 		end
 

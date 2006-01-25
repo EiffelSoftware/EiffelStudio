@@ -39,20 +39,19 @@ create
 
 feature -- Initialization
 
-	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS; a_provide_features: BOOLEAN; a_provide_classes: BOOLEAN) is
+	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS; a_static: BOOLEAN) is
 			-- Initialization
 			-- Set `class_c' with `a_class_c'.
+			-- If a_static, we do not provide possibilities from context information.
 		do
 			context_class_c := a_class_c
-			provide_features := a_provide_features
-			provide_classes := a_provide_classes
+			static := a_static
 			context_feature_as := a_feature_as
 			current_feature_as := a_feature_as
 			completion_possibilities := Void
 			class_completion_possibilities := Void
 		ensure
-			provide_features_set: provide_features = a_provide_features
-			provide_classes_set: provide_classes = a_provide_classes
+			static_set: static = a_static
 		end
 
 feature -- Access
@@ -84,8 +83,9 @@ feature -- Basic operation
 	prepare_completion is
 			--
 		do
-			is_prepared := true
-			if context_class_c = Void and context_feature_as = Void then
+			Precursor
+			create insertion_cell
+			if not static then
 				context_class_c := eb_debugger_manager.debugging_class_c
 				context_feature_as := eb_debugger_manager.debugging_feature_as
 			end
@@ -393,7 +393,6 @@ feature {NONE} -- Build completion possibilities
 			cnt, i				: INTEGER
 			l_saved_token: EDITOR_TOKEN
 		do
-			create insertion_cell
 			insertion_cell.put ("")
 			is_create := False
 			class_completion_possibilities := Void
@@ -525,7 +524,6 @@ feature {NONE} -- Build completion possibilities
 			l_current_class_c	: CLASS_C
 			l_saved_token: EDITOR_TOKEN
 		do
-			create insertion_cell
 			insertion_cell.put ("")
 			is_create := False
 			is_static := False
@@ -540,7 +538,7 @@ feature {NONE} -- Build completion possibilities
 					cls_c := class_c_to_complete_from (token, watching_line, l_current_class_c, False, False)
 
 					if exploring_current_class then
-						set_up_local_analyzer (watching_line, token)
+						set_up_local_analyzer (watching_line, token, l_current_class_c)
 						add_names_to_completion_list (Local_analyzer, l_current_class_c)
 						local_analyzer.reset
 					end
@@ -1154,7 +1152,7 @@ feature {NONE} -- Build completion possibilities
 			end
 		end
 
-	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN) is
+	set_up_local_analyzer (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_class_c: CLASS_C) is
 			--
 		local
 			l_analyzer: EB_LOCAL_ENTITIES_FINDER_FROM_AST
@@ -1168,6 +1166,8 @@ feature {NONE} -- Build completion possibilities
 				l_analyzer.build_entities_list (context_feature_as)
 			end
 		end
+
+	static: BOOLEAN
 
 	is_create: BOOLEAN
 

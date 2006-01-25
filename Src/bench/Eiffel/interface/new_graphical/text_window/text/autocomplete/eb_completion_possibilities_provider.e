@@ -50,6 +50,8 @@ feature {CODE_COMPLETABLE} -- Basic operation
 			code_completable_attached: code_completable /= Void
 		do
 			is_prepared := true
+			provide_features := code_completable.completing_feature
+			provide_classes := not code_completable.completing_feature
 		ensure
 			is_prepared: is_prepared
 		end

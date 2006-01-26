@@ -92,7 +92,6 @@ feature {NONE} -- Initialization
 			default_size := n
 			extend_tbl_make (n)
 			create inherited_features.make (n)
-			create body_table.make (50)
 			create changed_features.make (100)
 			create origins.make (100)
 		end
@@ -132,9 +131,6 @@ feature
 
 	parents: PARENT_LIST;
 			-- Compiled form of the parents of the current analyzed class
-
-	body_table: HASH_TABLE [READ_INFO, INTEGER];
-			-- Body table information for `Tmp_body_server'.
 
 	changed_features: ARRAYED_LIST [INTEGER];
 			-- Changed features of `a_class'.
@@ -454,8 +450,6 @@ debug ("HAS_CALLS", "TRACE_TABLE")
 			resulting_table.trace_replications;
 			resulting_table.trace;
 end;
-				-- Update `Tmp_body_server'.
-			update_body_server;
 				-- Update table `changed_features' of `a_class'.
 			update_changed_features;
 			clear;
@@ -498,7 +492,7 @@ end;
 			inherited_features.set_feat_tbl_id (id);
 				-- Compute `previous_feature_table'.
 			if Tmp_feat_tbl_server.has (id) then
-					-- There eas an error and a feature table has been already
+					-- There was an error and a feature table has been already
 					-- computed for this class.
 				previous_feature_table := Tmp_feat_tbl_server.item (id);
 				previous_feature_table.update_table;
@@ -764,12 +758,11 @@ end;
 			vmfn: VMFN;
 			vmfn1: VMFN1;
 			compute_new_rout_id: BOOLEAN;
-			read_info: READ_INFO
 		do
 				-- Now, compute the routine id set of the feature.	
 			inherit_feat := item (feature_name_id);
 
-				-- Find out it there previously was a feature with name
+				-- Find out if there previously was a feature with name
 				-- `feature_name'
 			old_feature := feature_table.item_id (feature_name_id);
 
@@ -878,17 +871,14 @@ end;
 
 							-- Update server information
 						if old_feature.body_index > 0 then
-							read_info := body_table.item (old_feature.body_index)
-							body_table.remove (old_feature.body_index)
+							tmp_ast_server.body_replace (old_feature.body_index, feature_i.body_index)
 						else
 							check
 								old_feature_is_il_external: old_feature.extension /= Void
 									and then old_feature.extension.is_il
 							end
-							read_info := body_table.item (external_body_index)
-							body_table.remove (external_body_index)
+							tmp_ast_server.body_replace (external_body_index, feature_i.body_index)
 						end
-						body_table.force (read_info, feature_i.body_index)
 					else
 						feature_i.set_body_index (old_feature.body_index);
 						if
@@ -934,7 +924,6 @@ end;
 			is_the_same, old_feature_in_class: BOOLEAN;
 				-- Is the parsed feature the saem than a previous
 				-- compiled one ?
-			read_info: READ_INFO;
 			feature_name_id: INTEGER;
 			integer_value: INTEGER_CONSTANT;
 				-- Internal name of the feature
@@ -958,11 +947,12 @@ end;
 			Result.set_is_binary (feat.is_binary)
 			Result.set_is_unary (feat.is_unary)
 			Result.set_has_convert_mark (feat.has_convert_mark)
+
 			if Result.is_unique then
 					-- Unique value processing
 				unique_feature ?= Result;
 				create integer_value.make_with_value (
-					class_info.unique_values.item (Result.feature_name))
+					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name))
 				unique_feature.set_value (integer_value);
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class. Freeze is taken care by
@@ -970,8 +960,6 @@ end;
 				external_i ?= Result
 				pass2_control.add_external (external_i)
 			end
-
-			read_info := class_info.index.item (yacc_feature.id);
 
 				-- Look for a previous definition of the feature
 			feature_i := feature_table.item_id (feature_name_id);
@@ -983,8 +971,8 @@ end;
 						-- Found a feature of same name and written in the
 						-- same class.
 					old_description := Body_server.server_item (body_index)
-					if Tmp_body_server.has (body_index) then
-						old_tmp_description := Tmp_body_server.item (body_index)
+					if Tmp_ast_server.body_has (body_index) then
+						old_tmp_description := Tmp_ast_server.body_item (body_index)
 					end
 
 						-- Incrementality of the workbench is here: we
@@ -1049,16 +1037,14 @@ end;
 
 						-- Update `read_info' in BODY_SERVER
 					if body_index > 0 then
-						body_table.force (read_info, body_index)
-						Tmp_body_server.reactivate (body_index)
+						Tmp_ast_server.body_force (yacc_feature, body_index, a_class.class_id)
+						Tmp_ast_server.reactivate (body_index)
 					else
 						check
 							feature_is_il_external: feature_i.extension /= Void
 								and then feature_i.extension.is_il
 						end
-						body_table.force (read_info, external_body_index)
-							-- No need to reactivate it, since it never existed
-							-- at the first place.
+						Tmp_ast_server.body_force (yacc_feature, external_body_index, a_class.class_id)
 					end
 
 						-- Insert the changed feature in the table of
@@ -1066,17 +1052,12 @@ end;
 					changed_features.extend (feature_name_id);
 				else
 						-- Update `read_info' in BODY_SERVER
-					body_table.force (read_info, body_index);
-					Tmp_body_server.reactivate (body_index)
+					Tmp_ast_server.body_force (yacc_feature, body_index, a_class.class_id)
+					Tmp_ast_server.reactivate (body_index)
 				end;
 			else
-					-- New body index for newly introduced feature.	
 				Result.set_body_index (Body_index_counter.next_id)
-
-					-- Take reading information for the body server left
-					-- by `Tmp_ast_server' during first pass and put it
-					-- the temporary body server.
-				body_table.force (read_info, Result.body_index);
+				Tmp_ast_server.body_force (yacc_feature, Result.body_index, a_class.class_id)
 
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
@@ -1099,7 +1080,6 @@ end;
 			previous_feature_table := Void;
 			feature_table := Void;
 			parents := Void;
-			body_table.clear_all;
 			Origin_table.clear_all;
 			adaptations.wipe_out;
 			changed_features.wipe_out;
@@ -1148,18 +1128,6 @@ end;
 		do
 			create redefined_features;
 			redefined_features.process (adaptations);
-		end;
-
-	update_body_server is
-			-- Update `Tmp_body_server' after a successful second
-			-- pass
-		require
-			no_error: not Error_handler.has_error;
-		do
-			Tmp_body_server.merge (body_table)
-				-- Since we access `tmp_body_server' in `feature_unit', the cache
-				-- is now invalid. So we need to clear it.
-			tmp_body_server.cache.wipe_out
 		end;
 
 	update_changed_features is
@@ -1328,7 +1296,7 @@ end;
 					--| The only issue when performing this call is that in a compilation
 					--| from scratch it is useless, but we do not have much choice in
 					--| case of incremental compilation.
-				Tmp_body_server.reactivate (f.body_index)
+				Tmp_ast_server.reactivate (f.body_index)
 			else
 					-- Take the old feature id
 				f.set_feature_id (old_feature.feature_id)
@@ -1446,27 +1414,27 @@ end;
 			changed: a_class.changed;
 		local
 			class_id: INTEGER;
-			invariant_info: READ_INFO;
 				-- information left by the temporary server `Tmp_ast_server'
 				-- and stored in `class_info'
 			old_invar_clause, invar_clause: INVARIANT_AS;
-			old_clause_exists: BOOLEAN;
+			old_clause_exists, clause_exists: BOOLEAN;
 		do
 				-- First: check is the invariant clause of the current
 				-- class has syntactically changed. If yes, flag
 				-- `changed5' of `a_class' is set to True.
 			class_id := a_class.class_id;
-			invariant_info := class_info.invariant_info;
 				-- Look in the non-temporary invariant AST server for
 				-- for an old invariant clause
 			old_clause_exists := Inv_ast_server.server_has (class_id);
-			if invariant_info /= Void then
+			clause_exists := Tmp_ast_server.invariant_has (class_id)
+			if clause_exists then
 					-- The changed class `a_class' has an invariant clause
 				if old_clause_exists then
 						-- Evaluation of an old invariant clause in order
 						-- to see if it has changed
 					old_invar_clause := Inv_ast_server.server_item (class_id);
-					invar_clause := Tmp_inv_ast_server.item (class_id);
+					invar_clause := Tmp_ast_server.invariant_item (class_id);
+
 
 						-- Incrementality test on invariant clause
 					if invar_clause = Void then
@@ -1479,17 +1447,9 @@ end;
 				else
 					invariant_changed := True;
 				end;
-			elseif old_clause_exists then
+			elseif old_clause_exists or a_class.has_invariant then
 				invariant_removed := True;
-					-- Remove invariant description from server
-				Tmp_inv_ast_server.remove_id (class_id);
-			elseif Tmp_inv_ast_server.has (class_id) then
-					-- There was an invariant in the previous
-					-- unsuccessful compilation: remove
-					-- it from the server and reset `invariant_feature'
-					-- in CLASS_C
-				a_class.set_invariant_feature (Void);
-				Tmp_inv_ast_server.remove_id (class_id);
+				tmp_ast_server.invariant_remove (class_id)
 			end;
 		end;
 

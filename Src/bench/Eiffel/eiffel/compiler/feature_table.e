@@ -598,7 +598,7 @@ debug ("ACTIVITY")
 	io.error.put_string (Names_heap.item (key_for_iteration))
 	io.error.put_string (" removed%N")
 end
-					Tmp_body_server.desactive (f.body_index)
+					Tmp_ast_server.desactive (f.body_index)
 
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be

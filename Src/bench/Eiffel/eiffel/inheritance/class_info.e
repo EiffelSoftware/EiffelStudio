@@ -10,7 +10,7 @@ indexing
 -- Attribute `features' is useful for iteratiing on it during second
 -- pass in order to analyze local features written in a class.
 
-class CLASS_INFO 
+class CLASS_INFO
 
 inherit
 	SHARED_ERROR_HANDLER;
@@ -36,23 +36,12 @@ feature -- Access
 
 	parents: EIFFEL_LIST [PARENT_AS];
 			-- Parents
-			
-	index: HASH_TABLE [READ_INFO, INTEGER];
-			-- Indexes left by the server `Tmp_ast_server' during
-			-- execution of feature `pass1' of CLASS_C. Useful
-			-- for second pass
-
-	invariant_info: READ_INFO;
-			-- Index of invariant clause
 
 	creators: EIFFEL_LIST [CREATE_AS];
 			-- Creators
-			
+
 	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
 			-- Convertors
-
-	unique_values: HASH_TABLE [INTEGER, STRING];
-			-- Stores the values of the unique attributes
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
 			-- Feature abstract syntax
@@ -159,22 +148,10 @@ feature -- Access
 
 feature -- Settings
 
-	set_invariant_info (i: like invariant_info) is
-			-- Assign `i' to `invariant_info'.
-		do
-			invariant_info := i;
-		end;
-
 	set_parents (p: like parents) is
 			-- Assign `p' to `parents'.
-		do	
-			parents := p;
-		end;
-
-	set_index (i: like index) is
-			-- Assign `i' to `index'.
 		do
-			index := i;
+			parents := p;
 		end;
 
 	set_creators (c: like creators) is
@@ -183,12 +160,6 @@ feature -- Settings
 			creators := c;
 		end;
 
-	set_unique_values (u: HASH_TABLE [INTEGER, STRING]) is
-			-- Assign `u' to `unique_values'.
-		do
-			unique_values := u;
-		end;
-		
 	set_convertors (c: like convertors) is
 			-- Assign `c' to `convertors'.
 		require
@@ -198,7 +169,6 @@ feature -- Settings
 		ensure
 			convertors_set: convertors = c
 		end
-		
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

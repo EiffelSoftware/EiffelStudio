@@ -5,61 +5,78 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_INFO_SERVER 
+class CLASS_INFO_SERVER
 
 inherit
-	COMPILER_SERVER [CLASS_INFO]
-		redefine
-			has, item, disk_item
+	SHARED_SERVER
+		export
+			{NONE} all
 		end
 
-create
-	make
-	
-feature 
+feature
 
 	cache: CLASS_INFO_CACHE is
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
-	
+
 	has (an_id: INTEGER): BOOLEAN is
 			-- Is an item of id `an_id' present in the current server ?
 		do
-			Result := server_has (an_id)
-					or else Tmp_class_info_server.has (an_id);
-		end;
-					
+			Result := Tmp_ast_server.has (an_id) or else Ast_server.has (an_id)
+		end
+
+	server_has (an_id: INTEGER): BOOLEAN is
+			-- Is an item of id `an_id' present in the current server ?
+		do
+			Result := Ast_server.has (an_id)
+		end
+
 	id (t: CLASS_INFO): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.class_id
 		end
 
-	item (an_id: INTEGER): CLASS_INFO is
+	item, disk_item (an_id: INTEGER): CLASS_INFO is
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
-		require else
-			has_an_id: has (an_id);
+		local
+			tmp_class: CLASS_AS
 		do
-			if Tmp_class_info_server.has (an_id) then
-				Result := Tmp_class_info_server.item (an_id);
-			else
-				Result := server_item (an_id);
-			end; 
+			if Tmp_ast_server.has (an_id) then
+				tmp_class := Tmp_ast_server.item (an_id)
+			elseif Ast_server.has (an_id) then
+				tmp_class := Ast_server.item (an_id)
+			end
+			if tmp_class /= Void then
+				create Result
+				Result.set_parents (tmp_class.parents)
+				Result.set_creators (tmp_class.creators)
+				Result.set_convertors (tmp_class.convertors)
+				Result.set_class_id (tmp_class.class_id)
+			end
 		end;
 
-	disk_item (an_id: INTEGER): CLASS_INFO is
-			-- Byte code of body id `and_id'. Look first in the temporary
-			-- byte code server
+
+	server_item (an_id: INTEGER): CLASS_INFO is
+			-- Feature table of id `an_id'. Look first in the temporary
+			-- feature table server. It not present, look in itself.
+		local
+			tmp_class: CLASS_AS
 		do
-			if Tmp_class_info_server.has (an_id) then
-				Result := Tmp_class_info_server.disk_item (an_id);
-			else
-				Result := Precursor {COMPILER_SERVER} (an_id);
-			end;
-		end;
+			if Ast_server.has (an_id) then
+				tmp_class := Ast_server.item (an_id)
+			end
+			if tmp_class /= Void then
+				create Result
+				Result.set_parents (tmp_class.parents)
+				Result.set_creators (tmp_class.creators)
+				Result.set_convertors (tmp_class.convertors)
+				Result.set_class_id (tmp_class.class_id)
+			end
+		end
 
 feature -- Server size configuration
 

@@ -106,4 +106,12 @@ feature -- Status reporting
 	text: STRING
 			-- Text of current item
 
+feature{NONE} -- Implementation
+
+	match_list: LEAF_AS_LIST
+			-- Match list used by roundtrip
+
+invariant
+	match_list_not_void: match_list /= Void
+
 end

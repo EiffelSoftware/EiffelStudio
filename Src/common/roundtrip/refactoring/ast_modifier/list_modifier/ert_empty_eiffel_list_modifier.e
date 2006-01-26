@@ -61,6 +61,85 @@ feature -- Applicability
 			end
 		end
 
+	apply is
+			-- Apply current modifier.
+		local
+			l_modifier_list: like prepend_modifier_list
+		do
+			l_modifier_list := merge_modifier_list
+			compute_modification (l_modifier_list)
+			if header_text /= Void and then header_ast /= Void then
+				header_ast.replace_text (header_text, match_list)
+			end
+			if footer_text /= Void and then footer_ast /= Void then
+				footer_ast.replace_text (footer_text, match_list)
+			end
+			l_modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.apply)
+			applied := True
+		end
+
+feature
+
+	insert_left (item_text: STRING; i: INTEGER) is
+		require else
+			i_is_zero: i = 0
+		do
+			if is_prepended then
+				prepend_modifier_list.extend (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
+			else
+				prepend_modifier_list.put_front (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
+			end
+			counter := counter + 1
+		end
+
+	insert_right (item_text: STRING; i: INTEGER) is
+		require else
+			i_is_zero: i = 0
+		do
+			if is_prepended then
+				prepend_modifier_list.put_front (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
+			else
+				prepend_modifier_list.extend (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
+			end
+			counter := counter + 1
+		end
+
+	replace (item_text: STRING; i: INTEGER) is
+			-- Not applicable.			
+		do
+			check
+				not_applicable: False
+			end
+		end
+
+	remove (i: INTEGER) is
+			-- Not applicable.
+		do
+			check
+				not_applicable: False
+			end
+		end
+
+	prepend (item_text: STRING) is
+		do
+			insert_left (item_text, 0)
+		end
+
+	append (item_text: STRING) is
+		do
+			insert_right (item_text, 0)
+		end
+
+feature -- Status reporting
+
+	is_empty: BOOLEAN is
+			-- Is current empty?
+		do
+			Result := prepend_modifier_list.is_empty and append_modifier_list.is_empty
+		end
+
+feature{NONE} -- Implementation
+
 	concatenate_modifier_list (dest, sour: like prepend_modifier_list) is
 			-- Concatenate `sour' to `dest'.
 		do
@@ -73,7 +152,6 @@ feature -- Applicability
 				sour.forth
 			end
 		end
-
 
 	merge_modifier_list: like prepend_modifier_list is
 			-- Merge `prepend_modifier_list' and `append_modifier_list'.
@@ -149,87 +227,6 @@ feature -- Applicability
 			end
 		end
 
-	apply is
-			-- Apply current modifier.
-		local
-			l_modifier_list: like prepend_modifier_list
-		do
-			l_modifier_list := merge_modifier_list
-			compute_modification (l_modifier_list)
-			if header_text /= Void and then header_ast /= Void then
-				header_ast.replace_text (header_text, match_list)
-			end
-			if footer_text /= Void and then footer_ast /= Void then
-				footer_ast.replace_text (footer_text, match_list)
-			end
-			l_modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.apply)
-			applied := True
-		end
-
-feature
-
-	prepend_item (item_text: STRING; i: INTEGER) is
-			-- Not applicable.
-		require else
-			i_is_zero: i = 0
-		do
-			if is_prepended then
-				prepend_modifier_list.extend (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
-			else
-				prepend_modifier_list.put_front (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
-			end
-			counter := counter + 1
-		end
-
-	append_item (item_text: STRING; i: INTEGER) is
-			-- Not applicable.
-		require else
-			i_is_zero: i = 0
-		do
-			if is_prepended then
-				prepend_modifier_list.put_front (create{ERT_PREPENDED_ITEM_MODIFIER}.make(attached_ast, item_text, i, counter, match_list))
-			else
-				prepend_modifier_list.extend (create{ERT_APPENDED_ITEM_MODIFIER}.make (attached_ast, item_text, i, counter, match_list))
-			end
-			counter := counter + 1
-		end
-
-	replace_item (item_text: STRING; i: INTEGER) is
-			-- Not applicable.			
-		do
-			check
-				not_applicable: False
-			end
-		end
-
-	remove_item (i: INTEGER) is
-			-- Not applicable.
-		do
-			check
-				not_applicable: False
-			end
-		end
-
-	prepend_first_item (item_text: STRING) is
-			-- Not applicable.
-		do
-			prepend_item (item_text, 0)
-		end
-
-	append_last_item (item_text: STRING) is
-			-- Register a append operation on the last item in `eiffel_list'.
-		do
-			append_item (item_text, 0)
-		end
-
-feature -- Status reporting
-
-	is_empty: BOOLEAN is
-			-- Is current empty?
-		do
-			Result := prepend_modifier_list.is_empty and append_modifier_list.is_empty
-		end
-
 feature{NONE} -- Implementation
 
 	attached_ast: AST_EIFFEL
@@ -253,5 +250,5 @@ invariant
 	trailing_text_not_void: trailing_text /= Void
 	leading_text_not_void: leading_text /= Void
 	separator_not_void: separator /= Void
-	
+
 end

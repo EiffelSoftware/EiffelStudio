@@ -27,12 +27,4 @@ feature -- Applicability
 			modifier_applied: applied
 		end
 
-feature{NONE} -- Implementation
-
-	match_list: LEAF_AS_LIST
-			-- Match list used by roundtrip
-
-invariant
-	match_list_not_void: match_list /= Void
-
 end

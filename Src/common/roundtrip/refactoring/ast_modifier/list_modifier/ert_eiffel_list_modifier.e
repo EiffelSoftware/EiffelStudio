@@ -1,5 +1,5 @@
 indexing
-	description: "Object to modify an EIFFEL_LIST AST node"
+	description: "[Object to modify an EIFFEL_LIST AST node]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,8 +98,7 @@ feature -- Modification apply
 
 feature -- Modifier register
 
-	prepend_item (item_text: STRING; i: INTEGER) is
-			-- Register a prepend operation on `i'-th item in `eiffel_list'.
+	insert_left (item_text: STRING; i: INTEGER) is
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
 		local
@@ -110,8 +109,7 @@ feature -- Modifier register
 			modifier_list.extend (l_modifier)
 		end
 
-	append_item (item_text: STRING; i: INTEGER) is
-			-- Register an append operation on `i'-th item in `eiffel_list'.
+	insert_right (item_text: STRING; i: INTEGER) is
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
 		local
@@ -128,7 +126,7 @@ feature -- Modifier register
 			modifier_list.extend (l_modifier)
 		end
 
-	replace_item (item_text: STRING; i: INTEGER) is
+	replace (item_text: STRING; i: INTEGER) is
 			-- Register a replace operation on `i'-th item in `eiffel_list'.
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
@@ -139,7 +137,7 @@ feature -- Modifier register
 			l_modifier.set_text (item_text)
 		end
 
-	remove_item (i: INTEGER) is
+	remove (i: INTEGER) is
 			-- Register a remove operation on `i'-th item in `eiffel_list'.	
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
@@ -150,16 +148,14 @@ feature -- Modifier register
 			l_modifier.set_text ("")
 		end
 
-	prepend_first_item (item_text: STRING) is
-			-- Register a prepend operation on the first item in `eiffel_list'.
+	prepend (item_text: STRING) is
 		do
-			prepend_item (item_text, 1)
+			insert_left (item_text, 1)
 		end
 
-	append_last_item (item_text: STRING) is
-			-- Register a append operation on the last item in `eiffel_list'.
+	append (item_text: STRING) is
 		do
-			append_item (item_text, eiffel_list.count)
+			insert_right (item_text, eiffel_list.count)
 		end
 
 feature -- Access

@@ -52,29 +52,45 @@ feature -- Header/footer
 
 	header_text: STRING
 			-- Header text
+			-- For example, in the following code
+			--
+			-- 		indexing
+			--			description: "demo"
+			--			author: ""
+			--
+			-- "indexing" is header text.
+			-- And there is no footer text here.
 
 	footer_text: STRING
 			-- Footer text		
+			-- For example, in the following code
+			--
+			-- feature {CLASS_A, CLASS_B}
+			--
+			-- "}" is footer text.
+			-- And "{" is header text.
 
 feature -- Item modification
 
-	prepend_item (item_text: STRING; i: INTEGER) is
-			-- Register a prepend operation on `i'-th item in `eiffel_list'.
+	insert_left (item_text: STRING; i: INTEGER) is
+			-- Register a left-insertion operation on `i'-th item in `eiffel_list'.
+			-- e.g. `item_text' will be inserted before `i'-th item.
 		require
 			item_text_not_void: item_text /= Void
 			item_text_not_empty: not item_text.is_empty
 		deferred
 		end
 
-	append_item (item_text: STRING; i: INTEGER) is
-			-- Register an append operation on `i'-th item in `eiffel_list'.
+	insert_right (item_text: STRING; i: INTEGER) is
+			-- Register an right-insertion operation on `i'-th item in `eiffel_list'.
+			-- e.g. `item_text' will be inserted after `i'-th item.			
 		require
 			item_text_not_void: item_text /= Void
 			item_text_not_empty: not item_text.is_empty
 		deferred
 		end
 
-	replace_item (item_text: STRING; i: INTEGER) is
+	replace (item_text: STRING; i: INTEGER) is
 			-- Register a replace operation on `i'-th item in `eiffel_list'.
 		require
 			item_text_not_void: item_text /= Void
@@ -82,25 +98,70 @@ feature -- Item modification
 		deferred
 		end
 
-	remove_item (i: INTEGER) is
+	remove (i: INTEGER) is
 			-- Register a remove operation on `i'-th item in `eiffel_list'.
 		deferred
 		end
 
-	prepend_first_item (item_text: STRING) is
-			-- Register a prepend operation on the first item in `eiffel_list'.
+	prepend (item_text: STRING) is
+			-- Register a prepend operation on `eiffel_list'.
+			-- e.g. `item_text' will be inserted before the first item.			
 		require
 			item_text_not_void: item_text /= Void
 			item_text_not_empty: not item_text.is_empty
 		deferred
 		end
 
-	append_last_item (item_text: STRING) is
-			-- Register a append operation on the last item in `eiffel_list'.
+	append (item_text: STRING) is
+			-- Register a append operation on  `eiffel_list'.
+			-- e.g. `item_text' will be inserted after the last item.
 		require
 			item_text_not_void: item_text /= Void
 			item_text_not_empty: not item_text.is_empty
 		deferred
+		end
+
+	merge_left (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list) is
+			-- Merge `other_eiffel_list' into current structure before the first item.
+		require
+			other_eiffel_list_not_void: other_eiffel_list /= void
+			other_match_list_not_void: other_match_list /= Void
+		local
+			i: INTEGER
+			l_count: INTEGER
+		do
+			if not other_eiffel_list.is_empty then
+				from
+					l_count := other_eiffel_list.count
+					i := l_count
+				until
+					i = 0
+				loop
+					prepend (other_eiffel_list.i_th (i).text (other_match_list))
+					i := i - 1
+				end
+			end
+		end
+
+	merge_right (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list) is
+			-- Merge `other_eiffel_list' into current structure after the last item.
+		require
+			other_eiffel_list_not_void: other_eiffel_list /= void
+		local
+			i: INTEGER
+			l_count: INTEGER
+		do
+			if not other_eiffel_list.is_empty then
+				from
+					l_count := other_eiffel_list.count
+					i := 1
+				until
+					i > l_count
+				loop
+					append (other_eiffel_list.i_th (i).text (other_match_list))
+					i := i + 1
+				end
+			end
 		end
 
 feature -- Status reporting
@@ -109,5 +170,14 @@ feature -- Status reporting
 			-- Is current empty?
 		deferred
 		end
+
+feature{NONE} -- Implementation
+
+	match_list: LEAF_AS_LIST
+			-- Match list used by roundtrip
+
+invariant
+	match_list_not_void: match_list /= Void
+
 
 end

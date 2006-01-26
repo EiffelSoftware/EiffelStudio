@@ -25,7 +25,8 @@ inherit
 			new_debug_as,
 			new_expr_address_as,
 			new_integer_value,
-			new_real_value
+			new_real_value,
+			new_external_lang_as
 		end
 
 	AST_COMPILER_FACTORY

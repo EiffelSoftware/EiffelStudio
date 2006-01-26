@@ -50,9 +50,7 @@ feature -- Initialization
 			current_label: EV_LABEL
 			combo_strings: ARRAY [STRING]
 			text_combo_box: EV_HORIZONTAL_BOX
-			color_combo_box: EV_HORIZONTAL_BOX
 			text_combo_label: EV_LABEL
-			color_combo_label: EV_LABEL
 			widget_minimum_width: INTEGER
 		do
 				-- Create the containers
@@ -84,25 +82,13 @@ feature -- Initialization
 			create text_combo_box
 			text_combo_box.set_padding (Layout_constants.Small_padding_size)
 			text_combo_box.extend (text_combo_label)
-			--text_combo_box.disable_item_expand (text_combo_label)
+			text_combo_box.disable_item_expand (text_combo_label)
 			text_combo_box.extend (text_combo)
 			text_combo.disable_edit
 
-			create combo_strings.make (1,2)
-			combo_strings.put (Interface_names.l_Toolbar_with_gray_icons, 1)
-			combo_strings.put (Interface_names.l_Toolbar_without_gray_icons, 2)
-			create color_combo.make_with_strings (combo_strings)
-			create color_combo_label.make_with_text (Interface_names.l_Toolbar_select_has_gray_icons)
-			create color_combo_box
-			color_combo_box.set_padding (Layout_constants.Small_padding_size)
-				--| FIXME XR: When someone wants flashing icons , uncomment these lines.
---			color_combo_box.extend (color_combo_label)
---			color_combo_box.disable_item_expand (color_combo_label)
---			color_combo_box.extend (color_combo)
---			color_combo.disable_edit
 
-			widget_minimum_width := text_combo_label.minimum_width.max (color_combo_label.minimum_width)
-			color_combo_label.set_minimum_width (widget_minimum_width)
+			widget_minimum_width := text_combo_label.minimum_width
+
 			text_combo_label.set_minimum_width (widget_minimum_width)
 
 			create pool_label.make_with_text (Interface_names.l_Available_buttons_text)
@@ -173,12 +159,10 @@ feature -- Initialization
 			square_container.disable_item_expand (right_button_container)
 
 			main_container.set_padding (Layout_constants.Default_padding_size)
-			main_container.set_border_width (Layout_constants.Default_border_size) 
+			main_container.set_border_width (Layout_constants.Default_border_size)
 			main_container.extend (square_container)
 			main_container.extend (text_combo_box)
 			main_container.disable_item_expand (text_combo_box)
-			main_container.extend (color_combo_box)
-			main_container.disable_item_expand (color_combo_box)
 
 				-- Add widgets to our window
 			extend (main_container)
@@ -187,7 +171,7 @@ feature -- Initialization
 			set_default_push_button (ok_button)
 		end
 
-	customize_toolbar (a_parent: EV_WINDOW; gray_icons: BOOLEAN; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [EB_TOOLBARABLE]) is
+	customize_toolbar (a_parent: EV_WINDOW; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [EB_TOOLBARABLE]) is
 			-- Reload the dialog box with available buttons found in `toolbar'
 			-- and set `is_text_displayed' to `text_displayed'.
 			-- `toolbar' is a list of separators and commands that represents both
@@ -196,23 +180,17 @@ feature -- Initialization
 		do
 			is_text_displayed := text_displayed
 			is_text_important := text_important
-			
-			has_gray_icons := gray_icons
+
 			fill_lists (toolbar)
 			if text_displayed then
 				text_combo.first.enable_select
-			elseif text_important then	
+			elseif text_important then
 				text_combo.start
 				text_combo.forth
 				text_combo.item.enable_select
 			else
 				text_combo.last.enable_select
 			end -- if
-			if has_gray_icons then
-				color_combo.set_text (Interface_names.l_Toolbar_with_gray_icons)
-			else
-				color_combo.set_text (Interface_names.l_Toolbar_without_gray_icons)
-			end
 			valid_data := False
 			set_width (w_width)
 			set_height (w_height)
@@ -231,14 +209,11 @@ feature -- Result
 	is_text_important: BOOLEAN
 			-- Should only important text be displayed?
 
-	has_gray_icons: BOOLEAN
-			-- Should gray icons be displayed?
-
 	final_toolbar: ARRAYED_LIST [EB_TOOLBARABLE]
 			-- list containing the buttons to be displayed and then the ones in the pool
 
 feature {NONE} -- Graphical interface
-	
+
 	pool_list: EB_CUSTOM_TOOLBAR_LIST -- EV_LIST
 			-- list containing the whole pool of buttons (+ a separator at the beginning)
 
@@ -267,17 +242,14 @@ feature {NONE} -- Graphical interface
 			-- box to select whether text is displayed on the right of buttons
 			-- or not.
 
-	color_combo: EV_COMBO_BOX
-			-- box to select whether icons are displayed in gray or not.
-
 	w_height: INTEGER
-			-- current height of the window. 
+			-- current height of the window.
 			--
 			-- Useful only because Vision2 currently does not remember the size
 			-- of the window after a hide/show.
 
 	w_width: INTEGER
-			-- current width of the window. 
+			-- current width of the window.
 			--
 			-- Useful only because Vision2 currently does not remember the size
 			-- of the window after a hide/show.
@@ -293,7 +265,6 @@ feature {NONE} -- Button actions
 		do
 			is_text_important := text_combo.text.is_equal (Interface_names.l_Put_text_right_text)
 			is_text_displayed := text_combo.text.is_equal (Interface_names.l_Show_all_text)
-			has_gray_icons := color_combo.text.is_equal (Interface_names.l_Toolbar_with_gray_icons)
 
 			final_toolbar.wipe_out
 			from
@@ -465,7 +436,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	on_current_deselect is
 			-- Called when the user deselects an item of the current list
 		do
-			if (not moving) 
+			if (not moving)
 				and then remove_button.is_sensitive
 			then
 				remove_button.disable_sensitive

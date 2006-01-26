@@ -287,7 +287,7 @@ feature -- Basic operations
 						clus.parent_cluster = Void
 					 then
 						create i.make_with_text (clus.cluster_name)
-						i.set_pixmap (pixmaps.icon_cluster_symbol @ 1)
+						i.set_pixmap (pixmaps.icon_cluster_symbol)
 						cluster_list.extend (i)
 						i.set_data (clus)
 						if not clus.sub_clusters.is_empty then
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			loop
 				clus := sub_clusters.item
 				create i.make_with_text (clus.display_name)
-				i.set_pixmap (pixmaps.icon_cluster_symbol @ 1)
+				i.set_pixmap (pixmaps.icon_cluster_symbol)
 				parent_item.extend (i)
 				i.set_data (clus)
 				if not clus.sub_clusters.is_empty then

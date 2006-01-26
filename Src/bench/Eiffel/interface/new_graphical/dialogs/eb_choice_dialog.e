@@ -27,7 +27,7 @@ create
 	make_default
 
 feature -- Initialization
-		
+
 	make_default (ctf: like callback) is
 			-- Make a choice window, and set a callback procedure.
 		local
@@ -166,20 +166,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Key_csts: EV_KEY_CONSTANTS is
-			-- Default key constants.
-		once
-			create Result
-		end
-
 	key_actions (k: EV_KEY) is
 			-- Call `execute' if k = Enter, `destroy_dialog' if k = Esc.
 		do
-			if k.code = Key_csts.Key_enter then
+			if k.code = {EV_KEY_CONSTANTS}.Key_enter then
 				if list.selected_item /= Void then
 					execute (list.selected_item)
 				end
-			elseif k.code = Key_csts.Key_escape then
+			elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
 				destroy_dialog
 			end
 		end

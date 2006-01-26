@@ -19,16 +19,15 @@ feature -- Access
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EV_TOOL_BAR_ITEM is
+	new_toolbar_item (display_text: BOOLEAN): EV_TOOL_BAR_ITEM is
 			-- Create a new toolbar item for Current
 		deferred
 		end
 
 feature {EB_CUSTOMIZABLE_LIST_ITEM, EB_CUSTOM_TOOLBAR_LIST} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the item (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the item.
 		deferred
 		end
 

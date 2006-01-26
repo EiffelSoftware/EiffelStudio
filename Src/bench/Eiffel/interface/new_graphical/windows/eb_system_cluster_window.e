@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_DIALOG
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -30,7 +30,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (image: EV_TREE) is
 			-- Initialize current window with `image'.
 		require
@@ -50,7 +50,7 @@ feature -- Access
 	parent_cluster: STRING
 			-- Name of cluster in which added cluster belongs to.
 			-- If Void, it is a top cluster.
-			
+
 	cluster_name: STRING is
 			-- Name of added cluster
 		require
@@ -78,12 +78,12 @@ feature -- Status
 
 	is_selected: BOOLEAN
 			-- Has a new cluster been selected for addition?
-			
+
 feature {NONE} -- Access
 
 	tree: EV_TREE
 			-- Tree representing hierarchy of clusters.
-			
+
 	name_field: EV_TEXT_FIELD
 			-- Name of new cluster.
 
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			create vbox1
 			vbox1.set_padding (Layout_constants.Small_padding_size)
 			vbox1.set_border_width (Layout_constants.Large_border_size)
-			
+
 				-- Name of cluster
 			create vbox2
 			vbox2.set_padding (Layout_constants.Tiny_padding_size)
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			vbox2.extend (label)
 			vbox2.disable_item_expand (label)
-			
+
 			create name_field
 			vbox2.extend (name_field)
 			vbox2.disable_item_expand (name_field)
@@ -128,30 +128,30 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			vbox2.extend (label)
 			vbox2.disable_item_expand (label)
-			
+
 			create tree
 			tree.set_minimum_height (150)
 			vbox2.extend (tree)
 			vbox1.extend (vbox2)
-			
+
 			create hbox
 			hbox.set_padding (Layout_constants.Small_padding_size)
-			
+
 			hbox.extend (create {EV_CELL})
-			
+
 			create ok_button.make_with_text_and_action (interface_names.b_ok, agent close_dialog (True))
 			ok_button.set_minimum_width (Layout_constants.Default_button_width)
 			hbox.extend (ok_button)
 			hbox.disable_item_expand (ok_button)
-			
+
 			create cancel_button.make_with_text_and_action (interface_names.b_cancel, agent close_dialog (False))
 			cancel_button.set_minimum_width (Layout_constants.Default_button_width)
 			hbox.extend (cancel_button)
 			hbox.disable_item_expand (cancel_button)
-			
+
 			vbox1.extend (hbox)
 			vbox1.disable_item_expand (hbox)
-			
+
 			extend (vbox1)
 
 			set_default_push_button (ok_button)
@@ -167,9 +167,9 @@ feature {NONE} -- Implementation
 		do
 				-- Create root for tree.
 			create root.make_with_text (root_name)
-			root.set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
+			root.set_pixmap (Pixmaps.Icon_cluster_symbol)
 			tree.extend (root)
-			
+
 			from
 				image.start
 			until
@@ -223,13 +223,13 @@ feature -- Action
 		end
 
 feature {NONE} -- Implementation
-	
+
 	root_name: STRING is "Lace root"
 			-- Name of root of tree displaying list of existing clusters.
 
 	clusters_names: SEARCH_TABLE [STRING]
 			-- Memorize all cluster names to make sure it is valid.
-			
+
 	recursive_traversal (parent_node: EV_TREE_NODE_LIST; tree_item: EV_TREE_ITEM) is
 		require
 			parent_node_not_void: parent_node /= Void
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 		do
 			create node.make_with_text (tree_item.text)
 			clusters_names.put (tree_item.text)
-			node.set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
+			node.set_pixmap (Pixmaps.Icon_cluster_symbol)
 			parent_tree ?= parent_node
 			if parent_tree /= Void then
 				parent_tree.extend (node)
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 invariant
 	has_name_field: name_field /= Void
 	has_tree: tree /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

@@ -35,12 +35,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -69,7 +69,7 @@ feature -- Tab access
 
 	msil_tab: EB_SYSTEM_MSIL_TAB
 			-- Widget describing MSIL specific option tab.
-			
+
 	msil_assembly_tab: EB_SYSTEM_MSIL_ASSEMBLY_TAB
 			-- Widget describing MSIL assembly specific option tab.
 
@@ -83,7 +83,7 @@ feature -- Status
 
 	is_initialized: BOOLEAN
 			-- Did current build all tabs.
-		
+
 feature -- Interface access
 
 	root_ast: ACE_SD
@@ -92,11 +92,11 @@ feature -- Interface access
 feature -- Actions
 
 	window_displayed is
-			-- 
+			--
 		do
 			ok_button.set_focus
 		end
-		
+
 	ok_action is
 			-- Action performed when clicking `Ok' button.
 		do
@@ -135,7 +135,7 @@ feature -- Actions
 
 	edit_ace is
 		local
-			cmd_exec: COMMAND_EXECUTOR	
+			cmd_exec: COMMAND_EXECUTOR
 			cmd_string: STRING
 		do
 			cmd_string := preferences.misc_data.general_shell_command.twin
@@ -163,14 +163,14 @@ feature -- Actions
 				tab_list.do_all (agent {EB_SYSTEM_TAB}.enable_c_widgets)
 			end
 		end
-		
+
 feature -- Content initialization
 
 	initialize_content is
 			-- Initialize content of Window.
 		do
 				-- Clean previously entered data
-			reset_content					
+			reset_content
 			check_content
 
 			if is_content_valid then
@@ -262,7 +262,7 @@ feature -- Content saving
 		do
 			l_list := tab_list
 			l_list.do_all (agent {EB_SYSTEM_TAB}.perform_check)
-			
+
 			if
 				l_list.for_all (agent {EB_SYSTEM_TAB}.is_valid)
 			then
@@ -273,9 +273,9 @@ feature -- Content saving
 				else
 					ast := root_ast.duplicate
 				end
-	
-				l_list.do_all (agent {EB_SYSTEM_TAB}.store (ast))				
-	
+
+				l_list.do_all (agent {EB_SYSTEM_TAB}.store (ast))
+
 				create st.make (2048)
 				ast.save (st)
 				if Eiffel_ace.file_name = Void then
@@ -289,7 +289,7 @@ feature -- Content saving
 					ace_file.copy_to (backup_file)
 					backup_file.close
 					ace_file.close
-	
+
 					ace_file.open_write
 					st.put_in_file (ace_file)
 					ace_file.close
@@ -300,7 +300,7 @@ feature -- Content saving
 					create err.make_with_text (Warning_messages.W_not_creatable (Eiffel_ace.file_name))
 					err.show_modal_to_window (window)
 				end
-	
+
 				if successful_save then
 						-- We now check the validity of the syntax
 					ast := Eiffel_ace.Lace.parsed_ast
@@ -312,7 +312,7 @@ feature -- Content saving
 						backup_file.copy_to (ace_file)
 						backup_file.close
 						ace_file.close
-	
+
 						create err.make_with_text (Warning_messages.W_incorrect_ace_configuration)
 						err.show_modal_to_window (window)
 					end
@@ -328,7 +328,7 @@ feature -- Content saving
 			end
 
 				-- Post­store operation to refresh display
-			l_list.do_all (agent {EB_SYSTEM_TAB}.post_store_reset)				
+			l_list.do_all (agent {EB_SYSTEM_TAB}.post_store_reset)
 		end
 
 feature {NONE} -- Initialization
@@ -345,7 +345,7 @@ feature {NONE} -- Initialization
 		do
 			set_title (default_name)
 			set_minimized_title (default_name)
-			
+
 				-- Close window when user press escape.
 			create l_accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_escape), False, False, False)
@@ -371,11 +371,11 @@ feature {NONE} -- Initialization
 
 			if Platform_constants.is_windows then
 				create l_msil_notebook
-				
+
 				create msil_tab.make (Current)
 				l_msil_notebook.extend (msil_tab)
 				l_msil_notebook.set_item_text (msil_tab, msil_tab.name)
-				
+
 				create msil_assembly_tab.make (Current)
 				l_msil_notebook.extend (msil_assembly_tab)
 				l_msil_notebook.set_item_text (msil_assembly_tab, msil_assembly_tab.name)
@@ -383,8 +383,8 @@ feature {NONE} -- Initialization
 				create msil_resources_tab.make (Current)
 				l_msil_notebook.extend (msil_resources_tab)
 				l_msil_notebook.set_item_text (msil_resources_tab, msil_resources_tab.name)
-				
-				notebook.extend (l_msil_notebook) 
+
+				notebook.extend (l_msil_notebook)
 				notebook.set_item_text (l_msil_notebook, ".NET")
 			end
 
@@ -397,7 +397,7 @@ feature {NONE} -- Initialization
 			notebook.set_item_text (advanced_tab, advanced_tab.name)
 
 			hbox.extend (notebook)
-			
+
 				-- All tabs have been created.
 			is_initialized := True
 
@@ -427,7 +427,7 @@ feature {NONE} -- Initialization
 
 				-- Default is to enable Standard C compilation
 			enable_c_generation
-			
+
 				-- Closing window
 			window.close_request_actions.wipe_out
 			window.close_request_actions.put_front (agent cancel_action)
@@ -441,7 +441,7 @@ feature {NONE} -- Initialization
 			build_file_menu
 			create menu_bar
 			menu_bar.extend (file_menu)
--- ARNAUD: Removed the menu. 
+-- ARNAUD: Removed the menu.
 --			window.set_menu_bar (menu_bar)
 		end
 
@@ -558,7 +558,7 @@ feature {NONE} -- Tab access
 				Result.extend (advanced_tab)
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

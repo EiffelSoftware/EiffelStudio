@@ -29,22 +29,21 @@ feature -- Basic operations
 			dialog.call_default
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		local
 			a_stone: CREATE_CLASS_STONE
 		do
 			create a_stone
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.set_pebble (a_stone)
 			Result.set_accept_cursor (Cursors.cur_Class)
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_new_class
 		end

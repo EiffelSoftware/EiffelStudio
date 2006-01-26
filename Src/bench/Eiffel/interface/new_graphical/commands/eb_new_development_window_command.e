@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			style := s
 			if s = default_style then
 				create accelerator.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Key_constants.Key_n),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_n),
 					True, False, False)
 				accelerator.actions.extend (agent execute)
 			end
@@ -71,10 +71,10 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_stone (?))
 			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
@@ -106,9 +106,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			inspect style
 			when default_style then

@@ -14,7 +14,7 @@ inherit
 		redefine
 			new_toolbar_item
 		end
-		
+
 create
 	make
 
@@ -70,10 +70,10 @@ feature -- Basic operations
 			tool.tool.launch_stone (a_stone)
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_class_stone)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 			Result.set_pebble_function (agent pebble)
@@ -103,12 +103,11 @@ feature {NONE} -- Implementation
 				was_dropped := False
 			end
 		end
-		
+
 	was_dropped: BOOLEAN
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_center_diagram
 		end
@@ -125,7 +124,7 @@ feature {NONE} -- Implementation
 
 	explain_dialog: EB_INFORMATION_DIALOG;
 			-- Dialog explaining how to use `Current'.
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

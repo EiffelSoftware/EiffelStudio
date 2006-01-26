@@ -24,9 +24,8 @@ create
 
 feature -- Initialization
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_new_metric
 		end
@@ -139,7 +138,7 @@ feature -- Widget
 			-- Fill `combobox' with all available metrics whose unit is different from ratio.
 		require
 			existing_tool: tool /= Void
-			existing_combobox: combobox /= Void 
+			existing_combobox: combobox /= Void
 		local
 			measure_item: EV_LIST_ITEM
 		do
@@ -368,7 +367,7 @@ feature -- Action
 				a_button.select_actions.call (Void)
 			end
 		end
-	
+
 	index_insert (a_metric: EB_METRIC): INTEGER is
 			-- index `a_metric' should be inserted in `tool.metrics'.
 		require
@@ -407,7 +406,7 @@ feature -- Initialization
 		do
 			tool.development_window.window.set_pointer_style (tool.development_window.Wait_cursor)
 			if new_metric_definition_dialog = Void then
-				build_new_metric_definition_dialog	
+				build_new_metric_definition_dialog
 			end
 			x_pos := tool.development_window.window.x_position + 200
 			y_pos := tool.development_window.window.y_position + 40

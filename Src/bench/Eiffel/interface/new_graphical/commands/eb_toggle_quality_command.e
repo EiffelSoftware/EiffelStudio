@@ -8,7 +8,7 @@ indexing
 
 class
 	EB_TOGGLE_QUALITY_COMMAND
-	
+
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
@@ -16,19 +16,19 @@ inherit
 			description,
 			initialize
 		end
-		
+
 	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
 
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_q),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_q),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -63,7 +63,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -74,10 +74,10 @@ feature -- Basic operations
 			if tool.world.is_high_quality then
 				Result.toggle
 			end
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 		end
-		
+
 feature -- Access
 
 	tooltip: STRING is
@@ -92,9 +92,8 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_toggle_quality
 		end

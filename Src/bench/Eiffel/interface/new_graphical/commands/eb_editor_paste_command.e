@@ -49,9 +49,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.m_Paste
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_paste
 		end

@@ -37,7 +37,7 @@ feature -- Basic operations
 		do
 			if retried then
 				create wd.make_with_text (Warning_messages.w_could_not_modify_class)
-				wd.show_modal_to_window (target.window)	
+				wd.show_modal_to_window (target.window)
 			else
 				if
 					Workbench.last_reached_degree <= 2
@@ -59,7 +59,7 @@ feature -- Basic operations
 								cg.new_feature
 							else
 								create wd.make_with_text (Warning_messages.W_class_not_modifiable)
-								wd.show_modal_to_window (target.window)	
+								wd.show_modal_to_window (target.window)
 							end
 						end
 					end
@@ -75,8 +75,8 @@ feature -- Basic operations
 
 feature -- Access
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_new_feature
 		end
@@ -89,9 +89,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.m_Create_new_feature
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_new_feature
 		end

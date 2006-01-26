@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_TOOLBARABLE_COMMAND 
+	EB_TOOLBARABLE_COMMAND
 
 inherit
 	EB_GRAPHICAL_COMMAND
@@ -18,15 +18,13 @@ inherit
 
 feature -- Access
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version at least).
-			-- Items at position 3 and 4 contain text.
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		deferred
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 		end
 
@@ -120,14 +118,14 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
 			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -137,7 +135,7 @@ feature -- Basic operations
 			mini_pixmap_not_void: mini_pixmap /= Void
 		do
 			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap @ 1)
+			Result.set_pixmap (mini_pixmap)
 			if is_sensitive then
 				Result.enable_sensitive
 			else
@@ -149,7 +147,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	initialize_toolbar_item (a_item: EB_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN; use_gray_icons: BOOLEAN) is
+	initialize_toolbar_item (a_item: EB_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
 			-- Initialize `a_item'
 		local
 			tt: STRING
@@ -157,7 +155,7 @@ feature {NONE} -- Implementation
 			if display_text and then has_text then
 				a_item.set_text (tooltext)
 			end
-			a_item.set_pixmap (pixmap @ 1)
+			a_item.set_pixmap (pixmap)
 			if is_sensitive then
 				a_item.enable_sensitive
 			else
@@ -173,7 +171,7 @@ feature {NONE} -- Implementation
 		end
 
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
-	
+
 	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 
 	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item] is
@@ -184,7 +182,7 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			end
 			Result := internal_managed_toolbar_items
 		end
-	
+
 	Opening_parenthesis: STRING is " ("
 	Closing_parenthesis: STRING is ")";
 indexing

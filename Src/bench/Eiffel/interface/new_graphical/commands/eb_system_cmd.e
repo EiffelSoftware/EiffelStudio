@@ -40,14 +40,14 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initialize default_values.
-		do	
+		do
 		end
 
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 --			Result.select_actions.put_front (agent execute_from (Result))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
@@ -102,9 +102,8 @@ feature {NONE} -- Implementation
 	name: STRING is "System_tool"
 			-- Name of command. Used to store command in preferences
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing command (one for
-			-- gray version, one for color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing command.
 		do
 			Result := Pixmaps.Icon_system
 		end
@@ -131,7 +130,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Interface_names.m_System_new
 		end
-		
+
 	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Show the ace file in editor.
 		local

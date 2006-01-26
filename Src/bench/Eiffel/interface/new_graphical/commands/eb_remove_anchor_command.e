@@ -8,7 +8,7 @@ indexing
 
 class
 	EB_REMOVE_ANCHOR_COMMAND
-	
+
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
@@ -28,13 +28,13 @@ feature -- Basic operations
 			explain_dialog.show_modal_to_window (tool.development_window.window)
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_class)
 			Result.drop_actions.extend (agent execute_with_class_list)
 			Result.drop_actions.extend (agent execute_with_cluster)
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 				a_stone.source.set_is_fixed (True)
 			end
 		end
-		
+
 	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE) is
 			-- Set `is_fixed' to false for all classes in `a_stone'.
 		do
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			end
 			tool.restart_force_directed
 		end
-		
+
 	execute_with_cluster (a_stone: CLUSTER_STONE) is
 			-- Set `is_fixed' to false for cluster in `a_stone'.
 		local
@@ -89,10 +89,9 @@ feature {NONE} -- Implementation
 
 	explain_dialog: EB_INFORMATION_DIALOG
 			-- Dialog explaining how to use `Current'.
-			
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.icon_remove_anchor
 		end

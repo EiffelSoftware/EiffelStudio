@@ -15,19 +15,19 @@ inherit
 			menu_name,
 			initialize
 		end
-		
+
 	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_r),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_r),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -75,19 +75,19 @@ feature -- Basic operations
 			if a_stone.source.world = tool.world then
 				create link_tool_dialog
 				link_tool_dialog.set_link_tool_command (Current)
-	
+
 					-- Save current link midpoints.
 				lf := a_stone.source
 				link_tool_dialog.set_link_figure (lf)
 				saved_edges := lf.edges
-	
+
 				create screen
 				x_pos := screen.pointer_position.x - link_tool_dialog.width // 2
 				y_pos := screen.pointer_position.y - link_tool_dialog.height // 2
 				link_tool_dialog.set_position (x_pos, y_pos)
-	
+
 				link_tool_dialog.preset (tool.world.is_labels_shown)
-	
+
 				client_stone ?= a_stone
 				if client_stone /= Void then
 					link_tool_dialog.set_strings (client_stone.source.feature_names)
@@ -97,17 +97,17 @@ feature -- Basic operations
 						--| go to the background when closing `link_tool_dialog'.
 					link_tool_dialog.set_maximum_size (link_tool_dialog.width, link_tool_dialog.height)
 				end
-	
+
 				link_tool_dialog.show_relative_to_window (tool.development_window.window)
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			create Result.make (Current)
 			current_button := Result
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_link_stone)
 		end
@@ -124,7 +124,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 				saved_edges_not_void: saved_edges /= Void
 			end
 			lf := link_tool_dialog.link_figure
-			
+
 				-- We need to check that `lf' is still on the diagram.
 			if lf.world /= Void then
 				if not link_tool_dialog.cancelled then
@@ -134,17 +134,17 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 							project
 							if link_tool_dialog.handle_left_selected then
 								lf.put_handle_left
-							elseif link_tool_dialog.handle_right_selected then			
+							elseif link_tool_dialog.handle_right_selected then
 								lf.put_handle_right
-							elseif link_tool_dialog.two_handles_left_selected then			
+							elseif link_tool_dialog.two_handles_left_selected then
 								lf.put_two_handles_left
-							elseif link_tool_dialog.two_handles_right_selected then			
+							elseif link_tool_dialog.two_handles_right_selected then
 								lf.put_two_handles_right
 							end
 							lf.show
 							project
 						end
-						
+
 						new_edges := lf.edges
 						if link_tool_dialog.handle_left_selected then
 							history.register_named_undoable (
@@ -181,7 +181,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 					end
 				end
 			end
-			link_tool_dialog.destroy			
+			link_tool_dialog.destroy
 		end
 
 	project is
@@ -201,15 +201,14 @@ feature -- Access
 				Result := Interface_names.f_diagram_put_right_angles
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	current_stone: LINK_STONE
 			-- Last dropped stone.
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_link_tool
 		end
@@ -226,12 +225,12 @@ feature {NONE} -- Implementation
 
 	link_tool_dialog: EB_LINK_TOOL_DIALOG
 			-- Associated widget.
-			
+
 	saved_edges: LIST [EG_EDGE]
 			-- Backup of previous link midpoints.
-			
+
 	all_saved_edges: LIST [TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]] is
-			-- 
+			--
 		local
 			l_edges: LIST [EG_LINK_FIGURE]
 			l_item: EIFFEL_LINK_FIGURE
@@ -252,9 +251,9 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	undo_apply_right_angles (edge_lists: like all_saved_edges) is
-			-- 
+			--
 		local
 			l_item: TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]
 			l_figure: EIFFEL_LINK_FIGURE
@@ -273,12 +272,12 @@ feature {NONE} -- Implementation
 				edge_lists.forth
 			end
 		end
-		
+
 feature {EB_CONTEXT_EDITOR} -- Implementation
 
 	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
 			-- Current toggle button.
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

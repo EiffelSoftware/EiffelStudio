@@ -23,9 +23,8 @@ feature -- Initialization
 			on_delete_click
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_delete_measure
 		end
@@ -67,7 +66,7 @@ feature -- Actions
 				tool.multi_column_list.prune (selected_items.item)
 				selected_items.forth
 			end
-			
+
 			if tool.file_manager.metric_file /= Void then
 					-- Make sure that a metric file is available.
 				if not tool.file_manager.metric_file.exists then
@@ -78,7 +77,7 @@ feature -- Actions
 				end
 				check tool.file_manager.metric_file.exists end
 				tool.file_manager.store
-				tool.file_manager.measure_notify_all_but (tool)				
+				tool.file_manager.measure_notify_all_but (tool)
 			end
 		end
 

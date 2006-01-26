@@ -89,7 +89,7 @@ feature -- Access
 			Result := explorer_bar_item.title
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap representing the item (for buttons)
 		do
 			Result := explorer_bar_item.pixmap
@@ -117,11 +117,11 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			if is_selected then
 				Result.enable_select
 			end

@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 			create wd.make_with_text ("Working directory:")
 			wd.align_text_left
 			create dir_btn.default_create
-			dir_btn.set_pixmap (Icon_open_file.item (1))
+			dir_btn.set_pixmap (Icon_open_file)
 			dir_btn.select_actions.extend (agent create_directory_dialog)
 			hb1.extend (working_directory_field)
 			hb1.extend (dir_btn)

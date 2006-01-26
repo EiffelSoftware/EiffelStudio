@@ -26,13 +26,13 @@ feature -- Basic operations
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_figure)
 			explain_dialog.show_modal_to_window (tool.development_window.window)
 		end
-		
+
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_class_stone)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 			Result.drop_actions.extend (agent execute_with_link_midpoint)
@@ -40,10 +40,9 @@ feature -- Access
 			Result.drop_actions.extend (agent execute_with_client_stone)
 			Result.drop_actions.extend (agent execute_with_class_list)
 		end
-		
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_recycle_bin
 		end
@@ -96,7 +95,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE) is
 			-- Remove `a_stone' from diagram.
 		local
@@ -114,7 +113,7 @@ feature {NONE} -- Implementation
 				undo_list.extend ([l_classes.item.port_x, l_classes.item.port_y, l_classes.item.model.needed_links])
 				l_classes.forth
 			end
-			
+
 			l_world := tool.world
 
 			history.do_named_undoable (
@@ -122,7 +121,7 @@ feature {NONE} -- Implementation
 				[<<agent remove_class_list (a_stone.classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 				[<<agent reinclude_class_list (a_stone.classes, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 		end
-		
+
 	remove_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]) is
 			-- Remove all classes in `a_list'.
 		local
@@ -153,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 			tool.projector.full_project
 		end
-		
+
 	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]) is
 			-- Reinclude all classes in `a_list' to position in `undo_list' TUPLE and reinclude all links in `undo_list'.
 		local
@@ -192,7 +191,7 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
 			cf: EIFFEL_CLASS_FIGURE
-			
+
 			l_classes: LIST [CLASS_I]
 			undo_list: ARRAYED_LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]
 			l_c_figs: ARRAYED_LIST [EIFFEL_CLASS_FIGURE]
@@ -216,7 +215,7 @@ feature {NONE} -- Implementation
 						remove_links.append (cf.model.needed_links)
 						remove_classes.forth
 					end
-					
+
 					history.do_named_undoable (
 							interface_names.t_diagram_erase_cluster_cmd (es_cluster.name),
 							[<<agent l_world.remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
@@ -248,7 +247,7 @@ feature {NONE} -- Implementation
 					[<<agent reinclude_class_list (l_c_figs, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
 		end
-		
+
 	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
@@ -276,7 +275,7 @@ feature {NONE} -- Implementation
 
 	execute_with_link_midpoint (a_stone: EG_EDGE) is
 			-- Remove `a_stone' from diagram.
-		local	
+		local
 			line: EIFFEL_LINK_FIGURE
 			old_edges, new_edges: LIST [EG_EDGE]
 			l_projector: EIFFEL_PROJECTOR
@@ -296,7 +295,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	execute_with_inheritance_stone (a_stone: INHERIT_STONE) is
 			-- Remove `a_stone' from diagram.
 		local
@@ -314,7 +313,7 @@ feature {NONE} -- Implementation
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
 		end
-		
+
 	execute_with_client_stone (a_stone: CLIENT_STONE) is
 			-- Remove `a_stone' from diagram.
 		local

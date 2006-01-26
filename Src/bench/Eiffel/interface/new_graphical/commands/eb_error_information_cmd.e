@@ -42,7 +42,7 @@ feature -- Status setting
 		do
 			execute_with_text (st.help_text)
 		end
-		
+
 feature -- Status report
 
 	description: STRING is
@@ -66,8 +66,8 @@ feature -- Status report
 	name: STRING is "Open_help_tool"
 			-- Internal textual representation.
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Images used for `Current's toolbar buttons.
+	pixmap: EV_PIXMAP is
+			-- Image used for `Current's toolbar buttons.
 		do
 			Result := Pixmaps.Icon_help_tool
 		end
@@ -78,13 +78,13 @@ feature -- Status report
 			Result := Interface_names.m_Display_error_help
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.drop_actions.extend (agent execute_with_stone)
 		end
 
@@ -125,14 +125,14 @@ feature {NONE} -- Implementation
 			create current_dialog
 			current_dialog.set_title (Interface_names.t_Extended_explanation)
 			current_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
-			
+
 			create but.make_with_text (Interface_names.b_Close)
 			Layout_constants.set_default_size_for_button (but)
 			create current_editor
 			current_editor.set_cursors (create {EB_EDITOR_CURSORS})
 			current_editor.set_reference_window (current_dialog)
 			current_editor.widget.set_minimum_size (150, 100)
-			
+
 			create f
 			f.extend (current_editor.widget)
 			hb.extend (create {EV_CELL})
@@ -142,9 +142,9 @@ feature {NONE} -- Implementation
 			vb.extend (f)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			
+
 			current_dialog.extend (vb)
-			
+
 				-- Set up the event handlers.
 			current_dialog.set_default_cancel_button (but)
 			but.select_actions.extend (agent current_dialog.destroy)

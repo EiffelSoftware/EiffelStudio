@@ -34,11 +34,11 @@ feature -- Access
 	execute_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Agents that are called when `Current' is executed.
 
-	pixmap: ARRAY [EV_PIXMAP]
-			-- Icons for tool bar button representing `Current'.
+	pixmap: EV_PIXMAP
+			-- Icon for tool bar button representing `Current'.
 
-	mini_pixmap: ARRAY [EV_PIXMAP]
-			-- Icons for mini tool bar button representing `Current'.
+	mini_pixmap: EV_PIXMAP
+			-- Icon for mini tool bar button representing `Current'.
 
 	tooltip: STRING
 			-- Help text displayed when associated buttons are focused.
@@ -57,11 +57,10 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pixmaps (new_p: ARRAY [EV_PIXMAP]) is
-			-- Define pixmaps associated with `Current'.
+	set_pixmap (new_p: EV_PIXMAP) is
+			-- Define pixmap associated with `Current'.
 		require
 			new_p_non_void: new_p /= Void
-			enough_icons: new_p.count >= 1
 		do
 			pixmap := new_p
 		end
@@ -117,8 +116,8 @@ feature -- Status setting
 			execute_agents.extend (a)
 		end
 
-	set_mini_pixmaps (p: ARRAY [EV_PIXMAP]) is
-			-- Define the pixmaps displayed on mini buttons associated to `Current'.
+	set_mini_pixmap (p: EV_PIXMAP) is
+			-- Define the pixmap displayed on mini buttons associated to `Current'.
 		do
 			mini_pixmap := p
 		end

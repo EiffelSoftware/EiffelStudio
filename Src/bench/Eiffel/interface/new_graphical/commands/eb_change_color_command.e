@@ -32,7 +32,7 @@ feature -- Basic operations
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
 			change_color_dialog.show_modal_to_window (tool.development_window.window)
-			
+
 			create class_list.make (20)
 			create old_color_table.make (20)
 			create new_color_table.make (20)
@@ -55,13 +55,13 @@ feature -- Basic operations
 				agent change_color_all (class_list, new_color_table),
 				agent change_color_all (class_list, old_color_table))
 		end
-		
+
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.select_actions.wipe_out
 			Result.select_actions.extend (agent execute)
 			Result.drop_actions.extend (agent execute_with_stone)
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
 			change_color_dialog.show_modal_to_window (tool.development_window.window)
-			
+
 			from
 				create class_list.make (1)
 				create old_color_table.make (1)
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 				agent change_color_all (class_list, new_color_table),
 				agent change_color_all (class_list, old_color_table))
 		end
-		
+
 
 	execute_with_stone (a_stone: CLASSI_STONE) is
 			-- Create a development window and process `a_stone'.
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	execute_with_list (a_list: CLASS_FIGURE_LIST_STONE) is
 			-- Colorize all classes in `a_list'.
 		local
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
 			change_color_dialog.show_modal_to_window (tool.development_window.window)
-			
+
 			l_classes := a_list.classes
 			create old_color_table.make (l_classes.count)
 			create new_color_table.make (l_classes.count)
@@ -207,8 +207,8 @@ feature {NONE} -- Implementation
 			a_class.set_background_color (new_color)
 			tool.world.update_cluster_legend
 			tool.projector.project
-		end	
-		
+		end
+
 	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING]) is
 			-- Change color of `classes' according to `color_table'.
 		require
@@ -232,14 +232,13 @@ feature {NONE} -- Implementation
 				end
 				classes.forth
 			end
-			
+
 			tool.world.update_cluster_legend
 			tool.projector.project
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_color
 		end
@@ -256,7 +255,7 @@ feature {NONE} -- Implementation
 
 	change_color_dialog: EV_COLOR_DIALOG
 			-- Dialog that allows to choose a color.
-			
+
 	default_colors: EV_STOCK_COLORS is
 		-- Eiffel Vision colors.
 	once

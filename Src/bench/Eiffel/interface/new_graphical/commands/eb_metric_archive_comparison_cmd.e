@@ -21,24 +21,24 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	TRANSFER_MANAGER_BUILDER
-	
+
 	PROJECT_CONTEXT
 		export
 			{NONE} all
 		end
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -49,9 +49,8 @@ create
 
 feature -- Initialization
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_sorter
 		end
@@ -123,7 +122,7 @@ feature -- Initialization
 						hb.extend (browse_archive_field)
 						vb2.extend (hb)
 						vb2.disable_item_expand (hb)
-								
+
 						create label.make_with_text ("Display comparison in terms of:")
 						label.align_text_left
 						vb2.extend (label)
@@ -134,7 +133,7 @@ feature -- Initialization
 							create label.make_with_text ("Ratio of current measure to archive")
 							hb.extend (label)
 							hb.disable_item_expand (label)
-							
+
 							hb.extend (create {EV_CELL})
 
 							create button.make_with_text_and_action ("Set", agent validate_url ("default"))
@@ -150,7 +149,7 @@ feature -- Initialization
 							create label.make_with_text ("Difference of current measure to archive")
 							hb.extend (label)
 							hb.disable_item_expand (label)
-									
+
 							hb.extend (create {EV_CELL})
 
 							create button.make_with_text_and_action ("Set", agent validate_url ("difference"))
@@ -165,7 +164,7 @@ feature -- Initialization
 							create label.make_with_text ("Archive value")
 							hb.extend (label)
 							hb.disable_item_expand (label)
-									
+
 							hb.extend (create {EV_CELL})
 
 							create button.make_with_text_and_action ("Set", agent validate_url ("value"))
@@ -185,7 +184,7 @@ feature -- Initialization
 
 						create hb
 						hb.set_padding (5)
-								
+
 							create label.make_with_text ("Create new archive for current system:")
 							label.align_text_left
 							hb.extend (label)
@@ -278,7 +277,7 @@ feature -- Access
 
 	archive_dialog: EV_DIALOG
 		-- Dialog to create, update or compare to an archive.
-			
+
 	default_ratio: EV_RADIO_BUTTON
 		-- Display comparison as ratio of system value to archived one.
 
@@ -308,7 +307,7 @@ feature -- Access
 
 	archived_file: PLAIN_TEXT_FILE
 		-- Loaded archive file for comparison.
-		
+
 feature -- Action
 
 	new_archive is
@@ -436,7 +435,7 @@ feature -- Action
 					l_deserialized_document := Xml_routines.deserialize_document (file_name)
 					if l_deserialized_document /= Void then
 						if l_deserialized_document.root_element.has_attribute_by_name ("System") then
-							system_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
+							system_name := l_deserialized_document.root_element.attribute_by_name ("System").value
 						end
 
 						right_file := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
@@ -505,7 +504,7 @@ feature -- Action
 			file_name := open_dialog.file_name
 			browse_archive_field.set_text (file_name)
 		end
-	
+
 	archive_syntax (root_element: XM_ELEMENT): BOOLEAN is
 			-- Is `root_element' the XML representation of an archive file?
 		require
@@ -593,8 +592,8 @@ feature -- Action
 			error_dialog.show_modal_to_window (archive_dialog)
 			retry
 		end
-		
-	
+
+
 	validate_url (str: STRING) is
 			-- Try to load remote file when connexion succeeded. Make comparison regarding
 			-- `archive_mode'.
@@ -612,7 +611,7 @@ feature -- Action
 			y_pos := archive_dialog.y_position + 50
 			url_address := browse_archive_field.text
 			if url_address /= Void and then not url_address.is_empty then
-				http := url_address.substring (1, 7) 
+				http := url_address.substring (1, 7)
 				ftp := url_address.substring (1, 6)
 				file := url_address.substring (1, 7)
 				if equal (file, "file://") then
@@ -625,7 +624,7 @@ feature -- Action
 						handle_archive (url_address)
 					else
 						transfer_and_compare (url_address)
-					end				
+					end
 				end
 			end
 	end
@@ -650,7 +649,7 @@ feature -- Action
 			file_name.set_subdirectory ("Metrics")
 			file_name.extend (tool.System.name + "_transfered_archive")
 			file_name.add_extension ("xml")
-			
+
 			create file.make (file_name)
 			if file.exists then
 				create confirm_dialog.make_with_text_and_actions ("Remote file will be loaded in:%N" + file_name +
@@ -767,7 +766,7 @@ feature -- Comparison
 		do
 			if not retried then
 				basic_metric ?= a_metric
-				if basic_metric /= Void or else 
+				if basic_metric /= Void or else
 					tool.calculate.has_metric (a_metric, f) then
 					measure_header := Xml_routines.element_by_name (root_element, "RECORDED_MEASURES")
 					from
@@ -875,7 +874,7 @@ feature -- Metric importation
 		ensure
 			filled_array: Result @ 1 /= Void and Result @ 2 /= Void
 		end
-	
+
 	import_metrics (file_name: STRING) is
 			-- Import metrics of archive `file'.
 		do
@@ -888,8 +887,8 @@ feature -- Metric importation
 			tool.manage.import.on_import (file_name, archive_dialog)
 			tool.manage.save_action
 		end
-		
-		
+
+
 feature -- Action
 
 	execute is

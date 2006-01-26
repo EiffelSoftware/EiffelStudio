@@ -27,10 +27,10 @@ create
 
 feature -- Initialization
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			current_button := Result
 		end
 
@@ -40,9 +40,8 @@ feature -- Initialization
 			on_details_click
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_view_measure_plus
 		end
@@ -115,14 +114,14 @@ feature -- Level in hierarchy
 
 feature -- Detailed column list
 
-	multi_column_list_for_details: EV_MULTI_COLUMN_LIST 
+	multi_column_list_for_details: EV_MULTI_COLUMN_LIST
 			-- Column list to display details of a metric result.
 
 	title_array_for_details (cluster_depth: INTEGER): ARRAY [STRING] is
 			-- `multi_column_list_for_details' titles.
 		require
 			existing_tool: tool /= Void
-			effective_metric: metric /= Void			
+			effective_metric: metric /= Void
 		local
 			array_depth, i: INTEGER
 		do
@@ -159,7 +158,7 @@ feature -- Detailed column list
 			-- `depth' is `a_cluster' depth in terms of sub-clusters.
 			-- `starting_index' is the line we start to insert details of `a_cluster'. Indeed, there
 			-- are possibly other clusters that have been detailed before `a_cluster' and we should not overwrite them.
-			-- `index_column_insert' is the index of column we start detailing. 
+			-- `index_column_insert' is the index of column we start detailing.
 		require
 			calculation: tool.is_calculation_done
 			effective_cluster: a_cluster /= Void
@@ -390,7 +389,7 @@ feature -- Detailed column list
 			if not retried then
 				if tool.details_hidden then
 						-- Change details_button's pixmap.
-					current_button.set_pixmap (Pixmaps.Icon_view_measure_minus @ 1)
+					current_button.set_pixmap (Pixmaps.Icon_view_measure_minus)
 						-- Disable all buttons.
 					disable_all_components
 						-- Hide unuseful ojects.
@@ -401,11 +400,11 @@ feature -- Detailed column list
 					create multi_column_list_for_details
 						-- Display a progress dialog while waiting for details calculation.
 					tool.progress_dialog.set_value (1)
-	
+
 						-- Retrieve metric object.
 					metric := tool.metric (tool.selected_metric)
 					check metric /= Void end
-			
+
 					if equal (tool.selected_scope, interface_names.metric_this_cluster) then
 						selected_cluster := tool.selected_cluster
 						depth := depth_of_cluster (selected_cluster)
@@ -430,7 +429,7 @@ feature -- Detailed column list
 					tool.details.enable_sensitive
 					tool.details_cmd_in_menu.enable_sensitive
 				else
-					current_button.set_pixmap (Pixmaps.Icon_view_measure_plus @ 1)
+					current_button.set_pixmap (Pixmaps.Icon_view_measure_plus)
 					tool.widget.prune (multi_column_list_for_details)
 					tool.text_area.show
 					tool.sep.show
@@ -450,7 +449,7 @@ feature -- Detailed column list
 			tool.details_cmd_in_menu.enable_sensitive
 			tool.set_details_hidden (False)
 			tool.development_window.window.set_pointer_style (tool.development_window.Standard_cursor)
-			retry				
+			retry
 		end
 
 	disable_all_components is

@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
-	
+
 feature -- Status setting
 
 	enable_select is
@@ -23,7 +23,7 @@ feature -- Status setting
 				current_button.set_tooltip (tooltip + shortcut_string)
 			end
 		end
-		
+
 	disable_select is
 			-- Make `Current' deselected.
 		do
@@ -36,22 +36,20 @@ feature -- Status setting
 				current_button.set_tooltip (tooltip + shortcut_string)
 			end
 		end
-		
+
 feature -- Access
 
 	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 		deferred
 		end
-		
+
 	tooltip: STRING is
 		deferred
 		end
-		
+
 	shortcut_string: STRING is
 		deferred
 		end
-		
-		
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

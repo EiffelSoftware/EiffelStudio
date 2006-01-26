@@ -38,7 +38,7 @@ feature -- Status report
 
 	name: STRING is "Toggle_stone"
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 		do
 			Result := Pixmaps.Icon_unify_stone
 		end
@@ -136,12 +136,12 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 				-- Create the button
 			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			if window.unified_stone then
 				Result.toggle
 			end

@@ -50,7 +50,7 @@ feature -- Initialization
 			-- Create a formatter associated with `a_manager'.
 		do
 		--	create accelerator.make_with_key_combination (
-		--		create {EV_KEY}.make_with_code (Key_constants.Key_p),
+		--		create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_p),
 		--		True, False, False)
 		--	accelerator.actions.extend (~execute)
 			dev_window := a_dev_win
@@ -120,11 +120,11 @@ feature -- Execution
 	--		if filterable_format = Void or else not postscript_t.is_selected then
 	--			new_text := tool.text_area.text
 	--		else
-	--			new_text := filterable_format.filtered_text 
+	--			new_text := filterable_format.filtered_text
 	--				(tool.stone, "PostScript")
 	--		end
 		end
-		
+
 feature {NONE} -- Implementation
 
 
@@ -134,9 +134,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.m_Print
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_print
 		end

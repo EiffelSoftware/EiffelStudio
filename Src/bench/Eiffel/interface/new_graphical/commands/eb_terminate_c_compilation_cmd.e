@@ -17,7 +17,7 @@ inherit
 		end
 
 	EB_SHARED_WINDOW_MANAGER
-	
+
 	EB_SHARED_MANAGERS
 
 create
@@ -36,16 +36,16 @@ feature -- Status setting
 			-- Launch `Current'.
 			-- Pop up an error wizard relative to the last focused development window.
 		do
-			internal_execute 
+			internal_execute
 		end
-		
+
 	execute_with_stone (st: ERROR_STONE)  is
-			-- 
+			--
 		do
-			internal_execute 	
+			internal_execute
 		end
-		
-		
+
+
 feature -- Status report
 
 	description: STRING is
@@ -69,10 +69,10 @@ feature -- Status report
 	name: STRING is "Terminate C compilation"
 			-- Internal textual representation.
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Images used for `Current's toolbar buttons.
+	pixmap: EV_PIXMAP is
+			-- Image used for `Current's toolbar buttons.
 		do
-			Result := Void 
+			Result := Void
 		end
 
 	menu_name: STRING is
@@ -81,31 +81,31 @@ feature -- Status report
 			Result := Interface_names.b_Terminate_c_compilation
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.drop_actions.extend (agent execute_with_stone)
 		end
 
 feature {NONE} -- Implementation
 
 	internal_execute is
-			-- 
-		do	
-			if freezing_launcher.launched and then 
+			--
+		do
+			if freezing_launcher.launched and then
 			   not freezing_launcher.has_exited
 		    then
 				freezing_launcher.terminate
-			end	
-			if finalizing_launcher.launched and then 
+			end
+			if finalizing_launcher.launched and then
 			   not finalizing_launcher.has_exited
 		    then
 				finalizing_launcher.terminate
-			end				
+			end
 		end
 
 indexing

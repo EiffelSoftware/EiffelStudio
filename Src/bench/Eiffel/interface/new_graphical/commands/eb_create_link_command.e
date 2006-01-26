@@ -8,7 +8,7 @@ indexing
 
 class
 	EB_CREATE_LINK_COMMAND
-	
+
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
@@ -19,17 +19,17 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_target: like tool) is
 			-- Initialize `Current'.
-			-- Client-supplier links are selected by default. 
+			-- Client-supplier links are selected by default.
 		do
 			Precursor (a_target)
 			selected_type := Inheritance
 		end
-		
+
 
 feature -- Basic operations
 
@@ -45,14 +45,14 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
 			create Result.make (Current)
-			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			initialize_toolbar_item (Result, display_text)
 			current_button := Result
 			Result.select_actions.extend (agent show_text_menu)
 		end
@@ -61,7 +61,7 @@ feature -- Status report
 
 	selected_type: INTEGER
 			-- Currently selected type of new links
-			
+
 	inheritance, supplier, aggregate: INTEGER is unique
 			-- Possible values for `selected_type'.
 
@@ -77,7 +77,7 @@ feature -- Status setting
 		do
 			selected_type := a_type
 			execute
-			
+
 			tt := tooltip.twin
 			if accelerator /= Void then
 				tt.append (Opening_parenthesis)
@@ -90,7 +90,7 @@ feature -- Status setting
 				managed_toolbar_items.after
 			loop
 				tbb := managed_toolbar_items.item
-				tbb.set_pixmap (pixmap @ 1)
+				tbb.set_pixmap (pixmap)
 				tbb.set_tooltip (tt)
 				if is_sensitive then
 					tbb.enable_sensitive
@@ -102,9 +102,8 @@ feature -- Status setting
 		end
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			if selected_type = inheritance then
 				Result := Pixmaps.Icon_new_inherit

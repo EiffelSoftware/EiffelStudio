@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- 8*8 pixmaps representing `Current'.
+	mini_pixmap: EV_PIXMAP is
+			-- 8*8 pixmap representing `Current'.
 		do
 			Result := pixmaps.small_pixmaps.icon_expand_string
 		end
@@ -58,7 +58,7 @@ feature -- Access
 			Result := "Pretty_print"
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- No big pixmap is necessary.
 		do
 

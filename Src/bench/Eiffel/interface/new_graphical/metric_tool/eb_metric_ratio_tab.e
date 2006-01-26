@@ -74,7 +74,7 @@ feature -- Initialization
 					create unit_field
 					unit_field.set_minimum_height (22)
 					unit_field.disable_edit
-					unit_field.set_text (interface_names.metric_ratio_unit) 
+					unit_field.set_text (interface_names.metric_ratio_unit)
 					unit_field.key_press_actions.extend (agent dialog_key_press_action (?, unit_field))
 					hb.extend (unit_field)
 				extend (hb)
@@ -171,14 +171,14 @@ feature -- Initialization
 						new_button.select_actions.extend (agent preset)
 						new_button.set_minimum_size (22, 22)
 						new_button.set_tooltip ("New metric")
-						new_button.set_pixmap (Pixmaps.Icon_new_metric @ 1)
+						new_button.set_pixmap (Pixmaps.Icon_new_metric)
 						new_button.key_press_actions.extend (agent dialog_key_press_action (?, new_button))
 						vb_min.extend (new_button)
 						vb_min.disable_item_expand (new_button)
 
 						create {EV_CELL} ev_any
 						vb_min.extend (ev_any)
-					
+
 					hb.extend (vb_min)
 					hb.disable_item_expand (vb_min)
 				frame.extend (hb)
@@ -245,7 +245,7 @@ feature -- Access
 
 	first_metric_combobox: EV_COMBO_BOX
 		-- Combo box to display available metrics for numerator definition.
-		
+
 	second_metric_combobox: EV_COMBO_BOX
 		-- Combo box to display available metrics for denominator definition.
 
@@ -263,10 +263,10 @@ feature -- Access
 
 	divide: STRING is " / "
 		-- Operator /.
-		
+
 	empty_formula: BOOLEAN
 		-- Is `formula' empty?
-		
+
 feature -- Error rescue
 
 	error: BOOLEAN is
@@ -288,7 +288,7 @@ feature -- Error rescue
 
 			Result := error_name or empty_formula or existing_basic_name
 		end
-		
+
 	throw_error is
 			-- Must be called after `error' to display an information dialog.
 		local
@@ -377,7 +377,7 @@ feature -- Metric constituents
 			if valid_metric_definition then
 				Result.put_last (metric_definition)
 				Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
-			end		
+			end
 		end
 
 	valid_metric_definition: BOOLEAN is
@@ -406,7 +406,7 @@ feature -- Metric constituents
 				if sub_node /= Void then
 					a_name := sub_node.name
 					Result := Result and metric_definition.count = 3
-					inspect i 
+					inspect i
 						when 1 then
 							Result := Result and equal (a_name, "METRIC") and not (Xml_routines.element_by_name (metric_definition, "METRIC")).is_empty
 							metric := interface.tool.metric (sub_node.text)

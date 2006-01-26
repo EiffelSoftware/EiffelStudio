@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 						-- to the count as queried from the interface
 					l_parent_tree.general_remove_item (c.last)
 				end
-			else
+			elseif internal_children /= Void then
 				internal_children.prune_all (internal_children.last)
 			end
 		end

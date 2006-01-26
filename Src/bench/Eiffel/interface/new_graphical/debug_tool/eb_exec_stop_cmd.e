@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Key_constants.Key_f5),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
 				True, False, True)
 			accelerator.actions.extend (agent execute)
 		end
@@ -75,13 +75,13 @@ feature {NONE} -- Attributes
 
 	menu_name: STRING is
 			-- Menu entry corresponding to `Current'.
-		once
+		do
 			Result := Interface_names.m_Debug_interrupt_new
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing `Current' on buttons.
-		once
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing `Current' on buttons.
+		do
 			Result := Pixmaps.Icon_exec_stop
 		end
 

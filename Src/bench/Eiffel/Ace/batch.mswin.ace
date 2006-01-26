@@ -113,7 +113,7 @@ cluster
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			".svn"; "external"; "compiler_override"; "error"; "types"; 
+			".svn"; "compiler_override"; "error"; "types"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"

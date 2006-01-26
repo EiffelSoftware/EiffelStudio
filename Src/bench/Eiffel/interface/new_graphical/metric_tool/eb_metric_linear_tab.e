@@ -175,7 +175,7 @@ feature -- Initialization
 							del_button.select_actions.extend (agent remove_action)
 							del_button.set_minimum_size (22, 22)
 							del_button.set_tooltip ("Remove last term")
-							del_button.set_pixmap (Pixmaps.Icon_delete_small @ 1)
+							del_button.set_pixmap (Pixmaps.Icon_delete_small)
 							del_button.key_press_actions.extend (agent dialog_key_press_action (?, del_button))
 							vb_min.extend (del_button)
 							vb_min.disable_item_expand (del_button)
@@ -184,7 +184,7 @@ feature -- Initialization
 							new_button.select_actions.extend (agent preset)
 							new_button.set_tooltip ("New metric")
 							new_button.set_minimum_size (22, 22)
-							new_button.set_pixmap (Pixmaps.Icon_new_metric @ 1)
+							new_button.set_pixmap (Pixmaps.Icon_new_metric)
 							new_button.key_press_actions.extend (agent dialog_key_press_action (?, new_button))
 							vb_min.extend (new_button)
 							vb_min.disable_item_expand (new_button)
@@ -220,10 +220,10 @@ feature -- Access
 
 	text_field: EV_TEXT_FIELD
 		-- Text field to display `displayed_metric'.
-		
+
 	coeff_field: EV_TEXT_FIELD
 		-- Text field to display multiplying coefficient of single terms.
-		
+
 	definition_field: EV_TEXT_FIELD
 		-- Text field to display definition of selected metric from `metric_combobox'.
 
@@ -232,19 +232,19 @@ feature -- Access
 
 	plus: STRING is " + "
 		-- Operator +.
-		
+
 	minus: STRING is " - "
 		-- Operator -.
-		
+
 	multiply: STRING is " * "
 		-- Operator *.
-		
+
 	plus_button: EV_BUTTON
 		-- Button that allows adding single term to sum.
-	 
+
 	del_button: EV_BUTTON
 		-- Button that allows deleting last entered term.
-		
+
 	new_button: EV_BUTTON
 		-- Button that allows defining new linear metric by restting all fields.
 
@@ -272,7 +272,7 @@ feature -- Error rescue
 
 			Result := error_name or empty_formula or existing_basic_name
 		end
-		
+
 	throw_error is
 			-- Must be called after `error' to display an information dialog.
 		local
@@ -388,7 +388,7 @@ feature -- Metric constituents.
 					a_name := sub_node.name
 						Result := Result and (metric_definition.count = 3 or ((metric_definition.count - 3) \\ 4) = 0)
 						if i <= 3 then
-							inspect i 
+							inspect i
 								when 1 then
 									Result := Result and a_name.is_equal ("PARAMETER") and metric_definition.has_element_by_name ("PARAMETER")
 									Result := Result and sub_node.text.is_double

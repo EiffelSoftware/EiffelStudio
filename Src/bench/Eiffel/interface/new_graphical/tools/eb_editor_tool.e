@@ -54,7 +54,7 @@ feature -- Access
 	text_area: EB_SMART_EDITOR
 			-- Text Editor.
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.Icon_editor

@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			if has_metrics then
 				notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
 			end
-			notebook.set_tab_position (notebook.Tab_bottom)
+			notebook.set_tab_position (notebook.tab_left)
 			notebook.selection_actions.extend (agent on_tab_changed)
 			notebook.set_minimum_size (500, 200)
 
@@ -238,7 +238,7 @@ feature -- Access
 			Result := Interface_names.m_Context_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.Icon_context_tool

@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 
 			create scmd.make
-			scmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_on_off)
+			scmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_on_off)
 			scmd.set_tooltip ("Display breakpoints separated by status")
 			scmd.enable_sensitive
 			tb := scmd.new_mini_toolbar_item
@@ -146,7 +146,7 @@ feature -- Access
 			Result := Interface_names.m_Breakpoints_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.icon_bkpt_info

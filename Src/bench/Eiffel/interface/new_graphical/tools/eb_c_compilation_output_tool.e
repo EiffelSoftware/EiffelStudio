@@ -87,7 +87,7 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_h_area_1)
 			l_ev_tool_bar_1.disable_vertical_button_style
 
-			save_output_btn.set_pixmap (icon_save.item (1))
+			save_output_btn.set_pixmap (icon_save)
 			save_output_btn.set_tooltip ("Save c compilation output to file")
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 			w_code_btn.set_text ("W_code")
@@ -98,7 +98,7 @@ feature{NONE} -- Initialization
 
 			f_code_btn.set_tooltip ("Go to F_code directory of this system")
 
-			clear_output_btn.set_pixmap (Icon_recycle_bin.item (1))
+			clear_output_btn.set_pixmap (Icon_recycle_bin)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 

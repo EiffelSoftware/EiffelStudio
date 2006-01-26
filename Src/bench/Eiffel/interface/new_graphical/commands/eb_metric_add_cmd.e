@@ -25,9 +25,8 @@ feature -- Initialization
 			on_add_click
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_save_measure
 		end
@@ -149,13 +148,13 @@ feature -- Action
 			correct_type: str /= Void and then not str.is_empty
 		do
 			scope_type := str
-		ensure 
+		ensure
 			valid_scope: tool.scope (scope_type) /= Void
 		end
-	
+
 	added: BOOLEAN
 		-- Has calculated result been added?
-	
+
 	set_added (bool: BOOLEAN) is
 			-- Assign `bool' to `added'.
 		do

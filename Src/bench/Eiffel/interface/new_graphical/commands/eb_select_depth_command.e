@@ -14,19 +14,19 @@ inherit
 			menu_name,
 			initialize
 		end
-	
+
 	SHARED_ERROR_HANDLER
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_d),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -55,7 +55,7 @@ feature -- Basic operations
 						dial.subcluster_depth /= cd.model.subcluster_depth
 					then
 						history.wipe_out
-						cd.model.set_supercluster_depth (dial.supercluster_depth)		
+						cd.model.set_supercluster_depth (dial.supercluster_depth)
 						cd.model.set_subcluster_depth (dial.subcluster_depth)
 						tool.create_cluster_view (cd.model.center_cluster.cluster_i, False)
 					end
@@ -88,9 +88,8 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_select_depth
 		end
@@ -106,7 +105,7 @@ feature {NONE} -- Implementation
 		do
 			Result := Interface_names.m_diagram_context_depth
 		end
-		
+
 	name: STRING is "Context_depth"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
@@ -116,7 +115,7 @@ feature {NONE} -- Implementation
 
 	cluster_depth_dialog: EB_CONTEXT_DEPTH_DIALOG;
 			-- Dialog to tweak depths on cluster views.
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

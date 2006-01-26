@@ -29,9 +29,8 @@ feature -- Initialization
 			on_calculate_click
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_new_measure
 		end
@@ -113,7 +112,7 @@ feature -- Displayed messages in text form.
 						end
 						if (basic_metric /= Void or same_metric) then
 							if l_deserialized_document.root_element.has_attribute_by_name ("System") then
-								archive_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
+								archive_name := l_deserialized_document.root_element.attribute_by_name ("System").value
 							end
 							measure_element := Xml_routines.element_by_name (l_deserialized_document.root_element, "RECORDED_MEASURES")
 							a_cursor := measure_element.new_cursor
@@ -313,7 +312,7 @@ feature -- Displayed messages in text form.
 			bool := (scope /= Void and then scope.index < Cluster_scope)
 				or (scope /= Void and then scope.index = Archive_scope)
 				or (metric /= Void and then metric.min_scope > Cluster_scope)
-				or (composite_metric /= Void and then 
+				or (composite_metric /= Void and then
 					(metric.min_scope = Cluster_scope and equal (metric.unit, interface_names.metric_class_unit)))
 				or (composite_metric /= Void and then composite_metric.is_scope_ratio)
 				or not tool.is_calculation_done
@@ -445,13 +444,13 @@ feature -- Displayed messages in text form.
 			tool.delete.enable_sensitive
 			tool.manage.enable_sensitive
 			tool.archive.enable_sensitive
-			
+
 			tool.new_metric_cmd_in_menu.enable_sensitive
 			tool.calculate_cmd_in_menu.enable_sensitive
 			tool.delete_cmd_in_menu.enable_sensitive
 			tool.manage_cmd_in_menu.enable_sensitive
 			tool.archive_cmd_in_menu.enable_sensitive
-			
+
 			tool.name.enable_sensitive
 			tool.scope_combobox.enable_sensitive
 			tool.metric_field.enable_sensitive

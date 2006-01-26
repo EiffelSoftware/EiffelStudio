@@ -53,16 +53,14 @@ feature -- Access
 			Result := Interface_names.m_Set_slice_size + "New"
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version at least).
-			-- Items at position 3 and 4 contain text.
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_slice_limits
 		end

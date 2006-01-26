@@ -16,14 +16,14 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_z),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_z),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -51,9 +51,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Accelerator action
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_undo
 		end

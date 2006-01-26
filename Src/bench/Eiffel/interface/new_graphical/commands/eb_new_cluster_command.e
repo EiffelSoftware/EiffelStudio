@@ -49,8 +49,8 @@ feature -- Basic operations
 
 feature -- Access
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_new_cluster
 		end
@@ -63,9 +63,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.m_Create_new_cluster
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_new_cluster
 		end

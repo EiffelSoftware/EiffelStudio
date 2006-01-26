@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	 	do
 	 		Precursor
 			accelerator := create {EV_ACCELERATOR}.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_pause), True, False, False
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_pause), True, False, False
 			)
 			accelerator.actions.extend (agent execute)
 		end
@@ -46,8 +46,8 @@ feature {NONE} -- Implementation
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := interface_names.B_cancel
-		end	
-	
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

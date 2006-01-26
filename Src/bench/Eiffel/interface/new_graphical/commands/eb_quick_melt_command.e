@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE} all
 		end
- 
+
 create
 	make
 
@@ -32,7 +32,7 @@ feature {NONE} --Initialization
 		do
 			Precursor {EB_MELT_PROJECT_COMMAND}
 			accelerator := create {EV_ACCELERATOR}.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_f7), False, False, True
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f7), False, False, True
 			)
 			accelerator.actions.extend (agent execute)
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			eiffel_project.recompile_known_modified_classes			
+			eiffel_project.recompile_known_modified_classes
 		end
 
 feature {NONE} -- Attributes
@@ -68,9 +68,8 @@ feature {NONE} -- Attributes
 			Result := Interface_names.e_Quick_compile
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- (export status {NONE})
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_quick_compile
 		end

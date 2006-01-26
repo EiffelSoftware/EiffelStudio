@@ -31,16 +31,14 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version at least).
-			-- Items at position 3 and 4 contain text.
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_numeric_format
 		end
@@ -82,7 +80,7 @@ feature -- Execution
 				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_dec)
 			else
 				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_hex)
-			end			
+			end
 		end
 
 feature -- Basic operations
@@ -91,7 +89,7 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		do
 			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap @ 1)
+			Result.set_pixmap (mini_pixmap)
 			if is_sensitive then
 				Result.enable_sensitive
 			else

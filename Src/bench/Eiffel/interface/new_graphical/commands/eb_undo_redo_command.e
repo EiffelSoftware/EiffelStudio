@@ -38,12 +38,12 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			do
-				start_observer 
+				start_observer
 
-				Result := Precursor (display_text, use_gray_icons)
+				Result := Precursor (display_text)
 			end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
@@ -54,7 +54,7 @@ feature -- Basic operations
 		end
 
 feature -- recycle
-	
+
 	recycle is
 			-- Recycle Current
 		do
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			sensitive: BOOLEAN
 			operation_possible: BOOLEAN
 		do
-			sensitive := is_sensitive 
+			sensitive := is_sensitive
 			operation_possible := executable
 
 			if sensitive and (not operation_possible) then

@@ -17,14 +17,14 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_f),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -61,10 +61,10 @@ feature -- Basic operations
 			end
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_cluster_stone)
 		end
 
@@ -80,27 +80,26 @@ feature {NONE} -- Implementation
 		do
 			port_x := a_cluster_fig.port_x
 			port_y := a_cluster_fig.port_y
-			
+
 			old_count := a_cluster_fig.model.flat_linkables.count
 			tool.cluster_graph.include_all_classes (a_cluster_fig.model)
-			
+
 			if not tool.cluster_graph.last_included_classes.is_empty then
 				a_cluster_fig.reset_user_size
 				tool.world.update
-				tool.layout.set_spacing (40, 40)
+				tool.layout.set_spacing ({EB_CONTEXT_EDITOR}.default_bon_horizontal_spacing, {EB_CONTEXT_EDITOR}.default_bon_vertical_spacing)
 				tool.layout.layout_cluster_only (a_cluster_fig)
-				
+
 				a_cluster_fig.set_port_position (port_x, port_y)
 				tool.restart_force_directed
 				tool.reset_history
 				tool.projector.full_project
 			end
 		end
-		
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_fill_cluster
 		end

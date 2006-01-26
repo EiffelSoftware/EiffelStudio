@@ -8,12 +8,12 @@ class
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EIFFEL_ENV
 		export
 			{NONE} all
@@ -45,7 +45,7 @@ feature -- Access
 			Result := Interface_names.m_Open_eac_browser
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Icon for `current'.
 		do
 			Result := Pixmaps.Icon_dotnet_import
@@ -58,7 +58,7 @@ feature -- Basic operations
 		do
 			Execution_environment.launch (ISE_eac_browser_name)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

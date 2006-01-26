@@ -16,7 +16,7 @@ inherit
 		end
 
 	SHARED_XML_ROUTINES
-	
+
 	EV_KEY_CONSTANTS
 
 create
@@ -36,9 +36,8 @@ feature -- Initialization
 			ev_list.select_actions.extend (agent on_select)
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_select_metrics
 		end
@@ -177,7 +176,7 @@ feature -- Widget
 				hb.disable_item_expand (save_button)
 
 --				create import.make (Current)
-				
+
 				create import_button.make_with_text_and_action ("Import...", agent import.import_action)
 				import_button.set_minimum_width (60)
 				create {EV_CELL} ev_any
@@ -210,28 +209,28 @@ feature -- Access
 
 	management_dialog: EV_DIALOG
 			-- Dialog to reorder, delete, edit or import metrics.
-			
+
 	ev_list: EV_LIST
 		-- List of available non basic metrics in current system.
-		
+
 	deleted_metrics: ARRAYED_LIST [EV_LIST_ITEM]
 		-- List of deleted metrics.
 
 	import: EB_METRIC_MANAGEMENT_IMPORT
 		-- Interface for importation.
-		
+
 	up_button, down_button: EV_BUTTON
 		-- Buttons to change non basic metrics order.
-		
+
 	delete_button: EV_BUTTON
 		-- Button to delete selected metric.
-		
+
 	edit_button: EV_BUTTON
 		-- Button to edit selected metric.
-		
+
 	save_button: EV_BUTTON
 		-- Button to save changes.
-		
+
 	import_button: EV_BUTTON
 		-- Button to import a setof metric definitions.
 
@@ -246,7 +245,7 @@ feature -- Access
 
 	confirm_dialog: EV_CONFIRMATION_DIALOG
 		-- Dialog to confirm actions.
-		
+
 feature -- Setting
 
 	fill_ev_list (a_list: EV_LIST) is
@@ -463,14 +462,14 @@ feature -- Action
 								"Clicking save will remove the selected metric%N%
 								%any composite metric that involves it and any%N%
 								%recorded measure that involves it.%NContinue?", actions_array)
-					confirm_dialog.show_modal_to_window (management_dialog)	
+					confirm_dialog.show_modal_to_window (management_dialog)
 					delete_confirmation_shown := True
 				else
-					delete_confirmed	
+					delete_confirmed
 				end
 			end
 		end
-	
+
 	key_delete_action (a_key: EV_KEY) is
 			-- Action to be performed on pressing delete.
 		do
@@ -478,7 +477,7 @@ feature -- Action
 				delete_action
 			end
 		end
-	
+
 	delete_confirmed is
 			-- Remove metric, associated metrics and measures.
 		require
@@ -492,16 +491,16 @@ feature -- Action
 			deleted_metrics.extend (ev_list.i_th (i))
 			ev_list.go_i_th (i)
 			ev_list.remove
-			
+
 			remove_metrics
-			
+
 			save_button.enable_sensitive
 			up_button.disable_sensitive
 			down_button.disable_sensitive
 			delete_button.disable_sensitive
 			edit_button.disable_sensitive
 			formula_field.remove_text
-			unit_field.remove_text			
+			unit_field.remove_text
 		end
 
 	edit_action is
@@ -512,7 +511,7 @@ feature -- Action
 		local
 			x_pos, y_pos: INTEGER
 			selected_item: EV_LIST_ITEM
-			type: STRING 
+			type: STRING
 			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			selected_item := ev_list.selected_item
@@ -637,7 +636,7 @@ feature -- Measures and metrics deletion.
 			end
 			tool.delete.on_delete_click
 		end
-		
+
 	metric_is_deleted (current_metric: STRING): BOOLEAN is
 			-- Has `current_metric' been deleted?
 		require
@@ -679,7 +678,7 @@ feature -- Measures and metrics deletion.
 				end
 			end
 		end
-		
+
 	has_deleted_metric (xml_def: XM_ELEMENT): BOOLEAN is
 			-- Has `xml_element' been defined with a removed metric?
 		require
@@ -691,7 +690,7 @@ feature -- Measures and metrics deletion.
 		do
 			from
 				xml_def.start
-				i := 1 
+				i := 1
 			until
 				xml_def.after or Result
 			loop
@@ -699,7 +698,7 @@ feature -- Measures and metrics deletion.
 				check metric_el /= Void end
 				if metric_el.name.is_equal ("METRIC") then
 					Result := metric_is_deleted (metric_el.text)
-				end				
+				end
 				xml_def.forth
 				i := i + 1
 			end

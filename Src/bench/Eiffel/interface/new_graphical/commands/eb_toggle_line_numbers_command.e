@@ -15,25 +15,25 @@ inherit
 		export
 			{NONE} all
 		end
-	
-create	
+
+create
 	make
-	
+
 feature -- Initialization
 
-	make is	
+	make is
 			-- New command
 		do
-			initialize	
-		end		
-	
+			initialize
+		end
+
 feature -- Execution
 
 	initialize is
 			-- Initialize
 		do
-			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code (key_constants.key_l), True, False, False)
-			accelerator.actions.extend (agent execute)	
+			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, False, False)
+			accelerator.actions.extend (agent execute)
 			enable_sensitive
 		end
 

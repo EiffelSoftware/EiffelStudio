@@ -17,7 +17,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Access
 
 	executable: BOOLEAN is
@@ -26,9 +26,8 @@ feature -- Access
 			Result := history_manager.is_forth_possible
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Mini pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	mini_pixmap: EV_PIXMAP is
+			-- Mini pixmap representing the command.
 		do
 			Result := pixmaps.small_pixmaps.icon_mini_forth
 		end
@@ -41,9 +40,8 @@ feature {NONE} -- Implementation
 			history_manager.forth
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_forth
 		end

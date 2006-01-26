@@ -38,12 +38,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Key_constants.Key_o),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_o),
 				True, False, False)
 			accelerator.actions.extend (agent execute)
 		end
@@ -87,7 +87,7 @@ feature -- Properties
 			Result := Interface_names.m_Open_new
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 		do
 			Result := Pixmaps.Icon_open_file
 		end
@@ -109,7 +109,7 @@ feature -- Properties
 		do
 			Result := Interface_names.b_Open
 		end
-		
+
 
 feature {NONE} -- Implementation
 
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 			l_env.change_working_directory (l_dir)
 		end
-	
+
 	execute_callback (dialog: EB_FILE_OPEN_DIALOG) is
 			-- Open a file.
 		local

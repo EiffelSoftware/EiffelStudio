@@ -26,6 +26,8 @@ inherit
 
 	EB_SHARED_DEBUG_TOOLS
 
+	SHARED_APPLICATION_EXECUTION
+
 create
 	make
 
@@ -41,13 +43,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent drop_class)
 			Result.drop_actions.extend (agent drop_cluster)
 		end
@@ -80,13 +82,13 @@ feature -- Properties
 	name: STRING is "Remove_class_cluster"
 			-- Internal identifier of `Current'.
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' in toolbars.
 		once
 			Result := Pixmaps.Icon_delete_small
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
+	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing `Current' in toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_delete

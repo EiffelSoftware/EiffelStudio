@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent drop (?))
 			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
 		end
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				req.execute (cmd_string)
 			end
 		end
-		
+
 	replace_target (cmd: STRING; fn:STRING) is
 			-- Find out if `fn' is a relativ path or not and if it is
 			-- one, complete it to make it absolute, so that the shell
@@ -219,9 +219,8 @@ feature {NONE} -- Implementation properties
 			Result := Interface_names.m_external_editor
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_shell
 		end

@@ -6,7 +6,7 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND 
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 
 inherit
 	EB_TOOLBARABLE_COMMAND
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EB_MENUABLE_COMMAND} (a_menu_item)
 			if pixmap /= Void then
-				a_menu_item.set_pixmap (pixmap @ 1)
+				a_menu_item.set_pixmap (pixmap)
 			end
 		end
 

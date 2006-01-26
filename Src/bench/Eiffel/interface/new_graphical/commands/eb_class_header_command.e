@@ -13,11 +13,11 @@ inherit
 		redefine
 			new_toolbar_item
 		end
-	
+
 	SHARED_EIFFEL_PARSER
-	
+
 	SHARED_ERROR_HANDLER
-	
+
 	EV_DIALOG_CONSTANTS
 
 create
@@ -31,12 +31,11 @@ feature -- Basic operations
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_class_header)
 			explain_dialog.show_modal_to_window (tool.development_window.window)
 		end
-		
+
 feature -- Access
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_class_header
 		end
@@ -64,13 +63,13 @@ feature -- Access
 	explain_dialog: EB_INFORMATION_DIALOG
 			-- Dialog explaining how to use `Current'.
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor (display_text, use_gray_icons)
+			Result := Precursor (display_text)
 			Result.drop_actions.extend (agent execute_with_stone)
 		end
-			
+
 feature {NONE} -- Implementation
 
 	execute_with_stone (a_stone: CLASSI_STONE) is
@@ -144,7 +143,7 @@ feature {NONE} -- Implementation
 										if stone_as = Void then
 											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
 											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-										else			
+										else
 											if not change_name_dialog.global_replace then
 												history.do_named_undoable (
 													Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
@@ -155,7 +154,7 @@ feature {NONE} -- Implementation
 												if change_name_dialog.global_replace_universe then
 													history.do_named_undoable (
 														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
-														[<<agent tool_disable_sensitive, 
+														[<<agent tool_disable_sensitive,
 															agent change_name_universe_classes (src, cnr, old_name, s, g),
 															agent tool_enable_sensitive>>],
 														[<<agent tool_disable_sensitive,
@@ -188,7 +187,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				create invalid_name_dialog.make_with_text ("Class must be on the diagram")
-				invalid_name_dialog.show_modal_to_window (tool.development_window.window)				
+				invalid_name_dialog.show_modal_to_window (tool.development_window.window)
 			end
 			tool.projector.project
 		end
@@ -218,7 +217,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-			
+
 	change_name_compiled_classes (a_class: ES_CLASS; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
 			-- Change name of `a_class' to `new_name' in compiled classes.
 		require
@@ -267,7 +266,7 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			Error_handler.error_list.wipe_out
-			retry			
+			retry
 		end
 
 	try_change_name (text, new_name, new_generics: STRING) is
@@ -297,7 +296,7 @@ feature {NONE} -- Implementation
 		do
 			tool.disable_toolbar
 			tool.area_as_widget.disable_sensitive
-		end			
+		end
 
 	tool_enable_sensitive is
 			-- Make diagram sensitive to user input.

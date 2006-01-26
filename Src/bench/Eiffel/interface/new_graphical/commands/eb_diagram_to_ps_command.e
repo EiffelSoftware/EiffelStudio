@@ -14,12 +14,12 @@ inherit
 			menu_name,
 			initialize
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -27,14 +27,14 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (key_constants.key_s),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s),
 				True, False, True)
 			accelerator.actions.extend (agent execute)
 		end
@@ -58,7 +58,7 @@ feature -- Basic operations
 				if error = 0 then
 					create dial.make_with_preference (preferences.dialog_data.last_saved_diagram_postscript_directory_preference)
 					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
-					
+
 					if tool.class_graph /= Void then
 						dial.set_file_name (tool.class_graph.center_class.name + ".png")
 					else
@@ -73,7 +73,7 @@ feature -- Basic operations
 					if not dial.file_name.is_empty then
 						error := 1
 						p := tool.projector.world_as_pixmap (5)
-						if p /= Void then 
+						if p /= Void then
 							create png_file.make_from_string (dial.file_name)
 							create test_file.make_open_write (png_file)
 							if test_file.is_writable then
@@ -107,9 +107,8 @@ feature -- Basic operations
 			retry
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_export_to_png
 		end

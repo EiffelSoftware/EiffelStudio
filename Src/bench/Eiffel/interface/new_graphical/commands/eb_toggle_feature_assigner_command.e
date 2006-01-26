@@ -31,17 +31,16 @@ feature -- Basic operations
 
 feature -- Access
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command for mini toolbars.
+	mini_pixmap: EV_PIXMAP is
+			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.small_pixmaps.icon_toggle_assigner
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 		end
 
@@ -77,7 +76,7 @@ feature -- Basic operations
 			-- Create a new mini toolbar button for this command.
 		do
 			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap @ 1)
+			Result.set_pixmap (mini_pixmap)
 			if is_sensitive then
 				Result.enable_sensitive
 			else

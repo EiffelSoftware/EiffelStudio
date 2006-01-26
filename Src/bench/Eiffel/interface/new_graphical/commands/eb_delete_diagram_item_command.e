@@ -66,19 +66,18 @@ feature -- Access
 			explain_dialog.show_modal_to_window (tool.development_window.window)
 		end
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
-			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text, use_gray_icons)
+			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text)
 			Result.drop_actions.extend (agent execute_with_inherit_stone)
 			Result.drop_actions.extend (agent execute_with_client_stone)
 			Result.drop_actions.extend (agent drop_class)
 			Result.drop_actions.extend (agent drop_cluster)
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing the command.
 		do
 			Result := Pixmaps.Icon_delete_small
 		end

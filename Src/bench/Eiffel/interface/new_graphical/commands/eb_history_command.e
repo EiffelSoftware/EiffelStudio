@@ -42,7 +42,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			do
 				start_observer
@@ -50,7 +50,7 @@ feature -- Basic operations
 					disable_sensitive
 				end
 
-				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			end
 
 	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is

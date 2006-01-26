@@ -196,7 +196,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 
 	explore_relations is
 			-- Explore relations of `center_class'.

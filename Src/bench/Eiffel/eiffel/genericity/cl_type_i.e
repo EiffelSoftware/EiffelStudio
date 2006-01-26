@@ -27,6 +27,7 @@ inherit
 			is_expanded,
 			is_explicit,
 			is_external,
+			is_frozen,
 			is_generated_as_single_type,
 			is_reference,
 			is_separate,
@@ -328,6 +329,12 @@ feature -- Status
 				-- as reference are not external.
 			l_base_class := base_class
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
+		end
+
+	is_frozen: BOOLEAN is
+			-- Is current type based on a frozen class?
+		do
+			Result := base_class.is_frozen
 		end
 
 	is_generated_as_single_type: BOOLEAN is
@@ -637,19 +644,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -395,7 +395,6 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 				--history.unbind_current_item_to_next
 			else
 				complete_feature_call (completed, is_feature_signature, appended_character, remainder)
-				show_possible_selection
 				if is_feature_signature then
 					if completed.last_index_of (')',completed.count) = completed.count then
 						tab_action

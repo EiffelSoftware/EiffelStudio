@@ -91,7 +91,7 @@ cluster
 			".svn"
 		end
 
-	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\misc"
 		exclude
 			"error_handler.e"; "syntax_error.e"; 
 		end

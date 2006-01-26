@@ -51,11 +51,14 @@ feature -- Comparison
 			check
 				not region.is_overlap_region (other.region)
 			end
-
 			if region.is_equivalent (other.region) then
 				Result := index > other.index
 			else
-				Result := region.start_index < other.region.end_index
+				if region.start_index = other.region.start_index then
+					Result := region.end_index > other.region.end_index
+				else
+					Result := region.start_index < other.region.start_index
+				end
 			end
 		end
 

@@ -9,20 +9,37 @@ class
 	MSR_SEARCH_INCREMENTAL_STRATEGY
 
 inherit
-	MSR_SEARCH_TEXT_STRATEGY	
+	MSR_SEARCH_TEXT_STRATEGY
 		redefine
 			launch
 		end
 
 creation
-	make		
+	make,
+	make_with_start
+
+feature -- Initialization
+
+	make_with_start (a_keyword: STRING; a_range: INTEGER; a_class_name: STRING; a_path: FILE_NAME; a_source_text: STRING; a_start: INTEGER) is
+			-- Initialization
+		require
+			keyword_attached: a_keyword /= Void
+			range_positive: a_range >= 0
+			class_name_attached: a_class_name /= Void
+			path_attached: a_path /= Void
+			source_text_attached: a_source_text /= Void
+			a_start_valid: a_start >= 1 and a_start <= a_source_text.count
+		do
+			make (a_keyword, a_range, a_class_name, a_path, a_source_text)
+			start_position_internal := a_start
+		end
 
 feature -- Access
 
 	start_position : INTEGER is
 			-- Start position of `text_to_be_searched'
 		do
-			if is_text_to_be_searched_set then			
+			if is_text_to_be_searched_set then
 				if start_position_internal <= text_to_be_searched.count and start_position_internal >= 1 then
 					Result := start_position_internal
 				else
@@ -30,7 +47,7 @@ feature -- Access
 				end
 			else
 				Result := 1
-			end		
+			end
 		ensure then
 			start_position_in_the_scope: Result >= 1 and (is_keyword_set implies Result <= text_to_be_searched.count)
 		end
@@ -68,7 +85,7 @@ feature -- Basic operations
 			end
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
-				pcre_regex.match_substring (text_to_be_searched, start_position, text_to_be_searched.count)			
+				pcre_regex.match_substring (text_to_be_searched, start_position, text_to_be_searched.count)
 			end
 			if pcre_regex.has_matched then
 				item_matched_internal.wipe_out
@@ -82,7 +99,7 @@ feature {NONE} -- Implementation
 
 	start_position_internal: INTEGER
 			-- Search start position in `text_to_be_searched'
-			
+
 invariant
 
 	invariant_clause: True -- Your invariant here
@@ -93,19 +110,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

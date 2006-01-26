@@ -205,6 +205,12 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_frozen: BOOLEAN is
+			-- Is current type based on a frozen class?
+		do
+			-- Do nothing
+		end
+
 	is_generated_as_single_type: BOOLEAN is
 			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.

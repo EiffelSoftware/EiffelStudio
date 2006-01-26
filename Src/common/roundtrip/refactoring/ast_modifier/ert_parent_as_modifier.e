@@ -1,5 +1,7 @@
 indexing
-	description: "Object that is responsiable for modifying a PARENT_AS for refactoriing."
+	description: "[
+					Object that is responsiable for modifying a PARENT_AS for refactoriing.
+				]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,10 +12,18 @@ class
 inherit
 	ERT_AST_MODIFIER
 
+	AST_ROUNDTRIP_FACTORY
+		rename
+			match_list as a_list_a
+		export
+			{STRING, ARRAY}all
+			{STRING}create_match_list
+		end
+
 create
 	make
 
-feature
+feature{NONE} -- Initialization
 
 	make (a_parent_as: PARENT_AS; a_match_list: like match_list) is
 			-- Initialize instance.
@@ -52,37 +62,6 @@ feature -- Applicability
 			end
 		end
 
-	can_inherit_clause_apply (a_clause: INTEGER): BOOLEAN is
-			-- Can modifications done on `a_clause'-th inherit clause be applied?
-		require
-			a_clause_valid: valid_clause (a_clause)
-		do
-			if
-				inherit_clause_modifier.i_th (a_clause).is_empty and
-				not inherit_clause_has_comment (a_clause) and
-				inherit_clause.i_th (a_clause) /= Void
-			then
-				Result := inherit_clause.i_th (a_clause).can_replace_text (match_list)
-			else
-				Result := inherit_clause_modifier.i_th (a_clause).can_apply
-			end
-		end
-
-	can_end_keyword_modification_apply: BOOLEAN is
-			-- Can modifications done on "end" keyword of `parent_as' be applied?
-		do
-			Result := True
-			if is_end_keyword_needed then
-				if parent_ast.end_keyword = Void then
-					Result := parent_ast.can_append_text (match_list)
-				end
-			else
-				if parent_ast.end_keyword /= Void then
-					Result := parent_ast.end_keyword.can_replace_text (match_list)
-				end
-			end
-		end
-
 	apply is
 			-- Apply current modifier.
 		local
@@ -109,7 +88,7 @@ feature -- Applicability
 
 			if is_end_keyword_needed then
 				if parent_ast.end_keyword = Void then
-					parent_ast.append_text ("%N%T%Tend", match_list)
+					parent_ast.append_text (end_keyword_string, match_list)
 				end
 			else
 				if parent_ast.end_keyword /= Void then
@@ -121,36 +100,39 @@ feature -- Applicability
 
 feature -- Modification Register
 
-	append_item (a_clause: INTEGER; a_text: STRING) is
-			-- Register an item append in `a_clause'-th inherit clause.
-			-- `a_text' is text of the item to be appended in that inherit clause.
+	extend (a_clause: INTEGER; a_text: STRING) is
+			-- Register an item insertion in `a_clause'-th inherit clause.
+			-- `a_text' is text of the item to be inserted at the last position in that inherit clause.
+			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.
 		require
 			a_clause_valid: valid_clause (a_clause)
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 		do
-			inherit_clause_modifier.i_th (a_clause).append_last_item (a_text)
+			inherit_clause_modifier.i_th (a_clause).append (a_text)
 		end
 
-	replace_item (a_clause: INTEGER; a_index: INTEGER; a_text: STRING) is
+	replace (a_clause: INTEGER; a_index: INTEGER; a_text: STRING) is
 			-- Register an item replacement of the `a_index'-th item in `a_clause'-th inherit clause
 			-- by `a_text'.
+			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.			
 		require
 			a_clause_valid: valid_clause (a_clause)
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
 			index_valid: valid_index (a_clause, a_index)
 		do
-			inherit_clause_modifier.i_th (a_clause).replace_item (a_text, a_index)
+			inherit_clause_modifier.i_th (a_clause).replace (a_text, a_index)
 		end
 
-	remove_item (a_clause: INTEGER; a_index: INTEGER) is
+	remove (a_clause: INTEGER; a_index: INTEGER) is
 			-- Register a removal of `a_index'-th item in `a_clause'-th inherit clause.
+			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.			
 		require
 			a_clause_valid: valid_clause (a_clause)
 			index_valid: valid_index (a_clause, a_index)
 		do
-			inherit_clause_modifier.i_th (a_clause).remove_item (a_index)
+			inherit_clause_modifier.i_th (a_clause).remove (a_index)
 		end
 
 feature -- Inherit clause indicators
@@ -182,27 +164,6 @@ feature -- Inherit clause indicators
 			-- Indicators for rename, export, undefine, redefine and select inherit clauses.
 
 feature{NONE} -- Initialization
-
-	inherit_clause_has_comment (a_clause: INTEGER): BOOLEAN is
-			-- Does `a_clause'-th inherit clause has comment?
-		require
-			a_clause_valid: valid_clause (a_clause)
-		local
-			l_leaf: LEAF_AS
-		do
-			if inherit_clause.i_th (a_clause) = Void then
-				Result := False
-			else
-				l_leaf := next_inherit_clause_start_token (a_clause)
-				if l_leaf = Void then
-					Result := False
-				else
-					Result := match_list.has_comment (
-						create{ERT_TOKEN_REGION}.make (inherit_clause.i_th (a_clause).first_token (match_list).index,
-													  l_leaf.first_token (match_list).index - 1))
-				end
-			end
-		end
 
 	initialize is
 			-- Initialize
@@ -263,6 +224,61 @@ feature{NONE} -- Initialization
 			end
 		end
 
+feature{NONE} -- Implementation
+
+	can_inherit_clause_apply (a_clause: INTEGER): BOOLEAN is
+			-- Can modifications done on `a_clause'-th inherit clause be applied?
+		require
+			a_clause_valid: valid_clause (a_clause)
+		do
+			if
+				inherit_clause_modifier.i_th (a_clause).is_empty and
+				not inherit_clause_has_comment (a_clause) and
+				inherit_clause.i_th (a_clause) /= Void
+			then
+				Result := inherit_clause.i_th (a_clause).can_replace_text (match_list)
+			else
+				Result := inherit_clause_modifier.i_th (a_clause).can_apply
+			end
+		end
+
+	can_end_keyword_modification_apply: BOOLEAN is
+			-- Can modifications done on "end" keyword of `parent_as' be applied?
+		do
+			Result := True
+			if is_end_keyword_needed then
+				if parent_ast.end_keyword = Void then
+					Result := parent_ast.can_append_text (match_list)
+				end
+			else
+				if parent_ast.end_keyword /= Void then
+					Result := parent_ast.end_keyword.can_replace_text (match_list)
+				end
+			end
+		end
+
+	inherit_clause_has_comment (a_clause: INTEGER): BOOLEAN is
+			-- Does `a_clause'-th inherit clause has comment?
+			-- If it does, we don't remove the clause even there is no item in it.
+		require
+			a_clause_valid: valid_clause (a_clause)
+		local
+			l_leaf: LEAF_AS
+		do
+			if inherit_clause.i_th (a_clause) = Void then
+				Result := False
+			else
+				l_leaf := next_inherit_clause_start_token (a_clause)
+				if l_leaf = Void then
+					Result := False
+				else
+					Result := match_list.has_comment (
+						create{ERT_TOKEN_REGION}.make (inherit_clause.i_th (a_clause).first_token (match_list).index,
+													  l_leaf.first_token (match_list).index - 1))
+				end
+			end
+		end
+
 	attached_ast (a_clause: INTEGER): AST_EIFFEL is
 			-- The AST structure appearing befor `a_index'-th inherit clause
 			-- It is used when an inherit clause is present while the one before it is missing.
@@ -291,9 +307,10 @@ feature{NONE} -- Initialization
 		end
 
 	is_footer_needed: BOOLEAN
+			-- Is a footer needed to separate two inherit clauses?
 
 	next_inherit_clause_start_token (a_clause: INTEGER): LEAF_AS is
-			--
+			-- Start token of the next inherit clause of `a_clause'.
 		require
 			a_clause_valid: valid_clause (a_clause)
 		local
@@ -332,6 +349,17 @@ feature{NONE} -- Initialization
 			end
 		end
 
+	inherit_clause_index: ARRAYED_LIST [INTEGER] is
+			-- List of inherit clause index
+		once
+			create Result.make (5)
+			Result.extend (rename_clause)
+			Result.extend (export_clause)
+			Result.extend (undefine_clause)
+			Result.extend (redefine_clause)
+			Result.extend (select_clause)
+		end
+
 feature{NONE} -- Implementation
 
 	parent_ast: PARENT_AS
@@ -343,9 +371,19 @@ feature{NONE} -- Implementation
 	inherit_clause: ARRAYED_LIST [EIFFEL_LIST [AST_EIFFEL]]
 			-- List of inherit clauses
 
+feature{NONE} -- Implementation
+
+	end_keyword_string: STRING is "%N%T%Tend"
+
+feature{NONE} -- Implementation
+
+	match_list: LEAF_AS_LIST
+			-- Match list used by roundtrip
+
 invariant
 	parent_ast_not_void: parent_ast /= Void
 	inherit_clause_modifier_not_void: inherit_clause_modifier /= Void
 	inherit_clause_not_void: inherit_clause /= Void
+	match_list_not_void: match_list /= Void
 
 end

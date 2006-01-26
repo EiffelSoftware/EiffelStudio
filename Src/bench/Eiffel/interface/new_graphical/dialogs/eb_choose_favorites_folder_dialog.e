@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
-	
+
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 				-- Create the controls
 			build_folders_tree
 			create label.make_with_text (Interface_names.l_Choose_folder)
-			
+
 				-- Create the left panel: a Combo Box to type the name of the class
 				-- and a tree to select the class.
 			create controls_box
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		do
 			create folders_tree
 			create root_node
-			root_node.set_pixmap (Pixmaps.Icon_favorites_folder @ 1)
+			root_node.set_pixmap (Pixmaps.Icon_favorites_folder)
 			root_node.set_text (root_folder_name)
 			root_node.set_data (favorites)
 			folders_tree.extend (root_node)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 				if an_item.is_folder and not an_item.is_class then
 					a_folder_item ?= an_item
 					tree_item := build_tree_folder (a_folder_item)
-					tree_item.set_pixmap (Pixmaps.Icon_favorites_folder @ 1)
+					tree_item.set_pixmap (Pixmaps.Icon_favorites_folder)
 					tree_item.set_text (an_item.name)
 					tree_item.set_data (a_folder_item)
 					root_node.extend (tree_item)
@@ -218,12 +218,12 @@ feature {NONE} -- Implementation
 				if an_item.is_folder then
 					a_folder_item ?= an_item
 					tree_item := build_tree_folder (a_folder_item)
-					tree_item.set_pixmap (Pixmaps.Icon_favorites_folder @ 1)
+					tree_item.set_pixmap (Pixmaps.Icon_favorites_folder)
 					tree_item.set_text (an_item.name)
 					tree_item.set_data (a_folder_item)
 					Result.extend (tree_item)
 				end
-	
+
 					-- prepare next iteration
 				a_favorites_folder.forth
 			end
@@ -262,4 +262,4 @@ indexing
 		]"
 
 end -- class EB_CHOOSE_FAVORITES_FOLDER_DIALOG
-	
+

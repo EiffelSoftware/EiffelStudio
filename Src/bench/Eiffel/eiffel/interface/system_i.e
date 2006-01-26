@@ -1936,10 +1936,8 @@ end
 
 				-- Update servers
 			Feat_tbl_server.take_control (Tmp_feat_tbl_server)
-			Tmp_body_server.finalize
-			Tmp_inv_ast_server.finalize
+			Tmp_ast_server.finalize
 			Ast_server.take_control (Tmp_ast_server)
-			Class_info_server.take_control (Tmp_class_info_server)
 			Depend_server.take_control (Tmp_depend_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)
@@ -2463,7 +2461,6 @@ feature {NONE} -- Implementation
 				Inv_byte_server.remove (id)
 				Ast_server.remove (id)
 				Feat_tbl_server.remove (id)
-				Class_info_server.remove (id)
 				Inv_ast_server.remove (id)
 				Depend_server.remove (id)
 				M_rout_id_server.remove (id)
@@ -2478,8 +2475,6 @@ feature {NONE} -- Implementation
 				Tmp_inv_byte_server.remove (id)
 				Tmp_ast_server.remove (id)
 				Tmp_feat_tbl_server.remove (id)
-				Tmp_class_info_server.remove (id)
-				Tmp_inv_ast_server.remove (id)
 				Tmp_depend_server.remove (id)
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
@@ -4437,19 +4432,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

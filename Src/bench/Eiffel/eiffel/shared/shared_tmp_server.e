@@ -4,12 +4,13 @@ indexing
 -- Shared access to temporary servers
 
 class SHARED_TMP_SERVER
-	
+
 feature {NONE}
 
 	Tmp_ast_server: TMP_AST_SERVER is
 			-- Server for recompilation. Will be merge into server
-			-- `Ast_server' after a successful recompilation.
+			-- `Ast_server', `Body_server' and `Inv_ast_server' after a
+			-- successful recompilation.
 			-- Is not an attribute of SYSTEM_I because it won't be saved
 			-- on the disk. We need a new one at each workbench session.
 		once
@@ -18,24 +19,8 @@ feature {NONE}
 
 	Tmp_feat_tbl_server: TMP_FEAT_TBL_SERVER is
 			-- Server of feature table during recompilation. Will be
-			-- merge into `Feat_tbl_server' after a successful 
+			-- merge into `Feat_tbl_server' after a successful
 			-- recompilation.
-		once
-			create Result.make;
-		end;
-
-	Tmp_body_server: TMP_BODY_SERVER is
-			-- Server for instance of FEATURE_AS during recompilation.
-			-- Will be useful to update the body server `Body_server'
-			-- in case of successful recompilation
-		once
-			create Result.make;
-		end;
-
-	Tmp_class_info_server: TMP_CLASS_INFO_SERVER is
-			-- Server fo instance of CLASS_INFO during recompilation.
-			-- Will be useful to update the server `Class_info_server'
-			-- in case of successful recompilation
 		once
 			create Result.make;
 		end;
@@ -43,14 +28,6 @@ feature {NONE}
 	Tmp_byte_server: TMP_BYTE_SERVER is
 			-- Server for byte code. Will be useful to update the byte code
 			-- server after a successful recompilation
-		once
-			create Result.make;
-		end;
-
-	Tmp_inv_ast_server: TMP_INV_AST_SERVER is
-			-- Temporary server for invariant clauses. Will be useful to
-			-- update the invariant server after a successful
-			-- recompilation
 		once
 			create Result.make;
 		end;

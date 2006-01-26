@@ -1196,8 +1196,8 @@ feature -- Check
 		do
 			if body_index > 0 then
 				bid := body_index
-				if Tmp_body_server.has (bid) then
-					Result := Tmp_body_server.item (bid)
+				if Tmp_ast_server.body_has (bid) then
+					Result := Tmp_ast_server.body_item (bid)
 				elseif Body_server.server_has (bid) then
 					Result := Body_server.server_item (bid)
 				end

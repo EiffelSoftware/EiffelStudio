@@ -464,11 +464,7 @@ feature -- Action
 				-- End of the first pass after syntax analysis
 		local
 			supplier_list: LINKED_LIST [ID_AS]
-			l_class_info: CLASS_INFO
-				-- Temporary structure to build about the current class
-				-- which will be useful for second pass.
 			parent_list: EIFFEL_LIST [PARENT_AS]
-			invariant_info: READ_INFO
 			old_syntactical_suppliers: like syntactical_suppliers
 			unique_values: HASH_TABLE [INTEGER, STRING]
 				-- Stores the values of the unique attributes
@@ -493,10 +489,6 @@ feature -- Action
 -- FIXME add incrementality check  Type check error d.add (Current) of type B not conform to A ...
 				check_parent_classes (parent_list)
 			end
-
-				-- Process a compiled form of the parents
-			l_class_info := class_info (ast_b)
-			l_class_info.set_class_id (class_id)
 
 				-- Initialization of the current class
 			init (ast_b, old_syntactical_suppliers)
@@ -524,30 +516,10 @@ if System.class_of_id (class_id) /= Void then
 				create unique_counter
 				create unique_values.make (7)
 
-				ast_b.assign_unique_values (unique_counter, unique_values)
-
 					-- Compute the values of the unique constants
-				l_class_info.set_unique_values (unique_values)
+				ast_b.assign_unique_values (unique_counter, unique_values)
+				Tmp_ast_server.unique_values_put (unique_values, class_id)
 			end
-
-				-- Save index left by the temporary ast server into the
-				-- class information.
-			l_class_info.set_index (Tmp_ast_server.index.twin)
-			if ast_b.invariant_part /= Void then
-				invariant_info := Tmp_ast_server.invariant_info
-				if invariant_info /= Void then
-					l_class_info.set_invariant_info (Tmp_ast_server.invariant_info)
-					Tmp_inv_ast_server.force (invariant_info, class_id)
-				end
-			end
-
-				-- Put class information in class information table for
-				-- feature `init'.
-			Tmp_class_info_server.put (l_class_info)
-
-				-- Clear index of the temporary ast server for next first
-				-- pass
-			Tmp_ast_server.clear_index
 
 				-- Clean the filters, i.e. remove all the obsolete types
 			filters.clean
@@ -1128,7 +1100,7 @@ feature -- Third pass: byte code production and type check
 						-- Second pass desactive body id of changed
 						-- features only. Deactive body ids of removed
 						-- features.
-					Tmp_body_server.desactive (body_index)
+					Tmp_ast_server.desactive (body_index)
 
 					removed_features.forth
 				end
@@ -1167,8 +1139,6 @@ feature -- Third pass: byte code production and type check
 					--| The other servers are READ_SERVERs.
 
 				Tmp_ast_server.cache.wipe_out
-				Tmp_body_server.cache.wipe_out
-				Tmp_inv_ast_server.cache.wipe_out
 			end
 		end
 
@@ -4396,8 +4366,6 @@ feature -- Element change
 					--| removed from the server and avoided a growing EIFGEN).
 				set_changed (True)
 				Tmp_ast_server.put (class_ast)
-					-- Clear index of the temporary ast server for next first pass.
-				Tmp_ast_server.clear_index
 				Degree_5.insert_parsed_class (compiled_info)
 				Degree_4.insert_new_class (compiled_info)
 				Degree_3.insert_new_class (compiled_info)
@@ -5268,15 +5236,6 @@ feature {NONE} -- Implementation
 	internal_feature_table_file_id: INTEGER
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
-
-	class_info (a_class: CLASS_AS): CLASS_INFO is
-			-- Associated info from `a_class'.
-		do
-			create Result
-			Result.set_parents (a_class.parents)
-			Result.set_creators (a_class.creators)
-			Result.set_convertors (a_class.convertors)
-		end
 
 invariant
 

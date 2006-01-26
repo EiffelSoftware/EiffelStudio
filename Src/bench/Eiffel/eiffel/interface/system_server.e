@@ -27,7 +27,7 @@ feature -- Initialization
 			create body_server.make
 			create byte_server.make
 			create ast_server.make
-			create class_info_server.make
+			create class_info_server
 			create inv_ast_server.make
 			create inv_byte_server.make
 			create depend_server.make
@@ -63,7 +63,7 @@ feature -- Access
 	classes: CLASS_C_SERVER;
 			-- Server for compiled classes
 			--| Reminder: This is not a real server
-	
+
 	server_controler: SERVER_CONTROL;
 			-- Controler of servers
 
@@ -104,7 +104,7 @@ feature -- Access
 			-- Server for class type descriptors
 
 	class_comments_server: CLASS_COMMENTS_SERVER;
-			-- Server for class comments 
+			-- Server for class comments
 
 feature {NONE} -- Private access
 
@@ -137,19 +137,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

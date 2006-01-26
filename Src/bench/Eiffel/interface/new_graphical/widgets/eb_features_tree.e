@@ -84,7 +84,7 @@ feature -- Status report
 	is_clickable: BOOLEAN
 			-- Is the class corresponding to the item loaded in the tool when
 			-- the user left-click on it.
-			
+
 feature -- Access
 
 	toggle_signatures is
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	button_go_to (ef: E_FEATURE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
 						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
 						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -415,12 +415,12 @@ feature {NONE} -- Implementation
 							tree_item.set_text (f_item_name)
 							tree_item.pointer_button_press_actions.force_extend (
 								agent features_tool.go_to_line (fa.start_location.line))
-							tree_item.set_pixmap (pixmaps.Icon_feature.item (1))
+							tree_item.set_pixmap (pixmaps.Icon_feature)
 						else
 							if is_clickable then
 								tree_item.set_data (ef)
 								tree_item.pointer_button_press_actions.extend (
-									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
+									agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
 							end
 
 							tree_item.set_text (feature_name (ef))
@@ -435,9 +435,9 @@ feature {NONE} -- Implementation
 					end
 				end
 				fl.forth
-			end			
+			end
 		end
-		
+
 	build_tree_folder_for_external (n: STRING; fl: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]): EV_TREE_ITEM is
 			-- Build the tree node corresponding to feature clause named `n'.
 		local
@@ -486,10 +486,10 @@ feature {NONE} -- Implementation
 						create tree_item
 						tree_item.set_data (ef)
 						tree_item.pointer_button_press_actions.extend (
-						agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
+						agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))
 						tree_item.set_text (feature_name (ef))
 						tree_item.set_pixmap (pixmap_from_e_feature (ef))
-						
+
 						create st.make (ef)
 						tree_item.set_pebble (st)
 						tree_item.set_accept_cursor (st.stone_cursor)
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				fl.forth
-			end			
+			end
 		end
 
 indexing

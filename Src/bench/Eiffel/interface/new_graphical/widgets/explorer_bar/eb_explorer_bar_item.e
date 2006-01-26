@@ -6,7 +6,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class 
+class
 	EB_EXPLORER_BAR_ITEM
 
 inherit
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			if mini_toolbar /= Void then
 				mini_toolbar_holder.extend (mini_toolbar)
 			end
-			
+
 				-- Connect actions required to update `Current' which its state
 				-- has been changed in `parent'.
 			parent.minimize_actions.extend (agent internal_set_minimized_wrapper)
@@ -105,12 +105,12 @@ feature -- Access
 	associated_command: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 				-- Command associated with Current.
 
-	pixmap: ARRAY [EV_PIXMAP]
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the item (for buttons)
 
 	menu_name: STRING
 			-- Name as it appears in menus.
-			
+
 	title: STRING
 			-- Name as displayed in tools.
 
@@ -157,7 +157,7 @@ feature -- Status Report
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: ARRAY [EV_PIXMAP]) is
+	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			valid_pixmap: a_pixmap /= Void
@@ -185,7 +185,7 @@ feature -- Status Setting
 			selectable_command: EB_SELECTABLE
 		do
 			if is_visible then
-				parent.remove (widget)	
+				parent.remove (widget)
 			end
 			is_visible := False
 			is_maximized := False
@@ -199,7 +199,7 @@ feature -- Status Setting
 			end
 			parent.on_item_hidden (Current)
 		end
-		
+
 	show_external (an_x, a_y, a_width, a_height: INTEGER) is
 			--
 		local
@@ -210,7 +210,7 @@ feature -- Status Setting
 			is_minimized := False
 			parent.add_external (widget, parent.explorer_bar_manager.window, title, 1, an_x, a_y, a_width, a_height)
 			parent.docked_external (widget)
-			
+
 			if is_closeable then
 				parent.enable_close_button (widget)
 			else
@@ -222,7 +222,7 @@ feature -- Status Setting
 				mini_toolbar_holder.parent.prune_all (mini_toolbar_holder)
 			end
 			parent.customizeable_area_of_widget (widget).extend (mini_toolbar_holder)
-			parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar_holder)			
+			parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar_holder)
 
 			if header_addon /= Void then
 				if header_addon.parent /= Void then
@@ -230,13 +230,13 @@ feature -- Status Setting
 				end
 				parent.customizeable_area_of_widget (widget).extend (header_addon)
 			end
-			
+
 			selectable_command ?= associated_command
 			if selectable_command /= Void then
 				selectable_command.enable_selected
 			end
 		end
-		
+
 
 	show is
 			-- Show current
@@ -256,7 +256,7 @@ feature -- Status Setting
 			if not is_visible then
 				is_visible := True
 				show_actions.call (Void)
-				
+
 					-- Now calculate the insert position for `widget'.
 					-- This is non trivial, as it must match the order within `item_list' of
 					-- `parent', and some items in this list may not be displayed.
@@ -307,7 +307,7 @@ feature -- Status Setting
 						parent.item_list.forth
 					end
 				end
-				
+
 				if must_add_as_external then
 					parent.add_external (widget, parent.explorer_bar_manager.window, title, insert_pos.min (parent.count + 1), external_window.x_position, external_window.y_position, external_window.width, external_window.height)
 				else
@@ -340,7 +340,7 @@ feature -- Status Setting
 			parent.on_item_shown (Current)
 			parent.explorer_bar_manager.unlock_update
 		end
-	
+
 	minimize is
 			-- Set the item to be minimized.
 		require
@@ -394,7 +394,7 @@ feature -- Status Setting
 				if selectable_command /= Void then
 					selectable_command.disable_selected
 				end
-				
+
 					-- In EiffelStudio, the `parent' of `Current'
 					-- does not have to contain `Current', as it may
 					-- not be shown, hence we only remove the widget
@@ -453,13 +453,13 @@ feature {EB_EXPLORER_BAR_ATTACHABLE} -- Status setting
 		ensure
 			parented: mtb.parent = mini_toolbar_holder
 		end
-		
+
 feature {EB_EXPLORER_BAR} -- Controls
-		
+
 	mini_toolbar_holder: EV_CONTAINER
-	
+
 	mini_toolbar: EV_TOOL_BAR
-	
+
 	header_addon: EV_HORIZONTAL_BOX
 			-- Horizontal bar displayed in the header.
 
@@ -474,7 +474,7 @@ feature {EB_EXPLORER_BAR} -- Implementation
 			is_maximizable := True
 			is_minimizable := True
 		end
-		
+
 feature {EB_EXPLORER_BAR, EB_EXPLORER_BAR_ITEM} -- Implementation
 
 	internal_set_restored is
@@ -485,7 +485,7 @@ feature {EB_EXPLORER_BAR, EB_EXPLORER_BAR_ITEM} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 	close_wrapper (closed_widget: EV_WIDGET) is
 			-- A wrapper between the actions of `parent', and `Current',
 			-- fired when the widget is closed. This message is
@@ -494,9 +494,9 @@ feature {NONE} -- Implementation
 		do
 			if closed_widget = widget then
 				close
-			end			
+			end
 		end
-		
+
 	internal_set_minimized_wrapper (a_widget: EV_WIDGET) is
 			-- A wrapper between the actions of `parent', and `Current',
 			-- fired when the widget is minimized. This message is
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 				internal_set_maximized
 			end
 		end
-	
+
 	internal_set_restored_wrapper (a_widget: EV_WIDGET) is
 			-- A wrapper between the actions of `parent', and `Current',
 			-- fired when the widget is restored. This message is

@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	ES_NOTEBOOK
-	
+
 inherit
 	EB_EXPLORER_BAR_ATTACHABLE
 		redefine
@@ -55,19 +55,19 @@ feature {NONE} -- Initialization
 			end
 			explorer_bar.add (explorer_bar_item)
 		end
-		
+
 feature -- Access
 
 	title: STRING
 
 	menu_name: STRING
 
-	pixmap: ARRAY [EV_PIXMAP]
-	
+	pixmap: EV_PIXMAP
+
 	header_box: EV_HORIZONTAL_BOX
 
 	selected_item: ES_NOTEBOOK_ITEM
-	
+
 	pointed_item: ES_NOTEBOOK_ITEM is
 			-- Pointer notebook item.
 		local
@@ -98,7 +98,7 @@ feature -- Access
 			until
 				cursor.after or Result /= Void
 			loop
-				if 
+				if
 					not cursor.item.is_destroyed
 					and then cursor.item = tabw
 				then
@@ -121,7 +121,7 @@ feature -- Access
 					Result := item_by_widget (tabw)
 				end
 			end
-		end		
+		end
 
 	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
 			-- Notebook item corresponding to `tab'.
@@ -133,7 +133,7 @@ feature -- Access
 		do
 			tabw := tab.widget
 			if valid_item_widget (tabw) then
-				Result := item_by_widget (tabw)			
+				Result := item_by_widget (tabw)
 			end
 		end
 
@@ -160,18 +160,18 @@ feature -- Access
 		end
 
 	widget: EV_WIDGET
-	
+
 feature -- Status
 
 	valid_notebook_index (i: INTEGER): BOOLEAN is
 		do
 			Result := notebook.valid_index (i)
 		end
-		
+
 	valid_item_widget (w: EV_WIDGET): BOOLEAN is
 		do
 			Result := items.has_item (w)
-		end		
+		end
 
 feature -- Change
 
@@ -203,7 +203,7 @@ feature -- Change
 				update_mini_toolbar
 			end
 		end
-		
+
 	update_selected_item is
 		local
 			w: EV_WIDGET
@@ -221,7 +221,7 @@ feature -- Change
 			selected_item /= Void
 		local
 			par: EV_CONTAINER
-			hbox: EV_HORIZONTAL_BOX	
+			hbox: EV_HORIZONTAL_BOX
 		do
 			header_box.wipe_out
 			hbox := selected_item.header_box
@@ -234,9 +234,9 @@ feature -- Change
 					hbox.parent = Void
 				end
 				header_box.extend (hbox)
-			end			
+			end
 		end
-		
+
 	update_mini_toolbar	is
 		require
 			selected_item /= Void
@@ -266,7 +266,7 @@ feature -- Change
 			explorer_bar_item.recycle
 				-- Link with the manager and the explorer.
 			set_explorer_bar (an_explorer_bar)
-		end	
+		end
 
 feature {NONE} -- tab selection
 
@@ -299,7 +299,7 @@ feature {NONE} -- Drop action
 				t.drop_actions.call ([a_data])
 			end
 		end
-		
+
 	on_dropped_stone_veto (a: ANY): BOOLEAN is
 		local
 			t: ES_NOTEBOOK_ITEM
@@ -312,7 +312,7 @@ feature {NONE} -- Drop action
 				end
 			end
 		end
-		
+
 	pointed_notebook_item: ES_NOTEBOOK_ITEM is
 		local
 			pointed_w: EV_WIDGET
@@ -328,10 +328,10 @@ feature {NONE} -- Drop action
 feature {NONE} -- Implementation
 
 	items: DS_HASH_TABLE [EV_WIDGET, ES_NOTEBOOK_ITEM]
-			-- [notebook item -> tab widget] 
+			-- [notebook item -> tab widget]
 
 	notebook: EV_NOTEBOOK;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

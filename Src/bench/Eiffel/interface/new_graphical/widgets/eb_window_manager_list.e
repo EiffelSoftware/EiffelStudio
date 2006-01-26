@@ -65,7 +65,7 @@ feature -- Hole processing
 		do
 			drop_stone (a_stone)
 		end
- 
+
 	drop_feature (a_stone: FEATURE_STONE) is
 			-- Process dropped stone `a_stone'.
 			-- This function exists to filter FEATURE_STONEs
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization Implementation
 				managed_windows.forth
 			end
 		end
-	
+
 feature -- Observer pattern
 
 	on_item_added (an_item: EB_WINDOW) is
@@ -127,7 +127,7 @@ feature -- Observer pattern
 		end
 
 	on_item_removed (an_item: EB_WINDOW) is
-			-- `an_item' has just been removed. 
+			-- `an_item' has just been removed.
 		local
 			list_item_to_remove: EV_LIST_ITEM
 		do
@@ -139,7 +139,7 @@ feature -- Observer pattern
 		end
 
 	on_item_changed (an_item: EB_WINDOW) is
-			-- `an_item' has just changed. 
+			-- `an_item' has just changed.
 		local
 			list_item_to_change: EV_LIST_ITEM
 		do
@@ -159,7 +159,7 @@ feature -- Recycle
 		end
 
 feature {NONE} -- Implementation
-		
+
 	drop_stone (a_stone: STONE) is
 			-- Process dropped stone `a_stone': Create a new development window and
 			-- set it up with `a_stone'.
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 	key_action (k: EV_KEY) is
 			-- If `k' is `Enter' then raise the selected window.
 		do
-			if k.code = (create {EV_KEY_CONSTANTS}).Key_enter then
+			if k.code = {EV_KEY_CONSTANTS}.Key_enter then
 				raise_selected
 			end
 		end

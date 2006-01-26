@@ -76,9 +76,6 @@ feature -- Status report
 	is_text_important: BOOLEAN
 			-- Should only text deemed as important be displayed?
 
-	has_gray_icons: BOOLEAN
-			-- Should gray icons be displayed?
-
 	changed: BOOLEAN
 			-- Has the toolbar been customized/changed by the user?
 
@@ -107,20 +104,6 @@ feature -- Status setting
 		do
 			is_text_displayed := False
 			is_text_important := True
-		end
-
-	enable_gray_icons is
-			-- Set `has_gray_icons' to True.
-			-- Call `update_toolbar' to have change taken into account.
-		do
-			has_gray_icons := True
-		end
-
-	disable_gray_icons is
-			-- Set `has_gray_icons' to False.
-			-- Call `update_toolbar' to have change taken into account.
-		do
-			has_gray_icons := False
 		end
 
 	reset_changed is
@@ -157,7 +140,7 @@ feature -- Transformation
 			end
 
 				-- Show the dialog and let the user customize the toolbar.
-			dialog.customize_toolbar (widget_parent, has_gray_icons, is_text_displayed, is_text_important, Current)
+			dialog.customize_toolbar (widget_parent, is_text_displayed, is_text_important, Current)
 
 				-- Rebuilt the toolbar if needed.
 			if dialog.valid_data then
@@ -172,7 +155,6 @@ feature -- Transformation
 				end
 				is_text_displayed := dialog.is_text_displayed
 				is_text_important := dialog.is_text_important
-				has_gray_icons := dialog.has_gray_icons
 				update_toolbar
 				changed := True
 			end
@@ -181,7 +163,7 @@ feature -- Transformation
 feature -- Conversion
 
 	new_toolbar: EV_TOOL_BAR is
-			-- 
+			--
 		do
 			create Result
 			if is_text_important then
@@ -189,7 +171,7 @@ feature -- Conversion
 			else
 				Result.enable_vertical_button_style
 			end
-		end	
+		end
 
 	update_toolbar is
 			-- [Re]generate `widget' using the ARRAYED_LIST.
@@ -219,7 +201,7 @@ feature -- Conversion
 			until
 				after
 			loop
-				curitem := item.new_toolbar_item (is_text_displayed or is_text_important, has_gray_icons)
+				curitem := item.new_toolbar_item (is_text_displayed or else is_text_important)
 				recyclable_item ?= curitem
 				if recyclable_item /= Void then
 					add_recyclable (recyclable_item)
@@ -233,14 +215,14 @@ feature -- Conversion
 					in_text_toolbar := False
 				else
 					cv_cmd ?= item
-					if cv_cmd /= Void and then cv_cmd.is_displayed then							
+					if cv_cmd /= Void and then cv_cmd.is_displayed then
 						if is_text_important then
 							if cv_cmd.is_tooltext_important then
 								if not in_text_toolbar then
 									widget.extend (cur_bar)
 									widget.disable_item_expand (cur_bar)
 									cur_bar := new_toolbar
-									in_text_toolbar := True										
+									in_text_toolbar := True
 								end
 							else
 									-- Strip unimportant text if not needed
@@ -280,7 +262,7 @@ feature -- Conversion
 					loc_parent := loc_parent.parent
 				end
 			end
-			Result ?= loc_parent			
+			Result ?= loc_parent
 		end
 
 feature -- Memory management

@@ -34,14 +34,14 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-	
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-	
+
 create
 	make
 
@@ -63,19 +63,19 @@ feature -- Override cluster access
 		do
 			Result := not override_cluster_names.is_empty
 		end
-	
+
 	override_cluster_check: EV_CHECK_BUTTON
 			-- Override cluster option.
-	
+
 	override_cluster_names: SEARCH_TABLE [STRING]
 			-- Name of override clusters if any.
 			-- Void otherwise
-	
+
 feature -- Location access
 
 	cluster_name: EV_TEXT_FIELD
 			-- Name of cluster
-			
+
 	cluster_path: EV_PATH_FIELD
 			-- Location of cluster
 
@@ -94,7 +94,7 @@ feature -- Option access
 	override_default_trace, trace_check: EV_CHECK_BUTTON
 	trace_box: EV_BOX
 			-- Trace option and box containing them.
-			
+
 	override_default_profile, profile_check: EV_CHECK_BUTTON
 	profile_box: EV_BOX
 			-- Profile option and box containing them.
@@ -108,10 +108,10 @@ feature -- File access
 
 	exclude_list: EV_ADD_REMOVE_LIST
 			-- List of exclude clauses
-			
+
 	include_list: EV_ADD_REMOVE_LIST
 			-- List of incluide clauses
-			
+
 	use_field: EV_TEXT_FIELD
 			-- Use file for current cluster.
 
@@ -119,7 +119,7 @@ feature -- Cluster tree
 
 	cluster_tree: EV_TREE
 			-- Tree representing all clusters in system.
-			
+
 feature -- Parent access
 
 	system_window: EB_SYSTEM_WINDOW
@@ -289,7 +289,7 @@ feature {NONE} -- Filling
 					tree_table.put (node, cl_name)
 					cl.forth
 				end
-				
+
 				cluster_tree.i_th (1).enable_select
 			end
 		end
@@ -338,7 +338,7 @@ feature {NONE} -- Cluster display and saving
 
 			cl_name := tree_item.text
 			current_cluster := cl_name
-			
+
 			cl := clusters.item (cl_name)
 			cluster_name.set_text (cl.cluster_name)
 			cluster_path.set_text (cl.directory_name)
@@ -346,7 +346,7 @@ feature {NONE} -- Cluster display and saving
 			is_in_select_action := True
 			set_selected (override_cluster_check,
 				has_override_cluster and then override_cluster_names.has (cl_name))
-		
+
 			set_selected (all_check, cl.is_recursive)
 			set_selected (library_check, cl.is_library)
 
@@ -356,7 +356,7 @@ feature {NONE} -- Cluster display and saving
 				if cl.cluster_properties.use_name /= Void then
 					use_field.set_text (cl.cluster_properties.use_name)
 				end
-				
+
 				incl := cl.cluster_properties.include_option
 				if incl /= Void then
 					from
@@ -371,7 +371,7 @@ feature {NONE} -- Cluster display and saving
 						incl.forth
 					end
 				end
-				
+
 				excl := cl.cluster_properties.exclude_option
 				if excl /= Void then
 					from
@@ -386,7 +386,7 @@ feature {NONE} -- Cluster display and saving
 						excl.forth
 					end
 				end
-			
+
 				visib := cl.cluster_properties.visible_option
 				if visib /= Void then
 					from
@@ -581,20 +581,20 @@ feature {NONE} -- Cluster display and saving
 				prop.set_default_option (default_options)
 			end
 
-			if msil_widgets_enabled then	
+			if msil_widgets_enabled then
 				if not namespace_name.text.is_empty then
 					from
 						default_options.start
 					until
 						default_options.after
-					loop				
+					loop
 						if default_options.item.option.is_namespace then
-							default_options.remove 
+							default_options.remove
 						else
 							default_options.forth
 						end
 					end
-					create l_d_option.initialize (create {NAMESPACE_SD}.default_create, 
+					create l_d_option.initialize (create {NAMESPACE_SD}.default_create,
 						create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
 					default_options.extend (l_d_option)
 				end
@@ -614,7 +614,7 @@ feature {NONE} -- Cluster display and saving
 	store_cluster_assertions (prop: CLUST_PROP_SD) is
 			-- Store assertions of current cluster
 		require
-			prop_not_void: prop /= Void 
+			prop_not_void: prop /= Void
 			has_default_option: prop.default_option /= Void
 		local
 			d_option: D_OPTION_SD
@@ -664,7 +664,7 @@ feature {NONE} -- Cluster display and saving
 				end
 			end
 		end
-	
+
 	fill_optional_options is
 			-- Store displayed information and fill graphical user interface
 			-- with optional options.
@@ -676,7 +676,7 @@ feature {NONE} -- Cluster display and saving
 			-- 	Store displayed information and fill graphical user interface
 			-- with default options.
 		do
-			
+
 		end
 
 feature -- Checking
@@ -766,7 +766,7 @@ feature {NONE} -- Initialization
 
 			current_cluster := Void
 		end
-	
+
 feature {NONE} -- Initialization
 
 	make (top: like system_window) is
@@ -788,7 +788,7 @@ feature {NONE} -- Initialization
 			default_create
 
 			set_border_width (5)
-	
+
 			create split
 			create vbox
 
@@ -804,7 +804,7 @@ feature {NONE} -- Initialization
 			create button.make_with_text_and_action ("Remove", agent delete_cluster)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
-			
+
 			hbox.extend (create {EV_CELL})
 
 			vbox.extend (hbox)
@@ -815,7 +815,7 @@ feature {NONE} -- Initialization
 			vbox.extend (cluster_tree)
 
 			split.set_first (vbox)
-			
+
 			create vbox
 			vbox.set_border_width (5)
 			vbox.set_padding (5)
@@ -832,19 +832,19 @@ feature {NONE} -- Initialization
 			create cluster_path.make_with_text_and_parent ("Cluster path:", system_window.window)
 			vbox.extend (cluster_path)
 			vbox.disable_item_expand (cluster_path)
-			
+
 			if Platform_constants.is_windows then
 				create label.make_with_text ("Namespace name:")
 				label.align_text_left
 				vbox.extend (label)
 				vbox.disable_item_expand (label)
-				
+
 				create namespace_name
 				vbox.extend (namespace_name)
 				vbox.disable_item_expand (namespace_name)
 				msil_specific_widgets.extend (namespace_name)
 			end
-	
+
 			create hbox
 			override_cluster_check := new_check_button (hbox, "override", False)
 			override_cluster_check.select_actions.extend (agent select_current_for_override)
@@ -855,33 +855,33 @@ feature {NONE} -- Initialization
 			hbox.extend (create {EV_CELL})
 			all_check := new_check_button (hbox, "all", False)
 			all_check.select_actions.extend (agent select_for_all)
-			
+
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
 
 			create notebook
-			
+
 			widget := options_frame
 			notebook.extend (widget)
 			notebook.set_item_text (widget, "Options")
-			
+
 			create visible_list.make
 			notebook.extend (visible_list)
 			notebook.set_item_text (visible_list, "Visible classes")
-		
+
 			widget := file_frame
 			notebook.extend (widget)
 			notebook.set_item_text (widget, "Exclude/include")
-			
+
 			vbox.extend (notebook)
-			
+
 			split.set_second (vbox)
 			extend (split)
 
 				-- Add C specific widgets
 			c_specific_widgets.extend (visible_list)
-			c_specific_widgets.extend (trace_box)	
-			c_specific_widgets.extend (profile_box)	
+			c_specific_widgets.extend (trace_box)
+			c_specific_widgets.extend (profile_box)
 		end
 
 	options_frame: EV_VERTICAL_BOX is
@@ -896,7 +896,7 @@ feature {NONE} -- Initialization
 			create Result
 			Result.set_border_width (3)
 			Result.set_padding (3)
-			
+
 -- 			create hbox
 -- 			hbox.set_padding (3)
 -- 			create label.make_with_text ("type: ")
@@ -915,7 +915,7 @@ feature {NONE} -- Initialization
 -- 			
 -- 			Result.extend (hbox)
 -- 			Result.disable_item_expand (hbox)
-			
+
 			create hbox
 			create vbox
 			override_default_assertions := new_check_button (vbox, "override default assertions", False)
@@ -925,7 +925,7 @@ feature {NONE} -- Initialization
 			loop_check := new_check_button (vbox, "loop", False)
 			invariant_check := new_check_button (vbox, "class invariant", False)
 			hbox.extend (vbox)
-		
+
 				-- Set up exclusive between `override_default_assertions' and other
 				-- assertion checks.
 			assertions_list.do_all (agent {EV_CHECK_BUTTON}.disable_sensitive)
@@ -959,11 +959,11 @@ feature {NONE} -- Initialization
 			end
 
 			hbox.extend (vbox)
-		
+
 			Result.extend (hbox)
 			Result.disable_item_expand (hbox)
 		end
-	
+
 	file_frame: EV_VERTICAL_BOX is
 			-- Frame which contains options "exclude", "include"
 			-- and "use".
@@ -974,17 +974,17 @@ feature {NONE} -- Initialization
 			create Result
 			Result.set_border_width (5)
 			Result.set_padding (5)
-			
+
 -- FIXME: Manu 06/16/2001: Disabled "use" entry
 -- 			create label.make_with_text ("Use:")
 -- 			label.align_text_left
 -- 			Result.extend (label)
 -- 			Result.disable_item_expand (label)
- 			
+
 			create use_field
 --			Result.extend (use_field)
 --			Result.disable_item_expand (use_field)
-			
+
 			create exclude_list.make
 			create frame.make_with_text ("Exclude")
 			frame.extend (exclude_list)
@@ -1048,7 +1048,7 @@ feature {NONE} -- Actions
 					end
 				end
 				clusters.remove (clus_name)
-				
+
 					-- Remove deleted clusters from override clusters.
 				override_cluster_names.remove (clus_name)
 			end
@@ -1229,7 +1229,7 @@ feature {NONE} -- Cluster addition implementation
 			cl_name_valid: valid_identifier (cl_name)
 		do
 			create Result.make_with_text (cl_name)
-			Result.set_pixmap (Pixmaps.Icon_cluster_symbol @ 1)
+			Result.set_pixmap (Pixmaps.Icon_cluster_symbol)
 			Result.select_actions.extend (agent display_cluster (Result))
 			Result.deselect_actions.extend (agent store_cluster (Result))
 		end
@@ -1270,12 +1270,12 @@ feature {NONE} -- Assertion checks access through list
 			Result.extend (loop_check)
 			Result.extend (invariant_check)
 		end
-		
+
 invariant
 	cluster_tree_not_void: cluster_tree /= Void
 	clusters_not_void: clusters /= Void
 	override_cluster_names_not_void: override_cluster_names /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

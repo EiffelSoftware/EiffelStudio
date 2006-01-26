@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent remove_feature)
 			drop_actions.extend (agent remove_class)
 			drop_actions.extend (agent remove_folder)
-			
+
 
 			if an_item.is_class then
 					-- ...or a class.
@@ -58,16 +58,16 @@ feature {NONE} -- Initialization
 				conv_folder ?= an_item
 					-- `an_item' is either a folder...
 				set_pebble (conv_folder)
-				drop_actions.extend (agent conv_folder.add_feature_stone)				
+				drop_actions.extend (agent conv_folder.add_feature_stone)
 				drop_actions.extend (agent conv_folder.add_class_stone)
 				drop_actions.extend (agent conv_folder.add_favorite_folder)
-				set_pixmap (Pixmaps.Icon_favorites_folder @ 1)				
+				set_pixmap (Pixmaps.Icon_favorites_folder)
 			elseif an_item.is_feature then
 					-- ...or a feature.
 				conv_feat ?= an_item
 				set_pebble (conv_feat.associated_feature_stone)
 				if conv_feat.associated_e_feature /= Void then
-					set_pixmap (pixmap_from_e_feature (conv_feat.associated_e_feature))				
+					set_pixmap (pixmap_from_e_feature (conv_feat.associated_e_feature))
 				end
 				drop_actions.extend (agent drop_feature_stone_after)
 				drop_actions.extend (agent drop_folder_after)
@@ -131,7 +131,7 @@ feature -- Status setting
 		do
 			data.parent.add_stone_after (a_stone, data)
 		end
-		
+
 	refresh is
 			-- After a recompilation, get the right icon,
 			-- delete `Current' if the class was removed,...
@@ -218,10 +218,10 @@ feature {NONE} -- Implementation
 					Result := True
 				end
 			end
-		end		
-		
+		end
+
 invariant
-	
+
 	data_not_void: data /= Void
 
 indexing

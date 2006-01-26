@@ -52,11 +52,11 @@ inherit
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
-		end	
+		end
 
-create 
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_parent: EV_WINDOW; a_from_project_settings: BOOLEAN) is
@@ -82,7 +82,7 @@ feature -- Access
 			-- we simply update our AST.
 
 feature {NONE} -- Retrieval		
-		
+
 	retrieve_ace_arguments is
 			-- Check content of Ace file and if valid set retrieve arguments.
 		local
@@ -112,11 +112,11 @@ feature {NONE} -- Retrieval
 						val := d_opt.value
 						if opt.is_free_option then
 							free_option ?= opt
-							inspect 
+							inspect
 								free_option.code
 							when {FREE_OPTION_SD}.arguments then
 								argument_value := val.value
-								if 
+								if
 									not (argument_value.is_empty or else
 									argument_value.is_equal (No_argument_string) or else
 									argument_value.is_equal (" "))
@@ -127,7 +127,7 @@ feature {NONE} -- Retrieval
 									ace_arguments_list.extend (l_row)
 										-- Add argument to combo.
 									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
-								end					
+								end
 								defaults.remove
 							when {FREE_OPTION_SD}.working_directory then
 								defaults.remove
@@ -142,13 +142,13 @@ feature {NONE} -- Retrieval
 				end
 			end
 		end
-		
+
 	retrieve_user_arguments is
 			-- Retrieve and initialize the user specific arguments from 'arguments.wb'.
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			l_last_string: STRING
-		do	
+		do
 			user_arguments_list.wipe_out
 			user_combo.wipe_out
 			set_mode (User_mode)
@@ -167,7 +167,7 @@ feature {NONE} -- Retrieval
 				loop
 					arguments_file.read_line
 					l_last_string := arguments_file.last_string.twin
-					if 
+					if
 						not (l_last_string.is_empty or else
 						l_last_string.is_equal (No_argument_string) or else
 						l_last_string.is_equal (" "))
@@ -198,7 +198,7 @@ feature {NONE} -- Retrieval
 			end
 			arguments_file.close
 		end
-		
+
 	retrieve_ace: ACE_SD is
 			-- Retrieve the current lace file
 		local
@@ -222,7 +222,7 @@ feature -- Storage
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
 			else
-				saved_argument := current_argument.text	
+				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
@@ -231,14 +231,14 @@ feature -- Storage
 			save_ace_arguments (a_root_ast)
 			synch_with_others
 		end
-	
+
 	store_custom_arguments is
 			-- Store new arguments in `a_root_ast'.
 		do
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
 			else
-				saved_argument := current_argument.text	
+				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
@@ -249,13 +249,13 @@ feature -- Storage
 		end
 
 	store_arguments (a_root_ast: ACE_SD) is
-			-- Store the current arguments to their corresponding files and set current 
+			-- Store the current arguments to their corresponding files and set current
 			-- arguments for system execution.
 		do
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
 			else
-				saved_argument := current_argument.text	
+				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
@@ -289,7 +289,7 @@ feature {NONE} -- Storage
 				create defaults.make (10)
 				a_root_ast.set_defaults (defaults)
 			end
-			
+
 			from
 				defaults.start
 			until
@@ -313,7 +313,7 @@ feature {NONE} -- Storage
 					defaults.forth
 				end
 			end
-			
+
 			if ace_arguments_list.count > 0 then
 				if ace_arguments_list.selected_item /= Void then
 					sel_arg := ace_arguments_list.selected_item.i_th (1).twin
@@ -324,9 +324,9 @@ feature {NONE} -- Storage
 				until
 					ace_arguments_list.after
 				loop
-					if 
-						sel_arg /= Void and then 
-						not ace_arguments_list.item.i_th (1).is_equal (sel_arg) 
+					if
+						sel_arg /= Void and then
+						not ace_arguments_list.item.i_th (1).is_equal (sel_arg)
 					then
 						argument_text := ace_arguments_list.item.i_th (1).twin
 						defaults.extend (new_d_option (argument_text))
@@ -334,8 +334,8 @@ feature {NONE} -- Storage
 					ace_arguments_list.forth
 				end
 			end
-			
-				-- Save working directory. 
+
+				-- Save working directory.
 			wd := working_directory_path
 			if not wd.is_empty then
 				defaults.extend (
@@ -347,7 +347,7 @@ feature {NONE} -- Storage
 			if not from_project_settings then
 				save_ace (a_root_ast)
 			end
-		end	
+		end
 
 	save_custom_arguments is
 			-- Save user custom arguments to 'arguments.wb'.	
@@ -400,7 +400,7 @@ feature {NONE} -- Storage
 					ace_file.close
 				end
 			end
-		end	
+		end
 
 feature {NONE} -- GUI
 
@@ -423,8 +423,8 @@ feature {NONE} -- GUI
 			create user_current_arg_text
 			create notebook
 			create Result
-			
-			
+
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
@@ -434,21 +434,21 @@ feature {NONE} -- GUI
 			vbox.extend (working_directory)
 			Result.extend (l_frame)
 			Result.disable_item_expand (l_frame)
-			
+
 				-- Ace file arguments tab.
 			set_mode (Ace_mode)
 			create project_args_tab
 			populate_by_template (project_args_tab)
 			notebook.extend (project_args_tab)
 			notebook.set_item_text (project_args_tab, "Project Arguments")
-			
+
 				-- My Arguments tab.
 			set_mode (User_mode)
 			create user_args_tab
 			populate_by_template (user_args_tab)
 			notebook.extend (user_args_tab)
 			notebook.set_item_text (user_args_tab, "My Arguments")
-				
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
@@ -459,21 +459,21 @@ feature {NONE} -- GUI
 			vbox.disable_item_expand (argument_check)
 			vbox.extend (notebook)
 			Result.extend (l_frame)
-			
+
 			ace_arguments_list.set_all_columns_editable
 			user_arguments_list.set_all_columns_editable
 			ace_combo.disable_edit
 			user_combo.disable_edit
-			
+
 				-- Global actions.
 			pointer_leave_actions.extend (agent synch_with_others)
-			
+
 				-- Check button actions
 			argument_check.select_actions.extend (agent arg_check_selected)
-			
+
 				-- Notebook actions.
 			notebook.selection_actions.extend (agent on_tab_changed)
-			
+
 				-- List actions.
 			ace_arguments_list.focus_in_actions.extend (agent refresh)
 			user_arguments_list.focus_in_actions.extend (agent refresh)
@@ -481,11 +481,11 @@ feature {NONE} -- GUI
 			user_arguments_list.select_actions.force_extend (agent argument_selected (user_arguments_list))
 			ace_arguments_list.end_edit_actions.extend (agent on_list_edited)
 			user_arguments_list.end_edit_actions.extend (agent on_list_edited)
-			
+
 				-- Combo actions.
 			ace_combo.select_actions.extend (agent argument_selected (ace_combo))
 			user_combo.select_actions.extend (agent argument_selected (user_combo))
-			
+
 				-- Argument text actions.
 			ace_current_arg_text.key_release_actions.extend (agent arg_text_changed)
 			user_current_arg_text.key_release_actions.extend (agent arg_text_changed)
@@ -499,23 +499,23 @@ feature {NONE} -- GUI
 			l_horizontal_box: EV_HORIZONTAL_BOX
 			l_cell: EV_CELL
 			l_label: EV_LABEL
-			add_button, 
+			add_button,
 			remove_button: EV_BUTTON
-		do				
+		do
 			a_vbox.set_border_width (Layout_constants.Small_border_size)
 			a_vbox.set_padding (Layout_constants.Small_padding_size)
-	
+
 				-- Argument combo box.
 			a_vbox.extend (argument_combo)
 			a_vbox.disable_item_expand (argument_combo)
-	
+
 				-- Argument list box.
 			a_vbox.extend (argument_list)
 			argument_list.set_minimum_size (400, 50)
-			
+
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
-			
+
 			create l_label.make_with_text ("Current Argument")
 			l_label.align_text_left
 			a_vbox.extend (l_label)
@@ -523,23 +523,23 @@ feature {NONE} -- GUI
 
 			a_vbox.extend (current_argument)
 			current_argument.set_minimum_height (50)
-			
+
 			create l_cell
 			l_horizontal_box.extend (l_cell)
-			
+
 			create add_button.make_with_text_and_action ("Add", agent add_argument)
 			l_horizontal_box.extend (add_button)
 			l_horizontal_box.disable_item_expand (add_button)
 			add_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
-			
+
 			create remove_button.make_with_text_and_action ("Remove", agent remove_argument)
 			l_horizontal_box.extend (remove_button)
 			l_horizontal_box.disable_item_expand (remove_button)
 			remove_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
-			
+
 			create l_cell
 			l_horizontal_box.extend (l_cell)
-			
+
 			a_vbox.extend (l_horizontal_box)
 			a_vbox.disable_item_expand (l_horizontal_box)
 		end
@@ -550,10 +550,10 @@ feature -- Access
 			-- Path of 'working_directory'.
 		do
 			Result := working_directory.path
-		end		
+		end
 
 feature -- Status Setting
-	
+
 	synch_with_others is
 			-- Synchronize other open controls due to changes in Current.
 		local
@@ -576,7 +576,7 @@ feature -- Status Setting
 				l_counter := l_counter + 1
 			end
 		end
-	
+
 	synch_check_box (a_flag: BOOLEAN) is
 			-- Synchronize the check box.
 		do
@@ -585,12 +585,12 @@ feature -- Status Setting
 			elseif argument_check.is_selected then
 				argument_check.disable_select
 			end
-		end	
-	
+		end
+
 	update is
 			-- Update all elements after changes.
 		do
-			if not argument_check.is_selected then	
+			if not argument_check.is_selected then
 				argument_check.enable_select
 				is_with_argument := False
 			end
@@ -598,7 +598,7 @@ feature -- Status Setting
 			retrieve_user_arguments
 				-- Determine last argument run and set mode and argument to this.
 				-- If not use Ace mode as default.
-			
+
 			if saved_argument /= Void and not saved_argument.is_equal (No_argument_string) then
 				if ace_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (1))
@@ -613,7 +613,7 @@ feature -- Status Setting
 				else
 					notebook.select_item (notebook.i_th (2))
 					set_mode (User_mode)
-				end			
+				end
 				current_argument.set_text (saved_argument)
 			else
 				current_argument.remove_text
@@ -637,12 +637,12 @@ feature {NONE} -- Status Setting
 	set_mode (a_mode: INTEGER) is
 			-- Set the current mode to 'a_mode'.
 		require
-			a_mode_is_valid: a_mode = 1 or a_mode = 2 
+			a_mode_is_valid: a_mode = 1 or a_mode = 2
 		do
 			mode := a_mode
 			initialize_mode
 		end
-		
+
 	new_d_option (a_string: STRING): D_OPTION_SD is
 			-- Create a new D_OPTION_SD to add to Ace.
 		local
@@ -653,7 +653,7 @@ feature {NONE} -- Status Setting
 			create val.make (new_id_sd (a_string, True))
 			create Result.initialize (free_option, val)
 		end
-		
+
 feature {NONE} -- Element Change
 
 	initialize_mode is
@@ -670,13 +670,13 @@ feature {NONE} -- Element Change
 					current_argument := user_current_arg_text
 				else
 			end
-			argument_list.hide_title_row	
+			argument_list.hide_title_row
 		end
 
 	update_arguments is
 			-- Update the arguments lists due to changes.
 		do
-			inspect mode 
+			inspect mode
 				when Ace_mode then
 					ace_modified := True
 					ace_arguments_list := argument_list
@@ -687,13 +687,13 @@ feature {NONE} -- Element Change
 			end
 			synch_with_others
 		end
-	
+
 feature -- Status setting
 
 	set_focus is
 			-- Grab keyboard focus.
 		do
-				-- Set focus to a new argument field or to a check box 
+				-- Set focus to a new argument field or to a check box
 				-- to allow arguments if they are not allowed yet.
 			if argument_check.is_selected then
 				current_argument.set_focus
@@ -715,22 +715,22 @@ feature {NONE} -- GUI Properties
 
 	current_argument: EV_TEXT
 			-- The current argument (either 'ace_current_arg_text' or 'user_current_arg_text').
-	
+
 	argument_list: EV_EDITABLE_LIST
 			-- The current list with focus (either 'ace_arguments_list' or 'custom_arguments_list').
-			
+
 	argument_combo: EV_COMBO_BOX
 			-- The current list of arguments (either 'ace_combo' or 'custom_combo').
 
 	ace_arguments_list: EV_EDITABLE_LIST
 			-- Widget displaying arguments from Ace file.
-			
+
 	ace_combo: EV_COMBO_BOX
 			-- Widget displaying arguments from Ace file.
-	
+
 	user_arguments_list: EV_EDITABLE_LIST
 			-- Widget displaying arguments from user specific file.
-			
+
 	user_combo: EV_COMBO_BOX
 			-- Widget displaying arguments from user specific file.
 
@@ -739,10 +739,10 @@ feature {NONE} -- GUI Properties
 
 	user_current_arg_text: EV_TEXT
 			-- Widget displaying current program argument from user file.
-			
-	project_args_tab: EV_VERTICAL_BOX 
+
+	project_args_tab: EV_VERTICAL_BOX
 			-- Widget containing project-wide argument settings.
-		
+
 	user_args_tab: EV_VERTICAL_BOX
 			-- Widget containing user specific argument settings.
 
@@ -784,7 +784,7 @@ feature {NONE} -- Actions
 			l_argument_dialog: EB_ARGUMENT_DIALOG
 		do
 			if key.code = {EV_KEY_CONSTANTS}.key_enter then
-				
+
 					-- Disallow new line character.
 				l_caret_pos := current_argument.caret_position
 				l_text := current_argument.text.substring (1, l_caret_pos - 2)
@@ -796,15 +796,15 @@ feature {NONE} -- Actions
 					current_argument.set_text (l_text)
 					current_argument.set_caret_position (l_caret_pos + 1)
 				end
-				
+
 					-- Set focus to Run button if Current is in a dialog and not
 					-- in the project settings.
 				l_argument_dialog := Argument_dialog_cell.item
 				if l_argument_dialog /= Void and then l_argument_dialog.has_focus then
 					l_argument_dialog.run_and_close_button.set_focus
 				end
-			end			
-		end		
+			end
+		end
 
 	on_list_edited is
 			-- Action to be performed when list row argument has been in-place edited.
@@ -822,7 +822,7 @@ feature {NONE} -- Actions
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			l_argument: STRING
-		do	
+		do
 			if not current_argument.text.is_empty then
 				l_argument := current_argument.text
 				create l_row
@@ -833,7 +833,7 @@ feature {NONE} -- Actions
 						argument_list.set_column_width (argument_list.width - 4, 1)
 					end
 					argument_list.extend (l_row)
-					
+
 					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (saved_argument))
 					argument_list.last.enable_select
 					argument_combo.last.enable_select
@@ -841,10 +841,10 @@ feature {NONE} -- Actions
 				update_arguments
 			end
 		end
-		
+
 	current_new_arg_text: STRING
 			-- Text of mostly recently added argument.
-		
+
 	row_duplicate (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
 			-- Does text in 'a_row' already exist in row in the list?
 		do
@@ -854,8 +854,8 @@ feature {NONE} -- Actions
 	remove_argument is
 			-- Action to take when user chooses to remove an existing argument.
 		do
-			if 
-				argument_list.selected_item /= Void 
+			if
+				argument_list.selected_item /= Void
 			then
 				argument_list.prune (argument_list.selected_item)
 				argument_combo.prune (argument_combo.selected_item)
@@ -891,7 +891,7 @@ feature {NONE} -- Actions
 			end
 			refresh
 		end
-		
+
 	refresh is
 			-- Refresh control since it has been resized.
 		do
@@ -901,7 +901,7 @@ feature {NONE} -- Actions
 				end
 			else
 				current_argument.remove_text
-			end	
+			end
 		end
 
 	select_combo_item (a_string: STRING) is
@@ -934,10 +934,10 @@ feature {NONE} -- Implementation
 
 	mode: INTEGER
 			-- Mode of control (can be ace or user mode).
-		
+
 	saved_argument: STRING
 			-- The argument last used in opposite 'mode'
-			
+
 	parent_window: EV_WINDOW
 			-- Parent window.
 
@@ -949,7 +949,7 @@ feature {NONE} -- Constants
 
 	Ace_mode: INTEGER is 1
 			-- Ace mode constant.
-			
+
 	User_mode: INTEGER is 2
 			-- User mode constant.
 

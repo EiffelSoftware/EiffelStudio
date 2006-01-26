@@ -25,7 +25,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EV_TOOL_BAR_ITEM is
+	new_toolbar_item (display_text: BOOLEAN): EV_TOOL_BAR_ITEM is
 			-- Create a new toolbar item for Current
 			-- display_text currently has only a compatibility role
 		do
@@ -34,7 +34,7 @@ feature -- Basic operations
 
 feature -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Picture representing a button in the customize toolbar dialog box
 		once
 			Result := Pixmaps.Icon_toolbar_separator

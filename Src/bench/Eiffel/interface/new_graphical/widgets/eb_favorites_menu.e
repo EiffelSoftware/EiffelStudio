@@ -23,7 +23,7 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create, is_equal, copy
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 				disable_sensitive
 			end
 		end
-		
+
 feature -- Element change
 
 	refresh is
@@ -56,7 +56,7 @@ feature -- Element change
 
 	update_folder_item (m: EV_MENU_ITEM) is
 		do
-			m.set_pixmap (pixmaps.icon_favorites_folder @ 1)
+			m.set_pixmap (pixmaps.icon_favorites_folder)
 		end
 
 	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM) is
@@ -67,14 +67,14 @@ feature -- Element change
 				m.set_pixmap (Pixmaps.Icon_class_symbol_gray)
 			end
 		end
-		
+
 	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM) is
 		do
-			if a_feat_item.associated_e_feature /= Void then			
+			if a_feat_item.associated_e_feature /= Void then
 				m.set_pixmap (pixmap_from_e_feature (a_feat_item.associated_e_feature))
 			end
 		end
-		
+
 feature {NONE} -- Initialization Implementation
 
 	build_menu is
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization Implementation
 				-- Add the separator
 			if not a_favorites.is_empty then
 				create menu_sep
-				extend (menu_sep)				
+				extend (menu_sep)
 			end
 
 				-- Add the favorites
@@ -198,7 +198,7 @@ feature {NONE} -- Initialization Implementation
 			elseif an_item.is_folder then
 				a_folder_item ?= an_item
 				Result := build_menu_folder (a_folder_item)
-				update_folder_item (Result)				
+				update_folder_item (Result)
 			elseif an_item.is_feature then
 				a_feat_item ?= an_item
 				create Result
@@ -235,7 +235,7 @@ feature -- Observer pattern
 					replace_class_menu_item_by (l_item, l_menu)
 				end
 			end
-			
+
 			if l_menu /= Void then
 				if not l_menu.is_empty then
 					l_item_data ?= l_menu.last.data
@@ -248,7 +248,7 @@ feature -- Observer pattern
 						if l_class_data /= Void then
 								-- Creates a separator between class an feature items
 							create menu_sep
-							l_menu.extend (menu_sep)							
+							l_menu.extend (menu_sep)
 						end
 					end
 				end
@@ -257,7 +257,7 @@ feature -- Observer pattern
 		end
 
 	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
-			-- `a_item' has been removed. 
+			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
 			-- be set to an empty list or `Void'
@@ -289,12 +289,12 @@ feature -- Observer pattern
 					if l_sep /= Void then
 						item_list.go_i_th (item_list.count)
 						item_list.remove
-					end	
+					end
 				end
-				
+
 			end
 		end
-		
+
 	replace_class_menu_item_by (mi1, mi2: EV_MENU_ITEM) is
 			-- Replace mi1 by mi2
 		local
@@ -308,7 +308,7 @@ feature -- Observer pattern
 			else
 				item_list.replace (mi2)
 			end
-		end		
+		end
 
 feature -- Memory management
 
@@ -321,7 +321,7 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Implementation
-		
+
 	get_menu_item_from_path (an_item: EV_MENU_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM is
 			-- Get the menu item corresponding to the path `a_path'
 			-- Void if not found.
@@ -334,8 +334,8 @@ feature {NONE} -- Implementation
 			item_list ?= an_item
 			if
 				item_list = Void
-				or else	a_path = Void 
-				or else a_path.is_empty 
+				or else	a_path = Void
+				or else a_path.is_empty
 			then
 				Result := an_item
 			else
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 				new_path.start
 				curr_item := new_path.item
 				new_path.remove
-		
+
 				sub_menu ?= item_list.retrieve_item_by_data (curr_item, True)
 				Result := get_menu_item_from_path (sub_menu, new_path)
 			end

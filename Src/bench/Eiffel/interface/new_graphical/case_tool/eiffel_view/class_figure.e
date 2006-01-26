@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EIFFEL_CLASS_FIGURE
-	
+
 inherit
 	EG_LINKABLE_FIGURE
 		redefine
@@ -21,19 +21,19 @@ inherit
 			on_handle_start,
 			recycle
 		end
-		
+
 	EB_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -41,13 +41,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EG_LINKABLE_FIGURE}
 			set_pointer_style (default_pixmaps.sizeall_cursor)
-			
+
 			drop_actions.extend (agent on_class_drop)
 
 			start_actions.extend (agent save_position)
 			end_actions.extend (agent extend_history)
 			move_actions.extend (agent on_move)
-			
+
 			pointer_double_press_actions.extend (agent on_pointer_double_pressed)
 		end
 
@@ -55,11 +55,11 @@ feature {NONE} -- Initialization
 			-- Initialize a class figure with given model.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			
+
 			pebble_function := agent on_pebble_request
 			model.needed_on_diagram_changed_actions.extend (agent on_needed_on_diagram_changed)
 		end
-		
+
 feature -- Status report
 
 	is_faded: BOOLEAN
@@ -69,13 +69,13 @@ feature -- Access
 
 	model: ES_CLASS
 			-- Model for `Current'.
-	
+
 	world: EIFFEL_WORLD is
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EG_LINKABLE_FIGURE}
 		end
-		
+
 feature -- Element change
 
 	recycle is
@@ -91,7 +91,7 @@ feature -- Element change
 				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
 			end
 		end
-		
+
 	apply_right_angles is
 			-- Apply right angles to all links in `links'.
 		local
@@ -113,21 +113,21 @@ feature -- Element change
 				i := i + 1
 			end
 		end
-		
+
 	fade_out is
 			-- Fade out `Current'.
 		deferred
 		ensure
 			is_faded: is_faded
 		end
-		
+
 	fade_in is
 			-- Fade in `Current'.
-		deferred	
+		deferred
 		ensure
 			not_is_faded: not is_faded
 		end
-		
+
 	update_fade is
 			-- Fade out if `is_cluster_above'.
 		do
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
 	on_pebble_request: ANY is
 			-- A pebble was requested for `Current'.
 		local
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_pointer_double_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- User double pressed on `Current'.
 		local
@@ -257,10 +257,10 @@ feature {NONE} -- Implementation
 					end
 					old_center.set_is_fixed (False)
 					cg.set_new_center_class (model)
-					
+
 					new_classes := cg.last_created_classes
 					cg.reset_last_created_classes
-					
+
 					if ce.is_force_directed_used then
 						arrange_around (new_classes, port_x, port_y, 200)
 						fdl := ce.force_directed_layout
@@ -291,9 +291,9 @@ feature {NONE} -- Implementation
 					else
 						create layout.make_with_world (world)
 						if world.is_uml then
-							layout.set_spacing (150, 150)
+							layout.set_spacing ({EB_CONTEXT_EDITOR}.default_uml_horizontal_spacing, {EB_CONTEXT_EDITOR}.default_uml_vertical_spacing)
 						else
-							layout.set_spacing (40, 40)
+							layout.set_spacing ({EB_CONTEXT_EDITOR}.default_bon_horizontal_spacing, {EB_CONTEXT_EDITOR}.default_bon_vertical_spacing)
 						end
 						layout.layout
 						if not world.context_editor.history.undo_list.is_empty then
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	arrange_around (classes: LIST [ES_CLASS]; ax,ay: INTEGER; radius: INTEGER) is
 			-- Arrange classes on a circle with center at (`ax', `ay') and `radius'.
 		local
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 				end
 				classes.forth
 				l_angle := l_angle + angle_inc
-			end	
+			end
 		end
 
 feature {NONE} -- Implementation (adding relations)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation (adding relations)
 				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
 			end
 		end
-		
+
 	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE) is
 			-- Add `Current' to others inheritance clause.
 		local
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation (adding relations)
 				end
 			end
 		end
-		
+
 	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
 			-- Add `Current' to `an_other's inheritance clause, show `a_link' if succesfull.
 		do
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation (adding relations)
 				a_link.enable_needed_on_diagram
 			end
 		end
-		
+
 	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
 			-- Remove `Current' from `an_other's inheritance clause, hide `a_link' if succesfull.
 		do
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation (adding relations)
 				a_link.disable_needed_on_diagram
 			end
 		end
-		
+
 	add_client_relation (client: EIFFEL_CLASS_FIGURE; is_aggregated: BOOLEAN) is
 			-- Add relation with `Current' as supplier and `client' as client
 			-- expanded if `is_aggregated'.
@@ -453,11 +453,11 @@ feature {NONE} -- Implementation (adding relations)
 				if cg.extend_from_diagram_successful then
 					last_query := cg.last_feature_as
 					client_model.add_query (last_query)
-	
+
 					added_code := cg.last_added_code.twin
-					
+
 					es_link ?= model.graph.client_supplier_link_connecting (client_model, model)
-					
+
 					if es_link = Void or else not es_link.is_needed_on_diagram then
 						if es_link = Void then
 							create es_link.make (client_model, model)
@@ -466,13 +466,13 @@ feature {NONE} -- Implementation (adding relations)
 							es_link.enable_needed_on_diagram
 							es_link.synchronize
 						end
-						
+
 						world.context_editor.history.register_named_undoable (
 							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
 							agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
 							agent remove_added_feature_and_link (client_model, added_code, last_query, es_link))
 					else
-				
+
 						es_link.synchronize
 						world.context_editor.history.register_named_undoable (
 							interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
@@ -482,9 +482,9 @@ feature {NONE} -- Implementation (adding relations)
 				end
 			end
 		end
-		
+
 	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
-			-- 
+			--
 		do
 			a_client.code_generator.undelete_code (added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
@@ -493,9 +493,9 @@ feature {NONE} -- Implementation (adding relations)
 				a_link.synchronize
 			end
 		end
-		
+
 	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
-			-- 
+			--
 		do
 			a_client.code_generator.delete_code (added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
@@ -503,9 +503,9 @@ feature {NONE} -- Implementation (adding relations)
 				a_link.disable_needed_on_diagram
 			end
 		end
-		
+
 	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
-			-- 
+			--
 		do
 			a_client.code_generator.delete_code (added_code)
 			if not a_client.code_generator.class_modified_outside_diagram then
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation (move)
 			saved_x := port_x
 			saved_y := port_y
 		end
-		
+
 	saved_x, saved_y: INTEGER
 			-- Saved positions.
 
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation (move)
 			offset_y := port_y - saved_y
 			world.context_editor.history.register_named_undoable (
 				interface_names.t_diagram_move_class_cmd (model.name),
-				agent move_figures_for (l_selected_figures, offset_x, offset_y),                       
+				agent move_figures_for (l_selected_figures, offset_x, offset_y),
 				agent move_figures_for (l_selected_figures, -offset_x, -offset_y))
 			if world.context_editor.is_force_directed_used then
 				set_is_fixed (True)
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation (move)
 			end
 			world.context_editor.restart_force_directed
 		end
-		
+
 	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 		do
 			if world.context_editor.is_force_directed_used then
@@ -597,8 +597,8 @@ feature {NONE} -- Implementation (move)
 				world.context_editor.on_time_out
 			end
 			world.context_editor.restart_force_directed
-			if 
-				world.context_editor.class_graph /= Void and then 
+			if
+				world.context_editor.class_graph /= Void and then
 				model = world.context_editor.class_graph.center_class
 			then
 				world.context_editor.force_directed_layout.set_center (port_x, port_y)
@@ -613,19 +613,19 @@ feature {NONE} -- Implementation (move)
 				set_is_fixed (True)
 			end
 		end
-		
+
 	on_handle_end is
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
 		end
-		
+
 	faded_color (a_color: EV_COLOR): EV_COLOR is
 			-- Return brighter color then `a_color'
 		require
 			a_color_exists: a_color /= Void
 		do
-			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max (0.0), 
+			create Result.make_with_rgb ((a_color.red - (a_color.red / 2)).max (0.0),
 										 (a_color.green - (a_color.green / 2)).max (0.0),
 										 (a_color.blue - (a_color.blue / 2)).max (0.0))
 		ensure

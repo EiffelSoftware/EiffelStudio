@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			create focused_windows.make (5)
 
 			create minimize_all_cmd.make
-			minimize_all_cmd.set_pixmaps (Pixmaps.Icon_minimize_all)
+			minimize_all_cmd.set_pixmap (Pixmaps.Icon_minimize_all)
 			minimize_all_cmd.set_tooltip (Interface_names.e_Minimize_all)
 			minimize_all_cmd.set_menu_name (Interface_names.m_Minimize_all)
 			minimize_all_cmd.set_tooltext (Interface_names.b_Minimize_all)
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			minimize_all_cmd.enable_sensitive
 
 			create raise_all_cmd.make
-			raise_all_cmd.set_pixmaps (Pixmaps.Icon_raise_all)
+			raise_all_cmd.set_pixmap (Pixmaps.Icon_raise_all)
 			raise_all_cmd.set_tooltip (Interface_names.e_Raise_all)
 			raise_all_cmd.set_menu_name (Interface_names.m_Raise_all)
 			raise_all_cmd.set_tooltext (Interface_names.b_Raise_all)
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			raise_all_cmd.enable_sensitive
 
 			create raise_all_unsaved_cmd.make
-			raise_all_unsaved_cmd.set_pixmaps (Pixmaps.Icon_raise_all_unsaved)
+			raise_all_unsaved_cmd.set_pixmap (Pixmaps.Icon_raise_all_unsaved)
 			raise_all_unsaved_cmd.set_tooltip (Interface_names.e_Raise_all_unsaved)
 			raise_all_unsaved_cmd.set_menu_name (Interface_names.m_Raise_all_unsaved)
 			raise_all_unsaved_cmd.set_name ("Raise_all_unsaved")

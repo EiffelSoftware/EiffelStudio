@@ -6987,9 +6987,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if yyvs53.item (yyvsp53) /= Void then
+--				if $2 /= Void then
 					yyval47 := ast_factory.new_export_item_as (ast_factory.new_client_as (yyvs94.item (yyvsp94)), yyvs53.item (yyvsp53))
-				end
+--				end
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3

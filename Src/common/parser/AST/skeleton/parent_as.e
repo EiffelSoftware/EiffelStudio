@@ -67,11 +67,37 @@ feature -- Attributes
 
 	exports: EIFFEL_LIST [EXPORT_ITEM_AS] is
 			-- Exports for parent
+		local
+			l_index: INTEGER
 		do
 			if internal_exports = Void or else internal_exports.is_empty then
 				Result := Void
 			else
-				Result := internal_exports
+					--| This is to make sure roundtrip parser work correctly
+					--| for code like:
+					--| 	export
+					--|        {ANY}  -- No features here.
+					--|     end
+				if non_empty_exports = Void then
+					create non_empty_exports.make (internal_exports.count)
+					l_index := internal_exports.index
+					from
+						internal_exports.start
+					until
+						internal_exports.after
+					loop
+						if internal_exports.item.features /= Void then
+							non_empty_exports.extend (internal_exports.item)
+						end
+						internal_exports.forth
+					end
+					internal_exports.go_i_th (l_index)
+				end
+				if non_empty_exports.is_empty then
+					Result := Void
+				else
+					Result := non_empty_exports
+				end
 			end
 		end
 
@@ -126,6 +152,9 @@ feature -- Roundtrip
 	internal_selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Internal select clause
 
+	non_empty_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
+			-- List of EXPORT_ITEM_AS whose `features' are not empty.
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -173,19 +202,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

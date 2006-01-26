@@ -177,13 +177,13 @@ feature -- Roundtrip
 			-- Void if no one appears.
 		do
 			if frozen_keyword /= Void then
-				Result :=frozen_keyword
+				Result := frozen_keyword
 			elseif deferred_keyword /= Void then
 				Result := deferred_keyword
 			elseif expanded_keyword /= Void then
-				Result :=expanded_keyword
+				Result := expanded_keyword
 			elseif separate_keyword /= Void then
-				Result :=separate_keyword
+				Result := separate_keyword
 			elseif external_keyword /= Void then
 				Result := external_keyword
 			end

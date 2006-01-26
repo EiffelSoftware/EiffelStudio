@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			delayed_action := a_delayed_action
 			delay := a_delay
+			reset_timer_on_request := True
 		ensure
 			delayed_action = a_delayed_action
 			delay = a_delay
@@ -55,10 +56,26 @@ feature -- Changes
 			on_request_end_action := v
 		end
 
+	enable_reset_timer_on_request is
+			-- Enable reset_timer_on_request
+		do
+			reset_timer_on_request := True
+		end
+
+	disable_reset_timer_on_request is
+			-- Disable reset_timer_on_request
+		do
+			reset_timer_on_request := False
+		end
+
 feature -- Properties
 
 	delay: INTEGER
 			-- Number of milliseconds waited before calling calling action
+
+	reset_timer_on_request: BOOLEAN
+			-- Reset the timer interval if a request occurs while a request is running ?
+			-- default: True
 
 feature -- Delayed action access
 
@@ -86,12 +103,16 @@ feature -- Delayed action access
 		do
 			if delay = 0 then
 				call
-			elseif delayed_action_timer = Void then
+			else
 				if on_request_start_action /= Void then
 					on_request_start_action.call (Void)
 				end
-				create delayed_action_timer.make_with_interval (delay)
-				delayed_action_timer.actions.extend (agent call)
+				if delayed_action_timer = Void then
+					create delayed_action_timer.make_with_interval (delay)
+					delayed_action_timer.actions.extend (agent call)
+				elseif reset_timer_on_request then
+					delayed_action_timer.set_interval (delay)
+				end
 			end
 		ensure
 			delayed_action_timer_created: delay > 0 implies delayed_action_timer /= Void

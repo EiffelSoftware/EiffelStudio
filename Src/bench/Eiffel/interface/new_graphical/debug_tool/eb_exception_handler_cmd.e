@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 --			create accelerator.make_with_key_combination (
---				create {EV_KEY}.make_with_code (Key_constants.Key_f5),
+--				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
 --				True, False, True)
 --			accelerator.actions.extend (agent execute)
 		end
@@ -104,10 +104,10 @@ feature {NONE} -- Attributes
 			Result := "Exception handling"
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing `Current' on buttons.
-		once
-			Result := <<Pixmaps.icon_debugger_exception>>
+	pixmap: EV_PIXMAP is
+			-- Pixmap representing `Current' on buttons.
+		do
+			Result := Pixmaps.icon_debugger_exception
 		end
 
 indexing

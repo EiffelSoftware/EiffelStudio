@@ -88,9 +88,9 @@ feature -- Initialization
 
 feature -- Access
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
-			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
@@ -524,9 +524,8 @@ feature {NONE} -- Implementation / Attributes
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_run
 		end

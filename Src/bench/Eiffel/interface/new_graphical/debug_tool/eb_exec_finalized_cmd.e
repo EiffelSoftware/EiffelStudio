@@ -33,7 +33,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
@@ -68,9 +68,9 @@ feature -- Execution
 			if system_name = Void then
 				create wd.make_with_text (Warning_messages.w_Must_finalize_first)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-			elseif 
+			elseif
 				Eiffel_system.system /= Void and then
-				Eiffel_system.system.il_generation and then 
+				Eiffel_system.system.il_generation and then
 				Eiffel_system.system.msil_generation_type.is_equal ("dll")
 			then
 				create wd.make_with_text ("No debugging for DLL system")
@@ -109,9 +109,8 @@ feature -- Execution
 
 feature -- Properties
 
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
+	pixmap: EV_PIXMAP is
+			-- Pixmaps representing the command.
 		do
 			Result := Pixmaps.Icon_run
 		end
@@ -136,7 +135,7 @@ feature -- Properties
 
 	name: STRING is "Run_final"
 			-- Text internally defining Current.
-		
+
 	menu_name: STRING is
 			-- Name used in menu entry
 		do

@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Set execution format so that each breakable points %
 			%of the current routine will be taken into account."
 	legal: "See notice at end of class."
@@ -30,16 +30,16 @@ feature -- Initialization
 		do
 			Precursor (a_manager)
 			create accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Key_constants.Key_f11),
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f11),
 				False, False, True)
 			accelerator.actions.extend (agent execute)
 		end
 
 feature {NONE} -- Attributes
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
-		once
+		do
 			Result := Pixmaps.Icon_step_out
 		end
 

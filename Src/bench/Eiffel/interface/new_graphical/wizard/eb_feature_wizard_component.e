@@ -35,7 +35,7 @@ feature -- Factory
 			-- Create button with a star.
 		do
 			create Result
-			Result.set_pixmap (pixmaps.small_pixmaps.icon_new @ 1)
+			Result.set_pixmap (pixmaps.small_pixmaps.icon_new)
 			Result.set_minimum_size (16, 16)
 		end
 
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 
 	Indent_size: INTEGER is 30;
 			-- Number of pixels used to indent widgets.
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

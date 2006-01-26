@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			hb.extend (type_selector)
 			hb.disable_item_expand (hb.last)
 			create remove_button
-			remove_button.set_pixmap (Pixmaps.icon_delete_small @ 1)
+			remove_button.set_pixmap (Pixmaps.icon_delete_small)
 			remove_button.set_minimum_size (16, 16)
 			hb.extend (remove_button)
 			hb.disable_item_expand (hb.last)
@@ -53,10 +53,10 @@ feature -- Access
 
 	name_field: EB_FEATURE_NAME_EDIT
 			-- Argument label text box.
-	
+
 	type_selector: EB_TYPE_SELECTOR
 			-- Argument type selection widget.
-			
+
 	remove_button: EV_BUTTON
 			-- Button to remove `Current' from its container.
 			-- Does nothing until `set_remove_procedure' gets called.
@@ -107,7 +107,7 @@ feature -- Status setting
 				prune_all (lbl)
 			end
 		end
-		
+
 feature -- Element change
 
 	set_name (a_name: STRING) is
@@ -137,7 +137,7 @@ feature {EV_ANY} -- Contract support
 			Result := (
 				not is_homogeneous and
 				border_width = 0 and
-				padding = 0			
+				padding = 0
 			)
 		end
 

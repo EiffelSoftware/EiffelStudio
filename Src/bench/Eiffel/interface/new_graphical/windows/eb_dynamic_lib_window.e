@@ -31,7 +31,7 @@ inherit
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
 	PLATFORM_CONSTANTS
-	
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -79,11 +79,11 @@ feature {NONE} -- Initialization
 			exports_list.disable_multiple_selection
 			vb.extend (exports_list)
 			window.extend (vb)
-			
+
 				-- We give correct sizes to the columns.
 				-- A definite size for index and calling convention, the rest for the other columns.
 			f := create {EV_FONT}
-			
+
 				--| Because of naughty Vision2, the multi_column_list doesn't know its size until it is displayed.
 			--w := exports_list.width
 			w := initial_width - 10
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			create kcsts
 				-- Create `new_cmd'.
 			create new_cmd.make
-			new_cmd.set_pixmaps (Pixmaps.Icon_new_dynamic_lib)
+			new_cmd.set_pixmap (Pixmaps.Icon_new_dynamic_lib)
 			new_cmd.set_tooltip (Interface_names.e_New_dynamic_lib_definition)
 			new_cmd.set_menu_name (Interface_names.m_New)
 			new_cmd.set_name ("new_dynamic_lib_definition")
@@ -133,10 +133,10 @@ feature {NONE} -- Initialization
 					create {EV_KEY}.make_with_code (kcsts.Key_n), True, False, False))
 			new_cmd.add_agent (agent new_def_file)
 			new_cmd.enable_sensitive
-			
+
 				-- Create `open_cmd'.
 			create open_cmd.make
-			open_cmd.set_pixmaps (Pixmaps.Icon_open_file)
+			open_cmd.set_pixmap (Pixmaps.Icon_open_file)
 			open_cmd.set_tooltip (Interface_names.e_Open_dynamic_lib_definition)
 			open_cmd.set_menu_name (Interface_names.m_Open_new)
 			open_cmd.set_name ("open_dynamic_lib_definition")
@@ -144,10 +144,10 @@ feature {NONE} -- Initialization
 			open_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_o), True, False, False))
 			open_cmd.enable_sensitive
-			
+
 				-- Create `save_cmd'.
 			create save_cmd.make
-			save_cmd.set_pixmaps (Pixmaps.Icon_save)
+			save_cmd.set_pixmap (Pixmaps.Icon_save)
 			save_cmd.set_tooltip (Interface_names.e_Save_dynamic_lib_definition)
 			save_cmd.set_menu_name (Interface_names.m_Save_new)
 			save_cmd.set_name ("save_dynamic_lib_definition")
@@ -155,17 +155,17 @@ feature {NONE} -- Initialization
 			save_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_s), True, False, False))
 			save_cmd.enable_sensitive
-			
+
 				-- Create `save_as_cmd'.
 			create save_as_cmd.make
 			save_as_cmd.set_menu_name (Interface_names.m_Save_as)
 			save_as_cmd.set_name ("save_dynamic_lib_definition_as")
 			save_as_cmd.add_agent (agent save_def_file_as)
 			save_as_cmd.enable_sensitive
-			
+
 				-- Create `add_feature_cmd'.
 			create add_feature_cmd.make
-			add_feature_cmd.set_pixmaps (Pixmaps.Icon_add_exported_feature)
+			add_feature_cmd.set_pixmap (Pixmaps.Icon_add_exported_feature)
 			add_feature_cmd.set_tooltip (Interface_names.e_Add_exported_feature)
 			add_feature_cmd.set_menu_name (Interface_names.	m_Add_exported_feature)
 			add_feature_cmd.set_name ("add_exported_feature")
@@ -173,10 +173,10 @@ feature {NONE} -- Initialization
 			add_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_a), True, False, False))
 			add_feature_cmd.enable_sensitive
-			
+
 				-- Create `edit_feature_cmd'.
 			create edit_feature_cmd.make
-			edit_feature_cmd.set_pixmaps (Pixmaps.Icon_edit_exported_feature)
+			edit_feature_cmd.set_pixmap (Pixmaps.Icon_edit_exported_feature)
 			edit_feature_cmd.set_tooltip (Interface_names.e_Edit_exported_feature)
 			edit_feature_cmd.set_menu_name (Interface_names.m_Edit_exported_feature)
 			edit_feature_cmd.set_name ("edit_exported_feature")
@@ -184,10 +184,10 @@ feature {NONE} -- Initialization
 			edit_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_e), True, False, False))
 			edit_feature_cmd.disable_sensitive
-			
+
 				-- Create `remove_feature_cmd'.
 			create remove_feature_cmd.make
-			remove_feature_cmd.set_pixmaps (Pixmaps.Icon_remove_exported_feature)
+			remove_feature_cmd.set_pixmap (Pixmaps.Icon_remove_exported_feature)
 			remove_feature_cmd.set_tooltip (Interface_names.e_Remove_exported_feature)
 			remove_feature_cmd.set_menu_name (Interface_names.m_Remove_exported_feature)
 			remove_feature_cmd.set_name ("remove_exported_feature")
@@ -195,10 +195,10 @@ feature {NONE} -- Initialization
 			remove_feature_cmd.set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
 					create {EV_KEY}.make_with_code (kcsts.Key_delete), False, False, False))
 			remove_feature_cmd.disable_sensitive
-			
+
 				-- Create `check_exports_cmd'.
 			create check_exports_cmd.make
-			check_exports_cmd.set_pixmaps (Pixmaps.Icon_check_exports)
+			check_exports_cmd.set_pixmap (Pixmaps.Icon_check_exports)
 			check_exports_cmd.set_tooltip (Interface_names.e_Check_exports)
 			check_exports_cmd.set_menu_name (Interface_names.m_Check_exports)
 			check_exports_cmd.set_name ("check_exports")
@@ -207,7 +207,7 @@ feature {NONE} -- Initialization
 					create {EV_KEY}.make_with_code (kcsts.Key_c), True, False, False))
 			check_exports_cmd.enable_sensitive
 		end
-			
+
 	build_file_menu is
 			-- Create and build `file_menu'.
 		local
@@ -285,41 +285,41 @@ feature {NONE} -- Initialization
 		do
 			create tool_bar
 			create tb
-			tbit := new_cmd.new_toolbar_item (False, False)
+			tbit := new_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
-			tbit := open_cmd.new_toolbar_item (False, False)
+
+			tbit := open_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
-			tbit := save_cmd.new_toolbar_item (False, False)
+
+			tbit := save_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
+
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)
 			create sep
 			tool_bar.extend (sep)
 			tool_bar.disable_item_expand (sep)
-			
+
 			create tb
-			tbit := check_exports_cmd.new_toolbar_item (False, False)
+			tbit := check_exports_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
 
-			tbit := add_feature_cmd.new_toolbar_item (False, False)
+			tbit := add_feature_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
-			tbit := edit_feature_cmd.new_toolbar_item (False, False)
+
+			tbit := edit_feature_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
-			tbit := remove_feature_cmd.new_toolbar_item (False, False)
+
+			tbit := remove_feature_cmd.new_toolbar_item (False)
 			tb.extend (tbit)
 			add_recyclable (tbit)
-			
+
 			tool_bar.extend (tb)
 			tool_bar.disable_item_expand (tb)
 		end
@@ -445,7 +445,7 @@ feature {NONE} -- Status
 
 	exports: ARRAYED_LIST [DYNAMIC_LIB_EXPORT_FEATURE]
 			-- The abstract representation for all the exported features.
-	
+
 	file_name: FILE_NAME
 			-- The name of the file we are currently working on.
 			-- May be Void if no file is loaded.
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation: Graphical interface
 
 	exports_list: EV_MULTI_COLUMN_LIST
 			-- The list displaying all currently exported features.
-	
+
 	tool_bar: EV_HORIZONTAL_BOX
 			-- The container of `Current's toolbar.
 
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation: Graphical interface
 			preferences.misc_data.dyn_lib_window_width_preference.set_value (window.width)
 			preferences.misc_data.dyn_lib_window_height_preference.set_value (window.height)
 		ensure
-			size_saved: initial_width = window.width and 
+			size_saved: initial_width = window.width and
 						initial_height = window.height
 		end
 
@@ -1104,19 +1104,19 @@ feature {NONE} -- Implementation: Feature creation
 
 	current_class: CLASS_C
 			-- The class from which a new feature should be exported.
-	
+
 	current_creation_routine: E_FEATURE
 			-- The creation routine used to create `current_class' when exporting `current_feature'.
-	
+
 	current_feature: E_FEATURE
 			-- The new feature that should be exported.
-	
+
 	current_alias: STRING
 			-- Name under which `current_feature' should be exported.
-	
+
 	current_index: INTEGER
 			-- Index in the dynamic library which should correspond to `current_feature'.
-	
+
 	current_calling_convention: STRING
 			-- Calling convention that should be used to call `current_feature' in the dynamic library.
 
@@ -1149,7 +1149,7 @@ feature {NONE} -- Implementation: Properties dialog
 			create vb
 			vb.set_border_width (Layout_constants.small_border_size)
 			vb.set_padding (Layout_constants.small_padding_size)
-			
+
 				-- Determine the width of the info labels.
 			f := create {EV_FONT}
 			info_width := f.string_width (Interface_names.l_Class)
@@ -1158,7 +1158,7 @@ feature {NONE} -- Implementation: Properties dialog
 			info_width := info_width.max (f.string_width (Interface_names.l_Creation))
 			info_width := info_width.max (f.string_width (Interface_names.l_Index))
 			info_width := info_width.max (f.string_width (Interface_names.l_Calling_convention))
-			
+
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			create ilab.make_with_text (Interface_names.l_Class)
@@ -1178,7 +1178,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.extend (class_field)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			create ilab.make_with_text (Interface_names.l_Creation)
@@ -1191,7 +1191,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.extend (creation_combo)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			create ilab.make_with_text (Interface_names.l_Feature)
@@ -1208,7 +1208,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.extend (feature_field)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			create ilab.make_with_text (Interface_names.l_Alias_name)
@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.extend (alias_field)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			
+
 			if is_windows then
 				create hb
 				hb.set_padding (Layout_constants.default_padding_size)
@@ -1238,7 +1238,7 @@ feature {NONE} -- Implementation: Properties dialog
 				hb.disable_item_expand (index_field)
 				vb.extend (hb)
 				vb.disable_item_expand (hb)
-				
+
 				create hb
 				hb.set_padding (Layout_constants.default_padding_size)
 				create ilab.make_with_text (Interface_names.l_Calling_convention)
@@ -1272,11 +1272,11 @@ feature {NONE} -- Implementation: Properties dialog
 				vb.extend (hb)
 				vb.disable_item_expand (hb)
 			end
-			
+
 			create fr.make_with_text (Interface_names.l_Feature_properties)
 			fr.extend (vb)
 			mainvb.extend (fr)
-			
+
 			create okb.make_with_text (Interface_names.b_Ok)
 			Layout_constants.set_default_size_for_button (okb)
 			if for_modification then
@@ -1289,7 +1289,7 @@ feature {NONE} -- Implementation: Properties dialog
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			Layout_constants.set_default_size_for_button (cancelb)
 			cancelb.select_actions.extend (agent properties_dialog.destroy)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
 			hb.extend (create {EV_CELL})
@@ -1298,7 +1298,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.extend (cancelb)
 			hb.disable_item_expand (cancelb)
 			mainvb.extend (hb)
-			
+
 			properties_dialog.set_maximum_height (properties_dialog.height)
 			properties_dialog.set_default_cancel_button (cancelb)
 			properties_dialog.set_default_push_button (okb)
@@ -1463,7 +1463,7 @@ feature {NONE} -- Implementation: Properties dialog
 				properties_dialog.default_push_button.disable_sensitive
 			end
 		end
-		
+
 	on_creation_ok is
 			-- Check if the modified feature is valid enough,
 			-- update `modified_exported_feature' if necessary.
@@ -1602,7 +1602,7 @@ feature {NONE} -- Implementation: Properties dialog
 
 	properties_dialog: EV_DIALOG
 			-- Dialog used to alter the status of exported features (and to add new features).
-	
+
 	class_field: EV_TEXT_FIELD
 			-- Field containing the class name
 			--| (only valid if a `new feature' dialog has been created, not if a modification dialog was created).
@@ -1613,10 +1613,10 @@ feature {NONE} -- Implementation: Properties dialog
 
 	creation_combo: EV_COMBO_BOX
 			-- Combo box containing the selected creation routine name.
-	
+
 	alias_field: EV_TEXT_FIELD
 			-- Text field containing the (optional) alias name.
-	
+
 	index_field: EV_SPIN_BUTTON
 			-- Spin button containing the (optional) index.
 
@@ -1643,7 +1643,7 @@ feature {NONE} -- Implementation: checks
 			Result := valid_export_parameters (exp.compiled_class, exp.creation_routine, exp.routine,
 												exp.alias_name, exp.index, exp.call_type)
 		end
-			
+
 	valid_export_parameters (cl: CLASS_C; cr: E_FEATURE; f: E_FEATURE;
 							al: STRING; ind: INTEGER; cc: STRING): BOOLEAN is
 			-- Is the export feature defined by these parameters valid?

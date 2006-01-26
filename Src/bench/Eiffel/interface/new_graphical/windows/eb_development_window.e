@@ -367,14 +367,14 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (toggle_stone_cmd)
 
 			create send_stone_to_context_cmd.make
-			send_stone_to_context_cmd.set_pixmaps (Pixmaps.Icon_send_stone_down)
+			send_stone_to_context_cmd.set_pixmap (Pixmaps.Icon_send_stone_down)
 			send_stone_to_context_cmd.set_tooltip (Interface_names.e_send_stone_to_context)
 			send_stone_to_context_cmd.set_menu_name (Interface_names.m_send_stone_to_context)
 			send_stone_to_context_cmd.set_name ("Send_to_context")
 			send_stone_to_context_cmd.set_tooltext (Interface_names.b_send_stone_to_context)
 			send_stone_to_context_cmd.add_agent (agent send_stone_to_context)
 			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Kcst.Key_down), False, True, False
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_down), False, True, False
 			)
 			accel.actions.extend (agent send_stone_to_context)
 			send_stone_to_context_cmd.set_accelerator (accel)
@@ -482,7 +482,7 @@ feature {NONE} -- Initialization
 
 			create {EB_BASIC_TEXT_FORMATTER} form.make (Current)
 			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Kcst.Key_t),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
@@ -490,7 +490,7 @@ feature {NONE} -- Initialization
 
 			create {EB_CLICKABLE_FORMATTER} form.make (Current)
 			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Kcst.Key_c),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_c),
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
@@ -498,7 +498,7 @@ feature {NONE} -- Initialization
 
 			create {EB_FLAT_FORMATTER} form.make (Current)
 			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Kcst.Key_f),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f),
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
@@ -506,7 +506,7 @@ feature {NONE} -- Initialization
 
 			create {EB_SHORT_FORMATTER} form.make (Current)
 			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Kcst.Key_o),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_o),
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
@@ -514,7 +514,7 @@ feature {NONE} -- Initialization
 
 			create {EB_FLAT_SHORT_FORMATTER} form.make (Current)
 			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code (Kcst.Key_i),
+					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_i),
 					True, False, True)
 			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
@@ -1051,20 +1051,20 @@ feature -- Graphical Interface
 --			hbox.disable_item_expand (address_bar)
 
 				-- Back icon
-			tb.extend (history_manager.back_command.new_toolbar_item (False, False))
+			tb.extend (history_manager.back_command.new_toolbar_item (False))
 
 				-- Forward icon
-			tb.extend (history_manager.forth_command.new_toolbar_item (False, False))
+			tb.extend (history_manager.forth_command.new_toolbar_item (False))
 
 				-- Set up the accelerators.
 			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Kcst.Key_right), False, True, False
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_right), False, True, False
 			)
 			accel.actions.extend (agent on_forth)
 			window.accelerators.extend (accel)
 
 			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Kcst.Key_left), False, True, False
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_left), False, True, False
 			)
 			accel.actions.extend (agent on_back)
 			window.accelerators.extend (accel)
@@ -1303,7 +1303,7 @@ feature {NONE} -- Menu Building
 				-- Cut
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.M_cut)
-			os_cmd.set_pixmaps (pixmaps.icon_cut)
+			os_cmd.set_pixmap (pixmaps.icon_cut)
 			os_cmd.set_name ("Editor_cut")
 			os_cmd.set_tooltip (interface_names.f_cut)
 			os_cmd.add_agent (agent cut_selection)
@@ -1318,7 +1318,7 @@ feature {NONE} -- Menu Building
 				-- Copy
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.M_copy)
-			os_cmd.set_pixmaps (pixmaps.icon_copy)
+			os_cmd.set_pixmap (pixmaps.icon_copy)
 			os_cmd.set_name ("Editor_copy")
 			os_cmd.set_tooltip (interface_names.f_copy)
 			os_cmd.set_tooltext (Interface_names.b_copy)
@@ -4096,12 +4096,6 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool 
 		end
 
 feature {NONE} -- Execution
-
-	Kcst: EV_KEY_CONSTANTS is
-			-- A way to access key constants.
-		once
-			create Result
-		end
 
 	toolbar_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Action called when the user right-click in the toolbar.

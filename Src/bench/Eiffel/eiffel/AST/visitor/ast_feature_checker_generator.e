@@ -3582,12 +3582,16 @@ feature -- Implementation
 					l_creation_expr.set_call (l_call_access)
 					l_creation_expr.set_info (l_create_info)
 					l_creation_expr.set_type (l_creation_type.type_i)
+					l_creation_expr.set_creation_instruction (True)
 					l_creation_expr.set_line_number (l_as.target.start_location.line)
 
 					create l_assign
 					l_assign.set_target (l_access)
 					l_assign.set_source (l_creation_expr)
 					l_assign.set_line_number (l_as.target.start_location.line)
+					check
+						l_assign.is_creation_instruction
+					end
 
 					last_byte_node := l_assign
 				end

@@ -43,7 +43,7 @@ feature -- Button texts
 	b_Create: STRING is							"Create"
 	b_Create_folder: STRING is					"Create Folder..."
 	b_Delete_command: STRING is					"Delete"
-	b_Descendant_time: STRING is				"Descendant Time"
+	b_Descendant_time: STRING is					"Descendant Time"
 	b_Discard_assertions: STRING is				"Discard Assertions"
 	b_Display_Exception_Trace: STRING is		"Display Exception Trace"
 	b_Down_text: STRING is 						"Down"
@@ -57,10 +57,10 @@ feature -- Button texts
 	b_Load_ace: STRING is						"Load From..."
 	b_Move_to_folder: STRING is					"Move to Folder..."
 	b_New_ace: STRING is						"Reset"
-	b_New_command: STRING is					"Add..."
+	b_New_command: STRING is						"Add..."
 	b_New_favorite_class: STRING is				"New Favorite Class..."
 	b_Next: STRING is							"Next"
-	b_Number_of_calls: STRING is				"Number of Calls"
+	b_Number_of_calls: STRING is					"Number of Calls"
 	b_Ok: STRING is								"OK"
 	b_Open_original: STRING is					"Open Original File"
 	b_Open_backup: STRING is					"Open Backup File"
@@ -80,7 +80,7 @@ feature -- Button texts
 	b_Total_time: STRING is						"Total Time"
 	b_Up_text: STRING is 						"Up"
 	b_Update: STRING is 						"Update"
-	b_Compile: STRING is						"Compile"
+	b_Compile: STRING is							"Compile"
 	b_Launch: STRING is							"Debug"
 	b_Continue: STRING is						"Continue"
 	b_Finalize: STRING is						"Finalize"
@@ -105,11 +105,11 @@ feature -- Button texts
 	b_Send_stone_to_context: STRING is			"Synchronize"
 	b_Display_error_help: STRING is				"Help Tool"
 	b_Project_settings: STRING is				"Project Settings"
-	b_System_info: STRING is					"System Info"
+	b_System_info: STRING is						"System Info"
 	b_Bkpt_info: STRING is						"Breakpoint Info"
 	b_Bkpt_enable: STRING is					"Enable Breakpoints"
 	b_Bkpt_disable: STRING is					"Disable Breakpoints"
-	b_Bkpt_remove: STRING is					"Remove Breakpoints"
+	b_Bkpt_remove: STRING is						"Remove Breakpoints"
 	b_Bkpt_stop_in_hole: STRING is				"Pause"
 	b_Exec_kill: STRING is						"Kill Debugged Application"
 	b_Exec_into: STRING is						"Step Into"
@@ -131,7 +131,7 @@ feature -- Graphical degree output
 	d_Classes_to_go: STRING is					"Classes to Go:"
 	d_Clusters_to_go: STRING is					"Clusters to Go:"
 	d_Compilation_class: STRING is				"Class:"
-	d_Compilation_cluster: STRING is			"Cluster:"
+	d_Compilation_cluster: STRING is				"Cluster:"
 	d_Compilation_progress: STRING is			"Compilation Progress for "
 	d_Degree: STRING is							"Degree:"
 	d_Documentation: STRING is					"Documentation"
@@ -141,7 +141,7 @@ feature -- Graphical degree output
 	d_Resynchronizing_breakpoints: STRING is 	"Resynchronizing Breakpoints"
 	d_Resynchronizing_tools: STRING is			"Resynchronizing Tools"
 	d_Reverse_engineering: STRING is			"Reverse Engineering Project"
-	d_Finished_removing_dead_code: STRING is	"Dead Code Removal Completed"
+	d_Finished_removing_dead_code: STRING is		"Dead Code Removal Completed"
 
 feature -- Help text
 
@@ -159,32 +159,32 @@ feature -- Accelerator, focus label and menu name
 		end
 	m_Advanced: STRING is				"Ad&vanced"
 	m_Add_to_favorites: STRING is		"&Add to Favorites"
-	m_Address_toolbar: STRING is		"&Address Bar"
+	m_Address_toolbar: STRING is			"&Address Bar"
 	m_Apply: STRING is					"&Apply"
 	m_Breakpoints_tool: STRING is		"Breakpoints"
 	f_Clear_breakpoints: STRING is		"Remove all breakpoints"
 	m_Clear_breakpoints: STRING is		"Re&move All Breakpoints"
-	m_Comment: STRING is				"&Comment%TCtrl+K"
+	m_Comment: STRING is					"&Comment%TCtrl+K"
 	m_Compilation_C_Workbench: STRING is	"Compile W&orkbench C Code"
-	m_Compilation_C_Final: STRING is	"Compile F&inalized C Code"
+	m_Compilation_C_Final: STRING is		"Compile F&inalized C Code"
 	m_Contents: STRING is				"&Contents"
 	m_Customize_general: STRING is		"&Customize Standard Toolbar..."
 	m_Customize_project: STRING is		"Customize P&roject Toolbar..."
-	m_Cut: STRING is					"Cu&t%TCtrl+X"
+	m_Cut: STRING is						"Cu&t%TCtrl+X"
 	f_Cut: STRING is					"Cut (Ctrl+X)"
-	m_Call_stack_tool: STRING is		"Call stack"
+	m_Call_stack_tool: STRING is			"Call stack"
 	m_Cluster_tool: STRING is			"&Clusters"
 	m_Complete_word: STRING is			"Complete &Word"
-	m_Complete_class_name: STRING is	"Complete Class &Name"
+	m_Complete_class_name: STRING is		"Complete Class &Name"
 	m_Context_tool: STRING is			"Conte&xt"
 	m_Copy: STRING is					"&Copy%TCtrl+C"
 	f_Copy: STRING is					"Copy (Ctrl+C)"
 	m_Close: STRING is					"&Close Window%TAlt+F4"
-	m_Close_short: STRING is			"&Close"
+	m_Close_short: STRING is				"&Close"
 	f_Create_new_cluster: STRING is		"Create a new cluster"
 	f_Create_new_class: STRING is		"Create a new class"
 	f_Create_new_feature: STRING is		"Create a new feature"
-	m_Debug_interrupt_new: STRING is	"I&nterrupt Application"
+	m_Debug_interrupt_new: STRING is		"I&nterrupt Application"
 	f_Debug_edit_object: STRING is		"Edit Object content"
 	m_Debug_edit_object: STRING is		"Edit Object Content"
 	f_Debug_dynamic_eval: STRING is		"Dynamic feature evaluation"
@@ -205,24 +205,31 @@ feature -- Accelerator, focus label and menu name
 	m_diagram_to_png: STRING is			"&Export Diagram to PNG"
 	f_diagram_context_depth: STRING is  "Select depth of relations"
 	m_diagram_context_depth: STRING is  "&Select Depth of Relations"
-	f_diagram_delete_view: STRING is	"Delete current view"
-	f_diagram_reset_view: STRING is 	"Reset current view"
-	m_diagram_delete_view: STRING is	"&Delete Current View"
+	f_diagram_delete_view: STRING is		"Delete current view"
+	f_diagram_reset_view: STRING is 		"Reset current view"
+	m_diagram_delete_view: STRING is		"&Delete Current View"
 	m_diagram_reset_view: STRING is		"&Reset Current View"
-	f_diagram_zoom_in: STRING is		"Zoom in"
+	f_diagram_zoom_in: STRING is			"Zoom in"
 	f_diagram_fit_to_screen: STRING is	"Fit to screen"
 	f_diagram_undo: STRING is			"Undo last action"
 	f_diagram_hide_supplier: STRING is	"Hide supplier links"
 	f_diagram_show_supplier: STRING is	"Show supplier links"
+
 	l_diagram_supplier_visibility: STRING is "Toggle visibility of supplier links"
-	f_diagram_hide_labels: STRING is	"Hide labels"
-	f_diagram_show_labels: STRING is	"Show labels"
+
+	l_diagram_add_ancestors: STRING is "Add class ancestors to diagram"
+	l_diagram_add_descendents: STRING is "Add class descendents to diagram"
+	l_diagram_add_suppliers: STRING is "Add class suppliers to diagram"
+	l_diagram_add_clients: STRING is "Add class clients to diagram"
+
+	f_diagram_hide_labels: STRING is		"Hide labels"
+	f_diagram_show_labels: STRING is		"Show labels"
 	f_diagram_show_uml: STRING is		"Show UML"
 	f_diagram_show_bon: STRING is 		"Show BON"
 	f_diagram_hide_clusters: STRING is	"Hide clusters"
 	f_diagram_show_clusters: STRING is	"Show clusters"
-	f_diagram_show_legend: STRING is	"Show cluster legend"
-	f_diagram_hide_legend: STRING is	"Hide cluster legend"
+	f_diagram_show_legend: STRING is		"Show cluster legend"
+	f_diagram_hide_legend: STRING is		"Hide cluster legend"
 	f_diagram_remove_anchor: STRING is	"Remove anchor"
 	l_diagram_labels_visibility: STRING is	"Toggle visibility of client link labels"
 	l_diagram_uml_visibility: STRING is	"Toggle between UML and BON view"
@@ -632,8 +639,6 @@ feature -- Label texts
 	l_Text_saved: STRING is				"Text was saved"
 	l_Three_dots: STRING is				"..."
 	l_Text_loading: STRING is		"Current text is being loaded. It is therefore%Nnot editable nor pickable."
-	l_Toolbar_with_gray_icons: STRING is "Display color icon when mouse cursor is over the button"
-	l_Toolbar_without_gray_icons: STRING is "Always display color icon"
 	l_Toolbar_select_text_position: STRING is "Text option: "
 	l_Toolbar_select_has_gray_icons: STRING is "Icon option: "
 	l_Top_level: STRING is				"Top-level"
@@ -894,6 +899,8 @@ feature -- Description texts
 										%Use right click for both%Npick and drop actions."
 	e_Diagram_delete_figure: STRING is	"Please drop a class, a cluster or a midpoint%N%
 										%on this button. Use right click for both%Npick and drop actions."
+	e_Diagram_add_class_figure_relations: STRING is "A class figure(s) must either be selected%N%
+										%or dropped on this button via right clicking."
 	e_Diagram_delete_item: STRING is	"Please drop a class, a cluster or a link%N%
 										%on this button. Use right click for both%Npick and drop actions."
 	e_Display_error_help: STRING is		"Give help on compilation errors"
@@ -1146,19 +1153,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

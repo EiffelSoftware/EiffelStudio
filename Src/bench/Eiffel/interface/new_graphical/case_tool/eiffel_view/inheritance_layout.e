@@ -14,7 +14,7 @@ inherit
 			default_create,
 			world
 		end
-		
+
 create
 	make_with_world
 
@@ -24,32 +24,32 @@ feature {NONE} -- Initialization
 			-- Initialize `table'.
 		do
 			create table.make (20)
-			vertical_spacing := 40
-			horizontal_spacing := 40
+			vertical_spacing := {EB_CONTEXT_EDITOR}.default_bon_vertical_spacing
+			horizontal_spacing := {EB_CONTEXT_EDITOR}.default_bon_horizontal_spacing
 		end
-		
+
 feature -- Access
 
 	table: ARRAYED_LIST [like row]
 			-- List of rows of class bubbles.
-			
+
 	vertical_spacing: INTEGER
 			-- Vertical space between class figures.
-			
+
 	horizontal_spacing: INTEGER
 			-- Horizontal space between class figures.
-			
+
 	world: EIFFEL_WORLD
-	
+
 feature -- Element change
 
-	set_spacing (vertical, horizontal: INTEGER) is
-			-- Set `vertical_spacing' to `vertical' and `horizonatl_spacing' to `horizontal'.
+	set_spacing (horizontal, vertical: INTEGER) is
+			-- Set `horizontal_spacing' to `horizontal' and `vertical_spacing' to `vertical'.
 		do
-			vertical_spacing := vertical
 			horizontal_spacing := horizontal
+			vertical_spacing := vertical
 		ensure
-			set: vertical_spacing = vertical and horizontal_spacing = horizontal
+			spacings_set: horizontal_spacing = horizontal and vertical_spacing = vertical
 		end
 
 feature {NONE} -- Implementation
@@ -62,10 +62,10 @@ feature {NONE} -- Implementation
 		do
 				-- Never called.
 			check
-				False 
+				False
 			end
 		end
-		
+
 	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		local
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 		do
 			ew := world
 			vertical_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
-			horizontal_scaled_spacing := (ew.scale_factor * vertical_spacing).truncated_to_integer
+			horizontal_scaled_spacing := (ew.scale_factor * horizontal_spacing).truncated_to_integer
 
 			table.wipe_out
 			set_clusters_and_classes (linkables)
@@ -95,13 +95,13 @@ feature {NONE} -- Implementation
 				ew.apply_right_angles
 			end
 		end
-		
+
 	clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			-- Clusters in linkables currently layouted.
-			
+
 	classes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			-- Classes in linkables currently layouted.
-			
+
 	set_clusters_and_classes (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]) is
 			-- Build list `clusters' and `classes'.
 		require
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			clusters_not_void: clusters /= Void
 			classes_not_void: classes /= Void
 		end
-		
+
 	has_cluster: BOOLEAN is
 			-- Is `clusters' not empty?
 		require
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		do
 			Result := not clusters.is_empty
 		end
-		
+
 	has_classes: BOOLEAN is
 			-- Is `classes' not empty?
 		require
@@ -160,10 +160,10 @@ feature {NONE} -- Implementation
 			arrange_by_generation
 			arrange_clients
 
-			from 
+			from
 				i := 1
 				nb := clusters.count
-			until	
+			until
 				i > nb
 			loop
 				add_linkable_figure (clusters.i_th (i))
@@ -184,16 +184,16 @@ feature {NONE} -- Implementation
 			end
 			r.extend (lf)
 		end
-		
+
 	height: INTEGER is
 			-- Vertical dimension in pixels of current placement.
 		local
 			i: INTEGER
 		do
-			from 
-				i := 1 
-			until 
-				i > table.count 
+			from
+				i := 1
+			until
+				i > table.count
 			loop
 				Result := Result + row_height (table.i_th (i))
 				i := i + 1
@@ -202,15 +202,15 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	row_height (r: like row): INTEGER is
 			-- Height in pixels of `r'.
 		do
 			if r /= Void then
 				from
-					r.start 
-				until 
-					r.after 
+					r.start
+				until
+					r.after
 				loop
 					if r.item /= Void then
 						Result := Result.max (r.item.height)
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 					max_widths.after
 				loop
 					Result := Result + max_widths.item + horizontal_scaled_spacing
-					max_widths.forth		
+					max_widths.forth
 				end
 			else
 				from
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 				Result := Result + horizontal_scaled_spacing
 			end
 		end
-		
+
 	max_x_widths: ARRAYED_LIST [INTEGER] is
 			-- Array of maximum bubles width to line them up vertically and horizontally.
 			-- | Result is a list from 1 to max column count where each entry is the max width of this column.
@@ -297,15 +297,15 @@ feature {NONE} -- Implementation
 				index := index + 1
 			end
 		end
-		
+
 	row_width (r: like row): INTEGER is
 			-- Width in pixels of `r'.
 		do
 			if r /= Void then
-				from 
-					r.start 
-				until 
-					r.after 
+				from
+					r.start
+				until
+					r.after
 				loop
 					if r.item /= Void then
 						Result := Result + r.item.width
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	smallest_row: like row is
 			-- Row with smallest width.
 		local
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 				table.forth
 			end
 		end
-		
+
 	arrange_by_generation is
 			-- Place class bubbles so that descendants are always below
 			-- their ancestors.
@@ -355,9 +355,9 @@ feature {NONE} -- Implementation
 				r := next_generation (r)
 			end
 		end
-		
+
 	first_generation: like row is
-			-- Classes in `figure_set' that have no ancestors 
+			-- Classes in `figure_set' that have no ancestors
 			-- in same cluster but descendants in same cluster.
 		local
 			l_classes: like classes
@@ -371,16 +371,16 @@ feature {NONE} -- Implementation
 				l_classes.after
 			loop
 				l_item := l_classes.item
-				if 
+				if
 					not has_ancestor_in_same_cluster (l_item) and then
-					has_descendant_in_same_cluster (l_item) 
+					has_descendant_in_same_cluster (l_item)
 				then
-					Result.extend (l_item)   	
+					Result.extend (l_item)
 				end
 				l_classes.forth
 			end
 		end
-		
+
 	next_generation (r: like row): like row is
 			-- Direct descendants of `r' in same cluster.
 		local
@@ -406,11 +406,11 @@ feature {NONE} -- Implementation
 					bil ?= l_links.i_th (i)
 					if bil /= Void then
 						descendant := bil.descendant
-						if 
+						if
 							descendant.is_show_requested and then
-							descendant /= l_item and then 
-							descendant.cluster = l_item.cluster and then 
-							not Result.has (descendant) 
+							descendant /= l_item and then
+							descendant.cluster = l_item.cluster and then
+							not Result.has (descendant)
 						then
 							Result.extend (descendant)
 						end
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 				r.forth
 			end
 		end
-		
+
 	has_ancestor_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN is
 			-- Does `linkable' have an ancestor in the same cluster?
 		require
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	has_descendant_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN is
 			-- Does `linkable' have an descendant in the same cluster?
 		require
@@ -472,9 +472,9 @@ feature {NONE} -- Implementation
 					end
 				end
 				i := i + 1
-			end	
+			end
 		end
-		
+
 	remove_from_table (r: like row) is
 			-- Remove any class in `r' if present from `table'.
 		local
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 				l.forth
 			end
 		end
-		
+
 	has (lf: EG_LINKABLE_FIGURE): BOOLEAN is
 			-- Does `table' contain `lf'?
 		require
@@ -521,17 +521,17 @@ feature {NONE} -- Implementation
 		local
 			r: like row
 		do
-			from 
-				table.start 
-			until 
-				Result or table.after 
+			from
+				table.start
+			until
+				Result or table.after
 			loop
 				r := table.item
 				Result := r.has (lf)
 				table.forth
 			end
 		end
-		
+
 	execute is
 			-- Perform the actual placement.
 		local
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation
 					cur_x := max_width // 2 - row_width (r) // 2 + horizontal_scaled_spacing
 					l_row_height := row_height (r)
 					cur_y := cur_y + l_row_height // 2
-					
+
 					from
 						r.start
 					until
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 					loop
 						r.item.set_port_position (cur_x + r.item.width // 2, cur_y)
 						cur_x := cur_x + r.item.width + horizontal_scaled_spacing
-						
+
 						r.forth
 					end
 					cur_y := cur_y + l_row_height // 2 + vertical_scaled_spacing
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 				table.forth
 			end
 		end
-		
+
 	center_rows is
 			-- Add void elements in `table' in order to center rows.
 			-- Applies only for class views.
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 				table.after
 			loop
 				r := table.item
-				class_offset := (lgw - r.count) // 2 
+				class_offset := (lgw - r.count) // 2
 				from
 					i := 1
 				until
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 				table.forth
 			end
 		end
-		
+
 	largest_row_width: INTEGER is
 			-- Number of figures in largest row of `table'.
 		do

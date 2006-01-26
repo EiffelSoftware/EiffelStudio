@@ -105,7 +105,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-feature{NONE} -- Roundtrip/Break token inclusion
+feature -- Roundtrip/Break token inclusion
 
 	break_included: BOOLEAN
 			-- Is trailing break included when `last_token' is computed?

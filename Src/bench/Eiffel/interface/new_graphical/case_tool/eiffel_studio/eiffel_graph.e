@@ -249,7 +249,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			retry
 		end
 
-feature {EIFFEL_WORLD} -- Insert
+feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 
 	add_classes_relations is
 			-- Add relation between classes in `Current'.
@@ -646,6 +646,7 @@ feature {NONE} -- Implementation
 	node_type: ES_CLASS is
 			-- Type of nodes in `nodes'.
 		do
+
 		end
 
 invariant
@@ -660,19 +661,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

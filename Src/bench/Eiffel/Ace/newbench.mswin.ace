@@ -47,6 +47,7 @@ default
 	disabled_debug ("debugger_interface")
 	disabled_debug ("debugger_trace")
 	disabled_debug ("debugger_trace_breakpoint")
+	disabled_debug ("debugger_trace_cache")
 	disabled_debug ("debugger_trace_callback")
 	disabled_debug ("debugger_trace_callback_data")
 	disabled_debug ("debugger_trace_callback_notify")
@@ -69,6 +70,7 @@ default
 	disabled_debug ("eifnet_debugger")
 	disabled_debug ("es_dockable_notebook")
 	disabled_debug ("es_grid_layout")
+	disabled_debug ("es_grid_layout_positioning")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
 	disabled_debug ("flat_short")
@@ -77,11 +79,10 @@ default
 	disabled_debug ("gelex")
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
-	disabled_debug ("grid_layout")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("il_info_trace")
-	disabled_debug ("docking")
+	disabled_debug ("larry")
 	disabled_debug ("lex_output")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("log_exceptions")
@@ -98,8 +99,10 @@ default
 	disabled_debug ("server")
 	disabled_debug ("show_prof_query")
 	disabled_debug ("timing")
+	disabled_debug ("to_implement")
 	disabled_debug ("trace_table")
 	disabled_debug ("transfer")
+	disabled_debug ("update_on_idle")
 	disabled_debug ("verbose")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
@@ -128,6 +131,7 @@ default
 
 cluster
 	override:		"$EIFFEL_SRC\Eiffel\override"
+
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -179,7 +183,7 @@ cluster
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			".svn"; "external"; "compiler_override"; "types"; "error"; 
+			".svn"; "compiler_override"; "types"; "error"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"

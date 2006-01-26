@@ -41,8 +41,6 @@ feature {NONE} -- Implementation
 						-- This is a separator.
 					create toolbarable_separator
 					Result.extend (toolbarable_separator)
-				elseif command_name.is_equal (use_gray_icons_flag) then
-					Result.enable_gray_icons
 				else
 						-- This is a command.
 					check
@@ -59,7 +57,7 @@ feature {NONE} -- Implementation
 						if command_suffix.is_equal ("__hidden") then
 							command_visibility := False
 							command_name := command_name.substring (1, command_name_count - 8)
-						else	
+						else
 							-- Error in suffix, it is not "__hidden" or "__visible", default is "__hidden".
 							-- We leave the command_name inchanged.
 							command_visibility := False
@@ -88,7 +86,7 @@ feature {NONE} -- Implementation
 						command_pool.forth
 					end
 				end
-					
+
 					-- prepare next iteration
 				i := i + 1
 			end
@@ -103,13 +101,7 @@ feature {NONE} -- Implementation
 			index: INTEGER
 		do
 			index := 1
-			if a_toolbar.has_gray_icons then
-				create Result.make (1, a_toolbar.count + 1)
-				Result.put (use_gray_icons_flag, index)
-				index := index + 1
-			else
-				create Result.make (1, a_toolbar.count)
-			end
+			create Result.make (1, a_toolbar.count)
 			from
 				a_toolbar.start
 			until
@@ -132,9 +124,6 @@ feature {NONE} -- Implementation
 				index := index + 1
 			end
 		end
-
-	Use_gray_icons_flag: STRING is "USE_GRAY_ICONS";
-			-- What is written in the preferences to indicate that gray icons should or not be used.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

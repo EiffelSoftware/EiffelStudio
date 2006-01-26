@@ -224,12 +224,12 @@ feature {NONE} -- Initialization
 		do
 			create mini_toolbar
 			create save_call_stack_cmd.make
-			save_call_stack_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_save_call_stack)
+			save_call_stack_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_save_call_stack)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
 			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
 			create set_stack_depth_cmd.make
-			set_stack_depth_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_set_stack_depth)
+			set_stack_depth_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_set_stack_depth)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
@@ -299,7 +299,7 @@ feature -- Access
 			Result := Interface_names.m_Call_stack_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 --| To be done.

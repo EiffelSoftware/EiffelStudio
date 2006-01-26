@@ -188,7 +188,7 @@ feature {NONE} -- Initialization
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
-			remove_debugged_object_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_delete)
+			remove_debugged_object_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_delete)
 			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
 			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
 			tbb := remove_debugged_object_cmd.new_mini_toolbar_item
@@ -272,7 +272,7 @@ feature -- Access
 			Result := interface_names.m_object_tools
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 		end
@@ -1375,19 +1375,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

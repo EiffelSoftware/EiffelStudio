@@ -58,7 +58,7 @@ feature -- Access
 			Result := favorites_manager.widget
 		end
 
-	title: STRING is 
+	title: STRING is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Favorites_tool
@@ -70,7 +70,7 @@ feature -- Access
 			Result := Interface_names.m_Favorites_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.Icon_favorites

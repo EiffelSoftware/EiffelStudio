@@ -19,7 +19,7 @@ inherit
 		end
 
 	EB_SHARED_MANAGERS
-	
+
 	SHARED_WORKBENCH
 
 create
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		do
 			create show_current_class_cluster_cmd.make
 			show_current_class_cluster_cmd.set_tooltip (Interface_names.e_Show_class_cluster)
-			show_current_class_cluster_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_view)
+			show_current_class_cluster_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_view)
 			show_current_class_cluster_cmd.set_name ("Show_class_cluster")
 			show_current_class_cluster_cmd.add_agent (agent show_current_class_cluster)
 			show_current_class_cluster_cmd.set_menu_name (Interface_names.m_Show_class_cluster)
@@ -110,7 +110,7 @@ feature -- Access
 	window: EB_DEVELOPMENT_WINDOW
 			-- development window `Current' is in.
 
-	title: STRING is 
+	title: STRING is
 			-- title of the tool.
 		do
 			Result := Interface_names.t_Cluster_tool
@@ -122,7 +122,7 @@ feature -- Access
 			Result := Interface_names.m_Cluster_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.Icon_cluster_tool

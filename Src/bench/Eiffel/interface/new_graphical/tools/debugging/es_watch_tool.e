@@ -125,28 +125,28 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 
 			create scmd.make
-			scmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_open_menu)
+			scmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_open_menu)
 			scmd.set_tooltip ("Open Watch tool menu")
 			scmd.add_agent (agent open_watch_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
 
 			create create_expression_cmd.make
-			create_expression_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_new_expression)
+			create_expression_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_new_expression)
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
 			mini_toolbar.extend (create_expression_cmd.new_mini_toolbar_item)
 
 			create edit_expression_cmd.make
-			edit_expression_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_edit_expression)
+			edit_expression_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_edit_expression)
 			edit_expression_cmd.set_tooltip (interface_names.e_edit_expression)
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
 			create toggle_state_of_expression_cmd.make
-			toggle_state_of_expression_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_on_off)
+			toggle_state_of_expression_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_on_off)
 			toggle_state_of_expression_cmd.set_tooltip (interface_names.e_toggle_state_of_expressions)
 			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
 			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 
 			create delete_expression_cmd.make
-			delete_expression_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_delete)
+			delete_expression_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_delete)
 			delete_expression_cmd.set_tooltip (interface_names.e_remove_expressions)
 			delete_expression_cmd.add_agent (agent remove_selected)
 			tbb := delete_expression_cmd.new_mini_toolbar_item
@@ -174,14 +174,14 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (tbb)
 
 			create move_up_cmd.make
-			move_up_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_mini_up)
+			move_up_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_mini_up)
 			move_up_cmd.set_tooltip ("Move item up")
 			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
 			tbb := move_up_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
 			create move_down_cmd.make
-			move_down_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_mini_down)
+			move_down_cmd.set_mini_pixmap (pixmaps.small_pixmaps.icon_mini_down)
 			move_down_cmd.set_tooltip ("Move item down")
 			move_down_cmd.add_agent (agent move_selected (watches_grid, +1))
 			tbb := move_down_cmd.new_mini_toolbar_item
@@ -249,7 +249,7 @@ feature -- Access
 			Result := interface_names.m_Watch_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 		end
@@ -1305,19 +1305,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

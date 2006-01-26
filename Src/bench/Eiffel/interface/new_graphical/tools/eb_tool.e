@@ -9,11 +9,11 @@ indexing
 	author		: "$Author$"
 
 deferred class
-	EB_TOOL 
+	EB_TOOL
 
 inherit
-	
-	REFACTORING_HELPER	
+
+	REFACTORING_HELPER
 
 	EB_EXPLORER_BAR_ATTACHABLE
 
@@ -33,7 +33,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -69,7 +69,7 @@ feature -- Change
 		do
 			manager := m
 		end
-		
+
 feature -- Access
 
 	widget: EV_WIDGET is
@@ -106,7 +106,7 @@ feature -- Access
 			valid_menu_name: menu_name /= Void and then not menu_name.is_empty
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
 		do
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		do
 			on_shown
 		end
-		
+
 
 	on_shown is
 			-- Perform update actions when the tool is displayed.

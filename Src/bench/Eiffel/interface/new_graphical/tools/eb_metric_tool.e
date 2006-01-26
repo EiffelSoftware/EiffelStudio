@@ -25,12 +25,12 @@ inherit
 		end
 
 	EB_METRIC_SCOPE_INFO
-	
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -130,7 +130,7 @@ feature -- Implementation
 			create vb
 				vb.set_border_width (1)
 				create metric_button
-				metric_button.set_pixmap (pixmaps.small_pixmaps.icon_down_triangle @ 1)
+				metric_button.set_pixmap (pixmaps.small_pixmaps.icon_down_triangle)
 				metric_button.select_actions.extend (agent display_metric_menu)
 				metric_button.set_minimum_size (15, 20)
 				vb.extend (metric_button)
@@ -228,9 +228,9 @@ feature -- Implementation
 				is_recompiled := False
 			end
 		end
-	
+
 	on_deselect is
-			-- 
+			--
 		require
 			tool_built: development_window.metric_menu /= Void
 		do
@@ -287,25 +287,25 @@ feature -- Access
 	manage: EB_METRIC_MANAGEMENT_CMD
 			-- Command to display interface for reordering, deleting, editing
 			-- or importing metrics.
-			
+
 	file_handler: EB_METRIC_FILE_HANDLER
 			-- Pointer to hanle `file_manager.metric_file'.
-	
+
 	calculate_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to calculate current metric.
 
 	add_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to add current metric to `multi_column_list'.
-	
+
 	delete_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to delete selected metric(s) from `multi_column_list'.
-	
+
 	details_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to display details of current metric.
 
 	new_metric_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to add new metric formula.
-	
+
 	manage_cmd_in_menu: EV_MENU_ITEM
 			-- Menu command to display interface for reordering, deleting, editing
 			-- or importing metrics.
@@ -357,13 +357,13 @@ feature -- Scope
 feature -- Metric
 
 	enable_commands_in_toolbar is
-			-- 
+			--
 		local
 			toolbar_menu: EV_MENU
 		do
 			toolbar_menu := development_window.metric_menu
 			toolbar_menu.enable_sensitive
-			from 
+			from
 				toolbar_menu.start
 			until
 				toolbar_menu.after
@@ -674,7 +674,7 @@ feature -- Combo box and field action.
 				metric_menu.forth
 			end
 		ensure
-			found_metric: not metric_field.text.is_empty 
+			found_metric: not metric_field.text.is_empty
 		end
 
 	adjust_scope (index: INTEGER) is
@@ -815,7 +815,7 @@ feature -- Selected object
 			end
 		end
 
-	selected_cluster: CLUSTER_I is 
+	selected_cluster: CLUSTER_I is
 			-- Return cluster object when stone is feature, class, or cluster.
 		do
 			if cluster_stone /= Void then
@@ -828,7 +828,7 @@ feature -- Selected object
 		end
 
 feature -- Metric retrieving and setting.
-	
+
 	fix_decimals_and_percentage (a_result: DOUBLE; a_percentage: BOOLEAN): STRING is
 			-- Adjust decimal part: 3 digits when absolute value of`a_result' is less than 1.
 			-- 2 whrn it is greater. Display `a_result' in percentage style if `a_percentage'.
@@ -846,7 +846,7 @@ feature -- Metric retrieving and setting.
 				else
 					displayed_result := a_result * 100
 				end
-				
+
 				if displayed_result.abs >=1 then
 					decimals := 2
 				else
@@ -882,18 +882,18 @@ feature -- Status report
 
 feature -- Setting
 
-	set_details_hidden (bool: BOOLEAN) is 
+	set_details_hidden (bool: BOOLEAN) is
 			-- Assign `bool' to `details_hidden'.
 		do
 			details_hidden := bool
 		end
 
-	set_calculation_done (bool: BOOLEAN) is 
+	set_calculation_done (bool: BOOLEAN) is
 			-- Assign `bool' to `is_calculation_done'.
 		do
 			is_calculation_done := bool
 		end
-	
+
 	set_file_loaded (bool: BOOLEAN) is
 			-- Assign `bool' to `is_file_loaded'.
 		do
@@ -921,7 +921,7 @@ feature -- Setting
 			retried: BOOLEAN
 		do
 			if not retried then
-				if  file_manager.metric_file /= Void and then 
+				if  file_manager.metric_file /= Void and then
 					file_manager.metric_file.exists
 					and not file_handler.parser_problems
 				then
@@ -1035,7 +1035,7 @@ feature -- Displayed messages in column list form
 			column_list_built: Result /= Void
 			column_number: Result.column_count = 6
 		end
-		
+
 	adjust_columns_size is
 			-- Set minimal size for each column when `multi_column_list' is empty.
 		require
@@ -1046,7 +1046,7 @@ feature -- Displayed messages in column list form
 			multi_column_list.set_column_width (80, 3)
 			multi_column_list.set_column_width (42, 4)
 			multi_column_list.set_column_width (42, 5)
-			multi_column_list.set_column_width (110, 6)		
+			multi_column_list.set_column_width (110, 6)
 		end
 
 	right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -1132,7 +1132,7 @@ feature -- Displayed messages in column list form
 						else
 							a_scope := scope (row_scope_den)
 							row_stone_name := row_stone_name_den
-						end					
+						end
 					else
 						a_scope := scope (row_scope)
 					end
@@ -1173,9 +1173,9 @@ feature -- Displayed messages in column list form
 						-- Update if there was something pertinent in last column
 					if not default_archive then
 						archive_measure := archive.retrieve_archived_result (a_metric, archive.archived_file, archive.archived_root_element, archive_mode, new_result)
-						row.put_i_th (archive_measure, 6)				
+						row.put_i_th (archive_measure, 6)
 					end
-								
+
 					file_manager.update_row (row, index_updated_row)
 					if not file_manager.metric_file.exists then
 							-- Should not be called, if file does not exist, `multi_column_list' is emptied.
@@ -1276,7 +1276,7 @@ feature -- Correspondance: name-object.
 			until
 				i > array_classes.count or Result /= Void
 			loop
-				if array_classes.item (i) /= Void and then equal (array_classes.item (i).name, class_name) then 
+				if array_classes.item (i) /= Void and then equal (array_classes.item (i).name, class_name) then
 					Result := array_classes.item (i)
 				end
 				i := i + 1
@@ -1296,7 +1296,7 @@ feature -- Correspondance: name-object.
 			until
 				list_clusters.after
 			loop
-				if equal (list_clusters.item.cluster_name, cluster_name) then 
+				if equal (list_clusters.item.cluster_name, cluster_name) then
 					Result := list_clusters.item
 				end
 				list_clusters.forth
@@ -1311,7 +1311,7 @@ feature -- Storing results.
 			multi_column_list.wipe_out
 			file_handler.retrieve_recorded_measures (file_manager.metric_file)
 		end
-	
+
 
 	notify_new_metric (new_defined_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
 			-- Notify current observer when added new metric definition.
@@ -1333,7 +1333,7 @@ feature -- Storing results.
 					user_metrics_xml_list.go_i_th (index - 1)
 					metrics.put_right (new_defined_metric)
 					user_metrics_xml_list.put_right (new_metric_element)
-				else					
+				else
 					metrics.extend (new_defined_metric)
 					user_metrics_xml_list.extend (new_metric_element)
 				end
@@ -1345,7 +1345,7 @@ feature -- Storing results.
 				user_metrics_xml_list.put_i_th (new_metric_element, i - nb_basic_metrics)
 				check metric (new_defined_metric.name) /= Void end
 			end
-			if new_composite_metric /= Void then 
+			if new_composite_metric /= Void then
 				display_name := (not new_composite_metric.is_scope_ratio and new_composite_metric.min_scope <= scope (scope_combobox.text).index)
 					or (new_composite_metric.is_scope_ratio and then new_composite_metric.min_scope >= min_scope_available)
 			else
@@ -1357,7 +1357,7 @@ feature -- Storing results.
 			end
 			update_displayed_dialogs
 		end
-		
+
 	notify_management_metric (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
 			-- The state of the manager has changed. Metrics have been changed. Update `Current'.
 		local
@@ -1404,7 +1404,7 @@ feature -- Storing results.
 		do
 			if new_metric.new_metric_definition_dialog /= Void and then
 				new_metric.new_metric_definition_dialog.is_displayed then
-				
+
 				new_metric.linear_tab.update_displayed_dialogs
 				new_metric.ratio_metric_tab.update_displayed_dialogs
 				new_metric.ratio_scope_tab.update_displayed_dialogs
@@ -1443,7 +1443,7 @@ feature -- Dialog
 feature -- Memory management
 
 	recycle is
-			-- Remove all references to `Current', and leave `Current' in an 
+			-- Remove all references to `Current', and leave `Current' in an
 			-- unstable state, so that we know `Current' is not referenced any longer.
 		do
 			Precursor {EB_METRIC_OBSERVER}
@@ -1481,7 +1481,7 @@ feature {NONE} -- Implementation
 		do
 			new_feature_stone ?= a_stone
 			if new_feature_stone /= Void then
-				if new_feature_stone.is_valid and then not 
+				if new_feature_stone.is_valid and then not
 					(
 						feature_stone /= Void
 							and then
@@ -1497,7 +1497,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				new_class_stone ?= a_stone
-				if new_class_stone /= Void then 
+				if new_class_stone /= Void then
 					if new_class_stone.is_valid and then not
 						(
 							class_stone /= Void
@@ -1533,7 +1533,7 @@ feature {NONE} -- Implementation
 				if details_hidden then
 					details.disable_sensitive
 					if details_cmd_in_menu /= Void then
-						details_cmd_in_menu.disable_sensitive					
+						details_cmd_in_menu.disable_sensitive
 					end
 				end
 			end

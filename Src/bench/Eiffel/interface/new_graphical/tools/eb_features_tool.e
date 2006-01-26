@@ -98,7 +98,7 @@ feature -- Access
 			Result := Interface_names.m_features_tool
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
 			Result := Pixmaps.Icon_features

@@ -149,11 +149,11 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_padding (4)
 			l_ev_vertical_box_1.set_border_width (4)
 
-			del_cmd_btn.set_pixmap (Icon_delete_small.item (1))
+			del_cmd_btn.set_pixmap (Icon_delete_small)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
-			clear_output_btn.set_pixmap (Icon_recycle_bin.item (1))
+			clear_output_btn.set_pixmap (Icon_recycle_bin)
 			clear_output_btn.set_tooltip (f_clear_output)
 			clear_output_btn.select_actions.extend (agent on_clear_output_window)
 
@@ -162,18 +162,18 @@ feature{NONE} -- Initialization
 			console.set_font (preferences.editor_data.font)
 			console.disable_edit
 
+			terminate_btn.set_pixmap (Pixmaps.icon_exec_quit)
 			console.drop_actions.extend (agent drop_class)
 			console.drop_actions.extend (agent drop_feature)
 			console.drop_actions.extend (agent drop_cluster)
 			console.drop_actions.extend (agent drop_breakable)
 
-			terminate_btn.set_pixmap (Pixmaps.icon_exec_quit.item (1))
 			terminate_btn.set_tooltip (f_terminate_command_button)
 			terminate_btn.select_actions.extend (agent on_terminate_process)
 
 			edit_cmd_detail_btn.set_text ("")
 			edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
-			edit_cmd_detail_btn.set_pixmap (icon_save.item (1))
+			edit_cmd_detail_btn.set_pixmap (icon_save)
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
@@ -182,7 +182,7 @@ feature{NONE} -- Initialization
 			state_label.drop_actions.extend (agent drop_cluster)
 			state_label.drop_actions.extend (agent drop_breakable)
 
-			run_btn.set_pixmap (Pixmaps.icon_run.item (1))
+			run_btn.set_pixmap (Pixmaps.icon_run)
 			run_btn.set_tooltip (f_start_command_button)
 			run_btn.select_actions.extend (agent on_run_process)
 
@@ -211,7 +211,7 @@ feature{NONE} -- Initialization
 
 			output_toolbar.disable_vertical_button_style
 			save_output_btn.set_tooltip (f_save_output_button)
-			save_output_btn.set_pixmap (icon_save.item (1))
+			save_output_btn.set_pixmap (icon_save)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
 
 			l_ev_cmd_lbl.set_text (l_command)

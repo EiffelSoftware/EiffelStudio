@@ -11,14 +11,14 @@ class
 
 inherit
 	EB_GOTO_DIALOG_IMP
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 create
 	make
 
@@ -61,10 +61,10 @@ feature {NONE} -- Initialization
 		do
 			l_line_count := editor.number_of_lines
 			if l_line_count > 0 then
-				line_number_label.set_text ("Line number (1 - " + editor.number_of_lines.out + ")")	
+				line_number_label.set_text ("Line number (1 - " + editor.number_of_lines.out + ")")
 				line_number_text.value_range.resize_exactly (1, l_line_count)
-			end	
-		end		
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -85,27 +85,27 @@ feature {NONE} -- Implementation
 				end
 				editor.set_first_line_displayed (l_line.min (editor.vertical_scrollbar.value_range.upper), True)
 				editor.text_displayed.cursor.set_y_in_lines (l_line)
-			end			
-		end		
+			end
+		end
 
 	on_key_pressed (a_key: EV_KEY) is
 			-- Key was pressed in line number text field box
-		do				
-			if a_key.code = (create {EV_KEY_CONSTANTS}).key_enter and then line_number_text.text.is_integer then
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter and then line_number_text.text.is_integer then
 				go_button.enable_sensitive
-				goto_line				
+				goto_line
 			end
-		end		
-	
+		end
+
 	on_value_changed (a_value: INTEGER) is
 			-- Text field changed
-		do	
+		do
 			if line_number_text.text.is_integer then
-				go_button.enable_sensitive	
+				go_button.enable_sensitive
 			else
-				go_button.disable_sensitive	
+				go_button.disable_sensitive
 			end
-		end		
+		end
 
 invariant
 	has_editor: editor /= Void

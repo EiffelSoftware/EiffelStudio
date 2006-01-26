@@ -32,10 +32,9 @@ inherit
 			on_text_reset,
 			on_text_fully_loaded,
 			set_focus,
-			recycle
+			recycle,
+			editor
 		end
-
-	MSR_FORMATTER
 
 	EB_SHARED_MANAGERS
 		undefine
@@ -69,7 +68,6 @@ feature {NONE} -- Initialization
 			new_search_set := true
 			is_text_new_loaded := true
 			check_class_succeed := true
-			create report_summary_string.make_empty
 			create changed_classes.make (0)
 			create loaded_actions
 		end
@@ -100,6 +98,7 @@ feature {NONE} -- Initialization
 			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
 			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
 			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
+			keyword_field.focus_in_actions.extend (agent focusing_keyword_field)
 
 			create search_box
 			search_box.set_padding (1)
@@ -280,28 +279,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	grid_head_class: STRING is				"Class"
-	grid_head_line_number: STRING is 		"Line"
-	grid_head_found: STRING is				"Found"
-	grid_head_context: STRING is			"Context"
-	grid_head_file_location: STRING is		"File location"
-			-- Grid header texts
-
-	header_width: ARRAYED_LIST [INTEGER] is
-			-- List of header width.
-		once
-			create Result.make (4)
-			Result.extend (label_font.string_width (grid_head_class) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_found) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_context) + column_border_space + column_border_space)
-			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space)
-		end
-
 	surrounding_text_number: INTEGER is 	20
 			-- Maximal number of characters on one side of found text in the report.
-
-	column_border_space: INTEGER is 8
-			-- Padding space for column content	
 
 	resized_columns_list: ARRAY [BOOLEAN] is
 			-- List of boolean s for each column indicating if it has been user resizedat all.
@@ -348,7 +327,7 @@ feature -- Access
 	scope_list: EV_LIST
 			-- List of the specific scope
 
-	search_report_grid: ES_GRID
+	search_report_grid: EB_SEARCH_REPORT_GRID
 			-- Grid to contain search report
 
 	replace_combo_box: EV_COMBO_BOX
@@ -356,6 +335,12 @@ feature -- Access
 
 	notebook: EV_NOTEBOOK
 			-- Notebook, one tab for basic search, one for scopes.
+
+	editor: EB_EDITOR is
+			-- current_editor
+		do
+			Result := manager.current_editor
+		end
 
 feature -- Status report
 
@@ -541,7 +526,7 @@ feature -- Action
 								extend_and_run_loaded_action (agent replace_current_perform)
 							end
 							extend_and_run_loaded_action (agent go_to_next_found)
-							extend_and_run_loaded_action (agent redraw_grid)
+							extend_and_run_loaded_action (agent search_report_grid.redraw_grid)
 							extend_and_run_loaded_action (agent select_current_row)
 							extend_and_run_loaded_action (agent force_not_changed)
 						end
@@ -588,15 +573,17 @@ feature -- Action
 			end
 		end
 
-feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
+feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR, EB_SEARCH_REPORT_GRID} -- Implementation
 
-	check_class_succeed: BOOLEAN
+	check_class_succeed: BOOLEAN assign set_check_class_succeed
 			-- `check_class_file' makes file changed if needed?
 
-	set_check_class_succeed (a_succeed : BOOLEAN) is
-			-- Set `check_class_succeed' with `a_succeed'.
+	set_check_class_succeed (a_succeed: BOOLEAN) is
+			--
 		do
 			check_class_succeed := a_succeed
+		ensure
+			check_class_succeed_set: check_class_succeed = a_succeed
 		end
 
 	is_item_source_changed (a_item: MSR_ITEM): BOOLEAN is
@@ -646,7 +633,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
 			is_text_changed_in_editor := false
 		end
 
-feature {NONE} -- Build interface
+feature {EB_SEARCH_REPORT_GRID} -- Build interface
 
 	build_scope_box: EV_VERTICAL_BOX is
 			-- Create and return a box containing the search options
@@ -870,25 +857,7 @@ feature {NONE} -- Build interface
 			expand_all_button.select_actions.extend (agent expand_all)
 			collapse_all_button.select_actions.extend (agent collapse_all)
 
-			create search_report_grid
-			search_report_grid.enable_row_height_fixed
-			search_report_grid.enable_single_row_selection
-			search_report_grid.disable_always_selected
-			search_report_grid.enable_tree
-			search_report_grid.set_item (4, 1, Void)
-			search_report_grid.column (1).set_title (grid_head_class)
-			search_report_grid.column (2).set_title (grid_head_found)
-			search_report_grid.column (3).set_title (grid_head_context)
-			search_report_grid.column (4).set_title (grid_head_file_location)
-
-			search_report_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
-			search_report_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
-
-			search_report_grid.row_select_actions.extend (agent on_grid_row_selected (?))
-			search_report_grid.set_item_pebble_function (agent grid_pebble_function (?))
-			search_report_grid.set_accept_cursor (Cursors.cur_class)
-			search_report_grid.set_deny_cursor (Cursors.cur_x_class)
-			search_report_grid.set_minimum_width (100)
+			create search_report_grid.make (current)
 
 			create Result
 			Result.extend (frm)
@@ -1010,53 +979,6 @@ feature {NONE} -- Shortcut button actions
 				i := i + 1
 			end
 		end
-
-feature {NONE} -- Sort data
-
-	on_grid_header_click (a_column_index: INTEGER) is
-			-- User click on the column header of index `a_column_index'.
-		require
-			a_column_index_valid: column_index_valid (a_column_index)
-			output_grid_not_destroyed: not search_report_grid.is_destroyed
-		local
-			l_item: MSR_TEXT_ITEM
-		do
-			if search_report_grid.header.pointed_divider_index = 0 then
-				if sorted_column = a_column_index then
-						-- We invert the sorting.
-					sorting_order := not sorting_order
-				else
-					sorted_column := a_column_index
-					sorting_order := False
-				end
-				if search_report_grid.row_count > 0 then
-					l_item ?= multi_search_performer.item_matched.first
-					if l_item = Void then
-						if a_column_index = 1 then
-							multi_search_performer.sort_on (multi_search_performer.sort_by_class_name, sorting_order)
-							redraw_grid
-							select_current_row
-						elseif a_column_index = 2 then
-							multi_search_performer.sort_on (multi_search_performer.sort_by_found, sorting_order)
-							redraw_grid
-							select_current_row
-						end
-					end
-				end
-			end
-		end
-
-	sorted_column: INTEGER
-			-- Column on which sorting is done.	
-
-	column_index_valid (a_column_index: INTEGER): BOOLEAN  is
-			-- Validate a column index.
-		do
-			Result := a_column_index > 0 and a_column_index <= search_report_grid.column_count
-		end
-
-	sorting_order: BOOLEAN
-			-- If True, sort from the smaller to the larger.
 
 feature {NONE} -- Actions handler
 
@@ -1256,15 +1178,15 @@ feature {NONE} -- Actions handler
 					l_editor := old_editor
 					old_editor := editor
 					incremental_search (keyword_field.text)
-					if not multi_search_performer.off then
+					if not multi_search_performer.off or not multi_search_performer.is_empty then
 						select_in_current_editor
 					else
-						editor.deselect_all
+						retrieve_cursor
 					end
 					old_editor := l_editor
 				end
 			else
-				editor.deselect_all
+				retrieve_cursor
 				search_button.disable_sensitive
 				replace_button.disable_sensitive
 				replace_all_click_button.disable_sensitive
@@ -1272,6 +1194,19 @@ feature {NONE} -- Actions handler
 			if old_search_key_value /= Void and then not old_search_key_value.is_equal (keyword_field.text) then
 				force_new_search
 			end
+		end
+
+	retrieve_cursor is
+			-- Retrieve cursor position.
+		require
+			editor_not_void: editor /= Void
+			text_displayed_not_void: editor.text_displayed /= Void
+			cursor_not_void: editor.text_displayed.cursor /= Void
+		do
+			editor.disable_selection
+			editor.text_displayed.cursor.go_to_position (incremental_search_start_pos)
+			editor.check_cursor_position
+			editor.refresh_now
 		end
 
 	on_drop_notebook (a_stone: STONE) is
@@ -1322,6 +1257,15 @@ feature {NONE} -- Actions handler
 			end
 		end
 
+	focusing_keyword_field is
+			-- Focusing keyword field.
+			-- We record cursor position in the editor for incremental search.
+		do
+			if editor.text_displayed.cursor /= Void then
+				incremental_search_start_pos := editor.text_displayed.cursor.pos_in_text
+			end
+		end
+
 feature {EB_DEVELOPMENT_WINDOW} -- Notification
 
 	class_changed (a_class: CLASS_I) is
@@ -1367,6 +1311,7 @@ feature {NONE} -- Search perform
 			file_name: FILE_NAME
 			class_name: STRING
 			class_stone: CLASSI_STONE
+			l_text: STRING
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
@@ -1381,7 +1326,13 @@ feature {NONE} -- Search perform
 					create file_name.make
 				end
 				if editor.text_displayed.reading_text_finished then
-					create incremental_search_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
+					l_text := editor.text_displayed.text
+					create incremental_search_strategy.make_with_start (currently_searched,
+																		surrounding_text_number,
+																		class_name,
+																		file_name,
+																		l_text,
+																		incremental_search_start_pos.min (l_text.count).max (1))
 					if case_sensitive_button.is_selected then
 						incremental_search_strategy.set_case_sensitive
 					else
@@ -1404,6 +1355,9 @@ feature {NONE} -- Search perform
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
+
+	incremental_search_start_pos: INTEGER
+			-- Incremental search start from.
 
 	search is
 			-- Search in editor.
@@ -1551,7 +1505,7 @@ feature {NONE} -- Search perform
 			if multi_search_performer.is_search_launched then
 				old_search_key_value := currently_searched
 				old_editor := editor
-				redraw_grid
+				search_report_grid.redraw_grid
 				changed_classes.wipe_out
 				extend_and_run_loaded_action (agent force_not_changed)
 			end
@@ -1559,447 +1513,13 @@ feature {NONE} -- Search perform
 
 feature {NONE} -- Search report
 
-	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM) is
-			-- Compute `adjust_vertical'
-		require
-			font_attached: a_font /= Void
-			label_item_attached: a_label_item /= Void
-		local
-			vertical_text_offset_into_available_space: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
-			client_height: INTEGER
-		do
-			if adjust_vertical = 0 then
-				label_item ?= a_label_item
-				if label_item /= Void then
-					if text_height = 0 then
-						text_height := a_font.string_size ("a").integer_item (2)
-					end
-					client_height := label_item.height - label_item.top_border - label_item.bottom_border
-					vertical_text_offset_into_available_space := client_height - text_height - 1
-					if label_item.is_top_aligned then
-						vertical_text_offset_into_available_space := 0
-					elseif label_item.is_bottom_aligned then
-					else
-						vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
-					end
-					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
-					adjust_vertical := vertical_text_offset_into_available_space + label_item.top_border
-				end
-			end
-		end
-
-	new_label_item (a_string: STRING): EV_GRID_LABEL_ITEM is
-			-- Create uniformed label item
-		require
-			string_attached: a_string /= Void
-		local
-			l_color: EV_COLOR
-		do
-			create Result.make_with_text (a_string)
-			l_color := search_report_grid.background_color
-			Result.set_foreground_color (row_text_color (l_color))
-		ensure
-			new_item_not_void: Result /= Void
-		end
-
-	label_font: EV_FONT is
-			-- Font of report text.
-		local
-			l_label: EV_LABEL
-		once
-			create l_label
-			Result := l_label.font
-		end
-
-	adjust_vertical: INTEGER
-			-- Offset between top of a row and top of charactors in it, buffer for effiency enhancement
-
-	text_height: INTEGER
-			-- Height of the text in the `search_report_grid', buffer for effiency enhancement
-
-	expose_drawable_action (drawable: EV_DRAWABLE; a_item: MSR_ITEM; query_grid_row: EV_GRID_ROW) is
-			-- Draw grid item, to make the text colorfull.
-			-- return width of current drawable item.
-		local
-			offset: INTEGER
-			row_selected, focused: BOOLEAN
-			l_color, focused_sel_color, non_focused_sel_color: EV_COLOR
-			font: EV_FONT
-			l_item: MSR_TEXT_ITEM
-		do
-			font := label_font
-			focused_sel_color := search_report_grid.focused_selection_color
-			non_focused_sel_color := search_report_grid.non_focused_selection_color
-			if adjust_vertical = 0 then
-				compute_adjust_vertical (font, query_grid_row.item (1))
-			end
-			drawable.clear
-			drawable.set_font (font)
-			row_selected := query_grid_row.is_selected
-			focused := search_report_grid.has_focus
-			if row_selected then
-				if focused then
-					drawable.set_foreground_color(focused_sel_color)
-				else
-					drawable.set_foreground_color(non_focused_sel_color)
-				end
-			else
-				drawable.set_foreground_color (search_report_grid.background_color)
-			end
-			l_color := row_text_color (drawable.foreground_color)
-
-			drawable.fill_rectangle (0, 0, drawable.width,drawable.height)
-			l_item ?= a_item
-			if l_item /= Void then
-				drawable.set_foreground_color (l_color)
-				drawable.draw_text_top_left (0, adjust_vertical,
-											l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
-				if not row_selected then
-					drawable.set_foreground_color (preferences.editor_data.operator_text_color)
-				end
-				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
-
-				drawable.draw_text_top_left (offset, adjust_vertical, replace_rnt_to_space (l_item.text))
-				drawable.set_foreground_color (l_color)
-				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text + l_item.text.count - 1))
-
-				drawable.draw_text_top_left (offset,
-											adjust_vertical,
-											l_item.context_text.substring (l_item.start_index_in_context_text + l_item.text.count,
-																			l_item.context_text.count))
-			else
-				drawable.draw_text (0, adjust_vertical, "-")
-			end
-		end
-
-	row_text_color (a_bg_color: EV_COLOR): EV_COLOR is
-			-- Text color according to its background color `a_bg_color'
-		require
-			bg_color_attached: a_bg_color  /= Void
-		do
-			if a_bg_color.lightness > 0.6 then
-				create Result.make_with_rgb (0, 0, 0)
-			else
-				create Result.make_with_rgb (1, 1, 1)
-			end
-		end
-
-	report_summary_string: STRING
-
-	redraw_grid is
-			-- Redraw grid according to search result and refresh summary label.
-		local
-			l_index: INTEGER
-			i, j, k: INTEGER
-			row_count: INTEGER
-			submatch_parent: INTEGER
-			arrayed_list: ARRAYED_LIST[MSR_ITEM]
-			l_item: MSR_ITEM
-			l_class_item: MSR_CLASS_ITEM
-			l_text_item: MSR_TEXT_ITEM
-			l_grid_drawable_item: EV_GRID_DRAWABLE_ITEM
-			l_grid_label_item: EV_GRID_LABEL_ITEM
-			l_class_i: CLASS_I
-			font: EV_FONT
-			l_new_row: EV_GRID_ROW
-		do
-			if multi_search_performer.is_search_launched then
-				if not multi_search_performer.is_empty then
-					l_class_item ?= multi_search_performer.item_matched.first
-					if l_class_item /= Void then
-						search_report_grid.column (1).set_title (grid_head_class)
-					else
-						search_report_grid.column (1).set_title (grid_head_line_number)
-					end
-				end
-				search_report_grid.remove_and_clear_all_rows
-				report_summary_string := "   " +
-										multi_search_performer.text_found_count.out +
-										" found(s) in " +
-										multi_search_performer.class_count.out +
-										" class(es)"
-				summary_label.set_text (report_summary_string)
-				new_search_tool_bar.hide
-
-				l_index := multi_search_performer.index
-				font := label_font
-				from
-					arrayed_list := multi_search_performer.item_matched
-					arrayed_list.start
-					row_count := search_report_grid.row_count + 1
-					i := 0
-					j := 0
-					k := 0
-				until
-					arrayed_list.after
-				loop
-					l_item := arrayed_list.item
-
-					l_class_item ?= arrayed_list.item
-					if l_class_item /= Void then
-						j := j + 1
-						search_report_grid.insert_new_row (row_count)
-						l_new_row := search_report_grid.row (row_count)
-						l_new_row.set_data (l_class_item)
-						if i /= 0 then
-							search_report_grid.set_item (2, i, new_label_item (k.out))
-							search_report_grid.item (2, i).set_foreground_color (preferences.editor_data.number_text_color_preference.value)
-							extend_pointer_actions (search_report_grid.row (i))
-						end
-						i := row_count
-						create l_grid_label_item.make_with_text (l_item.class_name)
-						l_class_i ?= l_class_item.data
-						if l_class_i /= Void then
-							l_grid_label_item.set_pixmap (pixmap_from_class_i (l_class_i))
-						end
-						search_report_grid.set_item (1, row_count, l_grid_label_item)
-						search_report_grid.set_item (3,
-													row_count,
-													new_label_item (once "-"))
-						search_report_grid.set_item (4,
-													row_count,
-													new_label_item (l_item.path))
-						k := 0
-					else
-						l_text_item ?= l_item
-						if l_text_item /= Void then
-							k := k + 1
-							if i /= 0 then
-								search_report_grid.insert_new_row_parented (row_count, search_report_grid.row (i))
-								l_new_row := search_report_grid.row (row_count)
-								l_new_row.set_data (l_text_item)
-							end
-							if row_count > search_report_grid.row_count then
-								search_report_grid.insert_new_row (row_count)
-								l_new_row := search_report_grid.row (row_count)
-								l_new_row.set_data (l_text_item)
-							end
-							search_report_grid.set_item (1,
-														row_count,
-														new_label_item ("Line " + l_text_item.line_number.out + ":"))
-							search_report_grid.set_item (2,
-														row_count,
-														new_label_item (replace_rnt_to_space (l_text_item.text)))
-							search_report_grid.item (2, row_count).set_foreground_color (preferences.editor_data.operator_text_color)
-							create l_grid_drawable_item
-							search_report_grid.set_item (3, row_count, l_grid_drawable_item)
-							l_grid_drawable_item.expose_actions.extend (agent expose_drawable_action (?, l_item, search_report_grid.row (row_count)))
-							l_grid_drawable_item.set_required_width (font.string_width (l_text_item.context_text))
-							search_report_grid.set_item (4, row_count, new_label_item (l_item.path))
-							extend_pointer_actions (l_new_row)
-							if not l_text_item.captured_submatches.is_empty then
-								submatch_parent := row_count
-								search_report_grid.row (row_count).ensure_expandable
-								from
-									l_text_item.captured_submatches.start
-								until
-									l_text_item.captured_submatches.after
-								loop
-									row_count := row_count + 1
-									search_report_grid.insert_new_row_parented (row_count, search_report_grid.row (submatch_parent))
-									search_report_grid.set_item (1,
-																row_count,
-																new_label_item ("Capture " +
-																				l_text_item.captured_submatches.index.out +
-																				": " +
-																				l_text_item.captured_submatches.item))
-									l_text_item.captured_submatches.forth
-								end
-							end
-						end
-					end
-					row_count := row_count + 1
-					arrayed_list.forth
-				end
-				if i /= 0 then
-					search_report_grid.set_item (2, i, new_label_item (k.out))
-					search_report_grid.item (2, i).set_foreground_color (preferences.editor_data.number_text_color)
-				end
-				multi_search_performer.go_i_th (l_index)
-			end
-			adjust_grid_column_width
-		end
-
-	extend_pointer_actions (a_row: EV_GRID_ROW) is
-			-- Extend pointer actions to every row item.
-		require
-			a_row_attached: a_row /= Void
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > a_row.count
-			loop
-				a_row.item (i).pointer_button_press_actions.extend (agent on_grid_row_clicked (?, ?, ?, ?, ?, ?, ?, ?, a_row))
-				i := i + 1
-			end
-		end
-
-	on_grid_row_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW) is
-			-- A row is clicked by mouse pointer.
-		do
-			if not search_report_grid.selected_rows.is_empty then
-				if search_report_grid.selected_rows.first = a_row then
-					on_grid_row_selected (a_row)
-				end
-			end
-		end
-
-	adjust_grid_column_width is
-			-- Adjust grid column width to best fit visible area.
-		local
-			i: INTEGER
-			l_grid_width: INTEGER
-			col : EV_GRID_COLUMN
-			full_width: INTEGER
-			temp_width: INTEGER
-			l_width: INTEGER
-			l_required_width: ARRAYED_LIST [INTEGER]
-		do
-			if search_report_grid.row_count /= 0 then
-				create l_required_width.make (search_report_grid.column_count)
-				from
-					i := 1
-				until
-					i > search_report_grid.column_count
-				loop
-					col := search_report_grid.column (i)
-					l_required_width.extend (col.required_width_of_item_span (1, col.parent.row_count))
-					full_width := full_width + (header_width @ i).max (l_required_width @ i)
-					i := i + 1
-				end
-				l_grid_width := search_report_grid.width
-				from
-					i := 1
-				until
-					i > search_report_grid.column_count
-				loop
-					col := search_report_grid.column (i)
-					temp_width := (header_width @ i).max (l_required_width @ i)
-					l_width := ((temp_width / full_width) * l_grid_width).floor
-					if l_width > temp_width then
-						l_width := temp_width
-					end
-					l_width := l_width-- + column_border_space
-					col.set_width (l_width)
-					i := i + 1
-				end
-			end
-		end
-
-	on_grid_row_selected (a_row: EV_GRID_ROW) is
-			-- Invoke when a row of the report grid selected
-		require
-			a_row_not_void: a_row /= Void
-		local
-			l_item: MSR_ITEM
-		do
-			check_class_succeed := true
-			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
-				a_row.parent_row.expand
-				adjust_grid_column_width
-			end
-			a_row.ensure_visible
-			l_item ?= a_row.data
-			if l_item /= Void then
-				multi_search_performer.start
-				multi_search_performer.search (l_item)
-				if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-					check_class_file_and_do (agent on_grid_row_selected_perform)
-				end
-			end
-		end
-
-	on_grid_row_selected_perform is
-			-- Do actual `on_grid_row_selected'
-		local
-			l_text_item: MSR_TEXT_ITEM
-			l_editor: EB_EDITOR
-		do
-			new_search_set := false
-			l_text_item ?= multi_search_performer.item
-			if l_text_item /= Void then
-				if old_editor /= Void then
-					l_editor := old_editor
-				else
-					l_editor := editor
-				end
---				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
-				if (not is_item_source_changed (l_text_item)) then
-					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
-						if l_editor.text_is_fully_loaded then
-							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
-						end
-					elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-						l_editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
-						l_editor.deselect_all
-					end
-					if l_editor.has_selection then
-						l_editor.show_selection (False)
-					end
-					l_editor.refresh_now
-					summary_label.set_text (report_summary_string)
-					new_search_tool_bar.hide
-				else
-					summary_label.set_text (report_summary_string + "   Item selected has expired.")
-					new_search_tool_bar.show
-				end
-			else
-				summary_label.set_text (report_summary_string)
-				new_search_tool_bar.hide
-			end
-		end
-
 	changed_classes: ARRAYED_LIST [CLASS_I]
 			-- Keep a record of modified class by editor.
 
 	select_current_row is
-			-- Select current row in the grid
-		require
-			search_launched: multi_search_performer.is_search_launched
-		local
-			l_row: EV_GRID_ROW
-			l_row_index: INTEGER
-			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+			-- Select current row in the report.
 		do
-			if not multi_search_performer.off then
-				l_row := grid_row_by_data (search_report_grid, multi_search_performer.item)
-			end
-			if l_row /= Void then
-				l_row_index := l_row.index
-			elseif search_report_grid.row_count > 0 then
-				l_row_index := 1
-			end
-			l_selected_rows := search_report_grid.selected_rows
-			if not l_selected_rows.is_empty then
-				(l_selected_rows @ 1).disable_select
-			end
-			search_report_grid.select_row (l_row_index)
-		end
-
-	grid_row_by_data (a_grid: ES_GRID; a_data: ANY) : EV_GRID_ROW is
-			-- Find a row in a_grid that include a_data
-		local
-			i: INTEGER
-			l_row: EV_GRID_ROW
-			loop_end: BOOLEAN
-		do
-			loop_end := false
-			from
-				i := 1
-			until
-				i > a_grid.row_count or loop_end
-			loop
-				l_row := a_grid.row (i)
-				if l_row.data /= Void and then l_row.data = a_data then
-					Result := l_row
-					loop_end := true
-				end
-				i := i + 1
-			end
+			search_report_grid.select_current_row
 		end
 
 feature {NONE} -- Replacement Implementation
@@ -2042,7 +1562,7 @@ feature {NONE} -- Replacement Implementation
 				multi_search_performer.set_replace_string (currently_replacing)
 				multi_search_performer.replace_all
 				update_combo_box_specific (replace_combo_box, currently_replacing)
-				redraw_grid
+				search_report_grid.redraw_grid
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
@@ -2093,7 +1613,7 @@ feature {NONE} -- Destroy behavior.
 			Precursor {EB_SEARCH_TOOL}
 		end
 
-feature {NONE} -- Implementation
+feature {EB_SEARCH_REPORT_GRID} -- Implementation
 
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
@@ -2342,28 +1862,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
-			-- Grid pebble function
-		local
-			l_row: EV_GRID_ROW
-			l_item: MSR_ITEM
-			l_class_name: STRING
-			l_list: LIST [CLASS_I]
-		do
-			if a_item /= Void then
-				l_row := a_item.row
-				l_item ?= l_row.data
-				if l_item /= Void then
-					create l_class_name.make_from_string (l_item.class_name)
-					l_class_name.to_upper
-					l_list := manager.eiffel_universe.classes_with_name (l_class_name)
-					if l_list /= Void and then not l_list.is_empty then
-						Result := stone_from_class_i (l_list.first)
-					end
-				end
-			end
-		end
-
 	clusters_in_the_project: EB_CLUSTERS is
 			-- Clusters in the project
 		do
@@ -2465,8 +1963,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_search_set: BOOLEAN
+	new_search_set: BOOLEAN assign set_new_search_set
 			-- Will a new search be launched? (Incremental search excluded)
+
+	set_new_search_set (a_new: BOOLEAN) is
+			--
+		do
+			new_search_set := a_new
+		ensure
+			new_search_set_set: new_search_set = a_new
+		end
 
 	old_search_key_value: STRING
 			-- Last search keyword.
@@ -2585,19 +2091,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

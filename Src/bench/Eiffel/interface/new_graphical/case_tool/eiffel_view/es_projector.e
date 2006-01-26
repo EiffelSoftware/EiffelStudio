@@ -22,9 +22,9 @@ inherit
 			default_cursor,
 			world
 		end
-	
+
 	EB_CONSTANTS
-		
+
 create
 	make_with_buffer
 
@@ -36,32 +36,32 @@ feature {NONE} -- Initialization
 			l_figure: EG_FIGURE
 		do
 			Precursor {EV_MODEL_BUFFER_PROJECTOR} (a_world, a_drawing_area)
-			
+
 				-- Below, we need to create the corresponding figure instance and
 				-- set it to the local variable `l_figure' so that we can call
 				-- `recycle' on it when we are completely done with it.
 			create {BON_CLIENT_SUPPLIER_FIGURE} l_figure
 			register_figure (l_figure, agent draw_bon_client_supplier)
 			l_figure.recycle
-			
+
 			create {BON_INHERITANCE_FIGURE} l_figure
 			register_figure (l_figure, agent draw_bon_inheritance)
 			l_figure.recycle
-			
+
 			create {BON_CLASS_FIGURE} l_figure
 			register_figure (l_figure, agent draw_bon_class)
 			l_figure.recycle
-			
+
 			create {UML_INHERITANCE_FIGURE} l_figure
 			register_figure (l_figure, agent draw_uml_inheritance)
 			l_figure.recycle
 		end
-		
+
 feature -- Status report
 
 	is_painting_disabled: BOOLEAN
 			-- Is painting disabled?
-			
+
 feature -- Access
 
 	world: EIFFEL_WORLD
@@ -76,7 +76,7 @@ feature -- Status settings
 		ensure
 			set: not is_painting_disabled
 		end
-		
+
 	disable_painting is
 			-- Set `is_painting_disabled' to True.
 		do
@@ -84,7 +84,7 @@ feature -- Status settings
 		ensure
 			set: is_painting_disabled
 		end
-		
+
 feature -- Display updates
 
 	full_project is
@@ -98,7 +98,7 @@ feature -- Display updates
 				project_rectangle (rectangle)
 			end
 		end
-		
+
 	project is
 			-- Make a standard projection of world on device.
 		local
@@ -131,7 +131,7 @@ feature -- Display updates
 				Precursor {EV_MODEL_BUFFER_PROJECTOR} (u)
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	on_paint (x, y, w, h: INTEGER) is
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 				update_rectangle (create {EV_RECTANGLE}.make (x, y, w, h), x, y)
 			end
 		end
-		
+
 	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER) is
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		do
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 				Precursor {EV_MODEL_BUFFER_PROJECTOR} (u, a_x, a_y)
 			end
 		end
-		
+
 	update is
 			-- Update display by drawing the right part of the buffer on `area'.
 		do
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		do
 			Result := cursors.open_hand_cursor
 		end
-		
+
 	draw_bon_class (a_class: BON_CLASS_FIGURE) is
 			-- Draw `a_class'
 		local
@@ -176,8 +176,8 @@ feature {NONE} -- Implementation
 				draw_figure_ellipse (r_ellipse)
 			end
 		end
-		
-		
+
+
 	draw_bon_client_supplier (group: BON_CLIENT_SUPPLIER_FIGURE) is
 			-- Draw `group'.
 		require -- from EV_MODEL_PROJECTION_ROUTINES
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	draw_bon_inheritance (group: BON_INHERITANCE_FIGURE) is
 			-- Draw `group'.
 		require
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	draw_uml_inheritance (group: UML_INHERITANCE_FIGURE) is
 			-- Draw `group'.
 		require
@@ -315,13 +315,13 @@ feature {NONE} -- Implementation
 		do
 			d := drawable
 			d.set_foreground_color (line.foreground_color)
-			
-			
+
+
 			if line.point_count > 2 then
 				point_array := create {EV_COORDINATE_ARRAY}.make_from_area (line.point_array)
 
 				d.set_line_width (line.line_width)
-				
+
 				p := line.end_arrow
 				poly := create {EV_COORDINATE_ARRAY}.make_from_area (p.point_array)
 				if offset_x /= 0 or else offset_y /= 0 then
@@ -339,14 +339,14 @@ feature {NONE} -- Implementation
 						d.fill_polygon (poly)
 						d.set_foreground_color (line.foreground_color)
 					end
-					d.draw_polyline (poly, not is_client_supplier)	
+					d.draw_polyline (poly, not is_client_supplier)
 				end
 				a1 := p.point_array.item (1)
 				a2 := p.point_array.item (2)
 				l_item := point_array.item (point_array.count)
 				old_lex := l_item.x_precise
 				old_ley := l_item.y_precise
-				
+
 				p0 := point_array.item (point_array.count - 1)
 				x1 := p0.x
 				y1 := p0.y
@@ -365,13 +365,13 @@ feature {NONE} -- Implementation
 				else
 					d.draw_polyline (point_array, line.is_closed)
 				end
-			
+
 				point_array.item (point_array.count).set_precise (old_lex, old_ley)
 			else
 				pa := line.point_array
-				
+
 				d.set_line_width (line.line_width)
-				
+
 				p := line.end_arrow
 				poly := create {EV_COORDINATE_ARRAY}.make_from_area (p.point_array)
 				if offset_x /= 0 or else offset_y /= 0 then
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 						d.set_foreground_color (line.foreground_color)
 					end
 					d.draw_polyline (poly, not is_client_supplier)
-					
+
 					deoffset_coordinates (poly)
 				else
 					if not is_client_supplier then
@@ -394,14 +394,14 @@ feature {NONE} -- Implementation
 				end
 				a1 := p.point_array.item (1)
 				a2 := p.point_array.item (2)
-				
+
 				p0 := pa.item (0)
 				x1 := p0.x + offset_x
 				y1 := p0.y + offset_y
-				
+
 				x2 := as_integer ((a1.x_precise + a2.x_precise) / 2) + offset_x
 				y2 := as_integer ((a1.y_precise + a2.y_precise) / 2) + offset_y
-				
+
 				if (x1 - x2).abs = 1 then
 					x1 := x2
 				end
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 				point_array := create {EV_COORDINATE_ARRAY}.make_from_area (line.point_array)
 
 				d.set_line_width (line.line_width)
-				
+
 				p := line.end_arrow
 				poly := create {EV_COORDINATE_ARRAY}.make_from_area (p.point_array)
 				if offset_x /= 0 or else offset_y /= 0 then
@@ -440,14 +440,14 @@ feature {NONE} -- Implementation
 					d.fill_polygon (poly)
 					deoffset_coordinates (poly)
 				else
-					d.fill_polygon (poly)	
+					d.fill_polygon (poly)
 				end
 				a1 := p.point_array.item (1)
 				a2 := p.point_array.item (2)
 				l_item := point_array.item (point_array.count)
 				old_lex := l_item.x_precise
 				old_ley := l_item.y_precise
-				
+
 				p0 := point_array.item (point_array.count - 1)
 				x1 := p0.x
 				y1 := p0.y
@@ -476,13 +476,13 @@ feature {NONE} -- Implementation
 						d.draw_polyline (point_array, line.is_closed)
 					end
 				end
-			
+
 				point_array.item (point_array.count).set_precise (old_lex, old_ley)
 			else
 				pa := line.point_array
-				
+
 				d.set_line_width (line.line_width)
-				
+
 				p := line.end_arrow
 				poly := create {EV_COORDINATE_ARRAY}.make_from_area (p.point_array)
 				if offset_x /= 0 or else offset_y /= 0 then
@@ -490,15 +490,15 @@ feature {NONE} -- Implementation
 					d.fill_polygon (poly)
 					deoffset_coordinates (poly)
 				else
-					d.fill_polygon (poly)	
+					d.fill_polygon (poly)
 				end
 				a1 := p.point_array.item (1)
 				a2 := p.point_array.item (2)
-				
+
 				p0 := pa.item (0)
 				x1 := p0.x + offset_x
 				y1 := p0.y + offset_y
-				
+
 				x2 := as_integer ((a1.x_precise + a2.x_precise) / 2) + offset_x
 				y2 := as_integer ((a1.y_precise + a2.y_precise) / 2) + offset_y
 				if (x1 - x2).abs = 1 then

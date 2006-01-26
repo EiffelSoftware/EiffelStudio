@@ -390,7 +390,7 @@ feature -- Element change
 			until
 				selected_figures.after
 			loop
-				selected_figures.item.disable_selected
+				set_figure_selection_state (selected_figures.item, False)
 				selected_figures.forth
 			end
 			selected_figures.wipe_out
@@ -511,7 +511,7 @@ feature -- Element change
 				selected_figures.start
 				selected_figures.search (link_figure)
 				selected_figures.remove
-				link_figure.disable_selected
+				set_figure_selection_state (link_figure, False)
 			end
 			figure_removed (link_figure)
 		ensure
@@ -557,7 +557,7 @@ feature -- Element change
 				selected_figures.start
 				selected_figures.search (node_figure)
 				selected_figures.remove
-				node_figure.disable_selected
+				set_figure_selection_state (node_figure, False)
 			end
 			figure_removed (node_figure)
 		ensure
@@ -627,7 +627,7 @@ feature -- Element change
 				selected_figures.start
 				selected_figures.search (cluster_figure)
 				selected_figures.remove
-				cluster_figure.disable_selected
+				set_figure_selection_state (cluster_figure, False)
 			end
 			figure_removed (cluster_figure)
 		ensure
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 			not_has_cluster: not has_cluster_figure (a_cluster)
-			non_linkable_allready_part_of_view: not a_cluster.flat_linkables.there_exists (agent has_linkable_figure)
+			non_linkable_already_part_of_view: not a_cluster.flat_linkables.there_exists (agent has_linkable_figure)
 		local
 			cur_cluster: EG_CLUSTER
 			cur_node: like node_type
@@ -982,15 +982,28 @@ feature {NONE} -- Implementation
 				if not figure_was_selected and then button = 1 then --and then ev_application.ctrl_pressed then
 					if figure.is_selected and then ev_application.ctrl_pressed then
 						selected_figures.prune_all (figure)
-						figure.disable_selected
+						set_figure_selection_state (figure, False)
 					elseif not selected_figures.has (figure) then
 						selected_figures.extend (figure)
-						figure.enable_selected
+						set_figure_selection_state (figure, True)
 					end
 					figure_was_selected := True
 				end
 			end
 			selected_figure := figure
+		end
+
+	set_figure_selection_state (a_figure: EG_FIGURE; a_selection_state: BOOLEAN) is
+			-- Set `is_selected' state of `a_figure' to `a_selection_state'.
+		local
+			a_class: EIFFEL_CLASS_FIGURE
+		do
+			if a_selection_state then
+				a_figure.enable_selected
+			else
+				a_figure.disable_selected
+			end
+			a_class ?= a_figure
 		end
 
 	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
@@ -1074,7 +1087,7 @@ feature {NONE} -- Implementation
 				loop
 					if nodes.item.bounding_box.intersects (l_bbox) then
 						selected_figures.extend (nodes.item)
-						nodes.item.enable_selected
+						set_figure_selection_state (nodes.item, True)
 					end
 					nodes.forth
 				end

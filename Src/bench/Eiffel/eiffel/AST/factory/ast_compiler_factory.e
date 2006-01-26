@@ -18,7 +18,8 @@ inherit
 			new_expr_address_as,
 			new_feature_as,
 			new_integer_as,
-			new_integer_hexa_as
+			new_integer_hexa_as,
+			new_external_lang_as
 		end
 
 	PREDEFINED_NAMES
@@ -132,6 +133,14 @@ feature -- Access
 				error_handler.raise_error
 			elseif e /= Void then
 				create Result.initialize (e, a_as, l_as, r_as)
+			end
+		end
+
+	new_external_lang_as (l: STRING_AS): COMPILER_EXTERNAL_LANG_AS is
+			-- New EXTERNAL_LANGUAGE AST node
+		do
+			if l /= Void then
+				create Result.initialize (l)
 			end
 		end
 

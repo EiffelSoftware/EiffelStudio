@@ -80,6 +80,7 @@ feature {NONE} -- Implementation
 				-- declaration that wont do!
 			l_extension: EXTERNAL_EXT_I
 			l_il_ext: IL_EXTENSION_I
+			l_lang: COMPILER_EXTERNAL_LANG_AS
 			l_is_deferred_external, l_is_attribute_external: BOOLEAN
 			l_result: FEATURE_I
 			l_assigner_name_id: INTEGER
@@ -132,7 +133,11 @@ feature {NONE} -- Implementation
 
 						-- External procedure
 					l_external_body ?= l_routine.routine_body
-					l_extension := l_external_body.language_name.extension_i
+					l_lang ?= l_external_body.language_name
+					check
+						l_lang_not_void: l_lang /= Void
+					end
+					l_extension := l_lang.extension_i
 					if l_external_body.alias_name_id > 0 then
 						l_extension.set_alias_name_id (l_external_body.alias_name_id)
 					end
@@ -185,7 +190,11 @@ feature {NONE} -- Implementation
 
 						-- External procedure
 					l_external_body ?= l_routine.routine_body
-					l_extension := l_external_body.language_name.extension_i
+					l_lang ?= l_external_body.language_name
+					check
+						l_lang_not_void: l_lang /= Void
+					end
+					l_extension := l_lang.extension_i
 					if l_external_body.alias_name_id > 0 then
 						l_extension.set_alias_name_id (l_external_body.alias_name_id)
 					end
@@ -258,19 +267,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -21,7 +21,7 @@ inherit
 create
 	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (l: like language_name) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
@@ -29,7 +29,6 @@ feature {AST_FACTORY} -- Initialization
 			l_not_void: l /= Void
 		do
 			language_name := l
-			parse
 		ensure
 			language_name_set: language_name = l
 		end
@@ -48,24 +47,12 @@ feature -- Attributes
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 
-	extension: EXTERNAL_EXTENSION_AS
-			-- Parsed external extension
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-				-- FIXME: is_equivalent should be done on EXTERNAL_EXTENSION_AS
 			Result := language_name.is_equivalent (other.language_name)
-		end
-
-feature {NONE} -- Implementation
-
-	parse is
-			-- Parse external declaration
-		do
-			-- do nothing
 		end
 
 indexing
@@ -74,19 +61,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

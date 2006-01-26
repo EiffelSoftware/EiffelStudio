@@ -59,7 +59,7 @@ feature -- Basic operations
 			if is_empty then
 				a_customizable_item ?= v
 				if v /= void then
-					pix := a_customizable_item.data.pixmap @ 1
+					pix := a_customizable_item.data.pixmap
 					set_pixmaps_size (pix.width, pix.height)
 				end
 			end

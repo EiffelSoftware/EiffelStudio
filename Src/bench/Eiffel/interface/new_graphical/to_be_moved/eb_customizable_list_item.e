@@ -27,7 +27,7 @@ feature -- Initialization
 			command: EB_TOOLBARABLE_COMMAND
 		do
 			make_with_text (v.description)
-			set_pixmap (v.pixmap @ 1)
+			set_pixmap (v.pixmap)
 			data := v
 			command ?= v
 			if command /= Void then
@@ -73,7 +73,7 @@ feature -- Interactivity
 					parent.put_right (an_item)
 				end
 			end
-		end	
+		end
 
 feature -- Access
 

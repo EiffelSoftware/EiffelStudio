@@ -16,66 +16,71 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PIXMAP_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Breakpoint Icons
 
 	icon_bp_arrow: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_arrow")
+			Result := pixmap_from_constant (icon_bp_arrow_value)
 		end
 
 	icon_bp_slot: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_slot")
+			Result := pixmap_from_constant (icon_bp_slot_value)
 		end
 
 	icon_bp_enabled: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_enabled")
+			Result := pixmap_from_constant (icon_bp_enabled_value)
 		end
 
 	icon_bp_disabled: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_disabled")
+			Result := pixmap_from_constant (icon_bp_disabled_value)
 		end
 
 	icon_bp_slot_arrow: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_slot_arrow")
+			Result := pixmap_from_constant (icon_bp_slot_arrow_value)
 		end
 
 	icon_bp_enabled_arrow: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_enabled_arrow")
+			Result := pixmap_from_constant (icon_bp_enabled_arrow_value)
 		end
 
 	icon_bp_disabled_arrow: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_disabled_arrow")
+			Result := pixmap_from_constant (icon_bp_disabled_arrow_value)
 		end
 
 	icon_bp_slot_stopped: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_slot_stopped")
+			Result := pixmap_from_constant (icon_bp_slot_stopped_value)
 		end
 
 	icon_bp_enabled_stopped: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_enabled_stopped")
+			Result := pixmap_from_constant (icon_bp_enabled_stopped_value)
 		end
 
 	icon_bp_disabled_stopped: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_disabled_stopped")
+			Result := pixmap_from_constant (icon_bp_disabled_stopped_value)
 		end
 
 	icon_bp_enabled_condition: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_enabled_condition")
+			Result := pixmap_from_constant (icon_bp_enabled_condition_value)
 		end
 
 	icon_bp_disabled_condition: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_bp_disabled_condition")
+			Result := pixmap_from_constant (icon_bp_disabled_condition_value)
 		end
 
 feature -- Logical Icon Groups
@@ -131,7 +136,7 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 	image_matrix: EV_PIXMAP is
 			-- Matrix pixmap containing all of the icons
 		once
-			Result := pixmap_file_content ("icon_matrix_12")
+			Result := load_pixmap_from_repository ("icon_matrix_12")
 		end
 
 	pixmap_path: DIRECTORY_NAME is
@@ -141,24 +146,39 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "png">>)
 		end
 
-	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
-			-- Lookup hash table for Studio pixmaps
+	pixmap_lookup_table: ES_PIXMAP_LOOKUP_TABLE is
+			--
 		once
-			create Result.make (12)
-			Result.put ([1, 1], "icon_bp_arrow")
-			Result.put ([1, 2], "icon_bp_slot")
-			Result.put ([1, 3], "icon_bp_enabled")
-			Result.put ([1, 4], "icon_bp_disabled")
-			Result.put ([1, 5], "icon_bp_slot_arrow")
-			Result.put ([1, 6], "icon_bp_enabled_arrow")
-			Result.put ([1, 7], "icon_bp_disabled_arrow")
-			Result.put ([1, 8], "icon_bp_slot_stopped")
-			Result.put ([1, 9], "icon_bp_enabled_stopped")
-			Result.put ([1, 10], "icon_bp_disabled_stopped")
-			Result.put ([1, 11], "icon_bp_enabled_condition")
-			Result.put ([1, 12], "icon_bp_disabled_condition")
-			Result.compare_objects
+			create Result.make_with_values (12, 1)
+			Result.add_pixmap (1, 1, icon_bp_arrow_value)
+			Result.add_pixmap (2, 1, icon_bp_slot_value)
+			Result.add_pixmap (3, 1, icon_bp_enabled_value)
+			Result.add_pixmap (4, 1, icon_bp_disabled_value)
+			Result.add_pixmap (5, 1, icon_bp_slot_arrow_value)
+			Result.add_pixmap (6, 1, icon_bp_enabled_arrow_value)
+			Result.add_pixmap (7, 1, icon_bp_disabled_arrow_value)
+			Result.add_pixmap (8, 1, icon_bp_slot_stopped_value)
+			Result.add_pixmap (9, 1, icon_bp_enabled_stopped_value)
+			Result.add_pixmap (10, 1, icon_bp_disabled_stopped_value)
+			Result.add_pixmap (11, 1, icon_bp_enabled_condition_value)
+			Result.add_pixmap (12, 1, icon_bp_disabled_condition_value)
 		end
+
+feature {NONE} -- Constants
+
+	icon_bp_arrow_value,
+	icon_bp_slot_value,
+	icon_bp_enabled_value,
+	icon_bp_disabled_value,
+	icon_bp_slot_arrow_value,
+	icon_bp_enabled_arrow_value,
+	icon_bp_disabled_arrow_value,
+	icon_bp_slot_stopped_value,
+	icon_bp_enabled_stopped_value,
+	icon_bp_disabled_stopped_value,
+	icon_bp_enabled_condition_value,
+	icon_bp_disabled_condition_value: INTEGER is unique;
+		-- Constants used for pixmap table lookup.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -166,19 +186,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

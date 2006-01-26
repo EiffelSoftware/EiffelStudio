@@ -16,12 +16,19 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PIXMAP_FACTORY
+		export
+			{NONE} all
+		redefine
+			pixmap_lookup_table
+		end
+
 feature -- Pixmap Icons
 
 	icon_bon_deferred: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_bon_deferred")
+			Result := pixmap_from_constant (icon_bon_deferred_value)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -29,7 +36,7 @@ feature -- Pixmap Icons
 	icon_bon_effective: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_bon_effective")
+			Result := pixmap_from_constant (icon_bon_effective_value)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -37,7 +44,7 @@ feature -- Pixmap Icons
 	icon_bon_interfaced: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_bon_interfaced")
+			Result := pixmap_from_constant (icon_bon_interfaced_value)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -45,266 +52,238 @@ feature -- Pixmap Icons
 	icon_bon_persistent: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_bon_persistent")
+			Result := pixmap_from_constant (icon_bon_persistent_value)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	icon_close: ARRAY [EV_PIXMAP] is
+	icon_close: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_close")>>
+			Result := pixmap_from_constant (icon_close_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_delete: ARRAY [EV_PIXMAP] is
+	icon_delete: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_delete")>>
+			Result := pixmap_from_constant (icon_delete_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_down_triangle: ARRAY [EV_PIXMAP] is
+	icon_down_triangle: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_down_triangle")>>
+			Result := pixmap_from_constant (icon_down_triangle_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_edit_expression: ARRAY [EV_PIXMAP] is
+	icon_edit_expression: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_edit_expression")>>
+			Result := pixmap_from_constant (icon_edit_expression_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_expand_string: ARRAY [EV_PIXMAP] is
+	icon_expand_string: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_expand_string")>>
+			Result := pixmap_from_constant (icon_expand_string_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_maximize: ARRAY [EV_PIXMAP] is
+	icon_maximize: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_maximize")>>
+			Result := pixmap_from_constant (icon_maximize_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_minimize: ARRAY [EV_PIXMAP] is
+	icon_minimize: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_minimize")>>
+			Result := pixmap_from_constant (icon_minimize_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_mini_back: ARRAY [EV_PIXMAP] is
+	icon_mini_back: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_mini_back")>>
+			Result := pixmap_from_constant (icon_mini_back_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_mini_down: ARRAY [EV_PIXMAP] is
+	icon_mini_down: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_mini_down")>>
+			Result := pixmap_from_constant (icon_mini_down_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_mini_forth: ARRAY [EV_PIXMAP] is
+	icon_mini_forth: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_mini_forth")>>
+			Result := pixmap_from_constant (icon_mini_forth_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_mini_up: ARRAY [EV_PIXMAP] is
+	icon_mini_up: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_mini_up")>>
+			Result := pixmap_from_constant (icon_mini_up_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_new_class: ARRAY [EV_PIXMAP] is
+	icon_new_class: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_new_class")>>
+			Result := pixmap_from_constant (icon_new_class_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_new_cluster: ARRAY [EV_PIXMAP] is
-			--
+	icon_new_cluster: EV_PIXMAP is
 		once
-			Result := <<pixmap_file_content ("icon_new_cluster")>>
+			Result := pixmap_from_constant (icon_new_cluster_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_new_expression: ARRAY [EV_PIXMAP] is
+	icon_new_expression: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_new_expression")>>
+			Result := pixmap_from_constant (icon_new_expression_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_new_feature: ARRAY [EV_PIXMAP] is
+	icon_new_feature: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_new_feature")>>
+			Result := pixmap_from_constant (icon_new_feature_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_new: ARRAY [EV_PIXMAP] is
+	icon_new: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_new")>>
+			Result := pixmap_from_constant (icon_new_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	icon_nothing: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_nothing")
+			Result := pixmap_from_constant (icon_nothing_value)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	icon_numeric_format: ARRAY [EV_PIXMAP] is
+	icon_numeric_format: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_numeric_format")>>
+			Result := pixmap_from_constant (icon_numeric_format_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_on_off: ARRAY [EV_PIXMAP] is
+	icon_on_off: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_on_off")>>
+			Result := pixmap_from_constant (icon_on_off_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_open_menu: ARRAY [EV_PIXMAP] is
+	icon_open_menu: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_open_menu")>>
+			Result := pixmap_from_constant (icon_open_menu_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_restore: ARRAY [EV_PIXMAP] is
+	icon_restore: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_restore")>>
+			Result := pixmap_from_constant (icon_restore_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_save_call_stack: ARRAY [EV_PIXMAP] is
+	icon_save_call_stack: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_save_call_stack")>>
+			Result := pixmap_from_constant (icon_save_call_stack_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_set_stack_depth: ARRAY [EV_PIXMAP] is
+	icon_set_stack_depth: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_set_stack_depth")>>
+			Result := pixmap_from_constant (icon_set_stack_depth_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_slice_limits: ARRAY [EV_PIXMAP] is
+	icon_slice_limits: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_slice_limits")>>
+			Result := pixmap_from_constant (icon_slice_limits_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_toggle_alias: ARRAY [EV_PIXMAP] is
+	icon_toggle_alias: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_toggle_alias")>>
+			Result := pixmap_from_constant (icon_toggle_alias_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_toggle_assigner: ARRAY [EV_PIXMAP] is
+	icon_toggle_assigner: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_toggle_assigner")>>
+			Result := pixmap_from_constant (icon_toggle_assigner_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_toggle_signature: ARRAY [EV_PIXMAP] is
+	icon_toggle_signature: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_toggle_signature")>>
+			Result := pixmap_from_constant (icon_toggle_signature_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
-	icon_view: ARRAY [EV_PIXMAP] is
+	icon_view: EV_PIXMAP is
 			--
 		once
-			Result := <<pixmap_file_content ("icon_view")>>
+			Result := pixmap_from_constant (icon_view_value)
 		ensure
 			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	icon_dbg_error: EV_PIXMAP is
 			--
 		once
-			Result := pixmap_file_content ("icon_dbg_error")
+			Result := pixmap_from_constant (icon_dbg_error_value)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -320,7 +299,7 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 	image_matrix: EV_PIXMAP is
 			-- Matrix pixmap containing all of the screen cursors
 		once
-			Result := pixmap_file_content ("icon_matrix_8")
+			Result := load_pixmap_from_repository ("icon_matrix_8")
 		end
 
 	pixmap_path: DIRECTORY_NAME is
@@ -330,53 +309,90 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "png">>)
 		end
 
-	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
-			-- Lookup hash table for studio pixmaps
+	pixmap_lookup_table: ES_PIXMAP_LOOKUP_TABLE is
+			--
 		once
-			create Result.make (40)
-
-			Result.put ([1, 1], "icon_close")
-			Result.put ([1, 2], "icon_maximize")
-			Result.put ([1, 3], "icon_restore")
-			Result.put ([1, 4], "icon_minimize")
-			Result.put ([1, 5], "icon_down_triangle")
-			Result.put ([1, 6], "icon_new_feature")
-			Result.put ([1, 7], "icon_toggle_signature")
-			Result.put ([1, 8], "icon_toggle_assigner")
-			Result.put ([1, 9], "icon_toggle_alias")
-			Result.put ([1, 10], "icon_new")
-			Result.put ([1, 11], "icon_mini_back")
-			Result.put ([1, 12], "icon_mini_down")
-			Result.put ([1, 13], "icon_mini_forth")
-			Result.put ([1, 14], "icon_mini_up")
-			Result.put ([1, 15], "icon_new_class")
-			Result.put ([1, 16], "icon_view")
-
-			Result.put ([2, 1], "icon_new_cluster")
-			Result.put ([2, 2], "icon_numeric_format")
-			Result.put ([2, 3], "icon_nothing")
-			Result.put ([2, 4], "icon_dbg_error")
-			Result.put ([2, 5], "icon_open_menu")
-			Result.put ([2, 6], "icon_new_expression")
-			Result.put ([2, 7], "icon_edit_expression")
-			Result.put ([2, 8], "icon_on_off")
-			Result.put ([2, 9], "icon_delete")
-			Result.put ([2, 10], "icon_save_call_stack")
-			Result.put ([2, 11], "icon_set_stack_depth")
-			Result.put ([2, 12], "icon_slice_limits")
-			Result.put ([2, 13], "icon_expand_string")
-			Result.put ([2, 14], "icon_bon_persistent")
-			Result.put ([2, 15], "icon_bon_interfaced")
-			Result.put ([2, 16], "icon_bon_effective")
-
-			Result.put ([3, 1], "icon_bon_deferred")
-			Result.put ([3, 2], "bon_persistent")
-			Result.put ([3, 3], "bon_interfaced")
-			Result.put ([3, 4], "bon_effective")
-			Result.put ([3, 5], "bon_deferred")
-
-			Result.compare_objects
+			create Result.make_with_values (16, 3)
+			Result.add_pixmap (1, 1, icon_close_value)
+			Result.add_pixmap (2, 2, icon_numeric_format_value)
+			Result.add_pixmap (2, 1, icon_maximize_value)
+			Result.add_pixmap (3, 1, icon_restore_value)
+			Result.add_pixmap (4, 1, icon_minimize_value)
+			Result.add_pixmap (5, 1, icon_down_triangle_value)
+			Result.add_pixmap (6, 1, icon_new_feature_value)
+			Result.add_pixmap (7, 1, icon_toggle_signature_value)
+			Result.add_pixmap (8, 1, icon_toggle_assigner_value)
+			Result.add_pixmap (9, 1, icon_toggle_alias_value)
+			Result.add_pixmap (10, 1, icon_new_value)
+			Result.add_pixmap (11, 1, icon_mini_back_value)
+			Result.add_pixmap (12, 1, icon_mini_down_value)
+			Result.add_pixmap (13, 1, icon_mini_forth_value)
+			Result.add_pixmap (14, 1, icon_mini_up_value)
+			Result.add_pixmap (15, 1, icon_new_class_value)
+			Result.add_pixmap (16, 1, icon_view_value)
+			Result.add_pixmap (1, 2, icon_new_cluster_value)
+			Result.add_pixmap (2, 2, icon_numeric_format_value)
+			Result.add_pixmap (3, 2, icon_nothing_value)
+			Result.add_pixmap (4, 2, icon_dbg_error_value)
+			Result.add_pixmap (5, 2, icon_open_menu_value)
+			Result.add_pixmap (6, 2, icon_new_expression_value)
+			Result.add_pixmap (7, 2, icon_edit_expression_value)
+			Result.add_pixmap (8, 2, icon_on_off_value)
+			Result.add_pixmap (9, 2, icon_delete_value)
+			Result.add_pixmap (10, 2, icon_save_call_stack_value)
+			Result.add_pixmap (11, 2, icon_set_stack_depth_value)
+			Result.add_pixmap (12, 2, icon_slice_limits_value)
+			Result.add_pixmap (13, 2, icon_expand_string_value)
+			Result.add_pixmap (14, 2, icon_bon_persistent_value)
+			Result.add_pixmap (15, 2, icon_bon_interfaced_value)
+			Result.add_pixmap (16, 2, icon_bon_effective_value)
+			Result.add_pixmap (1, 3, icon_bon_deferred_value)
+			Result.add_pixmap (2, 3, bon_persistent_value)
+			Result.add_pixmap (3, 3, bon_interfaced_value)
+			Result.add_pixmap (4, 3, bon_effective_value)
+			Result.add_pixmap (5, 3, bon_deferred_value)
 		end
+
+feature {NONE} -- Constants
+
+	icon_close_value,
+	icon_maximize_value,
+	icon_restore_value,
+	icon_minimize_value,
+	icon_down_triangle_value,
+	icon_new_feature_value,
+	icon_toggle_signature_value,
+	icon_toggle_assigner_value,
+	icon_toggle_alias_value,
+	icon_new_value,
+	icon_mini_back_value,
+	icon_mini_down_value,
+	icon_mini_forth_value,
+	icon_mini_up_value,
+	icon_new_class_value,
+	icon_view_value,
+	icon_new_cluster_value,
+	icon_numeric_format_value,
+	icon_nothing_value,
+	icon_dbg_error_value,
+	icon_open_menu_value,
+	icon_new_expression_value,
+	icon_edit_expression_value,
+	icon_on_off_value,
+	icon_delete_value,
+	icon_save_call_stack_value,
+	icon_set_stack_depth_value,
+	icon_slice_limits_value,
+	icon_expand_string_value,
+	icon_bon_persistent_value,
+	icon_bon_interfaced_value,
+	icon_bon_effective_value,
+	icon_bon_deferred_value,
+	bon_persistent_value,
+	bon_interfaced_value,
+	bon_effective_value,
+	bon_deferred_value: INTEGER is unique;
+		-- Constants used for pixmap lookup.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -384,19 +400,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

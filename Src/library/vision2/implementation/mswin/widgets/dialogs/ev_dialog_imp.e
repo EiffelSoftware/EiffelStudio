@@ -210,8 +210,8 @@ feature {EV_DIALOG_I} -- Implementation
 		do
 			application_imp.remove_root_window (Current)
 
-			wel_destroy_window
 			set_is_destroyed (True)
+			wel_destroy_window
 		end
 
 feature {NONE} -- Implementation

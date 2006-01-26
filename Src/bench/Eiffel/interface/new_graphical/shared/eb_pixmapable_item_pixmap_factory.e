@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 			if a_cluster.is_library or else a_cluster.is_precompiled then
 				Result := (Pixmaps.Icon_read_only_cluster)
 			else
-				Result := (Pixmaps.Icon_cluster_symbol @ 1)
+				Result := (Pixmaps.Icon_cluster_symbol)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 				elseif a_feature.is_frozen then
 					Result := Pixmaps.Icon_frozen_feature
 				else
-					Result := Pixmaps.Icon_feature @ 1
+					Result := Pixmaps.Icon_feature
 				end
 			end
 		ensure

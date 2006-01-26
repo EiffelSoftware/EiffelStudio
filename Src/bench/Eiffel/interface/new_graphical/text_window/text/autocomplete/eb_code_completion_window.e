@@ -658,9 +658,9 @@ feature {NONE} -- Implementation
 						end
 					else
 							-- Completion list is being shown automatically
-						check
-							non_completion_term: before_complete.is_empty
-						end
+--						check
+--							non_completion_term: before_complete.is_empty
+--						end
 						show_needed := True
 					end
 				end

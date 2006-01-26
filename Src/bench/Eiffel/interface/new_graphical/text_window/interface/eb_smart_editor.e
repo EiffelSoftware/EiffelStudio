@@ -185,6 +185,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Complete feature name.
 		do
 			set_completing_feature (true)
+			if auto_complete_after_dot and then not shifted_key then
+				completing_automatically := True
+			end
 			complete_code
 		end
 
@@ -192,6 +195,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Complete class name.
 		do
 			set_completing_feature (false)
+			if auto_complete_after_dot and then not shifted_key then
+				completing_automatically := True
+			end
 			complete_code
 		end
 
@@ -370,14 +376,6 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 						end
 					else
 						display_not_editable_warning_message
-					end
-				elseif code = key_period then
-						-- case: .				
-					Precursor (ev_key)
-					if auto_complete_after_dot and then not shifted_key then
-						completing_automatically := True
-						completion_timeout.reset_count
-						completion_timeout.actions.resume
 					end
 				else
 					Precursor (ev_key)
@@ -913,6 +911,7 @@ feature {NONE} -- Code completable implementation
 		do
 			if a_key /= Void then
 				if
+					auto_complete_after_dot and then
 					a_key.code = {EV_KEY_CONSTANTS}.key_period and
 					not a_ctrl and
 					not a_alt and
@@ -920,6 +919,7 @@ feature {NONE} -- Code completable implementation
 				then
 					Result := true
 					set_completing_feature (true)
+					completing_automatically := true
 				end
 
 				l_shortcut_pref := preferences.editor_data.shortcuts.item ("autocomplete")
@@ -1004,6 +1004,9 @@ feature {NONE} -- Code completable implementation
 	go_right_char is
 			-- Go to right character.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.cursor.go_right_char_no_down_line
 		end
 
@@ -1019,9 +1022,12 @@ feature {NONE} -- Code completable implementation
 	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line) is
 			-- Select from the start position of `a_start_token' to the start position of `a_end_token'.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.selection_cursor.make_from_relative_pos (a_start_line, a_start_token, 1, text_displayed)
 			text_displayed.cursor.make_from_relative_pos (a_end_line, a_end_token, 1, text_displayed)
-			text_displayed.enable_selection
+			show_possible_selection
 		end
 
 	allow_tab_selecting: BOOLEAN is
@@ -1094,9 +1100,7 @@ feature {NONE} -- Code completable implementation
 			-- Show possible selection
 		do
 			text_displayed.enable_selection
-			if has_selection then
-				show_selection (False)
-			end
+			show_selection (False)
 		end
 
 	key_press_actions: EV_KEY_ACTION_SEQUENCE is
@@ -1108,30 +1112,45 @@ feature {NONE} -- Code completable implementation
 	delete_char is
 			-- Delete char.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.delete_char
 		end
 
 	back_delete_char is
 			-- Back delete character.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.back_delete_char
 		end
 
 	insert_string (a_str: STRING) is
 			-- Insert `a_str' at cursor position.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.insert_string (a_str)
 		end
 
 	insert_char (a_char: CHARACTER) is
 			-- Insert `a_char' at cursor position.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.insert_char (a_char)
 		end
 
 	replace_char (a_char: CHARACTER) is
 			-- Replace current char with `a_char'.
 		do
+			if has_selection then
+				disable_selection
+			end
 			text_displayed.replace_char (a_char)
 		end
 
@@ -1191,6 +1210,7 @@ feature {NONE} -- Code completable implementation
 			text_displayed.selection_cursor.make_from_character_pos (text_displayed.cursor.x_in_characters, text_displayed.cursor.y_in_lines, text_displayed)
 			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
 			text_displayed.enable_selection
+			show_possible_selection
 		end
 
 	end_of_line: BOOLEAN is
@@ -1235,11 +1255,13 @@ feature {NONE} -- Code completable implementation
 					l_tok := l_tok.previous
 				end
 				if l_tok /= Void and then l_tok.is_text then
-					Result := l_tok.image.is_equal (".") = False
+					Result := not l_tok.image.is_equal (".")
 					if not Result then
 							-- is a '.'
 						Result := not completing_automatically
 					end
+				else
+					Result := preferences.editor_data.auto_complete_words
 				end
 			end
 			completing_automatically := False

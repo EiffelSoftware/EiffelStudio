@@ -560,6 +560,7 @@ feature {NONE} -- Implementation
 		do
 			if a_key /= Void then
 				if
+					auto_complete_after_dot and then
 					a_key.code = {EV_KEY_CONSTANTS}.key_period and
 					not a_ctrl and
 					not a_alt and
@@ -602,6 +603,12 @@ feature {NONE} -- Implementation
 			create ev_eviron
 			Result := ev_eviron.application
 		end
+
+	auto_complete_after_dot: BOOLEAN is
+	        -- Should build autocomplete dialog after call on valid target?
+	  	do
+	  	   	Result := preferences.editor_data.auto_auto_complete
+	  	end
 
 feature {NONE} -- Lexer
 

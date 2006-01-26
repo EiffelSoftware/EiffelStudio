@@ -3917,8 +3917,13 @@ feature -- Implementation
 	process_external_as (l_as: EXTERNAL_AS) is
 		local
 			l_external: EXTERNAL_I
+			l_lang: COMPILER_EXTERNAL_LANG_AS
 		do
-			l_as.language_name.extension.type_check (l_as)
+			l_lang ?= l_as.language_name
+			check
+				l_lang_not_void: l_lang /= Void
+			end
+			l_lang.extension.type_check (l_as)
 			if is_byte_node_enabled then
 				l_external ?= current_feature
 				if l_external = Void then

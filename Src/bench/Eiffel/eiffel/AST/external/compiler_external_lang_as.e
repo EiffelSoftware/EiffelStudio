@@ -1,17 +1,14 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class EXTERNAL_LANG_AS
+
+class COMPILER_EXTERNAL_LANG_AS
 
 inherit
-	AST_EIFFEL
-		undefine
-			text
+	EXTERNAL_LANG_AS
 		redefine
-			is_equivalent
+			initialize
 		end
-
-	LEAF_AS
 
 	EXTERNAL_CONSTANTS
 
@@ -35,46 +32,22 @@ inherit
 create
 	initialize
 
-feature {NONE} -- Initialization
+feature {AST_FACTORY} -- Initialization
 
 	initialize (l: like language_name) is
 			-- Create a new EXTERNAL_LANGUAGE AST node.
-		require
-			l_not_void: l /= Void
 		do
-			language_name := l
+			Precursor {EXTERNAL_LANG_AS} (l)
 			parse
-		ensure
-			language_name_set: language_name = l
 		end
 
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_external_lang_as (Current)
-		end
-
-feature -- Attributes
-
-	language_name: STRING_AS
-			-- Language name
-			-- might be replaced by external_declaration or external_definition
+feature -- Access
 
 	extension: EXTERNAL_EXTENSION_AS
-			-- Parsed external extension
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' equivalent to the current object ?
-		do
-				-- It is enough to just compare `language_name' since it stores
-				-- full external specification. And if it is the same specification
-				-- then it is the same external.
-			Result := language_name.is_equivalent (other.language_name)
-		end
+			-- Parsed external extension.
+			--| It is enough to just compare `language_name' in `is_equivalent' since it stores
+			--| full external specification. And if it is the same specification
+			--| then it is the same external.
 
 feature -- Properties
 
@@ -404,19 +377,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -430,4 +403,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_LANG_AS
+end

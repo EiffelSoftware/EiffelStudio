@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 			-- Create a new EXPORT_ITEM AST node.
 		require
 			c_not_void: c /= Void
-			f_not_void: f /= Void
 		do
 			clients := c
 			features := f
@@ -52,7 +51,17 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := features.last_token (a_list)
+			if a_list = Void then
+					-- Non-roundtrip mode
+				check features /= Void end
+			else
+					-- Roundtrip mode
+				if features /= Void then
+					Result := features.last_token (a_list)
+				else
+					Result := clients.last_token (a_list)
+				end
+			end
 		end
 
 feature -- Comparison
@@ -66,7 +75,6 @@ feature -- Comparison
 
 invariant
 	clients_not_void: clients /= Void
-	features_not_void: features /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -74,19 +82,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

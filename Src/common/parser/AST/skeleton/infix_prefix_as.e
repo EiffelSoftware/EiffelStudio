@@ -120,7 +120,7 @@ feature -- Roundtrip/Token
 			if Result = Void or else Result.is_null then
 				if a_list = Void then
 						-- Non-roundtrip mode
-					Result := internal_name.first_token (a_list)
+					Result := alias_name.first_token (a_list)
 				else
 						-- Roundtrip mode
 					Result := infix_prefix_keyword.first_token (a_list)
@@ -130,7 +130,7 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := internal_name.last_token (a_list)
+			Result := alias_name.last_token (a_list)
 		end
 
 invariant
@@ -142,19 +142,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

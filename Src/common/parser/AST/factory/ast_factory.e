@@ -1057,7 +1057,7 @@ feature -- Access
 	new_export_item_as (c: CLIENT_AS; f: FEATURE_SET_AS): EXPORT_ITEM_AS is
 			-- New EXPORT_ITEM AST node
 		do
-			if c /= Void and f /= Void then
+			if c /= Void then
 				create Result.initialize (c, f)
 			end
 		end

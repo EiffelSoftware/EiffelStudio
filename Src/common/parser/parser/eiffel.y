@@ -986,9 +986,7 @@ New_export_list: New_export_item
 
 New_export_item: Client_list Feature_set ASemi
 			{
-				if $2 /= Void then
 					$$ := ast_factory.new_export_item_as (ast_factory.new_client_as ($1), $2)
-				end
 			}
 	;
 

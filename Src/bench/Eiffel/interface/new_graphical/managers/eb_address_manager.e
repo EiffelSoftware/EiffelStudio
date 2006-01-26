@@ -39,7 +39,7 @@ inherit
 	EB_SHARED_PREFERENCES
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-		
+
 	EV_UTILITIES
 		export
 			{NONE} all
@@ -200,14 +200,14 @@ feature -- Access
 			-- Void if none.
 
 	parent_widget: EB_DEVELOPMENT_WINDOW is
-			-- 
+			--
 		require
 			not_context_mode: not mode
 		do
 			Result ?= parent
-		ensure	
+		ensure
 			result_not_void: Result /= Void
-		end		
+		end
 
 feature -- Element change
 
@@ -252,7 +252,7 @@ feature -- Element change
 			from
 				l_cnt := 1
 			until
-				l_cnt > 5 
+				l_cnt > 5
 			loop
 				but := known_formatters.i_th (l_cnt).new_button
 				but.drop_actions.set_veto_pebble_function (agent is_not_feature_stone (?))
@@ -330,7 +330,7 @@ feature -- Element change
 		do
 			output_line := t
 		end
-		
+
 	set_feature_text_simply (s: STRING) is
 			-- Set feature combo text with `s'.
 		require
@@ -339,7 +339,7 @@ feature -- Element change
 			feature_address.change_actions.block
 			feature_address.set_text (s)
 			feature_address.change_actions.resume
-		end		
+		end
 
 feature -- Observer management
 
@@ -478,7 +478,7 @@ feature -- Observer management
 feature -- Memory management
 
 	recycle is
-			-- Recycle `Current' and leave it in an unstable state, 
+			-- Recycle `Current' and leave it in an unstable state,
 			-- so that we know whether we're not referenced any longer.
 		do
 			if widget /= Void then
@@ -519,10 +519,10 @@ feature -- Updating
 			if mode then
 				cluster_label.set_foreground_color (preferences.editor_data.cluster_text_color)
 				class_label.set_foreground_color (preferences.editor_data.class_text_color)
-				feature_label.set_foreground_color (preferences.editor_data.feature_text_color)		
+				feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
 			end
 		end
-		
+
 
 	on_project_created is
 			-- A new project has been loaded. Enable all controls.
@@ -721,7 +721,7 @@ feature {NONE} -- Execution
 				else
 					parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
 				end
-			end			
+			end
 		end
 
 	process_feature_feature is
@@ -1001,7 +1001,7 @@ feature {NONE} -- Implementation
 --			loc_list: LINKED_LIST [CLASS_I]
 --		do
 --			loc_list := Universe.classes_with_name (class_name)
-		
+
 				-- Return the first element of the list.
 --			if loc_list /= Void and then not loc_list.is_empty then
 --				Result := loc_list.first
@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation
 			-- Should editor get focus after selection chahnce in choice?
 
 feature {NONE} -- open new class
-	
+
 	extract_cluster_from_user_entry is
 			-- Process the user entry in `cluster_address' to generate `current_cluster'.
 		local
@@ -1052,7 +1052,7 @@ feature {NONE} -- open new class
 					until
 						cl.after
 					loop
-						matcher.set_text (cl.item.cluster_name) 
+						matcher.set_text (cl.item.cluster_name)
 						if matcher.pattern_matches then
 							matching.extend (cl.item)
 						end
@@ -1155,7 +1155,7 @@ feature {NONE} -- open new class
 							else
 								process_feature_class
 							end
-						end	
+						end
 					end
 				else
 					from
@@ -1171,7 +1171,7 @@ feature {NONE} -- open new class
 						until
 							classes.after
 						loop
-							matcher.set_text (classes.key_for_iteration) 
+							matcher.set_text (classes.key_for_iteration)
 							if matcher.pattern_matches then
 								sorted_classes.put_front (classes.item_for_iteration)
 							end
@@ -1232,7 +1232,7 @@ feature {NONE} -- open new class
 							until
 								ft.after
 							loop
-								matcher.set_text (ft.item_for_iteration.name) 
+								matcher.set_text (ft.item_for_iteration.name)
 								if matcher.pattern_matches then
 									sorted_features.put_front (ft.item_for_iteration)
 								end
@@ -1247,7 +1247,7 @@ feature {NONE} -- open new class
 							until
 								fl.after
 							loop
-								matcher.set_text (fl.item.name) 
+								matcher.set_text (fl.item.name)
 								if matcher.pattern_matches then
 									sorted_features.put_front (fl.item)
 								end
@@ -1336,13 +1336,13 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_cluster.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					end					
-				elseif k.code = Key_csts.Key_escape then
+					end
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1355,13 +1355,13 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_class.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					end					
-				elseif k.code = Key_csts.Key_escape then
+					end
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1374,17 +1374,17 @@ feature {NONE} -- open new class
 			-- If it is return, call execute_with_feature.
 		do
 			if k /= Void then
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
-						lost_focus_action_enabled := False						
+						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					else						
+					else
 						if not mode then
 							parent_widget.editor_tool.text_area.set_focus
 						end
-					end										
-				elseif k.code = Key_csts.Key_escape then
+					end
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
 					if mode then
 						address_dialog.hide
 					end
@@ -1399,14 +1399,14 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					execute_with_class
 					if class_address.text_length > 0 then
 						class_address.select_all
 					end
-				elseif k.code = Key_csts.Key_delete then
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
-				elseif k.code = Key_csts.Key_back_space then
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
 					last_key_was_backspace := True
 					if class_address.has_selection then
 						had_selection := True
@@ -1424,14 +1424,14 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					execute_with_cluster
 					if cluster_address.text_length > 0 then
 						cluster_address.select_all
 					end
-				elseif k.code = Key_csts.Key_delete then
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
-				elseif k.code = Key_csts.Key_back_space then
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
 					last_key_was_backspace := True
 					if cluster_address.has_selection then
 						cluster_had_selection := True
@@ -1449,22 +1449,22 @@ feature {NONE} -- open new class
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = Key_csts.key_enter then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
 					execute_with_feature
 					if feature_address.text_length > 0 then
-						feature_address.select_all						
-					end								
-					give_parent_widget_focus := True		
-				elseif k.code = Key_csts.Key_delete then
+						feature_address.select_all
+					end
+					give_parent_widget_focus := True
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
-				elseif k.code = Key_csts.Key_back_space then
+				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
 					last_key_was_backspace := True
 					if feature_address.has_selection then
 						feature_had_selection := True
 					else
 						feature_had_selection := False
 					end
-				elseif k.code = key_csts.key_up or  k.code = key_csts.key_down then					
+				elseif k.code = {EV_KEY_CONSTANTS}.key_up or k.code = {EV_KEY_CONSTANTS}.key_down then
 					give_parent_widget_focus := False
 				end
 			end
@@ -1475,7 +1475,7 @@ feature {NONE} -- open new class
 
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
-			
+
 	cluster_had_selection: BOOLEAN
 			-- Did the cluster address had a selection when the user hit the key?
 			-- Only meaningful if `last_key_was_backspace'.
@@ -1539,7 +1539,7 @@ feature {NONE} -- open new class
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
-			
+
 			str := class_address.text
 			if not str.is_empty and then (str @ (str.count) /= ' ') then
 				last_caret_position := class_address.caret_position
@@ -1557,7 +1557,7 @@ feature {NONE} -- open new class
 					nb := nb - 1
 					truncated := True
 				end
-				
+
 				if not do_not_complete and nb > 1 then
 					list := System.classes
 					array_count := system.class_counter.count
@@ -1671,7 +1671,7 @@ feature {NONE} -- open new class
 					nb := nb - 1
 					truncated := True
 				end
-				
+
 				if not do_not_complete and nb > 0 then
 					list := Universe.clusters
 					from
@@ -1779,7 +1779,7 @@ feature {NONE} -- open new class
 					nb := nb - 1
 					truncated := True
 				end
-	
+
 				if
 					current_typed_class /= Void and then
 					current_typed_class.has_feature_table and
@@ -1922,19 +1922,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	class_label: EV_LABEL
 	feature_label: EV_LABEL
 			-- Labels displayed in the header_info.
-			
+
 	output_line: EV_LABEL
 			-- Textable in which warnings are displayed.
 			-- May be Void, warnings are then not displayed.
 
 	address_dialog: EV_POPUP_WINDOW
 			-- Window that pops up in the context tool to change the stone centering.
-
-	key_csts: EV_KEY_CONSTANTS is
-			-- Global key constants.
-		once
-			create Result
-		end
 
 	is_not_feature_stone (st: ANY): BOOLEAN is
 			-- Is `st' not a feature stone?
@@ -1976,7 +1970,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			cluster_label.pointer_button_press_actions.extend (agent button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			class_label.pointer_button_press_actions.extend (agent button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			feature_label.pointer_button_press_actions.extend (agent button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			
+
 			class_label.drop_actions.extend (agent drop_class)
 			feature_label.drop_actions.extend (agent drop_feature)
 			cluster_label.drop_actions.extend (agent drop_cluster)
@@ -2095,7 +2089,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			c_stone: STONE
 		do
 			c_stone := parent.history_manager.active
-			conv_clus ?= c_stone 
+			conv_clus ?= c_stone
 			if conv_clus /= Void then
 				if mode then
 					cluster_address.set_text (conv_clus.cluster_i.cluster_name)
@@ -2252,7 +2246,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	default_class_name: STRING is "(no_class)"
 	default_feature_name: STRING is "(no_feature)"
 	default_cluster_name: STRING is "(no_cluster)"
-	
+
 	l_From: STRING is " from "
 	l_Space: STRING is " "
 

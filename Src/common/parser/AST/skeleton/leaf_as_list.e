@@ -62,6 +62,20 @@ feature
 			Precursor (v)
 		end
 
+feature -- Status
+
+	generated: INTEGER
+			-- Timestamp when this matchlist was generated.
+
+feature -- Status update
+
+	set_generated (a_timestamp: INTEGER) is
+			-- Set the timestamp when this matchlist was generated.
+		do
+			generated := a_timestamp
+		end
+
+
 feature -- Item searching
 
 	item_by_start_position (start_pos: INTEGER): LEAF_AS is

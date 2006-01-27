@@ -14,7 +14,7 @@ class ACCESS_INV_AS
 inherit
 	ACCESS_FEAT_AS
 		redefine
-			process
+			process, is_qualified
 		end
 
 create
@@ -31,6 +31,14 @@ feature{NONE} -- Initialization
 			dot_symbol_set: dot_symbol = s_as
 		end
 
+feature -- Attributes
+
+	is_qualified: BOOLEAN is
+			-- Is current entity a call on an other object?
+		do
+			Result := False
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -43,7 +51,6 @@ feature -- Roundtrip
 
 	dot_symbol: SYMBOL_AS;
 			-- Symbol "." associated with this structure
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

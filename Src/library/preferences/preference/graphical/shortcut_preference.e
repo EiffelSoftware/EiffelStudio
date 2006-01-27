@@ -249,7 +249,7 @@ feature -- Query
 			Result := (is_alt = alt)
 				and then (is_ctrl = ctrl)
 				and then (is_shift = shift)
-				and then (value.last.is_equal (key_strings.item (a_key.code)))
+				and then (value.last.is_case_insensitive_equal (key_strings.item (a_key.code)))
 		end
 
 feature {PREFERENCES} -- Access

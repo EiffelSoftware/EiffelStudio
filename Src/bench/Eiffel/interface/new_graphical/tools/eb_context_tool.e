@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			if has_metrics then
 				notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
 			end
-			notebook.set_tab_position (notebook.tab_left)
+			notebook.set_tab_position (notebook.tab_bottom)
 			notebook.selection_actions.extend (agent on_tab_changed)
 			notebook.set_minimum_size (500, 200)
 

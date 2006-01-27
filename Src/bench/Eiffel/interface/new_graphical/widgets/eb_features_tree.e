@@ -63,6 +63,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	SHARED_SERVER
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -171,66 +176,63 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			tree_item: EV_TREE_ITEM
 			name: STRING
 			expand_tree: BOOLEAN
-			class_text: STRING
 			retried: BOOLEAN
 			l_class: CLASS_C
 			l_export_status: EXPORT_I
+			l_match_list: LEAF_AS_LIST
+			l_comments: EIFFEL_COMMENTS
 		do
 			if not retried then
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
 				l_class := features_tool.current_compiled_class
-				class_text := l_class.text
-				if class_text /= Void or else l_class.is_precompiled then
-						--| Features
-					from
-						fcl.start
-					until
-						fcl.after
-					loop
-						if fcl.item = Void then
-							extend (create {EV_TREE_ITEM}.make_with_text (
-								Warning_messages.w_short_internal_error ("Void feature clause")))
-						else
-							features := fcl.item.features
-							if class_text = Void then
-								name := " "
-							else
-								name := fcl.item.comment (class_text)
-								name.right_adjust
-							end
-							tree_item := build_tree_folder (name, features, l_class)
-							l_export_status := export_status_generator.
-								feature_clause_export_status (l_class, fcl.item)
-							if l_export_status.is_none then
-								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
-							elseif l_export_status.is_set then
-								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
-							else
-								tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
-							end
-							if is_clickable then
-								tree_item.set_data (fcl.item)
-								tree_item.pointer_button_press_actions.extend (
-									agent button_go_to_clause (fcl.item, ?, ?, ?, ?, ?, ?, ?, ?))
-							end
-							extend (tree_item)
-							if
-								expand_tree and then
-								tree_item.is_expandable
-							then
-								tree_item.expand
-							end
-						end
-						fcl.forth
-					end
-					if fcl.is_empty then
-							-- Display a message not to confuse the user.
+				l_match_list := match_list_server.item (l_class.class_id)
+					--| Features
+				from
+					fcl.start
+				until
+					fcl.after
+				loop
+					if fcl.item = Void then
 						extend (create {EV_TREE_ITEM}.make_with_text (
-							Warning_messages.w_no_feature_to_display))
+							Warning_messages.w_short_internal_error ("Void feature clause")))
+					else
+						features := fcl.item.features
+						l_comments := fcl.item.comment (l_match_list)
+						if l_comments = Void or else l_comments.is_empty then
+							name := " "
+						else
+							name := l_comments.first
+						end
+						name.right_adjust
 					end
-				else
+					tree_item := build_tree_folder (name, features, l_class)
+					l_export_status := export_status_generator.
+					feature_clause_export_status (l_class, fcl.item)
+					if l_export_status.is_none then
+						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_none)
+					elseif l_export_status.is_set then
+						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_some)
+					else
+						tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
+					end
+					if is_clickable then
+						tree_item.set_data (fcl.item)
+						tree_item.pointer_button_press_actions.extend (
+							agent button_go_to_clause (fcl.item, ?, ?, ?, ?, ?, ?, ?, ?))
+					end
+					extend (tree_item)
+					if
+						expand_tree and then
+						tree_item.is_expandable
+					then
+						tree_item.expand
+					end
+					fcl.forth
+				end
+				if fcl.is_empty then
+						-- Display a message not to confuse the user.
 					extend (create {EV_TREE_ITEM}.make_with_text (
-						Warning_messages.w_cannot_read_file (l_class.file_name)))
+					Warning_messages.w_no_feature_to_display))
 				end
 			else
 				extend (create {EV_TREE_ITEM}.make_with_text (
@@ -507,19 +509,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

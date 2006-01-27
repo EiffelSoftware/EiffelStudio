@@ -63,7 +63,7 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
 
 	show_general_toolbar: BOOLEAN is
 			-- Show the general toolbar (New, Save, Cut, ...)?
-		deferred 
+		deferred
 		end
 
 	show_text_in_general_toolbar: BOOLEAN is
@@ -73,6 +73,16 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
 
 	show_all_text_in_general_toolbar: BOOLEAN is
 			-- Show all text in the general toolbar?
+		deferred
+		end
+
+	show_text_in_refactoring_toolbar: BOOLEAN is
+			-- Show only selected text in refactoring toolbar?
+		deferred
+		end
+
+	show_all_text_in_refactoring_toolbar: BOOLEAN is
+			-- Show all text in the refactoring toolbar?
 		deferred
 		end
 
@@ -86,6 +96,11 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
 		deferred
 		end
 
+	show_refactoring_toolbar: BOOLEAN is
+			-- Show the refactoring toolbar.
+		deferred
+		end
+
 	show_search_options: BOOLEAN is
 			-- Are search tool options displayed ?
 		deferred
@@ -95,12 +110,17 @@ feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
 			-- Is the context tool linked?
 		deferred
 		end
-		
+
 	general_toolbar_layout: ARRAY [STRING] is
 			-- Toolbar organization
 		deferred
-		end	
-		
+		end
+
+	refactoring_toolbar_layout: ARRAY [STRING] is
+			-- Toolbar organization
+		deferred
+		end
+
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER) is
@@ -151,14 +171,19 @@ feature -- Element change
 		end
 
 	save_show_search_options (a_show: BOOLEAN) is
-			-- 
+			--
 		deferred
 		end
-		
+
 feature -- Basic operations
 
 	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
-			-- Retreive the general toolbar using the available commands in `command_pool' 
+			-- Retreive the general toolbar using the available commands in `command_pool'
+		deferred
+		end
+
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		deferred
 		end
 

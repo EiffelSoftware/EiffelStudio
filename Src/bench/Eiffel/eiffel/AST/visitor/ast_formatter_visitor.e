@@ -39,6 +39,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_SERVER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -213,7 +218,6 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			f: EIFFEL_LIST [FEATURE_AS]
 			next_feat, feat: FEATURE_AS
-			e_file: EIFFEL_FILE
 		do
 			ctxt.put_text_item (ti_feature_keyword)
 			ctxt.put_space
@@ -222,8 +226,7 @@ feature {NONE} -- Implementation
 				ctxt.set_space_between_tokens
 				l_as.clients.process (Current)
 			end
-			e_file := ctxt.eiffel_file
-			comments := e_file.current_feature_clause_comments
+			comments := l_as.comment (ctxt.match_list)
 			if comments = Void then
 				ctxt.put_new_line
 			else
@@ -262,13 +265,6 @@ feature {NONE} -- Implementation
 				ctxt.new_expression
 				ctxt.begin
 				i := i + 1
-				if i > l_count then
-					e_file.set_next_feature (Void)
-				else
-					next_feat := f.i_th (i)
-					e_file.set_next_feature (next_feat)
-				end
-				e_file.set_current_feature (feat)
 				feat.process (Current)
 				feat := next_feat
 				ctxt.commit
@@ -1172,7 +1168,7 @@ feature {NONE} -- Implementation
 			feature_dec: FEATURE_DEC_ITEM
 		do
 			if is_simple_formatting then
-				comments := ctxt.eiffel_file.current_feature_comments
+				comments := l_as.comment (ctxt.match_list)
 				ctxt.set_feature_comments (comments)
 				ctxt.set_separator (ti_comma)
 				ctxt.set_space_between_tokens
@@ -2380,9 +2376,7 @@ feature {NONE} -- Implementation: helpers
 			i, l_count: INTEGER
 			fc, next_fc: FEATURE_CLAUSE_AS
 			feature_list: EIFFEL_LIST [FEATURE_AS]
-			e_file: EIFFEL_FILE
 		do
-			e_file := ctxt.eiffel_file
 			ctxt.begin
 			from
 				i := 1
@@ -2399,19 +2393,10 @@ feature {NONE} -- Implementation: helpers
 				ctxt.new_expression
 				ctxt.begin
 				i := i + 1
-				if i > l_count then
-					e_file.set_next_feature_clause (Void)
-				else
+				if i <= l_count then
 					next_fc := l_as.i_th (i)
-					e_file.set_next_feature_clause (next_fc)
 				end
-				e_file.set_current_feature_clause (fc)
 				feature_list := fc.features
-				if feature_list.is_empty then
-					e_file.set_next_feature (Void)
-				else
-					e_file.set_next_feature (feature_list.i_th (1))
-				end
 				fc.process (Current)
 				fc := next_fc
 				ctxt.commit

@@ -9,7 +9,7 @@ inherit
 	SHARED_WORKBENCH
 
 	SHARED_TMP_SERVER
-	
+
 feature {NONE}
 
 	Feat_tbl_server: FEAT_TBL_SERVER is
@@ -71,36 +71,38 @@ feature {NONE}
 		once
 			Result := System.m_feature_server
 		end
- 
+
 	M_desc_server: M_DESC_SERVER is
 		once
 			Result := System.m_desc_server
 		end
- 
-	Class_comments_server: CLASS_COMMENTS_SERVER is
+
+	Match_list_server: MATCH_LIST_SERVER is
+			-- Server for the match list
 		once
-			Result := System.Class_comments_server
+			Result := System.Match_list_server
 		end
- 
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1943,7 +1943,6 @@ end
 			M_feature_server.take_control (Tmp_m_feature_server)
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
 			M_desc_server.take_control (Tmp_m_desc_server)
-			Class_comments_server.take_control (Tmp_class_comments_server)
 
 				-- No need to do `Byte_server' and `Inv_byte_server' because
 				-- it is done in `melt'. See comment in `melt' for rationale.
@@ -2465,13 +2464,6 @@ feature {NONE} -- Implementation
 				Depend_server.remove (id)
 				M_rout_id_server.remove (id)
 				M_desc_server.remove (id)
-				if Compilation_modes.is_precompiling then
-						-- Do not need to remove id from
-						-- Class_comments_server since
-						-- we are not able to remove a
-						-- precompiled class
-					Tmp_class_comments_server.remove (id)
-				end
 				Tmp_inv_byte_server.remove (id)
 				Tmp_ast_server.remove (id)
 				Tmp_feat_tbl_server.remove (id)

@@ -84,6 +84,11 @@ inherit
 			default_create
 		end
 
+	SHARED_SERVER
+		undefine
+			default_create
+		end
+
 create
 	make_with_tool,
 	make
@@ -1028,7 +1033,10 @@ feature {NONE} -- Implementation
 			l: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			exp, s, c: STRING
 			lcs: like leading_clauses
+			l_match_list: LEAF_AS_LIST
+			l_comments: EIFFEL_COMMENTS
 		do
+			l_match_list := match_list_server.item (class_as.class_id)
 			exp := a_export.as_lower
 			insertion_position := 0
 
@@ -1041,7 +1049,13 @@ feature {NONE} -- Implementation
 					else
 						s := ""
 					end
-					c := l.item.comment (text)
+--					c := l.item.comment (text)
+					l_comments := l.item.comment (l_match_list)
+					if l_comments = Void or else l_comments.is_empty then
+						c := " "
+					else
+						c := l_comments.first
+					end
 					c.prune_all_trailing ('%R')
 					if s.is_equal (exp) and c.is_equal (a_comment) then
 						insertion_position := feature_insert_position (l.item)
@@ -1062,7 +1076,13 @@ feature {NONE} -- Implementation
 					until
 						insertion_position > 0 or else l.after
 					loop
-						c := l.item.comment (text)
+--						c := l.item.comment (text)
+						l_comments := l.item.comment (l_match_list)
+						if l_comments = Void or else l_comments.is_empty then
+							c := " "
+						else
+							c := l_comments.first
+						end
 						c.prune_all_trailing ('%R')
 						if not lcs.has (c) then
 							insertion_position := l.item.feature_keyword.position
@@ -1336,19 +1356,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

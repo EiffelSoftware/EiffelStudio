@@ -1,29 +1,19 @@
 indexing
-	description: 
-		"Comments for an eiffel class. Eiffel comments are hashed%
-		%on position within the eiffel text."
+	description: "Check if a given class name is already used."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CLASS_COMMENTS
+class
+	ERF_CHK_SAME_CLASS_NAME
 
 inherit
-	HASH_TABLE [EIFFEL_COMMENTS, INTEGER]
-		rename
-			make as table_make
-		export
-			{CLASS_COMMENTS} all;
-			{ANY} put, clear_all, remove, item, is_empty, valid_key
-		end
+	ERF_CHECK
 
-	IDABLE
-		rename
-			id as class_id,
-			set_id as set_class_id
-		undefine
-			is_equal, copy
+	SHARED_WORKBENCH
+		export
+			{NONE} all
 		end
 
 create
@@ -31,38 +21,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (id: like class_id; init_size: INTEGER) is
-			-- Create precompiled comments with class_id `id'
-			-- with initial size `init_size'.
+	make (a_name: STRING) is
+			-- Create check for class name `a_name'.
 		require
-			valid_id: id /= 0
+			a_name_not_void: a_name /= void
 		do
-			table_make (init_size);
-			class_id := id
-		ensure
-			class_id = id
-		end;
+			new_name := a_name
+			error_message := "There is already a class with the same name."
+		end
 
-feature -- Debug
+feature -- Basic operation
 
-	trace is
-		do
-			from
-				start
-			until
-				after
-			loop
-				io.error.put_string ("Position: ");
-				io.error.put_integer (key_for_iteration);
-				io.error.put_new_line;
-				item_for_iteration.trace;
-				forth
-			end
-		end;
+	execute is
+            -- Execute a check.
+        do
+			success := universe.classes_with_name (new_name).count = 0
+        end
 
-invariant
+feature {NONE} -- Implementation
 
-	class_id_not_void: class_id /= 0
+	new_name: STRING;
+			-- The name to check.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -70,19 +49,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -96,4 +75,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_COMMENTS
+end

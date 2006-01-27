@@ -23,7 +23,6 @@ feature -- Initialization
 			create unref_classes.make (10)
 			create server_controler.make
 			create feat_tbl_server.make
-			create class_comments_server.make
 			create body_server.make
 			create byte_server.make
 			create ast_server.make
@@ -35,6 +34,7 @@ feature -- Initialization
 			create m_feature_server.make
 			create m_rout_id_server.make
 			create m_desc_server.make
+			create match_list_server.make
 		end
 
 feature -- Purge of compilation files
@@ -103,8 +103,8 @@ feature -- Access
 	m_desc_server: M_DESC_SERVER;
 			-- Server for class type descriptors
 
-	class_comments_server: CLASS_COMMENTS_SERVER;
-			-- Server for class comments
+	match_list_server: MATCH_LIST_SERVER
+			-- Server for match lists
 
 feature {NONE} -- Private access
 
@@ -118,7 +118,6 @@ invariant
 	unref_classes_not_void: unref_classes /= Void
 	server_controler_not_void: server_controler /= Void
 	feat_tbl_server_not_void: feat_tbl_server /= Void
-	class_comments_server_not_void: class_comments_server /= Void
 	body_server_not_void: body_server /= Void
 	byte_server_not_void: byte_server /= Void
 	ast_server_not_void: ast_server /= Void
@@ -130,6 +129,7 @@ invariant
 	m_feature_server_not_void: m_feature_server /= Void
 	m_rout_id_server_not_void: m_rout_id_server /= Void
 	m_desc_server_not_void: m_desc_server /= Void
+	match_list_server_not_void: match_list_server /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

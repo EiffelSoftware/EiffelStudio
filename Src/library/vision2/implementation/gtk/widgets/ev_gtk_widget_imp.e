@@ -251,6 +251,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
+				--| FIXME IEK This is a hack for forcing parent contains to allocate sizes to their children immediately.
+			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
+			end
+
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_height)
 		end
 

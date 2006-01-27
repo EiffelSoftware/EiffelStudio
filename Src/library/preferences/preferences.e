@@ -65,7 +65,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_storage (a_storage: PREFERENCES_STORAGE_I) is
-			-- Create preferences based on underlyin storage engine `a_storage'.
+			-- Create preferences based on underlying storage engine `a_storage'.
 		require
 			a_storage_not_void: a_storage /= Void
 		do

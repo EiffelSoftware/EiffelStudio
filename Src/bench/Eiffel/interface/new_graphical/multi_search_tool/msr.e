@@ -670,10 +670,10 @@ feature -- Basic operations
 			is_search_launched : is_search_launched
 			item_matched_not_off: not off
 		do
+
 			replace_strategy.set_surrounding_text_range (search_strategy.surrounding_text_range)
 			replace_strategy.set_replace_items (search_strategy_internal.item_matched)
 			replace_strategy_internal.replace
-			last_replaced_text_internal := search_strategy_internal.item_matched.item.source_text
 		ensure
 			last_replaced_text_not_void: last_replaced_text_internal /= Void
 			is_replace_launched: is_replace_launched
@@ -684,16 +684,10 @@ feature -- Basic operations
 		require
 			is_replace_strategy_set: is_replace_strategy_set
 			is_search_launched : is_search_launched
-		local
-			i: INTEGER
 		do
-			i := index
 			replace_strategy.set_surrounding_text_range (search_strategy.surrounding_text_range)
 			replace_strategy.set_replace_items (search_strategy_internal.item_matched)
 			replace_strategy.replace_all
-			go_i_th (i)
-		ensure
-			keep_current_position: old index = index
 		end
 
 feature -- Sorting
@@ -775,7 +769,7 @@ feature {NONE} -- Sorting
 			l_array: ARRAYED_LIST [MSR_ITEM]
 			l_text_item: MSR_TEXT_ITEM
 		do
-			l_array := item_matched.twin
+			l_array := item_matched
 			create Result.make_default
 			from
 				l_array.start
@@ -882,7 +876,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	if_replace_launched_last_replaced_text_not_void: is_replace_launched implies last_replaced_text_internal /= Void
 	search_strategy_internal_not_void: search_strategy_internal /= Void
 
 indexing

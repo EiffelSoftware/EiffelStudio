@@ -110,12 +110,14 @@ feature -- Basic operations
 			-- All items will be replaced, cluster mode is used by default.
 		local
 			l_last_item, l_item : MSR_TEXT_ITEM
+			l_saved_item: MSR_ITEM
 			l_string : STRING
 			l_index: INTEGER
 			l_refresh: BOOLEAN
 		do
 			l_refresh := false
 			l_index := replace_items.index
+			l_saved_item := replace_items.item
 			from
 				replace_items.start
 			until
@@ -125,6 +127,7 @@ feature -- Basic operations
 				if l_item /= Void then
 					if is_current_replaced_as_cluster (l_item) then
 						l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
+						remove_item (l_item)
 						if l_last_item = Void or (l_last_item /= Void and then l_last_item.pcre_regex /= l_item.pcre_regex) then
 							l_item.pcre_regex.first_match
 							l_string :=	l_item.pcre_regex.replace_all (replace_string)
@@ -138,16 +141,89 @@ feature -- Basic operations
 					end
 					l_refresh := true
 				end
-				replace_items.forth
+				if l_item = Void or else (not replace_items.off and then l_saved_item = replace_items.item) then
+					replace_items.forth
+				end
 			end
-			replace_items.go_i_th (l_index)
-			if l_refresh then
-				refresh_item_text
-			end
+			replace_items.wipe_out
 			is_replace_launched_internal := true
+		ensure
+			replace_items_empty: replace_items.is_empty
 		end
 
 feature {NONE} -- Implementation
+
+	remove_item (a_item: MSR_ITEM) is
+			-- Remove item from item_matched.
+			-- If `a_item' is a class item, we remove it and its children.
+			-- If `a_item' is a text item, we remove from `replace_items', set the cursor to next item.
+			-- And remove from its parent's children list if exists.
+			-- If `a_item' is a text item item before which is a class item and with a class item or nothing following,
+			-- we remove its previous class item
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_text_item: MSR_TEXT_ITEM
+			l_class_item: MSR_CLASS_ITEM
+			l_index: INTEGER
+		do
+			if replace_items.has (a_item) then
+				l_text_item ?= a_item
+				l_class_item ?= a_item
+				if l_text_item /= Void then
+					from
+						l_index := replace_items.index_of (a_item, 1) - 1
+						l_class_item := Void
+					until
+						l_index < 1 or l_class_item /= Void
+					loop
+						l_class_item ?= replace_items.i_th (l_index)
+						if l_class_item /= Void then
+							l_class_item.children.start
+							l_class_item.children.prune (a_item)
+						end
+						l_index := l_index - 1
+					end
+					replace_items.start
+					replace_items.search (a_item)
+					l_index := replace_items.index
+					if l_index > 1 then
+						l_class_item ?= replace_items.i_th (l_index - 1)
+						if l_class_item /= Void then
+							if replace_items.valid_index (l_index + 1) then
+								l_class_item ?= replace_items.i_th (l_index + 1)
+								if l_class_item /= Void then
+									replace_items.go_i_th (l_index - 1)
+									replace_items.remove
+								end
+							else
+								replace_items.go_i_th (l_index - 1)
+								replace_items.remove
+							end
+						end
+					end
+					replace_items.remove
+				elseif l_class_item /= Void then
+					replace_items.start
+					replace_items.search (a_item)
+					from
+						replace_items.remove
+						if not replace_items.off then
+							l_text_item ?= replace_items.item
+						end
+					until
+						l_text_item = Void
+					loop
+						replace_items.remove
+						if not replace_items.off then
+							l_text_item ?= replace_items.item
+						else
+							l_text_item := Void
+						end
+					end
+				end
+			end
+		end
 
 	string_formatter: MSR_FORMATTER is
 			-- String formatter. i.e. Mute every GOBO regular expression meta-characters in a string.
@@ -205,6 +281,7 @@ feature {NONE} -- Implementation
 			 	if refresh_finding then
 			 		refresh_item_text
 			 	end
+			 	remove_item (replace_items.item)
 			end
 		end
 
@@ -414,19 +491,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

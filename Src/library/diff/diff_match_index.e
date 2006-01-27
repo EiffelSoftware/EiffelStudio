@@ -2,7 +2,6 @@ indexing
 	description: "Represents a line that matches in source and destination."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

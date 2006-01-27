@@ -2,7 +2,6 @@ indexing
 	description: "Compute the difference between two arrays."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

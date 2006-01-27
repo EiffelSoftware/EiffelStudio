@@ -2,7 +2,6 @@ indexing
 	description: "Represents a line that must be added in source to get to the destination."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

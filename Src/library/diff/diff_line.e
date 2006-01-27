@@ -2,7 +2,6 @@ indexing
 	description: "Base class for diff line indices."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

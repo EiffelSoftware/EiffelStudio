@@ -2,7 +2,6 @@ indexing
 	description: "Diff class for texts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

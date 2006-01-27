@@ -2,7 +2,6 @@ indexing
 	description: "This are objects that are used internaly by the diff algorithm to store a list of indices that are a match."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Patrick Ruckstuhl"
 	date: "$Date$"
 	revision: "$Revision$"
 

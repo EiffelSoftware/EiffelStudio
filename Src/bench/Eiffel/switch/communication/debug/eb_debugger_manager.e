@@ -215,8 +215,8 @@ feature -- Access
 						l_tool := l_tools [i]
 						if l_tool /= Void then
 							create mit.make_with_text (l_tool.menu_name)
-							if l_tool.pixmap /= Void and then not l_tool.pixmap.is_empty then
-								mit.set_pixmap (l_tool.pixmap.item (l_tool.pixmap.lower))
+							if l_tool.pixmap /= Void then
+								mit.set_pixmap (l_tool.pixmap)
 							end
 							mit.select_actions.extend (agent show_hide_debugging_tools (mit))
 							m.extend (mit)
@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (disable_bkpt)
 
 			create bkpt_info_cmd.make
-			bkpt_info_cmd.set_pixmaps (Pixmaps.Icon_bkpt_info)
+			bkpt_info_cmd.set_pixmap (Pixmaps.Icon_bkpt_info)
 			bkpt_info_cmd.set_tooltip (Interface_names.e_Bkpt_info)
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
 			bkpt_info_cmd.set_tooltext (Interface_names.b_Bkpt_info)
@@ -1230,7 +1230,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (bkpt_info_cmd)
 
 			create system_info_cmd.make
-			system_info_cmd.set_pixmaps (Pixmaps.Icon_system_info)
+			system_info_cmd.set_pixmap (Pixmaps.Icon_system_info)
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")
@@ -1528,19 +1528,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -683,6 +683,12 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (context_tool)
 
+				-- Build the refactoring tools
+			toolbarable_commands.extend (refactoring_manager.pull_command)
+			toolbarable_commands.extend (refactoring_manager.rename_command)
+			toolbarable_commands.extend (refactoring_manager.undo_command)
+			toolbarable_commands.extend (refactoring_manager.redo_command)
+
 				-- Set the flag "Tools initialized"
 			tools_initialized := True
 
@@ -1126,6 +1132,52 @@ feature -- Graphical Interface
 			hbox.extend (cell)
 			project_toolbar.extend (hbox)
 		end
+
+	build_refactoring_toolbar is
+			-- Build refactoring toolbar.
+		local
+			cell: EV_CELL
+			hsep: EV_HORIZONTAL_SEPARATOR
+			hbox: EV_HORIZONTAL_BOX
+		do
+				-- Create the toolbar.
+			create refactoring_toolbar
+			refactoring_customizable_toolbar := development_window_data.retrieve_refactoring_toolbar (toolbarable_commands)
+			if development_window_data.show_text_in_refactoring_toolbar then
+				refactoring_customizable_toolbar.enable_important_text
+			elseif development_window_data.show_all_text_in_refactoring_toolbar then
+				refactoring_customizable_toolbar.enable_text_displayed
+			end
+
+			create hbox
+			hbox.extend (refactoring_customizable_toolbar.widget)
+			hbox.disable_item_expand (refactoring_customizable_toolbar.widget)
+
+				-- Generate the toolbar.
+			refactoring_customizable_toolbar.update_toolbar
+
+				-- Cell to fill in empty space and receive the right click menu holder.
+			create cell
+			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
+			hbox.extend (cell)
+
+				-- Create the vertical layout (separator + toolbar)
+			create hsep
+			refactoring_toolbar.set_padding (2)
+			refactoring_toolbar.extend (hsep)
+			refactoring_toolbar.disable_item_expand (hsep)
+			refactoring_toolbar.extend (hbox)
+
+				-- Create the command to show/hide this toolbar.
+			create show_refactoring_toolbar_command.make (refactoring_toolbar, Interface_names.m_refactoring_toolbar)
+			show_toolbar_commands.extend (show_refactoring_toolbar_command)
+			if development_window_data.show_refactoring_toolbar then
+				show_refactoring_toolbar_command.enable_visible
+			else
+				show_refactoring_toolbar_command.disable_visible
+			end
+		end
+
 
 feature {NONE} -- Menu Building
 
@@ -2186,6 +2238,13 @@ feature -- Resource Update
 				show_project_toolbar_command.disable_visible
 			end
 
+				-- Show/hide refactoring toolbar
+			if development_window_data.show_refactoring_toolbar then
+				show_refactoring_toolbar_command.enable_visible
+			else
+				show_refactoring_toolbar_command.disable_visible
+			end
+
 			left_panel.load_from_resource (development_window_data.left_panel_layout)
 			right_panel.load_from_resource (development_window_data.right_panel_layout)
 			splitter_position := development_window_data.left_panel_width
@@ -2719,6 +2778,7 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				toolbars_area.wipe_out
 				address_manager.recycle
 				project_customizable_toolbar.recycle
+				refactoring_customizable_toolbar.recycle
 				Precursor {EB_TOOL_MANAGER}
 
 				managed_class_formatters.wipe_out
@@ -3671,6 +3731,9 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EB_TOOL_MANAGER}
 			command_controller.recycle
+			if refactoring_manager /= Void then
+				refactoring_manager.destroy
+			end
 		end
 
 feature {NONE} -- Implementation: Editor commands
@@ -4144,6 +4207,7 @@ feature {NONE} -- Execution
 			delete_class_cluster_cmd.enable_sensitive
 			c_workbench_compilation_cmd.enable_sensitive
 			c_finalized_compilation_cmd.enable_sensitive
+			refactoring_manager.enable_sensitive
 		end
 
 	disable_commands_on_project_unloaded is
@@ -4165,6 +4229,8 @@ feature {NONE} -- Execution
 			delete_class_cluster_cmd.disable_sensitive
 			c_workbench_compilation_cmd.disable_sensitive
 			c_finalized_compilation_cmd.disable_sensitive
+			refactoring_manager.disable_sensitive
+			refactoring_manager.forget_undo_redo
 		end
 
 feature {NONE} -- Access
@@ -4188,19 +4254,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

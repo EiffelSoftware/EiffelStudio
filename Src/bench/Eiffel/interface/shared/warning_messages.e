@@ -817,6 +817,11 @@ feature -- Project creation, retrieval, ...
 				%Please choose a valid and writable directory."
 		end
 
+feature -- Refactoring
+
+	w_Feature_not_written_in_class: STRING is "Feature is not written in selected class."
+	w_Select_class_feature_to_rename: STRING is "Select class or feature to rename."
+	w_Select_feature_to_pull: STRING is "Select a feature to pull up."
 
 feature -- Warning messages
 
@@ -1097,19 +1102,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

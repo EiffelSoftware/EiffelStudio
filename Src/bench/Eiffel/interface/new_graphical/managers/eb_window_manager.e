@@ -572,6 +572,7 @@ feature -- Actions on all windows
 			melt_project_cmd.enable_sensitive
 			Quick_melt_project_cmd.enable_sensitive
 			terminate_c_compilation_cmd.disable_sensitive
+			refactoring_manager.enable_sensitive
 
 			project_cancel_cmd.disable_sensitive
 			if process_manager.is_c_compilation_running then
@@ -956,8 +957,32 @@ feature -- Events
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
 			Project_cancel_cmd.enable_sensitive
+			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
 		end
+
+	on_refactoring_start is
+			-- A refactoring has been started.
+		do
+			Melt_project_cmd.disable_sensitive
+			Quick_melt_project_cmd.disable_sensitive
+			Freeze_project_cmd.disable_sensitive
+			Finalize_project_cmd.disable_sensitive
+			Precompilation_cmd.disable_sensitive
+			for_all (agent c_compilation_start_action)
+		end
+
+	on_refactoring_end is
+			-- A refactoring has finished.
+		do
+			Melt_project_cmd.enable_sensitive
+			Quick_melt_project_cmd.enable_sensitive
+			Freeze_project_cmd.enable_sensitive
+			Finalize_project_cmd.enable_sensitive
+			Precompilation_cmd.enable_sensitive
+			for_all (agent c_compilation_stop_action)
+		end
+
 
 	on_c_compilation_start is
 			-- Freezing or finalizing has been launched.
@@ -1496,19 +1521,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

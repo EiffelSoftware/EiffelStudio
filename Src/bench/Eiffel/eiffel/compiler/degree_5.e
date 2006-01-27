@@ -125,7 +125,6 @@ feature {NONE} -- Processing
 			ast: CLASS_AS
 			ext_class: EXTERNAL_CLASS_C
 			class_id: INTEGER
-			comment_reg: COMMENT_REGISTRATION
 		do
 			class_id := a_class.class_id
 			ext_class ?= a_class
@@ -135,11 +134,6 @@ feature {NONE} -- Processing
 				if a_class.parsing_needed then
 						-- Parse class and save a backup if requested.
 					ast := a_class.build_ast (True)
-					if Compilation_modes.is_precompiling then
-							-- Register the comments for precompiled class.
-						create comment_reg.make (ast, a_class)
-						comment_reg.register
-					end
 									debug ("PARSE")
 										io.error.put_string ("parsed%N")
 									end
@@ -244,19 +238,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

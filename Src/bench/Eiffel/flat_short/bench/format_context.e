@@ -105,7 +105,7 @@ feature -- Initialization
 			valid_unnested_local_adapt: local_adapt /= Void
 		end
 
-	init_feature_context (source, target: FEATURE_I; 
+	init_feature_context (source, target: FEATURE_I;
 				feature_as: FEATURE_AS) is
 			-- Initialize Current context to analyze
 			-- `source' and `target' features.
@@ -136,6 +136,19 @@ feature -- Case properties
 
 feature -- Properties
 
+	match_list: LEAF_AS_LIST is
+			-- Match list for roundtrip parser.
+		local
+			l_id: INTEGER
+		do
+			if client /= Void then
+				l_id := client.class_id
+			else
+				l_id := class_c.class_id
+			end
+			Result := match_list_server.item (l_id)
+		end
+
 	is_for_case: BOOLEAN
 			-- Is Current format done for EiffelCase?
 
@@ -155,16 +168,12 @@ feature -- Properties
 	feature_comments: EIFFEL_COMMENTS
 			-- Comments for current analyzed feature
 
-	eiffel_file: EIFFEL_FILE
-			-- Eiffel file associated with class_ast
-			--| (Not used in format context b).
-
 	last_class_printed: TYPE_A
 			-- Last class printed (used for !TYPE! creation)
 
 	first_assertion: BOOLEAN
 			-- Are we about to format the first assertion?
-		
+
 	format_registration: FORMAT_REGISTRATION
 			-- Structure registerd for formatting
 
@@ -195,7 +204,7 @@ feature -- Properties
 
 	class_c: CLASS_C
 			-- Current class being processed
-	
+
 	format: LOCAL_FORMAT
 			-- Current internal formatting directives
 
@@ -274,7 +283,7 @@ feature -- Indentation
 	emit_tabs is
 			-- Emit tabs according to indent depth of current `format'.
 		require
-			not_tabs_emitted: not tabs_emitted	
+			not_tabs_emitted: not tabs_emitted
 		local
 			i: INTEGER
 		do
@@ -397,7 +406,7 @@ feature -- Setting
 		end
 
 	set_insertion_point is
-			-- Remember text position for parantheses 
+			-- Remember text position for parantheses
 			-- and prefix operator.
 		do
 			if not tabs_emitted then
@@ -409,7 +418,7 @@ feature -- Setting
 	set_current_class_only is
 			-- Set current_class_only to True.
 		do
-			current_class_only := True;	
+			current_class_only := True;
 		ensure
 			current_class_only: current_class_only
 		end
@@ -504,7 +513,7 @@ feature -- Setting local format details
 		ensure
 			must_abort_on_failure: must_abort_on_failure
 		end
-	
+
 	continue_on_failure is
 			-- Set abort flag for format to be False.
 		do
@@ -547,7 +556,7 @@ feature -- Access
 	in_indexing_clause: BOOLEAN
 			-- Should strings be formatted over multiple lines?
 			-- For details, see STRING_AS.simple_format.
-	
+
 feature -- Execution
 
 	execute is
@@ -625,7 +634,7 @@ feature -- Update
 		end
 
 	commit is
-			-- Go back to previous format. 
+			-- Go back to previous format.
 			--| Keep text modifications.
 		do
 			format_stack.remove
@@ -681,7 +690,7 @@ feature -- Element change
 			text.add_classi (c, c.name)
 		end
 
-	put_clusteri (c: CLUSTER_I) is		
+	put_clusteri (c: CLUSTER_I) is
 			-- Append cluster name to 'text', treated as a stone.
 		do
 			if not tabs_emitted then
@@ -705,7 +714,7 @@ feature -- Element change
 	put_origin_comment is
 			-- Put original comment.
 		do
-			if global_adapt.source_enclosing_class 
+			if global_adapt.source_enclosing_class
 				/= global_adapt.target_enclosing_class
 			then
 				put_text_item (ti_Dashdash)
@@ -731,7 +740,7 @@ feature -- Element change
 			local_adapt := unnested_local_adapt
 			last_was_printed := True
 		end
-	
+
 	prepare_for_feature (name: STRING; args: EIFFEL_LIST [EXPR_AS]) is
 			-- Prepare for features within main features.
 		require
@@ -790,10 +799,10 @@ feature -- Element change
 			if not is_for_case then
 				adapt := global_adapt.adapt_result
 				type := last_class_printed
-				if type /= Void then 
+				if type /= Void then
 						-- Clone result adaptation.
 						-- Need to update type in result for
-						-- ! TYPE ! Result.make 
+						-- ! TYPE ! Result.make
 					adapt := adapt.twin
 					adapt.set_source_type (type)
 					adapt.set_target_type (type)
@@ -1158,7 +1167,7 @@ feature -- Implementation
 				f_name := adapt.final_name
 				if feature_i /= Void and then in_bench_mode then
 					create {FEATURE_TEXT} item.make (feature_i.api_feature (adapt.target_class.class_id), f_name)
-				else			
+				else
 					create {LOCAL_TEXT} item.make (f_name)
 				end
 				text.add (item)
@@ -1186,7 +1195,7 @@ feature -- Implementation
 					local_adapt := adapt
 				else
 					last_was_printed := True
-				end;			
+				end;
 			end
 		end
 
@@ -1339,26 +1348,26 @@ feature {NONE} -- Implementation
 
 	formatter: AST_FORMATTER_VISITOR;
 			-- Formatter of AST_EIFFEL nodes
-				
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

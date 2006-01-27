@@ -178,6 +178,10 @@ feature {NONE} -- Initialization
 			build_project_toolbar
 			toolbars_area.extend (project_toolbar)
 			toolbars_area.disable_item_expand (project_toolbar)
+
+			build_refactoring_toolbar
+			toolbars_area.extend (refactoring_toolbar)
+			toolbars_area.disable_item_expand (refactoring_toolbar)
 		end
 
 	build_toolbars_area is
@@ -198,6 +202,10 @@ feature {NONE} -- Initialization
 			toolbars_area.extend (project_toolbar)
 			toolbars_area.disable_item_expand (project_toolbar)
 
+			build_refactoring_toolbar
+			toolbars_area.extend (refactoring_toolbar)
+			toolbars_area.disable_item_expand (refactoring_toolbar)
+
 			view_menu.put_front (build_toolbar_menu)
 		end
 
@@ -215,6 +223,12 @@ feature {NONE} -- Initialization
 			-- Build toolbar corresponding to the project options bar.
 		deferred
 		end
+
+	build_refactoring_toolbar is
+			-- Build toolbar for the refactorings.
+		deferred
+		end
+
 
 feature {NONE} -- Menus initializations
 
@@ -306,6 +320,11 @@ feature {NONE} -- Menus initializations
 			create menu_item.make_with_text (Interface_names.m_Customize_project)
 			menu_item.select_actions.extend (agent project_customizable_toolbar.customize)
 			menu_item.select_actions.extend (agent save_project_toolbar)
+			Result.extend (menu_item)
+
+			create menu_item.make_with_text (Interface_names.m_Customize_refactoring)
+			menu_item.select_actions.extend (agent refactoring_customizable_toolbar.customize)
+			menu_item.select_actions.extend (agent save_refactoring_toolbar)
 			Result.extend (menu_item)
 		end
 
@@ -437,12 +456,19 @@ feature {NONE} -- Vision2 architechture
 	project_customizable_toolbar: EB_TOOLBAR
 			-- Customizable part of `project_toolbar'.
 
+	refactoring_customizable_toolbar: EB_TOOLBAR
+			-- Customizable part of `refactoring_toolbar'.
+
 	address_toolbar: EV_VERTICAL_BOX
 			-- Address toolbar (Back, forth, Class name, feature name, format type).
 			-- The vertical box contains the separator and then the toolbar.
 
 	project_toolbar: EV_VERTICAL_BOX
 			-- Project toolbar
+			-- The vertical box contains the separator and then the toolbar.
+
+	refactoring_toolbar: EV_VERTICAL_BOX
+			-- Refactoring toolbar
 			-- The vertical box contains the separator and then the toolbar.
 
 feature {NONE} -- Menus.
@@ -646,6 +672,9 @@ feature {NONE} -- Implementation / Commands
 	show_project_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
 			-- Command to show/hide the project toolbar.
 
+	show_refactoring_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
+			-- Command to show/hide the refactoring toolbar.
+
 	show_address_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
 			-- Command to show/hide the address toolbar.
 
@@ -667,6 +696,18 @@ feature {NONE} -- Implementation / Commands
 				Eb_debugger_manager.save_interface (project_customizable_toolbar)
 			end
 		end
+
+	save_refactoring_toolbar is
+			-- Save the apparence of the refactoring toolbar.
+		do
+			if refactoring_customizable_toolbar.changed then
+				preferences.development_window_data.refactoring_toolbar_layout_preference.set_value (save_toolbar (refactoring_customizable_toolbar))
+				preferences.development_window_data.show_refactoring_toolbar_preference.set_value (show_refactoring_toolbar_command.is_visible)
+				preferences.development_window_data.show_text_in_refactoring_toolbar_preference.set_value (refactoring_customizable_toolbar.is_text_important)
+				preferences.development_window_data.show_all_text_in_refactoring_toolbar_preference.set_value (refactoring_customizable_toolbar.is_text_displayed)
+			end
+		end
+
 
 	save_toolbar_state is
 			-- Write in the preferences whether to display the toolbars or not.

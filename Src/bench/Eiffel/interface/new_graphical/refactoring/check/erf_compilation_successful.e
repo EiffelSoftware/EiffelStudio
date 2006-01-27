@@ -1,40 +1,52 @@
 indexing
-	description: "Comment server for a class indexed by class id."
+	description: "Check if the current project compiles without any errors."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CLASS_COMMENTS_SERVER
+	ERF_COMPILATION_SUCCESSFUL
 
 inherit
-	COMPILER_SERVER [CLASS_COMMENTS]
+	ERF_CHECK
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_GRAPHICAL_COMMANDS
+		export
+			{NONE} all
+		end
 
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	id (t: CLASS_COMMENTS): INTEGER is
-			-- Id associated with `t'
+	make is
+			-- Create check
 		do
-			Result := t.class_id
+			error_message := "Compilation was not successful."
 		end
 
-	Cache: CACHE [CLASS_COMMENTS] is
-			-- No caching machanism
-			-- (Returns void)
+feature -- Basic operation
+
+	execute is
+			-- Execute the check.
+		local
+			l_sensitive: BOOLEAN
 		do
+			l_sensitive := melt_project_cmd.is_sensitive
+			melt_project_cmd.enable_sensitive
+			melt_project_cmd.execute
+			success := workbench.successful
+			if not l_sensitive then
+				melt_project_cmd.disable_sensitive
+			end
 		end
-
-feature {NONE} -- Implementation
-
-	Size_limit: INTEGER is 200
-			-- Size of the CLASS_COMMENTS_SERVER file (200 Ko)
-
-	Chunk: INTEGER is 500;
-			-- Size of a HASH_TABLE block
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -42,19 +54,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

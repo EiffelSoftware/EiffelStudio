@@ -106,6 +106,18 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			Result := show_all_text_in_general_toolbar_preference.value
 		end
 
+	show_text_in_refactoring_toolbar: BOOLEAN is
+			-- Show only selected text in the refactoring toolbar?
+		do
+			Result := show_text_in_refactoring_toolbar_preference.value
+		end
+
+	show_all_text_in_refactoring_toolbar: BOOLEAN is
+			-- Show all text in the refactoring toolbar?
+		do
+			Result := show_all_text_in_refactoring_toolbar_preference.value
+		end
+
 	show_address_toolbar: BOOLEAN is
 			-- Show the address toolbar (Back, Forward, Class, Feature, ...)?
 		do
@@ -118,6 +130,13 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			Result := show_project_toolbar_preference.value
 		end
 
+	show_refactoring_toolbar: BOOLEAN is
+			-- Show the refactoring toolbar.
+		do
+			Result := show_refactoring_toolbar_preference.value
+		end
+
+
 	show_search_options: BOOLEAN is
 			-- Are search tool options displayed ?
 		do
@@ -128,6 +147,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			-- Toolbar organization
 		do
 			Result := general_toolbar_layout_preference.value
+		end
+
+	refactoring_toolbar_layout: ARRAY [STRING] is
+			-- Toolbar organization
+		do
+			Result := refactoring_toolbar_layout_preference.value
 		end
 
 	max_history_size: INTEGER is
@@ -250,17 +275,29 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_all_text_in_general_toolbar_preference: BOOLEAN_PREFERENCE
 			-- Show all text in the general toolbar?
 
+	show_text_in_refactoring_toolbar_preference: BOOLEAN_PREFERENCE
+			-- Show only selected text in the refactoring toolbar?
+
+	show_all_text_in_refactoring_toolbar_preference: BOOLEAN_PREFERENCE
+			-- Show all text in the refactoring toolbar?
+
 	show_address_toolbar_preference: BOOLEAN_PREFERENCE
 			-- Show the address toolbar (Back, Forward, Class, Feature, ...)?
 
 	show_project_toolbar_preference: BOOLEAN_PREFERENCE
 			-- Show the project toolbar (Breakpoints, ...)?
 
+	show_refactoring_toolbar_preference: BOOLEAN_PREFERENCE
+			-- Show the refactoring toolbar.
+
 	show_search_options_preference: BOOLEAN_PREFERENCE
 			-- Are search tool options displayed ?
 
 	general_toolbar_layout_preference: ARRAY_PREFERENCE
-			--
+			-- General toolbar layout.
+
+	refactoring_toolbar_layout_preference: ARRAY_PREFERENCE
+			-- Refactoring toolbar layout.
 
 	max_history_size_preference: INTEGER_PREFERENCE
 
@@ -368,6 +405,12 @@ feature -- Basic operations
 			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
 		end
 
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+			-- Retreive the refactoring toolbar using the available commands in `command_pool'
+		do
+			Result := retrieve_toolbar (command_pool, refactoring_toolbar_layout)
+		end
+
 feature {NONE} -- Preference Strings
 
 	show_eiffel_studio_debug_menu: STRING is "interface.development_window.show_eiffel_studio_debug_menu"
@@ -384,10 +427,14 @@ feature {NONE} -- Preference Strings
 	show_general_toolbar_string: STRING is "interface.development_window.show_general_toolbar"
 	show_text_in_general_toolbar_string: STRING is "interface.development_window.show_text_in_general_toolbar"
 	show_all_text_in_general_toolbar_string: STRING is "interface.development_window.show_all_text_in_general_toolbar"
+	show_text_in_refactoring_toolbar_string: STRING is "interface.development_window.show_text_in_refactoring_toolbar"
+	show_all_text_in_refactoring_toolbar_string: STRING is "interface.development_window.show_all_text_in_refactoring_toolbar"
 	show_address_toolbar_string: STRING is "interface.development_window.show_address_toolbar"
 	show_project_toolbar_string: STRING is "interface.development_window.show_project_toolbar"
+	show_refactoring_toolbar_string: STRING is "interface.development_window.show_refactoring_toolbar"
 	search_tool_show_options_string: STRING is "interface.development_window.search_tool_show_options"
 	general_toolbar_layout_string: STRING is "interface.development_window.general_toolbar_layout"
+	refactoring_toolbar_layout_string: STRING is "interface.development_window.refactoring_toolbar_layout"
 	max_history_size_string: STRING is "interface.development_window.maximum_history_size"
 	remember_completion_list_size_string: STRING is "interface.development_window.remember_completion_list_size"
 	completion_list_width_string: STRING is "interface.development_window.completion_list_width"
@@ -424,6 +471,10 @@ feature {NONE} -- Implementation
 			show_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_general_toolbar_string, True)
 			show_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_general_toolbar_string, False)
 			show_all_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_general_toolbar_string, False)
+			refactoring_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, refactoring_toolbar_layout_string, <<"RF_pull__visible", "RF_rename__visible", "Remove_class_cluster__visible", "Separator", "RF_undo__visible", "RF_redo__visible">>)
+			show_text_in_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_refactoring_toolbar_string, True)
+			show_all_text_in_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_refactoring_toolbar_string, False)
+			show_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_refactoring_toolbar_string, True)
 			show_address_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_address_toolbar_string, True)
 			show_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_project_toolbar_string, False)
 			show_search_options_preference := l_manager.new_boolean_preference_value (l_manager, search_tool_show_options_string, True)
@@ -460,12 +511,16 @@ invariant
 	left_panel_layout_preference_not_void: left_panel_layout_preference /= Void
 	right_panel_layout_preference_not_void: right_panel_layout_preference /= Void
 	show_general_toolbar_preference_not_void: show_general_toolbar_preference /= Void
+	show_refactoring_toolbar_preference_not_void: show_refactoring_toolbar_preference /= Void
 	show_text_in_general_toolbar_preference_not_void: show_text_in_general_toolbar_preference /= Void
 	show_all_text_in_general_toolbar_preference_not_void: show_all_text_in_general_toolbar_preference /= Void
+	show_text_in_refactoring_toolbar_preference_not_void: show_text_in_refactoring_toolbar_preference /= Void
+	show_all_text_in_refactoring_toolbar_preference_not_void: show_all_text_in_refactoring_toolbar_preference /= Void
 	show_address_toolbar_preference_not_void: show_address_toolbar_preference /= Void
 	show_project_toolbar_preference_not_void: show_project_toolbar_preference /= Void
 	show_search_options_preference_not_void: show_search_options_preference /= Void
 	general_toolbar_layout_preference_not_void: general_toolbar_layout_preference /= Void
+	refactoring_toolbar_layout_preference_not_void: refactoring_toolbar_layout_preference /= Void
 	max_history_size_preference_not_void: max_history_size_preference /= Void
 
 indexing
@@ -474,19 +529,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -501,3 +556,5 @@ indexing
 		]"
 
 end -- class EB_DEVELOPMENT_WINDOW_PREFERENCES
+
+

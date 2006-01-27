@@ -28,15 +28,11 @@ feature -- Execution
 			-- Format feature_as and make all items
 			-- clickable with class `c' as context
 		require
-			class_set: class_c /= Void 
-			valid_target_feat: a_target_feat /= Void 
+			class_set: class_c /= Void
+			valid_target_feat: a_target_feat /= Void
 		local
-			start_pos, end_pos: INTEGER
-			file: RAW_FILE
 			f_ast: FEATURE_AS
-			rout_as: ROUTINE_AS
 			written_in_class: CLASS_C
-			c_comments: CLASS_COMMENTS
 			source_feat: FEATURE_I
 			target_feat: FEATURE_I
 			prev_class: CLASS_C
@@ -61,13 +57,13 @@ feature -- Execution
 						-- from class `class_c' (args, and result type
 						-- are evaluated). Need the feature_i entry in
 						-- feature table of written_in_class
-						-- (the evaluation of args and result in the 
+						-- (the evaluation of args and result in the
 						-- written_in class of feature_).
 						-- The feature name of the ast structure where
 						-- it was defined can be used to retrieve
 						-- the source_feat.
-					source_feat := written_in_class.feature_named 
-							(f_ast.feature_names.first.internal_name)			
+					source_feat := written_in_class.feature_named
+							(f_ast.feature_names.first.internal_name)
 					if source_feat = Void then
 						-- Shouldn't happen - but just in case
 						source_feat := target_feat
@@ -75,26 +71,7 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
-				start_pos := f_ast.start_position;
-				if written_in_class.is_precompiled then
-					if Class_comments_server.has (written_in_class.class_id) then
-						c_comments := Class_comments_server.disk_item (written_in_class.class_id);
-						feature_comments := c_comments.item (start_pos)
-					end
-				else
-					create file.make (written_in_class.file_name);
-					if file.exists then
-						rout_as ?= f_ast.body.content
-						if rout_as /= Void then
-							end_pos := rout_as.body_start_position
-						else
-							end_pos := f_ast.next_position
-						end
-						create eiffel_file.make_with_positions (file.name, start_pos, end_pos)
-						eiffel_file.set_current_feature (f_ast)
-						feature_comments := eiffel_file.current_feature_comments
-					end;
-				end;
+				feature_comments := f_ast.comment (match_list)
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
@@ -140,9 +117,9 @@ feature -- Element change
 			Result := assert_server.current_assertion
 		end;
 
-feature {NONE} -- Feature comments 
+feature {NONE} -- Feature comments
 
-	export_status: EXPORT_I;;
+	export_status: EXPORT_I;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -150,19 +127,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -176,4 +153,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end	
+end

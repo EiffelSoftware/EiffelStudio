@@ -31,7 +31,9 @@ feature {NONE} -- Creation
 			save_right_panel_layout (a_window_data.right_panel_layout)
 			save_show_search_options (a_window_data.show_search_options)
 			general_toolbar_layout := a_window_data.general_toolbar_layout.twin
+			refactoring_toolbar_layout := a_window_data.refactoring_toolbar_layout.twin
 			show_general_toolbar := a_window_data.show_general_toolbar
+			show_refactoring_toolbar := a_window_data.show_refactoring_toolbar
 			show_project_toolbar := a_window_data.show_project_toolbar
 			show_all_text_in_general_toolbar := a_window_data.show_all_text_in_general_toolbar
 			show_text_in_general_toolbar := a_window_data.show_text_in_general_toolbar
@@ -97,21 +99,33 @@ feature {EB_DEVELOPMENT_WINDOW} -- Access
 	show_all_text_in_general_toolbar: BOOLEAN
 			-- Show all text in the general toolbar?
 
+	show_text_in_refactoring_toolbar: BOOLEAN
+			-- Show only selected text in the refactoring toolbar?
+
+	show_all_text_in_refactoring_toolbar: BOOLEAN
+			-- Show all text in the refactoring toolbar?
+
 	show_address_toolbar: BOOLEAN
 			-- Show the address toolbar (Back, Forward, Class, Feature, ...)?
 
 	show_project_toolbar: BOOLEAN
 			-- Show the project toolbar (Breakpoints, ...)?
 
+	show_refactoring_toolbar: BOOLEAN
+			-- Show the refactoring toolbar.
+
 	show_search_options: BOOLEAN
 			-- Are search tool options displayed ?
 
 	context_unified_stone: BOOLEAN
 			-- Is the context tool linked?
-		
+
 	general_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
-		
+
+	refactoring_toolbar_layout: ARRAY [STRING]
+			-- Toolbar organization
+
 feature {EB_DEVELOPMENT_WINDOW} -- Element change
 
 	save_filename (a_filename: like file_name) is
@@ -183,19 +197,25 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 		end
 
 	save_show_search_options (a_show: BOOLEAN) is
-			-- 
+			--
 		do
 			show_search_options := a_show
 		end
-		
+
 feature -- Basic operations
 
 	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
-			-- Retreive the general toolbar using the available commands in `command_pool' 
+			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
 		end
-	
+
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+			-- Retreive the refactoring toolbar using the available commands in `command_pool'
+		do
+			Result := retrieve_toolbar (command_pool, refactoring_toolbar_layout)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

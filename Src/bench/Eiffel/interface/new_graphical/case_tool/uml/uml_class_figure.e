@@ -57,6 +57,11 @@ inherit
 			default_create
 		end
 
+	SHARED_SERVER
+		undefine
+			default_create
+		end
+
 create
 	make_with_model
 
@@ -731,75 +736,57 @@ feature {NONE} -- Implementation
 		local
 			features: EIFFEL_LIST [FEATURE_AS]
 			name: STRING
-			class_text: STRING
 			retried: BOOLEAN
 			l_section: FEATURE_SECTION
 			fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			l_export_status: EXPORT_I
 			l_item: FEATURE_CLAUSE_AS
+			l_match_list: LEAF_AS_LIST
+			l_comments: EIFFEL_COMMENTS
 		do
 			create {ARRAYED_LIST[FEATURE_SECTION]} Result.make (0)
 			if not retried then
 				eiffel_system.system.set_current_class (compiled_class)
 				fcl := model.feature_clause_list
 				if fcl /= Void and then not fcl.is_empty then
-					class_text := compiled_class.text
+					l_match_list := match_list_server.item (compiled_class.class_id)
 					if not compiled_class.has_feature_table then
 							--| We cannot rely on feature calls on Void targets: they corrupt memory.
 						raise ("No feature table")
 					end
-					if class_text /= Void then
-							--| Features
-						from
-							fcl.start
-						until
-							fcl.after
-						loop
-							if fcl.item = Void then
-								raise ("Void feature clause")
-							end
-							features := fcl.item.features
-							l_item := fcl.item
-							name := l_item.comment (class_text)
-							name.right_adjust
-							create l_section.make (name, features, compiled_class)
-							l_export_status := export_status_generator.
-								feature_clause_export_status (compiled_class, l_item)
-							if l_export_status = Void then
-								l_section.enable_is_none
-							elseif l_export_status.is_none then
-								l_section.enable_is_none
-							elseif l_export_status.is_set then
-								l_section.enable_is_some
-							else
-								l_section.enable_is_any
-							end
-							Result.extend (l_section)
-							fcl.forth
+						--| Features
+					from
+						fcl.start
+					until
+						fcl.after
+					loop
+						if fcl.item = Void then
+							raise ("Void feature clause")
 						end
-					elseif compiled_class.cluster.is_precompiled then
-						from
-							fcl.start
-						until
-							fcl.after
-						loop
-							if fcl.item = Void then
-								raise ("Void feature clause")
-							end
-							features := fcl.item.features
-							create l_section.make ("", features, compiled_class)
-							l_export_status := export_status_generator.
-								feature_clause_export_status (compiled_class, fcl.item)
-							if l_export_status.is_none then
-								l_section.enable_is_none
-							elseif l_export_status.is_set then
-								l_section.enable_is_some
-							else
-								l_section.enable_is_any
-							end
-							Result.extend (l_section)
-							fcl.forth
+						features := fcl.item.features
+						l_item := fcl.item
+
+						l_comments := l_item.comment (l_match_list)
+						if l_comments = Void or else l_comments.is_empty then
+							name := " "
+						else
+							name := l_comments.first
 						end
+						name.right_adjust
+						create l_section.make (name, features, compiled_class)
+						l_export_status := export_status_generator.
+							feature_clause_export_status (compiled_class, l_item)
+						if l_export_status = Void then
+							l_section.enable_is_none
+						elseif l_export_status.is_none then
+							l_section.enable_is_none
+						elseif l_export_status.is_set then
+							l_section.enable_is_some
+						else
+							l_section.enable_is_any
+						end
+						Result.extend (l_section)
+						fcl.forth
 					end
 				end
 			end
@@ -1050,19 +1037,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

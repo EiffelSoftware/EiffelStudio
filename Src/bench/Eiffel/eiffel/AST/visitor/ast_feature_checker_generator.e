@@ -734,6 +734,8 @@ feature -- Implementation
 				end
 			end
 			if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
+				last_routine_id_set := l_feature.rout_id_set
+
 					-- Attachments type check
 				l_formal_count := l_feature.argument_count
 				if is_agent and l_actual_count = 0 and l_formal_count > 0 then
@@ -1419,15 +1421,43 @@ feature -- Implementation
 		end
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+		local
+			l_class_id: INTEGER
+			l_type_a: TYPE_A
 		do
+			l_type_a := constrained_type (last_type.actual_type)
+			if not l_type_a.is_none then
+				l_class_id := l_type_a.associated_class.class_id
+			else
+				l_class_id := -1
+			end
+
 			process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, True, False)
 			error_handler.checksum
+
+				-- set some type attributes of the node
+			l_as.set_class_id (l_class_id)
+			l_as.set_routine_ids (last_routine_id_set)
 		end
 
 	process_access_inv_as (l_as: ACCESS_INV_AS) is
+		local
+			l_class_id: INTEGER
+			l_type_a: TYPE_A
 		do
+			l_type_a := constrained_type (last_type.actual_type)
+			if not l_type_a.is_none then
+				l_class_id := l_type_a.associated_class.class_id
+			else
+				l_class_id := -1
+			end
+
 			process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
 			error_handler.checksum
+
+				-- set some type attributes of the node
+			l_as.set_class_id (l_class_id)
+			l_as.set_routine_ids (last_routine_id_set)
 		end
 
 	process_access_id_as (l_as: ACCESS_ID_AS) is
@@ -1443,6 +1473,8 @@ feature -- Implementation
 			l_veen2b: VEEN2B
 			l_needs_byte_node: BOOLEAN
 			l_type: TYPE_A
+			l_class_id: INTEGER
+			l_type_a: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 				-- No need for `last_type.actual_type' as here `last_type' is equal to
@@ -1464,6 +1496,17 @@ feature -- Implementation
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
+					-- set some type attributes of the node
+				l_as.enable_argument
+				l_as.set_argument_position (l_arg_pos)
+
+				l_type_a := constrained_type (l_type.actual_type)
+					if not l_type_a.is_none then
+						l_class_id := l_type_a.associated_class.class_id
+					else
+						l_class_id := -1
+					end
+				l_as.set_class_id (l_class_id)
 			else
 					-- Look for a local if not in a pre- or postcondition
 				l_local_info := context.locals.item (l_as.feature_name)
@@ -1492,10 +1535,22 @@ feature -- Implementation
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
 					end
+						-- set some type attributes of the node
+					l_as.enable_local
+					l_type_a := constrained_type (l_type.actual_type)
+					if not l_type_a.is_none then
+						l_class_id := l_type_a.associated_class.class_id
+					else
+						l_class_id := -1
+					end
+					l_as.set_class_id (l_class_id)
 				else
 						-- Look for a feature
 					process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
 					l_type := last_type
+						-- set some type attributes of the node
+					l_as.set_class_id (l_last_id)
+					l_as.set_routine_ids (last_routine_id_set)
 				end
 			end
 			if l_has_vuar_error then
@@ -1524,16 +1579,20 @@ feature -- Implementation
 			l_vuar1: VUAR1
 			l_veen2b: VEEN2B
 			l_last_id: INTEGER
+			l_class_id: INTEGER
+			l_type_a: TYPE_A
 		do
+			-- No need for `last_type.actual_type' as here `last_type' is equal to
+			-- `context.current_class_type' since we start a feature call.
+			l_last_id := constrained_type (last_type).associated_class.class_id
+
 			l_feature := current_feature
 				-- Look for an argument
 			l_arg_pos := l_feature.argument_position (l_as.feature_name)
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_arg_type ?= l_feature.arguments.i_th (l_arg_pos)
-					-- No need for `last_type.actual_type' as here `last_type' is equal to
-					-- `context.current_class_type' since we start a feature call.
-				l_last_id := constrained_type (last_type).associated_class.class_id
+
 				last_type := l_arg_type.actual_type.instantiation_in (last_type, l_last_id)
 				if l_as.parameters /= Void then
 					create l_vuar1
@@ -1547,6 +1606,17 @@ feature -- Implementation
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
+					-- set some type attributes of the node
+				l_as.enable_argument
+				l_as.set_argument_position (l_arg_pos)
+
+				l_type_a := constrained_type (last_type.actual_type)
+				if not l_type_a.is_none then
+					l_class_id := l_type_a.associated_class.class_id
+				else
+					l_class_id := -1
+				end
+				l_as.set_class_id (l_class_id)
 			else
 					-- Look for a local if in a pre- or postcondition
 				l_local_info := context.locals.item (l_as.feature_name)
@@ -1560,6 +1630,9 @@ feature -- Implementation
 				else
 						-- Look for a feature
 					process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
+						-- set some type attributes of the node
+					l_as.set_routine_ids (last_routine_id_set)
+					l_as.set_class_id (l_last_id)
 				end
 			end
 			error_handler.checksum
@@ -3391,9 +3464,17 @@ feature -- Implementation
 			l_creators := l_creation_class.creators
 
 			if l_call /= Void then
+
+					-- Set some type informations
+				l_call.set_class_id (constrained_type (last_type.actual_type).associated_class.class_id)
+
 					-- Type check the call: as if it was an unqualified call (as export checking
 					-- is done later below)
 				process_call (last_type, Void, l_call.feature_name, Void, l_call.parameters, False, False, False, False)
+
+					-- Set some type informations
+				l_call.set_routine_ids (last_routine_id_set)
+
 					-- We need to reset `last_type' as it now `VOID_A' after checking the call
 					-- which a procedure.
 				last_type := a_creation_type
@@ -5595,6 +5676,11 @@ feature {NONE} -- Implementation
 				l.forth
 			end
 		end
+
+feature {NONE} -- Implementation: Add type informations
+
+	last_routine_id_set: ROUT_ID_SET
+			-- The last routine ids.
 
 feature {NONE} -- Implementation: checking locals
 

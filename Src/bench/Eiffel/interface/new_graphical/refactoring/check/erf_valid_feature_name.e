@@ -1,47 +1,47 @@
 indexing
-	description: "Server for class information on temporary file. This server is%
-			%used during the compilation. The goal is to merge the file%
-			%Tmp_class_info_file and Class_info_file if the compilation is successful.%
-			%Indexed by class id."
+	description: "Check if a given feature name is valid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TMP_CLASS_INFO_SERVER 
+class
+	ERF_VALID_FEATURE_NAME
 
 inherit
+	ERF_CHECK
 
-	DELAY_SERVER [CLASS_INFO]
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 
 create
 	make
-	
-feature 
 
-	id (t: CLASS_INFO): INTEGER is
-			-- Id associated with `t'
+feature {NONE} -- Initialization
+
+	make (a_name: STRING) is
+			-- Create check for feature name `a_name'.
+		require
+			a_name_not_void: a_name /= void
 		do
-			Result := t.class_id
+			new_name := a_name
+			error_message := "The feature name is not valid."
 		end
 
-	cache: CLASS_INFO_CACHE is
-			-- Cache for routine tables
-		once
-			create Result.make
-		end
+feature -- Basic operation
 
-	Delayed: SEARCH_TABLE [INTEGER] is
-			-- Cache for delayed items
-		once
-			create Result.make ((3 * Cache.cache_size) // 2)
-		end
+	execute is
+            -- Execute a check.
+        do
+			success := (create {IDENTIFIER_CHECKER}).is_valid (new_name)
+        end
 
-	Size_limit: INTEGER is 200
-			-- Size of the TMP_CLASS_INFO_SERVER file (200 Ko)
+feature {NONE} -- Implementation
 
-	Chunk: INTEGER is 500;
-			-- Size of a HASH_TABLE block
+	new_name: STRING;
+			-- The name to check.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -49,19 +49,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

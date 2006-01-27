@@ -72,6 +72,28 @@ feature -- Attributes
 			Result := feature_name
 		end
 
+
+	is_qualified: BOOLEAN is
+			-- Is current entity a call on an other object?
+		do
+			Result := True
+		end
+
+	is_local: BOOLEAN
+			-- Is current entity a local?
+
+	is_argument: BOOLEAN
+			-- Is the current entity an argument?
+
+	class_id: INTEGER
+			-- The class id of the qualified call.
+
+	argument_position: INTEGER
+			-- If the current entity is an argument this gives the position in the argument list.
+
+	routine_ids: ROUT_ID_SET
+			-- If the current entity is a feature this gives the routine ids.
+
 feature -- Roundtrip
 
 	internal_parameters: EIFFEL_LIST [EXPR_AS]
@@ -132,6 +154,42 @@ feature -- Setting
 		do
 			internal_parameters := p
 		end
+
+	set_class_id (a_class_id: like class_id) is
+			-- Set `class_id' to `a_class_id'.
+		do
+			class_id := a_class_id
+		end
+
+	set_routine_ids (a_routine_ids: like routine_ids) is
+			-- Set `routine_ids' to `a_routine_ids'.
+		require
+			a_routine_ids_not_void: a_routine_ids /= Void
+		do
+			routine_ids := a_routine_ids
+		end
+
+	set_argument_position (an_argument_position: like argument_position) is
+			-- Set `argument_position' to `an_argument_position'.
+		do
+			argument_position := an_argument_position
+		end
+
+	enable_local is
+			-- Set `is_local' to true.
+		do
+			is_local := true
+		end
+
+	enable_argument is
+			-- Set `is_argument' to true.
+		do
+			is_argument := true
+		end
+
+
+invariant
+	not_local_and_argument: is_local implies not is_argument
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

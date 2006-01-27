@@ -84,7 +84,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Comments
 
-	feature_clause_comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
+	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
 			-- First line of comments on `Current'
 		require
 			a_list_not_void: a_list /= Void
@@ -101,40 +101,6 @@ feature -- Roundtrip/Comments
 			end
 			check first_token (a_list).index + 1 <= l_end_index end
 			Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index + 1, l_end_index))
-		end
-
-feature -- Comments
-
-	comment (class_text: STRING): STRING is
-			-- Extract first line of comments on `Current' from `class_text'.
-		require
-			class_text_not_void: class_text /= Void
-		local
-			end_pos, real_pos: INTEGER
-		do
-			end_pos := feature_keyword.final_position
-				-- `end_position' might not be up-to-date, so that we may look
-				-- after the end of the file. Case were new class text is shorter
-				-- than the previous text of the compiled version.
-			if end_pos <= class_text.count then
-				real_pos := class_text.substring_index ("--", end_pos)
-			end
-			if real_pos /= 0 then
-				if not features.is_empty then
-					end_pos := features.first.start_position
-				else
-					end_pos := 0
-				end
-				if end_pos = 0 or else real_pos < end_pos then
-					Result := class_text.substring (real_pos + 2, class_text.index_of ('%N', real_pos) - 1)
-					Result.prune_all_leading (' ')
-				end
-			end
-			if Result = Void then
-				create Result.make (0)
-			end
-		ensure
-			not_void: Result /= Void
 		end
 
 feature -- Comparison

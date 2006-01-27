@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Adding debug breakpoints to simple format text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -44,12 +44,8 @@ feature {NONE} -- Initialization
 		do
 			make_for_case;
 			e_class := a_feat.associated_class;
-			e_feature := a_feat;	
-			ast := a_feat.ast;	
-			create eiffel_file.make_with_positions 
-				(a_feat.written_class.file_name, 
-					ast.start_position, ast.end_position);
-			eiffel_file.set_current_feature (ast);
+			e_feature := a_feat;
+			ast := a_feat.ast;
 			if ast = Void then
 				execution_error := True
 			else
@@ -125,19 +121,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

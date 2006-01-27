@@ -404,7 +404,7 @@ feature {NONE} -- Sort data
 		local
 			l_item: MSR_TEXT_ITEM
 		do
-			if header.pointed_divider_index = 0 then
+			if row_count > 1 and then header.pointed_divider_index = 0 then
 				if sorted_column = a_column_index then
 						-- We invert the sorting.
 					sorting_order := not sorting_order
@@ -550,6 +550,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_text_item: MSR_TEXT_ITEM
 			l_editor: EB_EDITOR
+			l_saving_string: STRING
 		do
 			search_tool.set_new_search_set (false)
 			l_text_item ?= multi_search_performer.item
@@ -576,7 +577,12 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 					search_tool.summary_label.set_text (report_summary_string)
 					search_tool.new_search_tool_bar.hide
 				else
-					search_tool.summary_label.set_text (report_summary_string + "   Item selected has expired.")
+					if search_tool.is_customized or search_tool.is_whole_project_searched then
+						l_saving_string := " saving file and"
+					else
+						l_saving_string := ""
+					end
+					search_tool.summary_label.set_text (report_summary_string + "   Item expires. Try" + l_saving_string + " searching again.")
 					search_tool.new_search_tool_bar.show
 				end
 			else

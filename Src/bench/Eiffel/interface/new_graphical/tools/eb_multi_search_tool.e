@@ -113,8 +113,8 @@ feature {NONE} -- Initialization
 			cell.set_minimum_width (3)
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
-			create search_button.make_with_text_and_action (interface_names.b_search, agent search_button_clicked)
-			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent search_button_clicked))
+			create search_button.make_with_text_and_action (interface_names.b_search, agent new_search)
+			search_button.key_press_actions.extend (agent handle_enter_on_button (?, agent new_search))
 			search_button.disable_sensitive
 			hbox.extend (search_button)
 			hbox.disable_item_expand (search_button)
@@ -505,7 +505,7 @@ feature -- Action
 				(editor.text_displayed.cursor.pos_in_text > l_end or
 				editor.text_displayed.cursor.pos_in_text < l_start)))
 			then
-				search_button_clicked
+				new_search_or_go_next
 			end
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				 l_class_i ?= multi_search_performer.item.data
@@ -941,7 +941,8 @@ feature {NONE} -- Shortcut button actions
 			--
 		do
 			force_new_search
-			search_button_clicked
+			changed_by_replace := false
+			new_search_or_go_next
 		end
 
 	expand_all is
@@ -982,7 +983,7 @@ feature {NONE} -- Shortcut button actions
 
 feature {NONE} -- Actions handler
 
-	search_button_clicked is
+	new_search_or_go_next is
 			-- Invokes when search button is clicked.
 		do
 			check_class_succeed := true
@@ -1015,7 +1016,7 @@ feature {NONE} -- Actions handler
 				if k.code = Key_enter then
 					if not keyword_field.text.is_empty and then search_is_possible then
 						if search_only then
-							search_button_clicked
+							new_search_or_go_next
 						else
 							replace_current
 						end
@@ -1026,12 +1027,14 @@ feature {NONE} -- Actions handler
 				else
 					if search_selection_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
-							search_button_clicked
+							new_search_or_go_next
+							ev_application.do_once_on_idle (agent editor.set_focus)
 						end
-					elseif search_last_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
+					elseif search_backward_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) or search_last_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
 							temp_reverse := true
-							search_button_clicked
+							new_search_or_go_next
+							ev_application.do_once_on_idle (agent editor.set_focus)
 							temp_reverse := false
 						end
 					end
@@ -1198,15 +1201,13 @@ feature {NONE} -- Actions handler
 
 	retrieve_cursor is
 			-- Retrieve cursor position.
-		require
-			editor_not_void: editor /= Void
-			text_displayed_not_void: editor.text_displayed /= Void
-			cursor_not_void: editor.text_displayed.cursor /= Void
 		do
-			editor.disable_selection
-			editor.text_displayed.cursor.go_to_position (incremental_search_start_pos)
-			editor.check_cursor_position
-			editor.refresh_now
+			if editor.text_displayed.cursor /= Void then
+				editor.disable_selection
+				editor.text_displayed.cursor.go_to_position (incremental_search_start_pos)
+				editor.check_cursor_position
+				editor.refresh_now
+			end
 		end
 
 	on_drop_notebook (a_stone: STONE) is
@@ -1547,13 +1548,13 @@ feature {NONE} -- Replacement Implementation
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_replacing := replace_combo_box.text
 			if is_current_editor_searched then
-				search_button_clicked
+				new_search_or_go_next
 			else
 				if
 					new_search_set or else
 					not multi_search_performer.is_search_launched
 				then
-					search_button_clicked
+					new_search_or_go_next
 				end
 			end
 			if multi_search_performer.is_search_launched then

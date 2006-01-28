@@ -138,6 +138,12 @@ cluster
 			".svn"; "registry_implementation"; "graphical";
 		end		
 
+	all uuid:       "$EIFFEL_SRC/library/uuid"
+		exclude
+			".svn";
+		end
+
+
 external
 
 	include_path:

@@ -325,7 +325,7 @@ cluster
 			".svn"; 
 		end
 
-	all uuid:       "$EIFFEL_SRC/library/uuid"
+	all uuid:       "$EIFFEL_SRC\library\uuid"
 		exclude
 			".svn";
 		end

@@ -73,8 +73,8 @@ feature {NONE} -- Implementation
 
 invariant
 	class_i_not_void: class_i /= Void
-	old_name_ext_set: old_name_ext /= Void and not old_name_ext.empty
-	new_name_ext_set: new_name_ext /= Void and not new_name_ext.empty
+	old_name_ext_set: old_name_ext /= Void and not old_name_ext.is_empty
+	new_name_ext_set: new_name_ext /= Void and not new_name_ext.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -22,7 +22,7 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end		
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
@@ -48,7 +48,7 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	expand_feature_tree_string: STRING is "interface.development_window.expand_feature_tree"	
+	expand_feature_tree_string: STRING is "interface.development_window.expand_feature_tree"
 	show_all_callers_string: STRING is "tools.context_tool.show_all_callers"
 
 feature {NONE} -- Implementation
@@ -56,20 +56,20 @@ feature {NONE} -- Implementation
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EC_PREFERENCE_MANAGER	
-		do		
-			create l_manager.make (preferences, "feature_tool")			
-							
-			show_all_callers_preference := l_manager.new_boolean_resource_value (l_manager, show_all_callers_string, False)		
-			expand_feature_tree_preference := l_manager.new_boolean_resource_value (l_manager, expand_feature_tree_string, True)					
+			l_manager: EC_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "feature_tool")
+
+			show_all_callers_preference := l_manager.new_boolean_preference_value (l_manager, show_all_callers_string, False)
+			expand_feature_tree_preference := l_manager.new_boolean_preference_value (l_manager, expand_feature_tree_string, True)
 		end
-	
+
 	preferences: PREFERENCES
 			-- Preferences
 
 invariant
 	show_all_callers_preference_not_void: show_all_callers_preference /= Void
-	expand_feature_tree_preference_not_void: expand_feature_tree_preference /= Void	
+	expand_feature_tree_preference_not_void: expand_feature_tree_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -77,19 +77,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

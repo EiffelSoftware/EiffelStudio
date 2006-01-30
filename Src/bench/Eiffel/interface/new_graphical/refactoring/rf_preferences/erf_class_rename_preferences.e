@@ -123,31 +123,31 @@ feature {NONE} -- Implementation
 			create l_manager.make (preferences, "refactoring.class_rename")
 			l_update_agent := agent update
 
-			file_rename_preference := l_manager.new_boolean_resource_value (l_manager, file_rename_string, False)
+			file_rename_preference := l_manager.new_boolean_preference_value (l_manager, file_rename_string, False)
 			file_rename_preference.set_description ("Should the file be renamed to the new name?")
 			file_rename_preference.change_actions.extend (l_update_agent)
 
-			old_class_name_preference := l_manager.new_string_resource_value (l_manager, old_class_name_string, "OLD_NAME")
+			old_class_name_preference := l_manager.new_string_preference_value (l_manager, old_class_name_string, "OLD_NAME")
 			old_class_name_preference.set_description ("The old name of the class.")
 			old_class_name_preference.change_actions.extend (l_update_agent)
 			old_class_name_preference.set_hidden (True)
 
-			new_class_name_preference := l_manager.new_string_resource_value (l_manager, new_class_name_string, "NEW_NAME")
+			new_class_name_preference := l_manager.new_string_preference_value (l_manager, new_class_name_string, "NEW_NAME")
 			new_class_name_preference.set_description ("The new name of the class.")
 			new_class_name_preference.change_actions.extend (l_update_agent)
 			new_class_name_preference.set_hidden (True)
 
-			all_classes_preference := l_manager.new_boolean_resource_value (l_manager, all_classes_string, False)
+			all_classes_preference := l_manager.new_boolean_preference_value (l_manager, all_classes_string, False)
 			all_classes_preference.set_description ("Should all classes be processed?")
 			all_classes_preference.change_actions.extend (l_update_agent)
 			all_classes_preference.set_hidden (True)
 
-			update_comments_preference := l_manager.new_boolean_resource_value (l_manager, update_comments_string, False)
+			update_comments_preference := l_manager.new_boolean_preference_value (l_manager, update_comments_string, False)
 			update_comments_preference.set_description ("Should the occurance of the class name in comments be changed?")
 			update_comments_preference.change_actions.extend (l_update_agent)
 			update_comments_preference.set_hidden (True)
 
-			update_strings_preference := l_manager.new_boolean_resource_value (l_manager, update_strings_string, False)
+			update_strings_preference := l_manager.new_boolean_preference_value (l_manager, update_strings_string, False)
 			update_strings_preference.set_description ("Should the occurance of the class name in strings be changed?")
 			update_strings_preference.change_actions.extend (l_update_agent)
 			update_strings_preference.set_hidden (True)

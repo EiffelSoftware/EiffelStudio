@@ -108,6 +108,7 @@ feature -- Element change
 			end
 
 			window_manager.on_refactoring_end
+			window_manager.synchronize_all
 			enable_sensitive
 		end
 
@@ -142,6 +143,7 @@ feature -- Element change
 			compiler_check.execute
 
 			window_manager.on_refactoring_end
+			window_manager.synchronize_all
 			enable_sensitive
 		end
 

@@ -108,6 +108,7 @@ feature -- Basic actions
 							commit
 						end
 					end
+					window_manager.synchronize_all
 				end
 			end
 		rescue

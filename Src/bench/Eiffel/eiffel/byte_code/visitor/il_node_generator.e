@@ -197,7 +197,11 @@ feature -- Generation
 			end
 
 			if a_body.compound /= Void then
-				a_body.compound.process (Current)
+				if a_body.body_index = context.copy_body_index then
+					generate_copy
+				else
+					a_body.compound.process (Current)
+				end
 				il_generator.flush_sequence_points (context.class_type)
 			end
 
@@ -273,6 +277,45 @@ feature -- Generation
 		do
 			target_type := context.real_type (a_node.type)
 			generate_il_simple_assignment (a_node, target_type, source_type)
+		end
+
+	generate_reattachment (source_type, target_type: TYPE_I) is
+			-- Generate code that ensures semantics of reattachment
+			-- of expression of `source_type' to entity of `target_type'
+			-- assuming the expression value is on the stack.
+		require
+			source_type_not_void: source_type /= Void
+			target_type_not_void: target_type /= Void
+		local
+			label: IL_LABEL
+		do
+			if source_type.is_expanded then
+				if not source_type.is_external then
+						-- Generate code to copy object at compile time
+					if target_type.is_expanded then
+							-- Box object before calling run-time feature
+						il_generator.generate_metamorphose (target_type)
+					end
+					generate_twin_routine ({PREDEFINED_NAMES}.twin_name_id, target_type)
+				end
+			elseif
+				source_type.is_external and then
+				target_type.is_external and then
+				source_type.type_a.associated_class.is_interface and then
+				target_type.type_a.associated_class.is_interface or else
+				not source_type.is_external and then
+				not source_type.is_generated_as_single_type and then
+				not source_type.is_frozen
+			then
+					-- Generate code to copy object at run-time
+					-- depending on its dynamic type
+				il_generator.duplicate_top
+				il_generator.generate_is_true_instance_of (system.system_value_type_class.compiled_class.types.first.type)
+				label := il_generator.create_label
+				il_generator.branch_on_false (label)
+				generate_twin_routine ({PREDEFINED_NAMES}.twin_name_id, target_type)
+				il_generator.mark_label (label)
+			end
 		end
 
 	generate_il_load_value (a_node: INSPECT_B) is
@@ -539,6 +582,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	generate_copy is
+			-- Generate body of feature `copy' from ANY.
+		local
+			class_type: CLASS_TYPE
+			cl_type_i: CL_TYPE_I
+			skeleton: SKELETON
+			feature_id: INTEGER
+		do
+			class_type := context.original_class_type
+			if class_type.is_expanded then
+				cl_type_i := class_type.type
+				skeleton := class_type.skeleton
+				if skeleton /= Void then
+					from
+						skeleton.start
+					until
+						skeleton.after
+					loop
+						feature_id := skeleton.item.feature_id
+						il_generator.generate_current
+						il_generator.generate_argument (1)
+						il_generator.generate_metamorphose (cl_type_i)
+						il_generator.generate_load_address (cl_type_i)
+						il_generator.generate_attribute (True, cl_type_i, feature_id)
+						il_generator.generate_attribute_assignment (True, cl_type_i, feature_id)
+						skeleton.forth
+					end
+				end
+			else
+				il_generator.generate_current
+				il_generator.generate_argument (1)
+				il_generator.generate_call_to_standard_copy
+			end
+		end
+
 feature -- Access
 
 	il_generator: IL_CODE_GENERATOR
@@ -686,6 +764,9 @@ feature {NONE} -- Visitors
 
 	process_assign_b (a_node: ASSIGN_B) is
 			-- Process `a_node'.
+		local
+			source_type: TYPE_I
+			target_type: TYPE_I
 		do
 			generate_il_line_info (a_node, True)
 
@@ -693,11 +774,21 @@ feature {NONE} -- Visitors
 				-- assignment to an attribute.
 			generate_il_start_assignment (a_node.target)
 
-				-- Generate expression byte code
-			generate_expression_il_for_type (a_node.source, context.real_type (a_node.target.type))
+			source_type := context.real_type (a_node.source.type)
+			target_type := context.real_type (a_node.target.type)
 
-				-- Generate assignment
-			generate_il_assignment (a_node.target, context.real_type (a_node.source.type))
+				-- Generate expression byte code.
+			generate_expression_il_for_type (a_node.source, target_type)
+
+				-- Check if the assignment instruction is used to model
+				-- creation instruction.
+			if not a_node.is_creation_instruction then
+					-- Generate code for reattachment.
+				generate_reattachment (source_type, target_type)
+			end
+
+				-- Generate assignment.
+			generate_il_assignment (a_node.target, source_type)
 		end
 
 	process_attribute_b (a_node: ATTRIBUTE_B) is
@@ -1995,8 +2086,12 @@ feature {NONE} -- Visitors
 
 	process_parameter_b (a_node: PARAMETER_B) is
 			-- Process `a_node'.
+		local
+			target_type: TYPE_I
 		do
-			generate_expression_il_for_type (a_node.expression, context.real_type (a_node.attachment_type))
+			target_type := context.real_type (a_node.attachment_type)
+			generate_expression_il_for_type (a_node.expression, target_type)
+			generate_reattachment (context.real_type (a_node.type), target_type)
 		end
 
 	process_paran_b (a_node: PARAN_B) is
@@ -2106,6 +2201,8 @@ feature {NONE} -- Visitors
 
 				il_generator.mark_label (failure_label)
 			end
+
+			generate_reattachment (l_source_type, l_target_type)
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).

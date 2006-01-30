@@ -17,6 +17,9 @@ inherit
 		end
 
 	LEAF_AS
+		redefine
+			first_token
+		end
 
 create
 	make
@@ -61,6 +64,21 @@ feature -- Roundtrip
 			sign_symbol_set: sign_symbol = s_as
 		end
 
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list = Void then
+				Result := Current
+			else
+				if sign_symbol /= Void then
+					Result := sign_symbol.first_token (a_list)
+				else
+					Result := Current
+				end
+			end
+		end
+
 feature -- Access
 
 	value: STRING
@@ -90,19 +108,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

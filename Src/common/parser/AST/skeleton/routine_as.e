@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
-		l: like locals; b: like routine_body; po: like postcondition;
+		l: like internal_locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
 		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword) is
 			-- Create a new ROUTINE AST node.
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			obsolete_message := o
 			precondition := pr
-			locals := l
+			internal_locals := l
 			routine_body := b
 			postcondition := po
 			rescue_clause := r
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
-			locals_set: locals = l
+			internal_locals_set: internal_locals = l
 			routine_body_set: routine_body = b
 			postcondition_set: postcondition = po
 			rescue_clause_set: rescue_clause = r
@@ -71,7 +71,12 @@ feature -- Visitor
 feature -- Roundtrip
 
 	obsolete_keyword, rescue_keyword: KEYWORD_AS
-			-- keyword "obsolete" and "rescue" associated with this class	
+			-- keyword "obsolete" and "rescue" associated with this class
+
+feature -- Roundtrip
+
+	internal_locals: LOCAL_DEC_LIST_AS
+			-- Local declarations, in which keyword "local" is stored
 
 feature -- Attributes
 
@@ -82,8 +87,19 @@ feature -- Attributes
 	precondition: REQUIRE_AS
 			-- Precondition list
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS]
+	locals: EIFFEL_LIST [TYPE_DEC_AS] is
 			-- Local declarations
+		do
+			if
+				internal_locals = Void or else
+				internal_locals.locals = Void or else
+				internal_locals.locals.is_empty
+		 	then
+				Result := Void
+			else
+				Result := internal_locals.locals
+			end
+		end
 
 	routine_body: ROUT_BODY_AS
 			-- Routine body
@@ -322,19 +338,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

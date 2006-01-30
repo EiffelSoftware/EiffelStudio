@@ -169,28 +169,38 @@ create
 
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
 %type <EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
-%type <EIFFEL_LIST [CONVERT_FEAT_AS]>	Convert_list Convert_clause
+%type <CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
 %type <EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
-%type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_exports New_exports_opt New_export_list
-%type <EIFFEL_LIST [EXPR_AS]>			Parameters Expression_list
+%type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
+%type <EXPORT_CLAUSE_AS> 		New_exports New_exports_opt
+%type <EIFFEL_LIST [EXPR_AS]>			Expression_list
+%type <PARAMETER_LIST_AS> 	Parameters 
 %type <EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
-%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl Undefine Undefine_opt Redefine Redefine_opt Select Select_opt Creation_constraint New_feature_list
-%type <EIFFEL_LIST [FORMAL_DEC_AS]>		Formal_generics Formal_generic_list
-%type <EIFFEL_LIST [ID_AS]>				Client_list Class_list 
+%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl  New_feature_list
+%type <CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
+%type <UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
+%type <REDEFINE_CLAUSE_AS> Redefine Redefine_opt 
+%type <SELECT_CLAUSE_AS>	Select Select_opt 
+%type <FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
+%type <CLASS_LIST_AS>					Client_list Class_list 
 
 %type <INDEXING_CLAUSE_AS>			Indexing Index_list Dotnet_indexing
 %type <EIFFEL_LIST [INSTRUCTION_AS]>	 Compound Instruction_list 
 %type <EIFFEL_LIST [INTERVAL_AS]>		Choices
-%type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actuals Delayed_actual_list
-%type <EIFFEL_LIST [PARENT_AS]>			Inheritance Parent_list
-%type <EIFFEL_LIST [RENAME_AS]>			Rename Rename_list
-%type <EIFFEL_LIST [STRING_AS]>			Debug_keys String_list
+%type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
+%type <DELAYED_ACTUAL_LIST_AS>	Delayed_actuals 
+%type <PARENT_LIST_AS>					Inheritance Parent_list
+%type <EIFFEL_LIST [RENAME_AS]>			Rename_list
+%type <RENAME_CLAUSE_AS>					Rename
+%type <EIFFEL_LIST [STRING_AS]>			 String_list
+%type <DEBUG_KEY_LIST_AS>	Debug_keys
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list 
 %type <TYPE_LIST_AS>			Generics_opt Type_list Type_list_impl
-%type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments Entity_declaration_list Local_declarations
-
+%type <EIFFEL_LIST [TYPE_DEC_AS]>		Entity_declaration_list 
+%type <LOCAL_DEC_LIST_AS>	Local_declarations
+%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments 
 %type <CONSTRAINT_TRIPLE>	Constraint
 
 %expect 118
@@ -319,7 +329,7 @@ Indexing: -- Empty
 		Index_list
 			{
 				$$ := $3
-				if $$ /= Void and $1 /= Void then
+				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end				
 				remove_counter
@@ -329,7 +339,7 @@ Indexing: -- Empty
 			--- { $$ := Void }
 			{
 				$$ := ast_factory.new_indexing_clause_as (0)
-				if $$ /= Void and $1 /= Void then
+				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end
 			}
@@ -342,12 +352,8 @@ Dotnet_indexing: -- Empty
 		{
 				$$ := ast_factory.new_indexing_clause_as (0)
 				if $$ /= Void then
-					if $1 /= Void then
 						$$.set_indexing_keyword ($1)
-					end
-					if $2 /= Void then	
 						$$.set_end_keyword ($2)
-					end
 				end		
 		}
 	|	TE_INDEXING
@@ -603,19 +609,19 @@ Clients: -- Empty
 
 Client_list: TE_LCURLY TE_RCURLY
 			{
-				$$ := ast_factory.new_eiffel_list_id_as (1)
+				$$ := ast_factory.new_class_list_as (1)
 				if $$ /= Void then
 					$$.reverse_extend (new_none_id)
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $2)
+					$$.set_lcurly_symbol ($1)
+					$$.set_rcurly_symbol ($2)
 				end
 			}
 	|	TE_LCURLY { add_counter } Class_list TE_RCURLY
 			{
 				$$ := $3
 				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $4)
+					$$.set_lcurly_symbol ($1)
+					$$.set_rcurly_symbol ($4)
 				end				
 				remove_counter
 			}
@@ -623,7 +629,7 @@ Client_list: TE_LCURLY TE_RCURLY
 
 Class_list: Identifier_as_upper
 			{
-				$$ := ast_factory.new_eiffel_list_id_as (counter_value + 1)
+				$$ := ast_factory.new_class_list_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
@@ -836,14 +842,14 @@ Inheritance: -- Empty
 				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_parent_as (0)
 				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
+					$$.set_inherit_keyword ($1)
 				end
 			}
 	|	TE_INHERIT { add_counter } Parent_list
 			{
 				$$ := $3
 				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
+					$$.set_inherit_keyword ($1)
 				end				
 				remove_counter
 			}
@@ -904,17 +910,11 @@ Parent_clause: Identifier_as_upper Generics_opt
 Rename: TE_RENAME
 			--- { $$ := Void }
 			{
-				$$ := ast_factory.new_eiffel_list_rename_as (0)
-				if $$ /= Void and $1 /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end
+				$$ := ast_factory.new_rename_clause_as (Void, $1)
 			}
 	|	TE_RENAME { add_counter } Rename_list
 			{
-				$$ := $3
-				if $$ /= Void and $1 /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end				
+				$$ := ast_factory.new_rename_clause_as ($3, $1)
 				remove_counter
 			}
 	;
@@ -948,23 +948,13 @@ New_exports_opt: -- Empty
 
 New_exports: TE_EXPORT { add_counter } New_export_list
 			{
-				if $3 = Void then
-					$$ := ast_factory.new_eiffel_list_export_item_as (0)
-				else
-					$$ := $3
-				end
-				if $$ /= Void and $1 /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end
+				$$ := ast_factory.new_export_clause_as ($3, $1)
 				remove_counter
 			}
 	|	TE_EXPORT ASemi
 			--- { $$ := Void }
 			{
-				$$ := ast_factory.new_eiffel_list_export_item_as (0)
-				if $$ /= Void and $1 /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end
+				$$ := ast_factory.new_export_clause_as (Void, $1)
 			}
 	;
 
@@ -1004,7 +994,7 @@ Convert_clause: -- Empty
 		{
 			$$ := $3
 			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
+				$$.set_convert_keyword ($1)
 			end
 			remove_counter
 		}
@@ -1032,21 +1022,13 @@ Convert_feature: Feature_name TE_LPARAN TE_LCURLY Type_list TE_RCURLY TE_RPARAN
 		{
 				-- True because this is a conversion feature used as a creation
 				-- procedure in current class.
-			if $4 /= Void then
-				ast_factory.extend_pre_as ($4, $3)
-				ast_factory.extend_post_as ($4, $5)
-			end
-			$$ := ast_factory.new_convert_feat_as (True, $1, $4, $2, $6, Void)
+			$$ := ast_factory.new_convert_feat_as (True, $1, $4, $2, $6, Void, $3, $5)
 		}
 	|	Feature_name TE_COLON TE_LCURLY Type_list TE_RCURLY
 		{
 				-- False because this is not a conversion feature used as a creation
 				-- procedure.
-			if $4 /= Void then
-				ast_factory.extend_pre_as ($4, $3)
-				ast_factory.extend_post_as ($4, $5)
-			end
-			$$ := ast_factory.new_convert_feat_as (False, $1, $4, Void, Void, $2)
+			$$ := ast_factory.new_convert_feat_as (False, $1, $4, Void, Void, $2, $3, $5)
 		}
 	;
 
@@ -1083,16 +1065,11 @@ Undefine_opt: -- Empty
 Undefine: TE_UNDEFINE
 			--- { $$ := Void }
 		{
-			$$ := ast_factory.new_eiffel_list_feature_name (0)
-			if $$ /= Void and $1 /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-			end
+			$$ := ast_factory.new_undefine_clause_as (Void, $1)
 		}
 	|	TE_UNDEFINE Feature_list
-			{ $$ := $2 
-				if $$ /= Void and $1 /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end
+			{ 
+				$$ := ast_factory.new_undefine_clause_as ($2, $1)
 			}
 	;
 
@@ -1105,16 +1082,11 @@ Redefine_opt: -- Empty
 Redefine: TE_REDEFINE
 			--- { $$ := Void }
 		{
-			$$ := ast_factory.new_eiffel_list_feature_name (0)
-			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-			end		
+			$$ := ast_factory.new_redefine_clause_as (Void, $1)
 		}
 	|	TE_REDEFINE Feature_list
-			{ $$ := $2 
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end			
+			{ 
+				$$ := ast_factory.new_redefine_clause_as ($2, $1)				
 			}
 	;
 
@@ -1127,16 +1099,11 @@ Select_opt: -- Empty
 Select: TE_SELECT
 			--- { $$ := Void }
 		{
-			$$ := ast_factory.new_eiffel_list_feature_name (0)
-			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-			end				
+			$$ := ast_factory.new_select_clause_as (Void, $1)
 		}
 	|	TE_SELECT Feature_list
-			{ $$ := $2 
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end						
+			{ 
+				$$ := ast_factory.new_select_clause_as ($2, $1)
 			}
 	;
 
@@ -1147,19 +1114,11 @@ Select: TE_SELECT
 Formal_arguments:	TE_LPARAN TE_RPARAN
 		---	{ $$ := Void }
 		{
-			$$ := ast_factory.new_eiffel_list_type_dec_as (0)
-			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-				ast_factory.extend_post_as ($$, $2)
-			end
+			$$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2)
 		}
 	|	TE_LPARAN { add_counter } Entity_declaration_list TE_RPARAN
 			{
-				$$ := $3
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $4)				
-				end
+				$$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $4)
 				remove_counter
 			}
 	;
@@ -1281,17 +1240,11 @@ Internal: TE_DO Compound
 Local_declarations: -- Empty
 			-- { $$ := Void }
 	|	TE_LOCAL
-			{ $$ := ast_factory.new_eiffel_list_type_dec_as (0) 
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end
+			{ $$ := ast_factory.new_local_dec_list_as (Void, $1)
 			}
 	|	TE_LOCAL { add_counter } Entity_declaration_list
 			{
-				$$ := $3
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-				end				
+				$$ := ast_factory.new_local_dec_list_as ($3, $1)
 				remove_counter
 			}
 	;
@@ -1489,8 +1442,7 @@ Generics_opt: -- Empty
 		{
 			$$ := ast_factory.new_eiffel_list_type (0)
 			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-				ast_factory.extend_post_as ($$, $2)
+				$$.set_positions ($1, $2)
 			end	
 		}
 	|	TE_LSQURE Type_list TE_RSQURE
@@ -1541,18 +1493,16 @@ Formal_generics:
 				 --- $$ := Void
 				 $$ := ast_factory.new_eiffel_list_formal_dec_as (0)
 				 if $$ /= Void then
-				 		ast_factory.extend_pre_as ($$, $1)
-				 		ast_factory.extend_post_as ($$, $2)
+					$$.set_squre_symbols ($1, $2)
 				 end
 			}
 	|	TE_LSQURE { add_counter } Formal_generic_list TE_RSQURE
 			{
 				formal_generics_end_position := position
 				$$ := $3
-				 if $$ /= Void then
-				 		ast_factory.extend_pre_as ($$, $1)
-				 		ast_factory.extend_post_as ($$, $4)
-				 end				
+				if $$ /= Void then
+					$$.set_squre_symbols ($1, $4)
+				end
 				remove_counter
 			}
 	;
@@ -1631,9 +1581,13 @@ Formal_generic: Formal_parameter
 			Constraint
 			{
 				if $3 /= Void then
-					$$ := ast_factory.new_formal_dec_as ($1, $3.type, $3.feature_name_list, $3.constrain_symbol)
+					if $3.creation_constrain /= Void then
+						$$ := ast_factory.new_formal_dec_as ($1, $3.type, $3.creation_constrain.feature_list, $3.constrain_symbol, $3.creation_constrain.create_keyword, $3.creation_constrain.end_keyword)
+					else
+						$$ := ast_factory.new_formal_dec_as ($1, $3.type, Void, $3.constrain_symbol, Void, Void)				
+					end					
 				else
-					$$ := ast_factory.new_formal_dec_as ($1, Void, Void, Void)
+					$$ := ast_factory.new_formal_dec_as ($1, Void, Void, Void, Void, Void)
 				end
 			}
 	;
@@ -1650,11 +1604,7 @@ Creation_constraint: -- Empty
 			-- { $$ := Void }
 	|	TE_CREATE Feature_list TE_END
 			{ 
-				$$ := $2 
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $3)
-				end
+				$$ := ast_factory.new_creation_constrain_triple ($2, $1, $3)
 			}
 	;
 
@@ -1859,19 +1809,11 @@ Debug_keys: -- Empty
 	|	TE_LPARAN TE_RPARAN
 			--- { $$ := Void }
 		{
-			$$ := ast_factory.new_eiffel_list_string_as (0)
-			if $$ /= Void then
-				ast_factory.extend_pre_as ($$, $1)
-				ast_factory.extend_post_as ($$, $2)
-			end
+			$$ := ast_factory.new_debug_key_list_as (Void, $1, $2)
 		}
 	|	TE_LPARAN { add_counter } String_list TE_RPARAN
 			{
-				$$ := $3
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $4)
-				end				
+				$$ := ast_factory.new_debug_key_list_as ($3, $1, $4)
 				remove_counter
 			}
 	;
@@ -2100,19 +2042,11 @@ Delayed_actuals: -- Empty
 	|	TE_LPARAN TE_RPARAN
 			--- { $$ := Void }
 			{
-				$$ := ast_factory.new_eiffel_list_operand_as (0)
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $2)
-				end
+				$$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2)
 			}
 	|	TE_LPARAN { add_counter } Delayed_actual_list TE_RPARAN
 			{
-				$$ := $3
-				if $$ /= Void then
-					ast_factory.extend_pre_as ($$, $1)
-					ast_factory.extend_post_as ($$, $4)
-				end				
+				$$ := ast_factory.new_delayed_actual_list_as ($3, $1, $4)
 				remove_counter
 			}
 	;
@@ -2299,11 +2233,7 @@ Factor: TE_VOID
 			{ $$ := ast_factory.new_un_old_as ($2, $1) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
 			{ 
-				if $3 /= Void then
-					ast_factory.extend_pre_as ($3.id_list, $2)
-					ast_factory.extend_post_as ($3.id_list, $4)
-				end
-				$$ := ast_factory.new_un_strip_as ($3, $1) 
+				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) 
 			}
 	|	TE_ADDRESS Feature_name
 			{ $$ := ast_factory.new_address_as ($2, $1) }
@@ -2485,19 +2415,11 @@ Parameters: -- Empty
 	|	TE_LPARAN TE_RPARAN
 			--- { $$ := Void }
 			{
-				 $$ := ast_factory.new_eiffel_list_expr_as (0)
-				 if $$ /= Void then
-				 		ast_factory.extend_pre_as ($$, $1)
-				 		ast_factory.extend_post_as ($$, $2)
-				 end
+				 $$ := ast_factory.new_parameter_list_as (Void, $1, $2)
 			}
 	|	TE_LPARAN { add_counter } Expression_list TE_RPARAN
 			{
-				$$ := $3
-				 if $$ /= Void then
-				 		ast_factory.extend_pre_as ($$, $1)
-				 		ast_factory.extend_post_as ($$, $4)
-				 end				
+				$$ := ast_factory.new_parameter_list_as ($3, $1, $4)
 				remove_counter
 			}
 	;

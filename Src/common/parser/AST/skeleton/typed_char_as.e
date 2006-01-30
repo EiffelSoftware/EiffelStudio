@@ -14,7 +14,7 @@ inherit
 		rename
 			initialize as char_initialize
 		redefine
-			process
+			process, first_token
 		end
 
 create
@@ -43,6 +43,21 @@ feature -- Roundtrip
 	type: TYPE_AS
 		-- Type associated with this node.
 
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list = Void then
+				Result := Current
+			else
+				if type /= Void then
+					Result := type.first_token (a_list)
+				else
+					Result := Current
+				end
+			end
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -59,19 +74,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

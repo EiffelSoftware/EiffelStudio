@@ -59,9 +59,6 @@ feature -- Match list maintainning
 			match_list: match_list /= Void
 			a_match_not_void: a_match /= Void
 		do
-			if match_list.capacity = match_list.count then
-				match_list.grow (match_list.capacity + 5000)
-			end
 			match_list_count := match_list_count + 1
 			a_match.set_index (match_list_count)
 			match_list.extend (a_match)
@@ -71,9 +68,6 @@ feature -- Match list maintainning
 			-- Extend `internal_match_list' with stub `a_stub',
 			-- and set index in `a_match'.
 		do
-			if match_list.capacity = match_list.count then
-				match_list.grow (match_list.capacity + 5000)
-			end
 			match_list_count := match_list_count + 1
 			a_stub.set_index (match_list_count)
 			match_list.extend (a_stub)

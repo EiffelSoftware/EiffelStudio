@@ -10,13 +10,9 @@ class
 
 inherit
 	AST_EIFFEL
-		undefine
-			text
 		redefine
 			is_equivalent
 		end
-
-	LEAF_AS
 
 create
 	initialize
@@ -39,6 +35,18 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_external_lang_as (Current)
+		end
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := language_name.first_token (a_list)
+		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := language_name.last_token (a_list)
 		end
 
 feature -- Attributes

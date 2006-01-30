@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (k: like keys; c: like compound; d_as, e: like end_keyword) is
+	initialize (k: like internal_keys; c: like compound; d_as, e: like end_keyword) is
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
@@ -55,10 +55,14 @@ feature -- Attributes
 	keys: EIFFEL_LIST [STRING_AS] is
 			-- Debug keys
 		do
-			if internal_keys = Void or else internal_keys.is_empty then
+			if
+				internal_keys = Void or else
+				internal_keys.keys = Void or else
+				internal_keys.keys.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_keys
+				Result := internal_keys.keys
 			end
 		end
 
@@ -67,8 +71,8 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_keys: EIFFEL_LIST [STRING_AS]
-			-- Internal debug keys			
+	internal_keys: DEBUG_KEY_LIST_AS
+			-- Internal debug keys, in which "(" and ")" are stored		
 
 feature -- Roundtrip/Token
 
@@ -120,19 +124,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

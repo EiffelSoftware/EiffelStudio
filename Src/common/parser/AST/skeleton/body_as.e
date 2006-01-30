@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: like indexing_clause) is
+	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: like indexing_clause) is
 			-- Create a new BODY AST node.
 		do
 			internal_arguments := a
@@ -64,10 +64,14 @@ feature -- Attributes
 	arguments: EIFFEL_LIST [TYPE_DEC_AS] is
 			-- List (of list) of arguments
 		do
-			if internal_arguments = Void or else internal_arguments.is_empty then
+			if
+				internal_arguments = Void or else
+				internal_arguments.arguments = Void or else
+				internal_arguments.arguments.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_arguments
+				Result := internal_arguments.arguments
 			end
 		end
 
@@ -82,8 +86,8 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_arguments: EIFFEL_LIST [TYPE_DEC_AS]
-			-- Internal list (of list) of arguments
+	internal_arguments: FORMAL_ARGU_DEC_LIST_AS
+			-- Internal list (of list) of arguments, in which "(" and ")" are stored
 
 	indexing_clause: INDEXING_CLAUSE_AS
 			-- Indexing clause in this structure
@@ -304,7 +308,7 @@ feature -- New feature description
 
 feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 
-	set_arguments (a: like arguments) is
+	set_arguments (a: like internal_arguments) is
 		do
 			internal_arguments := a
 		end
@@ -325,19 +329,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

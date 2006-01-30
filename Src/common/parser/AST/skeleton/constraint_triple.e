@@ -18,16 +18,16 @@ create
 
 feature{NONE} -- Initialization
 
-	make (k_as: SYMBOL_AS; t_as: TYPE_AS; a_list: EIFFEL_LIST [FEATURE_NAME]) is
+	make (k_as: SYMBOL_AS; t_as: TYPE_AS; l_as: like creation_constrain) is
 			-- Create new CONSTRAINT_TRIPLE sturcture.
 		do
 			constrain_symbol := k_as
 			type := t_as
-			feature_name_list := a_list
+			creation_constrain := l_as
 		ensure
 			constrain_symbol_set: constrain_symbol = k_as
 			type_set: type = t_as
-			feature_name_list_set: feature_name_list = a_list
+			creation_constrain_set: creation_constrain = l_as
 		end
 
 feature -- Access
@@ -36,8 +36,10 @@ feature -- Access
 			-- Constrain keyword
 
 	type: TYPE_AS
+			-- Type associated with current structure
 
-	feature_name_list: EIFFEL_LIST [FEATURE_NAME];
+	creation_constrain: CREATION_CONSTRAIN_TRIPLE;
+			-- Creation constraion structure
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -45,19 +47,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

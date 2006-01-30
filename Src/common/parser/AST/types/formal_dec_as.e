@@ -12,7 +12,7 @@ inherit
 		rename
 			initialize as initialize_formal_as
 		redefine
-			process, is_equivalent
+			process, is_equivalent, last_token
 		end
 
 create
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list; c_as: like constrain_symbol) is
+	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			is_expanded := f.is_expanded
 			constrain_symbol := c_as
 			formal_para := f
+			create_keyword := ck_as
+			end_keyword := ek_as
 		ensure
 			name_set: name = f.name
 			constraint_set: constraint = c
@@ -42,6 +44,8 @@ feature {NONE} -- Initialization
 			is_expanded_set: is_expanded = f.is_expanded
 			constrain_symbol_set: constrain_symbol = c_as
 			formal_para_set: formal_para = f
+			create_keyword_set: create_keyword = ck_as
+			end_keyword_set: end_keyword = ek_as
 		end
 
 feature -- Visitor
@@ -60,6 +64,13 @@ feature -- Roundtrip
 	formal_para: FORMAL_AS
 			-- Formal generic parameter associated with this structure		
 
+	create_keyword: KEYWORD_AS
+			-- Keyword "create" associated with this structure
+
+	end_keyword: KEYWORD_AS
+			-- Keyword "end" associated with this structure
+
+
 feature -- Attributes
 
 	constraint: TYPE_AS
@@ -67,6 +78,23 @@ feature -- Attributes
 
 	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Constraint on the creation routines of the constraint
+
+feature -- Roundtrip/Token
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list = Void then
+				Result := Precursor (a_list)
+			else
+				if end_keyword /= Void then
+					Result := end_keyword.last_token (a_list)
+				elseif constraint /= Void then
+					Result := constraint.last_token (a_list)
+				else
+					Result := Precursor (a_list)
+				end
+			end
+		end
 
 feature -- Status
 
@@ -181,19 +209,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

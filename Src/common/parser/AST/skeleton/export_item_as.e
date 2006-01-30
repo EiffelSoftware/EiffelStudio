@@ -53,7 +53,9 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 					-- Non-roundtrip mode
-				check features /= Void end
+				if features /= Void then
+					Result := features.last_token (a_list)
+				end
 			else
 					-- Roundtrip mode
 				if features /= Void then

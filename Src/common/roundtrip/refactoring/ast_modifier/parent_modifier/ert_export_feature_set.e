@@ -96,6 +96,7 @@ feature
 
 	export_items: LIST [ERT_EXPORT_ITEM_LIST] is
 			-- A list of feature name list which are exported to the same client set
+			-- Every item in list represents a client set and all features exported to that set.
 		local
 			l_features: like features
 			l_item: ERT_EXPORT_ITEM_LIST

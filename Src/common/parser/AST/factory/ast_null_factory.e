@@ -56,10 +56,14 @@ inherit
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
 			new_keyword_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
 			new_infix_keyword_as, new_precursor_keyword_as, new_prefix_keyword_as, new_once_string_keyword_as,
-			new_symbol_as, new_square_symbol_as, 
+			new_symbol_as, new_square_symbol_as,
 			create_break_as, create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
-			new_feature_keyword_as
+			new_feature_keyword_as,
+			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_debug_key_list_as,
+			new_delayed_actual_list_as, new_parameter_list_as,
+			new_rename_clause_as, new_export_clause_as, new_undefine_clause_as, new_redefine_clause_as, new_select_clause_as,
+			new_creation_constrain_triple
 		end
 
 feature -- Buffer operation
@@ -110,12 +114,12 @@ feature -- Roundtrip
 
 feature -- Roundtrip: New AST node
 
-	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS is
+	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS is
 			-- New AGENT_ROUTINE_CREATION AST node.
 		do
 		end
 
-	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
+	new_tilda_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): TILDA_ROUTINE_CREATION_AS is
 			-- New AGENT_ROUTINE_CREATION AST node.
 		do
 		end
@@ -150,7 +154,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_constraint_triple (k_as: SYMBOL_AS; t_as: TYPE_AS; a_list: EIFFEL_LIST [FEATURE_NAME]): CONSTRAINT_TRIPLE is
+	new_constraint_triple (k_as: SYMBOL_AS; t_as: TYPE_AS; l_as: CREATION_CONSTRAIN_TRIPLE): CONSTRAINT_TRIPLE is
 			-- New constraint triple structure.
 		do
 		end
@@ -317,22 +321,22 @@ feature -- Access
 		do
 		end
 
-	new_access_assert_as (f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): ACCESS_ASSERT_AS is
+	new_access_assert_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_ASSERT_AS is
 			-- New ACCESS_ASSERT AST node
 		do
 		end
 
-	new_access_feat_as (f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): ACCESS_FEAT_AS is
+	new_access_feat_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_FEAT_AS is
 			-- New ACCESS_FEAT AST node
 		do
 		end
 
-	new_access_id_as (f: ID_AS; p: EIFFEL_LIST [EXPR_AS]): ACCESS_ID_AS is
+	new_access_id_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_ID_AS is
 			-- New ACCESS_ID AST node
 		do
 		end
 
-	new_access_inv_as (f: ID_AS; p: EIFFEL_LIST [EXPR_AS]; k_as: SYMBOL_AS): ACCESS_INV_AS is
+	new_access_inv_as (f: ID_AS; p: PARAMETER_LIST_AS; k_as: SYMBOL_AS): ACCESS_INV_AS is
 			-- New ACCESS_INV AST node
 		do
 		end
@@ -483,7 +487,7 @@ feature -- Access
 		do
 		end
 
-	new_body_as (a: EIFFEL_LIST [TYPE_DEC_AS]; t: TYPE_AS; r: ID_AS; c: CONTENT_AS; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: INDEXING_CLAUSE_AS): BODY_AS is
+	new_body_as (a: FORMAL_ARGU_DEC_LIST_AS; t: TYPE_AS; r: ID_AS; c: CONTENT_AS; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: INDEXING_CLAUSE_AS): BODY_AS is
 			-- New BODY AST node
 		do
 		end
@@ -512,9 +516,9 @@ feature -- Access
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
-			p: EIFFEL_LIST [PARENT_AS];
+			p: PARENT_LIST_AS;
 			c: EIFFEL_LIST [CREATE_AS];
-			co: EIFFEL_LIST [CONVERT_FEAT_AS];
+			co: CONVERT_FEAT_LIST_AS;
 			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
 			inv: INVARIANT_AS;
 			s: SUPPLIERS_AS;
@@ -530,7 +534,7 @@ feature -- Access
 		do
 		end
 
-	new_client_as (c: EIFFEL_LIST [ID_AS]): CLIENT_AS is
+	new_client_as (c: CLASS_LIST_AS): CLIENT_AS is
 			-- New CLIENT AST node
 		do
 		end
@@ -540,7 +544,7 @@ feature -- Access
 		do
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as: SYMBOL_AS): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		do
 		end
@@ -570,7 +574,7 @@ feature -- Access
 		do
 		end
 
-	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
+	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
 			-- New DEBUG AST node
 		do
 		end
@@ -595,7 +599,7 @@ feature -- Access
 		do
 		end
 
-	new_eiffel_list_convert (n: INTEGER): EIFFEL_LIST [CONVERT_FEAT_AS] is
+	new_eiffel_list_convert (n: INTEGER): CONVERT_FEAT_LIST_AS is
 			-- New empty list of CONVERT_FEAT_AS
 		do
 		end
@@ -620,6 +624,11 @@ feature -- Access
 		do
 		end
 
+	new_parameter_list_as (l: EIFFEL_LIST [EXPR_AS]; lp_as, rp_as: SYMBOL_AS): PARAMETER_LIST_AS is
+			-- New empty list of PARAMETER_LIST_AS
+		do
+		end
+
 	new_eiffel_list_feature_as (n: INTEGER): EIFFEL_LIST [FEATURE_AS] is
 			-- New empty list of FEATURE_AS
 		do
@@ -635,7 +644,7 @@ feature -- Access
 		do
 		end
 
-	new_eiffel_list_formal_dec_as (n: INTEGER): EIFFEL_LIST [FORMAL_DEC_AS] is
+	new_eiffel_list_formal_dec_as (n: INTEGER): FORMAL_GENERIC_LIST_AS is
 			-- New empty list of FORMAL_DEC_AS
 		do
 		end
@@ -665,7 +674,7 @@ feature -- Access
 		do
 		end
 
-	new_eiffel_list_parent_as (n: INTEGER): EIFFEL_LIST [PARENT_AS] is
+	new_eiffel_list_parent_as (n: INTEGER): PARENT_LIST_AS is
 			-- New empty list of PARENT_AS
 		do
 		end
@@ -765,7 +774,7 @@ feature -- Access
 		do
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS): FORMAL_DEC_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_DEC_AS is
 			-- New FORMAL_DECLARATION AST node
 		do
 		end
@@ -888,15 +897,15 @@ feature -- Access
 		do
 		end
 
-	new_parent_as (t: CLASS_TYPE_AS; rn: EIFFEL_LIST [RENAME_AS];
-			e: EIFFEL_LIST [EXPORT_ITEM_AS]; u: EIFFEL_LIST [FEATURE_NAME];
-			rd: EIFFEL_LIST [FEATURE_NAME]; s: EIFFEL_LIST [FEATURE_NAME]; ed: KEYWORD_AS): PARENT_AS
+	new_parent_as (t: CLASS_TYPE_AS; rn: RENAME_CLAUSE_AS;
+			e: EXPORT_CLAUSE_AS; u: UNDEFINE_CLAUSE_AS;
+			rd: REDEFINE_CLAUSE_AS; s: SELECT_CLAUSE_AS; ed: KEYWORD_AS): PARENT_AS
 		is
 			-- New PARENT AST node
 		do
 		end
 
-	new_precursor_as (pk: KEYWORD_AS; n: CLASS_TYPE_AS; p: EIFFEL_LIST [EXPR_AS]): PRECURSOR_AS is
+	new_precursor_as (pk: KEYWORD_AS; n: CLASS_TYPE_AS; p: PARAMETER_LIST_AS): PRECURSOR_AS is
 			-- New PRECURSOR AST node
 		do
 		end
@@ -942,7 +951,7 @@ feature -- Access
 		end
 
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
-			l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
+			l: LOCAL_DEC_LIST_AS; b: ROUT_BODY_AS; po: ENSURE_AS;
 			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: KEYWORD_AS;
 			oms_count, a_pos: INTEGER; k_as, r_as: KEYWORD_AS): ROUTINE_AS
 		is
@@ -950,20 +959,20 @@ feature -- Access
 		do
 		end
 
-	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]; is_qualified: BOOLEAN): ROUTINE_CREATION_AS is
+	new_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN): ROUTINE_CREATION_AS is
 			-- New ROUTINE_CREATION AST node
 		do
 		end
 
 	new_old_routine_creation_as (
-			l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS];
+			l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS;
 			is_qualified: BOOLEAN; a_as: SYMBOL_AS): PAIR [ROUTINE_CREATION_AS, LOCATION_AS]
 		is
 			-- New ROUTINE_CREATION AST node for obsolete use of `~'.
 		do
 		end
 
-	new_static_access_as (c: TYPE_AS; f: ID_AS; p: EIFFEL_LIST [EXPR_AS]; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS is
+	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS is
 			-- New STATIC_ACCESS AST node
 		do
 		end
@@ -1018,7 +1027,7 @@ feature -- Access
 		do
 		end
 
-	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: KEYWORD_AS): UN_STRIP_AS is
+	new_un_strip_as (i: CONSTRUCT_LIST [INTEGER]; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS): UN_STRIP_AS is
 			-- New UN_STRIP AST node
 		do
 		end
@@ -1040,6 +1049,61 @@ feature -- Access
 
 	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS is
 			-- New VOID AST node
+		do
+		end
+
+	new_class_list_as (n: INTEGER): CLASS_LIST_AS is
+			-- New empty list of CLASS_LIST AST node
+		do
+		end
+
+	new_local_dec_list_as (l: EIFFEL_LIST [TYPE_DEC_AS]; k_as: KEYWORD_AS): LOCAL_DEC_LIST_AS is
+			-- New LOCAL_DEC_LIST AST node
+		do
+		end
+
+	new_formal_argu_dec_list_as (l: EIFFEL_LIST [TYPE_DEC_AS]; l_as, r_as: SYMBOL_AS): FORMAL_ARGU_DEC_LIST_AS is
+			-- New FORMAL_ARGU_DEC_LIST AST node
+		do
+		end
+
+	new_debug_key_list_as (l: EIFFEL_LIST [STRING_AS]; l_as, r_as: SYMBOL_AS): DEBUG_KEY_LIST_AS is
+			-- New DEBUG_KEY_LIST AST node
+		do
+		end
+
+	new_delayed_actual_list_as (l: EIFFEL_LIST [OPERAND_AS]; l_as, r_as: SYMBOL_AS): DELAYED_ACTUAL_LIST_AS is
+			-- New DELAYED_ACTUAL_LIST AST node
+		do
+		end
+
+	new_rename_clause_as (l: EIFFEL_LIST [RENAME_AS]; k_as: KEYWORD_AS): RENAME_CLAUSE_AS is
+			-- New RENAME_CLAUSE AST node
+		do
+		end
+
+	new_export_clause_as (l: EIFFEL_LIST [EXPORT_ITEM_AS]; k_as: KEYWORD_AS): EXPORT_CLAUSE_AS is
+			-- New EXPORT_CLAUSE AST node
+		do
+		end
+
+	new_undefine_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): UNDEFINE_CLAUSE_AS is
+			-- New UNDEFINE_CLAUSE AST node
+		do
+		end
+
+	new_redefine_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): REDEFINE_CLAUSE_AS is
+			-- New REDEFINE_CLAUSE AST node
+		do
+		end
+
+	new_select_clause_as (l: EIFFEL_LIST [FEATURE_NAME]; k_as: KEYWORD_AS): SELECT_CLAUSE_AS is
+			-- New SELECT_CLAUSE AST node
+		do
+		end
+
+	new_creation_constrain_triple (fl: EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: KEYWORD_AS): CREATION_CONSTRAIN_TRIPLE is
+			-- New CREATION_CONSTRAIN_TRIPLE object
 		do
 		end
 

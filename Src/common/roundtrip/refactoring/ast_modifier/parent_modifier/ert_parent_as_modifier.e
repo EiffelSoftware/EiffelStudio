@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Object that is responsiable for modifying text of a PARENT_AS for refactoriing.
+					Object that is responsiable for modifying text of a PARENT_AS for refactoring.
 				]"
 	author: ""
 	date: "$Date$"

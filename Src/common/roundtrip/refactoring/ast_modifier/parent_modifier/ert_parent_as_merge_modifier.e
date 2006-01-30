@@ -207,6 +207,7 @@ feature{NONE} -- Modification computation
 				last_computed_modifier /= Void
 			end
 			if a_clause = {ERT_PARENT_AS_MODIFIER}.undefine_clause then
+					-- We are processing undefine clause.
 				if source.internal_undefining /= Void then
 					l_sour_list := source.internal_undefining.content
 				else
@@ -218,6 +219,7 @@ feature{NONE} -- Modification computation
 					l_dest_list := Void
 				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.redefine_clause then
+					-- We are processing redefine clause.				
 				if source.internal_redefining /= Void then
 					l_sour_list := source.internal_redefining.content
 				else
@@ -229,6 +231,7 @@ feature{NONE} -- Modification computation
 					l_dest_list := Void
 				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.select_clause then
+					-- We are processing select clause.				
 				if source.internal_selecting /= Void then
 					l_sour_list := source.internal_selecting.content
 				else
@@ -240,9 +243,9 @@ feature{NONE} -- Modification computation
 					l_dest_list := Void
 				end
 			end
+				-- Update names that have been renamed.
 			create l_name_list.make
 			l_name_list.compare_objects
-
 			if l_dest_list /= Void then
 				l_index := l_dest_list.index
 				from
@@ -260,7 +263,7 @@ feature{NONE} -- Modification computation
 				end
 				l_dest_list.go_i_th (l_index)
 			end
-
+				-- Add new feature names from `source' to `destination'.
 			if l_sour_list /= Void and then not l_sour_list.is_empty then
 				l_index := l_sour_list.index
 				from
@@ -273,25 +276,7 @@ feature{NONE} -- Modification computation
 					end
 					l_sour_list.forth
 				end
-			end
-		end
-
-	contain_feature_name (a_list: EIFFEL_LIST [FEATURE_NAME]; a_name: STRING): BOOLEAN is
-			-- Does `a_list' contain `a_name'?
-		local
-			l_index: INTEGER
-		do
-			if not (a_list = Void or else a_list.is_empty) then
-				l_index := a_list.index
-				from
-					a_list.start
-				until
-					a_list.after or Result
-				loop
-					Result := a_name.is_case_insensitive_equal (a_list.item.internal_name)
-					a_list.forth
-				end
-				a_list.go_i_th (l_index)
+				l_sour_list.go_i_th (l_index)
 			end
 		end
 
@@ -331,8 +316,8 @@ feature{NONE} -- Modification computation
 			l_str: STRING
 			l_name, l_final_name: STRING
 		do
-			create l_dest_feature_set.make (destination.internal_exports.content, destination_match_list)
-			create l_sour_feature_set.make (source.internal_exports.content, source_match_list)
+			create l_dest_feature_set.make (destination.internal_exports.content, final_names, destination_match_list)
+			create l_sour_feature_set.make (source.internal_exports.content, final_names, source_match_list)
 			l_dest_feature_set.merge (l_sour_feature_set)
 			l_merged_items := l_dest_feature_set.export_items
 			create Result.make (l_merged_items.count)
@@ -380,7 +365,7 @@ feature{NONE} -- Modification computation
 		end
 
 	final_names: HASH_TABLE [STRING, STRING] is
-			-- Final names of all renamed features.
+			-- Final names (renamed features) of all renamed features.
 		do
 			if internal_final_names = Void then
 				create internal_final_names.make (10)

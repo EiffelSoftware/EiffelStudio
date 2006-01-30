@@ -87,7 +87,7 @@ feature {NONE} -- Visitor implementation
 					is_renaming := False
 
 						-- handle renaming
-					l_renamings := l_as.internal_renaming
+					l_renamings := l_as.renaming
 					if l_renamings /= Void then
 						from
 							l_renamings.start
@@ -139,7 +139,7 @@ feature {NONE} -- Visitor implementation
 						-- if the parent already has this feature
 					if not l_parent_features.is_empty then
 							-- handle rename
-						l_renamings := l_as.internal_renaming
+						l_renamings := l_as.renaming
 						if l_renamings /= Void then
 							from
 								l_renamings.start

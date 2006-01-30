@@ -3069,6 +3069,17 @@ feature -- IL Generation
 			method_writer.write_current_body
 		end
 
+	generate_call_to_standard_copy is
+			-- Generate a call to run-time feature `standard_copy'
+			-- assuming that Current and argument are on the evaluation stack.
+		do
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name,
+				"standard_copy", Static_type,
+				<<system_object_class_name, system_object_class_name>>,
+				Void, False)
+		end
+
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
 			-- (The feature is invoked with a current object on the stack,
@@ -4085,6 +4096,13 @@ feature -- Addresses
 				opcode := {MD_OPCODES}.ldvirtftn
 				type_id := type_i.static_type_id
 					-- Target object is used to calculate address.
+				debug ("fixme")
+					fixme ("[
+						The code below assumes the address of a routine is passed to a constructor of a delegate.
+						But it does not work well in other cases and may result in invalid IL.
+					]")
+				end
+				generate_check_cast (Void, type_i)
 				method_body.put_opcode ({MD_OPCODES}.Dup)
 			end
 			method_body.put_opcode_mdtoken (opcode, feature_token (type_id, a_feature_id))

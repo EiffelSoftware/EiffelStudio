@@ -996,14 +996,12 @@ feature {NONE} -- Implementation
 	set_figure_selection_state (a_figure: EG_FIGURE; a_selection_state: BOOLEAN) is
 			-- Set `is_selected' state of `a_figure' to `a_selection_state'.
 		local
-			a_class: EIFFEL_CLASS_FIGURE
 		do
 			if a_selection_state then
 				a_figure.enable_selected
 			else
 				a_figure.disable_selected
 			end
-			a_class ?= a_figure
 		end
 
 	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is

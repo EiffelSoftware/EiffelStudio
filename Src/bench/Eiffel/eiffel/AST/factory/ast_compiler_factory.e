@@ -67,9 +67,9 @@ feature -- Access
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
-			p: EIFFEL_LIST [PARENT_AS];
+			p: PARENT_LIST_AS;
 			c: EIFFEL_LIST [CREATE_AS];
-			co: EIFFEL_LIST [CONVERT_FEAT_AS];
+			co: CONVERT_FEAT_LIST_AS;
 			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
 			inv: INVARIANT_AS;
 			s: SUPPLIERS_AS;
@@ -104,23 +104,23 @@ feature -- Access
 			end
 		end
 
-	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
+	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
 		local
 			l_str: STRING
 		do
 			if e /= Void then
 				create Result.initialize (k, c, d_as, e)
-				if k /= Void then
+				if k /= Void and then k.keys /= Void then
 					from
 							-- Debug keys are not case sensitive
-						k.start
+						k.keys.start
 					until
-						k.after
+						k.keys.after
 					loop
-						l_str := k.item.value
+						l_str := k.keys.item.value
 						l_str.to_lower
 						system.add_new_debug_clause (l_str)
-						k.forth
+						k.keys.forth
 					end
 				end
 			end

@@ -54,6 +54,12 @@ feature -- Generation Info
 
 feature -- IL Generation
 
+	generate_call_to_standard_copy is
+			-- Generate a call to run-time feature `standard_copy'
+			-- assuming that Current and argument are on the evaluation stack.
+		deferred
+		end
+
 	generate_object_equality_test is
 			-- Generate comparison of two objects.
 		deferred

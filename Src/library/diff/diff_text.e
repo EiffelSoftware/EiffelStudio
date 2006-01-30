@@ -75,10 +75,10 @@ feature -- Access
 					-- if we had only adds or dels in this block the other start/end position
 					-- is not filled and has to be computed with line_diff
 				if se = -1 then
-					ss := ds-line_diff-1
+					ss := ds-line_diff
 					se := ss-1
 				elseif de = -1 then
-					ds := ss+line_diff-1
+					ds := ss+line_diff
 					de := ds-1
 				end
 

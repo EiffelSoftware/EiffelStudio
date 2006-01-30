@@ -81,17 +81,17 @@ feature {NONE} -- Implementation
 			create l_manager.make (preferences, "refactoring.feature_rename")
 			l_update_agent := agent update
 
-			new_feature_name_preference := l_manager.new_string_resource_value (l_manager, new_feature_name_string, "NEW_NAME")
+			new_feature_name_preference := l_manager.new_string_preference_value (l_manager, new_feature_name_string, "NEW_NAME")
 			new_feature_name_preference.set_description ("The new name of the feature.")
 			new_feature_name_preference.change_actions.extend (l_update_agent)
 			new_feature_name_preference.set_hidden (True)
 
-			update_comments_preference := l_manager.new_boolean_resource_value (l_manager, update_comments_string, False)
+			update_comments_preference := l_manager.new_boolean_preference_value (l_manager, update_comments_string, False)
 			update_comments_preference.set_description ("Should the occurance of the feature name in comments be changed?")
 			update_comments_preference.change_actions.extend (l_update_agent)
 			update_comments_preference.set_hidden (True)
 
-			update_strings_preference := l_manager.new_boolean_resource_value (l_manager, update_strings_string, False)
+			update_strings_preference := l_manager.new_boolean_preference_value (l_manager, update_strings_string, False)
 			update_strings_preference.set_description ("Should the occurance of the feature name in strings be changed?")
 			update_strings_preference.change_actions.extend (l_update_agent)
 			update_strings_preference.set_hidden (True)

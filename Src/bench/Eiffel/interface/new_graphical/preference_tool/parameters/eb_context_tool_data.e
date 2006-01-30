@@ -22,10 +22,10 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end	
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Value
-	
+
 	default_class_formatter_index: INTEGER is
 			-- Default class formatter that should be popped up automatically.
 		do
@@ -36,19 +36,19 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			-- Default feature formatter that should be popped up automatically.
 		do
 			Result := default_feature_formatter_index_preference.value
-		end		
-		
+		end
+
 	editor_history_size: INTEGER is
 			-- Number of memorized formatted text in formatters.
 		do
 			Result := editor_history_size_preference.value
-		end	
-		
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	editor_history_size_preference: INTEGER_PREFERENCE
 	default_class_formatter_index_preference: INTEGER_PREFERENCE
-	default_feature_formatter_index_preference: INTEGER_PREFERENCE	
+	default_feature_formatter_index_preference: INTEGER_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -61,14 +61,14 @@ feature {NONE} -- Implementation
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER	
-		do		
-			create l_manager.make (preferences, "context_tool")								
-			editor_history_size_preference := l_manager.new_integer_resource_value (l_manager, editor_history_size_string, 60)
-			default_class_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_class_formatter_index_string, 5)
-			default_feature_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_feature_formatter_index_string, 2)
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "context_tool")
+			editor_history_size_preference := l_manager.new_integer_preference_value (l_manager, editor_history_size_string, 60)
+			default_class_formatter_index_preference := l_manager.new_integer_preference_value (l_manager, default_class_formatter_index_string, 5)
+			default_feature_formatter_index_preference := l_manager.new_integer_preference_value (l_manager, default_feature_formatter_index_string, 2)
 		end
-	
+
 	preferences: PREFERENCES
 			-- Preferences
 
@@ -81,19 +81,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

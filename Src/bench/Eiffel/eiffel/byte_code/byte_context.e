@@ -153,6 +153,9 @@ feature -- Access
 	is_argument_protected: BOOLEAN
 			-- Does current call need to protect some of its arguments?
 
+	copy_body_index: INTEGER
+			-- Body index of `copy' from ANY
+
 feature -- Setting
 
 	set_first_precondition_block_generated (v: BOOLEAN) is
@@ -796,6 +799,9 @@ feature -- Access
 			formal_position: INTEGER
 			reference_i: REFERENCE_I
 		do
+			debug ("to_implement")
+				to_implement ("Move this feature to TYPE_I with a redefinition in FORMAL_I.")
+			end
 			Result := type
 			if Result.is_formal then
 				context_type_i := context_type.type
@@ -821,6 +827,9 @@ feature -- Access
 			type_not_void: type /= Void
 			context_type_not_void: context_type /= Void
 		do
+			debug ("to_implement")
+				to_implement ("Move this feature to TYPE_I and descendants.")
+			end
 			Result := constrained_type_in (type, context_type).instantiation_in (context_type)
 		ensure
 			result_not_void: Result /= Void
@@ -847,6 +856,9 @@ feature -- Access
 			elseif context_class_type = class_type then
 				Result := real_type_in (type, class_type)
 			else
+				debug ("to_implement")
+					to_implement ("Implement context-aware TYPE_I.instantiation_in so that there is no need to create TYPE_A.")
+				end
 				Result := constrained_type_in (type, class_type).type_a.instantiation_in
 						(context_class_type.type.type_a, class_type.type.class_id).type_i
 			end
@@ -876,11 +888,21 @@ feature -- Access
 			-- Initialize byte context with `t'.
 		require
 			t_not_void: t /= Void
+		local
+			f: FEATURE_I
 		do
 			class_type_stack.wipe_out
 			original_class_type := t
 			context_class_type := t
 			set_class_type (t)
+			f := System.any_class.compiled_class.feature_table.
+				item_id ({PREDEFINED_NAMES}.copy_name_id)
+			if f = Void then
+					-- "copy" is not found in ANY
+				copy_body_index := -1
+			else
+				copy_body_index := f.body_index
+			end
 		ensure
 			original_class_type_set: original_class_type = t
 			context_class_type_set: context_class_type = t

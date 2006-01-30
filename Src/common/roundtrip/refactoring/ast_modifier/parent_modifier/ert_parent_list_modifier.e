@@ -70,6 +70,8 @@ feature -- Applicability
 			applied := True
 		end
 
+feature{NONE} -- Implementation
+
 	last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER]
 			-- Last computed modifier list
 
@@ -87,9 +89,11 @@ feature -- Applicability
 			done: BOOLEAN
 			l_appended_parents: STRING
 			l_modifier: ERT_EIFFEL_LIST_MODIFIER
+			l_processed: ARRAY [BOOLEAN]
 		do
 			create last_computed_modifier.make
 			create l_appended_parents.make (256)
+			create l_processed.make (1, destination.internal_parents.count)
 			dest_index := 1
 			dest_count := destination.internal_parents.count
 			dest_ori_index := destination.internal_parents.index
@@ -100,21 +104,23 @@ feature -- Applicability
 				source.internal_parents.after
 			loop
 				from
-					i := dest_index
+					i := 1
 					done := False
 				until
 					i > dest_count or done
 				loop
-					if source.internal_parents.item.type.is_equivalent (destination.internal_parents.i_th (i).type) then
-						last_computed_modifier.extend (
-							create {ERT_PARENT_AS_MERGE_MODIFIER}.make
-								(destination.internal_parents.i_th (i), destination_match_list,
-								 source.internal_parents.item, source_match_list))
-						done := True
+					if not l_processed.item (i) then
+						if source.internal_parents.item.type.is_equivalent (destination.internal_parents.i_th (i).type) then
+							last_computed_modifier.extend (
+								create {ERT_PARENT_AS_MERGE_MODIFIER}.make
+									(destination.internal_parents.i_th (i), destination_match_list,
+									 source.internal_parents.item, source_match_list))
+							done := True
+							l_processed.put (True, i)
+						end
 					end
 					i := i + 1
 				end
-				dest_index := dest_index + 1
 				if not done then
 					l_appended_parents.append ("%N%N%T")
 					l_appended_parents.append (source.internal_parents.item.text (source_match_list))

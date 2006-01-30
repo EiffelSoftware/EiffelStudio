@@ -7,22 +7,25 @@ indexing
 class
 	ERT_EXPORT_FEATURE_SET
 
-create
+create{ERT_PARENT_AS_MERGE_MODIFIER}
 	make
 
 feature{NONE} -- Implementation
 
-	make (export_clause: EIFFEL_LIST [EXPORT_ITEM_AS]; a_list: LEAF_AS_LIST) is
+	make (export_clause: EIFFEL_LIST [EXPORT_ITEM_AS]; final_name_table: HASH_TABLE[STRING, STRING]; a_list: LEAF_AS_LIST) is
 			-- Initialize.
 		require
 			export_clause_not_void: export_clause /= Void
 			export_clause_not_empty: not export_clause.is_empty
 			a_list_not_void: a_list /= Void
+			final_name_table_not_void: final_name_table /= Void
 		local
 			l_index: INTEGER
 			l_index2: INTEGER
 			l_all: ALL_AS
 			l_feature_list: FEATURE_LIST_AS
+			l_new_name: STRING
+			l_old_name: STRING
 		do
 			l_index := export_clause.index
 			create features.make
@@ -44,8 +47,14 @@ feature{NONE} -- Implementation
 						until
 							l_feature_list.features.after
 						loop
-							features.extend (create{ERT_EXPORT_FEATURE}.make (l_feature_list.features.item.internal_name,
+							l_old_name := l_feature_list.features.item.internal_name.as_lower
+							l_new_name := final_name_table.item (l_old_name)
+							if l_new_name = Void then
+								l_new_name := l_old_name
+							end
+							features.extend (create{ERT_EXPORT_FEATURE}.make (l_new_name,
 											 client_set (export_clause.item)))
+
 							l_feature_list.features.forth
 						end
 						l_feature_list.features.go_i_th (l_index2)

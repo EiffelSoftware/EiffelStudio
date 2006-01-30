@@ -59,8 +59,8 @@ feature {NONE} -- Implementation
 			-- New file name
 
 invariant
-	original_name_set: original_name /= void and not original_name.empty
-	new_name_set: new_name /= void and not new_name.empty
+	original_name_set: original_name /= void and not original_name.is_empty
+	new_name_set: new_name /= void and not new_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

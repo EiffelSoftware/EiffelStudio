@@ -866,6 +866,7 @@ feature -- Update
 			-- Synchronize stones.
 		local
 			st: STONE
+			l_text_area: EB_SMART_EDITOR
 		do
 			during_synchronization := True
 			favorites_manager.refresh
@@ -882,7 +883,11 @@ feature -- Update
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
-			editor_tool.text_area.update_click_list (False)
+			l_text_area := editor_tool.text_area
+			l_text_area.update_click_list (False)
+			if l_text_area.file_loaded then
+				editor_tool.text_area.check_document_modifications_and_reload
+			end
 			set_stone (st)
 			update_save_symbol
 			address_manager.refresh

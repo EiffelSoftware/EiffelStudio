@@ -108,7 +108,7 @@ feature -- Basic actions
 							commit
 						end
 					end
-					window_manager.synchronize_all
+					window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.synchronize)
 				end
 			end
 		rescue

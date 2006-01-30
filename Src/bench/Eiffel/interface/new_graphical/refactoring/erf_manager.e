@@ -108,7 +108,7 @@ feature -- Element change
 			end
 
 			window_manager.on_refactoring_end
-			window_manager.synchronize_all
+			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.synchronize)
 			enable_sensitive
 		end
 
@@ -143,7 +143,7 @@ feature -- Element change
 			compiler_check.execute
 
 			window_manager.on_refactoring_end
-			window_manager.synchronize_all
+			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.synchronize)
 			enable_sensitive
 		end
 

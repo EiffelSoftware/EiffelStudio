@@ -70,7 +70,7 @@ feature -- Main operation
 				if class_i /= Void then
 	       			create class_stone.make (class_i)
 	       			open_classes.item (preferences.old_class_name).do_all (agent {EB_DEVELOPMENT_WINDOW}.set_stone (class_stone))
-	       			window_manager.synchronize_all
+	       			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.synchronize)
 				end
        		end
 		end

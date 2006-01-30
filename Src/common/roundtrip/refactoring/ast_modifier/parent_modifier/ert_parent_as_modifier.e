@@ -1,6 +1,6 @@
 indexing
 	description: "[
-					Object that is responsiable for modifying a PARENT_AS for refactoriing.
+					Object that is responsiable for modifying text of a PARENT_AS for refactoriing.
 				]"
 	author: ""
 	date: "$Date$"
@@ -152,7 +152,8 @@ feature -- Inherit clause indicators
 		do
 			Result := True
 			if inherit_clause.i_th (a_clause) /= Void then
-				Result := a_index > 0 and a_index <= inherit_clause.i_th (a_clause).count
+				Result := inherit_clause.i_th (a_clause).content /= Void and then
+						 (a_index > 0 and a_index <= inherit_clause.i_th (a_clause).content.count)
 			end
 		end
 
@@ -210,13 +211,13 @@ feature{NONE} -- Initialization
 						l_empty_modifier.set_footer_text ("%N%T%T")
 					end
 					l_modifier := l_empty_modifier
-				elseif inherit_clause.i_th (i).is_empty then
-					l_inherit_clause_name := inherit_clause.i_th (i).pre_as_list.i_th (1)
+				elseif inherit_clause.i_th (i).content = Void or else inherit_clause.i_th (i).content.is_empty then
+					l_inherit_clause_name := inherit_clause.i_th (i).clause_keyword
 					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
 					l_empty_modifier.set_header_ast (l_inherit_clause_name)
 					l_modifier := l_empty_modifier
 				else
-					l_modifier := create{ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i), match_list)
+					l_modifier := create{ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i).content, match_list)
 				end
 				l_modifier.set_arguments (l_sep_list.i_th (i), "%T%T%T", "%N")
 				inherit_clause_modifier.extend (l_modifier)
@@ -368,7 +369,7 @@ feature{NONE} -- Implementation
 	inherit_clause_modifier: ARRAYED_LIST [ERT_BASIC_EIFFEL_LIST_MODIFIER]
 			-- List of inherit clauses modifiers
 
-	inherit_clause: ARRAYED_LIST [EIFFEL_LIST [AST_EIFFEL]]
+	inherit_clause: ARRAYED_LIST [INHERIT_CLAUSE_AS]
 			-- List of inherit clauses
 
 feature{NONE} -- Implementation

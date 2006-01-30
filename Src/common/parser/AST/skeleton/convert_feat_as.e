@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as: SYMBOL_AS) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS) is
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		require
 			fn_not_void: fn /= Void
@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 			lparan_symbol := l_as
 			rparan_symbol := r_as
 			colon_symbol := c_as
+			lcurly_symbol := lc_as
+			rcurly_symbol := rc_as
 		ensure
 			is_creation_procedure_set: is_creation_procedure = cr
 			feature_name_set: feature_name = fn
@@ -39,6 +41,8 @@ feature {NONE} -- Initialization
 			lparan_symbol_set: lparan_symbol = l_as
 			rparan_symbol_set: rparan_symbol = r_as
 			colon_symbol_set: colon_symbol = c_as
+			lcurly_symbol_set: lcurly_symbol = lc_as
+			rcurly_symbol_set: rcurly_symbol = rc_as
 		end
 
 feature -- Visitor
@@ -52,13 +56,19 @@ feature -- Visitor
 feature -- Roundtrip
 
 	lparan_symbol: SYMBOL_AS
-		-- Symbol "(" associated with this structure
+			-- Symbol "(" associated with this structure
 
 	rparan_symbol: SYMBOL_AS
-		-- Symbol ")" associated with this structure
+			-- Symbol ")" associated with this structure
 
 	colon_symbol: SYMBOL_AS
-		-- Symbol colon associated with this structure
+			-- Symbol colon associated with this structure
+
+	lcurly_symbol: SYMBOL_AS
+			-- Symbol "{" associated with this structure
+
+	rcurly_symbol: SYMBOL_AS
+			-- Symbol "}" associated with this structure
 
 feature -- Access
 
@@ -86,7 +96,7 @@ feature -- Roundtrip/Token
 				if rparan_symbol /= Void then
 					Result := rparan_symbol.last_token (a_list)
 				else
-					Result := conversion_types.last_token (a_list)
+					Result := rcurly_symbol.last_token (a_list)
 				end
 			end
 		end
@@ -112,19 +122,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

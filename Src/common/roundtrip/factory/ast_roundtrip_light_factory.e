@@ -401,8 +401,6 @@ feature -- Access
 			then
 				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 			end
-
-			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
 
 	new_real_value (a_psr: EIFFEL_PARSER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS is
@@ -420,7 +418,6 @@ feature -- Access
 				l_buffer := buffer
 			end
 			Result := new_real_as (a_type, buffer, a_psr.text, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-			Result.set_position (a_psr.line, a_psr.column, a_psr.position, buffer.count)
 		end
 
 	new_bin_and_then_as (l, r: EXPR_AS; k_as, s_as: KEYWORD_AS): BIN_AND_THEN_AS is

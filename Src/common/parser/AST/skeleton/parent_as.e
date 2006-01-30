@@ -19,8 +19,8 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like type; rn: like renaming; e: like exports;
-		u: like undefining; rd: like redefining; s: like selecting; ek: like end_keyword) is
+	initialize (t: like type; rn: like internal_renaming; e: like internal_exports;
+		u: like internal_undefining; rd: like internal_redefining; s: like internal_selecting; ek: like end_keyword) is
 			-- Create a new PARENT AST node.
 		require
 			t_not_void: t /= Void
@@ -58,10 +58,14 @@ feature -- Attributes
 	renaming: EIFFEL_LIST [RENAME_AS] is
 			-- Rename clause
 		do
-			if internal_renaming = Void or else internal_renaming.is_empty then
+			if
+				internal_renaming = Void or else
+				internal_renaming.content = Void or else
+				internal_renaming.content.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_renaming
+				Result := internal_renaming.content
 			end
 		end
 
@@ -70,7 +74,11 @@ feature -- Attributes
 		local
 			l_index: INTEGER
 		do
-			if internal_exports = Void or else internal_exports.is_empty then
+			if
+				internal_exports = Void or else
+				internal_exports.content = Void or else
+				internal_exports.content.is_empty
+			then
 				Result := Void
 			else
 					--| This is to make sure roundtrip parser work correctly
@@ -79,19 +87,19 @@ feature -- Attributes
 					--|        {ANY}  -- No features here.
 					--|     end
 				if non_empty_exports = Void then
-					create non_empty_exports.make (internal_exports.count)
-					l_index := internal_exports.index
+					create non_empty_exports.make (internal_exports.content.count)
+					l_index := internal_exports.content.index
 					from
-						internal_exports.start
+						internal_exports.content.start
 					until
-						internal_exports.after
+						internal_exports.content.after
 					loop
-						if internal_exports.item.features /= Void then
-							non_empty_exports.extend (internal_exports.item)
+						if internal_exports.content.item.features /= Void then
+							non_empty_exports.extend (internal_exports.content.item)
 						end
-						internal_exports.forth
+						internal_exports.content.forth
 					end
-					internal_exports.go_i_th (l_index)
+					internal_exports.content.go_i_th (l_index)
 				end
 				if non_empty_exports.is_empty then
 					Result := Void
@@ -104,30 +112,42 @@ feature -- Attributes
 	redefining: EIFFEL_LIST [FEATURE_NAME] is
 			-- Redefining clause
 		do
-			if internal_redefining = Void or else internal_redefining.is_empty then
+			if
+				internal_redefining = Void or else
+			   	internal_redefining.content = Void or else
+			   	internal_redefining.content.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_redefining
+				Result := internal_redefining.content
 			end
 		end
 
 	undefining: EIFFEL_LIST [FEATURE_NAME] is
 			-- Undefine clause
 		do
-			if internal_undefining = Void or else internal_undefining.is_empty then
+			if
+				internal_undefining = Void or else
+			   	internal_undefining.content = Void or else
+			   	internal_undefining.content.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_undefining
+				Result := internal_undefining.content
 			end
 		end
 
 	selecting: EIFFEL_LIST [FEATURE_NAME] is
 			-- Select clause
 		do
-			if internal_selecting = Void or else internal_selecting.is_empty then
+			if
+				internal_selecting = Void or else
+			   	internal_selecting.content = Void or else
+			   	internal_selecting.content.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_selecting
+				Result := internal_selecting.content
 			end
 		end
 
@@ -137,19 +157,19 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
+	internal_exports: EXPORT_CLAUSE_AS
 			-- Internal exports for parent
 
-	internal_renaming: EIFFEL_LIST [RENAME_AS]
+	internal_renaming: RENAME_CLAUSE_AS
 			-- Internal rename clause
 
-	internal_redefining: EIFFEL_LIST [FEATURE_NAME]
+	internal_redefining: REDEFINE_CLAUSE_AS
 			-- Internal redefining clause
 
-	internal_undefining: EIFFEL_LIST [FEATURE_NAME]
+	internal_undefining: UNDEFINE_CLAUSE_AS
 			-- Internal undefine clause
 
-	internal_selecting: EIFFEL_LIST [FEATURE_NAME]
+	internal_selecting: SELECT_CLAUSE_AS
 			-- Internal select clause
 
 	non_empty_exports: EIFFEL_LIST [EXPORT_ITEM_AS]

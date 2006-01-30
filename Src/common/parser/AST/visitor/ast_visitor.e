@@ -507,6 +507,104 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_class_list_as (l_as: CLASS_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_parent_list_as (l_as: PARENT_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 feature {AST_EIFFEL} -- Expressions visitors
 
 	process_tagged_as (l_as: TAGGED_AS) is

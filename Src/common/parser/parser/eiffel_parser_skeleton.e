@@ -195,7 +195,7 @@ feature -- Parsing
 		rescue
 			reset
 		end
-		
+
 feature -- Access: result nodes
 
 	root_node: CLASS_AS
@@ -383,7 +383,7 @@ feature {NONE} -- Actions
 	new_class_description (n: ID_AS; n2: STRING_AS;
 		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
-		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS]; co: EIFFEL_LIST [CONVERT_FEAT_AS];
+		p: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
 		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS is
 			-- New CLASS AST node;

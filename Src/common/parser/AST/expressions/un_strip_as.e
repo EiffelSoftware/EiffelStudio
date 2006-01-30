@@ -16,18 +16,24 @@ inherit
 			{NONE} all
 		end
 
+	PARAN_LIST_AS
+		redefine
+			first_token, last_token
+		end
+
 create
 	initialize
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; o: KEYWORD_AS) is
+	initialize (i: like id_list; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS) is
 			-- Create a new UN_STRIP AST node.
 		require
 			i_not_void: i /= Void
 		do
 			id_list := i
 			strip_keyword := o
+			set_paran_symbols (lp_as, rp_as)
 		ensure
 			id_list_set: id_list = i
 			strip_keyword_set: strip_keyword = o
@@ -70,7 +76,7 @@ feature -- Roundtrip/Token
 				Result := Void
 			else
 				l_id_list ?= id_list
-				Result := l_id_list.id_list.last_token (a_list)
+				Result := rparan_symbol.last_token (a_list)
 			end
 		end
 
@@ -91,19 +97,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

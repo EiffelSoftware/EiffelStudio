@@ -23,44 +23,120 @@ class
 	LEAF_AS_LIST
 
 inherit
-	ARRAYED_LIST [LEAF_AS]
-		export
-			{ANY}grow, count, capacity,i_th, valid_index, first, last
-			{NONE}all
-		redefine
-			make, extend
-		end
 
 	IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id
-		undefine
-			copy,
-			is_equal
 		end
 
 create
 	make
 
-feature{NONE} -- Initialization
-
-	make (n: INTEGER) is
+feature
+	make (a_trunk_number: INTEGER) is
+			-- Initialize
+		require
+			a_trunk_number_positive: a_trunk_number > 0
 		do
-			Precursor (n)
+			create trunks.make (a_trunk_number)
+			create current_trunk.make (trunk_size)
+			trunks.extend (current_trunk)
+			count := 0
+			in_trunk_count := 0
 			modifier_applied := True
 		end
 
-feature
+feature -- Element change
 
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		require else
-			leaf_position_valid: v.position > 0
+	extend (a_leaf: LEAF_AS) is
+			-- Extend `a_leaf' into current list.
+		require
+			a_leaf_not_void: a_leaf /= Void
+			a_leaf_index_positive: a_leaf.index > 0
 		do
-			Precursor (v)
+			if in_trunk_count = trunk_size then
+				create current_trunk.make (trunk_size)
+				trunks.extend (current_trunk)
+				in_trunk_count := 0
+			end
+			current_trunk.put (a_leaf, in_trunk_count)
+			in_trunk_count := in_trunk_count + 1
+			count := count + 1
 		end
+
+feature -- Access
+
+	i_th alias "[]", infix "@" (i: INTEGER): LEAF_AS is
+			-- Entry at index `i', if in index interval
+		require
+			i_valid: valid_index (i)
+		local
+			j: INTEGER
+		do
+			j := i - 1
+			Result := trunks.i_th (j // trunk_size + 1).item (j \\ trunk_size)
+		end
+
+	first: LEAF_AS is
+			-- First element in list
+		require
+			list_not_empty: count > 0
+		do
+			Result := trunks.i_th (1).item (0)
+		end
+
+	last: LEAF_AS is
+			-- Last element in list
+		require
+			list_not_empty: count > 0
+		do
+			Result := current_trunk.item (in_trunk_count - 1)
+		end
+
+feature -- Status reporting
+
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid index?
+		do
+			Result := (1 <= i) and (i <= count)
+		end
+
+	count: INTEGER
+			-- Number of items in current list
+
+	capacity: INTEGER is
+			-- Capacity of current
+		do
+			Result := trunk_count * trunk_size
+		ensure
+			Result_set: Result = trunk_count * trunk_size
+		end
+
+feature -- Status reporting
+
+	current_trunk: SPECIAL [LEAF_AS]
+			-- Current trunk
+
+	trunk_count: INTEGER is
+			-- Count of trunks
+		do
+			Result := trunks.count
+		end
+
+	in_trunk_count: INTEGER
+			-- Count in `current_trunk'
+
+feature{NONE} -- Implementation
+
+	trunks: ARRAYED_LIST [like current_trunk]
+			-- List of trunks of tokens
+
+	trunk_size: INTEGER is 1000
+			-- Initial size of every trunk
+
+	initial_trunk_number: INTEGER is 10
+			-- Initial number of trunks
 
 feature -- Status
 
@@ -796,6 +872,10 @@ feature{NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+invariant
+	trunks_not_void: trunks /= Void
+	trunks_not_empty: not trunks.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -458,7 +458,7 @@ feature
 			safe_process (l_as.obsolete_keyword)
 			safe_process (l_as.obsolete_message)
 			safe_process (l_as.precondition)
-			safe_process (l_as.locals)
+			safe_process (l_as.internal_locals)
 			safe_process (l_as.routine_body)
 			safe_process (l_as.postcondition)
 			safe_process (l_as.rescue_keyword)
@@ -535,7 +535,9 @@ feature
 		do
 			i_as ?= l_as.id_list
 			safe_process (l_as.strip_keyword)
+			safe_process (l_as.lparan_symbol)
 			safe_process (i_as.id_list)
+			safe_process (l_as.rparan_symbol)
 		end
 
 	process_paran_as (l_as: PARAN_AS) is
@@ -959,7 +961,9 @@ feature
 			safe_process (l_as.formal_para)
 			safe_process (l_as.constrain_symbol)
 			safe_process (l_as.constraint)
+			safe_process (l_as.create_keyword)
 			safe_process (l_as.creation_feature_list)
+			safe_process (l_as.end_keyword)
 			safe_process (l_as.rcurly_symbol)
 		end
 
@@ -1088,7 +1092,9 @@ feature
 			safe_process (l_as.feature_name)
 			safe_process (l_as.colon_symbol)
 			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.lcurly_symbol)
 			safe_process (l_as.conversion_types)
+			safe_process (l_as.rcurly_symbol)
 			safe_process (l_as.rparan_symbol)
 		end
 
@@ -1104,6 +1110,110 @@ feature
 			safe_process (l_as.opening_bracket_as)
 			process_eiffel_list (l_as)
 			safe_process (l_as.closing_bracket_as)
+		end
+
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.convert_keyword)
+			process_eiffel_list (l_as)
+		end
+
+	process_class_list_as (l_as: CLASS_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lcurly_symbol)
+			process_eiffel_list (l_as)
+			safe_process (l_as.rcurly_symbol)
+		end
+
+	process_parent_list_as (l_as: PARENT_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.inherit_keyword)
+			process_eiffel_list (l_as)
+		end
+
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.local_keyword)
+			safe_process(l_as.locals)
+		end
+
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.arguments)
+			safe_process (l_as.rparan_symbol)
+		end
+
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.keys)
+			safe_process (l_as.rparan_symbol)
+		end
+
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lparan_symbol)
+			safe_process (l_as.operands)
+			safe_process (l_as.rparan_symbol)
+		end
+
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lparan_symbol)
+			process_eiffel_list (l_as.parameters)
+			safe_process (l_as.rparan_symbol)
+		end
+
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.rename_keyword)
+			safe_process (l_as.content)
+		end
+
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.export_keyword)
+			safe_process (l_as.content)
+		end
+
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.undefine_keyword)
+			safe_process (l_as.content)
+		end
+
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.redefine_keyword)
+			safe_process (l_as.content)
+		end
+
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.select_keyword)
+			safe_process (l_as.content)
+		end
+
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.lsqure_symbol)
+			process_eiffel_list (l_as)
+			safe_process (l_as.rsqure_symbol)
 		end
 
 feature

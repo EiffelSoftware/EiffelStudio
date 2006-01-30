@@ -197,13 +197,14 @@ feature -- Roundtrip
 	internal_top_indexes: INDEXING_CLAUSE_AS
 			-- Internal indexing clause at top of class.
 
-	internal_parents: EIFFEL_LIST [PARENT_AS]
+	internal_parents: PARENT_LIST_AS
 			-- Internal inheritance clause
 
 	internal_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Internal formal generic parameter list
 
 	internal_invariant: like invariant_part
+			-- Invariant clause used by roundtrip, in which assertion without expression(such as "tag:") is stored.
 
 feature -- Attributes
 
@@ -237,7 +238,7 @@ feature -- Attributes
 			end
 		end
 
-	parents: EIFFEL_LIST [PARENT_AS] is
+	parents: PARENT_LIST_AS is
 			-- Inheritance clause
 		do
 			if internal_parents = Void or else internal_parents.is_empty then
@@ -260,7 +261,7 @@ feature -- Attributes
 	creators: EIFFEL_LIST [CREATE_AS]
 			-- Creators
 
-	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
+	convertors: CONVERT_FEAT_LIST_AS
 			-- Convertors
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]

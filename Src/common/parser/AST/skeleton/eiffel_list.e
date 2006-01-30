@@ -100,16 +100,8 @@ feature -- Roundtrip/Token
 					Result := Void
 				end
 			else
-				if pre_as_list /= Void and then not pre_as_list.is_empty then
-					Result := pre_as_list.first_token (a_list)
-				elseif not is_empty then
+				if not is_empty then
 					Result := i_th (1).first_token (a_list)
-				elseif post_as_list /= Void and then not post_as_list.is_empty then
-					Result := post_as_list.i_th (1).first_token (a_list)
-				else
-					check
-						should_not_arrive_here: False
-					end
 				end
 			end
 		end
@@ -123,16 +115,8 @@ feature -- Roundtrip/Token
 					Result := Void
 				end
 			else
-				if post_as_list /= Void and then not post_as_list.is_empty then
-					Result := post_as_list.last_token (a_list)
-				elseif not is_empty then
+				if not is_empty then
 					Result := i_th (count).last_token (a_list)
-				elseif pre_as_list /= Void and then not pre_as_list.is_empty then
-					Result := pre_as_list.i_th (pre_as_list.count).last_token (a_list)
-				else
-					check
-						should_not_arrive_here: False
-					end
 				end
 			end
 		end
@@ -195,19 +179,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

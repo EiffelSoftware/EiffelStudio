@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name; p: like parameters) is
+	initialize (f: like feature_name; p: like internal_parameters) is
 			-- Create a new FEATURE_ACCESS AST node.
 		require
 			f_not_void: f /= Void
@@ -52,10 +52,14 @@ feature -- Attributes
 	parameters: EIFFEL_LIST [EXPR_AS] is
 			-- List of parameters
 		do
-			if internal_parameters = Void or else internal_parameters.is_empty then
+			if
+				internal_parameters = Void or else
+				internal_parameters.parameters = Void or else
+				internal_parameters.parameters.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_parameters
+				Result := internal_parameters.parameters
 			end
 		end
 
@@ -96,8 +100,8 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_parameters: EIFFEL_LIST [EXPR_AS]
-			-- Internal list of parameters
+	internal_parameters: PARAMETER_LIST_AS
+			-- Internal list of parameters, in which "(" and ")" are stored
 
 feature -- Roundtrip/Token
 
@@ -150,7 +154,7 @@ feature -- Setting
 			feature_name := name
 		end
 
-	set_parameters (p: like parameters) is
+	set_parameters (p: like internal_parameters) is
 		do
 			internal_parameters := p
 		end

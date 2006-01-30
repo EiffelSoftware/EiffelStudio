@@ -34,12 +34,13 @@ feature{NONE} -- Implementation
 	make (dest: like destination; dest_match_list: like destination_match_list;
 	      sour: like source; sour_match_list: like source_match_list) is
 			-- Initialize instance.
-			-- Text of `source' will be merged into text of `dest'.
+			-- Text of `source' will be merged into text of `dest'.		
 		require
 			dest_not_void: dest /= Void
 			dest_match_list_not_void: dest_match_list /= Void
 			sour_not_void: sour /= Void
 			sour_match_list_not_void: sour_match_list /= Void
+			parents_of_same_type: dest.type.is_equivalent (sour.type)
 		do
 			source := sour
 			destination := dest
@@ -94,79 +95,44 @@ feature{NONE} -- Modification computation
 	compute_export_modification is
 			-- Compute modifications needed two merge export clauses.
 		local
-			l_sour_feature_set: ERT_EXPORT_FEATURE_SET
-			l_dest_feature_set: ERT_EXPORT_FEATURE_SET
-			l_merged_items: LIST [ERT_EXPORT_ITEM_LIST]
 			l_index: INTEGER
 			l_str_list: ARRAYED_LIST [STRING]
-			l_str: STRING
 			i: INTEGER
 			done: BOOLEAN
 		do
 			check
 				last_computed_modifier /= Void
 			end
-			if source.internal_exports /= Void and then not source.internal_exports.is_empty then
-				if destination.internal_exports = Void or else destination.internal_exports.is_empty then
+			if
+				source.internal_exports /= Void and then
+				source.internal_exports.content /= Void and then
+				not source.internal_exports.content.is_empty
+			then
+				if
+					destination.internal_exports = Void or else
+					destination.internal_exports.content = Void or else
+					destination.internal_exports.content.is_empty then
 						-- If `destination' doesn't contain export clause or its export clause is empty,
 						-- we just add every export item in `source' into export clause of `destination'.
-					l_index := source.internal_exports.index
+					l_index := source.internal_exports.content.index
 					from
-						source.internal_exports.start
+						source.internal_exports.content.start
 					until
-						source.internal_exports.after
+						source.internal_exports.content.after
 					loop
-						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.export_clause, source.internal_exports.item.text (source_match_list))
-						source.internal_exports.forth
+						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.export_clause, source.internal_exports.content.item.text (source_match_list))
+						source.internal_exports.content.forth
 					end
-					source.internal_exports.go_i_th (l_index)
+					source.internal_exports.content.go_i_th (l_index)
 				else
-					create l_dest_feature_set.make (destination.internal_exports, destination_match_list)
-					create l_sour_feature_set.make (source.internal_exports, source_match_list)
-					l_dest_feature_set.merge (l_sour_feature_set)
-					l_merged_items := l_dest_feature_set.export_items
-					create l_str_list.make (l_merged_items.count)
-						-- Construct every line in export clause.
+					l_str_list := new_exported_items
+					l_index := destination.internal_exports.content.index
 					from
-						l_merged_items.start
-					until
-						l_merged_items.after
-					loop
-						create l_str.make (50)
-						l_str.append ("{")
-						from
-							l_merged_items.item.clients.start
-						until
-							l_merged_items.item.clients.after
-						loop
-							l_str.append (l_merged_items.item.clients.item)
-							if l_merged_items.item.clients.index < l_merged_items.item.clients.count then
-								l_str.append (", ")
-							end
-							l_merged_items.item.clients.forth
-						end
-						l_str.append ("} ")
-						from
-							l_merged_items.item.feature_name_list.start
-						until
-							l_merged_items.item.feature_name_list.after
-						loop
-							l_str.append (l_merged_items.item.feature_name_list.item)
-							if l_merged_items.item.feature_name_list.index < l_merged_items.item.feature_name_list.count then
-								l_str.append (", ")
-							end
-							l_merged_items.item.feature_name_list.forth
-						end
-						l_str_list.extend (l_str)
-						l_merged_items.forth
-					end
-					l_index := destination.internal_exports.index
-					from
-						destination.internal_exports.start
+						destination.internal_exports.content.start
 						i := 1
 						done := False
 					until
-						destination.internal_exports.after
+						destination.internal_exports.content.after
 					loop
 						if not done then
 							last_computed_modifier.replace ({ERT_PARENT_AS_MODIFIER}.export_clause, i, l_str_list.i_th (i))
@@ -177,9 +143,9 @@ feature{NONE} -- Modification computation
 						else
 							last_computed_modifier.remove ({ERT_PARENT_AS_MODIFIER}.export_clause, i)
 						end
-						destination.internal_exports.forth
+						destination.internal_exports.content.forth
 					end
-					destination.internal_exports.go_i_th (l_index)
+					destination.internal_exports.content.go_i_th (l_index)
 					if i <= l_str_list.count then
 						from
 
@@ -198,26 +164,28 @@ feature{NONE} -- Modification computation
 			-- Compute modifications needed two merge rename clauses.
 		local
 			l_index: INTEGER
+			l_rename_list: EIFFEL_LIST [RENAME_AS]
 		do
 			check
 				last_computed_modifier /= Void
 			end
-			if source.internal_renaming /= Void and then not source.internal_renaming.is_empty then
-				l_index := source.internal_renaming.index
+			if source.internal_renaming /= Void and then source.internal_renaming.content /= Void then
+				l_rename_list := source.internal_renaming.content
+				l_index := l_rename_list.index
 				from
-					source.internal_renaming.start
+					l_rename_list.start
 				until
-					source.internal_renaming.after
+					l_rename_list.after
 				loop
-					if not destination_contain_renamming (source.internal_renaming.item) then
+					if not destination_contain_renamming (l_rename_list.item) then
 						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.rename_clause,
-									  source.internal_renaming.item.old_name.internal_name + " as " +
-									  source.internal_renaming.item.new_name.internal_name
+									  l_rename_list.item.old_name.internal_name + " as " +
+									  l_rename_list.item.new_name.internal_name
 									  )
 					end
-					source.internal_renaming.forth
+					l_rename_list.forth
 				end
-				source.internal_renaming.go_i_th (l_index)
+				l_rename_list.go_i_th (l_index)
 			end
 		end
 
@@ -232,20 +200,67 @@ feature{NONE} -- Modification computation
 			l_index: INTEGER
 			l_dest_list: EIFFEL_LIST [FEATURE_NAME]
 			l_sour_list: EIFFEL_LIST [FEATURE_NAME]
+			l_name_list: LINKED_LIST [STRING]
+			l_name: STRING
 		do
 			check
 				last_computed_modifier /= Void
 			end
 			if a_clause = {ERT_PARENT_AS_MODIFIER}.undefine_clause then
-				l_sour_list := source.internal_undefining
-				l_dest_list := destination.internal_undefining
+				if source.internal_undefining /= Void then
+					l_sour_list := source.internal_undefining.content
+				else
+					l_sour_list := Void
+				end
+				if destination.internal_undefining /= Void then
+					l_dest_list := destination.internal_undefining.content
+				else
+					l_dest_list := Void
+				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.redefine_clause then
-				l_sour_list := source.internal_redefining
-				l_dest_list := destination.internal_redefining
+				if source.internal_redefining /= Void then
+					l_sour_list := source.internal_redefining.content
+				else
+					l_sour_list := Void
+				end
+				if destination.internal_redefining /= Void then
+					l_dest_list := destination.internal_redefining.content
+				else
+					l_dest_list := Void
+				end
 			elseif a_clause = {ERT_PARENT_AS_MODIFIER}.select_clause then
-				l_sour_list := source.internal_selecting
-				l_dest_list := destination.internal_selecting
+				if source.internal_selecting /= Void then
+					l_sour_list := source.internal_selecting.content
+				else
+					l_sour_list := Void
+				end
+				if destination.internal_selecting /= Void then
+					l_dest_list := destination.internal_selecting.content
+				else
+					l_dest_list := Void
+				end
 			end
+			create l_name_list.make
+			l_name_list.compare_objects
+
+			if l_dest_list /= Void then
+				l_index := l_dest_list.index
+				from
+					l_dest_list.start
+				until
+					l_dest_list.after
+				loop
+					l_name := l_dest_list.item.internal_name.as_lower
+					if final_names.has (l_name) then
+						l_name := final_names.item (l_name)
+						last_computed_modifier.replace (a_clause, l_dest_list.index, l_name)
+						l_name_list.extend (l_name)
+					end
+					l_dest_list.forth
+				end
+				l_dest_list.go_i_th (l_index)
+			end
+
 			if l_sour_list /= Void and then not l_sour_list.is_empty then
 				l_index := l_sour_list.index
 				from
@@ -253,7 +268,7 @@ feature{NONE} -- Modification computation
 				until
 					l_sour_list.after
 				loop
-					if not contain_feature_name (l_dest_list, l_sour_list.item.internal_name) then
+					if not l_name_list.has (l_sour_list.item.internal_name.as_lower) then
 						last_computed_modifier.extend (a_clause, l_sour_list.item.text (source_match_list))
 					end
 					l_sour_list.forth
@@ -287,21 +302,124 @@ feature{NONE} -- Modification computation
 		local
 			l_index: INTEGER
 			l_rename: RENAME_AS
+			l_rename_list: EIFFEL_LIST [RENAME_AS]
 		do
-			if not (destination.internal_renaming = Void or else destination.internal_renaming.is_empty) then
-				l_index := destination.internal_renaming.index
+			if not (destination.internal_renaming = Void or else destination.internal_renaming.content = Void or else destination.internal_renaming.content.is_empty) then
+				l_rename_list := destination.internal_renaming.content
+				l_index := l_rename_list.index
 				from
-					destination.internal_renaming.start
+					l_rename_list.start
 				until
-					destination.internal_renaming.after or Result
+					l_rename_list.after or Result
 				loop
-					l_rename := destination.internal_renaming.item
+					l_rename := l_rename_list.item
 					Result :=
 						l_rename.old_name.internal_name.is_case_insensitive_equal (rename_item.old_name.internal_name) and
 						l_rename.new_name.internal_name.is_case_insensitive_equal (rename_item.new_name.internal_name)
-					destination.internal_renaming.forth
+					l_rename_list.forth
 				end
-				destination.internal_renaming.go_i_th (l_index)
+				l_rename_list.go_i_th (l_index)
+			end
+		end
+
+	new_exported_items: ARRAYED_LIST [STRING] is
+			-- List of string represnets text of merged exported items
+		local
+			l_sour_feature_set: ERT_EXPORT_FEATURE_SET
+			l_dest_feature_set: ERT_EXPORT_FEATURE_SET
+			l_merged_items: LIST [ERT_EXPORT_ITEM_LIST]
+			l_str: STRING
+			l_name, l_final_name: STRING
+		do
+			create l_dest_feature_set.make (destination.internal_exports.content, destination_match_list)
+			create l_sour_feature_set.make (source.internal_exports.content, source_match_list)
+			l_dest_feature_set.merge (l_sour_feature_set)
+			l_merged_items := l_dest_feature_set.export_items
+			create Result.make (l_merged_items.count)
+				-- Construct every line in export clause.
+			from
+				l_merged_items.start
+			until
+				l_merged_items.after
+			loop
+				create l_str.make (50)
+				l_str.append ("{")
+				from
+					l_merged_items.item.clients.start
+				until
+					l_merged_items.item.clients.after
+				loop
+					l_str.append (l_merged_items.item.clients.item)
+					if l_merged_items.item.clients.index < l_merged_items.item.clients.count then
+						l_str.append (", ")
+					end
+					l_merged_items.item.clients.forth
+				end
+				l_str.append ("} ")
+				from
+					l_merged_items.item.feature_name_list.start
+				until
+					l_merged_items.item.feature_name_list.after
+				loop
+					l_name := l_merged_items.item.feature_name_list.item
+					l_final_name := final_names.item (l_name)
+					if l_final_name = Void then
+						l_str.append (l_name)
+					else
+						l_str.append (l_final_name)
+					end
+
+					if l_merged_items.item.feature_name_list.index < l_merged_items.item.feature_name_list.count then
+						l_str.append (", ")
+					end
+					l_merged_items.item.feature_name_list.forth
+				end
+				Result.extend (l_str)
+				l_merged_items.forth
+			end
+		end
+
+	final_names: HASH_TABLE [STRING, STRING] is
+			-- Final names of all renamed features.
+		do
+			if internal_final_names = Void then
+				create internal_final_names.make (10)
+				internal_final_names.compare_objects
+				build_final_names (source.internal_renaming, internal_final_names)
+				build_final_names (destination.internal_renaming, internal_final_names)
+			end
+			Result := internal_final_names
+		end
+
+	internal_final_names: like final_names
+			-- Final names of all renamed features.
+
+	build_final_names (a_rename_clause: RENAME_CLAUSE_AS; a_name_table: like final_names) is
+			-- Build a hash_tabel for renamed features.
+		require
+			a_name_table_not_void: a_name_table /= Void
+		local
+			l_index: INTEGER
+			old_name: STRING
+			new_name: STRING
+		do
+			if
+				a_rename_clause /= Void and then
+				a_rename_clause.content /= Void and then
+				not a_rename_clause.content.is_empty
+			then
+				l_index := a_rename_clause.content.index
+				from
+					a_rename_clause.content.start
+				until
+					a_rename_clause.content.after
+				loop
+					old_name := a_rename_clause.content.item.old_name.internal_name.as_lower
+					new_name := a_rename_clause.content.item.new_name.internal_name.as_lower
+					a_name_table.force (new_name, old_name)
+					a_rename_clause.content.forth
+				end
+				a_rename_clause.content.go_i_th (l_index)
 			end
 		end
 

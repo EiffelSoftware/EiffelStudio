@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; f: like feature_name; o: like operands; ht: BOOLEAN) is
+	initialize (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN) is
 			-- Create a new ROUTINE_CREATION AST node.
 			-- When `t' is Void it means it is a question mark.
 		require
@@ -71,10 +71,14 @@ feature -- Attributes
 	operands : EIFFEL_LIST [OPERAND_AS] is
 			-- List of operands used by the feature when called.
 		do
-			if internal_operands = Void or else internal_operands.is_empty then
+			if
+				internal_operands = Void or else
+				internal_operands.operands = Void or else
+				internal_operands.operands.is_empty
+			then
 				Result := Void
 			else
-				Result := internal_operands
+				Result := internal_operands.operands
 			end
 		end
 
@@ -83,8 +87,8 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_operands : EIFFEL_LIST [OPERAND_AS]
-			-- Internal list of operands used by the feature when called.
+	internal_operands : DELAYED_ACTUAL_LIST_AS
+			-- Internal list of operands used by the feature when called, in which "(" and ")" are stored
 
 feature -- Comparison
 
@@ -106,19 +110,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

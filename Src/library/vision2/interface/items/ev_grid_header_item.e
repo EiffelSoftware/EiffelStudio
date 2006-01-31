@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			column := a_column
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
 	column: EV_GRID_COLUMN_I
 		-- Grid column to which `Current' is associated with.

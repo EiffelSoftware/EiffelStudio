@@ -4845,7 +4845,7 @@ doc:		<summary>Insert a global once result `address' which is an EIF_REFERENCE i
 doc:		<param name="address" type="EIF_REFERENCE">Address that needs to be tracked/protected.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
-doc:	</attribute>
+doc:	</routine>
 */
 
 rt_public void globalonceset(EIF_REFERENCE address)

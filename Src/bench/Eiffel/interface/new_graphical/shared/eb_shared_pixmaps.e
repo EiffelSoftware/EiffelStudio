@@ -1049,6 +1049,28 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_add_new_external_cmd_color_value)
 		end
 
+	Icon_quick_search_next_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_quick_search_next_color_value)
+		end
+
+	Icon_quick_search_previous_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_quick_search_previous_color_value)
+		end
+
+	Icon_quick_search_advanced_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_quick_search_advanced_color_value)
+		end
+
+	Icon_quick_search_close_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_quick_search_close_color_value)
+		end
+
+
+
 feature -- Reading
 
 	pixmap_path: DIRECTORY_NAME is
@@ -1270,6 +1292,10 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (15, 12, icon_add_new_external_cmd_color_value)
 			Result.add_pixmap (16, 12, icon_save_all_color_value)
 			Result.add_pixmap (1, 13, icon_new_tab_color_value)
+			Result.add_pixmap (2, 13, icon_quick_search_close_color_value)
+			Result.add_pixmap (3, 13, icon_quick_search_next_color_value)
+			Result.add_pixmap (4, 13, icon_quick_search_previous_color_value)
+			Result.add_pixmap (5, 13, icon_quick_search_advanced_color_value)
 		end
 
 feature {NONE} -- Constants
@@ -1462,7 +1488,12 @@ feature {NONE} -- Constants
 			icon_input_to_process_color_value,
 			icon_add_new_external_cmd_color_value,
 			icon_save_all_color_value,
-			icon_new_tab_color_value: INTEGER is unique;
+			icon_new_tab_color_value,
+			icon_quick_search_next_color_value,
+			icon_quick_search_previous_color_value,
+			icon_quick_search_advanced_color_value,
+			icon_quick_search_close_color_value		: INTEGER is unique;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

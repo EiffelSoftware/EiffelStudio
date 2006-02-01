@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Editor with search and pick n drop.
+		Editor pick n drop.
 		Uses a tool to make feature text clickable.
 	]"
 	legal: "See notice at end of class."
@@ -13,13 +13,12 @@ class
 	EB_CLICKABLE_EDITOR
 
 inherit
-	EB_EDITOR
-		rename
-			make as make_editor
+	EB_CUSTOM_WIDGETTED_EDITOR
 		export
 			{EB_COMPLETION_CHOICE_WINDOW} unwanted_characters
 			{EB_ROUTINE_FLAT_FORMATTER} invalidate_line
 		redefine
+			make,
 			reset, on_text_loaded,
 			gain_focus,
 			on_mouse_button_down,
@@ -58,41 +57,20 @@ feature {NONE}-- Initialization
 	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize the editor.
 		do
-			make_editor
-			dev_window := a_dev_window
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (a_dev_window)
 			if dev_window /= Void then
 				dev_window.add_editor_to_list (Current)
 					-- Register the dev_window as an observer of `Current'
 				text_displayed.add_selection_observer (dev_window)
 			end
 			create after_reading_text_actions.make
-			initialize_customizable_commands
 
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
 		end
 
-	initialize_customizable_commands is
-			-- Create array of customizable commands.
-		do
-			create customizable_commands.make (5)
-			customizable_commands.put (agent search, "show_search_panel")
-			customizable_commands.put (agent replace, "show_search_and_replace_panel")
-			customizable_commands.put (agent find_selection, "search_selection")
-			customizable_commands.put (agent find_next, "search_last")
-			customizable_commands.put (agent find_previous, "search_backward")
-		end
-
 feature -- Access
-
-	search_tool: EB_SEARCH_TOOL is
-			-- Current search tool.
-		do
-			if dev_window /= Void then
-				Result := dev_window.search_tool
-			end
-		end
 
 	text_length: INTEGER is
 			-- Length of displayed text.
@@ -320,62 +298,10 @@ feature -- Compatibility
 			text_displayed.put_new_line
 		end
 
-feature -- Search commands
-
-	find_next is
-			-- Find next occurrence of last searched pattern.
-		do
-			if search_tool /= Void then
-				prepare_search_selection
-				search_tool.go_to_next_found
-				check_cursor_position
-			end
-		end
-
-	find_previous is
-			-- Find next occurrence of last searched pattern.
-		do
-			if search_tool /= Void then
-				prepare_search_selection
-				search_tool.go_to_previous_found
-				check_cursor_position
-			end
-		end
-
-	find_selection is
-			-- Find next occurrence of selection.
-		do
-			if search_tool /= Void then
-				find_next
-			end
-		end
-
-	search is
-			-- Display search tool if necessary.
-		do
-			if search_tool /= Void then
-				if not search_tool.mode_is_search then
-					search_tool.set_mode_is_search (True)
-				end
-				prepare_search_tool
-			end
-		end
-
-	replace is
-			-- Display search tool (with Replace field) if necessary.
-		do
-			if search_tool /= Void then
-				if search_tool.mode_is_search then
-					search_tool.set_mode_is_search (False)
-				end
-				prepare_search_tool
-			end
-		end
-
 	copy_selection is
 			-- Copy current selection to clipboard.
 		do
-			Precursor {EB_EDITOR}
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if dev_window /= Void then
 				dev_window.update_paste_cmd
 			end
@@ -415,7 +341,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			if pick_n_drop_status = pnd_pick then
 				refresh_now
 			end
-			Precursor {EB_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (abs_x_pos, y_pos, button, unused1, unused2, unused3, a_screen_x, a_screen_y)
 		end
 
 	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
@@ -430,7 +356,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			cur: like cursor_type
 		do
 			if button = 1 then
-				Precursor {EB_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
+				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
 				set_pick_and_drop_status (no_pnd)
 			elseif button = 3 then
 				mouse_right_button_down := True
@@ -474,7 +400,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 				l_shortcuts.first.apply
 				check_cursor_position
 			else
-				Precursor {EB_EDITOR} (ev_key)
+				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (ev_key)
 			end
 		end
 
@@ -488,7 +414,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 				l_shortcuts.first.apply
 				check_cursor_position
 			else
-				Precursor {EB_EDITOR} (ev_key)
+				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (ev_key)
 			end
 		end
 
@@ -584,7 +510,7 @@ feature {NONE} -- Text Loading
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 				-- First abort our previous actions.
-			Precursor {EB_EDITOR}
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if search_tool /= Void then
 				search_tool.force_new_search
 			end
@@ -594,7 +520,7 @@ feature {NONE} -- Text Loading
 	on_text_loaded is
 			-- Finish editor setup as the entire text has been loaded.
 		do
-			Precursor {EB_EDITOR}
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			from
 				after_reading_text_actions.start
 			until
@@ -639,9 +565,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	customizable_commands: HASH_TABLE [PROCEDURE [like Current, TUPLE], STRING]
-			-- Hash of customizable commands (agent hashed by shortcut name)
-
 	after_reading_text_actions: LINKED_LIST [PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]]
 			-- Procedures to be applied when the text is completely loaded.
 
@@ -672,31 +595,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			matching_customizable_commands_not_void: Result /= Void
-		end
-
-	prepare_search_tool is
-			-- Show and give focus to search panel.
-		local
-			l_search_tool: EB_MULTI_SEARCH_TOOL
-		do
-			if search_tool.is_visible then
-				search_tool.set_focus
-			else
-				if search_tool.explorer_bar_item.is_minimized then
-					search_tool.explorer_bar_item.restore
-				end
-				l_search_tool ?= search_tool
-				if l_search_tool /= Void and then l_search_tool.notebook.selected_item_index /= 1 then
-					l_search_tool.notebook.select_item (l_search_tool.notebook.i_th (1))
-				end
-				search_tool.show_and_set_focus
-			end
-			if not text_displayed.is_empty and then not text_displayed.selection_is_empty then
-				search_tool.set_current_searched (text_displayed.selected_string)
-			end
-			if not text_displayed.is_empty then
-				check_cursor_position
-			end
 		end
 
 	display_breakpoint_number (bp_number: INTEGER) is
@@ -737,7 +635,7 @@ feature {NONE} -- Implementation
 	gain_focus is
 			-- Update the editor as it has just gained the focus.
 		do
-			Precursor {EB_EDITOR}
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if dev_window /= Void then
 				dev_window.set_current_editor (Current)
 			end
@@ -751,36 +649,12 @@ feature {NONE} -- Implementation
 			resume_cursor_blinking
 		end
 
-	prepare_search_selection is
-			-- Prepare search selection.
-		local
-			l_search_tool: EB_MULTI_SEARCH_TOOL
-			l_incremental_search: BOOLEAN
-		do
-			l_search_tool ?= search_tool
-			check
-				l_search_tool /= Void
-			end
-			l_search_tool.set_check_class_succeed (True)
-			if text_displayed.has_selection then
-				if l_search_tool.currently_searched = Void or else (not l_search_tool.item_selected (Current)) then
-					l_search_tool.force_new_search
-					l_incremental_search := l_search_tool.is_incremental_search
-					l_search_tool.disable_incremental_search
-					l_search_tool.set_current_searched (text_displayed.selected_string)
-					if l_incremental_search then
-						l_search_tool.enable_incremental_search
-					end
-				end
-			end
-		end
-
 feature -- Memory management
 
 	recycle is
 			-- Destroy `Current'
 		do
-			Precursor {EB_EDITOR}
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if customizable_commands /= Void then
 				customizable_commands.wipe_out
 				customizable_commands := Void
@@ -809,19 +683,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

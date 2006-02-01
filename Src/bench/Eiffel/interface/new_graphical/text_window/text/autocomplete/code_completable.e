@@ -240,12 +240,12 @@ feature -- Cursor
 		deferred
 		end
 
-	save_cursor_position is
+	save_cursor is
 			-- Save cursor position for retrieving.
 		deferred
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor is
 			-- Retrieve cursor position from saving.
 		deferred
 		end
@@ -438,7 +438,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 					back_delete_char
 				end
 			end
-			save_cursor_position
+			save_cursor
 			if remainder > 0 then
 				from
 					i := 0

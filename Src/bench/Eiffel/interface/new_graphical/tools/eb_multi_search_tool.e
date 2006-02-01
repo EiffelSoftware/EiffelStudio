@@ -28,6 +28,7 @@ inherit
 			key_pressed,
 			default_search,
 			enable_disable_search_button,
+			build_explorer_bar_item,
 			on_text_edited,
 			on_text_reset,
 			on_text_fully_loaded,
@@ -70,6 +71,8 @@ feature {NONE} -- Initialization
 			check_class_succeed := true
 			create changed_classes.make (0)
 			create loaded_actions
+			create show_actions
+			incremental_search_start_pos := 1
 		end
 
 	build_interface is
@@ -342,6 +345,9 @@ feature -- Access
 			Result := manager.current_editor
 		end
 
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions called when the item becomes visible.
+
 feature -- Status report
 
 	reverse : BOOLEAN is
@@ -573,7 +579,7 @@ feature -- Action
 			end
 		end
 
-feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR, EB_SEARCH_REPORT_GRID} -- Implementation
+feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_REPORT_GRID} -- Implementation
 
 	check_class_succeed: BOOLEAN assign set_check_class_succeed
 			-- `check_class_file' makes file changed if needed?
@@ -633,7 +639,14 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR, EB_SEARCH_REPORT_
 			is_text_changed_in_editor := false
 		end
 
-feature {EB_SEARCH_REPORT_GRID} -- Build interface
+feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
+
+	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
+			-- Build explorer bar item
+		do
+			Precursor {EB_SEARCH_TOOL} (explorer_bar)
+			explorer_bar_item.show_actions.extend (agent show_actions.call ([Void]))
+		end
 
 	build_scope_box: EV_VERTICAL_BOX is
 			-- Create and return a box containing the search options
@@ -821,6 +834,7 @@ feature {EB_SEARCH_REPORT_GRID} -- Build interface
 			create report_button.make_with_text (Interface_names.l_Search_report_hide)
 			report_button.select_actions.extend (agent toggle_search_report)
 			create report_toolbar
+			report_toolbar.disable_vertical_button_style
 			report_toolbar.extend (report_button)
 			create frm
 				-- This is a small workaround for a bug on Windows, where a toolbar
@@ -840,11 +854,13 @@ feature {EB_SEARCH_REPORT_GRID} -- Build interface
 			hbox.disable_item_expand (new_search_tool_bar)
 			create new_search_button.make_with_text (interface_names.b_new_search)
 			new_search_tool_bar.extend (new_search_button)
+			new_search_tool_bar.disable_vertical_button_style
 			new_search_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 			new_search_button.select_actions.extend (agent new_search)
 			new_search_tool_bar.hide
 
 			create shortcut_tool_bar
+			shortcut_tool_bar.disable_vertical_button_style
 			hbox.extend (create {EV_CELL})
 			hbox.extend (shortcut_tool_bar)
 			hbox.disable_item_expand (shortcut_tool_bar)
@@ -981,7 +997,7 @@ feature {NONE} -- Shortcut button actions
 			end
 		end
 
-feature {NONE} -- Actions handler
+feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 
 	new_search_or_go_next is
 			-- Invokes when search button is clicked.
@@ -1180,8 +1196,8 @@ feature {NONE} -- Actions handler
 				if not editor.is_empty and then is_incremental_search then
 					l_editor := old_editor
 					old_editor := editor
-					incremental_search (keyword_field.text)
-					if not multi_search_performer.off or not multi_search_performer.is_empty then
+					incremental_search (keyword_field.text, incremental_search_start_pos)
+					if has_result then
 						select_in_current_editor
 					else
 						retrieve_cursor
@@ -1277,7 +1293,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Notification
 			end
 		end
 
-feature {NONE} -- Search perform
+feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 
 	dispatch_search is
 			-- Dispatch search.
@@ -1304,7 +1320,7 @@ feature {NONE} -- Search perform
 			end
 		end
 
-	incremental_search (a_word: STRING) is
+	incremental_search (a_word: STRING; a_start_pos: INTEGER) is
 			-- Incremental search in the editor displayed text
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
@@ -1333,7 +1349,7 @@ feature {NONE} -- Search perform
 																		class_name,
 																		file_name,
 																		l_text,
-																		incremental_search_start_pos.min (l_text.count).max (1))
+																		a_start_pos.min (l_text.count).max (1))
 					if case_sensitive_button.is_selected then
 						incremental_search_strategy.set_case_sensitive
 					else
@@ -1359,6 +1375,14 @@ feature {NONE} -- Search perform
 
 	incremental_search_start_pos: INTEGER
 			-- Incremental search start from.
+
+	set_incremental_search_start_pos (a_start: INTEGER) is
+			-- Set `incremental_search_start_pos' with `a_start'.
+		require
+			a_start_larger_than_zero: a_start > 0
+		do
+			incremental_search_start_pos := a_start
+		end
 
 	search is
 			-- Search in editor.
@@ -1432,12 +1456,12 @@ feature {NONE} -- Search perform
 				if not editor.is_empty then
 					create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
 					multi_search_performer.set_search_strategy (text_strategy)
-					if case_sensitive_button.is_selected then
+					if is_case_sensitive then
 						text_strategy.set_case_sensitive
 					else
 						text_strategy.set_case_insensitive
 					end
-					text_strategy.set_regular_expression_used (true)
+					text_strategy.set_regular_expression_used (is_regular_expression_used)
 					text_strategy.set_whole_word_matched (false)
 					if class_i /= Void then
 						text_strategy.set_data (class_i)
@@ -1512,7 +1536,7 @@ feature {NONE} -- Search perform
 			end
 		end
 
-feature {NONE} -- Search report
+feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search report
 
 	changed_classes: ARRAYED_LIST [CLASS_I]
 			-- Keep a record of modified class by editor.
@@ -1521,6 +1545,12 @@ feature {NONE} -- Search report
 			-- Select current row in the report.
 		do
 			search_report_grid.select_current_row
+		end
+
+	has_result: BOOLEAN is
+			-- Search has result?
+		do
+			Result := not multi_search_performer.is_empty
 		end
 
 feature {NONE} -- Replacement Implementation
@@ -1614,7 +1644,7 @@ feature {NONE} -- Destroy behavior.
 			Precursor {EB_SEARCH_TOOL}
 		end
 
-feature {EB_SEARCH_REPORT_GRID} -- Implementation
+feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	go_to_next_found_perform (b: BOOLEAN) is
 			-- Do actual `go_to_next_found'.
@@ -1758,7 +1788,6 @@ feature {EB_SEARCH_REPORT_GRID} -- Implementation
 
 	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions that are invoked sequently when text is fully loaded
-
 
 	stone_from_class_i (a_class_i: CLASS_I): STONE is
 			-- Make a stone from a_class_i.
@@ -1980,6 +2009,12 @@ feature {EB_SEARCH_REPORT_GRID} -- Implementation
 
 	old_editor: EB_EDITOR
 			-- In which last search did.
+
+	set_old_editor (a_editor: like old_editor) is
+			-- Set `old_editor' with `a_editor'.
+		do
+			old_editor := a_editor
+		end
 
 	temp_reverse: BOOLEAN
 			-- Go upwards or forwards to next match in report?

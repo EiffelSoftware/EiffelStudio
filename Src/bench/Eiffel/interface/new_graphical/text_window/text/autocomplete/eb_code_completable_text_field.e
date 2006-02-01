@@ -402,13 +402,13 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 
-	save_cursor_position is
+	save_cursor is
 			-- Save cursor position for retrieving.
 		do
 			saved_cursor_position := caret_position
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor is
 			-- Retrieve cursor position from saving.
 		do
 			set_caret_position (saved_cursor_position)

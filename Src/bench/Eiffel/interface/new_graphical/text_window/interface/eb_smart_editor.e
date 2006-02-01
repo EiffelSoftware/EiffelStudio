@@ -746,10 +746,11 @@ feature {NONE} -- Implementation
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
 		do
-			create customizable_commands.make (10)
+			create customizable_commands.make (11)
 			customizable_commands.put (agent complete_feature_name, "autocomplete")
 			customizable_commands.put (agent complete_class_name, "class_autocomplete")
 			customizable_commands.put (agent search, "show_search_panel")
+			customizable_commands.put (agent quick_search, "show_quick_search_bar")
 			customizable_commands.put (agent replace, "show_search_and_replace_panel")
 			customizable_commands.put (agent find_selection, "search_selection")
 			customizable_commands.put (agent find_next, "search_last")
@@ -1182,13 +1183,13 @@ feature {NONE} -- Code completable implementation
 			editor_drawing_area.focus_out_actions.resume
 		end
 
-	save_cursor_position is
+	save_cursor is
 			-- Save cursor position for retrieving.
 		do
 			saved_cursor := text_displayed.cursor.twin
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor is
 			-- Retrieve cursor position from saving.
 		do
 			text_displayed.cursor.make_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)

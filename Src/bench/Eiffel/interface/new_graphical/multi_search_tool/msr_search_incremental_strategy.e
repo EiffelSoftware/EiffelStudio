@@ -90,6 +90,12 @@ feature -- Basic operations
 			if pcre_regex.has_matched then
 				item_matched_internal.wipe_out
 				add_new_item
+			elseif pcre_regex.is_compiled then
+				pcre_regex.match_substring (text_to_be_searched, 1, text_to_be_searched.count)
+				if pcre_regex.has_matched then
+					item_matched_internal.wipe_out
+					add_new_item
+				end
 			end
 			launched := true
 			item_matched_internal.start

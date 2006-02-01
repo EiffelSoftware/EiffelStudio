@@ -173,7 +173,7 @@ feature -- Access
 	currently_replacing: STRING
 			-- string to be search
 
-feature {NONE}-- Controls
+feature {EB_CUSTOM_WIDGETTED_EDITOR}-- Controls
 
 	keyword_field: EV_COMBO_BOX
 			-- Text field where the user type in the word he's looking for.
@@ -284,6 +284,8 @@ feature -- Action
 			-- show the search tool and set focus to the search text field
 		require
 			explorer_bar_item_not_void: explorer_bar_item /= Void
+		local
+			l_quick_search_editor: EB_CUSTOM_WIDGETTED_EDITOR
 		do
 			fixme ("it can occurs the explorer_bar_item is bad (void or maybe destroyed ..")
 			explorer_bar_item.show

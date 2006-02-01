@@ -534,7 +534,9 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				a_row.parent_row.expand
 				adjust_grid_column_width
 			end
-			a_row.ensure_visible
+			if is_displayed then
+				a_row.ensure_visible
+			end
 			l_item ?= a_row.data
 			if l_item /= Void then
 				multi_search_performer.start

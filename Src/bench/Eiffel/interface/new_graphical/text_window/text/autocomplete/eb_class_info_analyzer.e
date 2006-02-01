@@ -307,7 +307,7 @@ feature {NONE} -- Click ast exploration
 						System.set_current_class (prev_class)
 					end
 				else
-					current_class_as := c.most_recent_ast
+					current_class_as := c.ast
 				end
 			end
 

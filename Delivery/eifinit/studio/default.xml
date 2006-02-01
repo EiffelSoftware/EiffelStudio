@@ -498,9 +498,14 @@
 
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_key" DESCRIPTION="Key"><STRING>F</STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
+	
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_key" DESCRIPTION="Key"><STRING>F</STRING></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_quick_search_bar.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
+	
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_key" DESCRIPTION="Key"><STRING>H</STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>

@@ -33,7 +33,9 @@ if [ "$3" != "False" ]; then
 		# Remove previous documentation output file if it exists
 	rm -rf $2
 		# First call to Current. We need to insert `<doc>' tag
-	echo "<doc>" >> $2
+	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" >> $2
+	echo "<?xml-stylesheet href=\"c_code.xsl\" type=\"text/xsl\"?>" >> $2
+	echo "<doc name=\"Runtime - C code\" css=\"c_code.css\">" >> $2
 fi
 
 	# Display progress
@@ -47,7 +49,7 @@ done
 	# Recursion to subdirectories
 for directory in `ls $1`; do
 	if [ -d $directory ]; then
-		if [ "$directory" != "CVS" ]; then
+		if [ "$directory" != ".svn" ]; then
 			. document.sh $1/$directory $2 False
 		fi
 	fi

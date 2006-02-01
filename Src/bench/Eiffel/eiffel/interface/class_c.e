@@ -1302,12 +1302,12 @@ feature -- Third pass: byte code production and type check
 		require
 			il_generation: System.il_generation
 		local
-			l_ast: like most_recent_ast
+			l_ast: like ast
 			l_ca_feature: INVARIANT_FEAT_I
 		do
 				-- No need to initialize `context' because we are called from `pass3' which already
 				-- initializes it.
-			l_ast := most_recent_ast
+			l_ast := ast
 			if
 				l_ast.custom_attributes /= Void or l_ast.interface_custom_attributes /= Void or
 				l_ast.class_custom_attributes /= Void or l_ast.assembly_custom_attributes /= Void
@@ -4022,18 +4022,6 @@ feature -- Access
 
 	ast: CLASS_AS is
 			-- Associated AST structure
-		do
-			if Ast_server.has (class_id) then
-				Result := Ast_server.item (class_id)
-			elseif Tmp_ast_server.has (class_id) then
-				Result := Tmp_ast_server.item (class_id)
-			end
-		ensure
-			non_void_result_if: has_ast implies Result /= Void
-		end
-
-	most_recent_ast: CLASS_AS is
-			-- Last stored AST structure.
 		do
 			if Tmp_ast_server.has (class_id) then
 				Result := Tmp_ast_server.item (class_id)

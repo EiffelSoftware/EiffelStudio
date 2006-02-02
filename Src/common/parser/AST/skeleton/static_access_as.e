@@ -60,7 +60,15 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := class_type.first_token (a_list)
+			if a_list = Void  then
+				Result := Precursor (a_list)
+			else
+				if feature_keyword /= Void then
+					Result := feature_keyword.first_token (a_list)
+				else
+					Result := class_type.first_token (a_list)
+				end
+			end
 		end
 
 feature -- Roundtrip

@@ -39,7 +39,7 @@ feature -- Access
 
 	code: STRING is
 			-- | Result := "create {`type'}.`creation_routine' [(`arguments', ...)]" if target = Void
-			-- | Result := "create `target'.`creation_routine' [(`arguments', ...)]" otherwise
+			-- | Result := "create {`type'} `target'.`creation_routine' [(`arguments', ...)]" otherwise
 			-- Eiffel code of object create expression
 		do
 			create Result.make (160)
@@ -47,11 +47,13 @@ feature -- Access
 				Result.append (indent_string)
 			end
 			Result.append ("create ")
-			if target = Void then
+			if target_type /= Void then
 				Result.append_character ('{')
 				Result.append (target_type.eiffel_name)
-				Result.append_character ('}')				
-			else
+				Result.append_character ('}')
+			end
+			if target /= Void then
+				Result.append (" ")
 				Result.append (target)
 			end
 			Result.append_character ('.')

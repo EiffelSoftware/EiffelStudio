@@ -463,8 +463,12 @@ feature {NONE} -- Implementation
 				until
 					l_list.after or Result /= Void
 				loop
-					if l_list.item.has_arguments (a_arguments) then
-						Result := l_list.item
+					if l_list.item /= Void then
+						if a_arguments = Void and l_list.item.arguments = Void then
+							Result := l_list.item
+						elseif l_list.item.has_arguments (a_arguments) then
+							Result := l_list.item
+						end
 					end
 					l_list.forth
 				end

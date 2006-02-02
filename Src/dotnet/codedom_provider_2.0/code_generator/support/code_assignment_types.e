@@ -17,20 +17,24 @@ feature -- Access
 	Field_assignment: INTEGER is 3
 			-- Assignment target is a field
 
+	Array_assignment: INTEGER is 4
+			-- Assignment target is an array element
+
 feature -- Status Report
 
 	is_valid_assignment_type (a_value: INTEGER): BOOLEAN is
 			-- Is `a_value' a valid assignment type?
 		do
-			Result := a_value = Default_assignment or a_value = Property_assignment or a_value = Field_assignment
+			Result := a_value = Default_assignment or a_value = Property_assignment or a_value = Field_assignment or a_value = Array_assignment
 		ensure
-			definition: Result = (a_value = Default_assignment or a_value = Property_assignment or a_value = Field_assignment)
+			definition: Result = (a_value = Default_assignment or a_value = Property_assignment or a_value = Field_assignment or a_value = Array_assignment)
 		end
 
 invariant
 	default_assignment_is_valid: is_valid_assignment_type (Default_assignment)
 	property_assignment_is_valid: is_valid_assignment_type (Property_assignment)
 	field_assignment_is_valid: is_valid_assignment_type (Field_assignment)
+	array_assignment_is_valid: is_valid_assignment_type (Array_assignment)
 
 end -- class CODE_ASSIGNMENT_TYPES
 

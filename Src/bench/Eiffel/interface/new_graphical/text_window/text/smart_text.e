@@ -550,6 +550,7 @@ feature -- Completion-clickable initialization / update
 
 				cursor.set_y_in_lines (y)
 				cursor.set_x_in_characters (x)
+				enable_selection
 			end
 		end
 

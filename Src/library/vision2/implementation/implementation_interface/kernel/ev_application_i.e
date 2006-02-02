@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision application. Implementation interface.%N%
 		%See ev_application.e"
 	legal: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	keywords: "application"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_APPLICATION_I
 
@@ -18,9 +18,9 @@ inherit
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES_I
-	
+
 feature {EV_APPLICATION} -- Initialization
-	
+
 	initialize is
 			-- Create pick and drop target list.
 			-- Set F1 as default help key.
@@ -35,7 +35,7 @@ feature {EV_APPLICATION} -- Initialization
 				environment_imp_not_void: environment_imp /= Void
 			end
 			environment_imp.set_application (interface)
-			create f1_key.make_with_code ((create {EV_KEY_CONSTANTS}).Key_f1)
+			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
 			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
 			set_contextual_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, True))
 			create {EV_SIMPLE_HELP_ENGINE} help_engine
@@ -51,27 +51,27 @@ feature {EV_APPLICATION} -- Initialization
 			-- Start the event loop.
 		deferred
 		end
-		
+
 feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- Access
 
 	dockable_targets: ARRAYED_LIST [INTEGER]
 
 feature -- Access
 
-	pnd_targets: ARRAYED_LIST [INTEGER] 
+	pnd_targets: ARRAYED_LIST [INTEGER]
 			-- Global list of pick and drop target object ids.
 
 	windows: LINEAR [EV_WINDOW] is
 			-- Global list of windows.
 		deferred
 		end
-		
+
 	locked_window: EV_WINDOW
-			-- Window currently locked. Void if no window 
+			-- Window currently locked. Void if no window
 			-- is currently locked.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
-			
+
 	captured_widget: EV_WIDGET
 			-- Widget currently captured. Void if none.
 
@@ -172,12 +172,12 @@ feature -- Basic operation
 			-- handle any events that may be in its queue.
 		deferred
 		end
-		
+
 	process_events_until_stopped is
 			-- Process all events until 'stop_processing' is called.
 		deferred
 		end
-		
+
 	stop_processing is
 			--  Exit `process_events_until_stopped'.
 		deferred
@@ -186,7 +186,7 @@ feature -- Basic operation
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
 		require
-			msec_non_negative: msec >= 0 
+			msec_non_negative: msec >= 0
 		deferred
 		end
 
@@ -206,7 +206,7 @@ feature -- Basic operation
 				captured_widget.enable_capture
 			end
 		end
-	
+
 	display_help_for_widget (a_widget: EV_WIDGET) is
 			-- Display contextual help for `a_widget', if any.
 		require
@@ -355,7 +355,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 									trg.target_name
 								)
 								Result.extend (i)
-								i.select_actions.extend (agent 
+								i.select_actions.extend (agent
 									(trg.drop_actions).call ([a_pebble])
 								)
 							end
@@ -411,13 +411,13 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-	
+
 	help_handler_procedure: PROCEDURE [ANY, TUPLE] is
 			-- Help handler procedure associated with help accelerator
 		once
 			Result := agent help_handler
 		end
-	
+
 	help_handler is
 			-- Display contextual help for currently focused widget.
 		local
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	disable_contextual_help is
 			-- Disable contextual help: remove capture and restore mouse pointer style.
 		do
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			captured_widget.set_pointer_style (old_pointer_style)
 			captured_widget.disable_capture
 		end
-	
+
 	focused_widget_from_container (a_widget: EV_WIDGET): EV_WIDGET is
 			-- Child widget of `a_widget' with keyboard focus, if any
 		local
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 		ensure
 			focused_widget: Result /= Void implies Result.has_focus
 		end
-			
+
 invariant
 	dockable_targets_not_void: is_usable implies dockable_targets /= Void
 	pnd_targets_not_void: is_usable implies pnd_targets /= void

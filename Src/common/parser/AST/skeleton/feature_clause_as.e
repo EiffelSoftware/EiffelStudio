@@ -10,7 +10,8 @@ class FEATURE_CLAUSE_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			is_equivalent,
+			complete_end_position
 		end
 
 create
@@ -69,7 +70,10 @@ feature -- Roundtrip/Token
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- Last token in current AST node
 		do
-			if a_list = Void then
+			if a_list /= Void then
+				Result := a_list.item_by_end_position (feature_clause_end_position)
+			end
+			if Result = Void or a_list = Void then
 				if not features.is_empty then
 					Result := features.last_token (a_list)
 				elseif clients /= Void then
@@ -77,9 +81,15 @@ feature -- Roundtrip/Token
 				else
 					Result := feature_keyword.last_token (a_list)
 				end
-			else
-				Result := a_list.item_by_end_position (feature_clause_end_position)
 			end
+		end
+
+feature -- Roundtrip/Position
+
+	complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
+			-- Absolute end position for current construct
+		do
+			Result := feature_clause_end_position
 		end
 
 feature -- Roundtrip/Comments
@@ -242,7 +252,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		do
 			clients := c
 		end
-		
+
 invariant
 	features_not_void: features /= Void
 	feature_location_not_void: feature_keyword /= Void

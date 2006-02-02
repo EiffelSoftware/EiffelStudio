@@ -241,8 +241,6 @@ feature -- Item searching
 			end
 		end
 
-feature -- Leading/trailing separator
-
 feature -- Region validity
 
 	valid_region (a_region: ERT_TOKEN_REGION):BOOLEAN is

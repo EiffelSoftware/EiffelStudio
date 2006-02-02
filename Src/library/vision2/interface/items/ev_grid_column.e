@@ -1,8 +1,8 @@
 indexing
 	description: "Column of an EV_GRID, containing EV_GRID_ITEMs."
+	date: "$Date$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -13,7 +13,7 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 	EV_DESELECTABLE
 		redefine
 			implementation
@@ -104,7 +104,7 @@ feature -- Access
 		ensure
 			Result_non_negative: Result >= 0
 		end
-		
+
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -114,6 +114,21 @@ feature -- Access
 			is_parented: parent /= Void
 		do
 			Result := implementation.virtual_x_position
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+		end
+
+	virtual_x_position_unlocked: INTEGER is
+			-- Horizontal offset of unlocked position of `Current', in relation to the
+			-- virtual area of `parent' grid in pixels.
+			-- If not `is_locked', then `virtual_x_position' = `virtual_y_position_unlocked'.
+			-- If `is_locked' then `Result' is the "shadow" position where the column would
+			-- be if not locked.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.virtual_x_position_unlocked
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
@@ -149,7 +164,66 @@ feature -- Access
 			Result := implementation.pixmap
 		end
 
+	is_locked: BOOLEAN is
+			-- Is `Current' locked so that it no longer scrolls?
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.is_locked
+		end
+
+	locked_position: INTEGER is
+			-- Locked position of `Current' from left edge of viewable area of `parent'.
+			-- `Result' is 0 if not `is_locked'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.locked_position
+		ensure
+			not_locked_implies_result_zero: not is_locked implies result = 0
+		end
+
 feature -- Status setting
+
+	lock is
+			-- Ensure `is_locked' is `True'.
+			-- `Current' is locked at it's current horizontal offset from
+			-- the left edge of the viewable area of `parent'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			lock_at_position (virtual_x_position - parent.virtual_x_position)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = virtual_x_position - parent.virtual_x_position
+		end
+
+	lock_at_position (a_position: INTEGER) is
+			-- Ensure `is_locked' is `True' with the horizontal offset from
+			-- the left edge of the viewable area of `parent' set to `a_position'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			implementation.lock_at_position (a_position)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = a_position
+		end
+
+	unlock is
+			-- Ensure `is_locked' is `False'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			implementation.unlock
+		ensure
+			not_is_locked: not is_locked
+		end
 
 	hide is
 			-- Prevent column from being shown in `parent'.
@@ -173,7 +247,7 @@ feature -- Status setting
 		ensure
 			is_displayed: is_displayed
 		end
-		
+
 	ensure_visible is
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
@@ -237,7 +311,7 @@ feature -- Status report
 		ensure
 			count_not_negative: count >= 0
 		end
-			
+
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
@@ -287,7 +361,7 @@ feature -- Element change
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end
-		
+
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		require
@@ -332,7 +406,7 @@ feature -- Element change
 		ensure
 			pixmap_removed: pixmap = Void
 		end
-		
+
 	redraw is
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
@@ -398,7 +472,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_COLUMN_I
 		-- Responsible for interaction with native graphics toolkit.
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -407,19 +481,19 @@ feature {NONE} -- Implementation
 			create {EV_GRID_COLUMN_I} implementation.make (Current)
 		end
 
+invariant
+	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
 

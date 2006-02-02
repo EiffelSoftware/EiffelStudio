@@ -34,8 +34,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
-feature {EV_GRID_COLUMN} -- Initialization
-
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -180,12 +178,26 @@ feature -- Access
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do
+			if is_locked then
+				Result := parent_i.internal_client_x + locked_column.offset
+			else
+				Result := virtual_x_position_unlocked
+			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+		end
+
+	virtual_x_position_unlocked: INTEGER is
+			-- Horizontal offset of unlocked position of `Current', in relation to the
+			-- virtual area of `parent' grid in pixels.
+			-- If not `is_locked', then `virtual_x_position' = `virtual_y_position_unlocked'.
+			-- If `is_locked' then `Result' is the "shadow" position where the column would
+			-- be if not locked.
+		do
 			if parent_i /= Void then
 					-- If there is no parent then return 0.
-
 				parent_i.perform_horizontal_computation
 					-- Recompute horizontally if required.
-
 				Result := parent_i.column_offsets @ (index)
 			end
 		ensure
@@ -194,7 +206,7 @@ feature -- Access
 
 	background_color: EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
-			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed..
+			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
 
 	foreground_color: EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
@@ -203,7 +215,56 @@ feature -- Access
 	pixmap: EV_PIXMAP
 		-- Pixmap display on column header to left of `title'.
 
+	is_locked: BOOLEAN
+			-- Is `Current' locked so that it no longer scrolls?
+			-- Note that this could be implemented as a function
+			-- "Result := parent_i.locked_columns.item (index) /= Void" but this has not been done
+			-- so for performance reasons.
+
+	locked_position: INTEGER is
+			-- Locked position of `Current' from left edge of viewable area of `parent'.
+			-- `Result' is 0 if not `is_locked'.
+		do
+			if is_locked then
+				Result := locked_column.offset
+			end
+		ensure
+			not_locked_implies_result_zero: not is_locked implies result = 0
+		end
+
 feature -- Status setting
+
+	lock_at_position (a_position: INTEGER) is
+			-- Ensure `is_locked' is `True' with the horizontal offset from
+			-- the left edge of the viewable area of `parent' set to `a_position'.
+		do
+			if is_locked then
+				unlock
+			end
+			is_locked := True
+			create locked_column.make (parent_i, a_position, Current)
+			locked_column.set_locked_index (parent_i.locked_indexes.count + 1)
+			parent_i.locked_indexes.extend (locked_column)
+			parent_i.reposition_locked_column (Current)
+			parent_i.redraw_column (Current)
+			if parent_i.item_pebble_function /= Void then
+				locked_column.drawing_area.set_pebble_function (agent parent_i.user_pebble_function_intermediary_locked (?, ?, locked_column))
+			end
+			locked_column.drawing_area.drop_actions.set_veto_pebble_function (agent parent_i.veto_pebble_function_intermediary)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = a_position
+		end
+
+	unlock is
+			-- Ensure `is_locked' is `False'.
+		do
+			is_locked := False
+			parent_i.unlock_column (Current)
+			locked_column := Void
+		ensure
+			not_is_locked: not is_locked
+		end
 
 	hide is
 			-- Prevent column from being displayed in `parent'.
@@ -224,26 +285,6 @@ feature -- Status setting
 			parent.show_column (index)
 		ensure
 			is_displayed: is_displayed
-		end
-
-	enable_select is
-			-- Select `Current' in `parent_i'.
-		do
-			internal_update_selection (True)
-			set_internal_is_selected (True)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
-		end
-
-	disable_select is
-			-- Deselect `Current' from `parent_i'.
-		do
-			internal_update_selection (False)
-			set_internal_is_selected (False)
-			if parent_i /= Void then
-				parent_i.redraw_column (Current)
-			end
 		end
 
 	ensure_visible is
@@ -342,6 +383,10 @@ feature -- Status setting
 		end
 
 feature -- Status report
+
+	locked_column: EV_GRID_LOCKED_COLUMN_I
+		-- Locked column information for `Current'.
+		-- `Void' if not locked.
 
 	index: INTEGER
 			-- Position of Current in `parent'.
@@ -453,6 +498,9 @@ feature -- Element change
 		do
 			header_item.set_width (a_width)
 			parent_i.header.item_resize_end_actions.call ([header_item])
+			if is_locked then
+				parent_i.reposition_locked_column (Current)
+			end
 		ensure
 			width_set: width = a_width
 		end
@@ -516,11 +564,34 @@ feature {EV_GRID_I} -- Implementation
 		require
 			is_parented: parent /= Void
 		do
+			if is_locked then
+				unlock
+			end
 			clear
 			disable_select
 			unparent
 		ensure
 			parent_i_unset: parent_i = Void
+		end
+
+	enable_select is
+			-- Select `Current' in `parent_i'.
+		do
+			internal_update_selection (True)
+			set_internal_is_selected (True)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
+		end
+
+	disable_select is
+			-- Deselect `Current' from `parent_i'.
+		do
+			internal_update_selection (False)
+			set_internal_is_selected (False)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
 		end
 
 	destroy is
@@ -651,18 +722,15 @@ invariant
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
 

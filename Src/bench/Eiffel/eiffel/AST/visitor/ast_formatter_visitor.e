@@ -614,8 +614,10 @@ feature {NONE} -- Implementation
 					ctxt.put_text_item (ti_rescue_keyword)
 					ctxt.indent
 					ctxt.put_new_line
-					l_as.rescue_clause.process (Current)
-					ctxt.put_new_line
+					if not l_as.rescue_clause.is_empty then
+						format_compound (l_as.rescue_clause)
+						ctxt.put_new_line
+					end
 					ctxt.exdent
 					ctxt.put_breakable
 				end
@@ -682,9 +684,11 @@ feature {NONE} -- Implementation
 						ctxt.put_new_line
 						ctxt.set_separator (Void)
 						ctxt.set_new_line_between_tokens
-						l_as.rescue_clause.process (Current)
+						if not l_as.rescue_clause.is_empty then
+							format_compound (l_as.rescue_clause)
+							ctxt.put_new_line
+						end
 						ctxt.exdent
-						ctxt.put_new_line
 					end
 					if not l_as.is_deferred and not l_as.is_external then
 						ctxt.put_breakable
@@ -1407,7 +1411,7 @@ feature {NONE} -- Implementation
 				ctxt.put_new_line
 				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
-				l_as.compound.process (Current)
+				format_compound (l_as.compound)
 				ctxt.exdent
 			end
 			ctxt.put_new_line
@@ -1423,14 +1427,13 @@ feature {NONE} -- Implementation
 			l_as.condition.process (Current)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_then_keyword)
+			ctxt.put_new_line
 			if l_as.compound /= Void then
 				ctxt.indent
+				format_compound (l_as.compound)
 				ctxt.put_new_line
-				ctxt.set_new_line_between_tokens
-				l_as.compound.process (Current)
 				ctxt.exdent
 			end
-			ctxt.put_new_line
 			if l_as.elsif_list /= Void then
 				ctxt.set_separator (ti_empty)
 				ctxt.set_no_new_line_between_tokens
@@ -1442,10 +1445,11 @@ feature {NONE} -- Implementation
 				ctxt.indent
 				ctxt.put_new_line
 				ctxt.set_new_line_between_tokens
-				l_as.else_part.process (Current)
-				ctxt.exdent
+				format_compound (l_as.else_part)
 				ctxt.put_new_line
+				ctxt.exdent
 			end
+
 			ctxt.put_text_item (ti_end_keyword)
 		end
 
@@ -1469,8 +1473,10 @@ feature {NONE} -- Implementation
 				ctxt.put_new_line
 				ctxt.set_separator (Void)
 				ctxt.set_new_line_between_tokens
-				l_as.else_part.process (Current)
-				ctxt.put_new_line
+				if not l_as.else_part.is_empty then
+					format_compound (l_as.else_part)
+					ctxt.put_new_line
+				end
 				ctxt.exdent
 			end
 			ctxt.put_text_item (ti_end_keyword)
@@ -1490,7 +1496,7 @@ feature {NONE} -- Implementation
 			if l_as.from_part /= Void then
 				ctxt.indent
 				ctxt.put_new_line
-				l_as.from_part.process (Current)
+				format_compound (l_as.from_part)
 				ctxt.put_new_line
 				ctxt.exdent
 			else
@@ -1524,7 +1530,7 @@ feature {NONE} -- Implementation
 			if l_as.compound /= Void then
 				ctxt.indent
 				ctxt.put_new_line
-				l_as.compound.process (Current)
+				format_compound (l_as.compound)
 				ctxt.exdent
 			end
 			ctxt.put_new_line

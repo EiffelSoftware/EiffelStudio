@@ -16,9 +16,7 @@ inherit
 			make,
 			hide,
 			on_close,
-			add_preference_change_item,
-			set_preference_to_default,
-			on_preference_changed
+			preference_value_column
 		end
 
 	EB_SHARED_PIXMAPS
@@ -52,55 +50,22 @@ feature -- Access
 			close_request_actions.extend (agent on_close)
 		end
 
-	add_preference_change_item (l_preference: PREFERENCE; a_row: EV_GRID_ROW) is
-			-- Add the correct preference change widget item at `a_row' of `grid'
+	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
+			--
 		local
 			l_id_font: IDENTIFIED_FONT_PREFERENCE
 			l_font_widget: IDENTIFIED_FONT_PREFERENCE_WIDGET
 		do
-			l_id_font ?= l_preference
+			l_id_font ?= a_pref
 			if l_id_font /= Void then
 				create l_font_widget.make_with_preference (l_id_font)
+				l_font_widget.change_actions.extend (agent on_preference_changed)
 				l_font_widget.set_caller (Current)
-				l_font_widget.change_actions.extend (agent on_preference_changed (l_preference))
-				a_row.set_item (4, l_font_widget.change_item_widget)
-				a_row.item (4).set_data (l_font_widget)
+				Result := l_font_widget.change_item_widget
+				Result.set_data (l_font_widget)
 			else
-				Precursor {PREFERENCES_GRID} (l_preference, a_row)
+				Result := Precursor {PREFERENCES_GRID} (a_pref)
 			end
-		end
-
-	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
-			-- Set the preference value to the original default.
-		local
-			l_label_item: EV_GRID_LABEL_ITEM
-			l_font: IDENTIFIED_FONT_PREFERENCE
-		do
-			l_font ?= a_pref
-			if l_font /= Void then
-				a_pref.reset
-				a_item.set_text (a_pref.default_value)
-				a_item.set_font (default_font)
-				l_label_item ?= a_item.row.item (1)
-				if l_label_item /= Void then
-						-- Font label item
-					l_label_item.set_font (l_font.value.font)
-				end
-			else
-				Precursor {PREFERENCES_GRID} (a_item, a_pref)
-			end
-		end
-
-	on_preference_changed (a_pref: PREFERENCE) is
-			-- Preference was changed
-		local
-			l_id_font_pref: IDENTIFIED_FONT_PREFERENCE
-		do
-			l_id_font_pref ?= a_pref
-			if l_id_font_pref /= Void then
-				grid.selected_rows.first.set_height (l_id_font_pref.value.font.height.max (default_row_height))
-			end
-			Precursor {PREFERENCES_GRID} (a_pref)
 		end
 
 	on_close is
@@ -125,19 +90,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

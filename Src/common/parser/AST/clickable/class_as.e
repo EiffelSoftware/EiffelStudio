@@ -356,7 +356,11 @@ feature -- Roundtrip/Token
 					Result := class_name.first_token (a_list)
 				end
 			else
-				l_break ?= a_list.first.first_token (a_list)
+				if not a_list.is_empty then
+					l_break ?= a_list.first.first_token (a_list)
+				else
+					l_break := Void
+				end
 				if l_break /= Void then
 					Result := l_break
 				else
@@ -381,7 +385,11 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := end_keyword.last_token (a_list)
 			else
-				l_break ?= a_list.last.last_token (a_list)
+				if not a_list.is_empty then
+					l_break ?= a_list.last.last_token (a_list)
+				else
+					l_break := Void
+				end
 				if l_break /= Void then
 					Result := l_break
 				else

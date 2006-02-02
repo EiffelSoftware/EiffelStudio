@@ -35,7 +35,7 @@ create
 
 feature
 	make (a_trunk_number: INTEGER) is
-			-- Initialize
+			-- Initialize current list to contain at least `a_trunk_number' of trunks.
 		require
 			a_trunk_number_positive: a_trunk_number > 0
 		do
@@ -92,6 +92,14 @@ feature -- Access
 			list_not_empty: count > 0
 		do
 			Result := current_trunk.item (in_trunk_count - 1)
+		end
+
+	is_empty: BOOLEAN is
+			-- Is Current empty?
+		do
+			Result := count = 0
+		ensure
+			Result_set: Result implies count = 0
 		end
 
 feature -- Status reporting

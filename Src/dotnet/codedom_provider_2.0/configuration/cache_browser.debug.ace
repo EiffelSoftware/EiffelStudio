@@ -6,7 +6,7 @@ root
 
 default
 	multithreaded (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Base")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider_2.0\build_studio_debug\EiffelSoftware.CodeDom.Base")
  	assertion (require)
  	msil_generation (yes)
  	il_verifiable (yes)
@@ -18,14 +18,14 @@ default
  	use_all_cluster_name_as_namespace (yes)
  	use_cluster_name_as_namespace (no)
 	msil_use_optimized_precompile (yes)
-  	version ("5.6.1102.0")
+  	version ("5.7.0224.0")
 	debug ("log_exceptions")
- 	msil_clr_version ("v1.1.4322")
+ 	msil_clr_version ("v2.0.50727")
 
 cluster 
-	cache_browser:		"$EIFFEL_SRC\dotnet\codedom_provider\cache_browser"
+	cache_browser:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\cache_browser"
 	
-	all common:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
+	all common:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\common"
 		exclude
 			".svn"; 
 		default

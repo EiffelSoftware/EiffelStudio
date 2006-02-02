@@ -17,9 +17,9 @@ default
 	msil_use_optimized_precompile (yes)
  	use_all_cluster_name_as_namespace (yes)
  	use_cluster_name_as_namespace (no)
- 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom")
-  	version ("5.6.1102.0")
- 	msil_clr_version ("v1.1.4322")
+ 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider_2.0\build_studio_debug\EiffelSoftware.CodeDom")
+  	version ("5.7.0224.0")
+ 	msil_clr_version ("v2.0.50727")
 
 cluster
 		-- WEL

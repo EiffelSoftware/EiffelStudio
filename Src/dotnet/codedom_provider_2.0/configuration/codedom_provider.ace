@@ -6,7 +6,7 @@ root
 
 default
 	multithreaded (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider_2.0\build_studio\EiffelSoftware.CodeDom.CacheBrowser")
 	msil_use_optimized_precompile (yes)
 	assertion (no)
 	msil_generation (yes)
@@ -17,55 +17,55 @@ default
 	use_cluster_name_as_namespace (no)
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("dll")
-  	version ("5.6.1102.0")
+  	version ("5.7.0224.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
- 	msil_clr_version ("v1.1.4322")
+ 	msil_clr_version ("v2.0.50727")
 
 cluster
-	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider\interface"
+	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\interface"
 		exclude
 			".svn"; 
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
-	all compiler:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler"
+	all compiler:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler"
 		exclude
 			".svn"; "interface"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.Compiler")
 		end
 
-	compiler_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler\interface"
+	compiler_interface:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler\interface"
 		exclude
 			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
-	all code_generator:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator"
+	all code_generator:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator"
 		exclude
 			".svn"; "interface"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.CodeGenerator")
 		end
 
-	code_generator_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator\interface"
+	code_generator_interface:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\code_generator\interface"
 		exclude
 			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
-	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider\parser"
+	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser"
 		exclude
 			".svn"; "interface";
 		default
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end
 
-	parser_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\parser\interface"
+	parser_interface:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\parser\interface"
 		exclude
 			".svn";
 		default
@@ -107,13 +107,13 @@ cluster
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
 
-	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\misc"
 		exclude
 			"error_handler.e"; "syntax_error.e"; ".svn"
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
-
+		
 end -- system EiffelSoftware.CodeDom
 
 --+--------------------------------------------------------------------

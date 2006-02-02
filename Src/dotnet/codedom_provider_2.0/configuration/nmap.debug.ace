@@ -18,19 +18,19 @@ default
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	console_application (no)
 	msil_use_optimized_precompile (yes)
-  	version ("5.6.1102.0")
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Vision2")
- 	msil_clr_version ("v1.1.4322")
+  	version ("5.7.0224.0")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider_2.0\build_studio_debug\EiffelSoftware.CodeDom.Vision2")
+ 	msil_clr_version ("v2.0.50727")
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\name_mapper"
+	root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\name_mapper"
 		exclude
 			".svn"; "bin"; "text"; 
 		default
 			namespace ("EiffelSoftware.NameMapper")
 		end
 
-	tools_common: "$EIFFEL_SRC\dotnet\codedom_provider\tools\common"
+	tools_common: "$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common"
 		default
 			namespace ("EiffelSoftware.Library.Tools")
 		end

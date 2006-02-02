@@ -1005,57 +1005,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_preference_change_item (l_preference: PREFERENCE; a_row: EV_GRID_ROW) is
-			-- Add the correct preference change widget item at `row_index' of `grid'.
-		local
-			l_bool: BOOLEAN_PREFERENCE
-			l_font: FONT_PREFERENCE
-			l_color: COLOR_PREFERENCE
-			l_array: ARRAY_PREFERENCE
-			l_shortcut: SHORTCUT_PREFERENCE
-			l_text: STRING_PREFERENCE
-
-			l_pref_widget: PREFERENCE_WIDGET
-		do
-			l_bool ?= l_preference
-			if l_bool /= Void then
-				create {BOOLEAN_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_bool)
-			elseif l_preference.generating_preference_type.is_equal ("TEXT") then
-				l_text ?= l_preference
-				check l_text_not_void: l_text /= Void end
-				create {STRING_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_text)
-			elseif l_preference.generating_preference_type.is_equal ("COMBO") then
-				l_array ?= l_preference
-				if l_array /= Void then
-					create {CHOICE_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_array)
-				else
-					l_font ?= l_preference
-					if l_font /= Void then
-						create {FONT_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_font)
---						a_row.set_height (l_font.value.height.max (default_row_height))
-					else
-						l_color ?= l_preference
-						if l_color /= Void then
-							create {COLOR_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_color)
-
-						else
-							l_shortcut ?= l_preference
-							if l_shortcut /= Void then
-								create {SHORTCUT_PREFERENCE_WIDGET} l_pref_widget.make_with_preference (l_shortcut)
-							end
-						end
-					end
-				end
-			end
-			if l_pref_widget /= Void then
-				l_pref_widget.change_actions.extend (agent on_preference_changed)
-				l_pref_widget.set_caller (Current)
-				a_row.set_item (4, l_pref_widget.change_item_widget)
-				a_row.item (4).set_data (l_pref_widget)
-			end
-		end
-
-
 	clear_edit_widget is
 			-- Clear the edit widget
 		do

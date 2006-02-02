@@ -107,11 +107,11 @@ feature -- Basic Operation
 				last_error_message := "Could not find wsdl.exe, make sure .NET Framework SDK is installed on machine."
 			end
 		end
-	
+
 	wsdl_arguments: STRING is
 			-- Arguments to be passed to `wsdl.exe'
 		do
-			Result := "/language:%"" + (create {ECDS_PROVIDER}).to_dotnet.get_type.assembly_qualified_name
+			Result := "/language:%"" + (create {ECDS_PROVIDER}).get_type.assembly_qualified_name
 			if generate_server_code then
 				Result.append ("%" /server %"")
 			else

@@ -44,6 +44,9 @@ feature -- General Errors
 	Missing_ise_eiffel: INTEGER is 12
 			-- ISE_EIFFEL value in registry is missing
 
+	Missing_ise_platform: INTEGER is 13
+			-- ISE_PLATFORM value in registry is missing
+
 feature -- General Warning
 
 	Incorrect_result: INTEGER is 1001

@@ -11,7 +11,7 @@ class
 inherit
 	TYPE_AS
 		redefine
-			has_like, is_loose
+			has_like, is_loose, first_token, last_token
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -55,16 +55,22 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := anchor.first_token (a_list)
-			else
-				Result := like_keyword.first_token (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
+					Result := anchor.first_token (a_list)
+				else
+					Result := like_keyword.first_token (a_list)
+				end
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := anchor.last_token (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := anchor.last_token (a_list)
+			end
 		end
 
 feature -- Comparison
@@ -116,19 +122,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

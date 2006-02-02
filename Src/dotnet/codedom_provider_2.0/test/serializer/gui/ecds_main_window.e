@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 		do
 			create l_dialog.make_with_title ("Browse for destination folder")
 			l_path := Start_destination_folder_path
-			if l_path /= Void then
+			if l_path /= Void and then (create {DIRECTORY}.make (l_path)).exists then
 				l_dialog.set_start_directory (l_path)
 			end
 			l_dialog.show_modal_to_window (Current)
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 					name_text_field.set_text (l_file_name)
 				end
 				if not l_file_name.is_empty then
-					set_last_file_title (l_file_name)				
+					set_last_file_title (l_file_name)
 				end
 			end
 			check_wsdl_generation
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			set_last_aspnet_url (web_address_text_field.text)
 			check_aspnet_generation
 		end
-		
+
 	on_generate_aspnet_tree is
 			-- Called by `select_actions' of `generate_aspnet_tree_button'.
 		local
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			create l_dialog.make_with_text ("Codedom tree successfully serialized in " + a_file_name)
 			l_dialog.show_modal_to_window (Current)
 		end
-		
+
 	report_failure (a_error, a_output: STRING) is
 			-- Report that serialization failed.
 		require
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 		--	output_dialog.clear
 			output_dialog.write (l_text)
 		end
-		
+
 	check_wsdl_generation is
 			-- Enable generate wsdl button if all required settings are initialized
 		do
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 				wsdl_go_button.disable_sensitive
 			end
 		end
-		
+
 	check_aspnet_generation is
 			-- Enable generate wsdl button if all required settings are initialized
 		do
@@ -236,13 +236,13 @@ feature {NONE} -- Implementation
 				generate_aspnet_tree_button.disable_sensitive
 			end
 		end
-	
+
 	output_dialog: ECDS_OUTPUT_DIALOG is
 			-- Output dialog
 		once
 			create Result
 		end
-		
+
 end -- class ECDS_MAIN_WINDOW
 
 --+--------------------------------------------------------------------

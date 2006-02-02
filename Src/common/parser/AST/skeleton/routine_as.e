@@ -92,8 +92,7 @@ feature -- Attributes
 		do
 			if
 				internal_locals = Void or else
-				internal_locals.locals = Void or else
-				internal_locals.locals.is_empty
+				internal_locals.locals = Void
 		 	then
 				Result := Void
 			else

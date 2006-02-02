@@ -1240,7 +1240,7 @@ Internal: TE_DO Compound
 Local_declarations: -- Empty
 			-- { $$ := Void }
 	|	TE_LOCAL
-			{ $$ := ast_factory.new_local_dec_list_as (Void, $1)
+			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), $1)
 			}
 	|	TE_LOCAL { add_counter } Entity_declaration_list
 			{

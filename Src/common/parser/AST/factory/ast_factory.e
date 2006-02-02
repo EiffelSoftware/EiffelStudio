@@ -1618,7 +1618,9 @@ feature -- Access
 	new_local_dec_list_as (l: EIFFEL_LIST [TYPE_DEC_AS]; k_as: KEYWORD_AS): LOCAL_DEC_LIST_AS is
 			-- New LOCAL_DEC_LIST AST node
 		do
-			create Result.make (l, k_as)
+			if l /= Void then
+				create Result.make (l, k_as)
+			end
 		end
 
 	new_formal_argu_dec_list_as (l: EIFFEL_LIST [TYPE_DEC_AS]; l_as, r_as: SYMBOL_AS): FORMAL_ARGU_DEC_LIST_AS is

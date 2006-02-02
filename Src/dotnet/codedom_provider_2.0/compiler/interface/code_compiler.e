@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel compiler CodeDom interface implementation"
 	date: "$$"
 	revision: "$$"
@@ -79,7 +79,7 @@ feature -- Basic Operations
 					from
 						l_count := a_sources.count
 					until
-						i = l_count				
+						i = l_count
 					loop
 						source_generator.generate (a_sources.item (i))
 						i := i + 1
@@ -106,18 +106,13 @@ feature -- Basic Operations
 			non_void_options: a_options /= Void
 			non_void_file_name: a_file_name /= Void
 		local
-			l_file: PLAIN_TEXT_FILE
 			l_res: SYSTEM_OBJECT
 		do
 			if Access_mutex.wait_one then
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Starting CodeCompiler.CompileAssemblyFromFile"])
 				(create {SECURITY_PERMISSION}.make ({SECURITY_PERMISSION_FLAG}.unmanaged_code)).assert
-				create l_file.make (a_file_name)
-				if l_file.exists then
-					l_file.open_read
-					l_file.read_stream (l_file.count)
-					l_file.close
-					Result := compile_assembly_from_source (a_options, l_file.last_string)
+				if (create {RAW_FILE}.make (a_file_name)).exists then
+					Result := compile_assembly_from_source (a_options, file_content (a_file_name))
 				else
 					create Result.make (a_options.temp_files)
 					l_res := Result.errors.add (create {SYSTEM_DLL_COMPILER_ERROR}.make_with_file_name ("", 0, 0, "0", "Source file is missing"))
@@ -140,7 +135,7 @@ feature -- Basic Operations
 			non_void_file_names: a_file_names /= Void
 		local
 			i, l_count: INTEGER
-			l_file: PLAIN_TEXT_FILE
+			l_file_name: STRING
 			l_res: SYSTEM_OBJECT
 		do
 			if Access_mutex.wait_one then
@@ -153,12 +148,9 @@ feature -- Basic Operations
 					until
 						i = l_count
 					loop
-						create l_file.make (a_file_names.item (i))
-						if l_file.exists then
-							l_file.open_read
-							l_file.read_stream (l_file.count)
-							l_file.close
-							source_generator.generate (l_file.last_string)
+						l_file_name := a_file_names.item (i)
+						if (create {RAW_FILE}.make (l_file_name)).exists then
+							source_generator.generate (file_content (l_file_name))
 						else
 							Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_source_file, [a_file_names.item (i)])
 						end
@@ -260,7 +252,7 @@ feature -- Basic Operations
 		end
 
 feature {NONE} -- Implementation
-		
+
 	initialize (a_options: SYSTEM_DLL_COMPILER_PARAMETERS) is
 			-- Initialize compilation settings from `a_options'.
 		require
@@ -292,7 +284,7 @@ feature {NONE} -- Implementation
 				else
 					set_temp_files (a_options.temp_files)
 				end
-				
+
 				l_temp_dir := temp_files.temp_dir
 				if l_temp_dir.item (l_temp_dir.count) = Directory_separator then
 					l_temp_dir.keep_head (l_temp_dir.count - 1)
@@ -300,15 +292,15 @@ feature {NONE} -- Implementation
 				if not {SYSTEM_DIRECTORY}.exists (l_temp_dir) then
 					l_res := {SYSTEM_DIRECTORY}.create_directory (l_temp_dir)
 				end
-				
+
 				-- Initialize `compilation_directory' and `source_generator'
 				compilation_directory := l_temp_dir
 				create source_generator.make (compilation_directory)
-				
+
 				-- Finally initialize compiler
 				create l_ace_file.make
  				ace_file_path := temp_files.add_extension ("ace")
-				
+
 				if a_options.output_assembly /= Void then
 					system_path := a_options.output_assembly
 				end
@@ -324,9 +316,9 @@ feature {NONE} -- Implementation
 					l_system_name.keep_head (l_system_name.count - 4)
 				end
 				l_ace_file.set_system_name (l_system_name)
-				
+
 				create l_cluster.make ("root_cluster", compilation_directory)
-					
+
 				l_root_class := Compilation_context.root_class_name
 				l_creation_routine := Compilation_context.root_creation_routine_name
 				if l_root_class = Void or else l_root_class.is_empty then
@@ -346,7 +338,7 @@ feature {NONE} -- Implementation
 									l_creation_routines.after or l_found
 								loop
 									l_arguments := l_creation_routines.item_for_iteration.arguments
-									l_found := l_arguments = Void or else l_arguments.is_empty 
+									l_found := l_arguments = Void or else l_arguments.is_empty
 									if l_found then
 										l_creation_routine := l_creation_routines.item_for_iteration.eiffel_name
 									end
@@ -370,17 +362,17 @@ feature {NONE} -- Implementation
 				if not l_root_class.is_equal ("ANY") and not l_root_class.is_equal ("NONE") and l_creation_routine /= Void then
 					l_ace_file.set_root_creation_routine_name (l_creation_routine)
 				end
-		
+
 				l_ace_file.set_console_application (a_options.generate_executable)
-		
+
 				l_ace_file.set_target_clr_version (Clr_version)
-				
+
 				-- Setup Precompile
 				l_precompile_file := Compilation_context.precompile_file
 					-- Was there a snippet defined precompile file?
 				if l_precompile_file = Void then
 					l_precompile_file := precompile_ace_file
-						-- Otherwise use configuration precompile file 
+						-- Otherwise use configuration precompile file
 				end
 				if l_precompile_file /= Void then
 					create l_precompiler.make (l_precompile_file, precompile_cache)
@@ -416,15 +408,15 @@ feature {NONE} -- Implementation
 								Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_assembly, [l_assembly_file_name])
 							end
 						end
-						i := i + 1		
+						i := i + 1
 					end
 				elseif l_precompiler = Void or else not l_precompiler.successful then
 					add_default_assemblies
 				end
-				
+
 				-- Complete list of referenced assemblies so all required assemblies are listed
 				Referenced_assemblies.complete
-				
+
 					-- Remove precompile referenced assemblies
 				if l_precompiler /= Void and then l_precompiler.successful then
 						-- Only add references not already in precompile
@@ -455,7 +447,7 @@ feature {NONE} -- Implementation
 						l_references_list.forth
 					end
 				end
-				
+
 
 				-- Only add base clusters if requires
 				create l_cluster.make ("base", "$ISE_EIFFEL\library\base")
@@ -465,12 +457,12 @@ feature {NONE} -- Implementation
 				l_cluster.add_exclude_clause ("classic")
 				l_cluster.set_is_library
 				l_ace_file.add_cluster (l_cluster)
-				
+
 				create l_cluster.make ("base_net", "$ISE_EIFFEL\library.net\base")
 				l_cluster.set_namespace ("EiffelSoftware.Library.BaseNet")
 				l_cluster.set_is_library
 				l_ace_file.add_cluster (l_cluster)
-				
+
 				create l_cluster.make ("codedom", "$ISE_EIFFEL\library.net\codedom")
 				l_cluster.set_namespace ("EiffelSoftware.Library.CodeDom")
 				l_cluster.set_is_library
@@ -486,7 +478,7 @@ feature {NONE} -- Implementation
 					l_ace_file.add_assembly (create {CODE_ACE_ASSEMBLY}.make (l_assembly.cluster_name, l_assembly.assembly.location, l_assembly.assembly_prefix))
 					Referenced_assemblies.forth
 				end
-				
+
 				-- Setup resource file
 				if a_options.win_32_resource /= Void then
 					l_resource_file := compilation_directory + Directory_separator.out + l_system_name + ".rc"
@@ -495,14 +487,14 @@ feature {NONE} -- Implementation
 						temp_files.add_file (l_resource_file, False)
 					end
 				end
-				
+
 				-- Setup miscelleaneous settings
 				if compiler_metadata_cache /= Void then
 					l_ace_file.set_metadata_cache_path (compiler_metadata_cache)
 				end
-	
+
 				l_ace_file.set_generate_debug_info (a_options.include_debug_information)
-				
+
 				l_ace_file.write (ace_file_path)
 				load_result_in_memory := a_options.generate_in_memory
 				cleanup -- to avoid error if a .epr file already exists in project folder
@@ -518,7 +510,7 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-	
+
 	compile is
 			-- Compile all `.e' files in directory `compilation_directory'.
 			-- Put resulting dlls and pdb in `system_path' folder.
@@ -575,7 +567,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_results: last_compilation_results /= Void
 		end
-		
+
 	check_compilation_result is
 			-- Check that assembly was created.
 			-- Set native compiler result and compiled assembly accordingly.
@@ -612,7 +604,7 @@ feature {NONE} -- Implementation
 						loop
 							l_file := l_files.item
 							if has_extension (l_file, "dll") or has_extension (l_file, "exe") or has_extension (l_file, "pdb") then
-								copy_file (l_dir_name + Directory_separator.out + l_file, l_system_dir + Directory_separator.out + l_file)									
+								copy_file (l_dir_name + Directory_separator.out + l_file, l_system_dir + Directory_separator.out + l_file)
 							end
 							l_files.forth
 						end
@@ -651,7 +643,7 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-		
+
 	cleanup is
 			-- Cleanup compiler generated temporary files (EIFGEN directory and .epr file)
 		local
@@ -690,7 +682,7 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-		
+
 	read_output is
 			-- Read output from `output_stream'.
 			-- Set result in `compiler_output'.
@@ -699,7 +691,7 @@ feature {NONE} -- Implementation
 		do
 			compiler_output := output_stream.read_to_end
 		end
-		
+
 	read_error is
 			-- Read output from `error_stream'.
 			-- Set result in `compiler_error'.
@@ -708,7 +700,27 @@ feature {NONE} -- Implementation
 		do
 			compiler_error := error_stream.read_to_end
 		end
-	
+
+	file_content (a_file_name: STRING): STRING is
+			-- Content of file `a_file_name', encoding can be unicode UTF-16.
+		require
+			attached_file_name: a_file_name /= Void
+		local
+			l_reader: STREAM_READER
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_reader.make_from_path (a_file_name)
+				Result := l_reader.read_to_end
+			end
+		ensure
+			attached_content: Result /= Void
+		rescue
+			l_retried := True
+			Result := ""
+			retry
+		end
+
 feature {NONE} -- Private access
 
 	Code_generator_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS is
@@ -729,7 +741,7 @@ feature {NONE} -- Private access
 
 	system_path: STRING
 			-- Path to compiled assembly
-	
+
 	load_result_in_memory: BOOLEAN
 			-- Should compiled assembly be loaded in memory?
 

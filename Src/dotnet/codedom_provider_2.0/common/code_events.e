@@ -121,9 +121,9 @@ feature {NONE} -- Implementation
 						Not_implemented)
 			Result.extend (["Not Supported", "general", "Construct is not supported: {1}", Error],
 						Not_supported)
-			Result.extend (["Missing Setup Key", "general", "Setup keys are missing, installation corrupted", Error],
+			Result.extend (["Missing Setup Key", "general", "Setup keys are missing, corrupt installation", Error],
 						Missing_setup_key)
-			Result.extend (["Missing installation directory", "general", "Installation directory missing from setup keys, installation corrupted", Error],
+			Result.extend (["Missing installation directory", "general", "Installation directory missing from setup keys, corrupt installation", Error],
 						Missing_installation_directory)
 			Result.extend (["Missing Default Configuration Settings", "general", "No default configuration information could be found", Error],
 						Missing_default_config)
@@ -133,10 +133,12 @@ feature {NONE} -- Implementation
 						Cannot_load_type)
 			Result.extend (["Corrupt Installation", "general", "Installation of Codedom Provider is corrupt, please reinstall", Error],
 						Corrupt_installation)
-			Result.extend (["Missing Compiler Key", "general", "Compiler keys are missing, installation corrupted", Error],
+			Result.extend (["Missing Compiler Key", "general", "Compiler keys are missing, corrupt installation", Error],
 						Missing_compiler_key)
-			Result.extend (["Missing ISE_EIFFEL", "general", "ISE_EIFFEL value is not defined, installation corrupted", Error],
+			Result.extend (["Missing ISE_EIFFEL", "general", "ISE_EIFFEL value is not defined, corrupt installation", Error],
 						Missing_ise_eiffel)
+			Result.extend (["Missing ISE_PLATFORM", "general", "ISE_PLATFORM value is not defined, corrupt installation", Error],
+						Missing_ise_platform)
 
 			-- General Warning
 			Result.extend (["Incorrect Result", "general", "The operation returned an incorrect value: {1}", Warning],

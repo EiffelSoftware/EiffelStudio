@@ -120,9 +120,6 @@ rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif	/* EIF_NO_SCAVENGING */
 #endif	/* VXWORKS */
 
-#ifndef VXWORKS  /* In the case of VxWorks, the declaration and 
-					initialization of scount is added by finish_freezing
-					to the file E1/ececil.c (paulv) */
 /*
 doc:	<attribute name="scount" return_type="int" export="public">
 doc:		<summary>Number of dynamic types in system.</summary>
@@ -132,7 +129,6 @@ doc:		<synchronization>None since initialized in `eplug.c' from generated C code
 doc:	</attribute>
 */
 rt_public int scount;						/* Number of dynamic types */
-#endif
 
 /*
 doc:	<attribute name="esystem" return_type="struct cnode *" export="public">

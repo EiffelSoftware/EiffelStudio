@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_PARTIAL_TREE_STORE
+		export
+			{NONE} all
+		end
+
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_base_reference_expression (a_source: SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION) is
@@ -23,7 +28,6 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			a_base_reference_expression: CODE_BASE_REFERENCE_EXPRESSION
 		do
-			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 			create a_base_reference_expression.make
 			set_last_expression (a_base_reference_expression)
 		ensure
@@ -168,8 +172,26 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
+		local
+			l_value: STRING
 		do
-			set_last_expression (create {CODE_SNIPPET_EXPRESSION}.make (a_source.value))
+			if a_source.value /= Void then
+				l_value := a_source.value
+				if partial_tree_store.is_valid_id (l_value) then
+					partial_tree_store.search_expression (l_value)
+					if partial_tree_store.expression_found then
+						-- This expression corresponds to a expression that was stored
+						-- through a call to `code_generator.generate_code_from_expression'
+						code_dom_generator.generate_expression_from_dom (partial_tree_store.found_expression)
+					else
+						set_last_expression (create {CODE_SNIPPET_EXPRESSION}.make (l_value))
+					end
+				else
+					set_last_expression (create {CODE_SNIPPET_EXPRESSION}.make (l_value))
+				end
+			else
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
+			end
 		ensure
 			non_void_last_expression: last_expression /= Void
 		end		

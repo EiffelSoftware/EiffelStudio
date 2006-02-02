@@ -43,11 +43,10 @@ feature -- Access
 			end
 			create Result.make (120)
 			Result.append (Indent_string)
-			Result.append ("Result")
 			set_new_line (False)
 			l_cast_exp ?= expression
 			if l_cast_exp /= Void then
-				Result.append (" := ")
+				Result.append ("Result := ")
 				Result.append (expression.code)
 			else
 				l_object_creation_exp ?= expression
@@ -55,7 +54,7 @@ feature -- Access
 					l_object_creation_exp.set_target ("Result")
 					Result.append (l_object_creation_exp.code)	
 				else
-					Result.append (" := ")
+					Result.append ("Result := ")
 					Result.append (expression.code)
 				end
 			end

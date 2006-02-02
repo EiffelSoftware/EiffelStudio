@@ -11,32 +11,33 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			preference, 
+			preference,
 			set_preference,
 			change_item_widget,
-			update_changes
+			update_changes,
+			refresh
 		end
-		
+
 create
 	make,
 	make_with_preference
 
 feature -- Status Setting
-	
+
 	set_preference (new_preference: like preference) is
 			-- Set the preference.
 		do
 			Precursor (new_preference)
 		end
-		
+
 feature -- Access
 
 	graphical_type: STRING is
 			-- Graphical type identifier.
 		do
 			Result := "COLOR"
-		end	
-		
+		end
+
 	preference: COLOR_PREFERENCE
 			-- Actual preference.
 
@@ -58,8 +59,8 @@ feature {PREFERENCE_VIEW} -- Commands
 			color_tool.set_color (preference.value)
 			color_tool.ok_actions.extend (agent update_changes)
 			color_tool.show_modal_to_window (caller.parent_window)
-		end 
-		
+		end
+
 feature {NONE} -- Commands
 
 	update_changes is
@@ -73,22 +74,30 @@ feature {NONE} -- Commands
 			last_selected_value := color
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
-			end	
+			end
 			Precursor {PREFERENCE_WIDGET}
 		end
-		
+
 	update_preference is
 			-- Updates preference.
 		do
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
-			end	
-		end		
+			end
+		end
 
 	show is
 			-- Show the widget in its editable state.
 		do
 			show_change_item_widget
+		end
+
+	refresh is
+		do
+			Precursor {PREFERENCE_WIDGET}
+			if change_item_widget.parent /= Void then
+				change_item_widget.redraw
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -98,9 +107,9 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			change_item_widget.expose_actions.extend (agent on_color_item_exposed (?))
-			change_item_widget.set_data (preference)			
+			refresh
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
-		end	
+		end
 
 	show_change_item_widget is
 			-- Show the change color dialog.
@@ -109,7 +118,7 @@ feature {NONE} -- Implementation
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
 			end
-		end		
+		end
 
 	on_color_item_exposed (area: EV_DRAWABLE) is
 			-- Expose part of color preference value item.
@@ -117,18 +126,18 @@ feature {NONE} -- Implementation
 			l_y: INTEGER
 		do
 				-- Write the text
-			if change_item_widget.row.is_selected then				
+			if change_item_widget.row.is_selected then
 				area.set_foreground_color (change_item_widget.parent.focused_selection_color)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (20, 1, preference.string_value)					
+				area.draw_text_top_left (20, 1, preference.string_value)
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (20, 1, preference.string_value)					
-			end			
-			
+				area.draw_text_top_left (20, 1, preference.string_value)
+			end
+
 				-- Draw the little color box border
 			if change_item_widget.parent.is_row_height_fixed then
 				l_y := (change_item_widget.parent.row_height // 2 - 6)
@@ -137,11 +146,11 @@ feature {NONE} -- Implementation
 			end
 			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
 			area.draw_rectangle (1, l_y, 12, 12)
-			
+
 				-- Draw the little color box internal color
 			area.set_foreground_color (preference.value)
-			area.fill_rectangle (2, l_y + 1, 10, 10)			
-		end		
+			area.fill_rectangle (2, l_y + 1, 10, 10)
+		end
 
 	color_tool: EV_COLOR_DIALOG;
 			-- Color Palette from which we can select a color.

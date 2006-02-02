@@ -17,7 +17,7 @@ inherit
 			set_preference,
 			change_item_widget,
 			update_changes,
-			reset
+			refresh
 		end
 
 create
@@ -25,7 +25,7 @@ create
 	make_with_preference
 
 feature -- Access
-	
+
 	change_item_widget: EV_GRID_COMBO_ITEM
 			-- Widget to change the value of this preference.
 
@@ -33,10 +33,10 @@ feature -- Access
 			-- Graphical type identfier
 		do
 			Result := "COMBO"
-		end	
+		end
 
 feature -- Status Setting
-	
+
 	set_preference (new_preference: like preference) is
 			-- Set the preference.
 		require else
@@ -78,24 +78,24 @@ feature {NONE} -- Command
 				else
 					l_value.append (l_item)
 				end
-				l_cnt := l_cnt + 1				
+				l_cnt := l_cnt + 1
 				l_value.append_character (';')
 			end
-			preference.set_value_from_string (l_value)			
+			preference.set_value_from_string (l_value)
 			Precursor {PREFERENCE_WIDGET}
 		end
 
 	update_preference is
 			--	Update preference.	
-		do			
-		end		
+		do
+		end
 
-	reset is
+	refresh is
 			-- Reset.
 		do
 			Precursor {PREFERENCE_WIDGET}
-			set_preference (preference)
-		end		
+			change_item_widget.set_text (preference.selected_value)
+		end
 
 feature {NONE} -- Implementation
 
@@ -104,11 +104,11 @@ feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		do		
-			create change_item_widget			
+		do
+			create change_item_widget
 			change_item_widget.set_item_strings (preference.value)
-			change_item_widget.set_text (preference.selected_value)			
-			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)		
+			change_item_widget.set_text (preference.selected_value)
+			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 		end
 

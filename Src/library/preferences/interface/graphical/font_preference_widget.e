@@ -11,10 +11,11 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			preference, 
+			preference,
 			set_preference,
 			change_item_widget,
-			update_changes
+			update_changes,
+			refresh
 		end
 
 create
@@ -22,7 +23,7 @@ create
 	make_with_preference
 
 feature -- Status Setting
-	
+
 	set_preference (new_preference: like preference) is
 			-- Set the preference.
 		do
@@ -35,7 +36,7 @@ feature -- Access
 			-- Graphical type identifier.
 		do
 			Result := "FONT"
-		end	
+		end
 
 	preference: FONT_PREFERENCE
 			-- Actual preference.
@@ -45,7 +46,7 @@ feature -- Access
 
 	change_item_widget: EV_GRID_LABEL_ITEM
 			-- Font change label.
-	
+
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is
@@ -61,7 +62,7 @@ feature {PREFERENCE_VIEW} -- Commands
 			font_tool.ok_actions.extend (agent update_changes)
 			font_tool.cancel_actions.extend (agent cancel_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
-		end 
+		end
 
 feature {NONE} -- Commands
 
@@ -74,10 +75,7 @@ feature {NONE} -- Commands
 			l_font := last_selected_value.twin
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
-				l_font := preference.value.twin
-				l_font.set_height_in_points (default_font_height)
-				change_item_widget.set_font (l_font)
-				change_item_widget.set_text (preference.string_value)
+				refresh
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
@@ -92,37 +90,42 @@ feature {NONE} -- Commands
 			-- Update preference to reflect recently chosen value
 		do
 			if last_selected_value /= Void then
-				preference.set_value (last_selected_value)	
+				preference.set_value (last_selected_value)
 			end
-		end		
+		end
 
 	show is
 			-- Show the widget in its editable state
-		do			
+		do
 			show_change_item_widget
+		end
+
+	refresh is
+		local
+			l_font: EV_FONT
+		do
+			Precursor {PREFERENCE_WIDGET}
+			l_font := preference.value.twin
+			l_font.set_height_in_points (default_font_height)
+			change_item_widget.set_font (l_font)
+			change_item_widget.set_text (preference.string_value)
 		end
 
 feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		local
-			l_font: EV_FONT
 		do
 			create change_item_widget
-			change_item_widget.set_text (preference.string_value)
-			
-			l_font := preference.value.twin
-			l_font.set_height_in_points (default_font_height)
-			change_item_widget.set_font (l_font)
+			refresh
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
-		
+
 	show_change_item_widget is
 			-- Show the font change dialog.
 		do
-			change			
-		end		
+			change
+		end
 
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.

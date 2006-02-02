@@ -20,13 +20,13 @@ feature -- Access
 			-- String representation of `value'.
 		do
 			Result := value.twin
-		end	
-		
+		end
+
 	string_type: STRING is
 			-- String description of this preference type.
 		once
 			Result := "STRING"
-		end	
+		end
 
 feature -- Query
 
@@ -37,6 +37,14 @@ feature -- Query
 			Result := True
 		end
 
+feature -- Change
+
+	set_value_from_string (a_value: STRING) is
+			-- Parse the string value `a_value' and set `value'.
+		do
+			set_value (a_value)
+		end
+
 feature {PREFERENCES} -- Access
 
 	generating_preference_type: STRING is
@@ -44,20 +52,14 @@ feature {PREFERENCES} -- Access
 		once
 			Result := "TEXT"
 		end
-	
-feature {NONE} -- Implementation
 
-	set_value_from_string (a_value: STRING) is
-			-- Parse the string value `a_value' and set `value'.
-		do		
-			set_value (a_value)
-		end
+feature {NONE} -- Implementation
 
 	auto_default_value: STRING is
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
 			create Result.make_empty
-		end	
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

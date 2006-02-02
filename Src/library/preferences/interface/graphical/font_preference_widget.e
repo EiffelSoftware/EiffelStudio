@@ -12,7 +12,6 @@ inherit
 	PREFERENCE_WIDGET
 		redefine
 			preference,
-			set_preference,
 			change_item_widget,
 			update_changes,
 			refresh
@@ -21,14 +20,6 @@ inherit
 create
 	make,
 	make_with_preference
-
-feature -- Status Setting
-
-	set_preference (new_preference: like preference) is
-			-- Set the preference.
-		do
-			Precursor (new_preference)
-		end
 
 feature -- Access
 
@@ -42,20 +33,20 @@ feature -- Access
 			-- Actual preference.
 
 	last_selected_value: EV_FONT
-			-- Value last selected by user.
+			-- value last selected by user.
 
-	change_item_widget: EV_GRID_LABEL_ITEM
-			-- Font change label.
+	change_item_widget: ev_grid_label_item
+			-- font change label.
 
-feature {PREFERENCE_VIEW} -- Commands
+feature {preference_view} -- commands
 
 	change is
-			-- Change the value.
+			-- change the value.
 		require
 			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
-				-- Create Font Tool.
+				-- create font tool.
 			create font_tool
 			font_tool.set_font (preference.value)
 
@@ -68,11 +59,8 @@ feature {NONE} -- Commands
 
 	update_changes is
 			-- Commit the result of Font Tool.
-		local
-			l_font: EV_FONT
 		do
 			last_selected_value := font_tool.font
-			l_font := last_selected_value.twin
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
 				refresh
@@ -134,6 +122,7 @@ feature {NONE} -- Implementation
 			-- Default font height in points (for display only)
 
 indexing
+
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -143,8 +132,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class FONT_PREFERENCE_WIDGET

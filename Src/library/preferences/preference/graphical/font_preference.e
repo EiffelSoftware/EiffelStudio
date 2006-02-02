@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_height (s: STRING) is
-			-- Set `height' according to `s'.
+			-- Set `height' according to `s'
 		require
 			not_void: s /= Void
 		do

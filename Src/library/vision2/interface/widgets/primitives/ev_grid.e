@@ -477,6 +477,24 @@ feature -- Access
 			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
 		end
 
+	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW is
+			-- Row at virtual y position `a_virtual_y'.
+		require
+			not_destroyed: not is_destroyed
+			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
+		do
+			Result := implementation.row_at_virtual_position (a_virtual_y, ignore_locked_rows)
+		end
+
+	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN is
+			-- Column at virtual x position `a_virtual_x'.
+		require
+			not_destroyed: not is_destroyed
+			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
+		do
+			Result := implementation.column_at_virtual_position (a_virtual_x)
+		end
+
 	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
 			-- All columns selected in `Current'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.
@@ -814,18 +832,6 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
-			-- Row indexes that are currently viewable in the grid in its present state.
-			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
-			-- would be 1, 11, 12, 13, 14, ...
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.viewable_row_indexes
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
@@ -932,6 +938,26 @@ feature -- Access
 			not_is_destroyed: not is_destroyed
 		do
 			Result := implementation.is_locked
+		end
+
+	locked_rows: ARRAYED_LIST [EV_GRID_ROW] is
+			-- All rows locked within `Current' in order of locking.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.locked_rows
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	locked_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+			-- All columns locked within `Current' in order of locking.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.locked_columns
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Status setting
@@ -1879,6 +1905,18 @@ feature -- Status report
 			tree_not_enabled_implies_visible_rows_contiguous: row_count > 0 and then not is_tree_enabled implies Result.last - Result.first = Result.count - 1
 		end
 
+	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+			-- Indexes of all rows that are currently viewable in the grid in its present state.
+			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
+			-- would be 1, 11, 12, 13, 14, ...
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.viewable_row_indexes
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	visible_column_indexes: ARRAYED_LIST [INTEGER] is
 			-- All columns that are currently visible in `Current'.
 			-- `Result' may not be contiguous if one or more columns are hidden.
@@ -2406,18 +2444,14 @@ feature {NONE} -- Implementation
 		end
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
-

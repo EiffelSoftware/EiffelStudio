@@ -40,8 +40,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
-feature {EV_ANY} -- Initialization
-
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -85,7 +83,11 @@ feature -- Access
 		require
 			parented: parent /= Void
 		do
-			Result := column_i.virtual_x_position
+			if column_locked_but_not_obscured_by_locked_row then
+				Result := column_i.virtual_x_position
+			else
+				Result := column_i.virtual_x_position_unlocked
+			end
 			if parent_i /= Void then
 				Result := Result + parent_i.item_indent (Current)
 			end
@@ -99,7 +101,11 @@ feature -- Access
 		require
 			parented: parent /= Void
 		do
-			Result := row_i.virtual_y_position
+			if row_locked_but_not_obscured_by_locked_column then
+				Result := row_i.virtual_y_position
+			else
+				Result := row_i.virtual_y_position_unlocked
+			end
 		ensure
 			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
@@ -525,6 +531,30 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+	row_locked_but_not_obscured_by_locked_column: BOOLEAN is
+			-- Is `row' locked and above `column' if also locked?
+		do
+			if row_i.is_locked then
+				if not column_i.is_locked then
+					Result := True
+				else
+					Result := row_i.locked_row.locked_index > column_i.locked_column.locked_index
+				end
+			end
+		end
+
+	column_locked_but_not_obscured_by_locked_row: BOOLEAN is
+			-- Is `column' locked and above `row' if also locked?
+		do
+			if column_i.is_locked then
+				if not row_i.is_locked then
+					Result := True
+				else
+					Result := column_i.locked_column.locked_index > row_i.locked_row.locked_index
+				end
+			end
+		end
+
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
@@ -536,7 +566,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			focused: BOOLEAN
 		do
 				-- Retrieve properties from interface
-			focused := parent_i.drawable.has_focus
+			focused := parent_i.drawables_have_focus
 
 			drawable.set_copy_mode
 			back_color := displayed_background_color
@@ -628,20 +658,16 @@ invariant
 	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
 	hash_code_valid: is_initialized implies ((not is_parented and hash_code = -1) or (is_parented and then hash_code > 0))
 
-
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
 

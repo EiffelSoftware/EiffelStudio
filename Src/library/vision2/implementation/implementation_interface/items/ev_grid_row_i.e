@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
-feature {EV_ANY} -- Initialization
-
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -336,6 +334,22 @@ feature -- Access
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do
+			if is_locked then
+				Result := parent_i.internal_client_y + locked_row.offset
+			else
+				Result := virtual_y_position_unlocked
+			end
+		ensure
+			parent_void_implies_result_zero: parent = Void implies Result = 0
+		end
+
+	virtual_y_position_unlocked: INTEGER is
+			-- Vertical offset of unlocked position of `Current', in relation to the
+			-- virtual area of `parent' grid in pixels.
+			-- If not `is_locked', then `virtual_y_position' = `unlocked_virtual_y_position'.
+			-- If `is_locked' then `Result' is the "shadow" position where the row would
+			-- be if not locked.
+		do
 			if parent_i /= Void then
 					-- If there is no parent then return 0.
 
@@ -363,6 +377,10 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	locked_row: EV_GRID_LOCKED_ROW_I
+		-- Locked row information for `Current'.
+		-- `Void' if not locked.
 
 	subrow_count: INTEGER is
 			-- Number of children.
@@ -450,7 +468,59 @@ feature -- Status report
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 
+	is_locked: BOOLEAN
+			-- Is `Current' locked so that it no longer scrolls?
+			-- Note that this could be implemented as a function
+			-- "Result := parent_i.locked_rows.item (index) /= Void" but this has not been done
+			-- so for performance reasons.
+
+	locked_position: INTEGER is
+			-- Locked position of `Current' from top edge of viewable area of `parent'.
+			-- `Result' is 0 if not `is_locked'.
+		do
+			if is_locked then
+				Result := locked_row.offset
+			end
+		ensure
+			not_locked_implies_result_zero: not is_locked implies result = 0
+		end
+
 feature -- Status setting
+
+	lock_at_position (a_position: INTEGER) is
+			-- Ensure `is_locked' is `True' with the vertical offset from
+			-- the top edge of the viewable area of `parent' set to `a_position'.
+		do
+			if is_locked then
+				unlock
+			end
+			is_locked := True
+			create locked_row.make (parent_i, a_position, Current)
+			locked_row.set_locked_index (parent_i.locked_indexes.count + 1)
+			parent_i.locked_indexes.extend (locked_row)
+			parent_i.reposition_locked_row (Current)
+			parent_i.redraw_row (Current)
+			if parent_i.item_pebble_function /= Void then
+				locked_row.drawing_area.set_pebble_function (agent parent_i.user_pebble_function_intermediary_locked (?, ?, locked_row))
+			end
+			locked_row.drawing_area.drop_actions.set_veto_pebble_function (agent parent_i.veto_pebble_function_intermediary)
+			locked_row.drawing_area.drop_actions.extend (agent parent_i.drop_action_intermediary)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = a_position
+		end
+
+	unlock is
+			-- Ensure `is_locked' is `False'.
+		do
+			if is_locked then
+				is_locked := False
+				parent_i.unlock_row (Current)
+				locked_row := Void
+			end
+		ensure
+			not_is_locked: not is_locked
+		end
 
 	expand is
 			-- Display all subrows of `Current'.
@@ -542,6 +612,9 @@ feature -- Status setting
 			if not parent_i.is_row_height_fixed then
 				parent_i.set_vertical_computation_required (index)
 				parent_i.redraw_from_row_to_end (Current)
+				if is_locked then
+					parent_i.reposition_locked_row (Current)
+				end
 			end
 		ensure
 			height_set: height = a_height
@@ -871,22 +944,25 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 	enable_select is
 			-- Select the object.
+		local
+			l_parent_i: like parent_i
 		do
 			if not is_selected then
-				if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
+				l_parent_i := parent_i
+				if l_parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
 					internal_is_selected := True
-					parent_i.add_row_to_selected_rows (Current)
-					if parent_i.row_select_actions_internal /= Void then
-						parent_i.row_select_actions_internal.call ([interface])
+					l_parent_i.add_row_to_selected_rows (Current)
+					if l_parent_i.row_select_actions_internal /= Void then
+						l_parent_i.row_select_actions_internal.call ([interface])
 					end
 					if select_actions_internal /= Void then
-						select_actions_internal.call ([Void])
+						select_actions_internal.call (Void)
 					end
 				else
 					internal_update_selection (True)
 				end
-				if parent_i /= Void then
-					parent_i.redraw_row (Current)
+				if l_parent_i /= Void then
+					l_parent_i.redraw_row (Current)
 				end
 			end
 		end
@@ -965,6 +1041,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			is_parented: parent /= Void
 		do
+			if is_locked then
+				unlock
+			end
 			clear
 				-- Make sure row is unselected from grid before removal
 			disable_select
@@ -1281,19 +1360,17 @@ invariant
 	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
 	subrows_not_void: is_initialized implies subrows /= Void
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = -1) or else (parent /= Void and then hash_code > 0))
+
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
 

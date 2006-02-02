@@ -14,11 +14,11 @@ inherit
 			{NONE} all
 		end
 
-	ECDS_SHARED_SETTINGS
+	ECDS_DOTNET_SERIALIZER
 		export
 			{NONE} all
 		end
-		
+
 create
 	default_create
 		
@@ -221,20 +221,6 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 			Result.append ("x")
 			Result.append (a_char.code.out)
-		end
-
-	serialize (a_graph: SYSTEM_OBJECT) is
-			-- Serialize object graph `a_graph'.
-		require
-			non_void_graph: a_graph /= Void
-		local
-			l_formatter: BINARY_FORMATTER
-			l_stream: FILE_STREAM
-		do
-			create l_stream.make (serialized_tree_location, {FILE_MODE}.Create_)
-			create l_formatter.make
-			l_formatter.serialize (l_stream, a_graph)
-			l_stream.close
 		end
 
 end -- class ECDS_PROVIDER

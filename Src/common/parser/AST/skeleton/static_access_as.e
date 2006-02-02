@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} feat_initialize
 		redefine
-			process, is_equivalent
+			process, is_equivalent, first_token
 		end
 
 	ATOMIC_AS
@@ -54,6 +54,13 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_static_access_as (Current)
+		end
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			Result := class_type.first_token (a_list)
 		end
 
 feature -- Roundtrip

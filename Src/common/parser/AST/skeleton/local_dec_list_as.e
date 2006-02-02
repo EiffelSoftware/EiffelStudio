@@ -17,6 +17,8 @@ feature{NONE} -- Initialization
 
 	make (l_as: like locals; k_as: like local_keyword) is
 			-- Initialize instance.
+		require
+			l_as_not_void: l_as /= Void
 		do
 			locals := l_as
 			local_keyword := k_as

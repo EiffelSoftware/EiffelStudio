@@ -7,13 +7,13 @@ indexing
 
 class
 	EV_GRID_DRAWER_I
-	
+
 inherit
 	REFACTORING_HELPER
-	
+
 create
 	make_with_grid
-	
+
 feature {NONE} -- Initialization
 
 	make_with_grid (a_grid: EV_GRID_I) is
@@ -32,7 +32,7 @@ feature -- Access
 	grid: EV_GRID_I
 
 feature -- Basic operations
-		
+
 	items_spanning_horizontal_span (an_x, a_width: INTEGER): ARRAYED_LIST [INTEGER] is
 			-- For a virtual position starting at `an_x' with a width of `a_width',
 			-- return all of the column indexes which intersect this width.
@@ -51,15 +51,15 @@ feature -- Basic operations
 			internal_client_width: INTEGER
 		do
 			create Result.make (20)
-			
+
 			physical_column_indexes := grid.physical_column_indexes
-		
+
 			internal_client_x := grid.internal_client_x
 			internal_client_width := grid.viewable_width
-			
+
 			horizontal_buffer_offset := grid.viewport_x_offset
-			
-			
+
+
 			if grid.column_count > 0 then
 					-- If the grid has no columns, then there may not be any column indexes
 					-- which span the area, so do nothing.
@@ -76,11 +76,11 @@ feature -- Basic operations
 
 					column_offsets := grid.column_offsets
 						-- Retriece the offsets of all columns from `grid'.
-						
-					
+
+
 						-- Calculate the columns that must be displayed.
 					from
-						column_offsets.start				
+						column_offsets.start
 					until
 						last_column_index_set or column_offsets.off
 					loop
@@ -109,7 +109,7 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	items_spanning_vertical_span (a_y, a_height: INTEGER): ARRAYED_LIST [INTEGER] is
 			-- For a virtual position starting at `a_y' with a height of `a_height',
 			-- return all of the row indexes which intersect this width.
@@ -129,7 +129,7 @@ feature -- Basic operations
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_height: INTEGER
 			skipped_rows: INTEGER
-			current_height: INTEGER			
+			current_height: INTEGER
 			l_row_count: INTEGER
 			start_pos: INTEGER
 			found: BOOLEAN
@@ -145,9 +145,9 @@ feature -- Basic operations
 			internal_client_height := grid.viewable_height
 
 			vertical_buffer_offset := grid.viewport_y_offset
-			
+
 			if not grid.header.is_empty then
-				
+
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := a_y
@@ -170,7 +170,7 @@ feature -- Basic operations
 							-- the grid as nodes may be expanded or collapsed.
 						first_row_index := (((invalid_y_start) // grid.row_height) + 1)
 						last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid_row_count)
-						
+
 						if first_row_index <= grid_row_count then
 							l_row_count := grid_row_count
 							from
@@ -203,13 +203,13 @@ feature -- Basic operations
 								end
 							end
 							start_pos := i - pre_search_iteration_size
-		
+
 								-- If the starting index has fallen within a tree structure,
 								-- we must start from the beginning of the root parent.
 							if start_pos <= grid_row_count and then grid.row_internal (start_pos).parent_row /= Void then
 								start_pos := grid.row_internal (start_pos).parent_row_root.index
 							end
-		
+
 							from
 								row_counter := start_pos
 								i := 0
@@ -223,7 +223,7 @@ feature -- Basic operations
 								else
 									current_height := current_row.height
 								end
-		
+
 								if not first_row_index_set and then (i + current_height) > (invalid_y_start) then
 									first_row_index := row_counter
 									first_row_index_set := True
@@ -231,7 +231,7 @@ feature -- Basic operations
 								if first_row_index_set then
 									Result.extend (row_counter)
 								end
-		
+
 								if not last_row_index_set and then (invalid_y_end) < i + current_height then
 									last_row_index := row_counter
 									last_row_index_set := True
@@ -241,7 +241,7 @@ feature -- Basic operations
 										-- is possible that the current row may not exist.
 									if current_row.subrow_count > 0 and not current_row.is_expanded then
 										if not first_row_index_set then
-											skipped_rows := skipped_rows + current_row.subrow_count_recursive	
+											skipped_rows := skipped_rows + current_row.subrow_count_recursive
 										end
 										row_counter := row_counter + current_row.subrow_count_recursive
 									end
@@ -258,11 +258,12 @@ feature -- Basic operations
 					first_row_index := grid_row_count
 				end
 			end
-			
+
+
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	item_at_virtual_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
 			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
 			-- left hand corner of the virtual size.
@@ -270,21 +271,31 @@ feature -- Basic operations
 			Result := item_at_position (an_x - grid.internal_client_x + grid.viewport_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
 		end
 
+	row_at_virtual_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I is
+			-- `Result' is row at virtual y position, `a_y' relative to the top
+			--  of the virtual size.
+		do
+			Result := row_at_position (a_y - grid.internal_client_y + grid.viewport_y_offset, ignore_locked_rows)
+		end
+
+	column_at_virtual_position (a_x: INTEGER): EV_GRID_COLUMN_I is
+			-- `Result' is row at virtual x position, `a_x' relative to the left
+			--  of the virtual size.
+		do
+			Result := column_at_position (a_x - grid.internal_client_x + grid.viewport_x_offset)
+		end
+
 	item_coordinates_at_position (an_x, a_y: INTEGER): EV_COORDINATE is
 			-- `Result' is coordinates of item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any. No checking of whether the item at this posibion is `Void'.
 		local
-			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
+
+			l_item_i: EV_GRID_ITEM_I
 		do
-			grid.perform_horizontal_computation
-			grid.perform_vertical_computation
-				-- Recompute vertical row heights and scroll bar positions before
-				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
-			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
-			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				create Result.make (horizontal_span_items.first, vertical_span_items.first)
+			l_item_i := item_at_position (an_x, a_y)
+			if l_item_i /= Void then
+				create Result.make (l_item_i.column_i.index, l_item_i.row_i.index)
 			end
 		end
 
@@ -297,48 +308,227 @@ feature -- Basic operations
 		do
 			grid.perform_horizontal_computation
 			grid.perform_vertical_computation
-				-- Recompute vertical row heights and scroll bar positions before
-				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
-			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
-			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
+			Result := locked_item_at_position (an_x, a_y)
+			if Result = Void then
+					-- Recompute vertical row heights and scroll bar positions before
+					-- querying the item positions
+				horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
+				vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
+				if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
+					Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
+					if Result /= Void then
+						if Result.column_i.is_locked or Result.row_i.is_locked then
+							Result := Void
+						end
+					end
+				end
 			end
 		end
-		
-	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
-			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
-			-- of the `grid.drawable' in which the grid is displayed. This version
-			-- returns `Void' if the pointed_part of the item is part of a tree node.
+
+	row_at_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I is
+			-- `Result' is row at position `a_y' relative to the top
+			-- of the `grid.drawable' in which the grid is displayed.
 		local
-			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
-			item_indent: INTEGER
+			vertical_span_items: ARRAYED_LIST [INTEGER]
 		do
 			grid.perform_horizontal_computation
 			grid.perform_vertical_computation
-				-- Recompute vertical row heights and scroll bar positions before
-				-- querying the item positions
-			horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
-			vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
-			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then
-				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first)
-				if Result /= Void then
-					item_indent := grid.item_indent (Result)
-					if an_x - Result.virtual_x_position < 0 then
+			if not ignore_locked_rows then
+				Result := locked_row_at_position (a_y)
+			end
+			if Result = Void then
+					-- Recompute vertical row heights and scroll bar positions before
+					-- querying the item positions
+				vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
+				if not vertical_span_items.is_empty then
+					Result := grid.row_internal (vertical_span_items.first)
+					if not ignore_locked_rows then
+						if Result.is_locked then
+							Result := Void
+						end
+					end
+				end
+			end
+		end
+
+	column_at_position (a_x: INTEGER): EV_GRID_COLUMN_I is
+			-- `Result' is column at position `a_x' relative to the left
+			-- of the `grid.drawable' in which the grid is displayed.
+		local
+			horizontal_span_items: ARRAYED_LIST [INTEGER]
+		do
+			grid.perform_horizontal_computation
+			grid.perform_vertical_computation
+			Result := locked_column_at_position (a_x)
+			if Result = Void then
+					-- Recompute vertical row heights and scroll bar positions before
+					-- querying the item positions
+				horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (a_x), 0)
+				if not horizontal_span_items.is_empty then
+					Result := grid.column_internal (horizontal_span_items.first)
+					if Result.is_locked then
 						Result := Void
 					end
 				end
 			end
 		end
-		
+
+	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
+			-- of the `grid.drawable' in which the grid is displayed. This version
+			-- returns `Void' if the pointed_part of the item is part of a tree node.
+		local
+			item_indent: INTEGER
+		do
+			Result := item_at_position (an_x, a_y)
+			if Result /= Void then
+				item_indent := grid.item_indent (Result)
+				if an_x - Result.virtual_x_position < 0 then
+					Result := Void
+				end
+			end
+		end
+
+	locked_item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+			-- `Result' is locked item at position `an_x', `a_y' relative to the top left corner
+			-- of the `grid.drawable' in which the grid is displayed.
+		local
+			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
+			locked_row: EV_GRID_LOCKED_ROW_I
+			locked_column: EV_GRID_LOCKED_COLUMN_I
+			row_height: INTEGER
+			column_width: INTEGER
+			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
+			intersection_found: BOOLEAN
+		do
+			locked_items := grid.locked_indexes
+
+				-- We iterate in reverse as we wish to find the topmost item
+				-- first, ignoring all those beneath
+			from
+				locked_items.finish
+			until
+				locked_items.off or intersection_found
+			loop
+				locked_row ?= locked_items.item
+				if locked_row /= Void then
+					if grid.is_row_height_fixed then
+						row_height := grid.row_height
+					else
+						row_height := locked_row.row_i.height
+					end
+					if a_y >= grid.viewport_y_offset + locked_row.offset and a_y < grid.viewport_y_offset + locked_row.offset + row_height then
+						intersection_found := True
+						horizontal_span_items := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), 0)
+						if not horizontal_span_items.is_empty then
+							Result := grid.item_internal (horizontal_span_items.first, locked_row.row_i.index)
+							if Result /= Void then
+								if Result.column_i.is_locked and Result.column_i.locked_column.locked_index > locked_row.locked_index then
+									Result := Void
+								end
+							end
+						end
+					end
+				else
+					locked_column ?= locked_items.item
+					if locked_column /= Void then
+						column_width := locked_column.column_i.width
+						if an_x >= grid.viewport_x_offset + locked_column.offset and an_x < grid.viewport_x_offset + locked_column.offset + column_width then
+							intersection_found := True
+							vertical_span_items := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), 0)
+							if not vertical_span_items.is_empty then
+								Result := grid.item_internal (locked_column.column_i.index, vertical_span_items.first)
+								if Result /= Void then
+									if Result.row_i.is_locked and Result.row_i.locked_row.locked_index > locked_column.locked_index then
+										Result := Void
+									end
+								end
+							end
+						end
+					end
+				end
+				locked_items.back
+			end
+		end
+
+	locked_row_at_position (a_y: INTEGER): EV_GRID_ROW_I is
+			-- `Result' is locked row at position `a_y' relative to the top
+			-- of the `grid.drawable' in which the grid is displayed.
+		local
+			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
+			locked_row: EV_GRID_LOCKED_ROW_I
+			row_height: INTEGER
+			intersection_found: BOOLEAN
+		do
+			locked_items := grid.locked_indexes
+
+				-- We iterate in reverse as we wish to find the topmost item
+				-- first, ignoring all those beneath
+			from
+				locked_items.finish
+			until
+				locked_items.off or intersection_found
+			loop
+				locked_row ?= locked_items.item
+				if locked_row /= Void then
+					if grid.is_row_height_fixed then
+						row_height := grid.row_height
+					else
+						row_height := locked_row.row_i.height
+					end
+					if a_y >= grid.viewport_y_offset + locked_row.offset and a_y < grid.viewport_y_offset + locked_row.offset + row_height then
+						Result := locked_row.row_i
+					end
+				end
+				locked_items.back
+			end
+		end
+
+	locked_column_at_position (an_x: INTEGER): EV_GRID_COLUMN_I is
+			-- `Result' is locked column at position `an_x' relative to the left
+			-- of the `grid.drawable' in which the grid is displayed.
+		local
+			locked_items: ARRAYED_LIST [EV_GRID_LOCKED_I]
+			locked_column: EV_GRID_LOCKED_COLUMN_I
+			column_width: INTEGER
+			intersection_found: BOOLEAN
+		do
+			locked_items := grid.locked_indexes
+
+				-- We iterate in reverse as we wish to find the topmost item
+				-- first, ignoring all those beneath
+			from
+				locked_items.finish
+			until
+				locked_items.off or intersection_found
+			loop
+				locked_column ?= locked_items.item
+				if locked_column /= Void then
+					column_width := locked_column.column_i.width
+					if an_x >= grid.viewport_x_offset + locked_column.offset and an_x < grid.viewport_x_offset + locked_column.offset + column_width then
+						Result := locked_column.column_i
+					end
+				end
+				locked_items.back
+			end
+		end
+
+
 	redraw_area_in_virtual_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the virtual area.
 		do
-			redraw_area_in_drawable_coordinates (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset, a_width, a_height)
+			redraw_area_in_drawable_coordinates_wrapper (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset, a_width, a_height)
 		end
 
-	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
+	redraw_area_in_drawable_coordinates_wrapper (an_x, a_y, a_width, a_height: INTEGER) is
+			--
+		do
+			redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height, grid.drawable, grid.viewport, Void)
+		end
+
+
+	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: EV_GRID_LOCKED_I) is
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the `drawable' widget of `grid'.
 --		require
@@ -351,10 +541,10 @@ feature -- Basic operations
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
-			
+
 			current_row_list: SPECIAL [EV_GRID_ITEM_I]
 			current_row: EV_GRID_ROW_I
-			
+
 			physical_column_indexes: SPECIAL [INTEGER]
 			first_column_index, first_row_index: INTEGER
 			last_column_index: INTEGER
@@ -384,7 +574,7 @@ feature -- Basic operations
 			node_pixmap_width, node_pixmap_height: INTEGER
 			parent_row_i: EV_GRID_ROW_I
 			l_pixmap: EV_PIXMAP
-			
+
 			row_vertical_center: INTEGER
 			row_vertical_bottom: INTEGER
 			vertical_node_pixmap_top_offset: INTEGER
@@ -400,17 +590,17 @@ feature -- Basic operations
 			tree_node_connector_color: EV_COLOR
 			grid_rows_data_list: EV_GRID_ARRAYED_LIST [SPECIAL [EV_GRID_ITEM_I]]
 			current_column: EV_GRID_COLUMN_I
-			drawable: EV_DRAWABLE
 			row_count, row_height: INTEGER
 			is_tree_enabled, is_content_partially_dynamic : BOOLEAN
 			first_item_in_row_drawn: BOOLEAN
 			current_parent_row: EV_GRID_ROW_I
 			v_y: INTEGER
-
+			locked_column: EV_GRID_LOCKED_COLUMN_I
+			locked_row: EV_GRID_LOCKED_ROW_I
 		do
 			if not grid.is_locked then
 				-- Perform no re-drawing if the update of the grid is locked.
-			
+
 				grid.reset_redraw_item_counter
 					-- Although this feature is connected to the `expose_actions' of a drawing area,
 					-- there is currently a bug/feature on Windows where it is possible for the Wm_paint
@@ -420,77 +610,98 @@ feature -- Basic operations
 				if a_width > 0 and a_height > 0 then
 					item_buffer_pixmap.set_copy_mode
 					dynamic_content_function := grid.dynamic_content_function
-					
+
 					grid.perform_horizontal_computation
 					grid.perform_vertical_computation
 						-- Recompute vertical row heights and scroll bar positions before
 						-- calculating the draw positions. The recomputation is only
 						-- performed internally if they are flagged as requiring a re-compute.
-					
+
 					create column_widths.make (8)
 					column_widths.extend (0)
-					
+
 					expand_pixmap := grid.expand_node_pixmap
 					collapse_pixmap := grid.collapse_node_pixmap
-		
+
 					are_tree_node_connectors_shown := grid.are_tree_node_connectors_shown
 					tree_node_connector_color := grid.tree_node_connector_color
-					
+
 					tree_node_spacing := grid.tree_node_spacing
 						-- Retrieve the spacing around each node.
-						
+
 						-- Retrieve properties for drawing from the grid.
 					node_pixmap_width := grid.node_pixmap_width
 					node_pixmap_height := expand_pixmap.height
 					standard_subrow_indent := grid.tree_subrow_indent
 					total_tree_node_width := grid.total_tree_node_width
 					first_tree_node_indent := grid.first_tree_node_indent
-	
-	
+
+
 					physical_column_indexes := grid.physical_column_indexes
-					
-					internal_client_x := grid.internal_client_x
-					internal_client_y := grid.internal_client_y
+
+					if locked = Void then
+						internal_client_x := grid.internal_client_x
+						internal_client_y := grid.internal_client_y
+					else
+						locked_column ?= locked
+						locked_row ?= locked
+						if locked_column /= Void then
+							internal_client_x := locked_column.column_i.virtual_x_position
+							internal_client_y := locked.internal_client_y
+						else
+							internal_client_y := locked_row.row_i.virtual_y_position
+							internal_client_x := locked.internal_client_x
+						end
+					end
 					internal_client_width := grid.viewable_width
 					internal_client_height := grid.viewable_height
-					
+
 					vertical_buffer_offset := grid.viewport_y_offset
 					horizontal_buffer_offset := grid.viewport_x_offset
-					drawable := grid.drawable
 					row_count := grid.row_count
 					is_tree_enabled := grid.is_tree_enabled
 					is_content_partially_dynamic := grid.is_content_partially_dynamic
 					row_height := grid.row_height
-					
-					
+
+
 					if row_count > 0 and grid.column_count > 0 then
 						column_offsets := grid.column_offsets
 						row_offsets := grid.row_offsets
-	
+
 							-- Note that here we need to remove 1 from `a_width' and `a_height' before
 							-- calculating the visible column and row indexes, as one of the pixels
 							-- is already included within the offset pixel.
-						visible_column_indexes := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), a_width - 1)
-						visible_row_indexes := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), a_height - 1)
+						if locked_column = Void then
+							visible_column_indexes := items_spanning_horizontal_span (drawable_x_to_virtual_x (an_x), a_width - 1)
+						else
+							create visible_column_indexes.make (1)
+							visible_column_indexes.extend (locked_column.column_i.index)
+						end
+						if locked_row = Void then
+							visible_row_indexes := items_spanning_vertical_span (drawable_y_to_virtual_y (a_y), a_height - 1)
+						else
+							create visible_row_indexes.make (1)
+							visible_row_indexes.extend (locked_row.row_i.index)
+						end
 						if not (visible_column_indexes.is_empty or visible_row_indexes.is_empty) then
 							first_column_index := visible_column_indexes.first
 							last_column_index := visible_column_indexes.last
-							
-							
+
+
 							first_row_index := visible_row_indexes.first
 							current_item_y_position := 0
-			
+
 							from
 								visible_row_indexes.start
 								grid_rows_data_list := grid.internal_row_data
 							until
 								visible_row_indexes.off
-							loop						
+							loop
 								current_row_index := visible_row_indexes.item
 									-- Retrieve information regarding the rows that we must draw.
 								current_row := grid.row_internal (current_row_index)
 								current_row_list := grid_rows_data_list @ (current_row_index)
-						
+
 								if grid.is_row_height_fixed and not is_tree_enabled then
 									current_item_y_position := (row_height * (current_row_index - 1)) - (internal_client_y - vertical_buffer_offset)
 									current_row_height := row_height
@@ -502,27 +713,27 @@ feature -- Basic operations
 										current_row_height := current_row.height
 									end
 								end
-								
+
 								if is_tree_enabled then
 									-- Only perform the following calculations if the tree is enabled
 									-- as otherwise, they are not required.
 									-- Note that `current_row' may be Void if we are in partially dynamic mode
 									-- and a tree is enabled. If subrows were set, it is not possible for `current_row' to be Void.
-								
+
 									parent_row_i := current_row.parent_row_i
-								
+
 									drawing_subrow := parent_row_i /= Void
 										-- Are we drawing a subrow of the tree?
-		
+
 									drawing_parentrow := current_row.is_expandable
 										-- Are we drawing a row that is a parent of other rows?
-									
+
 									if drawing_subrow or drawing_parentrow then
 										-- We are now about to draw a row that is a subrow of another row, so
 										-- perform any calculations required.
-	
+
 										node_index := retrieve_node_index (current_row)
-	
+
 										if drawing_subrow then
 											parent_node_index := retrieve_node_index (parent_row_i)
 											from
@@ -540,20 +751,20 @@ feature -- Basic operations
 									else
 										node_index := 1
 									end
-									
+
 										-- Now compute variables required for drawing tree structures.
 										-- Note that here we only compute the vertical variables because as each row
 										-- has a fixed height, they can be computed outside of the inner row iteration.
 										-- The horizontal offsets must be computed within the inner loop.
 									row_vertical_center := (current_row_height // 2)
 									row_vertical_bottom := current_row_height
-		
+
 									vertical_node_pixmap_top_offset := ((current_row_height - node_pixmap_height + 1)// 2)
 									vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
-	
+
 									current_subrow_indent := subrow_indent (current_row)
 								end
-								
+
 								from
 									visible_column_indexes.start
 									current_item_x_position := 0
@@ -567,26 +778,26 @@ feature -- Basic operations
 									current_column_index := visible_column_indexes.item
 									current_column := grid.columns @ current_column_index
 									current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
-	
+
 										-- If the current column has a width of 0, then there is no need to
 										-- perform any drawing. This is especially beneficial to dynamic content
 										-- in the grid as the dynamic content function is not called until
 										-- the width of the column necessitates this.
 									if current_column_width > 0 then
 										current_physical_column_index := physical_column_indexes.item (visible_column_indexes.item - 1)
-										
-										
+
+
 											-- Assume that there is no grid item at the current position.
 											-- It is not possible to simply set `grid_item' to Void within the loop as otherwise
 											-- this effectively inserts `Void' at the grid item's position within the grid's
 											-- data structures. So we use a BOOLEAN to determine this instead.
 										grid_item_exists := False
-				
+
 										if current_row_list /= Void and then current_physical_column_index < current_row_list.count then
 												-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
 												-- as the current contents of the grid are never used. We also check that the current row and
 												-- current row position are valid.
-												
+
 											grid_item := current_row_list @ (current_physical_column_index)
 												-- In this case, we have found the grid item so we flag this fact
 												-- so that the calculations for the partial dynamic content know that
@@ -595,15 +806,16 @@ feature -- Basic operations
 												grid_item_exists := True
 											end
 										end
-					
-										current_item_x_position  := (column_offsets @ (current_column_index)) - (internal_client_x - horizontal_buffer_offset)
-										
+
+
+										current_item_x_position := (column_offsets @ (current_column_index)) - (internal_client_x - horizontal_buffer_offset)
+
 										if is_content_partially_dynamic and then not grid_item_exists and dynamic_content_function /= Void then
 												-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 												-- the grid, then we execute this code.
-	
+
 											grid_item_interface := dynamic_content_function.item ([current_column_index, current_row_index])
-	
+
 													-- We now check that the set item is the same as the one returned. If you both
 													-- set an item and return a different item from the dynamic function, this is invalid
 													-- so the following check prevents this:
@@ -611,17 +823,17 @@ feature -- Basic operations
 												item_set_implies_set_item_is_returned_item: grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) /= Void
 													implies grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) = grid_item_interface.implementation
 											end
-											
+
 											if grid_item_interface /= Void then
 												grid_item := grid_item_interface.implementation
-	
+
 													-- Note that the item is added to the grid in both partial and complete dynamic modes.
 													-- It is possible that a user called `set_item' with the returned item, as well
 													-- as returning it, so in this case, we only call `set_item' if it was not set.
 												if grid.item (visible_column_indexes.item, visible_row_indexes.item) = Void then
 													grid.set_item (visible_column_indexes.item, visible_row_indexes.item, grid_item.interface)
 												end
-	
+
 												grid_item_exists := True
 											end
 												-- We must now recompute the tree status of the current row as during the
@@ -632,19 +844,19 @@ feature -- Basic operations
 												-- The overhead of this should not be too high, but it is unfortunate. Julian
 											if is_tree_enabled then
 												parent_row_i := current_row.parent_row_i
-											
+
 												drawing_subrow := parent_row_i /= Void
 													-- Are we drawing a subrow of the tree?
-					
+
 												drawing_parentrow := current_row.is_expandable
 													-- Are we drawing a row that is a parent of other rows?
-												
+
 												if drawing_subrow or drawing_parentrow then
 													-- We are now about to draw a row that is a subrow of another row, so
 													-- perform any calculations required.
-				
+
 													node_index := retrieve_node_index (current_row)
-				
+
 													if drawing_subrow then
 														parent_node_index := retrieve_node_index (parent_row_i)
 														from
@@ -662,23 +874,23 @@ feature -- Basic operations
 												else
 													node_index := 1
 												end
-												
+
 													-- Now compute variables required for drawing tree structures.
 													-- Note that here we only compute the vertical variables because as each row
 													-- has a fixed height, they can be computed outside of the inner row iteration.
 													-- The horizontal offsets must be computed within the inner loop.
 												row_vertical_center := (current_row_height // 2)
 												row_vertical_bottom := current_row_height
-					
+
 												vertical_node_pixmap_top_offset := ((current_row_height - node_pixmap_height + 1)// 2)
 												vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
-				
+
 												current_subrow_indent := subrow_indent (current_row)
 											end
-		
+
 												-- Now retrieve `current_row_list' again. This is because as an item is added,
 												-- the row list is resized, which produces a new object.
-											current_row_list := grid_rows_data_list @ (current_row_index)							
+											current_row_list := grid_rows_data_list @ (current_row_index)
 										end
 											-- Resize the bufer if required. The buffer is only every increased and never decreased
 											-- as this prevents us from having to continuously change its size, which is an
@@ -686,7 +898,7 @@ feature -- Basic operations
 										if item_buffer_pixmap.width < current_column_width or item_buffer_pixmap.height < current_row_height then
 											item_buffer_pixmap.set_size (current_column_width, current_row_height)
 										end
-		
+
 											-- Now compute horizontal variables for tree drawing.
 										if drawing_parentrow then
 											horizontal_node_pixmap_left_offset := current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
@@ -696,10 +908,10 @@ feature -- Basic operations
 											horizontal_node_pixmap_left_offset := current_column_width
 										end
 										node_pixmap_vertical_center := current_subrow_indent - (tree_node_spacing * 2) - (node_pixmap_width + 1) // 2
-		
+
 										current_tree_adjusted_item_x_position := current_item_x_position
 										current_tree_adjusted_column_width := current_column_width
-		
+
 										if grid_item_exists then
 											item_buffer_pixmap.set_foreground_color (grid_item.displayed_background_color)
 										else
@@ -708,7 +920,7 @@ feature -- Basic operations
 											-- Now draw the complete background area for the cell in the grid that is currently being drawn.
 											fixme (Once "For drawable grid items, there is no need to do this, preventing overdraw.")
 										item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
-		
+
 											-- Fire the `pre_draw_overlay_actions' which enable a user to draw on top of the background
 											-- but bloe the features of drawn grid items before they are displayed.
 										if grid.pre_draw_overlay_actions_internal /= Void then
@@ -718,16 +930,16 @@ feature -- Basic operations
 												grid.pre_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
 											end
 										end
-		
+
 										if is_tree_enabled then
-		
+
 											if current_column_index = node_index then
-		
+
 												current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
 												current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
 													-- We adjust the horizontal position and width of the current item by the space required
 													-- for the tree node.
-		
+
 													-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
 												if current_row.is_expandable then
 														-- Note we add 1 to account for rounding errors when odd values.
@@ -750,7 +962,7 @@ feature -- Basic operations
 													end
 												end
 													-- We must now draw the lines for the tree structure.
-		
+
 												if current_subrow_indent > 0 and are_tree_node_connectors_shown then
 													if current_column_index > 1 or drawing_subrow then
 														l_x_start := current_subrow_indent
@@ -767,11 +979,11 @@ feature -- Basic operations
 														if l_x_start < current_column_width then
 																-- If the edge of the horizontal line from the left edge of the item is within the position
 																-- of the column, we must draw it, otherwise it is clipped below in the "elseif"
-		
+
 															item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 																-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 															 	-- if the node to which we are connected is within a different column.
-		
+
 															 if parent_node_index /= node_index and current_row.is_expandable then
 															 		-- Draw the horizontal line from the left edge of the expand icon to the start of
 															 		-- the grid cell as the horizontal line spans into other grid cells.
@@ -782,9 +994,9 @@ feature -- Basic operations
 															item_buffer_pixmap.draw_segment (l_x_end.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
 														end
 													end
-		
+
 													if drawing_subrow and then parent_node_index = current_column_index then
-		
+
 														current_horizontal_pos := node_pixmap_vertical_center
 														if are_tree_node_connectors_shown then
 															item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
@@ -814,7 +1026,7 @@ feature -- Basic operations
 																	end
 																end
 															end
-		
+
 																-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
 																-- We iterate backwards from the current position and for each subsequent parent node, determine
 																-- if a line must be drawn.
@@ -829,16 +1041,16 @@ feature -- Basic operations
 																		-- It is possible that the current vertical line segment that we must draw is outside the right hand
 																		-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
 																		-- drawing.
-		
+
 																	if loop_parent_row.subrow_count_recursive > ((loop_current_row.index + loop_current_row.subrow_count_recursive) - loop_parent_row.index) then
 																			-- If the current item is the last one contained within the parent then a line must be drawn. As this is
 																			-- computed in a nested fashion, the subnode count is used recursively.
-		
+
 																		item_buffer_pixmap.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, 0)
 																			-- Draw the vertical line from the bottom of the item to the top.
 																	end
 																end
-		
+
 																	-- Move one position upwards within the parenting node structure
 																loop_current_row := loop_parent_row
 																loop_parent_row := loop_parent_row.parent_row_i
@@ -858,13 +1070,13 @@ feature -- Basic operations
 											end
 											first_item_in_row_drawn := True
 										else
-		
+
 											translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
-		
+
 											if parent_node_index < current_column_index then
 												translated_parent_x_indent_position := 0
 											end
-		
+
 										item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
 											if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
 													-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
@@ -878,11 +1090,11 @@ feature -- Basic operations
 												item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 											end
 											if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index /= node_index and current_column_index >= parent_node_index then
-		
+
 													-- We must now draw the lines for the tree structure, as although there is no item
 													-- at this location in the grid, a tree line may cross it horizontally.
 												if current_column_index < node_index then
-		
+
 													item_buffer_pixmap.draw_segment (translated_parent_x_indent_position.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
 														-- The background area for the tree node must always be refreshed, even if the node is not visible.
 														-- We draw no wider than `current_column_width' to ensure this.
@@ -891,24 +1103,24 @@ feature -- Basic operations
 														-- If the grid column being drawn matches that in which the
 														-- node of `parent_row_i' is contained, then vertical lines must be drawn
 														-- to connect the lines.
-		
+
 													if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
 															-- In this case, there are more subrows of `parent_row_i' to be drawn,
 															-- so the vertical line is drawn to span the complete height of the current row.
 														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
-		
+
 													else
 															-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
 															-- from the start of the current row to the center only.
 														item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
 													end
-		
+
 												end
 											end
 										end
 											-- Now draw the border for `grid_item'.
 										draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-		
+
 											-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
 										if grid.post_draw_overlay_actions_internal /= Void then
 											if grid_item_exists then
@@ -917,10 +1129,41 @@ feature -- Basic operations
 												grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
 											end
 										end
-		
+
 											-- Now blit the buffered drawing for the item to `drawable'.
 										temp_rectangle.move_and_resize (0, 0, current_column_width, current_row_height)
-										drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, temp_rectangle)
+										if locked = Void then
+											if current_column.is_locked or current_row.is_locked then--(not current_column.is_locked) or (not current_row.is_locked) then
+												drawable.set_foreground_color (gray)
+												drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+											else
+												drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, temp_rectangle)
+											end
+										else
+											if locked_column /= Void then
+												if grid.row_internal (current_row_index).is_locked and then grid.row_internal (current_row_index).locked_row.locked_index > locked_column.locked_index then
+													if current_column.background_color /= Void then
+														drawable.set_foreground_color (current_column.background_color)
+													else
+														drawable.set_foreground_color (gray)
+													end
+													drawable.fill_rectangle (0, current_item_y_position, current_column_width, current_row_height)
+												else
+													drawable.draw_sub_pixmap (0, current_item_y_position, item_buffer_pixmap, temp_rectangle)
+												end
+											else
+												if grid.column_internal (current_column_index).is_locked and then grid.column_internal (current_column_index).locked_column.locked_index > locked_row.locked_index then
+													if current_row.background_color /= Void then
+														drawable.set_foreground_color (current_row.background_color)
+													else
+														drawable.set_foreground_color (gray)
+													end
+													drawable.fill_rectangle (current_item_x_position, 0, current_column_width, current_row_height)
+												else
+													drawable.draw_sub_pixmap (current_item_x_position, 0, item_buffer_pixmap, temp_rectangle)
+												end
+											end
+										end
 									end
 									visible_column_indexes.forth
 								end
@@ -931,7 +1174,7 @@ feature -- Basic operations
 						-- Note that we perform the vertical and horizontal drawing seperately so there may be overlap if both are
 						-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
 						-- it is simply drawing a rectangle and does not flicker.
-						
+
 					rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
 						-- We compute the rectangle width based on the position of the final item within `column_offsets'.
 					if rectangle_width > 0 then
@@ -946,7 +1189,11 @@ feature -- Basic operations
 							item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
 						end
 						temp_rectangle.move_and_resize (0, 0, rectangle_width, internal_client_height)
-						drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, temp_rectangle)
+						if locked_row = Void then
+							drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, temp_rectangle)
+						else
+							drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, 0, item_buffer_pixmap, temp_rectangle)
+						end
 					end
 					if current_row = Void or else current_row.index >= row_count - grid.hidden_node_count then
 						if grid.is_row_height_fixed and not is_tree_enabled then
@@ -959,7 +1206,7 @@ feature -- Basic operations
 						end
 						if rectangle_height > 0 then
 							-- Check to see if must draw the background below the items.
-	
+
 							if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then
 								item_buffer_pixmap.set_size (internal_client_width, rectangle_height)
 							end
@@ -970,7 +1217,11 @@ feature -- Basic operations
 								item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
 							end
 							temp_rectangle.move_and_resize (0, 0, internal_client_width, rectangle_height)
-							drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+							if locked_column = Void then
+								drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+							else
+								drawable.draw_sub_pixmap (0, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+							end
 						end
 					end
 					else
@@ -986,7 +1237,7 @@ feature -- Basic operations
 				end
 			end
 		end
-		
+
 feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
 
 	drawable_item_buffer_pixmap: EV_PIXMAP is
@@ -997,7 +1248,7 @@ feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
 		once
 			create Result
 		end
-		
+
 feature {NONE} -- Implementation
 
 	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER is
@@ -1023,7 +1274,7 @@ feature {NONE} -- Implementation
 		ensure
 			valid_result: Result > 0 and Result <= grid.column_count
 		end
-		
+
 	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER) is
 			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
 			-- of `current_column_width' and `current_row_height'.
@@ -1054,19 +1305,26 @@ feature {NONE} -- Implementation
 				item_buffer_pixmap.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
 			end
 		end
-		
+
 	white: EV_COLOR is
 			-- Once access to the color white.
 		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end
-		
+
 	black: EV_COLOR is
 			-- Once access to the color black.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
-		
+
+	gray: EV_COLOR is
+			--
+		once
+			Result := (create {EV_STOCK_COLORS}).gray
+		end
+
+
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.
 
@@ -1076,7 +1334,7 @@ feature {NONE} -- Implementation
 		-- iteration from. By performing an intial loop, we can reduce the number of
 		-- iterations to be performed in the main loop. Together, the total
 		-- number of iterations of both loops is far less. There may be a better
-		-- value, but this should give fairly good results. 
+		-- value, but this should give fairly good results.
 		-- The maximum number of iterations is given by (`row_count' / pre_search_iteration_size) + pre_search_iteration_size
 		-- Julian 05/16/05
 
@@ -1086,7 +1344,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_size (100, 16)
 		end
-		
+
 	temp_rectangle: EV_RECTANGLE
 		-- A rectangle used temporarily by the drawing code.
 		-- Prevents the need to keep creating new rectangle objects
@@ -1109,17 +1367,14 @@ invariant
 	temp_rectangle_not_void: temp_rectangle /= Void
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end

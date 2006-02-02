@@ -784,7 +784,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				end
 				end_selection.set_x_in_characters(end_pos + symbol.count)
 			end
-			if l_line_modified then
+			if l_line_modified and l_cursor > 1 then
 				cursor.set_x_in_characters (l_cursor + symbol.count)
 			end
 		end

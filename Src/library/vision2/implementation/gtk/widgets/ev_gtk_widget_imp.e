@@ -233,29 +233,20 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_width)
-		end
-
-	update_parent_size is
-			-- Check to see if `Current' needs resizing in parent.
-		local
-			a_toplevel: POINTER
-		do
-				-- If we are present in a GtkWindow structure then we force a container resize on the parent
-			a_toplevel := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
-			if a_toplevel /= default_pointer and then has_struct_flag (a_toplevel, {EV_GTK_ENUMS}.gtk_toplevel_enum) and then a_toplevel /= c_object then
+				--| Force parent container to allocate sizes to its children immediately.
+			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			end
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_width)
 		end
 
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
-				--| FIXME IEK This is a hack for forcing parent contains to allocate sizes to their children immediately.
+				--| Force parent container to allocate sizes to its children immediately.
 			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			end
-
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_height)
 		end
 

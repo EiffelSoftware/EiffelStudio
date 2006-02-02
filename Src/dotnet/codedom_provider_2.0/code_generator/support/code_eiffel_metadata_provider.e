@@ -171,6 +171,7 @@ feature -- Access
 				l_consumed_type := cache_reflection.consumed_type (a_type)
 				if l_consumed_type /= Void then
 					l_entities := l_consumed_type.flat_entities
+					l_entities.append (l_consumed_type.constructors)
 					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (l_entities.count)
 					from
 						l_entities.start
@@ -360,7 +361,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-			create Result.make_external (a_entity.dotnet_name, a_entity.eiffel_name, l_arguments, l_type)
+			create Result.make_external (a_entity.dotnet_name, a_entity.eiffel_name.as_lower, l_arguments, l_type)
 		end
 
 	internal_all_features: HASH_TABLE [LIST [CODE_MEMBER_REFERENCE], STRING] is

@@ -5268,61 +5268,84 @@ feature -- Assertions
 		local
 			l_invariant_token: INTEGER
 			l_dotnet_invariant_token: INTEGER
-			l_end_of_invariant: IL_LABEL
 			l_sig: like method_sig
 		do
-				-- First we generate the `$$_invariant' feature which only contains invariant for
-				-- Current class.
-			if feat /= Void then
-				generate_feature (feat, False, True, False)
-				generate_feature_code (feat, True)
-
-				l_invariant_token := implementation_feature_token (current_type_id, feat.feature_id)
-			else
-					-- Generate empty invariant feature that does nothing. Will be
-					-- used in descendant.
-				l_sig := method_sig
-				l_sig.reset
-				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-				l_sig.set_parameter_count (1)
-				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-				set_signature_type (l_sig, current_class_type.type)
-
-				uni_string.set_string ("$$_invariant")
-				l_invariant_token := md_emit.define_method (uni_string, current_class_token,
+			if feat = Void or else not current_class_type.is_expanded then
+					-- Generate instance invariant feature even though class invariant is not defined.
+				uni_string.set_string ("_invariant")
+				l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
 					{MD_METHOD_ATTRIBUTES}.Public |
 					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-					{MD_METHOD_ATTRIBUTES}.Static, l_sig,
-					{MD_METHOD_ATTRIBUTES}.Managed)
+					{MD_METHOD_ATTRIBUTES}.Virtual,
+					default_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+			end
+			if current_class_type.is_expanded then
+					-- Code for expanded class does not use static features.
+				if feat = Void then
+						-- Generate code for inherited invariants only.
+					start_new_body (l_dotnet_invariant_token)
+					generate_invariant_body (Void)
+					method_writer.write_current_body
+				else
+						-- Generate code for immediate and inherited invariants.
+					generate_feature (feat, False, False, False)
+					generate_feature_code (feat, False)
+				end
+			else
+					-- First we generate the `$$_invariant' feature
+					-- which only contains invariant for Current class.
+				if feat /= Void then
+					generate_feature (feat, False, True, False)
+					generate_feature_code (feat, True)
+					l_invariant_token := implementation_feature_token (current_type_id, feat.feature_id)
+				else
+						-- Generate empty invariant feature that does nothing.
+						-- Will be used in descendant.
+					l_sig := method_sig
+					l_sig.reset
+					l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+					l_sig.set_parameter_count (1)
+					l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					set_signature_type (l_sig, current_class_type.type)
 
-				start_new_body (l_invariant_token)
-				l_end_of_invariant := create_label
-				generate_invariant_checked_for (l_end_of_invariant)
-				generate_inherited_invariants
-				mark_label (l_end_of_invariant)
+					uni_string.set_string ("$$_invariant")
+					l_invariant_token := md_emit.define_method (uni_string, current_class_token,
+						{MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Static, l_sig,
+						{MD_METHOD_ATTRIBUTES}.Managed)
+
+					start_new_body (l_invariant_token)
+					generate_invariant_body (Void)
+					method_writer.write_current_body
+				end
+
+				current_module.internal_invariant_token.
+					put (l_invariant_token, current_class_type.implementation_id)
+
+					-- Generate invariant feature that calls above static version.
+				start_new_body (l_dotnet_invariant_token)
+				generate_current
+				method_body.put_call ({MD_OPCODES}.Call, l_invariant_token, 0, False)
 				generate_return (False)
 				method_writer.write_current_body
 			end
+		end
 
-			current_module.internal_invariant_token.
-				put (l_invariant_token, current_class_type.implementation_id)
-
-				-- Generate invariant feature that calls above static version.
-			uni_string.set_string ("_invariant")
-			l_dotnet_invariant_token := md_emit.define_method (uni_string, current_class_token,
-				{MD_METHOD_ATTRIBUTES}.Public |
-				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-				{MD_METHOD_ATTRIBUTES}.Virtual,
-				default_sig, {MD_METHOD_ATTRIBUTES}.Managed)
-
-			start_new_body (l_dotnet_invariant_token)
-			generate_current
-			if current_class_type.is_expanded then
-				generate_load_from_address (current_class_type.type)
+	generate_invariant_body (byte_list: BYTE_LIST [BYTE_NODE]) is
+			-- Generate body of the routine that checks class invariant of the current class
+			-- represented by `byte_list' (if any) as well as class invariant of ancestors.
+		local
+			l_end_of_invariant: IL_LABEL
+		do
+			l_end_of_invariant := create_label
+			generate_invariant_checked_for (l_end_of_invariant)
+			if byte_list /= Void then
+				byte_list.process (cil_node_generator)
 			end
-			method_body.put_call ({MD_OPCODES}.Call, l_invariant_token, 0, False)
+			generate_inherited_invariants
+			mark_label (l_end_of_invariant)
 			generate_return (False)
-			method_writer.write_current_body
 		end
 
 	generate_inherited_invariants is
@@ -5347,10 +5370,7 @@ feature -- Assertions
 				if not l_list.has (id) then
 					l_list.force (id)
 					if not cl_type.is_external then
-						generate_current
-						if current_class_type.is_expanded then
-							generate_metamorphose (current_class_type.type)
-						end
+						generate_current_as_reference
 						method_body.put_call ({MD_OPCODES}.Call,
 							invariant_token (id), 0, False)
 					end

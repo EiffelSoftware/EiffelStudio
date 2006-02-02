@@ -530,18 +530,9 @@ feature -- Assertions
 		do
 		end
 
-	generate_invariant_feature (feat: INVARIANT_FEAT_I) is
-			-- Generate `_invariant' that checks `current_class_type' invariants.
-		do
-		end
-
-	generate_inherited_invariants is
-			-- Generate call to all directly inherited invariant features.
-		do
-		end
-
-	generate_invariant_checked_for (a_label: IL_LABEL) is
-			-- Generate check to find out if we should check invariant or not.
+	generate_invariant_body (byte_list: BYTE_LIST [BYTE_NODE]) is
+			-- Generate body of the routine that checks class invariant of the current class
+			-- represented by `byte_list' (if any) as well as class invariant of ancestors.
 		do
 		end
 

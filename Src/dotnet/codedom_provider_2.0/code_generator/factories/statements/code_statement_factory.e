@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_PARTIAL_TREE_STORE
+		export
+			{NONE} all
+		end
+
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_assign_statement (a_source: SYSTEM_DLL_CODE_ASSIGN_STATEMENT) is
@@ -23,6 +28,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			l_property_expr: CODE_PROPERTY_REFERENCE_EXPRESSION
 			l_field_expr: CODE_ATTRIBUTE_REFERENCE_EXPRESSION
+			l_array_indexer_expr: CODE_ARRAY_INDEXER_EXPRESSION
 			l_target: CODE_EXPRESSION
 			l_assignment_type: INTEGER
 		do
@@ -40,7 +46,13 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							l_assignment_type := Field_assignment
 							l_field_expr.set_is_set_reference (True)
 						else
-							l_assignment_type := Default_assignment
+							l_array_indexer_expr ?= l_target
+							if l_array_indexer_expr /= Void then
+								l_assignment_type := Array_assignment
+								l_array_indexer_expr.set_is_set_reference (True)
+							else
+								l_assignment_type := Default_assignment
+							end
 						end
 					end
 					code_dom_generator.generate_expression_from_dom (a_source.right)			
@@ -153,6 +165,15 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						initialize_local_variables (l_value)
 							-- Do not generate statement inline
 						set_last_statement (Void)
+					elseif partial_tree_store.is_valid_id (l_value) then
+						partial_tree_store.search_statement (l_value)
+						if partial_tree_store.statement_found then
+							-- This statement corresponds to a statement that was stored
+							-- through a call to `code_generator.generate_code_from_statement'
+							code_dom_generator.generate_statement_from_dom (partial_tree_store.found_statement)
+						else
+							set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
+						end
 					else
 						set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
 					end

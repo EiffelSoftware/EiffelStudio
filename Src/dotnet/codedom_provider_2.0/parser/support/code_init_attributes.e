@@ -533,15 +533,7 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
-	process_delayed_access_feat_as (l_as: DELAYED_ACCESS_FEAT_AS) is
-		do
-		end
-
 	process_expr_addresse_as (l_as: EXPR_ADDRESS_AS) is
-		do
-		end
-
-	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 		end
 
@@ -550,6 +542,118 @@ feature {AST_YACC} -- Initialization
 		end
 
 	process_bracket_as (l_as: BRACKET_AS) is
+		do
+		end
+
+	process_type_list_as (l_as: TYPE_LIST_AS) is
+		do
+		end
+
+	process_none_id_as (l_as: NONE_ID_AS) is
+		do
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+		do
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+		do
+		end
+
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+		do
+		end
+
+	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+		do
+		end
+
+	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+		do
+		end
+
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+		do
+		end
+
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+		do
+		end
+
+	process_keyword_as (l_as: KEYWORD_AS) is
+		do
+		end
+
+	process_symbol_as (l_as: SYMBOL_AS) is
+		do
+		end
+
+	process_break_as (l_as: BREAK_AS) is
+		do
+		end
+
+	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+		do
+		end
+
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
+		do
+		end
+
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+		do
+		end
+
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+		do
+		end
+
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+		do
+		end
+
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+		do
+		end
+
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+		do
+		end
+
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+		do
+		end
+
+	process_parent_list_as (l_as: PARENT_LIST_AS) is
+		do
+		end
+
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+		do
+		end
+
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+		do
+		end
+
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+		do
+		end
+
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+		do
+		end
+
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
+		do
+		end
+
+	process_class_list_as (l_as: CLASS_LIST_AS) is
+		do
+		end
+
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
 		do
 		end
 

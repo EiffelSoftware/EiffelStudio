@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Initialize `initializers'.
 		require
 			non_void_type: a_type /= Void
-			valid_arguments: a_size_expression /= Void xor a_size > 0 xor a_initializers /= Void
+			valid_arguments: (a_size_expression /= Void xor a_size > 0) or a_initializers /= Void
 		do
 			array_type := a_type
 			size := a_size
@@ -52,13 +52,13 @@ feature -- Code Generation
 
 	code: STRING is
 			-- Eiffel code for array creation expression
-			-- | 	Result := "create `target'.make (1, `size_expression')" if size_expression /= Void and target /= Void
+			-- | 	Result := "create `target'.make (`size_expression')" if size_expression /= Void and target /= Void
 			-- | OR
-			-- | 	Result := "create `target'.make (1, `size')" if size > 0 and target /= Void
+			-- | 	Result := "create `target'.make (`size')" if size > 0 and target /= Void
 			-- | OR
-			-- | 	Result := "create {`array_type'}.make (1, `size_expression')" if size_expression /= Void and target = Void
+			-- | 	Result := "create {`array_type'}.make (`size_expression')" if size_expression /= Void and target = Void
 			-- | OR
-			-- | 	Result := "create {`array_type'}.make (1, `size')" if size > 0 and target = Void
+			-- | 	Result := "create {`array_type'}.make (`size')" if size > 0 and target = Void
 			-- | OR 
 			-- |	Result := "(create {MANIFEST_ARRAY_CONVERTER [SYSTEM_OBJECT]}).convert_to (<<`initializers', `initializers',...>>)
 		do
@@ -72,11 +72,11 @@ feature -- Code Generation
 					Result.append (array_type.eiffel_name)
 					Result.append_character ('}')
 				end
-				Result.append (".make (0, ")
+				Result.append (".make (")
 				if size_expression /= Void then
 					Result.append (size_expression.code)
 				else
-					Result.append ((size - 1).out)
+					Result.append (size.out)
 				end
 				Result.append_character (')')
 			elseif initializers /= Void then

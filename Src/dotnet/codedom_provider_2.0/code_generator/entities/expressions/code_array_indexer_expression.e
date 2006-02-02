@@ -46,7 +46,11 @@ feature -- Access
 		do
 			create Result.make (120)
 			Result.append (target.code)
-			Result.append (".item (")
+			if is_set_reference then
+				Result.append (".put (")
+			else
+				Result.append (".item (")
+			end
 			from
 				indices.start
 				if not indices.after then
@@ -60,7 +64,9 @@ feature -- Access
 				Result.append (indices.item.code)
 				indices.forth
 			end
-			Result.append_character (')')
+			if not is_set_reference then
+				Result.append_character (')')
+			end
 		end
 		
 feature -- Status Report
@@ -76,6 +82,19 @@ feature -- Status Report
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, [target.type.name])
 			end
+		end
+
+	is_set_reference: BOOLEAN
+			-- Are we assigning to the array element?
+
+feature -- Element Setting
+
+	set_is_set_reference (a_bool: BOOLEAN) is
+			-- Set `is_set_reference' with `a_bool'.
+		do
+			is_set_reference := a_bool
+		ensure
+			is_set_reference_set: is_set_reference = a_bool
 		end
 
 invariant

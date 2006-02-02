@@ -29,19 +29,38 @@ feature -- Access
 	code: STRING is
 			-- | Result C# := "base"
 			-- Eiffel code of base reference expression
-			-- NOT SUPPORTED YET !!!
+			-- Don't generate anything, generation is done in {CODE_ROUTINE_REFERENCE_EXPRESSION}
 		do
-			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
 		end
-		
+
+feature -- Element Settings
+
+	set_type (a_type: like type) is
+			-- Set `type' with `a_type'
+		require
+			attached_type: a_type /= Void
+		do
+			internal_type := a_type
+		ensure
+			type_set: type = a_type
+		end
+
 feature -- Status Report
 
 	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Event_manager.raise_event ({CODE_EVENTS_IDS}.not_supported, ["base reference expression"])
-			Result := None_type_reference
+			if internal_type = Void then
+				Result := None_type_reference
+			else
+				Result := internal_type
+			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_type: CODE_TYPE_REFERENCE
+			-- Cache for `type'
 
 end -- class CODE_BASE_REFERENCE_EXPRESSION
 

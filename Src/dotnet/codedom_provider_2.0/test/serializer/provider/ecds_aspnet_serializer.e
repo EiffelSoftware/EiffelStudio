@@ -85,12 +85,12 @@ feature {NONE} -- Implementation
 				saved_extension := l_config.language_extension (Eiffel_language)
 				l_config.remove_compiler_entry (Eiffel_language)
 			end
-			l_config.add_compiler_entry (Eiffel_language, saved_extension, (create {ECDS_PROVIDER}).to_dotnet.get_type.assembly_qualified_name)
+			l_config.add_compiler_entry (Eiffel_language, saved_extension, (create {ECDS_PROVIDER}).get_type.assembly_qualified_name)
 			provider_changed := True
 		ensure
 			provider_changed: provider_changed
 		end
-	
+
 	restore_provider is
 			-- Restore previous provider information
 		require
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 
 	saved_provider: STRING
 			-- Saved Eiffel codedom provider type fully qualified name
-	
+
 	saved_extension: STRING
 			-- Saved Eiffel language file extension
 

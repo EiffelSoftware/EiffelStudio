@@ -1,13 +1,5 @@
 @ECHO OFF
 
-IF EXIST "%VS71COMNTOOLS%vsvars32.bat" CALL "%VS71COMNTOOLS%vsvars32.bat"
-IF EXIST "%VS71COMNTOOLS%vsvars32.bat" GOTO START
-IF EXIST "%VSCOMNTOOLS%vsvars32.bat" CALL "%VSCOMNTOOLS%vsvars32.bat"
-IF EXIST "%VSCOMNTOOLS%vsvars32.bat" GOTO START
-
-ECHO Error: could not find Visual Studio installation...
-GOTO END
-
 :START
 IF EXIST build_studio_debug GOTO DEBUG
 CD build_studio

@@ -54,25 +54,32 @@ feature -- Access
 			-- Eiffel code of routine reference expression
 		local
 			l_type_ref_exp: CODE_TYPE_REFERENCE_EXPRESSION
+			l_base: CODE_BASE_REFERENCE_EXPRESSION
 		do
 			create Result.make (120)
-			if member /= Void then
-				if not is_current_generated_type (target.type) then
-					l_type_ref_exp ?= target
-					if l_type_ref_exp /= Void then
-						Result.append ("feature {")
-						Result.append (l_type_ref_exp.code)
-						Result.append ("}.")
+			l_base ?= target
+			if l_base = Void then
+				if member /= Void then
+					if not is_current_generated_type (target.type) then
+						l_type_ref_exp ?= target
+						if l_type_ref_exp /= Void then
+							Result.append ("feature {")
+							Result.append (l_type_ref_exp.code)
+							Result.append ("}.")
+						else
+							Result.append (target.code)
+							Result.append (".")
+						end
+					end
+					if Resolver.is_generated (member.implementing_type) then
+						Result.append (member.eiffel_name)
 					else
-						Result.append (target.code)
-						Result.append (".")
+						Result.append (member.overloaded_eiffel_name)
 					end
 				end
-				if Resolver.is_generated (member.implementing_type) then
-					Result.append (member.eiffel_name)
-				else
-					Result.append (member.overloaded_eiffel_name)
-				end
+			else
+				l_base.set_type (type)
+				Result := "Precursor"
 			end
 		end
 		
@@ -95,12 +102,17 @@ feature {NONE} -- Implementation
 			-- Corresponding member
 		require
 			in_generation: current_state = Code_generation
+		local
+			l_base: CODE_BASE_REFERENCE_EXPRESSION
 		do
 			if not member_searched then
 				member_searched := True
-				internal_member := target.type.member_from_name (routine)
-				if internal_member = Void then
-					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [routine, target.type.name])
+				l_base ?= target
+				if l_base = Void then
+					internal_member := target.type.member_from_name (routine)
+					if internal_member = Void then
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_feature, [routine, target.type.name])
+					end
 				end
 			end
 			Result := internal_member

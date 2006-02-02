@@ -65,6 +65,7 @@ feature -- Access
 	code: STRING is
 			-- | Result := "feature {`target'}.`attribut_name'"
 			-- | OR		:= "`attribut_name'" if `target_object.name' is_equal "Current" or "current_namespace.current_class"
+			-- | OR     := `set_attribute_name' if `is_set_reference' and not `target_object.name' is_equal "Current" or "current_namespace.current_class"
 			-- Eiffel code of attribute reference expression
 		local
 			l_type_reference: CODE_TYPE_REFERENCE_EXPRESSION

@@ -12,7 +12,7 @@ inherit
 		redefine
 			has_formal_generic, has_like, is_loose,
 			is_equivalent, start_location, end_location,
-			solved_type_for_format, append_to
+			solved_type_for_format, append_to, first_token, last_token
 		end
 
 	CLICKABLE_AST
@@ -97,32 +97,38 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				Result := class_name.first_token (a_list)
-			else
-				if expanded_keyword /= Void then
-					Result := expanded_keyword.first_token (a_list)
-				elseif separate_keyword /= Void then
-					Result := separate_keyword.first_token (a_list)
-				else
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
 					Result := class_name.first_token (a_list)
+				else
+					if expanded_keyword /= Void then
+						Result := expanded_keyword.first_token (a_list)
+					elseif separate_keyword /= Void then
+						Result := separate_keyword.first_token (a_list)
+					else
+						Result := class_name.first_token (a_list)
+					end
 				end
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list = Void then
-				if generics /= Void then
-					Result := generics.last_token (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list = Void then
+					if generics /= Void then
+						Result := generics.last_token (a_list)
+					else
+						Result := class_name.last_token (a_list)
+					end
 				else
-					Result := class_name.last_token (a_list)
-				end
-			else
-				if internal_generics /= Void then
-					Result := internal_generics.last_token (a_list)
-				else
-					Result := class_name.last_token (a_list)
+					if internal_generics /= Void then
+						Result := internal_generics.last_token (a_list)
+					else
+						Result := class_name.last_token (a_list)
+					end
 				end
 			end
 		end
@@ -367,19 +373,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

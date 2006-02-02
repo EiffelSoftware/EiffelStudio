@@ -12,7 +12,7 @@ class FORMAL_AS
 inherit
 	TYPE_AS
 		redefine
-			has_formal_generic, is_loose
+			has_formal_generic, is_loose, first_token, last_token
 		end
 
 create
@@ -74,17 +74,23 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			if a_list /= Void and then reference_expanded_keyword /= Void then
-					-- Roundtrip mode
-				Result := reference_expanded_keyword.first_token (a_list)
-			else
-				Result := name.first_token (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				if a_list /= Void and then reference_expanded_keyword /= Void then
+						-- Roundtrip mode
+					Result := reference_expanded_keyword.first_token (a_list)
+				else
+					Result := name.first_token (a_list)
+				end
 			end
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := name.last_token (a_list)
+			Result := Precursor (a_list)
+			if Result = Void then
+				Result := name.last_token (a_list)
+			end
 		end
 
 feature -- Comparison
@@ -127,19 +133,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

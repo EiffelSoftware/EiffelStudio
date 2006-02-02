@@ -41,6 +41,22 @@ feature -- Roundtrip
 			rcurly_symbol_set: rcurly_symbol = s_as
 		end
 
+feature -- Roundtrip/Token
+
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list /= Void and then lcurly_symbol /= Void then
+				Result := lcurly_symbol.first_token (a_list)
+			end
+		end
+
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+		do
+			if a_list /= Void and then rcurly_symbol /= Void then
+				Result := rcurly_symbol.last_token (a_list)
+			end
+		end
+
 feature -- Properties
 
 	has_like: BOOLEAN is
@@ -182,19 +198,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

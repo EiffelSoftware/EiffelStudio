@@ -18,11 +18,21 @@ feature {NONE} -- Initialization
 			-- Load configuration file and initialize attributes accordingly.
 		local
 			l_retried: BOOLEAN
+			l_codedom_node: XML_XML_NODE
+			l_res: SYSTEM_OBJECT
 		do
 			if not l_retried then
 				create machine_config.make
 				machine_config.load_string (Machine_config_path)
 				compilers_node := machine_config.get_elements_by_tag_name ("compilers").item (0)
+				if compilers_node = Void then
+					l_codedom_node := machine_config.get_elements_by_tag_name ("system.codedom").item (0)
+					if l_codedom_node = Void then
+						l_codedom_node := machine_config.create_element ("system.codedom")
+					end
+					compilers_node := machine_config.create_element ("compilers")
+					l_res := l_codedom_node.append_child (compilers_node)
+				end
 				initialized := True
 			end
 		ensure
@@ -98,12 +108,19 @@ feature -- Basic Operations
 		local
 			l_node: XML_XML_NODE
 			l_res: SYSTEM_OBJECT
+			l_attr: XML_XML_ATTRIBUTE
 		do
 			remove_compiler_entry (a_language)
-			l_node := compilers_node.first_child.clone
-			l_node.attributes.item (0).set_value (a_language)
-			l_node.attributes.item (1).set_value (a_extension)
-			l_node.attributes.item (2).set_value (a_provider)
+			l_node := machine_config.create_element ("compiler")
+			l_attr := machine_config.create_attribute ("language")
+			l_attr.set_value (a_language)
+			l_attr := l_node.attributes.append (l_attr)
+			l_attr := machine_config.create_attribute ("extension")
+			l_attr.set_value (a_extension)
+			l_attr := l_node.attributes.append (l_attr)
+			l_attr := machine_config.create_attribute ("type")
+			l_attr.set_value (a_provider)
+			l_attr := l_node.attributes.append (l_attr)
 			l_res := compilers_node.append_child (l_node)
 			machine_config.save_string (Machine_config_path)
 		end

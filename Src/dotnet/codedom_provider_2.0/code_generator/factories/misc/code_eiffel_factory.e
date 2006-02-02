@@ -191,6 +191,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				loop
 					l_generated_type := l_generated_types.item
 					l_all_features := l_generated_type.all_features
+					l_parents := l_generated_type.parents
 					from
 						l_all_features.start
 					until
@@ -198,7 +199,6 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					loop
 						l_feature := l_all_features.item_for_iteration
 						l_name := l_feature.eiffel_name
-						l_parents := l_generated_type.parents
 						if not l_feature.is_redefined and l_parents.has_feature (l_name) then
 							l_type_reference := l_parents.parent_type_with_homonym
 							Resolver.search (l_type_reference)

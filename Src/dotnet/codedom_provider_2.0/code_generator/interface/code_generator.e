@@ -17,6 +17,7 @@ inherit
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
 	CODE_SHARED_NAME_FORMATTER
 	CODE_SHARED_ACCESS_MUTEX
+	CODE_SHARED_PARTIAL_TREE_STORE
 
 create
 	default_create,
@@ -141,13 +142,9 @@ feature -- Interface
 				if a_statement = Void then
 					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
 				else
+					partial_tree_store.put_statement (a_statement)
 					initialize (a_text_writer, a_options)
-					set_current_state (Code_analysis)
-					code_dom_generator.generate_statement_from_dom (a_statement)
-					set_current_state (Code_generation)
-					if last_statement /= Void then
-						output.write_string (last_statement.code)
-					end
+					output.write_string (partial_tree_store.tree_id.out)
 					output := Void
 				end
 				Type_reference_factory.reset_cache
@@ -169,11 +166,9 @@ feature -- Interface
 				if a_expression = Void then
 					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
 				else
+					partial_tree_store.put_expression (a_expression)
 					initialize (a_text_writer, a_options)
-					set_current_state (Code_analysis)
-					code_dom_generator.generate_expression_from_dom (a_expression)
-					set_current_state (Code_generation)
-					output.write_string (last_expression.code)
+					output.write_string (partial_tree_store.tree_id.out)
 					output := Void
 				end
 				Type_reference_factory.reset_cache

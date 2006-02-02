@@ -122,7 +122,7 @@ feature -- Roundtrip/Location
 			result_not_void: Result /= Void
 		end
 
-	complete_start_position (a_list: LEAF_AS_LIST): INTEGER is
+	frozen complete_start_position (a_list: LEAF_AS_LIST): INTEGER is
 			-- Absolute start position for current construct
 		require
 			a_list_not_void: a_list /= Void
@@ -130,7 +130,7 @@ feature -- Roundtrip/Location
 			Result := complete_start_location (a_list).position
 		end
 
-	complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
+	frozen complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
 			-- Absolute end position for current construct
 		require
 			a_list_not_void: a_list /= Void

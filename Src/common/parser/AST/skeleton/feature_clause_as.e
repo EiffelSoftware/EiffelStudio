@@ -10,8 +10,7 @@ class FEATURE_CLAUSE_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent,
-			complete_end_position
+			is_equivalent
 		end
 
 create
@@ -82,14 +81,6 @@ feature -- Roundtrip/Token
 					Result := feature_keyword.last_token (a_list)
 				end
 			end
-		end
-
-feature -- Roundtrip/Position
-
-	complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
-			-- Absolute end position for current construct
-		do
-			Result := feature_clause_end_position
 		end
 
 feature -- Roundtrip/Comments

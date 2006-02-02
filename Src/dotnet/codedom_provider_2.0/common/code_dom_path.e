@@ -135,7 +135,7 @@ feature -- Access
 			-- Path to compiler
 		local
 			l_key: REGISTRY_KEY
-			l_path: SYSTEM_STRING
+			l_path, l_platform: SYSTEM_STRING
 		once
 			l_key := {REGISTRY}.local_machine.open_sub_key (Compiler_key, False)
 			if l_key = Void then
@@ -145,17 +145,22 @@ feature -- Access
 				if l_path = Void then
 					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_ise_eiffel, [])
 				else
-					Result := l_path
-					if Result.item (Result.count) /= Directory_separator then
+					l_platform ?= l_key.get_value (Ise_platform_value)
+					if l_platform = Void then
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_ise_platform, [])
+					else
+						Result := l_path
+						if Result.item (Result.count) /= Directory_separator then
+							Result.append_character (Directory_separator)
+						end
+						Result.append ("studio")
 						Result.append_character (Directory_separator)
+						Result.append ("spec")
+						Result.append_character (Directory_separator)
+						Result.append (l_platform)
+						Result.append_character (Directory_separator)
+						Result.append ("bin")
 					end
-					Result.append ("studio")
-					Result.append_character (Directory_separator)
-					Result.append ("spec")
-					Result.append_character (Directory_separator)
-					Result.append ("windows")
-					Result.append_character (Directory_separator)
-					Result.append ("bin")
 				end
 			end
 		ensure

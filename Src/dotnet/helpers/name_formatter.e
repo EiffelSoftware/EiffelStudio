@@ -606,8 +606,9 @@ feature {NONE} -- Implementation
 			Result.put ("variant_", "variant")
 			Result.put ("void_", "void")
 			Result.put ("when_", "when")
-			Result.put ("xor_", "xor")
-		end
+			Result.put ("xor_", "xor")		
+			Result.put ("make", ".ctor")
+		end 
 
 	argument_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Mapping for type when used in feature name to distinguish between
@@ -695,12 +696,9 @@ feature {NONE} -- Implementation
 	operators: HASH_TABLE [STRING, STRING] is
 			-- Operator symbols table
 		once
-			create Result.make (unary_operators.count + binary_operators.count + 1)
+			create Result.make (unary_operators.count + binary_operators.count)
 			Result.merge (unary_operators)
 			Result.merge (binary_operators)
-
-				-- Constructor
-			Result.put ("make", ".ctor")
 		end
 
 feature {NONE} -- Constants

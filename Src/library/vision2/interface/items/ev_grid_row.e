@@ -1,8 +1,8 @@
 indexing
 	description: "Representation of a row of an EV_GRID"
+	date: "$Date$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -13,14 +13,14 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 	EV_GRID_ROW_ACTION_SEQUENCES
 		undefine
 			default_create, copy, is_equal
 		redefine
 			implementation
 		end
-	
+
 	EV_DESELECTABLE
 		redefine
 			implementation
@@ -35,7 +35,7 @@ feature -- Access
 			-- Is `Current' part of a tree structure within `parent_i'?
 		require
 			not_destroyed: not is_destroyed
-			is_parented: parent /= Void		
+			is_parented: parent /= Void
 		do
 			Result := parent_row /= Void or else subrow_count > 0
 		ensure
@@ -65,7 +65,7 @@ feature -- Access
 		do
 			Result := implementation.has_subrow (a_row)
 		ensure
-			
+
 			has_subrow_same_parent: Result implies
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
@@ -90,7 +90,7 @@ feature -- Access
 		do
 			Result := implementation.parent
 		end
-		
+
 	parent_row_root: EV_GRID_ROW is
 			-- Parent row which is the root of the tree structure
 			-- in which `Current' is contained. May be `Current' if
@@ -113,7 +113,7 @@ feature -- Access
 		do
 			Result := implementation.item (i)
 		end
-		
+
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
 		require
@@ -125,7 +125,7 @@ feature -- Access
 			result_not_void: Result /= Void
 			valid_count: Result.count <= count
 		end
-		
+
 	is_expanded: BOOLEAN is
 			-- Are subrows of `Current' displayed?
 		require
@@ -139,7 +139,7 @@ feature -- Access
 			-- within the `expand_actions' with a row that is ensured exandable
 			-- and add no items.
 		end
-		
+
 	height: INTEGER is
 			-- Height of `Current' when displayed in a `parent'
 			-- that has `is_row_height_fixed' set to `False'.
@@ -154,7 +154,7 @@ feature -- Access
 		ensure
 			result_not_negative: Result >= 0
 		end
-		
+
 	virtual_y_position: INTEGER is
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -167,7 +167,22 @@ feature -- Access
 		ensure
 			parent_void_implies_result_zero: parent = Void implies result = 0
 		end
-		
+
+	virtual_y_position_unlocked: INTEGER is
+			-- Vertical offset of unlocked position of `Current', in relation to the
+			-- virtual area of `parent' grid in pixels.
+			-- If not `is_locked', then `virtual_y_position' = `unlocked_virtual_y_position'.
+			-- If `is_locked' then `Result' is the "shadow" position where the row would
+			-- be if not locked.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+		do
+			Result := implementation.virtual_y_position_unlocked
+		ensure
+			parent_void_implies_result_zero: parent = Void implies result = 0
+		end
+
 	index_of_first_item: INTEGER is
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
@@ -179,7 +194,7 @@ feature -- Access
 		ensure
 			valid_result: Result >= 0 and Result <= count
 		end
-		
+
 	is_expandable: BOOLEAN is
 			-- May `Current' be expanded?
 		require
@@ -224,7 +239,7 @@ feature -- Status report
 			subrow_count_non_negative: subrow_count >= 0
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
 		end
-		
+
 	subrow_count_recursive: INTEGER is
 			-- Number of child rows and their child rows recursively.
 		require
@@ -259,8 +274,52 @@ feature -- Status report
 		ensure
 			count_not_negative: count >= 0
 		end
-		
+
+	is_locked: BOOLEAN is
+			-- Is `Current' locked so that it no longer scrolls?
+		do
+			Result := implementation.is_locked
+		end
+
+	locked_position: INTEGER is
+			-- Locked position of `Current' from top edge of viewable area of `parent'.
+			-- `Result' is 0 if not `is_locked'.
+		do
+			Result := implementation.locked_position
+		ensure
+			not_locked_implies_result_zero: not is_locked implies result = 0
+		end
+
 feature -- Status setting
+
+	lock is
+			-- Ensure `is_locked' is `True'.
+			-- `Current' is locked at it's current vertical offset from
+			-- the top edge of the viewable area of `parent'.
+		do
+			lock_at_position (virtual_y_position - parent.virtual_y_position)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = virtual_y_position - parent.virtual_y_position
+		end
+
+	lock_at_position (a_position: INTEGER) is
+			-- Ensure `is_locked' is `True' with the vertical offset from
+			-- the top edge of the viewable area of `parent' set to `a_position'.
+		do
+			implementation.lock_at_position (a_position)
+		ensure
+			is_locked: is_locked
+			locked_position_set: locked_position = a_position
+		end
+
+	unlock is
+			-- Ensure `is_locked' is `False'.
+		do
+			implementation.unlock
+		ensure
+			not_is_locked: not is_locked
+		end
 
 	expand is
 			-- Display all subrows of `Current'.
@@ -273,7 +332,7 @@ feature -- Status setting
 		ensure
 			is_expanded: is_expanded or subrow_count = 0
 		end
-		
+
 	collapse is
 			-- Hide all subrows of `Current'.
 		require
@@ -284,7 +343,7 @@ feature -- Status setting
 		ensure
 			not_is_expanded: not is_expanded
 		end
-		
+
 	set_height (a_height: INTEGER) is
 			-- Assign `a_height' to `height'.
 		require
@@ -295,7 +354,7 @@ feature -- Status setting
 		ensure
 			height_set: height = a_height
 		end
-		
+
 	ensure_visible is
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
@@ -309,7 +368,7 @@ feature -- Status setting
 			row_visible_when_heights_fixed_in_parent: parent.is_row_height_fixed implies  virtual_y_position >= parent.virtual_y_position and virtual_y_position + parent.row_height <= parent.virtual_y_position + (parent.viewable_height).max (parent.row_height)
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
 		end
-		
+
 	ensure_expandable is
 			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
 			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
@@ -340,7 +399,7 @@ feature -- Status setting
 		ensure
 			not_is_expandable: not is_expandable
 		end
-		
+
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `background_color' with `a_color'.
 		require
@@ -362,7 +421,7 @@ feature -- Status setting
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end
-		
+
 	redraw is
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
@@ -426,7 +485,7 @@ feature -- Element change
 			subrow_count_increased: subrow_count = old subrow_count + 1
 			parent_row_count_increased: parent.row_count = old parent.row_count + 1
 		end
-		
+
 	insert_subrows (rows_to_insert, subrow_index: INTEGER) is
 			-- Add `rows_to_insert' rows to `parent' as a subrow of `Current'
 			-- with index in subrows of `Current' given by `subrow_index'.
@@ -456,7 +515,7 @@ feature -- Element change
 			same_parent: a_row.parent = parent
 			parent_enabled_as_tree: parent.is_tree_enabled
 			row_is_final_subrow_in_tree_structure:
-				a_row.index  + a_row.subrow_count_recursive = parent_row_root.index + parent_row_root.subrow_count_recursive				
+				a_row.index  + a_row.subrow_count_recursive = parent_row_root.index + parent_row_root.subrow_count_recursive
 		do
 			implementation.remove_subrow (a_row)
 		ensure
@@ -498,7 +557,7 @@ feature -- Contract support
 					a_ancestor_index_of_first_item := a_parent_row.index_of_first_item
 					a_parent_row := a_parent_row.parent_row
 				end
-				
+
 				if a_index >= a_ancestor_index_of_first_item then
 					Result := True
 					if index_of_first_item = 0 then
@@ -540,7 +599,7 @@ feature -- Contract support
 					end
 					i := i + 1
 				end
-				
+
 				if a_index_of_next_item > 0 then
 					-- A next item has been found, we now check this against any subrows to see if removing this index
 					-- is valid.
@@ -563,7 +622,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GRID_ROW_I
 		-- Responsible for interaction with native graphics toolkit.
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -571,24 +630,22 @@ feature {NONE} -- Implementation
 		do
 			create {EV_GRID_ROW_I} implementation.make (Current)
 		end
-		
+
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded
 	tree_disabled_in_parent_implies_no_subrows: parent /= Void and then not parent.is_tree_enabled implies subrow_count = 0
+	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_y_position = virtual_y_position_unlocked
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
+		Eiffel Software
+		356 Storke Road, Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end
 

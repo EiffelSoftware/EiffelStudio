@@ -86,7 +86,9 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := Precursor (a_list)
 			else
-				if end_keyword /= Void then
+				if rcurly_symbol /= Void then
+					Result := rcurly_symbol.last_token (a_list)
+				elseif end_keyword /= Void then
 					Result := end_keyword.last_token (a_list)
 				elseif constraint /= Void then
 					Result := constraint.last_token (a_list)

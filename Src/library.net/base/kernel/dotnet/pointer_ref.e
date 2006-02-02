@@ -158,12 +158,12 @@ feature -- Output
 
 	out: STRING is
 			-- Printable representation of pointer value
-		local
-			l_obj: SYSTEM_OBJECT
 		do
-			l_obj := item
-			create Result.make_from_cil (l_obj.to_string)
-			Result.prepend ("0x")
+			if {MARSHAL}.size_of_object (item) = 4 then
+				create Result.make_from_cil ({SYSTEM_STRING}.format ("0x{0:X}", to_integer_32))
+			else
+				create Result.make_from_cil ({SYSTEM_STRING}.format ("0x{0:X}", to_integer_64))
+			end
 		end
 
 feature -- Conversion

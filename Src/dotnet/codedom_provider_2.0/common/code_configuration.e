@@ -163,7 +163,7 @@ feature -- Access
 			-- Prefix associated with assembly located at `a_file_name'.
 			-- Empty string if none.
 		do
-			prefixes.search (a_file_name)
+			prefixes.search (a_file_name.as_lower)
 			if prefixes.found then
 				Result := prefixes.found_item
 			else

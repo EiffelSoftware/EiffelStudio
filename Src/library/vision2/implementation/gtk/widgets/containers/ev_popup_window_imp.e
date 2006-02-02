@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WINDOW_IMP}
+			disable_border
+			user_can_resize := False
 			{EV_GTK_EXTERNALS}.gtk_window_set_decorated (c_object , False)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)

@@ -94,16 +94,16 @@ feature {NONE}-- Initialization
 			l_ev_label_1.align_text_left
 			keyword_field.set_minimum_width (250)
 			l_ev_cell_1.set_minimum_width (3)
-			l_ev_tool_bar_1.disable_vertical_button_style
-			next_button.set_text ("Next")
-			l_ev_tool_bar_2.disable_vertical_button_style
-			previous_button.set_text ("Previous")
+			next_button.set_tooltip ("Next")
+			previous_button.set_tooltip ("Previous")
 			l_ev_cell_2.set_minimum_width (3)
 			match_case_button.set_text ("Match case")
-			regular_expression_button.set_text ("Regular expression")
+			match_case_button.set_tooltip ("Match case?")
+			regular_expression_button.set_text ("Regex")
+			regular_expression_button.set_tooltip ("Use regular expression?")
 			l_ev_cell_3.set_minimum_width (3)
-			l_ev_tool_bar_3.disable_vertical_button_style
-			advanced_button.set_text ("Advanced")
+			advanced_button.set_tooltip ("Advanced search")
+			close_button.set_tooltip ("Close")
 			set_padding (1)
 			disable_item_expand (l_ev_horizontal_separator_1)
 			disable_item_expand (l_ev_horizontal_box_1)

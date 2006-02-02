@@ -59,7 +59,7 @@ feature -- Status Setting
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
-			-- Is `a_string' valid for this resource type to convert into a value?
+			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
 		local
 			s: STRING
@@ -71,7 +71,7 @@ feature -- Query
 feature {PREFERENCES} -- Access
 
 	generating_preference_type: STRING is
-			-- The generating type of the resource for graphical representation.
+			-- The generating type of the preference for graphical representation.
 		once
 			Result := "IDENTIFIED_FONT"
 		end
@@ -80,7 +80,6 @@ feature {NONE} -- Implementation
 
 	face: STRING
 		-- Font faces
-
 	shape,
 	weight,
 	height,
@@ -126,20 +125,20 @@ feature {NONE} -- Implementation
 			has_value: value /= Void
 		local
 			v: STRING
-			l_value: like value
+			l_font: EV_FONT
 		do
 			create v.make (50)
 			v.append (face)
 			v.append ("-")
-			l_value := value
-			inspect l_value.font.shape
+			l_font := value.font
+			inspect l_font.shape
 			when shape_italic then
 				v.append ("i")
 			when shape_regular then
 				v.append ("r")
 			end
 			v.append ("-")
-			inspect l_value.font.weight
+			inspect l_font.weight
 			when weight_black then
 				v.append ("black")
 			when weight_thin then
@@ -152,7 +151,7 @@ feature {NONE} -- Implementation
 			v.append ("-")
 			v.append (height.out)
 			v.append ("-")
-			inspect l_value.font.family
+			inspect l_font.family
 			when family_roman then
 				v.append ("roman")
 			when family_screen then
@@ -247,19 +246,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

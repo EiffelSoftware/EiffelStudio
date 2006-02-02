@@ -13,7 +13,8 @@ inherit
 		redefine
 			preference,
 			change_item_widget,
-			update_changes
+			update_changes,
+			refresh
 		end
 
 	EV_SHARED_SCALE_FACTORY
@@ -37,30 +38,25 @@ feature -- Access
 			-- Actual preference.
 
 	last_selected_value: EV_IDENTIFIED_FONT
+			-- value last selected by user.
 
-	change_item_widget: EV_GRID_LABEL_ITEM
+	change_item_widget: ev_grid_label_item
+			-- font change label.
 
-feature -- Commands
-
-	show is
-			-- Show the widget in its editable state
-		do
-			show_change_item_widget
-		end
-
-feature {PREFERENCE_VIEW} -- Commands
+feature {preference_view} -- commands
 
 	change is
-			-- Change the value.
+			-- change the value.
 		require
 			preference_exists: preference /= Void
 			in_view: caller /= Void
 		do
-				-- Create Font Tool.
+				-- create font tool.
 			create font_tool
 			font_tool.set_font (preference.value.font)
 
 			font_tool.ok_actions.extend (agent update_changes)
+			font_tool.cancel_actions.extend (agent cancel_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
 		end
 
@@ -72,18 +68,40 @@ feature {NONE} -- Commands
 			last_selected_value := font_factory.registered_font (font_tool.font)
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
-				change_item_widget.set_font (last_selected_value.font)
-				change_item_widget.set_text (preference.string_value)
+				refresh
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
 
+	cancel_changes is
+			-- Commit the result of Font Tool.
+		do
+			last_selected_value := Void
+		end
+
 	update_preference is
-			--
+			-- Update preference to reflect recently chosen value
 		do
 			if last_selected_value /= Void then
 				preference.set_value (last_selected_value)
 			end
+		end
+
+	show is
+			-- Show the widget in its editable state
+		do
+			show_change_item_widget
+		end
+
+	refresh is
+		local
+			l_font: EV_FONT
+		do
+			Precursor {PREFERENCE_WIDGET}
+			l_font := preference.value.font.twin
+			l_font.set_height_in_points (default_font_height)
+			change_item_widget.set_font (l_font)
+			change_item_widget.set_text (preference.string_value)
 		end
 
 feature {NONE} -- Implementation
@@ -91,15 +109,13 @@ feature {NONE} -- Implementation
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
 		do
-
 			create change_item_widget
-			change_item_widget.set_text (preference.string_value)
-			change_item_widget.set_font (preference.value.font)
+			refresh
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
 	show_change_item_widget is
-			--
+			-- Show the font change dialog.
 		do
 			change
 			if last_selected_value /= Void then
@@ -107,8 +123,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	font_tool: EV_FONT_DIALOG;
+	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.
+
+	default_font_height: INTEGER is 9;
+			-- Default font height in points (for display only)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -116,19 +135,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1393,10 +1393,12 @@ feature {NONE} -- Visitors
 						l_il_ext.generate_call (False)
 					else
 							-- Standard call to an external feature.
-							-- Call will be polymorphic if it target of call is a reference
-							-- or if target has been boxed, or if type of external
-							-- forces a static binding (eg static features).
-						l_il_ext.generate_call (l_cl_type.is_reference or else l_real_metamorphose)
+						if not l_cl_type.is_enum or else l_il_ext.type /= field_type then
+								-- Call will be polymorphic if it target of call is a reference
+								-- or if target has been boxed, or if type of external
+								-- forces a static binding (eg static features).
+							l_il_ext.generate_call (l_cl_type.is_reference or else l_real_metamorphose)
+						end
 					end
 				else
 						-- Current external is a creation, we perform a slightly different
@@ -1472,7 +1474,7 @@ feature {NONE} -- Visitors
 				end
 
 				l_invariant_checked := (context.workbench_mode or
-					l_class_c.assertion_level.check_invariant) and then (not a_node.is_first or is_target_of_call)
+					l_class_c.assertion_level.check_invariant) and then (not a_node.is_first or l_is_target_of_call)
 					and then (l_native_array_class_type = Void)
 
 				if l_cl_type.is_expanded then
@@ -1498,7 +1500,9 @@ feature {NONE} -- Visitors
 					-- Box value type if the call is made to the predefined feature from ANY
 					-- This has to be done before calculating feature arguments
 				if l_is_call_on_any and then l_cl_type.is_true_expanded then
-					il_generator.generate_load_from_address (l_cl_type)
+					if not l_cl_type.is_enum then
+						il_generator.generate_load_from_address (l_cl_type)
+					end
 					il_generator.generate_metamorphose (l_cl_type)
 				end
 
@@ -1830,29 +1834,18 @@ feature {NONE} -- Visitors
 
 	process_invariant_b (a_node: INVARIANT_B) is
 			-- Process `a_node'.
-		local
-			l_end_of_invariant: IL_LABEL
-			l_body_index: INTEGER
 		do
 			context.local_list.wipe_out
 			context.set_assertion_type ({ASSERT_TYPE}.in_invariant)
 
-			l_body_index := a_node.associated_class.invariant_feature.body_index
-			context.set_original_body_index (l_body_index)
+			context.set_original_body_index (a_node.associated_class.invariant_feature.body_index)
 
 				-- Allocate memory for once manifest strings if required
 			if a_node.once_manifest_string_count > 0 then
 				il_generator.generate_once_string_allocation (a_node.once_manifest_string_count)
 			end
 
-			l_end_of_invariant := il_generator.create_label
-
-			il_generator.generate_invariant_checked_for (l_end_of_invariant)
-			a_node.byte_list.process (Current)
-			il_generator.generate_inherited_invariants
-
-			il_generator.mark_label (l_end_of_invariant)
-			il_generator.generate_return (False)
+			il_generator.generate_invariant_body (a_node.byte_list)
 		end
 
 	process_local_b (a_node: LOCAL_B) is
@@ -2408,7 +2401,7 @@ feature {NONE} -- Implementation
 			l_feature_b: FEATURE_B
 		do
 			l_cl_type ?= context.real_type (a_node.type)
-			Result := a_is_target_of_call and then l_cl_type.is_true_expanded
+			Result := a_is_target_of_call and then l_cl_type.is_true_expanded and then not l_cl_type.is_enum
 
 			if Result then
 				l_call_access ?= a_node.parent.message
@@ -3244,7 +3237,9 @@ feature {NONE} -- Implementation: Feature calls
 		do
 			if cl_type.is_true_expanded then
 					-- Box object before checking its class invariant
-				il_generator.generate_load_from_address (cl_type)
+				if not cl_type.is_enum then
+					il_generator.generate_load_from_address (cl_type)
+				end
 				il_generator.generate_metamorphose (cl_type)
 			end
 			il_generator.generate_invariant_checking (cl_type)

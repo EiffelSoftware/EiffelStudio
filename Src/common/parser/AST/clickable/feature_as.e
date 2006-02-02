@@ -99,6 +99,9 @@ feature -- Roundtrip/Token
 			else
 				if break_included and (is_attribute or is_constant) then
 					Result := a_list.item_by_end_position (next_position - 1)
+					if Result = Void then
+						Result := body.last_token (a_list)
+					end
 				else
 					Result := body.last_token (a_list)
 				end

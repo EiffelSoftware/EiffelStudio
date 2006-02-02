@@ -48,7 +48,7 @@ feature -- Access
 
 	code: STRING is
 			-- | Result := "`target' := `source'"
-			-- | OR		:= "`target'(`source')" if `is_property_assignement'.
+			-- | OR		:= "`target'(`source')" if `is_property_assignement' or `is_array_assignment'.
 			-- | OR		:= "`source.expression'" if `source' is `CODE_OBJECT_CREATE_EXPRESSION' or `CODE_ARRAY_CREATE_EXPRESSION'.
 			-- | Set `new_line' to false
 			-- Eiffel code of assign statement
@@ -71,6 +71,11 @@ feature -- Access
 			if assignment_type = Property_assignment or l_field_set then
 				Result.append (target.code)
 				Result.append (" (")
+				Result.append (source.code)
+				Result.append_character (')')
+			elseif assignment_type = Array_assignment then
+				Result.append (target.code)
+				Result.append (", ")
 				Result.append (source.code)
 				Result.append_character (')')
 			else

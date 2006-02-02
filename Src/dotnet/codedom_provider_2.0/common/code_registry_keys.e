@@ -29,7 +29,7 @@ feature -- Access
 	Compiler_key: STRING is
 			-- Key holding compiler values
 		once
-			Result := "Software\ISE\Eiffel56\"
+			Result := "Software\ISE\Eiffel57\"
 			Result.append (Compiler_file_name)
 			Result.keep_head (Result.count - 4)
 		end
@@ -54,10 +54,14 @@ feature -- Access
 			-- Name of string value that holds ISE_EIFFEL environment variable
 			-- This value is found under the compiler key
 
+	Ise_platform_value: STRING is "ISE_PLATFORM"
+			-- Name of string value that holds ISE_PLATFORM environment variable
+			-- This value is found under the compiler key
+
 	Compiler_file_name: STRING is "ecdpc.exe"
 			-- Compiler file name
 
-	Version: STRING is "5.6"
+	Version: STRING is "5.7"
 			-- Version number, change when different set of registry keys are needed.
 
 end -- class CODE_REGISTRY_KEYS

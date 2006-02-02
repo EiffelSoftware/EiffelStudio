@@ -17,7 +17,7 @@ inherit
 			set_preference,
 			change_item_widget,
 			update_changes,
-			reset
+			refresh
 		end
 
 create
@@ -25,7 +25,7 @@ create
 	make_with_preference
 
 feature -- Access
-	
+
 	change_item_widget: EV_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this preference.
 
@@ -33,26 +33,22 @@ feature -- Access
 			-- Graphical type identfier
 		do
 			Result := "TEXT"
-		end	
+		end
 
 feature -- Status Setting
-	
+
 	set_preference (new_preference: like preference) is
 			-- Set the preference.
-		local
-			tmpstr: STRING
 		do
 			Precursor (new_preference)
-			check 
+			check
 				change_item_widget_created: change_item_widget /= Void
 			end
-			
-			tmpstr := new_preference.string_value
 		end
 
 	show is
 			-- Show the widget in its editable state
-		do			
+		do
 			activate
 		end
 
@@ -85,14 +81,13 @@ feature {NONE} -- Command
 				str.set_value (change_item_widget.text)
 			elseif list /= Void then
 				list.set_value_from_string (change_item_widget.text)
-			end		
-		end		
+			end
+		end
 
-	reset is
-			-- Reset
+	refresh is
+			-- Refresh
 		do
-			Precursor {PREFERENCE_WIDGET}
-			change_item_widget.set_text (preference.default_value)
+			change_item_widget.set_text (preference.string_value)
 		end
 
 feature {NONE} -- Implementation
@@ -105,16 +100,16 @@ feature {NONE} -- Implementation
 			change_item_widget.set_text (preference.string_value)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
-		
+
 	activate is
 			-- Activate the text
 		do
 			change_item_widget.activate
 			change_item_widget.set_text_validation_agent (agent validate_preference_text)
-			if not change_item_widget.text_field.text.is_empty then					
+			if not change_item_widget.text_field.text.is_empty then
 				change_item_widget.text_field.select_all
 			end
-		end		
+		end
 
     validate_preference_text (a_text: STRING): BOOLEAN is
             -- Validate `a_text'.  Disallow input if text is not an integer and the preference

@@ -90,12 +90,9 @@ feature -- Basic operations
 		deferred
 		end
 
-	reset is
-			-- Reset preference to default value if any
+	refresh is
+			-- Refresh preference widget to current value
 		do
-			if preference.has_default_value then
-				reset
-			end
 		end
 
 	show is

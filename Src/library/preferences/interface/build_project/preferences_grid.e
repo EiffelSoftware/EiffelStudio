@@ -94,9 +94,6 @@ feature {NONE} -- Initialization
 			acc.actions.extend (agent toggle_view)
 			accelerators.extend (acc)
 
-				--| When escape is press, close the dialog
-			set_default_cancel_button (close_button)
-
 				--| Make sure to have the grid focused when dialog is shown
 				--| this way, we can use only keyboard.
 			show_actions.extend (agent on_show)
@@ -106,6 +103,9 @@ feature {NONE} -- Initialization
 
 				--|
 			filter_text_box.change_actions.extend (agent request_update_matches)
+
+				--| When escape is press, close the dialog
+			set_default_cancel_button (close_button)
 		end
 
 feature -- Status Setting
@@ -193,18 +193,19 @@ feature {NONE} -- Events
 			end
 
 			l_default_item ?= a_row.item (3)
-
-			if a_pref.is_default_value then
-				l_default_item.set_text (p_default_value)
-				l_default_item.set_font (default_font)
-			else
-				l_default_item.set_text (user_value)
-				l_default_item.set_font (non_default_font)
+			if l_default_item /= Void then
+					--| In flat mode, we use dynamic computation
+				if a_pref.is_default_value then
+					l_default_item.set_text (p_default_value)
+					l_default_item.set_font (default_font)
+				else
+					l_default_item.set_text (user_value)
+					l_default_item.set_font (non_default_font)
+				end
+				if a_pref.is_auto then
+					l_default_item.set_text (l_default_item.text + " (" + auto_value + ")")
+				end
 			end
-			if a_pref.is_auto then
-				l_default_item.set_text (l_default_item.text + " (" + auto_value + ")")
-			end
-
 			if a_update_value then
 				a_row.set_item (4, preference_value_column (a_pref))
 			end
@@ -244,11 +245,8 @@ feature {NONE} -- Events
 	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
 			-- Set the preference value to the original default.
 		local
-			l_text_item: EV_GRID_EDITABLE_ITEM
-			l_combo_item: EV_GRID_COMBO_ITEM
-			l_label_item: EV_GRID_LABEL_ITEM
-			l_color_item: EV_GRID_DRAWABLE_ITEM
-			l_font: FONT_PREFERENCE
+			l_gitem: EV_GRID_ITEM
+			l_prefwidget: PREFERENCE_WIDGET
 		do
 			a_pref.reset
 			a_item.set_text (p_default_value)
@@ -257,30 +255,11 @@ feature {NONE} -- Events
 				a_item.set_text (a_item.text + " (" + auto_value + ")")
 			end
 
-			l_text_item ?= a_item.row.item (4)
-			if l_text_item /= Void then
-					-- Editable text item
-				l_text_item.set_text (a_pref.string_value)
-			else
-				l_combo_item ?= a_item.row.item (4)
-				if l_combo_item /= Void then
-						-- Combo selectable item
-					l_combo_item.set_text (a_pref.string_value)
-				else
-					l_color_item ?= a_item.row.item (4)
-					if l_color_item /= Void then
-							-- Color drawable item
-						l_color_item.redraw
-					else
-						l_label_item ?= a_item.row.item (1)
-						if l_label_item /= Void and then a_pref.generating_preference_type.is_equal ("FONT") then
-								-- Font label item
-							l_font ?= a_pref
-							l_label_item ?= a_item.row.item (4)
-							l_label_item.set_text (l_font.string_value)
-							l_label_item.set_font (l_font.value)
-						end
-					end
+			l_gitem := a_item.row.item (4)
+			if l_gitem /= Void then
+				l_prefwidget ?= l_gitem.data
+				if l_prefwidget /= Void then
+					l_prefwidget.refresh
 				end
 			end
 		end
@@ -310,16 +289,21 @@ feature {NONE} -- Events
 				l_pref ?= a_item.row.data
 
 					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
-				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then
+				if l_pref /= Void and then l_pref = a_pref then
 						-- Ensure that before showing the menu, the row gets selected.
 					grid.remove_selection
 					a_item.row.enable_select
-
-						-- The right clicked preference matches the selection in the grid
 					create l_popup_menu
-					create l_menu_item.make_with_text ("Restore Default")
-					l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
-					l_popup_menu.extend (l_menu_item)
+					if l_pref.has_default_value then
+							-- The right clicked preference matches the selection in the grid
+						create l_menu_item.make_with_text ("Restore Default")
+						l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
+						l_popup_menu.extend (l_menu_item)
+					else
+						create l_menu_item.make_with_text ("No default value")
+						l_menu_item.disable_sensitive
+						l_popup_menu.extend (l_menu_item)
+					end
 					l_popup_menu.show
 				end
 			end
@@ -473,7 +457,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 
 				-- Alphabetically sort the known preferences
-			l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences)
+			l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, preferences.preferences.linear_representation)
 
 			if not l_sorted_preferences.is_empty then
 				create l_pref_hash.make (l_sorted_preferences.count)
@@ -596,7 +580,11 @@ feature {NONE} -- Implementation
 			grid_remove_and_clear_all_rows (grid)
 
 				-- Retrieve known preferences
-			l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences)
+			if matches /= Void then
+				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, matches)
+			else
+				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences.linear_representation)
+			end
 
 			if not l_sorted_preferences.is_empty then
 					-- Traverse the preferences in the system and add to grid list
@@ -613,19 +601,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN): LIST [PREFERENCE] is
+	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: LIST [PREFERENCE]): LIST [PREFERENCE] is
 			-- Sorted known preferences using criteria `a_sorting_info'.
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
-			l_known_pref_hash: HASH_TABLE [PREFERENCE, STRING]
+			l_prefs_to_sort: LIST [PREFERENCE]
+			l_known_pref_ht: HASH_TABLE [PREFERENCE, STRING]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [STRING]
 			l_pref_index, l_pref_name: STRING
 			l_pref: PREFERENCE
 			l_sorting_up: BOOLEAN
 			l_sorting_criteria: INTEGER
 		do
-			l_known_pref_hash := preferences.preferences
-			if not l_known_pref_hash.is_empty then
+			l_prefs_to_sort := a_prefs_to_sort
+			if l_prefs_to_sort /= Void then
 				l_sorting_up := a_sorting_info > 0
 				l_sorting_criteria := a_sorting_info.abs
 
@@ -633,19 +622,18 @@ feature {NONE} -- Implementation
 				from
 					create l_sorted_preferences.make
 					l_sorted_preferences.compare_objects
-					l_known_pref_hash.start
+					l_prefs_to_sort.start
 				until
-					l_known_pref_hash.after
+					l_prefs_to_sort.after
 				loop
-
 					inspect l_sorting_criteria
 					when Name_sorting_mode then --| Pref name
-						l_pref_index := l_known_pref_hash.key_for_iteration
+						l_pref_index := l_prefs_to_sort.item.name
 					when Type_sorting_mode then --| type name
-						l_pref := l_known_pref_hash.item_for_iteration
+						l_pref := l_prefs_to_sort.item
 						l_pref_index := l_pref.string_type + "@" + l_pref.name
 					when Status_sorting_mode then --| type name
-						l_pref := l_known_pref_hash.item_for_iteration
+						l_pref := l_prefs_to_sort.item
 						l_pref_index := ""
 						if l_pref.is_default_value then
 							l_pref_index.append_string (p_default_value)
@@ -660,13 +648,16 @@ feature {NONE} -- Implementation
 						check False end
 					end
 					l_sorted_preferences.extend (l_pref_index)
-					l_known_pref_hash.forth
+					l_prefs_to_sort.forth
 				end
 				l_sorted_preferences.sort
+				l_prefs_to_sort := Void
 
 				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
+
 					-- Traverse the preferences in the system and add to grid list
 				from
+					l_known_pref_ht := preferences.preferences
 					if l_sorting_up then
 						l_sorted_preferences.start
 					else
@@ -685,7 +676,7 @@ feature {NONE} -- Implementation
 						check False end
 					end
 
-					l_pref := l_known_pref_hash.item (l_pref_name)
+					l_pref := l_known_pref_ht.item (l_pref_name)
 					if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then
 						Result.extend (l_pref)
 					end
@@ -958,10 +949,10 @@ feature {NONE} -- Implementation
 	update_status_bar is
 			-- Update status bar
 		do
-			if grid.is_tree_enabled then
-				status_label.set_text (grid.row_count.out + " preferences")
-			else
+			if not grid.is_tree_enabled and matches /= Void then
 				status_label.set_text (matches.count.out + " matches of " + preferences.preferences.count.out + " total preferences")
+			else
+				status_label.set_text (grid.row_count.out + " preferences")
 			end
 			status_label.refresh_now
 		end
@@ -1164,65 +1155,76 @@ feature {NONE} -- Filtering
 			in_flat_mode: not grid.is_tree_enabled
 		local
 			l_match_text: STRING
-			l_pref_count: INTEGER
+
 			l_preference: PREFERENCE
-			l_sorted_preferences: LIST [PREFERENCE]
+			l_prefs: LIST [PREFERENCE]
 		do
 			status_label.set_text ("Updating the view ...")
 			status_label.refresh_now
 
-			matches.wipe_out
+			matches := Void
+			if not grid.is_tree_enabled and not update_matches_requested then
+				l_prefs := preferences.preferences.linear_representation
+				l_match_text := filter_text_box.text
 
-				--| Sort the known preferences
-			if grid.is_tree_enabled then
-					--| pref name sorting
-				l_sorted_preferences := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences)
-			else
-				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences)
-			end
-
-			if not update_matches_requested then
-				l_pref_count := l_sorted_preferences.count
-				if l_pref_count > matches.capacity then
-					matches.resize (l_pref_count)
-				end
-				if not grid.is_tree_enabled then
-					l_match_text := filter_text_box.text
-				end
-
-				from
-					l_sorted_preferences.start
-				until
-					l_sorted_preferences.after
-				loop
-					l_preference := l_sorted_preferences.item
-					if l_match_text = Void or else l_preference.name.has_substring (l_match_text) then
-						matches.extend (l_preference)
+				if l_match_text.is_empty then
+					matches := l_prefs
+				else
+					create {ARRAYED_LIST [PREFERENCE]} matches.make (l_prefs.count)
+					from
+						l_prefs.start
+					until
+						l_prefs.after
+					loop
+						l_preference := l_prefs.item
+						if l_match_text = Void or else l_preference.name.has_substring (l_match_text) then
+							matches.extend (l_preference)
+						end
+						l_prefs.forth
 					end
-					l_sorted_preferences.forth
 				end
-				if not update_matches_requested then
-					grid.set_row_count_to (matches.count)
-					grid.clear
-					update_status_bar
+				if update_matches_requested then
+					matches := Void
+				else
+						--| Sort the known preferences
+					matches := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, matches)
+--					matches := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences.linear_representation)
+					if update_matches_requested then
+						matches := Void
+					else
+						if grid.row_count > 0 then
+							grid.remove_rows (1, grid.row_count)
+						end
+						grid.set_row_count_to (matches.count)
+						update_status_bar
+					end
 				end
 			end
 		end
 
-	matches: ARRAYED_LIST [PREFERENCE] is
-			--
-		once
-			create Result.make (10)
-		end
+	matches: LIST [PREFERENCE]
 
-	dynamic_content_function (x, y: INTEGER): EV_GRID_ITEM is
-			-- Function to compute the necessary EV_GRID_ITEM for grid co-ordinates x,y.
+	dynamic_content_function (c, r: INTEGER): EV_GRID_ITEM is
+			-- Function to compute the necessary EV_GRID_ITEM for grid co-ordinates c,r.
+		require
+			flat_mode: not grid.is_tree_enabled
 		local
 			l_preference: PREFERENCE
 		do
-			if matches.valid_index (y) then
-				l_preference := matches.i_th (y)
-				inspect x
+			l_preference ?= grid.row (r).data
+			if l_preference = Void then
+				if matches.valid_index (r) then
+					--| grid indexes start at 1
+					--| list start at 1
+					l_preference := matches.i_th (r)
+					grid.row (r).set_data (l_preference)
+				end
+			end
+
+			check l_preference /= Void end
+
+			if l_preference /= Void then
+				inspect c
 				when 1 then
 					Result := preference_name_column (l_preference)
 				when 2 then

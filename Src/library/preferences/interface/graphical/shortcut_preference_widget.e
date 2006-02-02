@@ -13,10 +13,11 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
+			preference,
 			set_preference,
 			change_item_widget,
 			update_changes,
-			reset
+			refresh
 		end
 
 	PREFERENCE_CONSTANTS
@@ -26,6 +27,9 @@ create
 	make_with_preference
 
 feature -- Access
+
+	preference: SHORTCUT_PREFERENCE
+			-- Actual preference associated to the widget.	
 
 	change_item_widget: EV_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this preference.
@@ -81,8 +85,8 @@ feature {NONE} -- Command
 			end
 		end
 
-	reset is
-			-- Reset
+	refresh is
+			-- Refresh
 		local
 			l_preference: SHORTCUT_PREFERENCE
 		do
@@ -120,6 +124,7 @@ feature {NONE} -- Implementation
 			-- Setup the text field on activation to handle properly key sequence rules.
 		do
 			change_item_widget.text_field.key_press_actions.extend (agent on_key_pressed)
+			change_item_widget.text_field.disable_edit
 		end
 
 	on_key_pressed (a_key: EV_KEY) is
@@ -157,6 +162,15 @@ feature {NONE} -- Implementation
 						else
 							l_string.append (a_key.out)
 						end
+						change_item_widget.text_field.set_text (l_string)
+					elseif a_key.is_function then
+						valid_shortcut_text := True
+						create l_string.make_empty
+						if l_app.shift_pressed then
+							l_string.append (shift_text)
+							l_string.append (shortcut_delimiter)
+						end
+						l_string.append (a_key.out)
 						change_item_widget.text_field.set_text (l_string)
 					end
 				end

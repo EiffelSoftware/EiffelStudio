@@ -334,9 +334,11 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 		do
 			code := ev_key.code
 			switch_auto_point := auto_point and then not (code = Key_shift or code = Key_left_meta or code = Key_right_meta)
-			if not is_completing and then code = Key_tab and then allow_tab_selecting then
+			if not is_completing and then code = Key_tab and then allow_tab_selecting and then not shifted_key then
 					-- Tab action
-				handle_tab_action
+				handle_tab_action (false)
+			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
+				handle_tab_action (true)
 			elseif not is_completing and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
 				trigger_completion
 				debug ("Auto_completion")
@@ -949,10 +951,14 @@ feature {NONE} -- Code completable implementation
 			end
 		end
 
-	handle_tab_action is
+	handle_tab_action (a_backwards: BOOLEAN) is
 			-- Handle tab action.
 		do
-			run_if_editable (agent tab_action)
+			if a_backwards then
+				run_if_editable (agent shift_tab_action)
+			else
+				run_if_editable (agent tab_action)
+			end
 			run_if_editable (agent invalidate_cursor_rect (True))
 			run_if_editable (agent check_cursor_position)
 		end
@@ -1101,7 +1107,9 @@ feature {NONE} -- Code completable implementation
 			-- Show possible selection
 		do
 			text_displayed.enable_selection
-			show_selection (False)
+			if has_selection then
+				show_selection (False)
+			end
 		end
 
 	key_press_actions: EV_KEY_ACTION_SEQUENCE is

@@ -364,6 +364,65 @@ feature -- Tab actions
 			end
 		end
 
+	shift_tab_action is
+			-- Backward `tab_action'
+		local
+			l_line: like current_line
+			l_cur_token, l_end_token, l_start_token, l_save_token: EDITOR_TOKEN
+			l_found_start: BOOLEAN
+			l_selected: BOOLEAN
+			l_stop, l_is_start, l_jumped: BOOLEAN
+		do
+			l_line := current_line
+			l_save_token := current_token_in_line (l_line)
+
+			if has_selection then
+				go_to_start_of_selection
+			end
+			if end_of_line then
+				l_start_token := l_line.eol_token
+			else
+				l_start_token := find_previous_start_token (l_line)
+			end
+			if l_start_token /= Void then
+				move_cursor_to (l_start_token, l_line)
+				l_start_token := find_previous_start_token (l_line)
+				if l_start_token = Void then
+					l_start_token := l_line.first_token
+					l_found_start := true
+				else
+					move_cursor_to (l_start_token, l_line)
+				end
+			else
+				go_to_end_of_line
+				l_jumped := true
+			end
+
+			if l_jumped then
+				l_start_token := find_previous_start_token (l_line)
+			end
+			if l_start_token /= Void then
+					-- Discard blank tokens.
+				from
+				until
+					l_found_start or l_start_token.next = Void or else l_start_token.next.is_text or l_start_token.next = l_line.eol_token
+				loop
+					l_start_token := l_start_token.next
+				end
+				if not l_found_start then
+					l_start_token := l_start_token.next
+				end
+				l_end_token := find_end_token (l_start_token, l_line, true)
+				if l_end_token = Void then
+					l_end_token := l_line.eol_token
+				end
+				select_region_between_token (l_start_token, l_line, l_end_token, l_line)
+				show_possible_selection
+			else
+				move_cursor_to (l_save_token, l_line)
+			end
+		end
+
 feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 
 	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is
@@ -593,10 +652,14 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code complete window.
  		deferred
  		end
 
- 	handle_tab_action is
+ 	handle_tab_action (a_backwards: BOOLEAN) is
  			-- Handle tab action.
  		do
- 			tab_action
+ 			if a_backwards then
+ 				tab_action
+ 			else
+ 				shift_tab_action
+ 			end
  		end
 
 	calculate_completion_list_x_position: INTEGER is
@@ -622,8 +685,10 @@ feature -- Trigger completion
 			a_key_attached: a_key /= Void
 		do
 			if not is_completing then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_tab and allow_tab_selecting then
-					handle_tab_action
+				if a_key.code = {EV_KEY_CONSTANTS}.key_tab and allow_tab_selecting and then not shifted_key then
+					handle_tab_action (false)
+				elseif a_key.code = {EV_KEY_CONSTANTS}.key_tab and allow_tab_selecting and then shifted_key then
+					handle_tab_action (true)
 				end
 				if can_complete_by_key.item ([a_key, ctrled_key, alt_key, shifted_key]) then
 					trigger_completion
@@ -906,4 +971,5 @@ feature {NONE} -- Implementation
 				Result := l_cur_token
 			end
 		end
+
 end

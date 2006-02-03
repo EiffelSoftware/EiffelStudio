@@ -251,7 +251,7 @@ feature {NONE} -- Visitor implementation
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.internal_parameters)
+			safe_process (l_as.parameters)
 			if recursive_descendants.has (l_as.class_id) then
 					-- check if it is the right feature (correct has old routine_id and old name)
 				if

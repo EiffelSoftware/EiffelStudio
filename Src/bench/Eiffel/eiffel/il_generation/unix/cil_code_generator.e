@@ -257,8 +257,9 @@ feature -- Addresses
 		do
 		end
 
-	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
-			-- Generate address of routine of `a_feature_id' in class `type_i'.
+	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
+			-- Generate address of routine of `a_feature_id' in class `type_i'
+			-- assuming that previous argument is Current if `is_last_argument_current' is true.
 		do
 		end
 

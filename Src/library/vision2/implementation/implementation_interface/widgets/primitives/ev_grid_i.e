@@ -1071,7 +1071,7 @@ feature -- Status setting
 				displayed_column_count := displayed_column_count + 1
 
 					-- Now show the header.
-				header.go_i_th (previous_visible_column_from_index (a_col_i.index))
+				header.go_i_th (previous_visible_header_item_from_index (a_col_i.index))
 				header.put_right (a_col_i.header_item)
 
 				set_horizontal_computation_required (a_column)
@@ -2787,27 +2787,27 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			result_count_equals_column_count: Result.count = column_count
 		end
 
-	previous_visible_column_from_index (a_index: INTEGER): INTEGER is
-			-- Return the index of the previous visible column's logical index from index `a_index'.
+	previous_visible_header_item_from_index (a_index: INTEGER): INTEGER is
+			-- Return the visible header item index of the previous visible column from index `a_index'.
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count
 		local
 			i: INTEGER
-			found: BOOLEAN
-			a_column: EV_GRID_COLUMN_I
+			l_columns: like columns
 		do
 			from
+				l_columns := columns
 				i := a_index - 1
+				Result := i
 			until
-				found or else i = 0
+				i = 0
 			loop
-				a_column := columns @ i
-				found := a_column.is_displayed
-				if not found then
-					i := i - 1
+				if not (l_columns @ i).is_displayed then
+						-- If the column is not visible then neither is its associating header item.
+					Result := Result - 1
 				end
+				i := i - 1
 			end
-			Result := i
 		ensure
 			index_valid: Result >= 0 and then Result < column_count
 		end

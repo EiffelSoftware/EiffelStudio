@@ -364,7 +364,7 @@ rt_private void eif_remove_surrounding_white_spaces (char * str)
 
 		/* Find first non-space character starting from rightmost end */
 	for (s = str + length - 1; s >= str; s--) {
-		if (!isspace(*s)) {
+		if (!isspace((int) *s)) {
 			break;
 		}
 	}
@@ -382,7 +382,7 @@ rt_private void eif_remove_surrounding_white_spaces (char * str)
 
 			/* Find first non-space character starting from leftmost end */
 		for (i = 0; i < length; i++, s++) {
-			if (!isspace(*s)) {
+			if (!isspace((int) *s)) {
 				break;
 			}
 		}

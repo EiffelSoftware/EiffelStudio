@@ -1,26 +1,47 @@
 system
 	"codedom_serializer"
 
-root 
-	ECDS_APPLICATION (root_cluster): "make_and_launch"
+root
+	ECDS_APPLICATION: make_and_launch
 
 default
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider_2.0\test\serializer\provider")
+	msil_use_optimized_precompile (yes)
+	assertion (no)
 	msil_generation (yes)
-	msil_clr_version ("v1.1.4322")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
-	msil_use_optimized_precompile (yes)
-	dotnet_naming_convention (yes)
-	assertion (no)
+	msil_clr_version ("v2.0.50727")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
 	console_application (no)
-	line_generation (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\test\serializer\provider")
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
 
-cluster 
-		-- The application
-	all root_cluster: "$EIFFEL_SRC\dotnet\codedom_provider\test\serializer\gui"
+
+-- The application
+-- WEL
+
+cluster
+	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\test\serializer\gui"
 		exclude
-			"CVS"; "EIFGEN";
+			"CVS"; "EIFGEN"; 
 		end
 
 	library "base":		"$EIFFEL_SRC\library\base"
@@ -39,10 +60,9 @@ cluster
 			assertion (require)
 		end
 
-		-- WEL
 	library wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"spec"; "clib"; "classic"; "CVS";
+			"spec"; "clib"; "classic"; "CVS"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -50,7 +70,7 @@ cluster
 
 	library wel_net:		"$EIFFEL_SRC\library.net\wel"
 		exclude
-			"CVS";
+			"CVS"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -58,7 +78,7 @@ cluster
 
 	library vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "ev_pixmap_imp_delegate.e"; "CVS"
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_loader.e"; "ev_pixmap_imp_delegate.e"; "CVS"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -73,6 +93,7 @@ cluster
 		end
 
 external
+
 	include_path:
 		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
 		"$(ISE_EIFFEL)\library\vision2\spec\include"
@@ -82,4 +103,5 @@ external
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+
 end

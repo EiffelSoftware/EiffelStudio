@@ -1276,7 +1276,7 @@ rt_shared void eif_terminate_all_other_threads (void) {
 
 #endif /* ISE_GC */
 
-#ifndef EIF_WINDOWS
+#if !defined(EIF_WINDOWS) && !defined(VXWORKS)
 /*
 doc:	<routine name="eif_thread_fork" return_type="pid_t" export="shared">
 doc:		<summary>Call system fork and make sure that the GC is correctly updated in newly forked process. Made especially for EMC.</summary>

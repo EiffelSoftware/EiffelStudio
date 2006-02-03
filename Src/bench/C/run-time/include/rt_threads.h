@@ -121,7 +121,7 @@ extern void eif_terminate_all_other_threads(void);
 /* Defaults for condition variables */
 #ifdef EIF_NO_CONDVAR
 #define EIF_COND_INIT(cond, msg)
-#define EIF_COND_CREATE(cond, msg)
+#define EIF_COND_CREATE(cond, msg) cond = NULL
 #define EIF_COND_WAIT(cond, mutex, msg)
 #define EIF_COND_WAIT_WITH_TIMEOUT(result_success, cond, mutex, timeout, msg)
 #define EIF_COND_BROADCAST(cond, msg)
@@ -609,7 +609,7 @@ extern void eif_terminate_all_other_threads(void);
                 0,0,0,0,0,0,0,0,0               \
                 ))                              \
         ) eraise(msg, EN_EXT)
-#define EIF_THR_KILL(tid) eraise("Kill not implemented on VxWorks", EN_EXT)
+#define EIF_THR_KILL(tid,error) eraise("Kill not implemented on VxWorks", EN_EXT)
 
 #define EIF_THR_EXIT(arg)           taskDelete(taskIdSelf())
 #define EIF_THR_JOIN(which)

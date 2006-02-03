@@ -625,9 +625,6 @@ feature -- Access
 	is_in_creation_call: BOOLEAN
 			-- Is current call a creation instruction?
 
-	is_target_of_call: BOOLEAN
-			-- Is current call a qualified call?
-
 	is_nested_call: BOOLEAN
 			-- Is current call from a NESTED_B node?
 
@@ -647,7 +644,6 @@ feature {NONE} -- Visitors
 			l_type_i: TYPE_I
 		do
 			l_is_nested_call := is_nested_call
-			is_target_of_call := False
 			is_nested_call := False
 			a_node.expr.process (Current)
 			if l_is_nested_call then
@@ -1307,20 +1303,17 @@ feature {NONE} -- Visitors
 			l_return_type: TYPE_I
 			l_real_metamorphose: BOOLEAN
 			l_real_target: ACCESS_B
-			l_is_target_of_call: like is_target_of_call
 			l_is_in_creation: like is_in_creation_call
 			l_is_nested_call: like is_nested_call
 		do
-			l_is_target_of_call := is_target_of_call
 			l_is_in_creation := is_in_creation_call
 			l_is_nested_call := is_nested_call
-			is_target_of_call := False
 			is_in_creation_call := False
 			is_nested_call := False
 
 			if not a_node.extension.is_il then
 					-- Generate call to C external.
-				generate_il_c_call (a_node, l_is_target_of_call)
+				generate_il_c_call (a_node, not l_is_in_creation)
 			else
 				l_il_ext ?= a_node.extension
 					-- Type of object on which we are performing call to Current.
@@ -1430,14 +1423,11 @@ feature {NONE} -- Visitors
 			l_target_type: CL_TYPE_I
 			l_count: INTEGER
 			l_is_call_on_any: BOOLEAN
-			l_is_target_of_call: like is_target_of_call
 			l_is_nested_call: like is_nested_call
 			l_is_in_creation: like is_in_creation_call
 		do
-			l_is_target_of_call := is_target_of_call
 			l_is_in_creation := is_in_creation_call
 			l_is_nested_call := is_nested_call
-			is_target_of_call := False
 			is_in_creation_call := False
 			is_nested_call := False
 
@@ -1474,7 +1464,7 @@ feature {NONE} -- Visitors
 				end
 
 				l_invariant_checked := (context.workbench_mode or
-					l_class_c.assertion_level.check_invariant) and then (not a_node.is_first or l_is_target_of_call)
+					l_class_c.assertion_level.check_invariant) and then not a_node.is_first
 					and then (l_native_array_class_type = Void)
 
 				if l_cl_type.is_expanded then
@@ -2001,10 +1991,8 @@ feature {NONE} -- Visitors
 					-- Namely if `a_node.target' is predefined we will load
 					-- the address of `a_node.target' instead of `a_node.target' itself.
 					-- `a_node.message' will manage the boxing operation if needed.
-				is_target_of_call := True
 				is_nested_call := True
 				a_node.target.process (Current)
-				is_target_of_call := False
 				is_nested_call := False
 					-- In case of attributes which requires their address to be loaded
 					-- to perform the call, we check wether or not the value needs to be
@@ -2040,9 +2028,7 @@ feature {NONE} -- Visitors
 
 				-- Generate call
 			if l_call_access /= Void then
-				is_target_of_call := True
 				l_call_access.process (Current)
-				is_target_of_call := False
 			else
 				a_node.message.process (Current)
 			end
@@ -3151,7 +3137,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_basic_type ?= l_cl_type
 			l_invariant_checked := (context.workbench_mode or
 				l_cl_type.base_class.assertion_level.check_invariant) and then
-				(not a_node.is_first or inv_checked)
+				not a_node.is_first
 
 			if l_cl_type.is_expanded then
 					-- Current type is expanded. We need to find out if

@@ -239,6 +239,8 @@ typedef struct tag_rt_globals
 	double 	       init_date_cx;
 #elif defined(EIF_WINDOWS)
 	SYSTEMTIME 	*init_date_cx;
+#else
+	time_t	*init_date_cx;
 #endif  /* HAS_GERUSAGE */
 
 		/* memory.c */
@@ -258,6 +260,8 @@ typedef struct tag_rt_globals
 	 */
 
 #if defined EIF_HAS_TLS
+#	define RT_TSD_TYPE rt_global_context_t *
+#elif defined VXWORKS
 #	define RT_TSD_TYPE rt_global_context_t *
 #else
 #	define RT_TSD_TYPE EIF_TSD_TYPE

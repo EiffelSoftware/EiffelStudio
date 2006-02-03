@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="access" type="xs:string"/>
+	<xs:complexType name="attributeType" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="summary"/>
+			<xs:element name="access"/>
+			<xs:element name="indexing"/>
+			<xs:element name="result"/>
+			<xs:element name="thread_safety"/>
+			<xs:element name="eiffel_classes"/>
+			<xs:element name="synchronization"/>
+			<xs:element name="fixme"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="return_type" type="xs:string" use="required"/>
+		<xs:attribute name="export" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="paramType" mixed="true">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="routineType" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="summary"/>
+			<xs:element name="access"/>
+			<xs:element name="indexing"/>
+			<xs:element name="result"/>
+			<xs:element name="thread_safety"/>
+			<xs:element name="exception"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="param" type="paramType"/>
+			</xs:choice>
+			<xs:element name="eiffel_classes"/>
+			<xs:element name="synchronization"/>
+			<xs:element name="fixme"/>
+			<xs:element name="return"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="return_type" type="xs:string"/>
+		<xs:attribute name="export" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:element name="doc">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="file" type="fileType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="eiffel_classes" type="xs:string"/>
+	<xs:complexType name="fileType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="summary"/>
+			<xs:element name="attribute" type="attributeType"/>
+			<xs:element name="routine" type="routineType"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="header" type="xs:string"/>
+		<xs:attribute name="version" type="xs:string" use="required"/>
+		<xs:attribute name="summary" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="fixme" type="xs:string"/>
+	<xs:element name="indexing" type="xs:string"/>
+	<xs:element name="result" type="xs:string"/>
+	<xs:element name="summary" type="xs:string"/>
+	<xs:element name="exception" type="xs:string"/>
+	<xs:element name="return" type="xs:string"/>
+	<xs:element name="synchronization" type="xs:string"/>
+	<xs:element name="thread_safety" type="xs:string"/>
+</xs:schema>

@@ -734,8 +734,6 @@ feature -- Implementation
 				end
 			end
 			if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
-				last_routine_id_set := l_feature.rout_id_set
-
 					-- Attachments type check
 				l_formal_count := l_feature.argument_count
 				if is_agent and l_actual_count = 0 and l_formal_count > 0 then
@@ -1050,6 +1048,7 @@ feature -- Implementation
 				last_type := l_result_type
 				last_access_writable := l_feature.is_attribute
 				last_feature_name := l_feature.feature_name
+				last_routine_id_set := l_feature.rout_id_set
 			else
 					-- `l_feature' was not valid for current, report
 					-- corresponding error.

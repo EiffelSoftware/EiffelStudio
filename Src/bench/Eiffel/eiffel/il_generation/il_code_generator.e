@@ -311,8 +311,9 @@ feature -- Addresses
 		deferred
 		end
 
-	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
-			-- Generate address of routine of `a_feature_id' in class `type_i'.
+	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
+			-- Generate address of routine of `a_feature_id' in class `type_i'
+			-- assuming that previous argument is Current if `is_last_argument_current' is true.
 		require
 			type_i_not_void: type_i /= Void
 			positive_feature_id: a_feature_id > 0

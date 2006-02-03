@@ -632,6 +632,12 @@ feature -- Access
 			-- If we manipulate an expanded and try to access the object, we need
 			-- to load the object from its address.
 
+	is_this_argument_current: BOOLEAN
+			-- Is current argument loaded to the stack a Current?
+
+	is_last_argument_current: BOOLEAN
+			-- Is last argument loaded to the stack a Current?
+
 	retry_label: IL_LABEL
 			-- Label used for `retry' clause.
 
@@ -669,7 +675,7 @@ feature {NONE} -- Visitors
 				l_target_type := il_generator.implemented_type (a_node.class_id, l_target_type)
 				l_target_feature_id := a_node.feature_id
 			end
-			il_generator.generate_routine_address (l_target_type, l_target_feature_id)
+			il_generator.generate_routine_address (l_target_type, l_target_feature_id, is_last_argument_current)
 		end
 
 	process_argument_b (a_node: ARGUMENT_B) is
@@ -1249,12 +1255,14 @@ feature {NONE} -- Visitors
 				l_is_object_load_required := True
 			end
 
+			is_this_argument_current := True
 			il_generator.generate_current
 
 			if l_is_object_load_required then
 				is_object_load_required := False
 				l_type_i := context.real_type (a_node.type)
 				if l_type_i.is_expanded then
+					is_this_argument_current := False
 					il_generator.generate_load_from_address (l_type_i)
 				end
 			end
@@ -1310,6 +1318,7 @@ feature {NONE} -- Visitors
 			l_is_nested_call := is_nested_call
 			is_in_creation_call := False
 			is_nested_call := False
+			is_this_argument_current := False
 
 			if not a_node.extension.is_il then
 					-- Generate call to C external.
@@ -1430,6 +1439,7 @@ feature {NONE} -- Visitors
 			l_is_nested_call := is_nested_call
 			is_in_creation_call := False
 			is_nested_call := False
+			is_this_argument_current := False
 
 				-- Get type on which call will be performed.
 			l_cl_type ?= a_node.context_type
@@ -2068,6 +2078,8 @@ feature {NONE} -- Visitors
 		local
 			target_type: TYPE_I
 		do
+			is_last_argument_current := is_this_argument_current
+			is_this_argument_current := False
 			target_type := context.real_type (a_node.attachment_type)
 			generate_expression_il_for_type (a_node.expression, target_type)
 			generate_reattachment (context.real_type (a_node.type), target_type)

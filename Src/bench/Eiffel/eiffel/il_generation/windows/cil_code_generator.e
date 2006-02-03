@@ -4083,8 +4083,9 @@ feature -- Addresses
 			end
 		end
 
-	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
-			-- Generate address of routine of `a_feature_id' in class `type_i'.
+	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER; is_last_argument_current: BOOLEAN) is
+			-- Generate address of routine of `a_feature_id' in class `type_i'
+			-- assuming that previous argument is Current if `is_last_argument_current' is true.
 		local
 			opcode: INTEGER_16
 			type_id: INTEGER
@@ -4096,14 +4097,14 @@ feature -- Addresses
 				opcode := {MD_OPCODES}.ldvirtftn
 				type_id := type_i.static_type_id
 					-- Target object is used to calculate address.
-				debug ("fixme")
-					fixme ("[
-						The code below assumes the address of a routine is passed to a constructor of a delegate.
-						But it does not work well in other cases and may result in invalid IL.
-					]")
+				if is_last_argument_current then
+						-- Use code sequence that can be verified
+						-- when calling a delegate constructor.
+					generate_check_cast (Void, type_i)
+					method_body.put_opcode ({MD_OPCODES}.Dup)
+				else
+					generate_current
 				end
-				generate_check_cast (Void, type_i)
-				method_body.put_opcode ({MD_OPCODES}.Dup)
 			end
 			method_body.put_opcode_mdtoken (opcode, feature_token (type_id, a_feature_id))
 		end

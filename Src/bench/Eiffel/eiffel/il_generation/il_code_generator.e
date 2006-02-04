@@ -77,6 +77,16 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
+		is
+			-- Generate call to `name' with signature `parameters_type' + `return_type'.
+		require
+			a_actual_type_not_void: a_actual_type /= Void
+			valid_external_type: valid_type (ext_kind)
+		deferred
+		end
+
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
 		is

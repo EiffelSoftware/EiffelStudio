@@ -731,6 +731,7 @@ feature {NONE} -- Implementation
 			l_feature_info: STRING
 			l_class_info: STRING
 			l_orig_class_info: STRING
+			l_same_name: BOOLEAN
 			l_breakindex_info: STRING
 			l_obj_address_info: STRING
 			l_extra_info: STRING
@@ -758,9 +759,10 @@ feature {NONE} -- Implementation
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.written_class
-				if oc /= Void and then not oc.is_equal (dc) then
+				if oc /= Void then
 					l_orig_class_info := oc.name_in_upper
 					l_tooltip.prepend_string (" (from " + l_orig_class_info + ")")
+					l_same_name := oc.is_equal (dc)
 				else
 					l_orig_class_info := Interface_names.l_Same_class_name
 				end
@@ -806,6 +808,9 @@ feature {NONE} -- Implementation
 			a_row.set_item (2, glab)
 
 			create glab.make_with_text (l_orig_class_info)
+			if l_same_name then
+				glab.set_foreground_color ((create {EV_STOCK_COLORS}).grey)
+			end
 			glab.set_tooltip (l_orig_class_info)
 			a_row.set_item (3, glab)
 

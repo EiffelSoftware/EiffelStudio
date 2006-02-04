@@ -58,6 +58,8 @@ remtrace thread
 co %DEFAULT_CVS_TAG/Src/library/thread thread
 remtrace time
 co %DEFAULT_CVS_TAG/Src/library/time time
+remtrace uuid
+co %DEFAULT_CVS_TAG/Src/library/uuid uuid
 remtrace web
 co %DEFAULT_CVS_TAG/Src/library/web web
 remtrace wel

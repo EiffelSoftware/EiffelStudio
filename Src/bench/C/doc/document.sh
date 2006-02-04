@@ -48,7 +48,7 @@ done
 
 	# Recursion to subdirectories
 for directory in `ls $1`; do
-	if [ -d $directory ]; then
+	if [ -d $1/$directory ]; then
 		if [ "$directory" != ".svn" ]; then
 			. document.sh $1/$directory $2 False
 		fi

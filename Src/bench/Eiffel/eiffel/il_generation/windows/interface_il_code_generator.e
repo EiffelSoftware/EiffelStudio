@@ -106,8 +106,9 @@ feature -- IL Generation
 				agent generate_type_feature)
 				-- Generate class invariant and internal run-time features.
 			generate_class_features (class_c, class_type)
-				-- Generate default constructor
-			define_default_constructor (class_type, False)
+
+				-- Generates class constructor(s)
+			define_constructors (class_type, False)
 
 				-- Reset global variable for collection.
 			current_class_type := Void

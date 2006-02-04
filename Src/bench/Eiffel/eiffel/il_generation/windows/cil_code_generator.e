@@ -1208,12 +1208,12 @@ feature -- Class info
 			end
 		end
 
-	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
-			-- Define default constructor for implementation of `class_type'
+	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
+			-- Define constructors for implementation of `class_type'
 		require
 			class_type_not_void: class_type /= Void
 		do
-			current_module.define_default_constructor (class_type, is_reference)
+			current_module.define_constructors (class_type, is_reference)
 		end
 
 	define_runtime_features (class_type: CLASS_TYPE) is
@@ -2665,10 +2665,17 @@ feature -- IL Generation
 			l_meth_sig: like method_sig
 			l_name: STRING
 			l_feat_arg: FEAT_ARG
+			l_external_i: EXTERNAL_I
+			l_is_il_external: BOOLEAN
 			l_type_i: TYPE_I
 			l_meth_token, l_meth_attr: INTEGER
+			l_count: INTEGER
 			i, nb: INTEGER
 		do
+			if class_type.associated_class.name_in_upper.is_equal (once "SPECIAL") or class_c.name_in_upper.is_equal (once "SPECIAL") then
+				nb := feat.argument_count
+			end
+
 			nb := feat.argument_count
 			l_meth_sig := method_sig
 			l_meth_sig.reset
@@ -2680,7 +2687,15 @@ feature -- IL Generation
 			end
 			set_method_return_type (l_meth_sig, current_class_type.type)
 
+			if feat.is_external then
+				l_external_i ?= feat
+				if l_external_i /= Void then
+					l_is_il_external := l_external_i.extension.is_il
+				end
+			end
+
 			if nb > 0 then
+					-- Only added arguments when calling parent ctor with arguments
 				from
 					l_feat_arg := feat.arguments
 					l_feat_arg.start
@@ -2711,45 +2726,67 @@ feature -- IL Generation
 				l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
 			start_new_body (l_meth_token)
-			create_object (current_class_type.implementation_id)
-			if current_class_type.is_expanded then
-					-- Box expanded object.
-				generate_metamorphose (current_class_type.type)
-			end
-			if is_generic then
-				duplicate_top
-				generate_argument (nb)
-				method_body.put_call ({MD_OPCODES}.callvirt,
-					current_module.ise_set_type_token, 1, False)
-			end
-			if current_class_type.is_expanded then
-					-- Take address of expanded object.
-				generate_load_address (current_class_type.type)
-			end
-			duplicate_top
-			if nb > 0 then
+
+				-- Generate constructor arguments
+			if l_is_il_external and then nb > 0 then
+				l_count := feat.argument_count
 				from
+					i := 0
 				until
-					i >= nb
+					i = nb
 				loop
 					generate_argument (i)
 					i := i + 1
 				end
 			end
-			if current_class_type.is_expanded then
-				method_body.put_call ({MD_OPCODES}.Call,
-					feature_token (current_class_type.implementation_id,
-						current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, False)
+
+			if l_is_il_external then
+				create_object_with_args (current_class_type.implementation_id, feat.argument_count)
 			else
-				method_body.put_call ({MD_OPCODES}.callvirt,
-					feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
-					nb, False)
+				create_object (current_class_type.implementation_id)
 			end
-			fixme ("Generate class invariant check (if enabled).")
-			if current_class_type.is_expanded then
-					-- Load expanded object value.
-				generate_load_from_address (current_class_type.type)
+
+			if not l_is_il_external then
+				if current_class_type.is_expanded then
+						-- Box expanded object.
+					generate_metamorphose (current_class_type.type)
+				end
+				if is_generic then
+					duplicate_top
+					generate_argument (nb)
+					method_body.put_call ({MD_OPCODES}.callvirt,
+						current_module.ise_set_type_token, 1, False)
+				end
+				if current_class_type.is_expanded then
+						-- Take address of expanded object.
+					generate_load_address (current_class_type.type)
+				end
+				duplicate_top
+				if nb > 0 then
+					from
+					until
+						i >= nb
+					loop
+						generate_argument (i)
+						i := i + 1
+					end
+				end
+				if current_class_type.is_expanded then
+					method_body.put_call ({MD_OPCODES}.Call,
+						feature_token (current_class_type.implementation_id,
+							current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, False)
+				else
+					method_body.put_call ({MD_OPCODES}.callvirt,
+						feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
+						nb, False)
+				end
+				fixme ("Generate class invariant check (if enabled).")
+				if current_class_type.is_expanded then
+						-- Load expanded object value.
+					generate_load_from_address (current_class_type.type)
+				end
 			end
+
 			generate_return (True)
 			store_locals (l_meth_token)
 			method_writer.write_current_body
@@ -3328,6 +3365,21 @@ feature -- IL Generation
 					Names_heap.item (return_type), is_virtual)
 		end
 
+	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
+		is
+			-- Generate call to `name' with signature `parameters_type' + `return_type'.
+		local
+			l_type_id: INTEGER
+			l_type_token: INTEGER
+		do
+			l_type_id := a_actual_type.implementation_id
+			l_type_token := actual_class_type_token (l_type_id)
+			internal_generate_external_call (0, l_type_token, Void, name, ext_kind,
+					Names_heap.convert_to_string_array (parameters_type),
+					Names_heap.item (return_type), False)
+		end
+
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
 		is
@@ -3662,6 +3714,15 @@ feature -- Object creation
 			-- Create object of `a_type_id'.
 		do
 			method_body.put_newobj (constructor_token (a_type_id), 0)
+		end
+
+	create_object_with_args (a_type_id: INTEGER; a_arg_count: INTEGER) is
+			-- Create object of `a_type_id'.
+		require
+			valid_type_id: a_type_id > 0
+			a_arg_count_not_negative: a_arg_count >= 0
+		do
+			method_body.put_newobj (constructor_token (a_type_id), a_arg_count)
 		end
 
 	create_like_object is

@@ -529,10 +529,10 @@ rt_public void eif_free_dlls(void)
 
 #ifndef EIF_WINDOWS
 rt_public pid_t eiffel_fork(void) {
-#ifdef EIF_THREADS
-	return eif_thread_fork();
-#elif defined (VXWORKS)
+#ifdef VXWORKS
 	return 0;
+#elif defined (EIF_THREADS)
+	return eif_thread_fork();
 #else
 	return fork();
 #endif

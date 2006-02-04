@@ -13,11 +13,11 @@ inherit
 	SHARED_SERVER;
 	SHARED_CECIL;
 	COMPILER_EXPORTER
-	
+
 feature
 
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
-			-- Is feature name `feat_name' visible in context 
+			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		local
 			creators: HASH_TABLE [EXPORT_I, STRING]
@@ -142,10 +142,9 @@ end;
 				end;
 				feat_table.forth;
 			end;
-
 				-- Insertion in the cecil table of the effective features
 			from
-				cecil_routine_table.init (nb);
+				cecil_routine_table.init (nb.max (1));
 				a_class.set_visible_table_size (cecil_routine_table.capacity)
 				feat_table.start
 			until
@@ -159,7 +158,7 @@ end;
 					cecil_routine_table.put (a_feature, real_name (a_feature, class_id));
 				end;
 				feat_table.forth;
-			end;
+			end
 		end;
 
 indexing

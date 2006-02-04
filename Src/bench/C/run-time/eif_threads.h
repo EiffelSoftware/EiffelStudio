@@ -268,7 +268,7 @@ rt_public typedef struct {
 
 RT_LNK void eif_thr_panic(char *);
 
-#ifndef EIF_WINDOWS
+#if !defined(EIF_WINDOWS) && !defined(VXWORKS)
 /* Forking, only support on Unix platform on which `fork' is supported. */
 RT_LNK pid_t eif_thread_fork(void);
 #endif

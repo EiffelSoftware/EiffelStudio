@@ -16,10 +16,10 @@ inherit
 		redefine
 			make
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -43,10 +43,24 @@ feature -- Reset
 			current_position_set: current_position = 0
 			state_set: state = Method_type_setting_state
 		end
-		
+
+feature -- Access
+
+	method_type: INTEGER_8
+			-- Type of method
+
+	parameter_count: INTEGER
+			-- Number of parameters
+
+	return_type_element_type: INTEGER_8
+			-- Return type element type
+
+	return_type_token: INTEGER
+			-- Return type token
+
 feature -- Settings
 
-	set_method_type (t: INTEGER_8) is
+	set_method_type (t: like method_type) is
 			-- Set type of method.
 			-- See MD_SIGNATURE_CONSTANTS for possible values.
 		require
@@ -55,23 +69,27 @@ feature -- Settings
 			internal_put (t, current_position)
 			current_position := current_position + 1
 			state := Parameter_count_state
+			method_type := t
 		ensure
 			state_set: state = Parameter_count_state
+			method_type_set: method_type = t
 		end
-		
-	set_parameter_count (n: INTEGER) is
+
+	set_parameter_count (n: like parameter_count) is
 			-- Set number of method parameters.
 			-- To be compressed.
 		require
 			valid_state: state = Parameter_count_state
 		do
 			state := Return_type_state
+			parameter_count := n
 			compress_data (n)
 		ensure
 			state_set: state = Return_type_state
+			parameter_count_set: parameter_count = n
 		end
-	
-	set_return_type (element_type: INTEGER_8; token: INTEGER) is
+
+	set_return_type (element_type: like return_type_element_type; token: like return_type_token) is
 			-- Set return type of method.
 		require
 			valid_state: state = Return_type_state
@@ -81,8 +99,12 @@ feature -- Settings
 		do
 			set_type (element_type, token)
 			state := Parameters_state
+			return_type_element_type := element_type
+			return_type_token := token
 		ensure
 			state_set: state = Parameters_state
+			return_type_element_type_set: return_type_element_type = element_type
+			return_type_token_set: return_type_token = token
 		end
 
 feature -- State
@@ -94,7 +116,7 @@ feature -- State
 	parameter_count_state: INTEGER is 2
 	return_type_state: INTEGER is 3
 	parameters_state: INTEGER is 4;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

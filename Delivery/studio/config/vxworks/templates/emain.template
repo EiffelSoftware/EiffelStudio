@@ -1,0 +1,67 @@
+/*
+	EMAIN.TEMPLATE - Main entry point template for Windows. 
+*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "eif_macros.h"
+#include "eif_sig.h"
+
+extern void emain(int, char **);
+extern int main(int, char **, char **);
+extern void egc_init_plug(void);
+
+/* ctors and dtors arrays -- to be used by runtime system */
+/*   to call static constructors and destructors          */
+/*                                                        */
+/* NOTE: Use a C compiler to compile this file. If you    */
+/*       are using GNU C++, be sure to use compile this   */
+/*       file using a GNU compiler with the               */
+/*       -fdollars-in-identifiers flag.                   */
+
+
+extern void (*_ctors[])();
+void (*_ctors[])() =
+    {
+    0
+    };
+
+extern void (*_dtors[])();
+void (*_dtors[])() =
+    {
+    0
+    };
+
+void eiffel_main ()
+{
+
+	eif_alloc_init();
+#ifdef EIF_THREADS
+	eif_thr_init_root();
+#endif
+{
+	GTCX
+	struct ex_vect *exvect;
+	jmp_buf exenv;
+
+	egc_init_plug();
+	initsig();
+	initstk();
+	exvect = exset((char *) 0, 0, (char *) 0);
+	exvect->ex_jbuf = &exenv;
+	if (setjmp(exenv))
+		failure();
+
+	eif_rtinit(0, NULL, NULL);
+	if (egc_prof_enabled) initprf();
+	emain(0, NULL);
+	reclaim();
+	return;
+}
+}
+
+#ifdef __cplusplus
+}
+#endif

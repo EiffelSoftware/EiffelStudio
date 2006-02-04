@@ -93,7 +93,11 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 
 rt_private rt_global_context_t *eif_new_context (void);
 rt_private void eif_free_context (rt_global_context_t *);
+#ifdef VXWORKS
+rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE, int, int, int, int, int, int, int, int, int);
+#else
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
+#endif
 
 	/* To update GC with thread specific data */
 rt_private void eif_remove_gc_stacks(rt_global_context_t *);
@@ -639,7 +643,11 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	eif_wean (root_object);
 }
 
+#ifdef VXWORKS
+rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10)
+#else
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
+#endif
 {
 	/*
 	 * This function is a wrapper to the Eiffel routine that will be
@@ -1357,6 +1365,10 @@ rt_public void eif_thr_sleep(EIF_INTEGER_64 nanoseconds)
 	 * Use the most precise sleep function if possible.
 	 */
 
+#ifdef VXWORKS
+		/* No sleep routine by default. We fake a sleep. */
+	EIF_THR_YIELD;
+#else
 #ifdef HAS_NANOSLEEP
 	struct timespec req;
 	struct timespec rem;
@@ -1400,6 +1412,7 @@ rt_public void eif_thr_sleep(EIF_INTEGER_64 nanoseconds)
 #  undef EIF_THR_SLEEP_PRECISION
 #  undef EIF_THR_SLEEP_TYPE
 #  undef EIF_THR_SLEEP_FUNCTION
+#endif
 #endif
 }
 

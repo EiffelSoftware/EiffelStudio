@@ -807,10 +807,10 @@ feature -- Code generation
 				create l_version
 				if l_version.is_version_valid (assembly_info.version) then
 					l_version.set_version (assembly_info.version)
-					ass.set_major_version (l_version.major.to_integer_16)
-					ass.set_minor_version (l_version.minor.to_integer_16)
-					ass.set_build_number (l_version.build.to_integer_16)
-					ass.set_revision_number (l_version.revision.to_integer_16)
+					ass.set_major_version (l_version.major.to_natural_16)
+					ass.set_minor_version (l_version.minor.to_natural_16)
+					ass.set_build_number (l_version.build.to_natural_16)
+					ass.set_revision_number (l_version.revision.to_natural_16)
 				end
 
 				if public_key /= Void then
@@ -1306,21 +1306,23 @@ feature -- Metadata description
 			end
 		end
 
-	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
+	define_constructor (class_type: CLASS_TYPE; signature: like method_sig; is_reference: BOOLEAN; parent_token: INTEGER) is
 			-- Define default constructor for implementation of `class_type'
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
+			signature_not_void: signature /= Void
 			class_type_can_be_created: not class_type.associated_class.is_interface
 		local
 			l_meth_token: INTEGER
-			l_sig: like method_sig
 			l_uni_string: like uni_string
 			l_class: CLASS_C
+			l_arg_count: INTEGER
+			l_method_body: MD_METHOD_BODY
+			i: INTEGER
 		do
 				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
 			create l_uni_string.make (".ctor")
-			l_sig := default_sig
 
 			l_class := class_type.associated_class
 
@@ -1330,7 +1332,7 @@ feature -- Metadata description
 				il_code_generator.il_module (class_type) /= Current
 			then
 				l_meth_token := md_emit.define_member_ref (l_uni_string,
-					actual_class_type_token (class_type.implementation_id), l_sig)
+					actual_class_type_token (class_type.implementation_id), signature)
 			else
 				l_meth_token := md_emit.define_method (l_uni_string,
 					actual_class_type_token (class_type.implementation_id),
@@ -1338,16 +1340,47 @@ feature -- Metadata description
 					{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 					{MD_METHOD_ATTRIBUTES}.Special_name |
 					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
-					l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					signature, {MD_METHOD_ATTRIBUTES}.Managed)
 
 				il_code_generator.start_new_body (l_meth_token)
+				l_method_body := il_code_generator.method_body
 
 				if not class_type.is_expanded then
+
 						-- Call constructor from super-class for reference type
 					il_code_generator.generate_current
-					il_code_generator.method_body.put_call ({MD_OPCODES}.Call,
-						constructor_token (single_parent_mapping.item (class_type.implementation_id)),
-						0, False)
+					l_arg_count := signature.parameter_count
+					from
+						i := 1
+					until
+						i > l_arg_count
+					loop
+						inspect i
+						when 0 then
+							check
+								already_defined: False
+							end
+						when 1 then
+							l_method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+						when 2 then
+							l_method_body.put_opcode ({MD_OPCODES}.ldarg_2)
+						when 3 then
+							l_method_body.put_opcode ({MD_OPCODES}.ldarg_3)
+						else
+							if i <= 255 then
+								l_method_body.put_opcode_integer_8 ({MD_OPCODES}.ldarg_s, i.to_integer_8)
+							else
+								l_method_body.put_opcode_integer_16 ({MD_OPCODES}.ldarg, i.to_integer_16)
+							end
+						end
+						i := i + 1
+					end
+					if parent_token = 0 then
+						l_method_body.put_call ({MD_OPCODES}.Call,
+							constructor_token (single_parent_mapping.item (class_type.implementation_id)) , l_arg_count, False)
+					else
+						l_method_body.put_call ({MD_OPCODES}.Call, parent_token, l_arg_count, False)
+					end
 				end
 
 				if il_code_generator.is_initialization_required (class_type) then
@@ -1363,6 +1396,115 @@ feature -- Metadata description
 			end
 			internal_constructor_token.put (l_meth_token, class_type.implementation_id)
 		end
+
+	define_default_constructor (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
+			-- Define default constructor for implementation of `class_type'
+		require
+			is_generated: is_generated
+			class_type_not_void: class_type /= Void
+			class_type_can_be_created: not class_type.associated_class.is_interface
+		do
+			define_constructor (class_type, default_sig, is_reference, 0)
+		end
+
+	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is
+			-- Define constructors for implementation of `class_type'
+		require
+			is_generated: is_generated
+			class_type_not_void: class_type /= Void
+			class_type_can_be_created: not class_type.associated_class.is_interface
+		local
+			l_sig: like method_sig
+			l_class: CLASS_C
+			l_creators: ARRAY [STRING]
+			l_creators_count: INTEGER
+			l_feature: FEATURE_I
+			l_external_feature: EXTERNAL_I
+			l_il_extension: IL_EXTENSION_I
+			l_define_default_ctor: BOOLEAN
+			l_feat_arg: FEAT_ARG
+			l_type_i: TYPE_I
+			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
+			i: INTEGER
+		do
+			l_class := class_type.associated_class
+
+			l_creators_table := l_class.creators
+			if l_creators_table /= Void then
+				l_creators := l_creators_table.current_keys
+			end
+
+			if l_creators /= Void and then not l_creators.is_empty then
+				from
+					i := l_creators.lower
+					l_creators_count := l_creators.upper
+				until
+					i > l_creators_count
+				loop
+					l_feature := l_class.feature_named (l_creators[i])
+					check
+						l_feature_attached: l_feature /= Void
+					end
+					if l_feature.is_il_external then
+						if l_feature.has_arguments then
+
+							l_external_feature ?= l_feature
+							check
+								l_external_feature_attached: l_external_feature /= Void
+							end
+							l_il_extension ?= l_external_feature.extension
+							check
+								l_il_extension_attached: l_il_extension /= Void
+							end
+
+							create l_sig.make
+							l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+							l_sig.set_parameter_count (l_feature.argument_count)
+							l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+							from
+								l_feat_arg := l_feature.arguments
+								l_feat_arg.start
+							until
+								l_feat_arg.after
+							loop
+								l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+								set_signature_type (l_sig, l_type_i)
+								l_feat_arg.forth
+							end
+							define_constructor (class_type, l_sig, is_reference, l_il_extension.token)
+						else
+							l_define_default_ctor := True
+						end
+					else
+						l_define_default_ctor := True
+					end
+					i := i + 1
+				end
+			else
+				l_define_default_ctor := True
+			end
+
+			if l_define_default_ctor then
+				define_default_constructor (class_type, is_reference)
+			end
+		end
+
+	argument_actual_type (a_type: TYPE_I): TYPE_I is
+			-- Compute real type of Current in current generated class.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if a_type.is_none then
+				Result := system.any_class.compiled_class.types.first.type
+			else
+				Result := byte_context.real_type (a_type)
+			end
+		ensure
+			valid_result: Result /= Void
+		end
+
+
+
 
 feature -- Local saving
 
@@ -1630,10 +1772,10 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_build := l_version.build
 						l_revision := l_version.revision
 
-						l_ass_info.set_major_version (l_major.to_integer_16)
-						l_ass_info.set_minor_version (l_minor.to_integer_16)
-						l_ass_info.set_build_number (l_build.to_integer_16)
-						l_ass_info.set_revision_number (l_revision.to_integer_16)
+						l_ass_info.set_major_version (l_major.to_natural_16)
+						l_ass_info.set_minor_version (l_minor.to_natural_16)
+						l_ass_info.set_build_number (l_build.to_natural_16)
+						l_ass_info.set_revision_number (l_revision.to_natural_16)
 					end
 
 					if a_key /= Void then
@@ -2263,10 +2405,10 @@ feature {NONE} -- Once per modules being generated.
 
 			l_version.set_version (l_mscorlib.version)
 			create l_ass_info.make
-			l_ass_info.set_major_version (l_version.major.to_integer_16)
-			l_ass_info.set_minor_version (l_version.minor.to_integer_16)
-			l_ass_info.set_build_number (l_version.build.to_integer_16)
-			l_ass_info.set_revision_number (l_version.revision.to_integer_16)
+			l_ass_info.set_major_version (l_version.major.to_natural_16)
+			l_ass_info.set_minor_version (l_version.minor.to_natural_16)
+			l_ass_info.set_build_number (l_version.build.to_natural_16)
+			l_ass_info.set_revision_number (l_version.revision.to_natural_16)
 
 			create l_pub_key.make_from_string (l_mscorlib.public_key_token)
 
@@ -2725,19 +2867,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

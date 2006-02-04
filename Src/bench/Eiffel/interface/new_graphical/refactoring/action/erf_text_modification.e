@@ -85,7 +85,6 @@ feature -- Prepare/Commit
 		ensure
 			not_text_managed: not text_managed
 			not_modified: not is_modified
-			undo_managed: undo_managed
 		end
 
 feature -- Element change
@@ -121,8 +120,6 @@ feature -- Element change
 
 	discard_undo is
 			-- Discard the undo informations.
-		require
-			undo_managed: undo_managed
 		local
 			file: RAW_FILE
 		do

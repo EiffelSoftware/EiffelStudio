@@ -37,6 +37,8 @@ exprt %DEFAULT_CVS_TAG/Src/library/vision2 vision2
 fullrd vision2\implementation\gtk
 remtrace vision2_extension
 exprt %DEFAULT_CVS_TAG/Src/library/vision2_extension vision2_extension
+remtrace uuid
+exprt %DEFAULT_CVS_TAG/Src/library/uuid uuid
 remtrace web
 exprt %DEFAULT_CVS_TAG/Src/library/web web
 remtrace wel

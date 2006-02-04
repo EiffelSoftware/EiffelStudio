@@ -623,7 +623,10 @@ feature -- Access
 			-- Actual IL code generator.
 
 	is_in_creation_call: BOOLEAN
-			-- Is current call a creation instruction?
+			-- Is current call a creation instruction
+
+	is_in_external_creation_call: BOOLEAN
+			-- Is current call a creation instruction on an external type?
 
 	is_nested_call: BOOLEAN
 			-- Is current call from a NESTED_B node?
@@ -1187,12 +1190,13 @@ feature {NONE} -- Visitors
 			l_ext_call: EXTERNAL_B
 			l_creation_type: TYPE_I
 			l_nested: NESTED_B
+			l_is_il_external: BOOLEAN
 		do
 			is_nested_call := False
 			l_creation_type := context.real_type (a_node.type)
 			if l_creation_type.is_basic then
 				il_generator.put_default_value (l_creation_type)
-			elseif l_creation_type.is_external then
+			elseif l_creation_type.is_external then --or else a_node.call.is_external then
 					-- Creation call on external class.
 				if a_node.call /= Void then
 					create l_nested
@@ -1217,21 +1221,33 @@ feature {NONE} -- Visitors
 					a_node.info.generate_il
 				end
 			else
-					-- Standard creation call
-				a_node.info.generate_il
+				l_ext_call ?= a_node.call
+				if l_ext_call /= Void then
+					l_is_il_external := l_ext_call.extension.is_il
+				end
+				if not l_is_il_external then
+						-- Standard creation call on non-il external.
+					a_node.info.generate_il
+				end
 				if a_node.call /= Void then
 					if l_creation_type.is_expanded then
+
 							-- Take an address of a boxed object.
 						il_generator.generate_metamorphose (l_creation_type)
 						il_generator.generate_load_address (l_creation_type)
 					end
-					il_generator.duplicate_top
+					if not l_is_il_external then
+						il_generator.duplicate_top
+					end
+
 					create l_nested
 					l_nested.set_target (a_node)
 					l_nested.set_message (a_node.call)
 					a_node.call.set_parent (l_nested)
 					is_in_creation_call := True
+					is_in_external_creation_call := l_is_il_external
 					a_node.call.process (Current)
+					is_in_external_creation_call := False
 					is_in_creation_call := False
 					a_node.call.set_parent (Void)
 					if l_creation_type.is_expanded then
@@ -1313,11 +1329,14 @@ feature {NONE} -- Visitors
 			l_real_target: ACCESS_B
 			l_is_in_creation: like is_in_creation_call
 			l_is_nested_call: like is_nested_call
+			l_is_in_external_creation_call: like is_in_external_creation_call
 		do
 			l_is_in_creation := is_in_creation_call
 			l_is_nested_call := is_nested_call
+			l_is_in_external_creation_call := is_in_external_creation_call
 			is_in_creation_call := False
 			is_nested_call := False
+			is_in_external_creation_call := False
 			is_this_argument_current := False
 
 			if not a_node.extension.is_il then
@@ -1393,6 +1412,8 @@ feature {NONE} -- Visitors
 					if a_node.is_static_call or else a_node.precursor_type /= Void then
 							-- A call to precursor or a static call is never polymorphic.
 						l_il_ext.generate_call (False)
+					elseif l_is_in_external_creation_call then
+						l_il_ext.generate_external_creation_call (l_cl_type)
 					else
 							-- Standard call to an external feature.
 						if not l_cl_type.is_enum or else l_il_ext.type /= field_type then

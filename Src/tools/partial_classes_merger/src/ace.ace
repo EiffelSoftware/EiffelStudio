@@ -1,0 +1,73 @@
+system
+	"class_merger"
+
+root
+	APPLICATION: execute
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	disabled_debug (yes)
+	disabled_debug ("gelex")
+	disabled_debug ("geyacc")
+	disabled_debug ("refactor_fixme")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+	arguments ("-i %"..\tests%" -o %"..\tests\res%"")
+
+
+cluster
+	all merger:		"$EIFFEL_SRC\tools\partial_classes_merger\src"
+		exclude
+			".svn"; "EIFGEN"; 
+		end
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			".svn"; "table_eiffel3"; "desc"; 
+		default
+			assertion (no)
+		end
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			".svn"; "hact"; "se"; "ve"; "base"; "other"; "gelint"; "test"; 
+		default
+			assertion (no)
+		end
+
+	all ast:		"$EIFFEL_SRC\Eiffel\common"
+		exclude
+			".svn"; 
+		default
+			assertion (no)
+			assertion (check)
+		end
+
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\misc"
+		exclude
+			"error_handler.e"; "syntax_error.e"; 
+		end
+
+	all eclop:		"$EIFFEL_SRC\free_add_ons\eclop\eclop"
+		exclude
+			".svn"; 
+		end
+
+
+end

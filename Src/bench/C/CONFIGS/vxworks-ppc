@@ -128,7 +128,7 @@ d_strerror='define'
 d_syserrlst='define'
 d_sysernlst='undef'
 d_strerrm='strerror(e)'
-d_usleep='undef'
+d_usleep='define'
 i_stdarg='define'
 i_varargs='undef'
 

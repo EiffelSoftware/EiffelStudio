@@ -33,6 +33,9 @@
 			 Customer support http://support.eiffel.com
 		]"
 */
+/*
+doc:<file name="rt_bc_reader.h" version="$Id$" summary="Low level routines to read melted code.">
+*/
 
 #ifndef _rt_bc_reader_h_
 #define _rt_bc_reader_h_
@@ -379,3 +382,7 @@ rt_private EIF_CHARACTER * get_string8(unsigned char **bc, EIF_INTEGER_32 reques
 #endif
 
 #endif
+
+/*
+doc:</file>
+*/

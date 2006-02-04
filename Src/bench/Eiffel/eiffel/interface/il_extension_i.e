@@ -26,13 +26,13 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end		
+		end
 
 feature -- Access
 
 	is_il: BOOLEAN is True
 			-- Current external is an IL external.
-			
+
 	type: INTEGER
 			-- Type of IL external.
 			--| See SHARED_IL_CONSTANTS for all types constants.
@@ -85,6 +85,21 @@ feature -- Call generation
 				type, argument_types, return_type, is_polymorphic)
 		end
 
+	generate_external_creation_call (a_actual_type: CL_TYPE_I) is
+			-- Generate external creation call for `a_actual_type', where constructor comes
+			-- from `Current'.
+		require
+			a_actual_type_not_void: a_actual_type /= Void
+			valid_call: alias_name_id > 0 or else
+				type = {SHARED_IL_CONSTANTS}.Creator_type
+		do
+			check
+				type_not_enum: type /= Enum_field_type
+			end
+			il_generator.generate_external_creation_call (a_actual_type, Names_heap.item (alias_name_id),
+				type, argument_types, return_type)
+		end
+
 	generate_creation_call is
 			-- Generate external feature call on constructor `n' using information
 			-- of Current wihtout creating an object.
@@ -101,7 +116,7 @@ feature -- Call generation
 		do
 			-- Do nothing here since IL code does not generate into C code.
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

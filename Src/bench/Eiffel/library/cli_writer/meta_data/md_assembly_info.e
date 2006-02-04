@@ -19,38 +19,30 @@ create
 
 feature -- Settings
 
-	set_major_version (m: INTEGER_16) is
+	set_major_version (m: NATURAL_16) is
 			-- Set `major_version' to `m'.
-		require
-			valid_version: m >= 0
 		do
 			c_set_major_version (item, m)
 		end
 
-	set_minor_version (m: INTEGER_16) is
+	set_minor_version (m: NATURAL_16) is
 			-- Set `minor_version' to `m'.
-		require
-			valid_version: m >= 0
 		do
 			c_set_minor_version (item, m)
 		end
 
-	set_build_number (m: INTEGER_16) is
+	set_build_number (m: NATURAL_16) is
 			-- Set `build_number' to `m'.
-		require
-			valid_version: m >= 0
 		do
 			c_set_build_number (item, m)
 		end
 
-	set_revision_number (m: INTEGER_16) is
+	set_revision_number (m: NATURAL_16) is
 			-- Set `revision_number' to `m'.
-		require
-			valid_version: m >= 0
 		do
 			c_set_revision_number (item, m)
 		end
-		
+
 feature -- Measurement
 
 	size: INTEGER is
@@ -58,7 +50,7 @@ feature -- Measurement
 		do
 			Result := structure_size
 		end
-		
+
 	structure_size: INTEGER is
 			-- Size of ASSEMBLYMETADATA structure.
 		external
@@ -66,28 +58,28 @@ feature -- Measurement
 		alias
 			"sizeof(ASSEMBLYMETADATA)"
 		end
-		
+
 feature {NONE} -- Implementation
 
-	c_set_major_version (an_item: POINTER; i: INTEGER_16) is
+	c_set_major_version (an_item: POINTER; i: NATURAL_16) is
 			-- Set `usMajorVersion' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usMajorVersion type USHORT use <cor.h>"
 		end
 
-	c_set_minor_version (an_item: POINTER; i: INTEGER_16) is
+	c_set_minor_version (an_item: POINTER; i: NATURAL_16) is
 			-- Set `usMinorVersion' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usMinorVersion type USHORT use <cor.h>"
 		end
 
-	c_set_build_number (an_item: POINTER; i: INTEGER_16) is
+	c_set_build_number (an_item: POINTER; i: NATURAL_16) is
 			-- Set `usBuildNumber' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usBuildNumber type USHORT use <cor.h>"
 		end
 
-	c_set_revision_number (an_item: POINTER; i: INTEGER_16) is
+	c_set_revision_number (an_item: POINTER; i: NATURAL_16) is
 			-- Set `usRevisionNumber' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usRevisionNumber type USHORT use <cor.h>"

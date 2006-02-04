@@ -45,16 +45,6 @@ extern "C" {
 #endif
 
 /*
- * Documentation shows that mmap, and sbrk are 
- * incompatible with parallel use of standard malloc 
- * functions.
- */
-
-#undef HAS_SMART_MMAP
-#undef HAS_SMART_SBRK
-#undef HAS_SBRK
-
-/*
  * Useful shortcuts for accessing fields.
  */
 #define ov_next		ov_head.ovu.ovu_next

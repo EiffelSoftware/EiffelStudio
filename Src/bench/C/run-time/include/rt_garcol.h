@@ -123,9 +123,6 @@ extern double last_gc_time;		/* Time spent during the last run */
 extern int gc_ran;				/* Has the GC been running */
 
 /* Exported variables */
-extern struct sc_zone ps_from;	/* Partial scavenging 'from' zone */
-extern struct sc_zone ps_to;	/* Partial scavenging 'to' zone */
-extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
 extern size_t th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
 

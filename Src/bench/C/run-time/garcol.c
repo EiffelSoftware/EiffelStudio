@@ -577,42 +577,33 @@ doc:	</attribute>
 */
 rt_public EIF_INTEGER clsc_per;			/* Period of full coalescing: 0 => never. */
 
-/*
-doc:	<attribute name="spoilt_tbl" return_type="struct s_table *" export="private">
-doc:		<summary>Spoilt chunks are put into a search table, to avoid taking them as 'from' space more than once: for each spoilt chunk we find, we have to allocate a new 'to' zone at the next partial scavenge.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
-doc:	</attribute>
-*/
-rt_private struct s_table *spoilt_tbl = NULL;
-
 /* Zones used for partial scavenging */
 /*
-doc:	<attribute name="ps_from" return_type="struct sc_zone" export="shared">
+doc:	<attribute name="ps_from" return_type="struct partial_sc_zone" export="private">
 doc:		<summary>From zone used for partial scavenging</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_shared struct sc_zone ps_from;
+rt_private struct partial_sc_zone ps_from;
 
 /*
-doc:	<attribute name="ps_to" return_type="struct sc_zone" export="shared">
+doc:	<attribute name="ps_to" return_type="struct partial_sc_zone" export="private">
 doc:		<summary>To zone used for partial scavenging</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_shared struct sc_zone ps_to;
+rt_private struct partial_sc_zone ps_to;
 
 /*
-doc:	<attribute name="last_from" return_type="struct chunk *" export="shared">
+doc:	<attribute name="last_from" return_type="struct chunk *" export="private">
 doc:		<summary>Last `from' zone used by partial scavenging.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_shared struct chunk *last_from = NULL;
+rt_private struct chunk *last_from = NULL;
 
 /*
 doc:	<attribute name="th_alloc" return_type="size_t" export="public">
@@ -671,7 +662,6 @@ rt_private void internal_marking(MARKER marking, int moving);
 rt_private void full_mark(EIF_CONTEXT_NOARG);			/* Marks all reachable objects */
 rt_private void full_sweep(void);			/* Removes all un-marked objects */
 rt_private void run_collector(void);		/* Wrapper for full collections */
-rt_private void clean_up(void);			/* After collection, time to clean up */
 
 /* Stack markers */
 rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move);	/* Marks a collector's stack */
@@ -687,15 +677,15 @@ rt_private void run_plsc(void);			/* Run the partial scavenging algorithm */
 rt_shared void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
 rt_private void init_plsc(void);			/* Initialize the scavenging process */
 rt_private void clean_zones(void);			/* Clean up scavenge zones */
-rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *to);			/* Scavenge an object */
+rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top);			/* Scavenge an object */
 /*rt_private void clean_space();*/			/* Sweep forwarded objects */ /* %%ss undefine */
 rt_private void full_update(void);			/* Update scavenge-related structures */
-rt_private void split_to_block(void);		/* Keep only needed space in 'to' block */
+rt_private void split_to_block (int is_to_keep);		/* Keep only needed space in 'to' block */
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */
 rt_private int find_scavenge_spaces(void);	/* Find a pair of scavenging spaces */
-rt_private struct chunk *find_std_chunk(register struct chunk *start);	/* Look for a standard-size chunk */
 #ifndef EIF_NO_SCAVENGING
-rt_private void find_to_space(struct sc_zone *to);		/* Find standard-size 'to' chunks */
+rt_private struct chunk *find_from_space(void);	/* Look for a chunk that could be used as a `from' space. */
+rt_private void find_to_space(void);		/* Look for a chunk that could be used as a 'to' chunks */
 #endif
 
 /* Generation based collector */
@@ -711,7 +701,6 @@ rt_private void update_rem_set(void);		/* Update remembered set */
 rt_shared int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
-rt_shared EIF_REFERENCE to_chunk(void);			/* Address of the chunk holding 'to' */
 
 /* Dealing with dispose routine */
 rt_shared void gfree(register union overhead *zone);				/* Free object, eventually call dispose */
@@ -848,11 +837,6 @@ rt_shared int acollect(void)
 	if (plsc_per) {				/* Can we run full collections?.*/
 		if (force_plsc || (0 == nb_calls % plsc_per)) {	/* Full collection required */
 			plsc();
-				/* This is the best time to run a full_coalesc of the memory. Not doing
-				 * it kills the performance of the GC as memory is more fragmented at this
-				 * point due to many small blocks of the memory that returned to the
-				 * free list. */
-			full_coalesc (ALL_T);
 			status = 0;
 				/* Reset `force_plsc' since we don't want to have a second full
 				 * collection right after this one. */
@@ -1187,20 +1171,6 @@ rt_public void gc_run(void)
 #endif
 }
 
-#ifdef ISE_GC
-rt_private void clean_up(void)
-{
-	/* After a collection cycle, we may restore attempt to release some core,
-	 * then dispatch signals which may have been stacked while in the GC process
-	 * and finally stop blocking signals.
-	 */
-	RT_GET_CONTEXT
-
-	rel_core();				/* We may give some core back to the kernel */
-	SIGRESUME;				/* Dispatch any signal which has been queued */
-}
-#endif /* ISE_GC */
-
 #if defined (WORKBENCH) || defined (EIF_THREADS)
 /*
 doc:	<routine name="alloc_oms" return_type="EIF_REFERENCE **" export="shared">
@@ -1296,17 +1266,17 @@ rt_public void reclaim(void)
 				sc_stop();					/* Free 'to' and explode 'from' space */
 			}
 
+				/* Reset GC status otherwise plsc() might skip some memory blocks
+				 * (those previously used as partial scavenging areas).
+				 */
+			rt_g_data.status = (char) 0;
 				/* Call for the last time the GC through a `full_collect'. It enables
 				 * the call to `dispose' routine of remaining objects which defines
-				 * the dispose routine. */
+				 * the dispose routine. 
+				 * Ensures that `root_obj' is cleared.
+				 */
+			root_obj = NULL;
 			plsc ();
-
-			/* Reset GC status otherwise full_sweep() might skip some memory blocks
-			 * (those previously used as partial scavenging areas).
-			 */
-			rt_g_data.status = (char) 0;
-			
-			full_sweep();				/* Reclaim ALL the objects in the system */
 
 #endif
 
@@ -1350,11 +1320,7 @@ rt_public void reclaim(void)
 #ifdef ISE_GC
 			for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
 				cn = c->ck_next;
-#if !defined HAS_SMART_MMAP && !defined HAS_SBRK
 				eif_free (c);	/* Previously allocated with eif_malloc. */
-#else
-				eif_rt_xfree ((EIF_REFERENCE) c);		/* Previously allocated with mmap or sbrk. */
-#endif	/* !HAS_SMART_MMAP && !!HAS_SBRK */
 			}
 			cklst.ck_head = (struct chunk *) 0;
 #endif
@@ -2125,13 +2091,13 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 
 
 rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
-
 {
-	/* Mark all the objects referenced by the root object. This is almost the
-	 * same routine as recursive_mark() with one major change: the tail
-	 * recursion has been removed. All the attributes of an object are 
-	 * recursively marked, except the last one. This brings a noticeable
-	 * improvement with structures like LINKED_LIST.
+	/* Mark all the objects referenced by the root object.
+	 * All the attributes of an object are recursively marked,
+	 * except the last one. This brings a noticeable
+	 * improvement with structures like LINKED_LIST when its `right'
+	 * part is the last reference (note this is not always the case).
+	 * It also prevents stack overflow with the `overflow_stack_set'.
 	 */
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
@@ -2224,18 +2190,28 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 				goto done;				/* Object processed and did not move */
 
 			if (offset & GC_GEN && !(size & B_BUSY)) {
-				current = scavenge(current, &sc_to);	/* Simple scavenging */
+				current = scavenge(current, &sc_to.sc_top);	/* Simple scavenging */
 				zone = HEADER(current);					/* Update zone */
 				flags = zone->ov_flags;					/* And Eiffel flags */
 				if (prev)					/* Update referencing pointer */
 					*prev = current;
 				goto marked;
 			} else
-				if (offset & GC_PART &&
-				current > ps_from.sc_arena && current <= ps_from.sc_end) {
-					current = scavenge(current, &ps_to);/* Partial scavenge */
+				if
+					((offset & GC_PART) && (current > ps_from.sc_arena && current <= ps_from.sc_end) &&
+					 (ps_to.sc_top + ((size & B_SIZE) + OVERHEAD) <= ps_to.sc_end))
+				{
+					current = scavenge(current, &ps_to.sc_top);/* Partial scavenge */
 					zone = HEADER(current);				/* Update zone */
 					flags = zone->ov_flags;				/* And Eiffel flags */
+						/* If we reached the end of the scavenge space, then the B_LAST flag
+						 * must be already set on the new object (size of from and to spaces are
+						 * identical). Otherwise, it has to be reset. */
+					if (ps_to.sc_top == ps_to.sc_end) {
+						zone->ov_size |= B_LAST;
+					} else {
+						zone->ov_size &= ~B_LAST;
+					}
 					if (prev)
 						*prev = current;	/* Update referencing pointer */
 					goto marked;
@@ -2426,8 +2402,7 @@ rt_private void full_sweep(void)
 		 * the chunk is not completely free, i.e. if it has C blocks in it).
 		 * The 'to' zone is full of 'alive' objects, but they are unmarked...
 		 * There is no special consideration for generation scavenging,
-		 * because the blocks which hold these zone are C ones. Note that this
-		 * test works only because we use standard chunks--RAM.
+		 * because the blocks which hold these zone are C ones.
 		 *
 		 * In non-partial scavenging mode, then only the 'to' has to be skipped:
 		 * the scavenge zone are unused in this mode, but 'to' contains a bunch
@@ -2435,13 +2410,15 @@ rt_private void full_sweep(void)
 		 * last scavenging cycle).
 		 */
 
-		if (rt_g_data.status & GC_PART) {			/* In partial scavenge */
-			if (arena == ps_from.sc_arena || arena == ps_to.sc_arena)
-				continue;					/* Skip scavenge zones */
-		} else if (arena == ps_to.sc_arena)
-			continue;						/* Skip 'to' zone */
-
-		end = (EIF_REFERENCE) arena + chunk->ck_length;	/* Chunk's tail */
+		if (arena == ps_to.sc_arena) {
+				/* Only traverse the bottom part of `ps_to' which
+				 * is actually not used as a `to' zone for partial scavenging. */
+			end = ps_to.sc_active_arena;
+		} else if ((rt_g_data.status & GC_PART) && (arena == ps_from.sc_arena)) {
+			continue;
+		} else {
+			end = (EIF_REFERENCE) arena + chunk->ck_length;	/* Chunk's tail */
+		}
 
 		/* Objects are not chained together, so the only way to walk
 		 * through them is to use the size field of each block. C blocks
@@ -2572,7 +2549,9 @@ rt_private int partial_scavenging(void)
 	SIGBLOCK;				/* Block all signals during garbage collection */
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 	run_plsc();				/* Normal sequence */
+	rel_core();				/* We may give some core back to the kernel */
 	eiffel_usage = 0;		/* Reset Eiffel memory allocated since last collection */
+	SIGRESUME;				/* Dispatch any signal which has been queued */
 	return 0;
 }
 
@@ -2583,8 +2562,11 @@ rt_private void run_plsc(void)
 	 */
 
 	run_collector();		/* Call a wrapper to do the job */
-	clean_zones();			/* Clean up 'from' and 'to' scavenge zonse */
-	clean_up();				/* Dispatch signals, release core, etc... */
+		/* Clean up `from' and `to' scavenge zone if a partial scavenging is done, not
+		 * a simple mark and sweep. */
+	if (rt_g_data.status & GC_PART) {
+		clean_zones();			/* Clean up 'from' and 'to' scavenge zonse */
+	}
 }
 
 rt_shared void urgent_plsc(EIF_REFERENCE *object)
@@ -2609,6 +2591,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	*object = MARK_SWITCH(object);	/* Ensure object is alive */
 
 	run_plsc();				/* Normal sequence */
+	SIGRESUME;				/* Dispatch any signal which has been queued */
 
 	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 }
@@ -2623,102 +2606,89 @@ rt_private void clean_zones(void)
 	 * time, but some C blocks may pollute the zones if we are low in memory).
 	 */
 
-#ifdef DEBUG
-	dprintf(1)("clean_zones: entering function..\n");
-#endif
+	int is_ps_to_keep;
+	static rt_uint_ptr copied_average = 0;
 
+	REQUIRE("GC_PART", rt_g_data.status & GC_PART);
 
-	if (!(rt_g_data.status & GC_PART))
-		return;				/* A simple mark and sweep was done */
-
-	/* Compute the amount of copied bytes and the size of the scavenging zone
-	 * we were dealing with. This is used by scollect to update its statistics
-	 * about the memory collected (since when scavenging is done, some memory
-	 * is collected without having the free-list disturbed, thus making the
-	 * malloc statistics inaccurate in this respect)--RAM.
-	 */
-
+		/* Compute the amount of copied bytes and the size of the scavenging zone
+		 * we were dealing with. This is used by scollect to update its statistics
+		 * about the memory collected (since when scavenging is done, some memory
+		 * is collected without having the free-list disturbed, thus making the
+		 * malloc statistics inaccurate in this respect)--RAM.
+		 */
 	rt_g_data.mem_copied += ps_from.sc_size;	/* Bytes subject to copying */
-	rt_g_data.mem_move += ps_to.sc_top - ps_to.sc_arena;
+	rt_g_data.mem_move += ps_to.sc_top - ps_to.sc_active_arena;
 
-	split_to_block();		/* Put final free block back to the free list */
-
-	if (0 == sweep_from_space()) {	/* Clean up 'from' space */
-
-#ifdef DEBUG
-		dprintf(1)("clean_zones: 'from' zone is completely empty\n");
-		flush;
-#endif
-
-		/* For malloc, set the B_LAST bit to indicate that the block held
-		 * in the space is the last one in the chunk (remember, we use
-		 * standard chunks only).
-		 */
-		((union overhead *) ps_from.sc_arena)->ov_size |= B_LAST;
-
-		/* The whole 'from' space is now free. If the 'to' space holds at least
-		 * one object, then this will become the new 'to' space. Otherwise, we
-		 * keep the same 'to' space and the 'from' space is put back to the
-		 * free list.
-		 */
-
-		if (ps_to.sc_arena == ps_to.sc_top) {
-
-#ifdef DEBUG
-			dprintf(1)("clean_zones: 'from' zone freed (%d bytes)\n",
-				((union overhead *) ps_from.sc_arena)->ov_size & B_SIZE);
-			flush;
-#endif
-
-			/* The 'to' space is empty -- Free the 'from' space but keep the
-			 * to zone for next scavenge (it's so hard to find). Before
-			 * freeing the scavenge zone, do not forget to set the B_BUSY
-			 * flag for eif_rt_xfree. The number of 'to' zones allocated is also
-			 * decreased by one, since its allocation is compensated by the
-			 * release of the from space (well, sort of).
+		/* Update the average. */
+	copied_average = (copied_average + (ps_to.sc_top - ps_to.sc_active_arena)) / 2;
+	if
+		((ps_to.sc_top >= ps_to.sc_end) ||
+		((copied_average * 2 <= ps_to.sc_size) &&
+		 	((rt_uint_ptr) (ps_to.sc_end - ps_to.sc_top) <= ((copied_average * 50) / 100))))
+	{
+			/* If we have reached the end of the `ps_to' zone, then we cannot keep it. */
+			/* If we compact in average less than half of the `ps_to' zone, then if we
+			 * have less than 50% of `copied_average' bytes available in `ps_to', we
+			 * cannot keep it, since next partial scavenging might overflow `ps_to' and thus
+			 * as if no partial scavenging was done.
 			 */
-
-			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
-			eif_rt_xfree (ps_from.sc_arena + OVERHEAD);	/* One big bloc */
-			memset (&ps_from, 0, sizeof(struct sc_zone));	/* Was freed */
-			rt_g_data.gc_to--;
-
-		} else {
-
-			/* The 'to' space holds at least one object (normal case). The
-			 * 'from' space is completely empty and will be the next 'to' space
-			 * in the next partial scavenging.
-			 */
-
-			memcpy (&ps_to, &ps_from, sizeof(struct sc_zone));
-			ps_to.sc_flgs = ((union overhead *) ps_from.sc_arena)->ov_size;
-
-#ifdef DEBUG
-			dprintf(1)("clean_zones: 'from' zone kept for next 'to'\n");
-			flush;
-#endif
-		}
-		return;
+		is_ps_to_keep = 0;
+	} else {
+		is_ps_to_keep = 1;
 	}
 
-	/* Chunk is spoilt. Add it in the search table, so that we do not try to
-	 * scavenge this space again.
-	 */
+		/* Put final free block back to the free list? */
+	split_to_block(is_ps_to_keep);
 
-	if (spoilt_tbl == (struct s_table *) 0)
-		spoilt_tbl = s_create(SPOILT_TBL);
+	if (is_ps_to_keep) {
+			/* Update `ps_to' so that we can reuse it for next compaction. */
+			/* Reset `sc_active_arena', so that it corresponds to `top'. */
+		ps_to.sc_size = ps_to.sc_size - (ps_to.sc_top - ps_to.sc_active_arena);
+		ps_to.sc_active_arena = ps_to.sc_top;
+			/* Update size so that it is seen as a non-free block of memory. */
+		ps_to.sc_flags = ((union overhead *) ps_to.sc_top)->ov_size;
+			/* B_BUSY flag should be set by `split_to_block'. */
+		CHECK("B_BUSY set", ((union overhead *) ps_to.sc_top)->ov_size & B_BUSY);
+	} else {
+			/* Reset `ps_to' since we cannot reuse it. */
+		memset (&ps_to, 0, sizeof(struct partial_sc_zone));
+	}
 
-	if (spoilt_tbl != (struct s_table *) 0)
-		(void) s_put(spoilt_tbl, ps_from.sc_arena);
+	if (0 == sweep_from_space()) {	/* Clean up 'from' space */
+			/* For malloc, set the B_LAST bit to indicate that the block held
+			 * in the space is the last one in the chunk.
+			 */
+		((union overhead *) ps_from.sc_arena)->ov_size |= B_LAST;
 
-	/* The whole 'from' space is not free, but the 'to' space may well be if
-	 * by chance all the Eiffel objects in 'from' where garbage. The 'to' space
-	 * is hence kept for next scavenge unless there is something.
-	 */
-	if (ps_to.sc_arena == ps_to.sc_top)		/* To space is empty */
+			/* The whole 'from' space is now free. If the 'to' space holds at least
+			 * one object, then the `from' space will become the new 'to' space.
+			 * Otherwise, we keep the same 'to' space and the 'from' space is put
+			 * back to the free list.
+			 */
+		if (is_ps_to_keep) {
+				/* The 'to' space is partially empty -- Free the 'from' space but keep the
+				 * to zone for next scavenge (it's so hard to find). Before
+				 * freeing the scavenge zone, do not forget to set the B_BUSY
+				 * flag for eif_rt_xfree. The number of 'to' zones allocated is also
+				 * decreased by one, since its allocation is compensated by the
+				 * release of the from space (well, sort of).
+				 */
+			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
+			eif_rt_xfree (ps_from.sc_arena + OVERHEAD);	/* One big bloc */
+			rt_g_data.gc_to--;
+		} else {
+				/* The 'to' space holds at least one object (normal case). The
+				 * 'from' space is completely empty and will be the next 'to' space
+				 * in the next partial scavenging.
+				 */
+			memcpy (&ps_to, &ps_from, sizeof(struct partial_sc_zone));
+			ps_to.sc_flags = ((union overhead *) ps_from.sc_arena)->ov_size;
+		}
+			/* Reset `ps_from' since not needed anymore. */
+		memset (&ps_from, 0, sizeof(struct partial_sc_zone));	/* Was freed */
 		return;
-
-	ps_to.sc_arena = (EIF_REFERENCE) 0;		/* Signals: no valid 'to' space */
+	}
 }
 
 rt_private void init_plsc(void)
@@ -2740,18 +2710,14 @@ rt_private void init_plsc(void)
 	if (!(rt_g_data.status & GC_PART)) {
 		ps_from.sc_arena = (EIF_REFERENCE) 0;		/* Will restart from end */
 		if (ps_to.sc_arena != (EIF_REFERENCE) 0) {	/* One chunk was kept in reserve */
-			/* Somehow, it is important to make sure the one big block in the
-			 * empty 'from' space is marked as busy, otherwise we will get
-			 * into trouble when we try to put it back into the free list.
-			 */
-			((union overhead *) ps_to.sc_arena)->ov_size |= B_BUSY;
-			eif_rt_xfree (ps_to.sc_arena + OVERHEAD);
+			CHECK("Block is indeed busy", ((union overhead *) ps_to.sc_active_arena)->ov_size |= B_BUSY);
+			eif_rt_xfree (ps_to.sc_active_arena + OVERHEAD);
 			ps_to.sc_arena = (EIF_REFERENCE) 0;	/* No to zone yet */
 		}
 	}
 }
 
-rt_private void split_to_block(void)
+rt_private void split_to_block (int is_to_keep)
 {
 	/* The 'to' space may well not be full, and the free part at the end has
 	 * to be returned to the free list.
@@ -2769,58 +2735,55 @@ rt_private void split_to_block(void)
 	rt_uint_ptr size;			/* Amount of bytes used (malloc point's of view) */
 	rt_uint_ptr old_size;		/* To save the old size for the leading object */
 
-	base = (union overhead *) ps_to.sc_arena;
+	base = (union overhead *) ps_to.sc_active_arena;
 	size = ps_to.sc_top - (EIF_REFERENCE) base;	/* Plus overhead for first block */
 
-	if (size != 0) {		/* Some objects were scavengend */
-
-		/* I'm faking a big block which will hold all the scavenged object,
-		 * so that eif_rt_split_block() will be fooled and correctly split the block
-		 * after the last scavenged object--RAM. In fact, I'm restoring the
-		 * state the space was in when it was selected for a scavenge.
-		 * The malloc flags attached to the 'to' zone are restored. The two
-		 * which matters are B_LAST and B_CTYPE (needed by eif_rt_split_block).
-		 */
-
+	if (size != 0) {		/* Some objects were scavenged */
+			/* I'm faking a big block which will hold all the scavenged object,
+			 * so that eif_rt_split_block() will be fooled and correctly split the block
+			 * after the last scavenged object--RAM. In fact, I'm restoring the
+			 * state the space was in when it was selected for a scavenge.
+			 * The malloc flags attached to the 'to' zone are restored. The two
+			 * which matters are B_LAST and B_CTYPE (needed by eif_rt_split_block).
+			 */
 		old_size = base->ov_size;			/* Save size of 1st block */
-		base->ov_size = ps_to.sc_flgs;		/* Malloc flags for whole space */
+		base->ov_size = ps_to.sc_flags;		/* Malloc flags for whole space */
 		(void) eif_rt_split_block(base, size - OVERHEAD);
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
-#ifdef DEBUG
-		dprintf(1)("split_to_block: new 'to' is now %d bytes [0x%lx, 0x%lx[\n",
-			size, base, ps_to.sc_top);
-		dprintf(1)("split_to_block: released %d bytes (starting at 0x%lx)\n",
-			ps_to.sc_end - ps_to.sc_top, (EIF_REFERENCE) base + size);
-		flush;
-#endif
-
-		/* Update accounting information: the eif_rt_split_block() routine only update
-		 * the overhead usage, because it assumes the block it is splitting is
-		 * still "used", so the split only appears to add overhead. This is not
-		 * the case here. We also free some memory which was accounted as used.
-		 */
-
-		size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
-
-		rt_m_data.ml_used -= size;
-		if (ps_to.sc_flgs & B_CTYPE) {
-			rt_c_data.ml_used -= size;
+		if (is_to_keep) {
+				/* Block needs to be kept, so we remove it from free list and mark it B_BUSY,
+				 * so that it is not freed later. */
+			lxtract((union overhead *) ps_to.sc_top);
+				/* Mark `ps_to' as non-free block. */
+			((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
+				/* Update accounting information, we need to remove one OVERHEAD since block
+				 * is not free anymore. */
+			rt_m_data.ml_over -= OVERHEAD;
+			if (ps_to.sc_flags & B_CTYPE) {
+				rt_c_data.ml_over -= OVERHEAD;
+			} else {
+				rt_e_data.ml_over -= OVERHEAD;
+			}
 		} else {
-			rt_e_data.ml_used -= size;
-#ifdef MEM_STAT
-		printf ("Eiffel: %ld used (-%ld), %ld total (split_to_block)\n",
-			rt_e_data.ml_used, size, rt_e_data.ml_total);
-#endif
+				/* Update accounting information: the eif_rt_split_block() routine only update
+				 * the overhead usage, because it assumes the block it is splitting is
+				 * still "used", so the split only appears to add overhead. This is not
+				 * the case here. We also free some memory which was accounted as used.
+				 */
+			size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
+
+			rt_m_data.ml_used -= size;
+			if (ps_to.sc_flags & B_CTYPE) {
+				rt_c_data.ml_used -= size;
+			} else {
+				rt_e_data.ml_used -= size;
+			}
 		}
-
-		return;
+	} else if (is_to_keep) {
+			/* Mark `ps_to' as non-free block. */
+		((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
 	}
-
-#ifdef DEBUG
-	dprintf(1)("split_to_block: no object was scavenged ('to' empty)\n");
-	flush;
-#endif
 }
 
 rt_private int sweep_from_space(void)
@@ -2836,8 +2799,7 @@ rt_private int sweep_from_space(void)
 	 * The function returns 0 if the whole space is free, -1 otherwise.
 	 * When this function produces a big free block (i.e. when it returns 0),
 	 * that block should carry the B_LAST bit. Currently, it is added by the
-	 * caller because there is no reason this should be true if we did not use
-	 * standard chunks.
+	 * caller because there is no reason this should be true if we did not use.
 	 */
 	union overhead *zone;		/* Currently inspected block */
 	union overhead *next;		/* Address of next block */
@@ -2851,7 +2813,6 @@ rt_private int sweep_from_space(void)
 	base = ps_from.sc_arena;
 	zone = (union overhead *) base;		/* Start of from space */
 	end = ps_from.sc_end;				/* End of zone */
-	flags = zone->ov_size;				/* Malloc information flags */
 
 #ifdef DEBUG
 	dprintf(1)("sweep_from_space: chunk from 0x%lx to 0x%lx (excluded)\n",
@@ -2861,13 +2822,13 @@ rt_private int sweep_from_space(void)
 
 	for (;;) {
 
-		/* Loop until we reach an Eiffel block */
+		flags = zone->ov_size;				/* Malloc information flags */
+
+		/* Loop until we reach an Eiffel block which is not marked. */
 		for (
-			next = (union overhead *)
-				(((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
-			flags & B_C;
-			next = (union overhead *)
-				(((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD)
+			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
+			(flags & B_C) || (zone->ov_flags & EO_MARK);
+			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD)
 		) {
 
 #ifdef DEBUG
@@ -2966,9 +2927,8 @@ rt_private int sweep_from_space(void)
 		 */
 		for (
 			/* empty */;
-			!(flags & B_C) && (EIF_REFERENCE) next < end;
-			next = (union overhead *)
-				(((EIF_REFERENCE) next) + size + OVERHEAD)
+			!(flags & B_C) && !(next->ov_flags & EO_MARK) && (EIF_REFERENCE) next < end;
+			next = (union overhead *) (((EIF_REFERENCE) next) + size + OVERHEAD)
 		) {
 			flags = next->ov_size;			/* Fetch flags for next loop */
 
@@ -3108,9 +3068,6 @@ rt_private int find_scavenge_spaces(void)
 	 * the 'to' space and the next 'from' will be the chunk following the new
 	 * 'to' (i.e the old 'from') until 'to' is near the break, at which point
 	 * it is given back to the kernel.
-	 * Note that only the standard chunks (i.e. those whose size is CHUNK) are
-	 * taken into account by the scavenging process, for reasons that are too
-	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
 #if defined EIF_NO_SCAVENGING
@@ -3124,49 +3081,30 @@ rt_private int find_scavenge_spaces(void)
 	flush;
 #endif
 
-	/* Whenever a scavenge zone is released via rel_core() from malloc, or at
-	 * the beginning of the program, the ps_from and ps_to structure are filled
-	 * in with zeros, which means their sc_arena field is a null pointer.
-	 */
-
-	if (ps_from.sc_arena == (EIF_REFERENCE) 0)		/* From zone was freed */
-		last_from = (struct chunk *) 0;		/* Restart from the end */
-
-	if (last_from == (struct chunk *) 0) 	/* Reached the end of the list */
-		last_from = find_std_chunk(cklst.eck_tail);			/* Restart */
-	else {
-		last_from = find_std_chunk(last_from->ck_lprev);	/* Advance */
-		if (last_from == (struct chunk *) 0)				/* None valid ? */
-			last_from = find_std_chunk(cklst.eck_tail);		/* Restart */
-	}
+		/* Find next from zone for scavenging. */
+	last_from = find_from_space();
 	
 #ifdef DEBUG
 	dprintf(1)("find_scavenge_spaces: from space is now 0x%lx\n", last_from);
 	flush;
 #endif
 
-	if (last_from == (struct chunk *) 0) 	/* There are no standard chunks */
+	if (last_from == (struct chunk *) 0) 	/* There are no space available. */
 		return -1;
 
 	/* Water-mark is unused by the partial scavenging algorithm */
 	from_size = last_from->ck_length;				/* Record length */
 	ps_from.sc_size = from_size;					/* Subject to copying */
 	ps_from.sc_arena = (EIF_REFERENCE) (last_from + 1);	/* Overwrites first header */
+	ps_from.sc_active_arena = (EIF_REFERENCE) (last_from + 1);	/* Overwrites first header */
 	ps_from.sc_end = ps_from.sc_arena + from_size;	/* First location beyond */
 	ps_from.sc_top = ps_from.sc_arena;				/* Empty for now */
 
-	if (ps_to.sc_arena != (EIF_REFERENCE) 0) {
-
-#ifdef DEBUG
-		dprintf(1)("find_scavenge_spaces: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
-			ps_from.sc_arena, ps_from.sc_end - 1,
-			ps_to.sc_arena, ps_to.sc_end - 1);
-#endif
-
+	if (ps_to.sc_arena) {
 		return 0;			/* We already have a 'to' space */
 	}
 
-	find_to_space(&ps_to);	/* Try to find a 'to' space by coalescing */
+	find_to_space();	/* Try to find a 'to' space by coalescing */
 	if (ps_to.sc_arena)		/* It worked */
 		return 0;			/* We got our 'to' space */
 
@@ -3190,7 +3128,7 @@ rt_private int find_scavenge_spaces(void)
 	 * somewhat low-level malloc routine.
 	 *
 	 * The get_to_from_core replaces the previous call to malloc_from_eiffel_list_no_gc which used
-	 * to get a to_space anywhere in the free list. But we want a standard
+	 * to get a to_space anywhere in the free list. But we want an 
 	 * empty chunk and if we arrive here, the only way to get a free chunk
 	 * is to get it from the kernel. It does not happen so often. Usually
 	 * it happens the first time partial scavenging is called.
@@ -3211,7 +3149,8 @@ rt_private int find_scavenge_spaces(void)
 
 	rt_g_data.gc_to++;								/* Count 'to' zone allocation */
 	ps_to.sc_arena = to_space - OVERHEAD;		/* Overwrite the header */
-	ps_to.sc_flgs = HEADER(to_space)->ov_size;	/* Save flags */
+	ps_to.sc_active_arena = to_space - OVERHEAD;		/* Overwrite the header */
+	ps_to.sc_flags = HEADER(to_space)->ov_size;	/* Save flags */
 	ps_to.sc_size = from_size;					/* Used for statistics */
 	ps_to.sc_end = ps_to.sc_arena + from_size;	/* First free location beyond */
 	ps_to.sc_top = ps_to.sc_arena;				/* Is empty */
@@ -3229,61 +3168,76 @@ rt_private int find_scavenge_spaces(void)
 #endif	/* EIF_NO_SCAVENGING */
 }
 
-rt_private struct chunk *find_std_chunk(register struct chunk *start)
+#ifndef EIF_NO_SCAVENGING
+
+/*
+doc:	<routine name="find_from_space" return_type="struct chunk *" export="private">
+doc:		<summary>Find the next chunk that can be used as from space for `ps_from'. We cycle through the list of available Eiffel chunks and updates the Eiffel chunk cursor accordingly.</summary>
+doc:		<return>NULL when not found, otherwise a chunk of Eiffel memory.</return>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Synchronization done through `scollect'.</synchronization>
+doc:	</routine>
+*/
+rt_private struct chunk *find_from_space()
 {
-	/* Find a standard chunk (i.e. one whose size is CHUNK), starting at the
-	 * chunk 'start'. Return the pointer to the one found, or a null pointer
-	 * if none was found in the Eiffel list.
-	 */
+	char *l_arena;
+	struct chunk *start, *real_start;
 
-	size_t std_size = eif_chunk_size - sizeof(struct chunk);
-
-	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
-
-#ifdef DEBUG
-		dprintf(4)("find_std_chunk: chunk 0x%lx is %d (std is %d)\n",
-			start, start->ck_length, std_size);
-		flush;
-#endif
-
-		if (start->ck_length != std_size)		/* Not a standard chunk */
-			continue;
-
-		/* If there is a spoilt table, make sure the chunk is not recoded there,
-		 * since we do not want to deal with those spoilt chunks more than once.
-		 */
-		if (spoilt_tbl != (struct s_table *) 0)
-			if (EIF_SEARCH_FOUND == s_search(spoilt_tbl, (EIF_REFERENCE) (start + 1)))
-				continue;
-
-		/* Skip the active 'to' space, if any: we must not have 'from' and
-		 * 'to' at the same location, otherwise it's a 4 days bug--RAM.
-		 */
-		if (ps_to.sc_arena != (EIF_REFERENCE) (start + 1))	/* Used ? */
+	if (last_from == NULL) {
+			/* If `last_from' is null, then it was never set, we start from the beginning by
+			 * flagging `real_start' to NULL. */
+		real_start = NULL;
+	} else if (last_from != cklst.e_cursor) {
+			/* `last_from' was set, but now it is different from the cursor position, we take
+			 * the current cursor position as a from space. */
+			/* Note that it can be NULL if we are off the list. */
+		real_start = cklst.e_cursor;
+	} else {
+			/* We continue our iteration to the next block. */
+			/* Note that it can be NULL if we are off the list. */
+		real_start = last_from->ck_lnext;
+	}
+	if (!real_start) {
+			/* Could not find a valid start, we start from the begginning. */
+		real_start = cklst.eck_head;
+	}
+	for (start = real_start; start != NULL; start = start->ck_lnext) {
+			/* Skip the active 'to' space, if any: we must not have 'from' and
+			 * 'to' at the same location, otherwise it's a 4 days bug--RAM.
+			 */
+		l_arena = (char *) (start + 1);
+		if (l_arena != ps_to.sc_arena) {
+			cklst.e_cursor = start;
 			return start;							/* No, it's ok */
+		}
 	}
 
-	return (struct chunk *) 0;		/* No standard size chunk found */
+		/* We haven't found a block, so we restart from beginning if `real_start' was not
+		 * already at the beginning. */
+	for (start = cklst.eck_head; start != real_start; start = start->ck_lnext) {
+			/* See previous loop for explanations. */
+		l_arena = (char *) (start + 1);
+		if (l_arena != ps_to.sc_arena) {
+			cklst.e_cursor = start;
+			return start;							/* No, it's ok */
+		}
+	}
+	return NULL;		/* No chunk found */
 }
 
-#ifndef EIF_NO_SCAVENGING
-rt_private void find_to_space(struct sc_zone *to)
+rt_private void find_to_space(void)
 					/* The zone structure we want to fill in */
 {
 	/* Look for a suitable space which could be used by partial scanvenging
-	 * as a 'to' zone. We are starting by looking at the end of the memory,
-	 * and we walk back, focusing only on standard chunks. If the leading block
-	 * in the chunk is free but not equal to the whole chunk, we even attempt
-	 * block coalescing.
+	 * as `ps_to' zone. If the leading block in the chunk is free but not
+	 * equal to the whole chunk, we even attempt block coalescing.
 	 */
 	size_t std_size = eif_chunk_size - sizeof(struct chunk);
 	struct chunk *cur;	/* Current chunk we are considering */
 	rt_uint_ptr flags = 0;		/* Malloc info flags */
 	EIF_REFERENCE arena = (EIF_REFERENCE) 0;	/* Where chunk's arena starts */
 
-	for (cur = cklst.eck_tail; cur != (struct chunk *) 0; cur = cur->ck_lprev) {
-		if (cur->ck_length != std_size)		/* Not a standard sized chunk */
-			continue;						/* Skip it */
+	for (cur = cklst.eck_head; cur != (struct chunk *) 0; cur = cur->ck_lnext) {
 		arena = (EIF_REFERENCE) cur + sizeof(struct chunk);
 		if (arena == ps_from.sc_arena)
 			continue;						/* Skip scanvenging from space */
@@ -3309,9 +3263,10 @@ rt_private void find_to_space(struct sc_zone *to)
 	 * list world.
 	 */
 
-	to->sc_top = to->sc_arena = arena;
-	to->sc_flgs = flags;
-	to->sc_end = to->sc_arena + (flags & B_SIZE) + OVERHEAD;
+	ps_to.sc_top = ps_to.sc_arena = ps_to.sc_active_arena = arena;
+	ps_to.sc_flags = flags;
+	ps_to.sc_end = ps_to.sc_arena + (flags & B_SIZE) + OVERHEAD;
+	ps_to.sc_size = (flags & B_SIZE) + OVERHEAD;
 
 	/* This zone is now used for scavening, so it must be removed from the free
 	 * list so that further mallocs do not attempt to use this space (when
@@ -3321,11 +3276,11 @@ rt_private void find_to_space(struct sc_zone *to)
 
 	lxtract((union overhead *) arena);	/* Extract block from free list */
 
-	rt_m_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+	rt_m_data.ml_used += (flags & B_SIZE);
 	if (flags & B_CTYPE) {
-		rt_c_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+		rt_c_data.ml_used += (flags & B_SIZE);
 	} else {
-		rt_e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+		rt_e_data.ml_used += (flags & B_SIZE);
 	}
 
 #ifdef DEBUG
@@ -3339,21 +3294,7 @@ rt_private void find_to_space(struct sc_zone *to)
 }
 #endif
 
-rt_shared EIF_REFERENCE to_chunk(void)
-{
-	/* Return the address of the 'to' chunk used by partial scavenging. The
-	 * structure 'ps_to' is private but malloc needs the address when it
-	 * attempts to release some core. The address returned is the first one
-	 * which will be used, i.e. the start of the header block.
-	 */
-
-	if (ps_to.sc_arena == (EIF_REFERENCE) 0)
-		return (EIF_REFERENCE) 0;
-
-	return ps_to.sc_arena;
-}
-
-rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *to)
+rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 {
 	/* The object pointed to by 'root' is to be scavenged in the 'to' space,
 	 * provided it is not an expanded object (otherwise, it has already been
@@ -3432,7 +3373,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	);				
 	CHECK ("Not in Partial Scavenge TO zone.",
 		!((rt_g_data.status & GC_PART) &&
-		(root > ps_to.sc_arena) && 
+		(root > ps_to.sc_active_arena) && 
 		(root <= ps_to.sc_end))
 	);
 
@@ -3448,46 +3389,16 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 		return root;					/* Leave object where it is */
 	}
 
-	root = to->sc_top;						/* New location in 'to' space */
+	root = *top;						/* New location in 'to' space */
 	length = (zone->ov_size & B_SIZE) + OVERHEAD;
-	to->sc_top += length;					/* Update free-location pointer */
+	*top += length;					/* Update free-location pointer */
 	memcpy (root, zone, length);			/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
-#ifdef EIF_NO_SCAVENGING
-	eif_panic ("Scavenging is not disabled");
-#endif	/* EIF_NO_SCAVENGING */
 	zone->ov_size |= B_FWD;					/* Mark object as forwarded */
 
-	/* If we reached the end of the scavenge space, then the B_LAST flag
-	 * must be already set on the new object (size of from and to spaces are
-	 * identical). Otherwise, it has to be reset. Of course, this does not make
-	 * sense when scavenging in a generational zone...
-	 */
-
-	if (to != &sc_to) {						/* Not in generation scavenging */
-		if (to->sc_top == to->sc_end)		/* At end of space? */
-			((union overhead *) root)->ov_size |= B_LAST;
-		else
-			((union overhead *) root)->ov_size &= ~B_LAST;
-	}
-
-#ifdef MAY_PANIC
-	if (to->sc_top > to->sc_end) {			/* Uh-oh! Zone has overflowed */
-		if (to == &sc_to)					/* Identify culprit */
-			eif_panic("generation zone overflow");
-		else
-			eif_panic("scavenge zone overflow");
-	}
-#endif
-
-#ifdef DEBUG
-	dprintf(2)(
-		"scavenge: %sobject %lx moved to %lx (%d bytes) for %s scavenging\n",
-		to == &sc_to ? "" : (zone->ov_size & B_BUSY ? "" : "FREE? "),
-		zone + 1, zone->ov_fwd, length - OVERHEAD,
-		to == &sc_to ? "generation" : "partial");
-	flush;
-#endif
+#ifdef EIF_NO_SCAVENGING
+	CHECK ("Scavenging is not disabled", 0);
+#endif	/* EIF_NO_SCAVENGING */
 
 	return root + OVERHEAD;			/* New object's location */
 }
@@ -3670,13 +3581,13 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 }
 
 rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
-
 {
-	/* This function is the half-recursive half-iterative version of
-	 * generation_mark(). Instead of recursively marking all the attributes
-	 * of an object, the (n-1) first attributes are marked by a recursive call
-	 * to hybrid_gen_mark() while the last one is treated in the main loop
-	 * (suppression of tail recursion).
+	/* Mark all the objects referenced by the root object.
+	 * All the attributes of an object are recursively marked,
+	 * except the last one. This brings a noticeable
+	 * improvement with structures like LINKED_LIST when its `right'
+	 * part is the last reference (note this is not always the case).
+	 * It also prevents stack overflow with the `overflow_stack_set'.
 	 */
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
@@ -3923,11 +3834,11 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 
 	if (gen_scavenge & GS_STOP)			/* Generation scavenging was stopped */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
-			return scavenge(root, &sc_to);	/* Simple scavenging */
+			return scavenge(root, &sc_to.sc_top);	/* Simple scavenging */
 		
 	if (flags & EO_EXP) {				/* Expanded object */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
-			return scavenge(root, &sc_to);	/* Update reference pointer */
+			return scavenge(root, &sc_to.sc_top);	/* Update reference pointer */
 		else
 			return root;				/* Do nothing for expanded objects */
 	}
@@ -3992,7 +3903,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			new = malloc_from_eiffel_list_no_gc (size);				/* Try in Eiffel chunks first */
 			if ((EIF_REFERENCE) 0 == new) {			/* Out of memory */
 				gen_scavenge |= GS_STOP;		/* Stop generation scavenging */
-				return scavenge(root, &sc_to);	/* Simple scavenge */
+				return scavenge(root, &sc_to.sc_top);	/* Simple scavenge */
 			}
 
 			/* Object is promoted, so add it to the remebered set for later
@@ -4004,7 +3915,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			if (ret == -1) {	/* Cannot record it */
 				gen_scavenge |= GS_STOP;		/* Mark failure */
 				eif_rt_xfree(new);						/* Back where we found it */
-				return scavenge(root, &sc_to);	/* Simple scavenge */
+				return scavenge(root, &sc_to.sc_top);	/* Simple scavenge */
 			}
 
 			/* Copy the object to its new location, then update the header: the
@@ -4020,7 +3931,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 
 			/* It is imperative to mark the object we've just tenured, so that
 			 * we do not process it twice!! The tenured object will be processed
-			 * as we return from this routine, but generation_mark has already
+			 * as we return from this routine, but hybrid_mark has already
 			 * dealt with EO_MARK, so it is our responsability... This was a bug
 			 * I spent three days tracking--RAM.
 			 */
@@ -4062,7 +3973,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 		return root;					/* Object not moved */
 	} else {							/* Object is in the scavenge zone */
 		size_table[age] += (zone->ov_size & B_SIZE) + OVERHEAD;
-		return scavenge(root, &sc_to);	/* Move object */
+		return scavenge(root, &sc_to.sc_top);	/* Move object */
 	}
 	/* NOTREACHED */
 }
@@ -4477,7 +4388,7 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	if (flags & EO_SPEC) {				/* Special object */
 		EIF_REFERENCE o_ref;
-		if (!(flags & EO_REF))			/* (see recursive_mark() for details) */
+		if (!(flags & EO_REF))			/* (see hybrid_mark() for details) */
 			return 0;					/* No references at all */
 		o_ref = RT_SPECIAL_INFO(object);
 		refs = RT_SPECIAL_COUNT_WITH_INFO(o_ref);

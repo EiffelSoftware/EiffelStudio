@@ -47,11 +47,6 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
 #include "rt_assert.h"
-
-#ifdef HAS_SMART_MMAP
-#include <sys/mman.h>
-#endif
-
 #include <stdio.h>			/* For eif_trace_types() */
 #include <signal.h>
 
@@ -395,7 +390,7 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c);				/* Coalescing on a chun
 rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r);				/* Release block to the free list */
 rt_shared rt_uint_ptr full_coalesc(int chunk_type);				/* Coalescing over specified chunks */
 rt_private rt_uint_ptr full_coalesc_unsafe(int chunk_type);				/* Coalescing over specified chunks */
-rt_private int free_last_chunk(void);			/* Detach last chunk from core */
+rt_private void free_chunk(struct chunk *);			/* Detach chunk from list and release it to core. */
 
 /* Functions handling scavenging zone */
 rt_private EIF_REFERENCE malloc_from_eiffel_list (rt_uint_ptr nbytes);
@@ -420,16 +415,6 @@ rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);			/*
 rt_shared EIF_REFERENCE get_to_from_core(size_t nbytes);		/* Get a free eiffel chunk from kernel */
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_private void check_free_list (size_t nbytes, register union overhead **hlist);
-#endif
-#endif
-
-#ifdef ISE_GC
-#ifdef HAS_SMART_MMAP
-rt_private void free_unused(void);
-#else
-#ifdef HAS_SBRK
-#include <unistd.h>						/* Set break (system call) */
-#endif
 #endif
 #endif
 
@@ -1729,53 +1714,10 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 #endif
 	} else {
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-#ifdef HAS_SMART_MMAP
-		free_unused ();
-#endif
 			/* No other choice but to request for more core */
 		return allocate_from_core (nbytes, hlist);
 	}
 }
-
-#ifdef HAS_SMART_MMAP
-/*
-doc:	<routine name="free_unused" export="private">
-doc:		<summary>FIXME</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
-doc:	</routine>
-*/
-
-rt_private void free_unused (void)
-{
-	struct chunk *local_chunk;
-
-	if (cklst.ck_head == (struct chunk *) 0)
-		return;
-	for (local_chunk = cklst.ck_head; local_chunk != (struct chunk *) 0; 
-			local_chunk = local_chunk->ck_next) {
-		if (!chunk_free(local_chunk))
-			continue;
-		SIGBLOCK;
-		
-		SIGRESUME;
-	}
-}
-
-/*
-doc:	<routine name="chunk_free" return_type="int" export="private">
-doc:		<summary>FIXME</summary>
-doc:		<param name="ck" type="struct chunk *">FIXME</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:	</routine>
-*/
-
-rt_private int chunk_free (struct chunk *ck)
-{
-	return 0;
-}
-
-#endif
 
 /*
 doc:	<routine name="allocate_free_list" return_type="EIF_REFERENCE" export="private">
@@ -2118,146 +2060,65 @@ doc:	</routine>
 rt_private union overhead *add_core(size_t nbytes, int type)
 {
 	RT_GET_CONTEXT	
-#if defined HAS_SMART_MMAP || defined HAS_SBRK
-	union overhead *oldbrk = (union overhead *) -1;
-						/* Initialized with `failed' value. */
-#else
-	union overhead *oldbrk = (union overhead *) -1;
-						/* Initialized with `failed' value. */
-#endif
+	union overhead *oldbrk; /* Initialized with `failed' value. */
 	size_t asked = nbytes;	/* Bytes requested */
 
-	/* We want at least 'nbytes' bytes for use, so we must add the overhead
-	 * for each block and for each chunk. The memory made available to us
-	 * will be formatted correctly. We must not forget the ending pointer
-	 * (What we want is at least one usable block of 'nbytes').
-	 */
+		/* We want at least 'nbytes' bytes for use, so we must add the overhead
+		 * for each block and for each chunk.  */
 	asked += sizeof(struct chunk) + OVERHEAD;
 
-	/* Requesting less than CHUNK implies requesting CHUNK bytes, at least.
-	 * Requesting more implies at least CHUNK plus the needed number of
-	 * extra pages necessary (tiny fit).
-	 */
+		/* Requesting less than CHUNK implies requesting CHUNK bytes, at least.
+		 * Requesting more implies at least CHUNK plus the needed number of
+		 * extra pages necessary (tiny fit).
+		 */
 	if (asked <= eif_chunk_size) {
 		asked = eif_chunk_size;
 	} else {
 		asked = eif_chunk_size + (((asked - eif_chunk_size) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
 	}
 
-	/* If we request for more than a CHUNK, we'll loop only once (for Eiffel,
-	 * because of the tiny fit). Otherwise, we decrease the amount of requested
-	 * bytes as long as there are enough for our current need.
-	 */
-	for (; asked >= nbytes; asked -= PAGESIZE_VALUE) {
-
-#ifdef DEBUG
-		dprintf(2)("add_core: requesting for %d bytes\n", asked);
-		flush;
-#endif
-
 		/* We check that we are not asking for more than the limit
 		 * the user has fixed:
 		 *   - eif_max_mem (total allocated memory)
 		 * If the value of eif_max_mem is 0, there is no limit.
 		 */
-
-		if (eif_max_mem > 0)
-			if (rt_m_data.ml_total + asked > eif_max_mem) {
-				print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
-				return (union overhead *) 0;
-			}
-		/* Now request for some more core, checking the return value
-		 * from mmap() if available or sbrk() if available or malloc()
-		 * as the last option. Every failure is handled as a "no more memory"
-		 * condition.
-		 */
-
-#ifdef HAS_SMART_MMAP
-
-#if PTRSIZ > 4
-		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
-#else
-		oldbrk = (union overhead *) mmap (NULL, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
-#endif
-
-		if ((union overhead *) -1 != oldbrk)
-			break;							/* OK, we got it */
-
-#else /* !HAS_SMART_MMAP */
-
-#ifdef HAS_SBRK
-		oldbrk = (union overhead *) sbrk(asked);
-
-#ifdef DEBUG
-		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
-			((union overhead *) -1 == oldbrk) ? "no" : "ok", oldbrk);
-		flush;
-#endif
-		if ((union overhead *) -1 != oldbrk)
-			break;							/* OK, we got it */
-#else /* !HAS_SBRK */
-
-		oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc () */ 
-
-#ifdef DEBUG
-		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
-			((union overhead *) 0 == oldbrk) ? "no" : "ok", oldbrk);
-		flush;
-#endif
-		if ((union overhead *) 0 != oldbrk)
-			break;							/* OK, we got it */
-
-#endif /* HAS_SBRK */
-#endif /* HAS_SMART_MMAP */
-
+	if (eif_max_mem > 0)
+		if (rt_m_data.ml_total + asked > eif_max_mem) {
+			print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
+			return (union overhead *) 0;
+		}
+	oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc () */ 
+	if (!oldbrk) {
+		return NULL;
 	}
-
-#if defined HAS_SMART_MMAP || defined HAS_SBRK
-
-	if ((union overhead *) -1 == oldbrk)
-		return (union overhead *) 0;		/* We never succeeded */
-#else
-
-	if ((union overhead *) 0 == oldbrk)
-		return (union overhead *) 0;		/* We never succeeded */
-#endif
 	SIGBLOCK;			/* Critical section starts */
 
-	/* Accounting informations */
+		/* Accounting informations */
 	rt_m_data.ml_chunk++;
 	rt_m_data.ml_total += asked;				/* Counts overhead */
 	rt_m_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 
-	/* Accounting is also done for each type of memory (C/Eiffel) */
+		/* Accounting is also done for each type of memory (C/Eiffel) */
 	if (type == EIFFEL_T) {
 		rt_e_data.ml_chunk++;
 		rt_e_data.ml_total += asked;
-#ifdef MEM_STAT
-		printf ("Eiffel: %ld used, %ld total (+%ld) (add_core)\n",
-			rt_e_data.ml_used, rt_e_data.ml_total, asked);
-#endif
 		rt_e_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 	} else {
 		rt_c_data.ml_chunk++;
 		rt_c_data.ml_total += asked;
 		rt_c_data.ml_over += sizeof(struct chunk) + OVERHEAD;
-#ifdef MEM_STAT
-		printf ("C: %ld used, %ld total (+%ld) (add_core)\n",
-			rt_c_data.ml_used, rt_c_data.ml_total, asked);
-#endif
 	}
 
-	/* We got the memory we wanted. Make a chunk out of it, build one
-	 * big block inside and return the pointer to that block. This is
-	 * a somewhat costly operation, but it is note done very often.
-	 */
-	
+		/* We got the memory we wanted. Make a chunk out of it, build one
+		 * big block inside and return the pointer to that block. This is
+		 * a somewhat costly operation, but it is note done very often.
+		 */
 	asked -= sizeof(struct chunk) + OVERHEAD;	/* Was previously increased */
 
-	/* Update all the pointers for the double linked list. This
-	 * is somewhat heavy code, hard to read because of all these
-	 * casts, but believe me, it is simple--RAM.
-	 */
+		/* Update all the pointers for the double linked list. This
+		 * is somewhat heavy code, hard to read because of all these
+		 * casts, but believe me, it is simple--RAM.
+		 */
 
 #define chkstart	((struct chunk *) oldbrk)
 
@@ -2276,23 +2137,16 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 	/* Address of new block (skip chunck overhead) */
 	oldbrk = (union overhead *) (chkstart + 1);
 
-	/* Set the size of the new block. Note that this new block
-	 * is the first and the last one in the chunk, so we set the
-	 * B_LAST bit. All the other flags are set to false.
-	 */
+#undef chkstart
 
+		/* Set the size of the new block. Note that this new block
+		 * is the first and the last one in the chunk, so we set the
+		 * B_LAST bit. All the other flags are set to false.
+		 */
 	CHECK("asked not too big", asked <= 0xFFFFFFFF);
 	oldbrk->ov_size = (uint32) asked | B_LAST;
 
 	SIGRESUME;				/* Critical section ends */
-
-#ifdef DEBUG
-	dprintf(1+4)(
-		"add_core: kernel granted %d bytes (user mem from 0x%lx to 0x%lx)\n",
-		asked + OVERHEAD + sizeof(struct chunk), oldbrk,
-		(EIF_REFERENCE) oldbrk + asked + OVERHEAD - 1);
-	flush;
-#endif
 
 	return oldbrk;			/* Pointer to new free zone */
 }
@@ -2307,246 +2161,148 @@ doc:	</routine>
 
 rt_shared void rel_core(void)
 {
+	struct chunk *c, *cn;
 
-	while (free_last_chunk() == 0)		/* Free last chunk (all you can eat) */
-		;
+	for (c = cklst.ck_head; c; c = cn) {
+			/* Store next chunk before trying to free `c' as otherwise the
+			 * access `c->ck_next' would result in a segfault. */
+		cn = c->ck_next;
+		free_chunk (c);
+	}
 }
 
 /*
-doc:	<routine name="free_last_chunk" return_type="int" export="private">
-doc:		<summary>The last chunk in memory is freed (i.e. given back to the kernel) and the break value is updated. The status from sbrk() is returned. Great care is taken to ensure that the last chunk does not contain anything referenced by the process (otherwise, you get a free ticket for a memory fault)--RAM. Only called by `rel_core'.</summary>
-doc:		<return>An error condition of -2 means the last chunk is not near the break for whatever reason and hence cannot be wiped out from the process, sorry. A -3 means that there is no way the last chunk can be freed. -4 is returned when there are no more chunks to be freed</return>
+doc:	<routine name="free_chunk" export="private">
+doc:		<summary>If `a_chk' is not used, then it gets removed from `cklst' and given back to the system.</summary>
+doc:		<param name="a_chk" type="struct chunk *">Chunk being analyzed for potential removal from `cklst' and returned to system.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
-rt_private int free_last_chunk(void)
+rt_private void free_chunk(struct chunk *a_chk)
 {
 	RT_GET_CONTEXT
 	size_t nbytes;				/* Number of bytes to be freed */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
-	struct chunk *last_chk;	/* Pointer to last chunk header */
-	struct chunk last_desc;	/* A copy of the overhead part from last chunk */
-	uint32 i;				/* Index in hash table where block is stored */
 	rt_uint_ptr r;				/* To compute hashing index for released block */
 
-#if (!defined (HAS_SMART_MMAP)) && defined HAS_SBRK
-	EIF_REFERENCE last_addr;		/* The first address beyond the last chunk */
-#endif
+	REQUIRE("a_chk not null", a_chk);
 
-#if (!defined (HAS_SMART_MMAP)) && defined (HAS_SBRK) && (!defined (HAS_SMART_SBRK))
-	return -5;
-#else
-	last_chk = cklst.ck_tail;			/* Last chunk in memory */
-	if (last_chk == (struct chunk *) 0)	/* No more chunk */
-		return -4;						/* Make sure a failure is reported */
-	nbytes = last_chk->ck_length +		/* Amount of bytes is chunk's length */
-		sizeof(struct chunk);			/* plus the header overhead */
-#if (!defined (HAS_SMART_MMAP)) && defined HAS_SBRK
-	last_addr = (EIF_REFERENCE) last_chk + nbytes;
-#endif
-
-	/* Return immediately if the last chunk is used as a scavenging 'to' zone or
-	 * contains a generation scavenging pool.
-	 */
-	if (
-		to_chunk() > (EIF_REFERENCE) last_chk ||		/* Partial 'to' zone */
-		sc_from.sc_arena > (EIF_REFERENCE) last_chk ||	/* Generation scavenging pool */
-		sc_to.sc_arena > (EIF_REFERENCE) last_chk
-	) {
-#ifdef DEBUG
-		dprintf(1)("free_last_chunk: 0x%lx not eligible for shrinking\n",
-			last_chk);
-		flush;
-#endif
-		return -3;						/* Not eligible for shrinking */
+		/* Ok, let's see if this chunk is free. If it holds a free last block,
+		 * that's fine. Otherwise, we run a coalescing on the chunk and check again.
+		 * If we do not succeed either, then abort the procedure.
+		 */
+	arena = (union overhead *) ((EIF_REFERENCE) (a_chk + 1));
+	if (arena->ov_size & B_BUSY) {
+			/* Block is busy, we can forget about freeing this chunk, but
+			 * we still try to coalesc the free memory as much as we can
+			 * as it speeds up allocation later on. */
+		r = chunk_coalesc (a_chk);
+		return;
+	} else if (!(arena->ov_size & B_LAST)) {
+			/* Block is not busy, but it is not the last one of the chunk. We try
+			 * to coalesce it and check if it is now the last one. Of course
+			 * no need to do the check if we did not coalesce. */
+		r = chunk_coalesc (a_chk);		/* Try to coalesc `a_chk'. */
+		if ((r == 0) || !(arena->ov_size & B_LAST)) {
+				/* Chunk is not free. */
+			return;
+		}
 	}
 
-	/* Ok, let's see if this chunk is free. If it holds a free last block,
-	 * that's fine. Otherwise, we run a coalescing on the chunk and check again.
-	 * If we do not succeed either, then abort the procedure.
-	 */
-
-	arena = (union overhead *) ((EIF_REFERENCE) last_chk + sizeof(struct chunk));
-
-#ifdef DEBUG
-	dprintf(1)("free_last_chunk: %s block 0x%lx, %d bytes, %s\n",
-		arena->ov_size & B_LAST ? "last" : "normal",
-		arena, arena->ov_size & B_SIZE,
-		arena->ov_size & B_BUSY ?
-		(arena->ov_size & B_C ? "busy C" : "busy Eiffel") : "free");
-	flush;
-#endif
-
-	if (!(arena->ov_size & B_LAST) || (arena->ov_size & B_BUSY)) {
-		if (0 == chunk_coalesc(last_chk))	/* No coalescing was done */
-			return -3;						/* So this chunk is not eligible */
-		if (!(arena->ov_size & B_LAST) || (arena->ov_size & B_BUSY))
-			return -3;						/* Coalescing did not help */
-	}
-
-#ifdef DEBUG
-#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	dprintf(1)("free_last_chunk: %d bytes to be removed before 0x%lx\n",
-		nbytes, sbrk(0));
-	flush;
-
-#endif
-#endif
+	CHECK("arena free and last", (arena->ov_size & B_LAST) && !(arena->ov_size & B_BUSY));
 
 	SIGBLOCK;			/* Entering in critical section */
 
-	/* Make sure there is *nothing* between the end of the last chunk and the
-	 * break. There might be something on weird systems or if the pagesize value
-	 * was not correctly determined by Configure--RAM.
-	 */
+	r = arena->ov_size & B_SIZE;
+	disconnect_free_list(arena, HLIST_INDEX(r));		/* Remove arena from free list */
 
-#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	/* Fetch current break value */
-	if (((EIF_REFERENCE) sbrk(0)) != last_addr) { /* There *is* something */
-		SIGRESUME;					/* End of critical section */
-		return -2;					/* Sorry, cannot shrink data segment */
-	}
-#endif
-	
-	/* Save a copy of the informations held in the header of the last chunk:
-	 * once the sbrk() system call is run, those data won't be able to be
-	 * accessed any more.
-	 */
-
-	memcpy (&last_desc, last_chk, sizeof(struct chunk));
-
-	/* The bloc we are about to remove from the process memory is to be removed
-	 * from the free list (may manipulate some pointers in a zone where no
-	 * further access will be allowed by the kernel if shrinking succeeds).
-	 * In fact, we do not remove the block from the free list if it happens to
-	 * be the current ps_from structure (which the GC has freed, in the sense
-	 * that no alive object is stored in it, but has not put back to the free
-	 * list). Same thing for the current ps_to strucuture.
-	 */
-
-	if (
-		(EIF_REFERENCE) arena == ps_from.sc_arena ||
-		(EIF_REFERENCE) arena == ps_to.sc_arena
-	)
-		i = (uint32) -1;
-	else {
-		r = arena->ov_size & B_SIZE;
-		i = HLIST_INDEX(r);
-		disconnect_free_list(arena, i);		/* Remove arena from free list */
+		/* The garbage collectors counts the amount of allocated 'to' zones. A limit
+		 * is fixed to avoid a nasty memory leak when all the zones used would be
+		 * spoilt by frozen objects. However, each time we successfully decrease
+		 * the process size by releasing some core, we may allow a new allocation.
+		 */
+	if (rt_g_data.gc_to > 0) {
+		rt_g_data.gc_to--;					/* Decrease number of allocated 'to' */
 	}
 
-	/* Now here we go. Attempt the shrinking process by calling munmap() or sbrk() with a
-	 * negative value or free, bringing the memory used by the chunk back to the kernel.
-	 */
+		/* Amount of bytes is chunk's length plus the header overhead */
+	nbytes = a_chk->ck_length + sizeof(struct chunk);
 
-#ifdef HAS_SMART_MMAP
-	if (munmap (last_chk, nbytes) == -1) {
-		if (i != -1)
-			connect_free_list (arena, i);
-		SIGRESUME;
-		return -1;
-	}
-#else	/* HAS_SMART_SBRK */
-#ifdef HAS_SBRK
-	/* Shrink process's data segment */
-	if (((int) sbrk(-nbytes)) == -1) {	/* System call failed */
-		if (i != -1)					/* Was removed from free list */
-			connect_free_list(arena, i);/* Put block back in free list */
-		SIGRESUME;						/* End of critical section */
-		return -1;						/* Propagate failure */
-	}
-#else	/* HAS_SBRK */
-	eif_free (last_chk);
-#endif	/* HAS_SBRK */
-#endif /* HAS_SMART_SBRK */
-
-#ifdef DEBUG
-#if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
-		sbrk(0));
-	flush;
-#endif	/* !HAS_SMART_MMAP && HAS_SBRK */
-#endif	/* DEBUG */
-
-	/* The break value was sucessfully lowered. It's now time to update the
-	 * internal data structure which keep track of the memory status.
-	 */
-
+		/* It's now time to update the internal data structure which keep track of
+		 * the memory status.  */
 	rt_m_data.ml_chunk--;
 	rt_m_data.ml_total -= nbytes;			/* Counts overhead */
 	rt_m_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
+		/* Update list. */
+	if (a_chk == cklst.ck_head) {
+		cklst.ck_head = a_chk->ck_next;
+		if (a_chk->ck_next) {
+			a_chk->ck_next->ck_prev = NULL;
+		}
+	} else if (a_chk == cklst.ck_tail) {
+		cklst.ck_tail = a_chk->ck_prev;
+		CHECK("Has previous chunk", a_chk->ck_prev);
+		a_chk->ck_prev->ck_next = NULL;
+	} else {
+		a_chk->ck_prev->ck_next = a_chk->ck_next;
+		a_chk->ck_next->ck_prev = a_chk->ck_prev;
+	}
+		/* Update cursor. Cursors are moved to the right.*/
+	if (a_chk == cklst.cursor) {
+		cklst.cursor = a_chk->ck_next;
+	}
 
-	/* The garbage collectors counts the amount of allocated 'to' zones. A limit
-	 * is fixed to avoid a nasty memory leak when all the zones used would be
-	 * spoilt by frozen objects. However, each time we successfully decrease
-	 * the process size by releasing some core, we may allow a new allocation.
-	 */
-
-	if (rt_g_data.gc_to > 0)
-		rt_g_data.gc_to--;					/* Decrease number of allocated 'to' */
-
-	if (last_chk == cklst.eck_tail) {	/* Chunk was an Eiffel one */
+		/* Now do the same but for the Eiffel list and the C list. */
+	if (a_chk->ck_type == EIFFEL_T) {	/* Chunk was an Eiffel one */
 		rt_e_data.ml_chunk--;
 		rt_e_data.ml_total -= nbytes;	
 		rt_e_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
-		cklst.eck_tail = last_desc.ck_lprev;
-		if (last_desc.ck_lprev == (struct chunk *) 0)
-			cklst.eck_head = (struct chunk *) 0;
+		if (a_chk == cklst.eck_head) {
+			cklst.eck_head = a_chk->ck_lnext;
+			if (a_chk->ck_lnext) {
+				a_chk->ck_lnext->ck_lprev = NULL;
+			}
+		} else if (a_chk == cklst.eck_tail) {
+			cklst.eck_tail = a_chk->ck_lprev;
+			CHECK("Has previous chunk", a_chk->ck_lprev);
+			a_chk->ck_lprev->ck_lnext = NULL;
+		} else {
+			a_chk->ck_lprev->ck_lnext = a_chk->ck_lnext;
+			a_chk->ck_lnext->ck_lprev = a_chk->ck_lprev;
+		}
+		if (a_chk == cklst.e_cursor) {
+			cklst.e_cursor = a_chk->ck_lnext;
+		}
 	} else {							/* Chunk was a C one */
 		rt_c_data.ml_chunk--;
 		rt_c_data.ml_total -= nbytes;	
 		rt_c_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
-		cklst.cck_tail = last_desc.ck_lprev;
-		if (last_desc.ck_lprev == (struct chunk *) 0)
-			cklst.cck_head = (struct chunk *) 0;
+		if (a_chk == cklst.cck_head) {
+			cklst.cck_head = a_chk->ck_lnext;
+			if (a_chk->ck_lnext) {
+				a_chk->ck_lnext->ck_lprev = NULL;
+			}
+		} else if (a_chk == cklst.cck_tail) {
+			cklst.cck_tail = a_chk->ck_lprev;
+			CHECK("Has previous chunk", a_chk->ck_lprev);
+			a_chk->ck_lprev->ck_lnext = NULL;
+		} else {
+			a_chk->ck_lprev->ck_lnext = a_chk->ck_lnext;
+			a_chk->ck_lnext->ck_lprev = a_chk->ck_lprev;
+		}
+		if (a_chk == cklst.c_cursor) {
+			cklst.e_cursor = a_chk->ck_lnext;
+		}
 	}
 
-	if (last_desc.ck_lprev != (struct chunk *) 0) {
-		if (last_desc.ck_lprev->ck_next == last_chk)
-			last_desc.ck_lprev->ck_next = (struct chunk *) 0;
-		last_desc.ck_lprev->ck_lnext = (struct chunk *) 0;
-	}
-	cklst.ck_tail = last_desc.ck_prev;
-	if (last_desc.ck_prev == (struct chunk *) 0)
-		cklst.ck_head = (struct chunk *) 0;
-
-	/* Now the tail has been updated, update the new last block so that
-	 * its ck_next does not point to the removed chunk anymore.
-	 * Note that the previous chunk of same type has been updated, but
-	 * not the previous chunk (which might not be of same type).
-	 * The code is not optmized. I just try to fix a bug here.
-	 * It fixes malloc-free-collect-coalesc.
-	 * -- Fabrice
-	 */
-
-	if (last_desc.ck_prev != (struct chunk *) 0)
-	{
-		if (last_desc.ck_prev->ck_next == last_chk)
-			last_desc.ck_prev->ck_next = (struct chunk *) 0;
-	};
-
-	/* The garbage collector keeps track of 'last_from', the latest chunk which
-	 * has been scavenged in the partial scavenging collection cycle. If the
-	 * chunk we removed was this one, reset the value to a null pointer.
-	 */
-	if (last_from > last_chk)			/* Last from was held in chunk */
-		last_from = (struct chunk *) 0;	/* GC will start over from start */
-
-	/* If the chunk freed was one of the scavenge zones, reset them to their
-	 * initial state.
-	 */
-	if ((EIF_REFERENCE) arena == ps_from.sc_arena) {
-		memset (&ps_from, 0, sizeof(struct sc_zone));
-	} else if ((EIF_REFERENCE) arena == ps_to.sc_arena) {
-		memset (&ps_to, 0, sizeof(struct sc_zone));
-	}
+		/* We can free our block now. */
+	eif_free (a_chk);
 
 	SIGRESUME;							/* Critical section ends */
 
-	return 0;			/* Signals no error */
-#endif	/* !HAS_SMART_MMAP && HAS_SBRK && !HAS_SMART_SBRK */
+	return;			/* Signals no error */
 }
 
 /*
@@ -3578,7 +3334,7 @@ rt_shared rt_uint_ptr full_coalesc (int chunk_type)
 }
 
 /*
-doc:	<routine name="full_coalesc_unsafe" return_type="rt_uint_ptr" export="shared">
+doc:	<routine name="full_coalesc_unsafe" return_type="rt_uint_ptr" export="private">
 doc:		<summary>Walks through the designated chunk list (type 'chunk_type') and do block coalescing wherever possible.</summary>
 doc:		<param name="chunk_type" type="int">Type of chunk on which we perform coalescing (C_T, EIFFEL_T or ALL_T).</param>
 doc:		<return>Size of the largest block made available by coalescing, or 0 if no coalescing ever occurred.</return>
@@ -3825,11 +3581,10 @@ rt_shared void create_scavenge_zones(void)
 			} else {
 					/* Now set up the zones */
 				SIGBLOCK;								/* Critical section */
-				sc_from.sc_size = sc_to.sc_size = eif_scavenge_size; /* GC statistics */
-				sc_from.sc_arena = from;				/* Base address */
-				sc_to.sc_arena = to;
-				sc_from.sc_top = from;					/* First free address */
-				sc_to.sc_top = to;
+				sc_from.sc_arena = (char *) ((union overhead *) from);	/* Base address */
+				sc_to.sc_arena = (char *) ((union overhead *) to);
+				sc_from.sc_top = sc_from.sc_arena;					/* First free address */
+				sc_to.sc_top = sc_to.sc_arena;
 				sc_from.sc_mark = from + GS_WATERMARK;	/* Water mark (nearly full) */
 				sc_to.sc_mark = to + GS_WATERMARK;
 				sc_from.sc_end = from + eif_scavenge_size;	/* First free location beyond */

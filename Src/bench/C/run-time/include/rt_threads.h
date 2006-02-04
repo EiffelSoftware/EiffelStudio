@@ -591,7 +591,7 @@ extern void eif_terminate_all_other_threads(void);
                 NULL,                           \
                 EIF_DEFAULT_PRIORITY,           \
                 EIF_THR_CREATION_FLAGS,         \
-                0,                              \
+                10000,                              \
                 (FUNCPTR)(entry),               \
                 (EIF_THR_ENTRY_ARG_TYPE)(arg),  \
                 0,0,0,0,0,0,0,0,0               \
@@ -603,7 +603,7 @@ extern void eif_terminate_all_other_threads(void);
                 NULL,                           \
                 attr,                           \
                 EIF_THR_CREATION_FLAGS,         \
-                0,                              \
+                10000,                              \
                 (FUNCPTR)(entry),               \
                 (EIF_THR_ENTRY_ARG_TYPE)(arg),  \
                 0,0,0,0,0,0,0,0,0               \
@@ -614,7 +614,7 @@ extern void eif_terminate_all_other_threads(void);
 #define EIF_THR_EXIT(arg)           taskDelete(taskIdSelf())
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD               /*sched_yield()*/
+#define EIF_THR_YIELD               taskDelay(1)
 #define EIF_THR_SET_PRIORITY(tid,prio) taskPrioritySet(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio) taskPriorityGet(tid,&(prio))
 

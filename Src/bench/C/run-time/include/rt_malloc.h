@@ -38,6 +38,7 @@
 #define _rt_malloc_h_
 
 #include "eif_malloc.h"
+#include "rt_types.h"
 #include "rt_threads.h"
 
 #ifdef __cplusplus
@@ -55,7 +56,7 @@ extern "C" {
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
 #else
-#define CHUNK_DEFAULT	1048576		/* Number of bytes in standard chunk */
+#define CHUNK_DEFAULT	4194304		/* Number of bytes in standard chunk (4MB) */
 #endif
 
 #ifdef ISE_GC

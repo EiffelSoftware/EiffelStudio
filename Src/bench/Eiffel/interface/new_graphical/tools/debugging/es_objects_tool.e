@@ -130,17 +130,21 @@ feature {NONE} -- Initialization
 		end
 
 	initialize_objects_grid (esgrid: ES_OBJECTS_GRID) is
+		local
+			spref: STRING_PREFERENCE
 		do
 			esgrid.set_objects_grid_item_function (agent get_object_display_item)
-			esgrid.set_columns_layout ( 4, 1,
-					<<
-						[1, 150, "Name"],
-						[2, 80, "Address"],
-						[3, 150, "Value"],
-						[4, 200, "Type"],
-						[5, -1, "Context ..."]
-					>>
-				)
+			spref := preferences.debug_tool_data.grid_column_layout_preference_for (esgrid.id)
+			esgrid.set_columns_layout_from_string_preference (
+					preferences.debug_tool_data.grid_column_layout_preference_for (esgrid.id),
+						<<
+							[1, True, False, 150, "Name"],
+							[2, True, False, 80, "Address"],
+							[3, True, False, 150, "Value"],
+							[4, True, False, 200, "Type"],
+							[5, False, False, 0, "Context ..."]
+						>>
+					)
 
 				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
@@ -159,7 +163,7 @@ feature {NONE} -- Initialization
 	create_stack_objects_grid is
 		do
 				--| Stack obj grid
-			create stack_objects_grid.make_with_name ("Stack objects")
+			create stack_objects_grid.make_with_name ("Stack objects", "stack_objects")
 			initialize_objects_grid (stack_objects_grid)
 			stack_objects_grid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
 			stack_objects_grid.item_drop_actions.extend (agent on_drop_stack_element)
@@ -170,7 +174,7 @@ feature {NONE} -- Initialization
 	create_debugged_objects_grid is
 		do
 				--| Debugged obj grid
-			create debugged_objects_grid.make_with_name ("Debugged objects")
+			create debugged_objects_grid.make_with_name ("Debugged objects", "debugged_objects")
 			initialize_objects_grid (debugged_objects_grid)
 			debugged_objects_grid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
 			debugged_objects_grid.item_drop_actions.extend (agent on_add_debugged_object)
@@ -247,6 +251,18 @@ feature {NONE} -- Initialization
 			nb.extend (notebook_item)
 			notebook_item.drop_actions.extend (agent add_debugged_object)
 			notebook_item.drop_actions.extend (agent drop_stack_element)
+		end
+
+feature -- preference
+
+	save_grids_preferences is
+		do
+			debugged_objects_grid.save_columns_layout_to_string_preference (
+				preferences.debug_tool_data.grid_column_layout_preference_for (debugged_objects_grid.id)
+				)
+			stack_objects_grid.save_columns_layout_to_string_preference (
+				preferences.debug_tool_data.grid_column_layout_preference_for (stack_objects_grid.id)
+				)
 		end
 
 feature -- Access
@@ -804,7 +820,6 @@ feature {NONE} -- Current objects grid Implementation
 			add_displayed_objects_to_grid (debugged_objects_grid)
 			if debugged_objects_grid.row_count > 0 then
 					--| be sure the grid is redrawn, and the first row is visible
---				debugged_objects_grid.row (1).ensure_visible
 				debugged_objects_grid.row (1).redraw
 			end
 			debugged_objects_grid.restore_layout
@@ -1036,9 +1051,6 @@ feature {NONE} -- Impl : Stack objects grid
 			stack_objects_grid_empty := False
 			build_stack_info (stack_objects_grid)
 			build_stack_objects (stack_objects_grid)
-			if stack_objects_grid.row_count > 0 then
---				stack_objects_grid.row (1).ensure_visible
-			end
 		end
 
 	build_stack_info (a_target_grid: ES_OBJECTS_GRID) is
@@ -1333,10 +1345,8 @@ feature {NONE} -- Impl : Stack objects grid
 						pretty_print_cmd.set_stone (ost)
 					end
 				end
-			when {EV_KEY_CONSTANTS}.key_right then
-				expand_selected_rows (grid)
-			when {EV_KEY_CONSTANTS}.key_left then
-				collapse_selected_rows (grid)
+			when {EV_KEY_CONSTANTS}.key_enter then
+				toggle_expanded_state_of_selected_rows (grid)
 			else
 			end
 		end

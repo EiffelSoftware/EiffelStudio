@@ -581,11 +581,11 @@ feature {NONE} -- Initialization
 			-- Initialize shortcuts.  Create with default values stored in `default_shortcut_actions'.
 		local
 			action_name: STRING
-			default_value: ARRAYED_LIST [STRING]
+			default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]
 			l_name: STRING
 			l_s_pref: SHORTCUT_PREFERENCE
 			l_manager: EB_PREFERENCE_MANAGER
-			l_default_shortcut_actions: HASH_TABLE [ARRAY [STRING], STRING]
+			l_default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create l_manager.make (preferences, "editor.eiffel.keyboard_shortcuts")
 			l_default_shortcut_actions := default_shortcut_actions
@@ -595,7 +595,7 @@ feature {NONE} -- Initialization
 				l_default_shortcut_actions.after
 			loop
 				action_name := default_shortcut_actions.key_for_iteration
-				create default_value.make_from_array (default_shortcut_actions.item (action_name))
+				default_value := default_shortcut_actions.item (action_name)
 				l_name := once "editor.eiffel.keyboard_shortcuts." + action_name
 				l_s_pref := l_manager.new_shortcut_preference_value (l_manager, l_name, default_value)
 				l_s_pref.change_actions.extend (agent update)
@@ -815,21 +815,21 @@ feature -- Keybord shortcuts Customization
 			create Result.make (default_shortcut_actions.count)
 		end
 
-	default_shortcut_actions: HASH_TABLE [ARRAY [STRING], STRING] is
+	default_shortcut_actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING] is
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
 			create Result.make (10)
-			Result.put (<<"False", "True", "False", key_strings.item (Key_space).twin>>, "autocomplete")
-			Result.put (<<"False", "True", "True", key_strings.item (Key_space).twin>>, "class_autocomplete")
-			Result.put (<<"True", "True", "False", key_strings.item (Key_f).twin>>, "show_search_panel")
-			Result.put (<<"False", "True", "False", key_strings.item (Key_f).twin>>, "show_quick_search_bar")
-			Result.put (<<"False", "True", "False", key_strings.item (Key_h).twin>>, "show_search_and_replace_panel")
-			Result.put (<<"False", "False", "False", key_strings.item (Key_F3).twin>>, "search_selection")
-			Result.put (<<"False", "False", "True", key_strings.item (Key_F3).twin>>, "search_last")
-			Result.put (<<"False", "True", "False", key_strings.item (key_F3).twin>>, "search_backward")
-			Result.put (<<"False", "False", "False", key_strings.item (Key_F2).twin>>, "customized_insertion_1")
-			Result.put (<<"False", "True", "False", key_strings.item (Key_F2).twin>>, "customized_insertion_2")
-			Result.put (<<"False", "False", "True", key_strings.item (Key_F2).twin>>, "customized_insertion_3")
+			Result.put ([False,  True, False, key_strings.item (Key_space).twin], "autocomplete")
+			Result.put ([False,  True,  True, key_strings.item (Key_space).twin], "class_autocomplete")
+			Result.put ([ True,  True, False, key_strings.item (Key_f).twin], "show_search_panel")
+			Result.put ([False,  True, False, key_strings.item (Key_f).twin], "show_quick_search_bar")
+			Result.put ([False,  True, False, key_strings.item (Key_h).twin], "show_search_and_replace_panel")
+			Result.put ([False, False, False, key_strings.item (Key_F3).twin], "search_selection")
+			Result.put ([False, False,  True, key_strings.item (Key_F3).twin], "search_last")
+			Result.put ([False,  True, False, key_strings.item (key_F3).twin], "search_backward")
+			Result.put ([False, False, False, key_strings.item (Key_F2).twin], "customized_insertion_1")
+			Result.put ([False,  True, False, key_strings.item (Key_F2).twin], "customized_insertion_2")
+			Result.put ([False, False,  True, key_strings.item (Key_F2).twin], "customized_insertion_3")
 		end
 
 invariant
@@ -896,19 +896,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

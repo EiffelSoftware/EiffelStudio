@@ -478,6 +478,7 @@ feature -- Status setting
 			i: INTEGER
 			rl, rr: ARRAY_PREFERENCE
 			l_watch_tool: ES_WATCH_TOOL
+			nwt: INTEGER
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
@@ -537,10 +538,11 @@ feature -- Status setting
 			objects_tool.update
 
 				--| Watches tool
-			if watch_tool_list.count < Preferences.debug_tool_data.number_of_watch_tools  then
+			nwt := Preferences.debug_tool_data.number_of_watch_tools.min (1)
+			if watch_tool_list.count < nwt  then
 				from
 				until
-					watch_tool_list.count >= Preferences.debug_tool_data.number_of_watch_tools
+					watch_tool_list.count >= nwt
 				loop
 					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
 				end
@@ -650,6 +652,8 @@ feature -- Status setting
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
 
+			objects_tool.save_grids_preferences
+			
 			split ?= objects_tool.widget
 			if split /= Void then
 				objects_split_proportion := split.split_position / split.width

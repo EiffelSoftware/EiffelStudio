@@ -25,11 +25,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING) is
+	make_with_name (a_name: STRING; a_id: STRING) is
 			-- Create current with a_name and a_tool
 		do
 			default_create
 			name := a_name
+			id := a_id
 			enable_single_row_selection
 			enable_border
 		end
@@ -74,6 +75,8 @@ feature -- Properties
 	name: STRING
 			-- associated name to identify the related grid.
 
+	id: STRING
+
 	col_pixmap_index: INTEGER
 
 	col_name_index: INTEGER
@@ -81,6 +84,12 @@ feature -- Properties
 	col_type_index: INTEGER
 	col_address_index: INTEGER
 	col_context_index: INTEGER
+
+	col_name_id: INTEGER is 1
+	col_value_id: INTEGER is 2
+	col_type_id: INTEGER is 3
+	col_address_id: INTEGER is 4
+	col_context_id: INTEGER	is 5
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
@@ -114,15 +123,101 @@ feature -- Number formatting
 			end
 		end
 
+feature -- Change with preferences
+
+	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE; dft_value: ARRAY [like column_layout]) is
+		local
+			dts: ARRAY [like column_layout]
+			s: STRING
+			sp: LIST [STRING]
+			i,n: INTEGER
+			l_id: INTEGER
+			l_displayed: BOOLEAN
+			l_autoresize: BOOLEAN
+			l_width: INTEGER
+			l_title: STRING
+			retried: BOOLEAN
+		do
+			s := spref.value
+			if retried or (s = Void or else s.is_empty) then
+				set_columns_layout ( 5, 1, dft_value)
+				save_columns_layout_to_string_preference (spref)
+			else
+				sp := s.split (';')
+				from
+					i := 0
+					n := sp.count // 5
+					create dts.make (0, n - 1)
+					sp.start
+				until
+					sp.after
+				loop
+					l_id         := sp.item.to_integer
+					sp.forth
+					l_displayed  := sp.item.to_boolean
+					sp.forth
+					l_autoresize := sp.item.to_boolean
+					sp.forth
+					l_width      := sp.item.to_integer
+					sp.forth
+					l_title      := sp.item
+					sp.forth
+
+					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
+					i := i + 1
+				end
+				set_columns_layout (5, 1, dts)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	save_columns_layout_to_string_preference (spref: STRING_PREFERENCE) is
+		local
+			t: like column_layout
+			i: INTEGER
+			s: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				from
+					s := ""
+					i := 1
+				until
+					i > column_count
+				loop
+					t := column_layout (i)
+					s.append_string (t.item (1).out)
+					s.append_character (';')
+					s.append_string (t.item (2).out)
+					s.append_character (';')
+					s.append_string (t.item (3).out)
+					s.append_character (';')
+					s.append_string (t.item (4).out)
+					s.append_character (';')
+					s.append_string (t.item (5).out)
+					s.append_character (';')
+					i := i + 1
+				end
+				s.remove_tail (1)
+				spref.set_value (s)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature -- Change
 
 	set_columns_layout (
 				a_cols_count: INTEGER;
 				a_col_pixmap_index: INTEGER;
-				a_col_details: ARRAY [TUPLE [INTEGER, INTEGER, STRING]] --| name, address, value, type, context
+				a_col_details: ARRAY [like column_layout] --| name, address, value, type, context
 				) is
 		require
 			a_col_details.count = 5
+			a_cols_count >= a_col_details.count
 		local
 			i: INTEGER
 		do
@@ -134,37 +229,71 @@ feature -- Change
 			until
 				i > a_col_details.upper
 			loop
-				set_column_layout (a_col_details[i])
+				set_column_layout (1 + i - a_col_details.lower, a_col_details[i])
 				i := i + 1
 			end
 		end
 
-	set_column_layout (t: TUPLE [INTEGER, INTEGER, STRING]) is
+	set_column_layout (a_pos: INTEGER; t: like column_layout) is
 			-- Index, width, title
+		require
+			a_pos_positive: a_pos > 0
+			a_pos_not_greater_than_column_count: a_pos <= column_count
 		local
 			c,w: INTEGER
 			s: STRING
+			col: EV_GRID_COLUMN
 		do
 			c := t.integer_item (1)
 			inspect c
-			when 1 then
-				col_name_index := c
-			when 2 then
-				col_address_index := c
-			when 3 then
-				col_value_index := c
-			when 4 then
-				col_type_index := c
-			when 5 then
-				col_context_index := c
+			when Col_name_id then
+				col_name_index := a_pos
+			when Col_address_id then
+				col_address_index := a_pos
+			when Col_value_id then
+				col_value_index := a_pos
+			when Col_type_id then
+				col_type_index := a_pos
+			when Col_context_id then
+				col_context_index := a_pos
 			else
 			end
-			w := t.integer_item (2)
+			col := column (a_pos)
+			w := t.integer_item (4)
 			if w > 0 then
-				column (c).set_width (w)
-				s ?= t.item (3)
-				column (c).set_title (s)
+				s ?= t.item (5)
+				col.set_title (s)
+				col.set_width (w)
 			end
+			if t.boolean_item (2) then
+				col.show
+			else
+				col.hide
+			end
+			set_auto_resizing_column (c, t.boolean_item (3))
+		end
+
+	column_layout (c: INTEGER): TUPLE [INTEGER, BOOLEAN, BOOLEAN, INTEGER, STRING] is
+		require
+			c_positive: c > 0
+			c_not_greater_than_column_count: c <= column_count
+		local
+			col: EV_GRID_COLUMN
+			cindex: INTEGER
+		do
+			col := column (c)
+			if c = col_name_index then
+				cindex := Col_name_id
+			elseif c = col_address_index then
+				cindex := Col_address_id
+			elseif c = col_value_index then
+				cindex := Col_value_id
+			elseif c = col_type_index then
+				cindex := Col_type_id
+			elseif c = col_context_index then
+				cindex := Col_context_id
+			end
+			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title]
 		end
 
 	set_slices_cmd (v: like slices_cmd) is
@@ -226,10 +355,15 @@ feature -- Menu
 
 	grid_menu: EV_MENU is
 		local
+			sm: EV_MENU
 			mci: EV_CHECK_MENU_ITEM
+			c: INTEGER
+			s: STRING
+			col: EV_GRID_COLUMN
 		do
 			if layout_manager /= Void then
-				create Result.make_with_text ("Grid " + name)
+				create Result.make_with_text ("Grid %"" + name + "%"")
+
 				create mci.make_with_text ("Keep grid layout")
 				if is_layout_managed then
 					mci.enable_select
@@ -238,6 +372,38 @@ feature -- Menu
 					mci.select_actions.extend (agent enable_layout_management)
 				end
 				Result.extend (mci)
+				Result.extend (create {EV_MENU_SEPARATOR})
+				from
+					c := 1
+				until
+					c > column_count
+				loop
+					col := column (c)
+					if not col.title.is_empty then
+						s := "Column %"" + col.title + "%""
+					else
+						s := "Column #" + c.out
+					end
+					create sm.make_with_text (s)
+					Result.extend (sm)
+
+					create mci.make_with_text ("Auto resize")
+					if column_has_auto_resizing (c) then
+						mci.enable_select
+					end
+					mci.select_actions.extend (agent set_auto_resizing_column (c, not column_has_auto_resizing (c)))
+					sm.extend (mci)
+
+					create mci.make_with_text ("Displayed")
+					if col.is_displayed then
+						mci.enable_select
+						mci.select_actions.extend (agent col.hide)
+					else
+						mci.select_actions.extend (agent col.show)
+					end
+					sm.extend (mci)
+					c := c + 1
+				end
 			end
 		end
 
@@ -513,7 +679,7 @@ feature -- Layout manager
 			layout_preference = Void
 		do
 			layout_preference := v
-			create layout_manager.make (Current, name)
+			create layout_manager.make (Current, id)
 			if layout_preference /= Void then
 				layout_preference.change_actions.extend (agent on_layout_preferenced_changed)
 				on_layout_preferenced_changed
@@ -654,19 +820,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

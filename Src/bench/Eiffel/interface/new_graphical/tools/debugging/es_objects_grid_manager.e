@@ -36,6 +36,31 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 
 feature -- ES grid specific
 
+	toggle_expanded_state_of_selected_rows (a_grid: EV_GRID) is
+		require
+			a_grid /= Void
+		local
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			row: EV_GRID_ROW
+		do
+			rows := a_grid.selected_rows
+			from
+				rows.start
+			until
+				rows.after
+			loop
+				row := rows.item
+				if row.is_expandable then
+					if not row.is_expanded then
+						row.expand
+					else
+						row.collapse
+					end
+				end
+				rows.forth
+			end
+		end
+
 	expand_selected_rows (a_grid: EV_GRID) is
 		require
 			a_grid /= Void
@@ -153,19 +178,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

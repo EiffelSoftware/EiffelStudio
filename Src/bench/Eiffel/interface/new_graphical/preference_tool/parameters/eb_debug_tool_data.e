@@ -157,6 +157,25 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_watches_grids_layout_managed_preference: BOOLEAN_PREFERENCE
 
+	grid_column_layout_preference_for (grid_name: STRING): STRING_PREFERENCE is
+		local
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			if grid_column_layout_preferences.has (grid_name) then
+				Result := grid_column_layout_preferences.item (grid_name)
+			else
+				create l_manager.make (preferences, "debug_tool")
+				Result := l_manager.new_string_preference_value (l_manager, grid_column_layout_prefix + grid_name, "")
+				grid_column_layout_preferences.put (Result, grid_name)
+			end
+		end
+
+	grid_column_layout_preferences: HASH_TABLE [STRING_PREFERENCE, STRING] is
+		once
+			create Result.make (3)
+			Result.compare_objects
+		end
+
 feature -- Preference Strings
 
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
@@ -179,6 +198,8 @@ feature -- Preference Strings
 	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
 	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
 	is_watches_grids_layout_managed_string: STRING is "debugger.watches_grids_layout_managed"
+
+	grid_column_layout_prefix: STRING is "debugger.grid_column_layout_"
 
 feature {NONE} -- Implementation
 
@@ -245,19 +266,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

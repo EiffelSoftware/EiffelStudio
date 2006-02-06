@@ -25,7 +25,7 @@ create {EV_PND_ACTION_SEQUENCE}
 	make_filled
 
 feature {NONE} -- Initialization
-	
+
 	default_create is
 			-- Create a ready to use action sequence.
 		do
@@ -106,16 +106,16 @@ feature -- Status report
 				cur := cursor
 				a_tuple := [a_pebble]
 				start
-			until 
-				after or Result
+			until
+				Result or else after
 			loop
-				Result := item.valid_operands (a_tuple) 
+				Result := item.valid_operands (a_tuple)
 				if
 					Result and then
 					veto_pebble_function /= Void and then
 					veto_pebble_function.valid_operands (a_tuple)
 				then
-					Result := Result and then veto_pebble_function.item (a_tuple)
+					Result := veto_pebble_function.item (a_tuple)
 				end
 				forth
 			end

@@ -22,9 +22,9 @@ feature -- Access
 			-- Actions to be performed when a mouse pointer is pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
-			-- button_number: INTEGER -- The mouse button number.
 			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
+			-- button_number: INTEGER -- The mouse button number.
 		do
 			Result := implementation.item_pointer_button_press_actions
 		ensure
@@ -35,9 +35,9 @@ feature -- Access
 			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
-			-- button_number: INTEGER -- The mouse button number.
 			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
+			-- button_number: INTEGER -- The mouse button number.
 		do
 			Result := implementation.item_pointer_double_press_actions
 		ensure

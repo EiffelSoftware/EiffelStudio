@@ -10,6 +10,188 @@ class
 
 feature -- Externals
 
+	frozen gtk_widget_get_screen (a_widget: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*): GdkScreen* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_has_screen (a_widget: POINTER): BOOLEAN is
+		external
+			"C signature (GtkWidget*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pango_context_get_for_screen (a_screen: POINTER): POINTER is
+		external
+			"C signature (GdkScreen*): PangoContext* use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_new (a_pango_context: POINTER): POINTER is
+		external
+			"C signature (PangoContext*): PangoLayout* use <gtk/gtk.h>"
+		end
+
+-- ***************** Gtk 2.6 only ****************************
+
+--	frozen pango_renderer_draw_layout (a_pango_renderer, a_pango_layout: POINTER; a_x, a_y: INTEGER) is
+--		external
+--			"C signature (PangoRenderer*, PangoContext*, gint, gint) use <gtk/gtk.h>"
+--		end
+--
+--	frozen gdk_pango_renderer_new (a_screen: POINTER): POINTER is
+--		external
+--			"C signature (GdkScreen*): PangoRenderer use <gtk/gtk.h>"
+--		end
+--
+--	frozen gdk_pango_renderer_get_default (a_screen: POINTER): POINTER is
+--		external
+--			"C signature (GdkScreen*): PangoRenderer use <gtk/gtk.h>"
+--		end
+--
+--	frozen gdk_pango_renderer_set_drawable (a_renderer, a_drawable: POINTER) is
+--		external
+--			"C signature (PangoRenderer*, GdkDrawable*) use <gtk/gtk.h>"
+--		end
+--
+--	frozen gdk_pango_renderer_set_gc (a_renderer, a_gc: POINTER) is
+--		external
+--			"C signature (PangoRenderer*, GdkGC*) use <gtk/gtk.h>"
+--		end
+--
+--	frozen gtk_label_set_angle (a_label: POINTER; a_angle: REAL) is
+--		external
+--			"C signature (GtkLabel*, double) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_matrix_init (a_pango_matrix: TYPED_POINTER [POINTER]) is
+--		external
+--			"C inline use <gtk/gtk.h>"
+--		alias
+--			"[
+--				PangoMatrix matrix = PANGO_MATRIX_INIT;
+--				*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
+--			]"
+--		end
+--
+--	frozen pango_matrix_free (a_pango_matrix: POINTER) is
+--		external
+--			"C signature (PangoMatrix*) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_matrix_rotate (a_matrix: POINTER; a_degrees: REAL) is
+--		external
+--			"C signature (PangoMatrix*, double) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_matrix_translate (a_matrix: POINTER; a_x, a_y: REAL) is
+--		external
+--			"C signature (PangoMatrix*, double, double) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_matrix_scale (a_matrix: POINTER; a_x_scale, a_y_scale: REAL) is
+--		external
+--			"C signature (PangoMatrix*, double, double) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_matrix_concat (a_matrix, a_new_matrix: POINTER) is
+--		external
+--			"C signature (PangoMatrix*, PangoMatrix*) use <gtk/gtk.h>"
+--		end
+--
+--	frozen set_pango_matrix_struct_xx (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"xx"
+--		end
+--
+--	frozen set_pango_matrix_struct_xy (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"xy"
+--		end
+--
+--	frozen set_pango_matrix_struct_yx (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"yx"
+--		end
+--
+--	frozen set_pango_matrix_struct_yy (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"yy"
+--		end
+--
+--	frozen set_pango_matrix_struct_x0 (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"x0"
+--		end
+--
+--	frozen set_pango_matrix_struct_y0 (a_c_struct: POINTER; a_x: DOUBLE) is
+--		external
+--			"C [struct <gtk/gtk.h>] (PangoMatrix, gdouble)"
+--		alias
+--			"y0"
+--		end
+--
+--	frozen pango_context_set_matrix (a_context, a_matrix: POINTER) is
+--		external
+--			"C signature (PangoContext*, PangoMatrix*) use <gtk/gtk.h>"
+--		end
+--
+--	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
+--		external
+--			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
+--		end
+
+-- ***********************************************************
+
+	frozen gdk_draw_drawable (a_drawable: POINTER; a_gc: POINTER; a_src: POINTER; a_xsrc: INTEGER; a_ysrc: INTEGER; a_xdest: INTEGER; a_ydest: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+		external
+			"C (GdkDrawable*, GdkGC*, GdkDrawable*, gint, gint, gint, gint, gint, gint) | <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_get_context (a_pango_layout: POINTER): POINTER is
+		external
+			"C signature (PangoLayout*): PangoContext* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_window_begin_paint_region (a_window, a_region: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_window_begin_paint_region ((GdkWindow*) $a_window, (GdkRegion*) $a_region)"
+		end
+
+	frozen gdk_window_end_paint (a_window: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_window_end_paint ((GdkWindow*) $a_window)"
+		end
+
+	frozen g_mem_set_vtable (mem_vtable: POINTER) is
+		external
+			"C signature (GMemVTable*) use <gtk/gtk.h>"
+		end
+
+	frozen g_mem_is_system_malloc: BOOLEAN is
+		external
+			"C signature (): GBoolean use <gtk/gtk.h>"
+		end
+
+	frozen glib_mem_profiler_table: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"glib_mem_profiler_table"
+		end
+
 	frozen gdk_drawable_copy_to_image (a_drawable, a_image: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
 		external
 			"C signature (GdkDrawable*, GdkImage*, int, int, int, int, int, int): GdkImage* use <gtk/gtk.h>"
@@ -290,7 +472,7 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"sizeof(GType)"
-		end	
+		end
 
 	frozen gtk_get_current_event_time: NATURAL_32 is
 		external
@@ -363,7 +545,7 @@ feature -- Externals
 		alias
 			"group"
 		end
-		
+
 	frozen set_gdk_keymapkey_struct_level (a_c_struct: POINTER; a_level: INTEGER) is
 		external
 			"C [struct <gtk/gtk.h>] (GdkKeymapKey, gint)"
@@ -727,7 +909,7 @@ feature -- Externals
 	frozen gtk_tool_item_set_tooltip (a_tool_item, a_tooltips, a_tip_text, a_tip_private: POINTER) is
 		external
 			"C signature (GtkToolItem*, GtkTooltips*, gchar*, gchar*) use <gtk/gtk.h>"
-		end	
+		end
 
 	frozen gtk_tree_view_get_expander_column (a_tree_view: POINTER): POINTER is
 		external
@@ -926,7 +1108,7 @@ feature -- Externals
 		alias
 			"gtk_file_chooser_remove_filter ((GtkFileChooser*) $a_file_chooser, (GtkFileFilter*) $a_filter)"
 		end
-		
+
 
 	frozen gtk_file_chooser_action_open_enum: INTEGER is
 		external
@@ -934,14 +1116,14 @@ feature -- Externals
 		alias
 			"GTK_FILE_CHOOSER_ACTION_OPEN"
 		end
-		
+
 	frozen gtk_file_chooser_action_save_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GTK_FILE_CHOOSER_ACTION_SAVE"
 		end
-		
+
 	frozen gtk_file_chooser_action_select_folder_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -997,7 +1179,7 @@ feature -- Externals
 		alias
 			"GTK_RESPONSE_CANCEL"
 		end
-		
+
 
 	frozen gtk_stock_save_enum: POINTER is
 		external
@@ -1026,7 +1208,7 @@ feature -- Externals
 		alias
 			"GTK_FILE_CHOOSER ( $a_dialog )"
 		end
-		
+
 	frozen gtk_file_chooser_get_filename (a_dialog: POINTER): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -1206,7 +1388,7 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_list_store_clear ((GtkListStore*) $a_list_store)"
-		end	
+		end
 
 	frozen gtk_tree_view_get_headers_visible (a_tree_view: POINTER): BOOLEAN is
 		external
@@ -1401,7 +1583,7 @@ feature -- Externals
 		alias
 			"gtk_tree_selection_set_mode ((GtkTreeSelection*) $a_tree_sel, (GtkSelectionMode) $a_mode)"
 		end
-		
+
 	frozen gtk_tree_selection_get_mode (a_tree_sel: POINTER): INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -1484,6 +1666,13 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_view_column_set_min_width ((GtkTreeViewColumn*) $a_tree_view_column, (gint) $a_width)"
+		end
+
+	frozen gtk_tree_view_column_set_max_width (a_tree_view_column: POINTER; a_width: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_set_max_width ((GtkTreeViewColumn*) $a_tree_view_column, (gint) $a_width)"
 		end
 
 	frozen gtk_tree_view_column_add_attribute (a_tree_view_column, a_cell_renderer, a_attribute: POINTER; a_column: INTEGER) is
@@ -1844,7 +2033,7 @@ feature -- Externals
 		external
 			"C signature (): GdkScreen* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gdk_screen_get_width_mm (a_screen: POINTER): INTEGER is
 		external
 			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
@@ -1854,7 +2043,7 @@ feature -- Externals
 		external
 			"C signature (GdkScreen*): gint use <gtk/gtk.h>"
 		end
-		
+
 
 	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER) is
 		external
@@ -2047,7 +2236,7 @@ feature -- Externals
 		external
 			"C signature (gchar*): GtkWidget* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_label_set_text_with_mnemonic (a_label, a_text: POINTER) is
 		external
 			"C signature (GtkLabel*, gchar*) use <gtk/gtk.h>"
@@ -2163,7 +2352,7 @@ feature -- Externals
 					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
 				}
 			]"
-					
+
 		end
 
 	frozen g_filename_to_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
@@ -2179,7 +2368,7 @@ feature -- Externals
 					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
 				}
 			]"
-					
+
 		end
 
 	frozen g_utf8_strlen (a_utf8_string: POINTER; maximum: INTEGER): INTEGER is
@@ -2209,7 +2398,7 @@ feature -- Externals
 					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
 				}
 			]"
-					
+
 		end
 
 	frozen g_filename_from_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
@@ -2239,7 +2428,7 @@ feature -- Externals
 		alias
 			"g_value_peek_pointer ((GValue*) $arg)"
 		end
-		
+
 	frozen gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
@@ -2284,7 +2473,7 @@ feature -- Externals
 		external
 			"C signature (GtkWidget*): PangoContext* use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_layout_set_font_description (a_layout, a_font_desc: POINTER) is
 		external
 			"C signature (PangoLayout*, PangoFontDescription*) use <gtk/gtk.h>"
@@ -2295,16 +2484,11 @@ feature -- Externals
 			"C signature (PangoLayout*, int) use <gtk/gtk.h>"
 		end
 
---	frozen pango_layout_set_ellipsize (a_layout: POINTER; a_mode: INTEGER) is
---		external
---			"C signature (PangoLayout*, PangoEllipsizeMode) use <gtk/gtk.h>"
---		end
-
 	frozen pango_layout_get_pixel_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
 		external
 			"C signature (PangoLayout*, gint*, gint*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_layout_get_iter (a_layout: POINTER): POINTER is
 		external
 			"C signature (PangoLayout*): PangoLayoutIter* use <gtk/gtk.h>"
@@ -2314,7 +2498,7 @@ feature -- Externals
 		external
 			"C signature (PangoLayout*, char*, int) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_layout_iter_get_baseline (a_iter: POINTER): INTEGER is
 		external
 			"C signature (PangoLayoutIter*): gint use <gtk/gtk.h>"
@@ -2348,7 +2532,7 @@ feature -- Externals
 	frozen gtk_widget_get_modifier_style (a_widget: POINTER): POINTER is
 		external
 			"C signature (GtkWidget*): GtkRcStyle* use <gtk/gtk.h>"
-		end	
+		end
 
 	frozen pango_scale: INTEGER is
 		external
@@ -2366,7 +2550,7 @@ feature -- Externals
 		external
 			"C signature (PangoFontDescription*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_font_description_copy (a_pango_description: POINTER): POINTER is
 		external
 			"C signature (PangoFontDescription*): PangoFontDescription* use <gtk/gtk.h>"
@@ -2391,7 +2575,7 @@ feature -- Externals
 		external
 			"C signature (PangoFontDescription*, PangoStyle) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_font_description_get_style (a_pango_description: POINTER): INTEGER is
 		external
 			"C signature (PangoFontDescription*): PangoStyle use <gtk/gtk.h>"
@@ -2401,7 +2585,7 @@ feature -- Externals
 		external
 			"C signature (PangoFontDescription*, PangoWeight) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_font_description_get_weight (a_pango_description: POINTER): INTEGER is
 		external
 			"C signature (PangoFontDescription*): PangoWeight use <gtk/gtk.h>"
@@ -2411,7 +2595,7 @@ feature -- Externals
 		external
 			"C signature (PangoFontDescription*, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen pango_font_description_get_size (a_pango_description: POINTER): INTEGER is
 		external
 			"C signature (PangoFontDescription*): gint use <gtk/gtk.h>"
@@ -2428,7 +2612,7 @@ feature -- Externals
 		alias
 			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gpointer) $arg1, NULL)"
 		end
-		
+
 	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -2463,7 +2647,7 @@ feature -- Externals
 		alias
 			"g_object_set((gpointer) $a_object, (gchar*) $a_property, (gfloat) $double_arg, NULL)"
 		end
-		
+
 	frozen g_object_set_boolean (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -2477,7 +2661,7 @@ feature -- Externals
 		alias
 			"g_signal_handler_disconnect"
 		end
-		
+
 	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -2553,12 +2737,12 @@ feature -- Externals
 		external
 			"C signature (GtkEditable*): EIF_BOOLEAN use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_widget_set_default_visual (a_visual: POINTER) is
 		external
 			"C macro use <gtk/gtk.h>"
 		end
-	
+
 	frozen object_destroy (a_c_object: POINTER) is
 		external
 			"C signature (GtkObject*) use <gtk/gtk.h>"
@@ -2572,7 +2756,7 @@ feature -- Externals
 		alias
 			"g_object_ref"
 		end
-		
+
 	frozen object_unref (a_c_object: POINTER) is
 		external
 			"C signature (gpointer) use <gtk/gtk.h>"
@@ -2589,7 +2773,7 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, gchar*, GtkTextIter*, gboolean): GtkTextMark* use <gtk/gtk.h>"
 		end
-	
+
 	frozen gtk_text_buffer_delete_mark (a_text_buffer: POINTER; a_text_mark: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextMark*) use <gtk/gtk.h>"
@@ -2619,12 +2803,12 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, gchar *, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_insert_at_cursor (a_text_buffer: POINTER; a_string: POINTER; a_length: INTEGER) is
 		external
 			"C signature (GtkTextBuffer*, gchar *, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_insert (a_text_buffer: POINTER; a_text_iter: POINTER; a_string: POINTER; a_length: INTEGER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, gchar *, gint) use <gtk/gtk.h>"
@@ -2634,22 +2818,22 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_start_iter (a_text_buffer: POINTER; a_text_iter: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_end_iter (a_text_buffer: POINTER; a_text_iter: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*) use <gtk/gtk.h>"
 		end
-	
+
 	frozen gtk_text_buffer_get_char_count (a_text_buffer: POINTER): INTEGER is
 		external
 			"C signature (GtkTextBuffer*): gint use <gtk/gtk.h>"
-		end	
-		
+		end
+
 	frozen gtk_text_buffer_get_bounds (a_text_buffer: POINTER; a_start_iter: POINTER; a_end_iter: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
@@ -2659,12 +2843,12 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*): gboolean use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_selection_bound (a_text_buffer: POINTER): POINTER is
 		external
 			"C signature (GtkTextBuffer*): GtkTextMark* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_insert (a_text_buffer: POINTER): POINTER is
 		external
 			"C signature (GtkTextBuffer*): GtkTextMark* use <gtk/gtk.h>"
@@ -2679,12 +2863,12 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*, gboolean): gchar* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_line_count (a_text_buffer: POINTER): INTEGER is
 		external
 			"C signature (GtkTextBuffer*): gint use <gtk/gtk.h>"
-		end	
-		
+		end
+
 	frozen gtk_text_iter_get_text (a_start_iter: POINTER; a_end_iter: POINTER): POINTER is
 		external
 			"C signature (GtkTextIter*, GtkTextIter*): gchar* use <gtk/gtk.h>"
@@ -2709,12 +2893,12 @@ feature -- Externals
 		external
 			"C signature (GtkTextIter*, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_view_set_editable (a_text_view: POINTER; a_setting: BOOLEAN) is
 		external
 			"C signature (GtkTextView*, gboolean) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_view_get_editable (a_text_view: POINTER): BOOLEAN is
 		external
 			"C signature (GtkTextView*): gboolean use <gtk/gtk.h>"
@@ -2723,17 +2907,17 @@ feature -- Externals
 	frozen gtk_text_view_get_line_yrange (a_text_view: POINTER; a_text_iter: POINTER; a_y: POINTER; a_height: POINTER) is
 		external
 			"C signature (GtkTextView*, GtkTextIter*, gint*, gint*) use <gtk/gtk.h>"
-		end	
-		
+		end
+
 	frozen gtk_text_view_set_wrap_mode (a_text_view: POINTER; a_wrap_mode: INTEGER) is
 		external
 			"C signature (GtkTextView*, GtkWrapMode) use <gtk/gtk.h>"
 		end
-	
+
 	Gtk_wrap_none_enum: INTEGER is 0
 	Gtk_wrap_char_enum: INTEGER is 1
 	Gtk_wrap_word_enum: INTEGER is 2
-	
+
 	frozen gtk_text_tag_new (a_name: POINTER): POINTER is
 		external
 			"C signature (gchar*): GtkTextTag* use <gtk/gtk.h>"
@@ -2743,7 +2927,7 @@ feature -- Externals
 		external
 			"C signature (GtkTextTagTable*): GtkTextBuffer* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_apply_tag (a_buffer: POINTER; a_tag: POINTER; a_start: POINTER; a_end: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextTag*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
@@ -2753,7 +2937,7 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*): GtkTextTagTable* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_tag_table_add (a_table: POINTER; a_tag: POINTER) is
 		external
 			"C signature (GtkTextTagTable*, GtkTextTag*) use <gtk/gtk.h>"
@@ -2773,32 +2957,32 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_iter_at_mark (a_text_buffer: POINTER; a_text_iter: POINTER; a_text_mark: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextMark*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_get_iter_at_offset (a_text_buffer: POINTER; a_text_iter: POINTER; a_char_offset: INTEGER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_delete_selection (a_text_buffer: POINTER; a_interactive: BOOLEAN; a_default_editable: BOOLEAN) is
 		external
 			"C signature (GtkTextBuffer*, gboolean, gboolean) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_delete (a_text_buffer: POINTER; a_start_iter: POINTER; a_end_iter: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
 		end
-	
+
 	frozen gtk_text_buffer_place_cursor (a_text_buffer: POINTER; a_text_iter: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkTextIter*) use <gtk/gtk.h>"
-		end		
-	
+		end
+
 	frozen gtk_text_iter_forward_to_line_end (a_text_iter: POINTER) is
 		external
 			"C signature (GtkTextIter *) use <gtk/gtk.h>"
@@ -2823,7 +3007,7 @@ feature -- Externals
 		external
 			"C signature (GtkTextIter *) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_view_forward_display_line (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN is
 		external
 			"C signature (GtkTextView*, GtkTextIter*): gboolean use <gtk/gtk.h>"
@@ -2833,57 +3017,57 @@ feature -- Externals
 		external
 			"C signature (GtkTextView*, GtkTextIter*): gboolean use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_view_forward_display_line_end (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN is
 		external
 			"C signature (GtkTextView*, GtkTextIter*): gboolean use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_iter_get_offset (a_text_iter: POINTER): INTEGER is
 		external
 			"C signature (GtkTextIter*): gint use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_clipboard_get (a_atom: POINTER): POINTER is
 		external
 			"C signature (GdkAtom): GtkClipboard* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_clipboard_set_text (a_clipboard: POINTER; a_text: POINTER; a_length: INTEGER) is
 		external
 			"C signature (GtkClipboard*, gchar*, gint) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_clipboard_wait_for_text (a_clipboard: POINTER): POINTER is
 		external
 			"C signature (GtkClipboard*): gchar* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_clipboard_wait_is_text_available (a_clipboard: POINTER): BOOLEAN is
 		external
 			"C signature (GtkClipboard*): gboolean use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_cut_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER; default_editable: BOOLEAN) is
 		external
 			"C signature (GtkTextBuffer*, GtkClipboard*, gboolean) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_copy_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER) is
 		external
 			"C signature (GtkTextBuffer*, GtkClipboard*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_buffer_paste_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER; a_text_iter: POINTER; default_editable: BOOLEAN) is
 		external
 			"C signature (GtkTextBuffer*, GtkClipboard*, GtkTextIter*, gboolean) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_text_view_scroll_to_iter (a_text_view: POINTER; a_text_iter: POINTER; within_margin: DOUBLE; use_align: BOOLEAN; xalign: DOUBLE; yalign: DOUBLE) is
 		external
 			"C signature (GtkTextView*, GtkTextIter*, gdouble, gboolean, gdouble, gdouble) use <gtk/gtk.h> "
 		end
-		
+
 	frozen gtk_text_view_get_iter_location (a_text_view, a_text_iter, a_rectangle: POINTER) is
 		external
 			"C signature (GtkTextView*, GtkTextIter*, GdkRectangle*) use <gtk/gtk.h>"
@@ -2898,7 +3082,7 @@ feature -- Externals
 		external
 			"C signature (GtkImage*, GdkPixmap*, GdkBitmap*) use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_image_get_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER) is
 		external
 			"C signature (GtkImage*, GdkPixmap**, GdkBitmap**) use <gtk/gtk.h>"
@@ -2908,7 +3092,7 @@ feature -- Externals
 		external
 			"C signature (GtkImage*): GdkPixbuf* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_image_new_from_pixmap (a_pixmap: POINTER; a_mask: POINTER): POINTER is
 		external
 			"C signature (GdkPixmap*, GdkBitmap*): GtkImage* use <gtk/gtk.h>"
@@ -2923,22 +3107,22 @@ feature -- Externals
 		external
 			"C signature (): GtkImage* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_dialog_new: POINTER is
-		external	
+		external
 			"C signature (): GtkWidget* use <gtk/gtk.h>"
 		end
-		
+
 	frozen gtk_dialog_set_has_separator (a_dialog: POINTER; a_setting: BOOLEAN) is
 		external
 			"C signature (GtkDialog*, gboolean) use <gtk/gtk.h>"
 		end
-	
+
 	frozen gtk_widget_modify_font (a_widget: POINTER; a_font_description: POINTER) is
 		external
 			"C signature (GtkWidget*, PangoFontDescription*) use <gtk/gtk.h>"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			non_void_eiffel_name: a_eiffel_name /= Void
 		do
 			name := a_name
-			eiffel_name := a_eiffel_name
+			eiffel_name := a_eiffel_name.as_lower
 			create {ARRAYED_LIST [CODE_TYPE_REFERENCE]} feature_clauses.make (1)
 			create {ARRAYED_LIST [CODE_COMMENT]} comments.make (1)
 			create {ARRAYED_LIST [CODE_ATTRIBUTE_DECLARATION]} custom_attributes.make (1)

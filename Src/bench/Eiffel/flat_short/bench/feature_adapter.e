@@ -116,7 +116,9 @@ feature -- Element change
 						new_feature_as := feature_as.twin
 						create adapter;
 						f_name := names.first.twin
-						l_frozen_keyword := f_name.frozen_keyword.twin
+						if f_name.frozen_keyword /= Void then
+							l_frozen_keyword := f_name.frozen_keyword.twin
+						end
 						if source_feature.is_infix then
 							create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
 							l_op.set_index (f_name.internal_name.index)

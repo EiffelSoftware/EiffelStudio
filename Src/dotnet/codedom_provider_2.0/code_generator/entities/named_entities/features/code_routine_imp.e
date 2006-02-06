@@ -23,6 +23,7 @@ feature {NONE} -- Specific implementation
 			if not name.is_equal (".ctor") then
 				Result.append (indent_string)
 				Result.append (Ctor_eiffel_name.twin)
+				Result.append_character ('%N')
 			end
 		end
 
@@ -32,7 +33,6 @@ feature {NONE} -- Implementation
 				-- Eiffel name for `.ctor'
 			once
 				Result := Name_formatter.valid_variable_name (".ctor")
-				Result.append_character ('%N')
 			end
 
 end -- class CODE_ROUTINE

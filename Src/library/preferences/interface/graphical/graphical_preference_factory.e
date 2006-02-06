@@ -47,7 +47,7 @@ feature -- Access
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
-	new_shortcut_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAYED_LIST [STRING]): SHORTCUT_PREFERENCE is
+	new_shortcut_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]): SHORTCUT_PREFERENCE is
 			-- Add a new shortcut preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
@@ -57,7 +57,7 @@ feature -- Access
 			not_has_preference: not a_manager.known_preference (a_name)
 			valid_fallback_value: a_fallback_value.count = 4
 		do
-			Result := (create {PREFERENCE_FACTORY [ARRAYED_LIST [STRING], SHORTCUT_PREFERENCE]}).
+			Result := (create {PREFERENCE_FACTORY [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], SHORTCUT_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
 		ensure
 			has_result: Result /= Void
@@ -75,7 +75,7 @@ feature -- Access
 		do
 			Result := new_font_preference_value (a_manager, a_name, a_fallback_value)
 		end
-	new_shortcut_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAYED_LIST [STRING]): SHORTCUT_PREFERENCE is
+	new_shortcut_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]): SHORTCUT_PREFERENCE is
 		obsolete "use new_shortcut_preference_value."
 		do
 			Result := new_shortcut_preference_value (a_manager, a_name, a_fallback_value)

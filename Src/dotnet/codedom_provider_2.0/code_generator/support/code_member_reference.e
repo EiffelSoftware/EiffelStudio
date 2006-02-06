@@ -154,7 +154,8 @@ feature -- Access
 						Result := Name_formatter.valid_variable_name (name)
 					end
 				end
-				internal_eiffel_name := Result.as_lower
+				Result.to_lower
+				internal_eiffel_name := Result
 			else
 				Result := internal_eiffel_name
 			end

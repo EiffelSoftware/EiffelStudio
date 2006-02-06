@@ -9,7 +9,7 @@ class
 	SHORTCUT_PREFERENCE
 
 inherit
-	TYPED_PREFERENCE [ARRAYED_LIST [STRING]]
+	TYPED_PREFERENCE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]]
 
 	PREFERENCE_CONSTANTS
 
@@ -40,8 +40,10 @@ feature -- Access
 			-- Actual Key
 		local
 			l_key_code: INTEGER
+			s: STRING
 		do
-			l_key_code := key_code_from_key_string (value.last)
+			s ?= value.reference_item (4)
+			l_key_code := key_code_from_key_string (s)
 			if l_key_code > 0 then
 				create Result.make_with_code (l_key_code)
 			else
@@ -67,20 +69,20 @@ feature -- Access
 			until
 				l_cnt > values.count
 			loop
-				inspect l_cnt
-				when 1 then
-					if values.i_th (l_cnt).as_lower.is_equal ("true") then
+				inspect l_cnt - value.lower
+				when 0 then
+					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
 						Result.append (Alt_text + shortcut_delimiter)
 					end
-				when 2 then
-					if values.i_th (l_cnt).as_lower.is_equal ("true") then
+				when 1 then
+					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
 						Result.append (Ctrl_text + shortcut_delimiter)
 					end
-				when 3 then
-					if values.i_th (l_cnt).as_lower.is_equal ("true") then
+				when 2 then
+					if values.i_th (l_cnt).as_lower.is_equal (str_lower_true) then
 						Result.append (Shift_text + shortcut_delimiter)
 					end
-				when 4 then
+				when 3 then
 					Result.append (values.i_th (l_cnt).twin)
 				else
 				end
@@ -193,7 +195,7 @@ feature -- Status Setting
 			l_value: like value
 			l_cnt: INTEGER
 		do
-			create internal_value.make (4)
+			internal_value := [False, False, False, ""]
 			values := a_value.split ('+')
 			l_value := value
 			from
@@ -201,16 +203,12 @@ feature -- Status Setting
 			until
 				l_cnt > values.count
 			loop
-				l_string ?= values.i_th (l_cnt)
-				if l_string.as_lower.is_equal (once "true") then
-					l_value.extend (once "True")
-				else
-					if l_cnt = values.count then
-							-- Last one is assumed to be key
-						l_value.extend (l_string.as_lower)
-					else
-						l_value.extend (once "False")
-					end
+				l_string ?= values.i_th (l_cnt).as_lower
+				if l_string.is_equal (str_lower_true) then
+					l_value.put_boolean (True, l_cnt)
+				elseif l_cnt = values.count then
+						-- Last one is assumed to be key
+					l_value.put_reference (l_string, 4)
 				end
 				l_cnt := l_cnt + 1
 			end
@@ -222,19 +220,19 @@ feature -- Query
 	is_alt: BOOLEAN is
 			-- Requires Alt key?
 		do
-			Result := value.i_th (1).as_lower.is_equal (once "true")
+			Result := value.boolean_item (1)
 		end
 
 	is_ctrl: BOOLEAN is
 			-- Requires Ctrl key?
 		do
-			Result := value.i_th (2).as_lower.is_equal (once "true")
+			Result := value.boolean_item (2)
 		end
 
 	is_shift: BOOLEAN is
 			-- Requires Shift key?
 		do
-			Result := value.i_th (3).as_lower.is_equal (once "true")
+			Result := value.boolean_item (3)
 		end
 
 	valid_value_string (a_string: STRING): BOOLEAN is
@@ -245,11 +243,16 @@ feature -- Query
 
 	matches (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN is
 			-- Do combinations of `a_key', `alt', `ctrl' an `shift' match Current?
+		local
+			s: STRING
 		do
 			Result := (is_alt = alt)
 				and then (is_ctrl = ctrl)
 				and then (is_shift = shift)
-				and then (value.last.is_case_insensitive_equal (key_strings.item (a_key.code)))
+			if Result then
+				s ?= value.reference_item (4)
+				Result := s.is_case_insensitive_equal (key_strings.item (a_key.code))
+			end
 		end
 
 feature {PREFERENCES} -- Access
@@ -262,20 +265,18 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	auto_default_value: ARRAYED_LIST [STRING] is
+	auto_default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING] is
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create Result.make (4)
-			Result.extend ((create {EV_KEY}).out)
-			Result.extend (once "True")
-			Result.extend (once "False")
-			Result.extend (once "False")
+			Result := [True, False, False, (create {EV_KEY}).out]
 		end
 
+	str_true: STRING is "True"
+	str_false: STRING is "False"
+	str_lower_true: STRING is "true"
+
 invariant
-	has_control_key: value.i_th (1).as_lower.is_equal ("true") or
-		value.i_th (2).as_lower.is_equal ("true") or
-		value.i_th (3).as_lower.is_equal ("true")
+	has_control_key: value.boolean_item (1) or value.boolean_item (2) or value.boolean_item (3)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

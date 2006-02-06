@@ -42,6 +42,7 @@ feature -- Status Report
 	is_valid_id (a_string: STRING): BOOLEAN is
 			-- Is `a_string' a valid partial tree id?
 		do
+			a_string.left_adjust
 			Result := a_string.count = 40 and is_valid_id_prefix (a_string.substring (1, 4))
 							and is_valid_uuid (a_string.substring (5, 40))
 		end
@@ -63,6 +64,7 @@ feature -- Basic Operations
 		local
 			l_id: CODE_PARTIAL_TREE_ID
 		do
+			a_id.left_adjust
 			create l_id.make_from_string (a_id)
 			statements_store.search (l_id)
 			if statements_store.found then

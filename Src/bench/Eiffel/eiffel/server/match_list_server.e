@@ -38,8 +38,14 @@ feature -- Access
 			-- Retrieve object.
 		local
 			l_class: CLASS_C
+			old_item: LEAF_AS_LIST
 		do
-			if stored_has (an_id) then
+				-- 02/06/2006 Patrickr
+				-- On a read only project we can't write, so we just store the match list in the cash.
+				-- It would be better to have a more intelligent store mechanism, that would do this.
+			if cache.has_id (an_id) then
+				Result := cache.item_id (an_id)
+			elseif stored_has (an_id) then
 				Result := stored_item (an_id)
 			end
 			l_class := system.class_of_id (an_id)
@@ -49,7 +55,19 @@ feature -- Access
 				Result := matchlist_scanner.match_list
 				Result.set_class_id (an_id)
 				Result.set_generated (l_class.lace_class.date)
-				put (Result)
+					-- 02/06/2006 Patrickr
+					-- On a read only project we can't write, so we just store the match list in the cash.
+					-- It would be better to have a more intelligent store mechanism, that would do this.
+				if not system.eiffel_project.is_read_only then
+					put (Result)
+				else
+					old_item := cache.item_id (an_id)
+					if old_item = Void then
+						cache.force (Result)
+					else
+						cache.change_last_item (Result)
+					end
+				end
 			end
 		end
 

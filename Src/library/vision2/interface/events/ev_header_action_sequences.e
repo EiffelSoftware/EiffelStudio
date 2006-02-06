@@ -15,9 +15,35 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 feature -- Access
-		
+
+	item_pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+			-- Actions to be performed when a mouse pointer is pressed on a header item.
+			--
+			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
+			-- button_number: INTEGER -- The mouse button number.
+			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
+			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
+		do
+			Result := implementation.item_pointer_button_press_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	item_pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
+			--
+			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
+			-- button_number: INTEGER -- The mouse button number.
+			-- x_pos: INTEGER -- The x position of the motion in grid virtual coordinates.
+			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
+		do
+			Result := implementation.item_pointer_double_press_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 	item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when resizing begins on a header item.
 		do
@@ -25,7 +51,7 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed as a header item is resized.
 		do
@@ -33,7 +59,7 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-	
+
 	item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when resizing completes on a header item.
 		do

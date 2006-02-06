@@ -7,19 +7,19 @@ indexing
 
 class
 	EV_HEADER_IMP
-	
+
 inherit
 	EV_HEADER_I
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
 			interface,
 			initialize
 		end
-	
+
 	EV_PRIMITIVE_IMP
 		undefine
 			escape_pnd, pnd_press, on_right_button_double_click, on_middle_button_double_click,
@@ -32,13 +32,13 @@ inherit
 			on_mouse_move,
 			on_set_cursor
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
 			initialize
 		end
-		
+
 	WEL_HEADER_CONTROL
 		rename
 			make as wel_make,
@@ -97,29 +97,29 @@ inherit
 			on_hdn_item_changed,
 			on_hdn_item_changing
 		end
-		
+
 	EV_HEADER_ACTION_SEQUENCES_IMP
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_IMAGE_LIST_IMP
 		export
 			{NONE} all
 		end
-		
+
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		export
 			{NONE} all
 		redefine
 			interface
 		end
-		
+
 	WEL_HHT_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			initialize_pixmaps
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -141,9 +141,9 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			set_default_font
 		end
-		
+
 feature -- Status report
-		
+
 	ev_children: ARRAYED_LIST [EV_HEADER_ITEM_IMP]
 			-- List of the children.
 
@@ -166,7 +166,7 @@ feature -- Element change
 			insert_header_item (item_imp, an_index - 1)
 			item_imp.set_pixmap_in_parent
 		end
-		
+
 feature -- Removal
 
 	remove_item (item_imp: EV_HEADER_ITEM_IMP) is
@@ -174,7 +174,7 @@ feature -- Removal
 		local
 			an_index: INTEGER
 		do
-			an_index := ev_children.index_of (item_imp, 1) - 1			
+			an_index := ev_children.index_of (item_imp, 1) - 1
 			delete_header_item (an_index)
 		end
 
@@ -194,14 +194,14 @@ feature -- Miscellaneous
 feature {EV_ANY_I}
 
 	interface: EV_HEADER
-	
+
 feature {EV_HEADER_ITEM_IMP} -- Implementation
 
 	image_list: EV_IMAGE_LIST_IMP
 		-- Image list associated with `Current'.
 		-- `Void' if none.
 
-	setup_image_list is 
+	setup_image_list is
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		do
@@ -210,7 +210,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 		ensure then
 			image_list_not_void: image_list /= Void
 		end
-		
+
 	pixmaps_size_changed is
 			-- The size of the displayed pixmaps has just
 			-- changed.
@@ -228,13 +228,13 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			until
 				ev_children.off
 			loop
-				l_item := ev_children.item	
+				l_item := ev_children.item
 				l_item.set_pixmap_in_parent
 				ev_children.forth
 			end
 			ev_children.go_to (l_cursor)
 		end
-		
+
 	resize_item_to_content (header_item: EV_HEADER_ITEM_IMP) is
 			-- Resize `header_item' width to fully display both `pixmap' and `text'.
 		require
@@ -271,7 +271,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 				-- Restrict `desired_width' to dimensions permitted by `resize_item_to_content'.
 			desired_width := desired_width.min (header_item.maximum_width)
 			desired_width := desired_width.max (header_item.minimum_width)
-			
+
 			header_item.set_width (desired_width)
 		end
 
@@ -304,9 +304,9 @@ feature {NONE} -- Implementation
 		end
 
 	on_hdn_begin_track (info: WEL_HD_NOTIFY) is
-			-- The user has begun dragging a divider in the control 
-			-- (that is, the user has pressed the left mouse button while 
-			-- the mouse cursor is on a divider in the header control). 
+			-- The user has begun dragging a divider in the control
+			-- (that is, the user has pressed the left mouse button while
+			-- the mouse cursor is on a divider in the header control).
 		local
 			header_item: EV_HEADER_ITEM_IMP
 		do
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_hdn_track (info: WEL_HD_NOTIFY) is
-			-- The user is dragging a divider in the header control. 
+			-- The user is dragging a divider in the header control.
 		local
 			header_item: EV_HEADER_ITEM_IMP
 			desired_width: INTEGER
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_hdn_end_track (info: WEL_HD_NOTIFY) is
-			-- The user has finished dragging a divider. 
+			-- The user has finished dragging a divider.
 		local
 			header_item: EV_HEADER_ITEM_IMP
 		do
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 				item_resize_end_actions_internal.call ([header_item.interface])
 			end
 		end
-	
+
 	on_hdn_item_changing (info: WEL_HD_NOTIFY) is
 			-- The attributes of a header are changing.
 			-- (from WEL_HEADER_CONTROL)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				set_message_return_value (to_lresult (1))
 			end
 		end
-		
+
 	on_hdn_item_changed (info: WEL_HD_NOTIFY) is
 			-- The attributes of a header item have changed.
 			-- (from WEL_HEADER_CONTROL)
@@ -385,10 +385,18 @@ feature {NONE} -- Implementation
 				and not item_is_in_pnd then
 				if pre_drop_it.pointer_button_press_actions_internal
 					/= Void then
-					pre_drop_it.pointer_button_press_actions_internal.call(
+					pre_drop_it.pointer_button_press_actions_internal.call (
 						[x_pos - item_x_offset (pre_drop_it.interface) , y_pos, button, 0.0,
 						0.0, 0.0, pt.x, pt.y])
 				end
+				if item_pointer_button_press_actions_internal /= Void then
+					item_pointer_button_press_actions_internal.call (
+						[pre_drop_it.interface,
+						x_pos - item_x_offset (pre_drop_it.interface),
+						y_pos, button]
+					)
+				end
+
 					-- We record that the press actions have been called.
 				item_press_actions_called := True
 			end
@@ -399,7 +407,7 @@ feature {NONE} -- Implementation
 			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
 				not parent_is_pnd_source and pre_drop_it.parent /= Void then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then 
+			elseif pnd_item_source /= Void then
 				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
@@ -422,7 +430,7 @@ feature {NONE} -- Implementation
 
 					-- If there is an item where the button press was recieved,
 					-- and it has not changed from the start of this procedure
-					-- then call `pointer_button_press_actions'. 
+					-- then call `pointer_button_press_actions'.
 					--| Internal_propagate_pointer_press in
 					--| EV_MULTI_COLUMN_LIST_IMP has a complete explanation.
 				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
@@ -432,12 +440,19 @@ feature {NONE} -- Implementation
 							[x_pos - item_x_offset (post_drop_it.interface), y_pos, button, 0.0,
 							0.0, 0.0, pt.x, pt.y])
 					end
+					if item_pointer_button_press_actions_internal /= Void then
+						item_pointer_button_press_actions_internal.call (
+							[pre_drop_it.interface,
+							x_pos - item_x_offset (pre_drop_it.interface),
+							y_pos, button]
+						)
+					end
 				end
 			end
 				-- Reset `call_press_event'.
 			keep_press_event
 		end
-		
+
 	internal_propagate_pointer_double_press
 		(keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
@@ -453,9 +468,16 @@ feature {NONE} -- Implementation
 					it.pointer_double_press_actions_internal.call
 						([x_pos- item_x_offset (it.interface), y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 				end
+				if item_pointer_double_press_actions_internal /= Void then
+					item_pointer_double_press_actions_internal.call (
+						[it.interface,
+						x_pos - item_x_offset (it.interface),
+						y_pos, button]
+					)
+				end
 			end
 		end
-		
+
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 		local
@@ -474,7 +496,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
-		
+
 	on_set_cursor (hit_code: INTEGER) is
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
@@ -486,7 +508,7 @@ feature {NONE} -- Implementation
 				disable_default_processing
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

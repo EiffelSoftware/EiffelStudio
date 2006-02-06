@@ -9,7 +9,7 @@ class
 
 inherit
 	TESTER_MAIN_WINDOW_IMP
-	
+
 	TESTER_SAVED_SETTINGS
 		export
 			{NONE} all
@@ -66,7 +66,6 @@ feature {NONE} -- Initialization
 			create codedoms_tree.make
 			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
 			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
-			tree_bottom_split_area.set_first (codedoms_tree)
 			tree_bottom_split_area.set_split_position (3000)
 			Event_manager.set_output_displayer (agent display_output)
 			make
@@ -168,7 +167,7 @@ feature {NONE} -- Events
 				parse_button.disable_sensitive
 			end
 		end
-		
+
 	on_generate_source is
 			-- Called by `select_actions' of `generate_button'.
 		local
@@ -244,7 +243,7 @@ feature {NONE} -- Events
 			Event_manager.raise_event (create {TESTER_EVENT}.make ("Error while generating source code: " + (create {EXCEPTIONS}).exception_trace, True))
 			retry
 		end
-	
+
 	on_compile_from_dom is
 			-- Called by `select_actions' of `compile_from_dom_button'.
 		local
@@ -263,7 +262,7 @@ feature {NONE} -- Events
 			l_results := l_compiler.compile_assembly_from_dom (compiler_options, l_compilation_unit)
 			display_compilation_results (l_results)
 		end
-	
+
 	on_compile_from_file is
 			-- Called by `select_actions' of `compile_from_file_button'.
 		local
@@ -277,7 +276,7 @@ feature {NONE} -- Events
 			l_results := l_compiler.compile_assembly_from_file (compiler_options, source_filename_text_field.text)
 			display_compilation_results (l_results)
 		end
-	
+
 	on_compile_from_source is
 			-- Called by `select_actions' of `compile_from_source_button'.
 		local
@@ -291,7 +290,7 @@ feature {NONE} -- Events
 			l_results := l_compiler.compile_assembly_from_source (compiler_options, source_text.text)
 			display_compilation_results (l_results)
 		end
-	
+
 	on_parse is
 			-- Called by `select_actions' of `parse_button'.
 		local
@@ -337,7 +336,7 @@ feature {NONE} -- Events
 				output_type_text_field.remove_text
 			end
 		end
-	
+
 	on_identifier_change is
 			-- Update identifier test text fields.
 		local
@@ -370,13 +369,13 @@ feature {NONE} -- Events
 			l_retried := True
 			retry
 		end
-	
+
 	on_add_codedom_tree is
 			-- Add codedom tree to codedoms tree
 		do
 			browse_for_file ("Browse for serialized CodeDom tree...", Void, agent add_codedom_tree)
 		end
-	
+
 	on_remove_codedom_tree is
 			-- Add codedom tree to codedoms tree
 		local
@@ -455,7 +454,7 @@ feature {NONE} -- Events
 				compile_from_dom_button.disable_sensitive
 			end
 		end
-	
+
 	on_codedom_tree_deselect is
 			-- Called by `deselect_actions' of `codedoms_tree'.
 		do
@@ -514,7 +513,7 @@ feature {NONE} -- Events
 				new_reference_text_field.set_text (referenced_assemblies_list.selected_item.text)
 			end
 		end
-		
+
 	on_referenced_assembly_deselect is
 			-- Disable `Remove' button if necessary.
 		do
@@ -525,14 +524,14 @@ feature {NONE} -- Events
 				new_reference_text_field.set_text (referenced_assemblies_list.selected_item.text)
 			end
 		end
-	
+
 	on_browse_new_reference is
 			-- Called by `select_actions' of `new_reference_browse_button'.
 			-- Popup file browse dialog and update `ew_reference_text_field' accordingly.
 		do
 			browse_for_file ("Browse for assembly...", "*.dll", agent new_reference_text_field.set_text)
 		end
-		
+
 	on_new_reference_change is
 			-- Enable `Add' reference button if text field not empty.
 		do
@@ -551,14 +550,14 @@ feature {NONE} -- Events
 				end
 			end
 		end
-		
+
 	on_add_referenced_assembly is
 			-- Called by `select_actions' of `referenced_assemblies_add_button'.
 		do
 			referenced_assemblies_list.extend (create {EV_LIST_ITEM}.make_with_text (new_reference_text_field.text))
 			new_reference_text_field.remove_text
 		end
-	
+
 	on_remove_referenced_assembly is
 			-- Called by `select_actions' of `referenced_assemblies_remove_button'.
 		local
@@ -574,19 +573,19 @@ feature {NONE} -- Events
 				l_selected_items.forth
 			end
 		end
-	
+
 	on_browse_for_resource is
 			-- Called by `select_actions' of `resource_browse_button'.
 		do
 			browse_for_file ("Browse for resource...", "*.res", agent resource_text_field.set_text)
 		end
-	
+
 	on_browse_parse_file is
 			-- Called by `select_actions' of `parse_file_browse_button'.
 		do
 			browse_for_file ("Browse for file to parse...", "*.es", agent parse_file_text_field.set_text)
 		end
-	
+
 	on_browse_serialized_folder is
 			-- Called by `select_actions' of `serialized_folder_browse_button'.
 		do
@@ -679,7 +678,7 @@ feature {NONE} -- Events
 			Store.store;
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
-	
+
 feature {NONE} -- Implementation
 
 	check_can_generate is
@@ -708,7 +707,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	check_can_parse is
 			-- Check if `Parse' button should be enabled.
 		do
@@ -735,7 +734,7 @@ feature {NONE} -- Implementation
 				parse_button.disable_sensitive
 			end
 		end
-		
+
 	display_output (a_output: STRING) is
 			-- Display output `a_output'.
 		require
@@ -862,7 +861,7 @@ feature {NONE} -- Implementation
 				non_supports_list.extend (create {EV_LIST_ITEM}.make_with_text ("Win32 resources"))
 			end
 		end
-	
+
 	add_codedom_tree (a_path: STRING) is
 			-- Add tree located at `a_path' to codedoms tree.
 		require
@@ -906,7 +905,7 @@ feature {NONE} -- Implementation
 				Result.set_output_assembly (output_assembly_text_field.text)
 			end
 		end
-		
+
 	display_compilation_results (a_results: SYSTEM_DLL_COMPILER_RESULTS) is
 			-- Display `a_results' in output pane.
 		require
@@ -942,7 +941,7 @@ feature {NONE} -- Implementation
 				loop
 					l_message.append (l_errors.item (i).to_string)
 					l_message.append_character ('%N')
-					i := i + 1				
+					i := i + 1
 				end
 			end
 			l_path := a_results.path_to_assembly
@@ -973,7 +972,7 @@ feature {NONE} -- Implementation
 				a_processor.call ([l_dialog.file_name])
 			end
 		end
-		
+
 	browse_for_directory (a_title, a_key: STRING; a_processor: ROUTINE [ANY, TUPLE [STRING]]) is
 			-- Browse for directory and give title `a_title' to browse dialog.
 			-- Store/retrieve last used folder in `a_key'.
@@ -1012,12 +1011,12 @@ feature {NONE} -- Implementation
 		ensure
 			valid_extension: Result /= Void implies Result.item (1) = '.'
 		end
-		
+
 feature {NONE} -- Private Access
 
 	codedom_provider: SYSTEM_DLL_CODE_DOM_PROVIDER
 			-- Associated codedom provider
-		
+
 	Serialized_file_extension: STRING is ".ecds"
 			-- Serialized file extension
 
@@ -1026,7 +1025,7 @@ feature {NONE} -- Private Access
 		once
 			Result := (create {EV_STOCK_COLORS}).Black
 		end
-		
+
 	Red: EV_COLOR is
 			-- Black
 		once

@@ -66,6 +66,11 @@ feature -- Element change
 			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
 			f_name: FEATURE_NAME
 			is_precompiled: BOOLEAN
+
+			l_op: STRING_AS
+			l_id: ID_AS
+			l_frozen_keyword: KEYWORD_AS
+			l_infix_prefix_as: INFIX_PREFIX_AS
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
@@ -111,33 +116,36 @@ feature -- Element change
 						new_feature_as := feature_as.twin
 						create adapter;
 						f_name := names.first.twin
+						l_frozen_keyword := f_name.frozen_keyword.twin
 						if source_feature.is_infix then
-							create {INFIX_PREFIX_AS} f_name.initialize
-								(create {STRING_AS}.initialize (
-									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0),
-								True, create {KEYWORD_AS}.make_null)
+							create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
+							l_op.set_index (f_name.internal_name.index)
+							l_infix_prefix_as ?= f_name
+							create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_as.infix_prefix_keyword.twin)
 						elseif source_feature.is_prefix then
-							create {INFIX_PREFIX_AS} f_name.initialize
-								(create {STRING_AS}.initialize (
-									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0),
-								False, create {KEYWORD_AS}.make_null)
+							create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
+							l_op.set_index (f_name.internal_name.index)
+							l_infix_prefix_as ?= f_name
+							create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_as.infix_prefix_keyword.twin)
 						elseif source_feature.alias_name /= Void then
+							create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
+							l_op.set_index (f_name.internal_name.index)
+							create l_id.initialize (source_feature.feature_name)
+							l_id.set_index (f_name.internal_name.index)
 							create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
-								create {ID_AS}.initialize (source_feature.feature_name),
-								create {STRING_AS}.initialize (
-									extract_alias_name (source_feature.alias_name), 0, 0, 0, 0),
-								source_feature.has_convert_mark, Void, Void)
+								l_id, l_op, source_feature.has_convert_mark, Void, Void)
 							if source_feature.is_binary then
 								f_name.set_is_binary
 							elseif source_feature.is_unary then
 								f_name.set_is_unary
 							end
 						else
-							create {FEAT_NAME_ID_AS} f_name.initialize (
-								create {ID_AS}.initialize (source_feature.feature_name))
+							create l_id.initialize (source_feature.feature_name)
+							l_id.set_index (f_name.internal_name.index)
+							create {FEAT_NAME_ID_AS} f_name.initialize (l_id)
 						end
 						if source_feature.is_frozen then
-							f_name.set_frozen_keyword (create {KEYWORD_AS}.make_null)
+							f_name.set_frozen_keyword (l_frozen_keyword)
 						end
 						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);
@@ -372,19 +380,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

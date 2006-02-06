@@ -146,7 +146,7 @@ feature -- Duplication
 			twin_not_void: Result /= Void
 			is_equal: Result.is_equal (Current)
 		end
-		
+
 	copy (other: like Current) is
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
@@ -215,7 +215,7 @@ feature -- Duplication
 			standard_twin_not_void: Result /= Void
 			equal: standard_equal (Result, Current)
 		end
-		
+
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		do
@@ -251,7 +251,7 @@ feature -- Duplication
 feature {NONE} -- Retrieval
 
 	frozen internal_correct_mismatch is
-			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch' 
+			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch'
 			-- from MISMATCH_CORRECTOR.
 		local
 			l_corrector: MISMATCH_CORRECTOR
@@ -352,11 +352,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ANY

@@ -25,7 +25,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			destroy,
 			needs_event_box,
 			on_button_release,
 			button_press_switch
@@ -45,6 +44,7 @@ create
 feature -- Initialization
 
 	needs_event_box: BOOLEAN is True
+		-- Does `Current' need a GtkEventBox as its `c_object' to receive events.
 
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
@@ -245,13 +245,6 @@ feature {NONE} -- Implementation
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
-			--| FIXME IEK Implement me
-		end
-
-	destroy is
-			--
-		do
-			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 	interface: EV_HEADER;

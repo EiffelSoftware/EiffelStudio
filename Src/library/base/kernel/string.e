@@ -1643,7 +1643,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all characters.
 		do
-			area := empty_area
+			create area.make (1)
 			count := 0
 			internal_hash_code := 0
 		ensure then
@@ -1680,11 +1680,7 @@ feature -- Resizing
 		do
 			area_count := area.count
 			if newsize >= area_count then
-				if area = empty_area then
-					make_area (newsize + 1)
-				else
-					area := area.aliased_resized_area (newsize + 1)
-				end
+				area := area.aliased_resized_area (newsize + 1)
 			end
 		end
 
@@ -2323,6 +2319,8 @@ feature {NONE} -- Implementation
 
 	empty_area: SPECIAL [CHARACTER] is
 			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
+		obsolete
+			"Simply create `area' directly."
 		do
 			create Result.make (1)
 		ensure

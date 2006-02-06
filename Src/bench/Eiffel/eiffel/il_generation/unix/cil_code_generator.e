@@ -76,6 +76,12 @@ feature -- IL Generation
 		do
 		end
 
+	generate_external_creation_call (a_actual_type: CL_TYPE_I; name: STRING; ext_kind: INTEGER;
+			parameters_type: ARRAY [INTEGER]; return_type: INTEGER)
+		is
+		do
+		end
+
 	external_token (base_name: STRING; member_name: STRING; ext_kind: INTEGER;
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
 		is
@@ -126,7 +132,7 @@ feature -- Object creation
 			-- Load on stack type of object on top of stack.
 		do
 		end
-		
+
 	create_type is
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.
@@ -317,17 +323,17 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_integer_8, convert_to_boolean is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_integer_16, convert_to_character is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_integer_32 is
 			-- Convert top of stack into appropriate type.
 		do
@@ -342,12 +348,12 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_natural_16 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_natural_32 is
 			-- Convert top of stack into appropriate type.
 		do
@@ -357,12 +363,12 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_real_64 is
 			-- Convert top of stack into appropriate type.
 		do
 		end
-		
+
 	convert_to_real_32 is
 			-- Convert top of stack into appropriate type.
 		do
@@ -407,7 +413,7 @@ feature -- Once manifest string manipulation
 
 	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
 			-- Generate code for once string in a current routine with the given
-			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
 		do
 		end
@@ -555,7 +561,7 @@ feature -- Constants generation
 		end
 
 	put_manifest_string_from_system_string_local (n: INTEGER) is
-			-- Create a manifest string by using local at position `n' which 
+			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
 		do
 		end
@@ -581,7 +587,7 @@ feature -- Constants generation
 			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER on IL stack
 		do
 		end
-		
+
 	put_integer_64_constant (i: INTEGER_64) is
 			-- Put `i' as INTEGER_64 on IL stack
 		do
@@ -712,18 +718,18 @@ feature -- Basic feature
 			-- Generate call on `ToString'.
 		do
 		end
-	
+
 	generate_hash_code is
 			-- Given an INTEGER on top of stack, put on stack
 			-- a positive INTEGER.
 		do
 		end
-		
+
 	generate_out (type: TYPE_I) is
 			-- Generate `out' on basic types.
 		do
 		end
-		
+
 feature -- Line info
 
 	put_line_info (n: INTEGER) is
@@ -814,19 +820,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

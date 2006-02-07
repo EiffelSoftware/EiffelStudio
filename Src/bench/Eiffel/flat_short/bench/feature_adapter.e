@@ -71,6 +71,7 @@ feature -- Element change
 			l_id: ID_AS
 			l_frozen_keyword: KEYWORD_AS
 			l_infix_prefix_as: INFIX_PREFIX_AS
+			l_infix_prefix_keyword: KEYWORD_AS
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
@@ -123,12 +124,24 @@ feature -- Element change
 							create l_op.initialize (extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0)
 							l_op.set_index (f_name.internal_name.index)
 							l_infix_prefix_as ?= f_name
-							create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_as.infix_prefix_keyword.twin)
+							if l_infix_prefix_as = Void then
+								create l_infix_prefix_keyword.make_null
+								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
+							else
+								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+							end
+							create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
 						elseif source_feature.is_prefix then
 							create l_op.initialize (extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0)
 							l_op.set_index (f_name.internal_name.index)
 							l_infix_prefix_as ?= f_name
-							create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_as.infix_prefix_keyword.twin)
+							if l_infix_prefix_as = Void then
+								create l_infix_prefix_keyword.make_null
+								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
+							else
+								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+							end
+							create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
 						elseif source_feature.alias_name /= Void then
 							create l_op.initialize (extract_alias_name (source_feature.alias_name), 0, 0, 0, 0)
 							l_op.set_index (f_name.internal_name.index)

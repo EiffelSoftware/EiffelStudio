@@ -52,6 +52,9 @@ feature -- Access
 	eiffel_name: STRING
 			-- Eiffel name
 
+	is_expanded: BOOLEAN
+			-- Is type expanded?
+
 	indexing_clauses: LIST [CODE_INDEXING_CLAUSE]
 			-- Type indexing clauses
 		
@@ -137,6 +140,14 @@ feature -- Access
 		end
 
 feature -- Element Settings
+
+	set_expanded is
+			-- Set `is_expanded' to `True'.
+		do
+			is_expanded := True
+		ensure
+			is_expanded: is_expanded
+		end
 
 	add_indexing_clause (a_clause: CODE_INDEXING_CLAUSE) is
 			-- Add `a_clause' to `indexing_clauses'.
@@ -328,7 +339,10 @@ feature -- Code generation
 		require
 			is_in_code_generation: current_state = Code_generation
 		do
-			create Result.make (9 + eiffel_name.count)
+			create Result.make (19 + eiffel_name.count)
+			if is_expanded then
+				Result.append ("expanded ")
+			end
 			Result.append ("class%N%T")
 			Result.append (eiffel_name)
 			Result.append ("%N")

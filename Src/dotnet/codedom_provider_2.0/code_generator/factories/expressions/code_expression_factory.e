@@ -28,6 +28,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			a_base_reference_expression: CODE_BASE_REFERENCE_EXPRESSION
 		do
+			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["base reference expression"])
 			create a_base_reference_expression.make
 			set_last_expression (a_base_reference_expression)
 		ensure
@@ -74,6 +75,30 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_last_expression (create {CODE_CAST_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (a_source.target_type), current_routine.last_cast_variable))
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_routine, ["cast expression"])
+				set_last_expression (Empty_expression)
+			end
+		ensure
+			non_void_last_expression: last_expression /= Void
+		end
+
+	generate_default_value_expression (a_source: SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION) is
+			-- Generate Eiffel code from `a_source'.
+		require
+			non_void_source: a_source /= Void
+		local
+			l_type: SYSTEM_DLL_CODE_TYPE_REFERENCE
+		do
+			if current_routine /= Void then
+				l_type := a_source.type
+				if l_type /= Void then
+					current_routine.add_default_value_local (Type_reference_factory.type_reference_from_reference (l_type))
+					set_last_expression (create {CODE_DEFAULT_VALUE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), current_routine.last_default_variable))
+				else
+					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, ["default value expression"])
+					set_last_expression (Empty_expression)
+				end
+			else
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_current_routine, ["default value expression"])
 				set_last_expression (Empty_expression)
 			end
 		ensure
@@ -155,6 +180,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_last_expression (create {CODE_OBJECT_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), expressions_from_collection (a_source.parameters)))
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_creation_type, ["object create expression"])
+				set_last_expression (Empty_expression)
 			end
 		end	
 

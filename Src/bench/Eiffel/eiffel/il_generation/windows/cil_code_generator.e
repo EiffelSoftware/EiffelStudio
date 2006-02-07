@@ -5093,6 +5093,7 @@ feature -- Array manipulation
 					-- while (i != 0) {
 					--   i--;
 					--   array [i].ctor ();
+					--   array [i].default_create ();
 					-- }
 				enter_loop_label := create_label
 				continue_loop_label := create_label
@@ -5111,7 +5112,7 @@ feature -- Array manipulation
 				duplicate_top
 				generate_local_assignment (local_number)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
-				method_body.put_call ({MD_OPCODES}.call, constructor_token (actual_generic.implementation_id), 0, False)
+				initialize_expanded_variable (actual_generic)
 				mark_label (enter_loop_label)
 				generate_local (local_number)
 				branch_on_true (continue_loop_label)

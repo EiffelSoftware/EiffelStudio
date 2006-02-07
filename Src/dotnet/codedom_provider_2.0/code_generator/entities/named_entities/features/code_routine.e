@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			Precursor {CODE_FEATURE}  (a_name, a_eiffel_name)
 			create {ARRAYED_LIST [CODE_VARIABLE]} locals.make (4)
 			create {ARRAYED_LIST [CODE_SNIPPET_VARIABLE]} snippet_locals.make (0)
-			create cast_locals.make (1)
+			create generated_locals.make (1)
 			create {ARRAYED_LIST [CODE_STATEMENT]} statements.make (32)
 			create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} arguments.make (4)
 		ensure then
@@ -55,7 +55,7 @@ feature -- Access
 	snippet_locals: LIST [CODE_SNIPPET_VARIABLE]
 			-- Routine snippet local variables
 
-	cast_locals: HASH_TABLE [CODE_TYPE_REFERENCE, STRING]
+	generated_locals: HASH_TABLE [CODE_TYPE_REFERENCE, STRING]
 			-- Local variables used for cast expressions
 			-- Key is variable eiffel name
 			-- Value is expression with type of variable
@@ -65,6 +65,9 @@ feature -- Access
 	
 	last_cast_variable: STRING
 			-- Last cast variable name
+
+	last_default_value_variable: STRING
+			-- Last default variable name
 
 	code: STRING is
 			-- | result := "`export_clauses'	
@@ -182,12 +185,28 @@ feature {CODE_FACTORY} -- Status Setting
 		do
 			last_cast_variable := cast_variable_name
 			add_statement (create {CODE_ASSIGNMENT_ATTEMPT_STATEMENT}.make (last_cast_variable, a_expression))
-			cast_locals.put (a_type, last_cast_variable)
+			generated_locals.put (a_type, last_cast_variable)
 		ensure
 			non_void_last_cast_variable: last_cast_variable /= Void
-			local_added: cast_locals.item (last_cast_variable) = a_type
+			local_added: generated_locals.item (last_cast_variable) = a_type
 		end
 	
+	add_default_value_local (a_type: CODE_TYPE_REFERENCE) is
+			-- Add local variable for default value expression.
+		require
+			attached_type: a_type /= Void
+		do
+			last_default_value_variable := default_value_variable_name
+			Resolver.search (a_type)
+			if Resolver.found and then Resolver.found_type.is_expanded then
+				add_statement (create {CODE_VARIABLE_INITIALIZATION_STATEMENT}.make (last_default_value_variable))
+			end
+			generated_locals.put (a_type, last_default_value_variable)
+		ensure
+			attached_default_value_variable: last_default_value_variable /= Void
+			local_added: generated_locals.item (last_default_value_variable) = a_type
+		end
+			
 	add_statement (a_statement: CODE_STATEMENT) is
 			-- Add `a_statement' to `statements'.
 		require
@@ -311,31 +330,31 @@ feature {NONE} -- Implementation
 				decrease_tabulation
 			end
 			from
-				cast_locals.start
-				if not cast_locals.after then
+				generated_locals.start
+				if not generated_locals.after then
 					if locals.count = 0 and snippet_locals.count = 0 then
 	 					Result.append (indent_string)
 						Result.append ("local%N")
 					end
 					increase_tabulation
 					Result.append (indent_string)
-					Result.append (cast_locals.key_for_iteration)
+					Result.append (generated_locals.key_for_iteration)
 					Result.append (": ")
-					Result.append (cast_locals.item_for_iteration.eiffel_name)
+					Result.append (generated_locals.item_for_iteration.eiffel_name)
 					Result.append_character ('%N')
-					cast_locals.forth
+					generated_locals.forth
 				end
 			until
-				cast_locals.after
+				generated_locals.after
 			loop
 				Result.append (indent_string)
-				Result.append (cast_locals.key_for_iteration)
+				Result.append (generated_locals.key_for_iteration)
 				Result.append (": ")
-				Result.append (cast_locals.item_for_iteration.eiffel_name)
+				Result.append (generated_locals.item_for_iteration.eiffel_name)
 				Result.append_character ('%N')
-				cast_locals.forth
+				generated_locals.forth
 			end
-			if cast_locals.count > 0 then
+			if generated_locals.count > 0 then
 				decrease_tabulation
 			end
 		ensure
@@ -373,12 +392,26 @@ feature {NONE} -- Implementation
 			Result.append (cast_variable_count.out)
 		end
 	
+	default_value_variable_name: STRING is
+			-- Unique default value variable name
+		do
+			Result := "l_def_value_"
+			default_value_variable_count.set_item (default_value_variable_count.item + 1)
+			Result.append (default_variable_count.out)
+		end
+
 	cast_variable_count: INTEGER_REF is
 			-- Cast variable counter
 		once
 			create Result
 		end
 		
+	default_variable_count: INTEGER_REF is
+			-- Default value variable counter
+		once
+			create Result
+		end
+
 feature {NONE} -- Specific implementation
 
 	constructor_call: STRING is

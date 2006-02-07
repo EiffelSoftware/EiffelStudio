@@ -366,7 +366,7 @@ feature -- Status setting
 
 					-- `row_data' may not have a count less than
 					-- `column_count' if items are Void in this row.
-				if physical_index < row_data.count then
+				if row_data /= Void and then physical_index < row_data.count then
 					grid_item_i := row_data @ (physical_index)
 					if grid_item_i /= Void then
 						Result := Result.max (grid_item_i.required_width + parent_i.item_indent (grid_item_i))

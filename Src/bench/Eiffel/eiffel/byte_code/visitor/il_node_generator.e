@@ -3600,6 +3600,8 @@ feature {NONE} -- Implementation: Feature calls
 		require
 			is_valid: is_valid
 			target_type_not_void: target_type /= Void
+		local
+			cl_type_i: CL_TYPE_I
 		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, False)
@@ -3611,6 +3613,18 @@ feature {NONE} -- Implementation: Feature calls
 				else
 						-- Create new instance of expanded type
 					(create {CREATE_TYPE}.make (target_type)).generate_il
+					if not target_type.is_external then
+							-- Call default creation procedure.
+						il_generator.generate_metamorphose (target_type)
+						il_generator.generate_load_address (target_type)
+						il_generator.duplicate_top
+						cl_type_i ?= target_type
+						check
+							cl_type_i_not_void: cl_type_i /= Void
+						end
+						il_generator.initialize_expanded_variable (cl_type_i.associated_class_type)
+						il_generator.generate_load_from_address (target_type)
+					end
 				end
 				if return_type.is_reference then
 						-- Box value type

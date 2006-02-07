@@ -379,7 +379,10 @@ feature {NONE} -- Implementation
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do
-			pre_drop_it := find_item_at_position (x_pos, y_pos)
+			if pointed_divider_index = 0 then
+					-- Clicking on the divider should not register as an item button click.
+				pre_drop_it := find_item_at_position (x_pos, y_pos)
+			end
 			pt := client_to_screen (x_pos, y_pos)
 			if pre_drop_it /= Void and not transport_executing
 				and not item_is_in_pnd then
@@ -461,9 +464,12 @@ feature {NONE} -- Implementation
 			it: EV_HEADER_ITEM_IMP
 			pt: WEL_POINT
 		do
-			it := find_item_at_position (x_pos, y_pos)
-			pt := client_to_screen (x_pos, y_pos)
+			if pointed_divider_index = 0 then
+					-- Clicking on the divider should not register as an item button click.
+				it := find_item_at_position (x_pos, y_pos)
+			end
 			if it /= Void then
+				pt := client_to_screen (x_pos, y_pos)
 				if it.pointer_double_press_actions_internal /= Void then
 					it.pointer_double_press_actions_internal.call
 						([x_pos- item_x_offset (it.interface), y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])

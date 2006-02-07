@@ -71,7 +71,8 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
-				feature_comments := f_ast.comment (match_list)
+
+				feature_comments := f_ast.comment (match_list_server.item (written_in_class.class_id))
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;

@@ -124,24 +124,35 @@ feature -- IL code generation
 		local
 			cl_type_i: CL_TYPE_I
 			gen_type_i: GEN_TYPE_I
+			local_index: INTEGER
 		do
 			cl_type_i ?= context.creation_type (type)
-			il_generator.create_object (cl_type_i.implementation_id)
-			if cl_type_i.is_expanded then
-					-- Box expanded object.
-				il_generator.generate_metamorphose (cl_type_i)
+			check
+				cl_type_i_not_void: cl_type_i /= Void
 			end
-
+			if cl_type_i.is_expanded and then cl_type_i.is_external then
+					-- Load a default value of a local variable.
+				context.add_local (cl_type_i)
+				local_index := context.local_list.count
+				il_generator.put_dummy_local_info (cl_type_i, local_index)
+				il_generator.generate_local (local_index)
+			else
+					-- Create object using default constructor.
+				il_generator.create_object (cl_type_i.implementation_id)
+			end
 			gen_type_i ?= cl_type_i
 			if gen_type_i /= Void then
+				if cl_type_i.is_expanded then
+						-- Box expanded object.
+					il_generator.generate_metamorphose (cl_type_i)
+				end
 				il_generator.duplicate_top
 				gen_type_i.generate_gen_type_il (il_generator, True)
 				il_generator.assign_computed_type
-			end
-
-			if cl_type_i.is_expanded then
-					-- Load value of a value type object.
-				il_generator.generate_unmetamorphose (cl_type_i)
+				if cl_type_i.is_expanded then
+						-- Load value of a value type object.
+					il_generator.generate_unmetamorphose (cl_type_i)
+				end
 			end
 		end
 
@@ -219,19 +230,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

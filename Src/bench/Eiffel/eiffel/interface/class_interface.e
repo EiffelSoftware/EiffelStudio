@@ -18,13 +18,13 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 create
 	make_with_class,
 	make_from_context
-	
+
 feature {NONE} -- Initialization
-	
+
 	make_with_class (a_class: CLASS_C) is
 			-- Initialize current with `a_class'.
 		require
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		ensure
 			class_id_set: class_id = a_class.class_id
 		end
-		
+
 	make_from_context (other: like Current; cl_type: CLASS_TYPE) is
 			-- Initialize current with `other' in context of `class_type.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			parents_not_set: parents = Void
 			features_aliased: features = other.features
 		end
-		
+
 feature -- Access
 
 	class_id: INTEGER
@@ -62,10 +62,10 @@ feature -- Access
 
 	class_type: CLASS_TYPE
 			-- Associated CLASS_TYPE.
-			
+
 	parents: SEARCH_TABLE [CLASS_INTERFACE]
 			-- List of parent interfaces implemented by current interface.
-			
+
 	features: SEARCH_TABLE [INTEGER]
 			-- List of features explicitely declared on current interface.
 			-- Indexed by `rout_id' of FEATURE_I instance in context
@@ -79,7 +79,7 @@ feature -- Access
 		do
 			Result := System.class_of_id (class_id)
 		ensure
-			result_not_void: Result /= Void	
+			result_not_void: Result /= Void
 		end
 
 feature -- Status
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 							-- routine ids:
 							--  * one for itself
 							--  * one or more for the function it implements
-						count := l_rout_id_set.count	
+						count := l_rout_id_set.count
 					end
 				until
 					i >= nb or else found
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			-- Does `new_feat' needs to be inserted in Current if we are handling
 			-- renaming? Not always, e.g. an inherited constructor, a field,
 			-- a static routine or a static field of an external class should
-			-- not be added.
+			-- not be added, the same for a .NET IL external which is frozen.
 		local
 			l_ext: IL_EXTENSION_I
 			l_type: INTEGER
@@ -335,15 +335,23 @@ feature {NONE} -- Implementation
 			if Result then
 				l_ext ?= new_feat.extension
 				if l_ext /= Void then
+					check
+							-- If `new_feat' is an IL external, the inherited version
+							-- should be one as well.
+						inh_feat_is_il: l_ext /= Void implies inh_feat.is_il_external
+					end
 					l_type := l_ext.type
 					Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
 						l_type /= {SHARED_IL_CONSTANTS}.Static_type and
 						l_type /= {SHARED_IL_CONSTANTS}.Static_field_type and
 						l_type /= {SHARED_IL_CONSTANTS}.Field_type
+						-- Do not process inherited frozen routines from .NET types
+						-- as we cannot rename them.
+					Result := Result and then not inh_feat.is_frozen
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation: constants
 
 	Chunk: INTEGER is 50
@@ -351,28 +359,28 @@ feature {NONE} -- Implementation: constants
 
 invariant
 	valid_class_id: class_id > 0
-	features_not_void: features /= Void 
+	features_not_void: features /= Void
 	il_generation: (create {SHARED_WORKBENCH}).System.il_generation
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

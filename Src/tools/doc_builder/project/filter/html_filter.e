@@ -280,11 +280,13 @@ feature {NONE} -- Processing
 					end
 				elseif e.is_equal (anchor_name_string) then
 					if in_url then
-						if url_anchor_write_position < output_string.count then
-							output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
-						else
-							output_string.insert_string ("#" + anchor_content, output_string.count - 1)
-						end						
+						if anchor_content /= Void and then not anchor_content.is_empty then
+							if url_anchor_write_position < output_string.count then
+								output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+							else
+								output_string.insert_string ("#" + anchor_content, output_string.count - 1)
+							end
+						end
 						in_url_anchor := False
 						in_url := False
 						anchor_content := ""

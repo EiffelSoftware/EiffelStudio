@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			is_infix := inf
 			alias_name := op
 			create internal_name.initialize (get_internal_alias_name)
+			internal_name.set_index (op.index)
 			internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
 			infix_prefix_keyword := l
 		end

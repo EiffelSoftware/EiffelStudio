@@ -22,10 +22,10 @@ inherit
 			make, make_filled
 		end
 
-	PRE_POST_AS
-		undefine
-			copy, is_equal
-		end
+--	PRE_POST_AS
+--		undefine
+--			copy, is_equal
+--		end
 
 create
 	make, make_filled

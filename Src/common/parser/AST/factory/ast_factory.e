@@ -69,16 +69,6 @@ feature -- Roundtrip
 		do
 		end
 
-	extend_pre_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.pre_as_list.
-		do
-		end
-
-	extend_post_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.post_as_list.
-		do
-		end
-
 feature -- Access
 
 	new_agent_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: KEYWORD_AS; d_as: SYMBOL_AS): AGENT_ROUTINE_CREATION_AS is

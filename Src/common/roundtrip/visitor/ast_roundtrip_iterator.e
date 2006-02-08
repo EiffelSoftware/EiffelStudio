@@ -475,7 +475,6 @@ feature
 		local
 			i, l_count: INTEGER
 		do
-			safe_process (l_as.pre_as_list)
 			if l_as.count > 0 then
 				from
 					l_as.start
@@ -494,7 +493,6 @@ feature
 					l_as.forth
 				end
 			end
-			safe_process (l_as.post_as_list)
 		end
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is

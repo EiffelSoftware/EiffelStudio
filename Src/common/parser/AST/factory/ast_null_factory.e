@@ -50,7 +50,7 @@ inherit
 			new_integer_value, new_real_value,
 			set_buffer, append_text_to_buffer, append_string_to_buffer,
 			create_match_list,
-			reverse_extend_separator, reverse_extend_identifier, extend_pre_as, extend_post_as,
+			reverse_extend_separator, reverse_extend_identifier,
 			new_agent_routine_creation_as,
 			new_constraint_triple, new_alias_triple, new_agent_target_triple,
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
@@ -99,16 +99,6 @@ feature -- Roundtrip
 
 	reverse_extend_identifier (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: ID_AS) is
 			-- Add `l_as' into `a_list'.
-		do
-		end
-
-	extend_pre_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.pre_as_list.
-		do
-		end
-
-	extend_post_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.post_as_list.
 		do
 		end
 

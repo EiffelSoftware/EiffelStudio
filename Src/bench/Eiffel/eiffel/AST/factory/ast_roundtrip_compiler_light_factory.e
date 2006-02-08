@@ -44,8 +44,6 @@ inherit
 			new_filled_id_as,
 
 			reverse_extend_separator,
-			extend_pre_as,
-			extend_post_as,
 			reverse_extend_identifier,
 			new_character_as, new_typed_char_as,
 			set_buffer, append_text_to_buffer,

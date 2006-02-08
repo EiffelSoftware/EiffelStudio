@@ -436,6 +436,8 @@ feature -- Basic Operations
 			externals			: ARRAYED_LIST [E_FEATURE]
 			show_any_features	: BOOLEAN
 			l_current_class_c	: CLASS_C
+			l_class_as          : CLASS_AS
+			l_feature_as        : FEATURE_AS
 		do
 			create insertion
 			insertion.put ("")
@@ -453,6 +455,13 @@ feature -- Basic Operations
 					if exploring_current_class then
 						set_up_local_analyzer (cursor.line, token, l_current_class_c)
 						add_names_to_completion_list (Local_analyzer, l_current_class_c)
+
+							-- Add precursors
+						l_class_as := l_current_class_c.ast
+						l_feature_as := feature_containing_cursor (cursor)
+						if l_class_as /= Void and l_feature_as /= Void  then
+							add_precursor_possibilities (l_class_as, l_feature_as)
+						end
 						local_analyzer.reset
 					end
 				end
@@ -1421,6 +1430,90 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
             end
 		end
 
+	add_precursor_possibilities (a_class: CLASS_AS; a_feature: FEATURE_AS) is
+			-- Extend completion possiblities with appliable Precursors.
+		require
+			a_class_attached: a_class /= Void
+			a_feature_attached: a_feature /= Void
+		local
+			l_parents: PARENT_LIST_AS
+			l_parent: PARENT_AS
+			l_redefining: EIFFEL_LIST [FEATURE_NAME]
+			l_feat_name: FEATURE_NAME
+			l_arguments: EIFFEL_LIST [TYPE_DEC_AS]
+			l_cursor: CURSOR
+			l_redefining_cursor: CURSOR
+			l_args_cursor: CURSOR
+			l_name: STRING
+			l_continue: BOOLEAN
+			l_completion_name: EB_NAME_FOR_COMPLETION
+		do
+			l_parents := a_class.parents
+			if l_parents /= Void and then not l_parents.is_empty then
+				l_cursor := l_parents.cursor
+				l_name := a_feature.feature_name
+				from
+					l_parents.start
+				until
+					l_parents.after
+				loop
+					l_parent := l_parents.item
+					if l_parent /= Void then
+						l_redefining := l_parent.redefining
+						if l_redefining /= Void and then not l_redefining.is_empty then
+							l_continue := False
+							l_redefining_cursor := l_redefining.cursor
+							from
+								l_redefining.start
+							until
+								l_redefining.after or l_continue
+							loop
+								l_feat_name := l_redefining.item
+								l_continue := l_feat_name.visual_name.is_case_insensitive_equal (l_name)
+								if l_continue then
+										-- Found a precursor match
+									create l_completion_name.make_with_name (once "Precursor")
+									if l_parent.type /= Void then
+										l_completion_name.append (" {")
+										l_completion_name.append (l_parent.type.class_name)
+										if a_feature.body /= Void then
+											l_arguments := a_feature.body.arguments
+											if l_arguments /= Void and then not l_arguments.is_empty then
+													-- Add current feature argument list
+												l_completion_name.append (once "} (")
+												l_args_cursor := l_arguments.cursor
+												from
+													l_arguments.start
+												until
+													l_arguments.after
+												loop
+													l_completion_name.append (l_arguments.item.item_name (1))
+													l_arguments.forth
+													if not l_arguments.after then
+														l_completion_name.append (once ", ")
+													end
+												end
+												l_completion_name.append_character (')')
+												l_arguments.go_to (l_args_cursor)
+											else
+												l_completion_name.append_character ('}')
+											end
+										end
+									end
+									insert_in_completion_possibilities (l_completion_name)
+								end
+								l_redefining.forth
+							end
+
+							l_redefining.go_to (l_redefining_cursor)
+						end
+					end
+					l_parents.forth
+				end
+				l_parents.go_to (l_cursor)
+			end
+		end
+
 	Any_name: STRING is "ANY";
 
 indexing
@@ -1429,19 +1522,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

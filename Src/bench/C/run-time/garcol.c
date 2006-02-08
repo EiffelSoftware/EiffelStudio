@@ -680,7 +680,7 @@ rt_private void clean_zones(void);			/* Clean up scavenge zones */
 rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top);			/* Scavenge an object */
 /*rt_private void clean_space();*/			/* Sweep forwarded objects */ /* %%ss undefine */
 rt_private void full_update(void);			/* Update scavenge-related structures */
-rt_private void split_to_block (int is_to_keep);		/* Keep only needed space in 'to' block */
+rt_private int split_to_block (int is_to_keep);		/* Keep only needed space in 'to' block */
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */
 rt_private int find_scavenge_spaces(void);	/* Find a pair of scavenging spaces */
 #ifndef EIF_NO_SCAVENGING
@@ -2201,17 +2201,12 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 					((offset & GC_PART) && (current > ps_from.sc_arena && current <= ps_from.sc_end) &&
 					 (ps_to.sc_top + ((size & B_SIZE) + OVERHEAD) <= ps_to.sc_end))
 				{
+						/* Record location of previous `top' which will be used to set the
+						 * B_LAST flag at the end of the scavenging. */
+					ps_to.sc_previous_top = ps_to.sc_top;
 					current = scavenge(current, &ps_to.sc_top);/* Partial scavenge */
 					zone = HEADER(current);				/* Update zone */
 					flags = zone->ov_flags;				/* And Eiffel flags */
-						/* If we reached the end of the scavenge space, then the B_LAST flag
-						 * must be already set on the new object (size of from and to spaces are
-						 * identical). Otherwise, it has to be reset. */
-					if (ps_to.sc_top == ps_to.sc_end) {
-						zone->ov_size |= B_LAST;
-					} else {
-						zone->ov_size &= ~B_LAST;
-					}
 					if (prev)
 						*prev = current;	/* Update referencing pointer */
 					goto marked;
@@ -2557,10 +2552,7 @@ rt_private int partial_scavenging(void)
 
 rt_private void run_plsc(void)
 {
-	/* This routine actually invokes the partial scavenging and takes care of
-	 * restoring signals at the end and dispatching signals if necessary.
-	 */
-
+		/* This routine actually invokes the partial scavenging. */
 	run_collector();		/* Call a wrapper to do the job */
 		/* Clean up `from' and `to' scavenge zone if a partial scavenging is done, not
 		 * a simple mark and sweep. */
@@ -2606,7 +2598,7 @@ rt_private void clean_zones(void)
 	 * time, but some C blocks may pollute the zones if we are low in memory).
 	 */
 
-	int is_ps_to_keep;
+	int is_ps_to_keep, has_block_been_split;
 	static rt_uint_ptr copied_average = 0;
 
 	REQUIRE("GC_PART", rt_g_data.status & GC_PART);
@@ -2624,11 +2616,11 @@ rt_private void clean_zones(void)
 	copied_average = (copied_average + (ps_to.sc_top - ps_to.sc_active_arena)) / 2;
 	if
 		((ps_to.sc_top >= ps_to.sc_end) ||
-		((copied_average * 2 <= ps_to.sc_size) &&
-		 	((rt_uint_ptr) (ps_to.sc_end - ps_to.sc_top) <= ((copied_average * 50) / 100))))
+		(((copied_average * 2) <= ps_to.sc_size) &&
+		 	(((rt_uint_ptr) (ps_to.sc_end - ps_to.sc_top)) <= ((copied_average * 50) / 100))))
 	{
 			/* If we have reached the end of the `ps_to' zone, then we cannot keep it. */
-			/* If we compact in average less than half of the `ps_to' zone, then if we
+			/* If we compact in average less than half of the `ps_to' zone, and then if we
 			 * have less than 50% of `copied_average' bytes available in `ps_to', we
 			 * cannot keep it, since next partial scavenging might overflow `ps_to' and thus
 			 * as if no partial scavenging was done.
@@ -2638,8 +2630,11 @@ rt_private void clean_zones(void)
 		is_ps_to_keep = 1;
 	}
 
-		/* Put final free block back to the free list? */
-	split_to_block(is_ps_to_keep);
+		/* Put final free block back to the free list?
+		 * If we cannot do that, then `is_ps_to_keep' has to be updated
+		 * accordingly, that is to say, we cannot keep it for next partial collection. */
+	has_block_been_split = split_to_block(is_ps_to_keep);
+	is_ps_to_keep = is_ps_to_keep && (has_block_been_split == 1);
 
 	if (is_ps_to_keep) {
 			/* Update `ps_to' so that we can reuse it for next compaction. */
@@ -2648,8 +2643,9 @@ rt_private void clean_zones(void)
 		ps_to.sc_active_arena = ps_to.sc_top;
 			/* Update size so that it is seen as a non-free block of memory. */
 		ps_to.sc_flags = ((union overhead *) ps_to.sc_top)->ov_size;
-			/* B_BUSY flag should be set by `split_to_block'. */
+			/* B_BUSY and B_LAST flag should be set by `split_to_block'. */
 		CHECK("B_BUSY set", ((union overhead *) ps_to.sc_top)->ov_size & B_BUSY);
+		CHECK("B_LAST set", ((union overhead *) ps_to.sc_top)->ov_size & B_LAST);
 	} else {
 			/* Reset `ps_to' since we cannot reuse it. */
 		memset (&ps_to, 0, sizeof(struct partial_sc_zone));
@@ -2717,28 +2713,43 @@ rt_private void init_plsc(void)
 	}
 }
 
-rt_private void split_to_block (int is_to_keep)
+/*
+doc:	<routine name="split_to_block" return_type="int" export="private">
+doc:		<summary>The `ps_to' space may  well not be full. Thus if `is_to_keep' is set to `0' then we will return the remaining part at the end to the free list, if `is_to_keep' is set to `1' then we will not return the end to the free list, it will be used for the next partial collection as the new `ps_to' zone. This routine is also responsible to set the B_LAST flag to the last block in `ps_to'.</summary>
+doc:		<param name="is_to_keep" type="int">Is the remaining part of `ps_to' being kept for next partial collection?</param>
+doc:		<return>1 when block was split, 0 otherwise.</return>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Synchronization done through `scollect'.</synchronization>
+doc:	</routine>
+*/
+
+rt_private int split_to_block (int is_to_keep)
 {
-	/* The 'to' space may well not be full, and the free part at the end has
-	 * to be returned to the free list.
-	 *
-	 * I do not want to interfere with the malloc package more than necessary,
-	 * (I mean, at the implementation level), so I'm calling the low levels
-	 * procedures of malloc to do the dirty job for me.
-	 *
-	 * For the rare but possible case where everything in the 'from' space was
-	 * garbage, the 'to' space is empty, we do nothing, leaving the block in
-	 * its original state. The block will then be kept for the next scavenging,
-	 * only the 'from' space will change.
-	 */
 	union overhead *base;	/* Base address */
 	rt_uint_ptr size;			/* Amount of bytes used (malloc point's of view) */
 	rt_uint_ptr old_size;		/* To save the old size for the leading object */
+	int result;
+
+	REQUIRE("Valid sc_top", !is_to_keep || (ps_to.sc_top < ps_to.sc_end));
 
 	base = (union overhead *) ps_to.sc_active_arena;
 	size = ps_to.sc_top - (EIF_REFERENCE) base;	/* Plus overhead for first block */
 
-	if (size != 0) {		/* Some objects were scavenged */
+
+	if (size == 0) {
+			/* No objects were scavenged, make sure that `ps_to.sc_top' refers to a B_LAST
+			 * block. */
+		CHECK("previous_same_as_top", ps_to.sc_top == ps_to.sc_previous_top);
+		CHECK("valid sc_top", ps_to.sc_top < ps_to.sc_end);
+		((union overhead *) ps_to.sc_top)->ov_size |= B_LAST;
+		if (is_to_keep) {
+				/* Mark `ps_to' as non-free block. */
+			((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
+		}
+			/* Even if no split occurred, it is still a successful split when
+			 * seen from the client of this routine. */
+		result = 1;
+	} else {
 			/* I'm faking a big block which will hold all the scavenged object,
 			 * so that eif_rt_split_block() will be fooled and correctly split the block
 			 * after the last scavenged object--RAM. In fact, I'm restoring the
@@ -2748,42 +2759,64 @@ rt_private void split_to_block (int is_to_keep)
 			 */
 		old_size = base->ov_size;			/* Save size of 1st block */
 		base->ov_size = ps_to.sc_flags;		/* Malloc flags for whole space */
-		(void) eif_rt_split_block(base, size - OVERHEAD);
+		result = (eif_rt_split_block(base, size - OVERHEAD) != -1);
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
-		if (is_to_keep) {
-				/* Block needs to be kept, so we remove it from free list and mark it B_BUSY,
-				 * so that it is not freed later. */
-			lxtract((union overhead *) ps_to.sc_top);
-				/* Mark `ps_to' as non-free block. */
-			((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
-				/* Update accounting information, we need to remove one OVERHEAD since block
-				 * is not free anymore. */
-			rt_m_data.ml_over -= OVERHEAD;
-			if (ps_to.sc_flags & B_CTYPE) {
-				rt_c_data.ml_over -= OVERHEAD;
-			} else {
-				rt_e_data.ml_over -= OVERHEAD;
-			}
+			/* Perform memory update only if we can split block, if not possible. */
+		if (!result) {
+			CHECK("valid sc_previous_top", ps_to.sc_previous_top < ps_to.sc_end);
+				/* Could not split the block, so make sure that `ps_to.sc_previous_top'
+				 * has its size updated as well as setting the B_LAST block. */
+			size = (((union overhead *) ps_to.sc_previous_top)->ov_size & B_SIZE) +
+				(ps_to.sc_end - ps_to.sc_top);
+				/* Clear previous size and then put the new one. */
+			((union overhead *) ps_to.sc_previous_top)->ov_size &= ~B_SIZE;
+			((union overhead *) ps_to.sc_previous_top)->ov_size |= size;
+				/* Make it last block. */
+			((union overhead *) ps_to.sc_previous_top)->ov_size |= B_LAST;
+				/* Update `ps_to.sc_top' and `ps_to.sc_previous_top' to the end of block. */
+			ps_to.sc_previous_top = ps_to.sc_end;
+			ps_to.sc_top = ps_to.sc_end;
 		} else {
-				/* Update accounting information: the eif_rt_split_block() routine only update
-				 * the overhead usage, because it assumes the block it is splitting is
-				 * still "used", so the split only appears to add overhead. This is not
-				 * the case here. We also free some memory which was accounted as used.
-				 */
-			size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
-
-			rt_m_data.ml_used -= size;
-			if (ps_to.sc_flags & B_CTYPE) {
-				rt_c_data.ml_used -= size;
+				/* We were able to split the block, so we simply need to put the B_LAST flag
+				 * on sc_top, not on sc_previous_top. */
+			((union overhead *) ps_to.sc_top)->ov_size |= B_LAST;
+				/* Update `ps_to.sc_previous_top' to now point at the same location as `ps_to.sc_top'
+				 * since we don't want to update the flags or size twice of the previous block
+				 * in case a partial collection does nothing. */
+			ps_to.sc_previous_top = ps_to.sc_top;
+			if (is_to_keep) {
+					/* Block needs to be kept, so we remove it from free list and mark it B_BUSY,
+					 * so that it is not freed later. */
+				lxtract((union overhead *) ps_to.sc_top);
+					/* Mark `ps_to' as non-free block. */
+				((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
+					/* Update accounting information, we need to remove one OVERHEAD since block
+					 * is not free anymore. */
+				rt_m_data.ml_over -= OVERHEAD;
+				if (ps_to.sc_flags & B_CTYPE) {
+					rt_c_data.ml_over -= OVERHEAD;
+				} else {
+					rt_e_data.ml_over -= OVERHEAD;
+				}
 			} else {
-				rt_e_data.ml_used -= size;
+					/* Update accounting information: the eif_rt_split_block() routine only update
+					 * the overhead usage, because it assumes the block it is splitting is
+					 * still "used", so the split only appears to add overhead. This is not
+					 * the case here. We also free some memory which was accounted as used.
+					 */
+				size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
+
+				rt_m_data.ml_used -= size;
+				if (ps_to.sc_flags & B_CTYPE) {
+					rt_c_data.ml_used -= size;
+				} else {
+					rt_e_data.ml_used -= size;
+				}
 			}
 		}
-	} else if (is_to_keep) {
-			/* Mark `ps_to' as non-free block. */
-		((union overhead *) ps_to.sc_top)->ov_size |= B_BUSY;
 	}
+	return result;
 }
 
 rt_private int sweep_from_space(void)
@@ -2827,7 +2860,7 @@ rt_private int sweep_from_space(void)
 		/* Loop until we reach an Eiffel block which is not marked. */
 		for (
 			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
-			(flags & B_C) || (zone->ov_flags & EO_MARK);
+			(flags & B_C) || (!(flags & B_FWD) && (zone->ov_flags & EO_MARK));
 			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD)
 		) {
 
@@ -2927,7 +2960,7 @@ rt_private int sweep_from_space(void)
 		 */
 		for (
 			/* empty */;
-			!(flags & B_C) && !(next->ov_flags & EO_MARK) && (EIF_REFERENCE) next < end;
+			!(flags & B_C) && !(!(flags & B_FWD) && (next->ov_flags & EO_MARK)) && (EIF_REFERENCE) next < end;
 			next = (union overhead *) (((EIF_REFERENCE) next) + size + OVERHEAD)
 		) {
 			flags = next->ov_size;			/* Fetch flags for next loop */
@@ -2943,7 +2976,7 @@ rt_private int sweep_from_space(void)
 			flush;
 #endif
 
-			if (flags & B_C)		/* Current block followed by a C one */
+			if ((flags & B_C) || (!(flags & B_FWD) && (next->ov_flags & EO_MARK)))		/* Current block followed by a C one */
 				break;				/* Coalescing has to stop here */
 
 			/* Any coalesced free block must be removed from the free list,
@@ -3098,9 +3131,12 @@ rt_private int find_scavenge_spaces(void)
 	ps_from.sc_arena = (EIF_REFERENCE) (last_from + 1);	/* Overwrites first header */
 	ps_from.sc_active_arena = (EIF_REFERENCE) (last_from + 1);	/* Overwrites first header */
 	ps_from.sc_end = ps_from.sc_arena + from_size;	/* First location beyond */
-	ps_from.sc_top = ps_from.sc_arena;				/* Empty for now */
+	ps_from.sc_previous_top = ps_from.sc_top = ps_from.sc_arena;		/* Empty for now */
 
 	if (ps_to.sc_arena) {
+		CHECK("valid ps_to", ps_to.sc_previous_top == ps_to.sc_top);
+			/* Clear B_LAST flag, it will be set in `split_to_block' at the end of this GC cycle. */
+		((union overhead *) ps_to.sc_top)->ov_size &= ~B_LAST;
 		return 0;			/* We already have a 'to' space */
 	}
 
@@ -3154,6 +3190,9 @@ rt_private int find_scavenge_spaces(void)
 	ps_to.sc_size = from_size;					/* Used for statistics */
 	ps_to.sc_end = ps_to.sc_arena + from_size;	/* First free location beyond */
 	ps_to.sc_top = ps_to.sc_arena;				/* Is empty */
+	ps_to.sc_previous_top = ps_to.sc_arena;				/* Is empty */
+		/* Clear B_LAST flag, it will be set in `split_to_block' at the end of this GC cycle. */
+	((union overhead *) ps_to.sc_top)->ov_size &= ~B_LAST;
 
 #ifdef DEBUG
 	dprintf(1)("find_scavenge_spaces: malloc'ed a to space at 0x%lx (#%d)\n",
@@ -3263,10 +3302,12 @@ rt_private void find_to_space(void)
 	 * list world.
 	 */
 
-	ps_to.sc_top = ps_to.sc_arena = ps_to.sc_active_arena = arena;
+	ps_to.sc_previous_top = ps_to.sc_top = ps_to.sc_arena = ps_to.sc_active_arena = arena;
 	ps_to.sc_flags = flags;
 	ps_to.sc_end = ps_to.sc_arena + (flags & B_SIZE) + OVERHEAD;
 	ps_to.sc_size = (flags & B_SIZE) + OVERHEAD;
+		/* Clear B_LAST flag, it will be set in `split_to_block' at the end of this GC cycle. */
+	((union overhead *) ps_to.sc_top)->ov_size &= ~B_LAST;
 
 	/* This zone is now used for scavening, so it must be removed from the free
 	 * list so that further mallocs do not attempt to use this space (when

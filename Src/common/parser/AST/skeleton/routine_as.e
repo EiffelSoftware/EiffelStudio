@@ -130,8 +130,8 @@ feature -- Roundtrip/Token
 					Result := obsolete_message.first_token (a_list)
 				elseif precondition /= Void then
 					Result := precondition.first_token (a_list)
-				elseif locals /= Void then
-					Result := locals.first_token (a_list)
+				elseif internal_locals /= Void then
+					Result := internal_locals.first_token (a_list)
 				elseif not routine_body.first_token (a_list).is_null then
 					Result := routine_body.first_token (a_list)
 				elseif postcondition /= Void then
@@ -146,8 +146,8 @@ feature -- Roundtrip/Token
 					Result := obsolete_keyword.first_token (a_list)
 				elseif precondition /= Void then
 					Result := precondition.first_token (a_list)
-				elseif locals /= Void then
-					Result := locals.first_token (a_list)
+				elseif internal_locals /= Void then
+					Result := internal_locals.first_token (a_list)
 				else
 					Result := routine_body.first_token (a_list)
 				end

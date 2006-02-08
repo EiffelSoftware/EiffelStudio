@@ -30,8 +30,6 @@ inherit
 			new_filled_id_as,
 
 			reverse_extend_separator,
-			extend_pre_as,
-			extend_post_as,
 			reverse_extend_identifier,
 
 			new_character_as, new_typed_char_as,
@@ -117,21 +115,21 @@ feature -- List operation
 			a_list.reverse_extend (l_as)
 		end
 
-	extend_pre_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.pre_as_list.
-		require else
-			a_list_not_void: a_list /= Void
-		do
-			a_list.extend_pre_as_list (l_as)
-		end
-
-	extend_post_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
-			-- Extend `l_as' into `a_list'.post_as_list.
-		require else
-			a_list_not_void: a_list /= Void
-		do
-			a_list.extend_post_as_list (l_as)
-		end
+--	extend_pre_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
+--			-- Extend `l_as' into `a_list'.pre_as_list.
+--		require else
+--			a_list_not_void: a_list /= Void
+--		do
+--			a_list.extend_pre_as_list (l_as)
+--		end
+--
+--	extend_post_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
+--			-- Extend `l_as' into `a_list'.post_as_list.
+--		require else
+--			a_list_not_void: a_list /= Void
+--		do
+--			a_list.extend_post_as_list (l_as)
+--		end
 
 feature -- Leaf nodes
 

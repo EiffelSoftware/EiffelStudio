@@ -64,7 +64,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' identical?
 		do
-			Result := same_as (other)
+			Result := same_type (other) and then same_as (other)
 		end
 
 	same_as (other: like Current): BOOLEAN is

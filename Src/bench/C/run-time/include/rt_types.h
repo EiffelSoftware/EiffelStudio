@@ -100,6 +100,7 @@ struct partial_sc_zone {
 	char *sc_active_arena;		/* Updated base address of zone */
 	char *sc_arena;				/* Original base address of zone */
 	char *sc_top;				/* Pointer to first free location */
+	char *sc_previous_top;		/* Pointer to previous top location, usefull to see the B_LAST flag. */
 	char *sc_end;				/* First location beyond space */
 	rt_uint_ptr sc_flags;		/* ov_size in the selected malloc block */
 };

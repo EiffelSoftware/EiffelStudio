@@ -675,16 +675,22 @@ feature {NONE} -- Implementation
 			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
 				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
 
+					-- In the code below we use `compare_objects' on the list we manipulate
+					-- to make sure that an option/assembly is not inserted more than twice in
+					-- the Ace file.
 				l_defaults := a_root.defaults
 				if l_defaults = Void then
 					create l_defaults.make (1)
 					a_root.set_defaults (l_defaults)
 				end
+				l_defaults.compare_objects
 
 				create l_factory
 				l_option := l_factory.new_special_option_sd (
 					{FREE_OPTION_SD}.msil_generation, Void, True)
-				l_defaults.extend (l_option)
+				if not l_defaults.has (l_option) then
+					l_defaults.extend (l_option)
+				end
 				if compilation_modes.is_precompiling then
 					l_option := l_factory.new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "dll", True)
@@ -692,16 +698,23 @@ feature {NONE} -- Implementation
 					l_option := l_factory.new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "exe", True)
 				end
-				l_defaults.extend (l_option)
+				if not l_defaults.has (l_option) then
+					l_defaults.extend (l_option)
+				end
+
 				if l_runtime_version /= Void then
 					l_option := l_factory.new_special_option_sd (
 						{FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
-					l_defaults.extend (l_option)
+					if not l_defaults.has (l_option) then
+						l_defaults.extend (l_option)
+					end
 				end
 
 				l_option := l_factory.new_special_option_sd (
 					{FREE_OPTION_SD}.console_application, Void, True)
 				l_defaults.extend (l_option)
+
+				l_defaults.compare_references
 
 				l_assemblies := a_root.assemblies
 				if l_assemblies = Void then
@@ -751,19 +764,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

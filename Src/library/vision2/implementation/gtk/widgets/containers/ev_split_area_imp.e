@@ -1,12 +1,12 @@
 indexing
-	description: 
+	description:
 		"EiffelVision Split Area. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_SPLIT_AREA_IMP
 
@@ -25,24 +25,17 @@ inherit
 		redefine
 			interface,
 			initialize,
-			container_widget,
-			on_widget_mapped,
-			needs_event_box
+			container_widget
 		end
 
 feature {NONE} -- Initialization
-
-	needs_event_box: BOOLEAN is do Result := False end
-		-- An event box does not need to be created for `Current'.
 
 	initialize is
 		do
 			Precursor {EV_CONTAINER_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			second_expandable := True
-			user_split_position := -1
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, 0)
-			real_signal_connect_after (container_widget, once "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (container_widget, False)
 		end
 
@@ -51,12 +44,7 @@ feature -- Access
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			if not is_displayed and then user_split_position /= -1 then
-				Result := user_split_position
-			else
-				Result := gtk_paned_struct_child1_size (container_widget)
-				Result := Result.max (minimum_split_position)
-			end
+			Result := gtk_paned_struct_child1_size (container_widget)
 		end
 
 	set_first (an_item: like item) is
@@ -66,7 +54,6 @@ feature -- Access
 		do
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
-			check item_imp_not_void: item_imp /= Void end
 			{EV_GTK_EXTERNALS}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
 			set_item_resize (first, False)
@@ -79,7 +66,6 @@ feature -- Access
 		do
 			item_imp ?= an_item.implementation
 			item_imp.set_parent_imp (Current)
-			check item_imp_not_void: item_imp /= Void end
 			{EV_GTK_EXTERNALS}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
 			set_item_resize (second, True)
@@ -127,32 +113,10 @@ feature -- Access
 	set_split_position (a_split_position: INTEGER) is
 			-- Set the position of the splitter.
 		do
-			internal_set_split_position (a_split_position)
-		end
-
-feature {NONE} -- Implementation
-
-	internal_set_split_position (a_split_position: INTEGER) is
-			-- Set the position of the splitter.
-		do
-			if is_displayed then
-				user_split_position := -1
-			else
-				user_split_position := a_split_position
-			end
 			{EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
 		end
 
-	user_split_position: INTEGER
-			-- Split position as set by user, -1 if unset.
-
-	on_widget_mapped is
-			-- `Current' has been mapped to screen.
-		do
-			if user_split_position /= -1 then
-				internal_set_split_position (user_split_position)
-			end
-		end
+feature {NONE} -- Implementation
 
 	container_widget: POINTER
 		-- Pointer to the GtkPaned widget.

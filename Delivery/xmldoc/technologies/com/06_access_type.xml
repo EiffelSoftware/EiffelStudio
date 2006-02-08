@@ -6,7 +6,7 @@
 		</heading>Accessing a COM component through Automation means using a well known interface to access to a group of methods and properties. This interface is called IDispatch, and it includes the method 
 		<feature_name>invoke</feature_name> that allows to call a method, set or get a property on the Automation server. One advantage of that approach is that the interface has a known virtual table layout. As a result, Windows can include a built-in marshaler for that interface (See 
 		<link>
-			<url>07_deeper_into_com.xml</url><anchor_name></anchor_name>
+			<url>07_deeper_into_com.xml</url>
 			<label>Marshaling</label>
 		</link> for information on what a marshaler is). The supported types (known as Automation types) and their Eiffel equivalents are listed in the following table:
 		<table>

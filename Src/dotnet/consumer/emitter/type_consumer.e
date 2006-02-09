@@ -177,6 +177,8 @@ feature -- Basic Operation
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			is_enum: BOOLEAN
+			underlying_enum_type: CONSUMED_REFERENCED_TYPE
 
 			cp_function: CONSUMED_FUNCTION
 			cp_procedure: CONSUMED_PROCEDURE
@@ -199,6 +201,8 @@ feature -- Basic Operation
 				create l_properties.make (0)
 				create l_events.make (0)
 				create reserved_names.make (100)
+
+				is_enum := consumed_type.is_enum
 
 					-- Add constructors.
 				from
@@ -253,6 +257,10 @@ feature -- Basic Operation
 						check
 							is_field: l_field /= Void
 						end
+						if is_enum and then not l_field.is_literal then
+								-- Get base type of enumeration
+							underlying_enum_type := referenced_type_from_type (l_field.field_type)
+						end
 						if is_consumed_field (l_field) then
 							l_fields.extend (consumed_field (l_field))
 							if is_public_field (l_field) and not is_init_only_field (l_field) then
@@ -286,7 +294,10 @@ feature -- Basic Operation
 				consumed_type.set_constructors (solved_constructors (tc))
 				consumed_type.set_fields (l_fields)
 				consumed_type.set_procedures (l_procedures)
-				if consumed_type.is_enum then
+				if is_enum then
+					if underlying_enum_type = Void then
+						underlying_enum_type := integer_type
+					end
 					from
 						l_other_functions := l_functions
 						l_other_functions.start
@@ -299,8 +310,8 @@ feature -- Basic Operation
 					end
 					l_functions.extend (infix_and_feature (internal_referenced_type))
 					l_functions.extend (infix_or_feature (internal_referenced_type))
-					l_functions.extend (from_integer_feature (internal_referenced_type))
-					l_functions.extend (to_integer_feature (internal_referenced_type))
+					l_functions.extend (from_integer_feature (internal_referenced_type, underlying_enum_type))
+					l_functions.extend (to_integer_feature (internal_referenced_type, underlying_enum_type))
 				end
 				consumed_type.set_functions (l_functions)
 				initialized := True
@@ -1097,7 +1108,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE; underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for`from_integer' in enum type `t'.
 		require
 			enum_type_not_void: enum_type /= Void
@@ -1105,7 +1116,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 		do
-			create l_arg.make ("a_value", "a_value", integer_type)
+			create l_arg.make ("a_value", "a_value", underlying_enum_type)
 			l_args := <<l_arg>>
 			create Result.make ("from_integer", "from_integer", "from_integer", l_args, enum_type,
 				True,	-- is_frozen
@@ -1121,7 +1132,7 @@ feature {NONE} -- Added features for ENUM types.
 			Result.set_is_artificially_added (True)
 		end
 
-	to_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+	to_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE; underlying_enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
 			-- Create instance of CONSUMED_FUNCTION for`to_integer' in enum type `t'.
 		require
 			enum_type_not_void: enum_type /= Void
@@ -1129,7 +1140,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			create l_args.make (1, 0)
-			create Result.make ("to_integer", "to_integer", "to_integer", l_args, integer_type,
+			create Result.make ("to_integer", "to_integer", "to_integer", l_args, underlying_enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1232,19 +1243,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

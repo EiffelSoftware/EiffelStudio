@@ -2206,6 +2206,12 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 					ps_to.sc_previous_top = ps_to.sc_top;
 					current = scavenge(current, &ps_to.sc_top);/* Partial scavenge */
 					zone = HEADER(current);				/* Update zone */
+						/* Clear B_LAST flag in case previous location of `current' was the last
+						 * block in its chunk, we don't want to find a B_LAST flag bit in the new
+						 * location especially if it is most likely the case that we are not at the
+						 * end of the `ps_to' zone. This is a 1 day bug.
+						 */
+					zone->ov_size &= ~B_LAST;
 					flags = zone->ov_flags;				/* And Eiffel flags */
 					if (prev)
 						*prev = current;	/* Update referencing pointer */

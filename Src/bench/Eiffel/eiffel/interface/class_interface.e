@@ -242,12 +242,11 @@ feature {NONE} -- Implementation
 						-- current even though it is written
 						-- in an ancestor class.
 					feat.set_origin_class_id (class_id)
+					check
+						same_class: feat.origin_class_id = class_id
+					end
 				else
 					feat.set_origin_class_id (feat.written_in)
-				end
-
-				check
-					same_class: feat.origin_class_id = class_id
 				end
 			else
 				from

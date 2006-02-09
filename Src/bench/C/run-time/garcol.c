@@ -3993,6 +3993,20 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			zone->ov_flags = flags;		/* Copy flags for new object */
 			zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 
+				/* Special case for EO_SPEC objects in the case where `new'
+				 * has a greater size than `root'. This happens when the call
+				 * to `malloc_from_eiffel_list_no_gc' returns the last block
+				 * of a chunk which is bigger than `size' but cannot be split
+				 * into two blocks because the remaining part is less than OVERHEAD.
+				 * In that case, we need to move the `count' and the `element size'
+				 * which were copied from `root' down by the difference in size between
+				 * `new' and `root'. We could have used two assignments, but to make
+				 * the code simpler and because it is quite a rare case, we use memmove.
+				 */
+			if ((flags & EO_SPEC) && (size != (zone->ov_size & B_SIZE))) {
+				memmove(RT_SPECIAL_INFO(new), new + (size - LNGPAD_2), LNGPAD_2);
+			}
+
 #ifdef DEBUG
 			dprintf(4)("gscavenge: tenured 0x%lx to 0x%lx at age %d (%d bytes)\n",
 				root, new, age >> AGE_OFFSET, size);

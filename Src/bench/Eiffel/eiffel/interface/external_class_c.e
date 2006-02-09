@@ -657,6 +657,9 @@ feature {NONE} -- Initialization
 			l_list: ARRAYED_LIST [INTEGER]
 			l_name: STRING
 			l_name_id: INTEGER
+			l_underlying_enum_type: STRING
+			l_enum_member: CONSUMED_ENTITY
+			l_enum_value: INTEGER_CONSTANT
 		do
 			from
 				a_features.start
@@ -805,9 +808,51 @@ feature {NONE} -- Initialization
 				if l_ext.type = {SHARED_IL_CONSTANTS}.Enum_field_type then
 					check
 						l_enum_ext_not_void: l_enum_ext /= Void
-						value_is_integer: l_literal.value.is_integer
 					end
-					l_enum_ext.set_value (l_literal.value.to_integer)
+						-- Find underlying type of an enumeration
+					if l_underlying_enum_type = Void then
+						from
+							j := a_features.count
+						until
+							j <= 0
+						loop
+							l_enum_member := a_features.i_th (j)
+							if not l_enum_member.is_literal and then l_enum_member.is_field then
+								l_underlying_enum_type := l_enum_member.return_type.name
+							end
+							j := j - 1
+						end
+						if l_underlying_enum_type = Void then
+							l_underlying_enum_type := "System.Int32"
+						end
+					end
+					if l_literal.value.item (1) = '-' then
+						create l_enum_value.make_from_string (Void, True, l_literal.value.substring (2, l_literal.value.count))
+					else
+						create l_enum_value.make_from_string (Void, False, l_literal.value)
+					end
+					if l_underlying_enum_type.is_equal ("System.SByte") then
+						l_enum_value.set_real_type (integer_8_type)
+					elseif l_underlying_enum_type.is_equal ("System.Int16") then
+						l_enum_value.set_real_type (integer_16_type)
+					elseif l_underlying_enum_type.is_equal ("System.Int32") then
+						l_enum_value.set_real_type (integer_type)
+					elseif l_underlying_enum_type.is_equal ("System.Int64") then
+						l_enum_value.set_real_type (integer_64_type)
+					elseif l_underlying_enum_type.is_equal ("System.Byte") then
+						l_enum_value.set_real_type (natural_8_type)
+					elseif l_underlying_enum_type.is_equal ("System.UInt16") then
+						l_enum_value.set_real_type (natural_16_type)
+					elseif l_underlying_enum_type.is_equal ("System.UInt32") then
+						l_enum_value.set_real_type (natural_32_type)
+					elseif l_underlying_enum_type.is_equal ("System.UInt64") then
+						l_enum_value.set_real_type (natural_64_type)
+					else
+						debug ("refactor_fixme")
+							fixme ("Types Char, IntPtr, UIntPtr are not processed correctly.")
+						end
+					end
+					l_enum_ext.set_value (l_enum_value)
 				end
 				l_feat.set_private_external_name_id (l_names_heap.found_item)
 				if l_member.has_return_value then

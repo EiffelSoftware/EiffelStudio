@@ -128,7 +128,6 @@ feature {NONE}-- Initialization
 			l_ev_label_2.align_text_left
 			l_ev_vertical_box_6.set_padding (5)
 			l_ev_vertical_box_6.set_border_width (3)
-			description_text.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 255))
 			description_text.set_minimum_height (40)
 			description_text.disable_edit
 			l_ev_horizontal_box_4.set_padding (5)
@@ -343,8 +342,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class PREFERENCES_GRID_IMP

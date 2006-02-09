@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (3))
 			grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (4))
 
+			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			close_button.select_actions.extend (agent on_close)
 			close_request_actions.extend (agent on_close)
 			restore_button.select_actions.extend (agent on_restore)
@@ -1008,7 +1009,7 @@ feature {NONE} -- Implementation
 	clear_edit_widget is
 			-- Clear the edit widget
 		do
-			description_text.set_text (once "")
+			description_text.remove_text
 		end
 
 	short_preference_name (a_name: STRING): STRING is

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><Project_settings xsi="http://www.w3.org/1999/XMLSchema-instance">
  <Project_type>1</Project_type>
  <Project_name>VISION2_PROJECT</Project_name>
- <Project_location>D:\Src\library\preferences\interface\build_project</Project_location>
+ <Project_location>C:\work\57dev\library\preferences\interface\build_project</Project_location>
  <Main_window_class_name>MAIN_WINDOW</Main_window_class_name>
  <Application_class_name>VISION2_APPLICATION</Application_class_name>
  <Complete_project>False</Complete_project>

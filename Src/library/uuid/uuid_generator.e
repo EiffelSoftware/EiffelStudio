@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
         	end
             Result := rand.i_th (rand_count.item).as_natural_8
         ensure
-        	rand_count_changed: old rand_count /= rand_count
+        	rand_count_changed: old rand_count.item /= rand_count.item
         end
 
 	rand: RANDOM is

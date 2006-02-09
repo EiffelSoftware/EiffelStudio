@@ -336,18 +336,18 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * the old content.(starts at `j' and is `k' long).
 	 */
 
-	union overhead *zone;
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */
+	long old_count;
 	uint32 exp_dftype;		/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
 	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));
  
-	zone = HEADER(area);
-	ref = area + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	elem_size = *((EIF_INTEGER *) ref + 1);		/* Extract the element size */
+	ref = RT_SPECIAL_INFO(area);
+	old_count = RT_SPECIAL_COUNT_WITH_INFO(ref);
+	elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(ref);
 
 #ifdef ARYCPY_DEBUG
 	printf ("ARYCPY: area 0x%x, new count %d, old count %d, start %d and %d long\n", area, i, *(long*) ref, j, k);
@@ -363,7 +363,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	/* Move old contents to the right position and fill in empty parts with
 	 * zeros.
 	 */
-	if ((j == 0) && (*(EIF_INTEGER *) ref == k))	/* Is this the usual case. */
+	if ((j == 0) && (old_count == k))	/* Is this the usual case. */
 		return new_area;		/* All have been done in sprealloc () . */
 
 	/* Otherwise, in some rare cases, we may change the 

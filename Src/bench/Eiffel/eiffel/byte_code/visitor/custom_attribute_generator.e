@@ -298,7 +298,7 @@ feature {BYTE_NODE} -- Visitors
 					check l_cl_type_not_void: l_cl_type /= Void end
 					insert_enum_type (l_cl_type)
 				end
-				ca_blob.put_integer_32 (l_il_enum.value)
+				insert_integer_constant (l_il_enum.value)
 			else
 				check not_supported: False end
 			end
@@ -385,7 +385,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 			if l_class_type /= Void then
 				create l_type_name.make_from_string (l_class_type.full_il_type_name)
-				if l_class_type.is_precompiled then
+				if l_class_type.is_precompiled and then not l_class_type.is_external then
 					l_type_name.append_character (',')
 					l_type_name.append_character (' ')
 					l_type_name.append (l_class_type.assembly_info.full_name)
@@ -495,12 +495,40 @@ feature {NONE} -- Implemention
 			-- compatible value, or a REAL_32/REAL_64 value.
 		local
 			l_element_type: INTEGER_8
+			l_cl_type_i: CL_TYPE_I
+			l_feature_table: FEATURE_TABLE
+			l_feature_i: FEATURE_I
+			l_il_extension_i: IL_EXTENSION_I
+			l_underlying_type: TYPE_I
 		do
 			if is_target_object then
 					-- We simply assume that we will put the INTEGER as is.
 				l_element_type := a_int.type.element_type
 			else
 				l_element_type := target_type.element_type
+				l_cl_type_i ?= target_type
+				if l_cl_type_i /= Void and then l_cl_type_i.base_class.is_enum then
+						-- Use underlying integer type.
+					check
+						l_cl_type_i_not_void: l_cl_type_i /= Void
+					end
+					from
+						l_feature_table := l_cl_type_i.base_class.feature_table
+						l_feature_table.start
+					until
+						l_feature_table.after or else l_underlying_type /= Void
+					loop
+						l_feature_i := l_feature_table.item_for_iteration
+						l_il_extension_i ?= l_feature_i.extension
+						if l_il_extension_i /= Void and then l_il_extension_i.type = {SHARED_IL_CONSTANTS}.field_type then
+							l_underlying_type := l_feature_i.type.actual_type.type_i
+						end
+						l_feature_table.forth
+					end
+					if l_underlying_type /= Void then
+						l_element_type := l_underlying_type.element_type
+					end
+				end
 			end
 
 			inspect l_element_type
@@ -625,19 +653,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

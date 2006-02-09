@@ -2732,6 +2732,7 @@ doc:	</routine>
 rt_private int split_to_block (int is_to_keep)
 {
 	union overhead *base;	/* Base address */
+	EIF_REFERENCE l_special;	/* Pointer in case it is a SPECIAL. */
 	rt_uint_ptr size;			/* Amount of bytes used (malloc point's of view) */
 	rt_uint_ptr old_size;		/* To save the old size for the leading object */
 	int result;
@@ -2771,15 +2772,25 @@ rt_private int split_to_block (int is_to_keep)
 			/* Perform memory update only if we can split block, if not possible. */
 		if (!result) {
 			CHECK("valid sc_previous_top", ps_to.sc_previous_top < ps_to.sc_end);
+			base = (union overhead *) ps_to.sc_previous_top;
+				/* Make it last block. Otherwise it would corrupt the coalesce process. */
+			base->ov_size |= B_LAST;
 				/* Could not split the block, so make sure that `ps_to.sc_previous_top'
-				 * has its size updated as well as setting the B_LAST block. */
-			size = (((union overhead *) ps_to.sc_previous_top)->ov_size & B_SIZE) +
-				(ps_to.sc_end - ps_to.sc_top);
-				/* Clear previous size and then put the new one. */
-			((union overhead *) ps_to.sc_previous_top)->ov_size &= ~B_SIZE;
-			((union overhead *) ps_to.sc_previous_top)->ov_size |= size;
-				/* Make it last block. */
-			((union overhead *) ps_to.sc_previous_top)->ov_size |= B_LAST;
+				 * has its size updated. */
+			old_size = base->ov_size & B_SIZE;
+			size = old_size + (ps_to.sc_end - ps_to.sc_top);
+			if (size > old_size) {
+					/* Clear previous size and then put the new one. */
+				base->ov_size &= ~B_SIZE;
+				base->ov_size |= size;
+					/* If last block was a special object, we need to update its count and element_size
+					 * because block is made larger by the above setting of its size.
+					 */
+				if (base->ov_flags & EO_SPEC) {
+					l_special = ((char *) base) + OVERHEAD;
+					memmove(RT_SPECIAL_INFO(l_special), l_special + (old_size - LNGPAD_2), LNGPAD_2);
+				}
+			}
 				/* Update `ps_to.sc_top' and `ps_to.sc_previous_top' to the end of block. */
 			ps_to.sc_previous_top = ps_to.sc_end;
 			ps_to.sc_top = ps_to.sc_end;

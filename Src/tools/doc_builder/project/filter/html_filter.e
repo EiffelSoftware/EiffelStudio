@@ -267,7 +267,7 @@ feature {NONE} -- Processing
 					l_name := start_end_string
 				elseif e.is_equal (url_string) then
 					if in_url_anchor then
-						if not anchor_content.is_equal ("") then 
+						if anchor_content /= Void and then not anchor_content.is_empty then 
 							if url_anchor_write_position < output_string.count then
 								output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
 							else

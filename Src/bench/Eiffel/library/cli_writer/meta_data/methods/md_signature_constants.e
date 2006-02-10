@@ -15,13 +15,16 @@ feature -- Access
 	default_sig: INTEGER_8 is 0
 	vararg_sig: INTEGER_8 is 0x05
 			-- Flags for signature description of methods.
-			
+
 	field_sig: INTEGER_8 is 0x06
 			-- Flag for signature description of a field.
-			
+
 	local_sig: INTEGER_8 is 0x07
 			-- Flag for a signature description of all locals in
 			-- a method body.
+
+	property_sig: INTEGER_8 is 0x08
+			-- Flag for signature description of a property.
 
 	ca_prolog: INTEGER_16 is 0x0001
 			-- Prolog for Custom Attribute blob.
@@ -101,21 +104,21 @@ feature -- Types
 
 	element_type_pinned: INTEGER_8 is 0x05
 		-- ELEMENT_TYPE_MODIFIER
-		
+
 feature -- Custom attribute flags
 
 	element_type_type: INTEGER_8 is 0x50
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a System.Type instance.
-		
+
 	element_type_boxed: INTEGER_8 is 0x51
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a boxed object.
-		
+
 	element_type_field: INTEGER_8 is 0x53
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a field setting.
-		
+
 	element_type_property: INTEGER_8 is 0x54
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a property setting.
@@ -156,7 +159,7 @@ feature -- Native types
 	native_type_r8: INTEGER_8 is 0xc
 
 	native_type_syschar: INTEGER_8 is 0xd
-			-- DEPRECATED 
+			-- DEPRECATED
 
 	native_type_variant: INTEGER_8 is 0xe
 			-- DEPRECATED
@@ -205,7 +208,7 @@ feature -- Native types
 			-- DEPRECATED (use NATIVE_TYPE_STRUCT)	
 
 	native_type_byvalstr: INTEGER_8 is 0x22
-	
+
 	native_type_ansibstr: INTEGER_8 is 0x23
 
 	native_type_tbstr: INTEGER_8 is 0x24
@@ -223,7 +226,7 @@ feature -- Native types
 	native_type_lpstruct: INTEGER_8 is 0x2b
 
 	native_type_custommarshaler: INTEGER_8 is 0x2c
-			--	Custom marshaler native type. This must be followed 
+			--	Custom marshaler native type. This must be followed
 			-- by a string of the following format:
 			-- "Native type name/0Custom marshaler type name/0Optional cookie/0"
 			-- Or
@@ -241,19 +244,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

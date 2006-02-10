@@ -15,7 +15,7 @@ inherit
 		redefine
 			make_by_pointer
 		end
-	
+
 	MD_TOKEN_TYPES
 
 create
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Initialize Current with `an_item'.
 		do
 			Precursor {COM_OBJECT} (an_item)
-			
+
 				-- Get associated IMetaDataAssemblyEmit object.
 			create assembly_emitter.make_by_pointer (c_query_assembly_emit (item))
 		end
@@ -58,7 +58,7 @@ feature -- Save
 			success: last_call_success = 0
 			valid_result: Result /= Void
 		end
-		
+
 	save (f_name: UNI_STRING) is
 			-- Save current assembly to file `f_name'.
 		require
@@ -69,7 +69,7 @@ feature -- Save
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 feature -- Definition: access
 
 	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
@@ -85,7 +85,7 @@ feature -- Definition: access
 		ensure
 			valid_result: Result > 0
 		end
-		
+
 	define_type_ref (type_name: UNI_STRING; resolution_scope: INTEGER): INTEGER is
 			-- Compute new token for `type_name' located in `resolution_scope'.
 		require
@@ -129,7 +129,7 @@ feature -- Definition: access
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_member_ref
 		end
-		
+
 	define_module_ref (a_name: UNI_STRING): INTEGER is
 			-- Define a reference to a module of name `a_name'.
 		require
@@ -139,9 +139,9 @@ feature -- Definition: access
 			last_call_success := c_define_module_ref (item, a_name.item, $Result)
 		ensure
 			success: last_call_success = 0
-			result_valid: Result & Md_mask = Md_module_ref	
+			result_valid: Result & Md_mask = Md_module_ref
 		end
-		
+
 feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
@@ -179,7 +179,7 @@ feature -- Definition: creation
 		ensure
 			valid_result: Result & Md_mask = Md_manifest_resource
 		end
-				
+
 	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
 			implements: ARRAY [INTEGER]): INTEGER
 		is
@@ -196,7 +196,7 @@ feature -- Definition: creation
 			--implements_valid: for_all (implemements.item (i) is a Md_type_def, Md_type_ref
 			--	or Md_type_spec.
 		local
-			a: ANY	
+			a: ANY
 		do
 			if implements /= Void then
 				a := implements.to_c
@@ -244,7 +244,7 @@ feature -- Definition: creation
 		ensure
 			valid_result: Result & Md_mask = Md_exported_type
 		end
-		
+
 	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER; file_flags: INTEGER): INTEGER is
 			-- Create a row in File table
 		require
@@ -260,7 +260,7 @@ feature -- Definition: creation
 		ensure
 			valid_result: Result & Md_mask = Md_file
 		end
-			
+
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; a_signature: MD_METHOD_SIGNATURE;
 			impl_flags: INTEGER): INTEGER
@@ -297,7 +297,30 @@ feature -- Definition: creation
 		ensure
 			success: last_call_success = 0
 		end
-	
+
+	define_property (type_token: INTEGER; name: UNI_STRING; flags: NATURAL_32;
+			signature: MD_METHOD_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER)
+		is
+			-- Define property `name' for a type `type_token'.
+		require
+			valid_type_token: type_token & Md_mask = Md_type_def
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+			signature_not_void: signature /= Void
+			signature_not_empty: signature.count > 0
+			setter_token_valid: setter_token & Md_mask = Md_method_def
+			getter_token_valid: getter_token & Md_mask = Md_method_def
+		local
+			property_token: NATURAL_32
+		do
+			last_call_success := c_define_property (item,
+				type_token, name.item, flags, signature.item.item, signature.count,
+				0, default_pointer, 0, setter_token, getter_token, default_pointer,
+				$property_token)
+		ensure
+			success: last_call_success = 0
+		end
+
 	define_pinvoke_map (method_token, mapping_flags: INTEGER;
 			import_name: UNI_STRING; module_ref: INTEGER)
 		is
@@ -315,7 +338,7 @@ feature -- Definition: creation
 		ensure
 			success: last_call_success = 0
 		end
-			
+
 	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
 			param_pos: INTEGER; param_flags: INTEGER): INTEGER
 		is
@@ -332,7 +355,7 @@ feature -- Definition: creation
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_param_def
 		end
-		
+
 	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE) is
 			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
 		require
@@ -639,6 +662,24 @@ feature {NONE} -- Implementation
 			"DefineModuleRef"
 		end
 
+	c_define_property (an_item: POINTER; td: INTEGER; wzProperty: POINTER;
+			dwPropFlags: NATURAL_32; pvSig: POINTER; cbSig: INTEGER;
+			dwDefType: NATURAL_32; pValue: POINTER; cchValue: NATURAL_32;
+			mdSetter: INTEGER; mdGetter: INTEGER; rmdOtherMethods: POINTER;
+			pmdProp: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineProperty'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdTypeDef, LPCWSTR, DWORD, PCCOR_SIGNATURE, ULONG, DWORD,
+					void *, ULONG, mdMethodDef, mdMethodDef, mdMethodDef *, mdProperty *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineProperty"
+		end
+
 	c_define_param (an_item: POINTER; meth_token: INTEGER; param_number: INTEGER;
 			name: POINTER; flags: INTEGER; default_value_type: INTEGER;
 			default_value_data: POINTER; default_value_data_length: INTEGER;
@@ -789,19 +830,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

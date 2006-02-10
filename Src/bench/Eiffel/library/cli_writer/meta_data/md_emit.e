@@ -299,7 +299,7 @@ feature -- Definition: creation
 		end
 
 	define_property (type_token: INTEGER; name: UNI_STRING; flags: NATURAL_32;
-			signature: MD_METHOD_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER)
+			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER)
 		is
 			-- Define property `name' for a type `type_token'.
 		require

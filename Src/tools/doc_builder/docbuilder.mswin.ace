@@ -7,7 +7,6 @@ root
 default
 	assertion (check)
 	assertion (require)
-	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("console_output")
 	disabled_debug ("dlg_dispatcher")
@@ -17,7 +16,6 @@ default
 	disabled_debug ("lex_output")
 	disabled_debug ("refactor_fixme")
 	disabled_debug ("regexp")
-	disabled_debug ("trace")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
@@ -45,7 +43,7 @@ default
 cluster
 	all root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
-			"facade"; "doc_builder.e"; "document_browser.e"; "document_schema.e"; "document_schema_element.e"; "schema_rendering_factory.e"; "spell_checker.e"; "web_browser_widget.e"; "schema_validator.e"; "EIFGEN"; 
+			".svn"; "facade"; "doc_builder.e"; "document_browser.e"; "document_schema.e"; "document_schema_element.e"; "schema_rendering_factory.e"; "spell_checker.e"; "web_browser_widget.e"; "schema_validator.e"; "EIFGEN"; 
 		end
 
 	facade (root_cluster):		"$\facade"
@@ -55,49 +53,52 @@ cluster
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"CVS"; "table_eiffel3"; "desc"; 
+			".svn"; "table_eiffel3"; "desc"; 
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "release"; "obsolete"; "CVS"; "components"; "gtk2"; 
+			".svn"; "gtk"; "release"; "obsolete"; "components"; "gtk2"; 
 		end
 
 	all time:		"$ISE_EIFFEL\library\time"
 		exclude
-			"french"; "german"; 
+			".svn"; "french"; "german"; 
 		end
 
 	all env:		"$EIFFEL_SRC\Eiffel\lace\env"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all compiler_shared:		"$EIFFEL_SRC\Eiffel\eiffel\shared"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all editor:		"$EIFFEL_SRC\library\editor"
 		exclude
-			"constants.e"; "constants_imp.e"; 
+			".svn"; "constants.e"; "constants_imp.e"; 
 		end
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+			".svn"; "hact"; "se"; "ve"; "base"; "other"; 
 		end
 
 	all lex:		"$ISE_EIFFEL\library\lex"
+		exclude
+			".svn"; 
+		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"CVS"; "xml_implementation"; 
+			".svn"; "xml_implementation"; 
 		end
 
 	compiler_observer:		"$EIFFEL_SRC\library\patterns\observer"

@@ -220,8 +220,8 @@ feature {NONE} -- Graphical initialization and changes
 			expression_field.change_actions.extend (agent on_expression_changed)
 			expression_field.focus_in_actions.extend (agent on_expression_focus)
 			if
-				eb_debugger_manager.application_is_executing
-				and then eb_debugger_manager.application_is_stopped
+				not eb_debugger_manager.application_is_executing
+				or else not eb_debugger_manager.application_is_stopped
 			then
 				on_object_radio.disable_sensitive
 				as_object_radio.disable_sensitive

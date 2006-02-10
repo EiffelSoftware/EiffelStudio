@@ -167,7 +167,7 @@ assembly
 			"ACCESSIBILITY_"
 		end
 
-	"System.Runtime.Serialization.Formatters.Soap, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
+	"Soap":	"$ISE_DOTNET_FRAMEWORK\system.runtime.serialization.formatters.soap.dll"
 		prefix
 			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
 		end

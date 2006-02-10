@@ -224,17 +224,17 @@ feature -- Element change
 			end
 		end
 
-	set_mask	 (a_mask: EV_BITMAP) is
-			-- Set the GdkBitmap used for masking `Current'.
-		local
-			a_mask_imp: EV_BITMAP_IMP
-		do
-			a_mask_imp ?= a_mask.implementation
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (visual_widget, drawable, a_mask_imp.drawable)
-				-- We do not need to unref `drawable' as it is reffed and then unreffed by GtkImage.
-			mask := a_mask_imp.drawable
-				-- We do not unref the mask as it is still needed by `a_mask'
-		end
+--	set_mask	 (a_mask: EV_BITMAP) is
+--			-- Set the GdkBitmap used for masking `Current'.
+--		local
+--			a_mask_imp: EV_BITMAP_IMP
+--		do
+--			a_mask_imp ?= a_mask.implementation
+--			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (visual_widget, drawable, a_mask_imp.drawable)
+--				-- We do not need to unref `drawable' as it is reffed and then unreffed by GtkImage.
+--			mask := a_mask_imp.drawable
+--				-- We do not unref the mask as it is still needed by `a_mask'
+--		end
 
 feature -- Access
 

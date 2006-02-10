@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			enable_solid_resizing_divider
 			set_separator_color (color_separator)
 			set_tree_node_connector_color (color_tree_node_connector)
-			header.pointer_button_press_actions.extend (agent on_header_clicked)
+			header.item_pointer_button_press_actions.extend (agent on_header_item_clicked)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
 			create scrolling_behavior.make (Current)
@@ -130,61 +130,21 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	on_header_item_clicked (hi: EV_HEADER_ITEM; ax, ay, abutton: INTEGER) is
 		local
 			m: EV_MENU
 			col: EV_GRID_COLUMN
-			hi: EV_HEADER_ITEM
-			c: INTEGER
-			l_x: INTEGER
+			ghi: EV_GRID_HEADER_ITEM
 		do
 			if abutton = 3 then
-				fixme ("[
-						we use this hack, because on linux/GTK,
-						the `ax' is related to the current header item's widget
-						and not as for windows, related to the full header's widget.
-						This way, we have a portable solution.
-					]")
-				l_x := ascreen_x - header.screen_x
-
-					--| Find the column whom header is clicked
-				from
-					header.start
-				until
-					header.after or hi /= Void
-				loop
-					hi := header.item
-					if header.has (hi) then
-						if header.item_x_offset (hi) > l_x and header.first /= hi then
-							header.back
-							hi := header.item
-							header.forth
-						elseif header.last = hi then
-							-- keep loop's col value
-						else
-							hi := Void
-						end
-					else
-						hi := Void
+				ghi ?= hi
+				if ghi /= Void and then header.pointed_divider_index = 0 then
+					col := column (ghi.column.index)
+					if col /= Void then
+							--| Col is the pointed header
+						m := header_menu_on_column (col)
+						m.show_at (header, header.item_x_offset (hi) + ax, ay)
 					end
-					header.forth
-				end
-				if hi /= Void then
-					from
-						c := 1
-					until
-						c > column_count or col /= Void
-					loop
-						if column (c).header_item = hi then
-							col := column (c)
-						end
-						c := c + 1
-					end
-				end
-				if col /= Void then
-						--| Col is the pointed header
-					m := header_menu_on_column (col)
-					m.show_at (header, l_x, ay)
 				end
 			end
 		end

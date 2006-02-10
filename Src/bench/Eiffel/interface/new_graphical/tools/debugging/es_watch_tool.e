@@ -87,9 +87,9 @@ feature {NONE} -- Initialization
 					preferences.debug_tool_data.grid_column_layout_preference_for (esgrid.id),
 					<<
 						[1, True, False, 150, "Expression"],
-						[2, True, False, 80, "Address"],
-						[3, True, False, 150, "Value"],
-						[4, True, False, 100, "Type"],
+						[2, True, False, 150, "Value"],
+						[3, True, False, 100, "Type"],
+						[4, True, False, 80, "Address"],
 						[5, True, False, 200, "Context"]
 					>>
 					)

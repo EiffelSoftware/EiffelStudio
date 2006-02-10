@@ -992,19 +992,21 @@ feature {NONE} -- Implementation
 		local
 			l_fired: BOOLEAN
 		do
-			if application_imp.mouse_wheel_actions_internal /= Void then
-				application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
-				l_fired := True
-			end
-			if mouse_wheel_actions_internal /= Void then
-				mouse_wheel_actions_internal.call ([delta // 120])
-				l_fired := True
-			end
-			if l_fired then
-					-- Only return 0 if the mouse wheel actions are not empty,
-					-- as this overrides intellipoint software if installed.
-				set_message_return_value (to_lresult (0))
-				disable_default_processing
+			if is_displayed then
+				if application_imp.mouse_wheel_actions_internal /= Void then
+					application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
+					l_fired := True
+				end
+				if mouse_wheel_actions_internal /= Void then
+					mouse_wheel_actions_internal.call ([delta // 120])
+					l_fired := True
+				end
+				if l_fired then
+						-- Only return 0 if the mouse wheel actions are not empty,
+						-- as this overrides intellipoint software if installed.
+					set_message_return_value (to_lresult (0))
+					disable_default_processing
+				end
 			end
 		end
 

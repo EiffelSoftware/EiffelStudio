@@ -248,12 +248,12 @@ feature -- Change
 			inspect c
 			when Col_name_id then
 				col_name_index := a_pos
-			when Col_address_id then
-				col_address_index := a_pos
 			when Col_value_id then
 				col_value_index := a_pos
 			when Col_type_id then
 				col_type_index := a_pos
+			when Col_address_id then
+				col_address_index := a_pos
 			when Col_context_id then
 				col_context_index := a_pos
 			else
@@ -284,12 +284,12 @@ feature -- Change
 			col := column (c)
 			if c = col_name_index then
 				cindex := Col_name_id
-			elseif c = col_address_index then
-				cindex := Col_address_id
 			elseif c = col_value_index then
 				cindex := Col_value_id
 			elseif c = col_type_index then
 				cindex := Col_type_id
+			elseif c = col_address_index then
+				cindex := Col_address_id
 			elseif c = col_context_index then
 				cindex := Col_context_id
 			end

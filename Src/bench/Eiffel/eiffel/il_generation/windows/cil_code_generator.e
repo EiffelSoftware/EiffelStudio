@@ -222,6 +222,9 @@ feature {NONE} -- Access
 	type_sig: MD_TYPE_SIGNATURE
 			-- Permanent signature for types.
 
+	property_sig: MD_PROPERTY_SIGNATURE
+			-- Permanent signature for properties.
+
 	boolean_native_signature: MD_NATIVE_TYPE_SIGNATURE is
 			-- Marshaller signature for converting IL boolean to Eiffel C boolean
 		once
@@ -590,6 +593,7 @@ feature -- Generation Structure
 			create field_sig.make
 			create local_sig.make
 			create type_sig.make
+			create property_sig.make
 			create local_types.make (5)
 
 			last_non_recorded_feature_token := 0

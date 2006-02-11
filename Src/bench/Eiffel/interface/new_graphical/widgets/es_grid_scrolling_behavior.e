@@ -130,7 +130,7 @@ feature -- Scrolling
 							end
 						else
 								-- We are scrolling up
-							l_viewable_row_indexes := g.viewable_row_indexes
+							l_viewable_row_indexes := g.viewable_row_indexes_in_tree_structure
 							if l_viewable_row_indexes /= Void then
 								l_visible_count := g.viewable_height // g.row_height - scrolling_common_line_count
 								l_first_row := g.row (l_visible_rows.first)
@@ -166,7 +166,7 @@ feature -- Scrolling
 							end
 						else
 								-- We are scrolling up
-							l_viewable_row_indexes := g.viewable_row_indexes
+							l_viewable_row_indexes := g.viewable_row_indexes_in_tree_structure
 							if l_viewable_row_indexes /= Void then
 								l_first_row := g.row (l_visible_rows.first)
 								l_viewable_row_indexes.start

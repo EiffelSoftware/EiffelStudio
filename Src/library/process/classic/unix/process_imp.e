@@ -23,9 +23,9 @@ feature {NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
 		do
-			setup_defaults
 			setup_command (a_exec_name, args, a_working_directory)
 			create_child_process_manager
+			initialize_parameter
 		end
 
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
@@ -55,21 +55,23 @@ feature {NONE} -- Initialization
 feature  -- Control
 
 	launch is
+		local
+			l_timeout: BOOLEAN
 		do
+				-- For repeated launch, we must ensure all listening threads, if any have terminated.
+			if timer.has_started then
+				l_timeout := timer.wait (0)
+			end
 			on_start
-			prepare_for_launch
-				-- Process launch.
+			initialize_child_process
+				-- Launch process.
 			child_process.spawn_nowait
 
-			id := child_process.process_id
-			last_operation_successful := (id /= -1)
-			launched := last_operation_successful
-
+			internal_id := child_process.process_id
+			launched := (id /= -1)
 			if launched then
+				initialize_after_launch
 				on_launch_successed
-				set_internal_process_terminated (False)
-				set_internal_all_finished (False)
-				setup_process_listeners
 			else
 				on_launch_failed
 			end
@@ -81,27 +83,39 @@ feature  -- Control
 		end
 
 	terminate_tree is
-			-- Terminate process tree starting from current launched process.
 		do
 			internal_terminate (True)
 		end
 
 	wait_for_exit is
+		local
+			l_wait: BOOLEAN
 		do
-			destroy_timer
-			wait_for_all_finished
+			l_wait := timer.wait (0)
+		end
+
+	wait_for_exit_with_timeout (a_timeout: INTEGER) is
+		local
+			l_wait: BOOLEAN
+		do
+			l_wait := timer.wait (a_timeout)
 		end
 
 	put_string (s: STRING) is
 		do
-			child_process.put_string (s)
+			append_input_buffer (s)
 		end
 
 feature -- Status reporting
 
+	id: INTEGER is
+		do
+			Result := internal_id
+		end
+
 	has_exited: BOOLEAN is
 		do
-			Result := all_finished
+			Result := has_cleaned_up
 		end
 
 	exit_code: INTEGER is
@@ -112,78 +126,145 @@ feature -- Status reporting
 feature {PROCESS_TIMER}  -- Status checking
 
 	check_exit is
-			-- Check whether process has exited.
+			-- Check if process has exited.
+		local
+			l_threads_exited: BOOLEAN
 		do
-			clean_up
+			if not has_exited then
+				if not has_process_exited then
+					child_process.wait_for_process (id, False)
+					has_process_exited := child_process.status_available
+						-- If launched process exited, send signal to all listenning threads.
+					if has_process_exited then
+						if in_thread /= Void then
+							in_thread.set_exit_signal
+						end
+						if out_thread /= Void then
+							out_thread.set_exit_signal
+						end
+						if err_thread /= Void then
+							err_thread.set_exit_signal
+						end
+					end
+				else
+					l_threads_exited := ((in_thread /= Void) implies in_thread.terminated) and
+							  ((out_thread /= Void) implies out_thread.terminated) and
+							  ((err_thread /= Void) implies err_thread.terminated)
+							  -- If all listenning threads exited, perform clean up.
+					if l_threads_exited then
+						if not has_cleaned_up then
+							timer.destroy
+							if input_buffer /= Void then
+								input_buffer.clear_all
+							end
+							child_process.close_pipes
+							has_cleaned_up := True
+								-- Call registered actions.
+							if force_terminated then
+								on_terminate
+							else
+								on_exit
+							end
+						end
+					end
+				end
+			end
 		end
 
-feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
+feature{NONE} -- Interprocess IO
+
+	input_buffer: STRING
+			-- Buffer used to store input data of process
+			-- This buffer is used temporarily to store data that can not be
+			-- consumed by launched process.
+
+	append_input_buffer (a_input:STRING) is
+			-- Append `a_input' to `input_buffer'.
+		require
+			a_input_not_void: a_input /= Void
+		do
+			input_mutex.lock
+			input_buffer.append (a_input)
+			input_mutex.unlock
+		end
+
+feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
+
+	last_output_bytes: INTEGER
+			-- Number of bytes of data read from output of process
+
+	last_error_bytes: INTEGER
+			-- Number of bytes of data read from error of process
+
+	last_input_bytes: INTEGER
+			-- Number of bytes in `buffer_size' wrote to process the last time
+
+	write_input_stream is
+			-- Write at most `buffer_size' bytes of data in `input_buffer' into launched process.
+			--|Note: This feature will be used in input listening thread.
+		require
+			process_running: is_running
+			input_redirected_to_stream: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
+		local
+			l_cnt: INTEGER
+			l_left: INTEGER
+			l_str: STRING
+		do
+			input_mutex.lock
+			l_cnt := input_buffer.count
+			if l_cnt > 0 then
+				last_input_bytes := l_cnt.min (buffer_size)
+				create l_str.make (last_input_bytes)
+				l_left := l_cnt - last_input_bytes
+				l_str.append (input_buffer.substring (1, last_input_bytes))
+				input_buffer.keep_tail (l_left)
+			else
+				last_input_bytes := 0
+			end
+			input_mutex.unlock
+			if l_str /= Void then
+				child_process.put_string (l_str)
+			end
+		end
 
 	read_output_stream is
-			-- Read output data from process.
-			-- May block.
+			-- Read output stream from launched process and dispatch data to `output_handler'.
+			--|Note: This feature will be used in output listening thread.			
+		require
+			process_running: is_running
+			output_redirected_to_agent: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
+			output_handler_not_void: output_handler /= Void
 		do
 			child_process.read_output_stream (buffer_size)
-			last_output := child_process.last_output
+			if child_process.last_output /= Void then
+				last_output_bytes := child_process.last_output.count
+				output_handler.call ([child_process.last_output])
+			else
+				last_output_bytes := 0
+			end
 		end
 
 	read_error_stream is
-			-- Read error data from process.
-			-- May block.
+			-- Read output stream from launched process and dispatch data to `output_handler'.
+			--|Note: This feature will be used in error listening thread.
+		require
+			process_running: is_running
+			error_redirected_to_agent: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
+			error_hander_not_viod: error_handler /= Void
 		do
 			child_process.read_error_stream (buffer_size)
-			last_error := child_process.last_error
+			if child_process.last_error /= Void then
+				last_error_bytes := child_process.last_error.count
+				error_handler.call ([child_process.last_error])
+			else
+				last_error_bytes := 0
+			end
 		end
-
-	last_output: STRING
-			-- Last output received from process
-
-	last_error: STRING
-			-- Last error received from process
 
 feature{NONE} -- Status reporting
 
-	has_process_terminated: BOOLEAN is
-			-- Has process terminated?
-		do
-			if not process_terminated then
-				child_process.wait_for_process (id, False)
-				set_internal_process_terminated (child_process.status_available)
-			end
-			Result := process_terminated
-		end
-
-	all_finished: BOOLEAN is
-			-- Have all launched-process-related operation finished?
-		do
-			mutex.lock
-			Result := internal_all_finished
-			mutex.unlock
-		end
-
-	output_thread_terminated: BOOLEAN is
-			-- Has output listening thread terminated?
-		do
-			Result := (out_thread /= Void) implies out_thread.terminated
-		end
-
-	error_thread_terminated: BOOLEAN is
-			-- Has error listening thread terminated?
-		do
-			Result := (err_thread /= Void) implies err_thread.terminated
-		end
-
-	listening_threads_terminated: BOOLEAN is
-			-- Have output and error listening threads terminated?
-		do
-			Result := output_thread_terminated and error_thread_terminated
-		end
-
-	process_terminated: BOOLEAN is
-			-- Has launched process terminated?
-		do
-			Result := internal_process_terminated
-		end
+	has_process_exited: BOOLEAN
+			-- Has launched process exited?
 
 feature {NONE}  -- Implementation
 
@@ -195,55 +276,42 @@ feature {NONE}  -- Implementation
 		do
 			child_process.terminate_hard (is_tree)
 			force_terminated := True
-			last_operation_successful := True
-			wait_for_exit
-		ensure
-			process_terminated: has_exited
 		end
 
-	set_internal_all_finished (b: BOOLEAN) is
-			-- Set `internal_all_finished' with `b'.
-		do
-			mutex.lock
-			internal_all_finished := b
-			mutex.unlock
-		ensure
-			internal_all_finished_set: internal_all_finished = b
-		end
-
-	set_internal_process_terminated (b: BOOLEAN) is
-			-- Set `internal_process_terminated' with `b'.
-		do
-			internal_process_terminated := b
-		ensure
-			internal_process_terminated_set: internal_process_terminated = b
-		end
-
-	prepare_for_launch is
-			-- Prepare for launch.
+	initialize_child_process is
+			-- Initialize `child_process'.
 		do
 			launched := False
 			force_terminated := False
 			create_child_process_manager
 			child_process.set_input_file_name (input_file_name)
 			child_process.set_output_file_name (output_file_name)
-			out_thread := Void
-			err_thread := Void
 			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output then
 				child_process.set_error_same_as_output
 			else
 				child_process.set_error_file_name (error_file_name)
 			end
-		ensure
-			launched_set: not launched
-			force_terminated_set: not force_terminated
-			out_thread_set: out_thread = Void
-			err_thread_set: err_thread = Void
 		end
 
-	setup_process_listeners is
+	initialize_after_launch is
+			-- Initialize when process has been launched successfully.
+		do
+			has_process_exited := False
+			force_terminated := False
+			last_termination_successful := True
+			has_cleaned_up := False
+			start_listening_threads
+		end
+
+	start_listening_threads is
 			-- Setup listeners for process output/error and for process status acquiring.
 		do
+			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
+				create input_buffer.make (initial_buffer_size)
+				create input_mutex.default_create
+				create in_thread.make (Current)
+				in_thread.launch
+			end
 				-- Start  output listening thread is necessory
 			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 				create out_thread.make (Current)
@@ -257,102 +325,10 @@ feature {NONE}  -- Implementation
 				end
 			end
 					-- Start a timer for process status acquiring.
-			if timer /= Void then
-				timer.start
-			else
-				create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval // 1000)
-				timer.set_process_launcher (Current)
-				timer.start
-			end
-		end
-
-	destroy_timer is
-			-- Destroy `timer' and (if necessary) wait for it to exit.
-		do
-			if timer /= Void then
-				timer.destroy
-				from
-
-				until
-					timer.destroyed
-				loop
-					sleep (initial_time_interval)
-				end
-			end
-		ensure
-			timer_destroyed: (timer /= Void) implies timer.destroyed
-		end
-
-	wait_for_all_finished is
-			-- Wait until `has_exited' is True.
-		do
-			from
-
-			until
-				has_exited
-			loop
-				clean_up
-				sleep (initial_time_interval)
-			end
-		ensure
-			all_process_related_operations_finished: has_exited
-		end
-
-	clean_up is
-			-- Clean up threads, timer, pipes if process has exited and we have read all its output and error.
-		do
-			if not all_finished and then
-			   listening_threads_terminated and then
-			   has_process_terminated
-			then
-				if timer /= Void then
-					timer.destroy
-				end
-				child_process.close_pipes
-				set_internal_all_finished (True)
-				if force_terminated then
-					on_terminate
-				else
-					on_exit
-				end
-			end
+			timer.start
 		end
 
 feature{NONE} -- Initialization
-
-	setup_defaults is
-			-- Setup defaults.
-		do
-			create mutex.default_create
-			out_thread := Void
-			err_thread := Void
-			hidden := False
-			separate_console := False
-			last_error := Void
-			last_output := Void
-			buffer_size := initial_buffer_size
-
-			cancel_input_redirection
-			cancel_output_redirection
-			cancel_error_redirection
-
-			set_internal_process_terminated (True)
-			set_internal_all_finished (True)
-
-			last_operation_successful := True
-			launched := False
-		ensure
-			out_thread_set: out_thread = Void
-			err_thread_set: err_thread = Void
-			hidden_set: hidden = False
-			separate_console_set: not separate_console
-			last_error_set: last_error = Void
-			last_output_set: last_output = Void
-			buffer_size_set: buffer_size = initial_buffer_size
-			input_redirection_set: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_redirection_set: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_redirection_set: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-		end
 
 	setup_command (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
 			-- Setup command line.
@@ -362,11 +338,7 @@ feature{NONE} -- Initialization
 		do
 			create command_line.make_from_string (a_exec_name)
 			create executable.make_from_string (a_exec_name)
-			if a_working_directory = Void then
-				working_directory := Void
-			else
-				create working_directory.make_from_string (a_working_directory)
-			end
+			initialize_working_directory (a_working_directory)
 
 			if args /= Void then
 				create arguments.make
@@ -386,9 +358,6 @@ feature{NONE} -- Initialization
 			command_line_not_empty: not command_line.is_empty
 			executable_not_void: executable /= Void
 			executable_not_empty: not executable.is_empty
-			working_directory_set:
-					((a_working_directory /= Void) implies working_directory.is_equal (a_working_directory)) and
-					((a_working_directory = Void) implies working_directory = Void)
 			arguments_set:
 					(args /= Void implies (arguments /= Void and then arguments.count = args.count)) and
 					(args = Void implies arguments = Void)
@@ -409,30 +378,25 @@ feature {NONE} -- Implementation
 	executable: STRING
 			-- Program which will be launched
 
+	in_thread: PROCESS_INPUT_LISTENER_THREAD
 	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
 	err_thread: PROCESS_ERROR_LISTENER_THREAD
 			-- Threads to listen to output and error from process
 
-	Initial_buffer_size: INTEGER is 1024
-			-- Initial size of buffer used to store interprocess data temporarily
-
-	initial_time_interval: INTEGER is 10000
-			-- Initial time interval in nanoseconds used to check process status
-
-	mutex: MUTEX
-			-- Internal mutex
+	input_mutex: MUTEX
+		-- Mutex used to synchorinze listening threads		
 
 	child_process: PROCESS_UNIX_PROCESS_MANAGER
+			-- Child process manager
 
-	internal_process_terminated: BOOLEAN
-			-- Launched process termination indicator
+	has_cleaned_up: BOOLEAN
+			-- Has cleanup performed after launched process exited?
 
-	internal_all_finished: BOOLEAN
-			-- Internal indicator to show if launched process has exited and also its listeners have exited.
+	internal_id: INTEGER
+			-- Internal process id
 
 invariant
 	child_process_not_void: child_process /= Void
-	mutex_not_void: mutex /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

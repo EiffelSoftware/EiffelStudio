@@ -24,60 +24,96 @@ feature {NONE} -- Implementation
 		require
 			interval_positive: interval > 0
 		do
-			time_interval := interval.to_integer_64 * 1000000
+			sleep_time := interval
 			create mutex
 			has_started := False
 		ensure
-			time_interval_set: time_interval = interval.to_integer_64 * 1000000
+			sleep_time_set: sleep_time = interval
 			destroyed_set: destroyed = True
 		end
 
 feature -- Control
 
-	destroy is
-		do
-			should_destroy := True
-		end
-
 	start is
 		do
+			mutex.lock
+			should_destroy := False
+			terminated := False
 			launch
 			has_started := True
-			should_destroy := False
+			mutex.unlock
+		end
+
+	destroy is
+		do
+			mutex.lock
+			should_destroy := True
+			mutex.unlock
+		end
+
+	wait (a_timeout: INTEGER): BOOLEAN is
+		local
+			l_sleep_time: INTEGER_64
+			prc_imp: PROCESS_IMP
+			l_timeout: BOOLEAN
+			l_start_time: DATE_TIME
+			l_now_time: DATE_TIME
+		do
+			if not destroyed then
+				prc_imp ?= process_launcher
+				check prc_imp /= Void end
+				if a_timeout > 0 then
+					create l_start_time.make_now
+				end
+				from
+					l_sleep_time := sleep_time * 1000000
+				until
+					destroyed or l_timeout
+				loop
+					if a_timeout > 0 then
+						create l_now_time.make_now
+						if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
+							l_timeout := True
+						end
+					end
+					if not l_timeout then
+						sleep (l_sleep_time)
+					end
+				end
+				Result := not l_timeout
+			else
+				Result := True
+			end
 		end
 
 	destroyed: BOOLEAN is
-			--
 		do
 			mutex.lock
 			Result := (not has_started) or (has_started and then terminated)
 			mutex.unlock
 		end
 
-
 feature {NONE} -- Implementation
 
 	execute is
 		local
 			prc_imp: PROCESS_IMP
+			l_sleep_time: INTEGER_64
 		do
 			prc_imp ?= process_launcher
 			from
-
+				l_sleep_time := sleep_time.to_integer_64 * 1000000
 			until
 				should_destroy
 			loop
 				prc_imp.check_exit
 				if not should_destroy then
-					sleep (time_interval)
+					sleep (l_sleep_time)
 				end
 			end
 		end
 
 feature{NONE} -- Implementation
-
-	has_started: BOOLEAN
-			-- Has this timer started yet?
 
 	should_destroy: BOOLEAN
 			-- Should this timer be destroyed?

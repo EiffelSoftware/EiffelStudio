@@ -96,12 +96,13 @@ feature -- Process operations
 	new_process_group is
 			-- Let the current process become a process group leader.
 		external
-			"C inline use <sys/types.h>, <unistd.h>"
+			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
 		alias
 			"[
 				{
 					int rlt;
 					rlt = setpgid (0, 0);
+					tcsetpgrp (0, getpid());
 				}
 			]"
 		end

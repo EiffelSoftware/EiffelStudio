@@ -5,7 +5,7 @@ indexing
 
 			It is used when you redirect output of a process to an agent.
 			It listens to process's output pipe, if data arrives,
-			it will call the agent specified in output_handler in PROCESS.
+			it will call the agent specified in `output_handler' in PROCESS.
 		 ]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,24 +40,23 @@ feature {NONE} -- Initialization
 feature -- Run
 
 	execute is
-			--
 		local
-			str: STRING
 			done: BOOLEAN
+			l_sleep_time: INTEGER_64
 		do
 			from
-				create str.make (process_launcher.buffer_size)
 				done := False
+				l_sleep_time := sleep_time.to_integer_64 * 1000000
 			until
 				done
 			loop
 				process_launcher.read_output_stream
-				str := process_launcher.last_output
-				if str /= Void and then not str.is_empty then
-					process_launcher.output_handler.call ([str])
-				end
-				if str = Void then
-					done := True
+				if process_launcher.last_output_bytes = 0 then
+					if should_thread_exit then
+						done := True
+					else
+						sleep (l_sleep_time)
+					end
 				end
 			end
 		end

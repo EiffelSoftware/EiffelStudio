@@ -1,10 +1,16 @@
 indexing
 	description: "[
 		Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
-		note: This library is not thread safe.
+		Instance of this class is not guaranteed to be thread safe.
+		Usage:
+			1. Use `PROCESS_FACTORY' to get new PROCESS object.
+			2. Invoke IO redirection features to redirect io to certain devices. By default,
+			   IO of launched process is not redirected.
+			3. Invoke `launch' to launch process.
+			4. You can use `has_exited' to check the status of launched process or use `wait_for_exit'/`wait_for_exit_with_timeout'
+			   to wait for launched process.
+		Note: Make sure that launched process has exited before you exit you application.
 		]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,13 +32,7 @@ feature {NONE} -- Initialization
 			comand_line_not_empty: not command_line.is_empty
 			working_directory_set: (a_working_directory /= Void) implies (working_directory.is_equal (a_working_directory)) and
 								   (a_working_directory = Void) implies (working_directory = Void)
-			process_not_launched: not launched
-			process_not_terminated: not force_terminated
-			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			separate_console_on_windows: platform.is_windows implies not separate_console
-			buffer_size_positive: buffer_size > 0
-			operation_succcessful: last_operation_successful
-			init_succeeded: initialization_successful
+			init_succeeded: parameter_initialized
 		end
 
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
@@ -48,13 +48,7 @@ feature {NONE} -- Initialization
 			comand_line_not_empty: not command_line.is_empty
 			working_directory_set: (a_working_directory /= Void) implies (working_directory.is_equal (a_working_directory)) and
 								   (a_working_directory = Void) implies (working_directory = Void)
-			process_not_launched: not launched
-			process_not_terminated: not force_terminated
-			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			separate_console_on_windows: platform.is_windows implies not separate_console
-			buffer_size_positive: buffer_size > 0
-			operation_succcessful: last_operation_successful
-			init_succeeded: initialization_successful
+			init_succeeded: parameter_initialized
 		end
 
 feature -- IO redirection
@@ -200,9 +194,11 @@ feature -- IO redirection
 			not_on_dotnet_platform: not platform.is_dotnet
 			process_not_running: not is_running
 		do
-			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
-			error_file_name := Void
-			error_handler := Void
+			if not platform.is_dotnet then
+				error_direction := {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
+				error_file_name := Void
+				error_handler := Void
+			end
 		ensure
 			error_redirected_to_same_as_output:
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
@@ -239,16 +235,20 @@ feature -- Control
 
 	terminate is
 			-- Terminate launched process.
+			-- Check `last_termination_successful' after to see if `terminate' succeeded.
+			-- `terminate' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
+			-- to wait for process to exit.
 		require
 			process_launched: launched
 			process_not_terminated: not force_terminated
 		deferred
-		ensure
-			process_exited: has_exited
 		end
 
 	terminate_tree is
 			-- Terminate process tree starting from current launched process.
+			-- Check `last_termination_successful' after to see if `terminate_tree' succeeded.
+			-- `terminate_tree' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
+			-- to wait for process to exit.
 		require
 			process_launched: launched
 			process_not_terminated: not force_terminated
@@ -257,11 +257,23 @@ feature -- Control
 
 	wait_for_exit is
 			-- Wait until process has exited.
+			-- Note: child processes of launched process are not guaranteed to have exited after `wait_for_exit' returns.
 		require
 			process_launched: launched
 		deferred
 		ensure
 			process_exited: has_exited
+		end
+
+	wait_for_exit_with_timeout (a_timeout: INTEGER) is
+			-- Wait launched process to exit for at most `a_timeout' milliseconds.
+			-- Check `has_exited' after to see if launched process has exited.
+			-- Note: child processes of launched process are not guaranteed to have exited even `wait_for_exit_with_timeout' returns
+			-- with True.
+		require
+			process_launched: launched
+			a_timeout_positive: a_timeout > 0
+		deferred
 		end
 
 feature -- Interprocess data transmission
@@ -308,7 +320,6 @@ feature -- Status setting
 			-- Has effects on Windows.
 		require
 			process_not_running: not is_running
-			on_windows: platform.is_windows
 		do
 			hidden := h
 		ensure
@@ -320,13 +331,21 @@ feature -- Status setting
 			-- Has effects on Windows.
 		require
 			process_not_running: not is_running
-			on_windows: platform.is_windows
 		do
 			separate_console := b
 		ensure
 			separate_console_set: separate_console = b
 		end
 
+	set_abort_termination_when_failed (b: BOOLEAN) is
+			-- Set `abort_termination_when_failed' with `b'.
+		require
+			process_not_running: not is_running
+		do
+			abort_termination_when_failed := b
+		ensure
+			abort_termination_when_failed_set: abort_termination_when_failed = b
+		end
 
 feature -- Actions setting
 
@@ -417,7 +436,6 @@ feature {NONE} -- Actions
 			if on_fail_launch_handler /= Void then
 				on_fail_launch_handler.call ([])
 			end
-
 		end
 
 	on_launch_successed is
@@ -430,8 +448,12 @@ feature {NONE} -- Actions
 
 feature -- Status report
 
-	id: INTEGER
+	id: INTEGER is
 			-- Process identifier of last launched process.
+		require
+			process_launched: launched
+		deferred
+		end
 
 	launched: BOOLEAN
 			-- Has the process been launched?
@@ -443,7 +465,10 @@ feature -- Status report
 		end
 
 	has_exited: BOOLEAN is
-			-- Has the process finished?
+			-- Has launched process exited?
+			-- Important: When default timer which is a thread is used, and you register either terminate or exit agents,
+			-- `has_exited' is True doesn't mean those agents have finished. Use `wait_for_exit' to ensure that all registered
+			-- agents are finished.
 		require
 			process_launched: launched
 		deferred
@@ -453,12 +478,19 @@ feature -- Status report
 			-- Exit code of child process
 		require
 			process_launched: launched
-			process_has_exited: has_exited
 		deferred
 		end
 
+	abort_termination_when_failed: BOOLEAN
+			-- Will termination be aborted when there is a child process which can not be terminated
+			-- when `terminate_tree'?
+			-- Have effect only on Windows.
+
 	force_terminated: BOOLEAN
 			-- Has process been terminated by user?
+
+	last_termination_successful: BOOLEAN
+			-- Is last process termination operation successful?
 
 	platform: PLATFORM is
 			-- Facility to tell us which `platform' we are on
@@ -469,7 +501,7 @@ feature -- Status report
 		end
 
 	buffer_size: INTEGER
-			-- Size of buffer used to store data read from process
+			-- Size of buffer used for interprocess data transmission
 
 	hidden: BOOLEAN
 			-- Will the process be launched silently?
@@ -509,9 +541,6 @@ feature -- Status report
 	error_file_name: STRING
 			-- File name served as the redirected error stream of the new process
 
-	last_operation_successful: BOOLEAN
-			-- Is last operation successful?
-
 	input_direction: INTEGER
 			-- Where will input stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
@@ -525,6 +554,7 @@ feature -- Status report
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
 feature -- Validation checking
+
 	is_input_redirection_valid (a_input_direction: INTEGER): BOOLEAN is
 			-- Can input of process be redirected to `a_input_direction'?
 		do
@@ -584,33 +614,65 @@ feature {NONE} -- Implementation
 	timer: PROCESS_TIMER
 			-- Timer used to check process termination so that some cleanups are done
 
-	initialization_successful: BOOLEAN is
-			-- Is initialization successful?
+	initialize_working_directory (a_working_directory: STRING) is
+			-- Setup `working_directory' according to `a_working_directory'.
+		do
+			if a_working_directory /= Void then
+				create working_directory.make_from_string (a_working_directory)
+			else
+				working_directory := Void
+			end
+		end
+
+	initial_buffer_size: INTEGER is 1024
+			-- Initial size of buffer used to store interprocess data temporarily
+
+	initial_time_interval: INTEGER is 100
+			-- Initial time interval in milliseconds used to check process status	
+
+feature{NONE} -- Implementation
+
+	initialize_parameter is
+			-- Initialize parameters.
+		do
+			cancel_input_redirection
+			cancel_output_redirection
+			cancel_error_redirection
+			output_handler := Void
+			error_handler := Void
+			hidden := False
+			separate_console := False
+			buffer_size := initial_buffer_size
+			create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval)
+			timer.set_process_launcher (Current)
+			abort_termination_when_failed := False
+			launched := False
+			force_terminated := False
+			last_termination_successful := True
+		ensure
+			initialized: parameter_initialized
+		end
+
+	parameter_initialized: BOOLEAN is
+			-- Are parameters initialized successfully?
 		do
 			Result :=
 			    (input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
-				(output_handler = Void) and
-				(error_handler = Void) and
 				(input_file_name.is_equal ("")) and
 				(output_file_name.is_equal ("")) and
 				(error_file_name.is_equal ("")) and
-				(timer = Void)
+				(output_handler = Void) and
+				(error_handler = Void) and
+				(not hidden) and
+				(not separate_console) and
+				(buffer_size = initial_buffer_size) and
+				(timer /= Void) and
+				(not abort_termination_when_failed) and
+				(not launched) and
+				(not force_terminated) and
+				(last_termination_successful)
 		end
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
 
 end

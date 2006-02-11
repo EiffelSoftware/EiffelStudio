@@ -220,7 +220,6 @@ feature -- Control
 					prc.set_hidden (False)
 					prc.set_separate_console (True)
 				end
-
 			end
 
 			if is_gui then
@@ -229,7 +228,7 @@ feature -- Control
 				pt := create {PROCESS_THREAD_TIMER}.make (time_interval)
 			end
 			prc.set_timer (pt)
-
+			prc.set_abort_termination_when_failed (False)
 			prc.set_on_start_handler (on_start_handler)
 			prc.set_on_exit_handler (on_exit_handler)
 			prc.set_on_terminate_handler (on_terminate_handler)
@@ -270,17 +269,18 @@ feature -- Control
 			if prc.launched and not prc.has_exited then
 				prc.put_string (s)
 			end
-
 		end
 
 	terminate is
-			-- Terminate child process.
+			-- Terminate C compilation.
 		do
 			if is_running then
 				prc.terminate_tree
+				check
+					prc.last_termination_successful
+				end
+				prc.wait_for_exit
 			end
-		ensure
-			process_terminated: launched implies has_exited
 		end
 
 feature -- Unmanaged process launch
@@ -385,16 +385,6 @@ feature -- Status reporting
 			Result := launched and then (not has_exited)
 		end
 
-	last_operation_successful: BOOLEAN is
-			-- Is last operation successful?
-		do
-			if prc /= Void then
-				Result := prc.last_operation_successful
-			else
-				Result := True
-			end
-		end
-
 	force_terminated: BOOLEAN is
 			-- Is child process terminated by user?
 		do
@@ -447,6 +437,9 @@ feature {NONE} -- Implementation
 	initial_time_interval: INTEGER is 100
 	initial_buffer_size: INTEGER is 128
 
+	child_termination_timeout: INTEGER is 5000
+			-- Time in milliseconds to wait when terminating child process
+
 invariant
 	data_storage_not_void: data_storage /= Void
 
@@ -456,19 +449,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

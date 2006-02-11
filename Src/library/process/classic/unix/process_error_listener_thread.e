@@ -5,7 +5,7 @@ indexing
 
 			It is used when you redirect error of a process to an agent.
 			It listens to process's error pipe, if data arrives,
-			it will call the agent specified in error_handler in PROCESS.
+			it will call the agent specified in `error_handler' in PROCESS.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,22 +41,22 @@ feature -- Run
 
 	execute is
 		local
-			str: STRING
 			done: BOOLEAN
+			l_sleep_time: INTEGER_64
 		do
 			from
-				create str.make (process_launcher.buffer_size)
 				done := False
+				l_sleep_time := sleep_time.to_integer_64 * 1000000
 			until
 				done
 			loop
 				process_launcher.read_error_stream
-				str := process_launcher.last_error
-				if str /= Void and then not str.is_empty then
-					process_launcher.error_handler.call ([str])
-				end
-				if str = Void then
-					done := True
+				if process_launcher.last_error_bytes = 0 and should_thread_exit then
+					if should_thread_exit then
+						done := True
+					else
+						sleep (l_sleep_time)
+					end
 				end
 			end
 		end

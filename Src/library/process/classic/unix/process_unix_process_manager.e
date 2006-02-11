@@ -182,8 +182,8 @@ feature -- Execution
 			end
 			process_id := fork_process
 			if process_id = 0 then
-				new_process_group
 				collection_off
+				new_process_group
 				setup_child_process_files
 				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files)
 			else
@@ -207,7 +207,7 @@ feature -- Execution
 			-- Wait for any process specified by process
 			-- id `pid' to return status.
 			-- Block if `is_block' is True.
-			-- Set `status_available' with True if process status is available and
+			-- Set `status_available' to True if process status is available and
 			-- if so, set `status' with reported process status.
 		do
 			unix_waitpid (pid, is_block, $status_available, $status)
@@ -483,7 +483,6 @@ feature {NONE} -- Implementation
 			then
 				move_desc (in_file.descriptor, stdin_descriptor)
 			end
-
 			if output_piped then
 				move_desc (shared_output_unnamed_pipe.write_descriptor, stdout_descriptor)
 				shared_output_unnamed_pipe.close_read_descriptor

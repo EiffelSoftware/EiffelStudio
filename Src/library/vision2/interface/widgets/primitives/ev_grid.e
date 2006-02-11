@@ -920,6 +920,26 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	focused_selection_text_color: EV_COLOR is
+			-- Color used to for text of selected items while focused.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.focused_selection_text_color
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	non_focused_selection_text_color: EV_COLOR is
+			-- Color used for text of selected items while not focused.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.non_focused_selection_text_color
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN is
 			-- Is complete client area invalidated as a result of virtual position changing?
 			-- Note that enabling this causes a large performance penalty in redrawing during
@@ -1630,6 +1650,28 @@ feature -- Status setting
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
 
+	set_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `focused_selection_text_color'.
+		require
+			not_is_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+		do
+			implementation.set_focused_selection_text_color (a_color)
+		ensure
+			focused_selection_text_color_set: focused_selection_text_color = a_color
+		end
+
+	set_non_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `non_focused_selection_text_color'.
+		require
+			not_is_destroyed: not is_destroyed
+			a_color_not_void: a_color /= Void
+		do
+			implementation.set_non_focused_selection_text_color (a_color)
+		ensure
+			non_focused_selection_text_color_set: non_focused_selection_text_color = a_color
+		end
+
 	redraw is
 			-- Force `Current' to be re-drawn when next idle.
 		require
@@ -1905,14 +1947,15 @@ feature -- Status report
 			tree_not_enabled_implies_visible_rows_contiguous: row_count > 0 and then not is_tree_enabled implies Result.last - Result.first = Result.count - 1
 		end
 
-	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+	viewable_row_indexes_in_tree_structure: ARRAYED_LIST [INTEGER] is
 			-- Indexes of all rows that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
 		require
 			not_destroyed: not is_destroyed
+			is_tree_enabled: is_tree_enabled
 		do
-			Result := implementation.viewable_row_indexes
+			Result := implementation.viewable_row_indexes_in_tree_structure
 		ensure
 			result_not_void: Result /= Void
 		end

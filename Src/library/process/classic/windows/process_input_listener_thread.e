@@ -1,17 +1,15 @@
 indexing
-	description:
-		"[
-			Object defining a listener for error data from another process.
+	description: "[
+					Object defining a listener for sending data into launched process.
+					It is used when you redirect input to stream.
+		 		]"
 
-			It is used when you redirect error of a process to an agent.
-			It listens to process's error pipe, if data arrives,
-			it will call the agent specified in `error_handler' in PROCESS.
-		]"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PROCESS_ERROR_LISTENER_THREAD
+	PROCESS_INPUT_LISTENER_THREAD
 
 inherit
 	PROCESS_IO_LISTENER_THREAD
@@ -35,7 +33,7 @@ feature {NONE} -- Initialization
 			sleep_time_set: sleep_time = initial_sleep_time
 		end
 
-feature -- Run	
+feature -- Run
 
 	execute is
 		local
@@ -48,14 +46,13 @@ feature -- Run
 			until
 				done
 			loop
-				process_launcher.read_error_stream
-				if process_launcher.last_error_bytes = 0 then
-					if should_thread_exit then
-						done := True
-					else
-						sleep (l_sleep_time)
-					end
+				process_launcher.write_input_stream
+				if should_exit_signal then
+					done := True
+				elseif process_launcher.last_input_bytes = 0 then
+					sleep (l_sleep_time)
 				end
 			end
 		end
+
 end

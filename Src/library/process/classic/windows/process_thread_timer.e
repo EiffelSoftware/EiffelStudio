@@ -1,7 +1,5 @@
 indexing
 	description: "Process status listening timer implemented with thread."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,71 +11,99 @@ inherit
 
 	THREAD
 
+	WEL_PROCESS_LAUNCHER
+		rename
+			launch as process_launch
+		end
+
 create
 	make
 
 feature {NONE} -- Implementation
 
-	make (interval: INTEGER) is
-			-- Set time interval which this timer will be triggered with `interval'.
-			-- Unit of `interval' is milliseconds.
+	make (a_sleep_time: INTEGER) is
+			-- Set time interval which this timer will be triggered with `a_sleep_time'.
+			-- Unit of `a_sleep_time' is milliseconds.
 		require
-			interval_positive: interval > 0
+			interval_positive: a_sleep_time > 0
 		do
-			time_interval := interval.to_integer_64 * 1000000
+			sleep_time := a_sleep_time
 			create mutex
 			has_started := False
 		ensure
-			time_interval_set: time_interval = interval.to_integer_64 * 1000000
+			slee_time_set: sleep_time = a_sleep_time
 			destroyed_set: destroyed = True
 		end
 
 feature -- Control
 
-	destroy is
-		do
-			should_destroy := True
-		end
-
 	start is
 		do
+			mutex.lock
+			should_destroy := False
+			terminated := False
 			launch
 			has_started := True
-			should_destroy := False
+			mutex.unlock
+		end
+
+	destroy is
+		do
+			mutex.lock
+			should_destroy := True
+			mutex.unlock
+		end
+
+	wait (a_timeout: INTEGER): BOOLEAN is
+		local
+			l_timeout: INTEGER
+		do
+			if a_timeout = 0 then
+				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), cwin_infinite)
+			else
+				l_timeout := cwin_wait_for_single_object (handle_from_thread_id (thread_id), a_timeout)
+			end
+			Result := l_timeout = cwin_wait_object_0
 		end
 
 	destroyed: BOOLEAN is
-			--
 		do
 			mutex.lock
 			Result := (not has_started) or (has_started and then terminated)
 			mutex.unlock
 		end
 
-
 feature {NONE} -- Implementation
 
 	execute is
 		local
 			prc_imp: PROCESS_IMP
+			l_sleep_time: INTEGER_64
 		do
 			prc_imp ?= process_launcher
 			from
-
+				l_sleep_time := sleep_time.to_integer_64 * 1000000
 			until
 				should_destroy
 			loop
 				prc_imp.check_exit
 				if not should_destroy then
-					sleep (time_interval)
+					sleep (l_sleep_time)
 				end
 			end
 		end
 
-feature{NONE} -- Implementation
+	handle_from_thread_id (a_thread_id: POINTER): POINTER is
+			-- Thread handle from `a_thread_id'.
+		require
+			a_thread_id_not_void: a_thread_id /= default_pointer
+		external
+			"C inline"
+		alias
+			"*(EIF_THR_TYPE *) $a_thread_id"
+		end
 
-	has_started: BOOLEAN
-			-- Has this timer started yet?
+feature{NONE} -- Implementation
 
 	should_destroy: BOOLEAN
 			-- Should this timer be destroyed?
@@ -88,19 +114,5 @@ feature{NONE} -- Implementation
 invariant
 
 	mutex_not_void: mutex /= Void
-
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
 
 end

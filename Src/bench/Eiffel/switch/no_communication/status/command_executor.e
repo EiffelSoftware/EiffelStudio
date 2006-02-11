@@ -65,13 +65,8 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			Execution_environment.change_working_directory (cwd)
 		end
 
-	terminate_freezing is
-			-- Terminate running freezing, if any.
-		do
-		end
-
-	terminate_finalizing is
-			-- Terminate running finalizing, if any.
+	terminate_c_compilation is
+			-- Terminate running c compilation, if any.
 		do
 		end
 

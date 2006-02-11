@@ -88,11 +88,15 @@ feature -- Printing
 				data_block := freezing_storage.all_blocks (True)
 				gm.process_block_text (data_block)
 				gm.scroll_to_end
-				if data_block.is_end then
-					is_printing_freezing := False
-					remove_printer (freezing_printer)
-				else
+				if process_manager.is_freezing_running then
 					is_printing_freezing := True
+				else
+					if data_block.count = 0 then
+						is_printing_freezing := False
+						remove_printer (freezing_printer)
+					else
+						is_printing_freezing := True
+					end
 				end
 			end
 		end
@@ -108,11 +112,15 @@ feature -- Printing
 				data_block := finalizing_storage.all_blocks (True)
 				gm.process_block_text (data_block)
 				gm.scroll_to_end
-				if data_block.is_end then
-					is_printing_finalizing := False
-					remove_printer (finalizing_printer)
-				else
+				if process_manager.is_finalizing_running then
 					is_printing_finalizing := True
+				else
+					if data_block.count = 0 then
+						is_printing_finalizing := False
+						remove_printer (finalizing_printer)
+					else
+						is_printing_finalizing := True
+					end
 				end
 			end
 		end
@@ -154,19 +162,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

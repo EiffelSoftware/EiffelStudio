@@ -43,25 +43,57 @@ feature{NONE} -- Generation path
 			Result := workbench_generation_path
 		end
 
+feature -- Message
+
+	c_compilation_launched_msg: STRING is
+			-- Message to indicate c compilation launched successfully
+		do
+			Result := interface_names.e_freezing_launched
+		end
+
+	c_compilation_launch_failed_msg: STRING is
+			-- Message to indicate c compilation launch failed
+		do
+			Result := interface_names.e_freezing_launch_failed
+		end
+
+	c_compilation_succeeded_msg: STRING is
+			-- Message to indicate c compilation exited successfully
+		do
+			Result := interface_names.e_freezing_succeeded
+		end
+
+	c_compilation_failed_msg: STRING is
+			-- Message to indicate c compilation failed
+		do
+			Result := interface_names.e_freezing_failed
+		end
+
+	c_compilation_terminated_msg: STRING is
+			-- Message to indicate c compilation has been terminated
+		do
+			Result := interface_names.e_freezing_terminated
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

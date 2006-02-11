@@ -14,7 +14,7 @@ create
 
 feature{NONE}  -- Initialization
 	make is
-			--
+			-- Initialize.
 		do
 			create data_list.make
 			create mutex
@@ -28,7 +28,7 @@ feature{NONE}  -- Initialization
 feature	-- Basic operations
 
 	extend_block (i: EB_PROCESS_IO_DATA_BLOCK) is
-			--
+			-- Extend `i' into current storage.
 		require
 			i_not_null: i /= Void
 		local
@@ -57,7 +57,8 @@ feature	-- Basic operations
 		end
 
 	first_block (block_to_be_removed: BOOLEAN): EB_PROCESS_IO_DATA_BLOCK is
-			--
+			-- First block in current storage.
+			-- If `block_to_be_removed' is True, returned block will be removed from current storage.
 		local
 			blk: EB_PROCESS_IO_DATA_BLOCK
 		do
@@ -78,7 +79,8 @@ feature	-- Basic operations
 		end
 
 	all_blocks (block_to_be_removed: BOOLEAN) : EB_PROCESS_IO_DATA_BLOCK is
-			--
+			-- All blocks from current storage.
+			-- If `block_to_be_removed' is True, returned blocks will be removed from current storage.
 		local
 			is_end: BOOLEAN
 			done: BOOLEAN
@@ -86,7 +88,7 @@ feature	-- Basic operations
 		do
 			mutex.lock
 			if count = 0 then
-				create s.make (1)
+				create s.make (0)
 			else
 				create s.make (count)
 			end
@@ -129,7 +131,7 @@ feature	-- Basic operations
 
 
 	wipe_out is
-			--
+			-- Wipe out current storage.
 		do
 			mutex.lock
 			data_list.wipe_out
@@ -160,7 +162,7 @@ feature -- Status setting
 		end
 
 	set_capacity (cap: INTEGER) is
-			--
+			-- Set `capacity' with `cap'.
 		require
 			cap_positive: cap > 0
 		do
@@ -182,11 +184,13 @@ feature -- Status reporting
 			-- time output_byte_count is reset to zero.	
 
 	capacity: INTEGER
+			-- Capacity of current storage.
 
 	count: INTEGER
+			-- Number in bytes of data in current storage.
 
 	has_new_block: BOOLEAN is
-			--
+			-- Is there any data block in current storage?
 		do
 			mutex.lock
 			Result := (data_list.count > 0)
@@ -199,33 +203,36 @@ feature{NONE} -- Implementation
 			-- Linked list where output and error data from process is stored.
 
 	mutex: MUTEX
+			-- Internal mutex
 
 	initial_capacity: INTEGER is 1048576
+			-- Initial capacity
 
 
 invariant
 	data_list_not_null: data_list /= Void
 	mutex_not_null: mutex /= Void
 	count_not_larger_than_capacity: count <= capacity
+	
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

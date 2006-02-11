@@ -99,9 +99,11 @@ feature{NONE}  -- Actions
 			if preferences.development_window_data.c_output_panel_prompted then
 				c_compilation_output_manager.force_display
 			end
-			state_message_timer.set_interval (initial_time_interval)
-			display_message_on_main_output (interface_names.e_C_compilication_launched, True)
-			window_manager.for_all_development_windows (agent start_pixmap_animation_timer (?))
+			if state_message_timer.interval = 0 then
+				state_message_timer.set_interval (initial_time_interval)
+				window_manager.for_all_development_windows (agent start_pixmap_animation_timer (?))
+			end
+			display_message_on_main_output (c_compilation_launched_msg, True)
 		end
 
 	synchronize_on_c_compilation_exit is
@@ -110,8 +112,10 @@ feature{NONE}  -- Actions
 			eb_debugger_manager.on_compile_stop
 			window_manager.on_c_compilation_stop
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
-			state_message_timer.set_interval (0)
-			window_manager.for_all_development_windows (agent stop_pixmap_animation_timer (?))
+			if not process_manager.is_c_compilation_running then
+				state_message_timer.set_interval (0)
+				window_manager.for_all_development_windows (agent stop_pixmap_animation_timer (?))
+			end
 		end
 
 	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
@@ -139,11 +143,11 @@ feature{NONE}  -- Actions
 			if launched then
 				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
-					display_message_on_main_output (Interface_names.e_c_compilation_failed, True)
+					display_message_on_main_output (c_compilation_failed_msg, True)
 					show_compilation_error_dialog
 				else
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
-					display_message_on_main_output (Interface_names.e_c_compilation_succeeded, True)
+					display_message_on_main_output (c_compilation_succeeded_msg, True)
 				end
 			end
 		end
@@ -158,7 +162,7 @@ feature{NONE}  -- Actions
 		do
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
-			display_message_on_main_output (Interface_names.e_C_compilation_launch_failed, True)
+			display_message_on_main_output (c_compilation_launch_failed_msg, True)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
 		end
 
@@ -168,10 +172,35 @@ feature{NONE}  -- Actions
 			data_storage.wipe_out
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_c_compilation_terminated)
-			display_message_on_main_output (Interface_names.e_C_compilation_terminated, True)
+			display_message_on_main_output (c_compilation_terminated_msg, True)
 		end
 
 feature{NONE} -- Implementation
+
+	c_compilation_launched_msg: STRING is
+			-- Message to indicate c compilation launched successfully
+		deferred
+		end
+
+	c_compilation_launch_failed_msg: STRING is
+			-- Message to indicate c compilation launch failed
+		deferred
+		end
+
+	c_compilation_succeeded_msg: STRING is
+			-- Message to indicate c compilation exited successfully
+		deferred
+		end
+
+	c_compilation_failed_msg: STRING is
+			-- Message to indicate c compilation failed
+		deferred
+		end
+
+	c_compilation_terminated_msg: STRING is
+			-- Message to indicate c compilation has been terminated
+		deferred
+		end
 
 	display_message_on_main_output (a_msg: STRING; a_suffix: BOOLEAN) is
 			-- Display `a_msg' on main output panel.
@@ -191,7 +220,6 @@ feature{NONE} -- Implementation
 			output_manager.process_text (l_str)
 			output_manager.scroll_to_end
 		end
-
 
 	open_console is
 			-- Open a command line console if c-compilation failed.
@@ -275,19 +303,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

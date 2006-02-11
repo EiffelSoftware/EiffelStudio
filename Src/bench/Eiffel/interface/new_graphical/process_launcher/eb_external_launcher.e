@@ -11,9 +11,6 @@ class
 
 inherit
 	EB_PROCESS_LAUNCHER
-		redefine
-			terminate
-		end
 
 	EB_SHARED_MANAGERS
 
@@ -31,7 +28,6 @@ feature{NONE} -- Initialization
 			set_buffer_size (initial_buffer_size)
 			set_time_interval (initial_time_interval)
 			set_output_handler (agent output_dispatch_handler (?))
---			set_error_handler (agent error_dispatch_handler (?))
 
 			set_on_start_handler (agent on_start)
 			set_on_exit_handler (agent on_exit)
@@ -42,21 +38,6 @@ feature{NONE} -- Initialization
 		ensure
 			buffer_size_set: buffer_size = initial_buffer_size
 			time_interval_set: time_interval = initial_time_interval
-		end
-
-feature -- Command termination
-
-	terminate is
-			-- Terminate child process.
-		do
-			if launched and then (not has_exited) then
-					-- If process is still running, terminate it.
-				prc.terminate_tree
-			else
-					-- If process has exited, but some of its output has not been printed,
-					-- discard this output.
-				on_terminate
-			end
 		end
 
 feature -- Status reporting
@@ -224,19 +205,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

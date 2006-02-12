@@ -32,8 +32,8 @@ feature -- TUPLE code
 	integer_32_tuple_code: INTEGER_8 is 0x08
 	integer_64_tuple_code: INTEGER_8 is 0x09
 	natural_8_tuple_code: INTEGER_8 is 0x0A
-	natural_32_tuple_code: INTEGER_8 is 0x0B
-	natural_16_tuple_code: INTEGER_8  is 0x0C
+	natural_16_tuple_code: INTEGER_8 is 0x0B
+	natural_32_tuple_code: INTEGER_8  is 0x0C
 	natural_64_tuple_code: INTEGER_8 is 0x0D
 	wide_character_tuple_code: INTEGER_8 is 0x0E;
 			-- Code used to identify type in TUPLE.

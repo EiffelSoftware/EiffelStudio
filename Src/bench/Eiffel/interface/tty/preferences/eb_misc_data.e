@@ -8,8 +8,8 @@ indexing
 
 class
 	EB_MISC_DATA
-	
-inherit	
+
+inherit
 	EIFFEL_ENV
 
 create
@@ -26,18 +26,18 @@ feature {EB_PREFERENCES} -- Initialization
 			initialize_preferences
 		ensure
 			preferences_not_void: preferences /= Void
-		end		
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
 	dotnet_debugger: STRING is ""
-	
+
 	use_postscript: BOOLEAN is False
 
 	use_external_editor: BOOLEAN is False
-	
+
 	print_shell_command: STRING is "lpr $target"
-		
+
 	dyn_lib_window_width: INTEGER is
 			-- Initial width for the dialog.
 		do
@@ -49,7 +49,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := dyn_lib_window_height_preference.value
 		end
-	
+
 	preference_window_width: INTEGER is
 			-- Initial width for the dialog.
 		do
@@ -61,7 +61,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := preference_window_height_preference.value
 		end
-	
+
 	acrobat_reader: STRING is
 		do
 			Result := acrobat_reader_preference.value
@@ -71,93 +71,93 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := text_mode_is_windows_preference.value
 		end
-	
+
 	general_shell_command: STRING is
 		do
 			Result := general_shell_command_preference.value
 		end
 
 	external_command_0: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (1).value
 		end
 
 	external_command_1: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (2).value
 		end
-		
+
 	external_command_2: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (3).value
 		end
-		
+
 	external_command_3: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (4).value
 		end
-		
+
 	external_command_4: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (5).value
 		end
-		
+
 	external_command_5: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (6).value
 		end
-		
+
 	external_command_6: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (7).value
 		end
-		
+
 	external_command_7: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (8).value
 		end
-		
+
 	external_command_8: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (9).value
 		end
-		
+
 	external_command_9: STRING is
-			-- 
+			--
 		do
 			Result := external_commands.item (10).value
 		end
 
 	i_th_external_preference_value (i: INTEGER): STRING is
-			-- 
+			--
 		do
 			Result := i_th_external_preference (i).value
 		end
 
 	i_th_external_preference_string (i: INTEGER): STRING is
-			-- 
+			--
 		do
 			Result := i_th_external_preference (i).name
 		end
 
-	editor_left_side: BOOLEAN is 
+	editor_left_side: BOOLEAN is
 		do
 			Result := editor_left_side_preference.value
-		end	
+		end
 
 	show_hidden_preferences: BOOLEAN is
 		do
-			Result := show_hidden_preferences_preference.value	
-		end		
+			Result := show_hidden_preferences_preference.value
+		end
 
 	default_displayed_string_size: INTEGER is
 			-- Default size of string to be retrieved from the application
@@ -166,6 +166,13 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := default_displayed_string_size_preference.value
 		end
+
+	console_shell_command: STRING is
+			--
+		do
+			Result := console_shell_command_preference.value
+		end
+
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -181,13 +188,13 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	external_command_9_preference: STRING_PREFERENCE
 
 	external_commands: ARRAY [STRING_PREFERENCE] is
-			-- 
+			--
 		once
 			create Result.make (0, 9)
-		end		
+		end
 
 	i_th_external_preference (i: INTEGER): STRING_PREFERENCE is
-			-- 
+			--
 		do
 			Result := external_commands.item (i)
 		end
@@ -196,13 +203,14 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
-	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
+	dyn_lib_window_width_preference: INTEGER_PREFERENCE
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
-	preference_window_width_preference: INTEGER_PREFERENCE	
-	preference_window_height_preference: INTEGER_PREFERENCE	
+	preference_window_width_preference: INTEGER_PREFERENCE
+	preference_window_height_preference: INTEGER_PREFERENCE
 	editor_left_side_preference: BOOLEAN_PREFERENCE
 	default_displayed_string_size_preference: INTEGER_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
+	console_shell_command_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -224,9 +232,10 @@ feature {NONE} -- Preference Strings
 	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
 	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
 	preference_window_width_string: STRING is "general.preference_window_width"
-	preference_window_height_string: STRING is "general.preference_window_height"	
+	preference_window_height_string: STRING is "general.preference_window_height"
 	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
 	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
+	console_shell_command_string: STRING is "general.console_shell_command"
 
 feature {NONE} -- Implementation
 
@@ -234,9 +243,9 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
-		do								
-			create l_manager.make (preferences, "misc")	
-			
+		do
+			create l_manager.make (preferences, "misc")
+
 			external_command_0_preference := l_manager.new_string_preference_value (l_manager, external_command_0_string, "")
 			external_commands.put (external_command_0_preference, 0)
 			external_command_1_preference := l_manager.new_string_preference_value (l_manager, external_command_1_string, "")
@@ -260,21 +269,22 @@ feature {NONE} -- Implementation
 
 			acrobat_reader_preference := l_manager.new_string_preference_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)									internet_browser_preference := l_manager.new_string_preference_value (l_manager, internet_browser_string, "netscape $url")
-			general_shell_command_preference := l_manager.new_string_preference_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")			
+			general_shell_command_preference := l_manager.new_string_preference_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			editor_left_side_preference := l_manager.new_boolean_preference_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_height_string, 200)
-			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)	
+			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
 			preference_window_height_preference := l_manager.new_integer_preference_value (l_manager, preference_window_height_string, 200)
-			preference_window_width_preference := l_manager.new_integer_preference_value (l_manager, preference_window_width_string, 400)				
+			preference_window_width_preference := l_manager.new_integer_preference_value (l_manager, preference_window_width_string, 400)
 			default_displayed_string_size_preference := l_manager.new_integer_preference_value (l_manager, default_displayed_string_size_string, 50)
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
+			console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
 		end
-	
+
 	preferences: PREFERENCES
 			-- Preferences
 
 invariant
-	preferences_not_void: preferences /= Void	
+	preferences_not_void: preferences /= Void
 	external_command_0_preference_not_void: external_command_0_preference /= Void
 	external_command_1_preference_not_void: external_command_1_preference /= Void
 	external_command_2_preference_not_void: external_command_2_preference /= Void
@@ -286,7 +296,7 @@ invariant
 	external_command_8_preference_not_void: external_command_8_preference /= Void
 	external_command_9_preference_not_void: external_command_9_preference /= Void
 	acrobat_reader_preference_not_void: acrobat_reader_preference /= Void
-	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void	
+	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void
 	general_shell_command_preference_not_void: general_shell_command_preference /= Void
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
@@ -294,6 +304,7 @@ invariant
 	preference_window_height_preference_not_void: preference_window_height_preference /= Void
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
 	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
+	console_shell_command_preference_not_void: console_shell_command_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -301,19 +312,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

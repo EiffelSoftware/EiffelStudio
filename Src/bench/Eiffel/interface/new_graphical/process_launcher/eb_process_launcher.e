@@ -23,6 +23,8 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
+	EB_SHARED_PREFERENCES
+
 feature -- Launching parameters setting
 
 	prepare_command_line (cmd: STRING; args: LIST [STRING]; a_working_directory: STRING) is
@@ -294,54 +296,23 @@ feature -- Unmanaged process launch
 			str: STRING
 			cl: STRING
 		do
-			cl := ""
+			create cl.make (50)
 			if platform_constants.is_windows then
 				cmdexe := Execution_environment.get ("COMSPEC")
 				if cmdexe /= Void then
 						-- This allows the use of `dir' etc.
 					cl.append (cmdexe)
 				else
-					cl.append ("cmd")
+					cl.append (preferences.misc_data.console_shell_command)
 				end
 			else
-				cl.prepend ("/bin/sh -c xterm")
+				cl.append (once "/bin/sh -c ")
+				cl.append (preferences.misc_data.console_shell_command)
 			end
 			str := execution_environment.current_working_directory
 			execution_environment.change_working_directory (dir)
 			execution_environment.launch (cl)
 			execution_environment.change_working_directory (str)
-		end
-
-	launch_prcocess (cmd: STRING; dir: STRING) is
-			-- Launch process `cmd' in directory `dir' without io redirection.
-		require
-			cmd_not_void: cmd /= Void
-			cmd_not_empty: not cmd.is_empty
-		local
-			l_dir: STRING
-			cmdexe: STRING
-			cl: STRING
-		do
-			if platform_constants.is_windows then
-				cmdexe := Execution_environment.get ("COMSPEC")
-				if cmdexe /= Void then
-						-- This allows the use of `dir' etc.
-					cl := cmdexe
-				else
-					cl := "cmd /c"
-				end
-			else
-				cl.prepend ("/bin/sh -c xterm")
-			end
-			cl.append_string (cmd)
-			if dir /= Void then
-				l_dir := execution_environment.current_working_directory
-				execution_environment.change_working_directory (dir)
-			end
-			execution_environment.launch (cl)
-			if l_dir /= Void then
-				execution_environment.change_working_directory (l_dir)
-			end
 		end
 
 feature -- Status reporting
@@ -424,6 +395,7 @@ feature {NONE} -- Implementation
 
 	prc: PROCESS
 			-- Process launcher implementation class
+
 	is_hidden: BOOLEAN
 			-- Should process be launched hidden?
 

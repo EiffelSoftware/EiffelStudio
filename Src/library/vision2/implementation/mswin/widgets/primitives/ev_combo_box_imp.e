@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision Combo-box. Implementation interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,12 +20,12 @@ inherit
 			interface,
 			initialize
 		end
-		
+
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		redefine
 			interface
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -71,7 +71,7 @@ inherit
 			destroy,
 			propagate_key_to_dialog
 		end
-		
+
 	WEL_DROP_DOWN_COMBO_BOX_EX
 		rename
 			make as wel_make,
@@ -154,7 +154,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
 		export
 			{NONE} all
@@ -197,7 +197,7 @@ feature -- Access
 			--| Windows sends messages to combo box's parent.
 			--| Therefore we use EV_INTERNAL_COMBO_BOX_IMP to propagate these
 			--| messages correctly.
-			
+
 feature -- Measurement
 
 	height: INTEGER is
@@ -263,7 +263,7 @@ feature -- Status report
 		local
 			wel_sel: POINTER
 			start_pos, end_pos: INTEGER
-				-- starting and ending character positions of the 
+				-- starting and ending character positions of the
 				-- current selection in the edit control
 		do
 			wel_sel := cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0))
@@ -298,14 +298,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
-		
+
 	set_focus is
 			-- Set the focus to `Current'
 		do
-			if is_editable then
-				Precursor {WEL_DROP_DOWN_COMBO_BOX_EX}
-			else
-				combo.set_focus
+			if not has_focus then
+				if is_editable then
+					Precursor {WEL_DROP_DOWN_COMBO_BOX_EX}
+				else
+					combo.set_focus
+				end
 			end
 		end
 
@@ -371,7 +373,7 @@ feature -- Basic operation
 			cwin_send_message (edit_item, Wm_clear, to_wparam (0), to_lparam (0))
 		end
 
-	cut_selection is 
+	cut_selection is
 			-- Cut the current selection to the clipboard.
 		do
 			cwin_send_message (edit_item, Wm_cut, to_wparam (0), to_lparam (0))
@@ -513,9 +515,9 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
    			list_height := wel_rect.bottom - wel_rect.top
    			Result := list_height // list_item_height
 		end
-		
+
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
-		
+
 	on_set_focus is
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
@@ -526,9 +528,9 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 				--| See window_process_message in EV_WINDOW_IMP.
 			if top_level_window_imp /= Void then
 				if is_editable then
-					top_level_window_imp.set_last_focused_widget (text_field.item)		
+					top_level_window_imp.set_last_focused_widget (text_field.item)
 				else
-					top_level_window_imp.set_last_focused_widget (combo.item)	
+					top_level_window_imp.set_last_focused_widget (combo.item)
 				end
 				top_level_titled_window ?= top_level_window_imp.interface
 				application_imp.set_window_with_focus (top_level_titled_window)
@@ -552,7 +554,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 				Precursor {EV_TEXT_COMPONENT_IMP}
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	propagate_key_to_dialog (is_pressed: BOOLEAN): BOOLEAN is
@@ -563,7 +565,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate 
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
 			pt: WEL_POINT
@@ -581,13 +583,13 @@ feature {NONE} -- Implementation
 
 	internal_propagate_pointer_double_press
 		(keys, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate 
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer double press.
 		do
 			--| Currently not implemented. This means that any items in the
 			--| combo box will not recieve double click events.
 		end
-			
+
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		do
@@ -622,14 +624,14 @@ feature {NONE} -- Implementation
 
 				-- We create the new combo.
 			internal_window_make (
-				par_imp, 
-				Void, 
+				par_imp,
+				Void,
 				default_style | creation_flag,
-				cur_x, 
-				cur_y, 
-				cur_width, 
-				cur_height, 
-				0, 
+				cur_x,
+				cur_y,
+				cur_width,
+				cur_height,
+				0,
 				default_pointer
 				)
  			id := 0
@@ -646,7 +648,7 @@ feature {NONE} -- Implementation
 				sensitive := is_sensitive
 				s_item := selected_item
 				recreate_combo_box (Cbs_dropdownlist)
-					
+
 					-- Remove the text field and create a combo.
 				text_field := Void
 				create combo.make_with_combo (Current)
@@ -672,7 +674,7 @@ feature {NONE} -- Implementation
 				sensitive := is_sensitive
 				s_item := selected_item
 				recreate_combo_box (Cbs_dropdown)
-					
+
 					-- Remove the combo and create a text field.
 				create combo.make_with_combo (Current)
  	 			create text_field.make_with_combo (Current)
@@ -693,7 +695,7 @@ feature {NONE} -- Implementation
 		do
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
-		
+
 	internal_copy_list is
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
@@ -742,8 +744,8 @@ feature {NONE} -- Implementation
  		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Refresh current so that it take into account 
-			-- changes made in `item_imp' 
+			-- Refresh current so that it take into account
+			-- changes made in `item_imp'
 		do
 			set_item_info (item_imp.index - 1, item_imp.cb_item)
 		end
@@ -756,7 +758,7 @@ feature {NONE} -- Implementation
 			an_index := internal_get_index (item_imp)
 			delete_string (an_index - 1)
 		end
-		
+
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
@@ -768,7 +770,7 @@ feature {NONE} -- Implementation
 				combo.invalidate
 			end
 		end
-		
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'.
 		do
@@ -787,7 +789,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
 		end
-		
+
 	tooltip_window: WEL_WINDOW is
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events.
@@ -833,7 +835,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 					end
 					counter := counter + 1
 				end
-			
+
 					-- Call the return actions
 				if return_actions_internal /= Void then
 					return_actions_internal.call (Void)
@@ -893,10 +895,10 @@ feature {NONE} -- WEL Implementation
 							([old_selected_item.interface])
 					end
 				end
-				
+
 					-- Remember the current selected item.
 				old_selected_item := new_selected_item
-				
+
 					-- Send a "Select Action" to the new item, and
 					-- to the combo box.
 				if new_selected_item /= Void then
@@ -938,7 +940,7 @@ feature {NONE} -- WEL Implementation
 				combo.resize (combo.width, 50)
 			end
 		end
-		
+
 	on_cbn_closeup is
 			-- The combo box has been closed.
 		do
@@ -948,12 +950,12 @@ feature {NONE} -- WEL Implementation
 		end
 
 	set_selection (start_pos, end_pos: INTEGER) is
-			-- Hilight the text between `start_pos' and `end_pos'. 
+			-- Hilight the text between `start_pos' and `end_pos'.
 			-- Both `start_pos' and `end_pos' are selected.
 		do
 			text_field.set_selection (start_pos, end_pos)
 		end
-	
+
 	wel_selection_start: INTEGER is
 			-- Zero based index of the first character selected.
 		do
@@ -967,7 +969,7 @@ feature {NONE} -- WEL Implementation
 			Result := cwin_hi_word (cwin_send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do
@@ -978,7 +980,7 @@ feature {NONE} -- WEL Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX
-	
+
 invariant
 	combo_not_void: is_initialized implies combo /= Void
 	text_field_not_void: (is_initialized and then is_editable) implies text_field /= Void

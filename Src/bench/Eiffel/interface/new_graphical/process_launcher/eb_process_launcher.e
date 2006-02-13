@@ -219,7 +219,7 @@ feature -- Control
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
 				if platform_constants.is_windows then
-					prc.set_hidden (False)
+					prc.set_hidden (True)
 					prc.set_separate_console (True)
 				end
 			end

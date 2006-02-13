@@ -95,18 +95,6 @@ feature -- Element change
 			redraw_client_area
 		end
 
-	set_focused_selection_text_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `focused_selection_text_color'.
-		do
-			focused_selection_text_color := a_color
-		end
-
-	set_non_focused_selection_text_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `non_focused_selection_text_color'.
-		do
-			non_focused_selection_text_color := a_color
-		end
-
 feature {EV_GRID_ITEM_I} -- Implementation
 
 	extra_text_spacing: INTEGER is

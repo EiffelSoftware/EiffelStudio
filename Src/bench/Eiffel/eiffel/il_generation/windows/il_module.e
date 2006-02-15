@@ -1897,6 +1897,48 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			setter_token_valid: Result /= 0
 		end
 
+	property_setter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
+			-- Given an attribute `a_feature_id' in `a_type_id' return associated
+			-- token of a property setter (if any).
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_setters /= Void
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		do
+			Result := table_token (internal_property_setters, a_type_id, a_feature_id)
+			if Result = 0 then
+					-- Most likely a feature from a precompiled library, False because
+					-- not in interface, not a static and not an override.
+				il_code_generator.define_feature_reference (a_type_id, a_feature_id,
+					False, False, False)
+				Result := table_token (internal_property_setters, a_type_id, a_feature_id)
+			end
+		ensure
+			setter_token_valid: Result /= 0 implies Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def
+		end
+
+	property_getter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
+			-- Given an attribute `a_feature_id' in `a_type_id' return associated
+			-- token of a property getter (if any).
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_getters /= Void
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+		do
+			Result := table_token (internal_property_getters, a_type_id, a_feature_id)
+			if Result = 0 then
+					-- Most likely a feature from a precompiled library, False because
+					-- not in interface, not a static and not an override.
+				il_code_generator.define_feature_reference (a_type_id, a_feature_id,
+					False, False, False)
+				Result := table_token (internal_property_getters, a_type_id, a_feature_id)
+			end
+		ensure
+			getter_token_valid: Result /= 0 implies Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def
+		end
+
 	implementation_feature_token (a_type_id, a_feature_id: INTEGER): INTEGER is
 			-- Given a `a_feature_id' in `a_type_id' return associated
 			-- token
@@ -2027,6 +2069,16 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
+	internal_property_setters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+			-- Array of property setter indexed by their `type_id'.
+			-- For each type, there is an HASH_TABLE where keys are `feature_id'
+			-- and elements are `token'.
+
+	internal_property_getters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+			-- Array of property getter indexed by their `type_id'.
+			-- For each type, there is an HASH_TABLE where keys are `feature_id'
+			-- and elements are `token'.
+
 	internal_attributes: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of attributes indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
@@ -2071,6 +2123,36 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			insert_in_table (internal_setters, a_token, a_type_id, a_feature_id)
 		ensure
 			inserted: setter_token (a_type_id, a_feature_id) = a_token
+		end
+
+	insert_property_setter (a_token, a_type_id, a_feature_id: INTEGER) is
+			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_property_setters'.
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_setters /= Void
+			valid_token: a_token /= 0
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+			not_inserted: table_token (internal_property_setters, a_type_id, a_feature_id) = 0
+		do
+			insert_in_table (internal_property_setters, a_token, a_type_id, a_feature_id)
+		ensure
+			inserted: property_setter_token (a_type_id, a_feature_id) = a_token
+		end
+
+	insert_property_getter (a_token, a_type_id, a_feature_id: INTEGER) is
+			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_property_getters'.
+		require
+			is_generated: is_generated
+			internal_setters_not_void: internal_property_getters /= Void
+			valid_token: a_token /= 0
+			valid_type_id: a_type_id > 0
+			valid_feature_id: a_feature_id > 0
+			not_inserted: table_token (internal_property_getters, a_type_id, a_feature_id) = 0
+		do
+			insert_in_table (internal_property_getters, a_token, a_type_id, a_feature_id)
+		ensure
+			inserted: property_getter_token (a_type_id, a_feature_id) = a_token
 		end
 
 	insert_implementation_feature (a_token, a_type_id, a_feature_id: INTEGER) is
@@ -2255,6 +2337,8 @@ feature {NONE} -- Once per modules being generated.
 			create defined_assemblies.make (10)
 			create internal_features.make (0, a_type_count)
 			create internal_setters.make (0, a_type_count)
+			create internal_property_setters.make (0, a_type_count)
+			create internal_property_getters.make (0, a_type_count)
 			create internal_attributes.make (0, a_type_count)
 			create internal_implementation_features.make (0, a_type_count)
 
@@ -2842,6 +2926,8 @@ feature {NONE} -- Cleaning
 			internal_invariant_token := Void
 			internal_module_references := Void
 			internal_setters := Void
+			internal_property_setters := Void
+			internal_property_getters := Void
 			last_parents := Void
 			local_info := Void
 			local_sig := Void

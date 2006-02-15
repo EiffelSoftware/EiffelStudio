@@ -2174,6 +2174,19 @@ feature -- Features info
 					last_non_recorded_feature_token := l_meth_token
 				end
 			end
+			if l_is_attribute then
+				l_meth_sig := method_sig
+				if has_property_getter (l_feat) then
+					prepare_property_getter (l_name, l_return_type)
+					current_module.insert_property_getter (md_emit.define_member_ref
+						(uni_string, l_class_token, l_meth_sig), a_type_id, l_feat.feature_id)
+				end
+				if has_property_setter (l_feat) then
+					prepare_property_setter (l_name, l_return_type)
+					current_module.insert_property_setter (md_emit.define_member_ref
+						(uni_string, l_class_token, l_meth_sig), a_type_id, l_feat.feature_id)
+				end
+			end
 		end
 
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override_or_c_external: BOOLEAN) is
@@ -2214,7 +2227,12 @@ feature -- Features info
 			l_naming_convention: BOOLEAN
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_is_attribute_generated_as_field: BOOLEAN
+			l_assigner: FEATURE_I
+			l_getter: INTEGER
+			l_setter: INTEGER
 		do
+			last_property_getter_token :=  {MD_TOKEN_TYPES}.md_method_def
+			last_property_setter_token :=  {MD_TOKEN_TYPES}.md_method_def
 			l_is_attribute := feat.is_attribute
 			l_is_c_external := feat.is_c_external
 			l_parameter_count := feat.argument_count
@@ -2420,9 +2438,7 @@ feature -- Features info
 					insert_setter (l_setter_token, current_type_id, feat.feature_id)
 
 					create l_ca_factory
-					if l_is_attribute then
-						l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
-					end
+					l_ca_factory.set_feature_custom_attributes (feat, l_setter_token)
 
 					if is_cls_compliant then
 						define_custom_attribute (l_setter_token,
@@ -2491,6 +2507,67 @@ feature -- Features info
 			if not is_override_or_c_external and (not is_static or else l_is_attribute) then
 				create l_ca_factory
 				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+			end
+
+			if l_is_attribute then
+					-- Define property for an attribute.
+				l_getter := {MD_TOKEN_TYPES}.md_method_def
+				l_setter := {MD_TOKEN_TYPES}.md_method_def
+				l_meth_sig := method_sig
+				if in_interface then
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Virtual |
+						{MD_METHOD_ATTRIBUTES}.Abstract
+				else
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+						{MD_METHOD_ATTRIBUTES}.Virtual
+				end
+				l_assigner := feat.assigner_in (signature_declaration_type)
+				if l_assigner /= Void and then not is_static then
+						-- Define setter method.
+					prepare_property_setter (l_name, l_return_type)
+					l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
+					l_setter := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					if is_override_or_c_external then
+						last_property_setter_token := l_setter
+					else
+						current_module.insert_property_setter (l_setter, current_type_id, feat.feature_id)
+					end
+					if not l_assigner.export_status.is_all then
+							-- Avoid listing this method as a property setter.
+						l_setter := {MD_TOKEN_TYPES}.md_method_def
+					end
+				end
+				if not is_static then
+						-- Define getter method.
+					prepare_property_getter (l_name, l_return_type)
+					l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
+					l_getter := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					if is_override_or_c_external then
+						last_property_getter_token := l_getter
+					else
+						current_module.insert_property_getter (l_getter, current_type_id, feat.feature_id)
+					end
+					if not feat.export_status.is_all then
+							-- Avoid listing this method as a property getter.
+						l_getter := {MD_TOKEN_TYPES}.md_method_def
+					end
+				end
+				if (is_single_class or else in_interface) and then not is_override_or_c_external and then
+					(l_getter /= {MD_TOKEN_TYPES}.md_method_def or else l_setter /= {MD_TOKEN_TYPES}.md_method_def)
+				then
+						-- Define property on a single class or interface only.
+					uni_string.set_string (l_name)
+					property_sig.reset
+					property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
+					property_sig.set_parameter_count (0)
+					set_signature_type (property_sig, l_return_type)
+					md_emit.define_property (current_class_token, uni_string, 0, property_sig, l_setter, l_getter)
+				end
 			end
 
 			if is_debug_info_enabled and l_is_attribute then
@@ -2588,6 +2665,57 @@ feature -- Features info
 				end
 				feats.forth
 			end
+		end
+
+	has_property_getter (f: FEATURE_I): BOOLEAN is
+			-- Is property getter generated for feature `f'?
+		require
+			f_not_void: f /= Void
+		do
+			Result := f.is_attribute
+		end
+
+	has_property_setter (f: FEATURE_I): BOOLEAN is
+			-- Is property getter generated for feature `f'?
+		require
+			f_not_void: f /= Void
+		do
+			Result := f.is_attribute and then f.assigner_name_id /= 0
+		end
+
+	prepare_property_getter (name: STRING; return_type: TYPE_I) is
+			-- Fill `uni_string' and `method_sig' with a property getter data.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+			return_type_not_void: return_type /= Void
+		local
+			l_meth_sig: like method_sig
+		do
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			l_meth_sig.set_parameter_count (0)
+			set_signature_type (l_meth_sig, return_type)
+			uni_string.set_string (property_getter_prefix + name)
+		end
+
+	prepare_property_setter (name: STRING; return_type: TYPE_I) is
+			-- Fill `uni_string' and `method_sig' with a property setter data.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+			return_type_not_void: return_type /= Void
+		local
+			l_meth_sig: like method_sig
+		do
+			l_meth_sig := method_sig
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			set_signature_type (l_meth_sig, return_type)
+			uni_string.set_string (property_setter_prefix + name)
 		end
 
 feature -- IL Generation
@@ -2879,6 +3007,7 @@ feature -- IL Generation
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
 				generate_return (False)
 				method_writer.write_current_body
+				generate_property (feat)
 			else
 				l_token := implementation_feature_token (a_type_id, code_feature_id)
 				l_cur_sig := signatures (current_type_id, feat.feature_id)
@@ -3023,7 +3152,9 @@ feature -- IL Generation
 			l_meth_token: INTEGER
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
 		do
-			if not feat.is_attribute and not feat.is_c_external and not feat.is_deferred then
+			if feat.is_attribute then
+				generate_property (feat)
+			elseif not feat.is_c_external and not feat.is_deferred then
 				if is_implementation then
 					l_meth_token := implementation_feature_token (current_type_id, feat.feature_id)
 				else
@@ -3073,6 +3204,46 @@ feature -- IL Generation
 					Il_debug_info_recorder.record_il_feature_info (current_module,
 								current_class_type, feat, current_class_token, l_meth_token)
 				end
+			end
+		end
+
+	generate_property (f: FEATURE_I) is
+			-- Generate property associated with feature `f' (if any).
+		require
+			f_not_void: f /= Void
+		local
+			target_type: CL_TYPE_I
+			target_feature: FEATURE_I
+		do
+			target_type := byte_context.original_class_type.type
+			if has_property_setter (f) then
+				target_feature := f.assigner_in (byte_context.original_class_type)
+				if not target_type.is_expanded then
+					target_type := implemented_type (target_feature.access_in, target_type)
+					target_feature := target_type.base_class.feature_of_rout_id (target_feature.rout_id_set.first)
+				end
+				start_new_body (current_module.property_setter_token (current_type_id, f.feature_id))
+				generate_current
+				generate_argument (1)
+				generate_feature_access (target_type, target_feature.feature_id, 1, false, true)
+				generate_return (false)
+				method_writer.write_current_body
+			end
+			if has_property_getter (f) then
+				if target_type.is_expanded then
+					target_feature := f
+				else
+					target_type := implemented_type (f.access_in, target_type)
+					target_feature := target_type.base_class.feature_of_rout_id (f.rout_id_set.first)
+				end
+				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
+				generate_current
+				generate_attribute (true, target_type, target_feature.feature_id)
+				generate_check_cast (byte_context.real_type_in
+					(target_feature.type.actual_type.type_i, target_type.associated_class_type),
+					byte_context.real_type (f.type.actual_type.type_i))
+				generate_return (true)
+				method_writer.write_current_body
 			end
 		end
 
@@ -3147,6 +3318,12 @@ feature -- IL Generation
 	last_non_recorded_feature_token: INTEGER
 			-- Token of last defined feature that we did not record or last override.
 
+	last_property_setter_token: INTEGER
+			-- Token of last defined property setter method resulted from override.
+
+	last_property_getter_token: INTEGER
+			-- Token of last defined property getter method resulted from override.
+
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
@@ -3189,7 +3366,8 @@ feature -- IL Generation
 					-- generated as `is_single_class' we have to generate a MethodImpl, because
 					-- in the interface it is defined as a function, thus the generated MethodImpl will actually implement
 					-- the function to retrieve the attribute field.
-				Result := is_single_class and then feat.is_attribute and then feat.written_in /= current_class.class_id and then
+				Result := is_single_class and then not feat.written_class.is_single	and then
+					feat.is_attribute and then feat.written_in /= current_class.class_id and then
 					not feat.written_class.is_external
 			end
 		end
@@ -3232,6 +3410,14 @@ feature -- IL Generation
 				if cur_feat.is_attribute and then inh_feat.is_attribute then
 					md_emit.define_method_impl (current_class_token, setter_token (current_type_id,
 						cur_feat.feature_id), setter_token (l_parent_type_id, inh_feat.feature_id))
+				end
+				if has_property_getter (inh_feat) then
+					md_emit.define_method_impl (current_class_token, current_module.property_getter_token
+						(current_type_id, cur_feat.feature_id), current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
+				end
+				if has_property_setter (inh_feat) then
+					md_emit.define_method_impl (current_class_token, current_module.property_setter_token
+						(current_type_id, cur_feat.feature_id), current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
 			else
 				l_name_id := inh_feat.feature_name_id
@@ -3304,53 +3490,81 @@ feature -- IL Generation
 				generate_return (cur_feat.has_return_value)
 				method_writer.write_current_body
 
-				md_emit.define_method_impl (current_class_token, l_token,
-					feature_token (l_parent_type_id, inh_feat.feature_id))
+				if not is_single_class or else not inh_feat.is_attribute then
+					md_emit.define_method_impl (current_class_token, l_token,
+						feature_token (l_parent_type_id, inh_feat.feature_id))
+					if cur_feat.is_attribute and then inh_feat.is_attribute then
+						l_meth_attr := {MD_METHOD_ATTRIBUTES}.Virtual |
+							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+							{MD_METHOD_ATTRIBUTES}.Private
 
-				if cur_feat.is_attribute and then inh_feat.is_attribute then
-					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Virtual |
-						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{MD_METHOD_ATTRIBUTES}.Private
+						l_meth_sig := method_sig
+						l_meth_sig.reset
+						l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+						l_meth_sig.set_parameter_count (1)
+						l_meth_sig.set_return_type (
+							{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 
-					l_meth_sig := method_sig
-					l_meth_sig.reset
-					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-					l_meth_sig.set_parameter_count (1)
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+						set_signature_type (l_meth_sig, l_return_type)
 
-					set_signature_type (l_meth_sig, l_return_type)
+						uni_string.set_string (Override_prefix + setter_prefix + l_name +
+							override_counter.next.out)
 
-					uni_string.set_string (Override_prefix + setter_prefix + l_name +
-						override_counter.next.out)
+						l_setter_token := md_emit.define_method (uni_string, current_class_token,
+							l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
-					l_setter_token := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+						start_new_body (l_setter_token)
+						generate_current
+						generate_argument (1)
+						if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
+								mapped_class_type_token (l_cur_sig.item (0)))
+						end
+							-- Hard coded `1' for number of arguments since there is one,
+							-- we cannot use `nb' as it is `0' for attributes.
+						if is_single_class then
+								-- Attribute was already generated as a field, we simply generate a routine to
+								-- perform the MethodImpl on the setter.
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, attribute_token (current_type_id,
+								cur_feat.feature_id))
+						else
+							method_body.put_call ({MD_OPCODES}.Callvirt,
+								setter_token (current_type_id, cur_feat.feature_id), 1, False)
+						end
 
-					start_new_body (l_setter_token)
+						generate_return (False)
+						method_writer.write_current_body
+
+						md_emit.define_method_impl (current_class_token, l_setter_token,
+							setter_token (l_parent_type_id, inh_feat.feature_id))
+					end
+				end
+				if last_property_setter_token /= {MD_TOKEN_TYPES}.md_method_def then
+						-- Generate property setter implementation.
+					start_new_body (last_property_setter_token)
 					generate_current
 					generate_argument (1)
-					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
-						method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
-							mapped_class_type_token (l_cur_sig.item (0)))
-					end
-						-- Hard coded `1' for number of arguments since there is one,
-						-- we cannot use `nb' as it is `0' for attributes.
-					if is_single_class then
-							-- Attribute was already generated as a field, we simply generate a routine to
-							-- perform the MethodImpl on the setter.
-						method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, attribute_token (current_type_id,
-							cur_feat.feature_id))
-					else
-						method_body.put_call ({MD_OPCODES}.Callvirt,
-							setter_token (current_type_id, cur_feat.feature_id), 1, False)
-					end
-
+					method_body.put_call ({MD_OPCODES}.callvirt,
+						current_module.property_setter_token (current_type_id, cur_feat.feature_id), 1, False)
 					generate_return (False)
 					method_writer.write_current_body
-
-					md_emit.define_method_impl (current_class_token, l_setter_token,
-						setter_token (l_parent_type_id, inh_feat.feature_id))
+					if has_property_setter (inh_feat) then
+						md_emit.define_method_impl (current_class_token, last_property_setter_token,
+							current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
+					end
+				end
+				if last_property_getter_token /= {MD_TOKEN_TYPES}.md_method_def then
+						-- Generate property getter implementation.
+					start_new_body (last_property_getter_token)
+					generate_current
+					method_body.put_call ({MD_OPCODES}.callvirt,
+						current_module.property_getter_token (current_type_id, cur_feat.feature_id), 0, True)
+					generate_return (True)
+					method_writer.write_current_body
+					if has_property_getter (inh_feat) then
+						md_emit.define_method_impl (current_class_token, last_property_getter_token,
+							current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
+					end
 				end
 			end
 		end

@@ -99,6 +99,12 @@ feature -- Access
 			Result := impl.folder_name
 		end	
 		
+	code_base: SYSTEM_STRING is
+			-- Assembly code base location
+		do
+			Result := impl.location
+		end
+		
 feature {NONE} -- Implementation
 
 	impl: CONSUMED_ASSEMBLY

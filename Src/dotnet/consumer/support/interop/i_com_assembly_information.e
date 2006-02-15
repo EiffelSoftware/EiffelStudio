@@ -57,6 +57,17 @@ feature -- Access
 	consumed_folder_name: SYSTEM_STRING is
 			-- name of folder where assembly was consumed to
 		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: Result.length > 0
+		end
+		
+	code_base: SYSTEM_STRING is
+			-- Assembly code base location
+		deferred
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: Result.length > 0
 		end
 
 indexing

@@ -19,7 +19,7 @@ inherit
 
 create
 	make_by_pointer
-	
+
 feature -- Initialization
 
 	initialize (a_clr_version: UNI_STRING) is
@@ -35,7 +35,7 @@ feature -- Initialization
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	initialize_with_path (a_path, a_clr_version: UNI_STRING) is
 			-- Initialize current with `a_path' as ISE_EIFFEL var.
 		require
@@ -51,7 +51,7 @@ feature -- Initialization
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 feature -- Access
 
 	is_initialized: BOOLEAN
@@ -69,7 +69,7 @@ feature -- Access
 		ensure
 			success: last_call_success = 0
 		end
-	
+
 	last_error_message: UNI_STRING is
 			-- Last error message of a failed operation
 		require
@@ -86,12 +86,12 @@ feature -- Access
 		end
 
 feature -- Basic Oprtations
-	
+
 	consume_assembly (a_name, a_version, a_culture, a_key: UNI_STRING) is
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
-			initialized: is_initialized		
+			initialized: is_initialized
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
@@ -99,7 +99,7 @@ feature -- Basic Oprtations
 			bstr_version: BSTR_STRING
 			bstr_culture: BSTR_STRING
 			bstr_key: BSTR_STRING
-		do	
+		do
 			create bstr_name.make_by_uni_string (a_name)
 			if a_version /= Void then
 				create bstr_version.make_by_uni_string (a_version)
@@ -121,7 +121,7 @@ feature -- Basic Oprtations
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	consume_assembly_from_path (a_path: UNI_STRING) is
 			-- consume assembly found at 'apath' and all of its dependacies into EAC.
 			-- GAC dependacies will be put into the EAC
@@ -137,11 +137,11 @@ feature -- Basic Oprtations
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	relative_folder_name (a_name, a_version, a_culture, a_key: UNI_STRING): UNI_STRING is
 			-- Retrieves relative path to an assembly using at least `a_name'
 		require
-			initialized: is_initialized		
+			initialized: is_initialized
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
@@ -150,7 +150,7 @@ feature -- Basic Oprtations
 			bstr_culture: BSTR_STRING
 			bstr_key: BSTR_STRING
 			res: POINTER
-		do	
+		do
 			create bstr_name.make_by_uni_string (a_name)
 			if a_version /= Void then
 				create bstr_version.make_by_uni_string (a_version)
@@ -173,7 +173,7 @@ feature -- Basic Oprtations
 			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
-			
+
 		ensure
 			success: last_call_success = 0
 		end
@@ -187,7 +187,7 @@ feature -- Basic Oprtations
 		local
 			bstr_path: BSTR_STRING
 			res: POINTER
-		do	
+		do
 			create bstr_path.make_by_uni_string (a_path)
 			last_call_success := c_relative_folder_name_from_path (item, bstr_path.item, $res)
 			if res /= default_pointer then
@@ -196,7 +196,7 @@ feature -- Basic Oprtations
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	assembly_info_from_assembly (a_path: UNI_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve the assembly information from a assembly
 		require
@@ -209,18 +209,18 @@ feature -- Basic Oprtations
 		do
 			create bstr_path.make_by_uni_string (a_path)
 			last_call_success := c_assembly_info_from_assembly (item, bstr_path.item, $res)
-			
+
 			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
 		ensure
 			success: last_call_success = 0
 		end
-		
-	assembly_info_from (a_name, a_version, a_culture, a_key: UNI_STRING): COM_ASSEMBLY_INFORMATION is
+
+	assembly_info (a_name, a_version, a_culture, a_key: UNI_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve the assembly information from a assembly's fusion name
 		require
-			initialized: is_initialized		
+			initialized: is_initialized
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
@@ -229,7 +229,7 @@ feature -- Basic Oprtations
 			bstr_culture: BSTR_STRING
 			bstr_key: BSTR_STRING
 			res: POINTER
-		do	
+		do
 			create bstr_name.make_by_uni_string (a_name)
 			if a_version /= Void then
 				create bstr_version.make_by_uni_string (a_version)
@@ -247,7 +247,7 @@ feature -- Basic Oprtations
 				create bstr_key.make_by_pointer (default_pointer)
 			end
 			last_call_success := c_assembly_info (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, $res)
-			
+
 			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
@@ -262,17 +262,17 @@ feature -- Basic Oprtations
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	c_initialize (ap, ver: POINTER): INTEGER is
-			-- initialize COM object 
+			-- initialize COM object
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"initialize"
 		end
-		
+
 	c_initialize_with_path (ap:POINTER; ap2, ver: POINTER): INTEGER is
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 		alias
 			"is_successful"
 		end
-		
+
 	c_last_error_message (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- last error message of a failed operation
 		external
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 		alias
 			"relative_folder_name_from_path"
 		end
-	
+
 	c_assembly_info_from_assembly (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
 			--  retrieve the assembly information from a assembly
 		external
@@ -345,15 +345,15 @@ feature {NONE} -- Implementation
 		alias
 			"assembly_info_from_assembly"
 		end
-		
+
 	c_assembly_info (ap, a_name, a_version, a_culture, a_key: POINTER; aret_val:POINTER): INTEGER is
 			-- retrieve the assembly information from an assembly's fusion name
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"assembly_info"
 		end
-		
+
 	c_unload (ap: POINTER): INTEGER is
 			-- -- retrieve the assembly information from a assembly
 		external
@@ -362,26 +362,26 @@ feature {NONE} -- Implementation
 			"unload"
 		end
 
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

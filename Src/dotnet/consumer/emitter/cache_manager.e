@@ -136,16 +136,12 @@ feature -- Basic Oprtations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			l_assembly: ASSEMBLY
 			l_ca: CONSUMED_ASSEMBLY
 		do
-			l_assembly := load_assembly_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
-			if l_assembly /= Void then
-				l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
-				if l_ca /= Void then
-					Result := relative_assembly_path_from_consumed_assembly (l_ca)
-					Result.prune_all_trailing ('\')
-				end
+			l_ca := assembly_info (a_name, a_version, a_culture, a_key)
+			if l_ca /= Void then
+				Result := relative_assembly_path_from_consumed_assembly (l_ca)
+				Result.prune_all_trailing ('\')
 			end
 		end
 		
@@ -181,6 +177,26 @@ feature -- Basic Oprtations
 		do
 			Result := cache_writer.consumed_assembly_from_path (a_path)	
 		end		
+
+	assembly_info (a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): CONSUMED_ASSEMBLY is
+			-- retrieve a assembly's information.
+			-- If assembly has already been consumed then function will
+			-- return found matching CONSUMED_ASSEMBLY. 
+			-- If you need to use resulting CONSUMED_ASSEMBLY.folder_name
+			-- then you need to query CONSUMED_ASSEMBLY.is_consumed = True to
+			-- know that that name exists.
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_assembly: ASSEMBLY
+			l_ca: CONSUMED_ASSEMBLY
+		do
+			l_assembly := load_assembly_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
+			if l_assembly /= Void then
+				Result := cache_writer.consumed_assembly_from_path (l_assembly.location)
+			end
+		end	
 
 feature {NONE} -- Basic Operations
 

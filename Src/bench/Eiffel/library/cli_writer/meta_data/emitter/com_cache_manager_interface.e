@@ -216,6 +216,44 @@ feature -- Basic Oprtations
 		ensure
 			success: last_call_success = 0
 		end
+		
+	assembly_info_from (a_name, a_version, a_culture, a_key: UNI_STRING): COM_ASSEMBLY_INFORMATION is
+			-- retrieve the assembly information from a assembly's fusion name
+		require
+			initialized: is_initialized		
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		local
+			bstr_name: BSTR_STRING
+			bstr_version: BSTR_STRING
+			bstr_culture: BSTR_STRING
+			bstr_key: BSTR_STRING
+			res: POINTER
+		do	
+			create bstr_name.make_by_uni_string (a_name)
+			if a_version /= Void then
+				create bstr_version.make_by_uni_string (a_version)
+			else
+				create bstr_version.make_by_pointer (default_pointer)
+			end
+			if a_culture /= Void then
+				create bstr_culture.make_by_uni_string (a_culture)
+			else
+				create bstr_culture.make_by_pointer (default_pointer)
+			end
+			if a_key /= Void then
+				create bstr_key.make_by_uni_string (a_key)
+			else
+				create bstr_key.make_by_pointer (default_pointer)
+			end
+			last_call_success := c_assembly_info (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, $res)
+			
+			if res /= default_pointer then
+				create Result.make_by_pointer (res)
+			end
+		ensure
+			success: last_call_success = 0
+		end
 
 	unload is
 			-- unloads initialized app domain and cache releated objects to preserve resources
@@ -301,11 +339,19 @@ feature {NONE} -- Implementation
 		end
 	
 	c_assembly_info_from_assembly (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
-			-- -- retrieve the assembly information from a assembly
+			--  retrieve the assembly information from a assembly
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"assembly_info_from_assembly"
+		end
+		
+	c_assembly_info (ap, a_name, a_version, a_culture, a_key: POINTER; aret_val:POINTER): INTEGER is
+			-- retrieve the assembly information from an assembly's fusion name
+		external
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"assembly_info"
 		end
 		
 	c_unload (ap: POINTER): INTEGER is

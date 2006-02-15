@@ -159,7 +159,23 @@ feature -- Retrieval
 				False
 			end
 		end
+		
+	retrieve_assembly_info_by_fusion_name (a_name, a_version, a_culture, a_key: STRING) is
+			-- Retrieve data about assembly stored using an assembly's fusion name.
 
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_version_attached: a_version /= Void
+			not_a_version_is_empty: not a_version.is_empty
+			not_a_culture_is_empty: a_culture /= Void implies not a_culture.is_empty
+			not_a_key_is_empty: a_key /= Void implies not a_key.is_empty
+		do
+			check
+				False
+			end
+		end
+	
 	unload is
 			-- unload all used resources
 		do
@@ -181,7 +197,6 @@ feature -- XML generation
 				False
 			end
 		end
-		
 
 	consume_assembly (a_name, a_version, a_culture, a_key: STRING) is
 			-- consume an assembly into the EAC from assemblyy defined by
@@ -201,7 +216,6 @@ feature -- XML generation
 				False
 			end
 		end
-	
 	
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -18,10 +18,10 @@ feature -- Access
 		do
 			Result := implementation.is_successful
 		end
-		
+
 	is_initialized: BOOLEAN
 			-- Has current object been initialized?
-			
+
 	last_error_message: SYSTEM_STRING is
 			-- Last error message
 		do
@@ -42,7 +42,7 @@ feature -- Basic Exportations
 		ensure
 			current_initialized: is_initialized
 		end
-		
+
 	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		require
@@ -72,33 +72,33 @@ feature -- Basic Exportations
 			current_initialized: is_initialized
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
-		do	
+		do
 			implementation.consume_assembly (a_name, a_version, a_culture, a_key)
 		end
-		
+
 	consume_assembly_from_path (a_path: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
 		require
 			current_initialized: is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
-		do	
+		do
 			implementation.consume_assembly_from_path (a_path)
 		end
-		
+
 	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
 			-- returns the relative path to an assembly using at least `a_name'
 		require
 			current_initialized: is_initialized
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
-		do			
+		do
 			Result := implementation.relative_folder_name (a_name, a_version, a_culture, a_key)
 		ensure
 			non_void_result: Result /= Void
 			non_empty_result: Result.length > 0
 		end
-		
+
 	relative_folder_name_from_path (a_path: SYSTEM_STRING): SYSTEM_STRING is
 			-- Relative path to consumed assembly metadata given `a_path'
 		require
@@ -112,7 +112,7 @@ feature -- Basic Exportations
 			non_void_result: Result /= Void
 			valid_result: Result.length > 0
 		end
-		
+
 	assembly_info_from_path (a_path: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
 		require
@@ -121,8 +121,22 @@ feature -- Basic Exportations
 			valid_path: a_path.length > 0
 		do
 			create Result.make (implementation.assembly_info_from_path (a_path))
-		ensure
-			non_void_result: Result /= Void
+		end
+
+	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
+			-- retrieve a assembly's information
+		require
+			current_initialized: is_initialized
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: a_name.length > 0
+			a_version_attached: a_version /= Void
+			not_a_version_is_empty: a_version.length > 0
+			not_a_cultureis_empty: a_culture /= Void implies a_culture.length > 0
+			not_a_name_is_empty: a_key /= Void implies a_key.length > 0
+		local
+			l_impl: MARSHAL_CACHE_MANAGER
+		do
+			create Result.make (implementation.assembly_info (a_name, a_version, a_culture, a_key))
 		end
 
 	prepare_for_unload is
@@ -133,7 +147,7 @@ feature -- Basic Exportations
 		end
 
 feature {COM_CACHE_MANAGER2} -- Implementation
-			
+
 	implementation: CACHE_MANAGER;
 			-- Access to `CACHE_MANAGER'.
 
@@ -143,19 +157,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

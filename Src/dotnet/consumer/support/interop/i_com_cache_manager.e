@@ -119,8 +119,19 @@ feature -- Query
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 		deferred
-		ensure
-			non_void_result: Result /= Void
+		end
+		
+	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
+			-- retrieve a local assembly's information
+		require
+			current_initialized: is_initialized
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: a_name.length > 0
+			a_version_attached: a_version /= Void
+			not_a_version_is_empty: a_version.length > 0
+			not_a_cultureis_empty: a_culture /= Void implies a_culture.length > 0
+			not_a_name_is_empty: a_key /= Void implies a_key.length > 0
+		deferred
 		end
 		
 feature {NONE} -- Implementation

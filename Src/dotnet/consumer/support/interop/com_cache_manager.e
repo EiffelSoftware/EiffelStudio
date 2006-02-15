@@ -151,6 +151,17 @@ feature -- Basic Exportations
 			update_current (l_impl)
 		end
 
+	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
+			-- retrieve a assembly's information
+		local
+			l_impl: MARSHAL_CACHE_MANAGER
+		do		
+			l_impl ?= new_marshalled_cache_manager.unwrap
+			Result := l_impl.assembly_info (a_name, a_version, a_culture, a_key)
+
+			update_current (l_impl)
+		end
+
 feature {NONE} -- Implementation
 
 	update_current (a_impl: MARSHAL_CACHE_MANAGER) is

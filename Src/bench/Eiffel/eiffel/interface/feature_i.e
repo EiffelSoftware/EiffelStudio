@@ -1889,6 +1889,19 @@ end
 			end
 		end
 
+	assigner_in (class_type: CLASS_TYPE): FEATURE_I is
+			-- Find an assigner in `class_type'.
+		require
+			class_type_not_void: class_type /= Void
+		do
+			if assigner_name_id /= 0 then
+				Result := class_type.associated_class.feature_of_rout_id
+					(written_class.feature_table.item_id (assigner_name_id).rout_id_set.first)
+			end
+		ensure
+			result_not_void: assigner_name_id /= 0 implies Result /= Void
+		end
+
 	check_assigner (feature_table: FEATURE_TABLE) is
 			-- Check if associated assigner is valid.
 		require
@@ -2400,19 +2413,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

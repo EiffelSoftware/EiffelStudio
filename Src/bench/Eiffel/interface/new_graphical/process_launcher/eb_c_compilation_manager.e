@@ -170,6 +170,7 @@ feature{NONE}  -- Actions
 			-- Handler called when c compiler has been terminated
 		do
 			data_storage.wipe_out
+			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make (c_compilation_terminated_msg+".%N", False, False))
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_c_compilation_terminated)
 			display_message_on_main_output (c_compilation_terminated_msg, True)

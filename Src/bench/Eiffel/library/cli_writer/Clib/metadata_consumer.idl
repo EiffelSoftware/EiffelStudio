@@ -9,7 +9,7 @@
 library EiffelSoftware_MetadataConsumer
 {
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
-    importlib("stdole2.tlb");
+    importlib("STDOLE2.TLB");
 
     // Forward declare all types defined in this typelib
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
@@ -21,49 +21,55 @@ library EiffelSoftware_MetadataConsumer
       version(1.0),
       dual,
       oleautomation
-
     ]
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER : IDispatch {
         [id(0x60020000)]
+        HRESULT assembly_info(
+                        [in] BSTR a_name, 
+                        [in] BSTR a_version, 
+                        [in] BSTR a_culture, 
+                        [in] BSTR a_key, 
+                        [out, retval] EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION** pRetVal);
+        [id(0x60020001)]
         HRESULT assembly_info_from_assembly(
                         [in] BSTR a_path, 
                         [out, retval] EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION** pRetVal);
-        [id(0x60020001)]
-        HRESULT clr_version([out, retval] BSTR* pRetVal);
         [id(0x60020002)]
+        HRESULT clr_version([out, retval] BSTR* pRetVal);
+        [id(0x60020003)]
         HRESULT consume_assembly(
                         [in] BSTR a_name, 
                         [in] BSTR a_version, 
                         [in] BSTR a_culture, 
                         [in] BSTR a_key);
-        [id(0x60020003)]
-        HRESULT consume_assembly_from_path([in] BSTR a_path);
         [id(0x60020004)]
-        HRESULT eac_path([out, retval] BSTR* pRetVal);
+        HRESULT consume_assembly_from_path([in] BSTR a_path);
         [id(0x60020005)]
-        HRESULT initialize([in] BSTR a_clr_version);
+        HRESULT eac_path([out, retval] BSTR* pRetVal);
         [id(0x60020006)]
+        HRESULT initialize([in] BSTR a_clr_version);
+        [id(0x60020007)]
         HRESULT initialize_with_path(
                         [in] BSTR a_path, 
                         [in] BSTR a_clr_version);
-        [id(0x60020007)]
-        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020008)]
-        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
+        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020009)]
-        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x6002000a)]
+        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        [id(0x6002000b)]
         HRESULT relative_folder_name(
                         [in] BSTR a_name, 
                         [in] BSTR a_version, 
                         [in] BSTR a_culture, 
                         [in] BSTR a_key, 
                         [out, retval] BSTR* pRetVal);
-        [id(0x6002000b)]
+        [id(0x6002000c)]
         HRESULT relative_folder_name_from_path(
                         [in] BSTR a_path, 
                         [out, retval] BSTR* pRetVal);
-        [id(0x6002000c)]
+        [id(0x6002000d)]
         HRESULT unload();
     };
 
@@ -76,18 +82,20 @@ library EiffelSoftware_MetadataConsumer
     ]
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION : IDispatch {
         [id(0x60020000)]
-        HRESULT consumed_folder_name([out, retval] BSTR* pRetVal);
+        HRESULT code_base([out, retval] BSTR* pRetVal);
         [id(0x60020001)]
-        HRESULT culture([out, retval] BSTR* pRetVal);
+        HRESULT consumed_folder_name([out, retval] BSTR* pRetVal);
         [id(0x60020002)]
-        HRESULT is_consumed([out, retval] VARIANT_BOOL* pRetVal);
+        HRESULT culture([out, retval] BSTR* pRetVal);
         [id(0x60020003)]
-        HRESULT is_in_gac([out, retval] VARIANT_BOOL* pRetVal);
+        HRESULT is_consumed([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020004)]
-        HRESULT name([out, retval] BSTR* pRetVal);
+        HRESULT is_in_gac([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020005)]
-        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        HRESULT name([out, retval] BSTR* pRetVal);
         [id(0x60020006)]
+        HRESULT public_key_token([out, retval] BSTR* pRetVal);
+        [id(0x60020007)]
         HRESULT version([out, retval] BSTR* pRetVal);
     };
 

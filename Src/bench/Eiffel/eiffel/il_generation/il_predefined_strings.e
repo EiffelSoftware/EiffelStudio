@@ -36,8 +36,12 @@ feature -- Access
 			-- Type used by code generation.
 
 	override_prefix: STRING is "__"
-	setter_prefix: STRING is "_set_";
+	setter_prefix: STRING is "_set_"
 			-- Prefix for automatically generated features.
+
+	property_getter_prefix: STRING is "__get__";
+	property_setter_prefix: STRING is "__set__";
+			-- Prefix for property getter and setter methods.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -45,19 +49,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

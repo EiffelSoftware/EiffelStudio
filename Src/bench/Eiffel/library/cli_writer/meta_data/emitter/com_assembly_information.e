@@ -106,6 +106,19 @@ feature -- Access
 			success: last_call_success = 0
 		end
 		
+	code_base: STRING is
+			-- assembly code base location
+		local
+			res: POINTER
+		do
+			last_call_success := c_code_base (item, $res)
+			if res /= default_pointer then
+				Result := (create {UNI_STRING}.make_by_pointer (res)).string
+			end
+		ensure
+			success: last_call_success = 0
+		end
+		
 feature {NONE} -- Implementation
 	
 	c_name (ap:POINTER; aret_val: POINTER): INTEGER is
@@ -162,6 +175,14 @@ feature {NONE} -- Implementation
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"consumed_folder_name"
+		end
+
+	c_code_base (ap:POINTER; aret_val: POINTER): INTEGER is
+			-- assembly code base
+		external
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"code_base"
 		end
 
 indexing

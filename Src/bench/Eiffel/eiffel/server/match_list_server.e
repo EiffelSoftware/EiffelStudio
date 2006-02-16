@@ -50,7 +50,7 @@ feature -- Access
 			end
 			l_class := system.class_of_id (an_id)
 				-- lazy computation, create match list if needed
-			if Result = Void or else Result.generated < l_class.lace_class.date then
+			if Result = Void or else Result.generated /= l_class.lace_class.date then
 				matchlist_scanner.scan_string (l_class.text)
 				Result := matchlist_scanner.match_list
 				Result.set_class_id (an_id)

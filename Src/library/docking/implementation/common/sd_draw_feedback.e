@@ -196,9 +196,6 @@ feature -- Basic operations
 
 			feedback_rect.set_area (create {EV_RECTANGLE}.make (a_left, a_top, a_width, a_height))
 
-			debug ("docking")
-				print ("%NSD_FEEDBACK_DRAWER draw_transparency_rectangle")
-			end
 		end
 
 	draw_transparency_rectangle_for_tab (a_top_rect, a_bottom_rect: EV_RECTANGLE) is

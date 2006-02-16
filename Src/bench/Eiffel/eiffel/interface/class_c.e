@@ -2507,20 +2507,23 @@ feature -- Parent checking
 			l_parent_class: CLASS_C
 			l_single_classes: LINKED_LIST [CLASS_C]
 			l_old_is_single: BOOLEAN
+			l_has_internal_single_parent: BOOLEAN
 		do
 			from
 				l_area := parents.area
 				nb := parents.count
 				l_old_is_single := is_single
+				l_has_internal_single_parent := false
 			until
 				i = nb
 			loop
 				parent_actual_type := l_area.item (i)
 				l_parent_class := parent_actual_type.associated_class
+				l_has_internal_single_parent := l_parent_class.is_single
 
 				if
 					(l_parent_class.is_external and then not l_parent_class.is_interface) or
-					l_parent_class.is_single
+					l_has_internal_single_parent
 				then
 					if l_single_classes = Void then
 						create l_single_classes.make
@@ -2582,6 +2585,7 @@ feature -- Parent checking
 				-- Only classes that explicitely inherit from an external class only once
 				-- are marked `single.
 			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1)
+			has_internal_single_parent := l_has_internal_single_parent
 			if System.il_generation and then l_old_is_single /= is_single then
 					-- Class has its `is_single' status changed. We have to
 					-- reset its `types' so that they are recomputed and we have
@@ -3833,6 +3837,9 @@ feature -- Properties
 
 	is_single: BOOLEAN
 			-- Is class generated as a single entity in IL code generation.
+
+	has_internal_single_parent: BOOLEAN
+			-- Is one non-external parent class generated as a single IL type?
 
 	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it?

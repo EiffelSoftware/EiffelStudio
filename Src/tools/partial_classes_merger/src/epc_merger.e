@@ -9,10 +9,27 @@ class
 	EPC_MERGER
 
 inherit
+	ANY
+		redefine
+			default_create
+		end
+
 	EPC_SHARED_ROUNDTRIP_PARSER
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create.
+		do
+			error_message := "No error."
+		end
+
+
 
 feature -- Access
 

@@ -68,7 +68,7 @@ feature  -- Control
 			child_process.spawn_nowait
 
 			internal_id := child_process.process_id
-			launched := (id /= -1)
+			launched := (internal_id /= -1)
 			if launched then
 				initialize_after_launch
 				on_launch_successed

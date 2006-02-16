@@ -88,6 +88,22 @@ feature -- Access
 			Result := allow_window_to_back_cell.item
 		end
 
+	menu_docker_mediator_cell: CELL [SD_MENU_DOCKER_MEDIATOR] is
+			-- Menu docker mediator when user dragging a SD_MENU_ZONE.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	set_menu_docker_mediator (a_mediator: SD_MENU_DOCKER_MEDIATOR) is
+			-- Set menu docker mediator singleton.
+		do
+			menu_docker_mediator_cell.put (a_mediator)
+		ensure
+			set: menu_docker_mediator_cell.item = a_mediator
+		end
+
 feature  -- Colors
 
 	non_focused_color: EV_COLOR is
@@ -95,7 +111,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		once
-			create l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.non_focused_selection_color
 		ensure
 			not_void: Result /= Void
@@ -105,11 +121,20 @@ feature  -- Colors
 			-- Non focused color of window title bar.
 		local
 			l_system_color: SD_SYSTEM_COLOR
-		once
-			create l_system_color
+		do
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.non_focused_selection_title_color
 		ensure
 			not_void: Result /= Void
+		end
+
+	non_focused_title_text_color: EV_COLOR is
+			--
+		local
+			l_system_color: SD_SYSTEM_COLOR
+		do
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			Result := l_system_color.non_focused_title_text_color
 		end
 
 	non_focused_color_lightness: EV_COLOR is
@@ -127,9 +152,20 @@ feature  -- Colors
 			-- Focused color. Used by SD_TITLE_BAR...
 		local
 			l_system_color: SD_SYSTEM_COLOR
-		once
-			create l_system_color
+		do
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.focused_selection_color
+		ensure
+			not_void: Result /= Void
+		end
+
+	focused_title_text_color: EV_COLOR is
+			-- Focused title bar text color. Used bt SD_TITLE_BAR.
+		local
+			l_system_color: SD_SYSTEM_COLOR
+		do
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			Result := l_system_color.focused_title_text_color
 		ensure
 			not_void: Result /= Void
 		end
@@ -139,8 +175,8 @@ feature  -- Colors
 		local
 			l_sys_color: SD_SYSTEM_COLOR
 		once
-			create l_sys_color
-			Result := l_sys_color.mdi_back_ground_color
+			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
+			Result := l_sys_color.active_border_color
 		ensure
 			not_void: Result /= Void
 		end
@@ -157,6 +193,15 @@ feature  -- Colors
 
 	border_width: INTEGER is 1
 			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
+
+	menu_title_bar_color: EV_COLOR is
+			-- Menu tilte bar color when menu floating.
+		once
+			create Result
+			Result.set_rgb (132 / 255, 130 / 255, 132 / 255)
+		ensure
+			not_void: Result /= Void
+		end
 
 feature {SD_DOCKING_MANAGER}
 

@@ -87,9 +87,9 @@ feature -- Save/Open inner container data.
 			l_file.close
 
 			internal_docking_manager.command.resize
-			internal_docking_manager.command.unlock_update
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
+			internal_docking_manager.command.unlock_update
 		end
 
 feature {NONE} -- Implementation for save config.
@@ -113,6 +113,8 @@ feature {NONE} -- Implementation for save config.
 				l_zone.save_content_title (a_config_data)
 				a_config_data.set_state (l_zone.content.state.generating_type)
 				a_config_data.set_direction (l_zone.content.state.direction)
+				a_config_data.set_width (l_zone.content.state.last_floating_width)
+				a_config_data.set_height (l_zone.content.state.last_floating_height)
 				debug ("docking")
 					io.put_string ("%N SD_DOCKING_MANAGER zone")
 					io.put_string ("%N  zone: " + l_zone.content.unique_title)
@@ -236,8 +238,7 @@ feature {NONE} -- Implementation for save config.
 			until
 				l_float_menus.after
 			loop
-				l_menu_zone ?= l_float_menus.item.item
-				check floating_menu_zone_only_has_menu_zone: l_menu_zone/= Void end
+				l_menu_zone := l_float_menus.item.zone
 				create l_menu_data.make
 				l_menu_data.set_floating (True)
 				l_menu_data.set_title (l_menu_zone.content.title)
@@ -255,8 +256,8 @@ feature {NONE} -- Implementation for save config.
 		local
 			l_menu_area: EV_CONTAINER
 			l_rows: LINEAR [EV_WIDGET]
+			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
 			l_menu_row: SD_MENU_ROW
-			l_menu_zone: SD_MENU_ZONE
 			l_row_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
 		do
 			l_menu_area := internal_docking_manager.menu_manager.menu_container (a_direction)
@@ -267,28 +268,23 @@ feature {NONE} -- Implementation for save config.
 			until
 				l_rows.after
 			loop
-				create l_row_data.make (1)
-				Result.rows.extend (l_row_data)
 				l_menu_row ?= l_rows.item
 				check menu_area_only_has_menu_row: l_menu_row /= Void end
-
+				create l_row_data.make (1)
+				Result.rows.extend (l_row_data)
 				from
-					l_menu_row.start
+					l_menus := l_menu_row.menu_zones
+					l_menus.start
 				until
-					l_menu_row.after
+					l_menus.after
 				loop
-					l_menu_zone ?= l_menu_row.item
-					check menu_row_only_has_menu_zone: l_menu_zone /= Void end
-
 					if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-						l_row_data.extend ([l_menu_zone.content.title, l_menu_zone.x_position])
+						l_row_data.extend ([l_menus.item_for_iteration.content.title, l_menus.item_for_iteration.x_position])
 					else
-						l_row_data.extend ([l_menu_zone.content.title, l_menu_zone.y_position])
+						l_row_data.extend ([l_menus.item_for_iteration.content.title, l_menus.item_for_iteration.y_position])
 					end
-
-					l_menu_row.forth
+					l_menus.forth
 				end
-
 				l_rows.forth
 			end
 		ensure
@@ -321,6 +317,8 @@ feature {NONE} -- Implementation for open config.
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
 					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager)
+					l_floating_state.set_last_floating_height (l_datas.item.height)
+					l_floating_state.set_last_floating_width (l_datas.item.width)
 					l_floating_state.set_size (l_datas.item.width, l_datas.item.height)
 					open_inner_container_data (l_datas.item, l_floating_state.inner_container)
 					l_multi_dock_area := l_floating_state.inner_container
@@ -451,6 +449,8 @@ feature {NONE} -- Implementation for open config.
 				l_type_id := l_internal.dynamic_type_from_string (a_config_data.state)
 				check a_type_exist: l_type_id /= -1 end
 				l_state ?= l_internal.new_instance_of (l_type_id)
+				l_state.set_last_floating_height (a_config_data.height)
+				l_state.set_last_floating_width (a_config_data.width)
 				l_state.set_docking_manager (internal_docking_manager)
 				l_state.restore (a_config_data.titles, a_container, a_config_data.direction)
 			else	-- If it's a split_area
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation for open config.
 
 				a_data.forth
 			end
-
+			l_panel.update_tab_group
 		end
 
 	open_menu_datas (a_menu_datas: ARRAYED_LIST [SD_MENU_DATA]) is
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation for open config.
 			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER]]]
 			l_row: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
 			l_content: SD_MENU_CONTENT
-			l_menu_row: SD_MENU_ROW
+			l_menus: SD_MENU_ROW
 			l_menu_zone: SD_MENU_ZONE
 		do
 			l_menu_container := internal_docking_manager.menu_manager.menu_container (a_direction)
@@ -627,11 +627,11 @@ feature {NONE} -- Implementation for open config.
 			loop
 				l_row := l_rows.item
 				if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-					create l_menu_row.make (False)
+					create l_menus.make (False)
 				else
-					create l_menu_row.make (True)
+					create l_menus.make (True)
 				end
-				l_menu_container.extend (l_menu_row)
+				l_menu_container.extend (l_menus)
 				from
 					l_row.start
 				until
@@ -641,8 +641,8 @@ feature {NONE} -- Implementation for open config.
 					check l_content_not_void: l_content /= Void end
 					create l_menu_zone.make (False, internal_docking_manager)
 					l_menu_zone.extend (l_content)
-					l_menu_row.extend (l_menu_zone)
-					l_menu_row.set_item_position_relative (l_menu_zone, l_row.item.integer_32_item (2))
+					l_menus.extend (l_menu_zone)
+					l_menus.set_item_position_relative (l_menu_zone, l_row.item.integer_32_item (2))
 					l_row.forth
 				end
 				l_rows.forth

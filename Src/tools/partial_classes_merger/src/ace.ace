@@ -2,7 +2,7 @@ system
 	"class_merger"
 
 root
-	APPLICATION: execute
+	EPC_APPLICATION: execute
 
 default
 	assertion (check)

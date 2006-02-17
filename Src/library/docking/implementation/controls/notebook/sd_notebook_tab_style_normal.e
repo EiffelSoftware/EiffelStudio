@@ -31,7 +31,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	expose_unselected (a_width: INTEGER) is
+	expose_unselected (a_width: INTEGER; a_selected_tab_after: BOOLEAN) is
 			-- Draw current when unselected.
 		require
 			setted: pixmap /= Void
@@ -54,7 +54,11 @@ feature -- Command
 				-- Draw pixmap
 				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
 				-- Draw end |
-				internal_drawing_area.draw_segment (width - 1, gap_height + 1, width - 1, height - 1)
+				if a_selected_tab_after then
+					internal_drawing_area.draw_segment (width - 1, gap_height - 1, width - 1, height)
+				else
+					internal_drawing_area.draw_segment (width - 1, gap_height + 1, width - 1, height - 1)
+				end
 				internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_shared.non_focused_color_lightness))
 				internal_drawing_area.draw_text_top_left (start_x_text_internal, gap_height, text)
 			else
@@ -63,7 +67,11 @@ feature -- Command
 				-- Draw pixmap
 				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
 				-- Draw end |
-				internal_drawing_area.draw_segment (width - 1, 0, width - 1, height - gap_height - 1)
+				if a_selected_tab_after then
+					internal_drawing_area.draw_segment (width - 1, 0, width - 1, height - gap_height)
+				else
+					internal_drawing_area.draw_segment (width - 1, 0, width - 1, height - gap_height - 1)
+				end
 				-- Draw text
 				internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_shared.non_focused_color_lightness))
 				internal_drawing_area.draw_text_top_left (start_x_text_internal, 0, text)
@@ -77,18 +85,28 @@ feature -- Command
 		local
 			l_helper: SD_COLOR_HELPER
 			l_rect: EV_RECTANGLE
+			l_start_x: INTEGER
 		do
 			if internal_drawing_area.height > 0 then
 
 				create l_helper
 
 				if internal_draw_border_at_top then
+						l_start_x := a_width - internal_shared.highlight_tail_width
+						if l_start_x < 0 then
+							l_start_x := 0
+						end
 					if internal_drawing_area.width - start_x_tail_internal > 0 then
-						create l_rect.make (start_x_tail_internal, gap_height - 1, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height + 1)
+
+						create l_rect.make (l_start_x, gap_height - 1, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height + 1)
 					end
 				else
 					if internal_drawing_area.width - start_x_tail_internal > 0  then
-						create l_rect.make (start_x_tail_internal, 0, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height)
+						l_start_x := a_width - internal_shared.highlight_tail_width
+						if l_start_x < 0 then
+							l_start_x := 0
+						end
+						create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height)
 					end
 				end
 				if l_rect /= Void then
@@ -104,9 +122,9 @@ feature -- Command
 				internal_drawing_area.set_foreground_color (internal_shared.border_color)
 				-- Draw | at end
 				if internal_draw_border_at_top then
-					internal_drawing_area.draw_segment (start_x_separator_after_internal, 1, start_x_separator_after_internal, height)
+					internal_drawing_area.draw_segment (a_width - 1, 1, a_width - 1, height)
 				else
-					internal_drawing_area.draw_segment (start_x_separator_after_internal, 0, start_x_separator_after_internal, height - 2)
+					internal_drawing_area.draw_segment (a_width - 1, 0, a_width - 1, height - 2)
 				end
 
 				if internal_draw_border_at_top then
@@ -218,10 +236,26 @@ feature -- Properties
 	is_selected: BOOLEAN
 			-- Draw selected?
 
-	set_selected (a_selected: BOOLEAN) is
+	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
 			-- Set `is_selected'
+		local
+			l_font: EV_FONT
 		do
 			is_selected := a_selected
+			if a_selected then
+				if a_focused then
+					internal_drawing_area.set_background_color (internal_shared.focused_color)
+				else
+					internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
+				end
+				l_font := internal_drawing_area.font
+				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
+			else
+				internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
+				l_font := internal_drawing_area.font
+				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
+			end
+			internal_drawing_area.set_font (l_font)
 		ensure
 			set: is_selected = a_selected
 		end

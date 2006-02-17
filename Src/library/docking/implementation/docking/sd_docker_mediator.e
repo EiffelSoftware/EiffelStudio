@@ -34,8 +34,12 @@ feature -- Initlization
 
 			create cancel_actions
 			internal_key_press_function := agent on_key_press
+			internal_key_release_function := agent on_key_release
 			create l_env
 			l_env.application.key_press_actions.extend (internal_key_press_function)
+			l_env.application.key_release_actions.extend (internal_key_release_function)
+
+			is_dockable := True
 		ensure
 			set: caller = a_caller
 			set: internal_docking_manager = a_docking_manager
@@ -99,7 +103,7 @@ feature -- Hanlde pointer events
 			until
 				hot_zones.after or changed
 			loop
-				changed := hot_zones.item.apply_change (a_screen_x, a_screen_y, caller)
+				changed := hot_zones.item.apply_change (a_screen_x, a_screen_y)
 				hot_zones.forth
 			end
 
@@ -130,51 +134,23 @@ feature -- Hanlde pointer events
 		do
 			screen_x := a_screen_x
 			screen_y := a_screen_y
+
 			from
 				hot_zones.start
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_feedback (a_screen_x, a_screen_y)
+				l_drawed := hot_zones.item.update_for_pointer_position_feedback (a_screen_x, a_screen_y, is_dockable)
 				hot_zones.forth
 			end
 
-			on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
-			on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
-		end
-
-	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
-			--
-		local
-			l_drawed: BOOLEAN
-		do
-			from
-				hot_zones.start
-			until
-				hot_zones.after or l_drawed
-			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
-
-				hot_zones.forth
+			if is_dockable then
+				on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
+				on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
 			end
 
-			if not hot_zones.after then
-				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
-			end
 		end
 
-	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER) is
-			--
-		do
-			from
-				hot_zones.start
-			until
-				hot_zones.after
-			loop
-				hot_zones.item.update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y)
-				hot_zones.forth
-			end
-		end
 feature -- Query
 
 	screen_x, screen_y: INTEGER
@@ -182,6 +158,9 @@ feature -- Query
 
 	is_tracing: BOOLEAN
 			-- Whether is is_tracing pointer events.
+
+	is_dockable: BOOLEAN
+			-- If current dragging widget dockable?
 
 	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Handle user canel dragging event.
@@ -227,13 +206,36 @@ feature {NONE} -- Implementation functions
 
 			create l_env
 			l_env.application.key_press_actions.prune_all (internal_key_press_function)
+			l_env.application.key_release_actions.prune_all (internal_key_release_function)
 		end
 
 	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
-			-- Handle user press Escape key to canel event.
+			-- Handle user press key to canel event or not allow to dock.
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+			inspect
+				a_key.code
+			when {EV_KEY_CONSTANTS}.key_escape then
 				cancel_tracing_pointer
+			when {EV_KEY_CONSTANTS}.key_ctrl then
+				is_dockable := False
+				clear_all_indicator
+				on_pointer_motion (screen_x, screen_y)
+			else
+
+			end
+		end
+
+	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY) is
+			-- Handle user release key to allow dock.
+		do
+			inspect
+				a_key.code
+			when {EV_KEY_CONSTANTS}.key_ctrl then
+				is_dockable := True
+--				on_pointer_motion_for_indicator (screen_x, screen_y)
+				on_pointer_motion (screen_x, screen_y)
+			else
+
 			end
 		end
 
@@ -260,12 +262,10 @@ feature {NONE} -- Implementation functions
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
 
---			if internal_shared.hot_zone_factory.hot_zone_main (caller, internal_docking_manager).type = caller.type  then
 				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (caller, internal_docking_manager))
 				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 				end
---			end
 		ensure
 			hot_zones_created: hot_zones /= Void
 		end
@@ -324,8 +324,8 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	add_hot_zone_on_type (a_zone: SD_ZONE; a_source: SD_DOCKER_SOURCE)is
-			--
+	add_hot_zone_on_type (a_zone: SD_ZONE; a_source: SD_DOCKER_SOURCE) is
+			-- Add a_zone's hot zone base on zone type.
 		require
 			a_zone_not_void: a_zone /= Void
 			a_source_not_void: a_source /= Void
@@ -337,6 +337,39 @@ feature {NONE} -- Implementation functions
 				if a_zone.type = caller.type then
 					a_source.add_hot_zones (Current, hot_zones)
 				end
+			end
+		end
+
+	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
+			-- Handle pointer motion event for draw docking indicator.
+		local
+			l_drawed: BOOLEAN
+		do
+			from
+				hot_zones.start
+			until
+				hot_zones.after or l_drawed
+			loop
+				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+
+				hot_zones.forth
+			end
+
+			if not hot_zones.after then
+				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+			end
+		end
+
+	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER) is
+			-- Handle pointer motion for clear docking indicator.
+		do
+			from
+				hot_zones.start
+			until
+				hot_zones.after
+			loop
+				hot_zones.item.update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y)
+				hot_zones.forth
 			end
 		end
 
@@ -356,6 +389,10 @@ feature {NONE} -- Implementation attributes
 
 	internal_key_press_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
 			-- Golbal key press action.
+
+	internal_key_release_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
+			-- Golbal key release action.
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

@@ -14,10 +14,10 @@ inherit
 		end
 
 	ECOM_TYPE_KIND
-		export 
+		export
 			{NONE} all
 		end
-		
+
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
@@ -77,10 +77,10 @@ feature -- Access
 
 	dispatch_functions: LIST [WIZARD_FUNCTION_DESCRIPTOR]
 			-- Descriptions of interface's dispatch functions
-	
+
 	function_table: LIST [WIZARD_FUNCTION_DESCRIPTOR]
 			-- Table of interface functions
-			
+
 	properties: LIST [WIZARD_PROPERTY_DESCRIPTOR]
 			-- Descriptions of interface's properties
 
@@ -152,7 +152,7 @@ feature -- Access
 				functions_start
 				if not functions_after then
 					Result.append ("%R%N%TFunctions:")
-				end				
+				end
 			until
 				functions_after
 			loop
@@ -171,7 +171,7 @@ feature -- Access
 				properties.start
 				if not properties.after then
 					Result.append ("%R%N%TProperties:")
-				end				
+				end
 			until
 				properties.after
 			loop
@@ -222,7 +222,7 @@ feature -- Access
 		ensure
 			non_void_function: Result /= Void
 		end
-	
+
 	functions_count: INTEGER is
 			-- Function count.
 		local
@@ -252,7 +252,7 @@ feature -- Element Change
 		ensure
 			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
 		end
-		
+
 	add_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add `a_coclass' to `implementing_coclasses'.
 		require
@@ -264,7 +264,7 @@ feature -- Element Change
 		ensure
 			added: implementing_coclasses.has (a_coclass)
 		end
-		
+
 	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
 			-- Set `type_library_descriptor' with `a_descriptor'.
 		require
@@ -366,7 +366,7 @@ feature -- Element Change
 		ensure
 			is_iunknown_set: is_iunknown = a_bool
 		end
-		
+
 	set_is_idispatch (a_bool: BOOLEAN) is
 			-- Set `is_idispatch' with `a_bool'.
 		do
@@ -374,7 +374,7 @@ feature -- Element Change
 		ensure
 			is_idispatch_set: is_idispatch = a_bool
 		end
-		
+
 feature -- Status Report
 
 	is_implementing_coclass (a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
@@ -384,7 +384,7 @@ feature -- Status Report
 		do
 			Result := implementing_coclasses.has (a_coclass)
 		end
-		
+
 	dual_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): WIZARD_FUNCTION_DESCRIPTOR is
 			-- Dual function
 		local
@@ -403,13 +403,13 @@ feature -- Status Report
 				l_func := function_table.item
 				if l_id = l_func.member_id and l_invoke_kind = l_func.invoke_kind then
 					Result := l_func
-				else			
+				else
 					function_table.forth
 				end
 			end
 			function_table.go_to (l_cursor)
 		end
-		
+
 	has_function (a_function: WIZARD_FUNCTION_DESCRIPTOR): BOOLEAN is
 			-- Does `function_table' or `function_table' of
 			-- `inherited_interface' have function `a_function'?
@@ -445,7 +445,7 @@ feature -- Status Report
 			from
 				properties.start
 			until
-				properties.after or 
+				properties.after or
 				Result
 			loop
 				Result := a_property.member_id = properties.item.member_id and
@@ -453,7 +453,7 @@ feature -- Status Report
 				properties.forth
 			end
 			properties.go_to (cursor)
-		end	
+		end
 
 	functions_after: BOOLEAN is
 			-- Is after?
@@ -462,16 +462,16 @@ feature -- Status Report
 		do
 			Result := not in_vtable and dispatch_functions.after
 		end
-		
+
 	functions_empty: BOOLEAN is
 			-- Are functions is_empty?
 		do
-			Result := (vtable_functions = Void or else vtable_functions.is_empty) and 
+			Result := (vtable_functions = Void or else vtable_functions.is_empty) and
 					(dispatch_functions = Void or else dispatch_functions.is_empty)
 		end
-	
+
 feature -- Cursor movement
-	
+
 	functions_start is
 			-- Start for iteration.
 		require
@@ -485,7 +485,7 @@ feature -- Cursor movement
 				in_vtable := False
 			end
 		end
-		
+
 	functions_forth is
 			-- Forth for iteration.
 		require
@@ -503,7 +503,7 @@ feature -- Cursor movement
 		end
 
 feature -- Miscellaneous
-	
+
 	finalize_functions is
 			-- Finalize interface functions.
 			-- Build `vtable_functions' and `dispatch_functions' lists from `function_table'.
@@ -534,7 +534,7 @@ feature -- Miscellaneous
 					vtable_functions.after
 				loop
 					l_virtual_function := vtable_functions.item
-					l_dispatch_function := dispinterface_descriptor.dual_function (l_virtual_function)	
+					l_dispatch_function := dispinterface_descriptor.dual_function (l_virtual_function)
 					if l_dispatch_function /= Void then
 						l_virtual_function.set_dual (True)
 						l_functions.prune (l_dispatch_function)
@@ -556,7 +556,7 @@ feature -- Miscellaneous
 				end
 			end
 		end
-	
+
 feature -- Basic operations
 
 	initialize_inherited_interface is
@@ -616,9 +616,6 @@ feature -- Basic operations
 						l_arguments.after
 					loop
 						l_argument := l_arguments.item
-						if l_argument.name.is_equal ("left") then
-							do_nothing
-						end
 						l_argument.set_name (unique_identifier (l_argument.name, agent feature_eiffel_names.has))
 						l_arguments.forth
 					end
@@ -627,7 +624,7 @@ feature -- Basic operations
 			end
 			is_interface_disambiguated := True
 		ensure
-			not_empty_feature_names: not functions_empty and not properties.is_empty implies 
+			not_empty_feature_names: not functions_empty and not properties.is_empty implies
 									not feature_eiffel_names.is_empty
 		end
 
@@ -718,9 +715,9 @@ feature -- Basic operations
 		do
 			a_visitor.process_interface (Current)
 		end
-	
+
 feature {WIZARD_INTERFACE_DESCRIPTOR} -- Implementation
-	
+
 	implementing_coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
 			-- Coclasses that *directly* implement interface
 

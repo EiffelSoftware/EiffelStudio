@@ -20,6 +20,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_UNIQUE_IDENTIFIER_FACTORY
+		export
+			{NONE} all
+		end
+
 create
 	make_from_interface
 
@@ -43,6 +48,7 @@ feature -- Initialization
 			description.append (a_descriptor.name)
 			description.append ("%' interface.")
 			type_library_descriptor := a_descriptor.type_library_descriptor
+			disambiguate_argument_names
 		end
 
 feature -- Access
@@ -68,6 +74,50 @@ feature -- Access
 			-- Is source interface?
 
 feature -- Basic operations
+
+	disambiguate_argument_names is
+			-- We need to make sure there are no clashes between argument
+			-- names and feature names because if we have interface IA with
+			-- feature `f (g: ANY)' and interface IB inherit IA with feature
+			-- `g' then the disambiguation of the feature names in the interfaces
+			-- will not rename the argument name (and it's not needed because the
+			-- argument is in a different scope, it's only needed in the implementation
+			-- because the feature is redefined and thus the argument is in the same
+			-- scope as the feature).
+		local
+			l_parent: WIZARD_INTERFACE_DESCRIPTOR
+			l_eiffel_names: LIST [STRING]
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_argument: WIZARD_PARAM_DESCRIPTOR
+		do
+			l_eiffel_names := interface_descriptor.feature_eiffel_names
+			from
+				l_parent := interface_descriptor.inherited_interface
+			until
+				l_parent = Void
+			loop
+				from
+					l_parent.functions_start
+				until
+					l_parent.functions_after
+				loop
+					if l_parent.functions_item.argument_count > 0 then
+						l_arguments := l_parent.functions_item.arguments
+						from
+							l_arguments.start
+						until
+							l_arguments.after
+						loop
+							l_argument := l_arguments.item
+							l_argument.set_name (unique_identifier (l_argument.name, agent l_eiffel_names.has))
+							l_arguments.forth
+						end
+					end
+					l_parent.functions_forth
+				end
+				l_parent := l_parent.inherited_interface
+			end
+		end
 
 	set_source (a_boolean: BOOLEAN) is
 			-- Set `source' with `a_boolean'.

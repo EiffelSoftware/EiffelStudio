@@ -190,7 +190,7 @@ feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD
 			end
 		end
 
-feature {SD_TAB_STATE} -- Maximum issues.
+feature {SD_TAB_STATE_ASSISTANT} -- Maximum issues.
 
 	main_area_widget: EV_WIDGET
 			-- Other user widgets when `Current' is maximized.

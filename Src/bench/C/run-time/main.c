@@ -493,14 +493,18 @@ rt_public void eif_alloc_init(void)
 		env_var = getenv ("EIF_MEMORY_CHUNK");
 		if ((env_var != NULL) && (strlen(env_var) > 0)) {
 			chunk_size = atoi (env_var);
-			mod = chunk_size % ALIGNMAX;
-			if (mod != 0)
-				chunk_size += ALIGNMAX - mod;
 		} else {
 			chunk_size = CHUNK_DEFAULT;
 		}
+		if (chunk_size < CHUNK_SZ_MIN) {
+			chunk_size = CHUNK_SZ_MIN;
+		}
+		mod = chunk_size % ALIGNMAX;
+		if (mod != 0) {
+			chunk_size += ALIGNMAX - mod;
+		}
 	}
-	eif_chunk_size = chunk_size >= CHUNK_SZ_MIN ? chunk_size : CHUNK_SZ_MIN;
+	eif_chunk_size = chunk_size;
 								/* Reasonable chunk size. */
 
 #ifdef ISE_GC
@@ -509,11 +513,12 @@ rt_public void eif_alloc_init(void)
 		env_var = getenv ("EIF_MEMORY_SCAVENGE");
 		if ((env_var != NULL) && (strlen(env_var) > 0)) {
 			scavenge_size = atoi (env_var);
-			mod = scavenge_size % ALIGNMAX;
-			if (mod != 0)
-				scavenge_size += ALIGNMAX - mod;
 		} else {
 			scavenge_size = GS_ZONE_SZ_DEFAULT;
+		}
+		mod = scavenge_size % ALIGNMAX;
+		if (mod != 0) {
+			scavenge_size += ALIGNMAX - mod;
 		}
 	}
 	eif_scavenge_size = scavenge_size >= GS_SZ_MIN ? scavenge_size : GS_SZ_MIN;
@@ -562,11 +567,12 @@ rt_public void eif_alloc_init(void)
 		env_var = getenv ("EIF_STACK_CHUNK");
 		if ((env_var != NULL) && (strlen(env_var) > 0)) {	/* Has user specified it? */
 			stack_chunk = atoi (env_var);
-			mod = stack_chunk % ALIGNMAX;
-			if (mod != 0)
-				stack_chunk += ALIGNMAX - mod;
 		} else {
 			stack_chunk = STACK_CHUNK;	/* RT default setting. */
+		}
+		mod = stack_chunk % ALIGNMAX;
+		if (mod != 0) {
+			stack_chunk += ALIGNMAX - mod;
 		}
 	}
 	eif_stack_chunk = stack_chunk;	

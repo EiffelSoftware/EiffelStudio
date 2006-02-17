@@ -500,7 +500,7 @@ feature {NONE}  -- Implementation
 				else
 					internal_tabs.item.set_selected (False, a_focus)
 				end
-
+				
 				internal_tabs.forth
 			end
 		end

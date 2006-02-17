@@ -457,7 +457,6 @@ feature -- Basic operations
 		local
 			i, l_count: INTEGER
 			l_descriptor: WIZARD_COCLASS_DESCRIPTOR
-			l_impl_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from

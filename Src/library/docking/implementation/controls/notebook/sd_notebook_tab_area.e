@@ -87,6 +87,7 @@ feature -- Command
 			-- Hide/show tabs base on space.
 		local
 			l_tabs, l_all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+			l_tab_before_selected: SD_NOTEBOOK_TAB
 		do
 			if a_width >= 0 then
 				ignore_resize := True
@@ -111,6 +112,11 @@ feature -- Command
 				loop
 					if not l_tabs.has (l_all_tabs.item) then
 						l_all_tabs.item.show
+						if l_all_tabs.item.is_selected and l_tab_before_selected /= Void then
+							l_tab_before_selected.set_selected_tab_after (True)
+						end
+						l_all_tabs.item.set_selected_tab_after (False)
+						l_tab_before_selected := l_all_tabs.item
 						ignore_resize := True
 					end
 					l_all_tabs.forth

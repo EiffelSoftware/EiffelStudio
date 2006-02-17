@@ -40,10 +40,12 @@ feature {NONE}  -- Initlization
 			init_actions (a_notebook)
 			internal_draw_pixmap := True
 			internal_docking_manager := a_docking_manager
+			internal_notebook := a_notebook
 
 			init_drawing_style (a_top)
 			set_enough_space
 		ensure
+			set: internal_notebook = a_notebook
 			set: internal_docking_manager = a_docking_manager
 		end
 
@@ -62,8 +64,6 @@ feature {NONE}  -- Initlization
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
-
-			-- FIXIT: Change to use Context Menu when right click.
 		end
 
 feature -- Command
@@ -183,26 +183,9 @@ feature -- Properties
 
 	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
 			-- Set `selected'.
-		local
-			l_color_helper: SD_COLOR_HELPER
-			l_font: EV_FONT
 		do
-			internal_tab_style.set_selected (a_selected)
-			create l_color_helper
-			if a_selected then
-				if a_focused then
-					internal_drawing_area.set_background_color (internal_shared.focused_color)
-				else
-					internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
-				end
-				l_font := internal_drawing_area.font
-				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_bold)
-			else
-				internal_drawing_area.set_background_color (internal_shared.non_focused_color_lightness)
-				l_font := internal_drawing_area.font
-				l_font.set_weight ({EV_FONT_CONSTANTS}.Weight_regular)
-			end
-			internal_drawing_area.set_font (l_font)
+			internal_tab_style.set_selected (a_selected, a_focused)
+
 			update_minmum_size
 			on_expose
 		ensure
@@ -225,10 +208,23 @@ feature -- Properties
 			set: not a_focused implies internal_drawing_area.background_color.is_equal (internal_shared.non_focused_title_color)
 		end
 
+	set_selected_tab_after (a_selected_tab_after: BOOLEAN) is
+			-- Set `is_selected_tab_after'.
+		do
+			is_selected_tab_after := a_selected_tab_after
+		ensure
+			set: is_selected_tab_after = a_selected_tab_after
+		end
+
+	is_selected_tab_after: BOOLEAN
+			-- If after Current, there is a selected tab?
+
 feature {NONE}  -- Implmentation for drag action
 
 	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer press.
+		local
+			l_menu: SD_ZONE_MANAGEMENT_MENU
 		do
 			debug ("docking")
 				print ("%NSD_NOTEBOOK_TAB  on_pointer_press")
@@ -239,6 +235,11 @@ feature {NONE}  -- Implmentation for drag action
 				internal_pointer_pressed := True
 				enable_capture
 				select_actions.call ([])
+			when 3 then
+				select_actions.call ([])
+				create l_menu.make (internal_notebook)
+--				l_menu.show_at (Current, a_x, a_y)
+				l_menu.show_at_window (internal_docking_manager.main_window)
 			else
 
 			end
@@ -288,7 +289,7 @@ feature {NONE}  -- Implementation agents
 				if is_selected then
 					internal_tab_style.expose_selected (a_width)
 				else
-					internal_tab_style.expose_unselected (a_width)
+					internal_tab_style.expose_unselected (a_width, is_selected_tab_after)
 				end
 			end
 		end
@@ -313,14 +314,14 @@ feature {NONE}  -- Implementation functions.
 
 feature {NONE}  -- Implementation attributes
 
+	internal_notebook: SD_NOTEBOOK
+			-- Notebook Current belong to.
+
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area for pixmap.
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which contain `internal_pixmap_drawing
-
-	internal_has_tab_before, internal_has_tab_after: BOOLEAN
-			-- If before/after Current, there is a tab?
 
 	internal_shared: SD_SHARED
 			-- All singletons.

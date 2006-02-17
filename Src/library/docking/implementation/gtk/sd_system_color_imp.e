@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_SYSTEM_COLOR
+	SD_SYSTEM_COLOR_IMP
 
 feature -- Access
 

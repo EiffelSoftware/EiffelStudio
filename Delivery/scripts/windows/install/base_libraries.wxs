@@ -1273,6 +1273,7 @@
 								<Component Id="process_component2" Guid="9afe9d4a-3b36-4c1b-94d5-192100184c0f">
 									<File Id="process_file1" LongName="process_error_listener_thread.e" Name="PROCES~1.E"/>
 									<File Id="process_file4" LongName="process_output_listener_thread.e" Name="PROCES~4.E"/>
+									<File Id="process_file77" LongName="process_input_listener_thread.e" Name="PR1C6F~1.E"/>
 									<File Id="process_file6" LongName="process_thread_timer.e" Name="PROCES~3.E"/>
 									<File Id="process_file13" LongName="process_imp.e" Name="PROCES~2.E"/>
 									<File Id="process_file19" LongName="process_unix_os.e" Name="PR8755~1.E"/>
@@ -1295,10 +1296,11 @@
 								<Component Id="process_component8" Guid="3ab51c8f-2dbc-4d86-b1b4-91bdb128d788">
 									<File Id="process_file51" LongName="process_error_listener_thread.e" Name="PROCES~1.E"/>
 									<File Id="process_file52" LongName="process_output_listener_thread.e" Name="PROCES~4.E"/>
+									<File Id="process_file66" LongName="process_input_listener_thread.e" Name="PR1C6F~1.E"/>
 									<File Id="process_file53" LongName="process_thread_timer.e" Name="PROCES~3.E"/>
 									<File Id="process_file42" LongName="file_handle.e" Name="FILE_H~1.E"/>
-									<File Id="process_file43" LongName="io_redirection_process_launcher.e" Name="IO_RED~1.E"/>
 									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~1.E"/>
+									<File Id="process_file43" LongName="wel_process.e" Name="WEL_PR~4.E"/>
 									<File Id="process_file60" LongName="wel_process_entry_32.e" Name="WEL_PR~3.E" />
 									<File Id="process_file61" LongName="wel_process_id_pair.e" Name="WEL_PR~1.E" />
 									<File Id="process_file65" LongName="wel_process_toolhelp_constants.e" Name="WEL_PR~2.E" />
@@ -1310,10 +1312,17 @@
 						<Directory Id="process_directory11" Name="dotnet">
 							<Directory Id="process_directory13" Name="windows">
 								<Component Id="process_component12" Guid="e587d143-6873-4bdb-a8ec-a7512c43441c">
-									<File Id="process_file55" LongName="dotnet_process_error_listener_thread.e" Name="DOTNET~1.E"/>
-									<File Id="process_file56" LongName="dotnet_process_input_listener_thread.e" Name="DOTNET~2.E"/>
-									<File Id="process_file57" LongName="dotnet_process_output_listener_thread.e" Name="DOTNET~3.E"/>
 									<File Id="process_file58" LongName="process_imp.e" Name="PROCES~1.E"/>
+									<File Id="process_file_67" Name="PROCES~2.E" LongName="process_error_listener_thread.e" />
+									<File Id="process_file_68" Name="PR1C6F~1.E" LongName="process_input_listener_thread.e" />
+									<File Id="process_file_69" Name="PR5B59~1.E" LongName="process_output_listener_thread.e" />
+									<File Id="process_file_70" Name="PROCES~4.E" LongName="process_thread_timer.e" />
+									<File Id="process_file_71" Name="PROCES~3.E" LongName="process_toolhelp.e" />
+									<File Id="process_file_72" Name="WEL_PR~3.E" LongName="wel_process_entry_32.e" />
+									<File Id="process_file_73" Name="WEL_PR~1.E" LongName="wel_process_id_pair.e" />
+									<File Id="process_file_74" Name="WEL_PR~2.E" LongName="wel_process_toolhelp_constants.e" />
+									<File Id="process_file_75" Name="WEL_TH~1.E" LongName="wel_thread_entry_32.e" />
+									<File Id="process_file_76" Name="WEL_TO~1.E" LongName="wel_toolhelp.e" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -1931,6 +1940,11 @@
 								<File Id="html_form.e" Name="HTML_F~1.E" LongName="html_form.e" />
 							</Component>
 						</Directory>
+					</Directory>
+					<Directory Id="uuid" Name="uuid">
+						<Component Id="uuid" Guid="F7692E65-2673-47ae-9624-D4BD9C496DCD">
+							<File Id="uuid_generator.e" Name="UUID_G~1.E" LongName="uuid_generator.e" />
+						</Component>
 					</Directory>
 				</Directory>
 			</Directory>

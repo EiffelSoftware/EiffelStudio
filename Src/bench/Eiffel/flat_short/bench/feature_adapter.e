@@ -129,6 +129,7 @@ feature -- Element change
 								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
 							else
 								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+								l_infix_prefix_keyword.set_position (0, 0, 0, 0)
 							end
 							create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, l_infix_prefix_keyword)
 						elseif source_feature.is_prefix then
@@ -140,6 +141,7 @@ feature -- Element change
 								l_infix_prefix_keyword.set_index (f_name.internal_name.index)
 							else
 								l_infix_prefix_keyword := l_infix_prefix_as.infix_prefix_keyword.twin
+								l_infix_prefix_keyword.set_position (0, 0, 0, 0)
 							end
 							create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, l_infix_prefix_keyword)
 						elseif source_feature.alias_name /= Void then

@@ -119,13 +119,13 @@ feature -- Access
 	name: STRING
 			-- Library name.
 
-	description: STRING 
+	description: STRING
 			-- Type Library description.
 
 	doc_string: STRING
 			-- Documentation string.
 
-	context_id: INTEGER 
+	context_id: INTEGER
 			-- Context identifier for library help topic in help file.
 
 	help_file: STRING
@@ -134,7 +134,7 @@ feature -- Access
 	major_version_number: INTEGER
 			-- Major version number.
 
-	minor_version_number: INTEGER 
+	minor_version_number: INTEGER
 			-- Minor version number.
 
 	lcid: INTEGER
@@ -142,7 +142,7 @@ feature -- Access
 
 	type_lib: ECOM_TYPE_LIB
 			-- Type Library.
-	
+
 	Generation_title: STRING is "Parsing Type Library"
 			-- Generation title.
 
@@ -373,17 +373,17 @@ feature -- Basic operations
 								aliased_descriptor := a_lib.descriptors.item (a_index)
 								a_name := aliased_descriptor.name.twin
 								a_name.to_upper
-								if 
+								if
 									(a_name.substring_index ("__MIDL___MIDL_", 1) > 0) or
 									(a_name.substring_index ("TAG", 1) > 0)
 								then
 									aliased_descriptor.set_name (l_type.name)
 									aliased_descriptor.set_c_type_name (l_type.name)
-									aliased_descriptor.set_eiffel_class_name 
+									aliased_descriptor.set_eiffel_class_name
 										(name_for_class (l_type.name, aliased_descriptor.type_kind, False))
 									aliased_descriptor.set_c_header_file_name (header_name (aliased_descriptor.namespace, aliased_descriptor.c_type_name))
-								end								
-								update_referees (i, a_index, a_lib)								
+								end
+								update_referees (i, a_index, a_lib)
 								descriptors.put (Void, i)
 							end
 						end
@@ -457,6 +457,7 @@ feature -- Basic operations
 		local
 			i, l_count: INTEGER
 			l_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			l_impl_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			l_type: WIZARD_TYPE_DESCRIPTOR
 		do
 			from
@@ -502,7 +503,7 @@ feature -- Basic operations
 					if l_type.type_kind = Tkind_interface or l_type.type_kind = Tkind_dispatch then
 						l_interface ?= l_type
 						if l_interface /= Void then
-							if (not environment.is_client or system_descriptor.is_iunknown or 
+							if (not environment.is_client or system_descriptor.is_iunknown or
 									not referees.item (i).is_empty) and not Non_generated_type_libraries.has (guid) and
 									l_interface.inherited_interface /= Void then
 								system_descriptor.interfaces.force (l_interface.implemented_interface)

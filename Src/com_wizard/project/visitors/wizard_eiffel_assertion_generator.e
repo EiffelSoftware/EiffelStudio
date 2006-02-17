@@ -62,7 +62,7 @@ feature -- Basic operation
 				l_visitor.vt_type /= Vt_bstr
 			then
 				create l_tag.make (100)
-				l_tag.append ("non_void_")
+				l_tag.append ("attached_")
 				l_tag.append (a_name)
 				
 				create l_body.make (100)
@@ -81,23 +81,6 @@ feature -- Basic operation
 			l_visitor := Void
 		ensure
 			non_void_assertions: assertions /= Void
-		end
-
-	user_defined_precondition (a_feature_name: STRING): WIZARD_WRITER_ASSERTION is
-			-- User defined precondition.
-		require
-			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.is_empty
-		local
-			l_tag, l_body, a_precondition_name: STRING
-		do
-			a_precondition_name := user_precondition_name (a_feature_name)
-			l_tag := a_precondition_name.twin
-			l_body := a_precondition_name.twin
-
-			create Result.make (l_tag, l_body)
-		ensure
-			non_void_assertion: Result /= Void
 		end
 
 	generate_postcondition (a_name: STRING; a_type: WIZARD_DATA_TYPE_DESCRIPTOR; 

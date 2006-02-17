@@ -324,6 +324,45 @@ feature -- Old half-tone style icons.
 			not_void: Result /= Void
 		end
 
+feature -- Menus icons.
+
+	menu_customize_indicator: EV_PIXMAP is
+			-- Indicator at right side of a menu.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	menu_customize_indicator_with_hidden_items: EV_PIXMAP is
+			-- Indictor at right side of a menu when there is hidden menus.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+feature -- Zone management icons.
+
+	close_context_menu: EV_PIXMAP  is
+			-- "Close" pixmap when user right click one SD_NOTEBOOK_TAB.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	close_others: EV_PIXMAP is
+			-- "Close all but this" pixmap when user right click one SD_NOTEBOOK_TAB.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	close_all: EV_PIXMAP is
+			-- When user click on a SD_NOTEBOOK_TAB, "close all" pixmap shown on context menu.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -334,8 +373,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end

@@ -119,13 +119,10 @@ feature -- Transformation
 			l_names := a_interface_descriptor.feature_eiffel_names
 			l_name := unique_identifier (l_name, agent has_name_or_accessors (l_names, ?))
 			l_names.force (l_name)
-			l_names.force (precondition_feature_name (l_name))
 			l_setter := setter_feature_name (l_name)
 			l_names.force (l_setter)
-			l_names.force (precondition_feature_name (l_setter))
 			l_setter := ref_setter_feature_name (l_name)
 			l_names.force (l_setter)
-			l_names.force (precondition_feature_name (l_setter))
 		end
 
 feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY} -- Basic operations
@@ -200,19 +197,19 @@ feature {NONE} -- Implementation
 		local
 			l_setter: STRING
 		do
-			Result := Eiffel_keywords.has (a_name) or a_list.has (a_name) or a_list.has (precondition_feature_name (a_name))
+			Result := Eiffel_keywords.has (a_name) or a_list.has (a_name)
 			if not Result then
 				l_setter := setter_feature_name (a_name)
-				Result := a_list.has (l_setter) or a_list.has (precondition_feature_name (l_setter))
+				Result := a_list.has (l_setter)
 				if not Result then
 					l_setter := ref_setter_feature_name (a_name)
-					Result := a_list.has (l_setter) or a_list.has (precondition_feature_name (l_setter))
+					Result := a_list.has (l_setter)
 				end
 			end
 		ensure
-			definition: Result = a_list.has (a_name) or a_list.has (precondition_feature_name (a_name)) or
-								a_list.has (setter_feature_name (a_name)) or a_list.has (precondition_feature_name (setter_feature_name (a_name))) or
-								a_list.has (ref_setter_feature_name (a_name)) or a_list.has (precondition_feature_name (ref_setter_feature_name (a_name))) or 
+			definition: Result = a_list.has (a_name)  or
+								a_list.has (setter_feature_name (a_name)) or
+								a_list.has (ref_setter_feature_name (a_name)) or
 								Eiffel_keywords.has (a_name)
 		end
 

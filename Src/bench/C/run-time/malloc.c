@@ -384,7 +384,7 @@ rt_private rt_uint_ptr coalesc(union overhead *zone);					/* Coalescing (return 
 rt_private EIF_REFERENCE malloc_free_list(size_t nbytes, union overhead **hlist, int type, int gc_flag);		/* Allocate block in one of the lists */
 rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, union overhead **hlist);		/* Allocate block from free list */
 rt_private union overhead * allocate_free_list_helper (size_t i, size_t nbytes, union overhead **hlist);
-rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist);		/* Allocate block asking for core */
+rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist, int maximized);		/* Allocate block asking for core */
 rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes);					/* Set up block before public usage */
 rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c);				/* Coalescing on a chunk */
 rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r);				/* Release block to the free list */
@@ -1663,7 +1663,7 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 			 * we try to do block coalescing before attempting a new allocation
 			 * from the free list if the coalescing brought a big enough bloc.
 			 */
-		result = allocate_from_core (nbytes, hlist);	/* Ask for more core */
+		result = allocate_from_core (nbytes, hlist, 0);	/* Ask for more core */
 		if (result) {
 			return result;				/* We got it */
 		}
@@ -1715,7 +1715,7 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 	} else {
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			/* No other choice but to request for more core */
-		return allocate_from_core (nbytes, hlist);
+		return allocate_from_core (nbytes, hlist, 0);
 	}
 }
 
@@ -1937,7 +1937,7 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 
 /*
 doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared">
-doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space.</summary>
+doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space for a from_space whose chunk as a size of `nbytes'.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes requested.</param>
 doc:		<return>New block if successful, otherwise a null pointer.</return>
 doc:		<thread_safety>Safe</thread_safety>
@@ -1947,7 +1947,17 @@ doc:	</routine>
 
 rt_shared EIF_REFERENCE get_to_from_core (size_t nbytes)
 {
-	return allocate_from_core (nbytes, e_hlist);
+	EIF_REFERENCE Result;
+
+		/* We substract OVERHEAD and the size of a chunk, because in `allocate_from_core' which
+		 * calls `add_core' we will add `OVERHEAD' and the size of a chunk to make sure we have indeed
+		 * the number of bytes allocated. However here we do not want `nbytes' we want
+		 * the same size as another chunk of memory whose size is `nbytes'. */
+	Result = allocate_from_core (nbytes - OVERHEAD - sizeof(struct chunk), e_hlist, 1);
+
+	ENSURE("block is indeed of the right size", (nbytes - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE));
+
+	return Result;
 }
 
 /*
@@ -1955,13 +1965,14 @@ doc:	<routine name="allocate_from_core" return_type="EIF_REFERENCE" export="priv
 doc:		<summary>Given a correctly padded size 'nbytes', we ask for some core to be able to make a chunk capable of holding 'nbytes'. The chunk will be placed in the specified `hlist'.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes requested.</param>
 doc:		<param name="hlist" type="union overhead **">List in which we try to allocated a free block.</param>
+doc:		<param name="maximize" type="int">Even though we asked for `nbytes' should we perform the split in case more than `nbytes' were allocated? `0' means yes, '1' means no.</param>
 doc:		<return>Address of new block, or null if no more core is available.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist)
+rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist, int maximize)
 {
 	RT_GET_CONTEXT
 	union overhead *selected;		/* The selected block */
@@ -2036,10 +2047,17 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 	flush;
 #endif
 
-	/* Block is ready to be set up for use of 'nbytes' (eventually after
-	 * having been split). Memory accounting is done in set_up().
-	 */
+	if (maximize == 1) {
+			/* Because we do not want to split the block, we now say
+			 * that what we really asked for was the size of the block
+			 * returned by `add_core'. This is still necessary to call
+			 * `set_up' for the memory accounting. */
+		nbytes = selected->ov_size & B_SIZE;
+	}
 
+		/* Block is ready to be set up for use of 'nbytes' (eventually after
+		 * having been split). Memory accounting is done in set_up().
+		 */
 	result = set_up(selected, nbytes);
 
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
@@ -2061,6 +2079,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 {
 	RT_GET_CONTEXT	
 	union overhead *oldbrk; /* Initialized with `failed' value. */
+	int mod;					/* Remainder for padding */
 	size_t asked = nbytes;	/* Bytes requested */
 
 		/* We want at least 'nbytes' bytes for use, so we must add the overhead
@@ -2073,20 +2092,31 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		 */
 	if (asked <= eif_chunk_size) {
 		asked = eif_chunk_size;
+		CHECK("Multiple of ALIGNMAX", (asked % ALIGNMAX) == 0);
 	} else {
 		asked = eif_chunk_size + (((asked - eif_chunk_size) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
+			/* Make sure that `asked' is a multiple of ALIGNMAX. */
+		mod = asked % ALIGNMAX;
+		if (mod != 0) {
+			asked += ALIGNMAX - mod;
+		}
 	}
+
+		/* Size of chunk has to be added, otherwise the remaining space
+		 * might not be a multiple of ALIGNMAX. */
+	asked += sizeof(struct chunk);
 
 		/* We check that we are not asking for more than the limit
 		 * the user has fixed:
 		 *   - eif_max_mem (total allocated memory)
 		 * If the value of eif_max_mem is 0, there is no limit.
 		 */
-	if (eif_max_mem > 0)
+	if (eif_max_mem > 0) {
 		if (rt_m_data.ml_total + asked > eif_max_mem) {
 			print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
 			return (union overhead *) 0;
 		}
+	}
 	oldbrk = (union overhead *) eif_malloc (asked); /* Use malloc () */ 
 	if (!oldbrk) {
 		return NULL;

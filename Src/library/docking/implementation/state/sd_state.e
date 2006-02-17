@@ -95,7 +95,7 @@ feature -- Commands
 
 	record_state is
 			-- Record current state.
-		deferred
+		do
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -159,7 +159,7 @@ feature -- Commands
 		do
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
 			-- Move to a SD_DOCKING_ZONE, then a_target_zone and `Current' became SD_TAB_ZONE.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -176,6 +176,51 @@ feature -- Commands
 	on_normal_max_window is
 			-- Handle normal\max zone.
 		do
+		end
+
+feature -- Properties
+
+	floating_zone: SD_FLOATING_ZONE is
+			-- When Current is floating, this is floating zone which Current is in.
+			-- Otherwise is Void.
+		local
+			l_2_parent: EV_CONTAINER
+			l_3_parent: EV_CONTAINER
+		do
+			if zone.parent /= Void then
+				l_2_parent := zone.parent.parent
+			end
+			if l_2_parent /= Void then
+				l_3_parent := l_2_parent.parent
+			end
+
+			Result ?= l_3_parent
+		end
+
+	last_floating_width: INTEGER
+			-- Last floating width. (At the beginning the width is default floating width from SD_SHARED.)
+
+	set_last_floating_width (a_width: INTEGER) is
+			-- Set `last_floating_width'
+		require
+			valid: a_width > 0
+		do
+			last_floating_width := a_width
+		ensure
+			set: last_floating_width = a_width
+		end
+
+	last_floating_height: INTEGER
+			-- Last floating height. (At the beginning the height is default floating height from SD_SHARED.)
+
+	set_last_floating_height (a_height: INTEGER) is
+			-- Set `last_floating_height'
+		require
+			valid: a_height > 0
+		do
+			last_floating_height := a_height
+		ensure
+			set: last_floating_height = a_height
 		end
 
 feature {SD_CONTENT} -- SD_CONTENT called functions.
@@ -240,6 +285,8 @@ feature {NONE} -- Implementation
 			a_state_not_void: a_state /= Void
 		do
 			internal_content.change_state (a_state)
+			a_state.set_last_floating_height (last_floating_height)
+			a_state.set_last_floating_width (last_floating_width)
 		ensure
 			changed: internal_content.state = a_state
 		end
@@ -323,7 +370,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	internal_shared_not_void: internal_shared /= Void
+	not_void: internal_shared /= Void
+	valid: last_floating_height > 0
+	valid: last_floating_width > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

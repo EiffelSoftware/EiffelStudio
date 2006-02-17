@@ -211,7 +211,7 @@ feature -- Set Position
 			set_focus
 		end
 
-	set_tab_with (a_content: SD_CONTENT) is
+	set_tab_with (a_content: SD_CONTENT; a_first: BOOLEAN) is
 			-- Set `Current' tab whit `a_content'.
 		require
 			manager_has_content: manager_has_content (Current)
@@ -223,11 +223,15 @@ feature -- Set Position
 		do
 			l_tab_zone ?= a_content.state.zone
 			if l_tab_zone /= Void then
-				state.move_to_tab_zone (l_tab_zone, 0)
+				if not a_first then
+				 	state.move_to_tab_zone (l_tab_zone, 0)
+				 else
+				 	state.move_to_tab_zone (l_tab_zone, 1)
+				end
 			else
 				l_docking_zone ?= a_content.state.zone
 				check l_docking_zone /= Void end
-				state.move_to_docking_zone (l_docking_zone)
+				state.move_to_docking_zone (l_docking_zone, a_first)
 			end
 			set_focus
 		end
@@ -315,7 +319,8 @@ feature -- States report
 
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,
 		 SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
-		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG} -- State
+		 SD_DOCKING_MANAGER_COMMAND, SD_ZONE_NAVIGATION_DIALOG,
+		 SD_TAB_STATE_ASSISTANT} -- State
 
 	state: like internal_state is
 			-- Current state
@@ -357,13 +362,16 @@ feature {SD_STATE} -- implementation
 	internal_state: SD_STATE
 			-- SD_STATE instacne, which will changed base on different states.
 
-feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
+feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT} -- Change the SD_STATE base on the states
 
 	change_state (a_state: SD_STATE) is
 			-- Called by SD_RESOTRE, change current state object.
 		require
 			a_state_not_void: a_state /= Void
 		do
+			debug ("docking")
+				print ("%NXXXXXXXXXXXXXXXXXXXXXXXXXX SD_CONTENT change_state XXXXXXXXXXXXXXXXXXXXXXXXXX")
+			end
 			internal_state := a_state
 		end
 

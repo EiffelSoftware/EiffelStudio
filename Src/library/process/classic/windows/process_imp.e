@@ -328,6 +328,9 @@ feature{NONE} -- Implementation
 			-- Initialize `child_process'.
 		do
 			create child_process.make
+			if hidden then
+				child_process.run_hidden
+			end
 			child_process.set_input_direction (input_direction)
 			child_process.set_output_direction (output_direction)
 			child_process.set_error_direction (error_direction)

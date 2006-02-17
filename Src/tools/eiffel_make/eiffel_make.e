@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 		do
 			l_process := process_launcher (make_utility, Void, a_dir)
 			l_process.launch
-			Result := l_process.last_operation_successful
+			Result := l_process.launched
 			if Result then
 				l_process.wait_for_exit
 				Result := l_process.exit_code = 0

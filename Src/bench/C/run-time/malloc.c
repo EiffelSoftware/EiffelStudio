@@ -2079,7 +2079,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 {
 	RT_GET_CONTEXT	
 	union overhead *oldbrk; /* Initialized with `failed' value. */
-	int mod;					/* Remainder for padding */
+	size_t mod;					/* Remainder for padding */
 	size_t asked = nbytes;	/* Bytes requested */
 
 		/* We want at least 'nbytes' bytes for use, so we must add the overhead

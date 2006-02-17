@@ -2732,7 +2732,6 @@ doc:	</routine>
 rt_private int split_to_block (int is_to_keep)
 {
 	union overhead *base;	/* Base address */
-	EIF_REFERENCE l_special;	/* Pointer in case it is a SPECIAL. */
 	rt_uint_ptr size;			/* Amount of bytes used (malloc point's of view) */
 	rt_uint_ptr old_size;		/* To save the old size for the leading object */
 	int result;
@@ -2771,29 +2770,15 @@ rt_private int split_to_block (int is_to_keep)
 
 			/* Perform memory update only if we can split block, if not possible. */
 		if (!result) {
-			CHECK("valid sc_previous_top", ps_to.sc_previous_top < ps_to.sc_end);
+				/* Could not split the block, it means that nothing remains otherwise we would
+				 * be in big trouble. */
+			CHECK("No more space available", ps_to.sc_end == ps_to.sc_top)
+			CHECK("Valid sc_previous_top", ps_to.sc_previous_top < ps_to.sc_end);
 			base = (union overhead *) ps_to.sc_previous_top;
 				/* Make it last block. Otherwise it would corrupt the coalesce process. */
 			base->ov_size |= B_LAST;
-				/* Could not split the block, so make sure that `ps_to.sc_previous_top'
-				 * has its size updated. */
-			old_size = base->ov_size & B_SIZE;
-			size = old_size + (ps_to.sc_end - ps_to.sc_top);
-			if (size > old_size) {
-					/* Clear previous size and then put the new one. */
-				base->ov_size &= ~B_SIZE;
-				base->ov_size |= size;
-					/* If last block was a special object, we need to update its count and element_size
-					 * because block is made larger by the above setting of its size.
-					 */
-				if (base->ov_flags & EO_SPEC) {
-					l_special = ((char *) base) + OVERHEAD;
-					memmove(RT_SPECIAL_INFO(l_special), l_special + (old_size - LNGPAD_2), LNGPAD_2);
-				}
-			}
 				/* Update `ps_to.sc_top' and `ps_to.sc_previous_top' to the end of block. */
 			ps_to.sc_previous_top = ps_to.sc_end;
-			ps_to.sc_top = ps_to.sc_end;
 		} else {
 				/* We were able to split the block, so we simply need to put the B_LAST flag
 				 * on sc_top, not on sc_previous_top. */
@@ -3189,7 +3174,7 @@ rt_private int find_scavenge_spaces(void)
 	 * -- Fabrice.
 	 */
 
-	to_space = get_to_from_core(from_size - OVERHEAD);	/* Allocation from free list */
+	to_space = get_to_from_core(from_size);	/* Allocation from free list */
 	if ((EIF_REFERENCE) 0 == to_space)
 		return -1;			/* Unable to find a 'to' space */
 	
@@ -4004,19 +3989,12 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			zone->ov_flags = flags;		/* Copy flags for new object */
 			zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 
-				/* Special case for EO_SPEC objects in the case where `new'
-				 * has a greater size than `root'. This happens when the call
-				 * to `malloc_from_eiffel_list_no_gc' returns the last block
-				 * of a chunk which is bigger than `size' but cannot be split
-				 * into two blocks because the remaining part is less than OVERHEAD.
-				 * In that case, we need to move the `count' and the `element size'
-				 * which were copied from `root' down by the difference in size between
-				 * `new' and `root'. We could have used two assignments, but to make
-				 * the code simpler and because it is quite a rare case, we use memmove.
-				 */
-			if ((flags & EO_SPEC) && (size != (zone->ov_size & B_SIZE))) {
-				memmove(RT_SPECIAL_INFO(new), new + (size - LNGPAD_2), LNGPAD_2);
-			}
+				/* If it was not exactly the same size, we would be in trouble
+				 * in the case of EO_SPEC objects for which there is some important
+				 * information about the special at the end of the allocated memory,
+				 * the size being changed, the information will not be copied at
+				 * its right location with the `memcpy' call above. */
+			CHECK("Same size", size == (zone->ov_size & B_SIZE));
 
 #ifdef DEBUG
 			dprintf(4)("gscavenge: tenured 0x%lx to 0x%lx at age %d (%d bytes)\n",

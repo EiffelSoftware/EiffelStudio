@@ -73,12 +73,12 @@ feature {NONE} -- Implementation
 		%	debug  (no)%N%
 		%	array_optimization (no)%N%
 		%	inlining (no)%N%
-		%	inlining_size (%"4%")%N%  
+		%	inlining_size (%"4%")%N%
 		%cluster%N"
 
 	Partial_ace_file_addition: STRING is 	"	all server: %""
 			-- Add Server cluster.
-		
+
 	Partial_ace_file_part_two: STRING is
 			-- Ace file used to precompile generated Eiffel system
 		do
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 						str_buffer.keep_head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
 						str_buffer.prepend ("%"")
 						str_buffer.append ("%"")
-						l_cluster.replace_substring_all ("%".%"", str_buffer)		
+						l_cluster.replace_substring_all ("%".%"", str_buffer)
 					end
 					Result.append (l_cluster)
 
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 
 	Default_keyword: STRING is "default"
 			-- Lace `default' keyword
-	
+
 	Shared_library_option: STRING is
 			-- Dll definition file for Ace file
 		do
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			Result.append (environment.project_name)
 			Result.append (Def_file_extension)
 		end
-	
+
 	Def_file_extension: STRING is ".def"
 			-- DLL definition file extension
 
@@ -265,13 +265,21 @@ feature {NONE} -- Implementation
 			-- Generate ace file for finalized system if `is_final', workbench otherwise.
 		local
 			a_file: PLAIN_TEXT_FILE
-			a_file_name, a_text: STRING
+			a_file_name, a_text, l_cl_clib_loc, l_serv_clib_loc: STRING
 		do
 			a_text := a_content.twin
-			
-			a_text.append (ecom_lib_location (Client, is_final))
-			a_text.append (",")
-			a_text.append (ecom_lib_location (Server, is_final))
+
+			l_cl_clib_loc := ecom_lib_location (Client, is_final)
+			l_serv_clib_loc := ecom_lib_location (Server, is_final)
+			if not l_cl_clib_loc.is_empty then
+				a_text.append (l_cl_clib_loc)
+				if not l_serv_clib_loc.is_empty then
+					a_text.append (",")
+				end
+			end
+			if not l_serv_clib_loc.is_empty then
+				a_text.append (l_serv_clib_loc)
+			end
 			a_text.append (";%Nend%N")
 
 			create a_file_name.make (100)
@@ -309,7 +317,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 			valid_result: not is_empty_clib_folder (a_folder) implies not Result.is_empty
 		end
-		
+
 	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
 			-- Is folder `a_folder' is_empty?
 		local
@@ -331,7 +339,7 @@ feature {NONE} -- Implementation
 			l_string: STRING
 			l_index: INTEGER
 		do
-			Result := client_generated_ace_file			
+			Result := client_generated_ace_file
 			create l_string.make (1000)
 			l_string.append (Registration_class_name)
 			l_string.append (": %"make%"")
@@ -485,9 +493,9 @@ feature {NONE} -- Implementation
 					l_class_index_before := l_class_index - 1
 					l_class_index_after := l_class_index + environment.eiffel_class_name.count
 					if (l_class_index = 0) or else not
-							(((a_cluster.item (l_class_index_before) = ' ' ) or 
+							(((a_cluster.item (l_class_index_before) = ' ' ) or
 							(a_cluster.item (l_class_index_before) = '%T')) and
-							((a_cluster.item (l_class_index_after) = ' ') or 
+							((a_cluster.item (l_class_index_after) = ' ') or
 							(a_cluster.item (l_class_index_after) = ';') or
 							(a_cluster.item (l_class_index_after) = '%N'))) then
 						a_cluster.insert_string ("%N%T%T%T" + environment.eiffel_class_name+ ";",

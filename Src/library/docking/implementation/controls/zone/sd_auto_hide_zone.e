@@ -26,7 +26,8 @@ inherit
 			cl_put,
 			prune_all,
 			set_background_color,
-			background_color
+			background_color,
+			is_empty_vertical_box
 		end
 
 	SD_SINGLE_CONTENT_ZONE

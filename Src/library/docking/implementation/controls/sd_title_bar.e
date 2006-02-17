@@ -221,9 +221,11 @@ feature -- Command
 			hightlight_color := internal_shared.focused_color
 
 			internal_drawing_area.set_background_color (hightlight_color)
-			l_text_color := l_color_helper.text_color_by (hightlight_color)
+--			l_text_color := l_color_helper.text_color_by (hightlight_color)
+			l_text_color := internal_shared.focused_title_text_color
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
+
 			on_expose
 
 		ensure
@@ -241,7 +243,8 @@ feature -- Command
 			hightlight_color := internal_shared.non_focused_title_color
 
 			internal_drawing_area.set_background_color (internal_shared.non_focused_title_color)
-			l_text_color := l_color_helper.text_color_by (internal_shared.non_focused_title_color)
+--			l_text_color := l_color_helper.text_color_by (internal_shared.non_focused_title_color)
+			l_text_color := internal_shared.non_focused_title_text_color
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
 			on_expose

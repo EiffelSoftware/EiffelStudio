@@ -130,9 +130,6 @@ feature {NONE} -- For redocker.
 		do
 			if docker_mediator /= Void then
 				docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
-				debug ("docking")
-					io.put_string ("%N hot zone for docking ! yeah~" + a_screen_x.out + " " + a_screen_y.out)
-				end
 			end
 		end
 

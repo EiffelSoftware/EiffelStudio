@@ -15,7 +15,8 @@ inherit
 			stick,
 			move_to_docking_zone,
 			move_to_tab_zone,
-			content_void
+			content_void,
+			change_state
 		end
 
 create
@@ -32,7 +33,6 @@ feature {NONE} -- Initlization
 			internal_docking_manager := a_docking_manager
 			create internal_zone.make (Current)
 			internal_zone.show
-			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
 			internal_zone.set_position (a_screen_x, a_screen_y)
 			internal_docking_manager.command.add_inner_container (internal_zone.inner_container)
 		ensure
@@ -85,12 +85,6 @@ feature -- Redefine.
 			internal_docking_manager.command.update_title_bar
 		end
 
-	record_state is
-			-- Redefine.
-		do
-
-		end
-
 	stick (a_direction: INTEGER) is
 			-- Redefine.
 		do
@@ -113,7 +107,7 @@ feature -- Redefine.
 			internal_zone.destroy
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
 			-- Redefine.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -128,11 +122,15 @@ feature -- Redefine.
 				l_zones.after
 			loop
 				if l_tab_zone = Void then
-					l_zones.item.state.move_to_docking_zone (a_target_zone)
+					l_zones.item.state.move_to_docking_zone (a_target_zone, a_first)
 					l_tab_zone ?= a_target_zone.content.state.zone
 					check l_tab_zone /= Void end
 				else
-					l_zones.item.state.move_to_tab_zone (l_tab_zone, 0)
+					if a_first then
+						l_zones.item.state.move_to_tab_zone (l_tab_zone, 1)
+					else
+						l_zones.item.state.move_to_tab_zone (l_tab_zone, 0)
+					end
 				end
 				l_zones.forth
 			end
@@ -163,6 +161,17 @@ feature -- Redefine.
 
 		end
 
+	change_state (a_state: SD_STATE) is
+			-- Redefine
+		do
+			content.change_state (a_state)
+			a_state.set_last_floating_height (internal_zone.height)
+			a_state.set_last_floating_width (internal_zone.width)
+		ensure then
+			set: a_state.last_floating_height = last_floating_height
+			set: a_state.last_floating_width = last_floating_width
+		end
+
 	content_void: BOOLEAN is
 			-- Redefine.
 		do
@@ -175,6 +184,7 @@ feature -- Redefine.
 	zone: SD_ZONE is
 			-- Redefine.
 		do
+			Result := internal_zone
 		end
 
 feature -- Command

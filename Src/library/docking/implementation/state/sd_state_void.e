@@ -7,7 +7,7 @@ indexing
 
 class
 	SD_STATE_VOID
-
+			--FIXIT: Rename to SD_INITIAL_STATE?
 inherit
 	SD_STATE
 
@@ -35,6 +35,8 @@ feature {NONE}  -- Initlization
 			internal_content := a_content
 			create internal_shared
 			internal_docking_manager := a_content.docking_manager
+			last_floating_height := internal_shared.default_floating_window_height
+			last_floating_width := internal_shared.default_floating_window_width
 		ensure
 			set: a_content = internal_content
 			set: internal_docking_manager = a_content.docking_manager
@@ -48,11 +50,6 @@ feature -- Redefine.
 		end
 
 	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
-			-- Redefine.
-		do
-		end
-
-	record_state is
 			-- Redefine.
 		do
 		end
@@ -113,6 +110,7 @@ feature -- Redefine.
 			create l_docking_state.make (internal_content, direction, 0)
 			l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 			change_state (l_docking_state)
+			l_floating_state.set_size (last_floating_width, last_floating_height)
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: internal_content.state /= Current
@@ -125,19 +123,25 @@ feature -- Redefine.
 		do
 			internal_docking_manager.command.lock_update (a_target_zone, False)
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, a_target_zone.state.direction)
+			if a_index =  1 then
+				l_tab_state.zone.set_content_position (internal_content, 1)
+			end
 			change_state (l_tab_state)
 			internal_docking_manager.command.unlock_update
 		ensure then
 			state_changed: internal_content.state /= Current
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
 		do
 			internal_docking_manager.command.lock_update (a_target_zone, False)
 			create l_tab_state.make (internal_content, a_target_zone, a_target_zone.state.direction)
+			if a_first then
+				l_tab_state.zone.set_content_position (internal_content, 1)
+			end
 			change_state (l_tab_state)
 			internal_docking_manager.command.unlock_update
 		ensure then
@@ -157,7 +161,7 @@ feature -- Redefine.
 				if l_tab_zone /= Void then
 					move_to_tab_zone (l_tab_zone, 0)
 				elseif l_docking_zone /= Void then
-					move_to_docking_zone (l_docking_zone)
+					move_to_docking_zone (l_docking_zone, False)
 				end
 				l_auto_hide_state ?= relative.state
 				if l_auto_hide_state /= Void then

@@ -17,7 +17,7 @@ feature -- Basic Operations
 		local
 			l_writer: WIZARD_WRITER_INHERIT_CLAUSE
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
-		do	
+		do
 			create eiffel_writer.make
 			eiffel_writer.set_deferred
 			eiffel_writer.set_class_name (a_descriptor.eiffel_class_name)
@@ -68,7 +68,6 @@ feature {NONE} -- Implementation
 					else
 						eiffel_writer.add_feature (l_writer, Basic_operations)
 					end
-					eiffel_writer.add_feature (l_func_generator.precondition_feature_writer, Status_report)
 				end
 				a_descriptor.functions_forth
 			end
@@ -90,11 +89,9 @@ feature {NONE} -- Implementation
 			loop
 				create prop_generator.generate (properties.item)
 				eiffel_writer.add_feature (prop_generator.access_feature, Access)
-				eiffel_writer.add_feature (prop_generator.precondition_access_feature_writer, Status_report)
 
 				if (prop_generator.setting_feature /= Void) then
 					eiffel_writer.add_feature (prop_generator.setting_feature, Element_change)
-					eiffel_writer.add_feature (prop_generator.precondition_set_feature_writer, Status_report)
 				end
 
 				properties.forth

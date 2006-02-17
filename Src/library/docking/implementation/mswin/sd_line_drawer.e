@@ -17,7 +17,6 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		do
 			create internal_shared
---			screen := internal_shared.feedback.screen
 			create screen
 		end
 

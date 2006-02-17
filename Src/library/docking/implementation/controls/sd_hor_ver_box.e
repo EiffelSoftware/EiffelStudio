@@ -17,6 +17,9 @@ inherit
 			start as start_vertical_box,
 			after as after_vertical_box,
 			forth as forth_vertical_box,
+			finish as finish_vertical_box,
+			back as back_vertical_box,
+			before as before_vertical_box,
 			item as item_vertical_box,
 			count as count_vertical_box,
 			has as has_vertical_box,
@@ -31,7 +34,13 @@ inherit
 			background_color as background_color_vertical_box,
 			set_border_width as set_border_width_vertical_box,
 			set_padding_width as set_padding_width_vertical_box,
-			padding_width as padding_width_vertical_box
+			padding_width as padding_width_vertical_box,
+			index as index_vertical_box,
+			swap as swap_vertical_box,
+			is_empty as is_empty_vertical_box
+		export
+			{NONE} all
+			{ANY} height, set_minimum_height, set_minimum_width, has_recursive
 		end
 
 create
@@ -74,30 +83,14 @@ feature -- Basic operations
 
 	change_direction is
 			-- Change `interal_direction', then change all items layout.
+		require
+			is_empty: is_empty
 		local
 			l_items: ARRAYED_LIST [EV_WIDGET]
 		do
-			create l_items.make (0)
-			from
-				start
-			until
-				after
-			loop
-				l_items.extend (item)
-				forth
-			end
 			internal_vertical_style := not internal_vertical_style
-			wipe_out
 			if not internal_vertical_style then
 				init_horizontal_style
-			end
-			from
-				l_items.start
-			until
-				l_items.after
-			loop
-				extend (l_items.item)
-				l_items.forth
 			end
 		ensure
 			style_changed: old internal_vertical_style = not internal_vertical_style
@@ -165,6 +158,36 @@ feature -- Redefine
 				forth_vertical_box
 			else
 				horizontal_box.forth
+			end
+		end
+
+	finish is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				finish_vertical_box
+			else
+				horizontal_box.finish
+			end
+		end
+
+	back is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				back_vertical_box
+			else
+				horizontal_box.back
+			end
+		end
+
+	before: BOOLEAN is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				Result := before_vertical_box
+			else
+				Result := horizontal_box.before
 			end
 		end
 
@@ -315,6 +338,36 @@ feature -- Redefine
 				Result := padding_width_vertical_box
 			else
 				Result := horizontal_box.padding_width
+			end
+		end
+
+	index: INTEGER is
+			-- Redefine
+		do
+			if is_vertical then
+				Result := index_vertical_box
+			else
+				Result := horizontal_box.index
+			end
+		end
+
+	swap (a_index: INTEGER) is
+			-- Redefine
+		do
+			if is_vertical then
+				swap_vertical_box (a_index)
+			else
+				horizontal_box.swap (a_index)
+			end
+		end
+
+	is_empty: BOOLEAN is
+			-- Redefine
+		do
+			if is_vertical then
+				Result := is_empty_vertical_box
+			else
+				Result := horizontal_box.is_empty
 			end
 		end
 

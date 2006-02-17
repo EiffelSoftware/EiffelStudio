@@ -33,15 +33,17 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		local
 			l_half_height, l_half_width: INTEGER
 			l_left, l_top, l_width, l_height: INTEGER
+			l_in_five_hot_area: BOOLEAN
 		do
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
+			l_in_five_hot_area := internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
 				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
-					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y)
+			if l_in_five_hot_area or a_dockable then
 
 				Result := True
 
@@ -83,29 +85,33 @@ feature -- Redefine
 			end
 		end
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		local
 			l_docking_zone: SD_DOCKING_ZONE
+			l_caller: SD_ZONE
+			l_in_hot_area: BOOLEAN
 		do
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
+			l_caller := internal_mediator.caller
+			l_in_hot_area := internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
 				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
-					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y)
+			if l_in_hot_area and internal_mediator.is_dockable then
 
 				Result := True
 
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+					l_caller.content.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 					l_docking_zone ?= internal_zone
 					check must_be_docking_zone: l_docking_zone /= Void end
-					caller.content.state.move_to_docking_zone (l_docking_zone)
+					l_caller.content.state.move_to_docking_zone (l_docking_zone, False)
 				end
 			end
 			internal_shared.feedback.reset_feedback_clearing

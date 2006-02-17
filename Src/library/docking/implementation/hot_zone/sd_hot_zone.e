@@ -13,14 +13,12 @@ deferred class
 
 feature -- Commands
 
-	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Apply change when user pointer stop dragging. It something changed, result is true.
-		require
-			caller_not_void: caller /= Void
 		deferred
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Update feedback rectangle when user move pointer.
 		deferred
 		end

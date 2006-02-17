@@ -264,6 +264,23 @@ feature -- Command
 			end
 		end
 
+	update_tab_group is
+			-- Update tab stubs layout by tab group.
+		do
+			from
+				create tab_groups_max_size.make (1)
+				tab_groups.start
+			until
+				tab_groups.after
+			loop
+				-- Remove stub seperator by group
+				update_one_tab_group (tab_groups.item)
+				tab_groups_max_size.extend (tab_group_max_size (tab_groups.item))
+				tab_groups.forth
+			end
+			update_tab_group_max_size
+		end
+		
 feature -- States report
 
 	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN is
@@ -296,23 +313,6 @@ feature {NONE} -- Implementation functions.
 				end
 				a_tab_group.forth
 			end
-		end
-
-	update_tab_group is
-			-- Update tab stubs layout by tab group.
-		do
-			from
-				create tab_groups_max_size.make (1)
-				tab_groups.start
-			until
-				tab_groups.after
-			loop
-				-- Remove stub seperator by group
-				update_one_tab_group (tab_groups.item)
-				tab_groups_max_size.extend (tab_group_max_size (tab_groups.item))
-				tab_groups.forth
-			end
-			update_tab_group_max_size
 		end
 
 	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is

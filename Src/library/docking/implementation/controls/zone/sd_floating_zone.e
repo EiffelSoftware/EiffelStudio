@@ -33,6 +33,9 @@ inherit
 			extend as extend_dialog,
 			show as show_allow_to_back,
 			has as has_untitled_dialog
+		export
+			{NONE} all
+			{ANY} set_position, set_size
 		select
 			implementation,
 			show_allow_to_back

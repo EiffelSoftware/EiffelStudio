@@ -296,7 +296,8 @@ feature {NONE} -- Implementation
 			non_void_name: an_argument_name /= Void
 			valid_name: not an_argument_name.is_empty
 		do
-			create Result.make (100)
+			create Result.make (an_argument_name.count + 8)
+			Result.append ("l__")
 			Result.append (an_argument_name)
 			Result.append ("_item")
 		ensure

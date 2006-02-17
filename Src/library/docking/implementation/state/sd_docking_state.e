@@ -20,7 +20,8 @@ inherit
 			zone,
 			change_title,
 			show,
-			hide
+			hide,
+			record_state
 		end
 
 create
@@ -41,6 +42,8 @@ feature {NONE}-- Initlization
 			internal_content := a_content
 			zone := internal_shared.widget_factory.docking_zone (a_content)
 			internal_docking_manager.zones.add_zone (zone)
+			last_floating_height := a_content.state.last_floating_height
+			last_floating_width := a_content.state.last_floating_width
 		ensure
 			set: internal_content = a_content
 			set: direction = a_direction
@@ -60,7 +63,7 @@ feature {NONE}-- Initlization
 			extended: a_container.has (zone)
 		end
 
-feature {SD_TAB_STATE} -- Initlization
+feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 
 	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
 			-- Set widget and main area which used by normal window.
@@ -93,9 +96,12 @@ feature -- Redefine.
 		end
 
 	record_state is
-			-- Redefine.
+			-- Redefine
 		do
-
+			if floating_zone /= Void then
+				last_floating_height := floating_zone.height
+				last_floating_width := floating_zone.width
+			end
 		end
 
 	change_title (a_title: STRING; a_content: SD_CONTENT) is
@@ -114,7 +120,7 @@ feature -- Redefine.
 			l_new_container: EV_SPLIT_AREA
 		do
 			internal_docking_manager.command.lock_update (zone, False)
-
+			record_state
 			if zone.parent /= Void then
 				zone.parent.prune (zone)
 			end
@@ -164,7 +170,7 @@ feature -- Redefine.
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
 		end
 
-	stick (a_direction: INTEGER) is
+stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -197,7 +203,7 @@ feature -- Redefine.
 			else
 				internal_docking_manager.command.lock_update (zone, False)
 				create l_floating_state.make (a_x, a_y, internal_docking_manager)
-				l_floating_state.set_size (zone.width, zone.height)
+				l_floating_state.set_size (last_floating_width, last_floating_height)
 				dock_at_top_level (l_floating_state.inner_container)
 				l_floating_state.update_title_bar
 				l_orignal_multi_dock_area.update_title_bar
@@ -211,9 +217,11 @@ feature -- Redefine.
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Redefine.
+		local
+--			l_floating_zone: SD_FLOATING_ZONE
 		do
 			internal_docking_manager.command.lock_update (zone, False)
-
+			record_state
 			if zone.parent /= Void then
 				zone.parent.prune (zone)
 			end
@@ -229,10 +237,10 @@ feature -- Redefine.
 			parent_changed: old zone.parent /= zone.parent
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
 			-- Redefine.
 		do
-			move_to_zone_internal (a_target_zone)
+			move_to_zone_internal (a_target_zone, a_first)
 		ensure then
 			state_changed: content.state /= Current
 		end
@@ -240,7 +248,12 @@ feature -- Redefine.
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
 			-- Redefine.
 		do
-			move_to_zone_internal (a_target_zone)
+			if a_index = 1 then
+				move_to_zone_internal (a_target_zone, True)
+			else
+				move_to_zone_internal (a_target_zone, False)
+			end
+
 			if a_index > 0 and a_index <= a_target_zone.contents.count then
 				a_target_zone.set_content_position (content, a_index)
 			end
@@ -278,7 +291,7 @@ feature -- Redefine.
 
 feature {NONE} -- Implementation
 
-	move_to_zone_internal (a_target_zone: SD_ZONE) is
+	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN) is
 			-- Move to a zone.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -298,6 +311,9 @@ feature {NONE} -- Implementation
 			else
 				check only_allow_two_type_zone: l_tab_zone /= Void end
 				create l_tab_state.make_with_tab_zone (internal_content, l_tab_zone, l_orignal_direction)
+			end
+			if a_first then
+				l_tab_state.zone.set_content_position (internal_content, 1)
 			end
 			internal_docking_manager.command.unlock_update
 			l_tab_state.set_direction (l_orignal_direction)

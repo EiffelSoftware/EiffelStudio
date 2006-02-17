@@ -34,27 +34,29 @@ feature {NONE}  -- Initlization
 
 feature -- Redefine
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		local
 			l_tab_zone: SD_TAB_ZONE
+			l_caller: SD_ZONE
 		do
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+			l_caller := internal_mediator.caller
+			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
 				Result := True
-			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
 				Result := True
-			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
 				Result := True
-			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
 				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
 				l_tab_zone ?= internal_zone
 				check must_be_tab_zone: l_tab_zone /= Void end
-				caller.state.move_to_tab_zone (l_tab_zone, 0)
+				l_caller.state.move_to_tab_zone (l_tab_zone, 0)
 				Result := True
 			end
 			internal_shared.feedback.reset_feedback_clearing

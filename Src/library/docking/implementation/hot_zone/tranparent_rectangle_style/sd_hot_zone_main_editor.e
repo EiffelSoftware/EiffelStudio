@@ -29,13 +29,13 @@ feature {NONE}  -- Initlization
 
 feature {NONE} -- Implementation
 
-	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		do
 
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		do
 			internal_shared.feedback.clear

@@ -48,42 +48,44 @@ feature {NONE} -- Initlization
 
 feature  -- Redefine
 
-	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		local
 			l_floating_zone: SD_FLOATING_ZONE
+			l_caller: SD_ZONE
 		do
-			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
+			l_caller := internal_mediator.caller
+			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
 				Result := True
 			end
-			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
+			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
 				Result := True
 			end
-			if left_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
+			if left_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
 				Result := True
 			end
-			if right_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
+			if right_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
 				Result := True
 			end
 
 			if Result then
-				caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
+				l_caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 			end
 
-			l_floating_zone ?= caller
+			l_floating_zone ?= l_caller
 			if not Result and  l_floating_zone = Void then
-				caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
+				l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
 				Result := True
 			end
 
 			internal_shared.feedback.reset_feedback_clearing
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		local
 			l_rect: EV_RECTANGLE
@@ -91,25 +93,25 @@ feature  -- Redefine
 		do
 
 			l_rect := internal_docking_manager.query.container_rectangle_screen
-			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.left
 				l_top := l_rect.top
 				l_width := l_rect.width
 				l_height := (l_rect.height * internal_shared.default_docking_height_rate).ceiling
 				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_down)
-			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y)  then
+			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable  then
 				l_left := l_rect.left
 				l_top := l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling
 				l_width := l_rect.width
 				l_height := (l_rect.height * internal_shared.default_docking_height_rate).ceiling
 				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_up)
-			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.left
 				l_top := l_rect.top
 				l_width := (l_rect.width * internal_shared.default_docking_width_rate).ceiling
 				l_height := l_rect.height
 				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_right)
-			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling
 				l_top := l_rect.top
 				l_width := (l_rect.width * internal_shared.default_docking_width_rate).ceiling

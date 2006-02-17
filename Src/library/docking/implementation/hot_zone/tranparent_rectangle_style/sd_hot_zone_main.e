@@ -56,60 +56,62 @@ feature {NONE} -- Initlization
 
 feature  -- Redefine
 
-	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		local
 			l_floating_zone: SD_FLOATING_ZONE
+			l_caller: SD_ZONE
 		do
-			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
+			l_caller := internal_mediator.caller
+			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_top)
 				Result := True
 			end
-			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
+			if bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_bottom)
 				Result := True
 			end
-			if left_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
+			if left_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_left)
 				Result := True
 			end
-			if right_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
+			if right_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
+				l_caller.state.set_direction ({SD_DOCKING_MANAGER}.dock_right)
 				Result := True
 			end
 
 			if Result then
-				caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
+				l_caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 			end
 
-			l_floating_zone ?= caller
+			l_floating_zone ?= l_caller
 			if not Result and  l_floating_zone = Void then
 				debug ("docking")
-					io.put_string ("%N caller: " + caller.out)
+					io.put_string ("%N caller: " + l_caller.out)
 				end
-				caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
+				l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
 				Result := True
 			end
 		ensure then
 --			must_process: Result = True
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine.
 		local
 			l_rect: EV_RECTANGLE
 		do
 			l_rect := internal_docking_manager.query.container_rectangle_screen
-			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y)  then
+			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable  then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
-			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 			else
-				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, internal_mediator.caller.width, internal_mediator.caller.height)
+				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, internal_mediator.caller.state.last_floating_width, internal_mediator.caller.state.last_floating_height)
 			end
 
 		ensure then

@@ -37,48 +37,55 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
+		local
+			l_caller: SD_ZONE
 		do
-			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
-				Result := True
-			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
-				Result := True
-			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
-				Result := True
-			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
-				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
-				caller.state.move_to_docking_zone (internal_zone)
-				Result := True
+			l_caller := internal_mediator.caller
+			if internal_mediator.is_dockable then
+				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
+					Result := True
+				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_bottom)
+					Result := True
+				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_left)
+					Result := True
+				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+					l_caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_right)
+					Result := True
+				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
+					l_caller.state.move_to_docking_zone (internal_zone, False)
+					Result := True
+				end
 			end
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine.
 		do
-			if internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
-				Result := True
-			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)
-				Result := True
-			elseif internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_top)
-				Result := True
-			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_bottom)
-				Result := True
-			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
-				Result := True
-			elseif internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_title_area)
-				Result := True
+			if a_dockable then
+				if internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
+					Result := True
+				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)
+					Result := True
+				elseif internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_top)
+					Result := True
+				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_bottom)
+					Result := True
+				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
+					Result := True
+				elseif internal_rectangle_title_area.has_x_y (a_screen_x, a_screen_y) then
+					update_feedback (a_screen_x, a_screen_y, internal_rectangle_title_area)
+					Result := True
+				end
 			end
 		end
 

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-
 	user_initialization is
 			-- Called by `initialize'.
 			-- Any custom user initialization that
@@ -53,7 +52,9 @@ feature {NONE} -- Initialization
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_label: SD_CONTENT_LABEL
-			l_pass_first_editor: BOOLEAN
+			l_pass_first_editor, l_pass_second_editor: BOOLEAN
+			l_first_label: SD_CONTENT_LABEL
+			l_last_label: SD_CONTENT_LABEL
 		do
 			l_contents := internal_docking_manager.property.contents_by_click_order
 			from
@@ -72,13 +73,25 @@ feature {NONE} -- Initialization
 				else
 					check only_two_type: l_contents.item.type = {SD_SHARED}.type_editor end
 					files_box.extend (l_label)
-					if not l_pass_first_editor then
+					if l_pass_first_editor and then not l_pass_second_editor then
 						focus_label (l_label)
+						l_pass_second_editor := True
+					end
+					if not l_pass_first_editor then
+						l_first_label := l_label
 						l_pass_first_editor := True
 					end
+					l_last_label := l_label
 				end
 
 				l_contents.forth
+			end
+			if not is_shift_pressed then
+				if l_pass_first_editor and then not l_pass_second_editor then
+					on_label_enable_focus_color (l_first_label)
+				end
+			else
+				on_label_enable_focus_color (l_last_label)
 			end
 		end
 

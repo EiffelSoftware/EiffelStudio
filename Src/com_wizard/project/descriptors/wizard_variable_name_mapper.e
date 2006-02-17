@@ -57,19 +57,6 @@ feature -- Basic Operations
 			a_name.replace_substring_all ("::", "_")
 		end
 
-	user_precondition_name (a_feature_name: STRING): STRING is
-			-- Name for user defined precondition.
-		require
-			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.is_empty
-		do
-			Result := a_feature_name.twin
-			Result.append ("_user_precondition")
-		ensure
-			non_void_name: Result /= Void
-			valid_name: not Result.is_empty
-		end
-
 	namespace_name (a_name: STRING): STRING is
 			-- Namespace name.
 		require

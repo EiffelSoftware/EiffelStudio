@@ -100,6 +100,8 @@ feature  -- Redefine
 			-- Redefine.
 		local
 			l_rect: EV_RECTANGLE
+			l_floating_zone: SD_FLOATING_ZONE
+			l_width, l_height: INTEGER
 		do
 			l_rect := internal_docking_manager.query.container_rectangle_screen
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
@@ -111,7 +113,15 @@ feature  -- Redefine
 			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 			else
-				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, internal_mediator.caller.state.last_floating_width, internal_mediator.caller.state.last_floating_height)
+				l_floating_zone ?= internal_mediator.caller
+				if l_floating_zone = Void then
+					l_width := internal_mediator.caller.state.last_floating_width
+					l_height := internal_mediator.caller.state.last_floating_height
+				else
+					l_width := l_floating_zone.width
+					l_height := l_floating_zone.height
+				end
+				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, l_width, l_height)
 			end
 
 		ensure then

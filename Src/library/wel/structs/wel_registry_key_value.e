@@ -10,7 +10,7 @@ class
 
 inherit
 	WEL_REGISTRY_KEY_VALUE_TYPE
-	
+
 	PLATFORM
 		export
 			{NONE} all
@@ -21,7 +21,7 @@ create
 	make_with_data,
 	make_with_value,
 	make_with_dword_value
-	
+
 feature -- Initialization
 
 	make (t: like type; v: STRING) is
@@ -47,7 +47,7 @@ feature -- Initialization
 			type_set: type = t
 			data_set: data = v
 		end
-		
+
 	make_with_value (t: like type; v: like internal_value) is
 			-- Create a new key value of type `t' using `v'.
 		obsolete
@@ -62,7 +62,7 @@ feature -- Initialization
 			type_set: type = t
 			internal_value_set: internal_value.is_equal (v)
 		end
-		
+
 	make_with_dword_value (v: like dword_value) is
 			-- Set `dword_value' with `v'.
 			-- Set `type' with `reg_dword'.
@@ -79,7 +79,7 @@ feature -- Access
 			-- Type of value
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values.
-			
+
 	data: MANAGED_POINTER
 			-- Hold data for registry key value
 
@@ -103,7 +103,7 @@ feature -- Access
 		ensure
 			string_value_not_void: Result /= Void
 		end
-		
+
 	string_value: STRING is
 			-- String data.
 		require
@@ -114,7 +114,7 @@ feature -- Access
 			l_count := data.count
 			create Result.make (l_count)
 			Result.from_c_substring (data.item, 1, l_count)
-			if Result.item (l_count) = '%U' then
+			if l_count > 0 and then Result.item (l_count) = '%U' then
 					-- Case where string was stored with its final null character,
 					-- so we don't want it in our actual string.
 				Result.remove (l_count)
@@ -142,7 +142,7 @@ feature -- Element Change
 		ensure
 			type_set: type = t
 		end
-		
+
 	set_value (v: like value) is
 			-- Set `value' with `v'.
 		obsolete
@@ -158,7 +158,7 @@ feature -- Element Change
 		ensure
 			value_set: value.is_equal (v)
 		end
-		
+
 	set_dword_value (v: like dword_value) is
 			-- Set `dword_value' with `v'.
 			-- Set `type' with `reg_dword'.
@@ -187,7 +187,7 @@ feature -- Element Change
 			type_set: type = reg_sz
 			dword_value_set: string_value.is_equal (v)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

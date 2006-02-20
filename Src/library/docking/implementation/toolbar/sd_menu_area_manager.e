@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_menu_box: EV_BOX; a_vertical: BOOLEAN; a_menu_dock_mediator: like internal_menu_dock_mediator) is
+	make (a_menu_box: EV_BOX; a_vertical: BOOLEAN; a_menu_dock_mediator: like internal_dock_mediator) is
 			-- Creation method.
 		require
 			a_menu_box_not_void: a_menu_box /= Void
@@ -23,11 +23,11 @@ feature {NONE} -- Initialization
 			internal_docking_manager := a_menu_dock_mediator.docking_manager
 			internal_box := a_menu_box
 			internal_vertical := a_vertical
-			internal_menu_dock_mediator := a_menu_dock_mediator
+			internal_dock_mediator := a_menu_dock_mediator
 			create area.make (internal_box.screen_x, internal_box.screen_y, internal_box.width, internal_box.height)
 		ensure
 			internal_box_set: a_menu_box = internal_box
-			internal_menu_dock_mediator_set: a_menu_dock_mediator = internal_menu_dock_mediator
+			internal_menu_dock_mediator_set: a_menu_dock_mediator = internal_dock_mediator
 		end
 
 feature -- Status report
@@ -85,7 +85,7 @@ feature -- Basic operation
 				l_menu_row := Void
 				l_menu_row ?= internal_box.item
 				check box_only_have_menu_row: l_menu_row /= Void end
-				l_menu_row.start_drag (internal_menu_dock_mediator.caller)
+				l_menu_row.start_drag (internal_dock_mediator.caller)
 				internal_box.forth
 			end
 		ensure
@@ -95,7 +95,7 @@ feature -- Basic operation
 feature {NONE} -- Implementation functions.
 
 	move_in (a_screen_y_or_x: INTEGER): BOOLEAN is
-			--
+			-- Handle pointern move in one mouse row/column.
 		local
 			l_menu_row: SD_MENU_ROW
 		do
@@ -107,18 +107,23 @@ feature {NONE} -- Implementation functions.
 				l_menu_row ?= internal_box.item
 				check l_menu_row /= Void end
 
-				if not l_menu_row.has (internal_menu_dock_mediator.caller)  then
+				if not l_menu_row.has (internal_dock_mediator.caller)  then
 
 					if not internal_vertical then
 						if l_menu_row.has_screen_y (a_screen_y_or_x) then
 							--Change caller's row.
 							prune_internal_caller_from_parent
-							l_menu_row.extend (internal_menu_dock_mediator.caller)
+							l_menu_row.extend (internal_dock_mediator.caller)
 							Result := True
 						end
 					else
 						-- When vertical, we should do....
-
+						if l_menu_row.has_screen_x (a_screen_y_or_x) then
+							--Change caller's row.
+							prune_internal_caller_from_parent
+							l_menu_row.extend (internal_dock_mediator.caller)
+							Result := True
+						end
 					end
 
 				end
@@ -131,8 +136,8 @@ feature {NONE} -- Implementation functions.
 		do
 			internal_docking_manager.command.lock_update (Void, True)
 			if not caller_in_current_area or not caller_in_single_row then
-				if internal_menu_dock_mediator.caller.is_floating then
-					internal_menu_dock_mediator.caller.dock
+				if internal_dock_mediator.caller.is_floating then
+					internal_dock_mediator.caller.dock
 				end
 				create_new_row_by_position (a_screen_y_or_x)
 				Result := True
@@ -166,11 +171,8 @@ feature {NONE} -- Implementation functions.
 			else
 				internal_box.extend (l_new_row)
 			end
-			l_new_row.extend (internal_menu_dock_mediator.caller)
+			l_new_row.extend (internal_dock_mediator.caller)
 			internal_docking_manager.command.resize
-			debug ("docking")
-				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
-			end
 		ensure
 			extended: old internal_box.count = internal_box.count - 1
 		end
@@ -178,16 +180,20 @@ feature {NONE} -- Implementation functions.
 	prune_internal_caller_from_parent is
 			-- Prune `caller' from parent.
 		do
-			if internal_menu_dock_mediator.caller.row /= Void then
+			if internal_dock_mediator.caller.row /= Void then
 				if caller_in_single_row then
-					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
+					internal_dock_mediator.caller.row.parent.prune (internal_dock_mediator.caller.row)
 					internal_docking_manager.command.resize
 				end
-				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
+				internal_dock_mediator.caller.row.prune (internal_dock_mediator.caller)
+			end
+			if internal_dock_mediator.caller.parent /= Void then
+				internal_dock_mediator.caller.parent.prune (internal_dock_mediator.caller)
 			end
 		ensure
-			pruned: internal_menu_dock_mediator.caller.row /= Void implies
-				 not internal_menu_dock_mediator.caller.row.has (internal_menu_dock_mediator.caller)
+			pruned: internal_dock_mediator.caller.row /= Void implies
+				 not internal_dock_mediator.caller.row.has (internal_dock_mediator.caller)
+			parent_void: internal_dock_mediator.caller.parent = Void
 		end
 
 feature {NONE}  -- Implementation query
@@ -195,7 +201,7 @@ feature {NONE}  -- Implementation query
 	caller_in_single_row: BOOLEAN is
 			-- If caller's SD_MENU_ROW only has caller?
 		do
-			Result := internal_menu_dock_mediator.caller.row.count = 1
+			Result := internal_dock_mediator.caller.row.count = 1
 		end
 
 	caller_in_current_area: BOOLEAN is
@@ -210,7 +216,7 @@ feature {NONE}  -- Implementation query
 			loop
 				l_menu_row ?= internal_box.item
 				check l_menu_row /= Void end
-				Result := l_menu_row.has (internal_menu_dock_mediator.caller)
+				Result := l_menu_row.has (internal_dock_mediator.caller)
 				internal_box.forth
 			end
 		end
@@ -226,7 +232,7 @@ feature {NONE} -- Implementation arrtibutes
 	internal_vertical: BOOLEAN
 			-- If `Current' vertical?
 
-	internal_menu_dock_mediator: SD_MENU_DOCKER_MEDIATOR
+	internal_dock_mediator: SD_MENU_DOCKER_MEDIATOR
 			-- Menu docker mediator.
 
 	internal_shared: SD_SHARED

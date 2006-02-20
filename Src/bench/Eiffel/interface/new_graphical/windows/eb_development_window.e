@@ -3593,7 +3593,11 @@ feature {NONE} -- Implementation
 				end
 				text_edited := True
 			end
-			status_bar.display_message ("")
+			if not status_bar.message.is_equal (interface_names.e_c_compilation_running) then
+					-- We don't want the "Background C compilation in progress" message flash every time
+					-- user presses a key.
+				status_bar.display_message ("")
+			end
 		end
 
 	on_back is

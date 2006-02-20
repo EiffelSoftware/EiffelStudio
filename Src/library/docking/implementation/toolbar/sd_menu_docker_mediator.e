@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			a_caller_not_void: a_caller /= Void
 		do
 			create internal_shared
+			internal_shared.set_menu_docker_mediator (Current)
 			docking_manager := a_docking_manager
 
 			internal_menus := docking_manager.menu_manager.menus
@@ -38,38 +39,36 @@ feature {NONE} -- Initialization
 			if a_caller.is_floating then
 				internal_last_floating := True
 			end
-
-
 		ensure
 			set: docking_manager = a_docking_manager
 			a_caller_set: a_caller = caller
 		end
 
-feature -- Docking issues.
+feature -- Command
 
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
 			-- Handle user drag menu events.
 		local
 			l_in_four_side: BOOLEAN
 		do
+			internal_last_screen_x := screen_x
+			internal_last_screen_y := screen_y
+			screen_x := a_screen_x
+			screen_y := a_screen_y
 
-			l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y)
+			l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
 
 			if not l_in_four_side then
-
 				if not internal_last_floating then
 					docking_manager.command.lock_update (Void, True)
 					caller.float
 					docking_manager.command.unlock_update
 				end
-
 				internal_last_floating := True
-				caller.set_position (a_screen_x, a_screen_y)
-
+				caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 			else
 				internal_last_floating := False
 			end
-
 		end
 
 	apply_change (a_screen_x, a_screen_y: INTEGER) is
@@ -84,7 +83,21 @@ feature -- Docking issues.
 			notify_row (l_docking_manager.menu_container.right)
 		end
 
-feature -- Access
+	set_offset (a_start_floating: BOOLEAN; a_offset_x, a_offset_y: INTEGER) is
+			-- Set offset when start dragging.
+		require
+			vaild: a_offset_x >= 0 and a_offset_y >= 0
+		do
+			offset_x := a_offset_x
+			offset_y := a_offset_y
+			start_floating := a_start_floating
+		ensure
+			set: offset_x = a_offset_x
+			set: offset_y = a_offset_y
+			set: start_floating = a_start_floating
+		end
+
+feature -- Query
 
 	caller: SD_MENU_ZONE
 			-- Caller.
@@ -92,9 +105,21 @@ feature -- Access
 	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 
+	screen_x, screen_y: INTEGER
+			-- Current pointer position.
+
+	start_floating: BOOLEAN
+			-- When start dragging, is it floating state?
+
+	offset_x, offset_y: INTEGER
+			-- Offset when start dragging.
+
 feature {NONE} -- Implementation
 
-	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	internal_last_screen_x, internal_last_screen_y: INTEGER
+			-- Last pointer position.
+
+	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER; a_offset_x, a_offset_y: INTEGER): BOOLEAN is
 			-- Handle pointer in four menu area.
 		local
 			l_changed: BOOLEAN
@@ -105,25 +130,19 @@ feature {NONE} -- Implementation
 			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
 				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x)
 				Result := True
-			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)  then
+			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y)  then
 				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_y)
 				Result := True
-			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
+			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y) then
 				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_y)
 				Result := True
 			end
 			if Result then
 				if not caller.row.is_vertical then
-					caller.row.set_item_position (caller, a_screen_x)
+					caller.row.on_pointer_motion (a_screen_x)
 				else
-					caller.row.set_item_position (caller, a_screen_y)
+					caller.row.on_pointer_motion (a_screen_y)
 				end
-			end
-			debug ("docking")
---				internal_shared.feedback.draw_red_rectangle (internal_top_hot_zone.area_managed.left, internal_top_hot_zone.area_managed.top, internal_top_hot_zone.area_managed.width, internal_top_hot_zone.area_managed.height)
---				internal_shared.feedback.draw_red_rectangle (internal_bottom_hot_zone.area_managed.left, internal_bottom_hot_zone.area_managed.top, internal_bottom_hot_zone.area_managed.width, internal_bottom_hot_zone.area_managed.height)
---				internal_shared.feedback.draw_red_rectangle (internal_left_hot_zone.area_managed.left, internal_left_hot_zone.area_managed.top, internal_left_hot_zone.area_managed.width, internal_left_hot_zone.area_managed.height)
---				internal_shared.feedback.draw_red_rectangle (internal_right_hot_zone.area_managed.left, internal_right_hot_zone.area_managed.top, internal_right_hot_zone.area_managed.width, internal_right_hot_zone.area_managed.height)
 			end
 		ensure
 			changed:

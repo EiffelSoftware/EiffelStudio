@@ -1,5 +1,5 @@
 indexing
-	description: "Manager that manage all menus."
+	description: "Manager that manage all menus. This manager directly under SD_DOCKING_MANAGER control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			menu_contents.add_actions.extend (agent on_add_menu_content)
 			menu_contents.remove_actions.extend (agent on_remove_menu_content)
 			create floating_menus.make (1)
+
 		ensure
 			action_added: menu_contents.add_actions.count = 1 and menu_contents.remove_actions.count = 1
 			set: internal_docking_manager = a_docking_manager
@@ -36,7 +37,7 @@ feature -- Access
 
 	menu_contents: ACTIVE_LIST [SD_MENU_CONTENT]
 			-- All menu contents.
-	
+
 	menus: ARRAYED_LIST [SD_MENU_ZONE]
 			-- All SD_MENU_ZONEs in system
 
@@ -79,13 +80,13 @@ feature -- Access
 		end
 
 feature -- Command
-	
+
 	add_menu (a_menu: SD_MENU_CONTENT) is
 			-- Add `a_menu' to menus.
 		do
-			
+
 		end
-		
+
 feature {NONE} -- Agents
 
 	on_add_menu_content (a_menu_item: SD_MENU_CONTENT) is
@@ -115,10 +116,10 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
-	
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager Current belong to.
-	
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 

@@ -414,13 +414,15 @@ static  void    print_byte_code ()
 	char    rescue; /* Has rescue?     */
 	int     i;
 	EIF_NATURAL_8   once_mark;
+	BODY_INDEX	once_key;
 
 	ip = body;
 
 	once_mark = get_uint8(&ip);  /* Once mark */
+	once_key = 0;
 
 	if (once_mark)
-		(void) get_int32(&ip);     /* Reserved space - skip it */
+		once_key = get_int32(&ip);     /* Once index. */
 
 	advance (1);
 
@@ -446,10 +448,10 @@ static  void    print_byte_code ()
 	switch (once_mark)
 	{
 	case ONCE_MARK_THREAD_RELATIVE:
-		fprintf (ofp,"Once routine : thread-relative\n");
+		fprintf (ofp,"Once routine : thread-relative (%u)\n", once_key);
 		break;
 	case ONCE_MARK_PROCESS_RELATIVE:
-		fprintf (ofp,"Once routine : process-relative\n");
+		fprintf (ofp,"Once routine : process-relative (%u)\n", once_key);
 		break;
 	}
 

@@ -238,8 +238,8 @@ feature {NONE}  -- Implmentation for drag action
 			when 3 then
 				select_actions.call ([])
 				create l_menu.make (internal_notebook)
---				l_menu.show_at (Current, a_x, a_y)
-				l_menu.show_at_window (internal_docking_manager.main_window)
+				l_menu.show_at (Current, a_x, a_y)
+--				l_menu.show_at_window (internal_docking_manager.main_window)
 			else
 
 			end

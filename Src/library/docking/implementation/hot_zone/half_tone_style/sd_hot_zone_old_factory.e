@@ -36,22 +36,25 @@ feature -- Factory method
 	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
 			-- Redefine
 		do
-			Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
+			if a_zone.type = {SD_SHARED}.type_tool then
+				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
+			elseif a_zone.type = {SD_SHARED}.type_editor then
+				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (docker_mediator)
+			end
 		end
-
 
 feature {NONE}-- Implementation
 
 	hot_zone_docking (a_zone: SD_DOCKING_ZONE): SD_HOT_ZONE_OLD_DOCKING is
 			-- Hot zone for SD_DOCKING_ZONE.
 		do
-			create Result.make (a_zone)
+			create Result.make (a_zone, docker_mediator)
 		end
 
 	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_OLD_TAB is
 			-- Hot zone for SD_TAB_ZONE.
 		do
-			create Result.make (a_zone)
+			create Result.make (a_zone, docker_mediator)
 		end
 
 indexing

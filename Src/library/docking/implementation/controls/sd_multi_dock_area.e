@@ -267,6 +267,14 @@ feature {NONE} -- Implementation
 			if l_temp_spliter /= Void and l_temp_spliter.full then
 				-- There should by only one, because Postorder, so NO recursive needed.
 				-- The split area must full, because Postorder recursive.
+				
+				-- FIXIT: following If cluse if for GTK, on MsWin is not needed.
+					if l_spliter_position < l_temp_spliter.minimum_split_position then
+						l_spliter_position := l_temp_spliter.minimum_split_position
+					end
+					if l_spliter_position > l_temp_spliter.maximum_split_position then
+						l_spliter_position := l_temp_spliter.maximum_split_position
+					end
 					l_temp_spliter.set_split_position (l_spliter_position)
 			end
 

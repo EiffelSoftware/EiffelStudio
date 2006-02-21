@@ -21,9 +21,12 @@ feature -- Initlization
 			l_screen: SD_SCREEN
 			l_env: EV_ENVIRONMENT
 		do
+			debug ("docking")
+				print ("%NSD_DOCKER_MEDIATOR creating.....")
+			end
 			create internal_shared
-			internal_docking_manager := a_docking_manager
-			internal_docking_manager.command.recover_normal_state
+			docking_manager := a_docking_manager
+			docking_manager.command.recover_normal_state
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			caller := a_caller
@@ -42,7 +45,7 @@ feature -- Initlization
 			is_dockable := True
 		ensure
 			set: caller = a_caller
-			set: internal_docking_manager = a_docking_manager
+			set: docking_manager = a_docking_manager
 		end
 
 feature -- Query
@@ -96,6 +99,9 @@ feature -- Hanlde pointer events
 			changed: BOOLEAN
 			l_floating_zone: SD_FLOATING_ZONE
 		do
+			debug ("docking")
+				print ("%NSD_DOCKER_MEDIATOR end_tracing_pointer a_screen_x, a_screen_y: " + a_screen_x.out + " " + a_screen_y.out)
+			end
 			clear_up
 
 			from
@@ -132,6 +138,9 @@ feature -- Hanlde pointer events
 		local
 			l_drawed: BOOLEAN
 		do
+			debug ("docking")
+				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
+			end
 			screen_x := a_screen_x
 			screen_y := a_screen_y
 
@@ -143,7 +152,9 @@ feature -- Hanlde pointer events
 				l_drawed := hot_zones.item.update_for_pointer_position_feedback (a_screen_x, a_screen_y, is_dockable)
 				hot_zones.forth
 			end
-
+			debug ("docking")
+				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion step 2")
+			end
 			if is_dockable then
 				on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
 				on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
@@ -164,6 +175,9 @@ feature -- Query
 
 	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Handle user canel dragging event.
+
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
 
 feature {SD_HOT_ZONE} -- Hot zone infos.
 
@@ -225,6 +239,26 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
+--	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
+--			--
+--		local
+--			l_drawed: BOOLEAN
+--		do
+--			from
+--				hot_zones.start
+--			until
+--				hot_zones.after or l_drawed
+--			loop
+--				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+--
+--				hot_zones.forth
+--			end
+--
+--			if not hot_zones.after then
+--				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+--			end
+--		end
+
 	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY) is
 			-- Handle user release key to allow dock.
 		do
@@ -257,12 +291,12 @@ feature {NONE} -- Implementation functions
 		local
 			l_zone_list: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zone_list := internal_docking_manager.zones.zones
+			l_zone_list := docking_manager.zones.zones
 
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
 
-				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (caller, internal_docking_manager))
+				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (caller, docking_manager))
 				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 				end
@@ -383,9 +417,6 @@ feature {NONE} -- Implementation attributes
 
 	last_hot_zone: SD_HOT_ZONE
 			-- When moving cursor, last SD_HOT_ZONE where pointer in.
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager manage Current.
 
 	internal_key_press_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
 			-- Golbal key press action.

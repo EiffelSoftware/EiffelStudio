@@ -1737,7 +1737,6 @@
 							<Component Id="Clib3" Guid="96AE4591-F8EE-4E35-902F-E83041373791">
 								<File Id="netvmsdef.h" Name="NETVMS~1.H" LongName="netvmsdef.h" KeyPath="yes" />
 								<File Id="local.c" Name="local.c" />
-								<File Id="bitmask.h" Name="bitmask.h" />
 								<File Id="make_msc.bat3" Name="make_msc.bat" />
 								<File Id="network.c" Name="network.c" />
 								<File Id="makefile.m2" Name="makefile.m" />

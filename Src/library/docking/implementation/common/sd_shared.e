@@ -111,7 +111,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		once
-			create {SD_SYSTEM_COLOR_IMP} l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.non_focused_selection_color
 		ensure
 			not_void: Result /= Void
@@ -122,7 +122,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.non_focused_selection_title_color
 		ensure
 			not_void: Result /= Void
@@ -133,7 +133,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.non_focused_title_text_color
 		end
 
@@ -153,7 +153,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.focused_selection_color
 		ensure
 			not_void: Result /= Void
@@ -164,7 +164,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color
+			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
 			Result := l_system_color.focused_title_text_color
 		ensure
 			not_void: Result /= Void
@@ -175,7 +175,7 @@ feature  -- Colors
 		local
 			l_sys_color: SD_SYSTEM_COLOR
 		once
-			create {SD_SYSTEM_COLOR_IMP} l_sys_color
+			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
 			Result := l_sys_color.active_border_color
 		ensure
 			not_void: Result /= Void

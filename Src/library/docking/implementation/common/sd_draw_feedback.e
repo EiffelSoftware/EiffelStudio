@@ -172,6 +172,7 @@ feature -- Basic operations
 			-- Clear feedback rectangle.
 		do
 			feedback_rect.clear
+			line_drawer.reset_feedback_clearing
 		end
 
 	draw_red_rectangle (left, top, width, height: INTEGER) is
@@ -181,12 +182,12 @@ feature -- Basic operations
 			screen.draw_rectangle (left, top, width, height)
 		end
 
-	draw_rectangle (left, top, width, height, line_width: INTEGER) is
+	draw_rectangle (a_left, a_top, a_width, a_height, a_line_width: INTEGER) is
 			-- Draw a rectangle on the screen which center is blank.
 		require
-			line_width_valid: line_width > 0
+			line_width_valid: a_line_width > 0
 		do
-			line_drawer.draw_rectangle (left, top, width, height, line_width)
+			line_drawer.draw_rectangle (a_left, a_top, a_width, a_height, a_line_width)
 		end
 
 	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER) is

@@ -91,7 +91,9 @@ feature  -- Redefine
 			l_rect: EV_RECTANGLE
 			l_left, l_top, l_width, l_height: INTEGER
 		do
-
+			debug ("docking")
+				print ("%NSD_HOT_ZONE_OLD_MAIN on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
+			end
 			l_rect := internal_docking_manager.query.container_rectangle_screen
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				l_left := l_rect.left
@@ -120,11 +122,10 @@ feature  -- Redefine
 			else
 				l_left := a_screen_x - internal_mediator.offset_x
 				l_top := a_screen_y - internal_mediator.offset_y
-				l_width := internal_mediator.caller.width
-				l_height := internal_mediator.caller.height
+				l_width := internal_mediator.caller.state.last_floating_width
+				l_height := internal_mediator.caller.state.last_floating_height
 				internal_docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_float)
 			end
-
 			internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
 			Result := True
 		end
@@ -177,3 +178,4 @@ indexing
 
 
 end
+

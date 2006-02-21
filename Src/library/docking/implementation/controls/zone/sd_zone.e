@@ -83,7 +83,8 @@ feature -- Command
 				main_area := Void
 
 				l_split_area ?= internal_parent
-				if l_split_area /= Void then
+				-- FIXIT: Only have to check if split position in bounds on GTK, mswin is not needed.
+				if l_split_area /= Void and then internal_parent_split_position >= l_split_area.minimum_split_position and internal_parent_split_position <= l_split_area.maximum_split_position then
 					l_split_area.set_split_position (internal_parent_split_position)
 				end
 				main_area_widget := Void

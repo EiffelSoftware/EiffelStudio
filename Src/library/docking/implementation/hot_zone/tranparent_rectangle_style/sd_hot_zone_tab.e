@@ -115,6 +115,7 @@ feature {NONE} -- Implementation
 		local
 			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_rect: EV_RECTANGLE
+			l_tab_behind_last: EV_RECTANGLE
 		do
 
 			l_tabs := internal_zone.tabs_shown
@@ -128,6 +129,10 @@ feature {NONE} -- Implementation
 				internal_tab_area.force_last (l_rect, l_tabs.key_for_iteration)
 				l_tabs.forth
 			end
+
+			create l_tab_behind_last.make (internal_tab_area.last.right + 1, internal_tab_area.last.top, internal_shared.feedback_tab_width, internal_tab_area.last.height)
+			internal_tab_area.finish
+			internal_tab_area.force_last (l_tab_behind_last, internal_tab_area.key_for_iteration + 1)
 
 			internal_rectangle := a_rect
 			create internal_rectangle_left.make (internal_rectangle.left + internal_rectangle.width // 2 - pixmap_center_width // 2 - pixmap_corner_width, internal_rectangle.top + internal_rectangle.height // 2 - pixmap_corner_width // 2, pixmap_corner_width, pixmap_corner_width)

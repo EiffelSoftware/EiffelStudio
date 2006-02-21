@@ -3576,6 +3576,10 @@ feature -- Implementation
 			is_target_of_creation_instruction := True
 			last_access_writable := False
 			l_as.target.process (Current)
+				-- Although it might be already reset when `target' is indeed
+				-- a feature of the current class, it is not reset when it is a local,
+				-- that's why we reset it.
+			is_target_of_creation_instruction := False
 			l_target_type := last_type
 			if l_needs_byte_node then
 				l_access ?= last_byte_node

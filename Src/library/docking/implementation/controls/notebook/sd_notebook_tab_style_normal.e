@@ -106,7 +106,12 @@ feature -- Command
 						if l_start_x < 0 then
 							l_start_x := 0
 						end
-						create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height)
+						-- FIXIT: On linux, internal_drawing_area.height's value may be only 1 sometime. But actually is not 1 at that time.
+						if internal_drawing_area.height - gap_height >= 0 then
+							create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height)
+						else
+							create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, 0)
+						end
 					end
 				end
 				if l_rect /= Void then

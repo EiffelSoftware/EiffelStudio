@@ -864,23 +864,7 @@ end;
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if old_feature.written_in /= a_class.class_id then
-							-- It is a new feature, we need to create a new
-							-- body index.
-						feature_i.set_body_index (Body_index_counter.next_id);
-
-							-- Update server information
-						if old_feature.body_index > 0 then
-							tmp_ast_server.body_replace (old_feature.body_index, feature_i.body_index)
-						else
-							check
-								old_feature_is_il_external: old_feature.extension /= Void
-									and then old_feature.extension.is_il
-							end
-							tmp_ast_server.body_replace (external_body_index, feature_i.body_index)
-						end
-					else
-						feature_i.set_body_index (old_feature.body_index);
+					if old_feature.written_in = a_class.class_id then
 						if
 							(feature_i.is_attribute and not old_feature.is_attribute) or else
 							(feature_i.is_deferred and then not old_feature.is_deferred) or else
@@ -921,8 +905,8 @@ end;
 				-- Body index of a previous compiled feature
 			old_description, old_tmp_description: FEATURE_AS;
 				-- Abstract representation of a previous compiled feature
-			is_the_same, old_feature_in_class: BOOLEAN;
-				-- Is the parsed feature the saem than a previous
+			is_the_same: BOOLEAN;
+				-- Is the parsed feature the same than a previous
 				-- compiled one ?
 			feature_name_id: INTEGER;
 			integer_value: INTEGER_CONSTANT;
@@ -965,9 +949,10 @@ end;
 			feature_i := feature_table.item_id (feature_name_id);
 
 			if feature_i /= Void then
-				old_feature_in_class := feature_i.written_in = a_class.class_id
-				body_index := feature_i.body_index;
-				if old_feature_in_class then
+				if feature_i.written_in = a_class.class_id then
+						-- same feature, reuse body_index
+					body_index := feature_i.body_index
+
 						-- Found a feature of same name and written in the
 						-- same class.
 					old_description := Body_server.server_item (body_index)
@@ -1016,7 +1001,12 @@ end;
 					Result.set_is_origin (feature_i.is_origin);
 					Result.set_rout_id_set (feature_i.rout_id_set.twin)
 					Result.set_is_selected (feature_i.is_selected);
-				end;
+				else
+						-- new feature => new body_index
+					body_index := Body_index_counter.next_id
+				end
+
+				Result.set_body_index (body_index)
 				if
 					not is_the_same or else
 					(supplier_status_modified and then
@@ -1031,20 +1021,19 @@ debug ("ACTIVITY")
 	io.error.put_string ("%Nchanged status ");
 	io.error.put_boolean (not Degree_4.changed_status.disjoint (feature_i.suppliers));
 	io.error.put_string ("%Nold_feature_in_class ");
-	io.error.put_boolean (old_feature_in_class);
 	io.error.put_new_line;
 end;
 
 						-- Update `read_info' in BODY_SERVER
 					if body_index > 0 then
-						Tmp_ast_server.body_force (yacc_feature, body_index, a_class.class_id)
+						Tmp_ast_server.body_force (yacc_feature, body_index)
 						Tmp_ast_server.reactivate (body_index)
 					else
 						check
 							feature_is_il_external: feature_i.extension /= Void
 								and then feature_i.extension.is_il
 						end
-						Tmp_ast_server.body_force (yacc_feature, external_body_index, a_class.class_id)
+						Tmp_ast_server.body_force (yacc_feature, external_body_index)
 					end
 
 						-- Insert the changed feature in the table of
@@ -1052,12 +1041,12 @@ end;
 					changed_features.extend (feature_name_id);
 				else
 						-- Update `read_info' in BODY_SERVER
-					Tmp_ast_server.body_force (yacc_feature, body_index, a_class.class_id)
+					Tmp_ast_server.body_force (yacc_feature, body_index)
 					Tmp_ast_server.reactivate (body_index)
 				end;
 			else
 				Result.set_body_index (Body_index_counter.next_id)
-				Tmp_ast_server.body_force (yacc_feature, Result.body_index, a_class.class_id)
+				Tmp_ast_server.body_force (yacc_feature, Result.body_index)
 
 					-- Insert the changed feature in the table of changed
 					-- features of `a_class'.
@@ -1533,19 +1522,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

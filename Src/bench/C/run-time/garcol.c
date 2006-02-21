@@ -2849,6 +2849,15 @@ rt_private int sweep_from_space(void)
 	zone = (union overhead *) base;		/* Start of from space */
 	end = ps_from.sc_end;				/* End of zone */
 
+	/* New macro to make writing end condition tests easier to read.
+	 * It is undefined at the end of this routine.
+	 * Its meaning is the following, an object is alive if either:
+	 * - it is an object with the B_C flag (object cannot be moved)
+	 * - it is an object which has the B_BUSY flag (i.e. not in the free list) and
+	 *   that has not been forwarded and was marked by the GC cycle with EO_MARK.
+	 */
+#define is_object_alive(zone)	(((zone)->ov_size & B_C) || (!((zone)->ov_size & B_FWD) && ((zone)->ov_size & B_BUSY) && ((zone)->ov_flags & EO_MARK)))
+
 #ifdef DEBUG
 	dprintf(1)("sweep_from_space: chunk from 0x%lx to 0x%lx (excluded)\n",
 		base, end);
@@ -2856,16 +2865,12 @@ rt_private int sweep_from_space(void)
 #endif
 
 	for (;;) {
+			/* Fetch next header. */
+		flags = zone->ov_size;
+		next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 
-		flags = zone->ov_size;				/* Malloc information flags */
-
-		/* Loop until we reach an Eiffel block which is not marked. */
-		for (
-			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
-			(flags & B_C) || (!(flags & B_FWD) && (zone->ov_flags & EO_MARK));
-			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD)
-		) {
-
+			/* Loop until we reach an Eiffel block which is not marked. */
+		while (((char *) zone < end) && is_object_alive(zone)) {
 #ifdef DEBUG
 			dprintf(8)("sweep_from_space: found a %d bytes C block at 0x%lx\n",
 				zone->ov_size & B_SIZE, zone + 1);
@@ -2879,9 +2884,9 @@ rt_private int sweep_from_space(void)
 			
 			zone->ov_flags &= ~EO_MARK;	/* Unconditionally unmark object */
 			zone = next;				/* Advance to next object */
-			if ((EIF_REFERENCE) zone >= end)	/* This zone block was the last one */
-				break;
-			flags = zone->ov_size;		/* Update flags for loop tests */
+				/* Go to next header. */
+			flags = zone->ov_size;
+			next = (union overhead *) (((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 		}
 
 		/* Either we reached an Eiffel block, a free block or the end of the
@@ -2915,7 +2920,6 @@ rt_private int sweep_from_space(void)
 		 * nothing if the space is spoilt and has to be freed.
 		 */
 
-		size = flags & B_SIZE;		/* Pre-compute that guy */
 
 		if (flags & B_BUSY) {		/* We reached a busy block */
 
@@ -2936,6 +2940,7 @@ rt_private int sweep_from_space(void)
 					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
 			}
 		} else {
+			size = flags & B_SIZE;		/* Pre-compute that guy */
 			lxtract(zone);			/* Extract it from free list */
 			rt_m_data.ml_used += size;	/* Memory accounting */
 			if (flags & B_CTYPE) {	/* Bloc is in a C chunk */
@@ -2960,12 +2965,7 @@ rt_private int sweep_from_space(void)
 		 * described in the 'zone' header). Stop at the end of the space or
 		 * when a C block is reached.
 		 */
-		for (
-			/* empty */;
-			!(flags & B_C) && !(!(flags & B_FWD) && (next->ov_flags & EO_MARK)) && (EIF_REFERENCE) next < end;
-			next = (union overhead *) (((EIF_REFERENCE) next) + size + OVERHEAD)
-		) {
-			flags = next->ov_size;			/* Fetch flags for next loop */
+		while (((char *) next < end) && !is_object_alive(next)) {
 
 #ifdef DEBUG
 			dprintf(8)(
@@ -2978,9 +2978,6 @@ rt_private int sweep_from_space(void)
 			flush;
 #endif
 
-			if ((flags & B_C) || (!(flags & B_FWD) && (next->ov_flags & EO_MARK)))		/* Current block followed by a C one */
-				break;				/* Coalescing has to stop here */
-
 			/* Any coalesced free block must be removed from the free list,
 			 * otherwise, if the coalesced block is finally freed because
 			 * the space is spoilt, the block will be listed twice in the list,
@@ -2990,8 +2987,8 @@ rt_private int sweep_from_space(void)
 			 * necessary.
 			 */
 
+			flags = next->ov_size;
 			size = flags & B_SIZE;		/* Pre-compute that guy */
-
 			if (flags & B_BUSY) {		/* We reached a busy block */
 
 				/* I don't expect any overflow which could corrupt the flags.
@@ -3051,6 +3048,8 @@ rt_private int sweep_from_space(void)
 				zone->ov_size & B_SIZE);
 			flush;
 #endif
+				/* Go to next element. */
+			next = (union overhead *) (((EIF_REFERENCE) next) + size + OVERHEAD);
 		}
 
 		/* Either we reached a C block or the end of the 'from' space. In case
@@ -3090,10 +3089,17 @@ rt_private int sweep_from_space(void)
 		 * This routine is a mess and needs rewriting--RAM.
 		 */
 
+#ifdef EIF_ASSERTIONS
+		size = zone->ov_size & B_SIZE;
+#endif
 		eif_rt_xfree((EIF_REFERENCE) (zone + 1));		/* Put block back to free list */
+		CHECK("No bigger than expected", (zone->ov_size & B_SIZE) == size);
 		zone = next;					/* Reset coalescing base */
 	}
 	/* NOTREACHED */
+
+	/* Remove macro definition. */
+#undef is_object_alive
 }
 
 rt_private int find_scavenge_spaces(void)
@@ -3273,7 +3279,6 @@ rt_private void find_to_space(void)
 	 * as `ps_to' zone. If the leading block in the chunk is free but not
 	 * equal to the whole chunk, we even attempt block coalescing.
 	 */
-	size_t std_size = eif_chunk_size - sizeof(struct chunk);
 	struct chunk *cur;	/* Current chunk we are considering */
 	rt_uint_ptr flags = 0;		/* Malloc info flags */
 	EIF_REFERENCE arena = (EIF_REFERENCE) 0;	/* Where chunk's arena starts */

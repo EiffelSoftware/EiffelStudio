@@ -11,6 +11,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef VXWORKS
+#include <hostLib.h>
+#endif
+
 #ifdef EIF_WINDOWS
 #include <winsock.h>
 extern void do_init (void);

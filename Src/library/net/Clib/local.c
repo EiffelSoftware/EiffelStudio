@@ -4,14 +4,16 @@
 
 #include "eif_config.h"
 
-#ifdef EIF_VMS
-    /* This module just won't compile under VMS; give it up now. */
+#if defined EIF_VMS || defined VXWORKS
+    /* This module just won't compile under those platforms; give it up now. */
 int net_local_is_empty = 0;
 
 #else /* EIF_VMS */
 
 #include <sys/types.h>
+#ifdef I_SYS_TIME
 #include <sys/time.h>
+#endif
 #include <errno.h>
 #ifndef BSD
 #define BSD_COMP
@@ -30,11 +32,11 @@ int net_local_is_empty = 0;
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
+#ifdef I_SYS_UN
 #include <sys/un.h>
+#endif
 
 #include <string.h>
-
-#include "bitmask.h"
 
 EIF_INTEGER unix_address_size()
 	/*x Size of unix domain address data structure */

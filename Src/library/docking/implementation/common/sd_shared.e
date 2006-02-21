@@ -111,7 +111,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		once
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_system_color
 			Result := l_system_color.non_focused_selection_color
 		ensure
 			not_void: Result /= Void
@@ -122,7 +122,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_system_color
 			Result := l_system_color.non_focused_selection_title_color
 		ensure
 			not_void: Result /= Void
@@ -133,7 +133,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_system_color
 			Result := l_system_color.non_focused_title_text_color
 		end
 
@@ -153,7 +153,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_system_color
 			Result := l_system_color.focused_selection_color
 		ensure
 			not_void: Result /= Void
@@ -164,7 +164,7 @@ feature  -- Colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_system_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_system_color
 			Result := l_system_color.focused_title_text_color
 		ensure
 			not_void: Result /= Void
@@ -175,7 +175,7 @@ feature  -- Colors
 		local
 			l_sys_color: SD_SYSTEM_COLOR
 		once
-			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
+			create {SD_SYSTEM_COLOR_IMP} l_sys_color
 			Result := l_sys_color.active_border_color
 		ensure
 			not_void: Result /= Void
@@ -248,7 +248,7 @@ feature -- Constants
 	Auto_hide_panel_gap_size: INTEGER is 4
 			-- Auto hide panel's Gap size.
 
-	Line_width: INTEGER is 5
+	Line_width: INTEGER is 2
 			-- Width of feedback line.
 
 	Resize_bar_width_height: INTEGER is 5
@@ -313,6 +313,9 @@ feature -- Constants
 
 	Padding_width: INTEGER is 6
 			-- Padding width used by whold system.
+
+	Feedback_tab_width: INTEGER is 60
+			-- When user dragging, the width of feedback rectangle for tab.
 
 feature {NONE} -- Implementation
 

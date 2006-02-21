@@ -99,6 +99,8 @@ feature -- Redefine.
 			-- Redefine
 		do
 			if floating_zone /= Void then
+				check valid_height: floating_zone.height > 0 end
+				check valid_width: floating_zone.width > 0 end
 				last_floating_height := floating_zone.height
 				last_floating_width := floating_zone.width
 			end

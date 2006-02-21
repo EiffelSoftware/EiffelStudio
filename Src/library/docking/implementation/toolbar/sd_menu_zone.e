@@ -111,6 +111,9 @@ feature -- Command
 
 			wipe_out
 			create floating_menu.make (internal_docking_manager)
+			if parent /= Void then
+				parent.prune (Current)
+			end
 			floating_menu.extend (Current)
 
 			drag_area.hide

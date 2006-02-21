@@ -11,8 +11,7 @@ class
 inherit
 	SD_HOT_ZONE_OLD_DOCKING
 		rename
-			make as make_docking,
-			internal_zone as internal_zone_docking
+			make as make_docking
 		redefine
 			apply_change,
 			set_rectangle,
@@ -46,7 +45,6 @@ feature -- Redefine
 			l_caller: SD_ZONE
 		do
 			l_caller := internal_mediator.caller
---			if  then
 			from
 				internal_tab_area.start
 			until
@@ -57,7 +55,9 @@ feature -- Redefine
 					debug ("docking")
 						print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 					end
-					l_caller.state.move_to_tab_zone (internal_zone, internal_tab_area.key_for_iteration)
+					l_tab_zone ?= internal_zone
+					check must_be_tab_zone: l_tab_zone /= Void end
+					l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
 				end
 				internal_tab_area.forth
 			end
@@ -116,9 +116,12 @@ feature -- Redefine
 		local
 			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_tab_behind_last: EV_RECTANGLE
+			l_tab_zone: SD_TAB_ZONE
 		do
 			Precursor {SD_HOT_ZONE_OLD_DOCKING} (a_rect)
-			l_tabs := internal_zone.tabs_shown
+			l_tab_zone ?= internal_zone
+			check tab_hot_zone_only_for_tab_zone: l_tab_zone /= Void end
+			l_tabs := l_tab_zone.tabs_shown
 			from
 				l_tabs.start
 				create internal_tab_area.make_default
@@ -137,9 +140,6 @@ feature {NONE} -- Implementation
 
 	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
-
-	internal_zone: SD_TAB_ZONE;
-			-- Tab zone Current belong to.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

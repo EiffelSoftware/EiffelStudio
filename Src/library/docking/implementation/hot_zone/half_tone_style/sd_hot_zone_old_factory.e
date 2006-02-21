@@ -39,7 +39,7 @@ feature -- Factory method
 			if a_zone.type = {SD_SHARED}.type_tool then
 				Result := create {SD_HOT_ZONE_OLD_MAIN}.make (docker_mediator, a_docking_manager)
 			elseif a_zone.type = {SD_SHARED}.type_editor then
-				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (docker_mediator)
+				Result := create {SD_HOT_ZONE_OLD_MAIN_EDITOR}.make (docker_mediator, a_docking_manager)
 			end
 		end
 

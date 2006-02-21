@@ -113,6 +113,8 @@ feature {NONE} -- Implementation for save config.
 				l_zone.save_content_title (a_config_data)
 				a_config_data.set_state (l_zone.content.state.generating_type)
 				a_config_data.set_direction (l_zone.content.state.direction)
+				check valid: l_zone.content.state.last_floating_width > 0 end
+				check valid: l_zone.content.state.last_floating_height > 0 end
 				a_config_data.set_width (l_zone.content.state.last_floating_width)
 				a_config_data.set_height (l_zone.content.state.last_floating_height)
 				debug ("docking")
@@ -181,7 +183,7 @@ feature {NONE} -- Implementation for save config.
 		local
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 			l_tab_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TAB_STUB]]
-			l_one_group_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
+			l_one_group_data: ARRAYED_LIST [TUPLE [STRING, INTEGER, INTEGER, INTEGER]]
 			l_one_group: ARRAYED_LIST [SD_TAB_STUB]
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
@@ -201,7 +203,7 @@ feature {NONE} -- Implementation for save config.
 				loop
 					l_auto_hide_state ?= l_one_group.item.content.state
 					check not_void: l_auto_hide_state /= Void end
-					l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height])
+					l_one_group_data.extend ([l_one_group.item.content.unique_title, l_auto_hide_state.width_height, l_auto_hide_state.last_floating_width, l_auto_hide_state.last_floating_height])
 
 					l_one_group.forth
 				end
@@ -511,7 +513,7 @@ feature {NONE} -- Implementation for open config.
 			open_one_auto_hide_panel_data (a_data.top, {SD_DOCKING_MANAGER}.dock_top)
 		end
 
-	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER]]]; a_direction: INTEGER) is
+	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER, INTEGER, INTEGER]]]; a_direction: INTEGER) is
 			-- Open one SD_AUTO_HIDE_PANEL's data.
 		require
 			a_data_not_void: a_data /= Void
@@ -551,6 +553,8 @@ feature {NONE} -- Implementation for open config.
 					-- If we don't find SD_CONTENT last saved, ignore it.
 					if l_content /= Void then
 						create l_auto_hide_state.make (l_content, a_direction)
+						l_auto_hide_state.set_last_floating_width (l_list.item.integer_32_item (3))
+						l_auto_hide_state.set_last_floating_height (l_list.item.integer_32_item (4))
 						l_auto_hide_state.restore (l_list_for_state, l_panel, a_direction)
 						l_auto_hide_state.set_width_height (l_list.item.integer_32_item (2))
 						l_tab_group.extend (l_content)

@@ -145,8 +145,13 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	internal_tab_group: ARRAYED_LIST [TUPLE [STRING, INTEGER]] is
+	internal_tab_group: ARRAYED_LIST [TUPLE [STRING, INTEGER, INTEGER, INTEGER]] is
 			-- Anchor type
+			-- In the Tuple, first argument is SD_CONTENT unique name.
+			--               second argument is last_width_height of a SD_AUTO_HIDE_ZONE.
+			--               third argument is last_floating_width of a SD_STATE
+			--               forth argument is last_floating_height of a SD_STATE
+
 		require
 			False
 		do

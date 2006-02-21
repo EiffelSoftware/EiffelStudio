@@ -17,11 +17,21 @@
 #define GET_SOCKET_ERROR WSAGetLastError()
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #else
+#ifdef I_SYS_TIME
 #include <sys/time.h>		/* select */
+#endif
+#ifdef I_SYS_TIMES
+#include <sys/times.h>
+#endif
 #include <sys/types.h>		/* select */
 #include <unistd.h>
 #define SOCKET_ERROR -1
 #define GET_SOCKET_ERROR errno
+#endif
+
+#ifdef VXWORKS
+#include <string.h>
+#include <selectLib.h>	/* For select. */
 #endif
 
 #define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"

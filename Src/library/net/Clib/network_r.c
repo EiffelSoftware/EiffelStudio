@@ -53,9 +53,16 @@
 #endif
 
 #include <sys/types.h>
+
+#ifdef VXWORKS
+#include <types/vxTypesOld.h>
+#endif
+
 #ifndef EIF_WINDOWS
  
+#ifdef I_SYS_TIME
 #include <sys/time.h>
+#endif
 #endif
 #include <errno.h>
 #include <fcntl.h>
@@ -74,7 +81,6 @@
 #endif
 #if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
 #else
-#include <sys/un.h>
 #include <netinet/tcp.h>
 #endif
 #ifdef SOC_XNS

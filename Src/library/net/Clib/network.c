@@ -32,7 +32,7 @@
 #include <io.h>
 #endif
 
-#ifndef EIF_WINDOWS
+#ifdef I_SYS_TIME
 #include <sys/time.h>
 #endif
 
@@ -75,16 +75,23 @@
 #include <sys/in.h>
 #endif
 
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
-#else
+#ifdef I_SYS_UN
 #include <sys/un.h>
+#endif
+
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS || defined VXWORKS
+#else
 #include <arpa/inet.h>
 #include <fcntl.h>
 #endif
 
-#include <string.h>
+#ifdef VXWORKS
+#include <ioLib.h>
+#include <inetLib.h>
+#include <sockLib.h>
+#endif
 
-#include "bitmask.h"
+#include <string.h>
 
 #ifdef EIF_WINDOWS
 #define EIFNET_ERROR_HAPPENED SOCKET_ERROR
@@ -347,7 +354,11 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 	do_init();
 #endif
 
+#ifdef VXWORKS
+	hp = NULL;
+#else
 	hp = gethostbyname((char *) name);
+#endif
 
 	if (hp == (struct hostent *) 0)
 		eif_net_check(EIFNET_ERROR_HAPPENED);
@@ -364,7 +375,11 @@ EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 	do_init();
 #endif
 
+#ifdef VXWORKS
+	sp = NULL;
+#else
 	sp = getservbyname((char *) name, (char *) proto);
+#endif
 	if (sp == (struct servent *) 0) {
 		eio();
 			/* Not Reached */
@@ -1047,7 +1062,7 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
 {
-#if defined EIF_WINDOWS || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined VXWORKS
 	return 0;
 #elif defined EIF_VMS
 #  ifdef DEBUG
@@ -1068,6 +1083,8 @@ void c_set_blocking(EIF_INTEGER fd)
 #elif defined EIF_WINDOWS
 	u_long arg = 0;
 	ioctlsocket((int) fd, FIONBIO, &arg);
+#elif defined VXWORKS
+	ioctl((int) fd, FIONBIO, 0); 
 #else
 	int arg = 0;
 	ioctl((int) fd, FIONBIO, (char *) &arg);
@@ -1084,6 +1101,8 @@ void c_set_non_blocking(EIF_INTEGER fd)
 #elif defined EIF_WINDOWS
 	u_long arg = 1;
 	ioctlsocket((int) fd, FIONBIO, &arg);
+#elif defined VXWORKS
+	ioctl((int) fd, FIONBIO, 1);
 #else
 	int arg = 1;
 	ioctl ((int) fd, FIONBIO, (char *) &arg);

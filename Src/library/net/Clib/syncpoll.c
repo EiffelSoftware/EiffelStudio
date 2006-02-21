@@ -13,7 +13,7 @@
 #include <stdio.h>
 #endif
 
-#ifndef EIF_WINDOWS
+#ifdef I_SYS_TIME
 #include <sys/time.h>
 #endif
 
@@ -45,6 +45,9 @@
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
+#ifdef VXWORKS
+#include <sockLib.h>
+#endif
 #endif
 
 #ifdef I_FD_SET_SYS_SELECT
@@ -57,13 +60,9 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
-#else
+#ifdef I_SYS_UN
 #include <sys/un.h>
 #endif
-
-#include "bitmask.h"
-
 
 EIF_INTEGER c_syncpoll(EIF_INTEGER fd)
 	/*x Synchronously poll a socket without modifying buffer
@@ -143,7 +142,7 @@ EIF_INTEGER c_is_blocking(EIF_INTEGER fd)
 	/*x attempt to get blocking status of socket */
 	/*x BIG BUG UNDER HP-UX !!! => couldn't get actual blocking status */
 {
-#if defined EIF_WINDOWS || EIF_OS2 || EIF_VMS
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS || defined VXWORKS
 	return 0;
 #else
 	return (EIF_INTEGER) fcntl((int) fd, (int) F_GETFL, (int) FNDELAY);

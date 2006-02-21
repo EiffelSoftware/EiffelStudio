@@ -112,6 +112,28 @@ feature -- Element change.
 			show
 		end
 
+	 set_area (a_rect: EV_RECTANGLE) is
+	 		--
+	 	require
+	 		not_void: a_rect /= Void
+	 	do
+			x_position := a_rect.x
+			y_position := a_rect.y
+			width := a_rect.width
+			height := a_rect.height
+		ensure
+			set: x_position = a_rect.x and y_position = a_rect.y and width = a_rect.width and height = a_rect.height
+	 	end
+
+	 set_tab_area (a_rect, a_rect_2: EV_RECTANGLE) is
+	 		--
+	 	require
+	 		to_implementated: False
+	 	do
+
+	 	end
+
+
 feature {NONE} -- Implementation
 
 	screen: EV_SCREEN

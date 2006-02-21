@@ -19,16 +19,18 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_zone: SD_DOCKING_ZONE) is
+	make (a_zone: SD_DOCKING_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
 		do
 			internal_zone := a_zone
+			internal_mediator := a_docker_mediator
 			create internal_shared
 			set_rectangle (create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
 		ensure
 			set: internal_zone = a_zone
+			set: internal_mediator = a_docker_mediator
 		end
 
 feature -- Redefine
@@ -43,7 +45,7 @@ feature -- Redefine
 			l_in_five_hot_area := internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y)
 				or internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) or internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) or
 					internal_rectangle_center.has_x_y (a_screen_x, a_screen_y)
-			if l_in_five_hot_area or a_dockable then
+			if l_in_five_hot_area and a_dockable then
 
 				Result := True
 
@@ -54,33 +56,46 @@ feature -- Redefine
 					l_top := internal_rectangle_top.top
 					l_width := internal_zone.width
 					l_height := l_half_height
-					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_up)
+					debug ("docking")
+						print ("%NSD_HOT_ZONE_OLD_DOCKING	update_for_pointer_position_feedback icons is: " + internal_shared.icons.drag_pointer_up.out)
+					end
+					-- On GTK, following line not work sometimes?
+--					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_up)
+					-- On Windows, does following line work?
+					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_up)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_top.left
 					l_top := internal_rectangle_bottom.bottom - l_half_height
 					l_width := internal_zone.width
 					l_height := l_half_height
-					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_down)
+--					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_down)
+					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_down)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_top.left
 					l_top := internal_rectangle_top.top
 					l_width := l_half_width
 					l_height := internal_zone.height
-					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_left)
+--					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_left)
+					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_rectangle_right.right - l_half_width
 					l_top := internal_rectangle_top.top
 					l_width := l_half_width
 					l_height := internal_zone.height
-					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_right)
+--					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_right)
+					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
 					l_left := internal_zone.screen_x
 					l_top := internal_zone.screen_y
 					l_width := internal_zone.width
 					l_height := internal_zone.height
-					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_center)
+--					internal_zone.set_pointer_style (internal_shared.icons.drag_pointer_center)
+					internal_mediator.docking_manager.main_window.set_pointer_style (internal_shared.icons.drag_pointer_center)
 				end
-
+				debug ("docking")
+					print ("%NSD_HOT_ZONE_OLD_DOCKING on_pointer_motion: " + l_left.out + " " + l_top.out + " " + l_width.out + " " + l_height.out)
+--					print ("%N                                         internal_zone:%N" + internal_zone.out)
+				end
 				internal_shared.feedback.draw_rectangle (l_left, l_top, l_width, l_height, internal_shared.line_width)
 			end
 		end
@@ -120,7 +135,7 @@ feature -- Redefine
 	clear_indicator is
 			-- Redefine
 		do
-			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+--			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
 	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -185,3 +200,4 @@ indexing
 
 
 end
+

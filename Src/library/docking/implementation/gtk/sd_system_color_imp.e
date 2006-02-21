@@ -8,6 +8,15 @@ indexing
 class
 	SD_SYSTEM_COLOR_IMP
 
+create
+	make
+
+feature {NONE} -- Initlization
+	make is
+			-- Creation method
+		do
+		end
+
 feature -- Access
 
 	mdi_back_ground_color: EV_COLOR is

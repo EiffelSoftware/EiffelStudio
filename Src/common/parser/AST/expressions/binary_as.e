@@ -35,6 +35,12 @@ feature -- Attributes
 	right: EXPR_AS
 			-- Right opernad
 
+	class_id: INTEGER
+			-- The class id of the qualified call.
+
+	routine_ids: ID_SET
+			-- The routine ids of the feature.
+
 feature -- Roundtrip
 
 	operator: AST_EIFFEL
@@ -83,6 +89,22 @@ feature -- Comparison
 				equivalent (right, other.right)
 		end
 
+feature -- Setting
+
+	set_routine_ids (a_routine_ids: like routine_ids) is
+			-- Set `routine_ids' to `a_routine_ids'.
+		require
+			a_routine_ids_not_void: a_routine_ids /= Void
+		do
+			routine_ids := a_routine_ids
+		end
+
+	set_class_id (a_class_id: like class_id) is
+			-- Set `class_id' to `a_class_id'.
+		do
+			class_id := a_class_id
+		end
+
 invariant
 	left_not_void: left /= Void
 	right_not_void: right /= Void
@@ -93,19 +115,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

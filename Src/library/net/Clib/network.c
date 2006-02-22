@@ -1084,7 +1084,8 @@ void c_set_blocking(EIF_INTEGER fd)
 	u_long arg = 0;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #elif defined VXWORKS
-	ioctl((int) fd, FIONBIO, 0); 
+	int arg = 0;
+	eif_net_check(ioctl((int) fd, FIONBIO, (int) &arg)); 
 #else
 	int arg = 0;
 	ioctl((int) fd, FIONBIO, (char *) &arg);
@@ -1102,7 +1103,8 @@ void c_set_non_blocking(EIF_INTEGER fd)
 	u_long arg = 1;
 	ioctlsocket((int) fd, FIONBIO, &arg);
 #elif defined VXWORKS
-	ioctl((int) fd, FIONBIO, 1);
+	int arg = 1;
+	eif_net_check(ioctl((int) fd, FIONBIO, (int) &arg)); 
 #else
 	int arg = 1;
 	ioctl ((int) fd, FIONBIO, (char *) &arg);

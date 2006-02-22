@@ -45,7 +45,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 all: $(NET_LIBS)
 	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
-	make clobber
+	#make clobber
 
 SMODE = local.c network.c network_r.c storable.c
 

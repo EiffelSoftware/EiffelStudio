@@ -20,6 +20,7 @@ inherit
 			process_access_id_as,
 			process_access_assert_as,
 			process_access_inv_as,
+			process_static_access_as,
 			process_break_as,
 			process_string_as, process_verbatim_string_as
 		end
@@ -282,6 +283,13 @@ feature {NONE} -- Visitor implementation
 		do
 			process_access_feat_as (l_as)
 		end
+
+	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+			-- Process `l_as'.
+		do
+			process_access_feat_as (l_as)
+		end
+
 
 	process_break_as (l_as: BREAK_AS) is
 			-- Process breaks which could be comments.

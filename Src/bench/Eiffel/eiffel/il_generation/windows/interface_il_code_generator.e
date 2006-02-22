@@ -305,6 +305,7 @@ feature -- IL Generation
 		require
 			feat_not_void: feat /= Void
 			class_type_not_void: class_type /= Void
+			parent_class_not_expanded: inh_feat /= Void implies not class_type.is_expanded
 		local
 			l_is_method_impl_generated: BOOLEAN
 			is_expanded: BOOLEAN
@@ -352,10 +353,20 @@ feature -- IL Generation
 					end
 				else
 					if is_expanded then
-						impl_feat := feat
-						impl_type := current_class_type.type.duplicate
-						impl_type.set_reference_mark
-						impl_class_type := impl_type.associated_class_type
+						if inh_feat = Void then
+								-- Generate implementation for reference counterpart of this class.
+							impl_feat := feat
+							impl_type := current_class_type.type.duplicate
+							impl_type.set_reference_mark
+							impl_class_type := impl_type.associated_class_type
+						else
+								-- Generate implementation for parent class type.
+							impl_feat := inh_feat
+							impl_class_type := class_type
+						end
+						check
+							impl_class_type_is_reference: not impl_class_type.is_expanded
+						end
  					end
 					if impl_feat /= Void then
 						l_is_method_impl_generated := is_method_impl_needed (feat, impl_feat, impl_class_type) or else

@@ -1772,14 +1772,14 @@ feature -- Implementation
 			is_assigner_call := False
 				-- Type check the target
 			l_as.target.process (Current)
+				-- Restore assigner call flag for nested call
+			is_assigner_call := l_is_assigner_call
 			if not is_byte_node_enabled then
 					-- Type check the message
 				l_as.message.process (Current)
 			else
 				l_target_access ?= last_byte_node
 
-					-- Restore assigner call flag for nested call
-				is_assigner_call := l_is_assigner_call
 					-- Type check the message
 				l_as.message.process (Current)
 

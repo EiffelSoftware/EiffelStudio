@@ -606,6 +606,9 @@ feature -- Implementation
 
 			process_call (l_type, Void, l_as.feature_name, Void, l_as.parameters, True, False, True, False)
 			error_handler.checksum
+
+			l_as.set_routine_ids (last_routine_id_set)
+			l_as.set_class_id (l_type.associated_class.class_id)
 		end
 
 	process_call (

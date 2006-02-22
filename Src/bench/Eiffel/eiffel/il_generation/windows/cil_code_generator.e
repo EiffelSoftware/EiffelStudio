@@ -2005,6 +2005,7 @@ feature -- Features info
 			l_naming_convention: BOOLEAN
 			l_is_single_class: BOOLEAN
 			l_is_static: BOOLEAN
+			l_is_attribute_generated_as_field: BOOLEAN
 			l_declaration_class: CLASS_C
 		do
 			l_class_type := class_types.item (a_type_id)
@@ -2033,12 +2034,98 @@ feature -- Features info
 			l_signature.compare_references
 
 			l_return_type := result_type_in (l_feat, l_class_type)
-			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
+
+			l_is_attribute_generated_as_field := l_is_attribute and (l_is_single_class or (not in_interface and l_is_static))
+
+			if not l_feat.is_type_feature then
+					-- Only for not automatically generated feature do we use the
+					-- naming convention chosen by user.
+				l_naming_convention := l_class_type.is_dotnet_name
+			end
+
+				-- When we are handling with an external feature, we have to extract its
+				-- real name, not the Eiffel one.
+			if l_ext /= Void then
+				l_name := l_ext.alias_name
+			else
+				if l_feat.is_type_feature then
+					l_name := l_feat.feature_name
+				else
+					if l_is_static then
+						if l_is_c_external then
+							l_name := encoder.feature_name (l_class_type.static_type_id,
+								l_feat.body_index)
+						else
+							if l_is_attribute then
+								l_name := "$$" + il_casing.camel_casing (
+									l_naming_convention, l_feat.feature_name)
+							else
+								l_name := "$$" + il_casing.pascal_casing (
+									l_naming_convention, l_feat.feature_name,
+									{IL_CASING_CONVERSION}.lower_case)
+							end
+						end
+					else
+						l_name := il_casing.pascal_casing (
+							l_naming_convention, l_feat.feature_name,
+							{IL_CASING_CONVERSION}.lower_case)
+						if l_is_attribute then
+							if has_property_getter (l_feat) then
+								prepare_property_getter (l_name, l_return_type)
+								current_module.insert_property_getter (md_emit.define_member_ref
+									(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
+							end
+							if has_property_setter (l_feat) then
+								prepare_property_setter (l_name, l_return_type)
+								current_module.insert_property_setter (md_emit.define_member_ref
+									(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
+							end
+							if
+								l_is_single_class and then not is_override and then
+								(l_feat.export_status.is_all or else
+								 l_feat.assigner_name_id /= 0 and then l_feat.assigner_in (l_class_type).export_status.is_all)
+							then
+									-- Use a field name different from the property name.
+								l_name := "$$" + il_casing.camel_casing (
+									l_naming_convention, l_feat.feature_name)
+							end
+						end
+					end
+				end
+			end
+
+			uni_string.set_string (l_name)
+
+			if l_is_attribute_generated_as_field then
+					-- Evaluate signature of the field.
 				l_field_sig := field_sig
 				l_field_sig.reset
 				set_signature_type (l_field_sig, l_return_type)
 				l_signature.put (l_return_type.static_type_id, 0)
+
+				l_declaration_class := system.class_of_id (l_feat.access_in)
+				if
+					l_declaration_class.is_external or else
+					l_declaration_class.is_single and then l_declaration_class /= l_class_type.associated_class
+				then
+						-- No field is generated because it is inherited.
+					check
+						is_single_class: is_single_class
+					end
+					l_meth_token := attribute_token (implemented_type
+						(l_feat.access_in, current_class_type.type).associated_class_type.static_type_id,
+						l_declaration_class.feature_of_rout_id (l_feat.rout_id_set.first).feature_id)
+				else
+					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
+						l_field_sig)
+				end
+				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
+				if l_is_single_class then
+					insert_signature (l_signature, a_type_id, l_feat.feature_id)
+				end
 			else
+					-- Normal method.
+					-- Evaluate its signature.
 				l_meth_sig := method_sig
 				l_meth_sig.reset
 				if l_is_static and not in_interface then
@@ -2084,69 +2171,7 @@ feature -- Features info
 						l_feat_arg.forth
 					end
 				end
-			end
 
-			if not l_feat.is_type_feature then
-					-- Only for not automatically generated feature do we use the
-					-- naming convention chosen by user.
-				l_naming_convention := l_class_type.is_dotnet_name
-			end
-
-				-- When we are handling with an external feature, we have to extract its
-				-- real name, not the Eiffel one.
-			if l_ext /= Void then
-				l_name := l_ext.alias_name
-			else
-				if l_feat.is_type_feature then
-					l_name := l_feat.feature_name
-				else
-					if l_is_static then
-						if l_is_c_external then
-							l_name := encoder.feature_name (l_class_type.static_type_id,
-								l_feat.body_index)
-						else
-							if l_is_attribute then
-								l_name := "$$" + il_casing.camel_casing (
-									l_naming_convention, l_feat.feature_name)
-							else
-								l_name := "$$" + il_casing.pascal_casing (
-									l_naming_convention, l_feat.feature_name,
-									{IL_CASING_CONVERSION}.lower_case)
-							end
-						end
-					else
-						l_name := il_casing.pascal_casing (
-							l_naming_convention, l_feat.feature_name,
-							{IL_CASING_CONVERSION}.lower_case)
-					end
-				end
-			end
-
-			uni_string.set_string (l_name)
-
-			if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
-				l_declaration_class := system.class_of_id (l_feat.access_in)
-				if
-					l_declaration_class.is_external or else
-					l_declaration_class.is_single and then l_declaration_class /= l_class_type.associated_class
-				then
-						-- No field is generated because it is inherited.
-					check
-						is_single_class: is_single_class
-					end
-					l_meth_token := attribute_token (implemented_type
-						(l_feat.access_in, current_class_type.type).associated_class_type.static_type_id,
-						l_declaration_class.feature_of_rout_id (l_feat.rout_id_set.first).feature_id)
-				else
-					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
-						l_field_sig)
-				end
-				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
-				if l_is_single_class then
-					insert_signature (l_signature, a_type_id, l_feat.feature_id)
-				end
-			else
-					-- Normal method
 				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 					l_meth_sig)
 
@@ -2186,19 +2211,6 @@ feature -- Features info
 					end
 				else
 					last_non_recorded_feature_token := l_meth_token
-				end
-			end
-			if l_is_attribute then
-				l_meth_sig := method_sig
-				if has_property_getter (l_feat) then
-					prepare_property_getter (l_name, l_return_type)
-					current_module.insert_property_getter (md_emit.define_member_ref
-						(uni_string, l_class_token, l_meth_sig), a_type_id, l_feat.feature_id)
-				end
-				if has_property_setter (l_feat) then
-					prepare_property_setter (l_name, l_return_type)
-					current_module.insert_property_setter (md_emit.define_member_ref
-						(uni_string, l_class_token, l_meth_sig), a_type_id, l_feat.feature_id)
 				end
 			end
 		end
@@ -2241,6 +2253,7 @@ feature -- Features info
 			l_naming_convention: BOOLEAN
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_is_attribute_generated_as_field: BOOLEAN
+			l_is_field_hidden: BOOLEAN
 			l_declaration_class: CLASS_C
 			l_assigner: FEATURE_I
 			l_getter: INTEGER
@@ -2326,6 +2339,8 @@ feature -- Features info
 					if l_is_attribute then
 						l_name := "$$" + il_casing.camel_casing (
 							l_naming_convention, feat.feature_name)
+							-- Ensure the field is not accessible outside Eiffel system.
+						l_is_field_hidden := True
 					else
 						l_name := "$$" + il_casing.pascal_casing (
 							l_naming_convention, feat.feature_name,
@@ -2336,6 +2351,77 @@ feature -- Features info
 				l_name := il_casing.pascal_casing (
 					l_naming_convention, feat.feature_name,
 					{IL_CASING_CONVERSION}.lower_case)
+				if l_is_attribute then
+						-- Define property for an attribute.
+					l_getter := {MD_TOKEN_TYPES}.md_method_def
+					l_setter := {MD_TOKEN_TYPES}.md_method_def
+					l_meth_sig := method_sig
+					if in_interface then
+						l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+							{MD_METHOD_ATTRIBUTES}.Virtual |
+							{MD_METHOD_ATTRIBUTES}.Abstract
+					else
+						l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
+							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+							{MD_METHOD_ATTRIBUTES}.Virtual
+					end
+					l_assigner := feat.assigner_in (signature_declaration_type)
+					if l_assigner /= Void then
+							-- Define setter method.
+						prepare_property_setter (l_name, l_return_type)
+						debug ("refactor_to_implement")
+							to_implement ("Support special name for setter.")
+							-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
+						end
+						l_setter := md_emit.define_method (uni_string, current_class_token,
+							l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+						if is_override_or_c_external then
+							last_property_setter_token := l_setter
+						else
+							current_module.insert_property_setter (l_setter, current_type_id, feat.feature_id)
+						end
+						if not l_assigner.export_status.is_all then
+								-- Avoid listing this method as a property setter.
+							l_setter := {MD_TOKEN_TYPES}.md_method_def
+						end
+					end
+						-- Define getter method.
+					prepare_property_getter (l_name, l_return_type)
+					debug ("refactor_to_implement")
+						to_implement ("Support special name for getter.")
+						-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
+					end
+					l_getter := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					if is_override_or_c_external then
+						last_property_getter_token := l_getter
+					else
+						current_module.insert_property_getter (l_getter, current_type_id, feat.feature_id)
+					end
+					if not feat.export_status.is_all then
+							-- Avoid listing this method as a property getter.
+						l_getter := {MD_TOKEN_TYPES}.md_method_def
+					end
+					if (is_single_class or else in_interface) and then not is_override_or_c_external and then
+						(l_getter /= {MD_TOKEN_TYPES}.md_method_def or else l_setter /= {MD_TOKEN_TYPES}.md_method_def)
+					then
+							-- Define property on a single class or interface only.
+						uni_string.set_string (l_name)
+						property_sig.reset
+						property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
+						property_sig.set_parameter_count (0)
+						set_signature_type (property_sig, l_return_type)
+						md_emit.define_property (current_class_token, uni_string, 0, property_sig, l_setter, l_getter)
+						if l_is_attribute_generated_as_field then
+								-- Use a field name different from the property name.
+							l_name := "$$" + il_casing.camel_casing (
+								l_naming_convention, feat.feature_name)
+								-- Ensure the field is not accessible outside Eiffel system.
+							l_is_field_hidden := True
+						end
+					end
+				end
 			end
 
 			uni_string.set_string (l_name)
@@ -2354,7 +2440,11 @@ feature -- Features info
 						(feat.access_in, current_class_type.type).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (feat.rout_id_set.first).feature_id)
 				else
-					l_field_attr := {MD_FIELD_ATTRIBUTES}.Public
+					if l_is_field_hidden then
+						l_field_attr := {MD_FIELD_ATTRIBUTES}.family_or_assembly
+					else
+						l_field_attr := {MD_FIELD_ATTRIBUTES}.public
+					end
 
 					l_meth_token := md_emit.define_field (uni_string, current_class_token,
 						l_field_attr, l_field_sig)
@@ -2538,75 +2628,6 @@ feature -- Features info
 				create l_ca_factory
 				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 			end
-
-			if l_is_attribute then
-					-- Define property for an attribute.
-				l_getter := {MD_TOKEN_TYPES}.md_method_def
-				l_setter := {MD_TOKEN_TYPES}.md_method_def
-				l_meth_sig := method_sig
-				if in_interface then
-					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
-						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{MD_METHOD_ATTRIBUTES}.Virtual |
-						{MD_METHOD_ATTRIBUTES}.Abstract
-				else
-					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
-						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{MD_METHOD_ATTRIBUTES}.Virtual
-				end
-				l_assigner := feat.assigner_in (signature_declaration_type)
-				if l_assigner /= Void and then not is_static then
-						-- Define setter method.
-					prepare_property_setter (l_name, l_return_type)
-					debug ("refactor_to_implement")
-						to_implement ("Support special name for setter.")
-						-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
-					end
-					l_setter := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
-					if is_override_or_c_external then
-						last_property_setter_token := l_setter
-					else
-						current_module.insert_property_setter (l_setter, current_type_id, feat.feature_id)
-					end
-					if not l_assigner.export_status.is_all then
-							-- Avoid listing this method as a property setter.
-						l_setter := {MD_TOKEN_TYPES}.md_method_def
-					end
-				end
-				if not is_static then
-						-- Define getter method.
-					prepare_property_getter (l_name, l_return_type)
-					debug ("refactor_to_implement")
-						to_implement ("Support special name for getter.")
-						-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
-					end
-					l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
-					l_getter := md_emit.define_method (uni_string, current_class_token,
-						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
-					if is_override_or_c_external then
-						last_property_getter_token := l_getter
-					else
-						current_module.insert_property_getter (l_getter, current_type_id, feat.feature_id)
-					end
-					if not feat.export_status.is_all then
-							-- Avoid listing this method as a property getter.
-						l_getter := {MD_TOKEN_TYPES}.md_method_def
-					end
-				end
-				if (is_single_class or else in_interface) and then not is_override_or_c_external and then
-					(l_getter /= {MD_TOKEN_TYPES}.md_method_def or else l_setter /= {MD_TOKEN_TYPES}.md_method_def)
-				then
-						-- Define property on a single class or interface only.
-					uni_string.set_string (l_name)
-					property_sig.reset
-					property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
-					property_sig.set_parameter_count (0)
-					set_signature_type (property_sig, l_return_type)
-					md_emit.define_property (current_class_token, uni_string, 0, property_sig, l_setter, l_getter)
-				end
-			end
-
 			if is_debug_info_enabled and l_is_attribute then
 				Il_debug_info_recorder.set_record_context (is_single_class, l_is_attribute, is_static, in_interface)
 				Il_debug_info_recorder.record_il_feature_info (current_module, current_class_type, feat, current_class_token, l_meth_token)

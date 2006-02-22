@@ -2667,6 +2667,10 @@ feature -- Implementation
 					l_target_type := l_left_type
 				end
 
+					-- Set type informations
+				l_as.set_routine_ids (last_infix_feature.rout_id_set)
+				l_as.set_class_id (l_left_id)
+
 				if last_infix_argument_conversion_info /= Void then
 					if last_infix_argument_conversion_info.has_depend_unit then
 						context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)

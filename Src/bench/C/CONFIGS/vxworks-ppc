@@ -79,7 +79,7 @@ i_fd_setsyss='undef'
 i_niin='define'
 i_sysin='undef'
 i_syssock='define'
-i_sysun='define'
+i_sysun='undef'
 
 #Time
 timetype='time_t'

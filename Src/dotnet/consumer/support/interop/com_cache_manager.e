@@ -149,6 +149,9 @@ feature -- Basic Exportations
 			Result := l_impl.assembly_info_from_path (a_path)
 
 			update_current (l_impl)
+			if Result = Void then
+				{ISE_RUNTIME}.raise (create {COM_EXCEPTION}.make ("No assembly found", e_fail_code))
+			end
 		end
 
 	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
@@ -160,6 +163,9 @@ feature -- Basic Exportations
 			Result := l_impl.assembly_info (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
+			if Result = Void then
+				{ISE_RUNTIME}.raise (create {COM_EXCEPTION}.make ("No assembly found", e_fail_code))
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -273,6 +279,14 @@ feature {NONE} -- Implementation
 			-- app domain consumption is run in
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+		end
+
+	e_fail_code: INTEGER is
+			--
+		external
+			"C [ macro %"winerror.h%"] : HRESULT"
+		alias
+			"E_FAIL"
 		end;
 
 indexing

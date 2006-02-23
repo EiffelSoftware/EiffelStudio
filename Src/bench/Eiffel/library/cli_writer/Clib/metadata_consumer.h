@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0365 */
-/* at Tue Feb 14 16:35:43 2006
+/* at Thu Feb 23 09:25:48 2006
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
@@ -831,7 +831,7 @@ EXTERN_C const CLSID CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACH
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("E1FFE1AC-B1AC-436F-948D-20B62A3A87AF")
+class DECLSPEC_UUID("E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F")
 EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER;
 #endif
 #endif /* __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__ */

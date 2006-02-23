@@ -115,11 +115,23 @@ feature -- Access
 		deferred
 		end
 
+	application_current_thread_id: INTEGER is
+		require
+			application_is_executing: application_is_executing
+		do
+			Result := Application.status.current_thread_id
+		end
+
 feature -- Change
 
 	set_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
-		deferred
+		do
+			if Application_current_thread_id /= tid then
+				Application.status.set_current_thread_id (tid)
+				Application.status.switch_to_current_thread_id
+				Application.status.reload_current_call_stack
+			end
 		end
 
 	set_maximum_stack_depth (nb: INTEGER) is
@@ -193,19 +205,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

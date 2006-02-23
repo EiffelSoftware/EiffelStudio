@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Initialization
 
 	init_connection (old_style: BOOLEAN) is
@@ -33,10 +33,10 @@ feature -- Initialization
 			end
 
 			pass_adresses
-				-- Pass adresses of RQST_HANDLER objects to 
+				-- Pass adresses of RQST_HANDLER objects to
 				-- C, so they can be called when the
 				-- the workbench is in server mode.
-			
+
 			enable_server_mode
 				-- Enable the server mode
 		end
@@ -68,6 +68,9 @@ feature {NONE} -- Implementation
 	dead_handler: DEAD_HDLR
 			-- Handler for dead application event.
 
+	notified_handler: NOTIFIED_HDLR
+			-- Handler for notification event.
+			
 	stopped_handler: STOPPED_HDLR
 			-- Handler for stopped application event.
 			-- (Called when the application hit a breakpoint or when
@@ -76,11 +79,12 @@ feature {NONE} -- Implementation
 
 	pass_adresses is
 			-- Create all possible kinds of RQST_HANDLER that the outside could
-			-- send on the pipe `Listen_to_const', and pass the corresponding 
+			-- send on the pipe `Listen_to_const', and pass the corresponding
 			-- addresses to C so that C can set the proper object.
 		do
 			create failure_handler.make
 			create dead_handler.make
+			create notified_handler.make
 			create stopped_handler.make
 		end
 
@@ -104,19 +108,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

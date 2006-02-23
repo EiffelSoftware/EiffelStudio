@@ -11,6 +11,7 @@ inherit
 
 	APPLICATION_EXECUTION_IMP
 		redefine
+			recycle,
 			make,
 			apply_critical_stack_depth
 		end
@@ -34,6 +35,12 @@ feature {APPLICATION_EXECUTION} -- Initialization
 			--
 		do
 			Precursor
+		end
+
+	recycle is
+		do
+			Precursor
+			once_request.recycle
 		end
 
 feature -- Properties
@@ -152,17 +159,16 @@ feature -- Query
 		local
 			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
-			once_r: ONCE_REQUEST
 			odv: ABSTRACT_DEBUG_VALUE
 			l_feat: E_FEATURE
 			l_addr: STRING
 			l_class: CLASS_C
+			once_r: ONCE_REQUEST
 		do
 			l_addr := a_addr
 			l_class := a_cl
 			from
-				create once_r.make
---				once_r := Application.debug_info.Once_request
+				once_r := Once_request
 				i := 1
 				create Result.make (i, i + flist.count - 1)
 				flist.start
@@ -171,25 +177,12 @@ feature -- Query
 			loop
 				l_feat := flist.item
 				if once_r.already_called (l_feat) then
-					fixme ("[
-								JFIAT: update the runtime to avoid evaluate the once
-								For now, we evaluate the once function as any expression
-								which is not very smart/efficient
-							]")
---					odv := once_r.once_result (l_feat)
---					l_item := debug_value_to_tree_item (odv)
-					if l_feat.argument_count > 0 then
-						create err_dv.make_with_name  (l_feat.name)
-						err_dv.set_message ("Could not evaluate once with arguments...")
-						odv := err_dv
+					odv := once_r.once_result (l_feat)
+					if odv /= Void then
+						odv.set_name (l_feat.name)
 					else
-						odv := once_r.once_eval_result (l_addr, l_feat, l_class)
-						if odv /= Void then
-							odv.set_name (l_feat.name)
-						else
-							create err_dv.make_with_name  (l_feat.name)
-							err_dv.set_message ("Could not retrieve information (once is being called or once failed)")
-						end
+						create err_dv.make_with_name  (l_feat.name)
+						err_dv.set_message ("Could not retrieve information (once is being called or once failed)")
 					end
 				else
 					create err_dv.make_with_name  (l_feat.name)
@@ -226,6 +219,11 @@ feature {RUN_REQUEST} -- Implementation
 
 feature {APPLICATION_STATUS}
 
+	once_request: ONCE_REQUEST is
+		once
+			create Result.make
+		end
+
 	quit_request: EWB_REQUEST is
 		once
 			create Result.make (Rqst_quit)
@@ -247,19 +245,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

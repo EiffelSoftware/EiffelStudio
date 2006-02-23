@@ -8,6 +8,7 @@ class
 
 inherit
 	IPC_SHARED
+	SK_CONST
 	DEBUG_EXT
 	RECV_VALUE
 	SHARED_DEBUG
@@ -22,18 +23,20 @@ inherit
 		end
 	SHARED_WORKBENCH
 	REFACTORING_HELPER
-	
+
+	EXCEPTION_CODE_MEANING
+
 create
 	make
 
-feature 
+feature -- Initialization
 
 	make is
 		do
 			old_make (Rqst_inspect)
 			init_recv_c
 		end
-		
+
 	address: STRING
 
 	already_called (once_routine: E_FEATURE): BOOLEAN is
@@ -42,16 +45,46 @@ feature
 			exists: once_routine /= Void
 			is_once: feature_i (once_routine).is_once
 		local
-			real_body_id: INTEGER
+			l_index: INTEGER
+			s: STRING
+			fi: FEATURE_I
 		do
+			debug ("debugger_ipc")
+				print (generator + ".already_called (" + once_routine.name + ") %N")
+			end
 			if not Application.is_running then
 				Result := False
 			else
-				real_body_id := once_routine.real_body_id
-				send_rqst_3_integer (Rqst_once, Out_called, 0, real_body_id - 1)
-				Result := c_tread.to_boolean
+				fi := feature_i (once_routine)
+				l_index := once_index (fi)
+				if fi.is_process_relative then
+					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_process, l_index)
+				else
+					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_thread, l_index)
+				end
+				debug ("debugger_ipc")
+					print (generator + ".already_called (" + once_routine.name + " ~ 0x" + l_index.to_hex_string + ") : request sent%N")
+				end
+				s := c_tread
+				debug ("debugger_ipc")
+					print (generator + ".already_called (" + once_routine.name + ") : request received [" + s + "]%N")
+				end
+				if s.is_boolean then
+					Result := s.to_boolean
+				else
+					debug ("debugger_ipc")
+						print (generator + ".already_called ("+ once_routine.name +") returned ")
+						if s /= Void then
+							print (s)
+						else
+							print ("Void")
+						end
+						print ("%N")
+					end
+					check False end
+					Result := False
+				end
 			end
-	
 debug ("ONCE")
 	io.error.put_string ("Once routine `");
 	io.error.put_string (once_routine.name);
@@ -64,6 +97,9 @@ debug ("ONCE")
 	end
 	io.error.put_new_line
 end
+			debug ("debugger_ipc")
+				print (generator + ".already_called (" + once_routine.name + "): " + Result.out + " %N")
+			end
 		end
 
 	once_result (once_function: E_FEATURE): ABSTRACT_DEBUG_VALUE is
@@ -73,111 +109,182 @@ end
 			is_once: feature_i (once_function).is_once
 			is_function: once_function.type /= Void
 			result_exists: already_called (once_function)
-		local
-			real_body_id: INTEGER
 		do
-			real_body_id := once_function.real_body_id
-			send_rqst_3_integer (Rqst_once, Out_result, once_function.argument_count, real_body_id - 1)
-			c_recv_value (Current)
-			Result := item
-			if Result /= Void then
-				Result.set_name (once_function.name)
-					-- Convert the physical addresses received from 
-					-- the application to hector addresses.
-				Result.set_hector_addr
-			else
-					--| FIXME XR: This shouldn't happen, but happens anyway.
-					--| It's better to display a dummy once instead of crashing...
-				create {REFERENCE_VALUE} Result.make (default_pointer, 1)
+			debug ("debugger_ipc")
+				print (generator + ".once_result (" + once_function.name + ") : start %N")
+			end
+			Result := once_data (feature_i (once_function))
+			debug ("debugger_ipc")
+				print (generator + ".once_result (" + once_function.name + ") : done %N")
 			end
 		ensure
 			result_exists: Result /= Void
 		end
 
-	once_eval_result (a_addr: STRING; f: E_FEATURE; dclass: CLASS_C): ABSTRACT_DEBUG_VALUE is
+feature -- Implementation
+
+	once_data (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+			-- Fetched data related to `once_routine'
+			-- first if it has already been called
+			-- then if it failed
+			-- and then the result if available.
+		require
+			exists: once_routine /= Void
+			is_once: once_routine.is_once
+			is_function: once_routine.type /= Void
 		local
-			par: INTEGER
-			rout_info: ROUT_INFO
-			l_dynclass: CLASS_C
-			l_dyntype: CLASS_TYPE
+			l_index: INTEGER
+			l_type: INTEGER
+			l_once_func: ONCE_FUNC_I
+			err_v: EXCEPTION_DEBUG_VALUE
 		do
-			fixme ("JFIAT: update the runtime to avoid evaluate the once")
-			debug ("debugger_trace_eval")
-				if a_addr /= Void then
-					print (generator + ".once_eval_result (" + a_addr.out + ", " + f.name + ", " + dclass.name_in_upper + ")%N")
-				else					
-					print (generator + ".once_eval_result (Void, " + f.name + ", " + dclass.name_in_upper + ")%N")
-					
+			clear_last_values
+			l_index := once_index (once_routine)
+			if l_index >= 0 then
+				l_once_func ?= once_routine
+				if l_once_func /= Void then
+					l_type := l_once_func.type.actual_type.type_i.sk_value
 				end
+				debug ("debugger_ipc")
+					print ("### Called [type="+l_type.out+"]?%N")
+				end
+				if once_routine.is_process_relative then
+					send_rqst_3_integer (Rqst_once, out_data_per_process, l_type, l_index)
+				else
+					send_rqst_3_integer (Rqst_once, out_data_per_thread, l_type, l_index)
+				end
+				last_is_called := c_tread.to_boolean
 			end
-			if a_addr = Void then
-				fixme ("JFIAT: for expanded value, we can not evaluate the once, so we use the old way")
-				Result := once_result (f)
-			else
-				l_dynclass := dclass
-				if l_dynclass /= Void and then l_dynclass.is_basic then
-					l_dyntype := associated_reference_class_type (l_dynclass)
-				elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
-					if a_addr /= Void then
-							-- The type has generic derivations: we need to find the precise type.
-						l_dyntype := debugged_object_manager.class_type_at_address (a_addr)
-						if l_dyntype = Void then
-						elseif l_dynclass = Void then
-							l_dynclass := l_dyntype.associated_class						
-						end
+			if last_is_called then
+				debug ("debugger_ipc")
+					print ("### Failed ?%N")
+				end
+				last_failed := c_tread.to_boolean
+				if not last_failed then
+					debug ("debugger_ipc")
+						print ("### Result of type["+ l_type.out +" ~ 0x"+l_type.to_hex_string+"] ?%N")
+					end
+					c_recv_value (Current)
+					Result := item
+					clear_item
+					last_result := Result
+					if Result /= Void then
+						Result.set_name (once_routine.feature_name)
+						Result.set_hector_addr
 					else
-						--| Shouldn't happen: basic types are not generic.
+						create err_v.make_with_name (once_routine.feature_name)
+						err_v.set_tag ("Error : unable to retrieve the data.")
+						Result := err_v
 					end
 				else
-					l_dyntype := l_dynclass.types.first
+					last_exception_code := c_tread.to_integer
+					create err_v.make_with_name (once_routine.feature_name)
+					err_v.set_tag (exception_tag_from_code (last_exception_code))
+					Result := err_v
+
+					debug ("debugger_ipc")
+						print (once_routine.feature_name + " : failed%N")
+					end
 				end
-				
-				send_ref_value (hex_to_pointer (a_addr))
-	
-				if f.is_external then
-					par := par + 1
+
+				debug ("debugger_ipc")
+					print (once_routine.feature_name + " : already called%N")
 				end
-				if f.written_class.is_precompiled then
-					par := par + 2
-					rout_info := System.rout_info_table.item (f.rout_id_set.first)
-					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+			else
+				create err_v.make_with_name (once_routine.feature_name)
+				err_v.set_tag ("Not yet called")
+				Result := err_v
+			end
+
+			if Result = Void then
+				check should_not_occur: False end
+				create err_v.make_with_name (once_routine.feature_name)
+				err_v.set_tag ("Error! : unable to retrieve the data.")
+				Result := err_v
+			end
+		ensure
+			Result /= Void
+		end
+
+	once_index (once_routine: FEATURE_I): INTEGER is
+			-- Index used in runtime to retrieve once information.
+		local
+			l_index: INTEGER
+			s: STRING
+		do
+			l_index := once_routine.body_index
+			debug ("debugger_ipc")
+				print (generator + ".once_index (" + once_routine.feature_name + " ~ " + l_index.out + ")  %N")
+			end
+			if once_indexes.has (l_index) then
+				Result := once_indexes.item (l_index)
+				debug ("debugger_ipc")
+					print ("%T cached -> " + Result.out + "%N")
+				end
+			else
+					--| FIXME: when ready, we may use FEATURE_I.code_id
+				if once_routine.is_process_relative then
+					send_rqst_3_integer (Rqst_once, Out_index, Out_once_per_process, l_index)
 				else
-					send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
+					send_rqst_3_integer (Rqst_once, Out_index, Out_once_per_thread, l_index)
 				end
-				c_recv_value (Current)
-				Result := item
-				if Result /= Void then
-					Result.set_name (f.name)
-						-- Convert the physical addresses received from 
-						-- the application to hector addresses.
-					Result.set_hector_addr
-				else
-						--| FIXME XR: This shouldn't happen, but happens anyway.
-						--| It's better to display a dummy once instead of crashing...
-					create {REFERENCE_VALUE} Result.make (default_pointer, 1)
+				s := c_tread
+				Result := s.to_integer
+				check Result >= 0 end
+				once_indexes.put (Result, l_index)
+				debug ("debugger_ipc")
+					print ("%T fetched -> " + Result.out + "%N")
 				end
 			end
+			debug ("debugger_ipc")
+				print (once_routine.feature_name + " : index = " + Result.out + " ~ 0x" + Result.to_hex_string + "%N")
+			end
+		end
+
+feature -- Last fetched values
+
+	clear_last_values is
+		do
+			last_is_called := False
+			last_failed := False
+			last_exception_code := 0
+			last_result := Void
+		end
+
+	last_is_called: BOOLEAN
+
+	last_failed: BOOLEAN
+
+	last_exception_code: INTEGER
+
+	last_result: ABSTRACT_DEBUG_VALUE
+
+	last_exception_meaning: STRING is
+		do
+			Result := exception_code_meaning (last_exception_code)
+		end
+
+feature -- Recycling
+
+	recycle is
+		do
+			clear_item
+			clear_last_values
+			once_indexes.wipe_out
 		end
 
 feature -- Impl
 
-	associated_reference_class_type (cl: CLASS_C): CLASS_TYPE is
-			-- Associated _REF classtype for type `cl'
-			--| for instance return INTEGER_REF for INTEGER
-		require
-			cl_not_void: cl /= Void
-			cl_is_basic: cl.is_basic
-		local
-			l_basic: BASIC_I
+	exception_tag_from_code (a_code: INTEGER): STRING is
 		do
-			l_basic ?= cl.actual_type.type_i
-			check
-				l_basic_not_void: l_basic /= Void
-			end
-			Result := l_basic.associated_class_type
-		ensure
-			associated_reference_class_type_not_void: Result /= Void
-		end		
+			Result := exception_code_meaning (a_code)
+		end
+
+	Once_indexes: HASH_TABLE [INTEGER, INTEGER] is
+			-- Once indexes cached during the debugging session.
+		once
+			create Result.make (10)
+		end
 
 feature -- Contract support
 
@@ -196,19 +303,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

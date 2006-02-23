@@ -52,6 +52,19 @@ feature {NONE} -- properties
 
 	name: STRING
 
+	restorations_in_progress: INTEGER
+
+	current_processing_id: INTEGER
+			-- Current restoration processing id.
+
+feature -- Status
+
+	enabled: BOOLEAN
+
+	positioning_enabled: BOOLEAN
+
+feature -- Layout acces
+
 	layout: TUPLE [STRING, DS_LIST [TUPLE], ANY, BOOLEAN]
 			--	TUPLE [id=STRING, subrows=DS_LIST [like layout]], value=ANY, visible_row=BOOLEAN]
 			-- ["A"
@@ -65,16 +78,10 @@ feature {NONE} -- properties
 			--    }
 			-- ]
 
-	restorations_in_progress: INTEGER
-
-	current_processing_id: INTEGER
-			-- Current restoration processing id.
-
-feature -- Status
-
-	enabled: BOOLEAN
-
-	positioning_enabled: BOOLEAN
+	set_layout (v: like layout) is
+		do
+			layout := v
+		end
 
 feature -- Change
 
@@ -431,7 +438,11 @@ feature {NONE} -- Implementation
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
 			end
-			restore_row_layout (a_row, lay, True, l_curr_pid)
+			if a_row.parent /= Void then
+				restore_row_layout (a_row, lay, True, l_curr_pid)
+			else
+				restorations_in_progress := restorations_in_progress - 1
+			end
 		end
 
 	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER) is
@@ -440,6 +451,7 @@ feature {NONE} -- Implementation
 			-- if it is different from `current_processing_id', this operation is cancelled.
 			-- (nota: if `on_idle' is False, the value of `l_pid' is ignored)
 		require
+			lay_not_void: lay /= Void
 			row_is_ready_for_identification: row_is_ready_for_identification (a_row)
 		local
 			lst: DS_LIST [TUPLE]
@@ -715,19 +727,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

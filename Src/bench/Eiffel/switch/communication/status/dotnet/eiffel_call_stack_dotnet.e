@@ -136,7 +136,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER; tid: INTEGER) is
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -259,7 +259,7 @@ feature {NONE} -- Initialization
 															l_class_type := l_stack_adv.dynamic_class.types.first
 														end
 
-														create eiffel_cse.make (level)
+														create eiffel_cse.make (level, tid)
 														eiffel_cse.set_private_current_object (l_stack_adv)
 														eiffel_cse.set_routine (
 															l_chain,
@@ -286,7 +286,7 @@ feature {NONE} -- Initialization
 											end
 											if call = Void then
 													-- Here we have an External CallStack
-												create external_cse.make (level)
+												create external_cse.make (level, tid)
 												if l_stack_object /= Void then
 													l_hexaddress := "0x" + l_stack_object.get_address.to_integer.to_hex_string
 												else
@@ -366,19 +366,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

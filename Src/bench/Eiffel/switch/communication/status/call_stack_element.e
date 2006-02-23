@@ -20,18 +20,20 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER) is
+	make (level: INTEGER; tid: INTEGER) is
 		require
 			valid_level: level >= 1
-		deferred
+		do
+			level_in_stack := level
+			thread_id := tid
 		end
-	
+
 feature -- Properties
 
 	is_eiffel_call_stack_element: BOOLEAN is
 			-- Is, Current, an eiffel call stack element or not (external stack) ?
 		deferred
-		end		
+		end
 
 	class_name: STRING
 			-- Associated class name
@@ -43,11 +45,13 @@ feature -- Properties
 			-- Where is this element situated in the call stack?
 			-- 1 means on the top.
 
+	thread_id: INTEGER
+
 	break_index: INTEGER
 			-- the "Line number" where application is stopped within current feature
 
 	object_address: STRING is
-			-- Hector address of associated object 
+			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
 			--| it doesn't ask an hector address for that object until
@@ -66,11 +70,11 @@ feature -- Output
 		end
 
 	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
+			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		deferred
 		end
-		
+
 	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
 		deferred
@@ -86,19 +90,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

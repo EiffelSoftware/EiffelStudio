@@ -10,7 +10,7 @@ class
 	EIFNET_DEBUGGER_INFO
 
 inherit
-	
+
 	IL_PREDEFINED_STRINGS
 
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
@@ -22,17 +22,17 @@ inherit
 		redefine
 			reset, init
 		end
-		
+
 	SHARED_APPLICATION_EXECUTION
 		export
 			{EIFNET_DEBUGGER_INFO_ACCESSOR} Application
 		end
-		
+
 	SHARED_IL_DEBUG_INFO_RECORDER
 
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS
-	
-	EIFNET_STEP_REASON_CONSTANTS 
+
+	EIFNET_STEP_REASON_CONSTANTS
 
 create {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Creation
 	make
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			create_jit_info
 			init
 		end
-		
+
 	init is
 			-- Initialize
 		do
@@ -75,22 +75,22 @@ feature -- Reset
 
 				--| Debugger Error
 			reset_debugger_error
-			
+
 				--| Param   |--
 			param_arguments := Void
 			param_executable := Void
 			param_directory := Void
-			
+
 				--| Various |--
 			current_stack_info := Void
 			previous_stack_info := Void
 			current_callstack_initialized := False
-			
+
 			last_control_mode := 0
-			
+
 				--| outside of any evaluation |--
 			set_is_evaluating (False)
-			
+
 				--| Ancestors |--
 			reset_jit_info
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
@@ -99,7 +99,7 @@ feature -- Reset
 feature -- Current CallStack
 
 	debug_display_current_callstack_info is
-			-- 
+			--
 		local
 			l_mod: ICOR_DEBUG_MODULE
 			l_cn: STRING
@@ -108,12 +108,12 @@ feature -- Current CallStack
 			debug ("debugger_trace_callstack")
 				print ("Callback: stack info :%N")
 				l_mod := icor_debug_module (current_stack_info.current_module_name)
-				
+
 				l_cn := l_mod.md_type_name (current_stack_info.current_class_token)
 				l_fn := l_mod.md_member_name (current_stack_info.current_feature_token)
 
-				print (" Current Call Stack %N")			
-				print ("  Module  = " + l_mod.module_name + "%N")			
+				print (" Current Call Stack %N")
+				print ("  Module  = " + l_mod.module_name + "%N")
 				print ("  Class   = " + l_cn + " : " + current_stack_info.current_class_token.to_hex_string + "%N")
 				print ("  Feature = " + l_fn + " : " + current_stack_info.current_feature_token.to_hex_string + "%N")
 				print ("  Offset  = " + current_stack_info.current_il_offset.to_hex_string + "%N")
@@ -122,10 +122,10 @@ feature -- Current CallStack
 
 	current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 			-- Contains current debugger info about current stack
-			
+
 	previous_stack_info: EIFNET_DEBUGGER_STACK_INFO
 			-- Contains saved debugger info about previous stack
-	
+
 	reset_current_callstack is
 			-- Reset current callstack information
 		do
@@ -151,12 +151,12 @@ feature -- Current CallStack
 				debug ("_jfiat")
 					display_loaded_managed_threads
 				end
-				
+
 				if current_stack_info = Void then
 					create current_stack_info
 				end
 				current_stack_info.set_synchronized (False)
-				
+
 				debug ("debugger_trace_eifnet")
 					io.error.put_string ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
 				end
@@ -186,7 +186,7 @@ feature -- Current CallStack
 							l_module := l_func.get_module
 							l_class := l_func.get_class
 							l_il_code := l_func.get_il_code
-							
+
 							current_stack_info.set_current_stack_pseudo_depth (l_frames.count)
 							current_stack_info.set_current_module_name        (l_module.get_name)
 							current_stack_info.set_current_class_token        (l_class.get_token)
@@ -209,7 +209,7 @@ feature -- Current CallStack
 		ensure
 			current_callstack_initialized
 		end
-		
+
 	current_callstack_initialized: BOOLEAN
 			-- Is current callstack initialized ?
 
@@ -228,7 +228,7 @@ feature {EIFNET_EXPORTER} -- Current Breakpoint access
 										current_stack_info.current_il_offset
 									)
 			if l_eifnet_breakpoint /= Void then
-				Result := l_eifnet_breakpoint.breakpoint				
+				Result := l_eifnet_breakpoint.breakpoint
 			end
 		end
 
@@ -240,7 +240,7 @@ feature -- Evaluation
 		end
 
 	is_evaluating: BOOLEAN
-	
+
 feature -- Progression
 
 	save_current_stack_as_previous is
@@ -264,7 +264,7 @@ feature -- Progression
 				end
 				Result := current_stack_info.is_equal (previous_stack_info)
 			end
-		end	
+		end
 
 feature {EIFNET_EXPORTER} -- Access
 
@@ -291,7 +291,7 @@ feature {EIFNET_EXPORTER} -- Access
 
 	last_step_complete_reason: INTEGER
 			-- Last `reason' from a `step_complete' callback
-			
+
 	icd_exception: ICOR_DEBUG_VALUE is
 			-- Last ICOR_DEBUG_VALUE's exception object
 		do
@@ -339,7 +339,7 @@ feature -- Debugger error
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 
-	set_last_icd_controller (p: POINTER) is 
+	set_last_icd_controller (p: POINTER) is
 			-- Set `last_icd_controller' to `p'
 		local
 			n: INTEGER
@@ -363,7 +363,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			if last_icd_controller /= Void then
 				last_icd_controller.clean_on_dispose
-				last_icd_controller := Void				
+				last_icd_controller := Void
 			end
 			if last_p_icd_controller /= Default_pointer then
 				n := {CLI_COM}.release (last_p_icd_controller)
@@ -371,8 +371,8 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			end
 			last_icd_controller_updated := True
 		end
-		
-	set_last_icd_process (p: POINTER) is 
+
+	set_last_icd_process (p: POINTER) is
 			-- Set `last_icd_process' to `p'
 		local
 			n: INTEGER
@@ -405,7 +405,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			last_icd_process_updated := True
 		end
 
-	set_last_icd_breakpoint (p: POINTER) is 
+	set_last_icd_breakpoint (p: POINTER) is
 			-- Set `last_icd_breakpoint' to `p'
 		local
 			n: INTEGER
@@ -448,22 +448,22 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				--| STEP_RETURN means that stepping continued normally, after the function
 				--|		returned.
 				--|
-				--| STEP_CALL means that stepping continued normally, at the start of 
+				--| STEP_CALL means that stepping continued normally, at the start of
 				--|		a newly called function.
 				--|
 				--| STEP_EXCEPTION_FILTER means that control passed to an exception filter
 				--|		after an exception was thrown.
-				--| 
+				--|
 				--| STEP_EXCEPTION_HANDLER means that control passed to an exception handler
 				--|		after an exception was thrown.
 				--|
 				--| STEP_INTERCEPT means that control passed to an interceptor.
-				--| 
+				--|
 				--| STEP_EXIT means that the thread exited before the step completed.
 				--|		No more stepping can be performed with the stepper.			
 		end
 
-	set_last_icd_exception (p: POINTER) is 
+	set_last_icd_exception (p: POINTER) is
 			-- Set `last_icd_exception' to `p'
 		local
 			n: INTEGER
@@ -501,8 +501,8 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		do
 			last_exception_is_handled := val
 		end
-		
-	set_last_evaluation_icd_exception (p: POINTER) is 
+
+	set_last_evaluation_icd_exception (p: POINTER) is
 			-- Set `last_evaluation_icd_exception' to `p'
 		local
 			n: INTEGER
@@ -569,7 +569,7 @@ feature {NONE} -- Pointers to COM Objects
 	last_icd_exception_updated: BOOLEAN
 	last_icd_exception: ICOR_DEBUG_VALUE
 			-- Last Exception object
-			
+
 	last_evaluation_icd_exception_updated: BOOLEAN
 	last_evaluation_icd_exception: ICOR_DEBUG_VALUE
 			-- Last Evaluation Exception object			
@@ -582,8 +582,8 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_controller_updated then
-				if 
-					last_p_icd_controller = Default_pointer 
+				if
+					last_p_icd_controller = Default_pointer
 				then
 					if last_icd_controller /= Void then
 						last_icd_controller.clean_on_dispose
@@ -603,7 +603,7 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_process_updated then
-				if 
+				if
 					last_p_icd_process = Default_pointer
 				then
 					if last_icd_process /= Void	then
@@ -612,7 +612,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_process.make_by_pointer (last_p_icd_process)
-					n := {CLI_COM}.add_ref (last_p_icd_process)					
+					n := {CLI_COM}.add_ref (last_p_icd_process)
 				end
 				last_icd_process_updated := True
 			end
@@ -624,8 +624,8 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_breakpoint_updated then
-				if 
-					last_p_icd_breakpoint = Default_pointer 
+				if
+					last_p_icd_breakpoint = Default_pointer
 				then
 					if last_icd_breakpoint /= Void then
 						last_icd_breakpoint.clean_on_dispose
@@ -633,7 +633,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
-					n := {CLI_COM}.add_ref (last_p_icd_breakpoint)					
+					n := {CLI_COM}.add_ref (last_p_icd_breakpoint)
 				end
 				last_icd_breakpoint_updated := True
 			end
@@ -645,8 +645,8 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_exception_updated then
-				if 
-					last_p_icd_exception = Default_pointer 
+				if
+					last_p_icd_exception = Default_pointer
 				then
 					if last_icd_exception /= Void then
 						last_icd_exception.clean_on_dispose
@@ -654,20 +654,20 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_exception.make_value_by_pointer (last_p_icd_exception)
-					n := {CLI_COM}.add_ref (last_p_icd_exception)					
+					n := {CLI_COM}.add_ref (last_p_icd_exception)
 				end
 				last_icd_exception_updated := True
 			end
 		end
-		
+
 	update_evaluation_icd_exception is
 			-- Last Evaluation Exception object
 		local
 			n: INTEGER
 		do
 			if not last_evaluation_icd_exception_updated then
-				if 
-					last_p_evaluation_icd_exception = Default_pointer 
+				if
+					last_p_evaluation_icd_exception = Default_pointer
 				then
 					if last_evaluation_icd_exception /= Void then
 						last_evaluation_icd_exception.clean_on_dispose
@@ -675,11 +675,11 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_evaluation_icd_exception.make_value_by_pointer (last_p_evaluation_icd_exception)
-					n := {CLI_COM}.add_ref (last_p_evaluation_icd_exception)					
+					n := {CLI_COM}.add_ref (last_p_evaluation_icd_exception)
 				end
 				last_evaluation_icd_exception_updated := True
 			end
-		end		
+		end
 
 feature -- Debuggee Session Parameters
 
@@ -688,12 +688,12 @@ feature -- Debuggee Session Parameters
 
 	param_executable: STRING
 			-- Filename to the executable to debug
-			
+
 	param_arguments: STRING
 			-- Arguments
 
 feature -- Change Debuggee Session Parameters
-	
+
 	set_param_directory (a_dir: STRING) is
 			-- Set the working directory parameter  to `a_dir'
 			-- used for launching application
@@ -713,7 +713,7 @@ feature -- Change Debuggee Session Parameters
 			-- used for launching application
 		do
 			param_arguments := a_arg
-		end	
+		end
 
 feature -- JIT notification
 
@@ -722,7 +722,7 @@ feature -- JIT notification
 		do
 			notify_new_module_for_breakpoints (a_mod_key)
 		end
-		
+
 	refresh_breakpoints_on_module (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING) is
 		do
 			refresh_module_for_breakpoints (a_module, a_mod_key)
@@ -746,17 +746,17 @@ feature -- JIT info
 		do
 				--| Threads
 			if not loaded_managed_threads.is_empty then
-				from 
+				from
 					loaded_managed_threads.start
 				until
-					loaded_managed_threads.after					
+					loaded_managed_threads.after
 				loop
-					loaded_managed_threads.item_for_iteration.clean					
-					loaded_managed_threads.forth					
+					loaded_managed_threads.item_for_iteration.clean
+					loaded_managed_threads.forth
 				end
 				loaded_managed_threads.wipe_out
 			end
-				
+
 				--| Modules
 			if not loaded_modules.is_empty then
 					--| No need to clean or release the ICorDebugModule
@@ -768,7 +768,7 @@ feature -- JIT info
 			mscorlid_module := Void
 			runtime_module := Void
 		end
-		
+
 feature -- JIT Thread
 
 	display_loaded_managed_threads is
@@ -787,9 +787,9 @@ feature -- JIT Thread
 					if l_id = last_icd_thread_id then
 						print (">- Thread :")
 					else
-						print (" - Thread :")						
+						print (" - Thread :")
 					end
-					
+
 					print (" 0x" + l_id.to_hex_string + " (" + l_id.out + ")" + "%N")
 					loaded_managed_threads.forth
 				end
@@ -806,7 +806,7 @@ feature -- JIT Thread
 		ensure
 			Result /= Void
 		end
-			
+
 	is_valid_managed_thread_id (thid: INTEGER): BOOLEAN is
 			-- Is `thid' a valid Thread id for a managed thread ?
 		do
@@ -829,8 +829,8 @@ feature -- JIT Thread
 		ensure
 			Result_not_void_unless_empty_list: Result = Void implies loaded_managed_threads.is_empty
 		end
-		
-	add_managed_thread_by_pointer (p: POINTER) is 
+
+	add_managed_thread_by_pointer (p: POINTER) is
 			-- Add `p' as ICorDebugThread
 		require
 			p /= Default_pointer
@@ -839,17 +839,19 @@ feature -- JIT Thread
 		do
 			create edti.make (p)
 			loaded_managed_threads.put (edti, edti.thread_id)
+			Application.status.add_thread_id (edti.thread_id)
+
 			if last_icd_thread_id = 0 then
-				set_last_icd_thread_id (edti.thread_id)				
+				set_last_icd_thread_id (edti.thread_id)
 			end
-			
+
 			debug ("eifnet_debugger")
-				io.error.put_string (generator + ".add_managed_thread (" 
+				io.error.put_string (generator + ".add_managed_thread ("
 						+ p.out + ") -> ID=0x" + edti.thread_id.to_hex_string + "%N")
 			end
-		end	
-		
-	remove_managed_thread_by_pointer (p: POINTER) is 
+		end
+
+	remove_managed_thread_by_pointer (p: POINTER) is
 			-- Remove `p' as ICorDebugThread
 		local
 			n: INTEGER
@@ -858,19 +860,21 @@ feature -- JIT Thread
 			n := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if loaded_managed_threads.has (tid) then
 				loaded_managed_threads.remove (tid)
+				Application.status.remove_thread_id (tid)
+
 					-- FIXME jfiat: maybe find a better way for that .. a kind of history of selected thread ?
 				if last_icd_thread_id = tid and then not loaded_managed_threads.is_empty then
 					loaded_managed_threads.start
 					set_last_icd_thread_id (loaded_managed_threads.item_for_iteration.thread_id)
-				end				
+				end
 			end
 			debug ("eifnet_debugger")
-				io.error.put_string (generator + ".remove_managed_thread_by_pointer (" 
+				io.error.put_string (generator + ".remove_managed_thread_by_pointer ("
 						+ p.out + ") -> ID=0x" + tid.to_hex_string + "%N")
 			end
 		end
-		
-	set_last_icd_thread (p: POINTER) is 
+
+	set_last_icd_thread (p: POINTER) is
 			-- Set `last_icd_thread' to `p'
 		local
 			r: INTEGER
@@ -878,10 +882,10 @@ feature -- JIT Thread
 		do
 			r := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if tid > 0 then
-				set_last_icd_thread_id (tid)				
+				set_last_icd_thread_id (tid)
 			end
 		end
-		
+
 	set_last_icd_thread_id (id: INTEGER) is
 			-- Set `last_icd_thread_id' to `id'
 		require
@@ -889,7 +893,7 @@ feature -- JIT Thread
 		do
 			last_icd_thread_id := id
 		end
-		
+
 	icd_thread: ICOR_DEBUG_THREAD is
 			-- Last ICOR_DEBUG_THREAD object
 		local
@@ -907,7 +911,7 @@ feature -- JIT Thread
 				end
 			end
 		end
-		
+
 	last_icd_thread_id: INTEGER
 
 feature -- JIT Module
@@ -924,10 +928,10 @@ feature -- JIT Module
 			debug ("debugger_trace_callback_data")
 				io.error.put_string ("Registering new module : %N  [" + a_module.get_name + "]%N")
 			end
-			
+
 			l_module_key_name := resolved_module_key (a_module.get_name)
 			loaded_modules.put (a_module, l_module_key_name)
-			
+
 			if not loaded_modules.inserted then
 				l_module_stored := loaded_modules.item (l_module_key_name)
 				if l_module_stored /= Void then
@@ -943,7 +947,7 @@ feature -- JIT Module
 							io.error.put_string (" address -> " + a_module.item.out + "%N")
 							io.error.put_string ("    name -> " + l_module_key_name + "%N")
 						end
-	
+
 -- FIXME jfiat [2004/07/20] : if a new module is registered, we should keep a list of all modules
 --		for now, let's keep first one only
 --		we need to fix this issue for app_domain problem.
@@ -957,21 +961,21 @@ feature -- JIT Module
 					end
 				end
 			end
-			
+
 			debug ("debugger_trace_eifnet")
 				l_module_key_name_tail := l_module_key_name.twin
 				l_module_key_name_tail.keep_tail (30)
 				io.error.put_string ("Load module [.. " + l_module_key_name_tail + "]%N")
 			end
 			notify_new_module (l_module_key_name)
-			
+
 			if mscorlid_module = Void then -- loaded_modules.is_empty then
-					-- We have to deal with the MSCORLIB.DLL module 
-					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module 
+					-- We have to deal with the MSCORLIB.DLL module
+					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module
 				mscorlid_module := a_module
 			elseif runtime_module = Void and then l_module_key_name.has_substring (runtime_namespace.as_lower) then
 				register_runtime_module (a_module)
-			end			
+			end
 		end
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
@@ -993,21 +997,21 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 
 	mscorlid_module: ICOR_DEBUG_MODULE
 			-- MSCORLIB ICorDebugModule
-			
+
 	runtime_module: ICOR_DEBUG_MODULE
 			-- EiffelSoftware.runtime ICorDebugModule
 
 	register_runtime_module (a_module: ICOR_DEBUG_MODULE) is
-			-- 
+			--
 		do
 			runtime_module := a_module
 			if on_runtime_module_registration_action /= Void then
 				on_runtime_module_registration_action.call ([a_module])
 			end
 		end
-		
+
 	on_runtime_module_registration_action: PROCEDURE [ANY, TUPLE [ICOR_DEBUG_MODULE]]
-	
+
 	set_on_runtime_module_registration_action (p: like 	on_runtime_module_registration_action) is
 		do
 			on_runtime_module_registration_action := p
@@ -1022,7 +1026,7 @@ feature -- JIT Info access
 		do
 			Result := loaded_modules.item (resolved_module_key (a_mod_name))
 		end
-		
+
 	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
 			-- ICorDebugModule for MSCORLIB
 		do
@@ -1044,14 +1048,14 @@ feature -- Stepping
 	valid_control_mode (a_mode: INTEGER): BOOLEAN is
 			-- Is the control mode `a_mode' valid ?
 		do
-			Result :=  a_mode = cst_control_continue 
-					or a_mode = cst_control_stop 
+			Result :=  a_mode = cst_control_continue
+					or a_mode = cst_control_stop
 					or a_mode = cst_control_kill
-					or a_mode = cst_control_step_out			
-					or a_mode = cst_control_step_next 
+					or a_mode = cst_control_step_out
+					or a_mode = cst_control_step_next
 					or a_mode = cst_control_step_into
 					or a_mode = cst_control_nothing
-		end	
+		end
 
 	set_last_control_mode (a_mode: INTEGER) is
 			-- Set `last_control_mode' to `a_mode'
@@ -1066,7 +1070,7 @@ feature -- Stepping
 		do
 			Result := last_control_mode = cst_control_stop
 		end
-		
+
 	last_control_mode_is_step_out: BOOLEAN is
 			-- Last control was `step_out'
 		do
@@ -1084,7 +1088,7 @@ feature -- Stepping
 		do
 			Result := last_control_mode = Cst_control_step_next
 		end
-		
+
 	last_control_mode_is_stepping: BOOLEAN is
 			-- Last control was `stepping'
 		do
@@ -1092,7 +1096,7 @@ feature -- Stepping
 			or else last_control_mode_is_step_out
 			or else last_control_mode_is_step_next
 		end
-	
+
 invariant
 	loaded_managed_threads_not_void: loaded_managed_threads /= Void
 
@@ -1102,19 +1106,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

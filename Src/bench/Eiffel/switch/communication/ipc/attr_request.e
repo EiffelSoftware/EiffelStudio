@@ -13,36 +13,36 @@ inherit
 	EWB_REQUEST
 		rename
 			make as old_make
-		export 
+		export
 			{NONE} all
 		redefine
 			send
 		end
-		
+
 	BEURK_HEXER
-		export 
+		export
 			{NONE} all
 		end
-		
+
 	BASIC_ROUTINES
-		export 
+		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
-		export 
+		export
 			{NONE} all
 		end
 
 	PLATFORM
-		export 
+		export
 			{NONE} all
 		end
 
 	SK_CONST
-		export 
+		export
 			{NONE} all
-		end	
+		end
 
 	REFACTORING_HELPER
 		export
@@ -151,7 +151,7 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C) is
-			-- Receive `e_class attribute info from application and 
+			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
 			attr_name: STRING;
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			exp_attr: EXPANDED_VALUE;
 			spec_attr: SPECIAL_VALUE;
 			type_id: INTEGER;
-			p: POINTER			
+			p: POINTER
 		do
 			attr_nb := to_integer (c_tread)
 			if attr_list.capacity <= attr_nb then
@@ -234,14 +234,14 @@ feature {NONE} -- Implementation
 					end;
 					--| FIXME JFIAT: we need to sort it right away to keep same behavior
 					sort_debug_values (exp_attr.attributes)
-					
+
 				when Sk_ref then
 						-- Is this a special object?
 					if to_boolean (c_tread) then
 							-- Is this a tuple object?
 						if to_boolean (c_tread) then
 							type_id := to_integer (c_tread) + 1
-							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, 
+							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
 								type_id, to_pointer (c_tread).out)
 						else
 							debug("DEBUG_RECV")
@@ -268,12 +268,12 @@ feature {NONE} -- Implementation
 						end
 					else
 							-- Is this a void object?
-						if not to_boolean (c_tread) then	
+						if not to_boolean (c_tread) then
 							type_id := to_integer (c_tread) + 1
-							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, 
+							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
 														type_id, to_pointer (c_tread).out)
 						else
-							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, 
+							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
 														0, Void)
 						end
 					end
@@ -317,179 +317,9 @@ feature -- Special object properties
 
 	is_special: BOOLEAN;
 			-- Is the object being inspected SPECIAL?
-			
-	is_tuple: BOOLEAN
+
+	is_tuple: BOOLEAN;
 			-- Is object being inspected of type TUPLE?
-
-feature {NONE} -- Implementation
-
-	to_boolean (s: STRING): BOOLEAN is
-			-- Convert binary boolean enclosed in `s' into an BOOLEAN.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Boolean_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Boolean_bytes)
-		end
-
-	to_character (s: STRING): CHARACTER is
-			-- Convert binary character enclosed in `s' into an CHARACTER.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Character_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Character_bytes);
-		end
-
-	to_wide_char (s: STRING): WIDE_CHARACTER is
-			-- Convert binary wide_char enclosed in `s' into an WIDE_CHARACTER.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Wide_character_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Wide_character_bytes)
-		end
-
-	to_natural_8 (s: STRING): NATURAL_8 is
-			-- Convert binary integer_8 enclosed in `s' into an NATURAL_8.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = natural_8_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, natural_8_bytes)
-		end
-
-	to_natural_16 (s: STRING): NATURAL_16 is
-			-- Convert binary integer_16 enclosed in `s' into an NATURAL_16.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = natural_16_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, natural_16_bytes)
-		end
-
-	to_natural_32 (s: STRING): NATURAL_32 is
-			-- Convert binary integer enclosed in `s' into an NATURAL.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = natural_32_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, natural_32_bytes)
-		end
-
-	to_natural_64 (s: STRING): NATURAL_64 is
-			-- Convert binary integer_64 enclosed in `s' into an NATURAL_64.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = natural_64_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, natural_64_bytes)
-		end
-
-	to_integer_8 (s: STRING): INTEGER_8 is
-			-- Convert binary integer_8 enclosed in `s' into an INTEGER_8.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Integer_8_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Integer_8_bytes)
-		end
-
-	to_integer_16 (s: STRING): INTEGER_16 is
-			-- Convert binary integer_16 enclosed in `s' into an INTEGER_16.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Integer_16_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Integer_16_bytes)
-		end
-
-	to_integer (s: STRING): INTEGER is
-			-- Convert binary integer enclosed in `s' into an INTEGER.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Integer_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Integer_bytes)
-		end
-
-	to_integer_64 (s: STRING): INTEGER_64 is
-			-- Convert binary integer_64 enclosed in `s' into an INTEGER_64.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Integer_64_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Integer_64_bytes)
-		end
-
-	to_pointer (s: STRING): POINTER is
-			-- Convert binary pointer enclosed in `s' into a POINTER.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Pointer_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Pointer_bytes)
-		end
-
-	to_real (s: STRING): REAL is
-			-- Convert binary double enclosed in `s' into a DOUBLE.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Real_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Real_bytes)
-		end
-
-	to_double (s: STRING): DOUBLE is
-			-- Convert binary double enclosed in `s' into a DOUBLE.
-		require
-			s_not_void: s /= Void
-			valid_string: s.count = Double_bytes
-		local
-			a: ANY
-		do
-			a := s.area;
-			($Result).memory_copy ($a, Double_bytes)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -497,19 +327,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

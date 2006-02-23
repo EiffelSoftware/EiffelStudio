@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	DEBUG_EXT
 		export
 			{NONE} all
@@ -26,7 +26,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	BEURK_HEXER
 		export
 			{NONE} all
@@ -42,17 +42,17 @@ inherit
 			{NONE} all
 		end
 
-	DEBUG_OUTPUT_SYSTEM_I		
+	DEBUG_OUTPUT_SYSTEM_I
 		export
 			{NONE} all
 		end
-		
+
 	GENERATING_TYPE_SYSTEM_I
 		export
 			{NONE} all
 		end
 
-	RECV_VALUE		
+	RECV_VALUE
 		export
 			{NONE} all
 		end
@@ -66,12 +66,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFNET_DEBUGGER
 
 create
 	make_void,
-	make_boolean, make_character, 
+	make_boolean, make_character,
 	make_integer_32, make_integer_64,
 	make_natural_32, make_natural_64,
 	make_real,
@@ -79,7 +79,7 @@ create
 	make_string_for_dotnet, make_object_for_dotnet, make_bits,
 	make_expanded_object,
 	make_exception
-	
+
 feature -- Initialization
 
 	init is
@@ -140,7 +140,7 @@ feature -- Initialization
 		ensure
 			type /= Type_unknown
 		end
-		
+
 	make_natural_32 (value: NATURAL_32; dtype: CLASS_C) is
 			-- make a integer item initialized to `value'
 		do
@@ -161,7 +161,7 @@ feature -- Initialization
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
-		end		
+		end
 
 	make_real(value: REAL; dtype: CLASS_C) is
 			-- make a real item initialized to `value'
@@ -252,7 +252,7 @@ feature -- Initialization
 		ensure
 			type /= Type_unknown
 		end
-		
+
 	make_exception (value: EXCEPTION_DEBUG_VALUE) is
 		do
 			init
@@ -266,7 +266,7 @@ feature -- Dotnet creation
 	make_string_for_dotnet (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
-			arg_not_void: a_eifnet_dsv /= Void		
+			arg_not_void: a_eifnet_dsv /= Void
 		do
 			init
 			is_dotnet_value := True
@@ -304,7 +304,7 @@ feature -- Dotnet creation
 				value_address := a_eifnet_drv.address
 			end
 			type := Type_object
-			
+
 			dynamic_class_type := a_eifnet_drv.dynamic_class_type
 			if dynamic_class_type /= Void then
 				dynamic_class := dynamic_class_type.associated_class
@@ -320,7 +320,7 @@ feature -- Dotnet creation
 			type /= Type_unknown
 		end
 
-feature -- Dotnet access 
+feature -- Dotnet access
 
 	is_dotnet_system: BOOLEAN
 			-- Is current related to a dotnet system ?
@@ -333,11 +333,11 @@ feature -- Dotnet access
 	is_dotnet_value: BOOLEAN
 			-- Is Current represent a typical dotnet value ?
 			-- (String are processing in a special way)
-	
+
 	is_external_type: BOOLEAN
 			-- Is the value corresponding to an external type ?
 			-- (ex: like SystemObject for dotnet)
-			
+
 	eifnet_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Debug value related to `value_dotnet'
 
@@ -352,14 +352,14 @@ feature -- Dotnet access
 		do
 			Result := Eifnet_debugger.current_stack_icor_debug_frame
 		end
-	
+
 feature -- change
 
 	set_value_dotnet (v: like value_dotnet) is
 			-- Set `value_dotnet' as `v'
 		do
-			value_dotnet := v	
-		end	
+			value_dotnet := v
+		end
 
 feature {NONE} -- Implementation dotnet
 
@@ -372,10 +372,10 @@ feature {NONE} -- Implementation dotnet
 		end
 
 	icd_value_info: EIFNET_DEBUG_VALUE_INFO
-	
+
 	value_class_token: INTEGER
 			-- Class token for the dotnet value
-	
+
 	value_class_name: STRING is
 			-- Class name for the dotnet value
 		local
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation dotnet
 		ensure
 			Result /= Void
 		end
-	
+
 feature -- Status report
 
 	same_as (other: DUMP_VALUE): BOOLEAN is
@@ -459,8 +459,8 @@ feature -- Status report
 					system_string_c := eiffel_system.system.system_string_class
 					if
 						string_c /= Void
-						and then string_c.is_compiled 
-						and then dynamic_class.simple_conform_to (string_c.compiled_class) 
+						and then string_c.is_compiled
+						and then dynamic_class.simple_conform_to (string_c.compiled_class)
 					then
 						Result := True
 					elseif
@@ -500,7 +500,7 @@ feature -- Status report
 				end
 				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""
 			elseif type = Type_string_dotnet and value_string_dotnet = Void then
-				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""			
+				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""
 			else
 				l_max := Application.displayed_string_size
 				l_str := truncated_string_representation (0, l_max)
@@ -537,7 +537,7 @@ feature -- Status report
 				print ("%N")
 			end
 		end
-		
+
 	output_for_debugger: STRING is
 			-- Displayed output, including string representation.
 			--| but remove address value
@@ -552,7 +552,7 @@ feature -- Status report
 				print (Result)
 				print ("%N")
 			end
-		end			
+		end
 
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
@@ -562,7 +562,7 @@ feature -- Status report
 			Result := truncated_string_representation (min, max)
 			Result.replace_substring_all ("%U", "%%U")
 		end
-		
+
 	truncated_string_representation (min, max: INTEGER): STRING is
 		do
 			Result := raw_string_representation (min, max)
@@ -584,7 +584,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			debug ("debugger_trace")
 				print (generating_type + ".raw_string_representation (" + min.out + ", " + max.out + ")%N")
 			end
-			
+
 			debug ("debug_recv")
 				print ("DUMP_VALUE.raw_string_representation of " + dynamic_class.name_in_upper + "%N")
 			end
@@ -617,7 +617,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_slice_max: INTEGER
 		do
 			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= Void 
+			l_conform_to_string := dynamic_class /= Void
 										and then dynamic_class /= sc
 										and then dynamic_class.simple_conform_to (sc)
 			if dynamic_class = sc or l_conform_to_string then
@@ -669,7 +669,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					end
 					if count_attribute /= Void then
 						l_count := count_attribute.value
-	
+
 						if area_attribute /= Void then
 								--| Now we have the real count, we'll get the l_slice_max items
 								--| and not all the capacity
@@ -682,7 +682,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							area_attribute.get_items (min, l_slice_max)
 							Result := area_attribute.truncated_raw_string_value (l_count)
 						end
-					end									
+					end
 				end
 				if Result /= Void then
 						--| We now have retrieved the full `area' of STRING object. Let's check
@@ -720,7 +720,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					Result := l_eifnet_debugger.string_value_from_string_class_value (value_dotnet, l_icdov, min, max)
 					last_string_representation_length := l_eifnet_debugger.last_string_value_length
 					l_icdov.clean_on_dispose
-				end					
+				end
 			else
 				si := Eiffel_system.system.system_string_class
 				if si /= Void and then si.is_compiled then
@@ -736,7 +736,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							if max < 0 then
 								l_size := last_string_representation_length
 							else
-								l_size := (max + 1).min (last_string_representation_length)								
+								l_size := (max + 1).min (last_string_representation_length)
 							end
 							Result := Result.substring ((min + 1).max (1), l_size)
 						end
@@ -776,7 +776,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 				if dynamic_class /= Void then
 					l_feat := debug_output_feature_i (dynamic_class)
 					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-		
+
 					if l_final_result_value /= Void and then not l_final_result_value.is_void then
 						Result := l_final_result_value.classic_string_representation (min, max)
 						last_string_representation_length := l_final_result_value.last_string_representation_length
@@ -814,11 +814,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						end
 					else
 						l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-	
+
 						if l_final_result_value /= Void and then not l_final_result_value.is_void then
 							Result := l_final_result_value.classic_string_representation (0, -1)
 						end
-					end			
+					end
 				end
 				if Result /= Void then
 					Result.prune_all ('%U')
@@ -870,6 +870,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						if item /= Void then
 							item.set_hector_addr
 							Result := item.dump_value
+							clear_item
 						end
 					end
 				end
@@ -877,7 +878,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		end
 
 feature -- Action
-	
+
 	classic_send_value is
 			-- send the value the application
 		require
@@ -916,7 +917,7 @@ feature -- Action
 					end
 			end
 		end
-	
+
 feature -- Access
 
 	type_and_value: STRING is
@@ -937,7 +938,7 @@ feature -- Access
 					Result.append_character (' ')
 				end
 				Result.append (full_output)
-			else		
+			else
 				Result.append (full_output)
 			end
 		end
@@ -961,7 +962,7 @@ feature -- Access
 				end
 			elseif dynamic_class /= Void then
 				if is_dotnet_value and then dynamic_class.is_true_external then
-					l_generating_type_string := value_class_name				
+					l_generating_type_string := value_class_name
 				elseif dynamic_class.is_true_external then
 					l_generating_type_string := dynamic_class.external_class_name
 				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
@@ -974,10 +975,10 @@ feature -- Access
 				else
 					Result := dynamic_class.name_in_upper
 				end
-			else		
+			else
 				Result := "ANY"
 			end
-		end		
+		end
 
 	output_value: STRING is
 			-- String representation of the value of `Current'.
@@ -1050,11 +1051,11 @@ feature -- Access
 
 	dynamic_class: CLASS_C
 			-- Dynamic Class of `Current'. Void iff `is_void'.
-			
+
 	dynamic_class_type: CLASS_TYPE
 			-- Dynamic Class Type of `Current'. Void if `is_void'.
 			-- Used only in Reference dotnet context (for now)
-	
+
 	is_void: BOOLEAN is
 			-- Is `Current' a Void reference?
 		do
@@ -1074,7 +1075,7 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	value_integer_32: INTEGER
 	value_integer_64: INTEGER_64
 	value_natural_32: NATURAL_32
-	value_natural_64: NATURAL_64	
+	value_natural_64: NATURAL_64
 	value_real		: REAL
 	value_double	: DOUBLE
 	value_bits		: STRING
@@ -1086,9 +1087,9 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	value_exception : EXCEPTION_DEBUG_VALUE
 
 
-	type: INTEGER 
+	type: INTEGER
 		-- type discrimant, possible values are Type_XXXX
-			
+
 --| Useless now, using inspect on 'type' is enought
 --	is_type_unknown       : BOOLEAN is do Result := type = Type_unknown end
 	is_type_boolean       : BOOLEAN is do Result := type = Type_boolean end
@@ -1113,7 +1114,7 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	is_type_exception     : BOOLEAN is do Result := type = Type_exception end
 
 feature {NONE} -- Private Constants
-	
+
 	area_name: STRING is "area"
 	count_name: STRING is "count"
 
@@ -1132,19 +1133,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

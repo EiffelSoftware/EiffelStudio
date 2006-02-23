@@ -13,6 +13,16 @@ inherit
 			is_equal, copy
 		end
 
+	DEBUG_EXT
+		undefine
+			is_equal, copy
+		end
+
+	IPC_SHARED
+		undefine
+			is_equal, copy
+		end
+
 	TWO_WAY_LIST [CALL_STACK_ELEMENT_CLASSIC]
 		rename
 			make as list_make
@@ -55,7 +65,7 @@ feature -- Output
 			stack_num, i: INTEGER
 			cs: CALL_STACK_ITEM
 		do
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Displaying stack %N"); end
 			st.add_new_line;
 			st.add_string ("Call stack:");
 			st.add_new_line;
@@ -77,10 +87,10 @@ feature -- Output
 			st.add_string ("-------");
 			st.add_new_line;
 
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: getting stack number %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": getting stack number %N"); end
 			stack_num := Application.current_execution_stack_number;
 
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: processing %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": processing %N"); end
 			from
 				start;
 				i := 1
@@ -99,12 +109,12 @@ feature -- Output
 				i := i + 1;
 			end;
 			st.add_new_line
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: end displaying call stack %N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": end displaying call stack %N"); end
 		end;
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER; tid: INTEGER) is
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -112,20 +122,20 @@ feature {NONE} -- Initialization
 			call	: CALL_STACK_ELEMENT_CLASSIC
 			level	: INTEGER
 		do
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Eiffel Stack%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating Eiffel Stack%N"); end
 			error_occurred := False
 			list_make
 
 			from
-				request_dump (n)
+				send_dump_stack_request (n, tid)
 				level := 1			-- we start from the top of the call stack.
-				create call.make(level)
+				create call.make(level, tid)
 			until
 				call.is_exhausted or call.error
 			loop
 				extend (call)
 				level := level + 1
-				create call.make(level)
+				create call.make (level, tid)
 			end
 
 			if call.error then
@@ -134,8 +144,8 @@ feature {NONE} -- Initialization
 			end
 
 			debug ("DEBUGGER_TRACE");
-				io.error.put_string ("%TEIFFEL_CALL_STACK: Finished creating Eiffel Stack%N");
-				io.error.put_string ("%TEIFFEL_CALL_STACK: Adopting callstack objects%N");
+				io.error.put_string ("%T" + generator + " : Finished creating Eiffel Stack%N");
+				io.error.put_string ("%T" + generator + ": Adopting callstack objects%N");
 			end
 
 				-- Now we adopt each object situated on the callstack
@@ -144,22 +154,22 @@ feature {NONE} -- Initialization
 				forth
 			end
 
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Finished Adopting callstack objects%N"); end
 		end
 
 	dummy_make is
 			-- Initialize only the first call stack element.
 		do
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating dummy Eiffel Stack%N"); end
+			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating dummy Eiffel Stack%N"); end
 			error_occurred := False
 			list_make
 		end
 
 feature {NONE} -- Externals
 
-	request_dump (n: INTEGER) is
-		external
-			"C"
+	send_dump_stack_request (n: INTEGER; tid: INTEGER) is
+		do
+			send_rqst_1 (rqst_dump_stack, n)
 		end
 
 invariant
@@ -172,19 +182,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

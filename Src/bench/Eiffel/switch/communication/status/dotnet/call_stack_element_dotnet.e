@@ -8,8 +8,11 @@ indexing
 class CALL_STACK_ELEMENT_DOTNET
 
 inherit
-	
+
 	EIFFEL_CALL_STACK_ELEMENT
+		redefine
+			make
+		end
 
 	COMPILER_EXPORTER
 		export
@@ -35,11 +38,11 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
-		end	
+		end
 
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
@@ -47,16 +50,16 @@ inherit
 		undefine
 			error_value
 		end
-		
+
 	ICOR_EXPORTER -- debug trace purpose
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFNET_DEBUGGER
-	
+
 	SHARED_INST_CONTEXT
-	
+
 	SHARED_WORKBENCH
 
 
@@ -67,38 +70,38 @@ create {EIFFEL_CALL_STACK}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER) is
+	make (level: INTEGER; tid: INTEGER) is
 		do
-			level_in_stack := level
+			Precursor (level, tid)
 			private_body_index := -1
 		end
 
 feature -- Filling
 
-	set_routine (a_chain: ICOR_DEBUG_CHAIN; 
+	set_routine (a_chain: ICOR_DEBUG_CHAIN;
 			a_frame: ICOR_DEBUG_FRAME; a_il_frame: ICOR_DEBUG_IL_FRAME;
-			melted: BOOLEAN; a_address: STRING; 
+			melted: BOOLEAN; a_address: STRING;
 			a_dyn_type: CLASS_TYPE;
-			a_feature: FEATURE_I; 
+			a_feature: FEATURE_I;
 			a_il_offset: INTEGER; a_line_number: INTEGER) is
 		local
 			l_routine: E_FEATURE
 		do
 			icd_chain := a_chain
 			icd_chain.add_ref
-			
+
 			icd_frame := a_frame
 			icd_frame.add_ref
 
 			icd_il_frame := a_il_frame
 			icd_il_frame.add_ref
-			
+
 			il_offset := a_il_offset
-			
+
 			dynamic_type := a_dyn_type
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class
-				class_name := dynamic_class.name_in_upper				
+				class_name := dynamic_class.name_in_upper
 			end
 			written_class := a_feature.written_class
 			if a_line_number = 0 then
@@ -122,13 +125,13 @@ feature -- Filling
 			if dynamic_class /= written_class and then dynamic_class.simple_conform_to (written_class) then
 				l_routine := dynamic_class.feature_with_rout_id (a_feature.rout_id_set.first)
 				if l_routine.written_in = written_class.class_id then
-						-- Not the precursor case.
+					-- Not the precursor case.
 					routine := l_routine
 				end
 			end
 			private_body_index := -1
 		end
-		
+
 feature -- Cleaning
 
 	clean is
@@ -147,9 +150,9 @@ feature -- Dotnet Properties
 	icd_frame: ICOR_DEBUG_FRAME
 
 	icd_il_frame: ICOR_DEBUG_IL_FRAME
-	
+
 	icd_chain: ICOR_DEBUG_CHAIN
-	
+
 	il_offset: INTEGER
 
 feature {EIFFEL_CALL_STACK_DOTNET} -- Query
@@ -157,7 +160,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 	chain_index, frame_index: INTEGER
 			-- Chain and Frame index used to be able to refresh
 			-- the icd_chain and icd_frame values
-	
+
 	set_chain_frame_indexes (vc, vf: INTEGER) is
 		do
 			chain_index := vc
@@ -176,7 +179,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 			l_active_thread := Eifnet_debugger.icor_debug_thread
 			if l_active_thread /= Void then
 				l_enum_chain := l_active_thread.enumerate_chains
-				if l_enum_chain /= Void then 
+				if l_enum_chain /= Void then
 					if l_enum_chain.get_count >= chain_index then
 						l_chain := l_enum_chain.i_th (chain_index)
 						if l_chain /= Void then
@@ -186,7 +189,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 							end
 							icd_chain := l_chain
 							l_enum_frames := icd_chain.enumerate_frames
-							if l_enum_frames /= Void then 
+							if l_enum_frames /= Void then
 								if l_enum_frames.get_count >= frame_index then
 									l_frame := l_enum_frames.i_th (frame_index)
 									if l_frame /= Void then
@@ -230,7 +233,7 @@ feature -- Properties
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 
 	object_address: STRING
-			-- Hector address of associated object 
+			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
 			--| it doesn't ask an hector address for that object until
@@ -246,30 +249,30 @@ feature -- Current object
 			Result := private_current_object
 			if Result = Void and then not initialized_current_object then
 				initialize_stack_for_current_object
-				Result := private_current_object				
+				Result := private_current_object
 			end
 		end
-	
+
 	set_private_current_object (c: like private_current_object) is
 			-- Set current object value
 			-- without initializing the full stack...
 		do
 			private_current_object := c
 		end
-		
+
 feature -- Dotnet Properties
 
 	dotnet_class_token: INTEGER is
-			-- 
+			--
 		do
 			if not dotnet_initialized then
 				initialize_dotnet_info
 			end
 			Result := private_dotnet_class_token
 		end
-		
+
 	dotnet_feature_token: INTEGER is
-			-- 
+			--
 		do
 			if not dotnet_initialized then
 				initialize_dotnet_info
@@ -278,7 +281,7 @@ feature -- Dotnet Properties
 		end
 
 	dotnet_module_name: STRING is
-			-- 
+			--
 		do
 			if not dotnet_initialized then
 				initialize_dotnet_info
@@ -287,13 +290,13 @@ feature -- Dotnet Properties
 		end
 
 	dotnet_module_filename: STRING is
-			-- 
+			--
 		do
 			if not dotnet_initialized then
 				initialize_dotnet_info
 			end
 			Result := private_dotnet_module_filename
-		end		
+		end
 
 feature {NONE} -- Implementation Dotnet Properties
 
@@ -303,11 +306,11 @@ feature {NONE} -- Implementation Dotnet Properties
 	initialized_current_object,
 	initialized_arguments,
 	initialized_locals: BOOLEAN
-			
+
 	private_dotnet_class_token: INTEGER
-	
+
 	private_dotnet_feature_token: INTEGER
-	
+
 	private_dotnet_module_name: STRING
 
 	private_dotnet_module_filename: STRING
@@ -322,7 +325,7 @@ feature {NONE} -- Implementation Properties
 feature {NONE} -- Implementation
 
 	initialize_dotnet_info is
-			-- 
+			--
 		local
 			l_function: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
@@ -353,10 +356,10 @@ feature {NONE} -- Implementation
 				end
 
 				if l_function /= Void then
-					private_dotnet_feature_token := l_function.get_token		
+					private_dotnet_feature_token := l_function.get_token
 					l_class := l_function.get_class
 					l_module := l_function.get_module
-					
+
 					private_dotnet_class_token := l_class.get_token
 					private_dotnet_module_name := l_module.module_name
 					private_dotnet_module_filename := l_module.get_name
@@ -377,12 +380,12 @@ feature {NONE} -- Implementation
 			cobj: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
 			if Eifnet_debugger.exit_process_occurred then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_current_object := True
 			elseif not initialized_current_object then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<start> " + generator + ".initialize_stack_for_current_object %N")
 				end
 					--| Current and Arguments |--
@@ -396,9 +399,9 @@ feature {NONE} -- Implementation
 					object_address := private_current_object.address
 					display_object_address := object_address
 				end
-				initialized_current_object := True					
+				initialized_current_object := True
 
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<stop> " + generator + ".initialize_stack_for_current_object %N")
 				end
 			end
@@ -416,32 +419,32 @@ feature {NONE} -- Implementation
 			l_list			: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 		do
 			if Eifnet_debugger.exit_process_occurred then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_arguments := True
 			elseif not initialized_arguments then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<start> " + generator + ".initialize_stack_for_arguments"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
 				rout := routine
 				if rout /= Void then
-	
+
 					--| Current and Arguments |--
 					l_list := internal_arg_list
 					if l_list /= Void and then not l_list.is_empty then
 						--| Get Arguments
 						l_count := rout.argument_count
 						if l_count > 0 and not l_list.is_empty then
---| FIXME jfiat [2004/08/24] : check why l_list could be empty at this point 
-							create args_list.make_filled (l_count)	
+--| FIXME jfiat [2004/08/24] : check why l_list could be empty at this point
+							create args_list.make_filled (l_count)
 							arg_names := rout.argument_names
 							arg_types := rout.arguments
 							from
 								arg_names.start
 								arg_types.start
-								
+
 								args_list.start
 								l_list.start
 							until
@@ -473,18 +476,18 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-	
+
 					--| Associate to private list |--
 				private_arguments := args_list
 				initialized_arguments := True
-				
-				debug ("debugger_trace_callstack_data") 
+
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<stop> " + generator + ".initialize_stack_for_arguments"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
 			end
 		end
-		
+
 	initialize_stack_for_locals is
 		require
 			initialized_current_object
@@ -505,12 +508,12 @@ feature {NONE} -- Implementation
 			l_old_class: CLASS_C
 		do
 			if Eifnet_debugger.exit_process_occurred then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_locals := True
 			elseif not initialized_locals then
-				debug ("debugger_trace_callstack_data") 
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<start> " + generator + ".initialize_stack_for_locals"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
@@ -522,7 +525,7 @@ feature {NONE} -- Implementation
 					private_result := Void
 					if rout.is_function then
 						if rout.is_once then
-								--| In IL generated code .. for once function 
+								--| In IL generated code .. for once function
 								--| no local variable to store the Result
 								--| using directly  "return value"
 
@@ -548,14 +551,14 @@ feature {NONE} -- Implementation
 							end
 						end
 						if private_result /= Void then
-							private_result.set_static_class (rout.type.associated_class)							
+							private_result.set_static_class (rout.type.associated_class)
 						end
 					end
-					
+
 					--| LOCAL |--
 					if l_list /= Void and then not l_list.is_empty then
 						--| now the result value has been removed
-						--| let's get the real Local variables 
+						--| let's get the real Local variables
 						local_decl_grps := rout.locals
 						if local_decl_grps /= Void then
 							l_old_cluster := inst_context.cluster
@@ -563,7 +566,7 @@ feature {NONE} -- Implementation
 
 							l_old_class := System.current_class
 							System.set_current_class (dynamic_class)
-			
+
 							l_count := l_list.count
 							create locals_list.make (l_count)
 							from
@@ -572,7 +575,7 @@ feature {NONE} -- Implementation
 								l_names_heap := Names_heap
 								l_list.start
 							until
-								local_decl_grps.after 
+								local_decl_grps.after
 								or l_index > l_count
 							loop
 								id_list := local_decl_grps.item.id_list
@@ -616,12 +619,12 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-	
+
 					--| Associate to private list |--
 				private_locals := locals_list
 				initialized_locals := True
-				
-				debug ("debugger_trace_callstack_data") 
+
+				debug ("debugger_trace_callstack_data")
 					io.put_string ("<stop> " + generator + ".initialize_stack_for_locals"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
@@ -633,7 +636,7 @@ feature {NONE} -- Implementation
 			initialize_stack_for_current_object
 			initialize_stack_for_arguments
 			initialize_stack_for_locals
-			initialized := initialized_current_object 
+			initialized := initialized_current_object
 						and initialized_arguments
 						and initialized_locals
 		end
@@ -677,7 +680,7 @@ feature {NONE} -- Implementation
 					l_enum.reset
 						-- Ignore first element which is Current Object
 					if l_enum.get_count > 0 then
-						l_enum.skip (1)						
+						l_enum.skip (1)
 							-- Then process the following values (arguments)
 						Result := debug_value_list_from_enum (l_enum, l_enum.get_count - 1)
 					end
@@ -688,7 +691,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_local_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
-			-- Return list of Value for local var, 
+			-- Return list of Value for local var,
 			-- including the Result if there is one, in this case
 			-- this will be the first value
 		require
@@ -749,9 +752,9 @@ feature {NONE} -- Implementation
 
 invariant
 
---	non_empty_args_if_exists: private_arguments /= Void implies 
+--	non_empty_args_if_exists: private_arguments /= Void implies
 --				not private_arguments.is_empty
---	non_empty_locs_if_exists: private_locals /= Void implies 
+--	non_empty_locs_if_exists: private_locals /= Void implies
 --				not private_locals.is_empty
 --	valid_level: level_in_stack >= 1
 
@@ -761,19 +764,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -8,18 +8,17 @@ indexing
 	date        : "$Date$"
 	revision    : "$Revision$"
 
-class EWB_REQUEST 
+class EWB_REQUEST
 
 inherit
 
-	DEBUG_EXT
-	IPC_SHARED
+	IPC_REQUEST
 	SHARED_DEBUG
 	EXEC_MODES
 
 create
 
-	make 
+	make
 
 feature -- Initialization
 
@@ -117,7 +116,7 @@ feature -- Update
 		end
 
 	send is
-			-- Send Current request to ised, which may 
+			-- Send Current request to ised, which may
 			-- relay it to the application.
 		do
 			send_rqst_0 (request_code)
@@ -131,24 +130,54 @@ feature {NONE} -- Implementation
 	send_breakpoint (bp: BREAKPOINT; bp_mode: INTEGER) is
 			-- send a breakpoint to the application, and update the
 			-- status of the sent breakpoint
+		local
+			l_body_ids: LIST [INTEGER]
+			l_real_body_id: INTEGER
+			l_break_op: INTEGER
+			l_break_line: INTEGER
 		do
-			if (bp_mode = bp.breakpoint_to_remove) then
+			inspect
+				bp_mode
+			when {BREAKPOINT}.breakpoint_to_remove then
+				l_break_op := Break_remove
 				debug("debugger_trace_breakpoint")
 					io.put_string("removing the breakpoint : %N")
 					io.put_string (bp.debug_output)
 					io.put_new_line
 				end
-				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_remove, bp.breakable_line_number)
-				bp.set_application_not_set
-			elseif (bp_mode = bp.breakpoint_to_add) then
+			when {BREAKPOINT}.breakpoint_to_add then
+				l_break_op := Break_set
 				debug("debugger_trace_breakpoint")
 					io.put_string("adding the breakpoint : ")
 					io.put_string (bp.debug_output)
 					io.put_new_line
 				end
-				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_set, bp.breakable_line_number)
-				bp.set_application_set
+			else
+				check bp_mode = {BREAKPOINT}.Breakpoint_do_nothing end
+				l_break_op := -1
 			end
+			check minus_one_is_not_break_value : Break_remove /= -1 and Break_set /= - 1 end
+			if l_break_op /= -1 then
+				l_body_ids := bp.real_body_ids_list
+				l_break_line := bp.breakable_line_number
+				from
+					l_body_ids.start
+				until
+					l_body_ids.after
+				loop
+					l_real_body_id := l_body_ids.item
+					send_rqst_3_integer (Rqst_break, l_real_body_id - 1, l_break_op, l_break_line)
+					l_body_ids.forth
+				end
+				inspect
+					l_break_op
+				when Break_set then
+					bp.set_application_set
+				when Break_remove then
+					bp.set_application_not_set
+				end
+			end
+
 		end
 
 	update_breakpoints (bpts: BREAK_LIST) is
@@ -175,19 +204,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

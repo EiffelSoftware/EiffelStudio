@@ -95,6 +95,7 @@ feature {DBG_EVALUATOR} -- Interface
 				if item /= Void then
 					item.set_hector_addr
 					last_result_value := item.dump_value
+					clear_item
 				end
 			end
 		end
@@ -102,20 +103,23 @@ feature {DBG_EVALUATOR} -- Interface
 	effective_evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 		local
 			once_r: ONCE_REQUEST
+			res: ABSTRACT_DEBUG_VALUE
 		do
 				--| Classic
 			once_r := Once_request
 			if once_r.already_called (f) then
-				if a_addr /= Void or a_target /= Void then
-					evaluate_function (a_addr, a_target, Void, f, params)
+				res := once_r.once_result (f)
+				if once_r.last_failed then
+					notify_error (cst_error_exception_during_evaluation, "Once feature " + f.name + ": " + once_r.last_exception_meaning)
 				else
-fixme ("Complete once evaluation implementation changes (cf: jfiat + alexk)")
-					last_result_value := once_r.once_result (f).dump_value
-					last_result_static_type := f.type.associated_class
+					if res /= Void then
+						last_result_value := res.dump_value
+						last_result_static_type := f.type.associated_class
+					else
+						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.name + ": an exception occurred")
+					end
 				end
-				if last_result_value = Void then
-					notify_error (cst_error_exception_during_evaluation, "Once feature " + f.name + ": an exception occurred")
-				end
+				once_r.clear_last_values
 			else
 				notify_error (cst_error_occurred, "Once feature " + f.name + ": not yet called")
 			end
@@ -178,19 +182,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

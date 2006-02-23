@@ -15,13 +15,6 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make (level: INTEGER) is
-		do
-			level_in_stack := level
-		end
-
 feature -- Change
 
 	set_info (a_oa: STRING; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING) is
@@ -56,11 +49,11 @@ feature -- Output
 		end
 
 	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
+			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		do
 		end
-		
+
 	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
 		do
@@ -93,19 +86,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -60,11 +60,8 @@ feature {NONE} -- Initialization
 			grid.key_press_actions.extend (agent on_grid_key_pressed)
 
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
-			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
-			grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (1))
-			grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (2))
-			grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (3))
-			grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_header_single_clicked (4))
+			grid.header.item_resize_end_actions.force_extend (agent on_header_item_resize)
+			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
 			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			close_button.select_actions.extend (agent on_close)
@@ -398,11 +395,19 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_single_clicked (col_index: INTEGER) is
-			-- Header was single-clicked.
+	on_header_item_single_clicked (hi: EV_HEADER_ITEM; ax,ay, a_but: INTEGER) is
+		local
+			ghi: EV_GRID_HEADER_ITEM
+			col_index: INTEGER
 		do
-			if grid.header.pointed_divider_index = 0 then
-				if not grid.is_tree_enabled then
+			if
+				not grid.is_tree_enabled
+				and a_but = 1
+				and grid.header.pointed_divider_index = 0 --| Let's be sure no divider is clicked
+			then
+				ghi ?= hi
+				if ghi /= Void then
+					col_index := ghi.column.index
 					if col_index /= Value_sorting_mode then
 						if col_index = flat_sorting_info.abs then
 							flat_sorting_info := - flat_sorting_info
@@ -418,7 +423,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_resize is
+	on_header_item_resize is
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER

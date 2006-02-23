@@ -452,6 +452,7 @@ feature {NONE} -- Implementation
 								l_attribute := node.attribute_by_name (once "DESCRIPTION")
 								if l_attribute /= Void then
 									pref_description := l_attribute.value
+									pref_description.replace_substring_all ("%%N", "%N")
 								else
 										-- No description specified
 									pref_description := ""

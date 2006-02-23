@@ -83,6 +83,6 @@ struct dump {
 /* Visible routine */
 extern void send_stack(eif_stream s, uint32 nb_elems);	/* Send a stack dump to ewb */
 extern void send_stack_variables(eif_stream s, int where); /* dump the locals/arguments for a given feature on stack */
-extern void send_once_result(eif_stream s, BODY_INDEX body_id, int arg_num); /* Send result of once function to ewb */
+extern void send_once_result(eif_stream s, MTOT OResult, int otype); /* Send result of once function to ewb */
 
 #endif /* _stack_h_ */

@@ -66,6 +66,7 @@ typedef struct {			/* Position in program execution flow */
 	int wh_origin;			/* Where feature comes from */
 	int wh_type;			/* Dynamic type of Current */
 	int wh_offset;			/* Offset within byte code (-1 if none) */
+	rt_uint_ptr wh_thread_id;	/* Thread id */
 } Where;
 
 typedef struct {			/* Stopping notification */
@@ -74,6 +75,10 @@ typedef struct {			/* Stopping notification */
 	int st_code;			/* Exception code */
 	char *st_tag;			/* Exception tag, if appropriate */
 } Stop;
+typedef struct {			/* Event notification */
+	int st_type;			/* Event type */
+	int st_data;			/* Event data */
+} Notif;
 
 typedef struct dump Dump;	/* Structure returned by dumps */
 
@@ -83,37 +88,7 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  */
 
 /* Request types with specific information carried in structure:
- *	EIF_OPAQUE	1		Opaque data request
- *	ACKNLGE		2		Acknowledgment (positive/negative)
- *	TRANSFER	3		Data transfer via daemon
- *	HELLO		4		Application's handshake with ewb
- *	STOPPED		5		Stop notification from app -> ewb
- *	INSPECT		6		Object inspection
- *	DUMP		7		A general stack dump request
- *	DUMPED		8		A dumped stack item
- *	MOVE		9		Change active routine pointer
- *	BREAK		10		Add/delete breakpoint
- *	RESUME		11		Resume execution
- *	QUIT		12		Application must die immediately
- *	CMD			13		Run a shell command (for ised)
- *	APPLICATION	14		Start up application (for ised)
- *	KPALIVE		15		Dummy request to keep connection alive
- *	ASYNCMD		16		Run command asynchronously
- *	ASYNACK		17		Status of the asynchronous job
- *  DEAD		18		Application is dead
- *  LOAD		19		Load byte code information
- *  BYTECODE	20		A byte code transfer
- *	KILL		21		Kill application asynchronously
- *	ADOPT		22		Adopt object
- *	ACCESS		23		Access object through hector
- *	WEAN		24		Wean adopted object
- *	ONCE		25		Once routines inspection
- *	EWB_INTERRUPT	26	Debugger asking interruption of application
- *	APP_INTERRUPT	27	Application wondering if it has to stop
- *	INTERRUPT_OK	28	Application must stop its execution
- *	INTERRUPT_NO	29	Application can resume execution
- *	SP_LOWER	30		Bounds for special objects inspection
- *	METAMORPHOSE	31		Metamorphose the item on top of the operational stack (used to convert parameters in the evaluation of features)
+ * check rqst_conf.h
  */
 
 typedef struct {			/* General client request format */
@@ -124,6 +99,7 @@ typedef struct {			/* General client request format */
 		Opaque rqu_opaque;		/* Opaque parameters for request */
 		Stop rqu_stop;			/* Stop information */
 		Where rqu_where;		/* Position within program */
+		Notif rqu_event;		/* Event notified */
 	} rqu;
 } Request;
 
@@ -132,6 +108,7 @@ typedef struct {			/* General client request format */
 #define rq_opaque		rqu.rqu_opaque
 #define rq_stop			rqu.rqu_stop
 #define rq_where		rqu.rqu_where
+#define rq_event		rqu.rqu_event
 
 #define Request_Clean(rqst)		(memset (&(rqst), 0, sizeof (Request)))
 	/* Ensure that the Request is properly initialized

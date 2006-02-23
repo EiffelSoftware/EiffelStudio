@@ -96,9 +96,24 @@ rt_private void bit_inspect(EIF_OBJ object);
 rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
 rt_private void load_bc(int slots, int amount);				/* Load byte code information */
 rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspected */
+rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
+rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
 
 extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
+/* debugging macro */
+#ifdef EIF_THREADS
+#define dthread_prepare() 														\
+		CHECK("Thread context must be cleared", dthread_id_saved == 0); 		\
+		dthread_id_saved = dbg_switch_to_thread(dthread_id);
+#define dthread_restore() 														\
+		CHECK("Thread context must be saved", dthread_id_saved != 0); 			\
+		dthread_id_saved = dbg_switch_to_thread(dthread_id_saved); 					\
+		dthread_id_saved = 0;	
+#else
+#define dthread_prepare();
+#define dthread_restore();
+#endif
 /* debugging function */
 extern void set_breakpoint_count(int num);	/* Sets the breakpoint interrupt number */
 
@@ -194,26 +209,43 @@ static int curr_modify = NO_CURRMODIF;
 	case METAMORPHOSE:					/* Converts the top-level item on the operational stack to a reference type */
 		metamorphose_top();
 		break;
+	case CHANGE_THREAD:					/* Thread id used to precise current thread in debugger */
+		dthread_id = (rt_uint_ptr) arg_1;
+		break;
 	case DUMP_VARIABLES:
+		dthread_prepare();
 #ifdef EIF_WINDOWS
 		send_stack_variables(sp, arg_1);
 #else
 		send_stack_variables(writefd (sp), arg_1);
 #endif
+		dthread_restore();
 		break;
-	case DUMP:						/* General stack dump request */
+	case DUMP_THREADS:
+		CHECK("DUMP_THREADS: not yet implemented", 0);	
+			/* 
+			 * This is not yet implemented, 
+			 * and probably will be removed
+			 * if we don't find a portable way to get thread OS id, name, and priority 
+			 */
+		break;
+	case DUMP_STACK:						/* General stack dump request */
+		dthread_prepare();
 #ifdef EIF_WINDOWS
 		send_stack(sp, (uint32) arg_1); /* Since we convert int -> uint32, passing -1 will inspect the whole stack. */
 #else
 		send_stack(writefd (sp), (uint32) arg_1);
 #endif
+		dthread_restore();
 		break;
 	case DYNAMIC_EVAL: /* arg_1 = feature_id / arg2=static_type / arg3=is_external / arg4=is_precompiled / arg5=is_basic_type*/
+		dthread_prepare();
 #ifdef EIF_WINDOWS
 		dynamic_evaluation(sp, arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #else
 		dynamic_evaluation(writefd (sp), arg_1, arg_2, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #endif
+		dthread_restore();
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
 		modify_local_variable(arg_1,arg_2,arg_3,NULL);	             /* of a feature in the call stack */
@@ -224,6 +256,7 @@ static int curr_modify = NO_CURRMODIF;
 		curr_modify = OBJECT_ATTR;
 		break;
 	case DUMPED:					/* new value for the modified local variable / object / attribute */
+		dthread_prepare();
 		switch (curr_modify) {
 			case LOCAL_ITEM:				
 				modify_local_variable(0,0,0,rqst->rq_dump.dmp_item);
@@ -236,6 +269,7 @@ static int curr_modify = NO_CURRMODIF;
 				break;
 		}
 		curr_modify = NO_CURRMODIF;
+		dthread_restore();
 		break;
 	case MOVE:						/* Change active routine */
 		dmove(arg_1);
@@ -303,11 +337,13 @@ static int curr_modify = NO_CURRMODIF;
 #endif
 		break;
 	case ONCE:						/* Once routines inspection */
+		dthread_prepare();
 #ifdef EIF_WINDOWS
 		once_inspect(sp, &rqst->rq_opaque);
 #else
 		once_inspect(writefd(sp), &rqst->rq_opaque);
 #endif
+		dthread_restore();
 		break;
 	case INTERRUPT_OK:				/* Stop execution and send call stack */
 #ifdef EIF_WINDOWS
@@ -467,6 +503,7 @@ rt_public void stop_rqst(int s)
 		rqst.st_wh.wh_origin = 0;				/* Written where? */
 		rqst.st_wh.wh_type = 0;					/* Dynamic type */
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
+		rqst.st_wh.wh_thread_id = (rt_int_ptr) 0;			/* Thread id -> rt_int_ptr for XDR */
 	} 
 	else {
 		rqst.st_wh.wh_name = wh.wh_name;		/* Feature name */
@@ -474,6 +511,13 @@ rt_public void stop_rqst(int s)
 		rqst.st_wh.wh_origin = wh.wh_origin;	/* Written where? */
 		rqst.st_wh.wh_type = wh.wh_type;		/* Dynamic type */
 		rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code for melted feature, line number for frozen one */
+
+#ifdef EIF_THREADS
+		dthread_id = (rt_uint_ptr) eif_thr_id;
+#else
+		dthread_id = (rt_uint_ptr) 0;
+#endif
+		rqst.st_wh.wh_thread_id = (rt_int_ptr) dthread_id; 	/* Current Thread id  -> rt_int_ptr for XDR */
 	}
 
 #undef st_status
@@ -482,6 +526,36 @@ rt_public void stop_rqst(int s)
 #undef st_where
 
 	send_packet(s, &rqst);	/* Send stopped notification */
+}
+
+#ifdef EIF_WINDOWS
+rt_public void notify_rqst(STREAM *s, int ev_type, int ev_data)
+#else
+rt_public void notify_rqst(int s, int ev_type, int ev_data)
+#endif
+{
+	/* Send a notification
+	 */
+	Request rqst;			/* XDR request built */
+	Request_Clean (rqst);
+	rqst.rq_type = NOTIFIED;/* Notify request */
+	rqst.rq_event.st_type = ev_type;
+	rqst.rq_event.st_data = ev_data;
+	send_packet(s, &rqst);	/* Send notification */
+}
+
+
+rt_shared void dnotify(int evt_type, int evt_data)
+{
+	if (!debug_mode)		/* If not in debugging mode */
+		return ;			/* Resume execution immediately */
+#ifdef WORKBENCH
+#ifdef EIF_WINDOWS
+	notify_rqst(sp, evt_type, evt_data);		/* Notify workbench we stopped */
+#else	/* EIF_WINDOWS */
+	notify_rqst(EWBOUT, evt_type, evt_data);		/* Notify workbench we stopped */
+#endif	/* EIF_WINDOWS */
+#endif	/* WORKBENCH */
 }
 
 /* Encapsulate the 'modify_local' function */
@@ -637,19 +711,74 @@ rt_private void once_inspect(int s, Opaque *what)
 	 * its result may be ask by ewb.
 	 */
 
-	BODY_INDEX body_id = (BODY_INDEX) what->op_third;	/* Body_id of once routine */
+	EIF_GET_CONTEXT
 
+	char *out = NULL;				/* Buffer where out form is stored */
+	struct item *val = NULL;		/* Value in operational stack */
+	int volatile is_process_once = 0;	/* Is once routine process-relative? */
+	static char buf[BUFSIZ];
+
+	BODY_INDEX b_index;
+	ONCE_INDEX o_index;
+	MTOT OResult = (MTOT) 0;				/* Item for once data */
+#ifdef EIF_THREADS
+	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
+#define GetOResult(o_index, is_process_once)	\
+		if (is_process_once) {								\
+			POResult = EIF_process_once_values + o_index;	\
+			OResult = &(POResult -> value);					\
+		} else 												\
+		OResult = MTOI(o_index);
+#else
+#define GetOResult(o_index, is_process_once)	\
+		OResult = MTOI(o_index);
+#endif
+	
+	
 	switch (what->op_first) {		/* First value describes request */
-	case OUT_CALLED:				/* Has once routine already been called? */
-		if (onceitem(body_id) != (BODY_INDEX *)0)	/* body_id found in once list*/
-			twrite("true", 4);
-		else
-			twrite("false", 5);
+	case OUT_INDEX:					/* ONCE_INDEX for the once routine */
+	 	b_index = (BODY_INDEX) what->op_third;	/* Body_id of once routine */
+#ifdef EIF_THREADS
+		is_process_once = (what->op_second == OUT_ONCE_PER_PROCESS);
+		if (is_process_once) {
+			o_index = process_once_index (b_index);
+		} else 
+#endif
+			o_index = once_index (b_index);
+		sprintf(buf, "%ld", o_index);
+		twrite(buf, strlen(buf));
 		break;
-	case OUT_RESULT:			/* Result of already called once function */
-		send_once_result(s, body_id, what->op_second);	/* Send result back to ewb */
-														/* the last argument is the number of  */
-														/* arguments to be passed */
+	case OUT_CALLED:				/* Has once routine already been called? */
+		o_index = (ONCE_INDEX) what->op_third;
+		GetOResult(o_index, (what->op_second == OUT_ONCE_PER_PROCESS));
+		if (MTOD(OResult)) {
+			twrite("true", 4);
+		} else {
+			twrite("false", 5);
+		}
+		break;
+	case OUT_DATA_PER_PROCESS:			/* Result of already called once function */
+		is_process_once = 1;
+	case OUT_DATA_PER_THREAD:
+		o_index = (ONCE_INDEX) what->op_third;
+		GetOResult(o_index, is_process_once);
+		if (MTOD(OResult)) {
+				/* Done ? */
+			twrite("true", 4);
+				/* Failed ? */
+			if (MTOF(OResult)) {
+				twrite("true", 4);
+				sprintf(buf, "%ld", MTOF(OResult));
+				twrite(buf, strlen(buf));
+			} else {
+				twrite("false", 5);
+					/* Result */
+				send_once_result(s, OResult, (int) what->op_second);	/* Send result back to ewb */
+														/* the last argument is the expected type */
+			}
+		} else {
+			twrite("false", 5);
+		}
 		break;
 	default:
 		eif_panic("BUG once inspect");

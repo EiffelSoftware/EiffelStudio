@@ -207,6 +207,7 @@ rt_public void c_recv_value (EIF_OBJ target)
 					case SK_POINTER: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr); return;
 					case SK_REF:
 					case SK_EXP:
+//						if ((type_flag & (EO_SPEC | EO_TUPLE)) == EO_SPEC) {
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
 								(eif_access (target), item.it_ref, type_flag & SK_DTYPE);
 							/* reference and dynamic type */

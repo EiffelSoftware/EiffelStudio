@@ -42,3 +42,4 @@
 #define REP_MELT		4
 #define REP_DEAD		5
 #define REP_STOPPED		6
+#define REP_NOTIFIED	7

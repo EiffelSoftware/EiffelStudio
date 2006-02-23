@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0365 */
-/* at Tue Feb 14 16:35:43 2006
+/* at Thu Feb 23 09:25:48 2006
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
@@ -76,7 +76,7 @@ MIDL_DEFINE_GUID(IID, IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MA
 MIDL_DEFINE_GUID(IID, IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION,0xE1FFE100,0x6EB3,0x46C8,0x94,0xCE,0x20,0x8A,0x7B,0x1C,0x79,0xC3);
 
 
-MIDL_DEFINE_GUID(CLSID, CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER,0xE1FFE1AC,0xB1AC,0x436F,0x94,0x8D,0x20,0xB6,0x2A,0x3A,0x87,0xAF);
+MIDL_DEFINE_GUID(CLSID, CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER,0xE1FFE1AC,0x94DE,0x490F,0xAF,0xD8,0x0B,0x54,0xAC,0xE9,0x70,0x2F);
 
 #undef MIDL_DEFINE_GUID
 

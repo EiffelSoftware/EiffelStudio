@@ -10,6 +10,9 @@ class CALL_STACK_ELEMENT_CLASSIC
 inherit
 
 	EIFFEL_CALL_STACK_ELEMENT
+		redefine
+			make
+		end
 
 	OBJECT_ADDR
 
@@ -37,12 +40,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_INST_CONTEXT
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -55,10 +58,9 @@ create {STOPPED_HDLR,APPLICATION_EXECUTION_CLASSIC}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER) is
+	make (level: INTEGER; tid: INTEGER) is
 		do
-				-- set the level
-			level_in_stack := level
+			Precursor (level, tid)
 
 				-- set the private to a fake value
 			private_body_index := -1
@@ -83,7 +85,7 @@ feature {NONE} -- Initialization
 			end
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Finished creating%N"); end
 		end
-	
+
 	dummy_make (fn: STRING; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING; type, origin: INTEGER) is
 			-- Initialize `Current' with no calls to the run-time.
 		do
@@ -93,7 +95,7 @@ feature {NONE} -- Initialization
 			break_index := br
 			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
 			if dynamic_type /= Void then
-				dynamic_class := dynamic_type.associated_class	
+				dynamic_class := dynamic_type.associated_class
 			end
 			written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 			object_address := addr
@@ -137,7 +139,7 @@ feature -- Properties
 		end
 
 	object_address: STRING
-			-- Hector address of associated object 
+			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
 			--| it doesn't ask an hector address for that object until
@@ -185,9 +187,10 @@ feature {NONE} -- Implementation
 
 	retrieve_locals_and_arguments is
 		do
-			debug ("DEBUGGER_TRACE"); 
+			debug ("DEBUGGER_TRACE");
 				io.error.put_string (generator + ": receiving locals & arguments%N")
 				io.error.put_string (generator + ": sending the request%N")
+				io.error.put_string (generator + ": thread id = " + thread_id.to_hex_string + ".%N")
 			end
 				-- send the request
 			send_rqst_1 (Rqst_dump_variables, level_in_stack)
@@ -212,14 +215,14 @@ feature {NONE} -- Implementation
 				c_recv_value (Current)
 			end
 
-				-- Receive the local entities. 
-				-- user-defined, then loop variants and old expr, and finally the result if any. 
+				-- Receive the local entities.
+				-- user-defined, then loop variants and old expr, and finally the result if any.
 				-- (`item' is set to Void when no more values are expected).
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": receiving the locals%N"); end
 			from
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
-				if not error then 
-					c_recv_value (Current) 
+				if not error then
+					c_recv_value (Current)
 				end
 			until
 				error or item = Void
@@ -266,7 +269,7 @@ feature {NONE} -- Implementation
 				--l_count := rout.argument_count
 				l_count := retrieved_arguments_count
 				if l_count > 0 then
-					create args_list.make_filled (l_count)	
+					create args_list.make_filled (l_count)
 					from
 						arg_names := rout.argument_names
 						arg_types := rout.arguments
@@ -289,11 +292,11 @@ feature {NONE} -- Implementation
 				if local_decl_grps /= Void then
 					l_old_cluster := inst_context.cluster
 					inst_context.set_cluster (rout.associated_class.cluster)
-					
+
 					l_old_class := System.current_class
 					System.set_current_class (dynamic_class)
 
-					
+
 					create locals_list.make (retrieved_locals_count)
 					from
 						l_count := 0
@@ -302,7 +305,7 @@ feature {NONE} -- Implementation
 					until
 						local_decl_grps.after or
 						l_count >= retrieved_locals_count
-					loop 
+					loop
 						id_list := local_decl_grps.item.id_list
 						if not id_list.is_empty then
 							l_stat_class := local_decl_grps.item.type.actual_type.associated_class
@@ -330,7 +333,7 @@ feature {NONE} -- Implementation
 					if l_old_class /= Void then
 						System.set_current_class (l_old_class)
 					end
-					
+
 				end
 				if rout.is_function and not unprocessed_values.is_empty then
 					private_result := unprocessed_values.last
@@ -338,7 +341,7 @@ feature {NONE} -- Implementation
 					private_result.set_static_class (rout.type.associated_class)
 				end
 			end
-			
+
 				-- initialize item numbers
 			if args_list /= Void then
 				from
@@ -437,7 +440,7 @@ feature	{NONE} -- Initialization of the C/Eiffel interface
 feature {EIFFEL_CALL_STACK} -- Implementation
 
 	is_exhausted: BOOLEAN
-			-- Has all the elements of the calling stack been 
+			-- Has all the elements of the calling stack been
 			-- received ?
 
 feature {NONE} -- externals
@@ -450,13 +453,13 @@ feature {NONE} -- externals
 	c_pass_set_rout (d_rout: POINTER) is
 		external
 			"C"
-		end		
+		end
 
 invariant
 
-	non_empty_args_if_exists: private_arguments /= Void implies 
+	non_empty_args_if_exists: private_arguments /= Void implies
 				not private_arguments.is_empty
-	non_empty_locs_if_exists: private_locals /= Void implies 
+	non_empty_locs_if_exists: private_locals /= Void implies
 				not private_locals.is_empty
 	valid_level: level_in_stack >= 1
 
@@ -466,19 +469,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

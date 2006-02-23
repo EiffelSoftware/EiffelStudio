@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Constants for communication control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision $"
 
 class IPC_SHARED
- 
+
 feature {NONE} -- Request constants
 
 		-- Same as in file /ipc/shared/rqst_const.h
@@ -16,81 +16,87 @@ feature {NONE} -- Request constants
 	Rqst_hello: INTEGER is 4
 			-- Application's handshake with ewb
 
-	Rqst_inspect: INTEGER is 6
+	Rqst_inspect: INTEGER is 7
 			-- Object inspection
 
-	Rqst_dump: INTEGER is 7
+	Rqst_dump_threads: INTEGER is 8
+			-- Notification from Application.
+
+	Rqst_dump_stack: INTEGER is 9
 			-- A general stack dump request
 
-	Rqst_move: INTEGER is 9
-			-- Change active routine pointer
-
-	Rqst_break: INTEGER is 10
-			-- Add/delete breakpoint
-
-	Rqst_resume: INTEGER is 11
-			-- Resume execution
-
-	Rqst_quit: INTEGER is 12
-			-- Application must die immediately
-
-	Rqst_application: INTEGER is 14
-			-- Start up application (for ised)
-
-	Rqst_load: INTEGER is 19
-			-- Load byte code information
-
-	Rqst_bc: INTEGER is 20
-			-- Byte code transfer
-
-	Rqst_kill: INTEGER is 21
-			-- Kill application asynchronously
-
-	Rqst_adopt: INTEGER is 22
-			-- Adopt object
-
-	Rqst_access: INTEGER is 23
-			-- Access object through hector
-
-	Rqst_wean: INTEGER is 24
-			-- Wean adopted object
-
-	Rqst_once: INTEGER is 25
-			-- Once routines inspection
-
-	Rqst_interrupt: INTEGER is 26
-			-- Debugger asking interruption of application
-
-	Rqst_sp_lower: INTEGER is 30
-			-- Bounds for special objects inspection
-
-	Rqst_metamorphose: INTEGER is 31
-			-- Convert the top-level item on the operational stack from a basic type to a reference type.
-	
-	Rqst_new_breakpoint: INTEGER is 33
-			-- Debugger asking interruption of application in
-			-- order to take new breakpoint(s) into account.
-
-	Rqst_modify_local: INTEGER is 34
-			-- Debugger asking modification of a local item
-			-- (argument/local variable/result).
-
-	Rqst_modify_attr: INTEGER is 35
-			-- Debugger asking modification of an object attribute.
-
-	Rqst_dynamic_eval: INTEGER is 36
-			-- Debugger asking the application to evaluate a
-			-- given feature with the given parameters.
-
-	Rqst_dump_variables: INTEGER is 37
+	Rqst_dump_variables: INTEGER is 10
 			-- Dump variable for the current feature on stack.
 			-- Defined as DUMP_VARIABLE in run-time
 
-	Rqst_application_cwd: INTEGER is 38
+	Rqst_move: INTEGER is 12
+			-- Change active routine pointer
+
+	Rqst_break: INTEGER is 13
+			-- Add/delete breakpoint
+
+	Rqst_resume: INTEGER is 14
+			-- Resume execution
+
+	Rqst_quit: INTEGER is 15
+			-- Application must die immediately
+
+	Rqst_application: INTEGER is 17
+			-- Start up application (for ised)
+
+	Rqst_load: INTEGER is 22
+			-- Load byte code information
+
+	Rqst_bc: INTEGER is 23
+			-- Byte code transfer
+
+	Rqst_kill: INTEGER is 24
+			-- Kill application asynchronously
+
+	Rqst_adopt: INTEGER is 25
+			-- Adopt object
+
+	Rqst_access: INTEGER is 26
+			-- Access object through hector
+
+	Rqst_wean: INTEGER is 27
+			-- Wean adopted object
+
+	Rqst_once: INTEGER is 28
+			-- Once routines inspection
+
+	Rqst_interrupt: INTEGER is 29
+			-- Debugger asking interruption of application
+
+	Rqst_sp_lower: INTEGER is 33
+			-- Bounds for special objects inspection
+
+	Rqst_metamorphose: INTEGER is 34
+			-- Convert the top-level item on the operational stack from a basic type to a reference type.
+
+	Rqst_new_breakpoint: INTEGER is 36
+			-- Debugger asking interruption of application in
+			-- order to take new breakpoint(s) into account.
+
+	Rqst_modify_local: INTEGER is 37
+			-- Debugger asking modification of a local item
+			-- (argument/local variable/result).
+
+	Rqst_modify_attr: INTEGER is 38
+			-- Debugger asking modification of an object attribute.
+
+	Rqst_dynamic_eval: INTEGER is 39
+			-- Debugger asking the application to evaluate a
+			-- given feature with the given parameters.
+
+	Rqst_application_cwd: INTEGER is 40
 			-- Set current directory for application.
 
-	Rqst_overflow_detection: INTEGER is 39
+	Rqst_overflow_detection: INTEGER is 41
 			-- Set the call stack depth at which we warn the user.
+
+	Rqst_change_thread: INTEGER is 42
+			-- Set the thread id to inspect.
 
 feature {NONE} -- Resume
 
@@ -133,14 +139,20 @@ feature {NONE} -- Inspection constants
 	Out_called: INTEGER is 0
 			-- Check whether once routine has been called
 
-	Out_result: INTEGER is 1
-			-- Ask for result of already called once function
-
 	Out_index: INTEGER is 2
 			-- Ask for result of already called once function
-			
-	Out_data: INTEGER is 3
-			-- Ask for result of already called once function			
+
+	Out_data_per_thread: INTEGER is 3
+			-- Ask for result of already called once function per thread
+
+	Out_data_per_process: INTEGER is 4
+			-- Ask for result of already called once function per process
+
+	Out_once_per_thread: INTEGER is 0
+			-- Precised that once is per thread
+
+	Out_once_per_process: INTEGER is 1
+			-- Precised that once is per process
 
 feature {APPLICATION_STATUS} -- Implementation
 
@@ -174,12 +186,17 @@ feature {APPLICATION_STATUS} -- Implementation
 --	Args_stack: INTEGER is 4
 --	Vars_stack: INTEGER is 5
 --	Once_stack: INTEGER is 6
-	
-	
+
+
 -- Need to be updated.
 	Rqst_cont: INTEGER is 2
 	Rqst_step: INTEGER is 3
 	Rqst_next: INTEGER is 4
+
+feature {NONE} -- Notification event type (check eif_debug.h)
+
+	Notif_thr_created: INTEGER is 1
+	Notif_thr_exited: INTEGER is 2
 
 feature {NONE} -- For workbench responses.
 
@@ -191,7 +208,7 @@ feature {NONE} -- For workbench responses.
 	Rep_melt: INTEGER is 4
 	Rep_dead: INTEGER is 5
 	Rep_stopped: INTEGER is 6;
-
+	Rep_notified: INTEGER is 7;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -199,19 +216,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

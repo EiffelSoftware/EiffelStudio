@@ -5,13 +5,15 @@ class STOPPED_HDLR
 
 inherit
 
-	RQST_HANDLER
+	RQST_HANDLER_WITH_DATA
 
 	SHARED_DEBUG
 
 	OBJECT_ADDR
 
 	APPLICATION_STATUS_EXPORTER
+
+	REFACTORING_HELPER
 
 create
 
@@ -49,6 +51,7 @@ feature -- Execution
 			stopping_reason: INTEGER
 			exception_code: INTEGER
 			exception_tag: STRING
+			thr_id: INTEGER
 
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
@@ -60,53 +63,61 @@ feature -- Execution
 		do
 			if not retry_clause then
 				Application.on_application_before_stopped
-
-				debug ("DEBUGGER_TRACE")
-					io.error.put_string ("STOPPED_HDLR: Application is stopped - reading information from application%N")
+				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
+					io.error.put_string (generator + ": Application is stopped%N")
 				end
-
-				update_threads_info
 
 					--| Physical address of objects held in object tools
 					--| may have been change...
+				debug ("DEBUGGER_IPC")
+					io.error.put_string (generator + ": update kept objects addresses %N")
+				end
 				update_kept_objects_addresses
 
 					--|--------------------------------|--
 					--| Retrieve data sent by debuggee |--
 					--|--------------------------------|--
 
+				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
+					io.error.put_string (generator + ": reading information from application%N")
+				end
+
 					--| Reset pipe reader parsing
 				reset_parsing
 
 					--| Read feature name.
-				read_string;
-				feature_name := last_string;
+				read_string
+				feature_name := last_string
 
 					--| Read object address and convert it to hector address.
-				read_string;
-				address := keep_object_as_hector_address (last_string);
+				read_string
+				address := keep_object_as_hector_address (last_string)
 
 					--| Read origin of feature
-				read_int;
-				origine_type := last_int + 1;
+				read_integer
+				origine_type := last_integer + 1;
 
 					--| Read type of current object.
 					--| Note: the type id on the C side must be
 					--| incremented by one.
-				read_int;
-				dynamic_type := last_int + 1;
+				read_integer
+				dynamic_type := last_integer + 1;
 
 					--| Read offset in byte code.
-				read_int;
-				offset := last_int;
+				read_integer
+				offset := last_integer
+
+					--| Read thread id
+				read_integer
+				thr_id := last_integer
 
 					--| Read reason for stopping.
-				read_int;
-				stopping_reason := last_int;
+				read_integer
+				stopping_reason := last_integer
 
 					--| Read exception code.
-				read_int;
-				exception_code := last_int
+				read_integer
+				exception_code := last_integer
 
 					--| Read assertion tag.
 				read_string;
@@ -118,7 +129,7 @@ feature -- Execution
 					--| Now process stopped state  |--
 					--|----------------------------|--
 
-				debug ("DEBUGGER_TRACE")
+				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
 					io.error.put_string ("STOPPED_HDLR: Application is stopped - finished reading%N")
 					io.error.put_string ("              Setting app status for routine: ")
 					io.error.put_string (feature_name)
@@ -129,11 +140,21 @@ feature -- Execution
 				check
 					application_launched: l_status /= Void
 				end
+				if thr_id = 0 then
+						--| Since our version of HASH_TABLE does not allow to have default value as key
+						--| and thr_id may be zero only in non MT system
+						--| thus we can hack this with '1' as thread id.
+					thr_id := 1
+				end
 				l_status.set_is_stopped (True)
+				if not l_status.has_thread_id (thr_id) then
+					l_status.add_thread_id (thr_id)
+				end
+				l_status.set_current_thread_id (thr_id)
 				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
 				l_status.set_exception (exception_code, exception_tag)
 
-				debug ("DEBUGGER_TRACE")
+				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
 					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
 				end
 
@@ -222,83 +243,11 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	update_threads_info is
-			-- Update current threads information
-		local
-			s: APPLICATION_STATUS
-		do
-			s := application.status
-			if s /= Void and then s.current_thread_id = 0 then
-				s.set_current_thread_id (1) -- FIXME jfiat: fake Thread ID ... for now
-			end
-		end
-
 	cont_request: EWB_REQUEST is
 			-- Request to relaunch the application when needed.
 		once
 			create Result.make (Rqst_cont)
 		end
-
-feature {NONE} -- parsing features
-
-	position: INTEGER;
-			-- Position in parsed string
-
-	reset_parsing is
-		do
-			position := 1
-		end
-
-	last_string: STRING;
-			-- Last parsed string token
-
-	last_int: INTEGER;
-			-- Last parsed integer token
-
-	read_string is
-			-- Parse string token.
-		require
-			-- position < detail.count and
-			-- detail.substring (position, count).has ('%U')	
-		local
-			i: INTEGER;
-		do
-			i := index_of ('%U', position);
-			if i = 0 then i := detail.count + 1 end;
-			if i <= position then
-				last_string := ""
-			else
-				last_string := detail.substring (position, i - 1);
-			end;
-			position := i + 1;
-		end;
-
-	index_of (c: CHARACTER; pos: INTEGER): INTEGER is
-			-- position of first occurrence of c
-			-- after pos (included). 0 if none
-			--| should be in string
-		local
-			i: INTEGER
-		do
-			from
-				i := pos
-			until
-				i > detail.count or Result > 0
-			loop
-				if detail.item (i) = c then
-					Result := i
-				else
-					i := i + 1
-				end
-			end
-		end;
-
-	read_int is
-			-- Parse integer token.
-		do
-			read_string;
-			last_int := last_string.to_integer;
-		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -306,19 +255,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

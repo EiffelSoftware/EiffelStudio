@@ -19,18 +19,18 @@ inherit
 			set_current_thread_id,
 			thread_name, thread_priority
 		end
-		
+
 	SHARED_EIFNET_DEBUGGER
-	
-	SHARED_EIFNET_DEBUG_VALUE_FACTORY	
+
+	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 
 create {APPLICATION_EXECUTION}
 	make
-	
+
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 	set_top_level is -- (n: STRING; obj: STRING; ot, dt, offs, reas: INTEGER) is
-			-- Set the various attributes identifying current 
+			-- Set the various attributes identifying current
 			-- position in source code.
 		local
 			curr_mod_name: STRING
@@ -52,22 +52,22 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 					dyn_ctype := dbg_recorder.class_type_for_module_class_token (curr_mod_name, curr_ctok)
 					feat_i := dbg_recorder.feature_i_by_module_feature_token (curr_mod_name, curr_ftok)
 					if dyn_ctype /= Void then
-						dynamic_class := dyn_ctype.associated_class				
-				
+						dynamic_class := dyn_ctype.associated_class
+
 						if feat_i /= Void then
 							e_feature := feat_i.e_feature
 							origin_class := feat_i.written_class
 							body_index := e_feature.body_index
-			
-							curr_il_offset := curr_stack_info.current_il_offset			
+
+							curr_il_offset := curr_stack_info.current_il_offset
 							break_index := dbg_recorder.feature_eiffel_breakable_line_for_il_offset (dyn_ctype, feat_i, curr_il_offset)
 						end
-					end						
+					end
 				end
-				object_address := curr_stack_info.current_stack_address					
+				object_address := curr_stack_info.current_stack_address
 			end
 		end
-	
+
 feature -- Update
 
 	exception_debug_value: ABSTRACT_DEBUG_VALUE is
@@ -100,14 +100,14 @@ feature -- Update
 		do
 			Result := Eifnet_debugger.last_exception_is_handled
 		end
-		
+
 	exception_class_name: STRING is
 			-- Exception class name
 		require
 			exception_occurred: exception_occurred
 		do
 			Result := Eifnet_debugger.exception_class_name
-		end		
+		end
 
 	exception_module_name: STRING is
 			-- Exception module name
@@ -124,7 +124,7 @@ feature -- Update
 		do
 			Result := Eifnet_debugger.exception_to_string
 		end
-		
+
 	exception_message: STRING is
 			-- Exception "GetMessage" output
 		require else
@@ -142,12 +142,12 @@ feature -- Update
 				exception_tag := Void
 			end
 		end
-		
+
 feature -- Values
 
 	is_evaluating: BOOLEAN
 			-- Is the debugged application evaluating expression ?	
-		
+
 feature -- Changes
 
 	set_is_evaluating (b: BOOLEAN) is
@@ -156,9 +156,9 @@ feature -- Changes
 			is_evaluating := b
 			Eifnet_debugger.info.set_is_evaluating (b) -- For optimization purpose
 		end
-		
+
 feature -- Output
-	
+
 	display_status (st: STRUCTURED_TEXT) is
 			-- Display status of debugged system
 		do
@@ -183,7 +183,7 @@ feature -- Thread info
 			Precursor {APPLICATION_STATUS} (tid)
 			Eifnet_debugger.info.set_last_icd_thread_id (tid)
 		end
-		
+
 	refresh_current_thread_id is
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
@@ -213,7 +213,7 @@ feature -- Thread info
 				Result := Precursor (a_id)
 			end
 		end
-		
+
 	thread_priority	(a_id: like current_thread_id): INTEGER is
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
@@ -225,8 +225,8 @@ feature -- Thread info
 			else
 				Result := Precursor (a_id)
 			end
-		end		
-		
+		end
+
 feature -- Call stack related
 
 	current_call_stack: EIFFEL_CALL_STACK_DOTNET
@@ -245,9 +245,9 @@ feature {NONE} -- CallStack Impl
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 		do
 			clean_current_call_stack
-			create Result.make (a_stack_max_depth)
+			create Result.make (a_stack_max_depth, current_thread_id)
 		end
-			
+
 	current_call_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed
 		local
@@ -257,7 +257,7 @@ feature {NONE} -- CallStack Impl
 			ccs := current_call_stack
 			cesn := Application.current_execution_stack_number
 			if ccs.valid_index (cesn) then
-				Result := ccs.i_th (cesn)				
+				Result := ccs.i_th (cesn)
 			end
 		end
 
@@ -268,7 +268,7 @@ feature -- Values
 		do
 			Result ?= current_call_stack_element
 		end
-		
+
 feature -- Reason for stopping
 
 	set_reason (val: like reason) is
@@ -278,7 +278,7 @@ feature -- Reason for stopping
 		ensure
 			valid_reason
 		end
-		
+
 	set_reason_as_break is
 		do
 			set_reason ({IPC_SHARED}.Pg_break)
@@ -287,27 +287,27 @@ feature -- Reason for stopping
 	set_reason_as_interrupt is
 		do
 			set_reason ({IPC_SHARED}.Pg_interrupt)
-		end		
-		
+		end
+
 	set_reason_as_raise is
 		do
 			set_reason ({IPC_SHARED}.Pg_raise)
-		end		
+		end
 
 	set_reason_as_viol is
 		do
 			set_reason ({IPC_SHARED}.Pg_viol)
-		end		
-		
+		end
+
 	set_reason_as_new_breakpoint is
 		do
 			set_reason ({IPC_SHARED}.Pg_new_breakpoint)
-		end	
-		
+		end
+
 	set_reason_as_step is
 		do
 			set_reason ({IPC_SHARED}.Pg_step)
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -315,19 +315,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

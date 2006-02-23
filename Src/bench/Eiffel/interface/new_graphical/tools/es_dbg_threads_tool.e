@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 		local
 			box: EV_VERTICAL_BOX
 		do
+			create nota_on_threads.make (3)
+
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color)
 
@@ -58,12 +60,13 @@ feature {NONE} -- Initialization
 			create grid
 			grid.enable_single_row_selection
 			grid.enable_border
-			grid.set_column_count_to (3)
+			grid.set_column_count_to (4)
 			grid.column (1).set_title ("Id")
 			grid.column (2).set_title ("Name")
 			grid.column (3).set_title ("Priority")
+			grid.column (4).set_title ("Nota")
 
-			grid.pointer_double_press_actions.force_extend (agent on_row_double_clicked)
+			grid.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
 			grid.set_auto_resizing_column (1, True)
 			grid.set_auto_resizing_column (2, True)
 
@@ -145,14 +148,26 @@ feature -- Status setting
 			end
 		end
 
-	on_row_double_clicked is
+	on_item_double_clicked (ax,ay,abut: INTEGER; gi:EV_GRID_ITEM) is
 		local
-			row: EV_GRID_ROW
+			gedit: EV_GRID_EDITABLE_ITEM
+		do
+			if gi /= Void and then gi.parent /= Void then
+				gedit ?= gi
+				if gedit /= Void then
+					gedit.activate
+				else
+					on_row_double_clicked (gi.row)
+				end
+			end
+		end
+
+	on_row_double_clicked (a_row: EV_GRID_ROW) is
+		local
 			ir: INTEGER_REF
 		do
-			row := selected_row
-			if row /= Void then
-				ir ?= row.data
+			if a_row /= Void then
+				ir ?= a_row.data
 				if ir /= Void then
 					set_callstack_thread (ir.item)
 				end
@@ -162,9 +177,7 @@ feature -- Status setting
 	set_callstack_thread (tid: INTEGER) is
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
-			if application.status.current_thread_id /= tid then
-				application.status.set_current_thread_id (tid)
-				application.status.reload_current_call_stack
+			if Debugger_manager.application_current_thread_id /= tid then
 				Debugger_manager.set_current_thread_id (tid)
 			end
 		end
@@ -211,6 +224,7 @@ feature -- Memory management
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end
+			nota_on_threads.wipe_out
 		end
 
 feature {NONE} -- Implementation
@@ -246,10 +260,10 @@ feature {NONE} -- Implementation
 			r: INTEGER
 			row: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
+			gedit: EV_GRID_EDITABLE_ITEM
 
 			tid: INTEGER
-			i: INTEGER
-			arr: ARRAY [INTEGER]
+			arr: LIST [INTEGER]
 			l_status: APPLICATION_STATUS
 			s: STRING
 			prio: INTEGER
@@ -260,14 +274,27 @@ feature {NONE} -- Implementation
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then
 					from
+						nota_on_threads.start
+					until
+						nota_on_threads.after
+					loop
+						tid := nota_on_threads.key_for_iteration
+						if not arr.has (tid) then
+							if nota_on_threads.valid_key (tid) then
+								nota_on_threads.remove (tid)
+							end
+						end
+						nota_on_threads.forth
+					end
+					from
 						grid.insert_new_rows (arr.count, 1)
 						r := 1
-						i := arr.lower
+						arr.start
 					until
-						i > arr.upper
+						arr.after
 					loop
 						row := grid.row (r)
-						tid := arr @ i
+						tid := arr.item
 						create lab.make_with_text ("0x" + tid.to_hex_string)
 						row.set_item (1, lab)
 						if tid = l_status.current_thread_id then
@@ -278,7 +305,7 @@ feature {NONE} -- Implementation
 						if s /= Void then
 							create lab.make_with_text (s)
 						else
-							create lab.make_with_text ("")
+							create lab
 						end
 						row.set_item (2, lab)
 
@@ -286,13 +313,21 @@ feature {NONE} -- Implementation
 						if prio > 0 then
 							create lab.make_with_text (prio.out)
 						else
-							create lab.make_with_text ("")
+							create lab
 						end
 						row.set_item (3, lab)
 
+						if nota_on_threads.has (tid) then
+							create gedit.make_with_text (nota_on_threads.item (tid))
+						else
+							create gedit
+						end
+						gedit.deactivate_actions.extend (agent update_nota_from_item (gedit))
+						row.set_item (4, gedit)
+
 						row.set_data (tid)
 						r := r + 1
-						i := i + 1
+						arr.forth
 					end
 				else
 					grid.insert_new_row (1)
@@ -301,11 +336,27 @@ feature {NONE} -- Implementation
 				end
 			else
 				grid.insert_new_row (1)
-				create lab.make_with_text ("Sorry no information available on Threads for now")
+				create lab.make_with_text ("Sorry no information when the application is not stopped")
 				grid.set_item (1, 1, lab)
 			end
 			grid.request_columns_auto_resizing
 		end
+
+feature {NONE} -- Implementation nota
+
+	update_nota_from_item (gi: EV_GRID_EDITABLE_ITEM) is
+		local
+			tid: INTEGER_REF
+		do
+			if gi /= Void and then gi.parent /= Void and then gi.row /= Void then
+				tid ?= gi.row.data
+				if tid /= Void then
+					nota_on_threads.force (gi.text, tid.item)
+				end
+			end
+		end
+
+	nota_on_threads: HASH_TABLE [STRING, INTEGER]
 
 feature {NONE} -- Implementation, cosmetic
 
@@ -322,19 +373,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

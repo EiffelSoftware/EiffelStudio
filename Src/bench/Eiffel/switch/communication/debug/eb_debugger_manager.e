@@ -13,7 +13,8 @@ inherit
 
 	DEBUGGER_MANAGER
 		redefine
-			make
+			make,
+			set_current_thread_id
 		end
 
 	EB_CONSTANTS
@@ -653,7 +654,7 @@ feature -- Status setting
 			debug_splitter_position := debugging_window.panel.split_position
 
 			objects_tool.save_grids_preferences
-			
+
 			split ?= objects_tool.widget
 			if split /= Void then
 				objects_split_proportion := split.split_position / split.width
@@ -752,6 +753,7 @@ feature -- Status setting
 	set_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
 		do
+			Precursor (tid)
 			if raised then
 				call_stack_tool.update
 				threads_tool.update
@@ -846,7 +848,7 @@ feature -- Debugging events
 			-- occurred
 		local
 			status: APPLICATION_STATUS
-			call_stack_elem	: CALL_STACK_ELEMENT
+--			call_stack_elem	: CALL_STACK_ELEMENT
 		do
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_before_stopped %N")
@@ -859,7 +861,7 @@ feature -- Debugging events
 
 					-- Display the callstack, the current object & the current stop point.
 				Application.set_current_execution_stack_number (1)	-- go on top of stack
-				call_stack_elem := status.current_call_stack_element
+--				call_stack_elem := status.current_call_stack_element
 --				if call_stack_elem /= Void then
 ----					Project_tool.show_current_stoppoint
 ----					Project_tool.show_current_object

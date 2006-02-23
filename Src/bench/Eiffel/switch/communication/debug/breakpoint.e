@@ -28,25 +28,29 @@ inherit
 			is_equal
 		end
 
+	COMPILER_EXPORTER
+		redefine
+			is_equal
+		end
+
 create
 	make
 
 feature -- Creation
 
-	make (given_feature: E_FEATURE; given_breakable_line_number: INTEGER) is 
+	make (given_feature: E_FEATURE; given_breakable_line_number: INTEGER) is
 			-- Create a breakpoint in the feature `given_feature'
 			-- at the line `given_breakable_line_number'.
 		require
-			valid_breakpoint: 	given_feature /= Void and then 
-								given_breakable_line_number>0 and then 
-								given_feature.real_body_id /= 0
+			valid_breakpoint: 	given_feature /= Void and then
+								given_breakable_line_number > 0 and then
+								given_feature.body_index /= 0
 		do
 			if not is_corrupted then
 				breakable_line_number := given_breakable_line_number
 				routine := given_feature
 				application_status := Application_breakpoint_not_set
 				bench_status := Bench_breakpoint_set
-				real_body_id := routine.real_body_id
 				body_index := routine.body_index
 			end
 		rescue
@@ -87,27 +91,56 @@ feature -- Properties
 	routine: E_FEATURE
 			-- Feature where this breakpoint is situated.
 
-	real_body_id: INTEGER
-			-- `real_body_id' of the feature where this breakpoint is situated.
-
 	body_index: INTEGER
 			-- `body_index' of the feature where this breakpoint is situated
 
 	bench_status: INTEGER
 			-- Current status within $EiffelGraphicalCompiler$.
 			--
-			-- See the private constants at the end of the class to see the 
+			-- See the private constants at the end of the class to see the
 			-- different possible values taken.
 
 	application_status: INTEGER
 			-- Last status sent to the application, this is the current
 			-- status of this breakpoint from the application point of view
 			--
-			-- See the private constants at the end of the class to see the 
+			-- See the private constants at the end of the class to see the
 			-- different possible values taken.
 
 	condition: EB_EXPRESSION
 			-- Condition to stop.
+
+feature -- Query
+
+	real_body_ids_list: LIST [INTEGER] is
+		local
+			l_class_c: CLASS_C
+			l_class_type_list: LIST [CLASS_TYPE]
+			l_class_type: CLASS_TYPE
+			fi: FEATURE_I
+			lcurs: CURSOR
+		do
+			fi := routine.associated_feature_i
+			l_class_type_list := class_type_list
+			create {ARRAYED_LIST [INTEGER]} Result.make (l_class_type_list.count)
+			lcurs := l_class_type_list.cursor
+			from
+				l_class_type_list.start
+			until
+				l_class_type_list.after
+			loop
+				Result.extend (fi.real_body_id (l_class_type_list.item))
+				l_class_type_list.forth
+			end
+			if l_class_type_list.valid_cursor (lcurs) then
+				l_class_type_list.go_to (lcurs)
+			end
+		end
+
+	class_type_list: LIST [CLASS_TYPE] is
+		do
+			Result := routine.written_class.types
+		end
 
 feature -- Access
 
@@ -117,11 +150,11 @@ feature -- Access
 			Result := body_index * 100 + breakable_line_number
 				-- here we take the absolute value of the
 				-- result if  an overflow occurred
-			if Result<0 then
+			if Result < 0 then
 				Result := - Result
 			end
 		end
-	
+
 	is_not_usefull: BOOLEAN is
 			-- Is the structure still usefull?
 			--
@@ -141,7 +174,7 @@ feature -- Access
 			-- Is using `Current' safe?
 		do
 			Result := 	not is_corrupted and routine /= Void
-						and then routine.written_class /= Void 
+						and then routine.written_class /= Void
 						and then routine.is_debuggable
 						and then same_feature (routine, routine.associated_class.feature_with_rout_id (routine.rout_id_set.first))
 		end
@@ -163,13 +196,13 @@ feature -- Access
 		do
 			Result := (bench_status = Bench_breakpoint_set)
 		end
-	
+
 	has_condition: BOOLEAN is
 			-- Is `Current' a conditional breakpoint?
 		do
 			Result := condition /= Void
 		end
-	
+
 	trace is
 			-- Display the status of this breakpoint.
 			-- Note: Should only be called in Debug mode.
@@ -185,7 +218,7 @@ feature -- Access
 			io.put_string (" @")
 			io.put_integer (breakable_line_number)
 			io.put_new_line
-			
+
 			io.put_string ("%Tbench status: ")
 			inspect bench_status
 			when Bench_breakpoint_set then
@@ -195,7 +228,7 @@ feature -- Access
 			when Bench_breakpoint_not_set then
 				io.put_string ("not set%N")
 			end
-		
+
 			io.put_string ("%Tapplication status: ")
 			inspect application_status
 			when Application_breakpoint_set then
@@ -209,7 +242,7 @@ feature -- Setting
 
 	discard is
 			-- Set the breakpoint to be removed.
-		do	
+		do
 			bench_status := Bench_breakpoint_not_set
 			condition := Void
 		ensure
@@ -225,7 +258,7 @@ feature -- Setting
 		end
 
 	switch is
-			-- Set the breakpoint if it was not set, and 
+			-- Set the breakpoint if it was not set, and
 			-- discard it if it was set.
 			-- If the breakpoint is disabled, enable it.
 		do
@@ -264,7 +297,7 @@ feature -- Setting
 	update_status: INTEGER is
 			-- Update the status between Bench and the application.
 			--
-			-- See the public constants below to see the 
+			-- See the public constants below to see the
 			-- different possible value taken.
 		do
 			Result := Breakpoint_do_nothing
@@ -278,7 +311,7 @@ feature -- Setting
 					when Bench_breakpoint_not_set then
 						-- bench breakpoint is not set, application breakpoint is set
 						Result := Breakpoint_to_remove
-	
+
 					when Bench_breakpoint_disabled then
 						if application_status = Application_breakpoint_set then
 							-- bench breakpoint is disabled but application breakpoint is set
@@ -292,7 +325,7 @@ feature -- Setting
 	synchronize is
 			-- Resychronize the breakpoint after a recompilation.
 		local
-			invalid_breakpoint: BOOLEAN 
+			invalid_breakpoint: BOOLEAN
 		do
 			if not invalid_breakpoint then
 				-- update the feature
@@ -303,7 +336,6 @@ feature -- Setting
 							-- Update `real_body_id' since it may have changed
 							-- during recompilation (`body_index' is not supposed to change but
 							-- we update it as well in case of)
-						real_body_id := routine.real_body_id -- update the real_body_id as well
 						body_index := routine.body_index -- update the body_index as well
 						if condition /= Void then
 							condition.recycle
@@ -333,7 +365,7 @@ feature -- Setting
 				-- The synchronization of the breakpoint has failed.
 				-- We declare the breakpoint as "invalid".
 			invalid_breakpoint := True
-			retry			
+			retry
 		end
 
 	set_condition (expr: EB_EXPRESSION) is
@@ -389,7 +421,7 @@ feature -- Comparison
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
-			-- have the same `body_index' and `offset'. 
+			-- have the same `body_index' and `offset'.
 			-- We use 'body_index' because it does not change after
 			-- a recompilation
 		do
@@ -417,19 +449,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

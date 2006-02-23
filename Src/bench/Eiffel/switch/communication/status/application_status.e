@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create Current
 		do
+			debug ("debugger_trace")
+				print (generator + ".make %N")
+			end
 			initialize
 		end
 
@@ -51,7 +54,6 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		do
 			create_kept_objects
-
 			reset_call_stack_list
 		end
 
@@ -221,10 +223,19 @@ feature -- Call Stack related
 	current_call_stack: EIFFEL_CALL_STACK
 			-- Current Call Stack regarding Thread Id.
 
+	has_call_stack_by_thread_id (tid: INTEGER): BOOLEAN is
+		do
+			Result := call_stack_list.has (tid)
+		end
+
 	get_current_call_stack is
 			-- set `current_call_stack' value
+		require
+			current_thread_id_valid: has_call_stack_by_thread_id (current_thread_id)
 		do
 			current_call_stack := call_stack (current_thread_id)
+		ensure
+			current_call_stack /= Void
 		end
 
 	stack_max_depth: INTEGER
@@ -234,6 +245,8 @@ feature -- Call Stack element related
 
 	current_call_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed.
+		require
+			current_call_stack /= Void
 		do
 			Result := current_call_stack.i_th (Application.current_execution_stack_number)
 		end
@@ -243,7 +256,7 @@ feature -- Thread related access
 	current_thread_id: INTEGER
 			-- Thread ID of the Current call stack.
 
-	all_thread_ids: ARRAY [INTEGER]
+	all_thread_ids: ARRAYED_LIST [INTEGER]
 			-- All available threads' ids
 
 	all_thread_ids_count: INTEGER
@@ -261,11 +274,17 @@ feature -- Thread related change
 	set_call_stack (tid: INTEGER; ecs: like current_call_stack) is
 			-- Associate `ecs' with thread id `tid'
 		require
-			id_valid: tid > 0
+			id_valid: tid >= 0
 			callstack_not_void: ecs /= Void
 		do
 			call_stack_list.force (ecs, tid)
+				--| Update in case the current call stack's object changed
 			get_current_call_stack
+		end
+
+	has_thread_id (tid: INTEGER): BOOLEAN is
+		do
+			Result := all_thread_ids /= Void and then all_thread_ids.has (tid)
 		end
 
 	refresh_current_thread_id is
@@ -276,19 +295,65 @@ feature -- Thread related change
 	set_current_thread_id (tid: INTEGER) is
 			-- Set current thread id, and refresh `current_call_stack'
 		require
-			id_valid: tid > 0
+			id_valid: has_thread_id (tid)
 		do
+			debug ("DEBUGGER_TRACE")
+				print (generator + ".set_current_thread_id (" + tid.out + " ~ 0x" + tid.to_hex_string + ") %N")
+			end
 			current_thread_id := tid
-			get_current_call_stack
+			if has_call_stack_by_thread_id (current_thread_id) then
+				get_current_call_stack
+			end
 		end
 
-	set_thread_ids (a: ARRAY [INTEGER]) is
-			-- set thread's ids with `a'
-		require
-			a_not_empty: a /= Void and then not a.is_empty
+	switch_to_current_thread_id	is
+			-- Switch debugger context thread id to `current_thread_id'.
 		do
-			all_thread_ids := a.twin
+			--| Mainly use for Classical debugger purpose
+		end
+
+--	set_thread_ids (a: ARRAY [INTEGER]) is
+--			-- set thread's ids with `a'
+--		require
+--			a_not_empty: a /= Void and then not a.is_empty
+--		do
+--			create all_thread_ids.make_from_array (a)
+--			refresh_threads_information
+--		end
+
+	add_thread_id (tid: INTEGER) is
+		require
+			all_thread_ids = Void or else not all_thread_ids.has (tid)
+		do
+			if all_thread_ids = Void then
+				create all_thread_ids.make (5)
+			end
+			all_thread_ids.force (tid)
+			refresh_threads_information
+		ensure
+			all_thread_ids.has (tid)
+		end
+
+	remove_thread_id (tid: INTEGER) is
+		require
+			all_thread_ids.has (tid)
+		do
+			all_thread_ids.prune_all (tid)
+			refresh_threads_information
+		ensure
+			not all_thread_ids.has (tid)
+		end
+
+	refresh_threads_information is
+		do
 			all_thread_ids_count := all_thread_ids.count
+			from
+				all_thread_ids.start
+			until
+				all_thread_ids.after
+			loop
+				all_thread_ids.forth
+			end
 		end
 
 feature {NONE} -- Call stack implementation
@@ -302,11 +367,9 @@ feature {NONE} -- Call stack implementation
 	call_stack (tid: INTEGER): like current_call_stack is
 			-- Call stack associated with thread id `tid'.
 		do
-			if tid > 0 then
-				Result := call_stack_list.item (tid)
-			end
+			Result := call_stack_list.item (tid)
 		ensure
-			Result /= Void implies tid > 0
+			Result /= Void implies call_stack_list.has (tid)
 		end
 
 	call_stack_list: HASH_TABLE [like current_call_stack, INTEGER]
@@ -548,19 +611,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

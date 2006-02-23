@@ -718,8 +718,13 @@ feature {NONE} -- Implementation
 
 	current_stack_element: CALL_STACK_ELEMENT is
 			-- Stack element currently displayed in `stack_objects_grid'.
+		local
+			l_status: APPLICATION_STATUS
 		do
-			Result := application.status.current_call_stack_element
+			l_status := application.status
+			if l_status.current_call_stack /= Void then
+				Result := l_status.current_call_stack_element
+			end
 		end
 
 	split: EV_HORIZONTAL_SPLIT_AREA

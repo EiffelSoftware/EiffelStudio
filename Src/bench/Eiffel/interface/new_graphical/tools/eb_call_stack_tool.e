@@ -312,11 +312,8 @@ feature -- Status setting
 		local
 			s: APPLICATION_STATUS
 		do
-				-- FIXME jfiat: check what happens if the application is not stopped ?
-			s := eb_debugger_manager.application.status
-			if s.current_thread_id /= tid then
-				s.set_current_thread_id (tid)
-				s.reload_current_call_stack
+			if debugger_manager.application_current_thread_id /= tid then
+				debugger_manager.set_current_thread_id (tid)
 				update
 			end
 		end
@@ -531,6 +528,9 @@ feature {NONE} -- Implementation
 							end
 							i := i + 1
 							stack.forth
+						end
+						if l_status.is_stopped then
+							select_element_by_level (1)
 						end
 					else
 						l_tooltipable_grid_row := stack_grid.grid_extended_new_row (stack_grid)
@@ -986,8 +986,7 @@ feature {NONE} -- Implementation
 			m: EV_MENU
 			mi: EV_MENU_ITEM
 			tid: INTEGER
-			i: INTEGER
-			arr: ARRAY [INTEGER]
+			arr: LIST [INTEGER]
 			wd: EV_WARNING_DIALOG
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
@@ -1003,11 +1002,11 @@ feature {NONE} -- Implementation
 					m.extend (create {EV_MENU_SEPARATOR})
 
 					from
-						i := arr.lower
+						arr.start
 					until
-						i > arr.upper
+						arr.after
 					loop
-						tid := arr @ i
+						tid := arr.item
 						l_item_text := "0x" + tid.to_hex_string
 						s := l_status.thread_name (tid)
 						if s /= Void then
@@ -1022,7 +1021,7 @@ feature {NONE} -- Implementation
 						mi.set_data (tid)
 						mi.select_actions.extend (agent set_callstack_thread (tid))
 						m.extend (mi)
-						i := i + 1
+						arr.forth
 					end
 					m.show_at (lab, 0, thread_id.height)
 				else
@@ -1189,19 +1188,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

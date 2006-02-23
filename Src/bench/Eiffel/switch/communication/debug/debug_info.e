@@ -307,13 +307,13 @@ feature -- changing breakpoints for a feature
 	remove_breakpoints_in_feature(f: E_FEATURE) is
 			-- remove all breakpoints set for feature 'f'
 		local
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			bp: BREAKPOINT
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
@@ -323,7 +323,7 @@ feature -- changing breakpoints for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.discard
 					end
 					breakpoints.forth
@@ -339,13 +339,13 @@ feature -- changing breakpoints for a feature
 	disable_breakpoints_in_feature(f: E_FEATURE) is
 			-- disable all breakpoints set for feature 'f'
 		local
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			bp: BREAKPOINT
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
@@ -355,7 +355,7 @@ feature -- changing breakpoints for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.disable
 					end
 					breakpoints.forth
@@ -371,13 +371,13 @@ feature -- changing breakpoints for a feature
 	enable_breakpoints_in_feature(f: E_FEATURE) is
 			-- enable all breakpoints set for feature 'f'
 		local
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			bp: BREAKPOINT
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
@@ -387,7 +387,7 @@ feature -- changing breakpoints for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						bp.enable
 					end
 					breakpoints.forth
@@ -458,13 +458,13 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			create {LINKED_SET [INTEGER]} Result.make
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint set in this feature
@@ -474,7 +474,7 @@ feature -- getting breakpoints status for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_set then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_set then
 						Result.extend(bp.breakable_line_number)
 					end
 					breakpoints.forth
@@ -483,7 +483,7 @@ feature -- getting breakpoints status for a feature
 		ensure
 			non_void: Result /= Void
 		rescue
-			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
 				breakpoints.start
@@ -509,13 +509,13 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint disabled in this feature
@@ -525,7 +525,7 @@ feature -- getting breakpoints status for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_disabled then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_disabled then
 						Result.extend(bp.breakable_line_number)
 					end
 					breakpoints.forth
@@ -534,7 +534,7 @@ feature -- getting breakpoints status for a feature
 		ensure
 			non_void: Result /= Void
 		rescue
-			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
 				breakpoints.start
@@ -560,13 +560,13 @@ feature -- getting breakpoints status for a feature
 			f_is_debuggable: f.is_debuggable
 		local
 			bp: BREAKPOINT
-			f_real_body_id: INTEGER
+			f_body_index: INTEGER
 			retried: BOOLEAN
 		do
 			error_in_bkpts := False
 			create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
 			if not retried then
-				f_real_body_id := f.real_body_id
+				f_body_index := f.body_index
 
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint enabled in this feature
@@ -576,7 +576,7 @@ feature -- getting breakpoints status for a feature
 					breakpoints.after
 				loop
 					bp := breakpoints.item_for_iteration
-					if bp.real_body_id.is_equal(f_real_body_id) and then bp.is_enabled then
+					if bp.body_index.is_equal(f_body_index) and then bp.is_enabled then
 						Result.extend(bp.breakable_line_number)
 					end
 					breakpoints.forth
@@ -585,7 +585,7 @@ feature -- getting breakpoints status for a feature
 		ensure
 			non_void: Result /= Void
 		rescue
-			-- It's likely that we have not been able to compute `real_body_id' for `f'.
+			-- It's likely that we have not been able to compute `body_index' for `f'.
 			-- We will remove all breakpoints corresponding to the feature `f'.
 			from
 				breakpoints.start
@@ -758,7 +758,7 @@ feature -- changing a specified breakpoint
 		do
 			error_in_bkpts := False
 
-			if f.real_body_id /= 0 then
+			if f.body_index /= 0 then
 					-- create a 'fake' breakpoint, in order to get the real one in hash table
 				create bp.make (f, i)
 			end
@@ -1072,19 +1072,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

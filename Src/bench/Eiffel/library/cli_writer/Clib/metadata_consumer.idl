@@ -8,8 +8,10 @@
 ]
 library EiffelSoftware_MetadataConsumer
 {
+    // TLib :     // TLib : Common Language Runtime Library : {BED7F4EA-1A96-11D2-8F08-00A0C9A6186D}
+    importlib("mscorlib.tlb");
     // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
-    importlib("STDOLE2.TLB");
+    importlib("stdole2.tlb");
 
     // Forward declare all types defined in this typelib
     interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
@@ -100,10 +102,11 @@ library EiffelSoftware_MetadataConsumer
     };
 
     [
-      uuid(E1FFE1AC-B1AC-436F-948D-20B62A3A87AF),
+      uuid(E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F),
       version(1.0)
     ]
     coclass EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER {
+        interface _Object;
         [default] interface EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER;
     };
 };

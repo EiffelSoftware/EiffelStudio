@@ -119,8 +119,13 @@ feature -- Basic Exportations
 			current_initialized: is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
+		local
+			l_ca: CONSUMED_ASSEMBLY
 		do
-			create Result.make (implementation.assembly_info_from_path (a_path))
+			l_ca := implementation.assembly_info_from_path (a_path)
+			if l_ca /= Void then
+				create Result.make (l_ca)
+			end
 		end
 
 	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
@@ -134,9 +139,12 @@ feature -- Basic Exportations
 			not_a_cultureis_empty: a_culture /= Void implies a_culture.length > 0
 			not_a_name_is_empty: a_key /= Void implies a_key.length > 0
 		local
-			l_impl: MARSHAL_CACHE_MANAGER
+			l_ca: CONSUMED_ASSEMBLY
 		do
-			create Result.make (implementation.assembly_info (a_name, a_version, a_culture, a_key))
+			l_ca := implementation.assembly_info (a_name, a_version, a_culture, a_key)
+			if l_ca /= Void then
+				create Result.make (l_ca)
+			end
 		end
 
 	prepare_for_unload is

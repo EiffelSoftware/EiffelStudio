@@ -2420,6 +2420,8 @@ feature -- Implementation
 					-- Cannot go on here.
 				error_handler.raise_error
 			end
+			l_as.set_class_id (l_last_class.class_id)
+			l_as.set_routine_ids (l_prefix_feature.rout_id_set)
 
 				-- Export validity
 			if
@@ -2532,6 +2534,7 @@ feature -- Implementation
 			l_saved_vaol_check: BOOLEAN
 			l_expr: EXPR_B
 			l_un_old: UN_OLD_B
+			l_type_a: TYPE_A
 		do
 			if not is_checking_postcondition then
 					-- Old expression found somewhere else that in a
@@ -2572,6 +2575,12 @@ feature -- Implementation
 				end
 				old_expressions.put_front (l_un_old)
 				last_byte_node := l_un_old
+			end
+			l_type_a := constrained_type (last_type.actual_type)
+			if not l_type_a.is_none then
+				l_as.set_class_id (l_type_a.associated_class.class_id)
+			else
+				l_as.set_class_id (-1)
 			end
 
 			if not l_saved_vaol_check then
@@ -2850,6 +2859,7 @@ feature -- Implementation
 			l_binary: BINARY_B
 			l_vweq: VWEQ
 			l_needs_byte_node: BOOLEAN
+			l_type_a: TYPE_A
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -2858,6 +2868,13 @@ feature -- Implementation
 			l_left_type := last_type
 			if l_needs_byte_node then
 				l_left_expr ?= last_byte_node
+			end
+
+			l_type_a := constrained_type (l_left_type.actual_type)
+			if not l_type_a.is_none then
+				l_as.set_class_id (l_type_a.associated_class.class_id)
+			else
+				l_as.set_class_id (-1)
 			end
 
 				-- Then type check the right member
@@ -2965,6 +2982,8 @@ feature -- Implementation
 				error_handler.insert_error (vwbr)
 				error_handler.raise_error
 			end
+			l_as.set_class_id (target_class.class_id)
+			l_as.set_routine_ids (bracket_feature.rout_id_set)
 
 				-- Process arguments
 			create id_feature_name.initialize (bracket_feature.feature_name)

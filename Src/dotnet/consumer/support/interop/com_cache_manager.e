@@ -7,7 +7,7 @@ indexing
 	class_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-B1AC-436F-948D-20B62A3A87AF") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F") end
 
 class
 	COM_CACHE_MANAGER
@@ -37,10 +37,10 @@ feature -- Access
 
 	is_successful: BOOLEAN
 			-- Was the consuming successful?
-		
-	is_initialized: BOOLEAN 
+
+	is_initialized: BOOLEAN
 			-- has COM object been initialized?
-			
+
 	last_error_message: SYSTEM_STRING
 			-- Last error message
 
@@ -55,7 +55,7 @@ feature -- Basic Exportations
 			create l_sub.make
 			create l_resolver.make_with_name ("Initializing Resolver")
 			l_sub.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
-		
+
 			clr_version := a_clr_version
 
 				-- Turn of all security to prevent any security exceptions
@@ -63,7 +63,7 @@ feature -- Basic Exportations
 
 			is_initialized := True
 		end
-		
+
 	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		local
@@ -80,7 +80,7 @@ feature -- Basic Exportations
 			end
 			is_initialized := True
 		end
-		
+
 	unload is
 			-- unloads initialized app domain and cache releated objects to preserve resources
 		local
@@ -102,38 +102,38 @@ feature -- Basic Exportations
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do				
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			l_impl.consume_assembly (a_name, a_version, a_culture, a_key)
 			update_current (l_impl)
 		end
-		
+
 	consume_assembly_from_path (a_path: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do			
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			l_impl.consume_assembly_from_path (a_path)
 			update_current (l_impl)
 		end
-		
+
 	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
 			-- returns the relative path to an assembly using at least `a_name'
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do			
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.relative_folder_name (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
 		end
-		
+
 	relative_folder_name_from_path (a_path: SYSTEM_STRING): SYSTEM_STRING is
 			-- Relative path to consumed assembly metadata given `a_path'
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do			
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.relative_folder_name_from_path (a_path)
 
@@ -144,7 +144,7 @@ feature -- Basic Exportations
 			-- retrieve a local assembly's information
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do		
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.assembly_info_from_path (a_path)
 
@@ -155,7 +155,7 @@ feature -- Basic Exportations
 			-- retrieve a assembly's information
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
-		do		
+		do
 			l_impl ?= new_marshalled_cache_manager.unwrap
 			Result := l_impl.assembly_info (a_name, a_version, a_culture, a_key)
 
@@ -173,8 +173,8 @@ feature {NONE} -- Implementation
 		do
 			is_successful := a_impl.is_successful
 			last_error_message := a_impl.last_error_message
-		end	
-	
+		end
+
 	new_marshalled_cache_manager: OBJECT_HANDLE is
 			-- New instance of `MARSHAL_CACHE_MANAGER' created in `a_app_domain'.
 		indexing
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 					app_domain_not_exists: app_domain = Void
 				end
 				app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
-				
+
 					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
 				l_type := {COM_CACHE_MANAGER}
 				l_location := l_type.assembly.location
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 					l_lifetime_lease_not_void: l_lifetime_lease /= Void
 				end
 				l_time_span := l_lifetime_lease.renew (feature {TIME_SPAN}.from_days (356))
-				
+
 					-- Note: When trying to unwrap a dynamically created object using
 					-- APP_DOMAIN.create_instance_from, OBJECT_HANDLE.unwrap will try
 					-- to relocate the assembly (using a display name instead of the path
@@ -226,16 +226,16 @@ feature {NONE} -- Implementation
 				create l_subscription.make
 				create l_resolver.make
 				l_subscription.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
-				
+
 				Result := l_inst_obj_handle
 				l_marshal ?= Result.unwrap
 				check
 					unwrapped: l_marshal /= Void
 				end
-				
+
 					-- clean up resolver because it's no longer needed
 				l_subscription.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
-	
+
 				if eac_path = Void then
 					l_marshal.initialize (clr_version)
 				else
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
-		
+
 	eac_path: SYSTEM_STRING
 			-- Location of EAC `Eiffel Assembly Cache'
 		indexing
@@ -274,26 +274,26 @@ feature {NONE} -- Implementation
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end;
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

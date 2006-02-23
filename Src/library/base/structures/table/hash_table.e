@@ -869,6 +869,7 @@ feature {NONE} -- Transformation
 			array_content: ARRAY [G]
 			array_keys: ARRAY [H]
 			array_marks: ARRAY [BOOLEAN]
+			l_deleted_marks: SPECIAL [BOOLEAN]
 		do
 				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
 				-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
@@ -893,11 +894,32 @@ feature {NONE} -- Transformation
 				deleted_marks := array_marks.area
 			end
 
+				-- In version 5.5 and later, `deleted_marks' had its size increased by 1 to take
+				-- into account removal of default key, and therefore if we hit a 5.4 or earlier
+				-- version, we need to resize `deleted_marks' to the new expected size.
+			if deleted_marks /= Void then
+				if not mismatch_information.has ("hash_table_version_57") then
+						-- Unfortunately this handling of the mismatch was added in 5.7 and
+						-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
+						-- Fortunately enough we can simply compare the counts of
+						-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
+						-- otherwise it is 5.4 or older.
+					if deleted_marks.count /= keys.count then
+						l_deleted_marks := deleted_marks
+						create deleted_marks.make (keys.count)
+						deleted_marks.copy_data (l_deleted_marks, 0, 0, l_deleted_marks.count)
+					end
+				end
+			end
+
 			if content = Void or keys = Void or deleted_marks = Void then
 					-- Could not retrieve old version of HASH_TABLE. We throw an exception.
 				Precursor {MISMATCH_CORRECTOR}
 			end
 		end
+
+	hash_table_version_57: BOOLEAN
+			-- Fake attribute for versioning purposes. Used in `correct_mismatch'.
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 

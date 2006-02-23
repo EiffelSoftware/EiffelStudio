@@ -60,6 +60,11 @@ extern int eif_is_synchronized (void);
 extern void eif_terminate_all_other_threads(void);
 #endif
 
+/* Debugger usage */
+#ifdef WORKBENCH
+rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
+#endif
+
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/

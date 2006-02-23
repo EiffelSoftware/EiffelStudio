@@ -637,6 +637,19 @@ rt_public void eif_alloc_init(void)
 #endif /* ISE_GC */
 }
 
+#ifdef EIF_THREADS
+#ifdef WORKBENCH
+rt_private void notify_root_thread (void)
+{
+	/* Notify ewb the root thread had been created
+	 * and send the thread id
+	 */
+	RT_GET_CONTEXT
+	dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
+}
+#endif
+#endif
+
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
 	char *eif_timeout;
@@ -773,6 +786,11 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 #endif // NON_COMMERCIAL
 #endif // WORKBENCH
 	}
+#ifdef EIF_THREADS
+#ifdef WORKBENCH
+	notify_root_thread();
+#endif
+#endif
 }
 
 rt_public void failure(void)
@@ -833,6 +851,7 @@ rt_private Signal_t emergency(int sig)
  */
 
 rt_public void dserver(void) {}
+rt_public void dnotify(int evt_type, int evt_data) {}
 rt_public char dinterrupt(void) { return 0; }
 #endif
 

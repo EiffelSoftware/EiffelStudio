@@ -50,10 +50,12 @@ extern STREAM *sp;
 
 EIF_OBJ failure_handler;
 EIF_OBJ dead_handler;
+EIF_OBJ notify_handler;
 EIF_OBJ stopped_handler;
 
 EIF_PROC failure_hdlr_set;
 EIF_PROC dead_hdlr_set;
+EIF_PROC notify_hdlr_set;
 EIF_PROC stopped_hdlr_set;
 
 void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC eif_set)
@@ -70,6 +72,10 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 		case REP_DEAD:
 			dead_handler = eif_adopt (eif_rqst_hdlr);
 			dead_hdlr_set = eif_set;
+			break;
+		case REP_NOTIFIED:
+			notify_handler = eif_adopt (eif_rqst_hdlr);
+			notify_hdlr_set = eif_set;
 			break;
 		case REP_STOPPED:
 			stopped_handler = eif_adopt (eif_rqst_hdlr);
@@ -113,6 +119,20 @@ EIF_REFERENCE request_dispatch (Request rqst)
 			eif_string = makestr ("Nothing", 7);
 			(dead_hdlr_set) (eif_access (dead_handler), eif_string);
 			return eif_access (dead_handler);
+		case NOTIFIED:
+			{
+				Notif notif_info;
+				char string [1024], *ptr = string;
+
+				notif_info = rqst.rqu.rqu_event;
+				sprintf (ptr, "%i", notif_info.st_type);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", notif_info.st_data);
+				ptr += strlen (ptr) + 1;
+				eif_string = makestr (string, ptr - string);
+				(notify_hdlr_set) (eif_access (notify_handler), eif_string);
+				return eif_access (notify_handler);
+			}
 		case STOPPED:
 			{
 				Stop stop_info;
@@ -128,6 +148,8 @@ EIF_REFERENCE request_dispatch (Request rqst)
 				sprintf (ptr, "%i", stop_info.st_where.wh_type);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_offset);
+				ptr += strlen (ptr) + 1;
+				sprintf (ptr, "%i", stop_info.st_where.wh_thread_id);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);
 				ptr += strlen (ptr) + 1;

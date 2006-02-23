@@ -55,6 +55,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext);
 rt_private bool_t idr_Stop(IDR *idrs, void *ext);
 rt_private bool_t idr_Dumped(IDR *idrs, void *ext);
 rt_private bool_t idr_Item (IDR *idrs, struct item *ext);
+rt_private bool_t idr_Notif(IDR *idrs, void *ext);
 rt_private bool_t idr_void(IDR *idrs, void *ext);
 
 struct idr_discrim {	/* Discrimination array for unions encoding */
@@ -76,8 +77,11 @@ rt_private struct idr_discrim u_Request[] = {
 	{ TRANSFER, idr_Opaque },
 	{ HELLO, idr_void},
 	{ STOPPED, idr_Stop },
+	{ NOTIFIED, idr_Notif },
 	{ INSPECT, idr_Opaque },
-	{ DUMP, idr_Opaque },
+	{ DUMP_THREADS, idr_Opaque },
+	{ DUMP_STACK, idr_Opaque },
+	{ DUMP_VARIABLES, idr_Opaque },
 	{ DUMPED, idr_Dumped },
 	{ MOVE, idr_Opaque },
 	{ BREAK, idr_Opaque },
@@ -107,9 +111,9 @@ rt_private struct idr_discrim u_Request[] = {
 	{ MODIFY_LOCAL, idr_Opaque },
 	{ MODIFY_ATTR, idr_Opaque },
 	{ DYNAMIC_EVAL, idr_Opaque },
-	{ DUMP_VARIABLES, idr_Opaque },
 	{ APPLICATION_CWD, idr_void },
 	{ OVERFLOW_DETECT, idr_Opaque },
+	{ CHANGE_THREAD, idr_Opaque },
 };
 
 /*
@@ -161,6 +165,7 @@ rt_private bool_t idr_Where(IDR *idrs, void *ext)
 	result = result && idr_int(idrs, &whe->wh_origin);
 	result = result && idr_int(idrs, &whe->wh_type);
 	result = result && idr_int(idrs, &whe->wh_offset);
+	result = result && idr_rt_uint_ptr(idrs, &whe->wh_thread_id);
 
 	return result;
 }
@@ -179,6 +184,15 @@ rt_private bool_t idr_Stop(IDR *idrs, void *ext)
 	result = result && idr_int(idrs, &sto->st_code);
 	result = result && idr_string(idrs, &sto->st_tag, -MAX_STRLEN);
 
+	return result;
+}
+
+rt_private bool_t idr_Notif(IDR *idrs, void *ext)
+{
+	Notif *not = (Notif *) ext;
+	bool_t result;
+	result = idr_int(idrs, &not->st_type);
+	result = result && idr_int(idrs, &not->st_data);
 	return result;
 }
 

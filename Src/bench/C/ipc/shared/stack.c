@@ -81,11 +81,11 @@ rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level dow
 rt_private struct dump 	*variable_item(int variable_type, uint32 n, uint32 start); /* Dump a local or an argument of active feature */
 
 /* Public Routines declarations */
-rt_public void 			send_stack(eif_stream s, uint32 elem_nb);					/* Dump the application */
+rt_public void 			send_stack(eif_stream s, uint32 elem_nb);	/* Dump the application */
 rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
                                      uint32 loc_number, struct item *new_value); /* modify a local value */
 rt_public void			send_stack_variables(eif_stream s, int where);	/* Dump the locals and arguments of a feature */
-rt_public void 			send_once_result(eif_stream s, BODY_INDEX body_id, int arg_num); /* dump the results of onces feature */
+rt_public void 			send_once_result(eif_stream s, MTOT OResult, int otype); /* dump the results of onces feature */
 
 /* extern Routines used */
 extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
@@ -215,7 +215,7 @@ rt_private void restore_stacks(void)
  *------------------------------------------------------------------------* 
  * Dump the call stack - locals and arguments excluded                    *
  *                                                                        *
- * Get the next execution vector from the top of eif_stack. Whenever a    *
+ * Get the next execution vector from the top of `a_stack'. Whenever a    *
  * vector associated with a melted routine is reached, we also send       *
  * the arguments (and possibly the locals in ST_FULL mode). This is why   *
  * we keep an internal state about the status of the last vector.         *
@@ -470,30 +470,55 @@ rt_private struct dump *variable_item(int variable_type, uint32 n, uint32 start)
 /************************************************************************** 
  * NAME: send_once_result                                                 * 
  * ARGS: s      : the connected socket                                    * 
- *       body_id: body id of the once function                            *
- *       arg_num: Number of arguments                                     *
+ *       OResult: data related to a once                                  *
+ *       otype: type of the once result (if any)                          *
  *------------------------------------------------------------------------* 
  * Ask the debugger for the result of already called once function        *
  * and send the result back to EiffelStudio                                *
  **************************************************************************/
-rt_public void send_once_result(eif_stream s, BODY_INDEX body_id, int arg_num)
+rt_public void send_once_result(eif_stream s, MTOT OResult, int otype)
 	{
 	uint32 type;
-	struct item *ip;					/* Partial item pointer */
+	struct item ip;					/* Partial item pointer */
 	struct dump dumped;					/* Item to send */
 
-	ip = docall(body_id, arg_num);
+	memset (&ip, 0, sizeof(struct item));	
+
+	ip.type = otype;
+	switch (ip.type & SK_HEAD)
+		{
+		case SK_BOOL: ip.itu.itu_char = (EIF_BOOLEAN) OResult->result.EIF_BOOLEAN_result; break;
+		case SK_CHAR: ip.itu.itu_char = (EIF_CHARACTER) OResult->result.EIF_CHARACTER_result; break;
+		case SK_WCHAR: ip.itu.itu_wchar = (EIF_WIDE_CHAR) OResult->result.EIF_WIDE_CHAR_result; break;
+		case SK_UINT8: ip.itu.itu_uint8 = (EIF_NATURAL_8) OResult->result.EIF_NATURAL_8_result; break;
+		case SK_UINT16:ip.itu.itu_uint16 = (EIF_NATURAL_16) OResult->result.EIF_NATURAL_16_result; break;
+		case SK_UINT32:ip.itu.itu_uint32 = (EIF_NATURAL_32) OResult->result.EIF_NATURAL_32_result; break;
+		case SK_UINT64:ip.itu.itu_uint64 = (EIF_NATURAL_64) OResult->result.EIF_NATURAL_64_result; break;
+		case SK_INT8: ip.itu.itu_int8 = (EIF_INTEGER_8) OResult->result.EIF_INTEGER_8_result; break;
+		case SK_INT16:ip.itu.itu_int16 = (EIF_INTEGER_16) OResult->result.EIF_INTEGER_16_result; break;
+		case SK_INT32:ip.itu.itu_int32 = (EIF_INTEGER_32) OResult->result.EIF_INTEGER_32_result; break;
+		case SK_INT64:ip.itu.itu_int64 = (EIF_INTEGER_64) OResult->result.EIF_INTEGER_64_result; break;
+		case SK_REAL32: ip.itu.itu_real32 = (EIF_REAL_32) OResult->result.EIF_REAL_32_result; break;
+		case SK_REAL64: ip.itu.itu_real64 = (EIF_REAL_64) OResult->result.EIF_REAL_64_result; break;
+		case SK_POINTER: ip.itu.itu_ptr = (EIF_POINTER) OResult->result.EIF_POINTER_result; break;
+		case SK_REF: ip.itu.itu_ref = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
+		case SK_BIT: ip.itu.itu_bit = *(EIF_REFERENCE*) OResult->result.EIF_REFERENCE_result; break;
+		}
+	
+	ip.it_addr = NULL; 
+
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
-	dumped.dmp_item = ip;
+	dumped.dmp_item = &ip;
 
 	/* Because the interpreter (from time to time) does not care about the
 	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
 	 * object, we have to resynchronize these two entities before sending
 	 * that item to ewb (which relies on that consistency).
 	 */
-	type = ip->type & SK_HEAD;
-	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != NULL))
-		ip->type = type | Dtype(ip->it_ref);
+	type = ip.type & SK_HEAD;
+	if ((type == SK_EXP || type == SK_REF) && (ip.it_ref != NULL)) {
+		ip.type = type | Dtype(ip.it_ref);
+	}
 
 	send_dump(s, &dumped);
 	}

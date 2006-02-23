@@ -40,7 +40,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 
 #include "eif_portable.h"
 #include "eif_confmagic.h"	
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_debug.h"
 #include "rt_hashin.h"
 #include "rt_malloc.h"
@@ -208,7 +208,7 @@ rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against con
 #define DBGMTX_DESTROY \
 	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\
-	EIF_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n")
+	EIF_ENTER_C; EIF_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C;
 #define DBGMTX_UNLOCK \
 	EIF_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
 #else
@@ -225,6 +225,7 @@ rt_public void discard_breakpoints(void);	/* discard all breakpoints. used when 
 rt_public void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
 /* Step by step execution control */
+rt_public void dnotify(int, int);		/* Notify the daemon event and data, no answer waited */
 rt_public void dstop(struct ex_vect *exvect, uint32 offset); /* Breakable point reached */
 rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index); /* Breakable point in the middle of a nested call reached */
 rt_public void set_breakpoint_count(int num);	/* Sets the n breakpoint to stop at*/
@@ -247,7 +248,6 @@ rt_private int nb_calls(void);					/* Number of calls registered */
 
 /* Once list handling routines */
 rt_public BODY_INDEX *onceadd(BODY_INDEX id);				/* Add once body_id to list */
-rt_public BODY_INDEX *onceitem(register BODY_INDEX id);				/* Item with body_id in list */
 rt_private uint32 *list_allocate(register int size);		/* Allocate first chunk */
 rt_private int list_extend(register int size);				/* Extend list size */
 
@@ -527,6 +527,27 @@ rt_private int should_be_interrupted(void)
 	return 0; /* false */
 	}
 
+#ifdef EIF_THREADS
+rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
+{
+	if (debug_mode) {
+		EIF_GET_CONTEXT
+		DBGMTX_LOCK;	/* Enter critical section */
+		dnotify(THR_CREATED, (int) tid);
+		DBGMTX_UNLOCK; /* Leave critical section */
+	}
+}
+rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
+{
+	if (debug_mode) {
+		EIF_GET_CONTEXT
+		DBGMTX_LOCK;	/* Enter critical section */
+		dnotify(THR_EXITED, (int) tid);
+		DBGMTX_UNLOCK; /* Leave critical section */
+	}
+}
+#endif
+
 rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	/* args: ex_vect, current execution vector     */
 	/*       break_index, current offset (i.e. line number in stoppoints mode) within feature */
@@ -663,16 +684,21 @@ rt_private void safe_dbreak (int why)
 	 * mode means the user wishes to resume execution. We then restore the
 	 * run-time context and return.
 	 */
-
+	RT_GET_CONTEXT
 	REQUIRE("is debugging", debug_mode);
 
 #ifdef NEVER
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	dserver();
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 #else
 	escontext(why);				/* Save run-time context */
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	dserver();					/* Put application in server mode */
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	esresume();					/* Restore run-time context */
 #endif
+
 
 	/* Returning from this routine will resume execution where it stopped */
 }
@@ -1731,37 +1757,6 @@ rt_private int list_extend(register int size)
 	SIGRESUME;
 
 	return 0;			/* Everything is ok */
-}
-
-rt_public BODY_INDEX *onceitem(register BODY_INDEX id)
-{
-	/* Returns a pointer to the element of the list with body_id `id'
-	 * or a NULL pointer if that value is not found. I assume that the
-	 * list has been created.
-	 */
-
-	RT_GET_CONTEXT
-	struct idlchunk *chunk;	/* To walk through the list */
-	BODY_INDEX *item;				/* To walk through the chunk */
-	int done = 0;				/* Last element of list not reached */
-
-	for (chunk = once_list.idl_hd; chunk && !done; chunk = chunk->idl_next) {
-		if (chunk != once_list.idl_tl)
-			for (item = chunk->idl_arena; item != chunk->idl_end; item++) {
-
-				if (*item == id)
-					return item;
-			}
-		else {	/* Stop at last element */
-			for (item = chunk->idl_arena; item != once_list.idl_last; item++) {
-				if (*item == id)
-					return item;
-			}
-			done = 1;								/* Reached end of list */
-		}
-	}
-
-	return (BODY_INDEX *)0;		/* val not found */
 }
 
 rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num) /* %%ss mt last caller */

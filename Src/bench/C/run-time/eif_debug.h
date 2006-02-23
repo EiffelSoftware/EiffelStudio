@@ -119,7 +119,6 @@ extern rt_shared void dbreak(EIF_CONTEXT int why);		/* Program execution stopped
 
 /* Once list handling */
 RT_LNK BODY_INDEX *onceadd(BODY_INDEX id);		/* Add once body_id to list */	
-RT_LNK BODY_INDEX *onceitem(register BODY_INDEX id);		/* Item with body_id in list */
 
 /* Once result evaluation */
 extern struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/

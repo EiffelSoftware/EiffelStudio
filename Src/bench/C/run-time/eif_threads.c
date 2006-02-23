@@ -212,6 +212,72 @@ rt_private struct stack_list rt_globals_list = {
 	{NULL}		/* rt_globals_list */
 };
 
+
+/* Debugger usage */
+#ifdef WORKBENCH
+/*
+doc:	<routine name="get_thread_index" export="shared">
+doc:		<summary>This is used to get the index of thread `th_id' in rt_globals_list.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
+doc:	</routine>
+*/
+rt_shared int get_thread_index(rt_uint_ptr th_id)
+{
+#ifdef EIF_THREADS
+	RT_GET_CONTEXT
+	int count;
+	int i = 0;
+	rt_global_context_t ** lst;
+	
+	REQUIRE("eif GC synchronized", eif_is_synchronized());
+	count = rt_globals_list.count;
+	lst = (rt_global_context_t **) rt_globals_list.threads.data;
+	for (i = 0; i < count; i++) {
+		if (th_id == (rt_uint_ptr) ((EIF_THR_TYPE) ((rt_global_context_t*)lst[i])->eif_thr_id_cx)) {
+			break;
+		}
+	}
+	return i;
+#else
+	return 0;
+#endif
+}
+
+/*
+doc:	<routine name="dbg_switch_to_thread" export="shared">
+doc:		<summary>This is used to put `th_id''s thread context into current thread's context. Should be temporary, and we should replace orignal context right after. Return current thread id (to be used for restoring current context.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
+doc:	</routine>
+*/
+
+rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr th_id) {
+	RT_GET_CONTEXT
+	rt_global_context_t ** p_rtglob;
+	eif_global_context_t ** p_eifglob;
+	rt_uint_ptr thid;
+	thid = (rt_uint_ptr) rt_globals->eif_thr_id_cx;
+
+#define thread_rt_globals(th_id) ( ((rt_global_context_t **) rt_globals_list.threads.data)[get_thread_index(th_id)] ) 
+
+	if (th_id != 0) {
+		if (thid != th_id) {
+#ifdef DEBUG
+			printf ("Switch from %d to %d \n\n", thid, th_id);
+#endif
+			CHECK("eif GC synchronized", eif_is_synchronized());
+			p_rtglob = &thread_rt_globals (th_id);
+			p_eifglob = &((*p_rtglob)->eif_globals);
+			EIF_TSD_SET(rt_global_key, *p_rtglob, "switch to thread id (rt).");	
+			EIF_TSD_SET(eif_global_key, *p_eifglob, "switch to thread id (eif).");	
+		}
+	}
+#undef thread_rt_globals
+	return thid;
+}
+#endif
+
 #define LAUNCH_MUTEX_LOCK	\
 	EIF_LW_MUTEX_LOCK(eif_thread_launch_mutex, "Cannot lock mutex for the thread launcher\n")
 #define LAUNCH_MUTEX_UNLOCK \
@@ -288,6 +354,10 @@ rt_shared void eif_thread_cleanup (void)
 #endif
 	}
 
+		/* Free allocated thread id for root thread */
+	eif_free (eif_thr_id);
+
+		/* Free rt_globals context */
 	eif_free_context (rt_globals);
 
 		/* Free GC allocated stacks. */
@@ -351,7 +421,10 @@ rt_public void eif_thr_register(void)
 		}
 	} else {
 		not_root_thread = 1;
-		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
+		eif_thr_id = (EIF_THR_TYPE *) eif_malloc (sizeof (EIF_THR_TYPE));
+#ifdef WORKBENCH
+		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
+#endif
 	}
 }
 
@@ -701,6 +774,9 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		*routine_ctxt->is_initialized = 1;
 		RT_GC_WEAN(root_object);
 			/* Call the `execute' routine of the thread */
+#ifdef WORKBENCH
+		dnotify_create_thread((EIF_THR_TYPE) eif_thr_id);
+#endif
 		(FUNCTION_CAST(void,(EIF_REFERENCE)) execute)(eif_access(routine_ctxt->current));
 
 		exok();
@@ -713,7 +789,6 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 	return;
 #endif
 }
-
 
 rt_public void eif_thr_exit(void)
 {
@@ -749,6 +824,9 @@ rt_public void eif_thr_exit(void)
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_REFERENCE thread_object = NULL;
 
+#ifdef WORKBENCH
+		dnotify_exit_thread((EIF_THR_TYPE) eif_thr_context->tid);
+#endif
 		thread_exiting = 1;
 		exitprf();
 
@@ -1243,7 +1321,7 @@ rt_shared void eif_terminate_all_other_threads (void) {
 			if (thread_globals != rt_globals) {
 				if (thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) {
 						/* Worst case scenario, some threads are still running. */
-					if (thread_globals->eif_thr_id_cx) {
+					if (thread_globals->eif_thr_context_cx) {
 
 #ifdef HAS_THREAD_CANCELLATION
 						EIF_THR_CANCEL(*thread_globals->eif_thr_id_cx);
@@ -1586,10 +1664,7 @@ rt_public EIF_INTEGER eif_thr_max_priority(void) {
 
 rt_public EIF_POINTER eif_thr_thread_id(void) {
 	RT_GET_CONTEXT
-	if (eif_thr_context) {
-		return (EIF_POINTER) eif_thr_context->tid;
-	} else
-		return (EIF_POINTER) 0; /* Root thread's id is 0 */
+	return (EIF_POINTER) eif_thr_id;
 }
 
 rt_public EIF_POINTER eif_thr_last_thread(void) {

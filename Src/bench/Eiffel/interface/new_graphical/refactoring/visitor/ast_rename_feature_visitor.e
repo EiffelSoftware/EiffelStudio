@@ -11,6 +11,7 @@ class
 inherit
 	AST_REFACTORING_VISITOR
 		redefine
+			process_address_as,
 			process_parent_as,
 			process_create_as,
 			process_like_id_as,
@@ -288,6 +289,22 @@ feature {NONE} -- Visitor implementation
 			-- Process `l_as'.
 		do
 			process_access_feat_as (l_as)
+		end
+
+	process_address_as (l_as: ADDRESS_AS) is
+			-- Process `l_as'.
+		do
+			if recursive_descendants.has (l_as.class_id) then
+					-- check if it is the right feature (correct has old routine_id and old name)
+				if
+					l_as.routine_ids /= Void and then
+					l_as.routine_ids.has (feature_i.rout_id_set.first) and then
+					old_feature_name.is_case_insensitive_equal (l_as.feature_name.visual_name)
+				then
+					l_as.feature_name.replace_text (new_feature_name, match_list)
+					has_modified := True
+				end
+			end
 		end
 
 

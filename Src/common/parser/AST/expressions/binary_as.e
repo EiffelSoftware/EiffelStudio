@@ -101,6 +101,8 @@ feature -- Setting
 
 	set_class_id (a_class_id: like class_id) is
 			-- Set `class_id' to `a_class_id'.
+		require
+			a_class_id_ok: a_class_id > 0 or a_class_id = -1
 		do
 			class_id := a_class_id
 		end

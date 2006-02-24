@@ -2180,6 +2180,7 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 			l_last_id := context.current_class.class_id
+			l_as.set_class_id (l_last_id)
 
 			l_feature := current_feature
 				-- Look for an argument
@@ -2196,6 +2197,8 @@ feature -- Implementation
 					l_argument.set_position (l_arg_pos)
 					create {HECTOR_B} last_byte_node.make_with_type (l_argument, last_type.type_i)
 				end
+				l_as.enable_argument
+				l_as.set_argument_position (l_arg_pos)
 			else
 					-- Look for a local if not in a pre- or postcondition
 				l_local_info := context.locals.item (l_as.feature_name.internal_name)
@@ -2223,6 +2226,8 @@ feature -- Implementation
 						l_veen2b.set_location (l_as.feature_name.start_location)
 						error_handler.insert_error (l_veen2b)
 					end
+
+					l_as.enable_local
 				else
 					l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name)
 					if l_feature = Void then
@@ -2264,6 +2269,7 @@ feature -- Implementation
 								create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
 							end
 						end
+						l_as.set_routine_ids (l_feature.rout_id_set)
 					end
 				end
 			end

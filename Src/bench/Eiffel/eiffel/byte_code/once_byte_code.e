@@ -173,24 +173,12 @@ feature -- C code generation
 			if context.workbench_mode then
 				if is_global_once then
 					generate_once_result_definition ("RTOQR", "RTOQD")
-					buf.put_string (generated_c_feature_name)
-					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
-					fixme ("Notify debugger that process-relative once routine is executed (similar to RTOTW).")
 				else
 					generate_once_result_definition ("RTOTR", "RTOTD")
-					buf.put_string (generated_c_feature_name)
-					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
-						-- Real body id to be stored in the id list of already
-						-- called once routines to prevent supermelting them
-						-- (losing in that case their memory (already called and
-						-- result)) and to allow result inspection.
-					buf.put_string ("RTOTW (")
-					buf.put_real_body_id (real_body_id)
-					buf.put_string (gc_rparan_semi_c)
-					buf.put_new_line
 				end
+				buf.put_string (generated_c_feature_name)
+				buf.put_string (gc_rparan_semi_c)
+				buf.put_new_line
 			elseif not is_global_once and then System.has_multithreaded then
 					-- Generate locals for thread-relative once routine
 				generate_once_result_definition ("RTOTR", "RTOUD")
@@ -350,19 +338,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

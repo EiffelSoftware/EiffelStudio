@@ -1,0 +1,2 @@
+Error: Tuple label has same name as feature of the TUPLE class. 
+What to do: change the name of the label.

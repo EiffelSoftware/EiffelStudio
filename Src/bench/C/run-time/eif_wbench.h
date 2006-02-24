@@ -37,7 +37,7 @@
 #ifndef _eif_wbench_h_
 #define _eif_wbench_h_
 
-#include "eif_debug.h"			/* for onceadd() */
+#include "eif_debug.h"
 #include "eif_globals.h"
 #include "eif_struct.h"
 

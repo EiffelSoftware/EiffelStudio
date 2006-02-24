@@ -47,12 +47,10 @@ extern "C" {
 #ifndef EIF_THREADS
 extern struct pgcontext d_cxt;		/* Program context */
 extern struct dbstack db_stack;		/* Calling context stack */
-extern struct id_list once_list;	/* Calling context once_list */
 #else
 extern void dnotify_create_thread(EIF_THR_TYPE); 
 extern void dnotify_exit_thread(EIF_THR_TYPE); 
 extern void dbstack_reset(struct dbstack *stk);
-extern void once_list_reset (struct id_list *stk);
 #endif
 #endif
 

@@ -90,7 +90,6 @@ typedef struct tag_rt_globals
 #ifdef WORKBENCH
 		/* debug.c */
 	struct dbstack db_stack_cx;			/* Debugging stack. */
-	struct id_list once_list_cx;		/* Debugging once_list */
 	struct pgcontext d_cxt_cx;			/* Main program context */
 #endif
 
@@ -320,7 +319,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 	/* debug.c */
 #ifdef WORKBENCH
 #define db_stack			(rt_globals->db_stack_cx)		/* rt_shared */
-#define once_list			(rt_globals->once_list_cx)		/* rt_shared */
 #define d_cxt				(rt_globals->d_cxt_cx)		/* rt_shared */
 #endif
 

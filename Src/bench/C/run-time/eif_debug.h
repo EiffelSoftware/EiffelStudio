@@ -71,17 +71,6 @@ RT_LNK struct dbinfo d_data;	/* Global debugger information */
 #define DLM_DEPTH		0x3FFFFFFF /* mask the low 30 bits */
 
 /*
- * List of body_ids
- */
-
-struct idlchunk {
-	struct idlchunk *idl_next;	/* Next chunk in list */
-	struct idlchunk *idl_prev;	/* Previous chunk in list */
-	BODY_INDEX *idl_arena;			/* Arena where objects are stored */
-	BODY_INDEX *idl_end;			/* Pointer to first element beyond the chunk */
-};
-
-/*
  * Position within stopped program.
  */
 
@@ -116,9 +105,6 @@ extern void dmove(int offset);							/* Move active routine cursor */
 
 /* Breakpoint handling */
 extern rt_shared void dbreak(EIF_CONTEXT int why);		/* Program execution stopped */
-
-/* Once list handling */
-RT_LNK BODY_INDEX *onceadd(BODY_INDEX id);		/* Add once body_id to list */	
 
 /* Once result evaluation */
 extern struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num);	/* Evaluate result of already called once func*/

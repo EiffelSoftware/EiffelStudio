@@ -604,7 +604,6 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 #ifdef WORKBENCH
 	opstack_reset (&op_stack);
 	dbstack_reset (&db_stack);
-	once_list_reset (&once_list);
 	if (iregs) {
 		eif_rt_xfree (iregs);
 	}

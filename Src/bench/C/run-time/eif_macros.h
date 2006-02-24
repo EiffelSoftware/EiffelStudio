@@ -523,7 +523,7 @@ RT_LNK int fcount;
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
 	}
 
-#define RTOTW(body_id) if (!MTOD(OResult)) RTWO(body_id);
+#define RTOTW(body_id)
 
 #define RTOTC(name, body_id, value)                                          \
 	RTOTDV(name)                                                         \
@@ -533,7 +533,6 @@ RT_LNK int fcount;
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
 	MTOM(OResult);                                                       \
-	RTWO(body_id);                                                       \
 	return RTOTRR = value;
 
 #define RTOTOK
@@ -1227,7 +1226,7 @@ RT_LNK int fcount;
 #define RTWPCT(st,x,y,z)	wptype_gen(st,x,y,z)
 #define RTWPP(x,y)			((egc_address_table[x])[2*(y)])
 #define RTWPPR(x,y)			((egc_address_table[x])[2*(y)+1])
-#define RTWO(x)				onceadd(x)
+#define RTWO(x)
 
 #define WDBG(x,y)			is_debug(x,y)				/* Debug option */
 #define WASC(x)				eoption[x].assert_level		/* Assertion level */

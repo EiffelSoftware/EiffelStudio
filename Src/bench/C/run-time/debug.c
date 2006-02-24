@@ -128,20 +128,6 @@ rt_shared struct dbstack db_stack = {
 };
 
 /*
-doc:	<attribute name="once_list" return_type="struct id_list" export="shared">
-doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data.</synchronization>
-doc:	</attribute>
-*/
-rt_shared struct id_list once_list = {
-	(struct idlchunk *) 0,		/* idl_hd */
-	(struct idlchunk *) 0,		/* idl_tl */
-	(BODY_INDEX *) 0,				/* idl_last */
-	(BODY_INDEX *) 0,				/* idl_end */
-};
-
-/*
 doc:	<attribute name="d_data" return_type="struct dbinfo" export="public">
 doc:		<summary>For faster reference, the current control table is memorized in a global debugger status structure, along with the execution status and break point hash table.</summary>
 doc:		<thread_safety>Safe</thread_safety>
@@ -245,11 +231,6 @@ rt_private struct dcall *dbstack_allocate(register int size);	/* Allocate first 
 rt_private int dbstack_extend(register int size);				/* Extend stack size */
 rt_private void npop(register int nb_items);					/* Pop 'n' items */
 rt_private int nb_calls(void);					/* Number of calls registered */
-
-/* Once list handling routines */
-rt_public BODY_INDEX *onceadd(BODY_INDEX id);				/* Add once body_id to list */
-rt_private uint32 *list_allocate(register int size);		/* Allocate first chunk */
-rt_private int list_extend(register int size);				/* Extend list size */
 
 /* Program context */
 rt_shared void escontext(EIF_CONTEXT int why);				/* Save program context */
@@ -1415,15 +1396,10 @@ rt_public void initdb(void)
 	/* Initialize debugger stack and once list */
 
 	struct dcall *top;			/* Arena for first stack chunk */
-	BODY_INDEX *list_arena;			/* Arena for first list chunk */
 
 	top = dbstack_allocate(eif_stack_chunk);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
-
-	list_arena = list_allocate(LIST_CHUNK);		/* Create one */
-	if (list_arena == (BODY_INDEX *) 0)		 		/* Could not create list */
-		fatal_error("can't create once list");
 }
 
 rt_private int nb_calls(void)
@@ -1647,117 +1623,6 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
 /*
  * Once list handling.
  */
-
-rt_private BODY_INDEX *list_allocate(register int size)
-                   					/* Initial size */
-{
-	/* The once list is created, with size 'size'.
-	 * Return the arena value.
-	 */
-
-	RT_GET_CONTEXT
-	BODY_INDEX *arena;			/* Address for the arena */
-	struct idlchunk *chunk;	/* Address of the chunk */
-
-	size *= BODY_ID_SZ;
-	size += sizeof(*chunk);
-	chunk = (struct idlchunk *) cmalloc(size);
-	if (chunk == (struct idlchunk *) 0)
-		return (BODY_INDEX *) 0;			/* Malloc failed for some reason */
-
-	SIGBLOCK;
-	once_list.idl_hd = chunk;			/* New list (head of list) */
-	once_list.idl_tl = chunk;			/* One chunk for now */
-	arena = (BODY_INDEX *) (chunk + 1);		/* Header of chunk */
-	once_list.idl_last = arena;			/* Empty list */
-	chunk->idl_arena = arena;			/* Base address */
-	once_list.idl_end = chunk->idl_end = (BODY_INDEX *)
-		((char *) chunk + size);		/* First free location beyond list */
-	chunk->idl_next = (struct idlchunk *) 0;
-	chunk->idl_prev = (struct idlchunk *) 0;
-	SIGRESUME;
-
-	return arena;			/* List allocated */
-}
-
-rt_shared void once_list_reset (struct id_list *stk)
-{
-	/* Reset the stack 'stk' to its minimal state and disgard all its
-	 * contents. Walking through the list of chunks, we free them and
-	 * clear the 'stk' structure.
-	 */
-
-	struct idlchunk *k;	/* To walk through the list */
-	struct idlchunk *n;	/* Save next before freeing chunk */
-
-	for (k = stk->idl_hd; k; k = n) {
-		n = k->idl_next;		/* This is not necessary given current eif_rt_xfree() */
-		eif_rt_xfree((EIF_REFERENCE) k);
-	}
-
-	memset (stk, 0, sizeof(struct id_list));
-}
-
-rt_public BODY_INDEX *onceadd(BODY_INDEX id)
-{
-	/* Add body_id 'id' to end of the once list. If it fails, raise
-	 * an "Out of memory" exception.
-	 */
-
-	RT_GET_CONTEXT
-	BODY_INDEX *last = once_list.idl_last;/* Last free element of list */
-
-	/* List created at initialization time via initdb */
-
-	if (once_list.idl_end == last) {
-		/* The end of the current stack chunk has been reached. Create
-		 * a new one and insert it in the list.
-		 */
-		SIGBLOCK;
-		if (-1 == list_extend(LIST_CHUNK))
-			enomem();
-		last = once_list.idl_last;		/* New last */
-		SIGRESUME;
-	}
-
-	once_list.idl_last = last + 1;		/* Points to next free location */
-	memcpy (last, &id, BODY_ID_SZ);		/* Add `id' in the list */
-
-	return last;						/* Address of allocated item */
-}
-
-rt_private int list_extend(register int size)
-                   					/* Size of new chunk to be added */
-{
-	/* The once list is extended and the list structure is updated.
-	 * 0 is returned in case of success. Otherwise, -1 is returned.
-	 */
-
-	RT_GET_CONTEXT
-	BODY_INDEX *arena;			/* Address for the arena */
-	struct idlchunk *chunk;	/* Address of the chunk */
-
-	size *= BODY_ID_SZ;
-	size += sizeof(*chunk);
-	chunk = (struct idlchunk *) cmalloc(size);
-	if (chunk == (struct idlchunk *) 0)
-		return -1;		/* Malloc failed for some reason */
-
-	SIGBLOCK;
-	arena = (BODY_INDEX *) (chunk + 1);				/* Header of chunk */
-	chunk->idl_next = (struct idlchunk *) 0;	/* Last chunk in list */
-	chunk->idl_prev = once_list.idl_tl;			/* Preceded by the old tail */
-	once_list.idl_tl->idl_next = chunk;			/* Maintain link w/previous */
-	once_list.idl_tl = chunk;					/* New tail */
-	chunk->idl_arena = arena;					/* Where items are stored */
-	chunk->idl_end = (BODY_INDEX *)
-		((char *) chunk + size);				/* First item beyond chunk */
-	once_list.idl_last = arena;					/* New top */
-	once_list.idl_end = chunk->idl_end;			/* End of current chunk */
-	SIGRESUME;
-
-	return 0;			/* Everything is ok */
-}
 
 rt_public struct item *docall(EIF_CONTEXT register BODY_INDEX body_id, register int arg_num) /* %%ss mt last caller */
                          		/* body id of the once function */

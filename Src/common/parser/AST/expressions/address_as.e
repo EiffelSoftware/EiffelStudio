@@ -42,10 +42,31 @@ feature -- Roundtrip
 	address_symbol: SYMBOL_AS
 			-- Symbol "$" associated with this structure
 
-feature -- Attribute
+feature -- Attributes
 
 	feature_name: FEATURE_NAME
 			-- Feature name to address
+
+	is_qualified: BOOLEAN is
+			-- Is current entity a call on an other object?
+		do
+			Result := not (is_local or is_argument)
+		end
+
+	is_local: BOOLEAN
+			-- Is current entity a local?
+
+	is_argument: BOOLEAN
+			-- Is the current entity an argument?
+
+	class_id: INTEGER
+			-- The class id of the qualified call.
+
+	argument_position: INTEGER
+			-- If the current entity is an argument this gives the position in the argument list.
+
+	routine_ids: ID_SET
+			-- If the current entity is a feature this gives the routine ids.
 
 feature -- Roundtrip/Token
 
@@ -71,25 +92,59 @@ feature -- Comparison
 			Result := equivalent (feature_name, other.feature_name)
 		end
 
+feature -- Setting
+
+	set_class_id (a_class_id: like class_id) is
+			-- Set `class_id' to `a_class_id'.
+		do
+			class_id := a_class_id
+		end
+
+	set_routine_ids (a_routine_ids: like routine_ids) is
+			-- Set `routine_ids' to `a_routine_ids'.
+		require
+			a_routine_ids_not_void: a_routine_ids /= Void
+		do
+			routine_ids := a_routine_ids
+		end
+
+	set_argument_position (an_argument_position: like argument_position) is
+			-- Set `argument_position' to `an_argument_position'.
+		do
+			argument_position := an_argument_position
+		end
+
+	enable_local is
+			-- Set `is_local' to true.
+		do
+			is_local := True
+		end
+
+	enable_argument is
+			-- Set `is_argument' to true.
+		do
+			is_argument := True
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -122,9 +122,9 @@ static  char    *names [] = {
 "BC_AND_THEN" ,
 "BC_OR_ELSE" ,
 "BC_SPCREATE" ,
-"BC_NOTUSED_77" ,
+"BC_TUPLE_ACCESS" ,
 "BC_JMP_T" ,
-"BC_NOTUSED_79" ,
+"BC_TUPLE_ASSIGN" ,
 "BC_RESCUE" ,
 "BC_END_RESCUE" ,
 "BC_RETRY" ,
@@ -771,6 +771,14 @@ static  void    print_instructions ()
 				fprintf (ofp,"%d", get_int32(&ip));
 				break;
 
+			case BC_TUPLE_ACCESS:
+			case BC_TUPLE_ASSIGN:
+					/* Position of access/assign in TUPLE. */
+				fprintf (ofp, "[%d] ", get_int32(&ip));
+					/* Type of access/assign in TUPLE. */
+				print_dtype(0, get_uint32(&ip));
+				break;
+					
 			case BC_TUPLE:
 			case BC_PTUPLE:
 					/* Dynamic type of tuple */

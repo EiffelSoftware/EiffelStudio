@@ -139,8 +139,9 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_AND_THEN			74
 #define BC_OR_ELSE			75
 #define BC_SPCREATE			76
-#define BC_NOTUSED_77		77
+#define BC_TUPLE_ACCESS		77
 #define BC_JMP_T			78
+#define BC_TUPLE_ASSIGN		79
 #define BC_RESCUE			80
 #define BC_END_RESCUE		81
 #define BC_RETRY			82

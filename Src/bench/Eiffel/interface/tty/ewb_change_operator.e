@@ -103,7 +103,7 @@ feature {NONE} -- Attributes
 
 	index: INTEGER;
 
-	new_operator: STRING;;
+	new_operator: STRING;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

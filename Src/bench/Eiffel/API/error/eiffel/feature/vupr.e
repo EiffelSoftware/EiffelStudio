@@ -16,7 +16,7 @@ inherit
 feature -- Properties
 
 
-	code: STRING is "VUPR";;
+	code: STRING is "VUPR";
 			-- Error code
 
 indexing

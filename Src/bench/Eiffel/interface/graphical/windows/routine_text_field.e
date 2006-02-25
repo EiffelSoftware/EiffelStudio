@@ -187,7 +187,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 
 feature {NONE} -- Implementation
 
-	classc_stone: CLASSC_STONE;;
+	classc_stone: CLASSC_STONE;
 			-- Class stone saved while choosing a feature name
 
 indexing

@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "EXT_SAME_SIGN";;
+	code: STRING is "EXT_SAME_SIGN";
 			-- Error code
 
 indexing

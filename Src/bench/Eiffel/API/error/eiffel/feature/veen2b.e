@@ -19,7 +19,7 @@ inherit
 
 feature
 
-	subcode: INTEGER is 22;;
+	subcode: INTEGER is 22;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

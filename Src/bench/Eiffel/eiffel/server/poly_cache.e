@@ -15,7 +15,7 @@ create
 
 feature
 
-	Default_size: INTEGER is 200;;
+	Default_size: INTEGER is 200;
 			-- Size of cache
 
 indexing

@@ -82,7 +82,7 @@ feature {NONE} -- Resources
 	tool_width, tool_height: INTEGER_PREF_RES;
 	double_line_toolbar, keep_toolbar: BOOLEAN_PREF_RES;
 	private_show_all_callers: BOOLEAN_PREF_RES;
-	do_flat_in_breakpoints: BOOLEAN_PREF_RES;;
+	do_flat_in_breakpoints: BOOLEAN_PREF_RES;
 
 
 indexing

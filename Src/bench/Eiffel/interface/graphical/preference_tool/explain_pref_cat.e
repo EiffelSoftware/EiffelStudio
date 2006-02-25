@@ -74,7 +74,7 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
-	command_bar: BOOLEAN_PREF_RES;;
+	command_bar: BOOLEAN_PREF_RES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

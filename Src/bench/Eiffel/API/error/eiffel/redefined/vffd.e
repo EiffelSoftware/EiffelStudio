@@ -15,7 +15,7 @@ inherit
 	
 feature -- Properties
 
-	code: STRING is "VFFD";;
+	code: STRING is "VFFD";
 			-- Error code
 
 indexing

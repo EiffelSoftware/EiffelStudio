@@ -39,7 +39,7 @@ feature
 		do
 		end; -- print_register
 
-	is_temporary: BOOLEAN is true;;
+	is_temporary: BOOLEAN is true;
 			-- No register is a temporary value.
 
 indexing

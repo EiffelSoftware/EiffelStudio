@@ -144,7 +144,7 @@ feature {NONE} -- Resources
 	history_size: INTEGER_PREF_RES;
 	window_free_list_number: INTEGER_PREF_RES;
 	color_list: ARRAY_PREF_RES
-	text_mode: STRING_PREF_RES;;
+	text_mode: STRING_PREF_RES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

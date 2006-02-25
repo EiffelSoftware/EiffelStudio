@@ -111,7 +111,7 @@ feature {NONE} -- Resources
 	raise_on_error: BOOLEAN_PREF_RES;
 	debugger_show_all_callers: BOOLEAN_PREF_RES;
 	debugger_do_flat_in_breakpoints: BOOLEAN_PREF_RES;
-	graphical_output_disabled: BOOLEAN_PREF_RES;;
+	graphical_output_disabled: BOOLEAN_PREF_RES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

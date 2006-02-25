@@ -75,7 +75,7 @@ feature -- Properties
 
 feature {NONE} -- Resources
 
-	tool_width, tool_height, query_tool_height, query_tool_width: INTEGER_PREF_RES;;
+	tool_width, tool_height, query_tool_height, query_tool_width: INTEGER_PREF_RES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

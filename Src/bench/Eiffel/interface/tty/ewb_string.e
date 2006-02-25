@@ -49,7 +49,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Attributes
 
-	int_help_message: STRING;;
+	int_help_message: STRING;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

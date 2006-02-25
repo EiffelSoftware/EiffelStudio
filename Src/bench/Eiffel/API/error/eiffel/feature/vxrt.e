@@ -15,7 +15,7 @@ inherit
 	
 feature -- Properties
 
-	code: STRING is "VXRT";;
+	code: STRING is "VXRT";
 			-- Error code
 
 indexing

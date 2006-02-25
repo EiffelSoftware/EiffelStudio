@@ -22,7 +22,7 @@ create
 
 feature -- Properties
 
-	is_procedure: BOOLEAN is True;;
+	is_procedure: BOOLEAN is True;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

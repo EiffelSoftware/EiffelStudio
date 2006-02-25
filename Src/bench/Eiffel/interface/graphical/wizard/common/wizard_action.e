@@ -212,7 +212,7 @@ feature {NONE} -- Properties
 	wizard: WIZARD;
 			-- The wizrad Current is an action of.
 
-	dialog: WIZARD_DIALOG;;
+	dialog: WIZARD_DIALOG;
 			-- The dialog through which Current is displayed.
 
 indexing

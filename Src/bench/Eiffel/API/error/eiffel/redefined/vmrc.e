@@ -15,7 +15,7 @@ inherit
 
 feature -- Propertie
 
-	code: STRING is "VMRC";;
+	code: STRING is "VMRC";
 			-- Error code
 
 indexing

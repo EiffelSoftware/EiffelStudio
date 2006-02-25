@@ -106,7 +106,7 @@ feature -- Properties
 
 feature {NONE} -- Attributes
 
-	index: INTEGER;;
+	index: INTEGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

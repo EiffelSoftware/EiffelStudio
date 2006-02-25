@@ -48,7 +48,7 @@ feature {NONE} -- Command Execution
 
 feature {NONE} -- Attributes
 
-	tool: PROFILE_QUERY_WINDOW;;
+	tool: PROFILE_QUERY_WINDOW;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

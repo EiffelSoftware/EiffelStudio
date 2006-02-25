@@ -18,7 +18,7 @@ inherit
 	
 feature -- Property
 
-	code: STRING is "VNCB";;
+	code: STRING is "VNCB";
 			-- Error code
 
 indexing

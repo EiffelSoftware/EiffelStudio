@@ -52,7 +52,7 @@ feature -- Initialization
 			add_activate_action (a_cmd, Void)
 		end;
 
-	t_Empty: STRING is "";;
+	t_Empty: STRING is "";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

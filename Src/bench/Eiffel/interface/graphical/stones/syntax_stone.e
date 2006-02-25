@@ -55,7 +55,7 @@ feature -- Access
 			-- Ending position of the of the token involved in the syntax
 			-- error
 
-	code: STRING is "Syntax error";;
+	code: STRING is "Syntax error";
 			-- Error code
 
 indexing

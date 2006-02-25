@@ -71,7 +71,7 @@ feature -- Resources
 	selector_window: BOOLEAN_RESOURCE;
 	feature_window, object_window: BOOLEAN_RESOURCE
 	raise_on_error: BOOLEAN_RESOURCE;
-	graphical_output_disabled: BOOLEAN_RESOURCE;;
+	graphical_output_disabled: BOOLEAN_RESOURCE;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

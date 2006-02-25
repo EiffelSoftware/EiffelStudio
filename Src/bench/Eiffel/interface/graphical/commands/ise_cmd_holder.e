@@ -60,7 +60,7 @@ feature -- Properties
 	associated_button: ISE_BUTTON;
 			-- Button on the toolbars.
 
-	associated_menu_entry: ISE_MENU_ENTRY;;
+	associated_menu_entry: ISE_MENU_ENTRY;
 			-- Menu entry in the menus.
 
 indexing

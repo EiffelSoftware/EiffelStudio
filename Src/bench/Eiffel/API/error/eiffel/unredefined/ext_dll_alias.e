@@ -12,7 +12,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "EXT_DLL_ALIAS";;
+	code: STRING is "EXT_DLL_ALIAS";
 			-- Error code
 
 indexing

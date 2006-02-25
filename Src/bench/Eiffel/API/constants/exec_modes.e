@@ -28,7 +28,7 @@ feature -- Execution mode properties
 			-- routine set and a breakpoint set just after the
 			-- calling routine (like step-out)
 
-	Out_of_routine: INTEGER is 5;;
+	Out_of_routine: INTEGER is 5;
 			-- Execution with all breakable points set except
 			-- those of the current routine.
 

@@ -37,7 +37,7 @@ feature -- Setting
 
 feature {NONE} -- Attributes
 
-	int_active: BOOLEAN;;
+	int_active: BOOLEAN;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

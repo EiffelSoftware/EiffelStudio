@@ -20,7 +20,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 5;;
+	subcode: INTEGER is 5;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

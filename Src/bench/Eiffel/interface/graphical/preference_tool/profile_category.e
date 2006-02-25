@@ -48,7 +48,7 @@ feature -- Resources
 	tool_width: INTEGER_RESOURCE;
 	tool_height: INTEGER_RESOURCE;
 	query_tool_width: INTEGER_RESOURCE;
-	query_tool_height: INTEGER_RESOURCE;;
+	query_tool_height: INTEGER_RESOURCE;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

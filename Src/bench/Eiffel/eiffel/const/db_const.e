@@ -15,7 +15,7 @@ feature -- Access
 
 	Db_no:		CHARACTER is 'n';
 	Db_yes:		CHARACTER is 'y';
-	Db_tag:		CHARACTER is 't';;
+	Db_tag:		CHARACTER is 't';
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -51,7 +51,7 @@ feature -- Debugger
 			is_set := b;
 		end;
 
-	is_set: BOOLEAN;;
+	is_set: BOOLEAN;
 		-- is a breakpoint set at this position
 
 indexing

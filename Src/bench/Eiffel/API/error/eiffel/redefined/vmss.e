@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VMSS";;
+	code: STRING is "VMSS";
 			-- Error code
 
 indexing

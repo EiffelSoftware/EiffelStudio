@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VRLE";;
+	code: STRING is "VRLE";
 			-- Error code
 
 indexing

@@ -157,7 +157,7 @@ feature {WIZARD} -- Buttons
 	abort_button: PUSH_B;
 			-- Button to Abort the Wizard;
 
-	next_button: PUSH_B;;
+	next_button: PUSH_B;
 			-- Button to go to next step.
 
 indexing

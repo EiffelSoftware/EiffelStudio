@@ -82,7 +82,7 @@ feature {NONE} -- Resources
 	tool_width, tool_height: INTEGER_PREF_RES;
 	command_bar, format_bar: BOOLEAN_PREF_RES;
 	parse_class_after_saving: BOOLEAN_PREF_RES;
-	private_feature_clause_order: ARRAY_PREF_RES;;
+	private_feature_clause_order: ARRAY_PREF_RES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

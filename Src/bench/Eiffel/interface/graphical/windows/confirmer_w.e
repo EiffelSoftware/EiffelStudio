@@ -107,7 +107,7 @@ feature {NONE} -- Properties
 	last_caller: COMMAND
 			-- Last command which popped up current
 
-	window: WIDGET;;
+	window: WIDGET;
 			-- Window to which the confirmation will apply
 
 indexing

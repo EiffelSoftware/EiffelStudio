@@ -15,7 +15,7 @@ inherit
 
 feature -- Property
 
-	code: STRING is "VOMB";;
+	code: STRING is "VOMB";
 			-- Error code
 
 indexing

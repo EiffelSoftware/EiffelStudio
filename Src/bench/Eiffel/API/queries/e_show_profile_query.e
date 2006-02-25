@@ -775,7 +775,7 @@ feature {NONE} -- Attributes
 	prof_query: PROFILER_QUERY;
 		-- All the active queries.
 
-	prof_options: PROFILER_OPTIONS;;
+	prof_options: PROFILER_OPTIONS;
 		-- The options specified by the user.
 
 indexing

@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VGCP";;
+	code: STRING is "VGCP";
 			-- Error code
 
 indexing

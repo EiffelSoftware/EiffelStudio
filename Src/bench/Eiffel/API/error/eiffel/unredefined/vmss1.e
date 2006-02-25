@@ -18,7 +18,7 @@ inherit
 	
 feature -- Properties
 
-	subcode: INTEGER is 1;;
+	subcode: INTEGER is 1;
 			-- Error code
 
 indexing

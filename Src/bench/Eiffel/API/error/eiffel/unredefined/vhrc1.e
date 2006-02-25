@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 1;;
+	subcode: INTEGER is 1;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

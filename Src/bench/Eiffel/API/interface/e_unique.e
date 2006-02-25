@@ -22,7 +22,7 @@ create
 
 feature -- Property
 
-	is_unique: BOOLEAN is True;;
+	is_unique: BOOLEAN is True;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

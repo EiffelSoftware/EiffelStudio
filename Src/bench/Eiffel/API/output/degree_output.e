@@ -570,7 +570,7 @@ feature {NONE} -- Constants
 	Document_class_message: STRING is "Generating class ";
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " cluster ";
-	Class_output_string: STRING is " class ";;
+	Class_output_string: STRING is " class ";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

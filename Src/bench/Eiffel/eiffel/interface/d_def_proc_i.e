@@ -53,7 +53,7 @@ feature
 			f.set_access_in (access_in);
 		end;
 
-	is_unselected: BOOLEAN is True;;
+	is_unselected: BOOLEAN is True;
 			-- Is the feature a non-selected one ?
 
 indexing

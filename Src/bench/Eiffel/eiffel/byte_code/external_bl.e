@@ -372,7 +372,7 @@ feature
 	has_call: BOOLEAN is True;
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN is True;;
+	allocates_memory: BOOLEAN is True;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

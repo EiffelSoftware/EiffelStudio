@@ -78,7 +78,7 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
-	command_bar, parse_ace_after_saving: BOOLEAN_PREF_RES;;
+	command_bar, parse_ace_after_saving: BOOLEAN_PREF_RES;
 	--arr_hidden_clusters: ARRAY_PREF_RES
 
 indexing

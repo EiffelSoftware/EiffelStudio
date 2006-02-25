@@ -31,7 +31,7 @@ feature
 			f.set_code_id (code_id);
 		end;
 
-    is_replicated: BOOLEAN is True;;
+    is_replicated: BOOLEAN is True;
             -- Is Current feature conceptually replicated (True)
 
 indexing

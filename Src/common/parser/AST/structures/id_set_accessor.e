@@ -21,6 +21,8 @@ feature -- Update
 
 	set_id_set (an_id_set: ID_SET) is
 			-- Set the id_set.
+		require
+			an_id_set_not_void: an_id_set /= Void
 		do
 			first := an_id_set.first
 			if an_id_set.count > 0 then

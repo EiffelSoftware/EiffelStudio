@@ -346,7 +346,7 @@ feature -- Roundtrip: leaf_as
 			a_scn_not_void: a_scn /= Void
 			a_code_is_squre: a_code = {EIFFEL_TOKENS}.te_lsqure or a_code = {EIFFEL_TOKENS}.te_rsqure
 		do
-			create Result.make_with_data (a_code, a_scn.line, a_scn.column, a_scn.position, 1)
+			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, 1)
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER) is

@@ -40,7 +40,7 @@ feature
 	literal_text (a_list: LEAF_AS_LIST): STRING is
 			-- Literal text of current AST node
 		require else
-			a_list_can_be_void: a_list = Void
+			True
 		do
 			Result := internal_text
 		end

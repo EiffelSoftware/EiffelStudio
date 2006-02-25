@@ -297,7 +297,7 @@ feature -- Leaf nodes
 	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
 			-- New KEYWORD AST node
 		do
-			create Result.make (a_code, a_scn)
+			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end
@@ -341,7 +341,7 @@ feature -- Leaf nodes
 	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): KEYWORD_AS is
 			-- New KEYWORD AST node
 		do
-			create Result.make_with_data ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
+			create Result.make ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end
@@ -349,7 +349,7 @@ feature -- Leaf nodes
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER): SYMBOL_AS is
 			-- New KEYWORD AST node		
 		do
-			create Result.make (a_code, a_scn)
+			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end

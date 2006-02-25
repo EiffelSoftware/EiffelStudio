@@ -16,21 +16,11 @@ inherit
 		end
 
 create
-	make, make_with_data
+	make
 
 feature -- Initialization
 
-	make (a_code: INTEGER; a_scn: EIFFEL_SCANNER) is
-			-- Create a symbol_as object with `a_code' and information included in `a_scn'.
-		require
-			a_code_valid: symbol_valid (a_code)
-			a_scn_not_void: a_scn /= Void
-		do
-			code := a_code
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-		end
-
-	make_with_data (a_code: INTEGER; l, c, p, s: INTEGER) is
+	make (a_code: INTEGER; l, c, p, s: INTEGER) is
 			-- Create a symbol object with `a_code' indicating which symbol it is.
 			-- See `EIFFEL_TOKENS' for more information about `a_code'
 			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
@@ -298,19 +288,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

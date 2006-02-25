@@ -194,7 +194,7 @@ feature -- Access
 		local
 			b_as: BREAK_AS
 		do
-			create b_as.make (a_scn)
+			create b_as.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			extend_match_list (b_as)
 		end
 
@@ -203,7 +203,7 @@ feature -- Access
 		local
 			b_as: BREAK_AS
 		do
-			create b_as.make_with_data (a_text.string, l, c, p, n)
+			create b_as.make (a_text.string, l, c, p, n)
 			extend_match_list (b_as)
 		end
 

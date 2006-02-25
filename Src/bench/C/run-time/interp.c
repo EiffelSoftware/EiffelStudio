@@ -2680,6 +2680,65 @@ rt_private void interpret(int flag, int where)
 			break;
 		}
 
+	case BC_TUPLE_ACCESS:
+		{
+			int pos = get_int32(&IC);		/* Position of access. */
+			uint32 type = get_uint32(&IC);	/* SK_XX value of access. */
+			struct item *last;
+
+			last = otop();
+			last->type = type;	/* Stored type of accessed tuple element. */
+			switch (type & SK_HEAD) {
+				case SK_BOOL: last->it_char = eif_boolean_item (last->it_ref, pos); break;
+				case SK_CHAR: last->it_char = eif_character_item (last->it_ref, pos); break;
+				case SK_WCHAR: last->it_wchar = eif_wide_character_item (last->it_ref, pos); break;
+				case SK_UINT8: last->it_uint8 = eif_natural_8_item (last->it_ref, pos); break;
+				case SK_UINT16: last->it_uint16 = eif_natural_16_item (last->it_ref, pos); break;
+				case SK_UINT32: last->it_uint32 = eif_natural_32_item (last->it_ref, pos); break;
+				case SK_UINT64: last->it_uint64 = eif_natural_64_item (last->it_ref, pos); break;
+				case SK_INT8: last->it_int8 = eif_integer_8_item (last->it_ref, pos); break;
+				case SK_INT16: last->it_int16 = eif_integer_16_item (last->it_ref, pos); break;
+				case SK_INT32: last->it_int32 = eif_integer_32_item (last->it_ref, pos); break;
+				case SK_INT64: last->it_int64 = eif_integer_64_item (last->it_ref, pos); break;
+				case SK_REAL32: last->it_real32 = eif_real_32_item (last->it_ref, pos); break;
+				case SK_REAL64: last->it_real64 = eif_real_64_item (last->it_ref, pos); break;
+				case SK_POINTER: last->it_ptr = eif_pointer_item (last->it_ref, pos); break;
+				default:
+					last->it_ref = eif_reference_item (last->it_ref, pos);
+			}
+		}
+		break;
+
+	case BC_TUPLE_ASSIGN:
+		{
+			int pos = get_int32(&IC);		/* Position of access. */
+			uint32 type = get_uint32(&IC);	/* SK_XX value of access. */
+			struct item *source, *tuple;
+
+			source = opop();
+			tuple = opop();
+			switch (type & SK_HEAD) {
+				case SK_BOOL: eif_put_boolean_item (tuple->it_ref, pos, source->it_char); break;
+				case SK_CHAR: eif_put_character_item (tuple->it_ref, pos, source->it_char); break;
+				case SK_WCHAR: eif_put_wide_character_item (tuple->it_ref, pos, source->it_wchar); break;
+				case SK_UINT8: eif_put_natural_8_item (tuple->it_ref, pos, source->it_uint8); break;
+				case SK_UINT16: eif_put_natural_16_item (tuple->it_ref, pos, source->it_uint16); break;
+				case SK_UINT32: eif_put_natural_32_item (tuple->it_ref, pos, source->it_uint32); break;
+				case SK_UINT64: eif_put_natural_64_item (tuple->it_ref, pos, source->it_uint64); break;
+				case SK_INT8: eif_put_integer_8_item (tuple->it_ref, pos, source->it_int8); break;
+				case SK_INT16: eif_put_integer_16_item (tuple->it_ref, pos, source->it_int16); break;
+				case SK_INT32: eif_put_integer_32_item (tuple->it_ref, pos, source->it_int32); break;
+				case SK_INT64: eif_put_integer_64_item (tuple->it_ref, pos, source->it_int64); break;
+				case SK_REAL32: eif_put_real_32_item (tuple->it_ref, pos, source->it_real32); break;
+				case SK_REAL64: eif_put_real_64_item (tuple->it_ref, pos, source->it_real64); break;
+				case SK_POINTER: eif_put_pointer_item (tuple->it_ref, pos, source->it_ptr); break;
+				default:
+					eif_put_reference_item (tuple->it_ref, pos, source->it_ref);
+			}
+		}
+
+		break;
+		
 	case BC_TUPLE:
 	case BC_PTUPLE:
 #ifdef DEBUG

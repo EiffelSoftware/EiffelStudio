@@ -12,6 +12,15 @@ class
 inherit
 	EXPR_AS
 
+	ID_SET_ACCESSOR
+		rename
+			make as make_id_set,
+			id_set as routine_ids,
+			set_id_set as set_routine_ids
+		undefine
+			is_equal, copy
+		end
+
 create
 	initialize
 
@@ -65,9 +74,6 @@ feature -- Attributes
 	argument_position: INTEGER
 			-- If the current entity is an argument this gives the position in the argument list.
 
-	routine_ids: ID_SET
-			-- If the current entity is a feature this gives the routine ids.
-
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -98,14 +104,6 @@ feature -- Setting
 			-- Set `class_id' to `a_class_id'.
 		do
 			class_id := a_class_id
-		end
-
-	set_routine_ids (a_routine_ids: like routine_ids) is
-			-- Set `routine_ids' to `a_routine_ids'.
-		require
-			a_routine_ids_not_void: a_routine_ids /= Void
-		do
-			routine_ids := a_routine_ids
 		end
 
 	set_argument_position (an_argument_position: like argument_position) is

@@ -16,21 +16,11 @@ inherit
 		end
 
 create
-	make, make_with_data
+	make
 
 feature -- Initialization
 
-	make (a_scn: EIFFEL_SCANNER) is
-			-- Create an comment object using information included in `a_scn'.
-			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-			set_internal_text (a_scn.text)
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-		end
-
-	make_with_data (a_text: STRING; l, c, p, s: INTEGER) is
+	make (a_text: STRING; l, c, p, s: INTEGER) is
 			-- Create an comment object with `a_text' as literal text of this comment in source code.
 			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
 		require
@@ -67,7 +57,7 @@ feature -- Text
 	literal_text (a_list: LEAF_AS_LIST): STRING is
 			-- Literal text of current AST node
 		require else
-			a_list_can_be_void: a_list = Void
+			True
 		do
 			Result := internal_text
 		end

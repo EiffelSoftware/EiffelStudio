@@ -213,7 +213,7 @@ extern "C" {
 #define EIF_THR_ENTRY_ARG_TYPE  void *
 #define EIF_THR_ATTR_TYPE       unsigned char
 #define EIF_SEM_TYPE            HANDLE
-#define EIF_THR_TYPE            unsigned long
+#define EIF_THR_TYPE            uintptr_t
 #define EIF_MUTEX_TYPE          HANDLE
 
 #elif defined SOLARIS_THREADS

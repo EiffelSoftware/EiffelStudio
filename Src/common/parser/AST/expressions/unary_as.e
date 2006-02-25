@@ -15,6 +15,15 @@ inherit
 			{NONE} all
 		end
 
+	ID_SET_ACCESSOR
+		rename
+			make as make_id_set,
+			id_set as routine_ids,
+			set_id_set as set_routine_ids
+		undefine
+			is_equal, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize (e: like expr; o: like operator) is
@@ -41,9 +50,6 @@ feature -- Attributes
 
 	class_id: INTEGER
 			-- The class id of the qualified call.
-
-	routine_ids: ID_SET
-			-- The routine ids of the feature.
 
 feature -- Location
 
@@ -96,14 +102,6 @@ feature -- Comparison
 		end
 
 feature -- Setting
-
-	set_routine_ids (a_routine_ids: like routine_ids) is
-			-- Set `routine_ids' to `a_routine_ids'.
-		require
-			a_routine_ids_not_void: a_routine_ids /= Void
-		do
-			routine_ids := a_routine_ids
-		end
 
 	set_class_id (a_class_id: like class_id) is
 			-- Set `class_id' to `a_class_id'.

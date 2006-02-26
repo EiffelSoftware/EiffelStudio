@@ -1559,6 +1559,8 @@ feature -- Input
 				back
 			end
 			last_character := old_c
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 feature -- Convenience

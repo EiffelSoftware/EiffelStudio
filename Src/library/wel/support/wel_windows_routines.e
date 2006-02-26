@@ -97,7 +97,7 @@ feature -- Basic operations
 			create a_wel_string.make_empty (1024)
 			nb := cwin_load_string (
 				wr_main_args.resource_instance.item,
-				an_id, a_wel_string.item, Result.count)
+				an_id, a_wel_string.item, 1024)
 			Result := a_wel_string.substring (1, nb)
 		ensure
 			result_not_void: Result /= Void

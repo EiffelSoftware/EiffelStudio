@@ -309,8 +309,6 @@ feature -- Access
 feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
-		local
-			s: APPLICATION_STATUS
 		do
 			if debugger_manager.application_current_thread_id /= tid then
 				debugger_manager.set_current_thread_id (tid)

@@ -50,7 +50,7 @@ feature -- Element change
 			support_storable: support_storable
 		deferred
 		end
- 
+
 	general_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -65,7 +65,7 @@ feature -- Element change
 			support_storable: support_storable
 		deferred
 		end
- 
+
 	independent_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -77,7 +77,7 @@ feature -- Element change
 			support_storable: support_storable
 		deferred
 		end
- 
+
 feature -- Status report
 
 	handle: INTEGER is
@@ -106,40 +106,40 @@ feature -- Status report
 
 	last_integer: INTEGER
 			-- Last integer read by `read_integer'
-			
+
 	last_integer_32: INTEGER is
 			-- Synonymy of `last_integer'
 		do
 			Result := last_integer
-		end			
+		end
 
 	last_integer_64: INTEGER_64
 			-- Last 64-bit integer read by `read_integer_64'
-		
-	last_integer_16: INTEGER_16	
+
+	last_integer_16: INTEGER_16
 			-- Last 16-bit integer read by `read_integer_16'
-	
+
 	last_integer_8: INTEGER_8
 			-- Last 8-bit integer read by `read_integer_8'
-		
+
 	last_natural_64: NATURAL_64
 			-- Last 64-bit natural read by `read_natural_64'
 
 	last_natural: NATURAL_32
 			-- Last 32-bit natural read by `read_natural'
-		
+
 	last_natural_32: NATURAL_32 is
 			-- Synonymy of `last_natural'
 		do
 			Result := last_natural
 		end
-			
-	last_natural_16: NATURAL_16	
+
+	last_natural_16: NATURAL_16
 			-- Last 16-bit natural read by `read_natural_16'
-				
+
 	last_natural_8: NATURAL_8
 			-- Last 8-bit natural read by `read_natural_8'
-				
+
 	last_real: REAL
 			-- Last real read by `read_real'
 
@@ -260,7 +260,7 @@ feature -- Output
 			extendible: extendible
 		deferred
 		end
-		
+
 	put_integer_8 (i: INTEGER_8) is
 			-- Write `i' to medium.
 		require
@@ -274,14 +274,14 @@ feature -- Output
 			extendible: extendible
 		deferred
 		end
-	
+
 	put_integer_64 (i: INTEGER_64) is
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
-		
+
 	put_natural_8 (i: NATURAL_8) is
 			-- Write `i' to medium.
 		require
@@ -302,13 +302,13 @@ feature -- Output
 			extendible: extendible
 		deferred
 		end
-	
+
 	put_natural_64 (i: NATURAL_64) is
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
-		end				
+		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
@@ -367,7 +367,7 @@ feature -- Input
 			is_readable: readable
 		deferred
 		end
-		
+
 	read_integer_8 is
 			-- Read a new 8-bit integer.
 			-- Make result available in `last_integer_8'.
@@ -383,7 +383,7 @@ feature -- Input
 			is_readable: readable
 		deferred
 		end
-		
+
 	read_integer_64 is
 			-- Read a new 64-bit integer.
 			-- Make result available in `last_integer_64'.
@@ -391,7 +391,7 @@ feature -- Input
 			is_readable: readable
 		deferred
 		end
-				
+
 	read_natural_8 is
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
@@ -415,14 +415,14 @@ feature -- Input
 			is_readable: readable
 		deferred
 		end
-		
+
 	read_natural_64 is
 			-- Read a new 64-bit natural.
 			-- Make result available in `last_natural_64'.
 		require
 			is_readable: readable
 		deferred
-		end				
+		end
 
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
@@ -431,6 +431,8 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 	read_line, readline is
@@ -440,6 +442,8 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is

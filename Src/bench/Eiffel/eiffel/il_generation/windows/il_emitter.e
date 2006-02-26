@@ -182,7 +182,6 @@ feature -- Retrieval
 			l_version: UNI_STRING
 			l_culture: UNI_STRING
 			l_key: UNI_STRING
-			l_res: UNI_STRING
 		do
 			create l_name.make (a_name)
 			if a_version /= Void and not a_version.is_empty then

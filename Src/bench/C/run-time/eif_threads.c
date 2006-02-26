@@ -830,8 +830,7 @@ rt_public void eif_thr_exit(void)
 		exitprf();
 
 		RT_GC_PROTECT(thread_object);
-		thread_object = eif_access(eif_thr_context->current);
-		eif_wean(eif_thr_context->current);
+		thread_object = eif_wean(eif_thr_context->current);
 		offset = eifaddr_offset (thread_object, "terminated", &ret);
 		CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 

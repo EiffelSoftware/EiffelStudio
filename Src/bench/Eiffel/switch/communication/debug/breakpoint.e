@@ -22,8 +22,8 @@ inherit
 		redefine
 			is_equal
 		end
-		
-	E_FEATURE_COMPARER		
+
+	E_FEATURE_COMPARER
 		redefine
 			is_equal
 		end
@@ -114,9 +114,7 @@ feature -- Query
 
 	real_body_ids_list: LIST [INTEGER] is
 		local
-			l_class_c: CLASS_C
 			l_class_type_list: LIST [CLASS_TYPE]
-			l_class_type: CLASS_TYPE
 			fi: FEATURE_I
 			lcurs: CURSOR
 		do

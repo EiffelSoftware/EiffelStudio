@@ -28,6 +28,7 @@ inherit
 create
 	make,
 	make_button,
+	make_drop_down_button,
 	make_check,
 	make_check_group,
 	make_group,
@@ -41,7 +42,7 @@ feature {NONE} -- Initialization
 			-- `a_command_id'.
 		do
 			make
-			set_style (Tbstyle_button)
+			set_style (Tbstyle_button | Btns_showtext | Btns_autosize)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
 			set_command_id (a_command_id)
@@ -50,12 +51,23 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
+	make_drop_down_button  (a_bitmap_index, a_command_id: INTEGER) is
+			-- Make a drop down button using `a_bitmap_index' and
+			-- `a_command_id'.
+		do
+			make
+			set_style (Tbstyle_button | Btns_showtext | Btns_dropdown | Btns_autosize)
+			set_state (Tbstate_enabled)
+			set_bitmap_index (a_bitmap_index)
+			set_command_id (a_command_id)
+		end
+
 	make_button_with_string (a_bitmap_index, a_string_index, a_command_id: INTEGER) is
 			-- Make a button using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
 			make
-			set_style (Tbstyle_button)
+			set_style (Tbstyle_button | Tbstyle_autosize)
 			set_string_index (a_string_index)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
@@ -70,7 +82,8 @@ feature {NONE} -- Initialization
 			-- `a_command_id'.
 		do
 			make
-			set_style (Tbstyle_check)
+
+			set_style (tbstyle_check | tbstyle_autosize)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
 			set_command_id (a_command_id)
@@ -107,7 +120,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_separator is
+	make_separator  is
 			-- Make a separator providing a small gap between
 			-- groups.
 		do

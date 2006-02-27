@@ -20,7 +20,8 @@ inherit
 	EV_GRID_ITEM
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			required_width
 		end
 
 create
@@ -36,6 +37,15 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			expose_actions.extend (an_agent)
+		end
+
+feature -- Access
+
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+		do
+			Result := implementation.required_width
 		end
 
 feature -- Status setting

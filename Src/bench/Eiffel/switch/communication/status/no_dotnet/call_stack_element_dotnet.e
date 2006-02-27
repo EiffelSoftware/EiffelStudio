@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER) is
+	make (level, tid: INTEGER) is
 		do
 		end
 

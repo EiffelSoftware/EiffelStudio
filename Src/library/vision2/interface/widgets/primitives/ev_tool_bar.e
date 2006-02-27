@@ -19,7 +19,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_DOCKABLE_TARGET
 		undefine
 			is_equal,
@@ -37,7 +37,7 @@ inherit
 
 create
 	default_create
-	
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_TOOL_BAR_IMP} implementation.make (Current)
 		end
-		
+
 feature -- Status report
 
 	has_vertical_button_style: BOOLEAN is
@@ -59,7 +59,15 @@ feature -- Status report
 		ensure
 			bridge_ok: equal (Result, implementation.has_vertical_button_style)
 		end
-		
+
+	is_vertical: BOOLEAN is
+			-- Are items in toolbar vertical orientated?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_vertical
+		end
+
 feature -- Status setting
 
 	enable_vertical_button_style is
@@ -71,7 +79,7 @@ feature -- Status setting
 		ensure
 			vertical_button_style_assigned: has_vertical_button_style
 		end
-		
+
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		require
@@ -82,14 +90,34 @@ feature -- Status setting
 			vertical_button_style_not_assigned: not has_vertical_button_style
 		end
 
+	enable_vertical is
+			-- Ensure `is_vertical' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_vertical
+		ensure
+			is_vertical_assigned: is_vertical
+		end
+
+	disable_vertical is
+			-- Ensure `is_vertical' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_vertical
+		ensure
+			is_vertical_not_assigned: not is_vertical
+		end
+
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and has_vertical_button_style
 		end
-	
+
 feature -- Constract support
 
 	is_parent_recursive (a_tool_bar_item: EV_TOOL_BAR_ITEM): BOOLEAN is

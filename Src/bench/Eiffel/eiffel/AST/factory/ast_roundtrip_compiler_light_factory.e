@@ -22,6 +22,7 @@ inherit
 			new_bits_as,
 			new_class_as,
 			new_class_type_as,
+			set_expanded_class_type,
 			new_debug_as,
 			new_expr_address_as,
 			new_integer_value,

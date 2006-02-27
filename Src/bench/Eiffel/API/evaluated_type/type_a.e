@@ -47,12 +47,29 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := Void
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
 		do
-			Result := Void
+		end
+
+feature -- Roundtrip
+
+	lcurly_symbol, rcurly_symbol: SYMBOL_AS is
+			-- Left and/or right curly symbol(s) associated with this structure
+			-- Maybe none of them, or maybe only left curly appears.
+			-- Not applicable.
+		do
+		end
+
+	set_lcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `lcurly_symbol' with `s_as'.
+		do
+		end
+
+	set_rcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `rcurly_symbol' with `s_as'.
+		do
 		end
 
 feature -- Properties
@@ -170,8 +187,8 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_multi_type: BOOLEAN is
-			-- Is the current type a manifest array
+	is_named_tuple: BOOLEAN is
+			-- Is the current type a tuple with labels?
 		do
 			-- Do nothing
 		end
@@ -438,6 +455,14 @@ feature {COMPILER_EXPORTER} -- Access
 		require
 			good_argument: context_class /= Void
 			good_generic_count: good_generics
+		do
+		end
+
+	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is
+			-- Check validity of `labels' of current in `a_context_class'.
+		require
+			a_context_class_not_void: a_context_class /= Void
+			a_node_not_void: a_node /= Void
 		do
 		end
 

@@ -53,6 +53,22 @@ feature -- Roundtrip
 	current_keyword: KEYWORD_AS
 		-- Keyword "current" associated with this structure		
 
+	lcurly_symbol, rcurly_symbol: SYMBOL_AS
+			-- Left and/or right curly symbol(s) associated with this structure
+			-- Maybe none of them, or maybe only left curly appears.
+
+	set_lcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `lcurly_symbol' with `s_as'.
+		do
+			lcurly_symbol := s_as
+		end
+
+	set_rcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `rcurly_symbol' with `s_as'.
+		do
+			rcurly_symbol := s_as
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

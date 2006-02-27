@@ -14,6 +14,7 @@ inherit
 			new_bits_as,
 			new_class_as,
 			new_class_type_as,
+			set_expanded_class_type,
 			new_debug_as,
 			new_expr_address_as,
 			new_feature_as,
@@ -90,17 +91,22 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp: BOOLEAN; is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
 		do
 			if n /= Void then
-				create Result.initialize (n, g, is_exp, is_sep, e_as, s_as)
-				if is_exp then
-					system.set_has_expanded
-					check
-						system_initialized: system.current_class /= Void
-					end
-					system.current_class.set_has_expanded
+				create Result.initialize (n, g)
+			end
+		end
+
+	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS) is
+		do
+			Precursor {AST_FACTORY} (a_type, is_expanded, s_as)
+			if is_expanded then
+				system.set_has_expanded
+				check
+					system_initialized: system.current_class /= Void
 				end
+				system.current_class.set_has_expanded
 			end
 		end
 

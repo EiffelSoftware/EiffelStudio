@@ -383,7 +383,7 @@ feature {INHERIT_TABLE} -- Propagation
 		end
 
 feature {NONE} -- Propagation to Degree 4
-	
+
 	propagate_pass2 (a_class: CLASS_C; real_pass2: BOOLEAN) is
 			-- Ask the compiler to recalculate the feature table for
 			-- the direct descendants. The feature table of `a_class'
@@ -519,8 +519,8 @@ feature {NONE} -- Generic checking
 			-- Check that all the generic declarations where the generic
 			-- class defines a creation constraint clause are system valid.
 		local
-			generic_creation_list: LINKED_LIST [CONSTRAINT_CHECKING_INFO]
-			constraint_info: CONSTRAINT_CHECKING_INFO
+			generic_creation_list: LINKED_LIST [FUTURE_CHECKING_INFO]
+			constraint_info: FUTURE_CHECKING_INFO
 		do
 			generic_creation_list := remaining_validity_checking_list
 			from
@@ -558,19 +558,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

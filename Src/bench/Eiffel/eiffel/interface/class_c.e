@@ -3207,7 +3207,7 @@ feature -- Actual class type
 			actual_type_not_void: Result /= Void
 		end
 
-feature {CLASS_TYPE_AS, AST_TYPE_CHECKER} -- Actual class type
+feature {TYPE_AS, AST_TYPE_CHECKER} -- Actual class type
 
 	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared
@@ -5016,7 +5016,7 @@ feature {DEGREE_5} -- Degree 5
 			parsing_needed_set: parsing_needed = b
 		end
 
-feature {DEGREE_4} -- Degree 4
+feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 
 	add_to_degree_4 is
 			-- Add current class to Degree 4.

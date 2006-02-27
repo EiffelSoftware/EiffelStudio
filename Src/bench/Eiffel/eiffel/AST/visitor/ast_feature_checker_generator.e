@@ -354,6 +354,9 @@ feature {NONE} -- Implementation: Access
 			-- Actual name of last ACCESS_AS (might be different from original name
 			-- in case an overloading resolution took place)
 
+	is_last_access_tuple_access: BOOLEAN
+			-- Is last ACCESS_AS node an access to a TUPLE element?
+
 feature -- Settings
 
 	reset is
@@ -657,7 +660,9 @@ feature -- Implementation
 			l_cl_type_i: CL_TYPE_I
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
-			l_is_assigner_call: BOOLEAN
+			l_is_assigner_call, l_processing_done: BOOLEAN
+			l_named_tuple: NAMED_TUPLE_TYPE_A
+			l_label_pos: INTEGER
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -670,6 +675,7 @@ feature -- Implementation
 			l_is_target_of_creation_instruction := is_target_of_creation_instruction
 			is_in_creation_expression := False
 			is_target_of_creation_instruction := False
+			is_last_access_tuple_access := False
 
 				-- Reset assigner call flag
 			l_is_assigner_call := is_assigner_call
@@ -736,342 +742,362 @@ feature -- Implementation
 					l_feature := l_last_class.feature_table.item (l_feature_name)
 				end
 			end
-			if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
-					-- Attachments type check
-				l_formal_count := l_feature.argument_count
-				if is_agent and l_actual_count = 0 and l_formal_count > 0 then
-						-- Delayed call with all arguments open.
-						-- Create l_parameters.
-					from
-						create l_parameters.make_filled (l_formal_count)
-						l_parameters.start
-					until
-						l_parameters.after
-					loop
-						l_parameters.put (create {OPERAND_AS}.initialize (Void, Void, Void))
-						l_parameters.forth
-					end
-					l_actual_count := l_formal_count
-					current_target_type := Void
-					process_expressions_list (l_parameters)
-					l_arg_types := last_expressions_type
+				-- No feature was found, so if the target of the call is a named tuple
+				-- then it might be a call on one of its label.
+			if l_feature = Void and l_last_type.is_named_tuple then
+				l_named_tuple ?= l_last_type
+				check l_named_tuple_not_void: l_named_tuple /= Void end
+				l_label_pos := l_named_tuple.label_position (l_feature_name)
+				if l_label_pos > 0 then
+					l_processing_done := True
+					last_type := l_named_tuple.generics.item (l_label_pos)
+					last_access_writable := True
+					is_last_access_tuple_access := True
+					last_feature_name := l_feature_name
 					if l_needs_byte_node then
-						l_arg_nodes ?= last_byte_node
+						create {TUPLE_ACCESS_B} last_byte_node.make (l_named_tuple.type_i, l_label_pos)
+						last_byte_node.set_line_number (l_feature_name.line)
 					end
-					l_parameters.start
 				end
-				if l_actual_count /= l_formal_count then
-					create l_vuar1
-					context.init_error (l_vuar1)
-					l_vuar1.set_called_feature (l_feature, l_last_id)
-					l_vuar1.set_argument_count (l_actual_count)
-					l_vuar1.set_location (l_feature_name)
-					error_handler.insert_error (l_vuar1)
-						-- Cannot go on here: too dangerous
-					error_handler.raise_error
-				elseif l_parameters /= Void then
-					if l_needs_byte_node then
-						create l_parameter_list.make (l_actual_count)
+			end
+			if not l_processing_done then
+				if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
+						-- Attachments type check
+					l_formal_count := l_feature.argument_count
+					if is_agent and l_actual_count = 0 and l_formal_count > 0 then
+							-- Delayed call with all arguments open.
+							-- Create l_parameters.
+						from
+							create l_parameters.make_filled (l_formal_count)
+							l_parameters.start
+						until
+							l_parameters.after
+						loop
+							l_parameters.put (create {OPERAND_AS}.initialize (Void, Void, Void))
+							l_parameters.forth
+						end
+						l_actual_count := l_formal_count
+						current_target_type := Void
+						process_expressions_list (l_parameters)
+						l_arg_types := last_expressions_type
+						if l_needs_byte_node then
+							l_arg_nodes ?= last_byte_node
+						end
+						l_parameters.start
 					end
-					if l_arg_types /= Void then
-							-- Parameters have been evaluated, nothing to be done.
-							-- Case for overloaded routine call or agent with all open arguments.
-						l_actual_count := l_actual_count + 1 -- Optimization for loop exit
-					else
-							-- Parameters haven't yet evaluated
+					if l_actual_count /= l_formal_count then
+						create l_vuar1
+						context.init_error (l_vuar1)
+						l_vuar1.set_called_feature (l_feature, l_last_id)
+						l_vuar1.set_argument_count (l_actual_count)
+						l_vuar1.set_location (l_feature_name)
+						error_handler.insert_error (l_vuar1)
+							-- Cannot go on here: too dangerous
+						error_handler.raise_error
+					elseif l_parameters /= Void then
+						if l_needs_byte_node then
+							create l_parameter_list.make (l_actual_count)
+						end
+						if l_arg_types /= Void then
+								-- Parameters have been evaluated, nothing to be done.
+								-- Case for overloaded routine call or agent with all open arguments.
+							l_actual_count := l_actual_count + 1 -- Optimization for loop exit
+						else
+								-- Parameters haven't yet evaluated
+							from
+								i := 1
+								create l_arg_types.make (1, l_actual_count)
+								if l_needs_byte_node then
+									create l_arg_nodes.make (l_actual_count)
+								end
+								l_actual_count := l_actual_count + 1 -- Optimization for loop exit
+							until
+								i = l_actual_count
+							loop
+									-- Get formal argument type.
+								l_formal_arg_type ?= l_feature.arguments.i_th (i)
+								check
+									l_formal_arg_type_not_void: l_formal_arg_type /= Void
+								end
+
+								reset_for_unqualified_call_checking
+								if l_formal_arg_type.is_like_argument then
+										-- To bad we are not able to evaluate with a target context a manifest array
+										-- passed as argument where formal is an anchor type.
+									current_target_type := Void
+								else
+									current_target_type :=
+										l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+								end
+								l_parameters.i_th (i).process (Current)
+								l_arg_types.put (last_type, i)
+								if l_needs_byte_node then
+									l_expr ?= last_byte_node
+									l_arg_nodes.extend (l_expr)
+								end
+								i := i + 1
+							end
+						end
+
+							-- Conformance checking of arguments
 						from
 							i := 1
-							create l_arg_types.make (1, l_actual_count)
-							if l_needs_byte_node then
-								create l_arg_nodes.make (l_actual_count)
-							end
-							l_actual_count := l_actual_count + 1 -- Optimization for loop exit
 						until
 							i = l_actual_count
 						loop
+								-- Get actual argument type.
+							l_arg_type := l_arg_types.item (i)
+
 								-- Get formal argument type.
 							l_formal_arg_type ?= l_feature.arguments.i_th (i)
 							check
 								l_formal_arg_type_not_void: l_formal_arg_type /= Void
 							end
 
-							reset_for_unqualified_call_checking
+								-- Take care of anchoring to argument
 							if l_formal_arg_type.is_like_argument then
-									-- To bad we are not able to evaluate with a target context a manifest array
-									-- passed as argument where formal is an anchor type.
-								current_target_type := Void
-							else
-								current_target_type :=
-									l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+								l_like_arg_type := l_formal_arg_type.actual_argument_type (l_arg_types)
+								l_like_arg_type :=
+									l_like_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+									-- Check that `l_arg_type' is compatible to its `like argument'.
+									-- Once this is done, then type checking is done on the real
+									-- type of the routine, not the anchor.
+								if
+									not l_arg_type.conform_to (l_like_arg_type) and then
+									not l_arg_type.convert_to (context.current_class, l_like_arg_type)
+								then
+									insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
+										l_like_arg_type)
+								end
 							end
-							l_parameters.i_th (i).process (Current)
-							l_arg_types.put (last_type, i)
+								-- Actual type of feature argument
+							l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
+
+								-- Conformance: take care of constrained genericity
+								-- We must generate an error when `l_formal_arg_type' becomes
+								-- an OPEN_TYPE_A, for example "~equal (?, b)" will
+								-- check that the type of `b' conforms to type of `?'
+								-- since `equal' is defined as `equal (a: ANY; b: like a)'.
+								-- However `conform_to' does not work when parameter
+								-- is an OPEN_TYPE_A type. Since this checks can only
+								-- happens in type checking of an agent, we can do it
+								-- at only one place, ie here.
+							l_open_type ?= l_formal_arg_type
+							if l_open_type /= Void or else not l_arg_type.conform_to (l_formal_arg_type) then
+								if
+									l_open_type = Void and
+									l_arg_type.convert_to (context.current_class, l_formal_arg_type)
+								then
+									l_conv_info := context.last_conversion_info
+									if l_conv_info.has_depend_unit then
+										context.supplier_ids.extend (l_conv_info.depend_unit)
+									end
+										-- Generate conversion byte node only if we are not checking
+										-- a custom attribute. Indeed in that case, we do not want those
+										-- conversion routines, we will use the attachment type to figure
+										-- out how the custom attribute will be generated.
+									if l_needs_byte_node and not is_checking_cas then
+										l_expr ?= l_arg_nodes.i_th (i)
+										l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
+									end
+								elseif
+									l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
+									l_arg_type.is_conformant_to (l_formal_arg_type)
+								then
+										-- No need for conversion, this is currently done at the code
+										-- generation level to properly handle the generic case.
+										-- If not done at the code generation, we would need the
+										-- following lines.
+--									l_expr ?= l_arg_nodes.i_th (i)
+--									l_arg_nodes.put_i_th ((create {BOX_CONVERSION_INFO}.make (l_arg_type)).
+--										byte_node (l_expr), i)
+								else
+									insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
+										l_formal_arg_type)
+								end
+							end
 							if l_needs_byte_node then
-								l_expr ?= last_byte_node
-								l_arg_nodes.extend (l_expr)
+								create l_parameter
+								l_expr ?= l_arg_nodes.i_th (i)
+								l_parameter.set_expression (l_expr)
+								l_parameter.set_attachment_type (l_formal_arg_type.type_i)
+								l_parameter_list.extend (l_parameter)
+
+								if is_checking_cas then
+									fixme ("[
+										Validity checking should not be done when byte code generation
+										is required. But unfortunately we need the compiled version to get
+										information about the parameters.
+										]")
+									if not l_expr.is_constant_expression then
+										create l_vica2.make (context.current_class, current_feature)
+										l_vica2.set_location (l_parameters.i_th (i).start_location)
+										error_handler.insert_error (l_vica2)
+									end
+								end
 							end
 							i := i + 1
 						end
 					end
 
-						-- Conformance checking of arguments
-					from
-						i := 1
-					until
-						i = l_actual_count
-					loop
-							-- Get actual argument type.
-						l_arg_type := l_arg_types.item (i)
+						-- Get the type of Current feature.
+					l_result_type ?= l_feature.type
 
-							-- Get formal argument type.
-						l_formal_arg_type ?= l_feature.arguments.i_th (i)
-						check
-							l_formal_arg_type_not_void: l_formal_arg_type /= Void
-						end
+						-- If the declared target type is formal
+						-- and if the corresponding generic parameter is
+						-- constrained to a class which is also generic
+						-- Result id a FORMAL_A object with no more information
+						-- than the position of the formal in the generic parameter
+						-- list of the class in which the feature "l_feature_name" is
+						-- declared.
+						-- Example:
+						--
+						-- 	class TEST [G -> ARRAY [STRING]]
+						--	...
+						--	x: G
+						-- 		x.item (1)
+						--
+						-- For the evaluation of `item', l_last_type is "Generic #1" (of TEST)
+						-- `l_last_constrained_type' is ARRAY [STRING], `l_feature.type'
+						-- is "Generic #1" (of ARRAY)
+						-- We need to convert the type to the constrained type for proper
+						-- type evaluation of remote calls.
+						-- "Generic #1" (of ARRAY) is thus replaced by the corresponding actual
+						-- type in the declaration of the constraint class type (in this case
+						-- class STRING).
+						-- Note: the following conditional instruction will not be executed
+						-- if the class type of the constraint id not generic since in that
+						-- case `Result' would not be formal.
 
-							-- Take care of anchoring to argument
-						if l_formal_arg_type.is_like_argument then
-							l_like_arg_type := l_formal_arg_type.actual_argument_type (l_arg_types)
-							l_like_arg_type :=
-								l_like_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
-								-- Check that `l_arg_type' is compatible to its `like argument'.
-								-- Once this is done, then type checking is done on the real
-								-- type of the routine, not the anchor.
-							if
-								not l_arg_type.conform_to (l_like_arg_type) and then
-								not l_arg_type.convert_to (context.current_class, l_like_arg_type)
-							then
-								insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
-									l_like_arg_type)
-							end
-						end
-							-- Actual type of feature argument
-						l_formal_arg_type := l_formal_arg_type.instantiation_in (l_last_type, l_last_id).actual_type
-
-							-- Conformance: take care of constrained genericity
-							-- We must generate an error when `l_formal_arg_type' becomes
-							-- an OPEN_TYPE_A, for example "~equal (?, b)" will
-							-- check that the type of `b' conforms to type of `?'
-							-- since `equal' is defined as `equal (a: ANY; b: like a)'.
-							-- However `conform_to' does not work when parameter
-							-- is an OPEN_TYPE_A type. Since this checks can only
-							-- happens in type checking of an agent, we can do it
-							-- at only one place, ie here.
-						l_open_type ?= l_formal_arg_type
-						if l_open_type /= Void or else not l_arg_type.conform_to (l_formal_arg_type) then
-							if
-								l_open_type = Void and
-								l_arg_type.convert_to (context.current_class, l_formal_arg_type)
-							then
-								l_conv_info := context.last_conversion_info
-								if l_conv_info.has_depend_unit then
-									context.supplier_ids.extend (l_conv_info.depend_unit)
-								end
-									-- Generate conversion byte node only if we are not checking
-									-- a custom attribute. Indeed in that case, we do not want those
-									-- conversion routines, we will use the attachment type to figure
-									-- out how the custom attribute will be generated.
-								if l_needs_byte_node and not is_checking_cas then
-									l_expr ?= l_arg_nodes.i_th (i)
-									l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
-								end
-							elseif
-								l_arg_type.is_expanded and then l_formal_arg_type.is_external and then
-								l_arg_type.is_conformant_to (l_formal_arg_type)
-							then
-									-- No need for conversion, this is currently done at the code
-									-- generation level to properly handle the generic case.
-									-- If not done at the code generation, we would need the
-									-- following lines.
---								l_expr ?= l_arg_nodes.i_th (i)
---								l_arg_nodes.put_i_th ((create {BOX_CONVERSION_INFO}.make (l_arg_type)).
---									byte_node (l_expr), i)
-							else
-								insert_vuar2_error (l_feature, l_parameters, l_last_id, i, l_arg_type,
-									l_formal_arg_type)
-							end
-						end
-						if l_needs_byte_node then
-							create l_parameter
-							l_expr ?= l_arg_nodes.i_th (i)
-							l_parameter.set_expression (l_expr)
-							l_parameter.set_attachment_type (l_formal_arg_type.type_i)
-							l_parameter_list.extend (l_parameter)
-
-							if is_checking_cas then
-								fixme ("[
-									Validity checking should not be done when byte code generation
-									is required. But unfortunately we need the compiled version to get
-									information about the parameters.
-									]")
-								if not l_expr.is_constant_expression then
-									create l_vica2.make (context.current_class, current_feature)
-									l_vica2.set_location (l_parameters.i_th (i).start_location)
-									error_handler.insert_error (l_vica2)
-								end
-							end
-						end
-						i := i + 1
-					end
-				end
-
-					-- Get the type of Current feature.
-				l_result_type ?= l_feature.type
-
-					-- If the declared target type is formal
-					-- and if the corresponding generic parameter is
-					-- constrained to a class which is also generic
-					-- Result id a FORMAL_A object with no more information
-					-- than the position of the formal in the generic parameter
-					-- list of the class in which the feature "l_feature_name" is
-					-- declared.
-					-- Example:
-					--
-					-- 	class TEST [G -> ARRAY [STRING]]
-					--	...
-					--	x: G
-					-- 		x.item (1)
-					--
-					-- For the evaluation of `item', l_last_type is "Generic #1" (of TEST)
-					-- `l_last_constrained_type' is ARRAY [STRING], `l_feature.type'
-					-- is "Generic #1" (of ARRAY)
-					-- We need to convert the type to the constrained type for proper
-					-- type evaluation of remote calls.
-					-- "Generic #1" (of ARRAY) is thus replaced by the corresponding actual
-					-- type in the declaration of the constraint class type (in this case
-					-- class STRING).
-					-- Note: the following conditional instruction will not be executed
-					-- if the class type of the constraint id not generic since in that
-					-- case `Result' would not be formal.
-
-				if l_last_type.is_formal then
-					if l_result_type.is_formal then
-						l_formal_type ?= l_result_type
-					else
-						l_formal_type ?= l_result_type.actual_type
-					end
-
-					if l_formal_type /= Void then
-						l_result_type := l_last_constrained.generics.item (l_formal_type.position)
-					end
-				elseif l_last_type.is_like then
-					if l_result_type.is_formal then
-						l_formal_type ?= l_result_type
-					else
-						l_formal_type ?= l_result_type.actual_type
-					end
-					if l_formal_type /= Void then
-						l_result_type := l_last_type.actual_type.generics.item (l_formal_type.position)
-					end
-				end
-				if l_arg_types /= Void then
-					l_result_type := l_result_type.actual_argument_type (l_arg_types)
-				end
-				l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
-					-- Export validity
-				if
-					not context.is_ignoring_export and is_qualified and
-					not l_feature.is_exported_for (context.current_class)
-				then
-					create l_vuex
-					context.init_error (l_vuex)
-					l_vuex.set_static_class (l_last_class)
-					l_vuex.set_exported_feature (l_feature)
-					l_vuex.set_location (l_feature_name)
-					error_handler.insert_error (l_vuex)
-				end
-				if
-					l_feature.is_obsolete
-						-- If the obsolete call is in an obsolete class,
-						-- no message is displayed
-					and then not context.current_class.is_obsolete
-						-- The current feature is whether the invariant or
-						-- a non obsolete feature
-					and then (current_feature = Void or else
-						not current_feature.is_obsolete)
-				then
-					create l_obs_warn
-					l_obs_warn.set_class (context.current_class)
-					l_obs_warn.set_obsolete_class (l_last_constrained.associated_class)
-					l_obs_warn.set_obsolete_feature (l_feature)
-					l_obs_warn.set_feature (current_feature)
-					error_handler.insert_warning (l_obs_warn)
-				end
-				if
-					not System.do_not_check_vape and then is_checking_precondition and then
-					not l_is_in_creation_expression and then
-					not current_feature.export_status.is_subset (l_feature.export_status)
-				then
-						-- In precondition and checking for vape
-					create l_vape
-					context.init_error (l_vape)
-					l_vape.set_exported_feature (l_feature)
-					l_vape.set_location (l_feature_name)
-					error_handler.insert_error (l_vape)
-					error_handler.raise_error
-				end
-
-					-- Supplier dependances update
-				if l_is_target_of_creation_instruction then
-					create l_depend_unit.make_with_level (l_last_id, l_feature,
-						{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
-				else
-					if is_precursor then
-						create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
-							depend_unit_level)
-						context.supplier_ids.extend (l_depend_unit)
-					end
-					create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
-				end
-				context.supplier_ids.extend (l_depend_unit)
-
-				if l_is_assigner_call then
-					process_assigner_command (l_last_id, l_feature)
-				end
-
-				if l_needs_byte_node then
-					if not is_static then
-						if is_precursor then
-							l_cl_type_i ?= a_precursor_type.type_i
-							l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+					if l_last_type.is_formal then
+						if l_result_type.is_formal then
+							l_formal_type ?= l_result_type
 						else
-							l_access := l_feature.access (l_result_type.type_i)
+							l_formal_type ?= l_result_type.actual_type
 						end
-					else
-						l_cl_type_i ?= a_type.type_i
-						l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
-						l_ext ?= l_access
-						if l_ext /= Void then
-							l_ext.enable_static_call
+
+						if l_formal_type /= Void then
+							l_result_type := l_last_constrained.generics.item (l_formal_type.position)
+						end
+					elseif l_last_type.is_like then
+						if l_result_type.is_formal then
+							l_formal_type ?= l_result_type
+						else
+							l_formal_type ?= l_result_type.actual_type
+						end
+						if l_formal_type /= Void then
+							l_result_type := l_last_type.actual_type.generics.item (l_formal_type.position)
 						end
 					end
-					l_access.set_parameters (l_parameter_list)
-					last_byte_node := l_access
-				end
-				last_type := l_result_type
-				last_access_writable := l_feature.is_attribute
-				last_feature_name := l_feature.feature_name
-				last_routine_id_set := l_feature.rout_id_set
-			else
-					-- `l_feature' was not valid for current, report
-					-- corresponding error.
-				if l_feature = Void then
-						-- Not a valid feature name.
-					create l_veen
-					context.init_error (l_veen)
-					l_veen.set_identifier (l_feature_name)
-					l_veen.set_parameter_count (l_actual_count)
-					l_veen.set_location (l_feature_name)
-					error_handler.insert_error (l_veen)
-					error_handler.raise_error
-				elseif is_static then
-						-- Not a valid feature for static access.	
-					create l_vsta2
-					context.init_error (l_vsta2)
-					l_vsta2.set_non_static_feature (l_feature)
-					l_vsta2.set_location (l_feature_name)
-					error_handler.insert_error (l_vsta2)
-					error_handler.raise_error
+					if l_arg_types /= Void then
+						l_result_type := l_result_type.actual_argument_type (l_arg_types)
+					end
+					l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
+						-- Export validity
+					if
+						not context.is_ignoring_export and is_qualified and
+						not l_feature.is_exported_for (context.current_class)
+					then
+						create l_vuex
+						context.init_error (l_vuex)
+						l_vuex.set_static_class (l_last_class)
+						l_vuex.set_exported_feature (l_feature)
+						l_vuex.set_location (l_feature_name)
+						error_handler.insert_error (l_vuex)
+					end
+					if
+						l_feature.is_obsolete
+							-- If the obsolete call is in an obsolete class,
+							-- no message is displayed
+						and then not context.current_class.is_obsolete
+							-- The current feature is whether the invariant or
+							-- a non obsolete feature
+						and then (current_feature = Void or else
+							not current_feature.is_obsolete)
+					then
+						create l_obs_warn
+						l_obs_warn.set_class (context.current_class)
+						l_obs_warn.set_obsolete_class (l_last_constrained.associated_class)
+						l_obs_warn.set_obsolete_feature (l_feature)
+						l_obs_warn.set_feature (current_feature)
+						error_handler.insert_warning (l_obs_warn)
+					end
+					if
+						not System.do_not_check_vape and then is_checking_precondition and then
+						not l_is_in_creation_expression and then
+						not current_feature.export_status.is_subset (l_feature.export_status)
+					then
+							-- In precondition and checking for vape
+						create l_vape
+						context.init_error (l_vape)
+						l_vape.set_exported_feature (l_feature)
+						l_vape.set_location (l_feature_name)
+						error_handler.insert_error (l_vape)
+						error_handler.raise_error
+					end
+
+						-- Supplier dependances update
+					if l_is_target_of_creation_instruction then
+						create l_depend_unit.make_with_level (l_last_id, l_feature,
+							{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
+					else
+						if is_precursor then
+							create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+								depend_unit_level)
+							context.supplier_ids.extend (l_depend_unit)
+						end
+						create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+					end
+					context.supplier_ids.extend (l_depend_unit)
+
+					if l_is_assigner_call then
+						process_assigner_command (l_last_id, l_feature)
+					end
+
+					if l_needs_byte_node then
+						if not is_static then
+							if is_precursor then
+								l_cl_type_i ?= a_precursor_type.type_i
+								l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+							else
+								l_access := l_feature.access (l_result_type.type_i)
+							end
+						else
+							l_cl_type_i ?= a_type.type_i
+							l_access := l_feature.access_for_feature (l_result_type.type_i, l_cl_type_i)
+							l_ext ?= l_access
+							if l_ext /= Void then
+								l_ext.enable_static_call
+							end
+						end
+						l_access.set_parameters (l_parameter_list)
+						last_byte_node := l_access
+					end
+					last_type := l_result_type
+					last_access_writable := l_feature.is_attribute
+					last_feature_name := l_feature.feature_name
+					last_routine_id_set := l_feature.rout_id_set
+				else
+						-- `l_feature' was not valid for current, report
+						-- corresponding error.
+					if l_feature = Void then
+							-- Not a valid feature name.
+						create l_veen
+						context.init_error (l_veen)
+						l_veen.set_identifier (l_feature_name)
+						l_veen.set_parameter_count (l_actual_count)
+						l_veen.set_location (l_feature_name)
+						error_handler.insert_error (l_veen)
+						error_handler.raise_error
+					elseif is_static then
+							-- Not a valid feature for static access.	
+						create l_vsta2
+						context.init_error (l_vsta2)
+						l_vsta2.set_non_static_feature (l_feature)
+						l_vsta2.set_location (l_feature_name)
+						error_handler.insert_error (l_vsta2)
+						error_handler.raise_error
+					end
 				end
 			end
 		end
@@ -1439,7 +1465,17 @@ feature -- Implementation
 
 				-- set some type attributes of the node
 			l_as.set_class_id (l_class_id)
-			l_as.set_routine_ids (last_routine_id_set)
+			if last_routine_id_set /= Void then
+				check
+					not_is_tuple_access: not is_last_access_tuple_access
+				end
+				l_as.set_routine_ids (last_routine_id_set)
+			else
+				check
+					is_tuple_access: is_last_access_tuple_access
+				end
+				l_as.enable_tuple_access
+			end
 		end
 
 	process_access_inv_as (l_as: ACCESS_INV_AS) is
@@ -3159,10 +3195,14 @@ feature -- Implementation
 			arguments: BYTE_LIST [PARAMETER_B]
 			argument: PARAMETER_B
 			assigner_arguments: BYTE_LIST [PARAMETER_B]
+			l_tuple_access: TUPLE_ACCESS_B
+			l_is_tuple_access: BOOLEAN
 		do
 				-- Set assigner call flag for target expression
 			is_assigner_call := True
 			l_as.target.process (Current)
+			l_is_tuple_access := is_last_access_tuple_access
+			is_last_access_tuple_access := False
 			check
 				assigner_command_computed: not is_assigner_call
 			end
@@ -3179,7 +3219,9 @@ feature -- Implementation
 				vbac1.set_target_type (target_type)
 				vbac1.set_location (l_as.start_location)
 				error_handler.insert_error (vbac1)
-			elseif target_assigner = Void then
+			elseif target_assigner = Void and then not l_is_tuple_access then
+					-- If we have no `target_assigner' and the last access is not a tuple access
+					-- then we have an error.
 				create vbac2
 				context.init_error (vbac2)
 				vbac2.set_location (l_as.start_location)
@@ -3190,6 +3232,7 @@ feature -- Implementation
 				error_handler.checksum
 					-- Preserve source byte node
 				source_byte_node ?= last_byte_node
+
 					-- Discriminate over expression kind:
 					-- it should be either a qualified call,
 					-- a binary or an unary
@@ -3232,28 +3275,38 @@ feature -- Implementation
 					call_b := outer_nested_b
 						-- There are no arguments in unary expression
 				end
-					-- Evaluate assigner command arguments:
-					--   first is a source of an assigner command
-					--   next are those from target call
-				if arguments = Void then
-					create assigner_arguments.make (1)
+
+				if l_is_tuple_access then
+						-- When assigning to a tuple, we simply transform the tuple
+						-- access by giving a source.
+					l_tuple_access ?= access_b
+					check l_tuple_access_not_void: l_tuple_access /= Void end
+					l_tuple_access.set_source (source_byte_node)
+					last_byte_node := target_byte_node
 				else
-					create assigner_arguments.make (arguments.count + 1)
+						-- Evaluate assigner command arguments:
+						--   first is a source of an assigner command
+						--   next are those from target call
+					if arguments = Void then
+						create assigner_arguments.make (1)
+					else
+						create assigner_arguments.make (arguments.count + 1)
+					end
+					create argument
+					argument.set_expression (source_byte_node)
+					argument.set_attachment_type (target_type.type_i)
+					assigner_arguments.extend (argument)
+					if arguments /= Void then
+						assigner_arguments.append (arguments)
+					end
+						-- Evaluate assigner command byte node
+					access_b := target_assigner.access (void_type.type_i)
+					access_b.set_parameters (assigner_arguments)
+						-- Replace end of call chain with an assigner command
+					access_b.set_parent (outer_nested_b)
+					outer_nested_b.set_message (access_b)
+					create {INSTR_CALL_B} last_byte_node.make (call_b, l_as.start_location.line)
 				end
-				create argument
-				argument.set_expression (source_byte_node)
-				argument.set_attachment_type (target_type.type_i)
-				assigner_arguments.extend (argument)
-				if arguments /= Void then
-					assigner_arguments.append (arguments)
-				end
-					-- Evaluate assigner command byte node
-				access_b := target_assigner.access (void_type.type_i)
-				access_b.set_parameters (assigner_arguments)
-					-- Replace end of call chain with an assigner command
-				access_b.set_parent (outer_nested_b)
-				outer_nested_b.set_message (access_b)
-				create {INSTR_CALL_B} last_byte_node.make (call_b, l_as.start_location.line)
 			end
 		end
 
@@ -4152,6 +4205,11 @@ feature -- Implementation
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
+		do
+			last_type := type_checker.solved_type (l_as)
+		end
+
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
 		do
 			last_type := type_checker.solved_type (l_as)
 		end

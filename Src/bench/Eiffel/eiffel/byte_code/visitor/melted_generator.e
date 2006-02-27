@@ -1396,6 +1396,26 @@ feature {NONE} -- Visitors
 			ba.append_integer (l_attr_names.count)
 		end
 
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+			-- Process `a_node'.
+		do
+				-- It is guaranteed that the TUPLE object is on the stack because
+				-- TUPLE_ACCESS_B is always the message of a NESTED_B node.
+			if a_node.source /= Void then
+					-- Assignment to a tuple entry.
+				generate_melted_debugger_hook
+				a_node.source.process (Current)
+				ba.append (bc_tuple_assign)
+				ba.append_integer_32 (a_node.position)
+				ba.append_uint32_integer (a_node.tuple_element_type.sk_value)
+			else
+					-- Access to tuple entry.
+				ba.append (bc_tuple_access)
+				ba.append_integer_32 (a_node.position)
+				ba.append_uint32_integer (a_node.tuple_element_type.sk_value)
+			end
+		end
+
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is
 			-- Process `a_node'.
 		local
@@ -1877,19 +1897,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

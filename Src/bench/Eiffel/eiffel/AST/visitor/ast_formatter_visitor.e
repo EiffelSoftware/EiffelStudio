@@ -1911,6 +1911,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		do
+			if l_as.is_separate then
+				ctxt.put_text_item_without_tabs (ti_separate_keyword)
+				ctxt.put_space
+			end
+			ctxt.put_class_name (l_as.class_name)
+			if l_as.parameters /= Void then
+				ctxt.put_space
+				ctxt.put_text_item_without_tabs (ti_l_bracket)
+				ctxt.set_space_between_tokens
+				ctxt.set_separator (ti_semi_colon)
+				l_as.parameters.process (Current)
+				ctxt.put_text_item_without_tabs (ti_r_bracket)
+			end
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 			ctxt.put_class_name ("NONE")

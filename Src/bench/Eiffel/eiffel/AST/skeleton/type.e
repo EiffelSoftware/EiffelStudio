@@ -21,22 +21,22 @@ inherit
 
 feature -- Roundtrip
 
-	lcurly_symbol, rcurly_symbol: SYMBOL_AS
+	lcurly_symbol, rcurly_symbol: SYMBOL_AS is
 			-- Left and/or right curly symbol(s) associated with this structure
 			-- Maybe none of them, or maybe only left curly appears.
+		deferred
+		end
 
 	set_lcurly_symbol (s_as: SYMBOL_AS) is
 			-- Set `lcurly_symbol' with `s_as'.
-		do
-			lcurly_symbol := s_as
+		deferred
 		ensure
 			lcurly_symbol_set: lcurly_symbol = s_as
 		end
 
 	set_rcurly_symbol (s_as: SYMBOL_AS) is
 			-- Set `rcurly_symbol' with `s_as'.
-		do
-			rcurly_symbol := s_as
+		deferred
 		ensure
 			rcurly_symbol_set: rcurly_symbol = s_as
 		end

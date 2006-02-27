@@ -8,18 +8,18 @@
 
 					<!-- Registration information for EiffelSoftware.MetadataConsumer.dll -->
 				<Registry Id="cons_reg14" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-				<Registry Id="cons_reg15" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER\CLSID" Value="{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}" Type="string" />
-				<Registry Id="cons_reg0" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-				<Registry Id="cons_reg1" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" />
-				<Registry Id="cons_reg2" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32" Value="mscoree.dll" Type="string" />
-				<Registry Id="cons_reg3" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
-				<Registry Id="cons_reg4" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-				<Registry Id="cons_reg5" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.7.414.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="cons_reg6" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="cons_reg8" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32\5.7.414.0" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-				<Registry Id="cons_reg9" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32\5.7.414.0" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.7.414.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="cons_reg10" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\InprocServer32\5.7.414.0" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="cons_reg12" Root="HKCR" Key="CLSID\{E1FFE1AC-B1AC-436F-948D-20B62A3A87AF}\ProgId" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+				<Registry Id="cons_reg15" Root="HKCR" Key="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER\CLSID" Value="{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}" Type="string" />
+				<Registry Id="cons_reg0" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+				<Registry Id="cons_reg1" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" />
+				<Registry Id="cons_reg2" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32" Value="mscoree.dll" Type="string" />
+				<Registry Id="cons_reg3" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
+				<Registry Id="cons_reg4" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+				<Registry Id="cons_reg5" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.7.414.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
+				<Registry Id="cons_reg6" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
+				<Registry Id="cons_reg8" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32\5.7.414.0" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+				<Registry Id="cons_reg9" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32\5.7.414.0" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.7.414.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
+				<Registry Id="cons_reg10" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32\5.7.414.0" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
+				<Registry Id="cons_reg12" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\ProgId" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
 
 				<!-- Registration information for ISE.VS.FusionSupport.dll -->
 				<Registry Id="fus_reg0" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />

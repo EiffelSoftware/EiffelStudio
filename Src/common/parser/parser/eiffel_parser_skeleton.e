@@ -329,6 +329,16 @@ feature {NONE} -- Implementation
 	ast_location: LOCATION_AS
 			-- Temp location
 
+	last_class_type: CLASS_TYPE_AS
+			-- Temporary local in semantic actions when
+			-- performing assignment attempts.
+
+	last_identifier_list: IDENTIFIER_LIST
+			-- Temporary locals in semantic actions.
+
+	last_type_list: TYPE_LIST_AS
+			-- Temporary locals in semantic actions.
+
 feature {NONE} -- Counters
 
 	counter_value: INTEGER is
@@ -416,7 +426,7 @@ feature {NONE} -- ID factory
 
 feature {NONE} -- Type factory
 
-	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -456,7 +466,7 @@ feature {NONE} -- Type factory
 					end
 					if Result = Void then
 							-- It is a common class type.
-						class_type := ast_factory.new_class_type_as (class_name, generics, is_exp, is_sep, e_as, s_as)
+						class_type := ast_factory.new_class_type_as (class_name, generics)
 							-- Put the supplier in `suppliers'.
 						suppliers.insert_supplier_id (class_name)
 						Result := class_type

@@ -63,7 +63,7 @@ inherit
 			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_debug_key_list_as,
 			new_delayed_actual_list_as, new_parameter_list_as,
 			new_rename_clause_as, new_export_clause_as, new_undefine_clause_as, new_redefine_clause_as, new_select_clause_as,
-			new_creation_constrain_triple
+			new_creation_constrain_triple, new_named_tuple_type_as
 		end
 
 feature -- Buffer operation
@@ -519,8 +519,13 @@ feature -- Access
 		do
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
+		do
+		end
+
+	new_named_tuple_type_as (n: ID_AS; g: FORMAL_ARGU_DEC_LIST_AS): NAMED_TUPLE_TYPE_AS is
+			-- New TUPLE_TYPE AST node
 		do
 		end
 
@@ -534,7 +539,7 @@ feature -- Access
 		do
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS ; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		do
 		end

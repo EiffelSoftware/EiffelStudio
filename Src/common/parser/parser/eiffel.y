@@ -39,10 +39,10 @@ create
 %left		TE_DOT
 %right		TE_LPARAN
 
-%token <ID_AS> TE_FREE TE_ID TE_A_BIT
-%token TE_INTEGER 
-%token TE_REAL 
-%token <CHAR_AS>TE_CHAR 
+%token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
+%token TE_INTEGER
+%token TE_REAL
+%token <CHAR_AS>TE_CHAR
 
 %token <SYMBOL_AS> 		TE_LSQURE TE_RSQURE
 %token <SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
@@ -50,9 +50,9 @@ create
 %token <SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
 %token <SYMBOL_AS>		TE_LCURLY TE_RCURLY
 %token <SYMBOL_AS> 		TE_BANG TE_SEMICOLON
-%token <SYMBOL_AS>		TE_COLON TE_COMMA 
-%token <SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION 
-%token <SYMBOL_AS> 		TE_DOTDOT TE_TILDE TE_DOT 
+%token <SYMBOL_AS>		TE_COLON TE_COMMA
+%token <SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
+%token <SYMBOL_AS> 		TE_DOTDOT TE_TILDE TE_DOT
 %token <SYMBOL_AS> 		TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
 %token <SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
 %token <SYMBOL_AS> 		TE_DIV TE_MOD
@@ -73,19 +73,19 @@ create
 %token <KEYWORD_AS> TE_PREFIX
 
 %token <KEYWORD_AS> TE_IS
-%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS       
-%token <KEYWORD_AS> TE_ASSIGN TE_BIT TE_CHECK TE_CLASS TE_CONVERT    
+%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
+%token <KEYWORD_AS> TE_ASSIGN TE_BIT TE_CHECK TE_CLASS TE_CONVERT
 %token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
 %token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
 %token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INDEXING TE_INHERIT
 %token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
 %token <KEYWORD_AS> TE_LOOP TE_NOT TE_OBSOLETE TE_OLD TE_ONCE
-%token <KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE  TE_RENAME
+%token <KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE TE_RENAME
 %token <KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
 %token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
-%token <KEYWORD_AS> TE_XOR 
+%token <KEYWORD_AS> TE_XOR
 
-%token TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING		 
+%token TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
 %token TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
 %token TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
 %token TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
@@ -136,7 +136,7 @@ create
 %type <FEATURE_SET_AS>		Feature_set
 %type <FORMAL_AS>			Formal_parameter
 %type <FORMAL_DEC_AS>		Formal_generic
-%type <ID_AS>			 Identifier_as_upper Identifier_as_lower Free_operator Feature_name_for_call
+%type <ID_AS>				Class_or_tuple_identifier Class_identifier Identifier_as_lower Free_operator Feature_name_for_call
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause Index_clause_impl
 %type <INSPECT_AS>			Multi_branch
@@ -147,7 +147,7 @@ create
 %type <INVARIANT_AS>		Class_invariant
 %type <LOOP_AS>				Loop
 %type <NESTED_AS>			Call_on_feature_access
-%type <OPERAND_AS>			Delayed_actual 
+%type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
 %type <STATIC_ACCESS_AS>	A_static_call Old_a_static_call New_a_static_call
@@ -159,11 +159,12 @@ create
 %type <ROUTINE_AS>			Routine
 %type <ROUTINE_CREATION_AS>	Agent_call
 %type <PAIR[ROUTINE_CREATION_AS, LOCATION_AS]> Tilda_agent_call
-%type <STRING_AS>		 Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
+%type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Class_type Non_class_type Typed
-%type <TYPE_DEC_AS>			Entity_declaration_group
+%type <TYPE_AS>				Type Non_class_type Typed Class_or_tuple_type Class_type Tuple_type
+%type <CLASS_TYPE_AS>		Parent_class_type
+%type <TYPE_DEC_AS>			Entity_declaration_group Tuple_declaration_group
 %type <VARIANT_AS>			Variant
 %type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
@@ -175,35 +176,35 @@ create
 %type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
 %type <EXPORT_CLAUSE_AS> 		New_exports New_exports_opt
 %type <EIFFEL_LIST [EXPR_AS]>			Expression_list
-%type <PARAMETER_LIST_AS> 	Parameters 
+%type <PARAMETER_LIST_AS> 	Parameters
 %type <EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
-%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl  New_feature_list
+%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
 %type <CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
 %type <UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
-%type <REDEFINE_CLAUSE_AS> Redefine Redefine_opt 
-%type <SELECT_CLAUSE_AS>	Select Select_opt 
+%type <REDEFINE_CLAUSE_AS> Redefine Redefine_opt
+%type <SELECT_CLAUSE_AS>	Select Select_opt
 %type <FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
-%type <CLASS_LIST_AS>					Client_list Class_list 
+%type <CLASS_LIST_AS>					Client_list Class_list
 
 %type <INDEXING_CLAUSE_AS>			Indexing Index_list Dotnet_indexing
-%type <EIFFEL_LIST [INSTRUCTION_AS]>	 Compound Instruction_list 
+%type <EIFFEL_LIST [INSTRUCTION_AS]>	Compound Instruction_list
 %type <EIFFEL_LIST [INTERVAL_AS]>		Choices
 %type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
-%type <DELAYED_ACTUAL_LIST_AS>	Delayed_actuals 
+%type <DELAYED_ACTUAL_LIST_AS>	Delayed_actuals
 %type <PARENT_LIST_AS>					Inheritance Parent_list
 %type <EIFFEL_LIST [RENAME_AS]>			Rename_list
 %type <RENAME_CLAUSE_AS>					Rename
-%type <EIFFEL_LIST [STRING_AS]>			 String_list
+%type <EIFFEL_LIST [STRING_AS]>			String_list
 %type <DEBUG_KEY_LIST_AS>	Debug_keys
-%type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list 
-%type <TYPE_LIST_AS>			Generics_opt Type_list Type_list_impl
-%type <EIFFEL_LIST [TYPE_DEC_AS]>		Entity_declaration_list 
+%type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
+%type <TYPE_LIST_AS>					Generics_opt Type_list Type_list_impl
+%type <EIFFEL_LIST [TYPE_DEC_AS]>		Entity_declaration_list Tuple_entity_declaration_list
 %type <LOCAL_DEC_LIST_AS>	Local_declarations
-%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments 
+%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments
 %type <CONSTRAINT_TRIPLE>	Constraint
 
-%expect 118
+%expect 121
 
 %%
 
@@ -255,12 +256,11 @@ Eiffel_parser:
 				end
 				entity_declaration_node := Void
 			}
-	|	TE_LOCAL { add_counter } Entity_declaration_list
+	|	TE_LOCAL Add_counter Entity_declaration_list Remove_counter
 			{
 				if not entity_declaration_parser or type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
-				remove_counter
 				entity_declaration_node := $3
 			}
 	;
@@ -269,7 +269,7 @@ Class_declaration:
 		Indexing									-- $1
 		Header_mark								-- $2
 		TE_CLASS									-- $3
-		Identifier_as_upper					-- $4
+		Class_or_tuple_identifier					-- $4
 		Formal_generics						-- $5
 		External_name							-- $6
 		Obsolete									-- $7
@@ -314,7 +314,7 @@ Class_declaration:
 
 End_inheritance_pos: { inheritance_end_position := position } ;
 End_features_pos: { features_end_position := position } ;
-End_feature_clause_pos: { feature_clause_end_position := position };							 
+End_feature_clause_pos: { feature_clause_end_position := position };
 -- Indexing
 
 
@@ -322,20 +322,18 @@ Indexing: -- Empty
 			-- { $$ := Void }
 	|	TE_INDEXING
 			{
-				add_counter
 				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
 				set_has_old_verbatim_strings_warning (false)
 			}
-		Index_list
+		Add_counter Index_list Remove_counter
 			{
-				$$ := $3
+				$$ := $4
 				if $$ /= Void then
 					$$.set_indexing_keyword ($1)
 				end				
-				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
-	|	TE_INDEXING 
+	|	TE_INDEXING
 			--- { $$ := Void }
 			{
 				$$ := ast_factory.new_indexing_clause_as (0)
@@ -358,22 +356,20 @@ Dotnet_indexing: -- Empty
 		}
 	|	TE_INDEXING
 			{
-				add_counter
 				initial_has_old_verbatim_strings_warning := has_old_verbatim_strings_warning
 				set_has_old_verbatim_strings_warning (false)
 			}
-		Index_list TE_END
+		Add_counter Index_list Remove_counter TE_END
 			{
-				$$ := $3
+				$$ := $4
 				if $$ /= Void then
 					if $1 /= Void then
 						$$.set_indexing_keyword ($1)
 					end
-					if $4 /= Void then	
-						$$.set_end_keyword ($4)
+					if $6 /= Void then	
+						$$.set_end_keyword ($6)
 					end
 				end				
-				remove_counter
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	;
@@ -396,11 +392,8 @@ Index_list: Index_clause
 			}
 	;
 
-Index_clause: { add_counter } Index_clause_impl
-		{
-			$$ := $2
-			remove_counter
-		}
+Index_clause: Add_counter Index_clause_impl Remove_counter
+		{ $$ := $2 }
 	;
 			
 Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
@@ -549,13 +542,12 @@ Obsolete: -- Empty
 
 Features: -- Empty
 			-- { $$ := Void }
-	|	{ add_counter } Feature_clause_list
+	|	Add_counter Feature_clause_list Remove_counter
 			{
 				$$ := $2
 				if $$ /= Void and then $$.is_empty then
 					$$ := Void
 				end
-				remove_counter
 			}
 	;
 
@@ -578,16 +570,13 @@ Feature_clause_list: Feature_clause
 Feature_clause: Feature_client_clause End_feature_clause_pos
 			{ $$ := ast_factory.new_feature_clause_as ($1,
 				ast_factory.new_eiffel_list_feature_as (0), fclause_pos, feature_clause_end_position) }
-	|	Feature_client_clause { add_counter } Feature_declaration_list End_feature_clause_pos
-			{
-				$$ := ast_factory.new_feature_clause_as ($1, $3, fclause_pos,  feature_clause_end_position)
-				remove_counter
-			}
+	|	Feature_client_clause Add_counter Feature_declaration_list Remove_counter End_feature_clause_pos
+			{ $$ := ast_factory.new_feature_clause_as ($1, $3, fclause_pos, feature_clause_end_position) }
 	;
 
 Feature_client_clause: TE_FEATURE
 			{
-				fclause_pos := $1 
+				fclause_pos := $1
 				if $1 /= Void then
 						-- Originally, it was 8, I changed it to 7, delete the following line when fully tested. (Jason)
 					fclause_pos.set_position (line, column, position, 7)
@@ -616,25 +605,24 @@ Client_list: TE_LCURLY TE_RCURLY
 					$$.set_rcurly_symbol ($2)
 				end
 			}
-	|	TE_LCURLY { add_counter } Class_list TE_RCURLY
+	|	TE_LCURLY Add_counter Class_list Remove_counter TE_RCURLY
 			{
 				$$ := $3
 				if $$ /= Void then
 					$$.set_lcurly_symbol ($1)
-					$$.set_rcurly_symbol ($4)
+					$$.set_rcurly_symbol ($5)
 				end				
-				remove_counter
 			}
 	;
 
-Class_list: Identifier_as_upper
+Class_list: Class_or_tuple_identifier
 			{
 				$$ := ast_factory.new_class_list_as (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
 			}
-	|	Identifier_as_upper { increment_counter } TE_COMMA Class_list
+	|	Class_or_tuple_identifier { increment_counter } TE_COMMA Class_list
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -664,7 +652,7 @@ ASemi: -- Empty
 	|	TE_SEMICOLON { $$ := $1 }
 	;
 
-Feature_declaration: { add_counter } New_feature_list { remove_counter } Declaration_body Optional_semicolons
+Feature_declaration: Add_counter New_feature_list Remove_counter Declaration_body Optional_semicolons
 			{
 				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes, position)
 				feature_indexes := Void
@@ -702,11 +690,11 @@ New_feature: Extended_feature_name
 Extended_feature_name: Feature_name
 			{ $$ := $1 }
 	|	Identifier_as_lower Alias
-			{ 
+			{
 				if $2 /= Void then
-					$$ := ast_factory.new_feature_name_alias_as ($1, $2.alias_name, has_convert_mark, $2.alias_keyword, $2.convert_keyword) 
+					$$ := ast_factory.new_feature_name_alias_as ($1, $2.alias_name, has_convert_mark, $2.alias_keyword, $2.convert_keyword)
 				else
-					$$ := ast_factory.new_feature_name_alias_as ($1, Void, has_convert_mark, Void, Void) 
+					$$ := ast_factory.new_feature_name_alias_as ($1, Void, has_convert_mark, Void, Void)
 				end
 				
 			}
@@ -738,11 +726,11 @@ Alias: TE_ALIAS Alias_name Alias_mark
 Alias_name: Infix_operator
 			{ $$ := $1 }
 	|	TE_STR_NOT
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_BRACKET
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
 			}
 	;
@@ -750,7 +738,7 @@ Alias_name: Infix_operator
 Alias_mark: -- Empty
 			{ has_convert_mark := False }
 	|	TE_CONVERT
-			{ has_convert_mark := True 
+			{ has_convert_mark := True
 				$$ := $1
 			}
 	;
@@ -812,18 +800,18 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 	;
 
 Assigner_mark_opt: -- Empty
-			 { 
-			 	$$ := ast_factory.new_assigner_mark_as (Void, Void) 
-			 }
+			{
+				$$ := ast_factory.new_assigner_mark_as (Void, Void)
+			}
 	|	TE_ASSIGN Identifier_as_lower
-			{ 
-				$$ := ast_factory.new_assigner_mark_as ($1, $2) 
+			{
+				$$ := ast_factory.new_assigner_mark_as ($1, $2)
 			}
 	;
 
 Constant_attribute: Manifest_constant
 			{ $$ := ast_factory.new_constant_as ($1) }
-	|	TE_UNIQUE 
+	|	TE_UNIQUE
 			{ $$ := ast_factory.new_constant_as ($1) }
 	;
 
@@ -845,13 +833,12 @@ Inheritance: -- Empty
 					$$.set_inherit_keyword ($1)
 				end
 			}
-	|	TE_INHERIT { add_counter } Parent_list
+	|	TE_INHERIT Add_counter Parent_list Remove_counter
 			{
 				$$ := $3
 				if $$ /= Void then
 					$$.set_inherit_keyword ($1)
 				end				
-				remove_counter
 			}
 	;
 
@@ -868,55 +855,47 @@ Parent_list: Parent
 				if $$ /= Void and $1 /= Void then
 					$$.reverse_extend ($1)
 				end
-			} 
-	;
-
-Parent: Parent_clause
-			{
-				$$ := $1
-			}
-	|	Parent_clause TE_SEMICOLON
-			{
-				$$ := $1
 			}
 	;
 
-Parent_clause: Identifier_as_upper Generics_opt
+Parent: Parent_clause ASemi
+			{ $$ := $1 }
+	;
+
+Parent_class_type: Class_identifier Generics_opt
+			{ $$ := ast_factory.new_class_type_as ($1, $2) }
+	;
+
+Parent_clause: Parent_class_type
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), Void, Void, Void, Void, Void, Void)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, Void, Void, Void)
 			}
-	|	Identifier_as_upper Generics_opt Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
+	|	Parent_class_type Select TE_END
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), $3, $4, $5, $6, $7, $8)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, Void, $2, $3)
 			}
-	|	Identifier_as_upper Generics_opt New_exports Undefine_opt Redefine_opt Select_opt TE_END
+	|	Parent_class_type Redefine Select_opt TE_END
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), Void, $3, $4, $5, $6, $7)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, Void, $2, $3, $4)
 			}
-	|	Identifier_as_upper Generics_opt Undefine Redefine_opt Select_opt TE_END
+	|	Parent_class_type Undefine Redefine_opt Select_opt TE_END
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), Void, Void, $3, $4, $5, $6)
+				$$ := ast_factory.new_parent_as ($1, Void, Void, $2, $3, $4, $5)
 			}
-	|	Identifier_as_upper Generics_opt Redefine Select_opt TE_END
+	|	Parent_class_type New_exports Undefine_opt Redefine_opt Select_opt TE_END
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), Void, Void, Void, $3, $4, $5)
+				$$ := ast_factory.new_parent_as ($1, Void, $2, $3, $4, $5, $6)
 			}
-	|	Identifier_as_upper Generics_opt Select TE_END
+	|	Parent_class_type Rename New_exports_opt Undefine_opt Redefine_opt Select_opt TE_END
 			{
-				$$ := ast_factory.new_parent_as (ast_factory.new_class_type_as ($1, $2, False, False, Void, Void), Void, Void, Void, Void, $3, $4)
+				$$ := ast_factory.new_parent_as ($1, $2, $3, $4, $5, $6, $7)
 			}
 	;
 
 Rename: TE_RENAME
-			--- { $$ := Void }
-			{
-				$$ := ast_factory.new_rename_clause_as (Void, $1)
-			}
-	|	TE_RENAME { add_counter } Rename_list
-			{
-				$$ := ast_factory.new_rename_clause_as ($3, $1)
-				remove_counter
-			}
+			{ $$ := ast_factory.new_rename_clause_as (Void, $1) }
+	|	TE_RENAME Add_counter Rename_list Remove_counter
+			{ $$ := ast_factory.new_rename_clause_as ($3, $1) }
 	;
 
 Rename_list: Rename_pair
@@ -941,21 +920,15 @@ Rename_pair: Feature_name TE_AS Extended_feature_name
 	;
 
 New_exports_opt: -- Empty
-			-- { $$  := Void }
+			-- { $$ := Void }
 	|	New_exports
 			{ $$ := $1 }
 	;
 
-New_exports: TE_EXPORT { add_counter } New_export_list
-			{
-				$$ := ast_factory.new_export_clause_as ($3, $1)
-				remove_counter
-			}
+New_exports: TE_EXPORT Add_counter New_export_list Remove_counter
+			{ $$ := ast_factory.new_export_clause_as ($3, $1) }
 	|	TE_EXPORT ASemi
-			--- { $$ := Void }
-			{
-				$$ := ast_factory.new_export_clause_as (Void, $1)
-			}
+			{ $$ := ast_factory.new_export_clause_as (Void, $1) }
 	;
 
 New_export_list: New_export_item
@@ -989,14 +962,13 @@ Feature_set: -- Empty
 	;
 
 Convert_clause: -- Empty
-			  -- { $$ := Void }
-	|	TE_CONVERT { add_counter } Convert_list
+			-- { $$ := Void }
+	|	TE_CONVERT Add_counter Convert_list Remove_counter
 		{
 			$$ := $3
 			if $$ /= Void then
 				$$.set_convert_keyword ($1)
 			end
-			remove_counter
 		}
 	;
 
@@ -1032,11 +1004,8 @@ Convert_feature: Feature_name TE_LPARAN TE_LCURLY Type_list TE_RCURLY TE_RPARAN
 		}
 	;
 
-Feature_list: { add_counter } Feature_list_impl
-		{
-			$$ := $2
-			remove_counter
-		}
+Feature_list: Add_counter Feature_list_impl Remove_counter
+		{ $$ := $2 }
 	;
 
 Feature_list_impl: Feature_name
@@ -1068,7 +1037,7 @@ Undefine: TE_UNDEFINE
 			$$ := ast_factory.new_undefine_clause_as (Void, $1)
 		}
 	|	TE_UNDEFINE Feature_list
-			{ 
+			{
 				$$ := ast_factory.new_undefine_clause_as ($2, $1)
 			}
 	;
@@ -1085,7 +1054,7 @@ Redefine: TE_REDEFINE
 			$$ := ast_factory.new_redefine_clause_as (Void, $1)
 		}
 	|	TE_REDEFINE Feature_list
-			{ 
+			{
 				$$ := ast_factory.new_redefine_clause_as ($2, $1)				
 			}
 	;
@@ -1102,7 +1071,7 @@ Select: TE_SELECT
 			$$ := ast_factory.new_select_clause_as (Void, $1)
 		}
 	|	TE_SELECT Feature_list
-			{ 
+			{
 				$$ := ast_factory.new_select_clause_as ($2, $1)
 			}
 	;
@@ -1112,15 +1081,9 @@ Select: TE_SELECT
 
 
 Formal_arguments:	TE_LPARAN TE_RPARAN
-		---	{ $$ := Void }
-		{
-			$$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2)
-		}
-	|	TE_LPARAN { add_counter } Entity_declaration_list TE_RPARAN
-			{
-				$$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $4)
-				remove_counter
-			}
+			{ $$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2) }
+	|	TE_LPARAN Add_counter Entity_declaration_list Remove_counter TE_RPARAN
+			{ $$ := ast_factory.new_formal_argu_dec_list_as ($3, $1, $5) }
 	;
 
 Entity_declaration_list: Entity_declaration_group
@@ -1139,7 +1102,7 @@ Entity_declaration_list: Entity_declaration_group
 			}
 	;
 
-Entity_declaration_group: { add_counter } Identifier_list { remove_counter } TE_COLON Type ASemi
+Entity_declaration_group: Add_counter Identifier_list Remove_counter TE_COLON Type ASemi
 			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4) }
 	;
 
@@ -1166,11 +1129,8 @@ Identifier_list: Identifier_as_lower
 
 Strip_identifier_list: -- Empty
 			{ $$ := ast_factory.new_identifier_list (0) }
-	|	{ add_counter } Identifier_list
-			{
-				$$ := $2
-				remove_counter
-			}
+	|	Add_counter Identifier_list Remove_counter
+			{ $$ := $2 }
 	;
 
 Routine:
@@ -1226,7 +1186,7 @@ External_language:
 External_name: -- Empty
 			-- { $$ := Void }
 	|	TE_ALIAS Non_empty_string
-			{ 
+			{
 				$$ := ast_factory.new_keyword_string_pair ($1, $2)
 			}
 	;
@@ -1240,22 +1200,15 @@ Internal: TE_DO Compound
 Local_declarations: -- Empty
 			-- { $$ := Void }
 	|	TE_LOCAL
-			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), $1)
-			}
-	|	TE_LOCAL { add_counter } Entity_declaration_list
-			{
-				$$ := ast_factory.new_local_dec_list_as ($3, $1)
-				remove_counter
-			}
+			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), $1) }
+	|	TE_LOCAL Add_counter Entity_declaration_list Remove_counter
+			{ $$ := ast_factory.new_local_dec_list_as ($3, $1) }
 	;
 
 Compound: Optional_semicolons
 			-- { $$ := Void }
-	|	Optional_semicolons { add_counter } Instruction_list
-			{
-				$$ := $3
-				remove_counter
-			}
+	|	Optional_semicolons Add_counter Instruction_list Remove_counter
+			{ $$ := $3 }
 	;
 
 Instruction_list: Instruction
@@ -1348,13 +1301,12 @@ Postcondition: -- Empty
 
 Assertion: -- Empty
 			-- { $$ := Void }
-	|	{ add_counter } Assertion_list
+	|	Add_counter Assertion_list Remove_counter
 			{
 				$$ := $2
 				if $$ /= Void and then $$.is_empty then
 					$$ := Void
 				end
-				remove_counter
 			}
 	;
 
@@ -1404,23 +1356,31 @@ Assertion_clause: Expression ASemi
 -- Type
 
 
-Type: Class_type
+Type: Class_or_tuple_type
 			{ $$ := $1 }
 	|	Non_class_type
 			{ $$ := $1 }
 	;
 
-Non_class_type: TE_EXPANDED Identifier_as_upper Generics_opt
+Non_class_type: TE_EXPANDED Class_type
 			{
-				$$ := new_class_type ($2, $3, True, False, $1, Void)
+				$$ := $2
+				ast_factory.set_expanded_class_type ($$, True, $1)
 				if has_syntax_warning and $2 /= Void then
 					Error_handler.insert_warning (
-						create {SYNTAX_WARNING}.make ($2.line, $2.column, filename,
+						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
 						"Make an expanded version of the base class associated with this type."))
 				end
 			}
-	|	TE_SEPARATE Identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($2, $3, False, True, Void, $1) }
+	|	TE_SEPARATE Class_or_tuple_type
+			{
+				last_class_type ?= $2
+				if last_class_type /= Void then
+					last_class_type.set_is_separate (True, $1)
+					last_class_type := Void
+				end
+				$$ := $2
+			}
 	|	TE_BIT Integer_constant
 			{ $$ := ast_factory.new_bits_as ($2, $1) }
 	|	TE_BIT Identifier_as_lower
@@ -1431,20 +1391,18 @@ Non_class_type: TE_EXPANDED Identifier_as_upper Generics_opt
 			{ $$ := ast_factory.new_like_current_as ($2, $1) }
 	;
 
-Class_type: Identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($1, $2, False, False, Void, Void) }
+Class_or_tuple_type: Class_type
+			{ $$ := $1 }
+	| Tuple_type
+			{ $$ := $1 }
+	;
+
+Class_type: Class_identifier Generics_opt
+			{ $$ := new_class_type ($1, $2) }
 	;
 
 Generics_opt: -- Empty
 			-- { $$ := Void }
-	|	TE_LSQURE TE_RSQURE
-			--- { $$ := Void }
-		{
-			$$ := ast_factory.new_eiffel_list_type (0)
-			if $$ /= Void then
-				$$.set_positions ($1, $2)
-			end	
-		}
 	|	TE_LSQURE Type_list TE_RSQURE
 			{
 				$$ := $2
@@ -1452,13 +1410,17 @@ Generics_opt: -- Empty
 					$$.set_positions ($1, $3)
 				end
 			}
+	|	TE_LSQURE TE_RSQURE
+			{
+				$$ := ast_factory.new_eiffel_list_type (0)
+				if $$ /= Void then
+					$$.set_positions ($1, $2)
+				end	
+			}
 	;
 
-Type_list: { add_counter } Type_list_impl
-		 {
-		 	$$ := $2
-			remove_counter
-		}
+Type_list: Add_counter Type_list_impl Remove_counter
+		{ $$ := $2 }
 	;
 
 Type_list_impl: Type
@@ -1478,9 +1440,59 @@ Type_list_impl: Type
 			}
 	;
 
+Tuple_type: TE_TUPLE
+			{ $$ := ast_factory.new_class_type_as ($1, Void) }
+	|	TE_TUPLE TE_LSQURE TE_RSQURE
+			{
+				last_type_list := ast_factory.new_eiffel_list_type (0)
+				if last_type_list /= Void then
+					last_type_list.set_positions ($2, $3)
+				end
+				$$ := ast_factory.new_class_type_as ($1, last_type_list)
+				last_type_list := Void
+			}
+	|	TE_TUPLE TE_LSQURE Type_list TE_RSQURE
+			{
+				if $3 /= Void then
+					$3.set_positions ($2, $4)
+				end
+				$$ := ast_factory.new_class_type_as ($1, $3)
+			}
+	|	TE_TUPLE TE_LSQURE Add_counter Tuple_entity_declaration_list Remove_counter TE_RSQURE
+			{ $$ := ast_factory.new_named_tuple_type_as ($1, ast_factory.new_formal_argu_dec_list_as ($4, $2, $6)) }
+	;
+
+Tuple_entity_declaration_list: Tuple_declaration_group
+			{
+				$$ := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+				end
+			}
+	|	Tuple_declaration_group { increment_counter } ASemi Tuple_entity_declaration_list
+			{
+				$$ := $4
+				if $$ /= Void and $1 /= Void then
+					$$.reverse_extend ($1)
+				end
+			}
+	;
+
+Tuple_declaration_group: Identifier_as_lower TE_COLON Type
+			{
+				last_identifier_list := ast_factory.new_identifier_list (1)
+				if last_identifier_list /= Void and $1 /= Void then
+					Names_heap.put ($1)
+					last_identifier_list.reverse_extend (Names_heap.found_item)
+					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
+				end
+				$$ := ast_factory.new_type_dec_as (last_identifier_list, $3, $2)
+				last_identifier_list := Void
+			}
+	;
+
 
 -- Formal generics
-
 
 Formal_generics:
 			{
@@ -1490,20 +1502,19 @@ Formal_generics:
 	|	TE_LSQURE TE_RSQURE
 			{
 				formal_generics_end_position := position
-				 --- $$ := Void
-				 $$ := ast_factory.new_eiffel_list_formal_dec_as (0)
-				 if $$ /= Void then
+				--- $$ := Void
+				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
+				if $$ /= Void then
 					$$.set_squre_symbols ($1, $2)
-				 end
+				end
 			}
-	|	TE_LSQURE { add_counter } Formal_generic_list TE_RSQURE
+	|	TE_LSQURE Add_counter Formal_generic_list Remove_counter TE_RSQURE
 			{
 				formal_generics_end_position := position
 				$$ := $3
 				if $$ /= Void then
-					$$.set_squre_symbols ($1, $4)
+					$$.set_squre_symbols ($1, $5)
 				end
-				remove_counter
 			}
 	;
 
@@ -1524,7 +1535,7 @@ Formal_generic_list: Formal_generic
 			}
 	;
 
-Formal_parameter: TE_REFERENCE Identifier_as_upper
+Formal_parameter: TE_REFERENCE Class_identifier
 			{
 				if equal (None_classname, $2) then
 						-- Trigger an error when constraint is NONE.
@@ -1538,7 +1549,7 @@ Formal_parameter: TE_REFERENCE Identifier_as_upper
 					$$ := ast_factory.new_formal_as ($2, True, False, $1)
 				end
 			}
-	| TE_EXPANDED Identifier_as_upper
+	| TE_EXPANDED Class_identifier
 			{
 				if equal (None_classname, $2) then
 						-- Trigger an error when constraint is NONE.
@@ -1553,7 +1564,7 @@ Formal_parameter: TE_REFERENCE Identifier_as_upper
 				end
 			}
 
-	|	Identifier_as_upper
+	|	Class_identifier
 			{
 				if equal (None_classname, $1) then
 						-- Trigger an error when constraint is NONE.
@@ -1594,7 +1605,7 @@ Formal_generic: Formal_parameter
 
 Constraint: -- Empty
 			-- { $$ := Void }
-	|	TE_CONSTRAIN Class_type Creation_constraint
+	|	TE_CONSTRAIN Class_or_tuple_type Creation_constraint
 			{
 				$$ := ast_factory.new_constraint_triple ($1, $2, $3)
 			}
@@ -1603,43 +1614,40 @@ Constraint: -- Empty
 Creation_constraint: -- Empty
 			-- { $$ := Void }
 	|	TE_CREATE Feature_list TE_END
-			{ 
+			{
 				$$ := ast_factory.new_creation_constrain_triple ($2, $1, $3)
 			}
 	;
 
 
 -- Instructions
- 
+
 
 Conditional: TE_IF Expression TE_THEN Compound TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, Void, Void, $5, $1, $3, Void) }
 	|	TE_IF Expression TE_THEN Compound Else_part TE_END
-			{ 
+			{
 				if $5 /= Void then
-					$$ := ast_factory.new_if_as ($2, $4, Void, $5.second, $6, $1, $3, $5.first) 
+					$$ := ast_factory.new_if_as ($2, $4, Void, $5.second, $6, $1, $3, $5.first)
 				else
-					$$ := ast_factory.new_if_as ($2, $4, Void, Void, $6, $1, $3, Void) 
+					$$ := ast_factory.new_if_as ($2, $4, Void, Void, $6, $1, $3, Void)
 
 				end
 			}
 	|	TE_IF Expression TE_THEN Compound Elseif_list TE_END
 			{ $$ := ast_factory.new_if_as ($2, $4, $5, Void, $6, $1, $3, Void) }
 	|	TE_IF Expression TE_THEN Compound Elseif_list Else_part TE_END
-			{ 
+			{
 				if $6 /= Void then
-					$$ := ast_factory.new_if_as ($2, $4, $5, $6.second, $7, $1, $3, $6.first) 
+					$$ := ast_factory.new_if_as ($2, $4, $5, $6.second, $7, $1, $3, $6.first)
 				else
 					$$ := ast_factory.new_if_as ($2, $4, $5, Void, $7, $1, $3, Void)
 				end
 			}
 	;
 
-Elseif_list: { add_counter } Elseif_part_list
-		{
-			$$ := $2
-			remove_counter
-		}
+Elseif_list: Add_counter Elseif_part_list Remove_counter
+		{ $$ := $2 }
 	;
 
 Elseif_part_list: Elseif_part
@@ -1662,7 +1670,7 @@ Elseif_part: TE_ELSEIF Expression TE_THEN Compound
 			{ $$ := ast_factory.new_elseif_as ($2, $4, $1, $3) }
 	;
 
-Else_part: TE_ELSE Compound 
+Else_part: TE_ELSE Compound
 			{ $$ := ast_factory.new_keyword_instruction_list_pair ($1, $2) }
 	;
 
@@ -1681,11 +1689,8 @@ Multi_branch: TE_INSPECT Expression When_part_list_opt TE_END
 
 When_part_list_opt: -- Empty
 			-- { $$ := Void }
-	|	{ add_counter } When_part_list
-			{
-				$$ := $2
-				remove_counter
-			}
+	|	Add_counter When_part_list Remove_counter
+			{ $$ := $2 }
 	;
 
 When_part_list: When_part
@@ -1704,7 +1709,7 @@ When_part_list: When_part
 			}
 	;
 
-When_part: TE_WHEN { add_counter } Choices { remove_counter } TE_THEN Compound
+When_part: TE_WHEN Add_counter Choices Remove_counter TE_THEN Compound
 			{ $$ := ast_factory.new_case_as ($3, $6, $1, $5) }
 	;
 
@@ -1800,22 +1805,16 @@ Variant: -- Empty
 			{ $$ := ast_factory.new_variant_as (Void, $2, $1, Void) }
 	;
 
-Debug: TE_DEBUG Debug_keys Compound TE_END 
+Debug: TE_DEBUG Debug_keys Compound TE_END
 			{ $$ := ast_factory.new_debug_as ($2, $3, $1, $4) }
 	;
 
 Debug_keys: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			--- { $$ := Void }
-		{
-			$$ := ast_factory.new_debug_key_list_as (Void, $1, $2)
-		}
-	|	TE_LPARAN { add_counter } String_list TE_RPARAN
-			{
-				$$ := ast_factory.new_debug_key_list_as ($3, $1, $4)
-				remove_counter
-			}
+		{ $$ := ast_factory.new_debug_key_list_as (Void, $1, $2) }
+	|	TE_LPARAN Add_counter String_list Remove_counter TE_RPARAN
+			{ $$ := ast_factory.new_debug_key_list_as ($3, $1, $5) }
 	;
 
 String_list: Non_empty_string
@@ -1837,7 +1836,7 @@ String_list: Non_empty_string
 
 Rescue: -- Empty
 			-- { $$ := Void }
-	|	TE_RESCUE Compound 
+	|	TE_RESCUE Compound
 			{
 				if $2 = Void then
 					$$ := ast_factory.new_keyword_instruction_list_pair ($1, ast_factory.new_eiffel_list_instruction_as (0))
@@ -1874,11 +1873,8 @@ Reverse_assignment: Identifier_as_lower TE_ACCEPT Expression
 
 Creators: -- Empty
 			-- { $$ := Void }
-	|	{ add_counter } Creation_clause_list
-			{
-				$$ := $2
-				remove_counter
-			}
+	|	Add_counter Creation_clause_list Remove_counter
+			{ $$ := $2 }
 	;
 
 Creation_clause_list: Creation_clause
@@ -1906,11 +1902,11 @@ Creation_clause:
 			{
 				$$ := ast_factory.new_create_as ($2, $3, $1)
 			}
-	|	TE_CREATE Client_list 
+	|	TE_CREATE Client_list
 			{
 				$$ := ast_factory.new_create_as (ast_factory.new_client_as ($2), Void, $1)
 			}
-	|	 TE_CREATION
+	|	TE_CREATION
 			{
 				$$ := ast_factory.new_create_as (Void, Void, $1)
 				if has_syntax_warning and $1 /= Void then
@@ -1928,7 +1924,7 @@ Creation_clause:
 						"Use keyword `create' instead."))
 				end
 			}
-	|	TE_CREATION Client_list 
+	|	TE_CREATION Client_list
 			{
 				$$ := ast_factory.new_create_as (ast_factory.new_client_as ($2), Void, $1)
 				if has_syntax_warning and $1 /= Void then
@@ -1977,43 +1973,43 @@ Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
 --		{ $$ := ast_factory.new_old_routine_creation_as ($3, $1, $3, $4, True) }
 --	;
 Tilda_agent_call: TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, Void), $2, $3, False, $1) 
+		{
+			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, Void), $2, $3, False, $1)
 		}
 	|	Identifier_as_lower TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
-			$$ := ast_factory.new_old_routine_creation_as ($1, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void), $3, $4, True, $2) 
+		{
+			$$ := ast_factory.new_old_routine_creation_as ($1, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void), $3, $4, True, $2)
 		}
 	|	TE_LPARAN Expression TE_RPARAN TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, $2), $5, $6, True, $4) 
+		{
+			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, $2), $5, $6, True, $4)
 			if $$ /= Void and then $$.first /= Void	then
 				$$.first.set_lparan_symbol ($1)
 				$$.first.set_rparan_symbol ($3)
 			end
 		}
 	|	TE_RESULT TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
-			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2) 
+		{
+			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2)
 		}
 	|	TE_CURRENT TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
-			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2) 
+		{
+			$$ := ast_factory.new_old_routine_creation_as ($3, ast_factory.new_operand_as (Void, $1, Void), $3, $4, True, $2)
 		}
 	|	TE_LCURLY Type TE_CURLYTILDE Identifier_as_lower Delayed_actuals
-		{ 
+		{
 			if $2 /= Void then
 				$2.set_lcurly_symbol ($1)
 			end
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as ($2, Void, Void), $4, $5, True, $3) 
+			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as ($2, Void, Void), $4, $5, True, $3)
 		}
 	|	TE_QUESTION TE_TILDE Identifier_as_lower Delayed_actuals
-		{ 
+		{
 			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
 			if temp_operand_as /= Void then
 				temp_operand_as.set_question_mark_symbol ($1)
 			end
-			$$ := ast_factory.new_old_routine_creation_as ($3, temp_operand_as, $3, $4, True, $2) 
+			$$ := ast_factory.new_old_routine_creation_as ($3, temp_operand_as, $3, $4, True, $2)
 		}
 	;
 
@@ -2028,27 +2024,21 @@ Agent_target: Identifier_as_lower
 	|	Typed
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void, Void))}
 	|	TE_QUESTION
-		{ --- $$ := Void 
-			 temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
-				if temp_operand_as /= Void then
-					temp_operand_as.set_question_mark_symbol ($1)
-				end			 
-				$$ := ast_factory.new_agent_target_triple (Void, Void, temp_operand_as)
+		{ --- $$ := Void
+			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
+			if temp_operand_as /= Void then
+				temp_operand_as.set_question_mark_symbol ($1)
+			end
+			$$ := ast_factory.new_agent_target_triple (Void, Void, temp_operand_as)
 		}
 	;
 
 Delayed_actuals: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			--- { $$ := Void }
-			{
-				$$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2)
-			}
-	|	TE_LPARAN { add_counter } Delayed_actual_list TE_RPARAN
-			{
-				$$ := ast_factory.new_delayed_actual_list_as ($3, $1, $4)
-				remove_counter
-			}
+			{ $$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2) }
+	|	TE_LPARAN Add_counter Delayed_actual_list Remove_counter TE_RPARAN
+			{ $$ := ast_factory.new_delayed_actual_list_as ($3, $1, $5) }
 	;
 
 Delayed_actual_list: Delayed_actual
@@ -2069,7 +2059,7 @@ Delayed_actual_list: Delayed_actual
 	;
 
 Delayed_actual: TE_QUESTION
-			{ $$ := ast_factory.new_operand_as (Void, Void, Void) 
+			{ $$ := ast_factory.new_operand_as (Void, Void, Void)
 				if $$ /= Void then
 					$$.set_question_mark_symbol ($1)
 				end
@@ -2079,7 +2069,7 @@ Delayed_actual: TE_QUESTION
 -- To preserve this feature in case it is needed by some of our customers
 -- we have invented the new syntax ? Typed.
 	|	Typed TE_QUESTION
-			{ $$ := ast_factory.new_operand_as ($1, Void, Void) 
+			{ $$ := ast_factory.new_operand_as ($1, Void, Void)
 				if $$ /= Void then
 					$$.set_question_mark_symbol ($2)
 				end
@@ -2140,7 +2130,7 @@ Creation_call: -- Empty
 
 -- Instruction call
 
- 
+
 Call: A_feature
 			{ $$ := $1 }
 	|	A_precursor
@@ -2159,7 +2149,7 @@ Check: TE_CHECK Assertion TE_END
 -- Expression
 
 Typed: TE_LCURLY Type TE_RCURLY
-			{ $$ := $2 
+			{ $$ := $2
 				if $$ /= Void then
 					$$.set_lcurly_symbol ($1)
 					$$.set_rcurly_symbol ($3)
@@ -2232,22 +2222,22 @@ Factor: TE_VOID
 	|	TE_OLD Expression
 			{ $$ := ast_factory.new_un_old_as ($2, $1) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
-			{ 
-				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) 
+			{
+				$$ := ast_factory.new_un_strip_as ($3, $1, $2, $4)
 			}
 	|	TE_ADDRESS Feature_name
 			{ $$ := ast_factory.new_address_as ($2, $1) }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
-			{ 
-				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4) 
+			{
+				$$ := ast_factory.new_expr_address_as ($3, $1, $2, $4)
 			}
 	|	TE_ADDRESS TE_CURRENT
-			{ 
-				$$ := ast_factory.new_address_current_as ($2, $1) 
+			{
+				$$ := ast_factory.new_address_current_as ($2, $1)
 			}
 	|	TE_ADDRESS TE_RESULT
-			{ 
-				$$ := ast_factory.new_address_result_as ($2, $1) 
+			{
+				$$ := ast_factory.new_address_result_as ($2, $1)
 			}
 	|	Bracket_target
 			{ $$ := $1 }
@@ -2256,11 +2246,8 @@ Factor: TE_VOID
 	;
 
 Qualified_factor:
-		Bracket_target TE_LSQURE { add_counter } Expression_list TE_RSQURE
-			{
-				$$ := ast_factory.new_bracket_as ($1, $4, $2, $5)
-				remove_counter
-			}
+		Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
+			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
 	|	TE_MINUS Factor
 			{ $$ := ast_factory.new_un_minus_as ($2, $1) }
 	|	TE_PLUS Factor
@@ -2272,7 +2259,7 @@ Qualified_factor:
 	;
 
 Typed_expression:	Typed
-					 
+			
 			{ $$ := ast_factory.new_type_expr_as ($1) }
 	|	Typed_nosigned_integer
 			{ $$ := $1 }
@@ -2309,14 +2296,14 @@ Qualified_call:
 
 A_precursor: TE_PRECURSOR Parameters
 			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
-	|	TE_PRECURSOR TE_LCURLY Identifier_as_upper TE_RCURLY Parameters
-			{ 
-				temp_class_type_as := ast_factory.new_class_type_as ($3, Void, False, False, Void, Void)
+	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
+			{
+				temp_class_type_as := ast_factory.new_class_type_as ($3, Void)
 				if temp_class_type_as /= Void then
 					temp_class_type_as.set_lcurly_symbol ($2)
 					temp_class_type_as.set_rcurly_symbol ($4)
 				end
-				$$ := ast_factory.new_precursor_as ($1, temp_class_type_as, $5) 
+				$$ := ast_factory.new_precursor_as ($1, temp_class_type_as, $5)
 			}
 	;
 
@@ -2413,15 +2400,9 @@ Bracket_target:
 Parameters: -- Empty
 			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			--- { $$ := Void }
-			{
-				 $$ := ast_factory.new_parameter_list_as (Void, $1, $2)
-			}
-	|	TE_LPARAN { add_counter } Expression_list TE_RPARAN
-			{
-				$$ := ast_factory.new_parameter_list_as ($3, $1, $4)
-				remove_counter
-			}
+			{ $$ := ast_factory.new_parameter_list_as (Void, $1, $2) }
+	|	TE_LPARAN Add_counter Expression_list Remove_counter TE_RPARAN
+			{ $$ := ast_factory.new_parameter_list_as ($3, $1, $5) }
 	;
 
 Expression_list: Expression
@@ -2441,7 +2422,20 @@ Expression_list: Expression
 			}
 	;
 
-Identifier_as_upper: TE_ID
+Class_or_tuple_identifier: TE_TUPLE
+			{
+				if not case_sensitive and $1 /= Void then
+					$1.to_upper
+				end
+				$$ := $1
+			}
+	|	Class_identifier
+			{
+				$$ := $1;
+			}
+	;
+
+Class_identifier: TE_ID
 			{
 				if not case_sensitive and $1 /= Void then
 					$1.to_upper		
@@ -2466,6 +2460,13 @@ Identifier_as_upper: TE_ID
 	;
 
 Identifier_as_lower: TE_ID
+			{
+				if not case_sensitive and $1 /= Void then
+					$1.to_lower
+				end
+				$$ := $1
+			}
+	|	TE_TUPLE
 			{
 				if not case_sensitive and $1 /= Void then
 					$1.to_lower
@@ -2563,18 +2564,18 @@ Integer_constant:
 	;
 
 Signed_integer: TE_PLUS TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '+', Void, token_buffer, $1) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '+', Void, token_buffer, $1)
 			}
 	|	TE_MINUS TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '-', Void, token_buffer, $1) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '-', Void, token_buffer, $1)
 			}
 	;
 
 Nosigned_integer: TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '%U', Void, token_buffer, Void) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '%U', Void, token_buffer, Void)
 			}
 	;
 
@@ -2585,18 +2586,18 @@ Typed_integer: Typed_nosigned_integer
 	;
 
 Typed_nosigned_integer: Typed TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '%U', $1, token_buffer, Void) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '%U', $1, token_buffer, Void)
 			}
 	;
 
 Typed_signed_integer:	Typed TE_PLUS TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '+', $1, token_buffer, $2) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '+', $1, token_buffer, $2)
 			}
 	|	Typed TE_MINUS TE_INTEGER
-			{ 
-				$$ := ast_factory.new_integer_value (Current, '-', $1, token_buffer, $2) 
+			{
+				$$ := ast_factory.new_integer_value (Current, '-', $1, token_buffer, $2)
 			}
 	;
 
@@ -2604,26 +2605,26 @@ Typed_signed_integer:	Typed TE_PLUS TE_INTEGER
 --# Real constants
 --###################################################################
 Real_constant: Signed_real
-			 { $$ := $1 }
+			{ $$ := $1 }
 	|	Nosigned_real
-			 { $$ := $1 }
+			{ $$ := $1 }
 	|	Typed_real
 			{ $$ := $1 }
 	;
 
 Nosigned_real: TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, False, '%U', Void, token_buffer, Void) 
+			{
+				$$ := ast_factory.new_real_value (Current, False, '%U', Void, token_buffer, Void)
 			}
 	;
 
 Signed_real: TE_PLUS TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, True, '+', Void, token_buffer, $1) 
+			{
+				$$ := ast_factory.new_real_value (Current, True, '+', Void, token_buffer, $1)
 			}
 	|	TE_MINUS TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, True, '-', Void, token_buffer, $1) 
+			{
+				$$ := ast_factory.new_real_value (Current, True, '-', Void, token_buffer, $1)
 			}
 	;
 
@@ -2634,18 +2635,18 @@ Typed_real: Typed_nosigned_real
 	;
 
 Typed_nosigned_real: Typed TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, False, '%U', $1, token_buffer, Void) 
+			{
+				$$ := ast_factory.new_real_value (Current, False, '%U', $1, token_buffer, Void)
 			}
 	;
 
 Typed_signed_real: Typed TE_PLUS TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, True, '+', $1, token_buffer, $2) 
+			{
+				$$ := ast_factory.new_real_value (Current, True, '+', $1, token_buffer, $2)
 			}
 	|	Typed TE_MINUS TE_REAL
-			{ 
-				$$ := ast_factory.new_real_value (Current, True, '-', $1, token_buffer, $2) 
+			{
+				$$ := ast_factory.new_real_value (Current, True, '-', $1, token_buffer, $2)
 			}
 	;
 
@@ -2668,12 +2669,12 @@ Manifest_string: Default_manifest_string
 Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
-			{ 
-				$$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2) 
+			{
+				$$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_EMPTY_VERBATIM_STRING
-			{ 
-				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2) 
+			{
+				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	;
 
@@ -2692,207 +2693,205 @@ Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
 	;
 
 Non_empty_string: TE_STRING
-			{ 
-				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, string_position, position + text_count - string_position, token_buffer2) 
+			{
+				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_VERBATIM_STRING
-			{ 
-				$$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2) 
+			{
+				$$ := ast_factory.new_verbatim_string_as (cloned_string (token_buffer), verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_STR_LT
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
-			{ 
+			{
 				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_BRACKET
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_AND
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_AND_THEN
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 10, token_buffer2)
 			}
 	|	TE_STR_IMPLIES
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_OR
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_OR_ELSE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_XOR
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_NOT
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
 			}
 	;
 
 Prefix_operator: TE_STR_MINUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_NOT
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_lower_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
 			}
 	;
 
 Infix_operator: TE_STR_LT
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
-			{ 
+			{
 				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_AND
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("and", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_AND_THEN
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("and then", line, column, position, 10, token_buffer2)
 			}
 	|	TE_STR_IMPLIES
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("implies", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_OR
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("or", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_OR_ELSE
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("or else", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_XOR
-			{ 
+			{
 				$$ := ast_factory.new_string_as ("xor", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
-			{ 
+			{
 				$$ := ast_factory.new_string_as (cloned_lower_string (token_buffer), line, column, position, token_buffer.count + 2, token_buffer2)
 			}
 	;
 
 Manifest_array: TE_LARRAY TE_RARRAY
-			{ 
-				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) 
-			}
-	|	TE_LARRAY { add_counter } Expression_list TE_RARRAY
 			{
-				$$ := ast_factory.new_array_as ($3, $1, $4)	
-				remove_counter
+				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2)
 			}
+	|	TE_LARRAY Add_counter Expression_list Remove_counter TE_RARRAY
+			{ $$ := ast_factory.new_array_as ($3, $1, $5) }
 	;
 
 Manifest_tuple: TE_LSQURE TE_RSQURE
-			{ 
-				$$ := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) 		
-			}
-	|	TE_LSQURE { add_counter } Expression_list TE_RSQURE
-			{
-				$$ := ast_factory.new_tuple_as ($3, $1, $4)			
-				remove_counter
-			}
+			{ $$ := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) }
+	|	TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
+			{ $$ := ast_factory.new_tuple_as ($3, $1, $5) }
+	;
+
+Add_counter: { add_counter }
+	;
+
+Remove_counter: { remove_counter }
 	;
 
 %%

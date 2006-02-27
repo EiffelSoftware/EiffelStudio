@@ -369,7 +369,7 @@ feature -- Status setting
 				if row_data /= Void and then physical_index < row_data.count then
 					grid_item_i := row_data @ (physical_index)
 					if grid_item_i /= Void then
-						Result := Result.max (grid_item_i.required_width + parent_i.item_indent (grid_item_i))
+						Result := Result.max (grid_item_i.interface.required_width + parent_i.item_indent (grid_item_i))
 					end
 					row := parent_i.row_internal (item_counter)
 					if row.subrow_count > 0 and not row.is_expanded then

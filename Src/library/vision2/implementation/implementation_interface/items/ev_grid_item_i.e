@@ -160,17 +160,6 @@ feature -- Access
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 
-	required_width: INTEGER is
-			-- Width in pixels required to fully display contents, based
-			-- on current settings.
-			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
-			-- returns 0. For such items, `set_required_width' is available.
-		do
-			Result := 0
-		ensure
-			result_non_negative: Result >= 0
-		end
-
 feature -- Status setting
 
 	activate is

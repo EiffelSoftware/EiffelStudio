@@ -16,11 +16,6 @@ inherit
 			{NONE} all
 		end
 
-	PARAN_LIST_AS
-		redefine
-			first_token, last_token
-		end
-
 create
 	initialize
 
@@ -69,13 +64,10 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		local
-			l_id_list: IDENTIFIER_LIST
 		do
 			if a_list = Void then
 				Result := Void
 			else
-				l_id_list ?= id_list
 				Result := rparan_symbol.last_token (a_list)
 			end
 		end
@@ -86,6 +78,34 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equal (id_list, other.id_list)
+		end
+
+feature -- Roundtrip
+
+	lparan_symbol, rparan_symbol: SYMBOL_AS
+			-- Symbol "(" and ")" associated with current AST node
+
+	set_rparan_symbol (a_symbol: SYMBOL_AS) is
+			-- Set `rparan_symbol' with `a_symbol'.
+		do
+			rparan_symbol := a_symbol
+		ensure
+			rparan_symbol_set: rparan_symbol = a_symbol
+		end
+
+	set_lparan_symbol (a_symbol: SYMBOL_AS) is
+			-- Set `lparan_symbol' with `a_symbol'.
+		do
+			lparan_symbol := a_symbol
+		ensure
+			lparan_symbol_set: lparan_symbol = a_symbol
+		end
+
+	set_paran_symbols (l, r: SYMBOL_AS) is
+			-- Set `lparan_symbol' with `l' and `rparan_symbol' with 'r'.
+		do
+			set_lparan_symbol (l)
+			set_rparan_symbol (r)
 		end
 
 invariant

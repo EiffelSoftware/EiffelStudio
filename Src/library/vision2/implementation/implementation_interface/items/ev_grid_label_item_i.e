@@ -13,8 +13,7 @@ inherit
 		redefine
 			interface,
 			perform_redraw,
-			initialize,
-			required_width
+			initialize
 		end
 
 create
@@ -51,18 +50,6 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			Result := internal_text_height
 		ensure
 			result_non_negative: result >= 0
-		end
-
-	required_width: INTEGER is
-			-- Width in pixels required to fully display contents, based
-			-- on current settings.
-			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
-			-- returns 0. For such items, `set_required_width' is available.
-		do
-			Result := interface.left_border + text_width + interface.right_border
-			if interface.pixmap /= Void then
-				Result := Result + interface.pixmap.width + interface.spacing
-			end
 		end
 
 feature {EV_GRID_LABEL_ITEM} -- Implementation
@@ -135,12 +122,13 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			pixmap_x, pixmap_y: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
 			focused: BOOLEAN
+			l_clip_width, l_clip_height: INTEGER
 		do
 			recompute_text_dimensions
 				-- Update the dimensions of the text if required.
 
 				-- Retrieve properties from interface
-			focused := parent_i.drawable.has_focus
+			focused := parent_i.drawables_have_focus
 			left_border := interface.left_border
 			right_border := interface.right_border
 			top_border := interface.top_border
@@ -260,26 +248,33 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 				-- Now assign a clip area based on the borders of the item before we draw the text and the pixmap as they
 				-- may be clipped based on the amount of space available to them based on the border settings.
-			internal_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
-			drawable.set_clip_area (internal_rectangle)
-			if l_pixmap /= Void then
-					-- Now blit the pixmap
-				drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
-			end
 
-			if interface.font /= Void then
-				drawable.set_font (interface.font)
-			else
-				drawable.set_font (internal_default_font)
-			end
+			l_clip_width := column_i.width - right_border
+			l_clip_height := height - bottom_border
 
-			if interface.text /= Void and space_remaining_for_text > 0 and space_remaining_for_text < internal_text_width then
-				drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, interface.text, space_remaining_for_text)
-			else
-				drawable.draw_text_top_left (text_x + an_indent, text_y, interface.text)
+			if l_clip_width > 0 and then l_clip_height > 0 then
+					-- Only draw if the clipping area is not empty
+				internal_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
+				drawable.set_clip_area (internal_rectangle)
+				if l_pixmap /= Void then
+						-- Now blit the pixmap
+					drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
+				end
+
+				if interface.font /= Void then
+					drawable.set_font (interface.font)
+				else
+					drawable.set_font (internal_default_font)
+				end
+
+				if interface.text /= Void and space_remaining_for_text > 0 and space_remaining_for_text < internal_text_width then
+					drawable.draw_ellipsed_text_top_left (text_x + an_indent, text_y, interface.text, space_remaining_for_text)
+				else
+					drawable.draw_text_top_left (text_x + an_indent, text_y, interface.text)
+				end
+				drawable.remove_clip_area
+				drawable.set_copy_mode
 			end
-			drawable.remove_clip_area
-			drawable.set_copy_mode
 		end
 
 	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is

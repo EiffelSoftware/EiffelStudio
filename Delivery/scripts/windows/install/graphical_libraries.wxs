@@ -2090,6 +2090,9 @@
 									<Component Id="ev_radio_peer_i.e" Guid="61129521-DECE-4CDF-B192-68A44AFA6C54">
 										<File Id="ev_grid_arrayed_list_e" Name="EV_GRI~1.E" LongName="ev_grid_arrayed_list.e" />
 										<File Id="ev_grid_drawer_i_e" Name="EV_GRI~2.E" LongName="ev_grid_drawer_i.e" />
+										<File Id="ev_grid_locked_column_i_e" Name="EV8F5B~1.E" LongName="ev_grid_locked_column_i.e" />
+										<File Id="ev_grid_locked_i_e" Name="EV_GRI~4.E" LongName="ev_grid_locked_i.e" />
+										<File Id="ev_grid_locked_row_i_e" Name="EV_GRI~3.E" LongName="ev_grid_locked_row_i.e" />
 										<File Id="ev_radio_peer_i.e" Name="EV_RAD~2.E" LongName="ev_radio_peer_i.e" />
 										<File Id="ev_model_print_projector_i.e" Name="EV_MOD~1.E" LongName="ev_model_print_projector_i.e" />
 										<File Id="ev_tree_node_list_i.e" Name="EV_TRE~7.E" LongName="ev_tree_node_list_i.e" />

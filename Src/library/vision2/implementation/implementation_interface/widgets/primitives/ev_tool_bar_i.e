@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_TARGET_I
 		redefine
 			interface
@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 feature -- Status report
 
 	has_vertical_button_style: BOOLEAN is
@@ -32,7 +32,12 @@ feature -- Status report
 			-- the `pixmap' is displayed to left of `text'.
 		deferred
 		end
-		
+
+	is_vertical: BOOLEAN is
+			-- Is vertical items layout?
+		deferred
+		end
+
 feature -- Status setting
 
 	enable_vertical_button_style is
@@ -41,14 +46,28 @@ feature -- Status setting
 		ensure
 			vertical_button_style_assigned: has_vertical_button_style
 		end
-		
+
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		deferred
 		ensure
 			vertical_button_style_not_assigned: not has_vertical_button_style
 		end
-		
+
+	enable_vertical is
+			-- Enable vertical items layout.
+		deferred
+		ensure
+			vertical_layout:
+		end
+
+	disable_vertical is
+			-- Disable vertical items layout. Then items will be horizontal layout.
+		deferred
+		ensure
+			not_vertical_layout:
+		end
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	insertion_position: INTEGER is
@@ -57,7 +76,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			-- and not over a button. i.e if over button 1, `Result' is 0.
 		deferred
 		end
-		
+
 	block_selection_for_docking is
 			-- Ensure that a tool bar button is not selected as a
 			-- result of the transport ending.

@@ -76,7 +76,8 @@ inherit
 			on_mouse_wheel, on_getdlgcode
 		redefine
 			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
- 			on_left_button_double_click, default_style, background_brush
+ 			on_left_button_double_click, default_style, background_brush,
+ 			on_tbn_dropdown
 		end
 
 	WEL_COLOR_CONSTANTS
@@ -105,6 +106,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
+			l_prev_ex_style: INTEGER
 		do
 			create ctrl.make_with_toolbar (default_parent, Current)
 			wel_make (ctrl, 0)
@@ -112,6 +114,7 @@ feature {NONE} -- Initialization
 				-- Windows set the transparent flag, and since we don't want it, we need
 				-- to unset it.
 			set_style (style & tbstyle_transparent.bit_not)
+
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			create radio_group.make
@@ -119,6 +122,10 @@ feature {NONE} -- Initialization
 			new_item_actions.extend (agent add_radio_button)
 			new_item_actions.extend (agent add_toggle_button)
 			remove_item_actions.extend (agent remove_radio_button)
+
+			-- On Windows, we only can set ex style of toolbar this way.
+			l_prev_ex_style := cwin_send_message_result_integer (wel_item, tb_setextendedstyle, to_wparam (0), to_lparam (tbstyle_ex_mixedbuttons | tbstyle_ex_drawddarrows ))
+
 		end
 
 feature -- Access
@@ -197,6 +204,9 @@ feature -- Access
 		do
 			Result := flag_set (bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
+
+	is_vertical: BOOLEAN
+			-- Is vertical items layout?
 
 feature -- Status report
 
@@ -338,20 +348,25 @@ feature -- Element change
 			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
 			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+			dropdown_button: EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
 		do
 			-- We need to check the type of tool bar button.
 			-- Depending on the type, `but' is created differently.
 			radio_button ?= button
 			toggle_button ?= button
+			dropdown_button ?= button
 			if radio_button /= Void or toggle_button /= Void then
 				create but.make_check (-1, button.id)
+			end
+			if dropdown_button /= Void then
+				create but.make_drop_down_button (-1, button.id)
 			end
 			separator_button ?= button
 			if separator_button /= Void then
 				create but.make_separator
 				but.set_command_id (button.id)
 			end
-			if radio_button = Void and toggle_button =Void and
+			if radio_button = Void and toggle_button = Void and dropdown_button = Void and
 				separator_button = Void then
 				create but.make_button (-1, button.id)
 			end
@@ -392,7 +407,11 @@ feature -- Element change
 						--| Adding the empty text causes the toolbar to re-size, so
 						--| we only add the empty text when there are children already with text.
 					if a_child_has_text then
-						add_strings (<<" ">>)
+
+--						add_strings (<<" ">>)
+						-- Larry changed
+						add_strings (<<"">>)
+--						but.set_string_index (last_string_index, False)
 						but.set_string_index (last_string_index)
 					end
 				end
@@ -434,6 +453,83 @@ feature -- Element change
 
 feature -- Basic operation
 
+	enable_vertical is
+			-- Enable vertical items layout.
+		local
+			l_wel_button: WEL_TOOL_BAR_BUTTON
+			l_count: INTEGER
+			l_behind_is_separator: BOOLEAN
+		do
+			if not is_vertical then
+				from
+					l_count := button_count - 1
+					-- For the last button, we do not need to set tbstate_wrap
+					l_behind_is_separator := True
+				until
+					l_count < 0
+				loop
+					l_wel_button := i_th_button (l_count)
+					-- We set button tbstate_wrap ourself instead of using SetRows(), is because
+					-- SetRows can't always show one line vertical toolbar when Windows Xp common control is used.
+
+					-- WEL_TOOL_BAR_BUTTON with tbstyle_sep maybe a custom control (such as a combo box...),
+					-- but currently in Vision2 Windows implmentation it must be a separator.
+					if not l_behind_is_separator then
+						l_wel_button.set_state (l_wel_button.state | {WEL_TB_STATE_CONSTANTS}.tbstate_wrap)
+						l_wel_button.set_style (l_wel_button.style & {WEL_TB_STYLE_CONSTANTS}.btns_showtext.bit_not)
+						-- Because after set_state of a button is not work immediately,
+						-- So we first delete it, then insert it.
+						delete_button (l_count)
+						wel_insert_button (l_count, l_wel_button)
+					end
+
+					if (l_wel_button.style & {WEL_TB_STYLE_CONSTANTS}.tbstyle_sep) /= 0 then
+						l_behind_is_separator := True
+					else
+						l_behind_is_separator := False
+					end
+
+					l_count := l_count - 1
+				end
+
+				set_minimum_width (get_max_width)
+				set_minimum_height (get_max_height)
+				is_vertical := True
+			end
+
+		end
+
+	disable_vertical is
+			-- Disable vertical items layout. Then items will be horizontal layout.
+		local
+			l_wel_button: WEL_TOOL_BAR_BUTTON
+			l_count: INTEGER
+		do
+			if is_vertical then
+				from
+					l_count := button_count - 1
+				until
+					l_count < 0
+				loop
+					l_wel_button := i_th_button (l_count)
+
+					l_wel_button.set_state (l_wel_button.state & {WEL_TB_STATE_CONSTANTS}.tbstate_wrap.bit_not)
+					l_wel_button.set_style (l_wel_button.style | {WEL_TB_STYLE_CONSTANTS}.btns_showtext)
+					-- Because after set_state of a button is not work immediately,
+					-- So we first delete it, then insert it.
+					delete_button (l_count)
+					wel_insert_button (l_count, l_wel_button)
+
+					l_count := l_count - 1
+				end
+
+				set_minimum_width (get_max_width)
+				set_minimum_height (get_max_height)
+				is_vertical := False
+			end
+
+		end
+
 	internal_get_index (button: EV_TOOL_BAR_ITEM_IMP): INTEGER is
 			-- Retrieve the current index of `button'.
 		do
@@ -467,6 +563,7 @@ feature -- Basic operation
 					-- No API available, we can only guess the right value...
 				ev_set_minimum_height (buttons_height + 4)
 			end
+
 		end
 
 	compute_minimum_size is
@@ -917,6 +1014,16 @@ feature {NONE} -- WEL Implementation
 				disable_default_processing
 			end
 			Precursor {EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP} (keys, x_pos, y_pos)
+		end
+
+	on_tbn_dropdown (info: WEL_NM_TOOL_BAR) is
+			-- Drop down button drop down arrow clicked.
+		local
+			l_button: EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
+		do
+			l_button ?= button_associated_with_id (info.button_id)
+			check dropdown_notify_only_happen_on_dropdown_button: l_button /= Void end
+			l_button.interface.drop_down_actions.call ([])
 		end
 
 	default_style: INTEGER is

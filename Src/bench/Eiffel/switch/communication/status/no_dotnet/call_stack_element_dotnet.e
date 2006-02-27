@@ -10,6 +10,9 @@ class CALL_STACK_ELEMENT_DOTNET
 inherit
 	
 	CALL_STACK_ELEMENT
+		redefine
+			make
+		end
 
 feature {NONE} -- Initialization
 

@@ -50,6 +50,9 @@ feature -- Attributes
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
 
+	array_type: TYPE_A
+			-- Type of manifest array
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -82,13 +85,15 @@ feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is ""
 
-feature {ARRAY_AS}	-- Replication
+feature -- Settings
 
-	set_expressions (e: like expressions) is
+	set_array_type (t: like array_type) is
 		require
-			valid_arg: e /= Void
+			t_not_void: t /= Void
 		do
-			expressions := e
+			array_type := t
+		ensure
+			array_type_set: array_type = t
 		end
 
 invariant
@@ -100,19 +105,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

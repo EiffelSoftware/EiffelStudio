@@ -1361,6 +1361,7 @@ feature -- Implementation
 			if not l_has_error then
 					-- Update type stack
 				last_type := l_array_type
+				l_as.set_array_type (last_type)
 				if is_byte_node_enabled then
 					create {ARRAY_CONST_B} last_byte_node.make (l_list,
 						l_array_type.type_i, l_array_type.create_info)

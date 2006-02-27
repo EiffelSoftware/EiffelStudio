@@ -32,7 +32,8 @@ inherit
 			is_in_default_state,
 			implementation,
 			create_implementation,
-			initialize
+			initialize,
+			required_width
 		end
 
 create
@@ -65,7 +66,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status Setting
-	
+
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		require
@@ -91,7 +92,7 @@ feature -- Status Setting
 		ensure
 			text_empty: text.is_empty
 		end
-		
+
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to `font'.
 		require
@@ -106,7 +107,7 @@ feature -- Status Setting
 		ensure
 			font_assigned: font = a_font
 		end
-		
+
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Display image of `a_pixmap' on `Current'.
 		require
@@ -233,7 +234,7 @@ feature -- Status Setting
 		ensure
 			alignment_set: is_right_aligned
 		end
-        
+
 	align_text_left is
 			-- Display `text' left aligned.
 		require
@@ -298,7 +299,7 @@ feature -- Status Setting
 			-- Assign `a_layout_procedure' to `layout_procedure'.
 		do
 			layout_procedure := a_layout_procedure
-		ensure	
+		ensure
 			layout_procedure_set: layout_procedure = a_layout_procedure
 		end
 
@@ -327,7 +328,7 @@ feature -- Status Setting
 		ensure
 			full_select_disabled: not is_full_select_enabled
 		end
-			
+
 feature -- Measurement
 
 	left_border: INTEGER
@@ -354,7 +355,7 @@ feature -- Measurement
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.text_width
-		ensure		
+		ensure
 			result_non_negative: result >= 0
 		end
 
@@ -366,18 +367,28 @@ feature -- Measurement
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.text_height
-		ensure		
+		ensure
 			result_non_negative: result >= 0
 		end
-		
+
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+		do
+			Result := left_border + text_width + right_border
+			if pixmap /= Void then
+				Result := Result + pixmap.width + spacing
+			end
+		end
+
 feature -- Status report
 
 	text: STRING
 		-- Text displayed in `Current'.
-		
+
 	font: EV_FONT
 		-- Typeface appearance for `Current'.
-			
+
 	pixmap: EV_PIXMAP
 		-- Image displayed to left of `text'.
 
@@ -389,7 +400,7 @@ feature -- Status report
 		do
 			Result := boolean_flags.bit_test (1) = True
 		end
-		
+
 	is_center_aligned: BOOLEAN is
 			-- Is `text' of `Current' center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
@@ -416,7 +427,7 @@ feature -- Status report
 		do
 			Result := boolean_flags.bit_test (4) = True
 		end
-		
+
 	is_vertically_center_aligned: BOOLEAN is
 			-- Is `text' of `Current' vertically center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
@@ -481,7 +492,7 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 			-- Bit 5 set to 1 if vertically center aligned
 			-- Bit 6 set to 1 if bottom aligned
 			-- Bit 7 set to 1 if `is_full_select_enabled'.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is

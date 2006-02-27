@@ -13,7 +13,8 @@ inherit
 		redefine
 			process_like_id_as, process_like_cur_as,
 			process_formal_as, process_class_type_as, process_none_type_as,
-			process_bits_as, process_bits_symbol_as, process_type_a
+			process_bits_as, process_bits_symbol_as, process_type_a,
+			process_named_tuple_type_as, process_type_dec_as
 		end
 
 	COMPILER_EXPORTER
@@ -55,7 +56,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -82,7 +83,7 @@ feature -- Status report
 			Result := internal_solved_type (a_type)
 			error_handler.checksum
 		end
-		
+
 feature {NONE} -- Status report
 
 	internal_solved_type (a_type: TYPE_AS): TYPE_A is
@@ -223,6 +224,8 @@ feature -- Special checking
 							l_vtcg3.set_error_list (a_type.constraint_error_list)
 							l_vtcg3.set_location (a_type_node.start_location)
 							Error_handler.insert_error (l_vtcg3)
+						else
+							a_type.check_labels (current_class, a_type_node)
 						end
 					end
 				end
@@ -254,7 +257,7 @@ feature -- Special checking
 				l_vcfg3.set_class (a_class)
 				l_vcfg3.set_formal_name ("Constraint genericity")
 				l_vcfg3.set_location (a_type.start_location)
-				Error_handler.insert_error (l_vcfg3)				
+				Error_handler.insert_error (l_vcfg3)
 			elseif l_class_type /= Void then
 				l_cluster := a_class.cluster
 				l_class_i := Universe.class_named (l_class_type.class_name, l_cluster)
@@ -348,7 +351,7 @@ feature -- Special checking
 				end
 			end
 		end
-		
+
 feature {NONE} -- Visitor implementation
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
@@ -375,7 +378,7 @@ feature {NONE} -- Visitor implementation
 					-- Check if there is a cycle
 				if
 					l_anchor_type.is_void or
-					(l_controler_state and like_control.has_routine_id (l_rout_id)) 
+					(l_controler_state and like_control.has_routine_id (l_rout_id))
 				then
 						-- Error because of cycle
 					create l_vtat1.make (parent_type, l_as)
@@ -421,7 +424,7 @@ feature {NONE} -- Visitor implementation
 								-- Enable like controler only if not already enabled.
 							like_control.turn_on
 						end
-						like_control.put_argument (l_argument_position)	
+						like_control.put_argument (l_argument_position)
 						l_anchor_type := current_feature.arguments.i_th (l_argument_position)
 						create l_like_argument
 						l_like_argument.set_position (l_argument_position)
@@ -501,6 +504,52 @@ feature {NONE} -- Visitor implementation
 			last_type := l_type
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		local
+			l_class: CLASS_C
+			l_actual_generic: ARRAY [TYPE_A]
+			i, count: INTEGER
+			l_type: NAMED_TUPLE_TYPE_A
+			l_generics: EIFFEL_LIST [TYPE_DEC_AS]
+			l_names: SPECIAL [INTEGER]
+			l_id_list: CONSTRUCT_LIST [INTEGER]
+		do
+				-- Lookup class in universe, it should be present.
+			l_class := System.tuple_class.compiled_class
+			check
+				class_found_is_compiled: l_class /= Void
+			end
+			l_generics := l_as.generics
+			from
+				i := 1
+				count := l_as.generic_count
+				create l_actual_generic.make (1, count)
+				create l_names.make (count)
+				create l_type.make (l_class.class_id, l_actual_generic, l_names)
+			until
+				i > count
+			loop
+				l_generics.i_th (i).process (Current)
+				l_id_list := l_generics.i_th (i).id_list
+				from
+					l_id_list.start
+				until
+					l_id_list.after
+				loop
+					l_actual_generic.put (last_type, i)
+					l_names.put (l_id_list.item, i - 1)
+					i := i + 1
+					l_id_list.forth
+				end
+			end
+			last_type := l_type
+		end
+
+	process_type_dec_as (l_as: TYPE_DEC_AS) is
+		do
+			l_as.type.process (Current)
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 			last_type := none_type
@@ -512,9 +561,9 @@ feature {NONE} -- Visitor implementation
 			l_value: INTEGER
 		do
 			l_value := l_as.bits_value.integer_32_value
-			if 
+			if
 				l_value <= 0 or else
-				l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant 
+				l_value > {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 			then
 				create l_vtbt
 				l_vtbt.set_class (current_class)
@@ -583,7 +632,7 @@ feature {NONE} -- Visitor implementation
 		do
 			last_type := a_type.solved_type (current_feature_table, current_feature)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	record_exp_dependance (a_class: CLASS_C) is
@@ -624,19 +673,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

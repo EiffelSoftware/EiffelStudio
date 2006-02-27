@@ -2277,6 +2277,48 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+			-- Process `a_node'.
+		local
+			l_feat_tbl: FEATURE_TABLE
+			l_decl_type: CL_TYPE_I
+			l_actual_type: CL_TYPE_I
+			l_real_ty: TUPLE_TYPE_I
+			l_item_feat, l_put_feat: FEATURE_I
+		do
+			l_real_ty ?= context.real_type (a_node.tuple_type)
+			l_feat_tbl := l_real_ty.base_class.feature_table
+			if a_node.source /= Void then
+				generate_il_line_info (a_node, True)
+				a_node.source.process (Current)
+				l_actual_type ?= context.real_type (a_node.source.type)
+
+				if l_actual_type /= Void and then l_actual_type.is_expanded then
+					generate_il_metamorphose (a_node.source, l_actual_type, Void, True)
+				end
+
+				il_generator.put_integer_32_constant (a_node.position)
+
+					-- Find `put' from TUPLE
+				l_put_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
+				l_decl_type := il_generator.implemented_type (l_put_feat.origin_class_id, l_real_ty)
+					-- Call `put' from TUPLE
+				il_generator.generate_feature_access (l_decl_type, l_put_feat.origin_feature_id, l_put_feat.argument_count, l_put_feat.has_return_value, True)
+			else
+				il_generator.put_integer_32_constant (a_node.position)
+
+					-- Find `fast_item' from TUPLE
+				l_item_feat := l_feat_tbl.item ("fast_item")
+				l_decl_type := il_generator.implemented_type (l_item_feat.origin_class_id, l_real_ty)
+					-- Call `fast_item' from TUPLE
+				il_generator.generate_feature_access (l_decl_type, l_item_feat.origin_feature_id, l_item_feat.argument_count, l_item_feat.has_return_value, True)
+
+				if a_node.tuple_element_type.is_expanded then
+					il_generator.generate_unmetamorphose (a_node.tuple_element_type)
+				end
+			end
+		end
+
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is
 			-- Process `a_node'.
 		local

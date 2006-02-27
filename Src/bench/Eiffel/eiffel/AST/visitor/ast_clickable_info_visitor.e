@@ -13,6 +13,7 @@ inherit
 		redefine
 			process_precursor_as,
 			process_class_type_as,
+			process_named_tuple_type_as,
 			process_class_as
 		end
 
@@ -22,7 +23,7 @@ inherit
 		end
 
 feature -- Queries
-	
+
 	associated_eiffel_class (a_class_i: CLASS_I; a_node: CLICKABLE_AST): CLASS_I is
 		require
 			a_class_i_not_void: a_class_i /= Void
@@ -51,7 +52,7 @@ feature {NONE} -- Implementation
 			end
 			last_class := Universe.class_named (l_as.parent_base_class.class_name, reference_class.cluster)
 		end
-		
+
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
 			check
@@ -67,26 +68,34 @@ feature {NONE} -- Implementation
 			end
 			last_class := Universe.class_named (l_as.class_name, reference_class.cluster)
 		end
-		
+
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		do
+			check
+				reference_class_not_void: reference_class /= Void
+			end
+			last_class := Universe.class_named (l_as.class_name, reference_class.cluster)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

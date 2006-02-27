@@ -90,9 +90,9 @@ feature -- Access
 	Bc_and_then:		CHARACTER is '%/074/';
 	Bc_or_else:			CHARACTER is '%/075/';
 	Bc_spcreate:		CHARACTER is '%/076/';
-	Bc_notused_77:		CHARACTER is '%/077/';
+	Bc_tuple_access:	CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
-	Bc_notused_79:		CHARACTER is '%/079/';
+	Bc_tuple_assign:	CHARACTER is '%/079/';
 	Bc_rescue: 			CHARACTER is '%/080/';
 	Bc_end_rescue:		CHARACTER is '%/081/';
 	Bc_retry:			CHARACTER is '%/082/';

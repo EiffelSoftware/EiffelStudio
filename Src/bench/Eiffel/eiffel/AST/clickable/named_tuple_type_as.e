@@ -1,11 +1,10 @@
 indexing
-	description: "Node for normal class type. Version for Bench."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "AST representation of a TUPLE type."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_TYPE_AS
+class
+	NAMED_TUPLE_TYPE_AS
 
 inherit
 	TYPE_AS
@@ -27,17 +26,19 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics) is
+	initialize (n: like class_name; p: like parameters) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
+			p_not_void: p /= Void
+			p_has_arguments: p.arguments /= Void
 		do
 			class_name := n
 			class_name.to_upper
-			internal_generics := g
+			parameters := p
 		ensure
 			class_name_set: class_name.is_equal (n)
-			internal_generics_set: internal_generics = g
+			parameters_set: parameters = p
 		end
 
 feature -- Visitor
@@ -45,7 +46,7 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
-			v.process_class_type_as (Current)
+			v.process_named_tuple_type_as (Current)
 		end
 
 feature -- Roundtrip
@@ -66,9 +67,6 @@ feature -- Roundtrip
 			rcurly_symbol := s_as
 		end
 
-	expanded_keyword: KEYWORD_AS
-			-- Keyword "expanded" associated with this structure.
-
 	separate_keyword: KEYWORD_AS
 			-- Keyword "separate" associated with this structure.	
 
@@ -77,29 +75,46 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: TYPE_LIST_AS is
-			-- Possible generical parameters
+	generics: EIFFEL_LIST [TYPE_DEC_AS] is
+			-- Direct access to generic parameters
 		do
-			if internal_generics = Void or else internal_generics.is_empty then
-				Result := Void
-			else
-				Result := internal_generics
-			end
+		   Result := parameters.arguments
+		ensure
+		   generics_not_void: Result /= Void
 		end
+
+	parameters: FORMAL_ARGU_DEC_LIST_AS
+			-- Generic parameters
 
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
-	is_expanded: BOOLEAN
-			-- Is current type used with `expanded' keyword?
-
 	is_separate: BOOLEAN
 			-- Is current type used with `separate' keyword?
 
-feature -- Roundtrip
+feature -- Status report
 
-	internal_generics: like generics
-			-- Internal possible generical parameters
+	generic_count: INTEGER is
+			-- Number of actual generic parameters.
+		local
+			l_generics: like generics
+			l_index: INTEGER
+		do
+			from
+				l_generics := generics
+				l_index := l_generics.index
+				l_generics.start
+			until
+				l_generics.after
+			loop
+				Result := Result + l_generics.item.id_list.count
+				l_generics.forth
+			end
+			l_generics.go_i_th (l_index)
+		ensure
+			generic_count_positive: generic_count > 0
+		end
+
 
 feature -- Roundtrip/Token
 
@@ -110,8 +125,8 @@ feature -- Roundtrip/Token
 				if a_list = Void then
 					Result := class_name.first_token (a_list)
 				else
-					if expanded_keyword /= Void then
-						Result := expanded_keyword.first_token (a_list)
+					if lcurly_symbol /= Void then
+						Result := lcurly_symbol.first_token (a_list)
 					elseif separate_keyword /= Void then
 						Result := separate_keyword.first_token (a_list)
 					else
@@ -125,19 +140,7 @@ feature -- Roundtrip/Token
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
-				if a_list = Void then
-					if generics /= Void then
-						Result := generics.last_token (a_list)
-					else
-						Result := class_name.last_token (a_list)
-					end
-				else
-					if internal_generics /= Void then
-						Result := internal_generics.last_token (a_list)
-					else
-						Result := class_name.last_token (a_list)
-					end
-				end
+				Result := parameters.last_token (a_list)
 			end
 		end
 
@@ -147,95 +150,109 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
-				equivalent (generics, other.generics) and then
-				is_expanded = other.is_expanded
+				equivalent (parameters, other.parameters)
 		end
 
 feature -- Access
 
 	has_like: BOOLEAN is
 			-- Does the type have anchored type in its definition ?
+		local
+			l_generics: like generics
 		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_like
-					generics.forth
-				end
+			from
+				l_generics := generics
+				l_generics.start
+			until
+				l_generics.after or else Result
+			loop
+				Result := l_generics.item.type.has_like
+				l_generics.forth
 			end
 		end
 
 	has_formal_generic: BOOLEAN is
 			-- Has type a formal generic parameter?
+		local
+			l_generics: like generics
 		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_formal_generic
-					generics.forth
-				end
+			from
+				l_generics := generics
+				l_generics.start
+			until
+				l_generics.after or else Result
+			loop
+				Result := l_generics.item.type.has_formal_generic
+				l_generics.forth
 			end
 		end
 
 	is_loose: BOOLEAN is
 			-- Does type depend on formal generic parameters and/or anchors?
 		local
-			g: like generics
+			l_generics: like generics
 		do
-			g := generics
-			if g /= Void then
-				from
-					g.start
-				until
-					g.after or else Result
-				loop
-					Result := g.item.is_loose
-					g.forth
-				end
+			from
+				l_generics := generics
+				l_generics.start
+			until
+				l_generics.after or else Result
+			loop
+				Result := l_generics.item.type.is_loose
+				l_generics.forth
 			end
 		end
 
 feature -- Conveniences
 
-	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
+	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): NAMED_TUPLE_TYPE_A is
 			-- Track expanded classes
 		local
 			l_class: CLASS_C
 			l_class_i: CLASS_I
 			actual_generic: ARRAY [TYPE_A]
+			l_names: SPECIAL [INTEGER]
+			l_id_list: CONSTRUCT_LIST [INTEGER]
 			i, count: INTEGER
 			type_a: TYPE_A
 			abort: BOOLEAN
+			l_generics: like generics
 		do
-			l_class_i := Universe.class_named (class_name, Inst_context.cluster)
+			l_class_i := system.tuple_class
 			if l_class_i /= Void and then l_class_i.compiled_class /= Void then
 				l_class := l_class_i.compiled_class
-				if generics /= Void then
-					from
-						i := 1
-						count := generics.count
-						create actual_generic.make (1, count)
-						Result := l_class.partial_actual_type (actual_generic,
-							is_expanded, is_separate)
-					until
-						i > count or else abort
-					loop
-						type_a := generics.i_th (i).solved_type_for_format (feat_table, f)
-						if type_a = Void then
-							abort := True
-						else
+				from
+					i := 1
+					count := generic_count
+					create actual_generic.make (1, count)
+					create l_names.make (count)
+					create Result.make (l_class.class_id, actual_generic, l_names)
+					l_generics := generics
+					l_generics.start
+				until
+					l_generics.after or else abort
+				loop
+					type_a := l_generics.i_th (i).type.solved_type_for_format (feat_table, f)
+					if type_a = Void then
+						abort := True
+					else
+						l_id_list := l_generics.i_th (i).id_list
+						from
+							l_id_list.start
+						until
+							l_id_list.after
+						loop
 							actual_generic.put (type_a, i)
+							l_names.put (l_id_list.item, i - 1)
+							i := i + 1
+							l_id_list.forth
 						end
-						i := i + 1
 					end
-				else
-					Result := l_class.partial_actual_type (Void, is_expanded, is_separate)
+					l_generics.forth
+				end
+
+				if not abort and then is_separate then
+					Result.set_separate_mark
 				end
 
 				if abort then
@@ -244,68 +261,48 @@ feature -- Conveniences
 			end
 		end
 
-	actual_type: CL_TYPE_A is
+	actual_type: NAMED_TUPLE_TYPE_A is
 			-- Actual class type without processing like types
 		local
 			l_class: CLASS_C
 			l_class_i: CLASS_I
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
-			a_cluster: CLUSTER_I
+			type_a: TYPE_A
+			l_id_list: CONSTRUCT_LIST [INTEGER]
+			l_generics: like generics
+			l_names: SPECIAL [INTEGER]
 		do
-			a_cluster := Inst_context.cluster
-			l_class_i := Universe.class_named (class_name, a_cluster)
-				-- Bug fix: `append_signature' can be called on invalid
-				-- types by the error mechanism, thus the protection
+			l_class_i := system.tuple_class
 			if l_class_i /= Void and then l_class_i.compiled_class /= Void then
 				l_class := l_class_i.compiled_class
-				if generics /= Void then
+				from
+					i := 1
+					count := generic_count
+					create actual_generic.make (1, count)
+					create l_names.make (count)
+					create Result.make (l_class.class_id, actual_generic, l_names)
+					l_generics := generics
+					l_generics.start
+				until
+					l_generics.after
+				loop
+					type_a := l_generics.i_th (i).type.actual_type
+					l_id_list := l_generics.i_th (i).id_list
 					from
-						i := 1
-						count := generics.count
-						create actual_generic.make (1, count)
+						l_id_list.start
 					until
-						i > count
+						l_id_list.after
 					loop
-						actual_generic.put (generics.i_th (i).actual_type, i)
+						actual_generic.put (type_a, i)
+						l_names.put (l_id_list.item, i - 1)
 						i := i + 1
+						l_id_list.forth
 					end
+					l_generics.forth
 				end
-				Result := l_class.partial_actual_type (actual_generic, is_expanded, is_separate)
-
-				if Result.is_expanded and not Result.is_basic then
-						-- Only record when necessary.
-					record_exp_dependance (l_class)
-				end
-			end
-		end
-
-	record_exp_dependance (a_class: CLASS_C) is
-		local
-			d: DEPEND_UNIT
-			f: FEATURE_I
-			c_class: CLASS_C
-		do
-			c_class := System.current_class
-			if c_class /= Void then
--- *** FIXME ****
--- This was done since actual_type is called on the generic
--- parameters when the signature of the class is requested.
--- This approach seems ok but the FIXME is to make YOU
--- aware that there could be potential problems.
-				-- Only mark the class if it is used during a
-				-- compilation not when querying the actual
-				-- type
-				c_class.set_has_expanded
-				a_class.set_is_used_as_expanded
-				if System.in_pass3 then
-					create d.make_expanded_unit (a_class.class_id)
-					context.supplier_ids.extend (d)
-					f := a_class.creation_feature
-					if f /= Void then
-						create d.make (a_class.class_id, f)
-						context.supplier_ids.extend (d)
-					end
+				if is_separate then
+					Result.set_separate_mark
 				end
 			end
 		end
@@ -315,6 +312,8 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT) is
 		local
 			class_i: CLASS_I
+			i, nb: INTEGER
+			l_generics: like generics
 		do
 			class_i := Universe.class_named (class_name, Inst_context.cluster)
 			if class_i = Void then
@@ -322,34 +321,38 @@ feature -- Output
 			else
 				st.add_classi (class_i, class_name)
 			end
-			if generics /= Void then
+			from
+				l_generics := generics
+				l_generics.start
+				st.add_string (" [")
+			until
+				l_generics.after
+			loop
 				from
-					generics.start
-					st.add_string (" [")
+					i := 1
+					nb := l_generics.item.id_list.count
 				until
-					generics.after
+					i > nb
 				loop
-					generics.item.append_to (st)
-					if not generics.islast then
-						st.add_string (", ")
+					st.add_string (l_generics.item.item_name (i))
+					if i <= nb then
+						st.add_char (',')
+						st.add_char (' ')
 					end
-					generics.forth
+					i := i + 1
 				end
-				st.add_string ("]")
+				st.add_char (':')
+				st.add_char (' ')
+				l_generics.item.type.append_to (st)
+				if not l_generics.islast then
+					st.add_string ("; ")
+				end
+				l_generics.forth
 			end
+			st.add_string ("]")
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
-
-	set_is_expanded (i: like is_expanded; s_as: like expanded_keyword) is
-			-- Set `is_separate' to `i'.
-		do
-			is_expanded := i
-			expanded_keyword := s_as
-		ensure
-			is_expanded_set: is_expanded = i
-			expanded_keyword_set: expanded_keyword = s_as
-		end
 
 	set_is_separate (i: like is_separate; s_as: like separate_keyword) is
 			-- Set `is_separate' to `i'.
@@ -369,25 +372,45 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 
 	dump: STRING is
 			-- Dumped string
+		local
+			i, nb: INTEGER
+			l_generics: like generics
 		do
 			create Result.make (class_name.count)
 			Result.append (class_name)
-			if generics /= Void then
+			from
+				l_generics := generics
+				l_generics.start;
+				Result.append (" [")
+			until
+				l_generics.after
+			loop
 				from
-					generics.start;
-					Result.append (" [")
+					i := 1
+					nb := l_generics.item.id_list.count
 				until
-					generics.after
+					i > nb
 				loop
-					Result.append (generics.item.dump)
-					if not generics.islast then
-						Result.append (", ")
+					Result.append (l_generics.item.item_name (i))
+					if i <= nb then
+						Result.append_character (',')
+						Result.append_character (' ')
 					end
-					generics.forth
+					i := i + 1
 				end
-				Result.append ("]")
+				Result.append (": ")
+				Result.append (l_generics.item.type.dump)
+				if not l_generics.islast then
+					Result.append ("; ")
+				end
+				l_generics.forth
 			end
+			Result.append ("]")
 		end
+
+invariant
+	parameters_not_void: parameters /= Void and then parameters.arguments /= Void and then
+		not parameters.arguments.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -414,11 +437,11 @@ indexing
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_TYPE_AS
+end

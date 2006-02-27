@@ -367,6 +367,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+			-- Process `a_node'.
+		do
+		end
+
 	process_tuple_const_b (a_node: TUPLE_CONST_B) is
 			-- Process `a_node'.
 		do

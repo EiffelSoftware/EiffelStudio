@@ -15,8 +15,7 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			perform_redraw,
-			required_width
+			perform_redraw
 		end
 
 create
@@ -32,7 +31,7 @@ feature -- Access
 		do
 			Result := internal_required_width
 		end
-		
+
 feature -- Status Setting
 
 	set_required_width (a_required_width: INTEGER) is
@@ -62,15 +61,15 @@ feature {NONE} -- Implementation
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([pixmap])
 			end
-			
+
 				-- Now blit the pixmap to `drawable'.
 			internal_rectangle.move_and_resize (0, 0, a_width, a_height)
 			drawable.draw_sub_pixmap (an_indent, 0, pixmap, internal_rectangle)
 		end
-		
+
 	internal_required_width: INTEGER
 		-- Internal representation of `required_width'.
-		
+
 feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 
 	expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
@@ -101,7 +100,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_GRID_DRAWABLE_ITEM;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

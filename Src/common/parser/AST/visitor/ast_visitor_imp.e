@@ -476,6 +476,11 @@ feature -- Implementation
 		do
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 		end

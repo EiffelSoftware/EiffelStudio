@@ -468,6 +468,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			}
+[tT][uU][pP][lL][eE] {
+				last_token := TE_TUPLE
+				process_id_as
+			}
 [uU][nN][dD][eE][fF][iI][nN][eE]	{				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
 				last_token := TE_UNDEFINE

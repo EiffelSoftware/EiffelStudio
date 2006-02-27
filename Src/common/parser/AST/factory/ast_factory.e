@@ -710,18 +710,39 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 			if n /= Void then
-				create Result.initialize (n, g, is_exp, is_sep, e_as, s_as)
+				create Result.initialize (n, g)
+			end
+		end
+
+	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS) is
+			-- Set expanded status of `a_type' if it is an instance of CLASS_TYPE_AS.
+		local
+			l_class_type: CLASS_TYPE_AS
+		do
+			if is_expanded then
+				l_class_type ?= a_type
+				if l_class_type /= Void then
+					l_class_type.set_is_expanded (True, s_as)
+				end
+			end
+		end
+
+	new_named_tuple_type_as (n: ID_AS; p: FORMAL_ARGU_DEC_LIST_AS): NAMED_TUPLE_TYPE_AS is
+			-- New TUPLE_TYPE AST node
+		do
+			if n /= Void and (p /= Void and then p.arguments /= Void) then
+				create Result.initialize (n, p)
 			end
 		end
 
 	new_client_as (c: CLASS_LIST_AS): CLIENT_AS is
 			-- New CLIENT AST node
 		do
-			if c /= Void and not c.is_empty then
+			if c /= Void and then not c.is_empty then
 				create Result.initialize (c)
 			end
 		end

@@ -98,6 +98,9 @@ feature -- Attributes
 	is_argument: BOOLEAN
 			-- Is the current entity an argument?
 
+	is_tuple_access: BOOLEAN
+			-- Is the current entity an access to one of the TUPLE labels?
+
 	class_id: INTEGER
 			-- The class id of the qualified call.
 
@@ -158,11 +161,15 @@ feature -- Setting
 			valid_arg: name /= Void
 		do
 			feature_name := name
+		ensure
+			feature_name_set: feature_name = name
 		end
 
 	set_parameters (p: like internal_parameters) is
 		do
 			internal_parameters := p
+		ensure
+			internal_parameters_set: internal_parameters = p
 		end
 
 	set_class_id (a_class_id: like class_id) is
@@ -171,29 +178,46 @@ feature -- Setting
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
 		do
 			class_id := a_class_id
+		ensure
+			class_id_set: class_id = a_class_id
 		end
 
 	set_argument_position (an_argument_position: like argument_position) is
 			-- Set `argument_position' to `an_argument_position'.
 		do
 			argument_position := an_argument_position
+		ensure
+			argument_position_set: argument_position = an_argument_position
 		end
 
 	enable_local is
 			-- Set `is_local' to true.
 		do
-			is_local := true
+			is_local := True
+		ensure
+			is_local_set: is_local
 		end
 
 	enable_argument is
 			-- Set `is_argument' to true.
 		do
-			is_argument := true
+			is_argument := True
+		ensure
+			is_argument_set: is_argument
 		end
 
+	enable_tuple_access is
+			-- Set `is_tuple_access' to True.
+		do
+			is_tuple_access := True
+		ensure
+			is_tuple_access_set: is_tuple_access
+		end
 
 invariant
-	not_local_and_argument: is_local implies not is_argument
+	not_local_and_argument_and_tuple_access: is_local and (not is_argument and not is_tuple_access) or
+		is_argument and (not is_local and not is_tuple_access) or
+		is_tuple_access and (not is_local and not is_argument)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

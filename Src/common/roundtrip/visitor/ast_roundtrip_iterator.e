@@ -975,6 +975,15 @@ feature
 			safe_process (l_as.rcurly_symbol)
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		do
+			safe_process (l_as.lcurly_symbol)
+			safe_process (l_as.separate_keyword)
+			safe_process (l_as.class_name)
+			safe_process (l_as.parameters)
+			safe_process (l_as.rcurly_symbol)
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 			safe_process (l_as.lcurly_symbol)

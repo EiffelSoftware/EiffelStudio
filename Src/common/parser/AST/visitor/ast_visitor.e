@@ -1012,6 +1012,13 @@ feature {AST_EIFFEL} -- Clickable visitor
 		deferred
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_feature_as (l_as: FEATURE_AS) is
 			-- Process `l_as'.
 		require

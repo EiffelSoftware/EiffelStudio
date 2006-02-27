@@ -18,6 +18,7 @@ inherit
 			process_feature_name_alias_as,
 			process_class_as,
 			process_class_type_as,
+			process_named_tuple_type_as,
 			process_rename_as,
 			process_client_as,
 			process_convert_feat_as
@@ -134,6 +135,15 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		local
+			l_click_ast: CLICK_AST
+		do
+			create l_click_ast.initialize (l_as.class_name, l_as)
+			internal_click_list.extend (l_click_ast)
+			safe_process (l_as.generics)
+		end
+
 	process_rename_as (l_as: RENAME_AS) is
 		local
 			l_click_ast: CLICK_AST
@@ -160,7 +170,7 @@ feature {NONE} -- Implementation
 				l_clients.after
 			loop
 				create l_click_ast.initialize (l_clients.item,
-					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, False, False, Void, Void))
+					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void))
 				internal_click_list.extend (l_click_ast)
 				l_clients.forth
 			end
@@ -181,19 +191,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

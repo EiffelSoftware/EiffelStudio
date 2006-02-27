@@ -645,6 +645,12 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		do
+			l_as.class_name.process (Current)
+			safe_process (l_as.parameters)
+		end
+
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
 				-- Nothing to be done

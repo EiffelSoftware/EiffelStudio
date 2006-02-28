@@ -25,6 +25,16 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when drop down button is pressed.
+		do
+			if drop_down_actions_internal = Void then
+				drop_down_actions_internal :=
+					create_drop_down_actions
+			end
+			Result := drop_down_actions_internal
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -32,8 +42,16 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
+
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- 	Create a drop down action sequence.
+		deferred
+		end
+
+	drop_down_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+			-- Implementation of once per object `drop_down_acions'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

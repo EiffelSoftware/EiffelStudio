@@ -257,6 +257,20 @@ feature -- Status setting
 			tooltip_set: tooltip = a_tooltip
 		end
 
+	set_rows (a_row_count: INTEGER) is
+			-- Try to set items in toolbar to show in `a_row_count'
+			-- rows. The actual result maybe different base on buttons'
+			-- pixmaps' widths and buttons texts' widths.
+		require
+			exists: exists
+			valid: a_row_count > 0
+		local
+			l_result_rect: WEL_RECT
+		do
+			create l_result_rect.make (0, 0, 0, 0)
+			cwin_send_message (item, {WEL_TB_CONSTANTS}.tb_setrows, makew_param (a_row_count, 1), l_result_rect.item)
+		end
+
 	enable_hot_item (command_id: INTEGER) is
 			-- Set hot item for button identified by `command_id'.
 		require
@@ -421,7 +435,7 @@ feature -- Element change
 			end
 		ensure
 			count_increased: button_count = old button_count + buttons.count
-		end	
+		end
 
 	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER) is
 			-- Add bitmaps.
@@ -460,7 +474,7 @@ feature -- Element change
 			create wel_s.make (s)
 			last_string_index := cwin_send_message_result_integer (item, Tb_addstring,
 				to_wparam (0), wel_s.item)
-		end	
+		end
 
 feature -- Removal
 
@@ -546,7 +560,7 @@ feature -- Notifications
 		end
 
 	on_tbn_custhelp is
-			-- The user has chosen the Help button in the 
+			-- The user has chosen the Help button in the
 			-- customize toolbar dialog box.
 		require
 			exists: exists
@@ -554,7 +568,7 @@ feature -- Notifications
 		end
 
 	on_tbn_dropdown (info: WEL_NM_TOOL_BAR) is
-			-- The user clicks a button that uses the 
+			-- The user clicks a button that use the
 			-- Tbstyle_dropdown style.
 		require
 			exists: exists
@@ -568,7 +582,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			-- through the Wm_notify message
 		local
 			code: INTEGER
-			nm_info: WEL_NM_TOOL_BAR 
+			nm_info: WEL_NM_TOOL_BAR
 		do
 			code := notification_info.code
 			if code = Tbn_getbuttoninfo then
@@ -614,7 +628,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Ws_visible + Ws_child + Tbstyle_tooltips
+			Result := Ws_visible | Ws_child | Tbstyle_tooltips
 		end
 
 	set_button_struct_size is
@@ -641,6 +655,14 @@ feature {NONE} -- Externals
 			"C [macro <cctrl.h>]"
 		alias
 			"sizeof (TBBUTTON)"
+		end
+
+	makew_param (a_low_int, a_high_int: INTEGER): POINTER is
+			-- Make a `a_low_int' and `a_high_int' combined wparam.
+		external
+			"C [macro <winuser.h>]"
+		alias
+			"MAKEWPARAM"
 		end
 
 feature {NONE} -- Inapplicable

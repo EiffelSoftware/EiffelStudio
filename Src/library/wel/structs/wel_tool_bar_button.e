@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 		do
 			make
 
-			set_style (tbstyle_check | tbstyle_autosize)
+			set_style (tbstyle_check | tbstyle_autosize | Btns_showtext)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
 			set_command_id (a_command_id)

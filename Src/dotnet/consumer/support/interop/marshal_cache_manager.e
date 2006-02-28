@@ -19,8 +19,11 @@ feature -- Access
 			Result := implementation.is_successful
 		end
 
-	is_initialized: BOOLEAN
+	is_initialized: BOOLEAN is
 			-- Has current object been initialized?
+		do
+			Result := internal_is_initialized
+		end
 
 	last_error_message: SYSTEM_STRING is
 			-- Last error message
@@ -38,7 +41,7 @@ feature -- Basic Exportations
 			valid_clr_version: a_clr_version.length > 0
 		do
 			create implementation.make
-			is_initialized := True
+			internal_is_initialized := True
 		ensure
 			current_initialized: is_initialized
 		end
@@ -60,7 +63,7 @@ feature -- Basic Exportations
 			if not cr.is_initialized then
 				(create {EIFFEL_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path, False)
 			end
-			is_initialized := True
+			internal_is_initialized := True
 		ensure
 			current_initialized: is_initialized
 		end
@@ -155,6 +158,9 @@ feature -- Basic Exportations
 		end
 
 feature {COM_CACHE_MANAGER2} -- Implementation
+
+	internal_is_initialized: BOOLEAN
+			-- Storing for `is_initialized'.
 
 	implementation: CACHE_MANAGER;
 			-- Access to `CACHE_MANAGER'.

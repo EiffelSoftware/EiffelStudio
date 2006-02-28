@@ -24,11 +24,20 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when button is pressed then released.
 		do
 			Result := implementation.select_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {NONE} -- Speciall event handling
+
+	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when dropdown button is pressed.
+		do
+			Result := implementation.drop_down_actions
 		ensure
 			not_void: Result /= Void
 		end

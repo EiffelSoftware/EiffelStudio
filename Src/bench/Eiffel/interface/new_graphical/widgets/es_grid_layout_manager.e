@@ -438,7 +438,8 @@ feature {NONE} -- Implementation
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
 			end
-			if a_row.parent /= Void then
+			if a_row.parent /= Void and lay /= Void then
+					--| `lay' should not be Void, but issue bug#10172 still occurs
 				restore_row_layout (a_row, lay, True, l_curr_pid)
 			else
 				restorations_in_progress := restorations_in_progress - 1
@@ -452,6 +453,7 @@ feature {NONE} -- Implementation
 			-- (nota: if `on_idle' is False, the value of `l_pid' is ignored)
 		require
 			lay_not_void: lay /= Void
+			lay_not_empty: not lay.is_empty
 			row_is_ready_for_identification: row_is_ready_for_identification (a_row)
 		local
 			lst: DS_LIST [TUPLE]

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			-- `a_command_id'.
 		do
 			make
-			set_style (Tbstyle_button | Tbstyle_autosize)
+			set_style (Tbstyle_button | Btns_showtext | Btns_autosize)
 			set_string_index (a_string_index)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 		do
 			make
 
-			set_style (tbstyle_check | tbstyle_autosize | Btns_showtext)
+			set_style (tbstyle_check | Btns_showtext | Btns_autosize)
 			set_state (Tbstate_enabled)
 			set_bitmap_index (a_bitmap_index)
 			set_command_id (a_command_id)
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_separator  is
+	make_separator is
 			-- Make a separator providing a small gap between
 			-- groups.
 		do

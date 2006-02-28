@@ -752,6 +752,7 @@ feature -- Implementation
 					l_processing_done := True
 					last_type := l_named_tuple.generics.item (l_label_pos)
 					last_access_writable := True
+					last_routine_id_set := Void
 					is_last_access_tuple_access := True
 					last_feature_name := l_feature_name
 					if l_needs_byte_node then

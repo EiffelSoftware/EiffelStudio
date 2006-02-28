@@ -82,7 +82,8 @@ feature -- Checking
 				-- was checked.
 			l_named_tuple_node ?= a_node
 			if l_named_tuple_node /= Void then
-				l_is_tuple_class_available := system.tuple_class.is_compiled and then not system.tuple_class.compiled_class.degree_4_needed
+				l_is_tuple_class_available := system.tuple_class.is_compiled and then
+					system.tuple_class.compiled_class.degree_4_processed
 				if l_is_tuple_class_available then
 					l_feat_tbl := system.tuple_class.compiled_class.feature_table
 				end
@@ -138,7 +139,7 @@ feature {NONE} -- Checking
 			a_pos_valid: a_pos <= generics.count
 			has_tuple_class: system.tuple_class /= Void
 			has_tuple_class_compiled: system.tuple_class.is_compiled
-			has_tuple_class_features: not system.tuple_class.compiled_class.degree_4_needed
+			has_tuple_class_features: system.tuple_class.compiled_class.degree_4_processed
 		local
 			l_feat_tbl: FEATURE_TABLE
 			l_vrft: VRFT

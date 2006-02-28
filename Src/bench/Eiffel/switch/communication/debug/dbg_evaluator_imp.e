@@ -142,17 +142,12 @@ feature {NONE} -- Error code id
 			Result.force ("Error during parameters preparation", Cst_error_occurred_during_parameters_preparation)
 		end
 
-feature {NONE} -- reversed bridge
-
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
-		do
-			evaluator.evaluate_function (a_addr, a_target, Void, f, params)
-		end
-
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
+		require
+			realf /= Void
 		deferred
 		end
 
@@ -173,11 +168,11 @@ feature {DBG_EVALUATOR} -- Interface
 			--| only for dotnet for now
 		end
 
-	effective_evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	effective_evaluate_once (f: FEATURE_I) is
 		require
 			feature_not_void: f /= Void
 			f.written_class.types.count <= 1
-			f_is_once: f.associated_feature_i.is_once
+			f_is_once: f.is_once
 		deferred
 		end
 
@@ -228,7 +223,7 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 		deferred
 		end
 
-	prepare_parameters (dt: CLASS_TYPE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	prepare_parameters (dt: CLASS_TYPE; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 			-- Prepare parameters for function evaluation
 			-- For classic system
 			--| Warning: for classic system be sure `Init_recv_c' had been done before
@@ -263,7 +258,7 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 					if
 						f /= Void
 						and then (not Byte_context.real_type (
-									f.arguments.i_th (params.index).type_i
+									f.arguments.i_th (params.index).actual_type.type_i
 									).is_basic
 								)
 					then
@@ -278,7 +273,7 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 				end
 				params.forth
 			end
-			if dt /= Void then
+			if dt /= Void and Byte_context.is_class_type_changed then
 				Byte_context.restore_class_type_context
 			end
 			if bak_cc /= Void then
@@ -347,19 +342,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -45,14 +45,16 @@ feature -- Concrete initialization
 
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 		local
+			fi: FEATURE_I
 			dmp: DUMP_VALUE
 			par: INTEGER
 			rout_info: ROUT_INFO
 		do
 				-- Initialize the communication.
+			fi := f
 			Init_recv_c
 
 			if
@@ -73,22 +75,23 @@ feature {DBG_EVALUATOR} -- Interface
 				else
 					dmp := a_target
 					if dmp.is_basic then
+						fi := realf
 						par := par + 4
 					end
 					dmp.classic_send_value
 				end
 					-- Send the final request.
-				if f.is_external then
+				if fi.is_external then
 					par := par + 1
 				end
 
-				if f.written_class.is_precompiled then
+				if fi.written_class.is_precompiled then
 					par := par + 2
-					rout_info := System.rout_info_table.item (f.rout_id_set.first)
+					rout_info := System.rout_info_table.item (fi.rout_id_set.first)
 					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 				else
 					fixme ("it seems the runtime/debug is not designed to call precursor ...")
-					send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
+					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, ctype.static_type_id - 1, par)
 				end
 					-- Receive the Result.
 				c_recv_value (Current)
@@ -100,7 +103,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	effective_evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	effective_evaluate_once (f: FEATURE_I) is
 		local
 			once_r: ONCE_REQUEST
 			res: ABSTRACT_DEBUG_VALUE
@@ -110,18 +113,18 @@ feature {DBG_EVALUATOR} -- Interface
 			if once_r.already_called (f) then
 				res := once_r.once_result (f)
 				if once_r.last_failed then
-					notify_error (cst_error_exception_during_evaluation, "Once feature " + f.name + ": " + once_r.last_exception_meaning)
+					notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": " + once_r.last_exception_meaning)
 				else
 					if res /= Void then
 						last_result_value := res.dump_value
-						last_result_static_type := f.type.associated_class
+						last_result_static_type := f.type.actual_type.associated_class
 					else
-						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.name + ": an exception occurred")
+						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": an exception occurred")
 					end
 				end
 				once_r.clear_last_values
 			else
-				notify_error (cst_error_occurred, "Once feature " + f.name + ": not yet called")
+				notify_error (cst_error_occurred, "Once feature " + f.feature_name + ": not yet called")
 			end
 		end
 
@@ -133,7 +136,7 @@ feature {DBG_EVALUATOR} -- Interface
 			check
 				l_basic_not_void: l_basic /= Void
 			end
-			Result := l_basic.associated_class_type
+			Result := l_basic.associated_reference_class_type
 		end
 
 	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is

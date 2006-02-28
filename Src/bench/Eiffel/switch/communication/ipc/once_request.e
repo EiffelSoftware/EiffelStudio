@@ -39,41 +39,39 @@ feature -- Initialization
 
 	address: STRING
 
-	already_called (once_routine: E_FEATURE): BOOLEAN is
+	already_called (once_routine: FEATURE_I): BOOLEAN is
 			-- Has `once_routine' already been called?
 		require
 			exists: once_routine /= Void
-			is_once: feature_i (once_routine).is_once
+			is_once: once_routine.is_once
 		local
 			l_index: INTEGER
 			s: STRING
-			fi: FEATURE_I
 		do
 			debug ("debugger_ipc")
-				print (generator + ".already_called (" + once_routine.name + ") %N")
+				print (generator + ".already_called (" + once_routine.feature_name + ") %N")
 			end
 			if not Application.is_running then
 				Result := False
 			else
-				fi := feature_i (once_routine)
-				l_index := once_index (fi)
-				if fi.is_process_relative then
+				l_index := once_index (once_routine)
+				if once_routine.is_process_relative then
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_process, l_index)
 				else
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_thread, l_index)
 				end
 				debug ("debugger_ipc")
-					print (generator + ".already_called (" + once_routine.name + " ~ 0x" + l_index.to_hex_string + ") : request sent%N")
+					print (generator + ".already_called (" + once_routine.feature_name + " ~ 0x" + l_index.to_hex_string + ") : request sent%N")
 				end
 				s := c_tread
 				debug ("debugger_ipc")
-					print (generator + ".already_called (" + once_routine.name + ") : request received [" + s + "]%N")
+					print (generator + ".already_called (" + once_routine.feature_name + ") : request received [" + s + "]%N")
 				end
 				if s.is_boolean then
 					Result := s.to_boolean
 				else
 					debug ("debugger_ipc")
-						print (generator + ".already_called ("+ once_routine.name +") returned ")
+						print (generator + ".already_called ("+ once_routine.feature_name +") returned ")
 						if s /= Void then
 							print (s)
 						else
@@ -87,9 +85,9 @@ feature -- Initialization
 			end
 debug ("ONCE")
 	io.error.put_string ("Once routine `");
-	io.error.put_string (once_routine.name);
+	io.error.put_string (once_routine.feature_name);
 	io.error.put_string ("' (");
-	io.error.put_integer (once_routine.real_body_id)
+	io.error.put_integer (once_routine.body_index)
 	if Result then
 		io.error.put_string (") already called.")
 	else
@@ -98,24 +96,24 @@ debug ("ONCE")
 	io.error.put_new_line
 end
 			debug ("debugger_ipc")
-				print (generator + ".already_called (" + once_routine.name + "): " + Result.out + " %N")
+				print (generator + ".already_called (" + once_routine.feature_name + "): " + Result.out + " %N")
 			end
 		end
 
-	once_result (once_function: E_FEATURE): ABSTRACT_DEBUG_VALUE is
+	once_result (once_function: FEATURE_I): ABSTRACT_DEBUG_VALUE is
 			-- Result of `once_function'
 		require
 			exists: once_function /= Void
-			is_once: feature_i (once_function).is_once
+			is_once: once_function.is_once
 			is_function: once_function.type /= Void
 			result_exists: already_called (once_function)
 		do
 			debug ("debugger_ipc")
-				print (generator + ".once_result (" + once_function.name + ") : start %N")
+				print (generator + ".once_result (" + once_function.feature_name + ") : start %N")
 			end
-			Result := once_data (feature_i (once_function))
+			Result := once_data (once_function)
 			debug ("debugger_ipc")
-				print (generator + ".once_result (" + once_function.name + ") : done %N")
+				print (generator + ".once_result (" + once_function.feature_name + ") : done %N")
 			end
 		ensure
 			result_exists: Result /= Void

@@ -2178,7 +2178,7 @@ feature -- Specific function evaluation
 		end
 
 	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
-								a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
+								a_feat: FEATURE_I): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue object representing the once value.
 			-- This will also set `last_once_available' and `last_once_failed'.
 		require
@@ -2208,7 +2208,7 @@ feature -- Specific function evaluation
 			end
 
 				--| Get related tokens
-			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class (a_feat.associated_feature_i, a_class_c)
+			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class (a_feat, a_class_c)
 			if l_once_info_tokens /= Void then
 				l_data_class_token := l_once_info_tokens.integer_item (1)
 				l_done_token := l_once_info_tokens.integer_item (2)

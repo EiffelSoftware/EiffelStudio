@@ -118,9 +118,8 @@ feature -- Filling
 
 			is_melted := melted
 			routine_name := a_feature.feature_name
-
-				-- Get E_FEATURE from `a_feature'.
 			routine := a_feature.e_feature
+
 				-- Adapt `routine' to `dynamic_class' and handles precursor case.
 			if dynamic_class /= written_class and then dynamic_class.simple_conform_to (written_class) then
 				l_routine := dynamic_class.feature_with_rout_id (a_feature.rout_id_set.first)

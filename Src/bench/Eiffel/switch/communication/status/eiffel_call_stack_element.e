@@ -26,7 +26,7 @@ feature -- Properties
 				private_body_index := routine.body_index
 			end
 			Result := private_body_index
-		end			
+		end
 
 	is_melted: BOOLEAN
 			-- Is the associated routine melted.
@@ -42,12 +42,22 @@ feature -- Properties
 	written_class: CLASS_C
 			-- Class where routine is written in
 
+	routine_i: FEATURE_I is
+		local
+			ef: E_FEATURE
+		do
+			ef := routine
+			if ef /= Void then
+				Result := ef.associated_feature_i
+			end
+		end
+
 	routine: E_FEATURE is
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 		deferred
 		end
-		
+
 	has_result: BOOLEAN is
 			-- Does this routine has a Result ?
 			-- ie: function or once
@@ -57,7 +67,7 @@ feature -- Properties
 			r := routine
 			Result := r /= Void and then r.is_function
 		end
-		
+
 	result_value: ABSTRACT_DEBUG_VALUE is
 			-- Result value of routine
 		do
@@ -65,7 +75,7 @@ feature -- Properties
 				initialize_stack
 			end
 			Result := private_result
-			if 
+			if
 				Result = Void
 				and then has_result
 			then
@@ -79,7 +89,7 @@ feature -- Properties
 			-- Value of local variables
 		local
 			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
-			r: like routine
+			r: E_FEATURE
 		do
 			if not initialized then
 				initialize_stack
@@ -89,7 +99,7 @@ feature -- Properties
 				r := routine
 				if r /= Void then
 					l_locals := r.locals
-					if 
+					if
 						l_locals /= Void
 						and then not l_locals.is_empty
 					then
@@ -104,7 +114,7 @@ feature -- Properties
 			-- Value of arguments
 		local
 			l_args: E_FEATURE_ARGUMENTS
-			r: like routine
+			r: E_FEATURE
 		do
 			if not initialized then
 				initialize_stack
@@ -116,13 +126,13 @@ feature -- Properties
 					l_args := r.arguments
 					if
 						l_args /= Void
-						and then not l_args.is_empty 
+						and then not l_args.is_empty
 					then
 						create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
 						Result.extend (error_value ("...", "unable to get the arguments"))
 					end
 				end
-			end			
+			end
 		ensure
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
@@ -153,7 +163,7 @@ feature -- Output
 		end
 
 	display_locals (st: STRUCTURED_TEXT) is
-			-- Display the local entities and result (if it exists) of 
+			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		local
 			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
@@ -171,7 +181,7 @@ feature -- Output
 				create local_names.make
 				from
 					locals_list.start
-				until	
+				until
 					locals_list.after
 				loop
 					local_names.put_front (locals_list.item)
@@ -187,7 +197,7 @@ feature -- Output
 					loop
 						st.add_indent
 						local_names.item.append_to (st, 0)
-						local_names.forth	
+						local_names.forth
 					end
 				end
 			end
@@ -196,7 +206,7 @@ feature -- Output
 				st.add_indent
 				private_result.append_to (st, 0)
 			end
-		end 
+		end
 
 	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
@@ -204,7 +214,7 @@ feature -- Output
 			c, oc	: CLASS_C
 			last_pos: INTEGER
 		do
-			
+
 			c := dynamic_class
 			oc := written_class
 				-- Print object address (14 characters)
@@ -225,7 +235,7 @@ feature -- Output
 				last_pos := c.name.count + 14
 			else
 				st.add_string ("NOT FOUND ")
-				last_pos := 9 + 14 
+				last_pos := 9 + 14
 			end
 			st.add_column_number (26)
 
@@ -242,17 +252,17 @@ feature -- Output
 				end
 				st.add_string (")")
 			end
-			
+
 			-- print line number
 			st.add_string(" ( @ ")
 			st.add_int(break_index)
 			st.add_string(" )")
-			
+
 		ensure then
 			initialized_not_changed: old initialized = initialized
 		end
 
-feature {NONE} -- Implementation 
+feature {NONE} -- Implementation
 
 	initialize_stack is
 		require
@@ -278,20 +288,20 @@ feature {NONE} -- Implementation Properties
 
 	private_body_index: like body_index
 			-- Associated body index
-			
+
 feature {NONE} -- Implementation helper
 
 	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
-		do		
+		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
 		end
 
 invariant
 --
---	non_empty_args_if_exists: private_arguments /= Void implies 
+--	non_empty_args_if_exists: private_arguments /= Void implies
 --				not private_arguments.is_empty
---	non_empty_locs_if_exists: private_locals /= Void implies 
+--	non_empty_locs_if_exists: private_locals /= Void implies
 --				not private_locals.is_empty
 --	valid_level: level_in_stack >= 1
 
@@ -302,19 +312,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

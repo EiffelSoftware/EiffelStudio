@@ -20,28 +20,6 @@ inherit
 create
 	make
 
-feature -- Access
-
-	is_whole_drop_down: BOOLEAN is
-			-- Is current whole drop down style?
-		do
-
-		end
-
-feature -- Basic operation
-
-	enable_whole_drop_down is
-			-- Enable whole drop down button style.
-		do
-			
-		end
-
-	disable_whole_drop_down is
-			-- Disable whole drop down button style
-		do
-
-		end
-
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	interface: EV_TOOL_BAR_DROP_DOWN_BUTTON

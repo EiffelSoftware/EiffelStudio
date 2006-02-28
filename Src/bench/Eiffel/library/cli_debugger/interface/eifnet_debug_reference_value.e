@@ -14,21 +14,21 @@ inherit
 		redefine
 			kind
 		end
-		
-	EIFNET_ABSTRACT_DEBUG_VALUE		
+
+	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
 			address
 		redefine
 			kind
 		end
-	
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
 		undefine
 			is_equal
 		end
-	
+
 	SHARED_EIFNET_DEBUGGER
 		export
 			{NONE} all
@@ -39,7 +39,7 @@ inherit
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make
 --, make_attribute
-	
+
 feature {NONE} -- Initialization
 
 	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			a_prepared_value_not_void: a_prepared_value /= Void
 		do
 			set_default_name
-			
+
 			init_dotnet_data (a_referenced_value, a_prepared_value)
 
 			get_object_value
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 --			value_set: value = v
 --		end		
 
-feature -- Get 
+feature -- Get
 
 	has_object_value: BOOLEAN is
 		do
@@ -100,7 +100,7 @@ feature -- Get
 		do
 			object_value := icd_value_info.new_interface_debug_object_value
 		end
-		
+
 	release_object_value is
 			-- Release `object_value'
 		require
@@ -109,7 +109,7 @@ feature -- Get
 			object_value.clean_on_dispose
 			object_value := Void
 		end
-		
+
 feature -- Access
 
 	object_value: ICOR_DEBUG_OBJECT_VALUE
@@ -143,7 +143,7 @@ feature -- Access
 			if Result = Void then
 				if not is_null then
 					if icd_value_info.has_object_interface and then value_class_token > 0 then
-						Result := icd_value_info.value_class_type						
+						Result := icd_value_info.value_class_type
 						if Result = Void then
 								--| This means we are dealing with an external type (dotnet)
 							internal_dynamic_class := icd_value_info.value_class_c
@@ -152,7 +152,7 @@ feature -- Access
 						end
 					else
 						internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
-						Result := internal_dynamic_class.types.first						
+						Result := internal_dynamic_class.types.first
 					end
 					internal_dynamic_class_type := Result
 				end
@@ -192,11 +192,11 @@ feature {NONE} -- Output
 				end
 			end
 		end
-		
+
 feature -- Output
-		
+
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
-			-- List of all sub-items of `Current'. 
+			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
 			-- (sorted by name)
@@ -208,16 +208,16 @@ feature -- Output
 				else
 					Result := children_from_eiffel_type
 				end
-				attributes := Result				
+				attributes := Result
 			end
 		end
-		
+
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
-		
+
 feature {NONE} -- Children implementation
 
 	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
-			-- List of all sub-items of `Current'. 
+			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
 			-- (sorted by name)
@@ -271,7 +271,7 @@ feature {NONE} -- Children implementation
 			l_att_token: INTEGER
 			l_att_icd_debug_value: ICOR_DEBUG_VALUE
 		do
-			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type) 
+			l_att_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f, dynamic_class_type)
 			if l_att_token /= 0 then
 				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 				if l_att_icd_debug_value /= Void then
@@ -281,11 +281,11 @@ feature {NONE} -- Children implementation
 					else
 						create {DEBUG_VALUE[INTEGER]} Result.make (Sk_int32, 0)
 						Result.set_name ("ERROR on " + f.feature_name)
-							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
+							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say
 							--| we had problem to get its value ...
 						debug ("DEBUGGER_TRACE_CHILDREN")
-							print ("Unable to build debug value for : " 
-									+ dynamic_class.name_in_upper + "." + f.feature_name 
+							print ("Unable to build debug value for : "
+									+ dynamic_class.name_in_upper + "." + f.feature_name
 									+ "%N"
 								)
 						end
@@ -293,7 +293,7 @@ feature {NONE} -- Children implementation
 				end
 			end
 		end
-		
+
 feature -- Status
 
 	kind: INTEGER is
@@ -314,7 +314,7 @@ feature -- Status
 						Result := Static_reference_value
 					else
 						Result := Reference_value
-					end					
+					end
 				end
 			end
 		end
@@ -346,7 +346,7 @@ feature -- Once request
 
 			if l_class_c /= Void then
 				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
-				l_icd_dv_result := l_eifnet_debugger.once_function_value (l_icd_frame, l_class_c, a_feat)
+				l_icd_dv_result := l_eifnet_debugger.once_function_value (l_icd_frame, l_class_c, a_feat.associated_feature_i)
 				if l_eifnet_debugger.last_once_available then
 					if not l_eifnet_debugger.last_once_already_called then
 						Result := error_value (a_feat.name , "Not yet called")
@@ -365,10 +365,10 @@ feature -- Once request
 
 			debug ("DEBUGGER_TRACE")
 				print ("- " + a_feat.written_class.name_in_upper + " ")
-				print (">>" + a_feat.name + " Result /= Void =? " + (Result /= Void).out + "%N") 
+				print (">>" + a_feat.name + " Result /= Void =? " + (Result /= Void).out + "%N")
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	internal_dynamic_class: like dynamic_class
@@ -381,19 +381,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

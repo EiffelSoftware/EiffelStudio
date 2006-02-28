@@ -32,13 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	COMPILER_EXPORTER
-			--| Just to be able to access E_FEATURE::associated_feature_i :(
-			--| and other expression evaluation purpose
-		export
-			{NONE} all
-		end
-
 	SHARED_AST_CONTEXT
 		rename
 			Context as Ast_context
@@ -60,6 +53,13 @@ inherit
 		export
 			{NONE} all
 		end
+
+	COMPILER_EXPORTER --| To access:  ERROR_HANDLER.wipe_out
+		export
+			{NONE} all
+		end
+
+	REFACTORING_HELPER
 
 create
 	make_with_expression,
@@ -506,7 +506,7 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			l_type_to_create := a_creation_expr_b.info.type_to_create
 			if not retried then
-				-- FIXME JFIAT: 2004/03/18 for now just process basic type ...
+				fixme ("2004/03/18 for now we just process basic type ..., to improve ...")
 				if l_type_to_create /= Void and then l_type_to_create.is_basic then
 					l_f_b ?= a_creation_expr_b.call
 					if l_f_b /= Void and then l_f_b.parameters /= Void then
@@ -567,7 +567,6 @@ feature {NONE} -- EXPR_B evaluation
 	evaluate_feature_b (a_feature_b: FEATURE_B) is
 		local
 			fi: FEATURE_I
-			ef: E_FEATURE
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
@@ -586,36 +585,29 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				if a_feature_b.precursor_type /= Void then
 					cl := a_feature_b.precursor_type.base_class
-					ef := cl.feature_with_rout_id (a_feature_b.routine_id)
+					fi := cl.feature_table.feature_of_rout_id (a_feature_b.routine_id)
 				else
-					ef := cl.feature_with_name (a_feature_b.feature_name)
+					fi := cl.feature_table.item (a_feature_b.feature_name)
 				end
-				if ef /= Void then
-					fi := ef.associated_feature_i
-
+				if fi /= Void then
 					if fi.is_once then
-						params := parameter_values_from_parameters_b (a_feature_b.parameters)
-						if tmp_target /= Void then
-							evaluate_once (tmp_target.value_address, tmp_target, ef, params)
-						else
-							evaluate_once (context_address, Void, ef, params)
-						end
+						evaluate_once (fi)
 					elseif fi.is_constant then
-						evaluate_constant (ef)
+						evaluate_constant (fi)
 					elseif fi.is_function then
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
 						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, cl, ef, params)
+							evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
 						else
-							evaluate_function (context_address, Void, cl, ef, params)
+							evaluate_function (context_address, Void, cl, fi, params)
 						end
 					elseif fi.is_attribute then
 							-- How come ? maybe with redefinition .. and so on ..
 						if tmp_target /= Void then
-							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+							evaluate_attribute (tmp_target.value_address, tmp_target, fi)
 						else
-							evaluate_attribute (context_address, Void, ef)
+							evaluate_attribute (context_address, Void, fi)
 						end
 					else
 						notify_error_not_implemented (a_feature_b.generator +  Cst_error_other_than_func_cst_once_not_available)
@@ -629,7 +621,6 @@ feature {NONE} -- EXPR_B evaluation
 	evaluate_external_b	(a_external_b: EXTERNAL_B) is
 		local
 			fi: FEATURE_I
-			ef: E_FEATURE
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
@@ -646,8 +637,8 @@ feature {NONE} -- EXPR_B evaluation
 						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
-				ef := cl.feature_with_name (a_external_b.feature_name)
-				if ef = Void then
+				fi := cl.feature_table.item (a_external_b.feature_name)
+				if fi = Void then
 					params := parameter_values_from_parameters_b (a_external_b.parameters)
 					prepare_evaluation
 					evaluate_function_with_name (tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
@@ -658,22 +649,21 @@ feature {NONE} -- EXPR_B evaluation
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
 					end
 				else
-					fi := ef.associated_feature_i
 					if fi.is_external then
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
 						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, Void, ef, params)
+							evaluate_function (tmp_target.value_address, tmp_target, Void, fi, params)
 						elseif context_address /= Void then
-							evaluate_function (context_address, Void, Void, ef, params)
+							evaluate_function (context_address, Void, Void, fi, params)
 						else
-							evaluate_static_function (ef, params)
+							evaluate_static_function (fi, cl, params)
 						end
 					elseif fi.is_attribute then
 						if tmp_target /= Void then
-							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+							evaluate_attribute (tmp_target.value_address, tmp_target, fi)
 						else
-							evaluate_attribute (context_address, tmp_target, ef)
+							evaluate_attribute (context_address, tmp_target, fi)
 						end
 					else
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
@@ -707,7 +697,7 @@ feature {NONE} -- EXPR_B evaluation
 	evaluate_attribute_b (a_attribute_b: ATTRIBUTE_B) is
 		local
 			cl: CLASS_C
-			ef: E_FEATURE
+			fi: FEATURE_I
 		do
 			if tmp_target /= Void then
 				cl := tmp_target.dynamic_class
@@ -720,12 +710,11 @@ feature {NONE} -- EXPR_B evaluation
 			if cl = Void then
 				notify_error_evaluation (Cst_error_call_on_void_target)
 			else
-				ef := cl.feature_with_name (a_attribute_b.attribute_name)
-
+				fi := cl.feature_table.item (a_attribute_b.attribute_name)
 				if tmp_target /= Void then
-					evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+					evaluate_attribute (tmp_target.value_address, tmp_target, fi)
 				else
-					evaluate_attribute (context_address, Void, ef)
+					evaluate_attribute (context_address, Void, fi)
 				end
 			end
 		end
@@ -765,6 +754,7 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
+				notify_error_evaluation ("Unable to get Current call stack element")
 				check
 					False -- Shouldn't occur.
 				end
@@ -772,9 +762,7 @@ feature {NONE} -- EXPR_B evaluation
 				cf := cse.routine
 			end
 			if cf = Void then
-				check
-					False -- Shouldn't occur.
-				end
+				notify_error_evaluation ("Unable to get Current call stack element's routine")
 			else
 				dv :=  cse.locals.i_th (l_local_b.position)
 				tmp_result_value := dv.dump_value
@@ -791,6 +779,7 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
+				notify_error_evaluation ("Unable to get Current call stack element")
 				check
 					False -- Shouldn't occur.
 				end
@@ -798,6 +787,7 @@ feature {NONE} -- EXPR_B evaluation
 				cf := cse.routine
 			end
 			if cf = Void then
+				notify_error_evaluation ("Unable to get Current call stack element's routine")
 				check
 					False -- Shouldn't occur.
 				end
@@ -817,6 +807,7 @@ feature {NONE} -- EXPR_B evaluation
 		do
 			cse ?= Application.status.current_call_stack_element
 			if cse = Void then
+				notify_error_evaluation ("Unable to get Current call stack element")
 				check
 					False -- Shouldn't occur.
 				end
@@ -824,6 +815,7 @@ feature {NONE} -- EXPR_B evaluation
 				cf := cse.routine
 			end
 			if cf = Void then
+				notify_error_evaluation ("Unable to get Current call stack element's routine")
 				check
 					False -- Shouldn't occur.
 				end
@@ -881,29 +873,29 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	evaluate_static_function (f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_static_function (f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
 			prepare_evaluation
-			Dbg_evaluator.evaluate_static_function (f, params)
+			Dbg_evaluator.evaluate_static_function (f, cl, params)
 			retrieve_evaluation
 		end
 
-	evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_once (f: FEATURE_I) is
 			--
 		require
 			feature_not_void: f /= Void
 --			f_is_once: f.is_once
---			f_is_once: f.associated_feature_i.is_once
+--			f_is_once: f.is_once
 		do
 			prepare_evaluation
-			Dbg_evaluator.evaluate_once (a_addr, a_target, f, params)
+			Dbg_evaluator.evaluate_once (f)
 			retrieve_evaluation
 		end
 
-	evaluate_constant (f: E_FEATURE) is
+	evaluate_constant (f: FEATURE_I) is
 			-- Find the value of constant feature `f'.
 		require
 			valid_feature: f /= Void
@@ -911,7 +903,7 @@ feature {NONE} -- Concrete evaluation
 		local
 			cv_cst_i: CONSTANT_I
 		do
-			cv_cst_i ?= f.associated_feature_i
+			cv_cst_i ?= f
 			if cv_cst_i /= Void then
 				evaluate_value_i (cv_cst_i.value)
 			else
@@ -921,12 +913,12 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE) is
+	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
 				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
+						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
 					)
 			else
 				prepare_evaluation
@@ -935,14 +927,14 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
 				notify_error_evaluation (Cst_error_call_on_void_target +
-						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
+						Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit
 					)
 			else
 				prepare_evaluation
@@ -998,7 +990,7 @@ feature -- Change Context
 		local
 			cse: CALL_STACK_ELEMENT
 			ecse: EIFFEL_CALL_STACK_ELEMENT
-			cf: FEATURE_I
+			fi: FEATURE_I
 		do
 			cse := Application.status.current_call_stack_element
 			if cse = Void then
@@ -1013,8 +1005,8 @@ feature -- Change Context
 					--| in case of Exception or stopped state
 					notify_error_expression (Cst_error_during_context_preparation)
 				else
-					cf := ecse.routine.associated_feature_i
-					set_context_data (cf, ecse.dynamic_class, ecse.dynamic_type)
+					fi := ecse.routine_i
+					set_context_data (fi, ecse.dynamic_class, ecse.dynamic_type)
 				end
 			end
 		end
@@ -1101,7 +1093,7 @@ feature -- Access
 					Byte_context.change_class_type_context (context_class_type, context_class_type)
 				end
 				Result := expression_byte_node.type.is_boolean
-				if context_class_type /= Void then
+				if context_class_type /= Void and Byte_context.is_class_type_changed then
 					Byte_context.restore_class_type_context
 				end
 			end
@@ -1352,19 +1344,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

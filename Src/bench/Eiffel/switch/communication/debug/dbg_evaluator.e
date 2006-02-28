@@ -12,12 +12,12 @@ class
 inherit
 
 	REFACTORING_HELPER
-	
+
 	SHARED_DEBUG
 		export
 			{ANY} Application
 			{NONE} all
-		end	
+		end
 
 	SHARED_WORKBENCH
 		export
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		do
 			build_evaluator
 		end
-		
+
 	build_evaluator is
 		do
 			fixme ("try to make this decision between dotnet or classic before")
@@ -73,13 +73,13 @@ feature {SHARED_DBG_EVALUATOR} -- Init
 feature {SHARED_DBG_EVALUATOR} -- Variables
 
 	last_result_value: DUMP_VALUE
-	
-	last_result_static_type: CLASS_C	
+
+	last_result_static_type: CLASS_C
 
 	error_evaluation_message: STRING
-	
+
 	error_exception_message: STRING
-	
+
 	error_occurred: BOOLEAN is
 		do
 			Result := error_evaluation_message /= Void or error_exception_message /= Void
@@ -115,80 +115,90 @@ feature {SHARED_DBG_EVALUATOR, DBG_EVALUATOR_IMP} -- Variables preparation
 
 feature -- Concrete evaluation
 
-	evaluate_static_function (f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_static_function (f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
+			cl_not_void: cl /= Void
 		local
 			l_dyntype: CLASS_TYPE
 		do
-			l_dyntype := f.associated_class.types.first
+			l_dyntype := cl.types.first
 				--| FIXME jfiat: we deal only non generic types
-			
+
 			prepare_evaluation
-			implementation.effective_evaluate_static_function (f.associated_feature_i, l_dyntype, params)
+			implementation.effective_evaluate_static_function (f, l_dyntype, params)
 			retrieve_evaluation
-			
+
 			if last_result_value /= Void then
-				last_result_static_type := f.type.associated_class
+				last_result_static_type := f.type.actual_type.associated_class
 			else
-				notify_error_evaluation ("Unable to evaluate {" + f.associated_class.name_in_upper + "}." + f.name)
+				notify_error_evaluation ("Unable to evaluate {" + cl.name_in_upper + "}." + f.feature_name)
 			end
 		end
 
-	evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
-			-- 
+	evaluate_once (f: FEATURE_I) is
+			--
 		require
 			feature_not_void: f /= Void
 		do
 			check
-				f_is_once: f.associated_feature_i.is_once
+				f_is_once: f.is_once
 			end
-			if f.written_class.types.count > 1 then
-				if f.written_class.is_generic then
-					notify_error_evaluation ("Once evaluation on generic class {" + f.written_class.name_in_upper + "} not available")
-				else
-					notify_error_evaluation ("Evaluation on expanded class {" + f.written_class.name_in_upper + "} is not supported")
-				end
-			else
-				prepare_evaluation
-				implementation.effective_evaluate_once (a_addr, a_target, f, params)
-				retrieve_evaluation
-			end
-		end	
+			effective_evaluate_once_function (f)
+		end
 
-	evaluate_constant (f: E_FEATURE) is
+	evaluate_constant (f: FEATURE_I) is
 			-- Find the value of constant feature `f'.
 		require
 			valid_feature: f /= Void
 			is_constant: f.is_constant
 		local
-			val: STRING
-			cv_cst: E_CONSTANT
-		do		
+			cv_cst: CONSTANT_I
+			val: VALUE_I
+			int_val: INTEGER_CONSTANT
+			real_val: REAL_VALUE_I
+			char_val: CHAR_VALUE_I
+			bit_val: BIT_VALUE_I
+		do
 			cv_cst ?= f
 			if cv_cst /= Void then
 				val := cv_cst.value
-				last_result_static_type := cv_cst.type.associated_class
+				last_result_static_type := cv_cst.type.actual_type.associated_class
 				if val.is_integer then
-					 create last_result_value.make_integer_32 (val.to_integer, last_result_static_type);
-				elseif val.is_real then
-					 create last_result_value.make_real (val.to_real, last_result_static_type);
-				elseif val.is_double then
-					 create last_result_value.make_double (val.to_double, last_result_static_type);
+					int_val ?= val
+					if int_val.has_natural (64) then
+						create last_result_value.make_natural_64 (int_val.natural_64_value, last_result_static_type);
+					elseif int_val.has_integer (64) then
+						create last_result_value.make_integer_64 (int_val.integer_64_value, last_result_static_type);
+					else
+						create last_result_value.make_integer_32 (int_val.integer_32_value, last_result_static_type);
+					end
+				elseif val.is_real_32 then
+					real_val ?= val
+					create last_result_value.make_real (real_val.real_32_value, last_result_static_type);
+				elseif val.is_real_64 then
+					real_val ?= val
+					create last_result_value.make_double (real_val.real_64_value, last_result_static_type);
 				elseif val.is_boolean then
-					 create last_result_value.make_boolean (val.to_boolean, last_result_static_type);
-				elseif last_result_static_type.conform_to (system.character_class.compiled_class) then
-					 create last_result_value.make_character (val.item (1), last_result_static_type);			
-				else				
-					notify_error_evaluation ("Unknown constant type for " + cv_cst.name)
+					create last_result_value.make_boolean (val.boolean_value, last_result_static_type);
+				elseif val.is_character then
+					char_val ?= val
+					create last_result_value.make_character (char_val.character_value, last_result_static_type);
+				elseif val.is_string then
+					create last_result_value.make_manifest_string (val.string_value, last_result_static_type);
+				elseif val.is_bit then
+					bit_val ?= val
+					create last_result_value.make_bits (bit_val.bit_value, last_result_static_type.class_signature, last_result_static_type);
+				else
+					notify_error_evaluation ("Unknown constant type for " + cv_cst.feature_name)
 				end
 			else
-				notify_error_evaluation ("Unknown constant type for " + f.name)
-			end				
+				notify_error_evaluation ("Unknown constant type for " + f.feature_name)
+			end
 		end
 
-	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE) is
+	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		local
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
@@ -209,14 +219,14 @@ feature -- Concrete evaluation
 			end
 			if l_address /= Void then
 				lst := attributes_list_from_object (l_address)
-				dv := find_item_in_list (f.name, lst)
-				
+				dv := find_item_in_list (f.feature_name, lst)
+
 				last_result_static_type := f.type.actual_type.associated_class
 				if dv = Void then
-					if f.name.is_equal ("Void") then
+					if f.feature_name.is_equal ("Void") then
 						create last_result_value.make_void (last_result_static_type)
 					else
-						notify_error_evaluation ("Could not find attribute value for " + f.name)
+						notify_error_evaluation ("Could not find attribute value for " + f.feature_name)
 					end
 				else
 					last_result_value := dv.dump_value
@@ -225,18 +235,18 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.name +"] of a expanded value")
+				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.feature_name +"] of a expanded value")
 			end
 		end
 
-	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
 		local
 			l_dynclass: CLASS_C
 			l_dyntype: CLASS_TYPE
-			realf: E_FEATURE
+			realf: FEATURE_I
 			at: TYPE_A
 			l_err_msg: STRING
 		do
@@ -244,11 +254,11 @@ feature -- Concrete evaluation
 				print (generating_type + ".evaluate_function :%N")
 				print ("%Taddr="); print (a_addr); print ("%N")
 				if a_target /= Void then
-					print ("%Ttarget=not Void %N")
+					print ("%Ttarget=not Void : [" + a_target.type_and_value + "] %N")
 				else
 					print ("%Ttarget=Void %N")
 				end
-				print ("%Tfeature="); print (f.name); print ("%N")
+				print ("%Tfeature="); print (f.feature_name); print ("%N")
 			end
 
 				--| Get target data ...
@@ -258,7 +268,7 @@ feature -- Concrete evaluation
 				l_dynclass := a_target.dynamic_class
 			end
 			if l_dynclass /= Void and then l_dynclass.is_basic then
-				l_dyntype := implementation.associated_reference_basic_class_type (l_dynclass)
+				l_dyntype := associated_reference_basic_class_type (l_dynclass)
 			elseif l_dynclass /= Void and then l_dynclass.types.count = 1 then
 				l_dyntype := l_dynclass.types.first
 			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
@@ -268,10 +278,12 @@ feature -- Concrete evaluation
 					if l_dyntype = Void then
 						notify_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
 					elseif l_dynclass = Void then
-						l_dynclass := l_dyntype.associated_class						
+						l_dynclass := l_dyntype.associated_class
 					end
 				elseif f.is_once then
-					notify_error_evaluation ("Due to recent changes on once implementation,%N It is not possible to evaluate once function on Class context.")
+						--| Useless for once
+					l_dynclass := Void
+					l_dyntype := Void
 				else
 						--| Shouldn't happen: basic types are not generic.
 					notify_error_evaluation ("Cannot find complete dynamic type of an expanded type")
@@ -279,15 +291,20 @@ feature -- Concrete evaluation
 			else
 				l_dyntype := l_dynclass.types.first
 			end
-			if not error_occurred then
+			if f.is_once then
+					effective_evaluate_once_function (f)
+					if last_result_value = Void then
+						notify_error_evaluation ("Unable to evaluate once {" + f.written_class.name_in_upper + "}." + f.feature_name)
+					end
+			elseif not error_occurred then
 					-- Get real feature
-				realf := f.ancestor_version (f.written_class)
+				realf := ancestor_version_of (f, f.written_class)
 				if realf = Void then
 						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
 						--| occurred for EV_RICH_TEXT_IMP.line_index (...)
 					debug ("debugger_trace_eval_data")
 						print ("f.ancestor_version (f.written_class) = Void%N")
-						print ("  f.feature_signature = " + f.feature_signature + "%N")
+						print ("  f.feature_name = " + f.feature_name + "%N")
 						print ("  f.written_class     = " + f.written_class.name_in_upper + "%N")
 					end
 					realf := f
@@ -298,13 +315,13 @@ feature -- Concrete evaluation
 
 				effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, params)
 				if last_result_value = Void then
-					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name
+					l_err_msg := "Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.feature_name
 					if a_addr /= Void then
 						l_err_msg.append_string (" on <" + a_addr + ">")
 					end
 					notify_error_evaluation (l_err_msg)
 				end
-				
+
 				if not error_occurred and then last_result_value /= Void then
 					at := f.type.actual_type
 					last_result_static_type := at.associated_class
@@ -322,11 +339,11 @@ feature -- Concrete evaluation
 						last_result_value := last_result_value.to_basic
 					end
 				end
-			end			
+			end
 		end
 
 	evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
-				a_feature_name, a_external_name: STRING; 
+				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -337,12 +354,19 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 		end
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
+	effective_evaluate_once_function (f: FEATURE_I) is
+		do
+			prepare_evaluation
+			implementation.effective_evaluate_once (f)
+			retrieve_evaluation
+		end
+
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 		do
 			prepare_evaluation
 			implementation.effective_evaluate_function (
-								a_addr, a_target,f, realf, ctype, params
+								a_addr, a_target, f, realf, ctype, params
 							)
 			retrieve_evaluation
 		end
@@ -356,14 +380,14 @@ feature -- Concrete evaluation
 		do
 			Result := Debugged_object_manager.class_type_at_address (a_addr)
 		end
-		
+
 	class_type_from_object_relative_to (a_addr: STRING; cl: CLASS_C): CLASS_TYPE is
 		do
 			Result := class_type_from_object (a_addr)
-			if 
-				Result /= Void 
-				and then cl /= Void 
-				and then Result.associated_class /= cl 
+			if
+				Result /= Void
+				and then cl /= Void
+				and then Result.associated_class /= cl
 			then
 				if Result.associated_class.conform_to (cl) then
 					Result := cl.meta_type (Result)
@@ -384,7 +408,7 @@ feature -- Concrete evaluation
 		do
 			Result := implementation.dump_value_at_address (addr)
 		end
-		
+
 	address_from_dump_value (a_target: DUMP_VALUE): STRING is
 		require
 			a_target /= Void
@@ -424,9 +448,35 @@ feature {NONE} -- List helpers
 			end
 		ensure
 			same_name_if_found: (Result /= Void) implies (Result.name.is_equal (n))
-		end	
+		end
 
 feature {NONE} -- compiler helpers
+
+	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
+			-- Feature in `an_ancestor' of which `Current' is derived.
+			-- `Void' if not present in that class.
+		require
+			fi_not_void: fi /= Void
+			an_ancestor_not_void: an_ancestor /= Void
+		local
+			n, nb: INTEGER
+			ris: ROUT_ID_SET
+			rout_id: INTEGER
+		do
+			ris := fi.rout_id_set
+			from
+				n := ris.lower
+				nb := ris.count
+			until
+				n > nb or else Result /= Void
+			loop
+				rout_id := ris.item (n)
+				if rout_id /= 0 and then an_ancestor.is_valid and then an_ancestor.has_feature_table then
+					Result := an_ancestor.feature_table.feature_of_rout_id (rout_id)
+				end
+				n := n + 1
+			end
+		end
 
 	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
 			-- Associated _REF classtype for type `cl'
@@ -442,7 +492,7 @@ feature {NONE} -- compiler helpers
 			Result := implementation.associated_reference_basic_class_type (cl)
 		ensure
 			associated_reference_class_type_not_void: Result /= Void
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -451,12 +501,12 @@ feature {NONE} -- Implementation
 		do
 			implementation.prepare_evaluation (last_result_value, last_result_static_type)
 		end
-	
+
 	retrieve_evaluation is
 			-- Get the effective evaluation's result and info
 		do
 			last_result_value       := implementation.last_result_value
-			last_result_static_type := implementation.last_result_static_type			
+			last_result_static_type := implementation.last_result_static_type
 			if implementation.error_occurred then
 				notify_error_evaluation (implementation.error_message)
 			end
@@ -471,19 +521,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

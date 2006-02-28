@@ -339,7 +339,7 @@ feature -- Query
 	onces_values (flist: LIST [E_FEATURE]; a_addr: STRING; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
 		local
 			l_class: CLASS_C
-			l_feat: E_FEATURE
+			l_feat: FEATURE_I
 			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			exc_dv: EXCEPTION_DEBUG_VALUE
@@ -358,10 +358,10 @@ feature -- Query
 				flist.after
 			loop
 					--| Get the once's value
-				l_feat := flist.item
+				l_feat := flist.item.associated_feature_i
 				check l_feat.type /= Void end
 				if l_feat.argument_count > 0 then
-					create err_dv.make_with_name  (l_feat.name)
+					create err_dv.make_with_name  (l_feat.feature_name)
 					err_dv.set_message ("Could not evaluate once with arguments...")
 					odv := err_dv
 				else
@@ -369,31 +369,31 @@ feature -- Query
 					icdv := l_eifnet_debugger.once_function_value (l_icdframe, l_class, l_feat)
 					if l_eifnet_debugger.last_once_available then
 						if not l_eifnet_debugger.last_once_already_called then
-							create err_dv.make_with_name  (l_feat.name)
+							create err_dv.make_with_name  (l_feat.feature_name)
 							err_dv.set_message (Interface_names.l_Not_yet_called)
 							err_dv.set_display_kind (Void_value)
 							odv := err_dv
 						elseif l_eifnet_debugger.last_once_failed then
-							create exc_dv.make_with_name (l_feat.name)
+							create exc_dv.make_with_name (l_feat.feature_name)
 							exc_dv.set_tag ("An exception occurred during the once execution")
 							exc_dv.set_exception_value (debug_value_from_icdv (icdv, Void))
 --							err_dv.set_display_kind (Exception_message_value)
 							odv := exc_dv
 						elseif icdv /= Void then
-							odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
-							odv.set_name (l_feat.name)
+							odv := debug_value_from_icdv (icdv, l_feat.type.actual_type.associated_class)
+							odv.set_name (l_feat.feature_name)
 						else
 								--| This case occurs when we enter into the once's code
 								--| then the once is Called
 								--| but the once's data are not yet initialized and set
 								--| then the once' value is not yet available
-							create err_dv.make_with_name  (l_feat.name)
+							create err_dv.make_with_name  (l_feat.feature_name)
 							err_dv.set_message ("Could not retrieve information (once is being called)")
 							err_dv.set_display_kind (Void_value)
 							odv := err_dv
 						end
 					else
-						create err_dv.make_with_name  (l_feat.name)
+						create err_dv.make_with_name  (l_feat.feature_name)
 						err_dv.set_message (Interface_names.l_Not_yet_called)
 						err_dv.set_display_kind (Void_value)
 						odv := err_dv
@@ -1260,19 +1260,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

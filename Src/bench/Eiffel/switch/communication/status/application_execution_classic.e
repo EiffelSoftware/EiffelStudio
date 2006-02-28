@@ -26,6 +26,8 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+
 create {APPLICATION_EXECUTION}
 	make
 
@@ -160,7 +162,7 @@ feature -- Query
 			i: INTEGER
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			odv: ABSTRACT_DEBUG_VALUE
-			l_feat: E_FEATURE
+			l_feat: FEATURE_I
 			l_addr: STRING
 			l_class: CLASS_C
 			once_r: ONCE_REQUEST
@@ -175,17 +177,17 @@ feature -- Query
 			until
 				flist.after
 			loop
-				l_feat := flist.item
+				l_feat := flist.item.associated_feature_i
 				if once_r.already_called (l_feat) then
 					odv := once_r.once_result (l_feat)
 					if odv /= Void then
-						odv.set_name (l_feat.name)
+						odv.set_name (l_feat.feature_name)
 					else
-						create err_dv.make_with_name  (l_feat.name)
+						create err_dv.make_with_name  (l_feat.feature_name)
 						err_dv.set_message ("Could not retrieve information (once is being called or once failed)")
 					end
 				else
-					create err_dv.make_with_name  (l_feat.name)
+					create err_dv.make_with_name  (l_feat.feature_name)
 					err_dv.set_message (Interface_names.l_Not_yet_called)
 					err_dv.set_display_kind (Void_value)
 					odv := err_dv

@@ -44,7 +44,7 @@ feature -- Concrete initialization
 
 feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
+	effective_evaluate_function (addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 			-- Evaluate dotnet function
 		local
@@ -56,7 +56,7 @@ feature {DBG_EVALUATOR} -- Interface
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function : ")
-				print (ctype.associated_class.name_in_upper + "." + f.name)
+				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
 				--| Reset error status
@@ -70,7 +70,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 
 				--| Get the real adapted class_type
-			l_ctype := adapted_class_type (ctype, f.associated_feature_i)
+			l_ctype := adapted_class_type (ctype, f)
 
 				--| Get the target object : `l_icdv_obj'
 			l_icdv_obj := target_icor_debug_value (addr, a_target)
@@ -79,7 +79,7 @@ feature {DBG_EVALUATOR} -- Interface
 				notify_error (Cst_error_unable_to_get_target_object, Void)
 			else
 					--| Get the ICorDebugFunction to call.
-				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, f.associated_feature_i)
+				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, f)
 
 					--| And then let's process the following ...
 				if l_icd_function = Void then
@@ -87,7 +87,7 @@ feature {DBG_EVALUATOR} -- Interface
 				else
 					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params)
 					if error_occurred then
-						l_error_message := "%"" + realf.name + "%" : "
+						l_error_message := "%"" + realf.feature_name + "%" : "
 						if evaluation_aborted then
 							l_error_message.append_string ("Evaluation aborted")
 						elseif error_occurred then
@@ -197,7 +197,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 
 			if params /= Void and then not params.is_empty then
-				prepare_parameters (ctype, f.e_feature, params)
+				prepare_parameters (ctype, f, params)
 				l_params := dotnet_parameters
 				parameters_reset
 			end
@@ -236,7 +236,7 @@ feature {DBG_EVALUATOR} -- Interface
 			end
 		end
 
-	effective_evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
+	effective_evaluate_once (f: FEATURE_I) is
 		local
 			l_class_c: CLASS_C
 			l_icd_value: ICOR_DEBUG_VALUE
@@ -244,17 +244,16 @@ feature {DBG_EVALUATOR} -- Interface
 			err_dv: DUMMY_MESSAGE_DEBUG_VALUE
 			exc_dv: EXCEPTION_DEBUG_VALUE
 		do
-			fixme ("JFIAT: maybe we should call with the parameters ...")
 			debug ("debugger_trace_eval")
 				print (generating_type + ".effective_evaluate_once : ")
-				print (f.written_class.name_in_upper + "." + f.name)
+				print (f.written_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
 
 				--| Reset error status
 			reset_error
 
-			last_result_static_type := f.type.associated_class
+			last_result_static_type := f.type.actual_type.associated_class
 			l_class_c := f.written_class
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
@@ -268,28 +267,28 @@ feature {DBG_EVALUATOR} -- Interface
 
 			if last_once_available then
 				if not last_once_already_called then
-					create err_dv.make_with_name (f.name)
-					err_dv.set_message ("Once feature [" + f.name + "]: not yet called")
+					create err_dv.make_with_name (f.feature_name)
+					err_dv.set_message ("Once feature [" + f.feature_name + "]: not yet called")
 					last_result_value := err_dv.dump_value
 
-					notify_error (cst_error_occurred, "Once feature [" + f.name + "]: not yet called")
+					notify_error (cst_error_occurred, "Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
-					create exc_dv.make_with_name (f.name)
-					exc_dv.set_tag ("Once feature [" + f.name + "]: an exception occurred")
+					create exc_dv.make_with_name (f.feature_name)
+					exc_dv.set_tag ("Once feature [" + f.feature_name + "]: an exception occurred")
 					if l_adv /= Void then
 						exc_dv.set_exception_value (l_adv)
 					end
 					last_result_value := exc_dv.dump_value
 
-					notify_error (cst_error_exception_during_evaluation, "Once feature [" + f.name + "]: an exception occurred")
+					notify_error (cst_error_exception_during_evaluation, "Once feature [" + f.feature_name + "]: an exception occurred")
 				elseif l_adv = Void then
 						--| Is it possible ???
-					notify_error (cst_error_occurred, "Once feature [" + f.name + "]: Default value (i.e: Void ...)")
+					notify_error (cst_error_occurred, "Once feature [" + f.feature_name + "]: Default value (i.e: Void ...)")
 				else
 					last_result_value := l_adv.dump_value
 				end
 			else
-				notify_error (cst_error_occurred , "Once feature " + f.name + ": Could not get information")
+				notify_error (cst_error_occurred , "Once feature " + f.feature_name + ": Could not get information")
 			end
 		end
 
@@ -742,19 +741,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

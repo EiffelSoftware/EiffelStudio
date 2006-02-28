@@ -739,7 +739,7 @@ feature -- Element change
 								implies (not has (old_key))
 			new_present: (replaced or conflict) = has (new_key)
 			new_item: replaced implies (item (new_key) = old (item (old_key)))
-			not_found_iff_no_old_key: not_found = old (not has (old_key))
+			not_found_iff_no_old_key: (not_found or conflict) = old (not has (old_key))
 			conflict_iff_already_present: conflict = old (has (new_key))
 			not_inserted_if_conflict: conflict implies
 						(item (new_key) = old (item (new_key)))

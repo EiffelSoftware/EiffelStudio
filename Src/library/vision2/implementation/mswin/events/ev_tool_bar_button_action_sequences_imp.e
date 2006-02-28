@@ -21,6 +21,12 @@ feature -- Event handling
 			create Result
 		end
 
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a drop down action sequence.
+		do
+			create Result
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

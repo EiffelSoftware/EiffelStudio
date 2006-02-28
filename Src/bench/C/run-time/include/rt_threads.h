@@ -546,7 +546,7 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 #define EIF_THR_JOIN_ALL            while (thr_join(0, 0, 0) == 0)
 #define EIF_THR_YIELD               thr_yield()
 #define EIF_THR_SET_PRIORITY(tid,prio) thr_setprio(tid,prio)
-#define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
+#define EIF_THR_GET_PRIORITY(tid,prio) thr_getprio(tid,&(prio))
 
 /* Mutex management */
 

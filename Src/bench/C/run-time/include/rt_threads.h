@@ -586,8 +586,12 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 
 /* Thread attributes initialization macros */
 /* -- There's no such thing as a thread attribute under VxWorks, so for us,
-   -- the thread attribute is only its priority */
-#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) attr = pr
+   -- the thread attribute is only its priority.
+   -- Moreover, on VxWorks, the high priority is 0, the lowest priority value is 255,
+   -- thus we substract EIF_MAX_PRIORITY to the user specified value in order
+   -- to get a meaningful VxWorks value.
+   -- */
+#define EIF_THR_ATTR_INIT(attr,pr,sc,detach) attr = (EIF_MAX_PRIORITY - pr)
 #define EIF_THR_ATTR_DESTROY(attr)
 
 /* Thread control macros */
@@ -620,8 +624,12 @@ rt_shared rt_uint_ptr dbg_switch_to_thread (rt_uint_ptr);
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
 #define EIF_THR_YIELD               taskDelay(1)
-#define EIF_THR_SET_PRIORITY(tid,prio) taskPrioritySet(tid,prio)
-#define EIF_THR_GET_PRIORITY(tid,prio) taskPriorityGet(tid,&(prio))
+/* On VxWorks, the high priority is 0, the lowest priority value is 255,
+ * thus we substract EIF_MAX_PRIORITY to the user specified value in
+ * order to get a meaningful VxWorks value.
+*/
+#define EIF_THR_SET_PRIORITY(tid,prio) taskPrioritySet(tid, EIF_MAX_PRIORITY - prio)
+#define EIF_THR_GET_PRIORITY(tid,prio) taskPriorityGet(tid,&(prio)), prio = EIF_MAX_PRIORITY - prio
 
 
 /* Mutex management */

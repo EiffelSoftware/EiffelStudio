@@ -22,18 +22,6 @@ create
 	default_create,
 	make_with_text
 
-feature -- Basic operations
-
-	enable_whole_drop_down is
-			-- Enable whole button to drop down style.
-		do
-		end
-
-	disable_while_drop_down is
-			-- Disable whole button drop down style.
-		do
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_DROP_DOWN_BUTTON_I

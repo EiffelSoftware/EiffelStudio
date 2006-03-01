@@ -63,10 +63,8 @@ feature {EV_ANY_I} -- Access
 			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
 
-	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
+	frozen eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
-		require
-			a_c_object_not_null: a_c_object /= NULL
 		external
 			"C inline use %"ev_any_imp.h%""
 		alias

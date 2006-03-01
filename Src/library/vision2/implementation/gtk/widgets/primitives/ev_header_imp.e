@@ -132,7 +132,7 @@ feature
 			item_imp: EV_HEADER_ITEM_IMP
 		do
 			child_array.go_i_th (a_position)
-			item_imp ?=item.implementation
+			item_imp ?= item.implementation
 			item_imp.set_parent_imp (Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove

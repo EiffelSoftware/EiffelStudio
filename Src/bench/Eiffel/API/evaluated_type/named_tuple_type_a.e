@@ -73,6 +73,8 @@ feature -- Checking
 			l_names: like names
 			l_is_tuple_class_available: BOOLEAN
 			l_feat_tbl: FEATURE_TABLE
+			l_processed: SEARCH_TABLE [INTEGER]
+			l_pos: INTEGER
 		do
 				-- If `a_node' is of type NAMED_TUPLE_TYPE_AS then we should
 				-- check the validity of labels, if not, it means that we were
@@ -83,7 +85,7 @@ feature -- Checking
 			l_named_tuple_node ?= a_node
 			if l_named_tuple_node /= Void then
 				l_is_tuple_class_available := system.tuple_class.is_compiled and then
-					system.tuple_class.compiled_class.degree_4_processed
+					(not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed)
 				if l_is_tuple_class_available then
 					l_feat_tbl := system.tuple_class.compiled_class.feature_table
 				end
@@ -96,12 +98,15 @@ feature -- Checking
 				loop
 					l_name_id := l_names.item (i)
 						-- Check if we have unique names.
-					if i < nb and then l_names.index_of (l_name_id, i + 1) >= 0 then
-						create l_vreg
-						context.init_error (l_vreg)
-						l_vreg.set_location (l_named_tuple_node.generics.i_th (i + 1).start_location)
-						l_vreg.set_entity_name (names_heap.item (l_name_id))
-						error_handler.insert_error (l_vreg)
+					if i < nb then
+						l_pos := l_names.index_of (l_name_id, i + 1)
+						if l_pos >= 0 then
+							create l_vreg
+							context.init_error (l_vreg)
+							l_vreg.set_location (l_named_tuple_node.generics.i_th (l_pos + 1).start_location)
+							l_vreg.set_entity_name (names_heap.item (l_name_id))
+							error_handler.insert_error (l_vreg)
+						end
 					end
 						-- Check that we do not conflict with a feature of the TUPLE class.
 					if l_is_tuple_class_available then
@@ -139,7 +144,7 @@ feature {NONE} -- Checking
 			a_pos_valid: a_pos <= generics.count
 			has_tuple_class: system.tuple_class /= Void
 			has_tuple_class_compiled: system.tuple_class.is_compiled
-			has_tuple_class_features: system.tuple_class.compiled_class.degree_4_processed
+			has_tuple_class_features: not system.tuple_class.compiled_class.degree_4_needed or else system.tuple_class.compiled_class.degree_4_processed
 		local
 			l_feat_tbl: FEATURE_TABLE
 			l_vrft: VRFT

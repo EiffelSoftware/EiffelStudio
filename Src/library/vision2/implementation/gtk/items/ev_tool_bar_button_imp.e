@@ -180,7 +180,7 @@ feature -- Element change
 			Precursor {EV_SENSITIVE_IMP}
 			--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
-				l_pointer_over_widget := Current = gtk_widget_imp_at_pointer_position
+				l_pointer_over_widget := Current = app_implementation.gtk_widget_imp_at_pointer_position
 				if l_pointer_over_widget then
 					a_pointer_position := pnd_screen.pointer_position
 					pnd_screen.set_pointer_position (a_pointer_position.x + width + 10, a_pointer_position.y + height + 10)
@@ -214,6 +214,12 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			create Result
 			real_signal_connect (c_object, once "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
+		end
+
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- 	Create a drop down action sequence.
+		do
+			create Result
 		end
 
 feature {EV_ANY_I} -- Implementation

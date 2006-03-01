@@ -48,7 +48,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			{EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM |
 			{EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM |
+			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation
@@ -66,6 +67,12 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- Widget implementation at current mouse pointer position (if any)
+		do
+			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
+		end
 
 	width_request_string: EV_GTK_C_STRING is
 			-- Once string to pass to gtk.
@@ -132,47 +139,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP is
-			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
-		require
-			a_gtk_object_not_null: a_gtk_object /= default_pointer
-		local
-			gtkwid: POINTER
-		do
-			from
-				gtkwid := a_gtk_object
-			until
-				Result /= Void or else gtkwid = NULL
-			loop
-					Result := eif_object_from_c (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
-			end
-		end
-
-	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
-			-- Gtk Widget implementation at current mouse pointer position (if any)
-		local
-			a_x, a_y: INTEGER
-			gdkwin, gtkwid: POINTER
-		do
-			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-			if gdkwin /= null then
-				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
-				if gtkwid /= default_pointer then
-					Result ?= eif_object_from_gtk_object (gtkwid)
-				end
-			end
-			if Result /= Void and then Result.is_destroyed then
-				Result := Void
-			end
-		end
-
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
-			-- Widget implementation at current mouse pointer position (if any)
-		do
-			Result ?= gtk_widget_imp_at_pointer_position
-		end
-
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		do
@@ -185,7 +151,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_focus is
 			-- Grab keyboard focus.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+			if not has_focus then
+				{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+			end
 		end
 
 	internal_set_pointer_style (a_cursor: like pointer_style) is
@@ -234,7 +202,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Horizontal size measured in pixels.
 		do
 				--| Force parent container to allocate sizes to its children immediately.
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+			if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			end
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_width)
@@ -244,7 +212,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Vertical size measured in pixels.
 		do
 				--| Force parent container to allocate sizes to its children immediately.
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
+			if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
 			end
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_height)

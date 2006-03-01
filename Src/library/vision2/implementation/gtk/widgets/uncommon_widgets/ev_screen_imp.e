@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"EiffelVision screen. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -71,7 +71,7 @@ feature -- Status report
 				Result := l_widget_imp.interface
 			end
 		end
-		
+
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
 			-- Widget implementation at current mouse pointer position (if any)
 		local
@@ -79,7 +79,7 @@ feature -- Status report
 			gdkwin, gtkwid: POINTER
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-			if gdkwin /= default_pointer then				
+			if gdkwin /= default_pointer then
 				from
 					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
@@ -101,7 +101,7 @@ feature -- Status setting
 			create a_default_colors
 			set_background_color (a_default_colors.default_background_color)
 			set_foreground_color (a_default_colors.default_foreground_color)
-		end	
+		end
 
 feature -- Basic operation
 
@@ -118,12 +118,12 @@ feature -- Basic operation
 			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
 		do
 			Result := x_test_query_extension (
-					{EV_GTK_EXTERNALS}.gdk_display, 
+					{EV_GTK_EXTERNALS}.gdk_display,
 					$a_event_base,
 					$a_error_base,
 					$a_maj_ver,
 					$a_min_ver)
-			
+
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER) is
@@ -137,7 +137,7 @@ feature -- Basic operation
 			a_success_flag := x_test_fake_motion_event ({EV_GTK_EXTERNALS}.gdk_display, -1, a_x, a_y, 0)
 			check
 				pointer_position_set: a_success_flag
-			end		
+			end
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
@@ -151,7 +151,7 @@ feature -- Basic operation
 			a_success_flag := x_test_fake_button_event ({EV_GTK_EXTERNALS}.gdk_display, a_button, True, 0)
 			check
 				fake_pointer_button_press_success: a_success_flag
-			end		
+			end
 		end
 
 	fake_pointer_button_release (a_button: INTEGER) is
@@ -165,7 +165,7 @@ feature -- Basic operation
 			a_success_flag := x_test_fake_button_event ({EV_GTK_EXTERNALS}.gdk_display, a_button, False, 0)
 			check
 				fake_pointer_button_release_success: a_success_flag
-			end		
+			end
 		end
 
 	fake_key_press (a_key: EV_KEY) is
@@ -177,12 +177,12 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_key_code := key_constants.key_code_to_gtk (a_key.code).to_integer_32
+			a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 			a_key_code := x_keysym_to_keycode ({EV_GTK_EXTERNALS}.gdk_display, a_key_code)
 			a_success_flag := x_test_fake_key_event ( {EV_GTK_EXTERNALS}.gdk_display, a_key_code, True, 0)
 			check
 				fake_key_press_success: a_success_flag
-			end		
+			end
 		end
 
 	fake_key_release (a_key: EV_KEY) is
@@ -194,7 +194,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_key_code := key_constants.key_code_to_gtk (a_key.code).to_integer_32
+			a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 			a_key_code := x_keysym_to_keycode ( {EV_GTK_EXTERNALS}.gdk_display, a_key_code)
 			a_success_flag := x_test_fake_key_event (
 								{EV_GTK_EXTERNALS}.gdk_display,
@@ -204,10 +204,10 @@ feature -- Basic operation
 					)
 			check
 				fake_key_release_success: a_success_flag
-			end		
+			end
 		end
 
-	key_constants: EV_GTK_KEY_CONVERSION is
+	key_conversion: EV_GTK_KEY_CONVERSION is
 			-- Utilities for converting X key codes.
 		once
 			create Result
@@ -285,7 +285,6 @@ feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.
-			-- (export status {NONE})
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
 		end
@@ -307,7 +306,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 			set_is_destroyed (True)
 		end
-		
+
 	dispose is
 			-- Cleanup
 		do
@@ -323,8 +322,11 @@ feature {NONE} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
-	mask: POINTER
+	mask: POINTER is
 			-- Mask of `Current', which is always NULL
+		do
+			-- Not applicable to screen
+		end
 
 	interface: EV_SCREEN;
 

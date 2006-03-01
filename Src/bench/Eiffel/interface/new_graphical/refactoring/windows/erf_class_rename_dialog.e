@@ -101,6 +101,8 @@ feature {NONE} -- Initialization
 			fvb.set_padding (Layout_constants.small_padding_size)
 			fvb.set_border_width (Layout_constants.default_border_size)
 			f_bottom.extend (fvb)
+			create rename_file_button.make_with_text ("Rename file")
+			fvb.extend (rename_file_button)
 			create comments_button.make_with_text ("Replace name in comments")
 			fvb.extend (comments_button)
 			create strings_button.make_with_text ("Replace name in strings")
@@ -143,6 +145,11 @@ feature -- Status report
 			Result := not all_classes
 		end
 
+	rename_file: BOOLEAN is
+			-- Rename file?
+		do
+			Result := rename_file_button.is_selected
+		end
 
 	comments: BOOLEAN is
 			-- Replace name in comments?
@@ -186,6 +193,12 @@ feature -- Element change
 			end
 		end
 
+	enable_rename_file is
+			-- Enable rename file.
+		do
+			rename_file_button.enable_select
+		end
+
 	enable_update_comments is
 			-- Enable replace comments.
 		do
@@ -206,6 +219,12 @@ feature -- Element change
 			f_middle.enable_sensitive
 		end
 
+	disable_rename_file is
+			-- Disable rename file.
+		do
+			rename_file_button.disable_sensitive
+		end
+
 	disable_compiled is
 			-- The class is not compiled
 		do
@@ -217,6 +236,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	comments_button, strings_button: EV_CHECK_BUTTON
+	rename_file_button: EV_CHECK_BUTTON
 	name_field: EV_TEXT_FIELD
 	current_name: EV_LABEL
 	f_middle: EV_FRAME

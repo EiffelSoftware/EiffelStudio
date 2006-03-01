@@ -16,6 +16,7 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
+	ERF_SHARED_LOGGER
 
 create
 	make
@@ -194,6 +195,7 @@ feature -- Basic operation
 	execute_refactoring (a_refactoring: ERF_REFACTORING) is
 			-- Execute `a_refactoring'.
 		do
+			logger.refactoring_start
 			disable_sensitive
 			window_manager.on_refactoring_start
 			a_refactoring.execute
@@ -202,6 +204,7 @@ feature -- Basic operation
 			end
 			window_manager.on_refactoring_end
 			enable_sensitive
+			logger.refactoring_end
 		end
 
 

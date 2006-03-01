@@ -80,6 +80,11 @@ feature -- Change value
 			all_classes_preference.set_value (a_value)
 		end
 
+	set_file_rename (a_value: BOOLEAN) is
+			-- Set the rename file flag.
+		do
+			file_rename_preference.set_value (a_value)
+		end
 
 	set_update_comments (a_value: BOOLEAN) is
 			-- Set the update comments flag.
@@ -126,6 +131,7 @@ feature {NONE} -- Implementation
 			file_rename_preference := l_manager.new_boolean_preference_value (l_manager, file_rename_string, False)
 			file_rename_preference.set_description ("Should the file be renamed to the new name?")
 			file_rename_preference.change_actions.extend (l_update_agent)
+			file_rename_preference.set_hidden (True)
 
 			old_class_name_preference := l_manager.new_string_preference_value (l_manager, old_class_name_string, "OLD_NAME")
 			old_class_name_preference.set_description ("The old name of the class.")

@@ -161,6 +161,7 @@ feature {NONE} -- Implementation
 			create dialog
 
 			dialog.set_classes (feature_i.written_class.parents_classes)
+			dialog.disable_user_resize
 			dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
 			retry_ask_run_settings := dialog.ok_pressed
 			if retry_ask_run_settings then

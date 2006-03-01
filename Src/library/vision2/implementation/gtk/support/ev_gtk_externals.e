@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
+class
 	EV_GTK_EXTERNALS
 
 inherit
@@ -55,7 +55,7 @@ feature -- MACROS
 		alias
 			"GTK_WIDGET_NO_WINDOW"
 		end
-	
+
 feature -- Measurement
 
 	frozen c_gdk_color_struct_size: INTEGER is
@@ -381,7 +381,7 @@ feature -- Measurement
 		alias
 			"sizeof(GtkWindow)"
 		end
-	
+
 feature -- GTK Macros
 
 	frozen c_gtk_widget_can_focus (w: POINTER): BOOLEAN is
@@ -431,7 +431,7 @@ feature -- GTK Macros
 		alias
 			"GTK_IS_WINDOW"
 		end
-	
+
 feature -- C enums
 
 	frozen gdk_control_mask_enum: INTEGER is
@@ -986,7 +986,7 @@ feature -- C enums
 		alias
 			"GDK_RGB_DITHER_NORMAL"
 		end
-	
+
 feature -- External C functions
 
 	frozen g_allocator_free (a_allocator: POINTER) is
@@ -11486,12 +11486,9 @@ feature -- External C functions
 			"C (GtkWidget*) | <gtk/gtk.h>"
 		end
 
-	frozen gtk_widget_event (a_widget: POINTER; a_event: POINTER): INTEGER is
-			-- gint	   gtk_widget_event		  (GtkWidget	       *widget,
-			-- 					   GdkEvent	       *event);
-			-- (from C_GTK_WIDGET)
+	frozen gtk_widget_event (a_widget: POINTER; a_event: POINTER): BOOLEAN is
 		external
-			"C (GtkWidget*, GdkEvent*): gint | <gtk/gtk.h>"
+			"C (GtkWidget*, GdkEvent*): gboolean | <gtk/gtk.h>"
 		end
 
 	frozen gtk_widget_get_ancestor (a_widget: POINTER; a_widget_type: INTEGER): POINTER is
@@ -12138,7 +12135,7 @@ feature -- External C functions
 		external
 			"C (GtkWindow*, gchar*, gchar*) | <gtk/gtk.h>"
 		end
-	
+
 feature -- External C structs
 
 	frozen gdk_color_struct_blue (a_c_struct: POINTER): INTEGER is
@@ -19234,7 +19231,7 @@ feature -- External C structs
 		alias
 			"wmclass_name"
 		end
-	
+
 feature -- Externals
 
 	frozen gdk_display: POINTER is
@@ -19245,7 +19242,7 @@ feature -- Externals
 		alias
 			"GDK_DISPLAY()"
 		end
-	
+
 feature -- Memory allocation
 
 	frozen c_gdk_rectangle_struct_allocate: POINTER is
@@ -19279,7 +19276,7 @@ feature -- Memory allocation
 		alias
 			"calloc (sizeof(GdkGeometry), 1)"
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

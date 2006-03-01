@@ -73,7 +73,6 @@ feature {NONE} -- Implementation
 
 			{EV_GTK_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
 			has_vertical_button_style := True
-
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)
 		end
 
@@ -117,17 +116,17 @@ feature -- Status setting
 		end
 
 	enable_vertical is
-			--
+			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
-			--| FIXME IEK Implement
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 1)
 		end
 
 	disable_vertical is
 			--
 		do
 			is_vertical := False
-			--| FIXME IEK Implement
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)
 		end
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation

@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			a_c_object: POINTER
 			app_imp: like app_implementation
 			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
-			l_motion_actions: like pointer_motion_actions
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
 			app_imp := app_implementation
@@ -81,17 +80,18 @@ feature {NONE} -- Initialization
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 
-				-- Key events are handled by EV_WINDOW_IMP and propagated to the appropriate widget.
 
-			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
 			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (l_gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
+			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, False)
 
-				-- We need to hookup the motion actions to provide app imp with motion actions
-			l_motion_actions := pointer_motion_actions
+
 
 			if is_parentable then
 				real_signal_connect (a_event_widget, once "map-event", agent (l_gtk_marshal).on_widget_show (a_c_object), Void)
 					-- We need the map event to correctly set the cursor if available.
+			else
+				--l_motion_actions := pointer_motion_actions
+				--pointer_motion_actions_internal := create_pointer_motion_actions
 			end
 			signal_connect (
 				a_event_widget,
@@ -326,7 +326,7 @@ feature -- Access
 			create Result.set (x, y)
 		end
 
-feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
+feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 
 	screen_x: INTEGER is
 			-- Horizontal position of the client area on screen,

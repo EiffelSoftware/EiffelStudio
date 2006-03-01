@@ -8,9 +8,9 @@ indexing
 
 class
 	DBG_EVALUATOR_DOTNET
-	
+
 inherit
-	
+
 	DBG_EVALUATOR_IMP
 
 create
@@ -20,43 +20,19 @@ feature -- Access
 
 	last_once_available: BOOLEAN is False
 	last_once_failed: BOOLEAN is False
-	
---	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
---		do
---		end
---
---	dotnet_metamorphose_basic_to_value (dmp: DUMP_VALUE): DUMP_VALUE is
---		do
---		end
---
---	dotnet_evaluate_once_function (addr: STRING;  dvalue: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
---		do
---		end
---		
---	dotnet_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
---		do
---		end
---		
---	dotnet_evaluate_function (addr: STRING; dvalue: DUMP_VALUE; f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
---		do
---		end
---
---	dotnet_evaluate_function_with_name (addr: STRING; dvalue: DUMP_VALUE; a_feature_name, a_external_name: STRING; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
---		do
---		end
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: FEATURE_I; ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 		do
 		end
-	effective_evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is		
+	effective_evaluate_once (f: FEATURE_I) is
 		do
 		end
-		
+
 	parameters_push (dmp: DUMP_VALUE) is
 			-- (export status {DBG_EVALUATOR})
 		do
 		end
-	parameters_push_and_metamorphose (dmp: DUMP_VALUE) is		
+	parameters_push_and_metamorphose (dmp: DUMP_VALUE) is
 		do
 		end
 
@@ -65,34 +41,34 @@ feature -- Access
 			-- (export status {DBG_EVALUATOR})
 		do
 		end
-		
-	dump_value_at_address (addr: STRING): DUMP_VALUE is		
+
+	dump_value_at_address (addr: STRING): DUMP_VALUE is
 		do
 		end
-		
-	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is		
+
+	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
 		do
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -106,4 +82,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end 
+end

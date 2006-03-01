@@ -37,7 +37,7 @@ create
 feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN is False
-	
+
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.
 		local
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		local
@@ -70,13 +70,15 @@ feature {NONE} -- Implementation
 				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
 			a_cs := once "v2toolbar"
 			{EV_GTK_EXTERNALS}.gtk_widget_set_name (list_widget, a_cs.item)
-			
+
 			{EV_GTK_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
 			has_vertical_button_style := True
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)
 		end
 
 	list_widget: POINTER is
-			-- 
+			--
 		do
 			Result := visual_widget
 		end
@@ -87,14 +89,17 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (a_container_imp)
 			update_toolbar_style
 		end
-		
+
 feature -- Status report
 
 	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
-		
+
+	is_vertical: BOOLEAN
+			-- Are the buttons in `Current' arranged vertically?
+
 feature -- Status setting
 
 	enable_vertical_button_style is
@@ -103,18 +108,32 @@ feature -- Status setting
 			has_vertical_button_style := True
 			update_toolbar_style
 		end
-		
+
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			has_vertical_button_style := False
 			update_toolbar_style
 		end
-		
+
+	enable_vertical is
+			--
+		do
+			is_vertical := True
+			--| FIXME IEK Implement
+		end
+
+	disable_vertical is
+			--
+		do
+			is_vertical := False
+			--| FIXME IEK Implement
+		end
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
-		
+
 	block_selection_for_docking is
-			-- 
+			--
 		do
 			-- For now, do nothing.
 		end
@@ -143,7 +162,7 @@ feature -- Implementation
 					end
 					i := i + 1
 				end
-				
+
 				if has_text and has_pixmap then
 					if has_vertical_button_style then
 						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
@@ -157,7 +176,7 @@ feature -- Implementation
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
 			end
-		end	
+		end
 
 	insertion_position: INTEGER is
 			-- `Result' is index - 1 of item beneath the
@@ -168,7 +187,7 @@ feature -- Implementation
 			tbi: EV_TOOL_BAR_ITEM
 		do
 			Result := count + 1
-			wid_imp := gtk_widget_imp_at_pointer_position
+			wid_imp := app_implementation.gtk_widget_imp_at_pointer_position
 			if wid_imp /= Void then
 				tbi ?= wid_imp.interface
 				if tbi /= Void and has (tbi) then
@@ -189,7 +208,7 @@ feature -- Implementation
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if parent_imp /= Void then
-				update_toolbar_style			
+				update_toolbar_style
 			end
 		end
 

@@ -317,40 +317,6 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 
 feature {EV_ANY_IMP} -- Pointer intermediary agent routines	
 
-	pointer_motion_action_intermediary (a_object_id: INTEGER; a_x, a_y: INTEGER;
-		a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Pointer motion
-		local
-			widget: EV_WIDGET_IMP
-			p: POINTER
-		do
-			widget ?= eif_id_object (a_object_id)
-			if widget /= Void then
-				if
-					(widget.gdk_events_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum) = {EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum and then widget.has_focus)
-					or else widget.gtk_widget_imp_at_pointer_position = widget
-					or else widget.has_focus
-					or else widget.has_capture
-						-- Gtk will propagate motion events for ALL gtk widgets directly underneath the mouse pointer
-						-- We only want the one directly beneath the mouse pointer
-						-- We need to test for motion hint widgets so that the mouse pointer is not queried, at present
-						-- this is only gtk drawing area, this is to prevent a backlog of pointer motion events from being fired.
-				then
-					if widget.app_implementation.pointer_motion_actions_internal /= Void then
-						widget.app_implementation.pointer_motion_actions_internal.call (
-							[widget.interface, a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y]
-						)
-					end
-					widget.pointer_motion_actions_internal.call
-						([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-				end
-
-			end
-				-- We have motion hinting so we call get pointer to request our next motion event if any, this means we only get motion events when
-				-- the application can handle them
-			p := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, default_pointer, default_pointer, default_pointer)
-		end
-
 	pointer_button_release_action_intermediary (a_c_object: POINTER; a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Pointer button released

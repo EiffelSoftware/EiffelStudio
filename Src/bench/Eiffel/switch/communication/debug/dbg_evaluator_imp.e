@@ -238,7 +238,6 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 			bak_cc := System.current_class
 			if dt /= Void then
 				System.set_current_class (dt.associated_class)
-				Byte_context.change_class_type_context (dt, dt)
 			end
 			parameters_init (params.count)
 			from
@@ -257,9 +256,10 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 				if dmp.is_basic then
 					if
 						f /= Void
-						and then (not Byte_context.real_type (
+						and dt /= Void
+						and then (not Byte_context.real_type_in (
 									f.arguments.i_th (params.index).actual_type.type_i
-									).is_basic
+									, dt).is_basic
 								)
 					then
 						parameters_push_and_metamorphose (dmp)
@@ -272,9 +272,6 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 					parameters_push (dmp)
 				end
 				params.forth
-			end
-			if dt /= Void and Byte_context.is_class_type_changed then
-				Byte_context.restore_class_type_context
 			end
 			if bak_cc /= Void then
 				System.set_current_class (bak_cc)

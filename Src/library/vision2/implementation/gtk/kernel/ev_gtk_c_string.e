@@ -17,7 +17,7 @@ create
 
 convert
 	set_with_eiffel_string ({STRING})
-	
+
 feature {NONE} -- Initialization
 
 	make_from_pointer (a_utf8_ptr: POINTER) is
@@ -35,6 +35,7 @@ feature -- Access
 
 	item: POINTER
 			-- Pointer to the UTF8 string.
+
 
 	string: STRING is
 			-- Locale string representation of the UTF8 string
@@ -65,14 +66,14 @@ feature -- Access
 					l_nat8 := l_ptr.read_natural_8 (i)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
 					Result.extend (l_code.to_character)
-				
+
 				elseif (l_nat8 & 0xF0) = 0xE0 then
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
 					-- Not supported yet since Eiffel does not support character code greater than 255
 					-- we replace it with space.
 					Result.extend (' ')
 					i := i + 2
-				
+
 				elseif (l_nat8 & 0xF8) = 0xF0 then
 					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
 					-- Not supported yet since Eiffel does not support character code greater than 255
@@ -82,6 +83,8 @@ feature -- Access
 				end
 				i := i + 1
 			end
+				-- Reset shared pointer.
+			l_ptr.set_from_pointer (default_pointer, 0)
 		end
 
 	string_length: INTEGER
@@ -123,7 +126,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.share_from_pointer (default_pointer, 0)
 		end
-		
+
 	internal_set_with_eiffel_string (a_string: STRING; a_shared: BOOLEAN) is
 			-- Create a UTF8 string from Eiffel String `a_string'
 		require
@@ -137,7 +140,7 @@ feature {NONE} -- Implementation
 			l_ptr: MANAGED_POINTER
 		do
 			l_string_length := a_string.count
-			
+
 				-- First compute how many bytes we need to convert `a_string' to UTF-8.
 			from
 				i := l_string_length
@@ -151,7 +154,7 @@ feature {NONE} -- Implementation
 				bytes_written := bytes_written + 1
 				i := i - 1
 			end
-			
+
 				-- Fill `utf_ptr8' with the converted data.
 			from
 				i := 1
@@ -190,6 +193,9 @@ feature {NONE} -- Implementation
 				-- The value of bytes_written doesn't take the null character in to account.
 			a_string_size := bytes_written + 1
 			set_from_pointer (utf8_ptr, a_string_size, a_shared)
+
+				-- Reset shared pointer helper.
+			l_ptr.set_from_pointer (default_pointer, 0)
 		end
 
 	set_from_pointer (a_ptr: POINTER; a_size: INTEGER; a_shared: BOOLEAN) is
@@ -236,6 +242,8 @@ feature {NONE} -- Implementation
 				end
 				Result := Result + 1
 			end
+				-- Reset shared pointer helper.
+			l_ptr.set_from_pointer (default_pointer, 0)
 		end
 
 	dispose is

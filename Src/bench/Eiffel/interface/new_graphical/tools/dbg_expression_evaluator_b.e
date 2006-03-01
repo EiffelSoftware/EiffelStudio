@@ -1089,9 +1089,17 @@ feature -- Access
 				--| Get expression_byte_node
 			get_expression_byte_node
 			if expression_byte_node /= Void then
+--| Since the Byte_context is used only by debugger and code generation
+--| there is no need to restore previous context
+--| (see below the commented line for restoring class_type_context)
 				if context_class_type /= Void then
-					Byte_context.change_class_type_context (context_class_type, context_class_type)
+					if Byte_context.class_type = Void then
+						Byte_context.init (context_class_type)
+					else
+						Byte_context.change_class_type_context (context_class_type, context_class_type)
+					end
 				end
+
 				Result := expression_byte_node.type.is_boolean
 				if context_class_type /= Void and Byte_context.is_class_type_changed then
 					Byte_context.restore_class_type_context
@@ -1208,7 +1216,7 @@ feature {NONE} -- Implementation
 
 							Ast_context.set_current_feature (context_feature)
 
-								--| FIXME jfiat [2004/10/16] : Seems pretty heavy computing ..
+							fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
 							Byte_context.set_byte_code (l_byte_code)
 

@@ -22,13 +22,6 @@ feature -- Event handling
 			-- Attach to GTK "motion-notify-event" signal.
 		do
 			create Result
-			signal_connect (
-					event_widget,
-					App_implementation.motion_notify_event_string,
-					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (object_id, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate,
-					True
-				)
 		end
 
 	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is

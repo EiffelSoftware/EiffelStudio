@@ -120,11 +120,13 @@ feature -- Status setting
 	internal_disable_border is
 			-- Ensure no border is displayed around `Current'.
 		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_decorated (c_object, False)
 		end
 
 	internal_enable_border is
 			-- Ensure a border is displayed around `Current'.
 		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_decorated (c_object, True)
 		end
 
 	block is
@@ -358,16 +360,16 @@ feature {NONE} -- Implementation
 			a_gtk_focus_widget: POINTER
 		do
 			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
+			l_app_imp := app_implementation
 				-- Fire the widget events.
 			a_gtk_focus_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (c_object)
 			if a_gtk_focus_widget /= default_pointer then
-				a_focus_widget ?= eif_object_from_gtk_object (a_gtk_focus_widget)
+				a_focus_widget ?= l_app_imp.eif_object_from_gtk_object (a_gtk_focus_widget)
 			end
 
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void and then a_focus_widget.default_key_processing_blocked (a_key) then
 						-- Block event from losing focus should the widget want to keep it.
-					l_app_imp := app_implementation
 					if a_key_press then
 						a_cs := l_app_imp.key_press_event_string
 					else

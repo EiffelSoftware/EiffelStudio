@@ -10,6 +10,31 @@ class
 
 feature -- Externals
 
+	frozen gtk_toolbar_set_orientation (a_toolbar: POINTER; a_orientation: INTEGER) is
+		external
+			"C signature (GtkToolbar*, gint) use <gtk/gtk.h>"
+		end
+
+	frozen g_main_context_default: POINTER is
+		external
+			"C signature (): GMainContext* use <gtk/gtk.h>"
+		end
+
+	frozen g_main_context_pending (a_context: POINTER): BOOLEAN is
+		external
+			"C signature (GMainContext*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen g_main_context_dispatch (a_context: POINTER) is
+		external
+			"C signature (GMainContext*) use <gtk/gtk.h>"
+		end
+
+	frozen g_main_context_iteration (a_context: POINTER; may_block: BOOLEAN): BOOLEAN is
+		external
+			"C signature (GMainContext*, gboolean): gboolean use <gtk/gtk.h>"
+		end
+
 	frozen gtk_widget_get_screen (a_widget: POINTER): POINTER is
 		external
 			"C signature (GtkWidget*): GdkScreen* use <gtk/gtk.h>"

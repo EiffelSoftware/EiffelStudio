@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			end
 			size := n
 			younger := -1
-			set_older (-1)
+			older := -1
 		end
 
 feature
@@ -90,7 +90,7 @@ feature
 					next.put(new_one, younger)
 				else
 					check went_from_empty_to_one: count = 1 end
-					set_older (new_one)
+					older := new_one
 				end
 				next.put(-1, new_one)
 				previous.put(younger, new_one)
@@ -100,7 +100,7 @@ feature
 			else
 				-- we are full: the older must leave
 				new_one := older
-				set_older (next.item(new_one))
+				older := next.item(new_one)
 				previous.put (-1, older)
 				previous.put (younger, new_one)
 				next.put (new_one, younger)
@@ -123,7 +123,7 @@ feature
 				previous_i := previous.item (i)
 				next_i := next.item (i)
 				if i = older then
-					set_older (next_i)
+					older := next_i
 					previous.put (-1, next_i)
 				else
 					next.put (next_i, previous_i)
@@ -151,7 +151,7 @@ feature
 				previous_i := previous.item (i)
 				next_i := next.item (i)
 				if i = older then
-					set_older (next_i)
+					older := next_i
 					previous.put (-1, next_i)
 				elseif i = younger then
 					younger := previous_i
@@ -163,7 +163,7 @@ feature
 				count := count - 1
 				free_cells.put (i, count)
 			else
-				set_older (-1)
+				older := -1
 				younger := -1
 				count := 0
 				free_cells.put (i, 0)
@@ -178,7 +178,7 @@ feature
 		do
 			count := 0
 			younger := -1
-			set_older (-1)
+			older := -1
 			from
 				int_array := free_cells
 			until
@@ -196,16 +196,6 @@ feature
 		-- change the item at the index i
 		do
 			put (e, i)
-		end
-
-	set_older (v: like older) is
-		do
-			if v = 0 then
-				do_nothing
-			end
-			older := v
-		ensure
-			older_set: older = v
 		end
 
 	valid_content: BOOLEAN is

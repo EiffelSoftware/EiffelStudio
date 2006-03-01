@@ -36,6 +36,8 @@ inherit
 			{NONE} all
 		end
 
+	ERF_SHARED_LOGGER
+
 create
 	make
 
@@ -109,6 +111,7 @@ feature -- Highlevel element change
 
 			if a_visitor.has_modified then
 				rebuild_text
+				logger.refactoring_class (class_i)
 			end
 		end
 

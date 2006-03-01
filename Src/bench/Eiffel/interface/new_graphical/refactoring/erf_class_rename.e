@@ -107,10 +107,14 @@ feature {NONE} -- Implementation
 
 			create dialog
 			dialog.set_name (class_i.name_in_upper)
+			dialog.disable_user_resize
 			if class_i.compiled then
 				dialog.enable_compiled
 			else
 				dialog.disable_compiled
+			end
+			if preferences.file_rename then
+				dialog.enable_rename_file
 			end
 			if preferences.update_comments then
 				dialog.enable_update_comments
@@ -123,6 +127,7 @@ feature {NONE} -- Implementation
 
 				-- get the settings
 			preferences.set_new_class_name (dialog.name.as_upper)
+			preferences.set_file_rename (dialog.rename_file)
 			preferences.set_update_comments (dialog.comments)
 			preferences.set_update_strings (dialog.strings)
 			preferences.set_all_classes (dialog.all_classes)

@@ -105,6 +105,7 @@ feature {NONE} -- Implementation
         do
 			create dialog
 			dialog.set_name (feature_i.feature_name.as_upper)
+			dialog.disable_user_resize
 			if preferences.update_comments then
 				dialog.enable_update_comments
 			end

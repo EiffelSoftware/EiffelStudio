@@ -61,6 +61,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_SERVER
+		export
+			{NONE} all
+		end
+
+	SHARED_TMP_SERVER
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
@@ -82,10 +92,11 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 		do
 			type_checker.init (a_feature, context.current_class)
-			is_byte_node_enabled := False
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+			is_byte_node_enabled := False
+--			process_inherited_assertions (a_feature)
 			a_feature.body.process (Current)
 		end
 
@@ -95,10 +106,12 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 		do
 			type_checker.init (a_feature, context.current_class)
-			is_byte_node_enabled := True
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
+			is_byte_node_enabled := False
+--			process_inherited_assertions (a_feature)
+			is_byte_node_enabled := True
 			a_feature.body.process (Current)
 		end
 
@@ -302,6 +315,9 @@ feature {NONE} -- Implementation: State
 				{DEPEND_UNIT}.is_in_assignment_flag
 		end
 
+	is_inherited: BOOLEAN
+			-- Is code being processed inherited?
+
 	last_expressions_type: ARRAY [TYPE_A]
 			-- Last computed types of a list of expressions
 
@@ -375,6 +391,7 @@ feature -- Settings
 			last_feature_name := Void
 			is_type_compatible := False
 			last_assigner_command := Void
+			is_inherited := False
 		end
 
 	reset_types is
@@ -1524,7 +1541,11 @@ feature -- Implementation
 			l_feature := current_feature
 				-- Look for an argument
 			if l_feature /= Void then
-				l_arg_pos := l_feature.argument_position (l_as.feature_name)
+				if is_inherited then
+					l_arg_pos := l_as.argument_position
+				else
+					l_arg_pos := l_feature.argument_position (l_as.feature_name)
+				end
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
@@ -1537,19 +1558,22 @@ feature -- Implementation
 					last_byte_node := l_argument
 				end
 					-- set some type attributes of the node
-				l_as.enable_argument
-				l_as.set_argument_position (l_arg_pos)
-
-				l_type_a := constrained_type (l_type.actual_type)
+				if not is_inherited then
+					l_as.enable_argument
+					l_as.set_argument_position (l_arg_pos)
+					l_type_a := constrained_type (l_type.actual_type)
 					if not l_type_a.is_none then
 						l_class_id := l_type_a.associated_class.class_id
 					else
 						l_class_id := -1
 					end
-				l_as.set_class_id (l_class_id)
+					l_as.set_class_id (l_class_id)
+				end
 			else
 					-- Look for a local if not in a pre- or postcondition
-				l_local_info := context.locals.item (l_as.feature_name)
+				if not is_inherited then
+					l_local_info := context.locals.item (l_as.feature_name)
+				end
 				if l_local_info /= Void then
 						-- Local found
 					l_local_info.set_is_used (True)
@@ -1575,22 +1599,30 @@ feature -- Implementation
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
 					end
-						-- set some type attributes of the node
-					l_as.enable_local
-					l_type_a := constrained_type (l_type.actual_type)
-					if not l_type_a.is_none then
-						l_class_id := l_type_a.associated_class.class_id
-					else
-						l_class_id := -1
+					if not is_inherited then
+							-- set some type attributes of the node
+						l_as.enable_local
+						l_type_a := constrained_type (l_type.actual_type)
+						if not l_type_a.is_none then
+							l_class_id := l_type_a.associated_class.class_id
+						else
+							l_class_id := -1
+						end
+						l_as.set_class_id (l_class_id)
 					end
-					l_as.set_class_id (l_class_id)
 				else
 						-- Look for a feature
-					process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
+					l_feature := Void
+					if is_inherited then
+						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+					end
+					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
 					l_type := last_type
-						-- set some type attributes of the node
-					l_as.set_class_id (l_last_id)
-					l_as.set_routine_ids (last_routine_id_set)
+					if not is_inherited then
+							-- set some type attributes of the node
+						l_as.set_class_id (l_last_id)
+						l_as.set_routine_ids (last_routine_id_set)
+					end
 				end
 			end
 			if l_has_vuar_error then
@@ -1628,7 +1660,11 @@ feature -- Implementation
 
 			l_feature := current_feature
 				-- Look for an argument
-			l_arg_pos := l_feature.argument_position (l_as.feature_name)
+			if is_inherited then
+				l_arg_pos := l_as.argument_position
+			else
+				l_arg_pos := l_feature.argument_position (l_as.feature_name)
+			end
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_arg_type ?= l_feature.arguments.i_th (l_arg_pos)
@@ -1659,7 +1695,9 @@ feature -- Implementation
 				l_as.set_class_id (l_class_id)
 			else
 					-- Look for a local if in a pre- or postcondition
-				l_local_info := context.locals.item (l_as.feature_name)
+				if not is_inherited then
+					l_local_info := context.locals.item (l_as.feature_name)
+				end
 				if l_local_info /= Void then
 						-- Local found
 					create l_veen2b
@@ -1669,7 +1707,11 @@ feature -- Implementation
 					error_handler.insert_error (l_veen2b)
 				else
 						-- Look for a feature
-					process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
+					l_feature := Void
+					if is_inherited then
+						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+					end
+					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
 						-- set some type attributes of the node
 					l_as.set_routine_ids (last_routine_id_set)
 					l_as.set_class_id (l_last_id)
@@ -2223,7 +2265,13 @@ feature -- Implementation
 			l_feature := current_feature
 				-- Look for an argument
 			if l_feature /= Void then
-				l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name)
+				if is_inherited then
+					debug ("refactor_fixme")
+						fixme ("Support inherited features as done in process_access_id_as.")
+					end
+				else
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name)
+				end
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
@@ -2239,7 +2287,9 @@ feature -- Implementation
 				l_as.set_argument_position (l_arg_pos)
 			else
 					-- Look for a local if not in a pre- or postcondition
-				l_local_info := context.locals.item (l_as.feature_name.internal_name)
+				if not is_inherited then
+					l_local_info := context.locals.item (l_as.feature_name.internal_name)
+				end
 				if l_local_info /= Void then
 						-- Local found
 					l_local_info.set_is_used (True)
@@ -2267,6 +2317,9 @@ feature -- Implementation
 
 					l_as.enable_local
 				else
+					debug ("refactor_fixme")
+						fixme ("Support inherited features as done in process_access_id_as.")
+					end
 					l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name)
 					if l_feature = Void then
 						create l_veen
@@ -2951,7 +3004,7 @@ feature -- Implementation
 						if l_needs_byte_node then
 							l_left_expr := l_conv_info.byte_node (l_left_expr)
 						end
-					else
+					elseif not is_inherited then
 						create l_vweq
 						context.init_error (l_vweq)
 						l_vweq.set_left_type (l_left_type)
@@ -4564,6 +4617,58 @@ feature {NONE} -- Predefined types
 		end
 
 feature {NONE} -- Implementation
+
+	process_inherited_assertions (a_feature: FEATURE_I) is
+			-- Process assertions inherited by `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			assert_id_set: ASSERT_ID_SET
+			assertion_info: INH_ASSERT_INFO
+			body_index: INTEGER
+			precursor_feature: FEATURE_AS
+			routine_body: ROUTINE_AS
+			i: INTEGER
+		do
+			assert_id_set := a_feature.assert_id_set
+			if assert_id_set /= Void then
+				is_inherited := true
+				from
+					i := assert_id_set.count
+				until
+					i <= 0
+				loop
+					assertion_info := assert_id_set.item (i)
+					if assertion_info.has_assertion then
+						body_index := assertion_info.body_index
+						if tmp_ast_server.body_has (body_index) then
+							precursor_feature := tmp_ast_server.body_item (body_index)
+						else
+							check
+								body_server.server_has (body_index)
+							end
+							precursor_feature := body_server.server_item (body_index)
+						end
+						check
+							precursor_feature_not_void: precursor_feature /= Void
+						end
+						routine_body ?= precursor_feature.body.content
+						if assertion_info.has_precondition then
+							set_is_checking_precondition (True)
+							routine_body.precondition.process (Current)
+							set_is_checking_precondition (False)
+						end
+						if assertion_info.has_postcondition then
+							set_is_checking_postcondition (True)
+							routine_body.postcondition.process (Current)
+							set_is_checking_postcondition (False)
+						end
+					end
+					i := i - 1
+				end
+				is_inherited := false
+			end
+		end
 
 	process_expressions_list (l_as: EIFFEL_LIST [EXPR_AS]) is
 			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.

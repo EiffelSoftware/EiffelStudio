@@ -11,11 +11,19 @@ inherit
 	GEN_TYPE_A
 		redefine
 			good_generics, error_generics, check_constraints,
-			is_tuple, conform_to, type_i
+			is_tuple, conform_to, type_i, process
 		end
 
 create
 	make
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_tuple_type_a (Current)
+		end
 
 feature -- Properties
 
@@ -146,19 +154,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

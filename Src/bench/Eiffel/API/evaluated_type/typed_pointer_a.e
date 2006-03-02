@@ -21,14 +21,14 @@ inherit
 			is_equivalent, instantiation_of, same_as, instantiation_in,
 			is_full_named_type
 		redefine
-			is_typed_pointer, type_i, associated_class
+			is_typed_pointer, type_i, associated_class, process
 		end
-		
+
 	GEN_TYPE_A
 		undefine
 			meta_type, is_basic, feature_type, is_valid
 		redefine
-			is_typed_pointer, type_i, associated_class
+			is_typed_pointer, type_i, associated_class, process
 		end
 
 create
@@ -47,7 +47,15 @@ feature {NONE} -- Initialization
 		ensure
 			pointed_type_set: pointed_type = a_type
 		end
-		
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_typed_pointer_a (Current)
+		end
+
 feature -- Property
 
 	is_typed_pointer: BOOLEAN is True
@@ -79,19 +87,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

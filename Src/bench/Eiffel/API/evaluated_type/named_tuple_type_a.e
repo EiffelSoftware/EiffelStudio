@@ -11,7 +11,7 @@ inherit
 		rename
 			make as old_make
 		redefine
-			check_labels, is_named_tuple
+			check_labels, is_named_tuple, process
 		end
 
 	SHARED_NAMES_HEAP
@@ -38,6 +38,14 @@ feature {NONE} -- Initialization
 			class_id_set: class_id = a_class_id
 			generics_set: generics = g
 			names_set: names = n
+		end
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_named_tuple_type_a (Current)
 		end
 
 feature -- Status report

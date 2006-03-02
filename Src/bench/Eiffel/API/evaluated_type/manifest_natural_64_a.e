@@ -11,8 +11,7 @@ class
 inherit
 	NATURAL_A
 		redefine
-			convert_to,
-			intrinsic_type
+			convert_to, intrinsic_type, process
 		end
 
 	SHARED_TYPES
@@ -33,6 +32,14 @@ feature {NONE} -- Initialization
 		ensure
 			size_set: size = 64
 			is_convertible_to_integer_64_set: is_convertible_to_integer_64 = convertible_to_integer_64
+		end
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_manifest_natural_64_a (Current)
 		end
 
 feature -- Property
@@ -97,19 +104,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

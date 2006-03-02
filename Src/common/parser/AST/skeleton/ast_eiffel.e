@@ -19,6 +19,8 @@ feature -- Visitor
 
 	process (v: AST_VISITOR) is
 			-- Visitor feature.
+		require
+			v_not_void: v /= Void
 		deferred
 		end
 

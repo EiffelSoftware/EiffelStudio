@@ -102,16 +102,6 @@ feature -- Settings
 			parents_set: parents = p
 		end
 
-	set_feature_insertion_type (a_type: INTEGER) is
-			-- Assign `feature_insertion_type' with `a_type'.
-		require
-			valid_type: valid_insertion_type (a_type)
-		do
-			feature_insertion_type := a_type
-		ensure
-			feature_insertion_type_set: feature_insertion_type = a_type
-		end
-
 feature -- Control
 
 	process_features (feat_tbl: FEATURE_TABLE) is
@@ -213,17 +203,23 @@ feature {NONE} -- Implementation
 			feat_not_void: feat /= Void
 			p_not_void: p /= Void
 		local
+			l_is_new_attribute: BOOLEAN
+			l_attribute: ATTRIBUTE_I
 			l_feats: SELECT_TABLE
 			i, nb, j, count: INTEGER
 			l_rout_id_set: ROUT_ID_SET
 			l_old_feat: FEATURE_I
 			found: BOOLEAN
 		do
-			if
-				feat.is_origin or else
-				(feat.is_attribute and then feat.rout_id_set.count > 1
-				and then feat.written_in = class_id)
-			then
+			if feat.is_attribute and then feat.written_in = class_id then
+				l_attribute ?= feat
+					-- The following line ensures that the attribute has no
+					-- precursor feature in the attribute form.
+					-- It could also be written as
+					-- l_attribute.rout_id_set.count > 1 and then l_attribute.generate_in = class_id
+				l_is_new_attribute := l_attribute.has_function_origin
+			end
+			if feat.is_origin or else l_is_new_attribute then
 					-- A new introduced feature has to be in the interface.
 					-- An attribute that defines an inherited feature has to be
 					-- in the interface for attribute assignment.

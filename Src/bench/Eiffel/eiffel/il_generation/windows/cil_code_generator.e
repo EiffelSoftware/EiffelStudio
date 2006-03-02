@@ -2070,16 +2070,12 @@ feature -- Features info
 							l_naming_convention, l_feat.feature_name,
 							{IL_CASING_CONVERSION}.lower_case)
 						if l_is_attribute then
-							if has_property_getter (l_feat) then
-								prepare_property_getter (l_name, l_return_type)
-								current_module.insert_property_getter (md_emit.define_member_ref
-									(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
-							end
-							if has_property_setter (l_feat) then
-								prepare_property_setter (l_name, l_return_type)
-								current_module.insert_property_setter (md_emit.define_member_ref
-									(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
-							end
+							prepare_property_getter (l_name, l_return_type)
+							current_module.insert_property_getter (md_emit.define_member_ref
+								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
+							prepare_property_setter (l_name, l_return_type)
+							current_module.insert_property_setter (md_emit.define_member_ref
+								(uni_string, l_class_token, method_sig), a_type_id, l_feat.feature_id)
 							if
 								l_is_single_class and then not is_override and then
 								(l_feat.export_status.is_all or else
@@ -2103,7 +2099,11 @@ feature -- Features info
 				set_signature_type (l_field_sig, l_return_type)
 				l_signature.put (l_return_type.static_type_id, 0)
 
-				l_declaration_class := system.class_of_id (l_feat.access_in)
+				if l_feat.origin_class_id = 0 then
+					l_declaration_class := system.class_of_id (l_feat.access_in)
+				else
+					l_declaration_class := system.class_of_id (l_feat.origin_class_id)
+				end
 				if
 					l_declaration_class.is_external or else
 					l_declaration_class.is_single and then l_declaration_class /= l_class_type.associated_class
@@ -2113,7 +2113,7 @@ feature -- Features info
 						is_single_class: is_single_class
 					end
 					l_meth_token := attribute_token (implemented_type
-						(l_feat.access_in, current_class_type.type).associated_class_type.static_type_id,
+						(l_declaration_class.class_id, current_class_type.type).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (l_feat.rout_id_set.first).feature_id)
 				else
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
@@ -2366,25 +2366,23 @@ feature -- Features info
 							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 							{MD_METHOD_ATTRIBUTES}.Virtual
 					end
+						-- Define setter method.
+					prepare_property_setter (l_name, l_return_type)
+					debug ("refactor_to_implement")
+						to_implement ("Support special name for setter.")
+						-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
+					end
+					l_setter := md_emit.define_method (uni_string, current_class_token,
+						l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
+					if is_override_or_c_external then
+						last_property_setter_token := l_setter
+					else
+						current_module.insert_property_setter (l_setter, current_type_id, feat.feature_id)
+					end
 					l_assigner := feat.assigner_in (signature_declaration_type)
-					if l_assigner /= Void then
-							-- Define setter method.
-						prepare_property_setter (l_name, l_return_type)
-						debug ("refactor_to_implement")
-							to_implement ("Support special name for setter.")
-							-- l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.special_name
-						end
-						l_setter := md_emit.define_method (uni_string, current_class_token,
-							l_meth_attr, l_meth_sig, {MD_METHOD_ATTRIBUTES}.Managed)
-						if is_override_or_c_external then
-							last_property_setter_token := l_setter
-						else
-							current_module.insert_property_setter (l_setter, current_type_id, feat.feature_id)
-						end
-						if not l_assigner.export_status.is_all then
-								-- Avoid listing this method as a property setter.
-							l_setter := {MD_TOKEN_TYPES}.md_method_def
-						end
+					if l_assigner = Void or else not l_assigner.export_status.is_all then
+							-- Avoid listing this method as a property setter.
+						l_setter := {MD_TOKEN_TYPES}.md_method_def
 					end
 						-- Define getter method.
 					prepare_property_getter (l_name, l_return_type)
@@ -2427,7 +2425,11 @@ feature -- Features info
 			uni_string.set_string (l_name)
 
 			if l_is_attribute_generated_as_field then
-				l_declaration_class := system.class_of_id (feat.access_in)
+				if feat.origin_class_id = 0 then
+					l_declaration_class := system.class_of_id (feat.access_in)
+				else
+					l_declaration_class := system.class_of_id (feat.origin_class_id)
+				end
 				if
 					l_declaration_class.is_external or else
 					l_declaration_class.is_single and then l_declaration_class /= current_class
@@ -2437,10 +2439,10 @@ feature -- Features info
 						is_single_class: is_single_class
 					end
 					l_meth_token := attribute_token (implemented_type
-						(feat.access_in, current_class_type.type).associated_class_type.static_type_id,
+						(l_declaration_class.class_id, current_class_type.type).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (feat.rout_id_set.first).feature_id)
 				else
-					if l_is_field_hidden then
+					if l_is_field_hidden and then not Compilation_modes.is_precompiling then
 						l_field_attr := {MD_FIELD_ATTRIBUTES}.family_or_assembly
 					else
 						l_field_attr := {MD_FIELD_ATTRIBUTES}.public
@@ -2723,22 +2725,6 @@ feature -- Features info
 				end
 				feats.forth
 			end
-		end
-
-	has_property_getter (f: FEATURE_I): BOOLEAN is
-			-- Is property getter generated for feature `f'?
-		require
-			f_not_void: f /= Void
-		do
-			Result := f.is_attribute
-		end
-
-	has_property_setter (f: FEATURE_I): BOOLEAN is
-			-- Is property getter generated for feature `f'?
-		require
-			f_not_void: f /= Void
-		do
-			Result := f.is_attribute and then f.assigner_name_id /= 0
 		end
 
 	prepare_property_getter (name: STRING; return_type: TYPE_I) is
@@ -3071,7 +3057,6 @@ feature -- IL Generation
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
 				generate_return (False)
 				method_writer.write_current_body
-				generate_property (feat)
 			else
 				l_token := implementation_feature_token (a_type_id, code_feature_id)
 				l_cur_sig := signatures (current_type_id, feat.feature_id)
@@ -3216,9 +3201,7 @@ feature -- IL Generation
 			l_meth_token: INTEGER
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
 		do
-			if feat.is_attribute then
-				generate_property (feat)
-			elseif not feat.is_c_external and not feat.is_deferred then
+			if not feat.is_attribute and then not feat.is_c_external and not feat.is_deferred then
 				if is_implementation then
 					l_meth_token := implementation_feature_token (current_type_id, feat.feature_id)
 				else
@@ -3272,43 +3255,44 @@ feature -- IL Generation
 		end
 
 	generate_property (f: FEATURE_I) is
-			-- Generate property associated with feature `f' (if any).
+			-- Generate property methods associated with feature `f' (if any).
 		require
 			f_not_void: f /= Void
+			f_is_attribute: f.is_attribute
 		local
 			target_type: CL_TYPE_I
 			target_feature: FEATURE_I
 		do
-			target_type := byte_context.original_class_type.type
-			if has_property_setter (f) then
-				target_feature := f.assigner_in (byte_context.original_class_type)
+			start_new_body (current_module.property_setter_token (current_type_id, f.feature_id))
+				-- Look for assigner command.
+			target_feature := f.ancestor_assigner_in (current_class)
+			if target_feature /= Void then
+				target_type := current_class_type.type
 				if not target_type.is_expanded then
 					target_type := implemented_type (target_feature.access_in, target_type)
-					target_feature := target_type.base_class.feature_of_rout_id (target_feature.rout_id_set.first)
 				end
-				start_new_body (current_module.property_setter_token (current_type_id, f.feature_id))
+				target_feature := target_type.base_class.feature_of_rout_id (target_feature.rout_id_set.first)
 				generate_current
 				generate_argument (1)
 				generate_feature_access (target_type, target_feature.feature_id, 1, false, true)
-				generate_return (false)
-				method_writer.write_current_body
 			end
-			if has_property_getter (f) then
-				if target_type.is_expanded then
-					target_feature := f
-				else
-					target_type := implemented_type (f.access_in, target_type)
-					target_feature := target_type.base_class.feature_of_rout_id (f.rout_id_set.first)
-				end
-				start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
-				generate_current
-				generate_attribute (true, target_type, target_feature.feature_id)
-				generate_check_cast (byte_context.real_type_in
-					(target_feature.type.actual_type.type_i, target_type.associated_class_type),
-					byte_context.real_type (f.type.actual_type.type_i))
-				generate_return (true)
-				method_writer.write_current_body
+			generate_return (false)
+			method_writer.write_current_body
+			target_type := current_class_type.type
+			if target_type.is_expanded or else not target_type.is_generated_as_single_type then
+				target_feature := f
+			else
+				target_type := implemented_type (f.access_in, target_type)
+				target_feature := target_type.base_class.feature_of_rout_id (f.rout_id_set.first)
 			end
+			start_new_body (current_module.property_getter_token (current_type_id, f.feature_id))
+			generate_current
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldfld, attribute_token (target_type.associated_class_type.implementation_id, target_feature.feature_id))
+			generate_check_cast (byte_context.real_type_in
+				(target_feature.type.actual_type.type_i, target_type.associated_class_type),
+				byte_context.real_type (f.type.actual_type.type_i))
+			generate_return (true)
+			method_writer.write_current_body
 		end
 
 	generate_feature_standard_twin (feat: FEATURE_I) is
@@ -3476,11 +3460,9 @@ feature -- IL Generation
 					md_emit.define_method_impl (current_class_token, setter_token (current_type_id,
 						cur_feat.feature_id), setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
-				if has_property_getter (inh_feat) then
+				if inh_feat.is_attribute then
 					md_emit.define_method_impl (current_class_token, current_module.property_getter_token
 						(current_type_id, cur_feat.feature_id), current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
-				end
-				if has_property_setter (inh_feat) then
 					md_emit.define_method_impl (current_class_token, current_module.property_setter_token
 						(current_type_id, cur_feat.feature_id), current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 				end
@@ -3616,7 +3598,7 @@ feature -- IL Generation
 						current_module.property_setter_token (current_type_id, cur_feat.feature_id), 1, False)
 					generate_return (False)
 					method_writer.write_current_body
-					if has_property_setter (inh_feat) then
+					if inh_feat.is_attribute then
 						md_emit.define_method_impl (current_class_token, last_property_setter_token,
 							current_module.property_setter_token (l_parent_type_id, inh_feat.feature_id))
 					end
@@ -3634,7 +3616,7 @@ feature -- IL Generation
 						current_module.property_getter_token (current_type_id, cur_feat.feature_id), 0, True)
 					generate_return (True)
 					method_writer.write_current_body
-					if has_property_getter (inh_feat) then
+					if inh_feat.is_attribute then
 						md_emit.define_method_impl (current_class_token, last_property_getter_token,
 							current_module.property_getter_token (l_parent_type_id, inh_feat.feature_id))
 					end

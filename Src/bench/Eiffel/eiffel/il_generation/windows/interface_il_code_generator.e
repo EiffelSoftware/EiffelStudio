@@ -396,6 +396,9 @@ feature -- IL Generation
 						-- inherited method to current defined one.
 					generate_method_impl (feat, impl_class_type, impl_feat)
 				end
+				if feat.is_attribute then
+					generate_property (feat)
+				end
 			end
 		end
 
@@ -455,6 +458,9 @@ feature -- IL Generation
 							current_class_type.type).associated_class_type.implementation_id,
 							feat.written_feature_id)
 				end
+			end
+			if feat.is_attribute then
+				generate_property (feat)
 			end
 			if old_class_type /= Void then
 				byte_context.set_class_type (old_class_type)

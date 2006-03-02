@@ -9,6 +9,8 @@ deferred class TYPE_A
 
 inherit
 	TYPE_AS
+		rename
+			process as process_as_ast
 		redefine
 			is_solved, same_as, append_to, solved_type, first_token, last_token
 		end
@@ -37,7 +39,15 @@ inherit
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		require
+			v_not_void: v /= Void
+			v_is_valid: v.is_valid
+		deferred
+		end
+
+	process_as_ast (v: AST_VISITOR) is
 			-- process current element.
 		do
 			v.process_type_a (Current)

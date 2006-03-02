@@ -13,9 +13,9 @@ inherit
 			make as make_with_count
 		redefine
 			solved_type, dump, ext_append_to,
-			is_equivalent, is_full_named_type
+			is_equivalent, is_full_named_type, process
 		end
-		
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -32,6 +32,14 @@ feature {NONE} -- Initialization
 			feature_name_id := f.feature_name_id
 			current_class_id := System.current_class.class_id
 			rout_id := f.rout_id_set.first
+		end
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bits_symbol_a (Current)
 		end
 
 feature -- Properties
@@ -135,19 +143,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

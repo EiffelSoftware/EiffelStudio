@@ -19,7 +19,7 @@ inherit
 			same_as, format, is_equivalent,
 			deep_actual_type, instantiation_in,
 			actual_argument_type, update_dependance, hash_code,
-			is_full_named_type
+			is_full_named_type, process
 		end
 
 create
@@ -38,6 +38,14 @@ feature {NONE} -- Initialization
 		ensure
 			generics_set: generics = g
 			class_id_set: class_id = a_class_id
+		end
+
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_gen_type_a (Current)
 		end
 
 feature -- Property
@@ -1073,19 +1081,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

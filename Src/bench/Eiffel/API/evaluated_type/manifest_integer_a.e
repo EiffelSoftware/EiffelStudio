@@ -11,8 +11,7 @@ class
 inherit
 	INTEGER_A
 		redefine
-			convert_to,
-			intrinsic_type
+			convert_to, intrinsic_type, process
 		end
 	INTEGER_TYPE_MASKS
 	SHARED_TYPES
@@ -43,11 +42,19 @@ feature {NONE} -- Initialization
 			types_set: types = possible_types
 		end
 
+feature -- Visitor
+
+	process (v: TYPE_A_VISITOR) is
+			-- Process current element.
+		do
+			v.process_manifest_integer_a (Current)
+		end
+
 feature -- Property
 
 	intrinsic_type: INTEGER_A is
 			-- Real type of current manifest integer.
-			-- To preserve compatibility with ETL2, a manifest 
+			-- To preserve compatibility with ETL2, a manifest
 			-- integer is always at least 32 bits wide.
 		do
 			inspect size
@@ -55,7 +62,7 @@ feature -- Property
 			when 64 then Result := integer_64_type
 			end
 		end
-		
+
 feature {COMPILER_EXPORTER} -- Implementation
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
@@ -118,19 +125,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

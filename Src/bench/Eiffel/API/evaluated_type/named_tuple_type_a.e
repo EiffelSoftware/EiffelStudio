@@ -69,6 +69,17 @@ feature -- Status report
 			label_position_non_negative: Result >= 0
 		end
 
+	label_name (i: INTEGER): STRING is
+			-- Name of `i-th' label of Current.
+		require
+			valid_index: generics.valid_index (i)
+		do
+			Result := names_heap.item (names.item (i - 1))
+		ensure
+			label_name_not_void: Result /= Void
+		end
+
+
 feature -- Checking
 
 	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is
@@ -81,7 +92,6 @@ feature -- Checking
 			l_names: like names
 			l_is_tuple_class_available: BOOLEAN
 			l_feat_tbl: FEATURE_TABLE
-			l_processed: SEARCH_TABLE [INTEGER]
 			l_pos: INTEGER
 		do
 				-- If `a_node' is of type NAMED_TUPLE_TYPE_AS then we should

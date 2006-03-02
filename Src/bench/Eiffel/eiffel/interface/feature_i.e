@@ -1902,6 +1902,48 @@ end
 			result_not_void: assigner_name_id /= 0 implies Result /= Void
 		end
 
+	ancestor_assigner_in (c: CLASS_C): FEATURE_I is
+			-- Find an assigner routine id in some ancestor class of the class `c'.
+		require
+			c_not_void: c /= Void
+		local
+			parent_classes: FIXED_LIST [CLASS_C]
+			parent_class: CLASS_C
+			routine_id: INTEGER
+			c_id: like origin_class_id
+			f_id: like origin_feature_id
+		do
+			if assigner_name_id /= 0 then
+				Result := written_class.feature_table.item_id (assigner_name_id)
+			else
+				c_id := origin_class_id
+				if c_id = 0 then
+					c_id := written_in
+					f_id := feature_id
+				else
+					f_id := origin_feature_id
+				end
+				routine_id := system.class_of_id (c_id).feature_of_feature_id (f_id).rout_id_set.first
+				parent_classes := c.parents_classes
+				if parent_classes /= Void then
+					from
+						parent_classes.start
+					until
+						parent_classes.after or else Result /= Void
+					loop
+						parent_class := parent_classes.item
+						Result := parent_class.feature_of_rout_id (routine_id)
+						if Result /= Void then
+							Result := Result.ancestor_assigner_in (parent_class)
+						end
+						parent_classes.forth
+					end
+				end
+			end
+		ensure
+			result_not_void: assigner_name_id /= 0 implies Result /= Void
+		end
+
 	check_assigner (feature_table: FEATURE_TABLE) is
 			-- Check if associated assigner is valid.
 		require

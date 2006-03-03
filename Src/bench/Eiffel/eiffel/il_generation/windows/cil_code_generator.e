@@ -2258,6 +2258,7 @@ feature -- Features info
 			l_assigner: FEATURE_I
 			l_getter: INTEGER
 			l_setter: INTEGER
+			l_property_token: INTEGER
 		do
 			last_property_getter_token :=  {MD_TOKEN_TYPES}.md_method_def
 			last_property_setter_token :=  {MD_TOKEN_TYPES}.md_method_def
@@ -2410,7 +2411,7 @@ feature -- Features info
 						property_sig.set_property_type ({MD_SIGNATURE_CONSTANTS}.property_sig | {MD_SIGNATURE_CONSTANTS}.has_current)
 						property_sig.set_parameter_count (0)
 						set_signature_type (property_sig, l_return_type)
-						md_emit.define_property (current_class_token, uni_string, 0, property_sig, l_setter, l_getter)
+						l_property_token := md_emit.define_property (current_class_token, uni_string, 0, property_sig, l_setter, l_getter)
 						if l_is_attribute_generated_as_field then
 								-- Use a field name different from the property name.
 							l_name := "$$" + il_casing.camel_casing (
@@ -2629,6 +2630,9 @@ feature -- Features info
 			if not is_override_or_c_external and (not is_static or else l_is_attribute) then
 				create l_ca_factory
 				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+				if l_property_token /= 0 then
+					l_ca_factory.set_feature_custom_attributes (feat, l_property_token)
+				end
 			end
 			if is_debug_info_enabled and l_is_attribute then
 				Il_debug_info_recorder.set_record_context (is_single_class, l_is_attribute, is_static, in_interface)

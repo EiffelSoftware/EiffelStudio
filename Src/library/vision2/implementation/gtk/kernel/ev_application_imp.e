@@ -280,9 +280,9 @@ feature -- Basic operation
 								if l_widget_imp.pointer_motion_actions_internal /= Void and then l_widget_imp.is_sensitive then
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_widget_imp.screen_x, 1)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_widget_imp.screen_y, 2)
-									l_widget_motion_tuple.put_real (0.5, 3)
-									l_widget_motion_tuple.put_real (0.5, 4)
-									l_widget_motion_tuple.put_real (0.5, 5)
+									l_widget_motion_tuple.put_double (0.5, 3)
+									l_widget_motion_tuple.put_double (0.5, 4)
+									l_widget_motion_tuple.put_double (0.5, 5)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
 									l_widget_imp.pointer_motion_actions_internal.call (l_widget_motion_tuple)

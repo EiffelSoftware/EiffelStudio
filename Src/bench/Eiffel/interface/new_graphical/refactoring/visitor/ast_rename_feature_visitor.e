@@ -11,6 +11,7 @@ class
 inherit
 	AST_REFACTORING_VISITOR
 		redefine
+			process_interval_as,
 			process_address_as,
 			process_parent_as,
 			process_create_as,
@@ -65,6 +66,25 @@ feature -- Status
 			-- Is the class renaming the feature?
 
 feature {NONE} -- Visitor implementation
+
+	process_interval_as (l_as: INTERVAL_AS) is
+			-- Process interval clause nodes.
+		local
+			l_atom: ATOMIC_AS
+		do
+				-- we only have to do this stuff if we are a descendant
+			if is_descendant then
+				l_atom := l_as.lower
+				if l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
+					l_atom.replace_text (new_feature_name, match_list)
+				end
+				l_atom := l_as.upper
+				if l_atom /= Void and then l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
+					l_atom.replace_text (new_feature_name, match_list)
+				end
+			end
+		end
+
 
 	process_parent_as (l_as: PARENT_AS) is
 			-- Process the inherit clause node

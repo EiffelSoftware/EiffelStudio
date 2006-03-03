@@ -299,7 +299,7 @@ feature -- Definition: creation
 		end
 
 	define_property (type_token: INTEGER; name: UNI_STRING; flags: NATURAL_32;
-			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER)
+			signature: MD_PROPERTY_SIGNATURE; setter_token: INTEGER; getter_token: INTEGER): INTEGER
 		is
 			-- Define property `name' for a type `type_token'.
 		require
@@ -317,6 +317,7 @@ feature -- Definition: creation
 				type_token, name.item, flags, signature.item.item, signature.count,
 				0, default_pointer, 0, setter_token, getter_token, default_pointer,
 				$property_token)
+			Result := property_token.as_integer_32
 		ensure
 			success: last_call_success = 0
 		end

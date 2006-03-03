@@ -1,0 +1,22 @@
+# General tools
+RM=del
+
+# Gobo flag for gelex
+GOBO_LEX_FLAGS=-z
+GOBO_LEX=$(GOBO)/bin/gelex $(GOBO_LEX_FLAGS)
+
+# Gobo flag for geyaxx
+# To have verbose mode, simply add -v FILE_NAME
+GOBO_YACC_FLAGS=--new_typing --pragma=noline -x
+GOBO_YACC=$(GOBO)/bin/geyacc $(GOBO_YACC_FLAGS)
+
+all: lace_parser.e lace_scanner.e classname_finder.e
+
+lace_scanner.e: lace.l
+	$(GOBO_LEX) $?
+
+classname_finder.e: classname_finder.l
+	$(GOBO_LEX) $?
+
+lace_parser.e: lace.y
+	$(GOBO_YACC) -t LACE_TOKENS -o $@ $?

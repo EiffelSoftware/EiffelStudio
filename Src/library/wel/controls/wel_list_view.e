@@ -294,7 +294,7 @@ feature -- Status report
 				-- than the default `buffer_size'.
 			create buffer.make_empty (buffer_size)
 			Result.set_text_with_wel_string (buffer)
-			l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (0), Result.item)
+			l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (index), Result.item)
 			if l_count = buffer_size then
 				from
 					internal_buffer_size := buffer_size
@@ -304,7 +304,7 @@ feature -- Status report
 					internal_buffer_size := internal_buffer_size * 2
 					buffer.set_count (internal_buffer_size)
 					Result.set_text_with_wel_string (buffer)
-					l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (0), Result.item)
+					l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (index), Result.item)
 				end
 			end
 		end
@@ -769,7 +769,7 @@ feature {NONE} -- Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
-	buffer_size: INTEGER is 256
+	buffer_size: INTEGER is 32
 			-- Windows text retrieval buffer size
 
 feature {NONE} -- Externals

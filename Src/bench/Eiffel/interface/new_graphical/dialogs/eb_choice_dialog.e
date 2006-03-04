@@ -73,16 +73,8 @@ feature
 			pixmap_list_valid: pixmap_list /= Void implies pixmap_list.count = name_list.count
 		local
 			lr: EV_MULTI_COLUMN_LIST_ROW
-			new_width: INTEGER
-			char_width: INTEGER
 			char_height: INTEGER
 		do
-				-- Default medium size of characters.
-				-- font.maximum_width is too much, so we add 4 to the average width.
-			char_width := (create {EV_FONT}).width + 4
-				-- + 1 because there may be a space between list items.
-			char_height := (create {EV_FONT}).height + 1
-
 			list.wipe_out
 			from
 				name_list.start
@@ -96,14 +88,16 @@ feature
 				lr.extend (name_list.item)
 
 				list.extend (lr)
-				new_width := new_width.max (name_list.item.count)
 				name_list.forth
 			end
 			list.resize_column_to_content (1)
 
 				-- We allow bounds for the list width of 70 and 150 pixels.
-			list.set_minimum_width ((List_maximum_width.min (new_width * char_width + 10)).max (List_minimum_width))
+				-- +20 for taking into account pixmap size.
+			list.set_minimum_width (List_maximum_width.min (list.column_width (1) + 20).max (List_minimum_width))
 				-- We allow bounds for the list height of 50 and 300 pixels.
+				-- + 1 because there may be a space between list items.
+			char_height := (create {EV_FONT}).height + 1
 			list.set_minimum_height (((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height))
 		end
 
@@ -200,9 +194,9 @@ feature {NONE} -- Implementation
 		end
 
 	List_minimum_width: INTEGER is 70
-	List_maximum_width: INTEGER is 300
+	List_maximum_width: INTEGER is 400
 	List_minimum_height: INTEGER is 50
-	List_maximum_height: INTEGER is 300
+	List_maximum_height: INTEGER is 400
 		-- Bounds for the displayed list.
 
 invariant
@@ -215,19 +209,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

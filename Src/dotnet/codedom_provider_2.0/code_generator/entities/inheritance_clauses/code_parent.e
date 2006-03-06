@@ -7,7 +7,10 @@ class
 	CODE_PARENT
 
 inherit
-	ANY
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -56,7 +59,7 @@ feature	-- Access
 			
 			Result.append_character ('%T')
 			Result.append (type.eiffel_name)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 
 			l_has_snippet := snippet_parent /= Void
 			
@@ -90,8 +93,9 @@ feature	-- Access
 
 			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 or 
 				(l_has_snippet and then not snippet_parent.is_empty) then
-				Result.append ("%T%Tend%N")
-				Result.append ("%N")
+				Result.append ("%T%Tend")
+				Result.append (Line_return)
+				Result.append (Line_return)
 			end
 		end
 		
@@ -154,9 +158,10 @@ feature {NONE} -- Implementation
 					if a_generate_keyword then
 						Result.append ("%T%T")
 						Result.append (a_list.item.keyword)
-						Result.append_character ('%N')
+						Result.append (Line_return)
 					else
-						Result.append ("%T%T%T,%N")
+						Result.append ("%T%T%T,")
+						Result.append (Line_return)
 					end
 					Result.append ("%T%T%T")
 					Result.append (a_list.item.code)
@@ -165,12 +170,14 @@ feature {NONE} -- Implementation
 			until
 				a_list.after
 			loop
-				Result.append (",%N%T%T%T")
+				Result.append (",")
+				Result.append (Line_return)
+				Result.append ("%T%T%T")
 				Result.append (a_list.item.code)
 				a_list.forth
 			end
 			if a_list.count > 0 then
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			end
 		end
 
@@ -184,7 +191,7 @@ end -- class CODE_PARENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

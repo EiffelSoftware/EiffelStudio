@@ -125,6 +125,9 @@ feature -- Button texts
 	b_Terminate_c_compilation: STRING is 		"Terminate C compilation"
 	b_Expand_all: STRING is 					"Expand All"
 	b_Collapse_all: STRING is 					"Collapse All"
+	b_Dbg_exception_handler: STRING is			"Exceptions"
+	b_Dbg_assertion_checking_disable: STRING is	"Disable assertion checking"
+	b_Dbg_assertion_checking_restore: STRING is	"Restore assertion checking"
 
 feature -- Graphical degree output
 
@@ -185,6 +188,10 @@ feature -- Accelerator, focus label and menu name
 	f_Create_new_cluster: STRING is		"Create a new cluster"
 	f_Create_new_class: STRING is		"Create a new class"
 	f_Create_new_feature: STRING is		"Create a new feature"
+
+	m_Dbg_assertion_checking_disable: STRING is	"Disable assertion checking"
+	m_Dbg_assertion_checking_restore: STRING is	"Restore assertion checking"
+	m_Dbg_exception_handler: STRING is	"Exceptions handling"
 	m_Debug_interrupt_new: STRING is		"I&nterrupt Application"
 	f_Debug_edit_object: STRING is		"Edit Object content"
 	m_Debug_edit_object: STRING is		"Edit Object Content"
@@ -981,6 +988,9 @@ feature -- Description texts
 	e_Up_to_date: STRING is				"Executable is up-to-date"
 	e_Unify_stone: STRING is			"Link the context tool to the other components"
 	e_Terminate_c_compilation: STRING is "Terminate current C compilation in progress"
+
+	e_Dbg_exception_handler: STRING is "Exceptions handling"
+	e_Dbg_assertion_checking: STRING is "Disable or restore Assertion checking handling during debugging"
 
 feature -- Wizard texts
 

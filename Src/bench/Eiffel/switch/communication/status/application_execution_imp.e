@@ -123,6 +123,20 @@ feature {APPLICATION_EXECUTION} -- Execution
 		deferred
 		end
 
+	disable_assertion_check is
+			-- Send a message to the application to disable assertion checking
+		require
+			app_is_running: Application.is_running
+		deferred
+		end
+
+	restore_assertion_check is
+			-- Send a message to the application to restore the previous assertion check status
+		require
+			app_is_running: Application.is_running
+		deferred
+		end
+
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
@@ -181,19 +195,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			from
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
 				if not error then
-					c_recv_value (Current)
+					recv_value (Current)
 				end
 			until
 				error or item = Void
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 				unprocessed_values.extend (item)
 				retrieved_arguments_count := retrieved_arguments_count + 1
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
-				c_recv_value (Current)
+				recv_value (Current)
 			end
 
 				-- Receive the local entities.
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			from
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
 				if not error then
-					c_recv_value (Current)
+					recv_value (Current)
 				end
 			until
 				error or item = Void
@@ -231,8 +231,9 @@ feature {NONE} -- Implementation
 				unprocessed_values.extend (item)
 				retrieved_locals_count := retrieved_locals_count + 1
 				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_value%N"); end
-				c_recv_value (Current)
+				recv_value (Current)
 			end
+			reset_recv_value
 		end
 
 	initialize_stack is

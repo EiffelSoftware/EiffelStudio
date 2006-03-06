@@ -122,6 +122,13 @@ feature -- Update
 			send_rqst_0 (request_code)
 		end
 
+	send_integer (v: INTEGER) is
+			-- Send Current request to ised, which may
+			-- relay it to the application.
+		do
+			send_rqst_1 (request_code, v)
+		end
+
 	request_code: INTEGER
 		-- type of request
 
@@ -159,21 +166,26 @@ feature {NONE} -- Implementation
 			check minus_one_is_not_break_value : Break_remove /= -1 and Break_set /= - 1 end
 			if l_break_op /= -1 then
 				l_body_ids := bp.real_body_ids_list
-				l_break_line := bp.breakable_line_number
-				from
-					l_body_ids.start
-				until
-					l_body_ids.after
-				loop
-					l_real_body_id := l_body_ids.item
-					send_rqst_3_integer (Rqst_break, l_real_body_id - 1, l_break_op, l_break_line)
-					l_body_ids.forth
-				end
-				inspect
-					l_break_op
-				when Break_set then
-					bp.set_application_set
-				when Break_remove then
+				if l_body_ids /= Void then
+					l_break_line := bp.breakable_line_number
+					from
+						l_body_ids.start
+					until
+						l_body_ids.after
+					loop
+						l_real_body_id := l_body_ids.item
+						send_rqst_3_integer (Rqst_break, l_real_body_id - 1, l_break_op, l_break_line)
+						l_body_ids.forth
+					end
+					inspect
+						l_break_op
+					when Break_set then
+						bp.set_application_set
+					when Break_remove then
+						bp.set_application_not_set
+					end
+				else
+						--| Error when getting real body ids ...
 					bp.set_application_not_set
 				end
 			end

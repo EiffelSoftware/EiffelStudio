@@ -153,6 +153,11 @@ feature -- Access
 			Result.extend (sep)
 			Result.extend (exception_handler_cmd.new_menu_item)
 
+				-- Separator.
+			create sep
+			Result.extend (sep)
+			Result.extend (assertion_checking_handler_cmd.new_menu_item)
+
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
 				create sep
@@ -451,6 +456,7 @@ feature -- Status setting
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 		end
 
 	on_compile_stop is
@@ -822,6 +828,9 @@ feature -- Debugging events
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
+
+			assertion_checking_handler_cmd.reset
+
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog
 			end
@@ -898,6 +907,8 @@ feature -- Debugging events
 			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 			set_critical_stack_depth_cmd.enable_sensitive
+			assertion_checking_handler_cmd.enable_sensitive
+
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
@@ -982,6 +993,7 @@ feature -- Debugging events
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 
 				-- Fill in the threads tool.
 			threads_tool.update
@@ -1039,6 +1051,8 @@ feature -- Debugging events
 				window_manager.quick_refresh_all_margins
 				debugging_window := Void
 				output_manager.display_system_info
+
+				save_debug_info
 
 				if application.is_running then
 					Application.status.clear_kept_objects
@@ -1185,6 +1199,8 @@ feature {NONE} -- Implementation
 
 	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 
+	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
+
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.
 
@@ -1252,10 +1268,14 @@ feature {NONE} -- Implementation
 			create display_error_help_cmd.make
 			toolbarable_commands.extend (display_error_help_cmd)
 
-
 			create exception_handler_cmd.make
 			exception_handler_cmd.enable_sensitive
 			toolbarable_commands.extend (exception_handler_cmd)
+
+			create assertion_checking_handler_cmd.make
+			assertion_checking_handler_cmd.enable_sensitive
+			toolbarable_commands.extend (assertion_checking_handler_cmd)
+
 
 			create step_cmd.make (Current)
 			toolbarable_commands.extend (step_cmd)
@@ -1325,6 +1345,7 @@ feature {NONE} -- Implementation
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
 				bkpt_info_cmd.enable_sensitive
+				assertion_checking_handler_cmd.disable_sensitive
 
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
@@ -1345,6 +1366,7 @@ feature {NONE} -- Implementation
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			display_error_help_cmd.disable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 		end
 
 	disable_debugging_commands (full: BOOLEAN) is
@@ -1363,6 +1385,7 @@ feature {NONE} -- Implementation
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
+			assertion_checking_handler_cmd.disable_sensitive
 		end
 
 	force_raise is

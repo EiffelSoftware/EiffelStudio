@@ -30,7 +30,14 @@ feature	{} -- Initialization of the C/Eiffel interface
 				$set_int8, $set_int16, $set_int32, $set_int64, $set_bool,
 				$set_char, $set_wchar, $set_real,
 				$set_double, $set_ref, $set_point,
-				$set_bits, $set_error, $set_void)
+				$set_bits, $set_error, $set_exception_trace, $set_void)
+		end
+
+	set_exception_trace (str: STRING) is
+			-- Receive a reference STRING value.
+		do
+			exception_trace := str
+			item := Void
 		end
 
 	set_error is
@@ -167,15 +174,40 @@ feature	{} -- Initialization of the C/Eiffel interface
 			item := Void
 		end
 
+feature {RECV_VALUE} -- Reset
+
+	reset_recv_value is
+		do
+			clear_item
+			error := False
+			exception_trace := Void
+		end
+
 feature -- Status report
 
 	error: BOOLEAN
-			-- Did an error occurr?
+			-- Did an error occurred ?
+
+	is_exception_trace: BOOLEAN is
+			-- Is current `item' an Exception trace ?
+		do
+			Result := exception_trace /= Void
+		end
+
+	exception_trace: STRING
 
 feature {NONE} -- internal
 
 	item: ABSTRACT_DEBUG_VALUE
 			-- Last received value
+
+	recv_value (c: like Current) is
+		require
+			c_not_void: c /= Void
+		do
+			c.reset_recv_value
+			c_recv_value (c)
+		end
 
 feature {NONE} -- External routines
 
@@ -187,7 +219,7 @@ feature {NONE} -- External routines
 	c_pass_recv_routines (
 			d_nat8, d_nat16, d_nat32, d_nat64,
 			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double,
-			d_ref, d_point, d_bits, d_error, d_void: POINTER)
+			d_ref, d_point, d_bits, d_error, d_exception_trace, d_void: POINTER)
 		is
 		external
 			"C"

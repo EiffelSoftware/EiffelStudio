@@ -169,7 +169,12 @@ feature -- Execution
 					need_to_resend_bp := True
 					need_to_stop := True
 
-					if stopping_reason = Pg_break then
+					inspect
+						stopping_reason
+					when Pg_raise, Pg_viol then
+						need_to_stop := execution_stopped_on_exception (exception_code)
+						need_to_resend_bp := False
+					when Pg_break then
 							--| debuggee stopped on a Breakpoint
 
 							--| Initialize the stack with a dummy first call stack element
@@ -186,10 +191,10 @@ feature -- Execution
 								expr.evaluate
 								evaluator := expr.expression_evaluator
 								need_to_stop := evaluator.error_occurred or else evaluator.final_result_is_true_boolean_value
-
 								need_to_resend_bp := need_to_stop
 							end
 						end
+					else
 					end
 					if need_to_stop then
 							--| Now that we know the debuggee will be really stopped
@@ -204,7 +209,7 @@ feature -- Execution
 							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
 						end
 					else
-							--| We don't stop on thie breakpoint,
+							--| We don't stop on this breakpoint,
 							--| Relaunch the application.
 						Application.release_all_but_kept_object
 						if need_to_resend_bp then
@@ -242,6 +247,16 @@ feature -- Execution
 		end
 
 feature {NONE} -- Implementation
+
+	execution_stopped_on_exception (excep_code: INTEGER): BOOLEAN is
+		do
+			Result := Application.exceptions_handler.exception_catched_by_code (excep_code)
+			if Result then
+				print ("Catch exception: " + excep_code.out + "%N")
+			else
+				print ("Ignore exception: " + excep_code.out + "%N")
+			end
+		end
 
 	cont_request: EWB_REQUEST is
 			-- Request to relaunch the application when needed.

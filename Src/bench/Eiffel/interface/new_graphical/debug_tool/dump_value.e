@@ -865,12 +865,16 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							send_rqst_3_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
 						end
 							-- Receive the Result.
-						c_recv_value (Current)
-
-						if item /= Void then
-							item.set_hector_addr
-							Result := item.dump_value
-							clear_item
+						recv_value (Current)
+						if is_exception_trace then
+							
+							reset_recv_value
+						else
+							if item /= Void then
+								item.set_hector_addr
+								Result := item.dump_value
+								clear_item
+							end
 						end
 					end
 				end

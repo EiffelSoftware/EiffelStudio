@@ -597,10 +597,12 @@ feature {NONE} -- EXPR_B evaluation
 					elseif fi.is_function then
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_feature_b.parameters)
-						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
-						else
-							evaluate_function (context_address, Void, cl, fi, params)
+						if not error_occurred then
+							if tmp_target /= Void then
+								evaluate_function (tmp_target.value_address, tmp_target, cl, fi, params)
+							else
+								evaluate_function (context_address, Void, cl, fi, params)
+							end
 						end
 					elseif fi.is_attribute then
 							-- How come ? maybe with redefinition .. and so on ..
@@ -640,24 +642,28 @@ feature {NONE} -- EXPR_B evaluation
 				fi := cl.feature_table.item (a_external_b.feature_name)
 				if fi = Void then
 					params := parameter_values_from_parameters_b (a_external_b.parameters)
-					prepare_evaluation
-					evaluate_function_with_name (tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
-					retrieve_evaluation
+					if not error_occurred then
+						prepare_evaluation
+						evaluate_function_with_name (tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
+						retrieve_evaluation
 
-					if tmp_result_value = Void then
-							-- FIXME: What about static ? check ...
-						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
+						if tmp_result_value = Void then
+								-- FIXME: What about static ? check ...
+							notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
+						end
 					end
 				else
 					if fi.is_external then
 							--| parameters ...
 						params := parameter_values_from_parameters_b (a_external_b.parameters)
-						if tmp_target /= Void then
-							evaluate_function (tmp_target.value_address, tmp_target, Void, fi, params)
-						elseif context_address /= Void then
-							evaluate_function (context_address, Void, Void, fi, params)
-						else
-							evaluate_static_function (fi, cl, params)
+						if not error_occurred then
+							if tmp_target /= Void then
+								evaluate_function (tmp_target.value_address, tmp_target, Void, fi, params)
+							elseif context_address /= Void then
+								evaluate_function (context_address, Void, Void, fi, params)
+							else
+								evaluate_static_function (fi, cl, params)
+							end
 						end
 					elseif fi.is_attribute then
 						if tmp_target /= Void then

@@ -118,20 +118,26 @@ feature -- Query
 			fi: FEATURE_I
 			lcurs: CURSOR
 		do
-			fi := routine.associated_feature_i
 			l_class_type_list := class_type_list
-			create {ARRAYED_LIST [INTEGER]} Result.make (l_class_type_list.count)
-			lcurs := l_class_type_list.cursor
-			from
-				l_class_type_list.start
-			until
-				l_class_type_list.after
-			loop
-				Result.extend (fi.real_body_id (l_class_type_list.item))
-				l_class_type_list.forth
-			end
-			if l_class_type_list.valid_cursor (lcurs) then
-				l_class_type_list.go_to (lcurs)
+			if l_class_type_list /= Void then
+				if routine.associated_class /= Void then
+					fi := routine.associated_feature_i
+					if fi /= Void then
+						create {ARRAYED_LIST [INTEGER]} Result.make (l_class_type_list.count)
+						lcurs := l_class_type_list.cursor
+						from
+							l_class_type_list.start
+						until
+							l_class_type_list.after
+						loop
+							Result.extend (fi.real_body_id (l_class_type_list.item))
+							l_class_type_list.forth
+						end
+						if l_class_type_list.valid_cursor (lcurs) then
+							l_class_type_list.go_to (lcurs)
+						end
+					end
+				end
 			end
 		end
 

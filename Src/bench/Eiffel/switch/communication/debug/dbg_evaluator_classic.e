@@ -94,11 +94,20 @@ feature {DBG_EVALUATOR} -- Interface
 					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, ctype.static_type_id - 1, par)
 				end
 					-- Receive the Result.
-				c_recv_value (Current)
-				if item /= Void then
-					item.set_hector_addr
-					last_result_value := item.dump_value
-					clear_item
+				recv_value (Current)
+				if is_exception_trace then
+					notify_error (Cst_error_exception_during_evaluation,
+							"Exception occurred during evaluation"
+							+ " of {" + fi.written_class.name_in_upper + "}." + fi.feature_name + ": %N"
+							+ exception_trace
+							)
+					reset_recv_value
+				else
+					if item /= Void then
+						item.set_hector_addr
+						last_result_value := item.dump_value
+						clear_item
+					end
 				end
 			end
 		end

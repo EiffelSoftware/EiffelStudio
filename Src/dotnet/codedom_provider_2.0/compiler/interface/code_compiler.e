@@ -156,6 +156,7 @@ feature -- Basic Operations
 						end
 						i := i + 1
 					end
+					merge_partial_classes (compilation_directory)
 					compile
 					Result := last_compilation_results;
 				else
@@ -644,6 +645,18 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	merge_partial_classes (a_directory: STRING) is
+			-- Merge all partial classes found in `a_directory'.
+		local
+			l_merger: EPC_APPLICATION
+			l_list: ARRAYED_LIST [STRING]
+		do
+			create l_merger
+			create l_list.make (1)
+			l_list.extend (a_directory)
+			l_merger.process_directories (l_list, a_directory, false)
+		end
+
 	cleanup is
 			-- Cleanup compiler generated temporary files (EIFGEN directory and .epr file)
 		local
@@ -778,7 +791,7 @@ end -- class CODE_COMPILER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

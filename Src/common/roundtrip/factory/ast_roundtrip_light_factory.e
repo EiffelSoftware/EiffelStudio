@@ -377,12 +377,8 @@ feature -- Access
 
 	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
 		local
-			l_type: TYPE_A
 			token_value: STRING
 		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
 				-- Remember original token
 			token_value := buffer.twin
 				-- Remove underscores (if any) without breaking
@@ -403,12 +399,8 @@ feature -- Access
 
 	new_real_value (a_psr: EIFFEL_PARSER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS is
 		local
-			l_type: TYPE_A
 			l_buffer: STRING
 		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
 			if is_signed and sign_symbol = '-' then
 				l_buffer := buffer.twin
 				buffer.precede ('-')

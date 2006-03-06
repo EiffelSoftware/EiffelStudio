@@ -98,8 +98,10 @@ feature -- Access
 				end
 				Result.append_character (')')
 			end
-			Result.append (" is%N")
-			Result.append ("%T%Tlocal%N")
+			Result.append (" is")
+			Result.append (Line_return)
+			Result.append ("%T%Tlocal")
+			Result.append (Line_return)
 			from
 				catch_clauses.start
 			until
@@ -109,12 +111,15 @@ feature -- Access
 				Result.append (catch_clauses.item.variable.variable.eiffel_name)
 				Result.append (": ")
 				Result.append (catch_clauses.item.variable.variable.type.eiffel_name)
-				Result.append_character ('%N')
+				Result.append (Line_return)
 				catch_clauses.forth
 			end
-			Result.append ("%T%T%Tl_retried: BOOLEAN%N")
-			Result.append ("%T%Tdo%N")
-			Result.append ("%T%T%Tif not l_retried then%N")
+			Result.append ("%T%T%Tl_retried: BOOLEAN")
+			Result.append (Line_return)
+			Result.append ("%T%Tdo")
+			Result.append (Line_return)
+			Result.append ("%T%T%Tif not l_retried then")
+			Result.append (Line_return)
 			l_old_indent_string := indent_string
 			if try_statements /= Void then
 				set_indent_string ("%T%T%T%T")
@@ -127,7 +132,8 @@ feature -- Access
 					try_statements.forth
 				end
 			end
-			Result.append ("%T%T%Tend%N")
+			Result.append ("%T%T%Tend")
+			Result.append (Line_return)
 			if finally_statements /= Void then
 				set_indent_string ("%T%T%T")
 				from
@@ -139,7 +145,8 @@ feature -- Access
 					finally_statements.forth
 				end
 			end
-			Result.append ("%T%Trescue%N")
+			Result.append ("%T%Trescue")
+			Result.append (Line_return)
 			if catch_clauses /= Void then
 				set_indent_string ("%T%T%T")
 				from
@@ -151,7 +158,8 @@ feature -- Access
 					catch_clauses.forth
 				end
 			end
-			Result.append ("%T%Tend%N")
+			Result.append ("%T%Tend")
+			Result.append (Line_return)
 			set_indent_string (l_old_indent_string)
 		end
 
@@ -163,7 +171,7 @@ end -- class CODE_TRY_CATCH_IMPLEMENTATION_FEATURE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

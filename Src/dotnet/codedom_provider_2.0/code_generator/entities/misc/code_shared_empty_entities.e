@@ -17,12 +17,17 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Empty_snippet_feature: CODE_SNIPPET_FEATURE is
 			-- Empty snippet feature
 		once
-			create Result.make ("empty_", "empty_ is do end%N")
+			create Result.make ("empty_", "empty_ is do end" + Line_return)
 		end
 
 	Empty_attribute: CODE_ATTRIBUTE is
@@ -65,7 +70,7 @@ end -- class CODE_SHARED_EMPTY_ENTITIES
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

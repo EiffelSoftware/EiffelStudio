@@ -26,11 +26,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		local
-			a_base_reference_expression: CODE_BASE_REFERENCE_EXPRESSION
+			l_base_reference_expression: CODE_BASE_REFERENCE_EXPRESSION
 		do
-			Event_manager.raise_event ({CODE_EVENTS_IDS}.Not_implemented, ["base reference expression"])
-			create a_base_reference_expression.make
-			set_last_expression (a_base_reference_expression)
+			create l_base_reference_expression.make
+			set_last_expression (l_base_reference_expression)
 		ensure
 			non_void_last_expression: last_expression /= Void
 		end		
@@ -92,7 +91,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				l_type := a_source.type
 				if l_type /= Void then
 					current_routine.add_default_value_local (Type_reference_factory.type_reference_from_reference (l_type))
-					set_last_expression (create {CODE_DEFAULT_VALUE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), current_routine.last_default_variable))
+					set_last_expression (create {CODE_DEFAULT_VALUE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_type), current_routine.last_default_value_variable))
 				else
 					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_type, ["default value expression"])
 					set_last_expression (Empty_expression)
@@ -347,7 +346,7 @@ end -- class CODE_EXPRESSION_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -1,8 +1,8 @@
 indexing
 	description: "Eiffel representation of a CodeDom expression statement"
 	date: "$$"
-	revision: "$$"	
-	
+	revision: "$$"
+
 class
 	CODE_EXPRESSION_STATEMENT
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		ensure
 			expression_set: expression = a_expression
 		end
-		
+
 feature -- Access
 
 	expression: CODE_EXPRESSION
@@ -40,12 +40,15 @@ feature -- Access
 			-- Eiffel code of expression statement
 		do
 			create Result.make (80)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (indent_string)
 			if need_dummy then
 				Result.append ("res := ")
 			end
 			Result.append (expression.code)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 	need_dummy: BOOLEAN is
@@ -61,12 +64,12 @@ feature -- Access
 
 invariant
 	non_void_expression: expression /= Void
-	
+
 end -- class CODE_EXPRESSION_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

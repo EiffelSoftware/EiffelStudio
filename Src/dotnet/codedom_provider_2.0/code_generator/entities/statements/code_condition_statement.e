@@ -1,8 +1,8 @@
 indexing
 	description: "Eiffel representation of a CodeDom condition statement"
 	date: "$$"
-	revision: "$$"	
-	
+	revision: "$$"
+
 class
 	CODE_CONDITION_STATEMENT
 
@@ -27,18 +27,18 @@ feature {NONE} -- Initialization
 			true_statements_set: true_statements = a_true_statements
 			false_statements_set: false_statements = a_false_statements
 		end
-		
+
 feature -- Access
 
 	condition: CODE_EXPRESSION
 			-- Condition
-			
+
 	true_statements: LIST [CODE_STATEMENT]
 			-- True statements
-			
+
 	false_statements: LIST [CODE_STATEMENT]
 			-- False statements
-			
+
 	code: STRING is
 			-- | Result := "if `condition' then 
 			-- |				`true_statements'
@@ -48,11 +48,15 @@ feature -- Access
 			-- Eiffel code of condition statement
 		do
 			create Result.make (2000)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (Indent_string)
 			Result.append ("if ")
 			set_new_line (False)
 			Result.append (condition.code)
-			Result.append (" then%N")
+			Result.append (" then")
+			Result.append (Line_return)
 			increase_tabulation
 			if true_statements /= Void then
 				from
@@ -64,11 +68,12 @@ feature -- Access
 					true_statements.forth
 				end
 			end
-			
+
 			if false_statements /= Void and then false_statements.count > 0 then
 				decrease_tabulation
 				Result.append (indent_string)
-				Result.append ("else%N")
+				Result.append ("else")
+				Result.append (Line_return)
 				increase_tabulation
 				from
 					false_statements.start
@@ -81,15 +86,16 @@ feature -- Access
 			end
 			decrease_tabulation
 			Result.append (indent_string)
-			Result.append ("end%N")
+			Result.append ("end")
+			Result.append (Line_return)
 		end
-		
+
 	need_dummy: BOOLEAN is
 			-- Does statement require dummy local variable?
 		do
 			if true_statements /= Void then
 				from
-					true_statements.start				
+					true_statements.start
 				until
 					Result or true_statements.after
 				loop
@@ -99,7 +105,7 @@ feature -- Access
 			end
 			if false_statements /= Void then
 				from
-					false_statements.start				
+					false_statements.start
 				until
 					Result or false_statements.after
 				loop
@@ -108,15 +114,15 @@ feature -- Access
 				end
 			end
 		end
-		
+
 invariant
 	non_void_condition: condition /= Void
-	
+
 end -- class CODE_CONDITION_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

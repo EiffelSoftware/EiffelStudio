@@ -6,16 +6,25 @@ indexing
 class
 	CODE_SHARED_CLASS_SEPARATOR
 
+inherit
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
-	Class_separator: STRING is "%N--__end_class__--%N"
+	Class_separator: STRING is
 			-- Token used to separate class definition in single file
+		once
+			Result := Line_return + "--__end_class__--" + Line_return
+		end
 
 end -- class CODE_SHARED_CLASS_SEPARATOR
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

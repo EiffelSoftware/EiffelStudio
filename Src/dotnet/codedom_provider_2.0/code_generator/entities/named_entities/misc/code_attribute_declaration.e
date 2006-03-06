@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			arguments := a_arguments
 			type := a_type
+			type.set_custom_attribute_type
 		ensure
 			type_set: type = a_type
 			arguments_set: arguments = a_arguments
@@ -96,7 +97,7 @@ end -- class CODE_ATTRIBUTE_DECLARATION
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

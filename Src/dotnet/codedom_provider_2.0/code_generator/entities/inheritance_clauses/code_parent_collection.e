@@ -29,7 +29,8 @@ create
 feature -- Access
 
 	parent_type_with_homonym: CODE_TYPE_REFERENCE
-			-- Type containing feature with Eiffel name given as argument to `has_feature' if any
+			-- Direct parent containing feature with Eiffel name given as argument to `has_feature' if any
+			-- (can be inherited from a higher level parent but we really need the direct parent for the rename clause)
 
 feature -- Status Report
 
@@ -53,16 +54,15 @@ feature -- Status Report
 				Resolver.search (l_parent_type)
 				if Resolver.found then
 					l_type := Resolver.found_type
-					l_features := l_type.features
+					l_features := l_type.all_features
 					l_features.search (a_name)
 					Result := l_features.found
 					if Result then
 						parent_type_with_homonym := l_parent_type
-					end
-					if not Result then
+					else
 						Result := l_type.parents.has_feature (a_name)
 						if Result then
-							parent_type_with_homonym := l_type.parents.parent_type_with_homonym
+							parent_type_with_homonym := l_parent_type
 						end
 					end
 				else
@@ -105,7 +105,7 @@ end -- class CODE_PARENT_COLLECTION
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

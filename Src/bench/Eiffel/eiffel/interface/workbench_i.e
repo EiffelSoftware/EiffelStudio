@@ -95,7 +95,7 @@ feature -- Additional properties
 				Result := -4
 			end
 		end
-			
+
 feature -- Conveniences
 
 	set_system (s: like system) is
@@ -198,7 +198,7 @@ feature -- Commands
 					backup_counter := backup_counter + 1
 					create_backup_directory
 				end
-				
+
 
 				if missing_class_error then
 					Lace.set_need_directory_lookup (True)
@@ -343,7 +343,7 @@ feature -- Commands
 			System.prepare_before_saving (not was_precompiling)
 			if was_precompiling then
 				System.set_licensed_precompilation (False)
-				System.save_precompilation_info 
+				System.save_precompilation_info
 			end
 				-- NOTE: possible speed improvement by saving the project when this
 				-- condition is satisfied:
@@ -564,7 +564,7 @@ feature {E_PROJECT} -- Status update
 			-- Warn the interface that a compilation is over.
 		do
 			is_compiling := False
-			Eiffel_project.Manager.on_project_recompiled
+			Eiffel_project.Manager.on_project_recompiled (successful)
 		end
 
 feature {NONE} -- Automatic Backup
@@ -589,19 +589,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

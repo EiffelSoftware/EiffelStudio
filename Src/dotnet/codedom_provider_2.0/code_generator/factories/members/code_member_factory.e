@@ -53,6 +53,9 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					if a_source.comments /= Void and then a_source.comments.count > 0 then
 						initialize_comments (a_source.comments)
 					end
+					if a_source.line_pragma /= Void then
+						l_attribute.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+					end
 					set_last_feature (l_attribute)
 					set_current_feature (Void)
 					current_type.add_feature (l_attribute)
@@ -151,6 +154,9 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					end
 					create l_snippet_feature.make (l_name, a_source.text)
 					current_type.add_feature (l_snippet_feature)
+					if a_source.line_pragma /= Void then
+						l_snippet_feature.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+					end
 					set_last_feature (l_snippet_feature)
 				end
 			else
@@ -261,8 +267,9 @@ feature {NONE} -- Implementation
 			non_void_text: a_text /= Void
 		do
 			a_text.replace_substring_all ("%T", " ")
-			a_text.replace_substring_all ("%N", " ")
+			a_text.replace_substring_all ("%R%N", " ")
 			a_text.replace_substring_all ("%R", " ")
+			a_text.replace_substring_all ("%N", " ")
 			a_text.prune_all_leading (' ')
 		ensure
 			cleaned: not a_text.has ('%T') and not a_text.has ('%R') and not a_text.has ('%N')
@@ -286,7 +293,7 @@ end -- class CODE_MEMBER_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

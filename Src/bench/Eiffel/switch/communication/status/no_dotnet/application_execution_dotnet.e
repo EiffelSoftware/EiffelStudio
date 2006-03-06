@@ -55,6 +55,14 @@ feature {APPLICATION_EXECUTION} -- Properties
 		do
 		end
 
+	disable_assertion_check is
+		do
+		end
+
+	restore_assertion_check is
+		do
+		end
+
 feature -- access
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is

@@ -1,8 +1,8 @@
 indexing
 	description: "Eiffel representation of a CodeDom remove event statement"
 	date: "$$"
-	revision: "$$"		
-	
+	revision: "$$"
+
 class
 	CODE_REMOVE_EVENT_STATEMENT
 
@@ -24,23 +24,26 @@ feature {NONE} -- Initialization
 		do
 			removed_event := a_event
 			listener := a_listener
-		ensure 
+		ensure
 			removed_event_set: removed_event = a_event
 			listener_set: listener = a_listener
-		end		
+		end
 feature -- Access
 
 	removed_event: CODE_EVENT_REFERENCE_EXPRESSION
 			-- remove event
-	
+
 	listener: CODE_EXPRESSION
 			-- event listener
-			
+
 	code: STRING is
 			-- | Result := "`removed_event' (`listener')"
 			-- Eiffel code of remove event statement
 		do
 			create Result.make (120)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (indent_string)
 			set_new_line (False)
 			Result.append (removed_event.code)
@@ -48,7 +51,8 @@ feature -- Access
 			Result.append (" (")
 			set_new_line (False)
 			Result.append (listener.code)
-			Result.append (")%N")
+			Result.append (")")
+			Result.append (Line_return)
 		end
 
 	need_dummy: BOOLEAN is
@@ -56,7 +60,7 @@ feature -- Access
 		do
 			Result := False
 		end
-		
+
 feature {NONE} -- Implementation
 
 	remover_eiffel_name: STRING is
@@ -80,7 +84,7 @@ end -- class CODE_REMOVE_EVENT_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

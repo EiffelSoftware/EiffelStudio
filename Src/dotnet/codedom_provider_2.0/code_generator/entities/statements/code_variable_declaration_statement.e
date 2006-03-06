@@ -1,8 +1,8 @@
-indexing 
+indexing
 	description: "Eiffel representation of a CodeDom variable declaration statement"
 	date: "$$"
-	revision: "$$"		
-	
+	revision: "$$"
+
 class
 	CODE_VARIABLE_DECLARATION_STATEMENT
 
@@ -25,12 +25,12 @@ feature {NONE} -- Initialization
 			variable_set: variable = a_variable
 			init_expression_set: init_expression = a_init_expression
 		end
-		
+
 feature -- Access
 
 	variable: CODE_VARIABLE_REFERENCE
 			-- Variable
-	
+
 	init_expression: CODE_EXPRESSION
 			-- Initialization expression
 
@@ -50,25 +50,31 @@ feature -- Code generation
 		do
 			if init_expression /= Void then
 				create Result.make (160)
+				if line_pragma /= Void then
+					Result.append (line_pragma.code)
+				end
 				Result.append (indent_string)
 				Result.append (variable.eiffel_name)
 				Result.append (" := ")
 				set_new_line (False)
 				Result.append (init_expression.code)
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			else
 				create Result.make_empty
+				if line_pragma /= Void then
+					Result.append (line_pragma.code)
+				end
 			end
 		end
 
 invariant
 	non_void_variable: variable /= Void
-	
+
 end -- class CODE_VARIABLE_DECLARATION_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

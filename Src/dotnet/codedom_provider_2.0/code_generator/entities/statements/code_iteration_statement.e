@@ -1,14 +1,14 @@
 indexing
 	description: "Eiffel representation of a CodeDom iteration statement"
 	date: "$$"
-	revision: "$$"		
-	
+	revision: "$$"
+
 class
 	CODE_ITERATION_STATEMENT
 
 inherit
 	CODE_STATEMENT
-	
+
 create
 	make
 
@@ -30,41 +30,47 @@ feature {NONE} -- Initialization
 			loop_statements_set: loop_statements = a_loop_statements
 			increment_statement_set: increment_statement = a_increment_statement
 		end
-		
+
 feature -- Access
 
 	init_statement: CODE_STATEMENT
 			-- Initialization statement
-			
+
 	test_expression: CODE_EXPRESSION
 			-- Test expression
-	
+
 	loop_statements: LIST [CODE_STATEMENT]
 			-- Loop statements
-			
+
 	increment_statement: CODE_STATEMENT
 			-- Increment statement
-			
+
 	code: STRING is
 			-- | Result := "from `init_statement' until `test_expression' loop `loop_statements' `increment_statement' end
 			-- Eiffel code of iteration statement
 		do
 			create Result.make (800)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (Indent_string)
-			Result.append ("from%N")
+			Result.append ("from")
+			Result.append (Line_return)
 			increase_tabulation
 			if init_statement /= Void then
 				Result.append (init_statement.code)
-				Result.append ("%N")
+				Result.append (Line_return)
 			end
 			decrease_tabulation
 			Result.append (Indent_string)
-			Result.append ("until%N")
+			Result.append ("until")
+			Result.append (Line_return)
 			increase_tabulation
 			Result.append (test_expression.code)
-			Result.append ("%N")
+			Result.append (Line_return)
 			decrease_tabulation
-			Result.append ("loop%N")
+			Result.append ("loop")
+			Result.append (Line_return)
 			increase_tabulation
 			if loop_statements /= Void then
 				from
@@ -78,19 +84,20 @@ feature -- Access
 			end
 			if increment_statement /= Void then
 				Result.append (increment_statement.code)
-				Result.append ("%N")
+				Result.append (Line_return)
 			end
 			decrease_tabulation
 			Result.append (Indent_string)
-			Result.append ("end%N")
+			Result.append ("end")
+			Result.append (Line_return)
 		end
-		
+
 	need_dummy: BOOLEAN is
 			-- Does statement require dummy local variable?
 		do
 			Result := init_statement.need_dummy
 			from
-				loop_statements.start				
+				loop_statements.start
 			until
 				Result or loop_statements.after
 			loop
@@ -98,15 +105,15 @@ feature -- Access
 				loop_statements.forth
 			end
 		end
-		
+
 invariant
 	non_void_test_expression: test_expression /= Void
-	
+
 end -- class CODE_ITERATION_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

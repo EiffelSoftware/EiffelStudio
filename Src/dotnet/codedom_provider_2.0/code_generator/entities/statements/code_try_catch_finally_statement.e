@@ -1,8 +1,8 @@
 indexing
 	description: "Eiffel representation of a CodeDom try catch finally statement"
 	date: "$$"
-	revision: "$$"		
-	
+	revision: "$$"
+
 class
 	CODE_TRY_CATCH_FINALLY_STATEMENT
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			routine_set: routine = a_routine
 			name_set: implementation_feature_name = a_name
 		end
-		
+
 feature -- Access
 
 	routine: CODE_ROUTINE
@@ -43,9 +43,9 @@ feature -- Access
 	code: STRING is
 			-- Eiffel code of try catch finally statement
 			-- | Insert new routine with following code and calls routine:
-			-- | 		local 
+			-- | 		local
 			-- |			l_retried: BOOLEAN
-			-- |		do 
+			-- |		do
 			-- |			if not l_retried then
 			-- |				`try_statements'
 			-- |			end
@@ -58,6 +58,9 @@ feature -- Access
 			l_locals: LIST [CODE_VARIABLE]
 		do
 			create Result.make (100)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (Indent_string)
 			Result.append (implementation_feature_name)
 			l_locals := routine.locals
@@ -90,16 +93,17 @@ feature -- Access
 					Result.append (l_locals.item.variable.eiffel_name)
 					l_locals.forth
 				end
-				Result.append (")%N")
+				Result.append (")")
+				Result.append (Line_return)
 			end
 		end
-		
+
 	need_dummy: BOOLEAN is
 			-- Does statement require dummy local variable?
 		do
 			Result := False
 		end
-		
+
 invariant
 	non_void_routine: routine /= Void
 	non_void_implementation_feature_name: implementation_feature_name /= Void
@@ -108,7 +112,7 @@ end -- class CODE_TRY_CATCH_FINALLY_STATEMENT_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

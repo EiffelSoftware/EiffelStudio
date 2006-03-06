@@ -1,7 +1,7 @@
 indexing
 	description: "Eiffel representation of a CodeDom snippet statement"
 	date: "$$"
-	revision: "$$"		
+	revision: "$$"
 
 class
 	CODE_SNIPPET_STATEMENT
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		ensure
 			value_set: value = a_value
 		end
-		
+
 feature -- Access
 
 	value: STRING
@@ -33,11 +33,14 @@ feature -- Access
 			-- Eiffel code of snippet statement
 		do
 			create Result.make (indent_string.count + value.count + 1)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (indent_string)
 			Result.append (value)
-			Result.append ("%N")
+			Result.append (Line_return)
 		end
-	
+
 	need_dummy: BOOLEAN is
 			-- Does statement require dummy local variable?
 		do
@@ -48,7 +51,7 @@ end -- class CODE_SNIPPET_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

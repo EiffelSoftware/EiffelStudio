@@ -35,6 +35,17 @@ feature {NONE} -- Initialization
 				l_name.keep_tail (l_name.count - l_index)
 			end
 			assembly_prefix := config_assembly_prefix (l_name)
+			-- Force a prefix if there isn't one so that if an Eiffel assembly is
+			-- referenced base classes names don't clash.
+			if (assembly_prefix = Void or else assembly_prefix.is_empty) and not l_name.is_equal ("mscorlib.dll") then
+				generated_prefixes.search (l_name)
+				if generated_prefixes.found then
+					assembly_prefix := generated_prefixes.found_item
+				else
+					assembly_prefix := new_prefix
+					generated_prefixes.put (assembly_prefix, l_name)
+				end
+			end
 		ensure
 			assembly_prefix_set: assembly_prefix /= Void
 			assembly_set: assembly = an_assembly
@@ -72,6 +83,38 @@ feature -- Access
 			non_void_cluster_name: Result /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	new_prefix: STRING is
+			-- Creation procedure.
+		local
+			a, b, c: INTEGER
+		do
+			c := counter.item
+			counter.set_item (counter.item + 1)
+			a := c // 676
+			c := c \\ 676
+			b := c // 26
+			c := c \\ 26
+			create Result.make (4)
+			Result.append_character ('A' + a)
+			Result.append_character ('A' + b)
+			Result.append_character ('A' + c)
+			Result.append_character ('_')
+		end
+
+	counter: INTEGER_REF is
+			-- Counter
+		once
+			create Result
+		end
+
+	generated_prefixes: HASH_TABLE [STRING, STRING] is
+			-- Cache for generated prefixes
+		once
+			create Result.make (10)
+		end
+
 invariant
 	non_void_assembly_prefix: assembly_prefix /= Void
 	non_void_assembly: assembly /= Void
@@ -80,7 +123,7 @@ end -- Class CODE_REFERENCED_ASSEMBLY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

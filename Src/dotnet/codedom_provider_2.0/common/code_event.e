@@ -10,6 +10,11 @@ class
 inherit
 	CODE_EVENTS
 
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -89,7 +94,7 @@ feature -- Status Report
 			end
 			create Result.make (l_header.count + l_body.count + 1)
 			Result.append (l_header)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 			Result.append (l_body)
 		ensure
 			has_message: Result /= Void
@@ -105,7 +110,7 @@ end -- class CODE_EVENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

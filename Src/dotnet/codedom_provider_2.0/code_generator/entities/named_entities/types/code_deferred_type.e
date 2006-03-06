@@ -36,16 +36,18 @@ feature {NONE} -- Code Generation
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		do	
 			create Result.make (120)
-			Result.append ("deferred class%N%T")
+			Result.append ("deferred class")
+			Result.append (Line_return)
+			Result.append ("%T")
 			Result.append (name.twin)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 end -- class CODE_DEFERRED_TYPE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

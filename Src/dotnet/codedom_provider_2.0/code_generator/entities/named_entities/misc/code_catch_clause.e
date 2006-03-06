@@ -41,11 +41,13 @@ feature -- Access
 			create Result.make (120)
 			Result.append (indent_string)
 			Result.append (variable.variable.eiffel_name)
-			Result.append (" ?= {ISE_RUNTIME}.last_exception%N")
+			Result.append (" ?= {ISE_RUNTIME}.last_exception")
+			Result.append (Line_return)
 			Result.append (indent_string)
 			Result.append ("if ")
 			Result.append (variable.variable.eiffel_name)
-			Result.append (" /= Void then%N")
+			Result.append (" /= Void then")
+			Result.append (Line_return)
 			increase_tabulation
 			from
 				statements.start
@@ -56,10 +58,12 @@ feature -- Access
 				statements.forth
 			end
 			Result.append (indent_string)
-			Result.append ("retry%N")
+			Result.append ("retry")
+			Result.append (Line_return)
 			decrease_tabulation
 			Result.append (indent_string)
-			Result.append ("end%N")
+			Result.append ("end")
+			Result.append (Line_return)
 		end
 
 invariant
@@ -70,7 +74,7 @@ end -- class CODE_CATCH_CLAUSE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

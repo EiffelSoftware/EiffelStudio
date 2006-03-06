@@ -9,11 +9,20 @@ class
 inherit
 	CODE_GENERATED_TYPE
 		redefine
+			is_expanded,
 			class_declaration
 		end
 		
 create 
 	make
+
+feature -- Acess
+
+	is_expanded: BOOLEAN is
+			-- Is type expanded?
+		do
+			Result := True
+		end
 
 feature {NONE} -- Code Generation
 
@@ -21,16 +30,16 @@ feature {NONE} -- Code Generation
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		do
 			create Result.make (100)
-			Result.append ("frozen expanded class%N%T")
+			Result.append ("frozen expanded class%R%N%T")
 			Result.append (name.twin)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 end -- class CODE_FROZEN_EXPANDED_TYPE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

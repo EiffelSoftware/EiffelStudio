@@ -57,7 +57,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_routine.set_redefined (True)
 					l_parent := l_member.parent
 					if l_parent /= Void then
-						current_type.add_redefine_clause (l_parent.implementing_type, l_member)
+						current_type.add_redefine_clause (current_type.direct_parent (l_parent.implementing_type), l_member)
 					end
 				end
 				l_routine.set_arguments (l_arguments)
@@ -101,7 +101,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				if l_member.is_redefined then
 					l_parent := l_member.parent
 					if l_parent /= Void then
-						current_type.add_redefine_clause (l_parent.implementing_type, l_member)
+						current_type.add_redefine_clause (current_type.direct_parent (l_parent.implementing_type), l_member)
 					end
 				end
 				l_creation_routine.set_arguments (l_arguments)
@@ -199,7 +199,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							l_property_getter.set_redefined (True)
 							l_parent := l_getter.parent
 							if l_parent /= Void then
-								current_type.add_redefine_clause (l_parent.implementing_type, l_getter)
+								current_type.add_redefine_clause (current_type.direct_parent (l_parent.implementing_type), l_getter)
 							end
 						end
 						l_property_getter.set_arguments (l_arguments)
@@ -226,7 +226,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							l_property_setter.set_redefined (True)
 							l_parent := l_setter.parent
 							if l_parent /= Void then
-								current_type.add_redefine_clause (l_parent.implementing_type, l_setter)
+								current_type.add_redefine_clause (current_type.direct_parent (l_parent.implementing_type), l_setter)
 							end
 						end
 						l_property_setter.set_arguments (l_arguments)
@@ -455,7 +455,7 @@ end -- class CODE_ROUTINE_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

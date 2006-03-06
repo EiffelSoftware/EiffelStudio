@@ -9,7 +9,6 @@ class
 inherit
 	TYPE_AS
 		redefine
-			has_formal_generic, has_like, is_loose,
 			is_equivalent, start_location, end_location,
 			first_token, last_token
 		end
@@ -133,56 +132,6 @@ feature -- Comparison
 		do
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (parameters, other.parameters)
-		end
-
-feature -- Access
-
-	has_like: BOOLEAN is
-			-- Does the type have anchored type in its definition ?
-		local
-			l_generics: like generics
-		do
-			from
-				l_generics := generics
-				l_generics.start
-			until
-				l_generics.after or else Result
-			loop
-				Result := l_generics.item.type.has_like
-				l_generics.forth
-			end
-		end
-
-	has_formal_generic: BOOLEAN is
-			-- Has type a formal generic parameter?
-		local
-			l_generics: like generics
-		do
-			from
-				l_generics := generics
-				l_generics.start
-			until
-				l_generics.after or else Result
-			loop
-				Result := l_generics.item.type.has_formal_generic
-				l_generics.forth
-			end
-		end
-
-	is_loose: BOOLEAN is
-			-- Does type depend on formal generic parameters and/or anchors?
-		local
-			l_generics: like generics
-		do
-			from
-				l_generics := generics
-				l_generics.start
-			until
-				l_generics.after or else Result
-			loop
-				Result := l_generics.item.type.is_loose
-				l_generics.forth
-			end
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences

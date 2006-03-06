@@ -1,5 +1,6 @@
 indexing
-	description: "Node for `like Current' type."
+
+	description: "Node for `like Current' type. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,7 +11,7 @@ class LIKE_CUR_AS
 inherit
 	TYPE_AS
 		redefine
-			has_like, is_loose, first_token, last_token
+			first_token, last_token
 		end
 
 	LOCATION_AS
@@ -32,8 +33,8 @@ feature{NONE} -- Initialization
 			current_keyword := c_as
 			make_from_other (c_as)
 		ensure
-			current_keyword_set: current_keyword = c_as
 			like_keyword_set: like_keyword = l_as
+			current_keyword_set: current_keyword = c_as
 		end
 
 feature -- Visitor
@@ -60,19 +61,6 @@ feature -- Comparison
 			Result := True
 		end
 
-feature -- Properties
-
-	has_like: BOOLEAN is True
-			-- Does the type have anchor in its definition ?
-
-	is_loose: BOOLEAN is True
-			-- Does type depend on formal generic parameters and/or anchors?
-
-feature -- Output
-
-	dump: STRING is "like Current"
-			-- Dump trace
-
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -94,6 +82,11 @@ feature -- Roundtrip/Token
 				Result := current_keyword.last_token (a_list)
 			end
 		end
+
+feature -- Output
+
+	dump: STRING is "like Current";
+			-- Dump trace
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1,5 +1,7 @@
 indexing
-	description: "Abstract description for formal generic type."
+	description:
+			"Abstract description for formal generic type. %
+			%Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,7 +12,7 @@ class FORMAL_AS
 inherit
 	TYPE_AS
 		redefine
-			has_formal_generic, is_loose, first_token, last_token
+			first_token, last_token
 		end
 
 create
@@ -47,7 +49,6 @@ feature -- Roundtrip
 	reference_expanded_keyword: KEYWORD_AS
 			-- Keyword "reference" or "expanded" associated with this structure
 
-
 feature -- Properties
 
 	name: ID_AS
@@ -62,12 +63,6 @@ feature -- Properties
 
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
-
-	has_formal_generic: BOOLEAN is True
-			-- Has type a formal generic parameter?
-
-	is_loose: BOOLEAN is True
-			-- Does type depend on formal generic parameters and/or anchors?
 
 feature -- Roundtrip/Token
 
@@ -110,7 +105,7 @@ feature -- Output
 			Result.append_integer (position)
 		end
 
-feature {COMPILER_EXPORTER}
+feature {COMPILER_EXPORTER} -- Settings
 
 	set_position (i: INTEGER) is
 			-- Assign `i' to `position'.
@@ -124,19 +119,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

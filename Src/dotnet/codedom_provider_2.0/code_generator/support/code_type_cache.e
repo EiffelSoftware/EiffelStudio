@@ -85,7 +85,7 @@ feature -- Element Settings
 		do
 			generated_types.force (a_type, a_type.name)
 			Type_reference_factory.type_reference_from_code (a_type).set_initialized (True)
-			if generated_types.found then
+			if generated_types.found and not generated_types.found_item.is_partial then
 				event_manager.raise_event ({CODE_EVENTS_IDS}.type_in_cache, [a_type.name])
 			end
 		ensure
@@ -106,7 +106,7 @@ end -- class CODE_TYPE_CACHE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -175,7 +175,7 @@ feature -- Basic operations
 			end
 		end
 
-	on_project_recompiled is
+	on_project_recompiled (is_successful: BOOLEAN) is
 			-- `project' ends a compilation (not necessarily successfully).
 		require
 			project_created: is_created
@@ -188,6 +188,11 @@ feature -- Basic operations
 				compile_stop_agents.item.call (Void)
 				compile_stop_agents.forth
 			end
+
+			if is_successful then
+					-- Save breakpoint status and command line.
+				Debugger_manager.save_debug_info
+			end
 		end
 
 indexing
@@ -196,19 +201,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

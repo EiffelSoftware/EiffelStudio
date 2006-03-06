@@ -1,7 +1,7 @@
 indexing
 	description: "Eiffel representation of a CodeDom attach event statement"
 	date: "$$"
-	revision: "$$"	
+	revision: "$$"
 
 class
 	CODE_ATTACH_EVENT_STATEMENT
@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 			attached_event_set: attached_event = a_event
 			listener_set: listener = a_listener
 		end
-		
+
 feature -- Access
-	
-	attached_event: CODE_EVENT_REFERENCE_EXPRESSION 
+
+	attached_event: CODE_EVENT_REFERENCE_EXPRESSION
 			-- attached event
 
 	listener: CODE_EXPRESSION
@@ -42,6 +42,9 @@ feature -- Access
 			-- Eiffel code of attach event statement
 		do
 			create Result.make (120)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (indent_string)
 			set_new_line (False)
 			Result.append (attached_event.code)
@@ -49,7 +52,8 @@ feature -- Access
 			Result.append (" (")
 			set_new_line (False)
 			Result.append (listener.code)
-			Result.append (")%N")
+			Result.append (")")
+			Result.append (Line_return)
 		end
 
 	need_dummy: BOOLEAN is
@@ -57,7 +61,7 @@ feature -- Access
 		do
 			Result := False
 		end
-		
+
 feature {NONE} -- Implementation
 
 	adder_eiffel_name: STRING is
@@ -80,16 +84,16 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 invariant
 	non_void_attached_event: attached_event /= Void
 	non_void_listener: listener /= Void
-	
+
 end -- class CODE_ATTACH_EVENT_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

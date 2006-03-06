@@ -44,7 +44,8 @@ feature -- Access
 			Result.append (tag)
 			Result.append (": %"")
 			Result.append (text)
-			Result.append ("%"%N")
+			Result.append ("%"")
+			Result.append (Line_return)
 			Result.append (custom_attributes_code)
 		end
 
@@ -92,11 +93,13 @@ feature {NONE} -- Implementation
 					Result.append (custom_attributes.item.code)
 					custom_attributes.forth
 					if not custom_attributes.after then
-						Result.append (",%N%T%T")
+						Result.append (",")
+						Result.append (Line_return)
+						Result.append ("%T%T")
 					end
 				end
 				decrease_tabulation
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -110,7 +113,7 @@ end -- class CODE_INDEXING_CLAUSE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

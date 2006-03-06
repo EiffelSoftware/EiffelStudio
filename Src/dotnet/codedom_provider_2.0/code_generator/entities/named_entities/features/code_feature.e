@@ -64,6 +64,9 @@ feature -- Access
 	is_redefined: BOOLEAN
 			-- Is routine overwritten?
 
+	line_pragma: CODE_LINE_PRAGMA
+			-- Associated line pragma if any
+
 feature -- Element Settings
 
 	set_eiffel_name (a_name: like eiffel_name) is
@@ -173,7 +176,17 @@ feature -- Element Settings
 		ensure
 			a_custom_attribute_added: custom_attributes.has (a_custom_attribute)
 		end
-		
+	
+	set_line_pragma (a_line_pragma: like line_pragma) is
+			-- Set `line_pragma' with `a_pragma'.
+		require
+			attached_line_pragma: a_line_pragma /= Void
+		do
+			line_pragma := a_line_pragma
+		ensure
+			line_pragma_set: line_pragma = a_line_pragma
+		end
+
 feature {CODE_GENERATED_TYPE} -- Code Generation
 
 	feature_clause: STRING is
@@ -206,7 +219,8 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			if feature_kind /= Void then
 				Result.append (" -- ")
 				Result.append (feature_kind)
-				Result.append ("%N%N")
+				Result.append (Line_return)
+				Result.append (Line_return)
 			end
 		ensure
 			not_void_feature_clause: Result /= void
@@ -221,7 +235,8 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			if custom_attributes.count > 0 then
 				create Result.make (200)
 				Result.append (indent_string)
-				Result.append ("indexing%N")
+				Result.append ("indexing")
+				Result.append (Line_return)
 				increase_tabulation
 				Result.append (indent_string)
 				Result.append ("metadata: ")
@@ -237,7 +252,7 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 					custom_attributes.forth
 				end
 				decrease_tabulation
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			else
 				create Result.make_empty
 			end
@@ -281,7 +296,7 @@ end -- class CODE_FEATURE
 	
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

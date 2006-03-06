@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 					l_parents.forth
 				end
 			else
-				l_type := implementing_type.dotnet_type
+				l_type := a_type.dotnet_type
 				if l_type /= Void then
 					Result := parent_in_dotnet_type (l_type)
 				end
@@ -477,7 +477,7 @@ end -- class CODE_MEMBER_REFERENCE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

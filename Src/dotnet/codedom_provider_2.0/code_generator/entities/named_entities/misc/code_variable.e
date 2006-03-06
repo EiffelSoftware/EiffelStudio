@@ -46,7 +46,7 @@ feature -- Access
 			Result.append (variable.eiffel_name)
 			Result.append (": ")
 			Result.append (variable.type.eiffel_name)
-			Result.append ("%N")
+			Result.append (Line_return)
 		end
 
 feature -- Comparison
@@ -65,7 +65,7 @@ end -- class CODE_VARIABLE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

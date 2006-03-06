@@ -202,6 +202,7 @@ feature {NONE} -- Agent tables.
 			Result.add ((create {SYSTEM_DLL_CODE_BASE_REFERENCE_EXPRESSION}.make).get_type, agent generate_base_reference_expression)
 			Result.add ((create {SYSTEM_DLL_CODE_BINARY_OPERATOR_EXPRESSION}.make).get_type, agent generate_binary_operator_expression)
 			Result.add ((create {SYSTEM_DLL_CODE_CAST_EXPRESSION}.make).get_type, agent generate_cast_expression)
+			Result.add ((create {SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION}.make).get_type, agent generate_default_value_expression)
 			Result.add ((create {SYSTEM_DLL_CODE_DELEGATE_CREATE_EXPRESSION}.make).get_type, agent generate_delegate_create_expression)
 			Result.add ((create {SYSTEM_DLL_CODE_DELEGATE_INVOKE_EXPRESSION}.make).get_type, agent generate_delegate_invoke_expression)
 			Result.add ((create {SYSTEM_DLL_CODE_EVENT_REFERENCE_EXPRESSION}.make).get_type, agent generate_event_reference_expression)
@@ -431,6 +432,18 @@ feature {NONE} -- Expression agents.
 			Expression_factory.generate_cast_expression (cast_expression)
 		end
 
+	generate_default_value_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
+			-- Agent.
+		local
+			default_value_expression: SYSTEM_DLL_CODE_DEFAULT_VALUE_EXPRESSION
+		do
+			default_value_expression ?= an_expression
+			check
+				non_void_default_value_expression: default_value_expression /= Void
+			end
+			Expression_factory.generate_default_value_expression (default_value_expression)
+		end
+
 	generate_delegate_create_expression (an_expression: SYSTEM_DLL_CODE_EXPRESSION) is
 			-- Agent.
 		local
@@ -639,7 +652,7 @@ end -- class CODE_CONSUMER_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

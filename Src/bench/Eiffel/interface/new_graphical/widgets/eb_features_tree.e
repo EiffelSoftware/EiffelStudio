@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 		do
 			is_clickable := clickable
 			features_tool := a_features_tool
+			update_states
 			default_create
 
 			set_minimum_height (20)
@@ -92,24 +93,18 @@ feature -- Status report
 
 feature -- Access
 
-	toggle_signatures is
-			-- Toggle signature on/off
+	update_states is
+			-- Update command states
 		do
-			signature_enabled := not signature_enabled
-			recursive_do_all (agent update_node)
+			is_signature_enabled := features_tool.is_signature_enabled
+			is_alias_enabled := features_tool.is_alias_enabled
+			is_assigner_enabled := features_tool.is_assigner_enabled
 		end
 
-	toggle_alias is
-			-- Toggle alias name on/off
+	update_all is
+			-- Update feature tree
 		do
-			is_alias_enabled := not is_alias_enabled
-			recursive_do_all (agent update_node)
-		end
-
-	toggle_assigner is
-			-- Toggle assigner command on/off
-		do
-			is_assigner_enabled := not is_assigner_enabled
+			update_states
 			recursive_do_all (agent update_node)
 		end
 
@@ -124,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	signature_enabled: BOOLEAN
+	is_signature_enabled: BOOLEAN
 			-- Do we display signature of feature ?
 
 	is_alias_enabled: BOOLEAN
@@ -152,7 +147,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					Result.append_character ('%"')
 				end
 			end
-			if signature_enabled then
+			if is_signature_enabled then
 				a_ef.append_arguments_to (Result)
 				if a_ef.type /= Void then
 					Result.append (": " + a_ef.type.dump)

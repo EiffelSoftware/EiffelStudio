@@ -3807,28 +3807,8 @@ feature {NONE} -- Implementation: Editor commands
 	seek_item_in_feature_tool (a_feature: E_FEATURE) is
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
-		local
-			l_node: EV_TREE_NODE
-			l_selected_node: EV_TREE_NODE
 		do
-			l_selected_node := features_tool.tree.selected_item
-			if a_feature /= Void then
-				l_node := features_tool.tree.retrieve_item_recursively_by_data (a_feature, true)
-				if l_node /= Void then
-					l_node.enable_select
-					if features_tool.tree.is_displayed then
-						features_tool.tree.ensure_item_visible (l_node)
-					end
-				else
-					if l_selected_node /= Void then
-						l_selected_node.disable_select
-					end
-				end
-			else
-				if l_selected_node /= Void then
-					l_selected_node.disable_select
-				end
-			end
+			features_tool.seek_item_in_feature_tool (a_feature)
 		end
 
 	select_all is

@@ -18,6 +18,11 @@ inherit
 			make
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 	SHARED_EIFFEL_PROJECT
 
 create
@@ -29,6 +34,9 @@ feature {NONE} -- Initialization
 			-- Make a new features tool.
 		do
 			development_window ?= a_manager
+			is_signature_enabled := Preferences.feature_tool_data.is_signature_enabled
+			is_alias_enabled := Preferences.feature_tool_data.is_alias_enabled
+			is_assigner_enabled := Preferences.feature_tool_data.is_assigner_enabled
 			Precursor (a_manager)
 		end
 
@@ -49,6 +57,10 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (development_window.toggle_feature_alias_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (development_window.toggle_feature_signature_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (development_window.toggle_feature_assigner_cmd.new_mini_toolbar_item)
+
+			development_window.toggle_feature_signature_cmd.set_select (is_signature_enabled)
+			development_window.toggle_feature_alias_cmd.set_select (is_alias_enabled)
+			development_window.toggle_feature_assigner_cmd.set_select (is_assigner_enabled)
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -104,6 +116,51 @@ feature -- Access
 			Result := Pixmaps.Icon_features
 		end
 
+feature -- Behavior
+
+	is_assigner_enabled: BOOLEAN
+			-- Is assigner command shown?
+
+	is_alias_enabled: BOOLEAN
+			-- Is alias name shown?
+
+	is_signature_enabled: BOOLEAN
+			-- Do we display signature of feature ?
+
+	update_tree is
+		do
+			if tree /= Void then
+				tree.update_all
+			end
+		end
+
+	toggle_signatures is
+			-- Toggle signature on/off
+		do
+			is_signature_enabled := not is_signature_enabled
+			if tree /= Void then
+				tree.update_all
+			end
+		end
+
+	toggle_alias is
+			-- Toggle alias name on/off
+		do
+			is_alias_enabled := not is_alias_enabled
+			if tree /= Void then
+				tree.update_all
+			end
+		end
+
+	toggle_assigner is
+			-- Toggle assigner command on/off
+		do
+			is_assigner_enabled := not is_assigner_enabled
+			if tree /= Void then
+				tree.update_all
+			end
+		end
+
 feature -- Memory management
 
 	recycle is
@@ -119,6 +176,35 @@ feature -- Memory management
 		end
 
 feature -- Element change
+
+	seek_item_in_feature_tool (a_feature: E_FEATURE) is
+			-- Seek and select item contains data of `a_feature' in features tool.
+			-- If `a_feature' is void, deselect item in features tool.
+		local
+			l_node: EV_TREE_NODE
+			l_selected_node: EV_TREE_NODE
+		do
+			if tree /= Void then
+				l_selected_node := tree.selected_item
+				if a_feature /= Void then
+					l_node := tree.retrieve_item_recursively_by_data (a_feature, true)
+					if l_node /= Void then
+						l_node.enable_select
+						if tree.is_displayed then
+							tree.ensure_item_visible (l_node)
+						end
+					else
+						if l_selected_node /= Void then
+							l_selected_node.disable_select
+						end
+					end
+				else
+					if l_selected_node /= Void then
+						l_selected_node.disable_select
+					end
+				end
+			end
+		end
 
 	synchronize is
 			-- Should be called after recompilations.
@@ -312,19 +398,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

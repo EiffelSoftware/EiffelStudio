@@ -41,39 +41,43 @@ feature -- Access
 			l_system_string: SYSTEM_STRING
 			i: INTEGER
 		do
-			l_string := value.to_string
-			l_system_string ?= value
-			if l_system_string /= Void then
-				create Result.make (l_string.count + 10)			
-				Result.append ("(%"")
-				from
-					i := 1
-				until
-					i > l_string.count
-				loop
-					inspect 
-						l_string.item (i)
-					when '%R' then
-						Result.append ("%%R")
-					when '%T' then
-						Result.append ("%%T")
-					when '%"' then
-						Result.append ("%%%"")
-					when '%%' then
-						Result.append ("%%%%")
-					when '%'' then
-						Result.append ("%%%'")
-					when '%N' then
-						Result.append ("%%N")
-					else
-						Result.append_character (l_string.item (i))
+			if value /= Void then		
+				l_string := value.to_string
+				l_system_string ?= value
+				if l_system_string /= Void then
+					create Result.make (l_string.count + 10)			
+					Result.append ("(%"")
+					from
+						i := 1
+					until
+						i > l_string.count
+					loop
+						inspect 
+							l_string.item (i)
+						when '%R' then
+							Result.append ("%%R")
+						when '%T' then
+							Result.append ("%%T")
+						when '%"' then
+							Result.append ("%%%"")
+						when '%%' then
+							Result.append ("%%%%")
+						when '%'' then
+							Result.append ("%%%'")
+						when '%N' then
+							Result.append ("%%N")
+						else
+							Result.append_character (l_string.item (i))
+						end
+						
+						i := i + 1
 					end
-					
-					i := i + 1
+					Result.append ("%").to_cil")
+				else
+					Result := l_string
 				end
-				Result.append ("%").to_cil")
 			else
-				Result := l_string
+				Result := "Void"
 			end
 		end
 		
@@ -92,7 +96,7 @@ end -- class CODE_PRIMITIVE_EXPRESSION
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

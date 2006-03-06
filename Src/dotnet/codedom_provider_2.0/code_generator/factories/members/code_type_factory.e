@@ -17,7 +17,7 @@ inherit
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_type (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
-			-- | Check whether `a_source' is expanded or deferred 
+			-- | Check whether `a_source' is expanded or deferred
 			-- | to create instance of `CODE_GENERATED_TYPE' or `EXPANDED_TYPE' or `DEFERRED_TYPE'.
 			-- | Initialize the CODE_TYPE instance with `a_source' -> Call `Initialize_type'
 			-- | Set `current_type' with Void because there is no more current type
@@ -30,18 +30,19 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							(current_namespace = Void implies Resolver.is_generated (Type_reference_factory.type_reference_from_declaration (a_source, Void)))
 		local
 			l_type: CODE_GENERATED_TYPE
+			l_name: STRING
 		do
 			if current_namespace /= Void then
-				Resolver.search (Type_reference_factory.type_reference_from_declaration (a_source, current_namespace.name))
-			else
-				Resolver.search (Type_reference_factory.type_reference_from_declaration (a_source, Void))
+				l_name := current_namespace.name
 			end
+			Resolver.search (Type_reference_factory.type_reference_from_declaration (a_source, l_name))
 			check
 				found: Resolver.found
 			end
 			l_type := Resolver.found_type
 			set_current_type (l_type)
 			initialize_indexing_clause (a_source)
+			initialize_generic_parameters (a_source)
 			initialize_parents (a_source)
 			initialize_features (a_source)
 			set_current_type (Void)
@@ -53,8 +54,6 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 feature {NONE} -- Type generation
 
 	initialize_parents (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
-			-- | Use `eg_types' to set type parents.
-
 			-- Generate type parents from `a_source'.
 		require
 			non_void_source: a_source /= Void
@@ -62,19 +61,37 @@ feature {NONE} -- Type generation
 		local
 			i, l_count: INTEGER
 			l_parents: SYSTEM_DLL_CODE_TYPE_REFERENCE_COLLECTION
+			l_parent: SYSTEM_DLL_CODE_TYPE_REFERENCE
 			l_object_parent: CODE_PARENT
 			l_parent_type: CODE_TYPE_REFERENCE
 		do
 			l_parents := a_source.base_types
+			if a_source.is_partial then
+				-- We need to artificially add the parent to the class
+				-- because ASP.NET doesn't do it. We use a set of preset
+				-- class name prefixes to infer the parent type.
+				if a_source.name.to_lower.starts_with (("master_page_").to_cil) then
+					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.MasterPage").to_cil))
+				elseif a_source.name.to_lower.starts_with (("user_control_").to_cil) then
+					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.UserControl").to_cil))
+				elseif a_source.name.to_lower.starts_with (("mobile_user_control_").to_cil) then
+					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.MobileUserControl").to_cil))
+				else
+					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.Page").to_cil))
+				end
+			end
 			if l_parents /= Void then
 				from
 					l_count := l_parents.count
 				until
 					i = l_count
 				loop
-					l_parent_type := Type_reference_factory.type_reference_from_reference (l_parents.item (i))
-					create l_object_parent.make (l_parent_type)
-					current_type.add_parent (l_object_parent)
+					l_parent := l_parents.item (i)
+					if not l_parent.base_type.to_lower.is_equal ("valuetype") then
+						l_parent_type := Type_reference_factory.type_reference_from_reference (l_parent)
+						create l_object_parent.make (l_parent_type)
+						current_type.add_parent (l_object_parent)
+					end
 					i := i + 1
 				end
 			end
@@ -158,11 +175,51 @@ feature {NONE} -- Type generation
 			current_type.add_indexing_clause (l_indexing_clause)
 		end
 
+	initialize_generic_parameters (a_source: SYSTEM_DLL_CODE_TYPE_DECLARATION) is
+			-- Initialize generic parameters of `current_type' with info of `a_source'.
+		require
+			attached_source: a_source /= Void
+			attached_type: current_type /= Void
+		local
+			l_parameters: SYSTEM_DLL_CODE_TYPE_PARAMETER_COLLECTION
+			l_parameter: SYSTEM_DLL_CODE_TYPE_PARAMETER
+			i, j, l_count, l_count2: INTEGER
+			l_param: CODE_GENERIC_PARAMETER
+			l_constraints: SYSTEM_DLL_CODE_TYPE_REFERENCE_COLLECTION
+		do
+			l_parameters := a_source.type_parameters
+			if l_parameters /= Void then
+				from
+					l_count := l_parameters.count
+				until
+					i = l_count
+				loop
+					l_parameter := l_parameters.item (i)
+					create l_param.make (l_parameter.name)
+					l_param.set_creation_constraint (l_parameter.has_constructor_constraint)
+					l_constraints := l_parameter.constraints
+					if l_constraints /= Void then
+						from
+							l_count2 := l_constraints.count
+							j := 0
+						until
+							j = l_count
+						loop
+							l_param.add_constraint (Type_reference_factory.type_reference_from_reference (l_constraints.item (j)))
+							j := j + 1
+						end
+					end
+					i := i + 1
+					current_type.add_generic_parameter (l_param)
+				end
+			end
+		end
+
 end -- class CODE_TYPE_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

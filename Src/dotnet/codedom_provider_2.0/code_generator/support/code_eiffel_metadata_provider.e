@@ -160,7 +160,6 @@ feature -- Access
 		require
 			non_void_type: a_type /= Void
 		local
-			l_entities: LIST [CONSUMED_ENTITY]
 			l_consumed_type: CONSUMED_TYPE
 		do
 			internal_all_features.search (a_type.full_name)
@@ -170,20 +169,32 @@ feature -- Access
 				check_eac_for_type (a_type)
 				l_consumed_type := cache_reflection.consumed_type (a_type)
 				if l_consumed_type /= Void then
-					l_entities := l_consumed_type.flat_entities
-					l_entities.append (l_consumed_type.constructors)
-					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (l_entities.count)
-					from
-						l_entities.start
-					until
-						l_entities.after
-					loop
-						Result.extend (member_from_entity (l_entities.item, a_type))
-						l_entities.forth
-					end
+					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (200)
+					Result.append (members_from_entities (l_consumed_type.constructors, a_type))
+					Result.append (members_from_entities (l_consumed_type.fields, a_type))
+					Result.append (members_from_entities (l_consumed_type.functions, a_type))
+					Result.append (members_from_entities (l_consumed_type.procedures, a_type))
 				end
 				internal_all_features.put (Result, a_type.full_name)
 			end
+		end
+
+	members_from_entities (a_entities: LIST [CONSUMED_ENTITY]; a_type: SYSTEM_TYPE): LIST [CODE_MEMBER_REFERENCE] is
+			-- Map `a_entities' into a list of member references.
+		require
+			attached_entities: a_entities /= Void
+		do
+			create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (a_entities.count)
+			from
+				a_entities.start
+			until
+				a_entities.after
+			loop
+				Result.extend (member_from_entity (a_entities.item, a_type))
+				a_entities.forth
+			end
+		ensure
+			attached_members: Result /= Void
 		end
 
 	member (a_type: SYSTEM_TYPE; a_name: STRING; a_arguments: NATIVE_ARRAY [SYSTEM_TYPE]): CODE_MEMBER_REFERENCE is
@@ -204,7 +215,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	static_arguments_types (a_caller_type: SYSTEM_TYPE; a_dotnet_feature_name: STRING; a_arguments_types: NATIVE_ARRAY [SYSTEM_TYPE]): NATIVE_ARRAY [SYSTEM_TYPE] is
@@ -374,7 +385,7 @@ end -- class CODE_EIFFEL_METADATA_PROVIDER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

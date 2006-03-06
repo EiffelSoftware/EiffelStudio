@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Generate Eiffel code from a given CodeDom tree"
 	date: "$$"
 	revision: "$$"
@@ -8,7 +8,11 @@ class
 
 inherit
 	SYSTEM_DLL_ICODE_GENERATOR
-	CODE_SHARED_ANALYSIS_CONTEXT
+	CODE_SHARED_ANALYSIS_CONTEXT	
+		rename
+			reset as reset_context
+		end
+
 	CODE_SHARED_GENERATION_CONTEXT
 	CODE_SHARED_EVENT_MANAGER
 	CODE_SHARED_FACTORIES
@@ -50,7 +54,7 @@ feature {NONE} -- Initialization
 			non_void_output: output /= Void
 			output_set: output = a_text_writer
 		end
-		
+
 feature -- Interface
 
 	generate_code_from_compile_unit (a_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
@@ -78,7 +82,7 @@ feature -- Interface
 			Access_mutex.release_mutex
 			Event_manager.process_exception
 		end
-		
+
 	generate_code_from_namespace (a_namespace: SYSTEM_DLL_CODE_NAMESPACE; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_namespace_from_dom'.
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
@@ -154,7 +158,7 @@ feature -- Interface
 		rescue
 			Access_mutex.release_mutex
 			Event_manager.process_exception
-		end		
+		end
 
 	generate_code_from_expression (a_expression: SYSTEM_DLL_CODE_EXPRESSION; a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- | Call `generate_expression_from_dom'
@@ -254,7 +258,7 @@ feature -- Interface
 			end
 			Event_manager.raise_event ({CODE_EVENTS_IDS}.log, ["Ending CodeGenerator.CreateValidIdentifier"])
 		end
-		
+
 	is_valid_identifier (a_value: SYSTEM_STRING): BOOLEAN is
 			-- Is `a_value' a valid identifier?
 		do
@@ -276,16 +280,21 @@ feature -- Interface
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_delegates or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_enums or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_events or
+			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_indexer_properties or		No Generation of indexer properties yet	2.0
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_interfaces or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.declare_value_types or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.entry_point_method or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.generic_type_declaration or	--		2.0
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.generic_type_reference or	-- 		2.0
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.goto_statements or					No Gotos
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.multidimensional_arrays or			No multiple dimensional arrays
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.multiple_interface_members or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.nested_types or
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.parameter_attributes or				No parameter attributes
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.partial_types or --					2.0
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.public_static_members or			No static members
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.reference_parameters or
+					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.resources or --						2.0
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.return_type_attributes or			No return type attributes
 			--		a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.static_constructors or
 					a_flag = {SYSTEM_DLL_GENERATOR_SUPPORT}.try_catch_statements
@@ -328,7 +337,7 @@ feature {NONE} -- Implementation
 			Resolver.reset
 			Name_formatter.reset
 		end
-		
+
 	initialize (a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- Initialize `output' with `a_text_writer'.
 		do
@@ -364,7 +373,7 @@ end -- class CODE_GENERATOR
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

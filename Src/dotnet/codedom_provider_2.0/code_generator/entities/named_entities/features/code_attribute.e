@@ -25,6 +25,10 @@ feature -- Access
 			create Result.make (100)
 			increase_tabulation
 			Result.append (indent_string)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+				Result.append (Line_return)
+			end
 			if is_frozen then
 				Result.append ("frozen ")
 			end
@@ -36,18 +40,18 @@ feature -- Access
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_return_type, ["Attribute " + name + " (" + eiffel_name + ")"])
 				Result.append ("ANY")
 			end
-			Result.append_character ('%N')			
+			Result.append (Line_return)
 			Result.append (comments_code)
 			Result.append (indexing_clause)
 			decrease_tabulation
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 end -- class CODE_ATTRIBUTE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

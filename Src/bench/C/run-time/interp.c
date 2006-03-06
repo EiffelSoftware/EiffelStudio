@@ -241,7 +241,7 @@ rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop);
+rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured);
 rt_private int icall(int fid, int stype, int ptype);					/* Interpreter dispatcher (in water) */
 rt_private int ipcall(int32 origin, int32 offset, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
@@ -4126,12 +4126,13 @@ rt_private void eif_interp_bit_operations (void)
  * Function calling routines
  */
 
-rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop)
+rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured)
 						/* Feature ID or offset if the feature is precompiled */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
 						/* Precompiled ? (0=no, other=yes) */
 						/* Is the call performed on a basic type? (INTEGER...) */
+						/* return in `exception_occured' if an exception occurred */
 	{
 	/* This is the debugger dispatcher for routine calls. It is called when
 	 * the user want to dynamically evaluate a feature. Depending on the
@@ -4166,6 +4167,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 	RTLXD;
 
 	RTLXL;
+	*exception_occured = 0;
 	dstart();
 	SAVE(db_stack, dcur, dtop);
 	SAVE(op_stack, scur, stop);
@@ -4187,6 +4189,13 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 
 	excatch(&exenv);
 	if (setjmp(exenv)) {
+		*exception_occured = 1;
+		result = (struct item*) malloc (sizeof (struct item));
+		memset (result, 0, sizeof(struct item));	
+		result->type = SK_STRING;
+		result->it_ref = (char*) stack_trace_str();
+		result->it_addr = NULL;
+
 		RESTORE(op_stack,scur,stop);
 		RESTORE(db_stack,dcur,dtop);
 		dpop();
@@ -4199,7 +4208,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_precompiled, int 
 		tagval = stagval;
 		in_assertion = saved_assertion; /* Corresponds to RTED */
 		exclear ();
-		return NULL;
+		return result;
 	}
 
 	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */

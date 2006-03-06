@@ -68,6 +68,7 @@ EIF_PROC set_ref;
 EIF_PROC set_pointer;
 EIF_PROC set_bits;
 EIF_PROC set_error;
+EIF_PROC set_exception_trace;
 EIF_PROC set_void;
 
 #ifdef EIF_WINDOWS
@@ -187,43 +188,53 @@ rt_public void c_recv_value (EIF_OBJ target)
 	if (-1 != recv_packet (readfd (sp), &pack)) {
 #endif
 		if (pack.rq_type == DUMPED) {
-			if (pack.rq_dump.dmp_type == DMP_ITEM) {
-				item = *pack.rq_dump.dmp_item;
-				type_flag = item.type;
-				switch (type_flag & SK_HEAD) {
-					case SK_BOOL: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char); return;
-					case SK_CHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char); return;
-					case SK_WCHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar); return;
-					case SK_UINT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_8)) set_natural_8) (eif_access (target), item.it_uint8); return;
-					case SK_UINT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_16)) set_natural_16) (eif_access (target), item.it_uint16); return;
-					case SK_UINT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_32)) set_natural_32) (eif_access (target), item.it_uint32); return;
-					case SK_UINT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_64)) set_natural_64) (eif_access (target), item.it_uint64); return;
-					case SK_INT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8); return;
-					case SK_INT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16); return;
-					case SK_INT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32); return;
-					case SK_INT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64); return;
-					case SK_REAL32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32); return;
-					case SK_REAL64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64); return;
-					case SK_POINTER: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr); return;
-					case SK_REF:
-					case SK_EXP:
+			switch (pack.rq_dump.dmp_type) {
+				case DMP_EXCEPTION_TRACE:
+					item = *pack.rq_dump.dmp_item;
+					type_flag = item.type;
+					(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_exception_trace)
+							(eif_access (target), RTMS(item.it_ref));
+					return;
+				case DMP_ITEM:
+					item = *pack.rq_dump.dmp_item;
+					type_flag = item.type;
+					switch (type_flag & SK_HEAD) {
+						case SK_BOOL: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN)) set_bool) (eif_access (target), item.it_char); return;
+						case SK_CHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char); return;
+						case SK_WCHAR: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar); return;
+						case SK_UINT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_8)) set_natural_8) (eif_access (target), item.it_uint8); return;
+						case SK_UINT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_16)) set_natural_16) (eif_access (target), item.it_uint16); return;
+						case SK_UINT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_32)) set_natural_32) (eif_access (target), item.it_uint32); return;
+						case SK_UINT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_NATURAL_64)) set_natural_64) (eif_access (target), item.it_uint64); return;
+						case SK_INT8: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8); return;
+						case SK_INT16: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16); return;
+						case SK_INT32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32); return;
+						case SK_INT64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64); return;
+						case SK_REAL32: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32); return;
+						case SK_REAL64: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64); return;
+						case SK_POINTER: (FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr); return;
+						case SK_REF:
+						case SK_EXP:
 //						if ((type_flag & (EO_SPEC | EO_TUPLE)) == EO_SPEC) {
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
-								(eif_access (target), item.it_ref, type_flag & SK_DTYPE);
-							/* reference and dynamic type */
-						return;
-					case SK_BIT:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_bits) (eif_access (target),
-							item.it_ref, type_flag & SK_BMASK);
-							/* reference and number of bits */
-						return;
-					default:
-						break;
-				}
-			} else if (pack.rq_dump.dmp_type == DMP_VOID) {
-				/* No more values to be received */
-				(FUNCTION_CAST(void, (EIF_REFERENCE)) set_void) (eif_access (target));
-				return;
+							(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_ref)
+									(eif_access (target), item.it_ref, type_flag & SK_DTYPE);
+								/* reference and dynamic type */
+							return;
+						case SK_BIT:
+							(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) set_bits) (eif_access (target),
+								item.it_ref, type_flag & SK_BMASK);
+								/* reference and number of bits */
+							return;
+						default:
+							break;
+					}
+					break;
+				case DMP_VOID:
+					/* No more values to be received */
+					(FUNCTION_CAST(void, (EIF_REFERENCE)) set_void) (eif_access (target));
+					return;
+				default:
+					break;
 			}
 		} else {
 			request_dispatch (pack);
@@ -251,6 +262,7 @@ rt_public void c_pass_recv_routines (
 	EIF_PROC d_point,
 	EIF_PROC d_bits,
 	EIF_PROC d_error,
+	EIF_PROC d_exception_trace,
 	EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
@@ -273,6 +285,7 @@ rt_public void c_pass_recv_routines (
 	set_pointer = d_point;
 	set_bits = d_bits;
 	set_error = d_error;
+	set_exception_trace = d_exception_trace;
 	set_void = d_void;
 }
 

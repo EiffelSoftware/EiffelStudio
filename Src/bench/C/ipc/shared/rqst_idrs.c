@@ -114,6 +114,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ APPLICATION_CWD, idr_void },
 	{ OVERFLOW_DETECT, idr_Opaque },
 	{ CHANGE_THREAD, idr_Opaque },
+	{ EWB_SET_ASSERTION_CHECK, idr_Opaque },
 };
 
 /*
@@ -240,6 +241,7 @@ rt_private bool_t idr_Dumped (IDR *idrs, void *ext)
 				&& idr_int (idrs, &exv->exu.exua.exua_from)
 				&& idr_eif_reference (idrs, &exv->exu.exua.exua_oid);
 		}
+	case DMP_EXCEPTION_TRACE:
 	case DMP_ITEM:
 		exi = dum -> dmpu.dmpu_item;
 		if ((exi != last_exi) && (last_exi)) {

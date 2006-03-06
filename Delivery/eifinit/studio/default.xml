@@ -130,6 +130,9 @@
 	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.features_tool.is_signature_enabled" DESCRIPTION="Display signature ?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.features_tool.is_alias_enabled" DESCRIPTION="Display alias name ?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.features_tool.is_assigner_enabled" DESCRIPTION="Display assigner command ?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.is_maximized" HIDDEN="true" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>

@@ -63,16 +63,17 @@ feature	-- Access
 			create Result.make (1024)
 			Result.append_character ('%T')
 			Result.append (type)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 			Result.append (renames_code)
 			Result.append (exports_code)
 			Result.append (undefines_code)
 			Result.append (redefines_code)
 			Result.append (selects_code)
 			if undefines /= Void or redefines /= Void or renames /= Void or exports /= Void then
-				Result.append ("%T%Tend%N")
+				Result.append ("%T%Tend")
+				Result.append (Line_return)
 			end
-			Result.append ("%N")
+			Result.append (Line_return)
 		end
 	
 	renames_code: STRING is
@@ -82,7 +83,8 @@ feature	-- Access
 		do
 			create Result.make (1024)
 			if renames /= Void then
-				Result.append ("%T%Trename%N")
+				Result.append ("%T%Trename")
+				Result.append (Line_return)
 				from
 					renames.start
 					if not renames.after then
@@ -96,14 +98,15 @@ feature	-- Access
 				until
 					renames.after
 				loop
-					Result.append (",%N")
+					Result.append (",")
+					Result.append (Line_return)
 					Result.append ("%T%T%T")
 					Result.append (l_rename.routine_name)
 					Result.append (" as ")
 					Result.append (l_rename.target_name)
 					renames.forth
 				end
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			end
 		ensure
 			attached_code: Result /= Void
@@ -118,7 +121,8 @@ feature	-- Access
 		do
 			create Result.make (1024)
 			if exports /= Void then
-				Result.append ("%T%Texport%N")
+				Result.append ("%T%Texport")
+				Result.append (Line_return)
 				from
 					exports.start
 				until
@@ -142,7 +146,7 @@ feature	-- Access
 					end
 					Result.append ("} ")
 					Result.append (l_export.routine_name)
-					Result.append_character ('%N')
+					Result.append (Line_return)
 					exports.forth
 				end
 			end
@@ -197,18 +201,21 @@ feature {NONE} -- Implementation
 				from
 					a_clauses.start
 					if not a_clauses.after then
-						Result.append ("%N%T%T%T")
+						Result.append (Line_return)
+						Result.append ("%T%T%T")
 						Result.append (a_clauses.item.routine_name)
 						a_clauses.forth
 					end	
 				until
 					a_clauses.after
 				loop
-					Result.append (",%N%T%T%T")
+					Result.append (",")
+					Result.append (Line_return)
+					Result.append ("%T%T%T")
 					Result.append (a_clauses.item.routine_name)
 					a_clauses.forth
 				end
-				Result.append_character ('%N')
+				Result.append (Line_return)
 			end
 		ensure
 			attached_code: Result /= Void
@@ -226,7 +233,7 @@ end -- class CODE_SNIPPET_PARENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

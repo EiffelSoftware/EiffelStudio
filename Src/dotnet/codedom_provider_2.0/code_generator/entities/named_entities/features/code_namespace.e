@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_IMPORTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -25,8 +30,6 @@ feature {NONE} -- Initialization
 
 			-- Initialize attributes.
 		do
-			create {ARRAYED_LIST [STRING]} imports.make (5)
-			imports.compare_objects
 			create {ARRAYED_LIST [CODE_GENERATED_TYPE]} types.make (128)
 			set_name (a_name)
 		ensure
@@ -36,9 +39,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	imports: LIST [STRING]
-			-- Imported namespaces
 
 	types: LIST [CODE_GENERATED_TYPE]
 			-- Namespace types

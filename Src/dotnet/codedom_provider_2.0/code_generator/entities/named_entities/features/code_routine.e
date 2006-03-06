@@ -87,31 +87,45 @@ feature -- Access
 			increase_tabulation
 			create Result.make (1000)
 			Result.append (signature)
-			Result.append (" is%N")
+			Result.append (" is")
+			Result.append (Line_return)
 			Result.append (comments_code)
 			increase_tabulation
 			Result.append (indexing_clause)
 			Result.append (locals_code)
 			Result.append (indent_string)
 			if is_once_routine then
-				Result.append ("once%N")
+				Result.append ("once")
+				Result.append (Line_return)
 			elseif is_deferred then
-				Result.append ("deferred%N")
+				Result.append ("deferred")
+				Result.append (Line_return)
 			else
-				Result.append ("do%N")
+				Result.append ("do")
+				Result.append (Line_return)
+			end
+			if line_pragma /= Void then
+				increase_tabulation
+				increase_tabulation
+				Result.append (line_pragma.code)
+				decrease_tabulation
+				decrease_tabulation
 			end
 			l_creation_routine ?= Current
 			if l_creation_routine /= Void then
 				increase_tabulation
 				Result.append (indent_string)
-				Result.append ("if not constructor_called then%N")
+				Result.append ("if not constructor_called then")
+				Result.append (Line_return)
 				increase_tabulation
 				Result.append (indent_string)
-				Result.append ("constructor_called := True%N")
+				Result.append ("constructor_called := True")
+				Result.append (Line_return)
 				Result.append (body)
 				decrease_tabulation
 				Result.append (indent_string)
-				Result.append ("end%N")
+				Result.append ("end")
+				Result.append (Line_return)
 				decrease_tabulation
 			else
 				increase_tabulation
@@ -119,7 +133,9 @@ feature -- Access
 				decrease_tabulation
 			end
 			Result.append (indent_string)
-			Result.append ("end%N%N")
+			Result.append ("end")
+			Result.append (Line_return)
+			Result.append (Line_return)
 			decrease_tabulation
 			decrease_tabulation
 		end
@@ -266,7 +282,7 @@ feature {NONE} -- Implementation
 		require
 			in_code_generation: current_state = Code_generation
 		local
-			l_need_dummy: BOOLEAN
+			l_need_dummy, l_local_generated: BOOLEAN
 		do
 			create Result.make (1000)
 			
@@ -282,19 +298,24 @@ feature {NONE} -- Implementation
 
 			if l_need_dummy then
 				Result.append (indent_string)
-				Result.append ("local%N")
+				Result.append ("local")
+				Result.append (Line_return)
 				increase_tabulation
 				Result.append (indent_string)
-				Result.append ("res: SYSTEM_OBJECT%N")
+				Result.append ("res: SYSTEM_OBJECT")
+				Result.append (Line_return)
 				decrease_tabulation
+				l_local_generated := True
 			end
 
 			from
 				locals.start
 				if not locals.after then
-					if not l_need_dummy then
+					if not l_local_generated then
 						Result.append (indent_string)
-						Result.append ("local%N")				
+						Result.append ("local")				
+						Result.append (Line_return)
+						l_local_generated := True
 					end
 					increase_tabulation
 					Result.append (locals.item.declaration_code)
@@ -311,19 +332,23 @@ feature {NONE} -- Implementation
 			end
 			from
 				snippet_locals.start
-				if not snippet_locals.after and locals.count = 0 then
-					Result.append (indent_string)
-					Result.append ("local%N")
+				if not snippet_locals.after then
+					if not l_local_generated then
+						Result.append (indent_string)
+						Result.append ("local")				
+						Result.append (Line_return)
+						l_local_generated := True
+					end
 					increase_tabulation
 					Result.append (snippet_locals.item.code)
-					Result.append_character ('%N')
+					Result.append (Line_return)
 					snippet_locals.forth
 				end
 			until
 				snippet_locals.after
 			loop
 				Result.append (snippet_locals.item.code)
-				Result.append_character ('%N')
+				Result.append (Line_return)
 				snippet_locals.forth
 			end
 			if snippet_locals.count > 0 then
@@ -332,16 +357,18 @@ feature {NONE} -- Implementation
 			from
 				generated_locals.start
 				if not generated_locals.after then
-					if locals.count = 0 and snippet_locals.count = 0 then
-	 					Result.append (indent_string)
-						Result.append ("local%N")
+					if not l_local_generated then
+						Result.append (indent_string)
+						Result.append ("local")				
+						Result.append (Line_return)
+						l_local_generated := True
 					end
 					increase_tabulation
 					Result.append (indent_string)
 					Result.append (generated_locals.key_for_iteration)
 					Result.append (": ")
 					Result.append (generated_locals.item_for_iteration.eiffel_name)
-					Result.append_character ('%N')
+					Result.append (Line_return)
 					generated_locals.forth
 				end
 			until
@@ -351,7 +378,7 @@ feature {NONE} -- Implementation
 				Result.append (generated_locals.key_for_iteration)
 				Result.append (": ")
 				Result.append (generated_locals.item_for_iteration.eiffel_name)
-				Result.append_character ('%N')
+				Result.append (Line_return)
 				generated_locals.forth
 			end
 			if generated_locals.count > 0 then
@@ -397,7 +424,7 @@ feature {NONE} -- Implementation
 		do
 			Result := "l_def_value_"
 			default_value_variable_count.set_item (default_value_variable_count.item + 1)
-			Result.append (default_variable_count.out)
+			Result.append (default_value_variable_count.out)
 		end
 
 	cast_variable_count: INTEGER_REF is
@@ -406,7 +433,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 		
-	default_variable_count: INTEGER_REF is
+	default_value_variable_count: INTEGER_REF is
 			-- Default value variable counter
 		once
 			create Result
@@ -433,7 +460,7 @@ end -- class CODE_ROUTINE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

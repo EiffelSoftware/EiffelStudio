@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -30,36 +35,63 @@ feature -- Access
 			-- Ace file content
 		do
 			create Result.make (4096)
-			Result.append ("system%N%T%"")
+			Result.append ("system")
+			Result.append (Line_return)
+			Result.append ("%T%"")
 			Result.append (system_name)
-			Result.append ("%"%N%Nroot%N%T")
+			Result.append ("%"")
+			Result.append (Line_return)
+			Result.append (Line_return)
+			Result.append ("root")
+			Result.append (Line_return)
+			Result.append ("%T")
 			Result.append (root_class_name)
 			if root_creation_routine_name /= Void then
 				Result.append (": ")
 				Result.append (root_creation_routine_name)
 			end
-			Result.append ("%N%Ndefault%N%Tmsil_generation (yes)%N%Tuse_cluster_name_as_namespace (no)%N%T")
-			Result.append ("use_all_cluster_name_as_namespace (yes)%N%Tdotnet_naming_convention (yes)%N%T")
+			Result.append (Line_return)
+			Result.append (Line_return)
+			Result.append ("default")
+			Result.append (Line_return)
+			Result.append ("%Tmsil_generation (yes)")
+			Result.append (Line_return)
+			Result.append ("%Tuse_cluster_name_as_namespace (no)")
+			Result.append (Line_return)
+			Result.append ("%T")
+			Result.append ("use_all_cluster_name_as_namespace (yes)")
+			Result.append (Line_return)
+			Result.append ("%Tdotnet_naming_convention (yes)")
+			Result.append (Line_return)
+			Result.append ("%T")
 			Result.append ("console_application (")
 			if is_console_application then
 				Result.append ("yes")
 			else
 				Result.append ("no")
 			end
-			Result.append (")%N%Tmsil_generation_type (%"")
+			Result.append (")")
+			Result.append (Line_return)
+			Result.append ("%Tmsil_generation_type (%"")
 			if is_console_application then
 				Result.append ("exe")
 			else
 				Result.append ("dll")
 			end
-			Result.append ("%")%N%T")
+			Result.append ("%")")
+			Result.append (Line_return)
+			Result.append ("%T")
 			Result.append ("msil_clr_version (%"")
 			Result.append (target_clr_version)
-			Result.append ("%")%N%T")
+			Result.append ("%")")
+			Result.append (Line_return)
+			Result.append ("%T")
 			if metadata_cache_path /= Void then
 				Result.append ("metadata_cache_path (%"")
 				Result.append (metadata_cache_path)
-				Result.append ("%")%N%T")
+				Result.append ("%")")
+				Result.append (Line_return)
+				Result.append ("%T")
 			end
 			Result.append ("line_generation (")
 			if generate_debug_info then
@@ -68,11 +100,20 @@ feature -- Access
 				Result.append ("no")
 			end
 			if precompile /= Void then
-				Result.append (")%N%Tprecompiled (%"")
+				Result.append (")")
+				Result.append (Line_return)
+				Result.append ("%Tprecompiled (%"")
 				Result.append (precompile)
-				Result.append ("%")%N%Tmsil_use_optimized_precompile (yes")
+				Result.append ("%")")
+				Result.append (Line_return)
+				Result.append ("%Tmsil_use_optimized_precompile (yes")
 			end
-			Result.append (")%N%Ncluster%N%T")
+			Result.append (")")
+			Result.append (Line_return)
+			Result.append (Line_return)
+			Result.append ("cluster")
+			Result.append (Line_return)
+			Result.append ("%T")
 			from
 				clusters.start
 				if not clusters.after then
@@ -82,11 +123,17 @@ feature -- Access
 			until
 				clusters.after
 			loop
-				Result.append ("%N%N%T")
+				Result.append (Line_return)
+				Result.append (Line_return)
+				Result.append ("%T")
 				Result.append (clusters.item.code)
 				clusters.forth
 			end
-			Result.append ("%N%Nassembly%N%T")
+			Result.append (Line_return)
+			Result.append (Line_return)
+			Result.append ("assembly")
+			Result.append (Line_return)
+			Result.append ("%T")
 			from
 				assemblies.start
 				if not assemblies.after then
@@ -96,11 +143,15 @@ feature -- Access
 			until
 				assemblies.after
 			loop
-				Result.append ("%N%N%T")
+				Result.append (Line_return)
+				Result.append (Line_return)
+				Result.append ("%T")
 				Result.append (assemblies.item.code)
 				assemblies.forth
 			end
-			Result.append ("%N%Nend")
+			Result.append (Line_return)
+			Result.append (Line_return)
+			Result.append ("end")
 		end
 	
 	system_name: STRING
@@ -276,7 +327,7 @@ end -- class CODE_ACE_FILE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -1,8 +1,8 @@
 indexing
 	description: "Eiffel representation of a CodeDom comment statement"
 	date: "$$"
-	revision: "$$"	
-	
+	revision: "$$"
+
 class
 	CODE_COMMENT_STATEMENT
 
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		ensure
 			comment_set: comment = a_comment
 		end
-		
+
 feature -- Access
 
 	comment: CODE_COMMENT
@@ -33,7 +33,11 @@ feature -- Access
 			-- | Result := "`comment'"
 			-- Eiffel code of comment statement
 		do
-			Result := comment.code
+			create Result.make (250)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
+			Result.append (comment.code)
 		end
 
 	need_dummy: BOOLEAN is
@@ -41,7 +45,7 @@ feature -- Access
 		do
 			Result := False
 		end
-		
+
 invariant
 	non_void_comment: comment /= Void
 
@@ -49,7 +53,7 @@ end -- class CODE_COMMENT_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

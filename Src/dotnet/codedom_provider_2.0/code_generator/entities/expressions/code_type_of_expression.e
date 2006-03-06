@@ -40,18 +40,14 @@ feature -- Access
 			-- Type of expression target
 			
 	code: STRING is
-			-- | Result := "{SYSTEM_TYPE}.get_type_string (type)"
+			-- | Result := "{TYPE_NAME}"
 			-- | Result C# := "typeof(`type_name')"
 			-- Eiffel code of `type of' expression
 		do
 			create Result.make (120)
-			Result.append ("{SYSTEM_TYPE}.get_type (%"")
-			if not Resolver.is_generated (target) then
-				Result.append (target.dotnet_type.full_name)
-			else
-				Result.append (target.name)
-			end
-			Result.append ("%")")
+			Result.append ("{")
+			Result.append (target.eiffel_name)
+			Result.append ("}")
 		end
 		
 feature -- Status Report
@@ -69,7 +65,7 @@ end -- class CODE_TYPE_OF_EXPRESSION
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

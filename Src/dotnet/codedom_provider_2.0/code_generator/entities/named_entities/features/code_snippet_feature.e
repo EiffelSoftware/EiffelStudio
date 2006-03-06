@@ -39,9 +39,12 @@ feature -- Access
 	code: STRING is
 			-- Eiffel code of snippet feature
 		do
-			create Result.make (value.count + 1)
+			create Result.make (value.count + 250)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (value)
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 invariant
@@ -51,7 +54,7 @@ end -- class CODE_SNIPPET_FEATURE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

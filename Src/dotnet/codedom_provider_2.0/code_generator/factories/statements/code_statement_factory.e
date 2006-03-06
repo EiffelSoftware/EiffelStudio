@@ -31,6 +31,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			l_array_indexer_expr: CODE_ARRAY_INDEXER_EXPRESSION
 			l_target: CODE_EXPRESSION
 			l_assignment_type: INTEGER
+			l_statement: CODE_ASSIGN_STATEMENT
 		do
 			if a_source.left /= Void then
 				if a_source.right /= Void then
@@ -55,8 +56,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							end
 						end
 					end
-					code_dom_generator.generate_expression_from_dom (a_source.right)			
-					set_last_statement (create {CODE_ASSIGN_STATEMENT}.make (l_target, last_expression, l_assignment_type))
+					code_dom_generator.generate_expression_from_dom (a_source.right)
+					create l_statement.make (l_target, last_expression, l_assignment_type)
+					if a_source.line_pragma /= Void then
+						l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+					end
+					set_last_statement (l_statement)
 				else
 					Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_assignment_source, [current_context])
 				end
@@ -70,9 +75,15 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
+		local
+			l_statement: CODE_COMMENT_STATEMENT
 		do
 			if a_source.comment /= Void and then a_source.comment.text /= Void then
-				set_last_statement (create {CODE_COMMENT_STATEMENT}.make (create {CODE_COMMENT}.make (a_source.comment.text, not a_source.comment.doc_comment)))
+				create l_statement.make (create {CODE_COMMENT}.make (a_source.comment.text, not a_source.comment.doc_comment))
+				if a_source.line_pragma /= Void then
+					l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+				end
+				set_last_statement (l_statement)
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_comment_text, [current_context])
 				set_last_statement (Void)
@@ -85,11 +96,16 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_true_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION
+			l_statement: CODE_CONDITION_STATEMENT
 		do
 			if a_source.condition /= Void then
 				l_true_statements := a_source.true_statements
 				code_dom_generator.generate_expression_from_dom (a_source.condition)
-				set_last_statement (create {CODE_CONDITION_STATEMENT}.make (last_expression, statements_from_collection (l_true_statements), statements_from_collection (a_source.false_statements)))
+				create l_statement.make (last_expression, statements_from_collection (l_true_statements), statements_from_collection (a_source.false_statements))
+				if a_source.line_pragma /= Void then
+					l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+				end
+				set_last_statement (l_statement)
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_condition, [current_context])
 				set_last_statement (Void)
@@ -100,10 +116,16 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
+		local
+			l_statement: CODE_EXPRESSION_STATEMENT
 		do
 			if a_source.expression /= Void then
 				code_dom_generator.generate_expression_from_dom (a_source.expression)
-				set_last_statement (create {CODE_EXPRESSION_STATEMENT}.make (last_expression))
+				create l_statement.make (last_expression)
+				if a_source.line_pragma /= Void then
+					l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+				end
+				set_last_statement (l_statement)
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_expression, [current_context])
 				set_last_statement (Void)
@@ -116,6 +138,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_init_statement, l_increment_statement: CODE_STATEMENT
+			l_statement: CODE_ITERATION_STATEMENT
 		do
 			if a_source.test_expression /= Void then
 				if a_source.init_statement /= Void then
@@ -127,7 +150,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_increment_statement := last_statement
 				end
 				code_dom_generator.generate_expression_from_dom (a_source.test_expression)
-				set_last_statement (create {CODE_ITERATION_STATEMENT}.make (l_init_statement, last_expression, statements_from_collection (a_source.statements), l_increment_statement))
+				create l_statement.make (l_init_statement, last_expression, statements_from_collection (a_source.statements), l_increment_statement)
+				if a_source.line_pragma /= Void then
+					l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+				end
+				set_last_statement (l_statement)
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_test_expression, [current_context])
 				set_last_statement (Void)
@@ -138,10 +165,16 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Initialize `last_statement' with `a_source'.
 		require
 			non_void_source: a_source /= Void
+		local
+			l_statement: CODE_METHOD_RETURN_STATEMENT
 		do
 			if a_source.expression /= Void then
 				code_dom_generator.generate_expression_from_dom (a_source.expression)
-				set_last_statement (create {CODE_METHOD_RETURN_STATEMENT}.make (last_expression))
+				create l_statement.make (last_expression)
+				if a_source.line_pragma /= Void then
+					l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+				end
+				set_last_statement (l_statement)
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_return_expression, [current_context])
 				set_last_statement (Void)
@@ -154,6 +187,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_head, l_value: STRING
+			l_statement: CODE_STATEMENT
 		do
 			if a_source.value /= Void then
 				l_value := a_source.value
@@ -172,13 +206,25 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							-- through a call to `code_generator.generate_code_from_statement'
 							code_dom_generator.generate_statement_from_dom (partial_tree_store.found_statement)
 						else
-							set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
+							create {CODE_SNIPPET_STATEMENT} l_statement.make (l_value) 
+							if a_source.line_pragma /= Void then
+								l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+							end
+							set_last_statement (l_statement)
 						end
 					else
-						set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
+						create {CODE_SNIPPET_STATEMENT} l_statement.make (l_value)
+						if a_source.line_pragma /= Void then
+							l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+						end
+						set_last_statement (l_statement)
 					end
 				else
-					set_last_statement (create {CODE_SNIPPET_STATEMENT}.make (l_value))
+					create {CODE_SNIPPET_STATEMENT} l_statement.make (l_value)
+					if a_source.line_pragma /= Void then
+						l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+					end
+					set_last_statement (l_statement)
 				end
 			else
 				Event_manager.raise_event ({CODE_EVENTS_IDS}.Missing_snippet_value, [current_context])
@@ -194,13 +240,18 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		local
 			l_variable: CODE_VARIABLE_REFERENCE
 			l_init_expression: CODE_EXPRESSION
+			l_statement: CODE_VARIABLE_DECLARATION_STATEMENT
 		do
 			create l_variable.make (a_source.name, Type_reference_factory.type_reference_from_reference (a_source.type), Type_reference_factory.type_reference_from_code (current_type))
 			if a_source.init_expression /= Void then
 				code_dom_generator.generate_expression_from_dom (a_source.init_expression)
 				l_init_expression := last_expression
 			end
-			set_last_statement (create {CODE_VARIABLE_DECLARATION_STATEMENT}.make (l_variable, l_init_expression))
+			create l_statement.make (l_variable, l_init_expression)
+			if a_source.line_pragma /= Void then
+				l_statement.set_line_pragma (create {CODE_LINE_PRAGMA}.make (a_source.line_pragma))
+			end
+			set_last_statement (l_statement)
 		ensure
 			non_void_last_statement: last_statement /= Void
 		end
@@ -276,7 +327,7 @@ end -- class CODE_STATEMENT_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

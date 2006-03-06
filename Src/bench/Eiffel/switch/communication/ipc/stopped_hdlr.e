@@ -251,10 +251,12 @@ feature {NONE} -- Implementation
 	execution_stopped_on_exception (excep_code: INTEGER): BOOLEAN is
 		do
 			Result := Application.exceptions_handler.exception_catched_by_code (excep_code)
-			if Result then
-				print ("Catch exception: " + excep_code.out + "%N")
-			else
-				print ("Ignore exception: " + excep_code.out + "%N")
+			debug ("debugger_trace")
+				if Result then
+					print ("Catch exception: " + excep_code.out + "%N")
+				else
+					print ("Ignore exception: " + excep_code.out + "%N")
+				end
 			end
 		end
 

@@ -47,9 +47,13 @@ feature -- Access
 			Result.append (path)
 			Result.append_character ('"')
 			if assembly_prefix /= Void and then not assembly_prefix.is_empty then
-				Result.append ("%N%T%Tprefix%N%T%T%T")
+				Result.append (Line_return)
+				Result.append ("%T%Tprefix")
+				Result.append (Line_return)
+				Result.append ("%T%T%T")
 				Result.append (assembly_prefix)
-				Result.append ("%N%T%Tend")
+				Result.append (Line_return)
+				Result.append ("%T%Tend")
 			end
 		end
 		
@@ -60,7 +64,7 @@ end -- class CODE_ACE_ASSEMBLY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

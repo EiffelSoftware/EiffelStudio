@@ -85,7 +85,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		do
-			set_last_compile_unit (create {CODE_SNIPPET_COMPILE_UNIT}.make (a_source.value))
+			set_last_compile_unit (create {CODE_SNIPPET_COMPILE_UNIT}.make (a_source))
 		ensure
 			non_void_compile_unit: last_compile_unit /= Void
 		end
@@ -166,10 +166,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					else
 						create {CODE_GENERATED_TYPE} l_generated_type.make (l_type_reference)
 					end
+					l_generated_type.set_partial (l_type.is_partial)
 					Resolver.add_generated_type (l_generated_type)
 					i := i + 1
 				end
-				
+
 				-- Then process generated types and put result in generated namespace
 				from
 					i := 0
@@ -180,7 +181,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_namespace.types.extend (last_type)
 					i := i + 1
 				end
-				
+
 				-- Finally check for rename clauses, this needs to be done after the generation is complete
 				-- as we need the class hierarchy
 				from
@@ -240,15 +241,15 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			rename_counter_cell.set_item (rename_counter_cell.item + 1)
 			Result := rename_counter_cell.item
 		end
-	
+
 	rename_counter_cell: INTEGER_REF
 			-- Cell for counter
-		
+
 end -- class CODE_EIFFEL_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

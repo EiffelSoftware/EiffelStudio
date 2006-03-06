@@ -42,7 +42,7 @@ feature -- Access
 				Result.append ("| ")
 			end
 			Result.append (text)
-			Result.append ("%N")
+			Result.append (Line_return)
 		end
 
 feature -- Status Report
@@ -57,7 +57,7 @@ end -- class CODE_COMMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -1,5 +1,5 @@
 indexing
-	description: "Node for normal class type."
+	description: "Node for normal class type. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,8 +10,8 @@ class CLASS_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
-			has_formal_generic, has_like, is_loose,
-			is_equivalent, first_token, last_token
+			is_equivalent, start_location, end_location,
+			first_token, last_token
 		end
 
 	CLICKABLE_AST
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			internal_generics := g
 		ensure
 			class_name_set: class_name.is_equal (n.as_upper)
-			generics_set: generics = g
+			internal_generics_set: internal_generics = g
 		end
 
 feature -- Visitor
@@ -77,9 +77,7 @@ feature -- Roundtrip
 	separate_keyword: KEYWORD_AS
 			-- Keyword "separate" associated with this structure.	
 
-feature -- Roundtrip
-
-	internal_generics: TYPE_LIST_AS
+	internal_generics: like generics
 			-- Internal possible generical parameters
 
 feature -- Roundtrip/Token
@@ -91,9 +89,7 @@ feature -- Roundtrip/Token
 				if a_list = Void then
 					Result := class_name.first_token (a_list)
 				else
-					if lcurly_symbol /= Void then
-						Result := lcurly_symbol.first_token (a_list)
-					elseif expanded_keyword /= Void then
+					if expanded_keyword /= Void then
 						Result := expanded_keyword.first_token (a_list)
 					elseif separate_keyword /= Void then
 						Result := separate_keyword.first_token (a_list)
@@ -112,11 +108,7 @@ feature -- Roundtrip/Token
 					if generics /= Void then
 						Result := generics.last_token (a_list)
 					else
-						if rcurly_symbol /= Void then
-							Result := rcurly_symbol.last_token (a_list)
-						else
-							Result := class_name.last_token (a_list)
-						end
+						Result := class_name.last_token (a_list)
 					end
 				else
 					if internal_generics /= Void then
@@ -136,56 +128,6 @@ feature -- Comparison
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (generics, other.generics) and then
 				is_expanded = other.is_expanded
-		end
-
-feature -- Access
-
-	has_like: BOOLEAN is
-			-- Does the type have anchored type in its definition ?
-		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_like
-					generics.forth
-				end
-			end
-		end
-
-	has_formal_generic: BOOLEAN is
-			-- Has type a formal generic parameter?
-		do
-			if generics /= Void then
-				from
-					generics.start
-				until
-					generics.after or else Result
-				loop
-					Result := generics.item.has_formal_generic
-					generics.forth
-				end
-			end
-		end
-
-	is_loose: BOOLEAN is
-			-- Does type depend on formal generic parameters and/or anchors?
-		local
-			g: like generics
-		do
-			g := generics
-			if g /= Void then
-				from
-					g.start
-				until
-					g.after or else Result
-				loop
-					Result := g.item.is_loose
-					g.forth
-				end
-			end
 		end
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
@@ -214,12 +156,6 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s
-		end
-
-	set_generics (g: like generics) is
-			-- Assign `g' to `generics'.
-		do
-			internal_generics := g
 		end
 
 	dump: STRING is
@@ -266,7 +202,7 @@ indexing
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			 Eiffel Software

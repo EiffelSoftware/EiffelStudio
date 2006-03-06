@@ -162,17 +162,25 @@ feature -- Implementation
 					debug ("debugger_ipc")
 						print ("### Result of type["+ l_type.out +" ~ 0x"+l_type.to_hex_string+"] ?%N")
 					end
-					c_recv_value (Current)
-					Result := item
-					clear_item
-					last_result := Result
-					if Result /= Void then
-						Result.set_name (once_routine.feature_name)
-						Result.set_hector_addr
-					else
+					recv_value (Current)
+					if is_exception_trace then
 						create err_v.make_with_name (once_routine.feature_name)
-						err_v.set_tag ("Error : unable to retrieve the data.")
+						err_v.set_tag ("Exception occurred")
+						err_v.set_message (exception_trace)
 						Result := err_v
+						reset_recv_value
+					else
+						Result := item
+						clear_item
+						if Result /= Void then
+							last_result := Result
+							Result.set_name (once_routine.feature_name)
+							Result.set_hector_addr
+						else
+							create err_v.make_with_name (once_routine.feature_name)
+							err_v.set_tag ("Error : unable to retrieve the data.")
+							Result := err_v
+						end
 					end
 				else
 					last_exception_code := c_tread.to_integer

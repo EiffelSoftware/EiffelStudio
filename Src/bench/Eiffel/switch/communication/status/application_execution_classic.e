@@ -106,6 +106,32 @@ feature -- Execution
 			quit_request.send
 		end
 
+	disable_assertion_check is
+			-- Send a message to the application to disable assertion checking
+		local
+			s: STRING
+		do
+			quit_request.make (Rqst_set_assertion_check)
+			quit_request.send_integer (0)
+			s := c_tread
+			if s /= Void and then s.is_boolean then
+				last_assertion_check := s.to_boolean
+			end
+		end
+
+	restore_assertion_check is
+			-- Send a message to the application to restore the previous assertion check status
+		local
+			s: STRING
+		do
+			quit_request.make (Rqst_set_assertion_check)
+			quit_request.send_integer (last_assertion_check.to_integer)
+			s := c_tread
+		end
+
+	last_assertion_check: BOOLEAN
+			-- Last assertion check value when it had been disabled by `disable_assertion_check'.
+
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number

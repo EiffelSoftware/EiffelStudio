@@ -1014,7 +1014,7 @@ feature {NONE} -- Callback actions
 					l_icd_exception.clean_on_dispose
 				end
 				if cln /= Void then
-					Result := application.exceptions_handler.exception_catched (cln)
+					Result := application.exceptions_handler.exception_catched_by_name (cln)
 				else
 					Result := True
 				end

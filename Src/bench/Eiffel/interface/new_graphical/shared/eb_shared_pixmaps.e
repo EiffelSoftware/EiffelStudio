@@ -467,6 +467,16 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_debugger_exception_value)
 		end
 
+	Icon_dbg_assert_checking_restore: EV_PIXMAP is
+		once
+			Result := Icon_exec_quit
+		end
+
+	Icon_dbg_assert_checking_disable: EV_PIXMAP is
+		once
+			Result := Icon_exec_stop
+		end
+
 	Icon_cluster_tool: EV_PIXMAP is
 			-- Icon for cluster tool
 		once

@@ -295,6 +295,18 @@ feature -- Execution
 			end
 		end
 
+	disable_assertion_check is
+			-- Send a message to the application to disable assertion checking
+		do
+			to_implement ("to implemente: change_assertion_check")
+		end
+
+	restore_assertion_check is
+			-- Send a message to the application to restore the previous assertion check status
+		do
+			to_implement ("to implemente: restore_assertion_check")
+		end
+
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number

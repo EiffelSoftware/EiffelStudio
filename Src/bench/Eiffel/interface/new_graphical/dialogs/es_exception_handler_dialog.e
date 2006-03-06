@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			grid.column (2).set_title ("Name")
 			grid.column (1).set_width (60)
 			grid.column (2).set_width (400)
+			grid.enable_last_column_use_all_width
 			grid.row_select_actions.extend (agent row_selected)
 			grid.row_deselect_actions.extend (agent row_deselected)
 
@@ -58,19 +59,19 @@ feature -- Access
 
 	set_handler (eh: DBG_EXCEPTION_HANDLER) is
 		local
-			exceptions_handling: LIST [STRING]
-			s: STRING
+			exceptions_handling: LIST [TUPLE [INTEGER, STRING]]
+			elt: TUPLE [INTEGER, STRING]
 		do
 			exception_handler := eh
 			from
-				exceptions_handling := eh.exceptions_handling
+				exceptions_handling := eh.handled_exceptions_by_name
 				exceptions_handling.start
 			until
 				exceptions_handling.after
 			loop
-				s := exceptions_handling.item
-				if s.count > 0 then
-					add_row_from_data (s)
+				elt := exceptions_handling.item
+				if elt /= Void then
+					add_row_from_data (elt)
 				end
 				exceptions_handling.forth
 			end
@@ -91,30 +92,30 @@ feature -- Access
 			end
 		end
 
-	add_row_from_data (pat: STRING) is
+	add_row_from_data (elt: TUPLE [INTEGER, STRING]) is
 		require
-			pat /= Void and then pat.count > 0
+			elt /= Void
 		local
-			s: STRING
+			role: INTEGER
+			pat: STRING
 			row: EV_GRID_ROW
 			cell_lab: EV_GRID_LABEL_ITEM
 			cell_combo: EV_GRID_COMBO_ITEM
 		do
+			pat := exception_handler.exception_name_value_from (elt)
+			role := exception_handler.exception_name_role_from (elt)
+
 			grid.insert_new_row (grid.row_count + 1)
 			row := grid.row (grid.row_count)
 			row.set_data (pat)
 
-			s := pat
 			create cell_combo
 			cell_combo.set_item_strings (Status_id)
-			if s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_stop then
-				s := s.substring (2, s.count)
+			if role = {DBG_EXCEPTION_HANDLER}.Role_stop then
 				cell_combo.set_text (Status_id.item (1))
-			elseif s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_continue then
-				s := s.substring (2, s.count)
+			elseif role = {DBG_EXCEPTION_HANDLER}.Role_continue then
 				cell_combo.set_text (Status_id.item (2))
-			elseif s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_disabled then
-				s := s.substring (2, s.count)
+			elseif role = {DBG_EXCEPTION_HANDLER}.Role_disabled then
 				cell_combo.set_text (Status_id.item (3))
 			else
 				check False end
@@ -123,7 +124,7 @@ feature -- Access
 			cell_combo.pointer_double_press_actions.force_extend (agent cell_combo.activate)
 			row.set_item (1, cell_combo)
 
-			create cell_lab.make_with_text (s)
+			create cell_lab.make_with_text (pat)
 			row.set_item (2, cell_lab)
 		end
 
@@ -159,13 +160,10 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	row_selected (r: EV_GRID_ROW) is
-		local
-			s: STRING
 		do
 			selected_row := r
 			selected_data ?= r.data
-			s := selected_data.substring (2, selected_data.count)
-			tf_pattern.set_text (s)
+			tf_pattern.set_text (selected_data)
 		end
 
 	row_deselected (r: EV_GRID_ROW) is
@@ -181,7 +179,7 @@ feature {NONE} -- Implementation
 	on_del is
 		do
 			if selected_row /= Void and selected_data /= Void then
-				if (selected_data.substring (2, selected_data.count)).is_equal (tf_pattern.text) then
+				if selected_data.is_equal (tf_pattern.text) then
 					grid.remove_row (selected_row.index)
 				end
 			end
@@ -189,7 +187,7 @@ feature {NONE} -- Implementation
 
 	on_add is
 		do
-			add_row_from_data ({DBG_EXCEPTION_HANDLER}.Prefix_disabled.out + tf_pattern.text)
+			add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_disabled, tf_pattern.text])
 		end
 
 	on_cancel is
@@ -221,11 +219,11 @@ feature {NONE} -- Implementation
 					cell ?= row.item (1)
 					l_st := cell.text
 					if l_st.is_equal (status_id.item (1)) then
-						exception_handler.catch_exception (l_pat)
+						exception_handler.catch_exception_by_name (l_pat)
 					elseif l_st.is_equal (status_id.item (2)) then
-						exception_handler.ignore_exception (l_pat)
+						exception_handler.ignore_exception_by_name (l_pat)
 					elseif l_st.is_equal (status_id.item (3)) then
-						exception_handler.disable_exception (l_pat)
+						exception_handler.disable_exception_by_name (l_pat)
 					end
 					r := r + 1
 				end
@@ -259,6 +257,7 @@ feature {NONE} -- Implementation
 
 	on_external_handling_changed is
 		do
+			exception_handler.ignore_external_exceptions (handling_external_checking.is_selected)
 		end
 
 indexing
@@ -267,19 +266,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

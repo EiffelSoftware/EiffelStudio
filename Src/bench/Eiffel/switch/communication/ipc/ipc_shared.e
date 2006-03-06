@@ -98,6 +98,9 @@ feature {NONE} -- Request constants
 	Rqst_change_thread: INTEGER is 42
 			-- Set the thread id to inspect.
 
+	Rqst_set_assertion_check: INTEGER is 43
+			-- Set the assertion checking state.
+
 feature {NONE} -- Resume
 
 	Resume_cont: INTEGER is 0

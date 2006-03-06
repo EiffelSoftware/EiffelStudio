@@ -9,7 +9,7 @@ class
 	CODE_TYPE_REFERENCE
 
 inherit
-	CODE_SHARED_REFERENCED_ASSEMBLIES
+	CODE_SHARED_IMPORTS
 		export
 			{NONE} all
 		redefine
@@ -117,44 +117,19 @@ feature -- Access
 			-- Log error if not found.
 		require
 			non_generated_type: not Resolver.is_generated (Current)
-		local
-			l_name: STRING
 		do
 			if search_for_type then
-				Result := {SYSTEM_TYPE}.get_type (name)
-				if Result = Void then
-					from
-						Referenced_assemblies.start
-					until
-						Referenced_assemblies.after or Result /= Void
-					loop
-						Result := Referenced_assemblies.item.assembly.get_type (name)
-						Referenced_assemblies.forth
-					end
-				end
-				
-				-- Now search with `System' prefix since CodeDom might
-				-- use simple names for basic types (e.g. 'Int32' 'Boolean')
-				if Result = Void then
-					from
-						Referenced_assemblies.start
-						create l_name.make (name.count + 7)
-						l_name.append ("System.")
-						l_name.append (name)
-						Result := {SYSTEM_TYPE}.get_type (l_name)
-					until
-						Referenced_assemblies.after or Result /= Void
-					loop
-						Result := Referenced_assemblies.item.assembly.get_type (l_name)
-						Referenced_assemblies.forth
-					end
-				end
-					
 				-- Do not search for type if `element_type' calls `dotnet_type'
 				search_for_type := False
-
-				-- Maybe it's an array?
-				if Result = Void then
+				if is_custom_attribute_type then
+					search_attribute_type (name)
+				else
+					search_type (name)
+				end
+				if found then
+					Result := found_type
+				else
+					-- Maybe it's an array?
 					if element_type /= Void then
 						-- Special case for arrays of generated types:
 						-- They are external types but cannot be retrieved through `get_type'.
@@ -320,16 +295,18 @@ feature -- Access
 						l_features.forth
 					end
 				end
-				Result := members_cache.linear_representation
 				search_for_members := False
-			else
-				Result := members_cache.linear_representation
 			end
+			Result := members_cache.linear_representation
 		ensure
 			members_searched: not search_for_members
 			non_void_list: Result /= Void
 			-- valid_ordering: all list items of a list item of result have the same .NET name
 		end
+
+	is_custom_attribute_type: BOOLEAN
+			-- Is type for a custom attribute?
+			--| Changes how .NET type is resolved
 
 feature -- Status Report
 
@@ -364,6 +341,14 @@ feature -- Element Settings
 			initialized := a_value
 		ensure
 			initialized_set: initialized = a_value
+		end
+
+	set_custom_attribute_type is
+			-- Set `is_custom_attribute_type' to `True'.
+		do
+			is_custom_attribute_type := True
+		ensure
+			is_custom_attribute_type: is_custom_attribute_type
 		end
 
 feature -- Comparison
@@ -589,7 +574,7 @@ end -- class CODE_TYPE_REFERENCE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

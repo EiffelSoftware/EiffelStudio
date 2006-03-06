@@ -36,8 +36,8 @@ feature -- Access
 	Eiffel_language: STRING is "Eiffel"
 			-- Keyword that distinguish an Eiffel asp page to C# page.
 
-	Eiffel_extension: STRING is ".e"
-			-- Eiffel files extension.
+	Eiffel_extensions: STRING is ".e"
+			-- Eiffel files extensions
 
 feature -- Basic Operations
 
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			-- Add Eiffel CodeDom provider to list of CodeDom providers
 			-- in configuration file "machine.config"
 		do
-			(create {CODE_MACHINE_CONFIGURATION}.make).add_compiler_entry (Eiffel_language, Eiffel_extension, Eiffel_codedom_provider_fully_qualified_name)
+			(create {CODE_MACHINE_CONFIGURATION}.make).add_compiler_entry (Eiffel_language, Eiffel_extensions, Eiffel_codedom_provider_fully_qualified_name)
 		end
 
 	remove_entry is
@@ -107,7 +107,7 @@ end -- Class CODE_INSTALLER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

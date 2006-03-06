@@ -57,11 +57,14 @@ feature -- Access
 			Result.append (name)
 			Result.append ("%":%T%"")
 			Result.append (path)
-			Result.append ("%"%N")
+			Result.append ("%"")
+			Result.append (Line_return)
 			from
 				exclude_clauses.start
 				if not exclude_clauses.after then
-					Result.append ("%T%Texclude%N%T%T%T%"")
+					Result.append ("%T%Texclude")
+					Result.append (Line_return)
+					Result.append ("%T%T%T%"")
 					Result.append (exclude_clauses.item)
 					Result.append_character ('"')
 					exclude_clauses.forth
@@ -75,7 +78,7 @@ feature -- Access
 				exclude_clauses.forth
 			end
 			if exclude_clauses.count > 0 then
-				Result.append ("%N")
+				Result.append (Line_return)
 			end
 			from
 				visible_clauses.start
@@ -84,16 +87,22 @@ feature -- Access
 			loop
 				Result.append ("%T%T%T")
 				Result.append (visible_clauses.item)
-				Result.append ("%N%T%T%T%Tend%N")
+				Result.append (Line_return)
+				Result.append ("%T%T%T%Tend")
+				Result.append (Line_return)
 				visible_clauses.forth
 			end
 			if namespace /= Void then
-				Result.append ("%T%Tdefault%N%T%T%Tnamespace (%"")
+				Result.append ("%T%Tdefault")
+				Result.append (Line_return)
+				Result.append ("%T%T%Tnamespace (%"")
 				Result.append (namespace)
-				Result.append ("%")%N")
+				Result.append ("%")")
+				Result.append (Line_return)
 			end
 			if exclude_clauses.count > 0 or visible_clauses.count > 0 or namespace /= Void then
-				Result.append ("%T%Tend%N")
+				Result.append ("%T%Tend")
+				Result.append (Line_return)
 			end
 		end
 		
@@ -142,7 +151,7 @@ end -- class CODE_ACE_CLUSTER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

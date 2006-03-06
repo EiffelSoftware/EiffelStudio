@@ -82,7 +82,9 @@
 #define OVERFLOW_DETECT	41		/* Specify the stack overflow management: set a depth at which the application raises an exception */
 #define CHANGE_THREAD	42		/* Thread id used for inspection and other */
 
-#define MAX_REQUEST_TYPE 42		/* To update with new value of max request type. */
+#define EWB_SET_ASSERTION_CHECK 43		/* Change assertion checking on the application being debugged */
+
+#define MAX_REQUEST_TYPE 43		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

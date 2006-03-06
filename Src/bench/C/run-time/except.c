@@ -253,6 +253,7 @@ rt_private void print_top(void (*append_trace)(char *));			/* Prints top value o
 rt_private void dump_stack(void (*append_trace)(char *));			/* Dump the Eiffel trace stack */
 rt_private void ds_stderr(char *line);			/* Wrapper to dump stack to stderr */
 rt_private void ds_string(char *line);			/* Wrapper to dump stack to a string */
+rt_public char* stack_trace_str(void);				/* Exception trace C string */
 rt_public EIF_REFERENCE stack_trace_string(void);	/* Exception trace string */
 rt_private void extend_trace_string(char *line);	/* Extend exception trace string */
 
@@ -2308,6 +2309,29 @@ rt_private void extend_trace_string(char *line)
 		} else
 			enomem();
 	}
+}
+rt_public char* stack_trace_str (void)
+{
+    /* Initialize the SMART_STRING structure supposed to receive the exception
+     * stack, dump the exception stack into it and return a C string.
+     */
+	RT_GET_CONTEXT
+
+    /* Clean the area from a previous call. */
+    if (ex_string.area)
+        eif_free(ex_string.area);
+
+    /* Prepare the structure for a new trace */
+    ex_string.area = NULL;
+    ex_string.used = 0L;
+    ex_string.size = 0L;
+
+    /* Dump the exception stack into this structure by using the
+     * wrapper ds_string().
+     */
+    dump_stack(ds_string);
+
+    return (char*) ex_string.area;
 }
 
 rt_public EIF_REFERENCE stack_trace_string (void)

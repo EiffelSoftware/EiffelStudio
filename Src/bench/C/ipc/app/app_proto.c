@@ -99,6 +99,7 @@ rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspec
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
 rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
 
+rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
 extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
 /* debugging macro */
@@ -128,7 +129,7 @@ rt_private void opush_dmpitem(struct item *item);
 rt_private struct item *previous_otop = NULL;
 rt_private unsigned char otop_recorded = 0;
 rt_private void dynamic_evaluation(eif_stream s, int fid, int stype, int is_precompiled, int is_basic_type);
-extern struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop); /* dynamic evaluation of a feature (while debugging) */
+extern struct item *dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* dynamic evaluation of a feature (while debugging) */
 extern uint32 critical_stack_depth;	/* Call stack depth at which a warning is sent to the debugger to prevent stack overflows. */
 extern int already_warned; /* Have we already warned the user concerning a possible stack overflow? */
 
@@ -363,6 +364,9 @@ static int curr_modify = NO_CURRMODIF;
 	case OVERFLOW_DETECT:
 		critical_stack_depth = (uint32) arg_3; /* We convert int => uint32, so that passing -1 never checks for stack overflows */
 		already_warned = 0;
+		break;
+	case EWB_SET_ASSERTION_CHECK:
+		set_check_assert ((int) arg_1);
 		break;
 	}
 
@@ -782,6 +786,18 @@ rt_private void once_inspect(int s, Opaque *what)
 		break;
 	default:
 		eif_panic("BUG once inspect");
+	}
+}
+
+rt_private void set_check_assert (int v) 
+{
+	/* Set current assertion checking off/on */
+	EIF_BOOLEAN old_value;
+	old_value = c_check_assert ((v == 1)?EIF_TRUE:EIF_FALSE);
+	if (old_value == EIF_TRUE) {
+		twrite("true", 4);
+	} else {
+		twrite("false", 5);
 	}
 }
 
@@ -1656,21 +1672,23 @@ rt_private void dynamic_evaluation(int s, int fid, int stype, int is_precompiled
 	struct item *ip;
 	Request rqst;					/* What we send back */
 	struct dump dumped;			/* Item returned */
-
+	int exception_occured = 0;	/* Exception occurred ? */
+ 
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 
-	ip = dynamic_eval(fid,stype, is_precompiled, is_basic_type, previous_otop);
-	if (ip == (struct item *) 0)
-		{
+	ip = dynamic_eval(fid,stype, is_precompiled, is_basic_type, previous_otop, &exception_occured);
+	if (ip == (struct item *) 0) {
 		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
 		dumped.dmp_item = NULL;			/* arguments to be sent. */
+	} else {
+		if (exception_occured == 1) {
+			dumped.dmp_type = DMP_EXCEPTION_TRACE;			/* We are dumping a variable */
+		} else {
+			dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 		}
-	else
-		{
-		dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 		dumped.dmp_item = ip;
-		}
+	}
 	memcpy (&rqst.rq_dump, &dumped, sizeof(struct dump));
 	send_packet(s, &rqst);			/* Send to network */
 

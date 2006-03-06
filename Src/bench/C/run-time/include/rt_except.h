@@ -64,6 +64,9 @@ extern void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig);			/* Call sig
 extern void eif_except_thread_init (void);
 extern EIF_LW_MUTEX_TYPE *eif_except_lock;
 #endif
+#ifdef WORKBENCH
+extern char* stack_trace_str(void);		/* Exception stack as a C string */
+#endif
 
 #ifdef __cplusplus
 }

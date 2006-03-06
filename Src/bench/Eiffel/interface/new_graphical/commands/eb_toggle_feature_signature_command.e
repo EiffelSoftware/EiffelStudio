@@ -9,9 +9,9 @@ class
 	EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
 
 inherit
-	EB_TOOLBARABLE_COMMAND
+	EB_TOOLBARABLE_TOGGLE_COMMAND
 		redefine
-			mini_pixmap, new_mini_toolbar_item
+			mini_pixmap
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -26,7 +26,7 @@ feature -- Basic operations
 	execute is
 			-- show/hide signature
 		do
-			target.features_tool.tree.toggle_signatures
+			target.features_tool.toggle_signatures
 		end
 
 feature -- Access
@@ -47,11 +47,16 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			if target.features_tool.tree.signature_enabled then
+			if target.features_tool.is_signature_enabled then
 				Result := Interface_names.f_hide_signature
 			else
 				Result := Interface_names.f_show_signature
 			end
+		end
+
+	is_selected: BOOLEAN is
+		do
+			Result := target.features_tool.is_signature_enabled
 		end
 
 	description: STRING is
@@ -60,32 +65,9 @@ feature {NONE} -- Implementation
 			Result := Interface_names.l_toggle_signature
 		end
 
-	name: STRING is "Toggle_feature_signature"
+	name: STRING is "Toggle_feature_signature";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-
-	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
-			-- Update tooltip of `toggle'.
-		do
-			toggle.set_tooltip (tooltip)
-		end
-
-feature -- Basic operations
-
-	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
-			-- Create a new mini toolbar button for this command.
-		do
-			create Result.make (Current)
-			Result.set_pixmap (mini_pixmap)
-			if is_sensitive then
-				Result.enable_sensitive
-			else
-				Result.disable_sensitive
-			end
-			Result.set_tooltip (tooltip)
-			Result.select_actions.extend (agent execute)
-			Result.select_actions.extend (agent update_tooltip (Result))
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -93,19 +75,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

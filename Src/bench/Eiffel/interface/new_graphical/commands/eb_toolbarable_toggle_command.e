@@ -1,73 +1,77 @@
 indexing
-	description	: "Command to toggle display of feature assigner name."
+	description	: "Command using toggle button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
-	EB_TOGGLE_FEATURE_ASSIGNER_COMMAND
+deferred class
+	EB_TOOLBARABLE_TOGGLE_COMMAND
 
 inherit
-	EB_TOOLBARABLE_TOGGLE_COMMAND
+	EB_TOOLBARABLE_COMMAND
 		redefine
-			mini_pixmap
+			new_mini_toolbar_item
 		end
 
-	EB_DEVELOPMENT_WINDOW_COMMAND
+feature -- Change
 
-	SHARED_WORKBENCH
-
-create
-	make
-
-feature -- Basic operations
-
-	execute is
-			-- show/hide assigner name
+	set_select (b: BOOLEAN) is
+		local
+			lst: like managed_toolbar_items
+			but: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON
 		do
-			target.features_tool.toggle_assigner
-		end
-
-feature -- Access
-
-	mini_pixmap: EV_PIXMAP is
-			-- Pixmap representing the command for mini toolbars.
-		do
-			Result := pixmaps.small_pixmaps.icon_toggle_assigner
-		end
-
-feature {NONE} -- Implementation
-
-	pixmap: EV_PIXMAP is
-			-- Pixmap representing the command.
-		do
-		end
-
-	tooltip: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			if is_selected then
-				Result := Interface_names.f_hide_assigner
-			else
-				Result := Interface_names.f_show_assigner
+			lst := managed_toolbar_items
+			if not lst.is_empty then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					but ?= lst.item
+					if but /= Void then
+						but.select_actions.block
+						if b then
+							but.enable_select
+						else
+							but.disable_select
+						end
+						but.select_actions.resume
+					end
+					lst.forth
+				end
 			end
 		end
 
+	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
+			-- Update tooltip of `toggle'.
+		do
+			toggle.set_tooltip (tooltip)
+		end
+
+feature -- Basic operations
+
 	is_selected: BOOLEAN is
-		do
-			Result := target.features_tool.is_assigner_enabled
+		deferred
 		end
 
-	description: STRING is
-			-- Description for this command.
+	new_mini_toolbar_item: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+			-- Create a new mini toolbar button for this command.
 		do
-			Result := Interface_names.l_toggle_assigner
+			create Result.make (Current)
+			Result.set_pixmap (mini_pixmap)
+			if is_sensitive then
+				Result.enable_sensitive
+			else
+				Result.disable_sensitive
+			end
+			Result.set_tooltip (tooltip)
+			if is_selected then
+				Result.enable_select
+			end
+			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent update_tooltip (Result))
 		end
-
-	name: STRING is "Toggle_feature_assigner";
-			-- Name of the command. Used to store the command in the
-			-- preferences.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

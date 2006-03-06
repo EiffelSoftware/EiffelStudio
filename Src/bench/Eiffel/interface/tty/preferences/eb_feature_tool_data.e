@@ -38,6 +38,24 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := expand_feature_tree_preference.value
 		end
 
+	is_signature_enabled: BOOLEAN is
+			-- Do we display signature of feature ?
+		do
+			Result := is_signature_enabled_preference.value
+		end
+
+	is_alias_enabled: BOOLEAN is
+			-- Is alias name shown?
+		do
+			Result := is_alias_enabled_preference.value
+		end
+
+	is_assigner_enabled: BOOLEAN is
+			-- Is assigner command shown?
+		do
+			Result := is_assigner_enabled_preference.value
+		end
+
 feature {NONE} -- Preference
 
 	show_all_callers_preference: BOOLEAN_PREFERENCE
@@ -46,10 +64,25 @@ feature {NONE} -- Preference
 	expand_feature_tree_preference: BOOLEAN_PREFERENCE
 		-- Automatically expand the feature tree
 
+feature {EB_FEATURES_TOOL} -- Preference
+
+	is_signature_enabled_preference: BOOLEAN_PREFERENCE
+			-- Do we display signature of feature ?
+
+	is_alias_enabled_preference: BOOLEAN_PREFERENCE
+			-- Is alias name shown?	
+
+	is_assigner_enabled_preference: BOOLEAN_PREFERENCE
+			-- Is assigner command shown?
+
 feature {NONE} -- Preference Strings
 
 	expand_feature_tree_string: STRING is "interface.development_window.expand_feature_tree"
 	show_all_callers_string: STRING is "tools.context_tool.show_all_callers"
+
+	is_signature_enabled_string: STRING is "interface.development_window.features_tool.is_signature_enabled"
+	is_alias_enabled_string: STRING is "interface.development_window.features_tool.is_alias_enabled"
+	is_assigner_enabled_string: STRING is "interface.development_window.features_tool.is_assigner_enabled"
 
 feature {NONE} -- Implementation
 
@@ -62,6 +95,10 @@ feature {NONE} -- Implementation
 
 			show_all_callers_preference := l_manager.new_boolean_preference_value (l_manager, show_all_callers_string, False)
 			expand_feature_tree_preference := l_manager.new_boolean_preference_value (l_manager, expand_feature_tree_string, True)
+
+			is_signature_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_signature_enabled_string, False)
+			is_alias_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_alias_enabled_string, False)
+			is_assigner_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_assigner_enabled_string, False)
 		end
 
 	preferences: PREFERENCES
@@ -70,6 +107,10 @@ feature {NONE} -- Implementation
 invariant
 	show_all_callers_preference_not_void: show_all_callers_preference /= Void
 	expand_feature_tree_preference_not_void: expand_feature_tree_preference /= Void
+
+	is_signature_enabled_preference_not_void: expand_feature_tree_preference /= Void
+	is_alias_enabled_preference_not_void: is_alias_enabled_preference /= Void
+	is_assigner_enabled_preference_not_void: is_assigner_enabled_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

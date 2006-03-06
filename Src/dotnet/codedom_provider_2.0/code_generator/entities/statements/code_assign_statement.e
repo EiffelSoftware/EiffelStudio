@@ -1,7 +1,7 @@
 indexing
 	description: "Eiffel representation of CodeDom assign statement"
 	date: "$$"
-	revision: "$$"	
+	revision: "$$"
 
 class
 	CODE_ASSIGN_STATEMENT
@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			assignment_type_set: assignment_type = a_assignment_type
 		end
-		
+
 feature -- Access
 
 	target: CODE_EXPRESSION
 			-- Assignment target
-	
+
 	source: CODE_EXPRESSION
 			-- Assignment source
 
@@ -59,6 +59,9 @@ feature -- Access
 			l_field_expression: CODE_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			create Result.make (120)
+			if line_pragma /= Void then
+				Result.append (line_pragma.code)
+			end
 			Result.append (Indent_string)
 			set_new_line (False)
 			if assignment_type = Field_assignment then
@@ -90,14 +93,14 @@ feature -- Access
 					--TODO: check for valid target expressions (codevariablereference etc...)
 						create_array_expression.set_target (target.code)
 						Result.append (create_array_expression.code)
-					else	
+					else
 						Result.append (target.code)
 						Result.append (" := ")
 						Result.append (source.code)
 					end
 				end
 			end
-			Result.append_character ('%N')
+			Result.append (Line_return)
 		end
 
 	need_dummy: BOOLEAN is
@@ -113,7 +116,7 @@ end -- class CODE_ASSIGN_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

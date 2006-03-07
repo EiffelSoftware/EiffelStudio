@@ -9,6 +9,8 @@ deferred class
 inherit
 	CODE_SHARED_GENERATION_CONTEXT
 
+	CODE_SHARED_GENERATION_STATE
+
 	CODE_SHARED_GENERATION_HELPERS
 		export
 			{NONE} all
@@ -19,7 +21,10 @@ inherit
 			{NONE} all
 		end
 
-	CODE_SHARED_GENERATION_STATE
+	CODE_SHARED_GENERATION_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -39,7 +44,7 @@ end -- class CODE_ENTITY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -55,8 +55,7 @@ feature -- Initialization
 					l_file_name.append (l_item)
 					create l_file.make (l_file_name)
 					if l_file.exists then
-						Event_manager.raise_event ({CODE_EVENTS_IDS}.File_deletion, [l_file.name])
-						l_file.delete
+						try_delete (l_file)
 					end
 				end
 				l_content.forth
@@ -71,7 +70,7 @@ feature -- Access
 	destination_directory: DIRECTORY
 			-- Path to directory where generated Eiffel files should be written
 
-	Eiffel_source_prefix: STRING is "generated"
+	Eiffel_source_file: STRING is "generated.e"
 			-- Generated Eiffel source file name prefix
 
 feature -- Basic Operation
@@ -81,7 +80,7 @@ feature -- Basic Operation
 		require
 			non_void_content: a_content /= Void
 		local
-			l_index, l_old_index: INTEGER
+			l_index, l_index2, l_old_index: INTEGER
 		do
 			from
 				l_old_index := 1
@@ -89,31 +88,44 @@ feature -- Basic Operation
 			until
 				l_index = 0
 			loop
-				write_file (unique_file_name, a_content.substring (l_old_index, l_index - 1))
+				write_file (a_content.substring (l_old_index, l_index - 1))
 				l_old_index := l_index + Class_separator.count
 				l_index := a_content.substring_index (Class_separator, l_old_index)
-			end
-			if l_old_index < a_content.count then
-				write_file (unique_file_name, a_content.substring (l_old_index,  a_content.count))
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	write_file (a_file_name, a_content: STRING) is
+	try_delete (a_file: RAW_FILE) is
+			-- Try to delete `a_file', don't throw an exception if not possible.
+		require
+			attached_file: a_file /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.File_deletion, [a_file.name])
+				a_file.delete
+			end
+		rescue
+			l_retried := True
+			Event_manager.process_exception
+			retry
+		end
+
+	write_file (a_content: STRING) is
 			-- Write `a_content' into file `a_file_name' in `destination_directory'.
 		require
-			non_void_file_name: a_file_name /= Void
-			valid_file_name: not a_file_name.is_empty and not a_file_name.has ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-			non_void_content: a_content /= Void
+			attached_content: a_content /= Void
 		local
-			l_source: PLAIN_TEXT_FILE
-			l_path: STRING
+			l_source: RAW_FILE
+			l_file_name, l_path: STRING
 		do
-			create l_path.make (destination_directory.count + 1 + a_file_name.count)
+			l_file_name := unique_file_name
+			create l_path.make (destination_directory.count + 1 + l_file_name.count)
 			l_path.append (destination_directory.name)
 			l_path.append_character (Directory_separator)
-			l_path.append (a_file_name)
+			l_path.append (l_file_name)
 			create l_source.make_open_write (l_path)
 			l_source.put_string (a_content)
 			l_source.close
@@ -125,23 +137,24 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			i := 2
-			create Result.make (Eiffel_source_prefix.count + 4) -- up to 999 files before string resizing is needed
+			create Result.make (Eiffel_source_file.count + 4) -- up to 999 files before string resizing is needed
 			from
-				Result.append (Eiffel_source_prefix)
-				if destination_directory.has_entry (Result + ".e") then
+				Result.append (Eiffel_source_file)
+				if destination_directory.has_entry (Result) then
 					last_index_suffix := last_index_suffix + 1
+					Result.keep_head (Result.count - 2)
 					Result.append_character ('_')
 					Result.append (last_index_suffix.out)
+					Result.append (".e")
 					i := last_index_suffix + 1
 				end
 			until
-				not destination_directory.has_entry (Result + ".e")
+				not destination_directory.has_entry (Result)
 			loop
-				Result.replace_substring (i.out, Result.last_index_of ('_', Result.count) + 1, Result.count)
+				Result.replace_substring (i.out, Result.last_index_of ('_', Result.count) + 1, Result.last_index_of ('.', Result.count) - 1)
 				i := i + 1
 			end
 			last_index_suffix := i - 1
-			Result.append (".e")
 		ensure
 			exists: Result /= Void
 			is_unique: not destination_directory.has_entry (Result)
@@ -154,7 +167,7 @@ end -- class CODE_EIFFEL_SOURCE_FILES_GENERATOR
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

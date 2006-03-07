@@ -100,8 +100,8 @@ feature -- Output
 
 	dump: STRING is
 		do
-			create Result.make (12)
-			Result.append ("Generic #")
+			create Result.make (3)
+			Result.append ("G#")
 			Result.append_integer (position)
 		end
 

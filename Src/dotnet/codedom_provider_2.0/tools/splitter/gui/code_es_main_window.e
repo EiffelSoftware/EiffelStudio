@@ -17,12 +17,6 @@ inherit
 			default_create
 		end
 	
-	CODE_ES_SHARED_DIRECTORY_SEPARATOR
-		undefine
-			copy,
-			default_create
-		end
-	
 	EV_THREAD_SEVERITY_CONSTANTS
 		undefine
 			copy,
@@ -146,7 +140,9 @@ feature {NONE} -- Events Handling
 		local
 			l_dest, l_folder: STRING
 			l_worker_thread: EV_THREAD_WORKER
+			l_sep: CHARACTER
 		do
+			l_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 			check_can_generate
 			if generate_button.is_sensitive then
 				notebook.select_item (output_box)
@@ -159,13 +155,13 @@ feature {NONE} -- Events Handling
 					if l_dest.is_empty then
 						l_dest := Void
 					else
-						if l_dest.item (l_dest.count) = Directory_separator then
+						if l_dest.item (l_dest.count) = l_sep then
 							l_dest.keep_head (l_dest.count - 1)
 						end
 					end
 				end
 				l_folder := folders_combo_box.text
-				if l_folder.item (l_folder.count) = Directory_separator then
+				if l_folder.item (l_folder.count) = l_sep then
 					l_folder.keep_head (l_folder.count - 1)
 				end
 				output_text.set_text ("")
@@ -283,7 +279,7 @@ feature {NONE} -- Implementation
 			output_text.buffered_append (a_title, Information_format)
 			output_text.buffered_append (": ", Information_format)
 			output_text.buffered_append (a_message, Information_format)
-			output_text.buffered_append ("%N", Information_format)
+			output_text.buffered_append ("%R%N", Information_format)
 			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 		
@@ -296,7 +292,7 @@ feature {NONE} -- Implementation
 			output_text.buffered_append (a_title, Warning_format)
 			output_text.buffered_append (": ", Warning_format)
 			output_text.buffered_append (a_message, Warning_format)
-			output_text.buffered_append ("%N", Warning_format)
+			output_text.buffered_append ("%R%N", Warning_format)
 			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 		
@@ -306,9 +302,9 @@ feature {NONE} -- Implementation
 			non_void_title: a_title /= Void
 			non_void_text: a_message /= Void
 		do
-			output_text.buffered_append ("%NERROR: " + a_title + "%N", Error_format)
+			output_text.buffered_append ("%R%NERROR: " + a_title + "%R%N", Error_format)
 			output_text.buffered_append (a_message, Error_format)
-			output_text.buffered_append ("%N%N", Error_format)
+			output_text.buffered_append ("%R%N%R%N", Error_format)
 			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 

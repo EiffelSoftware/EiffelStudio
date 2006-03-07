@@ -361,7 +361,7 @@ feature -- default rescue
 			end
 		end
 
-feature {COMPILER_EXPORTER} -- Conveniences
+feature -- Conveniences
 
 	infix "<" (other: like Current): BOOLEAN is
 		do

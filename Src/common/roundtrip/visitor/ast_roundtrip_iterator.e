@@ -28,9 +28,6 @@ class
 
 inherit
 	AST_VISITOR
-		redefine
-			process_type_a
-		end
 
 feature -- AST process
 
@@ -1103,13 +1100,6 @@ feature
 			safe_process (l_as.conversion_types)
 			safe_process (l_as.rcurly_symbol)
 			safe_process (l_as.rparan_symbol)
-		end
-
-	process_type_a (a_type: TYPE_A) is
-		do
-			check
-				should_not_arrive_here: False
-			end
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS) is

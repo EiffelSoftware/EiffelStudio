@@ -180,20 +180,9 @@ feature -- Number AST creation
 			valid_sign: ("%U+-").has (sign_symbol)
 			a_psr_not_void: a_psr /= Void
 		local
-			l_type: TYPE_A
 			token_value: STRING
 		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
-			if l_type /= Void then
-				if not l_type.is_integer and not l_type.is_natural then
-					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
-				a_psr.report_invalid_type_for_integer_error (a_type, buffer)
-			end
+			validate_integer_real_type (a_psr, a_type, buffer, True)
 				-- Remember original token
 			token_value := buffer.twin
 				-- Remove underscores (if any) without breaking
@@ -229,20 +218,9 @@ feature -- Number AST creation
 			buffer_not_void: buffer /= Void
 			a_psr_not_void: a_psr /= Void
 		local
-			l_type: TYPE_A
 			l_buffer: STRING
 		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
-			if l_type /= Void then
-				if not l_type.is_real_32 and not l_type.is_real_64 then
-					a_psr.report_invalid_type_for_real_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
-				a_psr.report_invalid_type_for_real_error (a_type, buffer)
-			end
+			validate_integer_real_type (a_psr, a_type, buffer, False)
 			if is_signed and sign_symbol = '-' then
 				l_buffer := buffer.twin
 				buffer.precede ('-')
@@ -250,6 +228,20 @@ feature -- Number AST creation
 				l_buffer := buffer
 			end
 			Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+		end
+
+feature {NONE} -- Validation
+
+	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN) is
+			-- New integer value.
+		require
+			buffer_not_void: buffer /= Void
+			a_psr_not_void: a_psr /= Void
+		do
+				-- We cannot validate the name easily, so we assume it is correct.
+			if for_integer then
+			else
+			end
 		end
 
 feature -- Roundtrip: leaf_as

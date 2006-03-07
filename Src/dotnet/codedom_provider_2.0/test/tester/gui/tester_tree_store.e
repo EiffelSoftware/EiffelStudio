@@ -35,10 +35,11 @@ feature {NONE} -- Initialization
 			l_statement: SYSTEM_DLL_CODE_STATEMENT
 		do
 			make ("Software\ISE\Eiffel Codedom Provider\Tester\Trees")
-			
+
 			l_paths := text_setting (Compile_units_key)
 			if l_paths /= Void then
 				compile_units_paths := l_paths.split (Location_separator)
+				compile_units_paths.compare_objects
 				create {ARRAYED_LIST [SYSTEM_DLL_CODE_COMPILE_UNIT]} compile_units.make (compile_units_paths.count)
 				from
 					compile_units_paths.start
@@ -166,16 +167,16 @@ feature -- Access
 
 	compile_units_paths: LIST [STRING]
 			-- Compile units serialized codedeom tree locations
-	
+
 	namespaces_paths: LIST [STRING]
 			-- Namespaces serialized codedeom tree locations
-	
+
 	types_paths: LIST [STRING]
 			-- Types serialized codedeom tree locations
-	
+
 	expressions_paths: LIST [STRING]
 			-- Expressions serialized codedeom tree locations
-	
+
 	statements_paths: LIST [STRING]
 			-- Statements serialized codedeom tree locations
 
@@ -184,13 +185,13 @@ feature -- Access
 
 	namespaces: LIST [SYSTEM_DLL_CODE_NAMESPACE]
 			-- De-serialized namespaces
-	
+
 	types: LIST [SYSTEM_DLL_CODE_TYPE_DECLARATION]
 			-- De-serialized types
 
 	expressions: LIST [SYSTEM_DLL_CODE_EXPRESSION]
 			-- De-serialized expressions
-	
+
 	statements: LIST [SYSTEM_DLL_CODE_STATEMENT]
 			-- De-serialized statements
 
@@ -277,7 +278,7 @@ feature -- Basic Operations
 				set_text_setting (Statements_key, l_paths)
 			end
 		end
-	
+
 	add (a_path: STRING) is
 			-- Add serialized tree at `a_path'.
 		require
@@ -311,27 +312,59 @@ feature -- Basic Operations
 			added_if_expression: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_expression_type implies expressions_paths.has (a_path)
 			added_if_statement: {SYSTEM_FILE}.exists (a_path) and then codedom_type_from_file (a_path) = Codedom_statement_type implies statements_paths.has (a_path)
 		end
-	
+
 	remove (a_path: STRING) is
 			-- Remove serialized tree at `a_path' if in tree.
 			-- Otherwise do nothing.
 		require
 			non_void_path: a_path /= Void
+		local
+			l_index: INTEGER
 		do
 			if compile_units_paths /= Void then
-				compile_units_paths.prune (a_path)
+				l_index := compile_units_paths.index_of (a_path, 1)
+				if l_index > 0 then
+					compile_units.go_i_th (l_index)
+					compile_units.remove
+					compile_units_paths.go_i_th (l_index)
+					compile_units_paths.remove
+				end
 			end
 			if namespaces_paths /= Void then
-				namespaces_paths.prune (a_path)
+				l_index := namespaces_paths.index_of (a_path, 1)
+				if l_index > 0 then
+					namespaces.go_i_th (l_index)
+					namespaces.remove
+					namespaces_paths.go_i_th (l_index)
+					namespaces_paths.remove
+				end
 			end
 			if types_paths /= Void then
-				types_paths.prune (a_path)
+				l_index := types_paths.index_of (a_path, 1)
+				if l_index > 0 then
+					types.go_i_th (l_index)
+					types.remove
+					types_paths.go_i_th (l_index)
+					types_paths.remove
+				end
 			end
 			if expressions_paths /= Void then
-				expressions_paths.prune (a_path)
+				l_index := expressions_paths.index_of (a_path, 1)
+				if l_index > 0 then
+					expressions.go_i_th (l_index)
+					expressions.remove
+					expressions_paths.go_i_th (l_index)
+					expressions_paths.remove
+				end
 			end
 			if statements_paths /= Void then
-				statements_paths.prune (a_path)
+				l_index := statements_paths.index_of (a_path, 1)
+				if l_index > 0 then
+					statements.go_i_th (l_index)
+					statements.remove
+					statements_paths.go_i_th (l_index)
+					statements_paths.remove
+				end
 			end
 		ensure
 			removed_if_compile_unit: compile_units_paths /= Void implies ((old compile_units_paths).has (a_path) implies not compile_units_paths.has (a_path))
@@ -350,6 +383,7 @@ feature -- Basic Operations
 		do
 			if compile_units_paths = Void then
 				create {ARRAYED_LIST [STRING]} compile_units_paths.make (8)
+				compile_units_paths.compare_objects
 				create {ARRAYED_LIST [SYSTEM_DLL_CODE_COMPILE_UNIT]} compile_units.make (8)
 			end
 			if not compile_units_paths.has (a_path) then
@@ -361,7 +395,7 @@ feature -- Basic Operations
 		ensure
 			added: compile_units_paths.has (a_path)
 		end
-		
+
 	add_namespace (a_path: STRING) is
 			-- Extend `namespaces' with tree serialized at `a_path'.
 		require
@@ -382,7 +416,7 @@ feature -- Basic Operations
 		ensure
 			added: namespaces_paths.has (a_path)
 		end
-		
+
 	add_type (a_path: STRING) is
 			-- Extend `types' with tree serialized at `a_path'.
 		require
@@ -403,7 +437,7 @@ feature -- Basic Operations
 		ensure
 			added: types_paths.has (a_path)
 		end
-		
+
 	add_expression (a_path: STRING) is
 			-- Extend `expressions' with tree serialized at `a_path'.
 		require
@@ -424,7 +458,7 @@ feature -- Basic Operations
 		ensure
 			added: expressions_paths.has (a_path)
 		end
-		
+
 	add_statement (a_path: STRING) is
 			-- Extend `statements' with tree serialized at `a_path'.
 		require
@@ -450,19 +484,19 @@ feature {NONE} -- Private access
 
 	Location_separator: CHARACTER is ';'
 			-- Location separator in regsitry key value
-	
+
 	Compile_units_key: STRING is "CompileUnits"
 			-- Registry key containing locations of compile units
-			
+
 	Namespaces_key: STRING is "Namespaces"
 			-- Registry key containing locations of namespaces
-			
+
 	Types_key: STRING is "Types"
 			-- Registry key containing locations of types
-			
+
 	Expressions_key: STRING is "Expressions"
 			-- Registry key containing locations of expressions
-			
+
 	Statements_key: STRING is "Statements"
 			-- Registry key containing locations of statements
 
@@ -487,7 +521,7 @@ end -- class TESTER_TREE_STORE
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider Tester
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

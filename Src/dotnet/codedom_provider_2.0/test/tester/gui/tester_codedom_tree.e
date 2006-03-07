@@ -37,7 +37,7 @@ feature {NON} -- Initialization
 			-- Initialize tree from `Store'.
 		do
 			default_create
-			update	
+			update
 		end
 
 feature -- Access
@@ -97,11 +97,22 @@ feature -- Access
 		local
 			l_namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
 			i, l_count: INTEGER
+			l_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION
 		do
+			l_attributes := a_compile_unit.assembly_custom_attributes
 			l_namespaces := a_compile_unit.namespaces
-			l_count := l_namespaces.count
-			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_count)
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_namespaces.count + l_attributes.count)
 			from
+				l_count := l_attributes.count
+			until
+				i = l_count
+			loop
+				Result.extend (custom_attribute_node (a_path, l_attributes.item (i)))
+				i := i + 1
+			end
+			from
+				i := 0
+				l_count := l_namespaces.count
 			until
 				i = l_count
 			loop
@@ -122,7 +133,7 @@ feature -- Access
 			Result.set_tooltip (a_path)
 			Result.set_data (a_namespace)
 		end
-	
+
 	namespace_types_nodes (a_path: STRING; a_namespace: SYSTEM_DLL_CODE_NAMESPACE): LIST [EV_TREE_NODE] is
 			-- Types node for namespace `a_namespace'.
 		require
@@ -142,7 +153,7 @@ feature -- Access
 				i := i + 1
 			end
 		end
-	
+
 	type_node (a_path: STRING; a_type: SYSTEM_DLL_CODE_TYPE_DECLARATION): EV_DYNAMIC_TREE_ITEM is
 			-- Type node for type `a_type'.
 		require
@@ -165,12 +176,23 @@ feature -- Access
 			i, l_count: INTEGER
 			l_method: SYSTEM_DLL_CODE_MEMBER_METHOD
 			l_property: SYSTEM_DLL_CODE_MEMBER_PROPERTY
+			l_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION
 		do
+			l_attributes := a_type.custom_attributes
 			l_members := a_type.members
 			quick_sort (l_members)
-			l_count := l_members.count
-			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_count)
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_members.count + l_attributes.count)
 			from
+				l_count := l_attributes.count
+			until
+				i = l_count
+			loop
+				Result.extend (custom_attribute_node (a_path, l_attributes.item (i)))
+				i := i + 1
+			end
+			from
+				l_count := l_members.count
+				i := 0
 			until
 				i = l_count
 			loop
@@ -189,6 +211,31 @@ feature -- Access
 			end
 		end
 
+	custom_attribute_node (a_path: STRING; a_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION): EV_DYNAMIC_TREE_ITEM is
+			-- Type node for type `a_type'.
+		require
+			non_void_path: a_path /= Void
+			non_void_attribute: a_attribute /= Void
+		do
+			create Result.make_with_text (a_attribute.name)
+			Result.set_subtree_function (agent custom_attribute_arguments_nodes (a_path, a_attribute.arguments))
+			Result.set_pixmap (create {TESTER_TREE_ICON}.make_custom_attribute)
+			Result.set_tooltip (a_path)
+			Result.set_data (a_attribute)
+		end
+
+	line_pragma_node (a_path: STRING; a_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA): EV_TREE_ITEM is
+			-- Type node for type `a_type'.
+		require
+			non_void_path: a_path /= Void
+			non_void_attribute: a_pragma /= Void
+		do
+			create Result.make_with_text (a_pragma.file_name + " @ " + a_pragma.line_number.out)
+			Result.set_pixmap (create {TESTER_TREE_ICON}.make_pragma)
+			Result.set_tooltip (a_path)
+			Result.set_data (a_pragma)
+		end
+
 	method_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): EV_DYNAMIC_TREE_ITEM is
 			-- Type node for type `a_type'.
 		require
@@ -196,7 +243,7 @@ feature -- Access
 			non_void_member: a_member /= Void
 		do
 			create Result.make_with_text (a_member.name)
-			Result.set_subtree_function (agent statements_nodes (a_path, a_member.statements))
+			Result.set_subtree_function (agent method_nodes (a_path, a_member))
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make (a_member))
 			Result.set_tooltip (a_path)
 			Result.set_data (a_member)
@@ -215,7 +262,7 @@ feature -- Access
 			Result.set_data (a_member)
 		end
 
-	member_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): EV_TREE_ITEM is
+	member_node (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): EV_DYNAMIC_TREE_ITEM is
 			-- Type node for type `a_type'.
 		require
 			non_void_path: a_path /= Void
@@ -223,8 +270,22 @@ feature -- Access
 		do
 			create Result.make_with_text (a_member.name)
 			Result.set_pixmap (create {TESTER_TREE_ICON}.make (a_member))
+			Result.set_subtree_function (agent member_nodes (a_path, a_member))
 			Result.set_tooltip (a_path)
 			Result.set_data (a_member)
+		end
+
+	custom_attribute_argument_node (a_path: STRING; a_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT): EV_DYNAMIC_TREE_ITEM is
+			-- Custom attribute argument node
+		require
+			non_void_argument: a_argument /= Void
+			non_void_path: a_path /= Void
+		do
+			create Result.make_with_text (a_argument.name)
+			Result.set_subtree_function (agent expression_nodes (a_path, a_argument.value))
+			Result.set_pixmap (create {TESTER_TREE_ICON}.make_custom_attribute)
+			Result.set_tooltip (a_path)
+			Result.set_data (a_argument)
 		end
 
 	statement_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): EV_DYNAMIC_TREE_ITEM is
@@ -259,6 +320,45 @@ feature -- Access
 			Result.set_data (a_expression)
 		end
 
+	custom_attribute_arguments_nodes (a_path: STRING;  a_arguments: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT_COLLECTION): LIST [EV_TREE_NODE] is
+			-- Arguments nodes for custom attribute.
+		require
+			non_void_argumentss: a_arguments /= Void
+		local
+			i, l_count: INTEGER
+		do
+			l_count := a_arguments.count
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_count)
+			from
+			until
+				i = l_count
+			loop
+				Result.extend (custom_attribute_argument_node (a_path, a_arguments.item (i)))
+				i := i + 1
+			end
+		end
+
+	method_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_MEMBER_METHOD): LIST [EV_TREE_NODE] is
+			-- Nodes for method `a_member'
+		local
+			l_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION
+			l_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION
+			i, l_count: INTEGER
+		do
+			l_attributes := a_member.custom_attributes
+			l_statements := a_member.statements
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_attributes.count + l_statements.count)
+			from
+				l_count := l_attributes.count
+			until
+				i = l_count
+			loop
+				Result.extend (custom_attribute_node (a_path, l_attributes.item (i)))
+				i := i + 1
+			end
+			Result.append (statements_nodes (a_path, l_statements))
+		end
+
 	statements_nodes (a_path: STRING; a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION): LIST [EV_TREE_NODE] is
 			-- Statements nodes for method `a_method'.
 		require
@@ -276,7 +376,7 @@ feature -- Access
 				i := i + 1
 			end
 		end
-	
+
 	expressions_nodes (a_path: STRING; a_expressions: SYSTEM_DLL_CODE_EXPRESSION_COLLECTION): LIST [EV_TREE_NODE] is
 			-- Statements nodes for method `a_method'.
 		require
@@ -294,15 +394,26 @@ feature -- Access
 				i := i + 1
 			end
 		end
-	
+
 	property_statements_nodes (a_path: STRING; a_property: SYSTEM_DLL_CODE_MEMBER_PROPERTY): LIST [EV_TREE_NODE] is
 			-- Statements nodes for method `a_method'.
 		require
 			non_void_property: a_property /= Void
 		local
 			l_node: EV_TREE_ITEM
+			l_attributes: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION_COLLECTION
+			i, l_count: INTEGER
 		do
-			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (2)
+			l_attributes := a_property.custom_attributes
+			l_count := l_attributes.count
+			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (l_count + 2)
+			from
+			until
+				i = l_count
+			loop
+				Result.extend (custom_attribute_node (a_path, l_attributes.item (i)))
+				i := i + 1
+			end
 			if a_property.has_get then
 				create l_node.make_with_text ("Property Getter Statements")
 				l_node.set_tooltip (a_path)
@@ -320,7 +431,20 @@ feature -- Access
 				Result.extend (l_node)
 			end
 		end
-	
+
+	member_nodes (a_path: STRING; a_member: SYSTEM_DLL_CODE_TYPE_MEMBER): LIST [EV_TREE_NODE] is
+			-- Statements nodes for member `a_member'.
+		require
+			non_void_member: a_member /= Void
+		do
+			if a_member.line_pragma /= Void then
+				create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
+				Result.extend (line_pragma_node (a_path, a_member.line_pragma))
+			else
+				create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (0)
+			end
+		end
+
 	statement_expressions_node (a_path: STRING; a_statement: SYSTEM_DLL_CODE_STATEMENT): LIST [EV_TREE_NODE] is
 			-- Statement title
 		require
@@ -397,7 +521,7 @@ feature -- Access
 																if l_variable_declaration_statement /= Void then
 																	Result := variable_declaration_statement_nodes (a_path, l_variable_declaration_statement)
 																end
-															end	
+															end
 														end
 													end
 												end
@@ -409,6 +533,9 @@ feature -- Access
 						end
 					end
 				end
+			end
+			if Result /= Void and a_statement.line_pragma /= Void then
+				Result.extend (line_pragma_node (a_path, a_statement.line_pragma))
 			end
 		end
 
@@ -587,7 +714,7 @@ feature -- Access
 			l_node.set_pixmap (l_pixmap)
 			l_node.set_data (a_goto_statement)
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
-			Result.extend (l_node)			
+			Result.extend (l_node)
 		end
 
 	iteration_statement_nodes (a_path: STRING; a_iteration_statement: SYSTEM_DLL_CODE_ITERATION_STATEMENT): LIST [EV_TREE_NODE] is
@@ -874,7 +1001,7 @@ feature -- Access
 				i := i + 1
 			end
 		end
-	
+
 	catch_clause_node (a_path: STRING; a_catch_clause: SYSTEM_DLL_CODE_CATCH_CLAUSE): EV_TREE_ITEM is
 			-- Catch clause node
 		local
@@ -1081,7 +1208,7 @@ feature -- Access
 			else
 				create l_node.make_with_text ("Missing parameter name")
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
-			end			
+			end
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_argument_expression)
 			Result.extend (l_node)
@@ -1123,13 +1250,13 @@ feature -- Access
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_expression)
 				Result.extend (l_node)
 			end
-			
+
 			create l_node.make_with_text ("Size: " + a_array_create_expression.size.out)
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_array_create_expression)
 			l_node.set_pixmap (create {TESTER_TREE_ICON}.make_primitive)
 			Result.extend (l_node)
-			
+
 			if a_array_create_expression.size_expression /= Void then
 				create l_node.make_with_text ("Size Expression")
 				l_node.set_tooltip (a_path)
@@ -1725,7 +1852,7 @@ feature -- Access
 			l_node: EV_TREE_ITEM
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
-			
+
 			create l_node.make_with_text ("")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_primitive_expression)
@@ -1786,7 +1913,7 @@ feature -- Access
 			l_node: EV_TREE_ITEM
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
-			
+
 			create l_node.make_with_text ("")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_property_set_value_reference_expression)
@@ -1806,7 +1933,7 @@ feature -- Access
 			l_node: EV_TREE_ITEM
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
-			
+
 			create l_node.make_with_text ("")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_snippet_expression)
@@ -1831,7 +1958,7 @@ feature -- Access
 			l_node: EV_TREE_ITEM
 		do
 			create {ARRAYED_LIST [EV_TREE_NODE]} Result.make (1)
-			
+
 			create l_node.make_with_text ("")
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_this_expression)
@@ -1905,7 +2032,7 @@ feature -- Access
 			else
 				create l_node.make_with_text ("Missing Variable Name")
 				l_node.set_pixmap (create {TESTER_TREE_ICON}.make_error)
-			end			
+			end
 			l_node.set_tooltip (a_path)
 			l_node.set_data (a_variable_reference_expression)
 			Result.extend (l_node)

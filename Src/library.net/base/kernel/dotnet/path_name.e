@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} is_empty, empty, to_c, to_cil, wipe_out, out, string, twin
-			{PATH_NAME} count, area
+			{PATH_NAME} count, area, infix "<"
 		redefine
 			is_equal
 		end

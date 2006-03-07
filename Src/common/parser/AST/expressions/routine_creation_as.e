@@ -12,6 +12,15 @@ deferred class
 inherit
 	EXPR_AS
 
+	ID_SET_ACCESSOR
+		rename
+			make as make_id_set,
+			id_set as routine_ids,
+			set_id_set as set_routine_ids
+		undefine
+			copy, is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	initialize (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN) is
@@ -85,6 +94,9 @@ feature -- Attributes
 	has_target: BOOLEAN
 			-- Does Current has a target?
 
+	class_id: INTEGER
+			-- The class id.
+
 feature -- Roundtrip
 
 	internal_operands : DELAYED_ACTUAL_LIST_AS
@@ -99,6 +111,18 @@ feature -- Comparison
 					  equivalent (operands, other.operands) and then
 					  equivalent (target, other.target) and then
 					  has_target = other.has_target
+		end
+
+feature -- Setting
+
+	set_class_id (a_class_id: like class_id) is
+			-- Set `class_id' to `a_class_id'.
+		require
+			a_class_id_ok: a_class_id > 0 or a_class_id = -1
+		do
+			class_id := a_class_id
+		ensure
+			class_id_set: class_id = a_class_id
 		end
 
 invariant

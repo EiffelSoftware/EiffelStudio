@@ -351,7 +351,7 @@ feature -- Access
 	line_count: INTEGER;
 			-- Number of character in the current line
 
-	last_character: CHARACTER;;
+	last_character: CHARACTER;
 			-- Character at the current position in the `line'
 
 indexing

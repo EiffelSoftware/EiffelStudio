@@ -657,11 +657,15 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+		do
+		end
+
 end -- CODE_INIT_ATTRIBUTES
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

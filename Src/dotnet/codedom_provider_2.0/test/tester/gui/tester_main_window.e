@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 			create codedoms_tree.make
 			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
 			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
+			tree_bottom_split_area.replace (codedoms_tree)
 			tree_bottom_split_area.set_split_position (3000)
 			Event_manager.set_output_displayer (agent display_output)
 			make
@@ -447,6 +448,7 @@ feature {NONE} -- Events
 					compile_from_dom_button.disable_sensitive
 				end
 				check_can_generate
+				description.prune_all ('%R')
 				codedom_node_info_text.set_text (description)
 			else
 				generate_label.set_text (select_codedom_tree_label)
@@ -740,9 +742,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_output: a_output /= Void
 		do
-			output_text.set_caret_position (1)
-			output_text.insert_text (a_output)
-			tests_notebook.select_item (output_text)
+--			output_text.set_caret_position (1)
+--			output_text.insert_text (a_output)
+--			tests_notebook.select_item (output_text)
 		end
 
 	update_properties is
@@ -1043,7 +1045,7 @@ end -- class TESTER_TESTER_MAIN_WINDOW
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider Tester
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

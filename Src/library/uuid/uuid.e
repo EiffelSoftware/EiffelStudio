@@ -5,12 +5,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class
+frozen class
 	UUID
 
 inherit
 	COMPARABLE
 		redefine
+			is_equal,
 			out
 		end
 
@@ -203,6 +204,17 @@ feature -- Comparison
 					end
 				end
 			end
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := data_1 = other.data_1 and
+				data_2 = other.data_2 and
+				data_3 = other.data_3 and
+				data_4 = other.data_4 and
+				data_5 = other.data_5
 		end
 
 feature -- Query

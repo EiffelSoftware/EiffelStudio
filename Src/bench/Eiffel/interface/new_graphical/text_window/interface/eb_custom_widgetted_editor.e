@@ -107,7 +107,7 @@ feature -- Quick search bar basic operation
 			search_bar_exists: search_bar /= Void
 			search_bar_not_destroyed: not search_bar.is_destroyed
 		do
-			quick_search_mode := true
+			set_quick_search_mode (true)
 			if not search_tool.is_visible then
 				search_bar.show
 			end
@@ -129,6 +129,12 @@ feature -- Quick search bar basic operation
 			prepare_quick_search
 			search_tool.go_to_previous_found
 			check_cursor_position
+		end
+
+	set_quick_search_mode (a_mode: BOOLEAN) is
+			-- Set `quick_search_mode' with `a_mode'.
+		do
+			shared_quick_search_mode.put (a_mode)
 		end
 
 feature {NONE} -- Quick search bar.
@@ -179,11 +185,12 @@ feature {NONE} -- Quick search bar.
 				end
 			end
 			if search_bar.keyword_field.text /= Void then
-				search_tool.force_new_search
 				search_tool.set_check_class_succeed (True)
 				l_incremental_search := search_tool.is_incremental_search
 				search_tool.disable_incremental_search
-				search_tool.set_current_searched (search_bar.keyword_field.text)
+				if search_tool.currently_searched = Void or else not search_tool.currently_searched.is_equal (search_bar.keyword_field.text) then
+					search_tool.set_current_searched (search_bar.keyword_field.text)
+				end
 				if l_incremental_search then
 					search_tool.enable_incremental_search
 				end
@@ -300,13 +307,16 @@ feature {NONE} -- Quick search bar.
 	close_quick_search_bar is
 			-- When `close_button' is pressed.
 		do
-			quick_search_mode := false
+			set_quick_search_mode (false)
 			hide_search_bar
 			ev_application.idle_actions.extend_kamikaze (agent editor_drawing_area.set_focus)
 		end
 
-	quick_search_mode : BOOLEAN
+	quick_search_mode : BOOLEAN is
 			-- Is editor in search mode?
+		do
+			Result := shared_quick_search_mode.item
+		end
 
 feature -- Search commands
 
@@ -362,6 +372,12 @@ feature -- Search commands
 
 feature {NONE} -- Implementation
 
+	shared_quick_search_mode: CELL [BOOLEAN] is
+			-- Shared quick search mode.
+		once
+			create Result
+		end
+
 	prepare_search_tool is
 			-- Show and give focus to search panel.
 		do
@@ -400,6 +416,11 @@ feature {NONE} -- Implementation
 						l_search_tool.enable_incremental_search
 					end
 				end
+				if l_search_tool.currently_searched /= Void and then not l_search_tool.currently_searched.is_equal (search_bar.keyword_field.text) then
+					search_bar.keyword_field.change_actions.block
+					search_bar.keyword_field.set_text (l_search_tool.currently_searched)
+					search_bar.keyword_field.change_actions.resume
+				end
 			end
 		end
 
@@ -409,7 +430,6 @@ feature {NONE} -- Implementation
 			l_widget: like widget
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
-			l_cell: EV_CELL
 		do
 			create l_widget
 

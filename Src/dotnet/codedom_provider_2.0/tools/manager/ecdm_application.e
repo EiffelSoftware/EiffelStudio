@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		do
 			s := exe_name + " v" + (create {ECDM_CONSTANTS}).product_version + "%N"
 			s.append ("Eiffel Codedom Provider Manager%N")
-			s.append ("Copyright (c) 2004, Eiffel Software.%N")
+			s.append ("Copyright (c) 2004-2006, Eiffel Software.%N")
 			s.append ("Report bugs, problems or suggestions at http://support.eiffel.com%N")
 			print (s)
 		end
@@ -147,7 +147,7 @@ end -- class APPLICATION
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider Manager
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -445,23 +445,28 @@ feature {NONE} -- CodeDom object initialization
 		do
 			create Result.make_empty
 			if a_parent.redefining /= Void then
-				Result.append ("redefine%N")
+				Result.append ("redefine")
+				Result.append (Line_return)
 				Result.append ("")
 			end
 			if a_parent.renaming /= Void then
-				Result.append ("rename%N")
+				Result.append ("rename")
+				Result.append (Line_return)
 				Result.append ("")
 			end
 			if a_parent.undefining /= Void then
-				Result.append ("undefine%N")
+				Result.append ("undefine")
+				Result.append (Line_return)
 				Result.append ("")
 			end
 			if a_parent.exports /= Void then
-				Result.append ("export%N")
+				Result.append ("export")
+				Result.append (Line_return)
 				Result.append ("")
 			end
 			if a_parent.selecting /= Void then
-				Result.append ("select%N")
+				Result.append ("select")
+				Result.append (Line_return)
 				Result.append ("")
 			end
 		end

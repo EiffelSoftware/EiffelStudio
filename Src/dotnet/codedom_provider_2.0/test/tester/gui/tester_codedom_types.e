@@ -25,13 +25,13 @@ feature -- Access
 
 	Codedom_method_type: INTEGER is 6
 			-- Method tree node
-	
+
 	Codedom_property_type: INTEGER is 7
 			-- Property tree node
-	
+
 	Codedom_event_type: INTEGER is 8
 			-- Event tree node
-	
+
 	Codedom_field_type: INTEGER is 9
 			-- Field tree node
 
@@ -47,6 +47,12 @@ feature -- Access
 	Codedom_import_type: INTEGER is 13
 			-- Namespace import tree node
 
+	Custom_attribute_type: INTEGER is 14
+			-- Custom attribute tree node
+
+	Custom_attribute_argument_type: INTEGER is 15
+			-- Custom attribute argument
+
 feature -- Status Report
 
 	is_valid_codedom_type (a_type: INTEGER): BOOLEAN is
@@ -58,9 +64,10 @@ feature -- Status Report
 				a_type = Codedom_property_type or a_type = Codedom_event_type or
 				a_type = Codedom_field_type or a_type = Codedom_snippet_member_type or
 				a_type = Codedom_type_reference_type or a_type = Codedom_comment_type or
-				a_type = Codedom_import_type
+				a_type = Codedom_import_type or a_type = Custom_attribute_type or
+				a_type = Custom_attribute_argument_type
 		end
-		
+
 end -- class TESTER_CODEDOM_TYPES
 
 --+--------------------------------------------------------------------

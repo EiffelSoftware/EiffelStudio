@@ -21,7 +21,7 @@ feature -- Access
 
 	image_index: INTEGER
 			-- Image index of last analyzed member
-	
+
 	description: STRING
 			-- Description of last analyzed member
 
@@ -56,164 +56,187 @@ feature -- Basic Operation
 			l_import: SYSTEM_DLL_CODE_NAMESPACE_IMPORT
 			l_member: SYSTEM_DLL_CODE_TYPE_MEMBER
 			l_base_types: SYSTEM_DLL_CODE_TYPE_REFERENCE_COLLECTION
+			l_custom_attribute: SYSTEM_DLL_CODE_ATTRIBUTE_DECLARATION
+			l_custom_attribute_argument: SYSTEM_DLL_CODE_ATTRIBUTE_ARGUMENT
+			l_line_pragma: SYSTEM_DLL_CODE_LINE_PRAGMA
 			i, l_count: INTEGER
 		do
-			l_compile_unit ?= a_object
-			if l_compile_unit /= Void then
-				image_index := Compile_unit_icon
-				description := "Compile unit"
-				object_type := Codedom_compile_unit_type
+			l_line_pragma ?= a_object
+			if l_line_pragma /= Void then
+				image_index := Pragma_icon
+				description := "Line pragma: " + l_line_pragma.file_name + " @ " + l_line_pragma.line_number.out
 			else
-				l_expression ?= a_object
-				if l_expression /= Void then
-					image_index := Expression_icon
-					description := "Expression"
-					object_type := Codedom_expression_type
+				l_custom_attribute_argument ?= a_object
+				if l_custom_attribute_argument /= Void then
+					image_index := Custom_attribute_icon
+					description := "Custom Attribute Argument"
+					object_type := Custom_attribute_argument_type
 				else
-					l_namespace ?= a_object
-					if l_namespace /= Void then
-						image_index := Namespace_icon
-						description := "Namespace " + l_namespace.name
-						object_type := Codedom_namespace_type
+					l_custom_attribute ?= a_object
+					if l_custom_attribute /= Void then
+						image_index := Custom_attribute_icon
+						description := "Custom Attribute"
+						object_type := Custom_attribute_type
 					else
-						l_statement ?= a_object
-						if l_statement /= Void then
-							image_index := Statement_icon
-							description := "Statement"
-							object_type := Codedom_statement_type
+						l_compile_unit ?= a_object
+						if l_compile_unit /= Void then
+							image_index := Compile_unit_icon
+							description := "Compile unit"
+							object_type := Codedom_compile_unit_type
 						else
-							l_type_ref ?= a_object
-							if l_type_ref /= Void then
-								image_index := Class_group
-								description := "Type reference to " + l_type_ref.to_string
-								object_type := Codedom_type_reference_type
+							l_expression ?= a_object
+							if l_expression /= Void then
+								image_index := Expression_icon
+								description := "Expression"
+								object_type := Codedom_expression_type
 							else
-								l_comment ?= a_object
-								if l_comment /= Void then
-									image_index := primitive_icon
-									description := "Comment: " + l_comment.text
-									object_type := Codedom_comment_type
+								l_namespace ?= a_object
+								if l_namespace /= Void then
+									image_index := Namespace_icon
+									description := "Namespace " + l_namespace.name
+									object_type := Codedom_namespace_type
 								else
-									l_import ?= a_object
-									if l_import /= Void then
-										image_index := primitive_icon
-										description := "Namespace import: " + l_import.namespace
-										object_type := Codedom_import_type
+									l_statement ?= a_object
+									if l_statement /= Void then
+										image_index := Statement_icon
+										description := "Statement"
+										object_type := Codedom_statement_type
 									else
-										l_type ?= a_object
-										if l_type /= Void then
-											object_type := Codedom_type_type
-											if l_type.is_class then
-												l_base_index := Class_group
-												description := "class " + l_type.name
-											elseif l_type.is_enum then
-												l_base_index := Enum_group
-												description := "enum " + l_type.name
-											elseif l_type.is_interface then
-												l_base_index := Interface_group
-												description := "interface " + l_type.name
-											elseif l_type.is_struct then
-												l_base_index := Struct_group
-												description := "struct " + l_type.name
-											end
-											l_base_types := l_type.base_types
-											if l_base_types /= Void then
-												from
-													l_count := l_base_types.count
-													if l_count > 0 then
-														description.append (" : ")
-														description.append (l_base_types.item (0).base_type)
-														i := 1
-													end
-												until
-													i = l_count
-												loop
-													description.append (", ")
-													description.append (l_base_types.item (i).base_type)
-													i := i + 1
-												end
-											end
-											l_type_attributes := l_type.type_attributes
-											if l_type_attributes & {TYPE_ATTRIBUTES}.Nested_assembly = {TYPE_ATTRIBUTES}.Nested_assembly then
-												image_index := l_base_index + Internal_offset
-												description.prepend ("internal ")
-											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Public or l_type_attributes = {TYPE_ATTRIBUTES}.Nested_public then
-												image_index := l_base_index
-												description.prepend ("public ")
-											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_private then
-												image_index := l_base_index + Private_offset
-												description.prepend ("private ")
-											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_family then
-												image_index := l_base_index + Protected_offset
-												description.prepend ("protected ")
-											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_and_assem then
-												image_index := l_base_index + Internal_and_protected_offset
-												description.prepend ("internal and protected ")
-											elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_or_assem then
-												image_index := l_base_index + Internal_or_protected_offset
-												description.prepend ("internal or protected ")
-											else
-												check
-													should_not_be_here: False
-												end
-												image_index := l_base_index
-											end
+										l_type_ref ?= a_object
+										if l_type_ref /= Void then
+											image_index := Class_group
+											description := "Type reference to " + l_type_ref.to_string
+											object_type := Codedom_type_reference_type
 										else
-											l_member ?= a_object
-											if l_member /= Void then
-												l_attributes := l_member.attributes
-												analyze_offset (l_member)
-												l_constructor ?= a_object
-												if l_constructor /= Void then
-													image_index := Constructor_group + icon_offset + icon_static_offset
-													object_type := Codedom_method_type
-													description := static_offset_description + offset_description + "constructor"
+											l_comment ?= a_object
+											if l_comment /= Void then
+												image_index := primitive_icon
+												description := "Comment: " + l_comment.text
+												object_type := Codedom_comment_type
+											else
+												l_import ?= a_object
+												if l_import /= Void then
+													image_index := primitive_icon
+													description := "Namespace import: " + l_import.namespace
+													object_type := Codedom_import_type
 												else
-													l_method ?= a_object
-													if l_method /= Void then
-														image_index := Method_group + icon_offset
-														object_type := Codedom_method_type
-														description := static_offset_description + offset_description + "method " + l_method.name
-													else
-														l_event ?= a_object
-														if l_event /= Void then
-															image_index := Event_group + icon_offset
-															description := offset_description + "event " + l_event.name
-															object_type := Codedom_event_type
-														else
-															l_property ?= a_object
-															if l_property /= Void then
-																object_type := Codedom_property_type
-																if l_property.has_get and l_property.has_set then
-																	image_index := Property_group + icon_offset + icon_static_offset
-																	description := static_offset_description + offset_description + "read and write property " + l_property.name
-																elseif l_property.has_get then
-																	image_index := Read_only_property_group + icon_offset + icon_static_offset
-																	description := static_offset_description + offset_description + "read only property " + l_property.name
-																elseif l_property.has_set then
-																	image_index := Write_only_property_group + icon_offset + icon_static_offset
-																	description := static_offset_description + offset_description + "write only property " + l_property.name
-																else
-																	image_index := Property_group + icon_offset + icon_static_offset
-																	description := static_offset_description + offset_description + "property " + l_property.name
+													l_type ?= a_object
+													if l_type /= Void then
+														object_type := Codedom_type_type
+														if l_type.is_class then
+															l_base_index := Class_group
+															description := "class " + l_type.name
+														elseif l_type.is_enum then
+															l_base_index := Enum_group
+															description := "enum " + l_type.name
+														elseif l_type.is_interface then
+															l_base_index := Interface_group
+															description := "interface " + l_type.name
+														elseif l_type.is_struct then
+															l_base_index := Struct_group
+															description := "struct " + l_type.name
+														end
+														l_base_types := l_type.base_types
+														if l_base_types /= Void then
+															from
+																l_count := l_base_types.count
+																if l_count > 0 then
+																	description.append (" : ")
+																	description.append (l_base_types.item (0).base_type)
+																	i := 1
 																end
+															until
+																i = l_count
+															loop
+																description.append (", ")
+																description.append (l_base_types.item (i).base_type)
+																i := i + 1
+															end
+														end
+														l_type_attributes := l_type.type_attributes
+														if l_type_attributes & {TYPE_ATTRIBUTES}.Nested_assembly = {TYPE_ATTRIBUTES}.Nested_assembly then
+															image_index := l_base_index + Internal_offset
+															description.prepend ("internal ")
+														elseif l_type_attributes = {TYPE_ATTRIBUTES}.Public or l_type_attributes = {TYPE_ATTRIBUTES}.Nested_public then
+															image_index := l_base_index
+															description.prepend ("public ")
+														elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_private then
+															image_index := l_base_index + Private_offset
+															description.prepend ("private ")
+														elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_family then
+															image_index := l_base_index + Protected_offset
+															description.prepend ("protected ")
+														elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_and_assem then
+															image_index := l_base_index + Internal_and_protected_offset
+															description.prepend ("internal and protected ")
+														elseif l_type_attributes = {TYPE_ATTRIBUTES}.Nested_fam_or_assem then
+															image_index := l_base_index + Internal_or_protected_offset
+															description.prepend ("internal or protected ")
+														else
+															check
+																should_not_be_here: False
+															end
+															image_index := l_base_index
+														end
+													else
+														l_member ?= a_object
+														if l_member /= Void then
+															l_attributes := l_member.attributes
+															analyze_offset (l_member)
+															l_constructor ?= a_object
+															if l_constructor /= Void then
+																image_index := Constructor_group + icon_offset + icon_static_offset
+																object_type := Codedom_method_type
+																description := static_offset_description + offset_description + "constructor"
 															else
-																l_field ?= a_object
-																if l_field /= Void then
-																	object_type := Codedom_field_type
-																	image_index := Field_group + icon_offset + icon_static_offset
-																	description := static_offset_description + offset_description + "field " + l_field.name
+																l_method ?= a_object
+																if l_method /= Void then
+																	image_index := Method_group + icon_offset
+																	object_type := Codedom_method_type
+																	description := static_offset_description + offset_description + l_method.return_type.base_type + " method " + l_method.name
 																else
-																	l_snippet_member ?= a_object
-																	if l_snippet_member /= Void then
-																		-- Type snippet
-																		image_index := Type_snippet_group + icon_offset
-																		description := static_offset_description + offset_description + "snippet member:%N" + l_snippet_member.text
-																		object_type := Codedom_snippet_member_type
+																	l_event ?= a_object
+																	if l_event /= Void then
+																		image_index := Event_group + icon_offset
+																		description := offset_description + "event " + l_event.name
+																		object_type := Codedom_event_type
 																	else
-																		image_index := Error_icon
-																		description := "Unknown CodeDom member type"
-																		object_type := 0
+																		l_property ?= a_object
+																		if l_property /= Void then
+																			object_type := Codedom_property_type
+																			if l_property.has_get and l_property.has_set then
+																				image_index := Property_group + icon_offset + icon_static_offset
+																				description := static_offset_description + offset_description + "read and write property " + l_property.name
+																			elseif l_property.has_get then
+																				image_index := Read_only_property_group + icon_offset + icon_static_offset
+																				description := static_offset_description + offset_description + "read only property " + l_property.name
+																			elseif l_property.has_set then
+																				image_index := Write_only_property_group + icon_offset + icon_static_offset
+																				description := static_offset_description + offset_description + "write only property " + l_property.name
+																			else
+																				image_index := Property_group + icon_offset + icon_static_offset
+																				description := static_offset_description + offset_description + "property " + l_property.name
+																			end
+																		else
+																			l_field ?= a_object
+																			if l_field /= Void then
+																				object_type := Codedom_field_type
+																				image_index := Field_group + icon_offset + icon_static_offset
+																				description := static_offset_description + offset_description + l_field.type.base_type + " field " + l_field.name
+																			else
+																				l_snippet_member ?= a_object
+																				if l_snippet_member /= Void then
+																					-- Type snippet
+																					image_index := Type_snippet_group + icon_offset
+																					description := static_offset_description + offset_description + "snippet member:%N" + l_snippet_member.text
+																					object_type := Codedom_snippet_member_type
+																				else
+																					image_index := Error_icon
+																					description := "Unknown CodeDom member type"
+																					object_type := 0
+																				end
+																			end
+																		end
 																	end
 																end
 															end

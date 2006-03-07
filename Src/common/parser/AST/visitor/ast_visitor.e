@@ -1040,15 +1040,6 @@ feature {AST_EIFFEL} -- Clickable visitor
 		deferred
 		end
 
-feature {AST_EIFFEL} -- Compiled type
-
-	process_type_a (a_type: TYPE_A) is
-		require
-			a_type_not_void: a_type /= Void
-		do
-			-- Doesn't do anything by default because it is not part of the AST node.
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

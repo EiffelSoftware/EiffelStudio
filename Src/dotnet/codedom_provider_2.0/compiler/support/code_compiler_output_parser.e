@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 	Successful_compilation_keyword: STRING is 
 			-- Message displayed at the end of a successfull compilation.
 		once
-			Result := "System recompiled."--%NYou must now run %"finish_freezing.exe%" in:"
+			Result := "System recompiled."
 		ensure
 			non_void_successful_compilation: Result /= Void
 			not_empty_successful_compilation: not Result.is_empty
@@ -148,7 +148,7 @@ end -- class CODE_COMPILER_OUTPUT_PARSER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
---| Copyright (C) 2001-2004 Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

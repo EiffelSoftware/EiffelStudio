@@ -35,7 +35,7 @@ class CONSOLE inherit
 				read_natural_8, read_natural_16, read_natural, read_natural_32, read_natural_64,
 				put_integer_8, put_integer_16, putint, put_integer, put_integer_32, put_integer_64,
 				put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
-				dispose
+				dispose, before, readable, is_closed
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, next_line,

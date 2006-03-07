@@ -627,6 +627,11 @@ feature -- Status report
 	full: BOOLEAN is False
 			-- Is structure filled to capacity?
 
+	prunable: BOOLEAN is
+			-- Is there an item to be removed?
+		do
+		end
+
 feature -- Status setting
 
 	open_read is
@@ -1696,11 +1701,6 @@ feature {NONE} -- Inapplicable
 		ensure then
 			item = v
 			count = old count
-		end
-
-	prunable: BOOLEAN is
-			-- Is there an item to be removed?
-		do
 		end
 
 	remove is

@@ -10,72 +10,31 @@ class
 
 feature -- Access
 
-	uuid: STRING is
-			-- Get a random uuid.
+	generate_uuid: UUID is
+			-- Generate a random UUID
         local
-            l_b: ARRAY [NATURAL_8]
+            l_segs: ARRAY [NATURAL_8]
             i: INTEGER
         do
-        	create Result.make (36)
-        	create l_b.make (1, 16)
+        	create l_segs.make (1, 16)
         	from
         		i := 1
         	until
         		i > 16
         	loop
-        		l_b[i] := rand_byte
+        		l_segs[i] := rand_byte
         		i := i + 1
         	end
 
 				-- put in version
-			l_b[7] := l_b[7] & 0x0f | 0x40
+			l_segs[7] := l_segs[7] & 0x0f | 0x40
 				-- put in variant
-			l_b[9] := l_b[9] & 0x3f | 0x80
+			l_segs[9] := l_segs[9] & 0x3f | 0x80
 
-        	from
-        		i := 1
-        	until
-        		i > 16
-        	loop
-        		Result.append((l_b[i]).to_hex_string)
-        		if i = 4 or i = 6 or i = 8 or i = 10 then
-        			Result.append_character ('-')
-        		end
-        		i := i + 1
-        	end
-        	Result.to_lower
+			create Result.make_from_array (l_segs)
         ensure
-        	Valid_uuid: is_valid_uuid (Result)
+        	uuid_not_null: not Result.is_null
 		end
-
-feature -- Validation
-
-	is_valid_uuid (a_string: STRING): BOOLEAN is
-			-- Is `a_string' a valid uuid?
-		require
-			a_string_not_void: a_string /= Void
-		local
-			i: INTEGER
-		do
-			if a_string.count /= 36 then
-				Result := False
-			else
-				Result := True
-				from
-					i := 1
-				until
-					not Result or i > 36
-				loop
-					if i = 9 or i = 14 or i = 19 or i = 24 then
-						Result := a_string.item (i) = '-'
-					else
-						Result := a_string.item (i).is_hexa_digit
-					end
-					i := i +1
-				end
-			end
-		end
-
 
 feature {NONE} -- Implementation
 
@@ -142,4 +101,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class UUID_GENERATOR

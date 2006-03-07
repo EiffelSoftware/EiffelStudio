@@ -30,6 +30,20 @@ cluster
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
+	all merger:			"$EIFFEL_SRC\tools\partial_classes_merger\src"
+		exclude
+			".svn";
+		default
+			namespace ("EiffelSoftware.Library.Merger")
+		end
+
+	all eclop:		"$EIFFEL_SRC\free_add_ons\eclop\eclop"
+		exclude
+			".svn"; 
+		default
+			namespace ("EiffelSoftware.Library.Merger")
+		end
+
 	all compiler:		"$EIFFEL_SRC\dotnet\codedom_provider_2.0\compiler"
 		exclude
 			".svn"; "interface"; 
@@ -113,7 +127,7 @@ cluster
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
-
+		
 end -- system EiffelSoftware.CodeDom
 
 --+--------------------------------------------------------------------

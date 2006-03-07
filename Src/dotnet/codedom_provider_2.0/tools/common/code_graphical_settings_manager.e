@@ -242,7 +242,7 @@ end -- class CODE_GRAPHICAL_SETTINGS_MANAGER
 
 --+--------------------------------------------------------------------
 --| CodeDom Tools Library
---| Copyright (C) Eiffel Software
+--| Copyright (C) 2001-2006 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

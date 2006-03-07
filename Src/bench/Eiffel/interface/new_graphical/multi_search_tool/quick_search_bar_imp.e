@@ -28,17 +28,18 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create l_ev_horizontal_separator_1
 			create l_ev_horizontal_box_1
+			create l_ev_cell_1
 			create l_ev_label_1
 			create keyword_field
-			create l_ev_cell_1
+			create l_ev_cell_2
 			create l_ev_tool_bar_1
 			create next_button
 			create l_ev_tool_bar_2
 			create previous_button
-			create l_ev_cell_2
+			create l_ev_cell_3
 			create match_case_button
 			create regular_expression_button
-			create l_ev_cell_3
+			create l_ev_cell_4
 			create l_ev_tool_bar_3
 			create advanced_button
 			create l_ev_vertical_box_1
@@ -48,17 +49,18 @@ feature {NONE}-- Initialization
 				-- Build widget structure.
 			extend (l_ev_horizontal_separator_1)
 			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (keyword_field)
-			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_1)
 			l_ev_tool_bar_1.extend (next_button)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_2)
 			l_ev_tool_bar_2.extend (previous_button)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
+			l_ev_horizontal_box_1.extend (l_ev_cell_3)
 			l_ev_horizontal_box_1.extend (match_case_button)
 			l_ev_horizontal_box_1.extend (regular_expression_button)
-			l_ev_horizontal_box_1.extend (l_ev_cell_3)
+			l_ev_horizontal_box_1.extend (l_ev_cell_4)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_3)
 			l_ev_tool_bar_3.extend (advanced_button)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
@@ -79,29 +81,31 @@ feature {NONE}-- Initialization
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
 			l_ev_horizontal_box_1.set_border_width (1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (keyword_field)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_2)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_3)
 			l_ev_horizontal_box_1.disable_item_expand (match_case_button)
 			l_ev_horizontal_box_1.disable_item_expand (regular_expression_button)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_3)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_4)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_3)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_4)
+			l_ev_cell_1.set_minimum_width (5)
 			l_ev_label_1.set_text ("Find : ")
 			l_ev_label_1.align_text_left
 			keyword_field.set_minimum_width (250)
-			l_ev_cell_1.set_minimum_width (3)
+			l_ev_cell_2.set_minimum_width (3)
 			next_button.set_tooltip ("Next")
 			previous_button.set_tooltip ("Previous")
-			l_ev_cell_2.set_minimum_width (3)
+			l_ev_cell_3.set_minimum_width (3)
 			match_case_button.set_text ("Match case")
 			match_case_button.set_tooltip ("Match case?")
 			regular_expression_button.set_text ("Regex")
 			regular_expression_button.set_tooltip ("Use regular expression?")
-			l_ev_cell_3.set_minimum_width (3)
+			l_ev_cell_4.set_minimum_width (3)
 			advanced_button.set_tooltip ("Advanced search")
 			close_button.set_tooltip ("Close")
 			set_padding (1)
@@ -129,7 +133,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 	l_ev_tool_bar_1,
 	l_ev_tool_bar_2, l_ev_tool_bar_3, l_ev_tool_bar_4: EV_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX

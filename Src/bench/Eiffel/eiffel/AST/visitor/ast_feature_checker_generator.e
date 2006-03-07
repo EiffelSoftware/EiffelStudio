@@ -2423,6 +2423,7 @@ feature -- Implementation
 
 			l_feature_name := l_as.feature_name
 			l_class := l_target_type.associated_class
+			l_as.set_class_id (l_class.class_id)
 
 			if l_target_type.is_formal or l_target_type.is_basic then
 					-- Not supported. May change in the future - M.S.
@@ -2455,6 +2456,7 @@ feature -- Implementation
 				l_unsupported.set_location (l_feature_name)
 				error_handler.insert_error (l_unsupported)
 			else
+				l_as.set_routine_ids (l_feature.rout_id_set)
 				l_access ?= last_byte_node
 				compute_routine (l_table, l_feature, l_class.class_id, l_target_type, last_type,
 					l_as, l_access, l_target_node)

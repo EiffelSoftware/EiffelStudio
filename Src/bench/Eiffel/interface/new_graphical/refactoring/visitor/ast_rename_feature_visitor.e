@@ -11,6 +11,9 @@ class
 inherit
 	AST_REFACTORING_VISITOR
 		redefine
+			process_routine_creation_as,
+			process_tilda_routine_creation_as,
+			process_agent_routine_creation_as,
 			process_interval_as,
 			process_address_as,
 			process_parent_as,
@@ -66,6 +69,36 @@ feature -- Status
 			-- Is the class renaming the feature?
 
 feature {NONE} -- Visitor implementation
+
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			safe_process (l_as.target)
+			if recursive_descendants.has (l_as.class_id) then
+					-- check if it is the right feature (correct has old routine_id and old name)
+				if
+					l_as.routine_ids /= Void and then
+					l_as.routine_ids.has (feature_i.rout_id_set.first) and then
+					old_feature_name.is_case_insensitive_equal (l_as.feature_name)
+				then
+					l_as.feature_name.replace_text (new_feature_name, match_list)
+					has_modified := True
+				end
+			end
+			safe_process (l_as.internal_operands)
+		end
+
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
 
 	process_interval_as (l_as: INTERVAL_AS) is
 			-- Process interval clause nodes.

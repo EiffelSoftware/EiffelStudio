@@ -28,7 +28,9 @@ create
 	make_argument,
 	make_variable,
 	make_primitive,
-	make_error
+	make_error,
+	make_custom_attribute,
+	make_pragma
 
 feature {NONE} -- Initialization
 
@@ -48,28 +50,28 @@ feature {NONE} -- Initialization
 			default_create
 			make_from_index (Compile_unit_icon)
 		end
-	
+
 	make_namespace is
 			-- Initialize icon for namespace
 		do
 			default_create
 			make_from_index (Namespace_icon)
 		end
-	
+
 	make_type is
 			-- Initialize icon for type
 		do
 			default_create
 			make_from_index (Class_group)
 		end
-	
+
 	make_expression is
 			-- Initialize icon for expression
 		do
 			default_create
 			make_from_index (Expression_icon)
 		end
-	
+
 	make_statement is
 			-- Initialize icon for statement
 		do
@@ -105,11 +107,25 @@ feature {NONE} -- Initialization
 			make_from_index (Error_icon)
 		end
 
+	make_custom_attribute is
+			-- Initialize icon for custom attribute
+		do
+			default_create
+			make_from_index (Custom_attribute_icon)
+		end
+
+	make_pragma is
+			-- Initialize icon for custom attribute
+		do
+			default_create
+			make_from_index (Pragma_icon)
+		end
+
 feature -- Access
 
 	Icon_width: INTEGER is 16
 			-- Icons width
-	
+
 	Icon_height: INTEGER is 16
 			-- Icons height
 
@@ -123,7 +139,7 @@ feature {NONE} -- Implementation
 			set_size (Icon_width, Icon_height)
 			draw_sub_pixmap (0, 0, icons_pixmap, create {EV_RECTANGLE}.make (a_index * Icon_width, 0, Icon_width, Icon_height))
 		end
-		
+
 feature {NONE} -- Private Access
 
 	icons_pixmap: EV_PIXMAP is
@@ -141,7 +157,7 @@ feature {NONE} -- Private Access
 			l_retried := True
 			retry
 		end
-		
+
 end -- class TESTER_TREE_ICON
 
 --+--------------------------------------------------------------------

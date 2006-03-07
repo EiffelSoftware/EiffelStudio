@@ -6,7 +6,7 @@ root
 
 default
 	multithreaded (no)
- 	assertion (require)
+ 	assertion (no)
  	msil_generation (yes)
  	il_verifiable (yes)
  	cls_compliant (yes)

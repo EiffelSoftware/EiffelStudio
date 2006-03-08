@@ -960,6 +960,28 @@ feature -- Line info
 		deferred
 		end
 
+	set_pragma_offset (a_offset: INTEGER) is
+			-- Set line pragma offset for debug info.
+		deferred
+		end
+
+	set_default_document is
+			-- Restore debug document to default.
+		deferred
+		end
+
+	set_stop_breakpoints_generation (a_bool: BOOLEAN) is
+			-- Should breakpoints not be generated?
+		deferred
+		end
+
+	set_document (a_doc: STRING) is
+			-- Set debug document to `a_doc'.
+		require
+			attached_document: a_doc /= Void
+		deferred
+		end
+
 feature -- Convenience
 
 	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is

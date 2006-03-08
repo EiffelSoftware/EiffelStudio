@@ -38,6 +38,7 @@ inherit
 			new_filled_bit_id_as,
 			new_string_as,
 			new_verbatim_string_as,
+			new_line_pragma,
 			create_break_as,
 			create_break_as_with_data,
 			extend_match_list_with_stub,
@@ -209,6 +210,15 @@ feature -- Leaf Nodes
 		do
 			Result := Precursor (a_code, a_scn)
 			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count))
+		end
+
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
+		do
+			match_list_count := match_list_count + 1
+			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			Result.set_index (match_list_count)
+			extend_match_list (Result)
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER) is

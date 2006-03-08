@@ -1053,21 +1053,21 @@ feature {NONE} -- Visitors
 					elseif l_power_value = 1.0 then
 					elseif l_power_value = 2.0 then
 						il_generator.duplicate_top
-						il_generator.generate_binary_operator (il_star)
+						il_generator.generate_binary_operator (il_star, False)
 					elseif l_power_value = 3.0 then
 						il_generator.duplicate_top
 						il_generator.duplicate_top
-						il_generator.generate_binary_operator (il_star)
-						il_generator.generate_binary_operator (il_star)
+						il_generator.generate_binary_operator (il_star, False)
+						il_generator.generate_binary_operator (il_star, False)
 					else
 						a_node.right.process (Current)
 						il_generator.convert_to_real_64
-						il_generator.generate_binary_operator (il_power)
+						il_generator.generate_binary_operator (il_power, False)
 					end
 				else
 					a_node.right.process (Current)
 					il_generator.convert_to_real_64
-					il_generator.generate_binary_operator (il_power)
+					il_generator.generate_binary_operator (il_power, False)
 				end
 			else
 				a_node.nested_b.process (Current)
@@ -1082,7 +1082,7 @@ feature {NONE} -- Visitors
 				il_generator.convert_to_real_64
 				a_node.right.process (Current)
 				il_generator.convert_to_real_64
-				il_generator.generate_binary_operator (il_slash)
+				il_generator.generate_binary_operator (il_slash, False)
 			else
 				a_node.nested_b.process (Current)
 			end
@@ -2650,21 +2650,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: binary operators
 
-	generate_binary_b (a_node: BINARY_B; an_opcode: INTEGER) is
-			-- Generate binary node `a_node'.
-		require
-			is_valid: is_valid
-			a_node_not_void: a_node /= Void
-		do
-			if a_node.is_built_in then
-				a_node.left.process (Current)
-				a_node.right.process (Current)
-				il_generator.generate_binary_operator (an_opcode)
-			else
-				a_node.nested_b.process (Current)
-			end
-		end
-
 	generate_converted_binary_b (a_node: BINARY_B; an_opcode: INTEGER) is
 			-- Generate binary node `a_node' which cast either left hand side
 			-- or right hand side to heaviest type before performing binary operation.
@@ -2703,7 +2688,11 @@ feature {NONE} -- Implementation: binary operators
 					end
 				end
 
-				il_generator.generate_binary_operator (an_opcode)
+				if l_same_type then
+					il_generator.generate_binary_operator (an_opcode, l_left_type.is_natural)
+				else
+					il_generator.generate_binary_operator (an_opcode, l_type.is_natural)
+				end
 			else
 				a_node.nested_b.process (Current)
 			end
@@ -3054,7 +3043,7 @@ feature {NONE} -- Implementation: loop
 			il_generator.duplicate_top
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
-			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
+			il_generator.generate_binary_operator ({IL_CONST}.il_ge, False)
 
 			il_generator.generate_assertion_check (context.assertion_type, a_node.tag)
 		end
@@ -3084,13 +3073,13 @@ feature {NONE} -- Implementation: loop
 			il_generator.duplicate_top
 
 			il_generator.generate_local (a_local)
-			il_generator.generate_binary_operator ({IL_CONST}.Il_lt)
+			il_generator.generate_binary_operator ({IL_CONST}.Il_lt, False)
 
 			il_generator.generate_assertion_check (context.assertion_type, a_node.tag)
 
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
-			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
+			il_generator.generate_binary_operator ({IL_CONST}.il_ge, False)
 
 			il_generator.generate_assertion_check (context.assertion_type, a_node.tag)
 		end

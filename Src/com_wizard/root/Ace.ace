@@ -8,10 +8,6 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
-	arguments ("-g")
-	arguments ("--client=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
-	arguments ("com_wizard.exe --server=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated")
-	arguments ("--client=C:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=C:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("refactor_fixme")
@@ -35,6 +31,10 @@ default
 	exception_trace (yes)
 	inlining (no)
 	multithreaded (yes)
+	arguments ("-g")
+	arguments ("--client=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
+	arguments ("com_wizard.exe --server=D:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl destination=D:\Eiffel56\examples\com\wizard\string_manipulator\generated")
+	arguments ("--client=C:\Eiffel56\examples\com\wizard\string_manipulator\string_manipulator.idl --destination=C:\Eiffel56\examples\com\wizard\string_manipulator\generated --compileeiffel")
 
 
 -------------------------------------------------
@@ -49,15 +49,14 @@ default
 cluster
 	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
 
-
 	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
 		exclude
-			"EIFGEN"; "resources"; "Diagrams"; "CVS"; 
+			"EIFGEN"; "resources"; "Diagrams"; ".svn"; 
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "CVS"; 
+			"table_eiffel3"; "desc"; ".svn"; 
 		visible
 			ARRAY
 				end
@@ -67,7 +66,7 @@ cluster
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -75,14 +74,14 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk"; "gtk2"; "CVS"; 
+			"gtk"; "gtk2"; ".svn"; 
 		default
 			assertion (no)
 		end
 
 	all wizard:		"$EIFFEL_SRC\com_wizard\project"
 		exclude
-			"new_gui"; "CVS"; 
+			"new_gui"; ".svn"; 
 		visible
 			ECOM_TYPE_LIB_FIND_NAME_RESULT
 				end
@@ -100,12 +99,12 @@ cluster
 
 	all eiffel_to_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all com:		"$EIFFEL_SRC\library\com"
 		exclude
-			"CVS"; 
+			".svn"; 
 		visible
 			ECOM_CURRENCY
 				end
@@ -115,14 +114,14 @@ cluster
 
 	library date_time:		"$EIFFEL_SRC\library\time"
 		exclude
-			"german"; "french"; "CVS"; 
+			"german"; "french"; ".svn"; 
 		end
 
 	library thread:		"$EIFFEL_SRC\library\thread"
 
 	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension"
 		exclude
-			"gtk";
+			"gtk"; 
 		default
 			assertion (no)
 			assertion (require)

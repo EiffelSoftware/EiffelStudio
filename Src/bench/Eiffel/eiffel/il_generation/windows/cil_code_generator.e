@@ -1343,9 +1343,8 @@ feature -- Class info
 			method_writer.write_current_body
 
 			if
-				not is_single_inheritance_implementation and then not current_class.has_internal_single_parent or else
-				(class_type.static_type_id = any_type_id or else not
-				class_type.associated_class.main_parent.simple_conform_to (System.any_class.compiled_class))
+				(is_single_inheritance_implementation and (class_type.static_type_id = any_type_id)) or
+				(not is_single_inheritance_implementation and (not is_single_class or else (current_class.has_external_main_parent or current_class.is_expanded or current_class.is_used_as_expanded)))
 			then
 				l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Final
 
@@ -6256,12 +6255,12 @@ feature -- Line info
 		local
 			l_pos: INTEGER
 		do
-			if is_debug_info_enabled then
+			if is_debug_info_enabled and not stop_breakpoints_generation then
 				l_pos := dbg_offsets_count
 				dbg_offsets.force (method_body.count, l_pos)
-				dbg_start_lines.force (n, l_pos)
+				dbg_start_lines.force (n + pragma_offset, l_pos)
 				dbg_start_columns.force (0, l_pos)
-				dbg_end_lines.force (n, l_pos)
+				dbg_end_lines.force (n + pragma_offset, l_pos)
 				dbg_end_columns.force (1000, l_pos)
 				dbg_offsets_count := l_pos + 1
 
@@ -6275,7 +6274,7 @@ feature -- Line info
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			if is_debug_info_enabled then
+			if is_debug_info_enabled and not stop_breakpoints_generation then
 				Il_debug_info_recorder.ignore_next_debug_info
 				put_line_info (n)
 			end
@@ -6287,12 +6286,12 @@ feature -- Line info
 		local
 			l_pos: INTEGER
 		do
-			if is_debug_info_enabled then
+			if is_debug_info_enabled and not stop_breakpoints_generation then
 				l_pos := dbg_offsets_count
 				dbg_offsets.force (method_body.count, l_pos)
-				dbg_start_lines.force (location.line, l_pos)
+				dbg_start_lines.force (location.line + pragma_offset, l_pos)
 				dbg_start_columns.force (location.column, l_pos)
-				dbg_end_lines.force (location.line, l_pos)
+				dbg_end_lines.force (location.line + pragma_offset, l_pos)
 				dbg_end_columns.force (location.final_column, l_pos)
 				dbg_offsets_count := l_pos + 1
 
@@ -6318,7 +6317,7 @@ feature -- Line info
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
 		do
-			if is_debug_info_enabled then
+			if is_debug_info_enabled and not stop_breakpoints_generation then
 				Il_debug_info_recorder.ignore_next_debug_info
 				put_debug_info (location)
 			end
@@ -6328,10 +6327,16 @@ feature -- Line info
 			-- Flush all sequence points.
 		local
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
+			l_document: DBG_DOCUMENT_WRITER
 		do
 			if is_debug_info_enabled then
+				if internal_document /= Void then
+					l_document := current_module.dbg_pragma_documents (internal_document)
+				else
+					l_document := dbg_documents (a_class_type.associated_class.class_id)
+				end
 				dbg_writer.define_sequence_points (
-					dbg_documents (a_class_type.associated_class.class_id),
+					l_document,
 					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 					dbg_end_lines, dbg_end_columns)
 
@@ -6355,6 +6360,47 @@ feature -- Line info
 				dbg_offsets_count := 0
 			end
 		end
+
+	set_pragma_offset (a_offset: INTEGER) is
+			-- Set line pragma offset for debug info.
+		do
+			pragma_offset := a_offset
+		ensure then
+			pragma_offset_set: pragma_offset = a_offset
+		end
+
+	set_default_document is
+			-- Restore debug document to default.
+		do
+			internal_document := Void
+		ensure then
+			internal_document_void: internal_document = Void
+		end
+
+	set_stop_breakpoints_generation (a_bool: BOOLEAN) is
+			-- Should breakpoints not be generated?
+		do
+			stop_breakpoints_generation := a_bool
+		ensure then
+			set: stop_breakpoints_generation = a_bool
+		end
+
+	set_document (a_doc: STRING) is
+			-- Set debug document to `a_doc'.
+		do
+			internal_document := a_doc
+		ensure then
+			internal_document_set: internal_document = a_doc
+		end
+
+	internal_document: STRING
+			-- Document used to generate debug info as stated by pragma declaration if any
+
+	pragma_offset: INTEGER
+			-- Offset in document used for debug info as stated by pragma declaration
+
+	stop_breakpoints_generation: BOOLEAN
+			-- Should breakpoints not be generated?
 
 feature -- Compilation error handling
 

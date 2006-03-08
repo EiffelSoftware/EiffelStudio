@@ -171,6 +171,13 @@ feature -- Access
 			create Result.initialize (t_as, c, l, co, p, n)
 		end
 
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
+			--| Keep entire line, actual processing will be done later if we need it.
+		do
+			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.string_position)
+		end
+
 feature -- Number AST creation
 
 	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is

@@ -5,12 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FEAT_ARG 
+class FEAT_ARG
 
 -- FIXME: redefine is_equivalent
 
 inherit
-	ARRAYED_LIST [TYPE_AS]
+	ARRAYED_LIST [TYPE_A]
 		rename
 			make as old_make
 		export
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			make_filled (n)
 			create argument_names.make (n)
 		end
-	
+
 feature -- Access
 
 	argument_names: SPECIAL [INTEGER]
@@ -127,7 +127,7 @@ feature -- Access
 	pattern_types: ARRAY [TYPE_I] is
 			-- Pattern types of arguments
 		local
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			r_area: SPECIAL [TYPE_I]
 			i, nb: INTEGER
 		do
@@ -139,7 +139,7 @@ feature -- Access
 			until
 				i = nb
 			loop
-				r_area.put (l_area.item (i).actual_type.meta_type, i)
+				r_area.put (l_area.item (i).meta_type, i)
 				i := i + 1
 			end
 		end
@@ -174,7 +174,7 @@ feature -- Checking
 			associated_class: CLASS_C
 			argument_name: STRING
 			i, nb: INTEGER
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			a_area: like argument_names
 			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
@@ -186,13 +186,13 @@ feature -- Checking
 				l_names_heap := Names_heap
 				nb := count
 				associated_class := feat_table.associated_class
-				type_checker.init_with_feature_table (f, feat_table)
+				type_a_checker.init_with_feature_table (f, feat_table, Void, error_handler)
 			until
 				i = nb
 			loop
 					-- Process anchored type for argument types
 				argument_name := l_names_heap.item (a_area.item (i))
-				solved_type := type_checker.solved_type (l_area.item (i))
+				solved_type := type_a_checker.check_and_solved (l_area.item (i), Void)
 
 				check
 						-- If an anchored type cannot be evlaluated,
@@ -201,7 +201,7 @@ feature -- Checking
 				end
 				if associated_class = f.written_class then
 						-- Check validity of a generic type
-					type_checker.check_type_validity (solved_type, l_area.item (i))
+					type_a_checker.check_type_validity (solved_type, Void)
 				end
 					-- Instantiation: instantitation of the
 					-- argument types must be done in the context of the
@@ -226,7 +226,7 @@ feature -- Checking
 			argument_name: STRING
 			vtec: VTEC
 			a_area: like argument_names
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
@@ -276,7 +276,7 @@ feature -- Checking
 			-- Evaluates argument types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types.
 		local
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 			arg_eval: ARG_EVALUATOR
 		do
@@ -298,7 +298,7 @@ feature -- Status report
 			-- All the types are still in the system
 		local
 			type_a: TYPE_A
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
 			from
@@ -321,7 +321,7 @@ feature -- Status report
 			good_argument: other /= Void
 			good_count: count = other.count
 		local
-			l_area, o_area: SPECIAL [TYPE_AS]
+			l_area, o_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
 			from
@@ -341,7 +341,7 @@ feature -- Debugging
 
 	trace is
 		local
-			l_area: SPECIAL [TYPE_AS]
+			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
 			io.put_string ("feature argument types%N")
@@ -349,9 +349,9 @@ feature -- Debugging
 				l_area := area
 				nb := count
 			until
-				i = nb 
+				i = nb
 			loop
-				io.put_string (l_area.item (i).actual_type.dump)
+				io.put_string (l_area.item (i).dump)
 				io.put_new_line
 				i := i + 1
 			end
@@ -362,8 +362,6 @@ feature {FEATURE_I}
 	api_args: E_FEATURE_ARGUMENTS is
 		local
 			i, c: INTEGER
-			t_a: TYPE_A
-			t: TYPE_AS
 			args: ARRAYED_LIST [STRING]
 		do
 			c := count
@@ -374,12 +372,7 @@ feature {FEATURE_I}
 			until
 				i > c
 			loop
-				t := i_th (i)
-				t_a ?= t
-				if t_a = Void then
-					t_a := t.actual_type
-				end
-				Result.put_i_th (t_a, i)
+				Result.put_i_th (i_th (i), i)
 				args.put_i_th (item_name (i), i)
 				i := i + 1
 			end
@@ -395,19 +388,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -62,7 +62,7 @@ feature -- Access
 feature -- Insert
 
 	record (class_id: INTEGER; feature_id: INTEGER) is
-			-- Record the feature in the 
+			-- Record the feature in the
 		require
 			class_id_valid: class_id > 0
 			not_in_the_table: not has (class_id, feature_id)
@@ -113,7 +113,7 @@ feature -- Generation
 				buffer.put_string (Dot_h)
 				buffer.put_string ("%"%N%N")
 			end
-			
+
 			buffer.start_c_specific_code
 
 			from
@@ -319,7 +319,7 @@ feature {NONE} -- Generation
 			s_type := type_a.instantiated_in (a_type.type.type_a)
 			Result := s_type.type_i.c_type
 		end
-			
+
 	arg_names (nb: INTEGER): ARRAY [STRING] is
 			-- Names of the arguments
 		local
@@ -346,7 +346,6 @@ feature {NONE} -- Generation
 			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
-			arg_type_a: TYPE_A
 		do
 			from
 				i := 1
@@ -356,8 +355,7 @@ feature {NONE} -- Generation
 			until
 				i > nb
 			loop
-				arg_type_a := args.i_th (i).actual_type
-				Result.put (solved_type (arg_type_a).c_string, i + 1)
+				Result.put (solved_type (args.i_th (i)).c_string, i + 1)
 				i := i + 1
 			end
 		end
@@ -413,9 +411,9 @@ feature {NONE} -- Generation
 				args := a_feature.arguments
 				args_count := args.count
 			end
-			return_type := a_feature.type.actual_type
+			return_type := a_feature.type
 			is_function := a_feature.is_function
-			
+
 			if is_for_routine then
 				l_current_name := "args[1].element.rarg"
 			else
@@ -467,7 +465,7 @@ feature {NONE} -- Generation
 				buffer.put_string ("%N%T")
 
 				if final_mode then
-						-- Routine is always implemented unless found otherwise (Deferred routine 
+						-- Routine is always implemented unless found otherwise (Deferred routine
 						-- with no implementation).
 					l_is_implemented := True
 					if is_function then
@@ -588,7 +586,6 @@ feature {NONE} -- Generation
 			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
-			arg_type_a: TYPE_A
 		do
 			from
 				i := 1
@@ -597,8 +594,7 @@ feature {NONE} -- Generation
 			until
 				i > nb
 			loop
-				arg_type_a := args.i_th (i).actual_type
-				Result.put (solved_type (arg_type_a).union_tag, i)
+				Result.put (solved_type (args.i_th (i)).union_tag, i)
 				i := i + 1
 			end
 		end
@@ -611,7 +607,7 @@ feature {NONE} -- Generation
 			from
 				i := 1
 			until
-				i > nb 
+				i > nb
 			loop
 				buffer.put_string (", args[")
 					-- First argument position in `args' is 2.
@@ -629,19 +625,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

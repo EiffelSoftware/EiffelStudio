@@ -58,12 +58,20 @@ feature -- Access
 			locals_builder_not_void: Result /= Void
 		end
 
-	type_checker: AST_TYPE_CHECKER is
-			-- Visitor to check types.
+	type_a_checker: TYPE_A_CHECKER is
+			-- Visitor to check TYPE_A types.
 		once
 			create Result
 		ensure
-			type_checker_not_void: Result /= Void
+			type_a_checker_not_void: Result /= Void
+		end
+
+	type_a_generator: AST_TYPE_A_GENERATOR is
+			-- Visitor to generate potentially unevaluated types.
+		once
+			create Result
+		ensure
+			type_a_generator_not_void: Result /= Void
 		end
 
 	value_i_generator: AST_VALUE_I_GENERATOR is
@@ -80,19 +88,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

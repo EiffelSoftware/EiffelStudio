@@ -69,7 +69,7 @@ feature -- Output
 		do
 			actual_dump := actual_type.dump
 			create Result.make (16 + actual_dump.count)
-			Result.append ("[like arg #")
+			Result.append ("[like arg#")
 			Result.append_integer (position)
 			Result.append ("] ")
 			Result.append (actual_dump)
@@ -88,41 +88,12 @@ feature -- Output
 			end
 			st.add (ti_R_bracket)
 			st.add_space
-			actual_type.ext_append_to (st, f)
+			if is_valid then
+				actual_type.ext_append_to (st, f)
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_ARGUMENT is
-			-- Check if the anchored type is still a non like type and
-			-- update `actual_type'.
-		local
-			l_argument_type: TYPE_AS
-			l_controler_state: BOOLEAN
-		do
-			l_controler_state := like_control.is_on
-			if l_controler_state and like_control.has_argument (position) then
-				like_control.raise_error
-			else
-				if not l_controler_state then
-						-- Enable like controler only if not already enabled.
-					like_control.turn_on
-				end
-				l_argument_type := f.arguments.i_th (position)
-				Result := twin
-					-- Recalculation of the anchor
-				Result.set_actual_type
-					(l_argument_type.solved_type (feat_table, f).actual_type)
-				check
-					Result_actual_type_exists: Result.actual_type /= Void
-				end
-				if not l_controler_state then
-						-- Disable like controler only if it was not enabled before
-						-- entering current routine.
-					like_control.turn_off
-				end
-			end
-		end
 
 	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_ARGUMENT is
 			-- Instantiation of Current in the context of `class_type',

@@ -275,7 +275,7 @@ feature {NONE} -- Children implementation
 			if l_att_token /= 0 then
 				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 				if l_att_icd_debug_value /= Void then
-					Result := debug_value_from_icdv (l_att_icd_debug_value, f.type.actual_type.associated_class)
+					Result := debug_value_from_icdv (l_att_icd_debug_value, f.type.associated_class)
 					if Result /= Void then
 						Result.set_name (f.feature_name)
 					else

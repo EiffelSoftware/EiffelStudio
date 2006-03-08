@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 			"Error for unvalid anchored type (an anchored type cannot be evaluated). %
 				%1. cycle in like features %
 				%2. like feature wich is defined in terms of like argument %
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_type, an_anchor: TYPE_AS) is
+	make (a_type: like type; an_anchor: like anchor_type) is
 			-- New error occuring in `a_type' for anchor `an_anchor'.
 		require
 			a_type_not_void: a_type /= Void
@@ -38,13 +38,13 @@ feature {NONE} -- Initialize
 			type_set: type = a_type
 			anchor_set: anchor_type = an_anchor
 		end
-		
+
 feature -- Properties
 
-	type: TYPE_AS;
+	type: TYPE_A;
 			-- Type in which VTAT error occurs
 
-	anchor_type: TYPE_AS
+	anchor_type: STRING
 			-- Anchor in which error occurs.
 
 	code: STRING is "VTAT";
@@ -60,7 +60,7 @@ feature -- Output
 		do
 			if anchor_type /= Void then
 				st.add_string ("Anchored type: ")
-				anchor_type.append_to (st)
+				st.add_string (anchor_type)
 				st.add_new_line
 			end
 			st.add_string ("Appearing in type: ")
@@ -82,19 +82,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

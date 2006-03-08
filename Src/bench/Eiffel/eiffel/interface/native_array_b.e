@@ -62,7 +62,7 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Third, check if class has a feature item and infix "@" (INTEGER): Generic #1
+				-- Third, check if class has a feature item and infix "@" (INTEGER): G#1
 			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if
 				l_feat = Void
@@ -83,7 +83,7 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Fourth, check if class has a feature put (Generic #1, INTEGER)
+				-- Fourth, check if class has a feature put (G#1, INTEGER)
 			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
 			if
 				l_feat = Void
@@ -269,19 +269,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -12,7 +12,12 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			is_like_current, has_associated_class,
-			type_i, associated_class, conform_to
+			type_i, associated_class, conform_to, is_valid
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
 
 create
@@ -26,15 +31,16 @@ feature {NONE} -- Initialization
 		require
 			non_void_string: a_string /= Void
 		do
-			anchor := a_string
+			names_heap.put (a_string)
+			anchor_name_id := names_heap.found_item
 		ensure
-			set: anchor = a_string
+			set: anchor.is_equal (a_string)
 		end
 
 	make_current is
 			-- Initialize `anchor' to `Current'.
 		do
-			anchor := Like_current
+			make (Like_current)
 			is_like_current := True
 		ensure
 			is_like_current_set: is_like_current
@@ -50,14 +56,23 @@ feature -- Visitor
 
 feature -- Properties
 
-	anchor: STRING
+	anchor_name_id: INTEGER
+			-- Id of `anchor' in `names_heap'.
+
+	anchor: STRING is
 			-- Anchor name
+		do
+			Result := names_heap.item (anchor_name_id)
+		end
 
 	is_like_current: BOOLEAN
 			-- Is Current like Current?
 
 	has_associated_class: BOOLEAN is False
 			-- Does Current have associated class?
+
+	is_valid: BOOLEAN is False
+			-- An unevaluated type is never valid.
 
 feature -- Access
 
@@ -71,18 +86,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := anchor.is_equal (other.anchor) and then
+			Result := anchor_name_id = other.anchor_name_id and then
 				is_like_current = other.is_like_current
-		end
-
-feature -- Setting
-
-	set_like_current is
-			-- Set `is_like_current' to True.
-		do
-			is_like_current := True
-		ensure
-			is_like_current: is_like_current
 		end
 
 feature -- Output
@@ -106,13 +111,11 @@ feature {NONE} -- Implementation
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
+		local
+			l_other: like Current
 		do
-		end
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table
-		do
+			l_other ?= other
+			Result := l_other /= Void and then anchor_name_id = l_other.anchor_name_id
 		end
 
 	create_info: CREATE_INFO is

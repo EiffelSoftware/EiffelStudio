@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Dumps operands of a feature to stdout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -43,7 +43,7 @@ feature {NONE} -- Properties
 			names: LINEAR [STRING]
 			i: INTEGER
 			s: STRING
-		do	
+		do
 			if e_class.generics /= Void then
 				from
 					gs := e_class.generics
@@ -62,7 +62,7 @@ feature {NONE} -- Properties
 					gs.forth
 				end
 			end
-			
+
 			if e_feature.arguments /= Void and  e_feature.arguments.argument_names /= Void then
 				types := e_feature.arguments.linear_representation
 				names := e_feature.arguments.argument_names.linear_representation
@@ -85,7 +85,7 @@ feature {NONE} -- Properties
 						until
 							i > gts.upper
 						loop
-							s.replace_substring_all ("Generic #" + i.out, gts.item (i))
+							s.replace_substring_all ("G#" + i.out, gts.item (i))
 							i := i + 1
 						end
 					end
@@ -105,19 +105,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

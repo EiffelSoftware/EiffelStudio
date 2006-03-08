@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_bits, conform_to,
+			is_bits, is_valid, conform_to,
 			associated_class, dump,
 			same_as, ext_append_to,
 			format, is_equivalent, process
@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 
 	make (c: like bit_count) is
 			-- Initialize new instance of BITS_A with `c' bits.
-		require
-			c_positive: c > 0
 		do
 			bit_count := c
 			cl_make (associated_class.class_id)
@@ -49,6 +47,12 @@ feature -- Property
 
 	is_bits: BOOLEAN is True
 			-- Is the current actual type a bits type?
+
+	is_valid: BOOLEAN is
+			-- Is current type valid?
+		do
+			Result := bit_count > 0
+		end
 
 feature -- Comparison
 
@@ -77,6 +81,18 @@ feature -- Access
 
 	bit_count: INTEGER
 			-- Bit count
+
+feature -- Settings
+
+	set_bit_count (a_count: INTEGER) is
+			-- Set `bit_count' with `a_count'.
+		require
+			a_count_positive: a_count > 0
+		do
+			bit_count := a_count
+		ensure
+			bit_count_set: bit_count = a_count
+		end
 
 feature -- Output
 
@@ -123,7 +139,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 invariant
-	bit_count_positive: bit_count > 0
+	bit_count_positive: is_valid implies bit_count > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

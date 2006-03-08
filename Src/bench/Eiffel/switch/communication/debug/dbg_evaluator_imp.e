@@ -258,7 +258,7 @@ feature {DBG_EVALUATOR} -- Parameters Implementation
 						f /= Void
 						and dt /= Void
 						and then (not Byte_context.real_type_in (
-									f.arguments.i_th (params.index).actual_type.type_i
+									f.arguments.i_th (params.index).type_i
 									, dt).is_basic
 								)
 					then

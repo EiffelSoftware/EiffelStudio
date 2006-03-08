@@ -33,14 +33,17 @@ inherit
 
 feature -- Factory
 
-	new_feature (a_node: FEATURE_AS): FEATURE_I is
+	new_feature (a_node: FEATURE_AS; a_class: CLASS_C): FEATURE_I is
 			-- Create associated FEATURE_I instance of `a_node'
 		require
 			a_node_not_void: a_node /= Void
+			a_class_not_void: a_class /= Void
 		local
 			l_once: ONCE_PROC_I
 		do
+			current_class := a_class
 			process_body_as (a_node.body)
+			current_class := Void
 			Result := last_feature
 			last_feature := Void
 			if Result.is_once and then a_node.indexes /= Void then
@@ -57,6 +60,9 @@ feature {NONE} -- Implementation: Access
 
 	last_feature: FEATURE_I
 			-- Last computed feature
+		
+	current_class: CLASS_C
+			-- Class in which a FEATURE_AS is converted into a FEATURE_I.
 
 feature {NONE} -- Implementation
 
@@ -95,7 +101,7 @@ feature {NONE} -- Implementation
 				check
 					type_exists: l_as.type /= Void
 				end
-				l_attr.set_type (l_as.type, l_assigner_name_id)
+				l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
 				l_result := l_attr
 				l_result.set_is_empty (True)
 			elseif l_as.content.is_constant then
@@ -114,7 +120,7 @@ feature {NONE} -- Implementation
 					constant_exists: l_constant /= Void
 					type_exists: l_as.type /= Void
 				end
-				l_const.set_type (l_as.type, l_assigner_name_id)
+				l_const.set_type (query_type (l_as.type), l_assigner_name_id)
 				l_result := l_const
 				l_result.set_is_empty (True)
 
@@ -163,7 +169,7 @@ feature {NONE} -- Implementation
 				end
 				if l_as.arguments /= Void then
 						-- Arguments initialization
-					l_proc.init_arg (l_as.arguments)
+					l_proc.init_arg (l_as.arguments, current_class)
 				end
 				l_proc.init_assertion_flags (l_routine)
 				if l_routine.obsolete_message /= Void then
@@ -179,12 +185,12 @@ feature {NONE} -- Implementation
 				if l_routine.is_deferred then
 						-- Deferred function
 					create l_def_func
-					l_def_func.set_type (l_as.type, l_assigner_name_id)
+					l_def_func.set_type (query_type (l_as.type) , l_assigner_name_id)
 					l_func := l_def_func
 				elseif l_routine.is_once then
 						-- Once function
 					create l_once_func
-					l_once_func.set_type (l_as.type, l_assigner_name_id)
+					l_once_func.set_type (query_type (l_as.type), l_assigner_name_id)
 					l_func := l_once_func
 				elseif l_routine.is_external then
 
@@ -213,7 +219,7 @@ feature {NONE} -- Implementation
 
 							-- if there's a macro or a signature then encapsulate
 						l_extern_func.set_encapsulated (l_extension.need_encapsulation)
-						l_extern_func.set_type (l_as.type, l_assigner_name_id)
+						l_extern_func.set_type (query_type (l_as.type), l_assigner_name_id)
 						l_func := l_extern_func
 					elseif l_is_attribute_external then
 						create l_attr.make
@@ -221,7 +227,7 @@ feature {NONE} -- Implementation
 							il_generation: System.il_generation
 							type_exists: l_as.type /= Void
 						end
-						l_attr.set_type (l_as.type, l_assigner_name_id)
+						l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
 						l_attr.set_is_empty (True)
 						l_attr.set_extension (l_il_ext)
 						l_result := l_attr
@@ -234,7 +240,7 @@ feature {NONE} -- Implementation
 						end
 						create l_def_func
 						l_def_func.set_extension (l_il_ext)
-						l_def_func.set_type (l_as.type, l_assigner_name_id)
+						l_def_func.set_type (query_type (l_as.type), l_assigner_name_id)
 						l_func := l_def_func
 						if l_external_body.alias_name_id > 0 then
 							l_func.set_private_external_name_id (l_external_body.alias_name_id)
@@ -242,13 +248,13 @@ feature {NONE} -- Implementation
 					end
 				else
 					create l_dyn_func
-					l_dyn_func.set_type (l_as.type, l_assigner_name_id)
+					l_dyn_func.set_type (query_type (l_as.type), l_assigner_name_id)
 					l_func := l_dyn_func
 				end
 				if not l_is_attribute_external then
 					if l_as.arguments /= Void then
 							-- Arguments initialization
-						l_func.init_arg (l_as.arguments)
+						l_func.init_arg (l_as.arguments, current_class)
 					end
 					l_func.init_assertion_flags (l_routine)
 					if l_routine.obsolete_message /= Void then
@@ -259,6 +265,15 @@ feature {NONE} -- Implementation
 				end
 			end
 			last_feature := l_result
+		end
+
+	query_type (a_type: TYPE_AS): TYPE_A is
+		require
+			a_type_not_void: a_type /= Void
+		do
+			Result := type_a_generator.evaluate_type (a_type, current_class)
+		ensure
+			query_type_not_void: Result /= Void
 		end
 
 indexing

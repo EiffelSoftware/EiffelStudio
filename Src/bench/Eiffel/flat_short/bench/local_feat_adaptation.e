@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Local feature information currently being formatted.%
 		%These features are within the global features being formatted."
 	legal: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class LOCAL_FEAT_ADAPTATION 
+class LOCAL_FEAT_ADAPTATION
 
 inherit
 	SHARED_SERVER;
@@ -16,9 +16,13 @@ inherit
 	SHARED_INST_CONTEXT;
 	COMPILER_EXPORTER
 	PREFIX_INFIX_NAMES
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
 
 feature -- Update
-	
+
 	update_from_global (global_adapt: GLOBAL_FEAT_ADAPTATION) is
 			-- Make Current from `global_adapt' information.
 		require
@@ -43,7 +47,7 @@ feature -- Properties
 
 	source_feature: FEATURE_I;
 			-- feature called in ancestor
-	
+
 	target_feature: FEATURE_I;
 			-- feature called in descendant
 
@@ -103,7 +107,7 @@ feature -- Access
 			-- Is the feature visible for class_c type clients
 		do
 			Result := c /= Void and then target_feature /= Void and then
-				target_feature.is_exported_for (c) 
+				target_feature.is_exported_for (c)
 		end
 
 	compute_feature (name: STRING): FEATURE_I is
@@ -129,7 +133,7 @@ feature -- Access
 		do
 			l_source_class := source_class
 			if l_source_class /= Void then
-				Result := f.actual_type.
+				Result := type_a_generator.evaluate_type (f, l_source_class).
 					instantiation_in (target_type, l_source_class.class_id)
 			end
 		end
@@ -179,7 +183,7 @@ feature -- Setting
 		ensure
 			set: source_feature = f
 		end;
-		
+
 	set_target_feature (f: FEATURE_I) is
 			-- Set target_feature to `f'.
 		do
@@ -187,7 +191,7 @@ feature -- Setting
 		ensure
 			set: target_feature = f
 		end;
-		
+
 	set_is_normal is
 			-- Set `is_normal' to True.
 		do
@@ -231,7 +235,7 @@ feature -- Transformation
 				Result.set_source_feature (new_feat)
 				Result.set_source_type (source_type)
 				Result.set_target_type (target_type)
-				Result.set_private_select_table 
+				Result.set_private_select_table
 							(global_type.target_feature_table)
 				Result.adapt
 			else
@@ -245,7 +249,7 @@ feature -- Transformation
 						Result.set_source_type (source_type)
 						Result.set_target_type (target_type)
 						Result.set_source_feature (new_feat)
-						Result.set_private_select_table 
+						Result.set_private_select_table
 								(global_type.target_feature_table)
 						Result.adapt
 					end
@@ -253,7 +257,7 @@ feature -- Transformation
 			end
 		end
 
-	adapt_nested_feature (feature_name: STRING; 
+	adapt_nested_feature (feature_name: STRING;
 				global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation within nested calls with
 			-- feature `feature_name'
@@ -264,9 +268,9 @@ feature -- Transformation
 			Result := new_adapt_from_current (global_type);
 			Result.set_is_normal;
 			Result.set_feature_name (feature_name);
-			Result.set_source_feature (Result.compute_feature 
+			Result.set_source_feature (Result.compute_feature
 									(feature_name));
-			Result.adapt 
+			Result.adapt
 		end;
 
 	adapt_infix (int_name, v_name: STRING;
@@ -280,7 +284,7 @@ feature -- Transformation
 			Result.set_is_infix;
 			Result.set_feature_name (v_name);
 			Result.set_source_feature (Result.compute_feature (int_name));
-			Result.adapt 
+			Result.adapt
 		end;
 
 	adapt_prefix (int_name, v_name: STRING; global_type: GLOBAL_FEAT_ADAPTATION): like Current is
@@ -314,16 +318,16 @@ feature {LOCAL_FEAT_ADAPTATION, GLOBAL_FEAT_ADAPTATION} -- Implementation
 			select_table : SELECT_TABLE
 			new_feat: FEATURE_I
 		do
-debug ("LOCAL_FEAT_ADAPTATION") 
+debug ("LOCAL_FEAT_ADAPTATION")
 	io.error.put_string ("before adapting%N");
 	trace;
 end;
-			if source_feature = Void or else 
-				source_type = Void or else target_type = Void 
+			if source_feature = Void or else
+				source_type = Void or else target_type = Void
 			then
 				clear
 			elseif (source_type.is_deep_equal (target_type)) then
-				if in_bench_mode then 
+				if in_bench_mode then
 						-- If it is the same source and target type
 						-- then the target feature is the source feature
 					target_feature := source_feature
@@ -347,7 +351,7 @@ end;
 					adapt_final_name
 				end;
 			end;
-debug ("LOCAL_FEAT_ADAPTATION") 
+debug ("LOCAL_FEAT_ADAPTATION")
 	io.error.put_string ("After adapting%N");
 	trace;
 end
@@ -393,12 +397,12 @@ feature {LOCAL_FEAT_ADAPTATION}
 			end;
 		ensure
 			t /= Void implies private_target_select_table = t.origin_table
-		end; 
+		end;
 
 feature {NONE} -- Implementation
 
 	private_target_select_table: SELECT_TABLE;
-			-- Private select table. Used for 
+			-- Private select table. Used for
 
 	target_select_table: SELECT_TABLE is
 			-- Select table for the target_id
@@ -410,7 +414,7 @@ feature {NONE} -- Implementation
 				Result := Feat_tbl_server.item (target_class.class_id).origin_table
 			end;
 		end;
-				
+
 	clear is
 			-- Clear Current.
 		do
@@ -465,7 +469,7 @@ feature {NONE} -- Implementation
 
 							-- Then find current class.						
 						enclosing_class := global_type.target_enclosing_class
-						
+
 							-- Finally search for definition of `l_type_feature'
 							-- in `enclosing_class'.
 						check
@@ -497,7 +501,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	evaluate_type (last_type: TYPE_A; type: TYPE_AS): TYPE_A is
+	evaluate_type (last_type: TYPE_A; type: TYPE_A): TYPE_A is
 			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;
@@ -505,16 +509,11 @@ feature {NONE} -- Implementation
 			last_class: CLASS_C;
 			formal_type: FORMAL_A
 		do
-			Result ?= type;
-			if Result = Void then	
-					-- This is done since the target feature is retrieved from the
-					-- select table which doesn't evaluate types (ie. TYPE_A)
-				Result := type.actual_type
-			end;
+			Result := type
 			last_class := last_type.associated_class;
 			if last_type.is_formal then
 				formal_type ?= last_type;
-				last_constrained := 
+				last_constrained :=
 					last_class.constraint (formal_type.position)
 			end;
 			if last_type.is_formal and then Result.is_formal then
@@ -530,7 +529,7 @@ feature {NONE} -- Implementation
 				-- need to find out its real type in the current context,
 				-- which is done by applying `actual_type'.
 				-- Manus: 10/06/1999
-			Result := Result.instantiation_in 
+			Result := Result.instantiation_in
 						(last_type.actual_type, last_class.class_id).actual_type;
 		end
 
@@ -582,19 +581,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

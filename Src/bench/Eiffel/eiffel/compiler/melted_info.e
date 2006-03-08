@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			else
 				written_in := f.written_in
 			end
-			result_type := f.type.actual_type.type_i
+			result_type := f.type.type_i
 		end
 
 feature -- Update

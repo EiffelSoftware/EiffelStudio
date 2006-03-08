@@ -59,21 +59,18 @@ feature
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result
 		local
-			actual_type: TYPE_A
 			vqui: VQUI
 		do
 			old_check_types (feat_tbl)
-
-			actual_type := type.actual_type
 			if
 				feat_tbl.associated_class = written_class
-				and then not actual_type.is_integer
+				and then not type.actual_type.is_integer
 			then
 					-- Type of unique constant is not INTEGER
 				create vqui
 				vqui.set_class (written_class)
 				vqui.set_feature_name (feature_name)
-				vqui.set_type (actual_type)
+				vqui.set_type (type)
 				Error_handler.insert_error (vqui)
 			end
 		end
@@ -104,15 +101,9 @@ feature {NONE} -- Implementation
 
 	new_api_feature: E_UNIQUE is
 			-- API feature creation
-		local
-			t: TYPE_A
 		do
-			t ?= type
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
-			if t = Void then
-				t := type.actual_type
-			end
-			Result.set_type (t, assigner_name)
+			Result.set_type (type, assigner_name)
 			Result.set_value (value.string_value)
 		end
 

@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 	KL_EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
@@ -99,7 +104,7 @@ feature -- Initialization/Checking
 								l_feat.conversion_types.after or has_error
 							loop
 								l_type := l_feat.conversion_types.item
-								l_named_type ?= l_type.actual_type
+								l_named_type ?= type_a_generator.evaluate_type (l_type, a_class)
 								if
 									l_named_type = Void or else
 									not l_named_type.is_full_named_type
@@ -265,8 +270,8 @@ feature -- Initialization/Checking
 			last_conversion_check_successful := False
 			last_conversion_info := Void
 
-			l_target_class := a_target_type.associated_class
-			if l_target_class /= Void then
+			if a_target_type.has_associated_class then
+				l_target_class := a_target_type.associated_class
 				l_convert_table := l_target_class.convert_from
 			end
 			if l_convert_table /= Void then
@@ -311,8 +316,8 @@ feature -- Initialization/Checking
 				end
 			end
 			if not l_success then
-				l_source_class := a_source_type.associated_class
-				if l_source_class /= Void then
+				if a_source_type.has_associated_class then
+					l_source_class := a_source_type.associated_class
 					l_convert_table := l_source_class.convert_to
 				end
 				if l_convert_table /= Void then
@@ -524,7 +529,7 @@ feature {NONE} -- Implementation: checking
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
 			if l_feat.is_function then
-				if not l_feat.type.actual_type.conform_to (a_type) then
+				if not l_feat.type.conform_to (a_type) then
 					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)
@@ -532,7 +537,7 @@ feature {NONE} -- Implementation: checking
 					has_error := True
 				end
 			else
-				if not a_type.conform_to (l_feat.arguments.i_th (1).actual_type) then
+				if not a_type.conform_to (l_feat.arguments.i_th (1)) then
 					create l_vncp.make ("SOURCE does not conform to argument type.")
 					l_vncp.set_class (a_class)
 					l_vncp.set_location (a_convert_feat.feature_name.start_location)

@@ -246,6 +246,15 @@ feature {TYPE_A} -- Visitors
 		deferred
 		end
 
+	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A) is
+			-- Process `a_type'.
+		require
+			is_valid: is_valid
+			a_type_not_void: a_type /= Void
+			a_type_valid: is_type_valid (a_type)
+		deferred
+		end
+
 	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE) is
 			-- Process `a_type'.
 		require

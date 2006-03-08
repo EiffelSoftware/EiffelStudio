@@ -12,7 +12,7 @@ inherit
 		rename
 			string_value as dump
 		redefine
-			type_mask
+			adjust_type, has_constant_type
 		end
 
 	VALUE_I
@@ -34,10 +34,15 @@ inherit
 			is_simple_expr, is_predefined,
 			is_fast_as_local, is_constant_expression,
 			evaluate
-		end;
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
 
 create
-	make_with_value, make_from_string, make_from_hexa_string
+	make_with_value, make_from_string, make_from_hexa_string, make_from_type
 
 feature {NONE} -- Initialization
 
@@ -60,6 +65,21 @@ feature {NONE} -- Initialization
 			has_integer: has_integer (32)
 			default_type_set: default_type = integer_32_mask
 			integer_32_value_set: integer_32_value = v
+		end
+
+	make_from_type (a_type: TYPE_A; is_neg: BOOLEAN; s: STRING) is
+			-- Create a new INTEGER AST node.
+			-- Set `is_initialized' to true if the string denotes a value that is
+			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
+			-- (from INTEGER_AS)
+			-- (export status {NONE})
+		require -- from INTEGER_AS
+			s_not_void: s /= Void
+		do
+			internal_constant_actual_type := a_type
+			read_decimal_value (is_neg, s)
+		ensure -- from INTEGER_AS
+			constant_type_set: constant_actual_type = a_type
 		end
 
 feature -- Visitor
@@ -89,6 +109,34 @@ feature -- Properties
 
 	is_constant_expression: BOOLEAN is True
 			-- A constant is a constant.
+
+	has_constant_type: BOOLEAN is
+			-- Has constant an explicit type?
+		do
+			Result := constant_type /= Void or else internal_constant_actual_type /= Void
+		ensure then
+			constant_type_not_void: constant_type /= Void implies Result
+		end
+
+feature {NONE} -- Types
+
+	constant_actual_type: TYPE_A is
+			-- Actual type of integer constant
+		require
+			has_constant_type: has_constant_type
+		do
+			Result := internal_constant_actual_type
+			if Result = Void then
+				Result := type_a_generator.evaluate_type (constant_type, system.current_class)
+				internal_constant_actual_type := Result
+			end
+		ensure
+			constant_actual_type_not_void: Result /= Void
+			constant_actual_type_valid: Result.is_integer or Result.is_natural
+		end
+
+	internal_constant_actual_type: TYPE_A
+			-- Once per object to store `actual_type' of `constant_type'.
 
 feature -- Access
 
@@ -447,25 +495,46 @@ feature {NONE} -- Implementation
 				Result := natural_mask (natural_a.size)
 			end
 		end
+
+	adjust_type is
+			-- Make sure that this constant matches `constant_type' if possible.
+			-- Set `is_initialized' to `False' otherwise.
+		local
+			mask: like default_type
+		do
+			mask := type_mask (constant_actual_type)
+			if types & mask = 0 then
+				is_initialized := False
+			else
+				default_type := mask
+			end
+		ensure then
+			default_type_set: is_initialized implies default_type = type_mask (constant_actual_type)
+		end
+
+invariant
+	constant_type_valid: has_constant_type implies
+		(constant_actual_type.is_integer or constant_actual_type.is_natural)
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

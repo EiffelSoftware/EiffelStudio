@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: FEATURE_I; a_new_feature_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN; a_recursive_descendants: SEARCH_TABLE [INTEGER]; an_is_descendant: BOOLEAN) is
+	make (a_feature: FEATURE_I; a_new_feature_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN; a_context_class: CLASS_C; a_recursive_descendants: SEARCH_TABLE [INTEGER]) is
 			-- Create a visitor that renames the feature `a_feature' into `a_new_feature_name'.
 			-- `a_change_comments' specifies if the occurance of the name in comments should be changed.
 			-- `a_change_strings' specifies if the occurance of the name in strings should be changed.
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			a_feature_not_void: a_feature /= Void
 			a_new_feature_name_ok: a_new_feature_name /= Void and not a_new_feature_name.is_empty
 			a_recursive_descendants_not_void: a_recursive_descendants /= Void
+			a_context_class_not_void: a_context_class /= Void
 		do
 			feature_i := a_feature
 			rout_id_set := feature_i.rout_id_set
@@ -58,9 +59,10 @@ feature {NONE} -- Initialization
 			change_comments := a_change_comments
 			change_strings := a_change_strings
 			recursive_descendants := a_recursive_descendants
-			is_descendant := an_is_descendant
+			context_class := a_context_class
+			is_descendant := a_recursive_descendants.has (a_context_class.class_id)
 
-			create type_checker
+			create type_a_generator
 		end
 
 feature -- Status
@@ -135,7 +137,7 @@ feature {NONE} -- Visitor implementation
 				-- we only have to do this stuff if we are a descendant
 			if is_descendant then
 					-- check if the class we inherit from it a descendant of the class where the feature was changed
-				l_class := type_checker.solved_type (l_as.type).associated_class
+				l_class := type_a_generator.evaluate_type (l_as.type, context_class).associated_class
 				l_id := l_class.class_id
 				if recursive_descendants.has (l_id) then
 						-- with each inherit of a descendant we start with no renaming
@@ -393,6 +395,9 @@ feature {NONE} -- Visitor implementation
 
 feature {NONE} -- Implementation
 
+	context_class: CLASS_C
+			-- The class.
+
 	feature_i: FEATURE_I
 			-- The feature.
 
@@ -417,10 +422,11 @@ feature {NONE} -- Implementation
 	is_descendant: BOOLEAN
 			-- Is the currently visited class a descendant of the class that changes the feature?
 
-	type_checker: AST_TYPE_CHECKER
+	type_a_generator: AST_TYPE_A_GENERATOR
 			-- Needed to get some type information.
 
 invariant
+	context_class_not_void: context_class /= Void
 	feature_i_not_void: feature_i /= Void
 	rout_id_set_not_void: rout_id_set /= Void
 	old_feature_name_ok: old_feature_name /= Void and not old_feature_name.is_empty
@@ -428,7 +434,7 @@ invariant
 	new_feature_name_ok: new_feature_name /= Void and not new_feature_name.is_empty
 	new_feature_name_lower: new_feature_name.as_lower.is_equal (new_feature_name)
 	recursive_descendants_not_void: recursive_descendants /= Void
-	type_checker_not_void: type_checker /= Void
+	type_a_generator_not_void: type_a_generator /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

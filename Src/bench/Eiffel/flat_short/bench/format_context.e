@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make, make_for_case, make_for_appending
 
@@ -394,15 +399,8 @@ feature -- Setting
 
 	set_type_creation (t: TYPE_AS) is
 			-- Set last_class_printed to the actual type of `t'.
-		local
-			type_b: TYPE_AS
 		do
-			type_b ?= t
-			if type_b = Void then
-				last_class_printed := Void
-			else
-				last_class_printed := type_b.actual_type
-			end
+			last_class_printed := type_a_generator.evaluate_type (t, class_c)
 		end
 
 	set_insertion_point is
@@ -863,7 +861,7 @@ feature -- Element change
 			if is_for_case then
 				name_of_current_feature := a_name
 			else
-				l_type := a_type.actual_type
+				l_type := type_a_generator.evaluate_type (a_type, class_c)
 				local_adapt := unnested_local_adapt.adapt_feature ("", global_adapt)
 				local_adapt.set_source_type (l_type)
 				local_adapt.set_target_type (l_type)

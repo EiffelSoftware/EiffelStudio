@@ -113,8 +113,8 @@ feature -- Status report
 	name: STRING is
 			-- Name of current type.
 		do
-			create Result.make (9)
-			Result.append ("Formal #")
+			create Result.make (3)
+			Result.append ("G#")
 			Result.append_integer (position)
 		end
 

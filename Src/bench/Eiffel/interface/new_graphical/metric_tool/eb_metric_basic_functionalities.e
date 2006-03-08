@@ -8,10 +8,10 @@ indexing
 
 class
 	EB_METRIC_BASIC_FUNCTIONALITIES
-	
+
 inherit
 	EB_METRIC_SCOPE_INFO
-	
+
 create
 	default_create
 
@@ -30,7 +30,7 @@ feature -- Classes: 1
 			scope: EB_METRIC_SCOPE
 		do
 			create Result.make (1000)
-				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
+				-- Do not work directly on `s' since other metrics rely on it, otherwise, further
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
 			scope := s.twin
 			a_cluster := scope.cluster_i
@@ -77,7 +77,7 @@ feature -- Classes: 1
 			until
 				i > array_classes.count
 			loop
-				if array_classes.item (i) /= Void then 
+				if array_classes.item (i) /= Void then
 					Result.extend (array_classes.item (i))
 				end
 				i := i + 1
@@ -236,7 +236,7 @@ feature -- Clusters: 2
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			scope: EB_METRIC_SCOPE
 		do
-				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
+				-- Do not work directly on `s' since other metrics rely on it, otherwise, further
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
 			scope := s.twin
 			sub_clusters := scope.cluster_i.sub_clusters
@@ -260,7 +260,7 @@ feature -- Clusters: 2
 			scope_not_void: s /= Void
 			scope_is_system: s.index = System_scope
 			system_set: s.system_i /= Void
-		do	
+		do
 			Result := s.system_i.universe.clusters.count
 		end
 
@@ -537,7 +537,7 @@ feature -- 	All features: 5
 			scope_is_class: s.index = Class_scope
 	 		class_set: s.class_c /= Void
 		do
-			Result := number_of_all_features (s) - number_of_all_attributes (s) - number_of_all_functions (s) 
+			Result := number_of_all_features (s) - number_of_all_attributes (s) - number_of_all_functions (s)
 		end
 
 	 number_of_all_deferred_features (s: EB_METRIC_SCOPE): DOUBLE is
@@ -722,7 +722,7 @@ feature -- 	Immediate features: 6
 			scope_is_class: s.index = Class_scope
 	 		class_set: s.class_c /= Void
 		do
-			Result := number_of_imm_features (s) - number_of_imm_attributes (s) - number_of_imm_functions (s) 
+			Result := number_of_imm_features (s) - number_of_imm_attributes (s) - number_of_imm_functions (s)
 		end
 
 	 number_of_imm_deferred_features (s: EB_METRIC_SCOPE): DOUBLE is
@@ -1002,7 +1002,7 @@ feature -- Invariant clause: 10
 				indirect_parents_table.forth
 			end
 			if not indirect_parents_table.has (s.class_c) then
-				if s.class_c.ast.invariant_part /= Void then 
+				if s.class_c.ast.invariant_part /= Void then
 					Result := Result + s.class_c.ast.invariant_part.assertion_list.count
 				end
 			end
@@ -1025,7 +1025,7 @@ feature -- Lines: 11
 			error_dialog: EB_INFORMATION_DIALOG
 		do
 			if not retried then
-				cl := s.e_feature.written_class	
+				cl := s.e_feature.written_class
 				create f.make_open_read (cl.file_name)
 				if f.exists and then f.is_readable then
 					sp := s.e_feature.ast.start_position
@@ -1541,19 +1541,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

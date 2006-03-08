@@ -147,7 +147,7 @@ feature -- Setting
 				-- Feature id
 			byte_code.set_body_index (current_feature.body_index)
 				-- Result type if any
-			byte_code.set_result_type (current_feature.type.actual_type.type_i)
+			byte_code.set_result_type (current_feature.type.type_i)
 				-- Routine id
 			rout_id := current_feature.rout_id_set.first
 			byte_code.set_rout_id (rout_id)
@@ -178,7 +178,7 @@ feature -- Setting
 				until
 					i > argument_count
 				loop
-					local_dec.put (arguments.i_th (i).actual_type.type_i, i)
+					local_dec.put (arguments.i_th (i).type_i, i)
 					i := i + 1
 				end
 				byte_code.set_arguments (local_dec)

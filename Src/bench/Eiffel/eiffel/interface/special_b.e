@@ -17,7 +17,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Validity
 
 	check_validity is
@@ -46,7 +46,7 @@ feature -- Validity
 				create special_error.make (special_case_2, Current)
 				Error_handler.insert_error (special_error)
 			end
-			
+
 				-- Check that `make' is indeed a creation procedure
 			if creators = Void then
 				create special_error.make (special_case_3, Current)
@@ -67,7 +67,7 @@ feature -- Validity
 				end
 			end
 
-				-- Check if class has a feature item (INTEGER): Generic #1
+				-- Check if class has a feature item (INTEGER): G#1
 			item_feature := feat_table.item_id (names_heap.item_name_id)
 			if item_feature = Void
 				or else not (item_feature.written_in = class_id)
@@ -76,8 +76,8 @@ feature -- Validity
 				create special_error.make (special_case_4, Current)
 				Error_handler.insert_error (special_error)
 			end
-			
-				-- Check if class has a feature put (Generic #1, INTEGER)
+
+				-- Check if class has a feature put (G#1, INTEGER)
 			put_feature := feat_table.item_id (names_heap.put_name_id)
 			if put_feature = Void
 				or else not (put_feature.written_in = class_id)
@@ -114,7 +114,7 @@ feature -- Status report
 
 	is_special: BOOLEAN is True
 			-- Is class SPECIAL?
-	
+
 feature -- Code generation
 
 	generate_dynamic_types (buffer: GENERATION_BUFFER) is
@@ -281,19 +281,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

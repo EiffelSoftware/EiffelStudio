@@ -38,7 +38,7 @@ feature
 			area_feature ?= feature_table.item_id (names_heap.area_name_id)
 			if
 				(area_feature = Void)
-				or else not area_type.same_as (area_feature.type.actual_type)
+				or else not area_type.same_as (area_feature.type)
 			then
 				create special_error.make (array_case_2, Current)
 				Error_handler.insert_error (special_error)

@@ -131,7 +131,7 @@ feature -- Concrete evaluation
 			retrieve_evaluation
 
 			if last_result_value /= Void then
-				last_result_static_type := f.type.actual_type.associated_class
+				last_result_static_type := f.type.associated_class
 			else
 				notify_error_evaluation ("Unable to evaluate {" + cl.name_in_upper + "}." + f.feature_name)
 			end
@@ -164,7 +164,7 @@ feature -- Concrete evaluation
 			cv_cst ?= f
 			if cv_cst /= Void then
 				val := cv_cst.value
-				last_result_static_type := cv_cst.type.actual_type.associated_class
+				last_result_static_type := cv_cst.type.associated_class
 				if val.is_integer then
 					int_val ?= val
 					if int_val.has_natural (64) then
@@ -221,7 +221,7 @@ feature -- Concrete evaluation
 				lst := attributes_list_from_object (l_address)
 				dv := find_item_in_list (f.feature_name, lst)
 
-				last_result_static_type := f.type.actual_type.associated_class
+				last_result_static_type := f.type.associated_class
 				if dv = Void then
 					if f.feature_name.is_equal ("Void") then
 						create last_result_value.make_void (last_result_static_type)
@@ -323,7 +323,7 @@ feature -- Concrete evaluation
 				end
 
 				if not error_occurred and then last_result_value /= Void then
-					at := f.type.actual_type
+					at := f.type
 					last_result_static_type := at.associated_class
 					if last_result_static_type = Void then
 						last_result_static_type:= Workbench.Eiffel_system.Any_class.compiled_class

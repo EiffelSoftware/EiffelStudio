@@ -51,10 +51,10 @@ inherit
 
 create
 	make
-	
-feature 
 
-	type: TYPE_AS
+feature
+
+	type: TYPE_A
 			-- Type of the constant
 
 	assigner_name_id: INTEGER
@@ -85,7 +85,7 @@ feature
 			-- Is a constant redefinable ?
 
 	check_types (feat_tbl: FEATURE_TABLE) is
-			-- Check Result and argument types 
+			-- Check Result and argument types
 		local
 			actual_type: TYPE_A
 			vqmc: VQMC
@@ -135,7 +135,7 @@ feature -- Status
 			class_id := a_class.class_id
 			if
 				not byte_context.workbench_mode
-			then 
+			then
 					-- We need to generate current constant if:
 					-- 1 - `generate_in' has the same value as `class_id': in this
 					--     an encapsulation is needed because `a_class' has some
@@ -167,7 +167,7 @@ feature -- Incrementality
 						and then value.is_propagation_equivalent (other_constant.value)
 			end
 		end
-	
+
 feature -- C code generation
 
 	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
@@ -186,7 +186,7 @@ feature -- C code generation
 			if used then
 				local_byte_context := byte_context
 				generate_header (buffer)
-				type_c := type.actual_type.type_i.c_type
+				type_c := type.type_i.c_type
 				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
 
@@ -209,7 +209,7 @@ feature -- C code generation
 						header_buffer.put_new_line
 					end
 				end
-					
+
 					-- Generation of function's header
 				buffer.generate_function_signature (type_c.c_string,
 						internal_name, True, local_byte_context.header_buffer,
@@ -274,7 +274,7 @@ feature -- IL Code generation
 		do
 			Byte_context.set_byte_code (create {STD_BYTE_CODE})
 			Byte_context.set_current_feature (Current)
-			type_i := type.actual_type.type_i
+			type_i := type.type_i
 			if is_once then
 				il_generator.generate_once_prologue
 				value.generate_il
@@ -320,7 +320,7 @@ feature -- Byte code generation
 				-- Real body id ( -1 because it's a constant. We can't set a breakpoint )
 			ba.append_integer (-1)
 				-- Meta-type of Result
-			result_type := byte_context.real_type (type.actual_type.type_i)
+			result_type := byte_context.real_type (type.type_i)
 			ba.append_integer (result_type.sk_value)
 				-- Argument count
 			ba.append_short_integer (0)
@@ -341,10 +341,10 @@ feature -- Byte code generation
 				-- Access to attribute; Result := <attribute access>
 			value.make_byte_code (ba)
 			ba.append (Bc_rassign)
-				
+
 				-- End mark
 			ba.append (Bc_null)
-				
+
 			melted_feature := ba.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)
 			if not System.freeze then
@@ -408,12 +408,8 @@ feature {NONE} -- Implementation
 		local
 			t: TYPE_A
 		do
-			t ?= type
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
-			if t = Void then
-				t := type.actual_type
-			end
-			Result.set_type (t, assigner_name)
+			Result.set_type (type, assigner_name)
 			Result.set_value (value.string_value)
 		end
 
@@ -423,19 +419,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

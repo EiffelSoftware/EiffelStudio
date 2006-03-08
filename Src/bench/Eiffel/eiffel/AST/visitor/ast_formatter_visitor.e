@@ -10,9 +10,6 @@ class
 
 inherit
 	AST_VISITOR
-		redefine
-			process_type_a
-		end
 
 	COMPILER_EXPORTER
 		export
@@ -44,6 +41,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -56,7 +58,6 @@ feature {NONE} -- Initialization
 		do
 			ctxt := a_ctxt
 			is_simple_formatting := a_ctxt.is_for_case
-			create export_status_generator
 		end
 
 feature -- Formatting
@@ -86,9 +87,6 @@ feature {NONE} -- Implementation: Access
 
 	is_simple_formatting: BOOLEAN
 			-- Is `simple' formatting enabled?
-
-	export_status_generator: AST_EXPORT_STATUS_GENERATOR
-			-- To generate EXPORT_I instance for CLIENT_AS nodes
 
 feature -- Roundtrip
 
@@ -365,6 +363,8 @@ feature {NONE} -- Implementation
 		end
 
 	process_body_as (l_as: BODY_AS) is
+		local
+			l_type_a: TYPE_A
 		do
 			if l_as.arguments /= Void and then not l_as.arguments.is_empty then
 				ctxt.put_space
@@ -377,7 +377,8 @@ feature {NONE} -- Implementation
 			if l_as.type /= Void then
 				ctxt.put_text_item_without_tabs (ti_colon)
 				ctxt.put_space
-				if l_as.type.has_like then
+				l_type_a := type_a_generator.evaluate_type (l_as.type, ctxt.class_c)
+				if l_type_a.has_like then
 					ctxt.new_expression
 				end
 				l_as.type.process (Current)
@@ -1934,11 +1935,14 @@ feature {NONE} -- Implementation
 		end
 
 	process_bits_as (l_as: BITS_AS) is
+		local
+			l_type_a: TYPE_A
 		do
 			if is_simple_formatting then
 				ctxt.put_class_name (l_as.dump)
 			else
-				ctxt.put_classi (l_as.actual_type.associated_class.lace_class)
+				l_type_a := type_a_generator.evaluate_type (l_as, ctxt.class_c)
+				ctxt.put_classi (l_type_a.associated_class.lace_class)
 			end
 		end
 
@@ -2200,11 +2204,6 @@ feature {NONE} -- Implementation
 	process_void_as (l_as: VOID_AS) is
 		do
 			ctxt.put_text_item (ti_void)
-		end
-
-	process_type_a (a_type: TYPE_A) is
-		do
-			a_type.append_to (ctxt.text)
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS) is

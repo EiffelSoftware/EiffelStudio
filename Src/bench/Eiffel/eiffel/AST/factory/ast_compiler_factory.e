@@ -18,9 +18,11 @@ inherit
 			new_debug_as,
 			new_expr_address_as,
 			new_feature_as,
+			new_formal_dec_as,
 			new_integer_as,
 			new_integer_hexa_as,
-			new_external_lang_as
+			new_external_lang_as,
+			validate_integer_real_type
 		end
 
 	PREDEFINED_NAMES
@@ -39,6 +41,11 @@ inherit
 		end
 
 	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
 		end
@@ -67,7 +74,7 @@ feature -- Access
 	new_class_as (n: ID_AS; ext_name: STRING_AS;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
-			g: EIFFEL_LIST [FORMAL_DEC_AS];
+			g: EIFFEL_LIST [FORMAL_CONSTRAINT_AS];
 			p: PARENT_LIST_AS;
 			c: EIFFEL_LIST [CREATE_AS];
 			co: CONVERT_FEAT_LIST_AS;
@@ -242,10 +249,16 @@ feature -- Access
 			end
 		end
 
+	new_formal_dec_as (f: FORMAL_AS; c: TYPE_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS is
+			-- New FORMAL_DECLARATION AST node
+		do
+			if f /= Void then
+				create Result.initialize (f, c, cf, c_as, ck_as, ek_as)
+			end
+		end
+
 	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
-		require else
-			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
@@ -254,11 +267,43 @@ feature -- Access
 
 	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
-		require else
-			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+			end
+		end
+
+feature {NONE} -- Validation
+
+	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN) is
+			-- New integer value.
+		local
+			l_type: TYPE_A
+		do
+			if for_integer then
+				if a_type /= Void then
+					l_type := type_a_generator.evaluate_type_if_possible (a_type, System.current_class)
+				end
+				if l_type /= Void then
+					if not l_type.is_valid or (not l_type.is_integer and not l_type.is_natural) then
+						a_psr.report_invalid_type_for_integer_error (a_type, buffer)
+					end
+				elseif a_type /= Void then
+						-- A type was specified but did not result in a valid type
+					a_psr.report_invalid_type_for_integer_error (a_type, buffer)
+				end
+			else
+				if a_type /= Void then
+					l_type := type_a_generator.evaluate_type (a_type, System.current_class)
+				end
+				if l_type /= Void then
+					if not l_type.is_valid or (not l_type.is_real_32 and not l_type.is_real_64) then
+						a_psr.report_invalid_type_for_real_error (a_type, buffer)
+					end
+				elseif a_type /= Void then
+						-- A type was specified but did not result in a valid type
+					a_psr.report_invalid_type_for_real_error (a_type, buffer)
+				end
 			end
 		end
 

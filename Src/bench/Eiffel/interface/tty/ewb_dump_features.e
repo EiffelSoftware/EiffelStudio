@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Dumps features of a class that can be refernced by agents to stdout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 			want_compiled_class,
 			make
 		end
-	
+
 	SHARED_WORKBENCH
 
 create
@@ -65,7 +65,7 @@ feature {NONE} -- Properties
 
 	operand_dump: BOOLEAN
 			-- Is operand information dumped?
-	
+
 	extra_dump: BOOLEAN is True
 			-- Is extra information dumped?
 			-- Const values etc...
@@ -80,7 +80,7 @@ feature {NONE} -- Properties
 			s: STRING
 			c: CONSTANT_I
 			tl: TYPE_LIST
-		do	
+		do
 			if e_class.generics /= Void then
 				from
 					gs := e_class.generics
@@ -99,7 +99,7 @@ feature {NONE} -- Properties
 					gs.forth
 				end
 			end
-			
+
 			from
 				l := e_class.feature_table.linear_representation
 				l.start
@@ -123,7 +123,7 @@ feature {NONE} -- Properties
 						until
 							i > gts.upper
 						loop
-							s.replace_substring_all ("Generic #" + i.out, gts.item (i))
+							s.replace_substring_all ("G#" + i.out, gts.item (i))
 							i := i + 1
 						end
 					end
@@ -175,19 +175,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

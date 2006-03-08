@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 				class_c := a_class.compiled_class
 				class_i ?= a_class
 			else
-				class_i ?= a_class			
+				class_i ?= a_class
 			end
 			set_current_class_only (a_flag)
 			initialize (a_consumed)
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			command_features, hidden_command_features,
 			misc_features: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]
 		do
-			
+
 					-- Initialize all feature category lists.
 			create property_features.make ("Properties", True)
 			create property_setting_features.make ("Property Setting", True)
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			create hidden_access_features.make ("Access", False)
 			create hidden_query_features.make ("Query", False)
 			create hidden_command_features.make ("Commands", False)
-			
+
 			from
 				loop_counter := 1
 			until
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 				end
 				loop_counter := loop_counter + 1
 			end
-			
+
 					-- Add features to feature category list if not empty.
 			add_to_features_list (access_features)
 			add_to_features_list (query_features)
@@ -132,18 +132,18 @@ feature {NONE} -- Initialization
 			add_to_features_list (hidden_property_features)
 			add_to_features_list (hidden_property_setting_features)
 			add_to_features_list (hidden_events_features)
-			
+
 			if misc_features /= Void then
 				add_to_features_list (misc_features)
 			end
-			
+
 					-- Set feature category list to current development window.
 			l_dev_win := Window_manager.last_focused_development_window
 			if l_dev_win /= Void and class_c /= Void then
 				l_dev_win.set_feature_clauses (features, class_c.name)
 			end
 		end
-		
+
 	initialize_property_or_event (a_entity: CONSUMED_ENTITY) is
 			-- Initialize 'a_entity' for inclusion in corresponding entity list.
 		require
@@ -199,7 +199,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-		
+
 	set_constructors (a_consumed: CONSUMED_TYPE) is
 			-- Set all constrcutor for the .NET class.
 		require
@@ -228,7 +228,7 @@ feature {NONE} -- Initialization
 			constructors_set: constructors /= Void
 		end
 
-	set_ancestors (a_consumed: CONSUMED_TYPE) is 
+	set_ancestors (a_consumed: CONSUMED_TYPE) is
 			-- Set all ancestors for the .NET class.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -268,7 +268,7 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			ancestors_set: ancestors /= Void
-		end		
+		end
 
 feature {NONE} -- Access
 
@@ -297,7 +297,7 @@ feature {NONE} -- Access
 			-- Is Current format for the current class only (i.e no inheritance)?
 
 feature -- Status Setting
-		
+
 	set_current_class_only (a_flag: BOOLEAN) is
 			-- Set format type to include inherited features.
 		do
@@ -345,7 +345,7 @@ feature {NONE} -- Formatting
 			a_ctxt.put_string_item (dotnet_name)
 			a_ctxt.put_string_item ("%"")
 			a_ctxt.put_new_line
-		
+
 				-- Description of type.
 			if l_member_info /= Void then
 				a_ctxt.put_string ("summary: ")
@@ -366,7 +366,7 @@ feature {NONE} -- Formatting
 					end
 				end
 			end
-			
+
 			a_ctxt.put_text_item (ti_After_indexing)
 			a_ctxt.exdent
 			a_ctxt.put_new_line
@@ -409,10 +409,10 @@ feature {NONE} -- Formatting
 			a_ctxt.put_new_line
 			a_ctxt.put_text_item (ti_Before_class_end)
 			a_ctxt.put_text_item (ti_End_keyword)
-			a_ctxt.put_comment_text (" -- ") 
+			a_ctxt.put_comment_text (" -- ")
 			a_ctxt.put_comment_text ("class")
 			a_ctxt.put_space
-			a_ctxt.put_comment_text (a_ctxt.class_i.name_in_upper)			
+			a_ctxt.put_comment_text (a_ctxt.class_i.name_in_upper)
 			a_ctxt.put_text_item (ti_After_class_end)
 		end
 
@@ -447,8 +447,8 @@ feature {NONE} -- Formatting
 		local
 			generics: EIFFEL_LIST [FORMAL_DEC_AS]
 		do
-			if 
-				a_ctxt.class_i.compiled_class /= Void and 
+			if
+				a_ctxt.class_i.compiled_class /= Void and
 				a_ctxt.class_i.compiled_class.generics /= Void
 			then
 				generics := a_ctxt.class_i.compiled_class.generics
@@ -463,7 +463,7 @@ feature {NONE} -- Formatting
 		local
 			f_constructor: CONSUMED_CONSTRUCTOR
 		do
-			if not constructors.is_empty then 
+			if not constructors.is_empty then
 				a_ctxt.put_text_item (Ti_before_creators)
 				a_ctxt.put_new_line
 				a_ctxt.put_text_item (Ti_create_keyword)
@@ -499,8 +499,8 @@ feature {NONE} -- Formatting
 				features.after
 			loop
 				a_category_list := features.item
-				if 
-					a_category_list /= Void and then 
+				if
+					a_category_list /= Void and then
 					not a_category_list.is_empty and then
 					should_display (a_category_list)
 				then
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				Result := True
-			end	
+			end
 		end
 
 	should_add (a_entity: CONSUMED_ENTITY): BOOLEAN is
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 				Result := a_entity.declared_type.name.is_equal (consumed_type.dotnet_name)
 			else
 				Result := True
-			end	
+			end
 		end
 
 	add_to_features_list (a_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
@@ -615,19 +615,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

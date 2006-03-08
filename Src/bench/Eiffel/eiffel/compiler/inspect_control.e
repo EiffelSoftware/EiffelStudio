@@ -45,7 +45,7 @@ create
 	make
 
 feature {NONE} -- Creation
-	
+
 	make (inspect_expression_type: TYPE_A) is
 			-- Create controller for inspect instruction with `inspect_expression_type'.
 		require
@@ -78,7 +78,7 @@ feature {NONE} -- State
 			-- One of the positive values found (error report)
 
 	unique_names: LINKED_SET [STRING]
-			-- Set of unique names already used 
+			-- Set of unique names already used
 
 	unique_constant_class: CLASS_C
 			-- Class for controling uniques
@@ -151,7 +151,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			class_c: CLASS_C
 		do
 				-- At this stage `l_as' has already been type checked thus `solved_type' will be non-void.
-			class_c := type_checker.solved_type (l_as.class_type).associated_class
+			class_c := type_a_generator.evaluate_type (l_as.class_type, context.current_class).associated_class
 			feature_i := class_c.feature_table.item (l_as.feature_name)
 			constant_i ?= feature_i
 			if constant_i /= Void and then constant_i.value.valid_type (type) then
@@ -185,7 +185,7 @@ feature {ID_AS} -- Visitor
 					-- Calculate byte node
 				last_inspect_value := constant_i.value.inspect_value (type)
 			elseif
-				feature_i /= Void or else 
+				feature_i /= Void or else
 				context.current_feature.argument_position (l_as) /= 0 or else
 				context.locals.has (l_as)
 			then
@@ -315,19 +315,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

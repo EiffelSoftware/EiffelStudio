@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class PROCEDURE_I 
+deferred class PROCEDURE_I
 
 inherit
 	FEATURE_I
@@ -15,7 +15,7 @@ inherit
 			obsolete_message, assert_id_set, set_assert_id_set,
 			check_local_names, duplicate_arguments
 		end
-	
+
 feature -- Access
 
 	arguments: FEAT_ARG
@@ -26,7 +26,7 @@ feature -- Access
 			-- (Void if Current is not obsolete)
 
 	assert_id_set: ASSERT_ID_SET
-			-- Assertions to which the procedure belongs to 
+			-- Assertions to which the procedure belongs to
 
 feature -- Status report
 
@@ -106,13 +106,14 @@ feature -- Initialization
 			end
 		end
 
-	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]) is
+	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C) is
 			-- Initialization of arguments.
 		require
 			argument_as_not_void: argument_as /= Void
+			a_context_class_not_void: a_context_class /= Void
 		local
 			i, j, count, dec_count, nb_arg: INTEGER
-			arg_type: TYPE_AS
+			arg_type: TYPE_A
 			arg_dec: TYPE_DEC_AS
 			id_list: ARRAYED_LIST [INTEGER]
 		do
@@ -139,7 +140,7 @@ feature -- Initialization
 				from
 					j := 1
 					id_list := arg_dec.id_list
-					arg_type := arg_dec.type
+					arg_type := type_a_generator.evaluate_type (arg_dec.type, a_context_class)
 					dec_count := id_list.count
 				until
 					j > dec_count
@@ -170,7 +171,7 @@ feature -- Initialization
 			-- Check the conflicts between local names and feature names
 			-- for an unchanged feature
 		do
-			if not is_replicated then	
+			if not is_replicated then
 				feature_checker.check_local_names (Current, body)
 			end
 		end
@@ -248,19 +249,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

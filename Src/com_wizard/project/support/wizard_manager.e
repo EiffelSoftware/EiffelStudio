@@ -8,7 +8,7 @@ class
 	WIZARD_MANAGER
 
 inherit
-	WIZARD_CLEANER	
+	WIZARD_CLEANER
 		export
 			{NONE} all
 		end
@@ -65,17 +65,17 @@ feature -- Basic Operations
 					end
 					l_tasks.extend (create {WIZARD_DIRECTORY_INITIALIZATION_TASK})
 					run_tasks (l_tasks)
-					
+
 					if not environment.abort then
 						l_tasks.wipe_out
 						l_tasks.extend (create {WIZARD_TYPE_LIBRARY_ANALYSIS_TASK})
 						run_tasks (l_tasks)
-					
+
 						if not environment.abort then
 							l_tasks.wipe_out
 							l_tasks.extend (create {WIZARD_CODE_GENERATION_TASK})
 							run_tasks (l_tasks)
-						end	
+						end
 					end
 				end
 				if not environment.abort then
@@ -142,18 +142,20 @@ feature -- Basic Operations
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	setup_environment is
 			-- Setup environment variables for compilation
 		local
 			l_vs_setup: VS_SETUP
-			l_path: STRING
+			l_path, l_platform: STRING
 		do
 			if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
 				environment.set_abort (No_ise_eiffel)
 			else
+				l_platform := env.get ("ISE_PLATFORM")
+				env.put (l_platform, "ISE_PLATFORM")
 				l_path := env.get ("PATH")
 				l_path.append (";")
 				l_path.append (Eiffel_installation_dir_name)
@@ -205,10 +207,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
 			-- Agent used to raise events
-		
+
 end -- class WIZARD_MANAGER
 
 --+----------------------------------------------------------------

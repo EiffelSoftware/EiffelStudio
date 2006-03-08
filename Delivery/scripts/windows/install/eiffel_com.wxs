@@ -5,6 +5,7 @@
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="Registry" Guid="18B68737-CE2F-4F57-B358-1DAE29826C27" Win64="$(var.IsWin64)">
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\com_wizard" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\com_wizard" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry2" Type="string" />
 			</Component>
 			<Directory Id="ProgramMenuFolder" Name="Redist">
 				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.7">

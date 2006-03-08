@@ -2051,8 +2051,32 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			dbg_documents_not_void: Result /= Void
 		end
 
+	dbg_pragma_documents (a_path: STRING): DBG_DOCUMENT_WRITER is
+			-- Associated document to `a_path'.
+		require
+			attached_path: a_path /= Void
+			is_generated: is_generated
+			in_debug_mode: is_debug_info_enabled
+		local
+			l_string: UNI_STRING
+		do
+			Result := internal_dbg_pragma_documents.item (a_path)
+			if Result = Void then
+				create l_string.make (a_path)
+				Result := dbg_writer.define_document (l_string, language_guid,
+					vendor_guid, document_type_guid)
+				internal_dbg_pragma_documents.put (Result, a_path)
+			end
+		ensure
+			dbg_pragma_documents_not_void: Result /= Void
+		end
+
 	internal_dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]
 			-- Array indexed by class ID containing all DBG_DOCUMENTS.
+
+	internal_dbg_pragma_documents: HASH_TABLE [DBG_DOCUMENT_WRITER, STRING]
+			-- Item: Document writer used for pragma debug generation
+			-- Key: Path to document defined by pragma clause
 
 	internal_implementation_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of features for implementation indexed by their `type_id'.

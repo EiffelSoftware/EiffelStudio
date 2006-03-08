@@ -38,6 +38,7 @@ inherit
 			new_once_string_keyword_as,
 			new_symbol_as,
 			new_square_symbol_as,
+			new_line_pragma,
 			create_break_as,
 			create_break_as_with_data
 		end
@@ -187,6 +188,14 @@ feature -- Access
 			-- New KEYWORD AST node	only for symbol "[" and "]"
 		do
 			Result := new_symbol_as (a_code, a_scn)
+		end
+
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
+			--| Keep entire line, actual processing will be done later if we need it.
+		do
+			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			extend_match_list (Result)
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER) is

@@ -102,6 +102,9 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
+	last_line_pragma: STRING
+			-- Last line pragma to be associated with next instruction
+
 	token_buffer: STRING
 			-- Buffer for lexial tokens
 

@@ -1228,7 +1228,12 @@ Instruction_list: Instruction
 	;
 
 Instruction: Instruction_impl Optional_semicolons
-			{ $$ := $1 }
+			{
+				$$ := $1 
+				if $$ /= Void then
+					$$.set_line_pragma (last_line_pragma)
+				end
+			}
 	;
 
 Optional_semicolons: -- Empty

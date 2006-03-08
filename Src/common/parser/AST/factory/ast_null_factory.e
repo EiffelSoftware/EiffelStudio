@@ -63,7 +63,7 @@ inherit
 			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_debug_key_list_as,
 			new_delayed_actual_list_as, new_parameter_list_as,
 			new_rename_clause_as, new_export_clause_as, new_undefine_clause_as, new_redefine_clause_as, new_select_clause_as,
-			new_creation_constrain_triple, new_named_tuple_type_as
+			new_creation_constrain_triple, new_named_tuple_type_as, new_line_pragma
 		end
 
 feature -- Buffer operation
@@ -1099,6 +1099,11 @@ feature -- Access
 
 	new_creation_constrain_triple (fl: EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: KEYWORD_AS): CREATION_CONSTRAIN_TRIPLE is
 			-- New CREATION_CONSTRAIN_TRIPLE object
+		do
+		end
+
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
 		do
 		end
 

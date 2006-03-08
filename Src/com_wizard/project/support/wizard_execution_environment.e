@@ -14,7 +14,7 @@ feature -- Access
 		once
 			Result := Ise_c_compiler_value.is_equal ("bcb")
 		end
-		
+
 	Ise_c_compiler_value: STRING is
 			-- ISE_C_COMPILER value
 		once
@@ -33,7 +33,7 @@ feature -- Access
 		once
 			Result := Env.get ("ISE_EIFFEL")
 		end
-		
+
 	eiffel_compiler: STRING is
 			-- Path to Eiffel compiler executable.
 		require
@@ -41,9 +41,11 @@ feature -- Access
 		once
 			create Result.make (256)
 			Result.append (Eiffel_installation_dir_name)
-			Result.append ("\studio\spec\windows\bin\ec.exe")
+			Result.append ("\studio\spec\")
+			Result.append (Env.get ("ISE_PLATFORM"))
+			Result.append ("\bin\ec.exe")
 		end
-	
+
 	Ise_c_compiler: STRING is "ISE_C_COMPILER"
 			-- ISE_C_COMPLIER environmnent variable.
 
@@ -54,7 +56,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
+
 end -- class WIZARD_EXECUTION_ENVIRONMENT
 
 --+----------------------------------------------------------------

@@ -56,7 +56,8 @@ inherit
 			new_tagged_as,
 			create_break_as,
 			create_break_as_with_data,
-			new_filled_id_as_with_existing_stub
+			new_filled_id_as_with_existing_stub,
+			new_line_pragma
 		end
 
 feature -- Buffer operation
@@ -359,6 +360,12 @@ feature -- Leaf nodes
 		do
 			Result := new_symbol_as (a_code, a_scn)
 			Result.set_index (match_list_count)
+		end
+
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
+		do
+			match_list_count := match_list_count + 1
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER) is

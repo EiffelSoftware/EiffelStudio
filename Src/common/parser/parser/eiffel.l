@@ -35,6 +35,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Breaks
 
+([ \t\r\n]|"--#line".*)+ { last_line_pragma := ast_factory.new_line_pragma (Current) }
 ([ \t\r\n]|"--".*)+ { ast_factory.create_break_as (Current) }
 
 -- Symbols

@@ -11,7 +11,7 @@ deferred class
 inherit
 	TYPE_A
 		undefine
-			instantiation_in, same_as, solved_type
+			instantiation_in, same_as
 		redefine
 			actual_type,
 			conformance_type,
@@ -26,10 +26,9 @@ inherit
 			is_loose,
 			is_none,
 			is_reference,
+			is_valid,
 			meta_type
 		end
-
-	SHARED_LIKE_CONTROLER
 
 feature -- Properties
 
@@ -83,6 +82,12 @@ feature -- Properties
 			Result := actual_type.is_none
 		end
 
+	is_valid: BOOLEAN is
+			-- Is current type valid?
+		do
+			Result := actual_type /= Void
+		end
+
 feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
@@ -109,12 +114,6 @@ feature -- Primitives
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a
-		end
-
-	solved_type (feat_table: FEATURE_TABLE f: FEATURE_I): like Current is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table
-		deferred
 		end
 
 	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
@@ -175,19 +174,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

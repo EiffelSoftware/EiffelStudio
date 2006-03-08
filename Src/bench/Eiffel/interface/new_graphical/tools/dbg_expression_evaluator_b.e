@@ -1144,25 +1144,6 @@ feature {NONE} -- Implementation
 			Result := dbg_evaluator.dump_value_at_address (addr)
 		end
 
-	local_table_for (a_feat_i: FEATURE_I; a_feat_as: FEATURE_AS): HASH_TABLE [LOCAL_INFO, STRING] is
-		require
-			--| make sure all the context had been set
-			a_feat_i /= Void
-			a_feat_as /= Void
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				Result := locals_builder.local_table (a_feat_i, a_feat_as)
-			else
-					--| Should not occur ... but
-				Result := Void
-			end
-		rescue
-			retried := True
-			retry
-		end
-
 	get_expression_byte_node is
 			-- get expression byte node depending of the context
 		require
@@ -1226,7 +1207,7 @@ feature {NONE} -- Implementation
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
 							Byte_context.set_byte_code (l_byte_code)
 
-							l_ct_locals := locals_builder.local_table (context_feature, f_as)
+							l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
 							if l_ct_locals /= Void then
 									--| if it failed .. let's continue anyway for now
 								Ast_context.set_locals (l_ct_locals)

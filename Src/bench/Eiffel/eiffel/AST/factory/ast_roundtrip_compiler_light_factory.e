@@ -27,7 +27,9 @@ inherit
 			new_expr_address_as,
 			new_integer_value,
 			new_real_value,
-			new_external_lang_as
+			new_external_lang_as,
+			new_formal_dec_as,
+			validate_integer_real_type
 		end
 
 	AST_COMPILER_FACTORY
@@ -77,8 +79,6 @@ feature -- Roundtrip
 
 	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
-		require else
-			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
@@ -91,8 +91,6 @@ feature -- Roundtrip
 
 	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
-		require else
-			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)

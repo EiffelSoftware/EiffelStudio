@@ -51,6 +51,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create {EIFFEL_CALL_STACK}
 	make
 create {STOPPED_HDLR,APPLICATION_EXECUTION_CLASSIC}
@@ -253,6 +258,7 @@ feature {NONE} -- Implementation
 			l_stat_class	: CLASS_C
 			l_old_cluster   : CLUSTER_I
 			l_old_class		: CLASS_C
+			l_type_a: TYPE_A
 		do
 			debug ("DEBUGGER_TRACE_CALLSTACK")
 				io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
@@ -309,7 +315,14 @@ feature {NONE} -- Implementation
 					loop
 						id_list := local_decl_grps.item.id_list
 						if not id_list.is_empty then
-							l_stat_class := local_decl_grps.item.type.actual_type.associated_class
+							l_type_a := type_a_generator.evaluate_type (local_decl_grps.item.type, dynamic_class)
+							type_a_checker.init_for_checking (routine_i, dynamic_class, Void, Void)
+							l_type_a := type_a_checker.solved (l_type_a, Void)
+							check
+								l_type_a_not_void: l_type_a /= Void
+								l_type_a_valid: l_type_a.is_valid and l_type_a.has_associated_class
+							end
+							l_stat_class := l_type_a.associated_class
 
 							from
 								id_list.start

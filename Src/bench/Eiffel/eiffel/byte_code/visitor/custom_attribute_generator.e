@@ -466,7 +466,7 @@ feature {NONE} -- Implemention
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_property)
 			end
 
-			l_type := l_feat.type.actual_type.type_i
+			l_type := l_feat.type.type_i
 			insert_field_or_prop_type (l_type)
 
 				-- Put name of attribute or property.
@@ -521,7 +521,7 @@ feature {NONE} -- Implemention
 						l_feature_i := l_feature_table.item_for_iteration
 						l_il_extension_i ?= l_feature_i.extension
 						if l_il_extension_i /= Void and then l_il_extension_i.type = {SHARED_IL_CONSTANTS}.field_type then
-							l_underlying_type := l_feature_i.type.actual_type.type_i
+							l_underlying_type := l_feature_i.type.type_i
 						end
 						l_feature_table.forth
 					end

@@ -1452,7 +1452,7 @@ feature -- Class info
 				generate_argument (1)
 				if class_type.is_expanded then
 					l_feature := class_type.associated_class.feature_of_rout_id (copy_rout_id)
-					l_type := argument_actual_type (l_feature.arguments.first.actual_type.type_i)
+					l_type := argument_actual_type (l_feature.arguments.first.type_i)
 					if l_type.is_expanded then
 							-- Unbox a value object.
 						generate_unmetamorphose (l_type)
@@ -1481,7 +1481,7 @@ feature -- Class info
 				generate_argument (1)
 				if class_type.is_expanded then
 					l_feature := class_type.associated_class.feature_of_rout_id (is_equal_rout_id)
-					l_type := argument_actual_type (l_feature.arguments.first.actual_type.type_i)
+					l_type := argument_actual_type (l_feature.arguments.first.type_i)
 					if l_type.is_expanded then
 							-- Unbox a value object.
 						generate_unmetamorphose (l_type)
@@ -1625,7 +1625,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_end_label := create_label
 				branch_on_false (l_label)
 
-				arg_type := argument_actual_type (feature_i.arguments.first.actual_type.type_i)
+				arg_type := argument_actual_type (feature_i.arguments.first.type_i)
 				if arg_type.is_expanded then
 						-- Load value of the value object to the stack.
 					generate_unmetamorphose (arg_type)
@@ -2164,7 +2164,7 @@ feature -- Features info
 					until
 						l_feat_arg.after
 					loop
-						l_type_i := argument_actual_type_in (l_feat_arg.item.actual_type.type_i, l_class_type)
+						l_type_i := argument_actual_type_in (l_feat_arg.item.type_i, l_class_type)
 						set_signature_type (l_meth_sig, l_type_i)
 						l_signature.put (l_type_i.static_type_id, i + 1)
 						i := i + 1
@@ -2318,7 +2318,7 @@ feature -- Features info
 					until
 						l_feat_arg.after
 					loop
-						l_type_i := argument_actual_type_in (l_feat_arg.item.actual_type.type_i, signature_declaration_type)
+						l_type_i := argument_actual_type_in (l_feat_arg.item.type_i, signature_declaration_type)
 						set_signature_type (l_meth_sig, l_type_i)
 						l_signature.put (l_type_i.static_type_id, i + 1)
 						i := i + 1
@@ -2659,7 +2659,7 @@ feature -- Features info
 		require
 			feature_i_not_viod: feature_i /= Void
 		do
-			Result := argument_actual_type (feature_i.type.actual_type.type_i)
+			Result := argument_actual_type (feature_i.type.type_i)
 		ensure
 			result_not_void: Result /= Void
 			void_if_procedure: not feature_i.has_return_value implies Result.is_void
@@ -2686,7 +2686,7 @@ feature -- Features info
 			feature_i_not_viod: feature_i /= Void
 			class_type_not_void: class_type /= Void
 		do
-			Result := argument_actual_type_in (feature_i.type.actual_type.type_i, class_type)
+			Result := argument_actual_type_in (feature_i.type.type_i, class_type)
 		ensure
 			result_not_void: Result /= Void
 			void_if_procedure: not feature_i.has_return_value implies Result.is_void
@@ -2888,7 +2888,7 @@ feature -- IL Generation
 				until
 					l_feat_arg.after
 				loop
-					l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+					l_type_i := argument_actual_type (l_feat_arg.item.type_i)
 					set_signature_type (l_meth_sig, l_type_i)
 					l_feat_arg.forth
 				end
@@ -3293,8 +3293,8 @@ feature -- IL Generation
 			generate_current
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.ldfld, attribute_token (target_type.associated_class_type.implementation_id, target_feature.feature_id))
 			generate_check_cast (byte_context.real_type_in
-				(target_feature.type.actual_type.type_i, target_type.associated_class_type),
-				byte_context.real_type (f.type.actual_type.type_i))
+				(target_feature.type.type_i, target_type.associated_class_type),
+				byte_context.real_type (f.type.type_i))
 			generate_return (true)
 			method_writer.write_current_body
 		end
@@ -3499,7 +3499,7 @@ feature -- IL Generation
 					loop
 						generate_argument (i)
 						if l_cur_sig.item (i) /= l_inh_sig.item (i) then
-							l_type_i := argument_actual_type (l_args.item.actual_type.type_i)
+							l_type_i := argument_actual_type (l_args.item.type_i)
 							if l_type_i.is_expanded then
 								generate_unmetamorphose (l_type_i)
 							elseif is_verifiable then
@@ -3853,7 +3853,7 @@ feature {NONE} -- Implementation
 		do
 			if current_class_type.is_expanded then
 					-- Take into account signature changes due to "like Current" type
-				if local_feature.type.actual_type.type_i.is_anchored then
+				if local_feature.type.type_i.is_anchored then
 					Result := True
 				elseif local_feature.arguments /= Void then
 					from
@@ -3862,7 +3862,7 @@ feature {NONE} -- Implementation
 					until
 						arguments.after
 					loop
-						if arguments.item.actual_type.type_i.is_anchored then
+						if arguments.item.type_i.is_anchored then
 							Result := True
 							arguments.finish
 						end
@@ -4916,7 +4916,7 @@ feature -- Once management
 					-- Generate field for result
 				result_sig := field_sig
 				result_sig.reset
-				set_signature_type (result_sig, feat.type.actual_type.type_i)
+				set_signature_type (result_sig, feat.type.type_i)
 
 				uni_string.set_string (once_result_name (name))
 				result_token := md_emit.define_field (uni_string,
@@ -6431,7 +6431,7 @@ feature {NONE} -- Implementation: generation
 			l_type_i: TYPE_I
 			l_type_id, i, nb: INTEGER
 		do
-			l_type_i := a_type_feature.type.actual_type.type_i
+			l_type_i := a_type_feature.type.type_i
 
 				-- We are now evaluation `l_type_i' in the context of current CLASS_TYPE
 				-- generation.

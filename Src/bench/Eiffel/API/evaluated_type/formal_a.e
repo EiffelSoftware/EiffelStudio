@@ -107,8 +107,8 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			create Result.make (10)
-			Result.append ("Generic #")
+			create Result.make (3)
+			Result.append ("G#")
 			Result.append_integer (position)
 		end
 

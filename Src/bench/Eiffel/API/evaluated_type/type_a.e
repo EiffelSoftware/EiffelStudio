@@ -8,13 +8,6 @@ indexing
 deferred class TYPE_A
 
 inherit
-	TYPE_AS
-		rename
-			process as process_as_ast
-		redefine
-			is_solved, same_as, append_to, solved_type, first_token, last_token
-		end
-
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} all
@@ -26,16 +19,28 @@ inherit
 		end
 
 	SHARED_WORKBENCH
-		export
-			{NONE} all
-		end
 
 	SHARED_TYPE_I
 		export
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
+
 	SHARED_GENERIC_CONSTRAINT
+
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
+	SHARED_AST_CONTEXT
+		export
+			{NONE} all
+		end
 
 feature -- Visitor
 
@@ -47,12 +52,6 @@ feature -- Visitor
 		deferred
 		end
 
-	process_as_ast (v: AST_VISITOR) is
-			-- process current element.
-		do
-			v.process_type_a (Current)
-		end
-
 feature -- Roundtrip/Token
 
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
@@ -60,25 +59,6 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-		end
-
-feature -- Roundtrip
-
-	lcurly_symbol, rcurly_symbol: SYMBOL_AS is
-			-- Left and/or right curly symbol(s) associated with this structure
-			-- Maybe none of them, or maybe only left curly appears.
-			-- Not applicable.
-		do
-		end
-
-	set_lcurly_symbol (s_as: SYMBOL_AS) is
-			-- Set `lcurly_symbol' with `s_as'.
-		do
-		end
-
-	set_rcurly_symbol (s_as: SYMBOL_AS) is
-			-- Set `rcurly_symbol' with `s_as'.
 		do
 		end
 
@@ -233,13 +213,83 @@ feature -- Properties
 			is_full_named_type_consistent: Result implies is_named_type
 		end
 
-feature -- Access
+	is_solved: BOOLEAN is
+		do
+			Result := True
+		end
+
+	has_like: BOOLEAN is
+			-- Is the type an anchored type ?
+		do
+			-- Do nothing
+		end
+
+	has_formal_generic: BOOLEAN is
+			-- Has type a formal generic parameter?
+		do
+			-- Do nothing
+		end
+
+	is_loose: BOOLEAN is
+			-- Does type depend on formal generic parameters and/or anchors?
+		do
+			-- Do nothing
+		ensure
+			definition: Result = (has_like or has_formal_generic)
+		end
+
+	is_void: BOOLEAN is
+			-- Is the type void (procedure type) ?
+		do
+		end
+
+	is_like_current: BOOLEAN is
+			-- Is the current type a anchored type an Current ?
+		do
+			-- Do nothing
+		end
+
+feature -- Comparison
+
+	frozen is_deep_equal (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+			--| `deep_equal' cannot be used as for STRINGS, the area
+			--| can have a different size but the STRING is still
+			--| the same (problem detected for LIKE_FEATURE). Xavier
+		do
+			Result := other /= Void and then other.same_type (Current)
+				and then is_equivalent (other)
+		end;
+
+	frozen equivalent (o1, o2: TYPE_A): BOOLEAN is
+			-- Are `o1' and `o2' equivalent ?
+			-- this feature is similar to `deep_equal'
+			-- but ARRAYs and STRINGs are processed correctly
+			-- (`deep_equal' will compare the size of the `area')
+		do
+			if o1 = Void then
+				Result := o2 = Void
+			else
+				Result := o2 /= Void and then o2.same_type (o1) and then
+					o1.is_equivalent (o2)
+			end
+		end
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		require
+			arg_non_void: other /= Void
+			same_type: same_type (other)
+		deferred
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
 			-- Do nothing
 		end
+
+feature -- Access
 
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
@@ -251,7 +301,9 @@ feature -- Access
 		end
 
 	associated_class: CLASS_C is
-			-- Class associated to the current type
+			-- Class associated to the current type.
+		require
+			has_associated_class: has_associated_class
 		deferred
 		end
 
@@ -294,16 +346,21 @@ feature -- Access
 
 feature -- Output
 
-	append_to (structured_text: STRUCTURED_TEXT) is
+	frozen append_to (structured_text: STRUCTURED_TEXT) is
 			-- Append `Current' to `text'.
 		do
 			ext_append_to (structured_text, Void)
 		end
 
+	dump: STRING is
+			-- Dumped trace
+		deferred
+		end
+
 	ext_append_to (structured_text: STRUCTURED_TEXT; f: E_FEATURE) is
 			-- Append `Current' to `text'.
 			-- `f' is used to retreive the generic type or argument name as string.
-			-- This replaces the old "Generic #2" or "arg #1" texts in feature signature views.
+			-- This replaces the old "G#2" or "arg#1" texts in feature signature views.
 			-- Actually used in FORMAL_A and LIKE_ARGUMENT.
 		require
 			structured_text_not_void: structured_text /= Void
@@ -320,11 +377,15 @@ feature {COMPILER_EXPORTER} -- Access
 
 	type_i: TYPE_I is
 			-- C type
+		require
+			is_valid: is_valid
 		deferred
 		end
 
 	meta_type: TYPE_I is
 			-- Meta type
+		require
+			is_valid: is_valid
 		do
 			Result := type_i
 		end
@@ -365,7 +426,9 @@ feature {COMPILER_EXPORTER} -- Access
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other' ?
 		require
+			is_valid: is_valid
 			other_not_void: other /= Void
+			other_is_valid: other.is_valid
 		deferred
 		end
 
@@ -374,7 +437,9 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Most of the time, it is equivalent to `conform_to' except
 			-- when current is an expanded type.
 		require
+			is_valid: is_valid
 			other_not_void: other /= Void
+			other_is_valid: other.is_valid
 		do
 			Result := conform_to (other)
 		end
@@ -399,13 +464,6 @@ feature {COMPILER_EXPORTER} -- Access
 			type_not_void: type /= Void
 			conforming_type: type.associated_class.conform_to (associated_class)
 		do
-		end
-
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table'
-		do
-			Result := Current
 		end
 
 	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A is
@@ -434,11 +492,6 @@ feature {COMPILER_EXPORTER} -- Access
 			good_argument: class_type /= Void
 		do
 			Result := Current
-		end
-
-	is_solved: BOOLEAN is
-		do
-			Result := True
 		end
 
 	duplicate: like Current is
@@ -472,7 +525,6 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Check validity of `labels' of current in `a_context_class'.
 		require
 			a_context_class_not_void: a_context_class /= Void
-			a_node_not_void: a_node /= Void
 		do
 		end
 
@@ -537,6 +589,7 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Byte code information for entity type creation
 		require
 			has_current_class: system.current_class /= Void
+			is_valid: is_valid
 		deferred
 		end
 
@@ -550,12 +603,14 @@ feature {COMPILER_EXPORTER} -- Access
 			warn: OBS_CLASS_WARN
 		do
 			if not current_class.is_obsolete then
-				ass_class := actual_type.associated_class
-		   		if 	(ass_class /= Void) and then ass_class.is_obsolete then
-					create warn
-					warn.set_class (current_class)
-					warn.set_obsolete_class (ass_class)
-					Error_handler.insert_warning (warn)
+		   		if actual_type.has_associated_class then
+					ass_class := actual_type.associated_class
+					if ass_class.is_obsolete then
+						create warn
+						warn.set_class (current_class)
+						warn.set_obsolete_class (ass_class)
+						Error_handler.insert_warning (warn)
+					end
 				end
 			end
 		end

@@ -141,7 +141,7 @@ feature -- Implementation
 			if l_index >= 0 then
 				l_once_func ?= once_routine
 				if l_once_func /= Void then
-					l_type := l_once_func.type.actual_type.type_i.sk_value
+					l_type := l_once_func.type.type_i.sk_value
 				end
 				debug ("debugger_ipc")
 					print ("### Called [type="+l_type.out+"]?%N")

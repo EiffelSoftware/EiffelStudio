@@ -182,7 +182,7 @@ feature -- IL code generation
 			il_generator.create_type
 
 			target_type := context.real_type (context.class_type.associated_class.anchored_features.item
-				(routine_id).type.actual_type.type_i)
+				(routine_id).type.type_i)
 			if target_type.is_expanded then
 					-- Load value of a value type object.
 				il_generator.generate_unmetamorphose (target_type)
@@ -201,7 +201,7 @@ feature -- IL code generation
 	created_in (other: CLASS_TYPE): TYPE_I is
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
-			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type.actual_type.type_i, other)
+			Result := context.real_type_in (other.associated_class.feature_of_rout_id (routine_id).type.type_i, other)
 		end
 
 feature -- Byte code generation

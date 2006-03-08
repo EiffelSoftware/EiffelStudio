@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when the creation type of a creation instruction %
 		%is an expanded type, a none type, a bits symbol type %
 		%or a simple type."
@@ -9,7 +9,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VGCC3 
+class VGCC3
 
 inherit
 
@@ -41,7 +41,7 @@ feature -- Output
 			st.add_string ("Creation type: ");
 			if is_symbol then
 				st.add_string (symbol_name)
-			else
+			elseif type /= Void then
 				type.append_to (st);
 			end
 			st.add_new_line;
@@ -54,7 +54,7 @@ feature -- Settings
 		do
 			is_symbol := True
 		end
-	
+
 	set_symbol_name (s: STRING) is
 			-- Set `s' to `symbol_name'.
 		require
@@ -71,19 +71,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

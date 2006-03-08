@@ -15,6 +15,7 @@ default
 	disabled_debug ("anchored_features")
 	disabled_debug ("assertion")
 	disabled_debug ("assertions")
+	disabled_debug ("auto_completion")
 	disabled_debug ("c_debugger")
 	disabled_debug ("cache")
 	disabled_debug ("cache_compiler")
@@ -25,7 +26,6 @@ default
 	disabled_debug ("check_expanded")
 	disabled_debug ("class_of_id")
 	disabled_debug ("com_object")
-	disabled_debug ("comments")
 	disabled_debug ("count")
 	disabled_debug ("dbg")
 	disabled_debug ("dbg_extra_display")
@@ -45,6 +45,7 @@ default
 	disabled_debug ("debugger_il_info_trace")
 	disabled_debug ("debugger_il_info_trace_extra")
 	disabled_debug ("debugger_interface")
+	disabled_debug ("debugger_ipc")
 	disabled_debug ("debugger_trace")
 	disabled_debug ("debugger_trace_breakpoint")
 	disabled_debug ("debugger_trace_cache")
@@ -93,6 +94,7 @@ default
 	disabled_debug ("parse")
 	disabled_debug ("profile_convert")
 	disabled_debug ("refactor_fixme")
+	disabled_debug ("refactor_to_implement")
 	disabled_debug ("regexp")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
@@ -183,7 +185,7 @@ cluster
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			".svn"; "compiler_override"; "types"; "error"; 
+			".svn"; "compiler_override"; "error"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
@@ -325,9 +327,9 @@ cluster
 			".svn"; 
 		end
 
-	all uuid:       "$EIFFEL_SRC\library\uuid"
+	all uuid:		"$EIFFEL_SRC\library\uuid"
 		exclude
-			".svn";
+			".svn"; 
 		end
 
 external

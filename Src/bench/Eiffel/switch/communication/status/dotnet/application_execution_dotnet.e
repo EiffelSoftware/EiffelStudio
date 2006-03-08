@@ -392,7 +392,7 @@ feature -- Query
 --							err_dv.set_display_kind (Exception_message_value)
 							odv := exc_dv
 						elseif icdv /= Void then
-							odv := debug_value_from_icdv (icdv, l_feat.type.actual_type.associated_class)
+							odv := debug_value_from_icdv (icdv, l_feat.type.associated_class)
 							odv.set_name (l_feat.feature_name)
 						else
 								--| This case occurs when we enter into the once's code

@@ -129,14 +129,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			actual_type := Current
 		end
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
-			-- Calculated type in function of the feature `f' which has
-			-- the type Current and the feautre table `feat_table'
-		do
-			create Result
-			Result.set_actual_type (feat_table.associated_class.actual_type)
-		end
-
 	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.

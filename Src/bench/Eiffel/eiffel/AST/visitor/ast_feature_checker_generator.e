@@ -75,8 +75,11 @@ feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
 		do
-			if type_checker = Void then
-				create type_checker
+			if type_a_checker = Void then
+				create type_a_checker
+			end
+			if type_a_generator = Void then
+				create type_a_generator
 			end
 			if byte_anchor = Void then
 				create byte_anchor
@@ -91,7 +94,7 @@ feature -- Type checking
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			type_checker.init (a_feature, context.current_class)
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
@@ -105,7 +108,7 @@ feature -- Type checking
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			type_checker.init (a_feature, context.current_class)
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
@@ -121,7 +124,7 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 			an_exp_not_void: an_exp /= Void
 		do
-			type_checker.init (a_feature, context.current_class)
+			type_a_checker.init_for_checking (a_feature, context.current_class, Void, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset
@@ -137,7 +140,7 @@ feature -- Type checking
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_invariant: INVARIANT_B
 		do
-			type_checker.init (a_feature, context.current_class)
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset
@@ -156,7 +159,7 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 			a_cas_not_void: a_cas /= Void
 		do
-			type_checker.init (a_feature, context.current_class)
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			is_byte_node_enabled := True
 			current_feature := a_feature
 			reset
@@ -229,7 +232,10 @@ feature -- Status report
 
 feature {NONE} -- Implementation: Access
 
-	type_checker: AST_TYPE_CHECKER
+	type_a_generator: AST_TYPE_A_GENERATOR
+			-- To convert TYPE_AS into TYPE_A
+
+	type_a_checker: TYPE_A_CHECKER
 			-- To check a type
 
 	byte_anchor: AST_BYTE_NODE_ANCHOR
@@ -610,9 +616,6 @@ feature -- Implementation
 			l_as.class_type.process (Current)
 			l_type := last_type
 
-				-- Check validity of type declaration
-			type_checker.check_type_validity (l_type, l_as.class_type)
-
 				-- Check validity of type declaration for static access
 			if l_type.is_formal or l_type.has_like or l_type.is_none then
 				create l_vsta1.make (l_type.dump, l_as.feature_name)
@@ -833,10 +836,7 @@ feature -- Implementation
 								i = l_actual_count
 							loop
 									-- Get formal argument type.
-								l_formal_arg_type ?= l_feature.arguments.i_th (i)
-								check
-									l_formal_arg_type_not_void: l_formal_arg_type /= Void
-								end
+								l_formal_arg_type := l_feature.arguments.i_th (i)
 
 								reset_for_unqualified_call_checking
 								if l_formal_arg_type.is_like_argument then
@@ -867,10 +867,7 @@ feature -- Implementation
 							l_arg_type := l_arg_types.item (i)
 
 								-- Get formal argument type.
-							l_formal_arg_type ?= l_feature.arguments.i_th (i)
-							check
-								l_formal_arg_type_not_void: l_formal_arg_type /= Void
-							end
+							l_formal_arg_type := l_feature.arguments.i_th (i)
 
 								-- Take care of anchoring to argument
 							if l_formal_arg_type.is_like_argument then
@@ -959,7 +956,7 @@ feature -- Implementation
 					end
 
 						-- Get the type of Current feature.
-					l_result_type ?= l_feature.type
+					l_result_type := l_feature.type
 
 						-- If the declared target type is formal
 						-- and if the corresponding generic parameter is
@@ -975,12 +972,12 @@ feature -- Implementation
 						--	x: G
 						-- 		x.item (1)
 						--
-						-- For the evaluation of `item', l_last_type is "Generic #1" (of TEST)
+						-- For the evaluation of `item', l_last_type is "G#1" (of TEST)
 						-- `l_last_constrained_type' is ARRAY [STRING], `l_feature.type'
-						-- is "Generic #1" (of ARRAY)
+						-- is "G#1" (of ARRAY)
 						-- We need to convert the type to the constrained type for proper
 						-- type evaluation of remote calls.
-						-- "Generic #1" (of ARRAY) is thus replaced by the corresponding actual
+						-- "G#1" (of ARRAY) is thus replaced by the corresponding actual
 						-- type in the declaration of the constraint class type (in this case
 						-- class STRING).
 						-- Note: the following conditional instruction will not be executed
@@ -1159,9 +1156,9 @@ feature -- Implementation
 			if l_as.constant_type = Void then
 				last_type := Real_64_type
 			else
-				fixme ("We should check the `constant_type' matches the real `value' and%
+				fixme ("We should check that `constant_type' matches the real `value' and%
 					%possibly remove `constant_type' from REAL_AS.")
-				last_type := l_as.constant_type.actual_type
+				check_type (l_as.constant_type)
 			end
 			if is_byte_node_enabled then
 				create {REAL_CONST_B} last_byte_node.make (l_as.value, last_type)
@@ -1430,7 +1427,7 @@ feature -- Implementation
 				-- Error if in procedure or invariant
 			l_has_error := is_checking_invariant
 			if not l_has_error then
-				l_feat_type ?= current_feature.type
+				l_feat_type := current_feature.type
 				l_has_error := l_feat_type.actual_type.conform_to (Void_type)
 			end
 
@@ -1549,7 +1546,7 @@ feature -- Implementation
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
-				l_type ?= l_feature.arguments.i_th (l_arg_pos)
+				l_type := l_feature.arguments.i_th (l_arg_pos)
 				l_type := l_type.actual_type.instantiation_in (last_type, l_last_id)
 				l_has_vuar_error := l_as.parameters /= Void
 				if l_needs_byte_node then
@@ -1667,7 +1664,7 @@ feature -- Implementation
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
-				l_arg_type ?= l_feature.arguments.i_th (l_arg_pos)
+				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
 				last_type := l_arg_type.actual_type.instantiation_in (last_type, l_last_id)
 				if l_as.parameters /= Void then
@@ -2019,7 +2016,6 @@ feature -- Implementation
 			elseif l_as.class_type /= Void then
 				l_as.class_type.process (Current)
 				l_class_type := last_type
-				type_checker.check_type_validity (l_class_type, l_as.class_type)
 				instantiator.dispatch (l_class_type, context.current_class)
 				if is_byte_node_enabled then
 					create {OPERAND_B} last_byte_node
@@ -2219,7 +2215,7 @@ feature -- Implementation
 				l_veen2a.set_location (l_as.start_location)
 				error_handler.insert_error (l_veen2a)
 			end
-			l_type ?= current_feature.type
+			l_type := current_feature.type
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make (create {RESULT_B})
@@ -2275,7 +2271,7 @@ feature -- Implementation
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
-				l_type ?= l_feature.arguments.i_th (l_arg_pos)
+				l_type := l_feature.arguments.i_th (l_arg_pos)
 				l_type := l_type.actual_type.instantiation_in (last_type, l_last_id)
 				create {TYPED_POINTER_A} last_type.make_typed (l_type)
 				if l_needs_byte_node then
@@ -2341,8 +2337,7 @@ feature -- Implementation
 							l_unsupported.set_location (l_as.feature_name.start_location)
 							error_handler.insert_error (l_unsupported)
 						elseif l_feature.is_attribute then
-							l_type ?= l_feature.type
-							l_type := l_type.actual_type
+							l_type := l_feature.type.actual_type
 							create {TYPED_POINTER_A} last_type.make_typed (l_type)
 						else
 							last_type := Pointer_type
@@ -2375,9 +2370,6 @@ feature -- Implementation
 		do
 			l_as.type.process (Current)
 			l_type := last_type
-
-				-- Check validity of type declaration
-			type_checker.check_type_validity (l_type, l_as.type)
 
 			create l_type_type.make (system.type_class.compiled_class.class_id, << l_type >>)
 			instantiator.dispatch (l_type_type, context.current_class)
@@ -2422,8 +2414,6 @@ feature -- Implementation
 			end
 
 			l_feature_name := l_as.feature_name
-			l_class := l_target_type.associated_class
-			l_as.set_class_id (l_class.class_id)
 
 			if l_target_type.is_formal or l_target_type.is_basic then
 					-- Not supported. May change in the future - M.S.
@@ -2445,6 +2435,9 @@ feature -- Implementation
 
 				-- Check that it's a function or procedure
 				-- which is not external.
+			check has_class: l_target_type.has_associated_class end
+			l_class := l_target_type.associated_class
+			l_as.set_class_id (l_class.class_id)
 			l_table := l_class.feature_table
 			l_feature := l_table.item (l_feature_name)
 			if (l_feature = Void) or else (not l_feature.is_routine or else l_feature.is_external) then
@@ -2555,7 +2548,7 @@ feature -- Implementation
 				-- Assumes here that a prefix feature has no argument
 				-- Update the type stack; instantiate the result of the
 				-- refixed feature
-			l_prefix_feature_type ?= l_prefix_feature.type
+			l_prefix_feature_type := l_prefix_feature.type
 			if l_last_constrained.is_bits and then l_prefix_feature_type.is_like_current then
 					-- For feature prefix "not" of symbolic class BIT_REF.
 				l_prefix_feature_type := l_last_constrained
@@ -2797,7 +2790,7 @@ feature -- Implementation
 
 					-- Update the type stack: instantiate result type of the
 					-- infixed feature
-				l_infix_type ?= last_infix_feature.type
+				l_infix_type := last_infix_feature.type
 				if
 					l_target_type.is_bits and then l_right_constrained.is_bits and then
 					l_infix_type.is_like_current
@@ -3523,7 +3516,7 @@ feature -- Implementation
 		local
 			l_call_access: CALL_ACCESS_B
 			l_formal_type: FORMAL_A
-			l_formal_dec: FORMAL_DEC_AS
+			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_dcr_feat: FEATURE_I
@@ -3545,7 +3538,8 @@ feature -- Implementation
 					-- Cannot be Void
 				l_formal_type ?= l_actual_creation_type
 					-- Get the corresponding constraint type of the current class
-				l_formal_dec := context.current_class.generics.i_th (l_formal_type.position)
+				l_formal_dec ?= context.current_class.generics.i_th (l_formal_type.position)
+				check l_formal_dec_not_void: l_formal_dec /= Void end
 				if
 					l_formal_dec.has_constraint and then
 					l_formal_dec.has_creation_constraint
@@ -3738,7 +3732,6 @@ feature -- Implementation
 				if l_as.type /= Void then
 					l_as.type.process (Current)
 					l_explicit_type := last_type
-					type_checker.check_type_validity (l_explicit_type, l_as.type)
 				end
 
 					-- Check validity of creation type.
@@ -3839,7 +3832,6 @@ feature -- Implementation
 
 			l_as.type.process (Current)
 			l_creation_type := last_type
-			type_checker.check_type_validity (l_creation_type, l_as.type)
 			if l_creation_type.is_none then
 					-- Cannot create instance of NONE.
 				create l_vgcc3
@@ -4227,7 +4219,7 @@ feature -- Implementation
 
 	process_type_dec_as (l_as: TYPE_DEC_AS) is
 		do
-			last_type := type_checker.solved_type (l_as.type)
+			check_type (l_as.type)
 			fixme ("what do we do about the identifiers?")
 		end
 
@@ -4243,17 +4235,17 @@ feature -- Implementation
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
@@ -4263,27 +4255,27 @@ feature -- Implementation
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_none_type_as (l_as: NONE_TYPE_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_bits_as (l_as: BITS_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
 		do
-			last_type := type_checker.solved_type (l_as)
+			check_type (l_as)
 		end
 
 	process_rename_as (l_as: RENAME_AS) is
@@ -5016,7 +5008,7 @@ feature {NONE} -- Implementation
 					else
 							-- Conformance initialization
 							-- Argument conformance: infix feature must have one argument
-						l_arg_type ?= l_infix.arguments.i_th (1)
+						l_arg_type := l_infix.arguments.i_th (1)
 						l_arg_type := l_arg_type.instantiation_in (a_left_type,
 							l_class.class_id).actual_type
 
@@ -5968,6 +5960,26 @@ feature {NONE} -- Implementation: Add type informations
 	last_routine_id_set: ROUT_ID_SET
 			-- The last routine ids.
 
+feature {NONE} -- Implementation: type validation
+
+	check_type (a_type: TYPE_AS) is
+			-- Evaluate `a_type' into a TYPE_A instance if valid.
+			-- If not valid, raise a compiler error and return Void.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_type: TYPE_A
+		do
+				-- Convert TYPE_AS into TYPE_A.
+			l_type := type_a_generator.evaluate_type (a_type, context.current_class)
+				-- Perform simple check that TYPE_A is valid.
+			l_type := type_a_checker.check_and_solved (l_type, a_type)
+				-- Check validity of type declaration
+			type_a_checker.check_type_validity (l_type, a_type)
+				-- Update `last_type' with found type.
+			last_type := l_type
+		end
+
 feature {NONE} -- Implementation: checking locals
 
 	check_locals (l_as: ROUTINE_AS) is
@@ -5982,7 +5994,6 @@ feature {NONE} -- Implementation: checking locals
 		local
 			l_id_list: ARRAYED_LIST [INTEGER]
 			l_local_type: TYPE_AS
-			l_local_class_c: CLASS_C
 			l_local_name_id: INTEGER
 			l_local_name: STRING
 			l_solved_type: TYPE_A
@@ -6013,10 +6024,8 @@ feature {NONE} -- Implementation: checking locals
 				loop
 					from
 						l_local_type := l_as.locals.item.type
-						l_solved_type := type_checker.solved_type (l_local_type)
-
-							-- Check validity of type declaration
-						type_checker.check_type_validity (l_solved_type, l_local_type)
+						check_type (l_local_type)
+						l_solved_type := last_type
 
 						if l_track_local then
 							Instantiator.dispatch (l_solved_type, context.current_class)
@@ -6071,10 +6080,9 @@ feature {NONE} -- Implementation: checking locals
 						l_id_list.forth
 					end
 
-					l_local_class_c := l_solved_type.associated_class
-					if l_local_class_c /= Void then
+					if l_solved_type.has_associated_class then
 							-- Add the supplier in the feature_dependance list
-						context.supplier_ids.add_supplier (l_local_class_c)
+						context.supplier_ids.add_supplier (l_solved_type.associated_class)
 					end
 
 					if l_solved_type /= Void then

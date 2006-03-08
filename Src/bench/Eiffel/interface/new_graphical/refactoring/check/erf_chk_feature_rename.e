@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create syntactical_clients.make
 			create topological.make (Chunk)
 			create topological_mapping.make (Chunk)
-			create type_checker
+			create type_a_generator
 		end
 
 feature -- Basic operation
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 				-- check if the feature gets undefined or renamed
 				-- and if it gets renamed check if it is the new name or another
-			check_undefine_rename (a_class.ast)
+			check_undefine_rename (a_class)
 
 				-- check if there is another feature with the new_name that conflicts
 			if not is_undefined and not is_renamed then
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_undefine_rename (a_class: CLASS_AS) is
+	check_undefine_rename (a_class: CLASS_C) is
 			-- Check if the feature gets undefined or renamed.
 		require
 			a_class_not_void: a_class /= Void
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 		do
 			is_undefined := False
 			is_renamed := False
-			l_parents := a_class.parents
+			l_parents := a_class.ast.parents
 			if l_parents /= Void then
 				from
 					l_parents.start
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 					l_inherit := l_parents.item
 
 						-- we only look at classes that are descendants of the class where the feature gets renamed
-					l_id := type_checker.solved_type (l_inherit.type).associated_class.class_id
+					l_id := type_a_generator.evaluate_class_type (l_inherit.type, a_class).associated_class.class_id
 					if recursive_descendants.has (l_id) then
 							-- at the start of each inherit clause we have the feature (until it is undefined or renamed)
 						is_stop_hierarchy := false
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 	is_renamed: BOOLEAN
 			-- Is the feature renamed in the new name?
 
-	type_checker: AST_TYPE_CHECKER
+	type_a_generator: AST_TYPE_A_GENERATOR
 			-- Type checker to get some type informations.
 
 	recursive_descendants: SEARCH_TABLE [INTEGER]
@@ -251,7 +251,7 @@ invariant
 	topological_not_void: topological /= Void
 	topological_mapping_not_void: topological_mapping /= Void
 	syntactical_clients_not_void: syntactical_clients /= Void
-	type_checker_not_void: type_checker /= Void
+	type_a_generator_not_void: type_a_generator /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

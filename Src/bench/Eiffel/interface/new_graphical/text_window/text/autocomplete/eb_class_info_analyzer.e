@@ -1224,39 +1224,13 @@ feature {NONE}-- Implementation
 			a_feature_name_not_void: a_feature_name /= Void
 		local
 			l_feat: FEATURE_I
-			retried: BOOLEAN
-			l_cluster: CLUSTER_I
-			l_class_c: CLASS_C
 		do
-			if not retried then
-					-- Save compiler context
-				l_class_c := system.current_class
-				l_cluster := inst_context.cluster
-
-					-- Set new compiler context
-				system.set_current_class (a_current_class)
-				inst_context.set_cluster (a_current_class.cluster)
-
-					-- Resolve local's type
-				check
-					no_errors: not error_handler.has_error
-				end
-				error_handler.mark
-				l_feat := a_current_class.feature_named (a_feature_name)
-				type_checker.init (l_feat, a_current_class)
-				Result := type_checker.solved_type (a_type)
+			l_feat := a_current_class.feature_named (a_feature_name)
+			if l_feat /= Void then
+				type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
+				Result := type_a_generator.evaluate_type (a_type, a_current_class)
+				Result := type_a_checker.solved (Result, a_type)
 			end
-				-- After a crash or after the end of a normal execution
-				-- we need to restore compiler context.
-			system.set_current_class (l_class_c)
-			inst_context.set_cluster (l_cluster)
-		rescue
-			retried := True
-				-- We do not care about errors here, so we get rid of it.
-			if error_handler.new_error then
-				error_handler.wipe_out
-			end
-			retry
 		end
 
 	after_searched_token: BOOLEAN is

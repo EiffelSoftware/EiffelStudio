@@ -1467,7 +1467,7 @@ feature -- Metadata description
 							until
 								l_feat_arg.after
 							loop
-								l_type_i := argument_actual_type (l_feat_arg.item.actual_type.type_i)
+								l_type_i := argument_actual_type (l_feat_arg.item.type_i)
 								set_signature_type (l_sig, l_type_i)
 								l_feat_arg.forth
 							end

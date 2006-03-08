@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXTERNAL_I 
+class EXTERNAL_I
 
 inherit
 	PROCEDURE_I
@@ -22,12 +22,12 @@ create
 
 feature -- Initialization
 
-	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]) is
+	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C) is
 			-- Initialization of arguments.
 		local
 			l_inline_ext: INLINE_EXTENSION_I
 		do
-			Precursor {PROCEDURE_I} (argument_as)
+			Precursor {PROCEDURE_I} (argument_as, a_context_class)
 			if has_arguments and extension.is_inline then
 					-- In order to replace arguments specified in external `alias' part of
 					-- inline clause, we need to initialize `extension' with argument
@@ -36,7 +36,7 @@ feature -- Initialization
 				check
 					l_inline_ext_not_void: l_inline_ext /= Void
 				end
-				
+
 				l_inline_ext.set_argument_names (arguments.argument_names)
 			end
 		end
@@ -90,7 +90,7 @@ feature -- Incrementality
 			Result := Precursor {PROCEDURE_I} (other) and then freezing_equiv (other)
 		end
 
-feature 
+feature
 
 	external_alias_name_id: INTEGER is
 			-- Alias for the external
@@ -121,12 +121,12 @@ feature
 				-- For a macro or a signature in an external declaration
 				-- the external is not handled as a `standard' external
 				-- and the system does not freeze by itself. We have to
-				-- tell it. In fact, this doesn't take the incrementality 
+				-- tell it. In fact, this doesn't take the incrementality
 				-- into account: if the macro definition is removed, there is no
-				-- need to freeze the system but no way to tell the 
+				-- need to freeze the system but no way to tell the
 				-- system unless we use the same scheme as for the `standard'
 				-- externals.
-			--if b then 
+			--if b then
 				--System.set_freeze (True);
 			--end;
 		end;
@@ -166,7 +166,7 @@ feature
 			external_b.set_external_name_id (external_name_id)
 			external_b.set_encapsulated (encapsulated)
 			external_b.set_extension (extension)
-			
+
 			Result := external_b
 		end
 
@@ -221,12 +221,12 @@ feature
 				byte_code.generate
 				byte_context.clear_feature_data
 			else
-				system.removed_log_file.add (class_type, feature_name)				
+				system.removed_log_file.add (class_type, feature_name)
 			end
 		end
 
 feature {NONE} -- Api
-	
+
 	update_api (f: E_ROUTINE) is
 			-- Update the attributes of api feature `f'.
 		do
@@ -243,19 +243,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

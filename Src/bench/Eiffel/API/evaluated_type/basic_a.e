@@ -9,7 +9,7 @@ deferred class
 	BASIC_A
 
 inherit
-	CL_TYPE_A	
+	CL_TYPE_A
 		undefine
 			type_i
 		redefine
@@ -23,8 +23,11 @@ feature -- Access
 	is_basic: BOOLEAN is True
 			-- Is the current actual type a basic one ?
 
-	is_valid: BOOLEAN is True
+	is_valid: BOOLEAN is
 			-- The associated class is still in the system
+		do
+			Result := True
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -40,7 +43,7 @@ feature {COMPILER_EXPORTER}
 			Result := Current
 		end
 
-	instantiation_of (type: TYPE_AS; a_class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A is
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type
@@ -58,7 +61,7 @@ feature {COMPILER_EXPORTER}
 			--| this declaration.
 		deferred
 		end
-		
+
 	good_generics: BOOLEAN is
 			-- Has the current type the right number of generic types ?
 		do
@@ -68,7 +71,7 @@ feature {COMPILER_EXPORTER}
 	error_generics: VTUG is
 		do
 		end
-		
+
 invariant
 	is_basic: is_basic
 	is_expanded: is_expanded
@@ -79,19 +82,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

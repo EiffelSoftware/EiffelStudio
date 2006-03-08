@@ -19,6 +19,14 @@ inherit
 		end
 
 	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
 
 feature -- Status report
 
@@ -69,7 +77,7 @@ feature {NONE} -- Implementation
 			l_vhrc2: VHRC2
 		do
 			create last_parent_c
-			last_parent_c.set_parent_type (l_as.type.actual_type)
+			last_parent_c.set_parent_type (type_a_generator.evaluate_class_type (l_as.type, current_class))
 			if l_as.exports /= Void then
 				from
 					create last_export_adaptation.make (5)
@@ -127,7 +135,7 @@ feature {NONE} -- Implementation
 			end
 			l_as.features.process (Current)
 		end
-		
+
 	process_feature_list_as (l_as: FEATURE_LIST_AS) is
 		local
 			l_feature_name_id: INTEGER
@@ -169,9 +177,9 @@ feature {NONE} -- Implementation
 				l_vlel1.set_parent (last_parent_c.parent)
 				l_vlel1.set_location (l_as.start_location)
 				error_handler.insert_error (l_vlel1)
-			end		
+			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	search_table (l_as: PARENT_AS; clause: EIFFEL_LIST [FEATURE_NAME]; flag: INTEGER): SEARCH_TABLE [INTEGER] is
@@ -225,19 +233,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

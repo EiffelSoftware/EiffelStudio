@@ -709,6 +709,7 @@ feature -- Expanded rues validity
 			constraint_type: TYPE_A
 			l_formals: like generic_features
 			l_cursor: CURSOR
+			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 debug ("CHECK_EXPANDED")
 io.error.put_string ("Checking expanded for: ")
@@ -740,7 +741,9 @@ end
 				until
 					generics.after
 				loop
-					constraint_type := generics.item.constraint_type
+					l_formal_dec ?= generics.item
+					check l_formal_dec_not_void: l_formal_dec /= Void end
+					constraint_type := l_formal_dec.constraint_type
 					if constraint_type /= Void and then constraint_type.has_generics then
 						System.expanded_checker.check_actual_type (constraint_type)
 					end
@@ -2291,7 +2294,7 @@ feature
 		require
 			generics_exists: is_generic
 		local
-			generic_dec: FORMAL_DEC_AS
+			generic_dec: FORMAL_CONSTRAINT_AS
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, nb: INTEGER
 		do
@@ -2302,9 +2305,12 @@ feature
 			until
 				i = nb
 			loop
-				generic_dec := l_area.item (i)
+				generic_dec ?= l_area.item (i)
+				check
+					generic_dec_not_void: generic_dec /= Void
+				end
 				if generic_dec.has_constraint and then generic_dec.has_creation_constraint then
-					generic_dec.check_constraint_creation (Current, generic_dec.constraint)
+					generic_dec.check_constraint_creation (Current)
 				end
 				i := i + 1
 			end
@@ -2330,7 +2336,7 @@ feature
 				generic_dec := l_area.item (i)
 				constraint_type := generic_dec.constraint
 				if constraint_type /= Void then
-					type_checker.check_constraint_type (Current, constraint_type)
+					type_a_checker.check_constraint_type (Current, constraint_type, error_handler)
 				end
 				i := i + 1
 			end
@@ -2396,15 +2402,15 @@ feature -- Parent checking
 						-- Evaluation of the parent type
 					l_parent_as := l_parents_as.item
 					l_raw_type := l_parent_as.type
-						-- Check if there is no anchor in the parent type
-					if l_raw_type.has_like then
+					l_parent_c := l_compiled_parent_generator.compiled_parent (Current, l_parent_as)
+						-- Check if there is no anchor and no bit symbol in the parent type.
+					if not l_parent_c.parent_type.is_valid or else l_parent_c.parent_type.has_like then
 						create l_ve04
 						l_ve04.set_class (Current)
 						l_ve04.set_parent_type (l_raw_type)
 						l_ve04.set_location (l_parent_as.start_location)
 						Error_handler.insert_error (l_ve04)
 					else
-						l_parent_c := l_compiled_parent_generator.compiled_parent (Current, l_parent_as)
 						computed_parents.extend (l_parent_c)
 							-- Use reference class type as a parent.
 						l_parent_type := l_parent_c.parent_type
@@ -3184,7 +3190,7 @@ feature -- Actual class type
 			i, nb: INTEGER
 			actual_generic: ARRAY [FORMAL_A]
 			formal: FORMAL_A
-			l_formal_dec: FORMAL_DEC_AS
+			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 			if generics = Void then
 				create Result.make (class_id)
@@ -3197,7 +3203,8 @@ feature -- Actual class type
 				until
 					i > nb
 				loop
-					l_formal_dec := generics.i_th (i)
+					l_formal_dec ?= generics.i_th (i)
+					check l_formal_dec_not_void: l_formal_dec /= Void end
 					create formal.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
 					actual_generic.put (formal, i)
 					i := i + 1
@@ -3207,7 +3214,7 @@ feature -- Actual class type
 			actual_type_not_void: Result /= Void
 		end
 
-feature {TYPE_AS, AST_TYPE_CHECKER} -- Actual class type
+feature {TYPE_AS, AST_TYPE_CHECKER, AST_TYPE_A_GENERATOR} -- Actual class type
 
 	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
 			-- Actual type of `current depending on the context in which it is declared
@@ -3258,8 +3265,12 @@ end
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
+		local
+			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			Result := generics.i_th (i).constraint_type
+			l_formal_dec ?= generics.i_th (i)
+			check l_formal_dec_not_void: l_formal_dec /= Void end
+			Result := l_formal_dec.constraint_type
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -4412,7 +4423,7 @@ feature -- Output
 				until
 					gens.after
 				loop
-					formal_dec ?= gens.item
+					formal_dec := gens.item
 					Result.append (formal_dec.constraint_string)
 					gens.forth
 					if not gens.after then
@@ -4449,7 +4460,7 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		local
-			formal_dec: FORMAL_DEC_AS
+			formal_dec: FORMAL_CONSTRAINT_AS
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
@@ -4469,7 +4480,8 @@ feature -- Output
 					gens.after
 				loop
 					formal_dec ?= gens.item
-					formal_dec.append_signature (st)
+					check formal_dec_not_void: formal_dec /= Void end
+					formal_dec.append_signature (st, Current)
 					gens.forth
 					if not gens.after then
 						st.add (ti_Comma)

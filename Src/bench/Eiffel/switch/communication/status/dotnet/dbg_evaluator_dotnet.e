@@ -230,7 +230,7 @@ feature {DBG_EVALUATOR} -- Interface
 					notify_error (Cst_error_occurred, Void)
 				end
 				if not error_occurred then
-					l_adv := debug_value_from_icdv (l_result, f.type.actual_type.associated_class)
+					l_adv := debug_value_from_icdv (l_result, f.type.associated_class)
 					last_result_value := l_adv.dump_value
 				end
 			end
@@ -253,7 +253,7 @@ feature {DBG_EVALUATOR} -- Interface
 				--| Reset error status
 			reset_error
 
-			last_result_static_type := f.type.actual_type.associated_class
+			last_result_static_type := f.type.associated_class
 			l_class_c := f.written_class
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection

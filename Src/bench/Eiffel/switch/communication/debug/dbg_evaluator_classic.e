@@ -126,7 +126,7 @@ feature {DBG_EVALUATOR} -- Interface
 				else
 					if res /= Void then
 						last_result_value := res.dump_value
-						last_result_static_type := f.type.actual_type.associated_class
+						last_result_static_type := f.type.associated_class
 					else
 						notify_error (cst_error_exception_during_evaluation, "Once feature " + f.feature_name + ": an exception occurred")
 					end

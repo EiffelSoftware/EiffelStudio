@@ -69,7 +69,7 @@ end;
 
 						-- Remember extern declarations
 					Extern_declarations.add_routine (
-						feat.type.actual_type.type_i.instantiation_in (a_class_type).c_type,
+						feat.type.type_i.instantiation_in (a_class_type).c_type,
 						routine_name
 					)
 				end;

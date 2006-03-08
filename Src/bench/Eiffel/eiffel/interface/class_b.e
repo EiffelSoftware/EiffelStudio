@@ -80,7 +80,7 @@ feature -- Validity
 			if
 				l_feat = Void or else
 				l_feat.argument_count /= 1 or else
-				not l_feat.arguments.i_th (1).actual_type.same_as (actual_type)
+				not l_feat.arguments.i_th (1).same_as (actual_type)
 			then
 				create special_error.make (basic_case_4, Current)
 				Error_handler.insert_error (special_error)

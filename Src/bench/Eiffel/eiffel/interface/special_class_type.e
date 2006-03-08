@@ -442,7 +442,7 @@ feature {NONE} -- C code generation
 
 			buffer.put_string ("/* item_address */%N");
 
-			result_type := feat.type.actual_type.type_i.instantiation_in (Current)
+			result_type := feat.type.type_i.instantiation_in (Current)
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
@@ -505,7 +505,7 @@ feature {NONE} -- C code generation
 
 			buffer.put_string ("/* base_address */%N");
 
-			result_type := feat.type.actual_type.type_i.instantiation_in (Current)
+			result_type := feat.type.type_i.instantiation_in (Current)
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
@@ -623,7 +623,7 @@ feature -- IL code generation
 			end
 
 				-- Let's evaluate type of NATIVE_ARRAY			
-			l_native_array_type ?= Byte_context.real_type_in (l_native_array.type.actual_type.type_i, Current)
+			l_native_array_type ?= Byte_context.real_type_in (l_native_array.type.type_i, Current)
 			check
 				l_native_array_type_not_void: l_native_array_type /= Void
 			end

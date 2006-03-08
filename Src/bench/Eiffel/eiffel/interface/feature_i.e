@@ -1072,7 +1072,7 @@ feature -- Conveniences
 			Result := redefinable
 		end
 
-	type: TYPE_AS is
+	type: TYPE_A is
 			-- Type of feature
 		do
 			Result := void_type
@@ -1143,14 +1143,12 @@ feature -- Export checking
 			good_arg: feat_depend /= Void
 		local
 			type_a: TYPE_A
-			a_class: CLASS_C
 		do
 				-- Create the supplier set for the feature
-			type_a ?= type
+			type_a := type
 			if type_a /= Void then
-				a_class := type_a.associated_class
-				if a_class /= Void then
-					feat_depend.add_supplier (a_class)
+				if type_a.has_associated_class then
+					feat_depend.add_supplier (type_a.associated_class)
 				end
 				type_a.update_dependance (feat_depend)
 			end
@@ -1160,10 +1158,9 @@ feature -- Export checking
 				until
 					arguments.after
 				loop
-					type_a ?= arguments.item
-					a_class := type_a.associated_class
-					if a_class /= Void then
-						feat_depend.add_supplier (a_class)
+					type_a := arguments.item
+					if type_a.has_associated_class then
+						feat_depend.add_supplier (type_a.associated_class)
 					end
 					arguments.forth
 				end
@@ -1460,17 +1457,11 @@ feature -- Signature checking
 			end
 				-- Process an actual type for the feature interpret
 				-- anchored types.
-			type_checker.init_with_feature_table (Current, feat_table)
-			solved_type := type_checker.solved_type (type)
-
-			check
-					-- If an anchored cannot be valuated then an
-					-- exection is triggered by the type evaluator.
-				solved_type /= Void
-			end
+			type_a_checker.init_with_feature_table (Current, feat_table, Void, error_handler)
+			solved_type := type_a_checker.check_and_solved (type, Void)
 
 			if feat_table.associated_class = written_class then
-				type_checker.check_type_validity (solved_type, type)
+				type_a_checker.check_type_validity (solved_type, Void)
 			end
 
 			set_type (solved_type, assigner_name_id)
@@ -1868,7 +1859,7 @@ end
 			end
 		end
 
-	argument_position (arg_id: ID_AS): INTEGER is
+	argument_position (arg_id: STRING): INTEGER is
 			-- Position of argument `arg_id' in list of arguments
 			-- of current feature. 0 if none or not found.
 		require

@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Allow generation of specific formats (troff, mif, TEX,%
 		%PostScript) for output of clickable, short, flat and flat-short"
 	legal: "See notice at end of class."
@@ -165,7 +165,7 @@ feature -- Status setting
 		end
 
 	set_file_name (f: like file_name) is
-			-- Set `file_name' to `f'. 
+			-- Set `file_name' to `f'.
 		do
 			file_name := f
 		ensure
@@ -548,7 +548,7 @@ feature {NONE} -- Text processing
 		do
 			if format_table.has (f_Tab) then
 				format := format_table.found_item
-				from 
+				from
 					i := 1
 				until
 					i > text.indent_depth
@@ -584,8 +584,8 @@ feature {NONE} -- Text processing
 							-- Get rid of the text items until
 							-- the end mark of that construct.
 						from
-						until 	
-							structured_text.after or found 
+						until
+							structured_text.after or found
 						loop
 							structured_text.forth;
 							filter_item ?= structured_text.item;
@@ -667,8 +667,8 @@ feature {NONE} -- Text processing
 			else
 				feat_suffix := class_suffix
 			end
-			
-			feat_suffix := escaped_text (feat_suffix)			
+
+			feat_suffix := escaped_text (feat_suffix)
 
 			set_keyword (kw_File, relative_to_base ("" +
 				written_class.lace_class.document_file_relative_path (file_separator) +
@@ -694,7 +694,7 @@ feature {NONE} -- Text processing
 				if format_table.has (f_Non_generated_feature) then
 					format := format_table.found_item
 				end
-			end				
+			end
 			if format /= Void then
 				image_append (format.item1)
 				if format.item2 /= Void then
@@ -1019,19 +1019,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

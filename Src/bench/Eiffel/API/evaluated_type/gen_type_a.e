@@ -13,7 +13,7 @@ inherit
 			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
-			has_like, is_loose, duplicate, solved_type, type_i, good_generics,
+			has_like, is_loose, duplicate, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, format, is_equivalent,
@@ -342,32 +342,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_mark (declaration_mark)
 		end
 
-	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is
-			-- Calculate type in function of feature `f' and the feature
-			-- table `feat_table'.
-		local
-			i, count: INTEGER
-			new_generics: like generics
-		do
-			if not has_like then
-				Result := Current
-			else
-				from
-					i := 1
-					count := generics.count
-					create new_generics.make (1, count)
-				until
-					i > count
-				loop
-					new_generics.put
-							(generics.item (i).solved_type (feat_table, f), i)
-					i := i + 1
-				end
-				create Result.make (class_id, new_generics)
-				Result.set_mark (declaration_mark)
-			end
-		end
-
 	deep_actual_type: like Current is
 			-- Actual type of Current; recursive version for generics
 		local
@@ -653,7 +627,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A
 			pos: INTEGER
 			conformance_on_formal, is_conform: BOOLEAN
-			formal_dec_as: FORMAL_DEC_AS
+			formal_dec_as: FORMAL_CONSTRAINT_AS
 			l_vtug: VTUG
 		do
 				-- Some lines of explanations with some examples:
@@ -679,14 +653,18 @@ feature {COMPILER_EXPORTER} -- Primitives
 						context_class.generics /= Void
 					end
 					formal_type ?= gen_param
-					to_check := context_class.generics.i_th (formal_type.position).constraint_type
+					formal_dec_as ?= context_class.generics.i_th (formal_type.position)
+					check formal_dec_as_not_void: formal_dec_as /= Void end
+					to_check ?= formal_dec_as.constraint_type
 				else
 					formal_type := Void
 					to_check := gen_param
 				end
 
 					-- Evaluation of the constraint in the associated class
-				constraint_type := associated_class.generics.i_th (i).constraint_type
+				formal_dec_as ?= associated_class.generics.i_th (i)
+				check formal_dec_as_not_void: formal_dec_as /= Void end
+				constraint_type := formal_dec_as.constraint_type
 				conformance_on_formal := False
 				is_conform := True
 
@@ -763,7 +741,8 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- Check now for the validity of the creation constraint clause if
 						-- there is one which can be checked ,i.e. when `to_check' conforms
 						-- to `constraint_type'.
-					formal_dec_as := associated_class.generics.i_th (i)
+					formal_dec_as ?= associated_class.generics.i_th (i)
+					check formal_dec_as_not_void: formal_dec_as /= Void end
 					if formal_dec_as.is_reference and then not gen_param.is_reference then
 							-- FIXME: Put a better error here, i.e. one that says it is not
 							-- valid because we expect a reference actual generic parameter.
@@ -841,7 +820,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	delayed_creation_constraint_check (
-			formal_dec_as: FORMAL_DEC_AS
+			formal_dec_as: FORMAL_CONSTRAINT_AS
 			constraint_type: TYPE_A;
 			context_class: CLASS_C;
 			to_check: TYPE_A;
@@ -871,7 +850,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	creation_constraint_check (
-			formal_dec_as: FORMAL_DEC_AS
+			formal_dec_as: FORMAL_CONSTRAINT_AS
 			constraint_type: TYPE_A;
 			context_class: CLASS_C;
 			to_check: TYPE_A;
@@ -883,7 +862,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			formal_dec_as_not_void: formal_dec_as /= Void
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
 		local
-			formal_type_dec_as: FORMAL_DEC_AS
+			formal_type_dec_as: FORMAL_CONSTRAINT_AS
 			formal_crc_list, crc_list: LINKED_LIST [FEATURE_I];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
@@ -908,11 +887,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 				--              where `my_make_k' is a redefined/renamed version of `make_i'.
 			crc_list := formal_dec_as.constraint_creation_list
 			if formal_type = Void then
-				class_c := to_check.associated_class
-				if class_c /= Void then
-						-- `class_c' can be Void if `to_check' represent NONE type, for
+				if to_check.has_associated_class then
+					-- `to_check' may not have an associated class if it represents NONE type, for
 						-- example in PROCEDURE [ANY, NONE], we will check NONE against
 						-- constraint of PROCEDURE which is `TUPLE create default_create end'.
+					class_c := to_check.associated_class
 					creators_table := class_c.creators
 				end
 
@@ -958,7 +937,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 			else
 					-- Check if there is a creation constraint clause
-				formal_type_dec_as := context_class.generics.i_th (formal_type.position)
+				formal_type_dec_as ?= context_class.generics.i_th (formal_type.position)
 				if formal_type_dec_as /= Void and then formal_type_dec_as.has_creation_constraint then
 						-- Check if we have m >= n as specified above.
 					formal_crc_list := formal_type_dec_as.constraint_creation_list

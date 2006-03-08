@@ -1,19 +1,15 @@
 indexing
-	description: "Actual type for bits_symbol."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Unevaluated BIT x type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class BITS_SYMBOL_A
+class
+	UNEVALUATED_BITS_SYMBOL_A
 
 inherit
-	BITS_A
-		rename
-			make as make_with_count
+	TYPE_A
 		redefine
-			dump, ext_append_to,
-			is_equivalent, is_full_named_type, process
+			associated_class, is_valid, same_as
 		end
 
 	SHARED_NAMES_HEAP
@@ -21,17 +17,20 @@ inherit
 			{NONE} all
 		end
 
-create {COMPILER_EXPORTER}
+create
 	make
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; c: like bit_count) is
+	make (a_string: like dump) is
+			-- Initialize `symbol' to `a_string'
+		require
+			non_void_string: a_string /= Void
 		do
-			make_with_count (c)
-			feature_name_id := f.feature_name_id
-			current_class_id := System.current_class.class_id
-			rout_id := f.rout_id_set.first
+			names_heap.put (a_string)
+			symbol_name_id := names_heap.found_item
+		ensure
+			set: symbol.is_equal (a_string)
 		end
 
 feature -- Visitor
@@ -39,66 +38,83 @@ feature -- Visitor
 	process (v: TYPE_A_VISITOR) is
 			-- Process current element.
 		do
-			v.process_bits_symbol_a (Current)
+			v.process_unevaluated_bits_symbol_a (Current)
 		end
 
 feature -- Properties
 
-	feature_name_id: INTEGER
+	symbol_name_id: INTEGER
+			-- Id of `symbol' in `names_heap'.
 
-	feature_name: STRING is
+	symbol: STRING is
 			-- Anchor name
 		do
-			Result := names_heap.item (feature_name_id)
+			Result := names_heap.item (symbol_name_id)
 		end
 
-	rout_id: INTEGER
+	is_valid: BOOLEAN is False
+			-- An unevaluated type is never valid.
 
-	current_class_id: INTEGER
-			-- Class declaring current
+feature -- Access
 
-	is_full_named_type: BOOLEAN is False
-			-- Current is not fully named
+	associated_class: CLASS_C is
+			-- Associated class
+		once
+			Result := System.bit_class.compiled_class
+		end
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := bit_count = other.bit_count and then
-				rout_id = other.rout_id and then
-				feature_name_id = other.feature_name_id and then
-				current_class_id = other.current_class_id
-		end
-
-feature -- Setting
-
-	set_rout_id (a_routine_id: like rout_id) is
-			-- Set `rout_id' with `a_routine_id'.
-		require
-			a_routine_id_positive: a_routine_id > 0
-		do
-			rout_id := a_routine_id
-		ensure
-			rout_id_set: rout_id = a_routine_id
+			Result := symbol_name_id = other.symbol_name_id
 		end
 
 feature -- Output
 
-	dump: STRING is
-			-- Dumped trace
-		do
-			create Result.make (9)
-			Result.append ("BIT ")
-			Result.append (names_heap.item (feature_name_id))
-		end
-
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+			-- Append Current type to `st'.
 		do
 			st.add (ti_Bit_class)
 			st.add_space
-			st.add_string (names_heap.item (feature_name_id))
+			st.add_string (symbol)
 		end
+
+	dump: STRING is
+		do
+			create Result.make (9)
+			Result.append ("BIT ")
+			Result.append (symbol)
+		end
+
+feature {NONE} -- Implementation
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			l_other: like Current
+		do
+			l_other ?= other
+			Result := l_other /= Void and then symbol_name_id = l_other.symbol_name_id
+		end
+
+feature {NONE} -- Not applicable
+
+	conform_to (other: TYPE_A): BOOLEAN is
+		do
+		end
+
+	type_i: TYPE_I is
+		do
+		end
+
+	create_info: CREATE_INFO is
+		do
+		end
+
+invariant
+	non_void_symbol: symbol /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -132,4 +148,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class BITS_SYMBOL_A
+end -- class UNEVALUATED_LIKE_TYPE

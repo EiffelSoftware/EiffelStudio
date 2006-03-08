@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Global feature information currently being formatted."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class GLOBAL_FEAT_ADAPTATION 
+class GLOBAL_FEAT_ADAPTATION
 
 inherit
 	SHARED_FORMAT_INFO
@@ -44,9 +44,9 @@ feature -- Initialization
 
 	make (source, target: FEATURE_I; target_class: CLASS_C) is
 			-- Make Current for adaptation of source feature
-			-- `source' in relation to evaluated `target' feature in 
-			-- class `target_class'. The  purpose of this class is 
-			-- to have access to the global information related to 
+			-- `source' in relation to evaluated `target' feature in
+			-- class `target_class'. The  purpose of this class is
+			-- to have access to the global information related to
 			-- the `source' and `target' features.
 		require
 			valid_source: source /= Void;
@@ -141,7 +141,7 @@ feature -- Transformation
 			end
 		end;
 
-	adapt_local (f_name: STRING): LOCAL_FEAT_ADAPTATION is 
+	adapt_local (f_name: STRING): LOCAL_FEAT_ADAPTATION is
 			-- Feature adaptation for local variable `f_name'
 		require
 			valid_f_name: f_name /= Void
@@ -178,7 +178,7 @@ feature -- Transformation
 			if source_enclosing_feature /= Void then
 				source_arguments := source_enclosing_feature.arguments
 				if source_enclosing_feature.arguments /= Void then
-					from 
+					from
 						target_arguments := target_enclosing_feature.arguments;
 						i := 1
 						nb := source_arguments.count;
@@ -212,7 +212,7 @@ feature -- Transformation
 		end;
 
 	adapt_result: LOCAL_FEAT_ADAPTATION is
-			-- Feature adaptation for instructions 
+			-- Feature adaptation for instructions
 			-- with `Result' keyword
 			--| Return Void if not found
 		local
@@ -220,7 +220,7 @@ feature -- Transformation
 			formal_type: FORMAL_A
 		do
 			if private_adapt_result = Void then
-				if source_enclosing_feature = Void then	
+				if source_enclosing_feature = Void then
 					create private_adapt_result;
 					private_adapt_result.set_is_normal;
 					private_adapt_result.set_feature_name ("Result");
@@ -249,7 +249,7 @@ feature -- Transformation
 		end;
 
 	adapt_current: LOCAL_FEAT_ADAPTATION is
-			-- Feature adaptation for instructions 
+			-- Feature adaptation for instructions
 			-- with `Current' keyword
 		local
 			s_type, t_type: TYPE_A;
@@ -270,10 +270,10 @@ feature -- Transformation
 feature {NONE} -- Implementation properites
 
 	private_adapt_result: LOCAL_FEAT_ADAPTATION
-			-- Feature adaptation for result 
+			-- Feature adaptation for result
 
 	private_adapt_current: LOCAL_FEAT_ADAPTATION
-			-- Feature adaptation for Current 
+			-- Feature adaptation for Current
 
 feature {FORMAT_CONTEXT} -- Implementation
 
@@ -288,13 +288,13 @@ feature {FORMAT_CONTEXT} -- Implementation
 			local_info: LOCAL_INFO
 			formal_type: FORMAL_A
 			l_type_feature: TYPE_FEATURE_I
-		do	
+		do
 			if not is_short then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (source_enclosing_class.cluster);
 				System.set_current_class (source_enclosing_class);
 					-- When evaluating like feature
-				s_locals := locals_builder.local_table_for_format (source_enclosing_feature, body);
+				s_locals := locals_builder.local_table (source_enclosing_class, source_enclosing_feature, body);
 				System.set_current_class (target_enclosing_class);
 				if s_locals = Void or else s_locals.is_empty then
 					Inst_context.set_cluster (old_cluster);
@@ -316,13 +316,13 @@ feature {FORMAT_CONTEXT} -- Implementation
 								s_type := local_info.type.actual_type;
 								if s_type.is_formal then
 									formal_type ?= s_type;
-				 					s_type := source_enclosing_class.constraint 
+				 					s_type := source_enclosing_class.constraint
 													(formal_type.position)
 								end;
 							end;
 							source_locals.put (s_type, l_name);
 							s_locals.forth;
-						end;	
+						end;
 						target_locals := source_locals
 					else
 						from
@@ -339,10 +339,8 @@ feature {FORMAT_CONTEXT} -- Implementation
 								t_type := Void
 							else
 								s_type := s_locals.item_for_iteration.type;
-								t_type := Local_evaluator.evaluated_type_for_format
-										(s_type,
-										target_feature_table,
-										target_enclosing_feature);
+								type_a_checker.init_with_feature_table (target_enclosing_feature, target_feature_table, Void, Void)
+								t_type := type_a_checker.solved (s_type, Void)
 								if t_type = Void then
 									s_type := Void;
 									t_type := Void
@@ -352,7 +350,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 										formal_type ?= s_type
 										l_type_feature := source_enclosing_class.formal_at_position
 											(formal_type.position)
-				 						s_type := source_enclosing_class.constraint 
+				 						s_type := source_enclosing_class.constraint
 													(formal_type.position)
 										check
 											target_has_generic_features:
@@ -362,11 +360,11 @@ feature {FORMAT_CONTEXT} -- Implementation
 											l_type_feature.rout_id_set.first).type
 										if t_type.is_formal then
 											formal_type ?= t_type
-											t_type := target_enclosing_class.constraint 
+											t_type := target_enclosing_class.constraint
 													(formal_type.position)
 										end
 									else
-										t_type := t_type.instantiation_in 
+										t_type := t_type.instantiation_in
 												(target_enclosing_class.actual_type,
 												source_enclosing_class.class_id).actual_type;
 									end
@@ -375,7 +373,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 							source_locals.put (s_type, l_name);
 							target_locals.put (t_type, l_name);
 							s_locals.forth;
-						end	
+						end
 					end;
 					Inst_context.set_cluster (old_cluster);
 				end;
@@ -388,19 +386,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

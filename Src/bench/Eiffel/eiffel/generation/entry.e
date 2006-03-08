@@ -105,7 +105,7 @@ feature -- previously in POLY_UNIT
 		require
 			good_argument: class_type /= Void
 		do
-			Result := type_a.actual_type.type_i
+			Result := type_a.type_i
 			if not Result.is_formal then
 				Result := Result.instantiation_in (class_type)
 			end

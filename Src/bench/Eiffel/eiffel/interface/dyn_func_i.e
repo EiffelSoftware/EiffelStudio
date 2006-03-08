@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DYN_FUNC_I 
+class DYN_FUNC_I
 
 inherit
 	DYN_PROC_I
@@ -14,9 +14,9 @@ inherit
 			unselected, replicated, set_type, is_function, type
 		end
 
-feature 
+feature
 
-	type: TYPE_AS
+	type: TYPE_A
 			-- Type of the function
 
 	assigner_name_id: INTEGER
@@ -64,15 +64,9 @@ feature -- Api creation
 
 	new_api_feature: E_FUNCTION is
 			-- API feature creation
-		local
-			t: TYPE_A
 		do
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
-			t ?= type
-			if t = Void then
-				t := type.actual_type
-			end
-			Result.set_type (t, assigner_name)
+			Result.set_type (type, assigner_name)
 			update_api (Result)
 		end
 
@@ -82,19 +76,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

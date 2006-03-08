@@ -782,7 +782,6 @@ end
 		local
 			feature_i: FEATURE_I
 			desc: ATTR_DESC
-			attribute_type: TYPE_A
 			l_ext: IL_EXTENSION_I
 		do
 			from
@@ -795,12 +794,11 @@ end
 				feature_i := item_for_iteration
 				if feature_i.is_attribute then
 					l_ext ?= feature_i.extension
-					attribute_type := feature_i.type.actual_type
 					if
 						(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
 					then
 							-- We do not take IL static fields, only attributes of a class.
-						desc := attribute_type.type_i.description
+						desc := feature_i.type.type_i.description
 						desc.set_feature_id (feature_i.feature_id)
 						desc.set_attribute_name_id (feature_i.feature_name_id)
 						desc.set_rout_id (feature_i.rout_id_set.first)

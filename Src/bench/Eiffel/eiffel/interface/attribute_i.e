@@ -27,7 +27,7 @@ create
 
 feature
 
-	type: TYPE_AS
+	type: TYPE_A
 			-- Attribute type
 
 	assigner_name_id: INTEGER
@@ -103,7 +103,7 @@ feature -- Element Change
 			solved_type: TYPE_A
 		do
 			Precursor {ENCAPSULATED_I} (class_c)
-			solved_type ?= type.actual_type.conformance_type
+			solved_type ?= type.conformance_type
 			if
 				solved_type.is_true_expanded and then
 				solved_type.associated_class = class_c and then
@@ -160,7 +160,7 @@ feature -- Element Change
 			array_index: INTEGER
 		do
 			generate_header (buffer)
-			result_type := type.actual_type.type_i.instantiation_in (class_type)
+			result_type := type.type_i.instantiation_in (class_type)
 			internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 			add_in_log (class_type, internal_name)
 
@@ -280,7 +280,7 @@ feature -- Element Change
 				-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
 			ba.append_integer (-1)
 				-- Meta-type of Result
-			result_type := byte_context.real_type (type.actual_type.type_i)
+			result_type := byte_context.real_type (type.type_i)
 			ba.append_integer (result_type.sk_value)
 				-- Argument count
 			ba.append_short_integer (0)
@@ -331,15 +331,9 @@ feature {NONE} -- Implementation
 
 	new_api_feature: E_ATTRIBUTE is
 			-- API feature creation
-		local
-			t: TYPE_A
 		do
-			t ?= type
-			if t = Void then
-				t := type.actual_type
-			end
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
-			Result.set_type (t, assigner_name)
+			Result.set_type (type, assigner_name)
 		end
 
 indexing
@@ -348,19 +342,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

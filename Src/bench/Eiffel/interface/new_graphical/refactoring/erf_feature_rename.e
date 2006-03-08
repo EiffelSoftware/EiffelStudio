@@ -138,8 +138,8 @@ feature {NONE} -- Implementation
 			l_class_modifier.prepare
 
 			create l_rename_visitor.make (feature_i, preferences.new_feature_name, preferences.update_comments,
-											preferences.update_strings, recursive_descendants,
-											recursive_descendants.has (a_class.compiled_class.class_id))
+											preferences.update_strings, a_class.compiled_class,
+											recursive_descendants)
 			l_class_modifier.execute_visitor (l_rename_visitor, false)
 
         	l_class_modifier.commit

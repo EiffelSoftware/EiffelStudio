@@ -148,7 +148,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	return_type: TYPE_AS
+	return_type: TYPE_A
 			-- Associated feature's return type
 		
 	completion_type: STRING is

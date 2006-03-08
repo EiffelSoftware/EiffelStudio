@@ -46,11 +46,11 @@ feature -- Miscellaneous
 			-- Makefile macros for msc compiler
 		"CC = cl%N%
 		%OUTPUT_CMD = -Fo%N"
-		
+
 	makefile_macros_bcb: STRING is
 			-- Makefile macros for msc compiler
-		"CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%N OUTPUT_CMD = -o%N"	
-		
+		"CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe%N OUTPUT_CMD = -o%N"
+
 	lib_generation (a_library_name, obj_name, c_compiler: STRING): STRING is
 			-- lib generation part of Makefile
 		require
@@ -73,7 +73,7 @@ feature -- Miscellaneous
 				end
 				Result.append ("	&$(ISE_EIFFEL)\Bcc55\Bin\tlib.exe /p256 $@ +-$**%N")
 			end
-					
+
 			Result.append ("	del *.obj%N%
 					%	if not exist " + c_compiler + " mkdir " + c_compiler + "%N%
 					%	$(MV) $@ " + c_compiler + "%N%
@@ -82,7 +82,7 @@ feature -- Miscellaneous
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
-		
+
 	make_file (obj_list, wobj_list, a_library_name, wobj_generation, c_compiler: STRING): STRING is
 			-- Makefile text.
 		require
@@ -98,7 +98,7 @@ feature -- Miscellaneous
 					c_compiler.is_equal ("bcb")
 				end
 				Result.append (makefile_macros_bcb)
-			end	
+			end
 			Result.append (	"CFLAGS = ")
 			if c_compiler.is_equal ("msc") then
 				Result.append ("-MT -W0 -Ox ")
@@ -194,7 +194,7 @@ feature -- Basic operations
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
-		
+
 	save_file (content, a_file_name: STRING) is
 			-- Save file with content `content' and file name `a_file_name'.
 		local
@@ -221,14 +221,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	c_compiler_flags: STRING is 
+	c_compiler_flags: STRING is
 			-- C compiler options to compile generated code.
 			"-D_WIN32_DCOM %
 			%-c -I..\..\client\include -I..\..\server\include -I..\..\common\include %
-			%-I$(ISE_EIFFEL)\studio\spec\windows\include %
+			%-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include %
 			%-I%D(ISE_EIFFEL)\library\com\spec\windows\include "
-			
-	bcb_compiler_flags: STRING is 
+
+	bcb_compiler_flags: STRING is
 			-- Additional Borland C flags.
 			"-w- -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib "
 

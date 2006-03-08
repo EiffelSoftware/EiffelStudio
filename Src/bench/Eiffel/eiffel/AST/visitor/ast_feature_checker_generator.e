@@ -3223,6 +3223,7 @@ feature -- Implementation
 				l_assign.set_line_number (l_as.target.start_location.line)
 				l_source_expr ?= last_byte_node
 				l_assign.set_source (l_source_expr)
+				l_assign.set_line_pragma (l_as.line_pragma)
 				last_byte_node := l_assign
 			end
 		end
@@ -3245,6 +3246,7 @@ feature -- Implementation
 			arguments: BYTE_LIST [PARAMETER_B]
 			argument: PARAMETER_B
 			assigner_arguments: BYTE_LIST [PARAMETER_B]
+			l_instr: INSTR_CALL_B
 			l_tuple_access: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
 		do
@@ -3355,7 +3357,9 @@ feature -- Implementation
 						-- Replace end of call chain with an assigner command
 					access_b.set_parent (outer_nested_b)
 					outer_nested_b.set_message (access_b)
-					create {INSTR_CALL_B} last_byte_node.make (call_b, l_as.start_location.line)
+					create l_instr.make (call_b, l_as.start_location.line)
+					l_instr.set_line_pragma (l_as.line_pragma)
+					last_byte_node := l_instr
 				end
 			end
 		end
@@ -3407,6 +3411,7 @@ feature -- Implementation
 				create l_reverse
 				l_reverse.set_target (l_target_node)
 				l_reverse.set_line_number (l_as.target.start_location.line)
+				l_reverse.set_line_pragma (l_as.line_pragma)
 			end
 
 				-- Type checking
@@ -3500,11 +3505,13 @@ feature -- Implementation
 					l_check.set_check_list (l_list)
 					l_check.set_line_number (l_as.check_list.start_location.line)
 					l_check.set_end_location (l_as.end_keyword)
+					l_check.set_line_pragma (l_as.line_pragma)
 					last_byte_node := l_check
 				end
 			elseif is_byte_node_enabled then
 				create l_check
 				l_check.set_end_location (l_as.end_keyword)
+				l_check.set_line_pragma (l_as.line_pragma)
 				last_byte_node := l_check
 			end
 		end
@@ -3808,6 +3815,7 @@ feature -- Implementation
 					l_assign.set_target (l_access)
 					l_assign.set_source (l_creation_expr)
 					l_assign.set_line_number (l_as.target.start_location.line)
+					l_assign.set_line_pragma (l_as.line_pragma)
 					check
 						l_assign.is_creation_instruction
 					end
@@ -3892,6 +3900,7 @@ feature -- Implementation
 					end
 					l_debug.set_line_number (l_as.compound.start_location.line)
 					l_debug.set_end_location (l_as.end_keyword)
+					l_debug.set_line_pragma (l_as.line_pragma)
 					last_byte_node := l_debug
 				end
 			elseif is_byte_node_enabled then
@@ -3917,6 +3926,7 @@ feature -- Implementation
 				create l_if
 				l_expr ?= last_byte_node
 				l_if.set_condition (l_expr)
+				l_if.set_line_pragma (l_as.line_pragma)
 			end
 
 				-- Check conformance to boolean
@@ -3979,6 +3989,7 @@ feature -- Implementation
 				l_expr ?= last_byte_node
 				create l_inspect
 				l_inspect.set_switch (l_expr)
+				l_inspect.set_line_pragma (l_as.line_pragma)
 			end
 
 				-- Type check if it is an expression conform either to
@@ -4031,6 +4042,7 @@ feature -- Implementation
 		local
 			l_vkcn1: VKCN1
 			l_call: CALL_B
+			l_call_b: INSTR_CALL_B
 		do
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
@@ -4041,7 +4053,9 @@ feature -- Implementation
 				error_handler.insert_error (l_vkcn1)
 			elseif is_byte_node_enabled then
 				l_call ?= last_byte_node
-				create {INSTR_CALL_B} last_byte_node.make (l_call, l_as.call.start_location.line)
+				create l_call_b.make (l_call, l_as.call.start_location.line)
+				l_call_b.set_line_pragma (l_as.line_pragma)
+				last_byte_node := l_call_b
 			end
 		end
 
@@ -4059,6 +4073,7 @@ feature -- Implementation
 
 			if l_needs_byte_node then
 				create l_loop
+				l_loop.set_line_pragma (l_as.line_pragma)
 			end
 
 			if l_as.from_part /= Void then
@@ -4124,6 +4139,7 @@ feature -- Implementation
 	process_retry_as (l_as: RETRY_AS) is
 		local
 			l_vxrt: VXRT
+			l_retry_b: RETRY_B
 		do
 			if not is_in_rescue then
 					-- Retry instruction outside a recue clause
@@ -4132,7 +4148,9 @@ feature -- Implementation
 				l_vxrt.set_location (l_as.start_location)
 				error_handler.insert_error (l_vxrt)
 			elseif is_byte_node_enabled then
-				create {RETRY_B} last_byte_node.make (l_as.line)
+				create l_retry_b.make (l_as.line)
+				l_retry_b.set_line_pragma (l_as.line_pragma)
+				last_byte_node := l_retry_b
 			end
 		end
 

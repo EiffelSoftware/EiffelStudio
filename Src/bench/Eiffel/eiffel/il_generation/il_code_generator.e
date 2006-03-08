@@ -839,7 +839,7 @@ feature -- Switch instruction
 
 feature -- Binary operator generation
 
-	generate_binary_operator (code: INTEGER) is
+	generate_binary_operator (code: INTEGER; is_unsigned: BOOLEAN) is
 			-- Generate a binary operator represented by `code'.
 			-- Look in IL_CONST for `code' definition.
 		deferred

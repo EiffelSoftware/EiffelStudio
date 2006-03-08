@@ -5385,7 +5385,7 @@ feature -- Array manipulation
 				duplicate_top
 				generate_local (local_number)
 				put_integer_8_constant (1)
-				generate_binary_operator (il_minus)
+				generate_binary_operator (il_minus, False)
 				duplicate_top
 				generate_local_assignment (local_number)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
@@ -5985,39 +5985,96 @@ feature -- Switch instruction
 
 feature -- Binary operator generation
 
-	generate_binary_operator (code: INTEGER) is
+	generate_binary_operator (code: INTEGER; is_unsigned: BOOLEAN) is
 			-- Generate a binary operator represented by `code'.
 			-- Look in IL_CONST for `code' definition.
 		do
 			inspect
 				code
-			when il_le then
-				method_body.put_opcode ({MD_OPCODES}.Cgt)
-				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+			when il_eq then
 				method_body.put_opcode ({MD_OPCODES}.Ceq)
-			when il_lt then method_body.put_opcode ({MD_OPCODES}.Clt)
-			when il_ge then
-				method_body.put_opcode ({MD_OPCODES}.Clt)
-				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
-				method_body.put_opcode ({MD_OPCODES}.Ceq)
-			when il_gt then method_body.put_opcode ({MD_OPCODES}.Cgt)
-			when il_star then method_body.put_opcode ({MD_OPCODES}.Mul)
-			when il_power then
-				method_body.put_static_call (current_module.power_method_token, 2, True)
-			when il_plus then method_body.put_opcode ({MD_OPCODES}.Add)
-			when il_mod then method_body.put_opcode ({MD_OPCODES}.Rem)
-			when il_minus then method_body.put_opcode ({MD_OPCODES}.Sub)
-			when il_div, il_slash then method_body.put_opcode ({MD_OPCODES}.Div)
-			when il_xor then method_body.put_opcode ({MD_OPCODES}.Xor_opcode)
-			when il_or then method_body.put_opcode ({MD_OPCODES}.Or_opcode)
-			when il_and then method_body.put_opcode ({MD_OPCODES}.And_opcode)
-			when il_eq then method_body.put_opcode ({MD_OPCODES}.Ceq)
+
 			when il_ne then
 				method_body.put_opcode ({MD_OPCODES}.Ceq)
 				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
 				method_body.put_opcode ({MD_OPCODES}.Ceq)
-			when il_shl then method_body.put_opcode ({MD_OPCODES}.Shl)
-			when il_shr then method_body.put_opcode ({MD_OPCODES}.Shr)
+
+			when il_le then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.cgt_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Cgt)
+				end
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+
+			when il_lt then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.clt_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Clt)
+				end
+
+			when il_ge then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.clt_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Clt)
+				end
+				method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
+				method_body.put_opcode ({MD_OPCODES}.Ceq)
+
+			when il_gt then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.cgt_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Cgt)
+				end
+
+			when il_star then
+				method_body.put_opcode ({MD_OPCODES}.Mul)
+
+			when il_power then
+				method_body.put_static_call (current_module.power_method_token, 2, True)
+
+			when il_plus then
+				method_body.put_opcode ({MD_OPCODES}.Add)
+
+			when il_mod then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.rem_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Rem)
+				end
+
+			when il_minus then
+				method_body.put_opcode ({MD_OPCODES}.Sub)
+
+			when il_div, il_slash then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.div_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Div)
+				end
+
+			when il_xor then
+				method_body.put_opcode ({MD_OPCODES}.Xor_opcode)
+
+			when il_or then
+				method_body.put_opcode ({MD_OPCODES}.Or_opcode)
+
+			when il_and then
+				method_body.put_opcode ({MD_OPCODES}.And_opcode)
+
+			when il_shl then
+				method_body.put_opcode ({MD_OPCODES}.Shl)
+
+			when il_shr then
+				if is_unsigned then
+					method_body.put_opcode ({MD_OPCODES}.shr_un)
+				else
+					method_body.put_opcode ({MD_OPCODES}.Shr)
+				end
 			end
 		end
 

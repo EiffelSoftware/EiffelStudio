@@ -115,6 +115,7 @@ feature -- IL code generation
 		local
 			f_type: INTEGER
 			long: INTEGER_I
+			nat: NATURAL_I
 		do
 			f_type := function_type
 			inspect f_type
@@ -128,17 +129,22 @@ feature -- IL code generation
 				if parameters /= Void then
 					parameters.process (a_generator)
 				end
-				generate_il_operation_code (f_type)
+				generate_il_operation_code (f_type, type.is_natural)
 
 			when bit_shift_left_type then
 				if parameters /= Void then
 					parameters.process (a_generator)
 				end
-				generate_il_operation_code (bit_shift_left_type)
+				generate_il_operation_code (bit_shift_left_type, type.is_natural)
 				long ?= feat.real_type (feat.type)
 				if long /= Void and then long.size < 32 then
 						-- IL extended "int8" and "int16" to "int32" which has to be converted back
 					il_generator.convert_to (long)
+				else
+					nat ?= feat.real_type (feat.type)
+					if nat /= Void and then nat.size < 32 then
+						il_generator.convert_to (nat)
+					end
 				end
 
 			when bit_test_type then
@@ -149,10 +155,10 @@ feature -- IL code generation
 				end
 				il_generator.put_numeric_integer_constant (type, 1)
 				parameters.i_th (1).process (a_generator)
-				generate_il_operation_code (bit_shift_left_type)
-				generate_il_operation_code (bit_and_type)
+				generate_il_operation_code (bit_shift_left_type, type.is_natural)
+				generate_il_operation_code (bit_and_type, type.is_natural)
 				il_generator.put_default_value (type)
-				il_generator.generate_binary_operator (il_ne)
+				il_generator.generate_binary_operator (il_ne, type.is_natural)
 
 			when set_bit_type then
 				check
@@ -175,7 +181,7 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 				end
 				parameters.process (a_generator)
-				il_generator.generate_binary_operator (il_eq)
+				il_generator.generate_binary_operator (il_eq, type.is_natural)
 
 			when zero_type, default_type then
 					-- No need to keep pushed value as we are going
@@ -239,9 +245,10 @@ feature -- IL code generation
 			when offset_type then
 				check
 					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
 				end
 				parameters.process (a_generator)
-				il_generator.generate_binary_operator (il_plus)
+				il_generator.generate_binary_operator (il_plus, type.is_natural)
 
 			when to_real_32_type then
 				il_generator.convert_to_real_32
@@ -435,23 +442,23 @@ feature -- Fast access to feature name
 
 feature {NONE} -- IL code generation
 
-	generate_il_operation_code (op: INTEGER) is
+	generate_il_operation_code (op: INTEGER; is_natural: BOOLEAN) is
 			-- Make byte code for call on bit operations from INTEGER.
 		do
  			inspect
  				op
  			when bit_and_type then
-				il_generator.generate_binary_operator (il_and)
+				il_generator.generate_binary_operator (il_and, is_natural)
  			when bit_or_type then
-				il_generator.generate_binary_operator (il_or)
+				il_generator.generate_binary_operator (il_or, is_natural)
 			when bit_xor_type then
- 				il_generator.generate_binary_operator (il_xor)
+ 				il_generator.generate_binary_operator (il_xor, is_natural)
  			when bit_not_type then
 				il_generator.generate_unary_operator (il_bitwise_not)
 			when bit_shift_left_type then
-				il_generator.generate_binary_operator (il_shl)
+				il_generator.generate_binary_operator (il_shl, is_natural)
  			when bit_shift_right_type then
-				il_generator.generate_binary_operator (il_shr)
+				il_generator.generate_binary_operator (il_shr, is_natural)
 			else
 				check
 					not_implemented_yet: False
@@ -517,7 +524,7 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local_assignment (l_local)
 
 				-- Generate: if Current < x then Result := -1
-			il_generator.generate_binary_operator ({IL_CONST}.il_lt)
+			il_generator.generate_binary_operator ({IL_CONST}.il_lt, a_type.is_natural)
 			il_generator.branch_on_false (l_elseif_label)
 				-- Remove duplicate occurrence of `Current' that we push in case
 				-- we had to perform one more comparison.
@@ -528,7 +535,7 @@ feature {NONE} -- IL code generation
 				-- Generate: elseif x < Current then Result := 1
 			il_generator.mark_label (l_elseif_label)
 			il_generator.generate_local (l_local)
-			il_generator.generate_binary_operator ({IL_CONST}.il_gt)
+			il_generator.generate_binary_operator ({IL_CONST}.il_gt, a_type.is_natural)
 			il_generator.branch_on_false (l_else_label)
 			il_generator.put_integer_32_constant (1)
 			il_generator.branch_to (l_end_label)
@@ -610,8 +617,8 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local (l_target)
 			il_generator.put_numeric_integer_constant (a_type, 1)
 			parameters.i_th (2).process (a_generator)
-			il_generator.generate_binary_operator (il_shl)
-			il_generator.generate_binary_operator (il_or)
+			il_generator.generate_binary_operator (il_shl, a_type.is_natural)
+			il_generator.generate_binary_operator (il_or, a_type.is_natural)
 			il_generator.generate_local_assignment (l_result)
 			il_generator.branch_to (l_end)
 
@@ -622,9 +629,9 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local (l_target)
 			il_generator.put_numeric_integer_constant (a_type, 1)
 			parameters.i_th (2).process (a_generator)
-			il_generator.generate_binary_operator (il_shl)
+			il_generator.generate_binary_operator (il_shl, a_type.is_natural)
 			il_generator.generate_unary_operator (il_bitwise_not)
-			il_generator.generate_binary_operator (il_and)
+			il_generator.generate_binary_operator (il_and, a_type.is_natural)
 			il_generator.generate_local_assignment (l_result)
 
 			il_generator.mark_label (l_end)
@@ -667,7 +674,7 @@ feature {NONE} -- IL code generation
 			il_generator.branch_on_false (l_else)
 			il_generator.generate_local (l_target)
 			parameters.i_th (2).process (a_generator)
-			il_generator.generate_binary_operator (il_or)
+			il_generator.generate_binary_operator (il_or, a_type.is_natural)
 			il_generator.generate_local_assignment (l_result)
 			il_generator.branch_to (l_end)
 
@@ -678,7 +685,7 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local (l_target)
 			parameters.i_th (2).process (a_generator)
 			il_generator.generate_unary_operator (il_bitwise_not)
-			il_generator.generate_binary_operator (il_and)
+			il_generator.generate_binary_operator (il_and, a_type.is_natural)
 			il_generator.generate_local_assignment (l_result)
 
 			il_generator.mark_label (l_end)

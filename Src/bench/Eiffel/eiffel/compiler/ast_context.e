@@ -49,6 +49,10 @@ feature -- Access
 	current_feature_table: FEATURE_TABLE
 			-- Current feature table
 
+	written_class: CLASS_C
+			-- Class where the code is originally written.
+			-- (Used for checking inherited code in current context.)
+
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
@@ -80,6 +84,7 @@ feature -- Setting
 			create current_class_type
 			current_class_type.set_actual_type (a_type)
 			current_feature_table := a_feat_tbl
+			written_class := Void
 		ensure
 			current_class_set: current_class = a_class
 			current_class_type_set: current_class_type.conformance_type = a_type
@@ -94,6 +99,14 @@ feature -- Setting
 			current_feature := f
 		ensure
 			current_feature_set: current_feature = f
+		end
+
+	set_written_class (c: like written_class) is
+			-- Set `written_class' to `c'.
+		do
+			written_class := c
+		ensure
+			written_class_set: written_class = c
 		end
 
 	set_is_ignoring_export (b: BOOLEAN) is
@@ -124,6 +137,7 @@ feature -- Setting
 			good_argument: not (e = Void)
 		do
 			e.set_class (current_class)
+			e.set_written_class (written_class)
 			if current_feature /= Void then
 				e.set_feature (current_feature)
 			end
@@ -194,6 +208,7 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			current_feature_table := Void
+			written_class := Void
 			clear_feature_context
 		end
 
@@ -216,19 +231,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

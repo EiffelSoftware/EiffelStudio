@@ -47,7 +47,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			".svn"; "hact"; "se"; "ve"; "base"; "other"; "gelint"; "test"; 
+			".svn"; "hact"; "se"; "ve"; "base"; "other"; "gelint"; "test"; "free_elks";
 		default
 			assertion (no)
 		end

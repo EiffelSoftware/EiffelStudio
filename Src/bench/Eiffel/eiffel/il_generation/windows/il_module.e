@@ -215,6 +215,9 @@ feature -- Access: tokens
 	com_visible_ctor_token: INTEGER
 			-- Token for `System.Runtime.InteropServices.ComVisibleAttribute' constructor.
 
+	debuggable_ctor_token: INTEGER
+			-- Token for constructor of `System.Diagnostics.DebuggableAttribute'.
+
 	debugger_hidden_ctor_token, debugger_step_through_ctor_token: INTEGER
 			-- Token for constructor of `System.Diagnostics.DebuggerHiddenAttribute' and
 			-- `System.Diagnostics.DebuggerStepThroughAttribute'.
@@ -818,6 +821,11 @@ feature -- Code generation
 				end
 				associated_assembly_token :=
 					md_emit.define_assembly (uni_string, l_assembly_flags, ass, public_key)
+
+				if is_debug_info_enabled then
+					md_emit.define_custom_attribute (associated_assembly_token,
+						debuggable_ctor_token, enabled_debuggable_ca).do_nothing
+				end
 			end
 
 			md_emit.set_module_name (uni_string)
@@ -1915,7 +1923,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				Result := table_token (internal_property_setters, a_type_id, a_feature_id)
 			end
 		ensure
-			setter_token_valid: Result /= 0 implies Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def
+			setter_token_valid: Result /= 0 implies
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def or
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref
 		end
 
 	property_getter_token (a_type_id, a_feature_id: INTEGER): INTEGER is
@@ -1936,7 +1946,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				Result := table_token (internal_property_getters, a_type_id, a_feature_id)
 			end
 		ensure
-			getter_token_valid: Result /= 0 implies Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def
+			getter_token_valid: Result /= 0 implies
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def or
+				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref
 		end
 
 	implementation_feature_token (a_type_id, a_feature_id: INTEGER): INTEGER is
@@ -2538,6 +2550,7 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_sig: like method_sig
 			l_cls_compliant_token: INTEGER
+			l_debuggable_token: INTEGER
 			l_com_visible_token: INTEGER
 			l_debugger_step_through_token: INTEGER
 			l_debugger_hidden_token: INTEGER
@@ -2554,6 +2567,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make ("System.Char"), mscorlib_token)
 			system_exception_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.Exception"), mscorlib_token)
+			l_debuggable_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Diagnostics.DebuggableAttribute"), mscorlib_token)
 			l_cls_compliant_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make ("System.CLSCompliantAttribute"), mscorlib_token)
 			l_debugger_step_through_token := md_emit.define_type_ref (
@@ -2581,6 +2596,17 @@ feature {NONE} -- Once per modules being generated.
 
 			com_visible_ctor_token := md_emit.define_member_ref (uni_string,
 				l_com_visible_token, l_sig)
+
+				-- Define `.ctor' from `System.Diagnostics.DebuggableAttribute'.
+			l_sig.reset
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_parameter_count (2)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+			debuggable_ctor_token := md_emit.define_member_ref (uni_string,
+				l_debuggable_token, l_sig)
 
 			l_sig.reset
 			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)

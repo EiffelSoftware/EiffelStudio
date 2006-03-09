@@ -26,6 +26,11 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 %%
 
+[pP][aA][rR][tT][iI][aA][lL][ \r\n\t]+[cC][lL][aA][sS][sS]	{
+				set_partial_class
+				set_start_condition (IN_CLASS)
+			}
+
 [cC][lL][aA][sS][sS]	{
 				set_start_condition (IN_CLASS)
 			}
@@ -35,7 +40,7 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				last_token := TE_ID
 			}
 
-[^cC"\n-]*		-- Ignore
+[^pPcC"\n-]*	-- Ignore
 {A}{X}*			-- Ignore
 
 <INITIAL,IN_CLASS>{

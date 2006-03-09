@@ -307,7 +307,7 @@ feature {CIL_CODE_GENERATOR} -- Custom attributes: modification
 				l_method_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				thread_static_attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, l_method_sig)
 			end
-			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, Void).do_nothing
+			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, empty_ca).do_nothing
 		end
 
 feature {CIL_CODE_GENERATOR} -- Synchronization tokens
@@ -872,9 +872,9 @@ feature -- Code generation
 
 			if is_debug_info_enabled then
 				il_code_generator.define_custom_attribute (entry_point_token,
-					debugger_step_through_ctor_token, Void)
+					debugger_step_through_ctor_token, empty_ca)
 				il_code_generator.define_custom_attribute (entry_point_token,
-					debugger_hidden_ctor_token, Void)
+					debugger_hidden_ctor_token, empty_ca)
 			end
 
 			il_code_generator.start_new_body (entry_point_token)

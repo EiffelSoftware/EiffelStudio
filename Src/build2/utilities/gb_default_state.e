@@ -18,6 +18,12 @@ inherit
 			default_create, copy, is_equal
 		end
 
+feature {GB_DEFAULT_STATE} -- Contract support
+
+	is_equal (other: like Current): BOOLEAN is
+		deferred
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -37,12 +43,7 @@ feature {NONE} -- Contract support
 			-- to `other', so as to yield equal objects.
 		deferred
 		end
-	
-	is_equal (other: like Current): BOOLEAN is
-		deferred
-		end
-		
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

@@ -368,7 +368,7 @@ feature {NONE} -- Implementation (in memory)
 	unique_values: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of unique values per class.
 
-feature {CLASS_C} -- Implementation (disk cache)
+feature -- Implementation (disk cache)
 
 	cache: AST_CACHE is
 			-- Cache for classes.

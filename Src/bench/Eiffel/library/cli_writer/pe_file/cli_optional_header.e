@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			c_set_win32_version_value (item, 0)
 			c_set_check_sum (item, 0)
 			c_set_dll_characteristics (item, 0)
-			c_set_size_of_stack_reserve (item, 0x100000)
+			c_set_size_of_stack_reserve (item, 0x500000)
 			c_set_size_of_stack_commit (item, 0x1000)
 			c_set_size_of_heap_reserve (item, 0x100000)
 			c_set_size_of_heap_commit (item, 0x1000)
@@ -66,7 +66,7 @@ feature -- Access
 			p := c_directories (item)
 			create Result.make_by_pointer (p + i * {CLI_DIRECTORY}.structure_size)
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -74,7 +74,7 @@ feature -- Measurement
 		do
 			Result := structure_size
 		end
-		
+
 feature -- Settings
 
 	set_code_size (i: INTEGER) is
@@ -85,7 +85,7 @@ feature -- Settings
 		do
 			c_set_size_of_code (item, i)
 		end
-		
+
 	set_reloc_size (i: INTEGER) is
 			-- Set `reloc_size' to `i'.
 		require
@@ -98,7 +98,7 @@ feature -- Settings
 	set_subsystem (i: INTEGER_16) is
 			-- Set `subsystem' to `i'.
 		require
-			valid_i: i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console 
+			valid_i: i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_console
 				or i = {CLI_PE_FILE_CONSTANTS}.Image_subsystem_windows_gui
 		do
 			c_set_subsystem (item, i)
@@ -109,7 +109,7 @@ feature -- Settings
 		do
 			c_set_address_of_entry_point (item, i)
 		end
-		
+
 	set_base_of_code (i: INTEGER) is
 			-- Set `base_of_code' to `i'
 		do
@@ -121,13 +121,13 @@ feature -- Settings
 		do
 			c_set_base_of_data (item, i)
 		end
-		
+
 	set_image_size (i: INTEGER) is
 			-- Set `image_size' to `i'.
 		do
 			c_set_size_of_image (item, i)
 		end
-		
+
 	set_headers_size (i: INTEGER) is
 			-- Set `headers_size' to `i'.
 		do
@@ -147,11 +147,11 @@ feature {NONE} -- Implementation
 feature {NONE} -- Access
 
 	c_directories (an_item: POINTER): POINTER is
-			-- 
+			--
 		external
 			"C struct CLI_IMAGE_OPTIONAL_HEADER access &DataDirectory use %"cli_writer.h%""
 		end
-		
+
 feature {NONE} -- Settings: standard fields
 
 	c_set_magic (an_item: POINTER; i: INTEGER_16) is
@@ -342,19 +342,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

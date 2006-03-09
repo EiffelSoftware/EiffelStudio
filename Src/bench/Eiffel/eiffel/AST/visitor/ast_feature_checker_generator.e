@@ -99,7 +99,7 @@ feature -- Type checking
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
---			process_inherited_assertions (a_feature)
+			process_inherited_assertions (a_feature)
 			a_feature.body.process (Current)
 		end
 
@@ -113,7 +113,7 @@ feature -- Type checking
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
---			process_inherited_assertions (a_feature)
+			process_inherited_assertions (a_feature)
 			is_byte_node_enabled := True
 			a_feature.body.process (Current)
 		end
@@ -630,8 +630,10 @@ feature -- Implementation
 			process_call (l_type, Void, l_as.feature_name, Void, l_as.parameters, True, False, True, False)
 			error_handler.checksum
 
-			l_as.set_routine_ids (last_routine_id_set)
-			l_as.set_class_id (l_type.associated_class.class_id)
+			if not is_inherited then
+				l_as.set_routine_ids (last_routine_id_set)
+				l_as.set_class_id (l_type.associated_class.class_id)
+			end
 		end
 
 	process_call (
@@ -1029,6 +1031,8 @@ feature -- Implementation
 							-- a non obsolete feature
 						and then (current_feature = Void or else
 							not current_feature.is_obsolete)
+							-- Inherited code is checked in parent class.
+						and then not is_inherited
 					then
 						create l_obs_warn
 						l_obs_warn.set_class (context.current_class)
@@ -1468,29 +1472,35 @@ feature -- Implementation
 		local
 			l_class_id: INTEGER
 			l_type_a: TYPE_A
+			l_feature: FEATURE_I
 		do
 			l_type_a := constrained_type (last_type.actual_type)
-			if not l_type_a.is_none then
-				l_class_id := l_type_a.associated_class.class_id
-			else
+			if l_type_a.is_none then
 				l_class_id := -1
+			else
+				l_class_id := l_type_a.associated_class.class_id
+				if is_inherited then
+					l_feature := system.class_of_id (l_class_id).feature_of_rout_id (l_as.routine_ids.first)
+				end
 			end
 
-			process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, True, False)
+			process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, True, False)
 			error_handler.checksum
 
-				-- set some type attributes of the node
-			l_as.set_class_id (l_class_id)
-			if last_routine_id_set /= Void then
-				check
-					not_is_tuple_access: not is_last_access_tuple_access
+			if not is_inherited then
+					-- set some type attributes of the node
+				l_as.set_class_id (l_class_id)
+				if last_routine_id_set /= Void then
+					check
+						not_is_tuple_access: not is_last_access_tuple_access
+					end
+					l_as.set_routine_ids (last_routine_id_set)
+				else
+					check
+						is_tuple_access: is_last_access_tuple_access
+					end
+					l_as.enable_tuple_access
 				end
-				l_as.set_routine_ids (last_routine_id_set)
-			else
-				check
-					is_tuple_access: is_last_access_tuple_access
-				end
-				l_as.enable_tuple_access
 			end
 		end
 
@@ -1498,20 +1508,26 @@ feature -- Implementation
 		local
 			l_class_id: INTEGER
 			l_type_a: TYPE_A
+			l_feature: FEATURE_I
 		do
 			l_type_a := constrained_type (last_type.actual_type)
-			if not l_type_a.is_none then
-				l_class_id := l_type_a.associated_class.class_id
-			else
+			if l_type_a.is_none then
 				l_class_id := -1
+			else
+				l_class_id := l_type_a.associated_class.class_id
+				if is_inherited then
+					l_feature := system.class_of_id (l_class_id).feature_of_rout_id (l_as.routine_ids.first)
+				end
 			end
 
 			process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
 			error_handler.checksum
 
-				-- set some type attributes of the node
-			l_as.set_class_id (l_class_id)
-			l_as.set_routine_ids (last_routine_id_set)
+			if not is_inherited then
+					-- set some type attributes of the node
+				l_as.set_class_id (l_class_id)
+				l_as.set_routine_ids (last_routine_id_set)
+			end
 		end
 
 	process_access_id_as (l_as: ACCESS_ID_AS) is
@@ -1679,17 +1695,18 @@ feature -- Implementation
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
-					-- set some type attributes of the node
-				l_as.enable_argument
-				l_as.set_argument_position (l_arg_pos)
-
-				l_type_a := constrained_type (last_type.actual_type)
-				if not l_type_a.is_none then
-					l_class_id := l_type_a.associated_class.class_id
-				else
-					l_class_id := -1
+				if not is_inherited then
+						-- set some type attributes of the node
+					l_as.enable_argument
+					l_as.set_argument_position (l_arg_pos)
+					l_type_a := constrained_type (last_type.actual_type)
+					if not l_type_a.is_none then
+						l_class_id := l_type_a.associated_class.class_id
+					else
+						l_class_id := -1
+					end
+					l_as.set_class_id (l_class_id)
 				end
-				l_as.set_class_id (l_class_id)
 			else
 					-- Look for a local if in a pre- or postcondition
 				if not is_inherited then
@@ -1709,9 +1726,11 @@ feature -- Implementation
 						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
 					end
 					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
-						-- set some type attributes of the node
-					l_as.set_routine_ids (last_routine_id_set)
-					l_as.set_class_id (l_last_id)
+					if not is_inherited then
+							-- set some type attributes of the node
+						l_as.set_routine_ids (last_routine_id_set)
+						l_as.set_class_id (l_last_id)
+					end
 				end
 			end
 			error_handler.checksum
@@ -2256,15 +2275,15 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 			l_last_id := context.current_class.class_id
-			l_as.set_class_id (l_last_id)
+			if not is_inherited then
+				l_as.set_class_id (l_last_id)
+			end
 
 			l_feature := current_feature
 				-- Look for an argument
 			if l_feature /= Void then
 				if is_inherited then
-					debug ("refactor_fixme")
-						fixme ("Support inherited features as done in process_access_id_as.")
-					end
+					l_arg_pos := l_as.argument_position
 				else
 					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name)
 				end
@@ -2279,8 +2298,10 @@ feature -- Implementation
 					l_argument.set_position (l_arg_pos)
 					create {HECTOR_B} last_byte_node.make_with_type (l_argument, last_type.type_i)
 				end
-				l_as.enable_argument
-				l_as.set_argument_position (l_arg_pos)
+				if not is_inherited then
+					l_as.enable_argument
+					l_as.set_argument_position (l_arg_pos)
+				end
 			else
 					-- Look for a local if not in a pre- or postcondition
 				if not is_inherited then
@@ -2311,12 +2332,15 @@ feature -- Implementation
 						error_handler.insert_error (l_veen2b)
 					end
 
-					l_as.enable_local
-				else
-					debug ("refactor_fixme")
-						fixme ("Support inherited features as done in process_access_id_as.")
+					if not is_inherited then
+						l_as.enable_local
 					end
-					l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name)
+				else
+					if is_inherited then
+						l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
+					else
+						l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name)
+					end
 					if l_feature = Void then
 						create l_veen
 						context.init_error (l_veen)
@@ -2355,7 +2379,9 @@ feature -- Implementation
 								create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
 							end
 						end
-						l_as.set_routine_ids (l_feature.rout_id_set)
+						if not is_inherited then
+							l_as.set_routine_ids (l_feature.rout_id_set)
+						end
 					end
 				end
 			end
@@ -2437,7 +2463,6 @@ feature -- Implementation
 				-- which is not external.
 			check has_class: l_target_type.has_associated_class end
 			l_class := l_target_type.associated_class
-			l_as.set_class_id (l_class.class_id)
 			l_table := l_class.feature_table
 			l_feature := l_table.item (l_feature_name)
 			if (l_feature = Void) or else (not l_feature.is_routine or else l_feature.is_external) then
@@ -2449,7 +2474,10 @@ feature -- Implementation
 				l_unsupported.set_location (l_feature_name)
 				error_handler.insert_error (l_unsupported)
 			else
-				l_as.set_routine_ids (l_feature.rout_id_set)
+				if not is_inherited then
+					l_as.set_class_id (l_class.class_id)
+					l_as.set_routine_ids (l_feature.rout_id_set)
+				end
 				l_access ?= last_byte_node
 				compute_routine (l_table, l_feature, l_class.class_id, l_target_type, last_type,
 					l_as, l_access, l_target_node)
@@ -2512,8 +2540,10 @@ feature -- Implementation
 					-- Cannot go on here.
 				error_handler.raise_error
 			end
-			l_as.set_class_id (l_last_class.class_id)
-			l_as.set_routine_ids (l_prefix_feature.rout_id_set)
+			if not is_inherited then
+				l_as.set_class_id (l_last_class.class_id)
+				l_as.set_routine_ids (l_prefix_feature.rout_id_set)
+			end
 
 				-- Export validity
 			if
@@ -2668,11 +2698,13 @@ feature -- Implementation
 				old_expressions.put_front (l_un_old)
 				last_byte_node := l_un_old
 			end
-			l_type_a := constrained_type (last_type.actual_type)
-			if not l_type_a.is_none then
-				l_as.set_class_id (l_type_a.associated_class.class_id)
-			else
-				l_as.set_class_id (-1)
+			if not is_inherited then
+				l_type_a := constrained_type (last_type.actual_type)
+				if not l_type_a.is_none then
+					l_as.set_class_id (l_type_a.associated_class.class_id)
+				else
+					l_as.set_class_id (-1)
+				end
 			end
 
 			if not l_saved_vaol_check then
@@ -2771,9 +2803,11 @@ feature -- Implementation
 					l_target_type := l_left_type
 				end
 
-					-- Set type informations
-				l_as.set_routine_ids (last_infix_feature.rout_id_set)
-				l_as.set_class_id (l_left_id)
+				if not is_inherited then
+						-- Set type informations
+					l_as.set_routine_ids (last_infix_feature.rout_id_set)
+					l_as.set_class_id (l_left_id)
+				end
 
 				if last_infix_argument_conversion_info /= Void then
 					if last_infix_argument_conversion_info.has_depend_unit then
@@ -2962,11 +2996,13 @@ feature -- Implementation
 				l_left_expr ?= last_byte_node
 			end
 
-			l_type_a := constrained_type (l_left_type.actual_type)
-			if not l_type_a.is_none then
-				l_as.set_class_id (l_type_a.associated_class.class_id)
-			else
-				l_as.set_class_id (-1)
+			if not is_inherited then
+				l_type_a := constrained_type (l_left_type.actual_type)
+				if not l_type_a.is_none then
+					l_as.set_class_id (l_type_a.associated_class.class_id)
+				else
+					l_as.set_class_id (-1)
+				end
 			end
 
 				-- Then type check the right member
@@ -3074,8 +3110,10 @@ feature -- Implementation
 				error_handler.insert_error (vwbr)
 				error_handler.raise_error
 			end
-			l_as.set_class_id (target_class.class_id)
-			l_as.set_routine_ids (bracket_feature.rout_id_set)
+			if not is_inherited then
+				l_as.set_class_id (target_class.class_id)
+				l_as.set_routine_ids (bracket_feature.rout_id_set)
+			end
 
 				-- Process arguments
 			create id_feature_name.initialize (bracket_feature.feature_name)
@@ -3607,15 +3645,19 @@ feature -- Implementation
 
 			if l_call /= Void then
 
-					-- Set some type informations
-				l_call.set_class_id (constrained_type (last_type.actual_type).associated_class.class_id)
+				if not is_inherited then
+						-- Set some type informations
+					l_call.set_class_id (constrained_type (last_type.actual_type).associated_class.class_id)
+				end
 
 					-- Type check the call: as if it was an unqualified call (as export checking
 					-- is done later below)
 				process_call (last_type, Void, l_call.feature_name, Void, l_call.parameters, False, False, False, False)
 
-					-- Set some type informations
-				l_call.set_routine_ids (last_routine_id_set)
+				if not is_inherited then
+						-- Set some type informations
+					l_call.set_routine_ids (last_routine_id_set)
+				end
 
 					-- We need to reset `last_type' as it now `VOID_A' after checking the call
 					-- which a procedure.
@@ -4665,6 +4707,7 @@ feature {NONE} -- Implementation
 							precursor_feature_not_void: precursor_feature /= Void
 						end
 						routine_body ?= precursor_feature.body.content
+						context.set_written_class (system.class_of_id (assertion_info.written_in))
 						if assertion_info.has_precondition then
 							set_is_checking_precondition (True)
 							routine_body.precondition.process (Current)
@@ -4675,6 +4718,7 @@ feature {NONE} -- Implementation
 							routine_body.postcondition.process (Current)
 							set_is_checking_postcondition (False)
 						end
+						context.set_written_class (Void)
 					end
 					i := i - 1
 				end

@@ -205,6 +205,8 @@ feature {NONE} -- Implementation
 		local
 			l_is_new_attribute: BOOLEAN
 			l_attribute: ATTRIBUTE_I
+			l_class_c: CLASS_C
+			l_parent_classes: FIXED_LIST [CLASS_C]
 			l_feats: SELECT_TABLE
 			i, nb, j, count: INTEGER
 			l_rout_id_set: ROUT_ID_SET
@@ -218,6 +220,27 @@ feature {NONE} -- Implementation
 					-- It could also be written as
 					-- l_attribute.rout_id_set.count > 1 and then l_attribute.generate_in = class_id
 				l_is_new_attribute := l_attribute.has_function_origin
+				l_class_c := system.class_of_id (class_id)
+				if not l_is_new_attribute and then l_class_c.is_single and then not l_attribute.written_class.is_external then
+						-- It is possible that attribute is inherited from a non-single class
+						-- in which case it has to be generated in the current one.
+					from
+						l_is_new_attribute := True
+						l_parent_classes := l_class_c.parents_classes
+						l_parent_classes.start
+					until
+						l_parent_classes.after
+					loop
+						l_class_c := l_parent_classes.item
+						if not l_class_c.is_external and then l_class_c.is_single and then
+							l_class_c.feature_table.feature_of_rout_id_set (l_attribute.rout_id_set) /= Void
+						then
+							l_is_new_attribute := False
+							l_parent_classes.finish
+						end
+						l_parent_classes.forth
+					end
+				end
 			end
 			if feat.is_origin or else l_is_new_attribute then
 					-- A new introduced feature has to be in the interface.

@@ -40,6 +40,7 @@ feature -- Initialization
 			verbatim_marker.clear_all
 			input_buffer.wipe_out
 		end
+
 feature -- Access
 
 	classname: STRING
@@ -48,6 +49,9 @@ feature -- Access
 	verbatim_marker: STRING
 			-- Sequence of characters between " and [
 			-- in Verbatim_string_opener
+
+	is_partial_class: BOOLEAN
+			-- Is class partial?
 
 feature -- Parsing
 
@@ -59,6 +63,7 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 		do
 			classname := Void
+			is_partial_class := False
 			File_buffer.set_file (a_file)
 			input_buffer := File_buffer
 			yy_load_input_buffer
@@ -74,6 +79,16 @@ feature -- Error handling
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
 		do
+		end
+
+feature -- Element Settings
+
+	set_partial_class is
+			-- Set `is_partial_class' to `True'.
+		do
+			is_partial_class := True
+		ensure
+			is_partial_class: is_partial_class
 		end
 
 feature {NONE} -- Implementation

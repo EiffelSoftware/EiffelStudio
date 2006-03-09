@@ -64,6 +64,14 @@
 #endif
 
 /* Platform definition */
+
+/* Thread definition */
+#ifdef EIF_THREADS
+#define EIF_THREADS_SUPPORTED EIF_TRUE
+#else
+#define EIF_THREADS_SUPPORTED EIF_FALSE
+#endif
+
 /* Windows definition */
 #ifdef EIF_WINDOWS
 #define EIF_IS_WINDOWS EIF_TRUE

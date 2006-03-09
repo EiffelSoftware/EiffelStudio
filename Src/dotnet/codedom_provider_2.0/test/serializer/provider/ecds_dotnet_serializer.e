@@ -10,7 +10,7 @@ inherit
 	ECDS_SHARED_SETTINGS
 		export
 			{NONE} all
-		end	
+		end
 
 feature -- Basic Operations
 
@@ -21,48 +21,33 @@ feature -- Basic Operations
 		local
 			l_formatter: BINARY_FORMATTER
 			l_stream: FILE_STREAM
-			l_file_name, l_name: STRING
-			l_index: INTEGER
+			l_file_name, l_name, l_root, l_extension: STRING
+			l_index, i: INTEGER
+			l_exists: BOOLEAN
 		do
 			l_file_name := serialized_tree_location
-			increment_counter
-			if counter > 1 then
-				l_index := l_file_name.last_index_of ('.', l_file_name.count)
-				if l_index > 0 then
-					l_name := l_file_name.substring (1, l_index - 1)
-					l_name.append ("_")
-					l_name.append (counter.out)
-					l_name.append (l_file_name.substring (l_index, l_file_name.count))
-					l_file_name := l_name
-				else
-					l_file_name.append ("_")
-					l_file_name.append (counter.out)
-				end
+			l_index := l_file_name.last_index_of ('.', l_file_name.count)
+			if l_index > 0 then
+				l_root := l_file_name.substring (1, l_index - 1)
+				l_extension := l_file_name.substring (l_index, l_file_name.count)
+			else
+				l_root := l_file_name.twin
+				l_extension := ""
+			end
+			from
+				l_exists := (create {RAW_FILE}.make (l_file_name)).exists
+				i := 1
+			until
+				not l_exists
+			loop
+				i := i + 1
+				l_file_name := l_root + "_" + i.out + l_extension
+				l_exists := (create {RAW_FILE}.make (l_file_name)).exists
 			end
 			create l_stream.make (l_file_name, {FILE_MODE}.Create_)
 			create l_formatter.make
 			l_formatter.serialize (l_stream, a_graph)
 			l_stream.close
-		end
-
-feature {NONE} -- Implementation
-
-	counter: INTEGER is
-			-- Counter to change file name 
-		do
-			Result := internal_counter.item
-		end
-	
-	increment_counter is
-			-- Increment `counter' by 1.
-		do
-			internal_counter.set_item (counter + 1)
-		end
-
-	internal_counter: INTEGER_REF is
-			-- Counter to change file name 
-		once
-			create Result
 		end
 
 end -- class ECDS_DOTNET_SERIALIZER

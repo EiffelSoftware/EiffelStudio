@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class FEATURE_ERROR 
+deferred class FEATURE_ERROR
 
 inherit
 	EIFFEL_ERROR
@@ -19,17 +19,25 @@ feature -- Properties
 			-- Feature involved in the error
 
 	feature_name: STRING
-			-- If e_feature is Void then use feature name 
+			-- If e_feature is Void then use feature name
 			-- (if this is Void then feature occurred in
 			-- the invariant)
 
+	written_class: CLASS_C
+			-- Class where the code is originally written.
+			-- (Non-void if it differs from `class_c'.)
+
 	file_name: STRING is
 		do
-			Result := class_c.file_name
+			if written_class = Void then
+				Result := class_c.file_name
+			else
+				Result := written_class.file_name
+			end
 		ensure then
 			file_name_not_void: Result /= Void
 		end
-		
+
 feature -- Access
 
 	is_defined: BOOLEAN is
@@ -58,6 +66,11 @@ feature -- Output
 			st.add_string ("Class: ")
 			class_c.append_signature (st, False)
 			st.add_new_line
+			if written_class /= Void then
+				st.add_string ("Source class: ")
+				written_class.append_signature (st, False)
+				st.add_new_line
+			end
 			st.add_string ("Feature: ")
 			if line > 0 then
 				if e_feature /= Void then
@@ -77,7 +90,11 @@ feature -- Output
 			st.add_new_line
 			build_explain (st)
 			if line > 0 then
-				print_context_of_error (class_c, st)
+				if written_class = Void then
+					print_context_of_error (class_c, st)
+				else
+					print_context_of_error (written_class, st)
+				end
 			end
 		end
 
@@ -92,25 +109,33 @@ feature {COMPILER_EXPORTER} -- Implementation
 			e_feature := f.api_feature (class_c.class_id)
 		end
 
+	set_written_class (c: CLASS_C) is
+			-- Set `written_class' to `c'.
+		do
+			written_class := c
+		ensure
+			written_class_set: written_class = c
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -25,7 +25,7 @@ feature -- Visitor
 			v.process_native_array_type_a (Current)
 		end
 
-feature -- Access
+feature {COMPILER_EXPORTER} -- Access
 
 	type_i: NATIVE_ARRAY_TYPE_I is
 			-- Meta generic interpretation of the generic type

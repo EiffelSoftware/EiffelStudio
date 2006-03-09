@@ -456,32 +456,6 @@ feature -- Inlining
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	byte_node (f: FEATURE_I): ACCESS_B is
-			-- Byte node for the context feature `f'
-		require
-			f_not_void: f /= Void
-			f_not_internal_routine: f.is_attribute or f.is_external
-		local
-			p: like parent
-		do
-			Result := f.access (real_type (type))
-			p := parent
-			if p /= Void then
-				Result.set_parent (p)
-				if p.message = Current then
-					p.set_message (Result)
-				else
-					check p.target = Current end
-					p.set_target (Result)
-				end
-			end
-			Result.set_parameters (parameters)
-		ensure
-			result_not_void: Result /= Void
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

@@ -3119,9 +3119,9 @@ feature -- IL Generation
 					if is_debug_info_enabled then
 							-- Enable debugger to go through stub definition.
 						define_custom_attribute (l_meth_token,
-							current_module.debugger_step_through_ctor_token, Void)
+							current_module.debugger_step_through_ctor_token, empty_ca)
 						define_custom_attribute (l_meth_token,
-							current_module.debugger_hidden_ctor_token, Void)
+							current_module.debugger_hidden_ctor_token, empty_ca)
 					end
 
 					start_new_body (l_meth_token)
@@ -3175,9 +3175,9 @@ feature -- IL Generation
 			if is_debug_info_enabled then
 					-- Enable debugger to go through stub definition.
 				define_custom_attribute (l_meth_token,
-					current_module.debugger_step_through_ctor_token, Void)
+					current_module.debugger_step_through_ctor_token, empty_ca)
 				define_custom_attribute (l_meth_token,
-					current_module.debugger_hidden_ctor_token, Void)
+					current_module.debugger_hidden_ctor_token, empty_ca)
 			end
 
 			start_new_body (l_meth_token)

@@ -405,8 +405,6 @@ feature {NONE} -- Implementation
 
 	new_api_feature: E_CONSTANT is
 			-- API feature creation
-		local
-			t: TYPE_A
 		do
 			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)

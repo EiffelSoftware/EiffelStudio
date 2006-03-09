@@ -1,8 +1,7 @@
 indexing
 
 	description: "Eiffel classname finders"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,39 +49,48 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 29")
 end
 
+				set_partial_class
 				set_start_condition (IN_CLASS)
 			
 when 2 then
---|#line 33 "classname_finder.l"
+--|#line 34 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 33")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 34")
 end
 
-				classname := text
-				last_token := TE_ID
+				set_start_condition (IN_CLASS)
 			
 when 3 then
 --|#line 38 "classname_finder.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 38")
 end
--- Ignore
+
+				classname := text
+				last_token := TE_ID
+			
 when 4 then
---|#line 39 "classname_finder.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 39")
-end
--- Ignore
-when 5 then
 --|#line 43 "classname_finder.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 43")
 end
 -- Ignore
-when 6 then
---|#line 45 "classname_finder.l"
+when 5 then
+--|#line 44 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 45")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 44")
+end
+-- Ignore
+when 6 then
+--|#line 48 "classname_finder.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 48")
+end
+-- Ignore
+when 7 then
+--|#line 50 "classname_finder.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 50")
 end
 
 				verbatim_marker.clear_all
@@ -90,22 +98,16 @@ end
 				last_start_condition := start_condition
 				set_start_condition (VERBATIM_STR3)
 			
-when 7 then
---|#line 52 "classname_finder.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 52")
-end
--- Ignore
 when 8 then
---|#line 53 "classname_finder.l"
+--|#line 57 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 53")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 57")
 end
 -- Ignore
 when 9 then
---|#line 54 "classname_finder.l"
+--|#line 58 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 54")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 58")
 end
 -- Ignore
 when 10 then
@@ -113,22 +115,28 @@ when 10 then
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 59")
 end
+-- Ignore
+when 11 then
+--|#line 64 "classname_finder.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 64")
+end
 
 				set_start_condition (VERBATIM_STR1)
 			
-when 11 then
---|#line 62 "classname_finder.l"
+when 12 then
+--|#line 67 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 62")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 67")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
 			
-when 12 then
---|#line 74 "classname_finder.l"
+when 13 then
+--|#line 79 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 79")
 end
 
 				if is_verbatim_string_closer then
@@ -137,49 +145,49 @@ end
 					set_start_condition (VERBATIM_STR2)
 				end
 			
-when 13 then
---|#line 81 "classname_finder.l"
+when 14 then
+--|#line 86 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 81")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 86")
 end
 
 				set_start_condition (VERBATIM_STR2)
 			
-when 14 then
---|#line 84 "classname_finder.l"
+when 15 then
+--|#line 89 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 84")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 89")
 end
 
 				-- Ignore.
 			
-when 15 then
---|#line 87 "classname_finder.l"
+when 16 then
+--|#line 92 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 87")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 92")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
 			
-when 16 then
---|#line 99 "classname_finder.l"
+when 17 then
+--|#line 104 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 99")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 104")
 end
 
 				set_start_condition (VERBATIM_STR1)
 			
-when 17 then
---|#line 102 "classname_finder.l"
+when 18 then
+--|#line 107 "classname_finder.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 107")
 end
 
 					-- No final bracket-double-quote.
 				set_start_condition (last_start_condition)
 			
-when 18 then
+when 19 then
 --|#line 0 "classname_finder.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'classname_finder.l' at line 0")
@@ -234,32 +242,42 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,   12,   12,   13,   14,   12,   15,   12,   12,   16,
-			   16,   17,   16,   16,   12,   12,   12,   16,   16,   17,
-			   16,   16,   18,   18,   13,   14,   18,   15,   18,   18,
-			   19,   19,   19,   19,   19,   18,   18,   18,   19,   19,
-			   19,   19,   19,   21,   22,   23,   28,   29,   28,   29,
-			   33,   34,   58,   39,   42,   43,   24,   21,   22,   23,
-			   35,   39,   42,   46,   41,   49,   50,   48,   52,   53,
-			   24,   30,   30,   54,   31,   30,   48,   30,   37,   37,
-			   37,   38,   37,   37,   30,   30,   37,   37,   37,   38,
-			   37,   37,   44,   42,   43,   57,   33,   34,   42,   43,
+			   16,   17,   16,   16,   18,   16,   16,   16,   12,   12,
+			   12,   16,   16,   17,   16,   16,   18,   16,   16,   16,
+			   19,   19,   13,   14,   19,   15,   19,   19,   29,   30,
+			   61,   22,   23,   24,   22,   23,   24,   19,   19,   19,
+			   19,   19,   13,   14,   19,   15,   19,   19,   25,   29,
+			   30,   25,   34,   35,   44,   45,   50,   19,   19,   19,
+			   40,   32,   41,   44,   48,   43,   36,   31,   31,   51,
+			   52,   31,   40,   31,   41,   50,   59,   39,   44,   45,
+			   39,   46,   44,   45,   31,   31,   34,   35,   59,   39,
 
-			   42,   46,   41,   57,   36,   45,   35,   55,   56,   33,
-			   34,   49,   50,   61,   33,   34,   52,   53,   31,   35,
-			   44,   42,   43,   53,   53,   61,   51,   59,   51,   58,
-			   60,   26,   26,   45,   61,   59,   61,   61,   60,   20,
-			   20,   20,   20,   20,   20,   20,   20,   25,   25,   25,
-			   25,   25,   25,   25,   25,   27,   27,   27,   27,   27,
-			   27,   27,   27,   30,   61,   61,   61,   30,   61,   30,
-			   32,   61,   32,   32,   32,   32,   32,   32,   38,   38,
-			   38,   38,   40,   40,   40,   40,   41,   41,   41,   41,
-			   41,   41,   41,   41,   45,   45,   45,   45,   45,   45,
+			   54,   55,   39,   60,   37,   56,   51,   52,   47,   32,
+			   36,   57,   58,   34,   35,   60,   46,   44,   45,   44,
+			   48,   43,   74,   34,   35,   54,   55,   36,   31,   31,
+			   62,   63,   31,   47,   31,   74,   55,   55,   39,   53,
+			   64,   39,   62,   63,   27,   31,   31,   53,   61,   65,
+			   39,   66,   64,   39,   57,   58,   34,   35,   27,   67,
+			   70,   65,   71,   66,   68,   68,   68,   68,   72,   73,
+			   36,   67,   70,   74,   71,   69,   74,   74,   31,   74,
+			   72,   73,   31,   74,   74,   31,   74,   69,   20,   20,
+			   20,   20,   20,   20,   20,   20,   20,   20,   21,   21,
 
-			   45,   45,   47,   47,   47,   47,   47,   47,   47,   47,
-			   51,   51,   51,   51,   51,   51,   51,   51,   36,   61,
-			   36,   36,   36,   36,   36,   36,   11,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61, yy_Dummy>>)
+			   21,   21,   21,   21,   21,   21,   21,   21,   26,   26,
+			   26,   26,   26,   26,   26,   26,   26,   26,   28,   28,
+			   28,   28,   28,   28,   28,   28,   28,   28,   33,   74,
+			   33,   33,   33,   33,   33,   33,   33,   33,   38,   74,
+			   74,   74,   38,   38,   38,   38,   38,   38,   39,   39,
+			   39,   39,   39,   39,   42,   42,   42,   42,   42,   42,
+			   43,   43,   43,   43,   43,   43,   43,   43,   43,   43,
+			   47,   47,   47,   47,   47,   47,   47,   47,   47,   47,
+			   49,   49,   49,   49,   49,   49,   49,   49,   49,   49,
+			   53,   53,   53,   53,   53,   53,   53,   53,   53,   53,
+
+			   37,   74,   37,   37,   37,   37,   37,   37,   37,   37,
+			   11,   74,   74,   74,   74,   74,   74,   74,   74,   74,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74,   74,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74,   74, yy_Dummy>>)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER] is
@@ -267,57 +285,69 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    3,    3,    5,    5,    5,    9,    9,   10,   10,
-			   14,   14,   54,   17,   20,   20,    5,    6,    6,    6,
-			   14,   17,   24,   24,   24,   28,   28,   47,   34,   34,
-			    6,   16,   16,   34,   31,   16,   25,   16,   16,   16,
-			   16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
-			   16,   16,   21,   21,   21,   39,   32,   32,   41,   41,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    3,    3,    3,    3,    3,    3,    3,    3,    9,    9,
+			   56,    5,    5,    5,    6,    6,    6,    3,    3,    3,
+			    4,    4,    4,    4,    4,    4,    4,    4,    5,   10,
+			   10,    6,   14,   14,   21,   21,   49,    4,    4,    4,
+			   17,   32,   18,   25,   25,   25,   14,   16,   16,   29,
+			   29,   16,   17,   16,   18,   26,   40,   16,   43,   43,
+			   16,   22,   22,   22,   16,   16,   33,   33,   40,   16,
 
-			   45,   45,   45,   39,   15,   21,   32,   35,   35,   35,
-			   35,   49,   49,   51,   51,   51,   52,   52,   13,   35,
-			   44,   44,   44,   53,   53,   11,   53,   57,   58,   58,
-			   59,    8,    7,   44,    0,   57,    0,    0,   59,   62,
-			   62,   62,   62,   62,   62,   62,   62,   63,   63,   63,
-			   63,   63,   63,   63,   63,   64,   64,   64,   64,   64,
-			   64,   64,   64,   65,    0,    0,    0,   65,    0,   65,
-			   66,    0,   66,   66,   66,   66,   66,   66,   67,   67,
-			   67,   67,   68,   68,   68,   68,   69,   69,   69,   69,
-			   69,   69,   69,   69,   70,   70,   70,   70,   70,   70,
+			   35,   35,   16,   41,   15,   35,   51,   51,   22,   13,
+			   33,   36,   36,   36,   36,   41,   46,   46,   46,   47,
+			   47,   47,   53,   53,   53,   54,   54,   36,   38,   38,
+			   59,   60,   38,   46,   38,   11,   55,   55,   38,   55,
+			   62,   38,   59,   60,    8,   38,   38,   61,   61,   63,
+			   38,   65,   62,   38,   57,   57,   57,   57,    7,   66,
+			   69,   63,   70,   65,   67,   67,   68,   68,   71,   72,
+			   57,   66,   69,    0,   70,   68,    0,    0,   79,    0,
+			   71,   72,   79,    0,    0,   79,    0,   68,   75,   75,
+			   75,   75,   75,   75,   75,   75,   75,   75,   76,   76,
 
-			   70,   70,   71,   71,   71,   71,   71,   71,   71,   71,
-			   72,   72,   72,   72,   72,   72,   72,   72,   73,    0,
-			   73,   73,   73,   73,   73,   73,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61,   61,   61,   61,   61, yy_Dummy>>)
+			   76,   76,   76,   76,   76,   76,   76,   76,   77,   77,
+			   77,   77,   77,   77,   77,   77,   77,   77,   78,   78,
+			   78,   78,   78,   78,   78,   78,   78,   78,   80,    0,
+			   80,   80,   80,   80,   80,   80,   80,   80,   81,    0,
+			    0,    0,   81,   81,   81,   81,   81,   81,   82,   82,
+			   82,   82,   82,   82,   83,   83,   83,   83,   83,   83,
+			   84,   84,   84,   84,   84,   84,   84,   84,   84,   84,
+			   85,   85,   85,   85,   85,   85,   85,   85,   85,   85,
+			   86,   86,   86,   86,   86,   86,   86,   86,   86,   86,
+			   87,   87,   87,   87,   87,   87,   87,   87,   87,   87,
+
+			   88,    0,   88,   88,   88,   88,   88,   88,   88,   88,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74,   74,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74,   74,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74,   74, yy_Dummy>>)
 		end
 
 	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   21,    0,   41,   55,  129,  128,   44,
-			   46,  125,    0,  115,   46,   98,   70,   41,  226,    0,
-			   51,   90,  226,  226,   59,   73,  226,  226,   63,  226,
-			    0,   71,   92,  226,   66,  105,    0,    0,    0,   86,
-			    0,   95,  226,  226,  118,   97,  226,   64,  226,  109,
-			  226,  110,  114,  121,   44,    0,  226,  114,  121,  117,
-			    0,  226,  138,  146,  154,  162,  169,  173,  177,  185,
-			  193,  201,  209,  217, yy_Dummy>>)
+			    0,    0,    0,   29,   49,   39,   42,  155,  141,   36,
+			   57,  135,    0,  106,   58,   98,   76,   57,   63,  310,
+			    0,   61,   89,  310,  310,   70,   82,  310,  310,   77,
+			  310,    0,   68,   92,  310,   98,  109,    0,  127,    0,
+			   77,   88,    0,   85,  310,  310,  114,  116,  310,   63,
+			  310,  104,  310,  119,  123,  134,   32,  152,  310,  114,
+			  114,  140,  124,  137,    0,  142,  146,  162,  164,  147,
+			  153,  152,  153,  310,  310,  187,  197,  207,  217,  177,
+			  227,  237,  243,  249,  259,  269,  279,  289,  299, yy_Dummy>>)
 		end
 
 	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,   61,    1,   61,    3,   62,   62,   63,   63,   64,
-			   64,   61,   65,   61,   66,   61,   61,   67,   61,   68,
-			   69,   69,   61,   61,   70,   71,   61,   61,   61,   61,
-			   65,   61,   66,   61,   72,   66,   73,   16,   67,   67,
-			   68,   69,   61,   61,   69,   70,   61,   71,   61,   61,
-			   61,   72,   61,   61,   61,   35,   61,   67,   61,   67,
-			   67,    0,   61,   61,   61,   61,   61,   61,   61,   61,
-			   61,   61,   61,   61, yy_Dummy>>)
+			    0,   74,    1,   75,   75,   76,   76,   77,   77,   78,
+			   78,   74,   79,   74,   80,   74,   81,   82,   82,   74,
+			   83,   84,   84,   74,   74,   85,   86,   74,   74,   74,
+			   74,   79,   74,   80,   74,   87,   80,   88,   81,   82,
+			   82,   82,   83,   84,   74,   74,   84,   85,   74,   86,
+			   74,   74,   74,   87,   74,   74,   74,   80,   74,   82,
+			   82,   74,   82,   82,   82,   82,   82,   82,   74,   74,
+			   74,   74,   74,   74,    0,   74,   74,   74,   74,   74,
+			   74,   74,   74,   74,   74,   74,   74,   74,   74, yy_Dummy>>)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER] is
@@ -330,13 +360,13 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    6,    1,    7,    8,    8,
 			    8,    8,    8,    8,    8,    8,    8,    8,    1,    1,
 			    1,    1,    1,    1,    1,    9,   10,   11,   10,   10,
-			   10,   10,   10,   10,   10,   10,   12,   10,   10,   10,
-			   10,   10,   10,   13,   10,   10,   10,   10,   10,   10,
-			   10,   14,    1,   15,    1,   16,    1,   17,   18,   19,
+			   10,   10,   10,   12,   10,   10,   13,   10,   10,   10,
+			   14,   10,   15,   16,   17,   10,   10,   10,   10,   10,
+			   10,   18,    1,   19,    1,   20,    1,   21,   22,   23,
 
-			   18,   18,   18,   18,   18,   18,   18,   18,   20,   18,
-			   18,   18,   18,   18,   18,   21,   18,   18,   18,   18,
-			   18,   18,   18,    1,    1,    1,    1,    1,    1,    1,
+			   22,   22,   22,   22,   22,   24,   22,   22,   25,   22,
+			   22,   22,   26,   22,   27,   28,   29,   22,   22,   22,
+			   22,   22,   22,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -357,45 +387,47 @@ feature {NONE} -- Table templates
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    1,    4,    1,    5,    5,
-			    5,    6,    5,    7,    1,    1,    5,    5,    5,    8,
-			    5,    5, yy_Dummy>>)
+			    5,    6,    5,    5,    7,    5,    5,    8,    1,    1,
+			    5,    5,    5,    9,    5,    5,   10,    5,    5,    5, yy_Dummy>>)
 		end
 
 	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    3,    3,    4,    5,    6,    7,
-			    7,    7,    8,   11,   13,   15,   17,   21,   24,   26,
-			   29,   31,   33,   35,   37,   39,   41,   43,   45,   47,
-			   49,   50,   51,   51,   52,   52,   53,   54,   56,   57,
-			   58,   59,   60,   61,   62,   63,   64,   66,   67,   68,
-			   68,   69,   69,   69,   69,   69,   69,   70,   71,   71,
-			   72,   74,   74, yy_Dummy>>)
+			    7,    7,    8,   11,   13,   15,   17,   21,   24,   27,
+			   29,   32,   34,   36,   38,   40,   42,   44,   46,   48,
+			   50,   52,   53,   54,   54,   55,   55,   56,   57,   59,
+			   60,   61,   62,   63,   64,   65,   66,   67,   68,   70,
+			   71,   72,   72,   73,   73,   73,   73,   73,   73,   74,
+			   75,   76,   76,   77,   78,   80,   81,   82,   83,   83,
+			   83,   83,   83,   83,   84,   84, yy_Dummy>>)
 		end
 
 	yy_acclist_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    3,    3,   15,   15,   17,   17,   19,    3,    9,
-			   18,    8,   18,    9,   18,    9,   18,    3,    4,    9,
-			   18,    4,    9,   18,    9,   18,    2,    9,   18,   15,
-			   18,   15,   18,   14,   18,   13,   18,   15,   18,   17,
-			   18,   16,   18,   11,   18,   11,   18,   10,   18,    3,
-			    8,    5,  -24,    7,    3,    4,    4,    4,    2,   15,
-			   14,   13,   15,   15,   12,   13,   17,   16,   10,   -6,
-			    4,    4,    1,    4, yy_Dummy>>)
+			    0,    4,    4,   16,   16,   18,   18,   20,    4,   10,
+			   19,    9,   19,   10,   19,   10,   19,    4,    5,   10,
+			   19,    5,   10,   19,    5,   10,   19,   10,   19,    3,
+			   10,   19,   16,   19,   16,   19,   15,   19,   14,   19,
+			   16,   19,   18,   19,   17,   19,   12,   19,   12,   19,
+			   11,   19,    4,    9,    6,  -26,    8,    4,    5,    5,
+			    5,    5,    3,   16,   15,   14,   16,   16,   13,   14,
+			   18,   17,   11,   -7,    5,    5,    5,    5,    2,    5,
+			    5,    5,    5,    1, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 226
+	yyJam_base: INTEGER is 310
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 61
+	yyJam_state: INTEGER is 74
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 62
+	yyTemplate_mark: INTEGER is 75
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -414,10 +446,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 18
+	yyNb_rules: INTEGER is 19
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 19
+	yyEnd_of_buffer: INTEGER is 20
 			-- End of buffer rule code
 
 	yyLine_used: BOOLEAN is false
@@ -437,38 +469,19 @@ feature -- User-defined features
 
 
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
 end -- class CLASSNAME_FINDER
 
 
+--|----------------------------------------------------------------
+--| Copyright (C) 1992-2000, Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited
+--| without prior agreement with Interactive Software Engineering.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://eiffel.com
+--|----------------------------------------------------------------

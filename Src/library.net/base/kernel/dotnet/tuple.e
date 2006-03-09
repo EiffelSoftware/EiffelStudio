@@ -25,7 +25,7 @@ feature -- Creation
 			l_count: INTEGER
 		do
 			l_count := {ISE_RUNTIME}.generic_parameter_count (Current)
-			create native_array.make (l_count)
+			create native_array.make (l_count + 1)
 		ensure then
 			non_void_native_array: native_array /= Void
 		end
@@ -62,7 +62,7 @@ feature -- Access
 			when integer_16_code then Result := integer_16_item (index)
 			when integer_64_code then Result := integer_64_item (index)
 			when reference_code then
-				Result := native_array.item (index - 1)
+				Result := native_array.item (index)
 			end
 		end
 
@@ -72,7 +72,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_reference: is_reference_item (index)
 		do
-			Result := native_array.item (index - 1)
+			Result := native_array.item (index)
 		end
 
 	boolean_item (index: INTEGER): BOOLEAN is
@@ -81,7 +81,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_boolean: is_boolean_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	character_item (index: INTEGER): CHARACTER is
@@ -90,7 +90,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_character: is_character_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	real_64_item, double_item (index: INTEGER): DOUBLE is
@@ -99,7 +99,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_numeric: is_double_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	natural_8_item (index: INTEGER): NATURAL_8 is
@@ -108,7 +108,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_8_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	natural_16_item (index: INTEGER): NATURAL_16 is
@@ -117,7 +117,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_16_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	natural_32_item (index: INTEGER): NATURAL_32 is
@@ -126,7 +126,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_32_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	natural_64_item (index: INTEGER): NATURAL_64 is
@@ -135,7 +135,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_64_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	integer_8_item (index: INTEGER): INTEGER_8 is
@@ -144,7 +144,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_8_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	integer_16_item (index: INTEGER): INTEGER_16 is
@@ -153,7 +153,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_16_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	integer_item, integer_32_item (index: INTEGER): INTEGER is
@@ -162,7 +162,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_32_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	integer_64_item (index: INTEGER): INTEGER_64 is
@@ -171,7 +171,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_64_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	pointer_item (index: INTEGER): POINTER is
@@ -180,7 +180,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_pointer: is_pointer_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 	real_32_item, real_item (index: INTEGER): REAL is
@@ -189,7 +189,7 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_real_or_integer: is_real_item (index)
 		do
-			Result ?= fast_item (index - 1)
+			Result ?= native_array.item (index)
 		end
 
 feature -- Comparison
@@ -203,14 +203,15 @@ feature -- Comparison
 		do
 			l_cur := native_array
 			l_other := other.native_array
-			nb := l_cur.count - 1
-			if nb = l_other.count - 1 then
+			nb := l_cur.count
+			if nb = l_other.count then
 				from
 					Result := True
+					i := 1
 				until
-					i > nb or not Result
+					i = nb or not Result
 				loop
-					if is_reference_item (i + 1) then
+					if is_reference_item (i) then
 						Result := l_cur.item (i) = l_other.item (i)
 					else
 						Result := equal (l_cur.item (i), l_other.item (i))
@@ -251,7 +252,7 @@ feature -- Status report
 			until
 				i > nb 
 			loop
-				l_item := fast_item (i - 1) 
+				l_item := native_array.item (i) 
 				if is_reference_item (i) then
 					l_key ?= l_item
 					if l_key /= Void then 
@@ -270,7 +271,7 @@ feature -- Status report
 	valid_index (k: INTEGER): BOOLEAN is
 			-- Is `k' a valid key?
 		do
-			Result := k >= 1 and then k <= native_array.count
+			Result := k >= 1 and then k <= count
 		end
 
 	valid_type_for_index (v: SYSTEM_OBJECT; index: INTEGER): BOOLEAN is
@@ -301,7 +302,7 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of element in Current.
 		do
-			Result := native_array.count
+			Result := native_array.count - 1
 		end
 
 	lower: INTEGER is 1
@@ -316,7 +317,7 @@ feature -- Status report
 	is_empty: BOOLEAN is
 			-- Is Current empty?
 		do
-			Result := native_array.count = 0
+			Result := native_array.count <= 1
 		end
 
 feature -- Element change
@@ -327,7 +328,7 @@ feature -- Element change
 			valid_index: valid_index (k)
 			valid_type_for_index: valid_type_for_index (v, k)
 		do
-			native_array.put (k - 1, v)
+			native_array.put (k, v)
 		end
 
 	put_reference (v: ANY; index: INTEGER) is
@@ -336,7 +337,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_reference_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_boolean (v: BOOLEAN; index: INTEGER) is
@@ -345,7 +346,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_boolean_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_character (v: CHARACTER; index: INTEGER) is
@@ -354,7 +355,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_character_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
@@ -363,7 +364,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_double_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_real_32, put_real (v: REAL; index: INTEGER) is
@@ -372,7 +373,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_real_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_pointer (v: POINTER; index: INTEGER) is
@@ -381,7 +382,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_pointer_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 
 	put_natural_8 (v: NATURAL_8; index: INTEGER) is
@@ -390,7 +391,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_natural_8_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_natural_16 (v: NATURAL_16; index: INTEGER) is
@@ -399,7 +400,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_natural_16_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 
 	put_natural_32 (v: NATURAL_32; index: INTEGER) is
@@ -408,7 +409,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_natural_32_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_natural_64 (v: NATURAL_64; index: INTEGER) is
@@ -417,7 +418,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_natural_64_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 
 	put_integer, put_integer_32 (v: INTEGER; index: INTEGER) is
@@ -426,7 +427,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_integer_32_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_integer_8 (v: INTEGER_8; index: INTEGER) is
@@ -435,7 +436,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_integer_8_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_integer_16 (v: INTEGER_16; index: INTEGER) is
@@ -444,7 +445,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_integer_16_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 		
 	put_integer_64 (v: INTEGER_64; index: INTEGER) is
@@ -453,7 +454,7 @@ feature -- Element change
 			valid_index: valid_index (index)
 			valid_type: is_integer_64_item (index)
 		do
-			native_array.put (index - 1, v)
+			native_array.put (index, v)
 		end
 
 feature -- Type queries
@@ -463,7 +464,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = boolean_code)
+			Result := (generic_typecode (index) = boolean_code)
 		end
 
 	is_character_item (index: INTEGER): BOOLEAN is
@@ -471,7 +472,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = character_code)
+			Result := (generic_typecode (index) = character_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -479,7 +480,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = real_64_code)
+			Result := (generic_typecode (index) = real_64_code)
 		end
 
 	is_natural_8_item (index: INTEGER): BOOLEAN is
@@ -487,7 +488,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = natural_8_code)
+			Result := (generic_typecode (index) = natural_8_code)
 		end
 
 	is_natural_16_item (index: INTEGER): BOOLEAN is
@@ -495,7 +496,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = natural_16_code)
+			Result := (generic_typecode (index) = natural_16_code)
 		end
 
 	is_natural_32_item (index: INTEGER): BOOLEAN is
@@ -503,7 +504,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = natural_32_code)
+			Result := (generic_typecode (index) = natural_32_code)
 		end
 
 	is_natural_64_item (index: INTEGER): BOOLEAN is
@@ -511,7 +512,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = natural_64_code)
+			Result := (generic_typecode (index) = natural_64_code)
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN is
@@ -519,7 +520,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = integer_8_code)
+			Result := (generic_typecode (index) = integer_8_code)
 		end
 
 	is_integer_16_item (index: INTEGER): BOOLEAN is
@@ -527,7 +528,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = integer_16_code)
+			Result := (generic_typecode (index) = integer_16_code)
 		end
 
 	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
@@ -535,7 +536,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = integer_32_code)
+			Result := (generic_typecode (index) = integer_32_code)
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN is
@@ -543,7 +544,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = integer_64_code)
+			Result := (generic_typecode (index) = integer_64_code)
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN is
@@ -551,7 +552,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = pointer_code)
+			Result := (generic_typecode (index) = pointer_code)
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN is
@@ -559,7 +560,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = real_32_code)
+			Result := (generic_typecode (index) = real_32_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -567,7 +568,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index - 1) = reference_code)
+			Result := (generic_typecode (index) = reference_code)
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
@@ -579,7 +580,7 @@ feature -- Type queries
 		local
 			tcode: like item_code
 		do
-			tcode := generic_typecode (index - 1)
+			tcode := generic_typecode (index)
 			inspect tcode
 			when
 				integer_8_code, integer_16_code, integer_32_code,
@@ -723,10 +724,10 @@ feature -- Type conversion queries
 		do
 			Result := True
 			from
-				i := 0
+				i := 1
 				cnt := count
 			until
-				i >= cnt or else not Result
+				i > cnt or else not Result
 			loop
 				tcode := generic_typecode (i)
 				inspect tcode
@@ -754,10 +755,10 @@ feature -- Type conversion queries
 		do
 			Result := True
 			from
-				i := 0
+				i := 1
 				cnt := count
 			until
-				i >= cnt or else not Result
+				i > cnt or else not Result
 			loop
 				tcode := generic_typecode (i)
 				inspect tcode
@@ -792,7 +793,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				a ?= fast_item (i - 1)
+				a ?= native_array.item (i)
 				Result.put (a, i)
 				i := i + 1
 			end
@@ -969,7 +970,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				s ?= fast_item (i - 1)
+				s ?= native_array.item (i)
 				Result.put (s, i)
 				i := i + 1
 			end
@@ -990,7 +991,7 @@ feature {ROUTINE} -- Fast access
 
 	fast_item (k: INTEGER): SYSTEM_OBJECT is
 		require
-			valid_index: valid_index (k + 1)
+			valid_index: valid_index (k)
 		do
 			Result := native_array.item (k)
 		end
@@ -1003,7 +1004,7 @@ feature -- Access
 		require
 			valid_index: valid_index (index)
 		do
-			Result := generic_typecode (index - 1)
+			Result := generic_typecode (index)
 		end
 
 	reference_code: NATURAL_8 is 0x00
@@ -1038,12 +1039,12 @@ feature {NONE} -- Implementation
 			l_val: SYSTEM_OBJECT
 		do
 			Result := True
-			if count > 0 then
+			nb := count
+			if nb > 1 then
 				from
 					i := 2
-					nb := count
 					if code = any_code then
-						l_val := fast_item (0)
+						l_val := native_array.item (1)
 						if l_val /= Void then
 							first_type := l_val.get_type
 						end
@@ -1053,7 +1054,7 @@ feature {NONE} -- Implementation
 				until
 					i > nb or not Result
 				loop
-					l_val := fast_item (i - 1)
+					l_val := native_array.item (i)
 					if l_val /= Void then
 						type := l_val.get_type
 					else
@@ -1070,7 +1071,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: SYSTEM_OBJECT
 		do
-			l_item := fast_item (pos)
+			l_item := native_array.item (pos)
 			if l_item /= Void then
 					-- We already have an item stored in TUPLE, so get its type.
 				l_item := reverse_lookup.item (l_item.get_type)
@@ -1078,7 +1079,7 @@ feature {NONE} -- Implementation
 					-- Void element we need to retrieve type from actual generic
 					-- parameter.
 				l_item := reverse_lookup.item (
-					 {ISE_RUNTIME}.type_of_generic_parameter (Current, pos + 1))
+					 {ISE_RUNTIME}.type_of_generic_parameter (Current, pos))
 			end
 			if l_item /= Void then
 				Result ?= l_item

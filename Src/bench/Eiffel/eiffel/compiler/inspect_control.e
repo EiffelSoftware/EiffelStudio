@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 						create vomb6
 						context.init_error (vomb6)
 						vomb6.set_unique_feature (last_unique_constant)
-						vomb6.set_written_class (unique_constant_class)
+						vomb6.set_original_class (unique_constant_class)
 						vomb6.set_location (bound.start_location)
 						Error_handler.insert_error (vomb6)
 					end

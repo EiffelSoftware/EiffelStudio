@@ -49,6 +49,17 @@ feature -- Predefined custom attributes
 			empty_ca_not_void: Result /= Void
 		end
 
+	enabled_debuggable_ca: MD_CUSTOM_ATTRIBUTE is
+			-- Blob for not CLS compliant attribute
+		once
+			create Result.make
+			Result.put_boolean (True)
+			Result.put_boolean (True)
+			Result.put_integer_16 (0)
+		ensure
+			not_cls_compliant_ca_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

@@ -39,7 +39,7 @@ feature -- Visitor
 					-- Ensure the feature is not redeclared into attribute or internal routine.
 				c ?= context_type
 				f := c.base_class.feature_of_rout_id (routine_id)
-				if f.is_external then
+				if f.is_external or else f.extension = extension then
 					f := Void
 				end
 			end

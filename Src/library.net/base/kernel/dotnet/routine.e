@@ -172,9 +172,9 @@ feature -- Element change
 				loop
 					l_pos := l_open_map.item (i) - 1
 					if l_pos = 0 then
-						target_object := args.fast_item (i)
+						target_object := args.fast_item (i + 1)
 					else
-						l_internal.put (l_pos - 1, args.fast_item (i))
+						l_internal.put (l_pos - 1, args.fast_item (i + 1))
 					end
 					i := i + 1
 				end
@@ -255,7 +255,7 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 			-- If open arguments contain some references, we need
 			-- to clean them up after call.
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: TUPLE; 
+	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: OPEN_ARGS; 
 						 omap: ARRAY [INTEGER]) is
 			-- Initialize object. 
 		require
@@ -266,7 +266,7 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 		do
 			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
 
-			target_object := args.fast_item (0)
+			target_object := args.fast_item (1)
 			nb := args.count - 1
 			if nb > 0 then
 				from
@@ -275,7 +275,7 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 				until
 					i > nb
 				loop
-					l_internal.put (i - 1, args.fast_item (i))
+					l_internal.put (i - 1, args.fast_item (i + 1))
 					i := i + 1
 				end
 			end
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen compute_is_cleanup_needed (args: TUPLE) is
+	frozen compute_is_cleanup_needed (args: OPEN_ARGS) is
 			-- Set `is_cleanup_needed' to True if some open arguments are references.
 		local
 			l_open_map: like open_map

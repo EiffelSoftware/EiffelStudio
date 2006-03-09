@@ -31,8 +31,25 @@ feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
 			-- Process current element.
+		local
+			c: CL_TYPE_I
+			f: FEATURE_I
 		do
-			v.process_external_b (Current)
+			if not is_static_call and then not context.is_written_context then
+					-- Ensure the feature is not redeclared into attribute or internal routine.
+				c ?= context_type
+				f := c.base_class.feature_of_rout_id (routine_id)
+				if f.is_external then
+					f := Void
+				end
+			end
+			if f = Void then
+					-- Process feature as an external routine.
+				v.process_external_b (Current)
+			else
+					-- Create new byte node and process it instead of the current one.
+				byte_node (f).process (v)
+			end
 		end
 
 feature
@@ -180,20 +197,36 @@ feature -- Status report
 			end;
 		end;
 
-	enlarged: EXTERNAL_B is
+	enlarged: CALL_ACCESS_B is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		local
 			external_bl: EXTERNAL_BL
+			c: CL_TYPE_I
+			f: FEATURE_I
 		do
-			if context.final_mode then
-				create external_bl
+			if not is_static_call and then not context.is_written_context then
+					-- Ensure the feature is not redeclared into attribute or internal routine.
+				c ?= real_type (context_type)
+				if c /= Void then
+					f := c.base_class.feature_of_rout_id (routine_id)
+					if f.is_external then
+						f := Void
+					end
+				end
+			end
+			if f = Void then
+				if context.final_mode then
+					create external_bl
+				else
+					create {EXTERNAL_BW} external_bl.make
+				end
+				external_bl.fill_from (Current)
+				Result := external_bl
 			else
-				create {EXTERNAL_BW} external_bl.make
-			end;
-			external_bl.fill_from (Current)
-			Result := external_bl
-		end;
+				Result ?= byte_node (f).enlarged
+			end
+		end
 
 feature -- IL code generation
 
@@ -292,19 +325,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

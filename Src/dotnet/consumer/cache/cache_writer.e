@@ -350,8 +350,12 @@ feature -- Basic Operations
 			l_assembly_path: STRING
 			l_directories: ARRAYED_LIST [STRING]
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_ca: CONSUMED_ASSEMBLY
 			l_match: BOOLEAN
 			l_retried: BOOLEAN
+			l_upper: INTEGER
+			l_remove: BOOLEAN
+			l_removed: BOOLEAN
 			i: INTEGER
 		do
 			guard.lock
@@ -362,36 +366,27 @@ feature -- Basic Operations
 				if l_cache_folder.exists then
 					l_assemblies := cache_reader.info.assemblies
 
-					l_directories := l_cache_folder.linear_representation
-					if l_directories.count > 2 then
-						from
-							l_directories.start
-						until
-							l_directories.after
-						loop
-							l_match := False
-							from
-								i := 1
-							until
-								l_match or i > l_assemblies.count
-							loop
-								if l_assemblies.item (i) /= Void and then l_assemblies.item (i).folder_name.is_equal (l_directories.item) then
-									if not l_assemblies.item (i).is_consumed then
-											-- there is no entry in cache info so lets remove it
-										l_assembly_path := cache_reader.eiffel_assembly_cache_path.twin
-										l_assembly_path.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
-										l_assembly_path.append (l_directories.item)
-										create l_cache_folder.make (l_assembly_path)
-										if l_cache_folder.exists then
-											l_cache_folder.recursive_delete
-										end
-									end
-									l_match := True
-								end
-								i := i + 1
+						-- Unconsumed assemblies that cannot be found
+					from
+						i := l_assemblies.lower
+						l_upper := l_assemblies.count
+					until
+						i > l_upper
+					loop
+						l_ca := l_assemblies.item (i)
+						l_remove := not l_ca.is_consumed
+						if not l_remove and then not (create {RAW_FILE}.make (l_ca.location)).exists then
+							if not (create {RAW_FILE}.make (l_ca.gac_path)).exists then
+								l_remove := True
 							end
-							l_directories.forth
 						end
+						if l_remove then
+								-- Remove assembly
+							unconsume_assembly (l_ca.location)
+							update_client_assembly_mappings (l_ca)
+							l_removed := True
+						end
+						i := i + 1
 					end
 				end
 			end
@@ -657,7 +652,6 @@ feature {NONE} -- Implementation
 			-- updates serialized assembly mappings or all clients of `a_assembly' and sets consumed status based on contents of EAC.
 		require
 			non_void_assembly: a_assembly /= Void
-			is_consumed: a_assembly.is_consumed
 		local
 			l_clients: ARRAY [CONSUMED_ASSEMBLY]
 			i: INTEGER
@@ -725,19 +719,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -23,17 +23,17 @@ feature -- Property
 
 feature -- Output
 
-	put_file_name (st: STRUCTURED_TEXT) is
+	put_file_name (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("File name: ");
-			st.add_string (file_name);
-			st.add_new_line;
+			a_text_formatter.add ("File name: ");
+			a_text_formatter.add (file_name);
+			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			put_file_name (st);
+			put_cluster_name (a_text_formatter);
+			put_file_name (a_text_formatter);
 		end;
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting

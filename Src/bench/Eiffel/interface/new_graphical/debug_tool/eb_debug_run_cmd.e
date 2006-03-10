@@ -431,47 +431,44 @@ feature -- Execution
 	start_program is
 			-- Launch the program to be debugged.
 		local
-			output_text: STRUCTURED_TEXT
 			wd: EV_WARNING_DIALOG
 			working_dir: STRING
 			l_cmd_line_arg: STRING
 			app_exec: APPLICATION_EXECUTION
 		do
-			create output_text.make
 			if not eb_debugger_manager.application_is_executing then
 					-- First time we launch the program, we clear the output tool.
 				output_manager.clear
 			end
 			working_dir := application_working_directory
 			l_cmd_line_arg := current_cmd_line_argument
-
-			output_text.add_string ("Launching system :")
-			output_text.add_new_line
-			output_text.add_comment ("  - directory = ")
-			output_text.add_quoted_text (working_dir)
-			output_text.add_new_line
-			output_text.add_comment_text ("  - arguments = ")
+			output_manager.add_string ("Launching system :")
+			output_manager.add_new_line
+			output_manager.add_comment ("  - directory = ")
+			output_manager.add_quoted_text (working_dir)
+			output_manager.add_new_line
+			output_manager.add_comment_text ("  - arguments = ")
 			if l_cmd_line_arg.is_empty then
-				output_text.add_string ("<Empty>")
+				output_manager.add_string ("<Empty>")
 			else
-				output_text.add_quoted_text (l_cmd_line_arg)
+				output_manager.add_quoted_text (l_cmd_line_arg)
 			end
-			output_text.add_new_line
+			output_manager.add_new_line
 
 			if not (create {DIRECTORY} .make (working_dir)).exists then
 				create wd.make_with_text (Warning_messages.w_Invalid_working_directory (working_dir))
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-				output_text.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
+				output_manager.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
 			else
 				Eb_debugger_manager.raise
 				app_exec := eb_debugger_manager.application
 				app_exec.run (l_cmd_line_arg, working_dir)
 				if app_exec.is_running then
-					output_text.add_string ("System is running")
+					output_manager.add_string ("System is running")
 					if app_exec.execution_mode = No_stop_points then
-						output_text.add_string (" (ignoring breakpoints)")
+						output_manager.add_string (" (ignoring breakpoints)")
 					end
-					output_text.add_new_line
+					output_manager.add_new_line
 					app_exec.on_application_launched
 				else
 						-- Something went wrong
@@ -481,11 +478,10 @@ feature -- Execution
 						create wd.make_with_text (app_exec.eiffel_timeout_message)
 					end
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-					output_text.add_string ("Could not launch system")
+					output_manager.add_string ("Could not launch system")
 					Eb_debugger_manager.unraise
 				end
 			end
-			output_manager.process_text (output_text)
 		end
 
 feature {NONE} -- Implementation / Attributes
@@ -555,19 +551,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -20,12 +20,12 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			st.add_string ("File name: ");
-			st.add_string (use_name);
-			st.add_new_line;
+			put_cluster_name (a_text_formatter);
+			a_text_formatter.add ("File name: ");
+			a_text_formatter.add (use_name);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {CLUST_PROP_SD} -- Setting

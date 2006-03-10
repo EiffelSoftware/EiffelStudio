@@ -15,7 +15,6 @@ inherit
 			set_editor,
 			feature_cmd,
 			generate_text,
-			formatted_text,
 			set_stone,
 			is_dotnet_formatter
 		end
@@ -128,9 +127,6 @@ feature {NONE} -- Properties
 	post_fix: STRING is "rfl"
 			-- String symbol of the command, used as an extension when saving.
 
-	formatted_text: STRUCTURED_TEXT
-			-- Actual formatted text, if any.
-
 	consumed_type: CONSUMED_TYPE
 			-- .NET consumed type contain this feature if external.
 
@@ -157,6 +153,7 @@ feature {NONE} -- Implementation
 			associated_feature_non_void: associated_feature /= Void
 		do
 			create feature_cmd
+			feature_cmd.set_text_formatter (editor.text_displayed)
 		end
 
 	generate_text is
@@ -165,17 +162,14 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_with_breakable
+				editor.handle_before_processing (false)
 				if not is_dotnet_mode then
-					formatted_text := rout_flat_context_text (associated_feature)
+					last_was_error := rout_flat_context_text (associated_feature, editor.text_displayed)
 				else
 					set_is_without_breakable
-					formatted_text := rout_flat_dotnet_text (associated_feature, consumed_type)
+					last_was_error := rout_flat_dotnet_text (associated_feature, consumed_type, editor.text_displayed)
 				end
-				if formatted_text = Void then
-					last_was_error := True
-				else
-					last_was_error := False
-				end
+				editor.handle_after_processing
 			else
 				last_was_error := True
 			end
@@ -193,19 +187,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when the compiler cannot find a final name for a redefinition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,14 +8,14 @@ indexing
 	revision: "$Revision $"
 
 class VDRS
-	
+
 inherit
 
 	EIFFEL_ERROR
 		redefine
 			build_explain
 		end
-	
+
 feature -- Properties
 
 	parent_id: INTEGER;
@@ -28,14 +28,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
             -- Build specific explanation explain for current error
-            -- in `st'.
+            -- in `a_text_formatter'.
         do
-			st.add_indent;
-			st.add_string ("Feature: ");
-			st.add_string (feature_name);
-			st.add_new_line;
+			a_text_formatter.add_indent;
+			a_text_formatter.add ("Feature: ");
+			a_text_formatter.add (feature_name);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting
@@ -58,19 +58,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

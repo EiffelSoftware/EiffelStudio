@@ -24,16 +24,16 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (st);
+				error_list.item.build_explain (a_text_formatter);
 				error_list.forth;
 			end;
 		end;

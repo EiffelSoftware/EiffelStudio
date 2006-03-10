@@ -12,24 +12,24 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color, 
+			text_color,
 			background_color,
 			process
 		end
 
 create
 	make
-	
+
 feature -- Visitor
 
 	process (a_token_visitor: TOKEN_VISITOR) is
 			--  Process
 		do
-			a_token_visitor.process_number_token (image)
+			a_token_visitor.process_editor_token_number (Current)
 		end
 
 feature {NONE} -- Implementation
-	
+
 	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.number_text_color
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 
 	background_color: EV_COLOR is
 		do
-			if is_highlighted then				
+			if is_highlighted then
 				Result := editor_preferences.highlight_color
 			else
 				Result := editor_preferences.number_background_color

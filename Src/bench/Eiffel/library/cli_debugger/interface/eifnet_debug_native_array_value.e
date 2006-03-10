@@ -28,7 +28,7 @@ inherit
 
 create {CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
-	
+
 feature {NONE} -- Initialization
 
 	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			a_prepared_value_not_void: a_prepared_value /= Void
 		do
 			set_default_name
-			
+
 			init_dotnet_data (a_referenced_value, a_prepared_value)
 
 			is_null := icd_value_info.is_null
@@ -80,13 +80,13 @@ feature -- get
 		do
 			array_value := icd_value_info.interface_debug_array_value
 		end
-		
+
 	release_array_value is
 			-- Release `array_value'
 		do
 			array_value.clean_on_dispose
 			array_value := Void
-		end		
+		end
 
 feature -- Access
 
@@ -116,19 +116,19 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-		do 
-			st.add_string (type_and_value)
+	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
+		do
+			a_text_formatter.add_string (type_and_value)
 		end;
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
-		
-	append_value (st: STRUCTURED_TEXT) is 
-			-- Append only the value of Current to `st'.
-		do 
-			st.add_string (output_value)
+
+	append_value (a_text_formatter: TEXT_FORMATTER) is
+			-- Append only the value of Current to `a_text_formatter'.
+		do
+			a_text_formatter.add_string (output_value)
 		end;
-		
+
 feature -- Output	
 
 	kind: INTEGER is
@@ -145,7 +145,7 @@ feature -- Output
 				end
 			end
 		end
-		
+
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
@@ -168,7 +168,7 @@ feature -- Output
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			i: INTEGER
 			nb_items: INTEGER
-		do			
+		do
 			if capacity > 0 then
 				set_sp_bounds (a_slice_min, (capacity - 1).min (a_slice_max))
 				if sp_lower <= sp_upper then
@@ -193,7 +193,7 @@ feature -- Output
 					release_array_value
 				end
 			end
-			items_computed := True			
+			items_computed := True
 		end
 
 indexing
@@ -202,19 +202,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

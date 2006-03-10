@@ -78,26 +78,26 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- No need for an error message.
 		do
 			if not has_resource_compiler then
 				if resource_compiler = Void then
-					st.add_string ("Could not locate resource compiler.")
+					a_text_formatter.add ("Could not locate resource compiler.")
 				else
-					st.add_string ("Could not locate resource compiler at location:")
-					st.add_new_line
-					st.add_string (resource_compiler)
+					a_text_formatter.add ("Could not locate resource compiler at location:")
+					a_text_formatter.add_new_line
+					a_text_formatter.add (resource_compiler)
 				end
 			else
 				if not has_resource_file then
-					st.add_string ("Could not find resource file %"")
-					st.add_string (resource_file)
-					st.add_string ("%".")
+					a_text_formatter.add ("Could not find resource file %"")
+					a_text_formatter.add (resource_file)
+					a_text_formatter.add ("%".")
 				else
-					st.add_string ("Could not compile resource file %"")
-					st.add_string (resource_file)
-					st.add_string ("%".")
+					a_text_formatter.add ("Could not compile resource file %"")
+					a_text_formatter.add (resource_file)
+					a_text_formatter.add ("%".")
 				end
 			end
 		end

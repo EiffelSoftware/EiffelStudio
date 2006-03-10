@@ -25,11 +25,11 @@ feature -- Visitor
 	process (a_visitor: TOKEN_VISITOR) is
 			-- Process this token.  Visitor pattern.		
 		do
-			a_visitor.process_character_token (image)
-		end	
+			a_visitor.process_editor_token_character (Current)
+		end
 
 feature {NONE} -- Implementation
-	
+
 	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.string_text_color
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 
 	background_color: EV_COLOR is
 		do
-			if is_highlighted then				
+			if is_highlighted then
 				Result := editor_preferences.highlight_color
 			else
 				Result := editor_preferences.string_background_color

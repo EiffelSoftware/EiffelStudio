@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when class name listed twice in the first part %
 		%of a renaming clause of a cluster adaptation."
 	legal: "See notice at end of class."
@@ -27,15 +27,15 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
-			st.add_string ("Cluster path: ");
-			st.add_string (cluster.path);
-			st.add_new_line;
-			st.add_string ("Class name: ");
-			st.add_string (old_name.as_upper);
-			st.add_new_line
+			a_text_formatter.add ("Cluster path: ");
+			a_text_formatter.add (cluster.path);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Class name: ");
+			a_text_formatter.add (old_name.as_upper);
+			a_text_formatter.add_new_line
 		end;
 
 feature {CLUST_PROP_SD, CLUST_ADAPT_SD} -- Setting
@@ -58,19 +58,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

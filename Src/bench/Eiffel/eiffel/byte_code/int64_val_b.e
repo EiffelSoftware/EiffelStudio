@@ -55,9 +55,9 @@ feature -- Measurement
 
 feature -- Error reporting
 
-	display (st: STRUCTURED_TEXT) is
+	display (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add (create {NUMBER_TEXT}.make (value.out))
+			a_text_formatter.process_number_text (value.out)
 		end
 
 feature -- Iteration

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class E_SHOW_EXPORTED_ROUTINES 
+class E_SHOW_EXPORTED_ROUTINES
 
 inherit
 	E_CLASS_FORMAT_CMD
@@ -26,13 +26,13 @@ feature -- Access
 			good_criterium: Result = f.is_exported_to (Any_class)
 		end
 
-	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
+	display_feature (f: E_FEATURE; st: TEXT_FORMATTER) is
 			-- Append `f' to `st'.
 		do
 			f.append_signature (st)
 			if f.is_obsolete then
 					-- The user might change the background color of comments.
-				st.add_string ("  ")
+				st.add ("  ")
 				st.add_comment ("(obsolete)")
 			end
 		end
@@ -43,19 +43,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

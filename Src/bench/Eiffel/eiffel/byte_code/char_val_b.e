@@ -40,11 +40,11 @@ feature -- Measurement
 
 feature -- Error reporting
 
-	display (st: STRUCTURED_TEXT) is
+	display (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_char ('%'')
-			st.add_char (value)
-			st.add_char ('%'')
+			a_text_formatter.add_char ('%'')
+			a_text_formatter.add_char (value)
+			a_text_formatter.add_char ('%'')
 		end
 
 feature -- Iteration

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"A collection of features with the same export policy and%
 		%comments. Features are sorted alphabetically (if option is%
 		%set - `order_same_as_text' is False)."
@@ -46,9 +46,9 @@ feature -- Initialization
 feature -- Properties
 
 	features: PART_SORTED_TWO_WAY_LIST [FEATURE_ADAPTER];
-			-- Features sorted on name within 
+			-- Features sorted on name within
 			-- Current feature clause
-	
+
 feature -- Access
 
 	is_empty: BOOLEAN is
@@ -64,11 +64,11 @@ feature -- Comparison
 		do
 			Result := not export_status.is_subset (other.export_status);
 		end;
-						
+
 	compatible (other: like Current): BOOLEAN is
 			-- Is `other' clause compatible with Current?
 		do
-			Result := other.export_status.same_as (export_status);	
+			Result := other.export_status.same_as (export_status);
 		end;
 
 	can_include (feat: FEATURE_I): BOOLEAN is
@@ -78,7 +78,7 @@ feature -- Comparison
 		end;
 
 feature -- Element change
-	
+
 	add (f: FEATURE_ADAPTER) is
 			-- Add feature adapter `f' to Current feature clause.
 		require
@@ -95,19 +95,19 @@ feature -- Element change
 		require
 			valid_other: other /= Void
 		do
-			features.merge (other.features);			
+			features.merge (other.features);
 		end;
 
 feature -- Context output
 
-	format (ctxt: FORMAT_CONTEXT; comments: EIFFEL_COMMENTS) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR; comments: EIFFEL_COMMENTS) is
 			-- Reconstitute text.
 		local
 			not_first: BOOLEAN
 		do
-			ctxt.put_text_item (ti_Before_feature_clause);
-			ctxt.put_text_item (ti_Before_feature_clause_header)
-			ctxt.put_text_item (ti_Feature_keyword);
+			ctxt.process_filter_item (f_feature_clause, true)
+			ctxt.process_filter_item (f_feature_clause_header, true)
+			ctxt.process_keyword_text (ti_Feature_keyword, Void);
 			ctxt.put_space;
 			if not export_status.is_all then
 				export_status.format (ctxt);
@@ -118,7 +118,7 @@ feature -- Context output
 			else
 				ctxt.put_comments (comments);
 			end;
-			ctxt.put_text_item (ti_After_feature_clause_header)
+			ctxt.process_filter_item (f_feature_clause_header, false)
 			ctxt.indent;
 			ctxt.set_separator (Void);
 			ctxt.set_new_line_between_tokens;
@@ -136,11 +136,11 @@ feature -- Context output
 					ctxt.put_separator
 				end;
 				if not features.item.source_feature.written_class.is_true_external then
-					features.item.format (ctxt);		
+					features.item.format (ctxt);
 				end
 				features.forth;
 			end;
-			ctxt.put_text_item (ti_After_feature_clause)
+			ctxt.process_filter_item (f_feature_clause, false)
 			ctxt.exdent;
 			ctxt.put_new_line;
 		end
@@ -151,7 +151,7 @@ feature {FEATURE_CLAUSE_EXPORT, CATEGORY} -- Implementation
 			-- Export status of Current feature clause
 
 feature -- Debug
-		
+
 	trace is
 		do
 			from features.start until features.after loop
@@ -161,7 +161,7 @@ feature -- Debug
 		end
 
 invariant
-	
+
 	valid_features: features /= Void;
 	valid_export_status: export_status /= Void
 
@@ -171,19 +171,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

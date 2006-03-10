@@ -46,31 +46,31 @@ feature -- Access
 
 feature -- Output
 
-	print_signatures (st: STRUCTURED_TEXT) is
+	print_signatures (a_text_formatter: TEXT_FORMATTER) is
 		local
 			oclass, nclass: CLASS_C
 		do
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;
-			st.add_string ("First feature: ");
-			old_feature.append_signature (st);
-			st.add_new_line;
-			st.add_string ("Version from: ");
-			oclass.append_name (st);
-			st.add_new_line;
-			st.add_string ("Second feature: ");
-			new_feature.append_signature (st);
-			st.add_new_line;
-			st.add_string ("Version from: ");
-			nclass.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("First feature: ");
+			old_feature.append_signature (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Version from: ");
+			oclass.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Second feature: ");
+			new_feature.append_signature (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Version from: ");
+			nclass.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Different numbers of arguments");
-			st.add_new_line;
-			print_signatures (st);
+			a_text_formatter.add ("Different numbers of arguments");
+			a_text_formatter.add_new_line;
+			print_signatures (a_text_formatter);
 		end;
 
 feature {COMPILER_EXPORTER}

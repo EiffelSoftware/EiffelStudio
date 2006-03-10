@@ -75,21 +75,21 @@ feature -- Modification
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Feature: ")
-			a_feature.append_signature (st)
-			st.add_new_line
+			a_text_formatter.add ("Feature: ")
+			a_feature.append_signature (a_text_formatter)
+			a_text_formatter.add_new_line
 			if assigner = Void then
-				st.add_string ("Assigner mark: ")
-				st.add_feature_name (a_feature.assigner_name, a_feature.written_class)
+				a_text_formatter.add ("Assigner mark: ")
+				a_text_formatter.add_feature_name (a_feature.assigner_name, a_feature.written_class)
 			else
-				st.add_string ("Assigner feature: ")
-				assigner.append_signature (st)
+				a_text_formatter.add ("Assigner feature: ")
+				assigner.append_signature (a_text_formatter)
 			end
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end
 
 indexing

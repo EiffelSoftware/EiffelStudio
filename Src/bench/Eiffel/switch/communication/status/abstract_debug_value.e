@@ -102,7 +102,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
+	append_to (st: TEXT_FORMATTER; indent: INTEGER) is
 			-- Append `Current' to `st' printing the name, type
 			-- and its value.
 		require
@@ -116,14 +116,14 @@ feature -- Output
 			else
 				st.add_string (name)
 			end;
-			st.add_string (": ");
+			st.add (": ");
 			append_type_and_value (st);
 			st.add_new_line
 		end;
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
+	append_type_and_value (st: TEXT_FORMATTER) is
 			-- Append type and value of Current to `st'.
 		require
 			valid_st: st /= Void;
@@ -133,7 +133,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 feature {NONE} -- Computed Value access
 
-	append_value (st: STRUCTURED_TEXT) is
+	append_value (st: TEXT_FORMATTER) is
 			-- Append only the value of Current to `st'.
 		deferred
 		end
@@ -219,7 +219,7 @@ feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VA
 
 feature {NONE} -- Implementation
 
-	append_tabs (st: STRUCTURED_TEXT; indent: INTEGER) is
+	append_tabs (st: TEXT_FORMATTER; indent: INTEGER) is
 			-- Append `indent' tabulation character to `st'.
 		require
 			st: st /= Void;
@@ -277,19 +277,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

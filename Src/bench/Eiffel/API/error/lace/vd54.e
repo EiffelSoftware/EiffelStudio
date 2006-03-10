@@ -16,10 +16,10 @@ inherit
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Empty Ace file");
-			st.add_new_line
+			a_text_formatter.add ("Empty Ace file");
+			a_text_formatter.add_new_line
 		end;
 
 indexing

@@ -64,7 +64,7 @@ feature -- Miscellaneous
 						if l_is_fixed then
 							l_font_width := font_width
 						else
-							create l_string.make_filled (' ', 1)						
+							create l_string.make_filled (' ', 1)
 						end
 						l_tab_width := tabulation_width
 					until
@@ -72,10 +72,10 @@ feature -- Miscellaneous
 					loop
 						if image @ i = '%T' then
 							Result := ((((l_tab_position + Result) // l_tab_width) + 1 ) * l_tab_width ) - l_tab_position
-						else							
+						else
 							if l_is_fixed then
 								Result := Result + l_font_width
-							else								
+							else
 								l_string.put (image.item (i), 1)
 								Result := Result + font.string_width (l_string)
 							end
@@ -140,7 +140,7 @@ feature -- Miscellaneous
 				display_with_colors (d_y, gray_text_color , background_color, device)
 			end
 		end
-		
+
 	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`x_offset',`d_y')
@@ -176,7 +176,7 @@ feature -- Miscellaneous
 			text_width: INTEGER
 			indx: INTEGER
 			txt_color: EV_COLOR
-		do			
+		do
 			local_position := position
 			if panel.text_is_fully_loaded then
 				txt_color := text_color
@@ -198,8 +198,8 @@ feature -- Miscellaneous
 				else
 					local_string := image.substring (1, l_start - 1)
 				end
-			
-				text_width := get_substring_width (l_start - 1)			
+
+				text_width := get_substring_width (l_start - 1)
 
 					-- Set drawing style to "normal" text
 				device.set_foreground_color(txt_color)
@@ -221,27 +221,27 @@ feature -- Miscellaneous
 					local_string := expanded_image_substring (l_end, l_start - 1)
 				else
 					local_string := image.substring (l_end, l_start - 1)
-				end				
+				end
 			else
 				if indx > 0 and then indx < l_end then
 					local_string := expanded_image_substring (l_start, l_end - 1)
 				else
 					local_string := image.substring (l_start, l_end - 1)
 				end
-			end			
-			
+			end
+
 			text_width := get_substring_width (l_end - 1) - text_width
 			if text_width < 0 then
 				local_position := local_position - text_width.abs
 			end
-			text_width := text_width.abs		
-	
+			text_width := text_width.abs
+
 				-- Set drawing style to "selected" text
 			if panel.has_focus then
 				device.set_foreground_color(selected_text_color)
 			else
 				device.set_foreground_color(text_color)
-			end			
+			end
 			if selected_background_color /= Void then
 				if panel.has_focus then
 					device.set_background_color (selected_background_color)
@@ -267,7 +267,7 @@ feature -- Miscellaneous
 						local_string := expanded_image_substring (l_start, length)
 					else
 						local_string := image.substring (l_start, length)
-					end	
+					end
 				else
 					if image.index_of ('%T', end_selection) > 0 then
 						local_string := expanded_image_substring (l_end, length)
@@ -275,7 +275,7 @@ feature -- Miscellaneous
 						local_string := image.substring (l_end, length)
 					end
 				end
-							
+
 				text_width := get_substring_width(length) - text_width
 
 					-- Set drawing style to "normal" text
@@ -301,11 +301,19 @@ feature -- Status Setting
 			width := get_substring_width (image.count)
 		end
 
+feature -- Visitor
+
+	process (a_visitor: TOKEN_VISITOR) is
+			-- Visitor
+		do
+			a_visitor.process_editor_token_text (Current)
+		end
+
 feature {EB_CLASS_INFO_ANALYZER} -- implementation of clickable and editable text
 
 	is_text: BOOLEAN is True
 
-	pos_in_text: INTEGER 
+	pos_in_text: INTEGER
 			-- position of the token in the text in characters
 			-- Warning: To be used only by EB_CLICK_LIST
 
@@ -313,14 +321,14 @@ feature {EB_CLASS_INFO_ANALYZER} -- implementation of clickable and editable tex
 			-- assign `pit' to `pos_in_text'
 		do
 			pos_in_text := pit
-		end 
+		end
 
 feature {NONE} -- Implementation
 
 	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 		local
 			text_to_be_drawn: STRING
-		do		
+		do
 			if image.has ('%T') then
 				text_to_be_drawn := expanded_image_substring (1, image.count)
 			else
@@ -335,15 +343,15 @@ feature {NONE} -- Implementation
 				device.set_background_color (a_background_color)
 				device.clear_rectangle (position, d_y, get_substring_width (image.count), height)
 			end
-			
+
  				-- Display the text.
  			draw_text_top_left (position, d_y, text_to_be_drawn, device)
 		end
-		
+
 	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
 		local
 			text_to_be_drawn: STRING
-		do		
+		do
 			if image.has ('%T') then
 				text_to_be_drawn := expanded_image_substring (1, image.count)
 			else
@@ -358,7 +366,7 @@ feature {NONE} -- Implementation
 				device.set_background_color (a_background_color)
 				device.clear_rectangle (x_offset, d_y, get_substring_width (image.count), height)
 			end
-			
+
  				-- Display the text.
  			draw_text_top_left (x_offset, d_y, text_to_be_drawn, device)
 		end
@@ -374,7 +382,7 @@ feature {NONE} -- Implementation
 				i := n1
 			until
 				i > n2
-			loop	
+			loop
 				if image @ i = '%T' then
 					sz := (get_substring_width (i) -  get_substring_width (i - 1)) // font.string_width(" ")
 					from
@@ -410,7 +418,7 @@ feature {NONE} -- Implementation
 		do
 			lightness := sqrt (text_color.lightness)
 			create Result.make_with_rgb (lightness, lightness, lightness)
-		end			
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

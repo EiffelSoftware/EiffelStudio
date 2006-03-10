@@ -18,11 +18,11 @@ inherit
 
 	SHARED_DEBUG
 		export
-			{NONE} all	
+			{NONE} all
 		undefine
 			is_equal
 		end
-		
+
 feature -- Items
 
 	items_computed: BOOLEAN
@@ -45,7 +45,7 @@ feature -- Items
 			end
 			items_computed := False
 		ensure
-			not items_computed		
+			not items_computed
 		end
 
 feature -- Properties
@@ -56,7 +56,7 @@ feature -- Properties
 
 	address: STRING;
 			-- Address of object
-			--| In Classic, because the socket is already busy we cannot ask the 
+			--| In Classic, because the socket is already busy we cannot ask the
 			--| application for the hector address during the object
 			--| inspection. This should be done latter with `set_hector_addr'.)
 
@@ -77,7 +77,7 @@ feature -- Output
 			Result := children
 		end
 
-	expandable: BOOLEAN is 
+	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		do
 			Result := not is_null
@@ -96,7 +96,7 @@ feature -- Output
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
+	append_to (st: TEXT_FORMATTER; indent: INTEGER) is
 			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			status: APPLICATION_STATUS
@@ -125,13 +125,13 @@ feature -- Output
 				st.add_string ("... Items skipped ...");
 				st.add_new_line
 			end
-			
+
 			l_cursor := items.new_cursor
 			if items.count /= 0 then
 				l_cursor.start
 				char_value ?= l_cursor.item
 				is_special_of_char := char_value /= Void
-			end 
+			end
 			if not is_special_of_char then
 				from
 					l_cursor.start
@@ -179,7 +179,7 @@ feature {NONE} -- Output
 				Result := NONE_representation
 			else
 				Result := Left_address_delim + address + Right_address_delim
-				str := string_value 
+				str := string_value
 				if str /= Void then
 					Result.append (Equal_sign_str)
 					Result.append (str)
@@ -206,7 +206,7 @@ feature {NONE} -- Output
 					Result.append (Is_unknown)
 				end
 			end
-		end		
+		end
 
 feature -- Change
 
@@ -229,19 +229,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

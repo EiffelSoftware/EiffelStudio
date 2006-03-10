@@ -1338,14 +1338,10 @@ feature {NONE} -- Implementation
 
 	put_class_modified_outside_diagram_warning is
 			-- Inform user, that class was modified outside diagram.
-		local
-			l_text: STRUCTURED_TEXT
 		do
 			if not context_editor.history.is_empty then
-				create l_text.make
-				l_text.add_multiline_string (warning_messages.w_class_modified_outside_diagram, 0)
-				l_text.add_new_line
-				output_manager.process_text (l_text)
+				output_manager.add_multiline_string (warning_messages.w_class_modified_outside_diagram, 0)
+				output_manager.add_new_line
 				context_editor.reset_history
 			end
 		end

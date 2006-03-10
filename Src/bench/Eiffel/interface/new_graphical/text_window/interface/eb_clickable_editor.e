@@ -38,8 +38,6 @@ inherit
 			{NONE} All
 		undefine
 			clear_window, reset, default_create
-		redefine
-			process_text
 		end
 
 	EB_CONSTANTS
@@ -88,51 +86,37 @@ feature -- Access
 			end
 		end
 
-	current_text: STRUCTURED_TEXT is
-			-- Structured text loaded in the editor.
-		do
-			Result := text_displayed.current_text
-		end
-
-	structured_text: STRUCTURED_TEXT is
-			-- Structured text corresponding to the text
-			-- displayed in the editor
-		do
-			Result := current_text
-			if Result = Void then
-				Result := text_displayed.structured_text
-			end
-		end
-
 	margin: EB_CLICKABLE_MARGIN
 			-- Margin widget for breakpoints, line numbers, etc. This is different to the left margin
 			-- used in the editor for spacing purposes.		
 
 feature -- Content Change
 
-	process_text (str_text: STRUCTURED_TEXT) is
-			-- Load `str_text' in the editor.
-		local
-			local_str_text: like str_text
+	handle_before_processing (append: BOOLEAN) is
+			-- Reinitialize editor if not `append' so that new content be received
+			-- If `append' we only reset related flags.
+			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
 		do
 			editor_viewport.disable_sensitive
 
 				-- Reset the editor state
-			reset
-			allow_edition := False
-			if str_text /= Void and then not str_text.is_empty then
-				local_str_text := str_text
-			else
-				create local_str_text.make
-				local_str_text.add (create {BASIC_TEXT}.make (""))
+			if not append then
+				reset
 			end
+			allow_edition := False
+
 				-- Read and parse the text.
 			text_displayed.set_first_read_block_size (number_of_lines_in_block)
-			text_displayed.load_structured_text (local_str_text)
+			text_displayed.start_processing (append)
+		end
 
-				-- Setup the editor (scrollbar, ...)
+	handle_after_processing is
+			-- Setup editor after processing.
+			-- Editor interface is reinitialized, text observer methods are called.
+			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
+		do
+			text_displayed.end_processing
 			setup_editor (1)
-
 			editor_viewport.enable_sensitive
 		end
 
@@ -173,15 +157,15 @@ feature -- Possibly delayed operations
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded			
 		do
-				if text_is_fully_loaded then
-					if highlight then
-						text_displayed.select_line (l_num)
-					end
-					display_line_with_context (l_num)
-					refresh_now
-				else
-					after_reading_text_actions.extend(agent display_line_when_ready (l_num, highlight))
+			if text_is_fully_loaded then
+				if highlight then
+					text_displayed.select_line (l_num)
 				end
+				display_line_with_context (l_num)
+				refresh_now
+			else
+				after_reading_text_actions.extend(agent display_line_when_ready (l_num, highlight))
+			end
 		end
 
 	display_line_at_top_when_ready (l_num: INTEGER) is
@@ -283,19 +267,19 @@ feature -- Compatibility
 	put_string (s: STRING) is
 			-- Put string `s' at current position.
 		do
-			text_displayed.put_string (s)
+			text_displayed.add_string (s)
 		end
 
 	put_char (c: CHARACTER) is
 			-- Put a character `c' at current position.
 		do
-			text_displayed.put_char (c)
+			text_displayed.add_char (c)
 		end
 
 	put_new_line is
 			-- Put a new line at current position.
 		do
-			text_displayed.put_new_line
+			text_displayed.add_new_line
 		end
 
 	copy_selection is

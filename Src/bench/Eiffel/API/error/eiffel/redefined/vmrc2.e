@@ -39,25 +39,25 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		local
 			u_class: CLASS_C;
 			s_class: CLASS_C;
 		do
 			u_class := invalid_feature.written_class;
 			s_class := selected_feature.written_class;
-			st.add_string ("First version: ");
-			selected_feature.append_name (st);
-			st.add_string (" from class: ");
-			s_class.append_name (st);
-			st.add_new_line;
-			st.add_string ("Second version: ");
-			invalid_feature.append_name (st);
-			st.add_string (" from class: ");
-			u_class.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("First version: ");
+			selected_feature.append_name (a_text_formatter);
+			a_text_formatter.add (" from class: ");
+			s_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Second version: ");
+			invalid_feature.append_name (a_text_formatter);
+			a_text_formatter.add (" from class: ");
+			u_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -112,7 +112,7 @@ feature -- Output
 			Result.append_integer (position)
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		local
 			s: STRING
 			l_class: CLASS_AS
@@ -121,7 +121,7 @@ feature -- Output
 				l_class := f.associated_class.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
 					s := l_class.generics.i_th (position).name.as_upper
-					st.add (create {GENERIC_TEXT}.make (s))
+					st.process_generic_text (s)
 				else
 						-- We are in case where actual generic position does not match
 						-- any generics in written class of `f'. E.g: A [H, G] inherits
@@ -262,10 +262,10 @@ feature {COMPILER_EXPORTER}
 			create Result.make (type_i)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- reconstitute text
 		do
-			ctxt.put_text_item (create {GENERIC_TEXT}.make (ctxt.formal_name (position)))
+			ctxt.process_generic_text (ctxt.formal_name (position))
 		end
 
 indexing

@@ -36,9 +36,9 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		local
 			info: CELL2 [E_FEATURE, CLASS_C];
 		do
@@ -49,14 +49,14 @@ feature -- Output
 			loop
 				info := selection_list.item;
 				if (info.item2 = Void) then
-					st.add_string ("In current class: ");
+					a_text_formatter.add ("In current class: ");
 				else
-					st.add_string ("In parent ");
-					info.item2.append_name (st);
-					st.add_string (": ");
+					a_text_formatter.add ("In parent ");
+					info.item2.append_name (a_text_formatter);
+					a_text_formatter.add (": ");
 				end;
-				info.item1.append_signature (st);
-				st.add_new_line;
+				info.item1.append_signature (a_text_formatter);
+				a_text_formatter.add_new_line;
 
 				selection_list.forth;
 			end;

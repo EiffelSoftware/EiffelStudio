@@ -39,9 +39,9 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		local
 			feature_info: CELL2 [E_FEATURE, CLASS_C];
 			feat: E_FEATURE;
@@ -56,13 +56,13 @@ feature -- Output
 				feat := feature_info.item1;
 				parent := feature_info.item2;
 
-				st.add_string ("Feature: ");
-				feat.append_signature (st);
-				st.add_string (" inherited from: ");
-				parent.append_name (st);
-				st.add_string (" Version from: ");
-				feat.written_class.append_name (st);
-				st.add_new_line;
+				a_text_formatter.add ("Feature: ");
+				feat.append_signature (a_text_formatter);
+				a_text_formatter.add (" inherited from: ");
+				parent.append_name (a_text_formatter);
+				a_text_formatter.add (" Version from: ");
+				feat.written_class.append_name (a_text_formatter);
+				a_text_formatter.add_new_line;
 				features.forth;
 			end;
 		end;

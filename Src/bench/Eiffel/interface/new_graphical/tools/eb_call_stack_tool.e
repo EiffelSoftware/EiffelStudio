@@ -941,20 +941,20 @@ feature {NONE} -- Implementation
 		require
 			valid_dialog: fd /= Void
 		local
-			fn: PLAIN_TEXT_FILE
+			fn: FILE_WINDOW
 			retried: BOOLEAN
 			wd: EV_WARNING_DIALOG
-			stt: STRUCTURED_TEXT
 		do
 			if not retried then
 					--| We create a file (or open it).
-				create fn.make_create_read_write (fd.file_name)
-				create stt.make
+				create fn.make (fd.file_name)
+				fn.open_read_write
 					--| We generate the call stack.
-				eb_debugger_manager.Application.status.current_call_stack.display_stack (stt)
+				eb_debugger_manager.Application.status.current_call_stack.display_stack (fn)
 					--| We put it in the file.
-				fn.put_string (stt.image)
-				fn.close
+				if not fn.is_closed then
+					fn.close
+				end
 					--| Save the path to the preferences.
 				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (fd.file_path)
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)

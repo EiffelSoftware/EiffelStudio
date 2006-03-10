@@ -104,8 +104,6 @@ feature {NONE} -- Compilation implementation
 
 	compile is
 			-- Compile, in the one way or the other.
-		local
-			st: STRUCTURED_TEXT
 		do
 			if not Eiffel_project.is_compiling then
 				reset_debugger
@@ -116,15 +114,13 @@ feature {NONE} -- Compilation implementation
 						-- If a freezing already occurred (due to a new external
 						-- or new derivation of SPECIAL), no need to freeze again.
 					if Eiffel_project.save_error then
-						create st.make
-						st.add_string ("Could not write to ")
-						st.add_string (Project_directory_name)
-						st.add_new_line
-						st.add_string ("Please check permissions / disk space")
-						st.add_new_line
-						st.add_string ("and retry")
-						st.add_new_line
-						output_manager.process_text (st)
+						output_manager.add_string ("Could not write to ")
+						output_manager.add_string (Project_directory_name)
+						output_manager.add_new_line
+						output_manager.add_string ("Please check permissions / disk space")
+						output_manager.add_new_line
+						output_manager.add_string ("and retry")
+						output_manager.add_new_line
 					else
 						if not finalization_error then
 							launch_c_compilation
@@ -138,18 +134,14 @@ feature {NONE} -- Compilation implementation
 
 	display_eiffel_compilation_status is
 			-- Display status of eiffel compilation.
-		local
-			output_text: STRUCTURED_TEXT
 		do
-			create output_text.make
 			if Workbench.successful then
-				output_text.add_string (Interface_names.E_compilation_succeeded)
-				output_text.add_new_line
+				output_manager.add_string (Interface_names.E_compilation_succeeded)
+				output_manager.add_new_line
 			else
-				output_text.add_string (Interface_names.e_compilation_failed)
-				output_text.add_new_line
+				output_manager.add_string (Interface_names.e_compilation_failed)
+				output_manager.add_new_line
 			end
-			output_manager.process_text (output_text)
 		end
 
 	tool_resynchronization is
@@ -177,19 +169,15 @@ feature {NONE} -- Compilation implementation
 
 	launch_c_compilation is
 			-- Launch the C compilation.
-		local
-			output_text: STRUCTURED_TEXT
 		do
-			create output_text.make
-			if Eiffel_project.freezing_occurred then
-				output_text.add_string ("System had to be frozen to include new externals and/or new agents.")
-				output_text.add_new_line
-			end
-			output_text.add_string ("Eiffel system recompiled")
-			output_text.add_new_line
-
 			if start_c_compilation and then Eiffel_project.freezing_occurred then
-				output_manager.process_text (output_text)
+				if Eiffel_project.freezing_occurred then
+					output_manager.add_string ("System had to be frozen to include new externals and/or new agents.")
+					output_manager.add_new_line
+				end
+				output_manager.add_string ("Eiffel system recompiled")
+				output_manager.add_new_line
+
 				Eiffel_project.call_finish_freezing (True)
 			end
 		end
@@ -426,19 +414,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

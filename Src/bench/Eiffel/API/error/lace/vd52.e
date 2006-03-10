@@ -37,25 +37,25 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			check
 				path_not_void: path /= Void
 				compiler_version_not_void: compiler_version /= Void
 			end
-			st.add_string ("Precompiled path: ")
-			st.add_string (path)
-			st.add_new_line
-			st.add_string ("Compiler version: ")
-			st.add_string (compiler_version)
-			st.add_new_line
-			st.add_string ("Precompile compiled with version: ")
+			a_text_formatter.add ("Precompiled path: ")
+			a_text_formatter.add (path)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Compiler version: ")
+			a_text_formatter.add (compiler_version)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Precompile compiled with version: ")
 			if precompiled_version.is_empty then
-				st.add_string ("No version number could be retrieved.")
+				a_text_formatter.add ("No version number could be retrieved.")
 			else
-				st.add_string (precompiled_version)
+				a_text_formatter.add (precompiled_version)
 			end
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end
 
 feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting

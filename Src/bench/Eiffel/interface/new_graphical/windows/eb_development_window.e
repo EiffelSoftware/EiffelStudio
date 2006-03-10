@@ -2402,11 +2402,6 @@ feature -- Resource Update
 		local
 			dial: EV_CONFIRMATION_DIALOG
 		do
-			debug ("EDITOR")
-				if editor_tool.text_area.current_text /= Void and then changed then
-					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
-				end
-			end
 				-- Remove trailing blanks.
 			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
 				editor_tool.text_area.text_displayed.remove_trailing_blanks
@@ -2833,7 +2828,6 @@ feature {NONE} -- Implementation
 			ef_stone: EXTERNAL_FILE_STONE
 			f: FILE
 
-			l_format_context: FORMAT_CONTEXT
 			conv_errst: ERROR_STONE
 			cl_syntax_stone: CL_SYNTAX_STONE
 			error_line: INTEGER
@@ -3096,8 +3090,7 @@ feature {NONE} -- Implementation
 					end
 					if cluster_st /= Void then
 	--| FIXME XR: Really manage cluster display in the main editor
-						l_format_context := formatted_context_for_cluster (cluster_st.cluster_i)
-						editor_tool.text_area.process_text (l_format_context.text)
+						formatted_context_for_cluster (cluster_st.cluster_i)
 						if cluster_st.position > 0 then
 							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
 						end
@@ -3167,14 +3160,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	formatted_context_for_cluster (a_cluster: CLUSTER_I): FORMAT_CONTEXT is
+	formatted_context_for_cluster (a_cluster: CLUSTER_I) is
 			-- Formatted context representing the list of classes inside `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_assembly: ASSEMBLY_I
 			l_sorted_cluster: EB_SORTED_CLUSTER
-			l_format_context: FORMAT_CONTEXT
 			l_indexes: INDEXING_CLAUSE_AS
 			l_classes: LIST [CLASS_I]
 			l_subclu: LIST [EB_SORTED_CLUSTER]
@@ -3182,35 +3174,41 @@ feature {NONE} -- Implementation
 			l_list_cl_i: LIST [CLASS_I]
 			l_cluster: CLUSTER_I
 			l_assert_level: ASSERTION_I
+			l_format_context: TEXT_FORMATTER_DECORATOR
 		do
-			create l_format_context.make_for_case
 
-			l_format_context.put_text_item (ti_indexing_keyword)
+			create l_format_context.make_for_case (editor_tool.text_area.text_displayed)
+			editor_tool.text_area.handle_before_processing (false)
+			l_format_context.process_keyword_text (ti_indexing_keyword, Void)
 			l_format_context.put_new_line
 			l_format_context.indent
 			if a_cluster.is_assembly then
 				l_assembly ?= a_cluster
 				check l_assembly /= Void end
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("assembly_name"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("assembly_name")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_space
 				l_format_context.put_quoted_string_item (l_assembly.assembly_name)
 				l_format_context.put_new_line
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("assembly_path"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("assembly_path")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_space
 				l_format_context.put_quoted_string_item (l_assembly.assembly_path)
 				l_format_context.put_new_line
 
 			end
-			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
-			l_format_context.put_text_item_without_tabs (ti_colon)
+			l_format_context.process_indexing_tag_text ("cluster")
+			l_format_context.set_without_tabs
+			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
 			l_format_context.put_quoted_string_item (a_cluster.cluster_name)
 
 			l_format_context.put_new_line
-			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
-			l_format_context.put_text_item_without_tabs (ti_colon)
+			l_format_context.process_indexing_tag_text ("cluster_path")
+			l_format_context.set_without_tabs
+			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
 			l_format_context.put_quoted_string_item (a_cluster.path)
 			l_format_context.put_new_line
@@ -3221,13 +3219,14 @@ feature {NONE} -- Implementation
 			end
 
 			if a_cluster.parent_cluster /= Void then
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("parent cluster"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("parent cluster")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				l_format_context.put_manifest_string (" - ")
 
-				l_format_context.put_clusteri (a_cluster.parent_cluster)
+				l_format_context.add_cluster (a_cluster.parent_cluster, a_cluster.parent_cluster.cluster_name)
 				l_format_context.put_new_line
 				l_format_context.exdent
 			end
@@ -3235,8 +3234,9 @@ feature {NONE} -- Implementation
 			create l_sorted_cluster.make (a_cluster)
 
 			if not l_sorted_cluster.clusters.is_empty then
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("sub cluster(s)"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("sub cluster(s)")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
@@ -3247,11 +3247,13 @@ feature {NONE} -- Implementation
 				loop
 					l_cluster := l_subclu.item.actual_cluster
 					l_format_context.put_manifest_string (" - ")
-					l_format_context.put_clusteri (l_cluster)
+					l_format_context.add_cluster (l_cluster, l_cluster.cluster_name)
 					l_format_context.put_space
-					l_format_context.put_text_item_without_tabs (ti_L_parenthesis)
-					l_format_context.put_comment_text (l_cluster.classes.count.out)
-					l_format_context.put_text_item_without_tabs (ti_R_parenthesis)
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_L_parenthesis)
+					l_format_context.process_comment_text (l_cluster.classes.count.out, Void)
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_R_parenthesis)
 					l_format_context.put_new_line
 					l_subclu.forth
 				end
@@ -3259,8 +3261,9 @@ feature {NONE} -- Implementation
 			end
 
 			if not l_sorted_cluster.classes.is_empty then
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("class(es)"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("class(es)")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
@@ -3273,38 +3276,45 @@ feature {NONE} -- Implementation
 					l_assert_level := l_cl_i.assertion_level
 					l_format_context.put_manifest_string (" - ")
 					l_format_context.put_classi (l_cl_i)
-					l_format_context.put_text_item_without_tabs (ti_colon)
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_colon)
 					if l_cl_i.compiled then
 						if l_assert_level.check_all then
 							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_All_keyword)
+							l_format_context.set_without_tabs
+							l_format_context.process_keyword_text (ti_All_keyword, Void)
 						elseif l_assert_level.level = 0  then
 							l_format_context.put_space
-							l_format_context.put_comment_text (once "None")
+							l_format_context.process_comment_text (once "None", Void)
 						else
 							if l_assert_level.check_precond then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_Require_keyword)
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text (ti_Require_keyword, Void)
 							end
 							if l_assert_level.check_postcond then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_Ensure_keyword)
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text (ti_Ensure_keyword, Void)
 							end
 							if l_assert_level.check_check then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_Check_keyword)
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text (ti_Check_keyword, Void)
 							end
 							if l_assert_level.check_loop then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_Loop_keyword)
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text (ti_Loop_keyword, Void)
 							end
 							if l_assert_level.check_invariant then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_Invariant_keyword)
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text (ti_Invariant_keyword, Void)
 							end
 						end
 					else
-						l_format_context.put_comment_text (" Not in system.")
+						l_format_context.process_comment_text (" Not in system.", Void)
 					end
 					l_format_context.put_new_line
 					l_classes.forth
@@ -3313,8 +3323,9 @@ feature {NONE} -- Implementation
 			end
 
 			if not a_cluster.overriden_classes.is_empty then
-				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("overriden class(es)"))
-				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.process_indexing_tag_text ("overriden class(es)")
+				l_format_context.set_without_tabs
+				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
@@ -3328,8 +3339,9 @@ feature {NONE} -- Implementation
 					l_format_context.put_classi (l_cl_i)
 					l_list_cl_i := eiffel_universe.classes_with_name (l_cl_i.name)
 					if l_list_cl_i /= Void and then not l_list_cl_i.is_empty then
-						l_format_context.put_text_item_without_tabs (ti_colon)
-						l_format_context.put_comment_text (" overriden by")
+						l_format_context.set_without_tabs
+						l_format_context.process_symbol_text (ti_colon)
+						l_format_context.process_comment_text (" overriden by", Void)
 						from
 							l_list_cl_i.start
 						until
@@ -3338,9 +3350,11 @@ feature {NONE} -- Implementation
 							l_cluster := l_list_cl_i.item.cluster
 							if l_cluster /= a_cluster then
 								l_format_context.put_space
-								l_format_context.put_text_item_without_tabs (ti_double_quote)
-								l_format_context.put_clusteri (l_list_cl_i.item.cluster)
-								l_format_context.put_text_item_without_tabs (ti_double_quote)
+								l_format_context.set_without_tabs
+								l_format_context.process_symbol_text (ti_double_quote)
+								l_format_context.add_cluster (l_list_cl_i.item.cluster, l_list_cl_i.item.cluster.cluster_name)
+								l_format_context.set_without_tabs
+								l_format_context.process_symbol_text (ti_double_quote)
 							end
 							l_list_cl_i.forth
 						end
@@ -3354,9 +3368,7 @@ feature {NONE} -- Implementation
 
 			l_format_context.exdent
 			l_format_context.put_new_line
-			Result := l_format_context
-		ensure
-			result_not_void: Result /= Void
+			editor_tool.text_area.handle_after_processing
 		end
 
 	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is

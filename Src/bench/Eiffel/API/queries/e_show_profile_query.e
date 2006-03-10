@@ -17,7 +17,7 @@ inherit
 		redefine
 			executable, execute
 		end
-		
+
 	E_PROFILER_CONSTANTS
 
 create
@@ -26,22 +26,22 @@ create
 
 feature -- Initialization
 
-	make (new_st: STRUCTURED_TEXT;
+	make (a_text_formatter: TEXT_FORMATTER;
 		profiler_query: PROFILER_QUERY;
 		profiler_options: PROFILER_OPTIONS) is
 			-- Create the object and use `new_st'
 			-- for output.
 		require
-			new_st_not_void: new_st /= Void;
+			a_text_formatter_not_void: a_text_formatter /= Void;
 			profiler_query_not_void: profiler_query /= Void;
 			profiler_options_not_void: profiler_options /= Void
 		do
-			structured_text := new_st;
+			text_formatter := a_text_formatter;
 			prof_query := profiler_query;
 			prof_options := profiler_options.twin
 			create expanded_filenames.make
 		end;
-		
+
 	make_simple (profiler_query: PROFILER_QUERY;
 		profiler_options: PROFILER_OPTIONS) is
 			-- Create the object without any output generated.
@@ -54,7 +54,7 @@ feature -- Initialization
 			prof_options := profiler_options.twin
 			create expanded_filenames.make
 		end;
-		
+
 feature -- Access
 
 	executable: BOOLEAN is
@@ -141,14 +141,14 @@ debug("SHOW_PROF_QUERY")
 	io.error.put_string ("profile information not VOID");
 	io.error.put_new_line
 end;
-						if structured_text /= Void then
-							structured_text.add_string (current_item);
-							structured_text.add_new_line;
+						if text_formatter /= Void then
+							text_formatter.add (current_item);
+							text_formatter.add_new_line;
 							create line_str.make (current_item.count);
 							line_str.fill_character ('-');
-							structured_text.add_string (line_str);
-							structured_text.add_new_line;
-							structured_text.add_new_line
+							text_formatter.add (line_str);
+							text_formatter.add_new_line;
+							text_formatter.add_new_line
 						end
 					else
 debug("SHOW_PROF_QUERY")
@@ -157,20 +157,20 @@ debug("SHOW_PROF_QUERY")
 end;
 					end
 				else
-					if structured_text /= Void then
-						structured_text.add_string ("last output");
-						structured_text.add_new_line;
-						structured_text.add_string ("-----------");
-						structured_text.add_new_line;
-						structured_text.add_new_line;
+					if text_formatter /= Void then
+						text_formatter.add ("last output");
+						text_formatter.add_new_line;
+						text_formatter.add ("-----------");
+						text_formatter.add_new_line;
+						text_formatter.add_new_line;
 						profile_information := int_last_output
 					end
 				end
 			else
-				if structured_text /= Void then
-					structured_text.add_string ("Error during retrieval of: ");
-					structured_text.add_string (current_item);
-					structured_text.add_new_line
+				if text_formatter /= Void then
+					text_formatter.add ("Error during retrieval of: ");
+					text_formatter.add (current_item);
+					text_formatter.add_new_line
 				end
 			end
 		rescue
@@ -259,7 +259,7 @@ end;
 								expanded_filenames.extend (entries_name)
 							end;
 							entries.forth
-						end					
+						end
 					end
 				else
 					expanded_filenames.extend (name)
@@ -351,17 +351,17 @@ end;
 		local
 			i: INTEGER
 		do
-			if structured_text /= Void then
+			if text_formatter /= Void then
 				from
 					i:= 1
 				until
 					i > prof_options.output_names.count
 				loop
-					structured_text.add_string (prof_options.output_names.item(i));
-					structured_text.add_indent;
+					text_formatter.add (prof_options.output_names.item(i));
+					text_formatter.add_indent;
 					i := i + 1
 				end;
-				structured_text.add_new_line
+				text_formatter.add_new_line
 			end
 		end;
 
@@ -470,7 +470,7 @@ end;
 
 	set_filter_value (filter: PROFILE_FILTER; calls: BOOLEAN; i: INTEGER): PROFILE_FILTER is
 			-- Sets the value specified by the user in `filter'.
-			-- `calls' distinguishes between the filter is a 
+			-- `calls' distinguishes between the filter is a
 			-- CALLS_FILTER (true) or not (false).
 			-- Index of value is `i'.
 		local
@@ -508,7 +508,7 @@ end;
 		end;
 
 	single_value (val: STRING; calls: BOOLEAN; i: INTEGER): COMPARABLE is
-			-- `calls' distinguishes between the filter is a 
+			-- `calls' distinguishes between the filter is a
 			-- CALLS_FILTER (true) or not (false).
 			-- `val' contains the value.
 		local
@@ -535,7 +535,7 @@ end;
 					end
 				elseif val.is_equal (profiler_avg) then
 					if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
-						int_ref.set_item (profile_information.profile_data.calls_avg_eiffel 
+						int_ref.set_item (profile_information.profile_data.calls_avg_eiffel
 									// profile_information.profile_data.number_of_eiffel_features)
 					elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 						int_ref.set_item (profile_information.profile_data.calls_avg_c
@@ -731,30 +731,30 @@ end;
 		local
 			i: INTEGER
 		do
-			if structured_text /= Void then
+			if text_formatter /= Void then
 				from
 					i := 1
 				until
 					i > prof_options.output_names.count
 				loop
 					if prof_options.output_names.item (i).is_equal ("featurename") then
-						item.function.append_to (structured_text)
-						structured_text.add_indent
+						item.function.append_to (text_formatter)
+						text_formatter.add_indent
 					elseif prof_options.output_names.item (i).is_equal ("calls") then
-						structured_text.add_string (item.calls.out)
+						text_formatter.add (item.calls.out)
 					elseif prof_options.output_names.item (i).is_equal ("self") then
-						structured_text.add_string (item.self.out)
+						text_formatter.add (item.self.out)
 					elseif prof_options.output_names.item (i).is_equal ("descendants") then
-						structured_text.add_string (item.descendants.out)
+						text_formatter.add (item.descendants.out)
 					elseif prof_options.output_names.item (i).is_equal ("total") then
-						structured_text.add_string (item.total.out)
+						text_formatter.add (item.total.out)
 					elseif prof_options.output_names.item (i).is_equal ("percentage") then
-						structured_text.add_string (item.percentage.out)
+						text_formatter.add (item.percentage.out)
 					end
-					structured_text.add_indent
+					text_formatter.add_indent
 					i := i + 1
 				end;
-				structured_text.add_new_line
+				text_formatter.add_new_line
 			end
 		end;
 
@@ -784,19 +784,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

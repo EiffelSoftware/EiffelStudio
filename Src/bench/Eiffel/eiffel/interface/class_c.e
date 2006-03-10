@@ -4433,43 +4433,43 @@ feature -- Output
 			class_signature_not_void: Result /= Void
 		end
 
-	append_header (st: STRUCTURED_TEXT) is
-			-- Append class header to `st'.
+	append_header (a_text_formatter: TEXT_FORMATTER) is
+			-- Append class header to `a_text_formatter'.
 		do
 			if is_expanded then
-				st.add (ti_Expanded_keyword)
-				st.add_space
+				a_text_formatter.process_keyword_text (ti_Expanded_keyword, Void)
+				a_text_formatter.add_space
 			elseif is_deferred then
-				st.add (ti_Deferred_keyword)
-				st.add_space
+				a_text_formatter.process_keyword_text (ti_Deferred_keyword, Void)
+				a_text_formatter.add_space
 			end
-			st.add (ti_Class_keyword)
-			st.add_new_line
-			st.add_indent
-			append_signature (st, False)
-			st.add_new_line
+			a_text_formatter.process_keyword_text (ti_Class_keyword, Void)
+			a_text_formatter.add_new_line
+			a_text_formatter.add_indent
+			append_signature (a_text_formatter, False)
+			a_text_formatter.add_new_line
 		end
 
-	append_signature (st: STRUCTURED_TEXT; a_with_deferred_symbol: BOOLEAN) is
-			-- Append the signature of current class in `st'. If `a_with_deferred_symbol'
+	append_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN) is
+			-- Append the signature of current class in `a_text_formatter'. If `a_with_deferred_symbol'
 			-- then add a `*' to the class name.
 		require
-			non_void_st: st /= Void
+			non_void_st: a_text_formatter /= Void
 		local
 			formal_dec: FORMAL_CONSTRAINT_AS
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
-			append_name (st)
+			append_name (a_text_formatter)
 			if a_with_deferred_symbol and is_deferred then
-				st.add_char ('*')
+				a_text_formatter.add_char ('*')
 			end
 			gens := generics
 			if gens /= Void then
 				old_cluster := Inst_context.cluster
 				Inst_context.set_cluster (cluster)
-				st.add_space
-				st.add (ti_L_bracket)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (ti_L_bracket)
 				from
 					gens.start
 				until
@@ -4477,24 +4477,24 @@ feature -- Output
 				loop
 					formal_dec ?= gens.item
 					check formal_dec_not_void: formal_dec /= Void end
-					formal_dec.append_signature (st, Current)
+					formal_dec.append_signature (a_text_formatter)
 					gens.forth
 					if not gens.after then
-						st.add (ti_Comma)
-						st.add_space
+						a_text_formatter.process_symbol_text (ti_Comma)
+						a_text_formatter.add_space
 					end
 				end
-				st.add (ti_R_bracket)
+				a_text_formatter.process_symbol_text (ti_R_bracket)
 				Inst_context.set_cluster (old_cluster)
 			end
 		end
 
-	append_name (st: STRUCTURED_TEXT) is
-			-- Append the name ot the current class in `st'
+	append_name (a_text_formatter: TEXT_FORMATTER) is
+			-- Append the name ot the current class in `a_text_formatter'
 		require
-			non_void_st: st /= Void
+			non_void_st: a_text_formatter /= Void
 		do
-			st.add_classi (lace_class, name)
+			a_text_formatter.add_classi (lace_class, name)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Run time value representing a character."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -40,8 +40,8 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-		do 
+	append_type_and_value (st: TEXT_FORMATTER) is
+		do
 			dynamic_class.append_name (st)
 			st.add_string (" = ");
 			st.add_char ('%'');
@@ -51,8 +51,8 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 feature {NONE} -- Output
 
-	append_value (st: STRUCTURED_TEXT) is 
-		do 
+	append_value (st: TEXT_FORMATTER) is
+		do
 			st.add_string (char_text (value))
 		end;
 
@@ -67,7 +67,7 @@ feature {NONE} -- Output
 			Result.append (char_text (value))
 			Result.append (Quote)
 		end
-		
+
 feature {NONE} -- Constants
 
 	Equal_slash: STRING is " = /"
@@ -80,19 +80,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

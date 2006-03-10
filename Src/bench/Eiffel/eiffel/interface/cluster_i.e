@@ -45,7 +45,7 @@ inherit
 		export {NONE} all end
 
 create
-	make_with_parent, 
+	make_with_parent,
 	make_from_old_cluster,
 	make_from_precompiled_cluster
 
@@ -94,7 +94,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 feature {CLUSTER_I} -- Internal initialization
 
 	make (p: STRING) is
-			-- Create Current with path `p'. 
+			-- Create Current with path `p'.
 		do
 			dollar_path := p
 			update_path
@@ -120,7 +120,7 @@ feature -- Attributes
 	classes: HASH_TABLE [CLASS_I, STRING]
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
-			
+
 	overriden_classes: like classes
 			-- Classes available in cluster, but not to system since overriden.
 			-- Key is declared name, entry is class instance
@@ -154,7 +154,7 @@ feature -- Attributes
 	is_library: BOOLEAN
 			-- Are cluster and subclusters part of a library whose classes
 			-- cannot be modified?
-	
+
 	belongs_to_all: BOOLEAN
 			-- Is cluster created because it was a subdirectory of a cluster
 			-- specified with `all' specification in Ace file?
@@ -261,7 +261,7 @@ feature -- Access
 		do
 			Result := cluster_name.as_upper
 		end
-		
+
 	top_of_recursive_cluster: CLUSTER_I is
 			-- Top most cluster when Current is a subcluster that belongs
 			-- to a recursive cluster. Otherwise `Current'.
@@ -418,7 +418,7 @@ feature {COMPILER_EXPORTER} -- Element change
 				c.set_cluster (Current)
 				cl.forth
 			end
-			
+
 			from
 				cl := old_cluster.overriden_classes
 				cl.start
@@ -431,7 +431,7 @@ feature {COMPILER_EXPORTER} -- Element change
 				cl.forth
 			end
 				-- No need to keep a reference to `old_cluster' in `old_cluster_i'
-				-- as first it will not be used since now only `old_cluster_i' will be 
+				-- as first it will not be used since now only `old_cluster_i' will be
 				-- used as `old_cluster' in Current. Second because it is causing a huge
 				-- memory leak when using a precompiled library.
 			old_cluster_i.set_old_cluster (Void)
@@ -453,7 +453,7 @@ feature {COMPILER_EXPORTER} -- Element change
 		end
 
 	insert_renaming (cl: CLUSTER_I; old_name, new_name: STRING) is
-			-- Insert renaming of a class of `cl' named `old_name' 
+			-- Insert renaming of a class of `cl' named `old_name'
 			-- into `new_name'.
 		require
 			cl /= Void
@@ -483,9 +483,9 @@ feature {COMPILER_EXPORTER} -- Element change
 			rename_clause: RENAME_I
 		do
 			if renamings /= Void then
-				from   
-					renamings.start;   
-				until  
+				from
+					renamings.start;
+				until
 					renamings.after or else Result /= Void
 				loop
 					rename_clause := renamings.item
@@ -527,7 +527,7 @@ feature {COMPILER_EXPORTER} -- Element change
 			l_is_override: BOOLEAN
 		do
 			l_is_override := Universe.has_override_cluster_of_name (name)
-				
+
 				-- If the cluster has changed or if it is an override cluster,
 				-- do a degree 6
 			if
@@ -609,7 +609,7 @@ feature {COMPILER_EXPORTER} -- Element change
 		end
 
 	fill_recursively (cl_path, suffix : STRING; already_done: LINKED_LIST [STRING]) is
-			-- Fill the cluster name table with what is found in the path. 
+			-- Fill the cluster name table with what is found in the path.
 			-- If `is_recursive' is True process subclusters recursively.
 			-- Keep track of clusters already processed in `already_done'.
 			-- `cl_path' is the full path, `suffix' is the full path
@@ -1229,7 +1229,7 @@ feature {COMPILER_EXPORTER} -- Element change
 		do
 			ptr := path.to_c
 			Result := date /= eif_date ($ptr) or else Lace.need_directory_lookup
-			
+
 --			if not Result and then not Has_smart_file_system then
 					-- New Note: this comment has been previously done for Windows OS,
 					-- however the described situation can also occurs on other UNIX
@@ -1425,7 +1425,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 
 			if belongs_to_all then
 				from
-					cluster := parent_cluster	
+					cluster := parent_cluster
 				until
 					not cluster.belongs_to_all
 				loop
@@ -1787,13 +1787,13 @@ feature {NONE} -- Implementation
 
 feature -- Formatting
 
-	format (st: STRUCTURED_TEXT) is
-			-- Output name of Current in `st'.
+	format (a_text_formatter: TEXT_FORMATTER) is
+			-- Output name of Current in `a_text_formatter'.
 			-- (from ASSEMBLY_INFO)
 		require -- from ASSEMBLY_INFO
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 		do
-			st.add_string (path)
+			a_text_formatter.add_string (path)
 		end
 
 feature -- Type anchors
@@ -1802,7 +1802,7 @@ feature -- Type anchors
 			-- Type of classes one can insert in Current
 		do
 		end
-		
+
 feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is
@@ -1824,19 +1824,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

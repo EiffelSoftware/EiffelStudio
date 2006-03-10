@@ -18,28 +18,28 @@ feature -- Property
 
 feature -- Output
 
-	put_cluster_name (st: STRUCTURED_TEXT) is
+	put_cluster_name (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the cluster name
 		do
 			if cluster.is_assembly then
-				st.add_string ("Assembly cluster name: ")
+				a_text_formatter.add ("Assembly cluster name: ")
 			else
-				st.add_string ("Cluster name: ")			
+				a_text_formatter.add ("Cluster name: ")			
 			end
-			st.add_string (cluster.cluster_name)
-			st.add_new_line
+			a_text_formatter.add (cluster.cluster_name)
+			a_text_formatter.add_new_line
 		end
 
-	put_cluster_path (st: STRUCTURED_TEXT) is
+	put_cluster_path (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the cluster path
 		do
 			if cluster.is_assembly then
-				st.add_string ("Assembly details: ")
+				a_text_formatter.add ("Assembly details: ")
 			else
-				st.add_string ("Cluster path: ")
+				a_text_formatter.add ("Cluster path: ")
 			end
-			cluster.format (st)
-			st.add_new_line
+			cluster.format (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature {AST_LACE, COMPILER_EXPORTER}

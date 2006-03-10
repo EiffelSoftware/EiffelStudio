@@ -42,23 +42,23 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			print_called_feature (st);
-			st.add_string ("Argument name: ");
-			st.add_string (argument_name);
-			st.add_new_line;
-			st.add_string ("Argument position: ");
-			st.add_int (argument_position);
-			st.add_new_line;
-			st.add_string ("Actual argument type: ");
-			actual_type.append_to (st);
-			st.add_new_line;
-			st.add_string ("Formal argument type: ");
-			formal_type.append_to (st);
-			st.add_new_line;
+			print_called_feature (a_text_formatter);
+			a_text_formatter.add ("Argument name: ");
+			a_text_formatter.add (argument_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Argument position: ");
+			a_text_formatter.add_int (argument_position);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Actual argument type: ");
+			actual_type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Formal argument type: ");
+			formal_type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

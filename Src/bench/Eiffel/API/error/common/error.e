@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Properties 
+feature -- Properties
 
 	line: INTEGER
 			-- Line number involved in error
@@ -32,7 +32,7 @@ feature -- Properties
 		ensure
 			file_name_not_void: has_associated_file
 		end
-		
+
 	code: STRING is
 			-- Code error
 		deferred
@@ -59,7 +59,7 @@ feature -- Properties
 		ensure
 			error_string_not_void: Result /= Void
 		end
-		
+
 	has_associated_file: BOOLEAN is
 			-- Is current relative to a file?
 		do
@@ -72,7 +72,7 @@ feature -- Access
 		do
 			Result := True
 		end
-		
+
 feature -- Set position
 
 	set_location (a_location: LOCATION_AS) is
@@ -86,7 +86,7 @@ feature -- Set position
 			line_set: line = a_location.line
 			column_set: column = a_location.column
 		end
-		
+
 	set_position (l, c: INTEGER) is
 			-- Set `line' and `column' with `l' and `c'.
 		require
@@ -104,7 +104,7 @@ feature {NONE} -- Compute surrounding text around error
 
 	previous_line, current_line, next_line: STRING
 			-- Surrounding lines where error occurs.
-			
+
 	initialize_output is
 			-- Set `previous_line', `current_line' and `next_line' with their proper values
 			-- taken from file `file_name'.
@@ -138,39 +138,39 @@ feature {NONE} -- Compute surrounding text around error
 
 feature -- Output
 
-	trace (st: STRUCTURED_TEXT) is
-			-- Display full error message in `st'.
+	trace (a_text_formatter: TEXT_FORMATTER) is
+			-- Display full error message in `a_text_formatter'.
 		require
-			valid_st: st /= Void;
+			valid_st: a_text_formatter /= Void;
 			is_defined: is_defined
 		do
-			print_error_message (st);
-			build_explain (st);
+			print_error_message (a_text_formatter);
+			build_explain (a_text_formatter);
 		end;
 
-	print_error_message (st: STRUCTURED_TEXT) is
-			-- Display error in `st'.
+	print_error_message (a_text_formatter: TEXT_FORMATTER) is
+			-- Display error in `a_text_formatter'.
 		require
-			valid_st: st /= Void
+			valid_st: a_text_formatter /= Void
 		do
-			st.add_string (Error_string);
-			st.add_string (" code: ");
-			st.add_error (Current, code);
+			a_text_formatter.add (Error_string);
+			a_text_formatter.add (" code: ");
+			a_text_formatter.add_error (Current, code);
 			if subcode /= 0 then
-				st.add_char ('(');
-				st.add_int (subcode);
-				st.add_string (")");
-				st.add_new_line
+				a_text_formatter.add ("(");
+				a_text_formatter.add_int (subcode);
+				a_text_formatter.add (")");
+				a_text_formatter.add_new_line
 			else
-				st.add_new_line;
+				a_text_formatter.add_new_line;
 			end;
-			print_short_help (st);
+			print_short_help (a_text_formatter);
 		end;
 
-	print_short_help (st: STRUCTURED_TEXT) is
-			-- Display help in `st'.
+	print_short_help (a_text_formatter: TEXT_FORMATTER) is
+			-- Display help in `a_text_formatter'.
 		require
-			valid_st: st /= Void
+			valid_st: a_text_formatter /= Void
 		local
 			l_file_name: STRING;
 			f_name: FILE_NAME;
@@ -191,73 +191,73 @@ feature -- Output
 					file.end_of_file
 				loop
 					file.read_line;
-					st.add_string (file.last_string.twin)
-					st.add_new_line;
+					a_text_formatter.add (file.last_string.twin)
+					a_text_formatter.add_new_line;
 				end;
 				file.close;
 			else
-				st.add_new_line;
-				st.add_string ("No help available for this error");
-				st.add_new_line;
-				st.add_string ("(cannot read file: ");
-				st.add_string (l_file_name);
-				st.add_string (")");
-				st.add_new_line;
-				st.add_new_line;
-				st.add_string ("An error message should always be available.");
-				st.add_new_line;
-				st.add_string ("Please contact ISE.");
-				st.add_new_line;
-				st.add_new_line
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("No help available for this error");
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("(cannot read file: ");
+				a_text_formatter.add (l_file_name);
+				a_text_formatter.add (")");
+				a_text_formatter.add_new_line;
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("An error message should always be available.");
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("Please contact ISE.");
+				a_text_formatter.add_new_line;
+				a_text_formatter.add_new_line
 			end;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		require
-			valid_st: st /= Void
+			valid_st: a_text_formatter /= Void
 		deferred
 		end;
 
 feature {NONE} -- Implementation
 
-	print_context_of_error (a_context_class: CLASS_C; st: STRUCTURED_TEXT) is
-			-- Display the line number in `st'.
+	print_context_of_error (a_context_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+			-- Display the line number in `a_text_formatter'.
 		require
 			valid_line: line > 0
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 			a_context_class_not_void: a_context_class /= Void
 		do
 			initialize_output
-			st.add_string ("Line: ")
-			st.add_string (line.out)
+			a_text_formatter.add ("Line: ")
+			a_text_formatter.add (line.out)
 			if a_context_class.lace_class.date_has_changed then
-				st.add_string (" (source code has changed)")
-				st.add_new_line
+				a_text_formatter.add (" (source code has changed)")
+				a_text_formatter.add_new_line
 			elseif line > 0 then
-				st.add_new_line
-				st.add_string ("  ")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("  ")
 				if previous_line /= Void then
 					if not previous_line.is_empty then
 						previous_line.replace_substring_all ("%T", "  ")
 					end
-					st.add_string (previous_line)
-					st.add_new_line
+					a_text_formatter.add (previous_line)
+					a_text_formatter.add_new_line
 				end
-				st.add_string ("->")
+				a_text_formatter.add ("->")
 				if not current_line.is_empty then
 					current_line.replace_substring_all ("%T", "  ")
 				end
-				st.add_string (current_line)
-				st.add_new_line
+				a_text_formatter.add (current_line)
+				a_text_formatter.add_new_line
 				if next_line /= Void then
-					st.add_string ("  ")
+					a_text_formatter.add ("  ")
 					if not next_line.is_empty then
 						next_line.replace_substring_all ("%T", "  ")
 					end
-					st.add_string (next_line)
-					st.add_new_line
+					a_text_formatter.add (next_line)
+					a_text_formatter.add_new_line
 				end
 			end
 		end
@@ -266,26 +266,26 @@ invariant
 	non_void_code: code /= Void
 	non_void_error_message: error_string /= Void
 	non_void_help_file_name: help_file_name /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

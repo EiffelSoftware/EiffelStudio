@@ -22,7 +22,7 @@ inherit
 			handle_extended_key,
 			handle_extended_ctrled_key,
 			handle_character,
-			process_text, load_file,
+			load_file,
 			load_text, reload,
 			initialize_customizable_commands,
 			basic_cursor_move,
@@ -97,18 +97,6 @@ feature -- Content change
 			file_name := f_n
 			date_of_file_when_loaded := f_d
 			date_when_checked := f_d_c
-		end
-
-	process_text (str_text: STRUCTURED_TEXT) is
-			-- Load the text `str_text' in the editor.
-		do
-			if (not load_without_save) and then changed then
-				load_without_save := True
-				dev_window.save_and (agent process_text (str_text))
-			else
-				Precursor {EB_CLICKABLE_EDITOR} (str_text)
-			end
-			load_without_save := False
 		end
 
 	reload is

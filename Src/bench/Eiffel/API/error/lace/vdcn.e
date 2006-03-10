@@ -13,9 +13,9 @@ inherit
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st)
+			put_cluster_name (a_text_formatter)
 		end
 
 indexing

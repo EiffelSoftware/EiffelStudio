@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display once routines of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,17 +30,17 @@ feature -- Access
 
 feature -- Output
 
-	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
+	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is
 		local
 			const: E_CONSTANT;
 			ec: CLASS_I;
 			str: STRING
 		do
-			f.append_signature (st);
+			f.append_signature (a_text_formatter);
 			if f.is_constant then
-				st.add_space
-				st.add (ti_is_keyword)
-				st.add_space
+				a_text_formatter.add_space
+				a_text_formatter.process_keyword_text (ti_is_keyword, Void)
+				a_text_formatter.add_space
 				const ?= f;	--| Cannot fail
 				ec := const.type.associated_class.lace_class
 				if ec = eiffel_system.character_class then
@@ -51,15 +51,15 @@ feature -- Output
 					str := ""
 				end;
 				if const.is_unique then
-					st.add_string ("unique (");
-					st.add_string (str);
-					st.add_string (const.value);
-					st.add_string (str);
-					st.add_char (')')
+					a_text_formatter.add ("unique (");
+					a_text_formatter.add (str);
+					a_text_formatter.add (const.value);
+					a_text_formatter.add (str);
+					a_text_formatter.add_char (')')
 				else
-					st.add_string (str);
-					st.add_string (const.value);
-					st.add_string (str);
+					a_text_formatter.add (str);
+					a_text_formatter.add (const.value);
+					a_text_formatter.add (str);
 				end
 			end
 		end;
@@ -70,19 +70,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

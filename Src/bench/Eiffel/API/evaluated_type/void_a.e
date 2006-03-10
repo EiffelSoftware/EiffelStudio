@@ -52,9 +52,9 @@ feature -- Output
 	dump: STRING is "Void"
 			-- Dumped trace
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
-			st.add (ti_void)
+			st.process_keyword_text (ti_void, Void)
 		end
 
 feature {COMPILER_EXPORTER}

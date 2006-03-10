@@ -34,7 +34,7 @@ feature {EIFFEL_PARSER} -- Line pragma
 			line_pragma_set: line_pragma = a_line_pragma
 		end
 
-feature {INTERNAL_AS, AST_FORMATTER_VISITOR, AST_ROUNDTRIP_ITERATOR} -- Status report
+feature -- Status report
 
 	starts_with_parenthesis: BOOLEAN is
 			-- Is the first format item a "(".

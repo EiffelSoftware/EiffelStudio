@@ -15,7 +15,6 @@ inherit
 			generate_text,
 			set_stone,
 			is_dotnet_formatter,
-			formatted_text,
 			line_numbers_allowed
 		end
 
@@ -23,7 +22,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP] is
@@ -33,19 +32,19 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_contract, 1)
 			Result.put (Pixmaps.Icon_format_contract, 2)
 		end
- 
+
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showshort
 		end
- 
+
  	is_dotnet_formatter: BOOLEAN is
  			-- Is Current able to format .NET XML types?
  		do
  			Result := True
  		end
- 
+
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -62,9 +61,6 @@ feature {NONE} -- Properties
 
 	class_i: EXTERNAL_CLASS_I
 			-- Class currently associated with `Current'.
-
-	formatted_text: STRUCTURED_TEXT
-			-- Text representing `class_i'.
 
 feature {NONE} -- Implementation
 
@@ -86,21 +82,20 @@ feature {NONE} -- Implementation
 			if not retried then
 				set_is_with_breakable
 				if not is_dotnet_mode then
+					editor.handle_before_processing (false)
 					if associated_class /= Void then
-						formatted_text := short_context_text (associated_class)
+						last_was_error := short_context_text (associated_class, editor.text_displayed)
 					end
+					editor.handle_after_processing
 				else
+					editor.handle_before_processing (false)
 					set_is_without_breakable
 					if class_i /= Void then
-						formatted_text := short_dotnet_text (consumed_type, class_i)
+						last_was_error := short_dotnet_text (consumed_type, class_i, editor.text_displayed)
 					elseif associated_class /= Void then
-						formatted_text := short_dotnet_text (consumed_type, associated_class.lace_class)
+						last_was_error := short_dotnet_text (consumed_type, associated_class.lace_class, editor.text_displayed)
 					end
-				end
-				if formatted_text = Void then
-					last_was_error := True
-				else
-					last_was_error := False
+					editor.handle_after_processing
 				end
 				if has_breakpoints then
 					editor.enable_has_breakable_slots
@@ -147,7 +142,7 @@ feature -- Status setting
 						end
 						consumed_type := l_ext_class.external_consumed_type
 						if consumed_type /= Void then
-							consumed_types.put (consumed_type, a_stone.class_i.name)	
+							consumed_types.put (consumed_type, a_stone.class_i.name)
 						end
 					end
 					class_i := Void
@@ -159,7 +154,7 @@ feature -- Status setting
 					end
 					consumed_type := l_ext_class.external_consumed_type
 					associated_class := Void
-					set_classi (new_stone.class_i)					
+					set_classi (new_stone.class_i)
 				end
 			else
 				set_dotnet_mode (False)
@@ -171,7 +166,7 @@ feature -- Status setting
 			-- Associate current formatter with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-		do		
+		do
 			class_i ?= a_class
 			class_cmd := Void
 			must_format := True
@@ -190,19 +185,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

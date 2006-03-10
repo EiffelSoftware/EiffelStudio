@@ -13,8 +13,8 @@ inherit
 	EB_OUTPUT_TOOL
 		redefine
 			make,  drop_breakable, drop_class, drop_feature, drop_cluster,
-			process_text, clear, recycle, scroll_to_end,set_focus,
-			quick_refresh_editor,quick_refresh_margin
+			clear, recycle, scroll_to_end,set_focus,
+			quick_refresh_editor,quick_refresh_margin, is_general
 		end
 
 	EB_SHARED_PIXMAPS
@@ -403,11 +403,6 @@ feature -- Basic operation
 			end
 		end
 
-	process_text (st: STRUCTURED_TEXT) is
-			-- Display `st' on the console.
-		do
-		end
-
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
 		do
@@ -670,6 +665,8 @@ feature -- Status reporting
 				Result := Void
 			end
 		end
+
+	is_general: BOOLEAN is false;
 
 feature -- State setting
 

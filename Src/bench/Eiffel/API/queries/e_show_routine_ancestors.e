@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display ancestors version of `current_feature'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision $"
 
 
-class E_SHOW_ROUTINE_ANCESTORS 
+class E_SHOW_ROUTINE_ANCESTORS
 
 inherit
 
@@ -38,12 +38,12 @@ feature -- Execution
 				i > rout_id_set.count
 			loop
 				rout_id := rout_id_set.item (i);
-				structured_text.add_new_line;
-				structured_text.add_string ("History branch #");
-				structured_text.add_int (i);
-				structured_text.add_new_line;
-				structured_text.add_string ("-----------------");
-				structured_text.add_new_line;
+				text_formatter.add_new_line;
+				text_formatter.add ("History branch #");
+				text_formatter.add_int (i);
+				text_formatter.add_new_line;
+				text_formatter.add ("-----------------");
+				text_formatter.add_new_line;
 				from
 					classes.start
 				until
@@ -52,14 +52,14 @@ feature -- Execution
 					c := classes.item;
 					other_feature := c.feature_with_rout_id (rout_id);
 					if other_feature /= Void then
-						classes.item.append_name (structured_text);
-						structured_text.add (ti_Space);
-						other_feature.append_signature (structured_text);
-						structured_text.add_new_line;
-						structured_text.add_indent;
-						structured_text.add_string ("Version from class ");
-						other_feature.written_class.append_name (structured_text);
-						structured_text.add_new_line;	
+						classes.item.append_name (text_formatter);
+						text_formatter.add (ti_Space);
+						other_feature.append_signature (text_formatter);
+						text_formatter.add_new_line;
+						text_formatter.add_indent;
+						text_formatter.add ("Version from class ");
+						other_feature.written_class.append_name (text_formatter);
+						text_formatter.add_new_line;
 					end;
 					classes.forth
 				end;
@@ -67,7 +67,7 @@ feature -- Execution
 			end;
 		end;
 
-	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]; 
+	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			e_class: CLASS_C) is
 			-- Record parents of `class_c' to `classes'.	
 		local
@@ -86,7 +86,7 @@ feature -- Execution
 					rec_add_parents (classes, e_parent);
 				end;
 				parents.forth;
-			end;	
+			end;
 		end;
 
 indexing
@@ -95,19 +95,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

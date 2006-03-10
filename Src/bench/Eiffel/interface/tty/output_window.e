@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Window where output is generated."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,69 +16,83 @@ inherit
 			process_feature_error
 		end
 
-feature {TEXT_ITEM} -- Text processing
+feature -- Text processing
 
-	process_basic_text (text: BASIC_TEXT) is
+	process_basic_text (text: STRING) is
 		do
-			put_string (text.image)
+			put_string (text)
 		end
 
-	process_string_text (text: STRING_TEXT) is
+	process_string_text (text, link: STRING) is
 		do
-			put_string (text.image)
+			put_string (text)
 		end
 
-	process_comment_text (text: COMMENT_TEXT) is
-			-- Process comment text. 
+	process_comment_text (text: STRING; url: STRING) is
+			-- Process comment text.
 		do
-			put_comment (text.image)
+			put_comment (text)
 		end
 
-	process_quoted_text (text: QUOTED_TEXT) is
+	process_quoted_text (text: STRING) is
 			-- Process the quoted `text' within a comment.
 		do
-			put_quoted_comment (text.image)
+			put_quoted_comment (text)
 		end
 
-	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
+	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
 			-- Process class name text `t'.
 		do
-			put_cluster (text.cluster_i, text.image)
+			if a_quote then
+				put_cluster (a_cluster, text_quoted (text))
+			else
+				put_cluster (a_cluster, text)
+			end
 		end
 
-	process_class_name_text (text: CLASS_NAME_TEXT) is
+	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
 			-- Process class name text `t'.
 		local
 			e_class: CLASS_C
 			class_i: CLASS_I
+			l_text : STRING
 		do
-			class_i := text.class_i
+			if a_quote then
+				l_text := text_quoted (text)
+			else
+				l_text := text
+			end
+			class_i := a_class
 			e_class := class_i.compiled_class
 			if e_class /= Void then
-				put_class (e_class, text.image)
+				put_class (e_class, l_text)
 			else
-				put_classi (class_i, text.image)
+				put_classi (class_i, l_text)
 			end
 		end
 
-	process_feature_name_text (text: FEATURE_NAME_TEXT) is
+	process_feature_name_text (text: STRING; a_class: CLASS_C) is
 			-- Process feature name text `t'.
 		do
-			put_feature_name (text.image, text.e_class)
+			put_feature_name (text, a_class)
 		end
 
-	process_feature_text (text: FEATURE_TEXT) is
+	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
 			-- Process feature text `text'.
 		do
-			put_feature (text.e_feature, text.image)
+			if a_quote then
+				put_feature (a_feature, text_quoted (text))
+			else
+				put_feature (a_feature, text)
+			end
 		end
 
-	process_breakpoint (a_bp: BREAKPOINT_ITEM) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
 			-- Process breakpoint.
 		do
 		end
 
-	process_breakpoint_index (a_bp: BREAKPOINT_TEXT) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
 			-- Process breakpoint.
 		do
 		end
@@ -88,112 +102,112 @@ feature {TEXT_ITEM} -- Text processing
 		do
 		end
 
-	process_new_line (text: NEW_LINE_ITEM) is
+	process_new_line is
 			-- Process new line text `t'.
 		do
 			put_new_line
 		end
 
-	process_indentation (text: INDENT_TEXT) is
+	process_indentation (a_indent_depth: INTEGER) is
 			-- Process indentation `t'.
 		do
-			put_string (text.image)
+			put_string (indentation (a_indent_depth))
 		end
 
-	process_after_class (text: AFTER_CLASS) is
+	process_after_class (a_class: CLASS_C) is
 			-- Process after class text `t'.
 		do
-			put_after_class (text.e_class, text.image)
+			put_after_class (a_class, a_class.name_in_upper)
 		end
 
-	process_before_class (text: BEFORE_CLASS) is
+	process_before_class (a_class: CLASS_C) is
 			-- Process before class `t'.
 		do
-			put_before_class (text.e_class)
+			put_before_class (a_class)
 		end
 
-	process_filter_item (text: FILTER_ITEM) is
+	process_filter_item (text: STRING; is_before: BOOLEAN) is
 			-- Process filter text `t'.
 		do
-			put_filter_item (text.construct, text.is_before)
+			put_filter_item (text, is_before)
 		end
 
-	process_symbol_text (text: SYMBOL_TEXT) is
+	process_symbol_text (text: STRING) is
 			-- Process symbol text.
 		do
-			put_symbol (text.image)
+			put_symbol (text)
 		end
 
-	process_keyword_text (text: KEYWORD_TEXT) is
+	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
 			-- Process keyword text.
 		do
-			put_keyword (text.image)
+			put_keyword (text)
 		end
 
-	process_operator_text (text: OPERATOR_TEXT) is
+	process_operator_text (text: STRING; a_feature: E_FEATURE) is
 			-- Process operator text.
 		do
-			put_operator (text.image, text.e_feature, text.is_keyword)
+			put_operator (text, a_feature, is_keyword (text))
 		end
 
-	process_address_text (text: ADDRESS_TEXT) is
+	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
 			-- Process address text.
 		do
-			put_address (text.address, text.name, text.e_class)
+			put_address (a_address, a_name, a_class)
 		end
 
-	process_error_text (text: ERROR_TEXT) is
+	process_error_text (text: STRING; a_error: ERROR) is
 			-- Process error text.
 		do
-			put_error (text.error, text.error_text)
+			put_error (a_error, text)
 		end
 
-	process_cl_syntax (text: CL_SYNTAX_ITEM) is
+	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
-			put_class_syntax (text.syntax_message, text.e_class, text.error_text)
+			put_class_syntax (a_syntax_message, a_class, text)
 		end
 
-	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
+	process_ace_syntax (text: STRING; a_error: SYNTAX_ERROR) is
 			-- Process Ace syntax text.
 		do
-			put_ace_syntax (text.syntax_error, text.error_text)
+			put_ace_syntax (a_error, text)
 		end
 
-	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
+	process_difference_text_item (text: STRING) is
 			-- Process difference text.
 		do
-			put_string (text.image)
+			put_string (text)
 		end
 
-	process_feature_error (text: FEATURE_ERROR_TEXT) is
+	process_feature_error (text: STRING; a_feature: E_FEATURE; a_line: INTEGER) is
 			-- Process error feature text.
 		do
-			put_feature_error (text.e_feature, text.image, text.line)
+			put_feature_error (a_feature, text, a_line)
 		end
 
 feature -- Output
-	
-	display is 
+
+	display is
 			-- Display the contents of window.
-		do 
+		do
 		end
 
-	clear_window is 		
+	clear_window is
 			-- Clear the contents of window.
-		do 
+		do
 		end
 
-	put_new_line is 
+	put_new_line is
 			-- Put a new line at current position.
-		deferred 
+		deferred
 		end
 
-	put_string (s: STRING) is 
+	put_string (s: STRING) is
 			-- Put string `s' at current position.
 		require
 			valid_s: s /= Void
-		deferred 
+		deferred
 		end
 
 	put_one_indent is
@@ -254,7 +268,7 @@ feature -- Output
 		end
 
 	put_feature (feat: E_FEATURE; str: STRING) is
-			-- Put feature `feat' with string 
+			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		require
 			valid_str: str /= Void
@@ -282,7 +296,7 @@ feature -- Output
 			-- position `pos'
 		require
 			valid_str: str /= Void
-			positive_pos: pos > 0 
+			positive_pos: pos > 0
 		do
 			put_feature (feat, str)
 		end
@@ -327,8 +341,8 @@ feature -- Output
 		require
 			valid_str: str /= Void
 		do
-			put_string (str)
-		end;	
+			put_string (text_quoted (str))
+		end;
 
 	put_after_class (e_class: CLASS_C; str: STRING) is
 			-- Put `str' as representation of quoted text.
@@ -368,7 +382,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_operator (str: STRING; e_feature: E_FEATURE; is_keyword: BOOLEAN) is
+	put_operator (str: STRING; e_feature: E_FEATURE; a_is_keyword: BOOLEAN) is
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -383,19 +397,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

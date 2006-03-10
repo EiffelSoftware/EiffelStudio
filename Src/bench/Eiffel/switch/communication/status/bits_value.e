@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Run time value representing bits."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -92,13 +92,13 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
-		do 
+	append_type_and_value (st: TEXT_FORMATTER) is
+		do
 			st.add_classi (dynamic_class.lace_class, "BIT");
 			st.add (ti_Space);
 			st.add_int (value.count - 1);
-			st.add_string (Equal_sign);
-			st.add_string (value)
+			st.add (Equal_sign);
+			st.add (value)
 		end;
 
 feature {NONE} -- Output
@@ -122,12 +122,12 @@ feature {NONE} -- Output
 			Result.append (value)
 		end
 
-	append_value (st: STRUCTURED_TEXT) is
+	append_value (st: TEXT_FORMATTER) is
 			-- Append the value of `Current' to `st'. (Useful for pretty print).
 		do
 			st.add_string (value)
 		end
-		
+
 feature -- Output
 
 	expandable: BOOLEAN is False
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			-- all the information has been received from the application.)
 		do
 			if not is_attribute then
-				-- The `value' is the Physical address of the bit object 
+				-- The `value' is the Physical address of the bit object
 				send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_pointer (value));
 				value := c_tread
 				-- This is actual `value' .
@@ -172,26 +172,26 @@ feature {NONE} -- Implementation
 invariant
 
     not_value_void: value /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

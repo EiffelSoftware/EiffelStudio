@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Item that represents a new line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -35,7 +35,7 @@ feature {TEXT_FORMATTER} -- Implementation
     append_to (text: TEXT_FORMATTER) is
             -- Append Current basic text to `text'.
         do
-			text.process_new_line (Current)
+			text.process_new_line
         end
 
 indexing

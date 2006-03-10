@@ -353,8 +353,6 @@ feature {NONE} -- Logging
 
 	debugger_message (m: STRING) is
 			-- Put message on context tool's output
---		local
---			st: STRUCTURED_TEXT
 		do
 			Application.debugger_manager.debugger_message (m)
 --			if context_output_tool /= Void then

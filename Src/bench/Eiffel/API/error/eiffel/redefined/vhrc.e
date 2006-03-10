@@ -40,11 +40,11 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Parent: ");
-			parent.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Parent: ");
+			parent.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

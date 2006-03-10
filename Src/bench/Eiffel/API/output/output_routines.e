@@ -17,7 +17,7 @@ inherit
 
 feature -- Miscellaneous
 
-	append_system_info (text: STRUCTURED_TEXT) is
+	append_system_info (text: TEXT_FORMATTER) is
 			-- Append to `text' information about `e_system'.
 		local
 			creation_name: STRING
@@ -25,28 +25,28 @@ feature -- Miscellaneous
 			root_class: CLASS_I
 			cr_f: E_FEATURE
 		do
-			text.add (create {KEYWORD_TEXT}.make ("System"))
+			text.process_keyword_text ("System", Void)
 			text.add_new_line
 			text.add_indent
-			text.add (create {INDEXING_TAG_TEXT}.make ("name:     "))
-			text.add (create {BASIC_TEXT}.make (Eiffel_system.name))
-			text.add_new_line
-
-			text.add_indent
-			text.add (create {INDEXING_TAG_TEXT}.make ("location: "))
-			text.add (create {BASIC_TEXT}.make (Eiffel_project.name))
+			text.process_indexing_tag_text ("name:     ")
+			text.process_basic_text (Eiffel_system.name)
 			text.add_new_line
 
 			text.add_indent
-			text.add (create {INDEXING_TAG_TEXT}.make ("ace file: "))
-			text.add (create {BASIC_TEXT}.make (Eiffel_ace.file_name))
+			text.process_indexing_tag_text ("location: ")
+			text.process_basic_text (Eiffel_project.name)
+			text.add_new_line
+
+			text.add_indent
+			text.process_indexing_tag_text ("ace file: ")
+			text.process_basic_text (Eiffel_ace.file_name)
 			text.add_new_line
 
 			text.add_new_line
 
 			root_class := Eiffel_system.root_class
 			if root_class /= Void then
-				text.add (create {KEYWORD_TEXT}.make ("Root class"))
+				text.process_keyword_text ("Root class", Void)
 				text.add_new_line
 				text.add_indent
 				text.add_class (root_class)
@@ -54,9 +54,9 @@ feature -- Miscellaneous
 				root_cluster := Eiffel_system.root_cluster
 				if root_cluster /= Void then
 					text.add_space
-					text.add (ti_L_parenthesis)
+					text.process_symbol_text (ti_L_parenthesis)
 					text.add_cluster (root_cluster, root_cluster.cluster_name)
-					text.add (ti_R_parenthesis)
+					text.process_symbol_text (ti_R_parenthesis)
 				end
 
 				creation_name := Eiffel_system.system.creation_name
@@ -65,25 +65,25 @@ feature -- Miscellaneous
 						cr_f := root_class.compiled_class.feature_with_name (creation_name)
 					end
 					if cr_f /= Void then
-						text.add (ti_Colon)
+						text.process_symbol_text (ti_Colon)
 						text.add_space
 						text.add_feature (cr_f, creation_name)
 					else
-						text.add (ti_Colon)
+						text.process_symbol_text (ti_Colon)
 						text.add_space
-						text.add_string (creation_name)
+						text.add (creation_name)
 					end
 				elseif creation_name /= Void then
-					text.add (ti_Colon)
+					text.process_symbol_text (ti_Colon)
 					text.add_space
-					text.add_string (creation_name)
+					text.add (creation_name)
 				end
 				text.add_new_line
 				text.add_new_line
 			end
 		end
 
-	append_class_ancestors (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_class_ancestors (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append class ancestors for `class_c' to `text'.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
@@ -96,42 +96,42 @@ feature -- Miscellaneous
 					class_list.extend (parents.item.associated_class.lace_class)
 					parents.forth
 				end
-				text.add (create {KEYWORD_TEXT}.make ("Ancestors"))
+				text.process_keyword_text ("Ancestors", Void)
 				text.add_new_line
 				append_simple_class_list (text, class_list)
 				text.add_new_line
 			end
 		end
 
-	append_class_descendants (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_class_descendants (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append class descendants for `class_c' to `text'.
 		local
 			c_classes: LINEAR [CLASS_C]
 		do
 			c_classes := class_c.descendants
 			if c_classes /= Void and then not c_classes.is_empty then
-				text.add (create {KEYWORD_TEXT}.make ("Descendants"))
+				text.process_keyword_text ("Descendants", Void)
 				text.add_new_line
 				append_simple_class_list (text, lace_classes (c_classes))
 				text.add_new_line
 			end
 		end
 
-	append_class_clients (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_class_clients (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append class clients for `class_c' to `text'.
 		local
 			c_classes: LINEAR [CLASS_C]
 		do
 			c_classes := class_c.clients
 			if c_classes /= Void and then not c_classes.is_empty then
-				text.add (create {KEYWORD_TEXT}.make ("Clients"))
+				text.process_keyword_text ("Clients", Void)
 				text.add_new_line
 				append_simple_class_list (text, lace_classes (c_classes))
 				text.add_new_line
 			end
 		end
 
-	append_class_suppliers (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_class_suppliers (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append class suppliers for `class_c' to `text'.
 		local
 			suppliers: SUPPLIER_LIST
@@ -144,14 +144,14 @@ feature -- Miscellaneous
 					class_list.extend (suppliers.item.supplier.lace_class)
 					suppliers.forth
 				end
-				text.add (create {KEYWORD_TEXT}.make ("Suppliers"))
+				text.process_keyword_text ("Suppliers", Void)
 				text.add_new_line
 				append_simple_class_list (text, class_list)
 				text.add_new_line
 			end
 		end
 
-	append_simple_class_list (text: STRUCTURED_TEXT; class_list: LINKED_LIST [CLASS_I]) is
+	append_simple_class_list (text: TEXT_FORMATTER; class_list: LINKED_LIST [CLASS_I]) is
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -188,19 +188,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

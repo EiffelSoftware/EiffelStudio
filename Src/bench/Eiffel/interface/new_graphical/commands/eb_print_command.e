@@ -77,7 +77,10 @@ feature -- Execution
 		do
 			if not dev_window.is_empty then
 				create printer.make
-				printer.set_text (dev_window.editor_tool.text_area.structured_text)
+					--| Fixme:
+					--| We simply use text from the editor to print for the moment,
+					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
+				printer.set_text (dev_window.editor_tool.text_area.text)
 				printer.set_font (font)
 				printer.set_window (dev_window.window)
 				printer.set_job_name (dev_window.stone.history_name)
@@ -296,19 +299,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

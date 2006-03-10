@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error for useless selections. The selection is not needed or there are two %
 		%different selection of the same feature."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 		redefine
 			build_explain, subcode, is_defined
 		end
-	
+
 feature -- Properties
 
 	feature_name: STRING;
@@ -49,16 +49,16 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Feature name: ");
-			st.add_string (feature_name);
-			st.add_new_line;
-			st.add_string ("In Select subclause for parent: ");
-			parent.append_signature (st, False);
-			st.add_new_line;
+			a_text_formatter.add ("Feature name: ");
+			a_text_formatter.add (feature_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("In Select subclause for parent: ");
+			parent.append_signature (a_text_formatter, False);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -85,19 +85,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -15,11 +15,11 @@ inherit
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Anchor name: Result")
-			st.add_new_line
-			precursor {VTAT1} (st)
+			a_text_formatter.add ("Anchor name: Result")
+			a_text_formatter.add_new_line
+			precursor {VTAT1} (a_text_formatter)
 		end;
 
 indexing

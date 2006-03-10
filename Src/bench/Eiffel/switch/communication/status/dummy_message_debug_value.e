@@ -64,7 +64,7 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
+	append_type_and_value (st: TEXT_FORMATTER) is
 			-- Append type and value of Current to `st'.
 		do
 			st.add_string (display_message)
@@ -72,7 +72,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 feature {NONE} -- Output
 
-	append_value (st: STRUCTURED_TEXT) is
+	append_value (st: TEXT_FORMATTER) is
 			-- Append only the value of Current to `st'.
 		do
 			st.add_string (display_message)
@@ -119,19 +119,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

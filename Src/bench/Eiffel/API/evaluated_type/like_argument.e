@@ -75,18 +75,18 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
-			st.add (ti_L_bracket)
-			st.add (ti_Like_keyword)
+			st.process_symbol_text (ti_L_bracket)
+			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
 			if f /= Void then
-				st.add (create {LOCAL_TEXT}.make (f.arguments.argument_names.i_th (position)))
+				st.process_local_text (f.arguments.argument_names.i_th (position))
 			else
 				st.add (ti_Argument_index)
 				st.add_int (position)
 			end
-			st.add (ti_R_bracket)
+			st.process_symbol_text (ti_R_bracket)
 			st.add_space
 			if is_valid then
 				actual_type.ext_append_to (st, f)

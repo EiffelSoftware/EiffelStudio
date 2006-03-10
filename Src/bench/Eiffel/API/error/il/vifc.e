@@ -51,21 +51,21 @@ feature -- Properties
 	
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error message
 		do
-			st.add_string ("Following classes have same IL full name `")
-			st.add_string (full_name)
-			st.add_string ("'")
-			st.add_new_line
+			a_text_formatter.add ("Following classes have same IL full name `")
+			a_text_formatter.add (full_name)
+			a_text_formatter.add ("'")
+			a_text_formatter.add_new_line
 			from
 				classes.start
 			until
 				classes.after
 			loop
-				st.add_string ("Class: ")
-				classes.item_for_iteration.append_signature (st, False)
-				st.add_new_line
+				a_text_formatter.add ("Class: ")
+				classes.item_for_iteration.append_signature (a_text_formatter, False)
+				a_text_formatter.add_new_line
 				classes.forth
 			end
 		end

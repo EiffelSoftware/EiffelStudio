@@ -46,26 +46,26 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if e_feature /= Void then
-				st.add_string ("In feature: ");
-				e_feature.append_name (st);
+				a_text_formatter.add ("In feature: ");
+				e_feature.append_name (a_text_formatter);
 			else
-				st.add_string ("In inheritance clause");
+				a_text_formatter.add ("In inheritance clause");
 			end;
-			st.add_new_line;
+			a_text_formatter.add_new_line;
 			if entity_name /= Void then
-				st.add_string ("Entity name: ");
-				st.add_string (entity_name);
-				st.add_new_line;
+				a_text_formatter.add ("Entity name: ");
+				a_text_formatter.add (entity_name);
+				a_text_formatter.add_new_line;
 			end;
-			st.add_string ("Invalid type: ");
-			type.append_to (st);
-			st.add_new_line;
-			st.add_string ("Base class: ");
-			base_class.append_signature (st, False);
-			st.add_new_line;
+			a_text_formatter.add ("Invalid type: ");
+			type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Base class: ");
+			base_class.append_signature (a_text_formatter, False);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -25,18 +25,18 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
 			if in_constraint then
-				st.add_string ("In constraint genericity clause")
-				st.add_new_line
+				a_text_formatter.add ("In constraint genericity clause")
+				a_text_formatter.add_new_line
 			end
-			st.add_string ("In declaration: ")
-			parent_type.append_to (st)
-			st.add_new_line
-			Precursor {VTCG} (st)
+			a_text_formatter.add ("In declaration: ")
+			parent_type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
+			Precursor {VTCG} (a_text_formatter)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

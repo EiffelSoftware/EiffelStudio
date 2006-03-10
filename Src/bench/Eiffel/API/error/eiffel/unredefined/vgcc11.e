@@ -25,19 +25,19 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build the error message
 		do
 			if target_name /= Void then
-				st.add_string ("Creation of: ");
-				st.add_string (target_name);
-				st.add_new_line;
+				a_text_formatter.add ("Creation of: ");
+				a_text_formatter.add (target_name);
+				a_text_formatter.add_new_line;
 			end
-			st.add_string ("Feature name: ");
+			a_text_formatter.add ("Feature name: ");
 			if creation_feature /= Void then
-				creation_feature.append_signature (st);
+				creation_feature.append_signature (a_text_formatter);
 			end;
-			st.add_new_line;
+			a_text_formatter.add_new_line;
 		end
 
 feature {COMPILER_EXPORTER}

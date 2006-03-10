@@ -19,12 +19,12 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			st.add_string ("Option name: ");
-			st.add_string (option_name);
-			st.add_new_line;
+			put_cluster_name (a_text_formatter);
+			a_text_formatter.add ("Option name: ");
+			a_text_formatter.add (option_name);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {CLUST_PROP_SD} -- Setting

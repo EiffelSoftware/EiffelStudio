@@ -5,14 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	DOCUMENTATION_ROUTINES
 
 inherit
 	OUTPUT_ROUTINES
 
 	SHARED_EIFFEL_PROJECT
-	
+
 	EB_SHARED_PREFERENCES
 
 feature -- Status setting
@@ -31,143 +31,182 @@ feature -- Access
 	excluded_indexing_items: LINEAR [STRING]
 			-- Indexing items not to include in HTML meta clause.
 
-	index_text: STRUCTURED_TEXT is
+	index_text (a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation index as structured text.
+		require
+			a_text_formatter_not_void: a_text_formatter /= Void
 		local
 			subs: LINEAR [CLUSTER_I]
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			append_system_info (Result)
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, true, true, true)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			append_system_info (a_text_formatter)
 			subs := Eiffel_system.sub_clusters
 			if subs /= Void and then not subs.is_empty then
-				Result.add (create {KEYWORD_TEXT}.make ("Top-level clusters"))
-				Result.add_new_line
-				append_cluster_list (Result, subs)
-				Result.add_new_line
+				a_text_formatter.process_keyword_text ("Top-level clusters", Void)
+				a_text_formatter.add_new_line
+				append_cluster_list (a_text_formatter, subs)
+				a_text_formatter.add_new_line
 			end
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, true, true, true)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_list_text (du: DOCUMENTATION_UNIVERSE): STRUCTURED_TEXT is
+	class_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation class list from `du.classes' as structured text.
 		require
 			du_not_void: du /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			Result.add (create {KEYWORD_TEXT}.make ("Classes"))
-			Result.add_new_line
-			append_class_list (Result, du.classes, True)
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, false, true, true)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_keyword_text ("Classes", Void)
+			a_text_formatter.add_new_line
+			append_class_list (a_text_formatter, du.classes, True)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, false, true, true)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	cluster_list_text (du: DOCUMENTATION_UNIVERSE): STRUCTURED_TEXT is
+	cluster_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter:TEXT_FORMATTER)  is
 			-- Generate documentation cluster list from `du.clusters' as structured text.
 		require
 			du_not_void: du /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			Result.add (create {KEYWORD_TEXT}.make ("Clusters"))
-			Result.add_new_line
-			append_cluster_list (Result, du.clusters)
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, False, True)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_keyword_text ("Clusters", Void)
+			a_text_formatter.add_new_line
+			append_cluster_list (a_text_formatter, du.clusters)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, False, True)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	cluster_hierarchy_text (du: DOCUMENTATION_UNIVERSE): STRUCTURED_TEXT is
+	cluster_hierarchy_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)  is
 			-- Generate documentation cluster hierarchy as structured text.
 			-- Do not generate leafs of clusters that are not generated as described by `du'.
 			-- Add links to diagrams if `diagrams' is True.
 		require
 			du_not_void: du /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		local
 			cluster_list: LIST [CLUSTER_I]
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			Result.add (create {KEYWORD_TEXT}.make ("Clusters"))
-			Result.add_new_line
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, True, False)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_keyword_text ("Clusters", Void)
+			a_text_formatter.add_new_line
 			cluster_list := Eiffel_system.sub_clusters
 			from cluster_list.start until cluster_list.after loop
-				append_cluster_hierarchy_leaf (Result, du, cluster_list.item, 1)
+				append_cluster_hierarchy_leaf (a_text_formatter, du, cluster_list.item, 1)
 				cluster_list.forth
 			end
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, True, False)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
 	cluster_index_text (
 		cluster: CLUSTER_I;
 		class_list: LINKED_LIST [CLASS_I];
-		diagrams: BOOLEAN): STRUCTURED_TEXT is
+		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation cluster index for `cluster' as structured text.
 			-- Add links to diagrams if `diagrams' is True.
 		require
 			cluster_not_void: cluster /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		local
 			parent: CLUSTER_I
 			subs: ARRAYED_LIST [CLUSTER_I]
-			ust: URL_STRING_TEXT
 			l_indexes: EIFFEL_LIST [INDEX_AS]
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			Result.add (create {KEYWORD_TEXT}.make ("Cluster"))
-			Result.add_new_line
-			Result.add_indent
-			Result.add (create {CLUSTER_NAME_TEXT}.make (cluster.cluster_name, cluster))
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, True, False)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_keyword_text ("Clusters", Void)
+			a_text_formatter.add_new_line
+			a_text_formatter.add_indent
+			a_text_formatter.process_cluster_name_text (cluster.cluster_name, cluster, false)
 			if diagrams then
-				Result.add_indent
-				create ust.make ("(diagram)")
-				ust.set_link ("./diagram.html")
-				Result.add (ust)
+				a_text_formatter.add_indent
+				a_text_formatter.process_string_text ("(diagram)", "./diagram.html")
 			end
-			Result.add_new_line
-			Result.add_new_line;
+			a_text_formatter.add_new_line
+			a_text_formatter.add_new_line;
 
 			l_indexes := cluster.indexes
 			if l_indexes /= Void then
-				(create {FORMAT_CONTEXT}.make_for_appending (Result)).format_ast (l_indexes)
+				(create {TEXT_FORMATTER_DECORATOR}.make_for_appending (a_text_formatter)).format_ast (l_indexes)
 			end
 
 			parent := cluster.parent_cluster
 			if parent /= Void then
-				Result.add (create {KEYWORD_TEXT}.make ("Supercluster"))
-				Result.add_new_line
-				Result.add_indent
-				Result.add (create {CLUSTER_NAME_TEXT}.make (parent.cluster_name, parent))		
-				Result.add_new_line
-				Result.add_new_line
+				a_text_formatter.process_keyword_text ("Supercluster", Void)
+				a_text_formatter.add_new_line
+				a_text_formatter.add_indent
+				a_text_formatter.process_cluster_name_text (parent.cluster_name, parent, false)
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
 			end
 			subs := cluster.sub_clusters
 			if subs /= Void and then not subs.is_empty then
-				Result.add (create {KEYWORD_TEXT}.make ("Subclusters"))
-				Result.add_new_line
-				append_cluster_list (Result, subs)
-				Result.add_new_line
+				a_text_formatter.process_keyword_text ("Subclusters", Void)
+				a_text_formatter.add_new_line
+				append_cluster_list (a_text_formatter, subs)
+				a_text_formatter.add_new_line
 			end
 			if not class_list.is_empty then
-				Result.add (create {KEYWORD_TEXT}.make ("Classes"))
-				Result.add_new_line
-				append_class_list (Result, class_list, False)
+				a_text_formatter.process_keyword_text ("Classes", Void)
+				a_text_formatter.add_new_line
+				append_class_list (a_text_formatter, class_list, False)
 			end
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_global_menu_bar (a_text_formatter, True, True, False)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_chart_text (class_c: CLASS_C): STRUCTURED_TEXT is
+	class_chart_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation class chart for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		local
 			as_c: CLASS_C
 			features: LINEAR [E_FEATURE]
@@ -175,12 +214,14 @@ feature -- Access
 			f: E_FEATURE
 		do
 			current_class := class_c
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			class_c.append_header (Result)
-			Result.add_new_line
-			append_general_info (Result, class_c.lace_class)
-			append_class_ancestors (Result, class_c)
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+			class_c.append_header (a_text_formatter)
+			a_text_formatter.add_new_line
+			append_general_info (a_text_formatter, class_c.lace_class)
+			append_class_ancestors (a_text_formatter, class_c)
 			create queries.make
 			create commands.make
 			create actions.make
@@ -201,35 +242,40 @@ feature -- Access
 					features.forth
 				end
 			end
-			append_feature_chart_item (Result, actions, "Action sequences")
-			append_feature_chart_item (Result, queries, "Queries")
-			append_feature_chart_item (Result, commands, "Commands")
-			append_class_constraints (Result, class_c)
-			Result.add (ti_After_class_declaration)
+			append_feature_chart_item (a_text_formatter, actions, "Action sequences")
+			append_feature_chart_item (a_text_formatter, queries, "Queries")
+			append_feature_chart_item (a_text_formatter, commands, "Commands")
+			append_class_constraints (a_text_formatter, class_c)
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 			current_class := Void
-		ensure
-			not_void: Result /= Void
 		end
 
-	class_relations_text (class_c: CLASS_C): STRUCTURED_TEXT is
+	class_relations_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation class relations for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		do
-			create Result.make
-			Result.add (ti_Before_class_declaration)
-			class_c.append_header (Result)
-			Result.add_new_line
-			append_class_ancestors (Result, class_c)
-			append_class_descendants (Result, class_c)
-			append_class_clients (Result, class_c)
-			append_class_suppliers (Result, class_c)
-			Result.add (ti_After_class_declaration)
-		ensure
-			not_void: Result /= Void
+			a_text_formatter.process_filter_item (f_class_declaration, true)
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+			class_c.append_header (a_text_formatter)
+			a_text_formatter.add_new_line
+			append_class_ancestors (a_text_formatter, class_c)
+			append_class_descendants (a_text_formatter, class_c)
+			append_class_clients (a_text_formatter, class_c)
+			append_class_suppliers (a_text_formatter, class_c)
+			a_text_formatter.process_filter_item (f_menu_bar, true)
+			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			a_text_formatter.process_filter_item (f_menu_bar, false)
+			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_text (class_C: CLASS_C; flat, short: BOOLEAN): STRUCTURED_TEXT is
+	class_text (class_C: CLASS_C; flat, short: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
 			-- Generate documentation class text for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
@@ -237,6 +283,7 @@ feature -- Access
 			formatter: CLASS_TEXT_FORMATTER
 		do
 			create formatter
+			formatter.set_documentation (Current)
 			formatter.set_clickable
 			if flat then
 				formatter.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
@@ -247,15 +294,12 @@ feature -- Access
 			if short then
 				formatter.set_is_short
 			end
-			formatter.format (class_c)
-			Result := formatter.text
-		ensure
-			not_void: Result /= Void
+			formatter.format (class_c, a_text_formatter)
 		end
 
 feature -- Routines
 
-	append_general_info (text: STRUCTURED_TEXT; class_i: CLASS_I) is
+	append_general_info (text: TEXT_FORMATTER; class_i: CLASS_I) is
 			-- Append "General" item for class charts.
 		local
 			creators: HASH_TABLE [EXPORT_I, STRING]
@@ -263,7 +307,7 @@ feature -- Routines
 			class_c: CLASS_C
 		do
 			class_c := class_i.compiled_class
-			text.add (create {KEYWORD_TEXT}.make ("General"))
+			text.process_keyword_text ("General", Void)
 			text.add_new_line
 			if class_c.is_obsolete then
 				append_info_item (text, "obsolete")
@@ -271,9 +315,9 @@ feature -- Routines
 				text.add_new_line
 			end
 			append_info_item (text, "cluster")
-			text.add (create {CLUSTER_NAME_TEXT}.make (class_i.cluster.cluster_name, class_i.cluster))
+			text.process_cluster_name_text (class_i.cluster.cluster_name, class_i.cluster, false)
 			text.add_new_line
-				
+
 			s := indexing_item_as_string (class_i, "description")
 			if s /= Void then
 				append_info_item (text, "description")
@@ -295,7 +339,7 @@ feature -- Routines
 			text.add_new_line
 		end
 
-	append_class_constraints (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_class_constraints (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append to `text', all invariant tags.
 		local
 			ast: INVARIANT_AS
@@ -306,7 +350,7 @@ feature -- Routines
 			if ast /= Void then
 				invariants := ast.assertion_list
 				if ast.assertion_list /= Void and then not ast.assertion_list.is_empty then
-					text.add (create {KEYWORD_TEXT}.make ("Constraints"))
+					text.process_keyword_text ("Constraints", Void)
 					text.add_new_line
 					from
 						invariants.start
@@ -318,7 +362,7 @@ feature -- Routines
 							s := s.twin
 							s.replace_substring_all ("_", " ")
 							text.add_indent
-							text.add (create {ASSERTION_TAG_TEXT}.make (s))
+							text.process_assertion_tag_text (s)
 							text.add_new_line
 						end
 						invariants.forth
@@ -328,7 +372,7 @@ feature -- Routines
 			end
 		end
 
-	append_creators (text: STRUCTURED_TEXT; class_c: CLASS_C) is
+	append_creators (text: TEXT_FORMATTER; class_c: CLASS_C) is
 			-- Append creators list.
 		local
 			cr: HASH_TABLE [EXPORT_I, STRING]
@@ -344,13 +388,13 @@ feature -- Routines
 				text.add_feature (class_c.feature_with_name (f_name), f_name)
 				cr.forth
 				if not cr.after then
-					text.add (ti_Comma)
+					text.process_symbol_text (ti_Comma)
 					text.add_space
 				end
 			end
 		end
 
-	append_cluster_list (text: STRUCTURED_TEXT; cluster_list: LINEAR [CLUSTER_I]) is
+	append_cluster_list (text: TEXT_FORMATTER; cluster_list: LINEAR [CLUSTER_I]) is
 		do
 			from
 				cluster_list.start
@@ -358,20 +402,17 @@ feature -- Routines
 				cluster_list.after
 			loop
 				text.add_indent
-				text.add (create {CLUSTER_NAME_TEXT}.make (
-					cluster_list.item.cluster_name, cluster_list.item))
+				text.process_cluster_name_text (cluster_list.item.cluster_name, cluster_list.item, false)
 				text.add_new_line
 				cluster_list.forth
 			end
 		end
- 
-	append_feature_list (text: STRUCTURED_TEXT; f_list: LINEAR [E_FEATURE]) is
+
+	append_feature_list (text: TEXT_FORMATTER; f_list: LINEAR [E_FEATURE]) is
 			-- Append list of feature with signatures to `ctxt'.
 		local
 			f: E_FEATURE
 			t: STRING
-			ti: TOOLTIP_ITEM
-			fi: FILTER_ITEM
 		do
 			from
 				f_list.start
@@ -381,22 +422,14 @@ feature -- Routines
 				f := f_list.item
 				t := feature_tooltip (f)
 				text.add_indent
-				create ti.make (t)
-				ti.set_before
-				text.add (ti)
+				text.process_tooltip_item (t, true)
 				f.append_signature (text)
-				create ti.make (t)
-				ti.set_after
-				text.add (ti)
+				text.process_tooltip_item (t, false)
 
 				if current_class /= f.written_class then
-					create fi.make (f_Origin_comment)
-					fi.set_before
-					text.add (fi)
+					text.process_filter_item (f_Origin_comment, true)
 					text.add_comment_text (" -- (from " + f.written_class.name_in_upper + ")")
-					create fi.make (f_Origin_comment)
-					fi.set_after
-					text.add (fi)
+					text.process_filter_item (f_Origin_comment, false)
 				end
 
 				text.add_new_line
@@ -438,7 +471,7 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: STRUCTURED_TEXT; class_list: LINKED_LIST [CLASS_I]; desc: BOOLEAN) is
+	append_class_list (text: TEXT_FORMATTER; class_list: LINKED_LIST [CLASS_I]; desc: BOOLEAN) is
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -473,7 +506,7 @@ feature {NONE} -- Implementation
 		end
 
 	append_cluster_hierarchy_leaf (
-		text: STRUCTURED_TEXT;
+		text: TEXT_FORMATTER;
 		doc_universe: DOCUMENTATION_UNIVERSE;
 		parent_cluster: CLUSTER_I;
 		indent: INTEGER) is
@@ -486,8 +519,7 @@ feature {NONE} -- Implementation
 					text.add_indent
 					n := n + 1
 				end
-				text.add (create {CLUSTER_NAME_TEXT}.make (
-					parent_cluster.cluster_name, parent_cluster))
+				text.process_cluster_name_text (parent_cluster.cluster_name, parent_cluster, false)
 				text.add_new_line
 				subs := parent_cluster.sub_clusters
 				if subs /= Void then
@@ -499,7 +531,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_string_multilined (text: STRUCTURED_TEXT; s: STRING) is
+	add_string_multilined (text: TEXT_FORMATTER; s: STRING) is
 			-- Append `s' to `text' using the multilined formatting.
 		local
 			sb: STRING
@@ -542,27 +574,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_info_item (text: STRUCTURED_TEXT; tag: STRING) is
+	append_info_item (text: TEXT_FORMATTER; tag: STRING) is
 			-- Append `tag': `content' to `text'.
 		do
 			text.add_indent
-			text.add (create {INDEXING_TAG_TEXT}.make (tag))
-			text.add (ti_Colon)			
-			text.add_space			
+			text.process_indexing_tag_text (tag)
+			text.process_symbol_text (ti_Colon)
+			text.add_space
 		end
 
-	append_feature_chart_item (text: STRUCTURED_TEXT; fl: LIST [E_FEATURE]; a_title: STRING) is
+	append_feature_chart_item (text: TEXT_FORMATTER; fl: LIST [E_FEATURE]; a_title: STRING) is
 			-- Append class ancestors for `class_c' to `text'.
 		do
 			if not fl.is_empty then
-				text.add (create {KEYWORD_TEXT}.make (a_title))
+				text.process_keyword_text (a_title, Void)
 				text.add_new_line
 				append_feature_list (text, fl)
 				text.add_new_line
 			end
 		end
 
-	append_comment (text: STRUCTURED_TEXT; comment: STRING) is
+	append_comment (text: TEXT_FORMATTER; comment: STRING) is
 			-- Append `comment' to `text'.
 		local
 			n, prev: INTEGER
@@ -577,7 +609,7 @@ feature {NONE} -- Implementation
 				text.add_indent
 				text.add_indent
 				text.add_indent
-				text.add (ti_Dashdash)
+				text.add_comment_text (ti_Dashdash)
 				if n > 0 then
 					text.add_comment_text (" " + comment.substring (prev, n - 1))
 					prev := n + 2
@@ -700,7 +732,7 @@ feature {NONE} -- Indexing clauses
 			if ic.has (s) then
 				Result := ic.found_item
 			end
-			if Result = Void then				
+			if Result = Void then
 				ic := indexes_to_table (c.compiled_class.ast.bottom_indexes)
 				if ic.has (s) then
 					Result := ic.found_item
@@ -721,9 +753,9 @@ feature {NONE} -- Implementation
 		do
 			t := f.type
 			if t /= Void then
-				return_class := t.associated_class
-				if return_class /= Void then
-					if conf /= Void then	
+				if t.has_associated_class then
+					return_class := t.associated_class
+					if conf /= Void then
 						Result := return_class.conform_to (conf)
 					end
 				end
@@ -756,25 +788,37 @@ feature {NONE} -- Implementation
 				and then not f.is_obsolete
 		end
 
+feature  -- Menu bars
+
+	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN) is
+			-- Append a menu bar to `text'.
+		deferred
+		end
+
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING) is
+			-- Append a menu bar to `text'.
+		deferred
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

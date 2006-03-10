@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Display the implementers of a `current_feature'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_SHOW_ROUTINE_IMPLEMENTERS 
+class E_SHOW_ROUTINE_IMPLEMENTERS
 
 inherit
 
@@ -51,12 +51,12 @@ feature -- Execution
 			loop
 				rout_id := rout_id_set.item (i);
 				if rc > 1 then
-					structured_text.add_new_line;
-					structured_text.add_string ("Class history branch #");
-					structured_text.add_int (i);
-					structured_text.add_new_line;
-					structured_text.add_string ("-----------------------");
-					structured_text.add_new_line;
+					text_formatter.add_new_line;
+					text_formatter.add ("Class history branch #");
+					text_formatter.add_int (i);
+					text_formatter.add_new_line;
+					text_formatter.add ("-----------------------");
+					text_formatter.add_new_line;
 				end;
 				from
 					classes.start;
@@ -68,13 +68,13 @@ feature -- Execution
 					if c.has_feature_table then
 						feat := c.feature_with_rout_id (rout_id);
 						if feat /= Void and then feat.written_in = written_in then
-							c.append_name (structured_text);
-							structured_text.add (ti_Space);
-							feat.append_full_name (structured_text);
+							c.append_name (text_formatter);
+							text_formatter.add (ti_Space);
+							feat.append_full_name (text_formatter);
 							if c = written_cl then
-								structured_text.add_string (" (version from)");
+								text_formatter.add (" (version from)");
 							end;
-							structured_text.add_new_line;
+							text_formatter.add_new_line;
 						end
 					end
 					classes.forth
@@ -89,19 +89,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

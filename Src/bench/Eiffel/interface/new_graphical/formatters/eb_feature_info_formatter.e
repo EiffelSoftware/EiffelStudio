@@ -75,18 +75,6 @@ feature -- Status setting
 
 feature -- Formatting
 
-	formatted_text: STRUCTURED_TEXT is
-			-- Structured text representing information concerning `class'.
-		do
-			if feature_cmd /= Void then
-				Result := feature_cmd.structured_text
-			else
-				create Result.make
-			end
-		ensure
-			result_non_void: Result /= Void
-		end
-
 	save_in_file is
 			-- Save output format to a file.
 		require else
@@ -127,10 +115,9 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if feature_cmd /= Void then
-					if formatted_text /= Void then
-						formatted_text.wipe_out
-					end
+					editor.handle_before_processing (false)
 					feature_cmd.execute
+					editor.handle_after_processing
 				end
 				last_was_error := False
 			else
@@ -179,19 +166,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

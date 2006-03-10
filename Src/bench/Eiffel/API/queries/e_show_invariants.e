@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class E_SHOW_INVARIANTS 
+class E_SHOW_INVARIANTS
 
 inherit
 	E_CLASS_CMD
@@ -21,10 +21,7 @@ feature -- Execution
 		do
 			create class_f
 			class_f.set_clickable
-			class_f.format_invariants (current_class)
-			if not class_f.error then
-				structured_text.append (class_f.text)
-			end
+			class_f.format_invariants (current_class, text_formatter)
 		end
 
 indexing
@@ -33,19 +30,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

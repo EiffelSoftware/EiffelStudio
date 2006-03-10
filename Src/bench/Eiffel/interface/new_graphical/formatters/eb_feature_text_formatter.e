@@ -14,7 +14,7 @@ inherit
 		redefine
 			new_button
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 
 feature -- Access
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end
 
-	is_dotnet_formatter: BOOLEAN is 
+	is_dotnet_formatter: BOOLEAN is
 			-- Is Current formatter also a .NET formatter?
 		do
 			Result := False
@@ -63,26 +63,20 @@ feature -- Formatting
 				feature_cmd /= Void
 			then
 				editor.disable_feature_click
-				if must_format then
-					display_temp_header
-					generate_text
-				end
+				display_temp_header
+				generate_text
 				if not last_was_error then
-					if editor.current_text /= formatted_text then
-						if has_breakpoints then				
-							editor.enable_has_breakable_slots	
-						else
-							editor.disable_has_breakable_slots
-						end						
-						editor.process_text (formatted_text)
+					if has_breakpoints then
+						editor.enable_has_breakable_slots
+					else
+						editor.disable_has_breakable_slots
 					end
-					editor.set_read_only (not editable)
+				editor.set_read_only (not editable)
 				else
 					editor.clear_window
 					editor.display_message (Warning_messages.w_Formatter_failed)
 				end
 				display_header
-				must_format := last_was_error
 			end
 		end
 
@@ -122,10 +116,10 @@ feature {NONE} -- Implementation
 			end
 			Result := internal_empty_widget
 		end
-		
+
 	internal_empty_widget: EV_WIDGET
 			-- Widget displayed when no information can be displayed.
-	
+
 	new_empty_widget is
 			-- Initialize a default empty_widget.
 		local
@@ -137,7 +131,7 @@ feature {NONE} -- Implementation
 			internal_empty_widget.set_background_color (def.White)
 			manag ?= widget_owner
 			if manag = Void then
-				internal_empty_widget.drop_actions.extend (agent on_feature_drop) 
+				internal_empty_widget.drop_actions.extend (agent on_feature_drop)
 			else
 				internal_empty_widget.drop_actions.extend (agent manag.drop_stone)
 			end
@@ -149,19 +143,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

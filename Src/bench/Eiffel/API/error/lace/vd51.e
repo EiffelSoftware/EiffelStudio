@@ -26,15 +26,15 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
-			st.add_string ("Invalid parent cluster name: ");
-			st.add_string (parent_name);
-			st.add_new_line;
-			st.add_string ("Cluster name: ");
-			st.add_string (cluster_name);
-			st.add_new_line
+			a_text_formatter.add ("Invalid parent cluster name: ");
+			a_text_formatter.add (parent_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Cluster name: ");
+			a_text_formatter.add (cluster_name);
+			a_text_formatter.add_new_line
 		end;
 
 feature {CLUSTER_SD} -- Setting

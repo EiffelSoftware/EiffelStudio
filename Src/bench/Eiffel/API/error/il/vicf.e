@@ -66,18 +66,18 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- No need for an error message.
 		do
-			st.add_string ("Reason: ")
-			st.add_string (retrieve_reason)
-			st.add_new_line
-			st.add_string ("Source file name: ")
-			st.add_string (source_file_name)
-			st.add_new_line
-			st.add_string ("Target file name: ")
-			st.add_string (target_file_name)
-			st.add_new_line
+			a_text_formatter.add ("Reason: ")
+			a_text_formatter.add (retrieve_reason)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Source file name: ")
+			a_text_formatter.add (source_file_name)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Target file name: ")
+			a_text_formatter.add (target_file_name)
+			a_text_formatter.add_new_line
 		end
 		
 feature {NONE} -- Implementation

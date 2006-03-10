@@ -5,14 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VEEN 
+class VEEN
 
 inherit
 	FEATURE_ERROR
 		redefine
 			build_explain
 		end
-	
+
 feature -- Access
 
 	identifier: STRING
@@ -46,29 +46,29 @@ feature -- Settings
 		ensure
 			parameter_countt_set: parameter_count = i
 		end
-		
+
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Identifier: ")
-			st.add_string (identifier)
-			st.add_new_line
+			a_text_formatter.add ("Identifier: ")
+			a_text_formatter.add (identifier)
+			a_text_formatter.add_new_line
 			if is_parameter_count_set then
-				st.add_string ("Taking ")
+				a_text_formatter.add ("Taking ")
 				if parameter_count = 0 then
-					st.add_string ("no argument")
+					a_text_formatter.add ("no argument")
 				else
 					if parameter_count = 1 then
-						st.add_string ("1 argument")
+						a_text_formatter.add ("1 argument")
 					else
-						st.add_int (parameter_count)
-						st.add_string (" arguments")
+						a_text_formatter.add_int (parameter_count)
+						a_text_formatter.add (" arguments")
 					end
 				end
-				st.add_new_line
+				a_text_formatter.add_new_line
 			end
 		end
 
@@ -83,19 +83,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

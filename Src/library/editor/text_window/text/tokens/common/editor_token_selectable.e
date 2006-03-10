@@ -27,14 +27,14 @@ feature -- Initialisation
 			lexer_end_token: EDITOR_TOKEN
 		do
 			lexer_end_token := lexer.end_token
-			if lexer_end_token /= Void then				
+			if lexer_end_token /= Void then
 				from
-					create internal_representation.make (2)				
+					create internal_representation.make (2)
 					lexer_token := lexer.first_token
 				until
 					lexer_token = lexer_end_token
 				loop
-					internal_representation.extend (lexer_token)					
+					internal_representation.extend (lexer_token)
 					lexer_token := lexer_token.next
 				end
 				internal_representation.extend (lexer_end_token)
@@ -43,7 +43,7 @@ feature -- Initialisation
 		end
 
 feature -- Miscellaneous
-	
+
 	width: INTEGER
 			-- Width in pixel of the entire token.
 
@@ -123,19 +123,27 @@ feature -- Miscellaneous
 		end
 
 	tab_size_cell: CELL [INTEGER]
-	
+
 	tabulation_width: INTEGER is
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
 			Result := tab_size_cell.item * font.string_width(" ")
 		end
-	
+
 	internal_representation: ARRAYED_LIST [EDITOR_TOKEN]
 			-- Internal representation of tokens
 
+feature -- Visitor
+
+	process (a_visitor: TOKEN_VISITOR) is
+			-- Visitor
+		do
+			a_visitor.process_editor_token_group (Current)
+		end
+
 feature {NONE} -- Implementation
-	
+
 	composite_image: STRING is
 			-- Image of Current as single token
 		do
@@ -148,8 +156,8 @@ feature {NONE} -- Implementation
 				Result.append (internal_representation.item.image)
 				internal_representation.forth
 			end
-		end		
-	
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -13,7 +13,7 @@ inherit
 		
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Print out error message.
 		do
 		end

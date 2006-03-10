@@ -1,19 +1,19 @@
 indexing
-	description: "Abstract description of a .NET formatting context."
+	description: "Abstract description of a .NET formatting decorator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	DOTNET_FORMAT_CONTEXT
+	DOTNET_TEXT_FORMATTER_DECORATOR
 
 inherit
-	FORMAT_CONTEXT
+	TEXT_FORMATTER_DECORATOR
 		rename
 			make as format_context_make
 		end
-		
+
 feature {NONE} -- Initialization
 
 	make (a_consumed: CONSUMED_TYPE) is
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		ensure
 			has_dotnet_type: consumed_t /= Void
 			assembly_name_not_void: assembly_name /= Void
-		end		
+		end
 
 feature -- Access
 
@@ -56,7 +56,7 @@ feature -- Access
 		once
 			create Result.make (5)
 		end
-		
+
 feature -- Status Setting
 
 	set_assembly_name is
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_new_line_count, 
+			l_new_line_count,
 			l_old_line_count: INTEGER
 		do
 			from
@@ -84,9 +84,9 @@ feature {NONE} -- Implementation
 				l_old_line_count := l_new_line_count
 				a_string.replace_substring_all ("  ", " ")
 				l_new_line_count := a_string.count
-			end	
+			end
 		end
-		
+
 invariant
 	has_dotnet_type: consumed_t /= Void
 
@@ -96,19 +96,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -122,4 +122,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class DOTNET_FORMAT_CONTEXT
+end -- class DOTNET_TEXT_FORMATTER_DECORATOR

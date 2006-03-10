@@ -308,12 +308,12 @@ feature -- Status Setting
 
 feature -- Formatting
 
-	format (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Perform formatting of current using `a_ctxt'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
-			a_ctxt.put_front_text_item (ti_Before_class_declaration)
+			a_ctxt.process_filter_item (f_class_declaration, true)
 			format_indexes (a_ctxt)
 			format_header (a_ctxt)
 			format_ancestors (a_ctxt)
@@ -324,7 +324,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	format_indexes (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_indexes (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format indexes, i.e. class description.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -333,14 +333,14 @@ feature {NONE} -- Formatting
 			l_summary: LIST [STRING]
 		do
 			l_member_info := a_ctxt.assembly_info.find_type (a_ctxt.assembly_name, dotnet_name)
-			a_ctxt.put_text_item (ti_Before_indexing)
-			a_ctxt.put_text_item (ti_Indexing_keyword)
+			a_ctxt.process_filter_item (f_indexing, true)
+			a_ctxt.process_keyword_text (ti_Indexing_keyword, Void)
 			a_ctxt.indent
 			a_ctxt.put_new_line
 			a_ctxt.set_separator (Void)
 			a_ctxt.set_new_line_between_tokens
 				-- Full .NET name.
-			a_ctxt.put_string ("description: ")
+			a_ctxt.add ("description: ")
 			a_ctxt.put_string_item ("%"")
 			a_ctxt.put_string_item (dotnet_name)
 			a_ctxt.put_string_item ("%"")
@@ -348,7 +348,7 @@ feature {NONE} -- Formatting
 
 				-- Description of type.
 			if l_member_info /= Void then
-				a_ctxt.put_string ("summary: ")
+				a_ctxt.add ("summary: ")
 				a_ctxt.put_string_item ("%"")
 				l_summary := a_ctxt.parse_summary (l_member_info.summary)
 				from
@@ -367,64 +367,65 @@ feature {NONE} -- Formatting
 				end
 			end
 
-			a_ctxt.put_text_item (ti_After_indexing)
+			a_ctxt.process_filter_item (f_indexing, false)
 			a_ctxt.exdent
 			a_ctxt.put_new_line
 		end
 
-	format_header (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format header, ie classname and generics.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
-			a_ctxt.put_text_item (ti_Before_class_header)
+			a_ctxt.process_filter_item (f_class_header, true)
 			if is_expanded then
-				a_ctxt.put_text_item (Ti_expanded_keyword)
+				a_ctxt.process_keyword_text (Ti_expanded_keyword, Void)
 				a_ctxt.put_space
 			end
 			if is_deferred then
-				a_ctxt.put_text_item (Ti_deferred_keyword)
+				a_ctxt.process_keyword_text (Ti_deferred_keyword, Void)
 				a_ctxt.put_space
 			elseif is_frozen then
-				a_ctxt.put_text_item (Ti_frozen_keyword)
+				a_ctxt.process_keyword_text (Ti_frozen_keyword, Void)
 				a_ctxt.put_space
 			end
-			a_ctxt.put_text_item (ti_Class_keyword)
+			a_ctxt.process_keyword_text (ti_Class_keyword, Void)
 			a_ctxt.put_space
-			a_ctxt.put_text_item (ti_Interface_keyword)
+			a_ctxt.process_keyword_text (ti_Interface_keyword, Void)
 			a_ctxt.indent
 			a_ctxt.put_new_line
 			a_ctxt.put_classi (a_ctxt.class_i)
 			format_generics (a_ctxt)
-			a_ctxt.put_text_item (ti_After_class_header)
+			a_ctxt.process_filter_item (f_class_header, false)
 			a_ctxt.exdent
 			a_ctxt.put_new_line
 		end
 
-	format_footer (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_footer (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format footer, ie classname and end keyword.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
 			a_ctxt.put_new_line
-			a_ctxt.put_text_item (ti_Before_class_end)
-			a_ctxt.put_text_item (ti_End_keyword)
-			a_ctxt.put_comment_text (" -- ")
-			a_ctxt.put_comment_text ("class")
+			a_ctxt.process_filter_item (f_class_end, true)
+			a_ctxt.process_keyword_text (ti_End_keyword, Void)
+			a_ctxt.process_comment_text (" -- ", Void)
+			a_ctxt.process_comment_text ("class", Void)
 			a_ctxt.put_space
 			a_ctxt.put_comment_text (a_ctxt.class_i.name_in_upper)
-			a_ctxt.put_text_item (ti_After_class_end)
+			a_ctxt.process_filter_item (f_class_end, false)
+			a_ctxt.put_new_line
 		end
 
-	format_ancestors (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_ancestors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format class ancestors, if short.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 		do
 			if ancestors /= Void and not ancestors.is_empty then
-				a_ctxt.put_text_item (Ti_before_inheritance)
+				a_ctxt.process_filter_item (f_inheritance, true)
 				a_ctxt.put_new_line
-				a_ctxt.put_text_item (Ti_inherit_keyword)
+				a_ctxt.process_keyword_text (Ti_inherit_keyword, Void)
 				a_ctxt.put_new_line
 				a_ctxt.indent
 				from
@@ -440,7 +441,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_generics (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_generics (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format class formal generic parameters, if any.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -456,7 +457,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_constructors (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_constructors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format constructors.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -464,9 +465,9 @@ feature {NONE} -- Formatting
 			f_constructor: CONSUMED_CONSTRUCTOR
 		do
 			if not constructors.is_empty then
-				a_ctxt.put_text_item (Ti_before_creators)
+				a_ctxt.process_filter_item (f_creators, true)
 				a_ctxt.put_new_line
-				a_ctxt.put_text_item (Ti_create_keyword)
+				a_ctxt.process_keyword_text (Ti_create_keyword, Void)
 				a_ctxt.put_new_line
 				--a_ctxt.put_new_line
 				from
@@ -483,10 +484,10 @@ feature {NONE} -- Formatting
 					constructors.forth
 				end
 			end
-			a_ctxt.put_text_item (Ti_after_creators)
+			a_ctxt.process_filter_item (f_creators, false)
 		end
 
-	format_features (a_ctxt: DOTNET_CLASS_CONTEXT) is
+	format_features (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
 			-- Format all features.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -518,22 +519,22 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_feature_header (a_ctxt: DOTNET_CLASS_CONTEXT; a_header: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
+	format_feature_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR; a_header: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
 			-- Format feature with category 'a_header'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 			has_a_header: a_header /= Void
 		do
 			a_ctxt.put_new_line
-			a_ctxt.put_text_item (Ti_feature_keyword)
+			a_ctxt.process_keyword_text (Ti_feature_keyword, Void)
 			a_ctxt.put_space
 			if not a_header.is_exported then
-				a_ctxt.put_text_item (ti_l_curly)
-				a_ctxt.put_class_name ("NONE")
-				a_ctxt.put_text_item (ti_r_curly)
+				a_ctxt.process_symbol_text (ti_l_curly)
+				a_ctxt.add (ti_none_class)
+				a_ctxt.process_symbol_text (ti_r_curly)
 				a_ctxt.put_space
 			end
-			a_ctxt.put_text_item (ti_dashdash)
+			a_ctxt.process_comment_text (ti_dashdash, Void)
 			a_ctxt.put_space
 			a_ctxt.put_comment_text (a_header.name)
 			a_ctxt.put_new_line
@@ -600,7 +601,7 @@ feature {NONE} -- Implementation
 	loop_counter: INTEGER
 			-- Reusable loop counter
 
-	ctxt: DOTNET_CLASS_CONTEXT
+	ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR
 			-- Associated class context.
 
 invariant

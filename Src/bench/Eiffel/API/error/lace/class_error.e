@@ -20,17 +20,17 @@ feature -- Properties
 
 feature -- Output
 
-	put_class_name (st: STRUCTURED_TEXT) is
+	put_class_name (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Class name: ");
-			st.add_string (class_name);
-			st.add_new_line;
+			a_text_formatter.add ("Class name: ");
+			a_text_formatter.add (class_name);
+			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			put_class_name (st);
+			put_cluster_name (a_text_formatter);
+			put_class_name (a_text_formatter);
 		end;
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting

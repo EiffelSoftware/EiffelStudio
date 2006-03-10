@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Warning for obsolete features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -46,31 +46,31 @@ feature -- Access
 			Result := associated_class /= Void and then
 				obsolete_class /= Void
 		ensure
-			yes_implies_valid_classes: Result implies 
+			yes_implies_valid_classes: Result implies
 							associated_class /= Void and then
 							obsolete_class /= Void
 		end;
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			m: STRING
 		do
-			st.add_string ("Class: ")
-			associated_class.append_name (st)
-			st.add_new_line
-			st.add_string ("Obsolete class: ")
-			obsolete_class.append_name (st)
-			st.add_new_line
-			st.add_string ("Obsolete message: ")
+			a_text_formatter.add ("Class: ")
+			associated_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Obsolete class: ")
+			obsolete_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Obsolete message: ")
 			m := obsolete_class.obsolete_message
 			if m.has ('%N') then
 					-- Preserve formatting for multi-line message
-				st.add_new_line
+				a_text_formatter.add_new_line
 			end
-			st.add_multiline_string (m, 1)
-			st.add_new_line
+			a_text_formatter.add_multiline_string (m, 1)
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}
@@ -95,19 +95,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

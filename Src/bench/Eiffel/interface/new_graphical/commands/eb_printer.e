@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			
+
 		end
 
 feature -- Access
@@ -29,9 +29,9 @@ feature -- Measurement
 
 feature -- Status report
 
-	text: STRUCTURED_TEXT
+	text: STRING
 			-- Text that will be printed next time.
-			--| To print a file, just generate a STRUCTURED_TEXT with one token for example...
+			--| To print a file, just generate a TEXT_FORMATTER with one token for example...
 
 	job_name: STRING
 			-- Name for the print job.
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (stt: STRUCTURED_TEXT) is
+	set_text (stt: STRING) is
 			-- Set the text that should be printed next.
 		do
 			text := stt
@@ -180,7 +180,7 @@ feature -- Basic operations
 			dial.select_all_pages
 			dial.disable_page_numbers
 			dial.disable_selection
-			
+
 			dial.show_modal_to_window (window)
 		end
 
@@ -202,7 +202,7 @@ feature -- Basic operations
 					generate_postscript
 					sent_txt := postscript_representation
 				else
-					sent_txt := text.image
+					sent_txt := text
 					sent_txt.prune_all ('%R')
 					sent_txt.replace_substring_all ("%N", "%R%N")
 				end
@@ -247,10 +247,14 @@ feature {EB_PRINTER_IMP} -- Implementation: Postscript generation
 			tf: TEXT_FILTER
 		do
 			if not text.is_empty then
-				create tf.make ("PostScript")
-				tf.set_universe (create {DOCUMENTATION_UNIVERSE}.make)
-				tf.process_text (text)
-				postscript_representation := tf.image
+					--| Fixme:
+					--| We simply use text from the editor to print for the moment,
+					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
+--				create tf.make ("PostScript")
+--				tf.set_universe (create {DOCUMENTATION_UNIVERSE}.make)
+--				tf.process_text (text)
+--				postscript_representation := tf.image
+				postscript_representation := text
 			else
 				create postscript_representation.make (1)
 			end
@@ -309,19 +313,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

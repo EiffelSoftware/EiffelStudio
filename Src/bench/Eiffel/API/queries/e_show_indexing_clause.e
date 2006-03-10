@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display indexing clause of classes in the universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,8 +13,8 @@ inherit
 
 	E_OUTPUT_CMD;
 	SHARED_SERVER
-		export 
-			{NONE} all 
+		export
+			{NONE} all
 		end
 
 create
@@ -30,10 +30,10 @@ feature -- Execution
 			cursor: CURSOR
 		do
 			clusters := Universe.clusters;
-			from 
-				clusters.start 
-			until 
-				clusters.after 
+			from
+				clusters.start
+			until
+				clusters.after
 			loop
 				cursor := clusters.cursor;
 				display_a_cluster (clusters.item);
@@ -51,42 +51,42 @@ feature -- Execution
 		do
 			create sorted_class_names.make;
 			classes := cluster.classes;
-			from 
-				classes.start 
-			until 
-				classes.after 
+			from
+				classes.start
+			until
+				classes.after
 			loop
 				sorted_class_names.put_front (classes.key_for_iteration);
 				classes.forth
 			end;
 			sorted_class_names.sort;
-			structured_text.add_string ("Cluster: ");
-			structured_text.add_cluster (cluster, cluster.cluster_name);
+			text_formatter.add ("Cluster: ");
+			text_formatter.add_cluster (cluster, cluster.cluster_name);
 			if cluster.is_precompiled then
-				structured_text.add_string (" (Precompiled)")
+				text_formatter.add (" (Precompiled)")
 			end;
-			structured_text.add_new_line;
+			text_formatter.add_new_line;
 			from
 				sorted_class_names.start
 			until
 				sorted_class_names.after
 			loop
-				structured_text.add_indent;
+				text_formatter.add_indent;
 				a_classi := classes.item (sorted_class_names.item);
 				a_class := a_classi.compiled_class;
 				if a_class /= Void then
-					a_class.append_signature (structured_text, True);
-					display_indexing (a_class, structured_text)
+					a_class.append_signature (text_formatter, True);
+					display_indexing (a_class, text_formatter)
 				else
-					a_classi.append_name (structured_text);
-					structured_text.add_string ("  (not in system)")
+					a_classi.append_name (text_formatter);
+					text_formatter.add ("  (not in system)")
 				end;
-				structured_text.add_new_line;
+				text_formatter.add_new_line;
 				sorted_class_names.forth
 			end
 		end;
 
-	display_indexing (e_class: CLASS_C; st: STRUCTURED_TEXT) is
+	display_indexing (e_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Display the indexing clause of `classc' if any.
 		local
 			indexes: EIFFEL_LIST [INDEX_AS]
@@ -99,33 +99,33 @@ feature -- Execution
 			if ast /= Void then
 				indexes := ast.top_indexes
 				if indexes /= Void then
-					from 
-						indexes.start 
-					until 
-						indexes.after 
+					from
+						indexes.start
+					until
+						indexes.after
 					loop
 						index := indexes.item
 						index_tag := index.tag
-						if 
+						if
 							index_tag /= Void and then
 							(not index_tag.is_equal ("status") and
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							structured_text.add_new_line
-							structured_text.add_indent
-							structured_text.add_indent
-							structured_text.add_string (index_tag)
-							structured_text.add_string (": ")
+							a_text_formatter.add_new_line
+							a_text_formatter.add_indent
+							a_text_formatter.add_indent
+							a_text_formatter.add (index_tag)
+							a_text_formatter.add (": ")
 							index_list := index.index_list
-							from 
-								index_list.start 
-							until 
-								index_list.after 
+							from
+								index_list.start
+							until
+								index_list.after
 							loop
-								structured_text.add_string (index_list.item.string_value)
+								a_text_formatter.add (index_list.item.string_value)
 								if not index_list.islast then
-									structured_text.add_string (", ")
+									a_text_formatter.add (", ")
 								end
 								index_list.forth
 							end
@@ -135,33 +135,33 @@ feature -- Execution
 				end
 				indexes := ast.bottom_indexes
 				if indexes /= Void then
-					from 
-						indexes.start 
-					until 
-						indexes.after 
+					from
+						indexes.start
+					until
+						indexes.after
 					loop
 						index := indexes.item
 						index_tag := index.tag
-						if 
+						if
 							index_tag /= Void and then
 							(not index_tag.is_equal ("status") and
 							not index_tag.is_equal ("date") and
 							not index_tag.is_equal ("revision"))
 						then
-							structured_text.add_new_line
-							structured_text.add_indent
-							structured_text.add_indent
-							structured_text.add_string (index_tag)
-							structured_text.add_string (": ")
+							a_text_formatter.add_new_line
+							a_text_formatter.add_indent
+							a_text_formatter.add_indent
+							a_text_formatter.add (index_tag)
+							a_text_formatter.add (": ")
 							index_list := index.index_list
-							from 
-								index_list.start 
-							until 
-								index_list.after 
+							from
+								index_list.start
+							until
+								index_list.after
 							loop
-								structured_text.add_string (index_list.item.string_value)
+								a_text_formatter.add (index_list.item.string_value)
 								if not index_list.islast then
-									structured_text.add_string (", ")
+									a_text_formatter.add (", ")
 								end
 								index_list.forth
 							end
@@ -178,19 +178,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

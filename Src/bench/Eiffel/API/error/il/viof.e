@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			context_class_id_set: context_class_id = a_class_id
 			arg_list_set: arg_list = a_list_type
 		end
-		
+
 feature -- Access
 
 	code: STRING is "VIOF"
@@ -60,40 +60,40 @@ feature -- Access
 
 	arg_list: LIST [TYPE_A]
 			-- List of types used to perform call.
-			
+
 	context_class_id: INTEGER
 			-- Class id where all features from `matching_features' are coming from.
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error message
 		local
 			l_feature: E_FEATURE
 			l_feat: FEATURE_I
 		do
 				-- Display information on call being made.
-			st.add_string ("Call made: ")
-			st.add_string (feature_name)
-			
-			st.add_string (" (")
+			a_text_formatter.add ("Call made: ")
+			a_text_formatter.add (feature_name)
+
+			a_text_formatter.add (" (")
 			from
 				arg_list.start
 			until
 				arg_list.after
 			loop
-				arg_list.item.append_to (st)
+				arg_list.item.append_to (a_text_formatter)
 				arg_list.forth
 				if not arg_list.after then
-					st.add_string ("; ")
+					a_text_formatter.add ("; ")
 				end
 			end
-			st.add_char (')')
-			st.add_new_line
-			
+			a_text_formatter.add_char (')')
+			a_text_formatter.add_new_line
+
 				-- Display all possible matches for above call.
-			st.add_string ("List of possible matches: ")
-			st.add_new_line
+			a_text_formatter.add ("List of possible matches: ")
+			a_text_formatter.add_new_line
 			from
 				matching_features.start
 			until
@@ -101,15 +101,15 @@ feature -- Output
 			loop
 				l_feat := matching_features.item
 				l_feature := l_feat.api_feature (context_class_id)
-				st.add_indent
-				st.add_feature (l_feature, feature_name)
-				l_feature.append_just_signature (st);
-				st.add_string (" Disambiguated name: ");
-				st.add_feature (l_feature, l_feat.feature_name)
-				st.add_new_line
+				a_text_formatter.add_indent
+				a_text_formatter.add_feature (l_feature, feature_name)
+				l_feature.append_just_signature (a_text_formatter);
+				a_text_formatter.add (" Disambiguated name: ");
+				a_text_formatter.add_feature (l_feature, l_feat.feature_name)
+				a_text_formatter.add_new_line
 				matching_features.forth
 			end
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end
 
 invariant
@@ -121,26 +121,26 @@ invariant
 	arg_list_not_empty: not arg_list.is_empty
 	feature_name_not_void: feature_name /= Void
 	context_class_id_positive: context_class_id > 0
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

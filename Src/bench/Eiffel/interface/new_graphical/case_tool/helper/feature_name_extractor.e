@@ -8,10 +8,10 @@ indexing
 
 class
 	FEATURE_NAME_EXTRACTOR
-	
+
 inherit
 	SHARED_API_ROUTINES
-	
+
 feature -- Access
 
 	feature_name (a_feature: FEATURE_AS): STRING is
@@ -23,7 +23,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	feature_names (a_feature: FEATURE_AS): LIST [STRING] is
 			-- Return all names of `a_feature'.
 		require
@@ -57,15 +57,15 @@ feature -- Access
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_st: STRUCTURED_TEXT
+			l_st: YANK_STRING_WINDOW
 		do
 			create l_st.make
 			a_feature.append_just_signature (l_st)
-			Result := l_st.image
+			Result := l_st.stored_output
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	full_name_compiled (a_feature: E_FEATURE): STRING is
 			-- Full name of `a_feature' (i.e. "feature_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
 		require
@@ -89,7 +89,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	full_signature (a_feature: FEATURE_AS): STRING is
 			-- Full signature of `a_feature' (i.e. : INTEGER [FOO [BAR], INTEGER])
 		local
@@ -104,7 +104,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 
 feature {NONE} -- Implementation
 
@@ -124,13 +124,13 @@ feature {NONE} -- Implementation
 			else
 				Result := formal.dump
 			end
-			
+
 			l_generics := a_type.generics
-			
+
 			if l_generics /= Void then
 				Result.append (" [")
 				from
-					i := 1	
+					i := 1
 					nb := l_generics.count
 				until
 					i > nb
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-			
+
 	supplier_name (sup: CLASS_I): STRING is
 			-- Name of `sup'.
 		do
@@ -196,19 +196,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Visitor
-
 	process (v: TYPE_A_VISITOR) is
 			-- Process current element.
 		do
@@ -104,7 +103,7 @@ feature -- Output
 			Result.append_integer (bit_count)
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
 			st.add (ti_bit_class)
 			st.add_space
@@ -132,10 +131,10 @@ feature {COMPILER_EXPORTER}
 			create Result.make (bit_count)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		do
-			ctxt.put_string ("BIT ")
-			ctxt.put_string (bit_count.out)
+			ctxt.process_string_text ("BIT ", Void)
+			ctxt.process_string_text (bit_count.out, Void)
 		end
 
 invariant

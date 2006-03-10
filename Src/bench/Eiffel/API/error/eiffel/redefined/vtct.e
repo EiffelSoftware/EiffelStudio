@@ -33,13 +33,13 @@ feature -- Status report
 		
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Unknown class name: ")
-			st.add_string (class_name)
-			st.add_new_line
+			a_text_formatter.add ("Unknown class name: ")
+			a_text_formatter.add (class_name)
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

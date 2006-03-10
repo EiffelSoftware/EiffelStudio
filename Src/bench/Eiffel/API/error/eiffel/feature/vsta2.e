@@ -37,16 +37,16 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			ec: CLASS_C
 		do
 			ec := non_static_feature.written_class
-			st.add_string ("Not valid for static call: ")
-			non_static_feature.append_name (st)
-			st.add_string (" from ")
-			ec.append_name (st)
-			st.add_new_line
+			a_text_formatter.add ("Not valid for static call: ")
+			non_static_feature.append_name (a_text_formatter)
+			a_text_formatter.add (" from ")
+			ec.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature -- Setting

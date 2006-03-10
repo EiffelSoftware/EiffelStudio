@@ -41,16 +41,16 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Print out error message.
 		do
-			st.add_string ("Assembly `")
-			st.add_string (assembly)
-			st.add_string ("' could not be loaded from disk.")
-			st.add_new_line
-			st.add_string ("Assembly path: ")
-			st.add_string (path)
-			st.add_new_line
+			a_text_formatter.add ("Assembly `")
+			a_text_formatter.add (assembly)
+			a_text_formatter.add ("' could not be loaded from disk.")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Assembly path: ")
+			a_text_formatter.add (path)
+			a_text_formatter.add_new_line
 		end
 
 invariant

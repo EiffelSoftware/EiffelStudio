@@ -1,14 +1,14 @@
 indexing
-	description: "Formatting context for feature ast (flat and breakable format)."
+	description: "Formatting decorator for feature ast (flat and breakable format)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class FORMAT_FEAT_CONTEXT
+class FEAT_TEXT_FORMATTER_DECORATOR
 
 inherit
-	FORMAT_CONTEXT
+	TEXT_FORMATTER_DECORATOR
 		rename
 			execute as old_execute
 		redefine
@@ -28,7 +28,7 @@ feature -- Execution
 			-- Format feature_as and make all items
 			-- clickable with class `c' as context
 		require
-			class_set: class_c /= Void
+			class_set: current_class /= Void
 			valid_target_feat: a_target_feat /= Void
 		local
 			f_ast: FEATURE_AS
@@ -46,13 +46,12 @@ feature -- Execution
 				Error_handler.wipe_out
 				f_ast := target_feat.body
 				export_status := target_feat.export_status
-				initialize
-				last_was_printed := True;
-				System.set_current_class (class_c);
-				Inst_context.set_cluster (class_c.cluster);
+				initialize (text_formatter)
+				System.set_current_class (current_class);
+				Inst_context.set_cluster (current_class.cluster);
 				begin;
 				written_in_class := target_feat.written_class;
-				if written_in_class /= class_c then
+				if written_in_class /= current_class then
 						-- The target_feat is the evaluated feature_i
 						-- from class `class_c' (args, and result type
 						-- are evaluated). Need the feature_i entry in
@@ -76,7 +75,7 @@ feature -- Execution
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
-				formatter.format (f_ast)
+				ast_output_strategy.format (f_ast)
 				commit;
 			else
 				execution_error := True;
@@ -99,15 +98,15 @@ feature -- Element change
 			-- Print the origin comment if necessary and
 			-- print the export status.
 		do
-			Precursor {FORMAT_CONTEXT};
+			Precursor {TEXT_FORMATTER_DECORATOR};
 
 				--| Print export status.
 			if not export_status.is_all then
-				put_text_item (ti_Dashdash);
+				process_comment_text (ti_Dashdash, Void)
 				put_space;
-				put_comment_text ("(export status ");
+				process_comment_text ("(export status ", Void);
 				export_status.format (Current);
-				put_comment_text (")");
+				process_comment_text (")", Void);
 				put_new_line
 			end;
 		end;
@@ -154,4 +153,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class FEAT_TEXT_FORMATTER_DECORATOR

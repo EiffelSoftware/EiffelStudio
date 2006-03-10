@@ -1,25 +1,23 @@
 indexing
-	description: "Formatting context for .NET feature."
+	description: "Formatting decorator for .NET feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$1.0 $"
 
 class
-	DOTNET_FEATURE_CONTEXT
+	DOTNET_FEAT_TEXT_FORMATTER_DECORATOR
 
 inherit
-	DOTNET_FORMAT_CONTEXT
+	DOTNET_TEXT_FORMATTER_DECORATOR
 		rename
 			make as format_make,
 			execute as old_execute,
 			arguments as old_arguments,
-			prepare_for_feature as old_prepare_for_feature,
-			put_normal_feature as old_put_normal_feature,
 			put_comments as old_put_comments,
 			put_origin_comment as old_put_origin_comment
 		export
-			{DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} name_of_current_feature
+			{DOTNET_CLASS_AS, DOTNET_CLASS_TEXT_FORMATTER_DECORATOR} name_of_current_feature
 		redefine
 			initialize
 		end
@@ -35,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; c: CONSUMED_TYPE) is
+	make (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_text_formatter: TEXT_FORMATTER) is
 			-- Initialize Current with feature 'a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -48,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			class_i ?= a_feature.written_class.lace_class
 			if class_i /= Void then
-				class_c ?= class_i.compiled_class
+				current_class ?= class_i.compiled_class
 			end
 			l_class := a_feature.written_class
 			if l_class /= Void and then l_class.has_feature_table then
@@ -69,12 +67,12 @@ feature {NONE} -- Initialization
 			format_make (c)
 			current_feature := feature_from_type (c, l_feat)
 			set_assembly_name
-			initialize
+			initialize (a_text_formatter)
 		ensure
 			has_eiffel_class: class_i /= Void
 		end
 
-	make_from_entity (a_entity: CONSUMED_ENTITY; c: CONSUMED_TYPE; a_ci: CLASS_I) is
+	make_from_entity (a_entity: CONSUMED_ENTITY; c: CONSUMED_TYPE; a_ci: CLASS_I; a_text_formatter: TEXT_FORMATTER) is
 			-- Initialize Current from .NET feature entity 'a_entity'.
 		require
 			a_entity_not_void: a_entity /= Void
@@ -83,21 +81,21 @@ feature {NONE} -- Initialization
 		do
 			class_i ?= a_ci
 			if class_i /= Void then
-				class_c ?= class_i.compiled_class
+				current_class ?= class_i.compiled_class
 			end
 			format_make (c)
 			current_feature := a_entity
 			set_assembly_name
-			initialize
+			initialize (a_text_formatter)
 		end
 
-	initialize is
+	initialize (a_text_formatter: TEXT_FORMATTER) is
 			-- Initialization.
 		local
 			retried: BOOLEAN
 		do
 			if not retried and then current_feature /= Void then
-				Precursor {DOTNET_FORMAT_CONTEXT}
+				Precursor {DOTNET_TEXT_FORMATTER_DECORATOR} (a_text_formatter)
 				declared_type := current_feature.declared_type
 				name_of_current_feature := current_feature.eiffel_name.twin
 				dotnet_name_of_current_feature := current_feature.dotnet_eiffel_name.twin
@@ -196,61 +194,59 @@ feature -- Element change
 	put_normal_feature is
 			-- Format feature
 		local
-			l_txt: BASIC_TEXT
 			l_feature: E_FEATURE
 			l_is_str: BOOLEAN
 		do
 			begin
 			new_expression
 			set_separator (ti_comma)
-			text.add_new_line
-			text.add_indent
+			text_formatter.add_new_line
+			text_formatter.add_indent
 
 				-- Put either `frozen, deferred, infix or prefix'.
 			put_feature_qualification
 
 			l_is_str := current_feature.is_infix or current_feature.is_prefix
 			if
-				class_c /= Void and then class_c.has_feature_table and then
-				class_c.feature_table.has (name_of_current_feature)
+				current_class /= Void and then current_class.has_feature_table and then
+				current_class.feature_table.has (name_of_current_feature)
 			then
 				-- Feature should be clickable
-				l_feature ?= class_c.feature_table.item (name_of_current_feature).
-					api_feature (class_c.class_id)
+				l_feature ?= current_class.feature_table.item (name_of_current_feature).
+					api_feature (current_class.class_id)
 			end
 			if l_is_str then
-				text.add_string ("%"")
+				text_formatter.add_string ("%"")
 			end
 			if l_feature /= Void then
-				text.add_feature (l_feature, dotnet_name_of_current_feature)
+				text_formatter.add_feature (l_feature, dotnet_name_of_current_feature)
 				if l_is_str then
-					text.add_string ("%"")
+					text_formatter.add_string ("%"")
 				end
 				if
 					not use_dotnet_name_only and
 					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
 				then
-					text.add_char (',')
-					text.add_new_line
-					text.add_indent
+					text_formatter.add_char (',')
+					text_formatter.add_new_line
+					text_formatter.add_indent
 					put_feature_qualification
-					text.add_feature (l_feature, name_of_current_feature)
+					text_formatter.add_feature (l_feature, name_of_current_feature)
 				end
 			else
-				create {LOCAL_TEXT} l_txt.make (dotnet_name_of_current_feature)
-				text.add (l_txt)
+				text_formatter.process_local_text (dotnet_name_of_current_feature)
 				if l_is_str then
-					text.add_string ("%"")
+					text_formatter.add_string ("%"")
 				end
 				if
 					not use_dotnet_name_only and
 					not dotnet_name_of_current_feature.is_equal (name_of_current_feature)
 				then
-					text.add_char (',')
-					text.add_new_line
-					text.add_indent
+					text_formatter.add_char (',')
+					text_formatter.add_new_line
+					text_formatter.add_indent
 					put_feature_qualification
-					text.add (create {LOCAL_TEXT}.make (name_of_current_feature))
+					text_formatter.process_local_text (name_of_current_feature)
 				end
 			end
 			put_signature
@@ -262,26 +258,26 @@ feature {NONE} -- Element Change
 	put_feature_qualification is
 			-- Put current feature qualification: frozen, deferred, infix or prefix.
 		require
-			text_not_void: text /= Void
+			text_formatter_not_void: text_formatter /= Void
 		do
 			if current_feature.is_frozen then
 					-- Check if feature is frozen.
-				text.add (Ti_frozen_keyword)
-				text.add_space
+				text_formatter.process_keyword_text (Ti_frozen_keyword, Void)
+				text_formatter.add_space
 			end
 			if current_feature.is_deferred then
 					-- Check if feature is deferred.
-				text.add (Ti_deferred_keyword)
-				text.add_space
+				text_formatter.process_keyword_text (Ti_deferred_keyword, Void)
+				text_formatter.add_space
 			end
 			if current_feature.is_infix then
 					-- Check if feature is infix.
-				text.add (Ti_infix_keyword)
-				text.add_space
+				text_formatter.process_keyword_text (Ti_infix_keyword, Void)
+				text_formatter.add_space
 			elseif current_feature.is_prefix then
 					-- Check if feature is prefix.
-				text.add (Ti_prefix_keyword)
-				text.add_space
+				text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
+				text_formatter.add_space
 			end
 		end
 
@@ -299,9 +295,9 @@ feature {NONE} -- Element Change
 				begin
 				set_separator (ti_comma)
 				set_space_between_tokens
-				text.add_space
-				text.add (ti_l_parenthesis)
-				abort_on_failure
+				text_formatter.add_space
+				text_formatter.process_symbol_text (ti_l_parenthesis)
+--				abort_on_failure
 				l_char_count := name_of_current_feature.count + 8
 				from
 					l_cnt := 1
@@ -312,25 +308,25 @@ feature {NONE} -- Element Change
 					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
 
 					if not use_dotnet_name_only and l_char_count > 60 then
-						text.add_new_line
-						text.add_indents (4)
+						text_formatter.add_new_line
+						text_formatter.add_indents (4)
 						l_char_count := 0
 					end
-					text.add (create {LOCAL_TEXT}.make (l_c_arg.eiffel_name))
-					text.add_char (':')
-					text.add_space
+					text_formatter.process_local_text (l_c_arg.eiffel_name)
+					text_formatter.add_char (':')
+					text_formatter.add_space
 
 					if class_i.is_compiled then
 						l_ext ?= class_i.compiled_class
 						l_type_a := l_ext.type_from_consumed_type (l_c_arg.type)
 						l_type_a.format (Current)
 					else
-						text.add_class (l_c_class)
+						text_formatter.add_class (l_c_class)
 					end
 
 					if l_cnt < arguments.count then
-						text.add_char (';')
-						text.add_space
+						text_formatter.add_char (';')
+						text_formatter.add_space
 					end
 
 					l_char_count := l_char_count + l_c_arg.eiffel_name.count + 2 +
@@ -338,19 +334,19 @@ feature {NONE} -- Element Change
 					l_ext := Void
 					l_cnt := l_cnt + 1
 				end
-				text.add (ti_r_parenthesis)
+				text_formatter.process_symbol_text (ti_r_parenthesis)
 			end
 				-- Feature return type, if any
 			if return_type /= Void then
-				text.add_char (':')
-				text.add_space
+				text_formatter.add_char (':')
+				text_formatter.add_space
 				l_c_class := class_i.type_from_consumed_type (return_type)
 				if 	class_i.is_compiled then
 					l_ext ?= class_i.compiled_class
 					l_type_a := l_ext.type_from_consumed_type (return_type)
 					l_type_a.format (Current)
 				else
-					text.add_class (l_c_class)
+					text_formatter.add_class (l_c_class)
 				end
 			end
 		end
@@ -423,36 +419,36 @@ feature {NONE} -- Element Change
 			end
 
 			-- Tell if feature is overloaded and or static
-			if class_c /= Void and then class_c.has_feature_table then
-				l_overloaded_names := class_c.feature_table.overloaded_names
+			if current_class /= Void and then current_class.has_feature_table then
+				l_overloaded_names := current_class.feature_table.overloaded_names
 				if l_overloaded_names /= Void then
 					l_id := names_heap.id_of (current_feature.dotnet_eiffel_name)
 					if l_id > 0 then
 						l_overloaded_names.search (l_id)
 						if l_overloaded_names.found then
-							text.add_new_line
-							text.add_indents (3)
-							text.add_comment ("-- (+")
+							text_formatter.add_new_line
+							text_formatter.add_indents (3)
+							text_formatter.add_comment ("-- (+")
 							l_cnt := l_overloaded_names.found_item.count - 1
-							text.add_comment (l_cnt.out)
+							text_formatter.add_comment (l_cnt.out)
 							if l_cnt > 1 then
-								text.add_comment (" overloads")
+								text_formatter.add_comment (" overloads")
 							else
-								text.add_comment (" overload")
+								text_formatter.add_comment (" overload")
 							end
 							if current_feature.is_static then
-								text.add_comment (", static)")
+								text_formatter.add_comment (", static)")
 							else
-								text.add_comment (")")
+								text_formatter.add_comment (")")
 							end
 						end
 					end
 				end
 			end
-			if (class_c = Void or l_overloaded_names = Void or else not l_overloaded_names.found) and current_feature.is_static then
-				text.add_new_line
-				text.add_indents (3)
-				text.add_comment ("-- (static)")
+			if (current_class = Void or l_overloaded_names = Void or else not l_overloaded_names.found) and current_feature.is_static then
+				text_formatter.add_new_line
+				text_formatter.add_indents (3)
+				text_formatter.add_comment ("-- (static)")
 			end
 
 			put_origin_comment
@@ -465,10 +461,10 @@ feature {NONE} -- Element Change
 				until
 					l_summary.after
 				loop
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- ")
-					text.add_comment (l_summary.item)
+					text_formatter.add_new_line
+					text_formatter.add_indents (3)
+					text_formatter.add_comment ("-- ")
+					text_formatter.add_comment (l_summary.item)
 					l_summary.forth
 				end
 
@@ -481,31 +477,31 @@ feature {NONE} -- Element Change
 				l_return_info := parse_summary (l_member_info.returns)
 				if not l_return_info.is_empty then
 						-- Return Type comments.	
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- ")
-					text.add_new_line
-					text.add_indents (3)
-					text.add_comment ("-- Return:")
+					text_formatter.add_new_line
+					text_formatter.add_indents (3)
+					text_formatter.add_comment ("-- ")
+					text_formatter.add_new_line
+					text_formatter.add_indents (3)
+					text_formatter.add_comment ("-- Return:")
 					from
 						l_return_info.start
 					until
 						l_return_info.after
 					loop
-						text.add_new_line
-						text.add_indents (3)
-						text.add_comment ("-- ")
-						text.add_indents (1)
-						text.add_comment (l_return_info.item)
+						text_formatter.add_new_line
+						text_formatter.add_indents (3)
+						text_formatter.add_comment ("-- ")
+						text_formatter.add_indents (1)
+						text_formatter.add_comment (l_return_info.item)
 						l_return_info.forth
 					end
 				end
 				put_new_line
 			else
-				text.add_new_line
-				text.add_indents (3)
-				text.add_comment ("-- ")
-				text.add_comment ("Description unavailable.")
+				text_formatter.add_new_line
+				text_formatter.add_indents (3)
+				text_formatter.add_comment ("-- ")
+				text_formatter.add_comment ("Description unavailable.")
 				put_new_line
 			end
 		end
@@ -515,11 +511,11 @@ feature {NONE} -- Element Change
 			-- ancestor class.
 		do
 			if is_inherited then
-				text.add_new_line
-				text.add_indents (3)
-				text.add_comment ("-- (from ")
-				text.add_class (class_i.type_from_consumed_type (declared_type))
-				text.add_char (')')
+				text_formatter.add_new_line
+				text_formatter.add_indents (3)
+				text_formatter.add_comment ("-- (from ")
+				text_formatter.add_class (class_i.type_from_consumed_type (declared_type))
+				text_formatter.add_char (')')
 			end
 		end
 
@@ -533,15 +529,15 @@ feature {NONE} -- Element Change
 			l_max_count: INTEGER
 			l_string: STRING
 		do
-			text.add_new_line
-			text.add_indents (3)
-			text.add_comment ("--")
-			text.add_new_line
-			text.add_indents (3)
+			text_formatter.add_new_line
+			text_formatter.add_indents (3)
+			text_formatter.add_comment ("--")
+			text_formatter.add_new_line
+			text_formatter.add_indents (3)
 			if a_param_info.count > 1 then
-				text.add_comment ("-- Arguments:")
+				text_formatter.add_comment ("-- Arguments:")
 			else
-				text.add_comment ("-- Argument:")
+				text_formatter.add_comment ("-- Argument:")
 			end
 			l_max_count := max_length (a_param_info)
 			from
@@ -549,13 +545,13 @@ feature {NONE} -- Element Change
 			until
 				a_param_info.after
 			loop
-				text.add_new_line
-				text.add_indents (3)
-				text.add_comment ("-- ")
-				text.add_indents (1)
+				text_formatter.add_new_line
+				text_formatter.add_indents (3)
+				text_formatter.add_comment ("-- ")
+				text_formatter.add_indents (1)
 				create l_string.make_from_string (a_param_info.item.name)
 				l_string.prune_all_leading (' ')
-				text.add_comment (l_string + ": ")
+				text_formatter.add_comment (l_string + ": ")
 
 				l_summary := parse_summary (a_param_info.item.description)
 				from
@@ -566,19 +562,19 @@ feature {NONE} -- Element Change
 					if l_next_line then
 						create l_string.make (l_max_count + 1)
 						l_string.fill_character (' ')
-						text.add_new_line
-						text.add_indents (3)
-						text.add_comment ("-- ")
-						text.add_indents (1)
-						text.add_string (l_string)
+						text_formatter.add_new_line
+						text_formatter.add_indents (3)
+						text_formatter.add_comment ("-- ")
+						text_formatter.add_indents (1)
+						text_formatter.add_string (l_string)
 					else
 						if (l_max_count - a_param_info.item.name.count > 0) then
 							create l_string.make_filled (' ', l_max_count - a_param_info.item.name.count)
-							text.add_string (l_string)
+							text_formatter.add_string (l_string)
 						end
 						l_next_line := not l_next_line
 					end
-					text.add_comment (l_summary.item)
+					text_formatter.add_comment (l_summary.item)
 					l_summary.forth
 				end
 
@@ -811,4 +807,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class DOTNET_FEATURE_CONTEXT
+end -- class DOTNET_FEAT_TEXT_FORMATTER_DECORATOR

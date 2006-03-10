@@ -1,87 +1,96 @@
 indexing
-	description: "Objects that ..."
+	description	: "Facilities to handle breakpoints adding in flat/short formats"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
-class
-	CLASS_DEBUG_CONTEXT
+class SIMPLE_DEBUG_TEXT_FORMATTER_DECORATOR
 
 inherit
-	FORMAT_CONTEXT
+	TEXT_FORMATTER_DECORATOR
+		rename
+			emit_tabs as old_emit_tabs,
+			make as old_make
 		redefine
-			put_breakable, 
-			emit_tabs,
-			init_feature_context,
-			init_uncompiled_feature_context
+			put_breakable, formal_name
 		end
+
+	TEXT_FORMATTER_DECORATOR
+		rename
+			make as old_make
+		redefine
+			put_breakable, emit_tabs,
+			formal_name
+		select
+			emit_tabs
+		end
+
+	SHARED_WORKBENCH
 
 create
-	make, make_for_case
+	make
 
-feature
+feature {NONE} -- Initialization
 
-	init_uncompiled_feature_context (source_class: CLASS_C; feature_as: FEATURE_AS) is
-			-- Initialize Current context to analyze
-			-- uncompiled feature ast `feature_as'.
-			-- This ast is not in the feature table (ie has
-			-- not been compiled) but has been entered by
-			-- the user.
+	make (a_feat: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is
+			-- Initialize current with `a_class'.
+		require
+			valid_feat: a_feat /= Void
+		local
+			ast: FEATURE_AS
 		do
-			Precursor {FORMAT_CONTEXT} (source_class, feature_as)
-			current_e_feature := Void
-			breakpoint_index := 1
+			make_for_case (a_text_formatter);
+			e_class := a_feat.associated_class;
+			e_feature := a_feat;
+			ast := a_feat.ast;
+			if ast = Void then
+				execution_error := True
+			else
+				ast.process (ast_output_strategy)
+			end;
+		end;
+
+feature -- Access
+
+	e_class: CLASS_C
+			-- Class where feature is defined.
+
+	e_feature: E_FEATURE
+			-- Current feature.
+
+feature -- Element change
+
+	formal_name (pos: INTEGER): ID_AS is
+			-- Formal name of class_c generics at position `pos.
+		do
+			Result := e_class.generics.i_th (pos).name.as_upper
 		end
 
-	init_feature_context (source, target: FEATURE_I; 
-				feature_as: FEATURE_AS) is
-			-- Initialize Current context to analyze
-			-- `source' and `target' features.
-			-- Use `feature_as' to set up locals.
-		do
-			Precursor {FORMAT_CONTEXT} (source, target, feature_as)
-			current_e_feature := source.api_feature (source.written_in)
-			breakpoint_index := 1
-		end
+feature {NONE} -- Implementation
 
-feature {NONE}
-
-	current_e_feature: E_FEATURE
-			-- current e_feature of the context.
-
-	breakpoint_index: INTEGER
+	breakpoint_index: INTEGER;
 			-- Breakpoint index in feature
 
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
 
 	put_breakable is
-			-- Create a breakable mark.
-		local
-			bp: BREAKPOINT_ITEM
 		do
-			if
-				current_e_feature /= Void and then
-				current_e_feature.is_debuggable
-			then
-				create bp.make (current_e_feature, breakpoint_index)
-				added_breakpoint := True
-				text.add (bp)
-			end
 			breakpoint_index := breakpoint_index + 1
+			added_breakpoint := True
+			text_formatter.process_breakpoint (e_feature, breakpoint_index)
 		end
 
 	emit_tabs is
-			-- Add the good number of tabulations to the text.
 		do
 			if added_breakpoint then
 				added_breakpoint := false
 			else
-				text.add (ti_padded_debug_mark)
+				text_formatter.process_padded
 			end
-			Precursor {FORMAT_CONTEXT}
+			old_emit_tabs
 		end
 
 indexing
@@ -90,19 +99,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -116,4 +125,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_DEBUG_CONTEXT
+end	 -- class SIMPLE_DEBUG_TEXT_FORMATTER_DECORATOR

@@ -16,12 +16,12 @@ inherit
 			generate_text,
 			is_dotnet_formatter
 		end
-		
+
 	EB_SHARED_PREFERENCES
 
 create
 	make
-	
+
 feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP] is
@@ -31,7 +31,7 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_feature_homonyms, 1)
 			Result.put (Pixmaps.Icon_format_feature_homonyms, 2)
 		end
- 
+
 	feature_cmd: E_SHOW_ROUTINE_HOMONYMNS
 			-- Feature command that can generate wanted information.
 
@@ -40,7 +40,7 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showhomonyms
 		end
- 
+
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		require else
 			associated_feature_non_void: associated_feature /= Void
 		do
-			create feature_cmd.make (associated_feature)
+			create feature_cmd.make (editor.text_displayed, associated_feature)
 		end
 
 	has_breakpoints: BOOLEAN is False;
@@ -103,19 +103,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

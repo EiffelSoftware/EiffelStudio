@@ -27,38 +27,38 @@ feature -- Execution
 		do
 			create sorted_class_names.make
 			classes := current_cluster.classes
-			from 
-				classes.start 
-			until 
-				classes.after 
+			from
+				classes.start
+			until
+				classes.after
 			loop
 				sorted_class_names.put_front (classes.key_for_iteration)
 				classes.forth
 			end
 			sorted_class_names.sort
-			structured_text.add_string ("Cluster: ")
-			structured_text.add_cluster (current_cluster, current_cluster.cluster_name)
+			text_formatter.add ("Cluster: ")
+			text_formatter.add_cluster (current_cluster, current_cluster.cluster_name)
 			if current_cluster.is_precompiled then
-				structured_text.add_string (" (Precompiled)")
-				structured_text.add_new_line
+				text_formatter.add (" (Precompiled)")
+				text_formatter.add_new_line
 			else
-				structured_text.add_new_line
+				text_formatter.add_new_line
 				from
 					sorted_class_names.start
 				until
 					sorted_class_names.after
 				loop
-					structured_text.add_indent
+					text_formatter.add_indent
 					a_classi := classes.item (sorted_class_names.item)
 					a_class := a_classi.compiled_class
 					if a_class /= Void then
-						a_class.append_signature (structured_text)
+						a_class.append_signature (text_formatter)
 					else
-						a_classi.append_name (structured_text)
+						a_classi.append_name (text_formatter)
 					end
-					structured_text.add_string (" : ")		
-					structured_text.add_string (a_classi.file_name)		
-					structured_text.add_new_line
+					text_formatter.add (" : ")
+					text_formatter.add (a_classi.file_name)
+					text_formatter.add_new_line
 					sorted_class_names.forth
 				end
 			end
@@ -70,19 +70,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -332,15 +332,12 @@ feature -- Access
 	debugger_message (m: STRING) is
 		local
 			context_output_tool: EB_OUTPUT_TOOL
-			st: STRUCTURED_TEXT
 		do
 			if debugging_window /= Void and then debugging_window.context_tool /= Void then
 				context_output_tool := debugging_window.context_tool.output_view
 				if context_output_tool /= Void then
-					create st.make
-					st.add_string (m)
-					st.add_new_line
-					context_output_tool.process_text (st)
+					context_output_tool.text_area.text_displayed.add_string (m)
+					context_output_tool.text_area.text_displayed.add_new_line
 --					context_output_tool.scroll_to_end
 				end
 			end
@@ -892,7 +889,6 @@ feature -- Debugging events
 			-- Application was just stopped (by a breakpoint, ...).
 		local
 			st: CALL_STACK_STONE
-			stt: STRUCTURED_TEXT
 			cd: EV_CONFIRMATION_DIALOG
 		do
 			debug ("debugger_trace_synchro")
@@ -935,10 +931,8 @@ feature -- Debugging events
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
-			create stt.make
-			stt.add_string ("Application stopped")
-			stt.add_new_line
-			output_manager.process_text (stt)
+			output_manager.add_string ("Application stopped")
+			output_manager.add_new_line
 
 			if stopped_actions /= Void then
 				stopped_actions.call (Void)
@@ -975,8 +969,6 @@ feature -- Debugging events
 
 	on_application_resumed is
 			-- Application was resumed after a stop.
-		local
-			stt: STRUCTURED_TEXT
 		do
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_resumed%N")
@@ -1005,14 +997,12 @@ feature -- Debugging events
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
-			create stt.make
-			stt.add_string ("Application is running")
+			output_manager.add_string ("Application is running")
 			if Application.execution_mode = Application.No_stop_points then
-				stt.add_string (" (ignoring breakpoints)")
+				output_manager.add_string (" (ignoring breakpoints)")
 			end
+			output_manager.add_new_line
 
-			stt.add_new_line
-			output_manager.process_text (stt)
 			window_manager.quick_refresh_all_margins
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog

@@ -32,12 +32,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if formal_name /= Void then
-				st.add_string ("Parameter name: ");
-				st.add_string (formal_name);
-				st.add_new_line;
+				a_text_formatter.add ("Parameter name: ");
+				a_text_formatter.add (formal_name);
+				a_text_formatter.add_new_line;
 			end;
 		end;
 

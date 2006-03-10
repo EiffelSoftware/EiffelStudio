@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Displays class text in output_window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_TEXT 
+class EWB_TEXT
 
 inherit
 
@@ -55,13 +55,12 @@ feature {NONE} -- Execution
 			create ctxt;
 			ctxt.set_one_class_only;
 			ctxt.set_order_same_as_text;
-			ctxt.format (e_class);
 			if filter_name = Void or else filter_name.is_empty then
-				output_window.put_string (ctxt.text.image);
+				ctxt.format (e_class, output_window);
 			else
 				create filter.make (filter_name);
-				filter.process_text (ctxt.text);
-				output_window.put_string (filter.image);
+				ctxt.format (e_class, filter);
+				output_window.put_string (filter.image)
 			end;
 			output_window.put_new_line;
 		end;
@@ -90,19 +89,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

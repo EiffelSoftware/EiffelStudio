@@ -25,7 +25,7 @@ create
 
 feature -- Output
 
-	format_precondition (ctxt: FORMAT_CONTEXT) is
+	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format precondition to `ctxt'. Detect
 			-- if the assertion in the origin precursor
 			-- feature is defined. If not, generate
@@ -41,10 +41,9 @@ feature -- Output
 			current_feature: FEATURE_I
 			origin: CLASS_C
 		do
-			ctxt.save_adaptations
 			ctxt.begin
 
-			current_body_index := ctxt.global_adapt.source_enclosing_feature.body_index
+			current_body_index := ctxt.assertion_source_feature.body_index
 
 				--| The chained assertion can be empty:
 				--| There are no precursors (and thus no origins detected)
@@ -65,10 +64,10 @@ feature -- Output
 					-- Search if there is any ancestor without a precondition.
 					-- If so, the precondition is True and we don't show the
 					-- breakable marks on the preconditions.
-				from 
-					start 
-				until 
-					after 
+				from
+					start
+				until
+					after
 				loop
 					current_item := item
 					current_feature := current_item.origin
@@ -77,33 +76,11 @@ feature -- Output
 						-- if so, only assertions comming from that body are executed, not the other ones.
 					inherited_body := inherited_body or else current_feature.body_index = current_body_index
 
-					if current_item.precondition = Void then 
+					if current_item.precondition = Void then
 							-- Compute cached data
 						current_cl := current_feature.written_class
 						if source_cl = Void then -- lazzy evaluation.
-							source_cl := ctxt.global_adapt.source_enclosing_class
-						end
-
-							-- Test if there is an empty but origin fea
-						if current_feature.is_origin and then current_cl /= source_cl then
-								-- enable the flag for further use
-							precondition_true := True
-	
-								-- Display the name of the class that has generated
-								-- the "precondition True".
-							ctxt.put_text_item (ti_Require_keyword)
-							ctxt.put_space
-							ctxt.put_text_item (ti_Dashdash)
-							ctxt.put_space
-							ctxt.put_comment_text ("from ")
-							ctxt.put_space
-							ctxt.put_classi (current_cl.lace_class)
-							ctxt.indent
-							ctxt.put_new_line
-							ctxt.put_text_item (ti_True_keyword)
-							ctxt.put_new_line
-							ctxt.exdent
-							ctxt.set_first_assertion (False)
+							source_cl := ctxt.source_class
 						end
 					end
 					forth
@@ -111,7 +88,8 @@ feature -- Output
 			end
 
 			if inherited_body then
-				origin := ctxt.global_adapt.source_enclosing_feature.written_class
+				origin := ctxt.source_class
+				source_cl := ctxt.source_class
 			end
 
 			from
@@ -119,6 +97,38 @@ feature -- Output
 			until
 				after
 			loop
+				current_item := item
+				current_feature := current_item.origin
+					-- Test if there is an empty but origin fea
+				if current_item.precondition = Void then
+						-- Compute cached data
+					current_cl := current_feature.written_class
+					if source_cl = Void then -- lazzy evaluation.
+						source_cl := ctxt.current_class
+					end
+
+						-- Test if there is an empty but origin fea
+					if current_feature.is_origin and then current_cl /= source_cl and then is_not_first then
+							-- enable the flag for further use
+						precondition_true := True
+
+							-- Display the name of the class that has generated
+							-- the "precondition True".
+						ctxt.process_keyword_text (ti_Require_keyword, Void)
+						ctxt.put_space
+						ctxt.process_comment_text (ti_Dashdash, Void)
+						ctxt.put_space
+						ctxt.process_comment_text ("from ", Void)
+						ctxt.put_space
+						ctxt.put_classi (current_cl.lace_class)
+						ctxt.indent
+						ctxt.put_new_line
+						ctxt.process_keyword_text (ti_True_keyword, Void)
+						ctxt.put_new_line
+						ctxt.exdent
+						ctxt.set_first_assertion (False)
+					end
+				end
 				if item.precondition /= Void then
 					ctxt.begin
 						-- If the precondition is True, we don't show the
@@ -131,38 +141,28 @@ feature -- Output
  					else
  						item.format_precondition (ctxt, precondition_true)
  					end
-					if ctxt.last_was_printed then 
-						ctxt.commit 
-						is_not_first := True
-					else 
-						ctxt.rollback
-					end
+					ctxt.commit
+					is_not_first := True
 				end
 				forth
 			end
 			set_not_in_assertion
-			if is_not_first then
-					-- Only commit if there were chained preconditions
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-			ctxt.restore_adaptations
+			ctxt.commit
 		end
 
-	format_postcondition (ctxt: FORMAT_CONTEXT) is
-			-- Format format_postcondition to `ctxt'. 
+	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR) is
+			-- Format format_postcondition to `ctxt'.
 		local
 			is_not_first: BOOLEAN
 			current_body_index: INTEGER
 			inherited_body: BOOLEAN
 			origin: CLASS_C
 		do
-			current_body_index := ctxt.global_adapt.source_enclosing_feature.body_index
-			from 
-				start 
-			until 
-				after 
+			current_body_index := ctxt.assertion_source_feature.body_index
+			from
+				start
+			until
+				after
 			loop
 					-- We are computing here if body of current feature is the same as an inherited one,
 					-- if so, only assertions comming from that body are executed, not the other ones.
@@ -172,10 +172,9 @@ feature -- Output
 			end
 
 			if inherited_body then
-				origin := ctxt.global_adapt.source_enclosing_feature.written_class
+				origin := ctxt.source_class
 			end
-	
-			ctxt.save_adaptations
+
 			ctxt.begin
 			set_in_assertion
 			from
@@ -190,22 +189,13 @@ feature -- Output
 						-- taken into account.
 					item.format_postcondition (ctxt,
 						inherited_body and then not origin.simple_conform_to (item.origin.written_class))
-					if ctxt.last_was_printed then 
-						is_not_first := true 
-						ctxt.commit 
-					else 
-						ctxt.rollback 
-					end
+					is_not_first := true
+					ctxt.commit
 				end
 				forth
 			end
 			set_not_in_assertion
-			if is_not_first then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
-			ctxt.restore_adaptations
+			ctxt.commit
 		end
 
 feature -- Debug
@@ -228,19 +218,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

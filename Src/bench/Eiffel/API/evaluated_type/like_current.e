@@ -109,13 +109,13 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
-			st.add (ti_L_bracket)
-			st.add (ti_Like_keyword)
+			st.process_symbol_text (ti_L_bracket)
+			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
-			st.add (ti_Current)
-			st.add (ti_R_bracket)
+			st.process_keyword_text (ti_Current, Void)
+			st.process_symbol_text (ti_R_bracket)
 			st.add_space
 			conformance_type.ext_append_to (st, f)
 		end

@@ -11,17 +11,17 @@ deferred class
 
 inherit
 	ANY
-	
+
 	SHARED_DBG_EVALUATOR
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_DEBUG
 		export
 			{ANY} Application
 			{NONE} all
-		end	
+		end
 
 feature {NONE} -- Initialization
 
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			generic_make
 			dbg_expression := expr
 		end
-		
+
 	generic_make is
 		do
 			error := 0
@@ -70,24 +70,24 @@ feature -- change
 		do
 			on_object := v
 		end
-		
+
 	set_on_context (v: like on_context) is
 			-- set value of `on_context' with `v'	
 		do
 			on_context := v
-		end		
-		
+		end
+
 	set_context_class (c: like context_class) is
 			-- set value of `context_class' with `c'
 		do
 			context_class := c
 		end
-		
+
 	set_context_address (c: like context_address) is
 			-- set value of `context_address' with `c'
 		do
 			context_address := c
-		end		
+		end
 
 feature -- Properties
 
@@ -108,10 +108,10 @@ feature -- Properties
 
 	context_class_type: CLASS_TYPE
 			-- Class related to the target, in on_object context	
-	
+
 	context_class: CLASS_C
 			-- Class related to the expression
-	
+
 	context_address: STRING
 			-- Object's address related to the expression	
 
@@ -131,7 +131,7 @@ feature -- Change
 			error := error | a_code
 			error_messages.extend ([a_code, a_tag, a_msg])
 		end
-		
+
 	notify_error_evaluation (mesg: STRING) is
 		do
 			notify_error (cst_error_evaluation, Void, mesg)
@@ -171,11 +171,11 @@ feature -- Change
 		do
 			notify_error (cst_error_expression, Void, mesg)
 		end
-		
+
 	notify_error_syntax (mesg: STRING) is
 		do
 			notify_error (cst_error_syntax, Void, mesg)
-		end		
+		end
 
 	notify_error_not_implemented (mesg: STRING) is
 		do
@@ -183,22 +183,18 @@ feature -- Change
 		end
 
 feature {NONE} -- Utility Implementation
-	
+
 	error_to_string (e: ERROR): STRING is
 			-- Convert Error code to Error description STRING
 		require
 			error_not_void: e /= Void
 		local
 			yw: YANK_STRING_WINDOW
-			st: STRUCTURED_TEXT
 		do
-			create st.make
-			e.trace (st)
-			create yw.make
-			yw.process_text (st)
+			e.trace (yw)
 			Result := yw.stored_output
-		end		
-	
+		end
+
 feature {NONE} -- Error code
 
 	cst_error_evaluation: INTEGER is 		0x01 		--|  0b00000001 -> 0x01
@@ -206,15 +202,15 @@ feature {NONE} -- Error code
 	cst_error_exception: INTEGER is  		0x04		--|  0b00000100 -> 0x04
 	cst_error_syntax: INTEGER is     		0x08		--|  0b00001000 -> 0x08
 	cst_error_not_implemented: INTEGER is 	0x10		--|  0b00010000 -> 0x10
-	
+
 feature {NONE} -- Error message values
-	
+
 	Cst_error_call_on_void_target: STRING is "Error: Call on void target for "
 
 	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
 
 	Cst_error_during_context_preparation: STRING is "Error occurred while retrieving the expression's context"
-	
+
 	Cst_error_during_expression_analyse: STRING is "Error during expression analyse"
 
 	Cst_error_type_checking_failed : STRING is "Type checking failed"
@@ -230,7 +226,7 @@ feature {NONE} -- Error message values
 	Cst_error_during_evaluation_of_external_call: STRING is " => ERROR during evaluation of external call : "
 
 	Cst_error_evaluating_parameter: STRING is " => Error evaluating parameter"
-	
+
 	Cst_feature_name_left_limit: STRING is "`"
 	Cst_feature_name_right_limit: STRING is "'"
 
@@ -250,11 +246,11 @@ feature -- Access
 		do
 			Result := error & cst_error_exception > 0
 		end
-		
+
 	has_error_syntax: BOOLEAN is
 		do
 			Result := error & cst_error_syntax > 0
-		end		
+		end
 
 	has_error_not_implemented: BOOLEAN is
 		do
@@ -266,7 +262,7 @@ feature -- Access
 	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING, STRING]]
 			-- List of [Code, Tag, Message]
 			-- Error's message if any otherwise Void
-			
+
 	short_text_from_error_messages: STRING is
 		local
 			details: TUPLE [INTEGER, STRING, STRING]
@@ -276,7 +272,7 @@ feature -- Access
 				Result ?= details.reference_item (2)
 			end
 		end
-		
+
 	text_from_error_messages: STRING is
 		local
 			details: TUPLE [INTEGER, STRING, STRING]
@@ -303,13 +299,13 @@ feature -- Access
 				end
 			end
 		end
-	
+
 	error_occurred: BOOLEAN is
 			-- Did an error occurred ?
 		do
 			Result := error /= 0
-		end		
-	
+		end
+
 	is_condition (f: FEATURE_I): BOOLEAN is
 			-- is feature `f' a condition ?
 		require
@@ -355,14 +351,14 @@ feature -- Evaluation
 			running_and_stopped: Application.is_running and Application.is_stopped
 		deferred
 		ensure
-			error_message_if_failed: (final_result_value = Void 
+			error_message_if_failed: (final_result_value = Void
 										and	final_result_static_type = Void
 										and final_result_type = Void)
 									implies (error_occurred)
 		end
-		
+
 invariant
-	
+
 	error_messages_not_void: error_messages /= Void
 
 indexing
@@ -371,19 +367,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

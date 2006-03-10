@@ -80,6 +80,7 @@ feature -- Actions
 			cancelled: BOOLEAN
 			ir_error: INTERRUPT_ERROR
 		do
+			eiffel_system.system.set_current_class (any_class)
 			if not cancelled then
 				deg.put_initializing_documentation
 
@@ -103,32 +104,32 @@ feature -- Actions
 						copy_additional_file ("default.css")
 						generate_goto_html
 					end
-	
+
 					prepare_for_file (Void, "index")
 					set_document_title (Eiffel_system.name + " documentation")
 					generate_index
-	
+
 					if class_list_generated then
 						deg.put_string ("Building class list")
 						prepare_for_file (Void, "class_list")
 						set_document_title (Eiffel_system.name + " class dictionary")
 						generate_dictionary
 					end
-	
+
 					if cluster_list_generated then
 						deg.put_string ("Building cluster list")
 						prepare_for_file (Void, "cluster_list")
 						set_document_title (Eiffel_system.name + " alphabetical cluster list")
 						generate_cluster_list
 					end
-	
+
 					if cluster_hierarchy_generated then
 						deg.put_string ("Building cluster hierarchy")
 						prepare_for_file (Void, "cluster_hierarchy")
 						set_document_title (Eiffel_system.name + " cluster hierarchy")
 						generate_cluster_hierarchy
 					end
-	
+
 					if cluster_chart_generated then
 						from
 							clusters.start
@@ -147,7 +148,7 @@ feature -- Actions
 							clusters.forth
 						end
 					end
-	
+
 					if filter.is_html and then cluster_diagram_generated then
 						from
 							clusters.start
@@ -160,7 +161,7 @@ feature -- Actions
 							clusters.forth
 						end
 					end
-	
+
 					if any_class_format_generated then
 						deg.put_start_documentation (classes.count, generated_class_formats_string)
 						from
@@ -195,7 +196,7 @@ feature -- Actions
 							classes.forth
 						end
 					end
-	
+
 				end
 			end
 			deg.finish_degree_output
@@ -248,7 +249,7 @@ feature -- Actions
 		end
 
 	create_directories (tl_clusters: LIST [CLUSTER_I]) is
-			-- Create directories where documentation is 
+			-- Create directories where documentation is
 			-- to be generated.
 		require
 			root_directory /= Void
@@ -419,7 +420,7 @@ feature {NONE} -- Implementation
 	diagram_views: HASH_TABLE [STRING, STRING]
 			-- (View name, cluster name) couples for `clusters'.
 			-- Void if not `cluster_diagrams_generated'.
-	
+
 	generate_goto_html is
 			-- Generate HTML file that contains the JavaScript function
 			-- `go_to' wich takes 2 arguments. The first one is the base
@@ -512,6 +513,9 @@ feature {NONE} -- Implementation
 --			}
 --		}
 --	// -->
+
+	format: CLASS_FORMAT
+			-- Class format
 
 feature {NONE} -- Filtered generation
 
@@ -618,75 +622,60 @@ feature -- Specific Generation
 			set_target_file_name (final_name)
 		end
 
-	generate_from_structured_text (text: STRUCTURED_TEXT) is
+	generate_from_text_filter (text: TEXT_FILTER) is
 			-- Output `ctxt.text' using `filter' to `target_file_name'.
 		local
 			fi: PLAIN_TEXT_FILE
 		do
-			filter.process_text (text)
 			create fi.make_create_read_write (target_file_name)
-			fi.put_string(filter.image)
+			fi.put_string(text.image)
 			fi.close
 			filter.wipe_out_image
 		end
 
 	generate_index is
 			-- Write project index to `target_file_name'.
-		local
-			text: STRUCTURED_TEXT
 		do
-			text := index_text
-			insert_global_menu_bars (text, True, True, True)
 			filter.prepend_to_file_suffix (class_links)
-			generate_from_structured_text (text)
+			index_text (filter)
+			generate_from_text_filter (filter)
 		end
 
 	generate_dictionary is
 			-- Write project class list to `target_file_name'.
-		local
-			text: STRUCTURED_TEXT
 		do
-			text := class_list_text (doc_universe)
-			insert_global_menu_bars (text, False, True, True)
 			filter.prepend_to_file_suffix (class_links)
-			generate_from_structured_text (text)
+			class_list_text (doc_universe, filter)
+			generate_from_text_filter (filter)
 			filter.set_feature_redirect (Void)
 		end
 
 	generate_cluster_list is
 			-- Write project cluster list to `target_file_name'.
-		local
-			text: STRUCTURED_TEXT
 		do
-			text := cluster_list_text (doc_universe)
-			insert_global_menu_bars (text, True, False, True)
 			filter.prepend_to_file_suffix (class_links)
-			generate_from_structured_text (text)
+			cluster_list_text (doc_universe, filter)
+			generate_from_text_filter (filter)
 		end
 
 	generate_cluster_hierarchy is
 			-- Write project cluster hierarchy to `target_file_name'.
-		local
-			text: STRUCTURED_TEXT
 		do
-			text := cluster_hierarchy_text (doc_universe)
-			insert_global_menu_bars (text, True, True, False)
 			filter.prepend_to_file_suffix (class_links)
-			generate_from_structured_text (text)
+			cluster_hierarchy_text (doc_universe, filter)
+			generate_from_text_filter (filter)
 		end
 
 	generate_cluster_index (cluster: CLUSTER_I) is
 			-- Write project cluster index to `target_file_name'.
-		local
-			text: STRUCTURED_TEXT
 		do
-			text := cluster_index_text (
+			filter.prepend_to_file_suffix (class_links)
+			cluster_index_text (
 				cluster,
 				doc_universe.classes_in_cluster (cluster),
-				filter.is_html and cluster_diagram_generated)
-			insert_global_menu_bars (text, True, True, True)
-			filter.prepend_to_file_suffix (class_links)
-			generate_from_structured_text (text)
+				filter.is_html and cluster_diagram_generated,
+				filter)
+			generate_from_text_filter (filter)
 		end
 
 	generate_cluster_diagram (cluster: CLUSTER_I) is
@@ -706,38 +695,39 @@ feature -- Specific Generation
 			end
 			g.execute
 		end
-	
-	generate_class (class_i: CLASS_I; format: CLASS_FORMAT) is
+
+	generate_class (class_i: CLASS_I; a_format: CLASS_FORMAT) is
 			-- Write project class `format' to `target_file_name'.
 		require
 			class_i_not_void: class_i /= Void
-			format_not_void: format /= Void
-			format_generated: format.is_generated
+			format_not_void: a_format /= Void
+			format_generated: a_format.is_generated
 		local
-			text: STRUCTURED_TEXT
 			class_c: CLASS_C
 			retried: BOOLEAN
 		do
+			format := a_format
+			filter.prepend_to_file_suffix (format.file_extension)
 			if not retried then
 				class_c := class_i.compiled_class
 				inspect
 					format.type
 				when cf_Chart then
-					text := class_chart_text (class_c)
+					class_chart_text (class_c, filter)
 				when cf_Diagram then
-					text := class_relations_text (class_c)
+					class_relations_text (class_c, filter)
 				when cf_Clickable then
-					text := class_text (class_c, False, False)
 					filter.set_feature_redirect (Void)
+					class_text (class_c, False, False, filter)
 				when cf_Flat then
-					text := class_text (class_c, True, False)
 					filter.set_feature_redirect (Void)
+					class_text (class_c, True, False, filter)
 				when cf_Short then
-					text := class_text (class_c, False, True)
 					filter.set_feature_redirect (Void)
+					class_text (class_c, False, True, filter)
 				when cf_Flatshort then
-					text := class_text (class_c, True, True)
 					filter.set_feature_redirect (Void)
+					class_text (class_c, True, True, filter)
 				end
 			else
 					-- An error occurred due to an internal bug while doing the formal for
@@ -746,18 +736,24 @@ feature -- Specific Generation
 					-- Note: we need to insert `ti_before_class_declaration' and
 					-- `ti_after_class_declaration' so that `insert_class_menu_bars'
 					-- works properly.
-				create text.make
-				text.add (ti_before_class_declaration)
-				text.add_new_line
-				text.add_string ("Internal compiler error while generating documentation %
+				filter.process_filter_item (f_menu_bar, true)
+				insert_class_menu_bar (filter, class_i.name.as_lower)
+				filter.process_filter_item (f_menu_bar, false
+				)
+				filter.process_filter_item (f_class_declaration, true)
+				filter.add_new_line
+				filter.add_string ("Internal compiler error while generating documentation %
 					%for class ")
-				text.add_class (class_i)
-				text.add_new_line
-				text.add (ti_after_class_declaration)
+				filter.add_class (class_i)
+				filter.add_new_line
+
+				filter.process_filter_item (f_menu_bar, true)
+				insert_class_menu_bar (filter, class_i.name.as_lower)
+				filter.process_filter_item (f_menu_bar, false)
+
+				filter.process_filter_item (f_class_declaration, false)
 			end
-			filter.prepend_to_file_suffix (format.file_extension)
-			insert_class_menu_bars (text, class_i.name.as_lower, format)
-			generate_from_structured_text (text)
+			generate_from_text_filter (filter)
 			filter.set_feature_redirect (feature_links)
 		rescue
 			retried := True
@@ -766,55 +762,7 @@ feature -- Specific Generation
 
 feature {NONE} -- Menu bars
 
-	insert_class_menu_bars (text: STRUCTURED_TEXT; class_name: STRING; f: CLASS_FORMAT) is
-			-- Put a menu bar at top and bottom of `text'.
-		do
-			text.start
-			text.search (ti_Before_class_declaration)
-			check
-				not_exhausted: not text.exhausted
-			end
-			text.forth
-
-			text.put_left (ti_Before_menu_bar)
-			insert_class_menu_bar (text, class_name, f)
-			text.put_left (ti_After_menu_bar)
-
-			text.search (ti_After_class_declaration)
-			check
-				not_exhausted: not text.exhausted
-			end
-
-			text.put_left (ti_Before_menu_bar)
-			insert_class_menu_bar (text, class_name, f)
-			text.put_left (ti_After_menu_bar)
-		end
-
-	insert_global_menu_bars (text: STRUCTURED_TEXT; d, l, h: BOOLEAN) is
-			-- Put a menu bar at top and bottom of `text'.
-		do
-			text.start
-			text.search (ti_Before_class_declaration)
-			check
-				not_exhausted: not text.exhausted
-			end
-			text.forth
-
-			text.put_left (ti_Before_menu_bar)
-			insert_global_menu_bar (text, d, l, h)
-			text.put_left (ti_After_menu_bar)
-
-			text.search (ti_After_class_declaration)
-			check
-				not_exhausted: not text.exhausted
-			end
-
-			text.put_left (ti_Before_menu_bar)
-			insert_global_menu_bar (text, d, l, h)
-			text.put_left (ti_After_menu_bar)
-		end
-
-	insert_global_menu_bar (text: STRUCTURED_TEXT; d, l, h: BOOLEAN) is
+	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN) is
 			-- Append a menu bar to `text'.
 		do
 			insert_menu_item (text, "class_list", "Classes", d, class_list_generated)
@@ -822,7 +770,7 @@ feature {NONE} -- Menu bars
 			insert_menu_item (text, "cluster_hierarchy", "Cluster hierarchy", h, cluster_hierarchy_generated)
 		end
 
-	insert_class_menu_bar (text: STRUCTURED_TEXT; class_name: STRING; f: CLASS_FORMAT) is
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING) is
 			-- Append a menu bar to `text'.
 		local
 			af: LINEAR [INTEGER]
@@ -830,12 +778,12 @@ feature {NONE} -- Menu bars
 			insert_global_menu_bar (text, True, True, True)
 			af := all_class_formats.linear_representation
 			from af.start until af.after loop
-				insert_class_menu_item (text, class_name, create {CLASS_FORMAT}.make (af.item), f)
+				insert_class_menu_item (text, class_name, create {CLASS_FORMAT}.make (af.item), format)
 				af.forth
 			end
 		end
 
-	insert_menu_item (text: STRUCTURED_TEXT; link, label: STRING; enabled, generated: BOOLEAN) is
+	insert_menu_item (text: TEXT_FORMATTER; link, label: STRING; enabled, generated: BOOLEAN) is
 			-- Insert in `text', a menu item `label' with `link', if `generated' `True'.
 			-- Insert as disabled if not `enabled'.
 			-- `link' is a file relative to root dir without extension.
@@ -846,20 +794,20 @@ feature {NONE} -- Menu bars
 				path := relative_to_base (link)
 			end
 			if generated then
-				text.put_left (create {MENU_TEXT}.make (path, label))
+				text.process_menu_text (label, path)
 			end
 		end
 
-	insert_class_menu_item (text: STRUCTURED_TEXT; class_name: STRING; format, class_format: CLASS_FORMAT) is
+	insert_class_menu_item (text: TEXT_FORMATTER; class_name: STRING; a_format, class_format: CLASS_FORMAT) is
 			-- Insert in `text', a menu item for `class_name' for `format'.
 		local
 			path: STRING
 		do
-			if format.type /= class_format.type then
-				path := class_name + format.file_extension
+			if a_format.type /= class_format.type then
+				path := class_name + a_format.file_extension
 			end
-			if format.is_generated then
-				text.put_left (create {CLASS_MENU_TEXT}.make (path, format.description))
+			if a_format.is_generated then
+				text.process_class_menu_text (a_format.description, path)
 			end
 		end
 
@@ -869,19 +817,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

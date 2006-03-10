@@ -327,7 +327,7 @@ feature -- Access
 				written_class.is_debuggable
 		end;
 
-	text: STRUCTURED_TEXT is
+	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Text of the feature.
 			-- Void if unreadable file
 		local
@@ -350,21 +350,22 @@ feature -- Access
 				else
 					end_position := body_as.end_position
 				end
-				create Result.make;
-				Result.add_string ("-- Version from class: ");
-				Result.add_classi (c.lace_class, c.name_in_upper);
-				Result.add_new_line;
-				Result.add_new_line;
-				Result.add_indent;
+				a_text_formatter.add ("-- Version from class: ");
+				a_text_formatter.add_classi (c.lace_class, c.name_in_upper);
+				a_text_formatter.add_new_line;
+				a_text_formatter.add_new_line;
+				a_text_formatter.add_indent;
 				if
 					class_text.count >= end_position and
 					start_position < end_position
 				then
 					class_text := class_text.substring
 								(start_position, end_position);
-					Result.add_feature (Current, class_text)
+					a_text_formatter.add_feature (Current, class_text)
 				end;
-				Result.add_new_line;
+				a_text_formatter.add_new_line;
+			else
+				Result := true
 			end
 		end;
 
@@ -564,19 +565,19 @@ feature -- Comparison
 
 feature -- Output
 
-	append_signature (st: STRUCTURED_TEXT) is
-			-- Append the signature of current feature in `st'
+	append_signature (a_text_formatter: TEXT_FORMATTER) is
+			-- Append the signature of current feature in `a_text_formatter'
 		require
-			non_void_st: st /= Void
+			non_void_st: a_text_formatter /= Void
 		do
-			append_full_name (st)
-			append_just_signature (st)
+			append_full_name (a_text_formatter)
+			append_just_signature (a_text_formatter)
 		end
 
-	append_just_signature (st: STRUCTURED_TEXT) is
-			-- Append just signature of feature in `st'.
+	append_just_signature (a_text_formatter: TEXT_FORMATTER) is
+			-- Append just signature of feature in `a_text_formatter'.
 		require
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 		local
 			args: like arguments
 			orig_type, cur_type: TYPE_A
@@ -584,49 +585,49 @@ feature -- Output
 		do
 			args := arguments
 			if args /= Void then
-				st.add_space
-				st.add (Ti_l_parenthesis)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (Ti_l_parenthesis)
 				from
 					args.start
 				until
 					args.after
 				loop
 					orig_type := args.item
-					st.add_local (args.argument_names.i_th (args.index))
+					a_text_formatter.add_local (args.argument_names.i_th (args.index))
 					same := True
 					from args.forth until not same or else args.after loop
 						cur_type := args.item
 						if cur_type.same_type (orig_type) and then cur_type.is_equivalent (orig_type) then
-							st.add (Ti_comma)
-							st.add_space
-							st.add_local (args.argument_names.i_th (args.index))
+							a_text_formatter.process_symbol_text (Ti_comma)
+							a_text_formatter.add_space
+							a_text_formatter.add_local (args.argument_names.i_th (args.index))
 							args.forth
 						else
 							same := False
 						end
 					end
-					st.add (Ti_colon)
-					st.add_space
-					orig_type.ext_append_to (st, Current)
+					a_text_formatter.process_symbol_text (Ti_colon)
+					a_text_formatter.add_space
+					orig_type.ext_append_to (a_text_formatter, Current)
 					if not args.after then
-						st.add (Ti_semi_colon)
-						st.add_space
+						a_text_formatter.process_symbol_text (Ti_semi_colon)
+						a_text_formatter.add_space
 					end
 				end
-				st.add (Ti_r_parenthesis)
+				a_text_formatter.process_symbol_text (Ti_r_parenthesis)
 			end
 			if not is_procedure then
-				st.add (Ti_colon)
-				st.add_space
-				type.ext_append_to (st, Current)
+				a_text_formatter.process_symbol_text (Ti_colon)
+				a_text_formatter.add_space
+				type.ext_append_to (a_text_formatter, Current)
 			end
 		end
 
 
-	append_name (st: STRUCTURED_TEXT) is
-			-- Append the name of the feature in `st'
+	append_name (a_text_formatter: TEXT_FORMATTER) is
+			-- Append the name of the feature in `a_text_formatter'
 		require
-			valid_st: st /= Void
+			valid_st: a_text_formatter /= Void
 		local
 			l_name: STRING
 		do
@@ -634,43 +635,65 @@ feature -- Output
 			if is_once or else is_constant then
 				l_name.put ((l_name @ 1).upper, 1)
 			end
-			st.add_feature (Current, l_name)
+			a_text_formatter.add_feature (Current, l_name)
 		end
 
-	append_full_name (st: STRUCTURED_TEXT) is
-			-- Append name of the feature in `st' in its complete form
+	append_full_name (a_text_formatter: TEXT_FORMATTER) is
+			-- Append name of the feature in `a_text_formatter' in its complete form
 			-- (with infix and prefix keywords and alias names if any).
 		require
-			valid_st: st /= Void
+			valid_st: a_text_formatter /= Void
 		local
-			ot: OPERATOR_TEXT
 			a: like alias_name
 		do
 			if is_infix then
-				st.add (Ti_infix_keyword)
-				create ot.make (Current, extract_symbol_from_infix (name))
+				a_text_formatter.process_keyword_text (Ti_infix_keyword, Void)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (Ti_double_quote)
+				a_text_formatter.process_operator_text (extract_symbol_from_infix (name), Current)
+				a_text_formatter.process_symbol_text (Ti_double_quote)
 			elseif is_prefix then
-				st.add (Ti_prefix_keyword)
-				create ot.make (Current, extract_symbol_from_prefix (name))
+				a_text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (Ti_double_quote)
+				a_text_formatter.process_operator_text (extract_symbol_from_prefix (name), Current)
+				a_text_formatter.process_symbol_text (Ti_double_quote)
 			else
-				append_name (st)
+				append_name (a_text_formatter)
 				a := alias_name
 				if a /= Void then
-					st.add_space
-					st.add (Ti_alias_keyword)
-					create ot.make (Current, extract_alias_name (a))
+					a_text_formatter.add_space
+					a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
+					a_text_formatter.add_space
+					a_text_formatter.process_symbol_text (Ti_double_quote)
+					a_text_formatter.process_operator_text (extract_alias_name (a), Current)
+					a_text_formatter.process_symbol_text (Ti_double_quote)
 				end
 			end
-			if ot /= Void then
-				st.add_space
-				st.add (Ti_double_quote)
-				st.add (ot)
-				st.add (Ti_double_quote)
-			end
 			if has_convert_mark then
-				st.add_space
-				st.add (ti_convert_keyword)
+				a_text_formatter.add_space
+				a_text_formatter.process_keyword_text (ti_convert_keyword, Void)
 			end
+		end
+
+	infix_symbol : STRING is
+			--
+		require
+			is_infix: is_infix
+		do
+			Result := extract_symbol_from_infix (name)
+		ensure
+			infix_symbol_not_void: infix_symbol /= Void
+		end
+
+	prefix_symbol : STRING is
+			--
+		require
+			is_infix: is_prefix
+		do
+			Result := extract_symbol_from_prefix (name)
+		ensure
+			prefix_symbol_not_void: prefix_symbol /= Void
 		end
 
 feature -- Output
@@ -836,19 +859,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when a redeclaration don't specify a require %
 		%else or an ensure then assertion block."
 	legal: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VDRD8 
+class VDRD8
 
 inherit
 
@@ -37,30 +37,30 @@ feature -- Access
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
-				a_feature /= Void 
+				a_feature /= Void
 		ensure then
 			valid_a_feature: Result implies a_feature /= Void
 		end
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Feature: ");
-			a_feature.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Feature: ");
+			a_feature.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 			if postcondition then
 				if precondition then
-					st.add_string ("Invalid assertion clauses: precondition and postcondition")
+					a_text_formatter.add ("Invalid assertion clauses: precondition and postcondition")
 				else
-					st.add_string ("Invalid assertion clause: postcondition")
+					a_text_formatter.add ("Invalid assertion clause: postcondition")
 				end;
 			else
-				st.add_string ("Invalid assertion clause: precondition")
+				a_text_formatter.add ("Invalid assertion clause: precondition")
 			end;
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -89,19 +89,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

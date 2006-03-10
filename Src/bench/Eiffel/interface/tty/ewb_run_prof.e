@@ -20,7 +20,7 @@ inherit
 			loop_action
 		end;
 	SHARED_QUERY_VALUES
-			
+
 feature {NONE} -- Execute
 
 	loop_action is
@@ -31,7 +31,7 @@ feature {NONE} -- Execute
 	execute is
 		local
 			executer: E_SHOW_PROFILE_QUERY;
-			st: STRUCTURED_TEXT
+			st: YANK_WINDOW
 		do
 			create_profiler_query;
 			create_profiler_options;
@@ -52,7 +52,7 @@ feature {NONE} -- Execute
 				st.add_string ("You should first manipulate the subqueries")
 				st.add_new_line;
 			end;
-			output_window.put_string (st.image);
+			output_window.put_string (st.stored_output);
 			output_window.put_new_line
 		end;
 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			profiler_options.set_language_names (language_names);
 		end;
 
-	print_active_query (st: STRUCTURED_TEXT) is
+	print_active_query (st: TEXT_FORMATTER) is
 		do
 			from
 				st.add_string ("Query:");
@@ -133,19 +133,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

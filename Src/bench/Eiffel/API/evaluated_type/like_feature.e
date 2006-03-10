@@ -116,14 +116,14 @@ feature -- Output
 			Result.append (s)
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		local
 			ec: CLASS_C
 			l_feat: E_FEATURE
 		do
 			ec := Eiffel_system.class_of_id (class_id)
-			st.add (ti_l_bracket)
-			st.add (ti_like_keyword)
+			st.process_symbol_text (ti_l_bracket)
+			st.process_keyword_text (ti_like_keyword, Void)
 			st.add_space
 			if ec.has_feature_table then
 				l_feat := ec.feature_with_name (feature_name)
@@ -133,7 +133,7 @@ feature -- Output
 			else
 				st.add_feature_name (feature_name, ec)
 			end
-			st.add (ti_r_bracket)
+			st.process_symbol_text (ti_r_bracket)
 			st.add_space
 			if is_valid then
 				actual_type.ext_append_to (st, f)

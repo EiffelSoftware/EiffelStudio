@@ -10,7 +10,7 @@ class
 
 inherit
 	ABSTRACT_DEBUG_VALUE
-	
+
 	COMPILER_EXPORTER
 		undefine
 			is_equal
@@ -18,7 +18,7 @@ inherit
 
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make, make_attribute
-	
+
 feature {NONE} -- Initialization
 
 	make (a_sk_type: INTEGER; v: like value) is
@@ -74,7 +74,7 @@ feature -- Access
 			int16val: INTEGER_16_REF
 			int32val: INTEGER_REF
 			int64val: INTEGER_64_REF
-			
+
 			realval: REAL_REF
 			dblval: DOUBLE_REF
 			cval: CHARACTER_REF
@@ -95,7 +95,7 @@ feature -- Access
 			when sk_uint64  then
 				uint64val ?= value
 				create Result.make_natural_64 (uint64val.item, Dynamic_class)
-				
+
 			when sk_int8    then
 				int8val ?= value
 				create Result.make_integer_32 (int8val.item.to_integer, Dynamic_class)
@@ -108,7 +108,7 @@ feature -- Access
 			when sk_int64   then
 				int64val ?= value
 				create Result.make_integer_64 (int64val.item, Dynamic_class)
-				
+
 			when sk_bool    then
 				bval ?= value
 				create Result.make_boolean (bval.item, Dynamic_class)
@@ -135,20 +135,20 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-		do 
+	append_type_and_value (st: TEXT_FORMATTER) is
+		do
 			dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
 			st.add_string (value.out)
 		end;
-		
+
 feature {NONE} -- Output
 
-	append_value (st: STRUCTURED_TEXT) is 
-		do 
+	append_value (st: TEXT_FORMATTER) is
+		do
 			st.add_string (value.out)
 		end;
-		
+
 	output_value: STRING is
 			-- Return a string representing `Current'.
 		do
@@ -164,7 +164,7 @@ feature {NONE} -- Output
 			Result.append (value.out)
 		end
 
-feature -- ouput 
+feature -- ouput
 
 	expandable: BOOLEAN is False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
@@ -198,7 +198,7 @@ feature {NONE} -- Setting
 		do
 			system := Eiffel_system.system
 			inspect sk_type
-			when sk_uint8   then dynamic_class := system.natural_8_class.compiled_class				
+			when sk_uint8   then dynamic_class := system.natural_8_class.compiled_class
 			when sk_uint16  then dynamic_class := system.natural_16_class.compiled_class
 			when sk_uint32  then dynamic_class := system.natural_32_class.compiled_class
 			when sk_uint64  then dynamic_class := system.natural_64_class.compiled_class
@@ -226,19 +226,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

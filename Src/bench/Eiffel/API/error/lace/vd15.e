@@ -24,18 +24,18 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Option: ");
-			st.add_string (option_name);
-			st.add_new_line;
+			a_text_formatter.add ("Option: ");
+			a_text_formatter.add (option_name);
+			a_text_formatter.add_new_line;
 			if option_value /= Void then
-				st.add_string ("Invalid option value: ");
-				st.add_string (option_value);
+				a_text_formatter.add ("Invalid option value: ");
+				a_text_formatter.add (option_value);
 			else
-				st.add_string ("No option value");
+				a_text_formatter.add ("No option value");
 			end;
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end;
 
 feature {OPTION_SD} -- Setting

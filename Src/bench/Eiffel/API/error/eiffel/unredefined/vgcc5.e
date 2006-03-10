@@ -25,14 +25,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			print_name (st);
-			st.add_string ("Feature name: ");
+			print_name (a_text_formatter);
+			a_text_formatter.add ("Feature name: ");
 			if creation_feature /= Void then
-				creation_feature.append_signature (st);
+				creation_feature.append_signature (a_text_formatter);
 			end;
-			st.add_new_line;
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

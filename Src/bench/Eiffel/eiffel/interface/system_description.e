@@ -71,17 +71,17 @@ feature -- Access for precompilation configuration
 
 feature -- Update
 
-	add_new_debug_clause (st: STRING) is
-			-- Add `st' to list of existing debug clauses.
+	add_new_debug_clause (a_text_formatter: STRING) is
+			-- Add `a_text_formatter' to list of existing debug clauses.
 		require
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 		do
 			if debug_clauses = Void then
 				create debug_clauses.make (10)
 			end
-			debug_clauses.put (st)
+			debug_clauses.put (a_text_formatter)
 		ensure
-			extended: debug_clauses.has (st)
+			extended: debug_clauses.has (a_text_formatter)
 		end
 
 	set_name (s: STRING) is

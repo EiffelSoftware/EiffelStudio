@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLIENT_I 
+class CLIENT_I
 
 inherit
 	COMPARABLE
@@ -192,7 +192,7 @@ feature -- formatter
 			other_clients := other.clients
 			other_cluster := system.class_of_id (other.written_in).cluster
 			from
-				other_clients.start 
+				other_clients.start
 				Result := True
 			until
 				other_clients.after or Result = False
@@ -203,7 +203,7 @@ feature -- formatter
 		end
 
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		local
 			temp: STRING
 			cluster: CLUSTER_I
@@ -211,7 +211,7 @@ feature -- formatter
 		do
 			cluster := System.class_of_id (written_in).cluster
 			from
-				clients.start	
+				clients.start
 			until
 				clients.after
 			loop
@@ -221,11 +221,11 @@ feature -- formatter
 					ctxt.put_classi (client_classi)
 				else
 					temp.to_upper
-					ctxt.put_string (temp)
+					ctxt.process_string_text (temp, Void)
 				end
 				clients.forth
 				if not clients.after then
-					ctxt.put_text_item (Ti_comma)
+					ctxt.process_symbol_text (Ti_comma)
 					ctxt.put_space
 				end
 			end
@@ -237,19 +237,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

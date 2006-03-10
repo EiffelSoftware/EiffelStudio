@@ -26,11 +26,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Duplicate name: ");
-			st.add_string (entity_name);
-			st.add_new_line;
+			a_text_formatter.add ("Duplicate name: ");
+			a_text_formatter.add (entity_name);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

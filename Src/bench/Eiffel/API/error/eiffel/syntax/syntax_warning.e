@@ -13,14 +13,14 @@ inherit
 		redefine
 			trace, file_name
 		end
-		
+
 	SYNTAX_MESSAGE
 
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-	
+
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} all
@@ -61,34 +61,34 @@ feature -- Properties
 
 	associated_class: CLASS_C
 			-- Class in which syntax warning occurred.
-			
+
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 		end
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
 			initialize_output
 
-			st.add (create {ERROR_TEXT}.make (Current, "Obsolete"))
-			st.add_string (" syntax used at line ")
-			st.add_int (line)
+			a_text_formatter.add_error (Current, "Obsolete")
+			a_text_formatter.add (" syntax used at line ")
+			a_text_formatter.add_int (line)
 				-- Error happened in a class
-			st.add_string (" in class ")
-			st.add_class_syntax (Current, associated_class, associated_class.class_signature)
+			a_text_formatter.add (" in class ")
+			a_text_formatter.add_class_syntax (Current, associated_class, associated_class.class_signature)
 			if warning_message /= Void then
-				st.add_new_line
-				st.add_string (warning_message)
-				st.add_new_line
+				a_text_formatter.add_new_line
+				a_text_formatter.add (warning_message)
+				a_text_formatter.add_new_line
 			end
-			st.add_new_line
-			build_explain (st)
-			display_line (st, previous_line)
-			display_syntax_line (st, current_line)
-			display_line (st, next_line)
+			a_text_formatter.add_new_line
+			build_explain (a_text_formatter)
+			display_line (a_text_formatter, previous_line)
+			display_syntax_line (a_text_formatter, current_line)
+			display_line (a_text_formatter, next_line)
 		end
 
 invariant
@@ -100,19 +100,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

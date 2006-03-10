@@ -37,11 +37,11 @@ feature -- Access
 
 feature -- Output
 
-	print_parent (st: STRUCTURED_TEXT) is
+	print_parent (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Parent for which export list appears: ");
-			parent.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Parent for which export list appears: ");
+			parent.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is 
+	make is
 			-- Initializes XMI Export Module.
 		do
 			create xmi_clusters.make
@@ -75,11 +75,11 @@ feature -- Actions
 		do
 			if not cancelled then
 				deg.put_string ("Initializing")
-	
+
 				clusters := doc_universe.clusters
-	
+
 				classes := doc_universe.classes
-				
+
 					-- Clusters
 				from
 					clusters.start
@@ -128,7 +128,7 @@ feature -- Actions
 				id_counter := id_counter + 1
 				idref_counter := idref_counter + 1
 				from
-					xmi_clusters.start 
+					xmi_clusters.start
 				until
 					xmi_clusters.after
 				loop
@@ -138,10 +138,10 @@ feature -- Actions
 					xmi_clusters.forth
 				end
 				xmi_diagrams.extend (new_xmi_diagram)
-				
+
 				deg.put_string ("Building generalizations list")
 
-				from 
+				from
 					classes.start
 				until
 					classes.after
@@ -150,7 +150,7 @@ feature -- Actions
 					add_generalizations (current_compiled_class)
 					classes.forth
 				end
-	
+
 				deg.put_string ("Generating XMI")
 				generate_from_lists
 				classes := Void
@@ -172,8 +172,8 @@ feature -- Actions
 					Error_handler.error_list.wipe_out
 					retry
 				end
-			end	
-		end	
+			end
+		end
 
 feature -- Settings
 
@@ -192,7 +192,7 @@ feature -- Settings
 			root_directory_assigned: root_directory = p
 			directory_exists: p.exists
 			directory_is_writable: p.is_writable
-		end	
+		end
 
 feature {NONE} -- Implementation
 
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 					new_xmi_class := xmi_class_by_class_c (c)
 					new_xmi_parent_class := xmi_class_by_class_c (current_parent)
 					create new_xmi_generalization.make (idref_counter, new_xmi_class, new_xmi_parent_class)
-					idref_counter := idref_counter + 1 
+					idref_counter := idref_counter + 1
 					create new_xmi_generalization_presentation.make (idref_counter, new_xmi_generalization)
 					idref_counter := idref_counter + 1
 					xmi_generalizations.extend (new_xmi_generalization)
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 					current_feature_list.after
 				loop
 					current_feature := current_feature_list.item
-					if current_feature.is_attribute then			
+					if current_feature.is_attribute then
 						add_attribute_or_association (current_feature, current_xmi_class)
 					else
 						if not current_feature.is_procedure then
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 			a_xmi_class_not_void: a_xmi_class /= Void
 		local
 			new_xmi_type: XMI_TYPE
-			new_xmi_operation: XMI_OPERATION	
+			new_xmi_operation: XMI_OPERATION
 			full_type_name: STRING
 			f_name: STRING
 			c: CLASS_C
@@ -425,9 +425,9 @@ feature {NONE} -- Implementation
 			end
 			if a_feature.export_status.is_none then
 				new_xmi_operation.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_operation.set_protected
-			else	
+			else
 				new_xmi_operation.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_operation)
@@ -453,9 +453,9 @@ feature {NONE} -- Implementation
 			end
 			if a_feature.export_status.is_none then
 				new_xmi_operation.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_operation.set_protected
-			else	
+			else
 				new_xmi_operation.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_operation)
@@ -494,9 +494,9 @@ feature {NONE} -- Implementation
 			end
 			if a_feature.export_status.is_none then
 				new_xmi_operation.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_operation.set_protected
-			else	
+			else
 				new_xmi_operation.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_operation)
@@ -522,9 +522,9 @@ feature {NONE} -- Implementation
 			end
 			if a_feature.export_status.is_none then
 				new_xmi_operation.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_operation.set_protected
-			else	
+			else
 				new_xmi_operation.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_operation)
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			loop
 				if current_argument_list.item.has_associated_class then
 					new_xmi_class := xmi_class_by_class_c (current_argument_list.item.associated_class)
-					if new_xmi_class = Void then	
+					if new_xmi_class = Void then
 						create new_xmi_type.make_type (idref_counter, current_argument_list.item.associated_class.name_in_upper.twin)
 						if not xmi_types.has (new_xmi_type) then
 							idref_counter := idref_counter + 1
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_attribute: a_feature.is_attribute
-		do				
+		do
 			if a_feature.type.has_associated_class then
 				if a_feature.type.has_generics and not a_feature.type.generics.is_empty then
 					add_generics_association (a_feature, a_xmi_class)
@@ -608,10 +608,10 @@ feature {NONE} -- Implementation
 					else
 							-- Complex types are considered associations
 						add_association (a_feature, a_xmi_class)
-					end	
+					end
 				end
 			end
-		end			
+		end
 
 	add_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 			a_feature_is_attribute: a_feature.is_attribute
 		local
 			feature_type: XMI_CLASS
-		do				
+		do
 			if a_feature.type.has_associated_class then
 				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
 				if feature_type = Void then
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			idref_counter := idref_counter + 3
 			if a_feature.export_status.is_none then
 				new_xmi_association.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_association.set_protected
 			else
 				new_xmi_association.set_public
@@ -689,9 +689,9 @@ feature {NONE} -- Implementation
 			idref_counter := idref_counter + 3
 			if a_feature.export_status.is_none then
 				new_xmi_association.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_association.set_protected
-			else	
+			else
 				new_xmi_association.set_public
 			end
 			a_xmi_class.add_association (new_xmi_association)
@@ -813,7 +813,7 @@ feature {NONE} -- Implementation
 			a_feature_is_attribute: a_feature.is_attribute
 		local
 			feature_type: XMI_CLASS
-		do				
+		do
 			if a_feature.type.has_associated_class then
 				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
 				if feature_type = Void then
@@ -858,9 +858,9 @@ feature {NONE} -- Implementation
 			id_counter := id_counter + 1
 			if a_feature.export_status.is_none then
 				new_xmi_attribute.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_attribute.set_protected
-			else	
+			else
 				new_xmi_attribute.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_attribute)
@@ -882,9 +882,9 @@ feature {NONE} -- Implementation
 			id_counter := id_counter + 1
 			if a_feature.export_status.is_none then
 				new_xmi_attribute.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_attribute.set_protected
-			else	
+			else
 				new_xmi_attribute.set_public
 			end
 			a_xmi_class.add_feature (new_xmi_attribute)
@@ -919,12 +919,12 @@ feature {NONE} -- Implementation
 			id_counter := id_counter + 1
 			if a_feature.export_status.is_none then
 				new_xmi_attribute.set_private
-			elseif a_feature.export_status.is_set then	
+			elseif a_feature.export_status.is_set then
 				new_xmi_attribute.set_protected
-			else	
+			else
 				new_xmi_attribute.set_public
 			end
-	
+
 			a_xmi_class.add_feature (new_xmi_attribute)
 		end
 
@@ -936,12 +936,12 @@ feature {NONE} -- Implementation
 			src_depot: XMI_CODE
 		do
 			create src_depot.make
-			create fi.make_create_read_write (target_file_name)	
+			create fi.make_create_read_write (target_file_name)
 			src := src_depot.header
 			src.append (src_depot.content_start (idref_root_diagram))
-			from 
+			from
 				xmi_clusters.start
-			until 
+			until
 				xmi_clusters.after
 			loop
 				src.append (xmi_clusters.item.code)
@@ -957,7 +957,7 @@ feature {NONE} -- Implementation
 				xmi_associations.forth
 			end
 
-			from 
+			from
 				xmi_generalizations.start
 			until
 				xmi_generalizations.after
@@ -978,12 +978,12 @@ feature {NONE} -- Implementation
 			src.append (src_depot.content_end)
 
 			src.append (src_depot.extensions_start)
-		
+
 			from
 				xmi_diagrams.start
 			until
 				xmi_diagrams.after
-			loop	
+			loop
 				src.append (xmi_diagrams.item.code)
 				xmi_diagrams.forth
 			end
@@ -1007,11 +1007,11 @@ feature {NONE} -- Implementation
 		require
 			valid_feature: f /= Void
 		local
-			st: STRUCTURED_TEXT
+			st: YANK_STRING_WINDOW
 		do
 			create st.make
 			f.append_full_name (st)
-			Result := st.image
+			Result := st.stored_output
 			Result.replace_substring_all ("&", "&amp;")
 			Result.replace_substring_all ("<", "&lt;")
 			Result.replace_substring_all (">", "&gt;")
@@ -1056,13 +1056,13 @@ feature {NONE} -- Implementation
 						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
 						full_type_name.append ("," + a_feature.associated_class.generics.i_th (l_cnt).name)
-					end	
+					end
 				else
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
 						full_type_name.append (a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
 					else
 						full_type_name.append (a_feature.associated_class.generics.i_th (l_cnt).name)
-					end	
+					end
 					l_multiple_generics := True
 				end
 				l_cnt := l_cnt + 1
@@ -1083,19 +1083,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

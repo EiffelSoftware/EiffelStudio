@@ -63,19 +63,19 @@ feature -- Properties
 
 feature -- Output
 
-	display_arguments (st: STRUCTURED_TEXT) is
+	display_arguments (st: TEXT_FORMATTER) is
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		deferred
 		end
 
-	display_locals (st: STRUCTURED_TEXT) is
+	display_locals (st: TEXT_FORMATTER) is
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		deferred
 		end
 
-	display_feature (st: STRUCTURED_TEXT) is
+	display_feature (st: TEXT_FORMATTER) is
 			-- Display information about associated routine.
 		deferred
 		end
@@ -90,7 +90,6 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published

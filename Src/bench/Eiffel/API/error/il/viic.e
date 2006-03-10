@@ -41,13 +41,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error message
 		do
-			st.add_string ("Could not analyze .NET class ")
-			class_c.append_signature (st, False)
-			st.add_string (".")
-			st.add_new_line
+			a_text_formatter.add ("Could not analyze .NET class ")
+			class_c.append_signature (a_text_formatter, False)
+			a_text_formatter.add (".")
+			a_text_formatter.add_new_line
 		end
 
 indexing

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Parser of file descriptions which allow generation of%
 		%specific formats (troff, mif, TEX, PostScript) for%
 		%output of clickable, short, flat and flat-short."
@@ -16,7 +16,7 @@ feature {NONE} -- Formats
 	format_table: HASH_TABLE [CELL2 [STRING, STRING], STRING];
 			-- User-specified formats
 
-	escape_characters: HASH_TABLE [STRING, CHARACTER];
+	escape_characters: ARRAY [STRING];
 			-- User-specified escape characters
 
 	read_formats (filename: STRING) is
@@ -112,13 +112,12 @@ feature {NONE} -- Formats
 												construct.item (construct.count);
 											construct.right_adjust;
 											if construct.count > 6 then
-												escape_char := 
+												escape_char :=
 													construct.item (construct.count)
 											end;
-											escape_characters.force 
-													(before, escape_char)
+											escape_characters.put (before, escape_char.code)
 										else
-											syntax_error 
+											syntax_error
 													("Escape character expected")
 										end
 									end
@@ -126,9 +125,9 @@ feature {NONE} -- Formats
 								if normal_format then
 									construct.right_adjust;
 									construct.to_lower;
-									if 
-										not construct.is_empty and then 
-										before /= Void 
+									if
+										not construct.is_empty and then
+										before /= Void
 									then
 										create new_format.make (before, after);
 										format_table.force (new_format, construct)
@@ -144,8 +143,8 @@ debug ("FILTERS")
 end
 									elseif construct.is_empty and before /= Void then
 										syntax_error ("Construct expected")
-									elseif 
-										not construct.is_empty and before = Void 
+									elseif
+										not construct.is_empty and before = Void
 									then
 										syntax_error ("Appearance expected")
 									end
@@ -171,7 +170,7 @@ end
 
 	get_next_character is
 			-- Go forth one position in the filter file.
-			-- Interprete special characters. Put the 
+			-- Interprete special characters. Put the
 			-- read character in last_char_read.
 		do
 			is_last_meta := false;
@@ -204,7 +203,7 @@ end
 							loop
 								filter_file.read_character
 							end;
-							if 
+							if
 								filter_file.end_of_file or else
 								filter_file.last_character /= '%%'
 							then
@@ -301,6 +300,7 @@ invariant
 
 	format_table_not_void: format_table /= Void;
 	escape_characters_not_void:  escape_characters /= Void
+	escape_characters_capacity_valid: escape_characters.capacity > {CHARACTER}.max_value
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -308,19 +308,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

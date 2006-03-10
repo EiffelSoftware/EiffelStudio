@@ -209,16 +209,12 @@ feature{NONE} -- Implementation
 		require
 			a_msg_not_void: a_msg /= Void
 			a_msg_not_emtpy: not a_msg.is_empty
-		local
-			l_str: STRUCTURED_TEXT
 		do
-			create l_str.make
-			l_str.add_string (a_msg)
+			output_manager.add_string (a_msg)
 			if a_suffix then
-				l_str.add_char ('.')
-				l_str.add_new_line
+				output_manager.add_char ('.')
+				output_manager.add_new_line
 			end
-			output_manager.process_text (l_str)
 			output_manager.scroll_to_end
 		end
 

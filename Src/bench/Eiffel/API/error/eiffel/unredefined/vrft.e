@@ -36,13 +36,13 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Tuple lable name name: ")
-			st.add_string (other_feature.name)
-			st.add_string (" is also defined as a feature of TUPLE: ")
-			other_feature.append_signature (st)
-			st.add_new_line
+			a_text_formatter.add_string ("Tuple lable name name: ")
+			a_text_formatter.add_string (other_feature.name)
+			a_text_formatter.add_string (" is also defined as a feature of TUPLE: ")
+			other_feature.append_signature (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}

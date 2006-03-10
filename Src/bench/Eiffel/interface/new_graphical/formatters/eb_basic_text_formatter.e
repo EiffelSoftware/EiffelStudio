@@ -16,7 +16,6 @@ inherit
 			generate_text,
 			class_cmd,
 			editable,
-			formatted_text,
 			set_class,
 			format,
 			make,
@@ -33,7 +32,6 @@ feature -- Initialization
 		do
 			Precursor {EB_CLASS_TEXT_FORMATTER} (a_manager)
 			create_class_cmd
-			create formatted_text.make
 			editable := True
 		end
 
@@ -49,9 +47,6 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_text, 1)
 			Result.put (Pixmaps.Icon_format_text, 2)
 		end
-
-	formatted_text: STRUCTURED_TEXT
-			-- Text representing `classi'.
 
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
@@ -70,7 +65,7 @@ feature -- Formatting
 			if
 				classi /= Void and then
 				selected and then
-				displayed 
+				displayed
 			then
 				display_temp_header
 				create class_file.make (classi.file_name)
@@ -101,7 +96,6 @@ feature -- Formatting
 				else
 					editor.disable_has_breakable_slots
 				end
-				must_format := False
 				display_header
 			end
 		end
@@ -186,8 +180,6 @@ feature {NONE} -- Implementation
 	generate_text is
 			-- Create `formatted_text'.
 		do
---			create formatted_text.make
---			formatted_text.add_string (classi.text)
 		end
 
 	create_class_cmd is
@@ -203,26 +195,26 @@ feature {NONE} -- Implementation
 
 	line_numbers_allowed: BOOLEAN is True;
 		-- Does it make sense to show line numbers in Current?
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

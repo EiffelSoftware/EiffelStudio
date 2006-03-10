@@ -1,8 +1,8 @@
 indexing
 
-	description: 
+	description:
 		"General notion of an eiffel command with output%
-		%appended to `structured_text'."
+		%appended to `text_formatter'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -21,7 +21,7 @@ inherit
 
 feature -- Properties
 
-	structured_text: STRUCTURED_TEXT;
+	text_formatter: TEXT_FORMATTER;
 			-- Structured text for command.
 
 feature -- Access
@@ -29,29 +29,35 @@ feature -- Access
 	executable: BOOLEAN is
 			-- Is Current command executable?
 		do
-			Result := structured_text /= Void 
+			Result := text_formatter /= Void
 		end
 
 feature -- Setting
 
-	make is
-			-- Create `structured_text' to `st'.
+	make (a_text_formatter: TEXT_FORMATTER) is
+			-- Create `a_text_formatter' to `text_formatter'.
+		require
+			a_text_formatter_attached: a_text_formatter /= Void
 		do
-			create structured_text.make
-		ensure
-			struct_text_not_void: structured_text /= Void
+			set_text_formatter (a_text_formatter)
 		end;
+
+	set_text_formatter (a_text_formatter: TEXT_FORMATTER) is
+			-- Set `text_formatter' with `a_text_formatter'
+		do
+			text_formatter := a_text_formatter
+		end
 
 feature -- Execution
 
 	execute is
 			-- Execute the current command. Add a before and after
-			-- declaration (cluster declaration by default) to `structured_text'
+			-- declaration (cluster declaration by default) to `text_formatter'
 			-- and invoke `work'.
 		do
-			structured_text.add (ti_Before_cluster_declaration);
+			text_formatter.process_filter_item (f_cluster_declaration, true);
 			work;
-			structured_text.add (ti_After_cluster_declaration);
+			text_formatter.process_filter_item (f_cluster_declaration, false);
 		end;
 
 	work is
@@ -61,19 +67,10 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	add_tabs (st:STRUCTURED_TEXT; i: INTEGER) is
-			-- Add `i' tabs to `structured_text'.
-		local
-			j: INTEGER
+	add_tabs (a_text_formatter: TEXT_FORMATTER; i: INTEGER) is
+			-- Add `i' tabs to `text_formatter'.
 		do
-			from
-				j := 1;
-			until
-				j > i
-			loop
-				st.add_indent;
-				j := j + 1
-			end;
+			a_text_formatter.add_indents (i)
 		end;
 
 indexing
@@ -82,19 +79,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

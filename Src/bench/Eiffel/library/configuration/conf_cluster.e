@@ -141,7 +141,7 @@ feature -- Access queries
 			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
 			a_feature_lower: a_feature.is_equal (a_feature.as_lower)
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
+			a_class_upper: a_class.is_equal (a_class.as_upper)
 		local
 			l_tbl: HASH_TABLE [STRING, STRING]
 		do
@@ -157,7 +157,7 @@ feature -- Access queries
 			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
 			a_feature_lower: a_feature.is_equal (a_feature.as_lower)
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
+			a_class_upper: a_class.is_equal (a_class.as_upper)
 		local
 			l_tbl: HASH_TABLE [STRING, STRING]
 		do
@@ -280,7 +280,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add a visible.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
+			a_class_upper: a_class.is_equal (a_class.as_upper)
 			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
 		local
 			l_v_cl: HASH_TABLE [STRING, STRING]
@@ -291,7 +291,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				create visible.make (1)
 			end
 			if a_class_rename /= Void then
-				l_visible_name := a_class_rename
+				l_visible_name := a_class_rename.as_upper
 			else
 				l_visible_name := a_class
 			end

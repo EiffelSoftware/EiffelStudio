@@ -159,6 +159,7 @@ feature -- Equality
 			-- Is `other' and `Current' the same with respect to the group layout?
 		local
 			l_o_targets: like targets
+			l_o_target: CONF_TARGET
 		do
 			if targets.count = other.targets.count then
 				Result := True
@@ -169,7 +170,8 @@ feature -- Equality
 				until
 					not Result or targets.after or l_o_targets.after
 				loop
-					Result := targets.item_for_iteration.is_group_equivalent (l_o_targets.item_for_iteration)
+					l_o_target := l_o_targets.item (targets.key_for_iteration)
+					Result := l_o_target /= Void and then targets.item_for_iteration.is_group_equivalent (l_o_target)
 					targets.forth
 					l_o_targets.forth
 				end

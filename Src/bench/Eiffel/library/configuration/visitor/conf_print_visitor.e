@@ -88,14 +88,16 @@ feature -- Visit nodes
 			append_description_tag (a_target.description)
 			l_root := a_target.internal_root
 			if l_root /= Void then
-				create l_a_name.make (3)
-				create l_a_val.make (3)
+				create l_a_name.make (4)
+				create l_a_val.make (4)
 				l_a_name.force ("cluster")
 				l_a_val.force (l_root.cluster_name)
 				l_a_name.force ("class")
 				l_a_val.force (l_root.class_name)
 				l_a_name.force ("feature")
 				l_a_val.force (l_root.feature_name)
+				l_a_name.force ("all_classes")
+				l_a_val.force (l_root.is_all_root.out.as_lower)
 				append_tag ("root", Void, l_a_name, l_a_val)
 			end
 			l_version := a_target.internal_version
@@ -517,7 +519,6 @@ feature {NONE} -- Implementation
 			-- Append `an_options', optionally for `a_class'.
 		local
 			l_str: STRING
-			l_loc: CONF_LOCATION
 			l_debugs, l_warnings: HASH_TABLE [BOOLEAN, STRING]
 			l_assertions: CONF_ASSERTIONS
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
@@ -545,11 +546,6 @@ feature {NONE} -- Implementation
 				l_str := an_options.namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+l_str+"%"")
-				end
-				l_loc := an_options.documentation
-				if l_loc /= Void then
-					l_str := l_loc.original_path
-					append_text (" documentation=%""+l_str+"%"")
 				end
 				append_text (">%N")
 
@@ -622,15 +618,8 @@ feature {NONE} -- Implementation
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
 		local
 			l_str: STRING
-			l_pre: CONF_PRECOMPILE
 		do
-			if a_group.is_precompile then
-				l_pre ?= a_group
-				l_str := l_pre.precompile_location.original_path
-			else
-				l_str := a_group.location.original_path
-			end
-
+			l_str := a_group.location.original_path
 			if l_str.is_empty then
 				l_str := "none"
 			end

@@ -11,7 +11,6 @@ inherit
 		redefine
 			is_precompile,
 			process,
-			is_group_equivalent,
 			make
 		end
 
@@ -25,7 +24,6 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			set_name (a_name)
-			set_precompile_location (a_location)
 			set_location (a_location)
 		end
 
@@ -35,29 +33,6 @@ feature -- Status
 			-- Is this a precompile?
 		once
 			Result := True
-		end
-
-feature -- Access, stored in config file.
-
-	precompile_location: CONF_LOCATION
-			-- Location of the precompile.
-
-feature -- Update, stored in config file.
-
-	set_precompile_location (a_location: like precompile_location) is
-			-- Set `precompile_location' to `a_location'.
-		do
-			precompile_location := a_location
-		ensure
-			precompile_location_set: precompile_location = a_location
-		end
-
-feature -- Equality
-
-	is_group_equivalent (other: like Current): BOOLEAN is
-			-- Is `other' and `Current' the same with respect to the group layout?
-		do
-			Result := Precursor (other) and then equal (precompile_location, other.precompile_location)
 		end
 
 feature -- Visit

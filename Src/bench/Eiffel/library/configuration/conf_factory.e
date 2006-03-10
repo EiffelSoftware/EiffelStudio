@@ -61,15 +61,17 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_root (a_cluster, a_class, a_feature: STRING): CONF_ROOT is
+	new_root (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN): CONF_ROOT is
 			-- Create a `CONF_ROOT' object.
 		require
-			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
-			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
-			a_feature_lower: a_feature.is_equal (a_feature.as_lower)
+			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
+			a_cluster_lower: a_cluster /= Void implies a_cluster.is_equal (a_cluster.as_lower)
+			a_class_ok: not a_all_root implies a_class /= Void and then not a_class.is_empty
+			a_class_upper: not a_all_root implies a_class.is_equal (a_class.as_upper)
+			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
+			a_feature_lower: a_feature /= Void implies a_feature.is_equal (a_feature.as_lower)
 		do
-			create Result.make (a_cluster, a_class, a_feature)
+			create Result.make (a_cluster, a_class, a_feature, a_all_root)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -152,7 +154,6 @@ feature
 			-- Create a `CONF_CLASS' object.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
-			a_file_name_lower: a_file_name.is_equal (a_file_name.as_lower)
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		do
@@ -165,6 +166,7 @@ feature
 			-- Create a `CONF_CLASS_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_name_upper: a_name.is_equal (a_name.as_upper)
 			an_assembly_not_void: an_assembly /= Void
 			a_position_ok: a_position >= 0
 		do
@@ -237,7 +239,7 @@ feature
 			a_directory_not_void: a_directory /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, new_location_from_path (a_directory, a_target), a_target)
+			create Result.make (a_name, new_location_from_full_path (a_directory, a_target), a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -85,6 +85,7 @@ feature -- Basic operation
 				last_system := conf_factory.new_system (l_ast.system_name.as_lower, uuid_generator.uuid)
 				current_target := conf_factory.new_target (l_ast.system_name.as_lower, last_system)
 				last_system.add_target (current_target)
+				last_system.set_library_target (current_target)
 
 				process_defaults (l_ast.defaults)
 				if not l_parser.comments.is_empty then
@@ -515,11 +516,6 @@ feature {NONE} -- Implementation of data retrieval
 								create l_conf_vers.make
 							end
 							l_conf_vers.set_copyright (l_value.value)
-						elseif l_name.is_equal ("document") then
-							if current_options = Void then
-								create current_options
-							end
-							current_options.set_documentation (conf_factory.new_location_from_path (l_value.value, current_target))
 						elseif l_name.is_equal ("namespace") then
 							if current_options = Void then
 								create current_options
@@ -609,11 +605,16 @@ feature {NONE} -- Implementation of data retrieval
 						l_cluster.to_lower
 					end
 					l_feature := a_root.creation_procedure_name
-					if l_feature = Void or else l_feature.is_empty then
-						l_feature := "default_create"
+					if l_feature /= Void and then l_feature.is_empty then
+						l_feature := Void
 					end
 					l_feature.to_lower
-					l_root := conf_factory.new_root (l_cluster, l_class, l_feature)
+					if l_class.is_equal ("none") then
+						l_root := conf_factory.new_root (Void, Void, Void, True)
+					else
+						l_root := conf_factory.new_root (l_cluster, l_class, l_feature, False)
+					end
+
 					current_target.set_root (l_root)
 				end
 			end

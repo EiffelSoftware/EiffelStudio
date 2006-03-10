@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
-			a_file_name_lower: a_file_name.is_equal (a_file_name.as_lower)
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
@@ -38,15 +37,26 @@ feature {NONE} -- Initialization
 			group := a_group
 			path := a_path
 			check_changed
-			check
-				name_set: name /= Void and then not name.is_empty
-			end
-			l_cluster ?= a_group
-			if l_cluster /= Void and then l_cluster.visible /= Void then
-				visible := l_cluster.visible.item (name)
+
+			if not is_error then
+				check
+					name_set: name /= Void and then not name.is_empty
+				end
+
+				l_cluster ?= a_group
+				if l_cluster /= Void and then l_cluster.visible /= Void then
+					visible := l_cluster.visible.item (name)
+				end
 			end
 		end
 
+feature -- Status
+
+	is_error: BOOLEAN
+			-- Was there an error?
+
+	last_error: CONF_ERROR
+			-- Last error.
 
 feature -- Access, in compiled only, not stored to configuration file
 
@@ -163,6 +173,17 @@ feature -- Access queries
 			end
 		end
 
+feature -- Status update
+
+	set_up_to_date is
+			-- The class has been recompiled and is now up to date.
+		do
+			is_modified := False
+			is_renamed := False
+		ensure
+			not_modified: not is_modified
+			not_renamed: not is_renamed
+		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
@@ -171,7 +192,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			-- More or less the same thing as we during `make'.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
-			a_file_name_lower: a_file_name.is_equal (a_file_name.as_lower)
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
@@ -181,12 +201,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			group := a_group
 			path := a_path
 			check_changed
-			check
-				name_set: name /= Void and then not name.is_empty
-			end
-			l_cluster ?= a_group
-			if l_cluster /= Void and then l_cluster.visible /= Void then
-				visible := l_cluster.visible.item (name)
+
+			if not is_error then
+				l_cluster ?= a_group
+				if l_cluster /= Void and then l_cluster.visible /= Void then
+					visible := l_cluster.visible.item (name)
+				end
 			end
 
 				-- forget override informations
@@ -230,23 +250,28 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				l_file.open_read
 				classname_finder.parse (l_file)
 				l_file.close
-				l_name := classname_finder.classname.as_lower
-				if name = Void or else not name.is_equal (l_name) then
-					is_renamed := True
-					l_old_name := renamed_name
-					name := l_name
-					renamed_name := name.twin
-					l_renamings := group.renaming
-					if l_renamings /= Void and then l_renamings.has (name) then
-						renamed_name := l_renamings.item (name)
-					end
-					if group.name_prefix /= Void then
-						renamed_name.prepend (group.name_prefix)
-					end
-						-- if applicable, add new entry and remove old
-					if group.classes /= Void and then l_old_name /= Void and then group.classes.has (l_old_name) then
-						group.classes.remove (l_old_name)
-						group.classes.force (Current, renamed_name)
+				l_name := classname_finder.classname
+				if l_name = Void then
+					set_error (create {CONF_ERROR_CLASSN}.make (full_file_name))
+				else
+					l_name.to_upper
+					if name = Void or else not name.is_equal (l_name) then
+						is_renamed := True
+						l_old_name := renamed_name
+						name := l_name.as_upper
+						renamed_name := name.twin
+						l_renamings := group.renaming
+						if l_renamings /= Void and then l_renamings.has (name) then
+							renamed_name := l_renamings.item (name)
+						end
+						if group.name_prefix /= Void then
+							renamed_name.prepend (group.name_prefix)
+						end
+							-- if applicable, add new entry and remove old
+						if group.classes /= Void and then l_old_name /= Void and then group.classes.has (l_old_name) then
+							group.classes.remove (l_old_name)
+							group.classes.force (Current, renamed_name)
+						end
 					end
 				end
 			end
@@ -272,16 +297,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overrides.extend (a_class)
 		end
 
-	set_up_to_date is
-			-- The class has been recompiled and is now up to date.
-		do
-			is_modified := False
-			is_renamed := False
-		ensure
-			not_modified: not is_modified
-			not_renamed: not is_renamed
-		end
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -290,14 +305,24 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
+feature {NONE} -- Implementation
+
+	set_error (an_error: CONF_ERROR) is
+			-- Set `an_error'.
+		do
+			is_error := True
+			last_error := an_error
+		end
+
+
 invariant
 	name_ok: name /= Void and then not name.is_empty
-	name_lower: name.is_equal (name.as_lower)
+	name_upper: name.is_equal (name.as_upper)
 	renamed_name_ok: renamed_name /= Void and then not renamed_name.is_empty
-	renamed_name_lower: renamed_name.is_equal (renamed_name.as_lower)
+	renamed_name_upper: renamed_name.is_equal (renamed_name.as_upper)
 	file_name_not_void: file_name /= Void
-	file_name_lower: file_name.is_equal (file_name.as_lower)
 	group_not_void: group /= Void
 	path_not_void: path /= Void
+	is_error_set: is_error implies last_error /= Void
 
 end

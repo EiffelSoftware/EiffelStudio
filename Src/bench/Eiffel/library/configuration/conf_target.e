@@ -250,7 +250,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	variables: HASH_TABLE [STRING, STRING] is
+	variables: like internal_variables is
 			-- User defined variables.
 		do
 			if extends /= Void then
@@ -653,11 +653,16 @@ feature -- Equality
 						is_group_equal_check (assemblies, other.assemblies) and then
 						is_group_equal_check (clusters, other.clusters) and then
 						is_group_equal_check (overrides, other.overrides) and then
-						equal_variables (variables, other.variables) and then
+						equal (variables, other.variables) and then
 						equal (root, other.root) and then
-						equal (file_rule, other.file_rule) and then
-						((precompile = Void and other.precompile = Void) or
-						(precompile.is_group_equivalent (other.precompile)))
+						equal (file_rule, other.file_rule)
+			if Result then
+				if precompile = Void then
+					Result := other.precompile = Void
+				else
+					Result := other.precompile /= Void and then precompile.is_group_equivalent (other.precompile)
+				end
+			end
 		end
 
 feature -- Visit
@@ -718,32 +723,10 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: HASH_TABLE [STRING, STRING]
+	internal_variables: CONF_HASH_TABLE [STRING, STRING]
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation
-
-	equal_variables (a, b: like variables): BOOLEAN is
-			-- Are `a' and `b' equal?
-		do
-			if a = b then
-				Result := True
-			end
-			if not Result and a /= Void and b /= Void then
-				from
-					Result := True
-					a.start
-					b.start
-				until
-					not Result or a.after or b.after
-				loop
-					Result := equal (a.item_for_iteration, b.item_for_iteration) and equal (a.key_for_iteration, b.key_for_iteration)
-					a.forth
-					b.forth
-				end
-			end
-		end
-
 
 	is_group_equal_check (a, b: HASH_TABLE [CONF_GROUP, STRING]): BOOLEAN is
 			-- Check if `a' and `b' are group equivalent.

@@ -92,7 +92,7 @@ feature -- Access, stored in configuration file
 	name_prefix: STRING
 			-- An optional name prefix for this group.
 
-	renaming: HASH_TABLE [STRING, STRING]
+	renaming: CONF_HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
 	is_readonly: BOOLEAN
@@ -150,11 +150,16 @@ feature -- Access queries
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
+			a_class_upper: a_class.is_equal (a_class.as_upper)
 			classes_set: classes_set
+		local
+			l_class: CONF_CLASS
 		do
 			create Result.make (1)
-			Result.extend (classes.item (a_class))
+			l_class := classes.item (a_class)
+			if l_class /= Void then
+				Result.extend (l_class)
+			end
 		end
 
 feature -- Comparison
@@ -201,7 +206,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		do
 			name_prefix := a_name_prefix
 			if name_prefix /= Void then
-				name_prefix.to_lower
+				name_prefix.to_upper
 			end
 		ensure
 			name_prefix_set: name_prefix = a_name_prefix
@@ -219,9 +224,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Add a renaming.
 		require
 			an_old_name_ok: an_old_name /= Void and then not an_old_name.is_empty
-			an_old_name_lower: an_old_name.is_equal (an_old_name.as_lower)
+			an_old_name_upper: an_old_name.is_equal (an_old_name.as_upper)
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
-			a_new_name_lower: a_new_name.is_equal (a_new_name.as_lower)
+			a_new_name_upper: a_new_name.is_equal (a_new_name.as_upper)
 		do
 			if renaming = Void then
 				create renaming.make (1)
@@ -269,7 +274,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_option_not_void: a_option /= Void
 			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_lower: a_class.is_equal (a_class.as_lower)
+			a_class_upper: a_class.is_equal (a_class.as_upper)
 		do
 			if class_options = Void then
 				create class_options.make (1)
@@ -360,7 +365,7 @@ feature -- Equality
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := name.is_equal (other.name) and then location.is_equal (other.location) and then
-						equal (name_prefix, other.name_prefix) and then equal_renaming (renaming, other.renaming)
+						equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
 		end
 
 feature -- Visit
@@ -379,34 +384,10 @@ feature {CONF_VISITOR} -- Implementation, attributes stored in configuration fil
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
 
-feature {NONE} -- Implementation
-
-	equal_renaming (a, b: like renaming): BOOLEAN is
-			-- Are `a' and `b' two equal renamings?
-		do
-			if a = b then
-				Result := True
-			end
-			if not Result and a /= Void and b /= Void then
-				from
-					Result := True
-					a.start
-					b.start
-				until
-					not Result or a.after or b.after
-				loop
-					Result := equal (a.item_for_iteration, b.item_for_iteration) and equal (a.key_for_iteration, b.key_for_iteration)
-					a.forth
-					b.forth
-				end
-			end
-		ensure
-			symmetric: Result implies equal_renaming (b, a)
-		end
-
 invariant
 	name_ok: name /= Void and then not name.is_empty
 	location_not_void: location /= Void
 	target_not_void: target /= Void
+	name_prefix_upper: name_prefix /= Void implies name_prefix.is_equal (name_prefix.as_upper)
 
 end

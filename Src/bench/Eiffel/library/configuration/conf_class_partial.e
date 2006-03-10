@@ -51,14 +51,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature -- Status
-
-	is_error: BOOLEAN
-			-- Was there an error.
-
-	last_error: STRING
-			-- The last error.
-
 feature -- Access
 
 	is_read_only: BOOLEAN is True
@@ -159,7 +151,7 @@ feature {NONE} -- Implementation
 			epc_merger.merge (l_lst)
 			if not epc_merger.successful then
 				is_error := True
-				last_error := epc_merger.error_message
+				last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
 				name := ""
 				renamed_name := ""
 				path := ""
@@ -183,7 +175,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- rename file to class name
-				file_name := name + ".e"
+				file_name := name.as_lower + ".e"
 				l_file.change_name (full_file_name)
 			end
 		ensure
@@ -192,7 +184,7 @@ feature {NONE} -- Implementation
 		rescue
 			l_retried := True
 			is_error := True
-			last_error := "Could not store merged class."
+			last_error := create {CONF_ERROR_PARTIAL}.make ("Could not store merged class.")
 			retry
 		end
 

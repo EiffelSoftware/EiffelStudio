@@ -66,9 +66,6 @@ feature -- Access, stored in configuration file
 	namespace: STRING
 			-- .NET namespace.
 
-	documentation: CONF_LOCATION
-			-- Documentation location.
-
 	is_profile: BOOLEAN
 			-- Do profile?
 
@@ -86,7 +83,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access, stored in configuration file.
 
-	debugs: HASH_TABLE [BOOLEAN, STRING]
+	debugs: CONF_HASH_TABLE [BOOLEAN, STRING]
 			-- The debug settings.
 
 feature -- Access queries
@@ -164,15 +161,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		ensure
 			namespace_set: namespace = a_namespace
 		end
-
-	set_documentation (a_location: like documentation) is
-			-- Set `documentation' to `a_location'.
-		do
-			documentation := a_location
-		ensure
-			documentation_set: documentation = a_location
-		end
-
 
 	enable_profile is
 			-- Set `is_profile' to true.
@@ -262,6 +250,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			description_set: description = a_description
 		end
 
+feature -- Comparison
+
+	is_equal_options (other: like Current): BOOLEAN is
+			-- Are `current' and `other' equal considering the options that are in the compiled result?
+		do
+			Result := equal (assertions, other.assertions) and is_debug = other.is_debug
+				and is_optimize = other.is_optimize and is_profile = other.is_profile
+				and is_trace = other.is_trace and equal(namespace, other.namespace)
+				and equal (debugs, other.debugs)
+		end
+
 feature -- Merging
 
 	merge (other: like Current) is
@@ -279,9 +278,6 @@ feature -- Merging
 				end
 				if namespace = Void then
 					namespace := other.namespace
-				end
-				if documentation = Void then
-					documentation := other.documentation
 				end
 				if not is_profile_configured then
 					is_profile_configured := other.is_profile_configured

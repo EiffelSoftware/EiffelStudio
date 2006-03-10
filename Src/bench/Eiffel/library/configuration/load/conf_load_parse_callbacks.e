@@ -88,7 +88,7 @@ feature -- Callbacks
 				if
 					not a_local_part.is_case_insensitive_equal ("xmlns") and not
 					a_local_part.is_case_insensitive_equal ("xsi") and not
-					a_local_part.is_case_insensitive_equal ("schemaLocation") and check_value (a_value)
+					a_local_part.is_case_insensitive_equal ("schemaLocation")
 				then
 					a_local_part.to_lower
 
@@ -101,7 +101,11 @@ feature -- Callbacks
 						create current_attributes.make (1)
 					end
 					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-						current_attributes.force (a_value, l_attribute)
+						if not a_value.is_empty then
+							current_attributes.force (a_value, l_attribute)
+						else
+							set_parse_error_message ("Invalid value for '"+a_local_part+"'")
+						end
 					else
 						set_parse_error_message ("Invalid attribute '"+a_local_part+"'")
 					end
@@ -126,7 +130,7 @@ feature -- Callbacks
 				when t_setting then
 					process_setting_attributes
 				when t_option then
-					process_option_attributes
+					process_option_attributes (False)
 				when t_external_include then
 					process_external_attributes
 				when t_external_object then
@@ -162,7 +166,7 @@ feature -- Callbacks
 				when t_renaming then
 					process_renaming_attributes
 				when t_class_option then
-					process_class_option_attributes
+					process_option_attributes (True)
 				when t_visible then
 					process_visible_attributes
 				when t_uses then
@@ -361,17 +365,35 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_cluster, l_class, l_feature: STRING
+			l_all, l_cluster, l_class, l_feature: STRING
+			l_all_b: BOOLEAN
 		do
+			l_all := current_attributes.item (at_all_classes)
+			if l_all /= Void then
+				if l_all.is_boolean then
+					l_all_b := l_all.to_boolean
+				else
+					set_parse_error_message ("Invalid value for all_classes attribute in root tag.")
+				end
+			end
 			l_cluster := current_attributes.item (at_cluster)
+			if l_cluster /= Void then
+				l_cluster.to_lower
+			end
 			l_class := current_attributes.item (at_class)
+			if l_class /= Void then
+				l_class.to_upper
+			end
 			l_feature := current_attributes.item (at_feature)
-			if l_class /= Void and l_feature /= Void then
-				current_target.set_root (conf_factory.new_root (l_cluster, l_class, l_feature))
+			if l_feature /= Void then
+				l_feature.to_lower
+			end
+			if l_all_b or else l_class /= Void then
+				current_target.set_root (conf_factory.new_root (l_cluster, l_class, l_feature, l_all_b))
 			else
 				set_parse_error_message ("Invalid root tag.")
 			end
-		end
+	end
 
 	process_version_attributes is
 			-- Process attributes of a version tag.
@@ -437,66 +459,6 @@ feature {NONE} -- Implementation attribute processing
 			else
 				set_parse_error_message ("Invalid setting tag.")
 			end
-		end
-
-	process_option_attributes is
-			-- Process attributes of a option tag.
-		require
-			target_or_group: current_target /= Void or current_group /= Void
-			target: current_target /= Void
-		local
-			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_documentation: STRING
-		do
-			l_trace := current_attributes.item (at_trace)
-			l_profile := current_attributes.item (at_profile)
-			l_optimize := current_attributes.item (at_optimize)
-			l_debug := current_attributes.item (at_debug)
-			l_namespace := current_attributes.item (at_namespace)
-			l_documentation := current_attributes.item (at_documentation)
-
-			current_option := conf_factory.new_option
-			if l_trace /= Void and then l_trace.is_boolean then
-				if l_trace.to_boolean then
-					current_option.enable_trace
-				else
-					current_option.disable_trace
-				end
-			end
-			if l_profile /= Void and then l_profile.is_boolean then
-				if l_profile.to_boolean then
-					current_option.enable_profile
-				else
-					current_option.disable_profile
-				end
-			end
-			if l_optimize /= Void and then l_optimize.is_boolean then
-				if l_optimize.to_boolean then
-					current_option.enable_optimize
-				else
-					current_option.disable_optimize
-				end
-			end
-			if l_debug /= Void and then l_debug.is_boolean then
-				if l_debug.to_boolean then
-					current_option.enable_debug
-				else
-					current_option.disable_debug
-				end
-			end
-			if l_namespace /= Void then
-				current_option.set_namespace (l_namespace)
-			end
-			if l_documentation /= Void then
-				current_option.set_documentation (conf_factory.new_location_from_path (l_documentation, current_target))
-			end
-
-			if current_group /= Void then
-				current_group.set_options (current_option)
-			else
-				current_target.set_options (current_option)
-			end
-		ensure
-			current_option_not_void: not is_error implies current_option /= Void
 		end
 
 	process_file_rule_attributes is
@@ -638,13 +600,14 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_name, l_location, l_readonly, l_prefix: STRING
+			l_name, l_location, l_readonly, l_prefix, l_target: STRING
 			l_pre: CONF_PRECOMPILE
 		do
 			l_name := current_attributes.item (at_name)
 			l_location := current_attributes.item (at_location)
 			l_readonly := current_attributes.item (at_readonly)
 			l_prefix := current_attributes.item (at_prefix)
+			l_target := current_attributes.item (at_target)
 			if l_name /= Void and l_location /= Void and not group_list.has (l_name) and current_target.precompile = Void then
 				l_pre := conf_factory.new_precompile (l_name, l_location, current_target)
 				current_library := l_pre
@@ -725,7 +688,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_name /= Void and l_location /= Void and not group_list.has (l_name) then
 				l_parent := current_cluster
 				l_loc := conf_factory.new_location_from_path (l_location, current_target)
-				current_cluster := conf_factory.new_cluster (l_name, l_loc, current_target)
+				current_cluster := conf_factory.new_cluster (l_name.as_lower, l_loc, current_target)
 				current_group := current_cluster
 				if l_readonly /= Void and then l_readonly.is_boolean then
 					if l_readonly.to_boolean then
@@ -871,19 +834,22 @@ feature {NONE} -- Implementation attribute processing
 			l_old_name := current_attributes.item (at_old_name)
 			l_new_name := current_attributes.item (at_new_name)
 			if l_old_name /= Void and l_new_name /= Void then
-				current_group.add_renaming (l_old_name, l_new_name)
+				current_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
 			end
 		end
 
-	process_class_option_attributes is
-			-- Process attributes of a option tag.
+	process_option_attributes (a_class_option: BOOLEAN) is
+			-- Process attributes of a (class) option tag.
 		require
-			group: current_group /= Void
+			group: a_class_option implies current_group /= Void
+			target: current_target /= Void
 		local
-			l_trace, l_profile, l_namespace, l_class: STRING
+			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
+			l_optimize := current_attributes.item (at_optimize)
+			l_debug := current_attributes.item (at_debug)
 			l_namespace := current_attributes.item (at_namespace)
 			l_class := current_attributes.item (at_class)
 
@@ -898,14 +864,36 @@ feature {NONE} -- Implementation attribute processing
 					current_option.enable_profile
 				end
 			end
+			if l_optimize /= Void and then l_optimize.is_boolean then
+				if l_optimize.to_boolean then
+					current_option.enable_optimize
+				else
+					current_option.disable_optimize
+				end
+			end
+			if l_debug /= Void and then l_debug.is_boolean then
+				if l_debug.to_boolean then
+					current_option.enable_debug
+				else
+					current_option.disable_debug
+				end
+			end
 			if l_namespace /= Void then
 				current_option.set_namespace (l_namespace)
 			end
 
-			if l_class /= Void then
-				current_group.add_class_options (current_option, l_class)
+			if a_class_option then
+				if l_class /= Void then
+					current_group.add_class_options (current_option, l_class.as_upper)
+				else
+					set_parse_error_message ("Invalid class_option tag.")
+				end
 			else
-				set_parse_error_message ("Invalid class_option tag.")
+				if current_group /= Void then
+					current_group.set_options (current_option)
+				else
+					current_target.set_options (current_option)
+				end
 			end
 		ensure
 			current_option_not_void: not is_error implies current_option /= Void
@@ -923,6 +911,7 @@ feature {NONE} -- Implementation attribute processing
 			l_class_rename := current_attributes.item (at_class_rename)
 			l_feature_rename := current_attributes.item (at_feature_rename)
 			if l_class /= Void then
+				l_class.to_upper
 				if l_feature /= Void then
 					current_cluster.add_visible (l_class, l_feature, l_class_rename, l_feature_rename)
 				else
@@ -1175,11 +1164,12 @@ feature {NONE} -- Implementation state transitions
 				-- => pre_compile_action
 				-- => post_compile_action
 				-- => variable
+				-- => precompile
 				-- => library
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (16)
+			create l_trans.make (17)
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
@@ -1193,6 +1183,7 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_pre_compile_action, "pre_compile_action")
 			l_trans.force (t_post_compile_action, "post_compile_action")
 			l_trans.force (t_variable, "variable")
+			l_trans.force (t_precompile, "precompile")
 			l_trans.force (t_library, "library")
 			l_trans.force (t_assembly, "assembly")
 			l_trans.force (t_cluster, "cluster")
@@ -1316,10 +1307,12 @@ feature {NONE} -- Implementation state transitions
 				-- * cluster
 				-- * class
 				-- * feature
-			create l_attr.make (3)
+				-- * all_classes
+			create l_attr.make (4)
 			l_attr.force (at_cluster, "cluster")
 			l_attr.force (at_class, "class")
 			l_attr.force (at_feature, "feature")
+			l_attr.force (at_all_classes, "all_classes")
 			Result.force (l_attr, t_root)
 
 				-- version
@@ -1356,14 +1349,12 @@ feature {NONE} -- Implementation state transitions
 				-- * optimize
 				-- * debug
 				-- * namespace
-				-- * documentation
 			create l_attr.make (6)
 			l_attr.force (at_trace, "trace")
 			l_attr.force (at_profile, "profile")
 			l_attr.force (at_optimize, "optimize")
 			l_attr.force (at_debug, "debug")
 			l_attr.force (at_namespace, "namespace")
-			l_attr.force (at_documentation, "documentation")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -1538,6 +1529,7 @@ feature {NONE} -- Implementation constants
 	at_extends,
 	at_cluster,
 	at_class,
+	at_all_classes,
 	at_feature,
 	at_class_rename,
 	at_feature_rename,
@@ -1554,12 +1546,12 @@ feature {NONE} -- Implementation constants
 	at_optimize,
 	at_debug,
 	at_namespace,
-	at_documentation,
 	at_location,
 	at_command,
 	at_value,
 	at_readonly,
 	at_prefix,
+	at_target,
 	at_assembly_name,
 	at_assembly_version,
 	at_assembly_culture,

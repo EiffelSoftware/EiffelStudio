@@ -44,7 +44,7 @@ feature -- Basic operation
 			if l_callback.is_error then
 				is_error := True
 				last_error := l_callback.last_error
-			else
+			elseif not is_error then
 				last_system := l_callback.last_system
 				cnt := a_file.count
 				i := a_file.last_index_of ('/',cnt)
@@ -98,6 +98,7 @@ feature {NONE} -- Implementation
 			a_callback_not_void: a_callback /= Void
 		local
 			l_file: KL_TEXT_INPUT_FILE
+			l_test_file: PLAIN_TEXT_FILE
 			l_parser: XM_PARSER
 			l_ns_cb: XM_NAMESPACE_RESOLVER
 		do
@@ -109,8 +110,9 @@ feature {NONE} -- Implementation
 			l_parser.set_callbacks (l_ns_cb)
 
 			create l_file.make (a_file)
+			create l_test_file.make (a_file)
 			l_file.open_read
-			if not l_file.is_open_read then
+			if not l_file.is_open_read or else not l_test_file.is_plain then
 				is_error := True
 				last_error := create {CONF_ERROR_FILE}.make (a_file)
 			else

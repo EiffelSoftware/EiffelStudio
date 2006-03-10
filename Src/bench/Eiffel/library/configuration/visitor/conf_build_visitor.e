@@ -95,13 +95,13 @@ feature -- Update
 			partial_location := a_location
 		end
 
-
 	reset_classes is
 			-- Reset `modified_classes', `added_classes' and `removed_classes'.
 		do
 			create modified_classes.make (10)
 			create added_classes.make (10)
 			create removed_classes.make (10)
+			create reused_classes.make (500)
 		end
 
 feature -- Visit nodes
@@ -126,10 +126,6 @@ feature -- Visit nodes
 				if l_pre /= Void then
 					if l_old_pre /= Void then
 						old_group := l_old_pre
-					else
-							-- we don't have an old group, so load the precompile.
-						-- TODO: retrieve precompile as old and set config file location on new
-						-- so that we can process the new one as if it was a normal library
 					end
 					process_library (l_pre)
 				end
@@ -234,10 +230,6 @@ feature -- Visit nodes
 						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.is_enabled (platform, build))
 					end
 				end
-				if old_group /= Void then
-						-- classes of groups have been handled
-					old_group.clean_classes
-				end
 			end
 		ensure then
 			classes_set: not is_error implies a_library.classes_set
@@ -336,6 +328,9 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 
 
 feature {NONE} -- Implementation
+
+	reused_classes: ARRAYED_LIST [CONF_CLASS]
+			-- List of classes that are reused (and therefore should not be added to `removed_classes').
 
 	assembly_cache_folder: PATH_NAME
 			-- Assembly cache folder.
@@ -478,56 +473,61 @@ feature {NONE} -- Implementation
 					classname_finder.parse (l_file)
 					if classname_finder.classname = Void then
 						add_error (create {CONF_ERROR_CLASSN}.make (a_file))
-					end
-					l_tmp := classname_finder.classname.as_lower
-					l_renamings := current_cluster.renaming
-					if l_renamings /= Void then
-						l_name := l_renamings.item (l_tmp)
-					end
-					if l_name = Void then
-						l_name := l_tmp.twin
-					end
-					if current_cluster.name_prefix /= Void then
-						l_name.prepend (current_cluster.name_prefix)
-					end
-
-						-- partial classes					
-					if classname_finder.is_partial_class then
-						if partial_classes = Void then
-							create partial_classes.make (1)
-						end
-						l_pc := partial_classes.item (l_name)
-						if l_pc = Void then
-							create l_pc.make (1)
-						end
-						l_pc.extend (l_full_file)
-						partial_classes.force (l_pc, l_name)
-						-- normal classes
 					else
-						if old_group /= Void then
-							l_class := old_group.classes.item (l_name)
+						l_tmp := classname_finder.classname.as_upper
+						l_renamings := current_cluster.renaming
+						if l_renamings /= Void then
+							l_name := l_renamings.item (l_tmp)
 						end
-						if l_class /= Void then
-								-- update path
-							l_class.rebuild (a_file, current_cluster, a_path)
-							if l_class.is_compiled and l_class.is_modified then
-								modified_classes.extend (l_class)
-							elseif l_class.is_always_compile then
+						if l_name = Void then
+							l_name := l_tmp.twin
+						end
+						if current_cluster.name_prefix /= Void then
+							l_name.prepend (current_cluster.name_prefix)
+						end
+
+							-- partial classes					
+						if classname_finder.is_partial_class then
+							if partial_classes = Void then
+								create partial_classes.make (1)
+							end
+							l_pc := partial_classes.item (l_name)
+							if l_pc = Void then
+								create l_pc.make (1)
+							end
+							l_pc.extend (l_full_file)
+							partial_classes.force (l_pc, l_name)
+							-- normal classes
+						else
+							if old_group /= Void and then old_group.classes /= Void then
+								l_class := old_group.classes.item (l_name)
+							end
+							if l_class /= Void then
+									-- update path
+								l_class.rebuild (a_file, current_cluster, a_path)
+								if l_class.is_error then
+									add_error (l_class.last_error)
+								end
+								if l_class.is_compiled and l_class.is_modified then
+									modified_classes.extend (l_class)
+								end
+									-- add it to `reused_classes'
+								reused_classes.force (l_class)
+							else
+									-- not found => new class
+								l_class := conf_factory.new_class (a_file, current_cluster, a_path)
+								if l_class.is_error then
+									add_error (l_class.last_error)
+								end
 								added_classes.extend (l_class)
 							end
-								-- remove it from the old classes
-							old_group.classes.remove (l_name)
-						else
-								-- not found => new class
-							l_class := conf_factory.new_class (a_file, current_cluster, a_path)
-							added_classes.extend (l_class)
+							if current_classes.has (l_name) then
+								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+							else
+								current_classes.force (l_class, l_name)
+							end
+							l_file.close
 						end
-						if current_classes.has (l_name) then
-							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
-						else
-							current_classes.force (l_class, l_name)
-						end
-						l_file.close
 					end
 				end
 			end
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			-- Put an class from `an_assembly' with `a_name' and `a_position' into `current_clases'.
 		require
 			name_ok: a_name /= Void and then not a_name.is_empty
-			name_lower: a_name.is_equal (a_name.as_lower)
+			name_upper: a_name.is_equal (a_name.as_upper)
 			a_position_ok: a_position >= 0
 		local
 			l_class: CONF_CLASS_ASSEMBLY
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 		do
 				-- Try to retrieve from old_assembly before creating a new one
 			l_name := get_class_assembly_name (a_name)
-			if old_group /= Void then
+			if old_group /= Void and then old_group.classes /= Void then
 				l_class ?= old_group.classes.item (l_name)
 				old_group.classes.remove (l_name)
 			end
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 									l_name := l_types.eiffel_names.item (i)
 									l_pos := l_types.positions.item (i)
 									if l_name /= Void and then not l_name.is_empty then
-										put_class_assembly (l_name.as_lower, l_pos)
+										put_class_assembly (l_name.as_upper, l_pos)
 									end
 									i := i + 1
 								end
@@ -885,7 +885,7 @@ feature {NONE} -- Implementation
 				if classname_finder.classname = Void then
 					add_error (create {CONF_ERROR_CLASSN}.make (a_file))
 				end
-				l_name := classname_finder.classname.as_lower
+				l_name := classname_finder.classname.as_upper
 				l_renamings := a_group.renaming
 				if l_renamings /= Void then
 					Result := l_renamings.item (l_name)
@@ -922,12 +922,14 @@ feature {NONE} -- Implementation
 		local
 			l_group: CONF_GROUP
 			l_assembly: CONF_ASSEMBLY
+			l_library: CONF_LIBRARY
 			l_deps: LINKED_SET [CONF_ASSEMBLY]
 			l_rec: like a_groups
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_cl: CONF_CLASS
 			l_partial: CONF_CLASS_PARTIAL
 			l_file: RAW_FILE
+			l_done: BOOLEAN
 		do
 			if a_groups /= Void then
 				from
@@ -935,43 +937,59 @@ feature {NONE} -- Implementation
 				until
 					a_groups.after
 				loop
+					l_done := False
 					l_group := a_groups.item_for_iteration
 					if l_group /= Void and then l_group.classes_set then
-						from
-							l_classes := l_group.classes
-							l_classes.start
-						until
-							l_classes.after
-						loop
-							l_cl := l_classes.item_for_iteration
-							l_partial ?= l_cl
-							if l_partial /= Void then
-								create l_file.make (l_partial.full_file_name)
-								if l_file.exists then
-									l_file.delete
-								end
+							-- check if it's a library that still is used and therefore is alredy done
+						if l_group.is_library then
+							l_library ?= l_group
+							check
+								library: l_library /= Void
 							end
-							if l_cl.is_compiled then
-								removed_classes.extend (l_cl)
+							if libraries.has (l_library.uuid) then
+								l_done := True
 							end
-							l_classes.forth
 						end
-						l_group.clean_classes
-							-- for assemblies recursively do this for the dependencies
-						l_assembly ?= l_group
-						if l_assembly /= Void and then l_assembly.dependencies /= Void then
+
+						if not l_done then
 							from
-								l_deps := l_assembly.dependencies
-								create l_rec.make (l_deps.count)
-								l_deps.start
+								l_classes := l_group.classes
+								l_classes.start
 							until
-								l_deps.after
+								l_classes.after
 							loop
-								l_rec.force (l_deps.item, l_deps.item.name)
-								l_deps.forth
+								l_cl := l_classes.item_for_iteration
+									-- only if the class realy has been removed and we don't have it on the list yet
+								if not reused_classes.has (l_cl) and not removed_classes.has (l_cl) then
+									l_partial ?= l_cl
+									if l_partial /= Void then
+										create l_file.make (l_partial.full_file_name)
+										if l_file.exists then
+											l_file.delete
+										end
+									end
+									if l_cl.is_compiled then
+										removed_classes.extend (l_cl)
+									end
+								end
+							l_classes.forth
 							end
-							l_assembly.set_dependencies (Void)
-							process_removed (l_rec)
+								-- for assemblies recursively do this for the dependencies
+							l_assembly ?= l_group
+							if l_assembly /= Void and then l_assembly.dependencies /= Void then
+								from
+									l_deps := l_assembly.dependencies
+									create l_rec.make (l_deps.count)
+									l_deps.start
+								until
+									l_deps.after
+								loop
+									l_rec.force (l_deps.item, l_deps.item.name)
+									l_deps.forth
+								end
+								l_assembly.set_dependencies (Void)
+								process_removed (l_rec)
+							end
 						end
 					end
 					a_groups.forth
@@ -1044,7 +1062,7 @@ feature {NONE} -- Implementation
 				else
 					l_class := conf_factory.new_class_partial (partial_classes.item_for_iteration, current_cluster, partial_location)
 					if l_class.is_error then
-						add_error (create {CONF_ERROR_PARTIAL}.make (l_class.last_error))
+						add_error (l_class.last_error)
 					else
 						check
 							correct_renamed_name: l_class.renamed_name.is_equal (l_name)
@@ -1115,6 +1133,7 @@ feature {NONE} -- Size constants
 			-- How many libraries do we have per average target.
 
 invariant
+	reused_classes_not_void: reused_classes /= Void
 	modified_classes_not_void: modified_classes /= Void
 	added_classes_not_void: added_classes /= Void
 	removed_classes_not_void: removed_classes /= Void

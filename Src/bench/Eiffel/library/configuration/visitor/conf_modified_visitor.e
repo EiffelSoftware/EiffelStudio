@@ -109,6 +109,9 @@ feature {NONE} -- Implementation
 					if l_class.is_compiled then
 							-- check for changes and update name if necessary
 						l_class.check_changed
+						if l_class.is_error then
+							add_error (l_class.last_error)
+						end
 						if l_class.is_modified then
 							modified_classes.extend (l_class)
 						end

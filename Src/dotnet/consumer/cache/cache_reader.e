@@ -28,19 +28,25 @@ feature -- Access
 			-- Returns all completed consumed assemblies
 		local
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
+			l_cached_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_ca: CONSUMED_ASSEMBLY
+			l_upper: INTEGER
+			i: INTEGER
 		do
 			if is_initialized then
-				create l_assemblies.make_from_array (info.assemblies)
+				l_cached_assemblies := info.assemblies
+				create l_assemblies.make (l_cached_assemblies.count)
 				from
-					l_assemblies.start
+					i := l_cached_assemblies.lower
+					l_upper := l_cached_assemblies.upper
 				until
-					l_assemblies.after
+					i > l_upper
 				loop
-					if l_assemblies.item /= Void and then not l_assemblies.item.is_consumed then
-						l_assemblies.remove
-					else
-						l_assemblies.forth
+					l_ca := l_cached_assemblies[i]
+					if l_ca.is_consumed then
+						l_assemblies.extend (l_ca)
 					end
+					i := i + 1
 				end
 				Result := l_assemblies
 			end
@@ -276,7 +282,7 @@ feature {CACHE_WRITER} -- Implementation
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
 		end
-		
+
 feature -- Reset
 
 	reset_info is
@@ -353,19 +359,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -1520,7 +1520,7 @@ feature -- Implementation
 				end
 			end
 
-			process_call (last_type, Void, l_as.feature_name, Void, l_as.parameters, False, False, False, False)
+			process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False)
 			error_handler.checksum
 
 			if not is_inherited then

@@ -13,9 +13,17 @@ class PLATFORM
 
 feature -- Platform
 
+	frozen is_thread_capable: BOOLEAN is
+			-- Is current platform capable of multi-threading?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_THREADS_SUPPORTED"
+		end
+
 	is_dotnet: BOOLEAN is False
 			-- Are we targetting .NET?
-			
+
 	is_windows: BOOLEAN is
 			-- Are we running on Windows platform?
 		external
@@ -270,7 +278,7 @@ feature -- Access min max values
 			meaningful: Result >= 127
 		end
 
-	Maximum_integer: INTEGER is 
+	Maximum_integer: INTEGER is
 			-- Largest supported value of type INTEGER.
 		do
 			Result := {INTEGER}.Max_value

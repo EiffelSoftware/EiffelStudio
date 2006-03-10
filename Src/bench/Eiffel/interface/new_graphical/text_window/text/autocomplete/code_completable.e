@@ -322,7 +322,9 @@ feature -- Tab actions
 					elseif l_cur_token.image.is_equal ("{") then
 						l_cur_token := skip_pairs (l_cur_token, l_line, "{", "}")
 					end
-					l_cur_token := l_cur_token.next
+					if l_cur_token /= l_line.eol_token then
+						l_cur_token := l_cur_token.next
+					end
 				end
 				if start_of_line (l_cur_token, l_line) then
 					l_is_start := true

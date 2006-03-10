@@ -15,7 +15,6 @@ inherit
 			generate_text,
 			feature_cmd,
 			editable,
-			formatted_text,
 			format,
 			make
 		end
@@ -30,7 +29,6 @@ feature -- Initialization
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_manager)
 			create_feature_cmd
-			create formatted_text.make
 		end
 
 feature -- Properties
@@ -46,15 +44,12 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_text, 2)
 		end
 
-	formatted_text: STRUCTURED_TEXT
-			-- Text representing `associated_feature'.
-
 	menu_name: STRING is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showtext_new
 		end
- 
+
 feature -- Formatting
 
 	format is
@@ -63,17 +58,13 @@ feature -- Formatting
 			if
 				selected and then
 				associated_feature /= Void and then
-				displayed 
+				displayed
 			then
 				editor.set_feature_for_click (associated_feature)
 				editor.enable_feature_click
-				if must_format then
-					display_temp_header
-					generate_text
-				end
-				if formatted_text /= Void then
-					editor.load_text (formatted_text.image)
-				else
+				display_temp_header
+				generate_text
+				if last_was_error then
 					editor.clear_window
 					editor.display_message (Warning_messages.W_formatter_failed)
 				end
@@ -81,9 +72,8 @@ feature -- Formatting
 					editor.enable_has_breakable_slots
 				else
 					editor.disable_has_breakable_slots
-				end				
-				editor.set_read_only (not editable)				
-				must_format := False
+				end
+				editor.set_read_only (not editable)
 				display_header
 			end
 		end
@@ -117,13 +107,16 @@ feature {NONE} -- Implementation
 			-- Create `formatted_text'.
 		local
 			retried: BOOLEAN
+			ynk_win: YANK_STRING_WINDOW
 		do
+			create ynk_win.make
 			if not retried then
-				formatted_text := associated_feature.text
-				last_was_error := False
+				last_was_error := associated_feature.text (ynk_win)
 			else
 				last_was_error := True
-				formatted_text := Void
+			end
+			if not last_was_error then
+				editor.load_text (ynk_win.stored_output)
 			end
 		rescue
 			retried := True
@@ -147,19 +140,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

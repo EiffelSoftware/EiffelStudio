@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Command to display descendants of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_SHOW_DESCENDANTS 
+class E_SHOW_DESCENDANTS
 
 inherit
 
@@ -22,9 +22,9 @@ feature -- Output
 			-- Execute Current command.	
 		do
 			create displayed.make;
-			current_class.append_signature (structured_text, True);
-			structured_text.add_new_line;
-			rec_display (1, current_class, structured_text);
+			current_class.append_signature (text_formatter, True);
+			text_formatter.add_new_line;
+			rec_display (1, current_class, text_formatter);
 			displayed := Void
 		end;
 
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 
 	displayed: LINKED_LIST [CLASS_C];
 
-	rec_display (i: INTEGER; c: CLASS_C; st: STRUCTURED_TEXT) is
+	rec_display (i: INTEGER; c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Display parents of `c' in tree form.
 		local
 			descendants: ARRAYED_LIST [CLASS_C]
@@ -46,19 +46,19 @@ feature {NONE} -- Implementation
 					descendants.after
 				loop
 					descendant_class := descendants.item;
-					add_tabs (st, i);
-					descendant_class.append_signature (st, True);
+					add_tabs (a_text_formatter, i);
+					descendant_class.append_signature (a_text_formatter, True);
 					if displayed.has (descendant_class) then
 						if not descendant_class.descendants.is_empty then
-							st.add_string ("...")
+							a_text_formatter.add ("...")
 						end;
-						st.add_new_line;
-					else	
-						st.add_new_line;
+						a_text_formatter.add_new_line;
+					else
+						a_text_formatter.add_new_line;
 						displayed.extend (descendant_class);
 						displayed.finish
-						rec_display (i+1, descendant_class, st);
-					end;			
+						rec_display (i+1, descendant_class, a_text_formatter);
+					end;
 					descendants.forth
 				end
 			end
@@ -70,19 +70,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

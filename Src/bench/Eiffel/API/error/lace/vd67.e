@@ -34,13 +34,13 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Print out error message.
 		do
-			st.add_string ("Path `")
-			st.add_string (path)
-			st.add_string ("' does not exist or you do not have the correct permissions.")
-			st.add_new_line
+			a_text_formatter.add ("Path `")
+			a_text_formatter.add (path)
+			a_text_formatter.add ("' does not exist or you do not have the correct permissions.")
+			a_text_formatter.add_new_line
 		end
 
 invariant

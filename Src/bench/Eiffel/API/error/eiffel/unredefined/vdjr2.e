@@ -23,13 +23,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Argument number: ");
-			st.add_int (argument_number);
-			st.add_new_line;
-			print_types (st);
-			print_signatures (st);
+			a_text_formatter.add ("Argument number: ");
+			a_text_formatter.add_int (argument_number);
+			a_text_formatter.add_new_line;
+			print_types (a_text_formatter);
+			print_signatures (a_text_formatter);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -12,7 +12,7 @@ inherit
 		redefine
 			build_explain
 		end
-	
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -20,7 +20,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_class: like associated_class; a_feat: FEATURE_I) is
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		ensure
 			associated_class_set: associated_class = a_class
 		end
-		
+
 feature -- Properties
 
 	associated_feature: E_FEATURE
@@ -49,27 +49,27 @@ feature -- Properties
 		do
 			Result := "Unused_local_warning"
 		end
-	
+
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			l_name: STRING
 			l_type: TYPE_A
 		do
-			st.add_string ("Class: ")
-			associated_class.append_name (st)
-			st.add_new_line
-			st.add_string ("Feature: ")
-			associated_feature.append_name (st)
-			st.add_new_line
+			a_text_formatter.add ("Class: ")
+			associated_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Feature: ")
+			associated_feature.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 			if unused_locals.count = 1 then
-				st.add_string ("Unused local is: ")
+				a_text_formatter.add ("Unused local is: ")
 			else
-				st.add_string ("Unused locals are: ")
+				a_text_formatter.add ("Unused locals are: ")
 			end
-			st.add_new_line
-			
+			a_text_formatter.add_new_line
+
 			from
 				unused_locals.start
 			until
@@ -81,11 +81,11 @@ feature -- Output
 					l_name_not_void: l_name /= Void
 					l_type_not_void: l_type /= Void
 				end
-				st.add_indent
-				st.add_string (l_name)
-				st.add_string (": ")
-				l_type.append_to (st)
-				st.add_new_line
+				a_text_formatter.add_indent
+				a_text_formatter.add (l_name)
+				a_text_formatter.add (": ")
+				l_type.append_to (a_text_formatter)
+				a_text_formatter.add_new_line
 				unused_locals.forth
 			end
 		end
@@ -107,26 +107,26 @@ invariant
 	associated_class_not_void: associated_class /= Void
 	associated_feature_not_void: associated_feature /= Void
 	unused_locals_not_void: unused_locals /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

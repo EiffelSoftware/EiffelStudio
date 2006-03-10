@@ -139,7 +139,7 @@ feature -- Properties
 
 feature -- Output
 
-	display_arguments (st: STRUCTURED_TEXT) is
+	display_arguments (st: TEXT_FORMATTER) is
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		local
@@ -162,7 +162,7 @@ feature -- Output
 			end
 		end
 
-	display_locals (st: STRUCTURED_TEXT) is
+	display_locals (st: TEXT_FORMATTER) is
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		local
@@ -208,7 +208,7 @@ feature -- Output
 			end
 		end
 
-	display_feature (st: STRUCTURED_TEXT) is
+	display_feature (st: TEXT_FORMATTER) is
 			-- Display information about associated routine.
 		local
 			c, oc	: CLASS_C

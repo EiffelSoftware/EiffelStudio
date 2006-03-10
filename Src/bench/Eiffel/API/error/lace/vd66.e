@@ -26,19 +26,19 @@ feature {NONE} -- Initialization
 		
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Print out error message.
 		do
-			st.add_string ("Could not insert following assembly(ies) in Ace file: ")
-			st.add_new_line
+			a_text_formatter.add ("Could not insert following assembly(ies) in Ace file: ")
+			a_text_formatter.add_new_line
 			if missing_assemblies /= Void then
 				from
 					missing_assemblies.start
 				until
 					missing_assemblies.after
 				loop
-					missing_assemblies.item.format (st)
-					st.add_new_line
+					missing_assemblies.item.format (a_text_formatter)
+					a_text_formatter.add_new_line
 					missing_assemblies.forth
 				end
 			end

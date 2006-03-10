@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Formats Eiffel class text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,11 +25,14 @@ inherit
 
 feature -- Properties
 
+	is_for_documentation: BOOLEAN
+			-- Is the format for documentation?
+
 	is_one_class_only: BOOLEAN;
 			-- Is the format performed on one class only?
-	
+
 	is_short: BOOLEAN;
-			-- Is the format doing a short? 
+			-- Is the format doing a short?
 
 	ordered_same_as_text: BOOLEAN;
 			-- Will the format output be in the same order as text file?
@@ -38,7 +41,7 @@ feature -- Properties
 			-- Array of orderd feature clause comments
 
 	is_flat: BOOLEAN is
-			-- Is the format doing a flat? 
+			-- Is the format doing a flat?
 		do
 			Result := not is_short
 		ensure
@@ -46,6 +49,13 @@ feature -- Properties
 		end;
 
 feature -- Setting
+
+	set_documentation (a_doc: like documentation) is
+			-- Set `is_for_documentation'
+		do
+			is_for_documentation := true
+			documentation := a_doc
+		end
 
 	set_is_short is
 			-- Set `is_short' to True.
@@ -83,17 +93,17 @@ feature -- Setting
 
 feature -- Output
 
-	format (e_class: CLASS_C) is
+	format (e_class: CLASS_C; a_formatter: TEXT_FORMATTER) is
 			-- Format text for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: FORMAT_CONTEXT
+			f: TEXT_FORMATTER_DECORATOR
 		do
 			if is_with_breakable then
-				create {CLASS_DEBUG_CONTEXT} f.make (e_class)
+				create {CLASS_DEBUG_TEXT_FORMATTER_DECORATOR} f.make (e_class, a_formatter)
 			else
-				create f.make (e_class)
+				create f.make (e_class, a_formatter)
 			end
 			if is_short then
 				f.set_is_short
@@ -109,21 +119,23 @@ feature -- Output
 			else
 				f.set_feature_clause_order (feature_clause_order)
 			end;
+			if is_for_documentation then
+				f.set_for_documentation (documentation)
+			end
 			f.execute;
-			text := f.text;
 			error := f.execution_error
 		end;
 
-	format_invariants (e_class: CLASS_C) is
+	format_invariants (e_class: CLASS_C; a_formatter: TEXT_FORMATTER) is
 			-- Format invariants for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: FORMAT_CONTEXT;
+			f: TEXT_FORMATTER_DECORATOR;
 			old_cluster: CLUSTER_I;
 			old_class, class_c: CLASS_C;
 		do
-			create f.make (e_class);
+			create f.make (e_class, a_formatter);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
@@ -136,9 +148,12 @@ feature -- Output
 			f.format_invariants;
 			System.set_current_class (old_class);
 			Inst_context.set_cluster (old_cluster);
-			text := f.text;
 			error := f.execution_error
 		end;
+
+feature {NONE} -- Implementation
+
+	documentation: DOCUMENTATION_ROUTINES;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -146,19 +161,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

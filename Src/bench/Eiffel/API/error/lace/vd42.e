@@ -25,15 +25,15 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if is_directory then
-				st.add_string ("Directory: ")
+				a_text_formatter.add ("Directory: ")
 			else
-				st.add_string ("File: ")
+				a_text_formatter.add ("File: ")
 			end
-			st.add_string (path);
-			st.add_new_line
+			a_text_formatter.add (path);
+			a_text_formatter.add_new_line
 		end;
 
 feature {REMOTE_PROJECT_DIRECTORY} -- Setting

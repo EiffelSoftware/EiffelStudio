@@ -31,16 +31,16 @@ feature -- Access
 
 feature -- Output
 
-	print_called_feature (st: STRUCTURED_TEXT) is
+	print_called_feature (a_text_formatter: TEXT_FORMATTER) is
 		local
 			a_class: CLASS_C
 		do
 			a_class := called_feature.written_class
-			st.add_string ("Called feature: ")
-			called_feature.append_signature (st)
-			st.add_string (" from ")
-			a_class.append_name (st)
-			st.add_new_line
+			a_text_formatter.add ("Called feature: ")
+			called_feature.append_signature (a_text_formatter)
+			a_text_formatter.add (" from ")
+			a_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature -- Setting

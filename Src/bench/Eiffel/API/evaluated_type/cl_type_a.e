@@ -168,16 +168,16 @@ feature -- Access
 
 feature -- Output
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
 			if has_expanded_mark then
-				st.add (ti_expanded_keyword)
+				st.process_keyword_text (ti_expanded_keyword, Void)
 				st.add_space
 			elseif has_reference_mark then
-				st.add (ti_reference_keyword)
+				st.process_keyword_text (ti_reference_keyword, Void)
 				st.add_space
 			elseif has_separate_mark then
-				st.add (ti_separate_keyword)
+				st.process_keyword_text (ti_separate_keyword, Void)
 				st.add_space
 			end
 			associated_class.append_name (st)
@@ -499,7 +499,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			create Result.make (type_i)
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format current.
 		do
 			ctxt.put_classi (associated_class.lace_class)

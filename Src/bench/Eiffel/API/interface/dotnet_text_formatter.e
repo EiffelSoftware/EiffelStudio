@@ -26,7 +26,7 @@ feature {NONE} -- Properties
 			-- Is the format doing a flat short?
 
 feature -- Setting
-		
+
 	set_is_flat_short is
 			-- Set `is_flat_short' to True.
 		do
@@ -37,19 +37,19 @@ feature -- Setting
 
 feature -- Output
 
-	format (e_class: CONSUMED_TYPE; e_classi: CLASS_I) is
+	format (e_class: CONSUMED_TYPE; e_classi: CLASS_I; a_formatter: TEXT_FORMATTER) is
 			-- Format text for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
 			valid_i_class: e_classi /= Void
+			a_formatter_not_void: a_formatter /= Void
 		local
-			f: DOTNET_CLASS_CONTEXT
+			f: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR
 			l_include_ancestors: BOOLEAN
 		do
 			l_include_ancestors := not is_flat_short
-			create f.make (e_class, e_classi, l_include_ancestors)
+			create f.make (e_class, e_classi, l_include_ancestors, a_formatter)
 			f.execute
-			text := f.text
 			error := f.execution_error
 		end
 
@@ -59,19 +59,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

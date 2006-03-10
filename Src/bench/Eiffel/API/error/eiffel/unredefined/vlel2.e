@@ -29,12 +29,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Invalid feature name: ");
-			st.add_string (feature_name);
-			st.add_new_line;
-			print_parent (st);
+			a_text_formatter.add ("Invalid feature name: ");
+			a_text_formatter.add (feature_name);
+			a_text_formatter.add_new_line;
+			print_parent (a_text_formatter);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -12,6 +12,7 @@ deferred class
 inherit
 	ERROR_DISPLAYER
 
+	TEXT_FORMATTER
 
 feature -- Basic Operations / Generic purpose
 
@@ -20,19 +21,124 @@ feature -- Basic Operations / Generic purpose
 		deferred
 		end
 
-	process_text (st: STRUCTURED_TEXT) is
-			-- Print `st' on all output tools.
-		deferred
-		end
-
-	clear_and_process_text (st: STRUCTURED_TEXT) is
-			-- Clear window and print `st' on all output tools.
-		deferred
-		end
-
 	scroll_to_end is
 			-- Scroll to end of text.
 		deferred
+		end
+
+feature {NONE} -- Text formatter
+
+	process_basic_text (text: STRING) is
+			-- Process default basic text `t'.
+		do
+		end
+
+	process_quoted_text (text: STRING) is
+			-- Process the quoted `text' within a comment.
+		do
+		end
+
+	process_comment_text (text: STRING; url: STRING) is
+			-- Process comment text.
+			-- `url' is possible url, which can be void if none.
+		do
+		end
+
+	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
+			-- Process class name of `a_class'.
+		do
+		end
+
+	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+			-- Process cluster name of `a_cluster'.
+		do
+		end
+
+	process_feature_name_text (text: STRING; a_class: CLASS_C) is
+			-- Process feature name text `text'.
+		do
+		end
+
+	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+			-- Process feature text `text'.
+		do
+		end
+
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+			-- Process breakpoint index `a_index'.
+		do
+		end
+
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+			-- Process breakpoint.
+		do
+		end
+
+	process_padded is
+			-- Process padded item at start of non breakpoint line.
+		do
+		end
+
+	process_new_line is
+			-- Process new line.
+		do
+		end
+
+	process_indentation (a_indent_depth: INTEGER) is
+			-- Process indentation `t'.
+		do
+		end
+
+	process_after_class (a_class: CLASS_C) is
+			-- Process after class `a_class'.
+		do
+		end
+
+	process_before_class (a_class: CLASS_C) is
+			-- Process before class `a_class'.
+		do
+		end
+
+	process_filter_item (text: STRING; is_before: BOOLEAN) is
+			-- Process filter text `t'.
+		do
+		end
+
+	process_symbol_text (text: STRING) is
+			-- Process symbol text.
+		do
+		end
+
+	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
+			-- Process keyword text.
+			-- `a_feature' is possible feature.
+		do
+		end
+
+	process_operator_text (text: STRING; a_feature: E_FEATURE) is
+			-- Process operator text.
+			-- `a_feature' can be void.
+		do
+		end
+
+	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
+			-- Process address text.
+		do
+		end
+
+	process_error_text (text: STRING; a_error: ERROR) is
+			-- Process error text.
+		do
+		end
+
+	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+			-- Process class syntax text.
+		do
+		end
+
+	process_ace_syntax (text: STRING; a_error: SYNTAX_ERROR) is
+			-- Process Ace syntax text.
+		do
 		end
 
 feature -- Basic Operations / Information message
@@ -63,19 +169,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

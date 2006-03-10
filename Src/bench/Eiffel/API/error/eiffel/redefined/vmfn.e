@@ -43,20 +43,20 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Feature: ");
-			a_feature.append_signature (st);
-			st.add_string (" Version from: ");
-			a_feature.written_class.append_name (st);
-			st.add_new_line;
-			st.add_string ("Feature: ");
-			inherited_feature.append_signature (st);
-			st.add_string (" Version from: ");
-			inherited_feature.written_class.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Feature: ");
+			a_feature.append_signature (a_text_formatter);
+			a_text_formatter.add (" Version from: ");
+			a_feature.written_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Feature: ");
+			inherited_feature.append_signature (a_text_formatter);
+			a_text_formatter.add (" Version from: ");
+			inherited_feature.written_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -24,20 +24,20 @@ feature -- Properties
 
 feature -- Output
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 		do
-			print_error_message (st);
-			st.add_string ("Class: ");
-			class_c.append_signature (st, False);
-			st.add_new_line;
+			print_error_message (a_text_formatter);
+			a_text_formatter.add ("Class: ");
+			class_c.append_signature (a_text_formatter, False);
+			a_text_formatter.add_new_line;
 			if feature_name /= Void then
-				st.add_string ("Feature name: ");
-				st.add_string (feature_name)
+				a_text_formatter.add ("Feature name: ");
+				a_text_formatter.add (feature_name)
 			else
-				st.add_string ("Feature: invariant")
+				a_text_formatter.add ("Feature: invariant")
 			end;
-			st.add_new_line;
-			build_explain (st)
+			a_text_formatter.add_new_line;
+			build_explain (a_text_formatter)
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

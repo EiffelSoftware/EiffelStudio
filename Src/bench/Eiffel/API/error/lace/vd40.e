@@ -15,10 +15,10 @@ inherit
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			put_cluster_path (st);
+			put_cluster_name (a_text_formatter);
+			put_cluster_path (a_text_formatter);
 		end;
 
 indexing

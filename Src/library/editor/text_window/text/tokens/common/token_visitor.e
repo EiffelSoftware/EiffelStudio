@@ -1,53 +1,92 @@
 indexing
-	description: "Objects that ..."
+	description: "Visitor of EDITOR_TOKEN"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TOKEN_VISITOR
 
-feature -- Access
+feature -- Visit
 
-	last_structured_text_item: TEXT_ITEM
-	
-feature -- Commands
-
-	process_basic_token (image: STRING) is
-		do
-			last_structured_text_item := create {BASIC_TEXT}.make (image)
+	process_editor_token_line_number (a_tok: EDITOR_TOKEN_LINE_NUMBER) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
-	process_character_token (image: STRING) is
-		do
-			last_structured_text_item := create {CHARACTER_TEXT}.make (image)
-		end
-		
-	process_keyword_token (image: STRING) is
-		do
-			last_structured_text_item := create {KEYWORD_TEXT}.make (image)
-		end	
-		
-	process_eol_token (image: STRING) is
-		do
-			last_structured_text_item := create {NEW_LINE_ITEM}.make
-		end
-		
-	process_number_token (image: STRING) is
-		do
-			last_structured_text_item := create {NUMBER_TEXT}.make (image)
+	process_editor_token_space (a_tok: EDITOR_TOKEN_SPACE) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
-	process_string_token (image: STRING) is
-		do
-			last_structured_text_item := create {STRING_TEXT}.make (image)
+	process_editor_token_tabulation (a_tok: EDITOR_TOKEN_TABULATION) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
-	process_tabulation_token (image: STRING) is
-		do
-			last_structured_text_item := create {INDENT_TEXT}.make (image.count)
+	process_editor_token_text (a_tok: EDITOR_TOKEN_TEXT) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_comment (a_tok: EDITOR_TOKEN_COMMENT) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_operator (a_tok: EDITOR_TOKEN_OPERATOR) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_keyword (a_tok: EDITOR_TOKEN_KEYWORD) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_character (a_tok: EDITOR_TOKEN_CHARACTER) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_number (a_tok: EDITOR_TOKEN_NUMBER) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_string (a_tok: EDITOR_TOKEN_STRING) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_group (a_tok: EDITOR_TOKEN_GROUP) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_symbol (a_tok: EDITOR_TOKEN_SYMBOL) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
 indexing
@@ -60,9 +99,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class TOKEN_VISITOR
 

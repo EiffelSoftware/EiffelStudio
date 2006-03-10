@@ -73,7 +73,7 @@ feature -- Status report
 			-- Could `Current' be the name of a class?
 			-- i.e. Does `Current' consist of only underscores, uppercases and digits.
 		do
-			Result := (create {IDENTIFIER_CHECKER}).is_valid_upper (Current)
+			Result := id_checker.is_valid_upper (Current)
 		end
 
 	is_plural_class: BOOLEAN is
@@ -87,7 +87,7 @@ feature -- Status report
 	is_feature_name: BOOLEAN is
 			-- Could `Current' be the name of a feature?
 		do
-			Result := (create {IDENTIFIER_CHECKER}).is_valid (Current)
+			Result := id_checker.is_valid (Current)
 		end
 
 	is_dot_feature_name: BOOLEAN is
@@ -156,7 +156,7 @@ feature -- Cursor movement
 			from
 				c := item (index)
 			until
-				index > count or else not phrase_characters.has (c)
+				index > count or else not has_phrase_characters (c)
 			loop
 				trailing_phrase.extend (c)
 				index := index + 1
@@ -187,7 +187,7 @@ feature -- Cursor movement
 				from
 					word_item.wipe_out
 				until
-					index > count or else phrase_characters.has (c)
+					index > count or else has_phrase_characters (c)
 				loop
 					word_item.extend (c)
 					index := index + 1
@@ -198,7 +198,7 @@ feature -- Cursor movement
 				from
 					create trailing_phrase.make (3)
 				until
-					index > count or else not phrase_characters.has (c)
+					index > count or else not has_phrase_characters (c)
 				loop
 					trailing_phrase.extend (c)
 					index := index + 1
@@ -218,29 +218,25 @@ feature -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	phrase_characters: LINKED_LIST [CHARACTER] is
+	has_phrase_characters (c: CHARACTER): BOOLEAN is
 			-- List of characters that should be considered separators of words.
 			-- Please note that a dot is not part of this set since it is a part
 			-- of a number, URL or email address. Trailing dots at the end of a word
 			-- are NOT part of the word, though.
-		once
-			create Result.make
-			Result.extend (' ')
-			Result.extend ('%N')
-			Result.extend ('%T')
-			Result.extend ('"')
-			Result.extend ('`')
-			Result.extend ('%'')
-			Result.extend ('<')
-			Result.extend ('>')
-			Result.extend ('(')
-			Result.extend (')')
-			Result.extend ('[')
-			Result.extend (']')
-			Result.extend ('{')
-			Result.extend ('}')
-			Result.extend (',')
+		do
+			inspect c
+			when ' ', '%N', '%T', '"', '`', '%'', '<', '>', '(', ')', '[', ']', '{', '}', ',' then
+				Result := True
+			else
+			end
 		end
+
+	id_checker: IDENTIFIER_CHECKER is
+			-- Idendifier validation
+		once
+			create Result
+		end
+
 
 invariant
 	index_within_bounds: index >= 0 and then index <= count + 1
@@ -251,19 +247,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

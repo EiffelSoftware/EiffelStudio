@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 
 feature -- Output
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format Current feature into `ctxt'.
 		local
 			format_reg: FORMAT_REGISTRATION

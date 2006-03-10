@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Terminal window that redirects output to `io.error'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,19 +15,19 @@ inherit
 
 feature -- Output
 
-	put_string (s: STRING) is 
-		do 
-			io.error.put_string (s) 
+	put_string (s: STRING) is
+		do
+			io.error.put_string (s)
 		end;
 
-	put_new_line is 
-		do 
-			io.error.put_new_line 
+	put_new_line is
+		do
+			io.error.put_new_line
 		end;
 
-	put_char (c: CHARACTER) is 
-		do 
-			io.error.put_character (c) 
+	put_char (c: CHARACTER) is
+		do
+			io.error.put_character (c)
 		end;
 
 indexing
@@ -36,19 +36,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

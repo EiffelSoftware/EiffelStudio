@@ -1,51 +1,75 @@
 indexing
-	description	: "Text item to show the address of an object."
+	description	: "Facilities to handle breakpoints adding in flat/short formats"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
-class ADDRESS_TEXT
+class DEBUG_TEXT_FORMATTER_DECORATOR
 
 inherit
-	BASIC_TEXT
-		rename
-			image as address,
-			make as old_make
+	FEAT_TEXT_FORMATTER_DECORATOR
 		redefine
-			append_to
+			put_breakable,
+			emit_tabs,
+			execute
 		end
 
 create
 	make
 
-feature -- Initialization
+feature -- Execution
 
-	make (addr: like address; a_name: STRING; eclass: CLASS_C) is
-			-- Initialize Current with address is `addr' and
-			-- `e_class' is `eclass' referenced by `a_name'.
+	execute (a_target_feat: E_FEATURE) is
+			-- Format feature_as and make all items
+			-- clickable with class `c' as context
+		local
+			retried: BOOLEAN
 		do
-			address := addr
-			name := a_name
-			e_class := eclass
+			if not retried then
+				e_feature := a_target_feat
+				Precursor {FEAT_TEXT_FORMATTER_DECORATOR} (a_target_feat)
+			else
+				text_formatter.add_string ("No text could be generated.")
+				text_formatter.add_new_line
+				text_formatter.add_string ("Please make sure the system is correctly compiled.")
+			end
+		rescue
+			retried := True
+			retry
 		end
 
-feature -- Properties
+feature {NONE}
 
-	name: STRING
-			-- Name of the object address (it is an attribute,
-			-- local or argument name)
+	e_feature: E_FEATURE
+			-- current e_feature of the context.
 
-	e_class: CLASS_C
-			-- Eiffel class of which object at `address' is an
-			-- instantiation.
+	breakpoint_index: INTEGER
+			-- Breakpoint index in feature
 
-feature {TEXT_FORMATTER} -- Implementation
+	added_breakpoint: BOOLEAN
+			-- Was a break point added?
 
-	append_to (text: TEXT_FORMATTER) is
-			-- Append `address' to `text'.
+	put_breakable is
+			-- Create a breakable mark.
 		do
-			text.process_address_text (Current)
+			breakpoint_index := breakpoint_index + 1
+			if e_feature /= Void and then e_feature.is_debuggable then
+				added_breakpoint := True
+				text_formatter.process_breakpoint (e_feature, breakpoint_index)
+			end
+		end
+
+	emit_tabs is
+			-- Add the good number of tabulations to the text.
+		do
+			if added_breakpoint then
+				added_breakpoint := false
+			else
+				text_formatter.process_padded
+			end
+			Precursor {FEAT_TEXT_FORMATTER_DECORATOR}
 		end
 
 indexing
@@ -54,19 +78,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -80,4 +104,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class ADDRESS_TEXT
+end	 -- class DEBUG_TEXT_FORMATTER_DECORATOR

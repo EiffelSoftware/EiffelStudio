@@ -38,7 +38,7 @@ feature -- Creation
 		do
 			class_id := a_class_id
 		end;
-		
+
 feature -- Output
 
 	class_c: CLASS_C is
@@ -46,7 +46,7 @@ feature -- Output
 		do
 			Result := Eiffel_system.class_of_id (class_id);
 		end
-		
+
 	e_feature: E_FEATURE is
 			-- E_FEATURE associated with `Current'.
 			-- May be Void if feature was renamed or profile
@@ -62,9 +62,9 @@ feature -- Output
 					--| its definition is not in `feature_table' from `class_c'.
 					--| The only solution is to explicitely declare this feature
 					--| as a renamed one in the profile tool
-			end			
+			end
 		end
-				
+
 	displayed_feature_name: STRING is
 			-- Representation of `feature_name' to be displayed
 			-- as part of profiler output.
@@ -76,10 +76,10 @@ feature -- Output
 			end
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	append_to (st: TEXT_FORMATTER) is
 			-- Append Current function to `st'.
 		local
-			cluster: CLUSTER_I	
+			cluster: CLUSTER_I
 			class_i: CLASS_I
 			l_class_c: CLASS_C
 			feature_i: FEATURE_I
@@ -90,23 +90,23 @@ feature -- Output
 					cluster := Eiffel_universe.cluster_of_name (int_cluster_name);
 					if cluster /= Void then
 						class_i := Eiffel_universe.class_named (int_class_name, cluster);
-						if class_i.is_compiled then	
+						if class_i.is_compiled then
 							class_id := class_i.compiled_class.class_id;
 						end
 					end
 				end
 
-				st.add_string ("<cluster_tag>");
-				st.add_string (int_class_name);
-				st.add_string (feature_name);
+				st.add ("<cluster_tag>");
+				st.add (int_class_name);
+				st.add (feature_name);
 			else
 				if Eiffel_system.valid_class_id (class_id) then
 					l_class_c := class_c
-					st.add_string ("<");
+					st.add ("<");
 					st.add_cluster (l_class_c.cluster, l_class_c.cluster.cluster_name);
-					st.add_string (">");
+					st.add (">");
 					st.add_classi (l_class_c.lace_class, int_class_name);
-					st.add_string (".");
+					st.add (".");
 					feature_i := l_class_c.feature_table.item (feature_name)
 					if feature_i /= Void then
 						l_e_feature := feature_i.api_feature (class_id)
@@ -116,14 +116,14 @@ feature -- Output
 							--| its definition is not in `feature_table' from `class_c'.
 							--| The only solution is to explicitely declare this feature
 							--| as a renamed one in the profile tool
-						st.add_string ("Renamed feature `")
-						st.add_string (feature_name)
-						st.add_string ("'")
+						st.add ("Renamed feature `")
+						st.add (feature_name)
+						st.add ("'")
 					end
 				else
-					st.add_string (feature_name);
+					st.add (feature_name);
 				end
-			end;			
+			end;
 		end;
 
 	name: STRING is
@@ -161,19 +161,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

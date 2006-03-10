@@ -25,7 +25,6 @@ inherit
 		end
 
 feature -- Visitor
-
 	process (v: TYPE_A_VISITOR) is
 			-- Process current element.
 		do
@@ -71,7 +70,7 @@ feature -- Access
 
 feature -- Output
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
 			st.add (ti_Open_arg)
 		end
@@ -124,10 +123,10 @@ feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
 feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 
 		do
-			ctxt.put_string ("?")
+			ctxt.process_string_text ("?", Void)
 		end
 
 indexing

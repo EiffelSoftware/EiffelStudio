@@ -12,7 +12,7 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color, 
+			text_color,
 			background_color,
 			font,
 			process
@@ -22,15 +22,15 @@ create
 	make
 
 feature -- Visitor
-	
+
 	process (a_visitor: TOKEN_VISITOR) is
 			--
 		do
-			a_visitor.process_keyword_token (image)
+			a_visitor.process_editor_token_keyword (Current)
 		end
 
 feature {NONE} -- Implementation
-	
+
 	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.keyword_text_color
@@ -38,13 +38,13 @@ feature {NONE} -- Implementation
 
 	background_color: EV_COLOR is
 		do
-			if is_highlighted then				
+			if is_highlighted then
 				Result := editor_preferences.highlight_color
 			else
 				Result := editor_preferences.keyword_background_color
 			end
 		end
-		
+
 	font: EV_FONT is
 			-- Font used in the editor
 		do

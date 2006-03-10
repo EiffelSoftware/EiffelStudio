@@ -56,7 +56,7 @@ feature -- Output
 	dump: STRING is "NONE"
 			-- Dumped trace
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
 			st.add (ti_none_class)
 		end

@@ -137,6 +137,14 @@ feature -- Status setting
 			text_area.set_focus
 		end
 
+feature -- Status report
+
+	is_general: BOOLEAN is
+			-- Is general output tool?
+		do
+			Result := true
+		end
+
 feature -- Access
 
 	widget: EV_WIDGET
@@ -177,26 +185,13 @@ feature -- Basic operation
 			text_area.clear_window
 		end
 
-	process_text (st: STRUCTURED_TEXT) is
-			-- Display `st' on the text area.
-		local
-			old_st: STRUCTURED_TEXT
-		do
-			old_st :=  text_area.current_text
-			if old_st /= Void then
-				old_st := old_st.twin
-				old_st.append (st)
-				text_area.process_text (old_st)
-			else
-				text_area.process_text (st)
-			end
-		end
-
 	process_errors (errors: LINKED_LIST [ERROR]) is
 			-- Display contextual error information from `errors'.
 		do
 			if not errors.is_empty then
-				process_text (error_summary (errors.count))
+				text_area.handle_before_processing (true)
+				error_summary (errors.count, text_area.text_displayed)
+				text_area.handle_after_processing
 			end
 		end
 
@@ -204,7 +199,9 @@ feature -- Basic operation
 			-- Display contextual error information from `warnings'.
 		do
 			if not warnings.is_empty then
-				process_text (warning_summary (warnings.count))
+				text_area.handle_before_processing (true)
+				warning_summary (warnings.count, text_area.text_displayed)
+				text_area.handle_after_processing
 			end
 		end
 
@@ -283,19 +280,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

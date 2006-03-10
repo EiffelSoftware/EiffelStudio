@@ -36,17 +36,17 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Precompiled path: ");
-			st.add_string (path);
-			st.add_new_line
-			st.add_string ("Expected creation date: ")
-			st.add_string (expected_date);
-			st.add_new_line;
-			st.add_string ("Precompilation creation date: ");
-			st.add_string (precompiled_date);
-			st.add_new_line;
+			a_text_formatter.add ("Precompiled path: ");
+			a_text_formatter.add (path);
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Expected creation date: ")
+			a_text_formatter.add (expected_date);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Precompilation creation date: ");
+			a_text_formatter.add (precompiled_date);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting

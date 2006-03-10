@@ -23,14 +23,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Root class: ");
-			root_class.append_name (st);
-			st.add_new_line;
-			st.add_string ("Invalid procedure name: ");
-			st.add_string (creation_routine);
-			st.add_new_line
+			a_text_formatter.add ("Root class: ");
+			root_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Invalid procedure name: ");
+			a_text_formatter.add (creation_routine);
+			a_text_formatter.add_new_line
 		end;
 
 feature {CLASS_C} -- Setting

@@ -24,13 +24,13 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			put_cluster_name (st);
-			st.add_string ("Option: ");
-			st.add_string (node.option.option_name);
-			st.add_new_line;
-			put_class_name (st);
+			put_cluster_name (a_text_formatter);
+			a_text_formatter.add ("Option: ");
+			a_text_formatter.add (node.option.option_name);
+			a_text_formatter.add_new_line;
+			put_class_name (a_text_formatter);
 		end;
 
 feature {O_OPTION_SD} -- Setting

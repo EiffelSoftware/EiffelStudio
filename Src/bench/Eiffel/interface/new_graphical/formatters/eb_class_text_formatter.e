@@ -12,9 +12,9 @@ deferred class
 inherit
 	EB_CLASS_INFO_FORMATTER
 		redefine
-			new_button		
+			new_button
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 
 feature -- Access
@@ -34,9 +34,9 @@ feature -- Access
 			else
 				Result := internal_widget
 			end
-		end	
-	
-	is_dotnet_formatter: BOOLEAN is 
+		end
+
+	is_dotnet_formatter: BOOLEAN is
 			-- Is Current formatter also a .NET formatter?
 		do
 			Result := False
@@ -48,27 +48,21 @@ feature -- Formatting
 			-- Refresh `widget'.
 		do
 			if selected and then displayed then
-				if must_format then
-					display_temp_header
-					generate_text
-				end
+				display_temp_header
+				generate_text
 				if not last_was_error then
-					if editor.current_text /= formatted_text then						
-						editor.process_text (formatted_text)
-						go_to_position
-					end					
+					go_to_position
 					if has_breakpoints then
 						editor.enable_has_breakable_slots
 					else
 						editor.disable_has_breakable_slots
 					end
-					editor.set_read_only (not editable)
+				editor.set_read_only (not editable)
 				else
 					editor.clear_window
 					editor.display_message (Warning_messages.w_Formatter_failed)
 				end
 				display_header
-				must_format := last_was_error
 			end
 		end
 
@@ -86,9 +80,7 @@ feature {NONE} -- Implementation
 			if not selected then
 				execute
 			end
---			if cs.class_i /= associated_class.lace_class then
-				manager.set_stone (cs)
---			end
+			manager.set_stone (cs)
 		end
 
 	editable: BOOLEAN is
@@ -105,7 +97,7 @@ feature {NONE} -- Implementation
 			create def
 			create {EV_CELL} Result
 			Result.set_background_color (def.White)
-			Result.drop_actions.extend (agent on_class_drop) 
+			Result.drop_actions.extend (agent on_class_drop)
 		end
 
 indexing
@@ -114,19 +106,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

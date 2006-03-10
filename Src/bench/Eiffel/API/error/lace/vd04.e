@@ -27,15 +27,15 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
-			st.add_string ("Cluster path: ");
-			st.add_string (cluster.path);
-			st.add_new_line;
-			st.add_string ("Class name: ");
-			st.add_string (old_name.as_upper);
-			st.add_new_line
+			a_text_formatter.add ("Cluster path: ");
+			a_text_formatter.add (cluster.path);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Class name: ");
+			a_text_formatter.add (old_name.as_upper);
+			a_text_formatter.add_new_line
 		end;
 
 feature {CLUST_PROP_SD, CLUST_ADAPT_SD} -- Setting

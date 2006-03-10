@@ -21,37 +21,37 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			l_ext: EXTERNAL_CLASS_I
 		do
-			put_cluster_name (st)
-			st.add_string ("First class: ")
-			first.append_name (st)
-			st.add_new_line
+			put_cluster_name (a_text_formatter)
+			a_text_formatter.add ("First class: ")
+			first.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 			if first.is_external_class then
 				l_ext ?= first
-				st.add_string ("In assembly: %"")
-				l_ext.assembly.format (st)
+				a_text_formatter.add ("In assembly: %"")
+				l_ext.assembly.format (a_text_formatter)
 			else
-				st.add_string ("First file: %"")
-				st.add_string (first.file_name)
+				a_text_formatter.add ("First file: %"")
+				a_text_formatter.add (first.file_name)
 			end
-			st.add_string ("%"")
-			st.add_new_line
-			st.add_string ("Second class: ")
-			second.append_name (st)
-			st.add_new_line
+			a_text_formatter.add ("%"")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Second class: ")
+			second.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 			if second.is_external_class then
 				l_ext ?= second
-				st.add_string ("In assembly: %"")
-				l_ext.assembly.format (st)
+				a_text_formatter.add ("In assembly: %"")
+				l_ext.assembly.format (a_text_formatter)
 			else
-				st.add_string ("Second file: %"")
-				st.add_string (second.file_name)
+				a_text_formatter.add ("Second file: %"")
+				a_text_formatter.add (second.file_name)
 			end
-			st.add_string ("%"")
-			st.add_new_line
+			a_text_formatter.add ("%"")
+			a_text_formatter.add_new_line
 		end
 
 feature {UNIVERSE_I, CLUSTER_I, CLUST_REN_SD} -- Setting

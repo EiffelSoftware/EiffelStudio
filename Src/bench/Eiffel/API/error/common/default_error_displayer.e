@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Displays warnings and errors of compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -42,32 +42,31 @@ feature -- Output
 			-- Display warnings messages from `handler'.
 		local
 			warning_list: LINKED_LIST [WARNING];
-			st: STRUCTURED_TEXT
+			a_text_formatter: TEXT_FORMATTER
 		do
+			a_text_formatter := output_window
 			if not retried then
 				from
-					create st.make;
 					warning_list := handler.warning_list
 					warning_list.start
 				until
 					warning_list.after
 				loop
-					display_separation_line (st);
-					st.add_new_line;
-					warning_list.item.trace (st);
-					st.add_new_line;
+					display_separation_line (a_text_formatter);
+					a_text_formatter.add_new_line;
+					warning_list.item.trace (a_text_formatter);
+					a_text_formatter.add_new_line;
 					warning_list.forth;
 				end;
 				if handler.error_list.is_empty then
 						-- There is no error in the list
 						-- put a separation before the next message
-					display_separation_line (st)
+					display_separation_line (a_text_formatter)
 				end;
 			else
 				retried := False;
-				display_error_error (st)
+				display_error_error (a_text_formatter)
 			end;
-			output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True;
@@ -79,29 +78,28 @@ feature -- Output
 			-- Display error messages from `handler'.
 		local
 			error_list: LINKED_LIST [ERROR]
-			st: STRUCTURED_TEXT
+			a_text_formatter: TEXT_FORMATTER
 		do
+			a_text_formatter := output_window
 			if not retried then
 				from
-					create st.make
 					error_list := handler.error_list
 					error_list.start
 				until
 					error_list.after
 				loop
-					display_separation_line (st)
-					st.add_new_line
-					error_list.item.trace (st)
-					st.add_new_line
+					display_separation_line (a_text_formatter)
+					a_text_formatter.add_new_line
+					error_list.item.trace (a_text_formatter)
+					a_text_formatter.add_new_line
 					error_list.forth
 				end
-				display_separation_line (st)
-				display_additional_info (st)
+				display_separation_line (a_text_formatter)
+				display_additional_info (a_text_formatter)
 			else
 				retried := False
-				display_error_error (st)
+				display_error_error (a_text_formatter)
 			end
-			output_window.process_text (st)
 		rescue
 			if not fail_on_rescue then
 				retried := True
@@ -113,22 +111,22 @@ feature {NONE} -- Implementation
 
 	retried: BOOLEAN;
 
-	display_error_error (st: STRUCTURED_TEXT) is
+	display_error_error (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Exception occurred while displaying error message.");
-			st.add_new_line;
-			st.add_string ("Please contact ISE to report this bug.");
-			st.add_new_line
+			a_text_formatter.add ("Exception occurred while displaying error message.");
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Please contact ISE to report this bug.");
+			a_text_formatter.add_new_line
 		end;
 
-	display_separation_line (st: STRUCTURED_TEXT) is
+	display_separation_line (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("--------------------------------------------%
+			a_text_formatter.add ("--------------------------------------------%
 							%-----------------------------------");
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end
 
-	display_additional_info (st: STRUCTURED_TEXT) is
+	display_additional_info (a_text_formatter: TEXT_FORMATTER) is
 		do
 		end
 
@@ -142,19 +140,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

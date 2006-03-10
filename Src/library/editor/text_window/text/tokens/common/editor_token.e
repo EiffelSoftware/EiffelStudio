@@ -95,11 +95,10 @@ feature -- Status setting
 feature -- Visitor
 
 	process (a_visitor: TOKEN_VISITOR) is
-			--
+			-- Visitor
 		require
 			visitor_not_void: a_visitor /= Void
-		do
-			a_visitor.process_basic_token (image)
+		deferred
 		end
 
 feature -- Linkable functions

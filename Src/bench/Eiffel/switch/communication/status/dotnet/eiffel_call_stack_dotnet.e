@@ -81,27 +81,24 @@ feature -- Properties
 
 feature -- Output
 
-	display_stack (st: STRUCTURED_TEXT) is
+	display_stack (st: TEXT_FORMATTER) is
 			-- Display callstack in `st'.
 		local
 			stack_num, i: INTEGER
-			cs: CALL_STACK_ITEM
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
 			st.add_new_line;
 			st.add_string ("Call stack:");
 			st.add_new_line;
 			st.add_new_line;
-			create cs.do_nothing; -- For padding
-			st.add (cs);
+			st.process_call_stack_item (0, false) -- For padding
 			st.add_string ("Object");
 			st.add_column_number (14);
 			st.add_string ("Class");
 			st.add_column_number (26);
 			st.add_string ("Routine");
 			st.add_new_line;
-			create cs.do_nothing; -- For padding
-			st.add (cs);
+			st.process_call_stack_item (0, false) -- For padding
 			st.add_string ("------");
 			st.add_column_number (14);
 			st.add_string ("-----");
@@ -120,11 +117,10 @@ feature -- Output
 				after
 			loop
 				if i = stack_num then
-					create cs.make_selected (i);
+					st.process_call_stack_item (i, true)
 				else
-					create cs.make (i);
+					st.process_call_stack_item (i, false)
 				end;
-				st.add (cs)
 				item.display_feature (st);
 				st.add_new_line;
 				forth;

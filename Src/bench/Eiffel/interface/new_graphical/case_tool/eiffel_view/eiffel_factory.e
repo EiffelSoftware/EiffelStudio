@@ -16,25 +16,25 @@ inherit
 		redefine
 			world
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	SHARED_XML_ROUTINES
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-	
+
 feature -- Access
 
 	world: EIFFEL_WORLD
-	
+
 	name_string: STRING is "NAME"
 	cluster_name_string: STRING is "CLUSTER_NAME"
 	source_string: STRING is "SOURCE"
@@ -42,7 +42,7 @@ feature -- Access
 	source_cluster_string: STRING is "SOURCE_CLUSTER"
 	target_cluster_string: STRING is "TARGET_CLUSTER"
 		-- Xml string constants
-	
+
 	model_from_xml (node: XM_ELEMENT): EG_ITEM is
 			-- Create an EG_ITEM from `node' if possible.
 		local
@@ -59,7 +59,7 @@ feature -- Access
 			node_name := node.name
 			if node_name.is_equal (xml_class_figure_node_name) then
 				class_name := node.attribute_by_name (name_string).value
-				if class_name /= Void then				
+				if class_name /= Void then
 					cluster_name := node.attribute_by_name (cluster_name_string).value
 					if cluster_name /= Void then
 						cluster_found := l_universe.cluster_of_name (cluster_name)
@@ -150,76 +150,74 @@ feature -- Access
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	xml_class_figure_node_name: STRING is
 			-- Name of xml nodes describing class figures.
 		deferred
 		end
-		
+
 	xml_cluster_figure_node_name: STRING is
 			-- Name of xml nodes describing cluster figures.
 		deferred
 		end
-		
+
 	xml_client_supplier_figure_node_name: STRING is
 			-- Name of xml nodes describing client supplier links.
 		deferred
 		end
-		
+
 	xml_inheritance_figure_node_name: STRING is
 			-- Name of xml nodes describing inheritance links.
 		deferred
 		end
-		
+
 	put_class_not_exist_warning (class_name: STRING) is
 			-- Put a waring on the screen that class with `class_name' does not exist in the system.
 		local
-			l_text: STRUCTURED_TEXT
+			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			create l_text.make
-			l_text.add_indexing_string ("Loading diagram:")
-			l_text.add_new_line
-			l_text.add_indent
-			l_text.add_string ("Class " + class_name + " is not in the system anymore.")
-			l_text.add_new_line
-			world.context_editor.development_window.output_manager.process_text (l_text)
+			l_output_manager := world.context_editor.development_window.output_manager
+			l_output_manager.add_indexing_string ("Loading diagram:")
+			l_output_manager.add_new_line
+			l_output_manager.add_indent
+			l_output_manager.add_string ("Class " + class_name + " is not in the system anymore.")
+			l_output_manager.add_new_line
 		end
-		
+
 	put_cluster_not_exist_warning (cluster_name: STRING) is
-			-- Put a warning on the screen saying that class with `cluster_name' 
+			-- Put a warning on the screen saying that class with `cluster_name'
 		local
-			l_text: STRUCTURED_TEXT
+			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			create l_text.make
-			l_text.add_indexing_string ("Loading diagram:")
-			l_text.add_new_line
-			l_text.add_indent
-			l_text.add_string ("Cluster " + cluster_name + " is not in the system anymore.")
-			l_text.add_new_line
-			world.context_editor.development_window.output_manager.process_text (l_text)
+			l_output_manager := world.context_editor.development_window.output_manager
+			l_output_manager.add_indexing_string ("Loading diagram:")
+			l_output_manager.add_new_line
+			l_output_manager.add_indent
+			l_output_manager.add_string ("Cluster " + cluster_name + " is not in the system anymore.")
+			l_output_manager.add_new_line
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

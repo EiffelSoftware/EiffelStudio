@@ -53,15 +53,15 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error message
 		do
-			st.add_string ("Type of custom attribute being created: ")
-			st.add_class (creation_type.associated_class.lace_class)
-			st.add_new_line
-			st.add_string ("Named argument appearing more than once: ") 
-			st.add_string (named_argument)
-			st.add_new_line
+			a_text_formatter.add ("Type of custom attribute being created: ")
+			a_text_formatter.add_class (creation_type.associated_class.lace_class)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Named argument appearing more than once: ") 
+			a_text_formatter.add (named_argument)
+			a_text_formatter.add_new_line
 		end
 
 invariant

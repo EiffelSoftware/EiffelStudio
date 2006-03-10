@@ -18,12 +18,12 @@ inherit
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if cluster /= Void then
-				put_cluster_name (st);
+				put_cluster_name (a_text_formatter);
 			end;
-			put_file_name (st)
+			put_file_name (a_text_formatter)
 		end;
 
 indexing

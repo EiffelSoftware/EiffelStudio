@@ -24,14 +24,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Invalid feature name: ");
-			st.add_string (feature_name);
-			st.add_new_line;
-			st.add_string ("In Undefine clause for parent: ");
-			parent.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Invalid feature name: ");
+			a_text_formatter.add (feature_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("In Undefine clause for parent: ");
+			parent.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 indexing

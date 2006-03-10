@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Run time value representing of a special object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ inherit
 
 	CHARACTER_ROUTINES
 		export
-			{NONE} all	
+			{NONE} all
 		undefine
 			is_equal
 		end;
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_attribute (attr_name: like name; a_class: like e_class; 
+	make_attribute (attr_name: like name; a_class: like e_class;
 						addr: like address; cap: like capacity) is
 		require
 			not_attr_name_void: attr_name /= Void;
@@ -137,7 +137,7 @@ feature -- Access
 		ensure
 			raw_string_value_not_void: Result /= Void
 		end
-		
+
 	raw_string_value: STRING is
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
@@ -179,7 +179,7 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
+	append_type_and_value (st: TEXT_FORMATTER) is
 		local
 			ec: CLASS_C
 		do
@@ -205,7 +205,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 feature {NONE} -- Output
 
-	append_value (st: STRUCTURED_TEXT) is
+	append_value (st: TEXT_FORMATTER) is
 			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
 			is_special_of_char: BOOLEAN
@@ -226,7 +226,7 @@ feature {NONE} -- Output
 				l_cursor.start
 				char_value ?= l_cursor.item
 				is_special_of_char := char_value /= Void
-			end 
+			end
 			if not is_special_of_char then
 				from
 					l_cursor.start
@@ -288,7 +288,7 @@ feature -- Output
 			end
 			if items_computed then
 				Result := items
-			else	
+			else
 				reset_items
 				get_items (sp_lower, sp_upper)
 				Result := items
@@ -296,7 +296,7 @@ feature -- Output
 		end
 
 feature {NONE} -- Implementation
-	
+
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 				--| so let's compute it when needed
 			get_capacity
 		end
-		
+
 	get_capacity is
 			-- Get SPECIAL capacity value
 		do
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
- 
+
 	items_exists: items /= Void;
 	address_not_void: address /= Void;
 	is_attribute: is_attribute
@@ -333,19 +333,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -281,12 +281,10 @@ feature -- Thread related change
 				--| Update in case the current call stack's object changed
 			get_current_call_stack
 		end
-
 	has_thread_id (tid: INTEGER): BOOLEAN is
 		do
 			Result := all_thread_ids /= Void and then all_thread_ids.has (tid)
 		end
-
 	refresh_current_thread_id is
 			-- Get fresh value of Thread ID from debugger
 		deferred
@@ -498,7 +496,7 @@ feature -- Setting
 
 feature -- Output
 
-	display_status (st: STRUCTURED_TEXT) is
+	display_status (st: TEXT_FORMATTER) is
 			-- Display the status of the running application.
 		local
 			c, oc: CLASS_C
@@ -576,7 +574,7 @@ feature -- Output
 			end
 		end
 
-	display_exception (st: STRUCTURED_TEXT) is
+	display_exception (st: TEXT_FORMATTER) is
 			-- Display exception in `st'.
 		require
 			non_void_st: st /= Void
@@ -611,19 +609,16 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

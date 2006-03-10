@@ -203,8 +203,7 @@ feature -- Start output features
 			valid_type: type /= Void
 		do
 			total_number := total_num;
-			display_message ("Generating ");
-			display_message (type);
+			display_message ("Generating " + type);
 			display_new_line;
 			processed := 0;
 		end;
@@ -230,12 +229,12 @@ feature -- Start output features
 		end
 
 	put_header (displayed_version_number: STRING) is
+		local
+			l_msg: STRING
 		do
-			display_message (
-				once "Eiffel compilation manager%N%
-				%  (version ")
-			display_message (displayed_version_number)
-			display_message (")%N")
+			l_msg := once "Eiffel compilation manager%N%
+				%  (version " + displayed_version_number + ")%N"
+			display_message (l_msg)
 		end
 
 feature -- Output on per class
@@ -367,12 +366,12 @@ feature -- Output on per class
 
 	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
 			-- Put message progress the start of dead code removal.
+		local
+			l_msg: STRING
 		do
 			processed := processed + total_nbr
-			display_message (once "Features done: ")
-			display_message (processed.out)
-			display_message (once "%TFeatures to go: ")
-			display_message (nbr_to_go.out)
+			l_msg := once "Features done: " + processed.out + once "%TFeatures to go: " + nbr_to_go.out
+			display_message (l_msg)
 			display_new_line
 			flush_output
 		end
@@ -386,8 +385,7 @@ feature -- Output on per class
 			str: STRING
 		do
 			str := a_name.as_lower
-			display_message (case_cluster_message)
-			display_message (str)
+			display_message (case_cluster_message + str)
 			display_new_line
 		end
 
@@ -454,8 +452,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total;
-			display_message (percentage_output (to_go));
-			display_message (deg_nbr);
+			display_message (percentage_output (to_go) + deg_nbr);
 			display_new_line
 		end
 
@@ -470,9 +467,7 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 				Error_handler.insert_interrupt_error (True)
 			end
 			if not is_output_quiet then
-				display_message (percentage_output (to_go));
-				display_message (deg_nbr);
-				display_message (a_name);
+				display_message (percentage_output (to_go) + deg_nbr + a_name);
 				display_new_line
 			end
 		end
@@ -578,19 +573,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

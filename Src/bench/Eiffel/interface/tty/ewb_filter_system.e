@@ -32,13 +32,15 @@ feature {NONE} -- Execution
 			filter: TEXT_FILTER
 		do
 			cmd := associated_cmd;
-			cmd.execute;
+
 			if filter_name /= Void and then not filter_name.is_empty then
 				create filter.make (filter_name);
-				filter.process_text (cmd.structured_text);
+				cmd.set_text_formatter (filter)
+				cmd.execute
 				output_window.put_string (filter.image);
 			else
-				output_window.put_string (cmd.structured_text.image);
+				cmd.set_text_formatter (output_window)
+				cmd.execute
 			end;
 			output_window.put_new_line;
 		end;
@@ -49,19 +51,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

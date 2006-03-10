@@ -46,29 +46,29 @@ feature -- Access
 
 feature -- Output
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
 			initialize_output
-			print_error_message (st)
-			st.add_string ("Class: ")
-			class_c.append_signature (st, False)
-			st.add_new_line
-			st.add_string ("Feature name: ")
-			st.add_class_syntax (Current, class_c, feature_name)
-			st.add_new_line
-			build_explain (st)
-			st.add_string ("File: ")
-			st.add_string (file_name)
-			st.add_new_line
-			st.add_string ("Line: ")
-			st.add_int (line)
-			st.add_new_line
-			st.add_string ("Column: ")
-			st.add_int (column)
-			display_line (st, previous_line)
-			display_syntax_line (st, current_line)
-			display_line (st, next_line)
+			print_error_message (a_text_formatter)
+			a_text_formatter.add ("Class: ")
+			class_c.append_signature (a_text_formatter, False)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Feature name: ")
+			a_text_formatter.add_class_syntax (Current, class_c, feature_name)
+			a_text_formatter.add_new_line
+			build_explain (a_text_formatter)
+			a_text_formatter.add ("File: ")
+			a_text_formatter.add (file_name)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Line: ")
+			a_text_formatter.add_int (line)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Column: ")
+			a_text_formatter.add_int (column)
+			display_line (a_text_formatter, previous_line)
+			display_syntax_line (a_text_formatter, current_line)
+			display_line (a_text_formatter, next_line)
 		end
 
 indexing

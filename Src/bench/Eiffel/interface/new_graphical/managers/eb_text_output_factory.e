@@ -24,16 +24,16 @@ inherit
 
 feature -- Access
 
-	display_error_error (st: STRUCTURED_TEXT) is
+	display_error_error (st: TEXT_FORMATTER) is
 			-- Message telling that an error occurred while displaying the errors.
 		do
-			st.add_string ("Exception occurred while displaying error message.")
+			st.add ("Exception occurred while displaying error message.")
 			st.add_new_line
-			st.add_string ("Please contact ISE to report this bug.")
+			st.add ("Please contact ISE to report this bug.")
 			st.add_new_line
 		end
 
-	display_error_list (st: STRUCTURED_TEXT; error_list: LINKED_LIST [ERROR]) is
+	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR]) is
 			-- Display the content of `error_list' in `st'.
 		do
 			from
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	display_warning_list (st: STRUCTURED_TEXT; warning_list: LINKED_LIST [WARNING]) is
+	display_warning_list (st: TEXT_FORMATTER; warning_list: LINKED_LIST [WARNING]) is
 			-- Display the content of `warning_list' in `st'.
 		do
 			from
@@ -69,13 +69,13 @@ feature -- Access
 			end
 		end
 
-	display_separation_line (st: STRUCTURED_TEXT) is
+	display_separation_line (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("-------------------------------------------------------------------------------")
+			st.add ("-------------------------------------------------------------------------------")
 			st.add_new_line
 		end
 
-	display_additional_info (st: STRUCTURED_TEXT) is
+	display_additional_info (st: TEXT_FORMATTER) is
 			-- Additional system information.
 		local
 			degree_nbr: INTEGER
@@ -84,52 +84,50 @@ feature -- Access
 			degree_nbr := Degree_output.current_degree
 			if degree_nbr > 0 then
 					-- Case has degree_number equal to 0
-				st.add_string ("Degree: ")
-				st.add_string (degree_nbr.out)
+				st.add ("Degree: ")
+				st.add (degree_nbr.out)
 			end;
-			st.add_string (" Processed: ")
-			st.add_string (Degree_output.processed.out)
-			st.add_string (" To go: ")
+			st.add (" Processed: ")
+			st.add (Degree_output.processed.out)
+			st.add (" To go: ")
 			to_go := Degree_output.total_number - Degree_output.processed
-			st.add_string (to_go.out)
-			st.add_string (" Total: ")
-			st.add_string (Degree_output.total_number.out)
+			st.add (to_go.out)
+			st.add (" Total: ")
+			st.add (Degree_output.total_number.out)
 			st.add_new_line
 		end
 
 
 
-	welcome_info: STRUCTURED_TEXT is
+	welcome_info (a_formatter: TEXT_FORMATTER) is
 			-- Information text on how to launch $EiffelGraphicalCompiler$.
 		do
-			create Result.make
-			Result.add_new_line
-			Result.add_string ("To create or open a project using")
-			Result.add_new_line
-			Result.add_string (Interface_names.WorkBench_name + ": On the File menu,")
-			Result.add_new_line
-			Result.add_string ("click %"New...%" or %"Open...%".")
-			Result.add_new_line
-		ensure
-			st_not_void: Result /= Void
+			a_formatter.add_new_line
+			a_formatter.add ("To create or open a project using")
+			a_formatter.add_new_line
+			a_formatter.add (Interface_names.WorkBench_name + ": On the File menu,")
+			a_formatter.add_new_line
+			a_formatter.add ("click %"New...%" or %"Open...%".")
+			a_formatter.add_new_line
 		end
 
-	structured_system_info: STRUCTURED_TEXT is
+	structured_system_info (a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Information text about current project.
 		do
 			if Eiffel_project.system /= Void then
-				create Result.make
-				append_system_info (Result)
+				append_system_info (a_formatter)
+				Result := false
+			else
+				Result := true
 			end
 		end
 
-	error_summary (error_count: INTEGER): STRUCTURED_TEXT is
+	error_summary (error_count: INTEGER; a_formatter: TEXT_FORMATTER) is
 			-- Message telling error summary.
 		local
 			l_conjunctive,
 			l_plurality: STRING
 		do
-			create Result.make
 			if error_count > 1 then
 				l_conjunctive := " were "
 				l_plurality := " errors "
@@ -137,17 +135,16 @@ feature -- Access
 				l_conjunctive := " was "
 				l_plurality := " error "
 			end
-			Result.add_string ("%TThere" + l_conjunctive + error_count.out + l_plurality + "during compilation.")
-			Result.add_new_line
+			a_formatter.add ("%TThere" + l_conjunctive + error_count.out + l_plurality + "during compilation.")
+			a_formatter.add_new_line
 		end
 
-	warning_summary (warning_count: INTEGER): STRUCTURED_TEXT is
+	warning_summary (warning_count: INTEGER; a_formatter: TEXT_FORMATTER) is
 			-- Message telling warning summary.
 		local
 			l_conjunctive,
 			l_plurality: STRING
 		do
-			create Result.make
 			if warning_count > 1 then
 				l_conjunctive := " were "
 				l_plurality := " warnings "
@@ -155,8 +152,8 @@ feature -- Access
 				l_conjunctive := " was "
 				l_plurality := " warning "
 			end
-			Result.add_string ("(There" + l_conjunctive + warning_count.out + l_plurality + "during compilation)")
-			Result.add_new_line
+			a_formatter.add ("(There" + l_conjunctive + warning_count.out + l_plurality + "during compilation)")
+			a_formatter.add_new_line
 		end
 
 indexing
@@ -165,19 +162,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

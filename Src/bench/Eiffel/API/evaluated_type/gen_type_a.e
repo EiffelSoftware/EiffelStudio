@@ -161,7 +161,7 @@ feature -- Output
 			end
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		local
 			i, count: INTEGER
 		do
@@ -172,7 +172,7 @@ feature -- Output
 				-- TUPLE may have zero generic parameters
 			if count > 0 then
 				st.add_space
-				st.add (ti_L_bracket)
+				st.process_symbol_text (ti_L_bracket)
 				from
 					i := 1
 				until
@@ -180,12 +180,12 @@ feature -- Output
 				loop
 					generics.item (i).ext_append_to (st, f)
 					if i /= count then
-						st.add (ti_Comma)
+						st.process_symbol_text (ti_Comma)
 						st.add_space
 					end
 					i := i + 1
 				end
-				st.add (ti_R_bracket)
+				st.process_symbol_text (ti_R_bracket)
 			end
 		end
 
@@ -1022,7 +1022,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		local
 			i, count: INTEGER
 		do
@@ -1032,7 +1032,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- TUPLE may have zero generic parameters
 			if count > 0 then
 				ctxt.put_space
-				ctxt.put_text_item (ti_L_bracket)
+				ctxt.process_symbol_text (ti_L_bracket)
 				from
 					i := 1
 				until
@@ -1040,12 +1040,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 				loop
 					generics.item (i).format (ctxt)
 					if i /= count then
-						ctxt.put_text_item (ti_Comma)
+						ctxt.process_symbol_text (ti_Comma)
 						ctxt.put_space
 					end
 					i := i + 1
 				end
-				ctxt.put_text_item (ti_R_bracket)
+				ctxt.process_symbol_text (ti_R_bracket)
 			end
 		end
 

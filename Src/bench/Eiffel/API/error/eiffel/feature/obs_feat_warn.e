@@ -48,35 +48,35 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			m: STRING
 		do
-			st.add_string ("Class: ")
-			associated_class.append_name (st)
+			a_text_formatter.add ("Class: ")
+			associated_class.append_name (a_text_formatter)
 			if a_feature /= Void then
-				st.add_new_line
-				st.add_string ("Feature: ")
-				a_feature.append_name (st)
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Feature: ")
+				a_feature.append_name (a_text_formatter)
 			else
-				st.add_new_line
-				st.add_string ("Feature: invariant")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Feature: invariant")
 			end
-			st.add_new_line
-			st.add_string ("Obsolete feature: ")
-			obsolete_feature.append_signature (st)
-			st.add_string (" (class ")
-			obsolete_class.append_name (st)
-			st.add_string (")")
-			st.add_new_line
-			st.add_string ("Obsolete message: ")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Obsolete feature: ")
+			obsolete_feature.append_signature (a_text_formatter)
+			a_text_formatter.add (" (class ")
+			obsolete_class.append_name (a_text_formatter)
+			a_text_formatter.add (")")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Obsolete message: ")
 			m := obsolete_feature.obsolete_message
 			if m.has ('%N') then
 					-- Preserve formatting for multi-line message
-				st.add_new_line
+				a_text_formatter.add_new_line
 			end
-			st.add_multiline_string (m, 1)
-			st.add_new_line
+			a_text_formatter.add_multiline_string (m, 1)
+			a_text_formatter.add_new_line
 		end
 
 feature -- Setting

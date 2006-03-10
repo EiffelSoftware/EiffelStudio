@@ -22,25 +22,25 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		require
 			actual_type /= Void
 			c_type /= Void
 		do
-			st.add_new_line
-			st.add_string ("For type: ")
-			type.append_to (st)
-			st.add_new_line
-			st.add_string ("Argument number: ")
-			st.add_int (formal_number)
-			st.add_string (":")
-			st.add_new_line
-			st.add_string ("Actual generic parameter: ")
-			actual_type.append_to (st)
-			st.add_new_line
-			st.add_string ("Type to which it should conform: ")
-			c_type.append_to (st)
-			st.add_new_line
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("For type: ")
+			type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Argument number: ")
+			a_text_formatter.add_int (formal_number)
+			a_text_formatter.add (":")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Actual generic parameter: ")
+			actual_type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Type to which it should conform: ")
+			c_type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

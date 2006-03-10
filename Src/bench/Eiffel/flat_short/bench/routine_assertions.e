@@ -69,7 +69,7 @@ feature -- Properties
 
 feature -- Output
 
-	format_precondition (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
+	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN) is
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
 		local
@@ -90,7 +90,7 @@ feature -- Output
 			end
 		end
 
-	format_postcondition (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
+	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN) is
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
 		local

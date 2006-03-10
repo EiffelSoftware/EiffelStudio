@@ -23,7 +23,7 @@ feature -- Properties
 	
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Nothing to be done.
 		do
 		end

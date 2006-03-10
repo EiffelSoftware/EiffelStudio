@@ -31,20 +31,20 @@ feature -- Properties
 
 feature -- Output
 
-	print_name (st: STRUCTURED_TEXT) is
+	print_name (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if target_name /= Void then
-				st.add_string ("Creation of: ");
-				st.add_string (target_name);
-				st.add_new_line;
+				a_text_formatter.add ("Creation of: ");
+				a_text_formatter.add (target_name);
+				a_text_formatter.add_new_line;
 			end
-			st.add_string ("Creation type: ");
+			a_text_formatter.add ("Creation type: ");
 			if is_symbol then
-				st.add_string (symbol_name)
+				a_text_formatter.add (symbol_name)
 			elseif type /= Void then
-				type.append_to (st);
+				type.append_to (a_text_formatter);
 			end
-			st.add_new_line;
+			a_text_formatter.add_new_line;
 		end
 
 feature -- Settings

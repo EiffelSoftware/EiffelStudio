@@ -13,7 +13,8 @@ inherit
 	EDITOR_TOKEN_FEATURE
 		redefine
 			is_feature_start,
-			text_color
+			text_color,
+			process
 		end
 
 create
@@ -22,7 +23,7 @@ create
 feature -- Access
 
 	feature_index_in_table: INTEGER
-	
+
 	text_color: EV_COLOR is
 			-- Color of text. Normal text color by default.
 		do
@@ -30,7 +31,7 @@ feature -- Access
 				text_color_internal := editor_preferences.normal_text_color
 			end
 			Result := text_color_internal
-		end	
+		end
 
 feature -- Status report
 
@@ -42,25 +43,33 @@ feature -- Element change
 		do
 			feature_index_in_table := index
 		end
-		
+
 	set_text_color_feature is
 			-- Set text color with normal color.
 		do
 			text_color_internal := editor_preferences.feature_text_color
 		end
-	
+
 	set_text_color_normal is
 			-- Set text color with feature text color
 		do
 			text_color_internal := editor_preferences.normal_text_color
 		end
-		
+
 	set_text_color_operator is
 			-- Set text color with operator color
 		do
 			text_color_internal := editor_preferences.operator_text_color
-		end		
-		
+		end
+
+feature -- Visitor
+
+	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+			-- Visitor
+		do
+			a_visitor.process_editor_token_feature_start (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	text_color_internal: EV_COLOR;
@@ -71,19 +80,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

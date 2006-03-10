@@ -887,7 +887,7 @@ feature {NONE} -- Events on notification
 			-- Notify the system is exiting on debugger error
 		local
 			wd: EV_WARNING_DIALOG
---			st: STRUCTURED_TEXT
+--			st: TEXT_FORMATTER
 			l_err_msg: STRING
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do

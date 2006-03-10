@@ -82,29 +82,29 @@ feature -- Properties
 		
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 		end
 
-	print_error_message (st: STRUCTURED_TEXT) is
+	print_error_message (a_text_formatter: TEXT_FORMATTER) is
 			-- Print error message on output.
 		local
 			i, j: INTEGER
 		do
-			st.add_string ("IL Generation Error:")
-			st.add_new_line
+			a_text_formatter.add ("IL Generation Error:")
+			a_text_formatter.add_new_line
 
 			i := error_string.index_of ('%N', 1)
 			if i = 0 then
-				st.add_string (error_string)
-				st.add_new_line
+				a_text_formatter.add (error_string)
+				a_text_formatter.add_new_line
 			else
 				from
 				until
 					i = 0
 				loop
-					st.add_string (error_string.substring (j + 1, i - 1))
-					st.add_new_line
+					a_text_formatter.add (error_string.substring (j + 1, i - 1))
+					a_text_formatter.add_new_line
 					j := i
 					i := error_string.index_of ('%N', i + 1)
 				end

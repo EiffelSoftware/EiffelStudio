@@ -97,16 +97,7 @@ feature -- Basic Operations
 			scroll_to_end
 		end
 
-	process_text (st: STRUCTURED_TEXT) is
-			-- Print `st' on all output tools.
-		do
-		end
-
 feature -- Basic Operations / Information message
-
-	clear_and_process_text (st: STRUCTURED_TEXT) is
-		do
-		end
 
 	display_system_info is
 		do
@@ -151,30 +142,30 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	display_error_error (st: STRUCTURED_TEXT) is
+	display_error_error (st: TEXT_FORMATTER) is
 		do
 		end
 
-	display_error_list (st: STRUCTURED_TEXT; error_list: LINKED_LIST [ERROR]) is
+	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR]) is
 		do
 		end
 
-	display_separation_line (st: STRUCTURED_TEXT) is
+	display_separation_line (st: TEXT_FORMATTER) is
 		do
 		end
 
-	display_additional_info (st: STRUCTURED_TEXT) is
+	display_additional_info (st: TEXT_FORMATTER) is
 		do
 		end
 
 
 feature {NONE} -- Implementation
 
-	welcome_info: STRUCTURED_TEXT is
+	welcome_info: TEXT_FORMATTER is
 		do
 		end
 
-	structured_system_info: STRUCTURED_TEXT is
+	structured_system_info: TEXT_FORMATTER is
 		do
 		end
 
@@ -192,19 +183,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

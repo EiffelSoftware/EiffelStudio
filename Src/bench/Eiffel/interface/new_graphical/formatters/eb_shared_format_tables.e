@@ -10,236 +10,123 @@ class
 
 inherit
 	EB_CONSTANTS
-	
+
 	EB_SHARED_PREFERENCES
 
 feature -- Properties
 
-	flat_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+	flat_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format context of the flat form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
 			valid_a_class: a_class.is_valid
+			a_formatter_not_void: a_formatter /= Void
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if flat_table.has (a_class) then
-				create an_item_and_table.make (a_class, flat_table)
-				Result := flat_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create ctxt
-				ctxt.set_clickable
-				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
-				ctxt.set_is_with_breakable
-				ctxt.format (a_class)
-				if not ctxt.error then
-					Result := ctxt.text
-					record_in_history (a_class, flat_table, Result)
-				end
-			end
+			create ctxt
+			ctxt.set_clickable
+			ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
+			ctxt.set_is_with_breakable
+			ctxt.format (a_class, a_formatter)
+			Result := ctxt.error
 		end
-		
-	flatshort_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+
+	flatshort_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format context of the flatshort form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
 			valid_a_class: a_class.is_valid
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if flatshort_table.has (a_class) then
-				create an_item_and_table.make (a_class, flatshort_table)
-				Result := flatshort_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create ctxt
-				ctxt.set_clickable
-				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
-				ctxt.set_is_short
-				ctxt.set_is_without_breakable
-				ctxt.format (a_class)
-				if not ctxt.error then
-					Result := ctxt.text
-					record_in_history (a_class, flatshort_table, Result)
-				end
-			end
+			create ctxt
+			ctxt.set_clickable
+			ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
+			ctxt.set_is_short
+			ctxt.set_is_without_breakable
+			ctxt.format (a_class, a_formatter)
+			Result := ctxt.error
 		end
-		
-	short_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+
+	short_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format context of the short form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
 			valid_a_class: a_class.is_valid
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if short_table.has (a_class) then
-				create an_item_and_table.make (a_class, short_table)
-				Result := short_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create ctxt
-				ctxt.set_clickable
-				ctxt.set_is_short
-				ctxt.set_is_without_breakable
-				ctxt.set_one_class_only
-				ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
-				ctxt.format (a_class)
-				if not ctxt.error then
-					Result := ctxt.text
-					record_in_history (a_class, short_table, Result)
-				end
-			end
+			create ctxt
+			ctxt.set_clickable
+			ctxt.set_is_short
+			ctxt.set_is_without_breakable
+			ctxt.set_one_class_only
+			ctxt.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
+			ctxt.format (a_class, a_formatter)
+			Result := ctxt.error
 		end
-		
-	clickable_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+
+	clickable_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format context of the clickable form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
 			valid_a_class: a_class.is_valid
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if clickable_table.has (a_class) then
-				create an_item_and_table.make (a_class, clickable_table)
-				Result := clickable_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create ctxt
-				ctxt.set_clickable
-				ctxt.set_one_class_only
-				ctxt.set_order_same_as_text
-				ctxt.set_is_without_breakable
-				ctxt.format (a_class)
-				if not ctxt.error then
-					Result := ctxt.text
-					record_in_history (a_class, clickable_table, Result)
-				end
-			end
+			create ctxt
+			ctxt.set_clickable
+			ctxt.set_one_class_only
+			ctxt.set_order_same_as_text
+			ctxt.set_is_without_breakable
+			ctxt.format (a_class, a_formatter)
+			Result := ctxt.error
 		end
-		
-	rout_flat_context_text (a_feature: E_FEATURE): STRUCTURED_TEXT is
+
+	rout_flat_context_text (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format context of the flat form of `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			f_id: EB_FEATURE_ID
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: FEATURE_TEXT_FORMATTER
 		do
-			create f_id.make (a_feature)
-			if rout_flat_table.has (f_id) then
-				create an_item_and_table.make (f_id, rout_flat_table)
-				Result := rout_flat_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create ctxt
-				ctxt.set_clickable
-					--| Show flat form of the routine (False)
-				ctxt.format (a_feature, True)
-				if not ctxt.error then
-					Result := ctxt.text
-					record_in_history (f_id, rout_flat_table, Result)
-				end
-			end
+			create ctxt
+			ctxt.set_clickable
+				--| Show flat form of the routine (False)
+			ctxt.format (a_feature, True, a_formatter)
+			Result := ctxt.error
 		end
 
 feature -- Properties .NET	
-		
-	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
+
+	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format .NET consumed type, flat short.
 		require
 			a_consumed_void: a_consumed /= Void
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
-			if flatshort_dotnet_table.has (a_classi.name) then
-				create an_item_and_table.make (a_classi.name, flatshort_dotnet_table)
-				Result := flatshort_dotnet_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create dntxt
-				dntxt.set_is_flat_short
-				dntxt.format (a_consumed, a_classi)
-				if not dntxt.error then
-					Result := dntxt.text
-					record_in_history (a_classi.name, flatshort_dotnet_table, Result)
-				end
-			end
+			create dntxt
+			dntxt.set_is_flat_short
+			dntxt.format (a_consumed, a_classi, a_formatter)
+			Result := dntxt.error
 		end
-		
-	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
+
+	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format .NET consumed type, short (no inheritance).
 		require
 			a_consumed_void: a_consumed /= Void
 			a_classi_not_void: a_classi /= Void
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
-			if short_dotnet_table.has (a_classi.name) then
-				create an_item_and_table.make (a_classi.name, short_dotnet_table)
-				Result := short_dotnet_table.found_item
-				history_list.start
-				history_list.search (an_item_and_table)
-				if not history_list.exhausted then
-					history_list.remove
-				end
-				history_list.extend (an_item_and_table)
-			else
-				create dntxt
-				dntxt.format (a_consumed, a_classi)
-				if not dntxt.error then
-					Result := dntxt.text
-					record_in_history (a_classi.name, short_dotnet_table, Result)
-				end
-			end
+			create dntxt
+			dntxt.format (a_consumed, a_classi, a_formatter)
+			Result := dntxt.error
 		end
-		
-	rout_flat_dotnet_text (a_feature: E_FEATURE; a_consumed: CONSUMED_TYPE): STRUCTURED_TEXT is
+
+	rout_flat_dotnet_text (a_feature: E_FEATURE; a_consumed: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER): BOOLEAN is
 			-- Format .NET feature text, flat short (include inheritance).
 		require
 			a_feature_not_void: a_feature /= Void
@@ -248,12 +135,10 @@ feature -- Properties .NET
 			dntxt: DOTNET_FEATURE_TEXT_FORMATTER
 		do
 			create dntxt
-			dntxt.format (a_feature, a_consumed)
-			if not dntxt.error then
-				Result := dntxt.text
-			end
+			dntxt.format (a_feature, a_consumed, a_formatter)
+			Result := dntxt.error
 		end
-		
+
 feature -- Clearing tables
 
 	clear_format_tables is
@@ -283,8 +168,8 @@ feature -- Clearing tables
 				if a_class /= Void then
 					found := flat_table.has (a_class) or else
 						flatshort_table.has (a_class) or else
-						short_table.has (a_class) 
-					if found then			
+						short_table.has (a_class)
+					if found then
 						history_list.remove
 					else
 						history_list.forth
@@ -311,43 +196,43 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	flat_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
+	flat_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
-	flatshort_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
+	flatshort_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
 			-- Table of the last flatshort formats
 		once
 			create Result.make (History_size)
 		end
 
-	short_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
+	short_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
 			-- Table of the last short formats
 		once
 			create Result.make (History_size)
 		end
 
-	clickable_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
+	clickable_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
 			-- Table of the last clickable formats
 		once
 			create Result.make (History_size)
 		end
 
-	rout_flat_table: HASH_TABLE [STRUCTURED_TEXT, EB_FEATURE_ID] is
+	rout_flat_table: HASH_TABLE [TEXT_FORMATTER, EB_FEATURE_ID] is
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
 	history_list: LINKED_LIST [CELL2 [HASHABLE,
-						HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]] is
+						HASH_TABLE [TEXT_FORMATTER, HASHABLE]]] is
 			-- History list. Only `History_size' contexts are kept in memory.
 		once
 			create Result.make
 			Result.compare_objects
-		end		
+		end
 
 feature {NONE} -- Attributes .NET
 
@@ -359,29 +244,29 @@ feature {NONE} -- Attributes .NET
 			create Result.make (History_size)
 		end
 
-	flatshort_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, STRING] is
+	flatshort_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING] is
 			-- Table of last .NET flat short formats.
 		once
 			create Result.make (History_size)
 		end
-		
-	short_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, STRING] is
+
+	short_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING] is
 			-- Table of last .NET short formats.
 		once
 			create Result.make (History_size)
 		end
-		
-	rout_flat_dotnet_table: HASH_TABLE [STRUCTURED_TEXT, E_FEATURE] is
+
+	rout_flat_dotnet_table: HASH_TABLE [TEXT_FORMATTER, E_FEATURE] is
 			-- Table of last .NET flat routine formats.
 		once
 			create Result.make (History_size)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	record_in_history (an_item: HASHABLE;
-					table: HASH_TABLE [STRUCTURED_TEXT, HASHABLE];
-					text: STRUCTURED_TEXT) is
+					table: HASH_TABLE [TEXT_FORMATTER, HASHABLE];
+					text: TEXT_FORMATTER) is
 			-- Extend the history with `an_item'. Remove the oldest from
 			-- the history list if it is full.
 			-- Add `text' to the memorized texts in `table'.
@@ -389,8 +274,8 @@ feature {NONE} -- Implementation
 			an_item_not_void: an_item /= Void
 			table_not_void: table /= Void
 		local
-			an_item_and_table: CELL2 [HASHABLE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
+			an_item_and_table: CELL2 [HASHABLE,
+							HASH_TABLE [TEXT_FORMATTER, HASHABLE]]
 		do
 			create an_item_and_table.make (an_item, table)
 			table.put (text, an_item)
@@ -422,19 +307,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

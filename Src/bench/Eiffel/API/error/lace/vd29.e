@@ -22,17 +22,17 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Class name: ");
-			st.add_string (root_class_name);
-			st.add_new_line;
-			st.add_string ("First cluster: ");
-			st.add_string (cluster.cluster_name);
-			st.add_new_line;
-			st.add_string ("Second cluster: ");
-			st.add_string (second_cluster_name);
-			st.add_new_line
+			a_text_formatter.add ("Class name: ");
+			a_text_formatter.add (root_class_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("First cluster: ");
+			a_text_formatter.add (cluster.cluster_name);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Second cluster: ");
+			a_text_formatter.add (second_cluster_name);
+			a_text_formatter.add_new_line
 		end;
 
 feature {ROOT_SD} -- Setting

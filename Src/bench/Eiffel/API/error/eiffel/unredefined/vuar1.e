@@ -37,23 +37,23 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if called_feature /= Void then
-				print_called_feature (st);
-				st.add_new_line;
-				st.add_string ("Number of actuals: ");
-				st.add_int (argument_count);
-				st.add_string (" Number of formals: ");
-				st.add_int (called_feature.argument_count);
+				print_called_feature (a_text_formatter);
+				a_text_formatter.add_new_line;
+				a_text_formatter.add ("Number of actuals: ");
+				a_text_formatter.add_int (argument_count);
+				a_text_formatter.add (" Number of formals: ");
+				a_text_formatter.add_int (called_feature.argument_count);
 			elseif called_local /= Void then
-				st.add_string ("Local variable name: ");
-				st.add_string (called_local);
+				a_text_formatter.add ("Local variable name: ");
+				a_text_formatter.add (called_local);
 			elseif called_arg /= Void then
-				st.add_string ("Argument name: ");
-				st.add_string (called_arg);
+				a_text_formatter.add ("Argument name: ");
+				a_text_formatter.add (called_arg);
 			end;
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

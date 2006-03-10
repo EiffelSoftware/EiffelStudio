@@ -45,26 +45,26 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Display error message
 		do
 			check
 				parent_classes_set: parent_classes /= Void
 			end
-			st.add_string ("Classes that cannot be inherited:")
-			st.add_new_line
+			a_text_formatter.add ("Classes that cannot be inherited:")
+			a_text_formatter.add_new_line
 			from
 				parent_classes.start
 			until
 				parent_classes.after
 			loop
-				parent_classes.item.append_signature (st, False)
+				parent_classes.item.append_signature (a_text_formatter, False)
 				parent_classes.forth
 				if not parent_classes.after then
-					st.add_string (", ")
+					a_text_formatter.add (", ")
 				end
 			end
-			st.add_new_line
+			a_text_formatter.add_new_line
 		end
 
 indexing

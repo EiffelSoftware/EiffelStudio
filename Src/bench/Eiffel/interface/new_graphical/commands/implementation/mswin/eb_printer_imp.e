@@ -80,7 +80,10 @@ feature {EB_PRINTER} -- Basic operations
 				form.set_height_in_points (imp.wel_font.point)
 				rich.set_character_format_all (form)
 			end
-			txt := interface.text.image
+					--| Fixme:
+					--| We simply use text from the editor to print for the moment,
+					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
+			txt := interface.text
 				-- Rich edits don't like lonely '%N' characters.
 			txt.prune_all ('%R')
 			txt.replace_substring_all ("%N", "%R%N")
@@ -113,19 +116,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -14,7 +14,6 @@ inherit
 			class_cmd,
 			set_class,
 			generate_text,
-			formatted_text,
 			make
 		end
 
@@ -46,7 +45,7 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showflat
 		end
- 
+
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -57,8 +56,6 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "flt"
 			-- String symbol of the command, used as an extension when saving.
-
-	formatted_text: STRUCTURED_TEXT
 
 feature -- Status Setting
 
@@ -91,12 +88,9 @@ feature {NONE} -- Implementation
 			if not retried then
 				set_is_with_breakable
 				if associated_class /= Void then
-					formatted_text := flat_context_text (associated_class)
-				end
-				if formatted_text = Void then
-					last_was_error := True
-				else
-					last_was_error := False
+					editor.handle_before_processing (false)
+					last_was_error := flat_context_text (associated_class, editor.text_displayed)
+					editor.handle_after_processing
 				end
 			else
 				last_was_error := True
@@ -108,28 +102,28 @@ feature {NONE} -- Implementation
 
 	has_breakpoints: BOOLEAN is True
 		-- Should `Current' display breakpoints?	
-			
-	line_numbers_allowed: BOOLEAN is False;		
-			
+
+	line_numbers_allowed: BOOLEAN is False;
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

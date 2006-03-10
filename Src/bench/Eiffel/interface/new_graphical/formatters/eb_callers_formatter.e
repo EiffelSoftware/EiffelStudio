@@ -17,12 +17,12 @@ inherit
 			feature_cmd,
 			is_dotnet_formatter
 		end
-		
+
 	EB_SHARED_PREFERENCES
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_manager: like manager; a_flag: INTEGER_8) is
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			manager_set: manager = a_manager
 			flag_set: flag = a_flag
 		end
-	
+
 feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP] is
@@ -61,7 +61,7 @@ feature -- Properties
 				internal_symbol := Result
 			end
 		end
- 
+
 	feature_cmd: E_SHOW_CALLERS
 			-- Feature command that can generate the information.
 
@@ -77,10 +77,10 @@ feature -- Properties
 				Result := Interface_names.m_Showcallers
 			end
 		end
- 
+
  	flag: INTEGER_8
  			-- Flag for type of callers.
- 
+
 feature {NONE} -- Properties
 
 	internal_symbol: like symbol
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		require else
 			associated_feature_non_void: associated_feature /= Void
 		do
-			create feature_cmd.make (associated_feature)
+			create feature_cmd.make (editor.text_displayed, associated_feature)
 			if preferences.feature_tool_data.show_all_callers then
 				feature_cmd.set_all_callers
 			end
@@ -141,19 +141,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

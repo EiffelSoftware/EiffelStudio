@@ -43,19 +43,19 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			wclass: CLASS_C
 		do
 			wclass := unique_feature.written_class;
-			st.add_string ("Constant: ");
-			unique_feature.append_name (st);
-			st.add_string (" From: ");
-			wclass.append_name (st);
-			st.add_new_line;
-			st.add_string ("Origin of conflicting constants: ");
-			original_class.append_name (st);
-			st.add_new_line;
+			a_text_formatter.add ("Constant: ");
+			unique_feature.append_name (a_text_formatter);
+			a_text_formatter.add (" From: ");
+			wclass.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Origin of conflicting constants: ");
+			original_class.append_name (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTEr}

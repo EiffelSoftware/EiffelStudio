@@ -92,7 +92,7 @@ feature -- Access
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is
+	append_type_and_value (st: TEXT_FORMATTER) is
 			-- Append type and value of Current to `st'.
 		do
 			st.add_string (display_tag)
@@ -100,7 +100,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 feature {NONE} -- Output
 
-	append_value (st: STRUCTURED_TEXT) is
+	append_value (st: TEXT_FORMATTER) is
 			-- Append only the value of Current to `st'.
 		do
 			st.add_string (display_tag)

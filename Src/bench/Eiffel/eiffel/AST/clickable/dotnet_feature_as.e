@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	format (fctxt: DOTNET_FEATURE_CONTEXT) is
+	format (fctxt: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR) is
 			-- Format current using `fctxt'.
 		require
 			fctxt_not_void: fctxt /= Void

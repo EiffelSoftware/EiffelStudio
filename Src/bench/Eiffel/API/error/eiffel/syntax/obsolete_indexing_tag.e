@@ -50,29 +50,29 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 		end
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
-			st.add (create {ERROR_TEXT}.make (Current, "Obsolete"))
-			st.add_string (" indexing tag used in class ")
+			a_text_formatter.add (create {ERROR_TEXT}.make (Current, "Obsolete"))
+			a_text_formatter.add (" indexing tag used in class ")
 				-- Error happened in a class
-			associated_class.append_signature (st, False)
-			st.add_string (" at line ")
-			st.add_string (location.line.out)
-			st.add_string (".")
-			st.add_new_line
-			st.add_string ("It uses obsolete indexing tag `")
-			st.add_string (old_tag)
-			st.add_string ("'.")
-			st.add_new_line
-			st.add_string ("Use new indexing tag `")
-			st.add_string (new_tag)
-			st.add_string ("' instead.")
-			st.add_new_line
+			associated_class.append_signature (a_text_formatter, False)
+			a_text_formatter.add (" at line ")
+			a_text_formatter.add (location.line.out)
+			a_text_formatter.add (".")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("It uses obsolete indexing tag `")
+			a_text_formatter.add (old_tag)
+			a_text_formatter.add ("'.")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Use new indexing tag `")
+			a_text_formatter.add (new_tag)
+			a_text_formatter.add ("' instead.")
+			a_text_formatter.add_new_line
 		end
 
 feature {NONE} -- Implementation

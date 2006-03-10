@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Command to display the senders of `current_feature'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_SHOW_CALLERS 
+class E_SHOW_CALLERS
 
 inherit
 
@@ -31,7 +31,7 @@ feature -- Status setting
 		do
 			to_show_all_callers := True
 		ensure
-			show_all_callers: to_show_all_callers	
+			show_all_callers: to_show_all_callers
 		end
 
 	set_flag (a_flag: INTEGER_8) is
@@ -67,11 +67,11 @@ feature -- Execution
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
 			table: HASH_TABLE [SORTED_LIST [STRING], INTEGER];
-			st: like structured_text;
+			st: like text_formatter;
 			invariant_name: STRING
 		do
 			invariant_name := "_invariant";
-			st := structured_text;
+			st := text_formatter;
 			clients := l_class.clients;
 			create table.make (20);
 			create classes.make;
@@ -91,7 +91,7 @@ feature -- Execution
 
 			if not classes.is_empty then
 				l_feat.append_name (st);
-				st.add_string (" from ");
+				st.add (" from ");
 				l_class.append_name (st);
 				st.add_new_line;
 				tabs := 0;
@@ -104,7 +104,7 @@ feature -- Execution
 			until
 				classes.after
 			loop
-				client := classes.item.compiled_class;	
+				client := classes.item.compiled_class;
 					-- Print out client name once.
 				add_tabs (st, tabs);
 				client.append_name (st);
@@ -118,7 +118,7 @@ feature -- Execution
 					cfeat := list.item;
 					add_tabs (st, tabs + 1);
 					if cfeat.is_equal (invariant_name) then
-						st.add_string ("invariant")
+						st.add ("invariant")
 					else
 						st.add_feature_name (cfeat, client)
 					end;
@@ -145,10 +145,10 @@ feature {NONE} -- Implementation
 			a_list: ARRAYED_LIST [CELL2 [CLASS_C,E_FEATURE]];
 			cell: CELL2 [CLASS_C,E_FEATURE];
 			rid: INTEGER;
-			st: like structured_text
+			st: like text_formatter
 		do
 			rid := current_feature.rout_id_set.item (1);
-			create descendants.make; 
+			create descendants.make;
 			record_descendants (descendants, current_class);
 			from
 				create a_list.make (descendants.count)
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 
 			from
 				a_list.start
-				st := structured_text
+				st := text_formatter
 			until
 				a_list.after
 			loop
@@ -190,19 +190,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

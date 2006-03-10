@@ -37,25 +37,25 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Names of classes involved in cycle:");
-			st.add_new_line;
+			a_text_formatter.add ("Names of classes involved in cycle:");
+			a_text_formatter.add_new_line;
 			from
 				involved_classes.start
 			until
 				involved_classes.after
 			loop
 				if not (involved_classes.item = involved_classes.first) then
-					st.add_string (", ");
+					a_text_formatter.add (", ");
 				end;
 				Eiffel_system.class_of_id (involved_classes.item)
-						.append_name (st);
+						.append_name (a_text_formatter);
 				involved_classes.forth;
 			end;
-			st.add_new_line;
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

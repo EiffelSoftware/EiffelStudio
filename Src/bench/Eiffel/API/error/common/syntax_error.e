@@ -80,53 +80,53 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		local
 			msg: STRING
 		do
 			msg := syntax_message
 			if not msg.is_empty then
-				st.add_string ("(")
-				st.add_string (msg)
-				st.add_string (")")
-				st.add_new_line
+				a_text_formatter.add ("(")
+				a_text_formatter.add (msg)
+				a_text_formatter.add (")")
+				a_text_formatter.add_new_line
 			end
 		end
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Debug purpose
 		do
 			initialize_output
-			st.add_string ("Syntax error at line ")
-			st.add_int (line)
+			a_text_formatter.add ("Syntax error at line ")
+			a_text_formatter.add_int (line)
 			if Lace.successful then
 					-- Error happened in a class
-				st.add_string (" in class ")
-				st.add_class_syntax (Current, System.current_class, 
+				a_text_formatter.add (" in class ")
+				a_text_formatter.add_class_syntax (Current, System.current_class, 
 						System.current_class.class_signature)
 				if error_message /= Void then
-					st.add_new_line
-					st.add_string (error_message)
-					st.add_new_line
+					a_text_formatter.add_new_line
+					a_text_formatter.add (error_message)
+					a_text_formatter.add_new_line
 				end
 			else
 				if not is_in_use_file then
-					st.add_ace_syntax (Current, " in Ace file")
+					a_text_formatter.add_ace_syntax (Current, " in Ace file")
 				else
 						-- Error happened while parsing a "use" file
-					st.add_string (" in Cluster_properties %"Use%" file")
+					a_text_formatter.add (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						st.add_new_line
-						st.add_string ("	 File: ")
-						st.add_string (file_name)
+						a_text_formatter.add_new_line
+						a_text_formatter.add ("	 File: ")
+						a_text_formatter.add (file_name)
 					end
 				end
 			end
-			st.add_new_line
-			build_explain (st)
-			display_line (st, previous_line)
-			display_syntax_line (st, current_line)
-			display_line (st, next_line)
+			a_text_formatter.add_new_line
+			build_explain (a_text_formatter)
+			display_line (a_text_formatter, previous_line)
+			display_syntax_line (a_text_formatter, current_line)
+			display_line (a_text_formatter, next_line)
 		end
 
 indexing

@@ -20,12 +20,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Anchor name: ")
-			st.add_string (argument_name)
-			st.add_new_line
-			Precursor {VTAT1} (st)
+			a_text_formatter.add ("Anchor name: ")
+			a_text_formatter.add (argument_name)
+			a_text_formatter.add_new_line
+			Precursor {VTAT1} (a_text_formatter)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

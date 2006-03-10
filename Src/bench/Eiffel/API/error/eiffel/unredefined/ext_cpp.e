@@ -33,11 +33,11 @@ feature -- Settings
 
 feature -- Error display
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Error message: ")
-			st.add_string (error_message)
-			st.add_new_line
+			a_text_formatter.add ("Error message: ")
+			a_text_formatter.add (error_message)
+			a_text_formatter.add_new_line
 		end
 
 indexing

@@ -13,20 +13,17 @@ class
 	CLICKABLE_TEXT
 
 inherit
-	STRUCTURED_TEXT_TRANSLATOR
+	EDITOR_TOKEN_WRITER
 		rename
 			make as make_translator,
-			last_line as last_processed_line,
-			after as structured_text_after,
-			start as structured_text_start,
-			process_text as load_structured_text
-		export
-			{NONE} all
-			{ANY} load_structured_text,
-				current_text, put_string, put_new_line,
-				put_char
+			last_line as last_processed_line
+		undefine
+			ev_application
 		redefine
-			load_structured_text, last_processed_line
+			last_processed_line,
+			process_new_line,
+			start_processing,
+			end_processing
 		end
 
 	EDITABLE_TEXT
@@ -64,7 +61,8 @@ feature {NONE} -- Initialization
 			Precursor {EDITABLE_TEXT}
 			make_translator
 			reading_text_finished := True
-			finish_reading_text_agent := agent finish_reading_text
+			eol_reached := false
+			new_line
 		end
 
 feature -- Access
@@ -72,35 +70,6 @@ feature -- Access
 	first_line: EIFFEL_EDITOR_LINE
 
 	cursor: EIFFEL_EDITOR_CURSOR
-
-	structured_text: STRUCTURED_TEXT is
-			-- Structured text that corresponds to `Current'
-		local
-			ln: like line
-			tok: EDITOR_TOKEN
-			visitor: EIFFEL_TOKEN_VISITOR
-		do
-			create Result.make
-			if not is_empty then
-				from
-					create visitor
-					ln ?= first_line
-				until
-					ln = Void
-				loop
-					from
-						tok := ln.first_token
-					until
-						tok = Void
-					loop
-						tok.process (visitor)
-						Result.extend (visitor.last_structured_text_item)
-						tok := tok.next
-					end
-					ln := ln.next
-				end
-			end
-		end
 
 feature -- Feature click tool
 
@@ -164,15 +133,38 @@ feature -- Compatibility
 			history.record_move
 		end
 
+feature {EB_CLICKABLE_EDITOR} -- Load Text handling
+
+	start_processing (append: BOOLEAN) is
+			-- Start processing text.
+		do
+			reading_text_finished := false
+		end
+
+	end_processing is
+			-- End processing text.
+		do
+			if first_line = Void then
+				last_processed_line.update_token_information
+				if number_of_lines = 0 then
+					append_line (last_processed_line)
+				end
+			else
+				ev_application.idle_actions.extend_kamikaze (agent end_processing_internal)
+			end
+			if number_of_lines <= first_read_block_size then
+				on_text_block_loaded (true)
+				line_read := 0
+			end
+		end
+
 feature -- Load Text handling
 
 	reset_text is
 			-- Actions to be performed before a new text is processed.
 		do
-			current_text := Void
-
-				-- First abort our previous actions.
 			Precursor {EDITABLE_TEXT}
+			new_line
 		end
 
 feature -- Initialization
@@ -183,20 +175,6 @@ feature -- Initialization
 		do
 			load_type := from_string
 			Precursor {EDITABLE_TEXT} (a_string)
-		end
-
-	load_structured_text (str_text: STRUCTURED_TEXT) is
-			-- scan `a_string' and fill the object with resulting
-			-- lines and tokens
-		require else
-			structured_text_not_void: str_text /= Void
-			text_has_been_reinitialized: is_empty
-		do
-			load_type := from_text
-			current_text := str_text
-			start_reading_text
-		ensure then
-			read_enough_lines: number_of_lines >= first_read_block_size or else reading_text_finished
 		end
 
 	select_line (l_num: INTEGER) is
@@ -217,76 +195,43 @@ feature -- Initialization
 			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.x_in_characters = 1
 		end
 
+feature -- Load Text handling
+
+	process_new_line is
+			-- When processing a new line, we see if we are going to process rest of lines on idle.
+		do
+			process_new_line_internal
+		end
+
 feature {NONE} -- Load Text handling
 
-	start_reading_text is
-			-- Read the text named `a_name' and perform a lexical analysis
+	process_new_line_internal is
+			-- Process new line.
 		do
-				-- reset the displayed text & display the drawing area.
-			from
-				structured_text_start
-			until
-				number_of_lines > first_read_block_size
-					or else structured_text_after
-			loop
-				process_line
+			line_read := line_read + 1
+			eol_reached := true
+			last_processed_line.update_token_information
+			if number_of_lines = 0 then
 				append_line (last_processed_line)
 			end
-
-			on_text_block_loaded (True)
-
-			if not structured_text_after then
-					-- the text has not been entirely loaded, so we will
-					-- finish loading the text on idle actions.
-				reading_text_finished := False
-				current_cursor := current_text.cursor
-			else
-				reading_text_finished := True
-				on_text_loaded
-			end
-			ev_application.idle_actions.extend (finish_reading_text_agent)
-		end
-
-	finish_reading_text is
-			-- Read the text named `a_name' and perform a lexical analysis
-		local
-			lines_read	: INTEGER
-		do
-			if not reading_text_finished then
-				current_text.go_to (current_cursor)
-				from
-					lines_read := 1
-				until
-					lines_read > Lines_read_per_idle_action or else structured_text_after
-				loop
-					process_line
-					append_line (last_processed_line)
-						-- prepare next iteration
-					lines_read := lines_read + 1
+			if cursor = Void then
+				create cursor.make_from_integer (1, Current)
+				if selection_cursor = Void then
+					set_selection_cursor (cursor)
 				end
-				on_text_block_loaded (False)
-
-				if structured_text_after then
-						-- We have finished reading the text, so we remove
-						-- ourself from the idle actions.
-					reading_text_finished := True
-					on_text_loaded
-					after_reading_idle_action
-				else
-					current_cursor := current_text.cursor
+			end
+			if number_of_lines > first_read_block_size then
+				on_text_block_loaded (True)
+				line_read := 0
+			else
+				if line_read > Lines_read_per_idle_action then
+					on_text_block_loaded (False)
+					line_read := 0
 				end
-			else
-				after_reading_idle_action
 			end
-		end
-
-	finish_reading is
-		do
-			if load_type = from_text then
-				finish_reading_text
-			else
-				finish_reading_string
-			end
+			new_line
+			append_line (last_processed_line)
+			eol_reached := false
 		end
 
 	on_text_loaded is
@@ -303,14 +248,12 @@ feature {NONE} -- Load Text handling
 			-- Stop text processing done during idle actions.
 		do
 			Precursor {EDITABLE_TEXT}
-			ev_application.idle_actions.prune_all (finish_reading_text_agent)
 		end
 
 	after_reading_idle_action is
 			-- action performed on idle when text reading is finished.
 		do
 			Precursor {EDITABLE_TEXT}
-			ev_application.idle_actions.prune_all (finish_reading_text_agent)
 		end
 
 	new_line_from_lexer (line_image: STRING): like line is
@@ -324,6 +267,18 @@ feature {NONE} -- Load Text handling
 			end
 		end
 
+	end_processing_internal is
+			-- For running on idle
+		do
+			if last_processed_line /= last_line then
+				append_line (last_processed_line)
+			end
+			on_text_block_loaded (number_of_lines <= first_read_block_size)
+			reading_text_finished := True
+			on_text_loaded
+			after_reading_idle_action
+		end
+
 feature {NONE} -- Implementation
 
 	use_feature_click_tool: BOOLEAN
@@ -333,7 +288,7 @@ feature {NONE} -- Implementation
 			-- Cursor pointing position where to resume current structured loading.
 
 	last_processed_line: like line
-			-- last line processed while reading a STRUCTURED_TEXT
+			-- last line processed while reading a TEXT_FORMATTER
 
 	editor_preferences: EB_EDITOR_DATA is
 			-- Eiffel editor preferences
@@ -349,6 +304,9 @@ feature {NONE} -- Private status
 	load_type: INTEGER
 			-- type of text source: file, string...
 
+	line_read: INTEGER
+			-- Lines read during loading a block
+
 feature {NONE} -- Private Constants
 
 	from_string: INTEGER is unique
@@ -361,19 +319,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

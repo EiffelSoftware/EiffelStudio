@@ -127,49 +127,48 @@ feature {NONE} -- Access
 
 feature -- Output
 
-	append_signature (st: STRUCTURED_TEXT; a_context_class: CLASS_C) is
-			-- Append the signature of current class in `st'
+	append_signature (a_text_formatter: TEXT_FORMATTER) is
+			-- Append the signature of current class in `a_text_formatter'
 			--| We do not produce the creation constraint clause since
 			--| it is useless in this case.
 		require
-			non_void_st: st /= Void
-			a_context_class_not_void: a_context_class /= Void
+			non_void_st: a_text_formatter /= Void
 		local
 			c_name: STRING
 			eiffel_name: STRING
 		do
 			if is_reference then
-				st.add (ti_reference_keyword)
-				st.add_space
+				a_text_formatter.process_keyword_text (ti_reference_keyword, Void)
+				a_text_formatter.add_space
 			elseif is_expanded then
-				st.add (ti_expanded_keyword)
-				st.add_space
+				a_text_formatter.process_keyword_text (ti_expanded_keyword, Void)
+				a_text_formatter.add_space
 			end
 			c_name := name.as_upper
-			st.add (create {GENERIC_TEXT}.make (c_name))
+			a_text_formatter.process_generic_text (c_name)
 			if has_constraint then
-				st.add_space
-				st.add (ti_Constraint)
-				st.add_space
-				st.add_string (constraint.dump)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (ti_Constraint)
+				a_text_formatter.add_space
+				a_text_formatter.add_string (constraint.dump)
 				if has_creation_constraint then
 					from
 						creation_feature_list.start
-						st.add_space
-						st.add (ti_Create_keyword)
+						a_text_formatter.add_space
+						a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
 					until
 						creation_feature_list.after
 					loop
-						st.add_space
+						a_text_formatter.add_space
 						eiffel_name := creation_feature_list.item.internal_name
-						st.add_string (eiffel_name)
+						a_text_formatter.add (eiffel_name)
 						creation_feature_list.forth
 						if not creation_feature_list.after then
-							st.add (ti_Comma)
+							a_text_formatter.process_symbol_text (ti_Comma)
 						end
 					end
-					st.add_space
-					st.add (ti_End_keyword)
+					a_text_formatter.add_space
+					a_text_formatter.process_keyword_text (ti_End_keyword, Void)
 				end
 			end
 		end

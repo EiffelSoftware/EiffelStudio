@@ -30,21 +30,21 @@ feature -- Properties
 
 feature -- Output
 
-	print_name (st: STRUCTURED_TEXT) is
+	print_name (a_text_formatter: TEXT_FORMATTER) is
 		do
 			if target_name /= Void then
-				st.add_string ("Creation of: ");
-				st.add_string (target_name);
-				st.add_new_line;
+				a_text_formatter.add ("Creation of: ");
+				a_text_formatter.add (target_name);
+				a_text_formatter.add_new_line;
 			end
-			st.add_string ("Target type: ");
-			type.append_to (st);
-			st.add_new_line;
+			a_text_formatter.add ("Target type: ");
+			type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			print_name (st)
+			print_name (a_text_formatter)
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

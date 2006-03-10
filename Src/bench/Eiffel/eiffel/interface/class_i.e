@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Internal representation of a class. Instance of CLASS_I represent%
 		%non-compiled classes, but instance of CLASS_C already compiled%
 		%classes."
@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	CLASS_I 
+	CLASS_I
 
 inherit
 	SHARED_OPTION_LEVEL
@@ -124,13 +124,13 @@ feature -- Status report
 			if compiled_class.is_precompiled then
 				Result := internal_namespace
 			else
-					-- We need to clone as the result maybe used for string operation and we do not 
+					-- We need to clone as the result maybe used for string operation and we do not
 					-- want it to change some internal data from Current.
 				l_namespace := namespace
 				if namespace /= Void then
 					l_namespace := l_namespace.twin
 				end
-				
+
 				if
 					not System.use_all_cluster_as_namespace and then
 					not System.use_cluster_as_namespace
@@ -138,9 +138,9 @@ feature -- Status report
 						-- Simply use given namespace if any.
 					Result := l_namespace
 				else
-						-- Now either one or both of `System.use_cluster_as_namespace' or 
+						-- Now either one or both of `System.use_cluster_as_namespace' or
 						-- `System.use_all_cluster_as_namespace' is True.
-						
+
 					if not System.use_all_cluster_as_namespace then
 							-- In this case, it means that `System.use_cluster_as_namespace' is True.
 						if l_namespace /= Void then
@@ -154,13 +154,13 @@ feature -- Status report
 						else
 							l_start_name := cluster.cluster_name
 						end
-					
+
 						check
 							l_start_name_exists:
 								cluster.cluster_name.substring (1, l_start_name.count).
 									is_equal (l_start_name)
 						end
-						
+
 						Result := cluster.cluster_name.twin
 
 						if l_namespace /= Void then
@@ -170,7 +170,7 @@ feature -- Status report
 						end
 					end
 				end
-				
+
 
 				if System.system_namespace /= Void then
 					if Result /= Void then
@@ -187,7 +187,7 @@ feature -- Status report
 				internal_namespace := Result
 			end
 		ensure
-			result_not_void: Result /= Void	
+			result_not_void: Result /= Void
 		end
 
 	name_in_upper: STRING is
@@ -252,7 +252,7 @@ feature -- Access
 			Result := compiled_class /= Void
 		ensure
 			is_compiled: Result implies compiled_class /= Void
-		end; 
+		end;
 
 	date_has_changed: BOOLEAN is
 		local
@@ -271,7 +271,7 @@ feature -- Access
 		end
 
 feature -- Setting
-		
+
 	set_name (s: like name) is
 			-- Assign `s' to `name'.
 		require
@@ -332,12 +332,12 @@ feature -- Comparison
 
 feature -- Output
 
-	append_name (st: STRUCTURED_TEXT) is
+	append_name (a_text_formatter: TEXT_FORMATTER) is
 			-- Append the name ot the current class in `a_clickable'
 		require
-			non_void_st: st /= Void
+			non_void_st: a_text_formatter /= Void
 		do
-			st.add_classi (Current, name) 
+			a_text_formatter.add_classi (Current, name)
 		end
 
 feature {COMPILER_EXPORTER} -- Properties
@@ -630,19 +630,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

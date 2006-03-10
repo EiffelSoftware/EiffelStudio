@@ -185,7 +185,7 @@ feature -- Element change
 
 feature -- Context output
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Reconstitute text
 		do
 			from

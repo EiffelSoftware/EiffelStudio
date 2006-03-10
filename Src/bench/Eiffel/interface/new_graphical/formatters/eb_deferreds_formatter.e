@@ -17,7 +17,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP] is
@@ -27,7 +27,7 @@ feature -- Properties
 			Result.put (Pixmaps.Icon_format_deferreds, 1)
 			Result.put (Pixmaps.Icon_format_deferreds, 2)
 		end
- 
+
 	class_cmd: E_SHOW_DEFERRED_ROUTINES
 			-- Class command that can generate the information.
 
@@ -36,7 +36,7 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showdeferreds
 		end
- 
+
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -61,12 +61,12 @@ feature {NONE} -- Implementation
 		require else
 			associated_class_non_void: associated_class /= Void
 		do
-			create class_cmd.make (associated_class)
+			create class_cmd.make (editor.text_displayed, associated_class)
 		end
 
 	has_breakpoints: BOOLEAN is False
 		-- Should `Current' display breakpoints?
-		
+
 	line_numbers_allowed: BOOLEAN is False;
 		-- Does it make sense to show line numbers in Current?
 
@@ -76,19 +76,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

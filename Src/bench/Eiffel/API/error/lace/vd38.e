@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
 		end;
 

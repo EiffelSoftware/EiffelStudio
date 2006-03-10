@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXPORT_SET_I 
+	EXPORT_SET_I
 
 inherit
 	EXPORT_I
@@ -92,10 +92,10 @@ feature -- Comparison
 				Result := first.less_restrictive_than (other_set.first)
 			end
 		end
-	
+
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT) is
+	append_to (st: TEXT_FORMATTER) is
 			-- Append a representation of `Current' to `st'.
 		local
 			ci: CLASS_I
@@ -109,7 +109,7 @@ feature -- Output
 			loop
 				cts := item.clients
 				if not (cts.count = 1 and then cts.first.is_equal ("ANY")) then
-					st.add_string (S_l_curly)
+					st.add (S_l_curly)
 					from
 						cts.start
 					until
@@ -123,14 +123,14 @@ feature -- Output
 						if ci /= Void then
 							st.add_class (ci)
 						else
-							st.add_string (cts.item)
+							st.add (cts.item)
 						end
 						cts.forth
 						if not cts.after then
-							st.add_string (", ")
+							st.add (", ")
 						end
 					end
-					st.add_string (S_r_curly)
+					st.add (S_r_curly)
 				end
 				forth
 			end
@@ -208,7 +208,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 	is_subset (other: EXPORT_I): BOOLEAN is
-			-- Is Current clients a subset or equal with  
+			-- Is Current clients a subset or equal with
 			-- `other' clients?
 		local
 			other_set: EXPORT_SET_I
@@ -256,9 +256,9 @@ feature {COMPILER_EXPORTER}
 				end
 			end
 		end
-	
+
 	clause (written_in: INTEGER): CLIENT_I is
-			-- Clause of attribute `written_in' 
+			-- Clause of attribute `written_in'
 		local
 			old_cursor: CURSOR
 		do
@@ -290,7 +290,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		do
 			from
 				start
@@ -298,9 +298,10 @@ feature {COMPILER_EXPORTER}
 				after
 			loop
 				if not (item.clients.count = 1 and then item.clients.first.is_equal ("any")) then
-					ctxt.put_text_item (Ti_l_curly)
+					ctxt.process_symbol_text (Ti_l_curly)
 					item.format (ctxt)
-					ctxt.put_text_item_without_tabs (Ti_r_curly)
+					ctxt.set_without_tabs
+					ctxt.process_symbol_text (Ti_r_curly)
 				end
 				forth
 			end
@@ -312,19 +313,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

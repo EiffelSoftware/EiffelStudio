@@ -23,11 +23,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Invalid language name: ");
-			st.add_string (language_name);
-			st.add_new_line
+			a_text_formatter.add ("Invalid language name: ");
+			a_text_formatter.add (language_name);
+			a_text_formatter.add_new_line
 		end;
 
 feature {LANG_GEN_SD} -- Setting

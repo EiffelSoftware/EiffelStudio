@@ -27,11 +27,11 @@ feature -- Properties
 
 feature {NONE} -- Output
 
-	display_line (st: STRUCTURED_TEXT; a_line: STRING) is
-			-- Display `a_line' in `st'. It translates `%T' accordingly to `st' specification
+	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
+			-- Display `a_line' in `a_text_formatter'. It translates `%T' accordingly to `a_text_formatter' specification
 			-- which is to call `add_indent'.
 		require
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 		local
 			i: INTEGER
 			nb: INTEGER
@@ -46,23 +46,23 @@ feature {NONE} -- Output
 					i := i + 1
 					c := a_line.item (i)
 					if c = '%T' then
-						st.add_string (" ")
-						st.add_string (" ")
-						st.add_string (" ")
-						st.add_string (" ")
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
+						a_text_formatter.add (" ")
 					else
-						st.add_string (c.out)
+						a_text_formatter.add (c.out)
 					end
 				end
-				st.add_new_line
+				a_text_formatter.add_new_line
 			end
 		end
 
-	display_syntax_line (st: STRUCTURED_TEXT; a_line: STRING) is
+	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
 			-- Display `a_line' which does like `display_line' but with an additional
 			-- arrowed line that points out to `column' where syntax issue is located.
 		require
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 			a_line_not_void: a_line /= Void
 		local
 			i, nb: INTEGER
@@ -77,37 +77,37 @@ feature {NONE} -- Output
 				i := i + 1
 				c := a_line.item (i)
 				if c = '%T' then
-					st.add_string (" ")
-					st.add_string (" ")
-					st.add_string (" ")
-					st.add_string (" ")
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
+					a_text_formatter.add (" ")
 					if i <= column then
 						nb_tab := nb_tab + 1
 					end
 				else
-					st.add_string (c.out)
+					a_text_formatter.add (c.out)
 				end
 			end
-			st.add_new_line
+			a_text_formatter.add_new_line
 			if column > 0 then
 				position := (column - 1) + 3 * nb_tab
 			else
 				position := 3 * nb_tab
 			end
 			if position = 0 then
-				st.add_string ("^---------------------------")
-				st.add_new_line
+				a_text_formatter.add ("^---------------------------")
+				a_text_formatter.add_new_line
 			else
 				from
 					i := 1
 				until
 					i > position
 				loop
-					st.add_string ("-")
+					a_text_formatter.add ("-")
 					i := i + 1
 				end
-				st.add_string ("^")
-				st.add_new_line
+				a_text_formatter.add ("^")
+				a_text_formatter.add_new_line
 			end
 		end
 

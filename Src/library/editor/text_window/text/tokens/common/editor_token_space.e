@@ -62,7 +62,15 @@ feature -- Width & Height
 			-- FIXME: take into account if invisible symbols are displayed or not to compute the correct width
 			width := get_substring_width (length)
 		end
-	
+
+feature -- Visitor
+
+	process (a_visitor: TOKEN_VISITOR) is
+			-- Visitor
+		do
+			a_visitor.process_editor_token_space (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER is
@@ -75,7 +83,7 @@ feature {NONE} -- Implementation
  				if panel.has_focus then
 	 				the_text_color := selected_text_color
 	 				the_background_color := selected_background_color
-	 			else	
+	 			else
 	 				the_text_color := text_color
 	 				the_background_color := focus_out_selected_background_color
  				end
@@ -87,8 +95,8 @@ feature {NONE} -- Implementation
  				-- Change the drawing style.
  			device.set_foreground_color(the_text_color)
  			device.set_font(font)
- 
-				-- Compute the width of the string. 
+
+				-- Compute the width of the string.
 			l_count := char_end - char_start + 1
  			Result := d_x + l_count * space_width
 
@@ -125,7 +133,7 @@ feature {NONE} -- Private Constants
 		once
 			Result := '·'
 		end
-	
+
 	alternate_image: STRING
 			-- String representation of what is displayed
 			-- when the "invisible" symbols (spaces, end of lines

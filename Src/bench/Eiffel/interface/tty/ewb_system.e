@@ -22,10 +22,13 @@ feature {NONE}
 	execute is
 		local
 			cmd: like associated_cmd
+			l_text_formatter: TEXT_FORMATTER
 		do
 			cmd := associated_cmd
+			l_text_formatter := cmd.text_formatter
+			cmd.set_text_formatter (output_window)
 			cmd.execute
-			output_window.put_string (cmd.structured_text.image)
+			cmd.set_text_formatter (l_text_formatter)
 			output_window.put_new_line
 		end
 
@@ -35,19 +38,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

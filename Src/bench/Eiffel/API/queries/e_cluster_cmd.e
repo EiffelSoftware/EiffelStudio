@@ -30,11 +30,11 @@ feature -- Initialization
 		require
 			valid_a_cluster_i: a_cluster /= Void
 		do
-			current_cluster := a_cluster	
-			create structured_text.make
+			current_cluster := a_cluster
+			create text_formatter.make
 		ensure
 			cluster_set: current_cluster = a_cluster
-			structured_text_exists: structured_text /= Void
+			text_formatter_exists: text_formatter /= Void
 		end
 
 feature -- Property
@@ -46,7 +46,7 @@ feature -- Property
 			-- Is the Current able to be executed?
 		do
 			Result := current_cluster /= Void and then
-				structured_text /= Void
+				text_formatter /= Void
 		ensure then
 			good_result: Result implies current_cluster /= Void
 		end
@@ -55,13 +55,13 @@ feature -- Execution
 
 	execute is
 			-- Execute the current command. Add a before and after
-			-- declaration to `structured_text'
+			-- declaration to `text_formatter'
 			-- and invoke `work'.
 		do
-			structured_text.add (ti_Before_cluster_declaration)
+			text_formatter.add (ti_Before_cluster_declaration)
 			work
-			structured_text.finish
-			structured_text.add (ti_After_cluster_declaration)
+			text_formatter.finish
+			text_formatter.add (ti_After_cluster_declaration)
 		end
 
 	work is
@@ -100,19 +100,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

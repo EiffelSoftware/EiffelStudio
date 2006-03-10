@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Abstract notion of command selected from feature batch menu"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class EWB_FEATURE 
+deferred class EWB_FEATURE
 
 inherit
 
@@ -16,7 +16,7 @@ inherit
 			make as filter_class_make,
 			execute as class_execute
 		redefine
-			loop_action, process_compiled_class, 
+			loop_action, process_compiled_class,
 			want_compiled_class
 		end;
 	EWB_FILTER_CLASS
@@ -124,14 +124,14 @@ feature {NONE} -- Implementation
 			filter: TEXT_FILTER
 		do
 			cmd := associated_cmd;
-			cmd.make (e_feature);
-			cmd.execute;
 			if filter_name /= Void and then not filter_name.is_empty then
 				create filter.make (filter_name);
-				filter.process_text (cmd.structured_text);
+				cmd.make (filter, e_feature);
+				cmd.execute;
 				output_window.put_string (filter.image)
 			else
-				output_window.put_string (cmd.structured_text.image)
+				cmd.make (output_window, e_feature);
+				cmd.execute;
 			end;
 			output_window.put_new_line
 		end
@@ -142,19 +142,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

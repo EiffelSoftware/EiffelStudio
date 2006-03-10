@@ -19,7 +19,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	
+
 	make (a_path: STRING) is
 			-- create warning with path to directory `a_path'
 		require
@@ -30,29 +30,29 @@ feature {NONE} -- Initialization
 		ensure
 			precompiled_path_set: a_path.is_equal (precompiled_path)
 		end
-		
+
 
 feature -- Properties
 
 	code: STRING is "VIOP"
 		-- Error code
-		
+
 	precompiled_path: STRING
 		-- Path to precompiled library
-		
+
 	file_name: STRING is
 			-- No associated file name
 		do
 		end
-	
+
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- No need for an error message.
 		do
-			st.add_string ("Precompiled Library: ")
-			st.add_string (precompiled_path)
-			st.add_new_line
+			a_text_formatter.add ("Precompiled Library: ")
+			a_text_formatter.add (precompiled_path)
+			a_text_formatter.add_new_line
 		end
 
 invariant
@@ -65,19 +65,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

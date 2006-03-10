@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class VDRD5 
+class VDRD5
 
 inherit
 	EIFFEL_ERROR
@@ -17,7 +17,7 @@ inherit
 		undefine
 			is_equal
 		end
-	
+
 feature -- Properties
 
 	redeclaration: E_FEATURE
@@ -38,30 +38,30 @@ feature -- Access
 				precursor_of_redeclaration /= Void
 		ensure then
 			valid_redeclaration: Result implies redeclaration /= Void
-			valid_precursor: Result implies precursor_of_redeclaration /= Void	
+			valid_precursor: Result implies precursor_of_redeclaration /= Void
 		end
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation image for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		local
 			r_class: CLASS_C
 			p_class: CLASS_C
 		do
 			r_class := redeclaration.written_class
 			p_class := precursor_of_redeclaration.written_class
-			st.add_string ("Redefined feature: ")
-			redeclaration.append_signature (st)
-			st.add_string (" From: ")
-			r_class.append_name (st)
-			st.add_new_line
-			st.add_string ("Precursor: ")
-			precursor_of_redeclaration.append_signature (st)
-			st.add_string (" From: ")
-			p_class.append_name (st)
-			st.add_new_line
+			a_text_formatter.add ("Redefined feature: ")
+			redeclaration.append_signature (a_text_formatter)
+			a_text_formatter.add (" From: ")
+			r_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Precursor: ")
+			precursor_of_redeclaration.append_signature (a_text_formatter)
+			a_text_formatter.add (" From: ")
+			p_class.append_name (a_text_formatter)
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}
@@ -69,7 +69,7 @@ feature {COMPILER_EXPORTER}
 	init (old_feature, new_feature: FEATURE_I) is
 			-- Initialization
         require
-            good_arguments: not (old_feature = Void or else 
+            good_arguments: not (old_feature = Void or else
 					new_feature = Void)
 		do
 			class_c := System.current_class
@@ -83,19 +83,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

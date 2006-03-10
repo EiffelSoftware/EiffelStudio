@@ -59,41 +59,41 @@ feature -- Access
 
 feature -- Output
 
-	trace (st: STRUCTURED_TEXT) is
+	trace (a_text_formatter: TEXT_FORMATTER) is
 			-- Output the error message.
 		do
-			print_error_message (st)
-			st.add_string ("Class: ")
-			class_c.append_signature (st, False)
-			st.add_new_line
+			print_error_message (a_text_formatter)
+			a_text_formatter.add ("Class: ")
+			class_c.append_signature (a_text_formatter, False)
+			a_text_formatter.add_new_line
 			if written_class /= Void then
-				st.add_string ("Source class: ")
-				written_class.append_signature (st, False)
-				st.add_new_line
+				a_text_formatter.add ("Source class: ")
+				written_class.append_signature (a_text_formatter, False)
+				a_text_formatter.add_new_line
 			end
-			st.add_string ("Feature: ")
+			a_text_formatter.add ("Feature: ")
 			if line > 0 then
 				if e_feature /= Void then
-					st.add_feature_error (e_feature, e_feature.name, line)
+					a_text_formatter.add_feature_error (e_feature, e_feature.name, line)
 				elseif feature_name /= Void then
-					st.add_feature_error (e_feature, feature_name, line)
+					a_text_formatter.add_feature_error (e_feature, feature_name, line)
 				else
-					st.add_string ("invariant")
+					a_text_formatter.add ("invariant")
 				end
 			elseif e_feature /= Void then
-				e_feature.append_name (st)
+				e_feature.append_name (a_text_formatter)
 			elseif feature_name /= Void then
-				st.add_string (feature_name)
+				a_text_formatter.add (feature_name)
 			else
-				st.add_string ("invariant")
+				a_text_formatter.add ("invariant")
 			end
-			st.add_new_line
-			build_explain (st)
+			a_text_formatter.add_new_line
+			build_explain (a_text_formatter)
 			if line > 0 then
 				if written_class = Void then
-					print_context_of_error (class_c, st)
+					print_context_of_error (class_c, a_text_formatter)
 				else
-					print_context_of_error (written_class, st)
+					print_context_of_error (written_class, a_text_formatter)
 				end
 			end
 		end

@@ -18,14 +18,6 @@ inherit
 create
 	make
 
-feature -- Visitor
-
-	process (a_token_visitor: TOKEN_VISITOR) is
-			--  Process
-		do
-			a_token_visitor.process_tabulation_token (image)
-		end
-
 feature -- Initialisation
 
 	make (number: INTEGER) is
@@ -92,6 +84,14 @@ feature -- Width & Height
 			end
 		end
 
+feature -- Visitor
+
+	process (a_visitor: TOKEN_VISITOR) is
+			-- Visitor
+		do
+			a_visitor.process_editor_token_tabulation (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
@@ -107,13 +107,13 @@ feature {NONE} -- Implementation
  				-- Initialisations
  			view_tabulation_symbol := panel.view_invisible_symbols
  			local_position := d_x
- 
+
  				-- Select the drawing style we will use.
  			if selected then
  				if panel.has_focus then
 	 				the_text_color := selected_text_color
 	 				the_background_color := selected_background_color
-	 			else	
+	 			else
 	 				the_text_color := text_color
 	 				the_background_color := focus_out_selected_background_color
  				end
@@ -121,14 +121,14 @@ feature {NONE} -- Implementation
  				the_text_color := text_color
  				the_background_color := background_color
  			end
- 
+
  				-- Backup drawing style & set the new one
  			device.set_font (font)
  			device.set_foreground_color (the_text_color)
 			if the_background_color /= Void then
 				device.set_background_color (the_background_color)
 			end
- 
+
  				-- Display the first tabulation
  			from
  				i := start_tab
@@ -141,26 +141,26 @@ feature {NONE} -- Implementation
  				else
  					local_width := tabulation_width
  				end
- 			
+
  					-- Compute the position of the tabulation symbol
  				if view_tabulation_symbol then
  					symbol_position := local_position + ( local_width - tabulation_symbol_width ) // 2
  				end
- 
+
  					-- Fill the rectangle occupied by the tabulation
 				if the_background_color /= Void then
 	 				device.clear_rectangle(local_position, d_y, local_width, height)
 				end
- 
+
  					-- Display the tabulation symbol
  				if view_tabulation_symbol then
  					draw_text_top_left (symbol_position, d_y, tabulation_symbol, device)
  				end
- 
+
  					-- update the local position & prepare next iteration
  				local_position := local_position + local_width
  				i := i + 1
- 				
+
  				Result := local_position
  			end
 		end

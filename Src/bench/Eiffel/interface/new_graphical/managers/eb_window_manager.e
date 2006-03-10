@@ -1170,16 +1170,6 @@ feature {NONE} -- Implementation
 					conv_dev.file_name /= Void and then
 					conv_dev.changed
 				then
-					debug ("EDITOR")
-						if not conv_dev.editor_tool.text_area.is_editable then
-							io.error.put_string ("An uneditable editor has changed!%N")
-							io.error.put_string ("Please report this error to ISE.%N")
-						end
-						if conv_dev.editor_tool.text_area.current_text /= Void then
-							io.error.put_string ("A structured text has changed!%N")
-							io.error.put_string ("Please report this error to ISE.%N")
-						end
-					end
 					tmp_name := conv_dev.file_name.twin
 					tmp_name.add_extension ("swp")
 					create tmp_file.make (tmp_name)

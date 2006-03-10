@@ -22,11 +22,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("File: ");
-			st.add_string (path);
-			st.add_new_line;
+			a_text_formatter.add ("File: ");
+			a_text_formatter.add (path);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {REMOTE_PROJECT_DIRECTORY} -- Setting

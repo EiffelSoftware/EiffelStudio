@@ -358,7 +358,7 @@ feature -- Removal
 
 feature -- Output
 
-	format_categories (ctxt: FORMAT_CONTEXT) is
+	format_categories (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format categories into `ctxt'.
 		require
 			valid_ctxt: ctxt /= Void
@@ -380,7 +380,7 @@ feature -- Output
 			end;
 		end;
 
-	format_invariants (ctxt: FORMAT_CONTEXT) is
+	format_invariants (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format the invariants.
 		require
 			valid_ctxt: ctxt /= Void
@@ -401,65 +401,27 @@ feature {NONE} -- Implementation
 			vd21: VD21;
 			class_id: INTEGER
 		do
-				-- If associated file text is not present, then we use the one we have stored,
-				-- instead of generating a useless VD21 error.
-			if
-				current_class.is_precompiled
-				or else not (current_class.lace_class.exists and then current_class.lace_class.date_has_changed)
-			then
 debug ("FLAT_SHORT")
-	io.error.put_string ("Retrieving class ast: ");
-	io.error.put_string (current_class.name);
-	io.error.put_new_line;
+io.error.put_string ("Retrieving class ast: ");
+io.error.put_string (current_class.name);
+io.error.put_new_line;
 end;
-				class_id := current_class.class_id
+			class_id := current_class.class_id
 
-				if Tmp_feat_tbl_server.has (class_id) then
-					current_feature_table := Tmp_feat_tbl_server.item (class_id)
-				elseif Feat_tbl_server.server_has (class_id) then
-					current_feature_table := Feat_tbl_server.server_item (class_id)
-				else
-					create current_feature_table.make (0);
-					current_feature_table.init_origin_table
-				end;
-
-				if Tmp_ast_server.has (class_id) then
-					Result := Tmp_ast_server.item (class_id)
-				else
-					Result := Ast_server.item (class_id)
-				end
+			if Tmp_feat_tbl_server.has (class_id) then
+				current_feature_table := Tmp_feat_tbl_server.item (class_id)
+			elseif Feat_tbl_server.server_has (class_id) then
+				current_feature_table := Feat_tbl_server.server_item (class_id)
 			else
-debug ("FLAT_SHORT")
-	io.error.put_string ("Reparsing class ast: ");
-	io.error.put_string (current_class.name);
-	io.error.put_new_line;
-end;
-				class_file_name := current_class.file_name;
-				create file.make (class_file_name);
-				file.open_read
-				if not file.is_open_read then
-					create vd21;
-					vd21.set_cluster (current_class.cluster);
-					vd21.set_file_name (current_class.file_name);
-					Error_handler.insert_error (vd21);
-					Error_handler.raise_error;
-				else
-					parser := Eiffel_parser
-					parser.set_has_syntax_warning (False)
-					parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
-					parser.set_has_old_verbatim_strings_warning (False)
-					parser.parse (file)
-					Result := parser.root_node
-					file.close
-				end
-			end
-		rescue
-			if Rescue_status.is_error_exception then
-					-- Error happened
-				if not (file = Void or else file.is_closed) then
-					file.close;
-				end;
+				create current_feature_table.make (0);
+				current_feature_table.init_origin_table
 			end;
+
+			if Tmp_ast_server.has (class_id) then
+				Result := Tmp_ast_server.item (class_id)
+			else
+				Result := Ast_server.item (class_id)
+			end
 		end;
 
 	search_comment (comment: EIFFEL_COMMENTS) is

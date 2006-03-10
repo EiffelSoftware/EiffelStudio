@@ -108,7 +108,6 @@ feature -- Basic operations
 		local
 			profiler_query: PROFILER_QUERY
 			profiler_options: PROFILER_OPTIONS
-			st: STRUCTURED_TEXT
 			executer: E_SHOW_PROFILE_QUERY
 			retried: BOOLEAN
 		do
@@ -127,7 +126,6 @@ feature -- Basic operations
 					profiler_options.set_filenames (filenames.twin)
 					profiler_options.set_language_names (language_names.twin)
 
-					create st.make
 					create executer.make_simple (profiler_query, profiler_options)
 					executer.execute
 					show_new_window (profiler_query, profiler_options, executer.last_output)
@@ -310,19 +308,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

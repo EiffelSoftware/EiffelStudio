@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Command to display ancestores of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class E_SHOW_ANCESTORS 
+class E_SHOW_ANCESTORS
 
 inherit
 
@@ -22,9 +22,9 @@ feature -- Execution
 	work is
 		do
 			create displayed.make;
-			current_class.append_signature (structured_text, True);
-			structured_text.add_new_line;
-			rec_display (1, current_class, structured_text);
+			current_class.append_signature (text_formatter, True);
+			text_formatter.add_new_line;
+			rec_display (1, current_class, text_formatter);
 			displayed := Void;
 		end;
 
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	rec_display (i: INTEGER; c: CLASS_C; st: STRUCTURED_TEXT) is
+	rec_display (i: INTEGER; c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
 			-- Display parents of `c' in tree form.
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
@@ -64,20 +64,20 @@ feature {NONE} -- Implementation
 						parents.after
 					loop
 						parent_class := parents.item.associated_class;
-						add_tabs (st, i);
-						parent_class.append_signature (st, True);
+						add_tabs (a_text_formatter, i);
+						parent_class.append_signature (a_text_formatter, True);
 						if
 							already_processed (parents.item) and then
 							parent_class.class_id /= any_id
 						then
-							st.add_string ("...");
-							st.add_new_line;
-						else	
-							st.add_new_line;
+							a_text_formatter.add ("...");
+							a_text_formatter.add_new_line;
+						else
+							a_text_formatter.add_new_line;
 							displayed.extend (parents.item);
 							displayed.finish
-							rec_display (i+1, parent_class, st);
-						end;			
+							rec_display (i + 1, parent_class, a_text_formatter);
+						end;
 						parents.forth
 					end
 				end
@@ -90,19 +90,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

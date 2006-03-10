@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			current_object := Void
 		end
 
-	text: STRUCTURED_TEXT
+	text: TEXT_FORMATTER
 			-- Text that is displayed in the editor.
 
 	parent: EB_PRETTY_PRINT_CMD

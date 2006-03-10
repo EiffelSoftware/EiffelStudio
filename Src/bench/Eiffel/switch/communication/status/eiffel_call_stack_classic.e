@@ -59,33 +59,30 @@ feature -- Properties
 
 feature -- Output
 
-	display_stack (st: STRUCTURED_TEXT) is
-			-- Display callstack in `st'.
+	display_stack (text_formatter: TEXT_FORMATTER) is
+			-- Display callstack in `text_formatter'.
 		local
 			stack_num, i: INTEGER
-			cs: CALL_STACK_ITEM
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Displaying stack %N"); end
-			st.add_new_line;
-			st.add_string ("Call stack:");
-			st.add_new_line;
-			st.add_new_line;
-			create cs.do_nothing; -- For padding
-			st.add (cs);
-			st.add_string ("Object");
-			st.add_column_number (14);
-			st.add_string ("Class");
-			st.add_column_number (26);
-			st.add_string ("Routine");
-			st.add_new_line;
-			create cs.do_nothing; -- For padding
-			st.add (cs);
-			st.add_string ("------");
-			st.add_column_number (14);
-			st.add_string ("-----");
-			st.add_column_number (26);
-			st.add_string ("-------");
-			st.add_new_line;
+			text_formatter.add_new_line;
+			text_formatter.add_string ("Call stack:");
+			text_formatter.add_new_line;
+			text_formatter.add_new_line;
+			text_formatter.process_call_stack_item (0, false) -- For padding
+			text_formatter.add_string ("Object");
+			text_formatter.add_column_number (14);
+			text_formatter.add_string ("Class");
+			text_formatter.add_column_number (26);
+			text_formatter.add_string ("Routine");
+			text_formatter.add_new_line;
+			text_formatter.process_call_stack_item (0, false) -- For padding
+			text_formatter.add_string ("------");
+			text_formatter.add_column_number (14);
+			text_formatter.add_string ("-----");
+			text_formatter.add_column_number (26);
+			text_formatter.add_string ("-------");
+			text_formatter.add_new_line;
 
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": getting stack number %N"); end
 			stack_num := Application.current_execution_stack_number;
@@ -98,17 +95,16 @@ feature -- Output
 				after
 			loop
 				if i = stack_num then
-					create cs.make_selected (i);
+					text_formatter.process_call_stack_item (i, true)
 				else
-					create cs.make (i);
+					text_formatter.process_call_stack_item (i, false)
 				end;
-				st.add (cs)
-				item.display_feature (st);
-				st.add_new_line;
+				item.display_feature (text_formatter);
+				text_formatter.add_new_line;
 				forth;
 				i := i + 1;
 			end;
-			st.add_new_line
+			text_formatter.add_new_line
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": end displaying call stack %N"); end
 		end;
 

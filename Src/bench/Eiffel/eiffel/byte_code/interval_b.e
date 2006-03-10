@@ -143,11 +143,11 @@ feature -- Modification
 
 feature -- Output
 
-	display (st: STRUCTURED_TEXT) is
+	display (a_text_formatter: TEXT_FORMATTER) is
 		do
-			lower.display (st)
-			st.add_string ("..")
-			upper.display (st)
+			lower.display (a_text_formatter)
+			a_text_formatter.add_string ("..")
+			upper.display (a_text_formatter)
 		end
 
 feature -- C code generation

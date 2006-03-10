@@ -73,12 +73,12 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; f: E_FEATURE) is
 			-- Append Current type to `st'.
 		do
-			st.add (ti_Bit_class)
-			st.add_space
-			st.add_string (symbol)
+			a_text_formatter.add (ti_Bit_class)
+			a_text_formatter.add_space
+			a_text_formatter.add_string (symbol)
 		end
 
 	dump: STRING is

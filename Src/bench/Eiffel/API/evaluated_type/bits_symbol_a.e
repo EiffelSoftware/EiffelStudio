@@ -93,11 +93,11 @@ feature -- Output
 			Result.append (names_heap.item (feature_name_id))
 		end
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
 			st.add (ti_Bit_class)
 			st.add_space
-			st.add_string (names_heap.item (feature_name_id))
+			st.add (names_heap.item (feature_name_id))
 		end
 
 indexing

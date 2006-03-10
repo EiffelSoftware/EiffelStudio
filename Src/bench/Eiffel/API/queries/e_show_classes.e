@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command to display list of the classes in the%
 		%universe, in alphabetical order."
 	legal: "See notice at end of class."
@@ -32,17 +32,17 @@ feature -- Execution
 			clusters := Eiffel_universe.clusters;
 			if not clusters.is_empty then
 				create sorted_classes.make;
-				from 
-					clusters.start 
-				until 
-					clusters.after 
+				from
+					clusters.start
+				until
+					clusters.after
 				loop
 					cursor := clusters.cursor;
 					classes := clusters.item.classes;
-					from 
-						classes.start 
-					until 
-						classes.after 
+					from
+						classes.start
+					until
+						classes.after
 					loop
 						sorted_classes.put_front (classes.item_for_iteration);
 						classes.forth
@@ -51,23 +51,23 @@ feature -- Execution
 					clusters.forth
 				end;
 				sorted_classes.sort;
-				from 
-					sorted_classes.start 
-				until 
-					sorted_classes.after 
+				from
+					sorted_classes.start
+				until
+					sorted_classes.after
 				loop
 					a_classi := sorted_classes.item;
 					a_classe := a_classi.compiled_class;
 					if a_classe /= Void then
-						a_classe.append_signature (structured_text, True)
+						a_classe.append_signature (text_formatter, True)
 					else
-						a_classi.append_name (structured_text)
+						a_classi.append_name (text_formatter)
 					end;
-					structured_text.add_new_line;
-					structured_text.add_indent;
-					structured_text.add_string ("-- Cluster: ");
-					structured_text.add_cluster (a_classi.cluster, a_classi.cluster.cluster_name);
-					structured_text.add_new_line;
+					text_formatter.add_new_line;
+					text_formatter.add_indent;
+					text_formatter.add ("-- Cluster: ");
+					text_formatter.add_cluster (a_classi.cluster, a_classi.cluster.cluster_name);
+					text_formatter.add_new_line;
 					sorted_classes.forth
 				end
 			end
@@ -79,19 +79,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

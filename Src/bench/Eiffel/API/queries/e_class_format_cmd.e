@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Abstract description for a class format command which%
 		%displays features of `current_class' that follow `criterium'."
 	legal: "See notice at end of class."
@@ -17,14 +17,14 @@ inherit
 
 feature -- Access
 
-	criterium (f: E_FEATURE): BOOLEAN is 
+	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		require
 			f_not_void: f /= Void
-		deferred 
+		deferred
 		end;
 
-	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
+	display_feature (f: E_FEATURE; st: TEXT_FORMATTER) is
 			-- Display feature `f' defined in class `c'
 			-- to `st'.
 		require
@@ -52,7 +52,7 @@ feature -- Execution
 		do
 			c := current_class;
 			feature_table := c.api_feature_table;
-			
+
 			-- Group the features in terms of their origin.
 			from
 				create table.make (20);
@@ -84,12 +84,12 @@ feature -- Execution
 			until
 				classes.after
 			loop
-				structured_text.add_string ("Class ");
+				text_formatter.add ("Class ");
 				e_class := classes.item;
-				e_class.append_signature (structured_text, True);
-				structured_text.add_string (":");
-				structured_text.add_new_line;
-				structured_text.add_new_line;
+				e_class.append_signature (text_formatter, True);
+				text_formatter.add (":");
+				text_formatter.add_new_line;
+				text_formatter.add_new_line;
 				list := table.item (e_class.class_id);
 				list.sort;
 				from
@@ -98,12 +98,12 @@ feature -- Execution
 					list.after
 				loop
 					e_feature := list.item;
-					structured_text.add_indent;
-					display_feature (e_feature, structured_text);
-					structured_text.add_new_line;
+					text_formatter.add_indent;
+					display_feature (e_feature, text_formatter);
+					text_formatter.add_new_line;
 					list.forth
 				end;
-				structured_text.add_new_line;
+				text_formatter.add_new_line;
 				classes.forth
 			end
 		end
@@ -121,19 +121,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

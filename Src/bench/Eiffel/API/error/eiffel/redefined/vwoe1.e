@@ -40,16 +40,16 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_string ("Formal type: ");
-			formal_type.append_to (st);
-			st.add_new_line;
-			st.add_string ("Actual type: ");
-			actual_type.append_to (st);
-			st.add_new_line;
+			a_text_formatter.add ("Formal type: ");
+			formal_type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Actual type: ");
+			actual_type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

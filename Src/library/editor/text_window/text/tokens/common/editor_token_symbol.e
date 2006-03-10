@@ -11,11 +11,20 @@ class
 
 inherit
 	EDITOR_TOKEN_TEXT
+		redefine
+			process
+		end
 
 create
 	make
 
-feature -- Miscellaneous
+feature -- Visitor
+
+	process (a_token_visitor: TOKEN_VISITOR) is
+			--  Process
+		do
+			a_token_visitor.process_editor_token_symbol (Current)
+		end
 
 feature {NONE} -- Implementation
 	

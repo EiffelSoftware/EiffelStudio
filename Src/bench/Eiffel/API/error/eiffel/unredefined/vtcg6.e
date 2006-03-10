@@ -40,30 +40,30 @@ feature -- Status report
 feature -- Output
 
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 			-- Build specific explanation explain for current error
-			-- in `st'.
+			-- in `a_text_formatter'.
 		do
-			st.add_new_line
-			st.add_string ("Error: feature ")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Error: feature ")
 			if constraint_class /= Void then
-				st.add_feature_name (feature_name, constraint_class)
+				a_text_formatter.add_feature_name (feature_name, constraint_class)
 			else
-				st.add_char ('`')
-				st.add_string (feature_name)
-				st.add_char ('%'')
+				a_text_formatter.add_char ('`')
+				a_text_formatter.add (feature_name)
+				a_text_formatter.add_char ('%'')
 			end
-			st.add_string (" from ")
+			a_text_formatter.add (" from ")
 			if constraint_class /= Void then
-				constraint_class.append_signature (st, False)
+				constraint_class.append_signature (a_text_formatter, False)
 			else
 				check
 					constraint_type_not_void: constraint_type /= Void
 				end
-				constraint_type.append_to (st)
+				constraint_type.append_to (a_text_formatter)
 			end
-			st.add_string (" cannot be used for creation.")
-			st.add_new_line
+			a_text_formatter.add (" cannot be used for creation.")
+			a_text_formatter.add_new_line
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

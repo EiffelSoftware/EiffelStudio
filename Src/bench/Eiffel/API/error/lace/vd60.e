@@ -45,14 +45,14 @@ feature {NONE} -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Assembly: ")
-			st.add_string (assembly.cluster_name)
-			st.add_new_line
-			st.add_string ("Referred assembly: ")
-			st.add_string (referred_assembly.out)
-			st.add_new_line
+			a_text_formatter.add ("Assembly: ")
+			a_text_formatter.add (assembly.cluster_name)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Referred assembly: ")
+			a_text_formatter.add (referred_assembly.out)
+			a_text_formatter.add_new_line
 		end
 
 invariant

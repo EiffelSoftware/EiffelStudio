@@ -5,27 +5,78 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EIFFEL_TOKEN_VISITOR
 
 inherit
 	TOKEN_VISITOR
-	
-feature -- Visitor
 
-	process_reserved_word_token (image: STRING) is
-		do
-			last_structured_text_item := create {RESERVED_WORD_TEXT}.make (image)
-		end
-	
-	process_local_token (image: STRING) is
-		do
-			last_structured_text_item := create {LOCAL_TEXT}.make (image)
+feature -- Visit
+
+	process_editor_token_breakpoint (a_tok: EDITOR_TOKEN_BREAKPOINT) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
-	process_generic_token (image: STRING) is
-		do
-			last_structured_text_item := create {GENERIC_TEXT}.make (image)
+	process_editor_token_class (a_tok: EDITOR_TOKEN_CLASS) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_cluster (a_tok: EDITOR_TOKEN_CLUSTER) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_error_code (a_tok: EDITOR_TOKEN_ERROR_CODE) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_feature (a_tok: EDITOR_TOKEN_FEATURE) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_feature_start (a_tok: EDITOR_TOKEN_FEATURE_START) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_object (a_tok: EDITOR_TOKEN_OBJECT) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_generic (a_tok: EDITOR_TOKEN_GENERIC) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_local (a_tok: EDITOR_TOKEN_LOCAL) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_reserved (a_tok: EDITOR_TOKEN_RESERVED) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
+		end
+
+	process_editor_token_tag (a_tok: EDITOR_TOKEN_TAG) is
+		require
+			a_tok_not_void: a_tok /= Void
+		deferred
 		end
 
 indexing
@@ -34,19 +85,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

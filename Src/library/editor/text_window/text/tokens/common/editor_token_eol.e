@@ -32,9 +32,9 @@ feature -- Initialisation
 feature -- Display
 
 	width: INTEGER is
-		do		
+		do
 		end
-	
+
 	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
@@ -55,7 +55,7 @@ feature -- Display
 		do
 			-- Do nothing.
 		end
-		
+
 	display_with_offset (x_offset, d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		local
@@ -96,13 +96,13 @@ feature -- Width & height
 		do
 			Result := 1
 		end
-		
+
 feature -- Visitor
 
 	process (a_visitor: TOKEN_VISITOR) is
 			--
 		do
-			a_visitor.process_eol_token (image)
+			a_visitor.process_editor_token_eol (Current)
 		end
 
 feature {NONE} -- Private Constants
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	 				-- Fill the end of the line with the specified background brush.
 				a_device.set_background_color(editor_preferences.normal_background_color)
  				a_device.clear_rectangle(position, d_y, a_width, d_y + height)
- 
+
 			end
 
  				-- Display the ¶ only if the option is set.
@@ -149,14 +149,14 @@ feature {NONE} -- Implementation
  					-- Backup old drawing style and set the new one.
  				a_device.set_foreground_color(the_text_color)
  				a_device.set_font(font)
- 
+
  					-- Display the text.
  				draw_text_top_left (position, d_y, eol_symbol, a_device)
  			end
 		end
 
 feature {NONE} -- Implementation
-	
+
 	text_color: EV_COLOR is
 		do
 			Result := editor_preferences.spaces_text_color

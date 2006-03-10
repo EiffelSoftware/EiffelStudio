@@ -176,7 +176,6 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-
 	is_named_tuple: BOOLEAN is
 			-- Is the current type a tuple with labels?
 		do
@@ -346,10 +345,10 @@ feature -- Access
 
 feature -- Output
 
-	frozen append_to (structured_text: STRUCTURED_TEXT) is
+	frozen append_to (a_text_formatter: TEXT_FORMATTER) is
 			-- Append `Current' to `text'.
 		do
-			ext_append_to (structured_text, Void)
+			ext_append_to (a_text_formatter, Void)
 		end
 
 	dump: STRING is
@@ -357,13 +356,13 @@ feature -- Output
 		deferred
 		end
 
-	ext_append_to (structured_text: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; f: E_FEATURE) is
 			-- Append `Current' to `text'.
 			-- `f' is used to retreive the generic type or argument name as string.
 			-- This replaces the old "G#2" or "arg#1" texts in feature signature views.
 			-- Actually used in FORMAL_A and LIKE_ARGUMENT.
 		require
-			structured_text_not_void: structured_text /= Void
+			a_text_formatter_not_void: a_text_formatter /= Void
 		deferred
 		end
 
@@ -622,10 +621,10 @@ feature {COMPILER_EXPORTER} -- Access
 
 feature {COMPILER_EXPORTER}
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Reconstitute text
 		do
-			ctxt.put_string (dump)
+			ctxt.process_string_text (dump, Void)
 		end
 
 feature {NONE} -- Implementation

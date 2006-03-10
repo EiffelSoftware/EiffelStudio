@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Item that represents an indentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class INDENT_TEXT 
+class INDENT_TEXT
 
 inherit
 
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			create Result.make (indent_depth);
-			from 
+			from
 				i := 1
 			until
 				i > indent_depth
@@ -61,7 +61,7 @@ feature {TEXT_FORMATTER} -- Implementation
 	append_to (text: TEXT_FORMATTER) is
 			-- Append Current indentation to `text'.
 		do
-			text.process_indentation (Current)
+			text.process_indentation (indent_depth)
 		end
 
 indexing

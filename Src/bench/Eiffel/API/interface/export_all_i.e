@@ -42,7 +42,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT) is
+	append_to (st: TEXT_FORMATTER) is
 			-- Append a representation of `Current' to `st'.
 		do
 			
@@ -86,7 +86,7 @@ feature {COMPILER_EXPORTER}
 			io.error.put_string ("ALL")
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		do
 		end
 

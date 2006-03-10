@@ -27,14 +27,14 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Precompiled path: ");
-			st.add_string (path);
-			st.add_new_line;
-			st.add_string ("Unknown cluster name: ");
-			st.add_string (cluster_name);
-			st.add_new_line
+			a_text_formatter.add ("Precompiled path: ");
+			a_text_formatter.add (path);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Unknown cluster name: ");
+			a_text_formatter.add (cluster_name);
+			a_text_formatter.add_new_line
 		end;
 
 feature {D_PRECOMPILED_SD} -- Setting

@@ -45,18 +45,18 @@ feature {NONE} -- Properties
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Assembly cluster name: ")
-			st.add_string (assembly.cluster_name)
-			st.add_new_line
-			st.add_string ("Assembly details: %"")
-			assembly.format (st)
-			st.add_string ("%"")
-			st.add_new_line
-			st.add_string ("Missing file: ")
-			st.add_string (external_class.file_name)
-			st.add_new_line
+			a_text_formatter.add ("Assembly cluster name: ")
+			a_text_formatter.add (assembly.cluster_name)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Assembly details: %"")
+			assembly.format (a_text_formatter)
+			a_text_formatter.add ("%"")
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Missing file: ")
+			a_text_formatter.add (external_class.file_name)
+			a_text_formatter.add_new_line
 		end
 
 invariant

@@ -7,7 +7,7 @@ indexing
 
 
 class
-	E_SHOW_ROUTINE_FLAT 
+	E_SHOW_ROUTINE_FLAT
 
 inherit
 	E_FEATURE_CMD
@@ -33,8 +33,7 @@ feature -- Execution
 			ctxt.set_clickable
 				--| Show the flat format, that's why we are passing `False'
 				--| as parameter to the `format' feature
-			ctxt.format (current_feature, False);
-			structured_text := ctxt.text
+			ctxt.format (current_feature, False, text_formatter);
 		end;
 
 indexing
@@ -43,19 +42,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

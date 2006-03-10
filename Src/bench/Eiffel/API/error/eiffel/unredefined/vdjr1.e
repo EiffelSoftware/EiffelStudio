@@ -26,22 +26,22 @@ feature -- Properties
 
 feature -- Output
 
-	print_types (st: STRUCTURED_TEXT) is
+	print_types (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("First type: ");
-			old_type.append_to (st);
-			st.add_new_line;
-			st.add_string ("Second type: ");
-			type.append_to (st);
-			st.add_new_line;
+			a_text_formatter.add ("First type: ");
+			old_type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
+			a_text_formatter.add ("Second type: ");
+			type.append_to (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Result types are different");
-			st.add_new_line;
-			print_types (st);
-			print_signatures (st);
+			a_text_formatter.add ("Result types are different");
+			a_text_formatter.add_new_line;
+			print_types (a_text_formatter);
+			print_signatures (a_text_formatter);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

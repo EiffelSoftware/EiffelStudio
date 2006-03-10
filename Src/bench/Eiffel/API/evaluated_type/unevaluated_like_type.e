@@ -92,12 +92,12 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
+	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 			-- Append Current type to `st'.
 		do
-			st.add (ti_Like_keyword)
+			st.process_keyword_text (ti_Like_keyword, Void)
 			st.add_space
-			st.add_string (anchor)
+			st.add (anchor)
 		end
 
 	dump: STRING is

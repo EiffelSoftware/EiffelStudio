@@ -69,23 +69,23 @@ feature -- Settings
 
 feature -- Output
 
-	format (st: STRUCTURED_TEXT) is
-			-- Output name of Current in `st'.
+	format (a_text_formatter: TEXT_FORMATTER) is
+			-- Output name of Current in `a_text_formatter'.
 		require
-			st_not_void: st /= Void
+			st_not_void: a_text_formatter /= Void
 		do
-			st.add_string (assembly_name)
+			a_text_formatter.add_string (assembly_name)
 			if version /= Void then
-				st.add_string (", ")
-				st.add_string (version)
+				a_text_formatter.add_string (", ")
+				a_text_formatter.add_string (version)
 			end
 			if culture /= Void then
-				st.add_string (", ")
-				st.add_string (culture)
+				a_text_formatter.add_string (", ")
+				a_text_formatter.add_string (culture)
 			end
 			if public_key_token /= Void then
-				st.add_string (", ")
-				st.add_string (public_key_token)
+				a_text_formatter.add_string (", ")
+				a_text_formatter.add_string (public_key_token)
 			end
 		end
 
@@ -111,7 +111,7 @@ feature -- Output
 		ensure
 			full_name_not_void: Result /= Void
 		end
-		
+
 invariant
 	assembly_name_not_void: assembly_name /= Void
 
@@ -121,19 +121,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

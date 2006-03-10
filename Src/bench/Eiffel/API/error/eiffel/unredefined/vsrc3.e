@@ -38,11 +38,11 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (st: STRUCTURED_TEXT) is
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			st.add_string ("Creation feature: ");
-			creation_feature.append_signature (st);
-			st.add_new_line;
+			a_text_formatter.add ("Creation feature: ");
+			creation_feature.append_signature (a_text_formatter);
+			a_text_formatter.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

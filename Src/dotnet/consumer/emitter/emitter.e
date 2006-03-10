@@ -180,38 +180,41 @@ feature {NONE} -- Implementation
 					-- Turn of all security to prevent any security exceptions
 				{SECURITY_MANAGER}.set_security_enabled (False)
 
-				if path_is_full_name then
-					l_assembly := load_assembly_from_full_name (target_path)
-				else
-					l_assembly := load_assembly_from_path (target_path)
-				end
-
-				if l_assembly = Void then
-					set_error (Invalid_assembly, target_path)
-					display_error
-				elseif successful then
-					create l_resolver.make
-					resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
-					l_resolver.add_resolve_path_from_file_name (l_assembly.location)
-
-					if add_to_eac then
-						add_assembly_to_eac (l_assembly.location)
-					elseif remove_from_eac then
-						remove_assembly_from_eac (l_assembly.location)
+				if target_path /= Void then
+					if path_is_full_name then
+						l_assembly := load_assembly_from_full_name (target_path)
+					else
+						l_assembly := load_assembly_from_path (target_path)
 					end
 
-					resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+					if l_assembly = Void then
+						set_error (Invalid_assembly, target_path)
+						display_error
+					elseif successful then
+						create l_resolver.make
+						resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+						l_resolver.add_resolve_path_from_file_name (l_assembly.location)
 
-					if cache_writer /= Void and then not cache_writer.successful then
-						process_error (cache_writer.error_message)
+						if add_to_eac then
+							add_assembly_to_eac (l_assembly.location)
+						elseif remove_from_eac then
+							remove_assembly_from_eac (l_assembly.location)
+						end
+
+						resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+
+						if cache_writer /= Void and then not cache_writer.successful then
+							process_error (cache_writer.error_message)
+						end
+					else
+						process_error (error_message)
 					end
-				else
-					process_error (error_message)
+				end
+				if successful and compact_cache then
+					compact_and_clean_cache
 				end
 			end
-			if successful and compact_cache then
-				compact_and_clean_cache
-			end
+
 			debug ("press_enter_to_finish")
 				io.put_string ("%NApplication has finished executing.")
 				io.put_string ("%NPress enter to exit.")
@@ -252,11 +255,11 @@ feature {NONE} -- Implementation
 	post_process is
 			-- Post argument parsing processing.
 		do
-			if not (list_assemblies or display_usage_help) and target_path = Void then
+			if not (compact_cache or list_assemblies or display_usage_help) and target_path = Void then
 				set_error (No_target, Void)
 			elseif not display_usage_help and clr_version = Void then
 				set_error (Version_should_be_specified, Void)
-			elseif not (list_assemblies or display_usage_help) then
+			elseif not (compact_cache or list_assemblies or display_usage_help) then
 				if not add_to_eac or remove_from_eac or list_assemblies or compact_cache then
 					set_error (no_operation, Void)
 				end
@@ -422,8 +425,13 @@ feature {NONE} -- Implementation
 	compact_and_clean_cache is
 			-- compacts and cleans cache info
 		do
+			if verbose_output then
+				display_status ("Compacting assembly cache...")
+			end
 			cache_writer.clean_cache
-			cache_writer.compact_cache_info
+				-- Do not compact as it is dangerous to perform on a established and in-use cache.
+				-- This is because assembly ids are recycled so you could potentially have a dependency
+				-- referencing the wrong assembly after compaction and a new consume.
 		end
 
 	target_path: STRING
@@ -491,19 +499,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -84,7 +84,10 @@ feature {EB_PRINTER} -- Basic operations
 				else
 					file.create_read_write
 				end
-				sent_text := interface.text.image
+					--|Fixme:
+					--| We simply use text from editor to print for the moment,
+					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
+				sent_text := interface.text
 				sent_text.prune_all ('%R')
 				sent_text.replace_substring_all ("%N", "%R%N")
 				file.put_string (sent_text)

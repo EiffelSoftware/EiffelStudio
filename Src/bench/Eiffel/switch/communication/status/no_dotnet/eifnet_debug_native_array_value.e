@@ -26,13 +26,13 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
+	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is 
 		do 
 		end;
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 		
-	append_value (st: STRUCTURED_TEXT) is 
+	append_value (a_text_formatter: TEXT_FORMATTER) is 
 			-- Append only the value of Current to `st'.
 		do 
 		end;

@@ -45,18 +45,18 @@ feature -- Dotnet Properties
 		
 feature
 	
-	display_feature (st: STRUCTURED_TEXT) is
+	display_feature (a_text_formatter: TEXT_FORMATTER) is
 			-- Display information about associated routine.
 		do
 		end
 		
-	display_locals (st: STRUCTURED_TEXT) is
+	display_locals (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		do
 		end		
 		
-	display_arguments (st: STRUCTURED_TEXT) is
+	display_arguments (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		do

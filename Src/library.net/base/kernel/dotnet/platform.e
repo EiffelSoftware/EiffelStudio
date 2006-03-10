@@ -13,6 +13,9 @@ class PLATFORM
 
 feature -- Platform
 
+	frozen is_thread_capable: BOOLEAN is True
+			-- Is current platform capable of multi-threading?
+
 	is_dotnet: BOOLEAN is True
 			-- Are we targetting .NET?
 

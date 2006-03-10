@@ -37,7 +37,51 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
-#ifdef EIF_THREADS
+#ifndef EIF_THREADS
+
+// Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time
+
+#define eif_thr_yield()
+#define eif_thr_join_all()
+#define eif_thr_sleep(nanoseconds)
+#define eif_thr_wait(term)
+#define eif_thr_join(term)
+
+#define eif_thr_thread_id() NULL
+#define eif_thr_last_thread() NULL
+#define eif_thr_exit()
+#define eif_thr_default_priority() 0
+#define eif_thr_min_priority() 0
+#define eif_thr_max_priority() 0
+#define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
+#define eif_thr_create(current_object, init_func)
+
+#define eif_thr_sem_create(count) NULL
+#define eif_thr_sem_wait(a_sem_pointer)
+#define eif_thr_sem_post(a_sem_pointer)
+#define eif_thr_sem_trywait(a_sem_pointer) EIF_FALSE
+#define eif_thr_sem_destroy(a_sem_pointer)
+
+#define eif_thr_rwl_create() NULL
+#define eif_thr_rwl_rdlock(an_item)
+#define eif_thr_rwl_unlock(an_item)
+#define eif_thr_rwl_wrlock(an_item)
+#define eif_thr_rwl_destroy(an_item)
+
+#define eif_thr_mutex_create() NULL
+#define eif_thr_mutex_lock(a_mutex_pointer)
+#define eif_thr_mutex_unlock(a_mutex_pointer)
+#define eif_thr_mutex_trylock(a_mutex_pointer) EIF_FALSE
+#define eif_thr_mutex_destroy(a_mutex_pointer)
+
+#define eif_thr_cond_create() NULL
+#define eif_thr_cond_broadcast(a_cond_ptr)
+#define eif_thr_cond_signal(a_cond_ptr)
+#define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
+#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
+#define eif_thr_cond_destroy(a_mutex_ptr)
+
+#else
 
 #include "eif_cecil.h"		/* Needed for inclusion of predefined macros */
 
@@ -293,6 +337,8 @@ RT_LNK EIF_INTEGER eif_thr_max_priority(void);
 RT_LNK EIF_POINTER eif_thr_thread_id(void);
 RT_LNK EIF_POINTER eif_thr_last_thread(void);
 
+
+
 /* Constants common to all platforms */
 
 #define EIF_SCHED_DEFAULT 0
@@ -452,6 +498,7 @@ typedef struct tag_EIF_process_once_value_t {
 
 #ifdef __cplusplus
 }
+
 #endif
 
 #endif	/* _eif_threads_h_ */

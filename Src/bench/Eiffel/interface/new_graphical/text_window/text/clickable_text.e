@@ -113,7 +113,7 @@ feature -- Pick and drop
 				if feature_click_enabled and then feature_click_tool.is_ready then
 					Result := feature_click_tool.stone_at_position (cursr)
 				elseif cursr.token /= Void then
-					Result ?= cursr.token.pebble
+					Result ?= cursr.token.pebble.twin
 				end
 			end
 		end

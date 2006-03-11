@@ -1,12 +1,12 @@
 indexing
-	description:	
+	description:
 		"Objects that display class information in a widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EB_FORMATTER
 
 inherit
@@ -19,7 +19,7 @@ inherit
 	EB_CONSTANTS
 
 	EV_STOCK_PIXMAPS
-	
+
 	EB_STONABLE
 
 feature -- Properties
@@ -34,7 +34,7 @@ feature -- Properties
 			-- Widget representing the associated system information.
 		deferred
 		end
-		
+
 	stone: STONE
 			-- Stone representing Current
 
@@ -79,14 +79,14 @@ feature -- Setting
 		do
 			manager := a_manager
 		end
-		
+
 	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
 			-- Set `editor' to `an_editor'.
 			-- Used to share an editor between several formatters.
 		require
 			an_editor_non_void: an_editor /= Void
 		do
-			editor := an_editor			
+			editor := an_editor
 			internal_widget := an_editor.widget
 		end
 
@@ -209,23 +209,24 @@ feature -- Commands
 				cur_wid := Void
 			end
 		end
-		
+
 feature -- Stonable
 
 	refresh is
 			-- Do nothing.
-		do	
+		do
 		end
-		
+
 	force_stone (a_stone: STONE) is
 			-- Directly set `stone' with `a_stone'
 		do
 			stone := a_stone
-			if stone /= Void then
-				stone.set_pos_container (Current)	
+			manager.set_pos_container (Current)
+			if stone /= Void and selected then
+				stone.set_pos_container (Current)
 			end
 		end
-		
+
 feature -- Loacation
 
 	fresh_position is
@@ -235,20 +236,19 @@ feature -- Loacation
 				stone := manager.stone.twin
 			end
 			if stone /= Void then
-				if manager.position >= 0 then
-					stone.set_position (manager.position)
-				else
-					stone.set_position (0)
+				check
+					manager.position >= 0
 				end
 				stone.set_pos_container (Current)
+				stone.set_position (manager.position)
 			end
 		end
-		
+
 	go_to_position is
 			-- Save manager position and go to position in `editor' if possible.
 		do
 			save_manager_position
-			if 
+			if
 				selected and then
 				stone /= Void and then
 				stone.pos_container = current and then
@@ -257,9 +257,9 @@ feature -- Loacation
 				editor.display_line_at_top_when_ready (stone.position)
 			end
 		end
-		
+
 feature {NONE} -- Location
-		
+
 	fresh_old_formatter is
 			-- Fresh old formatter position
 		local
@@ -270,7 +270,7 @@ feature {NONE} -- Location
 				l_formatter.fresh_position
 			end
 		end
-		
+
 	save_manager_position is
 			-- Save container and position in manager
 		do
@@ -279,8 +279,8 @@ feature {NONE} -- Location
 			else
 				manager.set_previous_position (manager.position)
 			end
-			manager.set_previous_pos_container (Current)	
-		end		
+			manager.set_previous_pos_container (Current)
+		end
 
 feature {NONE} -- Implementation
 
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 
 	cur_wid: EV_WIDGET
 			-- Widget on which the hourglass cursor was set.
-			
+
 	editor: EB_CLICKABLE_EDITOR
 			-- Output editor.
 
@@ -301,12 +301,12 @@ feature {NONE} -- Implementation
 
 	internal_displayed: BOOLEAN
 			-- Is `widget's parent visible?
-			
+
 	internal_widget: EV_WIDGET
 			-- Widget corresponding to `editor's text area.
 
 	must_format: BOOLEAN
-			-- Is a call to `format' really necessary? 
+			-- Is a call to `format' really necessary?
 			-- (i.e. has the stone changed since last call?)
 
 	display_info (str: STRING) is
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			if window_manager.last_focused_development_window /= Void then
 					-- Check is needed for session handling.
 				cur_wid := Window_manager.last_focused_development_window.window
-			end		
+			end
 			if cur_wid = Void then
 				--| Do nothing.
 			else
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 
 	has_breakpoints: BOOLEAN is deferred end
 		-- Should `Current' display breakpoints?
-			
+
 	line_numbers_allowed: BOOLEAN is deferred end
 		-- Does it make sense to show line numbers in Current?
 
@@ -375,19 +375,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

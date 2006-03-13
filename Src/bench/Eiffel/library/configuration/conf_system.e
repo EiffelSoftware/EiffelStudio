@@ -14,12 +14,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, an_uuid: STRING) is
+	make (a_name: STRING; an_uuid: UUID) is
 			-- Creation with `a_name' and `an_uuid'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
 			a_name_lower: a_name.is_equal (a_name.as_lower)
-			an_uuid_valid: valid_uuid (an_uuid)
 		do
 			create targets.make (1)
 			name := a_name
@@ -37,7 +36,7 @@ feature -- Access, stored in configuration file
 	description: STRING
 			-- A description about the system.
 
-	uuid: STRING
+	uuid: UUID
 			-- Universal unique identifier that identifies this system.
 
 	targets: HASH_TABLE [CONF_TARGET, STRING]
@@ -105,22 +104,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	valid_uuid (an_uuid: like uuid): BOOLEAN is
-			-- Is `an_uuid' a valid uuid?
-		require
-			an_uuid_not_void: an_uuid /= Void
-		local
-			l_uuid_generator: UUID_GENERATOR
-		do
-			create l_uuid_generator
-			Result := l_uuid_generator.is_valid_uuid (an_uuid)
-		end
-
-
 	set_uuid (an_uuid: like uuid): BOOLEAN is
 			-- Set `uuid' to `a_uuid'.
 		require
-			an_uuid_valid: an_uuid /= Void and then valid_uuid (an_uuid)
+			an_uuid_valid: an_uuid /= Void
 		do
 			uuid := an_uuid
 		ensure
@@ -194,6 +181,4 @@ invariant
 	name_ok: name /= Void and then not name.is_empty
 	name_lower: name.is_equal (name.as_lower)
 	targets_not_void: targets /= Void
-	uuid_valid: uuid /= Void and then valid_uuid (uuid)
-
 end

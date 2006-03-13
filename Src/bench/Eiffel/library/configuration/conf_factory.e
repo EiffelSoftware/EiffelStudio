@@ -8,7 +8,7 @@ class
 
 feature
 
-	new_system (a_name, an_uuid: STRING): CONF_SYSTEM is
+	new_system (a_name: STRING an_uuid: UUID): CONF_SYSTEM is
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

@@ -94,7 +94,7 @@ feature -- Access queries
 		local
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_lib: CONF_LIBRARY
-			l_uuid: STRING
+			l_uuid: UUID
 			l_options: CONF_OPTION
 		do
 				-- if used as library, get options from application level

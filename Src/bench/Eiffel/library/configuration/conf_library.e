@@ -36,12 +36,12 @@ feature -- Access, in compiled only, not stored to configuration file
 
 feature -- Access queries
 
-	uuid: STRING
+	uuid: UUID
 			-- uuid of the used library.
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	set_uuid (an_uuid: STRING) is
+	set_uuid (an_uuid: UUID) is
 			-- Set the uuid of the library.
 		require
 			an_uuid_not_void: an_uuid /= Void

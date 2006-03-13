@@ -24,7 +24,7 @@ feature -- Access
 	last_system: CONF_SYSTEM
 			-- The last retrieved system.
 
-	last_uuid: STRING
+	last_uuid: UUID
 			-- The last retrieved uuid.
 
 feature -- Basic operation

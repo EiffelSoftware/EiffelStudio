@@ -27,6 +27,9 @@ feature -- Visit nodes
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
 		do
 			l_classes := a_group.classes
+			check
+				l_classes_not_void: l_classes /= Void
+			end
 
 				-- check renamings
 			l_ren := a_group.renaming
@@ -65,6 +68,9 @@ feature -- Visit nodes
 			l_vis: HASH_TABLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]], STRING]
 		do
 			l_classes := a_cluster.classes
+			check
+				l_classes_not_void: l_classes /= Void
+			end
 
 				-- check visibility
 			l_vis := a_cluster.visible

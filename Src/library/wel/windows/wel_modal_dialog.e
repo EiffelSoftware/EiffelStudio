@@ -23,19 +23,9 @@ feature -- Basic operations
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
-				-- `cwin_end_dialog' does not send the WM_DESTROY message
-				-- to its children and therefore we need to do it manually
-			from
-				dialog_children.start
-			until
-				dialog_children.off
-			loop
-				dialog_children.item.destroy_from_dialog
-				dialog_children.forth
-			end
 			result_id := a_result
 			cwin_end_dialog (item, a_result)
-			destroy_item
+			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
@@ -48,7 +38,7 @@ feature {NONE} -- Implementation
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		do
 				-- Initialise the common controls
-			create common_controls_dll.make	
+			create common_controls_dll.make
 
 			register_dialog
 			if a_name /= Void then
@@ -56,7 +46,7 @@ feature {NONE} -- Implementation
 				create c_name.make (a_name)
 				result_id := cwin_dialog_box (
 					main_args.resource_instance.item,
-					c_name.item, 
+					c_name.item,
 					parent_item,
 					cwel_dialog_procedure_address)
 			else
@@ -72,7 +62,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	
+
 
 feature {NONE} -- Externals
 

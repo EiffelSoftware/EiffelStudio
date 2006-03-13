@@ -18,7 +18,7 @@ inherit
 
 create
 	make_with_dialog_window
-	
+
 feature -- Status report
 
 	is_modal: BOOLEAN is
@@ -61,9 +61,9 @@ feature -- Basic operations
 			promote_to_dialog_window
 			interface.implementation.hide
 		end
-		
+
 feature {EV_WINDOW_IMP} -- Implementation
-		
+
 	execute_show_actions is
 			-- Execute `show_actions_internal'.
 			--| Needs to be called externally from within EV_WINDOW_IMP
@@ -76,7 +76,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 				-- will not be called again unless it is first set to `True'.
 			call_show_actions := False
 		end
-	
+
 feature {NONE} -- Implementation
 
 	terminate (a_result: INTEGER) is
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 		do
 			result_id := a_result
 			cwin_end_dialog (wel_item, a_result)
-			destroy_item
+			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			err: WEL_ERROR
 		do
 				-- Initialise the common controls
-			create common_controls_dll.make	
+			create common_controls_dll.make
 
 				-- Register the dialog to set `wel_item' later.
 			register_dialog
@@ -122,18 +122,18 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	common_dialog_imp: EV_DIALOG_IMP_MODAL is
 			-- Dialog implementation type common to all descendents.
 		do
 		end
-		
+
 
 feature {NONE} -- Externals
 
 	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
 				-- SDK DialogBoxIndirect
-			external 
+			external
 				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): INT_PTR"
 			alias
 				"DialogBoxIndirect"

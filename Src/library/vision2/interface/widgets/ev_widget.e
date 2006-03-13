@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Base class for all widgets.%N%
 		%Facilities for geometry management and user input."
@@ -18,7 +18,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_DOCKABLE_SOURCE
 		redefine
 			implementation,
@@ -90,7 +90,7 @@ feature -- Access
 			-- Because the pointer position may have changed between assigning
 			-- `Result' and calling the post conditions, there is no
 			-- post condition on this feature.
-		end 
+		end
 
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when pointer is over this widget.
@@ -110,7 +110,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.actual_drop_target_agent
 		end
-		
+
 	real_target: EV_DOCKABLE_TARGET is
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
@@ -170,25 +170,21 @@ feature -- Status setting
 
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
-			-- Make `is_show_requested' `False'.
+			-- If successful, make `is_show_requested' `False'.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.hide
-		ensure
-			not_is_show_requested: not is_show_requested
 		end
 
 	show is
 			-- Request that `Current' be displayed when its parent is.
 			-- `True' by default.
-			-- Make `is_show_requested' `True'.
+			-- If successful, make `is_show_requested' `True'.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.show
-		ensure
-			is_show_requested: is_show_requested
 		end
 
 	set_focus is
@@ -243,7 +239,7 @@ feature -- Status setting
 		ensure
 			assigned: actual_drop_target_agent = an_agent
 		end
-		
+
 	set_real_target (a_target: EV_DOCKABLE_TARGET) is
 			-- Assign `a_target' to `real_target'.
 		require
@@ -254,7 +250,7 @@ feature -- Status setting
 		ensure
 			assigned: real_target = a_target
 		end
-		
+
 	remove_real_target is
 			-- Ensure `real_target' is `Void'.
 		require
@@ -324,8 +320,8 @@ feature -- Element change
 		end
 
 
-feature -- Measurement 
-	
+feature -- Measurement
+
 	screen_x: INTEGER is
 			-- Horizontal offset relative to left of screen in pixels.
 		require
@@ -345,7 +341,7 @@ feature -- Measurement
 		ensure
 			bridge_ok: Result = implementation.screen_y
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -355,7 +351,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_COLORIZABLE} and Precursor {EV_POSITIONED} and
 				Precursor {EV_HELP_CONTEXTABLE} and Precursor {EV_DOCKABLE_SOURCE}
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WIDGET_I

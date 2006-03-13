@@ -9,8 +9,6 @@ class
 	WEL_WINDOWS_ROUTINES
 
 inherit
-	WEL_IDENTIFIED
-
 	WEL_MB_CONSTANTS
 		export
 			{NONE} all
@@ -136,7 +134,7 @@ feature -- Status report
 						-- the DOS prompt associated with the current process then
 						-- we know it must be one of our windows.
 					if window_process_id = current_process_id and l_data /= cwin_console_window_data then
-						Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data))
+						Result := {WEL_IDENTIFIED}.eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data))
 					end
 				end
 			else

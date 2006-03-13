@@ -1,48 +1,12 @@
 indexing
-	description: "Window manager which is able to retrieve an Eiffel %
-		%object from a HWND."
+	description: "To perform a proper handling of dialog initialization."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WEL_WINDOW_MANAGER
-
-inherit
-	WEL_WINDOWS_ROUTINES
-
-feature -- Basic operations
-
-	register_window (window: WEL_WINDOW) is
-			-- Register `window' in the window manager.
-		require
-			window_not_void: window /= Void
-			unregistered: not registered (window)
-		do
-			window.register_current_window
-		ensure
-			registered: registered (window)
-		end
-
-feature -- Status report
-
-	registered (window: WEL_WINDOW): BOOLEAN is
-			-- Is `window' registered?
-		require
-			window_not_void: window /= Void
-		local
-			l_data, null: POINTER
-		do
-				-- Default is `Result := False'.
-			if window.exists then
-				l_data := window.internal_data
-				if l_data /= null then
-					Result := eif_id_object (
-						{WEL_INTERNAL_DATA}.object_id (l_data)) /= Void
-				end
-			end
-		end
+	WEL_DIALOG_MANAGER
 
 feature {WEL_DISPATCHER} -- Dialog creation
 

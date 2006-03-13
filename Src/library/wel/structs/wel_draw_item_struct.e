@@ -14,7 +14,7 @@ inherit
 			make_by_pointer as structure_make_by_pointer
 		end
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine

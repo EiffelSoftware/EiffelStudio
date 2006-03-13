@@ -10,16 +10,13 @@ deferred class
 
 inherit
 	WEL_ANY
-		rename
-			destroy_item as gc_destroy_item
-		end
 
 	REFACTORING_HELPER
 		export
 			{NONE} all
 		end
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -1288,10 +1285,8 @@ feature -- Removal
 			-- Destroy the window.
 		require
 			exists: exists
-		local
-			l_result: INTEGER
 		do
-			l_result := cwin_destroy_window (item)
+			destroy_item_from_context (False)
 		ensure
 			not_exists: not exists
 		end
@@ -1612,7 +1607,6 @@ feature {WEL_WINDOW} -- Implementation
 			-- call its previous window procedure.
 		require
 			exists: exists
-			internal_data_not_null: internal_data /= default_pointer
 		do
 		end
 
@@ -1666,10 +1660,6 @@ feature {WEL_WINDOW} -- Implementation
 	on_wm_nc_destroy is
 			--  Wm_ncdestroy message.
 		do
-			destroy_item
-		ensure
-			destroyed: not exists
-			unregistered: not registered (Current)
 		end
 
 	on_wm_notify (wparam, lparam: POINTER) is
@@ -1841,31 +1831,38 @@ feature -- Registration
 			-- Register `Current' in window manager.
 		local
 			p: POINTER
+			l_object_id: INTEGER
 		do
 			p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
 			p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
-			{WEL_INTERNAL_DATA}.set_object_id (p, eif_object_id (Current))
-			set_internal_data (p)
+			l_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
+			{WEL_INTERNAL_DATA}.set_object_id (p, l_object_id)
+			cwin_set_window_long (item, Gwlp_userdata, p)
+			internal_data := p
+		ensure
+			registered: is_registered
 		end
 
-feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
+	is_registered: BOOLEAN is
+			-- Is `window' registered?
+		local
+			l_data, null: POINTER
+		do
+				-- Default is `Result := False'.
+			if exists then
+				l_data := internal_data
+				if l_data /= null then
+					Result := {WEL_IDENTIFIED}.eif_id_object (
+						{WEL_INTERNAL_DATA}.object_id (l_data)) = Current
+				end
+			end
+		end
 
-	frozen internal_data: POINTER is
+feature {NONE} -- Registration
+
+	frozen internal_data: POINTER
 			-- Data set to widget at creation.
 			-- Used for having weak references
-		require
-			exists: exists
-		do
-			Result := cwin_get_window_long (item, Gwlp_userdata)
-		end
-
-	frozen set_internal_data (v: POINTER) is
-			-- Set data of window.
-		require
-			exists: exists
-		do
-			cwin_set_window_long (item, Gwlp_userdata, v)
-		end
 
 feature {WEL_WINDOW} -- Properties
 
@@ -1884,77 +1881,70 @@ feature {WEL_WINDOW} -- Properties
 feature {NONE} -- Removal
 
 	frozen destroy_item is
-			-- At this stage, the window has been already destroyed
-			-- by Windows (see `on_wm_destroy').
-			-- Reset C and WEL structure that keep track of Current.
-		local
-			object_id: INTEGER
-			null, l_data: POINTER
-		do
-			l_data := internal_data
-			object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
-			check
-					-- `internal_data' cannot be 0 when the Window has not yet been
-					-- destroyed by Windows.
-				valid_id: object_id > 0
-			end
-
-			eif_object_id_free (object_id)
-
-			{WEL_INTERNAL_DATA}.set_object_id (l_data, 0)
-			{WEL_INTERNAL_DATA}.set_default_window_procedure (l_data, null)
-			l_data.memory_free
-
-				-- Remove `object_id' from `internal_data' of Current.
-			set_internal_data (null)
-
-				-- Clean `item' C pointer.
-			item := default_pointer
-		end
-
-	frozen gc_destroy_item is
 			-- Called by GC and `item' is still not equal to default_pointer,
 			-- meaning that `destroy' has not been called. We need to call it.
+		do
+			destroy_item_from_context (True)
+		end
+
+	frozen destroy_item_from_context (is_from_gc: BOOLEAN) is
+			-- Cleanup current. If `is_from_gc' then it was called from `dispose',
+			-- otherwise from a call to `destroy'.
 		local
-			p, hwnd, null: POINTER
+			l_null, l_data: POINTER
+			l_object_id: INTEGER
+			p, hwnd: POINTER
 			l_result: INTEGER
 		do
+			if is_from_gc then
+					-- Free memory taken by `internal_data'.
+				l_data := internal_data
+				if l_data /= l_null then
+					l_object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
+					check
+						l_object_id_valid: l_object_id > 0
+					end
+					{WEL_IDENTIFIED}.eif_object_id_free (l_object_id)
+					l_data.memory_free
+					internal_data := l_null
+				end
+			end
+
+				-- Now take care of `item'.
 			hwnd := item
 			if is_window (hwnd) then
-					-- Our Window has not been destroyed by Windows yet. We can clean
-					-- our stuff then.
+					-- When called from `dispose' we do not want to come back in Eiffel code
+					-- in the call to `cwin_destroy_window'. This is why we reset the dispatched
+					-- pointer.
+				if is_from_gc then
+						-- Save protected reference to `dispatcher' object.
+					p := cwel_dispatcher_pointer
 
-					-- Save protected reference to `dispatcher' object.
-				p := cwel_dispatcher_pointer
-
-					-- No more `dispatcher' object is called from C code of WEL,
-					-- avoiding to go through Eiffel when destroying the window.
-				cwel_set_dispatcher_pointer (null)
+						-- No more `dispatcher' object is called from C code of WEL,
+						-- avoiding to go through Eiffel when destroying the window.
+					cwel_set_dispatcher_pointer (l_null)
+				end
 
 					-- Destroying the window.
-					-- C code will automatically do an equivalent of `destroy_item'
-					-- feature.
 				l_result := cwin_destroy_window (hwnd)
 				if l_result = 0 then
 						-- In a multithreaded application it may fail when the thread
 						-- who created `hwnd' is not the current thread. This means
-						-- that the current windows was not destroyed, thus the C code
-						-- of `disptchr.c' did not free the allocated `internal_data'.
-						-- We need to free `internal_data' by calling `destroy_item'.
+						-- that the current windows was not destroyed.
 						-- To ensure that the window will be destroyed, we send a
 						-- WM_CLOSE message which by default calls `DestroyWindow'
-						-- but this time it will be done in the proper thread. Indeed our
-						-- handler will not be called because we will have no more trace
-						-- of the Current object when the WM_CODE message will be received.
-					destroy_item
-					cwin_post_message (hwnd, wm_close, default_pointer, default_pointer)
-				else
-					item := default_pointer
+						-- but this time it will be done in the proper thread.
+					cwin_post_message (hwnd, wm_close, l_null, l_null)
 				end
 
-					-- Restore `dispatcher' object so that dispatching can proceed.
-				cwel_set_dispatcher_pointer (p)
+				if is_from_gc then
+						-- Restore `dispatcher' object so that dispatching can proceed.
+					cwel_set_dispatcher_pointer (p)
+				end
 			end
+			item := l_null
+		ensure
+			not_exists: not exists
 		end
 
 	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN is

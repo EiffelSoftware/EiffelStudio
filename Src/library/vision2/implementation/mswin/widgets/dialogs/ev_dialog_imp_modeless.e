@@ -16,10 +16,10 @@ inherit
 			setup_dialog,
 			is_relative,
 			is_show_requested,
-			hide, 
+			hide,
 			destroy
 		end
-		
+
 	EV_DIALOG_IMP_COMMON
 		redefine
 			setup_dialog,
@@ -34,7 +34,7 @@ inherit
 
 create
 	make_with_dialog_window
-	
+
 feature -- Status report
 
 	is_relative: BOOLEAN is
@@ -42,7 +42,7 @@ feature -- Status report
 		do
 			Result := is_show_requested
 		end
-		
+
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
@@ -53,9 +53,9 @@ feature -- Status report
 				Result := interface.implementation.is_show_requested
 			else
 				Result := flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
-			end	
+			end
 		end
-		
+
 feature -- Basic operations
 
 	show_modal_to_window (a_parent_window: EV_WINDOW) is
@@ -100,7 +100,7 @@ feature -- Basic operations
 				end
 			end
 		end
-		
+
 	show is
 			-- Show window represented by `interface'
 			-- no longer modeless to a window. We need
@@ -118,16 +118,14 @@ feature -- Basic operations
 	terminate (a_result: INTEGER) is
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
-		local
-			l_result: INTEGER
 		do
 			result_id := a_result
-			l_result := cwin_destroy_window (wel_item)
+			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
 
-	hide is 
+	hide is
 			-- Hide `Current'.
 		do
 				--| FIXME, this is a hack to avoid unwanted behaviour when closing a focused
@@ -142,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {EV_DIALOG_IMP_COMMON}
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do
@@ -169,7 +167,7 @@ feature {NONE} -- Implementation
 			err: WEL_ERROR
 		do
 				-- Initialise the common controls
-			create common_controls_dll.make	
+			create common_controls_dll.make
 
 				-- Register the dialog to set `wel_item' later.
 			register_dialog
@@ -178,7 +176,7 @@ feature {NONE} -- Implementation
 			result_id := 0
 			tmp_result := cwin_create_dialog_indirect (
 				main_args.current_instance.item,
-				dlg_template.item, 
+				dlg_template.item,
 				a_parent.item,
 				cwel_dialog_procedure_address
 				)
@@ -193,7 +191,7 @@ feature {NONE} -- Implementation
 				-- Display the window
 			show_internal
 		end
-		
+
 feature {NONE} -- External
 
 	cwin_create_dialog_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
@@ -203,7 +201,7 @@ feature {NONE} -- External
 		alias
 			"CreateDialogIndirect"
         end
-                         
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

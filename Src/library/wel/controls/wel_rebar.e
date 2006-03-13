@@ -27,7 +27,7 @@ inherit
 	WEL_COMPOSITE_WINDOW
 		undefine
 			destroy,
-			on_wm_nc_destroy,
+			on_wm_destroy,
 			set_default_window_procedure,
 			call_default_window_procedure,
 			minimal_width,

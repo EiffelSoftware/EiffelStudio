@@ -9,7 +9,12 @@ deferred class
 	WEL_ABSTRACT_DISPATCHER
 
 inherit
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		end
+
+	WEL_DIALOG_MANAGER
 		export
 			{NONE} all
 		end
@@ -18,13 +23,13 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_WM_CONSTANTS
 		export
 			{NONE} all
 		end
 
-	WEL_EN_CONSTANTS	
+	WEL_EN_CONSTANTS
 		-- debug
 
 feature -- Settings
@@ -64,7 +69,7 @@ feature {NONE} -- Implementation
 						end
 						window.increment_level
 						need_decrement := True
-		
+
 						Result := window.process_message (hwnd, msg, wparam, lparam)
 							--| Store `message_return_value' and `has_return_value' for later
 							--| use, since `call_default_window_procedure' can reset their value.
@@ -74,15 +79,15 @@ feature {NONE} -- Implementation
 							returned_value := window.message_return_value
 							has_return_value := window.has_return_value
 						end
-		
+
 						if window.default_processing then
 							Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
 						end
-		
+
 						if has_return_value then
 							Result := returned_value
 						end
-		
+
 						window.decrement_level
 						need_decrement := False
 					else
@@ -131,7 +136,7 @@ feature {NONE} -- Implementation
 						new_dialog_cell.put (Void)
 						window.increment_level
 						need_decrement := True
-		
+
 						-- Special case for the message
 						-- Wm_initdialog. We set the hwnd value
 						-- to the object because this value
@@ -142,7 +147,7 @@ feature {NONE} -- Implementation
 						--| As a result, any call to `set_focus' in
 						--| `setup_dialog' from WEL_DIALOG is useless.
 						window.set_item (hwnd)
-						register_window (window)
+						window.register_current_window
 						Result := window.process_message (hwnd, msg, wparam, lparam)
 						window.decrement_level
 						need_decrement := False

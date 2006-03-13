@@ -443,10 +443,8 @@ feature {NONE} -- Implementation
 
 	wel_destroy_window is
 			-- Destroy the window-widget
-		local
-			l_result: INTEGER
 		do
-			l_result := cwin_destroy_window (wel_item)
+			destroy_item_from_context (False)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
@@ -770,9 +768,6 @@ feature {EV_ANY_I} -- Implementation
 			if parent_imp /= Void and not parent_imp.destroyed and then not
 				parent_imp.is_sensitive then
 				parent_imp.disable_sensitive
-			end
-			check
-				is_destroyed_set: is_destroyed
 			end
 		end
 

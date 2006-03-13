@@ -22,11 +22,9 @@ feature -- Basic operations
 	terminate (a_result: INTEGER) is
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
-		local
-			l_result: INTEGER
 		do
 			result_id := a_result
-			l_result := cwin_destroy_window (item)
+			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
@@ -39,7 +37,7 @@ feature {NONE} -- Implementation
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		do
 				-- Initialise the common controls
-			create common_controls_dll.make	
+			create common_controls_dll.make
 
 			register_dialog
 
@@ -62,8 +60,6 @@ feature {NONE} -- Implementation
 				if not shown then
 					show
 				end
-			else
-				destroy_item
 			end
 		end
 

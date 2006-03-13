@@ -12,7 +12,7 @@ class
 inherit
 	WEL_STRUCTURE
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine

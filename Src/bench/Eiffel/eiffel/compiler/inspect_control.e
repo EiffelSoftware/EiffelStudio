@@ -149,22 +149,52 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			feature_i: FEATURE_I
 			constant_i: CONSTANT_I
 			class_c: CLASS_C
+			vuex: VUEX
+			obs_warn: OBS_FEAT_WARN
 		do
 				-- At this stage `l_as' has already been type checked thus `solved_type' will be non-void.
 			class_c := type_a_generator.evaluate_type (l_as.class_type, context.current_class).associated_class
 			feature_i := class_c.feature_table.item (l_as.feature_name)
 			constant_i ?= feature_i
-			if constant_i /= Void and then constant_i.value.valid_type (type) then
+			if feature_i = Void then
+				report_veen (l_as.feature_name)
+			elseif
+				not context.is_ignoring_export and then
+				not feature_i.is_exported_for (context.current_class)
+			then
+				create vuex
+				context.init_error (vuex)
+				vuex.set_static_class (class_c)
+				vuex.set_exported_feature (feature_i)
+				vuex.set_location (l_as.feature_name)
+				error_handler.insert_error (vuex)
+			elseif constant_i /= Void and then constant_i.value.valid_type (type) then
 					-- Record dependencies
 				context.supplier_ids.extend (create {DEPEND_UNIT}.make (class_c.class_id, constant_i))
 					-- Check if this is a unique constant
 				last_unique_constant ?= constant_i
 					-- Calculate byte node
 				last_inspect_value := constant_i.value.inspect_value (type)
-			elseif feature_i /= Void then
-				report_vomb2 (l_as)
+				if
+					feature_i.is_obsolete
+						-- If the obsolete call is in an obsolete class,
+						-- no message is displayed
+					and then not context.current_class.is_obsolete
+						-- The current feature is whether the invariant or
+						-- a non obsolete feature
+					and then not context.current_feature.is_obsolete
+						-- Inherited code is checked in parent class.
+					-- and then not is_inherited
+				then
+					create obs_warn
+					obs_warn.set_class (context.current_class)
+					obs_warn.set_obsolete_class (class_c)
+					obs_warn.set_obsolete_feature (feature_i)
+					obs_warn.set_feature (context.current_feature)
+					error_handler.insert_warning (obs_warn)
+				end
 			else
-				report_veen (l_as.feature_name)
+				report_vomb2 (l_as)
 			end
 		end
 

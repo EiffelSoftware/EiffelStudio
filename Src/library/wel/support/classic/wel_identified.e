@@ -10,27 +10,27 @@ class
 
 feature -- For weak references
 
-	eif_id_object (an_id: INTEGER): WEL_WINDOW is
+	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW is
 			-- Object associated with `an_id'
 		external
 			"C | %"eif_object_id.h%""
 		end
 
-	eif_id_any_object (an_id: INTEGER): ANY is
+	frozen eif_id_any_object (an_id: INTEGER): ANY is
 			-- Object associated with `an_id'
 		external
 			"C | %"eif_object_id.h%""
 		alias
 			"eif_id_object"
 		end
-		
-	eif_object_id (an_object: ANY): INTEGER is
+
+	frozen eif_object_id (an_object: ANY): INTEGER is
 			-- New identifier for `an_object'
 		external
 			"C | %"eif_object_id.h%""
 		end
 
-	eif_object_id_free (an_id: INTEGER) is
+	frozen eif_object_id_free (an_id: INTEGER) is
 			-- Free the entry `an_id'
 		external
 			"C | %"eif_object_id.h%""

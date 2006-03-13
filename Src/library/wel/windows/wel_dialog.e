@@ -12,12 +12,17 @@ deferred class
 inherit
 	WEL_COMPOSITE_WINDOW
 		export
-			{NONE} register_window, register_current_window
+			{NONE} register_current_window
 		redefine
 			on_wm_control_id_command,
 			on_wm_menu_command,
 			process_message,
 			destroy
+		end
+
+	WEL_DIALOG_MANAGER
+		export
+			{NONE} all
 		end
 
 	WEL_ID_CONSTANTS
@@ -66,7 +71,7 @@ feature {NONE} -- Initialization
 			item := cwin_dialog_box_indirect (main_args.current_instance.item, a_template.item,
 				a_parent.item, cwel_dialog_procedure_address)
 		ensure
-			dialog_children_not_void: dialog_children /= Void		
+			dialog_children_not_void: dialog_children /= Void
 		end
 
 feature -- Access
@@ -254,7 +259,7 @@ feature {NONE} -- Implementation
 				control := dialog_children.item
 				control.set_item (cwin_get_dlg_item (item,
 					control.id))
-				register_window (control)
+				control.register_current_window
 				control.set_default_window_procedure
 				dialog_children.forth
 			end

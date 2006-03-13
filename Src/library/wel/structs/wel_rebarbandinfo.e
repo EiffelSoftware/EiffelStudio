@@ -14,7 +14,7 @@ inherit
 			make as structure_make
 		end
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -518,7 +518,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

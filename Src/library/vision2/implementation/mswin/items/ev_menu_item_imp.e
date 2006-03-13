@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_MENU_ITEM_IMP
 
@@ -14,14 +14,14 @@ inherit
 			interface,
 			parent
 		end
-		
+
 	EV_ITEM_IMP
 		undefine
 			parent
 		redefine
 			interface,
 			set_capture,
-			release_capture,	
+			release_capture,
 			set_heavy_capture,
 			release_heavy_capture,
 			remove_pixmap,
@@ -39,7 +39,7 @@ inherit
 	EV_ID_IMP
 
 	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-	
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
@@ -54,7 +54,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_SYSTEM_COLORS
 		export
 			{NONE} all
@@ -64,7 +64,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_SYSTEM_PARAMETERS_INFO
 		export
 			{NONE} all
@@ -74,7 +74,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -102,16 +102,16 @@ feature -- Access
 		do
 			Result := wel_text
 		end
-		
+
 	object_id: INTEGER is
 			-- Run-time object Id of `Current'.
 		do
 			if internal_object_id = 0 then
-				internal_object_id := eif_object_id (Current)
+				internal_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
 			end
 			Result := internal_object_id
 		end
-		
+
 feature -- Element change
 
 	set_text (a_text: STRING) is
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			if a_text /= Void then
 				real_text := a_text.twin
 			end
-			
+
 				-- Force the menu bar to be recomputed.
 			if parent_imp /= Void then
 				parent_imp.rebuild_control
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 				private_pixmap := Void
 				if parent_imp /= Void then
 					parent_imp.internal_replace (Current, parent_imp.index_of (interface, 1))
-		
+
 						-- Force the menu bar to be recomputed.
 					parent_imp.rebuild_control
 				end
@@ -236,12 +236,12 @@ feature {NONE} -- Implementation
 				parent_imp.rebuild_control
 			end
 		end
-		
+
 	internal_object_id: INTEGER
 			-- Runtime Eiffel Object Id. Zero if no call to `eif_object_id'
 			-- has been made so far.
 			-- This is used for drawing owner-draw menu items
-			
+
 	dispose is
 			-- Destroy the inner structure of `Current'.
 			--
@@ -250,13 +250,13 @@ feature {NONE} -- Implementation
 			-- no more usefull.
 		do
 			if internal_object_id /= 0 then
-				eif_object_id_free (internal_object_id)
+				{WEL_IDENTIFIED}.eif_object_id_free (internal_object_id)
 				internal_object_id := 0
 			end
 		end
-		
+
 feature {EV_MENU_ITEM_IMP} -- Implementation
-		
+
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Window containing `Current' in parenting heirarchy.
 		local
@@ -286,7 +286,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	plain_text_without_ampersands: STRING is
 			-- Plain text of menu item (equal "New" when full_text = "N&ew%TCtrl+B")
 			-- Ampersands are removed.
@@ -295,7 +295,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	accelerator_text: STRING is
 			-- Accelerator text of menu item (equal "Ctrl+B" when full text = "New%TCtrl+B")
 		local
@@ -317,7 +317,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 		end
 
 feature {NONE} -- WEL Implementation
-		
+
 	internal_plain_text (keep_ampersands: BOOLEAN): STRING is
 			-- Plain text of menu item (equal "New" when full_text = "New%TCtrl+B")
 			-- Set `keep_ampersands' to True to keep the ampersands.
@@ -339,7 +339,7 @@ feature {NONE} -- WEL Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
 	set_accelerator_text_position (a_value: INTEGER) is
@@ -389,7 +389,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 				on_measure_menu_bar_item (measure_item_struct)
 			end
 		end
-		
+
 	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
 			-- Process `Wm_drawitem' message.
 		local
@@ -407,7 +407,7 @@ feature {NONE} -- WEL Implementation
 
 	accelerator_text_position: INTEGER
 			-- Position in pixels where the accelerator starts being written.
-	
+
 	plain_text_position: INTEGER
 			-- Position in pixels where the plain text starts being written.
 
@@ -439,16 +439,16 @@ feature {NONE} -- WEL Implementation
 			if pixmap_imp /= Void then
 				pixmap_width := pixmap_imp.width + Menu_bar_item_pixmap_text_space
 			end
-			
+
 				-- Compute the result
 			measure_item_struct.set_item_width (pixmap_width + plain_text_width + accel_text_width)
 			measure_item_struct.set_item_height (desired_height)
-			
+
 				-- Update the tabultation margins
 			set_accelerator_text_position (0)
 			set_plain_text_position (pixmap_width + plain_text_width + accel_text_width)
 		end
-		
+
 	on_draw_menu_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
 			-- Process `Wm_drawitem' message for classic menu item
 			-- (i.e. not menu item in the menu bar).
@@ -494,7 +494,7 @@ feature {NONE} -- WEL Implementation
 					background_color := system_color_menu
 					foreground_color := system_color_menutext
 				end
-				
+
 					-- Erase the text area
 				create rect.make (left_pos + plain_text_position, top_pos, right_pos, bottom_pos)
 				erase_background (draw_dc, rect, background_color)
@@ -506,7 +506,7 @@ feature {NONE} -- WEL Implementation
 
 					-- Compute where to put texts
 				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (real_text)) // 2)
-				
+
 					-- Compute the drawing flags
 				draw_flags := Wel_drawing_constants.Dt_left
 				if draw_item_struct.item_state & Wel_ownerdraw_constants.Ods_noaccel /= 0 then
@@ -521,16 +521,16 @@ feature {NONE} -- WEL Implementation
 					space_width := menu_font.string_width ("W")
 					right_plain_text_pos := left_pos + accelerator_text_position - space_width
 				end
-				
+
 					-- Draw the text
 				if disabled_state and not selected_state then
 							-- Draw highlighted text if needed
 					if system_color_menu.is_equal (system_color_btnface) then
 						draw_dc.set_text_color (system_color_btnhighlight)
-	
+
 						rect.set_rect (1 + left_pos + plain_text_position, 1 + text_top_pos, right_plain_text_pos, bottom_pos)
 						draw_dc.draw_text (plain_text, rect, draw_flags)
-	
+
 						rect.set_rect (1 + left_pos + accelerator_text_position, 1 + text_top_pos, right_pos, bottom_pos)
 						draw_dc.draw_text (accelerator_text, rect, Wel_drawing_constants.Dt_left | Wel_drawing_constants.Dt_expandtabs)
 					end
@@ -545,7 +545,7 @@ feature {NONE} -- WEL Implementation
 				else
 					draw_dc.set_background_color (background_color)
 					draw_dc.set_text_color (foreground_color)
-	
+
 					rect.set_rect (left_pos + plain_text_position, text_top_pos, right_plain_text_pos, bottom_pos)
 					draw_dc.draw_text (plain_text, rect, draw_flags)
 
@@ -597,7 +597,7 @@ feature {NONE} -- WEL Implementation
 				rect.set_rect (left_pos, top_pos, left_pos + plain_text_position, bottom_pos)
 				erase_background (draw_dc, rect, system_color_menu)
 			end
-				
+
 					-- Draw the pixmap if needed
 			if pixmap_imp /= Void then
 				if disabled_state then
@@ -667,7 +667,7 @@ feature {NONE} -- WEL Implementation
 					draw_dc.draw_edge (draw_item_struct_rect, Wel_drawing_constants.Bdr_raisedinner, Wel_drawing_constants.Bf_rect)
 				end
 			end
-				
+
 					-- Draw the pixmap if needed
 			if pixmap_imp /= Void then
 				if disabled_state then
@@ -692,13 +692,13 @@ feature {NONE} -- WEL Implementation
 					-- Compute where to put texts
 				text_top_pos := top_pos + ((draw_item_struct_rect.height - menu_font.string_height (real_text)) // 2)
 				create rect.make (left_pos + left_pos_start, text_top_pos, right_pos, bottom_pos)
-				
+
 					-- Compute the drawing flags
 				draw_flags := Wel_drawing_constants.Dt_expandtabs | Wel_drawing_constants.Dt_left
 				if draw_item_state & Wel_ownerdraw_constants.Ods_noaccel /= 0 then
 					draw_flags := draw_flags | Wel_drawing_constants.Dt_hideprefix
 				end
-				
+
 					-- Draw the text
 				drawn_text := plain_text.twin
 				drawn_text.append_character (' ')
@@ -787,7 +787,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_MENU_ITEM
-	
+
 feature {NONE} -- Implementation
 
 	remove_ampersands (a_string: STRING): STRING is
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (a_string.substring (prv_index, a_string.count))
 		end
-		
+
 	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON is
 			-- Extract the icon from `pixmap_imp'.
 		local
@@ -827,12 +827,12 @@ feature {NONE} -- Implementation
 				Result.enable_reference_tracking
 			end
 		end
-		
+
 feature {NONE} -- Constants
 
 	Menu_bar_item_pixmap_text_space: INTEGER is 4;
 			-- Space between the text and the pixmap in a menu bar item
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

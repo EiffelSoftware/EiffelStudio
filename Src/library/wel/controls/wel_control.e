@@ -110,7 +110,7 @@ feature -- Basic operations
 		end
 
 	go_to_next_group_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN) is
-			-- Find the previous or following control with the 
+			-- Find the previous or following control with the
 			-- Wm_tabstop style in the current group in `a_parent'
 			-- depending on the value of `after'.
 		require
@@ -139,7 +139,7 @@ feature {WEL_COMPOSITE_WINDOW}
 		require
 			exists: exists
 		do
-		end 
+		end
 
 feature {WEL_DIALOG} -- Implementation
 
@@ -147,29 +147,18 @@ feature {WEL_DIALOG} -- Implementation
 			-- Set `default_window_procedure' with the
 			-- previous window procedure and set the
 			-- new one with `cwel_window_procedure_address'
-		local
-			p: POINTER
 		do
 				-- Keep the previous one
 			default_window_procedure := cwin_get_window_long (item, Gwlp_wndproc)
 
 				-- Set the new one
 			cwin_set_window_long (item, Gwlp_wndproc, cwel_window_procedure_address)
-				
-			p := internal_data
-			{WEL_INTERNAL_DATA}.set_default_window_procedure (p, default_window_procedure)
 		end
 
 	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 		do
 			Result := cwin_call_window_proc (default_window_procedure,
 				hwnd, msg, wparam, lparam)
-		end
-
-	destroy_from_dialog is
-			-- Destroy item and removes it from WEL_WINDOW_MANAGER.
-		do
-			destroy_item
 		end
 
 feature {NONE} -- Externals

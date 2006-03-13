@@ -15,7 +15,6 @@
  */
 
 #include "wel_globals.h"
-#include "eif_object_id.h"
 
 /* Temporary external used to get around genericity problem in Vision2. */
 EIF_REFERENCE generize (EIF_OBJECT g_item)
@@ -57,38 +56,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			(EIF_POINTER) wparam,
 			(EIF_POINTER) lparam));
 	} else {
-		WNDPROC proc = NULL;
-		struct EIF_WEL_USERDATA *data =
-			(struct EIF_WEL_USERDATA *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
-
-		if (data) {
-			proc = data->default_window_procedure;
-		}
-
-		switch (msg) {
-                        case WM_NCDESTROY:
-			{
-					/* Object is destroyed during call to `dispose' we need
-					 * to call `eif_object_id_free' to reset entry in GC, otherwise
-					 * it will crash at the next collection trying to find dead object
-					 */
-				if (data) {
-#ifndef EIF_IL_DLL
-	/* FIXME: It should be done in IL generation too */
-					eif_object_id_free (data->object_id);
-#endif
-					data->object_id = 0;
-					data->default_window_procedure = NULL;
-					free (data);
-					SetWindowLongPtr (hwnd, GWLP_USERDATA, (LONG_PTR) 0);
-				}
-			}
-		}
-		if (proc) {
-			return CallWindowProc (proc, hwnd, msg, wparam, lparam);
-		} else {
-			return DefWindowProc (hwnd, msg, wparam, lparam);
-		}
+		return DefWindowProc (hwnd, msg, wparam, lparam);
 	}
 }
 

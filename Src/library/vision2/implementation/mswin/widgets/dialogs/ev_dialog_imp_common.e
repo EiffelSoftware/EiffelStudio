@@ -58,17 +58,17 @@ inherit
 			has_capture as wel_has_capture,
 			cwin_dialog_box_indirect as wel_cwin_dialog_box_indirect
 		undefine
-			has_focus, on_middle_button_up, show, on_right_button_down, 
+			has_focus, on_middle_button_up, show, on_right_button_down,
 			on_move, on_size, default_ex_style, on_sys_key_down, on_key_up,
 			window_process_message, on_middle_button_down, on_kill_focus,
 			on_right_button_up, on_accelerator_command, on_menu_command,
 			on_middle_button_double_click, on_destroy, on_left_button_up,
-			on_wm_hscroll, on_notify, on_desactivate, on_wm_vscroll, 
+			on_wm_hscroll, on_notify, on_desactivate, on_wm_vscroll,
 			default_style, on_color_control, on_wm_close, on_key_down,
 			on_mouse_wheel,
-			on_draw_item, on_set_focus, background_brush, on_set_cursor, 
+			on_draw_item, on_set_focus, background_brush, on_set_cursor,
 			default_process_message, on_right_button_double_click, hide,
-			on_wm_menu_command, on_mouse_move, on_wm_window_pos_changing, 
+			on_wm_menu_command, on_mouse_move, on_wm_window_pos_changing,
 			on_show, on_char, on_left_button_down,
 			on_get_min_max_info, on_left_button_double_click, destroy,
 			on_sys_key_up, on_wm_command, on_activate, on_wm_setting_change,
@@ -78,12 +78,12 @@ inherit
 			process_message,
 			wel_move_and_resize
 		end
-			
+
 	WEL_ID_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_BN_CONSTANTS
 		export
 			{NONE} all
@@ -114,7 +114,7 @@ feature -- Status Report
 			-- Is `Current' closeable by the user?
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
-			
+
 	is_modal: BOOLEAN is
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
@@ -122,13 +122,13 @@ feature -- Status Report
 		do
 			Result := False
 		end
-		
+
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		do
 			Result := False
 		end
-		
+
 	blocking_window: EV_WINDOW is
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 				invalidate
 			end
 		end
-		
+
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
 			a_name: STRING) is
 			-- Create the dialog
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			actual_drop_target_agent := other_imp.actual_drop_target_agent
 			awaiting_movement := other_imp.awaiting_movement
 			background_color_imp := other_imp.background_color_imp
-			background_pixmap_imp := other_imp.background_pixmap_imp	
+			background_pixmap_imp := other_imp.background_pixmap_imp
 			set_base_make_called (other_imp.base_make_called)
 			child_cell := other_imp.child_cell
 			close_request_actions_internal := other_imp.close_request_actions_internal
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.lower_bar, lower_bar))
 			end
 		end
-		
+
 	post_creation_update_actions: ACTION_SEQUENCE [TUPLE []]
 		-- Action sequence to be fired after dialog is created and during initialization from
 		-- within `setup_dialog'. When we create a dialog, Windows calls us back with the
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Set the focus to the `default_push_button' if any
-			if default_push_button /= Void and then 
+			if default_push_button /= Void and then
 				default_push_button.is_show_requested and then
 				default_push_button.is_sensitive
 			then
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 				-- Add this dialog as root window.
 			application_imp.add_root_window (Current)
 		end
-	
+
 	move_children is
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
@@ -445,22 +445,22 @@ feature {NONE} -- Implementation
 			end
 			set_position (x_pos, y_pos)
 		end
-		
+
 	on_wm_command (wparam, lparam: POINTER) is
 			-- Wm_command message.
 		local
 			text_field_imp: EV_TEXT_FIELD_IMP
 			original_top_window: EV_WINDOW_IMP
 		do
-				-- Escape has been pressed in `Current', so we 
+				-- Escape has been pressed in `Current', so we
 				-- call the `select_actions' of the default_cancel_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			if cwin_lo_word (wparam) = idcancel and lparam = default_pointer then
 				if focus_on_widget.item /= Void then
-					focus_on_widget.item.process_standard_key_press (Vk_escape)	
+					focus_on_widget.item.process_standard_key_press (Vk_escape)
 				end
-			
-				-- Enter has been pressed in `Current', so we 
+
+				-- Enter has been pressed in `Current', so we
 				-- call the `select_actions' of the default_push_button.
 				-- See "Dialog Box Keyboard Interface" in MSDN.
 			elseif
@@ -480,14 +480,14 @@ feature {NONE} -- Implementation
 						-- the top dialog from the return actions of a text field, the default
 						-- push button of the lower dialog would be fired.
 					if focus_on_widget.item.top_level_window_imp = original_top_window then
-						focus_on_widget.item.process_standard_key_press (Vk_return)	
+						focus_on_widget.item.process_standard_key_press (Vk_return)
 					end
 				end
 			else
 				Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
 			end
 		end
-		
+
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
@@ -514,7 +514,7 @@ feature {NONE} -- Implementation
 			--| If it is determined that it is required, uncomment.
 			---background_brush.delete
 		end
-		
+
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
@@ -534,9 +534,8 @@ feature {NONE} -- Implementation
 			--| Redefined in order not to post a WM_QUIT message.
 		do
 			on_destroy
-			destroy_item
 		end
-		
+
 	window_on_wm_activate (wparam, lparam: POINTER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		do
@@ -555,7 +554,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	common_dialog_imp: EV_DIALOG_IMP_COMMON is
 			-- Dialog implementation type common to all descendents.
 		do
@@ -565,7 +564,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIALOG;
 			-- Interface for `Current'.
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

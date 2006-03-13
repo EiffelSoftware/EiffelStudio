@@ -72,14 +72,14 @@ feature {NONE} -- Implementation
 		local
 			timeout: EV_TIMEOUT_IMP
 		do
-			timeout ?= eif_id_any_object (id)
+			timeout ?= {WEL_IDENTIFIED}.eif_id_any_object (id)
 			if timeout /= Void then
 				timeout.on_timeout
 			else
 				remove_timeout (id)
 			end
 		end
-		
+
 	class_requires_icon: BOOLEAN is
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise

@@ -14,7 +14,7 @@ class
 inherit
 	WEL_MESSAGE_INFORMATION
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		end

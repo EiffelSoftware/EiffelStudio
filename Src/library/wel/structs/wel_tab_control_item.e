@@ -25,7 +25,7 @@ inherit
 			make as structure_make
 		end
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			create temp_window.make_with_coordinates (a_parent, create {STRING}.make (0), 0, 0, 0, 0)
 			set_window (temp_window)
 		end
-		
+
 feature -- Access
 
 	mask: INTEGER is
@@ -95,14 +95,14 @@ feature -- Access
 				Result := window_of_item (window_hwmd)
 			end
 		end
-		
+
 	iimage: INTEGER is
 			-- Index of image applied to `Current' from the tab
 			-- controls image list.
 		do
 			Result := cwel_tc_item_get_iimage (item)
 		end
-		
+
 
 feature -- Element change
 
@@ -136,7 +136,7 @@ feature -- Element change
 		ensure
 			window_set: window = a_window
 		end
-		
+
 	set_iimage (image_index: INTEGER) is
 			-- Apply image using image at position `image_index'
 			-- within the parent's image list.

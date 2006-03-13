@@ -18,7 +18,7 @@ inherit
 			is_equal
 		end
 
-	WEL_WINDOW_MANAGER
+	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_cursor_position is
-			-- Make a point and set `x' and `y' with 
+			-- Make a point and set `x' and `y' with
 			-- the current cursor position.
 		do
 			structure_make

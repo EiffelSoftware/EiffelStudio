@@ -5,10 +5,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_CONTAINER_IMP
-	
+
 inherit
 	ANY
 
@@ -68,7 +68,7 @@ feature {NONE} -- WEL Implementation
 		do
 			item_type := measure_item.ctl_type
 			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
-				menu_item_imp ?= eif_id_any_object (measure_item.item_data.to_integer_32)
+				menu_item_imp ?= {WEL_IDENTIFIED}.eif_id_any_object (measure_item.item_data.to_integer_32)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_measure_item (measure_item)
 				end
@@ -89,7 +89,7 @@ feature {NONE} -- WEL Implementation
 		do
 			item_type := draw_item.ctl_type
 			if item_type = ({WEL_ODT_CONSTANTS}.Odt_menu) then
-				menu_item_imp ?= eif_id_any_object (draw_item.item_data.to_integer_32)
+				menu_item_imp ?= {WEL_IDENTIFIED}.eif_id_any_object (draw_item.item_data.to_integer_32)
 				if menu_item_imp /= Void then
 					menu_item_imp.on_draw_item (draw_item)
 				end

@@ -39,7 +39,7 @@ inherit
 	WEL_COMPOSITE_WINDOW
 		undefine
 			destroy,
-			on_wm_nc_destroy,
+			on_wm_destroy,
 			on_wm_erase_background,
 			set_default_window_procedure,
 			call_default_window_procedure,
@@ -174,7 +174,7 @@ feature -- Status report
 			Result.set_cchtextmax (buffer_size)
 			cwin_send_message (item, Tcm_getitem, to_wparam (index), Result.item)
 		end
-			
+
 	background_region (invalid_rect: WEL_RECT): WEL_REGION is
 			-- `Result' is a background region of `Current' that needs
 			-- re-drawing when `invalid_rect' is invalidated.
@@ -238,14 +238,14 @@ feature -- Status report
 						end
 					else
 						r.set_top (r.top - 2)
-						
+
 					end
 				end
 				create tmp_region.make_rect_indirect (r)
 				new_region := Result.combine (tmp_region, Rgn_diff)
 				tmp_region.delete
 				Result.delete
-				Result := new_region 
+				Result := new_region
 				i := i + 1
 			end
 		ensure
@@ -271,11 +271,11 @@ feature -- Status setting
 	set_vertical_font (fnt: WEL_FONT) is
 			-- Assign `font' to the vertical tabs of this tab control.
 			-- (Cannot use `set_font' since its postcondition is not always fulfilled)
-			-- To use for a notebook with the tabs on the left or 
+			-- To use for a notebook with the tabs on the left or
 			-- the right.
 		do
 			cwin_send_message (item, wm_setfont, fnt.item, cwin_make_long (1, 0))
-		end			
+		end
 
 feature -- Element change
 
@@ -448,7 +448,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			Precursor {WEL_CONTROL} (a_x, a_y, a_width, a_height, repaint)
 			adjust_items
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
@@ -466,12 +466,12 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 					--| value to Windows, i.e. nonzero value.
 				disable_default_processing
 				set_message_return_value (to_lresult (1))
-	
+
 
 				a_background_region := background_region (invalid_rect)
 					-- Fill the remaining region, `main_region'.
 				paint_dc.fill_region (a_background_region, bk_brush)
-	
+
 					-- Clean up GDI objects
 				bk_brush.delete
 				a_background_region.delete
@@ -516,7 +516,7 @@ feature {NONE} -- Externals
 		alias
 			"WC_TABCONTROL"
 		end
-		
+
 	cwin_set_item_size (hwnd: POINTER; cx, cy: INTEGER) is
 			-- Change the parent of the given child
 		external

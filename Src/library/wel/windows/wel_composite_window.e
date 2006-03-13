@@ -17,7 +17,7 @@ inherit
 			move,
 			process_message,
 			on_getdlgcode,
-			on_wm_nc_destroy,
+			on_wm_destroy,
 			on_wm_notify,
 			destroy
 		end
@@ -900,13 +900,12 @@ feature {NONE} -- Implementation
 			set_default_processing (closeable)
 		end
 
-	on_wm_nc_destroy is
+	on_wm_destroy is
 			-- Wm_destroy message.
 			-- Quit the application if `Current' is the
 			-- application's main window.
 		do
 			on_destroy
-			destroy_item
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			end

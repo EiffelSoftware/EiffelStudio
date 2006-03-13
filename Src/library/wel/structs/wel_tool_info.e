@@ -21,6 +21,13 @@ inherit
 			copy, is_equal
 		end
 
+	WEL_WINDOWS_ROUTINES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -46,7 +53,7 @@ feature -- Access
 	window: WEL_WINDOW is
 			-- Window that contains the tool
 		do
-			Result := window_manager.window_of_item (cwel_toolinfo_get_hwnd (item))
+			Result := window_of_item (cwel_toolinfo_get_hwnd (item))
 		end
 
 	id: POINTER is
@@ -203,14 +210,6 @@ feature {NONE} -- Implementation
 
 	str_text: WEL_STRING
 			-- C string to save `text'
-
-	window_manager: WEL_WINDOW_MANAGER is
-			-- Window manager used by `window'
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
 
 	main_args: WEL_MAIN_ARGUMENTS is
 			-- Main arguments of the application used by `instance'

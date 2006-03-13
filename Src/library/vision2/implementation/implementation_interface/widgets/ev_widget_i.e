@@ -128,17 +128,18 @@ feature -- Status setting
 			-- Request that `Current' not be displayed when its parent is.
 		deferred
 		ensure
-			not_is_show_requested: not is_show_requested
+			--not_is_show_requested: not is_show_requested
+			--| FIXME: does not hold when an action sequence is called as a result of hiding
+			--| Current widget as this action sequence might call `show'.
 		end
 	
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		deferred
 		ensure
-				--| FIXME if we call show on a Windows modeless dialog,
-				--| then this postcondition does not hold on the previous implementation,
-				--| unless we go through the interface
-			is_show_requested: is_show_requested
+			--is_show_requested: is_show_requested
+			--| FIXME: does not hold when an action sequence is called as a result of showing
+			--| Current widget as this action sequence might call `hide'.
 		end
 
 	set_focus is

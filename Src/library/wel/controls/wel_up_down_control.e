@@ -2,7 +2,7 @@ indexing
 	description: "[
 		This control is a pair of arrow buttons that the user
 		can click to increment or decrement a value.
-	
+
 		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
 			be loaded to use this control.
 		]"
@@ -23,11 +23,6 @@ inherit
 		end
 
 	WEL_UDS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_WINDOW_MANAGER
 		export
 			{NONE} all
 		end

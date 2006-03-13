@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	last_uuid: STRING
+	last_uuid: UUID
 			-- The last parsed uuid.
 
 feature -- Callbacks
@@ -43,7 +43,7 @@ feature -- Callbacks
 				if
 					is_system and a_local_part.is_case_insensitive_equal ("uuid") and then check_uuid (a_value)
 				then
-					last_uuid := a_value
+					create last_uuid.make_from_string (a_value)
 				end
 			end
 		end

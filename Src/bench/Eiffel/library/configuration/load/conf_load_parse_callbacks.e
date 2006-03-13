@@ -316,12 +316,14 @@ feature {NONE} -- Implementation attribute processing
 			-- Process attributes of a system tag.
 		local
 			l_name, l_uuid: STRING
+			l_uu: UUID
 		do
 			l_name := current_attributes.item (at_name)
 			l_uuid := current_attributes.item (at_uuid)
 			current_library_target := current_attributes.item (at_library_target)
 			if l_name /= Void and then l_uuid /= Void and then check_uuid (l_uuid) then
-				last_system := conf_factory.new_system (l_name, l_uuid)
+				create l_uu.make_from_string (l_uuid)
+				last_system := conf_factory.new_system (l_name, l_uu)
 			else
 				set_parse_error_message ("Incorrect system tag.")
 			end

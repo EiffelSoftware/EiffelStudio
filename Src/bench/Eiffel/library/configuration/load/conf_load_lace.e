@@ -82,7 +82,7 @@ feature -- Basic operation
 					set_error (create {CONF_ERROR_PARSE})
 				end
 			else
-				last_system := conf_factory.new_system (l_ast.system_name.as_lower, uuid_generator.uuid)
+				last_system := conf_factory.new_system (l_ast.system_name.as_lower, uuid_generator.generate_uuid)
 				current_target := conf_factory.new_target (l_ast.system_name.as_lower, last_system)
 				last_system.add_target (current_target)
 				last_system.set_library_target (current_target)
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation of data retrieval
 			if a_root /= Void then
 				l_class := a_root.root_name
 				if l_class /= Void and then not l_class.is_empty then
-					l_class.to_lower
+					l_class.to_upper
 					l_cluster := a_root.cluster_mark
 					if l_cluster /= Void then
 						l_cluster.to_lower

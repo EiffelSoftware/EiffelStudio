@@ -182,7 +182,7 @@ feature -- Visit nodes
 		local
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
-			l_uuid: STRING
+			l_uuid: UUID
 			l_vis: like Current
 			l_path: STRING
 		do
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 	application_target: CONF_TARGET
 			-- The application target of the system.
 
-	libraries: HASH_TABLE [CONF_TARGET, STRING]
+	libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
 
 	assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]

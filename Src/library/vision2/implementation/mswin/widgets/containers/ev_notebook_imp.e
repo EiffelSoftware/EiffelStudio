@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"EiffelVision notebook, Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_NOTEBOOK_I
-		redefine	
+		redefine
 			interface,
 			is_usable
 		end
@@ -57,7 +57,7 @@ inherit
 			shown as is_displayed,
 			destroy as wel_destroy,
 			item as wel_item,
-			enabled as is_sensitive, 
+			enabled as is_sensitive,
 			width as wel_width,
 			height as wel_height,
 			x as x_position,
@@ -123,12 +123,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_ILC_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_IMAGE_LIST_IMP
 		export
 			{NONE} all
@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (2)
 			check_notebook_assertions := True
 		end
-	
+
 feature {AV_ANY_I} --  Access
 
 	top_level_window_imp: EV_WINDOW_IMP
@@ -191,7 +191,7 @@ feature {EV_ANY_I} -- Status report
 				Result:= interface.Tab_right
 			end
 		end
-		
+
 	pointed_tab_index: INTEGER is
 			-- index of tab currently under mouse pointer, or 0 if none.
 		local
@@ -201,10 +201,10 @@ feature {EV_ANY_I} -- Status report
 			create point.make_by_cursor_position
 			point.set_x (point.x - screen_x)
 			point.set_y (point.y - screen_y)
-			create hit_test_info.make_with_point (point)		
+			create hit_test_info.make_with_point (point)
 			Result := cwin_send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
 		end
-		
+
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
 			-- Tab associated with `an_item'.
 		do
@@ -224,7 +224,7 @@ feature {EV_ANY_I} -- Status setting
 				ev_set_minimum_width (tab_height)
 			end
 		end
-	
+
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom) according
 			-- to value of `pos'.
@@ -524,7 +524,7 @@ feature {NONE} -- WEL Implementation
  	default_style: INTEGER is
  			-- Default windows style used to create `Current'.
 		do
-			Result := Ws_child + Ws_group + Ws_tabstop 
+			Result := Ws_child + Ws_group + Ws_tabstop
 				+ Ws_visible + Ws_clipchildren + Ws_clipsiblings
 				+ Tcs_singleline
 		end
@@ -546,7 +546,7 @@ feature {NONE} -- WEL Implementation
 			elseif tab_pos = interface.tab_bottom then
  				Result := Result + Tcs_bottom + Tcs_singleline
  			elseif tab_pos = interface.tab_left then
- 				Result := Result + Tcs_vertical + Tcs_fixedwidth 
+ 				Result := Result + Tcs_vertical + Tcs_fixedwidth
 					+ Tcs_multiline
 			elseif tab_pos = interface.tab_right then
  				Result := Result + Tcs_right + Tcs_vertical
@@ -558,7 +558,7 @@ feature {NONE} -- WEL Implementation
 			-- The height of the tabs in `Tab_top' or `Tab_bottom' status,
 			-- the width of the tabs otherwise.
 		do
-			
+
 			if tab_pos = interface.Tab_top then
 				Result := sheet_rect.top - client_rect.top
 			elseif tab_pos = interface.Tab_left then
@@ -835,7 +835,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			an_index := get_child_index (child_imp)
 				-- Only select a page if it is not already selected.
 			if an_index /= selected_item_index then
-				set_current_selection (an_index - 1)	
+				set_current_selection (an_index - 1)
 			end
 		end
 
@@ -853,11 +853,11 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			a_wel_item.set_mask (Tcif_text)
 			update_item (child_index - 1, a_wel_item)
 		end
-		
+
 	image_list: EV_IMAGE_LIST_IMP
 		-- Image list associated with `Current'.
 		-- `Void' if none.
-		
+
 	set_item_pixmap (v: like item; a_pixmap: EV_PIXMAP) is
 			-- Assign `a_text' to the label for `an_item'.
 		require else
@@ -872,7 +872,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			create a_wel_item.make
 				-- Ensure that the item mask allows `iimage' to be a required member.
 			a_wel_item.set_mask (tcif_image)
-			
+
 			if a_pixmap /= Void then
 				if image_list = Void then
 						-- If no image list is associated with `Current', retrieve
@@ -889,11 +889,11 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					-- is associated with a tab.
 				a_wel_item.set_iimage (-1)
 			end
-			
+
 				-- Update status of tab item.
 			update_item (child_index - 1, a_wel_item)
 		end
-		
+
 	item_pixmap (v: like item): EV_PIXMAP is
 			-- `Result' is pixmap associated with `Current' or `Void' if none.
 		require
@@ -917,7 +917,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					-- If so, there is nothing to do as the returned pixmap must be `Void'.
 				if image_index >= 0 then
 						-- An image index greater or equal to zero indicates an image is used,
-						-- so we retrieve this image and 
+						-- so we retrieve this image and
 					image_icon := image_list.get_icon (image_index, Ild_normal)
 					create Result
 					pix_imp ?= Result.implementation
@@ -951,7 +951,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			a_wel_item := get_item (child_index - 1)
 			Result := a_wel_item.text
 		end
-	
+
 	selected_item: like item is
 			-- Page displayed topmost.
 		local
@@ -962,7 +962,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				Result := child_imp.interface
 			end
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
@@ -980,15 +980,15 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				Precursor {WEL_TAB_CONTROL} (paint_dc, invalid_rect)
 			end
 		end
-		
+
 	on_wm_theme_changed is
 			-- `Wm_themechanged' message received by Windows so update current theming.
 		do
 			application_imp.theme_drawer.close_theme_data (open_theme)
-			application_imp.update_theme_drawer			
+			application_imp.update_theme_drawer
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
 		end
-		
+
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
@@ -1038,7 +1038,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 		end
-		
+
 	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
@@ -1056,11 +1056,11 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			else
 				Result := Precursor {EV_WIDGET_LIST_IMP} (start_widget, search_pos, forwards)
 			end
-			
+
 		end
-		
+
 feature {EV_XP_THEME_DRAWER_IMP} -- Implementation
-		
+
 	open_theme: POINTER
 		-- Theme currently open for `Current'. May be Void while running on Windows versions that
 		-- do no support theming.
@@ -1093,9 +1093,9 @@ feature {NONE} -- Font implementation
 			end
 			notify_change (2 + 1, Current)
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
-		
+
 	interface: EV_NOTEBOOK;
 
 indexing

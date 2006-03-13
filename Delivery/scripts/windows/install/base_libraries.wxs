@@ -1021,6 +1021,12 @@
 						</Directory>
 					</Directory>
 					<Directory Id="obsolete" Name="obsolete">
+						<Directory Id="thread2" Name="thread">
+							<Component Id="thread2" Guid="F81ED0E2-D8FB-46e0-BE36-583FCDE51DBE">
+								<File Id="object_owner.e" Name="OBJECT~1.E" LongName="object_owner.e" />
+								<File Id="proxy.e" Name="proxy.e" />
+							</Component>
+						</Directory>
 						<Directory Id="base2" Name="base">
 							<Directory Id="desc" Name="desc">
 								<Directory Id="general" Name="general">
@@ -1642,8 +1648,6 @@
 					</Directory>
 					<Directory Id="thread" Name="thread">
 						<Component Id="thread" Guid="7B320094-02FD-41FD-8807-0FAA49BA1F33">
-							<File Id="object_owner.e" Name="OBJECT~1.E" LongName="object_owner.e" />
-							<File Id="proxy.e" Name="proxy.e" KeyPath="yes" />
 							<File Id="worker_thread.e" Name="WORKER~1.E" LongName="worker_thread.e" />
 						</Component>
 						<Directory Id="classic2" Name="classic">

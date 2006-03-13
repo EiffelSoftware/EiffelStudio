@@ -70,20 +70,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	void *wel_per_thread_data;
 #endif
 
-#ifdef WORKBENCH
-		/* debug.c */
-	struct dbinfo d_data_cx;			/* Global debugger information */
-	struct opstack cop_stack_cx;
-#endif
-
 		/* except.c */
 	struct xstack eif_stack_cx;			/* Calling stack */
 	struct eif_exception exdata_cx;		/* Exception handling global flags */
-
-		/* interp.c */
-#ifdef WORKBENCH
-	unsigned char *IC_cx;				/* Interpreter Counter (like PC on a CPU) */
-#endif	/* WORKBENCH */
 
 		/* plug.c */
 	int nstcall_cx;			/* Nested call global variable: signals a nested call and
@@ -95,17 +84,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int in_assertion_cx ;    /* Is an assertion evaluated? */
 
 		/* garcol.c */
-#ifdef ISE_GC
-	struct stack loc_stack_cx;			/* Local indirection stack */
-	struct stack loc_set_cx;	/* Local variable stack */
-#endif
 	struct stack once_set_cx;	/* Once functions */
 	struct stack oms_set_cx;	/* Once manifest strings */
-
-		/* hector.c */
-#ifdef ISE_GC
-	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
-#endif
 
 		/* option.c */
 	int trace_call_level_cx;
@@ -113,6 +93,24 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* storable.c from EiffelNet */
 	int socket_fides_cx;
+
+#ifdef WORKBENCH
+		/* debug.c */
+	struct dbinfo d_data_cx;			/* Global debugger information */
+	struct opstack cop_stack_cx;
+
+		/* interp.c */
+	unsigned char *IC_cx;				/* Interpreter Counter (like PC on a CPU) */
+#endif	/* WORKBENCH */
+
+		/* garcol.c */
+#ifdef ISE_GC
+	struct stack loc_stack_cx;			/* Local indirection stack */
+	struct stack loc_set_cx;	/* Local variable stack */
+
+		/* hector.c */
+	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
+#endif
 } eif_global_context_t;
 
 

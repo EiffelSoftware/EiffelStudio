@@ -58,7 +58,7 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st,
 rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
 rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
-#ifdef EIF_ASSERTIONS
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
 #endif
 
@@ -113,11 +113,13 @@ rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 #ifdef ISE_GC
 	EIF_INTEGER id;
 
+#ifdef EIF_EXPENSIVE_ASSERTIONS
   		/* Make sure object is not already in Object ID stack,
 		 * because otherwise when the object is disposed only
 		 * one entry will be deleted, not the other one
 		 * and therefore corrupting GC memory */
   	REQUIRE ("Not in Object ID stack", !has_object(&object_id_stack, eif_access (object)));
+#endif
 
 	EIF_OBJECT_ID_LOCK;
 	id = private_object_id(eif_access(object), &object_id_stack, &max_object_id);
@@ -152,7 +154,9 @@ rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
 	ref = private_id_object (id, &object_id_stack, max_object_id);
 	EIF_OBJECT_ID_UNLOCK;
 
+#ifdef EIF_EXPENSIVE_ASSERTIONS
   	ENSURE ("Object found", (!ref) || (ref && has_object(&object_id_stack, ref)));
+#endif
 
 	return ref;
 #else
@@ -173,7 +177,9 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 	EIF_OBJECT_ID_UNLOCK;
 
 	ENSURE ("Object of id must be free", eif_id_object(id) == NULL);
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 	ENSURE ("Object of id is not in Object ID stack", !has_object(&object_id_stack, ref));
+#endif
 #endif
 }
 
@@ -398,7 +404,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 }
 
 
-#ifdef EIF_ASSERTIONS
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 {
 	struct stchunk *ck;

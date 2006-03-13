@@ -96,7 +96,7 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 
 #ifdef ISE_GC
 
-#ifdef EIF_ASSERTIONS
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
 #endif
 
@@ -2936,8 +2936,10 @@ rt_private int sweep_from_space(void)
 					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
 					rt_g_data.status = gc_status;			/* Restart GC */
 				}
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
 					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+#endif
 			}
 		} else {
 			size = flags & B_SIZE;		/* Pre-compute that guy */
@@ -3006,8 +3008,10 @@ rt_private int sweep_from_space(void)
 						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
 						rt_g_data.status = gc_status;		/* Restore previous GC status */
 					}
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 					CHECK ("Cannot be in object ID stack",
 						!has_object (&object_id_stack, (EIF_REFERENCE) next + 1));
+#endif
 
 					rt_m_data.ml_over -= OVERHEAD;		/* Memory accounting */
 					rt_m_data.ml_used += OVERHEAD;		/* Overhead is used */
@@ -4386,8 +4390,10 @@ rt_private void update_memory_set ()
 				DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose'. */
 				in_assertion = saved_in_assertion;	/* Set in_assertion back. */
 				rt_g_data.status = gc_status;		/* Restore previous GC status.*/
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
 					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+#endif
 			}
 
 #ifdef DEBUG_UPDATE_MEMORY_SET
@@ -4617,8 +4623,10 @@ rt_shared void gfree(register union overhead *zone)
 		}
 	}
 
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 	CHECK ("Cannot be in object ID stack",
 		!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+#endif
 
 #ifdef DEBUG
 	dprintf(8)("gfree: freeing object 0x%lx, DT = %d\n",

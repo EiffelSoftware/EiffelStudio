@@ -9,6 +9,11 @@ frozen class
 	UUID
 
 inherit
+	HASHABLE
+		undefine
+			is_equal, out
+		end
+
 	COMPARABLE
 		redefine
 			out
@@ -183,6 +188,13 @@ feature -- Conversion
 		ensure then
 			result_attached: Result /= Void
 			result_is_valid_uuid: is_valid_uuid (Result)
+		end
+
+feature -- Access
+
+	hash_code: INTEGER is
+		do
+			Result := out.hash_code
 		end
 
 feature -- Comparison

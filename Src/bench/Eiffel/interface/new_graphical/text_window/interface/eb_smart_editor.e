@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 			customizable_commands.put (agent quick_search, "show_quick_search_bar")
 			customizable_commands.put (agent replace, "show_search_and_replace_panel")
 			customizable_commands.put (agent find_selection, "search_selection")
-			customizable_commands.put (agent find_next, "search_last")
+			customizable_commands.put (agent find_last, "search_last")
 			customizable_commands.put (agent find_previous, "search_backward")
 			customizable_commands.put (agent insert_customized_string (1), "customized_insertion_1")
 			customizable_commands.put (agent insert_customized_string (2), "customized_insertion_2")

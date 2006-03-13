@@ -74,6 +74,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := init_subclusters_preference.value
 		end
 
+	none_result_keyword_field_background_color: EV_COLOR is
+			-- Background color of keyword field, when no result.
+		do
+			Result := none_result_keyword_field_background_color_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	init_incremental_preference: BOOLEAN_PREFERENCE
@@ -86,6 +92,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	init_only_compiled_classes_preference: BOOLEAN_PREFERENCE
 	init_subclusters_preference: BOOLEAN_PREFERENCE
 
+	none_result_keyword_field_background_color_preference: COLOR_PREFERENCE
+
 feature {NONE} -- Preference Strings
 
 	init_incremental_string: STRING is "tools.search_tool.init_incremental"
@@ -97,6 +105,8 @@ feature {NONE} -- Preference Strings
 	init_scope_string: STRING is "tools.search_tool.init_scope"
 	init_only_compiled_classes_string: STRING is "tools.search_tool.init_only_compiled_classes"
 	init_subclusters_string: STRING is "tools.search_tool.init_subclusters"
+
+	none_result_keyword_field_background_color_string: STRING is "tools.search_tool.none_result_keyword_field_background_color"
 
 feature {NONE} -- Implementation
 
@@ -116,6 +126,7 @@ feature {NONE} -- Implementation
 			init_scope_preference.set_is_choice (True)
 			init_only_compiled_classes_preference := l_manager.new_boolean_preference_value (l_manager, init_only_compiled_classes_string, False)
 			init_subclusters_preference := l_manager.new_boolean_preference_value (l_manager, init_subclusters_string, True)
+			none_result_keyword_field_background_color_preference := l_manager.new_color_preference_value (l_manager, none_result_keyword_field_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 175, 138))
 		end
 
 	preferences: PREFERENCES
@@ -130,19 +141,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

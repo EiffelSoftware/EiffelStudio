@@ -72,6 +72,7 @@ feature {NONE} -- Initialization
 			create changed_classes.make (0)
 			create loaded_actions
 			create show_actions
+			create last_keyword_queue.make
 			incremental_search_start_pos := 1
 		end
 
@@ -1000,7 +1001,7 @@ feature {NONE} -- Shortcut button actions
 feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 
 	new_search_or_go_next is
-			-- Invokes when search button is clicked.
+			-- If new search is not necessary, go to next found.
 		do
 			check_class_succeed := true
 			if new_search_set or not multi_search_performer.is_search_launched then
@@ -1210,6 +1211,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				replace_button.disable_sensitive
 				replace_all_click_button.disable_sensitive
 			end
+			trigger_keyword_field_color (keyword_field)
 			if old_search_key_value /= Void and then not old_search_key_value.is_equal (keyword_field.text) then
 				force_new_search
 			end
@@ -1283,6 +1285,19 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			end
 		end
 
+	trigger_keyword_field_color (a_keyword_field: EV_COMBO_BOX) is
+			-- Trigger keyword field color after incremental search.
+			-- Highlight background if no result.
+		do
+			if is_incremental_search then
+				if a_keyword_field.text_length > 0 and (not multi_search_performer.is_search_launched or multi_search_performer.is_empty) then
+					a_keyword_field.set_background_color (no_result_bgcolor)
+				else
+					a_keyword_field.set_background_color (normal_bgcolor)
+				end
+			end
+		end
+
 feature {EB_DEVELOPMENT_WINDOW} -- Notification
 
 	class_changed (a_class: CLASS_I) is
@@ -1298,24 +1313,22 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 	dispatch_search is
 			-- Dispatch search.
 		do
-			if is_whole_project_searched then
-				search_whole_project
-			elseif is_customized then
-				search_in_scope
-			else
-				if shown then
-					if search_button.is_sensitive then
-						if new_search_set or not multi_search_performer.is_search_launched then
-							search
-						end
-						if not editor.has_focus then
-							editor.set_focus
-						end
-					end
-				else
+			if shown then
+				if is_whole_project_searched then
+					search_whole_project
+				elseif is_customized then
+					search_in_scope
+				elseif search_button.is_sensitive then
 					if new_search_set or not multi_search_performer.is_search_launched then
-						default_search
+						search
 					end
+					if not editor.has_focus then
+						editor.set_focus
+					end
+				end
+			else
+				if new_search_set or not multi_search_performer.is_search_launched then
+					default_search
 				end
 			end
 		end
@@ -1531,6 +1544,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				old_search_key_value := currently_searched
 				old_editor := editor
 				search_report_grid.redraw_grid
+				trigger_keyword_field_color (keyword_field)
 				changed_classes.wipe_out
 				extend_and_run_loaded_action (agent force_not_changed)
 			end
@@ -2005,7 +2019,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		end
 
 	old_search_key_value: STRING
-			-- Last search keyword.
+			-- Internal last search keyword.
 
 	old_editor: EB_EDITOR
 			-- In which last search did.
@@ -2061,6 +2075,30 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 			if box.text.is_empty or else not word.is_equal (box.text) then
 				box.set_text (word)
+			end
+			put_in_last_keyword_queue (word)
+		end
+
+	last_keyword: STRING is
+			-- Last searched keyword.
+		do
+			if not last_keyword_queue.is_empty then
+				Result := last_keyword_queue.first
+			end
+		end
+
+	last_keyword_queue: LINKED_LIST [like last_keyword]
+			-- Last searched keyword queue.
+
+	put_in_last_keyword_queue (a_str: like last_keyword) is
+			--
+		do
+			if last_keyword_queue.is_empty or (not last_keyword_queue.is_empty and then not last_keyword_queue.last.is_equal (a_str)) then
+				last_keyword_queue.extend (a_str)
+			end
+			if last_keyword_queue.count > 2 then
+				last_keyword_queue.start
+				last_keyword_queue.remove
 			end
 		end
 
@@ -2120,6 +2158,21 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	blocking_actions_times: INTEGER;
 			-- Blocking actions?
+
+	no_result_bgcolor: EV_COLOR is
+			-- Background color when no result for incremental search.
+		do
+			Result := preferences.search_tool_data.none_result_keyword_field_background_color
+		end
+
+	normal_bgcolor: EV_COLOR is
+			-- Normal background color.
+		local
+			l_comb: EV_COMBO_BOX
+		once
+			create l_comb
+			Result := l_comb.background_color
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

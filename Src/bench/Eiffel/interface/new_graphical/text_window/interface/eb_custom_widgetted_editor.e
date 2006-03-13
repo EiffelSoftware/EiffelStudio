@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			customizable_commands.put (agent quick_search, "show_quick_search_bar")
 			customizable_commands.put (agent replace, "show_search_and_replace_panel")
 			customizable_commands.put (agent find_selection, "search_selection")
-			customizable_commands.put (agent find_next, "search_last")
+			customizable_commands.put (agent find_last, "search_last")
 			customizable_commands.put (agent find_previous, "search_backward")
 		end
 
@@ -131,6 +131,16 @@ feature -- Quick search bar basic operation
 			check_cursor_position
 		end
 
+	quick_find_last is
+			-- Find last using default search and options on quick search bar.
+		do
+			prepare_search_last
+			search_bar.record_current_searched
+			prepare_quick_search
+			search_tool.go_to_next_found
+			check_cursor_position
+		end
+
 	set_quick_search_mode (a_mode: BOOLEAN) is
 			-- Set `quick_search_mode' with `a_mode'.
 		do
@@ -202,7 +212,7 @@ feature {NONE} -- Quick search bar.
 		local
 			l_editor: EB_EDITOR
 		do
-			if not is_empty then
+			if not is_empty and search_tool.is_incremental_search then
 				if search_bar.keyword_field.text_length /= 0 then
 					l_editor := search_tool.old_editor
 					search_tool.set_old_editor (Current)
@@ -217,6 +227,7 @@ feature {NONE} -- Quick search bar.
 					search_tool.retrieve_cursor
 				end
 			end
+			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
 	option_changed is
@@ -276,9 +287,11 @@ feature {NONE} -- Quick search bar.
 		local
 			l_shortcut_sel: SHORTCUT_PREFERENCE
 			l_shortcut_pre: SHORTCUT_PREFERENCE
+			l_shortcut_last: SHORTCUT_PREFERENCE
 		do
 			l_shortcut_sel := preferences.editor_data.shortcuts.item ("search_selection")
 			l_shortcut_pre := preferences.editor_data.shortcuts.item ("search_backward")
+			l_shortcut_last := preferences.editor_data.shortcuts.item ("search_last")
 			if a_key.code = {EV_KEY_CONSTANTS}.key_escape and not ctrled_key and not shifted_key and not alt_key then
 				close_quick_search_bar
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter and not ctrled_key and not shifted_key and not alt_key then
@@ -288,6 +301,8 @@ feature {NONE} -- Quick search bar.
 				quick_find_next
 			elseif l_shortcut_pre.matches (a_key, alt_key, ctrled_key, shifted_key) then
 				quick_find_previous
+			elseif l_shortcut_last.matches (a_key, alt_key, ctrled_key, shifted_key) then
+				quick_find_last
 			end
 		end
 
@@ -319,6 +334,16 @@ feature {NONE} -- Quick search bar.
 		end
 
 feature -- Search commands
+
+	find_last is
+			-- Search last searched if any.
+		do
+			if search_tool /= Void then
+				prepare_search_last
+				search_tool.go_to_next_found
+				check_cursor_position
+			end
+		end
 
 	find_next is
 			-- Find next occurrence of last searched pattern.
@@ -395,6 +420,30 @@ feature {NONE} -- Implementation
 			end
 			if not text_displayed.is_empty then
 				check_cursor_position
+			end
+		end
+
+	prepare_search_last is
+			-- Prepare search last.
+		local
+			l_incremental_search : BOOLEAN
+			l_str: STRING
+		do
+			l_str := search_tool.last_keyword
+			if l_str /= Void then
+				search_tool.set_check_class_succeed (True)
+				search_tool.force_new_search
+				l_incremental_search := search_tool.is_incremental_search
+				search_tool.disable_incremental_search
+				search_tool.set_current_searched (l_str)
+				if l_incremental_search then
+					search_tool.enable_incremental_search
+				end
+				if search_tool.currently_searched /= Void and then not search_tool.currently_searched.is_equal (search_bar.keyword_field.text) then
+					search_bar.keyword_field.change_actions.block
+					search_bar.keyword_field.set_text (search_tool.currently_searched)
+					search_bar.keyword_field.change_actions.resume
+				end
 			end
 		end
 

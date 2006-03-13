@@ -8,7 +8,7 @@ indexing
 	legal: "See notice at end of class."
 	appearance:
 		"[
-			  _______  _______  _______       
+			  _______  _______  _______
 			_/ tab_1 \/_tab_2_\/_tab_3_\______
 			|                                |
 			|         selected_item          |
@@ -19,12 +19,12 @@ indexing
 	keywrods: "notebook, tab, page"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_NOTEBOOK
 
 inherit
-	
+
 	EV_WIDGET_LIST
 		redefine
 			implementation,
@@ -37,7 +37,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 	EV_FONTABLE
 		undefine
 			is_equal
@@ -45,7 +45,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER
 		undefine
 			is_equal
@@ -57,7 +57,7 @@ inherit
 create
 	default_create
 
-feature -- Access 
+feature -- Access
 
 	item_text (an_item: EV_WIDGET): STRING is
 			-- Label of `an_item'.
@@ -71,7 +71,7 @@ feature -- Access
 			not_void: Result /= Void
 			cloned: Result /= implementation.item_text (an_item)
 		end
-		
+
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
 			-- Tab associated with `an_item'.
 		require
@@ -82,7 +82,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	selected_item: EV_WIDGET is
@@ -117,7 +117,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.tab_position
 		end
-		
+
 	pointed_tab_index: INTEGER is
 			-- index of tab currently under mouse pointer, or 0 if none.
 		require
@@ -129,7 +129,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	position_tabs_top is
 			-- Display tabs at top of `Current'.
 		require
@@ -195,7 +195,7 @@ feature -- Status setting
 		end
 
 feature -- Constants
-	
+
 	Tab_left: INTEGER is unique
 			-- Value used to position tab at left.
 
@@ -222,7 +222,7 @@ feature -- Element change
 			item_text_assigned: item_text (an_item).is_equal (a_text)
 			cloned: item_text (an_item) /= a_text
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

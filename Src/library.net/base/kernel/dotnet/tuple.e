@@ -981,10 +981,15 @@ feature -- Conversion
 
 	to_cil: NATIVE_ARRAY [SYSTEM_OBJECT] is
 			-- A reference to a CIL form of current tuple.
+		local
+			nb: INTEGER
 		do
-			Result := native_array
+			nb := count
+			create Result.make (nb)
+			{SYSTEM_ARRAY}.copy (native_array, 0, Result, 0, nb)
 		ensure
 			non_void_to_cil: Result /= Void
+			no_sharing: Result /= native_array
 		end
 
 feature {ROUTINE} -- Fast access

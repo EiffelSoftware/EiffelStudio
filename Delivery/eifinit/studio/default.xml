@@ -493,7 +493,7 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
 
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
 
@@ -604,4 +604,6 @@
 	<PREF NAME="tools.search_tool.init_scope" DESCRIPTION="Initial search scope."><LIST>[Current Editor];Whole Project;Custom</LIST></PREF>
 	<PREF NAME="tools.search_tool.init_only_compiled_classes" DESCRIPTION="Initial status of only compiled classes."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_subclusters" DESCRIPTION="Initial status of searching subclusters."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.search_tool.none_result_keyword_field_background_color" DESCRIPTION="Background color of none result keyword field" HIDDEN="True"><COLOR>255;175;138</COLOR></PREF>
+
 </EIFFEL_DOCUMENT>

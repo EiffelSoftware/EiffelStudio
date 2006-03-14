@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	WEL_ANY
+		redefine
+			dispose
+		end
 
 	REFACTORING_HELPER
 		export
@@ -1830,15 +1833,20 @@ feature -- Registration
 	frozen register_current_window is
 			-- Register `Current' in window manager.
 		local
-			p: POINTER
+			l_null, p: POINTER
 			l_object_id: INTEGER
 		do
-			p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
-			p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
-			l_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
-			{WEL_INTERNAL_DATA}.set_object_id (p, l_object_id)
+			p := internal_data
+				-- If object was already registered, no need to recreate `internal_data',
+				-- we simply set `GWLP_USERDATA' with `internal_data' again.
+			if p = l_null then
+				p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
+				internal_data := p
+				p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
+				l_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
+				{WEL_INTERNAL_DATA}.set_object_id (p, l_object_id)
+			end
 			cwin_set_window_long (item, Gwlp_userdata, p)
-			internal_data := p
 		ensure
 			registered: is_registered
 		end
@@ -1880,6 +1888,27 @@ feature {WEL_WINDOW} -- Properties
 
 feature {NONE} -- Removal
 
+	frozen dispose is
+			-- Free allocated memory.
+		local
+			l_null, l_data: POINTER
+			l_object_id: INTEGER
+		do
+				-- Free memory taken by `internal_data'.
+			l_data := internal_data
+			if l_data /= l_null then
+				l_object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
+				check
+					l_object_id_valid: l_object_id > 0
+				end
+				{WEL_IDENTIFIED}.eif_object_id_free (l_object_id)
+				l_data.memory_free
+				internal_data := l_null
+			end
+
+			Precursor {WEL_ANY}
+		end
+
 	frozen destroy_item is
 			-- Called by GC and `item' is still not equal to default_pointer,
 			-- meaning that `destroy' has not been called. We need to call it.
@@ -1891,26 +1920,11 @@ feature {NONE} -- Removal
 			-- Cleanup current. If `is_from_gc' then it was called from `dispose',
 			-- otherwise from a call to `destroy'.
 		local
-			l_null, l_data: POINTER
-			l_object_id: INTEGER
+			l_null: POINTER
 			p, hwnd: POINTER
 			l_result: INTEGER
 		do
-			if is_from_gc then
-					-- Free memory taken by `internal_data'.
-				l_data := internal_data
-				if l_data /= l_null then
-					l_object_id := {WEL_INTERNAL_DATA}.object_id (l_data)
-					check
-						l_object_id_valid: l_object_id > 0
-					end
-					{WEL_IDENTIFIED}.eif_object_id_free (l_object_id)
-					l_data.memory_free
-					internal_data := l_null
-				end
-			end
-
-				-- Now take care of `item'.
+				-- Take care of `item'.
 			hwnd := item
 			if is_window (hwnd) then
 					-- When called from `dispose' we do not want to come back in Eiffel code

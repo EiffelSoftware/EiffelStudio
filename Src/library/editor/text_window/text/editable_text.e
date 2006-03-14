@@ -320,6 +320,8 @@ feature -- Basic Operations
 			l_token, cursor_token: EDITOR_TOKEN
 			end_loop: BOOLEAN
 			l_cursor: like cursor
+			l_current_line: like current_line
+			l_next_line: like current_line
 		do
 			l_cursor := cursor
 			cursor_token := l_cursor.token.previous
@@ -328,31 +330,39 @@ feature -- Basic Operations
 			until
 				after
 			loop
-				from
-					l_token := current_line.eol_token.previous
-					end_loop := false
-				until
-					l_token = Void or end_loop
-				loop
-					if l_token.is_blank then
-						if cursor_token = l_token then
-							end_loop := true
-						else
-							if l_token.previous /= Void then
-								l_token.previous.set_next_token (l_token.next)
+				l_current_line := current_line
+				l_next_line := current_line.next
+						-- If current line is not verbatim string or
+						-- the next line is not verbatim string, namely current line
+						-- is the last line of verbatim string, we do not remove trailing blanks.
+				if not l_current_line.part_of_verbatim_string or else
+						(l_next_line /= Void and then not l_next_line.part_of_verbatim_string) then
+					from
+						l_token := l_current_line.eol_token.previous
+						end_loop := false
+					until
+						l_token = Void or end_loop
+					loop
+						if l_token.is_blank then
+							if cursor_token = l_token then
+								end_loop := true
+							else
+								if l_token.previous /= Void then
+									l_token.previous.set_next_token (l_token.next)
+								end
+								l_token.next.set_previous_token (l_token.previous)
+								create cursor.make_from_relative_pos (l_current_line, l_token.next, 1, Current)
+								history.record_remove_trailing_blank (l_token.image)
 							end
-							l_token.next.set_previous_token (l_token.previous)
-							create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
-							history.record_remove_trailing_blank (l_token.image)
+						else
+							end_loop := true
 						end
-					else
-						end_loop := true
-					end
-					if not end_loop then
-						l_token := l_token.previous
+						if not end_loop then
+							l_token := l_token.previous
+						end
 					end
 				end
-				current_line.update_token_information
+				l_current_line.update_token_information
 				forth
 			end
 			cursor := l_cursor
@@ -365,6 +375,7 @@ feature -- Basic Operations
 			l_token, cursor_token: EDITOR_TOKEN
 			end_loop: BOOLEAN
 			l_cursor: like cursor
+			l_next_line: like current_line
 		do
 			l_cursor := cursor
 			cursor_token := l_cursor.token.previous
@@ -373,28 +384,35 @@ feature -- Basic Operations
 			until
 				after
 			loop
-				from
-					l_token := current_line.eol_token.previous
-					end_loop := false
-				until
-					l_token = Void or end_loop
-				loop
-					if l_token.is_blank then
-						if l_token.is_fake then
-							if l_token.previous /= Void then
-								l_token.previous.set_next_token (l_token.next)
+				l_next_line := current_line.next
+						-- If current line is not verbatim string or
+						-- the next line is not verbatim string, namely current line
+						-- is the last line of verbatim string, we do not remove trailing blanks.
+				if not current_line.part_of_verbatim_string or else
+						(l_next_line /= Void and then not l_next_line.part_of_verbatim_string) then
+					from
+						l_token := current_line.eol_token.previous
+						end_loop := false
+					until
+						l_token = Void or end_loop
+					loop
+						if l_token.is_blank then
+							if l_token.is_fake then
+								if l_token.previous /= Void then
+									l_token.previous.set_next_token (l_token.next)
+								end
+								l_token.next.set_previous_token (l_token.previous)
+								create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
+								history.record_remove_trailing_blank (l_token.image)
+							else
+								end_loop := true
 							end
-							l_token.next.set_previous_token (l_token.previous)
-							create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
-							history.record_remove_trailing_blank (l_token.image)
 						else
 							end_loop := true
 						end
-					else
-						end_loop := true
-					end
-					if not end_loop then
-						l_token := l_token.previous
+						if not end_loop then
+							l_token := l_token.previous
+						end
 					end
 				end
 				current_line.update_token_information
@@ -402,7 +420,6 @@ feature -- Basic Operations
 			end
 			cursor := l_cursor
 		end
-
 
 	insert_char (c: CHARACTER) is
 			-- Insert `c' at the cursor position.

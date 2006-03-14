@@ -117,17 +117,16 @@ feature -- Basic operations
 		do
 			l_refresh := false
 			l_index := replace_items.index
-			l_saved_item := replace_items.item
 			from
 				replace_items.start
 			until
 				replace_items.after
 			loop
+				l_saved_item := replace_items.item
 				l_item ?= replace_items.item
 				if l_item /= Void then
 					if is_current_replaced_as_cluster (l_item) then
 						l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
-						remove_item (l_item)
 						if l_last_item = Void or (l_last_item /= Void and then l_last_item.pcre_regex /= l_item.pcre_regex) then
 							l_item.pcre_regex.first_match
 							l_string :=	l_item.pcre_regex.replace_all (replace_string)
@@ -136,6 +135,7 @@ feature -- Basic operations
 							one_cluster_item_replaced (l_item)
 							l_last_item := l_item
 						end
+						remove_item (l_item)
 					else
 						replace
 					end
@@ -145,7 +145,6 @@ feature -- Basic operations
 					replace_items.forth
 				end
 			end
-			replace_items.wipe_out
 			is_replace_launched_internal := true
 		ensure
 			replace_items_empty: replace_items.is_empty

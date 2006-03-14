@@ -9,7 +9,7 @@ indexing
 
 class SK_CONST
 	
-feature {NONE}
+feature -- Access
 
 	Sk_exp: INTEGER is 0x80000000
 			-- Defined in eif_struct.h as SK_EXP

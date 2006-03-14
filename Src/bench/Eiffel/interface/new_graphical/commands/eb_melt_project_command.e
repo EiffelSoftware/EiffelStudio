@@ -248,7 +248,6 @@ feature -- Execution
 			-- Kill c compilation and go on running Eiffel compilation.
 		do
 			output_manager.clear
-			output_manager.force_display
 			execute_with_c_compilation_flag (True)
 		end
 

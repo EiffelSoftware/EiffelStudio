@@ -1537,6 +1537,7 @@
 									<File Id="ev_list_item.e" Name="EV_LIS~D.E" LongName="ev_list_item.e" />
 									<File Id="ev_menu_bar.e" Name="EV_MEN~L.E" LongName="ev_menu_bar.e" />
 									<File Id="ev_header_item_e" Name="EV_HEA~1.E" LongName="ev_header_item.e" />
+									<File Id="ev_tool_bar_dropdown_button_e" Name="EVACA5~1.E" LongName="ev_tool_bar_dropdown_button.e" />
 								</Component>
 							</Directory>
 							<Directory Id="figures19" Name="figures">
@@ -1930,6 +1931,7 @@
 										<File Id="ev_list_item_imp.e" Name="EV_LIS~C.E" LongName="ev_list_item_imp.e" />
 										<File Id="ev_tool_bar_separator_imp.e" Name="EV_TOO~B.E" LongName="ev_tool_bar_separator_imp.e" />
 										<File Id="ev_header_item_imp_e" Name="EV_HEA~1.E" LongName="ev_header_item_imp.e" />
+										<File Id="ev_tool_bar_dropdown_button_imp_e" Name="EVBE4D~1.E" LongName="ev_tool_bar_dropdown_button_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="events24" Name="events">
@@ -2131,6 +2133,7 @@
 										<File Id="ev_multi_column_list_row_i.e" Name="EV_MUL~E.E" LongName="ev_multi_column_list_row_i.e" />
 										<File Id="ev_radio_menu_item_i.e" Name="EV_RAD~9.E" LongName="ev_radio_menu_item_i.e" />
 										<File Id="ev_menu_i.e" Name="EV_MEN~N.E" LongName="ev_menu_i.e" />
+										<File Id="ev_tool_bar_dropdown_button_i_e" Name="EV8845~1.E" LongName="ev_tool_bar_dropdown_button_i.e" />
 									</Component>
 								</Directory>
 								<Directory Id="properties35" Name="PROPER~2" LongName="properties">

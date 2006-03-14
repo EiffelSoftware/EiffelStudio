@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 			create format
 			format_stack.extend (format)
 			create ast_output_strategy.make (Current)
+			setup_output_strategy
 		end
 
 feature -- Initialization
@@ -107,12 +108,9 @@ feature -- Initialization
 			valid_source_class: a_source_class /= Void
 			valid_ast: a_feature_as /= Void
 		do
-			ast_output_strategy.set_source_class (source_class)
 			source_class := a_source_class
-			ast_output_strategy.set_current_class (current_class)
 			source_feature := a_source_class.feature_of_feature_id (a_feature_as.id)
-			ast_output_strategy.set_source_feature (source_feature)
-			ast_output_strategy.set_current_feature (target_feature)
+			setup_output_strategy
 		end
 
 	init_feature_context (source, target: FEATURE_I;
@@ -128,19 +126,15 @@ feature -- Initialization
 			source_feature := source
 			assertion_source_feature := source
 			target_feature := target
-			ast_output_strategy.set_source_class (source.written_class)
-			ast_output_strategy.set_source_feature (source)
 			source_class := source.written_class
-			ast_output_strategy.set_current_class (current_class)
-			ast_output_strategy.set_current_feature (target)
+			setup_output_strategy
 		end
 
 	init_variant_context is
 			-- Initialize context as processing in variant.
 		do
-			ast_output_strategy.set_current_feature (Void)
-			ast_output_strategy.set_source_feature (Void)
 			source_feature := Void
+			setup_output_strategy
 			set_in_assertion
 		end
 
@@ -398,10 +392,7 @@ feature -- Setting
 			-- Set `is_for_documentation'
 		do
 			create {AST_DOCUMENTATION_OUTPUT_STRATEGY}ast_output_strategy.make (Current, a_doc)
-			ast_output_strategy.set_source_class (source_class)
-			ast_output_strategy.set_current_class (current_class)
-			ast_output_strategy.set_source_feature (source_feature)
-			ast_output_strategy.set_current_feature (target_feature)
+			setup_output_strategy
 		end
 
 feature -- Setting local format details
@@ -1122,6 +1113,15 @@ feature {NONE} -- Implementation
 
 	text_formatter: TEXT_FORMATTER;
 			-- Text formatter
+
+	setup_output_strategy is
+			-- Setup attributes in `ast_output_strategy'.
+		do
+			ast_output_strategy.set_source_class (source_class)
+			ast_output_strategy.set_current_class (current_class)
+			ast_output_strategy.set_source_feature (source_feature)
+			ast_output_strategy.set_current_feature (target_feature)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

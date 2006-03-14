@@ -96,9 +96,6 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 
 #ifdef ISE_GC
 
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
-#endif
 
 #define MARK_SWITCH hybrid_mark
 #define GEN_SWITCH hybrid_gen_mark
@@ -3184,7 +3181,7 @@ rt_private int find_scavenge_spaces(void)
 	 * -- Fabrice.
 	 */
 
-	to_space = get_to_from_core(from_size);	/* Allocation from free list */
+	to_space = get_to_from_core ();	/* Allocation from free list */
 	if ((EIF_REFERENCE) 0 == to_space)
 		return -1;			/* Unable to find a 'to' space */
 	
@@ -3199,8 +3196,8 @@ rt_private int find_scavenge_spaces(void)
 	ps_to.sc_arena = to_space - OVERHEAD;		/* Overwrite the header */
 	ps_to.sc_active_arena = to_space - OVERHEAD;		/* Overwrite the header */
 	ps_to.sc_flags = HEADER(to_space)->ov_size;	/* Save flags */
-	ps_to.sc_size = from_size;					/* Used for statistics */
-	ps_to.sc_end = ps_to.sc_arena + from_size;	/* First free location beyond */
+	ps_to.sc_size = (ps_to.sc_flags & B_SIZE) + OVERHEAD;					/* Used for statistics */
+	ps_to.sc_end = ps_to.sc_arena + (ps_to.sc_flags & B_SIZE) + OVERHEAD;	/* First free location beyond */
 	ps_to.sc_top = ps_to.sc_arena;				/* Is empty */
 	ps_to.sc_previous_top = ps_to.sc_arena;				/* Is empty */
 		/* Clear B_LAST flag, it will be set in `split_to_block' at the end of this GC cycle. */

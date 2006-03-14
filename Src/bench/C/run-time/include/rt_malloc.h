@@ -167,7 +167,7 @@ extern rt_uint_ptr eif_rt_split_block(register union overhead *selected, registe
 extern void lxtract(union overhead *next);				/* Extraction from free list */
 extern void rel_core(void);				/* Give memory back to kernel */
 extern rt_uint_ptr chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
-extern EIF_REFERENCE get_to_from_core(size_t nbytes);	/* Get to_space from core for partial scavenging */
+extern EIF_REFERENCE get_to_from_core(void);	/* Get to_space from core for partial scavenging */
 extern void memck(unsigned int max_dt);
 
 extern void mem_diagnose(int sig);			/* Memory usage dump */

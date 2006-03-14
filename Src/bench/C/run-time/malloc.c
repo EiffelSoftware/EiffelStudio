@@ -66,7 +66,8 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_bits.h"
 #include "rt_globals.h"
 #include "rt_struct.h"
-#ifdef ISE_GC
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
+#include "rt_object_id.h"	/* For the object id and separate stacks */
 #endif
 #ifdef VXWORKS
 #include <string.h>
@@ -412,7 +413,7 @@ rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE, struct stack *);
 /* Also used by the garbage collector */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
 rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);			/* Wrapper to eif_rt_xmalloc */
-rt_shared EIF_REFERENCE get_to_from_core(size_t nbytes);		/* Get a free eiffel chunk from kernel */
+rt_shared EIF_REFERENCE get_to_from_core();		/* Get a free eiffel chunk from kernel */
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_private void check_free_list (size_t nbytes, register union overhead **hlist);
 #endif
@@ -1937,25 +1938,24 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 
 /*
 doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared">
-doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space for a from_space whose chunk as a size of `nbytes'.</summary>
-doc:		<param name="nbytes" type="size_t">Number of bytes requested.</param>
+doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space. The chunk size is `eif_chunk_size', it is not relevant how big is the `from_space' as the partial scavenging handle the case where the `to_space' is smaller than the `from_space'.</summary>
 doc:		<return>New block if successful, otherwise a null pointer.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Call to `allocate_from_core' is safe.</synchronization>
 doc:	</routine>
 */
 
-rt_shared EIF_REFERENCE get_to_from_core (size_t nbytes)
+rt_shared EIF_REFERENCE get_to_from_core ()
 {
 	EIF_REFERENCE Result;
 
 		/* We substract OVERHEAD and the size of a chunk, because in `allocate_from_core' which
 		 * calls `add_core' we will add `OVERHEAD' and the size of a chunk to make sure we have indeed
-		 * the number of bytes allocated. However here we do not want `nbytes' we want
-		 * the same size as another chunk of memory whose size is `nbytes'. */
-	Result = allocate_from_core (nbytes - OVERHEAD - sizeof(struct chunk), e_hlist, 1);
+		 * the number of bytes allocated.
+		 */
+	Result = allocate_from_core (eif_chunk_size - OVERHEAD - sizeof(struct chunk), e_hlist, 1);
 
-	ENSURE("block is indeed of the right size", (nbytes - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE));
+	ENSURE("block is indeed of the right size", (eif_chunk_size - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE));
 
 	return Result;
 }
@@ -3849,6 +3849,10 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 	flush;
 #endif
 
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+	CHECK ("Cannot be in object ID stack", !has_object (&object_id_stack, object));
+#endif
+
 	return object;
 }
 
@@ -3894,6 +3898,10 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef DEBUG
 	dprintf(256)("eif_spset: %d bytes special at 0x%lx\n", zone->ov_size & B_SIZE, object);
 	flush;
+#endif
+
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+	CHECK ("Cannot be in object ID stack", !has_object (&object_id_stack, object));
 #endif
 
 	return object;

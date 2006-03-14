@@ -77,15 +77,13 @@ doc:	</attribute>
 
 rt_public Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
 
-#ifndef EIF_THREADS
-
 /*
 doc:	<attribute name="sig_ign" return_type="char [EIF_NSIG]" export="private">
 doc:		<summary>Records whether a signal is ignored by default or not. Some of these values where set during the initialization, others were hardwired.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread</synchronization>
-doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Make it thread safe.</fixme>
 doc:	</attribute>
 */
 
@@ -95,12 +93,14 @@ rt_private char sig_ign[EIF_NSIG];
 doc:	<attribute name="osig_ign" return_type="char [EIF_NSIG]" export="private">
 doc:		<summary>Records original status of a signal to know whether by default a signal is ignored or not.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread</synchronization>
-doc:		<fixme>Does it really make sense to have per thread data here?</fixme>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Make it thread safe.</fixme>
 doc:	</attribute>
 */
 rt_private char osig_ign[EIF_NSIG];
+
+#ifndef EIF_THREADS
 
 /*
 doc:	<attribute name="esigblk" return_type="int" export="shared">
@@ -615,6 +615,9 @@ rt_shared void initsig(void)
 	sig_stk.s_max = 0;				/* First free location */
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
+#ifdef EIF_THREADS
+	if (eif_thr_is_root()) {
+#endif
 	for (sig = 1; sig < EIF_NSIG; sig++) {
 		old = SIG_IGN;
 
@@ -780,6 +783,9 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < EIF_NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
+#ifdef EIF_THREADS
+	}
+#endif
 
 #if defined(HAS_SIGALTSTACK) && defined(SIGSEGV)
 #ifdef EIF_THREADS

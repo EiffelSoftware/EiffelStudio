@@ -1,15 +1,19 @@
 indexing
 	description: "[
 					AST leaf list for roundtrip parser.
-				    It is a list to store terminals (or leaves) in a source file. When a file gets parsed, every token
+				    It is a list to store terminals (or leaves) in a source file.
+					When a file gets parsed, every token
 				    is stored in this list, so it is a tokenized source file.
 
 					Storage:
 					    There are two kinds of terminals:
-						 1. terminals that are not attached in AST: breaks (including comments, spaces and new-line characters and semicolons
-						 2. terminals that are attached in AST: all other terminals, like keywords, identifiers and symbols except semicolons
+						 1. terminals that are not attached in AST: breaks (including comments, spaces
+						    and new-line characters and semicolons
+						 2. terminals that are attached in AST: all other terminals, like keywords,
+						    identifiers and symbols except semicolons
 
-						For every symbol terminal (both attached and non-attached), a `SYMBOL_STUB_AS' object is stored in list,
+						For every symbol terminal (both attached and non-attached), a `SYMBOL_STUB_AS'
+						  object is stored in list,
 						For every other attached terminal, a `LEAF_STUB_AS' object is stored in list.
 						For a break, a `BREAK_AS' object is stored in list.
 				  ]"
@@ -23,7 +27,6 @@ class
 	LEAF_AS_LIST
 
 inherit
-
 	IDABLE
 		rename
 			id as class_id,
@@ -32,9 +35,6 @@ inherit
 
 create
 	make
-
-create {LEAF_AS_LIST}
-	make_filled
 
 feature {NONE} -- Initialization
 

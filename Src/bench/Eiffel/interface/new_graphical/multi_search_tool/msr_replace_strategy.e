@@ -144,13 +144,25 @@ feature -- Basic operations
 				if l_item = Void or else (not replace_items.off and then l_saved_item = replace_items.item) then
 					replace_items.forth
 				end
+				item_replaced
 			end
 			is_replace_launched_internal := true
+			all_item_replaced
 		ensure
 			replace_items_empty: replace_items.is_empty
 		end
 
 feature {NONE} -- Implementation
+
+	item_replaced is
+			-- One item replaced when replacing all.
+		do
+		end
+
+	all_item_replaced is
+			-- Replace all is done.
+		do
+		end
 
 	remove_item (a_item: MSR_ITEM) is
 			-- Remove item from item_matched.

@@ -271,7 +271,7 @@ feature -- Data by exception code
 
 	handled_exceptions_by_code: DS_HASH_TABLE [INTEGER, INTEGER]
 
-feature {ES_EXCEPTION_HANDLER_DIALOG} -- Implementation
+feature {ES_EXCEPTION_HANDLER_DIALOG, EB_EXCEPTION_HANDLER_CMD} -- Implementation
 
 	handling_mode: INTEGER
 

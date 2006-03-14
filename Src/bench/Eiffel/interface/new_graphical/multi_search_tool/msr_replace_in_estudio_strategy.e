@@ -15,7 +15,9 @@ inherit
 		redefine
 			replace,
 			one_cluster_item_replaced,
-			is_current_replaced_as_cluster
+			is_current_replaced_as_cluster,
+			item_replaced,
+			all_item_replaced
 		end
 
 	EB_SHARED_MANAGERS
@@ -93,19 +95,24 @@ feature -- Basic operation
 			l_item : MSR_TEXT_ITEM
 			class_i: CLASS_I
 			l_string: STRING
+			l_text: SMART_TEXT
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
 				class_i ?= l_item.data
 				if class_i /= Void then
 					if is_class_i_editing (class_i) and search_tool.check_class_succeed and not search_tool.is_item_source_changed (l_item) then
+						l_text ?= editor.text_displayed
+						check
+							l_text_is_smart_text: l_text /= Void
+						end
 						l_string := actual_replacement (l_item)
 						if l_item.end_index_in_unix_text + 1 = l_item.start_index_in_unix_text then
-							editor.text_displayed.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
+							l_text.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
 							editor.deselect_all
 							if not actual_replacement (l_item).is_empty then
 								search_tool.set_changed_by_replace (true)
-								editor.text_displayed.insert_string (l_string)
+								l_text.insert_string (l_string)
 								search_tool.set_changed_by_replace (true)
 								if not l_string.is_empty then
 									editor.select_region (l_item.start_index_in_unix_text, l_item.start_index_in_unix_text + l_string.count)
@@ -119,7 +126,7 @@ feature -- Basic operation
 									editor.replace_selection (l_string)
 									editor.select_region (l_item.start_index_in_unix_text, l_item.start_index_in_unix_text + l_string.count)
 								else
-									editor.text_displayed.delete_selection
+									l_text.delete_selection
 								end
 								search_tool.set_changed_by_replace (true)
 							end
@@ -128,13 +135,24 @@ feature -- Basic operation
 						replace_current_item (true)
 						search_tool.force_not_changed
 					end
-
 				 end
 			end
 			is_replace_launched_internal := true
 		end
 
 feature {NONE} -- Implementation
+
+	item_replaced is
+			-- One item replaced when replacing all.
+		do
+			smart_text.history_item_bind
+		end
+
+	all_item_replaced is
+			-- Replace all is done.
+		do
+			smart_text.history_item_unbind
+		end
 
 	one_cluster_item_replaced (a_item: MSR_TEXT_ITEM) is
 			-- When replacing all, all items of a cluster are replaced.
@@ -209,6 +227,15 @@ feature {NONE} -- Implementation
 
 	editor : EB_EDITOR
 
+	smart_text: SMART_TEXT is
+			-- Smart text in editor.
+		do
+			Result ?= editor.text_displayed
+			check
+				is_smart_text: Result /= Void
+			end
+		end
+
 	search_tool: EB_MULTI_SEARCH_TOOL;
 
 indexing
@@ -217,19 +244,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

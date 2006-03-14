@@ -32,12 +32,12 @@ inherit
 			default_style,
 			on_erase_background
 		end
-	
+
 	WEL_RGN_CONSTANTS
 		export {NONE}
 			all
 		end
-		
+
 create
 	make
 
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			create ev_children.make (2)
-		end	
+		end
 
 feature -- Status setting
 
@@ -83,7 +83,7 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Implementation
-	
+
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- Child widgets in z-order starting with farthest away.
 
@@ -122,18 +122,20 @@ feature {NONE} -- Implementation
 			new_min_width: INTEGER
 			cur: INTEGER
 		do
-			cur := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				v_imp := ev_children.item
-				new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
-				ev_children.forth
+			if not child_cell.is_user_min_width_set then
+				cur := ev_children.index
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					v_imp := ev_children.item
+					new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
+					ev_children.forth
+				end
+				ev_children.go_i_th (cur)
+				ev_set_minimum_width (new_min_width)
 			end
-			ev_children.go_i_th (cur)
-			ev_set_minimum_width (new_min_width)
 		end
 
 	compute_minimum_height is
@@ -143,18 +145,20 @@ feature {NONE} -- Implementation
 			new_min_height: INTEGER
 			cur: INTEGER
 		do
-			cur := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				v_imp := ev_children.item
-				new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
-				ev_children.forth
+			if not child_cell.is_user_min_height_set then
+				cur := ev_children.index
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					v_imp := ev_children.item
+					new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
+					ev_children.forth
+				end
+				ev_children.go_i_th (cur)
+				ev_set_minimum_height (new_min_height)
 			end
-			ev_children.go_i_th (cur)
-			ev_set_minimum_height (new_min_height)
 		end
 
 	compute_minimum_size is
@@ -164,19 +168,21 @@ feature {NONE} -- Implementation
 			new_min_width, new_min_height: INTEGER
 			cur: INTEGER
 		do
-			cur := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				v_imp := ev_children.item
-				new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
-				new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
-				ev_children.forth
+			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
+				cur := ev_children.index
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					v_imp := ev_children.item
+					new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
+					new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
+					ev_children.forth
+				end
+				ev_children.go_i_th (cur)
+				ev_set_minimum_size (new_min_width, new_min_height)
 			end
-			ev_children.go_i_th (cur)
-			ev_set_minimum_size (new_min_width, new_min_height)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -235,7 +241,7 @@ feature {NONE} -- WEL Implementation
 			temp_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			current_child: EV_WIDGET_IMP
 			bk_brush: WEL_BRUSH
-		do	
+		do
 				-- Disable default windows processing which would re-draw the
 				-- complete background of `Current'. This is not nice behaviour
 				-- as some widgets such as EV_LIST_IMP re-draw themselves as
@@ -283,7 +289,7 @@ feature {NONE} -- WEL Implementation
 			bk_brush.delete
 			main_region.delete
 		end
-		
+
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' currently contained in `Current'.
 		do

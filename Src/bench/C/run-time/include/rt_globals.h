@@ -149,8 +149,6 @@ typedef struct tag_rt_globals
 	char *inv_mark_tablep_cx;			/* Marking table to avoid checking the same invariant
 										   several times */
 		/* sig.c */
-	char sig_ign_cx[EIF_NSIG];			/* Is signal ignored by default? */
-	char osig_ign_cx[EIF_NSIG];			/* Original signal default (1 = ignored) */
 	int esigblk_cx;						/* By default, signals are not blocked */
 	struct s_stack sig_stk_cx;			/* Initialized by initsig() */
 
@@ -372,8 +370,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define inv_mark_tablep		(rt_globals->inv_mark_tablep_cx)	/* rt_private */
 
 	/* sig.c */
-#define sig_ign				(rt_globals->sig_ign_cx)		/* rt_public */
-#define osig_ign			(rt_globals->osig_ign_cx)		/* rt_public */
 #define esigblk				(rt_globals->esigblk_cx)		/* rt_shared */
 #define sig_stk				(rt_globals->sig_stk_cx)		/* rt_shared */
 

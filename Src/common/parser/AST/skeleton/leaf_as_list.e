@@ -33,7 +33,11 @@ inherit
 create
 	make
 
-feature
+create {LEAF_AS_LIST}
+	make_filled
+
+feature {NONE} -- Initialization
+
 	make (a_trunk_number: INTEGER) is
 			-- Initialize current list to contain at least `a_trunk_number' of trunks.
 		require

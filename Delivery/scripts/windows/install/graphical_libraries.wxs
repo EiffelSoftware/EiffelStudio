@@ -2395,7 +2395,7 @@
 								<File Id="wel_accelerators.e" Name="WEL_AC~3.E" LongName="wel_accelerators.e" />
 								<File Id="wel_system_metrics.e" Name="WEL_SY~5.E" LongName="wel_system_metrics.e" />
 								<File Id="wel_atom.e" Name="wel_atom.e" />
-								<File Id="wel_window_manager.e" Name="WEL_WI~A.E" LongName="wel_window_manager.e" />
+								<File Id="wel_dialog_manager_e" Name="WEL_DI~1.E" LongName="wel_dialog_manager.e" />
 								<File Id="wel_shared_memory_string.e" Name="WEL_SH~2.E" LongName="wel_shared_memory_string.e" />
 								<File Id="wel_shared_temporary_objects_e" Name="WEL_SH~3.E" LongName="wel_shared_temporary_objects.e" />
 								<File Id="wel_clipboard.e" Name="WEL_CL~2.E" LongName="wel_clipboard.e" />

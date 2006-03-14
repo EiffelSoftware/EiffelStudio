@@ -169,7 +169,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 		cmd,
 		NULL,
 		NULL,
-		TRUE,
+		FALSE,
 		CREATE_NEW_CONSOLE,
 		NULL,
 		current_dir,

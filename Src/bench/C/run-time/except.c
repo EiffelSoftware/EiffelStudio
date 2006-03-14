@@ -926,7 +926,8 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		rt_g_data.status = gc_status;	/* Restore previous GC status */
 		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
-		xraise(EN_HDLR);			/* Raise exception in signal handler */
+			/* We reuse `echtg' from exception taht causes us to go here.*/
+		eraise(echtg, EN_HDLR);			/* Raise exception in signal handler */
 		return;						/* Exception ignored */
 	}
 	trace->ex_jbuf = &exenv;	/* Save setjmp buffer address */
@@ -1941,6 +1942,8 @@ rt_private char *extag(struct ex_vect *trace)
 	case EN_IO:				/* I/O error */
 		echtg = error_tag(trace->ex_errno);
 		break;
+	case EN_ILVL:	/* Special level. */
+		break;		/* Leave tag unchanged. */
 	default:
 		echtg = trace->ex_name;
 	}

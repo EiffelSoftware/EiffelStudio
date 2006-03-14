@@ -1946,7 +1946,8 @@
 					</Directory>
 					<Directory Id="uuid" Name="uuid">
 						<Component Id="uuid" Guid="F7692E65-2673-47ae-9624-D4BD9C496DCD">
-							<File Id="uuid_generator.e" Name="UUID_G~1.E" LongName="uuid_generator.e" />
+							<File Id="uuid_generator_e" Name="UUID_G~1.E" LongName="uuid_generator.e" />
+							<File Id="uuid_e" Name="uuid.e" />
 						</Component>
 					</Directory>
 				</Directory>

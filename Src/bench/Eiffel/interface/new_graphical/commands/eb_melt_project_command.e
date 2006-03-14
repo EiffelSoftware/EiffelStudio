@@ -129,6 +129,7 @@ feature {NONE} -- Compilation implementation
 				end
 				Degree_output.finish_degree_output
 				tool_resynchronization
+				output_manager.end_processing
 			end
 		end
 

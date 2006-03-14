@@ -614,7 +614,9 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			if not l_selected_rows.is_empty then
 				(l_selected_rows @ 1).disable_select
 			end
-			select_row (l_row_index)
+			if l_row_index > 0 and l_row_index <= row_count then
+				select_row (l_row_index)
+			end
 		end
 
 	grid_row_by_data (a_data: ANY) : EV_GRID_ROW is

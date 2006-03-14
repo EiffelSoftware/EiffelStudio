@@ -370,10 +370,9 @@ feature -- Tab actions
 			-- Backward `tab_action'
 		local
 			l_line: like current_line
-			l_cur_token, l_end_token, l_start_token, l_save_token: EDITOR_TOKEN
+			l_end_token, l_start_token, l_save_token: EDITOR_TOKEN
 			l_found_start: BOOLEAN
-			l_selected: BOOLEAN
-			l_stop, l_is_start, l_jumped: BOOLEAN
+			l_jumped: BOOLEAN
 		do
 			l_line := current_line
 			l_save_token := current_token_in_line (l_line)

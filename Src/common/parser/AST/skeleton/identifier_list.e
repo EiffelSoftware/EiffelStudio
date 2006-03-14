@@ -15,6 +15,9 @@ inherit
 create
 	make
 
+create {IDENTIFIER_LIST}
+	make_filled
+
 feature
 	id_list: EIFFEL_LIST [ID_AS] is
 			-- List to store ID_AS objects in this structure.

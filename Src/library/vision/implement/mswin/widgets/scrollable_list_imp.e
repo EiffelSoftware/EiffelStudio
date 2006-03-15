@@ -19,7 +19,7 @@ inherit
 			set_height, set_size, set_width,
 			set_widget_default
 		end
-		
+
 	SCROLLABLE_LIST_I
 		rename
 			resize as arrayed_list_resize,
@@ -51,7 +51,7 @@ inherit
 			height as wel_height,
 			destroy as wel_destroy,
 			set_height as wel_set_height,
-			hide as wel_hide,	
+			hide as wel_hide,
 			set_font as wel_set_font,
 			shown as wel_shown,
 			parent as wel_parent,
@@ -87,7 +87,7 @@ inherit
 			on_lbn_dblclk,
 			on_key_down,
 			default_ex_style,
-			on_erase_background	
+			on_erase_background
 		end
 
 	WEL_LBS_CONSTANTS
@@ -126,9 +126,9 @@ feature -- Initialization
 				select_the_items
 				if private_visible_item_count > 0 then
 					set_visible_item_count (private_visible_item_count)
-				elseif not has_height and not fixed_size then 
+				elseif not has_height and not fixed_size then
 					if count > 0 then
-						set_visible_item_count (count) 
+						set_visible_item_count (count)
 					else
 						set_visible_item_count (1)
 					end
@@ -183,7 +183,7 @@ feature  -- Access
 				private_deselect (index)
 			end
 		end
-			
+
 	selected: BOOLEAN is
 			-- Is there at least one item selected?
 		do
@@ -287,7 +287,7 @@ feature  -- Access
 			-- Positions of the selected items
 			-- Void if single selection
 		do
-			Result := private_selected_positions	
+			Result := private_selected_positions
 		end
 
 	visible_item_count: INTEGER is
@@ -312,7 +312,7 @@ feature -- Default action callbacks
 		end
 
 	remove_default_action  is
-			-- Remove all actions executed 
+			-- Remove all actions executed
 			-- when items are selected with click double click or by
 			-- pressing 'RETURN'
 			-- in current scroll list.
@@ -564,7 +564,7 @@ feature -- Element change
 		do
 			ll_append (s)
 			if realized then
-				l := deep_clone (s)
+				l := s.deep_twin
 				from
 					l.start
 				until
@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 			a_font_windows: FONT_IMP
 			a_width: INTEGER
 		do
-			s := clone (i_th_text (pos - 1))
+			s := i_th_text (pos - 1).twin
 			wel_delete_string (pos - 1)
 				-- WEL list starts from zero
 			if realized then
@@ -908,7 +908,7 @@ feature {NONE} -- Implementation
 	on_lbn_selchange is
 			-- The selection is changed, update the
 			-- private attributes.
-	
+
 		do
 			update_private_selection
 
@@ -933,18 +933,18 @@ feature {NONE} -- Implementation
 
 	on_lbn_dblclk is
 			-- List item is double clicked
-			-- This feature implements the default action together 
+			-- This feature implements the default action together
 			-- with feature on_key_down
 		do
 			default_actions.execute (Current, Void)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- a key is pressed when an item is selected. 
-			-- This procedure checks if the pressed key is 
+			-- a key is pressed when an item is selected.
+			-- This procedure checks if the pressed key is
 			-- 'RETURN' and executes the default action then.
-			-- This feature implements the default action together 
-			-- with feature on_lbn_dblclk 
+			-- This feature implements the default action together
+			-- with feature on_lbn_dblclk
 		do
 			primitive_on_key_down (virtual_key, key_data)
 			if virtual_key = Vk_return then

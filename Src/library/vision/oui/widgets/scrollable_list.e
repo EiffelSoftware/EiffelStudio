@@ -7,7 +7,7 @@ indexing
 
 class
 
-	SCROLLABLE_LIST 
+	SCROLLABLE_LIST
 
 inherit
 	FONTABLE
@@ -92,14 +92,18 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; 
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE;
 			man: BOOLEAN; is_fixed: BOOLEAN) is
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SCROLLABLE_LIST_IMP} implementation.make (Current, man, is_fixed, a_parent);
 			implementation.set_widget_default;
 		end;
@@ -152,17 +156,17 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on object_comparison.)
 			-- 0 if none.
-		require 
+		require
 			positive_occurrences: i > 0
 		do
 			Result := implementation.index_of (v, i)
-		ensure 
+		ensure
 			non_negative_result: Result >= 0
 		end
 
 	item: SCROLLABLE_LIST_ELEMENT is
 			-- Item at current position
-		require 
+		require
 			not_off: not off
 			readable: readable
 		do
@@ -171,7 +175,7 @@ feature -- Access
 
 	last: like item is
 			-- Item at last position
-		require 
+		require
 			not_empty: not is_empty
 		do
 			Result := implementation.last
@@ -183,7 +187,7 @@ feature -- Access
 			-- based on object_comparison.)
 		do
 			Result := implementation.occurrences (v)
-		ensure 
+		ensure
 			non_negative_occurrences: Result >= 0
 		end
 
@@ -239,7 +243,7 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position if no next position,
 			-- ensure that exhausted will be true.
-		require 
+		require
 			not_after: not after
 		do
 			implementation.forth
@@ -249,7 +253,7 @@ feature -- Cursor movement
 
 	go_i_th (i: INTEGER) is
 			-- Move cursor to i-th position.
-		require 
+		require
 			valid_cursor_index: valid_cursor_index (i)
 		do
 			implementation.go_i_th (i)
@@ -314,11 +318,11 @@ feature -- Element change
 
 	extend (v: SCROLLABLE_LIST_ELEMENT) is
 			-- Add a new occurrence of v.
-		require 
+		require
 			extendible: extendible
 		do
 			implementation.extend (v)
-		ensure 
+		ensure
 			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
 			item_inserted: has (v)
 		end
@@ -340,7 +344,7 @@ feature -- Element change
 			extendible: extendible
 		do
 			implementation.force (v)
-		ensure 
+		ensure
 			new_count: count = old count + 1
 			item_inserted: has (v)
 		end
@@ -348,13 +352,13 @@ feature -- Element change
 	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
-		require 
+		require
 			extendible: extendible
 			not_before: not before
 			other_exists: other /= void
 		do
 			implementation.merge_left (other)
-		ensure 
+		ensure
 			new_count: count = old count + old other.count
 			new_index: index = old index + old other.count
 			other_is_empty: other.is_empty
@@ -363,7 +367,7 @@ feature -- Element change
 	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
-		require 
+		require
 			extendible: extendible
 			not_after: not after
 			other_exists: other /= void
@@ -392,30 +396,30 @@ feature -- Element change
 			-- Do not move cursor.
 		do
 			implementation.put_front (v)
-		ensure 
+		ensure
 			new_count: count = old count + 1
 			item_inserted: first = v
 		end
 
 	put_i_th (v: like item i: INTEGER) is
 			-- Put v at i-th position.
-		require 
+		require
 			valid_key: valid_index (i)
 		do
 			implementation.put_i_th (v,i)
-		ensure 
+		ensure
 			insertion_done: i_th (i) = v
 		end
 
 	put_left (v: like item) is
 			-- Add v to the left of cursor position.
 			-- Do not move cursor.
-		require 
+		require
 			extendible: extendible
 			not_before: not before
 		do
 			implementation.put_left (v)
-		ensure 
+		ensure
 			new_count: count = old count + 1
 			new_index: index = old index + 1
 		end
@@ -423,19 +427,19 @@ feature -- Element change
 	put_right (v: like item) is
 			-- Add v to the right of cursor position.
 			-- Do not move cursor.
-		require 
+		require
 			extendible: extendible
 			not_after: not after
 		do
 			implementation.put_right (v)
-		ensure 
+		ensure
 			new_count: count = old count + 1
 			same_index: index = old index
 		end
 
 	replace (v: SCROLLABLE_LIST_ELEMENT) is
 			-- Replace current item by v.
-		require 
+		require
 			writable: writable
 		do
 			implementation.replace (v)
@@ -450,7 +454,7 @@ feature -- Removal
 			-- after cursor position.
 			-- If found, move cursor to right neighbor
 			-- if not, make structure exhausted.
-		require 
+		require
 			prunable: prunable
 		do
 			implementation.prune (v)
@@ -461,11 +465,11 @@ feature -- Removal
 			-- (Reference or object equality,
 			-- based on object_comparison.)
 			-- Leave structure exhausted.
-		require 
+		require
 			prunable
 		do
 			implementation.prune_all (v)
-		ensure 
+		ensure
 			is_exhausted: exhausted
 			no_more_occurrences: not has (v)
 		end
@@ -474,7 +478,7 @@ feature -- Removal
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
-		require 
+		require
 			prunable: prunable
 			writable: writable
 		do
@@ -503,14 +507,14 @@ feature -- Removal
 			right_exists: index < count
 		do
 			implementation.remove_right
-		ensure 
+		ensure
 			new_count: count = old count - 1
 			same_index: index = old index
 		end
 
 	wipe_out is
 			-- Remove all items.
-		require 
+		require
 			prunable: prunable
 		do
 			implementation.wipe_out
@@ -568,12 +572,12 @@ feature -- Status report
 			-- Has structure been completely explored?
 		do
 			Result := implementation.exhausted
-		ensure 
+		ensure
 			exhausted_when_off: off implies Result
 		end
 
-	extendible: BOOLEAN is 
-			-- May new items be added? 
+	extendible: BOOLEAN is
+			-- May new items be added?
 		do
 			Result := implementation.extendible
 		end
@@ -588,7 +592,7 @@ feature -- Status report
 			-- Is cursor at first position?
 		do
 			Result := implementation.isfirst
-		ensure 
+		ensure
 			valid_position: Result implies not is_empty
 		end
 
@@ -596,7 +600,7 @@ feature -- Status report
 			-- Is cursor at last position?
 		do
 			Result := implementation.islast
-		ensure 
+		ensure
 			valid_position: Result implies not is_empty
 		end
 
@@ -678,7 +682,7 @@ feature -- Status report
 			-- Is i correctly bounded for cursor movement?
 		do
 			Result := implementation.valid_cursor_index (i)
-		ensure 
+		ensure
 			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count + 1))
 		end
 
@@ -718,11 +722,11 @@ feature -- Status setting
 	compare_references is
 			-- Ensure that future search operations will use =
 			-- rather than equal for comparing references.
-		require 
+		require
 			changeable_comparison_criterion
 		do
 			implementation.compare_references
-		ensure 
+		ensure
 			reference_comparison: not object_comparison
 		end
 
@@ -812,7 +816,7 @@ feature -- Status setting
 			a_count_large_enough: a_count > 0
 		do
 			implementation.set_visible_item_count (a_count)
-		end; 
+		end;
 
 feature -- Element change
 
@@ -837,8 +841,8 @@ feature -- Default Action commands
 			exists: not destroyed;
 			not_a_command_void: a_command /= Void
 		do
-			implementation.add_default_action (a_command, 
-							   argument)	
+			implementation.add_default_action (a_command,
+							   argument)
 		end;
 
 	remove_default_action  is
@@ -855,12 +859,12 @@ feature -- Transformation
 	swap (i: INTEGER) is
 			-- Exchange item at i-th position with item
 			-- at cursor position.
-		require 
+		require
 			not_off: not off
 			valid_index: valid_index (i)
 		do
 			implementation.swap (i)
-		ensure 
+		ensure
 			swapped_to_item: item = old i_th (i)
 			swapped_from_item: i_th (i) = old item
 		end

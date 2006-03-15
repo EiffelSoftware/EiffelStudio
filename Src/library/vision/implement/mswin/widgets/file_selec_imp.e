@@ -1,12 +1,12 @@
-indexing 
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
- 
+indexing
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class
 	FILE_SELEC_IMP
-  
-inherit 
+
+inherit
 	TERMINAL_IMP
 		redefine
 			build,
@@ -23,7 +23,7 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 
-	FILE_SELEC_I 
+	FILE_SELEC_I
 
 	WEL_DDL_CONSTANTS
 
@@ -73,12 +73,12 @@ feature -- Initialization
 
 feature -- Measurement
 
-	file_count: INTEGER 
+	file_count: INTEGER
 			-- Number of items in file list
 
 feature -- Status report
 
-	directory: STRING 
+	directory: STRING
 			-- Base directory used in determining files and directories
 			-- to be displayed
 
@@ -130,7 +130,7 @@ feature -- Status setting
 			-- Always visible
 		do
 		end
-	
+
 	hide_file_selection_list is
 			-- Always visible
 		do
@@ -172,7 +172,7 @@ feature -- Status setting
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		do
-			base_directory := clone (a_directory)
+			base_directory := a_directory.twin
 		end
 
 	set_directory_selection is
@@ -207,7 +207,7 @@ feature -- Status setting
 	set_filter (a_filter: STRING) is
 			-- Set current filter to `a_filter'.
 		do
-			base_filter := clone (a_filter)
+			base_filter := a_filter.twin
 		end
 
 	set_filter_label (label: STRING) is
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 				dir := "./"
 				directory := current_working_directory
 			else
-				dir := clone (directory)
+				dir := directory.twin
 			end
 			if dir.item (dir.count) /= '/' then
 				dir.append_character ('/')
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 		local
 			ls : STRING
 		do
-			ls := clone (selected)
+			ls := selected.twin
 			if ls.item (1) = '[' then
 				ls.remove (1)
 				ls.remove (ls.count)
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 				directory.remove (directory.count)
 				from
 				until
-					directory.item (directory.count) = '\'	
+					directory.item (directory.count) = '\'
 				loop
 					directory.remove (directory.count)
 				end
@@ -498,12 +498,12 @@ feature {NONE} -- Implementation
 				end
 				directory.append (ls)
 			end
-			selected_file := clone (directory)
+			selected_file := directory.twin
 			if selected.item (1) /= '[' then
 				selected_file.append (selected)
 			end
 			directory_label.set_text (directory)
-			fill			
+			fill
 		end
 
 	button_count: INTEGER is
@@ -520,13 +520,13 @@ feature {NONE} -- Implementation
 		end
 
 	adjust_controls_width is
-			-- Set the control width based on the width of the 
+			-- Set the control width based on the width of the
 			-- file_selection
 		local
 			button_width, last_x: INTEGER
 		do
 			directory_label.set_width (width)
-			if button_count /= 0 then 
+			if button_count /= 0 then
 				button_width := (width - 4 * button_count)// button_count
 				if button_width <= 0 then
 					button_width := 1
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_height: INTEGER is 
+	button_height: INTEGER is
 		local
 			wel_dc: WEL_SCREEN_DC
 			wel_ft: WEL_SYSTEM_FONT
@@ -562,11 +562,11 @@ feature {NONE} -- Implementation
 			wel_dc.select_font (wel_ft)
 			Result := wel_dc.string_height ("I") * 7 // 4
 			wel_dc.unselect_font
-			wel_dc.release 
+			wel_dc.release
 		end
 
 	adjust_controls_height is
-			-- Set the control height based on the width of the 
+			-- Set the control height based on the width of the
 			-- file_selection
 		local
 			directory_height : INTEGER
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 					cancel_button.set_y (height - button_height - 2)
 				end
 			end
-			
+
 		end
 
 	class_name: STRING is

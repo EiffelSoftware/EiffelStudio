@@ -11,7 +11,7 @@ class
 inherit
 	PRIMITIVE_IMP
 		redefine
-			realize, 
+			realize,
 			unrealize,
 			on_key_down,
 			on_key_up,
@@ -40,7 +40,7 @@ inherit
 			foreground_color as wel_foreground_color,
 			shown as wel_shown,
 			set_focus as wel_set_focus,
-			set_capture as wel_set_capture, 
+			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
 			parent as wel_parent,
 			text as wel_text,
@@ -91,9 +91,9 @@ feature -- Initialization
 			f: FONT
 			wc: WEL_COMPOSITE_WINDOW
 		do
-			if not realized then 
-				if width = 0 then 
-					set_width (150) 
+			if not realized then
+				if width = 0 then
+					set_width (150)
 				end
 				resize_for_shell
 				wc ?= parent
@@ -143,7 +143,7 @@ feature -- Element change
 		do
 			activate_actions.add (Current, a_command, argument)
 		end
-	
+
 feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
@@ -198,7 +198,11 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		do
-			private_text := clone (a_text)
+			if a_text /= Void then
+				private_text := a_text.twin
+			else
+				private_text := Void
+			end
 			if exists then
 				wel_set_text (a_text)
 			end
@@ -227,7 +231,7 @@ feature -- Element change
 		local
 			a_text: STRING
 		do
-			a_text := clone (text)
+			a_text := text.twin
 			a_text.append (s)
 			set_text (a_text)
 		end
@@ -238,7 +242,7 @@ feature -- Element change
 		local
 			a_text: STRING
 		do
-			a_text := clone (text)
+			a_text := text.twin
 			if a_position = a_text.count then
 				a_text.append (s)
 			else
@@ -252,7 +256,7 @@ feature -- Element change
 		local
 			a_text: STRING
 		do
-			a_text := clone (text)
+			a_text := text.twin
 			if from_position = to_position then
 				a_text.insert_string (s, from_position + 1)
 			else
@@ -299,7 +303,7 @@ feature {NONE} -- Implementation
 			kpd: KYPRESS_DATA
 		do
 			create kw.make_from_key_state
-			create kpd.make (owner, code, virtual_keys @ code, kw) 
+			create kpd.make (owner, code, virtual_keys @ code, kw)
 			key_press_actions.execute (Current, kpd)
 			if code = Vk_return then
 				activate_actions.execute (Current, kpd)
@@ -348,7 +352,7 @@ feature {NONE} -- Implementation
 					end
 					w.forth
 				end
-				if not found then	
+				if not found then
 					from
 						w.start
 					until
@@ -362,7 +366,7 @@ feature {NONE} -- Implementation
 						end
 						w.forth
 					end
-				end		
+				end
 			end
 			if found then
 				tf.wel_set_focus
@@ -401,7 +405,7 @@ feature {NONE} -- Implementation
 					end
 					w.back
 				end
-				if not found then	
+				if not found then
 					from
 						w.finish
 					until
@@ -415,7 +419,7 @@ feature {NONE} -- Implementation
 						end
 						w.back
 					end
-				end		
+				end
 			end
 			if found then
 				tf.wel_set_focus

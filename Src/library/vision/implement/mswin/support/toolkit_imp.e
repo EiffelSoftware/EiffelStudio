@@ -39,14 +39,14 @@ feature {NONE} -- Initialization
 		do
 			set_application (Current)
 			if application_class /= Void then
-				app_class := clone (application_class)
+				app_class := application_class.twin
 			end
 			create_dispatcher
 			init_instance
 			init_application
 		end;
 
-feature 
+feature
 
 	app_class: STRING;
 			-- Application class name of the application

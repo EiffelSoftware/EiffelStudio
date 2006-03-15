@@ -8,7 +8,7 @@ indexing
 
 class
 
-	SEPARATOR 
+	SEPARATOR
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SEPARATOR_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -124,7 +128,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_no_line
-		end 
+		end
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 

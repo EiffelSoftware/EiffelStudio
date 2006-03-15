@@ -1,4 +1,4 @@
-indexing	
+indexing
 	description: "This class represents a font that has been enumerated"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -30,14 +30,14 @@ feature -- Initialization
 		require
 			a_name_exists: a_name /= Void
 		do
-			name := clone (a_name)
+			name := a_name.twin
 			create details.make
 		ensure
 			name_set: name.is_equal (a_name)
 		end
 
 feature -- Access
-	
+
 	name: STRING
 			-- Name of the font
 
@@ -101,7 +101,7 @@ feature -- Status setting
 			loop
 				if display_style.is_equal (details.item.style) then
 					efdw := details.item
-				end	
+				end
 				details.forth
 			end
 			if efdw = Void then
@@ -159,7 +159,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
-			Result := name < other.name			
+			Result := name < other.name
 		end
 
 indexing

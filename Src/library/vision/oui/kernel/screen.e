@@ -13,7 +13,7 @@ indexing
 
 class
 
-	SCREEN 
+	SCREEN
 
 inherit
 
@@ -33,7 +33,11 @@ feature -- Initialization
 	make (a_screen_name: STRING) is
 			-- Create a screen specified by `a_screen_name'.
 		do
-			screen_name := clone (a_screen_name);
+			if a_screen_name /= Void then
+				screen_name := a_screen_name.twin
+			else
+				screen_name := Void
+			end
 			create {SCREEN_IMP} implementation.make (Current)
 		end;
 

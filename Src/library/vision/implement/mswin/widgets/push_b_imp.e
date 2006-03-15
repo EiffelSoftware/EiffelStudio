@@ -75,7 +75,11 @@ feature {NONE} -- Initialization
 		do
 			create private_attributes
 			parent ?= oui_parent.implementation;
-			private_text := clone (a_button.identifier);
+			if a_button.identifier = Void then
+				private_text := Void
+			else
+				private_text := a_button.identifier.twin
+			end
 			a_button.set_font_imp (Current);
 			managed := man;
 			set_default_size
@@ -254,7 +258,7 @@ feature -- Removal
 				wid_list.forth
 			end
 		end
-	
+
 feature {NONE} -- Notification
 
 	on_bn_clicked is

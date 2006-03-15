@@ -8,7 +8,7 @@ indexing
 
 class
 
-	DRAWING_AREA 
+	DRAWING_AREA
 
 inherit
 
@@ -18,7 +18,7 @@ inherit
 		end;
 
 	DRAWING
-		
+
 create
 
 	make, make_unmanaged
@@ -59,7 +59,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {DRAWING_AREA_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -94,8 +98,8 @@ feature -- Element change
 feature -- Removal
 
 	remove_input_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
-			-- to be executed when a key is pressed or when a mouse button 
+			-- Remove `a_command' with `argument' from the list of action
+			-- to be executed when a key is pressed or when a mouse button
 			-- is pressed.
 		require
 			exists: not destroyed;
@@ -105,7 +109,7 @@ feature -- Removal
 		end;
 
 	remove_resize_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
+			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current area is resized.
 		require
 			exists: not destroyed;
@@ -113,7 +117,7 @@ feature -- Removal
 		do
 			implementation.remove_resize_action (a_command, argument)
 		end;
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaiton
 
 	implementation: DRAWING_AREA_I;

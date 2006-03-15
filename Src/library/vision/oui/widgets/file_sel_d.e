@@ -6,12 +6,12 @@ indexing
 
 class
 
-	FILE_SEL_D 
+	FILE_SEL_D
 
 inherit
 
 	FILE_SELEC
-		rename 
+		rename
 			make as file_selec_make
 		undefine
 			raise, lower
@@ -27,7 +27,7 @@ inherit
 create
 
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {FILE_SEL_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure

@@ -6,14 +6,14 @@ indexing
 		%the characters: the first position is null and located before the text, %
 		%the position `i' is located after the `i'-th character of text. %
 		%When the text is empty, the only valid position is null"
-	legal: "See notice at end of class."; 
+	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
 
-	TEXT_FIELD 
+	TEXT_FIELD
 
 inherit
 
@@ -67,7 +67,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {TEXT_FIELD_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -94,7 +98,7 @@ feature -- Measurement
 			exists: not destroyed
 		do
 			Result := implementation.maximum_size
-		end; 
+		end;
 
 	count: INTEGER is
 			-- Number of character in current text field
@@ -123,13 +127,13 @@ feature -- Status setting
 			not_negative_maximum: a_max >= 0
 		do
 			implementation.set_maximum_size (a_max)
-		end; 
+		end;
 
 feature -- Element change
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when 
-			-- an activate event occurs. 
+			-- Add `a_command' to the list of action to be executed when
+			-- an activate event occurs.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
@@ -185,12 +189,12 @@ feature -- Element change
 			not_a_text_void: a_text /= Void
 		do
 			implementation.set_text (a_text)
-		end; 
+		end;
 
 feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of action to be executed 
+			-- Remove `a_command' from the list of action to be executed
 			-- when an activate event occurs.
 		require
 			exists: not destroyed;
@@ -214,7 +218,7 @@ feature {NONE} -- Implementation
 	set_default is
 			-- Set default text to current text field.
 		do
-		end; 
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -8,7 +8,7 @@ indexing
 
 class
 
-	BULLETIN 
+	BULLETIN
 
 inherit
 
@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {BULLETIN_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -76,7 +80,7 @@ feature -- Status report
 			index1: INTEGER;
 		do
 			Result := True;
-			from index1 := a_stackable_array.lower 
+			from index1 := a_stackable_array.lower
 			until  not Result or else index1 > a_stackable_array.upper
 			loop
 				If a_stackable_array.item (index1) = Void  then
@@ -93,19 +97,19 @@ feature -- Status report
 feature -- Status setting
 
 	allow_recompute_size is
-			-- Allow Current bulletin to recompute its size 
+			-- Allow Current bulletin to recompute its size
 			-- according to its children.
 		require
-			exists: not destroyed	
+			exists: not destroyed
 		do
 			implementation.allow_recompute_size
 		end;
 
 	forbid_recompute_size is
-			-- Forbid Current bulletin to recompute its size 
+			-- Forbid Current bulletin to recompute its size
 			-- according to its children.
 		require
-			exists: not destroyed	
+			exists: not destroyed
 		do
 			implementation.forbid_recompute_size
 		end;
@@ -113,7 +117,7 @@ feature -- Status setting
 	set_default_position (flag: BOOLEAN) is
 			-- Set default position of Current to `flag'.
 		require
-			exists: not destroyed	
+			exists: not destroyed
 		do
 			implementation.set_default_position (flag);
 		end;

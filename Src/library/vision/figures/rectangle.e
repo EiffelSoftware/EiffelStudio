@@ -8,7 +8,7 @@ indexing
 
 class
 
-	RECTANGLE 
+	RECTANGLE
 
 inherit
 
@@ -41,7 +41,7 @@ feature -- Initialization
 			width := 1;
 			height := 1;
 			orientation := 0;
-		end; 
+		end;
 
 	make_from_closure (cl: CLOSURE) is
 			-- Create a rectangle containing `cl`
@@ -50,7 +50,7 @@ feature -- Initialization
 		do
 			make;
 			if not cl.empty then
-				upper_left := deep_clone (cl.up_left);
+				upper_left := cl.up_left.deep_twin
 				w := cl.down_right.x - cl.up_left.x;
 				h := cl.down_right.y - cl.up_left.y;
 				width := w;
@@ -58,7 +58,7 @@ feature -- Initialization
 			end
 		end;
 
-feature -- Access 
+feature -- Access
 
 	center: COORD_XY_FIG is
 			-- Center of the rectangle.
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end;
 
-feature -- Element change 
+feature -- Element change
 
 	set_height (new_height: like height) is
 			-- Set `height' to `new_height'.
@@ -197,7 +197,7 @@ feature -- Element change
 		do
 			upper_left.xytranslate (vx, vy);
 			set_conf_modified
-		end 
+		end
 
 feature -- Output
 
@@ -218,13 +218,13 @@ feature -- Output
 		end;
 
 feature -- Status report
-	
+
 	is_superimposable (other: like Current): BOOLEAN is
 			-- Is the current rectangle superimposable to `other' ?
 		require else
 			other_exists: other /= Void
 		do
-			Result := upper_left.is_superimposable (other.upper_left) and 
+			Result := upper_left.is_superimposable (other.upper_left) and
 				(width = other.width) and (height = other.height)
 		end;
 

@@ -30,7 +30,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {SEARCH_REPLACE_DIALOG_IMP} implementation.make (Current, a_parent);
 			set_default
-		ensure 
+		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
 			in_replace_mode: replace_mode
@@ -78,7 +78,7 @@ feature -- Status report
 			Result := implementation.replace_text
 		end
 
-	search_text: STRING is 
+	search_text: STRING is
 			-- Text to search for
 		require
 			exists: not destroyed;
@@ -258,7 +258,7 @@ feature -- Element change
 feature -- Removal
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the cancel option.
 		require
 			exists: not destroyed;
@@ -268,7 +268,7 @@ feature -- Removal
 		end;
 
 	remove_find_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the find option.
 		require
 			exists: not destroyed;
@@ -278,7 +278,7 @@ feature -- Removal
 		end;
 
 	remove_replace_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace option.
 		require
 			exists: not destroyed;
@@ -288,7 +288,7 @@ feature -- Removal
 		end;
 
 	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace all option.
 		require
 			exists: not destroyed;

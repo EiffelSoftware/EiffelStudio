@@ -11,7 +11,7 @@ indexing
 
 class
 
-	FORM_D 
+	FORM_D
 
 inherit
 
@@ -32,7 +32,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -44,10 +44,10 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			identifier := a_name.twin
 			create {FORM_D_IMP} implementation.make (Current, a_parent);
 			set_default
-		ensure 
+		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
 		end;

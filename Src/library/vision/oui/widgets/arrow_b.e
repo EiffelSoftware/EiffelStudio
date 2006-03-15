@@ -8,13 +8,13 @@ indexing
 
 class
 
-	ARROW_B 
+	ARROW_B
 
 inherit
 
 	BUTTON
 		redefine
-			implementation, text, set_text, 
+			implementation, text, set_text,
 			font, set_font,
 			set_left_alignment, set_center_alignment
 		end
@@ -23,8 +23,8 @@ create
 
 	make, make_unmanaged
 
-feature {NONE} -- Initialization 
-	
+feature {NONE} -- Initialization
+
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an arrow button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create an unmanaged arrow button with `a_name' 
-			-- as identifier, `a_parent' as parent and 
+			-- Create an unmanaged arrow button with `a_name'
+			-- as identifier, `a_parent' as parent and
 			-- call `set_default'.
 		require
 			valid_name: a_name /= Void;
@@ -64,7 +64,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {ARROW_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -177,7 +181,7 @@ feature {NONE} -- Inapplicable
 		end;
 
 	set_text (a_text: STRING) is
-			-- Do nothing. 
+			-- Do nothing.
 		do
 		end;
 
@@ -185,7 +189,7 @@ feature {NONE} -- Inapplicable
 			-- Set text alignment to left.
 		do
 		end;
- 
+
 	set_center_alignment is
 			-- Set text alignment to center.
 		do

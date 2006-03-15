@@ -8,7 +8,7 @@ indexing
 
 class
 
-	FRAME 
+	FRAME
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			identifier_set: identifier.is_equal (a_name);
 			managed: managed
 		end;
-	
+
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
@@ -50,26 +50,30 @@ feature {NONE} -- Initialization
 			identifier_set: identifier.is_equal (a_name);
 			not_managed: not managed
 		end;
-	
+
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {FRAME_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
-	
+
 feature {NONE} -- Implementation
 
 	set_default is
 			-- Set default values to current frame.
 		do
 		end;
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: FRAME_I;

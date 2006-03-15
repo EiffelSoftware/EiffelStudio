@@ -10,7 +10,7 @@ indexing
 
 class
 
-	SCALE 
+	SCALE
 
 inherit
 
@@ -27,7 +27,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initiaization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -64,7 +64,11 @@ feature {NONE} -- Initiaization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SCALE_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -83,7 +87,7 @@ feature -- Access
 			value_small_enough: Result <= maximum
 		end
 	granularity: INTEGER is
-			-- Value of the amount that the current slider can be moved 
+			-- Value of the amount that the current slider can be moved
 			-- whenever a move action occurs
 		require
 			exists: not destroyed
@@ -138,19 +142,19 @@ feature -- Status report
 			exists: not destroyed;
 		do
 			Result := implementation.is_horizontal
-		end; 
+		end;
 
-	is_value_shown: BOOLEAN is 
+	is_value_shown: BOOLEAN is
 		require
 			exists: not destroyed;
-		do 
+		do
 			Result := implementation.is_value_shown;
 		end;
- 
-	is_maximum_right_bottom: BOOLEAN is 
+
+	is_maximum_right_bottom: BOOLEAN is
 		require
 			exists: not destroyed;
-		do 
+		do
 			Result := implementation.is_maximum_right_bottom;
 		end;
 
@@ -165,7 +169,7 @@ feature -- Status setting
 			implementation.set_output_only (flag)
 		ensure
 			Output_only: is_output_only = flag
-		end; 
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -178,17 +182,17 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
-	set_maximum_right_bottom (flag: BOOLEAN) is 
+	set_maximum_right_bottom (flag: BOOLEAN) is
 		require
 			exists: not destroyed;
-		do 
+		do
 			implementation.set_maximum_right_bottom (flag);
 		end;
 
-	show_value (flag: BOOLEAN) is 
+	show_value (flag: BOOLEAN) is
 		require
 			exists: not destroyed;
-		do 
+		do
 			implementation.set_value_shown (flag);
 		end;
 
@@ -203,7 +207,7 @@ feature -- Element change
 			implementation.set_text (a_text);
 		ensure
 			text.is_equal (a_text)
-		end; 
+		end;
 
 	set_value (new_value: INTEGER) is
 			-- Set value to `new_value'.
@@ -218,7 +222,7 @@ feature -- Element change
 		end;
 
 	set_granularity (new_granularity: INTEGER) is
-			-- Set amount to move the slider when a move action 
+			-- Set amount to move the slider when a move action
 			-- occurs to `new_granularity'.
 		require
 			exists: not destroyed;
@@ -272,7 +276,7 @@ feature -- Element change
 		end;
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be execute when 
+			-- Add `a_command' to the list of action to be execute when
 			-- value is changed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -281,7 +285,7 @@ feature -- Element change
 			Valid_command: a_command /= Void
 		do
 			implementation.add_value_changed_action (a_command, argument)
-		end; 
+		end;
 
 feature -- Removal
 
@@ -293,7 +297,7 @@ feature -- Removal
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_move_action (a_command, argument)
-		end; 
+		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to be executed when
@@ -310,7 +314,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: SCALE_I;
 			-- Implementation of scale
 
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
 	is_fontable: BOOLEAN is true;

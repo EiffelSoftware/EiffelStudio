@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DIRECTORY_SELECTION_DIALOG_WINDOWS
 
 inherit
@@ -16,7 +16,7 @@ inherit
 	WEL_CBN_CONSTANTS
 
 	WEL_LBN_CONSTANTS
-	
+
 	WEL_DDL_CONSTANTS
 
 	WEL_MODAL_DIALOG
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 				end
 				if pos > 1 then
 					fill_recently_used
-					directory := clone (directories_list)
+					directory := directories_list.twin
 					directory.keep_head (directory.index_of (';', 1) - 1)
 				else
 					directory := current_working_directory
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			-- Action on directory list
 		do
 			if notify_code = lbn_selchange then
-				selection_made := false	
+				selection_made := false
 			elseif notify_code = lbn_dblclk then
 				selection_made := true
 				directory := process_list_selection (directory_list.selected_string)
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 				tmp := process_list_selection (directory_list.selected_string)
 			end
 			if
-				tmp.item (tmp.count) = '\' or 
+				tmp.item (tmp.count) = '\' or
 				tmp.item (tmp.count) = '/'and
 				tmp.count /= 3
 			then
@@ -341,17 +341,17 @@ feature {NONE} -- Implementation
 		local
 			ls : STRING
 		do
-			ls := clone (selected_string)
+			ls := selected_string.twin
 			if ls.item (1) = '[' then
 				ls.remove (1)
 				ls.remove (ls.count)
 			end
-			Result := clone (directory)
+			Result := directory.twin
 			if ls.is_equal ("..") then
 				Result.remove (Result.count)
 				from
 				until
-					Result.item (Result.count) = '\'	
+					Result.item (Result.count) = '\'
 				loop
 					Result.remove (Result.count)
 				end
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			wildcard_dir, drive_to_find: STRING
 			select_item: INTEGER
 		do
-			wildcard_dir := clone (directory)
+			wildcard_dir := directory.twin
 			if wildcard_dir.item (wildcard_dir.count) = '\' then
 				wildcard_dir.remove (wildcard_dir.count)
 			end
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			combo_box.set_text (wildcard_dir)
 			drive_list.reset_content
 			drive_list.add_files (ddl_drives + ddl_exclusive, "*.*")
-			drive_to_find := "[-" 
+			drive_to_find := "[-"
 			drive_to_find.extend (wildcard_dir.item (1))
 			select_item := drive_list.find_string (0, drive_to_find)
 			if select_item > 0 then
@@ -454,10 +454,10 @@ feature {NONE} -- Implementation
 					d.readentry
 					found_item := d.lastentry
 				end
-				d.close	
+				d.close
 			end
 		end
-		
+
 	class_name: STRING is
 			-- Class name
 		once

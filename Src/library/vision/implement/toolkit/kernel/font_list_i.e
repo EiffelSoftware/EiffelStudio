@@ -6,7 +6,7 @@ indexing
 
 deferred class
 
-	FONT_LIST_I 
+	FONT_LIST_I
 
 inherit
 	G_ANY_I
@@ -33,7 +33,7 @@ feature -- Access
 		deferred
 		end;
 
-	i_th (i: INTEGER): like first is
+	i_th alias "[]" (i: INTEGER): like first is
 			-- Item at `i'_th position
 		require
 			index_large_enough: i >= 1;

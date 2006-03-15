@@ -60,7 +60,7 @@ inherit
 			text_length as wel_text_length,
 			text as wel_text,
 			set_text as wel_set_text,
-			set_focus as wel_set_focus			
+			set_focus as wel_set_focus
 		undefine
 			on_hide,
 			on_show,
@@ -159,7 +159,7 @@ feature -- Status report
 			end
 		end
 
-	search_text: STRING is 
+	search_text: STRING is
 			-- Text to search for
 		do
 			if exists then
@@ -302,7 +302,7 @@ feature -- Status setting
 	set_replace_text (a_text: STRING)  is
 			-- Set `replace_text' to `a_text'
 		do
-			private_replace_text := clone (a_text)
+			private_replace_text := a_text.twin
 			if exists then
 				replace_edit.set_text (a_text)
 			end
@@ -318,13 +318,13 @@ feature -- Status setting
 				replace_all_button.disable
 				replace_edit.disable
 				replace_static.disable
-			end	
+			end
 		end
 
 	set_search_text (a_text: STRING) is
 			-- Set `search_text' to `a_text'
 		do
-			private_search_text := clone (a_text)
+			private_search_text := a_text.twin
 			if exists then
 				find_edit.set_text (a_text)
 			end
@@ -369,28 +369,28 @@ feature -- Status setting
 feature -- Removal
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the cancel option.
 		do
 			cancel_actions.remove (Current, a_command, argument)
 		end;
 
 	remove_find_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the find option.
 		do
 			find_actions.remove (Current, a_command, argument)
 		end;
 
 	remove_replace_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace option.
 		do
 			replace_actions.remove (Current, a_command, argument)
 		end;
 
 	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' from the list of actions to be executed 
+			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace all option.
 		do
 			replace_all_actions.remove (Current, a_command, argument)
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 				private_replace_text.is_empty
 			then
 				replace_edit.set_text (private_replace_text)
-			end			
+			end
 		end
 
 	set_defaults is
@@ -571,7 +571,7 @@ feature {NONE} -- Inapplicable
 
 	label_font: FONT
 
-	button_font : FONT 
+	button_font : FONT
 
 	build is
 		do

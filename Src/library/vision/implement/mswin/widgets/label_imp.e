@@ -14,7 +14,7 @@ inherit
 			set_font,
 			realize
 		end
-		
+
 	LABEL_I
 
 	SIZEABLE_WINDOWS
@@ -50,7 +50,7 @@ inherit
 			set_text as wel_set_text,
 			move as wel_move,
 			set_focus as wel_set_focus,
-			set_capture as wel_set_capture, 
+			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
 			item as wel_item,
 			font as wel_control_font,
@@ -88,11 +88,15 @@ feature {NONE} -- Initialization
 			create {WEL_ANSI_VARIABLE_FONT} wel_font.make
 			create private_attributes
 			parent ?= oui_parent.implementation
-			text := clone (a_label.identifier)
+			if a_label.identifier /= Void then
+				text := a_label.identifier.twin
+			else
+				text := Void
+			end
 			a_label.set_font_imp (Current)
 			managed := man
 			set_default_attributes
-		end 
+		end
 
 feature -- Status setting
 
@@ -139,7 +143,7 @@ feature -- Element change
 	set_text (t: STRING) is
 			-- Set label text to `t'
 		do
-			text := clone (t)
+			text := t.twin
 			adjust_label
 		end
 

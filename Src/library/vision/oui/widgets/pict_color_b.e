@@ -8,7 +8,7 @@ indexing
 
 class
 
-	PICT_COLOR_B 
+	PICT_COLOR_B
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -59,7 +59,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {PICT_COLOR_B_IMP} implementation.make (Current, a_parent, man);
 			implementation.set_widget_default;
 			set_default
@@ -86,7 +90,7 @@ feature -- Status report
 		do
 			a_bar ?= other;
 			Result := (a_bar = Void)
-		end; 
+		end;
 
 	is_pressed: BOOLEAN is
 			-- Is the pict color button pressed?
@@ -122,7 +126,7 @@ feature -- Element change
 		end;
 
 	set_pressed (b: like is_pressed) is
-			-- Set `is_pressed' to `b'. 
+			-- Set `is_pressed' to `b'.
 		do
 			implementation.set_pressed (b)
 		ensure
@@ -133,7 +137,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: PICT_COLOR_B_I;
 			-- Implementation of draw button
-	
+
 feature {NONE} -- Implementation
 
 	set_default is

@@ -8,9 +8,9 @@ indexing
 
 class
 
-	BASE 
+	BASE
 
-inherit 
+inherit
 
 	TOP
 		redefine
@@ -20,7 +20,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make  (a_name: STRING; a_screen: SCREEN) is
@@ -29,14 +29,14 @@ feature {NONE} -- Initialization
 			-- will be defined as application name or the name
 			-- precised with -name option, and call `set_default'.
 		require
-			non_void_screen: a_screen /= Void; 
+			non_void_screen: a_screen /= Void;
 			valid_screen: a_screen.is_valid
 		do
 			depth := 0;
 			widget_manager.new (Current, Void);
 			if a_name /= Void then
-				identifier:= clone (a_name);
-			end;	
+				identifier:= a_name.twin
+			end;
 			screen := a_screen;
 			create {BASE_IMP} implementation.make (Current);
 			set_default

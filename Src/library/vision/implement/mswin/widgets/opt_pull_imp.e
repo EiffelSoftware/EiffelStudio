@@ -160,7 +160,7 @@ feature -- Element change
 				s := button.text
 				add_string (s)
 				if not fixed_size_flag then
-					adjust_size (b)	
+					adjust_size (b)
 				end
 			end
 		ensure
@@ -198,7 +198,7 @@ feature -- Status setting
 			screen_dc.get
 			s := b.text
 			max_width := screen_dc.string_width (s).max (width - 24)
-			new_height := (number_of_buttons + 1) * item_height 
+			new_height := (number_of_buttons + 1) * item_height
 			screen_dc.release
 			set_size (max_width + 24, new_height)
 				--| Add 24 to set visible the whole text.
@@ -206,7 +206,11 @@ feature -- Status setting
 
 	set_caption (a_caption: STRING) is
 		do
-			caption := clone (a_caption)
+			if a_caption /= Void then
+				caption := a_caption.twin
+			else
+				caption := Void
+			end
 		end
 
 	set_selected_button (b: BUTTON) is
@@ -222,7 +226,11 @@ feature -- Status setting
 	set_text (s: STRING) is
 			-- Set text for option pull.
 		do
-			text := clone (s)
+			if s /= Void then
+				text := s.twin
+			else
+				text := Void
+			end
 		end
 
 	set_title (t: STRING) is
@@ -301,10 +309,10 @@ feature {NONE} -- Implementation
 		do
 			if not button_list.is_empty then
 				Result := button_list.count - unmanaged_count (button_list.last) + 1
-			end 
+			end
 		end
 
-	private_selected_button: BUTTON; 
+	private_selected_button: BUTTON;
 			-- Button selected before realization
 
 indexing

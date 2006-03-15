@@ -1,10 +1,10 @@
-indexing 
+indexing
 
 	description: "This class represents a MS_WINDOWS event handler for a widget and a command"
 	legal: "See notice at end of class.";
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	WIDGET_ACTIONS
@@ -81,7 +81,11 @@ feature -- Element change
 				action := acts.item
 				action_command := action.command
 				if action_command.context_data_useful then
-					action_command.set_context_data (clone(cd))
+					if cd /= Void then
+						action_command.set_context_data (cd.twin)
+					else
+						action_command.set_context_data (Void)
+					end
 				end
 				action_command.execute (action.argument)
 				if not acts.after then
@@ -122,7 +126,7 @@ feature -- Element change
 				translation_list.after or else translation_list.item.exact_to_execute
 			loop
 				trans := translation_list.item
-				trans.set_context_data (cd) 
+				trans.set_context_data (cd)
 				if trans.exact and then trans.conditions_met then
 					debug ("ACTION")
 						io.error.putstring ("Found one! ")
@@ -185,7 +189,7 @@ feature -- Element change
 					end
 				end
 			end
-		end	
+		end
 
 invariant
 

@@ -10,7 +10,7 @@ indexing
 
 class
 
-	MESSAGE_D 
+	MESSAGE_D
 
 inherit
 	TERMINAL_OUI
@@ -30,7 +30,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {MESSAGE_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)
 		end;
-	
+
 
 feature -- Status setting
 
@@ -76,7 +76,7 @@ feature -- Status setting
 		do
 			implementation.hide_ok_button
 		end;
-	
+
 	set_center_alignment is
 			-- Set message alignment to center.
 		require
@@ -226,12 +226,12 @@ feature -- Removal
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
-		end; 
+		end;
 
 feature -- Display update
 
     update_display is
-            -- Updates the display of all the windows in the application    
+            -- Updates the display of all the windows in the application
             -- Windows implementation does not anything
         do
             implementation.update_display

@@ -6,7 +6,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LIST_MAN 
+deferred class LIST_MAN
 
 obsolete
 		"Use SCROLLABLE_LIST instead - it has the same semantics as a LINKED_LIST."
@@ -15,7 +15,7 @@ feature -- Callback (adding and removing)
 
 	add_selection_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed when items are
-			-- selected. 
+			-- selected.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
 		require
@@ -23,10 +23,10 @@ feature -- Callback (adding and removing)
 			valid_command: a_command /= Void
 		do
 			implementation.add_single_action (a_command, argument)
-		end; 
+		end;
 
 	remove_selection_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' to the list of action to execute 
+			-- Remove `a_command' with `argument' to the list of action to execute
 			-- when items are selected.
 		require
 			exists: not destroyed;
@@ -53,7 +53,7 @@ feature -- Access
 			not_empty: not empty
 		do
 			Result := implementation.last
-		end; 
+		end;
 
 	search_equal (v: STRING) is
 			-- Move cursor to first position
@@ -67,8 +67,8 @@ feature -- Access
 			implementation.search_equal (v)
 		ensure
 			(not off) implies (v.is_equal (item))
-		end; 
-	
+		end;
+
 feature -- Cursor
 
 	back is
@@ -81,12 +81,12 @@ feature -- Cursor
 			index = old index - 1
 		end;
 
-	empty: BOOLEAN is
+	is_empty, empty: BOOLEAN is
 			-- Is current series empty?
 		require
 			exists: not destroyed
 		do
-			Result := implementation.empty
+			Result := implementation.is_empty
 		end;
 
 	finish is
@@ -107,7 +107,7 @@ feature -- Cursor
 			not_empty: not empty
 		do
 			Result := implementation.first
-		end; 
+		end;
 
 	forth is
 			-- Move cursor forward one position.
@@ -131,7 +131,7 @@ feature -- Cursor
 			implementation.go_i_th (i)
 		ensure
 			index = i
-		end; 
+		end;
 
 	has (v: STRING): BOOLEAN is
 			-- Does `v' appear in current series?
@@ -161,7 +161,7 @@ feature -- Cursor
 			Result := implementation.index_of (v, i)
 		ensure
 			Result >= 0
-		end; 
+		end;
 
 	isfirst: BOOLEAN is
 			-- Is cursor at first position in current series?
@@ -212,7 +212,7 @@ feature -- Cursor
 			exists: not destroyed
 		do
 			Result := implementation.off
-		end; 
+		end;
 
 	before: BOOLEAN is
 			-- Is cursor off left edge?
@@ -228,10 +228,10 @@ feature -- Cursor
 			exists: not destroyed;
 		do
 			Result := implementation.after
-		end; 
+		end;
 
 	index: INTEGER is
-			-- Current cursor index 
+			-- Current cursor index
 		require
 			exists: not destroyed
 		do
@@ -241,7 +241,7 @@ feature -- Cursor
 feature -- Deletion
 
 	remove is
-			-- Remove current item. 
+			-- Remove current item.
 			-- Move cursor to its right neighbor
 			-- (or after if no right neighbor).
 		require
@@ -255,7 +255,7 @@ feature -- Deletion
 
 	remove_all_occurrences (an_item: STRING) is
 			-- Remove all items identical to `v'.
-			-- Leave cursor `off'. 
+			-- Leave cursor `off'.
 		require
 			exists: not destroyed
 		do
@@ -295,7 +295,7 @@ feature -- Deletion
 			exists: not destroyed
 		do
 			implementation.wipe_out
-		end 
+		end
 
 feature -- Insertion
 
@@ -309,7 +309,7 @@ feature -- Insertion
 			implementation.put_left (an_item)
 		ensure
 			count = old count+1;
-		end; 
+		end;
 
 	put_right (an_item: STRING) is
 			-- Put item `v' to the right of cursor position.
@@ -322,7 +322,7 @@ feature -- Insertion
 		ensure
 			count = old count+1;
 			index = old index
-		end; 
+		end;
 
 	merge_left (other: LIST [STRING]) is
 			-- Merge `other' into the current list before
@@ -373,7 +373,7 @@ feature -- Insertion
 			implementation.put_i_th (an_item, i)
 		ensure
 			not empty
-		end; 
+		end;
 
 	swap (i: INTEGER) is
 			-- Exchange item at `i'-th position with item
@@ -408,7 +408,7 @@ feature -- Number of elements
 			exists: not destroyed
 		do
 			Result := implementation.count
-		end;  
+		end;
 
 feature -- Selection
 
@@ -444,7 +444,7 @@ feature -- Selection
 			not_off: not off
 		do
 			implementation.scroll_to_current
-		end; 
+		end;
 
 	select_item is
 			-- Select item at current position.
@@ -463,7 +463,7 @@ feature -- Selection
 			index_small_enough: i <= count
 		do
 			implementation.select_i_th (i)
-		end; 
+		end;
 
 	selected_count: INTEGER is
 			-- Number of selected items in current list
@@ -480,7 +480,7 @@ feature -- Selection
 			exists: not destroyed
 		do
 			Result := implementation.selected_item
-		end; 
+		end;
 
 	selected_position: INTEGER is
 			-- Position of selected item if single or browse selection mode is
@@ -505,7 +505,7 @@ feature -- Visibilty
 			a_count_large_enough: a_count > 0
 		do
 			implementation.set_visible_item_count (a_count)
-		end; 
+		end;
 
 	show_current is
 			-- Make item at current position visible.
@@ -532,7 +532,7 @@ feature -- Visibilty
 			index_small_enough: i <= count
 		do
 			implementation.show_i_th (i)
-		end; 
+		end;
 
 	show_last is
 			-- Make last item visible.
@@ -540,7 +540,7 @@ feature -- Visibilty
 			exists: not destroyed
 		do
 			implementation.show_last
-		end; 
+		end;
 
 	visible_item_count: INTEGER is
 			-- Number of visible item of list
@@ -558,7 +558,7 @@ feature {LIST_MAN_I}
 			-- Set list implementation to `a_list_imp'.
 		do
 			implementation := a_list_imp
-		end; 
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
@@ -572,8 +572,8 @@ feature -- Obsolete
 			add_selection_action (a_command, argument)
 		end;
 
-	set_single_selection is 
-		do 
+	set_single_selection is
+		do
 		end;
 
 	add_right (an_item: STRING) is

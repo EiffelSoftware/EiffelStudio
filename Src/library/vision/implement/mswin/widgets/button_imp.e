@@ -45,7 +45,7 @@ feature -- Status report
 				is_parent_menu_pull
 		end
 
-feature -- Status setting 
+feature -- Status setting
 
 	set_center_alignment is
 			-- Set text alignment to center
@@ -104,7 +104,11 @@ feature -- Status setting
 	set_text (t: STRING) is
 			-- Set window text to t.
 		do
-			private_text := clone (t)
+			if t /= Void then
+				private_text := t.twin
+			else
+				private_text := Void
+			end
 			if exists then
 				wel_set_text (t)
 			elseif realized and then in_menu and then managed then
@@ -116,7 +120,7 @@ feature -- Status setting
 			end
 		end
 
-feature -- Element change 
+feature -- Element change
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add a_command to the list of action to execute when

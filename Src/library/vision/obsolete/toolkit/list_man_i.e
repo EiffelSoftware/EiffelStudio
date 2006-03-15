@@ -6,9 +6,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class LIST_MAN_I 
+deferred class LIST_MAN_I
 
-feature 
+feature
 
 	add_browse_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when items are
@@ -38,7 +38,7 @@ feature
 			-- Add `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			not_before_unless_empty: before implies empty
+			not_before_unless_empty: before implies is_empty
 		deferred
 		end;
 
@@ -54,7 +54,7 @@ feature
 			-- Add `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			not_after_unless_empty: after implies empty
+			not_after_unless_empty: after implies is_empty
 		deferred
 		ensure
 			new_count: count = old count+1;
@@ -100,7 +100,7 @@ feature
 		deferred
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is the chain empty?
 		deferred
 		end;
@@ -110,13 +110,13 @@ feature
 			-- (no effect if chain is empty).
 		deferred
 		ensure
-			at_last: not empty implies islast
+			at_last: not is_empty implies islast
 		end;
 
 	first: STRING is
 			-- Item at first index
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		end;
 
@@ -126,7 +126,7 @@ feature
 		ensure
 			non_negative: Result >= 0
 			in_list: Result <= count;
-			empty_convention: empty implies (Result = 0)
+			empty_convention: is_empty implies (Result = 0)
 		end;
 
 	forth is
@@ -143,7 +143,7 @@ feature
 		require
 			index_large_enough: i >= 0;
 			index_small_enough: i <= count + 1;
-			not_empty_unless_zero: empty implies i=0;
+			not_empty_unless_zero: is_empty implies i=0;
 		deferred
 		ensure
 			position_expected: index = i
@@ -153,7 +153,7 @@ feature
 			-- Does `v' appear in the chain ?
 		deferred
 		ensure
-			not_found_in_empty: Result implies not empty
+			not_found_in_empty: Result implies not is_empty
 		end;
 
 	i_th (i: INTEGER): STRING is
@@ -178,14 +178,14 @@ feature
 			-- Is cursor at first index in the chain?
 		deferred
 		ensure
-			valid_position: Result implies (not empty)
+			valid_position: Result implies (not is_empty)
 		end;
 
 	islast: BOOLEAN is
 			-- Is cursor at last index in the chain?
 		deferred
 		ensure
-			valid_position: Result implies (not empty)
+			valid_position: Result implies (not is_empty)
 		end;
 
 	item: STRING is
@@ -198,7 +198,7 @@ feature
 	last: STRING is
 			-- Item at last index
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		end;
 
@@ -208,12 +208,12 @@ feature
 			-- Do not move cursor.
 			-- Empty other.
 		require
-			empty_or_not_before: empty or not before;
+			empty_or_not_before: is_empty or not before;
 			other_exists: other /= Void
 		deferred
 		ensure
 			count = old count + old other.count;
-			other.empty
+			other.is_empty
 		end;
 
 	merge_right (other: LIST [STRING]) is
@@ -222,12 +222,12 @@ feature
 			-- Do not move cursor.
 			-- Empties other.
 		require
-			not_after_unless_empty: empty or not after;
+			not_after_unless_empty: is_empty or not after;
 			other_exists: other /= Void
 		deferred
 		ensure
 			count = old count+old other.count;
-			other.empty
+			other.is_empty
 		end;
 
 	move (i: INTEGER) is
@@ -235,7 +235,7 @@ feature
 		require
 			stay_right: index + i >= 0;
 			stay_left: index + i <= count + 1;
-			not_empty_unless_zero: empty implies i=0;
+			not_empty_unless_zero: is_empty implies i=0;
 		deferred
 		ensure
 			expected_index: index = old index + i
@@ -285,11 +285,11 @@ feature
 			-- and move cursor to its right neighbor
 			-- (or `after' if no right neighbor).
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		ensure
 			count_changed: count = old count-1;
-			after_when_empty: empty implies after
+			after_when_empty: is_empty implies after
 		end;
 
 	prune_all (an_item: STRING) is
@@ -334,7 +334,7 @@ feature
 			not_before: not before;
 			non_negative_argument: n >= 0
 		deferred
-		end; 
+		end;
 
 	remove_multiple_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
@@ -466,7 +466,7 @@ feature
 		require
 			a_count_large_enough: a_count > 0
 		deferred
-		end; 
+		end;
 
 	show_current is
 			-- Make item at current position visible.
@@ -497,7 +497,7 @@ feature
 			-- Move cursor to first position.
 		deferred
 		ensure
-			empty or isfirst
+			is_empty or isfirst
 		end;
 
 	swap (i: INTEGER) is
@@ -519,22 +519,22 @@ feature
 	wipe_out is
 			-- Make list empty
 		deferred
-		end 
-	
+		end
+
 	is_destroyed: BOOLEAN is
 			-- Is Current is_destroyed?
 		deferred
 		end
 
-	
+
 invariant
 
-	non_negative_selected_item_count: not is_destroyed implies selected_count >= 0	
+	non_negative_selected_item_count: not is_destroyed implies selected_count >= 0
 	positive_visible_item_count:  not is_destroyed implies visible_item_count > 0
-	non_negative_index: index >= 0	
+	non_negative_index: index >= 0
 	index_small_enough:  not is_destroyed implies index <= count + 1
-	non_negative_count:  not is_destroyed implies count >= 0	
-	empty_definition:  not is_destroyed implies empty = (count = 0)
+	non_negative_count:  not is_destroyed implies count >= 0
+	empty_definition:  not is_destroyed implies is_empty = (count = 0)
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -4,7 +4,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TRANSLATION_COMMAND 
+class TRANSLATION_COMMAND
 
 inherit
 	EVENT_HDL
@@ -34,7 +34,7 @@ feature -- Initialization
 			argument := a
 		end
 
-feature 
+feature
 
 	argument: ANY
 			-- Argument for set_action
@@ -68,7 +68,7 @@ feature
 							io.error.putstring ("exact to execute%N")
 						end
 						if command.is_template then
-							command_clone := clone (command)
+							command_clone := command.twin
 						else
 							command_clone := command
 						end
@@ -82,7 +82,7 @@ feature
 						io.error.putstring ("not executing exact%N")
 					end
 					if command.is_template then
-						command_clone := clone (command)
+						command_clone := command.twin
 					else
 						command_clone := command
 					end
@@ -136,13 +136,13 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 					place := 1
 				end
 			end
-			from 
+			from
 				create modifier.make (0)
 			variant
 				s.count + 1 - place
 			until
 				place > s.count or else s.item (place) = '<'
-			loop            
+			loop
 				modifier.extend (s.item(place))
 				place := place + 1
 			end
@@ -181,14 +181,14 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 				t := action.substring_index ("btn", 1)
 				if action.substring_index ("key",1) > 0 then
 					key_action := true
-				end 
+				end
 			end
 			if t > 0 and then t+3 <= action.count then
 				mouse_action := true
 				if ("123").has(action.item (t+3)) then
 					mouse_button := action.item (t+3).code - ('0').code
-				end 
-			end 
+				end
+			end
 			if place < s.count  then
 				place := place + 1
 				key_string := s.substring (place, s.count)
@@ -214,7 +214,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 				io.new_line
 				io.putstring ("Mouse button: ")
 				io.putint (mouse_button)
-				io.new_line                        
+				io.new_line
 				io.putstring ("Up?: ")
 				io.putbool (direction_up)
 				io.new_line
@@ -256,8 +256,8 @@ feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 			kd: KEY_DATA
 		do
 			bd ?= context_data
-			if bd /= Void then      
-					-- A response to a button event of some sort                    
+			if bd /= Void then
+					-- A response to a button event of some sort
 				if (mouse_button = 0) or else (bd.button = mouse_button) then
 					if no_modifier then
 						if exact then
@@ -277,7 +277,7 @@ feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 						end
 						if Result then
 							if alt_required then
-								Result := bd.keyboard.modifiers.item (1)        
+								Result := bd.keyboard.modifiers.item (1)
 							elseif exact then
 								Result := not bd.keyboard.modifiers.item (1)
 							end
@@ -349,7 +349,7 @@ feature {WIDGET_ACTIONS}
 			exact_to_execute := false
 		end
 
-	exact_to_execute: BOOLEAN 
+	exact_to_execute: BOOLEAN
 			-- This is the exact to execute
 
 	exact: BOOLEAN
@@ -359,7 +359,7 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 
 	command: COMMAND
 
-	no_modifier: BOOLEAN 
+	no_modifier: BOOLEAN
 		-- No Alt, Ctrl, Shift is required for this translation
 
 	alt_required: BOOLEAN
@@ -386,10 +386,10 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 
 	key_action: BOOLEAN
 			-- Is this action dependent on a key
-			
+
 	mouse_action: BOOLEAN
 			-- Is this action dependent on a mouse action?
-			
+
 	other_action: BOOLEAN
 			-- Is this action independent of the mouse and keyboard
 
@@ -426,7 +426,7 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 	special_translations : ARRAY [STRING] is
 			-- Translations we will specifically allow and deal with
 		once
-			Result := << 
+			Result := <<
 				"<Unmap>,<Prop>",       -- WM_SIZE & SIZE_MINIMIZED message.
 				"<Prop>,<Map>",         -- WM_SIZE & SIZE_MAXMIZE or SIZE_RESTORED message.
 				"<Visible>",            -- WM_SHOWWINDOW message.

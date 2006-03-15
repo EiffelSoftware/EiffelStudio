@@ -8,7 +8,7 @@ indexing
 
 class
 
-	OPTION_B 
+	OPTION_B
 
 inherit
 
@@ -57,7 +57,11 @@ feature {NONE} -- Initiazliation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {OPTION_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -104,7 +108,7 @@ feature -- Element change
 			implementation.set_selected_button (button)
 		ensure
 			button = selected_button
-		end; 
+		end;
 
 	attach_menu (a_menu: OPT_PULL) is
 			-- Attach menu `a_menu' to the menu button, it will
@@ -175,7 +179,7 @@ feature {NONE} -- Implementation
 	set_default is
 			-- Set default value to current menu button.
 		do
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

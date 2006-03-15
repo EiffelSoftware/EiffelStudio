@@ -8,7 +8,7 @@ indexing
 
 class
 
-	SCROLLBAR 
+	SCROLLBAR
 
 inherit
 
@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SCROLLBAR_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -91,7 +95,7 @@ feature -- Access
 		ensure
 			increment_large_enough: Result >= 1;
 			increment_small_enough: Result <= (maximum - minimum)
-		end;		
+		end;
 
 	maximum: INTEGER is
 			-- Maximum value of slider value
@@ -101,7 +105,7 @@ feature -- Access
 			Result := implementation.maximum
 		ensure
 			maximum_greater_than_mini: Result > minimum
-		end; 
+		end;
 
 	minimum: INTEGER is
 			-- Minimum value of slider value
@@ -111,7 +115,7 @@ feature -- Access
 			Result := implementation.minimum
 		ensure
 			minimum_smaller_than_maxi: Result < maximum
-		end; 
+		end;
 
 	initial_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) before starting
@@ -134,7 +138,7 @@ feature -- Access
 		ensure
 			positive_delay: Result > 0
 		end;
-	
+
 	slider_size: INTEGER is
 			-- Size of slider.
 		do
@@ -233,7 +237,7 @@ feature -- Element change
 			implementation.set_maximum (new_maximum)
 		ensure
 			maximum = new_maximum
-		end; 
+		end;
 
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of slider value to `new_minimum'.
@@ -327,7 +331,7 @@ feature -- Removal
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_move_action (a_command, argument)
-		end; 
+		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to be executed when
@@ -337,7 +341,7 @@ feature -- Removal
 			Valid_command: a_command /= Void
 		do
 			implementation.remove_value_changed_action (a_command, argument)
-		end; 
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 

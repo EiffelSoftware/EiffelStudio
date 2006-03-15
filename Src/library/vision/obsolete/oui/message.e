@@ -11,7 +11,7 @@ indexing
 
 class
 
-	MESSAGE 
+	MESSAGE
 
 inherit
 
@@ -53,7 +53,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			ot ?= toolkit;
 			check
 				obsolete_toolkit_instantiated: ot /= Void
@@ -238,7 +242,7 @@ feature -- Removal
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
-		end; 
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- implementation
 

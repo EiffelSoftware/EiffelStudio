@@ -50,11 +50,14 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 			create private_attributes
 			a_file_sel_dialog.set_dialog_imp (Current)
-			title := clone (a_file_sel_dialog.identifier)
+			title := a_file_sel_dialog.identifier
+			if title /= Void then
+				title := title.twin
+			end
 		end
 
 	realize is
-			-- Realize current widget 
+			-- Realize current widget
 		do
 			realized := true
 				-- set initial focus
@@ -75,7 +78,7 @@ feature -- Access
 		do
 		end
 
-	directory: STRING 
+	directory: STRING
 			-- Base directory used in determining files and directories
 			-- to be displayed
 
@@ -87,22 +90,22 @@ feature -- Access
 			end
 		end
 
-	filter: STRING 
+	filter: STRING
 		-- Filter used for directory selection
 
-	pattern: STRING 
+	pattern: STRING
 		-- Pattern used for file selection
 
-	pattern_name: STRING 
+	pattern_name: STRING
 		-- Name of the pattern used for file selection
 
-	title: STRING 
+	title: STRING
 		-- Title of dialog
 
 feature -- Measurement
 
 	file_count: INTEGER is
-			-- Count of files below `filter' that 
+			-- Count of files below `filter' that
 			-- match `pattern' when not `directory_selection'
 		do
 		end
@@ -120,7 +123,7 @@ feature -- Status report
 		do
 			if directory_selection then
 				if directory_dialog /= Void and directory_dialog.selection_made then
-					Result := clone (directory_dialog.directory)
+					Result := directory_dialog.directory.twin
 				end
 			else
 				if wel_file_dialog /= Void and then wel_file_dialog.selected then
@@ -193,7 +196,7 @@ feature -- Status setting
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.
 		do
-			title := clone (a_title)
+			title := a_title.twin
 		end
 
 	set_pattern (s: STRING) is
@@ -222,7 +225,7 @@ feature -- Status setting
 				c = '/' or else
 				c = ':'
 			then
-				directory := clone (s)
+				directory := s.twin
 				directory.replace_substring_all ("/", "\")
 				if c = ':' then
 					directory.append_character ('\')
@@ -264,7 +267,7 @@ feature -- Status setting
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		do
-			directory := clone (s)
+			directory := s.twin
 			directory.replace_substring_all ("/", "\")
 		end
 
@@ -386,7 +389,7 @@ feature -- Inapplicable
 
 	label_font: FONT
 
-	button_font : FONT 
+	button_font : FONT
 
 	set_file_list_width   (i: INTEGER) is
 		do
@@ -398,7 +401,7 @@ feature -- Inapplicable
 
 	is_list_updated: BOOLEAN
 
-	is_dir_valid  : BOOLEAN 
+	is_dir_valid  : BOOLEAN
 
 feature {NONE} -- Inaplicable
 

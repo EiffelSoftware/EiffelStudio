@@ -8,7 +8,7 @@ indexing
 
 class
 
-	TOGGLE_B 
+	TOGGLE_B
 
 inherit
 
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			parent_set: parent = a_parent;
 			identifer_set: identifier.is_equal (a_name);
 			managed: managed
-		end; 
+		end;
 
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged toggle button with `a_name' as label,
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			parent_set: parent = a_parent;
 			identifer_set: identifier.is_equal (a_name);
 			not_managed: not managed
-		end; 
+		end;
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a toggle button with `a_name' as label,
@@ -59,11 +59,15 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {TOGGLE_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default
 			set_default
-		end; 
+		end;
 
 feature -- Status report
 
@@ -82,7 +86,7 @@ feature -- Status report
 			exists: not destroyed
 		do
 			Result := implementation.state
-		end 
+		end
 
 feature -- Status setting
 
@@ -97,7 +101,7 @@ feature -- Status setting
 			state_is_true: state
 		end;
 
-	set_toggle_off is 
+	set_toggle_off is
 			-- Set Current toggle off and set
 			-- state to False.
 		require
@@ -109,7 +113,7 @@ feature -- Status setting
 		end;
 
 	arm is
-			-- Set `state' to True and call 
+			-- Set `state' to True and call
 			-- callback (if set).
 		require
 			exists: not destroyed
@@ -120,7 +124,7 @@ feature -- Status setting
 		end;
 
 	disarm is
-			-- Set `state' to False and call 
+			-- Set `state' to False and call
 			-- callback (if set).
 		require
 			exists: not destroyed
@@ -128,7 +132,7 @@ feature -- Status setting
 			implementation.disarm
 		ensure
 			state_is_false: not state
-		end; 
+		end;
 
 	set_default is
 			-- Set default values to current toggle button.
@@ -152,7 +156,7 @@ feature -- Element change
 		end;
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Add `a_command' to the list of action to be executed when 
+			-- Add `a_command' to the list of action to be executed when
 			-- arrow button is activated.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -176,17 +180,17 @@ feature -- Element change
 feature -- Removal
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
+			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when value is changed.
 		require
 			exists: not destroyed;
 			valid_command: a_command /= Void
 		do
 			implementation.remove_value_changed_action (a_command, argument)
-		end; 
+		end;
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' to the list of action to be executed when 
+			-- Remove `a_command' to the list of action to be executed when
 			-- arrow button is activated.
 		do
 			remove_value_changed_action (a_command, argument)

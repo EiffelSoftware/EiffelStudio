@@ -11,8 +11,6 @@ deferred class
 
 inherit
 	WIZARD_INITIAL_STATE_WINDOW
-		export
-			{NONE} all
 		redefine
 			display,
 			proceed_with_current_info,
@@ -58,7 +56,7 @@ feature -- Access
 
 	is_final_state: BOOLEAN is TRUE
 
-	final_message: STRING is 
+	final_message: STRING is
 		deferred
 		end
 

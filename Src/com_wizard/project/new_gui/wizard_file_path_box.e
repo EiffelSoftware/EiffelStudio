@@ -11,8 +11,6 @@ inherit
 		rename
 			path_label as text_label,
 			path_combo as text_combo
-		export
-			{NONE} all
 		redefine
 			enable_sensitive,
 			disable_sensitive

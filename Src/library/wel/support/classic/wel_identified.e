@@ -8,7 +8,7 @@ indexing
 class
 	WEL_IDENTIFIED
 
-feature -- For weak references
+feature {NONE} -- For weak references
 
 	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW is
 			-- Object associated with `an_id'

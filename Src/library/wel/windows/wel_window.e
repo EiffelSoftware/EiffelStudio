@@ -22,8 +22,6 @@ inherit
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 	WEL_DATA_TYPE
@@ -1843,7 +1841,7 @@ feature -- Registration
 				p := p.memory_alloc ({WEL_INTERNAL_DATA}.structure_size)
 				internal_data := p
 				p.memory_set (0, {WEL_INTERNAL_DATA}.structure_size)
-				l_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
+				l_object_id := eif_object_id (Current)
 				{WEL_INTERNAL_DATA}.set_object_id (p, l_object_id)
 			end
 			cwin_set_window_long (item, Gwlp_userdata, p)
@@ -1860,8 +1858,7 @@ feature -- Registration
 			if exists then
 				l_data := internal_data
 				if l_data /= null then
-					Result := {WEL_IDENTIFIED}.eif_id_object (
-						{WEL_INTERNAL_DATA}.object_id (l_data)) = Current
+					Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data)) = Current
 				end
 			end
 		end
@@ -1901,7 +1898,7 @@ feature {NONE} -- Removal
 				check
 					l_object_id_valid: l_object_id > 0
 				end
-				{WEL_IDENTIFIED}.eif_object_id_free (l_object_id)
+				eif_object_id_free (l_object_id)
 				l_data.memory_free
 				internal_data := l_null
 			end

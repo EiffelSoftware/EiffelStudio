@@ -15,7 +15,7 @@ inherit
 			{NONE} object_id_stack_size, extend_object_id_stack
 		end
 		
-feature -- Access
+feature {NONE} - Access
 
 	frozen eif_object_id (an_object: ANY): INTEGER is
 			-- Unique for current object in any given session
@@ -35,8 +35,6 @@ feature -- Access
 		do
 			Result ?= eif_id_system_object (an_id)
 		end
-
-feature -- Removal
 
 	frozen eif_object_id_free (an_id: INTEGER) is
 			-- Free the entry associated with `object_id' if any

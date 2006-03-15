@@ -488,7 +488,6 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	 * automatically reinstanciated by the run-time (although race conditions
 	 * may occur if this is not done by the kernel).
 	 */
-	RT_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
@@ -547,7 +546,6 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 	 * reception will no longer be well-defined.
 	 */
 
-	RT_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	/*	int ignored;	*/			/* Ignore status for previous handler */
 
@@ -1115,7 +1113,6 @@ rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 
 rt_public void esigcatch(long int sig)
 {
-	RT_GET_CONTEXT
 	/* Catch signal `sig'.
 	 * Check that the signal is defined
 	 */
@@ -1178,7 +1175,6 @@ rt_public void esigcatch(long int sig)
 
 rt_public void esigignore(long int sig)
 {
-	RT_GET_CONTEXT
 	/* Ignore signal `sig'.
 	 * Check that the signal is defined
      */
@@ -1237,7 +1233,6 @@ rt_public void esigignore(long int sig)
 
 rt_public char esigiscaught(long int sig)
 {
-	RT_GET_CONTEXT
 	/* Is signal of number `sig' caught?
 	 * Check that the signal is defined
      */
@@ -1268,7 +1263,6 @@ rt_public char esigdefined (long int sig)
 void esigresall(void)
 {
 	/* Reset all the signals to their default handling */
-	RT_GET_CONTEXT
 	int sig;
 	for (sig = 1; sig < EIF_NSIG; sig++)
 #ifdef SIGPROF
@@ -1304,7 +1298,6 @@ void esigresall(void)
 
 void esigresdef(long int sig)
 {
-	RT_GET_CONTEXT
 
 	/* Reset signal `sig' to its default handling */
 	if (!(esigdefined(sig) == (char) 1))

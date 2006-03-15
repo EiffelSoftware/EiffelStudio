@@ -15,7 +15,8 @@ inherit
 	EV_GRID_ITEM_I
 		redefine
 			interface,
-			perform_redraw
+			perform_redraw,
+			required_width
 		end
 
 create

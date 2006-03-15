@@ -636,6 +636,9 @@ rt_public void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object)
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
+	if (!idr_temp_buf) {
+		xraise (EN_MEM);
+	}
 
 	internal_store(object);
 
@@ -684,6 +687,9 @@ rt_public EIF_INTEGER stream_sstore (EIF_POINTER *buffer, EIF_INTEGER size, EIF_
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
+	if (!idr_temp_buf) {
+		xraise (EN_MEM);
+	}
 	
 	internal_store(object);
 
@@ -703,6 +709,9 @@ rt_public void independent_free_store (EIF_REFERENCE object)
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
 	idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
+	if (!idr_temp_buf) {
+		xraise (EN_MEM);
+	}
 
 	internal_store(object);
 
@@ -719,11 +728,11 @@ rt_public EIF_POINTER *stream_malloc (EIF_INTEGER stream_size)	/*08/04/98*/
 
 	buffer = (char *) eif_malloc(stream_size);
 	if (buffer == (char *) 0) 
-		enomem ();
+		xraise(EN_MEM);
 	else {
 		real_buffer = (EIF_POINTER *) eif_malloc (sizeof (char *));
 		if (!real_buffer) {
-			enomem ();
+			xraise(EN_MEM);
 		} else {
 			*real_buffer = buffer;
 		}
@@ -1570,6 +1579,9 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	}
 
 	s_buffer = (char *) eif_rt_xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	if (!s_buffer) {
+		xraise(EN_MEM);
+	}
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eise_io("General store: unable to write number of different Eiffel types.");
@@ -1748,6 +1760,9 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	}
 
 	s_buffer = (char *) eif_rt_xmalloc (bsize * sizeof( char), C_T, GC_OFF);
+	if (!s_buffer) {
+		xraise(EN_MEM);
+	}
 	/* Write maximum dynamic type */
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eise_io("Independent store: unable to write number of different Eiffel types.");
@@ -1777,6 +1792,9 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 		if (bsize < (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6)) {
 			bsize = (strlen (vis_name) + sizeof (long) + 2 * sizeof (int) + 6);
 			s_buffer = (char *) xrealloc (s_buffer, bsize, GC_OFF);
+			if (!s_buffer) {
+				xraise(EN_MEM);
+			}
 		}
 
 		info = cecil_info_for_dynamic_type (i);
@@ -2148,6 +2166,9 @@ rt_private int stream_write (char *pointer, int size)
 	if (store_stream_buffer_size - store_stream_buffer_position < (size_t) size) {
 		store_stream_buffer_size += buffer_size;
 		store_stream_buffer = (char *) eif_realloc (store_stream_buffer, store_stream_buffer_size);
+		if (!store_stream_buffer) {
+			xraise(EN_MEM);
+		}
 	}
 
 	memcpy ((store_stream_buffer + store_stream_buffer_position), pointer, size);

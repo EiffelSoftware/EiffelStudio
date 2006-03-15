@@ -15,7 +15,7 @@ inherit
 			{NONE} object_id_stack_size, extend_object_id_stack
 		end
 		
-feature {NONE} - Access
+feature {NONE} -- For weak references
 
 	frozen eif_object_id (an_object: ANY): INTEGER is
 			-- Unique for current object in any given session

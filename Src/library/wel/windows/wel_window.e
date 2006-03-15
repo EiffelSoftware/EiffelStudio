@@ -1885,7 +1885,7 @@ feature {WEL_WINDOW} -- Properties
 
 feature {NONE} -- Removal
 
-	frozen dispose is
+	dispose is
 			-- Free allocated memory.
 		local
 			l_null, l_data: POINTER

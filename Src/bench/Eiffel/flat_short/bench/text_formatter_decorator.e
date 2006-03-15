@@ -464,6 +464,8 @@ feature -- Execution
 
 				if format_registration.target_ast /= Void then
 					Inst_context.set_cluster (current_class.cluster)
+						-- We initialize source class as current class
+						-- when processing the header of a class.
 					ast_output_strategy.set_current_class (current_class)
 					ast_output_strategy.set_source_class (current_class)
 					ast_output_strategy.format (format_registration.target_ast)
@@ -1121,6 +1123,7 @@ feature {NONE} -- Implementation
 			ast_output_strategy.set_current_class (current_class)
 			ast_output_strategy.set_source_feature (source_feature)
 			ast_output_strategy.set_current_feature (target_feature)
+			ast_output_strategy.wipe_out_error
 		end
 
 indexing

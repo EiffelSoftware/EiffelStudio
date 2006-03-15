@@ -74,8 +74,13 @@ feature -- Execution
 				feature_comments := f_ast.comment (match_list_server.item (written_in_class.class_id))
 				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
+
 				indent;
 				ast_output_strategy.format (f_ast)
+				if ast_output_strategy.has_error then
+					put_new_line
+					process_comment_text ("-- An error occured, which was due to a compilation failure.", Void)
+				end
 				commit;
 			else
 				execution_error := True;

@@ -107,7 +107,7 @@ feature -- Access
 			-- Run-time object Id of `Current'.
 		do
 			if internal_object_id = 0 then
-				internal_object_id := {WEL_IDENTIFIED}.eif_object_id (Current)
+				internal_object_id := eif_object_id (Current)
 			end
 			Result := internal_object_id
 		end
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			-- no more usefull.
 		do
 			if internal_object_id /= 0 then
-				{WEL_IDENTIFIED}.eif_object_id_free (internal_object_id)
+				eif_object_id_free (internal_object_id)
 				internal_object_id := 0
 			end
 		end

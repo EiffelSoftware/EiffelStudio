@@ -33,6 +33,12 @@ inherit
 			{NONE} all
 		end
 
+	EB_COMPLETION_POSSIBILITIES_PROVIDER
+		redefine
+			prepare_completion,
+			completion_possible
+		end
+
 create
 	make
 
@@ -418,53 +424,10 @@ feature -- Completion-clickable initialization / update
 				insert_char ('.')
 					-- will prevent `click_tool' from considering
 					-- what precedes as the name to be completed.
-			else
-				l_token := cursor.token
-				if l_token /= Void then
-					if l_token.is_text then
-						l_image := l_token.image
-						if l_image.count > 1 and then cursor.pos_in_token > 1 then
-								-- Will prevent completion of '`.' or '..'
-							l_do_not_complete := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)
-						end
-					end
-
-					l_token := l_token.previous
-
-					if l_token /= Void then
-						l_comment ?= l_token
-						if l_comment /= Void then
-								-- Previous token is a comment so we cannot complete.
-								-- Happens when completing -- A Comment `.|
-							l_do_not_complete := True
-						elseif l_token.is_text then
-								-- Will prevent completion of '22|'
-							l_number ?= l_token
-							l_do_not_complete := l_number /= Void
-
-							if not l_do_not_complete then
-								l_image := l_token.image
-								if l_image.count > 1 then
-										-- Will prevent completion of '|.' or '..'
-									l_do_not_complete := is_completable_separator (l_image.item (l_image.count).out)
-								elseif not l_image.is_empty and is_completable_separator (l_image) then
-									if l_token.previous /= Void then
-											-- Will prevent completion of '10.|'
-										l_number ?= l_token.previous
-										l_do_not_complete := l_number /= Void
-									end
-								end
-							end
-						end
-					end
-				end
 			end
 
-			if not l_do_not_complete and not cursor.line.part_of_verbatim_string then
-				click_tool.build_completion_list (cursor)
-			end
-			if not l_do_not_complete and click_tool.completion_possibilities /= Void then
-
+			click_tool.build_completion_list (cursor)
+			if click_tool.completion_possibilities /= Void then
 				auto_complete_possible := True
 			elseif add_point then
 					-- We should have added a point.
@@ -566,6 +529,64 @@ feature -- Completion-clickable initialization / update
 				cursor.set_x_in_characters (x)
 				enable_selection
 			end
+		end
+
+	completing_context: BOOLEAN is
+			--
+		local
+			l_token: EDITOR_TOKEN
+			l_image: STRING
+			l_comment: EDITOR_TOKEN_COMMENT
+			l_number: EDITOR_TOKEN_NUMBER
+			l_string: EDITOR_TOKEN_STRING
+		do
+			check
+				cursor_not_void: cursor /= Void
+			end
+			l_token := cursor.token
+			if l_token /= Void then
+				if l_token.is_text then
+					l_image := l_token.image
+					if l_image.count > 1 and then cursor.pos_in_token > 1 then
+							-- Will prevent completion of '`.' or '..'
+						Result := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)
+					end
+				end
+
+				l_token := l_token.previous
+
+				if l_token /= Void then
+					l_comment ?= l_token
+					if l_comment /= Void then
+							-- Previous token is a comment so we cannot complete.
+							-- Happens when completing -- A Comment `.|
+						Result := True
+					elseif l_token.is_text then
+							-- Will prevent completion of '22|'
+						l_number ?= l_token
+						Result := l_number /= Void
+
+						if not Result then
+							l_string ?= l_token
+							Result := l_string /= Void
+							if not Result then
+								l_image := l_token.image
+								if l_image.count > 1 then
+										-- Will prevent completion of '|.' or '..'
+									Result := is_completable_separator (l_image.item (l_image.count).out)
+								elseif not l_image.is_empty and is_completable_separator (l_image) then
+									if l_token.previous /= Void then
+											-- Will prevent completion of '10.|'
+										l_number ?= l_token.previous
+										Result := l_number /= Void
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			Result := not Result
 		end
 
 feature -- Syntax completion
@@ -720,6 +741,39 @@ feature -- Syntax completion
 					mark_fake_trailing_blank (line (line_nb + 1), to_be_inserted.occurrences ('%N'))
 				end
 			end
+		end
+
+feature {NONE} -- Possiblilities provider
+
+	insertion: STRING is
+			-- Strings to be partially completed : the first one is the dot or tilda if there is one
+			-- the second one is the feature name to be completed
+		do
+			Result := click_tool.insertion.item
+		end
+
+	insertion_remainder: INTEGER is
+			-- The number of characters in the insertion remaining from the cursor position to the
+			-- end of the token
+		do
+			Result := click_tool.insertion_remainder
+		end
+
+	prepare_completion is
+			-- Prepare completion
+		do
+			Precursor
+			if provide_features and then click_and_complete_is_active then
+				prepare_auto_complete (false)
+			elseif provide_classes then
+				prepare_class_name_complete
+			end
+		end
+
+	completion_possible: BOOLEAN is
+			--
+		do
+			Result := click_and_complete_is_active and then auto_complete_possible and then Precursor
 		end
 
 feature {NONE}-- click information update

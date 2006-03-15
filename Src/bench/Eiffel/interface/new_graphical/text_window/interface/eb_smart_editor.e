@@ -54,14 +54,6 @@ inherit
 			calculate_completion_list_width
 		end
 
-	EB_COMPLETION_POSSIBILITIES_PROVIDER
-		export
-			{NONE} all
-		undefine
-			default_create,
-			prepare_completion
-		end
-
 create
 	make
 
@@ -74,8 +66,8 @@ feature {NONE} -- Initialize
 
 				-- Initialize code completion.
 			initialize_code_complete
-			set_completion_possibilities_provider (Current)
-			set_code_completable (Current)
+			set_completion_possibilities_provider (text_displayed)
+			text_displayed.set_code_completable (Current)
 		end
 
 feature -- Content change
@@ -172,21 +164,25 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	complete_feature_name is
 			-- Complete feature name.
 		do
-			set_completing_feature (true)
-			if auto_complete_after_dot and then not shifted_key then
-				completing_automatically := True
+			if text_displayed.completing_context then
+				set_completing_feature (true)
+				if auto_complete_after_dot and then not shifted_key then
+					completing_automatically := True
+				end
+				complete_code
 			end
-			complete_code
 		end
 
 	complete_class_name is
 			-- Complete class name.
 		do
-			set_completing_feature (false)
-			if auto_complete_after_dot and then not shifted_key then
-				completing_automatically := True
+			if text_displayed.completing_context then
+				set_completing_feature (false)
+				if auto_complete_after_dot and then not shifted_key then
+					completing_automatically := True
+				end
+				complete_code
 			end
-			complete_code
 		end
 
 	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
@@ -327,7 +323,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 				handle_tab_action (false)
 			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
 				handle_tab_action (true)
-			elseif not is_completing and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
+			elseif not is_completing and then text_displayed.completing_context and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
 				trigger_completion
 				debug ("Auto_completion")
 					print ("Completion triggered.%N")
@@ -844,45 +840,6 @@ feature -- Memory management
 			completion_timeout := Void
 		end
 
-feature {NONE} -- Possiblilities provider
-
-	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
-			-- Completions proposals found by `prepare_auto_complete'
-		do
-			Result := text_displayed.click_tool.completion_possibilities
-		end
-
-	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
-			-- Completions proposals found by `prepare_auto_complete'
-		do
-			Result := text_displayed.click_tool.class_completion_possibilities
-		end
-
-	insertion: STRING is
-			-- Strings to be partially completed : the first one is the dot or tilda if there is one
-			-- the second one is the feature name to be completed
-		do
-			Result := text_displayed.click_tool.insertion.item
-		end
-
-	insertion_remainder: INTEGER is
-			-- The number of characters in the insertion remaining from the cursor position to the
-			-- end of the token
-		do
-			Result := text_displayed.click_tool.insertion_remainder
-		end
-
-	prepare_completion is
-			-- Prepare completion
-		do
-			Precursor
-			if completing_feature and then click_and_complete_is_active and then not has_selection then
-				text_displayed.prepare_auto_complete (false)
-			elseif not completing_feature and then not has_selection then
-				text_displayed.prepare_class_name_complete
-			end
-		end
-
 feature {NONE} -- Code completable implementation
 
 	current_line: EIFFEL_EDITOR_LINE is
@@ -1265,9 +1222,6 @@ feature {NONE} -- Code completable implementation
 		ensure then
 			completing_automatically_reset: completing_automatically = False
 		end
-
-invariant
-	completion_timeout_not_void: completion_timeout /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

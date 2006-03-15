@@ -11,8 +11,6 @@ deferred class
 
 inherit
 	WIZARD_STATE_WINDOW
-		export
-			{NONE} all
 		redefine
 			display_pixmap
 		end
@@ -45,12 +43,12 @@ feature -- Basic Operations
 			message.align_text_left
 
 			create choice_box
-			choice_box.set_background_color (white_color)			
-			
+			choice_box.set_background_color (white_color)
+
 
 			display_state_text
 			create message_and_title_box
-			message_and_title_box.set_background_color (white_color)			
+			message_and_title_box.set_background_color (white_color)
 			message_and_title_box.set_border_width (Default_border_size)
 			message_and_title_box.set_padding (Default_padding_size)
 			message_and_title_box.extend (title)
@@ -76,15 +74,15 @@ feature -- Basic Operations
 			create tuple
 			choice_box.set_help_context (agent create_help_context (tuple))
 		end
-		
+
 	current_help_context: WIZARD_HELP_CONTEXT is
 			-- Help context for this window
 		local
 			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
 			hc := choice_box.help_context
-			Result ?= hc.item (hc.operands)		
-		end		
+			Result ?= hc.item (hc.operands)
+		end
 
 feature {NONE} -- Widgets
 

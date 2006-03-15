@@ -245,7 +245,7 @@ feature -- Execution
 		end
 
 	go_on_compile is
-			-- Kill c compilation and go on running Eiffel compilation.
+			-- Go on running Eiffel compilation.
 		do
 			output_manager.clear
 			execute_with_c_compilation_flag (True)
@@ -309,6 +309,7 @@ feature {NONE} -- Execution
 	compile_no_save is
 			-- Launch compilation.
 		do
+			window_manager.last_focused_development_window.window.set_focus
 			confirm_and_compile
 		end
 

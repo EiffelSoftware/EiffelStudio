@@ -15,7 +15,7 @@ inherit
 	EV_VERTICAL_BOX
 		export
 			{NONE} all
-			{ANY} destroy, parent, is_destroyed
+			{ANY} destroy, parent, is_destroyed, is_initialized
 		undefine
 			is_in_default_state
 		redefine

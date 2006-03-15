@@ -10,7 +10,7 @@ indexing
 
 class
 
-	MENU_B 
+	MENU_B
 
 inherit
 
@@ -59,7 +59,11 @@ feature {NONE} -- Initialziation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {MENU_B_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default

@@ -35,7 +35,7 @@ feature
               do
                       if not (command = Void) then
                               if command.is_template then
-                                      command_clone := clone (command)
+                                      command_clone := command.twin
                               else
                                       command_clone := command
                               end
@@ -71,13 +71,13 @@ feature
 			--| the behave of this routine should be examined when other
 			--| error handlers are used (such as Eiffel exception mechanism).
 		do
-		end 
+		end
 
 	set_no_call_back is
 			-- Remove any call-back already set.
 		do
 			command := Void
-		end 
+		end
 
 	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' has

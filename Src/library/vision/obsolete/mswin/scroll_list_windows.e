@@ -128,11 +128,11 @@ inherit
 
 	PRIMITIVE_IMP
 		redefine
-			realize, 
-			unrealize, 
+			realize,
+			unrealize,
 			set_form_height,
-			set_height, 
-			set_size, 
+			set_height,
+			set_size,
 			set_width
 		end
 
@@ -188,9 +188,9 @@ feature -- Initialization
 				end
 				if private_visible_item_count > 1 then
 					set_visible_item_count (private_visible_item_count)
-				elseif not has_height and not fixed_size then 
+				elseif not has_height and not fixed_size then
 					if count > 0 then
-						set_visible_item_count (count) 
+						set_visible_item_count (count)
 					else
 						set_visible_item_count (1)
 					end
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 		do
 			t_width := font.implementation.width_of_string (s)
 			largest_width := largest_width.max (t_width)
-			if t_width + 25 > width then	
+			if t_width + 25 > width then
 				if not fixed_size then
 					set_width (t_width+25)
 				else
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			loop
 				private_list.remove_right
 				if realized then
-					delete_string (i) 
+					delete_string (i)
 				end
 				i := i + 1
 			end
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 				delete_string (index - 1)
 			end
 		ensure then
-			not_empty_unchanged_index: not empty implies index = old index
+			not_empty_unchanged_index: not is_empty implies index = old index
 		end
 
 	prune_all (an_item: STRING) is
@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 			variant
 				private_list.count + 1 - private_list.index
 			until
-				private_list.after or private_list.empty
+				private_list.after or private_list.is_empty
 			loop
 				if private_list.item.is_equal (an_item) then
 					if exists then
@@ -634,10 +634,10 @@ feature {NONE} -- Implementation
 	wipe_out is
 			-- Make list empty
 		do
-			if not empty then
+			if not is_empty then
 				private_list.wipe_out
 				if realized then
-					reset_content 				
+					reset_content
 				end
 				index := 0
 			end
@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 
 	is_destroyed: BOOLEAN is
 		do
-			Result := not exists 
+			Result := not exists
 		end
 
 indexing

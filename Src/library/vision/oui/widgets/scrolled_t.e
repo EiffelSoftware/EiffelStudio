@@ -6,12 +6,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	SCROLLED_T 
+	SCROLLED_T
 
 inherit
 	TEXT
 		redefine
-			make, make_word_wrapped, make_unmanaged, 
+			make, make_word_wrapped, make_unmanaged,
 			make_word_wrapped_unmanaged,
 			create_ev_widget, create_ev_widget_ww,
 			implementation
@@ -20,7 +20,7 @@ inherit
 create
 
 	make, make_word_wrapped, make_unmanaged, make_word_wrapped_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING a_parent: COMPOSITE) is
@@ -43,14 +43,18 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1
 			widget_manager.new (Current, a_parent)
-			identifier := clone (a_name)
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SCROLLED_T_IMP} implementation.make (Current, man, a_parent)
 			implementation.set_widget_default
 			set_default
 		end
 
 	make_word_wrapped (a_name: STRING a_parent: COMPOSITE) is
-			-- Create a scrolled text with `a_name' as identifier, 
+			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
 		do
@@ -58,7 +62,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_word_wrapped_unmanaged (a_name: STRING a_parent: COMPOSITE) is
-			-- Create an unmanaged scrolled text with `a_name' as identifier, 
+			-- Create an unmanaged scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
 		do
@@ -71,7 +75,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1
 			widget_manager.new (Current, a_parent)
-			identifier := clone (a_name)
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {SCROLLED_T_IMP} implementation.make_word_wrapped (Current, man, a_parent)
 			set_default
 		end

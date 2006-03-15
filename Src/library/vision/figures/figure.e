@@ -22,7 +22,7 @@ inherit
 		rename
 			make as notify_make
 		export
-			{CONFIGURE_NOTIFY} 
+			{CONFIGURE_NOTIFY}
 				notify_make,
 				get_conf_notified,
 				set_conf_notified,
@@ -44,9 +44,9 @@ inherit
 feature -- Access
 
 	changes_box: CLOSURE;
-			-- box in which changes have been done 
+			-- box in which changes have been done
 
-	surround_box: CLOSURE;	
+	surround_box: CLOSURE;
 			-- box surrounding  `Current`
 
 	Default_max_plane: INTEGER is 10;
@@ -59,7 +59,7 @@ feature -- Access
 		-- plane in which current has to be drawn, plane 0 is the background
 
 	drawing: DRAWING_I;
-			-- Drawing area 
+			-- Drawing area
 
 feature -- Element change
 
@@ -92,7 +92,7 @@ feature -- Element change
 			-- Do nothing by default
 		 do
 		 end;
-	
+
 feature -- Output
 
 	draw is
@@ -132,7 +132,7 @@ feature {WORLD, FIGURE} -- Initialization
 			else
 				max_plane := Default_max_plane
 			end;
-			notify_make;	
+			notify_make;
 			create changes_box.make;
 			create surround_box.make;
 			set_figure (f);
@@ -174,11 +174,11 @@ feature {CONFIGURE_NOTIFY} -- Access
 		local
 			cl: CLOSURE;
 		do
-				if not conf_notify or else conf_notified = Void then	
+				if not conf_notify or else conf_notified = Void then
 					set_conf_value_modified (true);
 					changes_box.merge (surround_box)
 				else
-					cl := deep_clone (surround_box);
+					cl := surround_box.deep_twin
 					conf_recompute;
 					cl.merge (surround_box);
 					conf_notified.set_conf_modified_with (cl)
@@ -193,7 +193,7 @@ feature {CONFIGURE_NOTIFY} -- Access
 					set_conf_value_modified (true);
 					changes_box.merge (cl1)
 				else
-					cl2 := deep_clone (surround_box);
+					cl2 := surround_box.deep_twin
 					conf_recompute;
 					cl2.merge (surround_box);
 					cl2.merge (cl1);

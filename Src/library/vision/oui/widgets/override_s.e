@@ -8,7 +8,7 @@ indexing
 
 class
 
-	OVERRIDE_S 
+	OVERRIDE_S
 
 inherit
 
@@ -32,7 +32,7 @@ feature {NONE} -- Initializatin
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {OVERRIDE_S_IMP} implementation.make (current, a_parent);
 			set_default
 		ensure

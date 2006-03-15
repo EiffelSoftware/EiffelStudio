@@ -47,7 +47,7 @@ feature  -- Initialization
 			wel_font := a_wel_font
 			create wel_log_font.make_by_font (wel_font)
 		end
-			
+
 feature -- Access
 
 	wel_font: WEL_FONT
@@ -76,7 +76,7 @@ feature -- Status report
 	character_set: STRING is
 			-- (iso8859-1, ...)
 		do
-			Result := "*-*" 
+			Result := "*-*"
 		end
 
 	descent: INTEGER is
@@ -88,13 +88,13 @@ feature -- Status report
 	family: STRING is
 			-- Family name (courier, Helvetica...)
 		do
-			Result := "*" 
+			Result := "*"
 		end
 
 	foundry: STRING is
 			-- Foundry name (Adobe...)
 		do
-			Result := "*" 
+			Result := "*"
 		end
 
 	horizontal_resolution: INTEGER
@@ -262,17 +262,17 @@ feature -- Status report
 	slant: CHARACTER is
 			-- Slant of font (o, r, i...)
 		do
-			Result := '*' 
+			Result := '*'
 		end
 
 	screen_string_height (a_screen: SCREEN_I; a_text: STRING): INTEGER is
 			-- Height in pixels of `a_text' in the current font on `a_screen'
-		do	
+		do
 		end
 
 	screen_string_width (a_screen: SCREEN_I; a_text: STRING): INTEGER is
 			-- Width in pixels of `a_text' in the current font on `a_screen'
-		do	
+		do
 		end
 
 	string_height (a_widget: WIDGET_I; a_text: STRING): INTEGER is
@@ -314,6 +314,8 @@ feature -- Status report
 
 	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER is
 			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
+		require
+			a_text_not_void: a_text /= Void
 		local
 			dc: WEL_DC
 			client_dc: WEL_CLIENT_DC
@@ -374,13 +376,13 @@ feature -- Status report
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
 		do
-			Result := "*" 
+			Result := "*"
 		end
 
 	width: STRING is
 			-- Width of font (Normal, Condensed...)
 		do
-			Result := "*" 
+			Result := "*"
 		end
 
 feature -- Status setting
@@ -425,7 +427,7 @@ feature -- Status setting
 		do
 			if an_escapement /= Void and an_escapement.is_integer then
 				wel_log_font.set_escapement (an_escapement.to_integer)
-			else	
+			else
 				wel_log_font.set_escapement (0)
 			end
 		end
@@ -434,11 +436,11 @@ feature -- Status setting
 			-- Set family based on a value in `a_family'
 		do
 			if a_family.is_equal ("decorative") then
-				wel_log_font.set_decorative_family 
+				wel_log_font.set_decorative_family
 			elseif a_family.is_equal ("modern") then
-				wel_log_font.set_modern_family 
+				wel_log_font.set_modern_family
 			elseif a_family.is_equal ("script") then
-				wel_log_font.set_script_family 
+				wel_log_font.set_script_family
 			elseif a_family.is_equal ("roman") then
 				wel_log_font.set_roman_family
 			elseif a_family.is_equal ("swiss") then
@@ -466,7 +468,7 @@ feature -- Status setting
 					real_size := - mul_div (size_in_points,
 									get_device_caps (screen_dc.item, logical_pixels_y), 72)
 					screen_dc.release
-	
+
 						-- Set the computed font height.
 					wel_log_font.set_height (real_size)
 				else

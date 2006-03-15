@@ -23,7 +23,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	add_names is 
+	add_names is
 		local
 			color: WEL_COLOR_REF
 		do
@@ -788,7 +788,7 @@ feature {NONE} -- Implementation
 			rgb_tripple: RGB_TRIPLE
 		do
 			create rgb_tripple.make (r, g, b)
-			names.put (rgb_tripple, clone (color_name))
+			names.put (rgb_tripple, color_name.twin)
 		end
 
 indexing

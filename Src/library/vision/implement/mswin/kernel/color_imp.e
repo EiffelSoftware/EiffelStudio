@@ -62,7 +62,7 @@ feature -- Initialization
 			-- with information from `a_color_ref'.
 		require
 			a_color_ref_not_void: a_color_ref /= Void
-		do	
+		do
 			wel_color_ref_make
 			set_red (a_color_ref.red * 256)
 			set_green (a_color_ref.green * 256)
@@ -155,7 +155,7 @@ feature -- Settings
 		end
 
 	set_colorref (colorref_value: INTEGER) is
-			-- Set the colorref 
+			-- Set the colorref
 		do
 			item := colorref_value
 		end
@@ -165,8 +165,8 @@ feature -- Settings
 		local
 			rgb_tripple: RGB_TRIPLE
 		do
-			name := clone (a_name)
-			rgb_tripple := names @ (a_name)		
+			name := a_name.twin
+			rgb_tripple := names @ (a_name)
 			if rgb_tripple /= Void then
 				wel_set_red (rgb_tripple.red)
 				wel_set_green (rgb_tripple.green)
@@ -207,10 +207,9 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := clone (color_name)
-			s.to_lower
+			s := color_name.as_lower
 			Result := names.has (s)
-		end 
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

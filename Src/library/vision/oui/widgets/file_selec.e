@@ -6,7 +6,7 @@ indexing
 
 class
 
-	FILE_SELEC 
+	FILE_SELEC
 
 inherit
 
@@ -19,7 +19,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -42,7 +42,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {FILE_SELEC_IMP} implementation.make (Current, man, a_parent);
 			set_default
 		end;
@@ -77,7 +81,7 @@ feature -- Element change
 			valid_command: a_command /= Void
 		do
 			implementation.add_help_action (a_command, argument)
-		end; 
+		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -87,7 +91,7 @@ feature -- Element change
 			valid_command: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
-		end; 
+		end;
 
 	dir_count: INTEGER is
 			-- Number of items in directory list
@@ -179,7 +183,7 @@ feature -- Element change
 		end;
 
    	set_file_selection is
-	   		-- Sets selection to files (default value). 
+	   		-- Sets selection to files (default value).
 		require
 			exists: not destroyed
 	   	do
@@ -198,8 +202,8 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: FILE_SELEC_I;
 			-- Implementation of current file selection
-	
-feature 
+
+feature
 
 	is_dir_valid: BOOLEAN is
 			-- Is current search directory valid?

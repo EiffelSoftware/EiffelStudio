@@ -8,7 +8,7 @@ indexing
 
 class
 
-	ROW_COLUMN 
+	ROW_COLUMN
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 create
 
 	make, make_unmanaged
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -59,12 +59,16 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {ROW_COLUMN_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
-	
+
 feature -- Status report
 
 	is_row_layout: BOOLEAN is
@@ -127,7 +131,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_same_size
-		end; 
+		end;
 
 feature -- Measurement
 

@@ -7,7 +7,7 @@ indexing
 
 class
 
-	COLOR 
+	COLOR
 
 inherit
 
@@ -45,13 +45,13 @@ feature -- Access
 		end;
 
 	green_from_allocation: INTEGER is
-			-- Allocated green saturation level 
+			-- Allocated green saturation level
 		do
 			Result := implementation.allocated_green
 		end;
 
 	red_from_allocation: INTEGER is
-			-- Allocated red saturation level 
+			-- Allocated red saturation level
 		do
 			Result := implementation.allocated_red
 		end;
@@ -65,7 +65,7 @@ feature -- Duplication
 			if (name = Void) then
 				Result.set_rgb (red, green, blue);
 			else
-				Result.set_name (clone (name))
+				Result.set_name (name.twin)
 			end
 		end;
 
@@ -200,7 +200,7 @@ feature -- Obsolete
 		require
 			a_widget_exists: a_widget /= Void
 		do
-			Result := blue_from_allocation 
+			Result := blue_from_allocation
 		end;
 
 	allocated_green (a_widget: WIDGET): INTEGER is

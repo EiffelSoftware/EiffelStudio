@@ -1,9 +1,9 @@
-indexing 
+indexing
 	decription: "OPTION_B_IMPfor Windows - this delegates to an OPTION_PULL"
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
- 
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class
 	OPTION_B_IMP
 
@@ -37,21 +37,21 @@ feature -- Initialization
 			opt_pull := opw
 		end
 
-feature 
+feature
 
 	set_widget_default is
    			-- Set the defaults for current widget.
    		do
  			if managed and then parent.realized then
  				realize
-					--| FIXME!! Removed here the call to 
+					--| FIXME!! Removed here the call to
 					--| parent.child_has_resized because it
 					--| could lead to crashes. Crashes occurs
-					--| when the associated OPT_PULL is not 
+					--| when the associated OPT_PULL is not
 					--| realized. To reproduce the crash:
 					--| . On a window, put a ROW_COLUMN inside
 					--| a SCROLLED_W
-					--| . Add a button that, when pressed, 
+					--| . Add a button that, when pressed,
 					--| creates a form in the ROW_COLUMN with
 					--| at least an OPT_PULL inside
  			elseif parent.realized and then not managed then
@@ -63,7 +63,7 @@ feature
 
 feature -- Access
 
-	realized: BOOLEAN 
+	realized: BOOLEAN
 			-- Is this widget realized?
 
 feature -- Status report
@@ -79,7 +79,7 @@ feature -- Status report
 	title_width: INTEGER
 			-- Width of the title
 
-	title: STRING 
+	title: STRING
 
 	opt_pull: OPT_PULL_I
 			-- Associated option pull to delegate to
@@ -101,7 +101,11 @@ feature -- Status setting
 
 	set_title (a_title: STRING) is
 		do
-			title := clone (a_title)
+			if a_title /= Void then
+				title := a_title.twin
+			else
+				title := Void
+			end
 		end
 
 	unrealize is
@@ -128,8 +132,8 @@ feature {NONE} -- Inapplicable
 	process_notification (n: INTEGER) is
 		do
 		end
-		
-	wel_destroy, wel_hide, wel_set_focus, enable, disable, invalidate, 
+
+	wel_destroy, wel_hide, wel_set_focus, enable, disable, invalidate,
 	wel_release_capture, wel_set_capture, wel_show  is
 		do
 		end

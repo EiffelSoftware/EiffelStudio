@@ -8,7 +8,7 @@ indexing
 
 class
 
-	PROMPT_D 
+	PROMPT_D
 
 inherit
 
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {PROMPT_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure
@@ -89,7 +89,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.show_ok_button
-		end 
+		end
 
 	hide_apply_button is
 			-- Make apply button invisible.

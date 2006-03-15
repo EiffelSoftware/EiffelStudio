@@ -1,26 +1,26 @@
-indexing 
+indexing
 	description: "Dialog for choosing fonts for Windows"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."; 
+	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
- 
+
 class
 	FONT_BOX_D_IMP
-  
+
 inherit
 	WEL_CHOOSE_FONT_DIALOG
 		rename
 			make as wel_make,
 			item as wel_item
 		undefine
-			is_equal, copy
+			is_equal, copy, dispose
 		select
 			destroy_item,
 			exists,
 			wel_item
 		end
-			
+
 	COLORED_FOREGROUND_WINDOWS
 
 	DIALOG_IMP
@@ -46,14 +46,14 @@ inherit
 			children_count
 		end
 
-	FONT_BOX_D_I 
+	FONT_BOX_D_I
 		rename
 			forbid_recompute_size as forbid_resize,
 			allow_recompute_size as allow_resize
 		end
 create
 	make
- 
+
 feature -- Initialization
 
 	make (a_font_box_d: FONT_BOX_D; oui_parent: COMPOSITE) is
@@ -91,7 +91,7 @@ feature -- Status setting
 			fontw: FONT_IMP
 		do
 			fontw ?= f.implementation
-			set_log_font (fontw.wel_log_font)	
+			set_log_font (fontw.wel_log_font)
 		end
 
 	realize is
@@ -101,7 +101,7 @@ feature -- Status setting
 				-- set initial focus
 			if initial_focus /= void then
 				initial_focus.wel_set_focus
-			end			
+			end
 		end
 
 	dialog_realize is
@@ -124,7 +124,7 @@ feature -- Status setting
 		do
 			is_popped_up := False
 		end
- 
+
 	unrealize is
 			-- Unrealizes the font dialog, no effect under Windows.
 		do
@@ -141,8 +141,8 @@ feature -- Status report
 
 	realized: BOOLEAN
 			-- Is this widget realized?
-	
-	is_popped_up: BOOLEAN 
+
+	is_popped_up: BOOLEAN
 			-- Is this widget popped up?
 
 feature -- Element change
@@ -178,7 +178,7 @@ feature -- Element change
 			end
 		end
 
-	hide_cancel_button is	
+	hide_cancel_button is
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -198,7 +198,7 @@ feature -- Element change
 			end
 		end
 
-	show_apply_button is 
+	show_apply_button is
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -248,8 +248,8 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
-			ok_actions.remove (Current, a_command, arg)	
-		end	
+			ok_actions.remove (Current, a_command, arg)
+		end
 
 feature {NONE} -- Implementation
 

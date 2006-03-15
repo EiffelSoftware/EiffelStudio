@@ -3,14 +3,14 @@ indexing
 	description:
 		"Area which manages children relative to each other %
 		%according to defined constraints"
-	legal: "See notice at end of class."; 
+	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
 
-	FORM 
+	FORM
 
 inherit
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			create_ev_widget (a_name, a_parent, True)
 		ensure then
 			--default_fraction_base_is_100: fraction_base = 100
-		end; 
+		end;
 
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged form with `a_name' as identifier,
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			create_ev_widget (a_name, a_parent, False)
 		ensure then
 			--default_fraction_base_is_100: fraction_base = 100
-		end; 
+		end;
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a form with `a_name' as identifier,
@@ -50,12 +50,16 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {FORM_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
-		end; 
-	
+		end;
+
 feature -- Access
 
 	fraction_base: INTEGER is
@@ -75,7 +79,7 @@ feature -- Status report
 			-- Is `other' a valid child?
 		do
 			Result := true
-		end 
+		end
 
 feature -- Element change
 
@@ -145,7 +149,7 @@ feature -- Basic operations
 		end;
 
 	attach_right_widget (a_widget: WIDGET; a_child: WIDGET; right_offset: INTEGER) is
-			-- Attach right side of `a_child' to the left side of 
+			-- Attach right side of `a_child' to the left side of
 			-- `a_widget' with `right_offset' spaces between each other.
 		require
 			exists: not destroyed;
@@ -293,7 +297,7 @@ feature -- Basic operations
 			valid_child: a_child /= Void
 		do
 			implementation.detach_bottom (a_child.implementation)
-		end; 
+		end;
 
 	detach_top (a_child: WIDGET) is
 			-- detach top side of `a_child'.
@@ -308,7 +312,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: FORM_I;;
 			-- Implementation of form
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

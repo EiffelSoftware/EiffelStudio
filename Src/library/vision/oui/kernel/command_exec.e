@@ -6,7 +6,7 @@ indexing
 
 class
 
-	COMMAND_EXEC 
+	COMMAND_EXEC
 
 inherit
 
@@ -28,7 +28,7 @@ feature -- Initialization
 		do
 			command := a_command;
 			argument := an_argument
-		end; 
+		end;
 
 feature -- Access
 
@@ -46,7 +46,7 @@ feature -- Basic operations
 			command_clone: COMMAND
 		do
 			if command.is_template then
-				command_clone := clone (command)
+				command_clone := command.twin
 			else
 				command_clone := command
 			end;

@@ -11,7 +11,7 @@ indexing
 
 class
 
-	BULLETIN_D 
+	BULLETIN_D
 
 inherit
 
@@ -32,7 +32,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -42,16 +42,16 @@ feature {NONE} -- Initialization
 			valid_name: a_name /= Void;
 			valid_parent: a_parent /= Void
 		do
-					depth := a_parent.depth+1;
-					widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			depth := a_parent.depth+1;
+			widget_manager.new (Current, a_parent);
+			identifier:= a_name.twin
 			create {BULLETIN_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name)
 		end;
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BULLETIN_D_I;

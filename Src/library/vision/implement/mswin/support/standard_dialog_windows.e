@@ -19,7 +19,7 @@ inherit
 			on_size,
 			on_set_focus,
 			realize_current,
-			realize,	
+			realize,
 			set_x_y,
 			set_x,
 			set_y,
@@ -76,7 +76,7 @@ feature -- Initialization
 				-- set initial focus
 			if initial_focus /= Void then
 				initial_focus.wel_set_focus
-			end					
+			end
 		end
 
 feature -- Access
@@ -282,15 +282,15 @@ feature -- Element change
 
 	set_help_label (s: STRING) is
 			-- Replace the text on the `help_button' with `s'
+		require
+			s_not_void: s /= Void
 		do
+			help_label := s.twin
 			if exists then
-				help_label := clone (s)
 				help_button.set_text (help_label)
 				if not help_button_hidden then
 					adjust_dialog
 				end
-			else
-				help_label := clone (s)
 			end
 		ensure
 			help_label_is_equal_to_s: help_label.is_equal (s)
@@ -298,15 +298,15 @@ feature -- Element change
 
 	set_cancel_label (s: STRING) is
 			-- Replace the text on the `cancel_button' with `s'
+		require
+			s_not_void: s /= Void
 		do
+			cancel_label := s.twin
 			if exists then
-				cancel_label := clone (s)
 				cancel_button.set_text (cancel_label)
 				if not cancel_button_hidden then
 					adjust_dialog
 				end
-			else
-				cancel_label := clone (s)
 			end
 		ensure
 			cancel_label_is_equal_to_s: cancel_label.is_equal (s)
@@ -314,15 +314,15 @@ feature -- Element change
 
 	set_ok_label (s: STRING) is
 			-- Replace the text on the `ok_button' with `s'
+		require
+			s_not_void: s /= Void
 		do
+			ok_label := s.twin
 			if exists then
-				ok_label := clone (s)
 				ok_button.set_text (ok_label)
 				if not ok_button_hidden then
 					adjust_dialog
 				end
-			else
-				ok_label := clone (s)
 			end
 		ensure
 			ok_label_is_equal_to_s: ok_label.is_equal (s)
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 		local
 			a_font_windows: FONT_IMP
 		do
-			
+
 			a_font_windows ?= a_font.implementation
 			Result := a_font_windows.string_height (Current, a_text)
 		end

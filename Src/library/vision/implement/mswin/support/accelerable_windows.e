@@ -56,7 +56,7 @@ feature -- Status setting
 			if accelerator /= Void then
 				accelerators.remove (accelerator)
 			end
-			a_translation := clone (translation)
+			a_translation := translation.twin
 			a_translation.to_lower
 			if a_translation.substring_index ("shift", 1) /= 0 then
 				flags := set_flag (flags, Fshift)

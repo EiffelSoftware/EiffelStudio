@@ -11,7 +11,7 @@ indexing
 
 class
 
-	OPT_PULL 
+	OPT_PULL
 
 inherit
 
@@ -53,19 +53,23 @@ feature {NONE} -- Initialization
 			identifier_set: identifier.is_equal (a_name);
 			not_managed: not managed
 		end;
-	
+
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
-			identifier:= clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			widget_manager.new (Current, a_parent);
 			create {OPT_PULL_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
-	
+
 feature -- Access
 
 	parent: COMPOSITE is
@@ -109,7 +113,7 @@ feature -- Element change
 		require
 			exists: not destroyed
 		do
-			implementation.set_selected_button(a_button)				
+			implementation.set_selected_button(a_button)
 		ensure
 			a_button.same (selected_button)
 		end;

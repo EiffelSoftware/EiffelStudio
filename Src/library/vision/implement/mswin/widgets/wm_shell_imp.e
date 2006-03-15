@@ -3,9 +3,9 @@ indexing
 		%of the Window manager - always %
 		%so for Windows"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	WM_SHELL_IMP
@@ -48,7 +48,7 @@ feature -- Access
 
 	bar: BAR_IMP
 			-- Menu bar
- 
+
 feature -- Status setting
 
 	set_title (a_title: STRING) is
@@ -57,7 +57,7 @@ feature -- Status setting
 			if exists then
 				wel_set_text (a_title)
 			end
-			private_title := clone (a_title)
+			private_title := a_title.twin
 		end
 
 	associate_bar (new_bar: BAR_IMP) is
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 							w := icon_width
 						end
 						paint_dc.draw_bitmap (wel_bitmap, draw_x, draw_y, w, h)
-					else 
+					else
 						wel_icon := pixmap_windows.icon
 						if wel_icon /= Void then
 							paint_dc.draw_icon (wel_icon, 0, 0)

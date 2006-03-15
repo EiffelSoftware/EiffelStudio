@@ -7,7 +7,7 @@ indexing
 
 class
 
-	TEXT 
+	TEXT
 
 inherit
 
@@ -47,14 +47,18 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {TEXT_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
 
 	make_word_wrapped (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create a text with `a_name' as identifier, 
+			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
 		require
@@ -69,7 +73,7 @@ feature {NONE} -- Initialization
 		end;
 
 	make_word_wrapped_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create an unmanaged text with `a_name' as identifier, 
+			-- Create an unmanaged text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
 		require
@@ -84,13 +88,17 @@ feature {NONE} -- Initialization
 		end;
 
 	create_ev_widget_ww (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
-			-- Create a text with `a_name' as identifier, 
+			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {TEXT_IMP} implementation.make_word_wrapped (Current, man, a_parent);
 			set_default
 		end;
@@ -129,7 +137,7 @@ feature -- Access
 		do
 			Result := implementation.x_coordinate (char_pos)
 		end;
- 
+
 	y_coordinate (char_pos: INTEGER): INTEGER is
 			-- Y coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
@@ -139,7 +147,7 @@ feature -- Access
 		do
 			Result := implementation.y_coordinate (char_pos)
 		end;
- 
+
 	character_position (x_pos, y_pos: INTEGER): INTEGER is
 			-- Character position at cursor position `x' and `y'
 		require
@@ -157,7 +165,7 @@ feature -- Access
 		ensure
 			valid_result: Result >= 0 and then Result <= count
 		end;
- 
+
 	cursor_position: INTEGER is
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
@@ -264,7 +272,7 @@ feature -- Status report
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_any_resizable 
+			Result := implementation.is_any_resizable
 		end;
 
 	is_read_only: BOOLEAN is
@@ -318,7 +326,7 @@ feature -- Status setting
 		do
 			implementation.disable_resize
 		end;
- 
+
 	disable_resize_height is
 			-- Disable that current text widget attempts to resize its height
 			-- to accommodate all the text contained.
@@ -327,7 +335,7 @@ feature -- Status setting
 		do
 			implementation.disable_resize_height
 		end;
- 
+
 	disable_resize_width is
 			-- Disable that current text widget attempts to resize its width
 			-- to accommodate all the text contained.
@@ -345,7 +353,7 @@ feature -- Status setting
 		do
 			implementation.enable_resize
 		end;
- 
+
 	enable_resize_height is
 			-- Enable that current text widget attempts to resize its height to
 			-- accomodate all the text contained.
@@ -354,7 +362,7 @@ feature -- Status setting
 		do
 			implementation.enable_resize_height
 		end;
- 
+
 	enable_resize_width is
 			-- Enable that current text widget attempts to resize its width to
 			-- accommodate all the text contained.
@@ -456,7 +464,7 @@ feature -- Measurement
 
 	rows: INTEGER is
 			-- Height of Current widget measured in character
-			-- heights. 
+			-- heights.
 		require
 			exists: not destroyed;
 			is_multi_line_mode: is_multi_line_mode
@@ -505,7 +513,7 @@ feature -- Basic operations
 		ensure
 			valid_position: top_character_position = char_pos
 		end;
- 
+
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position'.
 		require
@@ -569,7 +577,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: TEXT_I;;
 			-- Implementation of current text
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

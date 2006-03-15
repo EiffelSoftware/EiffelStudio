@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			shell_height := title_bar_height + 2 * dialog_window_frame_height +
 				window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
-			max_width := full_screen_client_area_width 
+			max_width := full_screen_client_area_width
 			max_height := full_screen_client_area_height
 			default_position := True
 		end
@@ -114,7 +114,7 @@ feature -- Element change
 	set_selection_text (s: STRING) is
 			-- Set text for `selection_edit'
 		do
-			the_selection_text := clone (s)
+			the_selection_text := s.twin
 			if exists then
 				selection_edit.set_text (s)
 			end
@@ -124,13 +124,13 @@ feature -- Element change
 			-- Replace the text on the `apply_button' with `s'
 		do
 			if exists then
-				apply_label := clone (s)
+				apply_label := s.twin
 				apply_button.set_text (apply_label)
 				if not apply_button_hidden then
 					adjust_dialog
 				end
 			else
-				apply_label := clone (s)
+				apply_label := s.twin
 			end
 		ensure then
 			apply_label_is_equal_to_s: apply_label.is_equal (s)
@@ -141,7 +141,7 @@ feature -- Element change
 		require else
 			s_not_void: s /= Void
 		do
-			selection_label := clone (s)
+			selection_label := s.twin
 			if exists then
 				set_text_on_control (s, selection_static)
 			end
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			selection_edit_not_void: selection_edit /= Void
 		do
 			selection_edit.move_and_resize (2 * Dialog_unit,
-				selection_static.height + 2 * Dialog_unit, 
+				selection_static.height + 2 * Dialog_unit,
 				client_rect.width - 4 * Dialog_unit,
 				selection_edit.height, True)
 		end

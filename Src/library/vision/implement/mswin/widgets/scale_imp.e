@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	granularity: INTEGER
-			-- Value of the amount to move the slider and modifie 
+			-- Value of the amount to move the slider and modifie
 			-- the slide position value when a move action occurs
 
 	value: INTEGER
@@ -133,7 +133,7 @@ feature -- Status report
 	text: STRING
 			-- Text of current widget
 
-	is_horizontal: BOOLEAN 
+	is_horizontal: BOOLEAN
 			-- Is this slider horizontal?
 
 	maximum: INTEGER
@@ -142,7 +142,7 @@ feature -- Status report
 	minimum: INTEGER
 			-- Return the minimum value of the scroll bar
 
-	is_maximum_right_bottom: BOOLEAN 
+	is_maximum_right_bottom: BOOLEAN
 			-- Is the maximum at the right/bottom?
 
 feature -- Status setting
@@ -158,7 +158,7 @@ feature -- Status setting
 					create scroll_bar.make_horizontal (Current, 0, 0, 0, 0 , scroll_bar_id)
 				else
 					create scroll_bar.make_vertical (Current, 0, 0, 0, 0, scroll_bar_id)
-				end					
+				end
 				on_size (0, width, height)
 			end
 		end
@@ -173,7 +173,7 @@ feature -- Status setting
 	set_text (t: STRING) is
 			-- Set the text to `t'.
 		do
-			text := clone (t)
+			text := t.twin
 			if exists then
 				text_static.set_text (text)
 			end
@@ -207,7 +207,7 @@ feature -- Status setting
 						Ws_tabstop + Ss_right)
 					create scroll_bar.make_vertical (Current, value_width, 0, scroll_width, height, scroll_bar_id)
 				end
-				if not is_value_shown then 
+				if not is_value_shown then
 					value_static.hide
 				end
 				set_maximum (maximum)
@@ -337,6 +337,20 @@ feature -- Removal
 			value_changed_actions.remove (Current, a_command, arg)
 		end
 
+feature
+
+	valid_minimum (a_minimum: INTEGER): BOOLEAN is
+			-- Is `a_minimum' valid?
+		do
+			Result := precursor (a_minimum) and a_minimum >= -32768
+		end
+
+	valid_maximum (a_maximum: INTEGER): BOOLEAN is
+			-- Is `a_maximum' valid?
+		do
+			Result := precursor (a_maximum) and a_maximum < 32768
+		end
+
 feature {NONE} -- Implementation
 
 	on_size (a_type, a_width, a_height: INTEGER) is
@@ -371,7 +385,7 @@ feature {NONE} -- Implementation
 			-- control activated.
 		do
 			if managed then
-				on_scroll (scroll_code, a_position, bar) 
+				on_scroll (scroll_code, a_position, bar)
 			end
 		end
 
@@ -383,7 +397,7 @@ feature {NONE} -- Implementation
 			-- indicates the scrollbar or trackbar
 			-- control activated.
 		do
-				on_scroll (scroll_code, a_position, bar) 
+				on_scroll (scroll_code, a_position, bar)
 		end
 
 	on_scroll  (scroll_code, a_position: INTEGER;
@@ -469,18 +483,6 @@ feature {NONE} -- Implementation
 					value_static.move (0, ((height - text_height) * (value - minimum)) // (maximum - minimum))
 				end
 			end
-		end	
-
-	valid_minimum (a_minimum: INTEGER): BOOLEAN is
-			-- Is `a_minimum' valid?
-		do
-			Result := precursor (a_minimum) and a_minimum >= -32768
-		end
-
-	valid_maximum (a_maximum: INTEGER): BOOLEAN is
-			-- Is `a_maximum' valid?
-		do
-			Result := precursor (a_maximum) and a_maximum < 32768
 		end
 
 	scroll_bar: SCALE_SCROLL_BAR_WINDOWS
@@ -529,8 +531,8 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	valid_scroll_bar: exists implies (scroll_bar /= Void implies scroll_bar.exists)	
-	valid_text_static: exists implies (text_static /= Void implies text_static.exists)	
+	valid_scroll_bar: exists implies (scroll_bar /= Void implies scroll_bar.exists)
+	valid_text_static: exists implies (text_static /= Void implies text_static.exists)
 	valid_value_static: exists implies (value_static /= Void implies value_static.exists)
 
 indexing

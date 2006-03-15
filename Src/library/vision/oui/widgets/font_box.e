@@ -6,7 +6,7 @@ indexing
 
 class
 
-	FONT_BOX 
+	FONT_BOX
 
 inherit
 
@@ -42,7 +42,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {FONT_BOX_IMP} implementation.make (Current, man, a_parent);
 			set_default
 			implementation.set_widget_default;
@@ -84,7 +88,7 @@ feature -- Status report
 			exists: not destroyed
 		do
 			implementation.show_ok_button
-		end 
+		end
 
 	hide_apply_button is
 			-- Make apply button invisible.
@@ -108,7 +112,7 @@ feature -- Status report
 			exists: not destroyed
 		do
 			implementation.hide_ok_button
-		end; 
+		end;
 
 feature -- Element change
 
@@ -149,7 +153,7 @@ feature -- Element change
 			valid_command: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
-		end; 
+		end;
 
 feature -- Remocal
 
@@ -161,7 +165,7 @@ feature -- Remocal
 			valid_command: a_command /= Void
 		do
 			implementation.remove_apply_action (a_command, argument)
-		end; 
+		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -171,7 +175,7 @@ feature -- Remocal
 			valid_command: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
-		end; 
+		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -186,7 +190,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: FONT_BOX_I;;
 			-- Implementation of current font box
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -8,7 +8,7 @@ indexing
 
 deferred class
 
-	BUTTON 
+	BUTTON
 
 inherit
 
@@ -30,7 +30,7 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result:= implementation.text
-		end; 
+		end;
 
 feature -- Status setting
 
@@ -50,7 +50,7 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.forbid_recompute_size
-		end; 
+		end;
 
 	set_center_alignment is
 			-- Set text alignment of current label to center
@@ -59,7 +59,7 @@ feature -- Status setting
 		do
 			implementation.set_center_alignment
 		end;
- 
+
 	set_left_alignment is
 			-- Set text alignment of current label to left.
 		require
@@ -76,13 +76,13 @@ feature -- Status setting
 		do
 			implementation.set_text (a_text)
 		ensure
-			text_set: equal (without_ampersands (text), without_ampersands (a_text)) 
+			text_set: equal (without_ampersands (text), without_ampersands (a_text))
 			-- The comparison has to be done without
 			-- ampersands, because X version will change
-			-- the position of ampersand to the first 
+			-- the position of ampersand to the first
 			-- occurrence of the letter. (For ex. "Save 
 			-- &as" becomes "S&ave as"
-		end 
+		end
 
 feature -- Element change
 
@@ -125,7 +125,7 @@ feature -- Element change
 feature -- Removal
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
+			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is activated.
 		require
 			exists: not destroyed;
@@ -135,7 +135,7 @@ feature -- Removal
 		end;
 
 	remove_arm_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
+			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is armed.
 		require
 			exists: not destroyed;
@@ -145,7 +145,7 @@ feature -- Removal
 		end;
 
 	remove_release_action (a_command: COMMAND; argument: ANY) is
-			-- Remove `a_command' with `argument' from the list of action 
+			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is released.
 		require
 			exists: not destroyed;
@@ -163,16 +163,16 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: BUTTON_I;
 			-- Implementation of button
-	
+
 feature {NONE} -- Implementation
-	
+
 	without_ampersands (a_text: STRING): STRING is
 			-- Returns a string which is a_text without ampersands
 		do
-			Result := clone(a_text)
+			Result := a_text.twin
 			Result.prune_all('&')
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

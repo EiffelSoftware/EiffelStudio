@@ -8,7 +8,7 @@ indexing
 
 class
 
-	CHECK_BOX 
+	CHECK_BOX
 
 inherit
 
@@ -57,7 +57,11 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {CHECK_BOX_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
@@ -69,7 +73,7 @@ feature {NONE} -- Implementation
 			-- Set default values to current check box.
 		do
 		end;
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementatin
 
 	implementation: CHECK_BOX_I;

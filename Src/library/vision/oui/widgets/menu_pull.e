@@ -10,7 +10,7 @@ indexing
 
 class
 
-	MENU_PULL 
+	MENU_PULL
 
 inherit
 
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			identifer_set: identifier.is_equal (a_name);
 			managed: managed
 		end;
-	
+
 	make_unmanaged (a_name: STRING; a_parent: MENU) is
 			-- Create an unmanaged pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
@@ -52,23 +52,27 @@ feature {NONE} -- Initialization
 			identifer_set: identifier.is_equal (a_name);
 			not_managed: not managed
 		end;
-	
+
 	create_ev_widget (a_name: STRING; a_parent: MENU; man: BOOLEAN) is
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			create {MENU_PULL_IMP} implementation.make (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
-	
+
 feature -- Access
 
 	menu_button: MENU_B is
-			-- Menu button 
+			-- Menu button
 		require
 			exists: not destroyed
 		do

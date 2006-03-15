@@ -27,7 +27,7 @@ feature -- Status report
 			Result := private_list.count
 		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is the chain empty?
 		do
 			Result := count = 0
@@ -42,7 +42,7 @@ feature -- Status report
 	first_visible_item_position: INTEGER is
 			-- Position of the first visible item in the list
 		do
-			if not empty then
+			if not is_empty then
 				if Result = 0 then
 					Result := count
 				end
@@ -78,7 +78,7 @@ feature -- Status report
 	islast: BOOLEAN is
 			-- Is cursor at last position in the chain?
 		do
-			Result := (index = count) and not empty
+			Result := (index = count) and not is_empty
 		end
 
 	item: STRING is
@@ -205,7 +205,7 @@ feature -- Cursor movement
 	start is
 			-- Move cursor to first position.
 		do
-			if not empty then
+			if not is_empty then
 				index := 1
 			end
 		end
@@ -230,7 +230,7 @@ feature -- Element change
 			-- Put `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		do
-			if private_list.empty then
+			if private_list.is_empty then
 				private_list.put_front (an_item)
 			else
 				private_list.go_i_th (index)
@@ -302,7 +302,7 @@ feature -- Element change
 				insert_item (an_item, index)
 			end
 		ensure then
-			not empty
+			not is_empty
 			has (an_item)
 		end
 
@@ -315,7 +315,7 @@ feature -- Element change
 			end
 		ensure then
 			has (an_item)
-			not empty
+			not is_empty
 		end
 
 	swap (i: INTEGER) is

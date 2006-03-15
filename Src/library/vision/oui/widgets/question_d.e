@@ -11,7 +11,7 @@ indexing
 
 class
 
-	QUESTION_D 
+	QUESTION_D
 
 inherit
 
@@ -25,7 +25,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
+			identifier:= a_name.twin
 			create {QUESTION_D_IMP} implementation.make (Current, a_parent);
 			set_default
 		ensure

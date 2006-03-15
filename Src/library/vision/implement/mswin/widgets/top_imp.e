@@ -120,7 +120,7 @@ feature -- Status setting
 	set_icon_name (a_name: STRING) is
 			-- Set `icon_name' to `a_name'.
 		do
-			icon_name := clone (a_name)
+			icon_name := a_name.twin
 			if exists then
 				if minimized then
 					set_title (a_name)

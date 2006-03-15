@@ -10,9 +10,9 @@ indexing
 
 class
 
-	TOP_SHELL 
+	TOP_SHELL
 
-inherit 
+inherit
 
 	TOP
 		redefine
@@ -22,7 +22,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make  (a_name: STRING; a_screen: SCREEN) is
@@ -32,16 +32,20 @@ feature {NONE} -- Initialization
 			-- `set_default'.
 		require
 			non_void_screen: a_screen /= Void;
-			valid_screen: a_screen.is_valid			
+			valid_screen: a_screen.is_valid
 		do
 			depth := 0;
 			screen := a_screen;
-			identifier := clone (a_name);
+			if a_name /= Void then
+				identifier := a_name.twin
+			else
+				identifier := Void
+			end
 			widget_manager.new (Current, Void);
 			create {TOP_SHELL_IMP} implementation.make (Current);
 			set_default
 		end;
-	
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 	implementation: TOP_SHELL_I
@@ -52,7 +56,7 @@ feature {NONE} -- Implementation
 	set_default is
 			-- Set default values of current top shell.
 		do
-		end; 
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -150,7 +150,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 					append_line (last_processed_line)
 				end
 			else
-				ev_application.idle_actions.extend_kamikaze (agent end_processing_internal)
+				end_processing_internal
 			end
 			if number_of_lines <= first_read_block_size then
 				on_text_block_loaded (true)
@@ -270,6 +270,7 @@ feature {NONE} -- Load Text handling
 	end_processing_internal is
 			-- For running on idle
 		do
+			last_processed_line.update_token_information
 			if last_processed_line /= last_line then
 				append_line (last_processed_line)
 			end

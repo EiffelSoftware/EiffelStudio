@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
+			if not retried and associated_class /= Void then
 				set_is_with_breakable
 				if associated_class /= Void then
 					editor.handle_before_processing (false)

@@ -229,9 +229,6 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat: E_FEATURE
 		do
---			check
---				something_else_should_be_done: false
---			end
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.routine_id)

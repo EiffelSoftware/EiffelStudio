@@ -158,7 +158,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := 0
+			Result := implementation.required_width
 		ensure
 			result_non_negative: Result >= 0
 		end

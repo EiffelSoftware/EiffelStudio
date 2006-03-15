@@ -12,7 +12,6 @@ deferred class
 	GB_DEFAULT_STATE
 
 inherit
-	
 	ANY
 		undefine
 			default_create, copy, is_equal
@@ -32,16 +31,6 @@ feature {NONE} -- Contract support
 			-- return True.
 		do
 			Result := True
-		end
-		
-	default_create is
-		deferred
-		end
-		
-	copy (other: like Current) is
-			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
-		deferred
 		end
 
 indexing

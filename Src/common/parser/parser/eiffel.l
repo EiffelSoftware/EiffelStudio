@@ -35,7 +35,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Breaks
 
-([ \t\r\n]|"--#line".*)+ { last_line_pragma := ast_factory.new_line_pragma (Current) }
+[ \t\r\n]*"--#line".*[ \t\r\n]* { last_line_pragma := ast_factory.new_line_pragma (Current) }
 ([ \t\r\n]|"--".*)+ { ast_factory.create_break_as (Current) }
 
 -- Symbols
@@ -211,7 +211,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [aA][sS][sS][iI][gG][nN] {				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ASSIGN, Current)
 				if last_keyword_as_value /= Void then
-					last_assign_index := last_keyword_as_value.index
+					last_keyword_as_id_index := last_keyword_as_value.index
 				end
 				last_token := TE_ASSIGN
 			}
@@ -412,6 +412,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [oO][rR]	{			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
+			}
+[pP][aA][rR][tT][iI][aA][lL][ \t\r\n]*[cC][lL][aA][sS][sS] {				
+				last_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
+				last_token := TE_PARTIAL_CLASS
 			}
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	{				
 				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)

@@ -191,6 +191,7 @@ feature {NONE} -- Utility Implementation
 		local
 			yw: YANK_STRING_WINDOW
 		do
+			create yw.make
 			e.trace (yw)
 			Result := yw.stored_output
 		end

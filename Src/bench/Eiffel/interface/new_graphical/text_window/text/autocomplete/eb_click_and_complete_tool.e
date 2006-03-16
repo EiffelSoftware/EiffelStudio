@@ -1314,7 +1314,9 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			current_line := a_line
 			token := current_token
 			current_token := a_token
-			go_to_previous_token
+			if not token_image_is_same_as_word (current_token, closing_brace) then
+				go_to_previous_token
+			end
 			Result := token_image_is_same_as_word (current_token, Create_word)
 			if not Result and then token_image_is_same_as_word (current_token, closing_brace) then
 				from
@@ -1425,6 +1427,8 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 	            	type := type_from (token, a_cursor.line)
 	            	if type /= Void then
 		            	found_class := type.associated_class
+		            else
+		            	found_class := Void
 		            end
 	            end
             end

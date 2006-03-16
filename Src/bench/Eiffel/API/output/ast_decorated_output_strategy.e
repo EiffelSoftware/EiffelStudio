@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 					reset_last_class_and_type
 				else
 					l_type := l_feat.type.actual_type
-					if l_type.is_formal then
+					if l_type.has_formal_generic then
 						last_type := l_type.instantiation_in (l_static_type, last_class.class_id)
 					else
 						last_type := l_type
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 						reset_last_class_and_type
 					else
 						l_type := l_feat.type.actual_type
-						if l_type.is_formal then
+						if l_type.has_formal_generic then
 							last_type := l_type.instantiation_in (last_type, last_class.class_id)
 						else
 							last_type := l_type
@@ -1290,7 +1290,7 @@ feature {NONE} -- Implementation
 			check l_feat_is_not_procedure: not l_feat.is_procedure end
 			if not has_error then
 				l_type := l_feat.type.actual_type
-				if l_type.is_formal then
+				if l_type.has_formal_generic then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)
 				else
 					last_type := l_type
@@ -1420,7 +1420,7 @@ feature {NONE} -- Implementation
 				if l_feat /= Void then
 					check l_feat_is_not_procedure: not l_feat.is_procedure end
 					l_type := l_feat.type.actual_type
-					if l_type.is_formal then
+					if l_type.has_formal_generic then
 						last_type := l_type.instantiation_in (l_left_type, l_left_class.class_id)
 					else
 						last_type := l_type
@@ -1590,7 +1590,7 @@ feature {NONE} -- Implementation
 				end
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
-				if l_type.is_formal then
+				if l_type.has_formal_generic then
 					last_type := l_type.instantiation_in (last_type, last_class.class_id)
 				else
 					last_type := l_type

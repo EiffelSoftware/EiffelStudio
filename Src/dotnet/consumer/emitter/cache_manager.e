@@ -154,13 +154,20 @@ feature -- Basic Oprtations
 			l_ca: CONSUMED_ASSEMBLY
 			l_assembly: ASSEMBLY
 		do
-			l_assembly := load_from_gac_or_path (a_path)
+			l_assembly := load_assembly_from_path (a_path)
 			if l_assembly /= Void then
 				l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
-				if l_ca /= Void then
-					Result := relative_assembly_path_from_consumed_assembly (l_ca)
-					Result.prune_all_trailing ('\')
+			end
+			if l_ca = Void then
+					-- Try load assembly from GAC
+				l_assembly := load_from_gac_or_path (a_path)
+				if l_assembly /= Void then
+					l_ca := cache_writer.consumed_assembly_from_path (l_assembly.location)
 				end
+			end
+			if l_ca /= Void then
+				Result := relative_assembly_path_from_consumed_assembly (l_ca)
+				Result.prune_all_trailing ('\')
 			end
 		end
 

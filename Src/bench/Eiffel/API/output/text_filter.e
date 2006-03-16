@@ -75,6 +75,9 @@ feature {NONE} -- Initialization
 			create keyword_table.make (4)
 			set_keyword ("generator", "ISE " + Workbench_name + " version " + Version_number)
 			set_base_path ("")
+				-- We make DOCUMENTATION_UNIVERSE include all by default.
+			create doc_universe.make
+			doc_universe.include_all
 		end
 
 	init_file_separator is

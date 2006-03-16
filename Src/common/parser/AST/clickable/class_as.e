@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	initialize (n: like class_name;
 			ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
 			g: like generics;
@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			is_separate := is_s
 			is_frozen := is_fc
 			is_external := is_ex
+			is_partial := is_par
 			internal_top_indexes := top_ind
 			internal_bottom_indexes := bottom_ind
 			internal_generics := g
@@ -88,6 +89,7 @@ feature {NONE} -- Initialization
 			is_separate_set: is_separate = is_s
 			is_frozen_set: is_frozen = is_fc
 			is_external_set: is_external = is_ex
+			is_partial_set: is_partial = is_par
 			internal_top_indexes_set: internal_top_indexes = top_ind
 			internal_bottom_indexes_set: internal_bottom_indexes = bottom_ind
 			internal_generics_set: internal_generics = g
@@ -287,6 +289,9 @@ feature -- Attributes
 
 	is_external: BOOLEAN
 			-- Is class just an encapsulation of an already generated class.
+
+	is_partial: BOOLEAN
+			-- Is class a partial? (that is the type definition is divided between multiple files)
 
 	click_list: CLICK_LIST is
 		local

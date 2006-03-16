@@ -22,7 +22,8 @@ inherit
 			new_integer_as,
 			new_integer_hexa_as,
 			new_external_lang_as,
-			validate_integer_real_type
+			validate_integer_real_type,
+			new_line_pragma
 		end
 
 	PREDEFINED_NAMES
@@ -72,7 +73,7 @@ feature -- Access
 		end
 
 	new_class_as (n: ID_AS; ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_CONSTRAINT_AS];
 			p: PARENT_LIST_AS;
@@ -87,7 +88,7 @@ feature -- Access
 			-- New CLASS AST node
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
-				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind,
+				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, top_ind,
 				bottom_ind, g, p, c, co, f, inv, s, o, he, ed)
 
 					-- Check for Concurrent Eiffel which is not yet supported
@@ -271,6 +272,13 @@ feature -- Access
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
 			end
+		end
+
+	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
+			-- New line pragma
+			--| Keep entire line, actual processing will be done later if we need it.
+		do
+			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 feature {NONE} -- Validation

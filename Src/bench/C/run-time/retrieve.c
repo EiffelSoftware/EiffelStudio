@@ -627,16 +627,19 @@ rt_private type_descriptor *type_description_for_new (
 rt_private EIF_REFERENCE new_spref (int count)
 {
 	static EIF_TYPE_ID spref_type;		/* dynamic type of SPECIAL [ANY] */
-	EIF_REFERENCE result = spmalloc (
+	EIF_REFERENCE result;
+	union overhead *zone;
+	result = spmalloc (
 		CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD (2), FALSE);
-	union overhead *zone = HEADER (result);
-	EIF_INTEGER *spec_size_info = (EIF_INTEGER *)
-			((char *) result + (zone->ov_size & B_SIZE) - LNGPAD (2));
+	if (!result) {
+		xraise(EN_MEM);
+	}
+	zone = HEADER (result);
 	if (spref_type == 0)
 		spref_type = eif_type_id ("SPECIAL [ANY]");
 	zone->ov_flags |= spref_type | EO_REF;
-	spec_size_info[0] = count;
-	spec_size_info[1] = sizeof (EIF_REFERENCE);
+	RT_SPECIAL_COUNT_WITH_ZONE(result,zone) = count;
+	RT_SPECIAL_ELEM_SIZE_WITH_ZONE(result,zone) = sizeof(EIF_REFERENCE);
 	return result;
 }
 
@@ -659,11 +662,18 @@ rt_private mismatch_table *new_mismatch_table (uint32 min_count)
 rt_private void grow_mismatch_table (void)
 {
 	RT_GET_CONTEXT
+	EIF_REFERENCE res;
 	mismatches->capacity *= 2;
-	mismatches->objects = eif_protect (
-		sprealloc (eif_wean (mismatches->objects), mismatches->capacity));
-	mismatches->values = eif_protect (
-		sprealloc (eif_wean (mismatches->values), mismatches->capacity));
+	res = sprealloc (eif_wean (mismatches->objects), mismatches->capacity);
+	if (!res) {
+		xraise(EN_MEM);
+	}
+	mismatches->objects = eif_protect (res);
+	res = sprealloc (eif_wean (mismatches->values), mismatches->capacity);
+	if (!res) {
+		xraise(EN_MEM);
+	}
+	mismatches->values = eif_protect (res);
 }
 
 rt_private void free_mismatch_table (mismatch_table *table)
@@ -1992,7 +2002,9 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 	}
 	nb_byte = CHRPAD ((rt_uint_ptr) count * (rt_uint_ptr) spec_size) + LNGPAD_2;
 	result = spmalloc (nb_byte, EIF_TEST(!(crflags & EO_REF)));
-	if (result != NULL) {
+	if (!result) {
+		xraise(EN_MEM);
+	} else {
 		EIF_REFERENCE o_ref = RT_SPECIAL_INFO (result);
 		RT_SPECIAL_COUNT_WITH_INFO (o_ref) = count;
 		RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref) = spec_size;
@@ -2070,6 +2082,9 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			} else {
 				newadd = new_special_object (conv->new_type, crflags, count);
 			}
+			if (!newadd) {
+				xraise(EN_MEM);
+			}
 		}
 		else {		/* Normal object */
 			int16 dftype = crflags & EO_TYPE;
@@ -2084,6 +2099,9 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 				 * to create a proper TUPLE type, thus the use of RTLNSMART.
 				 */
 			newadd = RTLNSMART (dftype);
+			if (!newadd) {
+				xraise(EN_MEM);
+			}
 		}
 
 #ifdef ISE_GC
@@ -2588,6 +2606,9 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 					/* Not enough space we need to allocate dynamically */
 				gtype = (long *) cmalloc (nb_gen * sizeof(long));
 				itype = (int32 *) cmalloc (nb_gen * sizeof(int32));
+				if (!gtype || !itype) {
+					xraise(EN_MEM);
+				}
 			} else {
 				gtype = sgtype;
 				itype = sitype;
@@ -2758,6 +2779,9 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 					/* Not enough space we need to allocate dynamically */
 				gtype = (long *) cmalloc (nb_gen * sizeof(long));
 				itype = (int32 *) cmalloc (nb_gen * sizeof(int32));
+				if (!gtype || !itype) {
+					xraise(EN_MEM);
+				}
 			} else {
 				gtype = sgtype;
 				itype = sitype;
@@ -3265,9 +3289,15 @@ rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 						/* Let's resize our existing allocated `l_cid' array by 1.5 times. */
 					l_count = (2 * (i + 3)) / 2; 
 					l_cid = (int16 *) realloc (l_cid, l_count * sizeof(int16));
+					if (!l_cid) {
+						xraise(EN_MEM);
+					}
 				} else {
 						/* Create a new memory block and copy content of `cidarr' in it. */
 					l_cid = (int16 *) malloc ((i + 3) * sizeof(int16));
+					if (!l_cid) {
+						xraise(EN_MEM);
+					}
 					l_count = i + 3;
 					memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(int16));
 				}
@@ -4589,6 +4619,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_NATURAL_8 *) attr_address = value.vuint8;
 				if (mismatched) {
 					old_value = RTLN (egc_int8_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_NATURAL_8 *) old_value = value.vuint8;
 				}
 				break;
@@ -4598,6 +4631,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_NATURAL_16 *) attr_address = value.vuint16;
 				if (mismatched) {
 					old_value = RTLN (egc_int16_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_NATURAL_16 *) old_value = value.vuint16;
 				}
 				break;
@@ -4607,6 +4643,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_NATURAL_32 *) attr_address = value.vuint32;
 				if (mismatched) {
 					old_value = RTLN (egc_int32_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_NATURAL_32 *) old_value = value.vuint32;
 				}
 				break;
@@ -4616,6 +4655,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_NATURAL_64 *) attr_address = value.vuint64;
 				if (mismatched) {
 					old_value = RTLN (egc_int64_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_NATURAL_64 *) old_value = value.vuint64;
 				}
 				break;
@@ -4625,6 +4667,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_INTEGER_8 *) attr_address = value.vint8;
 				if (mismatched) {
 					old_value = RTLN (egc_int8_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_INTEGER_8 *) old_value = value.vint8;
 				}
 				break;
@@ -4634,6 +4679,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_INTEGER_16 *) attr_address = value.vint16;
 				if (mismatched) {
 					old_value = RTLN (egc_int16_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_INTEGER_16 *) old_value = value.vint16;
 				}
 				break;
@@ -4643,6 +4691,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_INTEGER_32 *) attr_address = value.vint32;
 				if (mismatched) {
 					old_value = RTLN (egc_int32_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_INTEGER_32 *) old_value = value.vint32;
 				}
 				break;
@@ -4652,6 +4703,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_INTEGER_64 *) attr_address = value.vint64;
 				if (mismatched) {
 					old_value = RTLN (egc_int64_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_INTEGER_64 *) old_value = value.vint64;
 				}
 				break;
@@ -4661,6 +4715,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_BOOLEAN *) attr_address = value.vbool;
 				if (mismatched) {
 					old_value = RTLN (egc_bool_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_BOOLEAN *) old_value = value.vbool;
 				}
 				break;
@@ -4670,6 +4727,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_CHARACTER *) attr_address = value.vchar;
 				if (mismatched) {
 					old_value = RTLN (egc_char_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_CHARACTER *) old_value = value.vchar;
 				}
 				break;
@@ -4679,6 +4739,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_WIDE_CHAR *) attr_address = value.vwchar;
 				if (mismatched) {
 					old_value = RTLN (egc_wchar_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_WIDE_CHAR *) old_value = value.vwchar;
 				}
 				break;
@@ -4688,6 +4751,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_REAL_32 *) attr_address = value.vreal;
 				if (mismatched) {
 					old_value = RTLN (egc_real32_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_REAL_32 *) old_value = value.vreal;
 				}
 				break;
@@ -4697,6 +4763,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_REAL_64 *) attr_address = value.vdbl;
 				if (mismatched) {
 					old_value = RTLN (egc_real64_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					*(EIF_REAL_64 *) old_value = value.vdbl;
 				}
 				break;
@@ -4708,6 +4777,9 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				}
 				if (mismatched) {
 					old_value = RTLN (egc_point_ref_dtype);
+					if (!old_value) {
+						xraise(EN_MEM);
+					}
 					if (! eif_discard_pointer_values)
 						*(EIF_POINTER *) old_value = value.vptr;
 				}
@@ -4733,8 +4805,10 @@ rt_private EIF_REFERENCE object_rread_attributes (
 				}
 				else {
 					if (mismatched) {
-						old_value =
-							emalloc (type_description (o_flags & EO_TYPE)->new_type);
+						old_value = emalloc (type_description (o_flags & EO_TYPE)->new_type);
+						if (!old_value) {
+							xraise(EN_MEM);
+						}
 					}
 					if (attr_address == NULL)
 						old_vals = object_rread_attributes (old_value, hflags, o_flags, 0L);
@@ -4868,6 +4942,9 @@ rt_private EIF_REFERENCE object_rread_special (
 		addr = object;
 	else {
 		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (multi_value), C_T, GC_OFF);
+		if (!trash) {
+			xraise(EN_MEM);
+		}
 		addr = trash;
 	}
 	if (!(flags & EO_REF)) {			/* Special of simple types */
@@ -4930,6 +5007,9 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 		addr = object;
 	else {
 		trash = (EIF_REFERENCE) eif_rt_xmalloc (count * sizeof (EIF_TYPED_ELEMENT), C_T, GC_OFF);
+		if (!trash) {
+			xraise(EN_MEM);
+		}
 		addr = trash;
 	}
 
@@ -4999,6 +5079,9 @@ rt_private int stream_read(char *pointer, int size)
 	if (stream_buffer_size - stream_buffer_position < (size_t) size) {
 		stream_buffer_size += buffer_size;
 		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
+		if (!stream_buffer) {
+			xraise(EN_MEM);
+		}
 	}	
 
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);
@@ -5086,6 +5169,9 @@ rt_private uint32 rt_read_cid (uint32 oflags)
 				 * `count + 2' because `l_cid' array has indices between the
 				 * range of `0' to `count + 1'*/
 			l_cid = (int16 *) malloc ((count + 2) * sizeof(int16));
+			if (!l_cid) {
+				xraise(EN_MEM);
+			}
 		} else {
 			l_cid = cidarr;
 		}
@@ -5139,6 +5225,9 @@ rt_private uint32 rt_id_read_cid (uint32 oflags)
 				 * `count + 2' because `l_cid' array has indices between the
 				 * range of `0' to `count + 1'*/
 			l_cid = (int16 *) malloc ((count + 2) * sizeof(int16));
+			if (!l_cid) {
+				xraise(EN_MEM);
+			}
 		} else {
 			l_cid = cidarr;
 		}
@@ -5183,9 +5272,15 @@ rt_private uint32 rt_id_read_cid (uint32 oflags)
 						if (count >= CIDARR_SIZE) {
 								/* Let's resize our existing allocated `l_cid' array. */
 							l_cid = (int16 *) realloc (l_cid, (l_real_count + 3) * sizeof(int16));
+							if (!l_cid) {
+								xraise(EN_MEM);
+							}
 						} else {
 								/* Create a new memory block and copy content of `cidarr' in it. */
 							l_cid = (int16 *) malloc ((l_real_count + 3) * sizeof(int16));
+							if (!l_cid) {
+								xraise(EN_MEM);
+							}
 							memcpy (l_cid, cidarr, CIDARR_SIZE * sizeof(int16));
 						}
 						ip = l_cid + 1;

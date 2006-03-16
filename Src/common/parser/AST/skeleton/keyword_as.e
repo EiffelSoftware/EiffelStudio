@@ -205,6 +205,12 @@ feature -- Status report
 			Result := (code = {EIFFEL_TOKENS}.te_frozen)
 		end
 
+	is_partial_class_keyword: BOOLEAN is
+			-- Is current keyword 'partial[ \n\r\t]*class'?
+		do
+			Result := (code = {EIFFEL_TOKENS}.te_partial_class)
+		end
+
 	is_if_keyword: BOOLEAN is
 			-- Is current keyword 'if'?
 		do

@@ -1544,6 +1544,8 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
+			l_last_type: TYPE_A
+			l_last_class: CLASS_C
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1566,11 +1568,15 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.process_basic_text (ti_l_bracket)
 				end
 				if l_as.operands /= Void then
+					l_last_type := last_type
+					l_last_class := last_class
 					text_formatter_decorator.begin
 					text_formatter_decorator.set_separator (ti_comma)
 					text_formatter_decorator.set_space_between_tokens
 					l_as.operands.process (Current)
 					text_formatter_decorator.commit
+					last_type := l_last_type
+					last_class := l_last_class
 				end
 				if not has_error then
 					text_formatter_decorator.process_operator_text (ti_r_bracket, l_feat)

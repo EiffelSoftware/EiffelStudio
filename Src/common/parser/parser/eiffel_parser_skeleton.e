@@ -300,6 +300,10 @@ feature {NONE} -- Implementation
 			-- by Eiffel compiler since they are already generated
 			-- within runtime environment.
 
+	is_partial_class: BOOLEAN
+			-- Boolean mark for class whose definition if spread
+			-- amongst multiple files.
+
 	is_separate: BOOLEAN
 			-- Boolean mark for separate class
 
@@ -391,7 +395,7 @@ feature {NONE} -- Counters
 feature {NONE} -- Actions
 
 	new_class_description (n: ID_AS; n2: STRING_AS;
-		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+		is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
@@ -409,7 +413,7 @@ feature {NONE} -- Actions
 					ext_name := n2
 				end
 			end
-			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,
+			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, first_ind,
 				last_ind, g, p, c, co, f, inv, s, o, has_externals, ed)
 		end
 
@@ -632,6 +636,7 @@ invariant
 	valid_id_level: (id_level = Normal_level) or
 		(id_level = Assert_level) or (id_level = Invariant_level)
 	is_external_class_not_set: not il_parser implies not is_external_class
+	is_partial_class_not_set: not il_parser implies not is_partial_class
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

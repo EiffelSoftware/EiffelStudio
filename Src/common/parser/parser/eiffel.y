@@ -67,6 +67,7 @@ create
 
 %token <KEYWORD_AS> TE_END
 %token <KEYWORD_AS> TE_FROZEN
+%token <KEYWORD_AS> TE_PARTIAL_CLASS	
 %token <KEYWORD_AS> TE_INFIX
 %token <KEYWORD_AS> TE_CREATION
 %token <KEYWORD_AS> TE_PRECURSOR
@@ -118,6 +119,7 @@ create
 %type <CASE_AS>				When_part
 %type <CHAR_AS>				Character_constant
 %type <CHECK_AS>			Check
+%type <KEYWORD_AS>			Class_mark
 %type <CLIENT_AS>			Clients Feature_client_clause
 %type <CONSTANT_AS>			Constant_attribute
 %type <CONVERT_FEAT_AS>		Convert_feature
@@ -268,7 +270,7 @@ Eiffel_parser:
 Class_declaration:
 		Indexing									-- $1
 		Header_mark								-- $2
-		TE_CLASS									-- $3
+		Class_mark								-- $3
 		Class_or_tuple_identifier					-- $4
 		Formal_generics						-- $5
 		External_name							-- $6
@@ -293,7 +295,7 @@ Class_declaration:
 				end
 				
 				root_node := new_class_description ($4, temp_string_as1,
-					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class,
+					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
 					$1, $15, $5, $8, $10, $11, $12, $14, suppliers, temp_string_as2, $16)
 				if root_node /= Void then
 					root_node.set_text_positions (
@@ -445,14 +447,12 @@ Index_value: Identifier_as_lower
 	;
 
 
--- Header mark
-
-
 Header_mark: Frozen_mark External_mark
 			{
 				is_deferred := False
 				is_expanded := False
 				is_separate := False
+
 				deferred_keyword := Void
 				expanded_keyword := Void
 				separate_keyword := Void
@@ -524,7 +524,18 @@ External_mark: -- Empty
 				end
 			}
 	;
-
+	
+Class_mark: TE_CLASS
+			{
+				$$ := $1;
+				is_partial_class := false;
+			}
+	| TE_PARTIAL_CLASS
+		{
+			$$ := $1;
+			is_partial_class := true;
+		}
+	;
 
 -- Obsolete
 
@@ -2450,7 +2461,7 @@ Class_identifier: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_assign_index)
+				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
@@ -2481,7 +2492,7 @@ Identifier_as_lower: TE_ID
 	|	TE_ASSIGN
 			{
 					-- Keyword used as identifier
-				process_id_as_with_existing_stub (last_assign_index)
+				process_id_as_with_existing_stub (last_keyword_as_id_index)
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,

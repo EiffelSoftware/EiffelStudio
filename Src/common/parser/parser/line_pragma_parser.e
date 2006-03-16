@@ -34,7 +34,7 @@ feature -- Basic Operations
 		require
 			attached_pragma: a_pragma /= Void
 		local
-			l_pp_count, i, l_count: INTEGER
+			l_pp_count, i, l_count, l_offset: INTEGER
 			l_parsed_text, l_line, l_document: STRING
 			l_parsing_line, l_stop: BOOLEAN
 			c: CHARACTER
@@ -46,6 +46,19 @@ feature -- Basic Operations
 			line_number := 0
 			l_pp_count := Pragma_prefix.count
 			l_parsed_text := a_pragma.as_lower
+			from
+				c := ' '
+				i := 1
+				l_count := l_parsed_text.count
+			until
+				not c.is_space or i > l_count
+			loop
+				c := l_parsed_text.item (i)
+				if c = '%N' then
+					l_offset := l_offset + 1
+				end
+				i := i + 1
+			end
 			l_parsed_text.left_adjust
 			l_parsed_text.right_adjust
 			if l_parsed_text.count > l_pp_count and then l_parsed_text.substring (1, l_pp_count).is_equal (Pragma_prefix) then
@@ -76,14 +89,16 @@ feature -- Basic Operations
 								l_stop := True -- Error!
 							end
 						else
-							l_document.append_character (c)
+							if c /= '"' then
+								l_document.append_character (c)
+							end
 						end
 						i := i + 1
 					end
 					if not l_stop then
 						l_document.left_justify
 						document := l_document
-						line_number := l_line.to_integer
+						line_number := l_line.to_integer - l_offset - 1
 						is_pragma := True
 					end
 				end

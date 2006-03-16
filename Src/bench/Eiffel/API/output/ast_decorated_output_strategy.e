@@ -1338,6 +1338,8 @@ feature {NONE} -- Implementation
 			l_bin_eq_as: BIN_EQ_AS
 			l_formal: FORMAL_A
 			l_type: TYPE_A
+			l_left_type: TYPE_A
+			l_left_class: CLASS_C
 		do
 			if not expr_type_visiting then
 				text_formatter_decorator.begin
@@ -1358,11 +1360,12 @@ feature {NONE} -- Implementation
 				else
 					last_class := last_type.associated_class
 				end
+				l_left_type := last_type
+				l_left_class := last_class
 				if l_as.routine_ids.first /= 0 then
-					l_feat := feature_in_class (last_class, l_as.routine_ids)
+					l_feat := feature_in_class (l_left_class, l_as.routine_ids)
 				end
 			end
-
 			if not expr_type_visiting then
 				if not has_error then
 					if l_feat /= Void then
@@ -1418,7 +1421,7 @@ feature {NONE} -- Implementation
 					check l_feat_is_not_procedure: not l_feat.is_procedure end
 					l_type := l_feat.type.actual_type
 					if l_type.is_formal then
-						last_type := l_type.instantiation_in (last_type, last_class.class_id)
+						last_type := l_type.instantiation_in (l_left_type, l_left_class.class_id)
 					else
 						last_type := l_type
 					end

@@ -74,7 +74,7 @@ feature -- Formatting
 			stel: EIFFEL_CALL_STACK_ELEMENT
 			l_line: INTEGER
 		do
-			if displayed and selected and not must_format then
+			if displayed and selected then
 				if associated_feature /= Void then
 					if
 						eb_debugger_manager.application_is_executing

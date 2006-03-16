@@ -29,7 +29,8 @@ inherit
 			new_real_value,
 			new_external_lang_as,
 			new_formal_dec_as,
-			validate_integer_real_type
+			validate_integer_real_type,
+			new_line_pragma
 		end
 
 	AST_COMPILER_FACTORY
@@ -68,7 +69,6 @@ inherit
 			new_bin_and_then_as,
 			new_bin_or_else_as,
 			new_tagged_as,
-			new_line_pragma,
 			create_break_as,
 			create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,

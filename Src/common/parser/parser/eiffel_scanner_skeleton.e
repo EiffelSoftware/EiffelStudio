@@ -88,8 +88,8 @@ feature -- Roundtrip
 	l_string_start_position: INTEGER
 			-- Start position of regular string being scanned	
 
-	last_assign_index: INTEGER
-			-- Last index in `match_list' for "assign" keyword (or maybe assign identifier)
+	last_keyword_as_id_index: INTEGER
+			-- Last index in `match_list' for keywords that can be used as identifier
 
 feature -- Access
 
@@ -102,7 +102,7 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
-	last_line_pragma: STRING
+	last_line_pragma: BREAK_AS
 			-- Last line pragma to be associated with next instruction
 
 	token_buffer: STRING

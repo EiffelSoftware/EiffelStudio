@@ -194,7 +194,7 @@ feature -- Access
 
 	hash_code: INTEGER is
 		do
-			Result := out.hash_code
+			Result := data_5.hash_code
 		end
 
 feature -- Comparison

@@ -2442,11 +2442,13 @@ feature -- Features info
 						(l_declaration_class.class_id, current_class_type.type).associated_class_type.static_type_id,
 						l_declaration_class.feature_of_rout_id (feat.rout_id_set.first).feature_id)
 				else
-					if l_is_field_hidden and then not Compilation_modes.is_precompiling then
-						l_field_attr := {MD_FIELD_ATTRIBUTES}.family_or_assembly
-					else
+						-- The field could be made non-public. But some third-party
+						-- auto-generated code relies on the fact that it is public.
+					-- if l_is_field_hidden and then not Compilation_modes.is_precompiling then
+					-- 	l_field_attr := {MD_FIELD_ATTRIBUTES}.family_or_assembly
+					-- else
 						l_field_attr := {MD_FIELD_ATTRIBUTES}.public
-					end
+					-- end
 
 					l_meth_token := md_emit.define_field (uni_string, current_class_token,
 						l_field_attr, l_field_sig)

@@ -758,6 +758,7 @@ feature -- Cleanup
 			-- Clean up external data structures.
 		do
 			internal_dbg_documents := Void
+			internal_dbg_pragma_documents := Void
 			if dbg_writer /= Void and then not dbg_writer.is_closed then
 				dbg_writer.close
 			end
@@ -2380,6 +2381,7 @@ feature {NONE} -- Once per modules being generated.
 
 				-- Debug data structure.
 			create internal_dbg_documents.make (0, a_type_count)
+			create internal_dbg_pragma_documents.make (a_type_count)
 			create method_sequence_points.make (1000)
 			create local_info.make (1000)
 			internal_class_types := Void
@@ -2970,6 +2972,7 @@ feature {NONE} -- Cleaning
 			internal_class_types := Void
 			internal_constructor_token := Void
 			internal_dbg_documents := Void
+			internal_dbg_pragma_documents := Void
 			internal_external_token_mapping := Void
 			internal_features := Void
 			internal_implementation_features := Void

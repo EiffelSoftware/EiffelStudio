@@ -29,8 +29,6 @@ feature {NONE} -- Initialization
 			error_message := "No error."
 		end
 
-
-
 feature -- Access
 
 	class_text: STRING
@@ -54,7 +52,8 @@ feature -- Status Report
 			l_ast, l_new_ast: CLASS_AS
 			l_match_list, l_new_match_list: LEAF_AS_LIST
 			l_is_deferred, l_is_expanded: BOOLEAN
-			l_content: STRING
+			l_content, l_new_pragma: STRING
+			l_index, l_index2: INTEGER
 		do
 			from
 				a_file_names.start
@@ -66,6 +65,22 @@ feature -- Status Report
 					roundtrip_eiffel_parser.parse_from_string (l_content)
 					l_ast := roundtrip_eiffel_parser.root_node
 					l_match_list := roundtrip_eiffel_parser.match_list
+					if l_content.substring (1, 8).is_equal ("--#line ") then
+						l_index := l_content.index_of ('"', 1)
+						if l_index > 0 then
+							l_index2 := l_content.index_of ('%N', l_index + 1)
+							if l_index2 > 0 then
+								create l_new_pragma.make (300)
+								l_new_pragma.append ("--#line ")
+								l_new_pragma.append ((l_ast.features.first_token (l_match_list).line - 1).out)
+								l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
+								l_ast.features.prepend_text (l_new_pragma, l_match_list)
+							end
+						end
+					end
+					if l_ast.is_partial then
+						l_ast.class_keyword.replace_text ("class", l_match_list)
+					end
 				end
 				a_file_names.forth
 			end
@@ -84,6 +99,19 @@ feature -- Status Report
 					if l_new_ast /= Void then
 						l_is_deferred := l_is_deferred or l_new_ast.is_deferred
 						l_is_expanded := l_is_expanded or l_new_ast.is_expanded
+						if l_content.substring (1, 8).is_equal ("--#line ") then
+							l_index := l_content.index_of ('"', 1)
+							if l_index > 0 then
+								l_index2 := l_content.index_of ('%N', l_index + 1)
+								if l_index2 > 0 then
+									create l_new_pragma.make (300)
+									l_new_pragma.append ("--#line ")
+									l_new_pragma.append (l_new_ast.features.first.first_token (l_new_match_list).line.out)
+									l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
+									l_ast.features.append_text (l_new_pragma, l_match_list)
+								end
+							end
+						end
 						append_features (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						append_invariants (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						merge_inheritance_clauses (l_match_list, l_new_match_list, l_ast, l_new_ast)

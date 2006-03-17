@@ -214,7 +214,8 @@ feature -- Query
 
 	theme_color (a_theme: POINTER; a_color_id: INTEGER): EV_COLOR is
 			-- Theme color
-			-- a_color_id is one value from EV_THEME_COLOR_CONTANT
+			-- `a_color_id' is one value from EV_THEME_COLOR_CONSTANTS.
+			-- Actually it only work with values from WEL_COLOR_CONSTANTS. Not same behaviour as MSDN said.
 		require
 			valid: is_color_id_valid (a_color_id)
 		deferred

@@ -90,6 +90,7 @@ feature -- Initialization
 					False,	-- is_separate
 					is_frozen,
 					True,	-- is_external
+					False,  -- is_partial
 					Void,	-- top_indexes
 					Void,	-- bottom_indexes
 					Void,	-- generics

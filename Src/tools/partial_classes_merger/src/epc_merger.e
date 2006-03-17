@@ -106,7 +106,7 @@ feature -- Status Report
 								if l_index2 > 0 then
 									create l_new_pragma.make (300)
 									l_new_pragma.append ("--#line ")
-									l_new_pragma.append (l_new_ast.features.first.first_token (l_new_match_list).line.out)
+									l_new_pragma.append ((l_new_ast.features.first_token (l_new_match_list).line - 1).out)
 									l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
 									l_ast.features.append_text (l_new_pragma, l_match_list)
 								end

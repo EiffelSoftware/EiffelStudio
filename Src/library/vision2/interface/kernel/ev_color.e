@@ -22,6 +22,7 @@ inherit
 
 	HASHABLE
 		undefine
+			default_create,
 			is_equal,
 			copy,
 			out
@@ -233,7 +234,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	hash_code, rgb_24_bit: INTEGER is
+	rgb_24_bit: INTEGER is
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		require
@@ -465,6 +466,14 @@ feature -- Comparison
 				default_create
 			end
 			implementation.set_with_other (other)
+		end
+
+feature -- Hashable
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := rgb_24_bit
 		end
 
 feature -- Constants

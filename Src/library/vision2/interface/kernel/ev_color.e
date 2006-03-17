@@ -8,13 +8,20 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_COLOR
 
 inherit
 	EV_ANY
 		redefine
 			implementation,
+			is_equal,
+			copy,
+			out
+		end
+
+	HASHABLE
+		undefine
 			is_equal,
 			copy,
 			out
@@ -137,7 +144,7 @@ feature -- Access
 				if sum_color < 1 then
 					Result := diff_color / sum_color
 				else
-					Result := diff_color / (2.0 - sum_color)	
+					Result := diff_color / (2.0 - sum_color)
 				end
 			end
 		end
@@ -226,7 +233,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	rgb_24_bit: INTEGER is
+	hash_code, rgb_24_bit: INTEGER is
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		require
@@ -300,7 +307,7 @@ feature -- Conversion
 		ensure
 			bridge_ok: Result = implementation.blue_8_bit
 		end
-	
+
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is
 			-- Set `red' from `an_8_bit_red' intinsity.
 		require
@@ -312,7 +319,7 @@ feature -- Conversion
 		ensure
 			red_assigned: red_8_bit = an_8_bit_red
 		end
-	
+
 	set_green_with_8_bit (an_8_bit_green: INTEGER) is
 			-- Set `green' from `an_8_bit_green' intinsity.
 		require
@@ -324,7 +331,7 @@ feature -- Conversion
 		ensure
 			green_assigned: green_8_bit = an_8_bit_green
 		end
-	
+
 	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		require
@@ -336,7 +343,7 @@ feature -- Conversion
 		ensure
 			blue_assigned: blue_8_bit = an_8_bit_blue
 		end
-	
+
 	set_rgb_with_16_bit (a_16_bit_red, a_16_bit_green, a_16_bit_blue: INTEGER)
 		is
 			-- Set intensities  from `a_16_bit_red', `a_16_bit_green', and
@@ -402,7 +409,7 @@ feature -- Conversion
 		ensure
 			red_assigned: red_16_bit = a_16_bit_red
 		end
-	
+
 	set_green_with_16_bit (a_16_bit_green: INTEGER) is
 			-- Set `green' from `a_16_bit_green' intinsity.
 		require
@@ -414,7 +421,7 @@ feature -- Conversion
 		ensure
 			green_assigned: green_16_bit = a_16_bit_green
 		end
-	
+
 	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		require
@@ -426,7 +433,7 @@ feature -- Conversion
 		ensure
 			blue_assigned: blue_16_bit = a_16_bit_blue
 		end
-	
+
 feature -- Output
 
 	out: STRING is
@@ -470,7 +477,7 @@ feature -- Constants
 
 	Max_24_bit: INTEGER is 16777215
 			-- Maximum value for 24 bit unsigned integers.
-		
+
 feature {NONE} -- Contract support
 
 	delta: REAL is
@@ -484,7 +491,7 @@ feature {EV_ANY, EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
 
 	implementation: EV_COLOR_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -516,7 +523,7 @@ invariant
 		delta * Max_16_bit
 	blue_8_bit_conversion: ((blue * Max_8_bit) - blue_8_bit).abs <
 		delta * Max_8_bit
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

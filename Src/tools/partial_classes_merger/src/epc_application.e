@@ -7,7 +7,7 @@ class
 	EPC_APPLICATION
 
 inherit
-	EPC_SHARED_ROUNDTRIP_PARSER
+	EPC_SHARED_CLASS_NAME_FINDER
 		export
 			{NONE} all
 		end
@@ -18,7 +18,8 @@ inherit
 		end
 
 create
-	execute
+	execute,
+	default_create
 
 feature {NONE} -- Initialization
 
@@ -68,7 +69,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Basic Operations
 
 	process_directories (a_dir_names: LIST [STRING]; a_output_dir_name: STRING; a_recursive: BOOLEAN) is
 			-- Process directories `a_dir_names' recursively if `a_recursive'.
@@ -78,7 +79,7 @@ feature {NONE} -- Implementation
 			l_merger: EPC_MERGER
 		do
 			create partial_classes_files.make (10)
-			parse (a_dir_names, Void, a_recursive)
+			internal_parse_directories (a_dir_names, Void, a_recursive)
 			create l_merger
 			if not partial_classes_files.is_empty then
 				from
@@ -88,7 +89,8 @@ feature {NONE} -- Implementation
 				loop
 					l_merger.merge (partial_classes_files.item_for_iteration)
 					if l_merger.successful then
-						save_class_text (l_merger.class_text, a_output_dir_name + partial_classes_files.key_for_iteration.as_lower + ".e")
+						save_class_text (l_merger.class_text, a_output_dir_name + Directory_separator.out + partial_classes_files.key_for_iteration.as_lower + ".e")
+						delete_files (partial_classes_files.item_for_iteration)
 					else
 						display_warning ("Could not merge class " + partial_classes_files.key_for_iteration)
 					end
@@ -97,7 +99,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse (a_dir_names: LIST [STRING]; a_parent: STRING; a_recursive: BOOLEAN) is
+feature {NONE} -- Implementation
+
+	delete_files (a_list: LIST [STRING]) is
+			-- Delete files whose path are in `a_list'.
+		require
+			attached_list: a_list /= Void
+		do
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				safe_delete (a_list.item)
+				a_list.forth
+			end
+		end
+
+	safe_delete (a_file: STRING) is
+			-- Delete file located at `a_file'.
+			-- Do not raise an exception if failed.
+		require
+			attached_file: a_file /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				(create {RAW_FILE}.make (a_file)).delete
+			end
+		rescue
+			l_retried := True
+			retry
+		end
+
+	internal_parse_directories (a_dir_names: LIST [STRING]; a_parent: STRING; a_recursive: BOOLEAN) is
 			-- Parse Eiffel classes in directories `a_dir_names' and put file names of
 			-- classes with identical names in `partial_classes_files'.
 		require
@@ -123,7 +158,7 @@ feature {NONE} -- Implementation
 				if l_dir.exists then
 					parse_directory (l_dir)
 					if a_recursive then
-						parse (create {ARRAYED_LIST [STRING]}.make_from_array (l_dir.directory_names), l_dir_name, True)
+						internal_parse_directories (create {ARRAYED_LIST [STRING]}.make_from_array (l_dir.directory_names), l_dir_name, True)
 					end
 				else
 					display_warning ("Directory " + a_dir_names.item + " not found.")
@@ -142,6 +177,7 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			l_dir_name, l_file_name, l_abs_path, l_class_name: STRING
 			l_new_list: ARRAYED_LIST [STRING]
+			l_file, l_dest_file: RAW_FILE
 		do
 			l_files := a_dir.filenames
 			l_count := l_files.count
@@ -152,38 +188,34 @@ feature {NONE} -- Implementation
 				i > l_count
 			loop
 				l_file_name := l_files.item (i)
-				if l_file_name.count > 3 and then l_file_name.substring_index (".e", l_file_name.count - 1) = l_file_name.count - 1 then
+				if l_file_name.count > 4 and then l_file_name.substring_index (".e", l_file_name.count - 1) = l_file_name.count - 1 then
 					create l_abs_path.make (l_dir_name.count + 1 + l_file_name.count)
 					l_abs_path.append (l_dir_name)
 					l_abs_path.append_character (Directory_separator)
 					l_abs_path.append (l_file_name)
-					l_class_name := class_name (l_abs_path)
-					if l_class_name /= Void then
-						partial_classes_files.search (l_class_name)
+					parse (l_abs_path)
+					if is_partial then
+						partial_classes_files.search (class_name)
 						if partial_classes_files.found then
 							partial_classes_files.found_item.extend (l_abs_path)
 						else
 							create l_new_list.make (10)
 							l_new_list.extend (l_abs_path)
-							partial_classes_files.put (l_new_list, l_class_name)
+							partial_classes_files.put (l_new_list, class_name)
 						end
 					end
 				end
 				i := i + 1
 			end
-			from
-				partial_classes_files.start
-			until
-				partial_classes_files.after
-			loop
-				if partial_classes_files.item_for_iteration.count < 2 then
-					partial_classes_files.remove (partial_classes_files.key_for_iteration)
-				end
-				partial_classes_files.forth
-			end
 		end
 
-	class_name (a_file: STRING): STRING is
+	class_name: STRING
+			-- Result of `parse'
+	
+	is_partial: BOOLEAN
+			-- Was last parsed class partial?
+
+	parse (a_file: STRING) is
 			-- Class name of Eiffel class text stored in `a_file'
 		require
 			attached_file: a_file /= Void
@@ -195,11 +227,11 @@ feature {NONE} -- Implementation
 				create l_file.make (a_file)
 				if l_file.exists then
 					l_file.open_read
-					roundtrip_eiffel_parser.parse (l_file)
+					class_name_finder.parse (l_file)
 					l_file.close
-					if roundtrip_eiffel_parser.root_node /= Void then
-						Result := roundtrip_eiffel_parser.root_node.class_name
-					else
+					class_name := class_name_finder.classname
+					is_partial := class_name_finder.is_partial_class
+					if class_name = Void then
 						display_warning ("Could not parse " + a_file)
 					end
 				end
@@ -218,11 +250,25 @@ feature {NONE} -- Implementation
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_retried: BOOLEAN
+			i: INTEGER
+			l_path: STRING
 		do
 			if not l_retried then
 				create l_file.make (a_path)
-				if l_file.exists then
-					display_warning ("File overwritten: " + a_path)
+				from
+					if l_file.exists then
+						l_path := a_path.twin
+						l_path.append ("_2")
+						create l_file.make (l_path)
+						i := 3
+					end
+				until
+					not l_file.exists
+				loop
+					l_path := l_path.substring (1, l_path.last_index_of ('_', l_path.count))
+					l_path.append (i.out)
+					create l_file.make (l_path)
+					i := i + 1
 				end
 				l_file.open_write
 				l_file.put_string (a_text)

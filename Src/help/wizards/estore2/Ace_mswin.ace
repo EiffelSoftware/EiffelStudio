@@ -24,7 +24,7 @@ default
 
 
 cluster
-	root_cluster:		".\src"
+	root_cluster:		"$EIFFEL_SRC\help\wizards\estore2\src"
 
 
 	all base:		"$EIFFEL_SRC\library\base"

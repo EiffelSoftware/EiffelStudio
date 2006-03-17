@@ -21,7 +21,9 @@ inherit
 			compute_minimum_height,
 			compute_minimum_width,
 			compute_minimum_size,
-			on_size
+			on_size,
+			insert_i_th,
+			notify_change
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -185,6 +187,36 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
+		do
+			Precursor {EV_WIDGET_LIST_IMP} (v, i)
+			if child_cell.is_user_min_height_set or else child_cell.is_user_min_width_set then
+				set_item_size (v, v.minimum_width, v.minimum_height)
+			end
+		end
+
+	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
+			-- Notify the current widget that the change identify by
+			-- type have been done. For types, see `internal_changes'
+			-- in class EV_SIZEABLE_IMP. If the container is shown,
+			-- we integrate the changes immediatly, otherwise, we postpone
+			-- them.
+			-- Use the constants defined in EV_SIZEABLE_IMP
+		local
+			widget_imp: EV_WIDGET_IMP
+		do
+			if not child_cell.is_user_min_height_set or else not child_cell.is_user_min_width_set then
+				Precursor {EV_WIDGET_LIST_IMP} (type, child)
+			else
+				widget_imp ?= child
+				check
+					widget_imp_not_void: widget_imp /= Void
+				end
+				widget_imp.parent_ask_resize (child.width, child.height)
+			end
+		end
+
 feature {NONE} -- WEL Implementation
 
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
@@ -306,8 +338,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end -- class EV_FIXED_IMP

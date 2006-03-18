@@ -13,12 +13,6 @@ inherit
 			meaning as signal_meaning
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{ANY} return_code ;
-			{NONE} all
-		end
-
 feature -- File descriptor operations
 
 	valid_file_descriptor (fd: INTEGER): BOOLEAN is
@@ -100,9 +94,7 @@ feature -- Process operations
 		alias
 			"[
 				{
-					int rlt;
-					rlt = setpgid (0, 0);
-					tcsetpgrp (0, getpid());
+					setpgid (0, 0);
 				}
 			]"
 		end
@@ -368,6 +360,21 @@ feature {NONE} -- Externals
 				  char ** arguments;
  				  arguments = (char **) $arg_array;
 				  arguments[$pos] = (char *) $arg;
+				}
+			]"
+		end
+
+	attach_terminals is
+			-- Attach terminal control to current process group.
+		external
+			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
+		alias
+			"[
+				{
+					int pgid = getpgid (getpid());
+					tcsetpgrp (0, pgid);
+					tcsetpgrp (1, pgid);
+					tcsetpgrp (2, pgid);
 				}
 			]"
 		end

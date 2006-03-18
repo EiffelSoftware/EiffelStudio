@@ -14,7 +14,15 @@ class
 inherit
 	PROCESS
 
+	PROCESS_UNIX_OS
+		export
+			{NONE}all
+		end
+
 	THREAD_CONTROL
+		export
+			{NONE}all
+		end
 
 create
 	make, make_with_command_line
@@ -65,8 +73,10 @@ feature  -- Control
 			on_start
 			initialize_child_process
 				-- Launch process.
-			child_process.spawn_nowait
-
+			if is_termianl_control_enabled then
+				attach_terminals
+			end
+			child_process.spawn_nowait (is_termianl_control_enabled)
 			internal_id := child_process.process_id
 			launched := (internal_id /= -1)
 			if launched then
@@ -136,6 +146,9 @@ feature {PROCESS_TIMER}  -- Status checking
 					has_process_exited := child_process.status_available
 						-- If launched process exited, send signal to all listenning threads.
 					if has_process_exited then
+						if is_termianl_control_enabled then
+							attach_terminals
+						end
 						if in_thread /= Void then
 							in_thread.set_exit_signal
 						end

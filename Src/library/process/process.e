@@ -221,6 +221,28 @@ feature -- IO redirection
 			error_handler_set: error_handler = Void
 		end
 
+	enable_terminal_control is
+			-- Make sure that launched process has terminal control over standard input, output and error.
+			-- Has effect only on Unix.
+		require
+			process_not_running: not is_running
+		do
+			is_termianl_control_enabled := True
+		ensure
+			terminal_control_enabled: is_termianl_control_enabled
+		end
+
+	disable_terminal_control is
+			-- Make sure that launched process doesn't has terminal control over standard input, output and error.
+			-- Has effect only on Unix.
+		require
+			process_not_running: not is_running
+		do
+			is_termianl_control_enabled := False
+		ensure
+			is_termianl_control_disabled: not is_termianl_control_enabled
+		end
+
 feature -- Control
 
 	launch is
@@ -552,6 +574,11 @@ feature -- Status report
 	error_direction: INTEGER
 			-- Where will the error stream of the to-be launched process be redirected.
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
+
+	is_termianl_control_enabled: BOOLEAN
+			-- Should launched process has terminal control over standard input, output and error?
+			-- If terminal control is not enabled, launched process won't be able to get access to terminals.
+			-- Has effect only on Unix.
 
 feature -- Validation checking
 

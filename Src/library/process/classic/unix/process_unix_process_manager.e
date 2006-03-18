@@ -165,13 +165,15 @@ feature -- Execution
 			is_executing_set: is_executing = b
 		end
 
-	spawn_nowait is
+	spawn_nowait (is_control_terminal_enabled: BOOLEAN) is
 			-- Spawn a process and return immediately.
+			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
 		local
 			ee: EXECUTION_ENVIRONMENT
 			cur_dir: STRING
 			exceptions: EXCEPTIONS
 			i: INTEGER
+			l_temp: INTEGER
 		do
 			build_argument_list
 			open_files_and_pipes
@@ -184,6 +186,9 @@ feature -- Execution
 			if process_id = 0 then
 				collection_off
 				new_process_group
+				if is_control_terminal_enabled then
+					attach_terminals
+				end
 				setup_child_process_files
 				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files)
 			else

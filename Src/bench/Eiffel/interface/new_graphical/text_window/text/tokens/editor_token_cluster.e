@@ -12,8 +12,8 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color,
-			background_color,
+			text_color_id,
+			background_color_id,
 			editor_preferences,
 			process
 		end
@@ -29,17 +29,19 @@ feature -- Visitor
 			a_visitor.process_editor_token_cluster (Current)
 		end
 
+feature -- Color
+
+	text_color_id: INTEGER is
+		do
+			Result := editor_preferences.cluster_text_color_id
+		end
+
+	background_color_id: INTEGER is
+		do
+			Result := editor_preferences.cluster_background_color_id
+		end
+
 feature {NONE} -- Implementation
-
-	text_color: EV_COLOR is
-		do
-			Result := editor_preferences.cluster_text_color
-		end
-
-	background_color: EV_COLOR is
-		do
-			Result := editor_preferences.cluster_background_color
-		end
 
 	editor_preferences: EB_EDITOR_DATA is
 			--

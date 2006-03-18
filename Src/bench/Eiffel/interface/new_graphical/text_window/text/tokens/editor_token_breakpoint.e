@@ -14,7 +14,7 @@ inherit
 		redefine
 			pebble,
 			update_position,
-			background_color,
+			background_color_id,
 			editor_preferences
 		end
 
@@ -157,15 +157,17 @@ feature -- Miscellaneous
 			Result := pixmaps @ index
 		end
 
-	background_color: EV_COLOR is
-		do
-			Result := editor_preferences.breakpoint_background_color
-		end
-
 	editor_preferences: EB_EDITOR_DATA is
 			--
 		once
 			Result ?= editor_preferences_cell.item
+		end
+
+feature -- Color
+
+	background_color_id: INTEGER is
+		do
+			Result := editor_preferences.breakpoint_background_color_id
 		end
 
 feature -- Visitor

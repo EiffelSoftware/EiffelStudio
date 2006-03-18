@@ -14,11 +14,11 @@ inherit
 		redefine
 			display_selected,
 			display_half_selected,
-			text_color,
 			is_blank,
-			background_color
+			text_color_id,
+			background_color_id
 		end
-		
+
 feature -- Status Report
 
 	is_blank: BOOLEAN is True
@@ -33,7 +33,7 @@ feature -- Display
 		do
 			useless := display_blanks (position, d_y, a_device, False, 1, length, panel)
 		end
-		
+
 	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc' at the coordinates (`x_offset',`d_y')
 		local
@@ -79,29 +79,29 @@ feature -- Display
 			end
 		end
 
+feature -- Color ids
+
+	text_color_id: INTEGER is
+		do
+			Result := editor_preferences.spaces_text_color_id
+		end
+
+	background_color_id: INTEGER is
+			-- Background color
+		do
+			if is_highlighted then
+				Result := editor_preferences.highlight_color_id
+			else
+				Result := editor_preferences.spaces_background_color_id
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
 		require
 			valid_selection: start_tab <= end_tab
 		deferred
-		end
-
-feature {NONE} -- Implementation
-	
-	text_color: EV_COLOR is
-		do
-			Result := editor_preferences.spaces_text_color
-		end
-
-	background_color: EV_COLOR is
-			-- Background color
-		do
-			if is_highlighted then				
-				Result := editor_preferences.highlight_color
-			else
-				Result := editor_preferences.spaces_background_color
-			end
 		end
 
 indexing

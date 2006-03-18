@@ -443,7 +443,10 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Autocompletion from window
 					completed.keep_head (ind - 1)
 				end
 				if discard_feature_signature and completed.has ('(') then
-					completed.keep_head (completed.index_of ('(', 1) - 1)
+					check
+						complete_is_not_preceded_with_open_brace: completed.index_of ('(', 1) - 2 >= 0
+					end
+					completed.keep_head (completed.index_of ('(', 1) - 2)
 				end
 			else
 				completed := cmp

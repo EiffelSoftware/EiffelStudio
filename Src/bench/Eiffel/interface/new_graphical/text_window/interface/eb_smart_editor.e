@@ -51,7 +51,8 @@ inherit
 			handle_tab_action,
 			complete_feature_call,
 			on_key_pressed,
-			calculate_completion_list_width
+			calculate_completion_list_width,
+			prepare_auto_complete
 		end
 
 create
@@ -164,7 +165,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	complete_feature_name is
 			-- Complete feature name.
 		do
-			if text_displayed.completing_context then
+			if text_displayed.completing_context and is_editable then
 				set_completing_feature (true)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
@@ -176,7 +177,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	complete_class_name is
 			-- Complete class name.
 		do
-			if text_displayed.completing_context then
+			if text_displayed.completing_context and is_editable then
 				set_completing_feature (false)
 				if auto_complete_after_dot and then not shifted_key then
 					completing_automatically := True
@@ -323,7 +324,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 				handle_tab_action (false)
 			elseif not is_completing and then code = Key_tab and then allow_tab_selecting and then shifted_key then
 				handle_tab_action (true)
-			elseif not is_completing and then text_displayed.completing_context and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
+			elseif is_editable and not is_completing and then text_displayed.completing_context and then can_complete_by_key.item ([ev_key, ctrled_key, alt_key, shifted_key]) then
 				trigger_completion
 				debug ("Auto_completion")
 					print ("Completion triggered.%N")
@@ -841,6 +842,81 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Code completable implementation
+
+	prepare_auto_complete is
+			-- Prepare possibilities in provider.
+		do
+			check_need_signature
+			Precursor {CODE_COMPLETABLE}
+		end
+
+	check_need_signature is
+			-- Check if signature needed.
+			-- We don't need signature when completing outside a feature.
+		local
+			l_line: EIFFEL_EDITOR_LINE
+			l_kt: EDITOR_TOKEN_KEYWORD
+			l_end_loop, l_quit: BOOLEAN
+			l_cursor: EDITOR_CURSOR
+			l_token: EDITOR_TOKEN
+			l_found_blank: BOOLEAN
+		do
+			if not is_empty then
+					-- Look for "like", we do not need signature after "like xxx".
+				from
+					l_token := text_displayed.cursor.token
+				until
+					l_token = Void or l_end_loop or l_quit
+				loop
+					l_token := l_token.previous
+					if l_token /= Void then
+						if l_token.is_blank then
+							l_found_blank := True
+						else
+							if l_found_blank then
+								if l_token.image.as_lower.is_equal ("like") then
+									l_end_loop := True
+									set_discard_feature_signature (True)
+								else
+									l_quit := True
+								end
+							end
+						end
+					end
+				end
+					-- Look for the fist feature within the whole editor.
+				from
+					text_displayed.start
+				until
+					text_displayed.after or l_end_loop
+				loop
+					l_line := text_displayed.current_line
+					from
+						l_line.start
+					until
+						l_line.after or l_end_loop
+					loop
+						if l_line.item.image.as_lower.is_equal ("feature") then
+							l_kt ?= l_line.item
+							if l_kt /= Void then
+								l_end_loop := true
+								create l_cursor.make_from_relative_pos (l_line, l_kt, 1, text_displayed)
+								if l_cursor.pos_in_text < text_displayed.cursor.pos_in_text then
+									set_discard_feature_signature (False)
+								else
+									set_discard_feature_signature (True)
+								end
+							end
+						end
+						l_line.forth
+					end
+					text_displayed.forth
+				end
+			end
+			if not l_end_loop then
+				set_discard_feature_signature (False)
+			end
+		end
 
 	current_line: EIFFEL_EDITOR_LINE is
 			-- Line of current cursor.

@@ -148,12 +148,16 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 				last_processed_line.update_token_information
 				if number_of_lines = 0 then
 					append_line (last_processed_line)
+					if cursor = Void then
+						create cursor.make_from_integer (1, Current)
+						set_selection_cursor (cursor)
+					end
 				end
 			else
 				end_processing_internal
 			end
 			if number_of_lines <= first_read_block_size then
-				on_text_block_loaded (true)
+				on_text_block_loaded (cursor = Void)
 				line_read := 0
 			end
 		end
@@ -215,7 +219,7 @@ feature {NONE} -- Load Text handling
 				append_line (last_processed_line)
 			end
 			if cursor = Void then
-				create cursor.make_from_integer (1, Current)
+				create cursor.make_from_character_pos (1, number_of_lines, Current)
 				if selection_cursor = Void then
 					set_selection_cursor (cursor)
 				end
@@ -269,12 +273,15 @@ feature {NONE} -- Load Text handling
 
 	end_processing_internal is
 			-- For running on idle
+		local
+			l_create_cursor: BOOLEAN
 		do
 			last_processed_line.update_token_information
 			if last_processed_line /= last_line then
 				append_line (last_processed_line)
 			end
-			on_text_block_loaded (number_of_lines <= first_read_block_size)
+			l_create_cursor := cursor = Void and then number_of_lines <= first_read_block_size
+			on_text_block_loaded (l_create_cursor)
 			reading_text_finished := True
 			on_text_loaded
 			after_reading_idle_action

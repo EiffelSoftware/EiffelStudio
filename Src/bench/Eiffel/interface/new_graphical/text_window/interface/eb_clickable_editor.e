@@ -116,9 +116,20 @@ feature -- Content Change
 			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
 		do
 			text_displayed.end_processing
-			setup_editor (1)
+			if not editor_set then
+				setup_editor (1)
+				editor_set := true
+			else
+				update_vertical_scrollbar
+				update_horizontal_scrollbar
+				update_horizontal_scrollbar
+				margin.setup_margin
+				refresh_now
+			end
 			editor_viewport.enable_sensitive
 		end
+
+	editor_set : BOOLEAN
 
 feature -- Status report
 
@@ -213,13 +224,15 @@ feature -- Possibly delayed operations
 		do
 			if text_is_fully_loaded then
 				cursor := text_displayed.cursor
-				if text_displayed.has_selection then
-					text_displayed.disable_selection
-				end
-				cursor.make_from_integer (pos.min (text_displayed.text_length), text_displayed)
-				if number_of_lines > number_of_lines_displayed then
-					set_first_line_displayed (cursor.y_in_lines.min (maximum_top_line_index), True)
-					check_position (cursor)
+				if cursor /= Void then
+					if text_displayed.has_selection then
+						text_displayed.disable_selection
+					end
+					cursor.make_from_integer (pos.min (text_displayed.text_length), text_displayed)
+					if number_of_lines > number_of_lines_displayed then
+						set_first_line_displayed (cursor.y_in_lines.min (maximum_top_line_index), True)
+						check_position (cursor)
+					end
 				end
 				refresh
 			else
@@ -232,16 +245,18 @@ feature -- Possibly delayed operations
 			-- does not need the text to be fully loaded			
 		do
 			if text_is_fully_loaded then
-				if text_displayed.has_selection then
-					text_displayed.disable_selection
+				if text_displayed.cursor /= Void then
+					if text_displayed.has_selection then
+						text_displayed.disable_selection
+					end
+					text_displayed.cursor.make_from_character_pos (1, number_of_lines, text_displayed)
+					if number_of_lines > number_of_lines_displayed then
+						check_cursor_position
+					end
+					refresh
 				end
-				text_displayed.cursor.make_from_character_pos (1, number_of_lines, text_displayed)
-				if number_of_lines > number_of_lines_displayed then
-					check_cursor_position
-				end
-				refresh
 			else
-				after_reading_text_actions.extend(agent scroll_to_end_when_ready)
+				after_reading_text_actions.extend (agent scroll_to_end_when_ready)
 			end
 		end
 
@@ -365,6 +380,9 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 						end
 					end
 				else
+					check
+						cursor_not_void: text_displayed.cursor /= Void
+					end
 					text_displayed.cursor.make_from_character_pos (cur.x_in_characters, cur.y_in_lines, text_displayed)
 					bkstn.display_bkpt_menu
 					mouse_right_button_down := False
@@ -380,7 +398,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			l_shortcuts: like matching_customizable_commands
 		do
 			l_shortcuts := matching_customizable_commands (ev_key.code, False, alt_key, shifted_key)
-			if not l_shortcuts.is_empty then
+				--| Fixme: When l_shortcuts is not empty, l_short_cuts.first can be void.
+			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
 				l_shortcuts.first.apply
 				check_cursor_position
 			else
@@ -394,7 +413,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			l_shortcuts: like matching_customizable_commands
 		do
 			l_shortcuts := matching_customizable_commands (ev_key.code, True, alt_key, shifted_key)
-			if not l_shortcuts.is_empty then
+				--| Fixme: When l_shortcuts is not empty, l_short_cuts.first can be void.
+			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
 				l_shortcuts.first.apply
 				check_cursor_position
 			else

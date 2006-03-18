@@ -15,11 +15,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_EDITOR_FONT
-		rename
-			line_height as height
-		end
-
 	SHARED_EDITOR_DATA
 
 feature -- Access
@@ -184,6 +179,12 @@ feature -- Width & height
 		deferred
 		end
 
+	height: INTEGER is
+			--
+		do
+			Result := editor_preferences.line_height
+		end
+
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
@@ -208,35 +209,96 @@ feature -- Width & height
 		do
 		end
 
-feature {EDITOR_TOKEN} -- Properties used to display the token
+feature -- Color
 
 	text_color: EV_COLOR is
 		do
-			Result := editor_preferences.normal_text_color
+			Result := editor_preferences.color_of_id (text_color_id)
 		end
 
 	background_color: EV_COLOR is
 		do
-			if is_highlighted then
-				Result := editor_preferences.highlight_color
-			else
-				Result := editor_preferences.normal_background_color
-			end
+			Result := editor_preferences.color_of_id (background_color_id)
 		end
 
 	selected_text_color: EV_COLOR is
 		do
-			Result := editor_preferences.selection_text_color
+			Result := editor_preferences.color_of_id (selected_text_color_id)
 		end
 
 	selected_background_color: EV_COLOR is
 		do
-			Result := editor_preferences.selection_background_color
+			Result := editor_preferences.color_of_id (selected_background_color_id)
 		end
 
 	focus_out_selected_background_color: EV_COLOR is
 		do
-			Result := editor_preferences.focus_out_selection_background_color
+			Result := editor_preferences.color_of_id (focus_out_selected_background_color_id)
+		end
+
+feature -- Color ids
+
+	text_color_id: INTEGER is
+		do
+			Result := editor_preferences.normal_text_color_id
+		end
+
+	background_color_id: INTEGER is
+		do
+			if is_highlighted then
+				Result := editor_preferences.highlight_color_id
+			else
+				Result := editor_preferences.normal_background_color_id
+			end
+		end
+
+	selected_text_color_id: INTEGER is
+		do
+			Result := editor_preferences.selection_text_color_id
+		end
+
+	selected_background_color_id: INTEGER is
+		do
+			Result := editor_preferences.selection_background_color_id
+		end
+
+	focus_out_selected_background_color_id: INTEGER is
+		do
+			Result := editor_preferences.focus_out_selection_background_color_id
+		end
+
+feature -- Font
+
+	font: EV_FONT is
+			-- Font of current.
+		do
+			Result := editor_preferences.font_of_id (font_id)
+		end
+
+	font_offset: INTEGER is
+			-- Number of pixels from top of line to beginning of drawing operation
+		do
+			Result := editor_preferences.font_offset
+		end
+
+	font_id: INTEGER is
+			-- Font id.
+		do
+			Result := editor_preferences.editor_font_id
+		end
+
+	font_width: INTEGER is
+			-- Width of character in the editor.
+		require
+			is_fixed_width: is_fixed_width
+		do
+			Result := editor_preferences.font_width
+		end
+
+	is_fixed_width: BOOLEAN is
+			-- Is `font' a fixed-width font?
+		do
+			Result := editor_preferences.is_fixed_width
 		end
 
 feature -- Implementation of clickable and editable text

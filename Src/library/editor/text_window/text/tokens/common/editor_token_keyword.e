@@ -12,9 +12,9 @@ class
 inherit
 	EDITOR_TOKEN_TEXT
 		redefine
-			text_color,
-			background_color,
-			font,
+			text_color_id,
+			background_color_id,
+			font_id,
 			process
 		end
 
@@ -29,26 +29,26 @@ feature -- Visitor
 			a_visitor.process_editor_token_keyword (Current)
 		end
 
-feature {NONE} -- Implementation
+feature -- Color and font
 
-	text_color: EV_COLOR is
+	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.keyword_text_color
+			Result := editor_preferences.keyword_text_color_id
 		end
 
-	background_color: EV_COLOR is
+	background_color_id: INTEGER is
 		do
 			if is_highlighted then
-				Result := editor_preferences.highlight_color
+				Result := editor_preferences.highlight_color_id
 			else
-				Result := editor_preferences.keyword_background_color
+				Result := editor_preferences.keyword_background_color_id
 			end
 		end
 
-	font: EV_FONT is
+	font_id: INTEGER is
 			-- Font used in the editor
 		do
-			Result := keyword_font_cell.item.value
+			Result := editor_preferences.keyword_font_id
 		end
 
 indexing

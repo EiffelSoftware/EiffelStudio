@@ -12,7 +12,8 @@ class
 inherit
 	EDITOR_TOKEN
 		redefine
-			text_color,
+			text_color_id,
+			background_color_id,
 			background_color,
 			process
 		end
@@ -155,11 +156,11 @@ feature {NONE} -- Implementation
  			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Color
 
-	text_color: EV_COLOR is
+	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.spaces_text_color
+			Result := editor_preferences.spaces_text_color_id
 		end
 
 	background_color: EV_COLOR is
@@ -167,6 +168,12 @@ feature {NONE} -- Implementation
 				-- There is no background for this symbol.
 			Result := Void
 		end
+
+	background_color_id: INTEGER is
+		do
+			Result := 0
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

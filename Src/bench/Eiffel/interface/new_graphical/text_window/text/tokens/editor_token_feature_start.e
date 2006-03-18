@@ -13,7 +13,7 @@ inherit
 	EDITOR_TOKEN_FEATURE
 		redefine
 			is_feature_start,
-			text_color,
+			text_color_id,
 			process
 		end
 
@@ -24,18 +24,20 @@ feature -- Access
 
 	feature_index_in_table: INTEGER
 
-	text_color: EV_COLOR is
-			-- Color of text. Normal text color by default.
-		do
-			if text_color_internal = Void  then
-				text_color_internal := editor_preferences.normal_text_color
-			end
-			Result := text_color_internal
-		end
-
 feature -- Status report
 
 	is_feature_start: BOOLEAN is True
+
+feature -- Color
+
+	text_color_id: INTEGER is
+		do
+			if text_color_id_internal = 0 then
+				Result := editor_preferences.normal_text_color_id
+			else
+				Result := text_color_id_internal
+			end
+		end
 
 feature -- Element change
 
@@ -47,19 +49,19 @@ feature -- Element change
 	set_text_color_feature is
 			-- Set text color with normal color.
 		do
-			text_color_internal := editor_preferences.feature_text_color
+			text_color_id_internal := editor_preferences.feature_text_color_id
 		end
 
 	set_text_color_normal is
 			-- Set text color with feature text color
 		do
-			text_color_internal := editor_preferences.normal_text_color
+			text_color_id_internal := editor_preferences.normal_text_color_id
 		end
 
 	set_text_color_operator is
 			-- Set text color with operator color
 		do
-			text_color_internal := editor_preferences.operator_text_color
+			text_color_id_internal := editor_preferences.operator_text_color_id
 		end
 
 feature -- Visitor
@@ -72,7 +74,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	text_color_internal: EV_COLOR;
+	text_color_id_internal: INTEGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

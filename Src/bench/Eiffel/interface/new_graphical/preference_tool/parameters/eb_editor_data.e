@@ -11,10 +11,14 @@ class
 
 inherit
 	EDITOR_DATA
+		undefine
+			max_color_id
 		redefine
 			make,
 			initialize_preferences,
-			update
+			update,
+			init_colors,
+			init_fonts
 		end
 
 	EB_SHARED_MANAGERS
@@ -23,6 +27,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_EDITOR_TOKEN_IDS
 
 create
 	make
@@ -375,11 +381,48 @@ feature {NONE} -- Preference Strings
 	customized_string_3_string: STRING is "editor.eiffel.customized_string_3"
 			-- strings defined by the user.
 
+feature {NONE} -- Init colors and fonts.
+
+	init_colors is
+			--
+		do
+			Precursor
+			colors.put (breakpoint_background_color_preference.value, breakpoint_background_color_id)
+			colors.put (assertion_tag_text_color_preference.value, assertion_tag_text_color_id)
+			colors.put (assertion_tag_background_color_preference.value, assertion_tag_background_color_id)
+			colors.put (indexing_tag_text_color_preference.value, indexing_tag_text_color_id)
+			colors.put (indexing_tag_background_color_preference.value, indexing_tag_background_color_id)
+			colors.put (reserved_text_color_preference.value, reserved_text_color_id)
+			colors.put (reserved_background_color_preference.value, reserved_background_color_id)
+			colors.put (generic_text_color_preference.value, generic_text_color_id)
+			colors.put (generic_background_color_preference.value, generic_background_color_id)
+			colors.put (local_text_color_preference.value, local_text_color_id)
+			colors.put (local_background_color_preference.value, local_background_color_id)
+			colors.put (class_text_color_preference.value, class_text_color_id)
+			colors.put (class_background_color_preference.value, class_background_color_id)
+			colors.put (feature_text_color_preference.value, feature_text_color_id)
+			colors.put (feature_background_color_preference.value, feature_background_color_id)
+			colors.put (cluster_text_color_preference.value, cluster_text_color_id)
+			colors.put (cluster_background_color_preference.value, cluster_background_color_id)
+			colors.put (error_text_color_preference.value, error_text_color_id)
+			colors.put (error_background_color_preference.value, error_background_color_id)
+			colors.put (object_text_color_preference.value, object_text_color_id)
+			colors.put (object_background_color_preference.value, object_background_color_id)
+		end
+
+	init_fonts is
+			--
+		do
+			Precursor
+		end
+
+
 feature -- Update
 
 	update is
 			-- The preferences have changed.
 		do
+			init_colors
 			window_manager.quick_refresh_all_editors
 		end
 

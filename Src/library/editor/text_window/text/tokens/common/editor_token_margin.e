@@ -12,7 +12,7 @@ deferred class
 inherit
 	EDITOR_TOKEN
 		redefine
-			background_color,
+			background_color_id,
 			is_margin_token
 		end
 
@@ -23,16 +23,24 @@ feature -- Access
 
 feature -- Miscellaneous
 
-	background_color: EV_COLOR is
-			-- Background color
-		do
-			Result := editor_preferences.margin_background_color
-		end
-		
 	separator_color: EV_COLOR is
 			-- Color of separator between margin and editor
 		do
-			Result := editor_preferences.margin_separator_color
+			Result := editor_preferences.color_of_id (separator_color_id)
+		end
+
+feature -- Color ids
+
+	background_color_id: INTEGER is
+			-- Background color
+		do
+			Result := editor_preferences.margin_background_color_id
+		end
+
+	separator_color_id: INTEGER is
+			-- Color of separator between margin and editor
+		do
+			Result := editor_preferences.margin_separator_color_id
 		end
 
 feature -- Status Setting
@@ -45,7 +53,7 @@ feature -- Status Setting
 			internal_image := a_image
 		ensure
 			image_set: internal_image = a_image
-		end	
+		end
 
 feature {NONE} -- Implementation
 

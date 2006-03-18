@@ -14,7 +14,7 @@ inherit
 		redefine
 			update_position,
 			update_width,
-			text_color
+			text_color_id
 		end
 
 	DOUBLE_MATH
@@ -128,7 +128,7 @@ feature -- Visitor
 			a_visitor.process_editor_token_line_number (Current)
 		end
 
-feature {MARGIN_WIDGET} -- Implementation
+feature {MARGIN_WIDGET, PRINTER_TOKEN_VISITOR} -- Implementation
 
 	update_width is
 			-- Update value of `width'
@@ -136,10 +136,10 @@ feature {MARGIN_WIDGET} -- Implementation
 			width := get_substring_width (internal_image.count) + 1 + separator_width
 		end
 
-	text_color: EV_COLOR is
+	text_color_id: INTEGER is
 			-- Color of text
 		do
-			Result := editor_preferences.line_number_text_color
+			Result := editor_preferences.line_number_text_color_id
 		end
 
 	gray_text_color: EV_COLOR is

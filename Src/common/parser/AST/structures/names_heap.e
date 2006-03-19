@@ -16,10 +16,10 @@ class
 
 inherit
 	PREDEFINED_NAMES
-		
+
 create {SYSTEM_I, SHARED_NAMES_HEAP}
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create lookup_table.make (Chunk)
 			initialize_constants
 		end
-		
+
 feature -- Access
 
 	item (i: INTEGER): STRING is
@@ -157,10 +157,10 @@ feature {NONE} -- Implementation: access
 			-- Hash-table indexed by string names
 			-- Values are indexes of Current to access corresponding
 			-- key in an efficient manner.
-			
+
 	top_index: INTEGER
 			-- Number of elements in Current
-	
+
 	Chunk: INTEGER is 500
 			-- Default chunk size.
 
@@ -310,14 +310,17 @@ feature {NONE} -- Implementation: access
 			put ("overlapping_move") check found_item = overlapping_move_name_id end
 			put ("non_overlapping_move") check found_item = non_overlapping_move_name_id end
 			put ("[]") check found_item = bracket_symbol_id end
+			put ("to_character_8") check found_item = to_character_8_name_id end
+			put ("to_character_32") check found_item = to_character_32_name_id end
+
 		end
-		
+
 invariant
 	area_not_void: area /= Void
 	lookup_table_not_void: lookup_table /= Void
 	top_index_positive: top_index >= 0
 	found_item_positive: found_item >= 0
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

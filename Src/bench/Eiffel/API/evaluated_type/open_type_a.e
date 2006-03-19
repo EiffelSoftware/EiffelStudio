@@ -20,7 +20,6 @@ inherit
 			type_i,
 			good_generics,
 			conform_to,
-			instantiation_in,
 			format
 		end
 
@@ -107,13 +106,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 		end
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
-
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in `written_id'
-		do
-			Result := Current
-		end
 
 	create_info: CREATE_INFO is
 			-- Byte code information for entity type creation

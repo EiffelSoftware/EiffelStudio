@@ -20,6 +20,15 @@ inherit
 			is_precursor
 		end
 
+	ID_SET_ACCESSOR
+		rename
+			make as make_id_set,
+			id_set as routine_ids,
+			set_id_set as set_routine_ids
+		undefine
+			copy, is_equal
+		end
+
 create
 	initialize
 
@@ -90,6 +99,9 @@ feature -- Attributes
 	is_precursor: BOOLEAN is True
 			-- Precursor makes reference to a class
 
+	class_id: INTEGER
+			-- Class ID where Current is coming from.
+
 feature -- Roundtrip
 
 	internal_parameters: PARAMETER_LIST_AS
@@ -130,6 +142,18 @@ feature -- Comparison
 		do
 			Result := equivalent (parent_base_class, other.parent_base_class) and
 				equivalent (parameters, other.parameters)
+		end
+
+feature -- Setting
+
+	set_class_id (a_class_id: like class_id) is
+			-- Set `class_id' to `a_class_id'.
+		require
+			a_class_id_ok: a_class_id > 0 or a_class_id = -1
+		do
+			class_id := a_class_id
+		ensure
+			class_id_set: class_id = a_class_id
 		end
 
 invariant

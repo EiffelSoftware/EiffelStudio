@@ -217,7 +217,8 @@ feature -- Setting
 invariant
 	not_local_and_argument_and_tuple_access: is_local and (not is_argument and not is_tuple_access) or
 		is_argument and (not is_local and not is_tuple_access) or
-		is_tuple_access and (not is_local and not is_argument)
+		is_tuple_access and (not is_local and not is_argument) or
+		not is_local and not is_argument and not is_tuple_access
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

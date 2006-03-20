@@ -190,8 +190,6 @@ feature -- Control
 			prc_ftry: PROCESS_FACTORY
 			ee: EXECUTION_ENVIRONMENT
 			dir: STRING
-			err_thread: PROCESS_ERROR_LISTENER_THREAD
-			out_thread: PROCESS_OUTPUT_LISTENER_THREAD
 			prc_imp: PROCESS_IMP
 			pt: PROCESS_TIMER
 		do
@@ -204,8 +202,6 @@ feature -- Control
 
 			prc.redirect_input_to_stream
 			prc_imp ?= prc
-			create err_thread.make (prc_imp)
-			create out_thread.make (prc_imp)
 			if redirection_needed then
 				prc.redirect_input_to_stream
 				prc.redirect_output_to_agent (output_handler)
@@ -229,6 +225,7 @@ feature -- Control
 			else
 				pt := create {PROCESS_THREAD_TIMER}.make (time_interval)
 			end
+			prc.enable_terminal_control
 			prc.set_timer (pt)
 			prc.set_abort_termination_when_failed (False)
 			prc.set_on_start_handler (on_start_handler)

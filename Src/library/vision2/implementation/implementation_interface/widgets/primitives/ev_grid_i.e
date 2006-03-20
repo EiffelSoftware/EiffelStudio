@@ -1071,7 +1071,7 @@ feature -- Status setting
 				displayed_column_count := displayed_column_count + 1
 
 					-- Now show the header.
-				header.go_i_th (previous_visible_header_item_from_index (a_col_i.index))
+				header.go_i_th (previous_header_item_index_from_column_index (a_col_i.index))
 				header.put_right (a_col_i.header_item)
 
 				set_horizontal_computation_required (a_column)
@@ -2809,8 +2809,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			result_count_equals_column_count: Result.count = column_count
 		end
 
-	previous_visible_header_item_from_index (a_index: INTEGER): INTEGER is
-			-- Return the visible header item index of the previous visible column from index `a_index'.
+	previous_header_item_index_from_column_index (a_index: INTEGER): INTEGER is
+			-- Return the header item index of the previous visible column from column index `a_index'.
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count
 		local
@@ -3409,20 +3409,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			else
 				drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
 			end
-			redraw_locked
-		end
-
-	redraw_from_row_to_end (a_row: EV_GRID_ROW_I) is
-			-- Redraw client area from `virtual_y_position' of `a_row' down to the bottom of the client
-			-- area (As virtual position of a row is at its top, `a_row' is invalidated).
-			-- Complete width of client area is invalidated.
-		require
-			a_row_not_void: a_row /= Void
-		local
-			row_virtual_y_position: INTEGER
-		do
-			row_virtual_y_position := a_row.virtual_y_position
-			drawable.redraw_rectangle (viewport_x_offset, row_virtual_y_position - (internal_client_y - viewport_y_offset), viewable_width, viewable_height + internal_client_y - row_virtual_y_position)
 			redraw_locked
 		end
 
@@ -4039,6 +4025,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header.set_minimum_width (maximum_header_width)
 			header_viewport.set_item_size (maximum_header_width, header.height)
 			create fixed
+			fixed.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
 			viewport.extend (fixed)
 			fixed.extend (drawable)
 			extend (horizontal_box)
@@ -4737,22 +4724,49 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		local
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
+			tooltip_drawable: EV_DRAWING_AREA
+			l_item: EV_GRID_ITEM_I
 		do
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
-				-- Now handle the tooltips for items.
-			if pointed_item /= Void and then pointed_item.tooltip /= Void and then not drawable.tooltip.is_equal (pointed_item.tooltip) then
-				drawable.set_tooltip (pointed_item.tooltip)
+			-- Calculate which drawable is the one to which we should apply the tooltip.
+
+			if pointed_item /= Void then
+				l_item := pointed_item
+			else
+				l_item := last_pointed_item
+			 end
+
+			if l_item /= Void then
+				if l_item.column_i.is_locked then
+					tooltip_drawable := l_item.column_i.locked_column.drawing_area
+				elseif l_item.row_i.is_locked then
+					tooltip_drawable := l_item.row_i.locked_row.drawing_area
+				else
+					tooltip_drawable := drawable
+				end
+			else
+				tooltip_drawable := drawable
+			end
+
+			-- Now handle the tooltips for items.
+
+			if
+				pointed_item /= Void and then
+				pointed_item.tooltip /= Void and then
+				not tooltip_drawable.tooltip.is_equal (pointed_item.tooltip)
+			then
+				tooltip_drawable.set_tooltip (pointed_item.tooltip)
 			elseif pointed_item = Void or else pointed_item /= Void and then pointed_item.tooltip = Void then
-				if tooltip.is_empty and not drawable.tooltip.is_empty then
+				if tooltip.is_empty and not tooltip_drawable.tooltip.is_empty then
 						-- There is no tooltip at the item or grid level, but there
 						-- is still a tooltip set, so remove the tooltip.
-					drawable.remove_tooltip
-				elseif (not drawable.tooltip.is_equal (tooltip)) then
-						-- Reset the tooltip back to the one of the grid, only
-						-- if not already equal.
-					drawable.set_tooltip (tooltip)
+					tooltip_drawable.remove_tooltip
+				elseif (not tooltip_drawable.tooltip.is_equal (tooltip)) then
+ 						-- Reset the tooltip back to the one of the grid, only
+ 						-- if not already equal.
+					tooltip_drawable.set_tooltip (tooltip)
 				end
 			end
 

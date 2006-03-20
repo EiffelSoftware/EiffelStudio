@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make_with_name (a_name: STRING) is
 			-- Create current
 		do
-			name := a_name
+			set_name (a_name)
 		end
 
 feature -- change
@@ -72,9 +72,9 @@ feature -- Access
 	display_message: STRING is
 			-- Computed information message to display in object tool
 		do
-			Result := tag
+			Result := message
 			if Result = Void then
-				Result := "Exception occurred"
+				Result := display_tag
 			end
 		end
 

@@ -33,7 +33,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_UNIT_CONVERSION
 		rename
 			vertical_resolution as sceeen_vertical_resolution,
@@ -67,7 +67,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 				-- Create and setup the preferred font face mechanism
 			create preferred_families
 			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
-			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
@@ -101,7 +101,7 @@ feature -- Access
 		do
 			Result := wel_font.height
 		end
-		
+
 	height_in_points: INTEGER is
 			-- Preferred font height measured in points.
 		do
@@ -173,16 +173,16 @@ feature -- Element change
 			-- Set `a_height' as preferred font size in pixels.
 		do
 			wel_font.set_height (a_height)
-			Wel_log_font.update_by_font (wel_font) 
+			Wel_log_font.update_by_font (wel_font)
 		end
-		
+
 	set_height_in_points (a_height: INTEGER) is
 			-- Set `a_height_in_points' to `a_height'.
 		do
 			wel_font.set_height_in_points (a_height)
 			wel_log_font.update_by_font (wel_font)
 		end
-		
+
 	copy_font (font: EV_FONT) is
 			-- Update `Current' with all attributes of `other'.
 			-- Redefined on Windows as certain properties of fonts
@@ -199,7 +199,7 @@ feature -- Element change
 			log_font := font_imp.wel_font.log_font
 			create new_wel_font.make_indirect (log_font)
 			set_by_wel_font (new_wel_font)
-			
+
 				-- Dispose of `log_font' as it is only required
 				-- temporarily to create the WEL_FONT.
 			log_font.dispose
@@ -215,14 +215,14 @@ feature -- Status report
 
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the top of the drawn character. 
+			-- operation to the top of the drawn character.
 		do
 			Result := text_metrics.ascent
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the bottom of the drawn character. 
+			-- operation to the bottom of the drawn character.
 		do
 			Result := text_metrics.descent
 		end
@@ -284,7 +284,7 @@ feature -- Status report
 		do
 			Result := internal_is_proportional
 		end
- 
+
 feature {EV_ANY_I} -- Access
 
 	wel_font: WEL_FONT
@@ -318,7 +318,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Structure used to initialize fonts.
 		once
 			create Result.make_by_font (gui_font)
-				
+
 				-- set the WEL family associated to Vision2 Screen fonts.
 			wel_screen_font_family := Result.family
 			wel_screen_font_pitch := Result.pitch
@@ -365,12 +365,12 @@ feature {EV_ANY_I} -- Implementation
 				Wel_log_font.set_variable_pitch
 
 			when family_typewriter then
-				Wel_log_font.set_modern_family
+				Wel_log_font.set_script_family
 				Wel_log_font.set_fixed_pitch
 
 			when family_modern then
 				Wel_log_font.set_modern_family
-				Wel_log_font.set_variable_pitch
+				Wel_log_font.set_fixed_pitch
 			else
 				check impossible: False end
 			end
@@ -405,7 +405,7 @@ feature {EV_ANY_I} -- Implementation
 
 				-- retrieve values set by windows
 			Wel_log_font.update_by_font (wel_font)
-			
+
 			if found then
 					-- `Current' may not always have the char set correctly set when created by passing a preferred family.
 					-- To determine the actual char set from the face name, we must select the font into a DC,
@@ -415,7 +415,7 @@ feature {EV_ANY_I} -- Implementation
 				create text_metric.make (dc)
 				wel_log_font.set_char_set (text_metric.character_set)
 				dc.unselect_all
-				dc.release		
+				dc.release
 				create wel_font.make_indirect (wel_log_font)
 					-- retrieve values set by windows
 				Wel_log_font.update_by_font (wel_font)
@@ -460,10 +460,10 @@ feature {EV_ANY_I} -- Implementation
 		-- Is the font proportional? (or fixed).
 
 	update_internal_is_proportional(logfont: Wel_log_font) is
-		do	
+		do
 			if logfont.pitch = Default_pitch then
 				internal_is_proportional := not (logfont.family = Ff_modern)
-						
+
 			elseif logfont.pitch = Fixed_pitch then
 				internal_is_proportional := False
 
@@ -539,11 +539,9 @@ feature {EV_ANY_I} -- Implementation
 			elseif wel_family = Ff_swiss then
 				Result := family_sans
 			elseif wel_family = Ff_modern then
-				if wel_pitch = Variable_pitch then
-					Result := family_modern
-				else
-					Result := family_typewriter
-				end
+				Result := family_modern
+			elseif wel_family = Ff_script then
+				Result := family_typewriter
 			else
 					-- none of the above match, so we take
 					-- an arbitrary family
@@ -652,7 +650,7 @@ feature {NONE} -- Not used
 		do
 			if an_escapement /= Void and an_escapement.is_integer then
 				Wel_log_font.set_escapement (an_escapement.to_integer)
-			else	
+			else
 				Wel_log_font.set_escapement (0)
 			end
 		end

@@ -1502,7 +1502,7 @@ feature{NONE} -- Implementation
 	state_message_waiting_count: INTEGER
 			-- Times that we have been waiting for displaying a c compilation message.
 
-	max_waiting_count: INTEGER is 100;
+	max_waiting_count: INTEGER is 30;
 			-- Max value of `state_message_waiting_count'
 
 indexing

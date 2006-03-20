@@ -64,6 +64,7 @@ feature -- Parser type setting
 		ensure
 			il_parser: il_parser
 			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
 		end
 
 	set_type_parser is
@@ -75,6 +76,7 @@ feature -- Parser type setting
 		ensure
 			type_parser: type_parser
 			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
 		end
 
 	set_expression_parser is
@@ -86,6 +88,19 @@ feature -- Parser type setting
 		ensure
 			expression_parser: expression_parser
 			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
+		end
+		
+	set_feature_parser is
+			-- Create a new Eiffel feature parser.
+		require
+			parsing_type_not_set: not has_parsing_type
+		do
+			feature_parser := True
+		ensure
+			feature_parser: feature_parser
+			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
 		end
 
 	set_indexing_parser is
@@ -97,6 +112,19 @@ feature -- Parser type setting
 		ensure
 			indexing_parser: indexing_parser
 			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
+		end
+		
+	set_invariant_parser is
+			-- Create a new Eiffel invariant clause parser.
+		require
+			parsing_type_not_set: not has_parsing_type
+		do
+			invariant_parser := True
+		ensure
+			invariant_parser: invariant_parser
+			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
 		end
 
 	set_entity_declaration_parser is
@@ -108,15 +136,25 @@ feature -- Parser type setting
 		ensure
 			entity_declaration_parser: entity_declaration_parser
 			parsing_type_set: has_parsing_type
+			single_parser_type: single_parser_type
 		end
 
-feature -- STatus report
+feature -- Status report
+
+	single_parser_type: BOOLEAN is
+			-- Is single entity parser?
+		do
+			Result := il_parser xor type_parser xor expression_parser xor
+				indexing_parser xor entity_declaration_parser xor invariant_parser xor
+				feature_parser
+		end
 
 	has_parsing_type: BOOLEAN is
 			-- Has parsing type been specified?
 		do
 			Result := il_parser or type_parser or expression_parser or
-				indexing_parser or entity_declaration_parser
+				indexing_parser or entity_declaration_parser or invariant_parser or
+				feature_parser
 		end
 
 feature -- Initialization
@@ -145,9 +183,15 @@ feature -- Status report
 
 	expression_parser: BOOLEAN
 			-- Is current Eiffel parser an expression parser ?
+			
+	feature_parser: BOOLEAN
+			-- Feature parser
 
 	indexing_parser: BOOLEAN
 			-- Is current Eiffel parser an indexing clause parser ?
+			
+	invariant_parser: BOOLEAN
+			-- Is current Eiffel parser an invariant clause parser ?
 
 	entity_declaration_parser: BOOLEAN
 			-- Is current Eiffel parser a entity declaration parser ?
@@ -207,8 +251,14 @@ feature -- Access: result nodes
 	expression_node: EXPR_AS
 			-- Expression node of AST
 
+	feature_node: FEATURE_AS
+			-- Feature node of AST
+			
 	indexing_node: INDEXING_CLAUSE_AS
 			-- Indexing clause node of AST
+
+	invariant_node: INVARIANT_AS
+			-- Invariant node of AST
 
 	entity_declaration_node: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Local clause node of AST

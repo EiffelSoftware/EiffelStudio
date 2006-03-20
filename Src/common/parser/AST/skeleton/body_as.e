@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: like indexing_clause) is
 			-- Create a new BODY AST node.
 		do
-			internal_arguments := a
+			set_arguments (a)
 			type := t
 			assigner := r
 			content := c
@@ -61,19 +61,8 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS] is
+	arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			-- List (of list) of arguments
-		do
-			if
-				internal_arguments = Void or else
-				internal_arguments.arguments = Void or else
-				internal_arguments.arguments.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_arguments.arguments
-			end
-		end
 
 	type: TYPE_AS
 			-- Type if any
@@ -309,8 +298,17 @@ feature -- New feature description
 feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 
 	set_arguments (a: like internal_arguments) is
+			-- Set `internal_arguments' with `a'.
+		local
+			l_internal_arguments: like internal_arguments
 		do
 			internal_arguments := a
+			l_internal_arguments := a
+			if l_internal_arguments /= Void then
+				arguments := l_internal_arguments.meaningful_content
+			end
+		ensure
+			internal_arguments_set: internal_arguments = a
 		end
 
 	set_type (t: like type) is
@@ -322,6 +320,10 @@ feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 		do
 			content := c
 		end
+
+invariant
+	arguments_correct: (internal_arguments /= Void implies arguments = internal_arguments.meaningful_content) and
+	   				   (internal_arguments = Void implies arguments = Void)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

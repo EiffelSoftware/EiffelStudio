@@ -82,14 +82,23 @@ feature -- Roundtrip
 	token_buffer2: STRING
 			-- Buffer for verbatim string tokens
 
-	l_verbatim_start_position: INTEGER
+	verbatim_start_position: INTEGER
 			-- Start position of verbatim string being scanned
 
-	l_string_start_position: INTEGER
+	string_start_position: INTEGER
 			-- Start position of regular string being scanned	
 
 	last_keyword_as_id_index: INTEGER
 			-- Last index in `match_list' for keywords that can be used as identifier
+
+	last_break_as_start_line: INTEGER
+			-- Start line of last BREAK_AS node
+
+	last_break_as_start_column: INTEGER
+			-- Start column of last BREAK_AS node
+
+	last_break_as_start_position: INTEGER
+			-- Start position of last BREAK_AS node
 
 feature -- Access
 

@@ -8,11 +8,9 @@ class
 	REDEFINE_CLAUSE_AS
 
 inherit
-	INHERIT_CLAUSE_AS
+	INHERIT_CLAUSE_AS [EIFFEL_LIST [FEATURE_NAME]]
 		rename
 			clause_keyword as redefine_keyword
-		redefine
-			content
 		end
 
 create
@@ -25,10 +23,5 @@ feature -- Visitor
 		do
 			v.process_redefine_clause_as (Current)
 		end
-
-feature -- Clause content
-
-	content: EIFFEL_LIST [FEATURE_NAME]
-			-- Content of Current redefine clause
 
 end

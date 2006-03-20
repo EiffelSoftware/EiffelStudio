@@ -369,7 +369,7 @@ feature{NONE} -- Implementation
 	inherit_clause_modifier: ARRAYED_LIST [ERT_BASIC_EIFFEL_LIST_MODIFIER]
 			-- List of inherit clauses modifiers
 
-	inherit_clause: ARRAYED_LIST [INHERIT_CLAUSE_AS]
+	inherit_clause: ARRAYED_LIST [INHERIT_CLAUSE_AS [EIFFEL_LIST [AST_EIFFEL]]]
 			-- List of inherit clauses
 
 feature{NONE} -- Implementation

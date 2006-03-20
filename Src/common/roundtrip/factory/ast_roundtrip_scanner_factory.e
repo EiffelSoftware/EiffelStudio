@@ -39,9 +39,35 @@ inherit
 			new_symbol_as,
 			new_square_symbol_as,
 			create_break_as,
-			create_break_as_with_data
+			create_break_as_with_data,
+
+			set_buffer,
+			append_text_to_buffer,
+			append_string_to_buffer
 		end
 
+feature -- Buffer operation
+
+	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
+		do
+			a_buf.clear_all
+			a_buf.append (a_scn.text)
+		ensure then
+			a_buf_set: a_buf.is_equal (a_scn.text)
+		end
+
+	append_text_to_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
+			-- Append `a_scn'.text to end of buffer `a_buf'.
+		do
+			a_scn.append_text_to_string (a_buf)
+		end
+
+	append_string_to_buffer (a_buf: STRING; a_str: STRING) is
+			-- Append `a_str' to end of buffer `a_buf'.
+		do
+			a_buf.append (a_str)
+		end
+		
 feature -- Match list maintainning
 
 	create_match_list (l_size: INTEGER) is

@@ -22,8 +22,14 @@ feature {NONE} -- Initialization
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
+		local
+			l_internal_keys: like internal_keys
 		do
 			internal_keys := k
+			l_internal_keys := internal_keys
+			if l_internal_keys /= Void then
+				keys := l_internal_keys.meaningful_content
+			end
 			compound := c
 			end_keyword := e
 			debug_keyword := d_as
@@ -31,7 +37,7 @@ feature {NONE} -- Initialization
 			internal_keys_set: internal_keys = k
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
-			ddebug_keyword_set: debug_keyword = d_as
+			debug_keyword_set: debug_keyword = d_as
 		end
 
 feature -- Visitor
@@ -52,19 +58,8 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS] is
+	keys: EIFFEL_LIST [STRING_AS]
 			-- Debug keys
-		do
-			if
-				internal_keys = Void or else
-				internal_keys.keys = Void or else
-				internal_keys.keys.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_keys.keys
-			end
-		end
 
 	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
@@ -117,6 +112,8 @@ feature -- Comparison
 
 invariant
 	end_keyword_not_void: end_keyword /= Void
+	keys_correct: (internal_keys /= Void implies keys = internal_keys.meaningful_content) and
+				  (internal_keys = Void implies keys = Void)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

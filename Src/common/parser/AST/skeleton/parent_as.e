@@ -1,5 +1,4 @@
 indexing
-
 	description: "Abstract description of a parent. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,11 +25,11 @@ feature {NONE} -- Initialization
 			t_not_void: t /= Void
 		do
 			type := t
-			internal_renaming := rn
-			internal_exports := e
-			internal_undefining := u
-			internal_redefining := rd
-			internal_selecting := s
+			set_internal_renaming (rn)
+			set_internal_exports (e)
+			set_internal_undefining (u)
+			set_internal_redefining (rd)
+			set_internal_selecting (s)
 			end_keyword := ek
 		ensure
 			type_set: type = t
@@ -55,101 +54,20 @@ feature -- Attributes
 	type: CLASS_TYPE_AS
 			-- Parent type
 
-	renaming: EIFFEL_LIST [RENAME_AS] is
+	renaming: EIFFEL_LIST [RENAME_AS]
 			-- Rename clause
-		do
-			if
-				internal_renaming = Void or else
-				internal_renaming.content = Void or else
-				internal_renaming.content.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_renaming.content
-			end
-		end
 
-	exports: EIFFEL_LIST [EXPORT_ITEM_AS] is
+	exports: EIFFEL_LIST [EXPORT_ITEM_AS]
 			-- Exports for parent
-		local
-			l_index: INTEGER
-		do
-			if
-				internal_exports = Void or else
-				internal_exports.content = Void or else
-				internal_exports.content.is_empty
-			then
-				Result := Void
-			else
-					--| This is to make sure roundtrip parser work correctly
-					--| for code like:
-					--| 	export
-					--|        {ANY}  -- No features here.
-					--|     end
-				if non_empty_exports = Void then
-					create non_empty_exports.make (internal_exports.content.count)
-					l_index := internal_exports.content.index
-					from
-						internal_exports.content.start
-					until
-						internal_exports.content.after
-					loop
-						if internal_exports.content.item.features /= Void then
-							non_empty_exports.extend (internal_exports.content.item)
-						end
-						internal_exports.content.forth
-					end
-					internal_exports.content.go_i_th (l_index)
-				end
-				if non_empty_exports.is_empty then
-					Result := Void
-				else
-					Result := non_empty_exports
-				end
-			end
-		end
 
-	redefining: EIFFEL_LIST [FEATURE_NAME] is
+	redefining: EIFFEL_LIST [FEATURE_NAME]
 			-- Redefining clause
-		do
-			if
-				internal_redefining = Void or else
-			   	internal_redefining.content = Void or else
-			   	internal_redefining.content.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_redefining.content
-			end
-		end
 
-	undefining: EIFFEL_LIST [FEATURE_NAME] is
+	undefining: EIFFEL_LIST [FEATURE_NAME]
 			-- Undefine clause
-		do
-			if
-				internal_undefining = Void or else
-			   	internal_undefining.content = Void or else
-			   	internal_undefining.content.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_undefining.content
-			end
-		end
 
-	selecting: EIFFEL_LIST [FEATURE_NAME] is
+	selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
-		do
-			if
-				internal_selecting = Void or else
-			   	internal_selecting.content = Void or else
-			   	internal_selecting.content.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_selecting.content
-			end
-		end
 
 	end_keyword: KEYWORD_AS
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
@@ -171,9 +89,6 @@ feature -- Roundtrip
 
 	internal_selecting: SELECT_CLAUSE_AS
 			-- Internal select clause
-
-	non_empty_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
-			-- List of EXPORT_ITEM_AS whose `features' are not empty.
 
 feature -- Roundtrip/Token
 
@@ -215,6 +130,87 @@ feature -- Status report
 			Result := undefining /= Void and then not undefining.is_empty
 				and then redefining /= Void and then not redefining.is_empty
 		end
+
+feature{NONE} -- Implementation
+
+	set_internal_renaming (a_renaming: like internal_renaming) is
+			-- Set `internal_renaming' with `a_renaming' and set `renaming' accordingly.
+		do
+			internal_renaming := a_renaming
+			if internal_renaming /= Void then
+				renaming := internal_renaming.meaningful_content
+			else
+				renaming := Void
+			end
+		ensure
+			internal_renaming_set: internal_renaming = a_renaming
+		end
+
+	set_internal_exports (a_exports: like internal_exports) is
+			-- Set `internal_exports' with `a_exports' and set `exports' accordingly.
+		local
+			l_internal_exporting: like internal_exports
+			l_exports: like exports
+		do
+			internal_exports := a_exports
+			if internal_exports /= Void then
+				exports := internal_exports.meaningful_content
+			else
+				exports := Void
+			end
+		ensure
+			internal_exports_set: internal_exports = a_exports
+
+		end
+
+	set_internal_undefining (a_undefining: like internal_undefining) is
+			-- Set `internal_undefining' with `a_undefining' and set `undefining' accordingly.
+		do
+			internal_undefining := a_undefining
+			if internal_undefining /= Void then
+				undefining := internal_undefining.meaningful_content
+			else
+				undefining := Void
+			end
+		ensure
+			internal_undefining_set: internal_undefining = a_undefining
+		end
+
+	set_internal_redefining (a_redefining: like internal_redefining) is
+			-- Set `internal_redefining' with `a_redefining' and set `redefining' accordingly.
+		do
+			internal_redefining := a_redefining
+			if internal_redefining /= Void then
+				redefining := internal_redefining.meaningful_content
+			else
+				redefining := Void
+			end
+		ensure
+			internal_redefining_set: internal_redefining = a_redefining
+		end
+
+	set_internal_selecting (a_selecting: like internal_selecting) is
+			-- Set `internal_selecting' with `a_selecting' and set `selecting' accordingly.
+		do
+			internal_selecting := a_selecting
+			if internal_selecting /= Void then
+				selecting := internal_selecting.meaningful_content
+			else
+				selecting := Void
+			end
+		ensure
+			internal_selecting_set: internal_selecting = a_selecting
+		end
+
+invariant
+	renaming_correct: (internal_renaming /= Void implies renaming = internal_renaming.meaningful_content) and
+					  (internal_renaming = Void implies renaming = Void)
+	undefining_correct: (internal_undefining /= Void implies undefining = internal_undefining.meaningful_content) and
+					  (internal_undefining = Void implies undefining = Void)
+	redefining_correct: (internal_redefining /= Void implies redefining = internal_redefining.meaningful_content) and
+					  (internal_redefining = Void implies redefining = Void)
+	selecting_correct: (internal_selecting /= Void implies selecting = internal_selecting.meaningful_content) and
+					  (internal_selecting = Void implies selecting = Void)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

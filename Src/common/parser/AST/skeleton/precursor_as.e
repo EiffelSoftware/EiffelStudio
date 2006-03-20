@@ -45,13 +45,6 @@ feature {NONE} -- Initialization
 			precursor_keyword := pk
 			parent_base_class := n
 			internal_parameters := p
-			l_internal_paran := internal_parameters
-			if l_internal_paran /= Void then
-				parameters := l_internal_paran.meaningful_content
-			end
-			if parameters /= Void then
-				parameters.start
-			end
 		ensure
 			precursor_keyword_set: precursor_keyword = pk
 			parent_base_class_set: parent_base_class = n
@@ -74,8 +67,22 @@ feature -- Attributes
 	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: EIFFEL_LIST [EXPR_AS] is
 			-- List of parameters
+		local
+			l_internal_paran: like internal_parameters
+		do
+			l_internal_paran := internal_parameters
+			if l_internal_paran /= Void then
+				Result := l_internal_paran.meaningful_content
+			end
+			if Result /= Void then
+				Result.start
+			end
+		ensure then
+			good_result: (internal_parameters = Void implies Result = Void) and
+						 (internal_parameters /= Void implies Result = internal_parameters.meaningful_content)
+		end
 
 	parameter_count: INTEGER is
 			-- Number of parameters

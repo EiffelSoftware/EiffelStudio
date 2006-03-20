@@ -28,16 +28,10 @@ feature {NONE} -- Initialization
 			-- When `t' is Void it means it is a question mark.
 		require
 			f_not_void: f /= Void
-		local
-			l_internal_operands: like internal_operands
 		do
 			target := t
 			feature_name := f
 			internal_operands := o
-			l_internal_operands := internal_operands
-			if l_internal_operands /= Void then
-				operands := l_internal_operands.meaningful_content
-			end
 			has_target := ht
 		ensure
 			target_set: target = t
@@ -83,8 +77,19 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Feature name.
 
-	operands : EIFFEL_LIST [OPERAND_AS]
+	operands : EIFFEL_LIST [OPERAND_AS] is
 			-- List of operands used by the feature when called.
+		local
+			l_internal_operands: like internal_operands
+		do
+			l_internal_operands := internal_operands
+			if l_internal_operands /= Void then
+				Result := l_internal_operands.meaningful_content
+			end
+		ensure
+			good_result: (internal_operands = Void implies Result = Void) and
+						 (internal_operands /= Void implies Result = internal_operands.meaningful_content)
+		end
 
 	has_target: BOOLEAN
 			-- Does Current has a target?

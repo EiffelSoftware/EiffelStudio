@@ -61,8 +61,19 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS]
+	arguments: EIFFEL_LIST [TYPE_DEC_AS] is
 			-- List (of list) of arguments
+		local
+			l_internal_arguments: like internal_arguments
+		do
+			l_internal_arguments := internal_arguments
+			if l_internal_arguments /= Void then
+				Result := l_internal_arguments.meaningful_content
+			end
+		ensure
+			good_result: (internal_arguments = Void implies Result = Void) and
+						 (internal_arguments /= Void implies Result = internal_arguments.meaningful_content)
+		end
 
 	type: TYPE_AS
 			-- Type if any
@@ -303,10 +314,6 @@ feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 			l_internal_arguments: like internal_arguments
 		do
 			internal_arguments := a
-			l_internal_arguments := a
-			if l_internal_arguments /= Void then
-				arguments := l_internal_arguments.meaningful_content
-			end
 		ensure
 			internal_arguments_set: internal_arguments = a
 		end

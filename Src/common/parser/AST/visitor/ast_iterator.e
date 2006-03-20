@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
 		do
 			l_as.class_type.process (Current)
-			safe_process (l_as.parameters)
+			safe_process (l_as.internal_parameters)
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
 		do
-			safe_process (l_as.parameters)
+			safe_process (l_as.internal_parameters)
 		end
 
 	process_access_inv_as (l_as: ACCESS_INV_AS) is
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 	process_precursor_as (l_as: PRECURSOR_AS) is
 		do
 			safe_process (l_as.parent_base_class)
-			safe_process (l_as.parameters)
+			safe_process (l_as.internal_parameters)
 		end
 
 	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
@@ -798,8 +798,13 @@ feature {NONE} -- Implementation
 
 	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
 			-- Process `l_as'.
+		local
+			l_list: EIFFEL_LIST [EXPR_AS]
 		do
-			l_as.parameters.process (Current)
+			l_list := l_as.parameters
+			if l_list /= Void and then not l_list.is_empty then
+				l_list.process (Current)
+			end
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is

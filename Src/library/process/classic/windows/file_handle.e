@@ -16,7 +16,7 @@ feature -- Factory
 			a_filename_not_empty: not a_filename.is_empty
 		local
 			l_sec: WEL_SECURITY_ATTRIBUTES
-			l_str: WEL_STRING
+			l_str: C_STRING
 		do
 			create l_sec.make
 			l_sec.set_inherit_handle (True)
@@ -37,7 +37,7 @@ feature -- Factory
 			a_filename_not_empty: not a_filename.is_empty
 		local
 			l_sec: WEL_SECURITY_ATTRIBUTES
-			l_str: WEL_STRING
+			l_str: C_STRING
 			l_mode: INTEGER
 			l_null: TYPED_POINTER [INTEGER]
 		do
@@ -120,7 +120,7 @@ feature -- Input
 		require
 			valid_count: a_count > 0
 		local
-			l_str: WEL_STRING
+			l_str: C_STRING
 		do
 			create l_str.make_empty (a_count)
 			if
@@ -140,7 +140,7 @@ feature -- Input
 			-- Put number of read bytes in `last_read_bytes'.
 			-- Make result available in `last_string'.
 		local
-			l_str: WEL_STRING
+			l_str: C_STRING
 			l_done: BOOLEAN
 		do
 			from
@@ -200,7 +200,7 @@ feature -- Element change
 		require
 			non_void_string: a_string /= Void
 		local
-			a_wel_string: WEL_STRING
+			a_wel_string: C_STRING
 		do
 			create a_wel_string.make (a_string)
 			last_write_successful := cwin_write_file (a_handle, a_wel_string.item,

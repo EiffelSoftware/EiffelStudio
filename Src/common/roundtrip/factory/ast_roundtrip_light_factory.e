@@ -33,7 +33,6 @@ inherit
 			reverse_extend_identifier,
 
 			new_character_as, new_typed_char_as,
-			set_buffer, append_text_to_buffer,
 			new_once_string_keyword_as,
 			new_square_symbol_as,
 			new_creation_keyword_as,
@@ -48,7 +47,6 @@ inherit
 			new_filled_bit_id_as,
 			new_string_as,
 			new_verbatim_string_as,
-			append_string_to_buffer,
 			new_bin_and_then_as,
 			new_bin_or_else_as,
 			new_integer_value,
@@ -57,34 +55,6 @@ inherit
 			create_break_as,
 			create_break_as_with_data,
 			new_filled_id_as_with_existing_stub
-		end
-
-feature -- Buffer operation
-
-	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
-		require else
-			a_buf_not_void: a_buf /= Void
-		do
-			a_buf.clear_all
-			a_buf.append (a_scn.text)
-		ensure then
-			a_buf_set: a_buf.is_equal (a_scn.text)
-		end
-
-	append_text_to_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
-			-- Append `a_scn'.text to end of buffer `a_buf'.
-		require else
-			a_buf_not_void: a_buf /= Void
-		do
-			a_scn.append_text_to_string (a_buf)
-		end
-
-	append_string_to_buffer (a_buf: STRING; a_str: STRING) is
-			-- Append `a_str' to end of buffer `a_buf'.
-		require else
-			a_buf_not_void: a_buf /= Void
-		do
-			a_buf.append (a_str)
 		end
 
 feature -- Match list maintain
@@ -114,22 +84,6 @@ feature -- List operation
 		do
 			a_list.reverse_extend (l_as)
 		end
-
---	extend_pre_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
---			-- Extend `l_as' into `a_list'.pre_as_list.
---		require else
---			a_list_not_void: a_list /= Void
---		do
---			a_list.extend_pre_as_list (l_as)
---		end
---
---	extend_post_as (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
---			-- Extend `l_as' into `a_list'.post_as_list.
---		require else
---			a_list_not_void: a_list /= Void
---		do
---			a_list.extend_post_as_list (l_as)
---		end
 
 feature -- Leaf nodes
 

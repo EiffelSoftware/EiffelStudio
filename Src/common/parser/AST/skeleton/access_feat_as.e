@@ -36,10 +36,7 @@ feature {NONE} -- Initialization
 			f_not_void: f /= Void
 		do
 			feature_name := f
-			internal_parameters := p
-			if parameters /= Void then
-				parameters.start
-			end
+			set_parameters (p)
 		ensure
 			feature_name_set: feature_name = f
 			internal_parameters_set: internal_parameters = p
@@ -58,19 +55,8 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
-		do
-			if
-				internal_parameters = Void or else
-				internal_parameters.parameters = Void or else
-				internal_parameters.parameters.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_parameters.parameters
-			end
-		end
 
 	parameter_count: INTEGER is
 			-- Count of parameters
@@ -166,8 +152,18 @@ feature -- Setting
 		end
 
 	set_parameters (p: like internal_parameters) is
+			-- Set `internal_parameters' with `p'.
+		local
+			l_internal_paran: like internal_parameters
 		do
 			internal_parameters := p
+			l_internal_paran := internal_parameters
+			if l_internal_paran /= Void then
+				parameters := l_internal_paran.meaningful_content
+			end
+			if parameters /= Void then
+				parameters.start
+			end
 		ensure
 			internal_parameters_set: internal_parameters = p
 		end
@@ -219,6 +215,9 @@ invariant
 		is_argument and (not is_local and not is_tuple_access) or
 		is_tuple_access and (not is_local and not is_argument) or
 		not is_local and not is_argument and not is_tuple_access
+	parameters_set: (internal_parameters /= Void implies parameters = internal_parameters.meaningful_content) and
+					(internal_parameters = Void implies parameters = Void)
+	parameter_count_correct: (parameters /= Void implies parameter_count > 0) and (parameters = Void implies parameter_count = 0)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

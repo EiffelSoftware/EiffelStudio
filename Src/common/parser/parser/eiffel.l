@@ -18,7 +18,7 @@ create
 
 %}
 
-%x SPECIAL_STR VERBATIM_STR1 VERBATIM_STR2 VERBATIM_STR3
+%x SPECIAL_STR VERBATIM_STR1 VERBATIM_STR2 VERBATIM_STR3 PRAGMA
 %option line position nodefault outfile="eiffel_scanner.e"
 
 D		[0-9]
@@ -35,8 +35,49 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Breaks
 
-[ \t\r\n]*"--#line".*[ \t\r\n]* { last_line_pragma := ast_factory.new_line_pragma (Current) }
-([ \t\r\n]|"--".*)+ { ast_factory.create_break_as (Current) }
+[ \t\r\n]+ { ast_factory.create_break_as (Current)  }
+
+[ \t\r\n]*/"--" { 
+				last_break_as_start_position := position
+				last_break_as_start_line := line
+				last_break_as_start_column := column
+				ast_factory.set_buffer (token_buffer2, Current)
+				set_start_condition (PRAGMA)					
+		}
+
+<PRAGMA> {
+	"--#line".*	{
+				ast_factory.append_text_to_buffer (token_buffer2, Current)
+				last_line_pragma := ast_factory.new_line_pragma (Current)
+			}
+	
+	"--".*	{
+				ast_factory.append_text_to_buffer (token_buffer2, Current)
+			}
+				
+	[ \t\r\n]+	{
+				ast_factory.append_text_to_buffer (token_buffer2, Current)
+			}
+				
+	. {
+			less (0)
+			ast_factory.create_break_as_with_data (token_buffer2, 
+																last_break_as_start_line, 
+																last_break_as_start_column, 
+																last_break_as_start_position, 
+																token_buffer2.count)
+			set_start_condition (INITIAL)						
+		}
+				
+	<<EOF>> {					
+			ast_factory.create_break_as_with_data (token_buffer2, 
+																last_break_as_start_line, 
+																last_break_as_start_column, 
+																last_break_as_start_position, 
+																token_buffer2.count)
+			set_start_condition (INITIAL)
+			}
+}
 
 -- Symbols
 
@@ -828,7 +869,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 \"[^\n"]*[\[\{]/[ \t\r]*\n {
 					-- Verbatim string.
 				string_position := position
-				l_verbatim_start_position := position
+				verbatim_start_position := position
 				token_buffer.clear_all
 				verbatim_marker.clear_all
 				if text_item (text_count) = '[' then
@@ -965,7 +1006,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- String with special characters.
 				ast_factory.set_buffer (token_buffer2, Current)
 				string_position := position
-				l_string_start_position := position
+				string_start_position := position
 				token_buffer.clear_all
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)

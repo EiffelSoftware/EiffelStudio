@@ -5,10 +5,12 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	INHERIT_CLAUSE_AS
+	INHERIT_CLAUSE_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
+
+	EIFFEL_LIST_WRAPPER_AS [G]
 
 feature{NONE} -- Initialization
 
@@ -66,9 +68,5 @@ feature -- Roundtrip
 
 	clause_keyword: KEYWORD_AS
 			-- Keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
-
-feature -- Clause content
-
-	content: EIFFEL_LIST [AST_EIFFEL]
-			-- Content of current inherit clause
+						
 end

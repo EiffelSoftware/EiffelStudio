@@ -39,10 +39,16 @@ feature {NONE} -- Initialization
 		require
 			pk_not_void: pk /= Void
 			valid_n: n /= Void implies n.generics = Void
+		local
+			l_internal_paran: like internal_parameters
 		do
 			precursor_keyword := pk
 			parent_base_class := n
 			internal_parameters := p
+			l_internal_paran := internal_parameters
+			if l_internal_paran /= Void then
+				parameters := l_internal_paran.meaningful_content
+			end
 			if parameters /= Void then
 				parameters.start
 			end
@@ -68,19 +74,8 @@ feature -- Attributes
 	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
-		do
-			if
-				internal_parameters = Void or else
-				internal_parameters.parameters = Void or else
-				internal_parameters.parameters.is_empty
-			then
-				Result := Void
-			else
-				Result := internal_parameters.parameters
-			end
-		end
 
 	parameter_count: INTEGER is
 			-- Number of parameters
@@ -159,6 +154,9 @@ feature -- Setting
 invariant
 	precursor_keyword_not_void: precursor_keyword /= Void
 	valid_parent_base_class: parent_base_class /= Void implies parent_base_class.generics = Void
+	parameters_set: (internal_parameters /= Void implies parameters = internal_parameters.meaningful_content) and
+					(internal_parameters = Void implies parameters = Void)
+	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

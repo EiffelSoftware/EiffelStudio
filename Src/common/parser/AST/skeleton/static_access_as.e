@@ -34,10 +34,7 @@ feature {AST_FACTORY} -- Initialization
 		do
 			class_type := c
 			feature_name := f
-			internal_parameters := p
-			if parameters /= Void then
-				parameters.start
-			end
+			set_parameters (p)
 			feature_keyword := f_as
 			dot_symbol := d_as
 		ensure

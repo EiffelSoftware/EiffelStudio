@@ -5,10 +5,12 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	PARAN_LIST_AS [G -> AST_EIFFEL]
+	PARAN_LIST_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
+
+	EIFFEL_LIST_WRAPPER_AS [G]
 
 feature{NONE} -- Implementation
 
@@ -23,11 +25,6 @@ feature{NONE} -- Implementation
 			lparan_symbol_set: lparan_symbol = lp_as
 			rparan_symbol_set: rparan_symbol = rp_as
 		end
-
-feature -- Access
-
-	content: G
-			-- Content surrounded by brackets
 
 feature -- Access: roundtrip
 

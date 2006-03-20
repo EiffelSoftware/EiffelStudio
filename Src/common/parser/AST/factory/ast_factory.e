@@ -13,6 +13,7 @@ feature -- Buffer operation
 	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
 			-- Clear `a_buf' and then set it with `a_scn'.text.
 		require
+			a_buf_not_void: a_buf /= Void
 			a_scn_not_void: a_scn /= Void
 		do
 		end
@@ -20,6 +21,7 @@ feature -- Buffer operation
 	append_text_to_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON) is
 			-- Append `a_scn'.text to end of buffer `a_buf'.
 		require
+			a_buf_not_void: a_buf /= Void
 			a_scn_not_void: a_scn /= Void
 		do
 		end
@@ -27,6 +29,7 @@ feature -- Buffer operation
 	append_string_to_buffer (a_buf: STRING; a_str: STRING) is
 			-- Append `a_str' to end of buffer `a_buf'.
 		require
+			a_buf_not_void: a_buf /= Void
 			a_str_not_void: a_str /= Void
 		do
 		end
@@ -360,10 +363,8 @@ feature -- Roundtrip: leaf_as
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		do
 		end
-
 
 feature -- Access
 
@@ -1376,9 +1377,20 @@ feature -- Access
 
 	new_precursor_as (pk: KEYWORD_AS; n: CLASS_TYPE_AS; p: PARAMETER_LIST_AS): PRECURSOR_AS is
 			-- New PRECURSOR AST node
+		local
+			i: INTEGER
+			l_parameter: EIFFEL_LIST [EXPR_AS]
 		do
 			if pk /= Void and (n /= Void implies n.generics = Void) then
 				create Result.initialize (pk, n, p)
+				from
+					i := 1
+				until
+					i > 100
+				loop
+					l_parameter := Result.parameters
+					i := i + 1
+				end
 			end
 		end
 

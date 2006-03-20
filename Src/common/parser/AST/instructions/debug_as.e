@@ -22,14 +22,8 @@ feature {NONE} -- Initialization
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
-		local
-			l_internal_keys: like internal_keys
 		do
 			internal_keys := k
-			l_internal_keys := internal_keys
-			if l_internal_keys /= Void then
-				keys := l_internal_keys.meaningful_content
-			end
 			compound := c
 			end_keyword := e
 			debug_keyword := d_as
@@ -58,8 +52,19 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS]
+	keys: EIFFEL_LIST [STRING_AS] is
 			-- Debug keys
+		local
+			l_internal_keys: like internal_keys
+		do
+			l_internal_keys := internal_keys
+			if l_internal_keys /= Void then
+				Result := l_internal_keys.meaningful_content
+			end
+		ensure
+			good_result: (internal_keys = Void implies Result = Void) and
+						 (internal_keys /= Void implies Result = internal_keys.meaningful_content)
+		end
 
 	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located

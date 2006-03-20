@@ -162,7 +162,6 @@ feature
 				cecil_basket.extend ("MTeif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_special_table.o"); cecil_basket.finish
 				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
 			end
 		end;

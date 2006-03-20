@@ -144,6 +144,10 @@ int main(int argc, char **argv)
 	int in_word = 0;
 	int in_string = 0;
 	int in_char = 0;
+	int in_single_comment = 0;
+	int in_multi_comment = 0;
+	int last_was_slash = 0;
+	int last_was_star = 0;
 	int last_was_backslash = 0;
 	char buf[MAXLEN + 2];				/* Allow for '\0' and overflow */
 	struct parse *ps;
@@ -193,8 +197,8 @@ int main(int argc, char **argv)
 		}
 
 	while ((c = getc(input_file)) != EOF) {
-		if (!in_string && !in_char) {
-			if (!last_was_backslash) {	/* Skip C strings and C chars */
+		if (!in_string && !in_char && !in_single_comment && !in_multi_comment) {
+			if (!last_was_backslash) {	/* Skip comments and C strings and C chars */
 				switch (c) {
 				case '"':
 					in_string = 1;
@@ -202,12 +206,21 @@ int main(int argc, char **argv)
 				case '\'':
 					in_char = 1;
 					break;
+				case '/':
+					in_single_comment = last_was_slash;
+					break;
+				case '*':
+					in_multi_comment = last_was_slash;
+					break;
 				}
-				if (in_string || in_char) {
+				if (in_string || in_char || in_single_comment || in_multi_comment) {
+					last_was_slash = 0;
+					last_was_backslash = 0;
 					putc(c, output_file);
 					continue;
 				}
 			}
+			last_was_slash = c == '/';
 			last_was_backslash = c == '\\' && !last_was_backslash;
 		} else if (in_string) {
 			if (c == '"' && !last_was_backslash)
@@ -219,6 +232,17 @@ int main(int argc, char **argv)
 			if (c == '\'' && !last_was_backslash)
 				in_char = 0;
 			last_was_backslash = c == '\\' && !last_was_backslash;
+			putc(c, output_file);
+			continue;
+		} else if (in_single_comment) {
+			if (c == '\n')
+				in_single_comment = 0;
+			putc(c, output_file);
+			continue;
+		} else if (in_multi_comment) {
+			if (last_was_star && c=='/')
+				in_multi_comment = 0;
+			last_was_star = c == '*';
 			putc(c, output_file);
 			continue;
 		} else {

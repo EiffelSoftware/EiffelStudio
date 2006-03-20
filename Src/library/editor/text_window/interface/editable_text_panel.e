@@ -566,7 +566,7 @@ feature -- Edition Operations on text
 		do
 			a_text := clipboard.text
 			if not a_text.is_empty then
-				text_displayed.insert_string (clipboard.text)
+				text_displayed.insert_string (a_text)
 				refresh_now
 			end
 		end

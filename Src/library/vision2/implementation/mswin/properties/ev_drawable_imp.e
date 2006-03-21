@@ -41,7 +41,7 @@ inherit
 	WEL_RASTER_OPERATIONS_CONSTANTS export {NONE} all end
 	WEL_HS_CONSTANTS 				export {NONE} all end
 	WEL_DT_CONSTANTS				export {NONE} all end
-	
+
 	WEL_SHARED_TEMPORARY_OBJECTS
 		export
 			{NONE} all
@@ -53,12 +53,15 @@ feature {NONE} -- Initialization
 			-- Set some default values.
 		do
 			set_default_font
-			create foreground_color.make_with_rgb (0, 0, 0)
-			create background_color.make_with_rgb (1, 1, 1)
+
+			if background_color = Void then
+				background_color := create {EV_COLOR}.make_with_rgb (1, 1, 1)
+			end
+			if foreground_color = Void then
+				foreground_color := create {EV_COLOR}.make_with_rgb (0, 0, 0)
+			end
 
 				-- Initialise the device for painting.
-			dc.set_background_opaque
-			dc.set_background_transparent
 			set_drawing_mode (drawing_mode_copy)
 			reset_pen
 			reset_brush
@@ -75,7 +78,7 @@ feature --{EV_ANY_I} -- Implementation
 		ensure
 			not_void: dc /= Void
 		end
-		
+
 	get_dc is
 			-- Get `dc'.
 			-- By default does nothing, but is
@@ -83,7 +86,7 @@ feature --{EV_ANY_I} -- Implementation
 			-- dc. Example : EV_DRAWING_AREA_IMP
 		do
 		end
-		
+
 	release_dc is
 			-- Release `dc'.
 			-- By default does nothing, but is
@@ -106,11 +109,11 @@ feature -- Access
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
-			
+
 			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
 
 			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, Void, area.width, area.height)
-			
+
 				-- Clean up
 			reusable_dc.unselect_bitmap
 			reusable_dc.delete
@@ -124,7 +127,7 @@ feature -- Access
 	foreground_color: EV_COLOR
 			-- Color used for lines and text.
 
-	line_width: INTEGER 
+	line_width: INTEGER
 			-- Line thickness.
 
 	drawing_mode: INTEGER is
@@ -194,7 +197,7 @@ feature -- Element change
 			a_color_imp ?= a_color.implementation
 			foreground_color_imp ?= foreground_color.implementation
 			if a_color_imp.item /= foreground_color_imp.item then
-				foreground_color_imp.set_color (a_color_imp.item)							
+				foreground_color_imp.set_color (a_color_imp.item)
 					-- update current pen & brush (lazzy evaluation)
 				internal_initialized_brush := False
 				internal_initialized_pen := False
@@ -329,37 +332,31 @@ feature -- Drawing operations
 			release_dc
 		end
 
+	draw_rotated_text (x, y: INTEGER; a_angle: REAL; a_text: STRING) is
+			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Rotation is number of radians counter-clockwise from horizontal plane.
+		do
+			internal_draw_text (x, y, a_angle, 0, True, a_text)
+		end
+
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_top_left (x, y - internal_font.ascent, a_text)
+			internal_draw_text (x, y, 0, 0, True, a_text)
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
-			get_dc
-			if not internal_initialized_text_color then
-				dc.set_text_color (wel_fg_color)
-				internal_initialized_text_color := True
-			end
-
-			if not internal_initialized_font then
-				dc.select_font (wel_font)
-				internal_initialized_font := True
-			end
-			wel_rect.set_rect (x, y, 10, 10)
-				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
-			dc.draw_text (a_text, wel_rect, Dt_expandtabs | dt_noclip | Dt_noprefix)
-			release_dc
+			internal_draw_text (x, y, 0, 0, False, a_text)
 		end
-		
+
 	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			draw_ellipsed_text_top_left (x, y - internal_font.ascent, a_text, clipping_width)
+			internal_draw_text (x, y, 0, clipping_width, True, a_text)
 		end
 
 	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
@@ -367,22 +364,74 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
+			internal_draw_text (x, y, 0, clipping_width, False, a_text)
+		end
+
+	internal_draw_text (x, y: INTEGER; angle: REAL; clipping_width: INTEGER; from_baseline: BOOLEAN; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+			-- Text is rotated counter-clockwise from the horizontal axis `degrees' degrees.
+		local
+			l_font: WEL_FONT
+			l_log_font: WEL_LOG_FONT
+			l_flags: INTEGER
+			l_dc: like dc
+			l_wel_rect: like wel_rect
+		do
 			get_dc
+			l_dc := dc
 			if not internal_initialized_text_color then
-				dc.set_text_color (wel_fg_color)
+				l_dc.set_text_color (wel_fg_color)
 				internal_initialized_text_color := True
 			end
 
-			if not internal_initialized_font then
-				dc.select_font (wel_font)
+			l_font := wel_font
+			if angle /= 0 then
+				l_log_font := l_font.log_font
+					-- Convert radians to escapement units which is 1/10th of a degree
+				l_log_font.set_escapement ((angle * 1800 / Pi).rounded)
+				create l_font.make_indirect (l_log_font)
+				l_log_font.dispose
+				if l_dc.font_selected then
+					l_dc.unselect_font
+				end
+				l_dc.select_font (l_font)
+				internal_initialized_font := False
+					-- We want to make sure that the font gets reset upon next call to draw text.
+			elseif not internal_initialized_font then
+				l_dc.select_font (l_font)
 				internal_initialized_font := True
 			end
-			
-			wel_rect.set_rect (x, y, x + clipping_width, 10)
-				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
-			dc.draw_text (a_text, wel_rect, Dt_word_ellipsis | Dt_noprefix | dt_noclip)
-			release_dc	
+
+
+			l_flags := Dt_noprefix | Dt_noclip
+
+			if clipping_width > 0 then
+				l_flags := l_flags | Dt_word_ellipsis
+			else
+				l_flags := l_flags | Dt_expandtabs
+			end
+
+			if from_baseline then
+				l_dc.set_text_alignment (ta_baseline | ta_left)
+			else
+				l_dc.set_text_alignment (ta_top | ta_left)
+			end
+
+			l_wel_rect := wel_rect
+			l_wel_rect.set_rect (x, y, x + clipping_width, 10)
+				-- Note that the size of the rectangle does not matter if we use the `dt_noclip' flag.
+			l_dc.draw_text (a_text, l_wel_rect, l_flags)
+
+			if not internal_initialized_font then
+					-- We must have rotated a font so cleanup.
+				l_dc.unselect_font
+				l_font.delete
+			end
+			release_dc
 		end
+
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
@@ -392,7 +441,7 @@ feature -- Drawing operations
 			end
 			get_dc
 			dc.move_to (x1, y1)
-			
+
 			dc.line_to (x2, y2)
 				-- As `line_to' does not actually draw the final
 				-- pixel, we need to draw this ourselved, so ensure
@@ -416,7 +465,7 @@ feature -- Drawing operations
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 			semi_width, semi_height: DOUBLE
 			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE			
+			x_tmp, y_tmp: DOUBLE
 		do
 				-- It appears that the divide by 0 we are protecting against in
 				-- `Current' will fail on Borland, but not microsoft.
@@ -424,7 +473,7 @@ feature -- Drawing operations
 			top := y
 			right := left + a_bounding_width
 			bottom := top + a_bounding_height
-			
+
 			semi_width := a_bounding_width / 2
 			semi_height := a_bounding_height / 2
 			tang_start := tangent (a_start_angle)
@@ -469,7 +518,7 @@ feature -- Drawing operations
 			end
 			x_end_arc := (x_tmp + left + semi_width).rounded
 			y_end_arc := (y_tmp + top + semi_height).rounded
-				
+
 			if not internal_initialized_pen then
 				reset_pen
 			end
@@ -487,12 +536,14 @@ feature -- Drawing operations
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp : EV_PIXMAP_IMP_STATE
+			l_bounding_area: like bounding_area
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			bounding_area.move_and_resize (0, 0, pixmap_imp.width, pixmap_imp.height)
-			draw_sub_pixmap (x, y, a_pixmap, bounding_area)
+			l_bounding_area := bounding_area
+			l_bounding_area.move_and_resize (0, 0, pixmap_imp.width, pixmap_imp.height)
+			draw_sub_pixmap (x, y, a_pixmap, l_bounding_area)
 		end
-		
+
 	bounding_area: EV_RECTANGLE is
 			-- Temporary rectangle used internally.
 		once
@@ -518,6 +569,8 @@ feature -- Drawing operations
 			dest_dc				: WEL_DC
 			temp_foreground_color	: WEL_COLOR_REF
 			temp_background_color	: WEL_COLOR_REF
+			l_backbuffer: WEL_BITMAP
+			l_backbuffer_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -534,22 +587,22 @@ feature -- Drawing operations
 				source_height = pixmap_height
 			then
 				dc.draw_icon_ex (
-					pixmap_imp.icon, 
-					x, y, 
-					pixmap_width, pixmap_height, 
+					pixmap_imp.icon,
+					x, y,
+					pixmap_width, pixmap_height,
 					0, Void, Drawing_constants.Di_normal
 				)
 			else
 					-- Allocate GDI objects
 				create s_dc
 				s_dc.get
-				
+
 				dest_dc := dc
 
 				if pixmap_imp.has_mask then -- Display a masked pixmap
-				
+
 					source_drawable ?= pixmap_imp
-					
+
 					if source_drawable /= Void then
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
@@ -557,38 +610,34 @@ feature -- Drawing operations
 					else
 							-- Retrieve Source bitmap
 						source_bitmap := pixmap_imp.get_bitmap
-						
+
 							-- Create dc for Source bitmap
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
-						
+
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
-						
+
 							-- Create dc for Mask bitmap
 						create source_mask_dc.make_by_dc (s_dc)
 						source_mask_dc.select_bitmap (source_mask_bitmap)
 					end
 
-						-- Store original colors as they need to be unset for masking
-					temp_background_color := dest_dc.background_color
-					temp_foreground_color := dest_dc.text_color
 
-					dest_dc.set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
-					dest_dc.set_background_color (create {WEL_COLOR_REF}.make_rgb (255, 255, 255))
+					create l_backbuffer.make_compatible (dest_dc, source_width, source_height)
+					create l_backbuffer_dc.make_by_dc (dest_dc)
+					l_backbuffer_dc.select_bitmap (l_backbuffer)
 
-						-- Xor source to destination
-					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
-					
-						-- Set opaque pixels to black on destination
-					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, Srcand)
-					
-						-- Re Xor source to destination to restore original pixels
-					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
-					
-						-- Reset colors
-					dest_dc.set_text_color (temp_foreground_color)
-					dest_dc.set_background_color (temp_background_color)
+					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_bitmap_dc, source_x, source_y, srccopy)
+					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_mask_dc, source_x, source_y, srcand)
+
+					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, maskpaint)
+
+					dest_dc.bit_blt (x, y, source_width, source_height, l_backbuffer_dc, 0, 0, srcpaint)
+
+					l_backbuffer_dc.unselect_bitmap
+					l_backbuffer_dc.delete
+					l_backbuffer.delete
 
 						-- Free newly created GDI Objects if source isn't a pixmap drawable
 					if source_drawable = Void then
@@ -597,7 +646,7 @@ feature -- Drawing operations
 						source_mask_dc.unselect_bitmap
 						source_mask_dc.delete
 						source_bitmap.decrement_reference
-						source_mask_bitmap.decrement_reference						
+						source_mask_bitmap.decrement_reference
 					end
 
 				else -- Display a not masked pixmap.
@@ -608,10 +657,10 @@ feature -- Drawing operations
 						source_bitmap := pixmap_imp.get_bitmap
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
-						
+
 						dest_dc.bit_blt (
-							x, y, 
-							source_width, source_height, 
+							x, y,
+							source_width, source_height,
 							source_bitmap_dc, source_x, source_y, src_drawing_mode
 						)
 							-- Free GDI Objects
@@ -621,8 +670,8 @@ feature -- Drawing operations
 					else
 						source_bitmap_dc := source_drawable.dc
 						dest_dc.bit_blt (
-							x, y, 
-							source_width, source_height, 
+							x, y,
+							source_width, source_height,
 							source_bitmap_dc, source_x, source_y, src_drawing_mode
 						)
 					end
@@ -731,12 +780,12 @@ feature -- Drawing operations
 			top := y
 			right := left + a_bounding_width
 			bottom := top + a_bounding_height
-			
+
 			semi_width := a_bounding_width / 2
 			semi_height := a_bounding_height / 2
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
-			
+
 				-- We must protect against both possible divides by 0.
 			if tang_start + semi_height /= 0 and semi_width /= 0 then
 				x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
@@ -757,13 +806,13 @@ feature -- Drawing operations
 			end
 			x_start_arc := (x_tmp + left + semi_width).rounded
 			y_start_arc := (y_tmp + top + semi_height).rounded
-			
+
 				-- We must protect against both possible divides by 0.
 			if tang_end + semi_height /= 0 and semi_width /= 0 then
 				x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
 			else
 				x_tmp := 0
-			end	
+			end
 				-- We must ensure that we protect against divide by 0.
 			if semi_width /= 0 and tang_end /= 0 then
 				y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
@@ -778,7 +827,7 @@ feature -- Drawing operations
 			end
 			x_end_arc := (x_tmp + left + semi_width).rounded
 			y_end_arc := (y_tmp + top + semi_height).rounded
-			
+
 			remove_brush
 			if not internal_initialized_pen then
 				reset_pen
@@ -807,7 +856,7 @@ feature -- Filling operations
 			get_dc
 			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
 			release_dc
-		end 
+		end
 
 	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
 			-- Fill an ellipse defined by a rectangular area with an
@@ -872,14 +921,14 @@ feature -- Filling operations
 			internal_bounding_width, internal_bounding_height: INTEGER
 			semi_width, semi_height: DOUBLE
 			tang_start, tang_end: DOUBLE
-			x_tmp, y_tmp: DOUBLE			
+			x_tmp, y_tmp: DOUBLE
 		do
 			-- It appears that the divide by 0 we are protecting against in
 			-- `Current' will fail on Borland, but not microsoft.
 			--| We add one to `a_bounding_width' and `a_bounding_height' as
 			--| when we fill on Windows, the filled area seems to be slightly smaller
 			--| than when we simple draw.
-			
+
 			if an_aperture /= 0.0 then
 				left := x
 				top := y
@@ -887,12 +936,12 @@ feature -- Filling operations
 				internal_bounding_height := a_bounding_height + 1
 				right := x + internal_bounding_width
 				bottom := top + internal_bounding_height
-	
+
 				semi_width := internal_bounding_width / 2
 				semi_height := internal_bounding_height / 2
 				tang_start := tangent (a_start_angle)
 				tang_end := tangent (a_start_angle + an_aperture)
-				
+
 					-- We must protect against both possible divides by 0.
 				if tang_start + semi_height /= 0 and semi_width /= 0 then
 					x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
@@ -913,7 +962,7 @@ feature -- Filling operations
 				end
 				x_start_arc := (x_tmp + left + semi_width).rounded
 				y_start_arc := (y_tmp + top + semi_height).rounded
-		
+
 					-- We must protect against both possible divides by 0.
 				if tang_end + semi_height /= 0 and semi_width /= 0 then
 					x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
@@ -934,7 +983,7 @@ feature -- Filling operations
 				end
 				x_end_arc := (x_tmp + left + semi_width).rounded
 				y_end_arc := (y_tmp + top + semi_height).rounded
-				
+
 				remove_pen
 				if not internal_initialized_brush then
 					reset_brush
@@ -1106,7 +1155,7 @@ feature {NONE} -- Implementation
 			end
 			release_dc
 		end
-		
+
 	src_drawing_mode: INTEGER is
 			-- Src drawing mode from current `wel_drawing_mode'
 			-- Used for bit blits.
@@ -1146,7 +1195,7 @@ feature {EV_ANY, EV_ANY_I} -- Command
 				internal_background_brush.decrement_reference
 				internal_background_brush := Void
 			end
-			
+
 			set_is_destroyed (True)
 		end
 

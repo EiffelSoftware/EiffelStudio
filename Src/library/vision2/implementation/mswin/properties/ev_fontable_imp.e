@@ -42,7 +42,7 @@ feature -- Access
 					end
 			end
 		end
-		
+
 	internal_font: EV_FONT is
 			-- Font of `Current' for internal queries.
 			-- Faster than calling `font' as we do not need to
@@ -54,7 +54,7 @@ feature -- Access
 				Result := private_font
 			end
 		end
-		
+
 	internal_font_height: INTEGER is
 			-- Height required to correctly display font of `Current' in pixels.
 		local
@@ -69,7 +69,7 @@ feature -- Access
 				screen_dc.select_font (wel_font)
 			end
 			extent := screen_dc.string_size ("X")
-			screen_dc.unselect_font 
+			screen_dc.unselect_font
 			screen_dc.quick_release
 			Result := extent.height
 		ensure

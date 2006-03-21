@@ -200,6 +200,12 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
 feature {EV_ANY_IMP}
 
+	set_focus_event_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Converted GtkWidget* to tuple.
+		do
+			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)]
+		end
+
 	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GdkEventKey to tuple.
 		local

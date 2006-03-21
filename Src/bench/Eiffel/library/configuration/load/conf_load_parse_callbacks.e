@@ -390,7 +390,7 @@ feature {NONE} -- Implementation attribute processing
 			if l_feature /= Void then
 				l_feature.to_lower
 			end
-			if l_all_b or else l_class /= Void then
+			if (l_all_b and l_cluster = Void and l_class = Void and l_feature = Void) or else l_class /= Void then
 				current_target.set_root (conf_factory.new_root (l_cluster, l_class, l_feature, l_all_b))
 			else
 				set_parse_error_message ("Invalid root tag.")
@@ -1006,6 +1006,13 @@ feature {NONE} -- Implementation attribute processing
 				elseif current_action /= Void then
 					current_action.enable (l_i_pf, l_i_build)
 				elseif current_group /= Void then
+					if l_platform.is_equal ("all") and then current_group.is_assembly then
+						l_platform := "dotnet"
+					end
+						-- remove default entry of assemblies
+					if current_group.is_assembly and then current_group.is_enabled (pf_dotnet, build_all) then
+						current_group.wipe_out
+					end
 					current_group.enable (l_i_pf, l_i_build)
 				else
 					set_parse_error_message ("Invalid if tag.")
@@ -1045,6 +1052,10 @@ feature {NONE} -- Implementation attribute processing
 				elseif current_action /= Void then
 					current_action.inverse_enable (get_platform (l_platform), get_build (l_build))
 				elseif current_group /= Void then
+						-- remove default entry of assemblies
+					if current_group.is_assembly and then current_group.is_enabled (pf_dotnet, build_all) then
+						current_group.wipe_out
+					end
 					current_group.inverse_enable (get_platform (l_platform), get_build (l_build))
 				else
 					set_parse_error_message ("Invalid ifnot tag.")
@@ -1570,7 +1581,7 @@ feature {NONE} -- Implementation constants
 	at_new_name,
 	at_group: INTEGER is unique
 
-feature {NONE} -- Assertions
+feature -- Assertions
 
 	has_resolved_namespaces: BOOLEAN is True
 

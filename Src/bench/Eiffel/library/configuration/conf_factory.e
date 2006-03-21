@@ -162,15 +162,16 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_assembly (a_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY is
+	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY is
 			-- Create a `CONF_CLASS_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_upper: a_name.is_equal (a_name.as_upper)
+			a_dotnet_name_ok: a_dotnet_name /= Void and then not a_dotnet_name.is_empty
 			an_assembly_not_void: an_assembly /= Void
 			a_position_ok: a_position >= 0
 		do
-			create Result.make_assembly_class (a_name, an_assembly, a_position)
+			create Result.make_assembly_class (a_name, a_dotnet_name, an_assembly, a_position)
 		ensure
 			Result_not_void: Result /= Void
 		end

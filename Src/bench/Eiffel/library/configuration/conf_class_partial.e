@@ -44,6 +44,9 @@ feature {NONE} -- Initialization
 			end
 
 			check_changed
+			if is_modified then
+				build_partial
+			end
 
 			l_cluster ?= a_group
 			if l_cluster /= Void and then l_cluster.visible /= Void then
@@ -114,19 +117,24 @@ feature {CONF_ACCESS} -- Update, in compiled only
 	check_changed is
 			-- Check if any of the partial classes that build this class have changed.
 		local
-			l_file: RAW_FILE
+			l_str: ANY
+			l_date: INTEGER
+			l_key: STRING
 		do
+			is_modified := False
 			from
 				partial_classes.start
 			until
-				is_modified or partial_classes.after
+				partial_classes.after
 			loop
-				create l_file.make (partial_classes.key_for_iteration)
-				is_modified := not l_file.exists or else partial_classes.item_for_iteration /= l_file.date
+				l_key := partial_classes.key_for_iteration
+				l_str := l_key.to_c
+				eif_date ($l_str, $l_date)
+				is_modified := partial_classes.item_for_iteration /= l_date
+				if is_modified then
+					partial_classes.replace (l_date, l_key)
+				end
 				partial_classes.forth
-			end
-			if is_modified then
-				build_partial
 			end
 		end
 
@@ -143,48 +151,48 @@ feature {NONE} -- Implementation
 			partial_classes_not_void: partial_classes /= Void
 		local
 			l_lst: ARRAYED_LIST [STRING]
-			l_retried: BOOLEAN
 			l_dir: KL_DIRECTORY
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_lst.make_from_array (partial_classes.current_keys)
-			epc_merger.merge (l_lst)
-			if not epc_merger.successful then
-				is_error := True
-				last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
-				name := ""
-				renamed_name := ""
-				path := ""
-				file_name := ""
-			else
-				path := group.name
+			if not is_error then
+				create l_lst.make_from_array (partial_classes.current_keys)
+				epc_merger.merge (l_lst)
+				if not epc_merger.successful then
+					is_error := True
+					last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
+					name := ""
+					renamed_name := ""
+					path := ""
+					file_name := ""
+				else
+					path := group.name
 
-				create l_dir.make (base_location.build_path (path, ""))
-				l_dir.create_directory
+					create l_dir.make (base_location.build_path (path, ""))
+					l_dir.create_directory
 
-					-- us temporary file to get name of class
-				file_name := "tmp.e"
-				create l_file.make_open_write (full_file_name)
-				l_file.put_string (epc_merger.class_text)
-				l_file.close
+						-- us temporary file to get name of class
+					file_name := "tmp.e"
+					create l_file.make_open_write (full_file_name)
+					l_file.put_string (epc_merger.class_text)
+					l_file.close
 
-				set_name
+					set_name
 
-				check
-					name_set: name /= Void and then renamed_name /= Void
+					check
+						name_set: name /= Void and then renamed_name /= Void
+					end
+
+						-- rename file to class name
+					file_name := name.as_lower + ".e"
+					l_file.change_name (full_file_name)
 				end
-
-					-- rename file to class name
-				file_name := name.as_lower + ".e"
-				l_file.change_name (full_file_name)
 			end
 		ensure
 			name: not is_error implies (not name.is_empty and not renamed_name.is_empty)
 			location: not is_error implies (not path.is_empty and not file_name.is_empty)
 		rescue
-			l_retried := True
 			is_error := True
-			last_error := create {CONF_ERROR_PARTIAL}.make ("Could not store merged class.")
+			last_error := create {CONF_ERROR_PARTIAL}.make (epc_merger.error_message)
 			retry
 		end
 

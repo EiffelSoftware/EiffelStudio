@@ -170,14 +170,16 @@ feature -- Access queries
 			end
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): ARRAYED_LIST [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [CONF_CLASS] is
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
-			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
+			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency that
+			-- is enabled for `a_platform' and `a_build'.
 		local
 			l_groups: LINKED_SET [CONF_GROUP]
 			l_class: CONF_CLASS
+			l_grp: CONF_GROUP
 		do
-			create Result.make (1)
+			create Result.make
 			l_class := classes.item (a_class)
 			if l_class /= Void then
 				Result.extend (l_class)
@@ -204,7 +206,10 @@ feature -- Access queries
 					until
 						l_groups.after
 					loop
-						Result.append (l_groups.item.class_by_name (a_class, False))
+						l_grp := l_groups.item
+						if l_grp.is_enabled (a_platform, a_build) then
+							Result.append (l_grp.class_by_name (a_class, False, a_platform, a_build))
+						end
 						l_groups.forth
 					end
 				end

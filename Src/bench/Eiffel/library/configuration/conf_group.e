@@ -146,20 +146,25 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): ARRAYED_LIST [CONF_CLASS] is
-			-- Get the class with the final (after renaming/prefix) name `a_class'.
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [CONF_CLASS] is
+			-- Get the class with the final (after renaming/prefix) name `a_class'
+			-- (if `a_dependencies' then we check dependencies with `a_platform' and `a_build')
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 			classes_set: classes_set
+			a_platform_valid: valid_platform (a_platform)
+			a_build_valid: valid_build (a_build)
 		local
 			l_class: CONF_CLASS
 		do
-			create Result.make (1)
+			create Result.make
 			l_class := classes.item (a_class)
 			if l_class /= Void then
 				Result.extend (l_class)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Comparison
@@ -314,15 +319,16 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overriders_set: overriders = an_overriders
 		end
 
-	add_overriders (an_overrider: CONF_OVERRIDE) is
-			-- Add `an_overrider' to `overriders'.
+	add_overriders (an_overrider: CONF_OVERRIDE; a_modified_classes: LINKED_SET [CONF_CLASS]) is
+			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'.
 		require
 			an_overrider_not_void: an_overrider /= Void
+			a_modified_classes_not_void: a_modified_classes /= Void
 			classes_set: classes_set
 		local
 			l_classes: like classes
 			l_overridee, l_overrider: CONF_CLASS
-			l_ovs: ARRAYED_LIST [CONF_CLASS]
+			l_ovs: LINKED_SET [CONF_CLASS]
 		do
 			if is_override then
 				is_error := True
@@ -340,7 +346,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					l_classes.after
 				loop
 					l_overrider := l_classes.item_for_iteration
-					l_ovs := class_by_name (l_overrider.renamed_name, False)
+					l_ovs := class_by_name (l_overrider.renamed_name, False, pf_all, build_all)
 					if l_ovs /= Void and then l_ovs.count > 0 then
 						l_overridee := l_ovs.first
 						if l_overridee.is_overriden then
@@ -349,6 +355,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 						else
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)
+							if l_overridee.is_modified then
+								a_modified_classes.extend (l_overridee)
+							end
 						end
 					end
 					l_classes.forth

@@ -19,16 +19,18 @@ create
 
 feature {NONE} -- Implementation
 
-	make_assembly_class (a_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER) is
+	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER) is
 			-- Create.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_upper: a_name.is_equal (a_name.as_upper)
+			a_dotnet_name_ok: a_dotnet_name /= Void and then not a_dotnet_name.is_empty
 			an_assembly_not_void: an_assembly /= Void
 			a_position_ok: a_position >= 0
 		do
 			group := an_assembly
 			name := a_name
+			dotnet_name := a_dotnet_name
 			type_position := a_position
 			set_name
 			create file_name.make_empty
@@ -62,14 +64,13 @@ feature {CONF_ACCESS} -- Update
 				end
 			end
 
-		set_position (a_position: INTEGER) is
+		set_type_position (a_position: INTEGER) is
 				-- Set class type description position.
 			require
 				a_position_ok: a_position >= 0
 			do
 				type_position := a_position
 			end
-
 
 		check_changed is
 				-- Check if `Current' has changed.
@@ -79,12 +80,31 @@ feature {CONF_ACCESS} -- Update
 
 feature -- Access
 
+	dotnet_name: STRING
+			-- Dotnet name.
+
 	group: CONF_ASSEMBLY
 			-- The assembly this class belongs to.
 
 feature {NONE} -- Implementation
 
 	type_position: INTEGER
-			--	Position of class type description.
+			-- Position of class type description.
+
+	type_file: STRING is
+			-- File of class type description.
+		require
+			consumed_path: group.consumed_path /= Void
+		do
+			Result := group.consumed_path.twin
+			Result.append_character (operating_environment.directory_separator)
+			Result.append (classes_file_name)
+		end
+
+	classes_file_name: STRING is "classes.info"
+			-- Directory from Assembly location where classes are located.
+
+invariant
+	dotnet_name_ok: dotnet_name /= Void and then not dotnet_name.is_empty
 
 end

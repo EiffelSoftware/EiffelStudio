@@ -56,8 +56,45 @@ feature {CONF_ACCESS} -- Status update
 			if internal_enabled = Void then
 				create internal_enabled.make (1)
 			end
-			internal_enabled.extend ((a_platform | a_build).bit_not)
+			if a_platform = pf_all then
+				inverse_enable_build (a_build)
+			elseif a_build = build_all then
+				inverse_enable_platform (a_platform)
+			else
+				internal_enabled.extend ((a_platform | a_build).bit_not)
+			end
 		end
+
+	inverse_enable_platform (a_platform: INTEGER) is
+			-- Enable `Current' for everything but `a_platform'.
+		require
+			valid_platform: valid_platform (a_platform)
+		do
+			if internal_enabled = Void then
+				create internal_enabled.make (1)
+			end
+			internal_enabled.extend (a_platform.bit_not)
+		end
+
+	inverse_enable_build (a_build: INTEGER) is
+			-- Enable `Current' for everything but `a_build'.
+		require
+			valid_build: valid_build (a_build)
+		do
+			if internal_enabled = Void then
+				create internal_enabled.make (1)
+			end
+			internal_enabled.extend (a_build.bit_not)
+		end
+
+
+
+	wipe_out is
+			-- Clear all enable flags.
+		do
+			internal_enabled.wipe_out
+		end
+
 
 feature {CONF_VISITOR} -- Implementation, attributes stored in configuration file
 

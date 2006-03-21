@@ -106,16 +106,12 @@ feature {NONE} -- Initialization
 			until
 				l_is_destroyed
 			loop
-				process_events
+				process_gdk_events
 				if not {EV_GTK_EXTERNALS}.g_main_context_pending (default_pointer) then
 					l_is_destroyed := is_destroyed
 					if not l_is_destroyed then
-						if idle_actions_pending then
-							call_idle_actions
-						else
-								-- Give timeslice back to kernel so as to not take all CPU.
-							usleep (10000)
-						end
+						call_idle_actions
+						relinquish_cpu_slice
 					end
 				else
 						-- Dispatch context events to trigger gtk signals, idle handling and expose events.
@@ -126,29 +122,11 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_IMP} -- Access
 
-	idle_actions_pending: BOOLEAN is
-			-- Are there any idle actions pending?
-		do
-			Result := internal_idle_actions.count > 0 or else
-						(idle_actions_internal /= Void and then idle_actions_internal.count > 0)
-		end
-
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
 
 	gtk_dependent_routines: EV_GTK_DEPENDENT_ROUTINES
 		-- Object used for exporting gtk version dependent routines to independent implementation
-
-	call_idle_actions is
-			-- Execute idle actions
-		do
-				-- Call the opo idle actions only if there are actions available.
-			if not internal_idle_actions.is_empty then
-				internal_idle_actions.call (Void)
-			elseif idle_actions_internal /= Void then
-				idle_actions_internal.call (Void)
-			end
-		end
 
 feature -- Access
 
@@ -206,32 +184,41 @@ feature -- Basic operation
 	process_events_until_stopped is
 			-- Process all events until one event is received
 			-- by `widget'.
-		local
-			main_not_running: INTEGER
 		do
 			from
 				stop_processing_requested := False
 			until
 				stop_processing_requested
 			loop
-					-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
-				main_not_running := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
+				process_events
+				process_graphical_events
+				call_idle_actions
+					-- Relinquish CPU so as to not take up 100% kernel
+				relinquish_cpu_slice
 			end
+		end
+
+	process_events is
+			-- Process all pending events and redraws.
+		do
+			process_gdk_events
+			process_graphical_events
+		end
+
+	process_graphical_events is
+			-- Process any invalidated Windows.
+		do
+			{EV_GTK_EXTERNALS}.gdk_window_process_all_updates
 		end
 
 	stop_processing is
 			-- Exit `process_events_until_stopped'.
-		local
-			temp_str: EV_GTK_C_STRING
 		do
 				-- Set flag for 'process_events_until_stopped' to exit.
 			stop_processing_requested := True
-				-- Send a message to our hidden window to fire up 'process_events_until_stopped' loop.
-			temp_str := "hide"
-			{EV_GTK_EXTERNALS}.gtk_signal_emit_by_name (default_gtk_window, temp_str.item)
 		end
 
-	process_events is
+	process_gdk_events is
 			-- Process all current GDK events
 		local
 			gdk_event: POINTER
@@ -250,7 +237,6 @@ feature -- Basic operation
 			loop
 				gdk_event := {EV_GTK_EXTERNALS}.gdk_event_get
 				if gdk_event /= default_pointer then
-
 					event_widget := {EV_GTK_EXTERNALS}.gtk_get_event_widget (gdk_event)
 					if event_widget /= default_pointer then
 						l_call_event := True
@@ -397,11 +383,35 @@ feature -- Basic operation
 							l_propagate_event := True
 						when GDK_DELETE then
 							debug ("GDK_EVENT")
-								print ("GDK_DELETE")
+								print ("GDK_DELETE%N")
 							end
 						when GDK_DESTROY then
 							debug ("GDK_EVENT")
-								print ("GDK_DESTROY")
+								print ("GDK_DESTROY%N")
+							end
+						when GDK_DRAG_ENTER then
+							debug ("GDK_EVENT")
+								print ("GDK_DRAG_ENTER")
+							end
+						when GDK_DRAG_LEAVE then
+							debug ("GDK_EVENT")
+								print ("GDK_DRAG_LEAVE")
+							end
+						when GDK_DRAG_MOTION then
+							debug ("GDK_EVENT")
+								print ("GDK_DRAG_MOTION")
+							end
+						when GDK_DRAG_STATUS then
+							debug ("GDK_EVENT")
+								print ("GDK_DRAG_STATUS")
+							end
+						when GDK_DROP_START then
+							debug ("GDK_EVENT")
+								print ("GDK_DROP_START")
+							end
+						when GDK_DROP_FINISHED then
+							debug ("GDK_EVENT")
+								print ("GDK_DROP_FINISHED")
 							end
 						else
 							l_call_event := False

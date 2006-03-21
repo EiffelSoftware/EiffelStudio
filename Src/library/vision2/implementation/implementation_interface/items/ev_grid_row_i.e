@@ -560,7 +560,7 @@ feature -- Status setting
 					is_expanded := subrow_count > 0
 				end
 				if parent_i /= Void then
-					parent_i.redraw_from_row_to_end (Current)
+					parent_i.redraw
 				end
 			end
 		ensure
@@ -595,7 +595,7 @@ feature -- Status setting
 					collapse_actions_internal.call (Void)
 				end
 				if parent_i /= Void then
-					parent_i.redraw_from_row_to_end (Current)
+					parent_i.redraw
 				end
 			end
 		ensure
@@ -611,7 +611,7 @@ feature -- Status setting
 			internal_height := a_height
 			if not parent_i.is_row_height_fixed then
 				parent_i.set_vertical_computation_required (index)
-				parent_i.redraw_from_row_to_end (Current)
+				parent_i.redraw
 				if is_locked then
 					parent_i.reposition_locked_row (Current)
 				end
@@ -717,7 +717,7 @@ feature -- Status setting
 			parent_tree_enabled: parent.is_tree_enabled
 		do
 			is_ensured_expandable := True
-			parent_i.redraw_from_row_to_end (Current)
+			parent_i.redraw
 		ensure
 			is_expandable: is_expandable
 		end
@@ -730,7 +730,8 @@ feature -- Status setting
 			no_subrows_contained: subrow_count = 0
 		do
 			is_ensured_expandable := False
-			parent_i.redraw_from_row_to_end (Current)
+
+			parent_i.redraw
 		ensure
 			not_is_expandable: not is_expandable
 		end

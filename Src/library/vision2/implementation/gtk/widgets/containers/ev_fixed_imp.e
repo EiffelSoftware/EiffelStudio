@@ -1,14 +1,14 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision fixed. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_FIXED_IMP
-	
+
 inherit
 	EV_FIXED_I
 		undefine
@@ -17,13 +17,13 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
 			on_removed_item
 		end
-	
+
 create
 	make
 
@@ -47,7 +47,7 @@ feature -- Status setting
 			w_imp ?= a_widget.implementation
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (c_object, w_imp.c_object, an_x, a_y)
 		end
-		
+
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
@@ -78,7 +78,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Y position of `a_widget_imp' within `Current'.
 		do
 			Result := gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
-		end	
+		end
 
 	i_th_fixed_child (i: INTEGER): POINTER is
 			-- `i-th' fixed child of `Current'.

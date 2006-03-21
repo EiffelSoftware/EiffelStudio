@@ -12,14 +12,6 @@ deferred class
 inherit
 	EV_ANY_IMP
 
-feature {NONE} -- Agent functions.
-
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for key events
-		once
-			Result := agent (App_implementation.gtk_marshal).key_event_translate
-		end
-
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
@@ -194,8 +186,18 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
+		local
+			l_window, l_widget: POINTER
+			l_widget_imp: EV_WIDGET_IMP
 		do
-			Result := has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum)
+			l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if l_window /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_window_has_toplevel_focus (l_window) then
+				l_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (l_window)
+				if l_widget /= default_pointer then
+					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
+					Result := l_widget_imp = Current
+				end
+			end
 		end
 
 	width: INTEGER is

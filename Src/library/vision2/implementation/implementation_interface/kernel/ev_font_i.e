@@ -27,6 +27,11 @@ feature -- Access
 		deferred
 		end
 
+	char_set: INTEGER is
+			-- Charset
+		deferred
+		end
+
 	weight: INTEGER is
 			-- Preferred font thickness.
 		deferred
@@ -41,7 +46,7 @@ feature -- Access
 			-- Preferred font height measured in screen pixels.
 		deferred
 		end
-		
+
 	height_in_points: INTEGER is
 			-- Preferred font height in pixels.
 		deferred
@@ -75,15 +80,15 @@ feature -- Element change
 			preferred_families.internal_remove_actions.wipe_out
 			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
 			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
-			
-			
+
+
 			update_font_face
 			set_family (a_family)
 			set_weight (a_weight)
 			set_shape (a_shape)
 			set_height (a_height)
 		end
-		
+
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
 		require
@@ -119,7 +124,7 @@ feature -- Element change
 		ensure
 			height_assigned: height = a_height
 		end
-		
+
 	set_height_in_points (a_height: INTEGER) is
 			-- Set `a_height_in_points' to `a_height'.
 		require
@@ -138,13 +143,13 @@ feature -- Status report
 
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the top of the drawn character. 
+			-- operation to the top of the drawn character.
 		deferred
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the bottom of the drawn character. 
+			-- operation to the bottom of the drawn character.
 		deferred
 		end
 
@@ -205,7 +210,7 @@ feature -- Status report
 			index, n: INTEGER
 			s: STRING
 			l_height: INTEGER
-		
+
 		do
 				-- Assign to local, avoiding multiple computations.
 			l_height := height
@@ -227,9 +232,9 @@ feature -- Status report
 			end
 			Result := [cur_width, cur_height, 0, 0]
 		end
-		
+
 feature {EV_FONT, EV_ANY_I} -- Implementation
-		
+
 	copy_font (other: like interface) is
 			-- Update `Current' with all attributes of `other'.
 		require
@@ -255,7 +260,7 @@ feature {EV_ANY_I} -- Implementation
 		ensure
 			name_not_void: name /= Void
 		end
-		
+
 	update_preferred_faces (a_face: STRING) is
 			-- `preferred_faces' has changed, so update `Current' to reflect this,
 			-- possibly selecting a new face name.

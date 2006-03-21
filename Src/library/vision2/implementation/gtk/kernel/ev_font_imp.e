@@ -69,6 +69,10 @@ feature -- Access
 	family: INTEGER
 			-- Preferred font category.
 
+	char_set: INTEGER
+			-- Charset
+			-- This is not meaningful on GTK.
+
 	weight: INTEGER
 			-- Preferred font thickness.
 

@@ -90,6 +90,12 @@ feature -- Access
 	family: INTEGER
 			-- Preferred font category.
 
+	char_set: INTEGER is
+			-- Charset
+		do
+			Result := wel_font.log_font.char_set
+		end
+
 	weight: INTEGER
 			-- Preferred font thickness.
 

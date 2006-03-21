@@ -5,7 +5,7 @@ indexing
 			Appearance is specified in terms of font family, height, shape and
 			weight. The local system font closest to the specification will be
 			displayed. A specific font name may optionally be specified. See `set_preferred_face'"
-			
+
 			There are two available queries for a font height, `height' and `height_in_points'.
 			Changing one, changes the other accordingly. `height' is given in pixels while
 			`height_in_points' is in points or 1/72 of an inch. Using `height_in_points' ensures
@@ -17,9 +17,9 @@ indexing
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
-	EV_FONT 
+	EV_FONT
 
 inherit
 	EV_ANY
@@ -83,6 +83,17 @@ feature -- Access
 			bridge_ok: Result = implementation.family
 		end
 
+	char_set: INTEGER is
+			-- Charset of the font.
+			-- Only meaningful on windows.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.char_set
+		ensure
+			bridge_ok: Result = implementation.char_set
+		end
+
 	weight: INTEGER is
 			-- Preferred font thickness. Can be any of the Weight_*
 			-- constants defined in EV_FONT_CONSTANTS.
@@ -117,7 +128,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.height
 		end
-		
+
 	height_in_points: INTEGER is
 			-- Preferred font height in points.
 		require
@@ -127,7 +138,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.height_in_points
 		end
-		
+
 	preferred_families: EV_ACTIVE_LIST [STRING] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
@@ -141,7 +152,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.preferred_families
 			Result_not_void: Result /= Void
-		end 
+		end
 
 feature -- Element change
 
@@ -189,7 +200,7 @@ feature -- Element change
 		ensure
 			height_assigned: height = a_height
 		end
-		
+
 	set_height_in_points (a_height: INTEGER) is
 			-- Set `height_in_points' to `a_height'.
 			-- `height' changes accordingly based on screen resolution.
@@ -216,22 +227,22 @@ feature -- Status report
 
 	ascent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the top of the drawn character. 
+			-- operation to the top of the drawn character.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.ascent 
+			Result := implementation.ascent
 		ensure
 			bridge_ok: Result = implementation.ascent
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
-			-- operation to the bottom of the drawn character. 
+			-- operation to the bottom of the drawn character.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.descent 
+			Result := implementation.descent
 		ensure
 			bridge_ok: Result = implementation.descent
 		end
@@ -335,7 +346,7 @@ feature -- Status report
 				(implementation.string_size (a_string).item (1)) and
 				Result.item (2).is_equal
 				(implementation.string_size (a_string).item (2))
-		end		
+		end
 
 feature -- Basic operations
 
@@ -361,7 +372,7 @@ feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
-			
+
 		do
 			Result := Precursor {EV_ANY} and then
 				preferred_families /= Void and then preferred_families.is_empty

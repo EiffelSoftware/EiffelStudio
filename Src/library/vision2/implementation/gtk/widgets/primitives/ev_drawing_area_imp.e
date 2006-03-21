@@ -30,7 +30,6 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			gdk_events_mask,
 			button_press_switch,
 			initialize,
 			tooltips_pointer,
@@ -62,7 +61,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, True)
 				-- When false, this means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
@@ -247,7 +246,7 @@ feature {NONE} -- Implementation
 	redraw is
 			-- Redraw the entire area.
 		do
-			redraw_rectangle (0, 0, width, height)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
@@ -340,15 +339,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	Gdk_events_mask: INTEGER is
-			-- Mask of all the gdk events the gdkwindow shall receive.
-		once
-			Result := Precursor {EV_PRIMITIVE_IMP} |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
-				-- We only want motion events when we query for them.
-				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
-		end
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.

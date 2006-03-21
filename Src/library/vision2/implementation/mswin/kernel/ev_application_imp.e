@@ -77,7 +77,6 @@ feature {NONE} -- Initialization
 				-- during creation of the widgets, and those widgets created before a window
 				-- end up with a null theme handle.
 			l_result := silly_main_window.is_inside
-			stop_processing_requested_msg := cwin_register_window_message (ev_stop_processing_requested.item)
 			cwin_disable_xp_ghosting
 				-- Initialize the theme drawer to the correct version for
 				-- the current platform.
@@ -567,14 +566,8 @@ feature {NONE} -- Implementation
 				if msg.last_boolean_result then
 					process_message (msg)
 				else
-					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call (Void)
-					elseif idle_actions_internal /= Void and then
-						not idle_actions_internal.is_empty then
-						idle_actions_internal.call (Void)
-					else
-						msg.wait
-					end
+					call_idle_actions
+					relinquish_cpu_slice
 				end
 			end
 		end
@@ -588,6 +581,7 @@ feature {NONE} -- Implementation
 			--| Different from WEL because of accelerators.
 		local
 			focused_window: like window_with_focus
+			temp_ptr: POINTER
 		do
 			if msg.last_boolean_result then
 				if msg.quit then
@@ -643,22 +637,17 @@ feature {NONE} -- Implementation
 			from
 				create msg.make
 				msg.peek_all
+				stop_processing_requested := False
 			until
-				msg.message = stop_processing_requested_msg
+				stop_processing_requested
 			loop
+				msg.peek_all
 				if msg.last_boolean_result then
 					process_message (msg)
 				else
-					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call (Void)
-					elseif idle_actions_internal /= Void and then
-						not idle_actions_internal.is_empty then
-						idle_actions_internal.call (Void)
-					else
-						msg.wait
-					end
+					call_idle_actions
+					relinquish_cpu_slice
 				end
-				msg.peek_all
 			end
 		end
 
@@ -666,23 +655,6 @@ feature {NONE} -- Implementation
 			--  Exit `process_events_until_stopped'.
 		do
 			stop_processing_requested := True
-			if application_main_window /= Void then
-				cwin_post_message (application_main_window.item, stop_processing_requested_msg,
-					default_pointer, default_pointer)
-			else
-				cwin_post_message (default_pointer, stop_processing_requested_msg,
-					default_pointer, default_pointer)
-			end
-		end
-
-	stop_processing_requested_msg: INTEGER
-		-- Custom message sent by `stop_processing'.
-
-	ev_stop_processing_requested: WEL_STRING is
-			-- `Result' is string used to register custom stop processing
-			-- message with Windows.
-		once
-			create Result.make ("ev_stop_processing_requested")
 		end
 
 feature {NONE} -- Externals

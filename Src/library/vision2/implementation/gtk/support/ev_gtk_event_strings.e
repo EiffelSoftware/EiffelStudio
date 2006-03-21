@@ -13,6 +13,11 @@ class
 
 feature -- Implementation
 
+	delete_event_string: EV_GTK_C_STRING is
+		once
+			Result := "delete-event"
+		end
+
 	key_press_event_string: EV_GTK_C_STRING is
 		once
 			Result := "key-press-event"
@@ -34,6 +39,24 @@ feature -- Implementation
 			-- focus_out_event_string constant.
 		once
 			Result := "focus-out-event"
+		end
+
+	set_focus_event_string: EV_GTK_C_STRING is
+			-- set_focus_event_string constant.
+		once
+			Result := "set-focus"
+		end
+
+	configure_event_string: EV_GTK_C_STRING is
+			-- configure_event_string constant.
+		once
+			Result := "configure-event"
+		end
+
+	map_event_string: EV_GTK_C_STRING is
+			-- map_event_string constant.
+		once
+			Result := "map_event"
 		end
 
 	enter_notify_event_string: EV_GTK_C_STRING is
@@ -58,13 +81,13 @@ feature -- Implementation
 			-- size_allocate_event_string constant.
 		once
 			Result := "size-allocate"
-		end		
+		end
 
 	button_press_event_string: EV_GTK_C_STRING is
 			-- button_press_event_string constant.
 		once
 			Result := "button-press-event"
-		end				
+		end
 
 	button_release_event_string: EV_GTK_C_STRING is
 			-- button_release_event_string constant.

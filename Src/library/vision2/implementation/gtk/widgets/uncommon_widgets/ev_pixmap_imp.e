@@ -224,88 +224,16 @@ feature -- Element change
 			end
 		end
 
---	set_mask	 (a_mask: EV_BITMAP) is
---			-- Set the GdkBitmap used for masking `Current'.
---		local
---			a_mask_imp: EV_BITMAP_IMP
---		do
---			a_mask_imp ?= a_mask.implementation
---			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (visual_widget, drawable, a_mask_imp.drawable)
---				-- We do not need to unref `drawable' as it is reffed and then unreffed by GtkImage.
---			mask := a_mask_imp.drawable
---				-- We do not unref the mask as it is still needed by `a_mask'
---		end
+	set_mask	 (a_mask: EV_BITMAP) is
+			-- Set the GdkBitmap used for masking `Current'.
+		local
+			a_mask_imp: EV_BITMAP_IMP
+		do
+			a_mask_imp ?= a_mask.implementation
+			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
+		end
 
 feature -- Access
-
-	bitmap_array: ARRAY [CHARACTER] is
-			-- Monochromatic representation of `Current' used for cursors.
-			-- Representation in bits stored in characters.
-		local
-			a_gdkimage, a_visual: POINTER
-			a_visual_type, a_pixel: INTEGER
-			a_color: POINTER
-			a_color_map: POINTER
-			a_width: INTEGER
-			array_offset, array_size: INTEGER
-			array_area: SPECIAL [CHARACTER]
-			color_struct_size: INTEGER
-			character_result, n_character: INTEGER
-		do
-			array_size := width * height
-			if (array_size \\ 8) > 0 then
-				array_size := array_size + (8 - (array_size \\ 8))
-			end
-			check
-				array_size_factor_of_8: (array_size \\ 8) = 0
-			end
-			array_size := array_size // 8
-			create Result.make (1, array_size)
-
-			a_gdkimage := {EV_GTK_EXTERNALS}.gdk_image_get (drawable, 0, 0, width, height)
-
-			from
-				a_width := width
-				a_color_map := {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
-				a_visual := {EV_GTK_EXTERNALS}.gdk_colormap_get_visual (a_color_map)
-				a_visual_type := {EV_GTK_EXTERNALS}.gdk_visual_struct_type (a_visual)
-				a_color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-				array_area := Result.area
-				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
-				array_offset := 0
-				n_character := 0
-			until
-				array_offset = width * height
-			loop
-				a_pixel := {EV_GTK_EXTERNALS}.gdk_image_get_pixel (
-					a_gdkimage,
-					(array_offset \\ (a_width)), -- Zero based X coord
-					((array_offset) // a_width) -- Zero based Y coord
-				)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-					-- RGB values of a_color are 16 bit.
-				if n_character = 8 then
-					n_character := 0
-					character_result := 0
-				end
-				if
-					{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 0
-					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) > 0
-					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) > 0
-				then
-					character_result := character_result + (2 ^ (n_character)).rounded
-					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
-					-- This is the way it is read in by the gdk function. (FIFO)
-				end
-				if array_offset \\ 8 = 7 then
-					Result.put (character_result.to_character, (array_offset // 8) + 1)
-				end
-				n_character := n_character + 1
-				array_offset := array_offset + 1
-			end
-			a_color.memory_free
-			{EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
-		end
 
 	raw_image_data: EV_RAW_IMAGE_DATA is
 		local

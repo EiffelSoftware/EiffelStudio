@@ -150,7 +150,12 @@ feature -- Output
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text (ti_Constraint)
 				a_text_formatter.add_space
-				a_text_formatter.add_string (constraint.dump)
+				if constraint_type.has_associated_class then
+					a_text_formatter.process_class_name_text (constraint_type.associated_class.name,
+																constraint_type.associated_class.lace_class, False)
+				else
+					a_text_formatter.add_string (constraint.dump)
+				end
 				if has_creation_constraint then
 					from
 						creation_feature_list.start

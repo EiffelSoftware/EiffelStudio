@@ -166,6 +166,12 @@ feature -- Element Change
 
 feature -- Basic operation
 
+	relinquish_cpu_slice is
+			-- Give timeslice back to kernel so as to not take all CPU.
+		do
+			sleep (10)
+		end
+
 	process_events is
 			-- Process any pending events.
 			-- Pass control to the GUI toolkit so that it can
@@ -229,6 +235,15 @@ feature -- Basic operation
 			idle_actions.extend (a_idle_action)
 		end
 
+	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+			-- Remove `a_idle_action' from `idle_actions'
+			-- Thread safe
+		require
+			a_idle_action_not_void: a_idle_action /= Void
+		do
+			idle_actions.prune_all (a_idle_action)
+		end
+
 feature -- Events
 
 	internal_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -253,6 +268,7 @@ feature -- Events
 		local
 			snapshot: like once_idle_actions
 		do
+
 			snapshot := once_idle_actions.twin
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
@@ -390,6 +406,19 @@ feature {NONE} -- Debug
 				pnd_targets.forth
 			end
 			pnd_targets.go_to (cur)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	call_idle_actions is
+			-- Call idle actions.
+		do
+				-- Call the opo idle actions only if there are actions available.
+			if not internal_idle_actions.is_empty then
+				internal_idle_actions.call (Void)
+			elseif idle_actions_internal /= Void then
+				idle_actions_internal.call (Void)
+			end
 		end
 
 feature {NONE} -- Implementation

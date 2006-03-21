@@ -113,7 +113,7 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 feature {EV_ANY_IMP} -- Widget intermediary agent routines
 
 	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER) is
-			-- Size allocate happened on widget
+			-- Size allocate happened on widget.
 		local
 			a_widget: EV_WIDGET_IMP
 		do
@@ -123,25 +123,25 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			end
 		end
 
-	widget_focus_in_intermediary (a_c_object: POINTER) is
-			-- Focus in
+	window_focus_intermediary (a_c_object: POINTER; a_focused: BOOLEAN) is
+			-- Focus handling intermediary.
 		local
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if a_widget /= Void and then not a_widget.is_destroyed then
-				a_widget.on_focus_changed (True)
+				a_widget.on_focus_changed (a_focused)
 			end
 		end
 
-	widget_focus_out_intermediary (a_c_object: POINTER) is
-			-- Focus out
+	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER) is
+			-- Set Focus handling intermediary.
 		local
-			a_widget: EV_WIDGET_IMP
+			a_window: EV_WINDOW_IMP
 		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void and then not a_widget.is_destroyed then
-				a_widget.on_focus_changed (False)
+			a_window ?= eif_id_object (a_object_id)
+			if a_window /= Void and then not a_window.is_destroyed then
+				a_window.on_set_focus_event (a_widget_ptr)
 			end
 		end
 

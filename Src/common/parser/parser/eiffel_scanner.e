@@ -580,7 +580,7 @@ end
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			
 when 49 then
@@ -959,7 +959,7 @@ end
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `note', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `note', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			
 when 83 then
@@ -1034,7 +1034,7 @@ end
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `only', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			
 when 89 then
@@ -2075,7 +2075,7 @@ end
 						if has_old_verbatim_strings_warning then
 							Error_handler.insert_warning (
 								create {SYNTAX_WARNING}.make (line, column, filename,
-									"Default verbatim string handling is changed to follow standard semantics %
+									once "Default verbatim string handling is changed to follow standard semantics %
 									%with alignment instead of previous non-standard one without alignment."))
 						end
 					end
@@ -2203,7 +2203,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1021")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%A")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%A")
 				token_buffer.append_character ('%A')
 			
 when 179 then
@@ -2214,7 +2214,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1025")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%B")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%B")
 				token_buffer.append_character ('%B')
 			
 when 180 then
@@ -2225,7 +2225,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1029")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%C")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%C")
 				token_buffer.append_character ('%C')
 			
 when 181 then
@@ -2236,7 +2236,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1033")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%D")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%D")
 				token_buffer.append_character ('%D')
 			
 when 182 then
@@ -2247,7 +2247,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1037")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%F")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%F")
 				token_buffer.append_character ('%F')
 			
 when 183 then
@@ -2258,7 +2258,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1041")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%H")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%H")
 				token_buffer.append_character ('%H')
 			
 when 184 then
@@ -2269,7 +2269,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1045")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%L")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%L")
 				token_buffer.append_character ('%L')
 			
 when 185 then
@@ -2280,7 +2280,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1049")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%N")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%N")
 				token_buffer.append_character ('%N')
 			
 when 186 then
@@ -2291,7 +2291,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1053")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%Q")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%Q")
 				token_buffer.append_character ('%Q')
 			
 when 187 then
@@ -2302,7 +2302,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1057")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%R")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%R")
 				token_buffer.append_character ('%R')
 			
 when 188 then
@@ -2313,7 +2313,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1061")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%S")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%S")
 				token_buffer.append_character ('%S')
 			
 when 189 then
@@ -2324,7 +2324,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1065")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%T")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%T")
 				token_buffer.append_character ('%T')
 			
 when 190 then
@@ -2335,7 +2335,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1069")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%U")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%U")
 				token_buffer.append_character ('%U')
 			
 when 191 then
@@ -2346,7 +2346,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1073")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%V")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%V")
 				token_buffer.append_character ('%V')
 			
 when 192 then
@@ -2357,7 +2357,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1077")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%%")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%%")
 				token_buffer.append_character ('%%')
 			
 when 193 then
@@ -2368,7 +2368,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1081")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%'")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%'")
 				token_buffer.append_character ('%'')
 			
 when 194 then
@@ -2379,7 +2379,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1085")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%"")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%"")
 				token_buffer.append_character ('%"')
 			
 when 195 then
@@ -2390,7 +2390,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1089")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%(")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%(")
 				token_buffer.append_character ('%(')
 			
 when 196 then
@@ -2401,7 +2401,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1093")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%)")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%)")
 				token_buffer.append_character ('%)')
 			
 when 197 then
@@ -2412,7 +2412,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1097")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%<")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%<")
 				token_buffer.append_character ('%<')
 			
 when 198 then
@@ -2423,7 +2423,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1101")
 end
 
-				ast_factory.append_string_to_buffer (token_buffer2, "%%>")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%>")
 				token_buffer.append_character ('%>')
 			
 when 199 then

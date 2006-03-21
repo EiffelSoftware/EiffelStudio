@@ -2,7 +2,7 @@ indexing
 	description: "EiffelVision drawable. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figures, primitives, drawing, line, point, ellipse" 
+	keywords: "figures, primitives, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,6 +29,8 @@ inherit
 			default_create
 		end
 
+	MATH_CONST
+
 feature {NONE} -- Initialization
 
 	init_default_values is
@@ -49,7 +51,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			-- Pointer to GdkGC struct.
 			-- The graphics context applied to the primitives.
 			-- Line style, width, colors, etc. are defined in here.
-	
+
 	gcvalues: POINTER
 			-- Pointer to GdkGCValues struct.
 			-- Is allocated during creation but has to be updated
@@ -114,7 +116,7 @@ feature -- Access
 				create Result.make_with_rgb (0, 0, 0)
 			end
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Color used for erasing of canvas.
 			-- Default: white.
@@ -146,7 +148,7 @@ feature -- Access
 			gcvalues.memory_free
 
 			if gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_copy_enum then
-				Result := drawing_mode_copy	
+				Result := drawing_mode_copy
 			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_xor_enum then
 				Result := drawing_mode_xor
 			elseif gdk_drawing_mode = {EV_GTK_EXTERNALS}.Gdk_invert_enum then
@@ -208,7 +210,7 @@ feature -- Element change
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)				
+				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)
 			end
 		end
 
@@ -223,7 +225,7 @@ feature -- Element change
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)				
+				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_fg_color (gc, color_struct)
 			end
 		end
 
@@ -231,25 +233,27 @@ feature -- Element change
 			-- Assign `a_width' to `line_width'.
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, a_width,
-				line_style, cap_style, join_style)				
+				line_style, cap_style, join_style)
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
 			-- Set drawing mode to `a_mode'.
+		local
+			l_gc: like gc
 		do
-			check valid_drawing_mode (a_mode) end
+			l_gc := gc
 			inspect
 				a_mode
 			when drawing_mode_copy then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
 			when drawing_mode_xor then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.Gdk_xor_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_xor_enum)
 			when drawing_mode_invert then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.Gdk_invert_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_invert_enum)
 			when drawing_mode_and then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.Gdk_and_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_and_enum)
 			when drawing_mode_or then
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.Gdk_or_enum)
+				{EV_GTK_EXTERNALS}.gdk_gc_set_function (l_gc, {EV_GTK_EXTERNALS}.Gdk_or_enum)
 			else
 				check
 					drawing_mode_existent: False
@@ -318,7 +322,7 @@ feature -- Clearing operations
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
-			clear_rectangle (0, 0, width, height)
+			--clear_rectangle (0, 0, width, height)
 		end
 
 	clear_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -353,7 +357,14 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_internal (x, y, a_text, True, -1)
+			draw_text_internal (x, y, a_text, True, -1, 0)
+		end
+
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING) is
+			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Rotation is number of degrees counter-clockwise from horizontal plane.
+		do
+			draw_text_internal (x, y, a_text, True, -1, angle)
 		end
 
 	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
@@ -361,7 +372,7 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			draw_text_internal (x, y, a_text, True, clipping_width)
+			draw_text_internal (x, y, a_text, True, clipping_width, 0)
 		end
 
 	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
@@ -369,19 +380,28 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			draw_text_internal (x, y, a_text, False, clipping_width)
+			draw_text_internal (x, y, a_text, False, clipping_width, 0)
 		end
-		
-	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN; a_width: INTEGER) is
+
+	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+		do
+			draw_text_internal (x, y, a_text, False, -1, 0)
+		end
+
+	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
-			a_y: INTEGER
+			a_x, a_y: INTEGER
 			a_clip_area: EV_RECTANGLE
+			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
+			l_pango_renderer: POINTER
 		do
 			if drawable /= default_pointer then
+				a_x := x
 				if draw_from_baseline then
 					if internal_font_imp /= Void then
 						a_y := y - internal_font_imp.ascent
@@ -394,7 +414,7 @@ feature -- Drawing operations
 				l_app_imp := App_implementation
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 					-- Replace when we have UTF16 support
-				a_pango_layout := l_app_imp.pango_layout				
+				a_pango_layout := l_app_imp.pango_layout
 
 				{EV_GTK_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
@@ -403,34 +423,59 @@ feature -- Drawing operations
 
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text
-				--	{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
+--					{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
 
-				a_clip_area := gc_clip_area
-
-				set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
-				--	{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
+					-- Previous code for gtk 2.4 that set a clip area for text rendering.
+					a_clip_area := gc_clip_area
+					set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
+--					{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
 				end
 
-				{EV_GTK_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
+				if a_angle /= 0 then
+--					l_pango_renderer := {EV_GTK_EXTERNALS}.gdk_pango_renderer_get_default ({EV_GTK_EXTERNALS}.gdk_screen_get_default)
+--						-- This is reusable so do not free the renderer.
+--						-- Renderer is needed to rotate text without a bounding box
+--					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
+--					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
+--					
+--					a_pango_context := {EV_GTK_EXTERNALS}.pango_layout_get_context (a_pango_layout)
+--					
+--					{EV_GTK_EXTERNALS}.pango_matrix_init ($a_pango_matrix)
+--					
+--					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, x, y)
+--					{EV_GTK_EXTERNALS}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi * 180)
+--					{EV_GTK_EXTERNALS}.pango_matrix_translate (a_pango_matrix, 0, -(y - a_y))
+--					
+--					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
+--
+--					{EV_GTK_EXTERNALS}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
+--					
+--						-- Clean up Pango renderer.
+--					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
+--					{EV_GTK_EXTERNALS}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
+				else
+					{EV_GTK_EXTERNALS}.gdk_draw_layout (drawable, gc, a_x, a_y, a_pango_layout)
+				end
 
+					-- Reset all changed values.
 				if a_width /= -1 then
-						-- Restore clip area
+						-- Restore clip area (used for gtk 2.4)
 					if a_clip_area /= Void then
 						set_clip_area (a_clip_area)
 					else
 						remove_clip_area
 					end
+	--				{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 0) -- PangoEllipsizeNone
 				end
-				
+
 				{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
 				{EV_GTK_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
-			end
-		end		
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
-			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
-		do
-			draw_text_internal (x, y, a_text, False, -1)
+--				if a_pango_context /= default_pointer then
+--					{EV_GTK_EXTERNALS}.pango_context_set_matrix (a_pango_context, default_pointer)
+--					{EV_GTK_EXTERNALS}.pango_matrix_free (a_pango_matrix)
+--				end			
+			end
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -483,7 +528,7 @@ feature -- Drawing operations
 					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
 					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x - x_src, y - y_src)
 				end
-				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc,
+				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (drawable, gc,
 					pixmap_imp.drawable,
 					x_src, y_src, x, y, src_width, src_height)
 				update_if_needed
@@ -510,7 +555,7 @@ feature -- Drawing operations
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		do
-			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)	
+			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -527,7 +572,7 @@ feature -- Drawing operations
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
-			if drawable /= default_pointer then 
+			if drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
 					{EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
@@ -573,12 +618,12 @@ feature -- Drawing operations
 			top := y
 			right := left + a_width
 			bottom := top + a_height
-			                     
+
 			semi_width := a_width / 2
 			semi_height := a_height / 2
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
-			                        
+
 			x_tmp := semi_height / (sqrt (tang_start^2 + semi_height^2 / semi_width^2))
 			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_start^2)))
 			if sine (a_start_angle) > 0 then
@@ -589,7 +634,7 @@ feature -- Drawing operations
 			end
 			x_start_arc := (x_tmp + left + semi_width).rounded
 			y_start_arc := (y_tmp + top + semi_height).rounded
-			
+
 			x_tmp := semi_height / (sqrt (tang_end^2 + semi_height^2 / semi_width^2))
 			y_tmp := semi_height / (sqrt (1 + semi_height^2 / (semi_width^2 * tang_end^2)))
 			if sine (a_start_angle + an_aperture) > 0 then
@@ -600,7 +645,7 @@ feature -- Drawing operations
 			end
 			x_end_arc := (x_tmp + left + semi_width).rounded
 			y_end_arc := (y_tmp + top + semi_height).rounded
-                        		
+
 			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
 			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
@@ -697,15 +742,15 @@ feature {NONE} -- Implemention
 		do
 			from
 				a_pts := pts
-				array_count := a_pts.count * 2 
+				array_count := a_pts.count * 2
 				create Result.make (1, array_count)
-				i := 2				
+				i := 2
 			until
 				i > array_count + 1
 			loop
 				a_coord := a_pts.item (i // 2)
 				Result.force (a_coord.x, i - 1)
-				Result.force (a_coord.y, i)			
+				Result.force (a_coord.y, i)
 				i := i + 2
 			end
 		ensure
@@ -726,13 +771,13 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		local
 			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
-			new_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)	
+			new_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
 			l_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-			
-			
+
+
 			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
 				-- We do not unref new_pix as it is being reused
-	
+
 			{EV_GTK_EXTERNALS}.object_unref (l_image)
 			l_image := default_pointer
 
@@ -742,18 +787,18 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 				a_mask_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
 				{EV_GTK_EXTERNALS}.object_unref (l_mask_image)
 				l_mask_image := default_pointer
-				
+
 				l_temp_pix := a_mask_pix
 				a_mask_pix := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
 				{EV_GTK_EXTERNALS}.object_unref (l_temp_pix)
 					-- Draw mask on top of pixbuf.
 				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 255)
 				draw_mask_on_pixbuf (a_pix, a_mask_pix)
-				
+
 				 -- Clean up
 				{EV_GTK_EXTERNALS}.object_unref (a_mask_pix)
-				
-				Result := a_pix				
+
+				Result := a_pix
 			else
 				Result := a_pix
 			end
@@ -768,7 +813,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear)
 			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
@@ -778,28 +823,28 @@ feature {NONE} -- Implementation
 			"[
 				{
 				int x, y;
-				
+
 				GdkPixbuf *pixbuf, *mask;
-				
+
 				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
-				mask = (GdkPixbuf*) $a_mask_ptr; 
-				
+				mask = (GdkPixbuf*) $a_mask_ptr;
+
 				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
 				{
 					guchar *src, *dest;
-					
+
 					src = gdk_pixbuf_get_pixels (mask) + y * gdk_pixbuf_get_rowstride (mask);
 					dest = gdk_pixbuf_get_pixels (pixbuf) + y * gdk_pixbuf_get_rowstride (pixbuf);
-					
+
 					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
 					{
 						if (src [0] == 0)
 							dest [3] = 0;
-						
+
 						src += 4;
-						dest += 4;				
+						dest += 4;
 					}
-					
+
 				}
 				}
 			]"
@@ -808,11 +853,11 @@ feature {NONE} -- Implementation
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.
 		deferred
-		end	
+		end
 
 	internal_foreground_color: EV_COLOR
 			-- Color used to draw primitives.
-		
+
 	internal_background_color: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
@@ -829,15 +874,15 @@ feature {NONE} -- Implementation
 
 	whole_circle: INTEGER is 23040
 		-- Number of 1/64 th degrees in a full circle (360 * 64)
-		
-	radians_to_gdk_angle: INTEGER is 3667 -- 
+
+	radians_to_gdk_angle: INTEGER is 3667 --
 			-- Multiply radian by this to get no of (1/64) degree segments.
 
 	internal_font_imp: EV_FONT_IMP
-	
+
 	interface: EV_DRAWABLE
-		
-	gdk_gc_unref (a_gc: POINTER) is 
+
+	gdk_gc_unref (a_gc: POINTER) is
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
 		external
 			"C (GdkGC*) | <gtk/gtk.h>"

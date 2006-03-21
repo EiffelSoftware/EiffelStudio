@@ -254,6 +254,7 @@ feature {NONE} -- Implementation
 			l_key: STRING
 			l_value: STRING
 			l_relative_base: STRING
+			l_offset: INTEGER
 		do
 			Result := original_path.twin
 
@@ -266,18 +267,19 @@ feature {NONE} -- Implementation
 
 				-- replace $ABC and ${ABC} with user defined or environment variables
 			from
-				i := Result.index_of ('$', 1)
-			variant
-					-- in each loop we decrease the number of $ by 1
-				Result.occurrences ('$')
+				l_offset := 1
+				i := Result.index_of ('$', l_offset)
 			until
 				i = 0
 			loop
+					-- in each loop we decrease the number of $ by 1, except if it is a $(ABC), then we increase the offset
 				if i /= 0 and then Result.item (i+1) = '{' then
 					j := Result.index_of ('}', i)
 					if j /= 0 and j > i+2 then
 						l_key := Result.substring (i+2, j-1)
 					end
+				elseif i /= 0 and then Result.item (i+1) = '(' then
+					l_offset := Result.index_of (')', i) + 2
 				elseif i /= 0 then
 					j := Result.index_of (' ', i) - 1
 					k := Result.index_of ('\', i) - 1
@@ -305,7 +307,7 @@ feature {NONE} -- Implementation
 					Result.replace_substring (to_internal (l_value), i, j)
 				end
 
-				i := Result.index_of ('$', 1)
+				i := Result.index_of ('$', l_offset)
 			end
 
 				-- handle relative path

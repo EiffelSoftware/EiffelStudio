@@ -19,6 +19,8 @@ inherit
 
 	KL_SHARED_OPERATING_SYSTEM
 
+	CONF_FILE_DATE
+
 create
 	make
 
@@ -155,15 +157,15 @@ feature -- Access, in compiled only, not stored to configuration file
 	path: STRING
 			-- The path of the class, relative to the group, in unix format.
 
-	overriden_by: CONF_CLASS
+	overriden_by: like class_type
 			-- The class that overrides this class.
 
-	overrides: ARRAYED_LIST [CONF_CLASS]
+	overrides: ARRAYED_LIST [like class_type]
 			-- The classes that this class overrides.
 
 feature -- Access queries
 
-	actual_class: CONF_CLASS is
+	actual_class: like class_type is
 			-- Return the actual class (takes overriding into account).
 		do
 			if is_overriden then
@@ -174,6 +176,13 @@ feature -- Access queries
 		end
 
 feature -- Status update
+
+	set_modified is
+			-- Mark the class as modified.
+		do
+			is_modified := True
+		end
+
 
 	set_up_to_date is
 			-- The class has been recompiled and is now up to date.
@@ -209,8 +218,10 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				end
 			end
 
-				-- forget override informations
+				-- forget override informations except the one necessary for the
+				-- check if a new override was added on a before not overriden class
 			overrides := Void
+			old_overriden_by := overriden_by
 			overriden_by := Void
 		end
 
@@ -225,11 +236,13 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			-- Check if the file was changed.
 			-- And update name if necessary
 		local
-			l_file: RAW_FILE
+			l_str: ANY
+			l_date: INTEGER
 		do
-			create l_file.make (full_file_name)
-			if l_file.exists and then date /= l_file.date then
-				date := l_file.date
+			l_str := full_file_name.to_c
+			eif_date ($l_str, $l_date)
+			if date /= l_date then
+				date := l_date
 				is_modified := True
 
 					-- check for a changed class name
@@ -278,17 +291,21 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		end
 
 
-	set_overriden_by (a_class: CONF_CLASS) is
+	set_overriden_by (a_class: like class_type) is
 			-- `a_class' overrides `Current'.
 		require
 			a_class_not_void: a_class /= Void
+			not_overriden: not is_overriden
 		do
 			overriden_by := a_class
+				-- if compiled and the override changed
+			is_modified := is_compiled and (old_overriden_by /= a_class or a_class.is_modified)
+			old_overriden_by := Void
 		ensure
 			is_overriden: is_overriden
 		end
 
-	add_does_override (a_class: CONF_CLASS) is
+	add_does_override (a_class: like class_type) is
 			-- `Current' overrides `a_class'.
 		do
 			if overrides = Void then
@@ -307,6 +324,9 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
+	old_overriden_by: like overriden_by
+			-- `overriden_by' from last compilation.
+
 	set_error (an_error: CONF_ERROR) is
 			-- Set `an_error'.
 		do
@@ -314,6 +334,9 @@ feature {NONE} -- Implementation
 			last_error := an_error
 		end
 
+feature {NONE} -- Type anchor
+
+	class_type: CONF_CLASS
 
 invariant
 	name_ok: name /= Void and then not name.is_empty

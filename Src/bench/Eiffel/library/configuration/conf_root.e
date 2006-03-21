@@ -27,18 +27,20 @@ feature {NONE} -- Initialization
 			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
 			a_feature_lower: a_feature /= Void implies a_feature.is_equal (a_feature.as_lower)
 		do
-			cluster_name := a_cluster
-			class_name := a_class
-			feature_name := a_feature
 			is_all_root := a_all_root
-			if a_all_root and a_class = Void then
+			if a_all_root then
 				class_name := "ANY"
+			else
+				cluster_name := a_cluster
+				class_name := a_class
+				feature_name := a_feature
 			end
 		ensure
-			cluster_set: cluster_name = a_cluster
-			class_set: a_class /= Void implies class_name = a_class
-			class_set: a_class = Void implies class_name = "ANY"
-			feature_set: feature_name = a_feature
+			cluster_set: not a_all_root implies cluster_name = a_cluster
+			class_set: not a_all_root implies class_name = a_class
+			class_set: a_all_root implies class_name.is_equal ("ANY")
+			feature_set: not a_all_root implies feature_name = a_feature
+			feature_set: a_all_root implies feature_name = Void
 		end
 
 feature -- Comparison

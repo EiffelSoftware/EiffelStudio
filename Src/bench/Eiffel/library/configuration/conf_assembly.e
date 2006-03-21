@@ -9,6 +9,8 @@ class
 inherit
 	CONF_GROUP
 		redefine
+			classes_set,
+			make,
 			process,
 			is_assembly,
 			class_by_name,
@@ -16,11 +18,24 @@ inherit
 			is_group_equivalent
 		end
 
+	CONF_FILE_DATE
+		undefine
+			is_equal
+		end
+
+
 create
 	make,
 	make_from_gac
 
 feature {NONE} -- Initialization
+
+	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
+			-- Create
+		do
+			Precursor (a_name, a_location, a_target)
+			enable (pf_dotnet, build_all)
+		end
 
 	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
 			-- Create.
@@ -32,6 +47,8 @@ feature {NONE} -- Initialization
 			an_assembly_key_not_void: an_assembly_key /= Void
 			a_target_not_void: a_target /= Void
 		do
+			enable (pf_dotnet, build_all)
+			is_in_gac := True
 			target := a_target
 			set_name (a_name)
 			assembly_name := an_assembly_name
@@ -44,11 +61,21 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
+	classes_set: BOOLEAN is
+			-- Are the classes set?
+		do
+			Result := classes /= Void and dotnet_classes /= Void
+		end
+
+
 	is_assembly: BOOLEAN is
 			-- Is this an assembly?
 		once
 			Result := True
 		end
+
+	is_in_gac: BOOLEAN
+			-- Is this assembly in gac?
 
 feature -- Access, stored in configuration file if location is empty
 
@@ -65,6 +92,9 @@ feature -- Access, stored in configuration file if location is empty
 			-- Public key of the assembly.
 
 feature -- Access, in compiled only
+
+	dotnet_classes: HASH_TABLE [like class_type, STRING]
+			-- Same as `classes' but indexed by the dotnet name.
 
 	guid: STRING
 			-- A unique id.
@@ -93,20 +123,58 @@ feature -- Access queries
 			Result := application_target /= target
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): ARRAYED_LIST [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [like class_type] is
 			-- Get class by name.
+		local
+			l_dep: CONF_ASSEMBLY
 		do
-			Result := Precursor (a_class, a_dependencies)
+			Result := Precursor (a_class, a_dependencies, a_platform, a_build)
 			if a_dependencies and dependencies /= Void then
 				from
 					dependencies.start
 				until
 					dependencies.after
 				loop
-					Result.append (dependencies.item.class_by_name (a_class, False))
+					l_dep := dependencies.item
+					if l_dep.is_enabled (a_platform, a_build) then
+						Result.append (l_dep.class_by_name (a_class, False, a_platform, a_build))
+					end
 					dependencies.forth
 				end
 			end
+		end
+
+	class_by_dotnet_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): ARRAYED_LIST [like class_type] is
+			-- Get class by dotnet name.
+		require
+			a_class_ok: a_class /= Void and then not a_class.is_empty
+			classes_set: classes_set
+			a_platform_valid: valid_platform (a_platform)
+			a_build_valid: valid_build (a_build)
+		local
+			l_class: like class_type
+			l_dep: CONF_ASSEMBLY
+		do
+			create Result.make (1)
+			l_class := dotnet_classes.item (a_class)
+			if l_class /= Void then
+				Result.extend (l_class)
+			end
+			if a_dependencies and dependencies /= Void then
+				from
+					dependencies.start
+				until
+					dependencies.after
+				loop
+					l_dep := dependencies.item
+					if l_dep.is_enabled (a_platform, a_build) then
+						Result.append (l_dep.class_by_dotnet_name (a_class, False, a_platform, a_build))
+					end
+					dependencies.forth
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	options: CONF_OPTION is
@@ -116,7 +184,6 @@ feature -- Access queries
 			l_uuid: STRING
 			l_options: CONF_OPTION
 		do
-			Result := internal_options.twin
 			if is_used_library then
 				from
 					l_uuid := guid
@@ -137,6 +204,12 @@ feature -- Access queries
 					Result := application_target.options
 				end
 			else
+				if internal_options /= Void then
+					Result := internal_options
+				else
+					create Result
+				end
+
 				Result.merge (target.options)
 			end
 		end
@@ -177,6 +250,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
+	set_dotnet_classes (a_classes: like dotnet_classes) is
+			-- Set `dotnet_classes' to `a_classes'.
+		require
+			a_classes_not_void: a_classes /= Void
+		do
+			dotnet_classes := a_classes
+		ensure
+			dotnet_classes_set: dotnet_classes = a_classes
+		end
+
+
 	set_guid (a_guid: like guid) is
 			-- Set `guid' to `a_guid'
 		require
@@ -208,7 +292,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			dependencies.force (an_assembly)
 		end
 
-
 	set_dependencies (a_dependencies: like dependencies) is
 			-- Set `dependencies' to `a_dependencies'.
 		do
@@ -225,15 +308,28 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			application_target_set: application_target = a_target
 		end
 
+	set_date (a_date: like date) is
+			-- Set `date' to `a_date'.
+		do
+			date := a_date
+		end
+
+
 	check_changed is
 			-- Check if the cached information of the assembly have changed.
+		require
+			consumed_path_ok: consumed_path /= void and then not consumed_path.is_empty
 		local
-			l_file: RAW_FILE
+			l_str: ANY
+			l_date: INTEGER
 		do
-			create l_file.make (consumed_path)
-			if l_file.exists and then date < l_file.date then
-				date := l_file.date
+			l_str := consumed_path.to_c
+			eif_date ($l_str, $l_date)
+			if date /= l_date then
+				date := l_date
 				is_modified := True
+			else
+				is_modified := False
 			end
 		end
 
@@ -256,5 +352,9 @@ feature -- Visit
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
 		end
+
+feature {NONE} -- Class type anchor
+
+	class_type: CONF_CLASS
 
 end

@@ -215,12 +215,7 @@ feature {NONE} -- Error handling
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 			-- Print error message.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, "", is_in_use_file)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
 		end
 
 indexing

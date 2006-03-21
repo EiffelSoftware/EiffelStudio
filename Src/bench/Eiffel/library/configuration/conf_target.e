@@ -188,7 +188,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE] is
+	external_include: like internal_external_include is
 			-- Global external include files.
 		do
 			Result := internal_external_include.twin
@@ -199,7 +199,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT] is
+	external_object: like internal_external_object is
 			-- Global external object files.
 		do
 			Result := internal_external_object.twin
@@ -210,7 +210,16 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_ressource: ARRAYED_LIST [CONF_EXTERNAL_RESSOURCE] is
+	external_make: like internal_external_make is
+			-- Global external make files.
+		do
+			Result := internal_external_make.twin
+			if extends /= Void then
+				Result.append (extends.external_make)
+			end
+		end
+
+	external_ressource: like internal_external_ressource is
 			-- Global external ressource files.
 		do
 			Result := internal_external_ressource.twin

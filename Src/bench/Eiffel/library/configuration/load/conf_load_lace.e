@@ -263,7 +263,7 @@ feature {NONE} -- Implementation of data retrieval
 					until
 						l_excludes.after
 					loop
-						l_str := l_excludes.item.file__name
+						l_str := "/"+l_excludes.item.file__name+"$"
 						l_fr.add_exclude (l_str)
 						if l_fr.is_error then
 							set_error (l_fr.last_error)
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation of data retrieval
 					loop
 						process_defaults (l_opt_map.item_for_iteration)
 						if current_options /= Void then
-							current_cluster.add_class_options (current_options, l_opt_map.key_for_iteration)
+							current_cluster.add_class_options (current_options, l_opt_map.key_for_iteration.as_upper)
 							current_options := Void
 						end
 						l_opt_map.forth
@@ -330,10 +330,10 @@ feature {NONE} -- Implementation of data retrieval
 						l_vis_lst.after
 					loop
 						l_vis := l_vis_lst.item
-						l_class := l_vis.class_name.as_lower
+						l_class := l_vis.class_name.as_upper
 						l_class_vis := l_vis.visible_name
 						if l_class_vis /= Void then
-							l_class_vis.to_lower
+							l_class_vis.to_upper
 						end
 
 						if l_vis.export_restriction = Void then
@@ -608,7 +608,9 @@ feature {NONE} -- Implementation of data retrieval
 					if l_feature /= Void and then l_feature.is_empty then
 						l_feature := Void
 					end
-					l_feature.to_lower
+					if l_feature /= Void then
+						l_feature.to_lower
+					end
 					if l_class.is_equal ("none") then
 						l_root := conf_factory.new_root (Void, Void, Void, True)
 					else

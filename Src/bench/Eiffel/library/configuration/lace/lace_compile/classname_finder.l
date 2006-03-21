@@ -26,12 +26,13 @@ X		([a-z]|[A-Z]|[0-9]|_)
 
 %%
 
-[pP][aA][rR][tT][iI][aA][lL][ \r\t\n]+[cC][lL][aA][sS][sS] {	 
+[pP][aA][rR][tT][iI][aA][lL][ \r\t\n]+[cC][lL][aA][sS][sS] {
 				set_start_condition (IN_CLASS)
 				set_partial_class (True)
 			}
 [cC][lL][aA][sS][sS]	{
 				set_start_condition (IN_CLASS)
+				set_partial_class (False)
 			}
 
 <IN_CLASS>{A}{X}*		{

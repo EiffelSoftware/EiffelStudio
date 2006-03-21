@@ -77,73 +77,34 @@ feature -- Error handling
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
 			-- Log `a_message' and raise an exception.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, a_message, False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
 		end
 
 	report_string_bad_special_character_error is
 			-- Invalid special character after % in manisfest string.
-		local
-			an_error: STRING_EXTENSION
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
-
-				-- Dummy code (for error recovery) follows:
-			token_buffer.append_character ('a')
 		end
 
 	report_string_invalid_code_error (a_code: INTEGER) is
 			-- Invalid character code after % in manisfest string.
-		local
-			an_error: STRING_EXTENSION
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
-
-				-- Dummy code (for error recovery) follows:
-			token_buffer.append_character ('a')
 		end
 
 	report_string_missing_quote_error (a_string: STRING) is
 			-- Invalid string: final quote missing.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			an_error: STRING_UNCOMPLETED
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
-
-				-- Dummy code (for error recovery) follows:
-			last_token := LAC_STRING
 		end
 
 	report_string_empty_error is
 			-- Invalid string: empty string.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
 		end
 
 	report_unknown_token_error (a_token: CHARACTER) is
 			-- Unknown token.
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
 		end
 
 feature {NONE} -- Implementation

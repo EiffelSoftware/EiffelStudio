@@ -96,8 +96,10 @@ feature -- Visit nodes
 				l_a_val.force (l_root.class_name)
 				l_a_name.force ("feature")
 				l_a_val.force (l_root.feature_name)
-				l_a_name.force ("all_classes")
-				l_a_val.force (l_root.is_all_root.out.as_lower)
+				if l_root.is_all_root then
+					l_a_name.force ("all_classes")
+					l_a_val.force (l_root.is_all_root.out.as_lower)
+				end
 				append_tag ("root", Void, l_a_name, l_a_val)
 			end
 			l_version := a_target.internal_version
@@ -641,11 +643,17 @@ feature {NONE} -- Implementation
 		local
 			l_renaming: HASH_TABLE [STRING, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
+			l_cond: ARRAYED_LIST [INTEGER]
 		do
 			append_text (">%N")
 			indent := indent + 1
 			last_count := text.count
 			append_description_tag (a_group.description)
+				-- don't append default assembly conditional
+			l_cond := a_group.internal_enabled
+			if l_cond /= Void and then not a_group.is_assembly or not a_group.is_enabled (pf_dotnet, build_all) then
+				append_conditionals (l_cond)
+			end
 			append_options (a_group.internal_options, Void)
 			l_renaming := a_group.renaming
 			if l_renaming /= Void then

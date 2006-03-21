@@ -26,7 +26,7 @@ while test $# -gt 0; do
 		ISE_LIBRARIES=$EIFFEL_SRC
 		;;
 		--object)
-		echo $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lX11 -lXtst `pkg-config $gtk_package_string $thread_string --libs`
+		echo $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 `pkg-config $gtk_package_string $thread_string --libs` -lXtst
 		;;
 		--threads)
 		thread_string=gthread-2.0

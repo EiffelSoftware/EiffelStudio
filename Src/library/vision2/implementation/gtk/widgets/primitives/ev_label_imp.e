@@ -1,16 +1,16 @@
 indexing
 
-	description: 
+	description:
 		"EiffelVision label, gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_LABEL_IMP
-	
+
 inherit
 	EV_LABEL_I
 		redefine
@@ -42,12 +42,32 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a gtk label.
+		local
+			a_cs: EV_GTK_C_STRING
+			int_value: INTEGER
 		do
 			base_make (an_interface)
 			textable_imp_initialize
 			set_c_object (text_label)
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 			align_text_center
+
+			a_cs := "justify"
+			{EV_GTK_EXTERNALS}.g_object_get_integer (text_label, a_cs.item, $int_value)
+
+		end
+
+feature -- Access
+
+	angle: REAL
+		-- Amount text is rotated counter-clockwise from horizontal plane in radians.
+
+	set_angle (a_angle: REAL) is
+			--
+		do
+--			{EV_GTK_EXTERNALS}.gtk_label_set_angle (text_label, a_angle / 3.14 * 180)
+			angle := a_angle
 		end
 
 feature {EV_ANY_I} -- Implementation

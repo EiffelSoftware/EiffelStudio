@@ -92,25 +92,22 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	signal_connect_true (
-		a_signal_name: STRING;
+		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE]
 		) is
 			-- Connect `an_agent' to `a_signal_name'.
 			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
-			a_cs: EV_GTK_C_STRING
 			l_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 			a_connection_id: INTEGER
 		do
-			a_cs := a_signal_name
 			l_translate := app_implementation.default_translate
 			a_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
-				a_cs.item,
+				a_signal_name.item,
 				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate)
 			)
 		end

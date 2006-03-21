@@ -80,19 +80,11 @@ feature {NONE} -- Initialization
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 
-
-			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (l_gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
-			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, False)
-
-
-
 			if is_parentable then
-				real_signal_connect (a_event_widget, once "map-event", agent (l_gtk_marshal).on_widget_show (a_c_object), Void)
+				signal_connect (a_event_widget, app_imp.map_event_string, agent (l_gtk_marshal).on_widget_show (a_c_object), Void, False)
 					-- We need the map event to correctly set the cursor if available.
-			else
-				--l_motion_actions := pointer_motion_actions
-				--pointer_motion_actions_internal := create_pointer_motion_actions
 			end
+
 			signal_connect (
 				a_event_widget,
 				app_imp.button_press_event_string,
@@ -101,6 +93,31 @@ feature {NONE} -- Initialization
 				False
 			)
 			set_is_initialized (True)
+		end
+
+	initialize_file_drop (a_widget: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				GtkTargetEntry target_entry[3];
+				target_entry[0].target = "text/plain";
+				target_entry[0].flags = 0;
+				target_entry[0].info = 0;
+				target_entry[1].target = "text/uri-list";
+				target_entry[1].flags = 0;
+				target_entry[1].info = 1;
+				target_entry[2].target = "STRING";
+				target_entry[2].flags = 0;
+				target_entry[2].info = 2;
+				gtk_drag_dest_set (
+					(GtkWidget*) $a_widget,
+					GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
+					target_entry,
+					sizeof (target_entry) / sizeof (GtkTargetEntry),
+					GDK_ACTION_MOVE | GDK_ACTION_COPY
+				);
+			]"
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
@@ -123,12 +140,14 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 		local
 			temp_key_string: STRING
 			a_capture_widget_imp: EV_WIDGET_IMP
+			app_imp: like app_implementation
 		do
-			if App_implementation.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.Key_escape then
+			app_imp := app_implementation
+			if app_imp.is_in_transport and then a_key_press and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.Key_escape then
 					-- If a PND is in action and the Esc key is pressed then cancel it
-				if App_implementation.captured_widget /= Void then
+				if app_imp.captured_widget /= Void then
 						-- We are definitely in PND so we set a_capture_widget_imp for start_transport to be executed on it
-					a_capture_widget_imp ?= App_implementation.captured_widget.implementation
+					a_capture_widget_imp ?= app_imp.captured_widget.implementation
 				end
 			end
 			if a_capture_widget_imp /= Void then
@@ -137,7 +156,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
 				if a_key_press then
 						-- The event is a key press event.
-					app_implementation.key_press_actions.call ([interface, a_key])
+					if app_imp.key_press_actions_internal /= Void then
+						app_imp.key_press_actions_internal.call ([interface, a_key])
+					end
 					if a_key /= Void and then key_press_actions_internal /= Void then
 						key_press_actions_internal.call ([a_key])
 					end
@@ -161,8 +182,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 							end
 						end
 						if temp_key_string /= Void then
-							if app_implementation.key_press_string_actions_internal /= Void then
-								app_implementation.key_press_string_actions_internal.call ([interface, temp_key_string])
+							if app_imp.key_press_string_actions_internal /= Void then
+								app_imp.key_press_string_actions_internal.call ([interface, temp_key_string])
 							end
 							key_press_string_actions_internal.call ([temp_key_string])
 						end
@@ -170,8 +191,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				else
 						-- The event is a key release event.
 					if a_key /= Void then
-						if app_implementation.key_release_actions_internal /= Void then
-							app_implementation.key_release_actions.call ([interface, a_key])
+						if app_imp.key_release_actions_internal /= Void then
+							app_imp.key_release_actions.call ([interface, a_key])
 						end
 						if key_release_actions_internal /= Void then
 							key_release_actions_internal.call ([a_key])

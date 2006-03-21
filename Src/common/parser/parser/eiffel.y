@@ -423,7 +423,7 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.start_location.line,
 						$1.start_location.column, filename,
-						"Missing `Index' part of `Index_clause'."))
+						once "Missing `Index' part of `Index_clause'."))
 				end
 			}
 	;
@@ -752,11 +752,11 @@ Alias_name: Infix_operator
 			{ $$ := $1 }
 	|	TE_STR_NOT
 			{
-				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as (once "not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_BRACKET
 			{
-				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "[]", line, column, position, 4, token_buffer2)
 			}
 	;
 
@@ -850,7 +850,7 @@ Inheritance: -- Empty
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-						"Use `inherit ANY' or do not specify an empty inherit clause"))
+						once "Use `inherit ANY' or do not specify an empty inherit clause"))
 				end
 				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_parent_as (0)
@@ -1399,7 +1399,7 @@ Non_class_type: TE_EXPANDED Class_type
 				if has_syntax_warning and $2 /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-						"Make an expanded version of the base class associated with this type."))
+						once "Make an expanded version of the base class associated with this type."))
 				end
 			}
 	|	TE_SEPARATE Class_or_tuple_type
@@ -1942,7 +1942,7 @@ Creation_clause:
 				if has_syntax_warning and $1 /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-						"Use keyword `create' instead."))
+						once "Use keyword `create' instead."))
 				end
 			}
 	|	TE_CREATION Clients Feature_list
@@ -1951,7 +1951,7 @@ Creation_clause:
 				if has_syntax_warning and $1 /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-						"Use keyword `create' instead."))
+						once "Use keyword `create' instead."))
 				end
 			}
 	|	TE_CREATION Client_list
@@ -1960,7 +1960,7 @@ Creation_clause:
 				if has_syntax_warning and $1 /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.line, $1.column, filename,
-						"Use keyword `create' instead."))
+						once "Use keyword `create' instead."))
 				end
 			}
 	;
@@ -1989,7 +1989,7 @@ Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
 				if has_syntax_warning and $1.second /= Void then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make ($1.second.line,
-						$1.second.column, filename, "Use keyword `agent' instead."))
+						$1.second.column, filename, once "Use keyword `agent' instead."))
 				end
 			end
 		}
@@ -2360,7 +2360,7 @@ Old_a_static_call:
 					end
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (ast_location.line,
-							ast_location.column, filename, "Remove the `feature' keyword."))
+							ast_location.column, filename, once "Remove the `feature' keyword."))
 				end
 			}
 	;
@@ -2479,7 +2479,7 @@ Class_identifier: TE_ID
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 
 				if not case_sensitive and last_id_as_value /= Void then
@@ -2510,7 +2510,7 @@ Identifier_as_lower: TE_ID
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 				if not case_sensitive and last_id_as_value /= Void then
 					last_id_as_value.to_lower
@@ -2576,7 +2576,7 @@ Character_constant: TE_CHAR
 	|	Typed TE_CHAR
 			{
 				check is_character: not token_buffer.is_empty end
-				fixme ("We should handle `Type' instead of ignoring it.")
+				fixme (once "We should handle `Type' instead of ignoring it.")
 				$$ := ast_factory.new_typed_char_as ($1, token_buffer.item (1), line, column, position, 1, token_buffer2)
 			}
 	;
@@ -2700,17 +2700,17 @@ Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
 			{
-				$$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_string_as (once "", line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_EMPTY_VERBATIM_STRING
 			{
-				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_verbatim_string_as (once "", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	;
 
 Typed_manifest_string: TE_RCURLY Type TE_RCURLY Default_manifest_string
 			{
-				fixme ("We should handle `Type' instead of ignoring it.")
+				fixme (once "We should handle `Type' instead of ignoring it.")
 				$$ := $4
 				if $2 /= Void then
 					$2.set_lcurly_symbol ($1)
@@ -2732,51 +2732,51 @@ Non_empty_string: TE_STRING
 			}
 	|	TE_STR_LT
 			{
-				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
 			{
-				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
 			{
-				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once ">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
 			{
-				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once ">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
 			{
-				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
 			{
-				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
 			{
-				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
 			{
-				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
 			{
-				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_BRACKET
 			{
-				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "[]", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_AND
 			{
@@ -2814,15 +2814,15 @@ Non_empty_string: TE_STRING
 
 Prefix_operator: TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_NOT
 			{
-				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as (once "not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
 			{
@@ -2832,71 +2832,71 @@ Prefix_operator: TE_STR_MINUS
 
 Infix_operator: TE_STR_LT
 			{
-				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
 			{
-				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
 			{
-				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once ">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
 			{
-				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once ">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
 			{
-				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
 			{
-				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
 			{
-				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
 			{
-				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
 			{
-				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (once "^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_AND
 			{
-				$$ := ast_factory.new_string_as ("and", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as (once "and", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_AND_THEN
 			{
-				$$ := ast_factory.new_string_as ("and then", line, column, position, 10, token_buffer2)
+				$$ := ast_factory.new_string_as (once "and then", line, column, position, 10, token_buffer2)
 			}
 	|	TE_STR_IMPLIES
 			{
-				$$ := ast_factory.new_string_as ("implies", line, column, position, 9, token_buffer2)
+				$$ := ast_factory.new_string_as (once "implies", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_OR
 			{
-				$$ := ast_factory.new_string_as ("or", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (once "or", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_OR_ELSE
 			{
-				$$ := ast_factory.new_string_as ("or else", line, column, position, 9, token_buffer2)
+				$$ := ast_factory.new_string_as (once "or else", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_XOR
 			{
-				$$ := ast_factory.new_string_as ("xor", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as (once "xor", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
 			{

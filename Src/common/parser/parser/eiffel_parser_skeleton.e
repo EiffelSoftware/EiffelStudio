@@ -139,7 +139,7 @@ feature -- Parser type setting
 			single_parser_type: single_parser_type
 		end
 
-feature -- Status report
+feature -- Status report [hide]
 
 	single_parser_type: BOOLEAN is
 			-- Is single entity parser?

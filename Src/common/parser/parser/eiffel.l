@@ -262,7 +262,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `attribute', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			}
 [bB][iI][tT]	{			
@@ -403,7 +403,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `note', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `note', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			}
 [oO][bB][sS][oO][lL][eE][tT][eE]	{				
@@ -447,7 +447,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				if has_syntax_warning then
 					Error_handler.insert_warning (
 						create {SYNTAX_WARNING}.make (line, column, filename,
-							"Use of `only', possibly a new keyword in future definition of `Eiffel'."))
+							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
 				end
 			}
 [oO][rR]	{			
@@ -933,7 +933,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 						if has_old_verbatim_strings_warning then
 							Error_handler.insert_warning (
 								create {SYNTAX_WARNING}.make (line, column, filename,
-									"Default verbatim string handling is changed to follow standard semantics %
+									once "Default verbatim string handling is changed to follow standard semantics %
 									%with alignment instead of previous non-standard one without alignment."))
 						end
 					end
@@ -1019,87 +1019,87 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				append_text_to_string (token_buffer)
 			}
 	%A		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%A")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%A")
 				token_buffer.append_character ('%A')
 			}
 	%B		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%B")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%B")
 				token_buffer.append_character ('%B')
 			}
 	%C		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%C")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%C")
 				token_buffer.append_character ('%C')
 			}
 	%D		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%D")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%D")
 				token_buffer.append_character ('%D')
 			}
 	%F		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%F")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%F")
 				token_buffer.append_character ('%F')
 			}
 	%H		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%H")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%H")
 				token_buffer.append_character ('%H')
 			}
 	%L		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%L")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%L")
 				token_buffer.append_character ('%L')
 			}
 	%N		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%N")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%N")
 				token_buffer.append_character ('%N')
 			}
 	%Q		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%Q")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%Q")
 				token_buffer.append_character ('%Q')
 			}
 	%R		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%R")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%R")
 				token_buffer.append_character ('%R')
 			}
 	%S		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%S")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%S")
 				token_buffer.append_character ('%S')
 			}
 	%T		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%T")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%T")
 				token_buffer.append_character ('%T')
 			}
 	%U		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%U")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%U")
 				token_buffer.append_character ('%U')
 			}
 	%V		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%V")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%V")
 				token_buffer.append_character ('%V')
 			}
 	%%		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%%")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%%")
 				token_buffer.append_character ('%%')
 			}
 	%\'		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%'")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%'")
 				token_buffer.append_character ('%'')
 			}
 	%\"		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%%"")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%%"")
 				token_buffer.append_character ('%"')
 			}
 	%\(		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%(")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%(")
 				token_buffer.append_character ('%(')
 			}
 	%\)		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%)")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%)")
 				token_buffer.append_character ('%)')
 			}
 	%<		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%<")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%<")
 				token_buffer.append_character ('%<')
 			}
 	%>		{
-				ast_factory.append_string_to_buffer (token_buffer2, "%%>")
+				ast_factory.append_string_to_buffer (token_buffer2, once "%%>")
 				token_buffer.append_character ('%>')
 			}
 	%\/[0-9]{1,3}\/	{

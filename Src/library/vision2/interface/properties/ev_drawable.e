@@ -10,11 +10,11 @@ indexing
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figure, primitive, drawing, line, point, ellipse" 
+	keywords: "figure, primitive, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_DRAWABLE
 
 inherit
@@ -252,6 +252,16 @@ feature -- Drawing operations
 			implementation.draw_text (x, y, a_text)
 		end
 
+--	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING) is
+--			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+--			-- Rotation is number of `angle' radians counter-clockwise from horizontal plane.
+--		require
+--			not_destroyed: not is_destroyed
+--			a_text_not_void: a_text /= Void
+--		do
+--			implementation.draw_rotated_text (x, y, angle, a_text)
+--		end
+
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		require
@@ -260,7 +270,7 @@ feature -- Drawing operations
 		do
 			implementation.draw_text_top_left (x, y, a_text)
 		end
-		
+
 	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
@@ -502,7 +512,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := Precursor {EV_COLORIZABLE} and then
+			Result := True or Precursor {EV_COLORIZABLE} and then
 				line_width = 1 and then
 				drawing_mode = drawing_mode_copy and then
 				clip_area = Void and then

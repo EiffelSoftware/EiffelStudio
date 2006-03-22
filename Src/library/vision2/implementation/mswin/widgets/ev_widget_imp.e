@@ -212,16 +212,20 @@ feature -- Access
 			l_wind: EV_WINDOW_IMP
 			l_parent: like parent_imp
 		do
-			l_parent := parent_imp
-			if l_parent /= Void then
-				Result := x_position + l_parent.screen_x
-				l_wind := top_level_window_imp
-				if l_parent = l_wind then
-						-- Parent is a window, since `screen_y' for a window gives
-						-- the coordinate of the top left corner of the window within
-						-- the screen, we need to add the the frame and the border
-						-- to get the right screen coordinates for Current.
-					Result := Result + l_wind.frame_width
+			if is_displayed then
+				Result := absolute_x
+			else
+				l_parent := parent_imp
+				if l_parent /= Void then
+					Result := x_position + l_parent.screen_x
+					l_wind := top_level_window_imp
+					if l_parent = l_wind then
+							-- Parent is a window, since `screen_y' for a window gives
+							-- the coordinate of the top left corner of the window within
+							-- the screen, we need to add the the frame and the border
+							-- to get the right screen coordinates for Current.
+						Result := Result + l_wind.frame_width
+					end
 				end
 			end
 		end
@@ -232,19 +236,23 @@ feature -- Access
 			l_wind: EV_WINDOW_IMP
 			l_parent: like parent_imp
 		do
-			l_parent := parent_imp
-			if l_parent /= Void then
-				Result := y_position + l_parent.screen_y
-				l_wind := top_level_window_imp
-				if l_parent = l_wind then
-						-- Parent is a window, since `screen_y' for a window gives
-						-- the coordinate of the top left corner of the window within
-						-- the screen, we need to add the title bar if any, the frame,
-						-- and the menu bar if any to get the right screen coordinates
-						-- for Current.
-					Result := Result + l_wind.title_height + l_wind.frame_height
-					if l_wind.has_menu then
-						Result := Result + l_wind.menu_bar_height
+			if is_displayed then
+				Result := absolute_y
+			else
+				l_parent := parent_imp
+				if l_parent /= Void then
+					Result := y_position + l_parent.screen_y
+					l_wind := top_level_window_imp
+					if l_parent = l_wind then
+							-- Parent is a window, since `screen_y' for a window gives
+							-- the coordinate of the top left corner of the window within
+							-- the screen, we need to add the title bar if any, the frame,
+							-- and the menu bar if any to get the right screen coordinates
+							-- for Current.
+						Result := Result + l_wind.title_height + l_wind.frame_height
+						if l_wind.has_menu then
+							Result := Result + l_wind.menu_bar_height
+						end
 					end
 				end
 			end

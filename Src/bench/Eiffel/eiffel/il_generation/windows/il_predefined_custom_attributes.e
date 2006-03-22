@@ -30,6 +30,16 @@ feature -- Predefined custom attributes
 			cls_compliant_ca_not_void: Result /= Void
 		end
 
+	eiffel_non_consumable_ca: MD_CUSTOM_ATTRIBUTE is
+			-- Blob for non-Eiffel consumable attribute
+		once
+			create Result.make
+			Result.put_boolean (False)
+			Result.put_integer_16 (0)
+		ensure
+			eiffel_non_consumable_ca_not_void: Result /= Void
+		end
+
 	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE is
 			-- Blob for not COM Visible attribute.
 		once

@@ -321,7 +321,6 @@ feature -- Event handling
 			implementation.remove_idle_action (a_idle_action)
 		end
 
-
 feature {NONE} -- Contract support
 
 	application_exists: BOOLEAN is

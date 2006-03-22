@@ -81,7 +81,7 @@ feature {EV_ANY_I} -- WEL Implementation
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
-		local	
+		local
 			loc_cursor: CURSOR
 		do
 			if hwnd_control = wel_item then
@@ -102,7 +102,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		ensure then
 			index_not_changed: old ev_children.index = ev_children.index
 		end
-		
+
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify all children.
 		local
@@ -121,20 +121,20 @@ feature {EV_ANY_I} -- WEL Implementation
 		ensure then
 			index_not_changed: old ev_children.index = ev_children.index
 		end
-		
+
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := index_of (child.interface, 1)
 		end
-		
+
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
 			-- container must be searched next.
 		require else
-			valid_search_pos: search_pos >= 0 and search_pos <= count + 1			
+			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
 		local
 			w: EV_WIDGET_IMP
 			container: EV_CONTAINER
@@ -178,7 +178,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 			go_to (l_cursor)
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET_LIST;

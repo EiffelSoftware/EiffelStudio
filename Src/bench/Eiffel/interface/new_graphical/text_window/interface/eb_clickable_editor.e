@@ -120,7 +120,6 @@ feature -- Content Change
 				setup_editor (1)
 				editor_set := true
 			else
-				editor_viewport.enable_sensitive
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
 				update_width
@@ -129,6 +128,7 @@ feature -- Content Change
 				refresh_now
 				margin.setup_margin
 			end
+			editor_viewport.enable_sensitive
 		end
 
 feature -- Status report

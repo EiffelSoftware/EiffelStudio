@@ -273,6 +273,7 @@ feature -- Access: tokens
 	ise_eiffel_name_attr_generic_ctor_token,
 	ise_assertion_level_attr_ctor_token,
 	ise_interface_type_attr_ctor_token,
+	ise_eiffel_consumable_attr_ctor_token,
 	type_handle_class_token,
 	ise_assertion_level_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
@@ -1131,6 +1132,9 @@ feature -- Metadata description
 				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
 					single_inheritance_token, last_parents)
 
+				if not class_type.is_generated_as_single_type then
+					md_emit.define_custom_attribute (l_type_token, ise_eiffel_consumable_attr_ctor_token, eiffel_non_consumable_ca).do_nothing
+				end
 				if not il_code_generator.is_single_module then
 					if not class_type.is_generated_as_single_type then
 						class_type.set_last_implementation_type_token (l_type_token)
@@ -2687,6 +2691,7 @@ feature {NONE} -- Once per modules being generated.
 			l_ise_type_feature_attr_token: INTEGER
 			l_ise_assertion_level_attr_token: INTEGER
 			l_ise_interface_type_attr_token: INTEGER
+			l_ise_eiffel_consumable_attr_token: INTEGER
 			l_system_type_token: INTEGER
 		do
 				-- Define `ise_runtime_token'.
@@ -2790,6 +2795,8 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (assertion_level_class_name_attribute), ise_runtime_token)
 			l_ise_interface_type_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (interface_type_class_name_attribute), ise_runtime_token)
+			l_ise_eiffel_consumable_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (eiffel_consumable_attribute), ise_runtime_token)
 			ise_generic_conformance_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
@@ -2888,6 +2895,18 @@ feature {NONE} -- Once per modules being generated.
 			uni_string.set_string (".ctor")
 			ise_interface_type_attr_ctor_token := md_emit.define_member_ref (uni_string,
 				l_ise_interface_type_attr_token, l_meth_sig)
+
+				-- Definition of `.ctor' for EIFFEL_CONSUMABLE_ATTRIBUTE
+			l_meth_sig.reset
+			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+
+			uni_string.set_string (".ctor")
+			ise_eiffel_consumable_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_eiffel_consumable_attr_token, l_meth_sig)
+
 		end
 
 feature {NONE} -- Implementation

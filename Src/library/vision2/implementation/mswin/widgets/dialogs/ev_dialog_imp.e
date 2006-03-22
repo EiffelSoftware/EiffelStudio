@@ -27,7 +27,8 @@ inherit
 			process_message,
 			set_x_position,
 			set_y_position,
-			set_position
+			set_position,
+			on_destroy
 		end
 
 create
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 			create accel_list.make (10)
 			apply_center_dialog := True
 		end
-		
+
 	make_with_real_dialog (other_imp: like common_dialog_imp) is
 			-- Create `Current' using attributes of `other_imp'.
 		require
@@ -58,7 +59,7 @@ feature {NONE} -- Initialization
 
 				-- Copy the attributes from the dialog to the window
 			copy_from_real_dialog (other_imp)
-			
+
 				-- Move the children
 			move_children (other_imp)
 
@@ -75,7 +76,7 @@ feature -- Status Report
 			-- Is `Current' closeable by the user?
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
-			
+
 	is_modal: BOOLEAN is
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
@@ -83,17 +84,17 @@ feature -- Status Report
 		do
 			Result := False
 		end
-		
+
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		do
 			Result := False
 		end
-		
+
 	blocking_window: EV_WINDOW is
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
-		
+
 		do
 			Result := Void
 			-- `Result' is Void as `Current' cannot be shown modally or
@@ -101,7 +102,7 @@ feature -- Status Report
 		end
 
 feature -- Status Setting
-	
+
 	enable_closeable is
 			-- Set `Current' to be closeable by the user.
 			-- (Through a clik on the Window Menu, or by
@@ -115,7 +116,7 @@ feature -- Status Setting
 		do
 			is_closeable := False
 		end
-		
+
 feature -- Element change
 
 	set_x_position (a_x: INTEGER) is
@@ -138,7 +139,7 @@ feature -- Element change
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (new_x_position, new_y_position)
 			apply_center_dialog := False
-		end		
+		end
 
 feature -- Basic operations
 
@@ -172,17 +173,17 @@ feature -- Basic operations
 					center_dialog
 				end
 				apply_center_dialog := False
-				
-				
+
+
 					-- Set the focus to the `default_push_button' if any
-				if default_push_button /= Void and then 
+				if default_push_button /= Void and then
 					default_push_button.is_show_requested and then
 					default_push_button.is_sensitive
 				then
 					button_imp ?= interface.default_push_button.implementation
 					set_default_push_button (button_imp.interface)
 					button_imp.set_focus
-				end	
+				end
 				Precursor {EV_TITLED_WINDOW_IMP}
 					-- Calling update style causes on_set_focus to be called
 					-- before the children are correctly displayed in `Current'.
@@ -215,6 +216,16 @@ feature {EV_DIALOG_I} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	on_destroy is
+			-- WM_DESTROY
+		do
+			if parent_window /= Void then
+				-- Parent Window has been destroyed therefore we don't need to destroy `Current'.
+			else
+				Precursor {EV_TITLED_WINDOW_IMP}
+			end
+		end
 
 	move_children (other_imp: like common_dialog_imp) is
 			-- Move the children to the dialog or the window, depending
@@ -388,20 +399,20 @@ feature {NONE} -- Implementation
 			call_show_actions := other_imp.call_show_actions
 			scroller := other_imp.scroller
 			set_position (other_imp.x_position, other_imp.y_position)
-			
+
 				-- Now copy contents of bars.
 			create lower_bar
 			copy_box_attributes (other_imp.lower_bar, lower_bar)
 			create upper_bar
 			copy_box_attributes (other_imp.upper_bar, upper_bar)
 		end
-		
+
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do
 			if msg = Wm_close then
 					-- Simulate a click on the default_cancel_button
-				process_standard_key_press (vk_escape)	
+				process_standard_key_press (vk_escape)
 					-- Do not actually close the window.
 				if close_request_actions_internal /= Void then
 					close_request_actions_internal.call (Void)
@@ -416,9 +427,9 @@ feature {NONE} -- Implementation
 			-- Dialog implementation type common to all descendents.
 		do
 		end
-		
+
 feature {EV_ANY, EV_ANY_I}
-		
+
 	interface: EV_DIALOG;
 			-- Interface for `Current'
 

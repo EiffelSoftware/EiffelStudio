@@ -11,6 +11,8 @@ class
 
 inherit
 	EDITOR_TOKEN_MARGIN
+		undefine
+			max_color_id
 		redefine
 			pebble,
 			update_position,
@@ -24,6 +26,8 @@ inherit
 		end
 
 	EB_SHARED_DEBUG_TOOLS
+
+	EB_EDITOR_TOKEN_IDS
 
 create
 	make
@@ -167,7 +171,7 @@ feature -- Color
 
 	background_color_id: INTEGER is
 		do
-			Result := editor_preferences.breakpoint_background_color_id
+			Result := breakpoint_background_color_id
 		end
 
 feature -- Visitor

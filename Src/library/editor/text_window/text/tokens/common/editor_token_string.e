@@ -33,15 +33,15 @@ feature -- Color
 
 	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.string_text_color_id
+			Result := string_text_color_id
 		end
 
 	background_color_id: INTEGER is
 		do
 			if is_highlighted then
-				Result := editor_preferences.highlight_color_id
+				Result := highlight_color_id
 			else
-				Result := editor_preferences.string_background_color_id
+				Result := string_background_color_id
 			end
 		end
 

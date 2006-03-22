@@ -10,12 +10,16 @@ class
 
 inherit
 	EDITOR_TOKEN_TEXT
+		undefine
+			max_color_id
 		redefine
 			text_color_id,
 			background_color_id,
 			editor_preferences,
 			process
 		end
+
+	EB_EDITOR_TOKEN_IDS
 
 create
 	make
@@ -46,18 +50,18 @@ feature -- Color
 	text_color_id: INTEGER is
 		do
 			if is_indexing then
-				Result := editor_preferences.indexing_tag_text_color_id
+				Result := indexing_tag_text_color_id
 			else
-				Result := editor_preferences.assertion_tag_text_color_id
+				Result := assertion_tag_text_color_id
 			end
 		end
 
 	background_color_id: INTEGER is
 		do
 			if is_indexing then
-				Result := editor_preferences.indexing_tag_background_color_id
+				Result := indexing_tag_background_color_id
 			else
-				Result := editor_preferences.assertion_tag_background_color_id
+				Result := assertion_tag_background_color_id
 			end
 		end
 

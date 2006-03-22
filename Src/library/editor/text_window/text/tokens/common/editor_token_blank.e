@@ -83,16 +83,16 @@ feature -- Color ids
 
 	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.spaces_text_color_id
+			Result := spaces_text_color_id
 		end
 
 	background_color_id: INTEGER is
 			-- Background color
 		do
 			if is_highlighted then
-				Result := editor_preferences.highlight_color_id
+				Result := highlight_color_id
 			else
-				Result := editor_preferences.spaces_background_color_id
+				Result := spaces_background_color_id
 			end
 		end
 

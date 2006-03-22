@@ -17,6 +17,8 @@ inherit
 
 	SHARED_EDITOR_DATA
 
+	EDITOR_TOKEN_IDS
+
 feature -- Access
 
 	image: STRING
@@ -240,31 +242,31 @@ feature -- Color ids
 
 	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.normal_text_color_id
+			Result := normal_text_color_id
 		end
 
 	background_color_id: INTEGER is
 		do
 			if is_highlighted then
-				Result := editor_preferences.highlight_color_id
+				Result := highlight_color_id
 			else
-				Result := editor_preferences.normal_background_color_id
+				Result := normal_background_color_id
 			end
 		end
 
 	selected_text_color_id: INTEGER is
 		do
-			Result := editor_preferences.selection_text_color_id
+			Result := selection_text_color_id
 		end
 
 	selected_background_color_id: INTEGER is
 		do
-			Result := editor_preferences.selection_background_color_id
+			Result := selection_background_color_id
 		end
 
 	focus_out_selected_background_color_id: INTEGER is
 		do
-			Result := editor_preferences.focus_out_selection_background_color_id
+			Result := focus_out_selection_background_color_id
 		end
 
 feature -- Font
@@ -284,7 +286,7 @@ feature -- Font
 	font_id: INTEGER is
 			-- Font id.
 		do
-			Result := editor_preferences.editor_font_id
+			Result := editor_font_id
 		end
 
 	font_width: INTEGER is

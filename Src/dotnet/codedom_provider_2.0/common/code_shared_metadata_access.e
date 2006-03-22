@@ -34,6 +34,9 @@ feature -- Access
 			-- Access to Eiffel Assemblies Cache
 		once
 			Result := cache_manager.cache_writer
+			Result.clean_cache 
+				-- Remove EAC entries that are not needed anymore because ASP.NET creates
+				-- new temporary assemblies that are consumed all the times.
 		end
 		
 end -- class CODE_SHARED_METADATA_ACCESS

@@ -2,7 +2,7 @@ indexing
 	description: "EiffelVision drawable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figures, primitives, drawing, line, point, ellipse" 
+	keywords: "figures, primitives, drawing, line, point, ellipse"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,7 +16,7 @@ inherit
 		end
 
 	SINGLE_MATH
-		
+
 	EV_DRAWABLE_CONSTANTS
 
 	EV_COLORIZABLE_I
@@ -187,13 +187,21 @@ feature -- Drawing operations
 		deferred
 		end
 
+--	draw_rotated_text (x, y: INTEGER; angle: REAL a_text: STRING) is
+--			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+--			-- Rotation is number of radians counter-clockwise from horizontal plane.
+--		require
+--			a_text_not_void: a_text /= Void
+--		deferred
+--		end
+
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		require
 			a_text_not_void: a_text /= Void
 		deferred
 		end
-		
+
 	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
@@ -218,7 +226,7 @@ feature -- Drawing operations
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		deferred
 		end
-		
+
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
 			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
 		local
@@ -240,7 +248,7 @@ feature -- Drawing operations
 				ax1 := 0
 				ax2 := width
 			end
-			draw_segment (ax1, ay1, ax2, ay2)			
+			draw_segment (ax1, ay1, ax2, ay2)
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is

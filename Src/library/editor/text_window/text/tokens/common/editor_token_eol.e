@@ -160,7 +160,7 @@ feature -- Color
 
 	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.spaces_text_color_id
+			Result := spaces_text_color_id
 		end
 
 	background_color: EV_COLOR is

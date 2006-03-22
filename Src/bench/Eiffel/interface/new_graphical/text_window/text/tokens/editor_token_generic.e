@@ -10,12 +10,16 @@ class
 
 inherit
 	EDITOR_TOKEN_TEXT
+		undefine
+			max_color_id
 		redefine
 			text_color_id,
 			background_color_id,
 			editor_preferences,
 			process
 		end
+
+	EB_EDITOR_TOKEN_IDS
 
 create
 	make
@@ -32,12 +36,12 @@ feature -- Color
 
 	text_color_id: INTEGER is
 		do
-			Result := editor_preferences.generic_text_color_id
+			Result := generic_text_color_id
 		end
 
 	background_color_id: INTEGER is
 		do
-			Result := editor_preferences.generic_background_color_id
+			Result := generic_background_color_id
 		end
 
 feature {NONE} -- Implementation

@@ -34,13 +34,13 @@ feature -- Color ids
 	background_color_id: INTEGER is
 			-- Background color
 		do
-			Result := editor_preferences.margin_background_color_id
+			Result := margin_background_color_id
 		end
 
 	separator_color_id: INTEGER is
 			-- Color of separator between margin and editor
 		do
-			Result := editor_preferences.margin_separator_color_id
+			Result := margin_separator_color_id
 		end
 
 feature -- Status Setting

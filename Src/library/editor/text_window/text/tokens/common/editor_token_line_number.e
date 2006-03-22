@@ -139,7 +139,7 @@ feature {MARGIN_WIDGET, PRINTER_TOKEN_VISITOR} -- Implementation
 	text_color_id: INTEGER is
 			-- Color of text
 		do
-			Result := editor_preferences.line_number_text_color_id
+			Result := line_number_text_color_id
 		end
 
 	gray_text_color: EV_COLOR is

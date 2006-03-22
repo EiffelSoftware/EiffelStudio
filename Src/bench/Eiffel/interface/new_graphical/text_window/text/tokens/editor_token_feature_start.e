@@ -33,7 +33,7 @@ feature -- Color
 	text_color_id: INTEGER is
 		do
 			if text_color_id_internal = 0 then
-				Result := editor_preferences.normal_text_color_id
+				Result := normal_text_color_id
 			else
 				Result := text_color_id_internal
 			end
@@ -49,19 +49,19 @@ feature -- Element change
 	set_text_color_feature is
 			-- Set text color with normal color.
 		do
-			text_color_id_internal := editor_preferences.feature_text_color_id
+			text_color_id_internal := feature_text_color_id
 		end
 
 	set_text_color_normal is
 			-- Set text color with feature text color
 		do
-			text_color_id_internal := editor_preferences.normal_text_color_id
+			text_color_id_internal := normal_text_color_id
 		end
 
 	set_text_color_operator is
 			-- Set text color with operator color
 		do
-			text_color_id_internal := editor_preferences.operator_text_color_id
+			text_color_id_internal := operator_text_color_id
 		end
 
 feature -- Visitor

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_PIXMAP_I 
+	EV_PIXMAP_I
 
 inherit
 	EV_DRAWABLE_I
@@ -46,8 +46,16 @@ feature -- Initialization
 		require
 			x_coordinate_valid: a_x > 0
 			y_coordinate_valid: a_y > 0
-		deferred	
+		deferred
 		end
+
+--	reset_for_buffering (a_width, a_height: INTEGER) is
+--			-- Resets the size of the pixmap without keeping original image or clearing background.
+--		require
+--			width_valid: a_width > 0
+--			height_valid: a_height > 0
+--		deferred
+--		end
 
 	stretch (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y' pixels.
@@ -66,6 +74,14 @@ feature -- Initialization
 		do
 			a_format.save (raw_image_data, a_filename)
 		end
+
+--	set_mask (a_mask: EV_BITMAP) is
+--			-- Assign `a_mask' to `pixmap'.
+--		require
+--			mask_not_void: a_mask /= Void
+--			mask_same_dimensions: a_mask.width = width and then a_mask.height = height
+--		deferred
+--		end
 
 feature -- Access
 

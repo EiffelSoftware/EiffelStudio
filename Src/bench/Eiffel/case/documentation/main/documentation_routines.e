@@ -650,7 +650,7 @@ feature {NONE} -- Indexing clauses
 			-- Convert `indexes' to a big string of HTML meta data.
 		local
 			content, t: STRING
-			ic: HASH_TABLE [STRING, STRING]
+			ic: like indexes_to_table
 			exc: like excluded_indexing_items
 		do
 			create Result.make (20)

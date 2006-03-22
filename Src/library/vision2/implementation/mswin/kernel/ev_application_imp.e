@@ -581,7 +581,6 @@ feature {NONE} -- Implementation
 			--| Different from WEL because of accelerators.
 		local
 			focused_window: like window_with_focus
-			temp_ptr: POINTER
 		do
 			if msg.last_boolean_result then
 				if msg.quit then

@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision Application.%N%
 		%To start an Eiffel Vision application: create exactly one%
 		%EV_APPLICATION object and call `launch' after setting up initial%
@@ -9,8 +9,8 @@ indexing
 	keywords: "application, accelerator, event loop"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class 
+
+class
 	EV_APPLICATION
 
 inherit
@@ -49,9 +49,9 @@ feature -- Access
 			not_void: Result /= Void
 			bridge_ok: Result.is_equal (implementation.windows)
 		end
-		
+
 	locked_window: EV_WINDOW is
-			-- Window currently locked. Void if no window 
+			-- Window currently locked. Void if no window
 			-- is currently locked.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
@@ -60,7 +60,7 @@ feature -- Access
 		do
 			Result := implementation.locked_window
 		end
-		
+
 	captured_widget: EV_WIDGET is
 			-- Widget currently captured. Void if none.
 		require
@@ -91,7 +91,7 @@ feature -- Access
 			bridge_ok: Result.is_equal
 				(implementation.contextual_help_accelerator)
 		end
-			
+
 	help_engine: EV_HELP_ENGINE is
 			-- Object that handles contextual help display requests
 		require
@@ -178,7 +178,7 @@ feature -- Basic operation
 		do
 			implementation.process_events
 		end
-		
+
 	process_events_until_stopped is
 			-- Process all events until 'stop_processing' is called.
 		require
@@ -187,7 +187,7 @@ feature -- Basic operation
 		do
 			implementation.process_events_until_stopped
 		end
-		
+
 	stop_processing is
 			--  Exit `process_events_until_stopped'.
 		require
@@ -196,12 +196,12 @@ feature -- Basic operation
 		do
 			implementation.stop_processing
 		end
-		
+
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
 		require
 			not_destroyed: not is_destroyed
-			msec_non_negative: msec >= 0 
+			msec_non_negative: msec >= 0
 		do
 			implementation.sleep (msec)
 		end
@@ -216,7 +216,7 @@ feature -- Basic operation
 		do
 			implementation.enable_contextual_help
 		end
-	
+
 	display_help_for_widget (a_widget: EV_WIDGET) is
 			-- Display contextual help for `a_widget', if any.
 		require
@@ -244,7 +244,7 @@ feature -- Status report
 
 	default_tooltip_delay: INTEGER is 500
 			-- Default delay in milleseconds for tooltips.
-	
+
 	focused_widget: EV_WIDGET is
 			-- Widget that has keyboard focus.
 		require
@@ -296,12 +296,32 @@ feature -- Event handling
 
 	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time when the application is next idle.
+			-- Thread safe
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.do_once_on_idle (an_action)
 		end
-		
+
+	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+			-- Extend `idle_actions' with `a_idle_action'.
+			-- Thread safe
+		require
+			a_idle_action_not_void: a_idle_action /= Void
+		do
+			implementation.add_idle_action (a_idle_action)
+		end
+
+	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+			-- Remove `a_idle_action' from `idle_actions'.
+			-- Thread safe.
+		require
+			a_idle_action_not_void: a_idle_action /= Void
+		do
+			implementation.remove_idle_action (a_idle_action)
+		end
+
+
 feature {NONE} -- Contract support
 
 	application_exists: BOOLEAN is
@@ -314,10 +334,10 @@ feature {NONE} -- Contract support
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I} -- Implementation
-	
+
 	implementation: EV_APPLICATION_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is

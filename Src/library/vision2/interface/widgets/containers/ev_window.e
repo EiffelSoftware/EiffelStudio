@@ -7,14 +7,14 @@ indexing
 	legal: "See notice at end of class."
 	appearance:
 		"[
-			 _____________ 
+			 _____________
 			|____________X|
 			|             |
 			|    item     |
 			|_____________|
 		]"
 	status: "See notice at end of class."
-	keywords: "toplevel, window, popup" 
+	keywords: "toplevel, window, popup"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +30,7 @@ inherit
 			is_in_default_state,
 			has
 		end
-	
+
 	EV_POSITIONABLE
 		redefine
 			implementation,
@@ -41,7 +41,7 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 create
 	default_create,
 	make_with_title
@@ -123,7 +123,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.menu_bar
 		end
-		
+
 	maximum_dimension: INTEGER is 32000
 			-- Maximum width/height that a window can be set to.
 
@@ -132,7 +132,7 @@ feature -- Status report
 	has (v: EV_WIDGET): BOOLEAN is
 			-- Does structure include `v'?
 		do
-			Result := implementation.has (v)	
+			Result := implementation.has (v)
 		end
 
 	user_can_resize: BOOLEAN is
@@ -144,13 +144,13 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.user_can_resize
 		end
-		
+
 	is_border_enabled: BOOLEAN is
 			-- Is a border displayed around `Current'?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_border_enabled	
+			Result := implementation.is_border_enabled
 		end
 
 feature -- Status setting
@@ -174,7 +174,7 @@ feature -- Status setting
 		ensure
 			not_user_can_resize: not user_can_resize
 		end
-		
+
 	enable_border is
 			-- Ensure a border is displayed around `Current'.
 		require
@@ -184,7 +184,7 @@ feature -- Status setting
 		ensure
 			is_border_enabled: is_border_enabled
 		end
-		
+
 	disable_border is
 			-- Ensure no border is displayed around `Current'.
 			-- Has no immediate effect if `user_can_resize', although
@@ -210,7 +210,7 @@ feature -- Status setting
 			implementation.set_maximum_width (a_maximum_width)
 		ensure
 			maximum_width_assigned: maximum_width = a_maximum_width
-		end 
+		end
 
 	set_maximum_height (a_maximum_height: INTEGER) is
 			-- Assign `a_maximum_height' to `maximum_height' in pixels.
@@ -296,7 +296,7 @@ feature -- Status setting
 			-- Lock drawing updates for this window on certain platforms until
 			-- `unlock_update' is called.
 			--
-			-- Note: - Only one window can be locked at a time. 
+			-- Note: - Only one window can be locked at a time.
 			--       - The window cannot be moved while update is locked.
 		require
 			not_destroyed: not is_destroyed
@@ -328,7 +328,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
@@ -337,19 +337,19 @@ feature {NONE} -- Contract support
 				is_border_enabled = is_border_enabled_default_state and
 				menu_bar = Void and maximum_width = maximum_dimension and maximum_height = maximum_dimension
 		end
-		
+
 	user_can_resize_default_state: BOOLEAN is
 			-- Is the default state of `Current' `user_can_resize'?
 		do
 			Result := True
 		end
-		
+
 	is_border_enabled_default_state: BOOLEAN is
 			-- Is the default state of `Current' `is_border_enabled'?
 		do
 			Result := True
 		end
-		
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	consistent_horizontal_bounds: is_usable implies maximum_width >= minimum_width 
+	consistent_horizontal_bounds: is_usable implies maximum_width >= minimum_width
 	consistent_vertical_bounds: is_usable implies maximum_height >= minimum_height
 
 	upper_bar_not_void: is_usable implies upper_bar /= Void

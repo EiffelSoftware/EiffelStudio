@@ -203,7 +203,7 @@ feature {EV_DIALOG} -- Implementation
 			if a_key /= Void then
 				a_key_code := a_key.code
 
-				if a_key_code = Key_constants.Key_escape and then
+				if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then
 					default_cancel_button /= Void then
 						-- We now check if `default_cancel_button' is sensitive
 						-- as we only call its select_actions if it is sensitive.
@@ -213,7 +213,7 @@ feature {EV_DIALOG} -- Implementation
 						default_cancel_button.select_actions.call (Void)
 					end
 	
-				elseif a_key_code = Key_constants.Key_enter and then
+				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
 					current_push_button /= Void then
 					if current_push_button.is_sensitive then
 							-- Enter key pressed and `current_push_button' is

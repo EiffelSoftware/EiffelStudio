@@ -120,16 +120,16 @@ feature -- Content Change
 				setup_editor (1)
 				editor_set := true
 			else
+				editor_viewport.enable_sensitive
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
+				update_width
+				set_editor_width (editor_width)
 				update_horizontal_scrollbar
-				margin.setup_margin
 				refresh_now
+				margin.setup_margin
 			end
-			editor_viewport.enable_sensitive
 		end
-
-	editor_set : BOOLEAN
 
 feature -- Status report
 
@@ -670,6 +670,9 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Implementation
+
+	editor_set : BOOLEAN
+			-- Has editor been setup?
 
 	line_type: EIFFEL_EDITOR_LINE is
 			-- Type of line.

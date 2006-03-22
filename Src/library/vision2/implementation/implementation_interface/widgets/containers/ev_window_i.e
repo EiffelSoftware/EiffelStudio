@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_POSITIONABLE_I
 		redefine
 			interface
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	upper_bar: EV_VERTICAL_BOX 
+	upper_bar: EV_VERTICAL_BOX
 			-- Room at top of `Current'. (Example use: toolbars.)
 			-- Positioned below menu bar.
 
@@ -34,7 +34,7 @@ feature -- Access
 			-- Maximum width that `Current' can take.
 		deferred
 		end
-	
+
 	maximum_height: INTEGER is
 			-- Maximum height that `Current' can take.
 		deferred
@@ -52,7 +52,7 @@ feature -- Access
 			if Result < minimum_width then
 				Result := minimum_width
 			end
-		end	
+		end
 
 	internal_maximum_height: INTEGER is
 			-- Maximum height that `Current' can take.
@@ -80,17 +80,17 @@ feature -- Access
 			-- Does structure include `v'?
 		do
 			if v /= Void then
-				Result := item = v or else 
+				Result := item = v or else
 					interface.lower_bar = v or else
 					interface.upper_bar = v
 			end
 		end
-    
+
 	menu_bar: EV_MENU_BAR is
 			-- Horizontal bar at top of client area that contains menu's.
 		deferred
 		end
-		
+
 	is_border_enabled: BOOLEAN is
 			-- Is a border displayed around `Current'?
 			-- Always return `True' if `user_can_resize'.
@@ -131,7 +131,7 @@ feature -- Status setting
 		deferred
 		ensure
 			maximum_width_set: maximum_width = value
-		end 
+		end
 
 	set_maximum_height (value: INTEGER) is
 			-- Make `value' the new `maximum_height'.
@@ -189,7 +189,7 @@ feature -- Status setting
 		do
 			(create {EV_ENVIRONMENT}).application.implementation.set_locked_window (Void)
 		end
-		
+
 	enable_border is
 			-- Ensure a border is displayed around `Current'
 			-- and set `internal_is_border_enabled' to `True'.
@@ -199,7 +199,7 @@ feature -- Status setting
 		ensure
 			is_border_enabled: is_border_enabled
 		end
-		
+
 	disable_border is
 			-- Ensure no border is displayed around `Current'
 			-- and set `internal_is_border_enabled' to `False'.
@@ -209,19 +209,19 @@ feature -- Status setting
 		ensure
 			border_disabled: not user_can_resize implies not is_border_enabled
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_disable_border is
 			-- Ensure no border is displayed around `Current'.
 		deferred
 		end
-	
+
 	internal_enable_border is
 			-- Ensure a border is displayed around `Current'.
 		deferred
 		end
-		
+
 	internal_is_border_enabled: BOOLEAN
 
 feature {EV_ANY_I} -- Implementation

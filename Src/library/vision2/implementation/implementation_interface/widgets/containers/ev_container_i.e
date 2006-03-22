@@ -5,16 +5,16 @@ indexing
 	keywords	: "container"
 	date		: "$Date$"
 	revision	: "$Revision$"
-	
+
 deferred class
 	EV_CONTAINER_I
-	
+
 inherit
 	EV_WIDGET_I
 		redefine
 			interface
 		end
-		
+
 	EV_PIXMAPABLE_I
 		rename
 			set_pixmap as set_background_pixmap,
@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_CONTAINER_ACTION_SEQUENCES_I
 
 feature -- Access
@@ -39,21 +39,21 @@ feature -- Access
 		ensure
 			positive: Result >= 0
 		end
-	
+
 	client_height: INTEGER is
 			-- Height of the client area of container.
 		deferred
 		ensure
 			positive: Result >= 0
 		end
-		
+
 	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER] is
 			-- `Result' is all other radio button groups
 			-- merged with `Current'.
 		do
 			if internal_merged_radio_button_groups /= Void then
 				Result := internal_merged_radio_button_groups.twin
-				Result.prune_all (interface)	
+				Result.prune_all (interface)
 			end
 		ensure
 			current_not_included: Result /= Void implies not Result.has (interface)
@@ -83,7 +83,7 @@ feature -- Status setting
 		do
 			connect_radio_grouping (other)
 			container_i ?= other.implementation
-			
+
 					-- If internal groups for both containers are empty, then create the internal, share
 					-- between the two objects, and fill with both of them.
 			if internal_merged_radio_button_groups = Void and container_i.internal_merged_radio_button_groups = Void then
@@ -91,25 +91,25 @@ feature -- Status setting
 				container_i.set_internal_merged_radio_button_group (internal_merged_radio_button_groups)
 				internal_merged_radio_button_groups.extend (interface)
 				internal_merged_radio_button_groups.extend (other)
-				
+
 					-- If `other' has no internal_group then set others group to `point' to that of `Current',
 					-- and add `other' to group.
 			elseif container_i.internal_merged_radio_button_groups = Void then
 				container_i.set_internal_merged_radio_button_group (internal_merged_radio_button_groups)
 				internal_merged_radio_button_groups.extend (other)
-			
+
 					-- If `Current' has no internal_group then set goup of `Current' to point to that of `other',
 					-- and add `Current' to group.
 			elseif internal_merged_radio_button_groups = Void then
 				set_internal_merged_radio_button_group (container_i.internal_merged_radio_button_groups)
 				container_i.internal_merged_radio_button_groups.extend (interface)
-				
+
 					-- If `Current' and `other' already share the same list, they must be already
 					-- merged, and therefore, nothing is to be performed.
 			elseif internal_merged_radio_button_groups /= Void and container_i.internal_merged_radio_button_groups /= Void and
 				internal_merged_radio_button_groups = container_i.internal_merged_radio_button_groups then
 					-- Nothing to perform here, as the groups are already merged.
-					
+
 					-- If `Current' and `other' both have individual groups of their own, then merge groups,
 					-- and update references, all to point to same group.
 			elseif internal_merged_radio_button_groups /= Void and container_i.internal_merged_radio_button_groups /= Void then
@@ -135,7 +135,7 @@ feature -- Status setting
 					end
 			end
 		end
-			
+
 	unmerge_radio_button_groups (other: EV_CONTAINER) is
 			-- Remove `other' from radio button group of `Current'.
 		local
@@ -145,10 +145,10 @@ feature -- Status setting
 				-- `other' is now no longer part of a group, so
 				-- set the internal group to Void
 			container_i.set_internal_merged_radio_button_group (Void)
-			
+
 				-- Now remove `other' from internal group of `Current'.
 			internal_merged_radio_button_groups.prune_all (other)
-			
+
 				-- If the group of `Current', is only now containing
 				-- `interface', then set group to `Void'.
 			if internal_merged_radio_button_groups.count = 1 then
@@ -157,10 +157,10 @@ feature -- Status setting
 				end
 				internal_merged_radio_button_groups := Void
 			end
-			
+
 			unconnect_radio_grouping (other)
 		end
-		
+
 feature -- Basic operations
 
 	propagate_foreground_color is
@@ -236,7 +236,7 @@ feature -- Basic operations
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER
-	
+
 feature {EV_CONTAINER_I} -- Implementation
 
 	internal_merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
@@ -245,13 +245,13 @@ feature {EV_CONTAINER_I} -- Implementation
 			-- This contains `interface', and this is removed by implementation
 			-- of `merged_radio_button_groups'. We need to include `interface', as
 			-- this object is shared between all linked containers.
-			
+
 	set_internal_merged_radio_button_group (new_group: ARRAYED_LIST [EV_CONTAINER]) is
 			-- Assign `new_group' to `internal_merged_radio_button_group'.
 		do
 			internal_merged_radio_button_groups := new_group
 		end
-		
+
 	select_first_radio_button is
 			-- Ensure that first radio button in `Current',
 			-- `Is_selected'.
@@ -297,7 +297,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 				children.forth
 			end
 		end
-		
+
 	has_selected_radio_button: BOOLEAN is
 			-- Does `Current' contain a selected radio button?
 		local
@@ -317,7 +317,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 				children.forth
 			end
 		end
-		
+
 	has_radio_button: BOOLEAN is
 			-- 	Does `Current' contain one or more radio buttons?
 		local
@@ -335,9 +335,9 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 					Result := True
 				end
 				children.forth
-			end			
+			end
 		end
-	
+
 feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 
 	all_radio_buttons_connected: BOOLEAN is
@@ -374,7 +374,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 				Result := True
 			end
 		end
-		
+
 	parent_of_items_is_current: BOOLEAN is
 			-- Do all items have parent `Current'?
 		require
@@ -457,7 +457,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 			from
 				l.start
-			until	
+			until
 				l.off or not Result
 			loop
 				c ?= l.item
@@ -491,7 +491,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 			from
 				l.start
-			until	
+			until
 				l.off or not Result
 			loop
 				c ?= l.item
@@ -508,24 +508,19 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		end
 
 feature {NONE} -- Implementation
-		
+
 	connect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Join radio grouping of `a_container' to Current.
 		require
 			a_container_not_void: a_container /= Void
 		deferred
 		end
-		
+
 	unconnect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Unconnect radio grouping of `a_container' from `Current'.
 		require
 			a_container /= Void
 		deferred
-		end
-
-	Key_constants: EV_KEY_CONSTANTS is
-		once
-			create Result
 		end
 
 indexing

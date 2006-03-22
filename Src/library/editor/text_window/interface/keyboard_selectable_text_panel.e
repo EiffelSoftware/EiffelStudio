@@ -910,13 +910,18 @@ feature {NONE} -- Implementation
 			elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
 				set_first_line_displayed (cur_pos - number_of_lines_displayed + 1, False)
 			end
-			cur_pos := x_position_of_cursor (a_cursor)
-			l_int := offset + editor_viewport.width - 30
-			if cur_pos < offset then
-				set_offset (cur_pos.max (0))
-			elseif cur_pos >= (l_int) then
-				if editor_width > editor_viewport.width then
-					set_offset (cur_pos - editor_viewport.width + 30)
+				-- Only when a viewport is displayed,
+				-- its width and height are set (not zero).
+				-- We move viewport offset leftward or rightward.
+			if editor_viewport.is_displayed then
+				cur_pos := x_position_of_cursor (a_cursor)
+				l_int := offset + editor_viewport.width - 30
+				if cur_pos < offset then
+					set_offset (cur_pos.max (0))
+				elseif cur_pos >= (l_int) then
+					if editor_width > editor_viewport.width then
+						set_offset (cur_pos - editor_viewport.width + 30)
+					end
 				end
 			end
 		end

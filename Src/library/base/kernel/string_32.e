@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	STRING
+	STRING_32
 
 inherit
 	STRING_GENERAL
@@ -17,7 +17,7 @@ inherit
 			copy, is_equal, out
 		end
 
-	INDEXABLE [CHARACTER, INTEGER]
+	INDEXABLE [WIDE_CHARACTER, INTEGER]
 		rename
 			item as item
 		redefine
@@ -25,13 +25,13 @@ inherit
 			changeable_comparison_criterion
 		end
 
-	RESIZABLE [CHARACTER]
+	RESIZABLE [WIDE_CHARACTER]
 		redefine
 			copy, is_equal, out,
 			changeable_comparison_criterion
 		end
 
-	TO_SPECIAL [CHARACTER]
+	TO_SPECIAL [WIDE_CHARACTER]
 		rename
 			item as item
 		redefine
@@ -54,8 +54,8 @@ create
 
 convert
 	to_cil: {SYSTEM_STRING},
-	as_string_32: {STRING_32},
-	make_from_cil ({SYSTEM_STRING})
+	make_from_cil ({SYSTEM_STRING}),
+	as_string_8: {STRING}
 
 feature -- Initialization
 
@@ -81,7 +81,7 @@ feature -- Initialization
 			area_allocated: capacity >= 0
 		end
 
-	make_filled (c: CHARACTER; n: INTEGER) is
+	make_filled (c: WIDE_CHARACTER; n: INTEGER) is
 			-- Create string of length `n' filled with `c'.
 		require
 			valid_count: n >= 0
@@ -94,9 +94,9 @@ feature -- Initialization
 			filled: occurrences (c) = count
 		end
 
-	make_from_string (s: STRING) is
+	make_from_string (s: STRING_32) is
 			-- Initialize from the characters of `s'.
-			-- (Useful in proper descendants of class STRING,
+			-- (Useful in proper descendants of class STRING_32,
 			-- to initialize a string-like object from a manifest string.)
 		require
 			string_exists: s /= Void
@@ -195,7 +195,7 @@ feature -- Initialization
 			--			 ASCII character at address c_string + (i - 1)
 		end
 
-	adapt (s: STRING): like Current is
+	adapt (s: STRING_32): like Current is
 			-- Object of a type conforming to the type of `s',
 			-- initialized with attributes from `s'
 		do
@@ -221,12 +221,11 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER assign put is
+	item, infix "@" (i: INTEGER): WIDE_CHARACTER assign put is
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
 		end
-
 
 	code (i: INTEGER): NATURAL_32 is
 			-- Numeric code of character at position `i'
@@ -273,13 +272,13 @@ feature -- Access
 	true_constant: STRING is "true"
 			-- Constant string "true"
 
-	shared_with (other: STRING): BOOLEAN is
+	shared_with (other: STRING_32): BOOLEAN is
 			-- Does string share the text of `other'?
 		do
 			Result := (other /= Void) and then (area = other.area)
 		end
 
-	index_of (c: CHARACTER; start_index: INTEGER): INTEGER is
+	index_of (c: WIDE_CHARACTER; start_index: INTEGER): INTEGER is
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
@@ -312,7 +311,7 @@ feature -- Access
 				not substring (start_index, Result - 1).has (c)
 		end
 
-	last_index_of (c: CHARACTER; start_index_from_end: INTEGER): INTEGER is
+	last_index_of (c: WIDE_CHARACTER; start_index_from_end: INTEGER): INTEGER is
 			-- Position of last occurrence of `c'.
 			-- 0 if none
 		require
@@ -338,12 +337,13 @@ feature -- Access
 			-- forall x : Result..last, item (x) /= c
 		end
 
-	substring_index_in_bounds (other: STRING; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index_in_bounds (other: STRING_32; start_pos, end_pos: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start_pos'
 			-- and to or before `end_pos';
 			-- 0 if none.
 		require
 			other_nonvoid: other /= Void
+			other_valid_string_8: other.is_valid_as_string_8
 			other_notempty: not other.is_empty
 			start_pos_large_enough: start_pos >= 1
 			start_pos_small_enough: start_pos <= count
@@ -358,8 +358,8 @@ feature -- Access
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
 
-	string: STRING is
-			-- New STRING having same character sequence as `Current'.
+	string: STRING_32 is
+			-- New STRING_32 having same character sequence as `Current'.
 		do
 			create Result.make (count)
 			Result.append (Current)
@@ -371,11 +371,12 @@ feature -- Access
 				substring (2, count).string)
 		end
 
-	substring_index (other: STRING; start_index: INTEGER): INTEGER is
+	substring_index (other: STRING_32; start_index: INTEGER): INTEGER is
 			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
 			other_not_void: other /= Void
+			other_valid_string_8: other.is_valid_as_string_8
 			valid_start_index: start_index >= 1 and start_index <= count + 1
 		do
 			Result := string_searcher.substring_index (Current, other, start_index, count)
@@ -390,12 +391,13 @@ feature -- Access
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
-	fuzzy_index (other: STRING; start: INTEGER; fuzz: INTEGER): INTEGER is
+	fuzzy_index (other: STRING_32; start: INTEGER; fuzz: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start'
 			-- with 0..`fuzz' mismatches between the string and `other'.
 			-- 0 if there are no fuzzy matches
 		require
 			other_exists: other /= Void
+			other_valid_string_8: other.is_valid_as_string_8
 			other_not_empty: not other.is_empty
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
@@ -415,11 +417,11 @@ feature -- Measurement
 	count: INTEGER
 			-- Actual number of characters making up the string
 
-	occurrences (c: CHARACTER): INTEGER is
+	occurrences (c: WIDE_CHARACTER): INTEGER is
 			-- Number of times `c' appears in the string
 		local
 			i, nb: INTEGER
-			a: SPECIAL [CHARACTER]
+			a: SPECIAL [WIDE_CHARACTER]
 		do
 			from
 				nb := count
@@ -472,7 +474,9 @@ feature -- Comparison
 			-- Is string made of same character sequence as `other' regardless of casing
 			-- (possibly with a different capacity)?
 		require
+			is_valid_as_string_8: is_valid_as_string_8
 			other_not_void: other /= Void
+			other_is_valid_as_string_8: other.is_valid_as_string_8
 		local
 			l_area, l_other_area: like area
 			i, nb: INTEGER
@@ -503,7 +507,7 @@ feature -- Comparison
 			valid_result: as_lower.is_equal (other.as_lower) implies Result
 		end
 
-	same_string (other: STRING): BOOLEAN is
+	same_string (other: STRING_32): BOOLEAN is
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
@@ -573,16 +577,31 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_string_8: BOOLEAN is True
+	is_string_8: BOOLEAN is False
 			-- Current is not a STRING_8 instance
 
-	is_string_32: BOOLEAN is False
+	is_string_32: BOOLEAN is True
 			-- Current is a STRING_32 instance
 
-	is_valid_as_string_8: BOOLEAN is True
+	is_valid_as_string_8: BOOLEAN is
 			-- Is `Current' convertible to STRING_8 without information loss?
+		local
+			i, nb: INTEGER
+			l_area: like area
+		do
+			from
+				nb := count
+				Result := True
+				l_area := area
+			until
+				i = nb or not Result
+			loop
+				Result := l_area.item (i).code <= {CHARACTER}.max_value
+				i := i + 1
+			end
+		end
 
-	has (c: CHARACTER): BOOLEAN is
+	has (c: WIDE_CHARACTER): BOOLEAN is
 			-- Does string include `c'?
 		local
 			i, nb: INTEGER
@@ -606,7 +625,7 @@ feature -- Status report
 				(Result = substring (2, count).has (c))
 		end
 
-	has_substring (other: STRING): BOOLEAN is
+	has_substring (other: STRING_32): BOOLEAN is
 			-- Does `Current' contain `other'?
 		require
 			other_not_void: other /= Void
@@ -643,7 +662,7 @@ feature -- Status report
 	valid_code (v: NATURAL_32): BOOLEAN is
 			-- Is `v' a valid code for a CHARACTER_32?
 		do
-			Result := v <= {CHARACTER}.max_value.to_natural_32
+			Result := True
 		end
 
 	changeable_comparison_criterion: BOOLEAN is False
@@ -698,8 +717,10 @@ feature -- Status report
 	is_double: BOOLEAN is
 			-- Does `Current' represent a DOUBLE?
 		do
-			ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
-			Result := ctor_convertor.is_integral_double
+			if is_valid_as_string_8 then
+				ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
+				Result := ctor_convertor.is_integral_double
+			end
 		ensure
 			syntax_and_range:
 				-- 'Result' is True if and only if the following two
@@ -748,7 +769,8 @@ feature -- Status report
 					l_area.item (4).lower = 'e'
 			end
 		ensure
-			is_boolean: Result = (true_constant.same_string (as_lower) or false_constant.same_string (as_lower))
+			is_boolean: Result = (true_constant.same_string (as_lower.as_string_8) or
+				false_constant.same_string (as_lower.as_string_8))
 		end
 
 	is_integer_8: BOOLEAN is
@@ -808,7 +830,7 @@ feature -- Element change
 		require
 			argument_not_void: t /= Void
 		local
-			s: STRING
+			s: STRING_32
 		do
 			s := t.substring (n1, n2)
 			area := s.area
@@ -875,7 +897,7 @@ feature -- Element change
 				old substring (index_pos + (end_pos - start_pos + 1), count)))
 		end
 
-	replace_substring (s: STRING; start_index, end_index: INTEGER) is
+	replace_substring (s: STRING_32; start_index, end_index: INTEGER) is
 			-- Replace characters from `start_index' to `end_index' with `s'.
 		require
 			string_not_void: s /= Void
@@ -921,6 +943,7 @@ feature -- Element change
 			original_exists: original /= Void
 			new_exists: new /= Void
 			original_not_empty: not original.is_empty
+			original_is_valid_as_string_8: original.is_valid_as_string_8
 		local
 			l_first_pos, l_next_pos: INTEGER
 			l_orig_count, l_new_count, l_count: INTEGER
@@ -1025,7 +1048,7 @@ feature -- Element change
 			-- all_blank: For every `i' in `count'..`capacity', `item' (`i') = `Blank'
 		end
 
-	fill_with (c: CHARACTER) is
+	fill_with (c: WIDE_CHARACTER) is
 			-- Replace every character with `c'.
 		local
 			l_count: INTEGER
@@ -1040,7 +1063,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	replace_character (c: CHARACTER) is
+	replace_character (c: WIDE_CHARACTER) is
 			-- Replace every character with `c'.
 		obsolete
 			"ELKS 2001: use `fill_with' instead'"
@@ -1051,7 +1074,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	fill_character (c: CHARACTER) is
+	fill_character (c: WIDE_CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
 		local
 			l_cap: like capacity
@@ -1132,6 +1155,8 @@ feature -- Element change
 
 	left_adjust is
 			-- Remove leading whitespace.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		local
 			nb, nb_space: INTEGER
 			l_area: like area
@@ -1163,6 +1188,8 @@ feature -- Element change
 
 	right_adjust is
 			-- Remove trailing whitespace.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		local
 			i, nb: INTEGER
 			nb_space: INTEGER
@@ -1195,7 +1222,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal ((old twin).substring (1, count))
 		end
 
-	share (other: STRING) is
+	share (other: STRING_32) is
 			-- Make current string share the text of `other'.
 			-- Subsequent changes to the characters of current string
 			-- will also affect `other', and conversely.
@@ -1210,7 +1237,7 @@ feature -- Element change
 			shared_area: other.area = area
 		end
 
-	put (c: CHARACTER; i: INTEGER) is
+	put (c: WIDE_CHARACTER; i: INTEGER) is
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
@@ -1224,11 +1251,11 @@ feature -- Element change
 	put_code (v: NATURAL_32; i: INTEGER) is
 			-- Replace character at position `i' by character of code `v'.
 		do
-			area.put (v.to_character, i - 1)
+			area.put (v.to_character_32, i - 1)
 			internal_hash_code := 0
 		end
 
-	precede, prepend_character (c: CHARACTER) is
+	precede, prepend_character (c: WIDE_CHARACTER) is
 			-- Add `c' at front.
 		local
 			l_area: like area
@@ -1245,7 +1272,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	prepend (s: STRING) is
+	prepend (s: STRING_32) is
 			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
@@ -1280,7 +1307,7 @@ feature -- Element change
 			prepend (r.out)
 		end
 
-	prepend_string (s: STRING) is
+	prepend_string (s: STRING_32) is
 			-- Prepend a copy of `s', if not void, at front.
 		do
 			if s /= Void then
@@ -1288,7 +1315,7 @@ feature -- Element change
 			end
 		end
 
-	append (s: STRING) is
+	append (s: STRING_32) is
 			-- Append a copy of `s' at end.
 		require
 			argument_not_void: s /= Void
@@ -1311,7 +1338,7 @@ feature -- Element change
 			appended: elks_checking implies is_equal (old twin + old s.twin)
 		end
 
-	infix "+" (s: STRING): like Current is
+	infix "+" (s: STRING_32): like Current is
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
@@ -1327,7 +1354,7 @@ feature -- Element change
 			final: elks_checking implies Result.substring (count + 1, count + s.count).same_string (s)
 		end
 
-	append_string (s: STRING) is
+	append_string (s: STRING_32) is
 			-- Append a copy of `s', if not void, at end.
 		do
 			if s /= Void then
@@ -1343,7 +1370,7 @@ feature -- Element change
 		local
 			l_value: INTEGER
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: WIDE_CHARACTER
 			l_area: like area
 		do
 			if i = 0 then
@@ -1400,7 +1427,7 @@ feature -- Element change
 			append (d.out)
 		end
 
-	append_character, extend (c: CHARACTER) is
+	append_character, extend (c: WIDE_CHARACTER) is
 			-- Append `c' at end.
 		local
 			current_count: INTEGER
@@ -1424,7 +1451,7 @@ feature -- Element change
 			append (b.out)
 		end
 
-	insert (s: STRING; i: INTEGER) is
+	insert (s: STRING_32; i: INTEGER) is
 			-- Add `s' to left of position `i' in current string.
 		obsolete
 			"ELKS 2001: use `insert_string' instead"
@@ -1439,7 +1466,7 @@ feature -- Element change
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_string (s: STRING; i: INTEGER) is
+	insert_string (s: STRING_32; i: INTEGER) is
 			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1477,7 +1504,7 @@ feature -- Element change
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_character (c: CHARACTER; i: INTEGER) is
+	insert_character (c: WIDE_CHARACTER; i: INTEGER) is
 			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1582,7 +1609,7 @@ feature -- Removal
 			removed: elks_checking implies is_equal (old substring (1, count - n.min (count)))
 		end
 
-	prune (c: CHARACTER) is
+	prune (c: WIDE_CHARACTER) is
 			-- Remove first occurrence of `c', if any.
 		require else
 			True
@@ -1601,14 +1628,14 @@ feature -- Removal
 			end
 		end
 
-	prune_all (c: CHARACTER) is
+	prune_all (c: WIDE_CHARACTER) is
 			-- Remove all occurrences of `c'.
 		require else
 			True
 		local
 			i, j, nb: INTEGER
 			l_area: like area
-			l_char: CHARACTER
+			l_char: WIDE_CHARACTER
 		do
 				-- Traverse string and shift characters to the left
 				-- each time we find an occurrence of `c'.
@@ -1632,7 +1659,7 @@ feature -- Removal
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end
 
-	prune_all_leading (c: CHARACTER) is
+	prune_all_leading (c: WIDE_CHARACTER) is
 			-- Remove all leading occurrences of `c'.
 		do
 			from
@@ -1643,7 +1670,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all_trailing (c: CHARACTER) is
+	prune_all_trailing (c: WIDE_CHARACTER) is
 			-- Remove all trailing occurrences of `c'.
 		do
 			from
@@ -1708,6 +1735,8 @@ feature -- Conversion
 
 	as_lower: like Current is
 			-- New object with all letters in lower case.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		do
 			Result := twin
 			Result.to_lower
@@ -1720,6 +1749,8 @@ feature -- Conversion
 
 	as_upper: like Current is
 			-- New object with all letters in upper case
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		do
 			Result := twin
 			Result.to_upper
@@ -1761,6 +1792,8 @@ feature -- Conversion
 
 	center_justify is
 			-- Center justify Current using `count' as width.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		local
 			i, nb, l_offset: INTEGER
 			left_nb_space, right_nb_space: INTEGER
@@ -1856,7 +1889,7 @@ feature -- Conversion
 			same_count: count = old count
 		end
 
-	character_justify (pivot: CHARACTER; position: INTEGER) is
+	character_justify (pivot: WIDE_CHARACTER; position: INTEGER) is
 			-- Justify a string based on a `pivot'
 			-- and the `position' it needs to be in
 			-- the final string.
@@ -1894,6 +1927,8 @@ feature -- Conversion
 
 	to_lower is
 			-- Convert to lower case.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		local
 			i: INTEGER
 			a: like area
@@ -1914,6 +1949,8 @@ feature -- Conversion
 
 	to_upper is
 			-- Convert to upper case.
+		require
+			is_valid_as_string_8: is_valid_as_string_8
 		local
 			i: INTEGER
 			a: like area
@@ -2035,14 +2072,14 @@ feature -- Conversion
 				Result := True
 			end
 		ensure
-			to_boolean: (Result = true_constant.same_string (as_lower)) or
-				(not Result = false_constant.same_string (as_lower))
+			to_boolean: (Result = true_constant.same_string (as_lower.as_string_8)) or
+				(not Result = false_constant.same_string (as_lower.as_string_8))
 		end
 
-	linear_representation: LINEAR [CHARACTER] is
+	linear_representation: LINEAR [WIDE_CHARACTER] is
 			-- Representation as a linear structure
 		local
-			temp: ARRAYED_LIST [CHARACTER]
+			temp: ARRAYED_LIST [WIDE_CHARACTER]
 			i: INTEGER
 		do
 			create temp.make (capacity)
@@ -2057,11 +2094,11 @@ feature -- Conversion
 			Result := temp
 		end
 
-	split (a_separator: CHARACTER): LIST [STRING] is
+	split (a_separator: WIDE_CHARACTER): LIST [STRING_32] is
 			-- Split on `a_separator'.
 		local
-			l_list: ARRAYED_LIST [STRING]
-			part: STRING
+			l_list: ARRAYED_LIST [STRING_32]
+			part: STRING_32
 			i, j, c: INTEGER
 		do
 			c := count
@@ -2145,7 +2182,7 @@ feature -- Conversion
 			-- "Hello world" -> "dlrow olleH".
 		local
 			a: like area
-			c: CHARACTER
+			c: WIDE_CHARACTER
 			i, j: INTEGER
 		do
 			if count > 0 then
@@ -2214,10 +2251,10 @@ feature -- Output
 			-- Printable representation
 		do
 			create Result.make (count)
-			Result.append (Current)
+			Result.append (as_string_8)
 		ensure then
 			out_not_void: Result /= Void
-			same_items: same_type ("") implies Result.same_string (Current)
+			same_items: same_type ("") implies Result.same_string (as_string_8)
 		end
 
 feature {STRING_HANDLER} -- Implementation
@@ -2272,9 +2309,12 @@ feature {NONE} -- Implementation
 	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN is
 			-- Is `Current' a valid number according to given `type'?
 		do
-			ctoi_convertor.reset (type)
-			ctoi_convertor.parse_string_with_type (Current, type)
-			Result := ctoi_convertor.is_integral_integer
+			Result := is_valid_as_string_8
+			if Result then
+				ctoi_convertor.reset (type)
+				ctoi_convertor.parse_string_with_type (Current, type)
+				Result := ctoi_convertor.is_integral_integer
+			end
 		end
 
 	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is
@@ -2302,16 +2342,6 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-		end
-
-	empty_area: SPECIAL [CHARACTER] is
-			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
-		obsolete
-			"Simply create `area' directly."
-		do
-			create Result.make (1)
-		ensure
-			empty_area_not_void: Result /= Void
 		end
 
 invariant

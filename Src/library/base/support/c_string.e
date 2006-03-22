@@ -23,7 +23,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING_GENERAL) is
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -113,7 +113,7 @@ feature -- Access
 			string_not_void: Result /= Void
 		end
 
-	read_substring_into (a_string: STRING; start_pos, end_pos: INTEGER) is
+	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
 		require
@@ -123,24 +123,22 @@ feature -- Access
 			end_position_not_too_big: end_pos <= capacity
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
-			l_area: SPECIAL [CHARACTER]
 			l_data: like managed_data
 			i, nb: INTEGER
 		do
 			from
 				i := start_pos - 1
 				nb := end_pos
-				l_area := a_string.area
 				l_data := managed_data
 			until
 				i = nb
 			loop
-				l_area.put (l_data.read_natural_8 (i).to_character, i)
+				a_string.put_code (l_data.read_natural_8 (i), i + 1)
 				i := i + 1
 			end
 		end
 
-	read_string_into (a_string: STRING) is
+	read_string_into (a_string: STRING_GENERAL) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string' replacing any
 			-- existing characters.
@@ -175,15 +173,14 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_string (a_string: STRING) is
+	set_string (a_string: STRING_GENERAL) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string_8: a_string.is_valid_as_string_8
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
-			l_area: SPECIAL [CHARACTER]
-			l_c: CHARACTER
 		do
 			nb := a_string.count
 			count := nb
@@ -196,12 +193,10 @@ feature -- Element change
 
 			from
 				i := 0
-				l_area := a_string.area
 			until
 				i = nb
 			loop
-				l_c := l_area.item (i)
-				managed_data.put_natural_8 (l_c.code.to_natural_8, i)
+				managed_data.put_natural_8 (a_string.code (i + 1).to_natural_8, i)
 				i := i + 1
 			end
 			managed_data.put_natural_8 (0, nb)

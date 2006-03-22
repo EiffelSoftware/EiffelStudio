@@ -16,7 +16,7 @@ class CHARACTER_REF inherit
 		redefine
 			is_hashable, out, is_equal
 		end
-		
+
 	REFACTORING_HELPER
 		redefine
 			out, is_equal
@@ -31,6 +31,12 @@ feature -- Access
 			-- Associated integer value
 		do
 			Result := item.code
+		end
+
+	natural_32_code: NATURAL_32 is
+			-- Associated integer value
+		do
+			Result := code.to_natural_32
 		end
 
 	hash_code: INTEGER is
@@ -74,7 +80,7 @@ feature -- Basic routines
 	infix "+" (incr: INTEGER): CHARACTER is
 			-- Add `incr' to the code of `item'
 		require
-			valid_increment: (item.code + incr).is_valid_character_code
+			valid_increment: (item.code + incr).is_valid_character_8_code
 		do
 			Result := (item.code + incr).to_character
 		ensure
@@ -84,7 +90,7 @@ feature -- Basic routines
 	infix "-" (decr: INTEGER): CHARACTER is
 			-- Subtract `decr' to the code of `item'
 		require
-			valid_decrement: (item.code - decr).is_valid_character_code
+			valid_decrement: (item.code - decr).is_valid_character_8_code
 		do
 			Result := (item.code - decr).to_character
 		ensure
@@ -102,7 +108,7 @@ feature -- Basic routines
 	next: CHARACTER is
 			-- Next character
 		require
-			valid_character: (item.code + 1).is_valid_character_code
+			valid_character: (item.code + 1).is_valid_character_8_code
 		do
 			Result := item + 1
 		ensure
@@ -112,7 +118,7 @@ feature -- Basic routines
 	previous: CHARACTER is
 			-- Previous character
 		require
-			valid_character: (item.code - 1).is_valid_character_code
+			valid_character: (item.code - 1).is_valid_character_8_code
 		do
 			Result := item - 1
 		ensure
@@ -145,7 +151,7 @@ feature {NONE} -- Initialization
 		do
 			item := v.item
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
@@ -157,6 +163,12 @@ feature -- Conversion
 			Result.set_item (item)
 		ensure
 			to_reference_not_void: Result /= Void
+		end
+
+	to_character_32: WIDE_CHARACTER is
+			-- Associated character in 32 bit version.
+		do
+			Result := item.natural_32_code.to_character_32
 		end
 
 	as_upper, upper: CHARACTER is
@@ -189,7 +201,7 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag)) > 0
 		end
-		
+
 	is_upper: BOOLEAN is
 			-- Is `item' uppercase?
 		do
@@ -208,7 +220,7 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & is_digit_flag) > 0
 		end
-		
+
 	is_hexa_digit: BOOLEAN is
 			-- Is `item' an hexadecimal digit?
 			-- A digit is one of 0123456789ABCDEFabcedf
@@ -221,19 +233,19 @@ feature -- Status report
 		do
 			Result := (character_types (item.code) & is_white_space_flag) > 0
 		end
-		
+
 	is_punctuation: BOOLEAN is
 			-- Is `item' a punctuation?
 		do
 			Result := (character_types (item.code) & is_punctuation_flag) > 0
 		end
-		
+
 	is_alpha_numeric: BOOLEAN is
 			-- Is `item' alphabetic or a digit?
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag | is_digit_flag)) > 0
 		end
-		
+
 	is_printable: BOOLEAN is
 			-- Is `item' a printable character including space?
 		do
@@ -259,7 +271,7 @@ feature {NONE} -- Implementation
 	character_types (a_code: INTEGER): NATURAL_8 is
 			-- Associated type for character of code `a_code'.
 		do
-				-- For character whose code is above 256, it is as if 
+				-- For character whose code is above 256, it is as if
 				-- we had no information about it.
 			if a_code < 256 then
 				Result := internal_character_types.item (a_code)
@@ -400,22 +412,22 @@ feature {NONE} -- Implementation
 			Result.put (is_control_flag, 127)
 		end
 
-	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01	
+	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01
 
 	is_lower_flag: NATURAL_8 is {NATURAL_8} 0x02
-	
+
 	is_digit_flag: NATURAL_8 is {NATURAL_8} 0x04
-	
+
 	is_white_space_flag: NATURAL_8 is {NATURAL_8} 0x08
-	
+
 	is_punctuation_flag: NATURAL_8 is {NATURAL_8} 0x10
-	
+
 	is_control_flag: NATURAL_8 is {NATURAL_8} 0x20
 
 	is_hexa_digit_flag: NATURAL_8 is {NATURAL_8} 0x40
-	
+
 	is_space_flag: NATURAL_8 is {NATURAL_8} 0x80;
-	
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -427,11 +439,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class CHARACTER_REF

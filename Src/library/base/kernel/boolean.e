@@ -1,23 +1,24 @@
 indexing
-	description: "Characters, with comparison operations and an ASCII code"
+	description: "Truth values, with the boolean operations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	external_name: "System.Boolean"
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class
-	CHARACTER
+frozen expanded class BOOLEAN
 
 inherit
-	CHARACTER_REF
+	BOOLEAN_REF
 
 create
 	default_create,
 	make_from_reference
 
 convert
-	make_from_reference ({CHARACTER_REF}),
-	to_reference: {CHARACTER_REF, HASHABLE, COMPARABLE, PART_COMPARABLE, ANY}
+	make_from_reference ({BOOLEAN_REF}),
+	to_reference: {BOOLEAN_REF, HASHABLE, ANY}
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
@@ -37,7 +38,7 @@ indexing
 
 
 
-end -- class CHARACTER
+end -- class BOOLEAN
 
 
 

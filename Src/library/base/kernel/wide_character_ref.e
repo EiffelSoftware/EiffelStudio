@@ -19,6 +19,11 @@ inherit
 			is_hashable, is_equal, out
 		end
 
+	REFACTORING_HELPER
+		redefine
+			is_equal, out
+		end
+
 feature -- Access
 
 	item: WIDE_CHARACTER
@@ -27,13 +32,37 @@ feature -- Access
 	hash_code, code: INTEGER is
 			-- Associated integer value and hash code value
 		do
-			Result := chcode (item)
+			Result := item.code
 		end
+
+	natural_32_code: NATURAL_32 is
+			-- Associated integer value
+		do
+			Result := code.to_natural_32
+		end
+
+	Min_value: NATURAL_32 is 0
+	Max_value: NATURAL_32 is 4294967295
+			-- Bounds for integer representation of CHARACTER_32
 
 feature -- Status report
 
 	is_hashable: BOOLEAN is True
 			-- May current object be hashed?
+
+	is_space: BOOLEAN is
+			-- Is `item' a white space?
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.is_space
+		end
+
+	is_character_8: BOOLEAN is
+			-- Can current be represented on a CHARACTER_8?
+		do
+			Result := natural_32_code <= {CHARACTER}.max_value.to_natural_32
+		end
 
 feature -- Comparison
 
@@ -66,7 +95,7 @@ feature -- Output
 			create Result.make (6)
 			Result.extend ('U')
 			Result.extend ('+')
-			Result.append (chcode (item).to_hex_string)
+			Result.append (code.to_hex_string)
 		end
 
 feature {NONE} -- Initialization
@@ -78,7 +107,7 @@ feature {NONE} -- Initialization
 		do
 			item := v.item
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
@@ -92,14 +121,30 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
+	to_character_8: CHARACTER is
+			-- Convert current to CHARACTER
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := natural_32_code.to_character
+		end
 
-	chcode (c: like item): INTEGER is
-			-- Character associated with integer value `i'
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"((EIF_INTEGER) ($c))"
+	as_upper, upper: WIDE_CHARACTER is
+			-- Uppercase value of `item'
+			-- Returns `item' if not `is_lower'
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.upper
+		end
+
+	as_lower, lower: WIDE_CHARACTER is
+			-- Lowercase value of `item'
+			-- Returns `item' if not `is_upper'
+		require
+			is_character_8_compatible: is_character_8
+		do
+			Result := to_character_8.lower
 		end
 
 indexing

@@ -1383,14 +1383,6 @@ feature -- Access
 		do
 			if pk /= Void and (n /= Void implies n.generics = Void) then
 				create Result.initialize (pk, n, p)
-				from
-					i := 1
-				until
-					i > 100
-				loop
-					l_parameter := Result.parameters
-					i := i + 1
-				end
 			end
 		end
 

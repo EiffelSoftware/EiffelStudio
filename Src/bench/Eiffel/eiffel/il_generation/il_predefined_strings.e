@@ -32,6 +32,7 @@ feature -- Access
 	assertion_level_class_name_attribute: STRING is "EiffelSoftware.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
 	interface_type_class_name_attribute: STRING is "EiffelSoftware.Runtime.CA.RT_INTERFACE_TYPE_ATTRIBUTE"
 	assertion_level_enum_class_name: STRING is "EiffelSoftware.Runtime.Enums.ASSERTION_LEVEL_ENUM"
+	eiffel_consumable_attribute: STRING is "EiffelSoftware.Runtime.CA.EIFFEL_CONSUMABLE_ATTRIBUTE"
 	eiffel_exception_class_name: STRING is "EiffelSoftware.Runtime.EIFFEL_EXCEPTION"
 			-- Type used by code generation.
 

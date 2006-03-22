@@ -155,7 +155,7 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: STRING; type: INTEGER) is
+	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
 		local
 			i: INTEGER
 			l_c: INTEGER
@@ -167,7 +167,7 @@ feature -- Parse
 			until
 				i > l_c or last_state = 9
 			loop
-				parse_character (s.item (i))
+				parse_character (s.code (i).to_character_8)
 				i := i + 1
 			end
 		end

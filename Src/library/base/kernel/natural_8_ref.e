@@ -7,7 +7,7 @@ indexing
 
 class
 	NATURAL_8_REF
-	
+
 inherit
 	NUMERIC
 		rename
@@ -67,9 +67,9 @@ feature -- Access
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
-			"Use to_character instead"
+			"Use to_character_8 instead."
 		require
-			valid_character_code: is_valid_character_code
+			valid_character_code: is_valid_character_8_code
 		do
 			Result := item.to_character
 		end
@@ -143,10 +143,25 @@ feature -- Status report
 		end
 
 	is_valid_character_code: BOOLEAN is
-			-- Does current object represent a character?
+			-- Does current object represent a CHARACTER_8?
+		obsolete
+			"Use `is_valid_character_8_code' instead."
+		do
+			Result := is_valid_character_8_code
+		end
+
+	is_valid_character_8_code: BOOLEAN is
+			-- Does current object represent a CHARACTER_8?
 		do
 			Result := item >= {CHARACTER}.Min_value.to_natural_8 and
 				item <= {CHARACTER}.Max_value.to_natural_8
+		end
+
+	is_valid_character_32_code: BOOLEAN is
+			-- Does current object represent a character?
+		do
+			Result := item >= {WIDE_CHARACTER}.Min_value and
+				item <= {WIDE_CHARACTER}.Max_value
 		end
 
 feature -- Basic operations
@@ -236,7 +251,7 @@ feature {NONE} -- Conversion
 		do
 			item := v.item
 		ensure
-			item_set: item = v.item	
+			item_set: item = v.item
 		end
 
 feature -- Conversion
@@ -273,7 +288,7 @@ feature -- Conversion
 		do
 			Result := item.as_natural_32
 		end
-	
+
 	frozen as_natural_64: NATURAL_64 is
 			-- Convert `item' into an NATURAL_64 value.
 		do
@@ -285,7 +300,7 @@ feature -- Conversion
 		do
 			Result := item.as_integer_8
 		end
-		
+
 	frozen as_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		do
@@ -406,9 +421,9 @@ feature -- Conversion
 	frozen to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		require
-			valid_character: is_valid_character_code
+			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character 
+			Result := item.to_character
 		end
 
 feature -- Bit operations
@@ -466,7 +481,7 @@ feature -- Bit operations
 				Result := bit_shift_right (n)
 			else
 				Result := bit_shift_left (- n)
-			end	
+			end
 		end
 
 	frozen infix "|<<", frozen bit_shift_left (n: INTEGER): like Current is

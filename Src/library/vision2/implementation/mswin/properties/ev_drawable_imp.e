@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Initialise the device for painting.
+			dc.set_background_transparent
 			set_drawing_mode (drawing_mode_copy)
 			reset_pen
 			reset_brush
@@ -586,22 +587,22 @@ feature -- Drawing operations
 				source_height = pixmap_height
 			then
 				dc.draw_icon_ex (
-					pixmap_imp.icon, 
-					x, y, 
-					pixmap_width, pixmap_height, 
+					pixmap_imp.icon,
+					x, y,
+					pixmap_width, pixmap_height,
 					0, Void, Drawing_constants.Di_normal
 				)
 			else
 					-- Allocate GDI objects
 				create s_dc
 				s_dc.get
-				
+
 				dest_dc := dc
 
 				if pixmap_imp.has_mask then -- Display a masked pixmap
-				
+
 					source_drawable ?= pixmap_imp
-					
+
 					if source_drawable /= Void then
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
@@ -609,14 +610,14 @@ feature -- Drawing operations
 					else
 							-- Retrieve Source bitmap
 						source_bitmap := pixmap_imp.get_bitmap
-						
+
 							-- Create dc for Source bitmap
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
-						
+
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
-						
+
 							-- Create dc for Mask bitmap
 						create source_mask_dc.make_by_dc (s_dc)
 						source_mask_dc.select_bitmap (source_mask_bitmap)
@@ -631,13 +632,13 @@ feature -- Drawing operations
 
 						-- Xor source to destination
 					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
-					
+
 						-- Set opaque pixels to black on destination
 					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, Srcand)
-					
+
 						-- Re Xor source to destination to restore original pixels
 					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
-					
+
 						-- Reset colors
 					dest_dc.set_text_color (temp_foreground_color)
 					dest_dc.set_background_color (temp_background_color)
@@ -649,7 +650,7 @@ feature -- Drawing operations
 						source_mask_dc.unselect_bitmap
 						source_mask_dc.delete
 						source_bitmap.decrement_reference
-						source_mask_bitmap.decrement_reference						
+						source_mask_bitmap.decrement_reference
 					end
 
 				else -- Display a not masked pixmap.
@@ -660,10 +661,10 @@ feature -- Drawing operations
 						source_bitmap := pixmap_imp.get_bitmap
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
-						
+
 						dest_dc.bit_blt (
-							x, y, 
-							source_width, source_height, 
+							x, y,
+							source_width, source_height,
 							source_bitmap_dc, source_x, source_y, src_drawing_mode
 						)
 							-- Free GDI Objects
@@ -673,8 +674,8 @@ feature -- Drawing operations
 					else
 						source_bitmap_dc := source_drawable.dc
 						dest_dc.bit_blt (
-							x, y, 
-							source_width, source_height, 
+							x, y,
+							source_width, source_height,
 							source_bitmap_dc, source_x, source_y, src_drawing_mode
 						)
 					end

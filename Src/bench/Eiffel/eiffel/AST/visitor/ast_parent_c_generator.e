@@ -75,19 +75,21 @@ feature {NONE} -- Implementation
 			l_old_name, l_new_name: FEATURE_NAME
 			old_name_id: INTEGER
 			l_vhrc2: VHRC2
+			l_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
 		do
 			create last_parent_c
 			last_parent_c.set_parent_type (type_a_generator.evaluate_class_type (l_as.type, current_class))
-			if l_as.exports /= Void then
+			l_exports := l_as.exports
+			if l_exports /= Void then
 				from
 					create last_export_adaptation.make (5)
 					last_parent_c.set_exports (last_export_adaptation)
-					l_as.exports.start
+					l_exports.start
 				until
-					l_as.exports.after
+					l_exports.after
 				loop
-					process_export_item_as (l_as.exports.item)
-					l_as.exports.forth
+					process_export_item_as (l_exports.item)
+					l_exports.forth
 				end
 			end
 			if l_as.renaming /= Void then

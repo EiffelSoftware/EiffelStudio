@@ -395,10 +395,6 @@ feature {NONE} -- Implementation
 			--| (If class is out of date with compiled
 			--| structures reparse class)
 		local
-			parser: like eiffel_parser
-			file: KL_BINARY_INPUT_FILE
-			class_file_name: STRING;
-			vd21: VD21;
 			class_id: INTEGER
 		do
 debug ("FLAT_SHORT")

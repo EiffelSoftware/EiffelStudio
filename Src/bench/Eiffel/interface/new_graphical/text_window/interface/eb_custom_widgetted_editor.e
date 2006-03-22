@@ -120,6 +120,7 @@ feature -- Quick search bar basic operation
 			prepare_quick_search
 			search_tool.go_to_next_found
 			check_cursor_position
+			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
 	quick_find_previous is
@@ -129,6 +130,7 @@ feature -- Quick search bar basic operation
 			prepare_quick_search
 			search_tool.go_to_previous_found
 			check_cursor_position
+			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
 	quick_find_last is
@@ -139,6 +141,7 @@ feature -- Quick search bar basic operation
 			prepare_quick_search
 			search_tool.go_to_next_found
 			check_cursor_position
+			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 		end
 
 	set_quick_search_mode (a_mode: BOOLEAN) is
@@ -342,6 +345,7 @@ feature -- Search commands
 				prepare_search_last
 				search_tool.go_to_next_found
 				check_cursor_position
+				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end
 
@@ -352,6 +356,7 @@ feature -- Search commands
 				prepare_search_selection
 				search_tool.go_to_next_found
 				check_cursor_position
+				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end
 
@@ -362,6 +367,7 @@ feature -- Search commands
 				prepare_search_selection
 				search_tool.go_to_previous_found
 				check_cursor_position
+				search_tool.trigger_keyword_field_color (search_bar.keyword_field)
 			end
 		end
 

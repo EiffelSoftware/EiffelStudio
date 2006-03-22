@@ -40,7 +40,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 create
 	default_create,
 	make_with_size
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			-- Ensure that the appearance of `Current' is updated on screen
 			-- immediately. Any changes that have not yet been reflected will
 			-- become visible.
-		require	
+		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.flush
@@ -109,11 +109,22 @@ feature -- Status setting
 			a_width_positive: a_width > 0
 			a_height_positive: a_height > 0
 		do
-			implementation.set_size (a_width, a_height)	
+			implementation.set_size (a_width, a_height)
 		ensure
 			width_assigned: width = a_width
 			height_assigned: height = a_height
 		end
+
+--	reset_for_buffering (a_width, a_height: INTEGER) is
+--			-- Resets the size of the pixmap without keeping original image or clearing background.
+--			-- Useful when reusing `Current' as a back-buffer for blitting to other drawables.
+--		require
+--			width_valid: a_width > 0
+--			height_valid: a_height > 0
+--			not_destroyed: not is_destroyed
+--		do
+--			implementation.reset_for_buffering (a_width, a_height)
+--		end
 
 	stretch (a_width, a_height: INTEGER) is
 			-- Assign `a_width' and `a_height' to `width' and `weight'.
@@ -129,6 +140,18 @@ feature -- Status setting
 			height_assigned: height = a_height
 		end
 
+--	set_mask (a_mask: EV_BITMAP) is
+--			-- Set transparency mask of `Current' to `a_mask'.
+--		require
+--			not_destroyed: not is_destroyed
+--			mask_not_void: a_mask /= Void
+--			mask_same_dimensions: a_mask.width = width and then a_mask.height = height
+--		do
+--			implementation.set_mask (a_mask)
+--		ensure
+--			--mask_assigned
+--		end
+
 feature -- Duplication
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
@@ -141,7 +164,7 @@ feature -- Duplication
 			implementation.save_to_named_file (a_format, a_filename)
 		end
 
-	copy (other: like Current) is 
+	copy (other: like Current) is
 			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -155,7 +178,7 @@ feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT
 
 	implementation: EV_PIXMAP_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -163,7 +186,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_PIXMAP_IMP} implementation.make (Current)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

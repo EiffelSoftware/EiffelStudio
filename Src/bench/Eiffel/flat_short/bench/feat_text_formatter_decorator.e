@@ -80,6 +80,8 @@ feature -- Execution
 				if ast_output_strategy.has_error then
 					put_new_line
 					process_comment_text ("-- An error occured, which was due to a compilation failure.", Void)
+					put_new_line
+					process_comment_text (ast_output_strategy.error_message, Void)
 				end
 				commit;
 			else

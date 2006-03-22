@@ -134,6 +134,7 @@ feature -- Element change
 			-- Wipe out errors.
 		do
 			has_error := False
+			error_message := Void
 		ensure
 			not_has_error: not has_error
 		end
@@ -167,6 +168,9 @@ feature -- Access
 			-- If `has_error', we give up type evaluating and send
 			-- simple text to output.
 
+	error_message: STRING
+			-- Error message.
+
 feature {NONE} -- Access
 
 	text_formatter_decorator: TEXT_FORMATTER_DECORATOR
@@ -176,6 +180,18 @@ feature {NONE} -- Access
 	locals_for_current_feature: HASH_TABLE [TYPE_A, STRING]
 
 	processing_locals: BOOLEAN;
+
+feature {NONE} -- Error handling
+
+	set_error_message (a_str: STRING) is
+			-- Setup `error_message'.
+		require
+			a_str_not_void: a_str /= Void
+		do
+			error_message := "-- Details: " + 	a_str
+		ensure
+			error_message_not_void: error_message /= Void
+		end
 
 feature -- Roundtrip
 
@@ -625,7 +641,7 @@ feature {NONE} -- Implementation
 						last_class := last_type.associated_class
 					end
 					l_rout_id_set := l_as.routine_ids
-					if l_rout_id_set.first /= 0 then
+					if l_rout_id_set /= Void then
 						if last_class /= Void then
 							l_feat := feature_in_class (last_class, l_rout_id_set)
 						else
@@ -735,14 +751,17 @@ feature {NONE} -- Implementation
 			check
 				current_feature.rout_id_set /= Void
 			end
+			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 			if not has_error then
-				l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 				if l_as.parent_base_class /= Void then
 					l_parent_class_i := universe.class_named (l_as.parent_base_class.class_name, current_class.cluster)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
-						has_error := true
+						if not has_error then
+							has_error := true
+							set_error_message ("Precursor class locating failed.")
+						end
 					end
 				else
 					l_parent_class := l_current_feature.precursors.last
@@ -1069,12 +1088,12 @@ feature {NONE} -- Implementation
 					end
 					l_id := l_as.id_list.item
 					l_feature := feature_from_ancestors (source_class, l_id)
-					if not has_error then
 						check
 							l_feature /= Void
 							l_feature.rout_id_set /= Void
 						end
-						l_feat := feature_in_class (current_class, l_feature.rout_id_set)
+					l_feat := feature_in_class (current_class, l_feature.rout_id_set)
+					if not has_error then
 						text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 					else
 						text_formatter_decorator.process_basic_text (l_feature.feature_name)
@@ -1156,7 +1175,7 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 		do
 			reset_last_class_and_type
-			if l_as.routine_ids.first /= 0 and then not has_error then
+			if l_as.routine_ids /= Void and then not has_error then
 				l_feat := feature_in_class (current_class, l_as.routine_ids)
 			end
 			if not expr_type_visiting then
@@ -1183,6 +1202,7 @@ feature {NONE} -- Implementation
 		local
 			l_operand: OPERAND_AS
 			l_feat: E_FEATURE
+			l_need_dot: BOOLEAN
 		do
 				-- No type set for this expression?
 			if not expr_type_visiting then
@@ -1194,22 +1214,29 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_symbol_text (ti_l_curly)
 						l_operand.class_type.process (Current)
 						text_formatter_decorator.process_symbol_text (ti_r_curly)
-						text_formatter_decorator.need_dot
+						l_need_dot := True
 					elseif l_operand.expression /= Void then
 						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 						l_operand.expression.process (Current)
 						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-						text_formatter_decorator.need_dot
+						l_need_dot := True
 					elseif l_operand.target /= Void then
 						l_operand.target.process (Current)
-						text_formatter_decorator.need_dot
+						l_need_dot := True
+					else
+							-- Open operand
+						text_formatter_decorator.process_symbol_text (ti_question)
+						l_need_dot := True
 					end
 				else
 					text_formatter_decorator.process_symbol_text (ti_question)
-					text_formatter_decorator.need_dot
+					l_need_dot := True
 				end
+				if l_need_dot then
+					text_formatter_decorator.process_symbol_text (ti_dot)
+				end
+				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 				if not has_error then
-					l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
 					text_formatter_decorator.process_basic_text (l_as.feature_name)
@@ -1362,7 +1389,7 @@ feature {NONE} -- Implementation
 				end
 				l_left_type := last_type
 				l_left_class := last_class
-				if l_as.routine_ids.first /= 0 then
+				if l_as.routine_ids /= Void then
 					l_feat := feature_in_class (l_left_class, l_as.routine_ids)
 				end
 			end
@@ -1726,7 +1753,11 @@ feature {NONE} -- Implementation
 				check
 					l_feat /= Void
 				end
-				text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, false)
+				if not has_error then
+					text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, false)
+				else
+					text_formatter_decorator.process_basic_text (l_as.feature_name)
+				end
 			else
 				text_formatter_decorator.process_basic_text (l_as.feature_name)
 			end
@@ -2776,11 +2807,15 @@ feature -- Expression visitor
 			l_ex_visiting := expr_type_visiting
 			expr_type_visiting := true
 			l_last_type := last_type
+			last_type := Void
 			a_expr.process (Current)
 			Result := last_type
 			last_type := l_last_type
 			expr_type_visiting := l_ex_visiting
-			has_error := (Result = Void)
+			if not has_error and Result = Void then
+				has_error := True
+				set_error_message ("Expression type evaluating failed.")
+			end
 		end
 
 	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A] is
@@ -2792,6 +2827,7 @@ feature -- Expression visitor
 		do
 			expr_type_visiting := true
 			l_last_type := last_type
+			last_type := Void
 			create Result.make (1, a_exprs.count)
 			from
 				i := 1
@@ -3215,8 +3251,13 @@ feature {NONE} -- Implementation: helpers
 			a_classs_c_not_void: a_class_c /= Void
 			a_id_set_not_void: a_id_set /= Void
 		do
-			Result := a_class_c.feature_with_rout_id (a_id_set.first)
-			has_error := (Result = Void or a_id_set.first = 0)
+			if not has_error then
+				Result := a_class_c.feature_with_rout_id (a_id_set.first)
+			end
+			if not has_error and (Result = Void or a_id_set.first = 0) then
+				has_error := True
+				set_error_message ("Feature with routine id 0 locating failed.")
+			end
 		end
 
 	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I is
@@ -3326,8 +3367,9 @@ feature {NONE} -- Implementation: helpers
 			l_type := type_a_generator.evaluate_type (a_type, source_class)
 
 				-- An error occurs when a class was renamed.
-			if l_type = Void then
+			if not has_error and l_type = Void then
 				has_error := true
+				set_error_message ("Type evaluating failed.")
 			end
 
 			if not has_error then
@@ -3534,6 +3576,7 @@ feature {NONE} -- Implementation: helpers
 
 invariant
 	text_formatter_not_void: text_formatter_decorator /= Void
+	has_error_implies_error_message_not_void: has_error implies error_message /= Void
 
 indexing
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"

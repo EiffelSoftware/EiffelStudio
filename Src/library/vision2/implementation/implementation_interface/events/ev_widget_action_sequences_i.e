@@ -17,8 +17,7 @@ feature -- Event handling
 			-- Actions to be performed when screen pointer moves.
 		do
 			if pointer_motion_actions_internal = Void then
-				pointer_motion_actions_internal :=
-					 create_pointer_motion_actions
+				pointer_motion_actions_internal := create_pointer_motion_actions
 			end
 			Result := pointer_motion_actions_internal
 		ensure
@@ -134,7 +133,7 @@ feature {EV_ANY_I} -- Implementation
 
 	pointer_enter_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_enter_actions'.
-			
+
 feature -- Event handling
 
 	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
@@ -147,7 +146,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is

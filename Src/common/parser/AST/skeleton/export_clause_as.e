@@ -28,33 +28,40 @@ feature -- Content
 		local
 			l_content: like content
 		do
-			l_content := content
-			if l_content = Void or else l_content.is_empty then
-				Result := Void
-			else
-				Result := l_content.twin
-					--| This is to make sure compiler work correctly
-					--| for code like:
-					--| 	export
-					--|        {ANY}  -- No features here.
-					--|     end
-					--| there is an item of type EXPORT_ITEM_AS stored in `internal_exports', but compiler should not see this item, so we
-					--| remove this item in the following code.				
-				from
-					Result.start
-				until
-					Result.after
-				loop
-					if Result.item.features = Void then
-						Result.remove
-					else
-						Result.forth
+			if not is_meaningful_content_calculated then
+				l_content := content
+				if l_content = Void or else l_content.is_empty then
+					internal_meaningful_content := Void
+				else
+						--| This is to make sure compiler work correctly
+						--| for code like:
+						--| 	export
+						--|        {ANY}  -- No features here.
+						--|     end
+						--| there is an item of type EXPORT_ITEM_AS stored in `internal_exports', but compiler should not see this item, so we
+						--| remove this item in the following code.				
+					l_content := l_content.twin
+					from
+						l_content.start
+					until
+						l_content.after
+					loop
+						if l_content.item.features = Void then
+							l_content.remove
+						else
+							l_content.forth
+						end
 					end
+					if l_content.is_empty then
+						l_content := Void
+					end
+					internal_meaningful_content := l_content
 				end
-				if Result.is_empty then
-					Result := Void
-				end
+				is_meaningful_content_calculated := True
 			end
+			Result := internal_meaningful_content
+		ensure then
+			meaningful_content_calculated: is_meaningful_content_calculated
 		end
 
 feature -- Visitor
@@ -105,5 +112,13 @@ feature -- Status reporting
 				end
 			end
 		end
+
+feature{NONE} -- Implementation
+
+	internal_meaningful_content: like content
+			-- Internally cached `meaningful_content'.
+
+	is_meaningful_content_calculated: BOOLEAN
+			-- Flag to indicate whether or not `meaningful_content' has been calculated already.
 
 end

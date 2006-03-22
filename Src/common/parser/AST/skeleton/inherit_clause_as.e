@@ -57,10 +57,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			if content = Void then
-				Result := other.content = Void
+			if meaningful_content = Void then
+				Result := other.meaningful_content = Void
 			else
-				Result := content.is_equivalent (other.content)
+				Result := content.is_equivalent (other.meaningful_content)
 			end
 		end
 
@@ -68,5 +68,5 @@ feature -- Roundtrip
 
 	clause_keyword: KEYWORD_AS
 			-- Keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
-						
+
 end

@@ -2,13 +2,13 @@ indexing
 	description: "Code generator for type methods and properties"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	CODE_ROUTINE_FACTORY
 
 inherit
 	CODE_MEMBER_FACTORY
-	
+
 	CODE_SHARED_CONTEXT
 		export
 			{NONE} all
@@ -28,7 +28,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_routine (a_source: SYSTEM_DLL_CODE_MEMBER_METHOD) is
@@ -73,7 +73,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		ensure
 			non_void_last_feature: last_feature /= Void
 		end
-		
+
 	generate_creation_routine (a_source: SYSTEM_DLL_CODE_CONSTRUCTOR) is
 			-- Generate Eiffel code from `a_source'.
 			-- | Create instance of `CODE_CREATION_ROUTINE'.
@@ -148,7 +148,6 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				initialize_routine (a_source)
 				l_root_procedure.set_feature_kind (Initialization)
 				current_type.add_feature (l_root_procedure)
-				current_type.add_feature (l_root_procedure)
 				set_current_feature (Void)
 				set_last_feature (l_root_procedure)
 
@@ -221,6 +220,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						check
 							exists: l_setter /= Void
 						end
+						if a_source.has_get then
+							-- Set assign feature to trigger generation of actual .NET property
+							l_property_getter.set_assigner (l_setter)
+						end
 						create l_property_setter.make (l_setter_name, l_setter.eiffel_name)
 						if l_setter.is_redefined then
 							l_property_setter.set_redefined (True)
@@ -245,7 +248,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 				set_last_feature (Empty_routine)
 			end
 		end
-	
+
 feature {NONE} -- Routine Initialization
 
 	initialize_property_getter (a_source: SYSTEM_DLL_CODE_MEMBER_PROPERTY) is
@@ -408,7 +411,7 @@ feature {NONE} -- Implementation
 			from
 				a_statements.start
 			until
-				a_statements.after		
+				a_statements.after
 			loop
 				if a_statements.item.name /= Void and a_statements.item.type /= Void then
 					current_routine.add_local (create {CODE_VARIABLE}.make (create {CODE_VARIABLE_REFERENCE}.make (
@@ -416,7 +419,7 @@ feature {NONE} -- Implementation
 						Type_reference_factory.type_reference_from_reference (a_statements.item.type),
 						Type_reference_factory.type_reference_from_code (current_type))))
 				end
-				a_statements.forth		
+				a_statements.forth
 			end
 		end
 
@@ -432,7 +435,7 @@ feature {NONE} -- Implementation
 					l_count := a_arguments.count
 					create {ARRAYED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]} Result.make (l_count)
 				until
-					i = l_count					
+					i = l_count
 				loop
 					l_argument := a_arguments.item (i)
 					if l_argument /= Void then
@@ -449,7 +452,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-		end	
+		end
 
 end -- class CODE_ROUTINE_FACTORY
 

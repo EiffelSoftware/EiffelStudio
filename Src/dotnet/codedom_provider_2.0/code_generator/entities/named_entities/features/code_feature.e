@@ -1,7 +1,7 @@
-indexing 
+indexing
 	description: "Eiffel feature"
 	date: "$$"
-	revision: "$$"	
+	revision: "$$"
 
 deferred class
 	CODE_FEATURE
@@ -36,25 +36,28 @@ feature -- Access
 
 	feature_clauses: LIST [CODE_TYPE_REFERENCE]
 			-- Types to which feature is exported
-	
+
 	feature_kind: STRING
 			-- Feature kind (Initialization, Status report, ...)
-	
+
 	comments: LIST [CODE_COMMENT]
 			-- Feature comments
-			
+
 	custom_attributes: LIST [CODE_ATTRIBUTE_DECLARATION]
 			-- List of custom attributes.
+
+	assigner: CODE_MEMBER_REFERENCE
+			-- Assigner
 
 	is_frozen: BOOLEAN
 			-- Is routine frozen?
 
 	is_constant: BOOLEAN
 			-- Is routine constant?
-	
+
 	is_overloaded: BOOLEAN
 			-- Is routine name overloaded?
-	
+
 	is_once_routine: BOOLEAN
 			-- Is routine static?
 
@@ -79,7 +82,7 @@ feature -- Element Settings
 		ensure
 			eiffel_name_set: eiffel_name = a_name
 		end
-		
+
 	set_result_type (a_type: like result_type) is
 			-- Set `result_type' with `a_type'
 		require
@@ -121,7 +124,7 @@ feature -- Element Settings
 		ensure
 			is_constant_set: is_constant = a_value
 		end
-		
+
 	set_overloaded (a_value: like is_overloaded) is
 			-- Set `is_overloaded' with `a_value'.
 		require
@@ -141,7 +144,7 @@ feature -- Element Settings
 		ensure
 			is_once_routine_set: is_once_routine = a_value
 		end
-		
+
 	add_feature_clause (a_clause: CODE_TYPE_REFERENCE) is
 			-- Add `a_clause' to `feature_clauses'.
 		require
@@ -151,6 +154,14 @@ feature -- Element Settings
 			feature_clauses.extend (a_clause)
 		ensure
 			feature_clauses_set: feature_clauses.has (a_clause)
+		end
+
+	set_assigner (a_assigner: CODE_MEMBER_REFERENCE) is
+			-- Set assigner with `a_assigner'.
+		do
+			assigner := a_assigner
+		ensure
+			assigner_set: assigner = a_assigner
 		end
 
 	add_comment (a_comment: CODE_COMMENT) is
@@ -176,7 +187,7 @@ feature -- Element Settings
 		ensure
 			a_custom_attribute_added: custom_attributes.has (a_custom_attribute)
 		end
-	
+
 	set_line_pragma (a_line_pragma: like line_pragma) is
 			-- Set `line_pragma' with `a_pragma'.
 		require
@@ -193,7 +204,7 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			-- | loop on feature_clause
 			-- | Result := "feature [{features_clause, ...}] -- `type_feature'"
 
-			-- Corresponding feature clause 
+			-- Corresponding feature clause
 		require
 			in_code_generation: current_state = Code_generation
 		do
@@ -276,7 +287,7 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 				loop
 					Result.append (comments.item.code)
 					comments.forth
-				end				
+				end
 				decrease_tabulation
 				decrease_tabulation
 			else
@@ -291,9 +302,9 @@ invariant
 	non_void_custom_attributes: custom_attributes /= Void
 	non_void_feature_clauses: feature_clauses /= Void
 	non_void_eiffel_name: eiffel_name /= Void
-	
+
 end -- class CODE_FEATURE
-	
+
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider
 --| Copyright (C) 2001-2006 Eiffel Software

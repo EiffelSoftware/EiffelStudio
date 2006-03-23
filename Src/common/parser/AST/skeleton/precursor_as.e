@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 		require
 			pk_not_void: pk /= Void
 			valid_n: n /= Void implies n.generics = Void
-		local
-			l_internal_paran: like internal_parameters
 		do
 			precursor_keyword := pk
 			parent_base_class := n

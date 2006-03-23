@@ -1381,9 +1381,6 @@ feature -- Access
 
 	new_precursor_as (pk: KEYWORD_AS; n: CLASS_TYPE_AS; p: PARAMETER_LIST_AS): PRECURSOR_AS is
 			-- New PRECURSOR AST node
-		local
-			i: INTEGER
-			l_parameter: EIFFEL_LIST [EXPR_AS]
 		do
 			if pk /= Void and (n /= Void implies n.generics = Void) then
 				create Result.initialize (pk, n, p)

@@ -9,28 +9,29 @@ class
 	WEL_HDM_CONSTANTS
 
 feature -- Access
- 
- 
+
+	Hdm_first: INTEGER is 4608
+
 	Hdm_delete_item: INTEGER is 4610
 
-	Hdm_get_item: INTEGER is 4611
+	Hdm_get_item: INTEGER is 4619
 
 	Hdm_get_item_count: INTEGER is 4608
 
 	Hdm_hit_test: INTEGER is 4614
-	
-	Hdm_insert_item: INTEGER is 4609
-	
+
+	Hdm_insert_item: INTEGER is 4618
+
 	Hdm_layout: INTEGER is 4613
-	
-	Hdm_set_item: INTEGER is 4612
-		
+
+	Hdm_set_item: INTEGER is 4620
+
 	Hdm_set_image_list: INTEGER is 4616
-		
+
 	Hdm_get_image_list: INTEGER is 4617
-		
+
 	Hdm_get_item_rect: INTEGER is 4615
-	
+
 	Hdm_get_bitmap_margin: INTEGER is 4629;
 
 indexing

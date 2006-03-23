@@ -49,13 +49,13 @@ extern EIF_LW_MUTEX_TYPE *eif_eo_store_mutex;
 #ifdef ISE_GC
 #define EIF_EO_STORE_LOCK \
 	thread_can_launch_gc = 0; \
-	EIF_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
+	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
 #define EIF_EO_STORE_UNLOCK \
 	thread_can_launch_gc = 1; \
-	EIF_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
+	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
 #else
-#define EIF_EO_STORE_LOCK	EIF_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
-#define EIF_EO_STORE_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
+#define EIF_EO_STORE_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.")
+#define EIF_EO_STORE_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_eo_store_mutex, "Cannot lock EO_STORE mutex.");
 #endif
 #else
 #define EIF_EO_STORE_LOCK

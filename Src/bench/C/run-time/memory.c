@@ -79,8 +79,8 @@ doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_shared	EIF_LW_MUTEX_TYPE *eif_memory_mutex = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_MEMORY_SETTING_LOCK	EIF_LW_MUTEX_LOCK (eif_memory_mutex, "Couldn't lock memory mutex");
-#define EIF_MEMORY_SETTING_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_memory_mutex, "Couldn't unlock memory mutex");
+#define EIF_MEMORY_SETTING_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_memory_mutex, "Couldn't lock memory mutex");
+#define EIF_MEMORY_SETTING_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_memory_mutex, "Couldn't unlock memory mutex");
 #endif /* EIF_THREADS */
 
 
@@ -132,6 +132,7 @@ rt_public void mem_speed(void)
 	 */
 
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	if (!cc_for_speed) {	/* Is it alread compiled for speed */
 		cc_for_speed = 1;			/* We are compiled for speed from now on */
@@ -154,6 +155,7 @@ rt_public void mem_slow(void)
 	 */
 
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	cc_for_speed = 0;			/* We are compiled for low memory from now on */
 	EIF_MEMORY_SETTING_UNLOCK
@@ -232,6 +234,7 @@ rt_public EIF_INTEGER mem_tget(void)
 rt_public void mem_tset(long int value)
 {
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	th_alloc = value;			/* Set new allocation threshold */
 	EIF_MEMORY_SETTING_UNLOCK
@@ -250,6 +253,7 @@ rt_public long mem_pget(void)
 rt_public void mem_pset(long int value)
 {
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	plsc_per = value;			/* Set new full collection period */
 	EIF_MEMORY_SETTING_UNLOCK
@@ -281,6 +285,7 @@ rt_public void mem_stat(EIF_POINTER item, EIF_INTEGER type)
 rt_public void gc_mon(char flag)
 {
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
 	EIF_MEMORY_SETTING_UNLOCK
@@ -296,6 +301,7 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
 	 */
 	
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	struct gacstat *gs = &rt_g_stat[type];	/* Get structure by type */
 
 	memcpy (item, gs, sizeof(struct gacstat));
@@ -317,6 +323,7 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
 rt_public char gc_ison(void)
 {
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	char result;
 	EIF_G_DATA_MUTEX_LOCK;
 	result = (char) (rt_g_data.status & GC_STOP ? '\0' : '\01');
@@ -347,6 +354,7 @@ rt_public void eif_set_max_mem (EIF_INTEGER lim)
 	 */
 
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_MEMORY_SETTING_LOCK
 	eif_max_mem = (int) lim;
 	EIF_MEMORY_SETTING_UNLOCK

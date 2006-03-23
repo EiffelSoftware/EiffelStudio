@@ -180,8 +180,8 @@ doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_shared	EIF_LW_MUTEX_TYPE *eif_except_lock = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_EXCEPT_LOCK	EIF_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
-#define EIF_EXCEPT_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
+#define EIF_EXCEPT_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_except_lock, "Couldn't lock exception lock");
+#define EIF_EXCEPT_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_except_lock, "Couldn't unlock exception lock");
 
 #endif /* EIF_THREADS */
 

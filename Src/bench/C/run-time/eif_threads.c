@@ -687,9 +687,10 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 #ifndef EIF_NO_CONDVAR
 	routine_ctxt->children_cond = eif_children_cond;
 #endif /* EIF_NO_CONDVAR */
-	EIF_MUTEX_LOCK(eif_children_mutex, "Couldn't lock children mutex");
+	EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Couldn't lock children mutex");
 	n_children ++;	
-	EIF_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
+	EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
+	SIGBLOCK;
 	LAUNCH_MUTEX_LOCK;
 	if (detach != (EIF_BOOLEAN) 5) {
 #ifndef EIF_WINDOWS
@@ -703,6 +704,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid, "Cannot create thread\n");
 	}
 	LAUNCH_MUTEX_UNLOCK;
+	SIGRESUME;
 	last_child = tid;
 		/* Wait until child thread is initialized so that we can safely
 		 * unprotect `thr_root_obj'. */
@@ -842,13 +844,13 @@ rt_public void eif_thr_exit(void)
 			/* Prevent other threads to wait for current thread in case 
 			 * one of the following calls is blocking. */
 		EIF_ENTER_C;
-		EIF_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(l_chld_mutex, "Lock parent mutex");
 			/* Decrement the number of child threads of the parent */
 		*l_addr_n_children -= 1;
 #ifndef EIF_NO_CONDVAR
 		EIF_COND_BROADCAST(l_chld_cond, "Pbl cond_broadcast");
 #endif
-		EIF_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
+		EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_chld_mutex, "Unlock parent mutex");
 
 		/* 
 		 * Every thread that has created a child thread with eif_thr_create() or
@@ -861,9 +863,9 @@ rt_public void eif_thr_exit(void)
 		 */
 
 		if (eif_children_mutex) {
-			EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
+			EIF_ASYNC_SAFE_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
 			if (!n_children) destroy_mutex = 1; /* No children are alive */
-			EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
 		}
 
 		if (destroy_mutex) {
@@ -1540,20 +1542,20 @@ rt_public void eif_thr_join_all(void)
 #ifdef EIF_NO_CONDVAR
 	EIF_THR_YIELD;
 	while (!end) {
-		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
 		if (n_children) {
-			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 			EIF_THR_YIELD;
 		} else {
 			end = 1;
-			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 		}
 	}
 #else
-	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
+	EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
 	while (n_children)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
-	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
+	EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 #endif
 }
 #endif
@@ -1596,13 +1598,13 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 
 	EIF_THR_YIELD;
 	while (!end) {
-		EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
 		if (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
-			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 			EIF_THR_YIELD;
 		} else {
 			end = 1;
-			EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+			EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 		}
 	}
 #else
@@ -1612,10 +1614,10 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	 * properly configured, ie compiled with POSIX_SCHED).
 	 */
 
-	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
+	EIF_ASYNC_SAFE_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
 	while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE)
 		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
-	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
+	EIF_ASYNC_SAFE_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 
 #endif
 	RT_GC_WEAN(thread_object);

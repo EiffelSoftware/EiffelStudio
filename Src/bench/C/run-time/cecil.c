@@ -93,8 +93,8 @@ doc:	</attribute>
 rt_shared EIF_LW_MUTEX_TYPE *eif_cecil_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_shared  void eif_cecil_init ();
-#define EIF_CECIL_LOCK EIF_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
-#define EIF_CECIL_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
+#define EIF_CECIL_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
+#define EIF_CECIL_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
 
 #else	/* EIF_THREADS */
 
@@ -115,6 +115,7 @@ rt_public int eiflocate (EIF_OBJECT object, char *name);
 rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
+	RT_GET_CONTEXT
 #ifdef EIF_THREADS
 	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif
@@ -126,6 +127,7 @@ rt_public void eifvisex (void) {
 rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
+	RT_GET_CONTEXT
 #ifdef EIF_THREADS
 	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif

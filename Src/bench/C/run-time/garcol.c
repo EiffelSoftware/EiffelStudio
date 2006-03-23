@@ -1142,6 +1142,7 @@ rt_public void gc_stop(void)
 	 */
 
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_G_DATA_MUTEX_LOCK;
 	if (!(rt_g_data.status & GC_SIG))		/* If not in signal handler */
 		rt_g_data.status |= GC_STOP;		/* Stop GC */
@@ -1161,6 +1162,7 @@ rt_public void gc_run(void)
 	 */
 
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	EIF_G_DATA_MUTEX_LOCK;
 	if (!(rt_g_data.status & GC_SIG))		/* If not in signal handler */
 		rt_g_data.status &= ~GC_STOP;		/* Restart GC */
@@ -4528,6 +4530,7 @@ rt_public void eremb(EIF_REFERENCE obj)
 	 * normally done by the RTAR macro.
 	 */
 
+	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -4564,6 +4567,7 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 * on every 'put' operation).
 	 */
 
+	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -4605,6 +4609,7 @@ rt_shared void gfree(register union overhead *zone)
 	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
 									then call the dispose routine */
 		if (zone->ov_flags & EO_DISP) { 
+			RT_GET_CONTEXT
 			dtype = Deif_bid(zone->ov_flags);
 			EIF_G_DATA_MUTEX_LOCK;
 			gc_status = rt_g_data.status;			/* Save GC status */
@@ -4821,12 +4826,13 @@ doc:	</routine>
 
 rt_public void globalonceset(EIF_REFERENCE address)
 {
-	EIF_LW_MUTEX_LOCK(eif_global_once_set_mutex, "Could not lock global once mutex");
+	RT_GET_CONTEXT
+	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_global_once_set_mutex, "Could not lock global once mutex");
 	if (-1 == epush(&global_once_set, address)) {
-		EIF_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
+		EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
 		eraise("once function recording", EN_MEM);
 	}
-	EIF_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
+	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_global_once_set_mutex, "Could not unlock global once mutex");
 }
 #endif
 

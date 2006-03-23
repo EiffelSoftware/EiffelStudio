@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	idle_action_mutex: MUTEX
+	idle_action_mutex: MUTEX;
 			-- Mutex used to access `idle_actions'
 
 indexing

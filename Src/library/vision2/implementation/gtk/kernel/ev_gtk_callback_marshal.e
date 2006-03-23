@@ -226,7 +226,7 @@ feature {EV_ANY_IMP}
 			if valid_gtk_code (keyval) then
 				create key.make_with_code (key_code_from_gtk (keyval))
 			end
-			Result := key_tuple (key, a_key_string.as_string_8, a_key_press)
+			Result := key_tuple (key, a_key_string, a_key_press)
 		end
 
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is

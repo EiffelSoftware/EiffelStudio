@@ -57,12 +57,12 @@ feature {PREFERENCES} -- Initialization
 			l_key_values: LINKED_LIST [STRING]
 		do
 			Precursor (a_preferences)
-			
+
 			l_keyp := open_key_with_access (location, key_read)
 			if l_keyp = default_pointer then
 				create_new_key (location)
 			else
-				l_key_values := enumerate_values (l_keyp)
+				l_key_values := enumerate_values_as_string_8 (l_keyp)
 				if not l_key_values.is_empty then
 					from
 						l_key_values.start

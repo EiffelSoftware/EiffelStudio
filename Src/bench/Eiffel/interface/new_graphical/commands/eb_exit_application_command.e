@@ -49,7 +49,7 @@ feature -- Basic operations
 				create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
 				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
-				confirm_stop_debug
+				process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
 			end
 		end
 
@@ -113,6 +113,9 @@ feature {NONE} -- Callbacks
 		local
 			cd: EV_CONFIRMATION_DIALOG
 		do
+			if process_manager.is_process_running then
+				process_manager.terminate_process
+			end
 			if Eb_debugger_manager.application_is_executing then
 				already_confirmed := True
 				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
@@ -179,19 +182,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

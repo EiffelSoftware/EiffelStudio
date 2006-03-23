@@ -13,6 +13,16 @@ class
 
 feature -- Implementation
 
+	accel_activate_string: EV_GTK_C_STRING is
+		once
+			Result := "accel-activate"
+		end
+
+	window_state_event_string: EV_GTK_C_STRING is
+		once
+			Result := "window-state-event"
+		end
+
 	delete_event_string: EV_GTK_C_STRING is
 		once
 			Result := "delete-event"

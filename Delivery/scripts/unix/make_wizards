@@ -11,5 +11,5 @@ cd $EIFFEL_SRC/help/wizards
 DELIVERY=$INSTALL_DIR
 remtrace Launch the actual wizard compilation
 cp compile_wizards $EXPORT_DIR
-source premake_wizards 
+. premake_wizards 
 

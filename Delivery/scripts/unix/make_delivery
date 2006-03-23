@@ -122,17 +122,17 @@ cd $INIT_DIR
 # Fill directories
 if [ ! "$NO_COMPILE" ]; then
 	remtrace Update all libraries
-	source update_libraries $GTK_DIR
+	. update_libraries $GTK_DIR
 	cd $INIT_DIR
 
 	remtrace Generate needed executables of the bin directory
 	cd $INIT_DIR
-	source make_exes
+	. make_exes
 	cd $INIT_DIR
 
 	if [ ! "$NO_WIZARDS" ]; then
 		remtrace Generate the precompilation and the \"new project\" wizards
-		source make_wizards
+		. make_wizards
 		cd $INIT_DIR
 	else
 		quick_move -r studio/wizards
@@ -146,7 +146,7 @@ fi
 
 remtrace Check out the documentation
 cd $INIT_DIR
-source make_xml_documentation
+. make_xml_documentation
 
 cd $INIT_DIR
 

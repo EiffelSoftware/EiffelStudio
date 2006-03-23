@@ -202,7 +202,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_GEN_PARAM_CREATE	(unsigned char) 134
 
 /* Byte code for expression creation */
-#define BC_NOTUSED_135		(unsigned char) 135
+#define BC_CAST_CHAR32		(unsigned char) 135
 #define BC_NULL_POINTER		(unsigned char) 136
 #define BC_BASIC_OPERATIONS	(unsigned char) 137
 #define BC_MAX				(unsigned char) 1
@@ -230,7 +230,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_INT64			(unsigned char) 142
 
 /* Conversion */
-#define BC_CAST_CHAR		(unsigned char) 143
+#define BC_CAST_CHAR8		(unsigned char) 143
 
 /* Once manifest strings */
 #define BC_ONCE_STRING		(unsigned char) 144

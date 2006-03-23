@@ -203,14 +203,14 @@ feature -- Access
 
 feature -- Process Vision2 events
 
- 	on_char (character_string: STRING) is
+ 	on_char (character_string: STRING_32) is
    			-- Process displayable character key press event.
    		local
    			c: CHARACTER
    		do
 			if not ignore_keyboard_input then
 				if not character_string.is_empty then
-		   			c := character_string @ 1
+		   			c := (character_string @ 1).to_character_8
 					if not ((ctrled_key xor alt_key) or else unwanted_characters.item (c.code)) then
 							-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
 						handle_character (c)

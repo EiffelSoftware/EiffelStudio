@@ -36,8 +36,8 @@ create
 	make_with_text
 
 feature -- Element change
-	
-	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], BOOLEAN]) is
+
+	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]) is
 			-- Set the agent that validates the text of `text_field' on `deactivate'.
 			-- If `a_validation_agent' is Void then no validation is performed before setting `text'.
 		do
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Access
 
-	validation_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], BOOLEAN]
+	validation_agent: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
 		-- Agent used to validate `text_field' text.
 
 	text_field: EV_TEXT_FIELD
@@ -73,20 +73,20 @@ feature {NONE} -- Implementation
 			if pixmap /= Void then
 				l_x_offset := l_x_offset + pixmap.width + spacing
 			end
-	
+
 			l_x_coord := (virtual_x_position + l_x_offset) - parent.virtual_x_position
 			l_x_coord := l_x_coord.max (0).min (l_x_offset)
-	
+
 			a_width := a_popup.width - l_x_coord - right_border
-			
+
 			a_widget_y_offset := (a_widget.minimum_height - text_height) // 2
-			
+
 			a_widget.set_minimum_width (0)
 
 			a_popup.set_x_position (a_popup.x_position + l_x_coord)
 			a_popup.set_width (a_width)
 			a_popup.set_y_position (a_popup.y_position + ((a_popup.height - top_border - bottom_border - text_height) // 2) + top_border - a_widget_y_offset)
-			a_popup.set_height (text_height)			
+			a_popup.set_height (text_height)
 		end
 
 	handle_key (a_key: EV_KEY) is
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 				deactivate
 			end
 		end
-		
+
 	user_cancelled_activation: BOOLEAN
 		-- Did the user cancel the activation using the Esc key?
 
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			if font /= Void then
 				text_field.set_font (font)
 			end
-			
+
 			text_field.set_text (text)
 
 			text_field.set_background_color (implementation.displayed_background_color)

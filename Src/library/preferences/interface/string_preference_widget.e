@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    validate_preference_text (a_text: STRING): BOOLEAN is
+    validate_preference_text (a_text: STRING_32): BOOLEAN is
             -- Validate `a_text'.  Disallow input if text is not an integer and the preference
             -- is an INTEGER_PREFERENCE.
         local

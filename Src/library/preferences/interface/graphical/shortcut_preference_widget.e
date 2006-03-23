@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	valid_shortcut_text: BOOLEAN
 			-- Is the text entered into the `change_item_widget' a valif format for a shortcut?
 
-    validate_preference_text (a_text: STRING): BOOLEAN is
+    validate_preference_text (a_text: STRING_32): BOOLEAN is
             -- Validate `a_text'.  Disallow input if text is not a valid shortcut key combination.
         do
             Result := valid_shortcut_text

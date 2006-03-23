@@ -752,11 +752,11 @@ Alias_name: Infix_operator
 			{ $$ := $1 }
 	|	TE_STR_NOT
 			{
-				$$ := ast_factory.new_string_as (once "not", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_BRACKET
 			{
-				$$ := ast_factory.new_string_as (once "[]", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
 			}
 	;
 
@@ -2700,11 +2700,11 @@ Default_manifest_string: Non_empty_string
 			{ $$ := $1 }
 	|	TE_EMPTY_STRING
 			{
-				$$ := ast_factory.new_string_as (once "", line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_string_as ("", line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	|	TE_EMPTY_VERBATIM_STRING
 			{
-				$$ := ast_factory.new_verbatim_string_as (once "", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
+				$$ := ast_factory.new_verbatim_string_as ("", verbatim_marker.substring (2, verbatim_marker.count), not has_old_verbatim_strings and then verbatim_marker.item (1) = ']', line, column, string_position, position + text_count - string_position, token_buffer2)
 			}
 	;
 
@@ -2732,51 +2732,51 @@ Non_empty_string: TE_STRING
 			}
 	|	TE_STR_LT
 			{
-				$$ := ast_factory.new_string_as (once "<", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
 			{
-				$$ := ast_factory.new_string_as (once "<=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
 			{
-				$$ := ast_factory.new_string_as (once ">", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
 			{
-				$$ := ast_factory.new_string_as (once ">=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
 			{
-				$$ := ast_factory.new_string_as (once "*", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
 			{
-				$$ := ast_factory.new_string_as (once "/", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
 			{
-				$$ := ast_factory.new_string_as (once "\\", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
 			{
-				$$ := ast_factory.new_string_as (once "//", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
 			{
-				$$ := ast_factory.new_string_as (once "^", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_BRACKET
 			{
-				$$ := ast_factory.new_string_as (once "[]", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("[]", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_AND
 			{
@@ -2814,15 +2814,15 @@ Non_empty_string: TE_STRING
 
 Prefix_operator: TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_NOT
 			{
-				$$ := ast_factory.new_string_as (once "not", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as ("not", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
 			{
@@ -2832,71 +2832,71 @@ Prefix_operator: TE_STR_MINUS
 
 Infix_operator: TE_STR_LT
 			{
-				$$ := ast_factory.new_string_as (once "<", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("<", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_LE
 			{
-				$$ := ast_factory.new_string_as (once "<=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("<=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_GT
 			{
-				$$ := ast_factory.new_string_as (once ">", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as (">", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_GE
 			{
-				$$ := ast_factory.new_string_as (once ">=", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as (">=", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_MINUS
 			{
-				$$ := ast_factory.new_string_as (once "-", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("-", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_PLUS
 			{
-				$$ := ast_factory.new_string_as (once "+", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("+", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_STAR
 			{
-				$$ := ast_factory.new_string_as (once "*", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("*", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_SLASH
 			{
-				$$ := ast_factory.new_string_as (once "/", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("/", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_MOD
 			{
-				$$ := ast_factory.new_string_as (once "\\", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("\\", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_DIV
 			{
-				$$ := ast_factory.new_string_as (once "//", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("//", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_POWER
 			{
-				$$ := ast_factory.new_string_as (once "^", line, column, position, 3, token_buffer2)
+				$$ := ast_factory.new_string_as ("^", line, column, position, 3, token_buffer2)
 			}
 	|	TE_STR_AND
 			{
-				$$ := ast_factory.new_string_as (once "and", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as ("and", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_AND_THEN
 			{
-				$$ := ast_factory.new_string_as (once "and then", line, column, position, 10, token_buffer2)
+				$$ := ast_factory.new_string_as ("and then", line, column, position, 10, token_buffer2)
 			}
 	|	TE_STR_IMPLIES
 			{
-				$$ := ast_factory.new_string_as (once "implies", line, column, position, 9, token_buffer2)
+				$$ := ast_factory.new_string_as ("implies", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_OR
 			{
-				$$ := ast_factory.new_string_as (once "or", line, column, position, 4, token_buffer2)
+				$$ := ast_factory.new_string_as ("or", line, column, position, 4, token_buffer2)
 			}
 	|	TE_STR_OR_ELSE
 			{
-				$$ := ast_factory.new_string_as (once "or else", line, column, position, 9, token_buffer2)
+				$$ := ast_factory.new_string_as ("or else", line, column, position, 9, token_buffer2)
 			}
 	|	TE_STR_XOR
 			{
-				$$ := ast_factory.new_string_as (once "xor", line, column, position, 5, token_buffer2)
+				$$ := ast_factory.new_string_as ("xor", line, column, position, 5, token_buffer2)
 			}
 	|	TE_STR_FREE
 			{

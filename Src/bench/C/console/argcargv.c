@@ -56,7 +56,7 @@ int eif_fn_count = 0;
 rt_public HANDLE ghInstance;
 rt_public HINSTANCE eif_hInstance;
 rt_public HINSTANCE eif_hPrevInstance;
-rt_public LPSTR eif_lpCmdLine;
+rt_public LPWSTR eif_lpCmdLine;
 rt_public int eif_nCmdShow;
 
 static char *temp = NULL;

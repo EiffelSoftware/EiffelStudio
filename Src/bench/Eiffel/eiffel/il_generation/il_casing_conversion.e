@@ -18,7 +18,7 @@ feature -- Naming convention
 	lower_case: INTEGER is 1
 	upper_case: INTEGER is 2
 			-- Conversion type for `pascal_casing'.
-			
+
 	pascal_casing (is_dotnet_name: BOOLEAN; name: STRING; type: INTEGER): STRING is
 			-- Convert `name' using PascalCasing convention.
 			-- If `type' is `upper_case' and if default is to use
@@ -116,13 +116,12 @@ feature -- Naming convention
 			-- `.' or a `_'.
 		require
 			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-			not_dot_terminated: name.item (name.count) /= '.'
+			not_dot_terminated: not name.is_empty implies name.item (name.count) /= '.'
 		local
 			i, nb: INTEGER
 		do
 			Result := name
-			if is_dotnet_name then
+			if is_dotnet_name and then not name.is_empty then
 				Result := Result.twin
 				from
 					i := 2
@@ -164,7 +163,7 @@ feature -- Naming convention
 			if a_namespace /= Void then
 				Result.append_string (namespace_casing (is_dotnet_naming, a_namespace))
 				if not Result.is_empty then
-					Result.append_character ('.')	
+					Result.append_character ('.')
 				end
 			end
 			if a_prefix /= Void then

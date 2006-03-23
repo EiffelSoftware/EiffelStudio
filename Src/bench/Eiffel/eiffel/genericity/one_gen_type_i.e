@@ -16,7 +16,7 @@ inherit
 		export
 			{ONE_GEN_TYPE_I} old_gen_make
 		undefine
-			il_type_name, type_a
+			il_type_name, type_a, generic_il_type_name
 		redefine
 			anchor_instantiation_in,
 			duplicate,

@@ -386,7 +386,7 @@ feature -- Status Report
 						i > count
 					loop
 						Result.append (sep)
-						tmp := l_meta.item (i).il_type_name (a_prefix).twin
+						tmp := l_meta.item (i).generic_il_type_name.twin
 						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
 						Result.append (tmp)
 						i := i + 1

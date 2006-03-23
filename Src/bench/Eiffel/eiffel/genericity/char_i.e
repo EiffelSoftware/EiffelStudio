@@ -28,9 +28,8 @@ feature -- Initialization
 				not w implies (System.character_class /= Void and then
 					System.character_class.is_compiled)
 			has_compiled_wide_character_class:
-				not System.il_generation implies (
-					w implies (System.wide_char_class /= Void and then
-						System.wide_char_class.is_compiled))
+				w implies (System.wide_char_class /= Void and then
+					System.wide_char_class.is_compiled)
 		do
 			is_wide := w
 			if w then
@@ -53,7 +52,11 @@ feature -- Property
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_char
+			if is_wide then
+				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u4
+			else
+				Result := {MD_SIGNATURE_CONSTANTS}.Element_type_char
+			end
 		end
 
 	tuple_code: INTEGER_8 is
@@ -61,7 +64,7 @@ feature -- Property
 		do
 			if is_wide then
 				Result := {SHARED_GEN_CONF_LEVEL}.wide_character_tuple_code
-			else	
+			else
 				Result := {SHARED_GEN_CONF_LEVEL}.character_tuple_code
 			end
 		end
@@ -75,7 +78,7 @@ feature -- Property
 				create Result.make (system.character_ref_class.compiled_class.class_id)
 			end
 		end
-		
+
 feature -- Access
 
 	level: INTEGER is
@@ -153,7 +156,7 @@ feature -- Access
 				buffer.put_string ("SK_CHAR")
 			end
 		end
-	
+
 	type_a: CHARACTER_A is
 		do
 			create Result.make (is_wide)
@@ -200,7 +203,7 @@ feature {NONE} -- Constants
 
 	Character_string: STRING is "EIF_CHARACTER"
 	Wide_char_string: STRING is "EIF_WIDE_CHAR"
-	
+
 	Union_character_tag: STRING is "carg"
 	Union_wide_char_tag: STRING is "wcarg";
 

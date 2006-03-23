@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class BASIC_I
 
 inherit
@@ -15,7 +15,7 @@ inherit
 			description, type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
-			generate_cecil_value
+			generate_cecil_value, generic_il_type_name
 		end
 
 	TYPE_C
@@ -51,6 +51,12 @@ feature -- Access
 			Result := reference_type.associated_class_type
 		ensure
 			associated_reference_class_type_not_void: Result /= Void
+		end
+
+	generic_il_type_name: STRING is
+			-- Associated name to for naming in generic derivation.
+		do
+			Result := base_class.name.twin
 		end
 
 feature -- Status report

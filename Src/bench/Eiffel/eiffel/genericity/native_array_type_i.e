@@ -23,6 +23,13 @@ feature -- Access
 			Result.append ("[]")
 		end
 
+	generic_il_type_name: STRING is
+			-- Name of current class
+		do
+			Result := true_generics.item (1).generic_il_type_name.twin
+			Result.append ("[]")
+		end
+
 	deep_il_element_type: CL_TYPE_I is
 			-- Find type of array element.
 			-- I.e. if you have NATIVE_ARRAY [NATIVE_ARRAY [INTEGER]], it

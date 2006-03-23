@@ -1065,14 +1065,14 @@ feature -- Class info
 			external_class_mapping.put (create {BOOLEAN_I}, "System.Boolean")
 			external_class_mapping.put (create {CHAR_I}.make (False), "System.Char")
 			external_class_mapping.put (create {NATURAL_I}.make (8), "System.Byte")
-			external_class_mapping.put (create {NATURAL_I}.make (16), "System.IUnt16")
-			external_class_mapping.put (create {NATURAL_I}.make (32), "System.IUnt32")
+			external_class_mapping.put (create {NATURAL_I}.make (16), "System.UInt16")
+			external_class_mapping.put (create {NATURAL_I}.make (32), "System.UInt32")
 			external_class_mapping.put (create {NATURAL_I}.make (64), "System.UInt64")
 			external_class_mapping.put (create {INTEGER_I}.make (8), "System.SByte")
 			external_class_mapping.put (create {INTEGER_I}.make (16), "System.Int16")
 			external_class_mapping.put (create {INTEGER_I}.make (32), "System.Int32")
 			external_class_mapping.put (create {INTEGER_I}.make (64), "System.Int64")
-			external_class_mapping.put (create {REAL_32_I}, "System.Float")
+			external_class_mapping.put (create {REAL_32_I}, "System.Single")
 			external_class_mapping.put (create {REAL_64_I}, "System.Double")
 			external_class_mapping.put (create {POINTER_I}, "System.IntPtr")
 
@@ -4646,7 +4646,7 @@ feature -- Conversion
 			inspect
 				type.element_type
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_boolean then convert_to_boolean
-			when {MD_SIGNATURE_CONSTANTS}.Element_type_char then convert_to_character
+			when {MD_SIGNATURE_CONSTANTS}.Element_type_char then convert_to_character_8
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then convert_to_real_32
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_r8 then convert_to_real_64
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then convert_to_natural_8
@@ -4677,7 +4677,7 @@ feature -- Conversion
 			method_body.put_opcode ({MD_OPCODES}.Conv_i1)
 		end
 
-	convert_to_integer_16, convert_to_character is
+	convert_to_integer_16, convert_to_character_8 is
 			-- Convert top of stack into appropriate type.
 		do
 			method_body.put_opcode ({MD_OPCODES}.Conv_i2)
@@ -4707,7 +4707,7 @@ feature -- Conversion
 			method_body.put_opcode ({MD_OPCODES}.Conv_u2)
 		end
 
-	convert_to_natural_32 is
+	convert_to_natural_32, convert_to_character_32 is
 			-- Convert top of stack into appropriate type.
 		do
 			method_body.put_opcode ({MD_OPCODES}.Conv_u4)

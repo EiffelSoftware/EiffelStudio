@@ -166,6 +166,17 @@ feature -- Access
 			il_type_name_not_empty: not Result.is_empty
 		end
 
+	generic_il_type_name: STRING is
+			-- Associated name to for naming in generic derivation.
+		require
+			in_il_generation: system.il_generation
+		do
+			Result := il_type_name (Void)
+		ensure
+			il_type_name_not_void: Result /= Void
+			il_type_name_not_empty: not Result.is_empty
+		end
+
 	name: STRING is
 			-- Name of current class type
 		deferred

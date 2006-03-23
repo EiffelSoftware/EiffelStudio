@@ -262,8 +262,11 @@ feature -- IL code generation
 			when hash_code_type then
 				generate_hash_code (type)
 
-			when to_character_type then
-				il_generator.convert_to_character
+			when to_character_8_type then
+				il_generator.convert_to_character_8
+
+			when to_character_32_type then
+				il_generator.convert_to_character_32
 
 			when abs_type then
 				il_generator.generate_abs (type)
@@ -329,6 +332,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (as_natural_8_type, as_natural_8_name_id)
 			Result.put (as_natural_16_type, as_natural_16_name_id)
 			Result.put (as_natural_32_type, as_natural_32_name_id)
+			Result.put (as_natural_32_type, natural_32_code_name_id)
 			Result.put (as_natural_64_type, as_natural_64_name_id)
 			Result.put (to_natural_8_type, to_natural_8_name_id)
 			Result.put (to_natural_16_type, to_natural_16_name_id)
@@ -358,8 +362,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
  			Result.put (out_type, out_name_id)
  			Result.put (hash_code_type, hash_code_name_id)
  			Result.put (hash_code_type, code_name_id)
-			Result.put (to_character_type, to_character_name_id)
-			Result.put (to_character_type, ascii_char_name_id)
+			Result.put (to_character_8_type, to_character_name_id)
+			Result.put (to_character_8_type, to_character_8_name_id)
+			Result.put (to_character_8_type, ascii_char_name_id)
+			Result.put (to_character_32_type, to_character_32_name_id)
  			Result.put (abs_type, abs_name_id)
 			Result.put (default_type, default_name_id)
 			Result.put (set_item_type, set_item_name_id)
@@ -413,7 +419,7 @@ feature -- Fast access to feature name
 	to_integer_64_type: INTEGER is 26
 	is_equal_type: INTEGER is 27
 	to_real_32_type: INTEGER is 28
-	to_character_type: INTEGER is 29
+	to_character_8_type: INTEGER is 29
 	From_integer_to_enum_type: INTEGER is 30
 	From_enum_to_integer_type: INTEGER is 31
 	is_digit_type: INTEGER is 32
@@ -438,7 +444,8 @@ feature -- Fast access to feature name
 	is_upper_type: INTEGER is 51
 	set_bit_type: INTEGER is 52
 	set_bit_with_mask_type: INTEGER is 53
-	max_type_id: INTEGER is 53
+	to_character_32_type: INTEGER is 54
+	max_type_id: INTEGER is 54
 
 feature {NONE} -- IL code generation
 

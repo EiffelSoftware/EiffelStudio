@@ -376,9 +376,7 @@ feature -- Properties
 			local_workbench.change_class (typed_pointer_class)
 			local_workbench.change_class (type_class)
 
-			if not il_generation then
-				local_workbench.change_class (wide_char_class)
-			else
+			if il_generation then
 				local_workbench.change_class (native_array_class)
 				local_workbench.change_class (system_string_class)
 				local_workbench.change_class (system_type_class)
@@ -398,6 +396,7 @@ feature -- Properties
 			local_workbench.change_class (integer_32_class)
 			local_workbench.change_class (integer_64_class)
 			local_workbench.change_class (character_class)
+			local_workbench.change_class (wide_char_class)
 			local_workbench.change_class (boolean_class)
 
 			protected_classes_level := boolean_class.compiled_class.class_id
@@ -434,6 +433,7 @@ feature -- Properties
 			integer_64_class.compiled_class.record_precompiled_class_in_system
 			boolean_class.compiled_class.record_precompiled_class_in_system
 			character_class.compiled_class.record_precompiled_class_in_system
+			wide_char_class.compiled_class.record_precompiled_class_in_system
 			string_class.compiled_class.record_precompiled_class_in_system
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
@@ -446,9 +446,7 @@ feature -- Properties
 			typed_pointer_class.compiled_class.record_precompiled_class_in_system
 			type_class.compiled_class.record_precompiled_class_in_system
 
-			if not il_generation then
-				wide_char_class.compiled_class.record_precompiled_class_in_system
-			else
+			if il_generation then
 				native_array_class.compiled_class.record_precompiled_class_in_system
 				system_string_class.compiled_class.record_precompiled_class_in_system
 				arguments_class.compiled_class.record_precompiled_class_in_system
@@ -1369,6 +1367,7 @@ end
 			integer_64_class.compiled_class.mark_class (marked_classes)
 			boolean_class.compiled_class.mark_class (marked_classes)
 			character_class.compiled_class.mark_class (marked_classes)
+			wide_char_class.compiled_class.mark_class (marked_classes)
 			string_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
@@ -1381,9 +1380,7 @@ end
 			typed_pointer_class.compiled_class.mark_class (marked_classes)
 			type_class.compiled_class.mark_class (marked_classes)
 
-			if not il_generation then
-				wide_char_class.compiled_class.mark_class (marked_classes)
-			else
+			if il_generation then
 				native_array_class.compiled_class.mark_class (marked_classes)
 				system_string_class.compiled_class.mark_class (marked_classes)
 				arguments_class.compiled_class.mark_class (marked_classes)

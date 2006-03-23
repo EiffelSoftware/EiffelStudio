@@ -148,7 +148,7 @@ feature -- Access
 	Bc_ref_to_ptr:		CHARACTER is '%/132/';
 	Bc_rcreate:			CHARACTER is '%/133/';
 	Bc_gen_param_create:CHARACTER is '%/134/';
-	Bc_notused_135:		CHARACTER is '%/135/';
+	Bc_cast_char32:		CHARACTER is '%/135/';
 	Bc_null_pointer:	CHARACTER is '%/136/';
 
 		-- Special instructions operation for basic type optimisations
@@ -180,7 +180,7 @@ feature -- Access
 	Bc_int64:			CHARACTER is '%/142/'
 
 		-- Conversion
-	Bc_cast_char:		CHARACTER is '%/143/'
+	bc_cast_char8:		CHARACTER is '%/143/'
 	
 		-- Once manifest strings
 	Bc_once_string:		CHARACTER is '%/144/'

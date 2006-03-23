@@ -16,8 +16,11 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 			l_str: STRING_BUILDER
+			l_str8: STRING
 		do
 			if a_str.is_string_8 then
+				l_str8 ?= a_str
+				create Result.make (l_str8.area.native_array, 0, a_str.count)
 			else
 				nb := a_str.count
 				create l_str.make (nb)
@@ -44,8 +47,11 @@ feature -- Conversion
 			a_result_valid: a_result.count = a_str.length
 		local
 			i, nb: INTEGER
+			l_str8: STRING
 		do
 			if a_result.is_string_8 then
+				l_str8 ?= a_result
+				a_str.copy_to (0, l_str8.area.native_array, 0, a_str.length)
 			else
 				from
 					i := 0
@@ -53,7 +59,7 @@ feature -- Conversion
 				until
 					i = nb
 				loop
-					a_result.put_code (a_str.get_chars (i), i + 1)
+					a_result.put_code (a_str.chars (i).natural_32_code, i + 1)
 					i := i + 1
 				end
 			end

@@ -6,6 +6,8 @@ md library
 cd library
 remtrace base
 exprt $DEFAULT_CVS_TAG/Src/library/base base 
+remtrace diff
+exprt $DEFAULT_CVS_TAG/Src/library/diff diff
 remtrace Eiffel2Java
 exprt $DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java 
 remtrace event
@@ -34,6 +36,8 @@ remtrace thread
 exprt $DEFAULT_CVS_TAG/Src/library/thread thread 
 remtrace time
 exprt $DEFAULT_CVS_TAG/Src/library/time time 
+remtrace uuid
+exprt $DEFAULT_CVS_TAG/Src/library/uuid uuid 
 remtrace vision
 exprt $DEFAULT_CVS_TAG/Src/library/vision vision 
 remtrace vision2

@@ -6,8 +6,10 @@ root
 
 default
 	assertion (all);
+	override_cluster ("override")
 
 cluster 
+	all override:	"$EIFFEL_SRC/Eiffel/override"
 
 		-- EiffelBase
 	all base: 		"$EIFFEL_SRC/library/base"

@@ -209,9 +209,9 @@ feature {NONE} -- Implementation
 			create it
 			if value_list_redirector /= Void then
 				value_list_redirector.redirect_list (list_item.table_description.selected_attribute_list (attribute_list))
-				it.fill (value_list_redirector.redirected_list)
+				it.fill_with_strings_8 (value_list_redirector.redirected_list)
 			else
-				it.fill (list_item.table_description.selected_printable_attribute_list (attribute_list))
+				it.fill_with_strings_8 (list_item.table_description.selected_printable_attribute_list (attribute_list))
 			end
 			it.set_data (current_i)
 			extend (it)

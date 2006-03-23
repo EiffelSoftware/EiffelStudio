@@ -24,6 +24,7 @@ feature -- Conversion
 			is_dotnet: {PLATFORM}.is_dotnet
 			a_str_not_void: a_str /= Void
 			a_result_not_void: a_result /= Void
+			a_result_valid: a_result.count = a_str.length
 		do
 		end
 

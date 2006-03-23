@@ -51,17 +51,22 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Setup accelerators for window
+		local
+			app_imp: like app_implementation
 		do
+			app_imp := app_implementation
 			Precursor {EV_WINDOW_IMP}
 			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
-			real_signal_connect (
+			signal_connect (
 				accel_group,
-				"accel-activate",
-				agent (App_implementation.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
-				Void
+				app_imp.accel_activate_string,
+				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
+				Void,
+				True
 			)
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
-			real_signal_connect (c_object, "window-state-event", agent (App_implementation.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void)
+			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, True)
+			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), {EV_GTK_EXTERNALS}.gdk_decor_all_enum)
 		end
 
 	initialize_client_area is

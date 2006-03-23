@@ -89,18 +89,27 @@ feature -- Initialization
 
 feature -- Type checking
 
-	type_check_only (a_feature: FEATURE_I) is
+	type_check_only (a_feature: FEATURE_I; a_code_inherited: BOOLEAN) is
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 		do
+			fixme (once "Make sure to use `a_code_inherited' to properly initialize our type checker.")
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
 			current_feature := a_feature
 			reset
 			is_byte_node_enabled := False
 			process_inherited_assertions (a_feature)
-			a_feature.body.process (Current)
+			if a_code_inherited then
+				if not a_feature.is_deferred then
+					is_inherited := True
+					a_feature.body.process (Current)
+					is_inherited := False
+				end
+			else
+				a_feature.body.process (Current)
+			end
 		end
 
 	type_check_and_code (a_feature: FEATURE_I) is
@@ -1555,7 +1564,9 @@ feature -- Implementation
 				-- Look for an argument
 			if l_feature /= Void then
 				if is_inherited then
-					l_arg_pos := l_as.argument_position
+					if l_as.is_argument then
+						l_arg_pos := l_as.argument_position
+					end
 				else
 					l_arg_pos := l_feature.argument_position (l_as.feature_name)
 				end
@@ -1584,7 +1595,7 @@ feature -- Implementation
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
-				if not is_inherited then
+				if not is_inherited or else l_as.is_local then
 					l_local_info := context.locals.item (l_as.feature_name)
 				end
 				if l_local_info /= Void then
@@ -1749,62 +1760,72 @@ feature -- Implementation
 			l_precursor_id: ID_AS
 			l_instatiation_type: LIKE_CURRENT
 		do
-			l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
+			if not is_inherited then
+				l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
 
-				-- Check that feature has a unique name (vupr1)
-				-- Check that we're in the body of a routine (l_vupr1).
-			if
-				l_feat_ast.feature_names.count > 1 or
-				is_checking_precondition or is_checking_postcondition or is_checking_invariant
-			then
-				create l_vupr1
-				context.init_error (l_vupr1)
-				error_handler.insert_error (l_vupr1)
-					-- Cannot go on here.
-				error_handler.raise_error
-			end
-
-				-- Create table of routine ids of all parents which have
-				-- an effective precursor of the current feature.
-			l_pre_table := precursor_table (l_as)
-
-				-- Check that current feature is a redefinition.
-			if l_pre_table.count = 0 then
-				if l_as.parent_base_class /= Void then
-						-- The specified parent does not have
-						-- an effective precursor.
-					create l_vupr2
-					context.init_error (l_vupr2)
-					error_handler.insert_error (l_vupr2)
+					-- Check that feature has a unique name (vupr1)
+					-- Check that we're in the body of a routine (l_vupr1).
+				if
+					l_feat_ast.feature_names.count > 1 or
+					is_checking_precondition or is_checking_postcondition or is_checking_invariant
+				then
+					create l_vupr1
+					context.init_error (l_vupr1)
+					error_handler.insert_error (l_vupr1)
 						-- Cannot go on here.
 					error_handler.raise_error
-				else
-						-- No parent has an effective precursor
-						-- (not a redefinition)
+				end
+
+					-- Create table of routine ids of all parents which have
+					-- an effective precursor of the current feature.
+				l_pre_table := precursor_table (l_as)
+
+					-- Check that current feature is a redefinition.
+				if l_pre_table.count = 0 then
+					if l_as.parent_base_class /= Void then
+							-- The specified parent does not have
+							-- an effective precursor.
+						create l_vupr2
+						context.init_error (l_vupr2)
+						error_handler.insert_error (l_vupr2)
+							-- Cannot go on here.
+						error_handler.raise_error
+					else
+							-- No parent has an effective precursor
+							-- (not a redefinition)
+						create l_vupr3
+						context.init_error (l_vupr3)
+						error_handler.insert_error (l_vupr3)
+							-- Cannot go on here.
+						error_handler.raise_error
+					end
+				end
+
+					-- Check that an unqualified precursor construct
+					-- is not ambiguous.
+				if l_pre_table.count > 1 then
+						-- Ambiguous construct
 					create l_vupr3
 					context.init_error (l_vupr3)
 					error_handler.insert_error (l_vupr3)
 						-- Cannot go on here.
 					error_handler.raise_error
 				end
-			end
 
-				-- Check that an unqualified precursor construct
-				-- is not ambiguous.
-			if l_pre_table.count > 1 then
-					-- Ambiguous construct
-				create l_vupr3
-				context.init_error (l_vupr3)
-				error_handler.insert_error (l_vupr3)
-					-- Cannot go on here.
-				error_handler.raise_error
+					-- Table has exactly one entry.
+				l_pre_table.start
+				l_parent_type := l_pre_table.item.first
+				l_parent_class := l_parent_type.associated_class
+				l_feature_i := l_parent_class.feature_table.feature_of_rout_id (l_pre_table.item.second)
+				l_as.set_class_id (l_parent_class.class_id)
+				l_as.set_routine_ids (l_feature_i.rout_id_set)
+			else
+				l_parent_class := system.class_of_id (l_as.class_id)
+				l_parent_type := l_parent_class.actual_type
+				l_parent_type ?= l_parent_type.instantiation_in (
+					context.current_class.actual_type, l_as.class_id)
+				l_feature_i := l_parent_class.feature_of_rout_id (l_as.routine_ids.first)
 			end
-
-				-- Table has exactly one entry.
-			l_pre_table.start
-			l_parent_type := l_pre_table.item.first
-			l_parent_class := l_parent_type.associated_class
-			l_feature_i := l_parent_class.feature_table.feature_of_rout_id (l_pre_table.item.second)
 
 				-- Update signature of parent `l_feature_i' in context of its instantiation
 				-- in current class.
@@ -2283,7 +2304,9 @@ feature -- Implementation
 				-- Look for an argument
 			if l_feature /= Void then
 				if is_inherited then
-					l_arg_pos := l_as.argument_position
+					if l_as.is_argument then
+						l_arg_pos := l_as.argument_position
+					end
 				else
 					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name)
 				end
@@ -2304,7 +2327,7 @@ feature -- Implementation
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
-				if not is_inherited then
+					if not is_inherited or else l_as.is_local then
 					l_local_info := context.locals.item (l_as.feature_name.internal_name)
 				end
 				if l_local_info /= Void then
@@ -4683,10 +4706,11 @@ feature {NONE} -- Implementation
 			precursor_feature: FEATURE_AS
 			routine_body: ROUTINE_AS
 			i: INTEGER
+			l_old_written_class: CLASS_C
 		do
 			assert_id_set := a_feature.assert_id_set
 			if assert_id_set /= Void then
-				is_inherited := true
+				is_inherited := True
 				from
 					i := assert_id_set.count
 				until
@@ -4707,6 +4731,7 @@ feature {NONE} -- Implementation
 							precursor_feature_not_void: precursor_feature /= Void
 						end
 						routine_body ?= precursor_feature.body.content
+						l_old_written_class := context.written_class
 						context.set_written_class (system.class_of_id (assertion_info.written_in))
 						if assertion_info.has_precondition then
 							set_is_checking_precondition (True)
@@ -4718,11 +4743,11 @@ feature {NONE} -- Implementation
 							routine_body.postcondition.process (Current)
 							set_is_checking_postcondition (False)
 						end
-						context.set_written_class (Void)
+						context.set_written_class (l_old_written_class)
 					end
 					i := i - 1
 				end
-				is_inherited := false
+				is_inherited := False
 			end
 		end
 

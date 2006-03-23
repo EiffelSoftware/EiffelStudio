@@ -969,7 +969,7 @@ feature -- Third pass: byte code production and type check
 					if not type_checked and then changed3 and then feature_i.is_routine then
 							-- Forced type check on the feature
 						ast_context.set_current_feature (feature_i)
-						feature_checker.type_check_only (feature_i)
+						feature_checker.type_check_only (feature_i, False)
 						check_local_names_needed := False
 						ast_context.clear_feature_context
 					elseif check_local_names_needed then
@@ -984,7 +984,7 @@ feature -- Third pass: byte code production and type check
 						-- Just type check it. See if VRRR or
 						-- VMRX error has occurred.
 					ast_context.set_current_feature (feature_i)
-					feature_checker.type_check_only (feature_i)
+					feature_checker.type_check_only (feature_i, False)
 					ast_context.clear_feature_context
 					record_suppliers (feature_i, dependances)
 				end

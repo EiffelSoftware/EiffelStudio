@@ -1151,13 +1151,10 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Cast of an INTEGER_XX type to CHARACTER
+	 * Cast to CHARACTER_8
 	 */
 	
-	case BC_CAST_CHAR:
-#ifdef DEBUG
-		dprintf(2)("BC_CAST_CHAR\n");
-#endif
+	case BC_CAST_CHAR8:
 		last = otop();
 		switch (last->type & SK_HEAD) {
 			case SK_UINT8: last->it_char = (EIF_CHARACTER) last->it_uint8; break;
@@ -1168,9 +1165,34 @@ rt_private void interpret(int flag, int where)
 			case SK_INT16: last->it_char = (EIF_CHARACTER) last->it_int16; break;
 			case SK_INT32: last->it_char = (EIF_CHARACTER) last->it_int32; break;
 			case SK_INT64: last->it_char = (EIF_CHARACTER) last->it_int64; break;
+			case SK_CHAR: break;
+			case SK_WCHAR: last->it_char = (EIF_CHARACTER) last->it_wchar; break;
 			}
 		last->type = SK_CHAR;
 		break;
+
+	/*
+	 * Cast to CHARACTER_32
+	 */
+	
+	case BC_CAST_CHAR32:
+		last = otop();
+		switch (last->type & SK_HEAD) {
+			case SK_UINT8: last->it_wchar = (EIF_CHARACTER) last->it_uint8; break;
+			case SK_UINT16: last->it_wchar = (EIF_CHARACTER) last->it_uint16; break;
+			case SK_UINT32: last->it_wchar = (EIF_CHARACTER) last->it_uint32; break;
+			case SK_UINT64: last->it_wchar = (EIF_CHARACTER) last->it_uint64; break;
+			case SK_INT8: last->it_wchar = (EIF_CHARACTER) last->it_int8; break;
+			case SK_INT16: last->it_wchar = (EIF_CHARACTER) last->it_int16; break;
+			case SK_INT32: last->it_wchar = (EIF_CHARACTER) last->it_int32; break;
+			case SK_INT64: last->it_wchar = (EIF_CHARACTER) last->it_int64; break;
+			case SK_CHAR: last->it_wchar = (EIF_CHARACTER) last->it_char; break;
+			case SK_WCHAR: break;
+			}
+		last->type = SK_WCHAR;
+		break;
+
+
 
 	/*
 	 * Assignment to result.

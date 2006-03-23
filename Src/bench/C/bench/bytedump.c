@@ -180,7 +180,7 @@ static  char    *names [] = {
 "BC_REF_TO_PTR" ,
 "BC_RCREATE" ,
 "BC_GEN_PARAM_CREATE" ,
-"BC_NOTUSED_135" ,
+"BC_CAST_CHAR32" ,
 "BC_NULL_POINTER" ,
 "BC_BASIC_OPERATIONS" ,
 "BC_INT_BIT_OP" ,
@@ -188,7 +188,7 @@ static  char    *names [] = {
 "BC_INT8" ,
 "BC_INT16" ,
 "BC_INT64" ,
-"BC_CAST_CHAR" ,
+"BC_CAST_CHAR8" ,
 "BC_ONCE_STRING" ,
 "BC_ALLOCATE_ONCE_STRINGS" ,
 "BC_NOTUSED_146" ,
@@ -945,7 +945,8 @@ static  void    print_instructions ()
 			case  BC_CAST_NATURAL :
 				fprintf (ofp,"%d", get_int32(&ip));
 				break;
-			case  BC_CAST_CHAR :
+			case  BC_CAST_CHAR8 :
+			case  BC_CAST_CHAR32 :
 			case  BC_CAST_REAL_32 :
 			case  BC_CAST_REAL_64 :
 				break;

@@ -284,8 +284,6 @@ feature -- Action
 			-- show the search tool and set focus to the search text field
 		require
 			explorer_bar_item_not_void: explorer_bar_item /= Void
-		local
-			l_quick_search_editor: EB_CUSTOM_WIDGETTED_EDITOR
 		do
 			fixme ("it can occurs the explorer_bar_item is bad (void or maybe destroyed ..")
 			explorer_bar_item.show
@@ -345,7 +343,7 @@ feature {NONE} -- Implementation
 		local
 			l: LIST[STRING]
 		do
-			l := keyword_field.strings
+			l := keyword_field.strings_8
 			if l /= Void then
 				l.compare_objects
 			end
@@ -702,19 +700,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

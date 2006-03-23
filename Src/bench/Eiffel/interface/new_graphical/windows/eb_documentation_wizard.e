@@ -28,7 +28,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -40,19 +40,19 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_WINDOW_MANAGER
 		undefine
 			default_create, copy
 		end
-	
+
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 				"Click `Finish' to generate the documentation."
 			))
 		end
-	
+
 feature -- Access
 
 	filter: STRING is
@@ -166,10 +166,10 @@ feature -- Access
 			end
 		end
 
-	excluded_indexing_items: LINKED_LIST [STRING] is
+	excluded_indexing_items: ARRAYED_LIST [STRING] is
 			-- Indexing items user does not want generated in HTML meta clauses.
 		do
-			Result := indexing_include.exclude_list.strings
+			Result := indexing_include.exclude_list.strings_8
 		end
 
 	diagram_views: HASH_TABLE [STRING, STRING]
@@ -204,7 +204,7 @@ feature -- Access
 		do
 			Result := cluster_diagrams_button.is_selected
 		end
-		
+
 	directory: DIRECTORY is
 			-- Location where documentation should be generated.
 		local
@@ -231,7 +231,7 @@ feature -- Widgets
 
 	cancel_button: EV_BUTTON
 			-- Button to close the wizard.
-	
+
 	previous_button: EV_BUTTON
 			-- Button to go back one page.
 
@@ -296,7 +296,7 @@ feature -- Miscellaneous
 			end
 			if not (cluster_diagrams_selected and is_html) and then diagram_specific_page (current_page) then
 				current_page := current_page - 1
-			end			
+			end
 			go_to_page (current_page)
 		end
 
@@ -338,10 +338,10 @@ feature {NONE} -- Widgets
 
 	view_label: EV_LABEL
 			-- Displays information about selecting views.
-			
+
 	view_list: EV_LIST
 			-- Displays available views for one cluster.
-			
+
 	set_view_button: EV_BUTTON
 			-- Assign view selected in `view_list' to current cluster.
 
@@ -367,13 +367,13 @@ feature {NONE} -- Implementation
 		do
 			Result := i = 3
 		end
-		
+
 	diagram_specific_page (i: INTEGER): BOOLEAN is
 			-- Index of page allowing to choose diagram views.
 		do
 			Result := i = 5
 		end
-	
+
 	go_to_page (i: INTEGER) is
 			-- Display page with `i' as index.
 		do
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 		do
 			if update_filters then
 				fill_filter_box (filter_combo_box)
-				update_filters := False			
+				update_filters := False
 			end
 			wizard_area.replace (list_area)
 			wizard_area.set_text ("Select format for output")
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 					file_name = Void
 				loop
 					name_count := file_name.count
-					if name_count > 4 then 
+					if name_count > 4 then
 						file_suffix := file_name.substring (name_count - 3, name_count)
 						file_suffix.to_lower
 						if file_suffix.is_equal (".fil") then
@@ -573,9 +573,9 @@ feature {NONE} -- Implementation
 			li: EV_LIST_ITEM
 			cl: ARRAYED_LIST [CLUSTER_I]
 			cl_name: STRING
-			old_exclude: LINKED_LIST [STRING]
+			old_exclude: ARRAYED_LIST [STRING]
 		do
-			old_exclude := ie.exclude_list.strings
+			old_exclude := ie.exclude_list.strings_8
 			old_exclude.compare_objects
 			ie.exclude_list.wipe_out
 			ie.include_list.wipe_out
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			cl: ARRAYED_LIST [CLUSTER_I]
 			classes: HASH_TABLE [CLASS_I, STRING]
 			all_tags: LINKED_LIST [STRING]
-			old_exclude: LINKED_LIST [STRING]
+			old_exclude: ARRAYED_LIST [STRING]
 			l_cluster: CLUSTER_I
 			l_class: CLASS_I
 		do
@@ -617,16 +617,16 @@ feature {NONE} -- Implementation
 					from classes.start until classes.after loop
 						l_class := classes.item_for_iteration
 						if l_class.compiled then
-							add_indexes (l_class.compiled_class.ast.top_indexes, all_tags)	
-							add_indexes (l_class.compiled_class.ast.bottom_indexes, all_tags)	
+							add_indexes (l_class.compiled_class.ast.top_indexes, all_tags)
+							add_indexes (l_class.compiled_class.ast.bottom_indexes, all_tags)
 						end
 						classes.forth
 					end
 				end
 				cl.forth
 			end
-			
-			old_exclude := ie.exclude_list.strings
+
+			old_exclude := ie.exclude_list.strings_8
 			old_exclude.compare_objects
 			ie.exclude_list.wipe_out
 			ie.include_list.wipe_out
@@ -742,11 +742,11 @@ feature {NONE} -- Implementation
 					cluster_row.set_data (views)
 					cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
 					view_mcl.extend (cluster_row)
-					
+
 					if not views.is_empty then
 						diagram_views.put ("DEFAULT", ci.cluster_name)
 					end
-				end	
+				end
 				cluster_list.forth
 			end
 			view_mcl.set_column_title ("Cluster", 1)
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 			right_vb.set_border_width (Layout_constants.Default_border_size)
 			vb.extend (main_hb)
 		end
-		
+
 	on_cluster_selected (row: EV_MULTI_COLUMN_LIST_ROW) is
 			-- `row' has been selected.
 			-- Display available views for corresponding cluster in `view_list'.
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_set_view_button_pressed is
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
@@ -813,14 +813,14 @@ feature {NONE} -- Implementation
 				diagram_views.replace (view_list.selected_item.text, cluster_name)
 			end
 		end
-		
+
 	on_directory_return_pressed is
 			-- Return was pressed after typing a directory name.
 			-- Press `finish_button'.
 		do
 			finish_button.select_actions.call (Void)
 		end
-			
+
 	on_cf_toggle (cf: CLASS_FORMAT; state: EV_CHECK_BUTTON) is
 			-- Set the generated state of `cf' to the selected state of `state'.
 		do

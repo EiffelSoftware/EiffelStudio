@@ -186,9 +186,9 @@ feature {NONE} -- Implementation
 	update_combo_box (word: STRING) is
 			-- add word to combo box list
 		local
-			l: LIST[STRING]
+			l: LIST [STRING]
 		do
-			l := keyword_field.strings
+			l := keyword_field.strings_8
 			if l /= Void then
 				l.compare_objects
 			end

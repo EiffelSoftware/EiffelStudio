@@ -216,7 +216,7 @@ feature -- Detailed column list
 			correct_column_insert: column_insert >= 1 and column_insert < multi_column_list_for_details.column_count
 		local
 			mean: DOUBLE
-			row_array: ARRAY [STRING]
+			row_array: ARRAY [STRING_32]
 			row:  EV_MULTI_COLUMN_LIST_ROW
 			a_cluster_scope: EB_METRIC_SCOPE
 			i: INTEGER
@@ -271,7 +271,7 @@ feature -- Detailed column list
 		local
 			classes_in_cluster: HASH_TABLE [CLASS_I, STRING]
 			x_pos, y_pos, i, progress_value: INTEGER
-			row_array: ARRAY [STRING]
+			row_array: ARRAY [STRING_32]
 			row:  EV_MULTI_COLUMN_LIST_ROW
 			a_cursor: CURSOR
 			displayed_result: DOUBLE

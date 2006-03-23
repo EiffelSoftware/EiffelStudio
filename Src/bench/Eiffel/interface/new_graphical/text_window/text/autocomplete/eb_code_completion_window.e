@@ -352,14 +352,14 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_char (character_string: STRING) is
+	on_char (character_string: STRING_32) is
    			-- Process displayable character key press event.
    		local
    			c: CHARACTER
 			c_name: EB_NAME_FOR_COMPLETION
    		do
 			if character_string.count = 1 then
-				c := character_string.item (1)
+				c := character_string.item (1).to_character_8
 				if c.is_alpha or c.is_digit or c = '_' then
 					buffered_input.append_character (c)
 					editor.handle_character (c)

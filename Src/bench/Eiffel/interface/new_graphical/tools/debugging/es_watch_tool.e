@@ -846,7 +846,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	string_key_pressed (s: STRING) is
+	string_key_pressed (s: STRING_32) is
 			-- A key was pressed in `watches_grid'.
 		local
 			row: EV_GRID_ROW

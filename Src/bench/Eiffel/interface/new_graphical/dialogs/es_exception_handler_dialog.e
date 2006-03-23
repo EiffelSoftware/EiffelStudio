@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 
 	on_add is
 		do
-			add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_disabled, tf_pattern.text])
+			add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_disabled, tf_pattern.text.to_string_8])
 		end
 
 	on_cancel is

@@ -2062,7 +2062,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		local
 			l: LIST[STRING]
 		do
-			l := box.strings
+			l := box.strings_8
 			if l /= Void then
 				l.compare_objects
 			end

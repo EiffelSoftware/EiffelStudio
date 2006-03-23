@@ -8,7 +8,7 @@ indexing
 
 class
 	EB_ZOOM_SELECTOR
-	
+
 inherit
 	EV_COMBO_BOX
 
@@ -26,7 +26,7 @@ feature -- Initialization
 			set_minimum_width_in_characters (5)
 			return_actions.extend (agent on_zoom_level_typed)
 		end
-		
+
 feature -- Element change
 
 	show_as_text (i: INTEGER) is
@@ -35,9 +35,11 @@ feature -- Element change
 			i_in_range: i > 0
 		local
 			l_text: like text
-		do			
+		do
 			remove_selection
-			l_text := i.out + "%%"
+			create l_text.make (5)
+			l_text.append_integer (i)
+			l_text.append_character ('%%')
 			set_text (l_text)
 		end
 
@@ -46,15 +48,17 @@ feature -- Element change
 		require
 			i_in_range: i > 0
 		local
-			tmp: LINKED_LIST [STRING]
+			tmp: like strings_8
 			l_text: like text
 		do
-			l_text := i.out + "%%"
-			tmp := strings
+			create l_text.make (5)
+			l_text.append_integer (i)
+			l_text.append_character ('%%')
+			tmp := strings_8
 			tmp.compare_objects
 			if tmp.has (l_text) then
 				tmp.prune_all (l_text)
-			end 
+			end
 			tmp.put_front (l_text)
 			set_strings (tmp)
 		end
@@ -68,7 +72,7 @@ feature {NONE} -- Events
 			new_val: INTEGER
 		do
 			l_text := text.twin
-			
+
 			if l_text.is_integer then
 				new_val := l_text.to_integer
 				if new_val > 5 then

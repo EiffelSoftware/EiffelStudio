@@ -293,7 +293,7 @@ feature -- Change
 			elseif c = col_context_index then
 				cindex := Col_context_id
 			end
-			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title]
+			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title.as_string_8]
 		end
 
 	set_slices_cmd (v: like slices_cmd) is

@@ -47,7 +47,7 @@ feature -- Event Handling
 		do
 			lock
 			idle_actions.extend (a_idle_action)
-			lock
+			unlock
 		end
 
 feature -- Thread Handling.

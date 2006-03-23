@@ -310,8 +310,6 @@ feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 
 	set_arguments (a: like internal_arguments) is
 			-- Set `internal_arguments' with `a'.
-		local
-			l_internal_arguments: like internal_arguments
 		do
 			internal_arguments := a
 		ensure

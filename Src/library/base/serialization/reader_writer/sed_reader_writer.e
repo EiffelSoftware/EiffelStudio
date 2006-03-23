@@ -66,7 +66,7 @@ feature -- Access
 			l_nat8: NATURAL_8
 		do
 			l_nat8 := read_natural_8
-			Result := l_nat8.to_character
+			Result := l_nat8.to_character_8
 		end
 
 	read_string_8: STRING is

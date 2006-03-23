@@ -82,7 +82,7 @@ feature -- Basic routines
 		require
 			valid_increment: (item.code + incr).is_valid_character_8_code
 		do
-			Result := (item.code + incr).to_character
+			Result := (item.code + incr).to_character_8
 		ensure
 			valid_result: Result |-| item = incr
 		end
@@ -92,7 +92,7 @@ feature -- Basic routines
 		require
 			valid_decrement: (item.code - decr).is_valid_character_8_code
 		do
-			Result := (item.code - decr).to_character
+			Result := (item.code - decr).to_character_8
 		ensure
 			valid_result: item |-| Result = decr
 		end
@@ -165,10 +165,16 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
+	to_character_8: CHARACTER is
+			-- Associated character in 8 bit version.
+		do
+			Result := item.to_character_8
+		end
+
 	to_character_32: WIDE_CHARACTER is
 			-- Associated character in 32 bit version.
 		do
-			Result := item.natural_32_code.to_character_32
+			Result := item.to_character_32
 		end
 
 	as_upper, upper: CHARACTER is
@@ -176,7 +182,7 @@ feature -- Conversion
 			-- Returns `item' if not `is_lower'
 		do
 			if is_lower then
-				Result := (item.code - ('a').code + ('A').code).to_character
+				Result := (item.code - ('a').code + ('A').code).to_character_8
 			else
 				Result := item
 			end
@@ -187,7 +193,7 @@ feature -- Conversion
 			-- Returns `item' if not `is_upper'
 		do
 			if is_upper then
-				Result := (item.code - ('A').code + ('a').code).to_character
+				Result := (item.code - ('A').code + ('a').code).to_character_8
 			else
 				Result := item
 			end

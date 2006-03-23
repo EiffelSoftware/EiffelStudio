@@ -1224,7 +1224,7 @@ feature -- Element change
 	put_code (v: NATURAL_32; i: INTEGER) is
 			-- Replace character at position `i' by character of code `v'.
 		do
-			area.put (v.to_character, i - 1)
+			area.put (v.to_character_8, i - 1)
 			internal_hash_code := 0
 		end
 
@@ -1359,7 +1359,7 @@ feature -- Element change
 							-- Special case for minimum integer value as negating it
 							-- as no effect.
 						if l_value = {INTEGER_REF}.Min_value then
-							append_character ((-(l_value \\ 10) + 48).to_character)
+							append_character ((-(l_value \\ 10) + 48).to_character_8)
 							l_value := -(l_value // 10)
 						end
 					else
@@ -1368,7 +1368,7 @@ feature -- Element change
 				until
 					l_value = 0
 				loop
-					append_character (((l_value \\ 10)+ 48).to_character)
+					append_character (((l_value \\ 10)+ 48).to_character_8)
 					l_value := l_value // 10
 				end
 

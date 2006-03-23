@@ -70,7 +70,7 @@ feature -- Access
 		require
 			valid_character_code: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
 	Min_value: INTEGER_8 is -128
@@ -433,12 +433,30 @@ feature -- Conversion
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
 
-	frozen to_character: CHARACTER is
+	to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
+		obsolete
+			"Use `to_character_8' instead."
 		require
 			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
+		end
+
+	to_character_8: CHARACTER is
+			-- Associated character in 8 bit version.
+		require
+			valid_character: is_valid_character_8_code
+		do
+			Result := item.to_character_8
+		end
+
+	to_character_32: WIDE_CHARACTER is
+			-- Associated character in 32 bit version.
+		require
+			valid_character: is_valid_character_32_code
+		do
+			Result := item.to_character_32
 		end
 
 feature -- Bit operations

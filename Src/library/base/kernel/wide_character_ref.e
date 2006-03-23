@@ -38,7 +38,7 @@ feature -- Access
 	natural_32_code: NATURAL_32 is
 			-- Associated integer value
 		do
-			Result := code.to_natural_32
+			Result := item.natural_32_code
 		end
 
 	Min_value: NATURAL_32 is 0
@@ -126,7 +126,13 @@ feature -- Conversion
 		require
 			is_character_8_compatible: is_character_8
 		do
-			Result := natural_32_code.to_character
+			Result := item.to_character_8
+		end
+
+	to_character_32: WIDE_CHARACTER is
+			-- Convert current to WIDE_CHARACTER
+		do
+			Result := item
 		end
 
 	as_upper, upper: WIDE_CHARACTER is

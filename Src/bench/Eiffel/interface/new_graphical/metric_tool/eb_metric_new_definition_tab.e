@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 			{ANY} Key_enter
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -90,7 +90,7 @@ feature -- Action
 		do
 			a_key_code := a_key.code
 
-			inspect a_key_code 
+			inspect a_key_code
 				when Key_escape then
 						-- Escape key pressed, so push the cancel button.
 					interface.new_metric_definition_dialog.default_cancel_button.select_actions.call (Void)
@@ -125,7 +125,7 @@ feature -- Action
 			end
 		end
 
-	change_in_name (s: STRING) is
+	change_in_name (s: STRING_32) is
 			-- Enable `save_button' when name is changed.
 		do
 			if s /= Void then
@@ -180,7 +180,7 @@ feature -- Action
 				combobox.forth
 			end
 		end
-		
+
 	yes_action is
 			-- Action to be performed when user overwrites a metric previously defined
 			-- with same name as the currently being defined.
@@ -194,7 +194,7 @@ feature -- Metric constituents.
 			-- Build a metric object regarding user's definition.
 		require
 			valid_name: name_field.text /= Void and then not name_field.text.is_empty
-			valid_unit: unit_field.text /= Void and then not unit_field.text.is_empty		
+			valid_unit: unit_field.text /= Void and then not unit_field.text.is_empty
 			metric_not_saved: not saved
 		deferred
 		ensure
@@ -209,7 +209,7 @@ feature -- Metric constituents.
 			metric_not_saved: not saved
 		deferred
 		ensure
-			metric_definition_built: valid_metric_definition implies not metric_definition.is_empty	
+			metric_definition_built: valid_metric_definition implies not metric_definition.is_empty
 		end
 
 	valid_metric_definition: BOOLEAN is
@@ -221,7 +221,7 @@ feature -- Metric constituents.
 			-- Has current definition any syntax error regarding metric_type?
 		deferred
 		end
-		
+
 	throw_error is
 			-- Must be called after `error' to display an information dialog.
 		deferred
@@ -240,7 +240,7 @@ feature -- Existing name
 			Result := name_field.text /= Void and then not name_field.text.is_empty and then
 				interface.tool.metrics.has (interface.tool.metric (name_field.text))
 		end
-	
+
 	build_confirm_dialog is
 		local
 			actions_array: ARRAY [PROCEDURE [ANY, TUPLE]]
@@ -253,7 +253,7 @@ feature -- Existing name
 								%a metric. Do you want%N%
 								%to overwrite it?", actions_array)
 		end
-	
+
 	to_scope (a_min_scope: INTEGER): STRING is
 			-- Transalte unique value `a_min_scope' to a storable one.
 		require

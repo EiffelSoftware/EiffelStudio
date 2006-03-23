@@ -161,7 +161,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			-- Current character, to the right of the cursor.
 		do
 			if text_length > 0 and then caret_position <= text_length then
-				Result := text.item (caret_position)
+				Result := text.item (caret_position).to_character_8
 			else
 				Result := '%N'
 			end

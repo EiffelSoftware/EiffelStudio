@@ -369,27 +369,27 @@ feature -- Metric
 				toolbar_menu.after
 			loop
 				toolbar_menu.item.select_actions.wipe_out
-				if equal (toolbar_menu.item.text, interface_names.metric_calculate) then
+				if toolbar_menu.item.text.is_equal (interface_names.metric_calculate) then
 					toolbar_menu.item.select_actions.extend (agent calculate.execute)
 					calculate_cmd_in_menu := toolbar_menu.item
-				elseif equal (toolbar_menu.item.text, interface_names.metric_add) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_add) then
 					toolbar_menu.item.select_actions.extend (agent add.execute)
 					add_cmd_in_menu := toolbar_menu.item
 					toolbar_menu.item.disable_sensitive
-				elseif equal (toolbar_menu.item.text,interface_names.metric_delete) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_delete) then
 					toolbar_menu.item.select_actions.extend (agent delete.execute)
 					delete_cmd_in_menu := toolbar_menu.item
-				elseif equal (toolbar_menu.item.text, interface_names.metric_details) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_details) then
 					toolbar_menu.item.select_actions.extend (agent details.execute)
 					details_cmd_in_menu := toolbar_menu.item
 					toolbar_menu.item.disable_sensitive
-				elseif equal (toolbar_menu.item.text, interface_names.metric_new_metrics) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_new_metrics) then
 					toolbar_menu.item.select_actions.extend (agent new_metric.execute)
 					new_metric_cmd_in_menu := toolbar_menu.item
-				elseif equal (toolbar_menu.item.text, interface_names.metric_management) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_management) then
 					toolbar_menu.item.select_actions.extend (agent manage.execute)
 					manage_cmd_in_menu := toolbar_menu.item
-				elseif equal (toolbar_menu.item.text, interface_names.metric_archive) then
+				elseif toolbar_menu.item.text.is_equal (interface_names.metric_archive) then
 					toolbar_menu.item.select_actions.extend (agent archive.execute)
 					archive_cmd_in_menu := toolbar_menu.item
 				end
@@ -413,11 +413,11 @@ feature -- Metric
 				metric_menu.after or Result /= Void
 			loop
 				parent_menu ?= metric_menu.item
-				if equal (metric_menu.item.text, a_text) then
+				if metric_menu.item.text.is_equal (a_text) then
 					Result := metric_menu.item
 				elseif parent_menu /= Void then
 					from parent_menu.start until parent_menu.after or Result /= Void loop
-						if equal (parent_menu.item.text, a_text) then
+						if parent_menu.item.text.is_equal (a_text) then
 							Result := parent_menu
 						end
 						parent_menu.forth
@@ -566,7 +566,7 @@ feature -- Combo box and field action.
 		local
 			parent_menu: EV_MENU
 		do
-			if not equal (a_metric_menu_item.text, interface_names.metric_all) then
+			if not a_metric_menu_item.text.is_equal (interface_names.metric_all) then
 				metric_field.set_text (a_metric_menu_item.text)
 			else
 				parent_menu ?= a_metric_menu_item.parent
@@ -701,7 +701,7 @@ feature -- Combo box and field action.
 			adjust_metric (index)
 		end
 
-	enable_add (s: STRING) is
+	enable_add (s: STRING_32) is
 			-- Action to be performed on change of measure's name.
 		do
 			if s /= Void and then (not add.is_sensitive and is_calculation_done) then

@@ -59,7 +59,7 @@ feature -- Action
 			valid_scope: tool.scope (scope_type) /= Void
 			valid_metric: tool.metric (tool.selected_metric) /= Void
 		local
-			row_array: ARRAY [STRING]
+			row_array: ARRAY [STRING_32]
 			row: EV_MULTI_COLUMN_LIST_ROW
 			a_percentage: BOOLEAN
 			a_metric: EB_METRIC

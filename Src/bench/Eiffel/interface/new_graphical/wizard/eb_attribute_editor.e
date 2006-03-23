@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		local
 			first_character: CHARACTER
 		do
-			first_character := feature_name_field.text.item (1).as_lower
+			first_character := feature_name_field.text.item (1).to_character_8.as_lower
 			if first_character = 'a' or first_character = 'e' or first_character = 'i'
 				or first_character = 'o' or first_character = 'u' then
 				Result := "an_"

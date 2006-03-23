@@ -31,9 +31,9 @@ feature -- Initialization
 		do
 			is_item_removable := False
 		ensure
-			is_item_removable_disabled: not is_item_removable		
+			is_item_removable_disabled: not is_item_removable
 		end
-	
+
 feature -- Access
 
 	name: STRING is
@@ -60,11 +60,11 @@ feature -- Access
 	widgets_set_before_has_compilation_started: ARRAYED_LIST [EV_WIDGET]
 			-- List of widgets that can be set only once
 			-- before the first Eiffel compilation started.
-			
+
 	widgets_set_before_is_already_compiled: ARRAYED_LIST [EV_WIDGET]
 			-- List of widgets that can be set only once
 			-- before the end of the first compilation.
-			
+
 feature -- Status
 
 	has_error: BOOLEAN is
@@ -112,7 +112,7 @@ feature -- Status setting
 		do
 			widgets_set_before_is_already_compiled.do_all (agent {EV_WIDGET}.disable_sensitive)
 		end
-		
+
 feature -- Setting
 
 	set_is_valid (v: BOOLEAN) is
@@ -148,7 +148,7 @@ feature -- Store/Retrieve
 			root_ast_not_void: root_ast /= Void
 		deferred
 		end
-	
+
 	post_store_reset is
 			-- Action to be done after a store has been done.
 			-- Eg. refresh display. By default do nothing.
@@ -291,7 +291,7 @@ feature -- Convenience
 			-- Result characters are upper case.
 		end
 
-	new_check_button (box: EV_BOX; st: STRING; a_expand: BOOLEAN): EV_CHECK_BUTTON is
+	new_check_button (box: EV_BOX; st: STRING_GENERAL; a_expand: BOOLEAN): EV_CHECK_BUTTON is
 			-- Add check button with title `st' to `box'
 		require
 			box_not_void: box /= Void
@@ -306,7 +306,7 @@ feature -- Convenience
 			result_not_void: Result /= Void
 		end
 
-	new_radio_button (box: EV_BOX; st: STRING): EV_RADIO_BUTTON is
+	new_radio_button (box: EV_BOX; st: STRING_GENERAL): EV_RADIO_BUTTON is
 			-- Add radio button with title `st' to `box'
 		require
 			box_not_void: box /= Void

@@ -13,14 +13,14 @@ class
 	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
 	SHARED_XML_ROUTINES
-	
+
 	EB_METRIC_SCOPE_INFO
-	
+
 	EB_CONSTANTS
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make (tl: EB_METRIC_TOOL; fm: EB_METRIC_FILE_MANAGER) is
@@ -37,22 +37,22 @@ feature -- Access
 
 	tool: EB_METRIC_TOOL
 			-- Metric tool `Current' is pointing on.
-	
+
 	file_manager: EB_METRIC_FILE_MANAGER
-			-- Manager that handles `metric_file' for saving new metrics and measures. 
+			-- Manager that handles `metric_file' for saving new metrics and measures.
 
 	plus: STRING is " + "
 		-- Operator +.
-		
+
 	minus: STRING is " - "
 		-- Operator -.
-		
+
 	multiply: STRING is " * "
 		-- Operator *.
-		
+
 	divide: STRING is " / "
 		-- Operator /.
-	
+
 	parser_problems: BOOLEAN
 		-- Has `metric_file' syntax errors?
 
@@ -63,7 +63,7 @@ feature -- Loading files
 		local
 			retried: BOOLEAN
 			error_dialog: EB_INFORMATION_DIALOG
-		do		
+		do
 			if not retried and not tool.is_file_loaded and tool.System /= Void then
 				file_manager.create_metric_file (file_manager.metric_file_name)
 				if file_manager.metric_file.exists then
@@ -495,7 +495,7 @@ feature -- Measures
 			l_deserialized_document: XM_DOCUMENT
 			metric_element, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			row_array: ARRAY [STRING]
+			row_array: ARRAY [STRING_32]
 			row: EV_MULTI_COLUMN_LIST_ROW
 			retried, info_missing, a_percentage: BOOLEAN
 			a_metric: EB_METRIC

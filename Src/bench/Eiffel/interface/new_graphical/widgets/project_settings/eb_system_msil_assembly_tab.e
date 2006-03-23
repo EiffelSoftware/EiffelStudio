@@ -26,14 +26,14 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -62,7 +62,7 @@ feature -- Parent access
 
 	system_window: EB_SYSTEM_WINDOW
 			-- Graphical parent of Current.
-			
+
 feature -- Store/Retrieve
 
 	store (root_ast: ACE_SD) is
@@ -75,7 +75,7 @@ feature -- Store/Retrieve
 			l_defaults: LACE_LIST [D_OPTION_SD]
 		do
 			if msil_widgets_enabled then
-				
+
 				l_defaults := root_ast.defaults
 				if l_defaults = Void then
 					create l_defaults.make (1)
@@ -84,7 +84,7 @@ feature -- Store/Retrieve
 				if not md_cache_path.text.is_empty then
 					l_defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.metadata_cache_path, md_cache_path.text, False))
 				end
-					
+
 				al := root_ast.assemblies
 				check
 					correctly_retrieved: al = Void or else al.is_empty
@@ -103,7 +103,7 @@ feature -- Store/Retrieve
 						pref_string := new_id_sd (l_row @ 2, True)
 					else
 						pref_string := Void
-					end		
+					end
 					create l_assembly_sd.initialize (new_id_sd (l_row @ 1, True),
 						new_id_sd (l_row @ 3, True),
 						pref_string,
@@ -173,15 +173,15 @@ feature {NONE} -- Filling
 							md_cache_path.set_text (l_defaults.item.value.value)
 							l_defaults.remove
 							l_removed := True
-						end	
+						end
 					end
 					if not l_removed then
-						l_defaults.forth	
+						l_defaults.forth
 					end
 					l_removed := False
 				end
 			end
-			
+
 			al ?= root_ast.assemblies
 			if al /= Void then
 				from
@@ -193,33 +193,33 @@ feature {NONE} -- Filling
 					if is_local_assembly (assembly) then
 							-- Add local reference row
 						create list_row
-						list_row.extend (assembly.cluster_name)
+						list_row.extend (assembly.cluster_name.to_string_8)
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
-							list_row.extend (assembly.prefix_name)
+							list_row.extend (assembly.prefix_name.to_string_8)
 						else
 							list_row.extend ("")
 						end
-						list_row.extend (assembly.assembly_name)
+						list_row.extend (assembly.assembly_name.to_string_8)
 						if assembly.public_key_token /= Void then
-							list_row.extend (assembly.version)
-							list_row.extend (assembly.culture)
-							list_row.extend (assembly.public_key_token)
+							list_row.extend (assembly.version.to_string_8)
+							list_row.extend (assembly.culture.to_string_8)
+							list_row.extend (assembly.public_key_token.to_string_8)
 						end
 						local_assembly_list.extend (list_row)
 						local_assembly_list.resize_column_to_content (3)
 					else
 							-- Add GAC reference row
 						create list_row
-						list_row.extend (assembly.cluster_name)
+						list_row.extend (assembly.cluster_name.to_string_8)
 						if (assembly.prefix_name /= Void and not assembly.prefix_name.is_empty) then
-							list_row.extend (assembly.prefix_name)
+							list_row.extend (assembly.prefix_name.to_string_8)
 						else
 							list_row.extend ("")
 						end
-						list_row.extend (assembly.assembly_name)
-						list_row.extend (assembly.version)
-						list_row.extend (assembly.culture)
-						list_row.extend (assembly.public_key_token)
+						list_row.extend (assembly.assembly_name.to_string_8)
+						list_row.extend (assembly.version.to_string_8)
+						list_row.extend (assembly.culture.to_string_8)
+						list_row.extend (assembly.public_key_token.to_string_8)
 						gac_assembly_list.extend (list_row)
 						gac_assembly_list.resize_column_to_content (1)
 						gac_assembly_list.resize_column_to_content (3)
@@ -295,7 +295,7 @@ feature -- Actions
 				l_error.show_modal_to_window (system_window.window)
 			end
 		end
-		
+
 	remove_reference (is_gac_assembly: BOOLEAN) is
 			-- Remove selected reference from list
 		do
@@ -304,7 +304,7 @@ feature -- Actions
 			else
 				local_assembly_list.remove_selected_item
 			end
-		end		
+		end
 
 feature {NONE} -- Initialization
 
@@ -312,17 +312,17 @@ feature {NONE} -- Initialization
 			-- Create widget corresponding to `General' tab in notebook.
 		require
 			top_not_void: top /= Void
-		local		
+		local
 			l_frame: EV_FRAME
 			l_hbox: EV_HORIZONTAL_BOX
 		do
 			system_window := top
 			tab_make
 			default_create
-			
+
 			set_border_width (5)
 			set_padding (3)
-			
+
 			create l_frame.make_with_text ("Eiffel Assembly Cache Options")
 			create md_cache_path.make_with_text_and_parent ("Cache Path:", system_window.window)
 			create l_hbox
@@ -332,14 +332,14 @@ feature {NONE} -- Initialization
 			l_frame.extend (l_hbox)
 			extend (l_frame)
 			disable_item_expand (l_frame)
-			
+
 				-- As soon as we do a successful compilation we cannot
 				-- change some options.
 			widgets_set_before_has_compilation_started.extend (md_cache_path)
 
 			extend (msil_assembly_info (True, Void, agent remove_reference (True)))
 			extend (msil_assembly_info (False, agent add_local_assembly_reference, agent remove_reference (False)))
-			
+
 			msil_specific_widgets.extend (Current)
 		end
 
@@ -367,11 +367,11 @@ feature {NONE} -- Initialization
 			vbox.set_padding (Layout_constants.Small_padding_size)
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
-			
+
 			if is_gac_assembly then
 				create Result.make_with_text ("GAC Assembly References")
 				create gac_assembly_list.make (system_window.window)
-				gac_assembly_list.set_column_titles 
+				gac_assembly_list.set_column_titles
 					(<<"Cluster Name", "Prefix", "Name", "Version", "Culture", "Public Key">>)
 				gac_assembly_list.disable_multiple_selection
 				gac_assembly_list.set_column_editable (True, 1)
@@ -393,12 +393,12 @@ feature {NONE} -- Initialization
 --					(local_assembly_list.set_column_width (local_assembly_list.resize_column_to_content (1)))
 				item_box.extend (local_assembly_list)
 			end
-			
+
 			if add_proc /= Void then
 				create add_button.make_with_text_and_action ("Add", add_proc)
 			end
 			if remove_proc /= Void then
-				create remove_button.make_with_text_and_action ("Remove", remove_proc)	
+				create remove_button.make_with_text_and_action ("Remove", remove_proc)
 			end
 			vbox.extend (item_box)
 			create hbox
@@ -412,7 +412,7 @@ feature {NONE} -- Initialization
 			end
 			if remove_proc /= Void then
 				remove_button.set_minimum_width (80)
-				hbox.extend (remove_button)	
+				hbox.extend (remove_button)
 				hbox.disable_item_expand (remove_button)
 			end
 			vbox.extend (hbox)
@@ -449,7 +449,7 @@ feature -- Implementation
 				end
 			else
 				Result := True
-			end	
+			end
 		end
 
 	check_cluster_names_valid is
@@ -485,7 +485,7 @@ feature -- Implementation
 				end
 			end
 		end
-		
+
 	assembly_prefix (a_name: STRING): STRING is
 			-- Return the required prefix for the assembly with name 'a_name'.
 		require
@@ -501,7 +501,7 @@ feature -- Implementation
 				Result := ""
 			end
 		ensure
-			result_not_void: Result /= Void			
+			result_not_void: Result /= Void
   		end
 
 	cluster_names: ARRAYED_LIST [STRING] is
@@ -525,7 +525,7 @@ feature -- Implementation
 				local_assembly_list.forth
 			end
 		end
-  		
+
 	reserved_words: ARRAYED_LIST [STRING] is
 			-- List of Lace reserved words which cannot be used for cluster names
 		once
@@ -568,13 +568,13 @@ feature -- Implementation
 			Result.extend ("use")
 			Result.extend ("visible")
 			Result.extend ("yes")
-		end	
+		end
 
 invariant
 	widgets_not_void:
 		gac_assembly_list /= Void and
 		local_assembly_list /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

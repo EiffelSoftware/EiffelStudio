@@ -30,10 +30,10 @@ feature {NONE} -- Events
 	on_view_name_typed is
 			-- A view name was typed in `Current' text field.
 		local
-			tmp: LINKED_LIST [STRING]
+			tmp: like strings_8
 		do
 			select_actions.block
-			tmp := strings
+			tmp := strings_8
 			tmp.compare_objects
 			if not is_trivial (text) then
 				if tmp.has (text) then

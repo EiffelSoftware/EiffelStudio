@@ -244,7 +244,7 @@ feature {EB_PRINTER_IMP} -- Implementation: Postscript generation
 		require
 			text_set: text /= Void
 		local
-			tf: TEXT_FILTER
+--			tf: TEXT_FILTER
 		do
 			if not text.is_empty then
 					--| Fixme:

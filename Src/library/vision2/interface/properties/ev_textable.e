@@ -6,7 +6,7 @@ indexing
 	keywords: "text, label, font, name, property"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXTABLE
 
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 		ensure
 			text_assigned: text.is_equal (a_text) and text /= a_text
 		end
-		
+
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in textable.
 		require
 			not_destroyed: not is_destroyed
@@ -47,12 +47,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -68,9 +68,9 @@ feature -- Element change
 		ensure
 			text_empty: text.is_empty
 		end
-		
+
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
@@ -81,7 +81,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXTABLE_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 invariant
 	text_not_void: is_usable implies text /= Void
 

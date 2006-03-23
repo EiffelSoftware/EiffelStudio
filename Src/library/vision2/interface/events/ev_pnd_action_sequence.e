@@ -11,10 +11,8 @@ class
 	EV_PND_ACTION_SEQUENCE
 
 inherit
-
 	ACTION_SEQUENCE [TUPLE [ANY]]
 		redefine
-			default_create,
 			call
 		end
 
@@ -23,15 +21,6 @@ create
 
 create {EV_PND_ACTION_SEQUENCE}
 	make_filled
-
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Create a ready to use action sequence.
-		do
-			Precursor {ACTION_SEQUENCE}
-			create names.make (0)
-		end
 
 feature -- Basic operations
 
@@ -128,18 +117,12 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING) is
+	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL) is
 			-- Acociate `a_name' with `an_item'.
+		obsolete
+			"Removed because did nothing useful."
 		do
-			names.force (a_name, an_item)
 		end
-
-feature {NONE} -- Implementation
-
-	names: HASH_TABLE [STRING, PROCEDURE [ANY, TUPLE]]
-
-invariant
-	names_not_void: names /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

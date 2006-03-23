@@ -90,7 +90,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 
-	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Key event
 		local
 			a_widget: EV_GTK_WIDGET_IMP
@@ -295,7 +295,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_pick_and_dropable_imp.execute (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	signal_emit_stop_intermediary (a_object_id: INTEGER; a_c_object: POINTER; signal: STRING) is
+	signal_emit_stop_intermediary (a_object_id: INTEGER; a_c_object: POINTER; signal: STRING_GENERAL) is
 			-- Emit stop signal
 		local
 			a_cs: EV_GTK_C_STRING

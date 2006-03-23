@@ -32,7 +32,7 @@ feature -- Status report
 			Result := cwin_get_window_text_length (edit_item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Window text
 		local
 			length: INTEGER
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set the window text
 		local
 			a_wel_string: WEL_STRING

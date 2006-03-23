@@ -12,7 +12,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WEL_RICH_EDIT 
+	WEL_RICH_EDIT
 
 inherit
 	WEL_MULTIPLE_LINE_EDIT
@@ -84,7 +84,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_name: STRING;
+	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a rich edit control.
 		require
@@ -134,7 +134,7 @@ feature -- Status report
 			cwin_send_message (item, Em_exgetsel, to_wparam (0), range.item)
 			Result := range.maximum
 		end
-		
+
 	has_selection: BOOLEAN is
 			-- Has a current selection?
 		local
@@ -168,7 +168,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	text_at (i: INTEGER; n: INTEGER): STRING is
+	text_at (i: INTEGER; n: INTEGER): STRING_32 is
 			-- Text of length `n' at position `i'.
 		require
 			exists: exists
@@ -179,7 +179,7 @@ feature -- Status report
 			new_options, old_options: INTEGER
 			previous_selection: WEL_CHARACTER_RANGE
 		do
-			hide_selection	
+			hide_selection
 			previous_selection := selection
 			old_options := options
 			new_options := 0
@@ -193,7 +193,7 @@ feature -- Status report
 			show_selection
 		end
 
-	selected_text: STRING is
+	selected_text: STRING_32 is
 			-- Currently selected text
 		require
 			exists: exists
@@ -282,7 +282,7 @@ feature -- Status report
 				Em_geteventmask, to_wparam (0), to_lparam (0))
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Contents of the rich edit control
 		local
 			stream: WEL_RICH_EDIT_BUFFER_SAVER
@@ -329,7 +329,7 @@ feature -- Status setting
 			create range.make (position, position)
 			cwin_send_message (item, Em_exsetsel, to_wparam (0), range.item)
   		end
-	
+
 	move_to_selection is
 			-- Move the selected text to be visible
 		do
@@ -403,7 +403,7 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	insert_text (a_text: STRING) is
+	insert_text (a_text: STRING_GENERAL) is
 			-- Insert `a_text' at the position of the cursor.
 			-- Replace the current selection if there is one
 		local
@@ -633,7 +633,7 @@ feature -- Basic operations
 			cwin_send_message (item, Em_hideselection, to_wparam (0), to_lparam (0))
 		end
 
-	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
 			-- Find `text_to_find' in WEL_RICH_EDIT
 		local
 			find_text: WEL_FIND_ARGUMENT
@@ -692,7 +692,7 @@ feature -- Element change
 			cwin_send_message (item, Em_setparaformat, to_wparam (0), a_para_format.item)
 		end
 
-	print_all (dc: WEL_PRINTER_DC; title: STRING) is
+	print_all (dc: WEL_PRINTER_DC; title: STRING_GENERAL) is
 			-- Print the contents of the rich edit control on
 			-- the printer `dc'. `title' is the printer job name.
 		require
@@ -761,7 +761,7 @@ feature -- Element change
 feature -- Notifications
 
 	on_en_msgfilter (a_msg_filter: WEL_MSG_FILTER) is
-			-- Notfication of a keyboard or mouse event in the control. 
+			-- Notfication of a keyboard or mouse event in the control.
 			-- Only notfications are sent that are enabled
 			-- in the `event_mask'.
 			-- Note:
@@ -797,12 +797,10 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
---			Result.from_c (Class_name_pointer) -- for version 2.0
-			Result := "RichEdit" -- for version 1.0
+			Result := (create {WEL_STRING}.share_from_pointer (Class_name_pointer)).string
 		end
 
 	default_style: INTEGER is
@@ -821,7 +819,7 @@ feature {NONE} -- Implementation
 				notification_info.code = En_msgfilter
 			then
 				create a_msg_filter.make_from_nmhdr (notification_info)
-				on_en_msgfilter (a_msg_filter)			
+				on_en_msgfilter (a_msg_filter)
 			end
 		end
 

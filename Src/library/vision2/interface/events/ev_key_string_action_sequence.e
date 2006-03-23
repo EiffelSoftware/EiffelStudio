@@ -11,10 +11,8 @@ class
 	EV_KEY_STRING_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [STRING]]
-	-- EV_ACTION_SEQUENCE [TUPLE [keystring: STRING]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [STRING_32]]
+
 create
 	default_create
 
@@ -29,7 +27,7 @@ feature -- Access
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_keystring: STRING; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_keystring: STRING_32; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

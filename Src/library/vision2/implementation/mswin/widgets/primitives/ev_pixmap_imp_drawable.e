@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			other_bitmap := other.get_bitmap
 			create internal_bitmap.make_by_bitmap(other_bitmap)
 			other_bitmap.decrement_reference
-			
+
 			internal_bitmap.enable_reference_tracking
 
 			if other.has_mask then
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 				mask_dc.select_bitmap (internal_mask_bitmap)
 			end
 			s_dc.release
-			
+
 				-- update events from `other'.
 			copy_events_from_other (other)
 
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 				-- Destroy `other' implementation
 			other.safe_destroy
 		end
-		
+
 	copy_events_from_other (other: EV_PIXMAP_I) is
 			-- Copy all events from `other' to `Current'.
 			-- Note that `other' is EV_PIXMAP_I and not EV_PIXMAP_IMP,
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			pick_actions_internal := other.pick_actions_internal
 			pick_ended_actions_internal := other.pick_ended_actions_internal
 		end
-		
+
 
 	adapt_from_simple (other: EV_PIXMAP_IMP) is
 			-- Adapt the current implementation to `other'.
@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 	read_from_named_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
 			--
-			-- Exceptions "Unable to retrieve icon information", 
+			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
 		local
 			simple_pixmap: EV_PIXMAP_IMP
@@ -181,7 +181,7 @@ feature {NONE} -- Initialization
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
 			simple_pixmap.read_from_named_file (file_name)
-			
+
 				-- Adapt the current object to the simple
 				-- pixmap just created
 			adapt_from_simple (simple_pixmap)
@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
 			simple_pixmap.set_with_default
-			
+
 				-- Adapt the current object to the simple
 				-- pixmap just created
 			adapt_from_simple (simple_pixmap)
@@ -218,7 +218,7 @@ feature {NONE} -- Initialization
 			create a_default_colors
 			set_background_color (a_default_colors.default_background_color)
 			set_foreground_color (a_default_colors.default_foreground_color)
-		end	
+		end
 
 feature {NONE} -- Saving
 
@@ -243,19 +243,19 @@ feature -- Access
 			create reusable_dc.make_by_dc (dc)
 			create a_private_bitmap.make_compatible (dc, area.width, area.height)
 			reusable_dc.select_bitmap (a_private_bitmap)
-			
+
 			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
-			
+
 			if has_mask then
 				-- Add mask to result
 				reusable_dc.unselect_bitmap
 				create a_private_mask_bitmap.make_compatible (mask_dc, area.width, area.height)
 				reusable_dc.select_bitmap (a_private_mask_bitmap)
-				reusable_dc.bit_blt (0, 0, area.width, area.height, mask_dc, area.x, area.y, srccopy)	
+				reusable_dc.bit_blt (0, 0, area.width, area.height, mask_dc, area.x, area.y, srccopy)
 			end
 
 			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, a_private_mask_bitmap, area.width, area.height)
-			
+
 				-- Clean up
 			reusable_dc.unselect_bitmap
 			reusable_dc.delete
@@ -264,7 +264,7 @@ feature -- Access
 	dc: WEL_MEMORY_DC
 			-- The device context corresponding to the image
 
-	mask_dc: WEL_MEMORY_DC 
+	mask_dc: WEL_MEMORY_DC
 			-- The device context corresponding to the mask
 
 	icon: WEL_ICON is
@@ -319,7 +319,7 @@ feature -- Access
 feature -- Status setting
 
 	stretch (new_width, new_height: INTEGER) is
-			-- Stretch the image to fit in size 
+			-- Stretch the image to fit in size
 			-- `new_width' by `new_height'.
 		local
 			simple_pixmap: EV_PIXMAP_IMP
@@ -345,7 +345,7 @@ feature -- Status setting
 		do
 				-- Resize the bitmap
 			if dc.bitmap_selected then
-				dc.unselect_bitmap	
+				dc.unselect_bitmap
 			end
 			resized_bitmap := resize_wel_bitmap (
 				internal_bitmap,
@@ -376,7 +376,7 @@ feature -- Status setting
 					black_brush
 					)
 				black_brush.delete
-	
+
 					-- Get rid of the old bitmap
 				internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
@@ -443,7 +443,7 @@ feature {
 				internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
 			end
-	
+
 			if palette /= Void then
 				palette.decrement_reference
 				palette := Void
@@ -468,11 +468,11 @@ feature {EV_PIXMAP} -- Duplication
 				-- from the old implementation, and needs re-setting. If the new implementation
 				-- requires a mask bitmap, it will be set during `copy_pixmap'.
 			internal_mask_bitmap := Void
-			
+
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
 			simple_pixmap.copy_pixmap (other_interface)
-			
+
 				-- Adapt the current object to the simple
 				-- pixmap just created
 			adapt_from_simple (simple_pixmap)
@@ -544,8 +544,8 @@ feature {NONE} -- Private Implementation
 				-- create and assign a new bitmap & dc
 			create new_dc.make_by_dc (s_dc)
 			create new_bitmap.make_compatible (
-				s_dc, 
-				new_width, 
+				s_dc,
+				new_width,
 				new_height
 				)
 			new_bitmap.enable_reference_tracking
@@ -593,7 +593,7 @@ feature -- Delegated features
 				must_be_widget_to_get_called: False
 			end
 		end
-		
+
 	pnd_screen: EV_SCREEN is
 			-- `Result' is screen used for pick and drop.
 		do
@@ -618,7 +618,7 @@ feature -- Delegated features
 			new_imp ?= interface.implementation
 			new_imp.disable_capture
 		end
-	
+
 	set_pebble (a_pebble: like pebble) is
 			-- Assign `a_pebble' to `pebble'.
 		do
@@ -670,7 +670,7 @@ feature -- Delegated features
 			a_y: INTEGER
 			a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER			
+			a_screen_x, a_screen_y: INTEGER
 		) is
 			-- Terminate the pick and drop mechanism.
 		do
@@ -683,13 +683,13 @@ feature -- Delegated features
 				a_screen_x, a_screen_y
 			)
 		end
-		
+
 	internal_enable_dockable is
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
-		
+
 	internal_disable_dockable is
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
@@ -916,7 +916,7 @@ feature -- Delegated features
 			interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
@@ -930,7 +930,7 @@ feature -- Delegated features
 			interface.implementation.show
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Text displayed when user moves mouse over widget.
 		do
 			promote_to_widget
@@ -958,24 +958,24 @@ feature -- Delegated features
 		end
 
 invariant
-	bitmap_not_void: 
+	bitmap_not_void:
 		is_initialized implies internal_bitmap /= Void
 
 	bitmap_reference_tracked:
-		internal_bitmap /= Void implies 
+		internal_bitmap /= Void implies
 			internal_bitmap.reference_tracked
 
 	palette_reference_tracked:
 		palette /= Void implies palette.reference_tracked
 
 	mask_bitmap_reference_tracked:
-		internal_mask_bitmap /= Void implies 
+		internal_mask_bitmap /= Void implies
 			internal_mask_bitmap.reference_tracked
 
 	dc_reference_tracked:
 		dc /= Void implies dc.reference_tracked
 
-	mask_dc_reference_tracked: 
+	mask_dc_reference_tracked:
 		mask_dc /= Void implies mask_dc.reference_tracked;
 
 indexing

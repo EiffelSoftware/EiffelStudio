@@ -27,7 +27,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
 			interface
@@ -44,21 +44,21 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} --
 
 	pointer_style: EV_CURSOR is
 			--
 		do
-			
+
 		end
-		
+
 	wel_has_capture: BOOLEAN is
 			--
 		do
-			
+
 		end
-	
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wel_text: STRING is
+	wel_text: STRING_32 is
 			-- Text of `Current'
 		do
 			if real_text /= Void then
@@ -95,7 +95,7 @@ feature -- Access
 			Result := real_text.count
 		end
 
-	real_text: STRING
+	real_text: STRING_32
 			-- Internal `text'. Not to be returned directly. Use clone.
 
 	index: INTEGER is
@@ -138,7 +138,7 @@ feature -- Access
 					Result := private_gray_pixmap
 				end
 			end
-		end 
+		end
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap of `Current'.
@@ -162,7 +162,7 @@ feature -- Access
 					Result := private_pixmap
 				end
 			end
-		end 
+		end
 
 feature -- Status report
 
@@ -187,7 +187,7 @@ feature -- Status setting
 		do
 			is_sensitive := True
 			if parent_imp /= Void then
-				parent_imp.enable_button (id)	
+				parent_imp.enable_button (id)
 			end
 		end
 
@@ -197,10 +197,10 @@ feature -- Status setting
 			is_sensitive := True
 			enabled_before := is_sensitive
 			if parent_imp /= Void then
-				parent_imp.enable_button (id)	
+				parent_imp.enable_button (id)
 			end
 		end
-		
+
 	disable_sensitive_internal is
 			 -- Disable `Current'.
 			 -- This is a special version used internally by the code that updates
@@ -241,7 +241,7 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -250,7 +250,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	wel_set_text (txt: STRING) is
+	wel_set_text (txt: STRING_GENERAL) is
 			-- Make `txt' the new label of `Current'.
 		do
 			if txt /= Void then
@@ -305,7 +305,7 @@ feature -- Element change
 				private_gray_pixmap := Void
 			end
 			private_gray_pixmap.copy (p)
-			
+
 			has_gray_pixmap := True
 
 				-- If the item is currently contained in the toolbar then
@@ -332,7 +332,7 @@ feature -- Element change
 		end
 
 	set_pixmap_in_parent is
-			-- Add the pixmap to the parent by updating the 
+			-- Add the pixmap to the parent by updating the
 			-- parent's image list.
 		local
 			default_imagelist: EV_IMAGE_LIST_IMP
@@ -355,7 +355,7 @@ feature -- Element change
 			if default_imagelist = Void then
 				if has_pixmap then
 					parent_imp.setup_image_list (private_pixmap.width, private_pixmap.height)
-					parent_imp.disable_false_image_list					
+					parent_imp.disable_false_image_list
 				else
 						-- Now set up an empty image list in `parent_imp' with a size 1x1.
 						-- This ensures that when no pixmap is associated with an item, the button is
@@ -408,7 +408,7 @@ feature -- Element change
 					hot_imagelist.extend_pixmap (local_pixmap)
 				end
 				check
-					hot_and_default_imagelist_synchronized: 
+					hot_and_default_imagelist_synchronized:
 						default_imagelist.last_position = hot_imagelist.last_position
 				end
 				image_index := default_imagelist.last_position
@@ -424,11 +424,11 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 	enabled_before: BOOLEAN
 		-- Was `Current' enabled before `update_for_pick_and_drop' modified
 		-- the current state.
-		
+
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
@@ -439,7 +439,7 @@ feature -- Element change
 			create env
 			app_imp ?= env.application.implementation
 			if starting then
-				if not interface.drop_actions.accepts_pebble (app_imp.pick_and_drop_source.pebble) then	
+				if not interface.drop_actions.accepts_pebble (app_imp.pick_and_drop_source.pebble) then
 					enabled_before := is_sensitive
 					disable_sensitive_internal
 				end
@@ -449,7 +449,7 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	restore_private_pixmaps is
@@ -457,7 +457,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- `private_gray_pixmap' are assigned Void. This is to stop
 			-- us keeping to many references to GDI objects. When
 			-- `Current' is removed from its parent, we must then
-			-- restore them. 
+			-- restore them.
 		do
 			if has_pixmap then
 				private_pixmap := pixmap
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 
 	private_gray_pixmap: EV_PIXMAP
 			-- Internal gray pixmap for Current. Void if none.
-			
+
 	destroy is
 			-- Destroy `Current'.
 		do
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 				private_gray_pixmap.destroy
 			end
 		end
-		
+
 
 feature {NONE} -- Implementation, pick and drop
 

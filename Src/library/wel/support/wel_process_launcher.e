@@ -55,7 +55,7 @@ feature -- Element settings
 
 feature -- Basic Operations
 
-	spawn (a_command_line, a_working_directory: STRING) is
+	spawn (a_command_line, a_working_directory: STRING_GENERAL) is
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
 		end
 
-	spawn_with_console (a_command_line, a_working_directory: STRING) is
+	spawn_with_console (a_command_line, a_working_directory: STRING_GENERAL) is
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
 		end
 
-	launch (a_command_line, a_working_directory: STRING; a_output_handler: ROUTINE [ANY, TUPLE [STRING]]) is
+	launch (a_command_line, a_working_directory: STRING_GENERAL; a_output_handler: ROUTINE [ANY, TUPLE [STRING]]) is
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
@@ -114,7 +114,7 @@ feature -- Basic Operations
 			input_pipe.close_output
 		end
 	
-	launch_and_refresh (a_command_line, a_working_directory: STRING; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
+	launch_and_refresh (a_command_line, a_working_directory: STRING_GENERAL; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Calls `a_refresh_handler' regularly while waiting for end of process.
 		require
@@ -181,7 +181,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	spawn_with_flags (a_command_line, a_working_directory: STRING; a_flags: INTEGER) is
+	spawn_with_flags (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER) is
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void

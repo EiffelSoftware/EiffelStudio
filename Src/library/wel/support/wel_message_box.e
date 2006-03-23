@@ -12,7 +12,7 @@ obsolete
 
 feature -- Basic operations
 
-	message_box (a_text, a_title: STRING; a_style: INTEGER) is
+	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER) is
 			-- Show a message box with `a_text' inside and
 			-- `a_title' using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -28,7 +28,7 @@ feature -- Basic operations
 				a_wel_string1.item, a_wel_string2.item, a_style)
 		end
 
-	error_message_box (a_text: STRING; a_style: INTEGER) is
+	error_message_box (a_text: STRING_GENERAL; a_style: INTEGER) is
 			-- Show a error message box with `a_text'
 			-- inside using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER): INTEGER is
 			-- SDK MessageBox
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR, %
+			"C [macro <wel.h>] (HWND, LPCTSTR, LPCTSTR, %
 				%UINT): EIF_INTEGER"
 		alias
 			"MessageBox"

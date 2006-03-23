@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_name (name: STRING) is
+	make_by_name (name: STRING_GENERAL) is
 			-- Load the resource by a `name'
 		do
 			Precursor (name)
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			data_not_void: a_data /= Void
 			data_count_big_enough: a_data.count >= 2 * (a_width * a_height * a_bits_per_pixel * a_planes) // 8
 		local
-			l_data: WEL_STRING
+			l_data: C_STRING
 		do
 			create l_data.make (a_data)
 			item := cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel, l_data.item)
@@ -179,7 +179,7 @@ feature -- Basic operations
 		do
 			cwin_set_di_bits (a_dc.item, item, start_line, length,
 				dib.item_bits, dib.item, mode)
-		end			
+		end
 
 feature {NONE} -- Implementation
 
@@ -198,7 +198,7 @@ feature {NONE} -- Externals
 			"CreateCompatibleBitmap"
 		end
 
-	cwin_create_di_bitmap (hdc, bitmapinfo: POINTER;init: INTEGER; 
+	cwin_create_di_bitmap (hdc, bitmapinfo: POINTER;init: INTEGER;
 				bits, infodib: POINTER; mode: INTEGER): POINTER is
 			-- SDK CreateDIBitmap
 		external
@@ -221,7 +221,7 @@ feature {NONE} -- Externals
 	cwin_load_bitmap (hinstance: POINTER; id: POINTER): POINTER is
 			-- SDK LoadBitmap
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
 		alias
 			"LoadBitmap"
 		end

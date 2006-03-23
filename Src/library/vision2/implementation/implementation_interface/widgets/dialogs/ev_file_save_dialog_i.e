@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision file save dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,10 +13,10 @@ inherit
 		redefine
 			internal_accept
 		end
-	
+
 feature {NONE} -- Implementation
 
-	internal_accept: STRING is
+	internal_accept: STRING_32 is
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.

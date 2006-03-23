@@ -40,13 +40,13 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create in (0, 0)
 		do
-			create text.make (0)
+			create {STRING_32} text.make_empty
 			font := default_font
 			is_default_font_used := True
 			Precursor {EV_ATOMIC_FIGURE}
 		end
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_GENERAL
 			-- Text that is displayed.
 
 	font: EV_FONT
@@ -89,7 +89,7 @@ feature -- Status setting
 			font_assigned: font = a_font
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -110,7 +110,7 @@ feature -- Events
 			Result := point_on_rectangle (x, y, point.x_abs, point.y_abs,
 				point.x_abs + width, point.y_abs + height)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	update_dimensions is
@@ -137,13 +137,13 @@ feature {NONE} -- Implementation
 		local
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			x_pos: INTEGER
-		do 
+		do
 			t := font.string_size (text)
 			update_dimensions_with_text_size (t)
 			x_pos := point.x_abs
 			x_pos := x_pos + t.integer_item (3)
 			create Result.make (x_pos, point.y_abs, width, height)
-			
+
 		end
 
 	Default_font: EV_FONT is

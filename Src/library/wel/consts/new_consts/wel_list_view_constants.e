@@ -245,13 +245,13 @@ feature -- Messages
 	Lvm_deleteitem: INTEGER is 4104
 			-- Declared in Windows as LVM_DELETEITEM
 
-	Lvm_editlabel: INTEGER is 4119
+	Lvm_editlabel: INTEGER is 4214
 			-- Declared in Windows as LVM_EDITLABEL
 
 	Lvm_ensurevisible: INTEGER is 4115
 			-- Declared in Windows as LVM_ENSUREVISIBLE
 
-	Lvm_finditem: INTEGER is 4109
+	Lvm_finditem: INTEGER is 4179
 			-- Declared in Windows as LVM_FINDITEM
 
 	Lvm_getbkcolor: INTEGER is 4096
@@ -260,7 +260,7 @@ feature -- Messages
 	Lvm_getcallbackmask: INTEGER is 4106
 			-- Declared in Windows as LVM_GETCALLBACKMASK
 
-	Lvm_getcolumn: INTEGER is 4121
+	Lvm_getcolumn: INTEGER is 4191
 			-- Declared in Windows as LVM_GETCOLUMN
 
 	Lvm_getcolumnwidth: INTEGER is 4125
@@ -275,10 +275,10 @@ feature -- Messages
 	Lvm_getimagelist: INTEGER is 4098
 			-- Declared in Windows as LVM_GETIMAGELIST
 
-	Lvm_getisearchstring: INTEGER is 4148
+	Lvm_getisearchstring: INTEGER is 4213
 			-- Declared in Windows as LVM_GETISEARCHSTRING
 
-	Lvm_getitem: INTEGER is 4101
+	Lvm_getitem: INTEGER is 4171
 			-- Declared in Windows as LVM_GETITEM
 
 	Lvm_getitemcount: INTEGER is 4100
@@ -296,14 +296,8 @@ feature -- Messages
 	Lvm_getitemstate: INTEGER is 4140
 			-- Declared in Windows as LVM_GETITEMSTATE
 
-	Lvm_getitemtext: INTEGER is 4141
+	Lvm_getitemtext: INTEGER is 4211
 			-- Declared in Windows as LVM_GETITEMTEXT
-
-	Lvm_gettooltips: INTEGER is 4174
-			-- Retrieves the tooltip control that the list
-			-- view control uses to display tooltips. 
-			--
-			-- Declared in Windows as LVM_GETTOOLTIPS
 
 	Lvm_getnextitem: INTEGER is 4108
 			-- Declared in Windows as LVM_GETNEXTITEM
@@ -314,7 +308,7 @@ feature -- Messages
 	Lvm_getselectedcount: INTEGER is 4146
 			-- Declared in Windows as LVM_GETSELECTEDCOUNT
 
-	Lvm_getstringwidth: INTEGER is 4113
+	Lvm_getstringwidth: INTEGER is 4183
 			-- Declared in Windows as LVM_GETSTRINGWIDTH
 
 	Lvm_gettextbkcolor: INTEGER is 4133
@@ -326,22 +320,16 @@ feature -- Messages
 	Lvm_gettopindex: INTEGER is 4135
 			-- Declared in Windows as LVM_GETTOPINDEX
 
-	Lvm_getunicodeformat: INTEGER is 8198
-			-- Retrieves the UNICODE character format flag for
-			-- the control
-			--
-			-- Declared in Windows as LVM_GETUNICODEFORMAT
-
 	Lvm_getviewrect: INTEGER is 4130
 			-- Declared in Windows as LVM_GETVIEWRECT
 
 	Lvm_hittest: INTEGER is 4114
 			-- Declared in Windows as LVM_HITTEST
 
-	Lvm_insertcolumn: INTEGER is 4123
+	Lvm_insertcolumn: INTEGER is 4193
 			-- Declared in Windows as LVM_INSERTCOLUMN
 
-	Lvm_insertitem: INTEGER is 4103
+	Lvm_insertitem: INTEGER is 4173
 			-- Declared in Windows as LVM_INSERTITEM
 
 	Lvm_redrawitems: INTEGER is 4117
@@ -356,7 +344,7 @@ feature -- Messages
 	Lvm_setcallbackmask: INTEGER is 4107
 			-- Declared in Windows as LVM_SETCALLBACKMASK
 
-	Lvm_setcolumn: INTEGER is 4122
+	Lvm_setcolumn: INTEGER is 4192
 			-- Declared in Windows as LVM_SETCOLUMN
 
 	Lvm_setcolumnwidth: INTEGER is 4126
@@ -365,7 +353,7 @@ feature -- Messages
 	Lvm_setimagelist: INTEGER is 4099
 			-- Declared in Windows as LVM_SETIMAGELIST
 
-	Lvm_setitem: INTEGER is 4102
+	Lvm_setitem: INTEGER is 4172
 			-- Declared in Windows as LVM_SETITEM
 
 	Lvm_setitemcount: INTEGER is 4143
@@ -380,7 +368,7 @@ feature -- Messages
 	Lvm_setitemstate: INTEGER is 4139
 			-- Declared in Windows as LVM_SETITEMSTATE
 
-	Lvm_setitemtext: INTEGER is 4142
+	Lvm_setitemtext: INTEGER is 4212
 			-- Declared in Windows as LVM_SETITEMTEXT
 
 	Lvm_settextbkcolor: INTEGER is 4134
@@ -409,7 +397,6 @@ feature -- Messages
 
 	Lvm_update: INTEGER is 4138
 			-- Declared in Windows as LVM_UPDATE
-
 
 	Lvm_approximateviewrect: INTEGER is 4160
 			-- Version 4.70. Calculates the approximate width and height
@@ -529,7 +516,7 @@ feature -- Notifications
 	Lvn_begindrag: INTEGER is -109
 			-- Declared in Windows as LVN_BEGINDRAG
 
-	Lvn_beginlabeledit: INTEGER is -105
+	Lvn_beginlabeledit: INTEGER is -175
 			-- Declared in Windows as LVN_BEGINLABELEDIT
 
 	Lvn_beginrdrag: INTEGER is -111
@@ -544,10 +531,10 @@ feature -- Notifications
 	Lvn_deleteitem: INTEGER is -103
 			-- Declared in Windows as LVN_DELETEITEM
 
-	Lvn_endlabeledit: INTEGER is -106
+	Lvn_endlabeledit: INTEGER is -176
 			-- Declared in Windows as LVN_ENDLABELEDIT
 
-	Lvn_getdispinfo: INTEGER is -150
+	Lvn_getdispinfo: INTEGER is -177
 			-- Declared in Windows as LVN_GETDISPINFO
 
 	Lvn_insertitem: INTEGER is -102
@@ -562,8 +549,8 @@ feature -- Notifications
 	Lvn_keydown: INTEGER is -155
 			-- Declared in Windows as LVN_KEYDOWN
 
-	Lvn_setdispinfo: INTEGER is -151
-			-- Declared in Windows as LVN_SETDISPINFO
+	Lvn_setdispinfo: INTEGER is -178;
+		-- Declared in Windows as LVN_SETDISPINFO
 
 	Lvn_getinfotip: INTEGER is -157
 			-- Version 4.71 and later of Comctl32.dll

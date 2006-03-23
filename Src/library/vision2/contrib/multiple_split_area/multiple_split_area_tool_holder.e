@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING; a_parent: MULTIPLE_SPLIT_AREA) is
+	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING_GENERAL; a_parent: MULTIPLE_SPLIT_AREA) is
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
 		require
@@ -667,7 +667,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 	maximize_button, minimize_button, close_button: EV_TOOL_BAR_BUTTON
 		-- Buttons representing minimize and maximize commands.
 
-	display_name: STRING
+	display_name: STRING_32
 			-- Name associated with `tool' when displayed in `Current'.
 
 	label: EV_LABEL

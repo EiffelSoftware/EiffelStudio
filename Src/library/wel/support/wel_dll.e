@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dll_name: STRING) is
+	make (dll_name: STRING_GENERAL) is
 			-- Load the DLL `dll_name'
 		require
 			dll_name_not_void: dll_name /= Void
@@ -38,16 +38,16 @@ feature {NONE} -- Initialization
 			dll_name_not_void: dll_name /= Void
 			dll_name_not_empty: not dll_name.is_empty
 		local
-			a_wel_string: WEL_STRING
+			a_string: C_STRING
 		do
-			create a_wel_string.make (dll_name)
-			item := cwin_permanent_load_library (a_wel_string.item)
+			create a_string.make (dll_name)
+			item := cwin_permanent_load_library (a_string.item)
 			is_loaded_at_all_time := True
 		end
 
 feature -- Access
 
-	name: STRING is
+	name: STRING_32 is
 			-- DLL name (including the path)
 		require
 			exists: exists
@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 	cwin_load_library (dll_name: POINTER): POINTER is
 			-- SDK LoadLibrary
 		external
-			"C [macro <wel.h>] (LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (LPCTSTR): EIF_POINTER"
 		alias
 			"LoadLibrary"
 		end
@@ -116,8 +116,7 @@ feature {NONE} -- Externals
 			length: INTEGER): INTEGER is
 			-- SDK GetModuleFileName
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPSTR, %
-				%int): EIF_INTEGER"
+			"C [macro <wel.h>] (HINSTANCE, LPTSTR, int): EIF_INTEGER"
 		alias
 			"GetModuleFileName"
 		end

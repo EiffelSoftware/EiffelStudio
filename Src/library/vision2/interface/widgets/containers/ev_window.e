@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_title: STRING) is
+	make_with_title (a_title: STRING_GENERAL) is
 			-- Initialize with `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -102,7 +102,7 @@ feature -- Access
 				(Result = implementation.minimum_height)
 		end
 
-	title: STRING is
+	title: STRING_32 is
 			-- A textual name used by the window manager.
 		require
 			not_destroyed: not is_destroyed
@@ -247,7 +247,7 @@ feature -- Status setting
 			maximum_height_assigned: maximum_height = a_maximum_height
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed

@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
-			
+
 			-- Initialize internal values
 			rows := 1
 			columns := 1
@@ -71,12 +71,6 @@ feature -- Status report
 			Result := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
 					{EV_GTK_EXTERNALS}.gtk_box_struct_container (container_widget)
 				)
-		end
-
-	resize (a_column, a_row: INTEGER) is
-		do
-			Precursor {EV_TABLE_I} (a_column, a_row)
-			{EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
 feature -- Status settings
@@ -143,19 +137,7 @@ feature -- Status settings
 			on_removed_item (item_imp)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
-		
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
-			-- Resize 'v' to occupy column span and row span
-		local
-			a_column, a_row: INTEGER
-		do
-			Precursor {EV_TABLE_I} (v, column_span, row_span)
-			a_column := item_column_position (v)
-			a_row := item_row_position (v)
-			remove (v)
-			put (v, a_column, a_row, column_span, row_span)
-		end
-		
+
 	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
 			-- Move `v' to position `a_column', `a_row'.
 		local
@@ -167,13 +149,13 @@ feature -- Status settings
 			remove (v)
 			put (v, a_column, a_row, column_span, row_span)
 		end
-		
+
 	item_column_span (widget: EV_WIDGET): INTEGER is
 			-- `Result' is number of columns taken by `widget'.
 		local
 			row_index, column_index: INTEGER
 			end_span: BOOLEAN
-		do	
+		do
 			from
 				row_index := item_row_position (widget)
 				column_index := item_column_position (widget)
@@ -188,13 +170,13 @@ feature -- Status settings
 				column_index := column_index + 1
 			end
 		end
-	
+
 	item_row_span (widget: EV_WIDGET): INTEGER is
 			--  `Result' is number of rows taken by `widget'.
 		local
 			row_index, column_index: INTEGER
 			end_span: BOOLEAN
-		do	
+		do
 			from
 				row_index := item_row_position (widget)
 				column_index := item_column_position (widget)
@@ -209,13 +191,13 @@ feature -- Status settings
 				row_index := row_index + 1
 			end
 		end
-		
+
 	item_row_position (widget: EV_WIDGET): INTEGER is
 			-- Result is row coordinate of 'widget'
 		local
 			row_cnt, column_cnt: INTEGER
 			found: BOOLEAN
-		do	
+		do
 			from
 				row_cnt := 1
 			until
@@ -224,7 +206,7 @@ feature -- Status settings
 				from
 					column_cnt := 1
 				until
-					column_cnt > interface.columns or found					
+					column_cnt > interface.columns or found
 				loop
 					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := row_cnt
@@ -232,16 +214,16 @@ feature -- Status settings
 					end
 					column_cnt := column_cnt + 1
 				end
-				row_cnt := row_cnt + 1	
+				row_cnt := row_cnt + 1
 			end
 		end
-		
+
 	item_column_position (widget: EV_WIDGET): INTEGER is
 			-- Result is column coordinate of 'widget'
 		local
 			row_cnt, column_cnt: INTEGER
 			found: BOOLEAN
-		do	
+		do
 			from
 				row_cnt := 1
 			until
@@ -250,7 +232,7 @@ feature -- Status settings
 				from
 					column_cnt := 1
 				until
-					column_cnt > interface.columns or found			
+					column_cnt > interface.columns or found
 				loop
 					if item_at_position (column_cnt, row_cnt) = widget then
 						Result := column_cnt
@@ -262,6 +244,26 @@ feature -- Status settings
 			end
 		end
 
+feature {EV_ANY_I, EV_ANY} -- Status Settings
+
+	resize (a_column, a_row: INTEGER) is
+		do
+			Precursor {EV_TABLE_I} (a_column, a_row)
+			{EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
+		end
+
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+			-- Resize 'v' to occupy column span and row span
+		local
+			a_column, a_row: INTEGER
+		do
+			Precursor {EV_TABLE_I} (v, column_span, row_span)
+			a_column := item_column_position (v)
+			a_row := item_row_position (v)
+			remove (v)
+			put (v, a_column, a_row, column_span, row_span)
+		end
+
 feature {NONE} -- Externals
 
 	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER is
@@ -271,7 +273,7 @@ feature {NONE} -- Externals
 		alias
 			"row_spacing"
 		end
-	
+
 	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER is
 			-- Spacing between two columns.
 		external

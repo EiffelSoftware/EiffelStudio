@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,12 +43,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
-			
+
 			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
 			a_ok_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
-			
+
 			real_signal_connect (
 				a_ok_button,
 				"clicked",
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	directory: STRING is
+	directory: STRING_32 is
 			-- Path of the current selected file
 		local
 			a_filename: POINTER
@@ -92,12 +92,12 @@ feature -- Access
 			end
 		end
 
-	start_directory: STRING
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_GENERAL) is
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING

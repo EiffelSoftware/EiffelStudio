@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			if not text.is_equal (a_text) then
@@ -189,7 +189,7 @@ feature {EV_ANY_I} -- Initialization
 			accomodate_text (" ")
 		end
 
-	accomodate_text (a_text: STRING) is
+	accomodate_text (a_text: STRING_GENERAL) is
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void

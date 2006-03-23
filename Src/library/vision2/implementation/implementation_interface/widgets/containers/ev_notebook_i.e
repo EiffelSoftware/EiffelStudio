@@ -1,27 +1,27 @@
 indexing
-	description: 
+	description:
 		"EiffelVision notebook. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_NOTEBOOK_I
-	
+
 inherit
 	EV_WIDGET_LIST_I
 		redefine
 			interface
 		end
-	
+
 	EV_FONTABLE_I
 		redefine
 			interface
 		end
 
 	EV_NOTEBOOK_ACTION_SEQUENCES_I
-	
+
 	EV_ITEM_PIXMAP_SCALER_I
 		redefine
 			interface
@@ -29,7 +29,7 @@ inherit
 
 feature {EV_NOTEBOOK} -- Access
 
-	item_text (an_item: like item): STRING is
+	item_text (an_item: like item): STRING_32 is
 			-- Label of `an_item'.
 		require
 			interface_has_an_item: interface.has (an_item)
@@ -37,7 +37,7 @@ feature {EV_NOTEBOOK} -- Access
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
 			-- Tab associated with `an_item'.
 		require
@@ -65,7 +65,7 @@ feature -- Status report
 			-- Default: `Tab_top'
 		deferred
 		end
-		
+
 	pointed_tab_index: INTEGER is
 			-- index of tab currently under mouse pointer, or 0 if none.
 		deferred
@@ -74,7 +74,7 @@ feature -- Status report
 		end
 
 feature {EV_NOTEBOOK} -- Status setting
-	
+
 	set_tab_position (a_tab_position: INTEGER) is
 			-- Display tabs at `a_tab_position'.
 		require
@@ -94,17 +94,17 @@ feature {EV_NOTEBOOK} -- Status setting
 		ensure
 			item_selected: selected_item = an_item
 		end
-		
+
 feature {EV_NOTEBOOK} -- Element change
 
-	set_item_text (an_item: like item; a_text: STRING) is
+	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to the label for `an_item'.
 		require
 			interface_has_an_item: interface.has (an_item)
 			a_text_not_void: a_text /= Void
 		deferred
 		end
-		
+
 feature {EV_NOTEBOOK, EV_NOTEBOOK_I} -- Implementation
 
 	interface: EV_NOTEBOOK

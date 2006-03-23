@@ -1,14 +1,14 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision textable. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXTABLE_IMP
-	
+
 inherit
 	EV_TEXTABLE_I
 		redefine
@@ -22,9 +22,9 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature {NONE} -- Initialization
-	
+
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the label.
 		local
 			a_str: POINTER
@@ -68,7 +68,7 @@ feature -- Access
 				check alignment_code_not_set: False end
 			end
 		end
-	
+
 feature -- Status setting
 
 	align_text_center is
@@ -91,10 +91,10 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
-	
+
 feature -- Element change	
-	
-	set_text (a_text: STRING) is
+
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -109,9 +109,9 @@ feature -- Element change
 				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			end
 		end
-	
+
 feature {EV_ANY_IMP} -- Implementation
-	
+
 	text_label: POINTER
 			-- GtkLabel containing `text'.
 
@@ -124,7 +124,7 @@ feature {EV_ANY_IMP} -- Implementation
 	real_text: EV_GTK_C_STRING
 			-- Internal `text'. (with ampersands)
 
-	filter_ampersand (s: STRING; char: CHARACTER) is
+	filter_ampersand (s: STRING_32; char: CHARACTER) is
 			-- Replace occurrences of '&' from `s'  by `char' and
 			-- replace occurrences of "&&" with '&'.
 		require
@@ -144,13 +144,13 @@ feature {EV_ANY_IMP} -- Implementation
 					else
 						i := i + 1
 					end
-				end					
+				end
 				i := i + 1
 			end
 			s.replace_substring_all (once "&&", once "&")
 		end
 
-	u_lined_filter (s: STRING): STRING is
+	u_lined_filter (s: STRING_GENERAL): STRING_32 is
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require
@@ -158,7 +158,7 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			Result := s.twin
 			Result.replace_substring_all (once  "_", once  "__")
-			if s.has ('&') then
+			if s.has_code (('&').natural_32_code) then
 				filter_ampersand (Result, '_')
 			end
 		end

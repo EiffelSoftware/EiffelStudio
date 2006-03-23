@@ -8,9 +8,6 @@ indexing
 class
 	WEL_DRAWING_CONSTANTS
 
-create
-	default_create
-
 feature -- DrawText constants (DT_xxxx)
 
 	Dt_top: INTEGER is 0

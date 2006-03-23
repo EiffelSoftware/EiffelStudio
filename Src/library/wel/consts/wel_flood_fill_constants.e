@@ -10,19 +10,9 @@ class
 
 feature -- Access
 
-	Floodfillborder: iNTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FLOODFILLBORDER"
-		end
+	Floodfillborder: INTEGER is 0
 
-	Floodfillsurface: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"FLOODFILLSURFACE"
-		end
+	Floodfillsurface: INTEGER is 1;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

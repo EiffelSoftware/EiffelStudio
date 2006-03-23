@@ -94,8 +94,8 @@ feature -- Access
 		-- Pixmap `Current' was based on, if any.
 
 	rgb_hex_representation: STRING is
-		-- Returns a string of hex codes representing the RGB values
-		-- of all the pixels in pixmap.
+			-- Returns a string of hex codes representing the RGB values
+			-- of all the pixels in pixmap.
 		local
 			i: INTEGER
 		do

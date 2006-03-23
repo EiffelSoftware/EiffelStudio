@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (dc: WEL_DC; family: STRING) is
+	make (dc: WEL_DC; family: STRING_GENERAL) is
 			-- Enumerate the fonts in the font `family' that are
 			-- available on the `dc'.
 			-- If `family' is Void, Windows randomly selects and
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	enumerate (dc: WEL_DC; family: STRING) is
+	enumerate (dc: WEL_DC; family: STRING_GENERAL) is
 			-- Enumerate `family' on `dc'
 		require
 			dc_not_void: dc /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Externals
 	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
 			-- SDK EnumFontFamilies
 		external
-			"C [macro %"windows.h%"] (HDC, LPCSTR, FONTENUMPROC, LPARAM)"
+			"C [macro %"windows.h%"] (HDC, LPCTSTR, FONTENUMPROC, LPARAM)"
 		alias
 			"EnumFontFamilies"
 		end

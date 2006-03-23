@@ -10,43 +10,43 @@ class
 
 feature -- Access
 
-	Tvn_begindrag: INTEGER is -407
+	Tvn_begindrag: INTEGER is -456
 			-- Declared in Windows as TVN_BEGINDRAG
 
-	Tvn_beginlabeledit: INTEGER is -410
+	Tvn_beginlabeledit: INTEGER is -459
 			-- Declared in Windows as TVN_BEGINLABELEDIT
 
-	Tvn_beginrdrag: INTEGER is -408
+	Tvn_beginrdrag: INTEGER is -457
 			-- Declared in Windows as TVN_BEGINRDRAG
 
-	Tvn_deleteitem: INTEGER is -409
+	Tvn_deleteitem: INTEGER is -458
 			-- Declared in Windows as TVN_DELETEITEM
 
-	Tvn_endlabeledit: INTEGER is -411
+	Tvn_endlabeledit: INTEGER is -460
 			-- Declared in Windows as TVN_ENDLABELEDIT
 
-	Tvn_getdispinfo: INTEGER is -403
+	Tvn_getdispinfo: INTEGER is -452
 			-- Declared in Windows as TVN_GETDISPINFO
 
-	Tvn_itemexpanded: INTEGER is -406
+	Tvn_itemexpanded: INTEGER is -455
 			-- Declared in Windows as TVN_ITEMEXPANDED
 
-	Tvn_itemexpanding: INTEGER is -405
+	Tvn_itemexpanding: INTEGER is -454
 			-- Declared in Windows as TVN_ITEMEXPANDING
 
 	Tvn_keydown: INTEGER is -412
 			-- Declared in Windows as TVN_KEYDOWN
 
-	Tvn_selchanged: INTEGER is -402
+	Tvn_selchanged: INTEGER is -452
 			-- Declared in Windows as TVN_SELCHANGED
 
-	Tvn_selchanging: INTEGER is -401
+	Tvn_selchanging: INTEGER is -451
 			-- Declared in Windows as TVN_SELCHANGING
 
-	Tvn_setdispinfo: INTEGER is -404
+	Tvn_setdispinfo: INTEGER is -453
 			-- Declared in Windows as TVN_SETDISPINFO
 
-	Tvn_getinfotip: INTEGER is -413;
+	Tvn_getinfotip: INTEGER is -414;
 			-- Declared in Windows as TVN_GETINFOTIP
 
 indexing

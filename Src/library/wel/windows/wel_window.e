@@ -370,7 +370,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	 text: STRING is
+	 text: STRING_32 is
 			-- Window text
 		require
 			exists: exists
@@ -734,7 +734,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set the window text
 		require
 			exists: exists
@@ -748,10 +748,8 @@ feature -- Element change
 			end
 			cwin_set_window_text (item, a_wel_string.item)
 		ensure
-			text_set_when_not_void: a_text /= Void implies
-				equal (text, a_text)
-			text_set_when_void: a_text = Void implies
-				text.count = 0
+			text_set_when_not_void: a_text /= Void implies text.is_equal (a_text)
+			text_set_when_void: a_text = Void implies text.count = 0
 		end
 
 	set_placement (a_placement: WEL_WINDOW_PLACEMENT) is
@@ -1057,7 +1055,7 @@ feature -- Basic operations
 			cwin_enable_scroll_bar (item, Sb_vert, Esb_enable_both)
 		end
 
-	message_box (a_text, a_title: STRING; a_style: INTEGER): INTEGER is
+	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER): INTEGER is
 		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1076,7 +1074,7 @@ feature -- Basic operations
 				a_style)
 		end
 
-	information_message_box (a_text, a_title: STRING) is
+	information_message_box (a_text, a_title: STRING_GENERAL) is
 		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1093,7 +1091,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconinformation)
 		end
 
-	warning_message_box (a_text, a_title: STRING) is
+	warning_message_box (a_text, a_title: STRING_GENERAL) is
 		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show a warning message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1110,7 +1108,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconexclamation)
 		end
 
-	error_message_box (a_text: STRING) is
+	error_message_box (a_text: STRING_GENERAL) is
 		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
@@ -1125,7 +1123,7 @@ feature -- Basic operations
 				Mb_ok + Mb_iconhand)
 		end
 
-	question_message_box (a_text, a_title: STRING): BOOLEAN is
+	question_message_box (a_text, a_title: STRING_GENERAL): BOOLEAN is
 		obsolete "Use class WEL_MSG_BOX instead"
 			-- Show a question message box with `Current'
 			-- as parent with `a_text' and `a_title'.
@@ -1241,7 +1239,7 @@ feature -- Basic operations
 				default_pointer, default_pointer)
 		end
 
-	win_help (help_file: STRING; a_command, data: INTEGER) is
+	win_help (help_file: STRING_GENERAL; a_command, data: INTEGER) is
 			-- Start the Windows Help program with `help_file'.
 			-- `a_command' specifies the type of help requested. See
 			-- class WEL_HELP_CONSTANTS for `a_command' values.
@@ -1554,7 +1552,7 @@ feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 feature {WEL_WINDOW} -- Implementation
 
-	internal_window_make (a_parent: WEL_WINDOW; a_name: STRING;
+	internal_window_make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER) is
 			-- Create the window
@@ -1583,7 +1581,7 @@ feature {WEL_WINDOW} -- Implementation
 			exists: exists
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		deferred
 		ensure
@@ -2019,7 +2017,7 @@ feature {NONE} -- Externals
 				param: POINTER): POINTER is
 			-- SDK CreateWindowEx
 		external
-			"C [macro %"wel.h%"] (DWORD, LPCSTR, LPCSTR, DWORD, int, %
+			"C [macro %"wel.h%"] (DWORD, LPCTSTR, LPCTSTR, DWORD, int, %
 				%int, int, int, HWND, HMENU, HINSTANCE, %
 				%LPVOID): EIF_POINTER"
 		alias
@@ -2151,7 +2149,7 @@ feature {NONE} -- Externals
 	cwin_set_window_text (hwnd, str: POINTER) is
 			-- SDK SetWindowText
 		external
-			"C [macro %"wel.h%"] (HWND, LPCSTR)"
+			"C [macro %"wel.h%"] (HWND, LPCTSTR)"
 		alias
 			"SetWindowText"
 		end
@@ -2167,7 +2165,7 @@ feature {NONE} -- Externals
 	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER is
 			-- SDK GetWindowText
 		external
-			"C [macro %"wel.h%"] (HWND, LPSTR, int): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND, LPTSTR, int): EIF_INTEGER"
 		alias
 			"GetWindowText"
 		end
@@ -2176,7 +2174,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER): INTEGER is
 			-- SDK MessageBox (with result)
 		external
-			"C [macro %"wel.h%"] (HWND, LPCSTR, LPCSTR, %
+			"C [macro %"wel.h%"] (HWND, LPCTSTR, LPCTSTR, %
 				%UINT): EIF_INTEGER"
 		alias
 			"MessageBox"
@@ -2186,7 +2184,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER) is
 			-- SDK MessageBox (without result)
 		external
-			"C [macro %"wel.h%"] (HWND, LPCSTR, LPCSTR, UINT)"
+			"C [macro %"wel.h%"] (HWND, LPCTSTR, LPCTSTR, UINT)"
 		alias
 			"MessageBox"
 		end
@@ -2353,7 +2351,7 @@ feature {NONE} -- Externals
 	cwin_win_help (hwnd, file: POINTER; a_command, data: INTEGER) is
 			-- SDK WinHelp
 		external
-			"C [macro %"wel.h%"] (HWND, LPCSTR, UINT, DWORD)"
+			"C [macro %"wel.h%"] (HWND, LPCTSTR, UINT, DWORD)"
 		alias
 			"WinHelp"
 		end

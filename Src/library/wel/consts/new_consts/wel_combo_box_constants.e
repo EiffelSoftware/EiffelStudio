@@ -209,9 +209,26 @@ feature -- Messages
 	Cb_errspace: INTEGER is -2
 			-- Declared in Windows as CB_ERRSPACE
 
+	Cb_gettopindex: INTEGER is 347
+			-- An application sends the CB_GETTOPINDEX message to 
+			-- retrieve the zero-based index of the first visible 
+			-- item in the list box portion of a combo box. 
+			--
+			-- Initially, the item with index 0 is at the top of 
+			-- the list box, but if the list box contents have 
+			-- been scrolled, another item may be at the top. 
+
+	Cb_settopindex: INTEGER is 348;
+			-- An application sends the CB_SETTOPINDEX message to 
+			-- ensure that a particular item is visible in the 
+			-- list box of a combo box. The system scrolls the 
+			-- list box contents so that either the specified 
+			-- item appears at the top of the list box or the 
+			-- maximum scroll range has been reached.
+
 feature -- Extended Messages
 
-	Cbem_insertitem: INTEGER is 1025
+	Cbem_insertitem: INTEGER is 1035
 			-- Inserts a new item in a ComboBoxEx.
 			--
 			-- Declared in Windows as CBEM_INSERTITEM
@@ -227,12 +244,12 @@ feature -- Extended Messages
 			--
 			-- Declared in Windows as CBEM_GETIMAGELIST
 
-	Cbem_getitem: INTEGER is 1028
+	Cbem_getitem: INTEGER is 1037
 			-- Retrieves item information for a given ComboBoxEx item.
 			--
 			-- Declared in Windows as CBEM_GETITEM
 
-	Cbem_setitem: INTEGER is 1029
+	Cbem_setitem: INTEGER is 1036
 			-- Sets the attributes for an item in a ComboBoxEx control.
 			--
 			-- Declared in Windows as CBEM_SETITEM
@@ -263,7 +280,7 @@ feature -- Extended Messages
 			--
 			-- Declared in Windows as CBEM_GETEXSTYLE
 
-	Cbem_haseditchanged: INTEGER is 1034
+	Cbem_haseditchanged: INTEGER is 1034;
 			-- Determines if the user has changed the contents of the
 			-- ComboBoxEx edit control by typing.
 			--
@@ -306,8 +323,8 @@ feature -- Notifications
 
 feature -- Extended Notifications
 
-	Cben_getdispinfo: INTEGER is -800
-			-- Sent to retrieve display information about a callback item. 
+	Cben_getdispinfo: INTEGER is -807
+			-- Sent to retrieve display information about a callback item.
 			--
 			-- Declared in Windows as CBEN_GETDISPINFO
 
@@ -327,14 +344,14 @@ feature -- Extended Notifications
 			--
 			-- Declared in Windows as CBEN_BEGINEDIT
 
-	Cben_endedit: INTEGER is -805
+	Cben_endedit: INTEGER is -806
 			-- Sent when the user has concluded an operation within
 			-- the edit box or has selected an item from the control's
 			-- drop-down list.
 			--
 			-- Declared in Windows as CBEN_ENDEDIT
 
-feature -- Extended Notification Flags
+feature -- Access : notification flags
 
 	Cbenf_dropdown: INTEGER is 4
 			-- The user activated the drop-down list.
@@ -351,7 +368,7 @@ feature -- Extended Notification Flags
 			--
 			-- Declared in Windows as CBENF_KILLFOCUS
 
-	Cbenf_return: INTEGER is 2
+	Cbenf_return: INTEGER is 2;
 			-- The user completed the edit operation by pressing
 			-- the ENTER key.
 			--

@@ -69,7 +69,7 @@ feature -- Status report
 			positive_result: Result > 0
 		end
 
-	text_for_part (index: INTEGER): STRING is
+	text_for_part (index: INTEGER): STRING_32 is
 			-- Text for the part identified by the zero-based
 			-- `index'.
 		require
@@ -212,7 +212,7 @@ feature -- Element change
 			cwin_send_message (item, Sb_simple, to_wparam (0), to_lparam (0))
 		end
 
-	set_simple_text (a_text: STRING) is
+	set_simple_text (a_text: STRING_GENERAL) is
 			-- Set `a_text' for the simple mode
 		require
 			exists: exists
@@ -224,7 +224,7 @@ feature -- Element change
 			cwin_send_message (item, Sb_settext, to_wparam (Simple_part), a_wel_string.item)
 		end
 
-	set_simple_text_with_style (a_text: STRING; a_style: INTEGER) is
+	set_simple_text_with_style (a_text: STRING_GENERAL; a_style: INTEGER) is
 			-- Set the text `a_text' with style `a_style' for a part
 			-- identified by `Simple_part'.
 			-- See class WEL_SBT_CONSTANTS for `a_style' values.
@@ -259,7 +259,7 @@ feature -- Element change
 			edges_set: edges.same_items (a_edges)
 		end
 
-	set_text_part (index: INTEGER; a_text: STRING) is
+	set_text_part (index: INTEGER; a_text: STRING_GENERAL) is
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
 		require
@@ -276,7 +276,7 @@ feature -- Element change
 			text_set: a_text.is_equal (text_for_part (index))
 		end
 
-	set_text_part_with_style (index: INTEGER; a_text: STRING;
+	set_text_part_with_style (index: INTEGER; a_text: STRING_GENERAL;
 			a_style: INTEGER) is
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
@@ -349,11 +349,10 @@ feature {NONE} -- Implementation
 			positive_result: Result > 0
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_status_window_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_status_window_class)).string
 		end
 
 	default_style: INTEGER is
@@ -364,15 +363,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set the window text.
 		do
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Window text
 		do
-			Result := create {STRING}.make (0)
+			create Result.make_empty
 		end
 
 	text_length: INTEGER is

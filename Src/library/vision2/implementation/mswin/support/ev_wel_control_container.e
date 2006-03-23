@@ -101,7 +101,7 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_ex_controlparent
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create.
 		do
 			Result := generator
@@ -111,7 +111,7 @@ feature {NONE} -- WEL Implementation
 			-- Access to the current application
 		deferred
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
@@ -129,7 +129,7 @@ feature {NONE} -- WEL Implementation
 			set_message_return_value (to_lresult (1))
 			bk_brush.delete
 		end
-		
+
 	current_as_container: EV_CONTAINER_IMP is
 			-- Result is `Current' as a container.
 		do
@@ -181,7 +181,7 @@ feature {NONE} -- Features that should be directly implemented by externals.
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
-		
+
 	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		external
@@ -189,7 +189,7 @@ feature {NONE} -- Features that should be directly implemented by externals.
 		alias
 			"GetNextDlgGroupItem"
 		end
-		
+
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		external

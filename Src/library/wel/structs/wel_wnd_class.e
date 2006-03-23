@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING) is
+	make (a_class_name: STRING_GENERAL) is
 			-- Make a window class named `a_class_name'.
 		require
 			class_name_not_void: a_class_name /= Void
@@ -52,10 +52,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		do
-			create Result.make_from_c (cwel_wnd_class_get_class_name (item))
+			Result := (create {WEL_STRING}.share_from_pointer (cwel_wnd_class_get_class_name (item))).string
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
@@ -64,12 +64,12 @@ feature -- Access
 	atom: INTEGER
 			-- Class atom that uniquely identifies class being registered.
 
-	menu_name: STRING is
+	menu_name: STRING_32 is
 			-- Menu name to load from the resource
 		require
 			menu_name_set: menu_name_set
 		do
-			create Result.make_from_c (cwel_wnd_class_get_menu_name (item))
+			Result := (create {WEL_STRING}.share_from_pointer (cwel_wnd_class_get_menu_name (item))).string
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -242,7 +242,7 @@ feature -- Element change
 			background_equal: background.item = a_background.item
 		end
 
-	set_class_name (a_class_name: STRING) is
+	set_class_name (a_class_name: STRING_GENERAL) is
 			-- Set `class_name' with `a_class_name'.
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -259,7 +259,7 @@ feature -- Element change
 			class_name_set: class_name.is_equal (a_class_name)
 		end
 
-	set_menu_name (a_menu_name: STRING) is
+	set_menu_name (a_menu_name: STRING_GENERAL) is
 			-- Set `menu_name' with `a_menu_name'.
 		require
 			a_menu_name_valid: a_menu_name /= Void
@@ -555,7 +555,7 @@ feature {NONE} -- Externals
 	cwin_unregister_class (cls_name, hinstance: POINTER): BOOLEAN is
 			-- SDK UnregisterClass
 		external
-			"C [macro <wel.h>] (LPCSTR, HINSTANCE): EIF_BOOLEAN"
+			"C [macro <wel.h>] (LPCTSTR, HINSTANCE): EIF_BOOLEAN"
 		alias
 			"UnregisterClass"
 		end
@@ -563,13 +563,11 @@ feature {NONE} -- Externals
 	cwin_get_class_info (hinstance, cls_name, ptr: POINTER): BOOLEAN is
 			-- SDK GetClassInfo
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR, %
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, %
 				%WNDCLASS *): EIF_BOOLEAN"
 		alias
 			"GetClassInfo"
 		end
-
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -581,9 +579,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_WND_CLASS
 

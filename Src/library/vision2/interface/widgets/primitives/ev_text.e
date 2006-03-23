@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"[
 			EiffelVision text area. To query multiple lines of text from the user.
 		]"
@@ -17,7 +17,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_FONTABLE
 		undefine
 			is_in_default_state
@@ -32,7 +32,7 @@ create
 
 feature -- Access
 
-	line (i: INTEGER): STRING is		
+	line (i: INTEGER): STRING_32 is
 			-- `Result' is content of `i'th line.
 		require
 			not_destroyed: not is_destroyed
@@ -58,7 +58,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.has_word_wrapping
 		end
-		
+
 	current_line_number: INTEGER is
 			-- Line currently containing cursor.
 		require
@@ -68,7 +68,7 @@ feature -- Status report
 		ensure
 			valid_line_index: valid_line_index (Result)
 		end
-	
+
 	line_count: INTEGER is
 			-- Number of lines in `Current'.
 		require
@@ -77,7 +77,7 @@ feature -- Status report
 			Result := implementation.line_count
 		ensure
 			result_greater_zero: Result > 0
-		end 
+		end
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of first character on `i'-th line.
@@ -100,7 +100,7 @@ feature -- Status report
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end
-		
+
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
 		require
@@ -123,7 +123,7 @@ feature -- Basic operation
 		ensure
 			word_wrapping_enabled: has_word_wrapping
 		end
-		
+
 	disable_word_wrapping is
 			-- Ensure `has_word_wrapping' is False.
 		require
@@ -143,7 +143,7 @@ feature -- Basic operation
 			implementation.scroll_to_line (i)
 		end
 
-	search (str: STRING; start: INTEGER): INTEGER is
+	search (str: STRING_GENERAL; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
@@ -159,7 +159,7 @@ feature -- Basic operation
 			not_destroyed: not is_destroyed
 			valid_line_index: valid_line_index (first_line) and valid_line_index (last_line)
 		do
-			select_region (first_position_from_line_number (first_line), 
+			select_region (first_position_from_line_number (first_line),
 								last_position_from_line_number (last_line))
 		ensure
 			has_selection: has_selection
@@ -179,7 +179,7 @@ feature -- Contract support
 		do
 			Result := not line (line_count).is_empty
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -192,7 +192,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_TEXT_IMP} implementation.make (Current)
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

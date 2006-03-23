@@ -53,7 +53,7 @@ feature -- Element change
 			set: width = a_width and height = a_height
 		end
 		
-	add_postscript_line (line: STRING) is
+	add_postscript_line (line: STRING_GENERAL) is
 			-- Add `line' to the postscript drawable.
 		require
 			line_exists: line /= Void

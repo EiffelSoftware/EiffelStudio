@@ -165,7 +165,7 @@ feature -- Access
 	background_color: EV_COLOR
 			-- Color displayed behind foreground features.
 
-	tooltip: STRING
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 
@@ -391,13 +391,17 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
-			tooltip := a_tooltip
+			if a_tooltip /= Void then
+				tooltip := a_tooltip
+			else
+				tooltip := Void
+			end
 		ensure
-			tooltip_assigned: a_tooltip = tooltip
+			tooltip_assigned: equal (tooltip, a_tooltip)
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

@@ -29,8 +29,8 @@ extern "C" {
 /*  ptr = cwin_get_function_address("kernel.dll", "GetFreeDiskSpaceEx");     */
 /*---------------------------------------------------------------------------*/
 EIF_POINTER cwin_get_function_address(
-		char *pszModuleName,		// Name of the module where the function is
-		char *pszFunctionName		// Name of the function to retrieve.
+		LPCTSTR pszModuleName,		// Name of the module where the function is
+		LPCSTR pszFunctionName		// Name of the function to retrieve.
 		);
 
 
@@ -61,7 +61,7 @@ void cwin_mask_blt(
 /* a typical call to this function would be:                                 */
 /*  if(cwin_get_dll_version("comctl32.dll") >= PACKVERSION(4,71))            */
 /*---------------------------------------------------------------------------*/
-DWORD cwin_get_dll_version(char *pszDllName);
+DWORD cwin_get_dll_version(LPCTSTR pszDllName);
 
 /*---------------------------------------------------------------------------*/
 /* Return the version number of the "shell32.dll" DLL. The version number is */

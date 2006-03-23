@@ -20,8 +20,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document_name: STRING) is
-			-- Make doc info structure with `document_name',
+	make (a_document_name: STRING_GENERAL) is
+			-- Make doc info structure with `document_name'.
+		require
+			a_document_name_not_void: a_document_name /= Void
 		do
 			structure_make
 			cwel_doc_info_set_cbsize (item, structure_size)
@@ -33,27 +35,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document_name: STRING is
+	document_name: STRING_32 is
 			-- Name of the document
 		do
-			create Result.make_from_c (cwel_doc_info_get_lpszdocname (item))
+			Result := str_document_name.string
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	output: STRING is
+	output: STRING_32 is
 			-- Name of the output file
 		require
 			default_output_not_set: not default_output_set
 		do
-			create Result.make_from_c (cwel_doc_info_get_lpszoutput (item))
+			Result := str_output.string
 		ensure
 			result_not_void: Result /= Void
 		end
 
 feature -- Element change
 
-	set_document_name (a_document_name: STRING) is
+	set_document_name (a_document_name: STRING_GENERAL) is
 			-- Set `document_name' with `a_document_name'.
 		require
 			a_document_name_not_void: a_document_name /= Void
@@ -64,7 +66,7 @@ feature -- Element change
 			document_name_set: document_name.is_equal (a_document_name)
 		end
 
-	set_output (an_output: STRING) is
+	set_output (an_output: STRING_GENERAL) is
 			-- Set `output' with `an_output'.
 		require
 			an_output_not_void: an_output /= Void
@@ -140,6 +142,10 @@ feature {NONE} -- Externals
 		external
 			"C [macro <docinfo.h>] (DOCINFO*): EIF_POINTER"
 		end
+
+invariant
+	str_output_not_void: str_output /= Void
+	str_document_name_not_void: str_document_name /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

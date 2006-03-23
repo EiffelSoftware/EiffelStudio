@@ -141,7 +141,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < band_count
 		local
-			buffer: STRING
+			buffer: STRING_32
 		do
 			create Result.make
 			Result.set_mask (Rbbim_style + Rbbim_colors + Rbbim_text
@@ -276,11 +276,10 @@ feature {NONE} -- Implementation
 	buffer_size: INTEGER is 30
 			-- Windows text retrieval buffer size
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_rebar_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_rebar_class)).string
 		end
 
 	default_style: INTEGER is

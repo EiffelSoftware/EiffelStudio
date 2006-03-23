@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING is
+	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING_32 is
 			-- Retrieve cell text from `a_tree_node_imp`
 		local
 			a_g_value_string_struct: POINTER
@@ -654,7 +654,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING) is
+	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING_GENERAL) is
 			-- Set cell text at to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING

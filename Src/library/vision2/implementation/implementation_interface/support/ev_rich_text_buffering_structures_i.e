@@ -9,7 +9,7 @@ indexing
 
 class
 	EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-	
+
 inherit
 	ANY
 
@@ -17,12 +17,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EV_FONT_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	set_rich_text
 
@@ -48,7 +48,7 @@ feature -- Status Setting
 			create heights.make (default_structure_size)
 			create hashed_formats.make (default_structure_size)
 			create format_offsets.make (default_structure_size)
-			
+
 				-- Rebuild structures used for optimizing contents of RTF.
 				-- i.e. those that prevent repeated fonts and colors from being defined.
 			create hashed_colors.make (default_structure_size)
@@ -71,22 +71,22 @@ feature -- Status Setting
 			color_count := 0
 			buffered_text := ""
 		end
-		
+
 	initialize_for_saving is
 			-- Initialize `Current' for saving'.
 		do
 			clear_structures
 		end
 
-	append_text_for_rtf (a_text: STRING; a_format: EV_CHARACTER_FORMAT_I) is
+	append_text_for_rtf (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT_I) is
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
 		local
-			hashed_character_format: STRING
-			temp_string: STRING
+			hashed_character_format: STRING_32
+			temp_string: STRING_32
 			format_index: INTEGER
 			vertical_offset, counter: INTEGER
-			character: CHARACTER
+			character_code: NATURAL_32
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			height_in_half_points: INTEGER
 		do
@@ -94,20 +94,20 @@ feature -- Status Setting
 			if not hashed_formats.has (hashed_character_format) then
 				hashed_formats.put (a_format.interface, hashed_character_format)
 				formats.extend (a_format.interface)
-				
+
 					-- Rich text requires font heights to be in half points, so
 					-- multiply by 2.
 				heights.extend (a_format.height_in_points * 2)
 				format_offsets.put (hashed_formats.count, hashed_character_format)
-			
+
 				build_color_from_format (a_format)
-				
+
 				build_font_from_format (a_format)
 			end
 
 			format_index := format_offsets.item (hashed_character_format)
-				
-			temp_string := ""
+
+			create temp_string.make (128)
 			if a_format.bcolor_set then
 					-- Only apply highlighting if a highlight color was explicitly set.
 				add_rtf_keyword (temp_string, rtf_highlight_string)
@@ -115,7 +115,7 @@ feature -- Status Setting
 			end
 			add_rtf_keyword (temp_string, rtf_color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
-			
+
 			format_underlined := a_format.is_underlined
 			if not is_current_format_underlined and format_underlined then
 				add_rtf_keyword (temp_string, rtf_underline_string)
@@ -167,31 +167,31 @@ feature -- Status Setting
 			until
 				counter > a_text.count
 			loop
-				character := a_text.item (counter)
-				if character = '%N' then
+				character_code := a_text.code (counter)
+				if character_code = ('%N').natural_32_code then
 					add_rtf_keyword (internal_text, rtf_newline + "%N")
-				elseif character = '\' then
+				elseif character_code = ('\').natural_32_code then
 					internal_text.append (rtf_backslash)
-				elseif character = '{' then
-					internal_text.append (rtf_open_brace)	
-				elseif character = '}' then
+				elseif character_code = ('{').natural_32_code then
+					internal_text.append (rtf_open_brace)
+				elseif character_code = ('}').natural_32_code then
 					internal_text.append (rtf_close_brace)
 				else
-					internal_text.append_character (character)
+					internal_text.append_code (character_code)
 				end
 				counter := counter + 1
 			end
 		end
-		
+
 	rich_text: EV_RICH_TEXT_I
 			-- Rich text associated with `Current'.
 
-	internal_text: STRING
+	internal_text: STRING_32
 			-- Text used for building RTF strings internally before buffering or saving.
-		
+
 feature {EV_ANY_I} -- Status Setting
 
-	generate_paragraph_information (a_text: STRING) is
+	generate_paragraph_information (a_text: STRING_GENERAL) is
 			-- `Result' is index of first character of every line in `a_text' upon
 			-- which the paragraph formatting changes, as determined by '%N'.
 		require
@@ -204,7 +204,7 @@ feature {EV_ANY_I} -- Status Setting
 
 				-- Add the first line which is always 1.
 			paragraph_start_indexes.extend (1)
-			
+
 			build_paragraph_from_format (rich_text.internal_paragraph_format (1))
 				-- Now iterate `a_string' and determine each line as determined by `%N'.
 			from
@@ -212,7 +212,7 @@ feature {EV_ANY_I} -- Status Setting
 			until
 				counter > a_text.count
 			loop
-				if a_text.item (counter).is_equal ('%N') then
+				if a_text.code (counter) = ('%N').natural_32_code then
 				if not rich_text.internal_paragraph_format_contiguous (counter, counter + 2) then
 						-- Note that we checked "counter + 2" as we find the %N that signifies a new line, and then
 						-- we must add one to convert to caret positions, and one to check that we are checking the first character
@@ -229,14 +229,14 @@ feature {EV_ANY_I} -- Status Setting
 			count_greater_or_equal_to_one: paragraph_start_indexes.count >= 1
 			counts_equal: paragraph_start_indexes.count = paragraph_formats.count
 		end
-	
-	set_with_rtf (rtf_text: STRING) is
+
+	set_with_rtf (rtf_text: STRING_32) is
 			-- Set `text' and formatting of `Current' from `rtf_text' in RTF format.
 		require
 			rtf_text_not_void: rtf_text /= Void
 			rtf_text_not_empty: not rtf_text.is_empty
 		local
-			current_character: CHARACTER
+			current_character: WIDE_CHARACTER
 			found_opening_brace: BOOLEAN
 			paragraph_format: EV_PARAGRAPH_FORMAT
 			last_load_value, current_load_value,
@@ -262,7 +262,7 @@ feature {EV_ANY_I} -- Status Setting
 					-- if the auto color is set as color 0 in the color table.
 				create current_format
 				plain_text := ""
-				
+
 				from
 					main_iterator := 1
 				until
@@ -279,7 +279,7 @@ feature {EV_ANY_I} -- Status Setting
 							format_stack.remove
 						elseif current_character = '\' then
 							process_keyword (rtf_text, main_iterator)
-						
+
 						elseif main_iterator >= 2 and then current_character /= '%R' and
 							(rtf_text.item (main_iterator - 1) = '%N' or
 							rtf_text.item (main_iterator - 1) = '}' or
@@ -297,11 +297,11 @@ feature {EV_ANY_I} -- Status Setting
 						format_stack.extend (current_format.twin)
 						found_opening_brace := True
 					end
-					
+
 					move_main_iterator (1)
 						-- Move the iterator by one. This may or may not be required
 						-- if other routines have just called it within this loop.
-					
+
 					update_main_iterator
 
 					if rich_text.file_access_actions_internal /= Void then
@@ -332,14 +332,14 @@ feature {EV_ANY_I} -- Status Setting
 					else
 						rich_text.format_paragraph (all_paragraph_indexes.i_th (key_index), rich_text.text_length, paragraph_format)
 					end
-					
+
 					if rich_text.file_access_actions_internal /= Void then
 							-- Here we update the `file_access_actions' with the range 90-100 for the
 							-- paragraph formatting.
 						current_load_value := 90 + ((key_index * 10) // keys_count)
 						if current_load_value /= last_load_value then
 								-- Fire the `file_access_actions' only if changed.	
-							last_load_value := current_load_value						
+							last_load_value := current_load_value
 							rich_text.file_access_actions.call ([current_load_value])
 						end
 					end
@@ -349,15 +349,15 @@ feature {EV_ANY_I} -- Status Setting
 				last_load_successful := False
 			end
 		end
-		
+
 	last_load_successful: BOOLEAN
 		-- Was last call to `set_with_rtf' successful?
-		
+
 	generate_complete_rtf_from_buffering is
 			-- Generate the rtf heading for buffered operations into `internal_text'.
 			-- Current contents of `internal_text' are lost.
 		local
-			internal_text_twin: STRING
+			internal_text_twin: like internal_text
 		do
 				-- `font_text' contents is generated by each call to `buffered_append',
 				-- so simply close the tag.
@@ -366,7 +366,7 @@ feature {EV_ANY_I} -- Status Setting
 				-- `color_text' contents is generated by each call to `buffered_append',
 				-- so simply close the tag.
 			color_text.append ("}")
-			
+
 			internal_text_twin := internal_text.twin
 			internal_text := font_text.twin
 			internal_text.append ("%R%N")
@@ -375,10 +375,10 @@ feature {EV_ANY_I} -- Status Setting
 			internal_text.append (internal_text_twin)
 			internal_text.append ("}")
 		end
-		
+
 feature {NONE} -- Implementation		
-		
-	process_text (rtf_text:STRING; index: INTEGER) is
+
+	process_text (rtf_text: STRING_32; index: INTEGER) is
 			-- Process RTF string `rtf_text' for text data from `index' until
 			-- text is exhausted signified through encountering a control character.
 		require
@@ -387,11 +387,11 @@ feature {NONE} -- Implementation
 		local
 			l_index: INTEGER
 			text_completed: BOOLEAN
-			current_text: STRING
-			current_character: CHARACTER
-			next_character: CHARACTER
-		do	
-			current_text := ""
+			current_text: STRING_32
+			current_character: WIDE_CHARACTER
+			next_character: WIDE_CHARACTER
+		do
+			create current_text.make (128)
 			from
 				l_index := 1
 			until
@@ -431,10 +431,10 @@ feature {NONE} -- Implementation
 			if current_text.count > 0 then
 				move_main_iterator (l_index - 1)
 				buffer_formatting (current_text)
-			end			
+			end
 		end
-		
-	buffer_formatting (a_text: STRING) is
+
+	buffer_formatting (a_text: STRING_32) is
 			-- Buffer `a_text' into `rich_text' with formatting applied from `current_format'.
 		require
 			a_text_not_void: a_text /= Void
@@ -449,13 +449,13 @@ feature {NONE} -- Implementation
 					-- Only create a new character format if an equivalent one does not already
 					-- exist in `all_formats'.
 				create character_format
-				
+
 				if first_color_is_auto and current_format.text_color = 0 then
 					character_format.set_color (rich_text.foreground_color)
 				else
 					character_format.set_color (all_colors.item (current_format.text_color))
 				end
-				
+
 				if first_color_is_auto and current_format.highlight_color = 0 then
 					character_format.set_background_color (rich_text.background_color)
 				elseif current_format.highlight_set then
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 				end
 				effects.set_vertical_offset (half_points_to_pixels (current_format.vertical_offset))
 				character_format.set_effects (effects)
-				
+
 					-- RTF uses half points to specify font heights so divide by 2.
 				a_font.set_height_in_points (current_format.font_height // 2)
 				character_format.set_font (a_font)
@@ -490,20 +490,20 @@ feature {NONE} -- Implementation
 				paragraph_format.set_right_margin (current_format.right_margin)
 				paragraph_format.set_top_spacing (current_format.top_spacing)
 				paragraph_format.set_bottom_spacing (current_format.bottom_spacing)
-				
+
 				all_paragraph_formats.put (paragraph_format, current_format.paragraph_format_out)
 			end
 			if all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.is_equal (current_format.paragraph_format_out) then
 				all_paragraph_format_keys.extend (current_format.paragraph_format_out)
 				all_paragraph_indexes.extend (number_of_characters_opened + 1)
 			end
-			
+
 			character_format := all_formats.item (current_format.character_format_out)
 			rich_text.buffered_append (a_text, character_format)
 			number_of_characters_opened := number_of_characters_opened + a_text.count
 		end
 
-	get_character (rtf_text: STRING; index: INTEGER): CHARACTER is
+	get_character (rtf_text: STRING_32; index: INTEGER): WIDE_CHARACTER is
 			-- `Result' is character `index' within `rtf_text'.
 		require
 			rtf_text_not_void: rtf_text /= Void
@@ -519,12 +519,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	highest_read_char: INTEGER
 		-- Highest character index already read. This prevents us from increasing or
 		-- decreasing the "depth" of the document if a "{" or "}" character is read twice.
 
-	process_keyword  (rtf_text: STRING; index: INTEGER) is
+	process_keyword  (rtf_text: STRING_32; index: INTEGER) is
 			-- Process RTF string `rtf_text' for a keyword starting at position `index'
 			-- until a rtf character is received signifying the end of the keyword.
 		require
@@ -532,9 +532,9 @@ feature {NONE} -- Implementation
 			valid_index: rtf_text.valid_index (index)
 		local
 			l_index: INTEGER
-			current_character: CHARACTER
-			tag: STRING
-			tag_value: STRING
+			current_character: WIDE_CHARACTER
+			tag: STRING_32
+			tag_value: STRING_32
 			performed_one_iteration: BOOLEAN
 			tag_completed: BOOLEAN
 			reading_tag_value: BOOLEAN
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 				tag_completed
 			loop
 				current_character := get_character (rtf_text, l_index + index)
-				
+
 				inspect current_character
 				when ' ', '\', '}', '{', '%N', '%R', ';'  then
 					if performed_one_iteration then
@@ -638,11 +638,11 @@ feature {NONE} -- Implementation
 				last_colorred := tag_value.to_integer
 			elseif tag.is_equal (rtf_green) then
 				last_colorgreen := tag_value.to_integer
-			elseif tag.is_equal (rtf_blue) then		
+			elseif tag.is_equal (rtf_blue) then
 				last_colorblue := tag_value.to_integer
 			elseif tag.is_equal (rtf_font_string) then
 				last_fontindex := tag_value.to_integer
-				current_format.set_character_format (tag_value.to_integer)				
+				current_format.set_character_format (tag_value.to_integer)
 			elseif tag.is_equal (rtf_font_size_string) then
 				current_format.set_font_height (tag_value.to_integer)
 			elseif tag.is_equal (rtf_charset) then
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 				processing_moved_iterator := True
 			else
 				--print ("Unhandled tag : " + tag.out + "%N")
-			end	
+			end
 			if not processing_moved_iterator then
 					-- Some keyword processing moves `main_iterator' as part of its processing,
 					-- so do nothing in those cases, otherwise move the iterator by the size of the tag.
@@ -711,14 +711,36 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_string: STRING is "%N"
-	tab_string: STRING is "%T"
-	tab_tag_string: STRING is "tab"
-	line_string: STRING is "line"
+	new_line_string: STRING_32 is
+		once
+			Result := "%N"
+		ensure
+			not_void: Result /= Void
+		end
+
+	tab_string: STRING_32 is
+		once
+			Result := "%T"
+		ensure
+			not_void: Result /= Void
+		end
+
+	tab_tag_string: STRING_32 is
+		once
+			Result := "tab"
+		ensure
+			not_void: Result /= Void
+		end
+
+	line_string: STRING_32 is
 			-- String constants
-		
-		
-	move_to_end_of_tag (rtf_text: STRING; start_index: INTEGER) is
+		once
+			Result := "line"
+		ensure
+			not_void: Result /= Void
+		end
+
+	move_to_end_of_tag (rtf_text: STRING_32; start_index: INTEGER) is
 			-- Move `main_iterator' to the next character immediately following the closing brace
 			-- associated with the opening brace at `start_index' within RTF text `rtf_text'
 			-- This includes the depth of the brace, and will find the brace pair, not just the next closing brace.
@@ -729,7 +751,7 @@ feature {NONE} -- Implementation
 		local
 			l_index: INTEGER
 			depth: INTEGER
-			current_character: CHARACTER
+			current_character: WIDE_CHARACTER
 		do
 			depth := 1
 			from
@@ -751,15 +773,15 @@ feature {NONE} -- Implementation
 			end
 			move_main_iterator (l_index - 1)
 		end
-		
-	process_fonttable (rtf_text: STRING) is
+
+	process_fonttable (rtf_text: STRING_32) is
 			-- Process fonttable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
 			pointing_to_fonttable: rtf_text.substring (main_iterator, main_iterator + rtf_fonttable.count).is_equal (rtf_control_character.out + rtf_fonttable)
 		local
 			depth: INTEGER
-			current_character: CHARACTER
+			current_character: WIDE_CHARACTER
 		do
 			depth := 1
 			from
@@ -789,7 +811,7 @@ feature {NONE} -- Implementation
 				move_main_iterator (1)
 			end
 		end
-		
+
 	add_font_to_all_fonts is
 			-- Create and add a new font to `all_fonts' at index `last_font_index'
 			-- based on `last_fontfamily' and `last_fontname'.
@@ -817,15 +839,15 @@ feature {NONE} -- Implementation
 			end
 			all_fonts.force (a_font, last_fontindex)
 		end
-		
-	process_colortable (rtf_text: STRING) is
+
+	process_colortable (rtf_text: STRING_32) is
 			-- Process colortable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
 			pointing_to_colortable: rtf_text.substring (main_iterator, main_iterator + rtf_colortbl.count).is_equal (rtf_control_character.out + rtf_colortbl)
 		local
 			depth: INTEGER
-			current_character: CHARACTER
+			current_character: WIDE_CHARACTER
 			a_color: EV_COLOR
 		do
 			depth := 1
@@ -847,7 +869,7 @@ feature {NONE} -- Implementation
 					if last_colorred = initial_color_value and
 						last_colorgreen = initial_color_value and
 						last_colorblue = initial_color_value then
-							
+
 						create a_color
 						first_color_is_auto := True
 							-- We have found the auto color so record the fact that there is an auto color.
@@ -860,13 +882,13 @@ feature {NONE} -- Implementation
 				move_main_iterator (1)
 			end
 		end
-		
+
 	first_color_is_auto: BOOLEAN
 		-- Color at index `0' in the color table corresponds to the auto color.
 		-- Any color references to this color must use either the foreground or
 		-- background color of the control, instead of its actual value.
 
-	last_fontname: STRING
+	last_fontname: STRING_32
 	last_colorindex: INTEGER
 	last_fontindex: INTEGER
 	last_fontcharset: INTEGER
@@ -875,37 +897,37 @@ feature {NONE} -- Implementation
 	last_colorgreen: INTEGER
 	last_colorblue: INTEGER
 		-- Current values read in by parsing RTF.
-	
+
 	all_fonts: ARRAY [EV_FONT]
 		-- All fonts retrieved during parsing, accessible through their index in the font table.
-	
+
 	all_colors: ARRAY [EV_COLOR]
 		-- All colors retrieved during parsing, accessible through their index in the color table.
 
-	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
+	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING_32]
 		-- All unique formats retreived during parsing.
-		
-	all_paragraph_formats: HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING]
-	
-	all_paragraph_format_keys: ARRAYED_LIST [STRING]
-	
+
+	all_paragraph_formats: HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING_32]
+
+	all_paragraph_format_keys: ARRAYED_LIST [STRING_32]
+
 	all_paragraph_indexes: ARRAYED_LIST [INTEGER]
 
-	number_of_characters_opened: INTEGER		
-		
+	number_of_characters_opened: INTEGER
+
 	current_depth: INTEGER
 			-- Current depth of rtf parsing as determined by openeing "{" and
 			-- closing "}". Valid rtf opens as many as are closed.
-		
-		
-	process_fontname (rtf_text:STRING) is
+
+
+	process_fontname (rtf_text: STRING_32) is
 			-- Process a font name found in RTF text `rtf_text' starting at position `main_iterator'.
 		require
 			rtf_text_not_void: rtf_text /= Void
 		local
 			text_completed: BOOLEAN
-			current_text: STRING
-			current_character: CHARACTER
+			current_text: STRING_32
+			current_character: WIDE_CHARACTER
 		do
 			current_text := ""
 			from
@@ -938,31 +960,31 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			
+
 			last_fontname := current_text
 		end
-		
-		
+
+
 	current_format: RTF_FORMAT_I
 		-- The current format retrieved from the RTF.
-		
+
 	format_stack: ARRAYED_STACK [RTF_FORMAT_I]
 		-- A stack to hold current formatting for RTF being loaded.
 		-- Each set of formatting contained within braces is only local to those braces,
 		-- so we pop and push the current formats from the stack as we enter and leave braces.
-		
+
 	main_iterator: INTEGER
 		-- The index currently iterated within the RTF file that is being loaded.
 		-- This must be accessible to `move_main_iterator'.
-		
+
 	temp_iterator: INTEGER
 		-- A temporary value used by `move_main_iterator' to ensure that multiple calls to
 		-- move forwards do not move backwards.
-	
-	plain_text: STRING
+
+	plain_text: STRING_32
 		-- A string representation of the contents of from the last
 		-- RTF file loaded.
-		
+
 	update_main_iterator is
 			-- Ensure `main_iterator' takes the value of `temp_iterator'.
 		do
@@ -986,7 +1008,7 @@ feature {NONE} -- Implementation
 		ensure
 			temp_iterator_moved_forwards: temp_iterator >= old temp_iterator
 		end
-		
+
 feature {NONE} -- Implementation
 
 	pixels_to_half_points (pixels: INTEGER): INTEGER is
@@ -995,7 +1017,7 @@ feature {NONE} -- Implementation
 		do
 			Result := (pixels * points_per_inch * 2) // screen.vertical_resolution
 		end
-		
+
 	half_points_to_pixels (half_points: INTEGER): INTEGER is
 			-- `Result' is half points converted to pixels.
 		do
@@ -1007,9 +1029,9 @@ feature {NONE} -- Implementation
 		require
 			formats_not_void: paragraph_formats /= Void
 		local
-			format: STRING
+			format: STRING_32
 		do
-			format := ""
+			create format.make (128)
 			add_rtf_keyword (format, rtf_new_paragraph)
 			if a_format.is_left_aligned then
 				add_rtf_keyword (format, rtf_paragraph_left_aligned)
@@ -1041,26 +1063,26 @@ feature {NONE} -- Implementation
 		ensure
 			formats_count_increased: paragraph_formats.count = old paragraph_formats.count + 1
 		end
-		
+
 
 	build_font_from_format (a_format: EV_CHARACTER_FORMAT_I) is
 			-- Update font text `font_text' for addition of a new format to the buffering.
 		local
 			current_family: INTEGER
-			family: STRING
-			temp_string: STRING
+			family: STRING_32
+			temp_string: STRING_32
 		do
 			current_family := a_format.family
 			inspect current_family
-			when family_screen then 
+			when family_screen then
 				family := rtf_family_tech
-			when family_roman then 
+			when family_roman then
 				family := rtf_family_roman
-			when family_sans then 
+			when family_sans then
 				family := rtf_family_swiss
-			when family_typewriter then 
+			when family_typewriter then
 				family := rtf_family_script
-			when family_modern then 
+			when family_modern then
 				family := rtf_family_modern
 			else
 				family := rtf_family_nill
@@ -1084,13 +1106,13 @@ feature {NONE} -- Implementation
 				font_offset.force (hashed_fonts.item (temp_string))
 			end
 		end
-		
-		
+
+
 	build_color_from_format (a_format: EV_CHARACTER_FORMAT_I) is
 			-- Update color text `color_text' for addition of a new format to the buffering.
 		local
 			l_color: INTEGER
-			hashed_color, hashed_back_color: STRING
+			hashed_color, hashed_back_color: STRING_32
 			red, green, blue: INTEGER
 		do
 			l_color := a_format.fcolor
@@ -1121,7 +1143,7 @@ feature {NONE} -- Implementation
 			else
 				color_offset.force (hashed_colors.item (hashed_color))
 			end
-			
+
 			l_color := a_format.bcolor
 			hashed_back_color := ""
 			add_rtf_keyword (hashed_back_color, rtf_red)
@@ -1150,10 +1172,10 @@ feature {NONE} -- Implementation
 				back_color_offset.force (hashed_colors.item (hashed_back_color))
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
-	add_rtf_keyword (a_string, a_keyword: STRING) is
+	add_rtf_keyword (a_string, a_keyword: STRING_32) is
 			-- Add rtf representation of `rtf_control_character' and keyword `a_keyword' to `a_string'.
 		require
 			string_not_void: a_string /= Void
@@ -1164,18 +1186,18 @@ feature {NONE} -- Implementation
 		ensure
 			count_increased: old a_string.count + a_keyword.count + 1 = a_string.count
 		end
-		
-		
+
+
 feature {EV_ANY_I} -- Implementation
 
 	paragraph_start_indexes: ARRAYED_LIST [INTEGER]
 		-- Indexes of every paragraph format change in a document in order.
 		-- Call `generate_paragraph_information' to fill.
-		
-	paragraph_formats: ARRAYED_LIST [STRING]
+
+	paragraph_formats: ARRAYED_LIST [STRING_32]
 		-- A string representation of Each paragraph change found in
 		-- `paragraph_start_indexes'. Call `generate_paragraph_information' to fill.
-			
+
 feature {NONE} -- Implementation
 
 	default_structure_size: INTEGER is 20
@@ -1190,27 +1212,27 @@ feature {NONE} -- Implementation
 	-- buffered append operations, while the other lists and hash tables are used
 	-- in the buffered formatting operations.
 
-	hashed_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
+	hashed_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING_32]
 			-- A list of all character formats to be applied to buffering, accessible
 			-- through `hash_value' of EV_CHARACTER_FORMAT. This ensures that repeated formats
 			-- are not stored multiple times.
-		
-	format_offsets: HASH_TABLE [INTEGER, STRING]
+
+	format_offsets: HASH_TABLE [INTEGER, STRING_32]
 			-- The index of each format in `hashed_formats' within the RTF document that must be generated.
 			-- For each set of formatting that must be applied, a reference to the format in the document
 			-- must be specified, and this table holds the appropriate offset of that formatting.
 
-	buffered_text: STRING
+	buffered_text: STRING_32
 		-- Internal representation of `text' used only when flushing the buffers. Prevents the need
 		-- to stream the contents of `current', every time that the `text' is needed.
-		
+
 	lowest_buffered_value, highest_buffered_value: INTEGER
 		-- Used when applying a buffered format, these values represent the lowest and highest character indexes
 		-- that have been buffered. This allows implementations to only stream between these indexes if possible.
-		
+
 	formats: ARRAYED_LIST [EV_CHARACTER_FORMAT]
 			-- All character formats used in `Current'.
-		
+
 	heights: ARRAYED_LIST [INTEGER]
 			-- All heights of formats used in `Current', corresponding to contents of `forrmats'.
 
@@ -1218,60 +1240,60 @@ feature {NONE} -- Implementation
 			-- The index of each format relative to a paticular character index. This permits the correct
 			-- format to be looked up when the start positions of the formats are traversed.
 
-	start_formats: HASH_TABLE [STRING, INTEGER]
+	start_formats: HASH_TABLE [STRING_32, INTEGER]
 			-- The format type applicable at a paticular character position. The `item' is used to look up the
 			-- character format from `hashed_formats'.
 
-	end_formats: HASH_TABLE [STRING, INTEGER]
+	end_formats: HASH_TABLE [STRING_32, INTEGER]
 			-- The format type applicable at a paticular character position. The integer represents the index of the
 			-- closing caret index.
 
 			-- These attributes are used to stop multiple versions of the same color being
 			-- generated in the RTF.
 
-	hashed_colors: HASH_TABLE [INTEGER, STRING]
+	hashed_colors: HASH_TABLE [INTEGER, STRING_32]
 			-- All colors currently stored for buffering, accessible via the
 			-- actual RTF output, in the form ";\red255\green0\blue0". The integer `item'
 			-- corresponds to the offset of the color in `colors'.
-		
+
 	color_offset: ARRAYED_LIST [INTEGER]
 			-- All color indexes to use for foreground colors in document,
 			-- indexed by their corresponding character format index.
 			-- So, for example, item 20 would correspond to the color offset to use from
 			-- the color table for the 20th character format.
-		
+
 	back_color_offset: ARRAYED_LIST [INTEGER]
 			-- All color indexes to use for background colors in document,
 			-- indexed by their corresponding character format index.
 			-- So, for example, item 20 would correspond to the color offset to use from
 			-- the color table for the 20th character format.
-			
+
 	color_count: INTEGER
 		-- Number of colors currently buffered.		
-	
-	color_text: STRING
+
+	color_text: STRING_32
 		-- The RTF string correponding to all colors in the document.
-		
+
 			-- These attributes are used to stop multiple versions of the same font being
 			-- generate in the RTF.
-			
-	hashed_fonts: HASH_TABLE [INTEGER, STRING]
+
+	hashed_fonts: HASH_TABLE [INTEGER, STRING_32]
 			-- All fonts currently stored for buffering, accessible via the
 			-- actual RTF output, in the form "\froman\fcharset0 System". The integer `item'
 			-- corresponds to the offset of the font in `fonts'.
-	
+
 	font_offset: ARRAYED_LIST [INTEGER]
 			-- All font indexes  in document,
 			-- indexed by their corresponding character format index.
 			-- So, for example, item 20 would correspond to the font offset to use from
 			-- the font table for the 20th character format.
-	
+
 	font_count: INTEGER
 		-- Number of fonts currently buffered.
-	
-	font_text:STRING
+
+	font_text:STRING_32
 		-- The RTF string corresponding to all fonts in the document.
-		
+
 	is_current_format_underlined: BOOLEAN
 	is_current_format_striked_through: BOOLEAN
 	is_current_format_bold: BOOLEAN
@@ -1279,21 +1301,21 @@ feature {NONE} -- Implementation
 	current_vertical_offset: INTEGER
 		-- Booleans used to determine current formatting. These are used to prevent
 		-- repeatedly opening the same tags each time a new format is encountered.
-		
+
 	screen: EV_SCREEN is
 			-- Once acces to EV_SCREEN object.
 		once
 			create Result
 		end
-		
+
 	points_per_inch: INTEGER is 72
 		-- Number of points per inch.
-		
+
 	initial_color_value: INTEGER is -1
 		-- Value assigned to each color RGB component before loading.
 		-- This permits us to determine if the first color is auto, as if
 		-- so, the rgb values are all still set to this value.
-		
+
 invariant
 	rich_text_not_void: rich_text /= Void
 

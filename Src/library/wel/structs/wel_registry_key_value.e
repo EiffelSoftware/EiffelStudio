@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (t: like type; v: STRING) is
+	make (t: like type; v: STRING_GENERAL) is
 			-- Create a new string key value.
 		require
 			v_not_void: v /= Void
@@ -88,11 +88,11 @@ feature -- Access
 		obsolete
 			"Use `string_value' or `dword_value' instead."
 		do
-			create Result.make_empty (data.count - 1)
+			create Result.make_empty (data.count - 2)
 			Result.item.memory_copy (data.item, data.count)
 		end
 
-	value: STRING is
+	value: STRING_32 is
 			-- String data.
 		obsolete
 			"Use `string_value' instead."
@@ -104,20 +104,23 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	string_value: STRING is
+	string_value: STRING_32 is
 			-- String data.
 		require
 			valid_type: type = Reg_sz
 		local
 			l_count: INTEGER
+			l_str: WEL_STRING
 		do
 			l_count := data.count
-			create Result.make (l_count)
-			Result.from_c_substring (data.item, 1, l_count)
-			if l_count > 0 and then Result.item (l_count) = '%U' then
-					-- Case where string was stored with its final null character,
-					-- so we don't want it in our actual string.
-				Result.remove (l_count)
+			if l_count > 0 then
+				create l_str.share_from_pointer_and_count (data.item, l_count)
+				Result := l_str.string
+				if Result.item (Result.count) = '%U' then
+						-- Case where string was stored with its final null character,
+						-- so we don't want it in our actual string.
+					Result.remove (l_count)
+				end
 			end
 		ensure
 			string_value_not_void: Result /= Void
@@ -171,7 +174,7 @@ feature -- Element Change
 			dword_value_set: dword_value = v
 		end
 
-	set_string_value (v: like string_value) is
+	set_string_value (v: STRING_GENERAL) is
 			-- Set `string_value' with `v'.
 			-- Set `type' with `reg_sz'.
 		require

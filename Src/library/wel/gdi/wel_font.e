@@ -20,33 +20,33 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_TMPF_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_SHARED_TEMPORARY_OBJECTS
 		export
 			{NONE} all
 		end
-		
-create 
+
+create
 	make,
 	make_indirect,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
-	make (a_height, a_width, escapement, orientation, weight, 
+	make (a_height, a_width, escapement, orientation, weight,
 			italic, underline, strike_out, charset,
 			output_precision, clip_precision, quality,
-			pitch_and_family: INTEGER; a_face_name: STRING) is
+			pitch_and_family: INTEGER; a_face_name: STRING_GENERAL) is
 			-- Make font named `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -88,7 +88,7 @@ feature -- Setting
 
 			set_indirect (l)
 		end
-		
+
 	set_height_in_points (a_height_in_points: INTEGER) is
 			-- Set `height' based on `a_height_in_points'.
 		local
@@ -100,10 +100,10 @@ feature -- Setting
 			l := log_font
 			l.set_height (- point_to_logical (screen_dc, a_height_in_points, 1))
 			screen_dc.release
-			
+
 			set_indirect (l)
 		end
-		
+
 
 feature -- Re-initialisation
 
@@ -185,25 +185,25 @@ feature -- Access
 			screen_dc.release
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width of `a_string'.
 		do
 			Result := string_size (a_string).integer_item (1)
 		end
 
-	string_height (a_string: STRING): INTEGER is
+	string_height (a_string: STRING_GENERAL): INTEGER is
 			-- Height of `a_string'.
 		do
 			Result := string_size (a_string).integer_item (2)
 		end
 
-	string_size_extended (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size_extended (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- [width, height, leading overhang, trailing overhang] of `a_string'.
 			-- Not all fonts have characters that fit completely within the bounds of
 			-- the standard `string_size'. See `char_abc_widths' from WEL_DC which
 			-- retrives information regarding Windows ABC structures for truetype
 			-- fonts. If a character has a negative "a" or "c" value which causes it
-			-- to extended past the boundaries of the rectange specified by the first two 
+			-- to extended past the boundaries of the rectange specified by the first two
 			-- INTEGER values, use the final two INTEGER values to determine the number
 			-- of pixels the characters extend in either direction past the bounds. This
 			-- is necessary to completely encompass the string in a rectangle.
@@ -219,13 +219,12 @@ feature -- Access
 			greatest_a, greatest_c: INTEGER
 			pointer: POINTER
 			current_c: INTEGER
-			area: SPECIAL [CHARACTER]
 			screen_dc_pointer: POINTER
 			abc_struct: WEL_ABC_STRUCT
 			abc_struct_size: INTEGER
 			managed_pointer: MANAGED_POINTER
 			char_pointer: POINTER
-			character: CHARACTER
+			character_code: NATURAL_32
 			a, b, c: INTEGER
 			current_width: INTEGER
 			advance_width: INTEGER
@@ -240,13 +239,12 @@ feature -- Access
 				cur_height := 0
 			else
 				wel_string.set_string (a_string)
-				area := a_string.area
 				pointer := wel_string.item
 				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 				count := wel_string.count
-				
+
 					-- Create a text metric structure from `screen_dc' providing information
 					-- regarding selected font.
 				create text_metric.make (screen_dc)
@@ -255,14 +253,14 @@ feature -- Access
 				if flag_set (text_metric.pitch_and_family, tmpf_truetype) then
 
 						-- Store height returned by metrics for quick access.
-					metric_height := text_metric.height				
-					
+					metric_height := text_metric.height
+
 						-- It is quicker to perform different implementations
 						-- based on the string length. The value of 48 is an approximate
 						-- value where in testing, the relative merits of each approach becomes
 						-- apparent. This value should not be changed without proper testing. Julian
 					optimize_for_short_strings := count < 48
-									
+
 					create abc_struct.make
 					abc_struct_size := abc_struct.structure_size
 					if not optimize_for_short_strings then
@@ -273,10 +271,10 @@ feature -- Access
 						screen_dc.cwel_get_char_abc_widths (screen_dc.item, 1, 255, managed_pointer.item)
 						char_pointer := managed_pointer.item
 					end
-					
+
 						-- Store pointers to structures for quicker access.
 					screen_dc_pointer := screen_dc.item
-	
+
 					greatest_a := 1000
 					greatest_c := -1000
 					from
@@ -285,8 +283,9 @@ feature -- Access
 					until
 						counter > count
 					loop
-						character := area.item (counter - 1)
-						if character = '%N' then
+						character_code := a_string.code (counter)
+						check character_code_not_too_big: character_code <= {INTEGER}.max_value.to_natural_32 end
+						if character_code = ('%N').code.to_natural_32 then
 							cur_width := cur_width.max (current_width)
 							greatest_c := greatest_c.max (current_width - current_c)
 							current_c := 0
@@ -297,13 +296,13 @@ feature -- Access
 							if optimize_for_short_strings then
 									-- It is quicker to retrieve the item multiple times, rather than
 									-- retrieve all 255 character indexes for short strings.
-								screen_dc.cwel_get_char_abc_widths (screen_dc.item, character.code, character.code, abc_struct.item)	
+								screen_dc.cwel_get_char_abc_widths (screen_dc.item, character_code, character_code, abc_struct.item)
 							else
 									-- As we are not optimizing for short strings, look up the character
 									-- in the prefetched table.
-								create abc_struct.make_by_pointer (char_pointer + ((character.code - 1) * abc_struct_size))
+								create abc_struct.make_by_pointer (char_pointer + ((character_code - 1).to_integer_32 * abc_struct_size))
 							end
-							
+
 							a := abc_struct.a
 							b := abc_struct.b
 							c := abc_struct.c
@@ -314,15 +313,15 @@ feature -- Access
 							if last_newline_index = counter - 1 or counter = 1 then
 								greatest_a := greatest_a.min (a)
 							end
-						end	
+						end
 						counter := counter + 1
 					end
 					cur_height := cur_height + metric_height
 					cur_width := cur_width.max (current_width)
 					greatest_c := greatest_c.max (current_width - current_c)
 					greatest_c := cur_width - greatest_c
-	
-	
+
+
 					screen_dc.unselect_font
 					screen_dc.quick_release
 				else
@@ -339,7 +338,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER] is
 			-- [width, height] of `a_string'.
 		local
 			cur_width, cur_height: INTEGER
@@ -349,7 +348,7 @@ feature -- Access
 				cur_width := 0
 				cur_height := 0
 			else
-			
+
 				wel_rect.set_rect (0, 0, 32767, 32767)
 				create screen_dc
 				screen_dc.get
@@ -358,7 +357,7 @@ feature -- Access
 				screen_dc.draw_text (a_string, wel_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
 				cur_width := wel_rect.width
 				cur_height := wel_rect.height
-				
+
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end
@@ -368,7 +367,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	get_char_a_width (dc: WEL_DC; character_code: INTEGER): INTEGER is
+	get_char_a_width (dc: WEL_DC; character_code: NATURAL_32): INTEGER is
 			-- `Result' is "a" width from truetype font character `character_code'.
 		require
 			dc_not_void: dc /= Void
@@ -376,8 +375,8 @@ feature {NONE} -- Implementation
 		do
 			Result := dc.char_abc_widths (character_code, character_code).i_th (1).a
 		end
-		
-	get_char_c_width (dc: WEL_DC; character_code: INTEGER): INTEGER is
+
+	get_char_c_width (dc: WEL_DC; character_code: NATURAL_32): INTEGER is
 			-- `Result' is "c" width from truetype font character `character_code'.
 		require
 			dc_not_void: dc /= Void
@@ -395,7 +394,7 @@ feature {NONE} -- Implementation
 		external
 			"C [macro <wel.h>] (int, int, int, int, int, DWORD, %
 				%DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, %
-				%DWORD, LPCSTR): EIF_POINTER"
+				%DWORD, LPCTSTR): EIF_POINTER"
 		alias
 			"CreateFont"
 		end

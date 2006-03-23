@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
+	signal_emit_stop (a_c_object: POINTER; signal: STRING_GENERAL) is
 		deferred
 		end
 

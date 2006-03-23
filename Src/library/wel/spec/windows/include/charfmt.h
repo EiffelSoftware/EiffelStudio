@@ -9,6 +9,8 @@
 #	include <redit.h>
 #endif
 
+#include <tchar.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,7 +23,7 @@ extern "C" {
 #define cwel_charformat_set_crtextcolor(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->crTextColor = (COLORREF) (_value_))
 #define cwel_charformat_set_bcharset(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->bCharSet = (BYTE) (_value_))
 #define cwel_charformat_set_bpitchandfamily(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->bPitchAndFamily = (BYTE) (_value_))
-#define cwel_charformat_set_szfacename(_ptr_, _value_) (strncpy(((CHARFORMAT *) _ptr_)->szFaceName, (char *) (_value_), LF_FACESIZE))
+#define cwel_charformat_set_szfacename(_ptr_, _value_) (_tcsncpy(((CHARFORMAT *) _ptr_)->szFaceName, (TCHAR *) (_value_), LF_FACESIZE))
 
 #define cwel_charformat_get_dwmask(_ptr_) ((((CHARFORMAT *) _ptr_)->dwMask))
 #define cwel_charformat_get_dweffects(_ptr_) ((((CHARFORMAT *) _ptr_)->dwEffects))

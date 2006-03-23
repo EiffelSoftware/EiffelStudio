@@ -209,7 +209,7 @@ feature {EV_ANY_I} -- Access
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of `Current'.
 		do
 			Result := internal_text_field.text
@@ -451,7 +451,7 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			Result := internal_text_field.maximum_character_width
 		end
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		do
 			Result := internal_text_field.clipboard_content
@@ -506,25 +506,25 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			internal_text_field.set_caret_position (pos)
 		end
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_GENERAL) is
 			-- Assign `txt' to text of `Current'.
 		do
 			internal_text_field.set_text (txt)
 		end
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING_GENERAL) is
 			-- Insert `txt' at the current caret position.
 		do
 			internal_text_field.insert_text (txt)
 		end
 
-	append_text (txt: STRING) is
+	append_text (txt: STRING_GENERAL) is
 			-- append 'txt' into `Current'.
 		do
 			internal_text_field.append_text (txt)
 		end
 
-	prepend_text (txt: STRING) is
+	prepend_text (txt: STRING_GENERAL) is
 			-- prepend 'txt' into `Current'.
 		do
 			internal_text_field.prepend_text (txt)
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 			-- not an integer value, it returns the minimum of the
 			-- range.
 		local
-			txt: STRING
+			txt: like text
 			val: INTEGER
 		do
 			txt := text
@@ -760,7 +760,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 				previous)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		do
 			Result := generator

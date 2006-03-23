@@ -163,7 +163,7 @@ feature {NONE} -- Accelerators
 
 feature -- Access
 
-	icon_name: STRING is
+	icon_name: STRING_32 is
 			-- Alternative name, displayed when window is minimised.
 		do
 			if icon_name_holder /= Void then
@@ -235,7 +235,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING) is
+	set_icon_name (an_icon_name: STRING_GENERAL) is
 			-- Assign `an_icon_name' to `icon_name'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -277,7 +277,7 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	icon_name_holder: STRING
+	icon_name_holder: STRING_32
 			-- Name holder for applications icon name
 
 	interface: EV_TITLED_WINDOW;

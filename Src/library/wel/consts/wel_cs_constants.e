@@ -14,6 +14,10 @@ feature -- Access
 
 	Cs_hredraw: INTEGER is 2
 
+	Cs_keycvtwindow: INTEGER is 4
+			-- Not defined any more for some
+			-- C compilers, returns old defined value
+
 	Cs_dblclks: INTEGER is 8
 
 	Cs_owndc: INTEGER is 32
@@ -33,12 +37,11 @@ feature -- Access
 	Cs_globalclass: INTEGER is 16384
 
 	Cs_nokeycvt: INTEGER is 256
-			-- Not defined any more for some 
+			-- Not defined any more for some
 			-- C compilers, returns old defined value
-	
-	Cs_keycvtwindow: INTEGER is 4;
-			-- Not defined any more for some 
-			-- C compilers, returns old defined value
+
+	Cs_ime: INTEGER is 65536;
+			-- Input Method Editor
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

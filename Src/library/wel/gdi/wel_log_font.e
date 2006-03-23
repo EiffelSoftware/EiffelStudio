@@ -77,7 +77,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_height: INTEGER; a_face_name: STRING) is
+	make (a_height: INTEGER; a_face_name: STRING_GENERAL) is
 			-- Make a font with `a_height' as `height' and
 			-- `a_face_name' as `face_name'.
 		require
@@ -284,10 +284,13 @@ feature -- Access
 			Result := cwel_log_font_get_pitchandfamily (item)
 		end
 
-	face_name: STRING is
+	face_name: STRING_32 is
 			-- Face name of current font
+		local
+			l_str: WEL_STRING
 		do
-			create Result.make_from_c (cwel_log_font_get_facename (item))
+			create l_str.share_from_pointer (cwel_log_font_get_facename (item))
+			Result := l_str.string
 		ensure
 			result_exists: Result /= Void
 		end
@@ -792,7 +795,7 @@ feature -- Status setting
 			pitch_and_family_set: pitch_and_family = a_pitch_and_family
 		end
 
-	set_face_name (a_face_name: STRING) is
+	set_face_name (a_face_name: STRING_GENERAL) is
 			-- Set `face_name' to `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void

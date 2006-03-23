@@ -9,7 +9,7 @@ indexing
 
 class
 	EV_EDITABLE_LIST
-	
+
 inherit
 	EV_MULTI_COLUMN_LIST
 		redefine
@@ -41,19 +41,19 @@ feature -- Initialization
 		end
 
 feature -- Status report
-		
+
 	all_columns_editable: BOOLEAN
 			-- Are all columns in the list editable?
-		
+
 	all_rows_editable: BOOLEAN
 			-- Are all rows in the list editable?
-			
+
 	column_editable (i: INTEGER): BOOLEAN is
 			-- Is column at index 'i' allowed to be edited?
 		do
 			Result := editable_columns.has (i)
 		end
-		
+
 	row_editable (i: INTEGER): BOOLEAN is
 			-- Is row at index 'i' allowed to be edited?
 		do
@@ -78,7 +78,7 @@ feature -- Status setting
 			"use `set_with_previous_text' instead"
 		do
 			set_with_previous_text
-		end		
+		end
 
 	set_with_previous_text is
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
@@ -93,13 +93,13 @@ feature -- Status setting
 		do
 			unique_column_values := a_flag
 		end
-		
+
 	set_non_empty_column_values (a_flag: BOOLEAN) is
 			-- Set so edited column values are not allowed to be empty.
 		do
 			empty_column_values := a_flag
 		end
-		
+
 	set_column_editable (a_flag: BOOLEAN; i: INTEGER) is
 			-- Make column at index 'i' editable according to 'a_flag'. 
 		do
@@ -108,7 +108,7 @@ feature -- Status setting
 					editable_columns.extend (i)
 				end
 			else
-				from 
+				from
 					editable_columns.start
 				until
 					editable_columns.after
@@ -119,7 +119,7 @@ feature -- Status setting
 					editable_columns.forth
 				end
 			end
-			
+
 		end
 
 	set_all_columns_editable is
@@ -139,7 +139,7 @@ feature -- Status setting
 			end
 			all_columns_editable := True
 		end
-		
+
 	set_row_editable (a_flag: BOOLEAN; i: INTEGER) is
 			-- Make row at index 'i' editable according to 'a_flag'.
 		local
@@ -152,7 +152,7 @@ feature -- Status setting
 					editable_rows.extend (i)
 				end
 			else
-				from 
+				from
 					editable_rows.start
 				until
 					editable_rows.after or done
@@ -182,7 +182,7 @@ feature -- Status setting
 			end
 			all_rows_editable := True
 		end
-		
+
 	change_widget_type (i: INTEGER; a_widget: EV_TEXTABLE) is
 			-- Set widget type to be displayed at column index 'i'
 		require
@@ -213,10 +213,10 @@ feature -- Removal
 				prune (list_item)
 			end
 		end
-		
+
 feature -- Selection
 
-	select_item (a_string: STRING; i: INTEGER) is
+	select_item (a_string: STRING_GENERAL; i: INTEGER) is
 			-- Select in list the first item with text 'a_string' at index 'i'.
 		local
 			done: BOOLEAN
@@ -241,21 +241,21 @@ feature -- Editing
 		do
 			if selected_item /= Void then
 				widget_column := column_index (x, y)
-				widget_row := index_of (selected_item, 1)				
+				widget_row := index_of (selected_item, 1)
 				saved_text := selected_item @ (widget_column)
 				calculate_offsets (x, y)
 				generate_edit_dialog
-			end	
+			end
 		end
 
 feature {NONE} -- Status report
 
 	unique_column_values: BOOLEAN
 			-- Should column values be unique for each row?	No by default.	
-			
+
 	empty_column_values: BOOLEAN
 			-- Are edited column values allowed to empty?  No by default.
-		
+
 	column_index (x, y: INTEGER): INTEGER is
 			-- The index of the column which was clicked by the user.  Store
 			-- result in `widget_column'
@@ -277,7 +277,7 @@ feature {NONE} -- Status report
 		end
 
 feature -- Actions
-				
+
 	end_edit_actions: ACTION_SEQUENCE [TUPLE]
 			-- List of actions to perform when list row has just been edited.
 
@@ -296,27 +296,27 @@ feature {NONE} -- Actions
 			hide_timer.actions.extend (agent hide_window_on_timer)
 			--internal_dialog.hide
 		end
-		
+
 	hide_window_on_timer is
 			--
 		do
 			hide_timer.destroy
 			internal_dialog.hide
 		end
-		
+
 	hide_timer: EV_TIMEOUT
-	
+
 	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG) is
 			-- Actions to check if user has press the return key on 'a_dialog'.
 		do
-			if key.code = {EV_KEY_CONSTANTS}.key_enter or 
+			if key.code = {EV_KEY_CONSTANTS}.key_enter or
 				key.code = {EV_KEY_CONSTANTS}.key_tab then
 				update_actions
 			end
 		end
-	
+
 	update_actions is
-			-- Actions to be performed when change widget is updated, redefine for custom 
+			-- Actions to be performed when change widget is updated, redefine for custom
 			-- behaviour.
 		do
 			if selected_item /= Void then
@@ -332,7 +332,7 @@ feature {NONE} -- Actions
 				else
 					selected_item.put_i_th (widget.text, widget_column)
 				end
-			end			
+			end
 			widget.focus_out_actions.wipe_out
 			widget.key_release_actions.wipe_out
 			on_edit_end
@@ -340,7 +340,7 @@ feature {NONE} -- Actions
 
 	update_agents (a_container_arg: EV_CONTAINER; adding: BOOLEAN) is
 			-- Add an agent to every widget in container so that when clicked
-			-- it hides the editable dialog.  If not `adding' then remove the 
+			-- it hides the editable dialog.  If not `adding' then remove the
 			-- appropriate agent.
 		local
 			con: EV_CONTAINER
@@ -372,42 +372,42 @@ feature {NONE} -- Commands
 
 	generate_edit_dialog is
 			-- Generate new edit dialog for row editing in column at index 'i'.
-		local			
+		local
 			textable: EV_TEXTABLE
 		do
 			if column_editable (widget_column) and row_editable (widget_row) then
-				
+
 						-- Destroy previous editing dialog
 				if internal_dialog /= Void then
 					internal_dialog.destroy
 				end
-				
+
 				if change_widgets.has (widget_column) then
 					widget ?= change_widgets.item (widget_column)
 				else
 						-- Use text field as default widget type
-					create {EV_TEXT_FIELD} textable					
+					create {EV_TEXT_FIELD} textable
 					change_widgets.put (textable, widget_column)
 					widget ?= textable
 				end
-				
+
 						-- Setup the editable widget			
 				widget.key_release_actions.extend (agent on_key_release (?, internal_dialog))
-						
+
 						-- Create the parent dialog
 				create internal_dialog
 				internal_dialog.extend (widget)
-				internal_dialog.disable_user_resize				
-				internal_dialog.set_size (dialog_width, dialog_height)				
+				internal_dialog.disable_user_resize
+				internal_dialog.set_size (dialog_width, dialog_height)
 				internal_dialog.show_relative_to_window (relative_window)
-				internal_dialog.set_position (x_offset, y_offset)				
-				initialize_observers			
-				
+				internal_dialog.set_position (x_offset, y_offset)
+				initialize_observers
+
 				widget.set_text (saved_text)
 				widget.focus_out_actions.extend (agent focus_lost)
 			end
 		end
-		
+
 	focus_lost is
 			-- Focus lost on editable widget
 		do
@@ -415,26 +415,26 @@ feature {NONE} -- Commands
 				update_actions
 			end
 		end
-		
+
 	screen: EV_SCREEN is
 			-- Screen
 		once
 			create Result
-		end		
+		end
 
 	redraw_dialog is
 			-- Redraw edit dialog in response to interface changes
 		require
 			has_internal_dialog: internal_dialog /= Void
 		do
-			internal_dialog.set_size (dialog_width, dialog_height)				
+			internal_dialog.set_size (dialog_width, dialog_height)
 			internal_dialog.show_relative_to_window (relative_window)
 			calculate_x_offset (0)
 			internal_dialog.set_position (x_offset, y_offset)
-		end	
+		end
 
 	hide_window is
-			-- Hide 
+			-- Hide
 		do
 			update_actions
 		--	update_agents (relative_window, False)
@@ -447,21 +447,21 @@ feature {NONE} -- Widget
 
 	x_offset, y_offset: INTEGER
 			-- Where 'widget' should be positioned on the x-axis or y-axis.
-			
+
 	widget_column, widget_row: INTEGER
 			-- The column/row index that 'widget' belongs to.
-			
-	saved_text: STRING
-			-- Saved text of 'widget'.  Used to reset text in case non-unique 
+
+	saved_text: STRING_32
+			-- Saved text of 'widget'.  Used to reset text in case non-unique
 			-- value entered and 'unique_column_values' in true.
-	
+
 	calculate_offsets (x, y: INTEGER) is
 			-- Determine the appropriate x and y values for 'widget'.
 		do
 			calculate_y_offset (y)
 			calculate_x_offset (x)
-		end		
-		
+		end
+
 	calculate_y_offset (y: INTEGER) is
 			-- Calculate the y axis value required to correctly position edit dialog in
 			-- list.  WORK AROUND SINCE VISION DOES NOT MAKE AVAILABLE COLUMN TITLE HEIGHT.
@@ -471,7 +471,7 @@ feature {NONE} -- Widget
 			actual_index := y - ((y - 19) \\ row_height).abs
 			y_offset := screen_y + actual_index + 13 - row_height
 		end
-			
+
 	calculate_x_offset (x: INTEGER) is
 			-- Calculate the x axis value required to correctly position edit dialog in list.
 		local
@@ -483,22 +483,22 @@ feature {NONE} -- Widget
 			until
 				i = widget_column
 			loop
-				x_offset := x_offset + column_width (i) 			
+				x_offset := x_offset + column_width (i)
 				i := i + 1
-			end	
+			end
 		end
 
 	dialog_width: INTEGER is
-			-- The width that editable dialog should be at any given moment based on 
+			-- The width that editable dialog should be at any given moment based on
 			-- current display status
-		do			
+		do
 			Result := column_width (widget_column)
 		end
-	
+
 	dialog_height: INTEGER is
-			-- The height that editable dialog should be at any given moment based on 
+			-- The height that editable dialog should be at any given moment based on
 			-- current display status
-		do			
+		do
 			Result := row_height - 5
 		end
 
@@ -506,26 +506,26 @@ feature {NONE} -- Access
 
 	relative_window: EV_WINDOW
 			-- Window to which editable dialogs are to be shown relative to.
-			
+
 	editable_columns: ARRAYED_LIST [INTEGER]
 			-- Indices of all editable columns in row.
-			
+
 	editable_rows: ARRAYED_LIST [INTEGER]
 			-- Indices of all editable rows in list.			
-			
+
 	change_widgets: HASH_TABLE [EV_TEXTABLE, INTEGER]
 			-- List of textable widgets associated by column.  Used to determine
 			-- widget type for each column.
 
 feature {NONE} -- Implementation
-		
+
 	initialize_observers is
-			-- 
+			--
 		do
 			--update_agents (relative_window, True)
 		end
 
-	is_valid_text (a_string: STRING; c, r: INTEGER): BOOLEAN is
+	is_valid_text (a_string: STRING_GENERAL; c, r: INTEGER): BOOLEAN is
 			-- Is the string 'a_string' at row 'r' and column 'c' unique to column 'c'?.
 		do
 			from
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 				forth
 			end
 		end
-		
+
 	resized is
 			-- Current was resized	
 		local
@@ -570,27 +570,27 @@ feature {NONE} -- Implementation
 					resize_actions.resume
 					column_resized_actions.resume
 				end
-		
+
 					-- Redraw internal dialog if required
 				if internal_dialog /= Void and then internal_dialog.is_displayed then
 					redraw_dialog
 				end
 			end
-		end			
-		
+		end
+
 	error_dialog: EV_INFORMATION_DIALOG
 			-- Error dialog indicating name clash.
-	
+
 	internal_dialog: EV_UNTITLED_DIALOG
 			-- Internal dialog for holding editable widget
-			
+
 	combo_item_selected (combo_box: EV_COMBO_BOX) is
 			--
 		do
 			i_th (widget_row).put_i_th (combo_box.selected_item.text, widget_column)
 		end
-		
-	
+
+
 invariant
 	has_relative_window: relative_window /= Void
 	change_widgets_not_void: change_widgets /= Void

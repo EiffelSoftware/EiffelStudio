@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision color selection dialog.%
 		%Mswindows implementation."
 	legal: "See notice at end of class."
@@ -82,12 +82,15 @@ feature -- Access
 			end
 		end
 
-	title: STRING is "Color"
+	title: STRING_32 is
+		do
+			Result := "Color"
+		end
 			-- Title of `Current'.
 
 feature -- Element change
 
-	set_title (new_title: STRING) is
+	set_title (new_title: STRING_32) is
 			-- Assign `new_title' to `title'.
 		do
 			--| FIXME IS it possible in windows to change
@@ -209,7 +212,7 @@ feature {EV_ANY_I}
 		end
 
 	minimum_height: INTEGER is
-		do	
+		do
 			check
 				to_be_implemented: FALSE
 			end

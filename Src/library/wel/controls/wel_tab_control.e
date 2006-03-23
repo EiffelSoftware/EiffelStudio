@@ -165,7 +165,7 @@ feature -- Status report
 		require
 			exists: exists
 		local
-			buffer: STRING
+			buffer: STRING_32
 		do
 			create Result.make
 			create buffer.make (buffer_size)
@@ -480,11 +480,10 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_tabcontrol_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_tabcontrol_class)).string
 		end
 
 	default_style: INTEGER is

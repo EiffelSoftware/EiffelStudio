@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	title: STRING is
+	title: STRING_32 is
 			-- Application name to be displayed by the window manager.
 		deferred
 		end
@@ -153,7 +153,7 @@ feature -- Status setting
 			set_maximum_height (mh)
 		end
 
-	set_title (txt : STRING) is
+	set_title (txt : STRING_GENERAL) is
 			-- Make `txt' the new title.
 		require
 			valid_title: txt /= Void

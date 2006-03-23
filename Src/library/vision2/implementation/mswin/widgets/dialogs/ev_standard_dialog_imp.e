@@ -52,7 +52,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected_button: STRING
+	selected_button: STRING_32
 			-- Label of last clicked button.
 
 feature -- Deferred

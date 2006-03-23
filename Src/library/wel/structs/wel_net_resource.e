@@ -99,24 +99,21 @@ feature -- Access
 				Result = Resource_usage_container
 		end
 
-	local_name: STRING is
+	local_name: STRING_32 is
 			-- If `scope' is equal to `Resource_connected' or 
 			-- `Resource_remembered', it specifies the name of a local
 			-- device. It is Void if the connection does not use a device.
-		local
-			string_pointer: POINTER
-			null_pointer: POINTER
 		do
-			string_pointer := cwel_net_resource_get_local_name (item)
-			if string_pointer /= null_pointer then
-				create Result.make (0)
-				Result.from_c (string_pointer)
+			if internal_local_name /= Void then
+				Result := internal_local_name.string
+			else
+				create Result.make_empty
 			end
 		ensure
 			valid_result: (Result /= Void) = (scope = Resource_connected or scope = Resource_remembered)
 		end
 		
-	remote_name: STRING is
+	remote_name: STRING_32 is
 			-- If the entry is a network resource, it specifies the remote
 			-- network name.
 			--
@@ -126,45 +123,36 @@ feature -- Access
 			--
 			-- The string can be MAX_PATH characters in length, and it must
 			-- follow the network provider's naming conventions.
-		local
-			string_pointer: POINTER
-			null_pointer: POINTER
 		do
-			string_pointer := cwel_net_resource_get_remote_name (item)
-			if string_pointer /= null_pointer then
-				create Result.make (0)
-				Result.from_c (string_pointer)
+			if internal_remote_name /= Void then
+				Result := internal_remote_name.string
+			else
+				create Result.make_empty
 			end
 		end
 		
-	comment: STRING is
+	comment: STRING_32 is
 			-- Comment supplied by the network provider.
 			-- It can be Void if there is no supplied comment.
-		local
-			string_pointer: POINTER
-			null_pointer: POINTER
 		do
-			string_pointer := cwel_net_resource_get_comment (item)
-			if string_pointer /= null_pointer then
-				create Result.make (0)
-				Result.from_c (string_pointer)
+			if internal_comment /= Void then
+				Result := internal_comment.string
+			else
+				create Result.make_empty
 			end
 		end
 		
-	provider: STRING is
+	provider: STRING_32 is
 			-- Name of the provider that owns the resource.
 			-- It can be Void if the provider name is unknown.
 			--
 			-- To retrieve the provider name, you can call
 			-- `WNetGetProviderName'.
-		local
-			string_pointer: POINTER
-			null_pointer: POINTER
 		do
-			string_pointer := cwel_net_resource_get_provider (item)
-			if string_pointer /= null_pointer then
-				create Result.make (0)
-				Result.from_c (string_pointer)
+			if internal_provider /= Void then
+				Result := internal_provider.string
+			else
+				create Result.make_empty
 			end
 		end
 		
@@ -226,7 +214,7 @@ feature -- Element change
 			value_set: usage = a_value
 		end
 
-	set_local_name (a_value: STRING) is
+	set_local_name (a_value: STRING_GENERAL) is
 			-- Set `local_name' to `a_value'
 			--
 			-- Can only be set if `scope' is equal to `Resource_connected'
@@ -247,7 +235,7 @@ feature -- Element change
 			value_set: equal (local_name, a_value)
 		end
 		
-	set_remote_name (a_value: STRING) is
+	set_remote_name (a_value: STRING_GENERAL) is
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
@@ -268,7 +256,7 @@ feature -- Element change
 			value_set: equal (remote_name, a_value)
 		end
 		
-	set_comment (a_value: STRING) is
+	set_comment (a_value: STRING_GENERAL) is
 			-- Set `comment' to `a_value'
 		local
 			string_pointer: POINTER
@@ -284,7 +272,7 @@ feature -- Element change
 			value_set: equal (comment, a_value)
 		end
 		
-	set_provider (a_value: STRING) is
+	set_provider (a_value: STRING_GENERAL) is
 			-- Set `provider' to `a_value'
 		local
 			string_pointer: POINTER

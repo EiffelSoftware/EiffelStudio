@@ -175,7 +175,7 @@ feature -- Status report
 			count_ok: Result.count = count_selected_items
 		end
 
-	selected_strings: ARRAY [STRING] is
+	selected_strings: ARRAY [STRING_32] is
 			-- Contains all the selected strings
 		require
 			exits: exists

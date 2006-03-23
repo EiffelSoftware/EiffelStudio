@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_name: STRING;
+	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a button.
 		require
@@ -79,10 +79,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := "BUTTON"
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_button_class)).string
+		end
+
+	cwin_button_class: POINTER is
+		external
+			"C inline use <windows.h>, <commctrl.h>"
+		alias
+			"WC_BUTTON"
 		end
 
 indexing

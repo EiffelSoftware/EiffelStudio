@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Eiffel Vision file open dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -40,10 +40,10 @@ inherit
 
 create
 	make
-	
+
 feature -- Status report
 
-	file_name: STRING is
+	file_name: STRING_32 is
 			-- Full name of currently selected file including path.
 		do
 			if multiple_selection_enabled and then not file_names.is_empty then
@@ -61,23 +61,13 @@ feature -- Status report
 		do
 			Result := has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		end
-		
-	file_names: ARRAYED_LIST [STRING] is
+
+	file_names: ARRAYED_LIST [STRING_32] is
 			-- Full names of currently selected files including path.
-		local
-			linked_list: LINKED_LIST [STRING]
 		do
 			if multiple_selection_enabled then
-				linked_list := multiple_file_names
-				create Result.make (linked_list.count)
-				from
-					linked_list.start
-				until
-					linked_list.off
-				loop
-					Result.extend (linked_list.item.twin)
-					linked_list.forth
-				end
+				Result ?= multiple_file_names
+				check result_not_void: Result /= Void end
 			else
 					-- If there is no multiple selection, simply copy `file_name' into `Result'.
 				create Result.make (1)

@@ -88,14 +88,17 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_fstyle (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Item text
 		require
 			exists: exists
 		do
 			set_mask (set_flag (mask, Rbbim_text))
-			create Result.make (0)
-			Result.from_c (cwel_rebarbandinfo_get_lptext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		end
 
 	length: INTEGER is
@@ -189,7 +192,7 @@ feature -- Element change
 			style_set: style = value
 		end
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_GENERAL) is
 			-- Set `text' as `txt'.
 		require
 			exists: exists

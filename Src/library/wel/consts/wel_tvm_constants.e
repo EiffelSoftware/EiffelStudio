@@ -16,7 +16,7 @@ feature -- Access
 	Tvm_deleteitem: INTEGER is 4353
 			-- Declared in Windows as TVM_DELETEITEM
 
-	Tvm_editlabel: INTEGER is 4366
+	Tvm_editlabel: INTEGER is 4417
 			-- Declared in Windows as TVM_EDITLABEL
 
 	Tvm_endeditlabelnow: INTEGER is 4374
@@ -40,10 +40,10 @@ feature -- Access
 	Tvm_getindent: INTEGER is 4358
 			-- Declared in Windows as TVM_GETINDENT
 
-	Tvm_getisearchstring: INTEGER is 4375
+	Tvm_getisearchstring: INTEGER is 4416
 			-- Declared in Windows as TVM_GETISEARCHSTRING
 
-	Tvm_getitem: INTEGER is 4364
+	Tvm_getitem: INTEGER is 4414
 			-- Declared in Windows as TVM_GETITEM
 
 	Tvm_getitemrect: INTEGER is 4356
@@ -58,7 +58,7 @@ feature -- Access
 	Tvm_hittest: INTEGER is 4369
 			-- Declared in Windows as TVM_HITTEST
 
-	Tvm_insertitem: INTEGER is 4352
+	Tvm_insertitem: INTEGER is 4402
 			-- Declared in Windows as TVM_INSERTITEM
 
 	Tvm_selectitem: INTEGER is 4363
@@ -70,7 +70,7 @@ feature -- Access
 	Tvm_setindent: INTEGER is 4359
 			-- Declared in Windows as TVM_SETINDENT
 
-	Tvm_setitem: INTEGER is 4365
+	Tvm_setitem: INTEGER is 4415
 			-- Declared in Windows as TVM_SETITEM
 
 	Tvm_sortchildren: INTEGER is 4371
@@ -78,16 +78,16 @@ feature -- Access
 
 	Tvm_sortchildrencb: INTEGER is 4373
 			-- Declared in Windows as TVM_SORTCHILDRENCB
-	
+
 	Tvm_setbkcolor: INTEGER is 4381
 			-- Declared in Windows as TVM_SETBKCOLOR
-	
+
 	Tvm_settextcolor: INTEGER is 4382
 			-- Declared in Windows as TVM_SETTEXTCOLOR
-	
+
 	Tvm_getbkcolor: INTEGER is 4383
 			-- Declared in Windows as TVM_GETBKCOLOR
-	
+
 	Tvm_gettextcolor: INTEGER is 4384;
 			-- Declared in Windows as TVM_GETTEXTCOLOR
 

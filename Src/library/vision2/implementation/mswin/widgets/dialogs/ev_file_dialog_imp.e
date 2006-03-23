@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Eiffel Vision file dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: STRING_32 is
 			-- Full name of currently selected file including path.
 		do
 			if selected then
@@ -47,15 +47,15 @@ feature -- Access
 			end
 		end
 
-	filter: STRING
+	filter: STRING_32
 			-- Filter currently applied to file list.
 
-	start_directory: STRING
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 
 feature -- Status report
 
-	file_title: STRING is
+	file_title: STRING_32 is
 			-- `file_name' without its path.
 		do
 			Result := file_name
@@ -66,7 +66,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING is
+	file_path: STRING_32 is
 			-- Path of `file_name'.
 		do
 			Result := file_name
@@ -76,7 +76,7 @@ feature -- Status report
 					Result.last_index_of ('\', Result.count) - 1)
 			end
 		end
-		
+
 	selected_filter_index: INTEGER is
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
@@ -93,10 +93,10 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING_GENERAL) is
 			-- Set `a_filter' as new filter.
 		local
-			filter_name: STRING
+			filter_name: STRING_32
 		do
 			filter := a_filter.twin
 			filter_name := a_filter.twin
@@ -119,22 +119,22 @@ feature -- Element change
 			wel_set_filter_index (0)
 		end
 
-	set_file_name (a_name: STRING) is
+	set_file_name (a_name: STRING_32) is
 			-- Make `a_name' the selected file.
 		do
 			wel_set_file_name (a_name)
 		end
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_32) is
 			-- Make `a_path' the base directory.
 		do
 			start_directory := a_path.twin
 			wel_set_initial_directory (a_path)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	valid_file_name (a_name: STRING): BOOLEAN is
+	valid_file_name (a_name: STRING_32): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
@@ -147,8 +147,8 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-		
-	valid_file_title (a_title: STRING): BOOLEAN is
+
+	valid_file_title (a_title: STRING_32): BOOLEAN is
 			-- Is `a_title' a valid file title on the current platform?
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:
@@ -157,15 +157,15 @@ feature {NONE} -- Implementation
 		do
 			Result := valid_file_name (a_title) and not (a_title.has ('/') or a_title.has ('\') or  a_title.has (':'))
 		end
-		
+
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show the window and wait until the user closed it.
 		local
-			filter_name: STRING
-			filter_pattern: STRING
-			filter_names: ARRAY [STRING]
-			filter_patterns: ARRAY [STRING]
-			filter_info: TUPLE [STRING, STRING]
+			filter_name: STRING_GENERAL
+			filter_pattern: STRING_GENERAL
+			filter_names: ARRAY [STRING_32]
+			filter_patterns: ARRAY [STRING_32]
+			filter_info: TUPLE [STRING_GENERAL, STRING_GENERAL]
 		do
 				--| FIXME when `set_filter' is removed, this check for
 				--| being non empty may be removed. Julian.
@@ -183,19 +183,21 @@ feature {NONE} -- Implementation
 					filter_info := filters.item
 					filter_pattern ?= filter_info.item (1)
 					filter_name ?= filter_info.item (2)
-					
-					filter_patterns.put (filter_pattern, filters.index)
-					filter_names.put (filter_name, filters.index)
+					check filter_pattern_not_void: filter_pattern /= Void end
+					check filter_name_not_void: filter_name /= Void end
+
+					filter_patterns.put (filter_pattern.to_string_32, filters.index)
+					filter_names.put (filter_name.to_string_32, filters.index)
 					filters.forth
 				end
 				wel_set_filter (filter_names, filter_patterns)
 				wel_set_filter_index (0)
 			end
-			
+
 				-- Now show the dialog in the standard fashion.
-			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)	
+			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)
 		end
-		
+
 
 feature -- Deferred
 
@@ -203,15 +205,15 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_file_name: STRING is
+	wel_file_name: STRING_32 is
 		deferred
 		end
 
-	wel_set_file_name (a_file_name: STRING) is
+	wel_set_file_name (a_file_name: STRING_GENERAL) is
 		deferred
 		end
 
-	wel_set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
+	wel_set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL]) is
 		deferred
 		end
 
@@ -219,10 +221,10 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_set_initial_directory (a_directory: STRING) is
+	wel_set_initial_directory (a_directory: STRING_GENERAL) is
 		deferred
 		end
-		
+
 	filter_index: INTEGER is
 		deferred
 		end

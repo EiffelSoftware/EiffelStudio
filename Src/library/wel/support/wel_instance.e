@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING_32 is
 			-- Module name
 		local
 			a_wel_string: WEL_STRING
@@ -60,7 +60,7 @@ feature {NONE} -- Externals
 			length: INTEGER): INTEGER is
 			-- SDK GetModuleFileName
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPSTR, %
+			"C [macro <wel.h>] (HINSTANCE, LPTSTR, %
 				%int): EIF_INTEGER"
 		alias
 			"GetModuleFileName"

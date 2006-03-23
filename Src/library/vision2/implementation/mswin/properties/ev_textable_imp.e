@@ -1,20 +1,20 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision textable. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXTABLE_IMP
-	
+
 inherit
 	EV_TEXTABLE_I
-	
+
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in `Current'.
 		do
 			Result := wel_text
@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (a_text)
@@ -30,12 +30,12 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING_GENERAL) is
 			-- Set `a_text' in WEL object.
 		deferred
 		end
 
-	wel_text: STRING is
+	wel_text: STRING_32 is
 			-- Text from WEL object.
 		deferred
 		ensure

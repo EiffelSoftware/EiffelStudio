@@ -18,7 +18,7 @@ extern "C" {
 #define cwel_rebarbandinfo_set_fstyle(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->fStyle = (UINT) (_value_))
 #define cwel_rebarbandinfo_set_clrfore(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->clrFore = (COLORREF) (_value_))
 #define cwel_rebarbandinfo_set_clrback(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->clrBack = (COLORREF) (_value_))
-#define cwel_rebarbandinfo_set_lptext(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->lpText = (LPSTR) (_value_))
+#define cwel_rebarbandinfo_set_lptext(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->lpText = (LPTSTR) (_value_))
 #define cwel_rebarbandinfo_set_cch(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->cch = (UINT) (_value_))
 #define cwel_rebarbandinfo_set_iimage(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->iImage = (int) (_value_))
 #define cwel_rebarbandinfo_set_hwndchild(_ptr_, _value_) (((REBARBANDINFO *) _ptr_)->hwndChild = (HWND) (_value_))

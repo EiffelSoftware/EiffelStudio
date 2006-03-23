@@ -1,11 +1,11 @@
 indexing
-	description: 
+	description:
 		"EiffelVision text field. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TEXT_FIELD_IMP
 
@@ -24,7 +24,7 @@ inherit
 			initialize,
 			next_dlgtabitem
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 			-- (export status {NONE})
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Status report
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of `Current'
 		do
 			Result := wel_text
@@ -173,7 +173,7 @@ feature {NONE} -- WEL Implementation
 			if spin_button /= Void then
 				spin_button.on_key_down (virtual_key, key_data)
 			end
-		end	
+		end
 
 	on_char (character_code, key_data: INTEGER) is
 			-- Wm_char message.
@@ -212,16 +212,16 @@ feature {NONE} -- WEL Implementation
 			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
 		end
-		
+
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
 		end
-		
+
 feature {EV_SPIN_BUTTON_IMP} -- Implementation
-		
+
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem.
 			-- This has been redefined from EV_WIDGET_IMP as EV_SPIN_BUTTON
@@ -240,7 +240,7 @@ feature {EV_SPIN_BUTTON_IMP} -- Implementation
 				l_interface := interface
 			end
 			if not previous then
-				l_widget := next_tabstop_widget (l_interface, 0, False)				
+				l_widget := next_tabstop_widget (l_interface, 0, False)
 			else
 				l_widget := next_tabstop_widget (l_interface, 1, True)
 			end

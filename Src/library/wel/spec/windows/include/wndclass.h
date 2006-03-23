@@ -21,8 +21,8 @@ extern "C" {
 #define cwel_wnd_class_set_icon(_ptr_, _value_) (((WNDCLASS *) _ptr_)->hIcon = (HICON) _value_)
 #define cwel_wnd_class_set_cursor(_ptr_, _value_) (((WNDCLASS *) _ptr_)->hCursor = (HCURSOR) _value_)
 #define cwel_wnd_class_set_background(_ptr_, _value_) (((WNDCLASS *) _ptr_)->hbrBackground = (HBRUSH) _value_)
-#define cwel_wnd_class_set_menu_name(_ptr_, _value_) (((WNDCLASS *) _ptr_)->lpszMenuName = (LPCSTR) _value_)
-#define cwel_wnd_class_set_class_name(_ptr_, _value_) (((WNDCLASS *) _ptr_)->lpszClassName = (LPCSTR) _value_)
+#define cwel_wnd_class_set_menu_name(_ptr_, _value_) (((WNDCLASS *) _ptr_)->lpszMenuName = (LPCTSTR) _value_)
+#define cwel_wnd_class_set_class_name(_ptr_, _value_) (((WNDCLASS *) _ptr_)->lpszClassName = (LPCTSTR) _value_)
 
 #define cwel_wnd_class_get_style(_ptr_) ((EIF_INTEGER) (((WNDCLASS *) _ptr_)->style))
 #define cwel_wnd_class_get_wnd_proc(_ptr_) ((EIF_POINTER) (((WNDCLASS *) _ptr_)->lpfnWndProc))

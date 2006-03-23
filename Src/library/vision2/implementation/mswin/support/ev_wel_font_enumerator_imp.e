@@ -23,22 +23,22 @@ create
 	default_create
 
 feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
-	
-	is_font_face_supported (a_face_name: STRING): BOOLEAN is
+
+	is_font_face_supported (a_face_name: STRING_GENERAL): BOOLEAN is
 			-- Is `a_font_face' supported on the current system?
 		require
-			a_face_name_valid: 
+			a_face_name_valid:
 				a_face_name /= Void and then
 				not a_face_name.is_empty
 		local
-			search_face: STRING
+			search_face: STRING_32
 		do
 			search_face := a_face_name.twin
 			search_face.to_lower
 			Result := font_faces.has (a_face_name)
 		end
 
-	font_faces: ARRAYED_LIST [STRING] is
+	font_faces: ARRAYED_LIST [STRING_32] is
 			-- List of all installed fonts on the system.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -48,7 +48,7 @@ feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 				create text_metrics.make (20)
 				create log_fonts.make (20)
 				internal_font_faces.compare_objects
-			
+
 					-- Enumerate installed fonts
 				create screen_dc
 				screen_dc.get
@@ -58,13 +58,13 @@ feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 
 			Result := internal_font_faces
 		end
-		
-	text_metrics: HASH_TABLE [WEL_TEXT_METRIC, STRING]
+
+	text_metrics: HASH_TABLE [WEL_TEXT_METRIC, STRING_32]
 			-- Text metrics found on system, accessible by face name.
 			-- Any metrics that share the same face name will not be accessible,
 			-- only the first found.
-			
-	log_fonts: HASH_TABLE [WEL_LOG_FONT, STRING]
+
+	log_fonts: HASH_TABLE [WEL_LOG_FONT, STRING_32]
 			-- Log fonts found on system accessible by face name.
 			-- Any metrics that share the same face name will not be accessible,
 			-- only the first found.
@@ -78,7 +78,7 @@ feature {NONE} -- Basic operations
 			-- See class WEL_FONT_TYPE_ENUM_CONSTANTS for
 			-- `font_type' values.
 		local
-			face_found: STRING
+			face_found: STRING_32
 		do
 			face_found := elf.log_font.face_name.twin
 			if not internal_font_faces.has (face_found) then
@@ -88,7 +88,7 @@ feature {NONE} -- Basic operations
 			log_fonts.put (elf.log_font, face_found)
 		end
 
-	internal_font_faces: ARRAYED_LIST [STRING];
+	internal_font_faces: ARRAYED_LIST [STRING_32];
 			-- Font faces found on the current system.		
 
 indexing

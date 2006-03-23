@@ -101,7 +101,7 @@ feature -- Access
 		-- Will return False if `hide' has been called on `Current'.
 		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of Current column. Empty if none.
 		require
 			is_parented: parent /= Void

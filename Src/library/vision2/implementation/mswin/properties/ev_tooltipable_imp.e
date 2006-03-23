@@ -1,18 +1,18 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision tooltipable. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "tooltip, popup"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
-	
+
 	EV_TOOLTIPABLE_IMP
-	
+
 inherit
-	
+
 	EV_TOOLTIPABLE_I
 		redefine
 			interface
@@ -22,19 +22,19 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Text of tooltip assigned to `Current'.
 		do
 			if internal_tooltip_string = Void then
 				Result := ""
 			else
-				Result := internal_tooltip_string.twin	
+				Result := internal_tooltip_string.twin
 			end
 		end
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		local
 			tool_info: WEL_TOOL_INFO
@@ -52,7 +52,7 @@ feature -- Element change
 				end
 				create internal_tooltip.make (tooltip_window, 1)
 				internal_tooltip.set_max_tip_width (32000)
-				
+
 				create tool_info.make
 				tool_info.set_text (a_tooltip)
 				tool_info.set_flags (Ttf_subclass + Ttf_idishwnd)
@@ -72,18 +72,18 @@ feature -- Element change
 					check
 						internal_tooltip_not_void: internal_tooltip /= Void
 					end
-				
+
 						-- Remove `internal_tooltip' from `all_tooltips' in
 						-- EV_APPLICATION_IMP.
 					create envir
 					app_imp ?= envir.application.implementation
 					app_imp.all_tooltips.prune (internal_tooltip.item)
-			
+
 						-- Destroy `internal_tooltip'.
 					internal_tooltip.destroy
 				end
 			end
-			
+
 				-- Assign `a_tooltip' to `tooltip'.
 			internal_tooltip_string := a_tooltip.twin
 		end
@@ -105,9 +105,9 @@ feature {NONE} -- Implementation
 			end
 			set_is_destroyed (True)
 		end
-		
 
-	internal_tooltip_string: STRING
+
+	internal_tooltip_string: STRING_32
 		-- Internal text of tooltip assigned to `Current'.
 
 	internal_tooltip: WEL_TOOLTIP

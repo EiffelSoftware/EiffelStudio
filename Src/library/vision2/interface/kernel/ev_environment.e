@@ -31,10 +31,10 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.application
 		end
-		
-	supported_image_formats: LINEAR [STRING] is
+
+	supported_image_formats: LINEAR [STRING_32] is
 			-- `Result' contains all supported image formats
-			-- on current platform, as a three letter uppercase 
+			-- on current platform, as a three letter uppercase
 			-- extension. e.g. PNG, BMP, ICO.
 		require
 			not_destroyed: not is_destroyed
@@ -44,8 +44,8 @@ feature -- Access
 			result_not_void: Result /= Void
 			object_comparison_set: Result.object_comparison
 		end
-		
-	font_families: LINEAR [STRING] is
+
+	font_families: LINEAR [STRING_32] is
 			-- All fonts families available on current platform.
 		require
 			not_destroyed: not is_destroyed
@@ -63,7 +63,7 @@ feature -- Access
 		do
 			Result := implementation.mouse_wheel_scroll_lines
 		end
-		
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
@@ -83,7 +83,7 @@ feature {NONE} -- Contract support
 		do
 			Result := True
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_ENVIRONMENT_I

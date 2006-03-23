@@ -56,7 +56,7 @@ feature {NONE} -- WEL Implementation
 	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
 		local
 			tt1: WEL_TOOLTIP_TEXT
-			tooltip_text: STRING
+			tooltip_text: STRING_32
 			tooltip: WEL_TOOLTIP
 			int: POINTER
 			env: EV_ENVIRONMENT
@@ -90,7 +90,7 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- No need to erase the background because this
@@ -129,7 +129,7 @@ feature {NONE} -- WEL Implementation
 			toolbar.on_size (size_type, a_width, a_height)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := generator

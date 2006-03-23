@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_GENERAL) is
 			-- Set current button text to `txt'.
 			-- Redefined because we want the text to be left-aligned.
 		do

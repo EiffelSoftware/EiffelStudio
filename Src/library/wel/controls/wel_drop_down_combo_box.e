@@ -14,11 +14,6 @@ inherit
 			height
 		end
 
-	WEL_CBS_CONSTANTS
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_by_id

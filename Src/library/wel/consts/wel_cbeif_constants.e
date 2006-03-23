@@ -8,6 +8,9 @@ indexing
 class
 	WEL_CBEIF_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
 	Cbeif_text: INTEGER is 1

@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
 
 			if interface.context.output_to_file then
-				create filename.make_from_string (interface.context.file_name)
+				create filename.make_from_string (interface.context.file_name.as_string_8)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
 				create filename.make_from_string (tmp_print_job_name)

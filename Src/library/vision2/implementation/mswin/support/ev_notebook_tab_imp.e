@@ -7,20 +7,20 @@ indexing
 
 class
 	EV_NOTEBOOK_TAB_IMP
-	
+
 inherit
 	EV_NOTEBOOK_TAB_I
 		redefine
 			interface
 		end
-		
+
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
 			wel_set_text,
 			wel_text
 		end
-	
+
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface,
@@ -28,10 +28,10 @@ inherit
 			set_pixmap,
 			pixmap
 		end
-		
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		do	
+		do
 			set_is_initialized (True)
 		end
-		
+
 	pixmap: EV_PIXMAP is
 			-- Image displayed on `Current' or Void if none.
 		do
@@ -60,7 +60,7 @@ feature -- Element change
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			if notebook /= Void then
-				notebook_imp.set_item_pixmap (widget, a_pixmap)	
+				notebook_imp.set_item_pixmap (widget, a_pixmap)
 			end
 		end
 
@@ -71,8 +71,8 @@ feature -- Element change
 				notebook_imp.set_item_pixmap (widget, Void)
 			end
 		end
-		
-	wel_text: STRING is
+
+	wel_text: STRING_32 is
 			-- Text displayed in label.
 		do
 			if notebook /= Void then
@@ -84,7 +84,7 @@ feature -- Element change
 				Result := ""
 			end
 		end
-		
+
 	text_length: INTEGER is
 			-- Number of characters making up `text'.
 		do
@@ -93,7 +93,7 @@ feature -- Element change
 
 feature -- Element change
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			if notebook /= Void then

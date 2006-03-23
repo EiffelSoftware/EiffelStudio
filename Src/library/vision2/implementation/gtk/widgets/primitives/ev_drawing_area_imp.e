@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `tooltip' to `a_text'.
 		local
 			a_tip_label: POINTER
@@ -228,13 +228,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip for `Current'.
 		do
 			Result := internal_tooltip.twin
 		end
 
-	internal_tooltip: STRING
+	internal_tooltip: STRING_32
 		-- Used for storing `tooltip' of `Current'.
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
@@ -340,7 +340,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
 				-- Make sure tooltip window is hidden.

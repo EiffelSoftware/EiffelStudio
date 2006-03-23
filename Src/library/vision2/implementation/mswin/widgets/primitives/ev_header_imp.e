@@ -242,7 +242,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			header_item_parented_in_current: header_item.parent_imp = Current
 		local
 			desired_width: INTEGER
-			l_text: STRING
+			l_text: STRING_32
 			font_imp: EV_FONT_IMP
 			margin: INTEGER
 		do

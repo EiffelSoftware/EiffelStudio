@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_top (a_name: STRING; a_menu: WEL_MENU; first_child: INTEGER) is
+	make_top (a_name: STRING_GENERAL; a_menu: WEL_MENU; first_child: INTEGER) is
 			-- Make a MDI frame window named `a_name' using
 			-- `a_menu' as the application's Window menu.
 			-- `first_child' specifies the child window identifier
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := "WELMDIFrameWindowClass"

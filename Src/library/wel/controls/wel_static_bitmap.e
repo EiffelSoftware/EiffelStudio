@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-create 
+create
 	make, make_by_bitmap_id
 
 feature {NONE} -- Initialization
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			dc: WEL_SCREEN_DC
 			raw_file: RAW_FILE
 		do
-			internal_window_make (a_parent, create {STRING}.make (0), default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
+			internal_window_make (a_parent, Void, default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
-		
+
 				-- Read the bitmap file
 			create raw_file.make_open_read(a_name)
 			create bitmap_dib.make_by_file(raw_file)
@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a static control
 		do
-			internal_window_make (a_parent, create {STRING}.make (0), default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
+			internal_window_make (a_parent, Void, default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
 			id := an_id
-		
+
 				-- Read the bitmap file
 			create bitmap.make_by_id(bitmap_id)
 
@@ -76,7 +76,7 @@ feature -- Access
 
 	bitmap: WEL_BITMAP
 		-- displayed bitmap
-	
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is

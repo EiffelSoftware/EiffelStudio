@@ -14,7 +14,7 @@ inherit
 
 feature {EV_PIXMAP_I} -- Access
 
-	file_extension: STRING is
+	file_extension: STRING_32 is
 			-- Three character file extension associated with format.
 		once
 			Result := "png"

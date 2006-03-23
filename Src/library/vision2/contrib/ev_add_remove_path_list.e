@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_browse_for_file (filter: STRING) is
+	set_browse_for_file (filter: STRING_GENERAL) is
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -56,7 +56,7 @@ feature -- Settings
 			
 feature {NONE} -- Implementation
 
-	build_text_field (t: STRING) is
+	build_text_field (t: STRING_GENERAL) is
 			-- Create a text field which has a browse button attached to it.
 		do
 			create path_field.make_with_text_and_parent (t, parent_window)

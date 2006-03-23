@@ -13,7 +13,7 @@ feature -- Access
 	clipboard_open: BOOLEAN
 		-- Is clipboard open?
 
-	last_string: STRING
+	last_string: STRING_32
 			-- Text retrieved from Clipboard
 			-- Only valid after a successfull call to
 			-- `retrieve_clipboard_text'
@@ -29,12 +29,12 @@ feature -- Element Change
 			-- Retrieves text from the clipboard
 		require
 			clipboard_open: clipboard_open
-			text_available: is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_text)
+			text_available: is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
 		local
 			shared_string: WEL_SHARED_MEMORY_STRING
 			shared_memory_handle: POINTER
 		do
-			shared_memory_handle := cwel_get_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_text)
+			shared_memory_handle := cwel_get_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
 			if shared_memory_handle /= default_pointer then
 				create shared_string.make_from_handle (shared_memory_handle)
 				shared_string.retrieve_string
@@ -46,7 +46,7 @@ feature -- Element Change
 			last_string_not_void: last_string /= Void
 		end
 
-	set_clipboard_text (a_text: STRING) is
+	set_clipboard_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to the clipboard
 		require
 			clipboard_open: clipboard_open
@@ -54,7 +54,7 @@ feature -- Element Change
 			shared_string: WEL_SHARED_MEMORY_STRING
 		do
 			create shared_string.make_from_string (a_text)
-			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_text, shared_string.handle)
+			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
 		end
 
 	open_clipboard (window: WEL_WINDOW) is
@@ -79,7 +79,7 @@ feature -- Element Change
 			check
 				clipboard_closed: b_result
 			end
-		end	
+		end
 
 	empty_clipboard is
 			-- Empty clipboard.
@@ -138,13 +138,13 @@ feature {NONE} -- Externals
 		end
 
 	cwel_is_clipboard_format_available (format: INTEGER): BOOLEAN is
-			-- Determines whether the clipboard contains data in the specified format. 
+			-- Determines whether the clipboard contains data in the specified format.
 		external
 			"C signature (UINT): BOOL use %"wel.h%""
 		alias
 			"IsClipboardFormatAvailable"
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

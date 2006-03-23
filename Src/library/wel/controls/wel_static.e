@@ -21,13 +21,13 @@ inherit
 
 	WEL_COLOR_CONTROL
 
-create 
+create
 	make,
 	make_by_id
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_name: STRING;
+	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
 			a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a static control
 		require
@@ -71,17 +71,24 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			set_text (create {STRING}.make (0))
+			set_text (create {STRING_32}.make_empty)
 		ensure
 			text_empty: text.is_empty
 		end
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := "STATIC"
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_static_class)).string
+		end
+
+	cwin_static_class: POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"WC_STATIC"
 		end
 
 	default_style: INTEGER is

@@ -87,7 +87,7 @@ feature -- Comparison
 
 feature -- Status setting
 
-	set_with_named_file (file_name: STRING) is
+	set_with_named_file (file_name: STRING_GENERAL) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.

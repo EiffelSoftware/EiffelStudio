@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision tooltipable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "tooltip, popup"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_TOOLTIPABLE_I
 
 inherit
@@ -15,17 +15,17 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void

@@ -19,7 +19,7 @@ inherit
 			default_create,
 			out
 		end
-		
+
 	ANY
 		redefine
 			default_create,
@@ -102,7 +102,7 @@ feature -- Standard output
 	out: STRING is
 			-- Readable representation of `code'.
 		do
-			Result := key_strings @ code
+			Result := (key_strings @ code).as_string_8
 		end
 
 invariant

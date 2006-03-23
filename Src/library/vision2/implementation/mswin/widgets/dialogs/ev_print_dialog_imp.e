@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision print dialog, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 		redefine
 			wel_make
 		end
-		
+
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all
@@ -82,12 +82,15 @@ feature -- Access
 			end
 		end
 
-	title: STRING is "Print"
+	title: STRING_32 is
 			-- Title of `Current'.
+		do
+			Result := "Print"
+		end
 
 feature -- Element change
 
-	set_title (new_title: STRING) is
+	set_title (new_title: STRING_GENERAL) is
 			-- Assign `new_title' to `title'.
 		do
 			--| FIXME IS it possible in windows to change
@@ -198,7 +201,7 @@ feature {EV_ANY_I}
 		end
 
 	minimum_height: INTEGER is
-		do	
+		do
 			check
 				to_be_implemented: FALSE
 			end
@@ -206,14 +209,14 @@ feature {EV_ANY_I}
 
 feature -- Access
 
-	output_file_name: STRING is
+	output_file_name: STRING_32 is
 		do
 			--| FIXME it appears that to implement this, you
 			--| need to handle WIN32 StartDoc and DOCINFO
 			Result:="Not yet implemented."
 		end
 
-	printer_name: STRING is
+	printer_name: STRING_32 is
 		do
 			--| FIXME Need to add WEL support for DEVNAMES
 			--| structure, to implement this feature.
@@ -243,7 +246,7 @@ feature -- Status_report
 			--| FIXME Appears to be no easy way to find this from
 			--| the dialog.
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

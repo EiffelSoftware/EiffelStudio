@@ -8,6 +8,9 @@ indexing
 class
 	WEL_CBN_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
 	Cbn_errspace: INTEGER is -1

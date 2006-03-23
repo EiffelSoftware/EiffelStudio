@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	directory: STRING is
+	directory: STRING_32 is
 			-- Path of currently selected directory.
 			-- `Result' is empty if "OK" was not pressed.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 				Result.is_equal (implementation.directory)
 		end
 
-	start_directory: STRING is
+	start_directory: STRING_32 is
 			-- Base directory where browsing will start.
 		require
 			not_destroyed: not is_destroyed
@@ -46,12 +46,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_GENERAL) is
 			-- Assign `a_path' to `start_directory'.
 		require
 			not_destroyed: not is_destroyed
 			a_path_not_void: a_path /= Void
-			a_path_exists: (create {DIRECTORY}.make (a_path)).exists
+			a_path_valid_string_8: a_path.is_valid_as_string_8
+			a_path_exists: (create {DIRECTORY}.make (a_path.to_string_8)).exists
 		do
 			implementation.set_start_directory (a_path)
 		ensure
@@ -62,7 +63,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DIRECTORY_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.
-	
+
 feature {NONE} -- Initialization
 
 	create_implementation is

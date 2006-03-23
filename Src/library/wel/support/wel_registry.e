@@ -10,44 +10,44 @@ class
 
 inherit
 	WEL_REGISTRY_ACCESS_MODE
-		
+
 	WEL_HKEY
-	
+
 	STRING_HANDLER
 
 feature -- Actions
 
-	create_new_key (key_path: STRING) is
+	create_new_key (key_path: STRING_GENERAL) is
 				-- Create a new key, with as path 'path'
 				-- The path should be like "a\b\c"
 				-- Please refer to WEL_HKEY for possible value for a.
 		require
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 		local
 			index_value: POINTER
 		do
 			index_value := key_from_path (key_path, True, Key_create_sub_key)
 		end
 
-	open_key_with_access (key_path: STRING; acc: INTEGER): POINTER is
+	open_key_with_access (key_path: STRING_GENERAL; acc: INTEGER): POINTER is
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'acc'.
 				-- Return the key reference (default_pointer if the operation failed).
 		require
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 		do
 			Result := key_from_path (key_path, False, acc)
 		end
 
-	open_key_value (key_path: STRING; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
-				-- Open a key, with as path 'path' and 
+	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
+				-- Open a key, with as path 'path' and
 				-- name 'key_name'.
 				-- The path should be like "a\b\c"
 				-- Please refer to WEL_HKEY for possible value for a.
 				-- Return Void if the operation did not correctly terminate.
 		require
 			key_name_possible: value_name /= Void
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 		local
 			index_value: POINTER
 		do
@@ -57,13 +57,13 @@ feature -- Actions
 			end
 		end
 
-	save_key_value (key_path, value_name: STRING; value: WEL_REGISTRY_KEY_VALUE) is
+	save_key_value (key_path, value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE) is
 			-- Set value of key in `key_path' with name `value_name' to `value'.
 			-- Create key if needed.
 			-- The path should be like "a\b\c"
 			-- Please refer to WEL_HKEY for possible value for a.
 		require
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 			key_name_possible: value_name /= Void
 			valid_value: value /= Void
 		local
@@ -75,12 +75,12 @@ feature -- Actions
 			end
 		end
 
-	delete_key_value (key_path, value_name: STRING) is
+	delete_key_value (key_path, value_name: STRING_GENERAL) is
 			-- Delete `key_path' key value `value_name'.
 			-- The path should be like "a\b\c"
 			-- Please refer to WEL_HKEY for possible value for a.
 		require
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 			key_name_possible: value_name /= Void
 		local
 			index_value: POINTER
@@ -98,42 +98,24 @@ feature -- Status
 
 feature {NONE} -- Internal Results
 
-	value_keys_list (path: STRING): ARRAYED_LIST [STRING] is
-			-- From a path ( "a\b\c\...\x") 
+	value_keys_list (path: STRING_GENERAL): LIST [STRING_32] is
+			-- From a path ( "a\b\c\...\x")
 			-- Return a list of string: a,b,c,d,e,...x
 		require
 			path_possible: path /= Void
-		local
-			i, j, nb: INTEGER
 		do
-			create Result.make (10)
-			from
-				i := 1
-				j := 1
-				nb := path.count
-			until
-				j < 1 or i >= nb
-			loop
-				j := path.index_of ('\', i + 1)
-				if j > i then
-					Result.extend (path.substring (i, j - 1))
-					i := j + 1
-				end
-			end
-			if j = 0 and then i + 1 <= nb then
-				Result.extend (path.substring (i, nb))
-			end
+			Result := path.as_string_32.split ('\')
 		ensure
 			value_keys_list_not_void: Result /= Void
 		end
-	
-	key_from_path (key_path: STRING; generate: BOOLEAN; access: INTEGER): POINTER is
+
+	key_from_path (key_path: STRING_GENERAL; generate: BOOLEAN; access: INTEGER): POINTER is
 			-- Key at `key_path'.
 			-- Create keys if `generate'.
 		require
-			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
+			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
 		local
-			node_list: ARRAYED_LIST [STRING]
+			node_list: LIST [STRING_GENERAL]
 			i: POINTER
 		do
 			node_list := value_keys_list (key_path)
@@ -150,7 +132,7 @@ feature {NONE} -- Internal Results
 			loop
 				i := open_key (Result, node_list.item, access)
 				if i = default_pointer and generate then
-					i := create_key (Result, node_list.item, access)					
+					i := create_key (Result, node_list.item, access)
 				end
 				close_key (Result)
 				Result := i
@@ -159,18 +141,18 @@ feature {NONE} -- Internal Results
 		end
 
 feature -- Access
-	
-	key_from_remote_host (host_name: STRING; root_key: POINTER): POINTER is
+
+	key_from_remote_host (host_name: STRING_GENERAL; root_key: POINTER): POINTER is
 			-- Connect the computer designed by its name 'host_name'.
 			-- 'Host_name' should be under the format: \\computer_name
-			-- 'root_key' is the key from where we want to start the 
+			-- 'root_key' is the key from where we want to start the
 			-- investigations on the remote machine.
 			-- If 'Host_name' is empty, then the local computer is used by default.
 		require
-			root_key_possible: root_key = HKEY_LOCAL_MACHINE or 
+			root_key_possible: root_key = HKEY_LOCAL_MACHINE or
 							   root_key = HKEY_USERS or
 							   root_key = HKEY_PERFORMANCE_DATA
-			host_name_possible: host_name /= Void	
+			host_name_possible: host_name /= Void
 		local
 			s: WEL_STRING
 			res: INTEGER
@@ -221,7 +203,7 @@ feature -- Access
 					$class_size,
 					file_time.item)
 			end
-			
+
 			last_call_successful := res = Error_success
 			if last_call_successful then
 				create Result.make (key_name.substring (1, key_size),
@@ -229,7 +211,7 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: POINTER; subkey: STRING): WEL_REGISTRY_KEY_VALUE is
+	default_key_value (key: POINTER; subkey: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
 			-- Retrieve value of `subkey' associated with open
 			-- `key'.
 		obsolete
@@ -260,9 +242,9 @@ feature -- Access
 
 feature -- Settings
 
-	set_key_value (key: POINTER; value_name: STRING; value: WEL_REGISTRY_KEY_VALUE) is
+	set_key_value (key: POINTER; value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE) is
 			-- Change value defined by `key' and `value_name' to `value'.
-	     	-- The key identified by the hKey parameter must have been 
+	     	-- The key identified by the hKey parameter must have been
 			-- opened with KEY_SET_VALUE access
 		require
 			valid_value: value /= Void
@@ -283,9 +265,9 @@ feature -- Settings
 			last_call_successful := res = Error_success
 		end
 
-feature -- Basic Actions 
+feature -- Basic Actions
 
-	create_key (parent_key: POINTER; key_name: STRING; sam: INTEGER): POINTER is
+	create_key (parent_key: POINTER; key_name: STRING_GENERAL; sam: INTEGER): POINTER is
 			-- Create `key_name' under `parent_key' according to `sam'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -308,11 +290,11 @@ feature -- Basic Actions
 				$disp)
 			last_call_successful := res = Error_success
 			if not last_call_successful then
-				Result := default_pointer	
+				Result := default_pointer
 			end
 		end
 
-	open_key (parent_key: POINTER; key_name: STRING; access_mode: INTEGER): POINTER is
+	open_key (parent_key: POINTER; key_name: STRING_GENERAL; access_mode: INTEGER): POINTER is
 			-- Open subkey `key_name' of `parent_key' according to `access_mode'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -338,7 +320,7 @@ feature -- Basic Actions
 			last_call_successful := cwin_reg_close_key (key) = Error_success
 		end
 
-	delete_key (parent_key: POINTER; key_name: STRING) is
+	delete_key (parent_key: POINTER; key_name: STRING_GENERAL) is
 			-- Delete subkey `key_name' of `parent_key'.
 			-- Return True if succeeded, False otherwise.
 			-- Under Windows 95, all subkeys are deleted.
@@ -356,12 +338,12 @@ feature -- Basic Actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_values (key: POINTER): LINKED_LIST [STRING] is
+	enumerate_values (key: POINTER): LINKED_LIST [STRING_32] is
 		-- Find the names of the key values within the
 		-- key referenced by 'key'.
 		local
 			i: INTEGER
-			s: STRING
+			s: STRING_GENERAL
 		do
 			create Result.make
 			from
@@ -379,9 +361,32 @@ feature -- Basic Actions
 			end
 		end
 
+	enumerate_values_as_string_8 (key: POINTER): LINKED_LIST [STRING] is
+		-- Find the names of the key values within the
+		-- key referenced by 'key'.
+		local
+			i: INTEGER
+			s: STRING_GENERAL
+		do
+			create Result.make
+			from
+				i:=0
+			until
+				i = -1
+			loop
+				s := enumerate_value(key, i)
+				if s /= Void then
+					Result.extend(s.as_string_8)
+					i := i+1
+				else
+					i := -1
+				end
+			end
+		end
+
 feature  -- New actions
 
-	delete_value (parent_key: POINTER; name: STRING) is
+	delete_value (parent_key: POINTER; name: STRING_GENERAL) is
 		require
 			key_possible: valid_value_for_hkey(parent_key)
 			name_possible: name /= Void
@@ -394,7 +399,7 @@ feature  -- New actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_value (key: POINTER; index: INTEGER): STRING is
+	enumerate_value (key: POINTER; index: INTEGER): STRING_GENERAL is
 			-- Find the name of the key_value corresponding
 			-- to the key 'key and the index 'index'.
 		local
@@ -410,7 +415,7 @@ feature  -- New actions
 				Result := ext.substring (1, size)
 			else
 				Result := Void
-			end	
+			end
 		end
 
 	number_of_subkeys (key: POINTER): INTEGER is
@@ -439,16 +444,16 @@ feature  -- New actions
 		end
 
 	valid_value_for_hkey (key: POINTER): BOOLEAN is
-			-- Does key pointed by 'key' exists 
+			-- Does key pointed by 'key' exists
 		do
 			Result := (key /= default_pointer)
 		end
-		
+
 feature -- Access
 
-	key_value (key: POINTER; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
-			-- Retrieve value of `value_name' associated with open 
-			-- `key'. 
+	key_value (key: POINTER; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
+			-- Retrieve value of `value_name' associated with open
+			-- `key'.
 			-- The identifier 'key' relative to the parent key must
 			-- have been opened with the KEY_QUERY_VALUE access.
 		require
@@ -474,13 +479,13 @@ feature -- Access
 					create l_ext.make (l_size)
 					l_res := cwin_reg_query_value_ex (key, l_name.item, l_null, $l_type, l_ext.item, $l_size)
 				end
-					
+
 				if l_res = error_success then
 					create Result.make_with_data (l_type, l_ext)
 					last_call_successful := True
 				end
 			end
-		end	
+		end
 
 feature {NONE} -- Externals
 
@@ -490,14 +495,14 @@ feature {NONE} -- Externals
 		alias
 			"RegCreateKeyEx"
 		end
-		
+
 	cwin_reg_open_key (parent_key: POINTER; key_name: POINTER; options, access_mode: INTEGER; res: POINTER): INTEGER is
 		external
 			"C macro signature (HKEY, LPCTSTR, DWORD, REGSAM, PHKEY): EIF_INTEGER use <windows.h>"
 		alias
 			"RegOpenKeyEx"
 		end
-		
+
 	cwin_reg_delete_key (key: POINTER; subkey: POINTER): INTEGER is
 		external
 			"C macro signature (HKEY, LPCTSTR): EIF_INTEGER use <windows.h>"
@@ -562,7 +567,7 @@ feature {NONE} -- Externals
 		external
 			"[
 			C macro signature
-				(HKEY, LPSTR, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, PFILETIME): EIF_INTEGER         
+				(HKEY, LPTSTR, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, LPDWORD, PFILETIME): EIF_INTEGER         
 				use <windows.h>
 			]"
 		alias
@@ -598,14 +603,14 @@ feature {NONE} -- External constants
 		alias
 			"REG_NONE"
 		end
-	
+
 	Reg_option_non_volatile: INTEGER is
 		external
 			"C macro use <windows.h>"
 		alias
 			"REG_OPTION_NON_VOLATILE"
 		end
-				
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

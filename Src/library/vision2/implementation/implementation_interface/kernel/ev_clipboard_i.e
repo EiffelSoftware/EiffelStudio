@@ -22,13 +22,13 @@ feature -- Access
 		deferred
 		end
 
-	text: STRING is
+	text: STRING_32 is
 		deferred
 		end
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to clipboard.
 		require
 			text_not_void: a_text /= Void

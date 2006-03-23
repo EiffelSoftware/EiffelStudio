@@ -15,12 +15,7 @@ inherit
 			text_length
 		end
 
-	WEL_CB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_CBN_CONSTANTS
+	WEL_COMBO_BOX_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -45,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	i_th_text (i: INTEGER): STRING is
+	i_th_text (i: INTEGER): STRING_32 is
 			-- Text at the zero-based index `i'
 		require
 			exists: exists
@@ -78,7 +73,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -97,7 +92,7 @@ feature -- Basic operations
 				Cb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING): INTEGER is
+	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
@@ -117,7 +112,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	add_string (a_string: STRING) is
+	add_string (a_string: STRING_GENERAL) is
 			-- Add `a_string' in the combo box.
 		require
 			exists: exists
@@ -131,7 +126,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
 			-- Add `a_string' at the zero-based `index'.
 		require
 			exists: exists
@@ -159,7 +154,7 @@ feature -- Element change
 			new_count: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL) is
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -236,7 +231,7 @@ feature -- Status report
 			result_small_enough: Result < count
 		end
 
-	selected_string: STRING is
+	selected_string: STRING_32 is
 			-- String currently selected
 		require
 			exists: exists
@@ -265,11 +260,11 @@ feature -- Status report
 		end
 
 	top_index: INTEGER is
-			-- Zero-based index of the first visible item in the list 
-			-- box portion of a combo box. 
-			-- Initially, the item with index 0 is at the top of the 
-			-- list box, but if the list box contents have been scrolled, 
-			-- another item may be at the top. 
+			-- Zero-based index of the first visible item in the list
+			-- box portion of a combo box.
+			-- Initially, the item with index 0 is at the top of the
+			-- list box, but if the list box contents have been scrolled,
+			-- another item may be at the top.
 		do
 			Result := cwin_send_message_result_integer (item, Cb_gettopindex, to_wparam (0), to_lparam (0))
 		ensure
@@ -419,10 +414,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := "COMBOBOX"
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_combobox_class)).string
+		end
+
+	cwin_combobox_class: POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"WC_COMBOBOX"
 		end
 
 indexing

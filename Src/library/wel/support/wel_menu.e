@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	append_string (a_string: STRING; an_id: INTEGER) is
+	append_string (a_string: STRING_GENERAL; an_id: INTEGER) is
 			-- Append `a_string' with the identifier `an_id' to the
 			-- menu.
 		require
@@ -84,7 +84,7 @@ feature -- Element change
 			string_set: id_string (an_id).is_equal (a_string)
 		end
 
-	append_popup (a_menu: WEL_MENU; a_title: STRING) is
+	append_popup (a_menu: WEL_MENU; a_title: STRING_GENERAL) is
 			-- Append a popup menu `a_menu' with `a_title' to the
 			-- current menu.
 		require
@@ -114,7 +114,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	append_string_with_break (a_string: STRING; an_id: INTEGER; has_separator: BOOLEAN) is
+	append_string_with_break (a_string: STRING_GENERAL; an_id: INTEGER; has_separator: BOOLEAN) is
 			-- Append an item with a break to the menu.
 			-- All the following items will be set in a new column.
 			-- If `has_separator' is True, then a vertical separator
@@ -158,7 +158,7 @@ feature -- Element change
 			item_exists: item_exists (an_id)
 		end
 
-	insert_string (a_string: STRING; a_position, an_id: INTEGER) is
+	insert_string (a_string: STRING_GENERAL; a_position, an_id: INTEGER) is
 			-- Insert `a_string' at zero-based `a_position' with
 			-- `an_id'.
 		require
@@ -179,7 +179,7 @@ feature -- Element change
 			string_set: id_string (an_id).is_equal (a_string)
 		end
 
-	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING) is
+	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING_GENERAL) is
 			-- Insert a popup menu `a_menu' at zero-based `a_position'
 			-- with `a_title'.
 		require
@@ -231,7 +231,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	modify_string (a_string: STRING; an_id: INTEGER) is
+	modify_string (a_string: STRING_GENERAL; an_id: INTEGER) is
 			-- Modify the menu title identified by `an_id' to
 			-- `a_string'.
 		require
@@ -505,7 +505,7 @@ feature -- Status report
 			Result := not flag_set (flags, Mf_grayed) and not flag_set(flags, Mf_disabled)
 		end
 
-	id_string (an_id: INTEGER): STRING is
+	id_string (an_id: INTEGER): STRING_32 is
 			-- String associated with `an_id'
 		require
 			exists: exists
@@ -603,7 +603,7 @@ feature {NONE} -- Externals
 	cwin_append_menu (hmenu: POINTER; flags: INTEGER; new_item, a_item: POINTER) is
 			-- SDK AppendMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT_PTR, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT_PTR, LPCTSTR)"
 		alias
 			"AppendMenu"
 		end
@@ -611,7 +611,7 @@ feature {NONE} -- Externals
 	cwin_insert_menu (hmenu: POINTER; position, flags: INTEGER; new_item, a_item: POINTER) is
 			-- SDK InsertMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCTSTR)"
 		alias
 			"InsertMenu"
 		end
@@ -676,7 +676,7 @@ feature {NONE} -- Externals
 				max: INTEGER; flags: INTEGER): INTEGER is
 			-- SDK GetMenuString
 		external
-			"C [macro <wel.h>] (HMENU, UINT, LPSTR, int, %
+			"C [macro <wel.h>] (HMENU, UINT, LPTSTR, int, %
 				%UINT): EIF_INTEGER"
 		alias
 			"GetMenuString"
@@ -685,7 +685,7 @@ feature {NONE} -- Externals
 	cwin_load_menu (hinstance: POINTER; id: POINTER): POINTER is
 			-- SDK LoadMenu
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
 		alias
 			"LoadMenu"
 		end
@@ -701,7 +701,7 @@ feature {NONE} -- Externals
 	cwin_modify_menu (hmenu: POINTER; id, flags: INTEGER; new_id, new_name: POINTER) is
 			-- SDK ModifyMenu
 		external
-			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCSTR)"
+			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCTSTR)"
 		alias
 			"ModifyMenu"
 		end

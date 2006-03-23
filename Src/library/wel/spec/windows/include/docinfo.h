@@ -14,8 +14,8 @@ extern "C" {
 #endif
 
 #define cwel_doc_info_set_cbsize(_ptr_, _value_) (((DOCINFO *) _ptr_)->cbSize = (int) (_value_))
-#define cwel_doc_info_set_lpszdocname(_ptr_, _value_) (((DOCINFO *) _ptr_)->lpszDocName = (LPSTR) (_value_))
-#define cwel_doc_info_set_lpszoutput(_ptr_, _value_) (((DOCINFO *) _ptr_)->lpszOutput = (LPSTR) (_value_))
+#define cwel_doc_info_set_lpszdocname(_ptr_, _value_) (((DOCINFO *) _ptr_)->lpszDocName = (LPTSTR) (_value_))
+#define cwel_doc_info_set_lpszoutput(_ptr_, _value_) (((DOCINFO *) _ptr_)->lpszOutput = (LPTSTR) (_value_))
 
 #define cwel_doc_info_get_lpszdocname(_ptr_) ((((DOCINFO *) _ptr_)->lpszDocName))
 #define cwel_doc_info_get_lpszoutput(_ptr_) ((((DOCINFO *) _ptr_)->lpszOutput))

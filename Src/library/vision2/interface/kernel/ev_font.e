@@ -139,7 +139,7 @@ feature -- Access
 			bridge_ok: Result = implementation.height_in_points
 		end
 
-	preferred_families: EV_ACTIVE_LIST [STRING] is
+	preferred_families: EV_ACTIVE_LIST [STRING_32] is
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
 			-- the system, the second will be tried, etc.
@@ -215,7 +215,7 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING is
+	name: STRING_32 is
 			-- Face name chosen by toolkit.
 		require
 			not_destroyed: not is_destroyed
@@ -278,7 +278,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.maximum_width
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		require
 			not_destroyed: not is_destroyed
@@ -324,7 +324,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_proportional
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and

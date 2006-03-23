@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_name (name: STRING) is
+	make_by_name (name: STRING_GENERAL) is
 			-- Load the resource by a `name'
 		require
 			name_not_void: name /= Void

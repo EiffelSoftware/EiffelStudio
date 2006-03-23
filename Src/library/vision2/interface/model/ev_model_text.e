@@ -12,7 +12,7 @@ indexing
 					
 					p3.y - p0.y  is the should height of a character to match scale
 					p3.x - p0.x  is the should width of a character to match scale
-		
+
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,19 +41,19 @@ inherit
 			out,
 			is_equal
 		end
-		
+
 	EV_MODEL_SINGLE_POINTED
 		undefine
 			default_create,
 			point_count,
 			is_equal
 		end
-		
+
 	COMPARABLE
 		undefine
 			default_create
 		end
-		
+
 	EV_SHARED_SCALE_FACTORY
 		undefine
 			default_create,
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 0)
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 1)
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 2)
-			create text.make (0)
+			create {STRING_32} text.make_empty
 			id_font := default_font
 			scaled_font := font
 			point_array.put (create {EV_COORDINATE}.make (font.width, font.height), 3)
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			center_is_valid: is_center_valid
 		end
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING 
+	text: STRING_32
 			-- Text that is displayed.
 
 	font: EV_FONT is
@@ -107,16 +107,16 @@ feature -- Access
 		do
 			Result := id_font.font
 		end
-			
+
 	angle: DOUBLE is 0.0
 			-- Since not rotatable.
-			
+
 	is_scalable: BOOLEAN is True
 			-- Is scalable? (Yes)
-			
+
 	is_rotatable: BOOLEAN is False
 			-- Not yet.
-			
+
 	is_transformable: BOOLEAN is False
 			-- No.
 
@@ -125,7 +125,7 @@ feature -- Access
 		do
 			Result := point_array.item (0).x
 		end
-		
+
 	point_y: INTEGER is
 			-- y position of `point'.
 		do
@@ -154,7 +154,7 @@ feature -- Status report
 
 	is_default_font_used: BOOLEAN
 			-- Is `Current' using a default font?
-			
+
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		do
@@ -162,7 +162,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-		
+
 	set_point_position (ax, ay: INTEGER) is
 			-- Set position of `point' to (`ax', `ay').
 		local
@@ -175,10 +175,10 @@ feature -- Status setting
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
 			p3 := l_point_array.item (3)
-			
+
 			a_delta_x := ax - p0.x_precise
 			a_delta_y := ay - p0.y_precise
-			
+
 			p0.set (ax, ay)
 			p1.set_precise (p1.x_precise + a_delta_x, p1.y_precise + a_delta_y)
 			p2.set_precise (p2.x_precise + a_delta_x, p2.y_precise + a_delta_y)
@@ -196,7 +196,7 @@ feature -- Status setting
 		ensure
 			font_assigned: font = a_font
 		end
-		
+
 	set_identified_font (an_id_font: EV_IDENTIFIED_FONT) is
 			-- Set `id_font' to `an_id_font' initialize `scaled_font'.
 		require
@@ -207,17 +207,17 @@ feature -- Status setting
 			should_height, real_height, scale_factor: DOUBLE
 		do
 			real_height := id_font.font.height
-			
+
 			id_font := an_id_font
 			font_factory.register_font (id_font)
-			
+
 			l_point_array := point_array
 			should_height := l_point_array.item (3).y_precise - l_point_array.item (0).y_precise
-			
+
 			scale_factor := should_height / real_height
-			
+
 			scaled_font := font_factory.scaled_font (id_font, as_integer (id_font.font.height * scale_factor).max (1))
-			
+
 			p0 := l_point_array.item (0)
 			l_point_array.item (3).set_precise (p0.x_precise + scaled_font.width, p0.y_precise + scaled_font.height)
 
@@ -239,7 +239,7 @@ feature -- Status setting
 		ensure
 			text_assigned: text = a_text
 		end
-		
+
 feature -- Events
 
 	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
@@ -253,7 +253,7 @@ feature -- Events
 			p0 := l_point_array.item (0)
 			Result := point_on_rectangle (a_x, a_y, p0.x_precise, p0.y_precise, l_point_array.item (2).x_precise, l_point_array.item (1).y_precise)
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Figure group
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -266,12 +266,12 @@ feature {EV_MODEL_GROUP} -- Figure group
 			should_height: INTEGER
 		do
 			Precursor {EV_MODEL_ATOMIC} (a_transformation)
-			
+
 			l_font := scaled_font
 			l_point_array := point_array
 			should_height := as_integer (l_point_array.item (3).y_precise - l_point_array.item (0).y_precise).max (1)
 			if should_height /= l_font.height then
-			
+
 				scaled_font := font_factory.scaled_font (id_font, should_height)
 
 				if should_height > 1 then
@@ -279,11 +279,11 @@ feature {EV_MODEL_GROUP} -- Figure group
 				end
 			end
 		end
-		
+
 feature {EV_MODEL_DRAWER}
 
 	scaled_font: like font
-	
+
 	left_offset: INTEGER
 
 feature {NONE} -- Implementation
@@ -298,12 +298,12 @@ feature {NONE} -- Implementation
 			p0: EV_COORDINATE
 		do
 			t := scaled_font.string_size (text)
-			
+
 			left_offset := t.integer_item (3)
-			
+
 			l_point_array := point_array
 			p0 := l_point_array.item (0)
-			
+
 			l_point_array.item (1).set_y_precise (p0.y_precise + t.integer_item (2))
 			l_point_array.item (2).set_x_precise (p0.x_precise + t.integer_item (1) - left_offset + t.integer_item (4))
 			center_invalidate
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			Result := font_factory.registered_font (create {EV_FONT})
 			font_factory.register_font (Result)
 		end
-		
+
 	set_center is
 			-- Set the position to the center
 		local
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			center.set_precise ((p1.x_precise + p2.x_precise) / 2, (p1.y_precise + p2.y_precise) / 2)
 			is_center_valid := True
 		end

@@ -14,7 +14,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	IDENTIFIED
 		undefine
 			out
@@ -26,11 +26,11 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create character format 
+			-- Create character format
 		do
 			base_make (an_interface)
 		end
-	
+
 	initialize is
 			-- Do nothing
 		local
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			bcolor := 0xFFFFFF -- White
 			fcolor := 0 -- Black
-			
+
 			app_imp := app_implementation
 			set_font_attributes
 				(
@@ -64,7 +64,7 @@ feature -- Access
 			Result.set_shape (shape)
 			Result.preferred_families.extend (name)
 		end
-	
+
 	color: EV_COLOR is
 			-- Color of the current format
 		local
@@ -88,7 +88,7 @@ feature -- Access
 			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
 			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
-		
+
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
 		do
@@ -103,7 +103,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	set_font (a_font: EV_FONT) is
 			-- Make `value' the new font
 		do
@@ -118,7 +118,7 @@ feature -- Status setting
 				)
 		end
 
-	set_font_attributes (a_name: STRING; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER) is
+	set_font_attributes (a_name: STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER) is
 			-- Set internal font attributes
 		do
 			name := a_name
@@ -161,7 +161,7 @@ feature -- Status setting
 		do
 			set_bcolor (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
 		end
-		
+
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'
 		do
@@ -169,7 +169,7 @@ feature -- Status setting
 		end
 
 	set_effects_internal (a_underlined, a_striked_out: BOOLEAN; a_vertical_offset: INTEGER) is
-			-- 
+			--
 		do
 			is_underlined := a_underlined
 			is_striked_out := a_striked_out
@@ -177,7 +177,7 @@ feature -- Status setting
 		end
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
-		
+
 	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Used for creating a fully set GtkTextTag
 		once
@@ -205,7 +205,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		do
 			a_tag_table := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
 			app_imp := app_implementation
-			
+
 			if applicable_attributes.font_family then
 				a_text_tag_name := app_imp.c_string_from_eiffel_string (name)
 				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
@@ -227,7 +227,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
-			
+
 			if applicable_attributes.font_shape then
 				if shape = {EV_FONT_CONSTANTS}.shape_italic then
 					a_text_tag_name := app_imp.c_string_from_eiffel_string (once "fsi")
@@ -278,8 +278,8 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
-			
-			
+
+
 			if applicable_attributes.color then
 				a_text_tag_name := app_imp.c_string_from_eiffel_string (once "fg" + fcolor.out)
 				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
@@ -339,19 +339,19 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
-	
+
 			if applicable_attributes.effects_vertical_offset then
 				a_text_tag_name := app_imp.c_string_from_eiffel_string ("vo" + vertical_offset.out)
 				a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
 					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)					
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
 			end
 		end
-		
+
 
 	new_text_tag_from_applicable_attributes (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION): POINTER is
 			-- Create a new text tag based on state of `Current'
@@ -359,18 +359,18 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			color_struct: POINTER
 			propvalue: EV_GTK_C_STRING
 			a_red, a_green, a_blue: INTEGER
-			temp_string: STRING
+			temp_string: STRING_32
 		do
-			
+
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
-			
+
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
 					propvalue := (name)
-					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)
 				end
 				if applicable_attributes.font_height then
-					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
 				end
 				if applicable_attributes.font_shape then
 					if shape = {EV_FONT_CONSTANTS}.shape_italic then
@@ -398,7 +398,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 						{EV_FONT_CONSTANTS}.weight_black
 					then
 						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_heavy)
-					end				
+					end
 				end
 			end
 
@@ -416,7 +416,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
 				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
 				--feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string.item, color_struct, default_pointer)
-							
+
 			end
 
 			if applicable_attributes.background_color then
@@ -426,14 +426,14 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
-				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, background_string.item, propvalue.item)		
-			end	
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, background_string.item, propvalue.item)
+			end
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
 					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
 				end
-				if applicable_attributes.effects_underlined then 
+				if applicable_attributes.effects_underlined then
 					if is_underlined then
 						{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, underline_string.item, {EV_GTK_DEPENDENT_EXTERNALS}.pango_underline_single_enum)
 					else
@@ -445,17 +445,17 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 			end
 		end
-		
+
 	family_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("family")	
+			Result := ("family")
 		end
 
 	size_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("size")	
+			Result := ("size")
 		end
 
 	style_string: EV_GTK_C_STRING is
@@ -467,7 +467,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	weight_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("weight")	
+			Result := ("weight")
 		end
 
 	foreground_string: EV_GTK_C_STRING is
@@ -479,7 +479,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	background_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("background")	
+			Result := ("background")
 		end
 
 	foreground_gdk_string: EV_GTK_C_STRING is
@@ -491,7 +491,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	background_gdk_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("background-gdk")	
+			Result := ("background-gdk")
 		end
 
 	underline_string: EV_GTK_C_STRING is
@@ -503,29 +503,29 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 	strikethrough_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("strikethrough")	
+			Result := ("strikethrough")
 		end
 
 	rise_string: EV_GTK_C_STRING is
 			-- String optimization
 		once
-			Result := ("rise")	
+			Result := ("rise")
 		end
 
 feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP is
-			-- 
+			--
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
 		end
 
-	name: STRING
+	name: STRING_32
 			-- Face name used by `Current'.
-		
+
 	family: INTEGER
 			-- Family used by `Current'.
-		
+
 	height: INTEGER is
 			--  Height of `Current' in screen pixels.
 		do
@@ -534,34 +534,34 @@ feature {NONE} -- Implementation
 
 	height_in_points: INTEGER
 			-- Height of `Current' in points.
-		
+
 	weight: INTEGER
 			-- Weight of `Current'.
-		
+
 	is_bold: BOOLEAN is
 			-- Is `Current' bold?
 		do
 			Result := (weight = {EV_FONT_CONSTANTS}.weight_bold)
 		end
-		
+
 	shape: INTEGER
 			-- Shape of `Current'.
 
 	char_set: INTEGER
 			-- Char set used by `Current'.
-		
+
 	is_underlined: BOOLEAN
 			-- Is `Current' underlined?
-		
+
 	is_striked_out: BOOLEAN
 			-- Is `Current' striken out?
-		
+
 	vertical_offset: INTEGER
 			-- Vertical offset of `Current'.
 
 	fcolor: INTEGER
 			-- foreground color BGR packed into 24 bit.
-		
+
 	bcolor: INTEGER
 			-- background color BGR packed into 24 bit.
 

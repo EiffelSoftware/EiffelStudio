@@ -163,7 +163,7 @@ feature -- Access
 			Result := not flag_set (style, Ws_hscroll)
 		end
 
-	line (i: INTEGER): STRING is
+	line (i: INTEGER): STRING_32 is
 			-- `Result' is content of the `i'th line.
 		do
 			Result := wel_line (i - 1)
@@ -175,29 +175,28 @@ feature -- Access
 				-- the start offset of the next line, to determine if the new line character is missing.
 			if has_word_wrapping then
 				if i < line_count and then wel_line_index (i) > Result.count + wel_line_index (i - 1) then
-					Result.append ("%N")
+					Result.append_character ('%N')
 				end
 			elseif i < line_count then
-				Result.append ("%N")
+				Result.append_character ('%N')
 			end
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- text of `Current'.
 		do
 			Result := wel_text
 			Result.prune_all ('%R')
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
-			exp: STRING
+			exp: STRING_GENERAL
 		do
 			if a_text /= Void then
-				exp := a_text.twin
 					-- Replace "%N" with "%R%N" for Windows.
-				convert_string (exp)
+				exp := convert_string (a_text)
 			end
 			wel_set_text (exp)
 		end
@@ -224,11 +223,11 @@ feature -- Access
 			end
 		end
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING_GENERAL) is
 			-- Insert `txt' at `caret_position'.
 		local
 			previous_caret_position: INTEGER
-			a_string: STRING
+			a_string: STRING_GENERAL
 			sel_start, sel_end: INTEGER
 		do
 			if has_selection then
@@ -237,8 +236,7 @@ feature -- Access
 				set_selection (caret_position - 1, caret_position - 1)
 			end
 			previous_caret_position := internal_caret_position
-			a_string := txt
-			convert_string (a_string)
+			a_string := convert_string (txt)
 			replace_selection (a_string)
 			if has_selection then
 				set_selection (sel_start - 1, sel_end - 1)
@@ -311,7 +309,7 @@ feature -- Status Settings
 	enable_word_wrapping is
 			-- Ensure `has_word_wrap' is True.
 		local
-			old_text: STRING
+			old_text: like text
 		do
 			old_text := text
 			wel_destroy
@@ -328,7 +326,7 @@ feature -- Status Settings
 	disable_word_wrapping is
 			-- Ensure `has_word_wrap' is False.
 		local
-			old_text: STRING
+			old_text: like text
 		do
 			old_text := text
 			wel_destroy
@@ -342,17 +340,16 @@ feature -- Status Settings
 			end
 		end
 
-	append_text (txt: STRING) is
+	append_text (txt: STRING_GENERAL) is
 			-- Append `txt' to end of `text'.
 		local
 			previous_caret_position: INTEGER
-			a_string: STRING
+			a_string: STRING_GENERAL
 		do
-			a_string := txt.twin
 			previous_caret_position := internal_caret_position
 			internal_set_caret_position (wel_text_length)
 				-- Replace "%N" with "%R%N" for Windows.
-			convert_string (a_string)
+			a_string := convert_string (txt)
 			replace_selection (a_string)
 			internal_set_caret_position (previous_caret_position)
 		end
@@ -362,22 +359,24 @@ feature -- Status Settings
 			--| This position is used for insertions.
 		local
 			new_lines: INTEGER
-			a: SPECIAL [CHARACTER]
 			counter: INTEGER
+			l_r_code: NATURAL_32
 			nb: INTEGER
+			l_text: like wel_text
 		do
 				-- We cannot simply call `occurrances' on `wel_text' to determine how
 				-- many new line characters there are before `pos' as each time one is
 				-- found, we must increase `pos' by one. This is because from the interface,
 				-- new lines are "%N" but on Windows they are "%R%N".
-			a := wel_text.area
 			from
+				l_r_code := ('%R').natural_32_code
+				l_text := wel_text
 				counter := 0
 				nb := pos - 1
 			until
 				counter >= nb
 			loop
-				if a.item (counter) = '%R' then
+				if l_text.code (counter) = l_r_code then
 					new_lines := new_lines + 1
 					nb := nb + 1
 					counter := counter + 2
@@ -400,7 +399,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	convert_string (a_string: STRING) is
+	convert_string (a_string: STRING_GENERAL): STRING_32 is
 			-- Replace all "%N" with "%R%N" which is the Windows new line
 			-- character symbol.
 		require
@@ -408,19 +407,21 @@ feature {NONE} -- Implementation
 		local
 			i, j, nb, l_count : INTEGER
 			l_null : CHARACTER
-			l_string : STRING
 		do
 				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
 			from
 				i := 2
 				nb := a_string.count
-				if nb > 0 and then a_string.item (1) = '%N' then
+				if nb > 0 and then a_string.code (1) = ('%N').natural_32_code then
 					l_count := 1
 				end
 			until
 				i > nb
 			loop
-				if a_string.item (i) = '%N' and a_string.item (i - 1) /= '%R' then
+				if
+					a_string.code (i) = ('%N').natural_32_code and
+					a_string.code (i - 1) /= ('%R').natural_32_code
+				then
 					l_count := l_count + 1
 				end
 				i := i + 1
@@ -428,29 +429,34 @@ feature {NONE} -- Implementation
 
 				-- Replace all found occurrences with '%R%N'.
 			if l_count > 0 then
-				create l_string.make_filled (l_null, nb + l_count)
+				create Result.make_filled (l_null, nb + l_count)
 				from
 					i := 2
 					j := 1
 					if nb > 0 then
-						if a_string.item (1) = '%N' then
-							l_string.put ('%R', j)
+						if a_string.code (1) = ('%N').natural_32_code then
+							Result.put ('%R', j)
 							j := j + 1
 						end
-						l_string.put (a_string.item (1), j)
+						Result.put_code (a_string.code (1), j)
 					end
 				until
 					i > nb
 				loop
-					if a_string.item (i) = '%N' and a_string.item (i - 1) /= '%R' then
+					if
+						a_string.code (i) = ('%N').natural_32_code and
+						 a_string.code (i - 1) /= ('%R').natural_32_code
+					then
 						j := j + 1
-						l_string.put ('%R', j)
+						Result.put ('%R', j)
 					end
 					j := j + 1
-					l_string.put (a_string.item (i), j)
+					Result.put_code (a_string.code (i), j)
 					i := i + 1
 				end
-				a_string.share (l_string)
+			end
+			if Result = Void then
+				Result := a_string.to_string_32
 			end
 		end
 

@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING) is
+	make_by_name (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING_GENERAL) is
 			-- Initialize a loadable dialog box identified by
 			-- `a_name' using `a_parent' as parent.
 		require
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			registered: new_dialog = Current
 		end
 
-	resource_name: STRING
+	resource_name: STRING_GENERAL
 			-- Name of the dialog in the resource.
 			-- Void if the dialog is identified by an
 			-- id (`resource_id').
@@ -269,15 +269,15 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING) is
+			a_name: STRING_GENERAL) is
 			-- Create the dialog
 		deferred
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- No class name
 		once
-			Result := create {STRING}.make (0)
+			create Result.make_empty
 		end
 
 	default_style: INTEGER is

@@ -114,7 +114,7 @@ feature {NONE} -- Event handling
 			grid.key_press_received (a_key)
 		end
 
-	key_press_string_received (a_keystring: STRING) is
+	key_press_string_received (a_keystring: STRING_32) is
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
 			grid.key_press_string_received (a_keystring)

@@ -12,7 +12,7 @@ class
 inherit
 	WEL_STRUCTURE
 
-	WEL_CBEIF_CONSTANTS
+	WEL_COMBO_BOX_CONSTANTS
 		export
 			{NONE} all
 		undefine
@@ -62,14 +62,17 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_iitem (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the current item
 		require
 			exists: exists
 		do
 			set_mask (set_flag (mask, Cbeif_text))
-			create Result.make (0)
-			Result.from_c (cwel_comboboxex_item_get_psztext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -128,7 +131,7 @@ feature -- Element change
 			value_set: index = value
 		end
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_GENERAL) is
 			-- Make `txt' the new text.
 		require
 			exists: exists

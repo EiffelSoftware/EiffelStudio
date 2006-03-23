@@ -666,7 +666,7 @@ feature {NONE} -- Externals
 			"[
 			{
 				FARPROC disable_ghosting = NULL;
-				HMODULE user32_module = LoadLibrary ("user32.dll");
+				HMODULE user32_module = LoadLibrary (L"user32.dll");
 				if (user32_module) {
 					disable_ghosting = GetProcAddress (user32_module, "DisableProcessWindowsGhosting");
 					if (disable_ghosting) {

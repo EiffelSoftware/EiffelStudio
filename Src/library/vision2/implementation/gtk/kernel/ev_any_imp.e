@@ -114,7 +114,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: STRING;
+		a_signal_name: STRING_GENERAL;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -122,7 +122,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		require
 			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.string.is_empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		do
 			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, False)
@@ -130,7 +130,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
-		a_signal_name: STRING;
+		a_signal_name: STRING_GENERAL;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -139,7 +139,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		require
 			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.string.is_empty
+			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		do
 			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)

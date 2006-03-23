@@ -37,8 +37,8 @@ create
 	make_with_text
 
 feature -- Element change
-	
-	set_item_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+
+	set_item_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
 			-- Set each item in `Current' to the strings referenced in `a_string_array'.
 		require
 			a_string_array_not_void: a_string_array /= Void
@@ -57,7 +57,7 @@ feature -- Access
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
-	item_strings: INDEXABLE [STRING, INTEGER]
+	item_strings: INDEXABLE [STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
 feature {NONE} -- Implementation
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			a_x_position := a_popup.x_position + l_x_coord
 				-- Align combo box to y position of text in `Current'.
 			a_y_position := a_popup.y_position + top_border + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
-			
+
 			a_widget.set_minimum_width (0)
 
 			a_popup.set_x_position (a_x_position)
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 				deactivate
 			end
 		end
-		
+
 	user_cancelled_activation: BOOLEAN
 		-- Did the user cancel the activation using the Esc key?
 
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			if font /= Void then
 				combo_box.set_font (font)
 			end
-			
+
 			if item_strings /= Void then
 				combo_box.set_strings (item_strings)
 			end
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			combo_box.set_text (text)
 
 			update_popup_dimensions (popup_window)
-		
+
 				-- Initialize action sequences when `Current' is shown.
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	initialize_actions is
 			-- Setup the action sequences when the item is shown.
 		do
-			combo_box.set_focus	
+			combo_box.set_focus
 			combo_box.focus_out_actions.extend (agent deactivate)
 			combo_box.return_actions.extend (agent deactivate)
 			user_cancelled_activation := False
@@ -153,12 +153,12 @@ feature {NONE} -- Implementation
 			if combo_box /= Void then
 				combo_box.focus_out_actions.wipe_out
 				if not user_cancelled_activation then
-					set_text (combo_box.text)				
+					set_text (combo_box.text)
 				end
 				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box := Void
 			end
-		end		
+		end
 
 invariant
 	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void

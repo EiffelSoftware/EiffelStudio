@@ -55,12 +55,12 @@ feature -- Access
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- `Result' is current clipboard content.
 		local
 			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
-		do			
+		do
 			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to clipboard.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -84,16 +84,16 @@ feature -- Status Setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
 				-- We also set the primary selection as there is no windows equivalent.
-			
+
 				-- Free existing string by resetting with a new string.
 			a_cs.set_with_eiffel_string (once "")
 		end
-		
+
 feature {EV_TEXT_COMPONENT_IMP} -- Implementation
 
 	clipboard: POINTER
 			-- Pointer to the CLIPBOARD Gtk clipboard
-	
+
 feature {NONE} -- Implementation
 
 	primary: POINTER

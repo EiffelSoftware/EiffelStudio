@@ -26,31 +26,6 @@ inherit
 			add_files
 		end
 
-	WEL_CBS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_CBES_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_CBEM_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_CBEN_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_CBEIF_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature -- Status report
 
 	get_item_info (index: INTEGER): WEL_COMBO_BOX_EX_ITEM is
@@ -61,7 +36,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		local
-			buffer: STRING
+			buffer: STRING_32
 		do
 			create Result.make_with_index (index)
 			Result.set_mask (Cbeif_text + Cbeif_image
@@ -86,7 +61,7 @@ feature -- Status report
 	get_image_list: WEL_IMAGE_LIST is
        		-- Get the image list associated with this combination box.
        		-- Returns Void if none.\
-       	local 
+       	local
        		handle: POINTER
        	do
        		handle := cwin_send_message_result (item, Cbem_getimagelist, to_wparam (0), to_lparam (0))
@@ -147,13 +122,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_string (a_string: STRING) is
+	add_string (a_string: STRING_GENERAL) is
 			-- Add `a_string' in the combo box.
 		do
 			insert_string_at (a_string, count)
 		end
 
-	insert_string_at (a_string: STRING; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
 			-- Add `a_string' at the zero-based `index'.
 		local
 			citem: WEL_COMBO_BOX_EX_ITEM
@@ -207,7 +182,7 @@ feature -- Notification
  			-- An item has been inserted in the control.
 		do
  		end
- 
+
  	on_cben_delete_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
  			-- An item has been deleted from the control.
 		do
@@ -215,7 +190,7 @@ feature -- Notification
 
 feature -- Inapplicable
 
-	find_string (index: INTEGER; a_string: STRING): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -227,7 +202,7 @@ feature -- Inapplicable
 			end
 		end
 
-	add_files (attribut: INTEGER; files: STRING) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL) is
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -277,11 +252,10 @@ feature {NONE} -- Implementation
 			Result := cwin_send_message_result (item, Cbem_getcombocontrol, to_wparam (0), to_lparam (0))
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_comboex_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_comboex_class)).string
 		end
 
 feature {NONE} -- Externals

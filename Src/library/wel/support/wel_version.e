@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	major_version: INTEGER is 2
+	major_version: INTEGER is 5
 			-- Major version of WEL
 
-	minor_version: INTEGER is 4
+	minor_version: INTEGER is 7
 			-- Minor version of WEL
 
-	description: STRING is "Windows Eiffel Library version 2.4";
+	description: STRING is "Windows Eiffel Library version 5.7";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

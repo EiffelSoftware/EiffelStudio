@@ -8,9 +8,12 @@ indexing
 class
 	WEL_CBEM_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
-	Cbem_insertitem: INTEGER is 1025
+	Cbem_insertitem: INTEGER is 1035
 			-- Inserts a new item in a ComboBoxEx.
 			--
 			-- Declared in Windows as CBEM_INSERTITEM
@@ -26,12 +29,12 @@ feature -- Access
 			--
 			-- Declared in Windows as CBEM_GETIMAGELIST
 
-	Cbem_getitem: INTEGER is 1028
+	Cbem_getitem: INTEGER is 1037
 			-- Retrieves item information for a given ComboBoxEx item.
 			--
 			-- Declared in Windows as CBEM_GETITEM
 
-	Cbem_setitem: INTEGER is 1029
+	Cbem_setitem: INTEGER is 1036
 			-- Sets the attributes for an item in a ComboBoxEx control.
 			--
 			-- Declared in Windows as CBEM_SETITEM

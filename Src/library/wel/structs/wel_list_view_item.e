@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_attributes (a_mask, a_iitem, a_isubitem, an_iimage: INTEGER; 
-				a_text: STRING) is
+				a_text: STRING_GENERAL) is
 		do
 			structure_make
 			set_mask (a_mask)
@@ -85,16 +85,13 @@ feature -- Access
 			Result := cwel_lv_item_get_state (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the item
-		local
-			p, q: POINTER
 		do
-			create Result.make (0)
-			p := cwel_lv_item_get_psztext (item)
-				-- Initialize string only if something to read.
-			if p /= q then
-				Result.from_c (p)
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -160,7 +157,7 @@ feature -- Element change
 			state_set: state = value
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void

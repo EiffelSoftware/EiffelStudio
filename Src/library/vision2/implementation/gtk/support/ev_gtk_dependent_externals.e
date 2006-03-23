@@ -2626,7 +2626,7 @@ feature -- Externals
 			"C signature (PangoFontDescription*): gint use <gtk/gtk.h>"
 		end
 
-	frozen pango_font_description_from_string (a_description: STRING): POINTER is
+	frozen pango_font_description_from_string (a_description: POINTER): POINTER is
 		external
 			"C signature (char*): PangoFontDescription* use <gtk/gtk.h>"
 		end

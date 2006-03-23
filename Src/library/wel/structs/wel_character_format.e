@@ -66,10 +66,13 @@ feature -- Access
 			Result := cwel_charformat_get_bcharset (item)
 		end
 
-	face_name: STRING is
+	face_name: STRING_32 is
 			-- Font face name
+		local
+			l_str: WEL_STRING
 		do
-			create Result.make_from_c (cwel_charformat_get_szfacename (item))
+			create l_str.share_from_pointer (cwel_charformat_get_szfacename (item))
+			Result := l_str.string
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -195,7 +198,7 @@ feature -- Element change
 			char_set_set: char_set = a_char_set
 		end
 
-	set_face_name (a_face_name: STRING) is
+	set_face_name (a_face_name: STRING_GENERAL) is
 			-- Set `face_name' with `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -204,7 +207,8 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			add_mask (Cfm_face)
-			create a_wel_string.make (a_face_name)
+			create a_wel_string.make_empty (Max_face_name_length + 1)
+			a_wel_string.set_string (a_face_name)
 			cwel_charformat_set_szfacename (item, a_wel_string.item)
 		ensure
 			face_name_set: face_name.is_equal (a_face_name)

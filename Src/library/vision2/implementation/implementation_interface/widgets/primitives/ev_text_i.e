@@ -1,21 +1,21 @@
 indexing
-	description: 
+	description:
 		"EiffelVision text area. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXT_I
-	
+
 inherit
 	EV_TEXT_COMPONENT_I
 		redefine
 			interface
 		end
-	
+
 	EV_FONTABLE_I
 		redefine
 			interface
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	line (i: INTEGER): STRING is
+	line (i: INTEGER): STRING_32 is
 			-- `Result' is content of the `i'th line.
 		require
 			valid_line: valid_line_index (i)
@@ -56,7 +56,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_greater_zero: Result > 0
-		end 
+		end
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
@@ -75,7 +75,7 @@ feature -- Status report
 		ensure
 			valid_caret_position: valid_caret_position (i)
 		end
-		
+
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
 		require
@@ -93,7 +93,7 @@ feature -- Basic operation
 		ensure
 			word_wrapping_enabled: has_word_wrapping
 		end
-		
+
 	disable_word_wrapping is
 			-- Ensure `has_word_wrap' is False.
 		deferred
@@ -101,13 +101,13 @@ feature -- Basic operation
 			word_wrapping_disabled: not has_word_wrapping
 		end
 
-	search (str: STRING; start: INTEGER): INTEGER is
+	search (str: STRING_GENERAL; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
 			valid_string: str /= Void
 		do
-			Result := text.substring_index (str, start)	
+			Result := text.substring_index (str, start)
 		end
 
 	scroll_to_line (i: INTEGER) is
@@ -125,7 +125,7 @@ feature -- Assertions
 		do
 			Result := i > 0 and i <= line_count
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXT;

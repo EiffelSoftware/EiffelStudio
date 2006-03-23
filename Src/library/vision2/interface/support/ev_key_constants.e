@@ -113,7 +113,7 @@ feature -- Constants
 
 feature -- Access
 
-	Key_strings: ARRAY [STRING] is
+	Key_strings: ARRAY [STRING_32] is
 			-- String representations of all key codes.
 		once
 			create Result.make (Key_0, Key_right_meta)
@@ -216,22 +216,25 @@ feature -- Access
 			Result.put ("Right Meta", Key_right_meta)
 		end
 
-	key_code_from_key_string (key_string: STRING): INTEGER is
+	key_code_from_key_string (key_string: STRING_GENERAL): INTEGER is
 			-- Key code value from `key_string'
 		require
 			key_string_not_void: key_string /= Void
 		local
-			l_key_strings: ARRAY [STRING]
+			l_key_strings: like key_strings
 			l_cnt: INTEGER
 			found: BOOLEAN
+			l_key: STRING_32
 		do
+			l_key := key_string
+			l_key := l_key.as_lower
 			l_key_strings := key_strings
 			from
 				l_cnt := l_key_strings.lower
 			until
 				l_cnt > l_key_strings.upper or found
 			loop
-				found := l_key_strings.item (l_cnt).as_lower.is_equal (key_string.as_lower)
+				found := l_key_strings.item (l_cnt).as_lower.is_equal (l_key)
 				if found then
 					Result := l_cnt
 				else

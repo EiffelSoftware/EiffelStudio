@@ -16,7 +16,7 @@ create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer
 
 convert
-	set_with_eiffel_string ({STRING})
+	set_with_eiffel_string ({STRING_GENERAL, STRING, STRING_32})
 
 feature {NONE} -- Initialization
 
@@ -36,8 +36,7 @@ feature -- Access
 	item: POINTER
 			-- Pointer to the UTF8 string.
 
-
-	string: STRING is
+	string: STRING_32 is
 			-- Locale string representation of the UTF8 string
 		local
 			l_ptr: MANAGED_POINTER
@@ -90,7 +89,7 @@ feature -- Access
 	string_length: INTEGER
 			-- Length of string data held in `managed_data'
 
-	set_with_eiffel_string (a_string: STRING) is
+	set_with_eiffel_string (a_string: STRING_GENERAL) is
 			-- Create `item' and retain ownership.
 		require
 			a_string_not_void: a_string /= Void
@@ -100,7 +99,7 @@ feature -- Access
 			string_set: a_string.is_equal (string)
 		end
 
-	share_with_eiffel_string (a_string: STRING) is
+	share_with_eiffel_string (a_string: STRING_GENERAL) is
 			-- Create `item' but do not take ownership.
 		require
 			a_string_not_void: a_string /= Void
@@ -127,14 +126,15 @@ feature {NONE} -- Implementation
 			create Result.share_from_pointer (default_pointer, 0)
 		end
 
-	internal_set_with_eiffel_string (a_string: STRING; a_shared: BOOLEAN) is
+	internal_set_with_eiffel_string (a_string: STRING_GENERAL; a_shared: BOOLEAN) is
 			-- Create a UTF8 string from Eiffel String `a_string'
 		require
 			a_string_not_void: a_string /= Void
 		local
 			utf8_ptr: POINTER
 			bytes_written: INTEGER
-			i, l_code: INTEGER
+			i: INTEGER
+			l_code: NATURAL_32
 			a_string_size: INTEGER
 			l_string_length: INTEGER
 			l_ptr: MANAGED_POINTER
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			until
 				i = 0
 			loop
-				if a_string.item (i).code > 127 then
+				if a_string.code (i) > 127 then
 					bytes_written := bytes_written + 1
 				end
 				bytes_written := bytes_written + 1
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			until
 				i > l_string_length
 			loop
-				l_code := a_string.item (i).code
+				l_code := a_string.code (i)
 				if l_code <= 127 then
 						-- Of the form 0xxxxxxx.
 					l_ptr.put_natural_8 (l_code.to_natural_8, bytes_written)

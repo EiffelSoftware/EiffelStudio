@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_ITEM_LIST_IMP
-	
+
 inherit
 	EV_MENU_ITEM_LIST_I
 		redefine
@@ -32,12 +32,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
 		end
-		
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create ev_children.make (2)
 		end
-			
+
 feature -- Standard output
 
 	print_radio_groups is
@@ -94,26 +94,27 @@ feature -- Standard output
 					if g.item.is_selected then
 						io.put_string ("->")
 					end
-					io.put_string ("%T" + g.item.text + "%N")
+					io.put_string ("%T" + g.item.text.as_string_8 + "%N")
 					g.forth
 				end
 				g.go_to (cur)
 			end
 		end
-		
+
 feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL Implementation
 
 	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER is
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		local
-			shortcut_text: STRING
-			menu_text: STRING
+			shortcut_text: STRING_32
+			menu_text: STRING_32
 			child_index: INTEGER
 			cur: CURSOR
 		do
 			if corresponding_menu.item = wel_item then
 					-- Look for a menu whose shortcut is `char_code'
-				shortcut_text := "&"
+				create shortcut_text.make (2)
+				shortcut_text.append_character ('&')
 				shortcut_text.append_character (char_code)
 				shortcut_text.to_lower
 
@@ -150,7 +151,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 				Result := propagate_on_menu_char (char_code, corresponding_menu)
 			end
 		end
-		
+
 feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 
 	rebuild_control is
@@ -169,7 +170,7 @@ feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 			loop
 				remove_position (0)
 			end
-			
+
 				-- Quickly reinsert them
 			from
 				ev_children.start
@@ -184,7 +185,7 @@ feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 
 			update_parent_size
 		end
-		
+
 feature {NONE} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
@@ -192,7 +193,7 @@ feature {NONE} -- Implementation
 
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radios groups
-			
+
 	insert_item (item_imp: EV_ITEM_IMP; pos: INTEGER) is
 			-- Insert `item_imp' on `pos' in `ev_children'.
 		local
@@ -216,7 +217,7 @@ feature {NONE} -- Implementation
 
 					-- Disable `menu_item_imp' if necessary.
 					--| Disabling through the implementation so
-					--| internal_non_sensitive from EV_SENSITIVE_I is not changed. 
+					--| internal_non_sensitive from EV_SENSITIVE_I is not changed.
 				if not menu_item_imp.is_sensitive or not is_sensitive then
 					menu_item_imp.disable_sensitive
 				end
@@ -224,7 +225,7 @@ feature {NONE} -- Implementation
 
 			update_parent_size
 		end
-		
+
 	quick_insert_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Quickly insert `item_imp' on `pos' in `ev_children'.
 			-- Do not take care of radio groups, etc.
@@ -267,7 +268,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	remove_item (item_imp: EV_ITEM_IMP) is
 			-- Remove `item_imp' from `ev_children'.
 		local
@@ -279,7 +280,7 @@ feature {NONE} -- Implementation
 		do
 			menu_item_imp ?= item_imp
 			pos := ev_children.index_of (menu_item_imp, 1)
-	
+
 				-- Enable `menu_item_imp' if necessary.
 			if not is_sensitive then
 				if not menu_item_imp.internal_non_sensitive then
@@ -329,13 +330,13 @@ feature {NONE} -- Implementation
 			end
 
 			remove_position (pos - 1)
-			
-				-- If `Current' is now empty, then we need to update the 
+
+				-- If `Current' is now empty, then we need to update the
 				-- size of the parent. When an EV_MENU_BAR is empty, it takes
 				-- up no space.
 			if wel_count = 0 then
 				update_parent_size
-			end	
+			end
 		end
 
 	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER) is
@@ -359,7 +360,7 @@ feature {NONE} -- Implementation
 						radio_imp.disable_select
 					end
 					radio_imp.set_radio_group (rgroup)
-				end							
+				end
 				ev_children.forth
 			end
 			if rgroup /= Void then
@@ -368,7 +369,7 @@ feature {NONE} -- Implementation
 			cwin_insert_menu (wel_item, pos - 1, Mf_separator | Mf_byposition | Mf_ownerdraw,
 				default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 		end
-		
+
 	insert_menu (menu_imp: EV_MENU_IMP; pos: INTEGER) is
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
@@ -378,7 +379,7 @@ feature {NONE} -- Implementation
 			cwin_insert_menu (wel_item, pos - 1, menu_flag, menu_imp.wel_item,
 				cwel_integer_to_pointer (menu_imp.object_id))
 		end
-		
+
 	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
@@ -398,7 +399,7 @@ feature {NONE} -- Implementation
 			if radio_imp /= Void then
 				-- Attach it to a radio group.
 				sep_imp := separator_imp_by_index (pos)
-				if sep_imp /= Void then 
+				if sep_imp /= Void then
 					-- It follows a separator.
 					if sep_imp.radio_group = Void then
 						sep_imp.create_radio_group
@@ -427,7 +428,7 @@ feature {NONE} -- Implementation
 					radio_imp.set_radio_group (radio_group)
 				end
 			end
-			
+
 				-- If `item_imp' is a check menu item then check if necessary.
 			chk_imp ?= menu_item_imp
 			if chk_imp /= Void then
@@ -510,12 +511,12 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 		do
 				-- Remove item at `pos' - 1 from `Current'
 			delete_position (pos - 1)
-				
+
 				-- Insert item at `pos' - 1.
 			quick_insert_item (an_item, pos)
 			ev_children.go_i_th (pos)
 		end
-	
+
 	menu_opened (a_menu: WEL_MENU) is
 			-- Call `select_actions' for `a_menu'.
 		require
@@ -530,7 +531,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 				ev_children.start
 			until
 				ev_children.after
-			loop	
+			loop
 				sub_menu ?= ev_children.item
 				if sub_menu /= Void then
 					wel_menu := sub_menu
@@ -548,7 +549,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			end
 			if ev_children.valid_cursor (cur) then
 				ev_children.go_to (cur)
-			end	
+			end
 		end
 
 	menu_item_clicked (an_id: INTEGER) is

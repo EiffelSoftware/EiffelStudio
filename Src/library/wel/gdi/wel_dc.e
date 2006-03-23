@@ -267,7 +267,7 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-	string_size (s: STRING): WEL_SIZE is
+	string_size (s: STRING_GENERAL): WEL_SIZE is
 			-- Size of the string `s' using the selected font.
 		require
 			exists: exists
@@ -298,7 +298,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	string_width (s: STRING): INTEGER is
+	string_width (s: STRING_GENERAL): INTEGER is
 			-- Width of the string `s' using the selected font.
 		require
 			exists: exists
@@ -309,7 +309,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	string_height (s: STRING): INTEGER is
+	string_height (s: STRING_GENERAL): INTEGER is
 			-- Height of the string `s' using the selected font.
 		require
 			exists: exists
@@ -320,7 +320,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	tabbed_text_size (text: STRING): WEL_SIZE is
+	tabbed_text_size (text: STRING_GENERAL): WEL_SIZE is
 			-- Size of a tabbed `text'.
 		require
 			exists: exists
@@ -340,7 +340,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	tabbed_text_width (text: STRING): INTEGER is
+	tabbed_text_width (text: STRING_GENERAL): INTEGER is
 			-- Width of a tabbed `text'.
 		require
 			exists: exists
@@ -351,7 +351,7 @@ feature -- Status report
 			positive_width: Result >= 0
 		end
 
-	tabbed_text_height (text: STRING): INTEGER is
+	tabbed_text_height (text: STRING_GENERAL): INTEGER is
 			-- Height of a tabbed `text'.
 		require
 			exists: exists
@@ -362,7 +362,7 @@ feature -- Status report
 			positive_height: Result >= 0
 		end
 
-	tabbed_text_size_with_tabulation (text: STRING;
+	tabbed_text_size_with_tabulation (text: STRING_GENERAL;
 			tabulations: ARRAY [INTEGER]): WEL_SIZE is
 			-- Size of a tabbed `text', with `tabulations' as
 			-- tabulation positions.
@@ -386,12 +386,13 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	char_abc_widths (first_char_index, last_char_index: INTEGER): ARRAYED_LIST [WEL_ABC_STRUCT] is
+	char_abc_widths (first_char_index, last_char_index: NATURAL_32): ARRAYED_LIST [WEL_ABC_STRUCT] is
 			-- `Result' is a list of Windows ABC structures corresponding to the currently
 			-- selected truetype font, with an entry for each character contained within the
 			-- indices `first_char_index', `last_char_index'.
 		require
 			indexes_valid: first_char_index >= 1 and last_char_index >= first_char_index
+			valid_range: (last_char_index - first_char_index) <= {INTEGER}.max_value.to_natural_32
 		local
 			managed_pointer: MANAGED_POINTER
 			abc_struct: WEL_ABC_STRUCT
@@ -401,11 +402,11 @@ feature -- Status report
 			struct_size: INTEGER
 		do
 			create abc_struct.make
-			character_count := last_char_index - first_char_index + 1
+			character_count := (last_char_index - first_char_index + 1).to_integer_32
 			struct_size := abc_struct.structure_size
 			create managed_pointer.make (character_count * struct_size)
 			cwel_get_char_abc_widths (item, first_char_index, last_char_index, managed_pointer.item)
-			create Result.make (character_count)
+			create Result.make (character_count.to_integer_32)
 			pointer := managed_pointer.item
 			from
 				loop_counter := 0
@@ -477,7 +478,7 @@ feature -- Status report
 			valid_stretch_mode: valid_stretch_mode_constant (Result)
 		end
 
-	text_face: STRING is
+	text_face: STRING_GENERAL is
 			-- Typeface name of the font that is currently selected.
 		require
 			exists: exists
@@ -998,7 +999,7 @@ feature -- Basic operations
 			cwin_select_clip_rgn (item, a_default_pointer)
 		end
 
-	text_out (x, y: INTEGER; string: STRING) is
+	text_out (x, y: INTEGER; string: STRING_GENERAL) is
 			-- Write `string' on `x' and `y' position.
 		require
 			exists: exists
@@ -1010,7 +1011,7 @@ feature -- Basic operations
 			cwin_text_out (item, x, y, a_wel_string.item, string.count)
 		end
 
-	tabbed_text_out (x, y: INTEGER; string: STRING;
+	tabbed_text_out (x, y: INTEGER; string: STRING_GENERAL;
 			tabulations: ARRAY [INTEGER];
 			tabulations_origin: INTEGER) is
 			-- Write `string' on `x' and `y' position expanding
@@ -1031,7 +1032,7 @@ feature -- Basic operations
 				tabulations.count, a.item, tabulations_origin)
 		end
 
-	draw_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
+	draw_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1045,7 +1046,7 @@ feature -- Basic operations
 			drawn_height := draw_text_with_result (string, rect, format)
 		end
 
-	draw_text_with_result (string: STRING; rect: WEL_RECT; format: INTEGER): INTEGER is
+	draw_text_with_result (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER): INTEGER is
 			-- Draw the text `string' inside the `rect' using `format'.
 			-- Return the height of the text drawn.
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1061,7 +1062,7 @@ feature -- Basic operations
 				string.count, rect.item, format)
 		end
 
-	draw_disabled_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
+	draw_disabled_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' in disabled mode inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1076,7 +1077,7 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
-	draw_state_text (a_brush: WEL_BRUSH; string: STRING; x, y: INTEGER; format: INTEGER) is
+	draw_state_text (a_brush: WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER) is
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1098,7 +1099,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, string.count, x, y, 0, 0, format)
 		end
 
-	draw_centered_text (string: STRING; rect: WEL_RECT) is
+	draw_centered_text (string: STRING_GENERAL; rect: WEL_RECT) is
 			-- Draw the text `string' centered in `rect'.
 		require
 			exists: exists
@@ -1808,7 +1809,7 @@ feature {NONE} -- Externals
 			length: INTEGER) is
 			-- SDK TextOut
 		external
-			"C [macro <windows.h>] (HDC, int, int, LPCSTR, int)"
+			"C [macro <windows.h>] (HDC, int, int, LPCTSTR, int)"
 		alias
 			"TextOut"
 		end
@@ -2128,7 +2129,7 @@ feature {NONE} -- Externals
 			init_data: POINTER): POINTER is
 			-- SDK CreateDC
 		external
-			"C [macro <windows.h>] (LPCSTR, LPCSTR, LPCSTR, CONST DEVMODE* ): EIF_POINTER"
+			"C [macro <windows.h>] (LPCTSTR, LPCTSTR, LPCTSTR, CONST DEVMODE* ): EIF_POINTER"
 		alias
 			"CreateDC"
 		end
@@ -2310,7 +2311,7 @@ feature {NONE} -- Externals
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
 		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, int, %
+			"C [macro <windows.h>] (HDC, LPCTSTR, int, int, %
 				%LPINT): EIF_INTEGER"
 		alias
 			"GetTabbedTextExtent"
@@ -2320,7 +2321,7 @@ feature {NONE} -- Externals
 			si: POINTER) is
 			-- SDK GetTextExtentPoint
 		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
+			"C [macro <windows.h>] (HDC, LPCTSTR, int, LPSIZE)"
 		alias
 			"GetTextExtentPoint32"
 		end
@@ -2377,7 +2378,7 @@ feature {NONE} -- Externals
 				buffer: POINTER): INTEGER is
 			-- SDK GetTextFace
 		external
-			"C [macro <windows.h>] (HDC, int, LPSTR): EIF_INTEGER"
+			"C [macro <windows.h>] (HDC, int, LPTSTR): EIF_INTEGER"
 		alias
 			"GetTextFace"
 		end
@@ -2408,7 +2409,7 @@ feature {NONE} -- Externals
 
 	cwin_get_function_address (module_name: POINTER; function_name: POINTER): POINTER is
 		external
-			"C(char *, char *): FARPROC | %"wel_dynload.h%""
+			"C(LPCTSTR, LPCSTR): FARPROC | %"wel_dynload.h%""
 		end
 
 	cwin_draw_disabled_text (hdc: POINTER; string: POINTER; length: INTEGER; rect: POINTER; format: INTEGER) is
@@ -2443,9 +2444,10 @@ feature {NONE} -- Externals
 	retrieve_mask_blt_funcaddr is
 		local
 			module_name_ptr: WEL_STRING
-			function_name_ptr: WEL_STRING
+			function_name_ptr: C_STRING
 		do
 			create module_name_ptr.make ("Gdi32.dll")
+				-- Remember that the function name is no unicode.
 			create function_name_ptr.make ("MaskBlt")
 			internal_mask_blt_funcaddr := cwin_get_function_address(module_name_ptr.item, function_name_ptr.item)
 		end
@@ -2456,12 +2458,12 @@ feature {WEL_FONT} -- Externals
 			rect: POINTER; format: INTEGER): INTEGER is
 			-- SDK DrawText
 		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT): int"
+			"C [macro <windows.h>] (HDC, LPCTSTR, int, LPRECT, UINT): int"
 		alias
 			"DrawText"
 		end
 
-	cwel_get_char_abc_widths (hdc: POINTER; first, last: INTEGER; array: POINTER) is
+	cwel_get_char_abc_widths (hdc: POINTER; first, last: NATURAL_32; array: POINTER) is
 		external
 			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"
 		alias

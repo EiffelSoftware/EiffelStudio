@@ -213,7 +213,7 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING is
+	name: STRING_32 is
 			-- Face name chosen by toolkit.
 		do
 			Result := internal_face_name
@@ -251,13 +251,13 @@ feature -- Status report
 			Result := wel_font.string_width ("W")
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		do
 			Result := wel_font.string_width (a_string)
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -338,7 +338,7 @@ feature {EV_ANY_I} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	update_preferred_faces (a_face: STRING) is
+	update_preferred_faces (a_face: STRING_32) is
 		do
 				-- retrieve current values
 			Wel_log_font.update_by_font(wel_font)
@@ -351,7 +351,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
 		local
-			found_face: STRING
+			found_face: STRING_32
 			found: BOOLEAN
 			dc: WEL_MEMORY_DC
 			text_metric: WEL_TEXT_METRIC
@@ -432,7 +432,7 @@ feature {EV_ANY_I} -- Implementation
 			update_internal_is_proportional (Wel_log_font)
 		end
 
-	set_name (str: STRING) is
+	set_name (str: STRING_GENERAL) is
 			-- sets the name of the current font
 		do
 				-- retrieve current values
@@ -459,7 +459,7 @@ feature {EV_ANY_I} -- Implementation
 			update_font_face
 		end
 
-	internal_face_name: STRING
+	internal_face_name: STRING_32
 		-- Font face name.
 
 	internal_is_proportional: BOOLEAN
@@ -478,23 +478,24 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	maximum_line_width (dc: WEL_DC; str: STRING; number_of_lines: INTEGER):
-		INTEGER is
+	maximum_line_width (dc: WEL_DC; str: STRING_GENERAL; number_of_lines: INTEGER): INTEGER is
 			-- Calculate the width of the longest %N delimited string in
 			-- `str' on `dc' given there are `number_of_lines' lines
 		require
 			efficient: number_of_lines > 1
 		local
 			i, pos, new_pos: INTEGER
-			line: STRING
+			l_newline_code: NATURAL_32
+			line: STRING_GENERAL
 		do
 			from
 				i := 1
 				pos := 0
+				l_newline_code := ('%N').natural_32_code
 			until
 				i > number_of_lines or pos + 1 > str.count
 			loop
-				new_pos := str.index_of ('%N', pos +1)
+				new_pos := str.index_of_code (l_newline_code, pos +1)
 				if new_pos = 0 then
 					line := str.substring (pos+1, str.count)
 					Result := Result.max (dc.string_width (line))
@@ -586,7 +587,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_TEXTABLE_IMP} -- Implementation
 
-	string_width_and_height_ignore_new_line (a_string: STRING):
+	string_width_and_height_ignore_new_line (a_string: STRING_GENERAL):
 		TUPLE [INTEGER, INTEGER] is
 			-- [width, height] of `a_string'.
 			-- Treat `%N' as a character.
@@ -613,7 +614,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 
 feature -- Obsolete
 
-	string_width_and_height (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+	string_width_and_height (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER] is
 			-- [width, height] of `a_string'.
 		obsolete
 			"Use `string_size'."
@@ -623,7 +624,7 @@ feature -- Obsolete
 
 feature {NONE} -- Not used
 
-	set_charset (a_charset: STRING) is
+	set_charset (a_charset: STRING_GENERAL) is
 			-- Set the charset to a value based on `a_charset'.
 		do
 			if a_charset.is_equal ("ansi") then
@@ -639,7 +640,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_clip_precision (a_clip_precision: STRING) is
+	set_clip_precision (a_clip_precision: STRING_GENERAL) is
 			-- Set the clip precision based on `a_clip_precision'.
 		do
 			if a_clip_precision.is_equal ("character") then
@@ -651,27 +652,33 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_escapement (an_escapement: STRING) is
+	set_escapement (an_escapement: STRING_GENERAL) is
 			-- Set escapement based on value of `an_escapement'.
+		local
+			l_value: STRING_32
 		do
-			if an_escapement /= Void and an_escapement.is_integer then
-				Wel_log_font.set_escapement (an_escapement.to_integer)
+			l_value := an_escapement
+			if l_value /= Void and l_value.is_integer then
+				Wel_log_font.set_escapement (l_value.to_integer)
 			else
 				Wel_log_font.set_escapement (0)
 			end
 		end
 
-	set_orientation (an_orientation: STRING) is
+	set_orientation (an_orientation: STRING_GENERAL) is
 			-- Set the orientation based on the value of `an_orientation'.
+		local
+			l_value: STRING_32
 		do
-			if an_orientation /= Void and then an_orientation.is_integer then
-				Wel_log_font.set_orientation (an_orientation.to_integer)
+			l_value := an_orientation
+			if l_value /= Void and then l_value.is_integer then
+				Wel_log_font.set_orientation (l_value.to_integer)
 			else
 				Wel_log_font.set_orientation (0)
 			end
 		end
 
-	set_out_precision (a_precision: STRING) is
+	set_out_precision (a_precision: STRING_GENERAL) is
 			-- Set the precision based on the value of `a_precision'.
 		do
 			if a_precision.is_equal ("character") then
@@ -685,7 +692,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_pitch (a_pitch: STRING) is
+	set_pitch (a_pitch: STRING_GENERAL) is
 			-- Set pitch based on value in `a_pitch'.
 		do
 			if a_pitch.is_equal ("fixed") then
@@ -697,7 +704,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_quality (a_quality: STRING) is
+	set_quality (a_quality: STRING_GENERAL) is
 			-- Set quality based on value in `a_quality'.
 		do
 			if a_quality.is_equal ("draft") then
@@ -709,20 +716,20 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_styles (styles: STRING) is
+	set_styles (styles: STRING_GENERAL) is
 			-- Set the style based on values in `styles'.
 		do
 			Wel_log_font.set_not_italic
 			Wel_log_font.set_not_underlined
 			Wel_log_font.set_not_strike_out
 			if styles /= Void then
-				if styles.has ('i') then
+				if styles.has_code (('i').natural_32_code) then
 					Wel_log_font.set_italic
 				end
-				if styles.has ('u') then
+				if styles.has_code (('u').natural_32_code) then
 					Wel_log_font.set_underlined
 				end
-				if styles.has ('s') then
+				if styles.has_code (('s').natural_32_code) then
 					Wel_log_font.set_strike_out
 				end
 			end

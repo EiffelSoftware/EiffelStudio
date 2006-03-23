@@ -60,14 +60,14 @@ feature -- Status report
 		do
 			Result := parent_imp.internal_is_selected (Current)
 		end
-		
-	tooltip: STRING is
+
+	tooltip: STRING_32 is
 			-- Text of tooltip assigned to `Current'.
 		do
 			if internal_tooltip_string = Void then
 				Result := ""
 			else
-				Result := internal_tooltip_string.twin	
+				Result := internal_tooltip_string.twin
 			end
 		end
 
@@ -85,7 +85,7 @@ feature -- Status setting
 			parent_imp.internal_deselect (Current)
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -117,7 +117,7 @@ feature {EV_ANY_I} -- Access
 				parent_imp := Void
 			end
 		end
-		
+
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
@@ -126,7 +126,7 @@ feature {EV_ANY_I} -- Access
 				parent_imp.set_row_pixmap (parent_imp.ev_children.index_of (Current, 1), a_pix)
 			end
 		end
-		
+
 	remove_pixmap is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
@@ -135,8 +135,8 @@ feature {EV_ANY_I} -- Access
 				parent_imp.remove_row_pixmap (parent_imp.ev_children.index_of (Current, 1))
 			end
 		end
-		
-	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
 		do
 			if parent_imp /= Void then
@@ -144,17 +144,17 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if parent_imp /= Void then
 				parent_imp.on_item_removed_at (Current, an_item, item_index)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
-	internal_tooltip_string: STRING
+	internal_tooltip_string: STRING_32
 		-- Internal text of tooltip assigned to `Current'.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

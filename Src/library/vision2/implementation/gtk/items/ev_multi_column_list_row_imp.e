@@ -22,7 +22,7 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Create the linked lists.
-		do	
+		do
 			tooltip := ""
 			set_is_initialized (True)
 		end
@@ -50,7 +50,7 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected.
-		do			
+		do
 			Result := (parent_imp.selected_item = interface)
 			 or else (parent_imp.selected_items.has (interface))
 		end
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- PND
 
-	enable_transport is 
+	enable_transport is
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
@@ -131,7 +131,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				do_not_call: False
@@ -174,18 +174,18 @@ feature -- Element Change
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			tooltip := a_tooltip.twin
 		end
 
-	tooltip: STRING
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
-		
+
 feature {NONE} -- Implementation
-		
-	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
 		local
 			a_parent_imp: like parent_imp
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if parent_imp /= Void then
@@ -238,14 +238,14 @@ feature {EV_ANY_I} -- Implementation
 
 	list_iter: EV_GTK_TREE_ITER_STRUCT
 		-- Object representing position of `Current' in parent tree model
-		
+
 
 	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
 			-- Set the rows parent to `par_imp'.
 		do
 			parent_imp := par_imp
 		end
-	
+
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 			-- Implementation of the rows parent.
 

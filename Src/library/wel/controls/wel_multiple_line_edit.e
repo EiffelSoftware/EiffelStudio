@@ -181,7 +181,7 @@ feature -- Status report
 			result_ok: Result = line (i).count
 		end
 
-	line (i: INTEGER): STRING is
+	line (i: INTEGER): STRING_32 is
 			-- `i'th line
 		require
 			exists: exists

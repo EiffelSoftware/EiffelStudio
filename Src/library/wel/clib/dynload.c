@@ -19,8 +19,8 @@
 /*  ptr = cwin_get_function_address("kernel.dll", "GetFreeDiskSpaceEx");     */
 /*---------------------------------------------------------------------------*/
 EIF_POINTER cwin_get_function_address(
-		char *pszModuleName,		// Name of the module where the function is
-		char *pszFunctionName		// Name of the function to retrieve.
+		LPCTSTR pszModuleName,		// Name of the module where the function is
+		LPCSTR pszFunctionName		// Name of the function to retrieve.
 		)
 	{
 	FARPROC pFunctionAddress;		// Address of the function
@@ -79,7 +79,7 @@ void cwin_mask_blt(
 /* a typical call to this function would be:                                 */
 /*  if(cwin_get_dll_version("comctl32.dll") >= PACKVERSION(4,71))            */
 /*---------------------------------------------------------------------------*/
-DWORD cwin_get_dll_version(char *pszDllName)
+DWORD cwin_get_dll_version(LPCTSTR pszDllName)
 	{
 	HINSTANCE hinstDll;
 	DWORD dwVersion = PACKVERSION (4,00); // 4.00 is the lowest value.
@@ -118,7 +118,7 @@ DWORD cwin_get_dll_version(char *pszDllName)
 			// pDllGetVersion not supported --> 4.00 or 4.70
 			// Note: 4.70 does not exist for Shell32.dll
 			//       Shlwapi.dll was first shiped with IE4 so its version start a 4.71.
-			if (stricmp(pszDllName, "comctl32.dll")==0)
+			if (wcsicmp(pszDllName, L"comctl32.dll")==0)
 				{
 				FARPROC pDllImageList_Copy = GetProcAddress (hinstDll, "ImageList_Copy");
 				if (pDllImageList_Copy != NULL)
@@ -145,7 +145,7 @@ DWORD cwin_get_dll_version(char *pszDllName)
 /* a typical call to this function would be:                                 */
 /*  if(cwin_get_shellcomctrl_dll_version("comctl32.dll")>=PACKVERSION(4,71)) */
 /*---------------------------------------------------------------------------*/
-DWORD cwin_get_shellcomctrl_dll_version(char *pszDllName)
+DWORD cwin_get_shellcomctrl_dll_version(LPCTSTR pszDllName)
 	{
 	DWORD dwVersion = cwin_get_dll_version(pszDllName);
 	
@@ -154,7 +154,7 @@ DWORD cwin_get_shellcomctrl_dll_version(char *pszDllName)
 	else
 		{
 		// DllGetVersion is not supported --> Win95 (4.00) or Win95+IE4 (4.70)
-		void* pInitCommonCtrlEx_addr = cwin_get_function_address("Comctl32.dll", "InitCommonControlsEx");
+		void* pInitCommonCtrlEx_addr = cwin_get_function_address(L"Comctl32.dll", "InitCommonControlsEx");
 		if (pInitCommonCtrlEx_addr == NULL)
 			{
 			// InitCommonCtrlEx do NOT exist on the system --> Win95 alone
@@ -177,7 +177,7 @@ DWORD cwin_get_shellcomctrl_dll_version(char *pszDllName)
 /*---------------------------------------------------------------------------*/
 DWORD cwin_get_shell32dll_version(void)
 	{
-	return cwin_get_shellcomctrl_dll_version("Shell32.dll");
+	return cwin_get_shellcomctrl_dll_version(L"Shell32.dll");
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ DWORD cwin_get_shell32dll_version(void)
 /*---------------------------------------------------------------------------*/
 DWORD cwin_get_comctl32dll_version(void)
 	{
-	return cwin_get_shellcomctrl_dll_version("Comctl32.dll");
+	return cwin_get_shellcomctrl_dll_version(L"Comctl32.dll");
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -201,5 +201,5 @@ DWORD cwin_get_comctl32dll_version(void)
 /*---------------------------------------------------------------------------*/
 DWORD cwin_get_shlwapidll_version(void)
 	{
-	return cwin_get_shellcomctrl_dll_version("Shlwapi.dll");
+	return cwin_get_shellcomctrl_dll_version(L"Shlwapi.dll");
 	}

@@ -87,7 +87,7 @@ feature -- Event handling
 			create Result
 		end
 
-	create_key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING]] is
+	create_key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]] is
 			-- Create a key_press_string action sequence.
 		do
 			create Result

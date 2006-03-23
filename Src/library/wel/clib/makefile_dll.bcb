@@ -3,7 +3,7 @@
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
 LINK = $(ISE_EIFFEL)\BCC55\bin\ilink32.exe
-CFLAGS = -q -w-8057 -c -O2 -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+CFLAGS = -q -w-8057 -c -O2 -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib  -D_UNICODE -DUNICODE
 LFLAGS = -Tpd -L$(ISE_EIFFEL)\BCC55\lib
 
 LIBS = CW32.lib IMPORT32.lib OLE2w32.lib

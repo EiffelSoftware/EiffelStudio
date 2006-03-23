@@ -13,7 +13,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		export
 			{EV_TREE_IMP}
@@ -31,7 +31,7 @@ inherit
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
 				expand_actions_internal, collapse_actions_internal
 		end
-		
+
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -94,7 +94,7 @@ feature -- Status setting
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)
 			end
 		end
 
@@ -107,10 +107,10 @@ feature -- Status setting
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)
 			end
 		end
-	
+
 	set_expand (a_flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
 		local
@@ -127,8 +127,8 @@ feature -- Status setting
 			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
-		
-	set_text (a_text: STRING) is
+
+	set_text (a_text: STRING_GENERAL) is
 			-- Set 'text' to 'a_text'
 		local
 			par_tree: EV_TREE_IMP
@@ -191,7 +191,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
         	-- Start PND transport (not needed)
 		do
 			check
@@ -336,8 +336,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				-- Nothing needs to be done if parent tree is Void
 			end
 		end
-	
-	text: STRING is
+
+	text: STRING_32 is
 			-- Text displayed.
 		local
 			par_t_imp: EV_TREE_IMP
@@ -352,7 +352,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			text_not_void: Result /= Void
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip if any.
 		do
 			if internal_tooltip = Void then
@@ -370,19 +370,19 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			internal_text := Void
 		end
 
-	set_internal_text (a_text: STRING) is
+	set_internal_text (a_text: STRING_GENERAL) is
 			-- Set `internal_text' to `a_text'
 		do
 			internal_text := a_text
 		end
 
-	internal_text: STRING
+	internal_text: STRING_32
 		-- Internal representation of `text'.
-	
-	internal_tooltip: STRING
+
+	internal_tooltip: STRING_32
 		-- Internal representation of `tooltip'.
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `a_text' to `tooltip'.
 		do
 			internal_tooltip := a_text
@@ -391,9 +391,9 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_tooltip is
 			-- Remove text of `tooltip'.
 		do
-			internal_tooltip := ""		
+			internal_tooltip := ""
 		end
-	
+
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the pixmap for 'Current'.
 		local
@@ -409,7 +409,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				par_tree.update_row_pixmap (Current)
 			end
 		end
-		
+
 	pix_width, pix_height: INTEGER
 			-- Height and width of pixmap in Tree.
 
@@ -420,14 +420,14 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		do
 			if gdk_pixbuf /= default_pointer then
 				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
-				gdk_pixbuf := default_pointer				
+				gdk_pixbuf := default_pointer
 			end
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				par_tree.update_row_pixmap (Current)
 			end
 		end
-		
+
 	pixmap: EV_PIXMAP is
 			-- Pixmap displayed in 'Current' if any.
 		local
@@ -442,7 +442,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	gdk_pixbuf: POINTER
 		-- Stored gdk pixbuf data
-		
+
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
@@ -461,7 +461,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				item_imp.remove_internal_text
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
-				end	
+				end
 			end
 				-- Resume expansion status from last node removal
 			if count = 1 and then par_t_imp /= Void then
@@ -481,7 +481,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			item_imp: EV_TREE_NODE_IMP
 			par_tree_imp: EV_TREE_IMP
 		do
-			if count = 1 then 
+			if count = 1 then
 				if parent_tree /= Void then
 					expanded_on_last_item_removal := is_expanded
 				else
@@ -504,10 +504,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				par_tree_imp.update_pnd_status
 			end
 		end
-		
+
 	expanded_on_last_item_removal: BOOLEAN
 		-- Was `Current' expanded upon removal of last item
-		
+
 feature {NONE} -- Redundant implementation
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 					gdk_pixbuf := default_pointer
 			end
 		end
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE;

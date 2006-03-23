@@ -28,13 +28,13 @@ feature -- Access
 	Lvm_deleteitem: INTEGER is 4104
 			-- Declared in Windows as LVM_DELETEITEM
 
-	Lvm_editlabel: INTEGER is 4119
+	Lvm_editlabel: INTEGER is 4214
 			-- Declared in Windows as LVM_EDITLABEL
 
 	Lvm_ensurevisible: INTEGER is 4115
 			-- Declared in Windows as LVM_ENSUREVISIBLE
 
-	Lvm_finditem: INTEGER is 4109
+	Lvm_finditem: INTEGER is 4179
 			-- Declared in Windows as LVM_FINDITEM
 
 	Lvm_getbkcolor: INTEGER is 4096
@@ -43,7 +43,7 @@ feature -- Access
 	Lvm_getcallbackmask: INTEGER is 4106
 			-- Declared in Windows as LVM_GETCALLBACKMASK
 
-	Lvm_getcolumn: INTEGER is 4121
+	Lvm_getcolumn: INTEGER is 4191
 			-- Declared in Windows as LVM_GETCOLUMN
 
 	Lvm_getcolumnwidth: INTEGER is 4125
@@ -58,10 +58,10 @@ feature -- Access
 	Lvm_getimagelist: INTEGER is 4098
 			-- Declared in Windows as LVM_GETIMAGELIST
 
-	Lvm_getisearchstring: INTEGER is 4148
+	Lvm_getisearchstring: INTEGER is 4213
 			-- Declared in Windows as LVM_GETISEARCHSTRING
 
-	Lvm_getitem: INTEGER is 4101
+	Lvm_getitem: INTEGER is 4171
 			-- Declared in Windows as LVM_GETITEM
 
 	Lvm_getitemcount: INTEGER is 4100
@@ -79,7 +79,7 @@ feature -- Access
 	Lvm_getitemstate: INTEGER is 4140
 			-- Declared in Windows as LVM_GETITEMSTATE
 
-	Lvm_getitemtext: INTEGER is 4141
+	Lvm_getitemtext: INTEGER is 4211
 			-- Declared in Windows as LVM_GETITEMTEXT
 
 	Lvm_getnextitem: INTEGER is 4108
@@ -91,7 +91,7 @@ feature -- Access
 	Lvm_getselectedcount: INTEGER is 4146
 			-- Declared in Windows as LVM_GETSELECTEDCOUNT
 
-	Lvm_getstringwidth: INTEGER is 4113
+	Lvm_getstringwidth: INTEGER is 4183
 			-- Declared in Windows as LVM_GETSTRINGWIDTH
 
 	Lvm_gettextbkcolor: INTEGER is 4133
@@ -109,10 +109,10 @@ feature -- Access
 	Lvm_hittest: INTEGER is 4114
 			-- Declared in Windows as LVM_HITTEST
 
-	Lvm_insertcolumn: INTEGER is 4123
+	Lvm_insertcolumn: INTEGER is 4193
 			-- Declared in Windows as LVM_INSERTCOLUMN
 
-	Lvm_insertitem: INTEGER is 4103
+	Lvm_insertitem: INTEGER is 4173
 			-- Declared in Windows as LVM_INSERTITEM
 
 	Lvm_redrawitems: INTEGER is 4117
@@ -127,7 +127,7 @@ feature -- Access
 	Lvm_setcallbackmask: INTEGER is 4107
 			-- Declared in Windows as LVM_SETCALLBACKMASK
 
-	Lvm_setcolumn: INTEGER is 4122
+	Lvm_setcolumn: INTEGER is 4192
 			-- Declared in Windows as LVM_SETCOLUMN
 
 	Lvm_setcolumnwidth: INTEGER is 4126
@@ -136,7 +136,7 @@ feature -- Access
 	Lvm_setimagelist: INTEGER is 4099
 			-- Declared in Windows as LVM_SETIMAGELIST
 
-	Lvm_setitem: INTEGER is 4102
+	Lvm_setitem: INTEGER is 4172
 			-- Declared in Windows as LVM_SETITEM
 
 	Lvm_setitemcount: INTEGER is 4143
@@ -151,7 +151,7 @@ feature -- Access
 	Lvm_setitemstate: INTEGER is 4139
 			-- Declared in Windows as LVM_SETITEMSTATE
 
-	Lvm_setitemtext: INTEGER is 4142
+	Lvm_setitemtext: INTEGER is 4212
 			-- Declared in Windows as LVM_SETITEMTEXT
 
 	Lvm_settextbkcolor: INTEGER is 4134
@@ -165,6 +165,7 @@ feature -- Access
 
 	Lvm_update: INTEGER is 4138;
 			-- Declared in Windows as LVM_UPDATE
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

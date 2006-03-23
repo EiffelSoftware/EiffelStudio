@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			temp_window: WEL_CONTROL_WINDOW
 		do
 			make
-			create temp_window.make_with_coordinates (a_parent, create {STRING}.make (0), 0, 0, 0, 0)
+			create temp_window.make_with_coordinates (a_parent, "", 0, 0, 0, 0)
 			set_window (temp_window)
 		end
 
@@ -76,11 +76,14 @@ feature -- Access
 			Result := cwel_tc_item_get_mask (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Item text
 		do
-			create Result.make (0)
-			Result.from_c (cwel_tc_item_get_psztext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -114,7 +117,7 @@ feature -- Element change
 			mask_set: mask = a_mask
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void

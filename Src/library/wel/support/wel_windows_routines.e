@@ -32,7 +32,7 @@ inherit
 
 feature -- Basic operations
 
-	output_debug_string (s: STRING) is
+	output_debug_string (s: STRING_GENERAL) is
 			-- Send a string `s' to the system debugger.
 		require
 			s_not_void: s /= Void
@@ -91,7 +91,7 @@ feature -- Basic operations
 			cwin_set_cursor_position (x, y)
 		end
 
-	resource_string_id (an_id: INTEGER): STRING is
+	resource_string_id (an_id: INTEGER): STRING_32 is
 			-- String identified by `an_id' in the resource file.
 		local
 			a_wel_string: WEL_STRING
@@ -177,7 +177,7 @@ feature -- Status report
 			Result := cwel_key_locked (virtual_key)
 		end
 
-	key_to_string (key_data: INTEGER): STRING is
+	key_to_string (key_data: INTEGER): STRING_32 is
 			-- Give the string associated with the key given by
 			-- `virtual_key'.
 		local
@@ -201,7 +201,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	system_directory: STRING is
+	system_directory: STRING_32 is
 			-- Path of the Windows system directory
 		local
 			a_wel_string: WEL_STRING
@@ -215,7 +215,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	windows_directory: STRING is
+	windows_directory: STRING_32 is
 			-- Path of the Windows directory
 		local
 			a_wel_string: WEL_STRING
@@ -295,7 +295,7 @@ feature {NONE} -- Externals
 			buffer: POINTER; buffer_size: INTEGER): INTEGER is
 			-- SDK LoadString
 		external
-			"C [macro %"wel.h%"] (HINSTANCE, UINT, LPSTR, %
+			"C [macro %"wel.h%"] (HINSTANCE, UINT, LPTSTR, %
 				%int): EIF_INTEGER"
 		alias
 			"LoadString"
@@ -328,7 +328,7 @@ feature {NONE} -- Externals
 	cwin_output_debug_string (s: POINTER) is
 			-- SDK OutputDebugString
 		external
-			"C [macro %"wel.h%"] (LPCSTR)"
+			"C [macro %"wel.h%"] (LPCTSTR)"
 		alias
 			"OutputDebugString"
 		end
@@ -336,7 +336,7 @@ feature {NONE} -- Externals
 	cwin_get_system_directory (buffer: POINTER; size: INTEGER): INTEGER is
 			-- SDK GetSystemDirectory
 		external
-			"C [macro %"wel.h%"] (LPSTR, UINT): EIF_INTEGER"
+			"C [macro %"wel.h%"] (LPTSTR, UINT): EIF_INTEGER"
 		alias
 			"GetSystemDirectory"
 		end
@@ -344,7 +344,7 @@ feature {NONE} -- Externals
 	cwin_get_windows_directory (buffer: POINTER; size: INTEGER): INTEGER is
 			-- SDK GetWindowsDirectory
 		external
-			"C [macro %"wel.h%"] (LPSTR, UINT): EIF_INTEGER"
+			"C [macro %"wel.h%"] (LPTSTR, UINT): EIF_INTEGER"
 		alias
 			"GetWindowsDirectory"
 		end
@@ -424,7 +424,7 @@ feature {NONE} -- Externals
 			"[
 			{
 				FARPROC get_console_window_proc = NULL;
-				HMODULE kernel32_module = LoadLibrary ("kernel32.dll");
+				HMODULE kernel32_module = LoadLibrary (L"kernel32.dll");
 				if (kernel32_module) {
 					get_console_window_proc = GetProcAddress (kernel32_module, "GetConsoleWindow");
 					if (get_console_window_proc) {

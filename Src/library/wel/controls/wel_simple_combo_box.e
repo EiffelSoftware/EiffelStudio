@@ -12,11 +12,6 @@ class
 inherit
 	WEL_COMBO_BOX
 
-	WEL_CBS_CONSTANTS
-		export
-			{NONE} all
-		end
-
 create
 	make,
 	make_by_id

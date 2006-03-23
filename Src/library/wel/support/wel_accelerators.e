@@ -48,7 +48,7 @@ feature {NONE} -- Externals
 	cwin_load_accelerators (hinstance: POINTER; id: POINTER): POINTER is
 			-- SDK LoadAccelerators
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
 		alias
 			"LoadAccelerators"
 		end

@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			--| No need to do anything here. Deferred from EV_MENU_ITEM_LIST_IMP.
 		end
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `Current' and refresh `Current'.
 		local
 			wel_string: WEL_STRING

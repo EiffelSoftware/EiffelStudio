@@ -40,7 +40,7 @@ feature {NONE} -- Externals
 	cwin_load_icon (hinstance: POINTER; id: POINTER): POINTER is
 			-- SDK LoadIcon
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
 		alias
 			"LoadIcon"
 		end

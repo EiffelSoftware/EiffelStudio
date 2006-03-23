@@ -28,7 +28,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER
 		undefine
 			is_equal
@@ -36,7 +36,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES
 		undefine
@@ -103,7 +103,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
-	
+
 	title_shown: BOOLEAN is
 			-- Is a row displaying column titles shown?
 		require
@@ -114,7 +114,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.title_shown
 		end
 
-	column_title (a_column: INTEGER): STRING is
+	column_title (a_column: INTEGER): STRING_32 is
 			-- Title of `a_column'.
 			-- Returns "" if no title given yet.
 		require
@@ -126,7 +126,7 @@ feature -- Status report
 			bridge_ok: Result.is_equal (implementation.column_title (a_column))
 			cloned: Result /= implementation.column_title (a_column)
 		end
-	
+
 	column_width (a_column: INTEGER): INTEGER is
 			-- Width of `a_column' in pixels.
 		require
@@ -177,7 +177,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_multiple_selection	
+			implementation.enable_multiple_selection
 		ensure
 			multiple_selection_enabled: multiple_selection_enabled
 		end
@@ -235,7 +235,7 @@ feature -- Status setting
 		ensure
 			center_aligned: column_alignment (a_column).is_center_aligned
 		end
-	
+
 	align_text_right (a_column: INTEGER) is
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
@@ -250,7 +250,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_column_title (a_title: STRING; a_column: INTEGER) is
+	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER) is
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			not_destroyed: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Element change
 			cloned: column_title (a_column) /= a_title
 		end
 
-	set_column_titles (titles: ARRAY [STRING]) is         
+	set_column_titles (titles: ARRAY [STRING_GENERAL]) is
 			-- Assign `titles' to titles of columns in order.
 			-- `Current' will resize if the number of titles exceeds
 			-- `Column_count'.
@@ -300,7 +300,7 @@ feature -- Element change
 			implementation.resize_column_to_content (a_column)
 		end
 
-	set_column_widths (widths: ARRAY [INTEGER]) is 
+	set_column_widths (widths: ARRAY [INTEGER]) is
 				-- Assign `widths' to column widths in order.
 		require
 			not_destroyed: not is_destroyed
@@ -324,7 +324,7 @@ feature -- Element change
 		do
 			implementation.set_column_alignment (an_alignment, a_column)
 		ensure
-			column_alignment_assigned: column_alignment (a_column).is_equal (an_alignment) 
+			column_alignment_assigned: column_alignment (a_column).is_equal (an_alignment)
 		end
 
 	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
@@ -341,7 +341,7 @@ feature -- Element change
 		end
 
 feature -- Obsolete
-		
+
 	clear_selection is
 			-- Make `selected_items' empty.
 		obsolete "Please use `remove_selection' instead."
@@ -352,9 +352,9 @@ feature -- Obsolete
 		ensure
 			selected_items_empty: selected_items.is_empty
 		end
-	
+
 feature {NONE} -- Contract support
-	
+
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
@@ -384,7 +384,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	column_titles_assigned (titles: ARRAY [STRING]): BOOLEAN is
+	column_titles_assigned (titles: ARRAY [STRING_GENERAL]): BOOLEAN is
 			-- Are titles of columns equal to `titles'?
 		require
 			titles_not_void: titles /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- Contract support
 			until
 				i > titles.count
 			loop
-				if not titles.item (i).is_equal (column_title (i)) then
+				if not column_title (i).is_equal (titles.item (i)) then
 					Result := False
 				end
 				i := i + 1
@@ -423,7 +423,7 @@ feature {NONE} -- Contract support
 				i := i + 1
 			end
 		end
-	
+
 feature -- Contract support
 
 	is_parent_recursive (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
@@ -435,7 +435,7 @@ feature -- Contract support
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_MULTI_COLUMN_LIST_I
 			-- Responsible for interaction with native graphics toolkit.
 

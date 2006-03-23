@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING;
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
 			a_x, a_y, a_width, a_height: INTEGER) is
 			-- Make a control using `a_parent' as parent and
 			-- `a_name' as name. `a_x', `a_y', `a_width', and
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_window + 1)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := "WELControlWindowClass"

@@ -16,8 +16,8 @@ inherit
 			default_style,
 			text_length
 		end
-		
-create 
+
+create
 	make,
 	make_by_id
 
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Window text
 		do
 			if internal_text /= Void then
@@ -44,10 +44,10 @@ feature -- Access
 				Result := ""
 			end
 		end
-		
+
 feature -- Element change
 
-	set_text (a_new_text: STRING) is
+	set_text (a_new_text: STRING_GENERAL) is
 			-- Set the window text
 		do
 			if a_new_text /= Void then
@@ -59,10 +59,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING
+	internal_text: STRING_32
 			-- Text set to this control. When we use the SS_OWNERDRAW
 			-- flag, Windows does not handle the text anymore.
-			
+
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once

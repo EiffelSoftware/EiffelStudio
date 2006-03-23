@@ -28,9 +28,12 @@ default
 	inlining (yes)
 	inlining_size ("0")
 	multithreaded (no)
+	override_cluster ("override")
 
 
 cluster
+	all override:		"$EIFFEL_SRC/Eiffel/override"
+
 	root_cluster:		"$EIFFEL_SRC/tools/doc_builder"
 		exclude
 			"doc_builder.e"; 

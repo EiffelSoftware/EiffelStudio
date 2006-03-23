@@ -47,9 +47,12 @@ default
 	exception_trace (yes)
 	inlining (no)
 	multithreaded (no)
+	override_cluster ("override")
 
 
 cluster
+	all override:		"$EIFFEL_SRC\Eiffel\override"
+
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 
 

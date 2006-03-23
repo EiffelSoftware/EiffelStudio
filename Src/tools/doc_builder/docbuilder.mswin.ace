@@ -38,9 +38,12 @@ default
 	inlining (yes)
 	inlining_size ("0")
 	multithreaded (no)
+	override_cluster ("override")
 
 
 cluster
+	all override:		"$EIFFEL_SRC\Eiffel\override"
+
 	all root_cluster:		"$EIFFEL_SRC\tools\doc_builder"
 		exclude
 			".svn"; "facade"; "doc_builder.e"; "document_browser.e"; "document_schema.e"; "document_schema_element.e"; "schema_rendering_factory.e"; "spell_checker.e"; "web_browser_widget.e"; "schema_validator.e"; "EIFGEN"; 

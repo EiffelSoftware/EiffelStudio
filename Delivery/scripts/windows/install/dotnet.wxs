@@ -161,7 +161,6 @@
 									<File Id="file.e" Name="file.e" />
 									<File Id="bit_ref.e" Name="bit_ref.e" />
 									<File Id="exceptions.e" Name="EXCEPT~2.E" LongName="exceptions.e" />
-									<File Id="boolean.e" Name="boolean.e" />
 									<File Id="real.e" Name="real.e" />
 									<File Id="platform.e" Name="platform.e" />
 									<File Id="memory.e" Name="memory.e" />
@@ -175,7 +174,6 @@
 									<File Id="stream.e" Name="stream.e" />
 									<File Id="double.e" Name="double.e" />
 									<File Id="function.e" Name="function.e" />
-									<File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
 									<File Id="tuple.e" Name="tuple.e" />
 									<File Id="any.e" Name="any.e" />
 									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
@@ -192,6 +190,7 @@
 									<File Id="dotnet_double.e" Name="DOTNET~3.E" LongName="dotnet_double.e" />
 									<File Id="dotnet_boolean.e" Name="DOTNET~1.E" LongName="dotnet_boolean.e" />
 									<File Id="dotnet_real.e" Name="DO9EFE~1.E" LongName="dotnet_real.e" />
+									<File Id="system_string_factory_e" Name="SYSTEM~1.E" LongName="system_string_factory.e" />
 									<File Id="type_e" Name="type.e" />
 								</Component>
 							</Directory>

@@ -22,10 +22,10 @@ wkoptimize: ""
 optimize: "-O2"
 
 -- compiler flags
-ccflags: "-c -g0 -w- -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS $(ISE_CFLAGS)"
-cppflags: "-c -g0 -w- -P -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -DEIF_THREADS $(ISE_CFLAGS)"
+ccflags: "-c -g0 -w- -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-c -g0 -w- -P -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -D_UNICODE -DUNICODE -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
 il_flags: "-tWM -DEIF_IL_DLL"
 

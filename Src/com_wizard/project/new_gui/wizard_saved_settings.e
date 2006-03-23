@@ -89,7 +89,7 @@ feature -- Basic Operations
 				end
 				l_save_routine ?= a_combo.data
 				if l_save_routine /= Void then
-					l_save_routine.call ([a_combo.strings])
+					l_save_routine.call ([a_combo.strings_8])
 				end
 			end
 		end

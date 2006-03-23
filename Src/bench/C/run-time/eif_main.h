@@ -69,7 +69,7 @@ RT_LNK void free_argv (char ***argv);
 RT_LNK HANDLE ghInstance;
 RT_LNK HINSTANCE eif_hInstance;
 RT_LNK HINSTANCE eif_hPrevInstance;
-RT_LNK LPSTR eif_lpCmdLine;
+RT_LNK LPWSTR eif_lpCmdLine;
 RT_LNK int eif_nCmdShow;
 #endif
 

@@ -14,9 +14,8 @@ inherit
 		redefine
 			make,
 			add_idle_action,
-			message_loop,
-			process_events_until_stopped,
-			idle_actions
+			do_once_on_idle,
+			call_idle_actions
 		end
 
 create
@@ -33,87 +32,59 @@ feature {NONE} -- Initialization
 
 feature -- Event Handling
 
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
+			-- Perform `an_action' one time only on idle.
+			-- Thread safe.
+		do
+			lock
+			Precursor {EV_APPLICATION_IMP} (an_action)
+			unlock
+		end
+
 	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
 			-- Extend `idle_actions' with `a_idle_action'.
 			-- Thread safe
 		do
-			idle_action_mutex.lock
+			lock
 			idle_actions.extend (a_idle_action)
-			idle_action_mutex.unlock
+			lock
 		end
 
-feature -- Event handling
+feature -- Thread Handling.
 
-	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when the application is otherwise idle.
+	lock is
+			-- Lock the Mutex.
 		do
 			idle_action_mutex.lock
-			Result := Precursor {EV_APPLICATION_IMP}
+		end
+
+	try_lock: BOOLEAN is
+			-- Try to see if we can lock, False means no lock could be attained
+		do
+			Result := idle_action_mutex.trylock
+		end
+
+	unlock is
+			-- Unlock the Mutex.
+		do
 			idle_action_mutex.unlock
 		end
 
 feature {NONE} -- Implementation
 
-	message_loop is
-			-- Windows message loop.
-		local
-			msg: WEL_MSG
+	call_idle_actions is
+			-- Execute idle actions.
 		do
-			from
-				create msg.make
-			until
-				quit_requested
-			loop
-				msg.peek_all
-				if msg.last_boolean_result then
-					process_message (msg)
-				else
-					idle_action_mutex.lock
-					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call (Void)
-						idle_action_mutex.unlock
-					elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
-						idle_actions_internal.call (Void)
-						idle_action_mutex.unlock
-					else
-						idle_action_mutex.unlock
-						msg.wait
-					end
-				end
+			if try_lock then
+				Precursor {EV_APPLICATION_IMP}
+				unlock
 			end
+				-- If we cannot obtain a lock then do not call idle actions, it will be called again in the next CPU slice.
 		end
 
-	process_events_until_stopped is
-			-- Process all events until 'stop_processing' is called.
-		local
-			msg: WEL_MSG
-		do
-			from
-				create msg.make
-				msg.peek_all
-			until
-				msg.message = stop_processing_requested_msg
-			loop
-				if msg.last_boolean_result then
-					process_message (msg)
-				else
-					idle_action_mutex.lock
-					if not internal_idle_actions.is_empty then
-						internal_idle_actions.call (Void)
-						idle_action_mutex.unlock
-					elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
-						idle_actions_internal.call (Void)
-						idle_action_mutex.unlock
-					else
-						idle_action_mutex.unlock
-						msg.wait
-					end
-				end
-				msg.peek_all
-			end
-		end
+feature {NONE} -- Implementation
 
-	idle_action_mutex: MUTEX;
+	idle_action_mutex: MUTEX
 			-- Mutex used to access `idle_actions'
 
 indexing
@@ -126,8 +97,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_THREAD_APPLICATION_IMP

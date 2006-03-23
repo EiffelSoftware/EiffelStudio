@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
 		do
-			validate_agent.call ([text_entry.text])
+			validate_agent.call ([text_entry.text.as_string_8])
 			if validate_agent.last_result then
 				execute_agent (text_entry.text)
 			else

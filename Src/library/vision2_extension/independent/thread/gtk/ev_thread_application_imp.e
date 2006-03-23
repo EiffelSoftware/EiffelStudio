@@ -15,7 +15,7 @@ inherit
 			make,
 			call_idle_actions,
 			add_idle_action,
-			idle_actions
+			do_once_on_idle
 		end
 
 create
@@ -24,34 +24,58 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Initialize thread handling and call precursor.
+			-- Initialize thread handling.
 		do
-				-- Initialize glib thread handling.
-			g_thread_init
-				-- Initialize gdk thread handling.
-			{EV_GTK_EXTERNALS}.gdk_threads_init
+			if not g_thread_supported then
+				g_thread_init
+			end
+			check
+				gtk_threading_supported: g_thread_supported
+			end
+				-- Initialize the recursive mutex.
+			static_mutex := new_g_static_rec_mutex
+			g_static_rec_mutex_init (static_mutex)
 			Precursor {EV_APPLICATION_IMP} (an_interface)
 		end
 
-feature -- Event Handling
+feature -- Idle Action Handling
+
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
+			-- Perform `an_action' one time only on idle.
+			-- Thread safe.
+		do
+			lock
+			Precursor {EV_APPLICATION_IMP} (an_action)
+			unlock
+		end
 
 	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
 			-- Extend `idle_actions' with `a_idle_action'.
-			-- Thread safe
+			-- Thread safe.
 		do
-			{EV_GTK_EXTERNALS}.gdk_threads_enter	
+			lock
 			idle_actions.extend (a_idle_action)
-			{EV_GTK_EXTERNALS}.gdk_threads_leave
+			unlock
 		end
 
-feature -- Event handling
+feature -- Thread Handling.
 
-	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions to be performed when the application is otherwise idle.
+	lock is
+			-- Lock the Mutex.
 		do
-			{EV_GTK_EXTERNALS}.gdk_threads_enter	
-			Result := Precursor {EV_APPLICATION_IMP}
-			{EV_GTK_EXTERNALS}.gdk_threads_leave
+			g_static_rec_mutex_lock (static_mutex)
+		end
+
+	try_lock: BOOLEAN is
+			-- Try to see if we can lock, False means no lock could be attained
+		do
+			Result := g_static_rec_mutex_trylock (static_mutex)
+		end
+
+	unlock is
+			-- Unlock the Mutex.
+		do
+			g_static_rec_mutex_unlock (static_mutex)
 		end
 
 feature {NONE} -- Implementation
@@ -59,23 +83,63 @@ feature {NONE} -- Implementation
 	call_idle_actions is
 			-- Execute idle actions.
 		do
-			{EV_GTK_EXTERNALS}.gdk_threads_enter
-			internal_idle_actions.call (Void)
-			{EV_GTK_EXTERNALS}.gdk_threads_leave
-			if idle_actions_internal /= Void then
-				{EV_GTK_EXTERNALS}.gdk_threads_enter
-				idle_actions_internal.call (Void)
-				{EV_GTK_EXTERNALS}.gdk_threads_leave
+			if try_lock then
+				Precursor {EV_APPLICATION_IMP}
+				unlock
 			end
+				-- If we cannot obtain a lock then do not call idle actions, it will be called again in the next CPU slice.
 		end
+
 feature {NONE} -- Externals
 
-	g_thread_init is
+	static_mutex: POINTER
+		-- Pointer to the global static mutex
+
+	new_g_static_rec_mutex: POINTER is
 		external
-			-- Application needs to be linked against gthread.
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_thread_init (NULL)"
+			"malloc (sizeof(GStaticRecMutex))"
+		end
+
+	frozen g_static_rec_mutex_init (a_static_mutex: POINTER) is
+		external
+			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_lock (a_static_mutex: POINTER) is
+		external
+			"C blocking signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_trylock (a_static_mutex: POINTER): BOOLEAN is
+		external
+			"C blocking signature (GStaticRecMutex*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen g_static_rec_mutex_unlock (a_static_mutex: POINTER) is
+		external
+			"C signature (GStaticRecMutex*) use <gtk/gtk.h>"
+		end
+
+	frozen g_thread_supported: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_thread_supported()"
+		end
+
+	frozen g_thread_init is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+			{
+				#ifdef G_THREADS_ENABLED
+					g_thread_init (NULL);
+				#endif
+			}
+			]"
 		end
 
 indexing
@@ -88,8 +152,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end -- class EV_THREAD_APPLICATION_IMP

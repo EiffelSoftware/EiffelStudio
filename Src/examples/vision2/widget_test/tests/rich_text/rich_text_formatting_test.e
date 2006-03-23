@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
-			font_families: LINEAR [STRING]
+			font_families: LINEAR [STRING_32]
 			environment: EV_ENVIRONMENT
 			list_item: EV_LIST_ITEM
 		do
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	font_selection: EV_COMBO_BOX
 		-- Combo box to select current font.
 		
-	font_names: HASH_TABLE [INTEGER, STRING];
+	font_names: HASH_TABLE [INTEGER, STRING_32];
 		-- Quick look up to retrieve font index in `font_selection'.
 
 indexing

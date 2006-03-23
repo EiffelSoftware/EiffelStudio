@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Common ancestor to Eiffel routine for both ASP and VS implementations"
 	date: "$$"
 	revision: "$$"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			non_void_locals: locals /= Void
 			non_void_statements: statements /= Void
 		end
-		
+
 feature -- Access
 
 	arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
@@ -62,7 +62,7 @@ feature -- Access
 
 	statements: LIST [CODE_STATEMENT]
 			-- Routine statements
-	
+
 	last_cast_variable: STRING
 			-- Last cast variable name
 
@@ -83,7 +83,7 @@ feature -- Access
 			-- Eiffel code of routine
 		local
 			l_creation_routine: CODE_CREATION_ROUTINE
-		do	
+		do
 			increase_tabulation
 			create Result.make (1000)
 			Result.append (signature)
@@ -206,7 +206,7 @@ feature {CODE_FACTORY} -- Status Setting
 			non_void_last_cast_variable: last_cast_variable /= Void
 			local_added: generated_locals.item (last_cast_variable) = a_type
 		end
-	
+
 	add_default_value_local (a_type: CODE_TYPE_REFERENCE) is
 			-- Add local variable for default value expression.
 		require
@@ -222,7 +222,7 @@ feature {CODE_FACTORY} -- Status Setting
 			attached_default_value_variable: last_default_value_variable /= Void
 			local_added: generated_locals.item (last_default_value_variable) = a_type
 		end
-			
+
 	add_statement (a_statement: CODE_STATEMENT) is
 			-- Add `a_statement' to `statements'.
 		require
@@ -247,10 +247,10 @@ feature {NONE} -- Implementation
 			if is_deferred then
 				Result.append ("deferred ")
 			end
-			if is_frozen then 
+			if is_frozen then
 				Result.append ("frozen ")
 			end
-			Result.append (eiffel_name)			
+			Result.append (eiffel_name)
 			from
 				arguments.start
 				if not arguments.after then
@@ -272,6 +272,10 @@ feature {NONE} -- Implementation
 				Result.append (": ")
 				Result.append (result_type.eiffel_name)
 			end
+			if assigner /= Void then
+				Result.append (" assign ")
+				Result.append (assigner.eiffel_name)
+			end
 		ensure
 			signature_generated: Result /= Void and not Result.is_empty
 		end
@@ -285,7 +289,7 @@ feature {NONE} -- Implementation
 			l_need_dummy, l_local_generated: BOOLEAN
 		do
 			create Result.make (1000)
-			
+
 				-- Dummy local for method with return value not in assignment statement
 			from
 				statements.start
@@ -313,7 +317,7 @@ feature {NONE} -- Implementation
 				if not locals.after then
 					if not l_local_generated then
 						Result.append (indent_string)
-						Result.append ("local")				
+						Result.append ("local")
 						Result.append (Line_return)
 						l_local_generated := True
 					end
@@ -335,7 +339,7 @@ feature {NONE} -- Implementation
 				if not snippet_locals.after then
 					if not l_local_generated then
 						Result.append (indent_string)
-						Result.append ("local")				
+						Result.append ("local")
 						Result.append (Line_return)
 						l_local_generated := True
 					end
@@ -359,7 +363,7 @@ feature {NONE} -- Implementation
 				if not generated_locals.after then
 					if not l_local_generated then
 						Result.append (indent_string)
-						Result.append ("local")				
+						Result.append ("local")
 						Result.append (Line_return)
 						l_local_generated := True
 					end
@@ -418,7 +422,7 @@ feature {NONE} -- Implementation
 			cast_variable_count.set_item (cast_variable_count.item + 1)
 			Result.append (cast_variable_count.out)
 		end
-	
+
 	default_value_variable_name: STRING is
 			-- Unique default value variable name
 		do
@@ -432,7 +436,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-		
+
 	default_value_variable_count: INTEGER_REF is
 			-- Default value variable counter
 		once
@@ -449,7 +453,7 @@ feature {NONE} -- Specific implementation
 		ensure
 			non_void_add_constructor: Result /= Void
 		end
-		
+
 invariant
 	non_void_arguments: arguments /= Void
 	non_void_locals: locals /= Void

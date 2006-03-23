@@ -528,7 +528,9 @@ feature -- C output pixmap management
 	c_output_panel_tab: EV_NOTEBOOK_TAB is
 			-- Notebook tab for C output
 		do
-			Result := notebook.item_tab (c_compilation_output_view.widget)
+			if notebook /= Void then
+				Result := notebook.item_tab (c_compilation_output_view.widget)
+			end
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Private stone management

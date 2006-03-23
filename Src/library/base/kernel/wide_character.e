@@ -3,6 +3,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	assembly: "mscorlib"
+	external_name: "System.UInt32"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,13 +33,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class WIDE_CHARACTER
-
-
-

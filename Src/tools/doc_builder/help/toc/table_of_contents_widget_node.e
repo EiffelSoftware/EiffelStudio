@@ -247,7 +247,7 @@ feature {NONE} -- Properties Widget
 			-- Build list of both editable and read-only properties
 		local			
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			l_list: ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [STRING_32]
 			l_url: STRING
 		do				
 			create properties_widget.make (Application_window)
@@ -257,7 +257,7 @@ feature {NONE} -- Properties Widget
 
 					-- Title
 			create l_row
-			create l_list.make_from_array (<<"Title", text>>)
+			create l_list.make_from_array (<<("Title").to_string_32, text>>)
 			l_row.append (l_list)
 			properties_widget.extend (l_row)
 

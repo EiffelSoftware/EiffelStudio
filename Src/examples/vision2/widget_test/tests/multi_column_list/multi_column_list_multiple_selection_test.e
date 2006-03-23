@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				counter > 25
 			loop
 				create multi_column_list_row
-				multi_column_list_row.fill (<<"1, " + counter.out, "2, " + counter.out, "No">>)
+				multi_column_list_row.fill (<<("1, ").to_string_32 + counter.out.to_string_32, ("2, ").to_string_32 + counter.out.to_string_32, ("No").to_string_32>>)
 				multi_column_list_row.select_actions.extend (agent update_selection_on_row (multi_column_list_row))
 				multi_column_list_row.deselect_actions.extend (agent update_selection_on_row (multi_column_list_row))
 				multi_column_list.extend (multi_column_list_row)

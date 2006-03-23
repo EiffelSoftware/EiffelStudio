@@ -155,6 +155,7 @@ feature -- Constants
 	bracket_symbol_id: INTEGER is 143
 	to_character_8_name_id: INTEGER is 144
 	to_character_32_name_id: INTEGER is 145
+	natural_32_code_name_id: INTEGER is 146
 			-- Predefined name IDs constants
 
 feature -- Classification

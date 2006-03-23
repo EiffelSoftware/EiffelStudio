@@ -312,7 +312,7 @@ feature {NONE} -- Implementation: access
 			put ("[]") check found_item = bracket_symbol_id end
 			put ("to_character_8") check found_item = to_character_8_name_id end
 			put ("to_character_32") check found_item = to_character_32_name_id end
-
+			put ("natural_32_code") check found_item = natural_32_code_name_id end
 		end
 
 invariant

@@ -19,7 +19,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_horizontal_box_1
 			create l_ev_vertical_box_1
@@ -83,7 +83,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create cancel_button
 			create l_ev_cell_2
-			
+
 				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
@@ -134,7 +134,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_9.extend (ok_button)
 			l_ev_vertical_box_9.extend (cancel_button)
 			l_ev_vertical_box_9.extend (l_ev_cell_2)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -240,9 +240,9 @@ feature {NONE}-- Initialization
 			integer_constant_retrieval_functions.extend (agent default_button_width)
 			string_constant_set_procedures.extend (agent set_title (?))
 			string_constant_retrieval_functions.extend (agent system_window_title)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			project_radio_button.select_actions.extend (agent project_build_type_selected)
 			class_radio_button.select_actions.extend (agent class_build_type_selected)
@@ -302,63 +302,63 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	project_build_type_selected is
 			-- Called by `select_actions' of `project_radio_button'.
 		deferred
 		end
-	
+
 	class_build_type_selected is
 			-- Called by `select_actions' of `class_radio_button'.
 		deferred
 		end
-	
+
 	attributes_local_selected is
 			-- Called by `select_actions' of `attributes_local_check_button'.
 		deferred
 		end
-	
+
 	attributes_class_selected is
 			-- Called by `select_actions' of `attributes_class_check_button'.
 		deferred
 		end
-	
+
 	generate_to_current_project_location_radio_button_selected is
 			-- Called by `select_actions' of `generate_to_current_project_location_radio_button'.
 		deferred
 		end
-	
+
 	generate_to_specified_location_radio_button_selected is
 			-- Called by `select_actions' of `generate_to_specified_location_radio_button'.
 		deferred
 		end
-	
+
 	browse_for_generation_location_button_selected is
 			-- Called by `select_actions' of `browse_for_generation_location_button'.
 		deferred
 		end
-	
+
 	ok_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		deferred
 		end
-	
+
 	cancel_pressed is
 			-- Called by `select_actions' of `cancel_button'.
 		deferred
 		end
-	
+
 	display_project_information is
 			-- Called by `show_actions' of `gb_system_window'.
 		deferred
 		end
-	
-	
+
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -378,7 +378,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -414,7 +414,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -432,7 +432,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -448,9 +448,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -468,7 +468,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -479,8 +479,8 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
+
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
@@ -492,7 +492,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

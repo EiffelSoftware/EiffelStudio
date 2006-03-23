@@ -19,7 +19,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
@@ -73,7 +73,7 @@ feature {NONE}-- Initialization
 			create l_ev_vertical_box_6
 			create ok_button
 			create l_ev_cell_6
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -114,7 +114,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_6)
 			l_ev_vertical_box_6.extend (ok_button)
 			l_ev_vertical_box_6.extend (l_ev_cell_6)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -206,9 +206,9 @@ feature {NONE}-- Initialization
 			set_minimum_height (480)
 			string_constant_set_procedures.extend (agent set_title (?))
 			string_constant_retrieval_functions.extend (agent constants_dialog_title)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))
@@ -268,93 +268,93 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	item_selected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `constants_list'.
 		deferred
 		end
-	
+
 	item_deselected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `deselect_actions' of `constants_list'.
 		deferred
 		end
-	
+
 	column_clicked (a_column: INTEGER) is
 			-- Called by `column_title_click_actions' of `constants_list'.
 		deferred
 		end
-	
+
 	key_pressed_on_constants_list (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `constants_list'.
 		deferred
 		end
-	
+
 	display_all_types_changed is
 			-- Called by `select_actions' of `display_all_types'.
 		deferred
 		end
-	
+
 	string_item_selected is
 			-- Called by `select_actions' of `string_item'.
 		deferred
 		end
-	
+
 	integer_item_selected is
 			-- Called by `select_actions' of `integer_item'.
 		deferred
 		end
-	
+
 	directory_item_selected is
 			-- Called by `select_actions' of `directory_item'.
 		deferred
 		end
-	
+
 	pixmap_item_selected is
 			-- Called by `select_actions' of `pixmap_item'.
 		deferred
 		end
-	
+
 	color_item_selected is
 			-- Called by `select_actions' of `color_item'.
 		deferred
 		end
-	
+
 	font_item_selected is
 			-- Called by `select_actions' of `font_item'.
 		deferred
 		end
-	
+
 	validate_constant_name is
 			-- Called by `change_actions' of `name_field'.
 		deferred
 		end
-	
+
 	new_button_selected is
 			-- Called by `select_actions' of `new_button'.
 		deferred
 		end
-	
+
 	modify_button_selected is
 			-- Called by `select_actions' of `modify_button'.
 		deferred
 		end
-	
+
 	remove_selected_constant is
 			-- Called by `select_actions' of `remove_button'.
 		deferred
 		end
-	
+
 	ok_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		deferred
 		end
-	
-	
+
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -374,7 +374,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -410,7 +410,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -428,7 +428,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -444,9 +444,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -464,7 +464,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -475,8 +475,8 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
+
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
@@ -488,7 +488,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

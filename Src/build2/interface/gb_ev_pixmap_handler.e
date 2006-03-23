@@ -17,20 +17,20 @@ feature -- Status report
 		require
 			extension_length_3: extension.count = 3
 		do
-			Result := environment.supported_image_formats.has (extension.as_upper)			
+			Result := environment.supported_image_formats.has (extension.as_upper)
 		end
-		
+
 	invalid_type_warning: STRING is
 			-- `Result' is message informing of the valid
 			-- file types supported.
 		local
-			types: LINEAR [STRING]
+			types: LINEAR [STRING_32]
 			arrayed: ARRAYED_LIST [STRING]
 			counter: INTEGER
 		do
 			Result := "File type not supported. "--unsupported_pixmap_type
 			types := environment.supported_image_formats
-			
+
 				-- We must convert the LINEAR into an ARRAYED_LIST, as otherwise
 				-- we cannot check to see if we are before the final position.
 				-- This must be done so that we can correctly build the text formatting.
@@ -62,7 +62,7 @@ feature -- Status report
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
 		end
-		
+
 feature {NONE} -- Implementation
 
 	environment: EV_ENVIRONMENT is

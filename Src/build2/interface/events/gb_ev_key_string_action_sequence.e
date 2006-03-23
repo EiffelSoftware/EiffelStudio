@@ -8,9 +8,9 @@ indexing
 
 class
 	GB_EV_KEY_STRING_ACTION_SEQUENCE
-	
+
 inherit
-	
+
 	GB_EV_ACTION_SEQUENCE
 
 feature -- Access
@@ -21,16 +21,16 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("STRING")
 		end
-	
+
 	argument_names: ARRAYED_LIST [STRING] is
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("a_keystring")
 		end
-		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [STRING]] is
-			-- `Result' is agent which will display all arguments passed to an 
+
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [STRING_32]] is
+			-- `Result' is agent which will display all arguments passed to an
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.
 		require
@@ -41,10 +41,10 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
-	internal_display_agent (a_keystring: STRING; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+	internal_display_agent (a_keystring: STRING_32; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
 			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do

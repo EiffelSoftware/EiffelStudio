@@ -60,6 +60,30 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_ITEM} and Precursor {EV_DESELECTABLE}
 		end
 
+feature -- Element change
+
+	fill_with_strings_8 (other: CONTAINER [STRING]) is
+			-- Fill with as many items of `other' as possible.
+			-- The representations of `other' and current structure
+			-- need not be the same.
+		local
+			lin_rep: LINEAR [STRING]
+			l_cursor: CURSOR
+		do
+			lin_rep := other.linear_representation
+			from
+				l_cursor := cursor
+				lin_rep.start
+			until
+				not extendible or else lin_rep.off
+			loop
+				extend (lin_rep.item)
+				finish
+				lin_rep.forth
+			end
+			go_to (l_cursor)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I

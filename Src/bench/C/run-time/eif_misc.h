@@ -87,7 +87,7 @@ RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EI
 #ifdef EIF_WINDOWS
 /* DLL declarations */
 #ifdef EIF_IL_DLL
-#define eif_load_dll(name)	LoadLibrary((LPCSTR) name);
+#define eif_load_dll(name)	LoadLibraryA((LPCSTR) name);
 #else
 RT_LNK HMODULE eif_load_dll(char *module_name);
 RT_LNK void eif_free_dlls(void);

@@ -1704,6 +1704,7 @@
 									<File Id="ev_font.e" Name="ev_font.e" KeyPath="yes" />
 									<File Id="ev_coordinates.e" Name="EV_COO~1.E" LongName="ev_coordinates.e" />
 									<File Id="ev_application.e" Name="EV_APP~3.E" LongName="ev_application.e" />
+									<File Id="ev_bitmap_e" Name="EV_BIT~1.E" LongName="ev_bitmap.e" />
 									<File Id="ev_screen.e" Name="EV_SCR~5.E" LongName="ev_screen.e" />
 									<File Id="ev_rectangle.e" Name="EV_REC~1.E" LongName="ev_rectangle.e" />
 									<File Id="ev_accelerator.e" Name="EV_ACC~3.E" LongName="ev_accelerator.e" />
@@ -1970,6 +1971,7 @@
 								<Directory Id="kernel34" Name="kernel">
 									<Component Id="ev_application_imp.e" Guid="0475D9FB-D30F-4339-AECF-DA5B9135CEC7">
 										<File Id="ev_application_imp.e" Name="EV_APP~2.E" LongName="ev_application_imp.e" KeyPath="yes" />
+										<File Id="ev_bitmap_imp_e" Name="EV_BIT~1.E" LongName="ev_bitmap_imp.e" />
 										<File Id="ev_timeout_imp.e" Name="EV_TIM~2.E" LongName="ev_timeout_imp.e" />
 										<File Id="ev_clipboard_imp.e" Name="EV_CLI~1.E" LongName="ev_clipboard_imp.e" />
 										<File Id="ev_screen_imp.e" Name="EV_SCR~6.E" LongName="ev_screen_imp.e" />
@@ -2164,6 +2166,7 @@
 										<File Id="ev_environment_i.e" Name="EV_ENV~1.E" LongName="ev_environment_i.e" />
 										<File Id="ev_font_i.e" Name="EV_FON~3.E" LongName="ev_font_i.e" />
 										<File Id="ev_application_i.e" Name="EV_APP~4.E" LongName="ev_application_i.e" />
+										<File Id="ev_bitmap_i_e" Name="EV_BIT~1.E" LongName="ev_bitmap_i.e" />
 										<File Id="ev_any_i.e" Name="ev_any_i.e" />
 										<File Id="ev_accelerator_i.e" Name="EV_ACC~1.E" LongName="ev_accelerator_i.e" />
 										<File Id="ev_color_i.e" Name="EV_COL~4.E" LongName="ev_color_i.e" />
@@ -2615,7 +2618,11 @@
 						</Directory>
 						<Directory Id="consts" Name="consts">
 							<Component Id="wel_swp_constants.e" Guid="AFEB6CFB-3C86-4EFC-9A48-AD1E5720BB87">
-								<File Id="wel_swp_constants.e" Name="WEL_SW~2.E" LongName="wel_swp_constants.e" KeyPath="yes" />
+								<File Id="wel_ccm_constants_e" Name="WEL_CC~2.E" LongName="wel_ccm_constants.e" />
+								<File Id="wel_composition_string_constants_e" Name="WEL_CO~1.E" LongName="wel_composition_string_constants.e" />
+								<File Id="wel_ime_constants_e" Name="WEL_IM~2.E" LongName="wel_ime_constants.e" />
+								<File Id="wel_keyboard_layout_constants_e" Name="WEL_KE~1.E" LongName="wel_keyboard_layout_constants.e" />
+								<File Id="wel_swp_constants.e" Name="WEL_SW~2.E" LongName="wel_swp_constants.e" />
 								<File Id="wel_nif_constants_e" Name="WEL_NI~1.E" LongName="wel_nif_constants.e" />
 								<File Id="wel_niif_constants_e" Name="WEL_NI~2.E" LongName="wel_niif_constants.e" />
 								<File Id="wel_nim_constants_e" Name="WEL_NI~3.E" LongName="wel_nim_constants.e" />

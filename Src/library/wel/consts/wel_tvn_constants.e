@@ -37,10 +37,10 @@ feature -- Access
 	Tvn_keydown: INTEGER is -412
 			-- Declared in Windows as TVN_KEYDOWN
 
-	Tvn_selchanged: INTEGER is -452
+	Tvn_selchanged: INTEGER is -451
 			-- Declared in Windows as TVN_SELCHANGED
 
-	Tvn_selchanging: INTEGER is -451
+	Tvn_selchanging: INTEGER is -450
 			-- Declared in Windows as TVN_SELCHANGING
 
 	Tvn_setdispinfo: INTEGER is -453

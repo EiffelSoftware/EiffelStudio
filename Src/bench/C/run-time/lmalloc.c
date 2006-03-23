@@ -85,10 +85,10 @@ rt_shared  int eif_lm_free ();
 #ifdef EIF_THREADS
 rt_private EIF_LW_MUTEX_TYPE *lm_lock = NULL;
 #define EIF_LM_LOCK \
-	EIF_LW_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
+	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
 
 #define EIF_LM_UNLOCK \
-	EIF_LW_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
+	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (lm_lock, "Couldn't lock lm lock"); 
 
 #else	/* EIF_THREADS */
 #define EIF_LM_LOCK

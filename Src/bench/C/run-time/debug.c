@@ -194,9 +194,9 @@ rt_private EIF_LW_MUTEX_TYPE  *db_mutex;	/* Mutex to protect `dstop' against con
 #define DBGMTX_DESTROY \
 	EIF_LW_MUTEX_DESTROY(db_mutex, "Cannot destroy mutex for the debugger [dbreak]\n");
 #define DBGMTX_LOCK	\
-	EIF_ENTER_C; EIF_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C;
+	EIF_ENTER_C; EIF_ASYNC_SAFE_LW_MUTEX_LOCK(db_mutex, "Cannot lock mutex for the debugger [dbreak]\n"); EIF_EXIT_C;
 #define DBGMTX_UNLOCK \
-	EIF_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
+	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(db_mutex, "Cannot unlock mutex for the debugger [dbreak]\n"); 
 #else
 #define DBGMTX_CREATE 
 #define DBGMTX_DESTROY 
@@ -512,6 +512,7 @@ rt_private int should_be_interrupted(void)
 rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
+		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
 		dnotify(THR_CREATED, (int) tid);
@@ -521,6 +522,7 @@ rt_public void dnotify_create_thread(EIF_THR_TYPE tid)
 rt_public void dnotify_exit_thread(EIF_THR_TYPE tid)
 {
 	if (debug_mode) {
+		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
 		DBGMTX_LOCK;	/* Enter critical section */
 		dnotify(THR_EXITED, (int) tid);
@@ -537,6 +539,7 @@ rt_public void dstop(struct ex_vect *exvect, uint32 break_index)
 	exvect->ex_linenum = break_index;
 			
 	if (debug_mode) {
+		RT_GET_CONTEXT
 		EIF_GET_CONTEXT	/* Not declared at the beggining because we only need it here.
 						 * As dstop is called even when the application is not launched
 						 * from Estudio, we can avoid the execution of this declaration
@@ -606,6 +609,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 	BODY_INDEX bodyid;
 
 	if (debug_mode) {	
+		RT_GET_CONTEXT
 		EIF_GET_CONTEXT	/* Not declared at the beggining because we only need it here.
 	   					* As dstop if called even when the application is not launched
 	   					* with Estudio, we can avoid the execution of this declaration
@@ -650,6 +654,7 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 rt_shared void dbreak(EIF_CONTEXT int why)
 	/* Safe entry point for multithreaded application */
 {
+	RT_GET_CONTEXT
 	DBGMTX_LOCK;
 
 	safe_dbreak(why);

@@ -582,8 +582,8 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 rt_shared EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
-#define EIF_GC_GSZ_LOCK EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex");
-#define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not unlock GSZ mutex")
+#define EIF_GC_GSZ_LOCK EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex");
+#define EIF_GC_GSZ_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not unlock GSZ mutex")
 
 /*
 doc:	<attribute name="eif_free_list_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
@@ -593,8 +593,8 @@ doc:	</attribute>
 */
 
 rt_shared EIF_LW_MUTEX_TYPE *eif_free_list_mutex = NULL;
-#define EIF_FREE_LIST_MUTEX_LOCK	EIF_LW_MUTEX_LOCK(eif_free_list_mutex, "Could not lock free list mutex");
-#define EIF_FREE_LIST_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eif_free_list_mutex, "Could not unlock free list mutex");
+#define EIF_FREE_LIST_MUTEX_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eif_free_list_mutex, "Could not lock free list mutex");
+#define EIF_FREE_LIST_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eif_free_list_mutex, "Could not unlock free list mutex");
 
 /*
 doc:	<attribute name="eiffel_usage_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
@@ -604,8 +604,8 @@ doc:	</attribute>
 */
 
 rt_shared EIF_LW_MUTEX_TYPE *eiffel_usage_mutex = NULL;
-#define EIFFEL_USAGE_MUTEX_LOCK		EIF_LW_MUTEX_LOCK(eiffel_usage_mutex, "Could not lock eiffel_usage mutex");
-#define EIFFEL_USAGE_MUTEX_UNLOCK	EIF_LW_MUTEX_UNLOCK(eiffel_usage_mutex, "Could not unlock eiffel_usage mutex");
+#define EIFFEL_USAGE_MUTEX_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(eiffel_usage_mutex, "Could not lock eiffel_usage mutex");
+#define EIFFEL_USAGE_MUTEX_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(eiffel_usage_mutex, "Could not unlock eiffel_usage mutex");
 
 /*
 doc:	<attribute name="trigger_gc_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
@@ -615,8 +615,8 @@ doc:	</attribute>
 */
 
 rt_shared EIF_LW_MUTEX_TYPE *trigger_gc_mutex = NULL;
-#define TRIGGER_GC_LOCK		EIF_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
-#define TRIGGER_GC_UNLOCK	EIF_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
+#define TRIGGER_GC_LOCK		EIF_ASYNC_SAFE_LW_MUTEX_LOCK(trigger_gc_mutex, "Could not lock trigger gc mutex");
+#define TRIGGER_GC_UNLOCK	EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(trigger_gc_mutex, "Could not unlock trigger gc mutex");
 #endif
 
 
@@ -1364,6 +1364,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 
 #ifdef ISE_GC
 	if (new_size > old_size) {				/* Then update memory usage. */
+		RT_GET_CONTEXT
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
 		eiffel_usage += (new_size - old_size);
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
@@ -1486,6 +1487,7 @@ rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes)
 		 */
 	result = allocate_free_list (nbytes, e_hlist);
 	if (!result) {
+		RT_GET_CONTEXT
 		result = malloc_free_list (nbytes, e_hlist, EIFFEL_T, GC_OFF);
 
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
@@ -1541,6 +1543,7 @@ rt_private EIF_REFERENCE malloc_from_eiffel_list (rt_uint_ptr nbytes)
 	}
 
 	if (result) {
+		RT_GET_CONTEXT
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
 		eiffel_usage += nbytes + OVERHEAD;	/* Memory used by Eiffel */
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_UNLOCK);
@@ -1653,6 +1656,7 @@ doc:	</routine>
 
 rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist, int type, int gc_flag)
 {
+	RT_GET_CONTEXT
 	EIF_REFERENCE result;					/* Location of the malloc'ed block */
 	unsigned int estimated_free_space;
 
@@ -2424,6 +2428,7 @@ doc:	</routine>
 rt_public void eif_rt_xfree(register void * ptr)
 {
 #ifdef ISE_GC
+	RT_GET_CONTEXT
 	rt_uint_ptr r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	rt_uint_ptr i;					/* Index in hlist */
@@ -3356,6 +3361,7 @@ doc:	</routine>
 
 rt_shared rt_uint_ptr full_coalesc (int chunk_type)
 {
+	RT_GET_CONTEXT
 	rt_uint_ptr result;
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	result = full_coalesc_unsafe (chunk_type);
@@ -3922,6 +3928,7 @@ doc:	</routine>
 
 rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE object, struct stack *stk)
 {
+	RT_GET_CONTEXT
 		/* Need to discard breakpoint in case GC is called */
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(stk, object)) {		/* Cannot record object */

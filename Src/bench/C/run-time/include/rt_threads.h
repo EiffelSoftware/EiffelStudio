@@ -40,6 +40,7 @@
 #include "eif_threads.h"
 #include "rt_globals.h"
 #include "rt_timer.h"
+#include "rt_sig.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -715,6 +716,23 @@ WINBASEAPI BOOL WINAPI InitializeCriticalSectionAndSpinCount(
 #define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY(m,msg)
 #endif
 
+
+/* Async safe version of mutex locking/unlocking. */
+#define EIF_ASYNC_SAFE_MUTEX_LOCK(m,msg) \
+	SIGBLOCK; \
+	EIF_MUTEX_LOCK(m,msg);
+
+#define EIF_ASYNC_SAFE_MUTEX_UNLOCK(m,msg) \
+	EIF_MUTEX_UNLOCK(m,msg); \
+	SIGRESUME;
+
+#define EIF_ASYNC_SAFE_LW_MUTEX_LOCK(m,msg) \
+	SIGBLOCK; \
+	EIF_LW_MUTEX_LOCK(m,msg);
+
+#define EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK(m,msg) \
+	EIF_LW_MUTEX_UNLOCK(m,msg); \
+	SIGRESUME;
 
 #endif	/* EIF_THREADS */
 

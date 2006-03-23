@@ -150,8 +150,8 @@ doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
 rt_shared	EIF_LW_MUTEX_TYPE *eif_trace_mutex = (EIF_LW_MUTEX_TYPE *) 0;
-#define EIF_TRACE_LOCK	EIF_LW_MUTEX_LOCK (eif_trace_mutex, "Couldn't lock trace mutex");
-#define EIF_TRACE_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_trace_mutex, "Couldn't unlock trace mutex");
+#define EIF_TRACE_LOCK	EIF_ASYNC_SAFE_LW_MUTEX_LOCK (eif_trace_mutex, "Couldn't lock trace mutex");
+#define EIF_TRACE_UNLOCK EIF_ASYNC_SAFE_LW_MUTEX_UNLOCK (eif_trace_mutex, "Couldn't unlock trace mutex");
 
 #endif
 

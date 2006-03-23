@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 				eiffel_name_set: eiffel_name = a_eiffel_name
 			arguments_set: arguments = a_arguments
 		end
-		
+
 feature -- Access
 
 	is_initialized: BOOLEAN
@@ -90,10 +90,10 @@ feature -- Access
 
 	name: STRING
 			-- .NET simple name
-	
+
 	implementing_type: CODE_TYPE_REFERENCE
 			-- Implementing type
-	
+
 	arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			-- Routine arguments
 
@@ -114,7 +114,7 @@ feature -- Access
 			end
 			Result := internal_parent
 		end
-	
+
 	overloaded_eiffel_name: STRING is
 			-- Overloaded eiffel name
 		require
@@ -130,7 +130,7 @@ feature -- Access
 				Result := Name_formatter.formatted_feature_name (name)
 			end
 		end
-		
+
 	eiffel_name: STRING is
 			-- Eiffel name
 		require
@@ -226,7 +226,7 @@ feature -- Status Report
 							a_arguments.after or l_stop
 						loop
 							l_stop := not arguments.item.variable.type.is_equal (a_arguments.item.variable.type)
-							a_arguments.forth				
+							a_arguments.forth
 							arguments.forth
 						end
 						Result := not l_stop
@@ -250,7 +250,7 @@ feature -- Element Settings
 		ensure
 			argument_added: arguments.has (a_argument)
 		end
-	
+
 	set_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]) is
 			-- Set `arguments' with `a_arguments'.
 		require
@@ -260,7 +260,7 @@ feature -- Element Settings
 		ensure
 			arguments_set: arguments = a_arguments
 		end
-	
+
 	set_initialized is
 			-- Set `is_initialized' to True.
 		require
@@ -270,7 +270,7 @@ feature -- Element Settings
 		ensure
 			initialized: is_initialized
 		end
-		
+
 feature {NONE} -- Implementation
 
 	parent_in_type (a_type: CODE_TYPE_REFERENCE): CODE_MEMBER_REFERENCE is
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						l_type := l_parent_type.dotnet_type
-						if l_type /= Void then
+						if l_type /= Void and then not l_type.is_interface then
 							Result := parent_feature_from_dotnet_type (l_type)
 							if Result = Void then
 								Result := parent_in_dotnet_type (l_type)
@@ -336,8 +336,11 @@ feature {NONE} -- Implementation
 				end
 			else
 				l_type := a_type.dotnet_type
-				if l_type /= Void then
-					Result := parent_in_dotnet_type (l_type)
+				if l_type /= Void and then not l_type.is_interface then
+					Result := parent_feature_from_dotnet_type (l_type)
+					if Result = Void then
+						Result := parent_in_dotnet_type (l_type)
+					end
 				end
 			end
 		end
@@ -387,7 +390,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	parent_feature_from_dotnet_type (a_type: SYSTEM_TYPE): CODE_MEMBER_REFERENCE is
 			-- Feature with same .NET name and same arguments as `Current' in `a_type' if any
 		require
@@ -412,7 +415,7 @@ feature {NONE} -- Implementation
 		ensure
 			valid_parent_feature: Result /= Void implies Result.name.is_equal (name) and has_arguments (Result.arguments)
 		end
-		
+
 	same_arguments (a_feature: CODE_FEATURE): BOOLEAN is
 			-- Does `a_feature' have same arguments as `Current'?
 		require
@@ -432,7 +435,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	native_arguments: NATIVE_ARRAY [SYSTEM_TYPE] is
 			-- Arguments types
 		require
@@ -459,7 +462,7 @@ feature {NONE} -- Private Access
 
 	internal_eiffel_name: STRING
 			-- Cached Eiffel name
-	
+
 	internal_result_type: CODE_TYPE_REFERENCE
 			-- Cached return type
 

@@ -46,6 +46,8 @@ remtrace process
 co $DEFAULT_CVS_TAG/Src/library/process process
 remtrace time
 co $DEFAULT_CVS_TAG/Src/library/time time
+remtrace uuid
+co $DEFAULT_CVS_TAG/Src/library/uuid uuid 
 remtrace vision2
 co $DEFAULT_CVS_TAG/Src/library/vision2 vision2
 if [ "$1" == "gtk" ]; then

@@ -72,7 +72,7 @@ feature -- Access
 		require
 			valid_character_code: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
 	Min_value: NATURAL_32 is 0
@@ -416,38 +416,38 @@ feature -- Conversion
 		do
 			tmp := item.to_integer_32
 			if tmp <= 9 then
-				Result := (tmp + ('0').code).to_character
+				Result := (tmp + ('0').code).to_character_8
 			else
-				Result := (('A').code + (tmp - 10)).to_character
+				Result := (('A').code + (tmp - 10)).to_character_8
 			end
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
 
-	frozen to_character: CHARACTER is
+	to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
 			"Use `to_character_8' instead."
 		require
 			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
-	frozen to_character_8: CHARACTER is
+	to_character_8: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		require
 			valid_character: is_valid_character_8_code
 		do
-			Result := item.to_character
+			Result := item.to_character_8
 		end
 
-	frozen to_character_32: WIDE_CHARACTER is
+	to_character_32: WIDE_CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		require
 			valid_character: is_valid_character_32_code
 		do
-			Result := conversion_to_wide_character (item)
+			Result := item.to_character_32
 		end
 
 feature -- Bit operations
@@ -572,16 +572,6 @@ feature -- Output
 			-- Printable representation of integer value
 		do
 			Result := item.out
-		end
-
-feature {NONE} -- Temporary
-
-	conversion_to_wide_character (v: NATURAL_32): WIDE_CHARACTER is
-			-- This is needed until compiler is bootstrapped.
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"$v"
 		end
 
 indexing

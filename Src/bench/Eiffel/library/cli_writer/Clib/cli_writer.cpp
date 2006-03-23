@@ -94,7 +94,7 @@ rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
 	FARPROC cor_bind_to_runtime_ex = NULL;
 	ICorRuntimeHost *pHost = NULL;
 
-	mscoree = LoadLibrary ("mscoree.dll");
+	mscoree = LoadLibrary (L"mscoree.dll");
 	if (mscoree != NULL) {
 		cor_bind_to_runtime_ex = GetProcAddress (mscoree, "CorBindToRuntimeEx");
 		if (cor_bind_to_runtime_ex != NULL) {

@@ -7,8 +7,8 @@
 #		 -I$(EIFFEL_SRC)\C\platform \
 #		 -I$(EIFFEL_SRC)\C\run-time
 
-CFLAGS = -nologo -Ox -MT -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
-#CFLAGS = -nologo -MT -W4 -Zi -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+CFLAGS = -nologo -Ox -MT -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -D_UNICODE -DUNICODE
+#CFLAGS = -nologo -MT -W4 -Zi -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -D_UNICODE -DUNICODE
 
 OPT_CFLAGS =
 #OPT_CFLAGS = -DASSERTIONS 

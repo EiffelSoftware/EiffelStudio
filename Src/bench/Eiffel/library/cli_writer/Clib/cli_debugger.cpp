@@ -859,7 +859,7 @@ rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
 	dbg_debuggee_version = a_dbg_version;
 
 	mscoree_module = NULL;
-	mscoree_module = LoadLibrary("mscoree.dll");
+	mscoree_module = LoadLibrary(L"mscoree.dll");
 	CHECK (((mscoree_module != NULL) ? 0 : 1), "Could not load mscoree.dll");
 
 	create_debug_address = NULL;

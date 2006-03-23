@@ -23,7 +23,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	override_cluster ("preferences")
+	override_cluster ("override")
 	check_vape (no)
 	console_application (no)
 	syntax_warning (no)
@@ -38,6 +38,8 @@ default
 -- Same for EV_PIXMAPABLE.
 
 cluster
+	all override:	"$EIFFEL_SRC\Eiffel\override"
+
 	all build2:		"$EIFFEL_SRC\build2"
 		exclude
 			".svn"; "object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "demo_version"; "gobo_16"; "exml"; 

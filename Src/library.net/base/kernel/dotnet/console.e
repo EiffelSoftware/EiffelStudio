@@ -135,7 +135,7 @@ feature -- Input
 						end
 						a_code := 10	
 				end
-				last_character := a_code.to_character
+				last_character := a_code.to_character_8
 			end
 		end
 

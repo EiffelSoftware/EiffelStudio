@@ -52,7 +52,7 @@ feature -- Properties
 
 	clusters: ARRAYED_LIST [CLUSTER_I]
 			-- Clusters of the universe
-			
+
 	assemblies_to_be_added: ARRAYED_LIST [ASSEMBLY_I]
 			-- List of assemblies that needs to be added in Ace file
 			-- before next compilation.
@@ -102,14 +102,14 @@ feature -- Access
 			fn: FILE_NAME
 		do
 			cur := clusters.cursor
-			from 
-				clusters.start 
-			until 
+			from
+				clusters.start
+			until
 				clusters.after or else Result /= Void
 			loop
 				classes := clusters.item.classes
 				from
-					classes.start	
+					classes.start
 				until
 					classes.after or else Result /= Void
 				loop
@@ -117,7 +117,7 @@ feature -- Access
 					if f_name.is_equal (fn) then
 						Result := classes.item_for_iteration
 					end
-					classes.forth	
+					classes.forth
 				end
 				clusters.forth
 			end
@@ -308,7 +308,7 @@ feature -- Access
 				end
 				clusters.forth
 			end
-			
+
 			check
 				l_found_implies_found: l_found implies l_assembly /= Void
 			end
@@ -390,7 +390,7 @@ feature -- Access
 				Result := cluster_list.item
 			end
 		end
-		
+
 	assembly_of_specification (a_name, a_culture, a_key, a_version: STRING): ASSEMBLY_I is
 			-- Find an assembly matching `a_name', `a_culture', `a_key' and `a_version'.
 		require
@@ -408,7 +408,7 @@ feature -- Access
 				l_key := a_key.as_lower
 			end
 			l_culture := a_culture.as_lower
-			
+
 			from
 				l_list := clusters
 				l_list.start
@@ -473,7 +473,7 @@ feature -- Access
 		do
 				-- Saving position
 			c := clusters.cursor
-			
+
 			from
 				create Result.make (override_cluster_names.count)
 				override_cluster_names.start
@@ -509,7 +509,7 @@ feature -- Update
 		ensure
 			override_cluster_names_reset: override_cluster_names = Void
 		end
-		
+
 	add_new_assembly_in_ace (an_assembly: ASSEMBLY_I) is
 			-- Add `an_assembly' in list of assemblies that are not originally in Ace
 			-- but needs to.
@@ -521,7 +521,7 @@ feature -- Update
 			end
 			assemblies_to_be_added.extend (an_assembly)
 		end
-		
+
 	update_cluster_paths is
 			-- Update the paths of the clusters in the universe.
 			-- (Re-interpret environment variables)
@@ -617,7 +617,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				Result := Result and clusters.item.is_equal (other.clusters.item)
 				clusters.forth
 				other.clusters.forth
-			end		
+			end
 		end
 
 	check_universe is
@@ -637,6 +637,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_any_class, "ANY")
 			l_actions.put (agent system.set_boolean_class, "BOOLEAN")
 			l_actions.put (agent system.set_character_class (?, False), "CHARACTER")
+			l_actions.put (agent system.set_character_class (?, True), "WIDE_CHARACTER")
 			l_actions.put (agent system.set_natural_class (?, 8), "NATURAL_8")
 			l_actions.put (agent system.set_natural_class (?, 16), "NATURAL_16")
 			l_actions.put (agent system.set_natural_class (?, 32), "NATURAL_32")
@@ -661,34 +662,30 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 				-- XX_REF classes
 			l_actions.put (agent system.set_bit_class, "BIT_REF")
-			l_actions.put (agent system.set_boolean_ref_class, "BOOLEAN_REF")   
-			l_actions.put (agent system.set_character_ref_class (?, False), "CHARACTER_REF")   
-			l_actions.put (agent system.set_natural_ref_class (?, 8), "NATURAL_8_REF")   
-			l_actions.put (agent system.set_natural_ref_class (?, 16), "NATURAL_16_REF")   
-			l_actions.put (agent system.set_natural_ref_class (?, 32), "NATURAL_32_REF")   
-			l_actions.put (agent system.set_natural_ref_class (?, 64), "NATURAL_64_REF")   
-			l_actions.put (agent system.set_integer_ref_class (?, 8), "INTEGER_8_REF")   
-			l_actions.put (agent system.set_integer_ref_class (?, 16), "INTEGER_16_REF")   
-			l_actions.put (agent system.set_integer_ref_class (?, 32), "INTEGER_REF")   
-			l_actions.put (agent system.set_integer_ref_class (?, 64), "INTEGER_64_REF")   
-			l_actions.put (agent system.set_real_32_ref_class, "REAL_REF")   
-			l_actions.put (agent system.set_real_64_ref_class, "DOUBLE_REF")   
-			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF") 
+			l_actions.put (agent system.set_boolean_ref_class, "BOOLEAN_REF")
+			l_actions.put (agent system.set_character_ref_class (?, False), "CHARACTER_REF")
+			l_actions.put (agent system.set_character_ref_class (?, True), "WIDE_CHARACTER_REF")
+			l_actions.put (agent system.set_natural_ref_class (?, 8), "NATURAL_8_REF")
+			l_actions.put (agent system.set_natural_ref_class (?, 16), "NATURAL_16_REF")
+			l_actions.put (agent system.set_natural_ref_class (?, 32), "NATURAL_32_REF")
+			l_actions.put (agent system.set_natural_ref_class (?, 64), "NATURAL_64_REF")
+			l_actions.put (agent system.set_integer_ref_class (?, 8), "INTEGER_8_REF")
+			l_actions.put (agent system.set_integer_ref_class (?, 16), "INTEGER_16_REF")
+			l_actions.put (agent system.set_integer_ref_class (?, 32), "INTEGER_REF")
+			l_actions.put (agent system.set_integer_ref_class (?, 64), "INTEGER_64_REF")
+			l_actions.put (agent system.set_real_32_ref_class, "REAL_REF")
+			l_actions.put (agent system.set_real_64_ref_class, "DOUBLE_REF")
+			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF")
 
-			if not system.il_generation then
-				l_actions.put (agent system.set_character_class (?, True), "WIDE_CHARACTER")
-				l_actions.put (agent system.set_character_ref_class (?, True), "WIDE_CHARACTER_REF")
-			else
+			if system.il_generation then
 				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")
 				l_actions.put (agent system.set_native_array_class, "NATIVE_ARRAY")
 				l_actions.put (agent system.set_arguments_class, "ARGUMENTS")
 				l_actions.put (agent system.set_system_type_class, "SYSTEM_TYPE")
-					-- In MSIL generation, WIDE_CHARACTER does not exist since
-					-- all characters are wide.
 			end
 
 			check_class_unicity (l_actions)
-			
+
 			if system.il_generation then
 					-- One more check, let's find out that `system_object' and `system_string'
 					-- are set with EXTERNAL_CLASS_I instances
@@ -698,7 +695,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				if system.system_object_class = Void then
 						-- Report error here
 						-- FIXME: Manu: 06/03/2003
-				end	
+				end
 
 					-- Check it is an EXTERNAL_CLASS_I instance.
 				if
@@ -707,7 +704,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				then
 						-- Report error here
 						-- FIXME: Manu: 06/03/2003
-				end	
+				end
 			end
 
 				-- Check sum error
@@ -793,7 +790,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end
 				clusters.forth
 			end
-			
+
 			if l_processed_set.count /= a_set.count then
 					-- Some classes were missing, so for each missing class we report a VD23 error.
 				from
@@ -811,7 +808,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end
 				l_has_error := True
 			end
-			
+
 			if not l_conflicts_set.is_empty then
 					-- We have found classes with the same name either in different cluster
 					-- (report a VD24 error) or in same cluster (report a VSCN error)
@@ -855,7 +852,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				end
 				l_has_error := True
 			end
-			
+
 			if not l_has_error then
 					-- No error occurred, we can safely call the actions associated to
 					-- `a_set'.

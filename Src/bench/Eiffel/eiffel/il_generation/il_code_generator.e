@@ -419,7 +419,7 @@ feature -- Conversion
 		deferred
 		end
 
-	convert_to_integer_16, convert_to_character is
+	convert_to_integer_16, convert_to_character_8 is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
@@ -444,7 +444,7 @@ feature -- Conversion
 		deferred
 		end
 
-	convert_to_natural_32 is
+	convert_to_natural_32, convert_to_character_32 is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end

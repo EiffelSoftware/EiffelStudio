@@ -153,7 +153,9 @@ feature -- IL code generation
 					else
 						type_kind := il_i2
 					end
-				when C_wide_char, C_int32 then
+				when C_wide_char then
+					type_kind := il_u4
+				when C_int32 then
 					type_kind := il_i4
 				when C_int8 then
 					type_kind := il_i1

@@ -13,7 +13,7 @@ inherit
 			make as old_make
 		undefine
 			anchor_instantiation_in,
-			is_equal, generate_cid, il_type_name, generate_cid_array,
+			is_equal, generate_cid, il_type_name, generic_il_type_name, generate_cid_array,
 			generate_cid_init, is_anchored, is_explicit, is_standalone, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
 			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
@@ -45,6 +45,13 @@ feature -- Access
 			-- Name of current class
 		do
 			Result := true_generics.item (1).il_type_name (a_prefix).twin
+			Result.append ("&")
+		end
+
+	generic_il_type_name: STRING is
+			-- Name of current class
+		do
+			Result := true_generics.item (1).generic_il_type_name.twin
 			Result.append ("&")
 		end
 

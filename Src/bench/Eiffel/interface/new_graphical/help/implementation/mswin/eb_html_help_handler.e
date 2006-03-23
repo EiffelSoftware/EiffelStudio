@@ -40,7 +40,7 @@ feature {NONE} -- Externals
 	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): POINTER is
 			-- Help Workshop `HtmlHelp' API.
 		external
-			"C [macro %"Htmlhelp.h%"] (HWND, LPCSTR, UINT, DWORD_PTR): HWND"
+			"C [macro %"Htmlhelp.h%"] (HWND, LPCTSTR, UINT, DWORD_PTR): HWND"
 		alias
 			"HtmlHelp"
 		end

@@ -2,6 +2,7 @@ indexing
 	description: "Unicode characters, with comparison operations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	assembly: "mscorlib"
 	date: "$Date$"
 	revision: "$Revision$"
 

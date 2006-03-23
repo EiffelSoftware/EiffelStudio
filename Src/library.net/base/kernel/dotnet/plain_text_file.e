@@ -261,7 +261,7 @@ feature -- Input
 				if a_code = 13 and then peek = 10 then
 					a_code := internal_stream.read_byte
 				end
-				last_character := a_code.to_character
+				last_character := a_code.to_character_8
 			end
 		end
 
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			until
 				i >= Result
 			loop
-				a_string.put (str_area.item (i).to_character, j)
+				a_string.put (str_area.item (i).to_character_8, j)
 				i := i + 1
 				j := j + 1
 			end

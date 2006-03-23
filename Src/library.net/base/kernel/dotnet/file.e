@@ -1380,7 +1380,7 @@ feature -- Input
 		  	if a_code = - 1 then
 				internal_end_of_file := True
 		  	else
-				last_character := a_code.to_character
+				last_character := a_code.to_character_8
 		  	end
 		end
 
@@ -1437,7 +1437,7 @@ feature -- Input
 							str_cap := last_string.capacity
 						end
 					end						
-					last_string.append_character (c.to_character)				
+					last_string.append_character (c.to_character_8)				
 				end
 			end
 		end
@@ -1830,9 +1830,9 @@ feature {NONE} -- Implementation
 					should_append := True
 				end
 				if should_append then
-					str.append_character (buf.item (j).to_character)
+					str.append_character (buf.item (j).to_character_8)
 				else
-					str.put (buf.item (j).to_character, i)
+					str.put (buf.item (j).to_character_8, i)
 				end				
 				i := i + 1
 				j := j + 1

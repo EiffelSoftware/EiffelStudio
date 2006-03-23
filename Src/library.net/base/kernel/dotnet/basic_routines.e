@@ -15,7 +15,7 @@ feature -- Conversion
 	charconv (i: INTEGER): CHARACTER is
 			-- Character corresponding to ascii code `i'
 		do
-			Result := i.to_character
+			Result := i.to_character_8
 		end
 
 feature -- Basic operations

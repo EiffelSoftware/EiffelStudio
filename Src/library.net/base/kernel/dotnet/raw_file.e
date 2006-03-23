@@ -201,7 +201,7 @@ feature -- Input
 			until
 				str_area_index = new_count
 			loop
-				last_string.append_character (str_area.item (str_area_index).to_character)
+				last_string.append_character (str_area.item (str_area_index).to_character_8)
 				str_area_index := str_area_index + 1
 			end
 		end
@@ -297,7 +297,7 @@ feature -- Input
 		  	if a_code = - 1 then
 				internal_end_of_file := True
 		  	else
-				last_character := a_code.to_character
+				last_character := a_code.to_character_8
 		  	end
 		end
 	
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			until
 				i >= Result
 			loop
-				a_string.put (str_area.item (i).to_character, j)
+				a_string.put (str_area.item (i).to_character_8, j)
 				i := i + 1
 				j := j + 1
 			end

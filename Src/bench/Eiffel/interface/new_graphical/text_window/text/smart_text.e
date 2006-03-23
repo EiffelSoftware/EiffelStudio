@@ -411,12 +411,6 @@ feature -- Completion-clickable initialization / update
 			-- are available in `completion_possibilities'.
 		require
 			click_and_complete_is_active
-		local
-			l_token: EDITOR_TOKEN
-			l_image: STRING
-			l_do_not_complete: BOOLEAN
-			l_comment: EDITOR_TOKEN_COMMENT
-			l_number: EDITOR_TOKEN_NUMBER
 		do
 			history.record_move
 			auto_complete_possible := False

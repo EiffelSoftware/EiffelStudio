@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING_GENERAL) is
 			-- Set `a_string' to the rich edit control.
 		require
 			a_string_not_void: a_string /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	last_position: INTEGER
 			-- Last position of `string'
 
-	string: STRING
+	string: STRING_GENERAL
 			-- String to set in the rich edit control
 
 	read_buffer (length: INTEGER) is

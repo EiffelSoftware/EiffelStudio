@@ -101,14 +101,16 @@ feature -- Access
 	Sm_dbcsenabled: INTEGER is 42
 
 	Sm_cmetrics: INTEGER is 76
-	
+
 	Sm_xvirtualscreen: INTEGER is 76
-	
+
 	Sm_yvirtualscreen: INTEGER is 77
 
 	Sm_cxvirtualscreen: INTEGER is 78
-	
-	Sm_cyvirtualscreen: INTEGER is 79;
+
+	Sm_cyvirtualscreen: INTEGER is 79
+
+	Sm_immenabled: INTEGER is 82;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -120,9 +122,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_SM_CONSTANTS
 

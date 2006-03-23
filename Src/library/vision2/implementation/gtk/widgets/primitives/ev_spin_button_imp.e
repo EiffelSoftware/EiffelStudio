@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP} (a_text)

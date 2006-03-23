@@ -49,14 +49,14 @@ feature -- Initialization
 
 feature -- Access
 
-	folder_name: STRING is
+	folder_name: STRING_32 is
 			-- Selected folder name
 			-- Empty if no folder was selected.
 		do
 			Result := str_folder_name.string
 		end
 
-	display_name: STRING is
+	display_name: STRING_32 is
 			-- Display name of selected folder
 			-- Empty if no folder was selected.
 		obsolete
@@ -65,13 +65,13 @@ feature -- Access
 			Result := folder_name
 		end
 	
-	title: STRING is
+	title: STRING_32 is
 			-- Dialog title
 		do
 			Result := str_title.string
 		end
 
-	starting_folder: STRING is
+	starting_folder: STRING_32 is
 			-- Initial folder name
 		do
 			Result := str_starting_folder.string
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set `title' with `a_title'
 		require
 			a_title_not_void: a_title /= Void
@@ -110,7 +110,7 @@ feature -- Element Change
 			set_title ("Please choose a folder.")
 		end
 
-	set_starting_folder (a_folder_name: STRING) is
+	set_starting_folder (a_folder_name: STRING_GENERAL) is
 			-- Set the initial folder name
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty

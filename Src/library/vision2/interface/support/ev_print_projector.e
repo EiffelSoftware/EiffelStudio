@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_context_not_void: a_context /= Void
 			has_printer: not a_context.output_to_file implies (create {EV_ENVIRONMENT}).has_printer
 			output_file_unique: a_context.output_to_file implies
-						not (create {RAW_FILE}.make (a_context.file_name)).exists
+						not (create {RAW_FILE}.make (a_context.file_name.as_string_8)).exists
 		do
 			world := a_world
 			context := a_context.twin

@@ -24,7 +24,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER
 		undefine
 			is_equal
@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+	make_with_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
 			-- Create with an item for each of `a_string_array'.
 		do
 			default_create
@@ -64,7 +64,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	strings: LINKED_LIST [STRING] is
+	strings: LINKED_LIST [STRING_32] is
 			-- Representation of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -75,6 +75,27 @@ feature -- Access
 			c := cursor
 			from start until after loop
 				Result.extend (item.text.twin)
+				forth
+			end
+			go_to (c)
+		ensure
+			not_void: Result /= Void
+			same_size: Result.count = count
+		end
+
+	strings_8: ARRAYED_LIST [STRING] is
+			-- Representation of `Current' as STRING_8.
+			-- Conversion is done using `as_string_8', thus some data
+			-- might be lost.
+		require
+			not_destroyed: not is_destroyed
+		local
+			c: CURSOR
+		do
+			create Result.make (count)
+			c := cursor
+			from start until after loop
+				Result.extend (item.text.twin.as_string_8)
 				forth
 			end
 			go_to (c)
@@ -95,7 +116,7 @@ feature -- Status setting
 			not_selected: selected_item = Void
 		end
 
-	set_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+	set_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
 			-- Wipe out and re-initialize with an item
 			-- for each of `a_string_array'.
 		require
@@ -116,7 +137,7 @@ feature -- Status setting
 		ensure
 			items_created: count = strings.count
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

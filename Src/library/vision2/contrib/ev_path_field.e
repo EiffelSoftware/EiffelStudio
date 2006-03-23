@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			make_with_text_and_parent (Void, win)
 		end
 
-	make_with_text_and_parent (t: STRING; win: like parent_window) is
+	make_with_text_and_parent (t: STRING_GENERAL; win: like parent_window) is
 			-- Create a widget that is made to browse for directory.
 		require
 			win_not_void: win /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status
 
-	text, path: STRING is
+	text, path: STRING_32 is
 			-- Current path set by user.
 		require
 			not_destroyed: not is_destroyed
@@ -56,10 +56,10 @@ feature -- Status
 		ensure
 			result_not_void: Result /= Void
 		end
-			
+
 feature -- Settings
 
-	set_text, set_path (p: STRING) is
+	set_text, set_path (p: STRING_GENERAL) is
 			-- Assign `p' to `path'.
 		require
 			not_destroyed: not is_destroyed
@@ -70,7 +70,7 @@ feature -- Settings
 			path_set: path.is_equal (p)
 		end
 
-	set_browse_for_file (filter: STRING) is
+	set_browse_for_file (filter: STRING_GENERAL) is
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -98,7 +98,7 @@ feature -- Removal
 
 feature {NONE} -- GUI building
 
-	build_widget (t: STRING) is
+	build_widget (t: STRING_GENERAL) is
 			-- Create Current using `t' as text label.
 		local
 			l_label: EV_LABEL
@@ -108,10 +108,10 @@ feature {NONE} -- GUI building
 				create l_label.make_with_text (t)
 				l_label.align_text_left
 				extend (l_label)
-				disable_item_expand (l_label)			
+				disable_item_expand (l_label)
 			end
 
-			
+
 			create l_hbox
 			l_hbox.set_padding ((create {EV_LAYOUT_CONSTANTS}).Small_padding_size)
 
@@ -121,7 +121,7 @@ feature {NONE} -- GUI building
 			l_hbox.extend (field)
 			l_hbox.extend (browse_button)
 			l_hbox.disable_item_expand (browse_button)
-			
+
 			extend (l_hbox)
 		end
 
@@ -134,7 +134,7 @@ feature {NONE} -- Actions
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
-			start_directory: STRING
+			start_directory: STRING_32
 		do
 			create dd
 			dd.set_title ("Select a directory")
@@ -142,7 +142,7 @@ feature {NONE} -- Actions
 			if
 				start_directory /= Void and then
 				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory)).exists
+				(create {DIRECTORY}.make (start_directory.as_string_8)).exists
 			then
 				dd.set_start_directory(start_directory)
 			end
@@ -152,27 +152,27 @@ feature {NONE} -- Actions
 			end
 		end
 
-	browse_for_file (filter: STRING) is
+	browse_for_file (filter: STRING_GENERAL) is
 			-- Popup a "select directory" dialog.
 		local
 			fd: EV_FILE_OPEN_DIALOG
-			start_directory: STRING
+			start_directory: STRING_32
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
 			create fd
 			if filter /= Void then
-				fd.filters.extend ([filter, "Files of type (" + filter + ")"])
-				fd.filters.extend (["*.*", "All Files (*.*)"])
+				fd.filters.extend ([filter.as_string_32, ("Files of type (").as_string_32 + filter.as_string_32 + ")"])
+				fd.filters.extend ([("*.*").as_string_32, ("All Files (*.*)").as_string_32])
 			end
 			fd.set_title ("Select a file")
 			start_directory := field.text
 			if
 				start_directory /= Void and then
 				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory)).exists
+				(create {DIRECTORY}.make (start_directory.as_string_8)).exists
 			then
-				fd.set_start_directory(start_directory)
+				fd.set_start_directory (start_directory)
 			end
 			create l_env
 			l_dir := l_env.current_working_directory

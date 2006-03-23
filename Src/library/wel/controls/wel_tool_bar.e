@@ -449,7 +449,7 @@ feature -- Element change
 			has_bitmap := True
 		end
 
-	add_strings (strings: ARRAY [STRING]) is
+	add_strings (strings: ARRAY [STRING_GENERAL]) is
 			-- Add strings to the toolbar.
 		require
 			exists: exists
@@ -457,12 +457,12 @@ feature -- Element change
 			strings_not_empty: not strings.is_empty
 		local
 			i: INTEGER
-			s: STRING
+			s: STRING_32
 			wel_s: WEL_STRING
 		do
 			from
 				i := strings.lower
-				s := create {STRING}.make (0)
+				create s.make_empty
 			until
 				i > strings.upper
 			loop
@@ -618,11 +618,10 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_toolbar_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_toolbar_class)).string
 		end
 
 	default_style: INTEGER is
@@ -667,16 +666,16 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Inapplicable
 
-	text: STRING is
+	text: STRING_32 is
 		do
-			Result := create {STRING}.make (0)
+			create Result.make_empty
 		end
 
 	text_length: INTEGER is
 		do
 		end
 
-	set_text (s: STRING) is
+	set_text (s: STRING_GENERAL) is
 		do
 		end
 

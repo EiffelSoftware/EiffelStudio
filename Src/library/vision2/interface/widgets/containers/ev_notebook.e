@@ -59,7 +59,7 @@ create
 
 feature -- Access
 
-	item_text (an_item: EV_WIDGET): STRING is
+	item_text (an_item: EV_WIDGET): STRING_32 is
 			-- Label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -210,7 +210,7 @@ feature -- Constants
 
 feature -- Element change
 
-	set_item_text (an_item: EV_WIDGET; a_text: STRING) is
+	set_item_text (an_item: EV_WIDGET; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to label of `an_item'.
 		require
 			not_destroyed: not is_destroyed

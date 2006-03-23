@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision file open dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,8 +20,8 @@ feature -- Status report
 			-- Can more than one item be selected?
 		deferred
 		end
-		
-	file_names: ARRAYED_LIST [STRING] is
+
+	file_names: ARRAYED_LIST [STRING_32] is
 			-- Full names of currently selected files including path.
 		deferred
 		ensure
@@ -39,10 +39,10 @@ feature -- Status setting
 			-- Allow only one item to be selected.
 		deferred
 		end
-	
+
 feature {NONE} -- Implementation
 
-	internal_accept: STRING is
+	internal_accept: STRING_32 is
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.

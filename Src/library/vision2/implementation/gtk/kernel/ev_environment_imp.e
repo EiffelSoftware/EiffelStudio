@@ -12,7 +12,10 @@ class
 
 inherit
 	EV_ENVIRONMENT_I
-	
+		export
+			{ANY} is_destroyed
+		end
+
 	EXECUTION_ENVIRONMENT
 
 create
@@ -31,10 +34,10 @@ feature {NONE} -- Initialization
 		do
 			set_is_initialized (True)
 		end
-		
+
 feature -- Access
-		
-	supported_image_formats: LINEAR [STRING] is
+
+	supported_image_formats: LINEAR [STRING_32] is
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
@@ -52,7 +55,7 @@ feature -- Access
 		do
 			Result := 3
 		end
-		
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
@@ -61,7 +64,7 @@ feature -- Access
 			Result := return_code = 0
 		end
 
-	font_families: LINEAR [STRING] is
+	font_families: LINEAR [STRING_32] is
 			-- List of fonts available on the system
 		local
 			app_imp: EV_APPLICATION_IMP

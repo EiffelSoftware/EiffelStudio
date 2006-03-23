@@ -22,6 +22,9 @@ feature -- Access
 	Sf_textized: INTEGER is 4
 			-- Text with a text representation of OLE objects.
 
+	Sf_unicode: INTEGER is 16
+		-- Unicode file of some kind, version 2.0+ only.
+
 	Sff_selection: INTEGER is 32768;
 			-- Selection only.
 

@@ -180,7 +180,7 @@ feature {EV_ANY_I}-- Access
 					Result := private_pixmap
 				end
 			end
-		end 
+		end
 
 feature {EV_ANY_I} -- Status report
 
@@ -240,7 +240,7 @@ feature {EV_ANY_I} -- Status setting
 			-- Deselect `Current'.
 		do
 			if top_parent_imp /= Void then
-				top_parent_imp.deselect_item (Current)	
+				top_parent_imp.deselect_item (Current)
 			end
 		end
 
@@ -253,10 +253,10 @@ feature {EV_ANY_I} -- Status setting
 				top_parent_imp.collapse_item (Current)
 			end
 		end
- 
+
 feature {EV_ANY_I} -- Element change
 
-	wel_text: STRING is
+	wel_text: STRING_32 is
 			-- Text of `Current'.
 		do
 			if real_text /= Void then
@@ -270,10 +270,10 @@ feature {EV_ANY_I} -- Element change
 			Result := real_text.count
 		end
 
-	real_text: STRING
+	real_text: STRING_32
 			-- Internal `text'.
 
-	wel_set_text (txt: STRING) is
+	wel_set_text (txt: STRING_GENERAL) is
 			-- Make `txt' the new label of `Current'.
 		local
 			tree: EV_TREE_IMP
@@ -299,7 +299,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
-		do	
+		do
 		end
 
 	internal_propagate_pointer_double_press
@@ -336,8 +336,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	on_parented is
 			-- `Current' has just been parented.
-			-- Because this message is only recieved when a tree item becomes 
-			-- the child of a tree, we need to recurse through all children of 
+			-- Because this message is only recieved when a tree item becomes
+			-- the child of a tree, we need to recurse through all children of
 			-- the item and send this message.
 		local
 			original_index: INTEGER
@@ -356,7 +356,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				end
 				ev_children.go_i_th (original_index)
 
-					-- Assign `pixmap' to tree. 
+					-- Assign `pixmap' to tree.
 				set_pixmap_in_parent
 			end
 		ensure then
@@ -366,7 +366,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	on_orphaned is
 			-- `Current' has just been orphaned.
 			-- Because this message is only recieved when a tree item becomes
-			-- the child of a tree, we need to recurse through all children of 
+			-- the child of a tree, we need to recurse through all children of
 			-- the item and send this message.
 		do
 				-- Retrieve the pixmap from the imagelist.
@@ -380,10 +380,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 
  	remove_all_direct_references is
- 			-- Recurse through all children and update 
+ 			-- Recurse through all children and update
  			--`top_parent_imp.current_image_list_info' removing images
  			-- from image list as required.
- 		local	
+ 		local
  			original_index: INTEGER
  		do
  			original_index := ev_children.index
@@ -398,7 +398,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
  				-- Restore original position in `ev_children.
  			ev_children.go_i_th (original_index)
  		end
- 
+
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 
 	has_pixmap: BOOLEAN
@@ -445,7 +445,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		end
 
 	set_pixmap_in_parent is
-			-- Add/Remove the pixmap to the parent by updating the 
+			-- Add/Remove the pixmap to the parent by updating the
 			-- parent's image list.
 		local
 			image_list: EV_IMAGE_LIST_IMP
@@ -476,7 +476,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 		end
 
 	remove_pixmap_in_parent is
-			-- Remove the pixmap from the parent by updating the parent's image 
+			-- Remove the pixmap from the parent by updating the parent's image
 			-- list.
 		do
 			set_image (0, 0) -- 0 = transparent image.
@@ -486,7 +486,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 	general_reset_pixmap is
 			-- Reset the pixmap
 			--| For example: if the size of displayed has changed.
-		local	
+		local
 			c: like ev_children
 		do
 				-- Reset the current pixmap
@@ -503,8 +503,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 				c.forth
 			end
 		end
-		
-	set_tooltip (a_tooltip: STRING) is
+
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -520,7 +520,7 @@ feature {EV_TREE_IMP} -- Implementation, pick and drop
 		do
 			pnd_original_parent := top_parent_imp
 		end
-	
+
 feature {EV_TREE_IMP} -- Implementation
 
 	internal_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
@@ -560,13 +560,13 @@ feature {EV_TREE_IMP} -- Implementation
 					-- but some people have custom implementations which fail sometimes.
 					-- As this feature has no pre-conditions, we protect against this case
 					-- as requested. See bug report 3806. Julian.
-				
+
 				sx := top_parent_imp.indent * counter + 1
 					--|FIXME The relative y_position is always returned as 0.
 				sy := 0
-				
+
 				Result.put_integer (sx, 1)
-				Result.put_integer (sy, 2) 
+				Result.put_integer (sy, 2)
 			end
 		end
 
@@ -577,11 +577,11 @@ feature {NONE} -- Implementation
 		do
 			if top_parent_imp /= Void then
 				if pos = 1 then
-					top_parent_imp.general_insert_item 
+					top_parent_imp.general_insert_item
 					(item_imp, h_item, Tvi_first, pos)
 				else
 					top_parent_imp.general_insert_item
-					(item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)                                                                   
+					(item_imp, h_item, (ev_children @ (pos - 1)).h_item, pos)
 				end
 			else
 				internal_children.go_i_th (pos)
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 				internal_children.prune_all (item_imp)
 			end
 		end
-		
+
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
-		
+
 	check_dragable_release (x_pos, y_pos: INTEGER) is
 			-- End transport if in drag and drop.
 		do
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
-				
+
 	ensure_expandable is
 			-- Ensure `Current' is displayed as expandable.
 		do
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 				-- as we do not wish the item to be accessible from the interface.
 			ev_children.wipe_out
 		end
-		
+
 	remove_expandable is
 			-- Ensure `Current' is no longer displayed as expandable.
 		local
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE
-	
+
 invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 

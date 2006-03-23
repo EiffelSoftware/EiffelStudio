@@ -14,7 +14,7 @@ class
 
 inherit
 	EV_CHARACTER_FORMAT_I
-	
+
 	WEL_CHARACTER_FORMAT2
 		rename
 			make as wel_make,
@@ -35,42 +35,42 @@ inherit
 		undefine
 			default_create, copy, is_equal, out
 		end
-		
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
 		undefine
 			out
 		end
-		
+
 	EV_FONT_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			out
 		end
-		
+
 	WEL_FONT_FAMILY_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			out
 		end
-		
+
 	WEL_FONT_PITCH_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			out
 		end
-		
+
 	WEL_SHARED_FONTS
 		export
 			{NONE} all
 		undefine
 			out
 		end
-	
+
 create
 	make
 
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 				-- is set correctly.
 			l_font := default_wel_log_font
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-		
+
 	color: EV_COLOR is
 			-- Color of the current format.
 		local
@@ -107,7 +107,7 @@ feature -- Access
 			color_ref := text_color
 			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Background color of the current format.
 		local
@@ -116,7 +116,7 @@ feature -- Access
 			color_ref := wel_background_color
 			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
-		
+
 	font: EV_FONT is
 			-- Font of the current format.
 		local
@@ -135,7 +135,7 @@ feature -- Access
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			end
 		end
-		
+
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'.
 		local
@@ -157,7 +157,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	set_font (a_font: EV_FONT) is
 			-- Make `value' the new font.
 		local
@@ -168,7 +168,7 @@ feature -- Status setting
 			if font_imp.internal_face_name /= Void then
 				set_face_name (font_imp.internal_face_name)
 			end
-				
+
 				-- It is important to note the the following code will not work here:
 				--
 				--			set_pitch_and_family (font_imp.wel_log_font.pitch_and_family)
@@ -207,7 +207,7 @@ feature -- Status setting
 			color_imp ?= a_color.implementation
 			set_text_color (color_imp)
 		end
-		
+
 	set_background_color (a_color: EV_COLOR) is
 			-- Make `value' the new background color.
 		local
@@ -217,7 +217,7 @@ feature -- Status setting
 			wel_set_background_color (color_imp)
 			bcolor_set := True
 		end
-		
+
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'.
 		local
@@ -226,7 +226,7 @@ feature -- Status setting
 				-- Create a screen DC for access to metrics
 			create screen_dc
 			screen_dc.get
-			
+
 			if an_effect.is_underlined then
 				enable_underlined
 			else
@@ -238,18 +238,18 @@ feature -- Status setting
 				disable_striked_out
 			end
 			set_offset (pixel_to_point (screen_dc, an_effect.vertical_offset * 20))
-			
+
 			screen_dc.release
 		end
-		
+
 feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	name: STRING is
+	name: STRING_32 is
 			-- Face name used by `Current'.
 		do
 			Result := face_name
 		end
-		
+
 	family: INTEGER is
 			-- Family used by `Current'.
 		local
@@ -276,7 +276,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 				Result := family_sans
 			end
 		end
-		
+
 	wel_screen_font_family: INTEGER
 		-- Font family of the wel screen font.
 
@@ -284,33 +284,33 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			-- Structure used to initialize fonts.
 		once
 			create Result.make_by_font (gui_font)
-				
+
 				-- set the WEL family associated to Vision2 Screen fonts.
 			wel_screen_font_family := Result.family
 		end
-		
+
 	italic: BOOLEAN is
 			-- Is `Current' italic?
 		do
 			Result := flag_set (wel_effects, cfm_italic)
 		end
-		
+
 	is_bold: BOOLEAN is
 			-- Is `Current' bold?
 		do
 			Result := flag_set (wel_effects, cfm_bold)
 		end
-		
+
 	shape: INTEGER is
 			-- Shape of `Current'.
 		do
 			if flag_set (wel_effects, cfm_italic) then
-				Result := shape_italic	
+				Result := shape_italic
 			else
 				Result := shape_regular
 			end
 		end
-		
+
 	vertical_offset: INTEGER is
 			-- Vertical offset of `Current' in pixels.
 		local
@@ -321,13 +321,13 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			Result := point_to_pixel (screen_dc, offset, 20)
 			screen_dc.release
 		end
-		
+
 	height: INTEGER is
 			--  Height of `Current'.
 		do
 			Result := height_in_pixels
 		end
-		
+
 	fcolor: INTEGER is
 			-- foreground color RGB packed into 24 bit.
 			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
@@ -343,13 +343,13 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		do
 			Result := wel_background_color.item
 		end
-		
+
 	is_striked_out: BOOLEAN is
 			-- Is the character striked out?
 		do
 			Result := flag_set (wel_effects, Cfm_strikeout)
 		end
-			
+
 	is_underlined: BOOLEAN is
 			-- Is the character underlined?
 		do

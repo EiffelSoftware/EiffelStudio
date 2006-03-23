@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_name: STRING) is
+	make_by_name (a_name: STRING_GENERAL) is
 			-- Initialize a loadable dialog box identified by
 			-- `a_name'.
 		require

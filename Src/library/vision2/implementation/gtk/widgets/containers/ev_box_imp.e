@@ -1,15 +1,15 @@
 indexing
-	description: 
+	description:
 		"EiffelVision box. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_BOX_IMP
-	
+
 inherit
 	EV_BOX_I
 		undefine
@@ -46,8 +46,8 @@ feature -- Access
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_box_struct_spacing (container_widget)
 		end
-	
-feature -- Status report
+
+feature {EV_ANY, EV_ANY_I} -- Status report
 
 	is_item_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is `child' expanded to occupy available spare space?
@@ -67,9 +67,9 @@ feature -- Status report
 			)
 			Result := expand.to_boolean
 		end
-	
-feature -- Status settings
-	
+
+feature {EV_ANY, EV_ANY_I} -- Status settings
+
 	set_homogeneous (flag: BOOLEAN) is
 			-- Set whether every child is the same size.
 		do
@@ -80,13 +80,13 @@ feature -- Status settings
 			 -- Assign `value' to `border_width'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, value)
-		end	
-	
+		end
+
 	set_padding (value: INTEGER) is
 			-- Assign `value' to `padding'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_set_spacing (container_widget, value)
-		end	
+		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
 			-- Set whether `child' expands to fill available spare space.
@@ -122,6 +122,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
+
+feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	interface: EV_BOX;
 			-- Provides a common user interface to platform dependent

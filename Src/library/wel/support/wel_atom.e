@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING_GENERAL) is
 			-- Make an atom named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING_32 is
 			-- Atom name
 		local
 			a_wel_string: WEL_STRING

@@ -16,12 +16,12 @@ extern "C" {
 
 /* Callback for the function SHBrowseForFolder (defined in ..\Clib\choose_folder.c) */
 int CALLBACK cwel_browse_callback_proc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
-int cwel_sh_browse_for_folder (LPBROWSEINFO info, LPCSTR name);
+int cwel_sh_browse_for_folder (LPBROWSEINFO info, LPCTSTR name);
 
 #define cwel_browse_info_set_hwndowner(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_browse_info_set_pidlroot (_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pidlRoot = (LPCITEMIDLIST) (_value_))
-#define cwel_browse_info_set_pszdisplayname(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pszDisplayName = (LPSTR) (_value_))
-#define cwel_browse_info_set_lpsztitle(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->lpszTitle = (LPCSTR) (_value_))
+#define cwel_browse_info_set_pszdisplayname(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->pszDisplayName = (LPTSTR) (_value_))
+#define cwel_browse_info_set_lpsztitle(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->lpszTitle = (LPCTSTR) (_value_))
 #define cwel_browse_info_set_ulflags(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->ulFlags = (UINT) (_value_))
 #define cwel_browse_info_set_lpfn(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->lpfn = (BFFCALLBACK) (_value_))
 #define cwel_browse_info_set_lparam(_ptr_, _value_) (((BROWSEINFO *) _ptr_)->lParam = (LPARAM) (_value_))

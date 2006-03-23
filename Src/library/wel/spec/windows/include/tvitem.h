@@ -18,7 +18,7 @@ extern "C" {
 #define cwel_tv_item_set_hitem(_ptr_, _value_)			(((TV_ITEM *) _ptr_)->hItem = (HTREEITEM) (_value_))
 #define cwel_tv_item_set_state(_ptr_, _value_)			(((TV_ITEM *) _ptr_)->state = (UINT) (_value_))
 #define cwel_tv_item_set_statemask(_ptr_, _value_)		(((TV_ITEM *) _ptr_)->stateMask = (UINT) (_value_))
-#define cwel_tv_item_set_psztext(_ptr_, _value_)		(((TV_ITEM *) _ptr_)->pszText = (LPSTR) (_value_))
+#define cwel_tv_item_set_psztext(_ptr_, _value_)		(((TV_ITEM *) _ptr_)->pszText = (LPTSTR) (_value_))
 #define cwel_tv_item_set_cchtextmax(_ptr_, _value_)		(((TV_ITEM *) _ptr_)->cchTextMax = (int) (_value_))
 #define cwel_tv_item_set_iimage(_ptr_, _value_)			(((TV_ITEM *) _ptr_)->iImage = (int) (_value_))
 #define cwel_tv_item_set_iselectedimage(_ptr_, _value_)	(((TV_ITEM *) _ptr_)->iSelectedImage = (int) (_value_))

@@ -61,13 +61,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the button associated with the notification.
 		require
 			exists: exists
 		do
-			create Result.make (0)
-			Result.from_c (cwel_nmtoolbar_get_psztext (item))
+				-- Fixme: this routine is useless without a `set_text' counterpart.
+			create Result.make_empty
 		end
 
 	text_count: INTEGER is

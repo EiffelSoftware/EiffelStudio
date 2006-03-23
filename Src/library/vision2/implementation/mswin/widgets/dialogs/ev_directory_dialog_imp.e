@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_DIRECTORY_DIALOG_IMP
-	
+
 	--| FIXME if you show the dialog, and click OK without
 	--| selecting something, the last selected button is
 	--| equal to "Cancel" as nothing was selected.
@@ -41,7 +41,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 	make
 
@@ -66,13 +66,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	directory: STRING is
+	directory: STRING_32 is
 			-- Path of the current selected file
 		do
 			Result := folder_name
 		end
 
-	start_directory: STRING is
+	start_directory: STRING_32 is
 			-- Base directory where browsing will start.
 		do
 			Result := starting_folder
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_GENERAL) is
 			-- Make `a_path' the base directory.
 		do
 			set_starting_folder (a_path)

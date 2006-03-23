@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the label.
 		local
 			a_txt: POINTER
@@ -101,7 +101,7 @@ feature -- Access
 	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip use for describing `Current'.
 		do
 			if internal_tooltip /= Void then
@@ -111,12 +111,12 @@ feature -- Access
 			end
 		end
 
-	internal_tooltip: STRING
+	internal_tooltip: STRING_32
 		-- Tooltip for `Current'.
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 			a_parent_imp: EV_TOOL_BAR_IMP
@@ -142,7 +142,7 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING

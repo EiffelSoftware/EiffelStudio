@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
 		local
-			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING_32, BOOLEAN]]
 			app_imp: like app_implementation
 			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 			l_c_object: POINTER
@@ -144,7 +144,7 @@ feature  -- Access
 			-- Maximum height that application wishes widget
 			-- instance to have.
 
-	title: STRING is
+	title: STRING_32 is
 			-- Application name to be displayed by
 			-- the window manager.
 		local
@@ -307,14 +307,14 @@ feature -- Element change
 			maximum_height := max_height
 		end
 
-	set_title (new_title: STRING) is
+	set_title (new_title: STRING_GENERAL) is
 			-- Set `title' to `new_title'.
 		local
-			a_title: STRING
+			a_title: STRING_32
 			a_cs: EV_GTK_C_STRING
 		do
 			a_title := new_title
-			if a_title.is_equal (once "") then
+			if a_title.is_empty then
 				-- Some window managers do not like empty strings as titles and show it as an error.
 				a_title := "%T"
 			end
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 	previous_x_position, previous_y_position: INTEGER
 		-- Positions of previously set x and y coordinates of `Current'.
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
 			a_cs: EV_GTK_C_STRING

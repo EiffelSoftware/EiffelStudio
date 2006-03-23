@@ -324,12 +324,11 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING]] is
+	key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]] is
 			-- Actions to be performed when a keyboard press generates a displayable character.
 		do
 			if key_press_string_actions_internal = Void then
-				key_press_string_actions_internal :=
-					 create_key_press_string_actions
+				key_press_string_actions_internal := create_key_press_string_actions
 			end
 			Result := key_press_string_actions_internal
 		ensure
@@ -338,14 +337,13 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING]] is
+	create_key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]] is
 			-- Create a key_press_string action sequence.
 		deferred
 		end
 
-	key_press_string_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING]]
+	key_press_string_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]]
 			-- Implementation of once per object `key_press_string_actions'.
-
 
 feature -- Event handling
 

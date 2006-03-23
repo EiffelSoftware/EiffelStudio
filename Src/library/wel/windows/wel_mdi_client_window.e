@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			exists: exists
-			name_set: text.is_equal (create {STRING}.make (0))
+			name_set: text.is_empty
 		end
 
 feature -- Status report
@@ -139,7 +139,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := "MDICLIENT"

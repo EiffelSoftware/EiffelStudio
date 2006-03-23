@@ -549,7 +549,7 @@ feature -- Access
 			Result := drawable.has_focus
 		end
 
-	tooltip: STRING
+	tooltip: STRING_32
 		-- Tooltip displayed on `Current'.
 
 	has_capture: BOOLEAN is
@@ -2410,7 +2410,7 @@ feature -- Element change
 			item_set: item (a_column, a_row) = a_item
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `Current'.
 		do
 
@@ -5556,7 +5556,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	key_press_string_received (a_keystring: STRING) is
+	key_press_string_received (a_keystring: STRING_32) is
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
 			if key_press_string_actions_internal /= Void and then not key_press_string_actions_internal.is_empty then
@@ -5969,7 +5969,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			item_removed: not internal_selected_items.has (a_item)
 		end
 
-	string_size (s: STRING; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
+	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT

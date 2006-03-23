@@ -30,7 +30,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -42,12 +42,12 @@ feature {NONE} -- Initialization
 			create remove_actions
 			create modify_actions
 		end
-		
+
 feature -- Access
 
 	list: EV_LIST
 			-- List containing items user want to add/remove.
-			
+
 	text_field: EV_TEXT_FIELD
 			-- Text field used to interact with `list'.
 
@@ -83,7 +83,7 @@ feature -- Setting
 		ensure
 			is_entry_valid_set: is_entry_valid = f
 		end
-			
+
 	set_display_error_message (p: like display_error_message) is
 			-- Set `display_error_message' with `p'.
 		do
@@ -91,15 +91,15 @@ feature -- Setting
 		ensure
 			display_error_message_set: display_error_message = p
 		end
-		
+
 feature {NONE} -- Implementation: access
 
-	is_entry_valid: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	is_entry_valid: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
 			-- Check if new entry is valid before adding it.
-			
-	display_error_message: PROCEDURE [ANY, TUPLE [STRING]]
+
+	display_error_message: PROCEDURE [ANY, TUPLE [STRING_32]]
 			-- Display error message when entry is not valid.
-			
+
 	add_button, apply_button, remove_button: EV_BUTTON
 			-- Add, Apply and Remove button
 
@@ -112,7 +112,7 @@ feature -- Cleaning
 			text_field.remove_text
 			apply_button.disable_sensitive
 		end
-				
+
 feature {NONE} -- GUI building
 
 	build_widget is
@@ -121,17 +121,17 @@ feature {NONE} -- GUI building
 			hbox: EV_HORIZONTAL_BOX
 		do
 			create list
-			
+
 			set_border_width (5)
 			set_padding (5)
-			
+
 			extend (list)
-			
+
 			build_text_field ("Entry: ")
 
 			text_field.change_actions.extend (agent update_button_status)
 			text_field.return_actions.extend (agent add_item_in)
-			
+
 			create hbox
 			hbox.set_border_width (5)
 			hbox.extend (create {EV_CELL})
@@ -158,12 +158,12 @@ feature {NONE} -- GUI building
 			hbox.disable_item_expand (remove_button)
 			remove_button.disable_sensitive
 			hbox.extend (create {EV_CELL})
-		
+
 			extend (hbox)
 			disable_item_expand (hbox)
 		end
 
-	build_text_field (t: STRING) is
+	build_text_field (t: STRING_GENERAL) is
 			-- Create text field part.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -189,7 +189,7 @@ feature {NONE} -- Action
 			text_not_void: text_field /= Void
 		local
 			list_item: EV_LIST_ITEM
-			txt: STRING
+			txt: STRING_32
 		do
 			txt := text_field.text
 			if not txt.is_empty and (is_entry_valid = Void or else is_entry_valid.item ([txt])) then
@@ -214,7 +214,7 @@ feature {NONE} -- Action
 			list_not_void: list /= Void
 			text_not_void: text_field /= Void
 		local
-			list_item: EV_LIST_ITEM	
+			list_item: EV_LIST_ITEM
 		do
 			list_item := list.selected_item
 			if list_item /= Void  then
@@ -224,7 +224,7 @@ feature {NONE} -- Action
 			text_field.set_focus
 			remove_actions.call (Void)
 		end
-	
+
 	modify_item_in is
 			-- Modify current selected item of `list' and clean
 			-- `text_field'.
@@ -233,7 +233,7 @@ feature {NONE} -- Action
 			text_not_void: text_field /= Void
 		local
 			list_item: EV_LIST_ITEM
-			txt: STRING
+			txt: STRING_32
 		do
 			txt := text_field.text
 			list_item := list.selected_item
@@ -246,7 +246,7 @@ feature {NONE} -- Action
 			text_field.set_focus
 			modify_actions.call (Void)
 		end
-	
+
 	update_button_status is
 			-- Enable or disable sensitivity of `Apply', `Add'
 			-- and `Remove' buttons.
@@ -254,7 +254,7 @@ feature {NONE} -- Action
 			list_not_void: list /= Void
 			text_not_void: text_field /= Void
 		local
-			l_text: STRING
+			l_text: STRING_32
 			l_item: EV_LIST_ITEM
 		do
 			l_text := text_field.text
@@ -277,7 +277,7 @@ feature {NONE} -- Action
 			else
 				apply_button.disable_sensitive
 			end
-			
+
 				-- Update `Remove'
 			if not l_text.is_empty then
 				remove_button.enable_sensitive
@@ -285,7 +285,7 @@ feature {NONE} -- Action
 				remove_button.disable_sensitive
 			end
 		end
-		
+
 invariant
 	list_not_void: list /= Void
 	text_field_not_void: text_field /= Void

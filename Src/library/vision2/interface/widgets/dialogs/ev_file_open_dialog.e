@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Eiffel Vision file open dialog."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 create
 	default_create,
 	make_with_title
-	
+
 
 feature -- Event handling
 
@@ -33,7 +33,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	multiple_selection_enabled: BOOLEAN is
@@ -45,8 +45,8 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
-		
-	file_names: ARRAYED_LIST [STRING] is
+
+	file_names: ARRAYED_LIST [STRING_32] is
 			-- Full names of currently selected files including path.
 			-- No particular order is guaranteed.
 		require
@@ -64,7 +64,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_multiple_selection	
+			implementation.enable_multiple_selection
 		ensure
 			multiple_selection_enabled: multiple_selection_enabled
 		end

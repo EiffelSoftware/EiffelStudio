@@ -135,10 +135,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
-			temp_key_string: STRING
+			temp_key_string: STRING_32
 			a_capture_widget_imp: EV_WIDGET_IMP
 			app_imp: like app_implementation
 		do

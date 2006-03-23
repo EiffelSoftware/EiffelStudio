@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_full_name: STRING) is
+	make (a_full_name: STRING_GENERAL) is
 			-- Initialize.
 		require
 			a_full_name_not_void: a_full_name /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	full_name: STRING
+	full_name: STRING_32
 
 	c_object: POINTER;
 

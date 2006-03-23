@@ -47,14 +47,17 @@ feature -- Access
 			Result := cwel_list_view_search_info_flags (item)
 		end
 	
-	target: STRING is
+	target: STRING_32 is
 			-- Search target
 			-- Either `target' or `lparam' will be used during search according to `flags'.
 		require
 			valid_flags: flag_set (flags, Lvfi_string)
 		do
-			create Result.make (0)
-			Result.from_c (cwel_list_view_search_info_target (item))
+			if str_target /= Void then
+				Result := str_target.string
+			else
+				create Result.make_empty
+			end
 		end
 	
 	lparam: INTEGER is
@@ -114,14 +117,15 @@ feature -- Element Change
 			added: flag_set (flags, a_flag)
 		end
 		
-	set_target (a_target: like target) is
+	set_target (a_target: STRING_GENERAL) is
 			-- Set `target' with `a_target'.
 		require
 			non_void_target: a_target /= Void
 			valid_target: not a_target.is_empty
 		do
 			add_flag (Lvfi_string)
-			cwel_list_view_search_info_set_target (item, (create {WEL_STRING}.make (a_target)).item)
+			create str_target.make (a_target)
+			cwel_list_view_search_info_set_target (item, str_target.item)
 		ensure
 			target_set: target.is_equal (a_target)
 		end
@@ -192,6 +196,9 @@ feature -- Measurment
 		end
 
 feature {NONE} -- Externals
+
+	str_target: WEL_STRING
+			-- Buffer for `target' field.
 
 	c_structure_size: INTEGER is
 		external

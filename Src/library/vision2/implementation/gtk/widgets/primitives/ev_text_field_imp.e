@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in field.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -79,7 +79,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (entry_widget, (nb + 1) * maximum_character_width, -1)
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -88,7 +88,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
-	append_text (txt: STRING) is
+	append_text (txt: STRING_GENERAL) is
 			-- Append `txt' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -97,7 +97,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 		end
 
-	prepend_text (txt: STRING) is
+	prepend_text (txt: STRING_GENERAL) is
 			-- Prepend `txt' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -174,7 +174,7 @@ feature -- Status report
 			Result := a_end
 		end
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -203,13 +203,13 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING_GENERAL) is
 			-- Insert `txt' at the current position.
 		do
 			insert_text_at_position (txt, caret_position)
 		end
 
-	insert_text_at_position (txt: STRING; a_pos: INTEGER) is
+	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER) is
 			-- Insert `txt' at the current position at position `a_pos'
 		local
 			a_cs: EV_GTK_C_STRING
@@ -321,14 +321,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			real_signal_connect_after  (entry_widget, once "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 
-	stored_text: STRING
+	stored_text: STRING_32
 			-- Value of 'text' prior to a change action, used to compare
 			-- between old and new text.
 
 	on_change_actions is
 			-- A change action has occurred.
 		local
-			new_text: STRING
+			new_text: STRING_32
 		do
 			new_text := text
 			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
@@ -348,7 +348,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	last_key_backspace: BOOLEAN
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- A key event has occurred
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press)

@@ -385,7 +385,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	buffered_append (a_text: STRING; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
 			-- or `flush_buffer_to' which inserts the formatted text.

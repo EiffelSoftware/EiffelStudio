@@ -32,7 +32,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	make_by_file (file_name: STRING) is
+	make_by_file (file_name: STRING_GENERAL) is
 			-- Load an icon file named `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_name (name: STRING) is
+	make_by_name (name: STRING_GENERAL) is
 			-- Load the resource by a `name'
 		do
 			Precursor {WEL_RESOURCE} (name)
@@ -148,7 +148,7 @@ feature {NONE} -- Externals
 				load_flags: INTEGER): POINTER is
 			-- SDK LoadImage
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR, UINT, int, int, %
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, UINT, int, int, %
 				%UINT): EIF_POINTER"
 		alias
 			"LoadImage"

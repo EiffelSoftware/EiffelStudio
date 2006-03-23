@@ -344,7 +344,7 @@ feature -- Element change
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
-			button_text: STRING
+			button_text: STRING_32
 			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
 			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
@@ -788,7 +788,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			but.interface.select_actions.call (Void)
 		end
 
-	button_tooltip_text (command_id: INTEGER): STRING is
+	button_tooltip_text (command_id: INTEGER): STRING_32 is
 			--	`Result' is tooltip text for button with `command_id'.
 		local
 			but: EV_TOOL_BAR_BUTTON_IMP

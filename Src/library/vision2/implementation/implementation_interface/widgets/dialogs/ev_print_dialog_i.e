@@ -1,6 +1,6 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
-indexing 
+indexing
 	description: "EiffelVision print dialog, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ feature -- Access
 	minimum_from_page: INTEGER
 			-- Minimum `from_page' value.
 
-	output_file_name: STRING is
+	output_file_name: STRING_32 is
 			-- String representation of the path to output
 			-- the printed area to.
 		require
@@ -57,7 +57,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	printer_name: STRING is
+	printer_name: STRING_32 is
 			-- String representation of the printer to output
 			-- the printed area to.
 		require
@@ -221,7 +221,7 @@ feature -- Status setting
 		deferred
 		ensure
 			colate_not_checked: not collate_checked
-		end	
+		end
 
 	enable_print_to_file is
 			-- Enable the "Print to file" check box.
@@ -314,7 +314,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_accept: STRING is
+	internal_accept: STRING_32 is
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.

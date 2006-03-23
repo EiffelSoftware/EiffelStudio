@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"[
 			A text field with a button. When the button is pressed, a list of
@@ -21,7 +21,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_COMBO_BOX
 
 inherit
@@ -44,7 +44,7 @@ inherit
 			is_in_default_state,
 			create_implementation
 		end
-		
+
 	EV_COMBO_BOX_ACTION_SEQUENCES
 		undefine
 			is_equal
@@ -52,11 +52,11 @@ inherit
 			implementation
 		end
 
-create	
+create
 	default_create,
 	make_with_strings,
 	make_with_text
-	
+
 feature -- Status report
 
 	is_list_shown: BOOLEAN is
@@ -69,19 +69,19 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 			combo_box_is_editable: is_editable
 		do
 			set_editable_text (a_text)
 		ensure
 			text_set: check_text_modification ("", a_text)
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

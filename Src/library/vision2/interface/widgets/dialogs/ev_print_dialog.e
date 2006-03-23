@@ -88,7 +88,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	output_file_name: STRING is
+	output_file_name: STRING_32 is
 			-- String representation of the path to output
 			-- the printed area to.
 		require
@@ -99,7 +99,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	printer_name: STRING is
+	printer_name: STRING_32 is
 			-- String representation of the printer to output
 			-- the printed area to.
 		require

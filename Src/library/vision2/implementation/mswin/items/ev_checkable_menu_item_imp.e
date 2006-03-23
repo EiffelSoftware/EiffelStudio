@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Abstract notion of a checkable/uncheckable menu item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EV_CHECKABLE_MENU_ITEM_IMP
-	
+
 inherit
 	ANY
 
@@ -16,22 +16,22 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WEL_SHARED_FONTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_SYSTEM_COLORS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_STANDARD_COLORS
 		export
 			{NONE} all
 		end
-		
+
 feature -- Access
 
 	pixmap_imp: EV_PIXMAP_IMP_STATE is
@@ -89,7 +89,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 				if selected_state then
 					rect.set_rect (left_pos, top_pos, left_pos + plain_text_position - 2, bottom_pos)
 					erase_background (draw_dc, rect, system_color_menu)
-					
+
 					rect.set_rect (left_pos + plain_text_position - 2, top_pos, left_pos + plain_text_position, bottom_pos)
 					erase_background (draw_dc, rect, system_color_highlight)
 				else
@@ -107,7 +107,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 					background_color := system_color_menu
 				end
 				erase_background (draw_dc, rect, background_color)
-				
+
 					-- Draw the check mark
 				if checked_state then
 					draw_check_mark (draw_dc, rect, selected_state, disabled_state)
@@ -151,7 +151,7 @@ feature {NONE} -- WEL Implementation
 				draw_dc.set_background_color (background_color)
 				draw_dc.set_text_color (system_color_btnhighlight)
 				draw_dc.bit_blt (1 + rect.left, 1 + rect.top + (rect.height - text_height) // 2, rect.width, text_height, check_dc, 0, 0, Wel_drawing_constants.Srccopy)
-				
+
 					-- Draw the main check mark
 				draw_dc.set_text_color (Black)
 				draw_dc.set_background_color (White)
@@ -218,7 +218,7 @@ feature {NONE} -- WEL Implementation
 			draw_dc.draw_state_icon (Void, wel_icon, icon_left_position, icon_top_position, draw_flags)
 			wel_icon.decrement_reference
 		ensure
-			rect_ok: rect.left = old rect.left and 
+			rect_ok: rect.left = old rect.left and
 					rect.top = old rect.top and
 					rect.right = old rect.right and
 					rect.bottom = old rect.bottom
@@ -230,7 +230,7 @@ feature {NONE} -- WEL Implementation
 			-- background color corresponding to the hilited state.
 		deferred
 		end
-		
+
 	check_mark_bitmap_constant: INTEGER is
 			-- Constant coding for the check mark used in Current.
 		deferred
@@ -241,7 +241,7 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Implementation
 
-	real_text: STRING is
+	real_text: STRING_32 is
 			-- (from EV_MENU_ITEM_IMP)
 		deferred
 		end
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			-- Extract the icon from `pixmap_imp'.
 		deferred
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

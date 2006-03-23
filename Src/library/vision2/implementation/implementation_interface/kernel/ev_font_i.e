@@ -52,7 +52,7 @@ feature -- Access
 		deferred
 		end
 
-	preferred_families: EV_ACTIVE_LIST [STRING]
+	preferred_families: EV_ACTIVE_LIST [STRING_32]
 			-- Preferred user fonts.
 			-- `family' will be ignored when not Void.
 
@@ -136,7 +136,7 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING is
+	name: STRING_32 is
 			-- Face name chosen by toolkit.
 		deferred
 		end
@@ -168,7 +168,7 @@ feature -- Status report
 		deferred
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		require
 			a_string_not_void: a_string /= Void
@@ -192,7 +192,7 @@ feature -- Status report
 		deferred
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -208,7 +208,7 @@ feature -- Status report
 		local
 			cur_width, cur_height: INTEGER
 			index, n: INTEGER
-			s: STRING
+			s: STRING_GENERAL
 			l_height: INTEGER
 
 		do
@@ -219,7 +219,7 @@ feature -- Status report
 			until
 				n > a_string.count
 			loop
-				index := a_string.index_of ('%N', n)
+				index := a_string.index_of_code (('%N').natural_32_code, n)
 				if index > 0 then
 					s := a_string.substring (n, index - 1)
 					n := index + 1
@@ -261,7 +261,7 @@ feature {EV_ANY_I} -- Implementation
 			name_not_void: name /= Void
 		end
 
-	update_preferred_faces (a_face: STRING) is
+	update_preferred_faces (a_face: STRING_32) is
 			-- `preferred_faces' has changed, so update `Current' to reflect this,
 			-- possibly selecting a new face name.
 		deferred

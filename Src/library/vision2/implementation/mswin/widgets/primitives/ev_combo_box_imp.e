@@ -208,7 +208,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	text: STRING is
+	text: STRING_32 is
 			-- `Result' is text of `Current'. Void if none.
 		local
 			loc_selected_item: like selected_item
@@ -392,7 +392,7 @@ feature -- Basic operation
 			cwin_send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
-	replace_selection (txt: STRING) is
+	replace_selection (txt: STRING_GENERAL) is
 			-- Replace the current selection with `txt'.
 			-- If there is no selection, `txt' is inserted
 			-- at the current `caret_position'.
@@ -807,7 +807,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			list: like ev_children
 			counter: INTEGER
 			found: BOOLEAN
-			s1, s2: STRING
+			s1, s2: STRING_32
 		do
 			process_tab_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
@@ -868,7 +868,7 @@ feature {NONE} -- WEL Implementation
 	old_selected_item: EV_LIST_ITEM_IMP
 			-- The previously selected item.
 
-	last_edit_change: STRING
+	last_edit_change: STRING_32
 			-- The string resulting from the last edit change.
 
 	on_cbn_selchange is

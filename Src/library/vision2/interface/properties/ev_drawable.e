@@ -243,7 +243,7 @@ feature -- Drawing operations
 			implementation.draw_point (x, y)
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -252,7 +252,7 @@ feature -- Drawing operations
 			implementation.draw_text (x, y, a_text)
 		end
 
---	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING) is
+--	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL) is
 --			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 --			-- Rotation is number of `angle' radians counter-clockwise from horizontal plane.
 --		require
@@ -262,7 +262,7 @@ feature -- Drawing operations
 --			implementation.draw_rotated_text (x, y, angle, a_text)
 --		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -271,7 +271,7 @@ feature -- Drawing operations
 			implementation.draw_text_top_left (x, y, a_text)
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -283,7 +283,7 @@ feature -- Drawing operations
 			implementation.draw_ellipsed_text (x, y, a_text, clipping_width)
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.

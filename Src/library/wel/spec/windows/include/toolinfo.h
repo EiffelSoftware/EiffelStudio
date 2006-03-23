@@ -19,7 +19,7 @@ extern "C" {
 #define cwel_toolinfo_set_uid(_ptr_, _value_) (((TOOLINFO *) _ptr_)->uId = (UINT_PTR) (_value_))
 #define cwel_toolinfo_set_rect(_ptr_, _value_) (((TOOLINFO *) _ptr_)->rect = (* (RECT *) (_value_)))
 #define cwel_toolinfo_set_hinst(_ptr_, _value_) (((TOOLINFO *) _ptr_)->hinst = (HINSTANCE) (_value_))
-#define cwel_toolinfo_set_lpsztext(_ptr_, _value_) (((TOOLINFO *) _ptr_)->lpszText = (LPSTR) (_value_))
+#define cwel_toolinfo_set_lpsztext(_ptr_, _value_) (((TOOLINFO *) _ptr_)->lpszText = (LPTSTR) (_value_))
 
 #define cwel_toolinfo_get_uflags(_ptr_) ((((TOOLINFO *) _ptr_)->uFlags))
 #define cwel_toolinfo_get_hwnd(_ptr_) ((((TOOLINFO *) _ptr_)->hwnd))

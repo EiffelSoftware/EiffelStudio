@@ -57,24 +57,26 @@ feature {NONE} -- Implementation
 	cwin_display_last_error is
 			-- Display GetLastError in a message box.
 		external
-			"C [macro <wel.h>]"
+			"C inline use <windows.h>, <tchar.h>"
 		alias
-			"{%N%
-			%%TLPVOID lpMsgBuf;%N%
-			%%TCHAR szBuf[5120]; DWORD dw = GetLastError();%N%
-			%%TFormatMessage( %N%
-			%%TFORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,%N%
-			%%TNULL,%N%
-			%%Tdw,%N%
-			%%TMAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language%N%
-			%%T(LPTSTR) &lpMsgBuf,%N%
-			%%T0,%N%
-			%%TNULL %N%
-			%%T);%N%
-			%%Tsprintf(szBuf, %"%%s\nGetLastError returned %%u\n%", lpMsgBuf, dw);%N%
-			%%TMessageBox( NULL, szBuf, %"EV_DIALOG_IMP Error%", MB_OK | MB_ICONINFORMATION );%N%
-			%%TLocalFree( lpMsgBuf );%N%
-			%}"
+			"[
+			{
+			LPVOID lpMsgBuf;
+			TCHAR szBuf[5120]; DWORD dw = GetLastError();
+			FormatMessage( 
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+				NULL,
+				dw,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+				(LPTSTR) &lpMsgBuf,
+				0,
+				NULL 
+				);
+			_stprintf(szBuf, L"%s\nGetLastError returned %u\n", lpMsgBuf, dw);
+			MessageBox( NULL, szBuf, L"EV_DIALOG_IMP Error", MB_OK | MB_ICONINFORMATION );
+			LocalFree( lpMsgBuf );
+			}
+			]"
 		end
 		
 indexing

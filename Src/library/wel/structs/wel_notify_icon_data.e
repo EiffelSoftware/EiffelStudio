@@ -35,7 +35,7 @@ feature -- Access
 	icon: WEL_ICON
 			-- Associated icon displayed in taskbar.
 
-	tooltip_text: STRING is
+	tooltip_text: STRING_32 is
 			-- Associated tooltip if any.
 		require
 			valid_flags: (uflags & {WEL_NIF_CONSTANTS}.nif_icon) = {WEL_NIF_CONSTANTS}.nif_icon
@@ -95,7 +95,7 @@ feature -- Settings
 			icon_set: icon = a_icon
 		end
 
-	set_tooltip_text (a_str: STRING) is
+	set_tooltip_text (a_str: STRING_GENERAL) is
 			-- Set `a_str' as `tooltip_text'.
 		require
 			valid_size: a_str /= Void implies a_str.count < tooltip_text_size

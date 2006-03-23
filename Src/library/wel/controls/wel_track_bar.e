@@ -177,11 +177,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_trackbar_class)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_trackbar_class)).string
 		end
 
 	default_style: INTEGER is

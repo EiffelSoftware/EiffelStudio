@@ -51,11 +51,11 @@ feature -- Access
 			Result := cwel_nm_cbeendedit_get_inewselection (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text from within the control's edit box.
 		do
-			create Result.make (0)
-			Result.from_c (cwel_nm_cbeendedit_get_tchar (item))
+				-- Fixme: this routine is useless without a `set_text' counterpart.
+			create Result.make_empty
 		end
 
 	why: INTEGER is

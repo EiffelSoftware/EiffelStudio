@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision multi column list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER_I
 		redefine
 			interface
@@ -33,7 +33,7 @@ feature {EV_ANY} -- Initialization
 		do
 				-- Set default width & height for the pixmaps
 			initialize_pixmaps
-			
+
 			create column_titles.make
 			create column_widths.make
 			create column_alignments.make
@@ -69,13 +69,13 @@ feature -- Status report
 			-- Can more that one item be selected?
 		deferred
 		end
-	
+
 	title_shown: BOOLEAN is
 			-- Is a row displaying column titles shown?
 		deferred
 		end
 
-	column_title (a_column: INTEGER): STRING is
+	column_title (a_column: INTEGER): STRING_32 is
 			-- Title of `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -86,7 +86,7 @@ feature -- Status report
 				Result := ""
 			end
 		end
-	
+
 	column_width (a_column: INTEGER): INTEGER is
 			-- Width of `a_column' in pixels.
 		require
@@ -134,7 +134,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			item_selected: 
+			item_selected:
 				selected_items.has (interface.i_th (an_index))
 		end
 
@@ -144,7 +144,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 			an_index_within_range: an_index > 0 and an_index <= count
 		deferred
 		ensure
-			item_deselected: 
+			item_deselected:
 				not selected_items.has (interface.i_th (an_index))
 		end
 
@@ -205,7 +205,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 			set_column_alignment (an_alignment, a_column)
 		end
 
-	
+
 	align_text_right (a_column: INTEGER) is
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
@@ -220,7 +220,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 
 feature {EV_ANY, EV_ANY_I}-- Element change
 
-	set_column_title (a_title: STRING; a_column: INTEGER) is
+	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER) is
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			a_column_positive: a_column > 0
@@ -230,7 +230,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				column_titles.go_i_th (a_column)
 				column_titles.replace (a_title.twin)
 			else
-				from	
+				from
 				until
 					column_titles.count = a_column - 1
 				loop
@@ -246,7 +246,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			a_title_assigned: a_title.is_equal (column_title (a_column))
 		end
 
-	set_column_titles (titles: ARRAY [STRING]) is         
+	set_column_titles (titles: ARRAY [STRING_GENERAL]) is
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
@@ -299,7 +299,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 		deferred
 		end
 
-	set_column_widths (widths: ARRAY [INTEGER]) is         
+	set_column_widths (widths: ARRAY [INTEGER]) is
 			-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
@@ -315,7 +315,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				i > widths.count
 			loop
 				column_widths.extend (widths @ (i + widths.lower - 1))
-				column_width_changed (widths @ (i + widths.lower - 1), i)				
+				column_width_changed (widths @ (i + widths.lower - 1), i)
 				i := i + 1
 				old_count := old_count - 1
 			end
@@ -334,13 +334,13 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 		require
 			alignments_not_void: alignments /= Void
 		do
-			
+
 				-- Firstly add the first column as left aligned as the first column is
 				-- always left aligned in a multi column list.
 			if column_alignments.is_empty then
 				column_alignments.extend ({EV_TEXT_ALIGNMENT}.left_alignment)
 			end
-			
+
 			from
 					-- Note that we go to the second position if it exists
 					-- as we have already added the first item as left aligned.
@@ -364,7 +364,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 		end
 
 	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
-			-- Assign text alignment to `an_alignment' for 
+			-- Assign text alignment to `an_alignment' for
 			-- column `a_column'.
 		require
 			an_alignment_not_void: an_alignment /= Void
@@ -374,11 +374,11 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				column_alignments.go_i_th (a_column)
 				column_alignments.replace (an_alignment.alignment_code)
 			else
-				from	
+				from
 				until
 					column_alignments.count = a_column - 1
 				loop
-					column_alignments.extend (an_alignment.left_alignment) 
+					column_alignments.extend (an_alignment.left_alignment)
 				end
 				column_alignments.extend (an_alignment.alignment_code)
 			end
@@ -404,11 +404,11 @@ feature {EV_ANY_I} -- Implementation
 				column_widths.go_i_th (a_column)
 				column_widths.replace (a_width)
 			else
-				from	
+				from
 				until
 					column_widths.count = a_column - 1
 				loop
-					column_widths.extend (Default_column_width) 
+					column_widths.extend (Default_column_width)
 				end
 				column_widths.extend (a_width)
 			end
@@ -416,7 +416,7 @@ feature {EV_ANY_I} -- Implementation
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL) is
 			-- Set the label of the cell with coordinates `a_column',
 			-- `a_row' with `a_text'.
 		require
@@ -446,7 +446,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Do nothing by default
 		end
 
-	column_title_changed (a_title: STRING; a_column: INTEGER) is
+	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER) is
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
 			-- Called when a title has been altered.
@@ -487,7 +487,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	column_titles: LINKED_LIST [STRING]
+	column_titles: LINKED_LIST [STRING_32]
 			-- All column titles set using `set_column_titles' and
 			-- `set_column_title'. We store it to give the user the
 			-- option to specify more titles than the current

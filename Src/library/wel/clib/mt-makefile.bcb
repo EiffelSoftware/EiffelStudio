@@ -2,7 +2,7 @@
 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib
-CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib -D_UNICODE -DUNICODE
 
 .c.obj:
 	$(CC) @&&|

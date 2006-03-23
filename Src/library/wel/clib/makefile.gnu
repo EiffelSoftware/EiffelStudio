@@ -1,7 +1,7 @@
 # wel.a - Makefile for Microsoft C
 
 CC = gcc
-CFLAGS = -c -O2 -I../spec/windows/include -I$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include
+CFLAGS = -c -O2 -I../spec/windows/include -I$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include -D_UNICODE -DUNICODE
 RM = rm
 
 .c.o:

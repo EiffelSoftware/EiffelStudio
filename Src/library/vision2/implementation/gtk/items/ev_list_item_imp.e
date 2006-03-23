@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_LIST_ITEM_IMP
 
 inherit
@@ -17,7 +17,7 @@ inherit
 	EV_ITEM_ACTION_SEQUENCES_IMP
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-	
+
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- PND
 
-	enable_transport is 
+	enable_transport is
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
@@ -99,7 +99,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is 
+        	a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				do_not_call: False
@@ -151,21 +151,21 @@ feature -- Status setting
 			parent_imp.deselect_item (parent_imp.index_of (interface, 1))
 		end
 
-	text: STRING is
-			-- 
+	text: STRING_32 is
+			--
 		do
 			Result := internal_text.twin
 		end
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			internal_tooltip := a_tooltip.twin
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 		do
 			if internal_tooltip /= Void then
@@ -175,7 +175,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING_GENERAL) is
 			-- Set current button text to `txt'.
 		do
 			internal_text := txt.twin
@@ -183,7 +183,7 @@ feature -- Element change
 				parent_imp.set_text_on_position (parent_imp.index_of (interface, 1) , txt)
 			end
 		end
-		
+
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
@@ -201,12 +201,12 @@ feature -- Element change
 				parent_imp.remove_row_pixmap (parent_imp.index_of (interface, 1))
 			end
 		end
-	
+
 	pixmap: EV_PIXMAP
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING
+	internal_text: STRING_32
 		-- Text displayed in `Current'
 
 	destroy is
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
-	internal_tooltip: STRING
+	internal_tooltip: STRING_32
 		-- Tooltip used for `Current'.
 
 	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
@@ -234,9 +234,9 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 		-- Object representing position of `Current' in parent tree model
 
 	parent_imp: EV_LIST_ITEM_LIST_IMP
-	
+
 	set_parent_imp (a_parent_imp: EV_LIST_ITEM_LIST_IMP) is
-			-- 
+			--
 		do
 			parent_imp := a_parent_imp
 		end

@@ -401,7 +401,7 @@ feature {NONE} -- Debug
 			loop
 				trg ?= identified.id_object (pnd_targets.item)
 				if trg /= Void then
-					io.error.put_string (trg.target_name)
+					io.error.put_string (trg.target_name.as_string_8)
 				end
 				pnd_targets.forth
 			end

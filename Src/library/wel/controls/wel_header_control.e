@@ -143,7 +143,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text_header_item (a_label: STRING; a_width, a_format: INTEGER; insert_after_item_no: INTEGER) is
+	insert_text_header_item (a_label: STRING_GENERAL; a_width, a_format: INTEGER; insert_after_item_no: INTEGER) is
 			-- Insert a text item to the header control after the
 			-- `insert_item_item_no' item. If there is no item in the list
 			-- yet, or you want to insert the new item as the first
@@ -401,11 +401,10 @@ feature {NONE} -- Implementation
 			last_retrieved_window_pos_not_void: last_retrieved_window_pos /= Void
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_wc_header)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_wc_header)).string
 		end
 
 	default_style: INTEGER is

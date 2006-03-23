@@ -47,7 +47,7 @@ feature -- Status report
 		end
 
 feature -- Element Change
-		
+
 	pixmap: EV_PIXMAP is
 			-- `Result' is pixmap displayed in `Current'.
 			-- We do not simply return `internal_pixmap' as
@@ -59,7 +59,7 @@ feature -- Element Change
 				if parent /= Void and then internal_pixmap.width /= parent_imp.pixmaps_width and then internal_pixmap.height /= parent_imp.pixmaps_height then
 					Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
 				end
-			end			
+			end
 		end
 
 	internal_pixmap: EV_PIXMAP
@@ -69,28 +69,28 @@ feature -- Element Change
 			-- Parent implementation of `Current'.
 		deferred
 		end
-		
-	tooltip: STRING is
+
+	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
 		deferred
 		end
-		
+
 	remove_tooltip is
 			-- Make `tooltip' empty.
 		do
 			set_tooltip ("")
 		ensure
 			tooltip_removed: tooltip.is_empty
-		end 
+		end
 
 feature -- Contract support
 
@@ -105,23 +105,23 @@ feature -- Contract support
 				multi_column_list ?= parent
 				scaled_pixmap.stretch (multi_column_list.pixmaps_width, multi_column_list.pixmaps_height)
 			else
-				scaled_pixmap := a_pixmap		
+				scaled_pixmap := a_pixmap
 			end
 			Result := scaled_pixmap.is_equal (pixmap)
 		end
-		
+
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
-	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
 		deferred
 		end
 
-	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
 			-- `an_item' has been removed from index `item_index'.
 		deferred
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW;

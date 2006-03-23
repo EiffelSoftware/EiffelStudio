@@ -42,11 +42,11 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text content of clipboard.
 		do
 			open_clipboard (Void)
-			if clipboard_open and then is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_text) then
+			if clipboard_open and then is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext) then
 				retrieve_clipboard_text
 				Result := last_string
 				Result.prune_all ('%R')
@@ -56,23 +56,23 @@ feature -- Access
 				Result := ""
 			end
 		end
-		
+
 	has_text: BOOLEAN is
 			-- Does the clipboard currently contain text?
 		do
 			open_clipboard (Void)
-			Result := clipboard_open and is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_text)
+			Result := clipboard_open and is_clipboard_format_available ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext)
 			close_clipboard
 		end
 
 feature -- Status Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to clipboard.
 		local
 			window: EV_WINDOW
 			wel_window: WEL_WINDOW
-			local_text: STRING
+			local_text: STRING_32
 		do
 			create window
 			wel_window ?= window.implementation
@@ -103,9 +103,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_CLIPBOARD_IMP
 

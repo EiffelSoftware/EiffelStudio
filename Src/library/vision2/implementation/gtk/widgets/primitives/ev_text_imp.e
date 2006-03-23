@@ -1,16 +1,16 @@
 indexing
 
-	description: 
+	description:
 		"EiffelVision text area, gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TEXT_IMP
-	
+
 inherit
 	EV_TEXT_I
 		redefine
@@ -29,7 +29,7 @@ inherit
 			default_key_processing_blocked,
 			visual_widget
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -57,15 +57,15 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
-			
+
 		end
-		
+
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Hook up the change actions for the text widget
 		do
 			Result := Precursor {EV_TEXT_COMPONENT_IMP}
 		end
-		
+
 	initialize is
 			-- Initialize `Current'
 		do
@@ -81,10 +81,10 @@ feature {NONE} -- Initialization
 		do
 			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
-		
+
 feature -- Access
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -130,7 +130,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	set_editable (flag: BOOLEAN) is
 			-- if `flag' then make the component read-write.
 			-- if not `flag' then make the component read-only.
@@ -148,7 +148,7 @@ feature -- Status setting
 feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
+			-- Select (hilight) the text between
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		local
@@ -168,7 +168,7 @@ feature -- Basic operation
 										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer),
 										a_end_iter.item
 			)
-		end	
+		end
 
 	deselect_all is
 			-- Unselect the current selection.
@@ -186,7 +186,7 @@ feature -- Basic operation
 										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
 										a_iter.item
 			)
-		end	
+		end
 
 	delete_selection is
 			-- Delete the current selection.
@@ -215,12 +215,12 @@ feature -- Basic operation
 		do
 			if has_selection then
 				clip_imp ?= App_implementation.clipboard.implementation
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)
 			end
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the contents of the clipboard 
+			-- Insert the contents of the clipboard
 			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing.
 		local
@@ -238,7 +238,7 @@ feature -- Basic operation
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			temp_text: POINTER
@@ -253,7 +253,7 @@ feature -- Access
 			a_cs.set_with_eiffel_string (once "")
 		end
 
-	line (a_line: INTEGER): STRING is
+	line (a_line: INTEGER): STRING_32 is
 			-- Returns the content of line `a_line'.
 		local
 			first_pos: INTEGER
@@ -267,16 +267,16 @@ feature -- Access
 			create end_iter.make
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, start_iter.item, first_pos -1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, end_iter.item, first_pos -1)
-			
+
 			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, end_iter.item)
-			
+
 			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, start_iter.item, end_iter.item, False)
-			
+
 			create a_cs.make_from_pointer (text_ptr)
 			Result := a_cs.string
 			a_cs.set_with_eiffel_string (once "")
 		end
-		
+
 	first_position_from_line_number (a_line: INTEGER): INTEGER is
 			-- Position of the first character on line `a_line'.
 		local
@@ -294,7 +294,7 @@ feature -- Access
 				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1		
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER is
@@ -314,7 +314,7 @@ feature -- Access
 				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				i := i + 1
 			end
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item)	
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item)
 		end
 
 feature -- Status report
@@ -339,7 +339,7 @@ feature -- Status report
 					not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
 				loop
 					Result := Result + 1
-				end				
+				end
 			else
 				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_line_count (text_buffer)
 			end
@@ -363,7 +363,7 @@ feature -- Status report
 				not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_iter.item)
 			loop
 				Result := Result + 1
-			end			
+			end
 			Result := Result.max (1)
 		end
 
@@ -381,13 +381,13 @@ feature -- Status report
 			)
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
-		
+
 	has_word_wrapping: BOOLEAN
 			-- Does `Current' have word wrapping enabled?
 
 feature -- Status setting
-	
-	insert_text (a_text: STRING) is
+
+	insert_text (a_text: STRING_GENERAL) is
 		local
 			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -402,8 +402,8 @@ feature -- Status setting
 			)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
-	
-	set_text (a_text: STRING) is
+
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' to `a_text'
 		local
 			a_cs: EV_GTK_C_STRING
@@ -411,14 +411,14 @@ feature -- Status setting
 			a_cs := a_text
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
-		
-	append_text (a_text: STRING) is
+
+	append_text (a_text: STRING_GENERAL) is
 			-- Append `a_text' to `text'.
 		do
 			append_text_internal (text_buffer, a_text)
 		end
 
-	prepend_text (a_text: STRING) is
+	prepend_text (a_text: STRING_GENERAL) is
 			-- Prepend 'txt' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -430,7 +430,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
 		end
-	
+
 	delete_text (start, finish: INTEGER) is
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
@@ -455,33 +455,33 @@ feature -- Basic operation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, i - 1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
 		end
-		
+
 	enable_word_wrapping is
 			-- Enable word wrapping for `Current'
 		do
 			-- Make sure only vertical scrollbar is showing
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				scrolled_window, 
+				scrolled_window,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_word_enum)
 			has_word_wrapping := True
 		end
-		
+
 	disable_word_wrapping is
 			-- Disable word wrapping for `Current'
 		do
 			-- Make sure both scrollbars are showing
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				scrolled_window, 
+				scrolled_window,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_none_enum)
 			has_word_wrapping := False
 		end
-		
+
 feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
+	append_text_internal (a_text_buffer: POINTER; a_text: STRING_GENERAL) is
 			-- Append `txt' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -569,10 +569,10 @@ feature {NONE} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
 		end
-		
+
 	text_view: POINTER
 		-- Pointer to the GtkTextView widget
-		
+
 	scrolled_window: POINTER
 		-- Pointer to the GtkScrolledWindow
 

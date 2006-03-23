@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING) is
+	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING_GENERAL) is
 		require
 			string_to_find_valid: to_find /= Void
 		local
@@ -40,11 +40,8 @@ feature -- Access
 			create Result.make_by_pointer (cwel_findargument_get_range (item))
 		end
 
-	string_to_find: WEL_STRING is
+	string_to_find: WEL_STRING
 			-- String to find
-		do
-			create Result.make_by_pointer (cwel_findargument_get_string_to_find (item))
-		end
 
 	range_out: WEL_CHARACTER_RANGE is
 			-- Range in which text is found
@@ -62,6 +59,7 @@ feature -- Element change
 
 	set_string_to_find (a_string_to_find: WEL_STRING) is
 		do
+			string_to_find := a_string_to_find
 			cwel_findargument_set_string_to_find (item, a_string_to_find.item)
 		end
 

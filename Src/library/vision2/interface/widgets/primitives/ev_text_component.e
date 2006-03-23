@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"[
 			Eiffel Vision text component. Base class for text editing widgets.
 		]"
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_TEXT_COMPONENT
 
 inherit
@@ -17,7 +17,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
 	EV_TEXTABLE
 		redefine
 			implementation,
@@ -42,7 +42,7 @@ feature -- Access
 			Result_not_negative: Result >= 0
 		end
 
-	selected_text: STRING is
+	selected_text: STRING_32 is
 			-- Currently selected text.
 		require
 			not_destroyed: not is_destroyed
@@ -122,7 +122,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	enable_edit is
 			-- Make `Current' editable.
 		require
@@ -130,7 +130,7 @@ feature -- Status setting
 		do
 			implementation.set_editable (True)
 		ensure
-			is_editable: is_editable 
+			is_editable: is_editable
 		end
 
 	disable_edit is
@@ -140,9 +140,9 @@ feature -- Status setting
 		do
 			implementation.set_editable (False)
 		ensure
-			is_editable: not is_editable 
+			is_editable: not is_editable
 		end
-	
+
 	set_caret_position (a_caret_position: INTEGER) is
 			-- Assign `a_caret_position' to `caret_position'.
 		require
@@ -156,44 +156,44 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text (a_text: STRING) is
+	insert_text (a_text: STRING_GENERAL) is
 			-- Insert `a_text' to right of `caret_position'.
 		require
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
 			implementation.insert_text (a_text)
 		ensure
 			text_insert_correctly: text.is_equal ((old text).substring (1,
-				(old caret_position - 1)) + a_text + (old text).substring
+				(old caret_position - 1)) + a_text.as_string_32 + (old text).substring
 				((old caret_position), (old text.count)))
 			caret_not_moved: old caret_position = caret_position
 		end
 
-	append_text (a_text: STRING) is
+	append_text (a_text: STRING_GENERAL) is
 			-- Append `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
 			implementation.append_text (a_text)
 		ensure
 			text_appended: check_text_modification (old text, a_text)
 			caret_not_moved: old caret_position = caret_position
 		end
-	
-	prepend_text (a_text: STRING) is
+
+	prepend_text (a_text: STRING_GENERAL) is
 			-- Prepend `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
 			implementation.prepend_text (a_text)
 		ensure
-			text_prepended:  text.is_equal (a_text + old text)
+			text_prepended:  text.is_equal (a_text.as_string_32 + old text)
 			caret_not_moved: old caret_position = caret_position
 		end
 
@@ -296,7 +296,7 @@ feature -- Basic operation
 		ensure
 			selection_copied: clipboard_content.is_equal (selected_text)
 			text_unchanged: text.is_equal (old text)
-			caret_not_moved: caret_position = old caret_position	
+			caret_not_moved: caret_position = old caret_position
 		end
 
 	paste (a_position: INTEGER) is
@@ -328,14 +328,14 @@ feature {NONE} -- Contract support
 		do
 			Result := implementation.maximum_character_width
 		end
-	
-	clipboard_content: STRING is
+
+	clipboard_content: STRING_32 is
 			-- `Result' is contents of the clipboard.
 		do
 			Result := implementation.clipboard_content
 		end
 
-	check_text_modification (old_text, added_text: STRING): BOOLEAN is
+	check_text_modification (old_text, added_text: STRING_32): BOOLEAN is
 			-- Ensure that `text' is equal to `old_text' + `added_text' with
 			-- all %R removed.
 		do
@@ -361,7 +361,7 @@ invariant
 	text_length_consistent: text_length = text.count
 	selection_consistent: has_selection implies text.substring (selection_start, selection_end).is_equal (selected_text)
 
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

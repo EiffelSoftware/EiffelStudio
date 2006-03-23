@@ -53,7 +53,7 @@ feature -- Access
 			Result := implementation.is_displayed
 		end
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of Current column. Empty if none.
 		require
 			not_destroyed: not is_destroyed

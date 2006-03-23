@@ -1,15 +1,15 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision tooltipable. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "tooltip, popup"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TOOLTIPABLE_IMP
-	
+
 inherit
 	EV_TOOLTIPABLE_I
 		redefine
@@ -26,7 +26,7 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip that has been set.
 		local
 			tip_ptr: POINTER
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -57,7 +57,7 @@ feature -- Element change
 					visual_widget,
 					a_cs.item,
 					NULL
-				)			
+				)
 			else
 				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 					tooltips_pointer,

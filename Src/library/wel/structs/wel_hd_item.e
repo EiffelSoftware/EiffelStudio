@@ -41,12 +41,16 @@ feature -- Access
 			Result := cwel_hd_item_get_mask (item)
 		end	
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the button associated with the notification.
 		require
 			exists: exists
 		do
-			Result := internal_text.string
+			if internal_text /= Void then
+				Result := internal_text.string
+			else
+				create Result.make_empty
+			end
 		end
 
 	text_count: INTEGER is
@@ -131,7 +135,7 @@ feature -- Element change
 			cwel_hd_item_set_mask (item, value)
 		end	
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 			-- Also Updates `text_count' and `mask'
 		require

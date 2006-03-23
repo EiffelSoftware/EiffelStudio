@@ -36,18 +36,24 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	full_name: STRING is
+	full_name: STRING_32 is
 			-- Specifies a unique name for the font
+		local
+			l_str: WEL_STRING
 		do
-			create Result.make_from_c (cwel_enumlogfont_get_elffullname (item))
+			create l_str.share_from_pointer (cwel_enumlogfont_get_elffullname (item))
+			Result := l_str.string
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	style: STRING is
+	style: STRING_32 is
 			-- Specifies the style of the font
+		local
+			l_str: WEL_STRING
 		do
-			create Result.make_from_c (cwel_enumlogfont_get_elfstyle (item))
+			create l_str.share_from_pointer (cwel_enumlogfont_get_elfstyle (item))
+			Result := l_str.string
 		ensure
 			result_not_void: Result /= Void
 		end

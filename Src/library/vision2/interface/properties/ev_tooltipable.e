@@ -6,8 +6,8 @@ indexing
 	keywords: "tooltip, popup, hint"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_TOOLTIPABLE
 
 inherit
@@ -16,10 +16,10 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is empty then no tooltip displayed.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			not_destroyed: not is_destroyed
@@ -42,7 +42,7 @@ feature -- Element change
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
-			tooltip_assigned: a_tooltip.is_equal (tooltip)
+			tooltip_assigned: tooltip.is_equal (a_tooltip)
 			cloned: tooltip /= a_tooltip
 		end
 
@@ -65,7 +65,7 @@ feature {NONE} -- Contract support
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_TOOLTIPABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 

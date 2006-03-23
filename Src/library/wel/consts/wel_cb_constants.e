@@ -8,6 +8,9 @@ indexing
 class
 	WEL_CB_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
 	Cb_geteditsel: INTEGER is 320
@@ -95,20 +98,20 @@ feature -- Access
 			-- Declared in Windows as CB_ERRSPACE
 
 	Cb_gettopindex: INTEGER is 347
-			-- An application sends the CB_GETTOPINDEX message to 
-			-- retrieve the zero-based index of the first visible 
-			-- item in the list box portion of a combo box. 
+			-- An application sends the CB_GETTOPINDEX message to
+			-- retrieve the zero-based index of the first visible
+			-- item in the list box portion of a combo box.
 			--
-			-- Initially, the item with index 0 is at the top of 
-			-- the list box, but if the list box contents have 
-			-- been scrolled, another item may be at the top. 
+			-- Initially, the item with index 0 is at the top of
+			-- the list box, but if the list box contents have
+			-- been scrolled, another item may be at the top.
 
 	Cb_settopindex: INTEGER is 348;
-			-- An application sends the CB_SETTOPINDEX message to 
-			-- ensure that a particular item is visible in the 
-			-- list box of a combo box. The system scrolls the 
-			-- list box contents so that either the specified 
-			-- item appears at the top of the list box or the 
+			-- An application sends the CB_SETTOPINDEX message to
+			-- ensure that a particular item is visible in the
+			-- list box of a combo box. The system scrolls the
+			-- list box contents so that either the specified
+			-- item appears at the top of the list box or the
 			-- maximum scroll range has been reached.
 
 indexing

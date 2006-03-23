@@ -61,14 +61,14 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	x_hotspot: INTEGER is
-			-- X-coordinate of `Current's hot spot. 
+			-- X-coordinate of `Current's hot spot.
 		local
 			icon_info: WEL_ICON_INFO
 		do
 			icon_info := get_icon_info
 			if icon_info /= Void then
 				Result := icon_info.x_hotspot
-	
+
 					-- Destroy `icon_info' structure
 				icon_info.enable_reference_tracking_on_bitmaps
 				icon_info.dispose
@@ -76,16 +76,16 @@ feature -- Access
 				Result := 0
 			end
 		end
-	
+
 	y_hotspot: INTEGER is
-			-- Y-coordinate of a `Current's hot spot. 
+			-- Y-coordinate of a `Current's hot spot.
 		local
 			icon_info: WEL_ICON_INFO
 		do
 			icon_info := get_icon_info
 			if icon_info /= Void then
 				Result := icon_info.y_hotspot
-	
+
 					-- Destroy `icon_info' structure
 				icon_info.enable_reference_tracking_on_bitmaps
 				icon_info.dispose
@@ -160,7 +160,7 @@ feature {NONE} -- Externals
 	cwin_load_cursor (hinstance: POINTER; id: POINTER): POINTER is
 			-- SDK LoadCursor
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
 		alias
 			"LoadCursor"
 		end

@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING; a_title: STRING) is
+	make (a_class_name: STRING_GENERAL; a_title: STRING_GENERAL) is
 			-- Make a MDI create structure with `a_class_name' and
 			-- `a_title'.
 		do
@@ -51,20 +51,26 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name of the MDI child window
 		do
-			create Result.make (0)
-			Result.from_c (cwel_mdi_cs_get_class_name (item))
+			if str_class_name /= Void then
+				Result := str_class_name.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of the MDI child window
 		do
-			create Result.make (0)
-			Result.from_c (cwel_mdi_cs_get_class_title (item))
+			if str_title /= Void then
+				Result := str_title.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -115,7 +121,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_class_name (a_class_name: STRING) is
+	set_class_name (a_class_name: STRING_GENERAL) is
 			-- Set `class_name' with `a_class_name'
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -127,7 +133,7 @@ feature -- Element change
 			class_name_set: class_name.is_equal (a_class_name)
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set `title' with `a_title'
 		require
 			a_title_valid: a_title /= Void

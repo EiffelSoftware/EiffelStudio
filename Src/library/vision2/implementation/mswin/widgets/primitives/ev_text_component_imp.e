@@ -118,10 +118,10 @@ feature {EV_ANY_I}-- Status setting
 
 feature {EV_ANY_I}-- element change
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING_GENERAL) is
 			-- Insert `txt' at `caret_position'.
 		local
-			temp_text: STRING
+			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := internal_caret_position
@@ -135,10 +135,10 @@ feature {EV_ANY_I}-- element change
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	append_text (txt:STRING) is
+	append_text (txt:STRING_GENERAL) is
 			-- Append 'txt' to text of `Current'.
 		local
-			temp_text: STRING
+			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := internal_caret_position
@@ -148,10 +148,10 @@ feature {EV_ANY_I}-- element change
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	prepend_text (txt: STRING) is
+	prepend_text (txt: STRING_GENERAL) is
 			-- Prepend 'txt' to text of `Current'.
 		local
-			temp_text: STRING
+			temp_text: STRING_32
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := internal_caret_position
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			enable_context_menu
 		end
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		local
 			edit_control: WEL_SINGLE_LINE_EDIT

@@ -205,7 +205,7 @@ feature -- Basic operations
 				elseif scroll_code = Sb_thumbtrack then
 					scroll_info_struct.set_mask (sif_trackpos)
 					cwin_get_scroll_info (item, Sb_ctl, scroll_info_struct.item)
-					new_pos := scroll_info_struct.track_position				
+					new_pos := scroll_info_struct.track_position
 				elseif scroll_code = Sb_top then
 					new_pos := min
 				elseif scroll_code = Sb_bottom then
@@ -240,10 +240,17 @@ feature {NONE} -- Implementation
 	Default_line_value: INTEGER is 1
 			-- Default scroll units per line
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := "SCROLLBAR"
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_scrollbar_class)).string
+		end
+
+	cwin_scrollbar_class: POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"WC_SCROLLBAR"
 		end
 
 	default_style: INTEGER is
@@ -254,7 +261,7 @@ feature {NONE} -- Implementation
 
 	scroll_info_struct: WEL_SCROLL_BAR_INFO
 		-- Associated SCROLLINFO struct to current toolbar.
-		
+
 	retrieve_scroll_info (mask: INTEGER) is
 			-- Retrieve `mask' into `scroll_info_struct' and then restore original mask.
 		local

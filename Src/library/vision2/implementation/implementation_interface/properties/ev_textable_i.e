@@ -1,12 +1,12 @@
 indexing
-	description: 
+	description:
 		"EiffelVision textable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "text, label, font, name, property"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXTABLE_I
 
@@ -15,10 +15,10 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in label.
 		deferred
 		ensure
@@ -28,11 +28,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		deferred
 		ensure
 			text_cloned: text.is_equal (a_text) and then text /= a_text

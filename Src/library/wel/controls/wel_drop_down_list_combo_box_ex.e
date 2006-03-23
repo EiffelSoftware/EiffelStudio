@@ -26,7 +26,7 @@ feature -- Status report
 			Result := selected_string.count
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Window text
 		do
 			Result := selected_string

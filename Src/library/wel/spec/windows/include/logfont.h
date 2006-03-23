@@ -9,6 +9,8 @@
 #	include <wel.h>
 #endif
 
+#include <tchar.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,7 +28,7 @@ extern "C" {
 #define cwel_log_font_set_clipprecision(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfClipPrecision = (BYTE) (_value_))
 #define cwel_log_font_set_quality(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfQuality = (BYTE) (_value_))
 #define cwel_log_font_set_pitchandfamily(_ptr_, _value_) (((LOGFONT *) _ptr_)->lfPitchAndFamily = (BYTE) (_value_))
-#define cwel_log_font_set_facename(_ptr_, _value_) (strcpy(((LOGFONT *) _ptr_)->lfFaceName, (char *) (_value_)))
+#define cwel_log_font_set_facename(_ptr_, _value_) (_tcscpy(((LOGFONT *) _ptr_)->lfFaceName, (TCHAR *) (_value_)))
 
 #define cwel_log_font_get_height(_ptr_) ((((LOGFONT *) _ptr_)->lfHeight))
 #define cwel_log_font_get_width(_ptr_) ((((LOGFONT *) _ptr_)->lfWidth))

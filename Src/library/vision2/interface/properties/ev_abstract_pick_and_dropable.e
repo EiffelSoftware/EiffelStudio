@@ -24,7 +24,7 @@ feature -- Access
 		deferred
 		end
 	
-	target_name: STRING
+	target_name: STRING_GENERAL
 			-- Optional textual name describing `Current' pick and drop hole.
 
 	pebble_function: FUNCTION [ANY, TUPLE, ANY] is
@@ -88,7 +88,7 @@ feature -- Status setting
 			pebble_function_assigned: pebble_function = a_function
 		end
 
-	set_target_name (a_name: STRING) is
+	set_target_name (a_name: STRING_GENERAL) is
 			-- Assign `a_name' to `target_name'.
 		require
 			a_name_not_void: a_name /= Void

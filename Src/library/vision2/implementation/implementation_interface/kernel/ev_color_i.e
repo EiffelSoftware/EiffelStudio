@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_COLOR_I
 
 inherit
@@ -20,7 +20,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create zero intinsity color. 
+			-- Create zero intinsity color.
 		deferred
 		ensure then
 			default_name_assigned: name.is_equal (Default_name)
@@ -55,7 +55,7 @@ feature {EV_COLOR} -- Access
 			within_range: Result >= 0 and Result <= 1
 		end
 
-	name: STRING is
+	name: STRING_32 is
 			-- A textual description.
 		deferred
 		ensure
@@ -91,7 +91,7 @@ feature {EV_COLOR} -- Element change
 			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING_GENERAL) is
 			-- Assign `a_name' to `name'.
 		require
 			name_not_void: a_name /= Void
@@ -147,7 +147,7 @@ feature {EV_COLOR} -- Conversion
 		ensure
 			within_range: Result >= 0 and Result <= interface.Max_8_bit
 		end
-	
+
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is
 			-- Set `red' from `an_8_bit_red' intinsity.
 		require
@@ -157,7 +157,7 @@ feature {EV_COLOR} -- Conversion
 		ensure
 			red_assigned: red_8_bit = an_8_bit_red
 		end
-	
+
 	set_green_with_8_bit (an_8_bit_green: INTEGER) is
 			-- Set `green' from `an_8_bit_green' intinsity.
 		require
@@ -167,7 +167,7 @@ feature {EV_COLOR} -- Conversion
 		ensure
 			green_assigned: green_8_bit = an_8_bit_green
 		end
-	
+
 	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		require
@@ -214,7 +214,7 @@ feature {EV_COLOR} -- Conversion
 		ensure
 			red_assigned: red_16_bit = a_16_bit_red
 		end
-	
+
 	set_green_with_16_bit (a_16_bit_green: INTEGER) is
 			-- Set `green' from `a_16_bit_green' intinsity.
 		require
@@ -224,7 +224,7 @@ feature {EV_COLOR} -- Conversion
 		ensure
 			green_assigned: green_16_bit = a_16_bit_green
 		end
-	
+
 	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		require

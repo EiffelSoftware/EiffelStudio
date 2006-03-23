@@ -96,13 +96,37 @@ feature -- Access
 			--| FIXME IEK Implement this
 		end
 
+	item_pixmap (an_item: like item): EV_PIXMAP is
+			--
+		local
+			item_imp: EV_WIDGET_IMP
+			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
+			pix_imp: EV_PIXMAP_IMP
+		do
+			item_imp ?= an_item.implementation
+			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
+			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+			if {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+				-- Our pixmap is set
+				create Result
+				pix_imp ?= Result.implementation
+				a_pixmap := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+				a_pixmap := {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
+				pix_imp.set_pixmap_from_pixbuf (a_pixmap)
+			end
+			{EV_GTK_EXTERNALS}.g_list_free (a_list)
+		end
+
+feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
+
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
 			-- Tab associated with `an_item'.
 		do
 			create Result.make_with_widgets (interface, an_item)
 		end
 
-	item_text (an_item: like item): STRING is
+	item_text (an_item: like item): STRING_32 is
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -127,28 +151,6 @@ feature -- Access
 				a_label
 			))
 			Result := a_cs.string
-			{EV_GTK_EXTERNALS}.g_list_free (a_list)
-		end
-
-	item_pixmap (an_item: like item): EV_PIXMAP is
-			--
-		local
-			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
-			pix_imp: EV_PIXMAP_IMP
-		do
-			item_imp ?= an_item.implementation
-			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
-				-- Our pixmap is set
-				create Result
-				pix_imp ?= Result.implementation
-				a_pixmap := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-				a_pixmap := {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
-				pix_imp.set_pixmap_from_pixbuf (a_pixmap)
-			end
 			{EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
 
@@ -210,7 +212,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
+feature {EV_NOTEBOOK} -- Status setting
 
 	set_tab_position (a_tab_position: INTEGER) is
 			-- Display tabs at `a_position'.
@@ -268,28 +270,6 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
 		end
 
-	set_item_text (an_item: like item; a_text: STRING) is
-			-- Assign `a_text' to the label for `an_item'.
-		local
-			item_imp: EV_WIDGET_IMP
-			a_cs: EV_GTK_C_STRING
-			a_event_box, a_hbox, a_label: POINTER
-		do
-			item_imp ?= an_item.implementation
-			a_cs := a_text
-
-			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
-			a_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
-			{EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
-		end
-
 	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to the tab for `an_item'.
 		local
@@ -314,6 +294,30 @@ feature -- Element change
 				{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
 				{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
 			end
+		end
+
+feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
+
+	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
+			-- Assign `a_text' to the label for `an_item'.
+		local
+			item_imp: EV_WIDGET_IMP
+			a_cs: EV_GTK_C_STRING
+			a_event_box, a_hbox, a_label: POINTER
+		do
+			item_imp ?= an_item.implementation
+			a_cs := a_text
+
+			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
+			a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
+			a_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -346,6 +350,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
 		end
+
+feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	interface: EV_NOTEBOOK;
 			-- Provides a common user interface to platform dependent

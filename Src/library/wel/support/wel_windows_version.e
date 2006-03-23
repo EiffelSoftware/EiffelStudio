@@ -51,7 +51,7 @@ feature -- Exact Windows Versions
 		ensure
 			windows2000_is_nt: Result implies is_windows_nt
 		end
-		
+
 	is_windows_xp: BOOLEAN is
 			-- Is the current program running under Windows XP (Home or Professional)?
 		do
@@ -59,7 +59,7 @@ feature -- Exact Windows Versions
 		ensure
 			windows_xp_is_nt: Result implies is_windows_nt
 		end
-		
+
 feature -- Compatible Windows Versions
 
 	is_windows_9x: BOOLEAN is
@@ -72,7 +72,7 @@ feature -- Compatible Windows Versions
 	is_windows_nt: BOOLEAN is
 			-- Is the current program running under a version of
 			-- windows belonging to the NT family?
-			-- (Windows NT 3.51, Windows NT4, Windows 2000, 
+			-- (Windows NT 3.51, Windows NT4, Windows 2000,
 			-- Windows XP Home/Professional)
 		do
 			Result := (internal_version & 0x80000000) = 0
@@ -101,14 +101,14 @@ feature -- Compatible Windows Versions
 		do
 			Result := is_windows_NT and major_version >= 5
 		end
-		
+
 	is_windows_xp_compatible: BOOLEAN is
 			-- Is the current program running under Windows XP or above?
 		do
-			Result := is_windows_nt and 
+			Result := is_windows_nt and
 				(major_version = 5 and minor_version >= 1) or (major_version > 5)
 		end
-		
+
 feature -- Current Windows Version
 
 	major_version: INTEGER is
@@ -181,7 +181,7 @@ feature -- "Shell and Common controls" Versions
 		once
 			Result := cwin_get_shlwapidll_version
 		end
-	
+
 feature -- Version Constants
 
 	version_400: INTEGER is 0x00040000
@@ -194,7 +194,7 @@ feature -- Version Constants
 			-- version_471 <=> Microsoft Internet Explorer 4.0
 
 	version_472: INTEGER is 0x00040048
-			-- version_472 <=> Microsoft Internet Explorer 4.01 & Windows 98 
+			-- version_472 <=> Microsoft Internet Explorer 4.01 & Windows 98
 
 	version_500: INTEGER is 0x00050000
 			-- version_500 (Shlwapi.dll) <=> Microsoft Internet Explorer 5
@@ -205,7 +205,7 @@ feature -- Version Constants
 
 	version_581: INTEGER is 0x00050051
 			-- version_581 (Comctl32.dll)<=> Microsoft Windows 2000
-			
+
 	version_600: INTEGER is 0x00060000
 			-- version_600 (Comctl32.dll)<=> Microsoft Windows XP
 
@@ -232,25 +232,25 @@ feature {NONE} -- External
 			-- Return the version number of the specified DLL.
 			-- The version number is packed.
 		external
-			"C (char *): DWORD | %"wel_dynload.h%""
+			"C (LPCTSTR): DWORD | %"wel_dynload.h%""
 		end
 
 	cwin_get_shell32dll_version: INTEGER is
-			-- Return the version number of the "shell32.dll" DLL. 
+			-- Return the version number of the "shell32.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""
 		end
 
 	cwin_get_comctl32dll_version: INTEGER is
-			-- Return the version number of the "Comctl32.dll" DLL. 
+			-- Return the version number of the "Comctl32.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""
 		end
 
 	cwin_get_shlwapidll_version: INTEGER is
-			-- Return the version number of the "Shlwapi.dll" DLL. 
+			-- Return the version number of the "Shlwapi.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""

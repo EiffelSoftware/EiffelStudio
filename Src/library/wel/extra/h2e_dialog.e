@@ -95,10 +95,10 @@ feature {NONE} -- Behaviors
 			open_eiffel_file_dialog.activate (Current)
 			if open_eiffel_file_dialog.selected then
 				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_name)
-				if file_exists (open_eiffel_file_dialog.file_name) then
+				if file_exists (open_eiffel_file_dialog.file_name.to_string_8) then
 					create c.make_by_predefined_id (Idc_wait)
 					c.set
-					scan_file_for_classname (open_eiffel_file_dialog.file_name)
+					scan_file_for_classname (open_eiffel_file_dialog.file_name.to_string_8)
 					c.restore_previous
 				end
 			end
@@ -111,15 +111,15 @@ feature {NONE} -- Behaviors
 			previous_text: STRING
 			msg_box: WEL_MSG_BOX
 		do
-			if file_exists (h_file_edit.text) then
+			if file_exists (h_file_edit.text.to_string_8) then
 				create c.make_by_predefined_id (Idc_wait)
 				c.set
-				previous_text := translate_button.text
+				previous_text := translate_button.text.to_string_8
 				translate_button.set_text ("Translating...")
-				create conv.make (class_name_edit.text,
-					eiffel_file_edit.text,
-					h_file_edit.text)
-				conv.extract_definition (h_file_edit.text)
+				create conv.make (class_name_edit.text.to_string_8,
+					eiffel_file_edit.text.to_string_8,
+					h_file_edit.text.to_string_8)
+				conv.extract_definition (h_file_edit.text.to_string_8)
 				conv.close_file
 				translate_button.set_text (previous_text)
 				c.restore_previous

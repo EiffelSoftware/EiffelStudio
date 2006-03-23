@@ -99,7 +99,7 @@ feature -- Status setting
 			end
 		end
 		
-	wel_set_text (a_string: STRING) is
+	wel_set_text (a_string: STRING_GENERAL) is
 			-- Set the text of the item to `a_string'
 		do
 			Precursor {WEL_HD_ITEM} (a_string)

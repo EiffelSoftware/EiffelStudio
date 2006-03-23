@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	EV_COLOR_IMP
 
 inherit
@@ -28,7 +28,7 @@ create
 feature -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create `Current' with interface `an_interface'. 
+			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make
@@ -56,7 +56,7 @@ feature {EV_COLOR} -- Access
 		do
 			Result := green_8_bit / 255.0
 		end
-	
+
 	blue: REAL is
 			-- Intensity of blue component.
 			-- Range: [0,1]
@@ -64,7 +64,7 @@ feature {EV_COLOR} -- Access
 			Result := blue_8_bit / 255.0
 		end
 
-	name: STRING
+	name: STRING_32
 			-- A textual description.
 
 feature {EV_COLOR} -- Element change
@@ -87,7 +87,7 @@ feature {EV_COLOR} -- Element change
 			wel_set_blue ((a_blue * 255).rounded)
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING_GENERAL) is
 			-- Assign `a_name' to `name'.
 		do
 			name.copy (a_name)
@@ -127,19 +127,19 @@ feature {EV_COLOR} -- Conversion
 			counter := counter |>> 8
 			wel_set_red (counter & 0x000000ff)
 		end
-	
+
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is
 			-- Set `red' from `an_8_bit_red' intinsity.
 		do
 			wel_set_red (an_8_bit_red)
 		end
-	
+
 	set_green_with_8_bit (an_8_bit_green: INTEGER) is
 			-- Set `green' from `an_8_bit_green' intinsity.
 		do
 			wel_set_green (an_8_bit_green)
 		end
-	
+
 	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		do
@@ -161,7 +161,7 @@ feature {EV_COLOR} -- Conversion
 		do
 			Result := green_8_bit * 256
 		end
-	
+
 	blue_16_bit: INTEGER is
 			-- Intensity of blue component
 			-- as a 16 bit unsigned integer.
@@ -169,19 +169,19 @@ feature {EV_COLOR} -- Conversion
 		do
 			Result := blue_8_bit * 256
 		end
-	
+
 	set_red_with_16_bit (a_16_bit_red: INTEGER) is
 			-- Set `red' from `a_8_bit_red' intinsity.
 		do
 			wel_set_red (a_16_bit_red // 256)
 		end
-	
+
 	set_green_with_16_bit (a_16_bit_green: INTEGER) is
 			-- Set `green' from `a_16_bit_green' intinsity.
 		do
 			wel_set_green (a_16_bit_green // 256)
 		end
-	
+
 	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		do
@@ -196,7 +196,7 @@ feature -- Status setting
 		do
 			set_is_destroyed (True)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	delta: REAL is

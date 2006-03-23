@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_LIST_ITEM_IMP
 
@@ -79,13 +79,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wel_set_text (a_string: STRING) is
+	wel_set_text (a_string: STRING_GENERAL) is
 			-- Set the text of the item to `a_string'
 		do
 			internal_text := a_string.twin
 		end
-	
-	wel_text: STRING is
+
+	wel_text: STRING_32 is
 			-- Text of the item.
 		do
 			if internal_text /= Void then
@@ -99,7 +99,7 @@ feature -- Access
 			Result := internal_text.count
 		end
 
-	text: STRING is
+	text: STRING_32 is
 		do
 			Result := lv_item.text
 		end
@@ -129,7 +129,7 @@ feature -- Access
 					Result := private_pixmap
 				end
 			end
-		end 
+		end
 
 feature -- Status report
 
@@ -143,7 +143,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 		do
 			wel_set_text (a_text)
 			lv_item.set_text (a_text)
@@ -159,7 +159,7 @@ feature -- Status setting
 				-- If `Current' is already selected, then
 				-- there is no need to do anything.
 			if not is_selected then
-				parent_imp.internal_select_item (Current)	
+				parent_imp.internal_select_item (Current)
 			end
 		end
 
@@ -169,7 +169,7 @@ feature -- Status setting
 				-- If `Current' is not seelcted then
 				-- there is no need to do anything.
 			if is_selected then
-				parent_imp.internal_deselect_item (Current)	
+				parent_imp.internal_deselect_item (Current)
 			end
 		end
 
@@ -183,11 +183,11 @@ feature {EV_ANY_I} -- Access
 
 	parent_imp: EV_LIST_ITEM_LIST_IMP
 		-- Parent of `Current'
-	
+
 	set_parent_imp (par_imp: like parent_imp) is
 			-- Assign 'par_imp' to `parent_imp'.
 		do
-			parent_imp := par_imp	
+			parent_imp := par_imp
 		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
@@ -276,7 +276,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 		end
 
 	set_pixmap_in_parent is
-			-- Add/Remove the pixmap to the parent by updating the 
+			-- Add/Remove the pixmap to the parent by updating the
 			-- parent's image list.
 		local
 			image_list: EV_IMAGE_LIST_IMP
@@ -310,7 +310,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -336,16 +336,16 @@ feature {EV_ITEM_LIST_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING
+	internal_text: STRING_32
 			-- Text of `Current'.
-			
+
 	destroy is
 			-- Destroy `Current'.
 		do
 			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_ITEM_IMP}
 		end
-		
+
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 

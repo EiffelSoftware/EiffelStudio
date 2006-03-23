@@ -89,7 +89,7 @@ feature {EV_ANY_IMP} -- Access
 			Result.put_integer (a_4, 4)
 		end
 
-	key_tuple (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN): like internal_key_tuple is
+	key_tuple (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN): like internal_key_tuple is
 			-- Return a key tuple from given arguments.
 		do
 			Result := internal_key_tuple
@@ -211,7 +211,7 @@ feature {EV_ANY_IMP}
 		local
 			keyval: NATURAL_32
 			gdkeventkey: POINTER
-			a_key_string: STRING
+			a_key_string: STRING_32
 			key: EV_KEY
 			a_key_press: BOOLEAN
 			a_cs: EV_GTK_C_STRING
@@ -226,7 +226,7 @@ feature {EV_ANY_IMP}
 			if valid_gtk_code (keyval) then
 				create key.make_with_code (key_code_from_gtk (keyval))
 			end
-			Result := key_tuple (key, a_key_string, a_key_press)
+			Result := key_tuple (key, a_key_string.as_string_8, a_key_press)
 		end
 
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
@@ -334,7 +334,7 @@ feature {NONE} -- Tuple optimizations.
 			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
 		end
 
-	internal_key_tuple: TUPLE [EV_KEY, STRING, BOOLEAN] is
+	internal_key_tuple: TUPLE [EV_KEY, STRING_32, BOOLEAN] is
 			-- Once function used for global access of key tuple.
 		once
 			Result := [Void, Void, False]

@@ -8,10 +8,13 @@ indexing
 class
 	WEL_CBEN_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
-	Cben_getdispinfo: INTEGER is -800
-			-- Sent to retrieve display information about a callback item. 
+	Cben_getdispinfo: INTEGER is -807
+			-- Sent to retrieve display information about a callback item.
 			--
 			-- Declared in Windows as CBEN_GETDISPINFO
 
@@ -31,7 +34,7 @@ feature -- Access
 			--
 			-- Declared in Windows as CBEN_BEGINEDIT
 
-	Cben_endedit: INTEGER is -805
+	Cben_endedit: INTEGER is -806
 			-- Sent when the user has concluded an operation within
 			-- the edit box or has selected an item from the control's
 			-- drop-down list.

@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"EiffelVision application, GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "application"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 
 inherit
@@ -37,7 +37,7 @@ feature -- Initialize
 		end
 
 	gtk_dependent_launch_initialize is
-			-- Gtk dependent code for `launch' 
+			-- Gtk dependent code for `launch'
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
@@ -70,26 +70,26 @@ feature -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 		end
 
-	writeable_pixbuf_formats: ARRAYED_LIST [STRING] is
+	writeable_pixbuf_formats: ARRAYED_LIST [STRING_32] is
 			-- Array of GdkPixbuf formats that Vision2 can save to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (True)
 			Result.compare_objects
 		end
-		
-	readable_pixbuf_formats: ARRAYED_LIST [STRING] is
+
+	readable_pixbuf_formats: ARRAYED_LIST [STRING_32] is
 			-- Array of GdkPixbuf formats that Vision2 can load to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (False)
 			Result.compare_objects
 		end
 
-	pixbuf_formats (a_writeable: BOOLEAN): ARRAYED_LIST [STRING] is
+	pixbuf_formats (a_writeable: BOOLEAN): ARRAYED_LIST [STRING_32] is
 			-- List of the readable formats available with current Gtk 2.0 library
 		local
 			formats: POINTER
 			i,format_count: INTEGER
-			format_name: STRING
+			format_name: STRING_32
 			pixbuf_format: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
@@ -103,7 +103,7 @@ feature -- Implementation
 				i = format_count
 			loop
 				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)
-				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))	
+				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
 				format_name := a_cs.string
 				if format_name.is_equal (once "jpeg") then
 					format_name := once "jpg"
@@ -111,7 +111,7 @@ feature -- Implementation
 				if a_writeable then
 					if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_is_writable (pixbuf_format) then
 						Result.extend (format_name.as_upper)
-					end					
+					end
 				else
 					Result.extend (format_name.as_upper)
 				end
@@ -123,13 +123,13 @@ feature -- Implementation
 	initialize_default_font_values is
 			-- Initialize values use for creating our default font
 		local
-			font_desc: STRING
-			font_names, font_names_as_lower: ARRAYED_LIST [STRING]
+			font_desc: STRING_32
+			font_names, font_names_as_lower: ARRAYED_LIST [STRING_32]
 			exit_loop: BOOLEAN
-			split_values: LIST [STRING]
+			split_values: LIST [STRING_32]
 			i, l_font_names_count: INTEGER
-			l_font_item: STRING
-		do	
+			l_font_item: STRING_32
+		do
 			from
 				font_desc := default_font_description.as_lower
 				font_names_as_lower := font_names_on_system_as_lower
@@ -149,17 +149,17 @@ feature -- Implementation
 				end
 				i := i + 1
 			end
-			
+
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
 			default_font_point_height_internal := split_values.last.to_integer
-			
+
 			if split_values.has (once "italic") or else split_values.has (once "oblique") then
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_regular
 			end
-			
+
 			if split_values.has (once "bold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_bold
 			elseif split_values.has (once "light") then
@@ -168,10 +168,10 @@ feature -- Implementation
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_black
 			else
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_regular
-			end		
+			end
 		end
-	
-	default_font_name: STRING is
+
+	default_font_name: STRING_32 is
 			-- Face name of the default font
 		do
 			if font_settings_changed then
@@ -179,9 +179,9 @@ feature -- Implementation
 			end
 			Result := default_font_name_internal
 		end
-		
-	default_font_name_internal: STRING
-	
+
+	default_font_name_internal: STRING_32
+
 	default_font_point_height: INTEGER is
 			-- Size of the default font in points
 		do
@@ -190,7 +190,7 @@ feature -- Implementation
 			end
 			Result := default_font_point_height_internal
 		end
-	
+
 	default_font_point_height_internal: INTEGER
 
 	default_font_style: INTEGER is
@@ -203,7 +203,7 @@ feature -- Implementation
 		end
 
 	default_font_style_internal: INTEGER
-	
+
 	default_font_weight: INTEGER is
 			-- Weight of the default font
 		do
@@ -214,21 +214,21 @@ feature -- Implementation
 		end
 
 	default_font_weight_internal: INTEGER
-	
-	previous_font_description: STRING
+
+	previous_font_description: STRING_32
 		-- Stored value of the default gtk font settings string
 
 	font_settings_changed: BOOLEAN is
 			-- Have the default font settings been changed by the user
 		local
-			a_settings: STRING
+			a_settings: STRING_32
 		do
 			a_settings := default_font_description
 			Result := previous_font_description = Void or else previous_font_description.is_equal (a_settings)
 			previous_font_description := a_settings
 		end
 
-	default_font_description: STRING is
+	default_font_description: STRING_32 is
 			-- Description string of the current font used
 		local
 			font_name_ptr: POINTER
@@ -249,7 +249,7 @@ feature -- Implementation
 			-- String optimization for gtk-font-name property string
 		once
 			Result := "gtk-font-name"
-		end	
+		end
 
 	default_gtk_settings: POINTER is
 			-- Default GtkSettings
@@ -257,7 +257,7 @@ feature -- Implementation
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
 		end
 
-	font_names_on_system: ARRAYED_LIST [STRING] is
+	font_names_on_system: ARRAYED_LIST [STRING_32] is
 			-- Retrieve a list of all the font names available on the system
 		local
 			a_name_array: POINTER
@@ -281,13 +281,13 @@ feature -- Implementation
 			a_name_array.memory_free
 		end
 
-	font_names_on_system_as_lower: ARRAYED_LIST [STRING] is
+	font_names_on_system_as_lower: ARRAYED_LIST [STRING_32] is
 			-- Retrieve a list of all the font names available on the system in lower case
 			-- This is needed for easy case insensitive lookup in EV_FONT_IMP.
 		local
 			i, l_font_count: INTEGER
 			l_font_names: like font_names_on_system
-		once	
+		once
 			from
 				i := 1
 				l_font_names := font_names_on_system
@@ -301,7 +301,7 @@ feature -- Implementation
 			end
 			Result.compare_objects
 		end
-		
+
 	default_gtk_window: POINTER is deferred end
 
 	previous_cursor: EV_CURSOR
@@ -326,16 +326,16 @@ feature -- Implementation
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
 				elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm then
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
-					
+
 				elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm then
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
-	
+
 				elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm then
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
-	
+
 				elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm then
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
-	
+
 				elseif a_cursor_imp.internal_xpm_data = {EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm then
 					Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 				else
@@ -402,7 +402,7 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
-		
+
 	gchar_array_i_th (a_gchar_array: POINTER; an_index: INTEGER): POINTER is
 			-- Returns `an_index' i_th value from gchar** `a_gchar_array'
 		require

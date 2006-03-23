@@ -141,7 +141,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 		require
@@ -201,7 +201,7 @@ feature -- Status setting
 			background_color_assigned: background_color = a_color
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		require

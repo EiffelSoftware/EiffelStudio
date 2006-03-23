@@ -171,7 +171,7 @@ feature -- Element change
 			invalidate
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			if a_text.is_empty then

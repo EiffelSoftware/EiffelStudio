@@ -5,16 +5,16 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TITLED_WINDOW_I
-	
+
 inherit
 	EV_WINDOW_I
 		redefine
 			interface
 		end
-		
+
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_I
 
 feature {EV_TITLED_WINDOW} -- Accelerators
@@ -41,16 +41,16 @@ feature -- Access
 			Result := accelerators_internal
 		end
 
-	icon_name: STRING is
+	icon_name: STRING_32 is
 			-- Alternative name, displayed when window is minimised.
 		deferred
-		end 
+		end
 
 	icon_pixmap: EV_PIXMAP is
 			-- Window icon.
 		deferred
 		end
-	
+
 feature -- Status report
 
 	is_minimized: BOOLEAN is
@@ -101,7 +101,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING) is
+	set_icon_name (an_icon_name: STRING_GENERAL) is
 			-- Assign `an_icon_name' to `icon_name'.
 		require
 			an_icon_name_not_void: an_icon_name /= Void
@@ -113,7 +113,7 @@ feature -- Element change
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
 		require
-			pixmap_not_void: an_icon /= void
+			pixmap_not_void: an_icon /= Void
 		deferred
 		ensure
 			icon_pixmap_assigned: icon_pixmap.is_equal (an_icon)

@@ -63,12 +63,12 @@ inherit
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		do
 			Result := generator
 		end
-		
+
 	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		external

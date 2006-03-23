@@ -20,14 +20,14 @@ inherit
 			foreground_color,
 			background_color
 		end
-		
+
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 create
 	default_create,
 	make_with_text,
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create `Current' and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_text_and_actions (
-		a_text: STRING;
+		a_text: STRING_GENERAL;
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	) is
 			-- Create `Current', assign `a_text' to `text' and `actions' to `select_actions'
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			end
 			button_box.go_to (c)
 		end
-		
+
 	initialize is
 			-- Initialize `Current' to default state.
 		local
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			vb2.extend (pixmap_box)
 			vb2.disable_item_expand (pixmap_box)
 			vb2.extend (create {EV_CELL})
-	
+
 			hb.extend (vb2)
 			hb.extend (label)
 			hb.set_padding (10)
@@ -121,14 +121,14 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb2)
 			vb.set_padding (14)
 			vb.set_border_width (10)
-			
+
 			label.align_text_left
 
 			button_box.set_padding (10)
 			extend (vb)
 
 			set_text ("Use `set_text' to modify this message.")
-		
+
 			foreground_color := implementation.foreground_color
 			background_color := implementation.background_color
 		end
@@ -148,7 +148,7 @@ feature -- Access
 			end
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Message displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -222,7 +222,7 @@ feature -- Status setting
 			pixmap_void: pixmap = Void
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -244,7 +244,7 @@ feature -- Status setting
 			text_not_void: text /= Void and text.is_empty
 		end
 
-	set_buttons (button_labels: ARRAY [STRING]) is
+	set_buttons (button_labels: ARRAY [STRING_GENERAL]) is
 			-- Assign new buttons with `button_labels' to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -263,7 +263,7 @@ feature -- Status setting
 		end
 
 	set_buttons_and_actions (
-		button_labels: ARRAY [STRING]
+		button_labels: ARRAY [STRING_GENERAL]
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 	) is
 			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
@@ -293,7 +293,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	has_button (a_text: STRING): BOOLEAN is
+	has_button (a_text: STRING_GENERAL): BOOLEAN is
 			-- Does `Current' contain a button with `text' `a_text'?
 		require
 			not_destroyed: not is_destroyed
@@ -302,7 +302,7 @@ feature -- Status report
 			Result := buttons.has (a_text)
 		end
 
-	button (a_text: STRING): EV_BUTTON is
+	button (a_text: STRING_GENERAL): EV_BUTTON is
 			-- Button that has `a_text'.
 		require
 			not_destroyed: not is_destroyed
@@ -313,8 +313,8 @@ feature -- Status report
 		ensure
 			not_void: Result /= Void
 		end
-		
-	selected_button: STRING
+
+	selected_button: STRING_32
 			-- Label of last clicked button.
 
 feature {NONE} -- Implementation
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 	pixmap_box: EV_CELL
 			-- Container to display pixmap in.
 
-	buttons: HASH_TABLE [EV_BUTTON, STRING]
+	buttons: HASH_TABLE [EV_BUTTON, STRING_32]
 			-- Lookup-table for the buttons in `Current' based on
 			-- their captions.
 
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			buttons.clear_all
 		end
 
-	add_button (a_text: STRING) is
+	add_button (a_text: STRING_GENERAL) is
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 
 			--| We now put the button in the hash-table to give the
 			--| user access to it.
-			buttons.put (new_button, a_text)
+			buttons.put (new_button, a_text.as_string_32)
 
 			new_button.select_actions.extend (agent on_button_press (a_text))
 			button_box.extend (new_button)
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_button_with_action
-		(a_text: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+		(a_text: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			button (a_text).select_actions.extend (a_action)
 		end
 
-	on_button_press (a_button_text: STRING) is
+	on_button_press (a_button_text: STRING_GENERAL) is
 			-- A button with text `a_button_text' has been pressed.
 		require
 			not_destroyed: not is_destroyed

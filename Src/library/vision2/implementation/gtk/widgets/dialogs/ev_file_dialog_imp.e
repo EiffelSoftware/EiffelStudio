@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Eiffel Vision file dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 			set_is_initialized (False)
 
 			filter := "*.*"
-			
+
 			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
 			a_ok_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_local_only (c_object, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
-			
+
 			real_signal_connect (
 				a_ok_button,
 				"clicked",
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: STRING_32 is
 			-- Full name of currently selected file including path.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	filter: STRING
+	filter: STRING_32
 			-- Filter currently applied to file list.
 
 	selected_filter_index: INTEGER is
@@ -109,15 +109,15 @@ feature -- Access
 				{EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
 				Result := i + 1
 			end
-			
+
 		end
 
-	start_directory: STRING
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 
 feature -- Status report
 
-	file_title: STRING is
+	file_title: STRING_32 is
 			-- `file_name' without its path.
 		do
 			if not file_name.is_empty then
@@ -129,7 +129,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING is
+	file_path: STRING_32 is
 			-- Path of `file_name'.
 		do
 			if not file_name.is_empty then
@@ -142,15 +142,15 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING_GENERAL) is
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_GTK_C_STRING
-			filter_name: STRING
+			filter_name: STRING_32
 			a_filter_ptr: POINTER
 		do
 			filter := a_filter.twin
-			
+
 			filter_name := a_filter.twin
 			if
 				filter_name.count >= 3 and
@@ -163,16 +163,16 @@ feature -- Element change
 				filter_name.append (a_filter)
 				filter_name.append (")")
 			end
-			
+
 			remove_file_filters
-			
+
 			if not a_filter.is_equal ("*.*") then
 				a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
 				a_cs :=  (a_filter)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
 				a_cs :=  (filter_name)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 			end
 
 			a_cs :=  ("*")
@@ -184,7 +184,7 @@ feature -- Element change
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
-	set_file_name (a_name: STRING) is
+	set_file_name (a_name: STRING_GENERAL) is
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -193,7 +193,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING_GENERAL) is
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -211,7 +211,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_ok is
 			-- The user has requested that the dialog be activated.
 		local
-			temp_filename: STRING
+			temp_filename: STRING_32
 			temp_file: RAW_FILE
 			a_filename: POINTER
 			a_cs: EV_GTK_C_STRING
@@ -221,11 +221,11 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_filename /= NULL then
 				create a_cs.share_from_pointer (a_filename)
 				temp_filename := a_cs.string
-				create temp_file.make (temp_filename)
-				if (not temp_file.exists or else not temp_file.is_directory) and not 
+				create temp_file.make (temp_filename.as_string_8)
+				if (not temp_file.exists or else not temp_file.is_directory) and not
 						temp_filename.item (temp_filename.count).is_equal ('/') then
 					Precursor {EV_STANDARD_DIALOG_IMP}
-				end				
+				end
 			end
 		end
 
@@ -256,8 +256,8 @@ feature {NONE} -- Implementation
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
-			filter_string_list: LIST [STRING]
-			current_filter_string, current_filter_description: STRING
+			filter_string_list: LIST [STRING_32]
+			current_filter_string, current_filter_description: STRING_32
 			filter_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
@@ -292,18 +292,18 @@ feature {NONE} -- Implementation
 						end
 						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, filter_ptr)
 					end
-				end	
+				end
 				filters.forth
 			end
 			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)
-		end	
+		end
 
 	file_chooser_action: INTEGER is
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		deferred
 		end
 
-	valid_file_name, valid_file_title (a_name: STRING): BOOLEAN is
+	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 		do
 			if a_name /= Void then

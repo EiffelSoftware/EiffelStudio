@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			a_columns_positive: a_columns > 0
 		local
 			i: INTEGER
-			temp_title: STRING
+			temp_title: STRING_32
 			temp_width: INTEGER
 			temp_alignment, default_alignment: EV_TEXT_ALIGNMENT
 			temp_alignment_code: INTEGER
@@ -648,7 +648,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	column_title_changed (a_txt: STRING; a_column: INTEGER) is
+	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -1028,7 +1028,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -1085,7 +1085,7 @@ feature {NONE} -- Implementation
 			child_exists: child /= Void
 		local
 			cur: CURSOR
-			txt: STRING
+			txt: STRING_32
 			list: EV_MULTI_COLUMN_LIST_ROW
 			column_counter: INTEGER
 		do

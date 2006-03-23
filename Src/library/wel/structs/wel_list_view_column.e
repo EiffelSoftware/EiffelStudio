@@ -39,26 +39,22 @@ feature -- Initialization
 			set_mask (0)
 		end
 
-	make_with_attributes (a_mask, a_width, an_alignment: INTEGER; a_text: STRING) is
+	make_with_attributes (a_mask, a_width, an_alignment: INTEGER; a_text: STRING_GENERAL) is
 			-- Make a list view column structure with the given
 			-- attributes:
 			-- `a_mask' set the valid member (`Lvcf_text', ...)
 			-- `a_width' is the width of the column in pixels
-			-- `an_alignment' is the alignment of the column header and 
+			-- `an_alignment' is the alignment of the column header and
 			--                items in the column.
 			-- `a_text' is the text of of the header.
 		require
 			valid_fmt: valid_lvcfmt_constant (an_alignment)
-		local
-			str_text: WEL_STRING
 		do
 			structure_make
 			cwel_lv_column_set_mask (item, a_mask)
 			cwel_lv_column_set_cx (item, a_width)
 			cwel_lv_column_set_fmt (item, an_alignment)
-			create str_text.make (a_text)
-			cwel_lv_column_set_psztext (item, str_text.item)
-			cwel_lv_column_set_cchtextmax (item, a_text.count)
+			set_text (a_text)
 		end
 
 feature -- Access
@@ -73,13 +69,16 @@ feature -- Access
 			Result := cwel_lv_column_get_mask (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Title of the column
 		require
 			text_meaningfull: is_text_valid
 		do
-			create Result.make (0)
-			Result.from_c (cwel_lv_column_get_psztext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -104,7 +103,7 @@ feature -- Access
 		end
 
 feature -- Status Report
-	
+
 	is_width_valid: BOOLEAN is
 			-- Is there any specified width in pixel for this column?
 		do
@@ -139,7 +138,7 @@ feature -- Status Report
 			cwel_lv_column_add_mask (item, a_mask)
 			new_mask :=  cwel_lv_column_get_mask (item)
 			Result := (new_mask = backup_mask)
-				
+
 				-- Restore the mask.
 			cwel_lv_column_set_mask (item, backup_mask)
 		end
@@ -162,12 +161,10 @@ feature -- Element change
 			mask_reseted: mask = 0
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
-		local
-			str_text: WEL_STRING
 		do
 			cwel_lv_column_add_mask (item, Lvcf_text)
 			create str_text.make (a_text)
@@ -188,7 +185,7 @@ feature -- Element change
 	set_width (a_width: INTEGER) is
 			-- Set the width of the column to `a_width'.
 		require
-			valid_width: a_width >= 0 or 
+			valid_width: a_width >= 0 or
 			a_width = Lvscw_autosize or
 			a_width = Lvscw_autosize_useheader
 		do
@@ -270,6 +267,9 @@ feature -- Obsolete
 		end
 
 feature {NONE} -- Externals
+
+	str_text: WEL_STRING
+			-- Backend buffer for `text'.
 
 	c_size_of_lv_column: INTEGER is
 		external

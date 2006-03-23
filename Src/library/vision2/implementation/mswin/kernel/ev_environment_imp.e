@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_ENVIRONMENT_I
-	
+
 	WEL_SYSTEM_PARAMETERS_INFO
 		export
 			{NONE} all
@@ -33,15 +33,15 @@ feature {NONE} -- Initialization
 		do
 			set_is_initialized (True)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	supported_image_formats: LINEAR [STRING] is
+	supported_image_formats: LINEAR [STRING_32] is
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, XPM, ICO
 		local
-			res: ARRAYED_LIST [STRING]
+			res: ARRAYED_LIST [STRING_32]
 		do
 			create res.make (3)
 			res.extend ("BMP")
@@ -50,15 +50,15 @@ feature {NONE} -- Implementation
 			res.compare_objects
 			Result := res
 		end
-		
-	font_families: LINEAR [STRING] is
+
+	font_families: LINEAR [STRING_32] is
 			-- All font families available on current platform.
 		local
-			res: ARRAYED_LIST [STRING]
-			all_fonts: ARRAYED_LIST [STRING]
+			res: ARRAYED_LIST [STRING_32]
+			all_fonts: ARRAYED_LIST [STRING_32]
 		do
 			create res.make (20)
-			all_fonts ?= font_enumerator.font_faces
+			all_fonts := font_enumerator.font_faces
 			from
 				all_fonts.start
 			until
@@ -68,15 +68,15 @@ feature {NONE} -- Implementation
 				all_fonts.forth
 			end
 			Result ?= res
-		end	
-		
+		end
+
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
 		do
 			Result := get_wheel_scroll_lines
 		end
-		
+
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			create default_printer.make
 			Result := default_printer.exists
 		end
-		
+
 	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP is
 			-- Enumerate Installed fonts
 		once

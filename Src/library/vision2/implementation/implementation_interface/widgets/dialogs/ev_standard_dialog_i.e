@@ -18,9 +18,9 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_I
-	
+
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of dialog shown in title bar.
 		deferred
 		end
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: STRING is
+	selected_button: STRING_32 is
 			-- Label of the last clicked button.
 		deferred
 		end
@@ -52,14 +52,14 @@ feature -- Status setting
 		deferred
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set the title of the dialog.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	internal_accept: STRING is
+	internal_accept: STRING_32 is
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- Normally "OK", but redefined in some descendents

@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL; a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a button.
 		do
 			Precursor {WEL_BUTTON} (a_parent, a_name, a_x, a_y, a_width, a_height, an_id)

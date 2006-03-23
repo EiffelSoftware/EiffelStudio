@@ -51,7 +51,7 @@ feature -- Access
 			-- Intensity of blue component.
 			-- Range: [0,1]
 
-	name: STRING
+	name: STRING_32
 			-- A textual description.
 
 feature -- Element change
@@ -78,7 +78,7 @@ feature -- Element change
 			blue_16_bit := (a_blue * 0xFFFF).rounded
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING_GENERAL) is
 			-- Assign `a_name' to `name'.
 		do
 			name.copy (a_name)
@@ -211,7 +211,7 @@ feature {EV_ANY_I} -- Command
 			set_is_destroyed (True)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, ANY} -- Implementation
 
 	interface: EV_COLOR;
 

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL) is
 			-- Make window as child of `a_parent' and `a_name' as title.
 		do
 			register_class
@@ -99,7 +99,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING;
+	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
 			data: POINTER) is
 			-- Create the window
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_sys_color (Color_window + 1)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := "WELMDIChildWindowClass"

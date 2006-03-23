@@ -16,7 +16,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_TOOL_BAR_ITEM_IMP
 		redefine
 			interface
@@ -24,7 +24,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
-		
+
 	parent_imp: EV_TOOL_BAR_IMP
 		-- The parent of `Current'.
 
@@ -56,52 +56,52 @@ feature {NONE} -- Implementation
 				parent_imp := Void
 			end
 		end
-		
-	text: STRING is
+
+	text: STRING_32 is
 			-- Text displayed in textable.
 			-- For seperators, it must always be empty.
 		do
 			Result := ""
 		end
-		
+
 	has_pixmap: BOOLEAN is False
 			-- Has Current a pixmap?
-		
+
 	set_pixmap_in_parent is
-			-- Add the pixmap to the parent by updating the 
+			-- Add the pixmap to the parent by updating the
 			-- parent's image list.
 		do
 			check
 				not_called: False
 			end
 		end
-		
+
 	is_sensitive: BOOLEAN is True
 			-- Is `Current' sensitive?
-		
+
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		do
 			-- Nothing to do here.
 		end
-		
+
 	disable_sensitive is
 			-- Enable `Current'.
 		do
 			-- Nothing to do here.
 		end
-		
+
 	enable_sensitive is
 			-- Disable `Current'.
 		do
 			-- Nothing to do here.
 		end
-		
+
 	internal_non_sensitive: BOOLEAN is True
 			-- Is `Current' not sensitive to input as seen
 			-- from `interface'?
-		
+
 	restore_private_pixmaps is
 			-- When `Current' is parented, `private_pixmap' and
 			-- `private_gray_pixmap' are assigned Void. This is to stop
@@ -114,9 +114,9 @@ feature {NONE} -- Implementation
 
 
 feature {EV_ANY_I} -- Interface
-	
+
 	interface: EV_TOOL_BAR_SEPARATOR
-	
+
 invariant
 	no_pixmap: has_pixmap = False
 	image_index_zero: image_index = 0

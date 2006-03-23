@@ -42,7 +42,7 @@ feature -- Basic operations
 			a_device: WEL_STRING
 			a_printer: WEL_STRING
 			options: WEL_STRING
-			printer: STRING
+			printer: STRING_32
 			device_count: INTEGER
 			nb: INTEGER
 		do
@@ -78,13 +78,13 @@ feature -- Basic operations
 
 feature -- Access
 
-	device: STRING
+	device: STRING_32
 			-- Default printer device installed
 
-	driver: STRING
+	driver: STRING_32
 			-- Default printer driver installed
 
-	output: STRING
+	output: STRING_32
 			-- Device name for the physical output medium
 
 feature {NONE} -- Implementation
@@ -105,7 +105,7 @@ feature {NONE} -- Externals
 			size: INTEGER): INTEGER is
 			-- SDK GetProfileString
 		external
-			"C [macro <wel.h>] (LPCSTR, LPCSTR, LPCSTR, LPSTR, %
+			"C [macro <wel.h>] (LPCTSTR, LPCTSTR, LPCTSTR, LPTSTR, %
 				%int): DWORD"
 		alias
 			"GetProfileString"

@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_child (a_parent: WEL_WINDOW; a_name: STRING) is
+	make_child (a_parent: WEL_WINDOW; a_name: STRING_GENERAL) is
 			-- Make the window as a child of `a_parent' and
 			-- `a_name' as a title.
 		require
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			name_set: text.is_equal (a_name)
 		end
 
-	make_top (a_name: STRING) is
+	make_top (a_name: STRING_GENERAL) is
 			-- Make a top window (without parent) with `a_name'
 			-- as a title.
 		do
@@ -115,7 +115,7 @@ feature -- Standard window class values
 			Result := Cs_hredraw + Cs_vredraw + Cs_dblclks
 		end
 
-	class_menu_name: STRING is
+	class_menu_name: STRING_32 is
 			-- Window's menu used to create the window class.
 			-- Can be redefined to return a user-defined menu.
 			-- (None by default).
@@ -125,7 +125,7 @@ feature -- Standard window class values
 			result_not_void: Result /= Void
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
 		once

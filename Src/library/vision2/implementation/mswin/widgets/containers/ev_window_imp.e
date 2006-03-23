@@ -211,7 +211,7 @@ feature -- Access
 			-- Maximum width that application wishes widget
 			-- instance to have.
 
-	title: STRING is
+	title: STRING_32 is
 			-- Window text to be displayed by the application manager.
 		do
 			Result := text
@@ -361,7 +361,7 @@ feature -- Element change
 			end
 		end
 
-	set_title (txt: STRING) is
+	set_title (txt: STRING_GENERAL) is
 			-- Make `txt' the title of `Current'.
 		do
 			set_text (txt.twin)

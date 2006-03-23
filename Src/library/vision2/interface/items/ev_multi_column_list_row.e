@@ -23,7 +23,7 @@ inherit
 			default_create
 		end
 
-	INTERACTIVE_LIST [STRING]
+	INTERACTIVE_LIST [STRING_32]
 		rename
 			default_create as interactive_list_make
 		redefine
@@ -48,7 +48,7 @@ inherit
 
 create
 	default_create
-	
+
 create {EV_MULTI_COLUMN_LIST_ROW}
 	make_filled
 
@@ -67,13 +67,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	create_implementation is 
+	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			interactive_list_make
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
-		
+
 	on_item_added_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' is about to be added.
 		do

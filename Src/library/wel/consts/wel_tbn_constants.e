@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Tbn_getbuttoninfo: INTEGER is -700
+	Tbn_getbuttoninfo: INTEGER is -680
 			-- Declared in Windows as TBN_GETBUTTONINFO
 
 	Tbn_begindrag: INTEGER is -701

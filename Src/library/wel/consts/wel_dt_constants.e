@@ -54,9 +54,12 @@ feature -- Access
 
 	Dt_internal: INTEGER is 4096
 			-- Declared in Windows as DT_INTERNAL
-			
-	Dt_word_ellipsis: INTEGER is 262144;
+
+	Dt_word_ellipsis: INTEGER is 262144
 			-- Declared in Windows as DT_WORD_ELLIPSIS
+
+	Dt_hideprefix: INTEGER is 1048576;
+			-- Declared in Windows as DT_HIDEPREFIX
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

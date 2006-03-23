@@ -308,7 +308,7 @@ feature -- Implementation
 			Result := mode_is_target_menu and a_button = 3
 		end
 
-	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
+	signal_emit_stop (a_c_object: POINTER; signal: STRING_GENERAL) is
 		local
 			a_cs: EV_GTK_C_STRING
 		do

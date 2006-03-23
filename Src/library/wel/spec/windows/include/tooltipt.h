@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-#define cwel_tooltiptext_set_lpsztext(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->lpszText = (LPSTR) (_value_))
+#define cwel_tooltiptext_set_lpsztext(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->lpszText = (LPTSTR) (_value_))
 #define cwel_tooltiptext_set_hinst(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->hinst = (HINSTANCE) (_value_))
 #define cwel_tooltiptext_set_uflags(_ptr_,_value_) (((TOOLTIPTEXT *) _ptr_)->uFlags = (UINT) (_value_))
 

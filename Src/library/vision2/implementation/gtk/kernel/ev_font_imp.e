@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FONT_IMP 
+	EV_FONT_IMP
 
 inherit
  	EV_FONT_I
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 		end
-		
+
 	initialize is
 			-- Set up `Current'
 		local
@@ -61,7 +61,7 @@ feature {EV_FONTABLE_IMP} -- Implementation
 					family = Family_sans and then
 					weight = l_app_imp.default_font_weight_internal and then
 					shape = l_app_imp.default_font_style_internal and then
-					name.is_equal (l_app_imp.default_font_name_internal)		
+					name.is_equal (l_app_imp.default_font_name_internal)
 		end
 
 feature -- Access
@@ -93,15 +93,15 @@ feature -- Element change
 			family := a_family
 			update_font_face
 		end
-	
-	set_face_name (a_face: STRING) is
+
+	set_face_name (a_face: STRING_GENERAL) is
 			-- Set the face name for current.
 		local
 			propvalue: EV_GTK_C_STRING
 		do
 			name := a_face
 			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)	
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)
 			calculate_font_metrics
 		end
 
@@ -144,7 +144,7 @@ feature -- Element change
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
 		local
-			a_agent: PROCEDURE [EV_FONT_IMP, TUPLE [STRING]]
+			a_agent: PROCEDURE [EV_FONT_IMP, TUPLE [STRING_32]]
 		do
 			ignore_font_metric_calculation := True
 			a_agent := agent update_preferred_faces
@@ -163,7 +163,7 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING
+	name: STRING_32
 			-- Face name chosen by toolkit.
 
 	ignore_font_metric_calculation: BOOLEAN
@@ -182,13 +182,13 @@ feature -- Status report
 				ascent := a_baseline
 				descent := a_height - ascent
 			end
-		end		
+		end
 
 	ascent: INTEGER
-			-- Vertical distance from the origin of the drawing operation to the top of the drawn character. 
+			-- Vertical distance from the origin of the drawing operation to the top of the drawn character.
 
 	descent: INTEGER
-			-- Vertical distance from the origin of the drawing operation to the bottom of the drawn character. 
+			-- Vertical distance from the origin of the drawing operation to the bottom of the drawn character.
 
 	width: INTEGER is
 			-- Character width of current fixed-width font.
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := string_width (once "W")
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		local
@@ -218,40 +218,40 @@ feature -- Status report
 			a_baseline: INTEGER
 			l_app_imp: like app_implementation
 		do
-				
+
 			l_app_imp := app_implementation
 			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
-			
+
 			a_pango_layout := l_app_imp.pango_layout
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
-			
+
 			ink_rect := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
 			log_rect := reusable_pango_rectangle_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
-			
+
 			a_pango_iter := l_app_imp.pango_iter
 			a_baseline := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
-			
+
 			log_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (log_rect)
 			log_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (log_rect)
 			log_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
 			log_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (log_rect)
-			
+
 			ink_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (ink_rect)
 			ink_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (ink_rect)
 			ink_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (ink_rect)
 			ink_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (ink_rect)
-			
+
 			a_width := log_width
 			a_height := log_height
-			
+
 			if ink_width > 0 then
 				left_off := ink_x
 				right_off := ink_width - log_width
 			end
-			
+
 			Result := reusable_string_size_tuple
 			Result.put_integer (a_width.max (1), 1)
 			Result.put_integer (a_height.max (1), 2)
@@ -269,7 +269,7 @@ feature -- Status report
 			create Result
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
 			a_pango_layout: POINTER
@@ -309,14 +309,14 @@ feature -- Status report
 		do
 			Result := True
 		end
- 
+
 feature {NONE} -- Implementation
 
-	update_preferred_faces (a_face: STRING) is
+	update_preferred_faces (a_face: STRING_32) is
 		do
 			update_font_face
 		end
-		
+
 	update_font_face is
 		do
 			set_face_name (pango_family_string)
@@ -324,17 +324,17 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP} -- Implementation
-		
-	pango_family_string: STRING is
+
+	pango_family_string: STRING_32 is
 			-- Get standard string to represent family.
 		local
 			l_preferred_families: like preferred_families
-			l_font_names_on_system_as_lower: ARRAYED_LIST [STRING]
-			l_item_string: STRING
+			l_font_names_on_system_as_lower: ARRAYED_LIST [STRING_32]
+			l_item_string: STRING_32
 			i, l_preferred_families_count: INTEGER
 		do
 			l_preferred_families := preferred_families
-			
+
 			if not l_preferred_families.is_empty then
 				from
 					l_font_names_on_system_as_lower := app_implementation.font_names_on_system_as_lower
@@ -431,7 +431,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 		end
 
 feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
-		
+
 	font_description: POINTER
 		-- Pointer to the PangoFontDescription struct
 
@@ -446,18 +446,18 @@ feature {EV_ANY_I} -- Implementation
 		-- Pango font weight constants
 
 feature {NONE} -- Implementation
-			
+
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
-		end		
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT
 		-- Interface coupling object for `Current'
-			
+
 	destroy is
 			-- Flag `Current' as destroyed
 		do
@@ -467,7 +467,7 @@ feature {EV_ANY_I} -- Implementation
 	dispose is
 			-- Clean up `Current'
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)	
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_description)
 		end
 

@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 		
-	wel_string_from_string (s: STRING): WEL_STRING is
+	wel_string_from_string (s: STRING_GENERAL): WEL_STRING is
 			-- Return a shared wel string set to `s' if
 			-- `s.count' < `maximum_buffered_string_size', otherwise
 			-- return a new WEL_STRING object set to `s'.

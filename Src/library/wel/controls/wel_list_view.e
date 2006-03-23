@@ -233,7 +233,7 @@ feature -- Status report
 			cwin_send_message (item, Lvm_getitemrect, to_wparam (index), Result.item)
 		end
 
-	get_cell_text (isub_item, iitem: INTEGER): STRING is
+	get_cell_text (isub_item, iitem: INTEGER): STRING_32 is
 			-- Get the label of the cell with coordinates `isub_item', `iiitem'.
 		require
 			exists: exists
@@ -395,7 +395,7 @@ feature -- Status setting
 			cwin_send_message (item, Lvm_setitemcount, to_wparam (value), to_lparam (0))
 		end
 
-	set_cell_text (isub_item, iitem: INTEGER; txt: STRING) is
+	set_cell_text (isub_item, iitem: INTEGER; txt: STRING_GENERAL) is
 			-- Set the label of the cell with coordinates `isub_item', `item'
 			-- with `txt'.
 		require
@@ -411,7 +411,7 @@ feature -- Status setting
 			cwin_send_message (item, Lvm_setitemtext, to_wparam (iitem), an_item.item)
 		end
 
-	set_column_title (txt: STRING; index: INTEGER) is
+	set_column_title (txt: STRING_GENERAL; index: INTEGER) is
 			-- Make `txt' the new title of the `index'-th column.
 		require
 			exists: exists
@@ -435,7 +435,7 @@ feature -- Status setting
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
-			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, create {STRING}.make (0))
+			create a_column.make_with_attributes (Lvcf_fmt, index, fmt, create {STRING_32}.make (0))
 			cwin_send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
@@ -754,11 +754,10 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_wc_listview)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_wc_listview)).string
 		end
 
 	default_style: INTEGER is

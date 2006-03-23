@@ -10,14 +10,14 @@ class
 
 inherit
 	EV_DRAWABLE_I
-	
+
 	EV_POSTSCRIPT_PAGE_CONSTANTS
 
 	REFACTORING_HELPER
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
 
@@ -28,7 +28,7 @@ feature {NONE} -- Initialize
 		do
 			base_make (an_interface)
 		end
-	
+
 feature {EV_ANY} -- Initialization
 
 	initialize is
@@ -37,23 +37,23 @@ feature {EV_ANY} -- Initialization
 			set_default_font
 			set_default_colors
 			set_default_page_size
-			
+
 			line_width := 1
 			drawing_mode := drawing_mode_copy
 			clip_area := Void
 			tile := Void
 			dashed_line_style := False
-			
+
 			set_is_initialized (True)
 			create postscript_result.make (0)
 		end
-		
+
 feature -- Access
 
 	width: INTEGER
 			-- Horizontal size in pixels.
 
-	height: INTEGER 
+	height: INTEGER
 			-- Vertical size in pixels.
 
 	line_width: INTEGER
@@ -61,33 +61,33 @@ feature -- Access
 
 	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
-		
+
 	clip_area: EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
-		
+
 	tile: EV_PIXMAP
 			-- Pixmap that is used to instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
-			
+
 	foreground_color: EV_COLOR
 			-- Color of foreground features like text.
 
 	background_color: EV_COLOR
 			-- Color displayed behind foregournd features.
-			
+
 	font: EV_FONT
 			-- Typeface appearance for `Current'.
-			
+
 	left_margin: INTEGER
 			-- size of left margin.
 
 	bottom_margin: INTEGER
 			-- size of bottom margin.
-			
+
 	landscape: BOOLEAN
 			-- Is page shown in landscape mode? (other is portrait)
 
@@ -136,7 +136,7 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		do
-			tile := a_pixmap	
+			tile := a_pixmap
 		end
 
 	remove_tile is
@@ -148,7 +148,7 @@ feature -- Element change
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		do
-			if not dashed_line_style then				
+			if not dashed_line_style then
 				dashed_line_style := True
 				add_ps ("[3] 0 setdash")
 			end
@@ -169,17 +169,17 @@ feature -- Element change
 			create foreground_color.make_with_rgb (0, 0, 0)
 			create background_color.make_with_rgb (1, 1, 1)
 		end
-		
+
 	set_default_font is
 			-- Set the `font' to the default font.
 		do
 			create font
 		end
-		
+
 	set_foreground_color (a_color: like foreground_color) is
 			-- Assign `a_color' to `foreground_color'.
 		do
-			if 
+			if
 				a_color.red /= foreground_color.red or else
 				a_color.blue /= foreground_color.blue or else
 				a_color.green /= foreground_color.green
@@ -194,7 +194,7 @@ feature -- Element change
 		do
 			background_color := a_color
 		end
-		
+
 	set_margins (a_left_margin, a_bottom_margin: INTEGER) is
 			-- Set `left' and `bottom' margins to `a_left_margin'
 			-- and `a_bottom_margin'.
@@ -217,7 +217,7 @@ feature -- Element change
 			real_page_height := page_height (a_size, a_landscape) - (bottom_margin*2)
 			landscape := a_landscape
 		end
-		
+
 	set_default_page_size is
 			-- Set page size to default values.
 		do
@@ -225,20 +225,20 @@ feature -- Element change
 			width := real_page_width
 			height := real_page_height
 		end
-		
-		
+
+
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to `font'.
 		do
 			font := a_font.twin
 		end
-		
+
 feature -- Clearing and drawing operations
 
-	redraw is 
-			-- Force `Current' to redraw itself. 
-		do 
-		end 
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+		end
 
 	clear is
 			-- Erase `Current' with `background_color'.
@@ -265,7 +265,7 @@ feature -- Clearing and drawing operations
 			add_ps ("stroke")
 			add_ps ("grestore")
 		end
-		
+
 	save_to_named_file (a_file_name: FILE_NAME) is
 			-- Save `Current' to the file with `a_file_name'.
 		require
@@ -291,17 +291,17 @@ feature -- Clearing and drawing operations
 			else
 				file_with_header.append ("%%%%PageOrientation: Portrait%N")
 			end
-			
+
 			nb_of_v_pages := (height / real_page_height).ceiling
 			nb_of_h_pages := (width / real_page_width).ceiling
 			file_with_header.append ("%%%%Pages: " + (nb_of_v_pages * nb_of_h_pages).out + "%N")
 			file_with_header.append_string (get_eiffel_header)
-			
+
 			-- draw page routine
 			file_with_header.append ("/draw_page {%N")
 			file_with_header.append (postscript_result)
 			file_with_header.append ("} bind def%N")
-			
+
 			-- draw all pages
 			if clip_area = Void then
 				create clip_rectangle.make (0, 0, width, height)
@@ -329,7 +329,7 @@ feature -- Clearing and drawing operations
 					file_with_header.append ((-real_page_width * (h - 1) + left_margin).out + " " + (real_page_height * v + bottom_margin).out + " translate%N")
 
 					-- set page clip
-					create page_rectangle.make (real_page_width * (h - 1), real_page_height * (v - 1), real_page_width, real_page_height)					
+					create page_rectangle.make (real_page_width * (h - 1), real_page_height * (v - 1), real_page_width, real_page_height)
 					page_clip_rectangle := intersect (page_rectangle, clip_rectangle)
 					file_with_header.append  ("newpath%N")
 					file_with_header.append  ((page_clip_rectangle.left).out + " " + (- (page_clip_rectangle.top)).out + " moveto%N")
@@ -338,27 +338,27 @@ feature -- Clearing and drawing operations
 					file_with_header.append  ((-page_clip_rectangle.width).out + " 0 rlineto%N")
 					file_with_header.append  ("closepath%N")
 					file_with_header.append ("clip%Nclippath%N")
-					
+
 					-- draw everything
 					file_with_header.append ("draw_page%N")
 
 					file_with_header.append ("grestore%N")
 					file_with_header.append ("%%%%EndPageSetup%N")
 					file_with_header.append ("showpage%N")
-					
+
 					h := h + 1
 					cur_page := cur_page + 1
 				end
 				v := v + 1
 			end
-			
+
 			file_with_header.append ("%%%%EOF%N")
-			
+
 			create file.make_open_write (a_file_name)
 			file.put_string (file_with_header)
 			file.close
 		end
-		
+
 	intersect (p, q: EV_RECTANGLE): EV_RECTANGLE is
 			-- Intersection of `q' and `p'.
 		do
@@ -371,14 +371,14 @@ feature -- Clearing and drawing operations
 		ensure
 			Result_exists: Result /= Void
 		end
-		
-feature -- Duplication 
-	
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is 
-			-- Pixmap region of `Current' represented by rectangle `area' 
+
+feature -- Duplication
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Pixmap region of `Current' represented by rectangle `area'
 		do
-		end 
-		
+		end
+
 feature -- Drawing operations
 
 	draw_point (x, y: INTEGER) is
@@ -393,17 +393,17 @@ feature -- Drawing operations
 			translate_to (-x, y)
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font.
 		do
 			draw_text_top_left (x, y - font.ascent, a_text)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
+	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
-			font_name, font_style, line: STRING
-			c: CHARACTER
+			font_name, font_style, line: STRING_32
+			l_char_code: NATURAL_32
 			nb, i, line_nr, font_height: INTEGER
 		do
 			add_ps ("gsave")
@@ -438,25 +438,25 @@ feature -- Drawing operations
 			until
 				i > nb
 			loop
-				c := a_text.item (i)
-				if c.is_equal ('%N') or i = nb then
+				l_char_code := a_text.code (i)
+				if l_char_code = ('%N').natural_32_code or i = nb then
 					if i = nb then
-						line.append_character (c)
+						line.append_character (l_char_code.to_character_32)
 					end
 					add_ps (x.out + " " + ( - y - font.ascent - line_nr * font_height).out + " moveto")
 					add_ps ("(" + line + ") show")
 					line_nr := line_nr + 1
 					line := ""
 				else
-					line.append_character (c)
+					line.append_character (l_char_code.to_character_32)
 				end
 				i := i + 1
 			end
-			
+
 			add_ps ("grestore")
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -464,7 +464,7 @@ feature -- Drawing operations
 			fixme ("draw_ellipsed_text: To be implemented")
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -488,16 +488,16 @@ feature -- Drawing operations
 			hex_string: STRING
 			i: INTEGER
 		do
-			
+
 			add_ps ("gsave")
 			translate_to (x, - y - a_pixmap.height)
 			pixmap_width := a_pixmap.width
 			pixmap_height := a_pixmap.height
-			
+
 			add_ps (pixmap_width.out + " " + pixmap_height.out + " scale")
-			
+
 			hex_string := a_pixmap.implementation.raw_image_data.rgb_hex_representation
-			
+
 			add_ps (pixmap_width.out + " " + pixmap_height.out + " 8 [" + pixmap_width.out + " 0 0 " + (-pixmap_height).out
 				+ " 0 " + pixmap_height.out + "]")
 
@@ -511,7 +511,7 @@ feature -- Drawing operations
 			end
 			add_ps ("{<%N"+hex_string+"%N>}")
 			add_ps ("false 3 colorimage")
-			add_ps ("grestore")	
+			add_ps ("grestore")
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
@@ -576,7 +576,7 @@ feature -- Drawing operations
 			i, nb: INTEGER
 			p: EV_COORDINATE
 		do
-			
+
 			add_ps ("newpath")
 			from
 				i := points.lower
@@ -617,7 +617,7 @@ feature -- Drawing operations (filled)
 			-- Draw rectangle with upper-left corner on (`x', 'y')
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
-			
+
 			add_ps ("gsave")
 			translate_to (0, 0)
 			add_ps ("newpath")
@@ -700,23 +700,23 @@ feature {EV_ANY, EV_ANY_I} -- Command
 		do
 			set_is_destroyed (True)
 		end
-		
+
 feature {EV_POSTSCRIPT_DRAWABLE} -- Write line
-		
-	add_ps (a_code: STRING) is
+
+	add_ps (a_code: STRING_GENERAL) is
 			-- Add `a_code' to postscript data.
 		do
-			postscript_result.append ("      "+a_code)
+			postscript_result.append ("      "+a_code.to_string_8)
 			postscript_result.append_character ('%N')
 		end
-		
+
 feature {NONE} -- Implementation
 
 	draw_arc_ps (a_radius, start_angle, end_angle: INTEGER) is
 		do
 			add_ps ("0 0 "+a_radius.out+" " + start_angle.out + " " + end_angle.out + " arc")
 		end
-		
+
 	draw_pie_slice_ps (a_h, a_w, a_line_width, start_angle, end_angle: INTEGER; dashed, filled: BOOLEAN) is
 		do
 			add_ps ("newpath")
@@ -737,15 +737,14 @@ feature {NONE} -- Implementation
 		end
 
 	append_color (a_color: EV_COLOR) is
-			-- 
+			--
 		require
 			a_color_not_void: a_color /= Void
 		do
-			
+
 			add_ps (a_color.out + " setrgbcolor")
 		end
-		
-		
+
 	get_eiffel_header: STRING is
 			-- Header dedicated to eiffel.
 		do
@@ -763,7 +762,7 @@ feature {NONE} -- Implementation
 			%%%Customer support: http://support.eiffel.com%N%
 			%%%For latest info see award-winning pages: http://www.eiffel.com%N%N"
 		end
-		
+
 	postscript_result: STRING
 			-- Everithing is drawn to this string.
 

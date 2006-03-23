@@ -25,7 +25,7 @@ inherit
 	EV_POSTSCRIPT_PROJECTOR
 		redefine
 			project,
-			add_ps,
+			add_ps_line,
 			add_footer
 		end
 
@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (NULL))
 
 			if interface.context.output_to_file then
-				create filename.make_from_string (interface.context.file_name)
+				create filename.make_from_string (interface.context.file_name.as_string_8)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
 				create filename.make_from_string (tmp_print_job_name)
 			end
 			make_with_filename (an_interface.world, filename)
 				-- World needs resetting on project
-				
+
 					-- Set up our page size based on context size resolution.
 			point_width := interface.context.horizontal_resolution
 			point_height := interface.context.vertical_resolution
@@ -80,10 +80,11 @@ feature {EV_ANY_I} -- Access
 			file.close
 		end
 
-	add_ps (ps_code: STRING) is
+	add_ps_line (ps_code: STRING_GENERAL) is
 			-- Append `ps_code' postscript to output.
 		do
-			file.put_string (ps_code + "%N")
+			file.put_string (ps_code.to_string_8)
+			file.put_new_line
 		end
 
 feature {NONE} -- Implementation
@@ -92,7 +93,7 @@ feature {NONE} -- Implementation
 			-- Add showpage if printing to printer.
 		do
 			if not interface.context.output_to_file then
-				add_ps ("showpage")
+				add_ps_line ("showpage")
 			end
 			Precursor {EV_POSTSCRIPT_PROJECTOR}
 		end

@@ -7,18 +7,18 @@ indexing
 
 class
 	EV_NOTEBOOK_TAB_IMP
-	
+
 inherit
 	EV_NOTEBOOK_TAB_I
 		redefine
 			interface
 		end
-		
+
 	EV_TEXTABLE_I
 		redefine
 			interface
 		end
-	
+
 	EV_PIXMAPABLE_I
 		redefine
 			interface,
@@ -26,10 +26,10 @@ inherit
 			set_pixmap,
 			pixmap
 		end
-		
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		do	
+		do
 			set_is_initialized (True)
 		end
-		
+
 	pixmap: EV_PIXMAP is
 			-- Image displayed on `Current' or Void if none.
 		do
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed on `Current'
 		do
 			if notebook /= Void then
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			if notebook /= Void then
@@ -76,7 +76,7 @@ feature -- Element change
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			if notebook /= Void then
-				notebook_imp.set_item_pixmap (widget, a_pixmap)	
+				notebook_imp.set_item_pixmap (widget, a_pixmap)
 			end
 		end
 

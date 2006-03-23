@@ -30,6 +30,7 @@ inherit
 
 create
 	make_by_file,
+	make_by_stream,
 	make_by_content_pointer
 
 feature {NONE} -- Initialization
@@ -40,38 +41,40 @@ feature {NONE} -- Initialization
 			file_not_void: file /= Void
 			file_exists: file.exists
 			file_opened: file.is_open_read
-		local
-			bitmap_file_header: WEL_BITMAP_FILE_HEADER						
-			s: STRING
-			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			create bitmap_file_header.make
-			create info_header.make
-			file.read_stream (bitmap_file_header.structure_size)
-			s := file.last_string
-			create a_wel_string1.make (s)
-			bitmap_file_header.memory_copy (a_wel_string1.item,
-				bitmap_file_header.structure_size)
-			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
-			structure_make
-			file.read_stream (structure_size)
-			s := file.last_string
-			create a_wel_string2.make (s)
-					--| !!FIXME!!
-					--| In the next line, we should use `structure_size' that is
-					--| the size read in the header of the bitmap, instead
-					--| of `s.count' that is the size of the bitmap actually 
-					--| read directly on the disk.
-					--| BUT it seems that `structure_size' can have a wrong
-					--| value, leading to a `segmentation violation'.
-			memory_copy (a_wel_string2.item, s.count)
-			info_header.memory_copy (item, info_header.structure_size)
-			calculate_palette
+			make_by_stream (file)
 			file.close
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
 			file_closed: file.is_closed
+		end
+
+	make_by_stream (a_stream: IO_MEDIUM) is
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_exists: a_stream.exists
+			a_stream_opened: a_stream.is_open_read
+		local
+			bitmap_file_header: WEL_BITMAP_FILE_HEADER
+			a_buf_1, a_buf_2: MANAGED_POINTER
+		do
+			create bitmap_file_header.make
+			create info_header.make
+			create a_buf_1.make (bitmap_file_header.structure_size)
+			a_stream.read_to_managed_pointer (a_buf_1, 0, bitmap_file_header.structure_size)
+			bitmap_file_header.memory_copy (a_buf_1.item,
+				bitmap_file_header.structure_size)
+			structure_size := bitmap_file_header.size - bitmap_file_header.structure_size
+			structure_make
+			create a_buf_2.make (structure_size)
+			a_stream.read_to_managed_pointer (a_buf_2, 0, structure_size)
+			memory_copy (a_buf_2.item, a_buf_2.count)
+			info_header.memory_copy (item, info_header.structure_size)
+			calculate_palette
+		ensure
+			palette_not_void: palette /= Void
+			palette_exists: palette.exists
 		end
 
 	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER) is
@@ -183,7 +186,7 @@ feature {NONE} -- Removal
 		end
 
 feature {NONE} -- Implementation
-	
+
 	object_id_palette: INTEGER
 			-- Object id of `palette'.
 
@@ -248,7 +251,7 @@ feature {NONE} -- Implementation
 			until
 				ind = num_color
 			loop
-				rgb_quad := i_th_quad (ind)	
+				rgb_quad := i_th_quad (ind)
 				create pal_entry.make (rgb_quad.red, rgb_quad.green,
 							rgb_quad.blue, 0)
 				log_pal.set_pal_entry (ind, pal_entry)
@@ -259,7 +262,7 @@ feature {NONE} -- Implementation
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
 		end
-		
+
 	calculate_palette_24_bits is
 			-- Calculates pallete for images with a colordepth of 24 bits
          -- A 24 bitcount DIB has no color table entries so, set the number of
@@ -300,10 +303,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				
+
 				ind := ind + 1
 			end
-			create palette.make (log_pal)	
+			create palette.make (log_pal)
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
@@ -313,7 +316,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := info_header.bit_count = 24		
+			Result := info_header.bit_count = 24
 		end
 
 	max_palette: INTEGER is 256

@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_PRINT_CONTEXT
-	
+
 inherit
 	ANY
 		redefine
@@ -15,7 +15,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
-		
+
 	default_create is
 			-- Create `Current' in default state.
 		do
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			vertical_resolution := 759
 			portrait := True
 		end
-								
+
 feature {NONE} -- Initialization
 
 	all_pages: INTEGER is 0
@@ -59,18 +59,18 @@ feature -- Access
 	output_to_file: BOOLEAN
 		-- Will output be to file?
 
-	printer_name: STRING
+	printer_name: STRING_32
 		-- Name of printer.
-		
+
 	horizontal_resolution: INTEGER
 		-- Horizontal resolution in points (1/72 of an inch), equating to full width
 		-- of printed page.
-	
+
 	vertical_resolution: INTEGER
 		-- Vertical resolution in points (1/72 of an inch), equating to full height
 		-- of printed page.
 
-	file_name: STRING
+	file_name: STRING_32
 		-- Name of output file.
 
 	portrait: BOOLEAN
@@ -128,7 +128,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			copies_set: copies = a_value
 		end
 
-	set_printer_name (a_string: STRING) is
+	set_printer_name (a_string: STRING_GENERAL) is
 			-- Set "printer_name" to "a_string".
 		require
 			a_string_not_empty: a_string.count > 0
@@ -138,7 +138,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			printer_name_set: printer_name = a_string
 		end
 
-	set_file_name (a_string: STRING) is
+	set_file_name (a_string: STRING_GENERAL) is
 			-- Set "file_name" to "a_string".
 		require
 			a_string_not_empty: a_string.count > 0
@@ -147,7 +147,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 		ensure
 			file_name_set: file_name = a_string
 		end
-		
+
 	set_horizontal_resolution (resolution: INTEGER) is
 			-- Assign `resolution' to `horizontal_resolution'.
 		require
@@ -157,7 +157,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 		ensure
 			resolution_set: horizontal_resolution = resolution
 		end
-		
+
 	set_vertical_resolution (resolution: INTEGER) is
 			-- Assign `resolution' to `vertical_resolution'.
 		require
@@ -210,7 +210,7 @@ feature {EV_PRINT_DIALOG_I, EV_PRINT_PROJECTOR_I, EV_MODEL_PRINT_PROJECTOR_I} --
 		do
 			printer_context := a_context
 		end
-		
+
 invariant
 	selection_type_valid: selection_type = all_pages or selection_type = page_range
 		or selection_type = selection

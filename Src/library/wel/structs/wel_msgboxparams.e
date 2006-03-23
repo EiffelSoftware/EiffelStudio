@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- initialization
 
-	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING; a_style,a_language,a_sublanguage: INTEGER) is
+	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER) is
 			-- create a MSGBOXPARAMS structure
 			-- without user icon.
 			-- With `a_window' as parent, `a_text' displayed as message, `a_title' displayed in title bar.
@@ -46,11 +46,11 @@ feature {NONE} -- initialization
 			end
 			structure_make
 			cwel_msgboxparams_set (item, handle, a_main_arguments.resource_instance.item, a_wel_string1.item,
-			a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
+				a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
-	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING; a_style, an_id, a_language, a_sublanguage: INTEGER)is
-			-- create a MSGBOXPARAMS structure 
+	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)is
+			-- create a MSGBOXPARAMS structure
 			-- with user icon defined by `an_id, `a_window' as parent, `a_text' displayed as message,
 			--`a_title' displayed in title bar and `a_style' as the window style.
 			-- `a_language' and `a_sublanguage' specify in which language the text on the buttons is displayed.
@@ -76,8 +76,7 @@ feature {NONE} -- initialization
 			end
 			structure_make
 			cwel_msgboxparams_set (item, a_window.item, a_main_arguments.resource_instance.item, a_wel_string1.item,
-			a_wel_string2.item, a_style, cwin_make_int_resource (an_id),
-			cwin_make_lang_id (a_language, a_sublanguage))
+				a_wel_string2.item, a_style, cwin_make_int_resource (an_id), cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
 feature -- Measurement
@@ -103,7 +102,7 @@ feature {NONE} -- Externals
 			-- Set the fields of
 			-- MSGBOXPARAMS
 		external
-			"C [macro <msgboxpa.h>] (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD)"
+			"C [macro <msgboxpa.h>] (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCTSTR, LPCTSTR, DWORD, LPCTSTR, DWORD)"
 		end
 
 	c_size_of_msgboxparams: INTEGER is

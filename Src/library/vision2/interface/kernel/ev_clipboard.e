@@ -28,7 +28,7 @@ feature -- Access
 			Result := implementation.has_text
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- `Result' is text of clipboard.
 		require
 			not_destroyed: not is_destroyed
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to clipboard.
 		require
 			not_destroyed: not is_destroyed

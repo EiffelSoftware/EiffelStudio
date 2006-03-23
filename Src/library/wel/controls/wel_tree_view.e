@@ -115,7 +115,7 @@ feature -- Access
 			else
 				Result := Void
 			end
-		end 
+		end
 
 feature -- Status report
 
@@ -318,7 +318,7 @@ feature -- Status report
 				Result := rect
 			end
 		end
-		
+
 	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
 			-- `Result' is rect for text of `an_item' or `Void'
 			-- if `an_item' is not visible.
@@ -333,7 +333,7 @@ feature -- Status report
 				Result := rect
 			end
 		end
-		
+
 	get_tooltip: WEL_TOOLTIP is
 			-- `Result' is tooltip associated with `Current'.
 		local
@@ -344,7 +344,7 @@ feature -- Status report
 				create Result.make_by_pointer (pointer)
 			end
 		end
-		
+
 	get_background_color: WEL_COLOR_REF is
 			-- `Result' is background color used for control.
 		local
@@ -353,7 +353,7 @@ feature -- Status report
 			color_int := cwin_send_message_result_integer (item, Tvm_getbkcolor, to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
-		
+
 	get_text_color: WEL_COLOR_REF is
 			-- `Result' is color for item text.
 		local
@@ -412,7 +412,7 @@ feature -- Status setting
 		end
 
 	select_first_visible (an_item: WEL_TREE_VIEW_ITEM) is
-			-- Scrolls the tree view vertically so that 
+			-- Scrolls the tree view vertically so that
 			-- the given `an_item' is the first visible item.
 		require
 			exists: exists
@@ -422,7 +422,7 @@ feature -- Status setting
 		end
 
 	select_drop_target (an_item: WEL_TREE_VIEW_ITEM) is
-			-- Redraw the given `an_item' in the style used to 
+			-- Redraw the given `an_item' in the style used to
 			-- indicate the target of a drag and drop operation.
 		require
 			exists: exists
@@ -456,13 +456,13 @@ feature -- Status setting
 		do
 			treeview_settooltips (item, tooltip.item)
 		end
-		
+
 	set_background_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to background color.
 		do
 			cwin_send_message (item, Tvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
-		
+
 	set_text_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to color of item text.
 		do
@@ -501,7 +501,7 @@ feature -- Element change
 				item_deleted: msg_result /= default_pointer
 			end
 		end
-		
+
 	reset_content is
 			-- Remove all `items' from `Current'.
 		require
@@ -591,7 +591,7 @@ feature -- Notifications
 		end
 
 	on_tvn_keydown (virtual_key: INTEGER) is
-			-- The user pressed a key and the tree-view control 
+			-- The user pressed a key and the tree-view control
 			-- has the input focus.
 		require
 			exists: exists
@@ -632,7 +632,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			keydown_info: WEL_TV_KEYDOWN
 			code: INTEGER
 		do
-			code := notification_info.code 
+			code := notification_info.code
 			if code = Tvn_begindrag then
 				create nm_info.make_by_nmhdr (notification_info)
 				on_tvn_begindrag (nm_info)
@@ -682,8 +682,8 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 			item_not_void: an_item /= Void
 			item_exists: an_item.exists
 			has_item: has_item (an_item)
-      local
-			buffer: STRING
+      		local
+			buffer: STRING_32
 		do
 			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
 			create buffer.make (Buffer_size)
@@ -700,11 +700,10 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			create Result.make (0)
-			Result.from_c (cwin_wc_treeview)
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_wc_treeview)).string
 		end
 
 	default_style: INTEGER is
@@ -728,7 +727,7 @@ feature {NONE} -- Externals
 		end
 
 	TreeView_Gettooltips (ptr: POINTER): POINTER is
-		external 
+		external
 			"C [macro %"cctrl.h%"] (HWND): EIF_POINTER"
 		alias
 			"TreeView_GetToolTips"
@@ -740,20 +739,20 @@ feature {NONE} -- Externals
 		alias
 			"TreeView_SetToolTips"
 		end
-		
+
 	cwin_index_to_state_image_mask (i: INTEGER): INTEGER is
 		external
 			"C [macro %"commctrl.h%"] (UINT): EIF_INTEGER"
 		alias
 			"INDEXTOSTATEIMAGEMASK"
 		end
-		
+
 	set_item_pointer_in_rect (a_rect_item, a_tree_item: POINTER) is
 			-- Place value of `a_tree_item' in structure pointed to by `a_rect_item'.
 		external
 			"C inline use <windows.h>"
 		alias
-			"*(HTREEITEM*)$a_rect_item = (HTREEITEM *) $a_tree_item"
+			"*(HTREEITEM*)$a_rect_item = (HTREEITEM) $a_tree_item"
 		end
 
 indexing

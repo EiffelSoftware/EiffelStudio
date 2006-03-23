@@ -16,7 +16,7 @@ feature -- Access
 	Lvn_begindrag: INTEGER is -109
 			-- Declared in Windows as LVN_BEGINDRAG
 
-	Lvn_beginlabeledit: INTEGER is -105
+	Lvn_beginlabeledit: INTEGER is -175
 			-- Declared in Windows as LVN_BEGINLABELEDIT
 
 	Lvn_beginrdrag: INTEGER is -111
@@ -31,10 +31,10 @@ feature -- Access
 	Lvn_deleteitem: INTEGER is -103
 			-- Declared in Windows as LVN_DELETEITEM
 
-	Lvn_endlabeledit: INTEGER is -106
+	Lvn_endlabeledit: INTEGER is -176
 			-- Declared in Windows as LVN_ENDLABELEDIT
 
-	Lvn_getdispinfo: INTEGER is -150
+	Lvn_getdispinfo: INTEGER is -177
 			-- Declared in Windows as LVN_GETDISPINFO
 
 	Lvn_insertitem: INTEGER is -102
@@ -49,8 +49,8 @@ feature -- Access
 	Lvn_keydown: INTEGER is -155
 			-- Declared in Windows as LVN_KEYDOWN
 
-	Lvn_setdispinfo: INTEGER is -151;
-			-- Declared in Windows as LVN_SETDISPINFO
+	Lvn_setdispinfo: INTEGER is -178;
+		-- Declared in Windows as LVN_SETDISPINFO
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

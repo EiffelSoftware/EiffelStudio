@@ -31,11 +31,8 @@ feature {NONE} -- Initialization
 			standard_dialog_make
 			cwel_open_file_name_set_lstructsize (item, structure_size)
 			create str_file_name.make_empty (Max_file_name_length)
-			str_file_name.set_string (create {STRING}.make (0))
 			create str_file_title.make_empty (Max_file_title_length)
-			str_file_title.set_string (create {STRING}.make (0))
 			create str_title.make_empty (Max_title_length)
-			str_title.set_string (create {STRING}.make (0))
 			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
 			cwel_open_file_name_set_nmaxfile (item, Max_file_name_length - 10)
 			cwel_open_file_name_set_lpstrfiletitle (item, str_file_title.item)
@@ -48,13 +45,13 @@ feature -- Access
 
 	flags: INTEGER is
 			-- Dialog box creation flags.
-			-- Can be a combination of the values defined in 
+			-- Can be a combination of the values defined in
 			-- class WEL_OFN_CONSTANTS.
 		do
 			Result := cwel_open_file_name_get_flags (item)
 		end
 
-	file_name: STRING is
+	file_name: STRING_32 is
 			-- File name selected (including path).
 		require
 			selected: selected
@@ -64,12 +61,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	multiple_file_names: LINKED_LIST [STRING] is
+	multiple_file_names: LIST [STRING_32] is
 			-- return the full path name of all selected files.
 		require
 			multiple_files_flag_set: has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		local
-			directory_name: STRING
+			directory_name: STRING_32
 		do
 			if has_flag ({WEL_OFN_CONSTANTS}.Ofn_explorer) then
 					-- Explorer-like dialog returns a buffer where
@@ -114,7 +111,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	file_title: STRING is
+	file_title: STRING_32 is
 			-- Title of the selected file (without path).
 		require
 			selected: selected
@@ -124,7 +121,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of the current dialog
 		do
 			Result := str_title.string
@@ -196,7 +193,7 @@ feature -- Element change
 			has_not_flag: not has_flag (a_flags)
 		end
 
-	set_file_name (a_file_name: STRING) is
+	set_file_name (a_file_name: STRING_GENERAL) is
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
 		require
@@ -210,7 +207,7 @@ feature -- Element change
 			file_name_set: file_name.is_equal (a_file_name)
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.
 		require
@@ -227,14 +224,14 @@ feature -- Element change
 			-- Set the title bar with the default value ("Save As"
 			-- or "Open")
 		do
-			str_title.set_string (create {STRING}.make (0))
+			str_title.set_count (0)
 			cwel_open_file_name_set_lpstrtitle (item,
 				default_pointer)
 		ensure
-			default_title_set: title.is_equal (create {STRING}.make (0))
+			default_title_set: title.is_empty
 		end
 
-	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
+	set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL]) is
 			-- Set the file type combo box.
 			-- `filter_names' is an array of string containing
 			-- the filter names and `filter_patterns' is an
@@ -250,7 +247,7 @@ feature -- Element change
 			no_void_pattern: not filter_patterns.has (Void)
 		local
 			i: INTEGER
-			s: STRING
+			s: STRING_32
 		do
 			-- Make a string containing pairs of string.
 			-- The first string in each pair describe the
@@ -288,7 +285,7 @@ feature -- Element change
 			filter_index_set: filter_index = a_filter_index
 		end
 
-	set_initial_directory (directory: STRING) is
+	set_initial_directory (directory: STRING_GENERAL) is
 			-- Set the initial directory with `directory'.
 		require
 			directory_not_void: directory /= Void
@@ -305,7 +302,7 @@ feature -- Element change
 				default_pointer)
 		end
 
-	set_default_extension (extension: STRING) is
+	set_default_extension (extension: STRING_GENERAL) is
 			-- Set the default extension with `extension'.
 			-- This extension will be automatically added to the
 			-- file name if the user fails to type an extension.

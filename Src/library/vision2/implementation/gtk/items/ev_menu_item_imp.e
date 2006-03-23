@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		local
 --			tab_mod: INTEGER

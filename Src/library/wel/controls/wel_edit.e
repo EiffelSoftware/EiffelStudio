@@ -132,7 +132,7 @@ feature -- Basic operations
 			has_no_selection: not has_selection
 		end
 
-	replace_selection (new_text: STRING) is
+	replace_selection (new_text: STRING_GENERAL) is
 			-- Replace the current selection with `new_text'.
 			-- If there is no selection, `new_text' is inserted
 			-- at the current `caret_position'.
@@ -187,7 +187,7 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Em_limittext, to_wparam (limit), to_lparam (0))
 		end
-	
+
 	get_text_limit: INTEGER is
 			-- Get the maximum length of text that the user
 			-- can enter into the edit control.
@@ -258,7 +258,7 @@ feature -- Status report
 				to be a pointer to a DWORD.
 			]")
 			cwin_send_message (item, Em_getsel, $sel_start, $sel_end)
-			Result := sel_end /= sel_start	
+			Result := sel_end /= sel_start
 		end
 
 	selection_start: INTEGER is
@@ -425,10 +425,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := "EDIT"
+			Result := (create {WEL_STRING}.share_from_pointer (cwin_edit_class)).string
+		end
+
+	cwin_edit_class: POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"WC_EDIT"
 		end
 
 	default_style: INTEGER is

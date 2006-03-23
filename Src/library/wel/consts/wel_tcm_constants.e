@@ -28,7 +28,7 @@ feature -- Access
 	Tcm_getimagelist: INTEGER is 4866
 			-- Declared in Windows as TCM_GETIMAGELIST
 
-	Tcm_getitem: INTEGER is 4869
+	Tcm_getitem: INTEGER is 4924
 			-- Declared in Windows as TCM_GETITEM
 
 	Tcm_getitemcount: INTEGER is 4868
@@ -46,7 +46,7 @@ feature -- Access
 	Tcm_hittest: INTEGER is 4877
 			-- Declared in Windows as TCM_HITTEST
 
-	Tcm_insertitem: INTEGER is 4871
+	Tcm_insertitem: INTEGER is 4926
 			-- Declared in Windows as TCM_INSERTITEM
 
 	Tcm_removeimage: INTEGER is 4906
@@ -58,7 +58,7 @@ feature -- Access
 	Tcm_setimagelist: INTEGER is 4867
 			-- Declared in Windows as TCM_SETIMAGELIST
 
-	Tcm_setitem: INTEGER is 4870
+	Tcm_setitem: INTEGER is 4925
 			-- Declared in Windows as TCM_SETITEM
 
 	Tcm_setitemextra: INTEGER is 4878

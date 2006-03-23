@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-#define cwel_mdi_cs_set_class_name(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szClass = (LPCSTR) (_value_))
-#define cwel_mdi_cs_set_title(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szTitle = (LPCSTR) (_value_))
+#define cwel_mdi_cs_set_class_name(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szClass = (LPCTSTR) (_value_))
+#define cwel_mdi_cs_set_title(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szTitle = (LPCTSTR) (_value_))
 #define cwel_mdi_cs_set_owner(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->hOwner = (HINSTANCE) (_value_))
 #define cwel_mdi_cs_set_x(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->x = (int) (_value_))
 #define cwel_mdi_cs_set_y(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->y = (int) (_value_))

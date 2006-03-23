@@ -10,29 +10,14 @@ class
 
 feature -- Access
 
-	Cp_none: INTEGER is
+	Cp_none: INTEGER is 0
 			-- Output is not clipped
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CP_NONE"
-		end
 
-	Cp_rectangle: INTEGER is
+	Cp_rectangle: INTEGER is 1
 			-- Output is clipped to rectangles
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CP_RECTANGLE"
-		end
 
-	Cp_region: INTEGER is
+	Cp_region: INTEGER is 2;
 			-- Output is clipped to regions
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"CP_REGION"
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

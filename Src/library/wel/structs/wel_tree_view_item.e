@@ -60,12 +60,16 @@ feature -- Access
 			Result := cwel_tv_item_get_statemask (item)
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Item text
 		require
 			valid_member: text_is_valid
 		do
-			create Result.make_from_c (cwel_tv_item_get_psztext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -140,7 +144,7 @@ feature -- Element change
 			cwel_tv_item_add_mask (item, mask, a_mask_value)
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void

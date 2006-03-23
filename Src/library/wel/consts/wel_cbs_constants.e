@@ -8,6 +8,9 @@ indexing
 class
 	WEL_CBS_CONSTANTS
 
+obsolete
+	"Use WEL_COMBO_BOX_CONSTANTS instead."
+
 feature -- Access
 
 	Cbs_simple: INTEGER is 1

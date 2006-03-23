@@ -26,10 +26,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_line: STRING is
+	command_line: STRING_32 is
 			-- Command line argument received in WinMain
+		local
+			l_str: WEL_STRING
 		once
-			create Result.make_from_c (cwel_command_line)
+			create l_str.share_from_pointer (cwel_command_line)
+			Result := l_str.string
 		ensure
 			result_not_void: Result /= Void
 		end

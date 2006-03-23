@@ -63,7 +63,7 @@ feature -- Status report
 			result_small_enough: Result < count
 		end
 
-	selected_string: STRING is
+	selected_string: STRING_32 is
 			-- Selected string
 		require
 			exists: exists

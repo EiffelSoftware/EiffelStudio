@@ -967,7 +967,7 @@ feature {NONE} -- Implementation
 			--| Now outputs all displayable characters, previously
 			--| depended on process_standard_key returning a valid EV_KEY.
 		local
-			character_string: STRING
+			character_string: STRING_32
 		do
 			inspect character_code
 			when 8, 27, 127 then
@@ -985,7 +985,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				create character_string.make(1)
-				character_string.append_character(character_code.to_character)
+				character_string.append_character(character_code.as_natural_32.to_character_32)
 				if application_imp.key_press_string_actions_internal /= Void then
 					application_imp.key_press_string_actions_internal.call ([interface, character_string])
 				end

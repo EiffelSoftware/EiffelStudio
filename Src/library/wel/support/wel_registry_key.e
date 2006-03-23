@@ -13,7 +13,7 @@ create
 	
 feature -- Initialization
 
-	make (a_name, a_class_id: STRING; a_modification_time: WEL_FILE_TIME) is
+	make (a_name, a_class_id: STRING_GENERAL; a_modification_time: WEL_FILE_TIME) is
 			-- Create current instance.
 		do
 			name := a_name
@@ -27,10 +27,10 @@ feature -- Initialization
 		
 feature -- Access
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name of key
 		
-	class_id: STRING
+	class_id: STRING_GENERAL
 			-- Class of key
 
 	last_change: WEL_FILE_TIME;

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	strings: ARRAY [STRING] is
+	strings: ARRAY [STRING_32] is
 			-- Strings contained in the list box
 		require
 			exists: exists
@@ -69,7 +69,7 @@ feature -- Access
 			count_ok: Result.count = count
 		end
 
-	i_th_text (i: INTEGER): STRING is
+	i_th_text (i: INTEGER): STRING_32 is
 			-- Text at the zero-based index `i'
 		require
 			exists: exists
@@ -120,7 +120,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_string (a_string: STRING) is
+	add_string (a_string: STRING_GENERAL) is
 			-- Add `a_string' in the list box.
 			-- If the list box does not have the
 			-- `Lbs_sort' style, `a_string' is added
@@ -139,7 +139,7 @@ feature -- Element change
 			count_increased: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
 			-- Add `a_string' at the zero-based `index'
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Element change
 			count_decreased: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL) is
 			-- Add `files' to the list box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -293,7 +293,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -313,7 +313,7 @@ feature -- Basic operations
 				Lb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING): INTEGER is
+	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create
 		once
 			Result := "LISTBOX"

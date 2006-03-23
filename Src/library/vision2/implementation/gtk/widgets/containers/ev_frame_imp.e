@@ -26,7 +26,7 @@ inherit
 			needs_event_box,
 			initialize
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -126,7 +126,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 1, 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_right_enum
 		end
-        
+
 	align_text_center is
 			-- Display `text' centered.
 		do
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the frame
 		do
 			if internal_text = Void then
@@ -161,7 +161,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- set the `text' of the frame
 		local
 			a_cs: EV_GTK_C_STRING
@@ -173,7 +173,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_text: STRING
+	internal_text: STRING_32
 		-- Text used to represent frame's label text
 
 	internal_alignment_code: INTEGER

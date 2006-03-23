@@ -45,13 +45,16 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of the tooltip
 		require
 			text_id_not_set: not text_id_set
 		do
-			create Result.make (0)
-			Result.from_c (cwel_tooltiptext_get_lpsztext (item))
+			if str_text /= Void then
+				Result := str_text.string
+			else
+				create Result.make_empty
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -81,7 +84,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		require
 			text_not_void: a_text /= Void

@@ -31,7 +31,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING) is
+			a_name: STRING_GENERAL) is
 			-- Create the dialog
 		local
 			c_name: WEL_STRING
@@ -69,7 +69,7 @@ feature {NONE} -- Externals
 	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER is
 			-- SDK DialogBox
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR, HWND, %
+			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, HWND, %
 				%DLGPROC): EIF_INTEGER"
 		alias
 			"DialogBox"

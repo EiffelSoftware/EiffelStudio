@@ -1,12 +1,12 @@
 # wel_hook.dll - Makefile for Microsoft C
 
 CC = cl.exe
-CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W1 -Ox
+CFLAGS = -nologo -D_WIN32_WINNT=0x200 -W1 -Ox -D_UNICODE -DUNICODE
 LFLAGS = -DLL -SECTION:.shared,RWS \
 		-EXPORT:MouseProc -EXPORT:hook_mouse -EXPORT:unhook_mouse -EXPORT:get_hook_window
 
-.cpp.obj:
-    $(CC) $(CFLAGS) $<
+.c.obj:
+    $(CC) $(CFLAGS) -c $<
 
 OBJS = wel_hook.obj
 LIBS =  kernel32.lib user32.lib advapi32.lib

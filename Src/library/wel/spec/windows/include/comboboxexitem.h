@@ -15,7 +15,7 @@ extern "C" {
 
 #define cwel_comboboxex_item_set_mask(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_comboboxex_item_set_iitem(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->iItem = (int) (_value_))
-#define cwel_comboboxex_item_set_psztext(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->pszText = (LPSTR) (_value_))
+#define cwel_comboboxex_item_set_psztext(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->pszText = (LPTSTR) (_value_))
 #define cwel_comboboxex_item_set_cchtextmax(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->cchTextMax = (int) (_value_))
 #define cwel_comboboxex_item_set_iimage(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->iImage = (int) (_value_))
 #define cwel_comboboxex_item_set_iselectedimage(_ptr_, _value_) (((COMBOBOXEXITEM *) _ptr_)->iSelectedImage = (int) (_value_))

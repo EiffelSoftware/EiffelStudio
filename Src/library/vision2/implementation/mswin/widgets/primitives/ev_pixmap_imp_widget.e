@@ -255,7 +255,7 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' at (`x', `y') using `font'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_text)

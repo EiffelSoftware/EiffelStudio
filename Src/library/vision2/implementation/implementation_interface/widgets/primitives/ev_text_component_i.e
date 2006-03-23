@@ -1,20 +1,20 @@
 indexing
-	description: 
+	description:
 		"EiffelVision text component. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_TEXT_COMPONENT_I
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
 			interface
 		end
-	
+
 	EV_TEXTABLE_I
 		redefine
 			interface
@@ -32,7 +32,7 @@ feature -- Access
 			Result_not_negative: Result >= 0
 		end
 
-	selected_text: STRING is
+	selected_text: STRING_32 is
 			-- Text currently selected in `Current'.
 		require
 			has_selection: has_selection
@@ -45,7 +45,7 @@ feature -- Access
 		deferred
 		end
 
-	clipboard_content: STRING is
+	clipboard_content: STRING_32 is
 			-- `Result' is current clipboard content.
 		deferred
 		end
@@ -90,11 +90,11 @@ feature -- Status report
 	valid_caret_position (pos: INTEGER): BOOLEAN is
 			-- Is `pos' a valid position for the caret?
 		do
-			Result := pos >= 1 and pos <= text_length + 1			
+			Result := pos >= 1 and pos <= text_length + 1
 		end
 
 feature -- Status setting
-	
+
 	set_editable (flag: BOOLEAN) is
 			-- if `flag' then make the component read-write.
 			-- if not `flag' then make the component read-only.
@@ -108,17 +108,17 @@ feature -- Status setting
 			valid_caret_position: valid_caret_position (pos)
 		deferred
 		end
-	
+
 feature -- Element change
 
-	insert_text (a_text: STRING) is
+	insert_text (a_text: STRING_GENERAL) is
 			-- Insert `a_text' at the current caret position.
 		require
 			valid_text: a_text /= Void
 		deferred
 		end
-	
-	append_text (a_text: STRING) is
+
+	append_text (a_text: STRING_GENERAL) is
 			-- append 'a_text' into `Current'.
 		require
 			valid_text: a_text /= Void
@@ -126,8 +126,8 @@ feature -- Element change
 		ensure
 			text_appended:
 		end
-	
-	prepend_text (a_text: STRING) is
+
+	prepend_text (a_text: STRING_GENERAL) is
 			-- prepend 'a_text' into `Current'.
 		require
 			valid_text: a_text /= Void
@@ -149,7 +149,7 @@ feature -- Resizing
 feature {EV_ANY, EV_ANY_I} -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
+			-- Select (hilight) the text between
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		require
@@ -161,7 +161,7 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 			selection_set: (start_pos <= end_pos implies
 				selection_start = start_pos and selection_end = end_pos) or
 				selection_start = end_pos and selection_end = start_pos
-		end	
+		end
 
 	select_all is
 			-- Select all the text of `Current'.
@@ -211,16 +211,16 @@ feature {EV_ANY, EV_ANY_I} -- Basic operation
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the contents of the clipboard 
+			-- Insert the contents of the clipboard
 			-- at `index' postion of `text'.
-			-- If the Clipboard is empty, it does nothing. 
+			-- If the Clipboard is empty, it does nothing.
 		require
 			index_large_enough: index >= 1
 			index_small_enough: index <= text_length + 1
 			is_editable: is_editable
 		deferred
 		end
-		
+
 feature {NONE} -- Implementation
 
 	interface: EV_TEXT_COMPONENT;

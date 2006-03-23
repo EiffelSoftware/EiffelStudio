@@ -76,7 +76,7 @@ feature -- Setting
 			icon_set: notify_icon_data.icon = a_icon
 		end
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING_GENERAL) is
 			-- Set `a_tooltip' to `notify_icon_data'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void

@@ -333,7 +333,7 @@ feature -- Element change
 			invalidate
 		end
 
-	wel_set_text (txt: STRING) is
+	wel_set_text (txt: STRING_GENERAL) is
 			-- Assign `txt' to `text' of `Current'.
 		do
 			Precursor {WEL_BITMAP_BUTTON} (txt)

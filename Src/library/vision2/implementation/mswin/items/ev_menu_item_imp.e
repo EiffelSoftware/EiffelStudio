@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in label.
 		do
 			Result := wel_text
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (a_text)
@@ -161,7 +161,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_text: STRING is
+	wel_text: STRING_32 is
 			-- Caption of the menu item.
 			--| For the specification given in the note of EV_MENU_ITEM,
 			--| we do not have to take any special action.
@@ -173,13 +173,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	real_text: STRING
+	real_text: STRING_32
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING_GENERAL) is
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
 			if a_text /= Void then
-				real_text := a_text.twin
+				real_text := a_text.as_string_32.twin
 			end
 
 				-- Force the menu bar to be recomputed.
@@ -279,7 +279,7 @@ feature {EV_MENU_ITEM_IMP} -- Implementation
 
 feature {EV_MENU_IMP} -- WEL Implementation
 
-	plain_text: STRING is
+	plain_text: STRING_32 is
 			-- Plain text of menu item (equal "N&ew" when full_text = "N&ew%TCtrl+B")
 		do
 			Result := internal_plain_text (True)
@@ -287,7 +287,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 			Result_not_void: Result /= Void
 		end
 
-	plain_text_without_ampersands: STRING is
+	plain_text_without_ampersands: STRING_32 is
 			-- Plain text of menu item (equal "New" when full_text = "N&ew%TCtrl+B")
 			-- Ampersands are removed.
 		do
@@ -296,7 +296,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 			Result_not_void: Result /= Void
 		end
 
-	accelerator_text: STRING is
+	accelerator_text: STRING_32 is
 			-- Accelerator text of menu item (equal "Ctrl+B" when full text = "New%TCtrl+B")
 		local
 			tab_index: INTEGER
@@ -318,7 +318,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 
 feature {NONE} -- WEL Implementation
 
-	internal_plain_text (keep_ampersands: BOOLEAN): STRING is
+	internal_plain_text (keep_ampersands: BOOLEAN): STRING_32 is
 			-- Plain text of menu item (equal "New" when full_text = "New%TCtrl+B")
 			-- Set `keep_ampersands' to True to keep the ampersands.
 		local
@@ -426,7 +426,7 @@ feature {NONE} -- WEL Implementation
 	on_measure_menu_bar_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
 			-- Get the measure for an item within a menu bar
 		local
-			accel_text: STRING
+			accel_text: STRING_32
 			plain_text_width: INTEGER
 			accel_text_width: INTEGER
 			pixmap_width: INTEGER
@@ -628,7 +628,7 @@ feature {NONE} -- WEL Implementation
 			text_color, background_color: WEL_COLOR_REF
 			desired_width: INTEGER
 			left_pos_start: INTEGER
-			drawn_text: STRING
+			drawn_text: STRING_32
 			flat_menu_enabled: BOOLEAN
 		do
 			draw_dc := draw_item_struct.dc
@@ -790,7 +790,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	remove_ampersands (a_string: STRING): STRING is
+	remove_ampersands (a_string: STRING_32): STRING_32 is
 			-- Remove all single ampersands in `a_string'.
 			-- Double ampersands are replaced by a single ampersand.
 		local

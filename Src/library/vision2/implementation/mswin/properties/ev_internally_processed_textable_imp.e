@@ -18,16 +18,16 @@ inherit
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text displayed in `Current'.
 		do
-				Result := wel_text
-				unescape_ampersands (Result)
+			Result := wel_text
+			unescape_ampersands (Result)
 		end
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (escaped_text (a_text))
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	escaped_text (s: STRING): STRING is
+	escaped_text (s: STRING_GENERAL): STRING_32 is
 			-- `text' with doubled ampersands.
 		do
 			if s /= Void then
@@ -44,9 +44,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	escape_ampersands (s: STRING) is
+	escape_ampersands (s: STRING_32) is
 			-- Replace all occurrences of "&" with "&&".
-			--| Cannot be replaced with {STRING}.replace_substring_all because
+			--| Cannot be replaced with `{STRING_32}.replace_substring_all' because
 			--| we only want it to happen once, not forever.
 		require
 			s_not_void: s /= Void
@@ -71,9 +71,9 @@ feature {NONE} -- Implementation
 				(old s.twin).occurrences ('&') * 2
 		end
 
-	unescape_ampersands (s: STRING) is
+	unescape_ampersands (s: STRING_32) is
 			-- Replace all occurrences of "&&" with "&".
-			--| Cannot be replaced with {STRING}.replace_substring_all because
+			--| Cannot be replaced with {STRING_32}.replace_substring_all because
 			--| it will replace any number of ampersands with only one.
 			--| Has to be a previously escaped string. Enforced with a check
 			--| inside routine body.
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 				if n > 0 then
 					s.remove (n)
 					check
-						is_escaped_string: (s @ n) = '&'
+						is_escaped_string: (s.item (n)) = '&'
 					end
 					n := n + 1
 				else
@@ -99,8 +99,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			ampersand_occurrences_halved: (old s.twin).occurrences ('&') =
-				s.occurrences ('&') * 2
+			ampersand_occurrences_halved: old s.twin.occurrences ('&') = s.occurrences ('&') * 2
 		end
 
 indexing

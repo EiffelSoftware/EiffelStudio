@@ -8,7 +8,7 @@ indexing
 
 class
 	EV_RICH_TEXT_IMP
-	
+
 inherit
 	EV_RICH_TEXT_I
 		undefine
@@ -28,7 +28,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create tab_positions
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
-			
+
 			pango_tab_array := {EV_GTK_DEPENDENT_EXTERNALS}.pango_tab_array_new (1, True)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 			set_tab_width (96 // 2)
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 		do
 			create Result
 		end
-			
+
 	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a selection change action sequence.
 		do
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		do
 			-- Do nothing
 		end
-		
+
 	complete_saving is
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
@@ -105,19 +105,19 @@ feature {NONE} -- Implementation
 		do
 			-- Do nothing
 		end
-		
+
 	complete_loading is
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_loading'.
 		do
 			-- Do nothing
 		end
-		
+
 	font_char_set (a_font: EV_FONT): INTEGER is
 			-- `Result' is char set of font `a_font'.
 		do
 			Result := 0
-		end	
+		end
 
 feature -- Status Report
 
@@ -151,7 +151,7 @@ feature -- Status Report
 			a_text_iter: POINTER
 			a_text_attributes: POINTER
 			previous_text_attributes: POINTER
-			previous_font_family, font_family: STRING
+			previous_font_family, font_family: STRING_32
 			non_contiguous_range_information: INTEGER
 			font_family_contiguous: BOOLEAN
 			a_change: BOOLEAN
@@ -170,20 +170,20 @@ feature -- Status Report
 				exit_loop or else a_character_index = end_index
 			loop
 				{EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, a_character_index - 1)
-	
+
 				a_text_attributes := gtk_text_attributes_copy (previous_text_attributes)
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
-				
+
 				if font_family_contiguous then
 					create font_family.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
-					
+
 					if font_family.hash_code /= previous_font_family.hash_code then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 						font_family_contiguous := False
 					end
-					previous_font_family := font_family	
+					previous_font_family := font_family
 				end
-				
+
 				if {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
 					{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
@@ -207,7 +207,7 @@ feature -- Status Report
 					{EV_GTK_EXTERNALS}.gdk_color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 				end
-				
+
 				if {EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
 					{EV_GTK_EXTERNALS}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
 					{EV_GTK_EXTERNALS}.gdk_color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
@@ -231,25 +231,25 @@ feature -- Status Report
 					gtk_text_appearance_struct_rise (gtk_text_attributes_struct_text_appearance (a_text_attributes)) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
 				end
-				
+
 				gtk_text_attributes_free (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
-				
+
 				a_character_index := a_character_index + 1
-				
+
 				if abort_on_change and then non_contiguous_range_information > 0 then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 					exit_loop := True
 				end
 			end
-			
+
 			gtk_text_attributes_free (previous_text_attributes)
-			
+
 			a_text_iter.memory_free
 
 			create Result.make_with_flags ((511).bit_xor (non_contiguous_range_information))
 				-- 511 is the mask value for character format constants
-	
+
 			if change_index /= Void then
 				change_index.set_item (a_character_index - 1)
 					-- We take off one as the change occurs before `character_index' is incremented at end of loop
@@ -290,7 +290,7 @@ feature -- Status Report
 					gtk_text_attributes_struct_justification (previous_text_attributes) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_PARAGRAPH_CONSTANTS}.alignment)
 				end
-				
+
 				if gtk_text_attributes_struct_left_margin (a_text_attributes) /=
 					gtk_text_attributes_struct_left_margin (previous_text_attributes) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_PARAGRAPH_CONSTANTS}.left_margin)
@@ -310,13 +310,13 @@ feature -- Status Report
 					gtk_text_attributes_struct_pixels_below_lines (previous_text_attributes) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
 				end
-				
+
 				gtk_text_attributes_free (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
-				
+
 				a_character_index := a_character_index + 1
 			end
-			
+
 			gtk_text_attributes_free (previous_text_attributes)
 
 			create Result.make_with_flags ((31).bit_xor (non_contiguous_range_information))
@@ -391,12 +391,12 @@ feature -- Status Report
 			{EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, caret_index - 1)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
 			a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
-			
+
 			Result.set_bottom_spacing (gtk_text_attributes_struct_pixels_below_lines (a_text_attributes))
 			Result.set_top_spacing (gtk_text_attributes_struct_pixels_above_lines (a_text_attributes))
 			Result.set_left_margin (gtk_text_attributes_struct_left_margin (a_text_attributes))
 			Result.set_right_margin (gtk_text_attributes_struct_right_margin (a_text_attributes))
-			
+
 			a_justification :=  gtk_text_attributes_struct_justification (a_text_attributes)
 			if a_justification = {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
 				Result.enable_left_alignment
@@ -431,7 +431,7 @@ feature -- Status Report
 			Result := {EV_GTK_EXTERNALS}.gtk_text_iter_get_offset (a_text_iter.item) + 1
 			Result := Result.min (text_count).max (1)
 		end
-		
+
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
 			-- Position of character at index `an_index'.
 		local
@@ -448,7 +448,7 @@ feature -- Status Report
 			gtk_text_view_buffer_to_window_coords (text_view, a_x, a_y, $a_x2, $a_y2)
 			create Result.set (a_x2, a_y2)
 		end
-		
+
 	character_displayed (an_index: INTEGER): BOOLEAN is
 			-- Is character `an_index' currently visible in `Current'?
 		local
@@ -467,7 +467,7 @@ feature -- Status Report
 			gtk_text_view_buffer_to_window_coords (text_view, a_x, a_y, $a_char_x, $a_char_y)
 			Result := (a_char_x >= 0 and a_char_x < width) and then (a_char_y >= 0 and a_char_y < height)
 		end
-	
+
 feature -- Status report
 
 	character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
@@ -494,14 +494,14 @@ feature -- Status report
 			{EV_GTK_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, character_index - 2)
 			a_text_attributes := gtk_text_view_get_default_attributes (text_view)
 			a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
-			
+
 			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
 			create a_family.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
 			font_style := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
 			font_weight := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
-			
+
 			if font_weight <= {EV_FONT_IMP}.pango_weight_ultra_light then
 				font_weight := {EV_FONT_CONSTANTS}.weight_thin
 			elseif font_weight <= {EV_FONT_IMP}.pango_weight_normal then
@@ -520,23 +520,23 @@ feature -- Status report
 			end
 
 			Result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
-			
+
 			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
 			Result.set_fcolor (
 				{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
-				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256			
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
 			)
-			
+
 			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
 			Result.set_bcolor (
 				{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256,
 				{EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256,
-				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256			
+				{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256
 			)
-			
+
 			Result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
-	
+
 			gtk_text_attributes_free (a_text_attributes)
 		end
 
@@ -551,7 +551,7 @@ feature -- Status setting
 
 	current_format: EV_CHARACTER_FORMAT
 		-- Format to be applied to next typed characters
-		
+
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
@@ -578,8 +578,8 @@ feature -- Status setting
 			a_format_imp ?= format.implementation
 			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
-		
-	buffered_append (a_text: STRING; format: EV_CHARACTER_FORMAT) is
+
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
 			-- Apply `a_text' with format `format' to append buffer.
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.
@@ -588,7 +588,7 @@ feature -- Status setting
 			buffer_length: INTEGER
 			a_format_imp: EV_CHARACTER_FORMAT_IMP
 			l_count: INTEGER
-			l_char: CHARACTER
+			l_char_code: NATURAL_32
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			l_count := a_text.count
@@ -603,8 +603,8 @@ feature -- Status setting
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (append_buffer, a_text_iter.item, temp_start_iter.item, temp_end_iter.item)
 					buffer_locked_in_append_mode := True
 				end
-				l_char := a_text.item (1)
-				if l_count = 1 and (l_char = '%N' or l_char = '%T') then
+				l_char_code := a_text.code (1)
+				if l_count = 1 and (l_char_code = ('%N').natural_32_code or l_char_code = ('%T').natural_32_code) then
 					append_text_internal (append_buffer, a_text)
 				else
 					buffer_length := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (append_buffer) + 1
@@ -616,10 +616,10 @@ feature -- Status setting
 				end
 			end
 		end
-		
+
 	temp_start_iter, temp_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		-- Reusable GtkTextIter objects
-		
+
 	flush_buffer is
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
@@ -641,7 +641,7 @@ feature -- Status setting
 				buffer_locked_in_append_mode := False
 			end
 		end
-		
+
 	flush_buffer_to (start_position, end_position: INTEGER) is
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
@@ -661,12 +661,12 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (append_buffer, append_buffer_end_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, text_buffer_start_iter.item, text_buffer_end_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (text_buffer, text_buffer_start_iter.item, append_buffer_start_iter.item, append_buffer_end_iter.item)
-			
+
 			set_caret_position (a_caret_pos)
 			dispose_append_buffer
 			buffer_locked_in_append_mode := False
 		end
-		
+
 	set_tab_width (a_width: INTEGER) is
 			-- Assign `a_width' to `tab_width'.
 		do
@@ -682,7 +682,7 @@ feature -- Status setting
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		do
 			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
@@ -788,7 +788,7 @@ feature {NONE} -- Implementation
 			external
 				"C struct GtkTextAppearance access &bg_color use <gtk/gtk.h>"
 			end
-			
+
 	gtk_text_appearance_struct_underline (a_text_appearance: POINTER): INTEGER is
 			external
 				"C struct GtkTextAppearance access underline use <gtk/gtk.h>"
@@ -810,14 +810,14 @@ feature {NONE} -- Implementation
 			alias
 				"gtk_text_iter_get_attributes ((GtkTextIter*) $a_text_iter, (GtkTextAttributes*) $a_text_values )"
 			end
-			
+
 	gtk_text_view_get_default_attributes (a_text_view: POINTER): POINTER is
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
 			end
-			
+
 	gtk_text_attributes_free (a_text_attributes: POINTER) is
 			external
 				"C inline use <gtk/gtk.h>"
@@ -831,7 +831,7 @@ feature {NONE} -- Implementation
 			alias
 				"gtk_text_attributes_copy_values ((GtkTextAttributes*) $a_text_attributes_src, (GtkTextAttributes*) $a_text_attributes_dest)"
 			end
-	
+
 	gtk_text_attributes_copy (a_text_attributes_src: POINTER): POINTER is
 			external
 				"C inline use <gtk/gtk.h>"
@@ -852,7 +852,7 @@ feature {NONE} -- Implementation
 			alias
 				"gtk_text_view_window_to_buffer_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $window_x, (gint) $window_y, (gint *) $buffer_x, (gint *) $buffer_y)"
 			end
-		
+
 	gtk_text_view_buffer_to_window_coords (a_text_view: POINTER; buffer_x, buffer_y: INTEGER; window_x, window_y: POINTER) is
 			external
 				"C inline use <gtk/gtk.h>"
@@ -872,7 +872,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_start_iter.item, start_position - 1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (a_text_buffer, a_end_iter.item, end_position - 1)
 
-			
+
 			text_tag := format_imp.new_text_tag_from_applicable_attributes (applicable_attributes)
 			a_tag_table := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (a_text_buffer)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, text_tag)
@@ -889,16 +889,16 @@ feature {NONE} -- Implementation
 		do
 			a_start_position := start_position
 			a_end_position := end_position
-			
+
 			create a_start_iter.make
 			create a_end_iter.make
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, a_start_position - 1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, a_end_position - 1)
-			
+
 			a_start_line := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_line (a_start_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_set_line (a_start_iter.item, a_start_line)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_to_line_end (a_end_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_forward_char (a_end_iter.item)
 
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 		-- Pointer to the GtkTextBuffer used for append buffering.	
 
 feature {EV_ANY_I} -- Implementation
-	
+
 	interface: EV_RICH_TEXT;
 
 indexing

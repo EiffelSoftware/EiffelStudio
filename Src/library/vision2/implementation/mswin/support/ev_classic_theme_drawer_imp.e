@@ -28,7 +28,7 @@ inherit
 
 feature -- Basic operations
 
-	open_theme_data (item: POINTER; class_name: STRING): POINTER is
+	open_theme_data (item: POINTER; class_name: STRING_GENERAL): POINTER is
 			-- Open theme data for WEL_WINDOW represented by `item'
 			-- with type of theme `class_name'. See "Parts and States" of MSDN
 			-- for a list of valid class names.
@@ -99,7 +99,7 @@ feature -- Basic operations
 			end
 		end
 
-	draw_text (wel_item: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP) is
+	draw_text (wel_item: POINTER; a_hdc: WEL_DC; a_part_id, a_state_id: INTEGER; text: STRING_GENERAL; dw_text_flags: INTEGER; is_sensitive: BOOLEAN; a_content_rect: WEL_RECT; foreground_color: EV_COLOR_IMP) is
 			-- Draw `text' on `a_hdc' within `a_content_rect' corresponding to part `a_part_id', `a_state_id'. Respect state of `is_sensitive' and use `foreground_color'
 			-- if set. Font used is that already selected into `a_hdc'.
 		do

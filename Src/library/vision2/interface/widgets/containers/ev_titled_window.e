@@ -18,7 +18,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_TITLED_WINDOW
 
 inherit
@@ -28,7 +28,7 @@ inherit
 			create_implementation,
 			initialize
 		end
-		
+
 	EV_TITLED_WINDOW_ACTION_SEQUENCES
 		redefine
 			implementation
@@ -66,7 +66,7 @@ feature -- Access
 			Result := implementation.accelerator_list
 		end
 
-	icon_name: STRING is
+	icon_name: STRING_32 is
 			-- Name displayed when `Current is minimized.
 			-- If `is_empty' then `title' is displayed.
 		require
@@ -77,7 +77,7 @@ feature -- Access
 			bridge_ok: equal (Result, implementation.icon_name)
 			result_not_void: Result /= Void
 			cloned: Result /= implementation.icon_name
-		end 
+		end
 
 	icon_pixmap: EV_PIXMAP is
 			-- Window icon.
@@ -88,7 +88,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result.is_equal (implementation.icon_pixmap)
 		end
-	
+
 feature -- Status report
 
 	is_minimized: BOOLEAN is
@@ -166,7 +166,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING) is
+	set_icon_name (an_icon_name: STRING_GENERAL) is
 			-- Assign `an_icon_name' to `icon_name'.
 		require
 			not_destroyed: not is_destroyed
@@ -187,7 +187,7 @@ feature -- Element change
 		ensure
 			icon_name_removed: icon_name.is_empty
 		end
-		
+
 
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
@@ -209,13 +209,13 @@ feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Responsible for interaction with native graphics toolkit.
-		do   
+		do
 			create {EV_TITLED_WINDOW_IMP} implementation.make (Current)
 		end
 
 invariant
 	accelerators_not_void: is_usable implies accelerators /= Void
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

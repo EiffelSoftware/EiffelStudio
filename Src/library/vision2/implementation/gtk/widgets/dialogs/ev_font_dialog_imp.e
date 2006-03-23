@@ -67,21 +67,21 @@ feature -- Access
 			font_imp: EV_FONT_IMP
 			a_cs: EV_GTK_C_STRING
 			a_utf8_ptr: POINTER
-			font_desc: STRING
-			font_names: ARRAYED_LIST [STRING]
+			font_desc: STRING_32
+			font_names: ARRAYED_LIST [STRING_32]
 			exit_loop: BOOLEAN
-			split_values: LIST [STRING]
-			selected_font_name: STRING
+			split_values: LIST [STRING_32]
+			selected_font_name: STRING_32
 		do
 			--| FIXME IEK Refactor this with default font code in EV_APPLICATION_IMP
 			create Result
 			font_imp ?= Result.implementation
-			
+
 			a_utf8_ptr := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
 			create a_cs.share_from_pointer (a_utf8_ptr)
 			font_desc := a_cs.string.as_lower
 			font_names := App_implementation.font_names_on_system
-			
+
 			from
 				font_names.start
 			until
@@ -93,20 +93,20 @@ feature -- Access
 				end
 				font_names.forth
 			end
-			
+
 			font_imp.set_face_name (selected_font_name.twin)
 			font_imp.preferred_families.extend (selected_font_name.twin)
 
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
 			font_imp.set_height_in_points (split_values.last.to_integer)
-			
+
 			if split_values.has ("italic") or else split_values.has ("oblique") then
 				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			else
 				font_imp.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 			end
-			
+
 			if split_values.has ("bold") then
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			elseif split_values.has ("light") then
@@ -115,7 +115,7 @@ feature -- Access
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_black)
 			else
 				font_imp.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
-			end		
+			end
 		end
 
 feature -- Element change
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_FONT_DIALOG;	
+	interface: EV_FONT_DIALOG;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 #define cwel_tc_item_set_mask(_ptr_, _value_) (((TC_ITEM *) _ptr_)->mask = (UINT) (_value_))
-#define cwel_tc_item_set_psztext(_ptr_, _value_) (((TC_ITEM *) _ptr_)->pszText = (LPSTR) (_value_))
+#define cwel_tc_item_set_psztext(_ptr_, _value_) (((TC_ITEM *) _ptr_)->pszText = (LPTSTR) (_value_))
 #define cwel_tc_item_set_cchtextmax(_ptr_, _value_) (((TC_ITEM *) _ptr_)->cchTextMax = (int) (_value_))
 #define cwel_tc_item_set_iimage(_ptr_, _value_) (((TC_ITEM *) _ptr_)->iImage = (int) (_value_))
 #define cwel_tc_item_set_lparam(_ptr_, _value_) (((TC_ITEM *) _ptr_)->lParam = (LPARAM) (_value_))

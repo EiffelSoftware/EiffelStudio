@@ -37,7 +37,7 @@ create
 
 feature -- Element change
 	
-	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], BOOLEAN]) is
 			-- Set the agent that validates the text of `text_field' on `deactivate'.
 			-- If `a_validation_agent' is Void then no validation is performed before setting `text'.
 		do
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Access
 
-	validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	validation_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], BOOLEAN]
 		-- Agent used to validate `text_field' text.
 
 	text_field: EV_TEXT_FIELD

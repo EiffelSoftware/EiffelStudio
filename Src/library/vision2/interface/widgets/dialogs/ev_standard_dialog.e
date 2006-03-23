@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_title: STRING) is
+	make_with_title (a_title: STRING_GENERAL) is
 			-- Initialize `Current' and assign `a_title' to `title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	title: STRING is
+	title: STRING_32 is
 			-- Title of `Current' displayed in title bar.
 		require
 			not_destroyed: not is_destroyed
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: STRING is
+	selected_button: STRING_32 is
 			-- Label of last clicked button.
 		require
 			not_destroyed: not is_destroyed
@@ -98,7 +98,7 @@ feature -- Status setting
 				not is_destroyed implies blocking_window = Void
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed

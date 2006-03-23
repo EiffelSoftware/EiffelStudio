@@ -1,5 +1,5 @@
 
-indexing 
+indexing
 	description: "Eiffel Vision print dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set_c_object (create_gtk_dialog)
 		end
 
-	printer_rdo, file_rdo, all_rdo, range_rdo, 
+	printer_rdo, file_rdo, all_rdo, range_rdo,
 	selection_rdo, portrait_rdo, landscape_rdo: EV_RADIO_BUTTON
 	printer_txt, file_txt: EV_TEXT_FIELD
 	from_spn, to_spn, copies_spn: EV_SPIN_BUTTON
@@ -153,7 +153,7 @@ feature {NONE} -- Initialization
 			create orientation_frame.make_with_text ("Orientation")
 			orientation_frame.extend (orientation_hbox)
 			main_dialog_container.extend (orientation_frame)
-			
+
 			-- Build the 'Page_type' frame.
 			create page_type_frame.make_with_text ("Page Type")
 			create page_type_hbox
@@ -165,8 +165,8 @@ feature {NONE} -- Initialization
 			page_type_combo.disable_edit
 			page_type_frame.extend (page_type_hbox)
 			main_dialog_container.extend (page_type_frame)
-			
-			
+
+
 			-- Add separator and buttons
 			main_dialog_container.extend (create {EV_HORIZONTAL_SEPARATOR})
 			create button_hbox
@@ -264,7 +264,7 @@ feature -- Access
 			page_constant: INTEGER
 		do
 			Result := Precursor {EV_PRINT_DIALOG_I}
-			
+
 				-- Set the vertical and horizontal resolutions.
 			create pspc
 			page_constant := pspc.Letter
@@ -309,14 +309,14 @@ feature -- Access
 			Result := copies_spn.value
 		end
 
-	output_file_name: STRING is
+	output_file_name: STRING_32 is
 			-- String representation of the path to output
 			-- the printed area to.
 		do
 			Result := file_txt.text
 		end
 
-	printer_name: STRING is
+	printer_name: STRING_32 is
 			-- String representation of the printer to output
 			-- the printed area to.
 		do
@@ -525,7 +525,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	page_type_combo: EV_COMBO_BOX
-	
+
 	Letter: STRING is "Letter"
 	Legal: STRING is "Legal"
 	Executive: STRING is "Executive"

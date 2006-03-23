@@ -181,7 +181,7 @@ __declspec(dllexport) int WINAPI hook_mouse(HWND hWnd) {
 	HOOKPROC hkprcMouse;
 
 	if ((hWnd == NULL) || (!IsWindow(hWnd))) {
-		MessageBox (NULL, "Invalid hWnd", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
+		MessageBox (NULL, L"Invalid hWnd", L"wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;	// Invalid handle to a window, exit.
 	}
 
@@ -198,7 +198,7 @@ __declspec(dllexport) int WINAPI hook_mouse(HWND hWnd) {
 	// Set the HookWindow if SetWindowsHookEx succeeded
 	if (hMouseHook == NULL) {
 		hHookWindow = NULL;
-		MessageBox (NULL, "hMouseHook==NULL", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
+		MessageBox (NULL, L"hMouseHook==NULL", L"wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;
 	}
 	
@@ -219,7 +219,7 @@ __declspec(dllexport) int WINAPI unhook_mouse() {
 	if (UnhookWindowsHookEx(hMouseHook) == 0) {
 		// DWORD nErrorCode = GetLastError();
 		// FIXME: Insert code here to deal with the error */
-		MessageBox (NULL, "Unable to unhook", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
+		MessageBox (NULL, L"Unable to unhook", L"wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;
 	}
 

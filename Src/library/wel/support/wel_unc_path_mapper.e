@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING) is
+	make (a_path: STRING_GENERAL) is
 			-- Map the networking path `a_path' to a temporary path
 		local
 			net_resource: WEL_NET_RESOURCE
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
-	access_name: STRING
+	access_name: STRING_32
 			-- Local access to the mapped path.
 			-- Example: "I:"
 		

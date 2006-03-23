@@ -39,7 +39,7 @@ EIF_BOOLEAN cwin_query_disk_space(
 		EIF_POINTER fnptr							// EiffelCallback
 		)
 	{
-	char szRootPath[4];				// Path to root directory of requested drive.
+	TCHAR szRootPath[4];				// Path to root directory of requested drive.
 	BOOL bRes;						// Success of operation
 	unsigned long MBytes_FreeSpace; 
 	unsigned long MBytes_TotalSpace;

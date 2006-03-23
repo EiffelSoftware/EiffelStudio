@@ -20,7 +20,7 @@ feature -- Access
 	color_mode: INTEGER
 		-- Color output mode of `Current'
 
-	file_extension: STRING is
+	file_extension: STRING_32 is
 			-- 3 character file extension associated with format.
 		deferred
 		end

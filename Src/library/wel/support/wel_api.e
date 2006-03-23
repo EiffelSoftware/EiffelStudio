@@ -50,7 +50,7 @@ feature -- Messages
 		external
 			"C inline use <windows.h>"
 		alias
-			"RegisterWindowMessage ((LPCSTR) $a_message_name)"
+			"RegisterWindowMessage ((LPCTSTR) $a_message_name)"
 		end
 
 feature -- Windows

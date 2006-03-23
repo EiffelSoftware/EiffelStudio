@@ -4,13 +4,13 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$";
-	
+
 class
 	WEL_HKEY
 
 feature -- Status
 
-	basic_valid_value_for_HKEY(value: POINTER): BOOLEAN is
+	basic_valid_value_for_hkey (value: POINTER): BOOLEAN is
 		-- Return True if 'value' is one of the basic following values.
 		do
 			if
@@ -21,50 +21,57 @@ feature -- Status
 				value = Hkey_users or else
 				value = Hkey_current_user or else
 				value = Hkey_local_machine
-			then 
+			then
 				Result := True
 			end
 		end
 
-	basic_valid_name_for_HKEY(name: STRING): BOOLEAN is
+	basic_valid_name_for_hkey (name: STRING_GENERAL): BOOLEAN is
 			-- Return True if 'name' correspond to one of the
 			-- value names below.
 		require
-				name_possible: name /= Void
+			name_possible: name /= Void
+			name_valid: name.is_valid_as_string_8
+		local
+			l_string: STRING
 		do
-			name.to_lower
+			l_string := name.to_string_8
 			if
-				name.is_equal("hkey_classes_root") or else
-				name.is_equal("hkey_dyn_data") or else
-				name.is_equal("hkey_current_config") or else
-				name.is_equal("hkey_performance_data") or else
-				name.is_equal("hkey_users") or else
-				name.is_equal("hkey_current_user") or else
-				name.is_equal("hkey_local_machine")
-			then 
+				l_string.is_case_insensitive_equal ("hkey_classes_root") or else
+				l_string.is_case_insensitive_equal ("hkey_dyn_data") or else
+				l_string.is_case_insensitive_equal ("hkey_current_config") or else
+				l_string.is_case_insensitive_equal ("hkey_performance_data") or else
+				l_string.is_case_insensitive_equal ("hkey_users") or else
+				l_string.is_case_insensitive_equal ("hkey_current_user") or else
+				l_string.is_case_insensitive_equal ("hkey_local_machine")
+			then
 				Result := True
 			end
 		end
 
-	index_value_for_root_keys(name: STRING): POINTER is
+	index_value_for_root_keys (name: STRING_GENERAL): POINTER is
 			-- Return the index corresponding to a root key.
 		require
-				name_possible: name /= Void and then basic_valid_name_for_HKEY(name)
+			name_not_void: name /= Void
+			name_valid: name.is_valid_as_string_8
+			valid_key: basic_valid_name_for_hkey (name)
+		local
+			l_string: STRING
 		do
-			name.to_lower
-			if name.is_equal("hkey_classes_root") then 
+			l_string := name.to_string_8
+			if l_string.is_case_insensitive_equal ("hkey_classes_root") then
 					Result := Hkey_classes_root
-			elseif name.is_equal("hkey_dyn_data") then
+			elseif l_string.is_case_insensitive_equal ("hkey_dyn_data") then
 					Result := Hkey_dyn_data
-			elseif name.is_equal("hkey_current_config") then
+			elseif l_string.is_case_insensitive_equal ("hkey_current_config") then
 					Result := Hkey_current_config
-			elseif name.is_equal("hkey_performance_data") then
+			elseif l_string.is_case_insensitive_equal ("hkey_performance_data") then
 					Result := Hkey_performance_data
-			elseif name.is_equal("hkey_users") then
+			elseif l_string.is_case_insensitive_equal ("hkey_users") then
 					Result := Hkey_users
-			elseif name.is_equal("hkey_current_user") then
+			elseif l_string.is_case_insensitive_equal ("hkey_current_user") then
 					Result := Hkey_current_user
-			elseif name.is_equal("hkey_local_machine") then 
+			elseif l_string.is_case_insensitive_equal ("hkey_local_machine") then
 					Result := Hkey_local_machine
 			end
 		end

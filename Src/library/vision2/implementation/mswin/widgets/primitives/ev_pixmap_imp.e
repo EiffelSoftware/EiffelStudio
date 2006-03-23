@@ -104,12 +104,12 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			create a_default_colors
 			set_background_color (a_default_colors.default_background_color)
 			set_foreground_color (a_default_colors.default_foreground_color)
-		end	
+		end
 
 	read_from_named_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
-			-- Exceptions "No such file or directory", 
-			--            "Unable to retrieve icon information", 
+			-- Exceptions "No such file or directory",
+			--            "Unable to retrieve icon information",
 			--            "Unable to load the file".
 		local
 			pixmap_file: RAW_FILE
@@ -139,7 +139,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Misc.
 			-- Free GDI resource than can be reloaded.
 		do
 			if pixmap_filename /= Void then
-					-- The bitmap/icon can be retrieved from the file, 
+					-- The bitmap/icon can be retrieved from the file,
 					-- so we can erase everything.
 				reset_bitmap_content
 				reset_resource_content
@@ -250,7 +250,7 @@ feature -- Access
 feature {EV_ANY_I} -- Status setting
 
 	stretch (new_width, new_height: INTEGER) is
-			-- Stretch the image to fit in size 
+			-- Stretch the image to fit in size
 			-- `new_width' by `new_height'.
 		local
 			tmp_bitmap: WEL_BITMAP
@@ -314,7 +314,7 @@ feature {EV_ANY_I} -- Delegated features
 				must_be_widget_to_get_called: False
 			end
 		end
-		
+
 	pnd_screen: EV_SCREEN is
 			-- `Result' is screen used for pick and drop.
 		do
@@ -349,7 +349,7 @@ feature {EV_ANY_I} -- Delegated features
 	enable_transport is
 			-- Enable Pick/Drag and Drop.
 			--| This should never be called, but is necessary
-			--| As only EV_PIXMAP_IMP_WIDGET is pick and dropable. 
+			--| As only EV_PIXMAP_IMP_WIDGET is pick and dropable.
 		do
 			check
 				never_called: False
@@ -393,28 +393,28 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.draw_point (a_x, a_y)
 		end
 
-	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
+	draw_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
 			interface.implementation.draw_text (a_x, a_y, a_text)
 		end
 
-	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING) is
+	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
 			interface.implementation.draw_text_top_left (a_x, a_y, a_text)
 		end
-		
-	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+
+	draw_ellipsed_text (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' at (`x', 'y') using `font'.
 		do
 			promote_to_drawable
 			interface.implementation.draw_ellipsed_text (a_x, a_y, a_text, clipping_width)
 		end
 
-	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			promote_to_drawable
@@ -429,7 +429,7 @@ feature {EV_ANY_I} -- Delegated features
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Draw infinite straight line through (`x1', 'y1') and 
+			-- Draw infinite straight line through (`x1', 'y1') and
 			-- (`x2', 'y2').
 		do
 			promote_to_drawable
@@ -542,16 +542,16 @@ feature {EV_ANY_I} -- Delegated features
 		end
 
 	draw_pie_slice (
-		a_x					: INTEGER 
+		a_x					: INTEGER
 		a_y					: INTEGER
 		a_vertical_radius	: INTEGER
 		a_horizontal_radius	: INTEGER
-		a_start_angle		: REAL 
+		a_start_angle		: REAL
 		an_aperture			: REAL
 		) is
 			-- Draw a part of an ellipse centered on (`x', 'y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + 
+			-- Start at `a_start_angle' and stop at `a_start_angle' +
 			-- `an_aperture'.
 			-- The arc is then closed by two segments through (`x', 'y').
 			-- Angles are measured in radians.
@@ -574,7 +574,7 @@ feature {EV_ANY_I} -- Delegated features
 		a_height			: INTEGER
 		) is
 			-- Draw rectangle with upper-left corner on (`x', 'y')
-			-- with size `a_width' and `a_height'. Fill with 
+			-- with size `a_width' and `a_height'. Fill with
 			-- `background_color'.
 		do
 			promote_to_drawable
@@ -746,24 +746,24 @@ feature {EV_ANY_I} -- Delegated features
 				-- Simple implementation => no tile.
 			Result := Void
 		end
-		
+
 	internal_enable_dockable is
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
-		
+
 	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
 		do
 		end
-		
+
 	internal_disable_dockable is
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
-		do	
+		do
 		end
 
 	disable_capture is
@@ -800,7 +800,7 @@ feature {EV_ANY_I} -- Delegated features
 			a_y: INTEGER
 			a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER			
+			a_screen_x, a_screen_y: INTEGER
 		) is
 			-- Terminate the pick and drop mechanism.
 		do
@@ -943,7 +943,7 @@ feature {EV_ANY_I} -- Delegated features
 					-- This should never be called, as `show' upgrades
 					-- the implementation.
 				Result := False
-			end	
+			end
 		end
 
 	minimum_height: INTEGER is
@@ -1058,7 +1058,7 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
-	set_tooltip (a_text: STRING) is
+	set_tooltip (a_text: STRING_GENERAL) is
 			-- Set `tooltip' to `a_text'.
 		do
 			promote_to_widget
@@ -1072,7 +1072,7 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.show
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_32 is
 			-- Text displayed when user moves mouse over widget.
 		do
 			check
@@ -1178,7 +1178,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 
 	pixmap_filename: STRING
-			-- Filename for the pixmap. 
+			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 
@@ -1193,7 +1193,7 @@ feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP} -- Pixmap State
 	private_bitmap: WEL_BITMAP
 			-- Current bitmap used. Void if not initialized or if
 			-- `update_needed' is set.
-		
+
 	private_bitmap_id: INTEGER
 			-- `object_id' of first `private_bitmap' set to `Current'. If you add an item
 			-- pixmap to an image list, `private_bitmap' is cleared and then reset upon removal.
@@ -1211,7 +1211,7 @@ feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP} -- Pixmap State
 
 	private_palette: WEL_PALETTE
 			-- Palette for bitmap. Void if none.
-			
+
 feature {EV_ANY_I} -- Implementation
 
 	set_private_bitmap_id (a_value: INTEGER) is
@@ -1225,7 +1225,7 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation
 
 	update_fields(
-		error_code		: INTEGER -- Loadpixmap_error_xxxx 
+		error_code		: INTEGER -- Loadpixmap_error_xxxx
 		data_type		: INTEGER -- Loadpixmap_hicon, ...
 		pixmap_width	: INTEGER -- Height of the loaded pixmap
 		pixmap_height	: INTEGER -- Width of the loaded pixmap
@@ -1271,14 +1271,14 @@ feature {NONE} -- Implementation
 						-- we have 24 bits/color)
 					size_row := 4 * ((pixmap_width * 24 + 31) // 32)
 					create dib.make_by_content_pointer (
-						rgb_data, 
+						rgb_data,
 						size_row * pixmap_height + 40
 						)
 					create s_dc
 					s_dc.get
 					create private_bitmap.make_by_dib(
-						s_dc, 
-						dib, 
+						s_dc,
+						dib,
 						Dib_colors_constants.Dib_rgb_colors
 						)
 					private_bitmap_id := private_bitmap.object_id
@@ -1298,23 +1298,23 @@ feature {NONE} -- Implementation
 					dib := Void
 
 						-- Let's build the mask.
-					if alpha_data /= Default_pointer then 
+					if alpha_data /= Default_pointer then
 							-- Compute the size of a row in bytes (here
 							-- we have 1 bit/color)
 						size_row := 4 * ((pixmap_width * 1 + 31) // 32)
 						create dib.make_by_content_pointer (
-							alpha_data, 
+							alpha_data,
 							size_row * pixmap_height + 40 + 8
 							)
 						create memory_dc.make
 						create private_mask_bitmap.make_by_dib (
-							memory_dc, dib, 
+							memory_dc, dib,
 							Dib_colors_constants.Dib_rgb_colors
 							)
 						private_mask_bitmap.enable_reference_tracking
-						
+
 						memory_dc.select_bitmap (private_bitmap)
-						
+
 							--| FIXME To get the icon masking to work properly we have to always make sure
 							--| that the color masked out is always black, this is achieved by blitting
 							--| the black part of the mask on to the source pixmap
@@ -1324,11 +1324,11 @@ feature {NONE} -- Implementation
 						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Maskpaint)
 						source_dc.unselect_bitmap
 						source_dc.delete
-						
+
 						memory_dc.unselect_all
 						memory_dc.delete
 
-						-- We don't need the DIB, and it consumes a GDI 
+						-- We don't need the DIB, and it consumes a GDI
 						-- resource, so we dispose it.
 						dib.palette.enable_reference_tracking
 						dib.dispose
@@ -1338,7 +1338,7 @@ feature {NONE} -- Implementation
 			else
 				last_pixmap_loading_had_error := True
 			end
-			
+
 				-- Enable invariant checking again
 			set_is_initialized (True)
 		end
@@ -1371,7 +1371,7 @@ feature {NONE} -- Implementation
 			-- any allocated GDI resource.
 		do
 			if private_bitmap /= Void then
-				private_bitmap.decrement_reference	
+				private_bitmap.decrement_reference
 				private_bitmap := Void
 			end
 			if private_mask_bitmap /= Void then
@@ -1394,8 +1394,8 @@ feature {NONE} -- Implementation
 				-- Discard current implementation
 			if not is_destroyed then
 				create drawable_pixmap.make_with_simple (Current)
-				interface.replace_implementation (drawable_pixmap)	
-				safe_destroy	
+				interface.replace_implementation (drawable_pixmap)
+				safe_destroy
 			end
 		end
 
@@ -1421,7 +1421,7 @@ feature {NONE} -- Implementation
 			new_width	: INTEGER
 			new_height	: INTEGER
 		): WEL_BITMAP is
-			-- Stretch `old_bitmap' to fit in size `new_width' by 
+			-- Stretch `old_bitmap' to fit in size `new_width' by
 			-- `new_height'. The resulting bitmap is stored in `Result'
 			--
 			-- Call `WEL_BITMAP.decrement_reference' when Result is no
@@ -1447,8 +1447,8 @@ feature {NONE} -- Implementation
 				-- create and assign a new bitmap & bitmap_dc
 			create new_dc.make_by_dc (s_dc)
 			create new_bitmap.make_compatible (
-				s_dc, 
-				new_width, 
+				s_dc,
+				new_width,
 				new_height
 				)
 			new_bitmap.enable_reference_tracking
@@ -1509,9 +1509,9 @@ feature {NONE} -- Implementation
 				private_width := info_mask_bitmap.width
 				if not icon_info.has_color_bitmap then
 						-- We have here a black & white icon.
-						-- `mask_bitmap' is formatted so that the upper half is the 
-						-- icon AND bitmask and the lower half is the icon XOR 
-						-- bitmask. Under this condition, the height should be 
+						-- `mask_bitmap' is formatted so that the upper half is the
+						-- icon AND bitmask and the lower half is the icon XOR
+						-- bitmask. Under this condition, the height should be
 						-- an even multiple of two.
 					private_height := info_mask_bitmap.height // 2
 				else
@@ -1528,12 +1528,12 @@ feature {NONE} -- Implementation
 			-- Retrieve the bitmap and the mask bitmap from the
 			-- icon handle or the cursor handle.
 		require
-			icon_or_cursor_defined: 
-				private_icon /= Void or 
+			icon_or_cursor_defined:
+				private_icon /= Void or
 				private_cursor /= Void
-			no_bitmap: 
-				private_bitmap = Void and 
-				private_palette = Void and 
+			no_bitmap:
+				private_bitmap = Void and
+				private_palette = Void and
 				private_mask_bitmap = Void
 		local
 			icon_info: WEL_ICON_INFO
@@ -1562,9 +1562,9 @@ feature {NONE} -- Implementation
 				-- the icon information.
 			if not icon_info.has_color_bitmap then
 					-- We have here a black & white icon.
-					-- `mask_bitmap' is formatted so that the upper half is the 
-					-- icon AND bitmask and the lower half is the icon XOR 
-					-- bitmask. Under this condition, the height should be 
+					-- `mask_bitmap' is formatted so that the upper half is the
+					-- icon AND bitmask and the lower half is the icon XOR
+					-- bitmask. Under this condition, the height should be
 					-- an even multiple of two.
 				icon_mask_bitmap := icon_info.mask_bitmap
 				new_width := icon_mask_bitmap.width
@@ -1589,14 +1589,14 @@ feature {NONE} -- Implementation
 
 					-- Copy the second half of `icon_mask_bitmap' into
 					-- `bitmap'			
-				mem2_dc.bit_blt (0, 0, new_width, new_height, 
+				mem2_dc.bit_blt (0, 0, new_width, new_height,
 					mem1_dc, 0, new_height, Raster_operations_constants.Srccopy)
-				
+
 				mem2_dc.unselect_bitmap
 				a_wel_bitmap.decrement_reference
 
 					-- Associate `mem2_dc' with `mask_bitmap'.
-				create private_mask_bitmap.make_compatible (mem2_dc, 
+				create private_mask_bitmap.make_compatible (mem2_dc,
 					new_width, new_height)
 				private_mask_bitmap.enable_reference_tracking
 
@@ -1605,7 +1605,7 @@ feature {NONE} -- Implementation
 
 					-- Copy the first half of `icon_mask_bitmap' into
 					-- `mask_bitmap'			
-				mem2_dc.bit_blt (0, 0, new_width, new_height, 
+				mem2_dc.bit_blt (0, 0, new_width, new_height,
 					mem1_dc, 0, 0, Raster_operations_constants.Srccopy)
 
 					-- Free memory				
@@ -1623,7 +1623,7 @@ feature {NONE} -- Implementation
 				private_mask_bitmap := icon_info.mask_bitmap
 				private_mask_bitmap.increment_reference
 			end
-			
+
 				-- Clean up the structure and free GDI Objects.
 			icon_info.delete
 		ensure
@@ -1631,13 +1631,13 @@ feature {NONE} -- Implementation
 			private_mask_bitmap_not_void: private_mask_bitmap /= Void
 			has_mask: has_mask
 		end
-		
+
 	disable_initialized is
 			-- Ensure `is_initialized' = False.
 		do
 			set_is_initialized (False)
 		end
-		
+
 
 feature {NONE} -- Constants
 
@@ -1671,7 +1671,7 @@ feature {NONE} -- Constants
 		end
 
 feature {
-		EV_PIXMAP_IMP, 
+		EV_PIXMAP_IMP,
 		EV_PIXMAP_IMP_DRAWABLE,
 		EV_PIXMAP_IMP_WIDGET,
 		EV_CONTAINER_IMP
@@ -1716,23 +1716,23 @@ invariant
 		not (private_icon /= Void and private_cursor /= Void)
 
 	bitmap_reference_tracked:
-		private_bitmap /= Void implies 
+		private_bitmap /= Void implies
 			private_bitmap.reference_tracked
 
 	palette_reference_tracked:
-		private_palette /= Void implies 
+		private_palette /= Void implies
 			private_palette.reference_tracked
 
 	mask_reference_tracked:
-		private_mask_bitmap /= Void implies 
+		private_mask_bitmap /= Void implies
 			private_mask_bitmap.reference_tracked
 
 	icon_reference_tracked:
-		private_icon /= Void implies 
+		private_icon /= Void implies
 			private_icon.reference_tracked
 
 	cursor_reference_tracked:
-		private_cursor /= Void implies 
+		private_cursor /= Void implies
 			private_cursor.reference_tracked
 
 indexing

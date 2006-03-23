@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -67,12 +67,12 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			no_carriage_returns: not a_text.has ('%R')
+			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
 			text := a_text
 			implementation.string_size_changed
@@ -383,7 +383,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	text: STRING
+	text: STRING_32
 		-- Text displayed in `Current'.
 
 	font: EV_FONT

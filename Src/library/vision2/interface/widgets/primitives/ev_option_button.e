@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text' and to `menu'.text.
 		do
 			implementation.set_text (a_text)

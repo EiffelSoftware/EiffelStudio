@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	title: STRING is
+	title: STRING_32 is
 			-- Application name to be displayed by
 			-- the window manager.
 		do
@@ -73,11 +73,11 @@ feature -- Access
 			end
 		end
 
-	internal_title: STRING
+	internal_title: STRING_32
 			-- Our internal represention of the application
 			-- name to be displayed by the window manager.
 
-	icon_name: STRING is
+	icon_name: STRING_32 is
 			-- Short form of application name to be
 			-- displayed by the window manager when
 			-- application is iconified.
@@ -179,7 +179,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_title (txt: STRING) is
+	set_title (txt: STRING_GENERAL) is
 			-- Make `txt' the title of `Current'.
 		do
 			internal_title := txt.twin
@@ -188,7 +188,7 @@ feature -- Element change
 			end
 		end
 
-	set_icon_name (txt: STRING) is
+	set_icon_name (txt: STRING_GENERAL) is
 			-- Make `txt' the new icon name.
 		do
 			internal_icon_name := txt.twin
@@ -237,7 +237,7 @@ feature -- Element change
 
 feature -- Standard window class values
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Window class name to create.
 		do
 			Result := internal_class_name
@@ -249,10 +249,10 @@ feature {EV_ANY_I} -- Implementation
 			-- Current icon set. Void if none
 			-- Should not be destroyed until the window is destroyed
 
-	internal_class_name: STRING
+	internal_class_name: STRING_32
 			-- Window class name.
 
-	new_class_name: STRING is
+	new_class_name: STRING_32 is
 			-- Standard application icon used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined icon.
@@ -261,7 +261,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := "EV_TITLED_WINDOW_IMP"
 		end
 
-	internal_icon_name: STRING
+	internal_icon_name: STRING_32
 			-- Name given by the user. internal representation.
 
 	compute_minimum_height is

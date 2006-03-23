@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_LIST_ITEM_LIST_IMP
 
 inherit
@@ -31,11 +31,11 @@ inherit
 			remove_i_th,
 			initialize
 		end
-	
+
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
-	
+
 	EV_KEY_CONSTANTS
-	
+
 	EV_PND_DEFERRED_ITEM_PARENT
 
 feature {NONE} -- Initialization
@@ -105,7 +105,7 @@ feature -- Status report
 			elseif not a_enable and pebble = Void then
 				disable_transport_signals
 				is_transport_enabled := False
-			end		
+			end
 		end
 
 	connect_pnd_callback is
@@ -117,7 +117,7 @@ feature -- Status report
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (visual_widget,
-				once "button-press-event", 
+				once "button-press-event",
 				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
@@ -172,7 +172,7 @@ feature -- Status report
 					end
 				end
 			end
-	
+
 	row_height: INTEGER is
 			-- Default height of rows
 		do
@@ -181,14 +181,14 @@ feature -- Status report
 
 	pnd_row_imp: EV_LIST_ITEM_IMP
 			-- Implementation object of the current row if in PND transport.
-	
+
 	temp_pebble: ANY
-	
+
 	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
 			-- Returns data to be transported by PND mechanism.
-	
+
 	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
-	
+
 	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Set `pebble' using `pebble_function' if present.
 		do
@@ -198,11 +198,11 @@ feature -- Status report
 				pebble := pnd_row_imp.pebble
 				pebble_function := pnd_row_imp.pebble_function
 			end
-	
+
 			if pebble_function /= Void then
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
-			end		
+			end
 		end
 
 	enable_transport is
@@ -224,7 +224,7 @@ feature -- Status setting
 
 feature -- Insertion
 
-	set_text_on_position (a_row: INTEGER; a_text: STRING) is
+	set_text_on_position (a_row: INTEGER; a_text: STRING_GENERAL) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -277,29 +277,29 @@ feature -- Insertion
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			
+
 			child_array.go_i_th (i)
-			child_array.put_left (v)	
+			child_array.put_left (v)
 
 				-- Add row to model
 			create a_tree_iter.make
 			item_imp.set_list_iter (a_tree_iter)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			set_text_on_position (i, v.text)
-			
+
 			if v.pixmap /= Void then
 				set_row_pixmap (i, v.pixmap)
 			end
-			
+
 			if item_imp.is_transport_enabled then
 				update_pnd_connection (True)
 			end
 		end
-		
+
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST_ITEM_LIST
-	
+
 	list_store: POINTER
 		-- Pointer to the model which holds all of the column data
 

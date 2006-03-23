@@ -839,7 +839,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	set_item_text (v: like item; a_text: STRING) is
+	set_item_text (v: like item; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
@@ -939,7 +939,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			set_default_minimum_size
 		end
 
-	item_text (v: like item): STRING is
+	item_text (v: like item): STRING_32 is
 			-- Label of `v'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM

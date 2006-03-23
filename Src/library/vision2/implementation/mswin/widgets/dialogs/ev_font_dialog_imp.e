@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision font selection dialog, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Access
-	
+
 	font: EV_FONT is
 			-- Font currently selected in `Current'.
 		local
@@ -76,8 +76,8 @@ feature -- Access
 				create text_metric.make (dc)
 				log_font.set_char_set (text_metric.character_set)
 				dc.unselect_all
-				dc.release		
-				
+				dc.release
+
 				create wel_font.make_indirect (log_font)
 				create ev_font
 				font_imp ?= ev_font.implementation
@@ -88,12 +88,15 @@ feature -- Access
 			end
 		end
 
-	title: STRING is "Font"
+	title: STRING_32 is
 			-- Title of `Current'.
+		do
+			Result := "Font"
+		end
 
 feature -- Element change
 
-	set_title (new_title: STRING) is
+	set_title (new_title: STRING_GENERAL) is
 			-- Assign `new_title' to `title'.
 		do
 			--|FIXME
@@ -104,7 +107,7 @@ feature -- Element change
 		local
 			font_imp: EV_FONT_IMP
 			wel_font: WEL_LOG_FONT
-			f_name: STRING
+			f_name: STRING_32
 		do
 			font_imp ?= a_font.implementation
 			wel_font := font_imp.wel_log_font
@@ -212,7 +215,7 @@ feature -- Element change
 		end
 
 	minimum_height: INTEGER is
-		do	
+		do
 			check
 				to_be_implemented: FALSE
 			end

@@ -19,7 +19,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_DIALOG}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
@@ -50,7 +50,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_4
 			create ok_button
 			create cancel_button
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -68,7 +68,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (l_ev_cell_4)
 			l_ev_horizontal_box_4.extend (ok_button)
 			l_ev_horizontal_box_4.extend (cancel_button)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -110,9 +110,9 @@ feature {NONE}-- Initialization
 			integer_constant_retrieval_functions.extend (agent default_button_width)
 			string_constant_set_procedures.extend (agent set_title (?))
 			string_constant_retrieval_functions.extend (agent no_directory_dialog)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 			directory_name_field.change_actions.extend (agent text_changed)
 			directory_name_field.return_actions.extend (agent return_pressed)
@@ -150,33 +150,33 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	text_changed is
 			-- Called by `change_actions' of `directory_name_field'.
 		deferred
 		end
-	
+
 	return_pressed is
 			-- Called by `return_actions' of `directory_name_field'.
 		deferred
 		end
-	
+
 	ok_button_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		deferred
 		end
-	
+
 	cancel_button_pressed is
 			-- Called by `select_actions' of `cancel_button'.
 		deferred
 		end
-	
-	
+
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -196,7 +196,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -232,7 +232,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -250,7 +250,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -266,9 +266,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -286,7 +286,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -297,8 +297,8 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
+
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
@@ -310,7 +310,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

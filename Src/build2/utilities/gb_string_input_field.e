@@ -11,12 +11,12 @@ class
 
 inherit
 	GB_INPUT_FIELD
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			check
 				internal_gb_ev_any /= Void
 			end
-			
+
 			has_multiple_line_entry := multiple_line_text_entry
 
 			object ?= internal_gb_ev_any.object
@@ -60,14 +60,14 @@ feature -- Basic operations
 			-- get infinite recursion.
 		require
 			a_text_not_void: a_text /= Void
-		do		
+		do
 			text_entry.change_actions.block
 			text_entry.set_text (a_text)
 			text_entry.change_actions.resume
 		ensure
 			text_set: text_entry.text.is_equal (a_text)
 		end
-		
+
 	hide_label is
 			-- Ensure that label is hidden.
 		do
@@ -89,10 +89,10 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-	has_multiple_line_entry: BOOLEAN	
+
+	has_multiple_line_entry: BOOLEAN
 		-- Does `Current' permit the entering of multiple lines of text?
-		
+
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
 	update_constant_display (a_value: STRING) is
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		do
 			value_on_entry := text_entry.text
 		end
-		
+
 	process is
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 				-- sometimes. To prevent us from working on the old object, we check that `Current' is
 				-- still valid.
 			if object.object /= Void then
-				validate_agent.call ([text_entry.text])
+				validate_agent.call ([text_entry.text.as_string_8])
 				if validate_agent.last_result then
 					execute_agent (text_entry.text)
 				else
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
 			-- Initialize text field for entry.
 		require
@@ -200,13 +200,13 @@ feature {NONE} -- Implementation
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
 				-- Store `a_validate_agent'.
-				
+
 			validate_agent := a_validate_agent
 			a_parent.extend (Current)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			extend (horizontal_box)
-	
+
 			if has_multiple_line_entry = multiple_line_entry then
 					-- Create a text component that supports multiple lines of text if necessary.
 				create {EV_TEXT} text_entry
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 				constants_combo_box.first.enable_select
 			end
 		end
-		
+
 	disable_constant_mode is
 			-- Ensure constant entry fields are hidden.
 		local
@@ -268,8 +268,8 @@ feature {NONE} -- Implementation
 			entry_widget.show
 			constants_combo_box.remove_selection
 		end
-		
-		
+
+
 	populate_constants is
 			-- Populate `constants_combo_box' with string constants.
 		local
@@ -288,12 +288,12 @@ feature {NONE} -- Implementation
 				create list_item.make_with_text (string_constants.item.name)
 				list_item.set_data (string_constants.item)
 				add_to_list_alphabetically (constants_combo_box, list_item)
-				
+
 				list_item.deselect_actions.block
 				list_item.disable_select
 				list_item.deselect_actions.resume
-				
-				
+
+
 				if internal_type /= Void then
 					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				add_select_item
 			end
 		end
-		
+
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
 		local
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 					data_was_constant: constant /= Void
 				end
 				validate_agent.call ([constant.value])
-			
+
 				if validate_agent.last_result then
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local

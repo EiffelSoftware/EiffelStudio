@@ -12,7 +12,7 @@ class
 
 inherit
 	GB_NAMING_DIALOG_IMP
-	
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
@@ -20,7 +20,7 @@ inherit
 			copy, default_create
 		end
 
-create 
+create
 	make_with_values
 
 feature {NONE} -- Initialization
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			name := ""
 			set_icon_pixmap (Icon_build_window @ 1)
 		end
-	
+
 	make_with_values (initial_name, a_title, prompt, an_invalid_message: STRING; a_validation_agent: like validation_agent) is
 			-- Create `Current' with `initial_name' displayed in `name_field', a title `a_title', `an_invalid_message' displayed
 			-- when `a_validation_agent' returns False.
@@ -58,36 +58,36 @@ feature {NONE} -- Initialization
 			invalid_message := an_invalid_message
 			validation_agent := a_validation_agent
 		end
-		
+
 feature -- Basic operation
-		
+
 	set_name (a_name: STRING) is
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
 			name_field.set_text (name)
 		end
-		
+
 	name: STRING
 		-- The name currently represented by `Current'.
-		
+
 	cancelled: BOOLEAN
 		-- Has `Current' been cancelled?
-		
+
 feature {NONE} -- Implementation
 
 	invalid_message: STRING
 		-- Message displayed if `text' not valid.
-		
+
 	validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Agent to validate entry in `initial_text'.
-		
+
 	validate is
 			-- Validate entry in `text_field' using `validation_agent'.
 		local
 			warning_dialog: EV_WARNING_DIALOG
 		do
-			validation_agent.call ([name_field.text])
+			validation_agent.call ([name_field.text.as_string_8])
 			if validation_agent.last_result then
 				name := name_field.text
 				hide
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 				warning_dialog.show_modal_to_window (Current)
 			end
 		end
-		
+
 	cancelled_action is
 			-- Respond to a press of `cancel_button', by hiding
 			-- `Current', and assigning `True' to `cancelled'.
@@ -106,10 +106,10 @@ feature {NONE} -- Implementation
 		ensure
 			is_cancelled: cancelled = True
 		end
-		
+
 invariant
 	name_not_void: name /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

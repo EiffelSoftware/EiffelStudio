@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: EV_DIRECTORY_DIALOG
 			directory: DIRECTORY
-			supported_types: LINEAR [STRING]
+			supported_types: LINEAR [STRING_32]
 			files: ARRAYED_LIST [STRING]
 			current_filename: STRING
 			filename_ext: STRING

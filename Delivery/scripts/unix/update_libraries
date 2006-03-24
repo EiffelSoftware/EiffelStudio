@@ -50,7 +50,7 @@ remtrace uuid
 co $DEFAULT_CVS_TAG/Src/library/uuid uuid 
 remtrace vision2
 co $DEFAULT_CVS_TAG/Src/library/vision2 vision2
-if [ "$1" == "gtk" ]; then
+if [ "$1" = "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
 	echo ""

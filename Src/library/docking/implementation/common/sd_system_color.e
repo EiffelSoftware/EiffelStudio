@@ -50,4 +50,13 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+feature -- Hot zone factory
+
+	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
+			-- Hot zone factory which current os should use.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 end

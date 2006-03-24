@@ -14,8 +14,6 @@ create
 feature
 	make is
 			-- Creation method
-		local
-
 		do
 			create internal_shared
 			create feedback_rect.make
@@ -204,23 +202,12 @@ feature -- Basic operations
 		do
 			feedback_rect.show
 			feedback_rect.set_tab_area (a_top_rect, a_bottom_rect)
-
-			debug ("docking")
-				print ("%NSD_FEEDBACK_DRAWER draw_transparency_rectangle")
-			end
-		end
-
-	feedback_rect: SD_FEEDBACK_RECT
-
-	internal_blue_pixmap_cell: CELL [EV_PIXMAP] is
-			-- Singleton cell of internal blue pixmap
-		once
-			create Result
-		ensure
-			not_void: Result /= Void
 		end
 
 feature -- Query
+
+	feedback_rect: SD_FEEDBACK_RECT
+			-- Feedback rectangle window.
 
 	screen: EV_SCREEN is
 			-- Utility to draw things on screen.

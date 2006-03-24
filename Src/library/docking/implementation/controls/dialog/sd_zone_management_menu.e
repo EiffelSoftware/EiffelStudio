@@ -27,7 +27,7 @@ feature {NONE}  -- Initlization
 			internal_notebook := a_notebook
 			create internal_shared
 			create internal_close
-			internal_close.set_pixmap (internal_shared.icons.close_context_menu)
+			internal_close.set_pixmap (internal_shared.icons.close_context_tool_bar)
 			internal_close.set_text ("Close")
 			internal_close.select_actions.extend (agent on_close (internal_notebook.selected_item))
 			extend (internal_close)

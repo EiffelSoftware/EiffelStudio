@@ -24,7 +24,7 @@ inherit
 		redefine
 			interface,
 			make,
-			has_wm_decorations,
+			default_wm_decorations,
 			is_displayed,
 			initialize,
 			initialize_client_area
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				app_imp.accel_activate_string,
 				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
 				Void,
-				True
+				False
 			)
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, True)
@@ -266,10 +266,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	has_wm_decorations: BOOLEAN is
-			-- Does the current window object have WM decorations?
+	default_wm_decorations: INTEGER is
+			-- Default WM decorations of `Current'.?
 		do
-			Result := True
+			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
 		end
 
 feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation

@@ -27,7 +27,6 @@ feature {NONE}  -- Initlization
 
 feature  -- Agents
 
---	on_widget_pointer_press (a_widget: EV_WIDGET) is
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
 			-- Handle EV_APPLICATION's pointer button press actions.
 		local
@@ -68,7 +67,6 @@ feature  -- Agents
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
 			internal_docking_manager.command.remove_auto_hide_zones (False)
-			internal_docking_manager.menu_container.set_minimum_size (0, 0)
 			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
 			internal_docking_manager.query.inner_container_main.set_minimum_size (0, 0)
 			if a_width > 0 then
@@ -79,6 +77,7 @@ feature  -- Agents
 				internal_docking_manager.internal_viewport.set_item_height (a_height)
 				internal_docking_manager.fixed_area.set_item_height (internal_docking_manager.query.inner_container_main, internal_docking_manager.fixed_area.height)
 			end
+			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, a_width, a_height)
 		end
 
 	on_added_zone (a_zone: SD_ZONE) is

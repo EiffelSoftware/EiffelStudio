@@ -66,7 +66,6 @@ feature {NONE} -- Initialization
 			)
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, True)
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), {EV_GTK_EXTERNALS}.gdk_decor_all_enum)
 		end
 
 	initialize_client_area is

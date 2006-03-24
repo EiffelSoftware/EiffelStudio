@@ -82,14 +82,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := (create {WEL_STRING}.share_from_pointer (cwin_button_class)).string
-		end
-
-	cwin_button_class: POINTER is
-		external
-			"C inline use <windows.h>, <commctrl.h>"
-		alias
-			"WC_BUTTON"
+			Result := "Button"
 		end
 
 indexing

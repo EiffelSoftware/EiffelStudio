@@ -37,14 +37,23 @@ feature -- Command
 			-- Clear
 		do
 			Precursor {EV_POPUP_WINDOW}
-			destroy_extra_area
 		end
 
 	set_area (a_rect: EV_RECTANGLE) is
 			-- Set feedback area.
+		local
+			l_region: WEL_REGION
+			l_imp: WEL_WINDOW
+			l_result: INTEGER
 		do
-			set_area_internal (a_rect)
-			destroy_extra_area
+			set_size (a_rect.width, a_rect.height)
+			set_position (a_rect.left, a_rect.top)
+
+			create l_region.make_rect (0, 0, a_rect.width, a_rect.height)
+			l_imp ?= implementation
+			check not_void: l_imp /= Void end
+			set_window_rgn (l_imp.item, l_region.item, $l_result)
+			check successed: l_result /= 0 end
 		end
 
 	set_tab_area (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
@@ -52,15 +61,36 @@ feature -- Command
 		require
 			a_top_rect_not_void: a_top_rect /= Void
 			a_bottom_rect_not_void: a_bottom_rect /= Void
+		local
+			l_region: WEL_REGION
+			l_temp_region, l_temp_region_2: WEL_REGION
+			l_constants: WEL_RGN_CONSTANTS
+			l_result: INTEGER
+			l_imp: WEL_WINDOW
+			l_left: INTEGER
 		do
-			set_area_internal (a_top_rect)
+			set_size (a_top_rect.width.max (a_bottom_rect.width), a_top_rect.height + a_bottom_rect.height)
+			set_position (a_top_rect.left, a_top_rect.top)
 
-			if internal_extra_rect = Void then
-				create internal_extra_rect.make
+			create l_constants
+			l_left := (a_top_rect.left - a_bottom_rect.left).abs
+			if a_top_rect.left - a_bottom_rect.left >= 0 then
+				create l_temp_region.make_rect (l_left, 0, l_left + a_top_rect.width, a_top_rect.height)
+				create l_temp_region_2.make_rect (0, a_top_rect.height, a_bottom_rect.width, a_top_rect.height + a_bottom_rect.height)
+			else
+				create l_temp_region.make_rect (0, 0, a_top_rect.width, a_top_rect.height)
+				create l_temp_region_2.make_rect (l_left, a_top_rect.height, l_left + a_bottom_rect.width, a_top_rect.height + a_bottom_rect.height)
 			end
 
-			internal_extra_rect.set_area (a_bottom_rect)
-			internal_extra_rect.show
+			l_region := l_temp_region.combine (l_temp_region_2, l_constants.rgn_or)
+
+			l_temp_region.delete
+			l_temp_region_2.delete
+
+			l_imp ?= implementation
+			check not_void: l_imp /= Void end
+			set_window_rgn (l_imp.item, l_region.item, $l_result)
+			check success: l_result /= 0 end
 		end
 
 feature {NONE} -- Implementation
@@ -72,33 +102,23 @@ feature {NONE} -- Implementation
 			set_size (a_rect.width, a_rect.height)
 		end
 
-	destroy_extra_area is
-			-- Destroy extra area.
-		do
-			if internal_extra_rect /= Void and then internal_extra_rect.is_displayed then
-				internal_extra_rect.clear
-			end
-		end
-
 	set_transparent (a_alpha: INTEGER)is
 			-- Set transparent. a_alpha is a value from 0-255.
 		local
 			l_imp: EV_POPUP_WINDOW_IMP
 			l_result: INTEGER
-			l_error: WEL_ERROR
 		do
 			l_imp ?= implementation
 			l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
 			check l_imp /= Void end
-			set_transparency (l_imp.wel_item, a_alpha, $l_result)
-			if l_result = 0 then
-				create l_error
-				l_error.display_last_error
-			end
+			cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)
 		end
 
-	set_transparency (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
-			-- Set layered window properties on Windows 2000 and later.
+	cwin_setlayeredwindowattributes (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
+				-- Set layered window properties on Windows 2000 and later.
+		require
+			exists: a_wnd /= a_wnd.default_pointer
+			valid: 0 <= a_alpha and a_alpha <= 255
 		external
 			"C inline use <windows.h>"
 		alias
@@ -119,8 +139,15 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	internal_extra_rect: SD_FEEDBACK_RECT
-			-- Extra rect feedback which used by draw tab feedback.
+	set_window_rgn (a_hwnd: POINTER; a_rgn: POINTER; a_result: TYPED_POINTER [INTEGER]) is
+			-- Set Windows reigon.
+		external
+			"C inline use <Winuser.h>"
+		alias
+			"[
+				*(EIF_INTEGER *) $a_result = SetWindowRgn ($a_hwnd, $a_rgn, TRUE)
+			]"
+		end
 
 	internal_shared: SD_SHARED;
 			-- All singletons.

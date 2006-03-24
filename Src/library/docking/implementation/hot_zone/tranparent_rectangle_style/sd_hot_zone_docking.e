@@ -30,6 +30,11 @@ feature {NONE} -- Initlization
 			internal_zone := a_zone
 			set_rectangle (a_rect)
 			internal_mediator := a_docker_mediator
+			create internal_arrow_indicator_center
+			internal_arrow_indicator_center.set_with_named_file (internal_shared.icons.arrow_indicator_center)
+
+			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
+			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
 		ensure
 			set: internal_zone = a_zone
 			set: internal_mediator = a_docker_mediator
@@ -92,9 +97,13 @@ feature -- Redefine
 	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
-			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
+			if internal_shared.show_all_feedback_indicator then
 				draw_drag_window_indicator (a_screen_x, a_screen_y)
-				Result := True
+			else
+				if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
+					draw_drag_window_indicator (a_screen_x, a_screen_y)
+					Result := True
+				end
 			end
 		end
 
@@ -111,14 +120,7 @@ feature -- Redefine
 	clear_indicator is
 			-- Clear indicators.
 		do
-			if need_clear then
-				clear_rect (internal_mediator.orignal_screen, internal_rectangle_top)
-				clear_rect (internal_mediator.orignal_screen, internal_rectangle_bottom)
-				clear_rect (internal_mediator.orignal_screen, internal_rectangle_left)
-				clear_rect (internal_mediator.orignal_screen, internal_rectangle_right)
-				clear_rect (internal_mediator.orignal_screen, internal_rectangle_center)
-				need_clear := False
-			end
+			internal_indicator.destroy
 		end
 
 feature {NONE} -- Implementation functions.
@@ -162,20 +164,20 @@ feature {NONE} -- Implementation functions.
 		do
 			l_shared := internal_shared
 			l_icons := l_shared.icons
-			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
-			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
+			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_arrow_indicator_center.width // 2
+			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_arrow_indicator_center.height // 2
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_up, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_up)
 			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_down, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_down)
 			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_left, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_left)
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_right, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_right)
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center_lightening_center)
 			else
-				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+				internal_indicator.set_pixmap_file (internal_shared.icons.arrow_indicator_center)
 			end
 		end
 
@@ -224,12 +226,19 @@ feature {NONE} -- Implementation attributes.
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center, internal_rectangle_title_area: EV_RECTANGLE
 			-- Five rectangle areas which allow user dock a window in this zone.
 
+	internal_arrow_indicator_center: EV_PIXMAP
+			-- One pixmap instance per object.
+
+	internal_indicator: SD_FEEDBACK_INDICATOR
+			-- Feedback indicator at center of zone.
+
 invariant
 
 	internal_docker_mediator_not_void: internal_mediator /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_zone_not_void: internal_zone /= Void
 	internal_rectangle_not_void: internal_rectangle /= Void
+	not_void: internal_indicator /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

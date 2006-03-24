@@ -14,17 +14,17 @@ inherit
 			structure_size as count,
 			make as old_make
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (is_dll: BOOLEAN) is
 			-- Allocate `item'.
 		local
 			str: POINTER
-			ascii_str: ASCII_STRING
+			ascii_str: C_STRING
 		do
 			old_make
 			c_set_time_date_stamp (item, 0)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 				create ascii_str.make (exe_entry_point_name)
 			end
 			str.memory_copy (ascii_str.item, ascii_str.count)
-			
+
 				-- Set `library_name'.
 			str := c_library_name (item)
 			create ascii_str.make (library_name)
@@ -57,7 +57,7 @@ feature -- Settings
 			c_set_iat_rva (item, section_rva)
 			c_set_import_by_name_rva (item, current_location + size_to_import_by_name)
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -65,7 +65,7 @@ feature -- Measurement
 		do
 			Result := structure_size
 		end
-		
+
 	structure_size: INTEGER is
 			-- Size of CLI_IMPORT_TABLE.
 		external
@@ -76,13 +76,13 @@ feature -- Measurement
 
 	size_to_import_by_name: INTEGER is 48
 			-- Location of import by name table from top of structure.
-			
+
 feature -- Constants
 
 	dll_entry_point_name: STRING is "_CorDllMain"
 	exe_entry_point_name: STRING is "_CorExeMain"
 			-- Entry point names for `dll' or `exe'.
-			
+
 	library_name: STRING is "mscoree.dll"
 			-- Name of library containing above entry points.
 
@@ -93,7 +93,7 @@ feature {NONE} -- Settings
 		external
 			"C struct CLI_IMPORT_TABLE access ImportLookupTable type DWORD use %"cli_writer.h%""
 		end
-	
+
 	c_set_time_date_stamp (an_item: POINTER; i: INTEGER) is
 			-- Set `TimeDateStamp' to `i'.
 		external

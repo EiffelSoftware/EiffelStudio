@@ -17,7 +17,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_name: STRING) is
@@ -26,16 +26,16 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_name_valid: not a_name.is_empty and then a_name.count <= 8
 		local
-			l_wel_string: ASCII_STRING
+			l_c_string: C_STRING
 			l_name_ptr: POINTER
 		do
 			old_make
 			c_set_pointer_to_line_numbers (item, 0)
 			c_set_number_of_line_numbers (item, 0)
-			
-			create l_wel_string.make (a_name)
+
+			create l_c_string.make (a_name)
 			l_name_ptr := c_name (item)
-			l_name_ptr.memory_copy (l_wel_string.item, a_name.count)
+			l_name_ptr.memory_copy (l_c_string.item, a_name.count)
 		end
 
 feature -- Measurement
@@ -45,7 +45,7 @@ feature -- Measurement
 		do
 			Result := structure_size
 		end
-		
+
 	structure_size: INTEGER is
 			-- Size of IMAGE_SECTION_HEADER.
 		external
@@ -79,13 +79,13 @@ feature -- Settings
 		do
 			c_set_pointer_to_raw_data (item, i)
 		end
-		
+
 	set_characteristics (i: INTEGER) is
 			-- Set `characteristics' to `i'.
 		do
 			c_set_characteristics (item, i)
 		end
-		
+
 feature {NONE} -- Access
 
 	c_name (an_item: POINTER): POINTER is

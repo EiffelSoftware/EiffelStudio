@@ -1,23 +1,35 @@
 indexing
-	description: "Zone that hold EV_TOOL_BAR_BUTTONs."
+	description: "Zone that hold SD_TOOL_BAR_BUTTONs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_ZONE
+	SD_TOOL_BAR_ZONE
 
 inherit
-	SD_HOR_VER_BOX
+	SD_TOOL_BAR
 		rename
-			extend as extend_hor_ver_box,
-			change_direction as change_direction_hor_ver_box,
-			is_vertical as is_vertical_hor_ver_box
+			extend as extend_tool_bar,
+			make as make_tool_bar
+		export
+			{ANY} x_position, y_position, screen_x, screen_y, parent, disable_capture, enable_capture, has_capture, set_pointer_style
+			{SD_TOOL_BAR_DRAGGING_AGENTS} pointer_motion_actions, pointer_button_release_actions
+			{SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ROW} set_minimum_width, set_minimum_height
+			{SD_TOOL_BAR_CONTENT} destroy
+			{SD_TOOL_BAR_ZONE_ASSISTANT} internal_items
+		redefine
+			compute_minmum_size
+		end
+
+	HASHABLE
 		export
 			{NONE} all
-			{ANY} x_position, y_position, minimum_width, set_minimum_width, minimum_height, set_minimum_height, parent, height, has, enable_capture, disable_capture, has_capture, pointer_motion_actions, pointer_button_release_actions, set_pointer_style
-			{SD_MENU_ZONE_ASSISTANT, SD_FLOATING_MENU_ZONE} wipe_out
+		undefine
+			default_create,
+			is_equal,
+			copy
 		end
 
 create
@@ -31,174 +43,180 @@ feature {NONE} -- Initialization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
-			internal_docking_manager := a_docking_manager
-			init (a_vertical)
+			docking_manager := a_docking_manager
+			make_tool_bar
 			is_vertical := a_vertical
-			create drag_area
 
-			background_color_internal := background_color
-			create internal_menu_dot_drawer.make (background_color_internal)
+			create internal_tool_bar_dot_drawer.make (background_color)
 			create bar_dot.make_with_size (3, 3)
-			internal_menu_dot_drawer.draw (bar_dot)
+			internal_tool_bar_dot_drawer.draw (bar_dot)
+
+			create assistant.make (Current)
 
 			init_drag_area
-
-			create sizer.make (Current)
 		ensure
 			set: is_vertical = a_vertical
-			pointer_style_set: drag_area.pointer_style = default_pixmaps.sizeall_cursor
-			set: internal_docking_manager = a_docking_manager
+			set: docking_manager = a_docking_manager
 		end
 
 	init_drag_area is
 			-- Initlization of `drag_area'.
 		do
-			drag_area.set_minimum_size (10, 10)
-			drag_area.set_background_color (background_color_internal)
-			drag_area.expose_actions.extend (agent on_redraw_drag_area)
+			start_x := internal_drag_area_size
+			create drag_area_rectangle.make (0, 0, start_x, row_height)
 
-			create internal_agents.make (internal_docking_manager, Current)
-			drag_area.pointer_button_press_actions.extend (agent internal_agents.on_drag_area_pressed)
-			drag_area.pointer_motion_actions.extend (agent internal_agents.on_drag_area_motion)
-			drag_area.pointer_button_release_actions.extend (agent internal_agents.on_drag_area_release)
-			drag_area.set_pointer_style (default_pixmaps.sizeall_cursor)
-			extend_hor_ver_box (drag_area)
-			disable_item_expand (drag_area)
+			expose_actions.extend (agent on_redraw_drag_area)
+
+			create agents.make (docking_manager, Current)
+			pointer_button_press_actions.extend (agent agents.on_drag_area_pressed)
+			pointer_motion_actions.extend (agent agents.on_drag_area_motion)
+			pointer_button_release_actions.extend (agent agents.on_drag_area_release)
+			pointer_double_press_actions.force_extend (agent assistant.floating_last_state)
+			set_pointer_style (default_pixmaps.sizeall_cursor)
 		end
 
 feature -- Command
 
-	change_direction is
+	change_direction (a_hortizontal: BOOLEAN) is
 			-- Change layout direction.
+		local
+			l_button: SD_TOOL_BAR_BUTTON
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			wipe_out
-			change_direction_hor_ver_box
-			extend_hor_ver_box (drag_area)
-			disable_item_expand (drag_area)
+			set_drag_area (a_hortizontal)
+			from
+				if not a_hortizontal then
+					create internal_text.make (1)
+				else
+					if internal_text /= Void then
+						internal_text.start
+					end
+				end
+				internal_items.start
+			until
+				internal_items.after
+			loop
+				l_button ?= internal_items.item
+				internal_items.item.set_wrap (not a_hortizontal)
+				if not a_hortizontal and then internal_items.index /= internal_items.count then
+					l_separator ?= internal_items.i_th (internal_items.index + 1)
+					if l_separator /= Void then
+						internal_items.item.set_wrap (False)
+					end
+				end
 
-			if is_vertical then
-				-- Change to horizontal
-				create internal_horizontal_tool_bar
-				extend_hor_ver_box (internal_horizontal_tool_bar)
-			else
-				-- Change to vertical
+				if not a_hortizontal and l_button /= Void then
+					-- We may record Void text here.
+					internal_text.extend (l_button.text)
+					l_button.set_text ("")
+				elseif a_hortizontal and l_button /= Void then
+					if internal_text /= Void then
+						l_button.set_text (internal_text.item)
+						internal_text.forth
+					end
+				end
+				internal_items.forth
 			end
-			is_vertical := not is_vertical
-
-			extend (content)
-
-			sizer.update_indicator
+			compute_minmum_size
+			is_vertical := not a_hortizontal
 		ensure
-			direction_changed: old is_vertical /= is_vertical
+			direction_changed: is_vertical = not a_hortizontal
 		end
 
-	float is
-			-- Float.
+	float (a_screen_x, a_screen_y: INTEGER) is
+			-- Float to `a_screen_x' and `a_screen_y'.
 		do
 			if row /= Void then
 				row.prune (Current)
 				if row.count = 0 then
 					if row.parent /= Void then
+						docking_manager.command.lock_update (Void, True)
 						row.parent.prune (row)
-						internal_docking_manager.command.resize
+						docking_manager.command.resize
+						docking_manager.command.unlock_update
 					end
 				end
 			end
 
 			if is_vertical then
-				change_direction
+				change_direction (True)
 			end
+			start_x := 0
+			start_y := 0
+			create drag_area_rectangle.make (0, 0, 0, 0)
+			redraw_rectangle (0, 0, {SD_TOOL_BAR_SEPARATOR}.width, row_height)
 
-			wipe_out
-			create floating_menu.make (internal_docking_manager)
+			create floating_tool_bar.make (docking_manager)
 			if parent /= Void then
 				parent.prune (Current)
 			end
-			floating_menu.extend (Current)
+			floating_tool_bar.extend (Current)
 
-			drag_area.hide
-			internal_tail_tool_bar.hide
-			floating_menu.show
+			prune (tail_indicator)
+			floating_tool_bar.set_position (a_screen_x, a_screen_y)
+			if assistant.last_state.floating_group_info /= Void then
+				floating_tool_bar.assistant.position_groups (assistant.last_state.floating_group_info)
+			end
+			floating_tool_bar.show
 
-			internal_docking_manager.menu_manager.floating_menus.extend (floating_menu)
+			docking_manager.tool_bar_manager.floating_tool_bars.extend (floating_tool_bar)
 
-			sizer.update_indicator
+			assistant.update_indicator
 		ensure
 			pruned: row /= Void implies not row.has (Current)
---			extended: floating_menu.has (Current)
+			is_floating: is_floating
 		end
 
 	dock is
-			-- Dock to a menu area.
+			-- Dock to a tool bar area.
 		require
 			is_floating: is_floating
 		do
-			internal_docking_manager.menu_manager.floating_menus.prune_all (floating_menu)
-			floating_menu.prune (Current)
-			floating_menu.destroy
-			floating_menu := Void
+			docking_manager.tool_bar_manager.floating_tool_bars.prune_all (floating_tool_bar)
+			floating_tool_bar.prune (Current)
+			floating_tool_bar.destroy
+			floating_tool_bar := Void
 
-			extend_hor_ver_box (drag_area)
-			drag_area.show
-			extend (content)
---			extend_hor_ver_box (internal_tail_tool_bar)
---			internal_tail_tool_bar.hide
+			if parent /= Void then
+				parent.prune (Current)
+			end
+			set_drag_area (True)
+			change_direction (True)
+			extend_one_item (tail_indicator)
+			compute_minmum_size
 		ensure
-			pruned: floating_menu =  Void
+			pruned: floating_tool_bar =  Void
 		end
 
-	extend (a_content: SD_MENU_CONTENT) is
+	extend (a_content: SD_TOOL_BAR_CONTENT) is
 			-- Extend `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 			content_not_set: content = Void or a_content = content
 		local
-			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_test_cell: EV_CELL
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			content := a_content
-			l_items := a_content.menu_items
+			l_items := a_content.items
 			from
 				l_items.start
 			until
 				l_items.after
 			loop
-				if l_items.item.parent /= Void then
-					l_items.item.parent.prune (l_items.item)
-				end
 				extend_one_item (l_items.item)
-
 				l_items.forth
 			end
+			create tail_indicator.make
+			extend_one_item (tail_indicator)
+			tail_indicator.set_pixmap (internal_shared.icons.tool_bar_customize_indicator)
+			tail_indicator.select_actions.extend (agent assistant.on_tail_indicator_selected)
 
-			create internal_tail_tool_bar
-
-			-- Test
-			create l_test_cell
-			extend_hor_ver_box (l_test_cell)
-			l_test_cell.extend (internal_tail_tool_bar)
---			extend_hor_ver_box (internal_tail_tool_bar)
-
-
-			create internal_tail_indicator
-				internal_tail_indicator.set_pixmap (internal_shared.icons.menu_customize_indicator)
-				internal_tail_indicator.select_actions.extend (agent sizer.on_tail_indicator_selected)
-
--- FIXIT: bugs in EV_TOOL_BAR
-			internal_tail_tool_bar.extend (internal_tail_indicator)
-
---			disable_item_expand (internal_tail_tool_bar)
--- If follow line move to above comment line position. It'll show different behaviour.
-			internal_tail_tool_bar.disable_vertical_button_style
-
---			internal_tail_tool_bar.set_minimum_height (16)
-
+			compute_minmum_size
 			if is_vertical then
-				maximize_size := height
+				maximize_size := minimum_height
 			else
-				maximize_size := width
+				maximize_size := minimum_width
 			end
-
 		ensure
 			set: content = a_content
 		end
@@ -208,9 +226,9 @@ feature -- Command
 		require
 			is_floating: is_floating
 		do
-			floating_menu.set_position (a_screen_x, a_screen_y)
+			floating_tool_bar.set_position (a_screen_x, a_screen_y)
 		ensure
-			set: floating_menu.screen_x = a_screen_x and floating_menu.screen_y = a_screen_y
+			set: floating_tool_bar.screen_x = a_screen_x and floating_tool_bar.screen_y = a_screen_y
 		end
 
 	set_row (a_row: like row) is
@@ -223,29 +241,38 @@ feature -- Command
 			set: row = a_row
 		end
 
+	compute_minmum_size is
+			-- Redefine
+		do
+			Precursor {SD_TOOL_BAR}
+			if row /= Void and row.has (Current) then
+				row.set_item_size (Current, minimum_width, minimum_height)
+			end
+		end
+
 feature -- Query
 
 	is_floating: BOOLEAN is
 			-- If `Current' floating?
 		do
-			Result := floating_menu /= Void
+			Result := floating_tool_bar /= Void
 		end
 
 	is_vertical: BOOLEAN
 			-- Is `Current' vertical layout or horizontal layout?
 
-	content: SD_MENU_CONTENT
+	content: SD_TOOL_BAR_CONTENT
 			-- Content in `Current'.
 
-	tool_bar_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM] is
+	tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
 			-- Tool bar items on `Current'.
 		do
-			Result := content.menu_items
+			Result := content.items
 		ensure
 			not_void: Result /= Void
 		end
 
-	row: SD_MENU_ROW
+	row: SD_TOOL_BAR_ROW
 			-- Parent which contain `Current'.
 
 	maximize_size: INTEGER
@@ -260,7 +287,7 @@ feature -- Query
 				Result := width
 			end
 		ensure
-			valid: Result > 0
+			valid: Result >= 0
 		end
 
 	position: INTEGER is
@@ -273,40 +300,25 @@ feature -- Query
 			end
 		end
 
-	tail_indicator_position: EV_COORDINATE is
-			-- Screen position `internal_tail_indicator' position.
+	hidden_dialog_position: EV_COORDINATE is
+			-- Screen position for SD_TOOL_BAR_HIDDEN_ITEM_DIALOG.
+		local
+			l_rect: EV_RECTANGLE
 		do
-			create Result.make (internal_tail_tool_bar.screen_x, internal_tail_tool_bar.screen_y)
+			l_rect := tail_indicator.rectangle
+			create Result.make (l_rect.x + screen_x, l_rect.y + screen_y)
 		ensure
 			not_void: Result /= Void
 		end
 
-	prune_last_separator is
-			-- Prune last separator, if exist.
-		local
-			l_separator: SD_TOOL_BAR_SEPARATOR
-		do
-			from
-				finish
-			until
-				before or l_separator /= Void
-			loop
-				l_separator ?= item
-				if l_separator /= Void then
-					prune (l_separator)
-				end
-				back
-			end
-		end
+	assistant: SD_TOOL_BAR_ZONE_ASSISTANT
+			-- Assistant to manage size issues.
 
-	sizer: SD_MENU_ZONE_ASSISTANT
-			-- Sizer to manage size issues.
+	drag_area_rectangle: EV_RECTANGLE
+			-- Drag area rectangle
 
-	drag_area: EV_DRAWING_AREA
-			-- Drag area which at beginning.
-
-	floating_menu: SD_FLOATING_MENU_ZONE
-			-- Floating menu zone which contain `Current' when floating.
+	floating_tool_bar: SD_FLOATING_TOOL_BAR_ZONE
+			-- Floating tool bar zone which contain `Current' when floating.
 
 feature {NONE} -- Agents
 
@@ -315,149 +327,93 @@ feature {NONE} -- Agents
 		local
 			i, l_interval : INTEGER
 		do
-			if not is_vertical then
-				l_interval := drag_area.height
-			else
-				l_interval := drag_area.width
-			end
-			drag_area.clear
-			from
-				i := 2
-			until
-				i > l_interval - 3
-			loop
+			if drag_area_rectangle.has_x_y (a_x, a_y) or drag_area_rectangle.has_x_y (a_x + a_width, a_y + a_height) then
 				if not is_vertical then
-					drag_area.draw_pixmap (4, i, bar_dot)
+					l_interval := drag_area_rectangle.height
 				else
-					drag_area.draw_pixmap (i, 4, bar_dot)
+					l_interval := drag_area_rectangle.width
 				end
-				i := i + 4
+
+				from
+					i := 2
+				until
+					i > l_interval - 3
+				loop
+					if not is_vertical then
+						draw_pixmap (4, i, bar_dot)
+					else
+						draw_pixmap (i, 4, bar_dot)
+					end
+					i := i + 4
+				end
 			end
 		end
 
 feature {NONE} -- Implmentation
 
-	extend_one_item_vertical (a_item: EV_TOOL_BAR_ITEM) is
-			-- Extend a_item when `is_vertical'.
-		local
-			l_ev_sep: EV_TOOL_BAR_SEPARATOR
-			l_tool_bar: EV_TOOL_BAR
-			l_sd_sep: SD_TOOL_BAR_SEPARATOR
-			l_hbox: EV_HORIZONTAL_BOX
-			l_button: EV_TOOL_BAR_BUTTON
+	hash_code: INTEGER is
+			-- Hash code is index in all tool bar zones.
 		do
-			l_button ?= a_item
-			if l_button /= Void then
-				l_button.set_text ("")
-			end
-			l_ev_sep ?= a_item
-			if l_ev_sep = Void then
-				create l_tool_bar
-				l_tool_bar.disable_vertical_button_style
-				l_tool_bar.extend (a_item)
-				extend_hor_ver_box (l_tool_bar)
-
-			else
-				create l_hbox
-				create l_sd_sep.make (background_color_internal, False, internal_shared.separator_width)
-				l_hbox.extend (l_sd_sep)
-				extend_hor_ver_box (l_hbox)
-			end
+			Result := docking_manager.tool_bar_manager.contents.index_of (Current.content, 1)
 		end
-
-	extend_one_item_horizontal (a_item: EV_TOOL_BAR_ITEM) is
-			-- Extend a_item when not `is_vertical'.
-			-- FIXIT: Extract a menu builder class?
-		require
-			not_void: a_item /= Void
-		local
-			l_ev_sep: EV_TOOL_BAR_SEPARATOR
-			l_sd_sep: SD_TOOL_BAR_SEPARATOR
-			l_hbox: EV_HORIZONTAL_BOX
-			l_button: EV_TOOL_BAR_BUTTON
-		do
-			l_ev_sep ?= a_item
-			if l_ev_sep = Void then
-				if (content.text_of (a_item).is_equal ("") and internal_last_has_text) or (not content.text_of (a_item).is_equal ("") and not internal_last_has_text) then
-					if not content.text_of (a_item).is_equal ("") then
-						internal_horizontal_tool_bar.disable_vertical_button_style
-					end
-				end
-				if not content.text_of (a_item).is_equal ("") then
-					l_button ?= a_item
-					check not_void: l_button /= Void end
-					l_button.set_text (content.text_of (a_item))
-				end
-				internal_horizontal_tool_bar.extend (a_item)
-			else
-				create l_hbox
-				create l_sd_sep.make (background_color_internal, not is_vertical, internal_shared.separator_width)
-				l_hbox.extend (l_sd_sep)
-				extend_hor_ver_box (l_hbox)
-			end
-		end
-
-	internal_last_has_text: BOOLEAN
-			-- If last extended item has a text? Used by `extend_one_item_horizontal'.
 
 	internal_shared: SD_SHARED
 			-- All singletons.
 
-	internal_horizontal_tool_bar: EV_TOOL_BAR
-			-- When `Current' is horizontal, use this to hold EV_TOOL_BAR_ITEM.
-
 	bar_dot: EV_PIXMAP
-			-- 9 colors on a dot.
+			-- Drag area pixmap.
 
-	background_color_internal: EV_COLOR
-			-- Backgroud color
+	internal_tool_bar_dot_drawer: SD_TOOL_BAR_DOT_DRAWER
+			-- Tool bar dot drawer.
 
-	internal_menu_dot_drawer: SD_MENU_DOT_DRAWER
-			-- Menu dot drawer.
+	internal_drag_area_size: INTEGER is 10
+			-- Drag area size.
+			-- It is width is Current is horizontal layout.
+			-- It is height is CUrrent is vertical layout.
 
-feature {SD_MENU_ZONE_ASSISTANT}
-
-	extend_one_item (a_item: EV_TOOL_BAR_ITEM) is
-			-- Extend `a_item'.
-		require
-			a_item_not_void: a_item /= Void
---			only_when_horizontal_and_floating: a_new_row implies (not is_vertical and is_floating)
+	set_drag_area (a_is_for_horizontal: BOOLEAN) is
+			-- Set `drag_area_rectangle' and `start_x', `start_y' for tool bar.
 		do
-
-			if is_vertical then
-				extend_one_item_vertical (a_item)
+			if a_is_for_horizontal then
+				-- Change to horizontal drag area.
+				start_x := internal_drag_area_size
+				start_y := 0
+				create drag_area_rectangle.make (0, 0, internal_drag_area_size, row_height)
 			else
-				create internal_horizontal_tool_bar
-				extend_hor_ver_box (internal_horizontal_tool_bar)
-				disable_item_expand (internal_horizontal_tool_bar)
-
-				extend_one_item_horizontal (a_item)
-			end
-			start
-			search (internal_tail_tool_bar)
-			if not off and then index /= count then
-				swap (count)
+				-- Change to vertical drag area.
+				start_x := 0
+				start_y := internal_drag_area_size
+				create drag_area_rectangle.make (0, 0, row_height, internal_drag_area_size)
 			end
 		end
 
-	internal_tail_tool_bar: EV_TOOL_BAR
-			-- Tool bar which only contain `internal_tail_indicator'.
+	internal_text: ARRAYED_LIST [STRING]
+			-- When `is_vertical' we hide all texts, store orignal texts here.
 
-	internal_tail_indicator: EV_TOOL_BAR_BUTTON
-			-- Button at tail of Current.
+feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE} -- Internal issues
 
-	internal_docking_manager: SD_DOCKING_MANAGER
+	tail_indicator: SD_TOOL_BAR_NARROW_BUTTON
+			-- Button at tail of Current, which used for show hide buttons and customize dialog.
+
+	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 
-feature {SD_FLOATING_MENU_ZONE} -- Internal issues.
+	extend_one_item (a_item: SD_TOOL_BAR_ITEM) is
+			-- Extend `a_item' if `a_item' is_displayed.
+		do
+			if a_item.is_displayed then
+				extend_tool_bar (a_item)
+			end
+		end
 
-	internal_agents: SD_MENU_DRAGGING_AGENTS
+feature {SD_FLOATING_TOOL_BAR_ZONE} -- Internal issues.
+
+	agents: SD_TOOL_BAR_DRAGGING_AGENTS
 			-- Dragging agents.
 invariant
 
 	not_void: internal_shared /= Void
-	not_void: drag_area /= Void
-	not_void: sizer /= Void
+	not_void: assistant /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

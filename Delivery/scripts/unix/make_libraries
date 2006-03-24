@@ -43,7 +43,7 @@ exprt $DEFAULT_CVS_TAG/Src/library/vision vision
 remtrace vision2
 exprt $DEFAULT_CVS_TAG/Src/library/vision2 vision2 
 fullrd vision2/implementation/mswin
-if [ "$1" == "gtk" ]; then
+if [ "$1" = "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
 	echo ""

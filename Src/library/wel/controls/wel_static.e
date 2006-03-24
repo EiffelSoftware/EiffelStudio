@@ -81,14 +81,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := (create {WEL_STRING}.share_from_pointer (cwin_static_class)).string
-		end
-
-	cwin_static_class: POINTER is
-		external
-			"C inline use <windows.h>"
-		alias
-			"WC_STATIC"
+			Result := "Static"
 		end
 
 	default_style: INTEGER is

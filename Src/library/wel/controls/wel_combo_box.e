@@ -417,14 +417,7 @@ feature {NONE} -- Implementation
 	class_name: STRING_32 is
 			-- Window class name to create
 		once
-			Result := (create {WEL_STRING}.share_from_pointer (cwin_combobox_class)).string
-		end
-
-	cwin_combobox_class: POINTER is
-		external
-			"C inline use <windows.h>"
-		alias
-			"WC_COMBOBOX"
+			Result := "ComboBox"
 		end
 
 indexing

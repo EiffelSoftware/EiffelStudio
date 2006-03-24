@@ -74,62 +74,24 @@ feature -- Execution
 			-- Save a file with the chosen name.
 		local
 			printer: EB_PRINTER
+			l_txt_gen: EB_PRINTER_TEXT_GENERATOR
 		do
+			create l_txt_gen.make (dev_window.editor_tool.text_area)
 			if not dev_window.is_empty then
 				create printer.make
-					--| Fixme:
-					--| We simply use text from the editor to print for the moment,
-					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
-				printer.set_text (dev_window.editor_tool.text_area.text)
-				printer.set_font (font)
+				printer.set_text (l_txt_gen.text_for_printing)
 				printer.set_window (dev_window.window)
 				printer.set_job_name (dev_window.stone.history_name)
 				if not use_external_editor then
 					printer.ask_and_print
 				else
-					if use_postscript then
-						printer.enable_postscript
-					else
-						printer.disable_postscript
-					end
 					printer.set_external_command (external_editor)
 					printer.print_via_command
 				end
 			end
 		end
 
-	launch (shell_cmd: STRING; print_to_file, postscript: BOOLEAN) is
-		local
-			file_name: STRING
-			cmd: STRING
-			editor: EB_EDITOR
-			shell_request: COMMAND_EXECUTOR
-			file: PLAIN_TEXT_FILE
-		do
-			cmd := shell_cmd.twin
-				-- let's check if passed command is well written
-			if cmd.substring_index ("$target", 1) /= 0 then
-				editor := dev_window.current_editor
-				file_name := generate_temp_name
-				cmd.replace_substring_all ("$target", file_name)
-				save_to_file (editor.text, file_name)
-				if saved then
-					create file.make (file_name)
-					create shell_request
-					shell_request.execute (cmd)
-					file.delete
-				end
-			end
-	--		if filterable_format = Void or else not postscript_t.is_selected then
-	--			new_text := tool.text_area.text
-	--		else
-	--			new_text := filterable_format.filtered_text
-	--				(tool.stone, "PostScript")
-	--		end
-		end
-
 feature {NONE} -- Implementation
-
 
 	menu_name: STRING is
 			-- Name as it appears in the menu (with & symbol).
@@ -263,12 +225,6 @@ feature {NONE} -- Implementation
 			-- Command line to invoke to use an external editor to print.
 		do
 			Result := preferences.misc_data.print_shell_command
-		end
-
-	use_postscript: BOOLEAN is
-			-- Should we use postscript when using an external editor to print?
-		do
-			Result := preferences.misc_data.use_postscript
 		end
 
 feature {NONE} -- Externals

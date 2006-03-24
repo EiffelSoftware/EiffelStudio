@@ -23,10 +23,6 @@ feature {NONE} -- Initialization
 
 		end
 
-feature -- Access
-
-feature -- Measurement
-
 feature -- Status report
 
 	text: STRING
@@ -47,12 +43,6 @@ feature -- Status report
 			-- Command line used to print a file.
 			--| $target in it will be automatically replaced with the file name when printing.
 			--| Necessary only for `print_via_command'.
-
-	use_postscript: BOOLEAN
-			-- Should a postscript file be generated before sending it to the external command?
-
-	font: EV_FONT
-			-- Set the font used for direct printing.
 
 feature -- Status setting
 
@@ -96,47 +86,6 @@ feature -- Status setting
 			same_command: cmd /= Void implies cmd.is_equal (external_command)
 		end
 
-	enable_postscript is
-			-- Set `use_postscript' to True.
-		do
-			use_postscript := True
-		ensure
-			use_postscript = True
-		end
-
-	disable_postscript is
-			-- Set `use_postscript' to False.
-		do
-			use_postscript := False
-		ensure
-			use_postscript = False
-		end
-
-	set_font (f: EV_FONT) is
-			-- Define the font used for direct printing.
-			--| Windows only.
-		require
-			valid_font: f /= Void
-		do
-			font := f
-		end
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature -- Basic operations
 
 	print_text is
@@ -152,10 +101,8 @@ feature -- Basic operations
 		do
 			if not retried then
 				if context.output_to_file then
-						-- Ok, that's an easy one, there is no actual print job.
-					generate_postscript
 					create {RAW_FILE} f.make_create_read_write (context.file_name)
-					f.put_string (postscript_representation)
+					f.put_string (text)
 					f.close
 				else
 					implementation.send_print_request
@@ -197,15 +144,9 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
-					-- Generate the output text.
-				if use_postscript then
-					generate_postscript
-					sent_txt := postscript_representation
-				else
-					sent_txt := text
-					sent_txt.prune_all ('%R')
-					sent_txt.replace_substring_all ("%N", "%R%N")
-				end
+				sent_txt := text
+				sent_txt.prune_all ('%R')
+				sent_txt.replace_substring_all ("%N", "%R%N")
 					-- Generate the file we put the text in.
 				create file_name.make_temporary_name
 				create file.make (file_name)
@@ -223,43 +164,11 @@ feature -- Basic operations
 				(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					-- Delete the temporary file.
 					--| FIXME XR: It is too soon, the external command didn't have time to load the file!
-				--file.delete
+				file.delete
 			end
 		rescue
 			retried := True
 			retry
-		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {EB_PRINTER_IMP} -- Implementation: Postscript generation
-
-	postscript_representation: STRING
-			-- What should be printed in a postscript format.
-
-	generate_postscript is
-			-- Fill in `postscript_representation'.
-		require
-			text_set: text /= Void
-		local
---			tf: TEXT_FILTER
-		do
-			if not text.is_empty then
-					--| Fixme:
-					--| We simply use text from the editor to print for the moment,
-					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
---				create tf.make ("PostScript")
---				tf.set_universe (create {DOCUMENTATION_UNIVERSE}.make)
---				tf.process_text (text)
---				postscript_representation := tf.image
-				postscript_representation := text
-			else
-				create postscript_representation.make (1)
-			end
-		ensure
-			postscript_generated: postscript_representation /= Void
 		end
 
 feature {NONE} -- Implementation: graphical interface

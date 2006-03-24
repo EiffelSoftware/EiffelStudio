@@ -65,29 +65,17 @@ feature {EB_PRINTER} -- Basic operations
 			txt: STRING
 			fnt: EV_FONT
 			imp: EV_FONT_IMP
+			l_loader: WEL_RICH_EDIT_BUFFER_LOADER
 		do
 			create wnd.make_top (Interface_names.t_Dummy)
 			create rich.make (wnd, Interface_names.t_Dummy, 10, 10, 300, 500, -1)
 			create pdc.make_by_pointer (interface.context.printer_context)
-			fnt := interface.font
-			if fnt /= Void then
-				form := rich.default_character_format
-				form.set_face_name (fnt.preferred_families.first)
-				imp ?= fnt.implementation
-				check
-					imp /= Void
-				end
-				form.set_height_in_points (imp.wel_font.point)
-				rich.set_character_format_all (form)
-			end
-					--| Fixme:
-					--| We simply use text from the editor to print for the moment,
-					--| A EDITOR_TOKEN_VISITOR will be made to generate text from text filter.
 			txt := interface.text
 				-- Rich edits don't like lonely '%N' characters.
 			txt.prune_all ('%R')
 			txt.replace_substring_all ("%N", "%R%N")
-			rich.set_text (txt)
+			create l_loader.make (txt)
+			rich.rtf_stream_in (l_loader)
 			if interface.job_name /= Void then
 				rich.print_all (pdc, interface.job_name)
 			else
@@ -95,10 +83,6 @@ feature {EB_PRINTER} -- Basic operations
 			end
 			wnd.destroy
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {EB_PRINTER} -- Implementation
 

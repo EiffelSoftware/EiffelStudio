@@ -1,242 +1,419 @@
 indexing
-	description: "Assistants that manage a SD_MENU_ZONE size and position issues."
+	description: "Assistants that manage a SD_TOOL_BAR_ZONE size and position issues."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_ZONE_ASSISTANT
+	SD_TOOL_BAR_ZONE_ASSISTANT
 
 create
 	make
 
 feature {NONE} -- Initlization
 
-	make (a_menu_zone: SD_MENU_ZONE) is
+	make (a_tool_bar_zone: SD_TOOL_BAR_ZONE) is
 			-- Creation method
 		require
-			not_void: a_menu_zone /= Void
+			not_void: a_tool_bar_zone /= Void
 		do
-			menu := a_menu_zone
-			create internal_hide_items.make (1)
+			tool_bar := a_tool_bar_zone
+			create internal_hidden_items.make (1)
+			create last_state.make
 		ensure
-			set: menu = a_menu_zone
+			set: tool_bar = a_tool_bar_zone
 		end
 
 feature -- Command
 
 	reduce_size (a_size: INTEGER): INTEGER is
-			-- Reduce a_size, Result is how many size actually reduced.
+			-- Reduce `a_size', `Result' is how many size actually reduced.
 		require
 
 		local
-			l_old_size: INTEGER
-			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_separator: EV_TOOL_BAR_SEPARATOR
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_old_size := menu.size
-			l_items := menu.content.menu_items
-
+			l_items := tool_bar.content.items
 			from
 				l_items.finish
 			until
 				-- At least show one button.
 				l_items.index <= 1 or Result >= a_size
 			loop
+				if tool_bar.has (l_items.item) then
+					internal_hidden_items.extend (l_items.item)
+					if not tool_bar.is_vertical then
+						Result := Result + l_items.item.width
+					else
+						Result := Result + l_items.item.rectangle.height
+					end
+					tool_bar.prune (l_items.item)
 
-				if l_items.item.parent /= Void and then l_items.item.parent.parent /= Void then
-					check has: menu.has (l_items.item.parent) end
-					l_items.item.parent.parent.prune (l_items.item.parent)
-					l_items.item.parent.prune (l_items.item)
+					l_separator := Void
 					l_separator ?= l_items.i_th (l_items.index - 1)
 					if l_separator /= Void then
-						-- Prune correspond SD_TOOL_BAR_SEPARATOR from `menu'.
-						menu.prune_last_separator
-					end
-					internal_hide_items.extend (l_items.item)
-				end
-
-				if menu.row /= Void then
-					if not menu.is_vertical then
-						menu.row.set_item_width (menu, menu.minimum_width)
-					else
-						menu.row.set_item_height (menu, menu.minimum_height)
+						check has: tool_bar.has (l_separator) end
+						internal_hidden_items.extend (l_separator)
+						Result := Result + l_separator.width
+						tool_bar.prune (l_separator)
 					end
 				end
-				Result := l_old_size - menu.size
 				l_items.back
 			end
+			tool_bar.compute_minmum_size
 			update_indicator
+--			last_size_reduced := Result
 		end
 
+--	rollback_last_reduce_size is
+--			-- Rollback last reduce size
+--		local
+--			l_result: INTEGER
+--		do
+--			l_result := expand_size (last_size_reduced)
+--			check must_equal: l_result = last_size_reduced end
+--			last_size_reduced := 0
+--		end
+
 	expand_size (a_size_to_expand: INTEGER): INTEGER is
-			-- Expand `menu' a_size_to_expand, Result is actually size expanded.
+			-- Expand `internal_tool_bar' a_size_to_expand, Result is actually size expanded.
 		require
 			valid: a_size_to_expand >= 0
 		local
-			l_snapshot: like hide_menu_items
+			l_snapshot: like internal_hidden_items
 			l_old_size: INTEGER
+			l_stop: BOOLEAN
+			l_last_result: INTEGER
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_item_after: SD_TOOL_BAR_ITEM
 		do
-			if hide_menu_items.count /= 0 then
+			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := menu.size
-					prune_all_parent (internal_hide_items)
-					l_snapshot := internal_hide_items.twin
-					l_snapshot.start
+					l_old_size := tool_bar.size
+					l_snapshot := internal_hidden_items.twin
+					l_snapshot.finish
 				until
-					l_snapshot.after or Result >= a_size_to_expand
+					l_snapshot.before or l_stop
 				loop
-					menu.extend_one_item (l_snapshot.item)
+					l_separator := Void
+					l_item_after := Void
+					l_separator ?= l_snapshot.item
+					tool_bar.extend_one_item (l_snapshot.item)
+					if l_separator /= Void then
+						-- We should extend item after separator.
+						if internal_hidden_items.index_of (l_separator, 1) > 1 then
+							l_item_after := internal_hidden_items.i_th (internal_hidden_items.index_of (l_separator, 1) - 1)
+							tool_bar.extend_one_item (l_item_after)
+						end
+					end
+					l_last_result := Result
+					if not tool_bar.is_vertical then
+						Result := Result + l_snapshot.item.width
+						if l_item_after /= Void then
+							Result := Result + l_item_after.width
+						end
+					else
+						Result := Result + l_snapshot.item.rectangle.height
+						if l_item_after /= Void then
+							Result := Result + l_item_after.rectangle.height
+						end
+					end
 
-					internal_hide_items.start
-					internal_hide_items.prune (l_snapshot.item)
-					check not_has: not internal_hide_items.has (l_snapshot.item) end
-
-					Result := menu.size - l_old_size
-					l_snapshot.forth
+					if Result > a_size_to_expand then
+						-- We should rollback one item and stop.
+						l_stop := True
+						tool_bar.prune (l_snapshot.item)
+						if l_item_after /= Void then
+							tool_bar.prune (l_item_after)
+						end
+						Result := l_last_result
+					else
+						internal_hidden_items.prune_all (l_snapshot.item)
+						if l_item_after /= Void then
+							internal_hidden_items.prune_all (l_item_after)
+						end
+					end
+					l_snapshot.back
+					if l_separator /= Void then
+						l_snapshot.back
+					end
 				end
 			end
-			debug ("docking")
-				print ("%NSD_MENU_ZONE_SIZER expand_size +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" +
-							 " Result is: " + Result.out)
-			end
+			tool_bar.compute_minmum_size
 			update_indicator
+--			last_size_expanded := Result
 		ensure
-			valid: Result >= 0
+			valid: 0 <= Result and Result <= a_size_to_expand
 		end
 
 	update_indicator is
 			-- Update indicator pixmap.
 		local
 			l_shared: SD_SHARED
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			create l_shared
-
-			menu.internal_tail_tool_bar.disable_vertical_button_style
-			if internal_hide_items.count > 0 then
-				menu.internal_tail_indicator.set_pixmap (l_shared.icons.menu_customize_indicator_with_hidden_items)
-			else
-				menu.internal_tail_indicator.set_pixmap (l_shared.icons.menu_customize_indicator)
+			if tool_bar.has (tool_bar.tail_indicator) then
+				create l_shared
+				if internal_hidden_items.count > 0 then
+					if not tool_bar.is_vertical then
+						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
+					else
+						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
+					end
+				else
+					if not tool_bar.is_vertical then
+						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
+					else
+						tool_bar.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
+					end
+				end
+				l_items := tool_bar.internal_items
+				if l_items.last /= tool_bar.tail_indicator then
+					l_items.prune_all (tool_bar.tail_indicator)
+					l_items.extend (tool_bar.tail_indicator)
+				end
 			end
 		end
 
 	on_tail_indicator_selected is
 			-- Handle tail indicator selected event.
 		local
-			l_dialog: SD_HIDE_MENU_ITEM_DIALOG
-			l_all_hiden_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
+			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
+			l_all_hiden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_helper: SD_POSITION_HELPER
+			l_indicator_size: INTEGER
 		do
 			create l_all_hiden_items.make (1)
-			if hide_menu_items.count > 0 then
-				-- Prepare all hiden items in Current row.
-				l_menus := menu.row.menu_zones
-				from
-					l_menus.start
-				until
-					l_menus.after
-				loop
-					l_all_hiden_items.append (l_menus.item_for_iteration.sizer.hide_menu_items)
-					l_menus.forth
-				end
-			end
-
-			create l_dialog.make (l_all_hiden_items)
-			create l_helper.make
-			l_helper.set_dialog_position (l_dialog, menu.tail_indicator_position.x, menu.tail_indicator_position.y)
-			l_dialog.show_relative_to_window (menu.internal_docking_manager.main_window)
-
-		end
-
-feature -- Commands for position menu items
-
-	position_groups (a_groups_info: SD_MENU_GROUP_INFO) is
-			-- Position menu items by a_group_info.
-		require
-			not_void: a_groups_info /= Void
-			is_horizontal: not menu.is_vertical
-			is_floating: menu.is_floating
-		local
-			l_env: EV_ENVIRONMENT
-		do
-			create l_env
-			if l_env.application.idle_actions.has (last_resize) then
-				l_env.application.idle_actions.start
-				l_env.application.idle_actions.prune (last_resize)
-			end
-			last_resize := agent position_groups_imp (a_groups_info)
-			l_env.application.idle_actions.extend_kamikaze (last_resize)
-		end
-
-	last_resize: PROCEDURE [SD_MENU_ZONE_ASSISTANT, TUPLE]
-
-	extend_items_by_sub_info (a_sub_info: SD_MENU_GROUP_INFO; a_goup_index: INTEGER) is
-			-- Extend menu items by a_sub_info.
-		require
-			not_void: a_sub_info /= Void
-			valid: a_goup_index > 0 and a_goup_index <= menu.content.group_count
-		local
-			l_items: ARRAYED_LIST [INTEGER]
-			l_group: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_need_separator: BOOLEAN
-			l_temp_row: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-		do
+			-- Prepare all hiden items in Current row.
+			l_tool_bars := tool_bar.row.tool_bar_zones
 			from
-				a_sub_info.start
-				l_need_separator := True
-				l_group := menu.content.group (a_goup_index)
+				l_tool_bars.start
 			until
-				a_sub_info.after
+				l_tool_bars.after
 			loop
-				from
-					l_items := a_sub_info.item
-					create l_temp_row.make (1)
-					l_items.start
-				until
-					l_items.after
-				loop
-					l_temp_row.extend (l_group.i_th (l_items.item))
-					l_items.forth
-				end
-				menu.floating_menu.extend_one_new_row (l_temp_row, True, l_need_separator)
-				l_need_separator := False
-				a_sub_info.forth
+				l_all_hiden_items.append (l_tool_bars.item_for_iteration.assistant.hide_tool_bar_items)
+				l_tool_bars.forth
 			end
+
+			create l_dialog.make (l_all_hiden_items, tool_bar)
+			create l_helper.make
+			if tool_bar.is_vertical then
+				l_indicator_size := tool_bar.tail_indicator.rectangle.height
+			else
+				l_indicator_size := tool_bar.tail_indicator.width
+			end
+			if not tool_bar.is_vertical then
+				l_helper.set_tool_bar_hidden_dialog_position (l_dialog, tool_bar.hidden_dialog_position.x, tool_bar.hidden_dialog_position.y, tool_bar.tail_indicator.width)
+			else
+				l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, tool_bar.hidden_dialog_position.x, tool_bar.hidden_dialog_position.y, tool_bar.tail_indicator.rectangle.height)
+			end
+
+			l_dialog.show_relative_to_window (tool_bar.docking_manager.main_window)
+		end
+
+	dock_last_state is
+			-- Dock to `last_state'.
+		require
+			is_floating: tool_bar.is_floating
+		local
+			l_container: EV_BOX
+			l_row: SD_TOOL_BAR_ROW
+		do
+			tool_bar.dock
+
+			l_container := tool_bar.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
+			if l_container.count < last_state.container_row_number or last_state.is_only_zone then
+				-- The row it missing, we should create a new one.
+				-- Or the row last time is in the only one in row.
+				if last_state.container_direction = {SD_DOCKING_MANAGER}.dock_top or last_state.container_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+					create l_row.make (False)
+				else
+					check direction_valid: last_state.container_direction = {SD_DOCKING_MANAGER}.dock_left or last_state.container_direction = {SD_DOCKING_MANAGER}.dock_right end
+					create l_row.make (True)
+				end
+				if l_container.count > last_state.container_row_number then
+					l_container.go_i_th (last_state.container_row_number)
+					l_container.put_left (l_row)
+				else
+					l_container.extend (l_row)
+				end
+			else
+				l_row ?= l_container.i_th (last_state.container_row_number)
+				check not_void: l_row /= Void end
+				-- Insert current zone to exsiting row.
+			end
+			check not_void: l_row /= Void end
+
+			l_row.extend (tool_bar)
+			l_row.set_item_position_relative (tool_bar, last_state.position)
+			tool_bar.docking_manager.command.resize
+		ensure
+			docked: not tool_bar.is_floating
+		end
+
+	record_docking_state is
+			-- Record docking state.
+		require
+			is_docking: not tool_bar.is_floating
+		local
+			l_box: EV_BOX
+			l_parent: SD_TOOL_BAR_ROW
+		do
+			last_state.set_position (tool_bar.position)
+			last_state.set_size (tool_bar.size)
+			last_state.set_container_direction (tool_bar.docking_manager.tool_bar_manager.container_direction (tool_bar))
+
+			l_box := tool_bar.docking_manager.tool_bar_manager.tool_bar_container (last_state.container_direction)
+			l_parent ?= tool_bar.parent
+			check not_void: l_parent /= Void end
+			last_state.set_container_row_number (l_box.index_of (l_parent, 1))
+
+			last_state.set_is_only_zone (l_box.count = 1)
+		end
+
+	floating_last_state is
+			-- Float to `last_state'
+		require
+			is_docking: not tool_bar.is_floating
+		do
+			record_docking_state
+			tool_bar.float (last_state.screen_x, last_state.screen_y)
+			if last_state.floating_group_info /= Void then
+				tool_bar.floating_tool_bar.assistant.position_groups (last_state.floating_group_info)
+			end
+		ensure
+			is_floating: tool_bar.is_floating
+		end
+
+feature {SD_CONFIG_MEDIATOR} -- Special setting.
+
+	set_last_state (a_last_data: SD_TOOL_BAR_ZONE_STATE) is
+			-- Set `last_data'
+		require
+			not_void: a_last_data /= Void
+		do
+			last_state := a_last_data
+		ensure
+			set: last_state = a_last_data
 		end
 
 feature -- Query
 
-	hide_menu_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM] is
-			-- `internal_hide_items'
+	can_reduce_size (a_size: INTEGER): INTEGER is
+			-- How many size can reduce, same as `reduce_size' but not really prune items.
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			prune_all_parent (internal_hide_items)
-			Result := internal_hide_items.twin
-		ensure
-			is_all_parent_void: is_all_parent_void (Result)
-		end
-
-	is_all_parent_void (a_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]): BOOLEAN is
-			-- Is all items in a_items parent void?
-		do
-			Result := True
+			l_items := tool_bar.content.items
 			from
-				a_items.start
+				l_items.finish
 			until
-				a_items.after or not Result
+				-- At least show one button.
+				l_items.index <= 1 or Result >= a_size
 			loop
-				Result := a_items.item.parent = Void
-				a_items.forth
+				if tool_bar.has (l_items.item) then
+--					internal_hidden_items.extend (l_items.item)
+					if not tool_bar.is_vertical then
+						Result := Result + l_items.item.width
+					else
+						Result := Result + l_items.item.rectangle.height
+					end
+--					tool_bar.prune (l_items.item)
+
+					l_separator := Void
+					l_separator ?= l_items.i_th (l_items.index - 1)
+					if l_separator /= Void then
+						check has: tool_bar.has (l_separator) end
+--						internal_hidden_items.extend (l_separator)
+						Result := Result + l_separator.width
+--						tool_bar.prune (l_separator)
+					end
+				end
+				l_items.back
 			end
 		end
 
-	groups: ARRAYED_LIST [ARRAYED_LIST [EV_TOOL_BAR_ITEM]] is
-			-- Groups in `menu'.
+	can_expand_size (a_size_to_expand: INTEGER): INTEGER is
+			-- How many size can actually expanded
+		require
+			valid: a_size_to_expand >= 0
 		local
-			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_separator: EV_TOOL_BAR_SEPARATOR
-			l_group: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+			l_snapshot: like internal_hidden_items
+			l_old_size: INTEGER
+			l_stop: BOOLEAN
+			l_last_result: INTEGER
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_item_after: SD_TOOL_BAR_ITEM
 		do
-			l_items := menu.content.menu_items
+			debug ("docking")
+				print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 0.5")
+			end
+			if internal_hidden_items.count /= 0 then
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 1")
+				end
+				from
+					l_old_size := tool_bar.size
+					l_snapshot := internal_hidden_items.twin
+					l_snapshot.finish
+				until
+					l_snapshot.before or l_stop
+				loop
+					l_separator := Void
+					l_item_after := Void
+					l_separator ?= l_snapshot.item
+					if l_separator /= Void then
+						-- We should extend item after separator.
+						l_item_after := internal_hidden_items.i_th (internal_hidden_items.index_of (l_separator, 1) - 1)
+					end
+					l_last_result := Result
+					if not tool_bar.is_vertical then
+						Result := Result + l_snapshot.item.width
+						if l_item_after /= Void then
+							Result := Result + l_item_after.width
+						end
+					else
+						Result := Result + l_snapshot.item.rectangle.height
+						if l_item_after /= Void then
+							Result := Result + l_item_after.rectangle.height
+						end
+					end
+					debug ("docking")
+						print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 2")
+					end
+					if Result > a_size_to_expand then
+						l_stop := True
+						Result := l_last_result
+					end
+					l_snapshot.back
+					if l_separator /= Void then
+						l_snapshot.back
+					end
+				end
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 3 Result: " + Result.out)
+				end
+			end
+		ensure
+			valid: 0 <= Result and Result <= a_size_to_expand
+		end
+
+	hide_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- `internal_hidden_items'
+		do
+			Result := internal_hidden_items.twin
+		end
+
+	groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]] is
+			-- Groups in `internal_tool_bar'.
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+		do
+			l_items := tool_bar.content.items
 			from
 				create Result.make (1)
 				create l_group.make (1)
@@ -258,61 +435,24 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	menu: SD_MENU_ZONE
-			-- Menu which size issues Current managed.
+	tool_bar: SD_TOOL_BAR_ZONE
+			-- Tool bar which size issues Current managed.
+
+	last_state: SD_TOOL_BAR_ZONE_STATE
+			-- Last tool bar docking state.
 
 feature {NONE} -- Implementation
-
-	position_groups_imp (a_groups_info: SD_MENU_GROUP_INFO) is
-			-- Position menu items by a_group_info.
-		require
-			not_void: a_groups_info /= Void
-			is_horizontal: not menu.is_vertical
-			is_floating: menu.is_floating
-		local
-			l_row: ARRAYED_LIST [INTEGER]
-			l_new_row: BOOLEAN
-			l_item: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-		do
-			menu.floating_menu.lock_update
-			menu.floating_menu.wipe_out
-
-			menu.content.prune_items_from_parent
-
-			from
-				a_groups_info.start
-			until
-				a_groups_info.after
-			loop
-				if not a_groups_info.has_sub_info then
-					from
-						l_new_row := True
-						l_row := a_groups_info.item
-						l_row.start
-					until
-						l_row.after
-					loop
-						l_item := menu.content.group (l_row.item)
-						menu.floating_menu.extend_one_new_row (l_item, l_new_row, a_groups_info.is_new_group)
-						l_row.forth
-						l_new_row := False
-					end
-				else
-					extend_items_by_sub_info (a_groups_info.sub_grouping.item (a_groups_info.index), a_groups_info.index)
-				end
-
-				a_groups_info.forth
-			end
-
-			menu.floating_menu.to_minmum_size
-			menu.floating_menu.unlock_update
-		end
+--	last_size_reduced: INTEGER
+--			-- Last size reduced.
+--			
+--	last_size_expanded: INTEGER
+--			-- Last expanded size.
 
 	groups_sizes: ARRAYED_LIST [INTEGER] is
 			-- Group sizes.
 		local
-			l_groups: ARRAYED_LIST [ARRAYED_LIST [EV_TOOL_BAR_ITEM]]
-			l_group: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+			l_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
+			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_size: INTEGER
 		do
 			create Result.make (1)
@@ -329,7 +469,7 @@ feature {NONE} -- Implementation
 				until
 					l_group.after
 				loop
-					l_size := l_size + menu.content.size_of (l_group.item, menu.is_vertical)
+					l_size := l_size + l_group.item.width
 					l_group.forth
 				end
 				Result.extend (l_size)
@@ -337,26 +477,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prune_all_parent (a_list: ARRAYED_LIST [EV_TOOL_BAR_ITEM]) is
-			-- Parent all parent in a_list.
-		do
-			from
-				a_list.start
-			until
-				a_list.after
-			loop
-				if a_list.item.parent /= Void then
-					a_list.item.parent.prune (a_list.item)
-				end
-				a_list.forth
-			end
-		end
-
-	internal_hide_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			-- Hide menu items.
+	internal_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Hide tool_bar items.
 
 invariant
 
-	not_void: menu /= Void
+	not_void: tool_bar /= Void
+	not_void: last_state /= Void
 
 end

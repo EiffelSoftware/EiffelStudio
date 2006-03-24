@@ -174,10 +174,10 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $temp_x, $Result)
 		end
 
-	has_wm_decorations: BOOLEAN is
-			-- Does current Window object have WM decorations.
+	default_wm_decorations: INTEGER is
+			-- Default WM decorations of `Current'.
 		do
-			Result := False
+			Result := 0 -- No decorations
 		end
 
 	show is

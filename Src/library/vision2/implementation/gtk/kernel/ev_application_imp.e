@@ -591,8 +591,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP is
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
-		require
-			a_gtk_object_not_null: a_gtk_object /= default_pointer
 		local
 			gtkwid: POINTER
 		do

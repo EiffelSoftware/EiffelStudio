@@ -95,6 +95,7 @@ feature {NONE} -- Implementation
 			else
 				recover_to_normal_state
 			end
+			internal_docking_manager.command.resize
 			internal_docking_manager.command.unlock_update
 		end
 

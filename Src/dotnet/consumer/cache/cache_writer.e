@@ -347,11 +347,8 @@ feature -- Basic Operations
 			-- cleans up cache and removes all incomplete consumed assembly metadata
 		local
 			l_cache_folder: DIRECTORY
-			l_assembly_path: STRING
-			l_directories: ARRAYED_LIST [STRING]
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			l_ca: CONSUMED_ASSEMBLY
-			l_match: BOOLEAN
 			l_retried: BOOLEAN
 			l_upper: INTEGER
 			l_remove: BOOLEAN

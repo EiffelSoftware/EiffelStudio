@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			show_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_general_toolbar_string, True)
 			show_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_general_toolbar_string, False)
 			show_all_text_in_general_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_general_toolbar_string, False)
-			refactoring_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, refactoring_toolbar_layout_string, <<"RF_pull__visible", "RF_rename__visible", "Remove_class_cluster__visible", "Separator", "RF_undo__visible", "RF_redo__visible">>)
+			refactoring_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, refactoring_toolbar_layout_string, <<"RF_pull__visible", "RF_rename__visible", "Separator", "RF_undo__visible", "RF_redo__visible">>)
 			show_text_in_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_refactoring_toolbar_string, True)
 			show_all_text_in_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_refactoring_toolbar_string, False)
 			show_refactoring_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_refactoring_toolbar_string, True)

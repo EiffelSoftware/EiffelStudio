@@ -1,243 +1,324 @@
 indexing
 	description: "[
-					Objects that manage menu sizes for a SD_MENU_ROW.
-					]"
+					Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW.
+																			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_ROW_SIZER
+	SD_TOOL_BAR_ROW_SIZER
 
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make (a_menu_row: SD_MENU_ROW) is
+	make (a_tool_bar_row: SD_TOOL_BAR_ROW) is
 			-- Creation method.
 		require
-			not_void: a_menu_row /= Void
+			not_void: a_tool_bar_row /= Void
 		local
 			l_shared: SD_SHARED
 		do
-			internal_menu_row := a_menu_row
+			internal_tool_bar_row := a_tool_bar_row
 			create l_shared
-			internal_mediator := l_shared.menu_docker_mediator_cell.item
+			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 		ensure
-			set: internal_menu_row = a_menu_row
+			set: internal_tool_bar_row = a_tool_bar_row
 		end
 
 feature -- Command
 
-	resize_all_menus is
-			-- Reisze all menus from start to end when not `is_enough_max_space'.
-		local
-			l_space_to_resize: INTEGER
-		do
-			if not is_enough_space then
-				l_space_to_resize := space_to_resize
-			end
-		ensure
-			enough_space: is_enough_space
-		end
-
 	start_drag_prepare is
-			-- Do some prepare work when user start drag.
+			-- Do prepare works when user start drag.
 		local
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_shared: SD_SHARED
 		do
 			from
-				l_menus := internal_menu_row.menu_zones
-				l_menus.start
+				l_tool_bars := internal_tool_bar_row.tool_bar_zones
+				l_tool_bars.start
 				create all_sizes.make (1)
 			until
-				l_menus.after
+				l_tool_bars.after
 			loop
-				all_sizes.extend (l_menus.item_for_iteration.size)
-				l_menus.forth
+				all_sizes.extend (l_tool_bars.item_for_iteration.size)
+				l_tool_bars.forth
 			end
 			create l_shared
-			internal_mediator := l_shared.menu_docker_mediator_cell.item
+			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 		end
 
 	end_drag_clean is
-			-- Do some clean work when user end drag.
+			-- Do clean works when user end drag.
 		do
 			all_sizes := Void
 		end
 
-	resize_on_extend (a_new_menu: SD_MENU_ZONE) is
-			-- When extend a_new_menu, if not `is_enough_max_space', then resize menus.
+	resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE) is
+			-- When extend `a_new_tool_bar;, if not `is_enough_max_space', then resize tool bars.
 		require
-			has: has (a_new_menu)
+			has: has (a_new_tool_bar)
 		local
 			l_space_to_reduce: INTEGER
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			if not is_enough_max_space then
+			if not is_enough_max_space (True) then
 				-- Not enough space, resize from right to left.
-				l_space_to_reduce := space_to_resize
-				l_menus := internal_menu_row.menu_zones
-				l_menus.delete (a_new_menu)
+				l_space_to_reduce := space_to_resize (True, 0)
+				l_tool_bars := internal_tool_bar_row.tool_bar_zones
+				l_tool_bars.delete (a_new_tool_bar)
 				from
-					l_menus.finish
+					l_tool_bars.finish
 				until
-					l_menus.before or l_space_to_reduce <= 0
+					l_tool_bars.before or l_space_to_reduce <= 0
 				loop
-					l_space_to_reduce := l_space_to_reduce - l_menus.item_for_iteration.sizer.reduce_size (l_space_to_reduce)
-					l_menus.back
+					l_space_to_reduce := l_space_to_reduce - l_tool_bars.item_for_iteration.assistant.reduce_size (l_space_to_reduce)
+					l_tool_bars.back
+				end
+				-- After resize other toolbars, there is still no enough space
+				-- So we resize a_new_tool_bar now
+				if l_space_to_reduce > 0 then
+					l_space_to_reduce := l_space_to_reduce - a_new_tool_bar.assistant.reduce_size (l_space_to_reduce)
+					-- FIXIT: If there is still not enough space
+					--        We should change current toolbar to another row.
+					--        We should wrap unplacable tool bar to another row, like Microsft Office.
+					check should_not_space_left: l_space_to_reduce <= 0 end
 				end
 			end
 		ensure
-			enough_space: is_enough_space
+			enough_space: is_enough_space (True, 0)
 		end
 
 	resize_on_prune is
-			-- Just after prune a menu from `internal_menu_row', we need to resize all menus if needed.
+			-- Just after prune a tool bar from `internal_tool_bar_row', we need to resize all tool bars if needed.
 		local
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_size_to_expand: INTEGER
 		do
-			l_menus := internal_menu_row.menu_zones
+			l_tool_bars := internal_tool_bar_row.tool_bar_zones
 			from
-				l_size_to_expand := space_to_resize
+				l_size_to_expand := space_to_resize (True, 0)
 				l_size_to_expand := - l_size_to_expand
-				debug ("docking")
-					print ("%NSD_MENU_ROW_SIZER reisze_on_prune l_size_to_expand ++++++++++ is: " + l_size_to_expand.out + " l_menus.count = " + l_menus.count.out)
-				end
-				l_menus.start
+				l_tool_bars.start
 			until
-				l_menus.after or l_size_to_expand <= 0
+				l_tool_bars.after or l_size_to_expand <= 0
 			loop
-				debug ("docking")
-					print ("%NSD_MENU_ROW_SIZER reisze_on_prune l_size_to_expand /////////// is: " + l_size_to_expand.out)
-				end
-				l_size_to_expand := l_size_to_expand - l_menus.item_for_iteration.sizer.expand_size (l_size_to_expand)
-				l_menus.forth
+				l_size_to_expand := l_size_to_expand - l_tool_bars.item_for_iteration.assistant.expand_size (l_size_to_expand)
+				l_tool_bars.forth
 			end
-			if is_enough_max_space then
+			if is_enough_max_space (False) then
 				-- Every body should extend to full size
-
 			else
 				-- Everyboy should extend
 			end
-			debug ("docking")
-				print ("%NSD_MENU_ROW_SIZER reisze_on_prune l_size_to_expand =========== Result is: " + l_size_to_expand.out)
+		end
+
+	on_resize (a_size: INTEGER) is
+			-- Handle docking manager main window resize events.
+			-- a_size is width when row is horizontal
+			-- a_size is height when row is vertical
+		local
+			l_space_to_reduce, l_space_to_expand: INTEGER
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+		do
+			if not is_enough_space (False, a_size) then
+				from
+					-- From right to left
+					l_space_to_reduce := space_to_resize (False, a_size)
+					l_tool_bars := internal_tool_bar_row.tool_bar_zones
+					l_tool_bars.finish
+				until
+					l_tool_bars.before or l_space_to_reduce <= 0
+				loop
+					l_space_to_reduce := l_space_to_reduce - l_tool_bars.item_for_iteration.assistant.reduce_size (l_space_to_reduce)
+					l_tool_bars.back
+				end
+			else
+				-- We can expand some size.
+				from
+					l_space_to_reduce := space_to_resize (False, a_size)
+					check negative: l_space_to_reduce <= 0 end
+					l_space_to_expand := - l_space_to_reduce
+					l_tool_bars := internal_tool_bar_row.tool_bar_zones
+					l_tool_bars.start
+				until
+					l_tool_bars.after or l_space_to_expand <= 0
+				loop
+					l_space_to_expand := l_space_to_expand - l_tool_bars.item_for_iteration.assistant.expand_size (l_space_to_expand)
+					l_tool_bars.forth
+				end
 			end
+			debug ("docking")
+				if not is_enough_space (False, a_size) then
+					print ("%N SD_TOOL_BAR_ROW_POSITIONER ....")
+				end
+			end
+		ensure
+--			enought_space: is_enough_space (False, a_size)
 		end
 
 	try_to_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
-			-- After SD_POSITIONER calculation, there is not enough space at left side. Try to minmize some menus.
+			-- After SD_POSITIONER calculation, there is not enough space at left side. Try to minmize some tool bars.
+		local
+			l_space_to_reduce: INTEGER
+			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_space_reduced: INTEGER
+			l_space_expanded: INTEGER
 		do
+			if not is_enough_max_space (True) then
+				l_zones := internal_tool_bar_row.tool_bar_zones
+				l_zones.delete (internal_mediator.caller)
+				check same_size: a_possible_positions.count = l_zones.count end
+				from
+					l_space_to_reduce := 0 - a_possible_positions.first.integer_32_item (1)
+					a_possible_positions.start
+				until
+					a_possible_positions.after or Result
+				loop
+					if l_space_reduced < l_space_to_reduce then
+						l_space_reduced := l_space_reduced + l_zones.item (a_possible_positions.index).assistant.can_reduce_size (l_space_to_reduce)
+					 	a_possible_positions.item.put_integer_32 (l_zones.item (a_possible_positions.index).size, 2)
+					else
+						l_space_expanded := l_space_expanded + l_zones.item (a_possible_positions.index).assistant.can_expand_size ({INTEGER}.max_value)
+						debug ("docking")
+							print ("%N                     trying...  l_space_expanded: " + l_space_expanded.out)
+						end
+					end
+					a_possible_positions.forth
+				end
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ROW_SIZER try_to_solve_no_space_left: ")
+					print ("%N                       l_space_reduced: " + l_space_reduced.out)
+					print ("%N                       l_space_to_reduce: " + l_space_to_reduce.out)
+					print ("%N                       l_space_expanded: " + l_space_expanded.out)
+				end
+				if l_space_reduced >= l_space_to_reduce and l_space_expanded > 0 and l_space_expanded <= l_space_to_reduce then
+					Result := True
+					l_space_reduced := 0
+					l_space_expanded := 0
+					-- Now we really reduce size and expand size.
+					from
+						l_space_to_reduce := 0 - a_possible_positions.first.integer_32_item (1)
+						a_possible_positions.start
+					until
+						a_possible_positions.after
+					loop
+						if l_space_reduced < l_space_to_reduce then
+							l_space_reduced := l_space_reduced + l_zones.item (a_possible_positions.index).assistant.reduce_size (l_space_to_reduce)
 
+							a_possible_positions.item.put_integer_32 (l_zones.item (a_possible_positions.index).size, 2)
+
+							debug ("docking")
+								print ("%N SD_TOOL_BAR_ROW_SIZER try_to_solve_no_space_left reduce size")
+							end
+						else
+							l_space_expanded := l_space_expanded + l_zones.item (a_possible_positions.index).assistant.expand_size ({INTEGER}.max_value)
+							debug ("docking")
+								print ("%N SD_TOOL_BAR_ROW_SIZER try_to_solve_no_space_left expand size")
+							end
+						end
+						a_possible_positions.forth
+					end
+				end
+			end
 		end
 
 	try_to_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
-			-- After SD_POSITIONER calculation, there is not enough space at right side. Try to minmize some menus.
+			-- After SD_POSITIONER calculation, there is not enough space at right side. Try to minmize some tool bars.
 		do
 
 		end
 
-	try_to_solve_no_space_hot_menu_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]): BOOLEAN is
-			-- After SD_POSITIONER calculation, there is not enough space for dragged menu at right side. Try to minmize dragged menu.
+	try_to_solve_no_space_hot_tool_bar_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]): BOOLEAN is
+			-- After SD_POSITIONER calculation, there is not enough space for dragged tool bar at right side. Try to minmize dragged tool bar.
 		do
 
 		end
 
 feature -- Query
 
-	is_enough_max_space: BOOLEAN is
-			-- If there is enough space without reduce size of all menu zones in Current?
-		require
-
+	is_enough_max_space (a_inlcude_caller_size: BOOLEAN) : BOOLEAN is
+			-- If there is enough space without reduce size of all tool bar zones in Current?
 		local
 			l_all_size: INTEGER
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
-			l_caller: SD_MENU_ZONE
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_caller: SD_TOOL_BAR_ZONE
 			l_row_max_size: INTEGER
 		do
-			l_menus := internal_menu_row.menu_zones
-			l_caller := internal_mediator.caller
-			l_menus.delete (l_caller)
+			l_tool_bars := internal_tool_bar_row.tool_bar_zones
 
+			if a_inlcude_caller_size and then internal_mediator /= Void then
+				l_caller := internal_mediator.caller
+				l_tool_bars.delete (l_caller)
+			end
 			from
-				l_menus.start
+				l_tool_bars.start
 			until
-				l_menus.after
+				l_tool_bars.after
 			loop
-				l_row_max_size := l_row_max_size + l_menus.item_for_iteration.maximize_size
-				l_menus.forth
+				l_row_max_size := l_row_max_size + l_tool_bars.item_for_iteration.maximize_size
+				l_tool_bars.forth
 			end
-			if internal_menu_row.is_vertical then
-				l_all_size := internal_menu_row.height
+			l_all_size := internal_tool_bar_row.size
+			if a_inlcude_caller_size then
+				Result := l_all_size >= l_row_max_size + l_caller.maximize_size
 			else
-				l_all_size := internal_menu_row.width
+				Result := l_all_size >= l_row_max_size
 			end
-			Result := l_all_size >= l_row_max_size + l_caller.maximize_size
-
 		end
 
-	is_enough_space: BOOLEAN is
-			-- If there is enough space for all menus' current size?
-		require
---			is_dragging: is_user_dragging
---			is_caller_in: is_caller_in
+	is_enough_space (a_dragging_state: BOOLEAN; a_new_size: INTEGER): BOOLEAN is
+			-- If there is enough space for all tool bars' current size?
 		do
-			debug ("docking")
-				print ("%NSD_MENU_ROW_SIZER is_enough_space space to reduce is: " + space_to_resize.out)
-			end
-			Result := space_to_resize <= 0
+			Result := space_to_resize (a_dragging_state, a_new_size) <= 0
 		end
 
-	space_to_resize: INTEGER is
-			-- Space that not enough, so have to reduce menus size.
+	space_to_resize (a_dragging_state: BOOLEAN; a_new_size: INTEGER): INTEGER is
+			-- Space that not enough, so have to reduce tool bars size.
 			-- If space is enough, Result will negative, means size we can expand.
 		local
 			l_all_size: INTEGER
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_row_max_size: INTEGER
 		do
-			l_menus := internal_menu_row.menu_zones
+			l_tool_bars := internal_tool_bar_row.tool_bar_zones
 			from
-				l_menus.start
+				l_tool_bars.start
 			until
-				l_menus.after
+				l_tool_bars.after
 			loop
-				l_row_max_size := l_row_max_size + l_menus.item_for_iteration.size
-				debug ("docking")
-					print ("%NSD_MENU_ROW_SIZER: space_to_resize @@@@@@@@@@ iteration: menu size: " + l_menus.item_for_iteration.size.out)
-				end
-				l_menus.forth
+				l_row_max_size := l_row_max_size + l_tool_bars.item_for_iteration.size
+				l_tool_bars.forth
 			end
-			if internal_menu_row.is_vertical then
-				l_all_size := internal_menu_row.height
+			if a_dragging_state then
+				l_all_size := internal_tool_bar_row.size
+				Result := l_row_max_size - l_all_size
 			else
-				l_all_size := internal_menu_row.width
-				debug ("docking")
-					print ("%NSD_MENU_ROW_SIZER: space_to_resize @@@@@@@@@@ row width: " + l_all_size.out)
-				end
+				Result := l_row_max_size - a_new_size
 			end
-			Result := l_row_max_size - l_all_size
 		ensure
 
 		end
 
-	has (a_menu: EV_WIDGET): BOOLEAN is
-			-- If `internal_menu_row' has a_menu?
+	has (a_tool_bar: EV_WIDGET): BOOLEAN is
+			-- If `internal_tool_bar_row' has a_tool_bar?
 		do
-			Result := internal_menu_row.has (a_menu)
+			Result := internal_tool_bar_row.has (a_tool_bar)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_mediator: SD_MENU_DOCKER_MEDIATOR
+	internal_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR
 			-- Docker mediator for one user dragging.
 
-	internal_menu_row: SD_MENU_ROW
-			-- Menu row which all it's menus' size are managed by Current.
+	internal_tool_bar_row: SD_TOOL_BAR_ROW
+			-- Tool bar row which all it's tool bars' size are managed by Current.
 
 	all_sizes: ARRAYED_LIST [INTEGER]
 			-- All orignal sizes when user dragging.
+
+invariant
+	not_void: internal_tool_bar_row /= Void
 
 end

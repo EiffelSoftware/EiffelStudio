@@ -1,22 +1,25 @@
 indexing
-	description: "A menu container that is a row when at top/bottom or column at left/right menu area. It contain SD_MENU_ZONE."
+	description: "[
+					A tool bar container that is a row when at top/bottom or column at
+					left/right tool bar area. It contain SD_TOOL_BAR_ZONE.
+																						]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_ROW
+	SD_TOOL_BAR_ROW
 
-inherit 
+inherit
 	EV_FIXED
 		rename
 			extend as extend_fixed,
 			set_item_position as set_item_position_fixed
 		export
 			{NONE} all
-			{ANY} has, parent, count, height, width
-			{SD_MENU_ZONE_ASSISTANT} set_item_width, set_item_height
+			{ANY} has, parent, count
+			{SD_TOOL_BAR_ZONE} set_item_size
 		redefine
 			prune
 		end
@@ -37,55 +40,57 @@ feature {NONE} -- Initialization
 			set: is_vertical = a_vertical
 		end
 
-feature -- Basic operation
+feature -- Command
 
-	extend (a_menu: SD_MENU_ZONE) is
-			-- Extend `a_menu'.
+	extend (a_tool_bar: SD_TOOL_BAR_ZONE) is
+			-- Extend `a_tool_bar'.
 		require
-			a_menu_not_void: a_menu /= Void
-			parent_void: a_menu.parent = Void
+			a_tool_bar_not_void: a_tool_bar /= Void
+			parent_void: a_tool_bar.parent = Void
 		do
-			if a_menu.is_vertical /= is_vertical then
-				a_menu.change_direction
+			if a_tool_bar.is_vertical /= is_vertical then
+				a_tool_bar.change_direction (not is_vertical)
 			end
-			extend_fixed (a_menu)
+			extend_fixed (a_tool_bar)
 
 			if is_vertical then
-				if a_menu.minimum_width > {SD_SHARED}.menu_size then
-					a_menu.set_minimum_width ({SD_SHARED}.menu_size)
+				if a_tool_bar.minimum_width > {SD_SHARED}.tool_bar_size then
+					a_tool_bar.set_minimum_width ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_width (a_menu, {SD_SHARED}.menu_size)
+				set_item_width (a_tool_bar, {SD_SHARED}.tool_bar_size)
 			else
-				if a_menu.minimum_height > {SD_SHARED}.menu_size then
-					a_menu.set_minimum_height ({SD_SHARED}.menu_size)
+				if a_tool_bar.minimum_height > {SD_SHARED}.tool_bar_size then
+					a_tool_bar.set_minimum_height ({SD_SHARED}.tool_bar_size)
 				end
-				set_item_height (a_menu, {SD_SHARED}.menu_size)
+				set_item_height (a_tool_bar, {SD_SHARED}.tool_bar_size)
 			end
 
-			set_item_position_fixed (a_menu, 0, 0)
-			a_menu.set_row (Current)
-			if internal_shared.menu_docker_mediator_cell.item /= Void then
+			a_tool_bar.set_row (Current)
+			set_item_position_fixed (a_tool_bar, 1, 1)
+			if internal_shared.tool_bar_docker_mediator_cell.item /= Void then
 				if is_vertical then
-					internal_positioner.position_resize_on_extend (a_menu, to_relative_position (internal_shared.menu_docker_mediator_cell.item.screen_y))
+					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_y))
 				else
-					internal_positioner.position_resize_on_extend (a_menu, to_relative_position (internal_shared.menu_docker_mediator_cell.item.screen_x))
+					internal_positioner.position_resize_on_extend (a_tool_bar, to_relative_position (internal_shared.tool_bar_docker_mediator_cell.item.screen_x))
 				end
 			end
+
+			a_tool_bar.assistant.update_indicator
 		ensure
-			extended: has (a_menu)
-			direction_changed: a_menu.is_vertical = is_vertical
-			menu_row_set: a_menu.row = Current
+			extended: has (a_tool_bar)
+			direction_changed: a_tool_bar.is_vertical = is_vertical
+			tool_bar_row_set: a_tool_bar.row = Current
 		end
 
 	prune (a_item: EV_WIDGET) is
 			-- Redefine
 		local
-			l_menu: SD_MENU_ZONE
+			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_result: INTEGER
 		do
-			l_menu ?= a_item
-			check not_void: l_menu /= Void end
-			l_result := l_menu.sizer.expand_size (l_menu.maximize_size)
+			l_tool_bar ?= a_item
+			check not_void: l_tool_bar /= Void end
+			l_result := l_tool_bar.assistant.expand_size (l_tool_bar.maximize_size)
 			Precursor {EV_FIXED} (a_item)
 			internal_positioner.position_resize_on_prune
 		end
@@ -102,7 +107,6 @@ feature -- Basic operation
 			a_widget_not_void: a_widget /= Void
 		do
 			set_item_position_relative (a_widget, to_relative_position (a_screen_x_y))
-
 		ensure
 		end
 
@@ -111,7 +115,7 @@ feature -- Basic operation
 		require
 			a_widget_not_void: a_widget /= Void
 		do
-			set_item_position_internal (a_widget, a_relative_x_y)
+			internal_set_item_position (a_widget, a_relative_x_y)
 		ensure
 		end
 
@@ -129,19 +133,45 @@ feature -- Basic operation
 			internal_positioner.start_drag
 		end
 
-feature {SD_MENU_ROW_POSITIONER}
-
-	set_item_position_internal (a_widget: EV_WIDGET; a_relative_position: INTEGER) is
-			-- Only do set item position issues.
+	on_resize (a_size: INTEGER) is
+			-- Handle docking manger main window resize events.
+			-- a_size is width when row is horizontal
+			-- a_size is height when row is vertical
 		do
-			if is_vertical then
-				set_item_y_position (a_widget, a_relative_position)
-			else
-				set_item_x_position (a_widget, a_relative_position)
+			if not is_ignore_resize then
+				internal_positioner.on_resize (a_size)
 			end
 		end
 
-feature -- States report
+	record_state is
+			-- Record position and size state.
+		do
+			internal_positioner.record_positions_and_sizes (False)
+		end
+
+	set_ignore_resize (a_ignore: BOOLEAN) is
+			-- Set `is_ignore_resize'.
+		do
+			is_ignore_resize := a_ignore
+		ensure
+			set: is_ignore_resize = a_ignore
+		end
+
+feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues
+
+	internal_set_item_position (a_widget: EV_WIDGET; a_relative_position: INTEGER) is
+			-- Only do set item position issues.
+		do
+			if has (a_widget) then
+				if is_vertical then
+					set_item_y_position (a_widget, a_relative_position)
+				else
+					set_item_x_position (a_widget, a_relative_position)
+				end
+			end
+		end
+
+feature -- Query
 
 	has_screen_y (a_screen_y: INTEGER): BOOLEAN is
 			-- If a_screen_y in Current area?
@@ -158,12 +188,12 @@ feature -- States report
 	is_vertical: BOOLEAN
 			-- If `Current' is_vertical?
 
-	menu_zones: DS_ARRAYED_LIST [SD_MENU_ZONE] is
-			-- All menu zone in Current. Order is from left to right (top to bottom).
+	tool_bar_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
+			-- All tool bar zone in Current. Order is from left to right (top to bottom).
 		local
-			l_menu_zone: SD_MENU_ZONE
-			l_sorter: DS_QUICK_SORTER [SD_MENU_ZONE]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_MENU_ZONE]
+			l_tool_bar_zone: SD_TOOL_BAR_ZONE
+			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
+			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [SD_TOOL_BAR_ZONE]
 		do
 			from
 				create Result.make (1)
@@ -171,26 +201,14 @@ feature -- States report
 			until
 				after
 			loop
-				l_menu_zone ?= item
-				check only_has_menu_zone: l_menu_zone /= Void end
-				Result.force_last (l_menu_zone)
+				l_tool_bar_zone ?= item
+				check only_has_tool_bar_zone: l_tool_bar_zone /= Void end
+				Result.force_last (l_tool_bar_zone)
 				forth
 			end
 			create l_agent_sorter.make (agent sort_by_position)
 			create l_sorter.make (l_agent_sorter)
 			l_sorter.sort (Result)
-		end
-
-	is_user_dragging: BOOLEAN is
-			-- If user Current dragging a menu zone?
-		do
-			Result := internal_shared.menu_docker_mediator_cell.item /= Void
-		end
-
-	is_caller_in: BOOLEAN is
-			-- If dragged menu zone in Current?
-		do
-			Result := has (internal_shared.menu_docker_mediator_cell.item.caller)
 		end
 
 	size: INTEGER is
@@ -205,10 +223,19 @@ feature -- States report
 			valid: Result = height or Result = width
 		end
 
-feature {SD_MENU_ROW_POSITIONER} -- Implementation
+	is_ignore_resize: BOOLEAN
+			-- Is ignore resize?
 
-	sort_by_position (a_first, a_second: SD_MENU_ZONE): BOOLEAN is
-			-- Compare a_first and a_second.
+	is_enough_max_space: BOOLEAN is
+			-- If there is enought space for each SD_TOOL_BAR without reduce size?
+		do
+			Result := internal_positioner.internal_sizer.is_enough_max_space (True)
+		end
+
+feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
+
+	sort_by_position (a_first, a_second: SD_TOOL_BAR_ZONE): BOOLEAN is
+			-- Compare `a_first' and `a_second'.
 		require
 			not_void: a_first /= Void
 			not_void: a_second /= Void
@@ -217,7 +244,7 @@ feature {SD_MENU_ROW_POSITIONER} -- Implementation
 		end
 
 	to_relative_position (a_screen_position: INTEGER): INTEGER is
-			-- Screen position to relative position.
+			-- Screen position convert to relative position.
 		do
 			if not is_vertical then
 				Result := a_screen_position - screen_x
@@ -226,8 +253,8 @@ feature {SD_MENU_ROW_POSITIONER} -- Implementation
 			end
 		end
 
-	internal_positioner: SD_MENU_ROW_POSITIONER
-			-- Menu positioner.
+	internal_positioner: SD_TOOL_BAR_ROW_POSITIONER
+			-- Tool bar positioner.
 
 	internal_shared: SD_SHARED;
 			-- All singletons.

@@ -17,7 +17,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_inner_container_datas.make (1)
 			create internal_auto_hide_zones_data.make
-			create menu_datas.make (1)
+			create tool_bar_datas.make (1)
 		end
 
 feature -- Properties
@@ -43,8 +43,8 @@ feature -- Properties
 			Result := internal_auto_hide_zones_data
 		end
 
-	menu_datas: ARRAYED_LIST [SD_MENU_DATA]
-			-- Four direction menu data. 1 is top, 2 is bottom, 3 is left, 4 is right.
+	tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]
+			-- Four direction tool bar data. 1 is top, 2 is bottom, 3 is left, 4 is right.
 
 feature {NONE}  -- Implementation
 

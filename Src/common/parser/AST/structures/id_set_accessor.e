@@ -15,6 +15,8 @@ feature -- Access
 			-- Access the id set.
 		do
 			Result := Current
+		ensure
+			id_set_not_void: Result /= Void
 		end
 
 feature -- Update

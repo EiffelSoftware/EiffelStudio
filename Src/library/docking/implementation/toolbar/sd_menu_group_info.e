@@ -1,10 +1,10 @@
 indexing
-	description: "Objects that store menu items group infomation."
+	description: "Objects that store tool bar items group infomation."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_GROUP_INFO
+	SD_TOOL_BAR_GROUP_INFO
 
 inherit
 	ANY
@@ -43,15 +43,11 @@ feature -- Query
 		end
 
 	maximum_width: INTEGER is
-			-- Maximum_width
+			-- Maximum width
 		local
 			l_maximum_index: INTEGER
 		do
 			l_maximum_index := maximum_width_group_index
---			go_group_i_th (l_maximum_index)
-			debug ("docking")
-				print ("%NSD_MENU_GROUP_INFO maximum_width l_maximum_index: " + l_maximum_index.out)
-			end
 			if not has_sub_info then
 				Result := group_width (l_maximum_index)
 			else
@@ -59,8 +55,8 @@ feature -- Query
 			end
 		end
 
-	maximum_width_group: SD_MENU_GROUP_INFO is
-			-- group with maximum width.
+	maximum_width_group: SD_TOOL_BAR_GROUP_INFO is
+			-- Group which has maximum width.
 		local
 			l_maximum_group_index: INTEGER
 			l_group_index_count: INTEGER
@@ -86,11 +82,6 @@ feature -- Query
 					l_new_group := False
 				end
 				forth
-			end
-			debug ("docking")
-				print ("%NSD_MENU_GROUP_INFO maximum_width_group: OYL_OYL_OYL " + Result.out)
-				print ("%N                   group_count: " + group_count.out)
-				print ("%N                   total_item_count: " + total_items_count.out)
 			end
 		ensure
 			not_void: Result /= Void
@@ -201,9 +192,26 @@ feature -- Query
 		end
 
 	row_count: INTEGER is
-			-- Row count.
+			-- Row count
 		do
 			Result := internal_group_info.count
+		end
+
+	row_total_count: INTEGER is
+			-- Total row count.
+		do
+			from
+				start
+			until
+				after
+			loop
+				if has_sub_info then
+					Result := sub_grouping.item (index).count + Result
+				else
+					Result := Result + 1
+				end
+				forth
+			end
 		ensure
 			valid: Result >= 0
 		end
@@ -261,13 +269,13 @@ feature -- Query
 			Result := item.first
 		end
 
-	sub_grouping: DS_HASH_TABLE [SD_MENU_GROUP_INFO ,INTEGER]
-			-- SD_MENU_GROUP_INFO is grouping info of items in one menu items group.
-			-- INTEGER is menu items group id. It is INTEGER in `internal_group_info'.
+	sub_grouping: DS_HASH_TABLE [SD_TOOL_BAR_GROUP_INFO ,INTEGER]
+			-- SD_tool_bar_GROUP_INFO is grouping info of items in one tool bar items group.
+			-- INTEGER is tool bar items group id. It is INTEGER in `internal_group_info'.
 
 feature -- Command
 
-	set_sub_group_info (a_sub_grouping_info: SD_MENU_GROUP_INFO; a_group_index: INTEGER) is
+	set_sub_group_info (a_sub_grouping_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER) is
 			-- Set sub grouping info.
 		require
 			valid: a_group_index > 0 and a_group_index <= items_width.count
@@ -291,7 +299,7 @@ feature -- Command
 	out: STRING is
 			-- Redefine
 		do
-			Result := "%NSD_MENU_GROUP_INFO:"
+			Result := "%NSD_tool_bar_GROUP_INFO:"
 			Result := Result + "%N                   group count: " + group_count.out
 			Result := Result + "%N                   total item count: " + total_items_count.out
 		end
@@ -427,7 +435,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_group_info: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]
-			-- Grouping formation, INTEGER is group_index of SD_MENU_CONTENT.
+			-- Grouping formation, INTEGER is group_index of SD_TOOL_BAR_CONTENT.
 
 	internal_is_new_group: ARRAYED_LIST [BOOLEAN]
 			-- Store each item in `internal_group_info' is a new row?

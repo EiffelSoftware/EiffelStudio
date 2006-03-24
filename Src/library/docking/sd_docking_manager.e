@@ -9,7 +9,7 @@ class
 	SD_DOCKING_MANAGER
 
 create
-	make 
+	make
 
 feature {NONE} -- Initialization
 
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			a_container_valid: container_valid (a_container, a_window)
 		local
 			l_app: EV_ENVIRONMENT
+			l_system_imp: SD_SYSTEM_COLOR_IMP
 		do
 			create internal_shared
 			create tab_drop_actions
@@ -44,9 +45,10 @@ feature {NONE} -- Initialization
 
 			init_inner_container
 
-			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
---			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_OLD_FACTORY})
-			create menu_manager.make (Current)
+			create l_system_imp.make
+			internal_shared.set_hot_zone_factory (l_system_imp.hot_zone_factory)
+
+			create tool_bar_manager.make (Current)
 			create l_app
 			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
 
@@ -61,11 +63,11 @@ feature {NONE} -- Initialization
 			top_container.extend (internal_viewport)
 			internal_viewport.resize_actions.extend (agent agents.on_resize)
 
-			create menu_container
-			internal_viewport.extend (menu_container)
-			menu_container.set_minimum_size (0, 0)
+			create tool_bar_container
+			internal_viewport.extend (tool_bar_container)
+			tool_bar_container.set_minimum_size (0, 0)
 			create main_container
-			menu_container.center.extend (main_container)
+			tool_bar_container.center.extend (main_container)
 			create fixed_area
 			main_container.center_area.extend (fixed_area)
 		end
@@ -116,16 +118,14 @@ feature -- Query
 			Result := contents.has (a_content)
 		end
 
-	menu_manager: SD_MENU_MANAGER
-			-- Manager control all menus.
+	tool_bar_manager: SD_TOOL_BAR_MANAGER
+			-- Manager control all tool bars.
 
 	tab_drop_actions: SD_PND_ACTION_SEQUENCE
 			-- Drop action when drop on a blank tab area.
 
 	open_actions: ACTION_SEQUENCE [ TUPLE [ANY]]
 			-- Open actions when open a config.
-
---	save_actions: ACTION_SEQUENCE [ ]
 
 feature -- Command
 
@@ -200,13 +200,13 @@ feature -- Contract support
 			Result := a_window.has_recursive (a_container) or a_container = a_window
 		end
 
-feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
+feature {SD_TOOL_BAR_HOT_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_WINDOW,
-	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE,
+	 SD_TOOL_BAR_DOCKER_MEDIATOR, SD_TOOL_BAR_MANAGER, SD_AUTO_HIDE_PANEL, SD_TOOL_BAR_ZONE,
 	  SD_TAB_STUB, SD_MULTI_DOCK_AREA, SD_DOCKING_MANAGER_AGENTS,
 	  SD_DOCKING_MANAGER_COMMAND, SD_DOCKING_MANAGER_ZONES, SD_AUTO_HIDE_ANIMATION,
 	  SD_DOCKING_MANAGER_QUERY, SD_NOTEBOOK, SD_ZONE_NAVIGATION_DIALOG,
-	  SD_TAB_STATE_ASSISTANT} -- Library internals querys.
+	  SD_TAB_STATE_ASSISTANT, SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT} -- Library internals querys.
 
 	query: SD_DOCKING_MANAGER_QUERY
 			-- Manager helper Current for querys.
@@ -223,17 +223,18 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	zones: SD_DOCKING_MANAGER_ZONES
 			-- Manager help Current for zones issues.
 
-feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
-	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_WINDOW, SD_MENU_DOCKER_MEDIATOR,
-	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS,
-	 SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND, SD_MENU_ZONE_ASSISTANT,
-	 SD_DOCKING_MANAGER_ZONES, SD_NOTEBOOK_TAB_AREA, SD_NOTEBOOK_TAB, SD_AUTO_HIDE_ANIMATION} -- Library internal attributes.
+feature {SD_TOOL_BAR_HOT_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
+	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, SD_DEBUG_WINDOW, SD_TOOL_BAR_DOCKER_MEDIATOR,
+	 SD_TOOL_BAR_MANAGER, SD_AUTO_HIDE_PANEL, SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS,
+	 SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER_COMMAND, SD_TOOL_BAR_ZONE_ASSISTANT,
+	 SD_DOCKING_MANAGER_ZONES, SD_NOTEBOOK_TAB_AREA, SD_NOTEBOOK_TAB, SD_AUTO_HIDE_ANIMATION,
+	 SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG} -- Library internal attributes.
 
-	menu_container: SD_MENU_CONTAINER
-			-- Container for menus on four sides.
+	tool_bar_container: SD_TOOL_BAR_CONTAINER
+			-- Container for tool bars on four sides.
 
 	main_window: EV_WINDOW
-			-- Client programmer's window.
+			-- Client programmer's main window.
 
 	fixed_area: EV_FIXED
 			-- EV_FIXED for DOCKING_MANAGER manage widgets.

@@ -221,7 +221,6 @@ feature -- Command
 			hightlight_color := internal_shared.focused_color
 
 			internal_drawing_area.set_background_color (hightlight_color)
---			l_text_color := l_color_helper.text_color_by (hightlight_color)
 			l_text_color := internal_shared.focused_title_text_color
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
@@ -243,7 +242,6 @@ feature -- Command
 			hightlight_color := internal_shared.non_focused_title_color
 
 			internal_drawing_area.set_background_color (internal_shared.non_focused_title_color)
---			l_text_color := l_color_helper.text_color_by (internal_shared.non_focused_title_color)
 			l_text_color := internal_shared.non_focused_title_text_color
 			internal_drawing_area.set_foreground_color (l_text_color)
 			internal_border.set_border_color (hightlight_color)
@@ -404,13 +402,16 @@ feature {NONE} -- Agents
 					end
 
 					--FIXIT: who set parent?
-					if mini_tool_bar_indicator.parent /= Void then
-						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
-					end
-
-					internal_tool_bar.start
-					check not_before: not internal_tool_bar.before end
-					internal_tool_bar.put_left (mini_tool_bar_indicator)
+					--FIXIT: Why prune/add tool bar item here there'll be problems?
+--					if mini_tool_bar_indicator.parent /= Void then
+--						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
+--					end
+--
+----					internal_tool_bar.start
+----					check not_before: not internal_tool_bar.before end
+----					internal_tool_bar.put_left (mini_tool_bar_indicator)
+--
+--					internal_tool_bar.put_i_th (mini_tool_bar_indicator, 1)
 				end
 				ignore_resize := False
 			end

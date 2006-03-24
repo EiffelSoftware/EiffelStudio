@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	SD_MENU_CONTAINER_IMP
+	SD_TOOL_BAR_CONTAINER_IMP
 
 inherit
 	EV_VERTICAL_BOX
@@ -25,7 +25,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
+
 				-- Create all widgets.
 			create top
 			create l_ev_horizontal_box_1
@@ -33,7 +33,7 @@ feature {NONE}-- Initialization
 			create center
 			create right
 			create bottom
-			
+
 				-- Build_widget_structure.
 			extend (top)
 			extend (l_ev_horizontal_box_1)
@@ -41,12 +41,12 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (center)
 			l_ev_horizontal_box_1.extend (right)
 			extend (bottom)
-			
+
 			l_ev_horizontal_box_1.disable_item_expand (left)
 			l_ev_horizontal_box_1.disable_item_expand (right)
 			disable_item_expand (top)
 			disable_item_expand (bottom)
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -74,12 +74,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -94,4 +94,4 @@ indexing
 
 
 
-end -- class SD_MENU_CONTAINER_IMP
+end -- class SD_TOOL_BAR_CONTAINER_IMP

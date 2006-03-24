@@ -49,7 +49,11 @@ feature -- Basic operations
 				create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
 				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
-				process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
+				if process_manager.is_process_running then
+					process_manager.confirm_process_termination_for_quiting (agent confirm_stop_debug, agent do_nothing, window_manager.last_focused_window.window)
+				else
+					confirm_stop_debug
+				end
 			end
 		end
 

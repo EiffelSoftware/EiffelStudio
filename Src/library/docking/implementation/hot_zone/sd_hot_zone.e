@@ -61,17 +61,6 @@ feature {NONE}
 	need_clear: BOOLEAN
 			-- If Current need clear indicator?
 
-	clear_rect (a_orignal_pixmap: EV_PIXMAP; a_clear_rect: EV_RECTANGLE) is
-			-- Clear a_clear_rect use a_orignal_pixmap.
-		local
-			l_screen: EV_SCREEN
-			l_pixmap_for_clear: EV_PIXMAP
-		do
-			l_pixmap_for_clear := a_orignal_pixmap.sub_pixmap (a_clear_rect)
-			create l_screen
-			l_screen.draw_pixmap (a_clear_rect.x, a_clear_rect.y, l_pixmap_for_clear)
-		end
-
 	internal_shared: SD_SHARED
 			-- All singletons.
 

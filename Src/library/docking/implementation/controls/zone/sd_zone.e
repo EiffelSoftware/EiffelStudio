@@ -48,6 +48,7 @@ feature -- Command
 				main_area.wipe_out
 				main_area.extend (Current)
 				set_max (True)
+				internal_docking_manager.command.resize
 			else
 				recover_to_normal_state
 			end
@@ -90,6 +91,7 @@ feature -- Command
 				main_area_widget := Void
 				internal_parent := Void
 				set_max (False)
+				internal_docking_manager.command.resize
 				internal_docking_manager.command.unlock_update
 			end
 		end

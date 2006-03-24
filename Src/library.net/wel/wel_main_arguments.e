@@ -25,7 +25,7 @@ feature -- Access
 			-- into the associated shared library and not in the current application.
 		local
 			l_str: WEL_STRING
-			l_name: STRING
+			l_name: STRING_32
 			l_pos: INTEGER
 		once
 				-- Note: 
@@ -48,7 +48,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_line: STRING is
+	command_line: STRING_32 is
 			-- Command line argument received in WinMain
 		once
 			create Result.make_from_cil ({ENVIRONMENT}.command_line)

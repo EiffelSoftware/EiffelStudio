@@ -83,25 +83,39 @@ feature -- Access
 		end
 
 	allow_window_to_back: BOOLEAN is
-			-- Does allow SD_FLOATING_ZONE or SD_FLOATING_MENU_ZONE to go to back of main window?
+			-- Does allow SD_FLOATING_ZONE or SD_FLOATING_TOOL_BAR_ZONE to go to back of main window?
 		do
 			Result := allow_window_to_back_cell.item
 		end
 
-	menu_docker_mediator_cell: CELL [SD_MENU_DOCKER_MEDIATOR] is
-			-- Menu docker mediator when user dragging a SD_MENU_ZONE.
+	tool_bar_docker_mediator_cell: CELL [SD_TOOL_BAR_DOCKER_MEDIATOR] is
+			-- Tool bar docker mediator when user dragging a SD_TOOL_BAR_ZONE.
 		once
 			create Result
 		ensure
 			not_void: Result /= Void
 		end
 
-	set_menu_docker_mediator (a_mediator: SD_MENU_DOCKER_MEDIATOR) is
-			-- Set menu docker mediator singleton.
+	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
+			-- Set tool bar docker mediator singleton.
 		do
-			menu_docker_mediator_cell.put (a_mediator)
+			tool_bar_docker_mediator_cell.put (a_mediator)
 		ensure
-			set: menu_docker_mediator_cell.item = a_mediator
+			set: tool_bar_docker_mediator_cell.item = a_mediator
+		end
+
+	show_all_feedback_indicator: BOOLEAN is
+			-- If show all indicators same time when use transparent rectangle style feedback?
+		do
+			Result := show_all_feedback_indicator_cell.item
+		end
+
+	set_show_all_feedback_indicator (a_bool: BOOLEAN) is
+			-- Set `show_all_feedback_indicator'.
+		do
+			show_all_feedback_indicator_cell.put (a_bool)
+		ensure
+			set: show_all_feedback_indicator = a_bool
 		end
 
 feature  -- Colors
@@ -188,19 +202,21 @@ feature  -- Colors
 		once
 			create l_text_box
 			Result :=  l_text_box.background_color
---			Result := (create {EV_STOCK_COLORS}).yellow
 		end
 
-	border_width: INTEGER is 1
-			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
-
-	menu_title_bar_color: EV_COLOR is
-			-- Menu tilte bar color when menu floating.
+	tool_bar_title_bar_color: EV_COLOR is
+			-- Tool bar tilte bar color when tool bar floating.
 		once
 			create Result
 			Result.set_rgb (132 / 255, 130 / 255, 132 / 255)
 		ensure
 			not_void: Result /= Void
+		end
+
+	feedback_indicator_region_window_discard_color: EV_COLOR is
+			-- Feedback indicator window region discard color.
+		once
+			create Result.make_with_rgb (1, 1, 1)
 		end
 
 feature {SD_DOCKING_MANAGER}
@@ -239,6 +255,9 @@ feature -- Contract Support
 
 feature -- Constants
 
+	Border_width: INTEGER is 1
+			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
+
 	Auto_hide_panel_lightness: REAL is 0.5
 			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
 
@@ -253,12 +272,6 @@ feature -- Constants
 
 	Resize_bar_width_height: INTEGER is 5
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
-
-	Type_tool: INTEGER is 1
-			-- Normal hot zones which normal zones have.
-
-	Type_editor: INTEGER is 2
-			-- Editor hot zones which editor zones have.
 
 	Title_bar_height: INTEGER is 16
 			-- Size of zone's title bar.
@@ -275,8 +288,14 @@ feature -- Constants
 			Result := Title_bar_height
 		end
 
-	Menu_size: INTEGER is 23
-			-- Size of menu.
+	Tool_bar_size: INTEGER is 24
+			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
+
+	Tool_bar_border_width: INTEGER is
+			--
+		do
+			Result := 10
+		end
 
 	Default_floating_window_width: INTEGER is 300
 			-- Default floating window width.
@@ -296,9 +315,6 @@ feature -- Constants
 	Focuse_border_width: INTEGER is 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
-	Separator_width: INTEGER is 6
-			-- Separator width used by SD_MENU_ZONE.
-
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.
 
@@ -317,10 +333,29 @@ feature -- Constants
 	Feedback_tab_width: INTEGER is 60
 			-- When user dragging, the width of feedback rectangle for tab.
 
+	Floating_title_bar_height: INTEGER is 13
+			-- Height of SD_FLOATING_TOOL_BAR_ZONE's title bar.
+
+feature -- Zone type constants
+
+	Type_tool: INTEGER is 1
+			-- Normal hot zones which normal zones have.
+
+	Type_editor: INTEGER is 2
+			-- Editor hot zones which editor zones have.
+
 feature {NONE} -- Implementation
 
 	internal_icons: SD_ICONS_SINGLETON;
 			-- Icons.
+
+	show_all_feedback_indicator_cell: CELL [BOOLEAN] is
+			-- Singleton cell for show_all_feedback_indicator.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

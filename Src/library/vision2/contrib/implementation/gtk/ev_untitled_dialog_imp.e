@@ -7,13 +7,13 @@ indexing
 
 class
 	EV_UNTITLED_DIALOG_IMP
-	
+
 inherit
 	EV_DIALOG_IMP
 		redefine
 			interface,
 			set_size,
-			has_wm_decorations,
+			default_wm_decorations,
 			initialize
 		end
 
@@ -21,17 +21,17 @@ create
 	make
 
 feature {NONE} -- Initialization
-		
+
 	initialize is
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-				-- We don't want any decorations at all
+			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
+			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 		end
 
 feature -- Status setting	
-		
+
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
@@ -42,10 +42,10 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	has_wm_decorations: BOOLEAN is
-			-- Does the current window object have window decorations.
+	default_wm_decorations: INTEGER is
+			-- Default Window Manager decorations of `Current'.
 		do
-			Result := False
+			Result := 0
 		end
 
 	interface: EV_UNTITLED_DIALOG;

@@ -261,7 +261,7 @@ feature -- Actions
 		end
 
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Actions perfromed before close.
+			-- Actions to perfrom when close requested.
 		do
 			if internal_close_request_actions = Void then
 				create internal_close_request_actions
@@ -406,7 +406,7 @@ feature {SD_TAB_ZONE}  -- Actions for SD_TAB_ZONE
 feature {SD_STATE} -- Actions for SD_STATE
 
 	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions perfromed before close.
+			-- Actions to perfrom when close requested.
 
 invariant
 

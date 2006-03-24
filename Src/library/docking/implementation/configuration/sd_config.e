@@ -48,7 +48,7 @@ feature -- Save/Open inner container data.
 			-- Second save auto hide zones data.
 			save_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
 
-			save_menu_datas (l_config_data.menu_datas)
+			save_tool_bar_datas (l_config_data.tool_bar_datas)
 
 			create l_writer.make (l_file)
 			create l_facility
@@ -82,7 +82,7 @@ feature -- Save/Open inner container data.
 			-- Restore auto hide zone.
 			open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
 
-			open_menu_datas (l_config_data.menu_datas)
+			open_tool_bar_datas (l_config_data.tool_bar_datas)
 
 			l_file.close
 
@@ -212,80 +212,77 @@ feature {NONE} -- Implementation for save config.
 			end
 		end
 
-	save_menu_datas (a_menu_datas: ARRAYED_LIST [SD_MENU_DATA]) is
-			-- Save four area menu and floating menu config datas.
+	save_tool_bar_datas (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+			-- Save four area tool bar and floating tool bar config datas.
 		require
-			a_menu_datas_not_void: a_menu_datas /= Void
+			not_void: a_tool_bar_datas /= Void
 		local
-			l_menu_data: SD_MENU_DATA
-			l_float_menus: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
-			l_menu_zone: SD_MENU_ZONE
+			l_tool_bar_data: SD_TOOL_BAR_DATA
+			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
+			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 		do
 			-- Top
-			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_top)
-			a_menu_datas.extend (l_menu_data)
+			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_top)
+			a_tool_bar_datas.extend (l_tool_bar_data)
 			-- Bottom
-			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_bottom)
-			a_menu_datas.extend (l_menu_data)
+			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_bottom)
+			a_tool_bar_datas.extend (l_tool_bar_data)
 			-- Left
-			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_left)
-			a_menu_datas.extend (l_menu_data)
+			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_left)
+			a_tool_bar_datas.extend (l_tool_bar_data)
 			-- Right	
-			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_right)
-			a_menu_datas.extend (l_menu_data)
+			l_tool_bar_data := save_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_right)
+			a_tool_bar_datas.extend (l_tool_bar_data)
 
-			l_float_menus := internal_docking_manager.menu_manager.floating_menus
+			l_float_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
-				l_float_menus.start
+				l_float_tool_bars.start
 			until
-				l_float_menus.after
+				l_float_tool_bars.after
 			loop
-				l_menu_zone := l_float_menus.item.zone
-				create l_menu_data.make
-				l_menu_data.set_floating (True)
-				l_menu_data.set_title (l_menu_zone.content.title)
-				l_menu_data.set_screen_x_y (l_float_menus.item.screen_x, l_float_menus.item.screen_y)
-				a_menu_datas.extend (l_menu_data)
-				l_float_menus.forth
+				l_tool_bar_zone := l_float_tool_bars.item.zone
+				create l_tool_bar_data.make
+				l_tool_bar_data.set_floating (True)
+				l_tool_bar_data.set_title (l_tool_bar_zone.content.title)
+				l_tool_bar_data.set_screen_x_y (l_float_tool_bars.item.screen_x, l_float_tool_bars.item.screen_y)
+				l_tool_bar_data.set_last_state (l_float_tool_bars.item.zone.assistant.last_state)
+				a_tool_bar_datas.extend (l_tool_bar_data)
+				l_float_tool_bars.forth
 			end
 		end
 
-	save_one_menu_data (a_direction: INTEGER): SD_MENU_DATA is
-			-- Save one menu area config data.
+	save_one_tool_bar_data (a_direction: INTEGER): SD_TOOL_BAR_DATA is
+			-- Save one tool bar area config data.
 		require
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		local
-			l_menu_area: EV_CONTAINER
+			l_tool_bar_area: EV_CONTAINER
 			l_rows: LINEAR [EV_WIDGET]
-			l_menus: DS_ARRAYED_LIST [SD_MENU_ZONE]
-			l_menu_row: SD_MENU_ROW
-			l_row_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_tool_bar: SD_TOOL_BAR_ROW
+			l_row_data: ARRAYED_LIST [TUPLE [STRING, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 		do
-			l_menu_area := internal_docking_manager.menu_manager.menu_container (a_direction)
-			l_rows := l_menu_area.linear_representation
+			l_tool_bar_area := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
+			l_rows := l_tool_bar_area.linear_representation
 			create Result.make
 			from
 				l_rows.start
 			until
 				l_rows.after
 			loop
-				l_menu_row ?= l_rows.item
-				check menu_area_only_has_menu_row: l_menu_row /= Void end
+				l_tool_bar ?= l_rows.item
+				check tool_bar_area_only_has_tool_bar_row: l_tool_bar /= Void end
 				create l_row_data.make (1)
 				Result.rows.extend (l_row_data)
 				from
-					l_menus := l_menu_row.menu_zones
-					l_menus.start
+					l_tool_bars := l_tool_bar.tool_bar_zones
+					l_tool_bars.start
 				until
-					l_menus.after
+					l_tool_bars.after
 				loop
-					if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-						l_row_data.extend ([l_menus.item_for_iteration.content.title, l_menus.item_for_iteration.x_position])
-					else
-						l_row_data.extend ([l_menus.item_for_iteration.content.title, l_menus.item_for_iteration.y_position])
-					end
-					l_menus.forth
+					l_row_data.extend ([l_tool_bars.item_for_iteration.content.title, l_tool_bars.item_for_iteration.position, l_tool_bars.item_for_iteration.assistant.last_state])
+					l_tool_bars.forth
 				end
 				l_rows.forth
 			end
@@ -375,7 +372,7 @@ feature {NONE} -- Implementation for open config.
 		local
 			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
-			l_floating_menu_zones: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
+			l_floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 		do
 			internal_docking_manager.command.remove_auto_hide_zones (False)
 			l_all_main_containers := internal_docking_manager.inner_containers
@@ -401,22 +398,22 @@ feature {NONE} -- Implementation for open config.
 			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs.wipe_out
 			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).set_minimum_width (0)
 			internal_docking_manager.zones.zones.wipe_out
-			-- Remove menu containers
-			internal_docking_manager.menu_container.top.wipe_out
-			internal_docking_manager.menu_container.bottom.wipe_out
-			internal_docking_manager.menu_container.left.wipe_out
-			internal_docking_manager.menu_container.right.wipe_out
-			-- Remove floating menu containers.
-			l_floating_menu_zones := internal_docking_manager.menu_manager.floating_menus
+			-- Remove tool bar containers
+			internal_docking_manager.tool_bar_container.top.wipe_out
+			internal_docking_manager.tool_bar_container.bottom.wipe_out
+			internal_docking_manager.tool_bar_container.left.wipe_out
+			internal_docking_manager.tool_bar_container.right.wipe_out
+			-- Remove floating tool bar containers.
+			l_floating_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
-				l_floating_menu_zones.start
+				l_floating_tool_bars.start
 			until
-				l_floating_menu_zones.after
+				l_floating_tool_bars.after
 			loop
-				l_floating_menu_zones.item.destroy
-				l_floating_menu_zones.forth
+				l_floating_tool_bars.item.destroy
+				l_floating_tool_bars.forth
 			end
-			l_floating_menu_zones.wipe_out
+			l_floating_tool_bars.wipe_out
 
 			l_all_contents := internal_docking_manager.contents
 			from
@@ -570,60 +567,64 @@ feature {NONE} -- Implementation for open config.
 			l_panel.update_tab_group
 		end
 
-	open_menu_datas (a_menu_datas: ARRAYED_LIST [SD_MENU_DATA]) is
-			-- Open four area menu datas.
+	open_tool_bar_datas (a_tool_bar_datas: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+			-- Open four area tool bar datas.
 		require
-			a_menu_datas_not_void: a_menu_datas /= Void
+			a_tool_bar_datas_not_void: a_tool_bar_datas /= Void
 		local
-			l_menu_on_floating: SD_MENU_ZONE
-			l_content: SD_MENU_CONTENT
+			l_tool_bar_on_floating: SD_TOOL_BAR_ZONE
+			l_content: SD_TOOL_BAR_CONTENT
 		do
 			-- Top
-			a_menu_datas.start
-			open_one_menu_data ({SD_DOCKING_MANAGER}.dock_top, a_menu_datas.item)
+			a_tool_bar_datas.start
+			open_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_top, a_tool_bar_datas.item)
 			-- Bottom
-			a_menu_datas.forth
-			open_one_menu_data ({SD_DOCKING_MANAGER}.dock_bottom, a_menu_datas.item)
+			a_tool_bar_datas.forth
+			open_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_bottom, a_tool_bar_datas.item)
 			-- Left
-			a_menu_datas.forth
-			open_one_menu_data ({SD_DOCKING_MANAGER}.dock_left, a_menu_datas.item)
+			a_tool_bar_datas.forth
+			open_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_left, a_tool_bar_datas.item)
 			-- Right
-			a_menu_datas.forth
-			open_one_menu_data ({SD_DOCKING_MANAGER}.dock_right, a_menu_datas.item)
+			a_tool_bar_datas.forth
+			open_one_tool_bar_data ({SD_DOCKING_MANAGER}.dock_right, a_tool_bar_datas.item)
 
-			-- Floating menus
+			-- Floating tool_bars
 			from
-				a_menu_datas.forth
+				a_tool_bar_datas.forth
 			until
-				a_menu_datas.after
+				a_tool_bar_datas.after
 			loop
-				check is_floating_menu_data: a_menu_datas.item.is_floating end
-				create l_menu_on_floating.make (False, internal_docking_manager)
-				l_content := internal_docking_manager.menu_manager.content_by_title (a_menu_datas.item.title)
-				l_menu_on_floating.extend (l_content)
-				l_menu_on_floating.float
-				l_menu_on_floating.set_position (a_menu_datas.item.screen_x, a_menu_datas.item.screen_y)
+				check is_floating_tool_bar_data: a_tool_bar_datas.item.is_floating end
+				create l_tool_bar_on_floating.make (False, internal_docking_manager)
+				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
+				l_tool_bar_on_floating.extend (l_content)
+				l_tool_bar_on_floating.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y)
+				l_tool_bar_on_floating.assistant.set_last_state (a_tool_bar_datas.item.last_state)
+				if a_tool_bar_datas.item.last_state.floating_group_info /= Void then
+					l_tool_bar_on_floating.floating_tool_bar.assistant.position_groups (a_tool_bar_datas.item.last_state.floating_group_info)
+				end
 
-				a_menu_datas.forth
+				a_tool_bar_datas.forth
 			end
 		end
 
-	open_one_menu_data (a_direction: INTEGER; a_menu_data: SD_MENU_DATA) is
+	open_one_tool_bar_data (a_direction: INTEGER; a_tool_bar_data: SD_TOOL_BAR_DATA) is
 			-- Open one mene area config datas.
 		require
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
-			a_menu_data_not_void: a_menu_data /= Void
+			a_tool_bar_data_not_void: a_tool_bar_data /= Void
 		local
-			l_menu_container: EV_CONTAINER
-			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER]]]
+			l_tool_bar_container: EV_CONTAINER
+			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING, INTEGER, SD_TOOL_BAR_ZONE_STATE]]]
 			l_row: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
-			l_content: SD_MENU_CONTENT
-			l_menus: SD_MENU_ROW
-			l_menu_zone: SD_MENU_ZONE
+			l_content: SD_TOOL_BAR_CONTENT
+			l_tool_bar_row: SD_TOOL_BAR_ROW
+			l_tool_bar_zone: SD_TOOL_BAR_ZONE
+			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
-			l_menu_container := internal_docking_manager.menu_manager.menu_container (a_direction)
-			l_rows := a_menu_data.rows
+			l_tool_bar_container := internal_docking_manager.tool_bar_manager.tool_bar_container (a_direction)
+			l_rows := a_tool_bar_data.rows
 			from
 				l_rows.start
 			until
@@ -631,24 +632,32 @@ feature {NONE} -- Implementation for open config.
 			loop
 				l_row := l_rows.item
 				if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-					create l_menus.make (False)
+					create l_tool_bar_row.make (False)
 				else
-					create l_menus.make (True)
+					create l_tool_bar_row.make (True)
 				end
-				l_menu_container.extend (l_menus)
+				l_tool_bar_container.extend (l_tool_bar_row)
+				l_tool_bar_row.set_ignore_resize (True)
 				from
 					l_row.start
 				until
 					l_row.after
 				loop
-					l_content := internal_docking_manager.menu_manager.content_by_title ((l_row.item @ 1).out)
+					l_content := internal_docking_manager.tool_bar_manager.content_by_title ((l_row.item @ 1).out)
 					check l_content_not_void: l_content /= Void end
-					create l_menu_zone.make (False, internal_docking_manager)
-					l_menu_zone.extend (l_content)
-					l_menus.extend (l_menu_zone)
-					l_menus.set_item_position_relative (l_menu_zone, l_row.item.integer_32_item (2))
+					create l_tool_bar_zone.make (False, internal_docking_manager)
+					l_tool_bar_zone.extend (l_content)
+					l_tool_bar_row.extend (l_tool_bar_zone)
+					l_tool_bar_row.record_state
+					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone, l_row.item.integer_32_item (2))
+
+					l_state ?= l_row.item.item (3)
+					check not_void: l_state /= Void end
+					l_tool_bar_zone.assistant.set_last_state (l_state)
+
 					l_row.forth
 				end
+				l_tool_bar_row.set_ignore_resize (False)
 				l_rows.forth
 			end
 		end

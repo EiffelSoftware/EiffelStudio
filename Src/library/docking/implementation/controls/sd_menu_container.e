@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_MENU_CONTAINER
+	SD_TOOL_BAR_CONTAINER
 
 inherit
-	SD_MENU_CONTAINER_IMP
+	SD_TOOL_BAR_CONTAINER_IMP
 
 
 feature {NONE} -- Initialization
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -42,5 +42,5 @@ indexing
 
 
 
-end -- class SD_MENU_CONTAINER
+end -- class SD_TOOL_BAR_CONTAINER
 

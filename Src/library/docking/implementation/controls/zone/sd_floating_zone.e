@@ -73,7 +73,7 @@ feature {NONE} -- Initlization
 			internal_inner_container.set_parent_floating_zone (Current)
 			if internal_floating_state.docking_manager.query.golbal_accelerators /= Void then
 				accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
-				set_title ("Ted")
+				set_title ("")
 				create l_test_key.make_with_code ({EV_KEY_CONSTANTS}.key_a)
 				create l_acceler_test.make_with_key_combination (l_test_key, False, False, False)
 				l_acceler_test.actions.extend (agent on_test_del_it)
@@ -81,6 +81,7 @@ feature {NONE} -- Initlization
 			end
 			focus_in_actions.extend (agent on_dialog_focus_in)
 			focus_out_actions.extend (agent on_dialog_focus_out)
+			resize_actions.extend (agent on_resize)
 		end
 
 	on_test_del_it is
@@ -187,7 +188,9 @@ feature -- Properties
 		local
 			l_zone: SD_ZONE
 		do
-			l_zone ?= internal_inner_container.item
+			if internal_inner_container.readable then
+				l_zone ?= internal_inner_container.item
+			end
 			if l_zone /= Void then
 				Result := content.state
 			else
@@ -208,7 +211,9 @@ feature -- Properties
 		local
 			l_zone: SD_ZONE
 		do
-			l_zone ?= internal_inner_container.item
+			if internal_inner_container.readable then
+				l_zone ?= internal_inner_container.item
+			end
 			if l_zone /= Void then
 				Result := l_zone.content
 			end
@@ -454,6 +459,20 @@ feature {NONE} -- Agents
 		do
 			disable_capture
 			docker_mediator := Void
+		end
+
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- Handle resize actions.
+		local
+			l_zone: SD_ZONE
+		do
+			if internal_inner_container.readable then
+				l_zone ?= internal_inner_container.item
+			end
+			if l_zone /= Void then
+				l_zone.content.state.set_last_floating_height (a_height)
+				l_zone.content.state.set_last_floating_width (a_width)
+			end
 		end
 
 indexing

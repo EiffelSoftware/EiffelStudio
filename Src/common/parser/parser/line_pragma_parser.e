@@ -105,7 +105,7 @@ feature -- Basic Operations
 			end
 		ensure
 			line_number_iff_document: (line_number > 0) = (document /= Void)
-			info_iff_pragma: is_pragma = (is_default xor is_hidden xor (document /= Void))
+			info_iff_pragma: is_pragma = is_pragma_definition
 			no_info_if_not_pragma: not is_pragma implies ((is_default = False) and (is_hidden = False) and (document = Void))
 		end
 
@@ -114,9 +114,17 @@ feature {NONE} -- Implementation
 	Pragma_prefix: STRING is "--#line "
 			-- Prefix to all line pragmas
 
+	is_pragma_definition: BOOLEAN is
+			-- Definition for `is_pragam'.
+		do
+			Result := (is_default and not is_hidden and document = Void) or
+				(is_hidden and not is_default and document = Void) or
+				(document /= Void and not is_default and not is_hidden)
+		end
+
 invariant
 	line_number_iff_document: (line_number > 0) = (document /= Void)
-	info_iff_pragma: is_pragma = (is_default xor is_hidden xor (document /= Void))
+	info_iff_pragma: is_pragma = is_pragma_definition
 	no_info_if_not_pragma: not is_pragma implies ((is_default = False) and (is_hidden = False) and (document = Void))
 
 end -- class LINE_PRAGMA_PARSER

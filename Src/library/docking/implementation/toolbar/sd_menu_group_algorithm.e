@@ -1,10 +1,10 @@
 indexing
-	description: "Menu grouping algorithm."
+	description: "Tool bar items grouping algorithm."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_GROUP_ALGORITHM
+	SD_TOOL_BAR_GROUP_ALGORITHM
 
 create
 	make
@@ -34,24 +34,24 @@ feature -- Command
 			set: a_group_count = group_count
 		end
 
-	set_items_with_width (a_items_with_width: like item_with_width) is
-			-- set `item_with_width'.
+	set_items_width (a_items_width: like item_width) is
+			-- Set `item_width'.
 		require
-			not_void: a_items_with_width /= Void
+			not_void: a_items_width /= Void
 		do
-			item_with_width := a_items_with_width
+			item_width := a_items_width
 		ensure
-			set: item_with_width = a_items_with_width
+			set: item_width = a_items_width
 		end
 
 feature -- Query
 
-	best_grouping: SD_MENU_GROUP_INFO is
+	best_grouping: SD_TOOL_BAR_GROUP_INFO is
 			-- Best grouping. Integer is the group index.
 		do
 			calculate_possible_groups
 			Result := minmum_space_groups
-			Result.set_items_width (item_with_width)
+			Result.set_items_width (item_width)
 		ensure
 			not_void: Result /= Void
 			valid: Result.count = group_count
@@ -60,12 +60,10 @@ feature -- Query
 		end
 
 	is_right_order (a_grouping: like one_possible_group): BOOLEAN is
-			-- If a_grouping integer which indicate index of `item_with_width' order right?
+			-- If a_grouping integer which indicate index of `item_width' order right?
 		require
 			not_void: a_grouping /= Void
 		local
---			l_count: INTEGER
---			l_inner_count: INTEGER
 			l_one_group: ARRAYED_LIST [INTEGER]
 			l_check_index: INTEGER
 		do
@@ -107,10 +105,10 @@ feature -- Query
 				l_item_count := a_group_info.item.count + l_item_count
 				a_group_info.forth
 			end
-			Result := l_item_count = item_with_width.count
+			Result := l_item_count = item_width.count
 		end
 
-	item_with_width: ARRAY [INTEGER]
+	item_width: ARRAY [INTEGER]
 			-- Groups to be calculated. Integer is each group width.
 
 	group_count: INTEGER
@@ -173,7 +171,7 @@ feature {NONE} -- Implementation functions
 			-- 1 to (group_count - 1) all only have one index. The rest indexs all allocate at last group.
 		require
 			valid: a_group_start_index >= 1 and a_group_start_index <= group_count
-			valid: a_item_start_index >= 1 and a_item_start_index <= item_with_width.count
+			valid: a_item_start_index >= 1 and a_item_start_index <= item_width.count
 		local
 			l_one_group: ARRAYED_LIST [INTEGER]
 			l_item_index: INTEGER
@@ -193,7 +191,7 @@ feature {NONE} -- Implementation functions
 					from
 						l_item_index := l_item_index + 1
 					until
-						l_item_index > item_with_width.count
+						l_item_index > item_width.count
 					loop
 						l_one_group.extend (l_item_index)
 						l_item_index := l_item_index + 1
@@ -331,7 +329,7 @@ feature {NONE} -- Implementation functions
 		end
 
 	total_redundance_space (a_group: like one_possible_group): INTEGER is
-			-- Totla redundance of one group
+			-- Total redundance of one group
 		require
 			not_void: a_group /= Void
 			valid: a_group.count = group_count
@@ -350,10 +348,6 @@ feature {NONE} -- Implementation functions
 			end
 		ensure
 			non_negative: Result >= 0
-		rescue
-			debug ("docking")
-				print ("%NSD_MENU_GROUP_DIVIDER total_redundance_space Position condition violate: Result is: "  + Result.out)
-			end
 		end
 
 	one_row_width (a_row: ARRAYED_LIST [INTEGER]): INTEGER is
@@ -366,7 +360,7 @@ feature {NONE} -- Implementation functions
 			until
 				a_row.after
 			loop
-				Result := item_with_width.item (a_row.item) + Result
+				Result := item_width.item (a_row.item) + Result
 				a_row.forth
 			end
 		ensure
@@ -375,8 +369,8 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
-	one_possible_group: SD_MENU_GROUP_INFO is
-			-- Possible item_with_width. Integer is index of one group, the index is same index as `item_with_width'.
+	one_possible_group: SD_TOOL_BAR_GROUP_INFO is
+			-- Possible item_with_width. Integer is index of one group, the index is same index as `item_width'.
 		require
 			only_used_for_type_anchor: False
 		do

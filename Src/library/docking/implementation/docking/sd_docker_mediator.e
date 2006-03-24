@@ -84,8 +84,7 @@ feature -- Hanlde pointer events
 		end
 
 	cancel_tracing_pointer is
-			-- Cancel is_tracing pointer, user may press Escape key?
-
+			-- Cancel tracing pointer.
 		do
 			clear_up
 			cancel_actions.call ([])
@@ -157,7 +156,9 @@ feature -- Hanlde pointer events
 			end
 			if is_dockable then
 				on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
-				on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
+				if not internal_shared.show_all_feedback_indicator then
+					on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
+				end
 			end
 
 		end

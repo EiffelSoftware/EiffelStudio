@@ -12,32 +12,7 @@ feature -- Initlization
 
 	init is
 			-- Initlization
-		local
-			l_temp: EV_PIXMAP
 		do
-			l_temp := arrow_indicator_up
-			l_temp := arrow_indicator_down
-			l_temp := arrow_indicator_left
-			l_temp := arrow_indicator_right
-			l_temp := arrow_indicator_center
-
-			l_temp := arrow_indicator_up_mask
-			l_temp := arrow_indicator_down_mask
-			l_temp := arrow_indicator_left_mask
-			l_temp := arrow_indicator_right_mask
-			l_temp := arrow_indicator_center_mask
-
-			l_temp := arrow_indicator_up_lightening
-			l_temp := arrow_indicator_down_lightening
-			l_temp := arrow_indicator_left_lightening
-			l_temp := arrow_indicator_right_lightening
-
-			l_temp := arrow_indicator_center_lightening_up
-			l_temp := arrow_indicator_center_lightening_down
-			l_temp := arrow_indicator_center_lightening_left
-			l_temp := arrow_indicator_center_lightening_right
-			l_temp := arrow_indicator_center_lightening_center
-
 		end
 
 feature -- Icons
@@ -107,177 +82,75 @@ feature -- Icons
 
 feature -- Side indicators
 
-	arrow_indicator_up: EV_PIXMAP is
-			-- Feedback indicator which is at top.
-		local
-			l_temp: SD_SIDE_INDICATOR
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_up: STRING is
+		deferred
 		end
 
-	arrow_indicator_down: EV_PIXMAP is
-			-- Feedback indicator which is at down.
-		local
-			l_temp: SD_SIDE_INDICATOR
-		once
-			create l_temp.make_bottom_to_top (Void)
-			Result :=  l_temp
+	arrow_indicator_down: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_left: EV_PIXMAP is
-			-- Feedback indicator which is at left.
-		local
-			l_temp: SD_SIDE_INDICATOR
-		once
-			create l_temp.make_left_to_right (Void)
-			Result :=  l_temp
+	arrow_indicator_left: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_right: EV_PIXMAP is
-			-- Feedback indicator which is at right.
-		local
-			l_temp: SD_SIDE_INDICATOR
-		once
-			create l_temp.make_right_to_left (Void)
-			Result :=  l_temp
+	arrow_indicator_right: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_up_mask: EV_PIXMAP is
-			-- Mask of `arrow_indicator_up'.
-		local
-			l_temp: SD_SIDE_MASK
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result := l_temp
+	arrow_indicator_up_lightening: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_down_mask: EV_PIXMAP is
-			-- Mask of `arrow_indicator_down'.
-		local
-			l_temp: SD_SIDE_MASK
-		once
-			create l_temp.make_bottom_to_top (Void)
-			Result := l_temp
+	arrow_indicator_down_lightening: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_left_mask: EV_PIXMAP is
-			-- Mask of `arrow_indicator_left'.
-		local
-			l_temp: SD_SIDE_MASK
-		once
-			create l_temp.make_left_to_right (Void)
-			Result := l_temp
+	arrow_indicator_left_lightening: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_right_mask: EV_PIXMAP is
-			-- Mask of `arrow_indicator_right'.
-		local
-			l_temp: SD_SIDE_MASK
-		once
-			create l_temp.make_right_to_left (Void)
-			Result := l_temp
-		end
-
-	arrow_indicator_up_lightening: EV_PIXMAP is
-			-- Lightening pixmap of `arrow_indicator_up'.
-		local
-			l_temp: SD_SIDE_INDICATOR_LIGHTENING
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result := l_temp
-		end
-
-	arrow_indicator_down_lightening: EV_PIXMAP is
-			-- Lightening pixmap of `arrow_indicator_down'.
-		local
-			l_temp: SD_SIDE_INDICATOR_LIGHTENING
-		once
-			create l_temp.make_bottom_to_top (Void)
-			Result := l_temp
-		end
-
-	arrow_indicator_left_lightening: EV_PIXMAP is
-			-- Lightening pixmap of `arrow_indicator_left'.
-		local
-			l_temp: SD_SIDE_INDICATOR_LIGHTENING
-		once
-			create l_temp.make_left_to_right (Void)
-			Result := l_temp
-		end
-
-	arrow_indicator_right_lightening: EV_PIXMAP is
-			-- Lightening pixmap of `arrow_indicator_right'.
-		local
-			l_temp: SD_SIDE_INDICATOR_LIGHTENING
-		once
-			create l_temp.make_right_to_left (Void)
-			Result := l_temp
+	arrow_indicator_right_lightening: STRING is
+			--
+		deferred
 		end
 
 feature -- Center indicators
 
-	arrow_indicator_center: EV_PIXMAP is
-			-- Feedback indicator which is at center.
-		local
-			l_temp: SD_CENTER_INDICATOR
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_center: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_center_mask: EV_PIXMAP is
-			-- Mask of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_MASK
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result := l_temp
+	arrow_indicator_center_lightening_up: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_center_lightening_up: EV_PIXMAP is
-			-- Top area lightening pixmap of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_INDICATOR_LIGHTENING_TOP
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_center_lightening_down: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_center_lightening_down: EV_PIXMAP is
-			-- Bottom area lightening pixmap of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_INDICATOR_LIGHTENING_BOTTOM
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_center_lightening_left: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_center_lightening_left: EV_PIXMAP is
-			-- Left area lightening pixmap of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_INDICATOR_LIGHTENING_LEFT
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_center_lightening_right: STRING is
+			--
+		deferred
 		end
 
-	arrow_indicator_center_lightening_right: EV_PIXMAP is
-			-- Right area lightening pixmap of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_INDICATOR_LIGHTENING_RIGHT
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
-		end
-
-	arrow_indicator_center_lightening_center: EV_PIXMAP is
-			-- Center area lightening pixmap of `arrow_indicator_center'.
-		local
-			l_temp: SD_CENTER_INDICATOR_LIGHTENING_CENTER
-		once
-			create l_temp.make_top_to_bottom (Void)
-			Result :=  l_temp
+	arrow_indicator_center_lightening_center: STRING is
+			--
+		deferred
 		end
 
 feature -- Old half-tone style icons.
@@ -324,17 +197,52 @@ feature -- Old half-tone style icons.
 			not_void: Result /= Void
 		end
 
-feature -- Menus icons.
+feature -- Tool bars icons.
 
-	menu_customize_indicator: EV_PIXMAP is
-			-- Indicator at right side of a menu.
+	tool_bar_customize_indicator: EV_PIXMAP is
+			-- Indicator at right side of a Tool bar.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	menu_customize_indicator_with_hidden_items: EV_PIXMAP is
-			-- Indictor at right side of a menu when there is hidden menus.
+	tool_bar_customize_indicator_with_hidden_items: EV_PIXMAP is
+			-- Indictor at right side of a tool bar when there is hidden tool bars.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_customize_indicator_horizontal: EV_PIXMAP is
+			-- `tool_bar_customize_indicator' horizontal version.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_customize_indicator_with_hidden_items_horizontal: EV_PIXMAP is
+			-- `tool_bar_customize_indicator_with_hidden_items' horizontal version.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_floating_customize: EV_PIXMAP is
+			-- When tool bar is floating, customize button's pixmap.
+		deferred
+		ensure
+			not_vod: Result /= Void
+		end
+
+	tool_bar_floating_close: EV_PIXMAP is
+			-- When tool bar if floating, close buttons's pixmap.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+	tool_bar_customize_dialog: EV_PIXMAP is
+			-- Pixmap used by EB_TOOL_BAR_EDITOR_BOX.
 		deferred
 		ensure
 			not_void: Result /= Void
@@ -342,7 +250,7 @@ feature -- Menus icons.
 
 feature -- Zone management icons.
 
-	close_context_menu: EV_PIXMAP  is
+	close_context_tool_bar: EV_PIXMAP  is
 			-- "Close" pixmap when user right click one SD_NOTEBOOK_TAB.
 		deferred
 		ensure
@@ -357,7 +265,7 @@ feature -- Zone management icons.
 		end
 
 	close_all: EV_PIXMAP is
-			-- When user click on a SD_NOTEBOOK_TAB, "close all" pixmap shown on context menu.
+			-- When user click on a SD_NOTEBOOK_TAB, "close all" pixmap shown on context Tool bar.
 		deferred
 		ensure
 			not_void: Result /= Void

@@ -2762,7 +2762,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser then
+				if type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 			
@@ -2782,7 +2782,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser or entity_declaration_parser then
+				if not type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				type_node := yyvs79.item (yyvsp79)
@@ -2822,7 +2822,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not feature_parser or not single_parser_type then
+				if not feature_parser or type_parser or expression_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				feature_node := yyvs51.item (yyvsp51)
@@ -2862,7 +2862,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not expression_parser or not single_parser_type then
+				if not expression_parser or type_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				expression_node := yyvs48.item (yyvsp48)
@@ -2902,7 +2902,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not indexing_parser or not single_parser_type then
+				if not indexing_parser or type_parser or expression_parser or feature_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				indexing_node := yyvs102.item (yyvsp102)
@@ -2941,7 +2941,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not invariant_parser or not single_parser_type then
+				if not invariant_parser or type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser then
 					raise_error
 				end
 				invariant_node := yyvs62.item (yyvsp62)
@@ -2981,7 +2981,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not entity_declaration_parser or not single_parser_type then
+				if not entity_declaration_parser or type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser then
 					raise_error
 				end
 				entity_declaration_node := Void
@@ -3020,7 +3020,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if not entity_declaration_parser or not single_parser_type then
+				if not entity_declaration_parser or type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser then
 					raise_error
 				end
 				entity_declaration_node := yyvs112.item (yyvsp112)

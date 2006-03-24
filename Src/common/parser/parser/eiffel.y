@@ -226,55 +226,55 @@ create
 Eiffel_parser:
 		Class_declaration
 			{
-				if type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser then
+				if type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 			}
 	|	Identifier_as_lower Type
 			{
-				if not type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser or entity_declaration_parser then
+				if not type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				type_node := $2
 			}
 	|	TE_FEATURE Feature_declaration
 			{
-				if not feature_parser or not single_parser_type then
+				if not feature_parser or type_parser or expression_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				feature_node := $2
 			}
 	|	TE_CHECK Expression
 			{
-				if not expression_parser or not single_parser_type then
+				if not expression_parser or type_parser or feature_parser or indexing_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				expression_node := $2
 			}
 	|	Indexing
 			{
-				if not indexing_parser or not single_parser_type then
+				if not indexing_parser or type_parser or expression_parser or feature_parser or entity_declaration_parser or invariant_parser then
 					raise_error
 				end
 				indexing_node := $1
 			}
 	|	TE_INVARIANT Class_invariant
 			{
-				if not invariant_parser or not single_parser_type then
+				if not invariant_parser or type_parser or expression_parser or feature_parser or indexing_parser or entity_declaration_parser then
 					raise_error
 				end
 				invariant_node := $2
 			}
 	|	TE_LOCAL
 			{
-				if not entity_declaration_parser or not single_parser_type then
+				if not entity_declaration_parser or type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser then
 					raise_error
 				end
 				entity_declaration_node := Void
 			}
 	|	TE_LOCAL Add_counter Entity_declaration_list Remove_counter
 			{
-				if not entity_declaration_parser or not single_parser_type then
+				if not entity_declaration_parser or type_parser or expression_parser or feature_parser or indexing_parser or invariant_parser then
 					raise_error
 				end
 				entity_declaration_node := $3

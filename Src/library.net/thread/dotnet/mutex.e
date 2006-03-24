@@ -18,7 +18,7 @@ inherit
 
 feature 
 
-	try_lock: BOOLEAN is
+	trylock: BOOLEAN is
 		do
 			Result := mutex_imp.wait_one (0, True)
 		end

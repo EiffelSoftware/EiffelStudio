@@ -64,7 +64,6 @@ feature -- Parser type setting
 		ensure
 			il_parser: il_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 
 	set_type_parser is
@@ -76,7 +75,6 @@ feature -- Parser type setting
 		ensure
 			type_parser: type_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 
 	set_expression_parser is
@@ -88,7 +86,6 @@ feature -- Parser type setting
 		ensure
 			expression_parser: expression_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 		
 	set_feature_parser is
@@ -100,7 +97,6 @@ feature -- Parser type setting
 		ensure
 			feature_parser: feature_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 
 	set_indexing_parser is
@@ -112,7 +108,6 @@ feature -- Parser type setting
 		ensure
 			indexing_parser: indexing_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 		
 	set_invariant_parser is
@@ -124,7 +119,6 @@ feature -- Parser type setting
 		ensure
 			invariant_parser: invariant_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 
 	set_entity_declaration_parser is
@@ -136,18 +130,9 @@ feature -- Parser type setting
 		ensure
 			entity_declaration_parser: entity_declaration_parser
 			parsing_type_set: has_parsing_type
-			single_parser_type: single_parser_type
 		end
 
 feature -- Status report [hide]
-
-	single_parser_type: BOOLEAN is
-			-- Is single entity parser?
-		do
-			Result := il_parser xor type_parser xor expression_parser xor
-				indexing_parser xor entity_declaration_parser xor invariant_parser xor
-				feature_parser
-		end
 
 	has_parsing_type: BOOLEAN is
 			-- Has parsing type been specified?

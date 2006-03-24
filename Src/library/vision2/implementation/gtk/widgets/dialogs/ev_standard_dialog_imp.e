@@ -17,7 +17,7 @@ inherit
 	EV_GTK_WINDOW_IMP
 		redefine
 			interface,
-			has_wm_decorations,
+			default_wm_decorations,
 			on_key_event,
 			initialize
 		end
@@ -177,10 +177,10 @@ feature {NONE} -- Implementation
 
 	interface: EV_STANDARD_DIALOG
 
-	has_wm_decorations: BOOLEAN is
-			-- Does 'Current' have Window Manager decorations?
+	default_wm_decorations: INTEGER is
+			-- Default Window Manager decorations of `Current'.
 		do
-			Result := True
+			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

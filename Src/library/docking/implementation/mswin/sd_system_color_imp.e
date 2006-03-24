@@ -11,14 +11,6 @@ class
 inherit
 	SD_SYSTEM_COLOR
 
-	REFACTORING_HELPER
---	EV_WINDOW_IMP
---		rename
---			make as make_button
---		export
---			{NONE} all
---		end
-
 create
 	make
 
@@ -29,32 +21,17 @@ feature {NONE} -- Implementation
 		local
 			l_err: WEL_ERROR
 		do
-
---			make_button (l_button)
-
 			create {EV_XP_THEME_DRAWER_IMP} theme_drawer
 			create l_err
 			l_err.reset_last_error_code
---			theme_data := theme_drawer.open_theme_data (only_window.item, "Window")
 			if l_err.last_error_code /= 0 then
 				l_err.display_last_error
 			end
-
---			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
-
 			create wel_color
+
 		end
-	theme_drawer: EV_THEME_DRAWER_IMP
---	theme_data: POINTER
 
---	only_window: WEL_WINDOW is
---			--
---		once
---			create {WEL_FRAME_WINDOW} Result.make_top ("Test windows.")
---			Result.show
---		end
-
-feature
+feature -- Querys
 
 	active_border_color: EV_COLOR is
 			-- Redefine.
@@ -107,10 +84,28 @@ feature
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_inactivecaptiontext)
 		end
 
+feature -- Hot zone factory
+
+	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
+			-- Redefine
+		local
+			l_version: WEL_WINDOWS_VERSION
+		do
+			create l_version
+			if l_version.is_windows_2000_compatible then
+				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result
+			else
+				create {SD_HOT_ZONE_OLD_FACTORY} Result
+			end
+		end
+
 feature {NONE}  -- Implementation
 
 	wel_color: WEL_SYSTEM_COLORS
 			-- Wel system colors.
+
+	theme_drawer: EV_THEME_DRAWER_IMP
+			-- Theme drawer used for query system colors.
 
 invariant
 	not_void: wel_color /= Void

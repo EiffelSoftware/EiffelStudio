@@ -241,9 +241,11 @@ feature -- Commands
 					end
 				end
 
-				if successful and (System.has_been_changed or else System.freezing_occurred) then
+				if successful then
 					compilation_counter := compilation_counter + 1
-					save_project (Compilation_modes.is_precompiling)
+					if (System.has_been_changed or else System.freezing_occurred) then
+						save_project (Compilation_modes.is_precompiling)
+					end
 				end
 
 					-- If the compilation is successful we are going to print the

@@ -1,20 +1,19 @@
 indexing
-	description: "Contents that have a menu items client programmer want to managed by docking library."
+	description: "Contents that have a tool bar items that client programmer want to managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_CONTENT
+	SD_TOOL_BAR_CONTENT
 
 create
-	make,
 	make_with_tool_bar
 
 feature {NONE} -- Initlization
 
-	make (a_title: STRING; a_items: like menu_items) is
+	make (a_title: STRING; a_items: like items) is
 			-- Creation method.
 		require
 			a_title_not_void: a_title /= Void
@@ -23,37 +22,36 @@ feature {NONE} -- Initlization
 			l_button: EV_TOOL_BAR_BUTTON
 		do
 			title := a_title
-			menu_items := a_items
+			items := a_items
 
-			create menu_items_texts.make (menu_items.count)
+			create tool_bar_items_texts.make (items.count)
 			from
-				menu_items.start
-				menu_items_texts.start
+				items.start
+				tool_bar_items_texts.start
 			until
-				menu_items.after
+				items.after
 			loop
-				l_button ?= menu_items.item
+				l_button ?= items.item
 				if l_button /= Void then
-					menu_items_texts.extend (l_button.text)
+					tool_bar_items_texts.extend (l_button.text)
 				else
-					menu_items_texts.extend ("")
+					tool_bar_items_texts.extend ("")
 				end
-				menu_items.forth
+				items.forth
 			end
-
 		ensure
 			set: title = a_title
-			set: menu_items = a_items
+			set: items = a_items
 		end
 
 	make_with_tool_bar (a_title: STRING; a_tool_bar: EV_TOOL_BAR) is
-			-- Creation method. A helper function, actually SD_MENU_ZONE only appcept EV_TOOL_BAR_ITEMs.
+			-- Creation method. A helper function, actually SD_TOOL_BAR_ZONE only appcept EV_TOOL_BAR_ITEMs.
 		require
 			a_title_not_void: a_title /= Void
 			a_tool_bar_not_void: a_tool_bar /= Void
 		local
 			l_item: EV_TOOL_BAR_ITEM
-			l_temp_items: like menu_items
+			l_temp_items: like items
 		do
 			from
 				a_tool_bar.start
@@ -65,32 +63,76 @@ feature {NONE} -- Initlization
 				if a_tool_bar.parent /= Void then
 					a_tool_bar.item.parent.prune (a_tool_bar.item)
 				end
-				l_temp_items.extend (l_item)
+
+				l_temp_items.extend (convert_to_sd_item (l_item))
 				a_tool_bar.forth
 			end
 			make (a_title, l_temp_items)
-
 		ensure
 			set: a_title = title
-			set: a_tool_bar.count = menu_items.count
+			set: a_tool_bar.count = items.count
 		end
 
-feature -- Properties
+	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM): SD_TOOL_BAR_ITEM is
+			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
+		require
+			not_void: a_ev_item /= Void
+		local
+			l_tool_bar_button: EV_TOOL_BAR_BUTTON
+			l_tool_bar_separator: EV_TOOL_BAR_SEPARATOR
+
+			l_sd_button: SD_TOOL_BAR_BUTTON
+			l_sd_separator: SD_TOOL_BAR_SEPARATOR
+		do
+			l_tool_bar_button ?= a_ev_item
+			l_tool_bar_separator ?= a_ev_item
+			if l_tool_bar_button /= Void then
+				create l_sd_button.make
+				if l_tool_bar_button.text /= Void  then
+					l_sd_button.set_text (l_tool_bar_button.text)
+				end
+				if l_tool_bar_button.pixmap /= Void then
+					l_sd_button.set_pixmap (l_tool_bar_button.pixmap)
+				end
+				Result := l_sd_button
+			else
+				check must_be_separator: l_tool_bar_separator /= Void end
+				create l_sd_separator.make
+				Result := l_sd_separator
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+feature -- Command
+
+	close is
+			-- Close current
+		do
+			if zone /= Void then
+				zone.destroy
+				if zone.is_floating then
+					zone.floating_tool_bar.destroy
+				end
+			end
+		end
+
+feature -- Query
 
 	title: STRING
-			-- Menu title.
+			-- Tool bar title.
 
-	menu_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+	items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current'.
 
-	items_except_separator: ARRAYED_LIST [EV_TOOL_BAR_ITEM] is
-			-- `menu_items' except EV_TOOL_BAR_SEPARATOR.
+	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		local
-			l_separator: EV_TOOL_BAR_SEPARATOR
-			l_snap_shot: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_snap_shot: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			Result := menu_items.twin
-			l_snap_shot := menu_items.twin
+			Result := items.twin
+			l_snap_shot := items.twin
 			from
 				l_snap_shot.start
 			until
@@ -111,64 +153,71 @@ feature -- Properties
 	group_count: INTEGER is
 			-- Group count, group is buttons before one separatpr.
 		local
-			l_separator: EV_TOOL_BAR_SEPARATOR
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
 			Result := 1
 			from
-				menu_items.start
+				items.start
 			until
-				menu_items.after
+				items.after
 			loop
-				l_separator ?= menu_items.item
+				l_separator ?= items.item
 				if l_separator /= Void then
 					Result := Result + 1
 				end
-				menu_items.forth
+				items.forth
 			end
 		end
 
-	group (a_group_index: INTEGER): ARRAYED_LIST [EV_TOOL_BAR_ITEM] is
-			--
+	group (a_group_index: INTEGER): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+			-- Group items.
 		require
 			valid: 0 < a_group_index and a_group_index <= group_count
 		local
-			l_separator: EV_TOOL_BAR_SEPARATOR
+			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
 			l_stop: BOOLEAN
 		do
 			from
 				create Result.make (1)
 				l_group_count := 1
-				menu_items.start
+				items.start
 			until
-				menu_items.after or l_stop
+				items.after or l_stop
 			loop
-				l_separator ?= menu_items.item
+				l_separator ?= items.item
 				if l_separator /= Void then
 					l_group_count := l_group_count + 1
 				elseif l_group_count = a_group_index then
-					Result.extend (menu_items.item)
+					Result.extend (items.item)
 				end
 				if l_group_count > a_group_index then
 					l_stop := True
 				end
-				menu_items.forth
+				items.forth
 			end
 		ensure
 			not_void: Result /= Void
 			not_contain_separator:
 		end
 
-feature -- Query
+	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to perfrom when close requested.
+		do
+			if internal_close_request_actions = Void then
+				create internal_close_request_actions
+			end
+			Result := internal_close_request_actions
+		end
 
 	item_count_except_separator: INTEGER is
-			-- Item count except EV_TOOL_BAR_SEPARATOR.
+			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		local
-			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-			l_separator: EV_TOOL_BAR_SEPARATOR
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
 			from
-				l_items := menu_items
+				l_items := items
 				l_items.start
 			until
 				l_items.after
@@ -181,140 +230,113 @@ feature -- Query
 			end
 		end
 
-feature {SD_MENU_ZONE, SD_FLOATING_MENU_ZONE, SD_MENU_ZONE_ASSISTANT}  -- Internal issues.
-
-	prune_items_from_parent is
-			-- Prune all items from its parent if exists.
-		do
-			from
-				menu_items.start
-			until
-				menu_items.after
-			loop
-				if menu_items.item.parent /= Void then
-					menu_items.item.parent.prune (menu_items.item)
-				end
-				menu_items.forth
-			end
-		end
-
-	text_of (a_item: EV_TOOL_BAR_ITEM): STRING is
-			-- Text of a_item
+feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
+		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER}  -- Internal issues.
+		
+	seperator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
+			-- Separator after `a_item' if exist.
 		require
-			has: menu_items.has (a_item)
+			has: items.has (a_item)
 		do
-			menu_items.start
-			menu_items.search (a_item)
-			Result := menu_items_texts.i_th (menu_items.index)
-		ensure
-			not_void: Result /= Void
-		end
-
-	size_of (a_item: EV_TOOL_BAR_ITEM; is_vertical: BOOLEAN): INTEGER is
-			-- Size of a_item
-		require
-			has: menu_items.has (a_item)
-			type_valid: is_type_valid (a_item)
-		local
-			l_tool_bar: EV_TOOL_BAR
-		do
-			l_tool_bar := a_item.parent
-			if is_vertical then
-				Result := l_tool_bar.height
-			else
-				Result := l_tool_bar.width
-			end
-		end
-
-	maximum_item_width: INTEGER is
-			-- Maximumu item size.
-		local
-			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
-		do
-			l_items := menu_items
-			from
-				l_items.start
-			until
-				l_items.after
-			loop
-				if Result < l_items.item.parent.width then
-					Result := l_items.item.parent.width
+			items.go_i_th (items.index_of (a_item, 1))
+			if not items.after then
+				items.forth
+				if not items.after then
+					Result ?= items.item
 				end
 			end
 		end
 
-	menu_items_texts: ARRAYED_LIST [STRING];
-			-- All strings on `menu_items'.
+	tool_bar_items_texts: ARRAYED_LIST [STRING];
+			-- All strings on `items'.
 
 	button_count_except_separator: INTEGER is
-			-- Button count except EV_TOOL_BAR_SEPARATOR.
+			-- Button count except SD_TOOL_BAR_SEPARATOR.
 		local
-			l_separetor: EV_TOOL_BAR_SEPARATOR
+			l_separetor: SD_TOOL_BAR_SEPARATOR
 		do
 			from
-				menu_items.start
+				items.start
 			until
-				menu_items.after
+				items.after
 			loop
-				l_separetor ?= menu_items.item
+				l_separetor ?= items.item
 				if l_separetor = Void then
 					Result := Result + 1
 				end
-				menu_items.forth
+				items.forth
 			end
 		end
 
 	item_start_index (a_group_index: INTEGER): INTEGER is
-			-- Start index in `menu_items' of a group. Start index not include EV_TOOL_BAR_SEPARATOR.
+			-- Start index in `items' of a group. Start index not include SD_TOOL_BAR_SEPARATOR.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		local
-			l_separator: EV_TOOL_BAR_SEPARATOR
+			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
 		do
 			from
 				Result := 1
 				l_group_count := 1
-				menu_items.start
+				items.start
 			until
-				menu_items.after or l_group_count = a_group_index
+				items.after or l_group_count = a_group_index
 			loop
-				l_separator ?= menu_items.item
+				l_separator ?= items.item
 				if l_separator /= Void then
 					l_group_count := l_group_count + 1
 				end
 				Result := Result + 1
 
-				menu_items.forth
+				items.forth
 			end
 		ensure
-			valid: Result > 0 and Result <= menu_items.count
+			valid: Result > 0 and Result <= items.count
 		end
 
 	item_end_index (a_group_index: INTEGER): INTEGER is
-			-- End index in `menu_items' of a group. End index not include EV_TOOL_BAR_SEPARATOR.
+			-- End index in `items' of a group. End index not include SD_TOOL_BAR_SEPARATOR.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
 		do
 			if a_group_index /= group_count then
 				Result := item_start_index (a_group_index + 1) - 2
 			else
-				Result := menu_items.count
+				Result := items.count
 			end
 		ensure
-			valid: Result > 0 and Result <= menu_items.count
+			valid: Result > 0 and Result <= items.count
 		end
 
-feature {SD_MENU_ZONE, SD_FLOATING_MENU_ZONE, SD_MENU_ZONE_ASSISTANT} -- Contract support
+	zone: SD_TOOL_BAR_ZONE
+			-- Tool bar zone which Current related. May be Void if not exists.
 
-	is_type_valid (a_item: EV_TOOL_BAR_ITEM): BOOLEAN is
-			-- If a_item type valid?
-		local
-			l_separator: EV_TOOL_BAR_SEPARATOR
+	set_zone (a_zone: SD_TOOL_BAR_ZONE) is
+			-- Set `zone'.
+		require
+			not_void: a_zone /= Void
 		do
-			l_separator ?= a_item
-			Result := l_separator = Void
+			zone := a_zone
+		ensure
+			set: zone = a_zone
 		end
+
+	manager: SD_TOOL_BAR_MANAGER
+			-- Manager which manage Current.
+
+	set_manager (a_manager: SD_TOOL_BAR_MANAGER) is
+			-- Set `manager'
+		do
+			manager := a_manager
+		ensure
+			set: manager = a_manager
+		end
+
+feature {NONE} -- Implementation
+
+	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE;
+			-- Actions to perfrom when close requested.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

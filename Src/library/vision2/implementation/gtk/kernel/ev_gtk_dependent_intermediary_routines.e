@@ -14,7 +14,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 	EV_GTK_KEY_CONVERSION
 
 feature {EV_ANY_I} -- Implementation
@@ -122,7 +122,7 @@ feature {EV_ANY_I} -- Implementation
 				else
 					--print ("Window restored%N")
 					titled_window_imp.call_window_state_event ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum | {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum)
-				end				
+				end
 			end
 		end
 
@@ -231,8 +231,8 @@ feature {EV_ANY_I} -- Implementation
 					a_combo.retrieve_toggle_button
 				when 2 then
 						-- The toggle button has been toggled.
-					a_combo.toggle_button_toggled			
-				end				
+					a_combo.toggle_button_toggled
+				end
 			end
 		end
 
@@ -248,7 +248,7 @@ feature {EV_ANY_I} -- Implementation
 				if a_radio_button_imp.is_selected and then a_toolbar_button_imp.select_actions_internal /= Void then
 					a_toolbar_button_imp.select_actions_internal.call (Void)
 				end
-			elseif a_toolbar_button_imp /= Void and then a_toolbar_button_imp.select_actions_internal /= Void then	
+			elseif a_toolbar_button_imp /= Void and then a_toolbar_button_imp.select_actions_internal /= Void then
 				a_toolbar_button_imp.select_actions_internal.call (Void)
 			end
 		end

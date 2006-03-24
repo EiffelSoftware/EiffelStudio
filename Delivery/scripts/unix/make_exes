@@ -24,8 +24,8 @@ safe_md $INSTALL_DIR/build/spec/unix/bin
 remtrace Recompile Vision2 Tour
 cd $EIFFEL_SRC/vision2_tour
 safe_md $EXPORT_DIR/vision2_tour
-. retrieve_build_files $DEFAULT_CVS_TAG &> $INSTALL_LOG >> $INSTALL_LOG
-. retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
+source retrieve_build_files $DEFAULT_CVS_TAG &> $INSTALL_LOG >> $INSTALL_LOG
+source retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
 cd $EIFFEL_SRC/vision2_tour
 clean_project
 finalize linuxace.ace

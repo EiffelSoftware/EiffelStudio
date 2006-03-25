@@ -56,7 +56,7 @@ feature -- Access
 				l_nat8 := l_ptr.read_natural_8 (i)
 				if l_nat8 <= 127 then
 						-- Form 0xxxxxxx.
-					Result.extend (l_nat8.to_character)
+					Result.extend (l_nat8.to_character_8)
 
 				elseif (l_nat8 & 0xE0) = 0xC0 then
 						-- Form 110xxxxx 10xxxxxx.
@@ -64,7 +64,7 @@ feature -- Access
 					i := i + 1
 					l_nat8 := l_ptr.read_natural_8 (i)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.extend (l_code.to_character)
+					Result.extend (l_code.to_character_8)
 
 				elseif (l_nat8 & 0xF0) = 0xE0 then
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
@@ -96,7 +96,7 @@ feature -- Access
 		do
 			internal_set_with_eiffel_string (a_string, False)
 		ensure
-			string_set: a_string.is_equal (string)
+			string_set: string.is_equal (a_string)
 		end
 
 	share_with_eiffel_string (a_string: STRING_GENERAL) is
@@ -106,7 +106,7 @@ feature -- Access
 		do
 			internal_set_with_eiffel_string (a_string, True)
 		ensure
-			string_set: a_string.is_equal (string)
+			string_set: string.is_equal (a_string)
 		end
 
 	share_from_pointer (a_utf8_ptr: POINTER) is

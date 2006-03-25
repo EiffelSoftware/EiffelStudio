@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EB_METRIC
-	
+
 inherit
 	COMPARABLE
 		undefine
@@ -30,9 +30,6 @@ feature -- Access
 
 	unit: STRING
 		-- `Current' unit.
-
-	tool: EB_METRIC_TOOL
-		-- Associated interface.
 
 	min_scope: INTEGER
 		-- Index of the minimum scope type `Current' applies to.
@@ -66,25 +63,78 @@ feature -- Application to scope
 		deferred
 		end
 
+feature -- Scope
+
+	scope (str: STRING): EB_METRIC_SCOPE is
+			-- Return the scope object whose name is `str'.
+		local
+			cursor: CURSOR
+		do
+			cursor := scopes.cursor
+			from
+				scopes.start
+			until
+				scopes.after or Result /= Void
+			loop
+				if equal (scopes.item.name, str) then
+					Result := scopes.item
+				end
+				scopes.forth
+			end
+			scopes.go_to (cursor)
+		end
+
+	scopes: ARRAYED_LIST [EB_METRIC_SCOPE] is
+		-- List of all scopes already defined. They are not necessarily displayed in
+		-- `scope_combobox' at any time.
+		local
+			a_scope: EB_METRIC_SCOPE
+		once
+			create a_scope
+			Result := a_scope.list_of_scopes
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature -- Progress agent
+
+	progress_changed_actions: ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, STRING]] is
+			-- Actions performed when progress of current metric calculation changes
+			-- The first parameter indicates current progress, the second parameter indicate whole progress,
+			-- the third parameter gives a message.
+		do
+			if internal_progress_actions = Void then
+				create internal_progress_actions
+			end
+			Result := internal_progress_actions
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature{NONE} -- Implementation
+
+	internal_progress_actions: like progress_changed_actions;
+			-- Internal actions for progress change
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

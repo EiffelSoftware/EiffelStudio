@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (a_name, a_unit, raw_metric: STRING; tl: EB_METRIC_TOOL;
+	make (a_name, a_unit, raw_metric: STRING;
 		minimal: INTEGER; array: ARRAY [FUNCTION [ANY, TUPLE [EB_METRIC_SCOPE], BOOLEAN]];
 		op, self: BOOLEAN; basic_func: EB_METRIC_BASIC_FUNCTIONALITIES) is
 			-- Build default array of agents to calculate metrics over scopes (for a given scope, sum on smaller scopes).
@@ -33,13 +33,11 @@ feature -- Initialization
 			correct_name: a_name /= Void and then not a_name.is_empty
 			correct_unit: a_unit /= Void and then not a_unit.is_empty
 			correct_scope: minimal >= Feature_scope and minimal <= Archive_scope
-			tool_not_void: tl /= Void
 			has_raw_metric: raw_metric /= Void and then not raw_metric.is_empty
 			function_object_not_void: basic_func /= Void
 		do
 			name := a_name
 			unit := a_unit
-			tool := tl
 			and_op := op
 			agent_array := array
 			min_scope := minimal
@@ -110,7 +108,7 @@ feature -- Default iterative agents
 			list_features: LIST [E_FEATURE]
 		do
 			if s.index > min_scope then
-				feat_scope := tool.scope (interface_names.metric_this_feature)
+				feat_scope := scope (interface_names.metric_this_feature)
 				list_features := s.class_c.written_in_features
 
 				from
@@ -133,18 +131,18 @@ feature -- Default iterative agents
 		local
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			classes: HASH_TABLE [CLASS_I, STRING]
-			a_class_scope, scope: EB_METRIC_SCOPE
+			a_class_scope, l_scope: EB_METRIC_SCOPE
 			progress_value: INTEGER
+			progress_count: INTEGER
 		do
-				-- Do not work directly on `s' since other metrics rely on it, otherwise, further 
+				-- Do not work directly on `s' since other metrics rely on it, otherwise, further
 				-- calculations will be done on a wrong scope (`s' changes during recursive features).
-			scope := s.twin
-			if scope.index > min_scope then
-				a_class_scope := tool.scope (interface_names.metric_this_class)
-				classes := scope.cluster_i.classes
-
-				tool.progress_dialog.start (classes.count)
-				tool.progress_dialog.set_value (0)
+			l_scope := s.twin
+			if l_scope.index > min_scope then
+				a_class_scope := scope (interface_names.metric_this_class)
+				classes := l_scope.cluster_i.classes
+				progress_count := classes.count
+				progress_value := 0
 
 				from
 					classes.start
@@ -154,22 +152,24 @@ feature -- Default iterative agents
 					if classes.item_for_iteration /= Void and then classes.item_for_iteration.compiled_class /= Void then
 						a_class_scope.set_class_c (classes.item_for_iteration.compiled_class)
 						Result := Result + (processors @ Class_scope).item ([a_class_scope])
-						tool.progress_dialog.set_current_entity (classes.item_for_iteration.name_in_upper)
+						if not progress_changed_actions.is_empty then
+							progress_changed_actions.call ([progress_value, progress_count, classes.item_for_iteration.name_in_upper])
+						end
 						progress_value := progress_value + 1
-						tool.progress_dialog.set_value (progress_value)
+
 					end
 					classes.forth
 				end
 
-				sub_clusters := scope.cluster_i.sub_clusters
+				sub_clusters := l_scope.cluster_i.sub_clusters
 				if sub_clusters.count /= 0 then
 					from
 						sub_clusters.start
 					until
 						sub_clusters.exhausted
 					loop
-						scope.set_cluster_i (sub_clusters.item)
-						Result := Result + default_cluster_value (scope)
+						l_scope.set_cluster_i (sub_clusters.item)
+						Result := Result + default_cluster_value (l_scope)
 						sub_clusters.forth
 					end
 				end
@@ -187,26 +187,26 @@ feature -- Default iterative agents
 			array_classes: ARRAY [CLASS_C]
 			a_class_scope: EB_METRIC_SCOPE
 			progress_value: INTEGER
+			progress_count: INTEGER
 		do
 			if s.index > min_scope then
 				array_classes:= s.system_i.classes.sorted_classes
-				a_class_scope := tool.scope (interface_names.metric_this_class)
-
-				tool.progress_dialog.start (array_classes.count)
-				tool.progress_dialog.set_value (0)
-
+				a_class_scope := scope (interface_names.metric_this_class)
+				progress_count := array_classes.count
+				progress_value := 0
 				from
 					i := 1
 				until
 					i > array_classes.count
 				loop
-					if array_classes.item (i) /= Void then 
+					if array_classes.item (i) /= Void then
 						a_class_scope.set_class_c (array_classes.item (i))
 						Result := Result + (processors @ Class_scope).item ([a_class_scope])
-						tool.progress_dialog.set_current_entity (array_classes.item (i).name_in_upper)
+						if not progress_changed_actions.is_empty then
+							progress_changed_actions.call ([progress_value, progress_count, array_classes.item (i).name_in_upper])
+						end
 					end
 					progress_value := progress_value + 1
-					tool.progress_dialog.set_value (progress_value)
 					i := i + 1
 				end
 			end
@@ -230,7 +230,7 @@ feature -- Specific iterative agents
 				-- but the criteria apply to `Feature_scope', except for the inherited one which needs also a
 				-- reference class.
 	--		if s.index > min_scope then
-				feat_scope := tool.scope (interface_names.metric_this_feature)
+				feat_scope := scope (interface_names.metric_this_feature)
 				feat_scope.set_class_c (s.class_c)
 				table_features := s.class_c.feature_table
 
@@ -304,7 +304,7 @@ feature -- Direct evaluating agents
 			until
 				i > array_classes.count
 			loop
-				if array_classes.item (i) /= Void then 
+				if array_classes.item (i) /= Void then
 					bf.set_test_class (array_classes.item (i))
 					if and_op then
 						bool := True
@@ -321,7 +321,7 @@ feature -- Direct evaluating agents
 								bool := bool and (agent_array @ j).item ([s])
 							else
 								bool := bool or (agent_array @ j).item ([s])
-							end						
+							end
 						end
 						j := j + 1
 					end
@@ -343,7 +343,7 @@ feature -- Direct evaluating agents
 							bool := bool and (agent_array @ j).item ([s])
 						else
 							bool := bool or (agent_array @ j).item ([s])
-						end						
+						end
 					end
 					j := j + 1
 				end
@@ -365,19 +365,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -13,7 +13,8 @@ inherit
 		redefine
 			interface,
 			perform_redraw,
-			initialize
+			initialize,
+			required_width
 		end
 
 create
@@ -29,6 +30,19 @@ feature {EV_ANY} -- Initialization
 		end
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
+
+	required_width: INTEGER is
+			-- Width in pixels required to fully display contents, based
+			-- on current settings.
+		local
+			l_interface: like interface
+		do
+			l_interface := interface
+			Result := l_interface.left_border + text_width + l_interface.right_border
+			if l_interface.pixmap /= Void then
+				Result := Result + l_interface.pixmap.width + l_interface.spacing
+			end
+		end
 
 	text_width: INTEGER is
 			-- `Result' is width required to fully display `text' in `pixels'.

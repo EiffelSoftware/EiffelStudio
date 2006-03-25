@@ -350,6 +350,9 @@ feature -- Displayed messages in text form.
 					scope := tool.scope (tool.selected_scope)
 					metric := tool.metric (tool.selected_metric)
 					check scope /= Void and metric /= Void end
+					tool.progress_dialog.start (100)
+					metric.progress_changed_actions.wipe_out
+					metric.progress_changed_actions.extend (agent display_metric_calculation_progress)
 					if scope.index /= Archive_scope then
 						str := fill_text_area (metric)
 					else
@@ -458,25 +461,48 @@ feature -- Displayed messages in text form.
 			tool.unit_field.enable_sensitive
 		end
 
+feature{NONE} -- Progress dialog display
+
+	display_metric_calculation_progress (progress_value, progress_count: INTEGER; message: STRING) is
+			-- Display progress infomation in `tool'.`progress_dialog'.
+		require
+			progress_value_not_negative: progress_value >= 0
+			pregress_count_not_negative: progress_count >= 0
+			proress_value_not_larger_than_progress_count:
+				progress_value <= progress_count
+			message_not_void: message /= Void
+		local
+			l_progress: DOUBLE
+		do
+			if progress_count > 0 then
+				l_progress := progress_value.to_double / progress_count.to_double
+				l_progress := l_progress * 100
+				tool.progress_dialog.set_value (l_progress.truncated_to_integer)
+			else
+				tool.progress_dialog.set_value (100)
+			end
+			tool.progress_dialog.set_current_entity (message)
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

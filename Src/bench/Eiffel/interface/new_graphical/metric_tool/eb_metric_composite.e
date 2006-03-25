@@ -9,7 +9,7 @@ indexing
 
 class
 	EB_METRIC_COMPOSITE
-	
+
 inherit
 	EB_METRIC
 
@@ -22,19 +22,17 @@ create
 
 feature -- Initialization
 
-	make (a_name, a_unit: STRING; an_operator: EB_METRIC_VALUE; tl:EB_METRIC_TOOL; minimal: INTEGER) is
+	make (a_name, a_unit: STRING; an_operator: EB_METRIC_VALUE; minimal: INTEGER) is
 			-- Assign an operator to `Current'
 		require
 			correct_name: a_name /= Void and then not a_name.is_empty
 			correct_unit: a_unit /= Void and then not a_unit.is_empty
 			correct_scope: minimal >= Feature_scope and minimal <= Archive_scope
-			tool_not_void: tl /= Void
 			correct_operator: an_operator /= Void
 		do
 			name := a_name
 			unit := a_unit
 			operator := an_operator
-			tool := tl
 			min_scope := minimal
 		end
 
@@ -110,19 +108,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

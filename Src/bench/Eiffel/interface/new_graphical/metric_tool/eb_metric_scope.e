@@ -10,8 +10,6 @@ class
 	EB_METRIC_SCOPE
 
 inherit
-	EB_CONSTANTS
-
 	EB_METRIC_SCOPE_INFO
 
 create
@@ -20,19 +18,22 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; an_index: INTEGER) is
+	make (an_index: INTEGER) is
 		require
-			name_not_empty: a_name /= Void and then not a_name.is_empty
-			correct_index: an_index >= Feature_scope and an_index <= Archive_scope
+			correct_index: valid_scope_index (an_index)
 		do
-			name := a_name
 			index := an_index
 		end
 
 feature -- Access
 
-	name: STRING
+	name: STRING is
 		-- Scope name.
+		do
+			Result := scope_name (index)
+		ensure
+			good_result: Result /= Void and then not Result.is_empty
+		end
 
 	index: INTEGER
 		-- Scope index
@@ -81,16 +82,18 @@ feature -- Scopes creation
 			a_feature, a_class, a_cluster, a_system, an_archive: EB_METRIC_SCOPE
 		do
 			create Result.make (5)
-			create a_feature.make (interface_names.metric_this_feature, Feature_scope)
+			create a_feature.make (Feature_scope)
 			Result.extend (a_feature)
-			create a_class.make (interface_names.metric_this_class, Class_scope)
+			create a_class.make (Class_scope)
 			Result.extend (a_class)
-			create a_cluster.make (interface_names.metric_this_cluster, Cluster_scope)
+			create a_cluster.make (Cluster_scope)
 			Result.extend (a_cluster)
-			create a_system.make (interface_names.metric_this_system, System_scope)
+			create a_system.make (System_scope)
 			Result.extend (a_system)
-			create an_archive.make (interface_names.metric_this_archive, Archive_scope)
+			create an_archive.make (Archive_scope)
 			Result.extend (an_archive)
+		ensure
+			good_result: Result /= Void and then Result.count = 5
 		end
 
 indexing
@@ -99,19 +102,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

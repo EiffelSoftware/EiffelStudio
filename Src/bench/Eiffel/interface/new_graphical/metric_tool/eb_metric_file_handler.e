@@ -161,7 +161,7 @@ feature -- Metrics loading
 								end
 								if tree /= Void or agent_array /= Void then
 									if tree /= Void and not is_derived then
-										create composite_metric.make (metric_name, metric_unit, tree, tool, min_scope)
+										create composite_metric.make (metric_name, metric_unit, tree, min_scope)
 										composite_metric.set_linear (is_linear)
 										composite_metric.set_metric_ratio (is_metric_ratio)
 										composite_metric.set_scope_ratio (is_scope_ratio)
@@ -182,7 +182,7 @@ feature -- Metrics loading
 											xml_list.extend (node)
 										end
 									elseif is_derived and agent_array /= Void then
-										create derived_metric.make (metric_name, metric_unit, parent_name, tool, min_scope, agent_array, op, self, bf)
+										create derived_metric.make (metric_name, metric_unit, parent_name, min_scope, agent_array, op, self, bf)
 										if metric_list /= tool.metrics or else tool.metric (derived_metric.name) = Void then
 											metric_list.extend (derived_metric)
 											xml_list.extend (node)
@@ -595,19 +595,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

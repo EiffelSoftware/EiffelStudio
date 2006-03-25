@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_WINDOW_IMP}
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			user_can_resize := False
 			set_is_initialized (True)
 		end
 

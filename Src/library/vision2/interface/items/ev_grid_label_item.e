@@ -32,8 +32,7 @@ inherit
 			is_in_default_state,
 			implementation,
 			create_implementation,
-			initialize,
-			required_width
+			initialize
 		end
 
 create
@@ -369,16 +368,6 @@ feature -- Measurement
 			Result := implementation.text_height
 		ensure
 			result_non_negative: result >= 0
-		end
-
-	required_width: INTEGER is
-			-- Width in pixels required to fully display contents, based
-			-- on current settings.
-		do
-			Result := left_border + text_width + right_border
-			if pixmap /= Void then
-				Result := Result + pixmap.width + spacing
-			end
 		end
 
 feature -- Status report

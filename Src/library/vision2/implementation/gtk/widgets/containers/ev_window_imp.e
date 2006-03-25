@@ -124,6 +124,7 @@ feature {NONE} -- Initialization
 			else
 				disable_border
 			end
+			enable_user_resize
 		end
 
 feature  -- Access

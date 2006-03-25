@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Empty object
 		do
+			create pcre_regex.make
+			reset_all
 		end
 
 feature -- Access

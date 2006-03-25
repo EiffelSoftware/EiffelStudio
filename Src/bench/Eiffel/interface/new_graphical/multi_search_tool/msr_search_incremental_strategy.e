@@ -16,7 +16,8 @@ inherit
 
 creation
 	make,
-	make_with_start
+	make_with_start,
+	make_empty
 
 feature -- Initialization
 
@@ -33,6 +34,8 @@ feature -- Initialization
 			make (a_keyword, a_range, a_class_name, a_path, a_source_text)
 			start_position_internal := a_start
 		end
+
+
 
 feature -- Access
 

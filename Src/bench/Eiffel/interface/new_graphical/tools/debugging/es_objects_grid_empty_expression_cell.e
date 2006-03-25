@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING_GENERAL) is
 			-- Create `Current' and assign `a_text' to `text'
 		do
 			empty_text := a_text
@@ -31,19 +31,19 @@ feature {NONE} -- Initialization
 			create apply_actions
 		end
 
-	make_with_text_and_provider (a_text: STRING; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
 		do
 			make_with_text (empty_text)
 			completion_possibilities_provider := a_provider
 		end
 
-	empty_text: STRING
+	empty_text: STRING_32
 
 feature -- Query
 
-	use_text: STRING
+	use_text: STRING_32
 
-	activate_with_string (a_text: STRING) is
+	activate_with_string (a_text: STRING_32) is
 		do
 			use_text := a_text
 			activate

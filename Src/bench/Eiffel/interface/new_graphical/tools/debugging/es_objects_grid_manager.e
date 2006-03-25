@@ -150,7 +150,7 @@ feature -- Clipboard related
 	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
 			-- Sets an expression from text held in clipboard
 		local
-			text_data: STRING
+			text_data: STRING_32
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
 			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL

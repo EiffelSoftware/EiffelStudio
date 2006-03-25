@@ -37,6 +37,8 @@ indexing
 */
 	
 using System;
+using System.Runtime.Serialization;
+
 namespace EiffelSoftware.Runtime {
 
 [Serializable]
@@ -44,6 +46,11 @@ public class EIFFEL_EXCEPTION: ApplicationException {
 /*
 feature -- Initialization
 */
+	public EIFFEL_EXCEPTION (SerializationInfo info, StreamingContext context) : base (info, context)
+		// New instance for ISerializable conformance.
+	{
+	}
+
 	public EIFFEL_EXCEPTION (int a_code, string a_tag) : base (exception_message (a_code, a_tag))
 		// New instance with `code' set to `a_code' and `tag' with `a_tag'.
 	{

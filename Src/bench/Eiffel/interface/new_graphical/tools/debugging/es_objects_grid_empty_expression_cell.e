@@ -69,7 +69,7 @@ feature -- Query
 			set_text (empty_text)
 		end
 
-	apply_actions: EV_NOTIFY_ACTION_SEQUENCE
+	apply_actions: ACTION_SEQUENCE [TUPLE [STRING_32]]
 		-- Action to perform when applying the changes
 
 	initialize_actions is

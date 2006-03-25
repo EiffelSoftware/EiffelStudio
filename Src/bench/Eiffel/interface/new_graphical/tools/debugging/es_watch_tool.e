@@ -450,7 +450,7 @@ feature {NONE} -- add new expression from the grid
 			new_expression_row.index = watches_grid.row_count
 		end
 
-	add_new_expression_for_context (s: STRING) is
+	add_new_expression_for_context (s: STRING_32) is
 		local
 			expr: EB_EXPRESSION
 		do
@@ -460,7 +460,7 @@ feature {NONE} -- add new expression from the grid
 			end
 		end
 
-	valid_expression_text (s: STRING): BOOLEAN is
+	valid_expression_text (s: STRING_32): BOOLEAN is
 		do
 			Result := s /= Void and then not s.has ('%R') and not s.has ('%N')
 		end

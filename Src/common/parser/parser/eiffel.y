@@ -1968,7 +1968,7 @@ Creation_clause:
 Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
 		{
 			$$ := ast_factory.new_agent_routine_creation_as (
-				ast_factory.new_operand_as (Void, Void, Void), $2, $3, False, $1, Void)
+				Void, $2, $3, False, $1, Void)
 		}
 	|	TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
 		{
@@ -2004,7 +2004,7 @@ Agent_call: TE_AGENT Feature_name_for_call Delayed_actuals
 --	;
 Tilda_agent_call: TE_TILDE Identifier_as_lower Delayed_actuals
 		{
-			$$ := ast_factory.new_old_routine_creation_as ($2, ast_factory.new_operand_as (Void, Void, Void), $2, $3, False, $1)
+			$$ := ast_factory.new_old_routine_creation_as ($2, Void, $2, $3, False, $1)
 		}
 	|	Identifier_as_lower TE_TILDE Identifier_as_lower Delayed_actuals
 		{
@@ -2054,7 +2054,7 @@ Agent_target: Identifier_as_lower
 	|	Typed
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void, Void))}
 	|	TE_QUESTION
-		{ --- $$ := Void
+		{
 			temp_operand_as := ast_factory.new_operand_as (Void, Void, Void)
 			if temp_operand_as /= Void then
 				temp_operand_as.set_question_mark_symbol ($1)

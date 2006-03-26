@@ -655,7 +655,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					formal_type ?= gen_param
 					formal_dec_as ?= context_class.generics.i_th (formal_type.position)
 					check formal_dec_as_not_void: formal_dec_as /= Void end
-					to_check ?= formal_dec_as.constraint_type
+					to_check ?= formal_dec_as.constraint_type (context_class)
 				else
 					formal_type := Void
 					to_check := gen_param
@@ -664,7 +664,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- Evaluation of the constraint in the associated class
 				formal_dec_as ?= associated_class.generics.i_th (i)
 				check formal_dec_as_not_void: formal_dec_as /= Void end
-				constraint_type := formal_dec_as.constraint_type
+				constraint_type := formal_dec_as.constraint_type (associated_class)
 				conformance_on_formal := False
 				is_conform := True
 
@@ -885,7 +885,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				--            * m >= n
 				--            * for each `make_i' where 1 <= i <= n, there is a `j' (1 <= j <= m)
 				--              where `my_make_k' is a redefined/renamed version of `make_i'.
-			crc_list := formal_dec_as.constraint_creation_list
+			crc_list := formal_dec_as.constraint_creation_list (context_class)
 			if formal_type = Void then
 				if to_check.has_associated_class then
 					-- `to_check' may not have an associated class if it represents NONE type, for
@@ -940,7 +940,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				formal_type_dec_as ?= context_class.generics.i_th (formal_type.position)
 				if formal_type_dec_as /= Void and then formal_type_dec_as.has_creation_constraint then
 						-- Check if we have m >= n as specified above.
-					formal_crc_list := formal_type_dec_as.constraint_creation_list
+					formal_crc_list := formal_type_dec_as.constraint_creation_list (context_class)
 					if formal_crc_list.count >= crc_list.count then
 						from
 							crc_list.start

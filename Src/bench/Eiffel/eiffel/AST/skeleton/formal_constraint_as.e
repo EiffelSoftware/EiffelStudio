@@ -46,8 +46,10 @@ create
 
 feature -- Status
 
-	constraint_type: TYPE_A is
+	constraint_type (a_context_class: CLASS_C): TYPE_A is
 			-- Actual type of the constraint.
+		require
+			a_context_class_not_void: a_context_class /= Void
 		do
 			if constraint = Void then
 					-- Default constraint to ANY
@@ -56,11 +58,11 @@ feature -- Status
 					-- No need to check validity of `Result' after converting
 					-- TYPE_AS into TYPE_A because at this stage it should be
 					-- a valid class.
-				Result := type_a_generator.evaluate_type (constraint, System.current_class)
+				Result := type_a_generator.evaluate_type_if_possible (constraint, a_context_class)
 			end
 		end
 
-	has_computed_feature_table: BOOLEAN is
+	has_computed_feature_table (a_context_class: CLASS_C): BOOLEAN is
 			-- Check that we can retrieve a FEATURE_TABLE from the class
 			-- on which we want to check the validity rule about creation
 			-- constraint.
@@ -68,28 +70,31 @@ feature -- Status
 			--| the information on a class which has not been yet compiled, because
 			--| of the order of the compilation which does not take into account
 			--| the constraint part.
+		require
+			a_context_class_not_void: a_context_class /= Void
 		local
 			class_type: CL_TYPE_A
 		do
 			if creation_feature_list /= Void then
-				class_type ?= constraint_type
+				class_type ?= constraint_type (a_context_class)
 				if class_type /= Void then
 					Result := Feat_tbl_server.item (class_type.class_id) /= Void
 				end
 			end
 		end
 
-	constraint_creation_list: LINKED_LIST [FEATURE_I] is
+	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [FEATURE_I] is
 			-- Actual creation routines from a constraint clause
 		require
 			has_creation_constraint: has_creation_constraint
-			has_computed_feature_table: has_computed_feature_table
+			a_context_class_not_void: a_context_class /= Void
+			has_computed_feature_table: has_computed_feature_table (a_context_class)
 		local
 			class_type: CL_TYPE_A
 			feature_name: STRING
 			feat_table: FEATURE_TABLE
 		do
-			class_type ?= constraint_type
+			class_type ?= constraint_type (a_context_class)
 			if class_type /= Void then
 				feat_table := class_type.associated_class.feature_table
 				check
@@ -127,7 +132,7 @@ feature {NONE} -- Access
 
 feature -- Output
 
-	append_signature (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN) is
+	append_signature (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C) is
 			-- Append the signature of current class in `a_text_formatter'
 			-- If `a_short', use "..." to replace constrained generic type, so
 			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
@@ -135,9 +140,11 @@ feature -- Output
 			--| it is useless in this case.
 		require
 			non_void_st: a_text_formatter /= Void
+			a_context_class_not_void: a_context_class /= Void
 		local
 			c_name: STRING
 			eiffel_name: STRING
+			l_type: TYPE_A
 		do
 			if is_reference then
 				a_text_formatter.process_keyword_text (ti_reference_keyword, Void)
@@ -155,9 +162,10 @@ feature -- Output
 				if a_short then
 					a_text_formatter.add_string (once "...")
 				else
-					if constraint_type.has_associated_class then
-						a_text_formatter.process_class_name_text (constraint_type.associated_class.name,
-																	constraint_type.associated_class.lace_class, False)
+					l_type := constraint_type (a_context_class)
+					if l_type /= Void and then l_type.has_associated_class then
+						a_text_formatter.process_class_name_text (l_type.associated_class.name,
+																	l_type.associated_class.lace_class, False)
 					else
 						a_text_formatter.add_string (constraint.dump)
 					end

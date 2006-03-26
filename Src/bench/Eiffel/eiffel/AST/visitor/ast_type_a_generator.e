@@ -44,7 +44,7 @@ inherit
 
 feature -- Status report
 
-	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): CL_TYPE_A is
+	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A is
 			-- Given a TYPE_AS node, try to find its equivalent CL_TYPE_A node.
 		require
 			a_type_not_void: a_type /= Void
@@ -53,7 +53,7 @@ feature -- Status report
 			is_failure_enabled := True
 			current_class := a_context_class
 			a_type.process (Current)
-			Result ?= last_type
+			Result := last_type
 			current_class := Void
 			last_type := Void
 		end

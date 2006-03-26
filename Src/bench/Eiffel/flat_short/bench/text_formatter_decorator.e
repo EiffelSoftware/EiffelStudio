@@ -124,7 +124,6 @@ feature -- Initialization
 			valid_target: target /= Void
 		do
 			source_feature := source
-			assertion_source_feature := source
 			target_feature := target
 			source_class := source.written_class
 			setup_output_strategy
@@ -236,10 +235,8 @@ feature -- Properties
 	source_class: CLASS_C
 			-- Source class from current AST comes.
 
-	source_feature, target_feature, assertion_source_feature: FEATURE_I
-			-- Source feature, target feature and assertion source feature.
-			-- When processin assertion, `source_feature' will not change,
-			-- we access soure feature by `assertion_source_feature'.
+	source_feature, target_feature: FEATURE_I
+			-- Source feature, target feature .
 
 	format: LOCAL_FORMAT
 			-- Current internal formatting directives
@@ -372,14 +369,6 @@ feature -- Setting
 		do
 			ast_output_strategy.set_source_class (c)
 			source_class := c
-		end
-
-	set_source_feature_for_assertion (source: FEATURE_I) is
-			-- Set source feature to be analyzed to `source'.
-		require
-			valid_source: source /= Void
-		do
-			assertion_source_feature := source
 		end
 
 	set_without_tabs is

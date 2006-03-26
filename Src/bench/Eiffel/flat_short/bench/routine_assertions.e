@@ -75,7 +75,6 @@ feature -- Output
 		local
 			l_old_is_with_breakable: BOOLEAN
 		do
-			ctxt.set_source_feature_for_assertion (origin)
 			l_old_is_with_breakable := ctxt.is_with_breakable
 			if hide_breakable_marks then
 				ctxt.set_is_without_breakable
@@ -96,7 +95,6 @@ feature -- Output
 		local
 			l_old_is_with_breakable: BOOLEAN
 		do
-			ctxt.set_source_feature_for_assertion (origin)
 			l_old_is_with_breakable := ctxt.is_with_breakable
 			if hide_breakable_marks then
 				ctxt.set_is_without_breakable

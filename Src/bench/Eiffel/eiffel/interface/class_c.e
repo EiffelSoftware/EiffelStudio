@@ -743,8 +743,8 @@ end
 				loop
 					l_formal_dec ?= generics.item
 					check l_formal_dec_not_void: l_formal_dec /= Void end
-					constraint_type := l_formal_dec.constraint_type
-					if constraint_type /= Void and then constraint_type.has_generics then
+					constraint_type := l_formal_dec.constraint_type (Current)
+					if constraint_type.has_generics then
 						System.expanded_checker.check_actual_type (constraint_type)
 					end
 					generics.forth
@@ -3266,7 +3266,7 @@ end
 		do
 			l_formal_dec ?= generics.i_th (i)
 			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.constraint_type
+			Result := l_formal_dec.constraint_type (Current)
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -5257,7 +5257,7 @@ feature {NONE} -- Implementation
 				loop
 					formal_dec ?= gens.item
 					check formal_dec_not_void: formal_dec /= Void end
-					formal_dec.append_signature (a_text_formatter, a_short)
+					formal_dec.append_signature (a_text_formatter, a_short, Current)
 					gens.forth
 					if not gens.after then
 						a_text_formatter.process_symbol_text (ti_Comma)

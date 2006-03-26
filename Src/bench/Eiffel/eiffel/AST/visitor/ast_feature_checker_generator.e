@@ -2447,17 +2447,21 @@ feature -- Implementation
 			reset_for_unqualified_call_checking
 
 			if l_as.target = Void then
-					-- Target is the open operand `Current'.
+					-- Target is the closed operand `Current'.
 				l_target_type := context.current_class_type
+				if l_needs_byte_node then
+					create {CURRENT_B} l_target_node
+				end
 			else
 				l_as.target.process (Current)
 				l_target_type := last_type
 				l_open ?= l_target_type
 				if l_open /= Void then
-						-- Target is the closed operand `Current'.
+						-- Target is the open operand, but we artificially make its type
+						-- to be the current type.
 					l_target_type := context.current_class_type
-					create {CURRENT_B} l_target_node
-				elseif l_needs_byte_node then
+				end
+				if l_needs_byte_node then
 					l_target_node := last_byte_node
 				end
 			end
@@ -3614,7 +3618,7 @@ feature -- Implementation
 				then
 					l_is_formal_creation := True
 						-- Ensure to update `has_default_create' from `l_formal_dec'
-					l_formal_dec.constraint_creation_list.do_nothing
+					l_formal_dec.constraint_creation_list (context.current_class).do_nothing
 				else
 						-- An entity of type a formal generic parameter cannot be
 						-- created here because there is no creation routine constraints
@@ -5705,7 +5709,7 @@ feature {NONE} -- Agents
 
 				-- Create `l_oargtypes'. But first we need to find the `l_count', number
 				-- of open operands.
-			if an_agent.target = Void or else an_agent.target.class_type /= Void then
+			if an_agent.target /= Void and then an_agent.target.is_open then
 					-- No target is specified, or just a class type is specified.
 					-- Therefore there is at least one argument
 				l_count := 1

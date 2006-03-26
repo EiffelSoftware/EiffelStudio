@@ -31,150 +31,85 @@ feature -- Output
 			-- feature is defined. If not, generate
 			-- true tag.
 		local
-			is_not_first: BOOLEAN
-			source_cl: CLASS_C
 			current_cl: CLASS_C
 			precondition_true: BOOLEAN
-			current_body_index: INTEGER
 			current_item: like item
 			inherited_body: BOOLEAN
 			current_feature: FEATURE_I
-			origin: CLASS_C
+			l_source_class, l_feature_written_class: CLASS_C
+			nb: INTEGER
 		do
+			l_source_class := ctxt.source_class
 			ctxt.begin
-
-			current_body_index := ctxt.assertion_source_feature.body_index
-
-				--| The chained assertion can be empty:
-				--| There are no precursors (and thus no origins detected)
-				--| plus the current feature dosn't have any preconditions itself.
-				--| This means the feature is the origin of a branch not defining
-				--| a precondition.
-			if not is_empty then
-					--| Void precondition is generated in `ASSERTION_SERVER'
-					--| and means: no origin with an assertion (and thus
-					--| the require is true.
-					--| `count' must be greater than one.
-					--| If there is just one assertion in the list without a precondition,
-					--| then that item comes from the origin(s), where all of them doesn't
-					--| have a precondition. And thus we may not generate any precondition.
-					--| This relies on the fact that we only record features that have an assertion
-					--| and *one* origin if all origins doesn't have a precondition.
-
-					-- Search if there is any ancestor without a precondition.
-					-- If so, the precondition is True and we don't show the
-					-- breakable marks on the preconditions.
-				from
-					start
-				until
-					after
-				loop
-					current_item := item
-					current_feature := current_item.origin
-
-						-- We are computing here if body of current feature is the same as an inherited one,
-						-- if so, only assertions comming from that body are executed, not the other ones.
-					inherited_body := inherited_body or else current_feature.body_index = current_body_index
-
-					if current_item.precondition = Void then
-							-- Compute cached data
-						current_cl := current_feature.written_class
-						if source_cl = Void then -- lazzy evaluation.
-							source_cl := ctxt.source_class
-						end
-					end
-					forth
-				end
-			end
-
-			if inherited_body then
-				origin := ctxt.source_class
-				source_cl := ctxt.source_class
-			end
-
+			l_feature_written_class := ctxt.target_feature.written_class
+			inherited_body := l_feature_written_class /= ctxt.current_class
 			from
+				nb := count
 				start
 			until
 				after
 			loop
 				current_item := item
 				current_feature := current_item.origin
-					-- Test if there is an empty but origin fea
+					-- Test if it is a routine with no assertion merged with a routine with assertion,
+					-- in which case we print th
 				if current_item.precondition = Void then
-						-- Compute cached data
-					current_cl := current_feature.written_class
-					if source_cl = Void then -- lazzy evaluation.
-						source_cl := ctxt.current_class
-					end
+					if nb > 1 then
+							-- Compute cached data
+						current_cl := current_feature.written_class
 
-						-- Test if there is an empty but origin fea
-					if current_feature.is_origin and then current_cl /= source_cl and then is_not_first then
-							-- enable the flag for further use
-						precondition_true := True
+							-- Test if there is an empty but origin fea
+						if current_feature.is_origin and then current_cl /= l_feature_written_class then
+								-- enable the flag for further use
+							precondition_true := True
 
-							-- Display the name of the class that has generated
-							-- the "precondition True".
-						ctxt.process_keyword_text (ti_Require_keyword, Void)
-						ctxt.put_space
-						ctxt.process_comment_text (ti_Dashdash, Void)
-						ctxt.put_space
-						ctxt.process_comment_text ("from ", Void)
-						ctxt.put_space
-						ctxt.put_classi (current_cl.lace_class)
-						ctxt.indent
-						ctxt.put_new_line
-						ctxt.process_keyword_text (ti_True_keyword, Void)
-						ctxt.put_new_line
-						ctxt.exdent
-						ctxt.set_first_assertion (False)
+								-- Display the name of the class that has generated
+								-- the "precondition True".
+							ctxt.process_keyword_text (ti_require_keyword, Void)
+							ctxt.put_space
+							ctxt.process_comment_text (ti_dashdash, Void)
+							ctxt.put_space
+							ctxt.process_comment_text ("from ", Void)
+							ctxt.put_space
+							ctxt.put_classi (current_cl.lace_class)
+							ctxt.indent
+							ctxt.put_new_line
+							ctxt.process_keyword_text (ti_true_keyword, Void)
+							ctxt.put_new_line
+							ctxt.exdent
+							ctxt.set_first_assertion (False)
+						end
 					end
-				end
-				if item.precondition /= Void then
+				else
 					ctxt.begin
+					ctxt.set_source_class (current_item.origin.written_class)
 						-- If the precondition is True, we don't show the
 						-- breakable marks on the preconditions.
- 					if inherited_body then
-							-- In that case, only preconditions inherited from definition of routine
-							-- are activated, the other one coming from the other branches are not
-							-- taken into account.
-						item.format_precondition (ctxt, not origin.simple_conform_to (item.origin.written_class))
- 					else
- 						item.format_precondition (ctxt, precondition_true)
- 					end
+					if inherited_body then
+						current_item.format_precondition (ctxt,
+							not l_feature_written_class.simple_conform_to (current_item.origin.written_class))
+					else
+						current_item.format_precondition (ctxt, precondition_true)
+					end
 					ctxt.commit
-					is_not_first := True
 				end
 				forth
 			end
 			set_not_in_assertion
 			ctxt.commit
+			ctxt.set_source_class (l_source_class)
 		end
 
 	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR) is
 			-- Format format_postcondition to `ctxt'.
 		local
-			is_not_first: BOOLEAN
-			current_body_index: INTEGER
 			inherited_body: BOOLEAN
-			origin: CLASS_C
+			l_source_class: CLASS_C
+			l_feature_written_class: CLASS_C
 		do
-			current_body_index := ctxt.assertion_source_feature.body_index
-			from
-				start
-			until
-				after
-			loop
-					-- We are computing here if body of current feature is the same as an inherited one,
-					-- if so, only assertions comming from that body are executed, not the other ones.
-				inherited_body := inherited_body or else item.origin.body_index = current_body_index
-
-				forth
-			end
-
-			if inherited_body then
-				origin := ctxt.source_class
-			end
-
+			l_source_class := ctxt.source_class
+			l_feature_written_class := ctxt.target_feature.written_class
+			inherited_body := l_feature_written_class /= ctxt.current_class
 			ctxt.begin
 			set_in_assertion
 			from
@@ -182,20 +117,21 @@ feature -- Output
 			until
 				after
 			loop
-				if item.postcondition /= void then
-					ctxt.begin;
+				if item.postcondition /= Void then
+					ctxt.begin
+					ctxt.set_source_class (item.origin.written_class)
 						-- Only postconditions inherited from definition of routine
 						-- are activated, the other one coming from the other branches are not
 						-- taken into account.
 					item.format_postcondition (ctxt,
-						inherited_body and then not origin.simple_conform_to (item.origin.written_class))
-					is_not_first := true
+						inherited_body and then not l_feature_written_class.simple_conform_to (item.origin.written_class))
 					ctxt.commit
 				end
 				forth
 			end
 			set_not_in_assertion
 			ctxt.commit
+			ctxt.set_source_class (l_source_class)
 		end
 
 feature -- Debug

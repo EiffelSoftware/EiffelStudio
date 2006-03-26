@@ -1036,7 +1036,9 @@ feature {NONE} -- Implementation
 				end
 			else
 				if l_as.expression /= Void then
+					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
 					l_as.expression.process (Current)
+					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 				else
 					if l_as.target /= Void then
 						l_as.target.process (Current)
@@ -1207,37 +1209,13 @@ feature {NONE} -- Implementation
 		local
 			l_operand: OPERAND_AS
 			l_feat: E_FEATURE
-			l_need_dot: BOOLEAN
 		do
 				-- No type set for this expression?
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
 				text_formatter_decorator.put_space
 				if l_as.target /= Void then
-					l_operand := l_as.target
-					if l_operand.class_type /= Void then
-						text_formatter_decorator.process_symbol_text (ti_l_curly)
-						l_operand.class_type.process (Current)
-						text_formatter_decorator.process_symbol_text (ti_r_curly)
-						l_need_dot := True
-					elseif l_operand.expression /= Void then
-						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-						l_operand.expression.process (Current)
-						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-						l_need_dot := True
-					elseif l_operand.target /= Void then
-						l_operand.target.process (Current)
-						l_need_dot := True
-					else
-							-- Open operand
-						text_formatter_decorator.process_symbol_text (ti_question)
-						l_need_dot := True
-					end
-				else
-					text_formatter_decorator.process_symbol_text (ti_question)
-					l_need_dot := True
-				end
-				if l_need_dot then
+					l_as.target.process (Current)
 					text_formatter_decorator.process_symbol_text (ti_dot)
 				end
 				l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
@@ -1367,7 +1345,6 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_name: STRING
-			l_bin_eq_as: BIN_EQ_AS
 			l_formal: FORMAL_A
 			l_type: TYPE_A
 			l_left_type: TYPE_A
@@ -2367,7 +2344,7 @@ feature {NONE} -- Implementation
 				l_as.constraint.process (Current)
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				l_type := l_formal_dec.constraint_type
+				l_type := l_formal_dec.constraint_type (current_class)
 				check
 					l_type_is_not_formal: not l_type.is_formal
 				end
@@ -3295,7 +3272,7 @@ feature {NONE} -- Implementation: helpers
 				end
 				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type.associated_class
+				Result := l_formal_dec.constraint_type (current_class).associated_class
 			else
 				Result := l_type.associated_class
 			end
@@ -3424,14 +3401,14 @@ feature {NONE} -- Implementation: helpers
 				end
 
 				if l_as.target = Void then
-						-- Target is the open operand `Current'.
+						-- Target is the closed operand `Current'.
 					l_target_type := current_class.actual_type
 				else
 					l_as.target.process (Current)
 					l_target_type := last_type
 					l_open ?= l_target_type
 					if l_open /= Void then
-							-- Target is the closed operand `Current'.
+							-- Target is actually an open operand.
 						l_target_type := current_class.actual_type
 					end
 				end
@@ -3456,7 +3433,7 @@ feature {NONE} -- Implementation: helpers
 
 					-- Create `l_oargtypes'. But first we need to find the `l_count', number
 					-- of open operands.
-				if l_as.target = Void or else l_as.target.class_type /= Void then
+				if l_as.target /= Void and then l_as.target.is_open then
 						-- No target is specified, or just a class type is specified.
 						-- Therefore there is at least one argument
 					l_count := 1

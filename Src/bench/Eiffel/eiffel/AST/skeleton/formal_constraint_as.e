@@ -127,8 +127,10 @@ feature {NONE} -- Access
 
 feature -- Output
 
-	append_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_signature (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN) is
 			-- Append the signature of current class in `a_text_formatter'
+			-- If `a_short', use "..." to replace constrained generic type, so
+			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
 			--| We do not produce the creation constraint clause since
 			--| it is useless in this case.
 		require
@@ -150,31 +152,36 @@ feature -- Output
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text (ti_Constraint)
 				a_text_formatter.add_space
-				if constraint_type.has_associated_class then
-					a_text_formatter.process_class_name_text (constraint_type.associated_class.name,
-																constraint_type.associated_class.lace_class, False)
+				if a_short then
+					a_text_formatter.add_string (once "...")
 				else
-					a_text_formatter.add_string (constraint.dump)
-				end
-				if has_creation_constraint then
-					from
-						creation_feature_list.start
-						a_text_formatter.add_space
-						a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
-					until
-						creation_feature_list.after
-					loop
-						a_text_formatter.add_space
-						eiffel_name := creation_feature_list.item.internal_name
-						a_text_formatter.add (eiffel_name)
-						creation_feature_list.forth
-						if not creation_feature_list.after then
-							a_text_formatter.process_symbol_text (ti_Comma)
-						end
+					if constraint_type.has_associated_class then
+						a_text_formatter.process_class_name_text (constraint_type.associated_class.name,
+																	constraint_type.associated_class.lace_class, False)
+					else
+						a_text_formatter.add_string (constraint.dump)
 					end
-					a_text_formatter.add_space
-					a_text_formatter.process_keyword_text (ti_End_keyword, Void)
+					if has_creation_constraint then
+						from
+							creation_feature_list.start
+							a_text_formatter.add_space
+							a_text_formatter.process_keyword_text (ti_Create_keyword, Void)
+						until
+							creation_feature_list.after
+						loop
+							a_text_formatter.add_space
+							eiffel_name := creation_feature_list.item.internal_name
+							a_text_formatter.add (eiffel_name)
+							creation_feature_list.forth
+							if not creation_feature_list.after then
+								a_text_formatter.process_symbol_text (ti_Comma)
+							end
+						end
+						a_text_formatter.add_space
+						a_text_formatter.process_keyword_text (ti_End_keyword, Void)
+					end
 				end
+
 			end
 		end
 

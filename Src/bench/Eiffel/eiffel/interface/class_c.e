@@ -4455,38 +4455,20 @@ feature -- Output
 			-- then add a `*' to the class name.
 		require
 			non_void_st: a_text_formatter /= Void
-		local
-			formal_dec: FORMAL_CONSTRAINT_AS
-			old_cluster: CLUSTER_I
-			gens: like generics
 		do
-			append_name (a_text_formatter)
-			if a_with_deferred_symbol and is_deferred then
-				a_text_formatter.add_char ('*')
-			end
-			gens := generics
-			if gens /= Void then
-				old_cluster := Inst_context.cluster
-				Inst_context.set_cluster (cluster)
-				a_text_formatter.add_space
-				a_text_formatter.process_symbol_text (ti_L_bracket)
-				from
-					gens.start
-				until
-					gens.after
-				loop
-					formal_dec ?= gens.item
-					check formal_dec_not_void: formal_dec /= Void end
-					formal_dec.append_signature (a_text_formatter)
-					gens.forth
-					if not gens.after then
-						a_text_formatter.process_symbol_text (ti_Comma)
-						a_text_formatter.add_space
-					end
-				end
-				a_text_formatter.process_symbol_text (ti_R_bracket)
-				Inst_context.set_cluster (old_cluster)
-			end
+			append_signature_internal (a_text_formatter, a_with_deferred_symbol, False)
+		end
+
+	append_short_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN) is
+			-- Append short signature of current class in `a_text_formatter'.
+			-- Short signature is to use "..." to replace constrained generic type, so
+			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
+			-- Short signature is used to save some display space.		
+			-- If `a_with_deferred_symbol' then add a `*' to the class name.
+		require
+			non_void_st: a_text_formatter /= Void
+		do
+			append_signature_internal (a_text_formatter, a_with_deferred_symbol, True)
 		end
 
 	append_name (a_text_formatter: TEXT_FORMATTER) is
@@ -5247,6 +5229,46 @@ feature {NONE} -- Implementation
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
 
+	append_signature_internal (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN; a_short: BOOLEAN) is
+			-- Append the signature of current class in `a_text_formatter'. If `a_with_deferred_symbol'
+			-- then add a `*' to the class name.
+			-- If `a_short', use "..." to replace constrained generic type.			
+		require
+			non_void_st: a_text_formatter /= Void
+		local
+			formal_dec: FORMAL_CONSTRAINT_AS
+			old_cluster: CLUSTER_I
+			gens: like generics
+		do
+			append_name (a_text_formatter)
+			if a_with_deferred_symbol and is_deferred then
+				a_text_formatter.add_char ('*')
+			end
+			gens := generics
+			if gens /= Void then
+				old_cluster := Inst_context.cluster
+				Inst_context.set_cluster (cluster)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (ti_L_bracket)
+				from
+					gens.start
+				until
+					gens.after
+				loop
+					formal_dec ?= gens.item
+					check formal_dec_not_void: formal_dec /= Void end
+					formal_dec.append_signature (a_text_formatter, a_short)
+					gens.forth
+					if not gens.after then
+						a_text_formatter.process_symbol_text (ti_Comma)
+						a_text_formatter.add_space
+					end
+				end
+				a_text_formatter.process_symbol_text (ti_R_bracket)
+				Inst_context.set_cluster (old_cluster)
+			end
+		end
+			
 invariant
 
 		-- Default invariants common to all kind of generation.

@@ -282,7 +282,15 @@ cluster
 			".svn"; 
 		end
 	
-	all configuration:	"$EIFFEL_SRC/work/configuration"
+	all configuration:	"$EIFFEL_SRC/Eiffel/library/configuration"
+		exclude
+			".svn";
+		end
+
+	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
+		exclude
+			".svn"; "EIFGEN"; 
+		end
 
 external
 

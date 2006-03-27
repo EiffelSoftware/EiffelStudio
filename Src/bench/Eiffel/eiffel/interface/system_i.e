@@ -857,7 +857,7 @@ end
 			if workbench.automatic_backup then
 				create l_file_name.make_from_string (workbench.backup_subdirectory)
 				l_file_name.set_file_name (backup_info)
-				create l_file.make (l_file_name)
+				create l_file.make_open_write (l_file_name)
 			end
 			l_classes := l_vis_build.removed_classes
 			from

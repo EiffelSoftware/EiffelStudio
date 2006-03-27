@@ -33,9 +33,12 @@ inherit
 	CONF_CLUSTER
 		rename
 			name as cluster_name,
-			parent as parent_cluster
+			parent as parent_cluster,
+			children as sub_clusters
 		redefine
-			classes, parent_cluster
+			classes,
+			parent_cluster,
+			sub_clusters
 		end
 
 create {CONF_COMP_FACTORY}
@@ -62,26 +65,8 @@ feature -- Attributes
 			-- Parent cluster of Current cluster
 			-- (Void implies it is a top level cluster)
 
-	sub_clusters: ARRAYED_LIST [CLUSTER_I] is
+	sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			-- List of sub clusters for Current cluster
-		local
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
-			l_cl_i: CLUSTER_I
-		do
-			create Result.make (0)
-			l_clusters := target.clusters
-			from
-				l_clusters.start
-			until
-				l_clusters.after
-			loop
-				l_cl_i ?= l_clusters.item_for_iteration
-				if l_cl_i.parent_cluster = Current then
-					Result.extend (l_cl_i)
-				end
-				l_clusters.forth
-			end
-		end
 
 feature -- Access
 

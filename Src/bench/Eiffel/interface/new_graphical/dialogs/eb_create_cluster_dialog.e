@@ -242,8 +242,7 @@ feature {NONE} -- Implementation
 				loop
 					clus := clus_list.item
 					if
-						not clus.is_precompiled and then
-						not clus.is_library
+						not clus.is_readonly
 					 then
 						create i.make_with_text (clus.cluster_name)
 						cluster_list.extend (i)

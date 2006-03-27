@@ -283,8 +283,7 @@ feature -- Basic operations
 				loop
 					clus := clus_list.item
 					if
-						not clus.is_precompiled and then
-						not clus.is_library and then
+						not clus.is_readonly and then
 						clus.parent_cluster = Void
 					 then
 						create i.make_with_text (clus.cluster_name)

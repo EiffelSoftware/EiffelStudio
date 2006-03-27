@@ -13,6 +13,7 @@ inherit
 
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
+	CONF_REFACTORING
 
 create
 
@@ -60,13 +61,14 @@ feature -- Execution
 				text_formatter.add_new_line;
 
 					--| Skip precompile clusters for now
-				from
-					clusters.start
-				until
-					clusters.after or else not (clusters.item.is_precompiled)
-				loop
-					clusters.forth
-				end;
+				conf_todo
+--				from
+--					clusters.start
+--				until
+--					clusters.after or else not (clusters.item.is_precompiled)
+--				loop
+--					clusters.forth
+--				end;
 				from
 					--| Print user defined clusters
 				until
@@ -77,17 +79,18 @@ feature -- Execution
 					clusters.go_to (cursor);
 					clusters.forth
 				end
-				from
-					--| Print precompiled clusters.
-					clusters.start
-				until
-					clusters.after or else not (clusters.item.is_precompiled)
-				loop
-					cursor := clusters.cursor;
-					display_a_cluster (clusters.item)
-					clusters.go_to (cursor);
-					clusters.forth
-				end
+				conf_todo
+--				from
+--					--| Print precompiled clusters.
+--					clusters.start
+--				until
+--					clusters.after or else not (clusters.item.is_precompiled)
+--				loop
+--					cursor := clusters.cursor;
+--					display_a_cluster (clusters.item)
+--					clusters.go_to (cursor);
+--					clusters.forth
+--				end
 			end
 		end;
 
@@ -104,11 +107,12 @@ feature -- Execution
 
 			text_formatter.add ("Cluster: ");
 			text_formatter.add_group (cluster, cluster.cluster_name);
-			if cluster.is_precompiled then
-				text_formatter.add (" (Precompiled, ")
-			else
-				text_formatter.add (" (")
-			end;
+			conf_todo
+--			if cluster.is_precompiled then
+--				text_formatter.add (" (Precompiled, ")
+--			else
+--				text_formatter.add (" (")
+--			end;
 			nb_of_classes := classes.count;
 			text_formatter.add_int (nb_of_classes);
 			if nb_of_classes > 1 then

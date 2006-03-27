@@ -33,6 +33,8 @@ inherit
 	EV_SHARED_APPLICATION
 		export {NONE} all end
 
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -56,39 +58,32 @@ feature -- Basic operations
 
 	execute is
 			-- Open the Project configuration window.
---		local
---			tool_window: EB_SYSTEM_WINDOW
---			rescued: BOOLEAN
---			wd: EV_WARNING_DIALOG
+		local
+			rescued: BOOLEAN
+			wd: EV_WARNING_DIALOG
 		do
-			conf_todo
---			if not rescued then
---				if ev_application.ctrl_pressed then
---					gc_window.show
---				else
---					if
---						(not Workbench.is_compiling or else
---						Workbench.last_reached_degree <= 5)
---					then
---						if not system_window_is_valid then
---							create tool_window.make
---							set_system_window (tool_window)
---						end
---						system_window.initialize_content
---						system_window.raise
---					else
---						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
---						wd.show_modal_to_window (window_manager.
---							last_focused_development_window.window)
---					end
---				end
---			end
---		rescue
---			display_error_message (window_manager.last_focused_development_window.window)
---			if catch_exception then
---				rescued := True
---				retry
---			end
+			if not rescued then
+				if ev_application.ctrl_pressed then
+					gc_window.show
+				else
+					if
+						(not Workbench.is_compiling or else
+						Workbench.last_reached_degree <= 5)
+					then
+						fixme("add new configuration window")
+					else
+						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
+						wd.show_modal_to_window (window_manager.
+							last_focused_development_window.window)
+					end
+				end
+			end
+		rescue
+			display_error_message (window_manager.last_focused_development_window.window)
+			if catch_exception then
+				rescued := True
+				retry
+			end
 		end
 
 feature {NONE} -- Implementation

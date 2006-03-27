@@ -189,8 +189,7 @@ feature {NONE} -- Implementation
 --				end
 			elseif cluster_i /= Void then
 				if
-					not cluster_i.is_library and
-					not cluster_i.is_precompiled
+					not cluster_i.is_readonly
 				then
 					if cluster_i.classes.is_empty and then cluster_i.sub_clusters.is_empty then
 						str := cluster_i.cluster_name.twin

@@ -48,13 +48,6 @@ feature -- Status report
 			end
 		end
 
-	editable: BOOLEAN is
-			-- Can the class represented by `Current' be edited?
-		do
-			conf_todo
---			Result := not data.is_read_only and then not data.cluster.is_library
-		end
-
 feature -- Status setting
 
 	set_data (a_class: CLASS_I) is

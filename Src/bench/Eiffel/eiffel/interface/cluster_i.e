@@ -56,11 +56,6 @@ feature -- Attributes
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
 
-	is_precompiled: BOOLEAN
-			-- Is the cluster precompiled
-			-- It won't be removed even if it is no more
-			-- in the local Ace file
-
 	parent_cluster: CLUSTER_I
 			-- Parent cluster of Current cluster
 			-- (Void implies it is a top level cluster)

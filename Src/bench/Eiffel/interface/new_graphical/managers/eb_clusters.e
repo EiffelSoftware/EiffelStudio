@@ -393,10 +393,8 @@ feature -- Element change
 				not retried
 			then
 				if
-					not new_cluster.is_precompiled and then
-					not old_cluster.is_precompiled and then
-					not new_cluster.is_library and then
-					not old_cluster.is_library and then
+					not new_cluster.is_readonly and then
+					not old_cluster.is_readonly and then
 					old_cluster.path /= Void and then
 					new_cluster.path /= Void
 				then

@@ -140,11 +140,11 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-binary_format='-n32'
 cc='c99'
-ccflags='-DLANGUAGE_C -G0 -xansi'
+ccflags='-DLANGUAGE_C -G0 -xansi -n32 -mips4'
+ccldflags=''
 cpp='CC'
-cppflags='-DLANGUAGE_C -G0 -xansi'
+cppflags='$ccflags'
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -157,12 +157,11 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
-optimize="-O3 $binary_format $platform_arch"
-platform_arch='-mips4'
+optimize="-O3"
 voidflags='15'
 #Check value for next 1
 warning_level='-woff 1552'
-wkoptimize="-O0 $binary_format $platform_arch"
+wkoptimize="-O0"
 
 #Makefiles
 ar='ar'
@@ -172,7 +171,7 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
-ldflags="-multigot $binary_format $platform_arch"
+ldflags="-multigot -n32 -mips4"
 ldsharedflags="$ldflags -shared -o"
 libs='-lm'
 ln='/bin/ln'

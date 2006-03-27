@@ -1079,7 +1079,10 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_quick_search_close_color_value)
 		end
 
-
+	Icon_trash_can_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_trash_can_color_value)
+		end
 
 feature -- Reading
 
@@ -1306,6 +1309,7 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (3, 13, icon_quick_search_next_color_value)
 			Result.add_pixmap (4, 13, icon_quick_search_previous_color_value)
 			Result.add_pixmap (5, 13, icon_quick_search_advanced_color_value)
+			Result.add_pixmap (6, 13, icon_trash_can_color_value)
 		end
 
 feature {NONE} -- Constants
@@ -1502,7 +1506,8 @@ feature {NONE} -- Constants
 			icon_quick_search_next_color_value,
 			icon_quick_search_previous_color_value,
 			icon_quick_search_advanced_color_value,
-			icon_quick_search_close_color_value		: INTEGER is unique;
+			icon_quick_search_close_color_value,
+			icon_trash_can_color_value	: INTEGER is unique;
 
 
 indexing

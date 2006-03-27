@@ -3,11 +3,11 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 6.00.0365 */
-/* at Thu Feb 23 09:25:48 2006
+ /* File created by MIDL compiler version 6.00.0361 */
+/* at Mon Mar 13 16:35:46 2006
  */
 /* Compiler settings for metadata_consumer.idl:
-    Oicf, W1, Zp8, env=Win64 (32b run)
+    Oicf, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 

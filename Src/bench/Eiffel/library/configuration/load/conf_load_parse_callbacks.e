@@ -706,6 +706,7 @@ feature {NONE} -- Implementation attribute processing
 					end
 				end
 				if l_parent /= Void then
+					l_parent.add_child (current_cluster)
 					current_cluster.set_parent (l_parent)
 					l_loc.set_parent (l_parent.location)
 				end

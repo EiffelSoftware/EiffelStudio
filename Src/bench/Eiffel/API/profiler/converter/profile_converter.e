@@ -145,7 +145,7 @@ end
 			if
 				(file.exists and then file.is_writable)
 				or else file.is_creatable
-			then	
+			then
 				file.open_write
 debug("PROFILE_CONVERT")
 	io.error.put_string ("Calling `spit_info' on `profile_information'.")
@@ -263,7 +263,7 @@ end
 			class_n, feature_n: STRING
 			dtype: INTEGER
 			eclass: CLASS_C
-			a_cluster: CLUSTER_I
+			a_group: CONF_GROUP
 		do
 			if config.get_function_name_column = column_nr then
 				if token_string.item (1) = '<' then
@@ -302,7 +302,7 @@ end
 						then
 							eclass := Eiffel_system.class_of_dynamic_id (dtype)
 							class_n := eclass.name_in_upper
-							a_cluster := eclass.cluster
+							a_group := eclass.group
 						else
 							class_n := dtype.out
 						end
@@ -321,10 +321,10 @@ debug("PROFILE_CONVERT")
 	io.error.put_new_line
 
 	io.error.put_string ("Cluster name: ")
-	if a_cluster = Void then
+	if a_group = Void then
 		io.error.put_string ("<unknown_cluster>")
 	else
-		io.error.put_string (a_cluster.cluster_name)
+		io.error.put_string (a_group.name)
 	end
 	io.error.put_new_line
 end
@@ -411,7 +411,7 @@ end
 			column_nr := 1
 			token_type := Newline_token
 		end
-			
+
 	perform_profile_line is
 			-- Sets up a PROFILE_DATA object for storage into the
 			-- `profile_information' object.
@@ -863,26 +863,26 @@ feature {NONE} -- Constants
 	Whitespace_token: INTEGER is unique
 
 	Error_token: INTEGER is unique;
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -161,6 +161,7 @@ feature
 			-- tables.
 		local
 			a_class: CLASS_C;
+			eif_class: EIFFEL_CLASS_C
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
 			object_name, file_name: STRING;
@@ -206,15 +207,16 @@ feature
 						end;
 						types.forth;
 					end;
-	
+
 					if (not a_class.is_precompiled) then
+						eif_class := a_class.eiffel_class_c
 							-- Feature table
 						create file_name.make (16);
-						file_name.append (a_class.base_file_name);
-						file_name.append_integer (a_class.feature_table_file_id);
+						file_name.append (eif_class.base_file_name);
+						file_name.append_integer (eif_class.feature_table_file_id);
 						file_name.append_character (Feature_table_file_suffix);
 						file_name.append (".o");
-						object_baskets.item (a_class.packet_number).extend (file_name);
+						object_baskets.item (eif_class.packet_number).extend (file_name);
 					end;
 				end
 				i := i + 1
@@ -225,25 +227,25 @@ feature
 			-- Run time with which the application must be linked
 		do
 			create Result.make (256)
-			
+
 			if System.has_dynamic_runtime then
 				Result.append ("-L")
 			end
-			
+
 			Result.append (Lib_location)
-	
+
 			if System.has_dynamic_runtime then
 				Result.append (" -l")
 			else
 				Result.append ("$prefix")
 			end
-	
+
 			if System.has_multithreaded then
 				Result.append ("$mt_prefix")
 			end
-	
+
 			Result.append ("$wkeiflib")
-	
+
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
 			end
@@ -259,7 +261,7 @@ feature
 			if System.uses_precompiled then
 				from
 					precomp := Precompilation_directories;
-					precomp.start 
+					precomp.start
 				until
 					precomp.after
 				loop
@@ -282,19 +284,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

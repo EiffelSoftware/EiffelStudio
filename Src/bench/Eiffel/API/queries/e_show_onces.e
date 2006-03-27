@@ -42,7 +42,7 @@ feature -- Output
 				a_text_formatter.process_keyword_text (ti_is_keyword, Void)
 				a_text_formatter.add_space
 				const ?= f;	--| Cannot fail
-				ec := const.type.associated_class.lace_class
+--				ec := const.type.associated_class.lace_class
 				if ec = eiffel_system.character_class then
 					str := "'"
 				elseif ec = eiffel_system.string_class then

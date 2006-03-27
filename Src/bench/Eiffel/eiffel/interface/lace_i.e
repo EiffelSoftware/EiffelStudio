@@ -12,6 +12,30 @@ inherit
 	SHARED_LACE_PARSER
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
+	SHARED_CONF_FACTORY
+	PROJECT_CONTEXT
+	CONF_ACCESS
+	SHARED_EXEC_ENVIRONMENT
+	KL_SHARED_FILE_SYSTEM
+		export
+			{NONE} all
+		end
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+	SHARED_EIFFEL_PARSER
+		export
+			{NONE} all
+		end
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -21,43 +45,38 @@ feature {NONE} -- Initialization
 	make is
 			-- Lace initialization
 		do
-			create argument_list.make (2)
 		end
 
+feature -- Status
+
+	is_error: BOOLEAN
+			-- Is there an error?
+
 feature -- Access
-
-	file_name: STRING
-			-- Path to the universe/system description
-
-	date: INTEGER
-			-- Time stamp of file named `file_name'
-
-	argument_list: ARRAYED_LIST [STRING]
-			-- List of command line arguments stored in Ace file.
 
 	application_working_directory: STRING
 			-- Current directory stored in Ace file.
 
+	file_name: STRING
+			-- Full path to the universe/system description
+
+	target_name: STRING
+			-- Target to use. (optional, if only one target)
+
+	project_path: STRING
+			-- Project path to use. (optional)
+
+	date: INTEGER
+			-- Time stamp of file named `file_name'
+
 	successful: BOOLEAN
 			-- Is the last compilation successful?
 
-	not_first_parsing: BOOLEAN
-			-- Has first parsing been done?
-
-	full_degree_6_needed: BOOLEAN
-			-- Must a full degree 6 be performed?
-			-- (Used when adding new clusters)
-
-	need_directory_lookup: BOOLEAN
-			-- Some Eiffel classes were not found after a first directory browsing,
-			-- we force a complete browsing of directory structure for all clusters.
-
 	has_changed: BOOLEAN
-			-- Did AST changed after a recompilation?
+			-- Did configuraiton change?
 
-	old_universe: UNIVERSE_I
-			-- Universe of the previous compilation
-			-- usefull for checking  the removed clusters
+	has_group_changed: BOOLEAN
+			-- Did configuration change (and is not group equivalent to the previous).
 
 	date_has_changed: BOOLEAN is
 		local
@@ -69,32 +88,122 @@ feature -- Access
 			Result := new_date /= date
 		end
 
+feature -- Conversion from old
+
+	convert_ace (a_file: STRING) is
+			-- Convert from an ace file in `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+		local
+			l_load: CONF_LOAD_LACE
+			l_print: CONF_PRINT_VISITOR
+			l_file: PLAIN_TEXT_FILE
+			vd00: VD00
+			vd72: VD72
+			vd82: VD82
+		do
+				-- load config from ace
+			create l_load
+			l_load.retrieve_configuration (a_file)
+			if l_load.is_error then
+				create vd00
+				vd00.set_error (l_load.last_error)
+				Error_handler.insert_error (vd00)
+				Error_handler.raise_error
+			end
+
+				-- set file name of the converted config
+			file_name := Execution_environment.current_working_directory
+			file_name.append_character (Operating_environment.directory_separator)
+			file_name.append ("Ace.acex")
+
+				-- write converted config
+			create l_print.make
+			l_load.last_system.process (l_print)
+			check
+				no_error: not l_print.is_error
+			end
+			create l_file.make (file_name)
+			if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
+				l_file.open_write
+				l_file.put_string (l_print.text)
+				l_file.close
+			else
+				create vd72
+				vd72.set_file_name (file_name)
+				Error_handler.insert_error (vd72)
+				Error_handler.raise_error
+			end
+
+				-- add conversion warning
+			create vd82.make (a_file)
+			Error_Handler.insert_warning (vd82)
+		ensure
+			file_name_set: file_name /= Void
+		end
+
+	convert_project (a_file: STRING) is
+			-- Convert from a project file in `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+		local
+			l_old_project: PROJECT_EIFFEL_FILE
+			l_ace: STRING
+			vd21: VD21
+			vd81: VD81
+		do
+				-- get ace file location
+			create l_old_project.make (a_file)
+			if not l_old_project.exists or else not l_old_project.is_readable then
+				create vd21
+				vd21.set_file_name (a_file)
+				Error_handler.insert_error (vd21)
+				Error_handler.raise_error
+			end
+			l_old_project.open_read
+			l_old_project.parse_project_header
+			l_ace := l_old_project.ace_file_path
+			if l_ace = Void or else l_ace.is_empty then
+				create vd81
+				vd81.set_file_name (a_file)
+				Error_handler.insert_error (vd81)
+				Error_handler.raise_error
+			end
+
+				-- convert ace
+			convert_ace (l_ace)
+		end
+
+
 feature -- Status setting
 
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
+			-- if s is relative, the file_name will be absolut.
 		require
 			s_not_void: s /= Void
 		do
-			file_name := s
-		ensure
-			file_name_set: file_name = s
+			file_name := file_system.absolute_pathname (s)
 		end
 
-	set_application_working_directory (s: STRING) is
-			-- Assign `s' to `application_working_directory'.
+	set_target_name (s: STRING) is
+			-- Assign `s' to `target_name'.
+		require
+			s_ok: s /= Void and then not s.is_empty
 		do
-			application_working_directory := s
+			target_name := s
 		ensure
-			application_working_directory_set: application_working_directory = s
+			target_name_set: target_name = s
 		end
 
-	set_need_directory_lookup (v: BOOLEAN) is
-			-- Assign `v' to `need_directory_lookup'.
+	set_project_path (s: like project_path) is
+			-- Assign `s' to `project_path'.
+		require
+			s_ok: s /= Void and then not s.is_empty
 		do
-			need_directory_lookup := v
+			project_path := s
 		ensure
-			need_directory_lookup_set: need_directory_lookup = v
+			project_path_set: project_path = s
 		end
 
 	reset_date_stamp is
@@ -105,8 +214,36 @@ feature -- Status setting
 			date := date - 1
 		end
 
+	load is
+			-- Load configuration system (config file, project if available)
+		local
+			l_file: RAW_FILE
+		do
+				-- default config file
+			if file_name = Void then
+				file_name := Execution_environment.current_working_directory
+				file_name.append_character (Operating_environment.directory_separator)
+				file_name.append ("Ace")
+				create l_file.make (file_name)
+				if not l_file.exists then
+					file_name := Execution_environment.current_working_directory
+					file_name.append_character (Operating_environment.directory_separator)
+					file_name.append ("Ace.acex")
+				end
+			end
+
+			retrieve_config
+			compute_target
+			do_user_file
+		rescue
+			if Rescue_status.is_error_exception then
+					-- Reset `Workbench'
+				successful := False
+			end
+		end
+
 	recompile is
-			-- Recompile ACE description
+			-- Recompile config description
 		require
 			file_name_exists: file_name /= Void
 		local
@@ -118,395 +255,981 @@ feature -- Status setting
 			debug ("Timing")
 				create d1.make_now
 			end
-			if not full_degree_6_needed then
-				ptr := file_name.to_c
-				create file.make (file_name)
-				has_changed := False
-				if not file.exists then
-					successful := False
-					create vd21
-					vd21.set_file_name (file_name)
-					Error_handler.insert_error (vd21)
-					Error_handler.raise_error
-				end
 
-					-- If last compilation was not successful, we have to trigger
-					-- the parse again even though the `date' on file did not change.
-				if
-					root_ast = Void or else
-					date_has_changed or else
-					not successful
-				then
-					do_recompilation
-					date := eif_date ($ptr)
-				else
-					build_universe
-				end
+			ptr := file_name.to_c
+			create file.make (file_name)
+			has_group_changed := False
+			has_changed := False
+			if not file.exists then
+				successful := False
+				create vd21
+				vd21.set_file_name (file_name)
+				Error_handler.insert_error (vd21)
+				Error_handler.raise_error
+			end
+
+				-- If last compilation was not successful, we have to trigger
+				-- the parse again even though the `date' on file did not change.
+			if
+				conf_system = Void or else
+				(universe.target = Void and universe.new_target = Void) or else
+				date_has_changed or else
+				not successful
+			then
+				has_changed := True
+				do_recompilation
+				date := eif_date ($ptr)
 			else
-				force_recompile
+				if universe.new_target = Void then
+						-- target hasn't changed so use this as the new one
+					universe.set_new_target (universe.target)
+				end
 			end
 			debug ("Timing")
 				create d2.make_now
-				print ("Degree 6 duration: ")
+				print ("Degree 7 duration: ")
 				print (d2.relative_duration (d1).fine_seconds_count)
 				print ("%N")
-			end
-		end
-
-	force_recompile is
-			-- Force a complete recompilation to find any missing classes
-			-- or clusters.
-		local
-			new_ast: like root_ast
-			conv_opt: FREE_OPTION_SD
-			tmp_ast: like root_ast
-		do
-			new_ast := parsed_ast
-			root_ast := new_ast
-			saved_root_ast := new_ast
-			build_universe
-			if successful and full_degree_6_needed then
-				full_degree_6_needed := False
-					-- Remove the force_recompile option(s) from the Ace file.
-					--| We can't just save the contents of `root_ast' because at this point `all' clusters are expanded.
-				tmp_ast := root_ast
-				root_ast := parsed_ast
-
-				if root_ast /= Void and then root_ast.defaults /= Void then
-					from
-						root_ast.defaults.start
-					until
-						root_ast.defaults.after
-					loop
-						conv_opt ?= root_ast.defaults.item.option
-						if conv_opt /= Void and then conv_opt.code = {FREE_OPTION_SD}.force_recompile then
-							root_ast.defaults.remove
-						else
-							root_ast.defaults.forth
-						end
-					end
-					save_content
-				end
-				root_ast := tmp_ast
-			end
-		end
-
-	parent_of_cluster (c: CLUSTER_SD): CLUSTER_SD is
-			-- Parent of `c'.
-		local
-			cluster_list: ARRAYED_LIST [CLUSTER_SD]
-			cu: CURSOR
-		do
-			if
-				root_ast.clusters /= Void and then
-				c.parent_name /= Void
-			then
-				from
-					cluster_list := root_ast.clusters
-					cu := cluster_list.cursor
-					cluster_list.start
-				until
-					cluster_list.after or
-					Result /= Void
-				loop
-					if cluster_list.item.cluster_name /= Void then
-						if cluster_list.item.cluster_name.is_equal (c.parent_name) then
-							Result := cluster_list.item
-						end
-					end
-					cluster_list.forth
-				end
-				cluster_list.go_to (cu)
-			end
-		end
-
-	path_of_cluster (c: CLUSTER_SD): STRING is
-			-- Full path of `c'.
-		local
-			i: INTEGER
-			ee:EXECUTION_ENVIRONMENT
-		do
-			if c = Void then
-				Result := "Void"
-			else
-				create ee
-				if c.directory_name.item (1) /= '$' then
-					Result := c.directory_name
-				else
-					if c.directory_name.item (2) = '/' then
-						Result :=
-							path_of_cluster (parent_of_cluster (c)) +
-							c.directory_name.substring (2, c.directory_name.count)
-					else
-						i := c.directory_name.index_of ('/', 1)
-						if i > 0 then
-							Result :=
-								ee.get (c.directory_name.substring (2, i -1)) +
-								c.directory_name.substring (i, c.directory_name.count)
-						else
-							Result :=
-								ee.get (c.directory_name.substring (2, c.directory_name.count))
-						end
-					end
-				end
-			end
-		end
-
-	dependency_dates: HASH_TABLE [INTEGER, STRING]
-			-- Dates that files changed last.
-
-	process_external_dependencies is
-			-- Process `dependencies'.
-		local
-			cluster: CLUSTER_SD
-			cluster_list: LINEAR [CLUSTER_SD]
-
-			ds: LINEAR [DEPEND_SD]
-			fs: ARRAYED_LIST [ID_SD]
-			d: INTEGER
-			str: ANY
-			changed: BOOLEAN
-			old_cwd: STRING
-			ee:EXECUTION_ENVIRONMENT
-			new_dates: HASH_TABLE [INTEGER, STRING]
-			path: STRING
-		do
-			create ee
-			if dependency_dates = Void then
-				create dependency_dates.make (10)
-			end
-			if root_ast.clusters /= Void then
-				create new_dates.make (dependency_dates.count)
-				from
-					cluster_list := root_ast.clusters
-					cluster_list.start
-				until
-					cluster_list.after
-				loop
-					cluster := cluster_list.item
-					cluster_list.forth
-					if
-						not cluster.belongs_to_all and then
-						cluster.cluster_properties /= Void and then
-						cluster.cluster_properties.dependencies /= Void
-					then
-						old_cwd := ee.current_working_directory
-						ee.change_working_directory (path_of_cluster (cluster))
-						from
-							ds := cluster.cluster_properties.dependencies
-							ds.start
-						until
-							ds.after
-						loop
-							from
-								fs := ds.item.depend_on
-								fs.start
-								changed := False
-							until
-								fs.after
-							loop
-								path := fs.item
-								if path.item (1) = '$' then
-									path :=
-										path_of_cluster (cluster) +
-										path.substring (2, path.count)
-								end
-								str := path.to_c
-								d := eif_date ($str)
-								if d /= dependency_dates.item (fs.item) then
-									changed := True
-								end
-								new_dates.force (d, fs.item)
-								fs.forth
-							end
-							if changed then
-								ee.system (ds.item.script)
-							end
-							ds.forth
-						end
-						ee.change_working_directory (old_cwd)
-					end
-				end
-				from
-					new_dates.start
-				until
-					new_dates.after
-				loop
-					dependency_dates.force (
-						new_dates.item_for_iteration,
-						new_dates.key_for_iteration
-					)
-					new_dates.forth
-				end
-			end
-		end
-
-	root_ast: ACE_SD
-			-- Root of last parsed ACE
-
-	saved_root_ast: like root_ast
-			-- Root of last parsed ACE. Untouched after building clusters.
-
-	ace_options: ACE_OPTIONS is
-			-- Options explicitly set in the ace file
-		once
-				create Result
-		end
-
-	parsed_ast: ACE_SD is
-			-- Parse Ace file and return a new AST.
-		do
-			Parser.reset_comment_list
-			Parser.parse_file (file_name, False)
-			Result ?= Parser.ast
-			if Result /= Void then
-				update_ace_for_eweasel_on_dotnet (Result)
-				update_ace_for_dotnet (Result)
-				Result.set_comment_list (Parser.comment_list)
-			end
-		end
-
-	do_recompilation is
-			-- Recompile ACE description
-		local
-			old_ast, new_ast: like root_ast
-			conv_opt: FREE_OPTION_SD
-		do
-				-- Lace parsing
-			old_ast := saved_root_ast
-			new_ast := parsed_ast
-
-			if new_ast = Void or else error_handler.error_list.count > 0 then
-				successful := False
-			else
-				if
-					new_ast.defaults /= Void
-				then
-					from
-						new_ast.defaults.start
-					until
-						new_ast.defaults.after
-					loop
-						conv_opt ?= new_ast.defaults.item.option
-						if
-							conv_opt /= Void and then
-							conv_opt.code = {FREE_OPTION_SD}.Force_recompile and then
-							new_ast.defaults.item.value.is_yes
-						then
-							full_degree_6_needed := True
-						end
-						new_ast.defaults.forth
-					end
-				end
-				if not full_degree_6_needed then
-					if old_ast /= Void then
-							-- Adapt changes from `new_ast' to `old_ast' and
-							-- return new updated AST.
-						if not new_ast.same_as (old_ast) then
-							saved_root_ast := new_ast
-							root_ast := root_ast.updated_ast (old_ast, new_ast)
-							has_changed := True
-						end
-					else
-						saved_root_ast := new_ast.duplicate
-						root_ast := new_ast
-						has_changed := True
-					end
-					build_universe
-				else
-					force_recompile
-				end
 			end
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
 				successful := False
 			end
+		end
+
+	compile_all_classes: BOOLEAN
+			-- Are all classes root? i.e. all the classes must be compiled
+
+feature {NONE} -- Implementation
+
+	conf_system: CONF_SYSTEM
+			-- Current parsed configuration system.
+
+	user_options: USER_OPTIONS
+			-- User options, like the eifgen path.
+
+	retrieve_config is
+			-- Parse config file.
+		require
+			file_name_ok: file_name /= Void and then not file_name.is_empty
+		local
+			l_load: CONF_LOAD
+			vd00: VD00
+		do
+				-- load configuration file
+			create l_load
+			l_load.retrieve_configuration (file_name)
+			if l_load.is_error then
+				create vd00
+				vd00.set_error (l_load.last_error)
+				Error_handler.insert_error (vd00)
+				error_handler.raise_error
+			end
+
+			conf_system := l_load.last_system
+		ensure
+			conf_system_set: conf_system /= Void
+		rescue
+			is_error := True
+		end
+
+	compute_target is
+			-- Compute the target to compile.
+		require
+			conf_system_set: conf_system /= Void
+		local
+			l_new_target: CONF_TARGET
+			vd69: VD69
+			vd70: VD70
+		do
+				-- get new target
+			if target_name /= Void then
+				l_new_target := conf_system.targets.item (target_name)
+			elseif conf_system.targets.count = 1 then
+				l_new_target := conf_system.targets.linear_representation.first
+			else
+				create vd69
+				Error_handler.insert_error (vd69)
+				Error_handler.raise_error
+			end
+			if l_new_target = Void then
+				create vd70.make (target_name)
+				Error_handler.insert_error (vd70)
+				Error_handler.raise_error
+			end
+			target_name := l_new_target.name
+
+			internal_target_name.set_name (target_name)
+		ensure
+			target_name_set: target_name /= Void and then not target_name.is_empty
+			valid_target: conf_system.targets.has (target_name)
+		rescue
+			is_error := True
+		end
+
+	do_user_file is
+			-- Handle the user file.
+			-- If we have a user file retrieve it, else create it
+			-- If we have a -project_directory argument, set the new path, else set the default path.
+			-- Store the new file.
+		require
+			file_name_ok: file_name /= Void and then not file_name.is_empty
+			target_name_set: target_name /= Void and then not target_name.is_empty
+			valid_target: conf_system.targets.has (target_name)
+		local
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+			l_user_file: STRING
+			l_file: RAW_FILE
+			vd21: VD21
+			vd72: VD72
+			vd76: VD76
+			l_changed: BOOLEAN
+			i: INTEGER
+			l_dir: DIRECTORY
+		do
+			l_user_file := file_name+".user"
+
+				-- if file exists, load it
+			create l_file.make (l_user_file)
+			if l_file.exists then
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_reading
+					create l_sed_facilities
+					user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+					l_file.close
+				else
+					create vd21
+					vd21.set_file_name (l_user_file)
+					Error_handler.insert_error (vd21)
+					Error_handler.raise_error
+				end
+			end
+
+				-- if we don't have a user_options object, create one.
+			if user_options = Void then
+				create user_options
+			end
+
+				 -- update project path
+			if project_path /= Void then
+					-- check if directory is present
+				create l_dir.make (project_path)
+				if not l_dir.exists then
+					create vd76
+					error_handler.insert_error (vd76)
+					error_handler.raise_error
+				end
+				project_path.append_character (Operating_environment.directory_separator)
+				project_path.append ("EIFGENS")
+
+				l_changed := equal (project_path, user_options.eifgen)
+				user_options.set_eifgen (project_path)
+			elseif user_options.eifgen /= Void then
+				project_path := user_options.eifgen
+			else
+				project_path := file_name.twin
+				i := project_path.last_index_of (Operating_environment.directory_separator, project_path.count)
+				project_path.replace_substring ("EIFGENS", i+1, project_path.count)
+
+				user_options.set_eifgen (project_path)
+				l_changed := True
+			end
+
+				-- create EIFGENS directory if necessary
+			create l_dir.make (project_path)
+			if not l_dir.exists then
+				l_dir.create_dir
+			end
+			if not l_dir.exists then
+				create vd76
+				error_handler.insert_error (vd76)
+				error_handler.raise_error
+			end
+
+				-- store the updated config file
+			if l_changed then
+				l_file.open_write
+				if l_file.is_writable then
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_writing
+					create l_sed_facilities
+					l_sed_facilities.independent_store (user_options, l_sed_rw, True)
+					l_file.close
+				else
+					create vd72
+					vd72.set_file_name (l_user_file)
+					Error_handler.insert_error (vd72)
+					Error_handler.raise_error
+				end
+			end
+		ensure
+			user_options_set: user_options /= Void
+		rescue
+			is_error := True
+		end
+
+	do_recompilation is
+			-- Recompile config description.
+		do
+			retrieve_config
+			compute_target
+			build_universe
+		ensure
+			conf_system_set: conf_system /= Void
 		end
 
 	build_universe is
 			-- Build the universe using the AST
 		require
-			valid_root: root_ast /= Void
+			valid_conf_system: conf_system /= Void
+			valid_target: conf_system.targets.has (target_name)
 		local
-			precomp_r: PRECOMP_R
-			old_system: SYSTEM_I
-			precompiled_project: PAIR [D_PRECOMPILED_SD, STRING]
 			sys: SYSTEM_I
+			l_new_target, l_old_target: CONF_TARGET
+			vd00: VD00
+			vd73: VD73
+			vd74: VD74
+			vd75: VD75
+			l_option_vis: CONF_RECOMPUTE_OPTIONS
+			l_errors: LIST [CONF_ERROR]
+			l_old_pre, l_new_pre: CONF_PRECOMPILE
+			l_first: BOOLEAN
+			l_root: CONF_ROOT
 		do
-			argument_list.wipe_out
-			application_working_directory := Void
-			process_external_dependencies
-				-- Options explicitely set in the ace file
-				--| Processing is done in `build_universe' in ACE_SD
-			ace_options.reset
+				-- get new target
+			l_new_target := conf_system.targets.item (target_name)
 
-			if not not_first_parsing then
-				precompiled_project := root_ast.precompiled_project
-				if precompiled_project /= Void then
-					Degree_output.put_string ("Retrieving precompile...")
-					create precomp_r
-					precomp_r.retrieve_precompiled (precompiled_project)
+			l_root := l_new_target.root
+			compile_all_classes := l_root /= Void and then l_root.is_all_root
+
+				-- init system, universe, ...
+			eiffel_project.init_system
+			sys := workbench.system
+			if sys = Void then
+				l_first := True
+					-- do we have a precompile?
+				if l_new_target.precompile /= Void then
+						--  load precompile as system
+					retrieve_precompile (l_new_target)
+					sys := workbench.system
 				else
+						-- no precompile, create new system
 					create sys.make
-					Eiffel_project.init_system
+					workbench.set_system (sys)
 				end
-				not_first_parsing := True
+			else
+				date := sys.lace.date
+				successful := sys.lace.successful
+			end
+				-- if the system name has changed, update it
+			if sys.name = Void or else not sys.name.is_equal (conf_system.name) then
+				sys.set_name (conf_system.name)
 			end
 
-			old_universe := Universe.twin
-			old_system := System.twin
+				-- we are only here if something in the ace changed, so we always melt
+			sys.set_melt
 
-			Universe.clusters.wipe_out
+				-- set the old target
+			l_old_target := universe.target
 
-				-- Recompilation
-			root_ast.build_universe
+				-- set the new target
+			universe.set_new_target (l_new_target)
 
-				-- Check presence of basic classes in the universe.
-				-- Do it on every recompilation, as these classes
-				-- may be removed from universe between recompilations.
-			Universe.check_universe
+				-- check if target has changed, update target or options if necessary
+			has_group_changed := universe.conf_system = Void or l_old_target = Void or else not conf_system.is_group_equivalent (universe.conf_system)
+			if has_group_changed then
+					-- check if a precompile was modified
+				if l_old_target /= Void then
+					l_old_pre := l_old_target.precompile
+				end
+				l_new_pre := l_new_target.precompile
+				if l_old_pre /= Void and l_new_pre = Void then
+					-- precompile removed
+					create vd73
+					Error_handler.insert_error (vd73)
+					Error_handler.raise_error
+				elseif not l_first and l_old_target /= Void and l_old_pre = Void and l_new_pre /= Void then
+					-- precompile added and not first compilation
+					create vd74
+					Error_handler.insert_error (vd74)
+					Error_handler.raise_error
+				elseif l_old_pre /= Void and then l_new_pre /= Void and then not l_old_pre.is_group_equivalent (l_new_pre) then
+					-- precompile changed
+					create vd75
+					Error_handler.insert_error (vd75)
+					Error_handler.raise_error
+				end
+			else
+					-- set the new options on the old target
+				create l_option_vis.make (l_new_target)
+				l_option_vis.set_application_target (l_old_target)
+				l_old_target.process (l_option_vis)
+				if l_option_vis.is_error then
+					from
+						l_errors := l_option_vis.last_errors
+						l_errors.start
+					until
+						l_errors.after
+					loop
+						create vd00
+						vd00.set_error (l_errors.item)
+						Error_handler.insert_error (vd00)
+						l_errors.forth
+					end
+					Error_handler.raise_error
+				end
+				l_new_target := l_old_target
+			end
+			universe.set_conf_system (conf_system)
 
-				-- Check sum error
-			Error_handler.checksum
-
-			add_missing_assemblies
-
-			old_universe := Void
+			update_settings (l_new_target)
 
 			successful := True
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
-				if old_system /= Void then
-					Universe.copy (old_universe)
-					Universe.reset_clusters
-					System.copy (old_system)
-				end
-				old_universe := Void
 				successful := False
 			end
 		end
 
-	compile_all_classes: BOOLEAN is
-			-- Is the root class NONE, i.e. all the classes must be compiled
+	update_settings (a_target: CONF_TARGET) is
+			-- Update settings set in `a_target'.
 		require
-			parsed: successful
+			a_target_not_void: a_target /= Void
+			system_valid: system /= Void
+		local
+			l_s: STRING
+			l_b: BOOLEAN
+			vd15: VD15
+			vd83: VD83
+			l_settings: HASH_TABLE [STRING, STRING]
 		do
-			Result := root_ast.compile_all_classes
+			l_settings := a_target.settings
+
+			update_settings_for_eweasel (l_settings)
+
+			l_s := l_settings.item ("address_expression")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.allow_address_expression (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("address_expression")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.allow_address_expression (False)
+			end
+
+			l_s := l_settings.item ("arguments")
+			if l_s /= Void then
+			end
+
+			l_s := l_settings.item ("array_optimization")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					fixme ("Enable array optimizations")
+					system.set_array_optimization_on (False)
+				else
+					create vd15
+					vd15.set_option_name ("array_optimization")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_array_optimization_on (False)
+			end
+
+			System.server_controler.set_block_size (1024)
+
+			l_s := l_settings.item ("check_generic_creation_constraint")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_check_generic_creation_constraint (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("check_generic_creation_constraint")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_check_generic_creation_constraint (True)
+			end
+
+			l_s := l_settings.item ("check_vape")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_do_not_check_vape (not l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("check_vape")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_do_not_check_vape (False)
+			end
+
+				-- CLS compliant implies that the generated
+				-- metadata are CLS compliant and that generated
+				-- names are too. However, you might want to
+				-- keep your Eiffel names in which case, after
+				-- having set `cls_compliant (yes)' you
+				-- have to do `dotnet_naming_convention (no)'. If
+				-- you do it the other way the `dotnet_naming_convention (no)'
+				-- option will not be taken into account.
+				-- Also you cannot change this option after
+				-- the first successful compilation as it might
+				-- break a lot of stuff.
+			l_s := l_settings.item ("cls_compliant")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_cls_compliant (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("cls_compliant")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				-- once set don't loose it
+			end
+
+			l_s := l_settings.item ("console_application")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_console_application (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("console_application")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_console_application (False)
+			end
+
+			l_s := l_settings.item ("dead_code_removal")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_remover_off (not l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("dead_code_removal")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_remover_off (False)
+			end
+
+				-- see cls_compliant comment above
+			l_s := l_settings.item ("dotnet_naming_convention")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_dotnet_naming_convention (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("dotnet_naming_convention")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_dotnet_naming_convention (False)
+			end
+
+			l_s := l_settings.item ("dynamic_runtime")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_dynamic_runtime (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("dynamic_runtime")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_dynamic_runtime (False)
+			end
+
+			l_s := l_settings.item ("dynamic_runtime")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_dynamic_runtime (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("dynamic_runtime")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_dynamic_runtime (False)
+			end
+
+			l_s := l_settings.item ("exception_trace")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_exception_stack_managed (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("exception_trace")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_exception_stack_managed (False)
+			end
+
+			l_s := l_settings.item ("external_runtime")
+			if l_s /= Void then
+				system.set_external_runtime (l_s)
+			end
+
+			l_s := l_settings.item ("full_type_checking")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_full_type_checking (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("full_type_checking")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_full_type_checking (False)
+			end
+
+			l_s := l_settings.item ("il_verifiable")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_il_verifiable (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("il_verifiable")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_il_verifiable (True)
+			end
+
+			l_s := l_settings.item ("inlining")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_inlining_on (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("inlining")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_inlining_on (False)
+			end
+
+			l_s := l_settings.item ("inlining_size")
+			if l_s /= Void then
+				if l_s.is_integer and then l_s.to_integer >= 0 and l_s.to_integer <= 100 then
+					system.set_inlining_size (l_s.to_integer)
+				else
+					create vd15
+					vd15.set_option_name ("inlining_size")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_inlining_size (4)
+			end
+
+			l_s := l_settings.item ("java_generation")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					l_b := l_s.to_boolean
+						-- value can't change from a precompile or in a compiled system
+					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+						create vd83.make ("java_generation")
+						Error_handler.insert_warning (vd83)
+					else
+						system.set_java_generation (l_b)
+					end
+				else
+					create vd15
+					vd15.set_option_name ("java_generation")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+					-- don't loose java_generation flag
+			end
+
+			l_s := l_settings.item ("line_generation")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_line_generation (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("line_generation")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_line_generation (False)
+			end
+
+			l_s := l_settings.item ("metadata_cache_path")
+			if l_s = Void then
+				l_s := overridden_metadata_cache_path
+			else
+				l_s := conf_factory.new_location_from_path (l_s, a_target).evaluated_directory
+			end
+				-- value can't change from a precompile or in a compiled system
+			if l_s /= Void and then not equal (l_s, system.metadata_cache_path) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+				create vd83.make ("metadata_cache_path")
+				Error_handler.insert_warning (vd83)
+				-- new system without precompile, set value
+			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
+				if l_s = Void then
+					l_s := conf_factory.new_location_from_path ((create {EIFFEL_ENV}).assemblies_path, a_target).evaluated_directory
+				end
+				system.set_metadata_cache_path (l_s)
+			end
+
+			l_s := l_settings.item ("msil_assembly_compatibility")
+			if l_s /= Void then
+				system.set_msil_assembly_compatibility (l_s)
+			end
+
+			l_s := l_settings.item ("msil_classes_per_module")
+			if l_s /= Void then
+				if l_s.is_natural_16 then
+					system.set_msil_classes_per_module (l_s.to_natural_16)
+				else
+					create vd15
+					vd15.set_option_name ("msil_classes_per_module")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			end
+
+			l_s := l_settings.item ("msil_culture")
+			if l_s /= Void then
+				system.set_msil_culture (l_s)
+			end
+
+			l_s := l_settings.item ("msil_generation")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					l_b := l_s.to_boolean
+						-- value can't change from a precompile or in a compiled system
+					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+						create vd83.make ("msil_generation")
+						Error_handler.insert_warning (vd83)
+					else
+						system.set_il_generation (l_b)
+						il_parsing_cell.set_item (l_b)
+					end
+				else
+					create vd15
+					vd15.set_option_name ("msil_generation")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+					-- don't loose il generation flag
+			end
+
+			l_s := l_settings.item ("msil_clr_version")
+			if system.il_generation then
+				set_clr_runtime_version (l_s)
+			end
+
+			l_s := l_settings.item ("msil_generation_type")
+			if l_s /= Void then
+				if l_s.is_case_insensitive_equal ("exe") or l_s.is_case_insensitive_equal ("dll") then
+					system.set_msil_generation_type (l_s.as_lower)
+				else
+					create vd15
+					vd15.set_option_name ("msil_generation_type")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_msil_generation_type ("exe")
+			end
+
+			l_s := l_settings.item ("msil_key_file_name")
+			if l_s /= Void then
+				system.set_msil_key_file_name (conf_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+			end
+
+			l_s := l_settings.item ("msil_use_optimized_precompile")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_msil_use_optimized_precompile (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("msil_use_optimized_precompile")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_msil_use_optimized_precompile (False)
+			end
+
+				-- il generation has no multithreaded
+			if not system.il_generation then
+				l_s := l_settings.item ("multithreaded")
+				if l_s /= Void then
+					if l_s.is_boolean then
+						l_b := l_s.to_boolean
+							-- value can't change from a precompile or in a compiled system
+						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
+							create vd83.make ("multithreaded")
+							Error_handler.insert_warning (vd83)
+						else
+							system.set_has_multithreaded (l_b)
+						end
+					else
+						create vd15
+						vd15.set_option_name ("multithreaded")
+						vd15.set_option_value (l_s)
+						Error_handler.insert_error (vd15)
+					end
+				else
+					-- once set we don't loose the multithreaded flag
+				end
+			end
+
+			l_s := l_settings.item ("old_verbatim_strings")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_has_old_verbatim_strings (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("old_verbatim_strings")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_has_old_verbatim_strings (False)
+			end
+			l_s := l_settings.item ("old_verbatim_strings_warning")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_has_old_verbatim_strings_warning (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("old_verbatim_strings_warning")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_has_old_verbatim_strings_warning (False)
+			end
+
+			l_s := l_settings.item ("shared_library_definition")
+				-- If the release doesn't generate DLL's,
+				-- we do not take the option into account in the Ace.
+			if l_s /= Void and has_dll_generation then
+				system.set_dynamic_def_file (conf_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+			end
+
+			l_s := l_settings.item ("syntax_warning")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_has_syntax_warning (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("syntax_warning")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_has_syntax_warning (False)
+			end
+
+			l_s := l_settings.item ("working_directory")
+			if l_s /= Void then
+				application_working_directory := conf_factory.new_location_from_path (l_s, a_target).evaluated_directory
+			end
+
+			l_s := l_settings.item ("use_cluster_name_as_namespace")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_use_cluster_as_namespace (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("use_cluster_name_as_namespace")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_use_cluster_as_namespace (True)
+			end
+
+			l_s := l_settings.item ("use_all_cluster_name_as_namespace")
+			if l_s /= Void then
+				if l_s.is_boolean then
+					system.set_use_all_cluster_as_namespace (l_s.to_boolean)
+				else
+					create vd15
+					vd15.set_option_name ("use_all_cluster_name_as_namespace")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
+			else
+				system.set_use_all_cluster_as_namespace (True)
+			end
+
+			Error_handler.checksum
 		end
 
-	set_full_degree_6_needed (value: BOOLEAN) is
-			-- Change the value of `full_degree_6_needed'.
+	update_settings_for_eweasel (a_settings: HASH_TABLE [STRING, STRING]) is
+			-- Update settings to run with eweasel
+		local
+			l_shared: SHARED_CONFIGURE_RESOURCES
+			l_runtime_version: STRING
 		do
-			full_degree_6_needed := value
+			create l_shared
+			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
+				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
+
+				a_settings.force ("true", "msil_generation")
+
+				if compilation_modes.is_precompiling then
+					a_settings.force ("dll", "msil_generation_type")
+				else
+					a_settings.force ("exe", "msil_generation_type")
+				end
+
+				if l_runtime_version /= Void then
+					a_settings.force (l_runtime_version, "msil_clr_version")
+				end
+
+				a_settings.force ("true", "console_application")
+			end
 		end
 
-feature -- Access
-
-	has_assertions: BOOLEAN is
+	retrieve_precompile (a_target: CONF_TARGET) is
+			-- Load the precompile as the system.
+		require
+			valid_conf_system: conf_system /= Void
+			valid_target: a_target /= Void and then a_target.precompile /= Void
+		local
+			l_pre: CONF_PRECOMPILE
+			l_system: CONF_SYSTEM
+			l_load: CONF_LOAD
+			vd77: VD77
+			vd78: VD78
+			vd79: VD79
+			vd21: VD21
+			l_file_name, l_user_file: STRING
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+			l_file: RAW_FILE
+			l_pre_path: STRING
+			l_user_options: USER_OPTIONS
+			l_precomp_r: PRECOMP_R
+			l_target: CONF_TARGET
+			l_old_target: CONF_TARGET
 		do
-			Result := ace_options.has_assertion
+			l_pre := a_target.precompile
+
+				-- check if the configuration file is ok
+			l_file_name := l_pre.location.evaluated_path
+			create l_load
+			l_load.retrieve_configuration (l_file_name)
+			if l_load.is_error then
+				create vd77
+				vd77.set_error (l_load.last_error)
+				Error_handler.insert_error (vd77)
+				Error_handler.raise_error
+			end
+			l_system := l_load.last_system
+
+				-- check if user file is ok and get EIFGENS location
+			l_user_file := l_file_name+".user"
+			create l_file.make (l_user_file)
+			if l_file.exists then
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_reading
+					create l_sed_facilities
+					l_user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+					l_file.close
+				else
+					create vd21
+					vd21.set_file_name (l_user_file)
+					Error_handler.insert_error (vd21)
+					Error_handler.raise_error
+				end
+			else
+					-- default
+				create l_user_options
+				l_user_options.set_eifgen (l_pre.location.build_path ("EIFGENS", ""))
+			end
+			if l_user_options = Void or else l_user_options.eifgen = Void then
+				create vd79
+				Error_handler.insert_error (vd79)
+				Error_handler.raise_error
+			end
+
+				-- check if we have a library target
+			if l_system.library_target = Void then
+				create vd78
+				Error_handler.insert_error (vd78)
+				Error_handler.raise_error
+			end
+
+				-- retrieve precompile project
+			l_pre_path := l_user_options.eifgen.twin
+			l_pre_path.append_character (operating_environment.directory_separator)
+			l_pre_path.append (l_system.library_target.name)
+			create l_precomp_r
+			l_precomp_r.retrieve_precompiled (l_pre_path)
+
+				-- move the configuration data from the precompile into the precompile node
+			l_target := universe.target
+			l_old_target := a_target
+			l_old_target.precompile.set_library_target (l_target)
+			universe.set_new_target (l_old_target)
+			universe.new_target_to_target
+		ensure
+			valid_system: workbench.system /= Void
+		end
+
+	set_clr_runtime_version (a_version: STRING) is
+			-- Set clr runtime version, use default if `a_version' is Void.
+		local
+			l_installed_runtimes: DS_LINEAR [STRING]
+			l_il_env: IL_ENVIRONMENT
+			vd15: VD15
+		do
+			create l_il_env
+
+			if a_version = Void then
+				system.set_clr_runtime_version (l_il_env.default_version)
+			else
+				l_installed_runtimes := l_il_env.installed_runtimes
+				if not l_installed_runtimes.has (a_version) then
+					create vd15
+					vd15.set_option_name ("msil_clr_version")
+					vd15.set_option_value (a_version)
+					Error_handler.insert_error (vd15)
+					Error_handler.raise_error
+				end
+
+				system.set_clr_runtime_version (a_version)
+			end
+
+			create l_il_env.make (system.clr_runtime_version)
+			l_il_env.register_environment_variable
 		end
 
 feature {NONE} -- Externals
@@ -516,247 +1239,6 @@ feature {NONE} -- Externals
 		external
 			"C"
 		end
-
-feature {NONE} -- Implementation
-
-	save_content is
-			-- Store `Ace' file with/without new cluster.
-		local
-			st: GENERATION_BUFFER
-			ace_file: PLAIN_TEXT_FILE
-			ast: like root_ast
-		do
-			if root_ast = Void then
-					-- Creation of AST.
-				create root_ast
-			end
-
-			ast := root_ast.duplicate
-
-			create st.make (2048)
-			ast.save (st)
-			if Eiffel_ace.file_name /= Void then
-				create ace_file.make_open_write (Eiffel_ace.file_name)
-				st.put_in_file (ace_file)
-				ace_file.close
-			end
-		end
-
-	add_missing_assemblies is
-			-- Create a copy of Ace file on disk with missing assemblies added.
-		require
-			parsed_ast_not_void: parsed_ast /= Void
-		local
-			st: GENERATION_BUFFER
-			ace_file: PLAIN_TEXT_FILE
-			ast: like root_ast
-			l_missing: ARRAYED_LIST [ASSEMBLY_I]
-			l_assembly: ASSEMBLY_SD
-			l_factory: LACE_AST_FACTORY
-			retried: BOOLEAN
-			vd66: VD66
-		do
-			if not retried then
-				l_missing := Universe.assemblies_to_be_added
-
-				if l_missing /= Void then
-					ast := parsed_ast
-
-					check
-						has_assemblies: ast.assemblies /= Void
-					end
-
-					from
-						l_missing.start
-						create l_factory
-					until
-						l_missing.after
-					loop
-						create l_assembly.initialize (
-							l_factory.new_id_sd (l_missing.item.cluster_name, True),
-							l_factory.new_id_sd (l_missing.item.assembly_path, True),
-							l_factory.new_id_sd (l_missing.item.prefix_name, True),
-							Void,
-							Void,
-							Void)
-						ast.assemblies.extend (l_assembly)
-						l_missing.forth
-					end
-
-					Universe.reset_assemblies_to_be_added
-
-					create st.make (2048)
-					ast.save (st)
-					if Eiffel_ace.file_name /= Void then
-						create ace_file.make_open_write (Eiffel_ace.file_name)
-						st.put_in_file (ace_file)
-						ace_file.close
-					end
-				end
-			else
-				create vd66.make (l_missing)
-				Error_handler.insert_warning (vd66)
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	update_ace_for_dotnet (a_root: ACE_SD) is
-			-- Update `a_root' with data required to compile a .NET system.
-			-- At the moment it only adds a reference to the Eiffel .NET runtime.
-		require
-			a_root_not_void: a_root /= Void
-		local
-			l_assemblies: LACE_LIST [ASSEMBLY_SD]
-			l_assembly: ASSEMBLY_SD
-			l_factory: LACE_AST_FACTORY
-			l_found: BOOLEAN
-			l_runtime_path: ID_SD
-			l_runtime, l_other: STRING
-		do
-			if a_root.is_dotnet_project then
-					-- Let's add a reference to EiffelSoftware.Runtime.dll
-					-- needed to compile our kernel classes when IL code
-					-- generation is enabled
-				l_assemblies := a_root.assemblies
-				create l_factory
-				l_runtime := (create {EIFFEL_ENV}).eiffelsoftware_runtime_path.twin
-				l_runtime_path := l_factory.new_id_sd (l_runtime, True)
-				if l_assemblies = Void then
-					create l_assemblies.make (3)
-					a_root.set_assemblies (l_assemblies)
-					create l_assembly.initialize (
-						l_factory.new_id_sd ("eiffelsoftware_runtime", True),
-						l_runtime_path, Void, Void, Void, Void)
-					l_assemblies.extend (l_assembly)
-				else
-						-- Let's find if we already have a matching cluster, i.e.
-						-- with the same `assembly_name'.
-					from
-						l_assemblies.start
-						l_runtime.to_lower
-					until
-						l_assemblies.after or l_found
-					loop
-						l_other := l_assemblies.item.assembly_name.string
-						l_other.replace_substring_all ("/", "\")
-						l_other.to_lower
-						l_found := l_other.is_equal (l_runtime)
-						l_assemblies.forth
-					end
-						-- Assembly was not found, let's add it to the Ace file.
-					if not l_found then
-						create l_factory
-						create l_assembly.initialize (
-							l_factory.new_id_sd ("eiffelsoftware_runtime", True),
-							l_runtime_path, Void, Void, Void, Void)
-						l_assemblies.extend (l_assembly)
-					end
-				end
-			end
-		end
-
-	update_ace_for_eweasel_on_dotnet (a_root: ACE_SD) is
-			-- Update `a_root' with data required to compile a .NET system
-			-- with eweasel. Mostly it will add .NET missing option and clusters.
-		require
-			a_root_not_void: a_root /= Void
-		local
-			l_shared: SHARED_CONFIGURE_RESOURCES
-			l_defaults: LACE_LIST [D_OPTION_SD]
-			l_factory: LACE_AST_FACTORY
-			l_option: D_OPTION_SD
-			l_assemblies: LACE_LIST [ASSEMBLY_SD]
-			l_assembly: ASSEMBLY_SD
-			l_runtime_version: STRING
-		do
-			create l_shared
-			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
-				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
-
-					-- In the code below we use `compare_objects' on the list we manipulate
-					-- to make sure that an option/assembly is not inserted more than twice in
-					-- the Ace file.
-				l_defaults := a_root.defaults
-				if l_defaults = Void then
-					create l_defaults.make (1)
-					a_root.set_defaults (l_defaults)
-				end
-				l_defaults.compare_objects
-
-				create l_factory
-				l_option := l_factory.new_special_option_sd (
-					{FREE_OPTION_SD}.msil_generation, Void, True)
-				if not l_defaults.has (l_option) then
-					l_defaults.extend (l_option)
-				end
-				if compilation_modes.is_precompiling then
-					l_option := l_factory.new_special_option_sd (
-						{FREE_OPTION_SD}.msil_generation_type, "dll", True)
-				else
-					l_option := l_factory.new_special_option_sd (
-						{FREE_OPTION_SD}.msil_generation_type, "exe", True)
-				end
-				if not l_defaults.has (l_option) then
-					l_defaults.extend (l_option)
-				end
-
-				if l_runtime_version /= Void then
-					l_option := l_factory.new_special_option_sd (
-						{FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
-					if not l_defaults.has (l_option) then
-						l_defaults.extend (l_option)
-					end
-				end
-
-				l_option := l_factory.new_special_option_sd (
-					{FREE_OPTION_SD}.console_application, Void, True)
-				l_defaults.extend (l_option)
-
-				l_defaults.compare_references
-
-				l_assemblies := a_root.assemblies
-				if l_assemblies = Void then
-					create l_assemblies.make (3)
-					a_root.set_assemblies (l_assemblies)
-				end
-				check
-					compare_references: not l_assemblies.object_comparison
-				end
-				l_assemblies.compare_objects
-
-				create l_assembly.initialize (
-					l_factory.new_id_sd ("mscorlib", True),
-					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\mscorlib.dll", True),
-					Void, Void, Void, Void)
-				if not l_assemblies.has (l_assembly) then
-					l_assemblies.extend (l_assembly)
-				end
-
-				create l_assembly.initialize (
-					l_factory.new_id_sd ("system_", True),
-					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.dll", True),
-					l_factory.new_id_sd ("system_dll_", False), Void, Void, Void)
-				if not l_assemblies.has (l_assembly) then
-					l_assemblies.extend (l_assembly)
-				end
-
-				create l_assembly.initialize (
-					l_factory.new_id_sd ("system_xml", True),
-					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.Xml.dll", True),
-					l_factory.new_id_sd ("system_xml_", False), Void, Void, Void)
-				if not l_assemblies.has (l_assembly) then
-					l_assemblies.extend (l_assembly)
-				end
-
-					-- Restore previous comparison to ensure we do not break code.
-				l_assemblies.compare_references
-			end
-		end
-
-invariant
-	argument_list_created: argument_list /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

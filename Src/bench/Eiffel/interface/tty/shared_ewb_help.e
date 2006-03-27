@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Help constants for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,9 @@ class SHARED_EWB_HELP
 
 feature {NONE}
 
-	ace_help: STRING is "specify the Ace file"
+	ace_help: STRING is "specify the Ace file (obsolete)"
 
-	ace_loop_help: STRING is "show the Ace file"
+	ace_loop_help: STRING is "show the config file"
 
 	add_subquery_help: STRING is "add a subquery"
 
@@ -28,6 +28,8 @@ feature {NONE}
 	batch_help: STRING is "launch the compilation without user request"
 
 	c_compile_help: STRING is "launch C compilation if needed"
+
+	config_help: STRING is "specify the config file"
 
 	callers_help: STRING is "show the callers of a feature"
 
@@ -59,7 +61,7 @@ feature {NONE}
 
 	dversions_help: STRING is "show the descendant versions of a feature"
 
-	edit_ace_help: STRING is "edit the Ace file"
+	edit_ace_help: STRING is "edit the config file"
 
 	edit_class_help: STRING is "edit the text of a class"
 
@@ -103,6 +105,8 @@ feature {NONE}
 
 	loop_help_help: STRING is "show list of commands"
 
+	overwrite_old_project_help: STRING is "overwrite any existing old project"
+
 	main_help: STRING is "go back to main menu"
 
 	melt_help: STRING is "melt the system"
@@ -118,14 +122,14 @@ feature {NONE}
 	Percentage_help: STRING is " output of percentage of time spent in a feature"
 
 	precompile_help: STRING is "precompile the system"
-	
+
 	finalize_precompile_help: STRING is "precompile and finalize the system"
 
 	Profile_help: STRING is "information about a profiled run"
 
 	project_path_help: STRING is "specify the compilation directory"
 
-	project_help: STRING is "specify the project file to load"
+	project_help: STRING is "specify the project file to load (obsolete)"
 
 	queries_help: STRING is "manipulate subqueries"
 
@@ -167,9 +171,11 @@ feature {NONE}
 
 	switches_help: STRING is "show the output switches"
 
-	system_help: STRING is "Ace and cluster details"
+	system_help: STRING is "Config and cluster details"
 
 	text_help: STRING is "show the text of a class"
+
+	target_help: STRING is "specify the target"
 
 	Total_sec_help: STRING is " output of time spent in both the function and its descendants"
 
@@ -193,19 +199,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

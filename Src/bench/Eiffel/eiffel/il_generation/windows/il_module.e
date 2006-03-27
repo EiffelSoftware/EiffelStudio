@@ -2328,9 +2328,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 							-- When it is an XML represented external class.
 						l_assembly := l_external_class.lace_class.assembly
 						l_name := l_assembly.assembly_name
-						l_version_string := l_assembly.version
-						l_culture := l_assembly.culture
-						l_key_string := l_assembly.public_key_token
+						l_version_string := l_assembly.assembly_version
+						l_culture := l_assembly.assembly_culture
+						l_key_string := l_assembly.assembly_public_key_token
 					else
 							-- When it is an actual Eiffel class encapsulating
 							-- an external class.
@@ -2526,17 +2526,17 @@ feature {NONE} -- Once per modules being generated.
 
 			create l_version
 			check
-				version_valid: l_version.is_version_valid (l_mscorlib.version)
+				version_valid: l_version.is_version_valid (l_mscorlib.assembly_version)
 			end
 
-			l_version.set_version (l_mscorlib.version)
+			l_version.set_version (l_mscorlib.assembly_version)
 			create l_ass_info.make
 			l_ass_info.set_major_version (l_version.major.to_natural_16)
 			l_ass_info.set_minor_version (l_version.minor.to_natural_16)
 			l_ass_info.set_build_number (l_version.build.to_natural_16)
 			l_ass_info.set_revision_number (l_version.revision.to_natural_16)
 
-			create l_pub_key.make_from_string (l_mscorlib.public_key_token)
+			create l_pub_key.make_from_string (l_mscorlib.assembly_public_key_token)
 
 			mscorlib_token := md_emit.define_assembly_ref (
 				create {UNI_STRING}.make (l_mscorlib.assembly_name), l_ass_info, l_pub_key)

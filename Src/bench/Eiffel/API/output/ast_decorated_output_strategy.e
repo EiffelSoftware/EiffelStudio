@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 			if not has_error then
 				if l_as.parent_base_class /= Void then
-					l_parent_class_i := universe.class_named (l_as.parent_base_class.class_name, current_class.cluster)
+					l_parent_class_i := universe.class_named (l_as.parent_base_class.class_name, current_class.group)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
@@ -2525,14 +2525,14 @@ feature {NONE} -- Implementation
 	process_client_as (l_as: CLIENT_AS) is
 		local
 			temp: STRING
-			cluster: CLUSTER_I
+			cluster: CONF_GROUP
 			client_classi: CLASS_I
 			l_export_status: EXPORT_I
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			cluster := system.class_of_id (current_class.class_id).cluster
+			cluster := system.class_of_id (current_class.class_id).group
 			text_formatter_decorator.begin
 			text_formatter_decorator.process_symbol_text (ti_l_curly)
 			text_formatter_decorator.set_separator (ti_comma)

@@ -345,7 +345,7 @@ feature -- Settings
 		local
 			l_pos: INTEGER
 		do
-			internal_namespace := associated_class.lace_class.actual_namespace.twin
+			internal_namespace := associated_class.original_class.actual_namespace.twin
 			internal_type_name := type.il_type_name (Void)
 			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
 			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
@@ -804,7 +804,7 @@ feature -- Generation
 			-- Generated base file name prefix
 		do
 			create Result.make (10)
-			Result.append (associated_class.base_file_name)
+			Result.append (associated_class.eiffel_class_c.base_file_name)
 			Result.append_integer (static_type_id)
 		ensure
 			valid_result: Result /= Void

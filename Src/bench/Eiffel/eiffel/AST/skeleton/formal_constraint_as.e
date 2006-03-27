@@ -202,13 +202,13 @@ feature -- Validity checking
 		local
 			associated_class: CLASS_C
 			class_i: CLASS_I
-			cluster: CLUSTER_I
+			cluster: CONF_GROUP
 			feature_name: STRING
 			feat_table: FEATURE_TABLE
 			class_type: CLASS_TYPE_AS
 			vtcg6: VTCG6
 		do
-			cluster := a_context_class.cluster
+			cluster := a_context_class.group
 			class_type ?= constraint
 
 			if class_type = Void then

@@ -142,7 +142,7 @@ feature -- Actions
 								filter.set_keyword ("html_meta", html_meta_for_cluster (clusters.item))
 							end
 							set_base_cluster (clusters.item)
-							prepare_for_file (clusters.item.relative_path ('%U'), "index")
+--							prepare_for_file (clusters.item.relative_path ('%U'), "index")
 							set_document_title ("cluster " + clusters.item.cluster_name)
 							generate_cluster_index (clusters.item)
 							clusters.forth
@@ -171,7 +171,7 @@ feature -- Actions
 						loop
 							deg.put_case_class_message (classes.item.compiled_class)
 							deg.flush_output
-							set_base_cluster (classes.item.cluster)
+--							set_base_cluster (classes.item.cluster)
 							cl_name := classes.item.name.as_lower
 							set_class_name (cl_name)
 							if filter.is_html then
@@ -185,10 +185,10 @@ feature -- Actions
 		--							if pd /= Void then
 		--								pd.set_current_degree (cf.description)
 		--							end
-									prepare_for_file (
-										classes.item.cluster.relative_path ('%U'),
-										cl_name + cf.file_extension
-									)
+--									prepare_for_file (
+--										classes.item.cluster.relative_path ('%U'),
+--										cl_name + cf.file_extension
+--									)
 									set_document_title (cl_name + " " + cf.description)
 									generate_class (classes.item, cf)
 								end
@@ -264,7 +264,7 @@ feature -- Actions
 				tl_clusters.after
 			loop
 				create fi.make_from_string (root_directory.name)
-				fa := tl_clusters.item.relative_path ('%U')
+--				fa := tl_clusters.item.relative_path ('%U')
 				fi.extend (fa)
 				create d.make (fi)
 				if not d.exists then
@@ -443,8 +443,8 @@ feature {NONE} -- Implementation
 				s := classes.item.name.as_lower
 				class_array.append ("%T%T%"" + s + "%"")
 				s.to_lower
-				s := "" + classes.item.cluster.relative_path ('/') +
-					"/" + s + class_links + ".html"
+--				s := "" + classes.item.cluster.relative_path ('/') +
+--					"/" + s + class_links + ".html"
 				location_array.append ("%T%T%"" + s + "%"")
 				classes.forth
 				if not classes.after then
@@ -527,7 +527,7 @@ feature {NONE} -- Filtered generation
 
 	set_base_cluster (c: CLUSTER_I) is
 		do
-			base_path := c.base_relative_path (filter.file_separator)
+--			base_path := c.base_relative_path (filter.file_separator)
 			filter.set_base_path (base_path)
 		end
 
@@ -596,7 +596,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			Result := a_cluster.relative_path (filter.file_separator)
+--			Result := a_cluster.relative_path (filter.file_separator)
 		end
 
 	base_relative_path (a_cluster: CLUSTER_I): FILE_NAME is
@@ -604,7 +604,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			Result := a_cluster.base_relative_path (filter.file_separator)
+--			Result := a_cluster.base_relative_path (filter.file_separator)
 		end
 
 feature -- Specific Generation

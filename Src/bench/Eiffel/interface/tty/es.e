@@ -25,6 +25,17 @@ inherit
 
 	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
+	SHARED_ERROR_HANDLER
+
+	REFACTORING_HELPER
+
+	COMPILER_EXPORTER
+
 create
 	make
 
@@ -40,6 +51,7 @@ feature -- Initialization
 			file_degree_output: FILE_DEGREE_OUTPUT
 			compilation: EWB_COMP
 			ewb_loop: EWB_LOOP
+			e_displayer: DEFAULT_ERROR_DISPLAYER
 		do
 			if not retried then
 					-- Check that environment variables
@@ -62,6 +74,7 @@ feature -- Initialization
 							-- so that there is no blocking.
 						enable_automatic_output_flushing
 					end
+					workbench.make
 					analyze_options
 					if option_error then
 						print_option_error
@@ -75,7 +88,23 @@ feature -- Initialization
 						else
 							command.set_output_window (output_window)
 						end
-						init_project (Project_file_name)
+
+							--| Initialization of the display
+						create e_displayer.make (Error_window);
+						Eiffel_project.set_error_displayer (e_displayer)
+
+							-- if necessary, do conversions
+						if old_project_file /= Void then
+							lace.convert_project (old_project_file)
+						elseif old_ace_file /= Void then
+							lace.convert_ace (old_ace_file)
+						end
+
+						workbench.lace.load
+						project_path_name := workbench.lace.project_path
+						Project_directory_name.set_directory (project_path_name)
+
+						init_project
 						if not error_occurred then
 							if project_is_new then
 								make_new_project (equal (command.name, loop_cmd_name))
@@ -83,6 +112,7 @@ feature -- Initialization
 								retrieve_project
 							end
 						end
+						lace.recompile
 
 						if output_file_option then
 							create file_degree_output.make (output_file_name)
@@ -115,14 +145,25 @@ feature -- Initialization
 				output_window.close
 			end
 		rescue
-			io.error.put_string ("ISE Eiffel 5: Session aborted%N")
-			io.error.put_string ("Exception tag: ")
-			temp := original_tag_name
-			if output_window /= Void and then not output_window.is_closed then
-				output_window.close
-			end
-			if temp /= Void then
-				io.error.put_string (temp)
+			if error_handler.is_developer_exception then
+				Error_handler.trace
+				if command_line_io.termination_requested then
+					retried := True
+					retry
+				else
+					command := Void
+					retry
+				end
+			else
+				io.error.put_string ("ISE Eiffel 5: Session aborted%N")
+				io.error.put_string ("Exception tag: ")
+				temp := original_tag_name
+				if output_window /= Void and then not output_window.is_closed then
+					output_window.close
+				end
+				if temp /= Void then
+					io.error.put_string (temp)
+				end
 			end
 			io.error.put_new_line
 			if not fail_on_rescue then
@@ -177,10 +218,11 @@ feature -- Properties
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
 		once
-			create Result.make (25)
+			create Result.make (30)
 			Result.put (ace_help, ace_cmd_name)
 			Result.put (ancestors_help, ancestors_cmd_name)
 			Result.put (aversions_help, aversions_cmd_name)
+			Result.put (config_help, config_cmd_name)
 			Result.put (callers_help, callers_cmd_name)
 			Result.put (clients_help, clients_cmd_name)
 			Result.put (descendants_help, descendants_cmd_name)
@@ -192,12 +234,15 @@ feature -- Properties
 			Result.put (help_help, help_cmd_name)
 			Result.put (implementers_help, implementers_cmd_name)
 			Result.put (loop_help, loop_cmd_name)
+			Result.put (melt_help, melt_cmd_name)
+			Result.put (overwrite_old_project_help, overwrite_old_project_cmd_name)
 			Result.put (project_help, project_cmd_name)
 			Result.put (project_path_help, project_path_cmd_name)
 			Result.put (quick_melt_help, quick_melt_cmd_name)
 			Result.put (short_help, short_cmd_name)
 			Result.put (stop_help, stop_cmd_name)
 			Result.put (suppliers_help, suppliers_cmd_name)
+			Result.put (target_help, target_cmd_name)
 			Result.put (version_help, version_cmd_name)
 			Result.put (batch_help, batch_cmd_name)
 			add_help_special_cmds
@@ -260,7 +305,7 @@ feature -- Output
 			io.put_string (argument (0))
 			io.put_string (" [-help | -version | -batch | ")
 			add_usage_special_cmds
-			io.put_string ("-loop | -quick_melt | ")
+			io.put_string ("-loop | -quick_melt | -melt | ")
 			if Has_documentation_generation then
 				io.put_string ("-clients [-filter filtername] class |%N%
 					%%T-suppliers [-filter filtername] class |%N%
@@ -274,11 +319,13 @@ feature -- Output
 					%%T-aversions [-filter filtername] class feature |%N%
 					%%T-dversions [-filter filtername] class feature |%N%
 					%%T-implementers [-filter filtername] class feature |%N%
-					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%T")
+					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N")
 			end
 			io.put_string ("%
-				%[-stop] [-ace Ace] [-project Project_file_name]|%N%
-				%%T[-project_path Project_directory_path] [-file File]]%N")
+				%%T-overwrite_old_project | -stop |%N%
+				%%T-config config.xml | -target target |%N%
+				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name|%N%
+				%%T-project_path Project_directory_path | -file File]%N")
 		end
 
 	print_version is
@@ -297,7 +344,7 @@ feature -- Output
 		do
 			print_usage
 			io.put_string ("%NOptions:%N");
-			io.put_string ("%Tdefault (no option): recompile the system.%N%N")
+			io.put_string ("%Tdefault (no option): quick melt the system.%N%N")
 
 			create command_list.make
 			keys := help_messages.current_keys
@@ -349,7 +396,6 @@ feature -- Update
 			-- Analyze the options entered by the user.
 		do
 					-- Default Project Options
-			Project_directory_name.set_directory (Execution_environment.current_working_directory)
 			from
 				current_option := 1
 			until
@@ -363,7 +409,7 @@ feature -- Update
 				if is_precompiling then
 					create {EWB_PRECOMP} command.make (False)
 				else
-					create {EWB_COMP} command
+					create {EWB_QUICK_MELT} command
 				end
 			end
 		end
@@ -377,6 +423,7 @@ feature -- Update
 			show_assigners: BOOLEAN
 			show_creators: BOOLEAN
 			ewb_senders: EWB_SENDERS
+			l_arg: STRING
 		do
 			filter_name := ""
 			option := argument (current_option);
@@ -394,6 +441,12 @@ feature -- Update
 			elseif option.is_equal ("-quick_melt") then
 				if command = Void then
 					create {EWB_QUICK_MELT} command
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-melt") then
+				if command = Void then
+					create {EWB_COMP} command
 				else
 					option_error := True
 				end
@@ -732,7 +785,12 @@ feature -- Update
 			elseif option.is_equal ("-project") then
 				if current_option < argument_count then
 					current_option := current_option + 1
-					project_file_name := argument (current_option)
+					l_arg := argument (current_option)
+					if l_arg /= Void then
+						old_project_file := l_arg
+					else
+						option_error := True
+					end
 				else
 					option_error := True
 				end
@@ -751,17 +809,51 @@ feature -- Update
 			elseif option.is_equal ("-project_path") then
 				if current_option < argument_count then
 					current_option := current_option + 1
-					project_path_name := argument (current_option)
+					l_arg := argument (current_option)
+					if l_arg /= Void then
+						lace.set_project_path (l_arg)
+					else
+						option_error := True
+					end
 				else
 					option_error := True
 				end
 			elseif option.is_equal ("-ace") then
 				if current_option < argument_count then
 					current_option := current_option + 1
-					Ace_name := argument (current_option)
+					l_arg := argument (current_option)
+					if l_arg /= Void then
+						old_ace_file := l_arg
+					else
+						option_error := True
+					end
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-config") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					l_arg := argument (current_option)
+					if l_arg /= Void then
+						lace.set_file_name (l_arg)
+					else
+						option_error := True
+					end
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-target") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					l_arg := argument (current_option)
+					if l_arg /= Void then
+						lace.set_target_name (l_arg)
+					else
+						option_error := True
+					end
+				end
+			elseif option.is_equal ("-overwrite_old_project") then
+				overwrite_old_project := True
 			elseif option.is_equal ("-stop") or else option.is_equal ("-batch") then
 					-- The compiler stops on errors, useful for batch compilation without
 					-- user intervention.
@@ -882,25 +974,40 @@ feature {NONE} -- Externals
 			"compiler_need_flush = 1;"
 		end
 
+feature {NONE} -- Onces
+
+	command_line_io: COMMAND_LINE_IO is
+		once
+			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	Old_ace_file: STRING
+			-- Old ace file to convert.
+
+	Old_project_file: STRING;
+			-- Old project file to convert.
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

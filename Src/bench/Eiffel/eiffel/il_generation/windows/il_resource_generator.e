@@ -15,12 +15,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
 		end
-		
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -28,7 +28,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_module: like module; a_resources: like resources) is
@@ -54,6 +54,7 @@ feature -- Generation
 			l_new_name: STRING
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
+			l_res: CONF_EXTERNAL_RESSOURCE
 		do
 			from
 				last_resource_offset := 0
@@ -61,26 +62,29 @@ feature -- Generation
 			until
 				resources.after
 			loop
-				l_name := resources.item
-				nb := l_name.count
-				l_not_is_resource_generated :=
-					((nb > 5) and l_name.substring (nb - 4, nb).as_lower.is_equal (".resx")) or
-					((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
-				if l_not_is_resource_generated then
-					l_new_name := new_compiled_resource_file_name (l_name)
-					generate_resource (l_name, l_new_name)
-					if (create {RAW_FILE}.make (l_new_name)).exists then
-						l_name := resource_name (l_name, True)
-						l_name.append_character ('.')
-						l_name.append (resources_extension)
-						define_resource (module, l_new_name, l_name)
+				l_res := resources.item
+				if l_res.is_enabled (universe.platform, universe.build) then
+					l_name := l_res.location.evaluated_path
+					nb := l_name.count
+					l_not_is_resource_generated :=
+						((nb > 5) and l_name.substring (nb - 4, nb).as_lower.is_equal (".resx")) or
+						((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
+					if l_not_is_resource_generated then
+						l_new_name := new_compiled_resource_file_name (l_name)
+						generate_resource (l_name, l_new_name)
+						if (create {RAW_FILE}.make (l_new_name)).exists then
+							l_name := resource_name (l_name, True)
+							l_name.append_character ('.')
+							l_name.append (resources_extension)
+							define_resource (module, l_new_name, l_name)
+						else
+							Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+						end
 					else
-						Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+							-- It is either a compiled resource or another type of files,
+							-- we simply embed them in the generated assembly.
+						define_resource (module, l_name, resource_name (l_name, False))
 					end
-				else
-						-- It is either a compiled resource or another type of files,
-						-- we simply embed them in the generated assembly.
-					define_resource (module, l_name, resource_name (l_name, False))
 				end
 				resources.forth
 			end
@@ -90,10 +94,10 @@ feature -- Access
 
 	module: IL_MODULE
 			-- PE file in which `resources' will be generated.
-			
-	resources: LIST [STRING]
+
+	resources: LIST [CONF_EXTERNAL_RESSOURCE]
 			-- List of resources.
-			
+
 	last_resource_offset: INTEGER
 			-- Offset for current inserted resource in `define_resource'.
 
@@ -113,8 +117,8 @@ feature {NONE} -- Implementation
 			l_virc: VIRC
 		do
 			create l_env.make (System.clr_runtime_version)
-			l_rc := l_env.resource_compiler			
-			
+			l_rc := l_env.resource_compiler
+
 			if l_rc /= Void and then (create {RAW_FILE}.make (l_rc)).exists then
 				if not (create {RAW_FILE}.make (a_resource)).exists then
 					create l_virc.make_resource_file_not_found (a_resource)
@@ -130,7 +134,7 @@ feature {NONE} -- Implementation
 			else
 				create l_virc.make_rc_not_found (l_rc)
 			end
-			
+
 			if l_virc /= Void then
 				Error_handler.insert_warning (l_virc)
 			end
@@ -148,7 +152,7 @@ feature {NONE} -- Implementation
 			if dir_pos = 0 then
 				dir_pos := a_resource.last_index_of ('/', nb) + 1
 			end
-			
+
 			if remove_extension then
 				dot_pos := a_resource.last_index_of ('.', nb)
 				if dot_pos = 0 then
@@ -159,12 +163,12 @@ feature {NONE} -- Implementation
 			else
 				dot_pos := nb
 			end
-			
+
 			Result := a_resource.substring (dir_pos.max (1), dot_pos)
 		ensure
 			resource_name_not_void: Result /= Void
 		end
-		
+
 	new_compiled_resource_file_name (a_resource: STRING): FILE_NAME is
 			-- Using `a_resource' generates a PATH in which output of compiling resource file
 			-- `a_resource' will be generated.
@@ -206,7 +210,7 @@ feature {NONE} -- Implementation
 				-- Read content of `a_file' and add it to the list of known resources
 				-- of `a_module'.
 			create l_raw_file.make_open_read (a_file)
-			
+
 				-- Before putting the resource data in `l_data', we need to insert
 				-- the number of bytes in the first 4 bytes of `l_data' so that
 				-- we know exactly how long is the current resource entry.
@@ -229,7 +233,7 @@ feature {NONE} -- Implementation: constants
 
 	resources_extension: STRING is "resources"
 			-- Compiled resources extension.
-	
+
 invariant
 	module_not_void: module /= Void
 	resources_not_void: resources /= Void
@@ -240,19 +244,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

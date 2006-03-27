@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (a_base_name)
 			Result.to_lower
-			Result := il_casing.type_name (l_base_class.lace_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
+			Result := il_casing.type_name (l_base_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty

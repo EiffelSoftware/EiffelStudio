@@ -38,7 +38,7 @@ feature -- Execution
 			class_name: STRING
 		do
 			feature_name := current_feature.name;
-			clusters := Eiffel_universe.clusters;
+--S			clusters := Eiffel_universe.clusters;
 			from
 				clusters.start
 			until

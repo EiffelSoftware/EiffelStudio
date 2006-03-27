@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when two different basic classes in two clusters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Property
 
-	other_cluster: CLUSTER_I;
+	other_cluster: CONF_GROUP;
 			-- Other cluster involved
 
 feature -- Output
@@ -27,20 +27,24 @@ feature -- Output
 		do
 			put_class_name (a_text_formatter);
 			a_text_formatter.add ("First cluster: ");
-			a_text_formatter.add (other_cluster.cluster_name);
+			a_text_formatter.add (other_cluster.name);
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Second cluster: ");
-			a_text_formatter.add (cluster.cluster_name);
+			a_text_formatter.add (cluster.name);
 			a_text_formatter.add_new_line;
 		end;
 
 feature {UNIVERSE_I} -- Setting
 
-	set_other_cluster (c: CLUSTER_I) is
+	set_other_cluster (c: CONF_GROUP) is
 			-- Assign `c' to `other_cluster'.
+		require
+			c_not_void: c /= Void
 		do
-			other_cluster := c;
-		end;
+			other_cluster := c
+		ensure
+			other_cluster_set: other_cluster /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -48,19 +52,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -5,20 +5,19 @@ root
 	ES: make
 
 default
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
 	disabled_debug ("anchored_features")
 	disabled_debug ("assertion")
 	disabled_debug ("assertions")
-	disabled_debug ("byte_code")
 	disabled_debug ("c_debugger")
 	disabled_debug ("cache")
 	disabled_debug ("cache_compiler")
@@ -29,7 +28,6 @@ default
 	disabled_debug ("check_expanded")
 	disabled_debug ("class_of_id")
 	disabled_debug ("com_object")
-	disabled_debug ("comments")
 	disabled_debug ("count")
 	disabled_debug ("dead_code")
 	disabled_debug ("dead_code_removal")
@@ -37,9 +35,7 @@ default
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_il_info_trace")
 	disabled_debug ("debugger_il_info_trace_extra")
-	disabled_debug ("disable_assertions")
 	disabled_debug ("dle topo")
-	disabled_debug ("document")
 	disabled_debug ("dollar")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
@@ -51,18 +47,21 @@ default
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
 	disabled_debug ("il_info_trace")
-	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("log_exceptions")
 	disabled_debug ("md out-of-order")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
 	disabled_debug ("parse")
 	disabled_debug ("profile_convert")
 	disabled_debug ("refactor_fixme")
+	disabled_debug ("refactor_to_implement")
+	disabled_debug ("regexp")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
 	disabled_debug ("server")
 	disabled_debug ("show_prof_query")
 	disabled_debug ("timing")
+	disabled_debug ("to_implement")
 	disabled_debug ("trace_table")
 	disabled_debug ("transfer")
 	disabled_debug ("verbose")
@@ -84,11 +83,11 @@ default
 	inlining (yes)
 	inlining_size ("0")
 	multithreaded (yes)
+	working_directory ("C:\Projects\partials")
 
 
 cluster
-	override:		"$EIFFEL_SRC\Eiffel\override"
-
+	override:		"$EIFFEL_SRC\Eiffel_conf\override"
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -107,43 +106,43 @@ cluster
 			".svn"; 
 		end
 
-	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+	beurk:		"$EIFFEL_SRC\Eiffel_conf\beurk"
 
-	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+	compiler_support:		"$EIFFEL_SRC\Eiffel_conf\support"
 
-	all common:		"$EIFFEL_SRC\Eiffel\common"
+	all common:		"$EIFFEL_SRC\Eiffel_conf\common"
 		exclude
-			".svn"; "compiler_override"; "error";
+			".svn"; "compiler_override"; "error"; 
 		end
 
-	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+	flat_short_b:		"$EIFFEL_SRC\Eiffel_conf\flat_short\bench"
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; ".svn"; "other"; 
 		end
 
-	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+	all documentation:		"$EIFFEL_SRC\Eiffel_conf\case\documentation"
 		exclude
 			".svn"; 
 		end
 
-	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+	all lace:		"$EIFFEL_SRC\Eiffel_conf\lace"
 		exclude
 			".svn"; 
 		end
 
-	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+	all compiler:		"$EIFFEL_SRC\Eiffel_conf\eiffel"
 		exclude
 			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		end
 
-	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+	all compiler_api:		"$EIFFEL_SRC\Eiffel_conf\API"
 		exclude
 			".svn"; "structured_text"; "eb_preference_manager.e"; 
 		end
 
-	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel\API\structured_text"
+	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel_conf\API\structured_text"
 		exclude
 			".svn"; "common"; 
 		end
@@ -153,7 +152,7 @@ cluster
 			".svn"; "text_formatter.e"; "structured_text.e"; 
 		end
 
-	switch:		"$EIFFEL_SRC\Eiffel\switch"
+	switch:		"$EIFFEL_SRC\Eiffel_conf\switch"
 
 	interface_switch (switch):		"$\interface\batch_only"
 
@@ -165,7 +164,7 @@ cluster
 
 	debuging_class (communications):		"$\debug"
 
-	interface:		"$EIFFEL_SRC\Eiffel\interface"
+	interface:		"$EIFFEL_SRC\Eiffel_conf\interface"
 
 	interface_shared (interface):		"$\shared"
 
@@ -178,7 +177,7 @@ cluster
 
 	profile_tool (interface):		"$\graphical\profile_tool"
 
-	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+	all cli_writer:		"$EIFFEL_SRC\Eiffel_conf\library\cli_writer"
 		exclude
 			".svn"; 
 		end
@@ -197,7 +196,7 @@ cluster
 			".svn"; 
 		end
 
-	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
+	all activation_checker:		"$EIFFEL_SRC\Eiffel_conf\library\activation"
 		exclude
 			"enterprise"; "free"; ".svn"; 
 		end
@@ -212,9 +211,28 @@ cluster
 			".svn"; "xml_implementation"; "graphical"; 
 		end
 
-	all uuid:       "$EIFFEL_SRC\library\uuid"
+	all configuration:		"$EIFFEL_SRC\Eiffel_conf\library\configuration"
 		exclude
-			".svn";
+			".svn"; 
+		visible
+			CONF_PRINT_VISITOR
+				end
+			CONF_BUILD_VISITOR
+				end
+			CONF_RECOMPUTE_OPTIONS
+				end
+			CONF_LOAD_LACE
+				end
+		end
+
+	all uuid:		"$EIFFEL_SRC\library\uuid"
+		exclude
+			".svn"; 
+		end
+
+	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
+		exclude
+			".svn"; "EIFGEN"; 
 		end
 
 external
@@ -223,11 +241,11 @@ external
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM"
+		"$(EIFFEL_SRC)\Eiffel_conf\library\cli_writer\Clib -D_WIN32_DCOM"
 
 	object:
 		"$(EIFFEL_SRC)\C\bench\mtcompiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib"
+		"$(EIFFEL_SRC)\Eiffel_conf\library\cli_writer\spec\msc\lib\cli_writer.lib"
 
 end

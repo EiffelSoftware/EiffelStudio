@@ -103,7 +103,7 @@ feature -- Output
 				if Eiffel_system.valid_class_id (class_id) then
 					l_class_c := class_c
 					st.add ("<");
-					st.add_cluster (l_class_c.cluster, l_class_c.cluster.cluster_name);
+--					st.add_cluster (l_class_c.cluster, l_class_c.cluster.cluster_name);
 					st.add (">");
 					st.add_classi (l_class_c.lace_class, int_class_name);
 					st.add (".");
@@ -133,7 +133,7 @@ feature -- Output
 			if class_id = 0 then
 				Result.append ("<cluster_tag>")
 			else
-				Result.append (Eiffel_system.class_of_id (class_id).cluster.cluster_name)
+				Result.append (Eiffel_system.class_of_id (class_id).group.name)
 			end
 			Result.extend ('.');
 			Result.append_string (int_class_name);

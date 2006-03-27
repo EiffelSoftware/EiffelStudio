@@ -63,13 +63,13 @@ feature -- Status
 
 feature -- Access
 
-	modified_classes: LINKED_SET [CONF_CLASS]
+	modified_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of modified classes.
 
-	added_classes: LINKED_SET [CONF_CLASS]
+	added_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of added classes.
 
-	removed_classes: LINKED_SET [CONF_CLASS]
+	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
 
 feature -- Update
@@ -100,10 +100,11 @@ feature -- Update
 	reset_classes is
 			-- Reset `modified_classes', `added_classes' and `removed_classes'.
 		do
-			create modified_classes.make
-			create added_classes.make
-			create removed_classes.make
-			create reused_classes.make
+			create modified_classes.make (modified_classes_per_system)
+			create added_classes.make (added_classes_per_system)
+			create removed_classes.make (removed_classes_per_system)
+			create reused_classes.make (classes_per_system)
+			create reused_groups.make (groups_per_system)
 		end
 
 feature -- Visit nodes
@@ -235,9 +236,9 @@ feature -- Visit nodes
 					end
 					if not is_error then
 						create current_classes.make (Classes_per_cluster)
-						a_library.set_classes (current_classes)
 						l_target.assemblies.linear_representation.do_if (agent merge_classes ({CONF_ASSEMBLY} ?), agent {CONF_ASSEMBLY}.is_enabled (platform, build))
 						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.is_enabled (platform, build))
+						a_library.set_classes (current_classes)
 					end
 				end
 			end
@@ -252,13 +253,20 @@ feature -- Visit nodes
 				current_cluster := a_cluster
 				a_cluster.set_application_target (application_target)
 				create current_classes.make (Classes_per_cluster)
-				a_cluster.set_classes (current_classes)
 				process_cluster_recursive ("")
 
 				if partial_classes /= Void then
 					process_partial_classes
 					partial_classes := Void
 				end
+
+					-- process removed classes
+				if old_group /= Void then
+					reused_groups.force (old_group)
+					process_removed_classes (old_group.classes)
+				end
+
+				a_cluster.set_classes (current_classes)
 			end
 		ensure then
 			classes_set: not is_error implies a_cluster.classes_set
@@ -270,8 +278,8 @@ feature -- Visit nodes
 			l_groups: ARRAYED_LIST [CONF_GROUP]
 			l_overridee: CONF_GROUP
 		do
+			process_cluster (an_override)
 			if not is_error then
-				process_cluster (an_override)
 				if an_override.override = Void then
 					l_groups := application_target.assemblies.linear_representation
 					l_groups.merge_right (application_target.libraries.linear_representation)
@@ -285,9 +293,11 @@ feature -- Visit nodes
 					is_error or l_groups.after
 				loop
 					l_overridee := l_groups.item
-					l_overridee.add_overriders (an_override, modified_classes)
-					if l_overridee.is_error then
-						add_error (l_overridee.last_error)
+					if l_overridee.is_enabled (platform, build) then
+						l_overridee.add_overriders (an_override, modified_classes)
+						if l_overridee.is_error then
+							add_error (l_overridee.last_error)
+						end
 					end
 
 					l_groups.forth
@@ -346,8 +356,11 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 
 feature {NONE} -- Implementation
 
-	reused_classes: LINKED_SET [CONF_CLASS]
+	reused_classes: SEARCH_TABLE [CONF_CLASS]
 			-- List of classes that are reused (and therefore should not be added to `removed_classes').
+
+	reused_groups: SEARCH_TABLE [CONF_GROUP]
+			-- List of groups that are reused (and therefore their removed classes have already been handled).
 
 	old_assemblies_handled: SEARCH_TABLE [STRING]
 			-- Old assemblies where their removed classes have been handled.
@@ -540,7 +553,7 @@ feature {NONE} -- Implementation
 									add_error (l_class.last_error)
 								end
 								if l_class.is_compiled and l_class.is_modified then
-									modified_classes.extend (l_class)
+									modified_classes.force (l_class)
 								end
 									-- add it to `reused_classes'
 								reused_classes.force (l_class)
@@ -550,7 +563,7 @@ feature {NONE} -- Implementation
 								if l_class.is_error then
 									add_error (l_class.last_error)
 								end
-								added_classes.extend (l_class)
+								added_classes.force (l_class)
 							end
 							if current_classes.has (l_name) then
 								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
@@ -636,6 +649,7 @@ feature {NONE} -- Implementation
 			l_pos: INTEGER
 			l_p: STRING
 			l_a: CONF_ASSEMBLY
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			if not is_error then
 				l_p := an_assembly.location.evaluated_path
@@ -696,9 +710,17 @@ feature {NONE} -- Implementation
 							-- if we have an old assembly and it wasn't modified, directly use the old classes.
 						if old_assembly /= Void and then not old_assembly.is_modified then
 							an_assembly.set_date (old_assembly.date)
-							an_assembly.set_classes (old_assembly.classes)
+							l_classes := old_assembly.classes
+							an_assembly.set_classes (l_classes)
 							an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)
-							reused_classes.append (old_assembly.classes.linear_representation)
+							from
+								l_classes.start
+							until
+								l_classes.after
+							loop
+								reused_classes.force (l_classes.item_for_iteration)
+								l_classes.forth
+							end
 						else
 							create l_reader
 
@@ -982,19 +1004,13 @@ feature {NONE} -- Implementation
 		end
 
 	process_removed (a_groups: HASH_TABLE [CONF_GROUP, STRING]) is
-			-- Add the classes that are still in `old_target' to `removed_classes'
+			-- Add the classes that have been removed to `removed_classes'
 		local
 			l_group: CONF_GROUP
 			l_assembly: CONF_ASSEMBLY
 			l_library: CONF_LIBRARY
 			l_deps: LINKED_SET [CONF_ASSEMBLY]
 			l_rec: like a_groups
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_overrides: ARRAYED_LIST [CONF_CLASS]
-			l_cl: CONF_CLASS
-			l_cl_over: CONF_CLASS
-			l_partial: CONF_CLASS_PARTIAL
-			l_file: RAW_FILE
 			l_done: BOOLEAN
 		do
 			if a_groups /= Void then
@@ -1006,6 +1022,10 @@ feature {NONE} -- Implementation
 					l_done := False
 					l_group := a_groups.item_for_iteration
 					if l_group /= Void then
+							-- check if the group has already been handled
+						if reused_groups.has (l_group) then
+							l_done := True
+						end
 							-- check if it's a library that still is used and therefore is alredy done
 						if l_group.is_library then
 							l_library ?= l_group
@@ -1018,47 +1038,7 @@ feature {NONE} -- Implementation
 						end
 
 						if not l_done and then l_group.classes_set then
-							l_classes := l_group.classes
-							if l_classes /= Void then
-								from
-									l_classes.start
-								until
-									l_classes.after
-								loop
-									l_cl := l_classes.item_for_iteration
-										-- only if the class realy has been removed and we don't have it on the list yet
-									if not reused_classes.has (l_cl) and not removed_classes.has (l_cl) then
-											-- remove partial class files
-										l_partial ?= l_cl
-										if l_partial /= Void then
-											create l_file.make (l_partial.full_file_name)
-											if l_file.exists then
-												l_file.delete
-											end
-										end
-											-- for override classes, mark the classes that used to be overriden as modified
-										l_overrides := l_cl.overrides
-										if l_overrides /= Void then
-											from
-												l_overrides.start
-											until
-												l_overrides.after
-											loop
-												l_cl_over := l_overrides.item
-												if l_cl_over.is_compiled and then reused_classes.has (l_cl_over) then
-													modified_classes.extend (l_cl_over)
-												end
-												l_overrides.forth
-											end
-										end
-
-										if l_cl.is_compiled then
-											removed_classes.extend (l_cl)
-										end
-									end
-								l_classes.forth
-								end
-							end
+							process_removed_classes (l_group.classes)
 
 								-- for assemblies recursively do this for the dependencies
 							l_assembly ?= l_group
@@ -1083,6 +1063,58 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_removed_classes (a_classes: HASH_TABLE [CONF_CLASS, STRING]) is
+			-- Add compiled classes from `a_classes' that are not in `reused_classes' to `removed_classes'.
+		local
+			l_overrides: ARRAYED_LIST [CONF_CLASS]
+			l_cl: CONF_CLASS
+			l_cl_over: CONF_CLASS
+			l_partial: CONF_CLASS_PARTIAL
+			l_file: RAW_FILE
+		do
+			if a_classes /= Void then
+				from
+					a_classes.start
+				until
+					a_classes.after
+				loop
+					l_cl := a_classes.item_for_iteration
+						-- only if the class realy has been removed
+					if not reused_classes.has (l_cl) then
+							-- remove partial class files
+						l_partial ?= l_cl
+						if l_partial /= Void then
+							create l_file.make (l_partial.full_file_name)
+							if l_file.exists then
+								l_file.delete
+							end
+						end
+							-- for override classes, mark the classes that used to be overriden as modified
+						l_overrides := l_cl.overrides
+						if l_overrides /= Void then
+							from
+								l_overrides.start
+							until
+								l_overrides.after
+							loop
+								l_cl_over := l_overrides.item
+								if l_cl_over.is_compiled and then reused_classes.has (l_cl_over) then
+									modified_classes.force (l_cl_over)
+								end
+								l_overrides.forth
+							end
+						end
+
+						if l_cl.is_compiled then
+							removed_classes.force (l_cl)
+						end
+					end
+					a_classes.forth
+				end
+			end
+		end
+
+
 
 	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING]) is
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
@@ -1103,15 +1135,12 @@ feature {NONE} -- Implementation
 						-- to start with them from scratch, but it works anyway.
 					if an_old_groups /= Void then
 						old_group := an_old_groups.item (l_group.name)
-							-- when we load a precompile we use the same configuration, so if the objects are the same it's not realy an old
-						if old_group = l_group then
-							old_group := Void
-						end
 						if old_group /= Void and then not old_group.classes_set then
 							old_group := Void
 						end
 						check
 							old_group_computed: old_group /= Void implies old_group.classes_set
+							old_group_different: old_group /= l_group
 						end
 							-- for assemblies, check if they changed
 						old_assembly ?= old_group
@@ -1230,6 +1259,21 @@ feature {NONE} -- Size constants
 
 	Classes_per_assembly: INTEGER is 100
 			-- How many classes do we have per average assembly.
+
+	Classes_per_system: INTEGER is 3000
+			-- How many classes do we have per average system.
+
+	Groups_per_system: INTEGER is 100
+			-- How many groups do we have per average system.
+
+	Modified_classes_per_system: INTEGER is 100
+			-- How many classes do we have per average system.
+
+	Added_classes_per_system: INTEGER is 3000
+			-- How many classes do we have per average system.
+
+	Removed_classes_per_system: INTEGER is 10
+			-- How many classes do we have per average system.
 
 	Libraries_per_target: INTEGER is 5
 			-- How many libraries do we have per average target.

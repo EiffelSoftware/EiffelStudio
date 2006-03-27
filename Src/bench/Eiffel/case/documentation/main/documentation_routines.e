@@ -168,7 +168,7 @@ feature -- Access
 			a_text_formatter.add_new_line
 			a_text_formatter.add_new_line;
 
-			l_indexes := cluster.indexes
+--			l_indexes := cluster.indexes
 			if l_indexes /= Void then
 				(create {TEXT_FORMATTER_DECORATOR}.make_for_appending (a_text_formatter)).format_ast (l_indexes)
 			end
@@ -315,7 +315,7 @@ feature -- Routines
 				text.add_new_line
 			end
 			append_info_item (text, "cluster")
-			text.process_cluster_name_text (class_i.cluster.cluster_name, class_i.cluster, false)
+			text.process_cluster_name_text (class_i.group.name, class_i.group, false)
 			text.add_new_line
 
 			s := indexing_item_as_string (class_i, "description")
@@ -637,7 +637,7 @@ feature {NONE} -- Indexing clauses
 		require
 			cluster_i_not_void: cluster_i /= Void
 		do
-			Result := indexes_to_html_meta (cluster_i.indexes, "Eiffel cluster")
+--			Result := indexes_to_html_meta (cluster_i.indexes, "Eiffel cluster")
 		end
 
 	html_meta_for_system: STRING is

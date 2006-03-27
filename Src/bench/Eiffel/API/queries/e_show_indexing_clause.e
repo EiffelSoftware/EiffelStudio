@@ -29,17 +29,17 @@ feature -- Execution
 			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR
 		do
-			clusters := Universe.clusters;
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				cursor := clusters.cursor;
-				display_a_cluster (clusters.item);
-				clusters.go_to (cursor);
-				clusters.forth
-			end
+--			clusters := Universe.clusters;
+--			from
+--				clusters.start
+--			until
+--				clusters.after
+--			loop
+--				cursor := clusters.cursor;
+--				display_a_cluster (clusters.item);
+--				clusters.go_to (cursor);
+--				clusters.forth
+--			end
 		end;
 
 	display_a_cluster (cluster: CLUSTER_I) is
@@ -61,7 +61,7 @@ feature -- Execution
 			end;
 			sorted_class_names.sort;
 			text_formatter.add ("Cluster: ");
-			text_formatter.add_cluster (cluster, cluster.cluster_name);
+			text_formatter.add_group (cluster, cluster.cluster_name);
 			if cluster.is_precompiled then
 				text_formatter.add (" (Precompiled)")
 			end;

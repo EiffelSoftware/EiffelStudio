@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			check
 				reference_class_not_void: reference_class /= Void
 			end
-			last_class := Universe.class_named (l_as.parent_base_class.class_name, reference_class.cluster)
+			last_class := Universe.class_named (l_as.parent_base_class.class_name, reference_class.group)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			check
 				reference_class_not_void: reference_class /= Void
 			end
-			last_class := Universe.class_named (l_as.class_name, reference_class.cluster)
+			last_class := Universe.class_named (l_as.class_name, reference_class.group)
 		end
 
 	process_class_as (l_as: CLASS_AS) is
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			check
 				reference_class_not_void: reference_class /= Void
 			end
-			last_class := Universe.class_named (l_as.class_name, reference_class.cluster)
+			last_class := Universe.class_named (l_as.class_name, reference_class.group)
 		end
 
 	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			check
 				reference_class_not_void: reference_class /= Void
 			end
-			last_class := Universe.class_named (l_as.class_name, reference_class.cluster)
+			last_class := Universe.class_named (l_as.class_name, reference_class.group)
 		end
 
 indexing

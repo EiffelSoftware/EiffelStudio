@@ -529,6 +529,7 @@ feature {NONE} -- Generic checking
 				generic_creation_list.after
 			loop
 				constraint_info := generic_creation_list.item
+				system.set_current_class (constraint_info.context_class)
 				constraint_info.action.call (Void)
 				if not constraint_error_list.is_empty then
 						-- Fill `changed_classes' to memorize the

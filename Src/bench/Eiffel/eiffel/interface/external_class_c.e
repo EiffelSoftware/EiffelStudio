@@ -11,13 +11,15 @@ class
 inherit
 	CLASS_C
 		rename
-			cluster as assembly
+			group as assembly
 		redefine
-			lace_class,
+			original_class,
 			is_true_external,
 			is_removable,
 			make,
-			assembly
+			assembly,
+			is_external_class_c,
+			external_class_c
 		end
 
 create
@@ -209,11 +211,20 @@ feature -- Initialization
 
 feature -- Access
 
+	is_external_class_c: BOOLEAN is True
+			-- Is `Current' an EXTERNAL_CLASS_C?
+
+	external_class_c: EXTERNAL_CLASS_C is
+			-- `Current' as `EXTERNAL_CLASS_C'.
+		do
+			Result := Current
+		end
+
 	is_built: BOOLEAN
 			-- Is Current class built?
 
-	lace_class: EXTERNAL_CLASS_I
-			-- Corresponding lace class.
+	original_class: EXTERNAL_CLASS_I
+			-- Original class.
 
 	external_class: CONSUMED_TYPE
 			-- Data read from XML file.
@@ -232,8 +243,6 @@ feature -- Access
 			-- Void, if `c' is not part of system.
 		require
 			c_not_void: c /= Void
-			c_in_assembly_of_current_class:
-				lace_class.assembly.referenced_assemblies.item (c.assembly_id) /= Void
 		do
 			Result := internal_type_from_consumed_type (False, c)
 		end
@@ -1105,9 +1114,9 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			a_feat_updated: a_feat.rout_id_set /= Void and then not a_feat.rout_id_set.is_empty
-			not_already_inserted:
-				not a_feat.rout_id_set.linear_representation.there_exists (
-					agent (a_feat_tbl.origin_table).has)
+--			not_already_inserted:
+--				not a_feat.rout_id_set.linear_representation.there_exists (
+--					agent (a_feat_tbl.origin_table).has)
 		end
 
 	matching_external_feature_in (
@@ -1215,28 +1224,9 @@ feature {NONE} -- Implementation
 			-- If `force_compilation' automatically add it for later compilation
 		require
 			c_not_void: c /= Void
-			c_in_assembly_of_current_class:
-				lace_class.assembly.referenced_assemblies.item (c.assembly_id) /= Void
-		do
-			Result := internal_type_from_consumed_type_in_assembly (
-				lace_class.assembly.referenced_assemblies.item (c.assembly_id),
-				force_compilation, c)
-		ensure
-			result_not_void: force_compilation implies Result /= Void
-		end
-
-	internal_type_from_consumed_type_in_assembly (
-			an_assembly: ASSEMBLY_I; force_compilation: BOOLEAN;
-			c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
-		is
-			-- Given an external type `c' in assembly `an_assembly' get its
-			-- associated CL_TYPE_A.
-			-- If `force_compilation' automatically add it for later compilation
-		require
-			assembly_not_void: an_assembly /= Void
-			c_not_void: c /= Void
 		local
 			l_result: CLASS_I
+			l_classes: ARRAYED_LIST [EXTERNAL_CLASS_I]
 			l_class: CLASS_C
 			l_is_array: BOOLEAN
 			l_generics: ARRAY [TYPE_A]
@@ -1262,13 +1252,13 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
-				l_result := an_assembly.dotnet_classes.item (l_type_name)
+				l_classes := assembly.class_by_dotnet_name (l_type_name, True, universe.platform, universe.build)
+				if not l_classes.is_empty then
+					l_result := l_classes.first
+				end
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
-					check
-						has_basic: lace_class.basic_type_mapping.has (l_type_name)
-					end
 					l_result := lace_class.basic_type_mapping.item (l_type_name)
 				end
 

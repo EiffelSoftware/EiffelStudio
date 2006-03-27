@@ -28,7 +28,7 @@ feature -- Execution
 			nb_of_classes: INTEGER;
 			nb_of_clusters: INTEGER;
 		do
-			clusters := Eiffel_universe.clusters;
+--			clusters := Eiffel_universe.clusters;
 			if not clusters.is_empty then
 
 				nb_of_clusters := clusters.count;
@@ -52,7 +52,7 @@ feature -- Execution
 				text_formatter.add ("root: ");
 				Eiffel_system.root_class.compiled_class.append_signature (text_formatter, True);
 				text_formatter.add (" (cluster: ");
-				text_formatter.add_cluster (
+				text_formatter.add_group (
 					Eiffel_system.root_cluster,
 					Eiffel_system.root_cluster.cluster_name);
 				text_formatter.add (")");
@@ -103,7 +103,7 @@ feature -- Execution
 			classes := cluster.classes;
 
 			text_formatter.add ("Cluster: ");
-			text_formatter.add_cluster (cluster, cluster.cluster_name);
+			text_formatter.add_group (cluster, cluster.cluster_name);
 			if cluster.is_precompiled then
 				text_formatter.add (" (Precompiled, ")
 			else

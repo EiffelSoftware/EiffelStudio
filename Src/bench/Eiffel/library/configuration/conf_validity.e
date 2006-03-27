@@ -143,9 +143,13 @@ feature {NONE} -- Implementation
 	valid_warnings: SEARCH_TABLE [STRING] is
 			-- The codes of valid warnings.
 		once
-			create Result.make (2)
-			Result.put ("unused_local")
-			Result.put ("obsolete")
+			create Result.make (4)
+			Result.force ("unused_local")
+			Result.force ("obsolete_class")
+			Result.force ("obsolete_feature")
+			Result.force ("once_in_generic")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	valid_settings: SEARCH_TABLE [STRING] is
@@ -187,6 +191,8 @@ feature {NONE} -- Implementation
 			Result.force ("working_directory")
 			Result.force ("use_cluster_name_as_namespace")
 			Result.force ("use_all_cluster_name_as_namespace")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	boolean_settings: SEARCH_TABLE [STRING] is
@@ -217,6 +223,8 @@ feature {NONE} -- Implementation
 			Result.force ("use_cluster_name_as_namespace")
 			Result.force ("use_all_cluster_name_as_namespace")
 			Result.force ("force_recompile")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 end

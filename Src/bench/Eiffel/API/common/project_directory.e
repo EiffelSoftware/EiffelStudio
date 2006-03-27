@@ -27,7 +27,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make (dn: STRING; project_eiffel_file: PROJECT_EIFFEL_FILE) is
@@ -39,33 +39,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	is_new: BOOLEAN is
-			-- Is this a new eiffel project directory?
-			-- (Checks to see if there is an EIFGEN directory
-			-- and project.eif file).
-		require
-			exists: exists
-		local
-			dir_name: DIRECTORY_NAME
-			eif_gen_d: DIRECTORY
-		do
-			create dir_name.make_from_string (name)
-			dir_name.extend (Eiffelgen)
-			create eif_gen_d.make (dir_name)
-			Result := not eif_gen_d.exists
-			if not Result then
-					-- A `EIFGEN' directory exists, we need to check
-					-- if there is an Eiffel Project Repository file.
-				if project_eif_file /= Void then
-					Result := not project_eif_file.exists
-				end
-			end
-		ensure
-			not_new_implies_eif_exists:
-				not is_new implies (project_eif_file /= Void
-							and then project_eif_file.exists)
-		end;
 
 	valid_project_eif: BOOLEAN is
 			-- Is the `project_eif' file valid?
@@ -142,62 +115,7 @@ feature -- Access
 			end
 		end
 
-	eifgen_exists: BOOLEAN is
-			-- Does the `EIFGEN' directory exist?
-		local
-			base: DIRECTORY
-			base_name: DIRECTORY_NAME
-		do
-			create base_name.make_from_string (Project_directory_name)
-			base_name.extend (Eiffelgen)
-			create base.make (base_name)
-
-			Result := base_exists and then base.exists
-		end
-               
-	has_base_full_access: BOOLEAN is
-		do
-			Result := is_base_readable and then is_base_writable and then
-					is_base_executable                      
-		end
-
-	forget_old_project is
-			-- Rename `EIFGEN' to `EIFGEN-old'.
-			-- Will raise an exception if it is not possible.
-			-- This exception will be catch at a higher level
-			--| This is for safety reason and to avoid the user
-			--| to do it by hands.
-		require
-			project_exists: exists
-			is_readable: is_readable
-			is_writable: is_writable
-		local
-			old_name: DIRECTORY_NAME
-			new_name: STRING
-			eifgen_dir: DIRECTORY
-		do
-			create old_name.make_from_string (name)
-			old_name.set_subdirectory (Eiffelgen)
-
-			new_name ?= old_name.twin
-			new_name.append ("-old")
-
-				--| Change the name of the directory
-				--| If the directory exists, it will raise an exception
-			create eifgen_dir.make (old_name)
-			eifgen_dir.change_name (new_name)
-		end
-
 feature -- Update
-
-	set_initialized is
-			-- Set a flag to know wether or not the project has been initialized
-			-- correctly, ie `system' has been correctly created.
-		do
-			initialized := True
-		ensure
-			initialized_set: initialized
-		end
 
 	set_project_file (project_file: PROJECT_EIFFEL_FILE) is
 		require
@@ -209,7 +127,7 @@ feature -- Update
 		end
 
 feature -- Access
-	
+
 	initialized: BOOLEAN
 			-- Has the project correctly initialized?
 
@@ -222,19 +140,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -11,26 +11,20 @@ inherit
 	SHARED_ERROR_HANDLER
 		export
 			{COMPILER_EXPORTER} all
-		redefine
-			copy, is_equal
 		end
 
 	SHARED_WORKBENCH
 		export
 			{COMPILER_EXPORTER} all
-		redefine
-			copy, is_equal
 		end
 
 	COMPILER_EXPORTER
-		redefine
-			copy, is_equal
-		end
 
 	PROJECT_CONTEXT
-		redefine
-			copy, is_equal
-		end
+
+	REFACTORING_HELPER
+
+	CONF_VALIDITY
 
 create {COMPILER_EXPORTER}
 	make
@@ -38,159 +32,93 @@ create {COMPILER_EXPORTER}
 feature {NONE} -- Initialization
 
 	make is
-			-- Create the hash table.
+			-- Create.
 		do
-			create clusters.make (25)
-			assemblies_to_be_added := Void
-			override_cluster_names := Void
-		ensure
-			clusters_not_void: clusters /= Void
-			assemblies_to_be_added_reset: assemblies_to_be_added = Void
 		end
 
 feature -- Properties
 
-	clusters: ARRAYED_LIST [CLUSTER_I]
-			-- Clusters of the universe
-
-	assemblies_to_be_added: ARRAYED_LIST [ASSEMBLY_I]
-			-- List of assemblies that needs to be added in Ace file
-			-- before next compilation.
-
-	clusters_sorted_by_tag: ARRAYED_LIST [CLUSTER_I] is
-			-- Clusters sorted by their tags
-		local
-			loc_clusters: like clusters
+	target_name: STRING is
+			-- Name of the universe target.
+		require
+			target_not_void: target /= Void
 		do
-			loc_clusters := clusters
-			create Result.make (loc_clusters.count)
-			if not loc_clusters.is_empty then
-				Result.force (loc_clusters.first)
-				from
-					loc_clusters.start
-					loc_clusters.forth
-				until
-					loc_clusters.after
-				loop
-					from
-						Result.start
-					until
-						Result.after or else
-						loc_clusters.item.cluster_name < Result.item.cluster_name
-					loop
-						Result.forth
-					end
-					Result.put_left (loc_clusters.item)
-					loc_clusters.forth
-				end
+			Result := target.name
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
+	target: CONF_TARGET
+			-- Universe target.
+
+	new_target: CONF_TARGET
+			-- Newly loaded target from configuration file, will become `target' after successful degree 6.
+
+	conf_system: CONF_SYSTEM
+			-- Complete configuration system.
+
+	platform: INTEGER is
+			-- Universe type of platform.
+		local
+			l_pf: PLATFORM
+		do
+			create l_pf
+			if system.il_generation then
+				Result := pf_dotnet
+			elseif l_pf.is_unix then
+				Result := pf_unix
+			elseif l_pf.is_windows then
+				Result := pf_windows
+			else
+				Result := pf_unix
 			end
 		end
 
-	last_class: CLASS_I
-			-- Last class subject to a query
+	build: INTEGER is
+			-- Universe type of build.
+		do
+			if compilation_modes.is_finalizing then
+				Result := build_finalize
+			else
+				Result := build_workbench
+			end
+		end
 
-	override_cluster_names: SEARCH_TABLE [STRING]
-			-- List of all override clusters in system.
+	groups: ARRAYED_LIST [CONF_GROUP] is
+			-- Groups of the universe (not including groups of libraries/precompiles).
+		do
+			Result := target.libraries.linear_representation
+			Result.merge_right (target.assemblies.linear_representation)
+			Result.merge_right (target.clusters.linear_representation)
+			Result.merge_right (target.overrides.linear_representation)
+		end
 
 feature -- Access
 
-	class_with_file_name (f_name: FILE_NAME): CLASS_I is
-			-- Class with name `f_name' found in the Universe
-		local
-			cur: CURSOR
-			classes: HASH_TABLE [CLASS_I, STRING]
-			fn: FILE_NAME
-		do
-			cur := clusters.cursor
-			from
-				clusters.start
-			until
-				clusters.after or else Result /= Void
-			loop
-				classes := clusters.item.classes
-				from
-					classes.start
-				until
-					classes.after or else Result /= Void
-				loop
-					create fn.make_from_string (classes.item_for_iteration.file_name)
-					if f_name.is_equal (fn) then
-						Result := classes.item_for_iteration
-					end
-					classes.forth
-				end
-				clusters.forth
-			end
-			clusters.go_to (cur)
-		end
-
 	classes_with_name (class_name: STRING): LIST [CLASS_I] is
-			-- Classes with name `class_name' found in the Universe
+			-- Classes with a lokal name of `class_name' found in the Universe.
+			-- That means renamings on the cluster of the class itself are taken into
+			-- account, but not renamings because of the use as a library.
+			-- We also look at classes in libraries of libraries.
 		require
 			class_name_not_void: class_name /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
+			class_name_upper: class_name.is_equal (class_name.as_upper)
 		local
-			cur: CURSOR
-			classes: HASH_TABLE [CLASS_I, STRING]
-			l_class_name: STRING
+			l_vis: CONF_FIND_CLASS_VISITOR
 		do
-				-- FIXME: Manu 03/06/2004: When we are 100% sure that all callers
-				-- of `classes_with_name' satisfy the precondition, we will be able to remove
-				-- this line:
-			l_class_name := class_name.as_upper
-
-			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			buffered_classes.search (l_class_name)
+			buffered_classes.search (class_name)
 			if not buffered_classes.found then
-				cur := clusters.cursor
-				from
-					clusters.start
-				until
-					clusters.after
-				loop
-					classes := clusters.item.classes
-					if classes.has (l_class_name) then
-						Result.extend (classes.found_item)
-						Result.forth
-					end
-					clusters.forth
-				end
-				clusters.go_to (cur)
+				create l_vis.make (platform, build)
+				l_vis.set_name (class_name)
+				target.process (l_vis)
+				Result := l_vis.found_classes
 				if Result.count = 1 then
-					buffered_classes.put (Result.first, l_class_name)
+					buffered_classes.put (Result.first, class_name)
 				end
 			else
+				Result := create {ARRAYED_LIST [CLASS_I]}.make (1)
 				Result.extend (buffered_classes.found_item)
 			end
-		ensure
-			classes_with_name_not_void: Result /= Void
-		end
-
-	overriden_classes_with_name (class_name: STRING): LIST [CLASS_I] is
-			-- Classes with name `class_name' found in the Universe of classes
-			-- which have been overriden.
-		require
-			class_name_not_void: class_name /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
-		local
-			cur: CURSOR
-			classes: HASH_TABLE [CLASS_I, STRING]
-		do
-			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			cur := clusters.cursor
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				classes := clusters.item.overriden_classes
-				if classes.has (class_name) then
-					Result.extend (classes.found_item)
-					Result.forth
-				end
-				clusters.forth
-			end
-			clusters.go_to (cur)
 		ensure
 			classes_with_name_not_void: Result /= Void
 		end
@@ -199,9 +127,9 @@ feature -- Access
 			-- Compiled classes with name `class_name' found in the Universe
 		require
 			class_name_not_void: class_name /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
+			class_name_upper: class_name.is_equal (class_name.as_upper)
 		do
-			Result := classes_with_name (class_name)
+			Result := classes_with_name (class_name.as_upper)
 			from
 				Result.start
 			until
@@ -215,129 +143,39 @@ feature -- Access
 			end
 		end
 
-	class_named (class_name: STRING; a_cluster: CLUSTER_I): CLASS_I is
+	class_named (class_name: STRING; a_group: CONF_GROUP): CLASS_I is
 			-- Class named `class_name' in cluster `a_cluster'
 		require
 			good_argument: class_name /= Void
-			good_cluster: a_cluster /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
+			good_group: a_group /= Void
 		local
-			l_cluster: CLUSTER_I
-			real_name: STRING
-			rename_clause: RENAME_I
-			renamings: HASH_TABLE [STRING, STRING]
-			old_cursor: CURSOR
-			l_ignore: LINKED_LIST [CLUSTER_I]
-			l_class_name: STRING
+			l_cl: LINKED_SET [CONF_CLASS]
+			vscn: VSCN
 		do
-				-- FIXME: Manu 03/06/2004: When we are 100% sure that all callers
-				-- of `class_named' satisfy the precondition, we will be able to remove
-				-- this line:
-			l_class_name := class_name.as_upper
+			l_cl := a_group.class_by_name (class_name, True, universe.platform, universe.build)
 
-			l_ignore := a_cluster.ignore
-				-- First look for a renamed class in `a_cluster'
-			Result := a_cluster.renamed_class (l_class_name)
-
-			if Result = Void then
-				from
-					old_cursor := clusters.cursor
-					clusters.start
-				until
-					clusters.after or else Result /= Void
-				loop
-					l_cluster := clusters.item
-					if l_ignore = Void or else not l_ignore.has (l_cluster) then
-						real_name := l_class_name
-						rename_clause := a_cluster.rename_clause_for (l_cluster)
-						if rename_clause /= Void then
-								-- Evaluation of the real name of the class
-							renamings := rename_clause.renamings
-							if renamings.has (l_class_name) then
-								real_name := renamings.found_item
-							elseif renamings.has_item (l_class_name) then
-								real_name := Has_been_renamed
-							end
-						end
-						Result := l_cluster.classes.item (real_name)
+			if l_cl /= Void then
+				if l_cl.count = 1 then
+					Result ?= l_cl.first
+					check
+						Result_not_void: Result /= Void
 					end
-					clusters.forth
-				end
-				clusters.go_to (old_cursor)
-			end
-		end
-
-	class_from_assembly (an_assembly, a_dotnet_name: STRING; lower_case_comparison: BOOLEAN): CLASS_I is
-			-- Associated CLASS_I instance for `a_dotnet_name' external class name
-			-- from given assembly `an_assembly'. If more than one assembly with
-			-- `an_assembly' as name, look only in first found item.
-			--| An example of usage would be:
-			--|	 l_class := universe.class_from_assembly ("mscorlib", "System.IComparable", False)
-			--| to get the associated `System.IComparable' from `mscorlib'.
-			--|
-			--| Nota: if `lower_case_comparison' is True, compare assembly names in lower case
-		require
-			an_assembly_not_void: an_assembly /= Void
-			an_assembly_not_empty: not an_assembly.is_empty
-			a_dotnet_name_not_void: a_dotnet_name /= Void
-			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
-		local
-			l_an: STRING
-			l_assembly_name: STRING
-			l_assembly: ASSEMBLY_I
-			l_found: BOOLEAN
-		do
-				-- Iterate through to find proper assembly.
-			if lower_case_comparison then
-				l_an := an_assembly.as_lower
-			else
-				l_an := an_assembly
-			end
-			from
-				clusters.start
-			until
-				clusters.after or l_found
-			loop
-				l_assembly ?= clusters.item
-				if l_assembly /= Void then
-					l_assembly_name := l_assembly.assembly_name
-					if lower_case_comparison then
-						l_assembly_name := l_assembly_name.as_lower
+				elseif l_cl.count > 1 then
+						-- if we have two results it's possible that we got a class which is overriden and the override itself
+						-- return the class that is overriden
+					if l_cl.count = 2 and then l_cl.i_th (1).actual_class = l_cl.i_th (2) then
+						Result ?= l_cl.i_th (1)
+					elseif l_cl.count = 2 and then l_cl.i_th (2).actual_class = l_cl.i_th (1) then
+						Result ?= l_cl.i_th (2)
+					else
+						create vscn
+						vscn.set_cluster (a_group)
+						vscn.set_first (l_cl.i_th (1))
+						vscn.set_second (l_cl.i_th (2))
+						error_handler.insert_error (vscn)
+						error_handler.raise_error
 					end
-					l_found := equal (l_an, l_assembly_name)
 				end
-				clusters.forth
-			end
-
-			check
-				l_found_implies_found: l_found implies l_assembly /= Void
-			end
-
-			if l_found then
-				l_assembly.dotnet_classes.search (a_dotnet_name)
-				if l_assembly.dotnet_classes.found then
-					Result := l_assembly.dotnet_classes.found_item
-				end
-			end
-		end
-
-	cluster_changed: BOOLEAN is
-			-- Has the time stamps of the present clusters changed ?
-		local
-			l_cluster: CLUSTER_I
-			new_date: INTEGER
-			ptr: ANY
-		do
-			from
-				clusters.start
-			until
-				clusters.after or else Result
-			loop
-				l_cluster := clusters.item
-				ptr := l_cluster.path.to_c
-				new_date := eif_date ($ptr)
-				Result := l_cluster.date /= new_date
-				clusters.forth
 			end
 		end
 
@@ -345,196 +183,44 @@ feature -- Access
 			-- Cluster whose name is `cluster_name' (Void if none)
 		require
 			good_argument: cluster_name /= Void
-		local
-			cluster_list: like clusters
 		do
-			from
-				cluster_list := clusters
-				cluster_list.start
-			until
-				cluster_list.after or else
-				cluster_name.is_equal (cluster_list.item.cluster_name)
-			loop
-				cluster_list.forth
+			if target /= Void then
+				Result ?= target.clusters.item (cluster_name)
 			end
-			if not cluster_list.after then
-				Result := cluster_list.item
-			end
-		end
-
-	has_cluster_of_name (cluster_name: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster whose name is `cluster_name' ?
-		require
-			good_argument: cluster_name /= Void
-		do
-			Result := cluster_of_name (cluster_name) /= Void
-		end
-
-	cluster_of_path (cluster_path: STRING): CLUSTER_I is
-			-- Cluster whose path is `cluster_path' (Void if none)
-		require
-			good_argument: cluster_path /= Void
-		local
-			cluster_list: like clusters
-		do
-			from
-				cluster_list := clusters
-				cluster_list.start
-			until
-				cluster_list.after or else
-				cluster_list.item.path.is_equal (cluster_path)
-			loop
-				cluster_list.forth
-			end
-			if not cluster_list.after then
-				Result := cluster_list.item
-			end
-		end
-
-	assembly_of_specification (a_name, a_culture, a_key, a_version: STRING): ASSEMBLY_I is
-			-- Find an assembly matching `a_name', `a_culture', `a_key' and `a_version'.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			l_key: like a_key
-			l_culture: like a_culture
-			l_result_key: like a_key
-			l_done: BOOLEAN
-			l_list: like clusters
-		do
-			if equal (a_key, "null") then
-				l_key := Void
-			else
-				l_key := a_key.as_lower
-			end
-			l_culture := a_culture.as_lower
-
-			from
-				l_list := clusters
-				l_list.start
-			until
-				l_list.after or l_done
-			loop
-				Result ?= l_list.item
-				if Result /= Void then
-					if Result.public_key_token /= Void then
-						l_result_key := Result.public_key_token.as_lower
-					else
-						l_result_key := Void
-					end
-					l_done := Result.assembly_name.is_equal (a_name) and
-							equal (Result.culture.as_lower, l_culture) and
-							equal (l_result_key, l_key) and
-							equal (Result.version, a_version)
-				end
-				l_list.forth
-			end
-			if not l_done then
-				Result := Void
-			end
-		end
-
-	has_cluster_of_path (cluster_path: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster whose path is `cluster_path' ?
-		require
-			good_argument: cluster_path /= Void
-		do
-			Result := cluster_of_path (cluster_path) /= Void
-		end
-
-	has_override_cluster: BOOLEAN is
-			-- Is there a cluster with the override flag on?
-		do
-			Result := override_cluster_names /= Void and then
-				not override_cluster_names.is_empty
-		ensure
-			override_cluster_names_status: Result implies override_cluster_names /= Void
-		end
-
-	has_override_cluster_of_name (a_name: STRING): BOOLEAN is
-			-- Is there a cluster of name `a_name' with the override flag on?
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.is_empty
-		do
-			Result := override_cluster_names /= Void and then
-				override_cluster_names.has (a_name)
-		ensure
-			override_cluster_names_status: Result implies override_cluster_names /= Void
-		end
-
-	override_clusters: ARRAYED_LIST [CLUSTER_I] is
-			-- Override cluster in the universe.
-		require
-			has_override_cluster: has_override_cluster
-		local
-			c: CURSOR
-			l_cluster: CLUSTER_I
-		do
-				-- Saving position
-			c := clusters.cursor
-
-			from
-				create Result.make (override_cluster_names.count)
-				override_cluster_names.start
-			until
-				override_cluster_names.after
-			loop
-				l_cluster := cluster_of_name (override_cluster_names.item_for_iteration)
-				if l_cluster /= Void then
-					Result.extend (l_cluster)
-				end
-				override_cluster_names.forth
-			end
-
-			clusters.go_to (c)
-		ensure
-			override_cluster_not_void: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Update
 
-	reset_assemblies_to_be_added is
-			-- Reset `assemblies_to_be_added'.
-		do
-			assemblies_to_be_added := Void
-		ensure
-			assemblies_to_be_added_reset: assemblies_to_be_added = Void
-		end
-
-	reset_override_clusters is
-			-- Reset `override_cluster_names'.
-		do
-			override_cluster_names := Void
-		ensure
-			override_cluster_names_reset: override_cluster_names = Void
-		end
-
-	add_new_assembly_in_ace (an_assembly: ASSEMBLY_I) is
-			-- Add `an_assembly' in list of assemblies that are not originally in Ace
-			-- but needs to.
+	set_new_target (a_target: like new_target) is
+			-- Set `new_target' to `a_target'.
 		require
-			an_assembly_not_void: an_assembly /= Void
+			a_target_not_void: a_target /= Void
 		do
-			if assemblies_to_be_added = Void then
-				create assemblies_to_be_added.make (10)
-			end
-			assemblies_to_be_added.extend (an_assembly)
+			new_target := a_target
+		ensure
+			new_target_set: new_target = a_target
 		end
 
-	update_cluster_paths is
-			-- Update the paths of the clusters in the universe.
-			-- (Re-interpret environment variables)
-			-- FIXME shouldn't be exported to all
+	new_target_to_target is
+			-- Move `new_target' to `target'.
+		require
+			new_target_not_void: new_target /= Void
 		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				clusters.item.update_path
-				clusters.forth
-			end
+			target := new_target
+			new_target := Void
+		ensure
+			target_set: target /= Void and target = old new_target
+			new_target_void: new_target = Void
+		end
+
+	set_conf_system (a_system: like conf_system) is
+			-- Set `conf_system' to `a_system'.
+		require
+			a_system_not_void: a_system /= Void
+		do
+			conf_system := a_system
+		ensure
+			conf_system_set: conf_system = a_system
 		end
 
 	reset_internals is
@@ -549,75 +235,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			-- Hash table that contains recent results of calls to `classes_with_name'.
 		once
 			create Result.make (200)
-		end
-
-	set_clusters (l: like clusters) is
-			-- Assign `l' to `clusters'.
-		do
-			clusters := l
-		end
-
-	set_last_class (c: CLASS_I) is
-			-- Assign `c' to `last_class'.
-		do
-			last_class := c
-		end
-
-	add_override_cluster_name (cluster_name: STRING) is
-			-- Extend `override_cluster_names' with `cluster_name'.
-		require
-			cluster_name_not_void: cluster_name /= Void
-			cluster_name_not_empty: not cluster_name.is_empty
-		do
-			if override_cluster_names = Void then
-				create override_cluster_names.make (5)
-			end
-			override_cluster_names.force (cluster_name)
-		end
-
-	insert_cluster (c: CLUSTER_I) is
-			-- Insert `c' in `clusters'.
-		require
-			good_argument: c /= Void
-			consistency: not has_cluster_of_path (c.path)
-		do
-			clusters.extend (c)
-			clusters.finish
-		end
-
-	copy (other: like Current) is
-			-- Clone universe
-		do
-			from
-				make
-				override_cluster_names := other.override_cluster_names
-				if override_cluster_names /= Void then
-					override_cluster_names := override_cluster_names.twin
-				end
-				other.clusters.start
-			until
-				other.clusters.after
-			loop
-				insert_cluster (other.clusters.item)
-				other.clusters.forth
-			end
-		end
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := equal (override_cluster_names, other.override_cluster_names)
-			from
-				clusters.start
-				other.clusters.start
-			until
-				not Result or clusters.after or other.clusters.after
-			loop
-				Result := Result and clusters.item.is_equal (other.clusters.item)
-				clusters.forth
-				other.clusters.forth
-			end
 		end
 
 	check_universe is
@@ -711,24 +328,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			Error_handler.checksum
 		end
 
-	reset_clusters is
-			-- Reset all the clusters
-		local
-			l_cluster: CLUSTER_I
-		do
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				l_cluster := clusters.item
-				if not l_cluster.is_precompiled then
-					l_cluster.reset_cluster
-				end
-				clusters.forth
-			end
-		end
-
 	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]) is
 			-- Universe checking, check all class names in `a_set' to ensure that only
 			-- one instance with specified name is found in universe. If it is unique,
@@ -736,341 +335,42 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			a_set_not_void: a_set /= Void
 		local
-			l_cluster: CLUSTER_I
-			l_classes: HASH_TABLE [CLASS_I, STRING]
 			vd23: VD23
 			vd24: VD24
-			vscn: VSCN
-			old_cursor: CURSOR
-			l_processed_set: HASH_TABLE [CLASS_I, STRING]
-			l_conflicts_set: HASH_TABLE [ARRAYED_LIST [CLASS_I], STRING]
-			l_list: ARRAYED_LIST [CLASS_I]
-			l_first_class, l_second_class: CLASS_I
 			l_class_name: STRING
-			l_has_error: BOOLEAN
-		do
-				-- First pass, we check that all classes in `a_set' are located at least
-				-- in one cluster. If located in two or more clusters, we record them
-				-- in `l_conflicts'.
-			from
-				create l_processed_set.make (a_set.count)
-				create l_conflicts_set.make (a_set.count)
-				old_cursor := clusters.cursor
-				clusters.start
-			until
-				clusters.after
-			loop
-				l_cluster := clusters.item
-				from
-					l_classes := l_cluster.classes
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_class_name := l_classes.key_for_iteration
-					if a_set.has (l_class_name) then
-						l_processed_set.search (l_class_name)
-						if l_processed_set.found then
-								-- We have a conflict here, let's record it for further analyzis.
-							l_list := l_conflicts_set.item (l_class_name)
-							if l_list = Void then
-									-- Create conflicts list for `l_class_name', we insert
-									-- as first element first element inserted for `l_class_name'
-									-- in `l_processed_set'.
-								create l_list.make (clusters.count)
-								l_conflicts_set.put (l_list, l_class_name)
-								l_list.extend (l_processed_set.found_item)
-							end
-							l_list.extend (l_classes.item_for_iteration)
-						else
-							l_processed_set.put (l_classes.item_for_iteration, l_class_name)
-						end
-					end
-					l_classes.forth
-				end
-				clusters.forth
-			end
-
-			if l_processed_set.count /= a_set.count then
-					-- Some classes were missing, so for each missing class we report a VD23 error.
-				from
-					a_set.start
-				until
-					a_set.after
-				loop
-					if not l_processed_set.has (a_set.key_for_iteration) then
-							-- No class `a_set.key_for_iteration' found.
-						create vd23
-						vd23.set_class_name (a_set.key_for_iteration)
-						Error_handler.insert_error (vd23)
-					end
-					a_set.forth
-				end
-				l_has_error := True
-			end
-
-			if not l_conflicts_set.is_empty then
-					-- We have found classes with the same name either in different cluster
-					-- (report a VD24 error) or in same cluster (report a VSCN error)
-				from
-					l_conflicts_set.start
-				until
-					l_conflicts_set.after
-				loop
-					l_class_name := l_conflicts_set.key_for_iteration
-					l_list := l_conflicts_set.item_for_iteration
-					check
-							-- We have at least 2 elements per list.
-						list_count_valid: l_list.count > 1
-					end
-					from
-						l_list.start
-						l_first_class := l_list.first
-						l_list.forth
-					until
-						l_list.after
-					loop
-						l_second_class := l_list.item
-						if l_first_class.cluster = l_second_class.cluster then
-								-- Report VSCN error
-							create vscn
-							vscn.set_cluster (l_first_class.cluster)
-							vscn.set_first (l_first_class)
-							vscn.set_second (l_second_class)
-							Error_handler.insert_error (vscn)
-						else
-								-- Report VD24 error
-							create vd24
-							vd24.set_cluster (l_first_class.cluster)
-							vd24.set_other_cluster (l_second_class.cluster)
-							vd24.set_class_name (l_class_name)
-							Error_handler.insert_error (vd24)
-						end
-						l_list.forth
-					end
-					l_conflicts_set.forth
-				end
-				l_has_error := True
-			end
-
-			if not l_has_error then
-					-- No error occurred, we can safely call the actions associated to
-					-- `a_set'.
-				from
-					a_set.start
-				until
-					a_set.after
-				loop
-					a_set.item_for_iteration.call ([l_processed_set.item (a_set.key_for_iteration)])
-					a_set.forth
-				end
-			end
-
-				-- Restore clusters cursor.
-			clusters.go_to (old_cursor)
-		end
-
-	duplicate: like Current is
-			-- Duplication of universe
-		local
-			old_cursor: CURSOR
-		do
-			old_cursor := clusters.cursor
-
-			create Result.make
-			clusters.start
-			Result.set_clusters (clusters.duplicate (clusters.count))
-
-			clusters.go_to (old_cursor)
-		end
-
-	compute_last_class (class_name: STRING; a_cluster: CLUSTER_I) is
-			-- Assign to `last_class' the class named `class_name'
-			-- in cluster `a_cluster'
-		require
-			good_argument: class_name /= Void
-			good_cluster: a_cluster /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
-		local
-			l_cluster: CLUSTER_I
-			real_name: STRING
-			rename_clause: RENAME_I
-			renamings: HASH_TABLE [STRING, STRING]
-			vscn: VSCN
-			new_class: CLASS_I
-			error_list: LINKED_LIST [VSCN]
-			l_ignore: LINKED_LIST [CLUSTER_I]
-		do
-			last_class := Void
-			l_ignore := a_cluster.ignore
-
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				l_cluster := clusters.item
-				if l_ignore = Void or else not l_ignore.has (l_cluster) then
-					real_name := class_name
-					rename_clause := a_cluster.rename_clause_for (l_cluster)
-					if rename_clause /= Void then
-							-- Evaluation of the real name of the class
-						renamings := rename_clause.renamings
-						if renamings.has (class_name) then
-							real_name := renamings.found_item
-						elseif renamings.has_item (class_name) then
-							real_name := Has_been_renamed
-						end
-					end
-
-					if l_cluster.classes.has (real_name) then
-						new_class := l_cluster.classes.found_item
-						if last_class = Void then
-							last_class := new_class
-						else
-							create vscn
-							vscn.set_first (last_class)
-							vscn.set_second (new_class)
-							vscn.set_cluster (l_cluster)
-							if error_list = Void then
-								create error_list.make
-							end
-							error_list.extend (vscn)
-						end
-					end
-				end
-				clusters.forth
-			end
-
-					-- Conflict detected
-			if error_list /= Void then
-				from
-					error_list.start
-				until
-					error_list.after
-				loop
-					error_handler.insert_error (error_list.item)
-					error_list.forth
-				end
-				last_class := Void
-				error_handler.raise_error
-			end
-		end
-
-	is_ambiguous_name (class_name: STRING): BOOLEAN is
-			-- Is the raw class name `class_name' ambiguous for the
-			-- universe ?
-		require
-			good_argument: class_name /= Void
-			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
-		local
-			found, one_found: BOOLEAN
+			l_classes: LIST [CLASS_I]
+			l_count: INTEGER
 		do
 			from
-				clusters.start
+				a_set.start
 			until
-				clusters.after or else Result
+				a_set.after
 			loop
-				if not clusters.item.belongs_to_all then
-					found := clusters.item.classes.has (class_name)
-					Result := found and then one_found
-					one_found := one_found or else found
-				end
-				clusters.forth
-			end
-		end
-
-	process_override_clusters is
-			-- incrementality of the override_cluster option
-		local
-			l_ovcs: like override_clusters
-			l_cluster: CLUSTER_I
-		do
-			if has_override_cluster then
-					-- Remove classes which are overridden
-				l_ovcs := override_clusters
-
-				from
-					l_ovcs.start
-				until
-					l_ovcs.after
-				loop
-					l_cluster := l_ovcs.item
-					from
-						clusters.start
-					until
-						clusters.after
-					loop
-						if not clusters.item.is_override_cluster then
-							clusters.item.process_overrides (l_cluster)
-						end
-						clusters.forth
-					end
-					l_ovcs.forth
-				end
-			end
-		end
-
-	rebuild_override_fast is
-			-- Performed during a recompile without degree 6. We simply analyzes
-			-- content of override clusters to find modified classes outside environment.
-		require
-			has_override_cluster: has_override_cluster
-		local
-			l_ovcs: like override_clusters
-		do
-				-- Remove classes which are overridden
-			l_ovcs := override_clusters
-
-			from
-				l_ovcs.start
-			until
-				l_ovcs.after
-			loop
-				l_ovcs.item.rebuild_override
-				l_ovcs.forth
-			end
-		end
-
-feature {COMPILER_EXPORTER} -- Merging
-
-	merge (other: like Current) is
-			-- Merge `other' to current universe.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		local
-			other_clusters: like clusters
-			c_of_name, c_of_path: CLUSTER_I
-			c: CLUSTER_I
-			vd28: VD28
-			vdcn: VDCN
-		do
-			other_clusters := other.clusters
-			from other_clusters.start until other_clusters.after loop
-				c := other_clusters.item
-				c_of_name := Universe.cluster_of_name (c.cluster_name)
-				c_of_path := Universe.cluster_of_path (c.path)
-				if c_of_name /= Void then
-					if c_of_path /= c_of_name then
-							-- Two clusters with the same name.
-						create vdcn
-						vdcn.set_cluster (c)
-						Error_handler.insert_error (vdcn)
-						Error_handler.raise_error
-					end
-				elseif c_of_path /= Void then
-						-- Two clusters with same path.
-					create vd28
-					vd28.set_cluster (c_of_path)
-					vd28.set_second_cluster_name (c.cluster_name)
-					Error_handler.insert_error (vd28)
-					Error_handler.raise_error
+				l_class_name := a_set.key_for_iteration
+				l_classes := universe.classes_with_name (l_class_name)
+				l_count := l_classes.count
+				if l_count = 0 then
+					create vd23
+					vd23.set_class_name (l_class_name)
+					error_handler.insert_error (vd23)
+					-- if we have two results it's possible that we got a class which is overriden and the override itself
+					-- return the class that is overriden
+				elseif l_count = 2 and then l_classes.i_th (1).actual_class = l_classes.i_th (2) then
+					a_set.item_for_iteration.call ([l_classes.i_th (1)])
+				elseif l_count = 2 and then l_classes.i_th (2).actual_class = l_classes.i_th (1) then
+					a_set.item_for_iteration.call ([l_classes.i_th (2)])
+				elseif l_count > 1 then
+					create vd24
+					vd24.set_class_name (l_class_name)
+					vd24.set_cluster (l_classes.first.group)
+					vd24.set_other_cluster (l_classes.i_th (2).group)
+					error_handler.insert_error (vd24)
 				else
-					insert_cluster (c)
+					a_set.item_for_iteration.call ([l_classes.first])
 				end
-				other_clusters.forth
+				a_set.forth
 			end
+			error_handler.checksum
 		end
 
 feature {COMPILER_EXPORTER} -- Precompilation
@@ -1085,20 +385,7 @@ feature {COMPILER_EXPORTER} -- Precompilation
 			nb := precomp_ids.count + 1
 			precomp_ids.conservative_resize (1, nb)
 			precomp_ids.put (System.compilation_id, nb)
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				clusters.item.set_is_precompiled (precomp_ids)
-				clusters.forth
-			end
 		end
-
-feature {NONE} -- Constants
-
-	Has_been_renamed: STRING is "_"
-			-- Fake name to identify a class which has been renamed
 
 feature {NONE} -- Externals
 
@@ -1114,19 +401,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -99,7 +99,7 @@ feature -- IL Generation
 				-- Initialize context.
 			set_current_class (class_c)
 			set_current_class_type (class_type)
-			Inst_context.set_cluster (class_c.cluster)
+			Inst_context.set_group (class_c.group)
 			is_single_class := class_type.is_generated_as_single_type
 
 				-- Generate features.

@@ -203,8 +203,8 @@ feature -- Generation
 				generate_entry_point
 
 					-- Generate resources if any
-				if System.dotnet_resources_names /= Void then
-					cil_generator.generate_resources (System.dotnet_resources_names)
+				if not universe.target.external_ressource.is_empty then
+					cil_generator.generate_resources (universe.target.external_ressource)
 				end
 					-- Finish code generation.
 				cil_generator.end_assembly_generation (signing)
@@ -247,7 +247,6 @@ feature -- Generation
 			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
 			-- copy configuration file to load local assemblies.
 		local
-			l_assembly: ASSEMBLY_I
 			l_source, l_target: RAW_FILE
 			l_source_name, l_target_name: FILE_NAME
 			l_file_name: STRING
@@ -255,21 +254,21 @@ feature -- Generation
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
+			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 		do
 			if not retried then
 					-- Copy referenced local assemblies
 				from
-					Universe.clusters.start
+					l_assemblies := universe.target.assemblies
+					create assemblies_done.make (l_assemblies.count)
+					l_assemblies.start
 				until
-					Universe.clusters.after
+					l_assemblies.after
 				loop
-					l_assembly ?= Universe.clusters.item
-					if l_assembly /= Void and then not l_assembly.is_in_gac then
-						l_has_local := True
-						copy_to_local (l_assembly.assembly_path)
-					end
-					Universe.clusters.forth
+					copy_recursively (l_assemblies.item_for_iteration)
+					l_assemblies.forth
 				end
+				assemblies_done.wipe_out
 
 					-- Copy precompiled assemblies.
 				if
@@ -381,9 +380,9 @@ feature {NONE} -- Type description
 			l_feat: FEATURE_I
 			l_root_class: CLASS_C
 		do
-			if System.root_class /= Void and then System.creation_name /= Void then
+			if System.root_class /= Void and then System.root_creation_name /= Void then
 				l_root_class := System.root_class.compiled_class
-				l_feat := l_root_class.feature_table.item (System.creation_name)
+				l_feat := l_root_class.feature_table.item (System.root_creation_name)
 				root_class_routine := l_feat.written_class
 			end
 		end
@@ -795,12 +794,12 @@ feature {NONE} -- Type description
 		do
 			if
 				System.msil_generation_type.is_equal ("exe") and then
-				System.creation_name /= Void
+				System.root_creation_name /= Void
 			then
 					-- Update the root class info
 				a_class := system.root_class.compiled_class
 				root_class_type := a_class.actual_type.type_i.associated_class_type
-				root_feat := a_class.feature_table.item (System.creation_name)
+				root_feat := a_class.feature_table.item (System.root_creation_name)
 				l_decl_type := cil_generator.implemented_type (root_feat.written_in,
 					root_class_type.type)
 				cil_generator.define_entry_point (
@@ -1013,6 +1012,37 @@ feature {NONE} -- Sort
 
 feature {NONE} -- File copying
 
+	assemblies_done: SEARCH_TABLE [STRING]
+			-- Lookup for the handled assemblies (during copy).
+
+	copy_recursively (an_assembly: CONF_ASSEMBLY) is
+			-- Copy `an_assembly' (if necessary) and check recursively for dependencies.
+		require
+			assemblies_copied_not_void: assemblies_done /= Void
+			an_assembly_not_void: an_assembly /= Void
+		local
+			l_deps: LINKED_SET [CONF_ASSEMBLY]
+		do
+			if not assemblies_done.has (an_assembly.guid) then
+				assemblies_done.force (an_assembly.guid)
+				if not an_assembly.is_in_gac then
+					copy_to_local (an_assembly.location.evaluated_path)
+				end
+				l_deps :=an_assembly.dependencies
+				if l_deps /= Void then
+					from
+						l_deps.start
+					until
+						l_deps.after
+					loop
+						copy_recursively (l_deps.item)
+						l_deps.forth
+					end
+				end
+			end
+		end
+
+
 	copy_to_local (a_source: STRING) is
 			-- Copy `a_source' into `Assemblies' directory.
 		require
@@ -1101,19 +1131,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

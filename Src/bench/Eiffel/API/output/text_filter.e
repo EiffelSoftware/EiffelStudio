@@ -475,12 +475,11 @@ feature -- Text processing
 					if format_table.has (f_Cluster_name) then
 						format := format_table.found_item
 
-						set_keyword (kw_File,
-							relative_to_base ("" +
-								a_cluster.relative_file_name (file_separator) +
-								"." + file_suffix
-							)
-						)
+--						set_keyword (kw_File, relative_to_base ("" +
+--								a_cluster.relative_file_name (file_separator) +
+--								"." + file_suffix
+--							)
+--						)
 					end
 				else
 					if format_table.has (f_Non_generated_Cluster) then
@@ -512,12 +511,12 @@ feature -- Text processing
 				if class_generated then
 					if format_table.has (f_Class_name) then
 						format := format_table.found_item
-						set_keyword (kw_File,
-							relative_to_base ("" +
-								a_class.document_file_relative_path (file_separator) +
-								class_suffix
-							)
-						)
+--						set_keyword (kw_File,
+--							relative_to_base ("" +
+--								a_class.document_file_relative_path (file_separator) +
+--								class_suffix
+--							)
+--						)
 					end
 				else
 					if format_table.has (f_Non_generated_class) then
@@ -784,10 +783,10 @@ feature -- Text processing
 
 			feat_suffix := escaped_text (feat_suffix)
 
-			set_keyword (kw_File, relative_to_base ("" +
-				written_class.lace_class.document_file_relative_path (file_separator) +
-				feat_suffix
-			))
+--			set_keyword (kw_File, relative_to_base ("" +
+--				written_class.lace_class.document_file_relative_path (file_separator) +
+--				feat_suffix
+--			))
 			set_keyword (kw_Feature, escaped_text (real_feature.name))
 		end
 

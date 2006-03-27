@@ -58,6 +58,12 @@ inherit
 
 	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
 
+	SHARED_CONF_FACTORY
+
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		end
 create
 	make
 
@@ -157,6 +163,9 @@ feature -- Counters
 		end
 
 feature -- Properties
+
+	is_rebuild: BOOLEAN
+			-- Do we have to do a full rebuild (because some classes could not be found).
 
 	rout_info_table: ROUT_INFO_TABLE
 			-- Global routine info table
@@ -347,13 +356,17 @@ feature -- Properties
 	init is
 			-- System initialization
 		require
-			any_class: any_class /= Void
+			new_target: universe.new_target /= Void
 		local
 			local_workbench: WORKBENCH_I
 		do
+			rebuild_configuration
+
 			first_compilation := True
 
 			local_workbench := Workbench
+
+				-- add
 
 				-- At the very beginning of a session, even class ANY is
 				-- not compiled. So we must say to the workbench to compile
@@ -456,7 +469,7 @@ feature -- Properties
 				-- The root class could be part of the precompiled library, so
 				-- we need to make sure that its `is_in_system' flag is set.
 			if
-				root_class /= Void and then root_class.is_compiled and then
+				root_cluster.classes_set and then root_class.is_compiled and then
 				root_class.compiled_class.is_precompiled
 			then
 				root_class.compiled_class.record_precompiled_class_in_system
@@ -466,49 +479,23 @@ feature -- Properties
 	add_visible_classes is
 			-- Force visible classes into System
 		local
-			local_workbench: WORKBENCH_I
-			local_universe: UNIVERSE_I
-			a_cluster_list: ARRAYED_LIST [CLUSTER_I]
-			a_cluster: CLUSTER_I
-			a_class_table: HASH_TABLE [CLASS_I, STRING]
-			a_class_i: CLASS_I
-			a_visible_i: VISIBLE_I
+			l_conf_class: CONF_CLASS
+			l_class_i: CLASS_I
 		do
-			local_workbench := Workbench
-			local_universe := Universe
-
 			from
-				a_cluster_list := local_universe.clusters
-				a_cluster_list.start
+				new_classes.start
 			until
-				a_cluster_list.after
+				new_classes.after
 			loop
-				a_cluster := a_cluster_list.item
-
-				from
-					a_class_table := a_cluster.classes
-					if a_class_table /= Void then a_class_table.start end
-				until
-					a_class_table = Void or else a_class_table.after
-				loop
-					a_class_i := a_class_table.item_for_iteration
-
-					if a_class_i /= Void then
-						a_visible_i := a_class_i.visible_level
-
-						if a_visible_i /= Void and then a_visible_i.has_visible then
-							-- Add visible class to system if
-							-- not in the system yet.
-							if not a_class_i.is_compiled then
-								local_workbench.change_class (a_class_i)
-							end
-						end
-					end
-
-					a_class_table.forth
+				l_class_i := new_classes.item
+				l_conf_class ?= l_class_i
+				check
+					is_conf_class: l_conf_class /= Void
 				end
-
-				a_cluster_list.forth
+				if l_conf_class.is_always_compile then
+					workbench.change_class (l_class_i)
+				end
+				new_classes.forth
 			end
 		end
 
@@ -600,10 +587,13 @@ end
 		require
 			 good_argument: a_class /= Void
 		do
-			if removed_classes = Void then
-				create removed_classes.make (10)
+			if a_class.is_removable then
+				if removed_classes = Void then
+					create removed_classes.make (10)
+				end
+				removed_classes.put (a_class)
+				Degree_5.remove_class (a_class)
 			end
-			removed_classes.put (a_class)
 		end
 
 	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING) is
@@ -757,14 +747,269 @@ end
 			class_type.remove_c_generated_files
 		end
 
+	rebuild_configuration is
+			-- Build or rebuild the configuration information
+		local
+			l_vis_build: CONF_BUILD_VISITOR
+			l_vis_check: CONF_CHECKER_VISITOR
+			l_classes: DS_HASH_SET [CONF_CLASS]
+			l_conf_class: CONF_CLASS
+			l_class_i: CLASS_I
+			l_errors: LIST [CONF_ERROR]
+			vd71: VD71
+			vd80: VD80
+			l_target: CONF_TARGET
+			l_file: PLAIN_TEXT_FILE
+			l_file_name: FILE_NAME
+			l_ise_lib: STRING
+		do
+			l_target := universe.new_target
+			check
+				l_target_not_void: l_target /= Void
+			end
+				-- initialize ISE_LIBRARY with ISE_EIFFEL
+			l_ise_lib := execution_environment.variable_value ("ISE_LIBRARY")
+			if l_ise_lib = Void then
+				l_ise_lib := execution_environment.variable_value ("ISE_EIFFEL")
+			end
+			l_target.environ_variables.force (l_ise_lib, "ise_library")
+
+				-- let the configuration system build "everything"
+			if universe.target /= Void then
+				create l_vis_build.make_build_from_old (universe.platform, universe.build, l_target, universe.target)
+			else
+				create l_vis_build.make_build (universe.platform, universe.build, l_target)
+			end
+			if il_generation then
+				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
+				l_vis_build.set_il_version (msil_version)
+			end
+			l_vis_build.set_partial_location (conf_factory.new_location_from_path (partial_generation_path, l_target))
+			l_target.process (l_vis_build)
+			if l_vis_build.is_error then
+				from
+					l_errors := l_vis_build.last_errors
+					l_errors.start
+				until
+					l_errors.after
+				loop
+					create vd71.make (l_errors.item)
+					Error_handler.insert_error (vd71)
+					l_errors.forth
+				end
+				Error_handler.raise_error
+			end
+
+				-- check configuration and add warnings
+			create l_vis_check.make (universe.platform, universe.build)
+			l_target.process (l_vis_check)
+			if l_vis_check.is_error then
+				from
+					l_errors := l_vis_check.last_errors
+					l_errors.start
+				until
+					l_errors.after
+				loop
+					create vd80
+					vd80.set_warning (l_errors.item)
+					Error_handler.insert_warning (vd80)
+					l_errors.forth
+				end
+			end
+
+				-- modified classes
+			l_classes := l_vis_build.modified_classes
+			from
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_conf_class := l_classes.item_for_iteration
+				l_class_i ?= l_conf_class
+				check
+					class_i: l_class_i /= Void
+				end
+					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed external classes
+				if not l_class_i.is_external_class then
+					workbench.change_class (l_class_i)
+				end
+				l_conf_class.set_up_to_date
+				l_classes.forth
+			end
+				-- added classes
+			create new_classes.make
+			l_classes := l_vis_build.added_classes
+			from
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_conf_class := l_classes.item_for_iteration
+				l_class_i ?= l_conf_class
+				check
+					class_i: l_class_i /= Void
+				end
+				record_new_class_i (l_class_i)
+				l_conf_class.set_up_to_date
+				l_classes.forth
+			end
+				-- removed classes
+			if workbench.automatic_backup then
+				create l_file_name.make_from_string (workbench.backup_subdirectory)
+				l_file_name.set_file_name (backup_info)
+				create l_file.make (l_file_name)
+			end
+			l_classes := l_vis_build.removed_classes
+			from
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_class_i ?= l_classes.item_for_iteration
+				check
+					class_i: l_class_i /= Void
+					class_compiled: l_class_i.is_compiled
+				end
+				l_class_i.compiled_class.recompile_syntactical_clients
+				if workbench.automatic_backup then
+					l_file.put_string (l_class_i.name+": "+l_class_i.group.name+": "+l_class_i.file_name+"%N")
+				end
+				remove_class (l_class_i.compiled_class)
+				l_classes.forth
+			end
+			if workbench.automatic_backup then
+				l_file.close
+			end
+
+				-- everything with the configuration system went ok, move new_target to target
+			universe.new_target_to_target
+
+				-- Try to reconnect removed classes with new classes
+			revive_moved_classes
+
+				-- check the universe
+			universe.check_universe
+
+				-- update/check root class
+			update_root_class
+		end
+
+	update_root_class is
+			-- Update/recheck the root class.
+		require
+			target_not_void: universe.target /= Void
+		local
+			l_target: CONF_TARGET
+			l_classes_i: LIST [CLASS_I]
+			l_root: CONF_ROOT
+			l_cluster: CLUSTER_I
+			vd19: VD19
+			vd20: VD20
+			vd29: VD29
+		do
+			l_target := universe.target
+				-- update root class/feature
+			l_root := l_target.root
+			if l_root /= Void then
+				system.set_root_class_name (l_root.class_name.as_upper)
+
+				if l_root.cluster_name = Void then
+					l_classes_i := universe.classes_with_name (l_root.class_name.as_upper)
+					if l_classes_i.count = 0 then
+						create vd20
+						vd20.set_class_name (l_root.class_name.as_upper)
+						Error_handler.insert_error (vd20)
+						Error_handler.raise_error
+					elseif l_classes_i.count > 1 then
+						create vd29
+						vd29.set_cluster (l_classes_i.first.group)
+						vd29.set_second_cluster_name (l_classes_i.last.group.name)
+						vd29.set_root_class_name (l_root.class_name.as_upper)
+						Error_handler.insert_error (vd29)
+						Error_handler.raise_error
+					else
+						l_cluster ?= l_classes_i.first.group
+					end
+				else
+					l_cluster ?= l_target.clusters.item (l_root.cluster_name)
+					if l_cluster = Void then
+						create vd19
+						vd19.set_root_cluster_name (l_root.cluster_name)
+						Error_handler.insert_error (vd19)
+						Error_handler.raise_error
+					elseif l_cluster.classes.item (root_class_name) = Void then
+						create vd20
+						vd20.set_class_name (l_root.class_name.as_upper)
+						Error_handler.insert_error (vd20)
+						Error_handler.raise_error
+					end
+				end
+
+				system.set_root_cluster (l_cluster)
+				system.set_creation_name (l_root.feature_name)
+			end
+		ensure
+			root_class_set: root_class /= Void
+			root_cluster_set: root_cluster /= Void
+		end
+
+
 	init_recompilation is
 			-- Initialization before a recompilation.
+		local
+			l_vis_modified: CONF_MODIFIED_VISITOR
+			l_classes: ARRAYED_LIST [CONF_CLASS]
+			l_class: CLASS_I
+			l_conf_class: CONF_CLASS
+			l_rebuild: BOOLEAN
+			l_grp: CONF_GROUP
 		do
+			if not compilation_modes.is_quick_melt then
+					-- Patrickr 03/07/2006
+					-- for now always rebuild
+				is_rebuild := True
+			else
+				is_rebuild := is_rebuild or first_compilation
+			end
+
 				-- Mark classes to be recompiled.
-			if not any_class.is_compiled then
+			if any_class = Void or else not any_class.is_compiled then
 					-- First compilation.
+				is_rebuild := True
 				init
 			else
+				if is_rebuild then
+						-- Full rebuild
+					rebuild_configuration
+				else
+						-- Let the configuration system check for compiled classes that have been modified.
+					create l_vis_modified.make (universe.platform, universe.build)
+					universe.target.process (l_vis_modified)
+					l_classes := l_vis_modified.modified_classes
+					from
+						l_classes.start
+					until
+						l_rebuild or l_classes.after
+					loop
+						l_conf_class := l_classes.item
+						l_grp := l_conf_class.group
+						l_class ?= l_conf_class
+						check
+							class_i: l_class /= Void
+						end
+						l_rebuild := l_conf_class.is_renamed and then (l_grp.is_overriden or l_grp.is_override)
+						workbench.change_class (l_class)
+						l_conf_class.set_up_to_date
+						l_classes.forth
+					end
+					if l_rebuild then
+						rebuild_configuration
+						is_rebuild := True
+					else
+						update_root_class
+					end
+				end
+
 				if
 					not marked_precompiled_classes and then
 					not Compilation_modes.is_precompiling and then uses_precompiled
@@ -783,7 +1028,6 @@ end
 				Lace.compile_all_classes or
 				(Compilation_modes.is_precompiling and root_class = any_class)
 			then
-					-- `None' is specified as the root class
 				Workbench.change_all_new_classes
 			end
 
@@ -811,9 +1055,6 @@ end
 			internal_default_rescue_id := -1
 			internal_default_create_id := -1
 			internal_special_make_id := - 1
-
-				-- Wipe out faked removed classes.
-			removed_classes := Void
 		end
 
 feature -- ANY.default_rescue routine id
@@ -901,6 +1142,12 @@ feature {NONE} -- Implementation: predefined routine IDs
 
 feature -- Recompilation
 
+	set_rebuild (b: BOOLEAN) is
+			-- Set `is_rebuild'.
+		do
+			is_rebuild := b
+		end
+
 	recompile is
 			-- Incremetal recompilation of the system.
 		require
@@ -918,11 +1165,81 @@ feature -- Recompilation
 
 			has_been_changed := False
 			do_recompilation
+
+			is_rebuild := False
 			successful := True
 		rescue
 			if Rescue_status.is_error_exception then
 				successful := False
 			end
+		end
+
+	revive_moved_classes is
+			-- Try to revive classes that have been removed and added (= moved).
+		local
+			l_cli: CLASS_I
+			l_clc: CLASS_C
+			l_class_i_found: BOOLEAN
+		do
+			if new_classes /= Void and removed_classes /= Void then
+				from
+					removed_classes.start
+				until
+					removed_classes.after
+				loop
+					l_clc := removed_classes.item_for_iteration
+					l_class_i_found := False
+					from
+						new_classes.start
+					until
+						l_class_i_found or new_classes.after
+					loop
+						l_cli := new_classes.item
+						if l_cli.name.is_equal (l_clc.name) then
+							l_cli.reset_class_c_information (l_clc)
+							new_classes.remove
+							removed_classes.remove (l_clc)
+							workbench.change_class (l_cli)
+							l_class_i_found := True
+						else
+							new_classes.forth
+						end
+					end
+					removed_classes.forth
+				end
+			end
+		end
+
+	recheck_missing_classes is
+			-- Recheck the classes that produced a missing class error and wipe out the list of missing classes.
+		local
+			l_classes: SEARCH_TABLE [CLASS_C]
+			l_cl: CLASS_C
+		do
+			if missing_classes /= Void then
+				from
+					missing_classes.start
+				until
+					missing_classes.after
+				loop
+					l_classes := missing_classes.item_for_iteration
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						l_cl := l_classes.item_for_iteration
+						if removed_classes = Void or else not removed_classes.has (l_cl) then
+							workbench.add_class_to_recompile (l_cl.lace_class)
+						end
+						l_classes.forth
+					end
+					missing_classes.forth
+				end
+				missing_classes := Void
+			end
+		ensure
+			missing_classes_void: missing_classes = Void
 		end
 
 	do_recompilation is
@@ -931,10 +1248,21 @@ feature -- Recompilation
 			root_class_c: CLASS_C
 			d1, d2: DATE_TIME
 			l_il_env: IL_ENVIRONMENT
+			l_file: KL_TEXT_INPUT_FILE
+			l_file_name: FILE_NAME
 		do
 			debug ("timing")
 				print_memory_statistics
 				create d1.make_now
+			end
+
+				-- create new backup subdir and copy config file in there
+			if workbench.automatic_backup then
+				workbench.create_backup_directory
+				create l_file.make (lace.file_name)
+				create l_file_name.make_from_string (workbench.backup_subdirectory)
+				l_file_name.set_file_name ("config.acex")
+				l_file.copy_file (l_file_name)
 			end
 
 				-- Set ISE_DOTNET_FRAMEWORK environment variable			
@@ -981,6 +1309,7 @@ feature -- Recompilation
 				-- the system (degree 5)
 			if
 				first_compilation or else freeze or else private_melt or else
+				new_class or else
 				not Degree_5.is_empty or else
 				not Degree_4.is_empty or else
 				not Degree_3.is_empty or else
@@ -988,6 +1317,8 @@ feature -- Recompilation
 			then
 					-- We compiled something we need to save project file.
 				has_been_changed := True
+
+				recheck_missing_classes
 
 					-- Perform parsing of Eiffel code
 				process_degree_5
@@ -999,7 +1330,6 @@ feature -- Recompilation
 					print_memory_statistics
 					create d1.make_now
 				end
-
 
 debug ("ACTIVITY")
 	io.error.put_string ("%Tnew_class = ")
@@ -1126,17 +1456,21 @@ end
 					print_memory_statistics
 					create d1.make_now
 				end
-					-- Melt the changed features
-				melt
 
-				debug ("Timing")
-					create d2.make_now
-					print ("Degree 2 duration: ")
-					print (d2.relative_duration (d1).fine_seconds_count)
-					print ("%N")
-					print_memory_statistics
-					create d1.make_now
+				if not Lace.compile_all_classes then
+						-- Melt the changed features
+					melt
+
+					debug ("Timing")
+						create d2.make_now
+						print ("Degree 2 duration: ")
+						print (d2.relative_duration (d1).fine_seconds_count)
+						print ("%N")
+						print_memory_statistics
+						create d1.make_now
+					end
 				end
+
 					-- Finalize a successful compilation
 				finish_compilation
 				debug ("Timing")
@@ -1167,7 +1501,7 @@ end
 					end
 				end
 			elseif
-				System.creation_name = Void and then
+				System.root_creation_name = Void and then
 				not Compilation_modes.is_precompiling and then
 				not Lace.compile_all_classes
 			then
@@ -1422,9 +1756,6 @@ end
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
-				if removed_classes = Void then
-					create removed_classes.make (10)
-				end
 				i := 1
 			until
 				i > nb
@@ -1441,7 +1772,7 @@ io.error.put_string (a_class.name)
 io.error.put_new_line
 end
 						-- Recursively remove `a_class' from system.
-					removed_classes.put (a_class)
+					remove_class (a_class)
 				end
 				i := i + 1
 			end
@@ -1666,8 +1997,8 @@ end
 					-- Update the root class info
 				a_class := root_class.compiled_class
 				dtype := a_class.types.first.type_id - 1
-				if creation_name /= Void then
-					root_feat := a_class.feature_table.item (creation_name)
+				if root_creation_name /= Void then
+					root_feat := a_class.feature_table.item (root_creation_name)
 					if root_feat /= Void then
 						if root_feat.has_arguments then
 							has_argument := 1
@@ -1694,7 +2025,7 @@ end
 					-- Write the number of original routine bodies
 				write_int (file_pointer, body_index_counter.count)
 					-- Write the profiler status
-				if Lace.ace_options.has_profile then
+				if universe.target.options.is_profile then
 					write_int (file_pointer, 3)
 				else
 					write_int (file_pointer, 0)
@@ -2218,6 +2549,7 @@ feature -- Final mode generation
 			deg_output: DEGREE_OUTPUT
 			retried: BOOLEAN
 			d1, d2: DATE_TIME
+			l_assertions: CONF_ASSERTIONS
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
@@ -2235,7 +2567,8 @@ feature -- Final mode generation
 
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
-				keep_assertions := keep_assert and then lace.has_assertions
+				l_assertions := universe.target.options.assertions
+				keep_assertions := keep_assert and then l_assertions /= Void and then l_assertions.has_assertions
 				set_is_precompile_finalized (True)
 
 				if il_generation then
@@ -2397,6 +2730,7 @@ feature {NONE} -- Implementation
 		require
 			 good_argument: a_class /= Void
 			 valid_depth: a_depth >= 0
+			 a_class_is_removable: a_class.is_removable
 		local
 			compiled_root_class: CLASS_C
 			supplier: CLASS_C
@@ -2405,8 +2739,12 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			id: INTEGER
 			types: TYPE_LIST
+			eif_class: EIFFEL_CLASS_C
 		do
-			if a_class.is_removable then
+			eif_class := a_class.eiffel_class_c
+			id := a_class.class_id
+			if system.class_of_id (id) /= Void then
+
 					-- Force a recompilation
 				set_melt
 
@@ -2415,32 +2753,31 @@ feature {NONE} -- Implementation
 					-- `a_class' does not remove any subclasses from `unref_classes',
 					-- so that they are recompiled back
 				if a_depth = 0 then
-					unref_classes.prune_all (a_class.lace_class)
+					unref_classes.prune_all (eif_class.lace_class)
 				end
 
-				id := a_class.class_id
 
-				a_class.remove_c_generated_files
+				eif_class.remove_c_generated_files
 
 					-- Update control flags of the topological sort
 				moved := True
 
 					-- Remove type check relations
-				if a_class.parents /= Void then
-					a_class.remove_relations
+				if eif_class.parents /= Void then
+					eif_class.remove_relations
 				end
 
 					-- Remove externals defined in current removed class
 				externals.remove (id)
 
 					-- Remove class `a_class' from the lists of changed classes
-				Degree_5.remove_class (a_class)
-				Degree_4.remove_class (a_class)
-				Degree_3.remove_class (a_class)
-				Degree_2.remove_class (a_class)
+				Degree_5.remove_class (eif_class)
+				Degree_4.remove_class (eif_class)
+				Degree_3.remove_class (eif_class)
+				Degree_2.remove_class (eif_class)
 
 					-- Mark the class to remove uncompiled
-				a_class.lace_class.reset_compiled_class
+				eif_class.lace_class.reset_compiled_class
 
 					-- Remove its types
 				from
@@ -2468,8 +2805,8 @@ feature {NONE} -- Implementation
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
-				Degree_1.remove_class (a_class)
-				Degree_minus_1.remove_class (a_class)
+				Degree_1.remove_class (eif_class)
+				Degree_minus_1.remove_class (eif_class)
 				classes.remove (id)
 
 					-- Create linked_set of classes that depends on current class.
@@ -2483,25 +2820,25 @@ feature {NONE} -- Implementation
 					finished
 				loop
 					finished := True
-					if not a_class.syntactical_suppliers.after then
-						supplier := a_class.syntactical_suppliers.item
+					if not eif_class.syntactical_suppliers.after then
+						supplier := eif_class.syntactical_suppliers.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.syntactical_suppliers.forth
+						supplier.suppliers.remove_class (eif_class)
+						eif_class.syntactical_suppliers.forth
 						finished := False
 					end
-					if not a_class.syntactical_clients.after then
-						supplier := a_class.syntactical_clients.item
+					if not eif_class.syntactical_clients.after then
+						supplier := eif_class.syntactical_clients.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.syntactical_clients.forth
+						supplier.suppliers.remove_class (eif_class)
+						eif_class.syntactical_clients.forth
 						finished := False
 					end
-					if not a_class.clients.after then
-						supplier := a_class.clients.item
+					if not eif_class.clients.after then
+						supplier := eif_class.clients.item
 						related_classes.extend (supplier)
-						supplier.suppliers.remove_class (a_class)
-						a_class.clients.forth
+						supplier.suppliers.remove_class (eif_class)
+						eif_class.clients.forth
 						finished := False
 					end
 				end
@@ -2540,13 +2877,13 @@ feature {NONE} -- Implementation
 					then
 							-- Recursively remove class.
 						internal_remove_class (supplier, a_depth + 1)
-					elseif supplier.has_dep_class (a_class) then
+					elseif supplier.has_dep_class (eif_class) then
 							-- Is it enough to remove the dependecies only on a class
 							-- which is still in the system, or should we do it for
 							-- all the classes even the ones that we just removed from
 							-- the system? In the last case, we should put the previous
 							-- test one level up.
-						supplier.remove_dep_class (a_class)
+						supplier.remove_dep_class (eif_class)
 					end
 
 					related_classes.forth
@@ -2637,7 +2974,7 @@ feature {NONE} -- Finalization implementation
 				if a_class /= Void then
 					if not a_class.is_precompiled or else a_class.is_in_system then
 						deg_output.put_degree_minus_2 (a_class, i)
-						a_class.process_polymorphism
+						a_class.eiffel_class_c.process_polymorphism
 						History_control.check_overload
 					end
 					i := i - 1
@@ -2715,9 +3052,9 @@ feature -- Dead code removal
 			end
 
 				-- First, inspection of the Eiffel code
-			if creation_name /= Void then
+			if root_creation_name /= Void then
 				l_class := root_class.compiled_class
-				root_feat := l_class.feature_table.item (creation_name)
+				root_feat := l_class.feature_table.item (root_creation_name)
 				remover.record (root_feat, l_class)
 			end
 
@@ -3876,8 +4213,8 @@ feature -- Pattern table generation
 			cl_type := root_cl.types.first
 			dtype := cl_type.type_id - 1
 
-			if not Compilation_modes.is_precompiling and then creation_name /= Void then
-				root_feat := root_cl.feature_table.item (creation_name)
+			if not Compilation_modes.is_precompiling and then root_creation_name /= Void then
+				root_feat := root_cl.feature_table.item (root_creation_name)
 				has_argument := root_feat.has_arguments
 				rout_id := root_feat.rout_id_set.first
 			end
@@ -3886,7 +4223,7 @@ feature -- Pattern table generation
 
 			buffer.start_c_specific_code
 
-			if creation_name /= Void then
+			if root_creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id)
 					rout_table.goto_implemented (cl_type.type_id)
@@ -3920,7 +4257,7 @@ feature -- Pattern table generation
 			buffer.put_string (");%N")
 
 			if final_mode then
-				if creation_name /= Void then
+				if root_creation_name /= Void then
 					buffer.put_string ("%T")
 					buffer.put_string (c_name)
 					buffer.put_string ("(root_obj")
@@ -4194,10 +4531,6 @@ feature -- Conveniences
 			-- Incrementality of the generated makefile
 		do
 			c_file_names := Void
-			include_paths := Void
-			object_file_names := Void
-			makefile_names := Void
-			dotnet_resources_names := Void
 		end
 
 	reset_lace_options is
@@ -4237,7 +4570,6 @@ feature -- Conveniences
 			has_precompiled_preobj := False
 			cls_compliant := False
 			dotnet_naming_convention := False
-			metadata_cache_path := Void
 			internal_msil_classes_per_module := 0
 		end
 
@@ -4294,7 +4626,12 @@ feature -- Conveniences
 			root_cluster /= Void
 			root_class_name /= Void
 		do
-			Result := root_cluster.classes.item (root_class_name)
+			if root_cluster.classes_set then
+				Result ?= root_cluster.classes.item (root_class_name)
+			end
+		ensure
+			Computed_Result_not_void: root_cluster.classes_set implies Result /= Void
+			Not_computed_void: not root_cluster.classes_set implies Result = Void
 		end
 
 feature -- Precompilation

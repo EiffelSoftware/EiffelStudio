@@ -28,7 +28,7 @@ feature -- Access, stored in configuration file
 			a_warning_valid: valid_warning (a_warning)
 		do
 			if internal_warnings.has (a_warning) then
-				Result := internal_warnings.item (a_warning)
+				Result := internal_warnings.found_item
 			else
 				Result := True
 			end

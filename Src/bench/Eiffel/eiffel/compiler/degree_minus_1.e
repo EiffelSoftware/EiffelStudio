@@ -31,6 +31,7 @@ feature -- Processing
 			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
+			eif_class: EIFFEL_CLASS_C
 			descriptors: ARRAY [INTEGER]
 		do
 			classes := System.classes.sorted_classes
@@ -40,12 +41,18 @@ feature -- Processing
 				Degree_output.put_start_degree (Degree_number, nb)
 				System.open_log_files
 				from i := 1 until nb = 0 loop
-					a_class := classes.item (i)
+					a_class := classes.item (i).eiffel_class_c
 					if a_class /= Void and then a_class.degree_minus_1_needed then
-						Degree_output.put_degree_minus_1 (a_class, nb)
-						a_class.generate_descriptor_tables
-						a_class.pass4
-						a_class.remove_from_degree_minus_1
+							-- only eiffel classes have degree -1
+						check
+							eiffel_class: a_class.is_eiffel_class_c
+						end
+						eif_class := a_class.eiffel_class_c
+
+						Degree_output.put_degree_minus_1 (eif_class, nb)
+						eif_class.generate_descriptor_tables
+						eif_class.pass4
+						eif_class.remove_from_degree_minus_1
 						nb := nb - 1
 					end
 					i := i + 1
@@ -68,9 +75,15 @@ feature -- Processing
 				from i := 1 until nb = 0 loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_minus_1_needed then
-						Degree_output.put_degree_minus_1 (a_class, nb)
-						a_class.generate_workbench_files
-						a_class.remove_from_degree_minus_1
+							-- only eiffel classes have degree -1
+						check
+							eiffel_class: a_class.is_eiffel_class_c
+						end
+						eif_class := a_class.eiffel_class_c
+
+						Degree_output.put_degree_minus_1 (eif_class, nb)
+						eif_class.generate_workbench_files
+						eif_class.remove_from_degree_minus_1
 						nb := nb - 1
 					end
 					i := i + 1
@@ -210,19 +223,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

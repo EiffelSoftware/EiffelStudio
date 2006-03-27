@@ -8,7 +8,7 @@ indexing
 class SPECIAL_B
 
 inherit
-	CLASS_C
+	EIFFEL_CLASS_C
 		redefine
 			check_validity, new_type, is_special
 		end

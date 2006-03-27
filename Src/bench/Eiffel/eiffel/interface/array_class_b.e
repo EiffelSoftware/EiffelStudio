@@ -4,10 +4,10 @@ indexing
 --- Compiled class ARRAY
 
 class
-	ARRAY_CLASS_B 
+	ARRAY_CLASS_B
 
 inherit
-	CLASS_C
+	EIFFEL_CLASS_C
 		redefine
 			check_validity
 		end
@@ -16,8 +16,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	check_validity is
 			-- Check validity of class ARRAY
@@ -46,14 +46,14 @@ feature
 
 			-- Third check if class has only one reference attribute
 			-- only (which is necessary `area' then).
-			if 
+			if
 				types.first.skeleton.nb_reference /= 1
 			then
 				create special_error.make (array_case_3, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
-			-- Fouth, check if there is only one creation procedure 
+			-- Fouth, check if there is only one creation procedure
 			-- having only two integer arguments
 			error := creators = Void
 			if not error then
@@ -78,7 +78,7 @@ feature
 				create special_error.make (array_case_4, Current);
 				Error_handler.insert_error (special_error);
 			end;
-				
+
 		end; -- check_validity
 
 feature {NONE}
@@ -114,19 +114,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

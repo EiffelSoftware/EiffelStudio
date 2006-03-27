@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class BASIC_SYSTEM_I 
+deferred class BASIC_SYSTEM_I
 
 feature -- Generation type
 
@@ -74,16 +74,16 @@ feature -- Access
 
 	function_class: CLASS_I
 			-- Class FUNCTION
-			
+
 	typed_pointer_class: CLASS_I
 			-- Class TYPED_POINTER
 
 	arguments_class: CLASS_I
 			-- Class ARGUMENTS
-			
+
 	type_class, system_type_class: CLASS_I
 			-- Class TYPE
-			
+
 feature -- Access: XX_REF classes
 
 	character_ref_class: CLASS_I
@@ -111,7 +111,7 @@ feature -- Access: XX_REF classes
 
 	pointer_ref_class: CLASS_I
 			-- Class POINTER_REF
-			
+
 feature -- Access
 
 	ancestor_class_to_all_classes_id: INTEGER is
@@ -773,19 +773,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

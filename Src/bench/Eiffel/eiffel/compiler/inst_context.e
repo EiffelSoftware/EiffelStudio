@@ -3,18 +3,18 @@ indexing
 	status: "See notice at end of class."
 -- Context for instantiation
 
-class INST_CONTEXT 
-	
-feature 
+class INST_CONTEXT
 
-	cluster: CLUSTER_I;
-			-- Cluster where to find a class by its name
+feature
 
-	set_cluster (c: CLUSTER_I) is
-			-- Assign `c' to `cluster'.
+	group: CONF_GROUP
+			-- Group where to find a class by its name
+
+	set_group (a_group: CONF_GROUP) is
+			-- Assign `a_group' to `CONF_GROUP'.
 		do
-			cluster := c;
-		end;
+			group := a_group
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -22,19 +22,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

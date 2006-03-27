@@ -2330,10 +2330,10 @@ feature -- Debugging
 			valid_body_id: valid_body_id
 		local
 			exec_unit: EXECUTION_UNIT
-			old_cluster: CLUSTER_I
+			old_group: CONF_GROUP
 		do
-			old_cluster := Inst_context.cluster
-			Inst_context.set_cluster (written_class.cluster)
+			old_group := Inst_context.group
+			Inst_context.set_group (written_class.group)
 
 				-- Search for associated EXECUTION_UNIT
 			create exec_unit.make (class_type)
@@ -2344,7 +2344,7 @@ feature -- Debugging
 				exec_unit := Execution_table.last_unit
 				Result := exec_unit.real_body_id
 			end
-			Inst_context.set_cluster (old_cluster)
+			Inst_context.set_group (old_group)
 		end
 
 	valid_body_id: BOOLEAN is

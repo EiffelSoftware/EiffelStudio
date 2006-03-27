@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Representation of an Eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -67,7 +67,7 @@ feature -- Access
 		local
 			d: DIRECTORY
 		do
-			create Result.make_from_string (Project_directory_name)
+			create Result.make_from_string (eiffel_gen_path)
 			Result.extend ("Diagrams")
 			create d.make (Result)
 			if not d.exists then
@@ -78,7 +78,7 @@ feature -- Access
 	document_file_name: FILE_NAME is
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
-		do	
+		do
 			Result := System.document_file_name (System.name)
 		end;
 
@@ -200,8 +200,8 @@ feature -- Access
 
 	is_precompiled: BOOLEAN is
 			-- Is the System precompiled?
-		do	
-			Result := System.is_precompiled
+		do
+			Result := workbench.system /= Void and then workbench.System.is_precompiled
 		end;
 
 feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, RUN_INFO, ABSTRACT_REFERENCE_VALUE, EXPANDED_VALUE, ATTR_REQUEST, APPLICATION_STATUS}
@@ -266,19 +266,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

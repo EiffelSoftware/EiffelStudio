@@ -1,17 +1,24 @@
 indexing
-	description:
-		"Internal representation of a class. Instance of CLASS_I represent%
-		%non-compiled classes, but instance of CLASS_C already compiled%
-		%classes."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description:"[
+				Abstract class that is used for the internal representation
+				of a class. Descendants of `ABSTRACT_CLASS' represent
+				non compiled classes.
+			]"
+	author: ""
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-class
+deferred class
 	CLASS_I
 
 inherit
+	SHARED_WORKBENCH
+
+	COMPARABLE
+		undefine
+			is_equal
+		end
+
 	SHARED_OPTION_LEVEL
 
 	SHARED_OPTIMIZE_LEVEL
@@ -20,89 +27,228 @@ inherit
 
 	SHARED_VISIBLE_LEVEL
 
-	SHARED_WORKBENCH
+	REFACTORING_HELPER
 
-	SYSTEM_CONSTANTS
-
-	SHARED_LACE_PARSER
-
-	COMPARABLE
-		undefine
-			is_equal
-		end
-
-	COMPILER_EXPORTER
-
-	DEBUG_OUTPUT
-		rename
-			debug_output as name_in_upper
-		end
-
-create {COMPILER_EXPORTER}
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: like name) is
-			-- Create new CLASS_I object with name `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_in_upper: a_name.as_upper.is_equal (a_name)
-		do
-			reset_options
-			if not System.first_compilation then
-					-- Time check and genericity (a generic parameter cannot
-					-- have the same name as a class)
-				System.record_new_class_i (Current)
-			end
-			name := a_name
-		ensure
-			name_set: name = a_name
-		end
+	CONF_FILE_DATE
 
 feature -- Access
 
-	name: STRING
-			-- Class name
+	name: STRING is
+			-- Final class name, after all renaming, prefix.
+		deferred
+		end
 
-	cluster: CLUSTER_I
-			-- Cluster to which the class belongs to
+	date: INTEGER is
+			-- Date of last modification.
+		deferred
+		end
 
-	base_name: STRING
-			-- Base file name of the class
+	group: CONF_GROUP is
+			-- Group this class belongs to.
+		deferred
+		end
 
-	is_read_only: BOOLEAN
-			-- Is class editable?
+	options: CONF_OPTION is
+			-- Options of this class.
+		deferred
+		end
 
-	date: INTEGER
-			-- Date of last modification of class
+	config_class: CONF_CLASS is
+			-- Configuration class.
+		deferred
+		end
+
+	actual_class: CLASS_I is
+			-- Return the actual class (takes overriding into account).
+		deferred
+		end
+
+	visible: TUPLE [STRING, HASH_TABLE [STRING, STRING]] is
+			-- The visible features, "*" = all, mapped to their renamed name (if any).
+		deferred
+		end
+
+	path: STRING is
+			-- Path of the class, relative to the group, in unix format.
+		deferred
+		end
+
+	base_name: STRING is
+			-- File name of the class.
+		deferred
+		end
+
+	changed: BOOLEAN
+			-- Has this class been modified? (as seen from the compiler)
+
+	set_date is
+			-- Set the new date.
+		deferred
+		end
 
 	compiled_class: CLASS_C
 			-- Compiled class
 
-	assertion_level: ASSERTION_I
+	assertion_level: ASSERTION_I is
 			-- Assertion checking level
+		local
+			l_a: CONF_ASSERTIONS
+		do
+			create Result.make_no
+			l_a := options.assertions
+			if l_a /= Void then
+				if l_a.is_check then
+					Result.enable_check
+				end
+				if l_a.is_invariant then
+					Result.enable_invariant
+				end
+				if l_a.is_loop then
+					Result.enable_loop
+				end
+				if l_a.is_postcondition then
+					Result.enable_ensure
+				end
+				if l_a.is_precondition then
+					Result.enable_require
+				end
+			end
+		end
 
-	trace_level: OPTION_I
+	trace_level: OPTION_I is
 			-- Tracing level
+		do
+			if options.is_trace then
+				Result := all_option
+			else
+				Result := no_option
+			end
+		end
 
-	profile_level: OPTION_I
+	profile_level: OPTION_I is
 			-- Profile level
+		do
+			if options.is_profile then
+				Result := all_option
+			else
+				Result := no_option
+			end
+		end
 
-	optimize_level: OPTIMIZE_I
+	optimize_level: OPTIMIZE_I is
 			-- Optimization level
+		do
+			if options.is_optimize then
+				Result := yes_optimize
+			else
+				Result := no_optimize
+			end
+		end
 
-	debug_level: DEBUG_I
+	debug_level: DEBUG_I is
 			-- Debug level
+		local
+			l_d: HASH_TABLE [BOOLEAN, STRING]
+			l_dp: DEBUG_TAG_I
+		do
+			if options.is_debug then
+				l_d := options.debugs
+				if l_d /= Void and then not l_d.is_empty then
+					l_dp := create {DEBUG_TAG_I}.make
+					Result := l_dp
+					if l_d /= Void then
+						from
+							l_d.start
+						until
+							l_d.after
+						loop
+							if l_d.item_for_iteration then
+								l_dp.tags.extend (l_d.key_for_iteration)
+							end
+							l_d.forth
+						end
+					end
+				else
+					Result := yes_debug
+				end
+			else
+				Result := no_debug
+			end
+		end
 
-	visible_level: VISIBLE_I
+	visible_level: VISIBLE_I is
 			-- Visible level
+		local
+			l_vis: HASH_TABLE [STRING, STRING]
+			l_sel: VISIBLE_SELEC_I
+			l_ren: HASH_TABLE [STRING, STRING]
+			l_vis_feat: SEARCH_TABLE [STRING]
+			l_feat, l_ren_feat: STRING
+		do
+			if visible /= Void then
+				l_vis ?= visible.item (1)
+			end
+			if l_vis /= Void then
+				from
+					create l_ren.make (l_vis.count)
+					create l_vis_feat.make (l_vis.count)
+					l_vis.start
+				until
+					l_vis.after
+				loop
+					l_feat := l_vis.key_for_iteration
+					if not l_feat.is_equal ("*") then
+						l_ren_feat := l_vis.item_for_iteration
+						l_ren.force (l_ren_feat, l_feat)
+						l_vis_feat.force (l_feat)
+					end
+					l_vis.forth
+				end
+				if l_vis.has ("*") then
+					Result := create {VISIBLE_EXPORT_I}
+				else
+					l_sel := create {VISIBLE_SELEC_I}
+					l_sel.set_visible_features (l_vis_feat)
+					Result := l_sel
+				end
+				Result.set_renamings (l_ren)
+			else
+				create Result
+			end
+		end
+
+	is_compiled, compiled: BOOLEAN is
+			-- Is the class already compiled ?
+		do
+			Result := compiled_class /= Void
+		ensure then
+			is_compiled: Result implies compiled_class /= Void
+		end
+
+	exists: BOOLEAN is
+		local
+			file: RAW_FILE
+		do
+			create file.make (file_name)
+			Result := file.exists
+		end
+
+	is_external_class: BOOLEAN is
+			-- Is class defined outside current system.
+		do
+		end
+
+	date_has_changed: BOOLEAN is
+		local
+			str: ANY
+			l_date: INTEGER
+		do
+			str := file_name.to_c
+			eif_date ($str, $l_date)
+			Result := l_date /= date
+		end
 
 feature {NONE} -- Access
-
-	namespace: STRING
-			-- Namespace specified for a class in Ace file.
-			-- Used for IL code generation.
 
 	internal_namespace: STRING
 			-- Stored associated namespace of Current.
@@ -118,7 +264,7 @@ feature -- Status report
 			il_generation: System.il_generation
 			compiled_class: is_compiled
 		local
-			l_start_name: STRING
+			l_path: STRING
 			l_namespace: STRING
 		do
 			if compiled_class.is_precompiled then
@@ -126,8 +272,8 @@ feature -- Status report
 			else
 					-- We need to clone as the result maybe used for string operation and we do not
 					-- want it to change some internal data from Current.
-				l_namespace := namespace
-				if namespace /= Void then
+				l_namespace := options.namespace
+				if l_namespace /= Void then
 					l_namespace := l_namespace.twin
 				end
 
@@ -140,37 +286,18 @@ feature -- Status report
 				else
 						-- Now either one or both of `System.use_cluster_as_namespace' or
 						-- `System.use_all_cluster_as_namespace' is True.
-
-					if not System.use_all_cluster_as_namespace then
-							-- In this case, it means that `System.use_cluster_as_namespace' is True.
-						if l_namespace /= Void then
-							Result := l_namespace
-						else
-							Result := cluster.top_of_recursive_cluster.cluster_name.twin
-						end
+					if l_namespace /= Void then
+						Result := l_namespace
 					else
-						if cluster.belongs_to_all then
-							l_start_name := cluster.top_of_recursive_cluster.cluster_name
-						else
-							l_start_name := cluster.cluster_name
-						end
+						Result := group.name.twin
+					end
 
-						check
-							l_start_name_exists:
-								cluster.cluster_name.substring (1, l_start_name.count).
-									is_equal (l_start_name)
-						end
-
-						Result := cluster.cluster_name.twin
-
-						if l_namespace /= Void then
-							Result.replace_substring (l_namespace, 1, l_start_name.count)
-						elseif not System.use_cluster_as_namespace then
-							Result.remove_head (l_start_name.count)
-						end
+					if System.use_all_cluster_as_namespace then
+						l_path := path.twin
+						l_path.replace_substring_all ("/", ".")
+						Result.append (l_path)
 					end
 				end
-
 
 				if System.system_namespace /= Void then
 					if Result /= Void then
@@ -190,6 +317,14 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
+	set_actual_namespace is
+			-- Compute `actual_namespace' and store its value in `internal_namespace'.
+		local
+			l_name: STRING
+		do
+			l_name := actual_namespace
+		end
+
 	name_in_upper: STRING is
 			-- Class name in upper case.
 		do
@@ -205,7 +340,7 @@ feature -- Status report
 	file_name: FILE_NAME is
 			-- Full file name of the class
 		do
-			create Result.make_from_string (cluster.path)
+			create Result.make_from_string (group.location.build_path (path, ""))
 			Result.set_file_name (base_name)
 		ensure
 			file_name_not_void: Result /= Void
@@ -239,186 +374,14 @@ feature -- Status report
 			retry
 		end
 
-feature -- Access
-
-	is_external_class: BOOLEAN is
-			-- Is class defined outside current system.
-		do
-		end
-
-	is_compiled, compiled: BOOLEAN is
-			-- Is the class already compiled ?
-		do
-			Result := compiled_class /= Void
-		ensure
-			is_compiled: Result implies compiled_class /= Void
-		end;
-
-	date_has_changed: BOOLEAN is
-		local
-			str: ANY
-		do
-			str := file_name.to_c
-			Result := eif_date ($str) /= date
-		end
-
-	exists: BOOLEAN is
-		local
-			file: RAW_FILE
-		do
-			create file.make (file_name)
-			Result := file.exists
-		end
-
-feature -- Setting
-
-	set_name (s: like name) is
-			-- Assign `s' to `name'.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-			s_upper: s.as_upper.is_equal (s)
-		do
-			name := s
-		ensure
-			set: name = s
-		end
-
-	set_base_name (s: STRING) is
-			-- Assign `s' to `base_name'.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		do
-			base_name := s
-		ensure
-			base_name_set: base_name = s
-		end
-
-	set_namespace (s: STRING) is
-			-- Assign `s' to `namespace'.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-		do
-			namespace := s
-		ensure
-			namespace_set: namespace = s
-		end
-
-	set_actual_namespace is
-			-- Compute `actual_namespace' and store its value in `internal_namespace'.
-		local
-			l_name: STRING
-		do
-			l_name := actual_namespace
-		end
-
-	set_read_only (v: BOOLEAN) is
-			-- Assign `v' to `is_read_only'.
-		do
-			is_read_only := v
-		ensure
-			is_read_only_set: is_read_only = v
-		end
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-			-- Class name alphabetic order
-		do
-			Result := name < other.name
-		end
-
 feature -- Output
 
-	append_name (a_text_formatter: TEXT_FORMATTER) is
+	append_name (st: TEXT_FORMATTER) is
 			-- Append the name ot the current class in `a_clickable'
 		require
-			non_void_st: a_text_formatter /= Void
+			non_void_st: st /= Void
 		do
-			a_text_formatter.add_classi (Current, name)
-		end
-
-feature {COMPILER_EXPORTER} -- Properties
-
-	visible_name: STRING
-			-- Visible name
-
-	changed: BOOLEAN
-			-- Must the class be recompiled ?
-
-feature {COMPILER_EXPORTER, EB_FILEABLE} -- Setting
-
-	set_date is
-			-- Assign `d' to `date'
-		local
-			str: ANY
-		do
-			str := file_name.to_c
-			date := eif_date ($str)
-		end
-
-feature {COMPILER_EXPORTER, EB_CLUSTERS} -- Setting
-
-	set_cluster (c: like cluster) is
-			-- Assign `c' to `cluster'.
-		do
-			cluster := c
-		ensure
-			cluster_set: cluster = c
-		end
-
-feature {COMPILER_EXPORTER} -- Setting
-
-	reset_options is
-			-- Reset option values of class.
-		do
-			create assertion_level.make_no
-			trace_level := No_option
-			profile_level := No_option
-			optimize_level := No_optimize
-			debug_level := No_debug
-			visible_level := Visible_default
-			namespace := Void
-		end
-
-	set_changed (b: BOOLEAN) is
-			-- Assign `b' to `changed'.
-		do
-			changed := b
-		ensure
-			changed_set: changed = b
-		end
-
-	set_compiled_class (c: CLASS_C) is
-			-- Assign `c' to `compiled_class'.
-		require
-			non_void_c: c /= Void
-		do
-			compiled_class := c
-		ensure
-			compiled_class = c
-		end
-
-	reset_compiled_class is
-			-- Reset `compiled_class' to Void.
-		do
-			compiled_class := Void
-		ensure
-			void_compiled_class: compiled_class = Void
-		end
-
-	reset_class_c_information (cl: CLASS_C) is
-			-- Set Current as `lace_class' of `cl' since file has been moved to override
-			-- cluster
-		do
-				-- If `cl' not void, it means that we are handling a class which is
-				-- in the system and therefore we update its info, otherwise we do nothing.
-			if cl /= Void then
-				cl.set_lace_class (Current)
-				set_compiled_class (cl)
-			end
+			st.add_classi (Current, name)
 		end
 
 feature {COMPILER_EXPORTER} -- Compiled class
@@ -498,7 +461,7 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				if is_external_class then
 					create {EXTERNAL_CLASS_C} Result.make (Current)
 				else
-					create Result.make (Current)
+					create {EIFFEL_CLASS_C} Result.make (Current)
 				end
 			end
 		ensure
@@ -507,153 +470,48 @@ feature {COMPILER_EXPORTER} -- Compiled class
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_assertion_level (l: like assertion_level) is
-			-- Merge `l' to `assertion_level'.
+	set_changed (b: BOOLEAN) is
+			-- Assign `b' to `changed'.
 		do
-			assertion_level.merge (l)
-		end
-
-	set_trace_level (t: like trace_level) is
-			-- Assign `t' to `trace_level'.
-		do
-			trace_level := t
+			changed := b
 		ensure
-			trace_level_set: trace_level = t
+			changed_set: changed = b
 		end
 
-	set_profile_level (t: like profile_level) is
-			-- Assign `t' to `trace_level'.
-		do
-			profile_level := t
-		ensure
-			profile_level_set: profile_level = t
-		end
-
-	set_optimize_level (o: like optimize_level) is
-			-- Assign `o' to `optimize_level'.
-		do
-			optimize_level := o
-		ensure
-			optimize_level_set: optimize_level = o
-		end
-
-	set_debug_level (d: like debug_level) is
-			-- Assign `d' to `debug_level'.
-		local
-			other_partial, partial: DEBUG_TAG_I
-			new_partial: DEBUG_TAG_I
-		do
-			if d.is_partial then
-				if debug_level.is_partial then
-					partial ?= debug_level
-					other_partial ?= d
-					create new_partial.make
-					new_partial.merge (partial)
-					new_partial.merge (other_partial)
-					debug_level := new_partial
-				else
-					debug_level := d
-				end
-			else
-				debug_level := d
-			end
-		end
-
-	set_visible_level (v: like visible_level) is
-			-- Assign `v' to `visible_level'.
-		do
-			visible_level := v
-		ensure
-			visible_level_set: visible_level = v
-		end
-
-	set_visible_name (s: like visible_name) is
-			-- Assign `s' to `visible_name'.
+	set_compiled_class (c: CLASS_C) is
+			-- Assign `c' to `compiled_class'.
 		require
-			visible_name_in_upper: s /= Void implies (s.as_upper.is_equal (s))
+			non_void_c: c /= Void
 		do
-			visible_name := s
+			compiled_class := c
 		ensure
-			visible_name_set: visible_name = s
+			compiled_class = c
 		end
 
-	external_name: STRING is
-			-- Name of the class for the external environment
+	reset_compiled_class is
+			-- Reset `compiled_class' to Void.
 		do
-			if visible_name = Void then
-				Result := name
-			else
-				Result := visible_name
+			compiled_class := Void
+		ensure
+			void_compiled_class: compiled_class = Void
+		end
+
+	reset_class_c_information (cl: CLASS_C) is
+			-- Set Current as `lace_class' of `cl' since file has been moved to override
+			-- cluster
+		do
+				-- If `cl' not void, it means that we are handling a class which is
+				-- in the system and therefore we update its info, otherwise we do nothing.
+			if cl /= Void then
+				cl.set_original_class (Current)
+				set_compiled_class (cl)
 			end
-		ensure
-			external_name_not_void: Result /= Void
-			external_name_in_upper: Result.as_upper.is_equal (Result)
-		end
-
-feature {TEXT_FILTER} -- Document processing
-
-	document_file_relative_path (sep: CHARACTER): EB_FILE_NAME is
-			-- Generate the relative path of the file
-			-- where Current should be generated.
-			-- Is relative to documentation root directory.
-			-- Use `sep' as platform specific file separator.
-		do
-			Result := cluster.relative_path (sep)
-			Result.extend (name.as_lower)
-		ensure
-			Result_exists: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	valid_class_file_extension (c: CHARACTER): BOOLEAN is
-			-- Is `c' a valid class file extension?
-		do
-			Result := c = 'e' or c = 'E'
-		end
-
-feature {NONE} -- Externals
-
-	eif_date (s: POINTER): INTEGER is
-			-- Date of file of name `str'.
-		external
-			"C"
 		end
 
 invariant
+	file_name_not_void: file_name /= Void
 	name_not_void: name /= Void
-	name_in_upper: name.as_upper.is_equal (name)
+	options_not_void: options /= Void
+	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-end -- class CLASS_I
+end

@@ -123,7 +123,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_cluster (e_cluster: CLUSTER_I; str: STRING) is
+	add_group (e_cluster: CONF_GROUP; str: STRING) is
 			-- Put `e_cluster' with strring representation
 			-- `str' at current position.
 		require

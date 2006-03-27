@@ -14,7 +14,7 @@ inherit
 	SHARED_BYTE_CONTEXT
 
 	SHARED_TABLE
-	
+
 	SHARED_GENERATION
 
 	COMPILER_EXPORTER
@@ -66,7 +66,7 @@ feature
 			set_area_rout_id := ftable.item_id (l_names_heap.set_area_name_id).rout_id_set.first
 			lower_rout_id := ftable.item_id (l_names_heap.lower_name_id).rout_id_set.first
 			area_rout_id := ftable.item_id (l_names_heap.area_name_id).rout_id_set.first
-			
+
 			create array_descendants.make (10)
 
 			create special_features.make
@@ -301,7 +301,7 @@ feature
 								-- defined in calls a.f
 							Context.init (a_class.types.first)
 							Context.set_byte_code (byte_code)
-							Inst_context.set_cluster (a_class.cluster)
+							Inst_context.set_group (a_class.group)
 
 							current_feature_optimized := False
 							byte_code := byte_code.optimized_byte_node
@@ -457,7 +457,7 @@ feature -- Detection of safe/unsafe features
 				if
 					not System.routine_id_counter.is_attribute (rout_id_val) and then
 					Tmp_poly_server.has (rout_id_val)
-				then	
+				then
 					written_class := System.class_of_id (dep.written_in)
 					table ?= Tmp_poly_server.item (rout_id_val)
 					from
@@ -524,19 +524,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

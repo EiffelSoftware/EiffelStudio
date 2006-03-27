@@ -31,7 +31,8 @@ feature -- Processing
 		local
 			i, nb, j: INTEGER
 			classes: ARRAY [CLASS_C]
-			a_class: CLASS_C
+			a_class_c: CLASS_C
+			a_class: EIFFEL_CLASS_C
 			l_conv_checker: CONVERTIBILITY_CHECKER
 		do
 			nb := count
@@ -45,8 +46,15 @@ feature -- Processing
 			Error_handler.checksum
 
 			from i := 1 until nb = 0 loop
-				a_class := classes.item (i)
-				if a_class /= Void and then a_class.degree_3_needed then
+				a_class_c := classes.item (i)
+
+				if a_class_c /= Void and then a_class_c.degree_3_needed then
+						-- only normal eiffel classes have a degree 3
+					check
+						eiffel_class_c: a_class_c.is_eiffel_class_c
+					end
+					a_class := a_class_c.eiffel_class_c
+
 					Degree_output.put_degree_3 (a_class, nb)
 					System.set_current_class (a_class)
 					process_class (a_class)
@@ -67,7 +75,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	process_class (a_class: CLASS_C) is
+	process_class (a_class: EIFFEL_CLASS_C) is
 			-- Byte code production and type checking: Degree 3
 			-- contains classes marked `changed' and/or changed3. For
 			-- the classes marked `changed', produce byte code and type
@@ -81,10 +89,10 @@ feature {NONE} -- Processing
 				-- Process creation feature of `a_class'.
 			a_class.process_creation_feature
 			a_class.pass3
-			
+
 				-- Type checking and maybe byte code production for `a_class'.
 			if System.il_generation then
-				a_class.update_anchors			
+				a_class.update_anchors
 			end
 
 				-- No error happened: set the compilation
@@ -172,19 +180,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -11,9 +11,11 @@ class
 
 inherit
 	REFACTORING_HELPER
-	
+
+	CONF_REFACTORING
+
 	ICOR_EXPORTER
-	
+
 	SHARED_IL_DEBUG_INFO_RECORDER
 		export
 			{NONE} all
@@ -28,15 +30,15 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 		end
-		
+
 create
 	make, make_from_prepared_value
-	
+
 feature {NONE} -- Initialisation
 
 	make (a_referenced_value: ICOR_DEBUG_VALUE) is
@@ -74,7 +76,7 @@ feature -- Dispose
 				--| IcorDebug world
 			icd_referenced_value := Void
 			icd_prepared_value := Void --| Nota: could be cleaned .. in certain context
-			
+
 				--| ICorDebugClass value
 			if once_value_icd_class /= Void then
 				once_value_icd_class := Void
@@ -85,7 +87,7 @@ feature -- Dispose
 			end
 
 				--| And then ...
-				
+
 				--|Eiffel world
 			once_value_class_type := Void
 			once_value_class_type_computed := False
@@ -102,21 +104,21 @@ feature {NONE} -- Internal Initialisation
 			if not error_occurred then
 				referenced_address := icd_referenced_value.get_address
 				object_address := icd_prepared_value.get_address
-				
+
 --				if referenced_address = 0 then
 -- FIXME jfiat: 20040316 : null address for non null object : Check this
 -- why sometime the referenced value has null address but is not null !!!
 -- so for now let's use the icd_prepared_value when it occurs ..
--- ANSWER: If the value is at least partly in registers, 
+-- ANSWER: If the value is at least partly in registers,
 --         the address value is 0
 --				end
-				
+
 				l_type := icd_prepared_value.get_type
 				if icd_prepared_value.error_code_is_object_neutered (icd_prepared_value.last_call_success) then
 					is_object := True
-				end		
+				end
 
-				is_reference_type := True			
+				is_reference_type := True
 				inspect l_type
 				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_string
@@ -127,7 +129,7 @@ feature {NONE} -- Internal Initialisation
 					{MD_SIGNATURE_CONSTANTS}.element_type_array
 				then
 					is_array_type := True
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_class,
 					{MD_SIGNATURE_CONSTANTS}.element_type_object,
 					{MD_SIGNATURE_CONSTANTS}.element_type_valuetype,
@@ -140,7 +142,7 @@ feature {NONE} -- Internal Initialisation
 				else
 					is_reference_type := False
 				end
-				
+
 				if is_reference_type then
 -- FIXME jfiat [2004/07/06] : we already compute the IsNull property
 -- so let's use it. Let's keep these lines commented
@@ -251,12 +253,12 @@ feature -- Queries
 	value_class_type: CLASS_TYPE is
 			-- CLASS_TYPE related to this Current value
 		require
-			has_object_interface: has_object_interface	
+			has_object_interface: has_object_interface
 			value_module_file_name_valid: value_module_file_name /= Void
-			value_class_token_valid: value_class_token > 0			
+			value_class_token_valid: value_class_token > 0
 		do
 			if once_value_class_type_computed then
-				Result := once_value_class_type			
+				Result := once_value_class_type
 			else
 				if has_object_interface then
 					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
@@ -270,11 +272,11 @@ feature -- Queries
 			end
 				--| NOTA: Result can be void
 		end
-		
+
 	value_class_c: CLASS_C is
 			-- CLASS_C related to this Current value
 		require
-			has_object_interface: has_object_interface	
+			has_object_interface: has_object_interface
 			value_module_file_name_valid: value_module_file_name /= Void
 			value_class_token_valid: value_class_token > 0
 		local
@@ -290,9 +292,10 @@ feature -- Queries
 				cn := value_class_name
 				an := value_icd_module.get_assembly.get_name
 				an := only_file_name_without_extension (an)
-					--| FIXME jfiat 2004/04/02 : maybe having 
+					--| FIXME jfiat 2004/04/02 : maybe having
 					--| eiffel_universe.class_from_assembly_filename (...
-				ci := eiffel_universe.class_from_assembly (an, cn, True)
+				conf_todo_msg ("Find equivalent in new configuration code")
+	--			ci := eiffel_universe.class_from_assembly (an, cn, True)
 				if ci = Void then
 					fixme ("FIXME JFIAT: Ugly .. but for now .. far enought")
 					ci := Eiffel_system.System.system_object_class
@@ -305,7 +308,7 @@ feature -- Queries
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	only_file_name_without_extension (f: STRING): STRING is
 			-- Return only the filename part of the absolute filename `f'
 			-- Not very nice, but how could we do otherwise ?
@@ -320,8 +323,8 @@ feature -- Queries
 			pos := Result.last_index_of ('.', Result.count)
 			if pos > 0 then
 				Result := Result.substring (1, pos - 1)
-			end			
-		end	
+			end
+		end
 
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
@@ -343,12 +346,12 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		local
-			l_ct: INTEGER			
+			l_ct: INTEGER
 		do
 			l_ct := value_class_token
 			if l_ct > 0 then
 				if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, l_ct) then
-					Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)			
+					Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)
 				else
 					Result := value_icd_module.md_type_name (l_ct)
 				end
@@ -362,7 +365,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		do
 			Result := value_icd_module.get_name
 		end
-		
+
 	value_icd_module: ICOR_DEBUG_MODULE is
 			-- ICorDebugModule for this ICorDebugObjectValue value
 		require
@@ -379,7 +382,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 				once_value_icd_module := Result
 			end
 		end
-		
+
 	value_icd_function (f_name: STRING): ICOR_DEBUG_FUNCTION is
 			-- ICorDebugFunction for this ICorDebugObjectValue value
 			-- with external feature name `f_name'.
@@ -458,11 +461,11 @@ feature -- IUnknown Interfaces
 		do
 			Result := new_interface_debug_object_value_from (icd_prepared_value)
 		end
-		
+
 	interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
 			-- ICorDebugArrayValue interface
 		require
-			is_array_type 
+			is_array_type
 		local
 			l_icdv: ICOR_DEBUG_VALUE
 		do
@@ -479,7 +482,7 @@ feature -- IUnknown Interfaces
 	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE is
 			-- ICorDebugStringValue interface
 		require
-			is_string_type 
+			is_string_type
 		local
 			l_icdv: ICOR_DEBUG_VALUE
 		do
@@ -498,16 +501,16 @@ feature {NONE} -- Implementation
 	once_value_class_type_computed: BOOLEAN
 			-- is `once_value_class_type' already computed ?
 			-- in case `once_value_class_type' is Void, do not recompute it
-			
+
 	once_value_class_type: CLASS_TYPE
 			-- Once per instance for `value_class_type'
 
 	once_value_icd_class: ICOR_DEBUG_CLASS
 			-- Once per instance for `value_icd_class'
-			
+
 	once_value_icd_module: ICOR_DEBUG_MODULE
 			-- Once per instance for `value_icd_module'			
-		
+
 
 	error_occurred: BOOLEAN
 			-- Did an error occurred ?
@@ -523,7 +526,7 @@ feature -- Restricted properties
 invariant
 
 	icd_referenced_and_prepared_value_not_void : icd_referenced_value = Void implies icd_prepared_value = Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

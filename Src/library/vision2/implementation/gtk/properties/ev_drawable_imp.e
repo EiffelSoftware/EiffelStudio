@@ -322,7 +322,7 @@ feature -- Clearing operations
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
-			--clear_rectangle (0, 0, width, height)
+			clear_rectangle (0, 0, width, height)
 		end
 
 	clear_rectangle (x, y, a_width, a_height: INTEGER) is

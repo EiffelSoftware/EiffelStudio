@@ -148,12 +148,13 @@ feature -- Access
 				was_low := True
 			end
 			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
-			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.client.class_i.cluster.cluster_name)
-			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.supplier.class_i.cluster.cluster_name)
-			Result.remove_attribute_by_name (name_string)
-			Result.put_last (l_xml_routines.xml_node (Result, once "IS_LABEL_EXPANDED", boolean_representation (is_label_expanded)))
-			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
-			Result.put_last (l_xml_routines.xml_node (Result, once "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			conf_todo
+--			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.client.class_i.cluster.cluster_name)
+--			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.supplier.class_i.cluster.cluster_name)
+--			Result.remove_attribute_by_name (name_string)
+--			Result.put_last (l_xml_routines.xml_node (Result, once "IS_LABEL_EXPANDED", boolean_representation (is_label_expanded)))
+--			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
+--			Result.put_last (l_xml_routines.xml_node (Result, once "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 
 			Result := polyline_label_xml_element (Result)
 			if was_low then

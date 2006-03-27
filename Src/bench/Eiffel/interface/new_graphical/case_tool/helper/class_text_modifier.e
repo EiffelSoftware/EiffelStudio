@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 				if class_i.compiled then
 					class_i.system.set_current_class (class_i.compiled_class)
 				end
-				inst_context.set_cluster (class_i.cluster)
+				inst_context.set_group (class_i.group)
 				Eiffel_parser.parse_from_string (text)
 				class_as := Eiffel_parser.root_node
 				is_modified := False

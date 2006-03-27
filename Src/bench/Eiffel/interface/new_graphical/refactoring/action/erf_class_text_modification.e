@@ -38,6 +38,8 @@ inherit
 
 	ERF_SHARED_LOGGER
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -47,8 +49,9 @@ feature {NONE} -- Initialization
 			-- Create modification associated with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_writable: not a_class.is_read_only
+--			a_class_writable: not a_class.is_read_only
 		do
+			conf_todo_msg ("precondition")
 			class_i := a_class
 		end
 

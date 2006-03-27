@@ -66,7 +66,7 @@ feature -- Main operation
 				-- was the class opened? so we have to change the class to show the new class
 				-- must be done after compilation, because we can't get the class before
        		if open_classes.has (preferences.old_class_name) then
-				class_i := universe.class_named (preferences.new_class_name, class_i.cluster)
+				class_i := universe.class_named (preferences.new_class_name, class_i.group)
 				if class_i /= Void then
 	       			create class_stone.make (class_i)
 	       			open_classes.item (preferences.old_class_name).do_all (agent {EB_DEVELOPMENT_WINDOW}.set_stone (class_stone))

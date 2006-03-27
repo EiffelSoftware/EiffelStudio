@@ -17,8 +17,10 @@ inherit
 	SHARED_API_ROUTINES
 
 	EB_SHARED_INTERFACE_TOOLS
-	
+
 	EV_SHARED_APPLICATION
+
+	CONF_REFACTORING
 
 feature -- Search and replace
 
@@ -38,7 +40,8 @@ feature -- Search and replace
 			l_ctm: CLASS_TEXT_MODIFIER
 		do
 			create cl.make
-			clusters := Eiffel_universe.clusters
+			conf_todo
+--			clusters := Eiffel_universe.clusters
 			cur := clusters.cursor
 			from
 				clusters.start
@@ -61,7 +64,7 @@ feature -- Search and replace
 			end
 			clusters.go_to (cur)
 			a_status_bar.reset_progress_bar_with_range (0 |..| cl.count)
-			
+
 			from
 				cl.start
 			until
@@ -84,7 +87,7 @@ feature -- Search and replace
 				a_status_bar.display_message (l_changed_count.out + " class updated")
 			else
 				a_status_bar.display_message ("0 classes updated")
-			end		
+			end
 		end
 
 feature -- Status report

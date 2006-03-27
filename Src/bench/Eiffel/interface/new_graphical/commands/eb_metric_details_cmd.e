@@ -99,17 +99,18 @@ feature -- Level in hierarchy
 		local
 			depth: INTEGER
 		do
-			from
-				universe.clusters.start
-			until
-				universe.clusters.after
-			loop
-				depth := depth_of_cluster (universe.clusters.item)
-				if depth > Result then
-					Result := depth
-				end
-				universe.clusters.forth
-			end
+			conf_todo
+--			from
+--				universe.clusters.start
+--			until
+--				universe.clusters.after
+--			loop
+--				depth := depth_of_cluster (universe.clusters.item)
+--				if depth > Result then
+--					Result := depth
+--				end
+--				universe.clusters.forth
+--			end
 		end
 
 feature -- Detailed column list
@@ -361,17 +362,18 @@ feature -- Detailed column list
 		local
 			index: INTEGER
 		do
-			from
-				universe.clusters.start
-			until
-				universe.clusters.after
-			loop
-				if universe.clusters.item.parent_cluster = Void then
-					show_details_of_cluster (universe.clusters.item, depth, index, 1)
-					index := multi_column_list_for_details.count
-				end
-				universe.clusters.forth
-			end
+			conf_todo
+--			from
+--				universe.clusters.start
+--			until
+--				universe.clusters.after
+--			loop
+--				if universe.clusters.item.parent_cluster = Void then
+--					show_details_of_cluster (universe.clusters.item, depth, index, 1)
+--					index := multi_column_list_for_details.count
+--				end
+--				universe.clusters.forth
+--			end
 		end
 
 	metric: EB_METRIC

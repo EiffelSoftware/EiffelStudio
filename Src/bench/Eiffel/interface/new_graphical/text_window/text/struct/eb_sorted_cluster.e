@@ -12,6 +12,11 @@ class
 inherit
 	COMPARABLE
 
+	CONF_REFACTORING
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -140,14 +145,15 @@ feature -- Basic operations
 		local
 			a_cluster: CLUSTER_I
 		do
-			from
-				a_cluster := a_class.cluster
-			until
-				a_cluster = Void or else a_cluster = actual_cluster
-			loop
-				a_cluster := a_cluster.parent_cluster
-			end
-			Result := (a_cluster = actual_cluster)
+			conf_todo
+--			from
+--				a_cluster := a_class.cluster
+--			until
+--				a_cluster = Void or else a_cluster = actual_cluster
+--			loop
+--				a_cluster := a_cluster.parent_cluster
+--			end
+--			Result := (a_cluster = actual_cluster)
 		end
 
 indexing

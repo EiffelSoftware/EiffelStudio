@@ -29,6 +29,7 @@ feature -- Execution
 			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR
 		do
+			conf_todo
 --			clusters := Universe.clusters;
 --			from
 --				clusters.start

@@ -292,20 +292,21 @@ feature {NONE} -- Click ast exploration
 				Error_handler.error_list.wipe_out
 			else
 				if not c.is_precompiled then
-					if after_save then
-						c.parse_ast
-						last_syntax_error := c.last_syntax_error
-						if last_syntax_error = Void then
-							current_class_as := Tmp_ast_server.item (c.class_id)
-						end
-					else
-						last_syntax_error := Void
-						prev_class := System.current_class
-						System.set_current_class (c)
-							-- Build AST without doing a backup
-						current_class_as := c.build_ast (False)
-						System.set_current_class (prev_class)
-					end
+					conf_todo
+--					if after_save then
+--						c.parse_ast
+--						last_syntax_error := c.last_syntax_error
+--						if last_syntax_error = Void then
+--							current_class_as := Tmp_ast_server.item (c.class_id)
+--						end
+--					else
+--						last_syntax_error := Void
+--						prev_class := System.current_class
+--						System.set_current_class (c)
+--							-- Build AST without doing a backup
+--						current_class_as := c.build_ast (False)
+--						System.set_current_class (prev_class)
+--					end
 				else
 					current_class_as := c.ast
 				end

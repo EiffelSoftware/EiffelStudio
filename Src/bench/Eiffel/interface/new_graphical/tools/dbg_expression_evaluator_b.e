@@ -1190,7 +1190,7 @@ feature {NONE} -- Implementation
 							l_ta := context_class.actual_type
 						end
 						ast_context.initialize (context_class, l_ta, context_class.feature_table)
-						Inst_context.set_cluster (context_class.cluster)
+						Inst_context.set_group (context_class.group)
 
 						bak_cc := System.current_class
 						System.set_current_class (context_class)

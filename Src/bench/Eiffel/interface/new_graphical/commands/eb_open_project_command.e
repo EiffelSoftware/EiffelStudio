@@ -50,6 +50,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	CONF_REFACTORING
+
 create
 	make,
 	make_with_parent
@@ -79,32 +81,33 @@ feature -- License managment
 
 feature -- Execution
 
-	execute_with_file (project_file_name: STRING) is
+	execute_with_file (a_project_file_name: STRING) is
 			-- Open the specific project named `project_file_name'
 		require
-			project_file_name_valid: project_file_name /= Void
+--			project_file_name_valid: project_file_name /= Void
 		local
 			wd: EV_WARNING_DIALOG
 			file: RAW_FILE
 			ebench_name: STRING
 			rescued: BOOLEAN
 		do
-			if not rescued then
-				create file.make (valid_file_name (project_file_name))
-				if not file.exists or else file.is_directory then
-					create wd.make_with_text (Warning_messages.w_file_not_exist (project_file_name))
-					wd.show_modal_to_window (parent_window)
-				else
-					if not Eiffel_project.initialized then
-						open_project_file (project_file_name)
-					else
-						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
-						ebench_name.append (" ")
-						ebench_name.append (project_file_name)
-						launch_ebench (ebench_name)
-					end
-				end
-			end
+			conf_todo_msg ("changed argument from project_file_name to a_project_file_name")
+--			if not rescued then
+--				create file.make (valid_file_name (project_file_name))
+--				if not file.exists or else file.is_directory then
+--					create wd.make_with_text (Warning_messages.w_file_not_exist (project_file_name))
+--					wd.show_modal_to_window (parent_window)
+--				else
+--					if not Eiffel_project.initialized then
+--						open_project_file (project_file_name)
+--					else
+--						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
+--						ebench_name.append (" ")
+--						ebench_name.append (project_file_name)
+--						launch_ebench (ebench_name)
+--					end
+--				end
+--			end
 		rescue
 			add_error_message (Warning_messages.w_Unable_to_retrieve_project)
 			display_error_message (parent_window)

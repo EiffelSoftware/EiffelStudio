@@ -78,10 +78,11 @@ feature -- Access
 			l_xml_routines := xml_routines
 			l_model := model
 			Result := Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
-			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.descendant.class_i.cluster.cluster_name)
-			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.ancestor.class_i.cluster.cluster_name)
-			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
-			Result.put_last (l_xml_routines.xml_node (Result, real_line_width_string, (real_line_width * 100).rounded.out))
+			conf_todo
+--			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.descendant.class_i.cluster.cluster_name)
+--			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.ancestor.class_i.cluster.cluster_name)
+--			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
+--			Result.put_last (l_xml_routines.xml_node (Result, real_line_width_string, (real_line_width * 100).rounded.out))
 		end
 
 	set_with_xml_element (node: XM_ELEMENT) is

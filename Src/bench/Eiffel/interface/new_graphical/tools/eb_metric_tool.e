@@ -818,13 +818,14 @@ feature -- Selected object
 	selected_cluster: CLUSTER_I is
 			-- Return cluster object when stone is feature, class, or cluster.
 		do
-			if cluster_stone /= Void then
-				Result := cluster_stone.cluster_i
-			elseif class_stone /= Void then
-				Result := class_stone.class_i.cluster
-			elseif feature_stone /= Void then
-				Result := feature_stone.e_feature.written_class.cluster
-			end
+			conf_todo
+--			if cluster_stone /= Void then
+--				Result := cluster_stone.cluster_i
+--			elseif class_stone /= Void then
+--				Result := class_stone.class_i.cluster
+--			elseif feature_stone /= Void then
+--				Result := feature_stone.e_feature.written_class.cluster
+--			end
 		end
 
 feature -- Metric retrieving and setting.
@@ -1147,11 +1148,13 @@ feature -- Displayed messages in column list form
 						class_name.to_upper
 						row_stone_name.keep_head (n1)
 						row_stone_name.append (class_name + ")")
-						a_cluster := a_class.cluster
+						conf_todo
+--						a_cluster := a_class.cluster
 					when Class_scope then
 						a_class := class_c (row_stone_name)
 						row_stone_name.to_upper
-						a_cluster := a_class.cluster
+						conf_todo
+--						a_cluster := a_class.cluster
 					when Cluster_scope then
 						a_cluster := cluster_i (row_stone_name)
 					when System_scope then
@@ -1290,7 +1293,8 @@ feature -- Correspondance: name-object.
 		local
 			list_clusters: ARRAYED_LIST [CLUSTER_I]
 		do
-			list_clusters := universe.clusters
+			conf_todo
+--			list_clusters := universe.clusters
 			from
 				list_clusters.start
 			until

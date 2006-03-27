@@ -321,7 +321,8 @@ feature -- Store/Retrive
 			end
 
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
-			Result.add_attribute ("CLUSTER_NAME", xml_namespace, model.class_i.cluster.cluster_name)
+			conf_todo
+--			Result.add_attribute ("CLUSTER_NAME", xml_namespace, model.class_i.cluster.cluster_name)
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 			Result.put_last (xqueries)
 			Result.put_last (xcommands)

@@ -910,10 +910,10 @@ feature {NONE} -- Implementation
 						first_ambiguous := True
 						last_name := class_names.last
 						last_name.extend ('@')
-						last_name.append (last_class.cluster.cluster_name)
+						last_name.append (last_class.group.name)
 					end
 					cname.extend ('@')
-					cname.append (classi.cluster.cluster_name)
+					cname.append (classi.group.name)
 				else
 					first_ambiguous := False
 				end
@@ -1046,7 +1046,8 @@ feature {NONE} -- open new class
 					process_cluster
 				else
 					from
-						cl := Universe.clusters
+						conf_todo
+--						cl := Universe.clusters
 						cl.start
 						create matching.make
 					until
@@ -1160,7 +1161,8 @@ feature {NONE} -- open new class
 				else
 					from
 						create sorted_classes.make
-						clusters := Universe.clusters
+						conf_todo
+--						clusters := Universe.clusters
 						clusters.start
 					until
 						clusters.after
@@ -1673,7 +1675,8 @@ feature {NONE} -- open new class
 				end
 
 				if not do_not_complete and nb > 0 then
-					list := Universe.clusters
+					conf_todo
+--					list := Universe.clusters
 					from
 						str_area := str.area
 						list.start
@@ -2043,8 +2046,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					class_label.set_minimum_width (maximum_label_width (text))
 					class_label.set_text (text)
 					class_label.set_pebble (create {CLASSC_STONE}.make (conv_f.e_feature.associated_class))
-					text := conv_f.e_feature.associated_class.cluster.cluster_name
-					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.cluster))
+					text := conv_f.e_feature.associated_class.group.name
+					conf_todo
+--					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.cluster))
 					cluster_label.set_minimum_width (maximum_label_width (text))
 					cluster_label.set_text (text)
 				else
@@ -2116,7 +2120,8 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					if conv_f /= Void then
 						feature_address.set_text (conv_f.feature_name)
 						class_address.set_text (conv_f.e_feature.associated_class.name_in_upper)
-						cluster_address.set_text (conv_f.e_feature.associated_class.cluster.cluster_name)
+						conf_todo
+--						cluster_address.set_text (conv_f.e_feature.associated_class.cluster.cluster_name)
 					else
 						conv_class ?= c_stone
 						if conv_class /= Void then

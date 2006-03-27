@@ -27,6 +27,13 @@ inherit
 			copy
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make_with_string
@@ -62,7 +69,7 @@ feature -- Initialization
 				else
 					default_create
 				end
-				
+
 				if a_string.substring_index (name, 1) = 1 then
 					analyzed_string := a_string.substring (name.count + 2, a_string.count)
 					analyzed_string := initialize_with_string (analyzed_string)
@@ -130,7 +137,7 @@ feature -- Observer Pattern
 		end
 
 	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
-			-- `a_item' has been removed. 
+			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
 			-- be set to an empty list or `Void'
@@ -266,49 +273,50 @@ feature {NONE} -- Implementation
 				l_item := f.item
 
 				if l_item.is_class then
-					conv_c ?= l_item					
+					conv_c ?= l_item
 					cli := conv_c.associated_class_i
 					if cli /= Void then
-						clu := cli.cluster
-						if Eiffel_universe.clusters.has (clu) then
-							if not clu.is_precompiled then
-								if conv_c.associated_file_name /= Void then
-									create file.make (conv_c.associated_file_name)
-									if not file.exists then
-										f.remove
-									else
-										refresh_folder (conv_c)
-										f.forth
-									end
-								else
-									f.remove
-								end
-							else
-								refresh_folder (conv_c)
-								f.forth
-							end
-						else
-							f.remove
-						end
+						conf_todo
+--						clu := cli.cluster
+--						if Eiffel_universe.clusters.has (clu) then
+--							if not clu.is_precompiled then
+--								if conv_c.associated_file_name /= Void then
+--									create file.make (conv_c.associated_file_name)
+--									if not file.exists then
+--										f.remove
+--									else
+--										refresh_folder (conv_c)
+--										f.forth
+--									end
+--								else
+--									f.remove
+--								end
+--							else
+--								refresh_folder (conv_c)
+--								f.forth
+--							end
+--						else
+--							f.remove
+--						end
 					else
 						f.remove
 					end
 				elseif l_item.is_folder then
-					conv_l ?= l_item				
+					conv_l ?= l_item
 					refresh_folder (conv_l)
-					f.forth					
+					f.forth
 				elseif l_item.is_feature then
-					conv_f ?= l_item					
+					conv_f ?= l_item
 					clc := conv_f.associated_class_c
 					if clc = Void or else clc.feature_named (conv_f.name) = Void then
 						f.remove
 					else
 						f.forth
-					end					
+					end
 				end
 			end
 		end
-	
+
 feature {NONE} -- Attributes
 
 	observer_list: ARRAYED_LIST [EB_FAVORITES_OBSERVER]

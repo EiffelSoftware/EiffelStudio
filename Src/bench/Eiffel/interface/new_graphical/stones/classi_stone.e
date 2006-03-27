@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone representing an uncompiled Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision $"
 
 class
-	CLASSI_STONE 
+	CLASSI_STONE
 
 inherit
 
@@ -18,9 +18,11 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	CONF_REFACTORING
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (aclassi: CLASS_I) is
@@ -31,7 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
- 
+
 	class_i: CLASS_I is
 		do
 			Result := actual_class_i
@@ -48,7 +50,8 @@ feature -- Properties
 	cluster: CLUSTER_I is
 			-- Cluster associated with current.
 		do
-			Result := class_i.cluster
+			conf_todo
+--			Result := class_i.cluster
 		end
 
 	stone_cursor: EV_CURSOR is
@@ -93,18 +96,18 @@ feature -- Properties
 feature -- Access
 
 	header: STRING is
-			-- Display class name, class' cluster and class location in 
+			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
 			create Result.make (20)
 			Result.append (stone_signature)
 			Result.append ("  in cluster ")
-			Result.append (class_i.cluster.cluster_name)
+			Result.append (class_i.group.name)
 			Result.append ("  (not in system)")
 			Result.append ("  located in ")
 			Result.append (class_i.file_name)
 		end
- 
+
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
@@ -113,17 +116,18 @@ feature -- Access
 
 	synchronized_stone: CLASSI_STONE is
 			-- Clone of `Current' after a recompilation
-			-- (May be Void if not valid anymore. It may also 
+			-- (May be Void if not valid anymore. It may also
 			-- be a classc_stone if the class is compiled now)
 		local
 			new_cluster: CLUSTER_I
 			new_ci: CLASS_I
 		do
 			if class_i /= Void then
-				new_cluster := Eiffel_Universe.cluster_of_name 
-							(class_i.cluster.cluster_name)
+				conf_todo
+--				new_cluster := Eiffel_Universe.cluster_of_name
+--							(class_i.cluster.cluster_name)
 				if new_cluster /= Void then
-					new_ci := new_cluster.class_with_name (class_i.name)
+--					new_ci := new_cluster.class_with_name (class_i.name)
 					if
 						new_ci /= Void
 					then

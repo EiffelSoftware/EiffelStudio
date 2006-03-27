@@ -369,7 +369,8 @@ feature -- Status Setting
 				if current_eiffel_profile_data /= Void then
 						-- Now we perform special handling for the row as we must have access to each of the three
 						-- feature, class and cluster texts individually.
-					query_grid_item.set_cluster_class_feature_text (current_eiffel_profile_data.function.class_c.cluster.cluster_name + full_stop, eiffel_system.class_of_id (current_eiffel_profile_data.function.class_id).name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
+					conf_todo
+--					query_grid_item.set_cluster_class_feature_text (current_eiffel_profile_data.function.class_c.cluster.cluster_name + full_stop, eiffel_system.class_of_id (current_eiffel_profile_data.function.class_id).name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
 				end
 				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)
 				profile_array.put (query_grid_item, i)
@@ -404,7 +405,8 @@ feature -- Status Setting
 				current_eiffel_profile_data ?= (profile_array.item (i)).profile_data
 				if current_eiffel_profile_data /= Void then
 					function := current_eiffel_profile_data.function
-					current_cluster_string := function.class_c.cluster.cluster_name
+					conf_todo
+--					current_cluster_string := function.class_c.cluster.cluster_name
 					current_class_id := function.class_id
 					if not last_cluster_string.is_equal (current_cluster_string) then
 						if last_cluster /= Void then
@@ -1251,7 +1253,8 @@ feature {NONE} -- Implementation
 							check
 								only_eiffel_data_pickable: eiffel_profile_data /= Void
 							end
-							cluster_i := eiffel_profile_data.function.class_c.cluster
+							conf_todo
+--							cluster_i := eiffel_profile_data.function.class_c.cluster
 							create {CLUSTER_STONE} Result.make (cluster_i)
 						end
 					elseif query_grid_row.type = 4 then
@@ -1265,7 +1268,8 @@ feature {NONE} -- Implementation
 								check
 									only_eiffel_data_pickable: eiffel_profile_data /= Void
 								end
-								cluster_i := eiffel_profile_data.function.class_c.cluster
+								conf_todo
+--								cluster_i := eiffel_profile_data.function.class_c.cluster
 								create {CLUSTER_STONE} Result.make (cluster_i)
 							else
 								total_offset := total_offset + query_grid_row.class_text_width
@@ -1424,17 +1428,17 @@ feature {NONE} -- Implementation
 				if eiffel_profile_data /= Void then
 					function := eiffel_profile_data.function
 					if query_grid_row.type = 1 then
-						Result.append (function.class_c.cluster.cluster_name)
+						Result.append (function.class_c.group.name)
 						Result.append (full_stop)
 						Result.append (function.class_c.name)
 						Result.append (full_stop)
 						Result.append (function.feature_name)
 					elseif query_grid_row.type = 2 then
-						Result.append (function.class_c.cluster.cluster_name)
+						Result.append (function.class_c.group.name)
 						Result.append (full_stop)
 						Result.append (function.class_c.name)
 					elseif query_grid_row.type = 3 then
-						Result.append (function.class_c.cluster.cluster_name)
+						Result.append (function.class_c.group.name)
 					end
 				else
 					Result.append (query_grid_row.text)

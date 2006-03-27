@@ -93,7 +93,8 @@ feature -- Basic operation
 			watching_line := text_field.current_line
 			if context_class_c /= Void then
 				current_class_name := context_class_c.name
-				cluster_name := context_class_c.cluster.cluster_name
+				conf_todo
+--				cluster_name := context_class_c.cluster.cluster_name
 				if provide_features then
 					build_completion_list
 				end
@@ -413,7 +414,8 @@ feature {NONE} -- Build completion possibilities
 				cname := ""
 				from
 					create class_list.make (100)
-					clusters := Universe.clusters
+					conf_todo
+--					clusters := Universe.clusters
 					clusters.start
 				until
 					clusters.after

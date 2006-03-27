@@ -28,6 +28,8 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -165,25 +167,26 @@ feature {NONE} -- Implementation
 		do
 			could_not_delete := True
 			if class_i /= Void then
-				if
-					not class_i.is_read_only and then
-					not class_i.cluster.is_precompiled
-				then
-					str := class_i.name_in_upper
-					if eb_debugger_manager.application_is_executing then
-						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
-						cd.show_modal_to_window (window.window)
-					else
-						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_class (str),
-												<<agent delete_class>>)
-						cd.show_modal_to_window (window.window)
-					end
-					class_i := Void
-				else
-					create wd.make_with_text (Warning_messages.w_cannot_delete_read_only_class (class_i.name_in_upper))
-					wd.show_modal_to_window (window.window)
-					class_i := Void
-				end
+				conf_todo
+--				if
+--					not class_i.is_read_only and then
+--					not class_i.cluster.is_precompiled
+--				then
+--					str := class_i.name_in_upper
+--					if eb_debugger_manager.application_is_executing then
+--						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
+--						cd.show_modal_to_window (window.window)
+--					else
+--						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_class (str),
+--												<<agent delete_class>>)
+--						cd.show_modal_to_window (window.window)
+--					end
+--					class_i := Void
+--				else
+--					create wd.make_with_text (Warning_messages.w_cannot_delete_read_only_class (class_i.name_in_upper))
+--					wd.show_modal_to_window (window.window)
+--					class_i := Void
+--				end
 			elseif cluster_i /= Void then
 				if
 					not cluster_i.is_library and

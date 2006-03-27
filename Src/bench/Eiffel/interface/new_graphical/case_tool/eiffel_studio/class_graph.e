@@ -15,6 +15,11 @@ inherit
 			synchronize
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create
+		end
+
 create
 	make
 
@@ -141,7 +146,8 @@ feature -- Element change
 			wipe_out
 			add_node (center_class)
 			if include_all_classes_of_cluster then
-				include_all_classes (center_class.class_i.cluster)
+				conf_todo
+--				include_all_classes (center_class.class_i.cluster)
 			end
 			explore_relations
 			remove_unneeded_items
@@ -694,29 +700,30 @@ feature {NONE} -- Disable relations
 			last_added_class := Void
 			if not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
 
-				if not include_only_classes_of_cluster or else a_class.cluster = center_class.class_i.cluster then
-					es_class := class_from_interface (a_class)
-					if es_class = Void then
-						create es_class.make (a_class)
-						add_node (es_class)
-						last_added_class := es_class
-						if last_created_classes /= Void then
-							last_created_classes.extend (es_class)
-						end
-					elseif not es_class.is_needed_on_diagram then
-						es_class.enable_needed_on_diagram
-						if es_class.is_compiled then
-							add_ancestor_relations (es_class)
-							add_descendant_relations (es_class)
-							add_client_relations (es_class)
-							add_supplier_relations (es_class)
-						end
-						last_added_class := es_class
-						if last_created_classes /= Void then
-							last_created_classes.extend (es_class)
-						end
-					end
-				end
+				conf_todo
+--				if not include_only_classes_of_cluster or else a_class.cluster = center_class.class_i.cluster then
+--					es_class := class_from_interface (a_class)
+--					if es_class = Void then
+--						create es_class.make (a_class)
+--						add_node (es_class)
+--						last_added_class := es_class
+--						if last_created_classes /= Void then
+--							last_created_classes.extend (es_class)
+--						end
+--					elseif not es_class.is_needed_on_diagram then
+--						es_class.enable_needed_on_diagram
+--						if es_class.is_compiled then
+--							add_ancestor_relations (es_class)
+--							add_descendant_relations (es_class)
+--							add_client_relations (es_class)
+--							add_supplier_relations (es_class)
+--						end
+--						last_added_class := es_class
+--						if last_created_classes /= Void then
+--							last_created_classes.extend (es_class)
+--						end
+--					end
+--				end
 			end
 		end
 

@@ -86,11 +86,11 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%T$(COMMAND_MAKEFILE)%N%
 %%Tlink @$appl.lnk%N%
 %%N%
-%..\..\$appl.rc:%N%
-%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
+%..\..\..\$appl.rc:%N%
+%%Tif not exist ..\..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$appl.rc%N%
 %%N%
-%$appl.res: ..\..\$appl.rc Makefile%N%
-%%Trc -r -fo$appl.res ..\..\$appl.rc%N%
+%$appl.res: ..\..\..\$appl.rc Makefile%N%
+%%Trc -r -fo$appl.res ..\..\..\$appl.rc%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res $precompilelibs Makefile%N%
 %%Tif exist $@ $(RM) $@%N%
@@ -158,11 +158,11 @@ il_system_compilation_line: "%
 	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) -NODEFAULTLIB:libc -out:$(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res %N%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
-	%..\..\$(IL_RESOURCE).rc:%N%
-	%%Tif not exist ..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\$(IL_RESOURCE).rc%N%
+	%..\..\..\$(IL_RESOURCE).rc:%N%
+	%%Tif not exist ..\..\..\$(IL_RESOURCE).rc $(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\eiffel.rc ..\..\..\$(IL_RESOURCE).rc%N%
 	%%N%
-	%$(IL_RESOURCE).res: ..\..\$(IL_RESOURCE).rc Makefile%N%
-	%%Trc -r -fo$(IL_RESOURCE).res ..\..\$(IL_RESOURCE).rc%N"
+	%$(IL_RESOURCE).res: ..\..\..\$(IL_RESOURCE).rc Makefile%N%
+	%%Trc -r -fo$(IL_RESOURCE).res ..\..\..\$(IL_RESOURCE).rc%N"
 
 -- done
 completed: "%Techo done > completed.eif"

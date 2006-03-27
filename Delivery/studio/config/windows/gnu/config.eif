@@ -79,19 +79,19 @@ appl_make: "$appl.exe: E1/emain.o $precompile_libs_command $(OBJECTS) $appl.res 
 %%T$(CC) $(LDFLAGS) -o $appl.exe E1/emain.o $sharedlibs $precompile_libs_command %
 %$appl.res $(OBJECTS) $(EXTERNALS) $library%N%
 %%N%
-%../../$appl.rc:%N%
-%%Tif [ ! -f ../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico ../../gnu.ico ; fi %N%
-%%Tif [ ! -f ../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc ../../$appl.rc ; fi %N%
+%../../../$appl.rc:%N%
+%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/gnu.ico ../../../gnu.ico ; fi %N%
+%%Tif [ ! -f ../../../$appl.rc ] ; then $(MV) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/$(ISE_C_COMPILER)/eiffel.rc ../../../$appl.rc ; fi %N%
 %%N%
-%$appl.rc: ../../$appl.rc%N%
-%%T$(MV) ../../$appl.rc $appl.rc%N%
+%$appl.rc: ../../../$appl.rc%N%
+%%T$(MV) ../../../$appl.rc $appl.rc%N%
 %%N%
 %$appl.res: $appl.rc Makefile%N%
-%%Tif [ -f ../../*.ico ] ; then $(MV) ../../*.ico . ; fi %N%
-%%Tif [ -f ../../*.cur ] ; then $(MV) ../../*.cur . ; fi %N%
-%%Tif [ -f ../../*.bmp ] ; then $(MV) ../../*.bmp . ; fi %N%
-%%Tif [ -f ../../*.tlb ] ; then $(MV) ../../*.tlb . ; fi %N%
-%%Tif [ -f ../../*.h ] ; then $(MV) ../../*.h . ; fi %N%
+%%Tif [ -f ../../../*.ico ] ; then $(MV) ../../../*.ico . ; fi %N%
+%%Tif [ -f ../../../*.cur ] ; then $(MV) ../../../*.cur . ; fi %N%
+%%Tif [ -f ../../../*.bmp ] ; then $(MV) ../../../*.bmp . ; fi %N%
+%%Tif [ -f ../../../*.tlb ] ; then $(MV) ../../../*.tlb . ; fi %N%
+%%Tif [ -f ../../../*.h ] ; then $(MV) ../../../*.h . ; fi %N%
 %%Twindres $appl.rc -O coff -o $appl.res%N%
 %"
 

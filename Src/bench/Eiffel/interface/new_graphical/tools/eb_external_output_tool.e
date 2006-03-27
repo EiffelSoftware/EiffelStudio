@@ -149,7 +149,7 @@ feature{NONE} -- Initialization
 			l_ev_vertical_box_1.set_padding (4)
 			l_ev_vertical_box_1.set_border_width (4)
 
-			del_cmd_btn.set_pixmap (Icon_delete_small)
+			del_cmd_btn.set_pixmap (icon_trash_can_color)
 			del_cmd_btn.set_tooltip (f_delete_command)
 			del_cmd_btn.select_actions.extend (agent on_delete_command)
 
@@ -464,6 +464,7 @@ feature{NONE} -- Actions
 				end
 			else
 				run_btn.disable_sensitive
+				del_cmd_btn.disable_sensitive
 				edit_cmd_detail_btn.set_tooltip (f_new_cmd_detail_button)
 				edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
 			end
@@ -736,6 +737,7 @@ feature{NONE} -- Implementation
 			-- Button to clear output window.
 
 	del_cmd_btn: EV_TOOL_BAR_BUTTON;
+			-- Button to delete an already stored external command
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

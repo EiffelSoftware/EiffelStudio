@@ -24,12 +24,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_TYPE_I
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -107,7 +107,7 @@ feature -- Dynamic Library file
 					buffer.put_string("/*****************%N")
 					buffer.put_string(" *** EDYNLIB.C ***%N")
 					buffer.put_string(" *****************/%N%N")
-					
+
 					buffer.put_string("#include %"egc_dynlib.h%"%N")
 
 					buffer.put_string("%N")
@@ -202,14 +202,14 @@ feature -- Dynamic Library file
 										return_type := "void"
 									end
 									buffer.put_string (return_type)
-										
+
 									buffer.put_string (" ")
 									buffer.put_string (internal_feature_name)
 									buffer.put_string (" (EIF_REFERENCE")
 									if args /= Void then
 										from
 											args.start
-										until 
+										until
 											args.after
 										loop
 											buffer.put_string (", ")
@@ -234,7 +234,7 @@ feature -- Dynamic Library file
 									buffer.put_string (" (")
 
 									if argument_names /= Void then
-										from 
+										from
 											argument_names.start
 										until
 											argument_names.after
@@ -269,7 +269,7 @@ feature -- Dynamic Library file
 										buffer.put_string (return_type)
 										buffer.put_string (" Return_Value ;")
 									end -- When the feature return a value.
-										
+
 										--INITIALIZATION DYNAMIC_LIB and RT
 									buffer.put_string ("%N%TDYNAMIC_LIB_RT_INITIALIZE(")
 									buffer.put_integer (nb_ref + 1)
@@ -313,7 +313,7 @@ feature -- Dynamic Library file
 										buffer.put_string ("main_obj")
 										buffer.put_string (");")
 									end
-									
+
 										--CALL THE ROUTINE
 									buffer.put_string ("%N%N%T/* Call the routine */")
 									buffer.put_string ("%N%T")
@@ -337,7 +337,7 @@ feature -- Dynamic Library file
 											argument_names.forth
 										end
 									end
-									
+
 									buffer.put_string (");")
 									buffer.put_string ("%N%TDYNAMIC_LIB_RT_END;")
 									if not return_type.is_equal("void") then
@@ -422,7 +422,7 @@ feature -- Plug and Makefile file
 			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 			buffer.put_string ("#include %"eif_project.h%"%N")
 			buffer.put_string ("#include %"egc_include.h%"%N%N")
-			
+
 			buffer.start_c_specific_code
 
 				-- Extern declarations
@@ -469,7 +469,7 @@ feature -- Plug and Makefile file
 			if (system.array_make_name = Void) or not System.uses_precompiled or final_mode then
 				array_cl := System.class_of_id (System.array_id)
 					--! Array ref type (i.e. ARRAY[ANY])
-				cl_type := System.Instantiator.Array_type.associated_class_type; 
+				cl_type := System.Instantiator.Array_type.associated_class_type;
 				id := cl_type.static_type_id
 				arr_type_id := cl_type.type_id
 				creators := array_cl.creators
@@ -478,7 +478,7 @@ feature -- Plug and Makefile file
 				arr_make_name := Encoder.feature_name (id, creation_feature.body_index).twin
 				system.set_array_make_name (arr_make_name)
 			else
-				cl_type := System.Instantiator.Array_type.associated_class_type; 
+				cl_type := System.Instantiator.Array_type.associated_class_type;
 				arr_type_id := cl_type.type_id
 				arr_make_name := system.array_make_name
 			end
@@ -540,7 +540,7 @@ feature -- Plug and Makefile file
 
 				-- Do we need to collect GC data for the profiler?
 			buffer.put_string ("%Tegc_prof_enabled = (EIF_INTEGER) ")
-			if system.lace.ace_options.has_profile then
+			if system.universe.target.options.is_profile then
 				buffer.put_string ("3;%N")
 			else
 				buffer.put_string ("0;%N")
@@ -599,7 +599,7 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (system.tuple_class.compiled_class.types.first.type_id)
 			buffer.put_string (";%N")
 
-				-- Dispose routine id from class DISPOSABLE (if compiled) 
+				-- Dispose routine id from class DISPOSABLE (if compiled)
 			buffer.put_string ("%Tegc_disp_rout_id = ")
 			if System.disposable_class /= Void and System.disposable_class.is_compiled then
 				buffer.put_integer (System.disposable_dispose_id)
@@ -632,10 +632,10 @@ feature -- Plug and Makefile file
 				buffer.put_string ("%Tegc_foption = egc_foption_init;%N")
 				buffer.put_string ("%Tegc_address_table = egc_address_table_init;%N")
 				buffer.put_string ("%Tegc_fpattern = egc_fpattern_init;%N")
-				
+
 				buffer.put_string ("%N%Tegc_einit = egc_einit_init;%N")
 				buffer.put_string ("%Tegc_tabinit = egc_tabinit_init;%N")
-	
+
 				buffer.put_string ("%N%Tegc_fcall = egc_fcall_init;%N")
 				buffer.put_string ("%Tegc_forg_table = egc_forg_table_init;%N")
 				buffer.put_string ("%Tegc_fdtypes = egc_fdtypes_init;%N")
@@ -692,8 +692,8 @@ feature -- Plug and Makefile file
 
 			if not final_mode then
 				root_cl := System.root_class.compiled_class
-				if not Compilation_modes.is_precompiling and then System.creation_name /= Void then
-					root_feat := root_cl.feature_table.item (System.creation_name)
+				if not Compilation_modes.is_precompiling and then System.root_creation_name /= Void then
+					root_feat := root_cl.feature_table.item (System.root_creation_name)
 					has_argument := root_feat.has_arguments
 					rout_info := System.rout_info_table.item (root_feat.rout_id_set.first)
 					rcorigin := rout_info.origin
@@ -768,7 +768,7 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (system.real_64_ref_type_id)
 			buffer.put_string (";%N%Tegc_point_ref_dtype = ")
 			buffer.put_type_id (system.pointer_ref_type_id)
-			buffer.put_string (";%N");	
+			buffer.put_string (";%N");
 
 			buffer.put_string ("%N%Tegc_uint8_dtype = ")
 			buffer.put_type_id (uint8_c_type.type_id)
@@ -798,7 +798,7 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (real64_c_type.type_id)
 			buffer.put_string (";%N%Tegc_point_dtype = ")
 			buffer.put_type_id (pointer_c_type.type_id)
-			buffer.put_string (";%N");	
+			buffer.put_string (";%N");
 
 		end
 
@@ -815,19 +815,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

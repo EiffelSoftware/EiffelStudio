@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Directory for an EiffelStudio project.%
 		%This represents the directory in which the%
 		%EIFGEN directory resides."
@@ -36,13 +36,13 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (dn: STRING) is
 			-- Create a remote project directory object.
 		do
-			dollar_name := dn;
+			name := dn
 			has_precompiled_preobj := True;
 			directory_make (Environ.interpreted_string (dn))
 		end
@@ -85,7 +85,7 @@ feature -- Status setting
 		ensure
 			il_generation_set: il_generation = v
 		end
-		
+
 	set_msil_generation_type (s: STRING) is
 			-- Set `msil_generation_type' to `s'
 		require
@@ -96,7 +96,7 @@ feature -- Status setting
 		ensure
 			msil_generation_type_set: s.is_equal (msil_generation_type)
 		end
-		
+
 	set_is_precompile_finalized (v: BOOLEAN) is
 			-- Set `is_precompile_finalize' to `v'
 		do
@@ -104,7 +104,7 @@ feature -- Status setting
 		ensure
 			is_precompile_finalized_set: is_precompile_finalized = v
 		end
-		
+
 	set_line_generation (b: BOOLEAN) is
 			-- Sets `line_generation' to `b'
 		do
@@ -112,17 +112,14 @@ feature -- Status setting
 		ensure
 			line_generation_set: line_generation = b
 		end
-		
-feature -- Access
 
-	dollar_name: STRING
-			-- Directory name (with environment variables)
+feature -- Access
 
 	compilation_path: DIRECTORY_NAME is
 			-- Path of the COMP directory
 		do
 			create Result.make_from_string (name);
-			Result.extend_from_array (<<Eiffelgen, Comp>>)
+			Result.extend (Comp)
 		end;
 
 	licensed: BOOLEAN
@@ -147,7 +144,6 @@ feature -- Access
 			-- precompilation information is stored
 		do
 			create Result.make_from_string (name);
-			Result.extend (Eiffelgen);
 			Result.set_file_name (Shared_precomp_eif)
 		end
 
@@ -162,22 +158,22 @@ feature -- Access
 		do
 			create Result.make_from_string (name);
 			if a_use_optimized_precompile then
-				Result.extend_from_array (<<Eiffelgen, F_code>>)
+				Result.extend (F_code)
 			else
-				Result.extend_from_array (<<Eiffelgen, W_code>>)
+				Result.extend (W_code)
 			end
-			Result.set_file_name (Il_info_name)			
-			Result.add_extension (Il_info_extension)	
+			Result.set_file_name (Il_info_name)
+			Result.add_extension (Il_info_extension)
 		end
-		
+
 	precompiled_preobj: FILE_NAME is
 			-- Full name of `preobj' object file
 		local
 			makefile_name: STRING
 		do
-			makefile_name := Environ.translated_string (dollar_name);
+			makefile_name := name
 			create Result.make_from_string (makefile_name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.extend (W_code)
 			Result.set_file_name (Platform_constants.Preobj)
 		end
 
@@ -185,7 +181,7 @@ feature -- Access
 			-- Full name of the precompilation driver
 		do
 			create Result.make_from_string (name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.extend (W_code)
 			Result.set_file_name (Platform_constants.Driver)
 		end
 
@@ -194,9 +190,9 @@ feature -- Access
 		do
 			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend_from_array (<<Eiffelgen, F_code>>)
+				Result.extend (F_code)
 			else
-				Result.extend_from_array (<<Eiffelgen, W_code>>)
+				Result.extend (W_code)
 			end
 			Result.set_file_name (system_name)
 			Result.add_extension (msil_generation_type)
@@ -209,31 +205,31 @@ feature -- Access
 		do
 			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend_from_array (<<Eiffelgen, F_code>>)
+				Result.extend (F_code)
 			else
-				Result.extend_from_array (<<Eiffelgen, W_code>>)
+				Result.extend (W_code)
 			end
 			Result.set_file_name ("lib" + system_name)
 			Result.add_extension ("dll")
 		ensure
 			assembly_herlp_driver_not_void: Result /= Void
 		end
-	
+
 	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
 			-- Full name of assembly pdb.
 		do
 			create Result.make_from_string (name)
 			if a_use_optimized_precompile then
-				Result.extend_from_array (<<Eiffelgen, F_code>>)
+				Result.extend (F_code)
 			else
-				Result.extend_from_array (<<Eiffelgen, W_code>>)
+				Result.extend (W_code)
 			end
 			Result.set_file_name (system_name)
 			Result.add_extension ("pdb")
 		ensure
 			assembly_debug_info_not_void: Result /= Void
 		end
-		
+
 	system_name: STRING
 			-- Name of the precompiled library
 
@@ -242,10 +238,10 @@ feature -- Access
 
 	msil_generation_type: STRING
 			-- Type of assembly to generate
-			
+
 	is_precompile_finalized: BOOLEAN
 			-- Is precompile finalized?
-			
+
 	line_generation: BOOLEAN
 			-- Does precompile have debug information generated for it?
 
@@ -253,7 +249,7 @@ feature -- Check
 
 	check_version_number (precomp_id: INTEGER)is
 			-- Check the version number of current directory.
-		require	
+		require
 			for_precompilation: precomp_id > 0
 		local
 			vd52: VD52;
@@ -291,8 +287,8 @@ feature -- Check
 		do
 			is_precompile := True;
 			check_project_directory
-				-- EIFGEN/precomp.eif file must be readable.
-			check_file (<<Eiffelgen>>, Shared_precomp_eif);
+				-- precomp.eif file must be readable.
+			check_file (<<>>, Shared_precomp_eif);
 		end
 
 	check_optional (a_use_optimized_precompile: BOOLEAN) is
@@ -312,14 +308,6 @@ feature -- Check
 --				end
 			end
 		end
-		
-feature {COMPILER_EXPORTER, E_PROJECT} -- Update
-
-	update_path is
-			-- Interpret environment variables in directory name.
-		do
-			name := Environ.interpreted_string (dollar_name)
-		end
 
 feature {NONE} -- Implementation
 
@@ -336,21 +324,17 @@ feature {NONE} -- Implementation
 				-- readable.
 			check_directory (<<>>);
 
-				-- EIFGEN directory must be 
-				-- be readable.
-			check_directory (<<Eiffelgen>>);
-
-				-- EIFGEN/COMP directory must be
+				-- COMP directory must be
 				-- readable.
-			check_directory (<<Eiffelgen, Comp>>);
+			check_directory (<<Comp>>);
 
-				-- EIFGEN/project.eif file must be
+				-- project.eif file must be
 				-- readable.
 			check_file (<<>>, Dot_workbench);
 
-				-- EIFGEN/W_code file must be
+				-- W_code file must be
 				-- readable.
-			check_directory (<<Eiffelgen, W_code>>);
+			check_directory (<<W_code>>);
 
 		end
 
@@ -461,19 +445,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

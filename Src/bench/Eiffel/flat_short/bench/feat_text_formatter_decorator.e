@@ -36,11 +36,11 @@ feature -- Execution
 			source_feat: FEATURE_I
 			target_feat: FEATURE_I
 			prev_class: CLASS_C
-			prev_cluster: CLUSTER_I
+			prev_cluster: CONF_GROUP
 		do
 			if not rescued then
 				prev_class := System.current_class
-				prev_cluster := Inst_context.cluster
+				prev_cluster := Inst_context.group
 				target_feat := a_target_feat.associated_feature_i
 				execution_error := false
 				Error_handler.wipe_out
@@ -48,7 +48,7 @@ feature -- Execution
 				export_status := target_feat.export_status
 				initialize (text_formatter)
 				System.set_current_class (current_class);
-				Inst_context.set_cluster (current_class.cluster);
+				Inst_context.set_group (current_class.group);
 				begin;
 				written_in_class := target_feat.written_class;
 				if written_in_class /= current_class then
@@ -89,7 +89,7 @@ feature -- Execution
 				rescued := False
 			end
 			System.set_current_class (prev_class);
-			Inst_context.set_cluster (prev_cluster);
+			Inst_context.set_group (prev_cluster);
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);

@@ -126,7 +126,7 @@ feature -- Process
 		deferred
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		require
 			text_not_void: text /= Void
@@ -378,7 +378,7 @@ feature -- Text operator
 			process_number_text (i.out)
 		end
 
-	add_cluster (e_cluster: CLUSTER_I; str: STRING) is
+	add_group (e_cluster: CONF_GROUP; str: STRING) is
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 					last_cluster := (create {SHARED_EIFFEL_PROJECT}).Eiffel_universe.cluster_of_name (token)
 					if last_cluster /= Void then
 						reset_phrase (phrase, for_comment)
-						add_cluster (last_cluster, token.twin)
+						add_group (last_cluster, token.twin)
 					else
 						phrase.append (token)
 					end

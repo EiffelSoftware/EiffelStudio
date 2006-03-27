@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"project.eif or precompile.eif file for an eiffel project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,7 +12,7 @@ inherit
 	RAW_FILE
 		rename
 			make as file_make
-		end;
+		end
 
 	EXCEPTIONS
 
@@ -40,7 +40,7 @@ feature -- Access
 
 	precompilation_id: INTEGER;
 			-- Precompilation id when checking for precompilation validity
-			
+
 	project_version_number: STRING;
 			-- Version number of project eiffel file
 
@@ -177,6 +177,8 @@ feature {NONE} -- Implementation
 			retry
 		end;
 
+feature {LACE_I} -- Header retrieval
+
 	parse_project_header is
 			-- Parse the project header file to get the following information:
 			-- version_number_tag
@@ -210,7 +212,7 @@ feature {NONE} -- Implementation
 
 					if version_number_tag.is_equal (string_tag) then
 						project_version_number := value
-					elseif precompilation_id_tag.is_equal (string_tag) then	
+					elseif precompilation_id_tag.is_equal (string_tag) then
 						precompilation_id := value.to_integer
 					elseif ace_file_path_tag.is_equal (string_tag) then
 						ace_file_path := value.twin
@@ -245,19 +247,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

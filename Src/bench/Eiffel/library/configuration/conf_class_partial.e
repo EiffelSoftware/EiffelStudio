@@ -68,6 +68,9 @@ feature -- Access
 	base_location: CONF_LOCATION
 			-- Base location where the generated files are stored.
 
+	partial_classes: HASH_TABLE [INTEGER, STRING]
+			-- Partial classes that are the source for this class, mapped to their last modification time.
+
 feature {CONF_ACCESS} -- Update, in compiled only
 
 	set_base_location (a_location: CONF_LOCATION) is
@@ -140,9 +143,6 @@ feature {CONF_ACCESS} -- Update, in compiled only
 
 
 feature {NONE} -- Implementation
-
-	partial_classes: HASH_TABLE [INTEGER, STRING]
-			-- Partial classes that are the source for this class, mapped to their last modification time.
 
 	build_partial is
 			-- Build the class from the partial class files.

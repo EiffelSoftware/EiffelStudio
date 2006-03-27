@@ -83,15 +83,15 @@ feature -- Query
 			consistency: System.class_of_id (written_in) /= Void
 		local
 			supplier_class: CLASS_I
-			cluster: CLUSTER_I
+			group: CONF_GROUP
 		do
 			from
-				cluster := System.class_of_id (written_in).cluster
+				group := System.class_of_id (written_in).group
 				clients.start
 			until
 				clients.after or else Result
 			loop
-				supplier_class := Universe.class_named (clients.item, cluster)
+				supplier_class := Universe.class_named (clients.item, group)
 				if
 					supplier_class /= Void and then
 					supplier_class.is_compiled
@@ -166,7 +166,7 @@ feature -- Debug purpose
 			-- Debug purpose
 		do
 			io.error.put_character ('[')
-			io.error.put_string (System.class_of_id (written_in).cluster.path)
+			io.error.put_string (System.class_of_id (written_in).group.location.evaluated_path)
 			io.error.put_string ("] : ")
 			from
 				clients.start
@@ -187,10 +187,10 @@ feature -- formatter
 			good_argument: other /= Void
 		local
 			other_clients: LIST [STRING]
-			other_cluster: CLUSTER_I
+			other_group: CONF_GROUP
 		do
 			other_clients := other.clients
-			other_cluster := system.class_of_id (other.written_in).cluster
+			other_group := system.class_of_id (other.written_in).group
 			from
 				other_clients.start
 				Result := True
@@ -198,7 +198,7 @@ feature -- formatter
 				other_clients.after or Result = False
 			loop
 				Result := valid_for (Universe.class_named
-					(other_clients.item, other_cluster).compiled_class)
+					(other_clients.item, other_group).compiled_class)
 			end
 		end
 
@@ -206,17 +206,17 @@ feature -- formatter
 	format (ctxt: TEXT_FORMATTER_DECORATOR) is
 		local
 			temp: STRING
-			cluster: CLUSTER_I
+			group: CONF_GROUP
 			client_classi: CLASS_I
 		do
-			cluster := System.class_of_id (written_in).cluster
+			group := System.class_of_id (written_in).group
 			from
 				clients.start
 			until
 				clients.after
 			loop
 				temp := clients.item.twin
-				client_classi := Universe.class_named (temp, cluster)
+				client_classi := Universe.class_named (temp, group)
 				if client_classi /= Void then
 					ctxt.put_classi (client_classi)
 				else

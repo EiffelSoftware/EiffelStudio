@@ -22,41 +22,46 @@ feature -- Execution
 	work is
 			-- Show classes in universe
 		local
-			clusters: ARRAYED_LIST [CLUSTER_I];
+			l_groups: ARRAYED_LIST [CONF_GROUP];
 			cursor: CURSOR;
-			classes: HASH_TABLE [CLASS_I, STRING];
-			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];
+			l_classes: HASH_TABLE [CONF_CLASS, STRING];
+			l_sorted_classes: SORTED_TWO_WAY_LIST [CONF_CLASS];
 			a_classi: CLASS_I;
 			a_classe: CLASS_C;
 		do
-			clusters := Eiffel_universe.clusters;
-			if not clusters.is_empty then
-				create sorted_classes.make;
+			l_groups := Eiffel_universe.groups
+			if not l_groups.is_empty then
+				create l_sorted_classes.make;
 				from
-					clusters.start
+					l_groups.start
 				until
-					clusters.after
+					l_groups.after
 				loop
-					cursor := clusters.cursor;
-					classes := clusters.item.classes;
-					from
-						classes.start
-					until
-						classes.after
-					loop
-						sorted_classes.put_front (classes.item_for_iteration);
-						classes.forth
-					end;
-					clusters.go_to (cursor);
-					clusters.forth
+					cursor := l_groups.cursor;
+					l_classes := l_groups.item.classes;
+					if l_classes /= Void then
+						from
+							l_classes.start
+						until
+							l_classes.after
+						loop
+							l_sorted_classes.put_front (l_classes.item_for_iteration);
+							l_classes.forth
+						end;
+					end
+					l_groups.go_to (cursor);
+					l_groups.forth
 				end;
-				sorted_classes.sort;
+				l_sorted_classes.sort;
 				from
-					sorted_classes.start
+					l_sorted_classes.start
 				until
-					sorted_classes.after
+					l_sorted_classes.after
 				loop
-					a_classi := sorted_classes.item;
+					a_classi ?= l_sorted_classes.item;
+					check
+						a_classi_not_void: a_classi /= Void
+					end
 					a_classe := a_classi.compiled_class;
 					if a_classe /= Void then
 						a_classe.append_signature (text_formatter, True)
@@ -65,10 +70,10 @@ feature -- Execution
 					end;
 					text_formatter.add_new_line;
 					text_formatter.add_indent;
-					text_formatter.add ("-- Cluster: ");
-					text_formatter.add_cluster (a_classi.cluster, a_classi.cluster.cluster_name);
+					text_formatter.add ("-- Group: ");
+					text_formatter.add_group (a_classi.group, a_classi.group.name);
 					text_formatter.add_new_line;
-					sorted_classes.forth
+					l_sorted_classes.forth
 				end
 			end
 		end;

@@ -132,7 +132,7 @@ feature -- Output
 			valid_e_class: e_class /= Void
 		local
 			f: TEXT_FORMATTER_DECORATOR;
-			old_cluster: CLUSTER_I;
+			old_group: CONF_GROUP
 			old_class, class_c: CLASS_C;
 		do
 			create f.make (e_class, a_formatter);
@@ -140,14 +140,14 @@ feature -- Output
 				f.set_in_bench_mode
 			end;
 			old_class := System.current_class;
-			old_cluster := Inst_context.cluster;
+			old_group := Inst_context.group;
 			class_c ?= e_class;
 			System.set_current_class (class_c);
-			Inst_context.set_cluster (e_class.cluster);
+			Inst_context.set_group (e_class.group);
 			f.register_invariants;
 			f.format_invariants;
 			System.set_current_class (old_class);
-			Inst_context.set_cluster (old_cluster);
+			Inst_context.set_group (old_group);
 			error := f.execution_error
 		end;
 

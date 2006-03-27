@@ -8,21 +8,17 @@ deferred class
 
 inherit
 	CONF_CONDITIONED
-		undefine
-			is_equal
-		end
 
 	CONF_VISITABLE
-		undefine
-			is_equal
-		end
 
 	CONF_ACCESS
+
+	COMPARABLE
 		undefine
 			is_equal
 		end
 
-	COMPARABLE
+	HASHABLE
 
 feature {NONE} -- Initialization
 
@@ -108,6 +104,16 @@ feature -- Access, in compiled only, not stored to configuration file
 
 	classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- All the classes in this group, indexed by the renamed class name.
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+				-- compute hash code on demand
+			if internal_hash_code = 0 then
+				internal_hash_code := name.hash_code
+			end
+			Result := internal_hash_code
+		end
 
 feature -- Access queries
 
@@ -319,7 +325,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overriders_set: overriders = an_overriders
 		end
 
-	add_overriders (an_overrider: CONF_OVERRIDE; a_modified_classes: LINKED_SET [CONF_CLASS]) is
+	add_overriders (an_overrider: CONF_OVERRIDE; a_modified_classes: DS_HASH_SET [CONF_CLASS]) is
 			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'.
 		require
 			an_overrider_not_void: an_overrider /= Void
@@ -356,7 +362,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)
 							if l_overridee.is_modified then
-								a_modified_classes.extend (l_overridee)
+								a_modified_classes.force (l_overridee)
 							end
 						end
 					end
@@ -392,6 +398,11 @@ feature {CONF_VISITOR} -- Implementation, attributes stored in configuration fil
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
+
+feature {NONE} -- Implementation
+
+	internal_hash_code: INTEGER
+			-- Cashed value of the hash_code
 
 invariant
 	name_ok: name /= Void and then not name.is_empty

@@ -23,7 +23,7 @@ feature -- Update
 		end
 
 	set_is_quick_melt is
-			-- Set `is_freezing' to `True'
+			-- Set `is_quick_melt' to `True'
 		do
 			is_quick_melt := True
 		end

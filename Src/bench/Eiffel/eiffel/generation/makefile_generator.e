@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class MAKEFILE_GENERATOR 
+deferred class MAKEFILE_GENERATOR
 
 inherit
 	SHARED_CODE_FILES
@@ -26,14 +26,14 @@ inherit
 feature -- Attributes
 
 	object_baskets: ARRAY [LINKED_LIST [STRING]]
-			-- The entire set of class object files we have 
+			-- The entire set of class object files we have
 			-- to make. It contains:
 			-- * C code for classes
 			-- * C code for descriptors
 			-- * C code for feature tables
 
 	system_baskets: ARRAY [LINKED_LIST [STRING]]
-			-- The entire set of system object files we have 
+			-- The entire set of system object files we have
 			-- to make is generated in the first entry. The
 			-- other entries contain the polymorphic routine
 			-- and attribute tables.
@@ -53,7 +53,7 @@ feature -- Attributes
 
 	Packet_number: INTEGER is 33
 			-- Maximum number of files in a single linking phase in Workbench mode.
-	
+
 	Final_packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase in Final mode.
 
@@ -133,7 +133,7 @@ feature -- Object basket managment
 		end
 
 	add_in_primary_system_basket (base_name: STRING) is
-		local	
+		local
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
 		do
@@ -142,11 +142,11 @@ feature -- Object basket managment
 			object_name.append (".o")
  			string_list := system_baskets.item (1)
 			string_list.extend (object_name)
- 			string_list.forth 
+ 			string_list.forth
 		end
 
 	add_in_system_basket (base_name: STRING; basket_number: INTEGER) is
-		local	
+		local
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
 		do
@@ -155,7 +155,7 @@ feature -- Object basket managment
 			object_name.append (".o")
  			string_list := system_baskets.item (basket_number)
 			string_list.extend (object_name)
- 			string_list.forth 
+ 			string_list.forth
 		end
 
 	add_common_objects is
@@ -224,7 +224,7 @@ feature -- Cecil
 			make_file.put_string ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
 			make_file.put_string ("%T$(RM) $(SHARED_CECIL) %N")
 			make_file.put_string ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(EXTERNALS) $(EIFLIB) $(SHAREDLIBS) %N")
-			
+
 			make_file.put_new_line
 			make_file.put_new_line
 		end
@@ -250,7 +250,7 @@ feature -- Generate Dynamic Library
 			make_file.put_string (egc_dynlib_file)
 			make_file.put_string (" ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/egc_dynlib.c") 
+			make_file.put_string ("/egc_dynlib.c")
 
 			make_file.put_string ("%N%Tcd ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
@@ -282,7 +282,7 @@ feature -- Generate Dynamic Library
 			make_file.put_string ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.put_string ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
 			make_file.put_string ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(EXTERNALS) $(EIFLIB) $(SHAREDLIBS) %N")
-			
+
 			make_file.put_new_line
 			make_file.put_new_line
 		end
@@ -600,7 +600,7 @@ feature -- Generation, Header
 			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
 			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
 
-			if System.makefile_names /= Void then
+			if not universe.target.external_make.is_empty then
 				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
 				make_file.put_string ("COMMAND_MAKEFILE = $command_makefile%N")
 			else
@@ -668,10 +668,11 @@ feature -- Generation, External archives and object files.
 	generate_externals is
 			-- Generate declaration fo the external variable
 		local
-			object_file_names: LIST [STRING]
+			object_file_names: LIST [CONF_EXTERNAL_OBJECT]
 			i, nb: INTEGER
+			l_ext: CONF_EXTERNAL_OBJECT
 		do
-			object_file_names := System.object_file_names
+			object_file_names := universe.target.external_object
 			if object_file_names /= Void then
 				make_file.put_string ("EXTERNALS = ")
 				from
@@ -680,10 +681,13 @@ feature -- Generation, External archives and object files.
 				until
 					i > nb
 				loop
-					make_file.put_character (' ')
-					make_file.put_character (Continuation)
-					make_file.put_string ("%N%T")
-					make_file.put_string (object_file_names.i_th (i))
+					l_ext := object_file_names.i_th (i)
+					if l_ext.is_enabled (universe.platform, universe.build) then
+						make_file.put_character (' ')
+						make_file.put_character (Continuation)
+						make_file.put_string ("%N%T")
+						make_file.put_string (l_ext.location.evaluated_path)
+					end
 					i := i + 1
 				end
 				make_file.put_new_line
@@ -694,10 +698,12 @@ feature -- Generation, External archives and object files.
 	generate_include_path is
 			-- Generate declaration fo the include_paths
 		local
-			include_paths: LIST [STRING]
+			include_paths: LIST [CONF_EXTERNAL_INCLUDE]
 			i, nb: INTEGER
+			l_ext: CONF_EXTERNAL_INCLUDE
+			l_path: STRING
 		do
-			include_paths := System.include_paths
+			include_paths := universe.target.external_include
 			if include_paths /= Void then
 				make_file.put_string ("INCLUDE_PATH = ")
 				from
@@ -706,10 +712,18 @@ feature -- Generation, External archives and object files.
 				until
 					i > nb
 				loop
-					make_file.put_string ("-I")
-					make_file.put_string (include_paths.i_th (i))
-					if i /= nb then
-						make_file.put_character (' ')
+					l_ext := include_paths.i_th (i)
+					if l_ext.is_enabled (universe.platform, universe.build) then
+						make_file.put_string ("-I")
+						l_path := l_ext.location.evaluated_path
+							-- all remaining $ are by choice so mask them
+						l_path.replace_substring_all ("$", "\$")
+							-- because its possible that they were already masked, correct double masking
+						l_path.replace_substring_all ("\\$", "\$")
+						make_file.put_string (l_path)
+						if i /= nb then
+							make_file.put_character (' ')
+						end
 					end
 					i := i + 1
 				end
@@ -718,13 +732,12 @@ feature -- Generation, External archives and object files.
 		end
 
 	generate_makefile_names is
-		require
-			list_not_void: System.makefile_names /= Void
 		local
-			makefile_names: LIST [STRING]
+			makefile_names: LIST [CONF_EXTERNAL_MAKE]
 			i, nb: INTEGER
+			l_ext: CONF_EXTERNAL_MAKE
 		do
-			makefile_names := System.makefile_names
+			makefile_names := universe.target.external_make
 			from
 				make_file.put_string ("EXTERNAL_MAKEFILES = ")
 				i := 1
@@ -732,8 +745,11 @@ feature -- Generation, External archives and object files.
 			until
 				i > nb
 			loop
-				make_file.put_string (" ")
-				make_file.put_string (makefile_names.i_th (i))
+				l_ext := makefile_names.i_th (i)
+				if l_ext.is_enabled (universe.platform, universe.build) then
+					make_file.put_string (" ")
+					make_file.put_string (l_ext.location.evaluated_path)
+				end
 				i := i + 1
 			end
 			make_file.put_new_line
@@ -752,7 +768,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string (system_name)
 			make_file.put_string (".obj")
 			make_file.put_new_line
-			
+
 				-- Continue the declaration for the IL_SYSTEM
 			make_file.put_string ("$il_system_compilation_line")
 			make_file.put_new_line
@@ -789,7 +805,7 @@ feature -- Generation (Linking rules)
 			generate_objects_macros
 			make_file.put_character (' ')
 			generate_system_objects_macros
-			make_file.put_string ("%N") 
+			make_file.put_string ("%N")
 
 			make_file.put_new_line
 			make_file.put_string (system_name)
@@ -797,10 +813,10 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("$(OBJECTS) ")
 			make_file.put_character (' ')
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/emain.o Makefile%N%T$(RM) ") 
+			make_file.put_string ("/emain.o Makefile%N%T$(RM) ")
 			make_file.put_string (system_name)
 			make_file.put_new_line
-			if System.makefile_names /= Void then
+			if not universe.target.external_make.is_empty then
 				make_file.put_string ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			end
 			if System.has_cpp_externals then
@@ -818,12 +834,12 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("FLAGS) $(CCLDFLAGS) ")
 			make_file.put_string (" $(OBJECTS) ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/emain.o ") 
+			make_file.put_string ("/emain.o ")
 			make_file.put_character (Continuation)
 			make_file.put_new_line
 			generate_other_objects
 			make_file.put_string ("%T%T")
-			if System.object_file_names /= Void then
+			if not universe.target.external_object.is_empty then
 				make_file.put_string ("$(EXTERNALS) ")
 			end
 			make_file.put_string ("$(EIFLIB)")
@@ -842,7 +858,7 @@ feature -- Generation (Linking rules)
 		end
 
 	generate_system_objects_macros is
-			-- Generate the system object macros 
+			-- Generate the system object macros
 			-- (dependencies for final executable).
 		do
 				-- System object files.
@@ -1077,7 +1093,7 @@ feature -- Cleaning rules
 		end
 
 feature -- Generation, Tail
-			
+
 	generate_ending is
 			-- Ends Makefile wrapping scheme
 		do
@@ -1160,26 +1176,26 @@ feature {NONE} -- Constants
 			boehm_library_not_void: Result /= Void
 			boehm_library_has_space_if_not_empty: not Result.is_empty implies Result.item (1) = ' '
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

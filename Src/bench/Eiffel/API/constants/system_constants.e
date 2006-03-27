@@ -81,8 +81,6 @@ feature {NONE}
 
 	Ehisto: STRING is "ehisto"
 
-	Eiffelgen: STRING is "EIFGEN"
-
 	Einit: STRING is "einit"
 
 	Emain: STRING is "emain"
@@ -113,11 +111,15 @@ feature {NONE}
 
 	updt_dle: STRING is "melted.dle";
 
+	Partials: STRING is "Partials"
+
 	Precomp_eif: STRING is "precomp.eif"
 
 	Prelink_script: STRING is "prelink"
 
 	Profiler: STRING is "Profiler"
+
+	Project_file_name: STRING is "project.epr"
 
 	Removed_log_file_name: STRING is "REMOVED";
 

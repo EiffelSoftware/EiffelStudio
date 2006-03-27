@@ -79,7 +79,7 @@ feature -- Element change
 		local
 			cl: ARRAYED_LIST [CLUSTER_I]
 		do
-			cl := Universe.clusters
+--			cl := Universe.clusters
 			from cl.start until cl.after loop
 				clusters.extend (cl.item)
 				cl.forth
@@ -154,15 +154,15 @@ feature -- Status report
 	is_class_generated (a_class: CLASS_I): BOOLEAN is
 			-- Is documentation for `cl' generated?
 		do
-			Result := any_class_format_generated and then clusters.has (a_class.cluster)
+--			Result := any_class_format_generated and then clusters.has (a_class.cluster)
 		end
 
 	is_feature_generated (a_feature: E_FEATURE): BOOLEAN is
 			-- Is documentation for `cl' generated?
 		do
-			Result := any_feature_format_generated and then clusters.has (
-				a_feature.written_class.lace_class.cluster
-			)
+--			Result := any_feature_format_generated and then clusters.has (
+--				a_feature.written_class.lace_class.cluster
+--			)
 		end
 
 	is_cluster_leaf_generated (cluster: CLUSTER_I): BOOLEAN is
@@ -206,19 +206,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

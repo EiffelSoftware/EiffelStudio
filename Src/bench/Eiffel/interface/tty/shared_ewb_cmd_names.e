@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Command names for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE}
 	batch_cmd_name: STRING is "batch"
 
 	callers_cmd_name: STRING is "callers"
-	
+
 	c_compile_cmd_name: STRING is "c_compile"
 			-- Name of command launching C compilation
 
@@ -43,6 +43,8 @@ feature {NONE}
 	clusters_cmd_name: STRING is "clusters"
 
 	compile_cmd_name: STRING is "compile"
+
+	config_cmd_name: STRING is "config"
 
 	Convert_profile_cmd_name: STRING is "convert"
 
@@ -100,6 +102,8 @@ feature {NONE}
 
 	loop_help_cmd_name: STRING is "help"
 
+	overwrite_old_project_cmd_name: STRING is "overwrite_old_project"
+
 	melt_cmd_name: STRING is "melt"
 
 	main_cmd_name: STRING is "main"
@@ -115,7 +119,7 @@ feature {NONE}
 	Percentage_cmd_name: STRING is "percentage"
 
 	precompile_cmd_name: STRING is "precompile"
-	
+
 	finalized_precompile_cmd_name: STRING is "finalize_precompile"
 
 	Profile_cmd_name: STRING is "profile"
@@ -160,6 +164,8 @@ feature {NONE}
 
 	system_cmd_name: STRING is "system"
 
+	target_cmd_name: STRING is "target"
+
 	text_cmd_name: STRING is "text"
 
 	Total_sec_cmd_name: STRING is "total"
@@ -184,19 +190,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

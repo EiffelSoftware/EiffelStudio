@@ -40,7 +40,7 @@ feature -- Text processing
 			put_quoted_comment (text)
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 			-- Process class name text `t'.
 		do
 			if a_quote then
@@ -230,7 +230,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_cluster (e_cluster: CLUSTER_I; str: STRING) is
+	put_cluster (e_cluster: CONF_GROUP; str: STRING) is
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		require

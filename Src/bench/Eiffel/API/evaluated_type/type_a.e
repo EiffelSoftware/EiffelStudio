@@ -604,7 +604,7 @@ feature {COMPILER_EXPORTER} -- Access
 			if not current_class.is_obsolete then
 		   		if actual_type.has_associated_class then
 					ass_class := actual_type.associated_class
-					if ass_class.is_obsolete then
+					if ass_class.is_obsolete and then ass_class.lace_class.options.warnings.is_enabled ("obsolete_class") then
 						create warn
 						warn.set_class (current_class)
 						warn.set_obsolete_class (ass_class)

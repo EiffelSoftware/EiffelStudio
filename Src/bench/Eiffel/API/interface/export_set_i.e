@@ -214,7 +214,7 @@ feature {COMPILER_EXPORTER}
 			other_set: EXPORT_SET_I
 			l_client: CLIENT_I
 			l_clients: LIST [STRING]
-			current_cluster: CLUSTER_I
+			current_group: CONF_GROUP
 			l_class: CLASS_I
 			l_index: INTEGER
 			l_cursor: like cursor
@@ -238,12 +238,12 @@ feature {COMPILER_EXPORTER}
 					from
 						l_client := item
 						l_clients := l_client.clients
-						current_cluster := l_client.written_class.cluster
+						current_group := l_client.written_class.group
 						l_clients.start
 					until
 						l_clients.after or else not Result
 					loop
-						l_class := Universe.class_named (l_clients.item, current_cluster)
+						l_class := Universe.class_named (l_clients.item, current_group)
 						l_index := l_clients.index
 						if l_class /= Void and then l_class.is_compiled then
 							Result := other_set.valid_for (l_class.compiled_class)

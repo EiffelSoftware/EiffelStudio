@@ -21,6 +21,8 @@ inherit
 
 	CONF_FILE_DATE
 
+	HASHABLE
+
 create
 	make
 
@@ -175,6 +177,18 @@ feature -- Access queries
 			end
 		end
 
+feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+				-- compute hash code on demand
+			if internal_hash_code = 0 then
+				internal_hash_code := renamed_name.hash_code
+			end
+			Result := internal_hash_code
+		end
+
 feature -- Status update
 
 	set_modified is
@@ -323,6 +337,9 @@ feature -- Comparison
 		end
 
 feature {NONE} -- Implementation
+
+	internal_hash_code: like hash_code
+			-- Computed `hash_code'.
 
 	old_overriden_by: like overriden_by
 			-- `overriden_by' from last compilation.

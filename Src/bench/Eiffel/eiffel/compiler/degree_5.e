@@ -123,17 +123,17 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			ast: CLASS_AS
-			ext_class: EXTERNAL_CLASS_C
+			eif_class: EIFFEL_CLASS_C
 			class_id: INTEGER
 		do
 			class_id := a_class.class_id
-			ext_class ?= a_class
-			if ext_class /= Void then
-				ext_class.process_degree_5
+			if a_class.is_external_class_c then
+				a_class.external_class_c.process_degree_5
 			else
-				if a_class.parsing_needed then
+				eif_class := a_class.eiffel_class_c
+				if eif_class.parsing_needed then
 						-- Parse class and save a backup if requested.
-					ast := a_class.build_ast (True)
+					ast := eif_class.build_ast (True)
 									debug ("PARSE")
 										io.error.put_string ("parsed%N")
 									end
@@ -150,7 +150,7 @@ feature {NONE} -- Processing
 						-- retrieved from a server.
 					ast_not_void: ast /= Void
 				end
-				a_class.end_of_pass1 (ast)
+				eif_class.end_of_pass1 (ast)
 
 					-- No syntax error happened: set the compilation
 					-- status of the current changed class.

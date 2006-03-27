@@ -39,15 +39,16 @@ feature -- Initialization
 			-- We just create the basic structure to enable the retrieving.
 		require
 			not_initialized: not initialized
-			is_not_new: not project_dir.is_new
 			is_readable: project_dir.is_base_readable
 			is_writable: project_dir.is_base_writable
 			is_executable: project_dir.is_base_executable
 			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
+		local
+			l_prev_work: STRING
 		do
 			project_directory := project_dir
-			Workbench.make
+			l_prev_work := Execution_environment.current_working_directory
  			Execution_environment.change_working_directory (project_directory.name)
 			retrieve
 			if not error_occurred then
@@ -56,6 +57,7 @@ feature -- Initialization
 				manager.on_project_create
 				manager.on_project_loaded
 			end
+			Execution_environment.change_working_directory (l_prev_work)
 		ensure
   			initialized_if_no_error: not error_occurred implies initialized
 		end
@@ -96,6 +98,7 @@ feature -- Initialization
 		local
 			d: DIRECTORY
 			new_name: STRING
+			l_prev_work: STRING
 		do
 			create d.make (Eiffel_gen_path)
 			if d.exists then
@@ -124,11 +127,12 @@ feature -- Initialization
 				project_directory := project_dir
 				Create_compilation_directory
 				Create_generation_directory
-				Workbench.make
 				set_is_initialized
+				l_prev_work := Execution_environment.current_working_directory
  				Execution_environment.change_working_directory (project_directory.name)
 			end
 			manager.on_project_create
+			Execution_environment.change_working_directory (l_prev_work)
 		ensure
 			initialized: initialized
 		end
@@ -243,12 +247,6 @@ feature -- Access
 			-- a new project and do not use precompilation).
 		do
 			Result := not Comp_system.poofter_finalization or else Comp_system.il_generation
-		end
-
-	lace_has_assertions: BOOLEAN is
-			-- Does the Ace file specify assertions?
-		do
-			Result := Lace.has_assertions
 		end
 
 	is_new: BOOLEAN is
@@ -464,23 +462,6 @@ feature -- Status setting
 		end
 
 feature -- Update
-
-	recompile_known_modified_classes is
-			-- Recompile only know modified class
-			-- (used for Quick compilation)
-		do
-			if Workbench.lace.successful then
-				workbench.recompile_no_degree_6
-			else
-				Workbench.recompile
-			end
-			if successful then
-				if Debugger_manager.has_breakpoints then
-					Degree_output.put_resynchronizing_breakpoints_message
-					Debugger_manager.resynchronize_breakpoints
-				end
-			end
-		end
 
 	melt is
 			-- Incremental recompilation of Eiffel project.
@@ -760,8 +741,7 @@ feature -- Output
 				if Compilation_modes.is_precompiling then
 					file_name.set_file_name (dot_workbench)
 				else
-					file_name.set_file_name (System.name)
-					file_name.add_extension (Project_extension)
+					file_name.set_file_name (project_file_name)
 				end
 
 				create project_file.make_open_write (file_name)
@@ -903,20 +883,12 @@ feature {NONE} -- Retrieval
 					end
 				else
 --!! FIXME: check Concurrent_Eiffel license
-					Project_directory_name.make_from_string (project_directory.name)
+					e_project.saved_workbench.set_lace (workbench.lace)
 					system := e_project.system
 					dynamic_lib := e_project.dynamic_lib
 					Workbench.copy (e_project.saved_workbench)
 					if Comp_system.is_precompiled then
 						precomp_dirs := Workbench.precompiled_directories
-						from
-							precomp_dirs.start
-						until
-							precomp_dirs.after
-						loop
-							precomp_dirs.item_for_iteration.update_path
-							precomp_dirs.forth
-						end
 						Precompilation_directories.copy (precomp_dirs)
 						create remote_dir.make (project_directory.name)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
@@ -933,7 +905,6 @@ feature {NONE} -- Retrieval
 
 					Comp_system.server_controler.init
 					set_il_parsing (Comp_system.il_generation)
-					Universe.update_cluster_paths
 
 					check_permissions
 
@@ -1148,19 +1119,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -427,11 +427,11 @@ feature -- Execution
 				-- Execute the flat or flat_short.
 		local
 			prev_class: CLASS_C
-			prev_cluster: CLUSTER_I
+			prev_cluster: CONF_GROUP
 		do
 			if not rescued then
 				prev_class := System.current_class
-				prev_cluster := Inst_context.cluster
+				prev_cluster := Inst_context.group
 				execution_error := False
 				class_name := current_class.name
 
@@ -452,13 +452,13 @@ feature -- Execution
 				System.set_current_class (current_class)
 
 				if format_registration.target_ast /= Void then
-					Inst_context.set_cluster (current_class.cluster)
+					Inst_context.set_group (current_class.group)
 						-- We initialize source class as current class
 						-- when processing the header of a class.
 					ast_output_strategy.set_current_class (current_class)
 					ast_output_strategy.set_source_class (current_class)
 					ast_output_strategy.format (format_registration.target_ast)
-					Inst_context.set_cluster (Void)
+					Inst_context.set_group (Void)
 				else
 					execution_error := True
 				end
@@ -469,7 +469,7 @@ feature -- Execution
 				rescued := False
 			end
 			System.set_current_class (prev_class)
-			Inst_context.set_cluster (prev_cluster)
+			Inst_context.set_group (prev_cluster)
 		rescue
 			if Rescue_status.is_error_exception then
 				rescued := True

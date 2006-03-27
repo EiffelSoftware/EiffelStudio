@@ -1,25 +1,83 @@
---	$Id$	
 system
-	ec
+	"ec"
 
 root
-
-	es: "make"
+	ES: make
 
 default
-	assertion (require)
-	assertion (ensure)
-	assertion (check)
-	console_application(yes)
-	exception_trace (yes)
+	assertion (no)
+	disabled_debug (yes)
+	disabled_debug ("activity")
+	disabled_debug ("actual_replication")
+	disabled_debug ("anchored_features")
+	disabled_debug ("assertion")
+	disabled_debug ("assertions")
+	disabled_debug ("c_debugger")
+	disabled_debug ("cache")
+	disabled_debug ("cache_compiler")
+	disabled_debug ("cache_research")
+	disabled_debug ("cache_server")
+	disabled_debug ("cache_stat")
+	disabled_debug ("cecil")
+	disabled_debug ("check_expanded")
+	disabled_debug ("class_of_id")
+	disabled_debug ("count")
+	disabled_debug ("dead_code")
+	disabled_debug ("dead_code_removal")
+	disabled_debug ("debbugger_hook")
+	disabled_debug ("debugger_hook")
+	disabled_debug ("dle topo")
+	disabled_debug ("dollar")
+	disabled_debug ("filters")
+	disabled_debug ("fixme")
+	disabled_debug ("flat_short")
+	disabled_debug ("flush_file")
+	disabled_debug ("formal_generic")
+	disabled_debug ("gelex")
+	disabled_debug ("genericity")
+	disabled_debug ("geyacc")
+	disabled_debug ("has_calls")
+	disabled_debug ("log_exceptions")
+	disabled_debug ("optimization")
+	disabled_debug ("options")
+	disabled_debug ("parse")
+	disabled_debug ("profile_convert")
+	disabled_debug ("refactor_fixme")
+	disabled_debug ("regexp")
+	disabled_debug ("remove_class")
+	disabled_debug ("replication")
+	disabled_debug ("server")
+	disabled_debug ("show_prof_query")
+	disabled_debug ("timing")
+	disabled_debug ("to_implement")
+	disabled_debug ("trace_table")
+	disabled_debug ("transfer")
+	disabled_debug ("verbose")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	override_cluster ("override")
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
 	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
 	inlining (yes)
 	inlining_size ("0")
-	override_cluster ("override")
-	multithreaded(yes)
+	multithreaded (yes)
+	working_directory ("/home/patrickr/local/57dev/eweasel/test_dir/config001")
+
+
+--	$Id$	
 
 cluster
-	override:		"$EIFFEL_SRC/Eiffel/override"
+	override:		"$EIFFEL_SRC/Eiffel_conf/override"
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
@@ -33,53 +91,56 @@ cluster
 			".svn"; "french"; "german"; 
 		end
 
-	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
+	beurk:		"$EIFFEL_SRC/Eiffel_conf/beurk"
 
-	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
+	compiler_support:		"$EIFFEL_SRC/Eiffel_conf/support"
 
-	all common:             "$EIFFEL_SRC/Eiffel/common"
-         exclude
-                 ".svn"; "compiler_override"; "error"
-         end
+	all common:		"$EIFFEL_SRC/Eiffel_conf/common"
+		exclude
+			".svn"; "compiler_override"; "error"; 
+		end
 
-	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
+	flat_short_b:		"$EIFFEL_SRC/Eiffel_conf/flat_short/bench"
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"hact"; "se"; "ve"; "base"; ".svn"; "other";
+			"hact"; "se"; "ve"; "base"; ".svn"; "other"; 
 		end
 
-	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
-		exclude
-			".svn"
-		end
-
-	all lace:		"$EIFFEL_SRC/Eiffel/lace"
+	all documentation:		"$EIFFEL_SRC/Eiffel_conf/case/documentation"
 		exclude
 			".svn"; 
 		end
 
-	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
+	all lace:		"$EIFFEL_SRC/Eiffel_conf/lace"
 		exclude
-			".svn"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows";
+			".svn"; 
 		end
 
-	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
+	all compiler:		"$EIFFEL_SRC/Eiffel_conf/eiffel"
 		exclude
-			".svn"; "structured_text";
+			".svn"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows"; 
+		option
+			assertion (require): cache_history
+			assertion (ensure): cache_history
 		end
 
-	all eiffel_structured_text:	"$EIFFEL_SRC/Eiffel/API/structured_text"
+	all compiler_api:		"$EIFFEL_SRC/Eiffel_conf/API"
 		exclude
-			".svn"; "common"
+			".svn"; "structured_text"; 
 		end
 
-	all common_structured_text:	"$EIFFEL_SRC/library/editor/text_window/text/structure/structured_text/common"
+	all eiffel_structured_text:		"$EIFFEL_SRC/Eiffel_conf/API/structured_text"
 		exclude
-			".svn"; "text_formatter.e"; "structured_text.e";
+			".svn"; "common"; 
 		end
 
-	switch:		"$EIFFEL_SRC/Eiffel/switch"
+	all common_structured_text:		"$EIFFEL_SRC/library/editor/text_window/text/structure/structured_text/common"
+		exclude
+			".svn"; "text_formatter.e"; "structured_text.e"; 
+		end
+
+	switch:		"$EIFFEL_SRC/Eiffel_conf/switch"
 
 	interface_switch (switch):		"$/interface/batch_only"
 
@@ -91,7 +152,7 @@ cluster
 
 	debuging_class (communications):		"$/debug"
 
-	interface:		"$EIFFEL_SRC/Eiffel/interface"
+	interface:		"$EIFFEL_SRC/Eiffel_conf/interface"
 
 	interface_shared (interface):		"$/shared"
 
@@ -104,12 +165,12 @@ cluster
 
 	profile_tool (interface):		"$/graphical/profile_tool"
 
-	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
+	all cli_writer:		"$EIFFEL_SRC/Eiffel_conf/library/cli_writer"
 		exclude
-			".svn"; "md_strong_name.e"; "md_public_key.e"
+			".svn"; "md_strong_name.e"; "md_public_key.e"; 
 		end
 
-	dotnet_helpers:			"$EIFFEL_SRC/dotnet/helpers"
+	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
 
 	dotnet_logger:		"$EIFFEL_SRC/dotnet/helpers/logger/classic"
 
@@ -123,7 +184,7 @@ cluster
 			".svn"; 
 		end
 
-	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
+	all activation_checker:		"$EIFFEL_SRC/Eiffel_conf/library/activation"
 		exclude
 			"enterprise"; "free"; ".svn"; 
 		end
@@ -133,16 +194,34 @@ cluster
 			"eiffel_envision_10"; "windows"; ".svn"; "EIFGEN"; 
 		end
 
-	all preferences:	"$EIFFEL_SRC/library/preferences"
+	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			".svn"; "registry_implementation"; "graphical";
-		end		
-
-	all uuid:       "$EIFFEL_SRC/library/uuid"
-		exclude
-			".svn";
+			".svn"; "registry_implementation"; "graphical"; 
 		end
 
+	all uuid:		"$EIFFEL_SRC/library/uuid"
+		exclude
+			".svn"; 
+		end
+
+	all configuration:		"$EIFFEL_SRC/Eiffel_conf/library/configuration"
+		exclude
+			".svn"; 
+		visible
+			CONF_PRINT_VISITOR
+				end
+			CONF_BUILD_VISITOR
+				end
+			CONF_RECOMPUTE_OPTIONS
+				end
+			CONF_LOAD_LACE
+				end
+		end
+
+	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
+		exclude
+			".svn"; "EIFGEN"; 
+		end
 
 external
 
@@ -152,6 +231,6 @@ external
 
 	object:
 		"$(EIFFEL_SRC)/C/bench/libmtcompiler.a",
-        "$(EIFFEL_SRC)/C/platform/libplatform.a"
+		"$(EIFFEL_SRC)/C/platform/libplatform.a"
 
 end

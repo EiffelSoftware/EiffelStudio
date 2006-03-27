@@ -69,6 +69,19 @@ feature -- Attributes
 			Result := lace.successful and then system.successful
 		end
 
+feature -- Update
+
+	set_lace (a_lace: like lace) is
+			-- Set `lace' to `a_lace'.
+		require
+			a_lace_not_void: a_lace /= Void
+		do
+			lace := a_lace
+		ensure
+			lace_set: lace = a_lace
+		end
+
+
 feature -- Additional properties
 
 	is_already_compiled: BOOLEAN is
@@ -165,12 +178,12 @@ feature -- Initialization
 			create universe.make
 			create precompiled_directories.make (5)
 			create lace.make
+
 			compilation_counter := 1
 			backup_counter := 0
 			new_session := True
 		ensure
-			initialized: universe /= Void and then
-					lace /= Void
+			initialized: universe /= Void and then lace /= Void
 		end
 
 feature -- Commands
@@ -191,35 +204,13 @@ feature -- Commands
 				not degree_6_done and then
 				(retried = 0 or else (retried = 1 and then missing_class_error))
 			then
-					-- Clean any previous errors
-				Error_handler.wipe_out
-
 				if automatic_backup then
 					backup_counter := backup_counter + 1
 					create_backup_directory
 				end
 
-
-				if missing_class_error then
-					Lace.set_need_directory_lookup (True)
-				else
-					Lace.set_need_directory_lookup (False)
-				end
-
-				if
-					not system_defined or else not Lace.not_first_parsing or else
-					Lace.date_has_changed or else missing_class_error or else
-					not Lace.successful or else forbid_degree_6
-				then
-					degree_6_done := True
-				end
-
-				if missing_class_error then
-					Lace.force_recompile
-				else
-					if not forbid_degree_6 then
-						Lace.recompile
-					end
+				if not forbid_degree_6 then
+					Lace.recompile
 				end
 
 				if Lace.successful then
@@ -227,13 +218,13 @@ feature -- Commands
 						System.set_melt
 						System.set_finalize
 					end
-				end
-
-					-- If it was the first compilation and if the ace file
-					-- was incorrect we need to raise again the exception
-					-- which was made first by yacc, since it has been forget
-					-- during the rescue processing within the Lace.
-				if system_defined and then Lace.successful then
+					if Lace.has_group_changed then
+						System.set_rebuild (True)
+					end
+					if missing_class_error then
+						system.set_rebuild (True)
+					end
+					degree_6_done := system.is_rebuild
 					System.recompile
 				else
 					if not Error_handler.error_list.is_empty then
@@ -271,6 +262,7 @@ feature -- Commands
 			increment_compilation_counter:
 				(successful and (System.has_been_changed or else System.freezing_occurred))
 					implies compilation_counter = old compilation_counter + 1
+			error_handler_empty: error_handler.nb_errors = 0
 		rescue
 			if Rescue_status.is_error_exception then
 				Error_handler.force_display
@@ -299,9 +291,8 @@ feature -- Commands
 						error_handler.error_list.item.code.is_equal ("VD01"))
 					then
 						missing_class_error := True
-							-- Resetting the date of Lace will triger a new parsing
-							-- and a complete traversing of the cluster directories.
-						Lace.reset_date_stamp
+						lace.reset_date_stamp
+						Error_handler.wipe_out
 					else
 						Error_handler.trace
 					end
@@ -323,10 +314,6 @@ feature -- Commands
 			-- Perform an incremental recompilation without performing a degree 6.
 		do
 			forbid_degree_6 := True
-			if universe.has_override_cluster then
-					-- We also process classes being changed outside EiffelStudio here.
-				universe.rebuild_override_fast
-			end
 			recompile
 			forbid_degree_6 := False
 		rescue
@@ -372,71 +359,22 @@ feature -- Commands
 			Degree_5.insert_new_class (cl.compiled_class)
 		end
 
-	change_all is
-			-- Record all the classes in the universe as
-			-- changed (for precompilation)
-		local
-			class_list: HASH_TABLE [CLASS_I, STRING]
-			c: CLUSTER_I
-		do
-			from
-				Universe.clusters.start
-			until
-				Universe.clusters.after
-			loop
-				c := Universe.clusters.item
-				if not c.is_precompiled and not c.is_assembly then
-					from
-						class_list := c.classes
-						class_list.start
-					until
-						class_list.after
-					loop
-						change_class (class_list.item_for_iteration)
-						class_list.forth
-					end
-				end
-				Universe.clusters.forth
-			end
-		end
-
 	change_all_new_classes is
 			-- Record all the classes in the universe as
-			-- changed (for compilation using `NONE' as root class)
+			-- changed (for compilation using `ANY' as root class)
 		local
-			class_list: HASH_TABLE [CLASS_I, STRING]
-			c: CLUSTER_I
+			classes: LINKED_LIST [CLASS_I]
 			cl: CLASS_I
-			file_date: INTEGER
-			str: ANY
 		do
 			from
-				Universe.clusters.start
+				classes := system.new_classes
+				classes.start
 			until
-				Universe.clusters.after
+				classes.after
 			loop
-				c := Universe.clusters.item
-				if not c.is_precompiled and not c.is_assembly then
-					from
-						class_list := c.classes
-						class_list.start
-					until
-						class_list.after
-					loop
-						cl := class_list.item_for_iteration
-						if cl.is_compiled then
-							str := cl.file_name.to_c
-							file_date := eif_date ($str)
-							if file_date /= cl.date then
-								change_class (class_list.item_for_iteration)
-							end
-						else
-							change_class (class_list.item_for_iteration)
-						end
-						class_list.forth
-					end
-				end
-				Universe.clusters.forth
+				cl := classes.item
+				change_class (cl)
+				classes.forth
 			end
 		end
 
@@ -514,8 +452,6 @@ feature -- Automatic backup
 			-- Save the information about this recompilation
 		local
 			file: PLAIN_TEXT_FILE
-			l: ARRAYED_LIST [CLUSTER_I]
-			c: CLUSTER_I
 		do
 			create file.make_open_write (backup_info_file_name)
 			file.put_string ("Compiler version: ")
@@ -530,22 +466,6 @@ feature -- Automatic backup
 			file.put_string ("successful: ")
 			file.put_boolean (successful)
 			file.put_new_line
-			file.put_string ("Cluster table:")
-			file.put_new_line
-
-			from
-				l := Universe.clusters
-				l.start
-			until
-				l.after
-			loop
-				c := l.item
-				if not c.belongs_to_all then
-					file.put_string (c.cluster_name)
-					file.put_new_line
-				end
-				l.forth
-			end
 
 			file.close
 

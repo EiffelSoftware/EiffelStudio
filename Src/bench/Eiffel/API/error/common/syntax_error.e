@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Syntax error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		end
 
 	SYNTAX_MESSAGE
-		
+
 	SHARED_WORKBENCH
 
 	SHARED_EIFFEL_PARSER
@@ -66,8 +66,8 @@ feature -- Properties
 	code: STRING is "Syntax error"
 			-- Error code
 
-	syntax_message: STRING is 
-			-- Specific syntax message. 
+	syntax_message: STRING is
+			-- Specific syntax message.
 			-- (By default, it is empty)
 		do
 			Result := ""
@@ -99,28 +99,14 @@ feature -- Output
 			initialize_output
 			a_text_formatter.add ("Syntax error at line ")
 			a_text_formatter.add_int (line)
-			if Lace.successful then
-					-- Error happened in a class
-				a_text_formatter.add (" in class ")
-				a_text_formatter.add_class_syntax (Current, System.current_class, 
-						System.current_class.class_signature)
-				if error_message /= Void then
-					a_text_formatter.add_new_line
-					a_text_formatter.add (error_message)
-					a_text_formatter.add_new_line
-				end
-			else
-				if not is_in_use_file then
-					a_text_formatter.add_ace_syntax (Current, " in Ace file")
-				else
-						-- Error happened while parsing a "use" file
-					a_text_formatter.add (" in Cluster_properties %"Use%" file")
-					if file_name /= Void then
-						a_text_formatter.add_new_line
-						a_text_formatter.add ("	 File: ")
-						a_text_formatter.add (file_name)
-					end
-				end
+				-- Error happened in a class
+			a_text_formatter.add (" in class ")
+			a_text_formatter.add_class_syntax (Current, System.current_class, 
+					System.current_class.class_signature)
+			if error_message /= Void then
+				a_text_formatter.add_new_line
+				a_text_formatter.add (error_message)
+				a_text_formatter.add_new_line
 			end
 			a_text_formatter.add_new_line
 			build_explain (a_text_formatter)
@@ -135,19 +121,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

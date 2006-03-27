@@ -8,7 +8,7 @@ indexing
 class NATIVE_ARRAY_B
 
 inherit
-	CLASS_C
+	EIFFEL_CLASS_C
 		redefine
 			check_validity, new_type, is_native_array, partial_actual_type, actual_type
 		end

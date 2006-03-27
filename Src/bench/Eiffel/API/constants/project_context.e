@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Directories management for an Eiffel project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,6 +13,12 @@ inherit
 	SYSTEM_CONSTANTS
 
 feature -- Eiffel Project Directories
+
+	target_path_name: STRING is
+			-- Target name, used to build paths.
+		do
+			Result := internal_target_name.name
+		end
 
 	Project_directory_name: DIRECTORY_NAME is
 			-- Shared project directory
@@ -29,25 +35,25 @@ feature -- Eiffel Project Directories
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
 		once
-			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, Backup>>);
+			create Result.make_from_string (eiffel_gen_path);
+			Result.extend (Backup);
 		end
 
 	Case_storage_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (eiffel_gen_path);
 			Result.extend_from_array (<<Casegen , Case_storage>>);
 		end
 
 	Case_gen_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (eiffel_gen_path);
 			Result.extend (Casegen);
 		end
 
 	Documentation_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (eiffel_gen_path);
 			Result.extend (Documentation);
 		end
 
@@ -61,15 +67,23 @@ feature -- Eiffel Project Directories
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Project_directory_name);
-			Result.extend (Eiffelgen);
+			Result.extend (target_path_name);
 		end
+
+	Partial_generation_path: DIRECTORY_NAME is
+			-- Valid path for partial generation
+		once
+			create Result.make_from_string (Eiffel_gen_path)
+			Result.extend (Partials)
+		end
+
 
 	Workbench_generation_path: DIRECTORY_NAME is
 			-- Valid path for compilation
 		once
 			Result := temp_workbench_generation_path
 		end
-	
+
 	Workbench_bin_generation_path: DIRECTORY_NAME is
 			-- Path to `assemblies' directory in EIFGEN/W_code.
 		once
@@ -88,7 +102,7 @@ feature -- Eiffel Project Directories
 			create Result.make_from_string (Final_generation_path)
 			Result.extend (Local_assemblies)
 		end
-		
+
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
@@ -100,7 +114,7 @@ feature -- Eiffel Project Directories
 			-- information is stored
 		do
 			create Result.make_from_string (Project_directory_name);
-			Result.extend (Eiffelgen);
+			Result.extend (target_path_name);
 			Result.set_file_name (Precomp_eif);
 		end
 
@@ -109,14 +123,14 @@ feature -- Eiffel Project Directories
 		once
 			create Result.make
 		end
-		
+
 	Arguments_file_name: FILE_NAME is
 			-- Full name of file where additional arguments
 			-- information for system is stored
 		once
-			create Result.make_from_string (Project_directory_name);
+			create Result.make_from_string (eiffel_gen_path);
 			Result.set_file_name (Additional_args);
-		end	
+		end
 
 feature -- Temporary access prior to the creation or the opening of a file.
 
@@ -124,19 +138,19 @@ feature -- Temporary access prior to the creation or the opening of a file.
 			-- Generate a temporary generation path
 		do
 			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.extend_from_array (<<target_path_name, W_code>>);
 		end
 
 	temp_final_generation_path: DIRECTORY_NAME is
 		do
 			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, F_code>>);
+			Result.extend_from_array (<<target_path_name, F_code>>);
 		end
 
 	temp_compilation_path: DIRECTORY_NAME is
 		do
 			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<Eiffelgen, Comp>>);
+			Result.extend_from_array (<<target_path_name, Comp>>);
 		end
 
 feature {NONE} -- Directory creation
@@ -151,6 +165,10 @@ feature {NONE} -- Directory creation
 				d.create_dir
 			end;
 			create d.make (Workbench_generation_path)
+			if not d.exists then
+				d.create_dir
+			end
+			create d.make (partial_generation_path)
 			if not d.exists then
 				d.create_dir
 			end
@@ -219,25 +237,33 @@ feature {NONE} -- Directory creation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	internal_target_name: TARGET_NAME is
+			-- Target name.
+		once
+			create Result
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

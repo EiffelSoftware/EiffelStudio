@@ -33,6 +33,7 @@ feature -- Processing
 			i, nb: INTEGER
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
+			eif_class: EIFFEL_CLASS_C
 		do
 			nb := count
 			Degree_output.put_start_degree (Degree_number, nb)
@@ -40,8 +41,14 @@ feature -- Processing
 			from i := 1 until nb = 0 loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_1_needed then
-					Degree_output.put_degree_1 (a_class, nb)
-					a_class.melt_feature_and_descriptor_tables
+						-- only eiffel classes have degree1
+					check
+						eiffel_class: a_class.is_eiffel_class_c
+					end
+					eif_class := a_class.eiffel_class_c
+
+					Degree_output.put_degree_1 (eif_class, nb)
+					eif_class.melt_feature_and_descriptor_tables
 					nb := nb - 1
 				end
 				i := i + 1
@@ -140,19 +147,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

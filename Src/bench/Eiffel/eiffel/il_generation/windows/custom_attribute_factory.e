@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_INST_CONTEXT
 		export
 			{NONE} all
@@ -59,7 +59,7 @@ feature -- Settings
 							-- and to create a `byte_node' for every creation expression
 							-- that represent the custom attribute
 						l_class_c := cil_generator.current_class_type.associated_class
-						Inst_context.set_cluster (l_class_c.cluster)
+						Inst_context.set_group (l_class_c.group)
 						context.initialize (l_class_c, l_class_c.actual_type, l_class_c.feature_table)
 						feature_checker.init (context)
 						feature_checker.custom_attributes_type_check_and_code (a_feature, attributes)
@@ -96,7 +96,7 @@ feature {CIL_CODE_GENERATOR} -- Generation
 				ca.forth
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	custom_attribute_generator: CUSTOM_ATTRIBUTE_GENERATOR is
@@ -106,26 +106,26 @@ feature {NONE} -- Implementation
 		ensure
 			custom_attribute_generator_not_void: Result /= Void
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				c := clusters.item;
 				add_tabs (a_text_formatter, indent);
 				a_text_formatter.add_indent;
-				a_text_formatter.add_cluster (c, c.name_in_upper);
+				a_text_formatter.add_group (c, c.name_in_upper);
 				a_text_formatter.add_new_line;
 				generate_cluster_list (a_text_formatter, c.sub_clusters, indent + 1);
 				clusters.forth

@@ -8,8 +8,23 @@ class
 
 inherit
 	CONF_VALIDITY
+		redefine
+			default_create
+		end
 
 	CONF_ACCESS
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Create.
+		do
+			create warnings.make
+		end
+
 
 feature -- Status
 
@@ -273,9 +288,7 @@ feature -- Merging
 				if debugs = Void then
 					debugs := other.debugs
 				end
-				if warnings = Void then
-					warnings := other.warnings
-				end
+				warnings.merge (other.warnings)
 				if namespace = Void then
 					namespace := other.namespace
 				end
@@ -297,5 +310,8 @@ feature -- Merging
 				end
 			end
 		end
+
+invariant
+	warnings_not_void: warnings /= Void
 
 end

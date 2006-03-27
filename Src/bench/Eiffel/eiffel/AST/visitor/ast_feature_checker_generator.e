@@ -1042,6 +1042,8 @@ feature -- Implementation
 							not current_feature.is_obsolete)
 							-- Inherited code is checked in parent class.
 						and then not is_inherited
+							-- Warning not disabled
+						and then context.current_class.lace_class.options.warnings.is_enabled ("obsolete_feature")
 					then
 						create l_obs_warn
 						l_obs_warn.set_class (context.current_class)
@@ -1989,7 +1991,7 @@ feature -- Implementation
 				end
 			end
 
-			if l_as.locals /= Void then
+			if l_as.locals /= Void and then context.current_class.lace_class.options.warnings.is_enabled ("unused_local") then
 				check_unused_locals (context.locals)
 			end
 
@@ -4284,7 +4286,7 @@ feature -- Implementation
 					l_list ?= last_byte_node
 				end
 			end
-			if context.current_class.is_generic then
+			if context.current_class.is_generic and then context.current_class.lace_class.options.warnings.is_enabled ("once_in_generic") then
 				error_handler.insert_warning (
 					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
 			end
@@ -4646,25 +4648,25 @@ feature -- Implementation
 	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.content)
+			safe_process (l_as.meaningful_content)
 		end
 
 	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.content)
+			safe_process (l_as.meaningful_content)
 		end
 
 	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.content)
+			safe_process (l_as.meaningful_content)
 		end
 
 	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
 			-- Process `l_as'.
 		do
-			safe_process (l_as.content)
+			safe_process (l_as.meaningful_content)
 		end
 
 	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
@@ -5941,15 +5943,13 @@ feature {NONE} -- Precursor handling
 			couple: PAIR [INTEGER, INTEGER]
 			check_written_in: LINKED_LIST [PAIR [INTEGER, INTEGER]]
 			r_class_i: CLASS_I
-			a_cluster: CLUSTER_I
 		do
 			rout_id_set := current_feature.rout_id_set
 			rc := rout_id_set.count
 
 			if l_as.parent_base_class /= Void then
 				-- Take class renaming into account
-				a_cluster := context.current_class.cluster
-				r_class_i := Universe.class_named (l_as.parent_base_class.class_name, a_cluster)
+				r_class_i := Universe.class_named (l_as.parent_base_class.class_name, context.current_class.group)
 
 				if r_class_i /= Void then
 					spec_p_name := r_class_i.name_in_upper

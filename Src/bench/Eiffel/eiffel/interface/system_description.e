@@ -15,35 +15,23 @@ inherit
 
 feature -- Access
 
-	name: STRING;
+	name: STRING
 			-- System name
 
-	root_cluster: CLUSTER_I;
-			-- Root class of the system
+	root_cluster: CLUSTER_I
+			-- Root cluster of the system
 
 	root_class_name: STRING;
 			-- Root class name
 
-	creation_name: STRING;
+	root_creation_name: STRING;
 			-- Creation procedure name
 
 	c_file_names: LIST [STRING];
 			-- C file names to include
 
-	include_paths: LIST [STRING];
-			-- Include paths to add in the Makefile C flags
-
-	object_file_names: LIST [STRING];
-			-- Object file names to link with the application
-
-	makefile_names: LIST [STRING];
-			-- Makefile names to execute before the linking
-
 	assembly_names: LIST [STRING]
 			-- Assembly names needed by IL generation to find types
-
-	dotnet_resources_names: LIST [STRING]
-			-- Resources names needed by IL generation.
 
 	has_cpp_externals: BOOLEAN
 			-- Did system included a C++ external at some point.
@@ -110,7 +98,7 @@ feature -- Update
 	set_creation_name (s: STRING) is
 			-- Assign `s' to `creation_name'.
 		do
-			creation_name := s
+			root_creation_name := s
 		end
 
 	set_c_file_names (l: like c_file_names) is
@@ -119,38 +107,12 @@ feature -- Update
 			c_file_names := l
 		end
 
-	set_include_paths (l: like include_paths) is
-			-- Assign `l' to `include_paths'.
-		do
-			include_paths := l
-		end
-
-	set_object_file_names (l: like object_file_names) is
-			-- Assign `l' to `object_file_names'.
-		do
-			object_file_names := l
-		end
-
-	set_makefile_names (l: like makefile_names) is
-			-- Assign `l' to `makefile_names'.
-		do
-			makefile_names := l
-		end
-
 	set_assembly_names (l: like assembly_names) is
 			-- Assign `l' to `assembly_names'.
 		do
 			assembly_names := l
 		ensure
 			assembly_names_set: assembly_names = l
-		end
-
-	set_dotnet_resources_names (l: like dotnet_resources_names) is
-			-- Assign `l' to `dotnet_resources_names'.
-		do
-			dotnet_resources_names := l
-		ensure
-			dotnet_resources_names_set: dotnet_resources_names = l
 		end
 
 	set_has_cpp_externals (v: BOOLEAN) is
@@ -196,19 +158,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -13,7 +13,7 @@ inherit
 
 feature -- Property
 
-	cluster: CLUSTER_I
+	cluster: CONF_GROUP
 			-- Cluster involved
 
 feature -- Output
@@ -21,13 +21,15 @@ feature -- Output
 	put_cluster_name (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the cluster name
 		do
-			if cluster.is_assembly then
-				a_text_formatter.add ("Assembly cluster name: ")
-			else
-				a_text_formatter.add ("Cluster name: ")			
+			if cluster /= Void then
+				if cluster.is_assembly then
+					a_text_formatter.add ("Assembly cluster name: ")
+				else
+					a_text_formatter.add ("Cluster name: ")
+				end
+				a_text_formatter.add (cluster.name)
+				a_text_formatter.add_new_line
 			end
-			a_text_formatter.add (cluster.cluster_name)
-			a_text_formatter.add_new_line
 		end
 
 	put_cluster_path (a_text_formatter: TEXT_FORMATTER) is
@@ -38,13 +40,13 @@ feature -- Output
 			else
 				a_text_formatter.add ("Cluster path: ")
 			end
-			cluster.format (a_text_formatter)
+			a_text_formatter.add_string (cluster.location.evaluated_path)
 			a_text_formatter.add_new_line
 		end
 
 feature {AST_LACE, COMPILER_EXPORTER}
 
-	set_cluster (c: CLUSTER_I) is
+	set_cluster (c: CONF_GROUP) is
 			-- Assign `c' to `cluster'.
 		require
 			c_not_void: c /= Void
@@ -60,19 +62,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

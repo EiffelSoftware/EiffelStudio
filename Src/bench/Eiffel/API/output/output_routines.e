@@ -55,11 +55,11 @@ feature -- Miscellaneous
 				if root_cluster /= Void then
 					text.add_space
 					text.process_symbol_text (ti_L_parenthesis)
-					text.add_cluster (root_cluster, root_cluster.cluster_name)
+					text.add_group (root_cluster, root_cluster.cluster_name)
 					text.process_symbol_text (ti_R_parenthesis)
 				end
 
-				creation_name := Eiffel_system.system.creation_name
+				creation_name := Eiffel_system.system.root_creation_name
 				if root_class.compiled_class /= Void and creation_name /= Void then
 					if root_class.compiled_class.has_feature_table then
 						cr_f := root_class.compiled_class.feature_with_name (creation_name)

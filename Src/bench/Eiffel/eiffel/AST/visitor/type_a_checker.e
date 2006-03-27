@@ -233,7 +233,7 @@ feature -- Special checking
 			l_associated_class: CLASS_C
 			l_temp, l_cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_class_i: CLASS_I
-			l_cluster: CLUSTER_I
+			l_cluster: CONF_GROUP
 			l_vcfg3: VCFG3
 			l_vtct: VTCT
 			l_vtug: VTUG
@@ -256,7 +256,7 @@ feature -- Special checking
 				l_vcfg3.set_location (a_type.start_location)
 				a_error_handler.insert_error (l_vcfg3)
 			elseif l_class_type /= Void then
-				l_cluster := a_context_class.cluster
+				l_cluster := a_context_class.group
 				l_class_i := universe.class_named (l_class_type.class_name, l_cluster)
 				if l_class_i = Void then
 					create l_vtct

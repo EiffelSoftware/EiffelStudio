@@ -79,7 +79,7 @@ feature -- Element change
 				emit_tabs;
 			end;
 			tmp := s.as_lower
-			classi := Universe.class_named (tmp, e_class.cluster);
+			classi := Universe.class_named (tmp, e_class.group);
 			if classi = Void then
 				text.add_string (s);
 			else

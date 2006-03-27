@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			loop
 				add_tabs (text_formatter, indent);
 				a_cluster := a_list.item;
-				text_formatter.add_cluster (a_cluster, a_cluster.cluster_name);
+				text_formatter.add_group (a_cluster, a_cluster.cluster_name);
 				text_formatter.add_new_line;
 				display_clusters (a_cluster.sub_clusters, indent + 1)
 				a_list.forth

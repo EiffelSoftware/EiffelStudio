@@ -46,6 +46,9 @@ feature -- Access, stored in configuration file
 	parent: CONF_CLUSTER
 			-- An optional parent cluster.
 
+	children: ARRAYED_LIST [CONF_CLUSTER]
+			-- Optionally multiple children.
+
 feature -- Access, in compiled only, not stored to configuration file
 
 	application_target: CONF_TARGET
@@ -226,6 +229,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: parent = a_cluster
 		end
 
+	add_child (a_cluster: like Current) is
+			-- Add `a_cluster' to `children'.
+		do
+			if children = Void then
+				create children.make (1)
+			end
+			children.force (a_cluster)
+		ensure
+			child_added: children.has (a_cluster)
+		end
+
 	enable_recursive is
 			-- Set `is_recursive' to true.
 		do
@@ -358,5 +372,5 @@ feature {CONF_VISITOR, CONF_CLASS} -- Implementation, attributes stored in confi
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
-
+	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
 end

@@ -29,7 +29,7 @@ feature -- Execution
 			text_formatter.add ("Classes modified since last compilation");
 			text_formatter.add_new_line;
 			text_formatter.add_new_line;
-			clusters := Eiffel_universe.clusters;
+--			clusters := Eiffel_universe.clusters;
 			if not clusters.is_empty then
 					--| Skip precompile clusters for now
 				from

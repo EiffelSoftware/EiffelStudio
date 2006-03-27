@@ -169,7 +169,6 @@ feature
 		local
 			class_id: INTEGER;
 			resulting_table: like inherited_features;
-			a_cluster: CLUSTER_I;
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
@@ -191,10 +190,9 @@ feature
 
 			supplier_status_modified := is_supplier_status_modified;
 
-			a_cluster := a_class.cluster;
 				-- Initialization of the context for evaluation of actual
 				-- types
-			Inst_context.set_cluster (a_cluster);
+			Inst_context.set_group (a_class.group)
 
 				-- Empty the selection control list
 			Selected.wipe_out;

@@ -878,7 +878,7 @@ feature -- Generation Structure
 			Il_debug_info_recorder.end_recording_session
 		end
 
-	generate_resources (a_resources: LIST [STRING]) is
+	generate_resources (a_resources: LIST [CONF_EXTERNAL_RESSOURCE]) is
 			-- Generate all resources in assembly.
 		require
 			a_resources_not_void: a_resources /= Void
@@ -982,9 +982,9 @@ feature -- Generation Structure
 				(current_module /= Void and then current_module.is_generated)
 			then
 					-- Mark now entry point for debug information
-				if has_root_class and is_debug_info_enabled and system.creation_name /= Void then
+				if has_root_class and is_debug_info_enabled and system.root_creation_name /= Void then
 					a_class := system.root_class.compiled_class
-					root_feat := a_class.feature_table.item (system.creation_name)
+					root_feat := a_class.feature_table.item (system.root_creation_name)
 					l_decl_type := implemented_type (root_feat.origin_class_id,
 						a_class.types.first.type)
 
@@ -1854,7 +1854,7 @@ feature -- Features info
 		do
 			set_current_class (class_c)
 			set_current_class_type (class_type)
-			inst_context.set_cluster (class_c.cluster)
+			inst_context.set_group (class_c.group)
 			is_single_class := class_type.is_generated_as_single_type
 
 			set_current_type_id (class_type.static_type_id)

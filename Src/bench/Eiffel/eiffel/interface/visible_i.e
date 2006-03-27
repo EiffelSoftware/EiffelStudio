@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Feature external visibility controler
 
-class VISIBLE_I 
+class VISIBLE_I
 
 inherit
 	SHARED_WORKBENCH
@@ -12,20 +12,20 @@ inherit
 		rename
 			context as byte_context
 		end
-		
+
 feature
 
 	renamings: HASH_TABLE [STRING, STRING];
 			-- Renaming table
 
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
-			-- Is feature name `feat_name' visible in context 
+			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		do
 			-- Do nothing
 		end;
 
-feature 
+feature
 
 	real_name (feat: FEATURE_I; class_id: INTEGER): STRING is
 			-- Real external name for `feat' in context
@@ -82,19 +82,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

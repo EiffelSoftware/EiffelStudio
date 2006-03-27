@@ -134,7 +134,8 @@ feature -- Action
 			parser: like eiffel_parser
 			file: KL_BINARY_INPUT_FILE
 			l_dir: KL_DIRECTORY
-			f_name: STRING
+			l_dir_name: DIRECTORY_NAME
+			l_fname: FILE_NAME
 			vd21: VD21
 		do
 			create file.make (file_name)
@@ -157,18 +158,6 @@ feature -- Action
 					False
 				end
 			else
-					-- Save the source class in a Backup directory
-				if save_copy and Workbench.automatic_backup then
-					f_name := workbench.backup_subdirectory
-					f_name.append_character (operating_environment.directory_separator)
-					f_name.append (lace_class.cluster.location.evaluated_directory)
-					create l_dir.make (f_name)
-					l_dir.recursive_create_directory
-					f_name.append_character (operating_environment.directory_separator)
-					f_name.append (file_name)
-					file.copy_file (f_name)
-				end
-
 				has_unique := False
 
 					-- Call Eiffel parser
@@ -184,6 +173,19 @@ feature -- Action
 				set_need_type_check (True)
 
 				file.close
+
+					-- Save the source class in a Backup directory
+				if save_copy and Workbench.automatic_backup then
+					create l_dir_name.make_from_string (workbench.backup_subdirectory)
+					l_dir_name.extend (lace_class.cluster.target.name)
+					l_dir_name.extend (lace_class.cluster.cluster_name)
+					create l_dir.make (l_dir_name)
+					l_dir.recursive_create_directory
+					create l_fname.make_from_string (l_dir_name)
+					l_fname.extend (lace_class.base_name)
+					file.copy_file (l_fname)
+				end
+
 				Error_handler.checksum
 			end
 		ensure

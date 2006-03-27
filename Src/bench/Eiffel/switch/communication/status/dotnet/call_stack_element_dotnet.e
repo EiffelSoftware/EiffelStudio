@@ -8,6 +8,7 @@ indexing
 class CALL_STACK_ELEMENT_DOTNET
 
 inherit
+	CONF_REFACTORING
 
 	EIFFEL_CALL_STACK_ELEMENT
 		redefine
@@ -565,8 +566,9 @@ feature {NONE} -- Implementation
 						--| let's get the real Local variables
 						local_decl_grps := rout.locals
 						if local_decl_grps /= Void then
-							l_old_cluster := inst_context.cluster
-							Inst_context.set_cluster (rout.associated_class.cluster)
+							conf_todo_msg ("Use group instead of cluster")
+--							l_old_cluster := inst_context.cluster
+--							Inst_context.set_cluster (rout.associated_class.cluster)
 
 							l_old_class := System.current_class
 							System.set_current_class (dynamic_class)
@@ -610,7 +612,8 @@ feature {NONE} -- Implementation
 								local_decl_grps.forth
 							end
 							if l_old_cluster /= Void then
-								inst_context.set_cluster (l_old_cluster)
+								conf_todo_msg ("Use group instead of cluster")
+--								inst_context.set_cluster (l_old_cluster)
 							end
 							if l_old_class /= Void then
 								System.set_current_class (l_old_class)

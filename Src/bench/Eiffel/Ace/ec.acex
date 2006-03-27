@@ -89,7 +89,7 @@
 		<external_include location="$(EIFFEL_SRC)\library\wel\spec\windows\include">
 			<if platform="windows"/>
 		</external_include>
-		<external_include location="$(EIFFEL_SRC)\Eiffel_conf\library\cli_writer\Clib -D_WIN32_DCOM">
+		<external_include location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<if platform="windows"/>
 		</external_include>
 		<external_object location="$(EIFFEL_SRC)\C\bench\libmtcompiler.a">
@@ -110,10 +110,10 @@
 		<external_object location="$(EIFFEL_SRC)\C\platform\platform.lib">
 			<if platform="windows"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\Eiffel_conf\library\cli_writer\spec\msc\lib\cli_writer.lib">
+		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<if platform="windows"/>
 		</external_object>
-		<cluster name="activation_checker" location="$EIFFEL_SRC\Eiffel_conf\library\activation\" recursive="true">
+		<cluster name="activation_checker" location="$EIFFEL_SRC\Eiffel\library\activation\" recursive="true">
 			<file_rule>
 				<exclude>/enterprise$</exclude>
 				<exclude>/free$</exclude>
@@ -124,18 +124,18 @@
 				<exclude>/table$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel_conf\beurk\"/>
-		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel_conf\library\cli_writer\" recursive="true">
+		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\"/>
+		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
 				<exclude>/md_strong_name.e$</exclude>
 				<exclude>/md_public_key.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel_conf\library\cli_writer\" recursive="true">
+		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<if platform="windows"/>
 		</cluster>
-		<cluster name="common" location="$EIFFEL_SRC\Eiffel_conf\common\" recursive="true">
+		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
 				<exclude>/compiler_override$</exclude>
 				<exclude>/error$</exclude>
@@ -147,7 +147,7 @@
 				<exclude>/structured_text.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel_conf\eiffel\" recursive="true">
+		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>
@@ -158,7 +158,7 @@
 				<exclude>/windows$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel_conf\eiffel\" recursive="true">
+		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<if platform="windows"/>
 			<file_rule>
 				<exclude>/unix$</exclude>
@@ -168,32 +168,32 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel_conf\API\" recursive="true">
+		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
 				<exclude>/structured_text$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_api_windows" location="$EIFFEL_SRC\Eiffel_conf\API\" recursive="true">
+		<cluster name="compiler_api_windows" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<if platform="windows"/>
 			<file_rule>
 				<exclude>/structured_text$</exclude>
 				<exclude>/eb_preference_manager.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_support" location="$EIFFEL_SRC\Eiffel_conf\support\"/>
-		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel_conf\library\configuration\" recursive="true"/>
-		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel_conf\case\documentation\" recursive="true"/>
+		<cluster name="compiler_support" location="$EIFFEL_SRC\Eiffel\support\"/>
+		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
+		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
 		<cluster name="dotnet_helpers" location="$EIFFEL_SRC\dotnet\helpers\"/>
 		<cluster name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\classic\"/>
 		<cluster name="eac_components" location="$EIFFEL_SRC\dotnet\consumer\components\" recursive="true"/>
 		<cluster name="eac_serialization" location="$EIFFEL_SRC\dotnet\consumer\serialization\" recursive="true"/>
-		<cluster name="eiffel_structured_text" location="$EIFFEL_SRC\Eiffel_conf\API\structured_text\" recursive="true">
+		<cluster name="eiffel_structured_text" location="$EIFFEL_SRC\Eiffel\API\structured_text\" recursive="true">
 			<file_rule>
 				<exclude>/common$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel_conf\flat_short\bench\"/>
+		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="gobo" location="$EIFFEL_SRC\library\gobo\library\" recursive="true">
 			<file_rule>
 				<exclude>/hact$</exclude>
@@ -206,7 +206,7 @@
 				<exclude>/no_expat$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="interface" location="$EIFFEL_SRC\Eiffel_conf\interface\">
+		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\">
 			<cluster name="interface_shared" location="$|shared\"/>
 			<cluster name="preference_tool" location="$|graphical\preference_tool\"/>
 			<cluster name="profile_tool" location="$|graphical\profile_tool\"/>
@@ -228,7 +228,7 @@
 				<exclude>/EIFGEN$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="lace" location="$EIFFEL_SRC\Eiffel_conf\lace\" recursive="true"/>
+		<cluster name="lace" location="$EIFFEL_SRC\Eiffel\lace\" recursive="true"/>
 		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN$</exclude>
@@ -248,7 +248,7 @@
 				<exclude>/graphical$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="switch" location="$EIFFEL_SRC\Eiffel_conf\switch\">
+		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|no_communication\">
 				<cluster name="debuging_class" location="$|debug\"/>
 				<cluster name="status" location="$|status\"/>
@@ -267,6 +267,6 @@
 		<cluster name="wel" location="$EIFFEL_SRC\library\wel\" recursive="true">
 			<if platform="windows"/>
 		</cluster>
-		<override name="override" location="$EIFFEL_SRC\Eiffel_conf\override\"/>
+		<override name="override" location="$EIFFEL_SRC\Eiffel\override\"/>
 	</target>
 </system>

@@ -105,7 +105,7 @@ default
 
 
 cluster
-	override:		"$EIFFEL_SRC/Eiffel_conf/override"
+	override:		"$EIFFEL_SRC/Eiffel/override"
 
 
 	all base:		"$EIFFEL_SRC/library/base"
@@ -132,21 +132,21 @@ cluster
 			".svn"; "french"; "german"; 
 		end
 
-	beurk:		"$EIFFEL_SRC/Eiffel_conf/beurk"
+	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
 	all editor:		"$EIFFEL_SRC/library/editor"
 		exclude
 			".svn"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
 		end
 
-	compiler_support:		"$EIFFEL_SRC/Eiffel_conf/support"
+	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
 
-	all common:		"$EIFFEL_SRC/Eiffel_conf/common"
+	all common:		"$EIFFEL_SRC/Eiffel/common"
 		exclude
 			".svn"; "compiler_override"; "error";
 		end
 
-	flat_short_b:		"$EIFFEL_SRC/Eiffel_conf/flat_short/bench"
+	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
 
 	observer:		"$EIFFEL_SRC/library/patterns/observer"
 
@@ -155,27 +155,27 @@ cluster
 			".svn"; "hact"; "se"; "ve"; "base"; "other"; "free_elks"; 
 		end
 
-	all case:		"$EIFFEL_SRC/Eiffel_conf/case"
+	all case:		"$EIFFEL_SRC/Eiffel/case"
 		exclude
 			".svn"; 
 		end
 
-	all lace:		"$EIFFEL_SRC/Eiffel_conf/lace"
+	all lace:		"$EIFFEL_SRC/Eiffel/lace"
 		exclude
 			".svn"; 
 		end
 
-	all compiler:		"$EIFFEL_SRC/Eiffel_conf/eiffel"
+	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
 			".svn"; "com_il_generation"; "kernel"; "windows"; 
 		end
 
-	all compiler_api:		"$EIFFEL_SRC/Eiffel_conf/API"
+	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
 			".svn"; 
 		end
 
-	switch:		"$EIFFEL_SRC/Eiffel_conf/switch"
+	switch:		"$EIFFEL_SRC/Eiffel/switch"
 
 	interface_switch (switch):		"$/interface/new_graphical"
 
@@ -201,7 +201,7 @@ cluster
 			".svn"; 
 		end
 
-	all interface:		"$EIFFEL_SRC/Eiffel_conf/interface"
+	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude
 			".svn"; "graphical"; "win32"; "mswin"; "tty"; "Not_in_System"; "registry"; "preferences"; "dotnet"; 
 		end
@@ -216,7 +216,7 @@ cluster
 			".svn"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
 		end
 
-	all cli_writer:		"$EIFFEL_SRC/Eiffel_conf/library/cli_writer"
+	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 		exclude
 			"md_strong_name.e"; "md_public_key.e"; 
 		end
@@ -237,7 +237,7 @@ cluster
 
 	eac_documentation:		"$EIFFEL_SRC/dotnet/eac_browser/src/deserialization/assembly_informations"
 
-	all activation_checker:		"$EIFFEL_SRC/Eiffel_conf/library/activation"
+	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude
 			"free"; "command_line"; ".svn"; 
 		end

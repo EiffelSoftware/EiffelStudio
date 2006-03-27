@@ -94,6 +94,7 @@ feature -- Printing
 					if data_block.count = 0 then
 						is_printing_freezing := False
 						remove_printer (freezing_printer)
+						gm.notify_c_compilation_output_finished
 					else
 						is_printing_freezing := True
 					end
@@ -118,6 +119,7 @@ feature -- Printing
 					if data_block.count = 0 then
 						is_printing_finalizing := False
 						remove_printer (finalizing_printer)
+						gm.notify_c_compilation_output_finished
 					else
 						is_printing_finalizing := True
 					end

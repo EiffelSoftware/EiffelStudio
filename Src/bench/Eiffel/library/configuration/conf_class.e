@@ -114,7 +114,7 @@ feature -- Access, in compiled only, not stored to configuration file
 		local
 			l_file: RAW_FILE
 		do
-			Result := is_precompiled or is_partial
+			Result := is_precompiled or is_partial or group.is_readonly
 			if not Result then
 					-- check if the file itself is read only
 				create l_file.make (full_file_name)

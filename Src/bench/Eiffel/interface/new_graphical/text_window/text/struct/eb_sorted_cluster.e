@@ -140,22 +140,6 @@ feature -- Basic operations
 			Result := actual_cluster.cluster_name < other.actual_cluster.cluster_name
 		end
 
-	has_child_class_recursive (a_class: CLASS_I): BOOLEAN is
-			-- Is `a_class' recursively child of `Current'?
-		local
-			a_cluster: CLUSTER_I
-		do
-			conf_todo
---			from
---				a_cluster := a_class.cluster
---			until
---				a_cluster = Void or else a_cluster = actual_cluster
---			loop
---				a_cluster := a_cluster.parent_cluster
---			end
---			Result := (a_cluster = actual_cluster)
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

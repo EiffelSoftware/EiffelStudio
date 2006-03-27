@@ -93,19 +93,6 @@ feature {NONE} -- Shared tools access
 			Result := (dynamic_lib_window /= Void) and then	(not dynamic_lib_window.destroyed)
 		end
 
---	system_window: EB_SYSTEM_WINDOW is
---			-- Project configuration tool
---		do
---			Result := System_window_cell.item
---		end
-
-	system_window_is_valid: BOOLEAN is
-			-- Is `system_window' valid?
-		do
-			conf_todo
---			Result := (system_window /= Void) and then (not system_window.destroyed)
-		end
-
 	argument_dialog: EB_ARGUMENT_DIALOG is
 			-- Project argument dialog
 		do
@@ -124,12 +111,6 @@ feature {NONE} -- Shared tools change
 			-- Makes `a_dynamic_lib_window' shared dynamic library tool.
 		do
 			Dynamic_lib_window_cell.put (a_dynamic_lib_window)
-		end
-
-	set_system_window (sw: EB_SYSTEM_WINDOW) is
-			-- Makes `sw' shared system window.
-		do
-			System_window_cell.put (sw)
 		end
 
 	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG) is
@@ -155,12 +136,6 @@ feature {NONE} -- Implementation
 
 	Dynamic_lib_window_cell: CELL [EB_DYNAMIC_LIB_WINDOW] is
 			-- Cell for the dynamic library window
-		once
-			create Result.put (Void)
-		end
-
-	System_window_cell: CELL [EB_SYSTEM_WINDOW] is
-			-- Cell for system tool
 		once
 			create Result.put (Void)
 		end

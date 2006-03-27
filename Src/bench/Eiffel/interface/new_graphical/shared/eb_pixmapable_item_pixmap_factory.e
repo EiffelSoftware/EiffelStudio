@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			if a_cluster.is_library or else a_cluster.is_precompiled then
+			if a_cluster.is_readonly then
 				Result := (Pixmaps.Icon_read_only_cluster)
 			else
 				Result := (Pixmaps.Icon_cluster_symbol)

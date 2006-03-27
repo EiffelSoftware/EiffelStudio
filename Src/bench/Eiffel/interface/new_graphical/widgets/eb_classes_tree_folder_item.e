@@ -64,7 +64,7 @@ feature -- Status setting
 			set_accept_cursor (Cursors.cur_Cluster)
 			set_deny_cursor (Cursors.cur_X_Cluster)
 			set_pixmap (pixmap_from_cluster_i (actual))
-			if not (actual.is_library or actual.is_precompiled) then
+			if not (actual.is_readonly) then
 				drop_actions.set_veto_pebble_function (agent droppable)
 				drop_actions.extend (agent on_class_drop)
 --| FIXME XR: When clusters can be moved effectively, uncomment this line.

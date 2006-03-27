@@ -63,9 +63,10 @@ feature -- Execution
 			sorted_class_names.sort;
 			text_formatter.add ("Cluster: ");
 			text_formatter.add_group (cluster, cluster.cluster_name);
-			if cluster.is_precompiled then
-				text_formatter.add (" (Precompiled)")
-			end;
+			conf_todo
+--			if cluster.is_precompiled then
+--				text_formatter.add (" (Precompiled)")
+--			end;
 			text_formatter.add_new_line;
 			from
 				sorted_class_names.start

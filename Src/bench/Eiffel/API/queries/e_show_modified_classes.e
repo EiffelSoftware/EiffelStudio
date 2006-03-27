@@ -32,26 +32,26 @@ feature -- Execution
 			text_formatter.add_new_line;
 			conf_todo
 --			clusters := Eiffel_universe.clusters;
-			if not clusters.is_empty then
-					--| Skip precompile clusters for now
-				from
-					clusters.start
-				until
-					clusters.after or else not (clusters.item.is_precompiled)
-				loop
-					clusters.forth
-				end;
-				from
-					--| Print user defined clusters
-				until
-					clusters.after
-				loop
-					cursor := clusters.cursor;
-					display_a_cluster (clusters.item);
-					clusters.go_to (cursor);
-					clusters.forth
-				end
-			end
+--			if not clusters.is_empty then
+--					--| Skip precompile clusters for now
+--				from
+--					clusters.start
+--				until
+--					clusters.after or else not (clusters.item.is_precompiled)
+--				loop
+--					clusters.forth
+--				end;
+--				from
+--					--| Print user defined clusters
+--				until
+--					clusters.after
+--				loop
+--					cursor := clusters.cursor;
+--					display_a_cluster (clusters.item);
+--					clusters.go_to (cursor);
+--					clusters.forth
+--				end
+--			end
 		end;
 
 feature {NONE} -- Implementation
@@ -79,9 +79,10 @@ feature {NONE} -- Implementation
 				sorted_class_names.sort;
 				text_formatter.add ("Cluster: ");
 				text_formatter.add (cluster.cluster_name);
-				if cluster.is_precompiled then
-					text_formatter.add (" (Precompiled)")
-				end;
+				conf_todo
+--				if cluster.is_precompiled then
+--					text_formatter.add (" (Precompiled)")
+--				end;
 				text_formatter.add_new_line;
 				from
 					sorted_class_names.start

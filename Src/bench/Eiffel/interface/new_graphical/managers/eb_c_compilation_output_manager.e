@@ -97,6 +97,24 @@ feature -- Basic Operations
 			scroll_to_end
 		end
 
+	notify_c_compilation_output_finished is
+			-- Notify all output tools that all output from c compilation has been finished.
+		local
+			eo: EB_C_COMPILATION_OUTPUT_TOOL
+		do
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				eo ?= managed_output_tools.item
+				if eo /= Void then
+					eo.on_c_compilation_output_finished
+				end
+				managed_output_tools.forth
+			end
+		end
+
 feature -- Basic Operations / Information message
 
 	display_system_info is

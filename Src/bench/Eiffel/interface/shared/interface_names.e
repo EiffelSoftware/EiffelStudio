@@ -992,6 +992,16 @@ feature -- Description texts
 	e_Dbg_exception_handler: STRING is "Exceptions handling"
 	e_Dbg_assertion_checking: STRING is "Disable or restore Assertion checking handling during debugging"
 
+	e_open_selection_in_editor: STRING is "Open selected file name in specified external editor"
+	e_save_c_compilation_output: STRING is "Save c compilation output to file"
+	e_go_to_w_code_dir: STRING is "Go to W_code directory of this system"
+	e_go_to_f_code_dir: STRING is "Go to F_code directory of this system"
+	e_f_code: STRING is "F_code"
+	e_w_code: STRING is "W_code"
+	e_no_text_is_selected: STRING is "No file name is selected."
+	e_selected_text_is_not_file: STRING is "Selected text is not a correct file name."
+	e_external_editor_not_defined: STRING is "External editor not defined"
+
 feature -- Wizard texts
 
 	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"

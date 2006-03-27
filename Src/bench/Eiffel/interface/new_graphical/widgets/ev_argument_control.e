@@ -54,6 +54,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -208,7 +213,8 @@ feature {NONE} -- Retrieval
 			l_file_name := Eiffel_ace.file_name
 			create l_file.make (l_file_name)
 			if l_file.exists and then l_file.is_readable then
-				Result := Eiffel_ace.Lace.parsed_ast
+				conf_todo
+				--Result := Eiffel_ace.Lace.parsed_ast
 			end
 		end
 
@@ -226,7 +232,8 @@ feature -- Storage
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
-				Lace.argument_list.put_front (saved_argument)
+				conf_todo
+--				Lace.argument_list.put_front (saved_argument)
 			end
 			save_ace_arguments (a_root_ast)
 			synch_with_others
@@ -242,7 +249,8 @@ feature -- Storage
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
-				Lace.argument_list.put_front (saved_argument)
+				conf_todo
+--				Lace.argument_list.put_front (saved_argument)
 			end
 			save_custom_arguments
 			synch_with_others
@@ -259,7 +267,8 @@ feature -- Storage
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
 			if Workbench.system_defined then
-				Lace.argument_list.put_front (saved_argument)
+				conf_todo
+--				Lace.argument_list.put_front (saved_argument)
 			end
 			if a_root_ast /= Void then
 				save_ace_arguments (a_root_ast)
@@ -287,7 +296,8 @@ feature {NONE} -- Storage
 			defaults := a_root_ast.defaults
 			if defaults = Void then
 				create defaults.make (10)
-				a_root_ast.set_defaults (defaults)
+				conf_todo
+--				a_root_ast.set_defaults (defaults)
 			end
 
 			from
@@ -342,7 +352,8 @@ feature {NONE} -- Storage
 					new_special_option_sd ({FREE_OPTION_SD}.working_directory, wd, True))
 			end
 			if Workbench.system_defined then
-				Lace.set_application_working_directory (wd)
+				conf_todo
+--				Lace.set_application_working_directory (wd)
 			end
 			if not from_project_settings then
 				save_ace (a_root_ast)
@@ -385,21 +396,22 @@ feature {NONE} -- Storage
 			ace_file: PLAIN_TEXT_FILE
 			st: GENERATION_BUFFER
 		do
-			l_ast := a_root_ast.duplicate
-			l_saved_ace := retrieve_ace
-			if l_saved_ace = Void or else not l_saved_ace.same_as (l_ast) then
-				create st.make (2048)
-				l_ast.save (st)
-				if Eiffel_ace.file_name = Void then
-					Eiffel_ace.set_file_name ("Ace.ace")
-				end
-				create ace_file.make (Eiffel_ace.file_name)
-				if not ace_file.exists or else ace_file.is_writable then
-					ace_file.open_write
-					st.put_in_file (ace_file)
-					ace_file.close
-				end
-			end
+			conf_todo
+--			l_ast := a_root_ast.duplicate
+--			l_saved_ace := retrieve_ace
+--			if l_saved_ace = Void or else not l_saved_ace.same_as (l_ast) then
+--				create st.make (2048)
+--				l_ast.save (st)
+--				if Eiffel_ace.file_name = Void then
+--					Eiffel_ace.set_file_name ("Ace.ace")
+--				end
+--				create ace_file.make (Eiffel_ace.file_name)
+--				if not ace_file.exists or else ace_file.is_writable then
+--					ace_file.open_write
+--					st.put_in_file (ace_file)
+--					ace_file.close
+--				end
+--			end
 		end
 
 feature {NONE} -- GUI

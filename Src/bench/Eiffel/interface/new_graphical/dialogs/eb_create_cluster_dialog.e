@@ -11,8 +11,8 @@ class
 
 inherit
 	EV_DIALOG
-	
-	COMPILER_EXPORTER	
+
+	COMPILER_EXPORTER
 		export
 			{NONE} all
 		undefine
@@ -122,13 +122,13 @@ feature {NONE} -- Initialization
 				-- Build the frames
 			create name_frame.make_with_text (Interface_names.l_Cluster_options)
 			create cluster_frame.make_with_text (Interface_names.l_Parent_cluster)
-			
+
 				-- Setup the agents
 			browse_button.select_actions.extend (agent start_browsing)
 			top_radio.select_actions.extend (agent top_cluster_selected)
 			sub_radio.select_actions.extend (agent sub_cluster_selected)
 			library_box.select_actions.extend (agent library_selected)
-			
+
 				-- Organize the options
 			wid := name_label.minimum_width.max (path_label.minimum_width)
 			create vb
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 			vb.extend (hb)
 			name_frame.extend (vb)
-			
+
 				-- Build the list
 			create vb
 			vb.set_padding (Layout_constants.Small_border_size)
@@ -192,7 +192,7 @@ feature {NONE} -- Initialization
 		ensure
 			target_set: target = a_target
 		end
-		
+
 feature -- Basic operations
 
 	call_default is
@@ -203,12 +203,12 @@ feature -- Basic operations
 			new_cluster_counter.put (new_cluster_counter.item + 1)
 			internal_call (default_cluster_name)
 		end
-		
+
 	call (cluster_n: STRING) is
 			-- Display the dialog.
 			-- Give `cluster_n' as the default cluster name in it.
 		require
-			valid_args: cluster_n /= Void 
+			valid_args: cluster_n /= Void
 		do
 			is_default_cluster_name_set := False
 			default_cluster_name := Void
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			-- Display the dialog.
 			-- Give `cluster_n' as the default cluster name in it.
 		require
-			valid_args: cluster_n /= Void 
+			valid_args: cluster_n /= Void
 		local
 			str: STRING
 			clus_list: ARRAYED_LIST [CLUSTER_I]
@@ -231,8 +231,9 @@ feature {NONE} -- Implementation
 		do
 			cluster := target.cluster
 			str := cluster_n.as_lower
-			cluster_entry.set_text (str)	
-			clus_list := Eiffel_universe.clusters_sorted_by_tag
+			cluster_entry.set_text (str)
+			conf_todo
+--			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.is_empty then
 				from
 					clus_list.start
@@ -321,7 +322,7 @@ feature {NONE} -- Implementation
 	change_parent_cluster is
 			-- Set `cluster' to the selected cluster in the list.
 		local
-			clu: CLUSTER_I 
+			clu: CLUSTER_I
 			wd: EV_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
@@ -384,22 +385,23 @@ feature {NONE} -- Implementation
 						cluster /= Void
 						-- Otherwise `change_parent_cluster' didn't do its job.
 					end
-					if cluster.is_library or cluster.is_precompiled then
-						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (cluster.cluster_name))
-						wd.show_modal_to_window (Current)
-						aok := False
-					elseif
-							-- FIXME XR: If the cluster is `all' in the Ace, but it has no child,
-							-- WE HAVE NO WAY OF KNOWING IT IS RECURSIVE except parsing the Ace again!!!!! (gr)
-							-- As a consequence, this will bug.
-						cluster.is_recursive or
-						not cluster.sub_clusters.is_empty and then
-						cluster.sub_clusters.first.belongs_to_all or
-						cluster.belongs_to_all
-					then
-						in_recursive := True
-						base_name := cluster.cluster_name + "." + base_name
-					end
+					conf_todo
+--					if cluster.is_library or cluster.is_precompiled then
+--						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (cluster.cluster_name))
+--						wd.show_modal_to_window (Current)
+--						aok := False
+--					elseif
+--							-- FIXME XR: If the cluster is `all' in the Ace, but it has no child,
+--							-- WE HAVE NO WAY OF KNOWING IT IS RECURSIVE except parsing the Ace again!!!!! (gr)
+--							-- As a consequence, this will bug.
+--						cluster.is_recursive or
+--						not cluster.sub_clusters.is_empty and then
+--						cluster.sub_clusters.first.belongs_to_all or
+--						cluster.belongs_to_all
+--					then
+--						in_recursive := True
+--						base_name := cluster.cluster_name + "." + base_name
+--					end
 				end
 				if aok then
 					create dir.make (chosen_dir)
@@ -433,17 +435,18 @@ feature {NONE} -- Implementation
 		local
 			cluster_i: CLUSTER_I
 		do
-			if sub_cluster then
-				create cluster_i.make_with_parent (path, cluster)
-				cluster_i.set_cluster_name (name)
-				cluster_i.set_belongs_to_all (rec)
-				manager.add_cluster_i (cluster_i, cluster, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
-			else
-				create cluster_i.make_with_parent (path, Void)
-				cluster_i.set_cluster_name (name)
-				manager.add_top_cluster_i (cluster_i, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
-			end
-			destroy
+			conf_todo
+--			if sub_cluster then
+--				create cluster_i.make_with_parent (path, cluster)
+--				cluster_i.set_cluster_name (name)
+--				cluster_i.set_belongs_to_all (rec)
+--				manager.add_cluster_i (cluster_i, cluster, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
+--			else
+--				create cluster_i.make_with_parent (path, Void)
+--				cluster_i.set_cluster_name (name)
+--				manager.add_top_cluster_i (cluster_i, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
+--			end
+--			destroy
 		end
 
 	create_directory (dir: DIRECTORY) is
@@ -470,7 +473,7 @@ feature {NONE} -- Implementation
 				--| Make sure the currently selected item is visible
 			curr_selected_item := cluster_list.selected_item
 			if curr_selected_item /= Void then
-				cluster_list.ensure_item_visible (curr_selected_item)			
+				cluster_list.ensure_item_visible (curr_selected_item)
 			end
 
 				--| Make sure the text in the cluster entry is entirely visible
@@ -522,7 +525,8 @@ feature {NONE} -- Implementation
 				end
 			else
 				icp := (create {ENV_INTERP}).interpreted_string (cp)
-				aok := Eiffel_universe.cluster_of_path (icp) = Void
+				conf_todo
+--				aok := Eiffel_universe.cluster_of_path (icp) = Void
 				if not aok then
 					create wd.make_with_text (Warning_messages.w_cluster_path_already_exists (icp))
 					wd.show_modal_to_window (target.window)
@@ -630,7 +634,7 @@ feature {NONE} -- Vision2 widgets
 
 	folder_entry: EV_TEXT_FIELD
 			-- Text field in which the user will type the folder name of the new cluster
-	
+
 	browse_button: EV_BUTTON
 			-- Button that lets the user browse to give a directory.
 
@@ -648,7 +652,7 @@ feature {NONE} -- Vision2 widgets
 
 	create_button: EV_BUTTON
 			-- Button to create the class
-			
+
 	cluster_list: EV_LIST
 			-- List of all available clusters.
 
@@ -659,7 +663,7 @@ feature {NONE} -- Constants
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (250)
 		end
-		
+
 	Cluster_list_minimum_height: INTEGER is
 			-- Minimum height for the cluster list.
 		do

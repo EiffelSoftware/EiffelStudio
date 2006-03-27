@@ -13,6 +13,7 @@ class E_SHOW_CLASSES
 inherit
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
+	CONF_REFACTORING
 
 create
 	make, do_nothing
@@ -29,6 +30,7 @@ feature -- Execution
 			a_classi: CLASS_I;
 			a_classe: CLASS_C;
 		do
+			conf_todo_msg ("tree layout?")
 			l_groups := Eiffel_universe.groups
 			if not l_groups.is_empty then
 				create l_sorted_classes.make;

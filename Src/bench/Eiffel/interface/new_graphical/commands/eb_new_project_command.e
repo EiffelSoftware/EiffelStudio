@@ -108,45 +108,46 @@ feature -- Project initialization
 			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir)
 
-			if not project_dir.has_base_full_access then
-				choose_again := True
-				create wd.make_with_text (Warning_messages.w_Cannot_create_project_directory (project_dir.name))
-				wd.show_modal_to_window (parent_window)
-			else
-					-- Look for an "epr" file.
-				create curr_directory.make_open_read (dir)
-				from
-					curr_directory.start
-					curr_directory.readentry
-				until
-					epr_file_name /= Void or else curr_directory.lastentry = Void
-				loop
-					if (curr_directory.lastentry.substring_index (".epr", 1) /= 0) then
-						epr_file_name := curr_directory.lastentry.twin
-					end
-					curr_directory.readentry
-				end
-
-				if ask_confirmation and then epr_file_name /= Void then
-					create epr_full_file_name.make_from_string (dir)
-					epr_full_file_name.set_file_name (epr_file_name)
-					create epr_file.make (epr_full_file_name)
-					project_dir.set_project_file (epr_file)
-					if project_dir.exists then
-						create qd.make_with_text (Warning_messages.w_Project_exists (project_dir.name))
-						qd.show_modal_to_window (parent_window)
-						if qd.selected_button /= Void and then qd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes) then
-							init_project
-						end
-					else
-							-- No "EIFGEN" file -> there is no project... go ahead.
-						init_project
-					end
-				else
-						-- No "epr" file or no confirmation asked -> there is no project... go ahead.
-					init_project
-				end
-			end
+			conf_todo
+--			if not project_dir.has_base_full_access then
+--				choose_again := True
+--				create wd.make_with_text (Warning_messages.w_Cannot_create_project_directory (project_dir.name))
+--				wd.show_modal_to_window (parent_window)
+--			else
+--					-- Look for an "epr" file.
+--				create curr_directory.make_open_read (dir)
+--				from
+--					curr_directory.start
+--					curr_directory.readentry
+--				until
+--					epr_file_name /= Void or else curr_directory.lastentry = Void
+--				loop
+--					if (curr_directory.lastentry.substring_index (".epr", 1) /= 0) then
+--						epr_file_name := curr_directory.lastentry.twin
+--					end
+--					curr_directory.readentry
+--				end
+--
+--				if ask_confirmation and then epr_file_name /= Void then
+--					create epr_full_file_name.make_from_string (dir)
+--					epr_full_file_name.set_file_name (epr_file_name)
+--					create epr_file.make (epr_full_file_name)
+--					project_dir.set_project_file (epr_file)
+--					if project_dir.exists then
+--						create qd.make_with_text (Warning_messages.w_Project_exists (project_dir.name))
+--						qd.show_modal_to_window (parent_window)
+--						if qd.selected_button /= Void and then qd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes) then
+--							init_project
+--						end
+--					else
+--							-- No "EIFGEN" file -> there is no project... go ahead.
+--						init_project
+--					end
+--				else
+--						-- No "epr" file or no confirmation asked -> there is no project... go ahead.
+--					init_project
+--				end
+--			end
 		end
 
 feature {NONE} -- Implementation

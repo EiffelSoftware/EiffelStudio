@@ -8,8 +8,11 @@ indexing
 class
 	EB_SHARED_ARGUMENTS
 
+inherit
+	CONF_REFACTORING
+
 feature -- Access
-	
+
 	current_cmd_line_argument: STRING is
 			-- Current selected command line argument.
 		local
@@ -25,17 +28,18 @@ feature -- Access
 				create l_args_file.make (l_project.Arguments_file_name)
 				if not l_args_file.exists then
 					create shared_eiffel
-					if not shared_eiffel.Eiffel_ace.lace.argument_list.is_empty then
-						Result := shared_eiffel.Eiffel_ace.lace.argument_list.i_th (1)
-						if Result.is_equal (" ") then
-							Result := ""
-						else
-								-- If it contains some environment variables, they are translated.
-							Result := (create {ENV_INTERP}).interpreted_string (Result)
-						end
-					else
-						Result := ""
-					end
+					conf_todo
+--					if not shared_eiffel.Eiffel_ace.lace.argument_list.is_empty then
+--						Result := shared_eiffel.Eiffel_ace.lace.argument_list.i_th (1)
+--						if Result.is_equal (" ") then
+--							Result := ""
+--						else
+--								-- If it contains some environment variables, they are translated.
+--							Result := (create {ENV_INTERP}).interpreted_string (Result)
+--						end
+--					else
+--						Result := ""
+--					end
 				else
 					if not l_args_file.is_empty then
 						l_args_file.open_read
@@ -43,8 +47,8 @@ feature -- Access
 						l_args_file.read_line
 						l_last_string := l_args_file.last_string.twin
 						l_args_file.close
-						if 
-							l_last_string /= Void and 
+						if
+							l_last_string /= Void and
 							not (l_last_string.is_empty or else
 								l_last_string.is_equal (No_argument_string) or else
 								l_last_string.is_equal (" "))
@@ -72,13 +76,13 @@ feature -- Access
 		ensure
 			current_cmd_line_argument_not_void: Result /= Void
 		end
-		
+
 	current_selected_cmd_line_argument: CELL [STRING] is
 			-- Argument last selected by user, if any.
 		once
 			create Result.put (Void)
 		end
-		
+
 feature {NONE} -- Constants
 
 	No_argument_string: STRING is "(No argument)"

@@ -13,6 +13,7 @@ inherit
 
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
+	CONF_REFACTORING
 
 create
 
@@ -29,6 +30,7 @@ feature -- Execution
 			text_formatter.add ("Classes modified since last compilation");
 			text_formatter.add_new_line;
 			text_formatter.add_new_line;
+			conf_todo
 --			clusters := Eiffel_universe.clusters;
 			if not clusters.is_empty then
 					--| Skip precompile clusters for now

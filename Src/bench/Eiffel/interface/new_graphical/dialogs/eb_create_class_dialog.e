@@ -273,7 +273,8 @@ feature -- Basic operations
 			end
 			str := class_n.as_upper
 			class_entry.set_text (str)
-			clus_list := Eiffel_universe.clusters_sorted_by_tag
+			conf_todo
+--			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.is_empty then
 				from
 					clus_list.start
@@ -362,7 +363,8 @@ feature {NONE} -- Implementation
 				sub_clusters.off
 			loop
 				clus := sub_clusters.item
-				create i.make_with_text (clus.display_name)
+				conf_todo
+--				create i.make_with_text (clus.display_name)
 				i.set_pixmap (pixmaps.icon_cluster_symbol)
 				parent_item.extend (i)
 				i.set_data (clus)
@@ -450,44 +452,45 @@ feature {NONE} -- Implementation
 					f_name.set_file_name (file_name)
 					base_name := file_name
 					create file.make (f_name)
-					if cluster.has_base_name (base_name) then
-						if file.exists then
-							create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
-						else
-							create wd.make_with_text (Warning_messages.w_class_still_in_cluster (base_name))
-						end
-						wd.show_modal_to_window (Current)
-						class_entry.set_focus
-					elseif
-						(not file.exists and then not file.is_creatable)
-					then
-						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
-						wd.show_modal_to_window (target.window)
-					else
-						if not file.exists then
-							destroy
-							load_default_class_text (file)
-							if not could_not_load_file then
-								manager.add_class_to_cluster_i (base_name, cluster)
-								class_i := cluster.class_with_base_name (base_name)
-								if set_stone and class_i /= Void then
-									target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
-								end
-							end
-						elseif
-							not (file.is_readable and then file.is_plain)
-						then
-							create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
-							wd.show_modal_to_window (target.window)
-							file_entry.set_focus
-						else
-								--| Reading in existing file (created outside
-								--| ebench). Ask for confirmation
-							create cd.make_with_text (Warning_messages.w_file_exists_edit_it (f_name))
-							cd.button (ev_ok).select_actions.extend (agent edit_class)
-							cd.show_modal_to_window (target.window)
-						end
-					end
+					conf_todo
+--					if cluster.has_base_name (base_name) then
+--						if file.exists then
+--							create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
+--						else
+--							create wd.make_with_text (Warning_messages.w_class_still_in_cluster (base_name))
+--						end
+--						wd.show_modal_to_window (Current)
+--						class_entry.set_focus
+--					elseif
+--						(not file.exists and then not file.is_creatable)
+--					then
+--						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
+--						wd.show_modal_to_window (target.window)
+--					else
+--						if not file.exists then
+--							destroy
+--							load_default_class_text (file)
+--							if not could_not_load_file then
+--								manager.add_class_to_cluster_i (base_name, cluster)
+--								class_i := cluster.class_with_base_name (base_name)
+--								if set_stone and class_i /= Void then
+--									target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+--								end
+--							end
+--						elseif
+--							not (file.is_readable and then file.is_plain)
+--						then
+--							create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
+--							wd.show_modal_to_window (target.window)
+--							file_entry.set_focus
+--						else
+--								--| Reading in existing file (created outside
+--								--| ebench). Ask for confirmation
+--							create cd.make_with_text (Warning_messages.w_file_exists_edit_it (f_name))
+--							cd.button (ev_ok).select_actions.extend (agent edit_class)
+--							cd.show_modal_to_window (target.window)
+--						end
+--					end
 				end
 			else
 					-- We were rescued.
@@ -508,7 +511,8 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				manager.add_class_to_cluster_i (file_name, cluster)
-				class_i := cluster.class_with_base_name (file_name)
+				conf_todo
+--				class_i := cluster.class_with_base_name (file_name)
 				destroy
 				if set_stone and then class_i /= Void then
 					target.set_stone (create {CLASSI_STONE}.make (class_i))

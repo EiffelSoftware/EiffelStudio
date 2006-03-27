@@ -579,18 +579,19 @@ feature {NONE} -- Implementation
 			old_exclude.compare_objects
 			ie.exclude_list.wipe_out
 			ie.include_list.wipe_out
-			cl := Eiffel_universe.clusters
-			from cl.start until cl.after loop
-				cl_name := cl.item.cluster_name.twin
-				create li.make_with_text (cl_name)
-				li.set_data (cl.item)
-				if old_exclude.has (cl_name) then
-					ie.exclude_list.extend (li)
-				else
-					ie.include_list.extend (li)
-				end
-				cl.forth
-			end
+			conf_todo
+--			cl := Eiffel_universe.clusters
+--			from cl.start until cl.after loop
+--				cl_name := cl.item.cluster_name.twin
+--				create li.make_with_text (cl_name)
+--				li.set_data (cl.item)
+--				if old_exclude.has (cl_name) then
+--					ie.exclude_list.extend (li)
+--				else
+--					ie.include_list.extend (li)
+--				end
+--				cl.forth
+--			end
 		end
 
 	fill_indexing_box (ie: EB_INCLUDE_EXCLUDE) is
@@ -608,23 +609,24 @@ feature {NONE} -- Implementation
 			create all_tags.make
 			all_tags.extend ("keywords")
 			all_tags.compare_objects
-			cl := Eiffel_universe.clusters
-			from cl.start until cl.after loop
-				l_cluster := cl.item
-				add_indexes (l_cluster.indexes, all_tags)
-				classes := l_cluster.classes
-				if classes /= Void then
-					from classes.start until classes.after loop
-						l_class := classes.item_for_iteration
-						if l_class.compiled then
-							add_indexes (l_class.compiled_class.ast.top_indexes, all_tags)
-							add_indexes (l_class.compiled_class.ast.bottom_indexes, all_tags)
-						end
-						classes.forth
-					end
-				end
-				cl.forth
-			end
+			conf_todo
+--			cl := Eiffel_universe.clusters
+--			from cl.start until cl.after loop
+--				l_cluster := cl.item
+--				add_indexes (l_cluster.indexes, all_tags)
+--				classes := l_cluster.classes
+--				if classes /= Void then
+--					from classes.start until classes.after loop
+--						l_class := classes.item_for_iteration
+--						if l_class.compiled then
+--							add_indexes (l_class.compiled_class.ast.top_indexes, all_tags)
+--							add_indexes (l_class.compiled_class.ast.bottom_indexes, all_tags)
+--						end
+--						classes.forth
+--					end
+--				end
+--				cl.forth
+--			end
 
 			old_exclude := ie.exclude_list.strings_8
 			old_exclude.compare_objects

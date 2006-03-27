@@ -86,10 +86,11 @@ feature -- Formatting
 					editor.clear_window
 					editor.display_message (Warning_messages.w_file_not_exist (classi.file_name))
 				end
-				editable :=	not classi.cluster.is_precompiled and
-							not classi.is_read_only and
-							(class_file.exists and then class_file.is_writable) and
-							not editor.load_file_error
+				conf_todo
+--				editable :=	not classi.cluster.is_precompiled and
+--							not classi.is_read_only and
+--							(class_file.exists and then class_file.is_writable) and
+--							not editor.load_file_error
 				editor.set_read_only (not editable)
 				if has_breakpoints then
 					editor.enable_has_breakable_slots

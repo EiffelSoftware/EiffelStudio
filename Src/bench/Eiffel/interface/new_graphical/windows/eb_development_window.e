@@ -165,7 +165,8 @@ feature {NONE} -- Initialization
 			make
 				-- Attempt to reload last edited class of `Current'.
 			if a_session_data.file_name /= Void then
-				l_class_i := eiffel_universe.class_with_file_name (a_session_data.file_name)
+				conf_todo
+--				l_class_i := eiffel_universe.class_with_file_name (a_session_data.file_name)
 				if l_class_i /= Void and then l_class_i.compiled then
 						-- Create compiled class stone and target `Current' to it.
 					create l_class_c_stone.make (l_class_i.compiled_class)
@@ -3193,7 +3194,8 @@ feature {NONE} -- Implementation
 				l_format_context.set_without_tabs
 				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_space
-				l_format_context.put_quoted_string_item (l_assembly.assembly_path)
+				conf_todo
+--				l_format_context.put_quoted_string_item (l_assembly.assembly_path)
 				l_format_context.put_new_line
 
 			end
@@ -3210,7 +3212,8 @@ feature {NONE} -- Implementation
 			l_format_context.put_space
 			l_format_context.put_quoted_string_item (a_cluster.path)
 			l_format_context.put_new_line
-			l_indexes := a_cluster.indexes
+			conf_todo
+--			l_indexes := a_cluster.indexes
 			if l_indexes /= Void then
 				l_format_context.format_indexing_with_no_keyword (l_indexes)
 				l_format_context.put_new_line
@@ -3224,7 +3227,8 @@ feature {NONE} -- Implementation
 				l_format_context.indent
 				l_format_context.put_manifest_string (" - ")
 
-				l_format_context.add_cluster (a_cluster.parent_cluster, a_cluster.parent_cluster.cluster_name)
+				conf_todo
+--				l_format_context.add_cluster (a_cluster.parent_cluster, a_cluster.parent_cluster.cluster_name)
 				l_format_context.put_new_line
 				l_format_context.exdent
 			end
@@ -3245,7 +3249,8 @@ feature {NONE} -- Implementation
 				loop
 					l_cluster := l_subclu.item.actual_cluster
 					l_format_context.put_manifest_string (" - ")
-					l_format_context.add_cluster (l_cluster, l_cluster.cluster_name)
+					conf_todo
+--					l_format_context.add_cluster (l_cluster, l_cluster.cluster_name)
 					l_format_context.put_space
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_L_parenthesis)
@@ -3320,49 +3325,50 @@ feature {NONE} -- Implementation
 				l_format_context.exdent
 			end
 
-			if not a_cluster.overriden_classes.is_empty then
-				l_format_context.process_indexing_tag_text ("overriden class(es)")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_new_line
-				l_format_context.indent
-				from
-					l_classes := a_cluster.overriden_classes.linear_representation
-					l_classes.start
-				until
-					l_classes.after
-				loop
-					l_cl_i := l_classes.item
-					l_format_context.put_manifest_string (" - ")
-					l_format_context.put_classi (l_cl_i)
-					l_list_cl_i := eiffel_universe.classes_with_name (l_cl_i.name)
-					if l_list_cl_i /= Void and then not l_list_cl_i.is_empty then
-						l_format_context.set_without_tabs
-						l_format_context.process_symbol_text (ti_colon)
-						l_format_context.process_comment_text (" overriden by", Void)
-						from
-							l_list_cl_i.start
-						until
-							l_list_cl_i.after
-						loop
-							l_cluster := l_list_cl_i.item.cluster
-							if l_cluster /= a_cluster then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_symbol_text (ti_double_quote)
-								l_format_context.add_cluster (l_list_cl_i.item.cluster, l_list_cl_i.item.cluster.cluster_name)
-								l_format_context.set_without_tabs
-								l_format_context.process_symbol_text (ti_double_quote)
-							end
-							l_list_cl_i.forth
-						end
-					end
-					l_format_context.put_new_line
-					l_classes.forth
-				end
-				l_format_context.exdent
-				l_format_context.put_new_line
-			end
+			conf_todo
+--			if not a_cluster.overriden_classes.is_empty then
+--				l_format_context.process_indexing_tag_text ("overriden class(es)")
+--				l_format_context.set_without_tabs
+--				l_format_context.process_symbol_text (ti_colon)
+--				l_format_context.put_new_line
+--				l_format_context.indent
+--				from
+--					l_classes := a_cluster.overriden_classes.linear_representation
+--					l_classes.start
+--				until
+--					l_classes.after
+--				loop
+--					l_cl_i := l_classes.item
+--					l_format_context.put_manifest_string (" - ")
+--					l_format_context.put_classi (l_cl_i)
+--					l_list_cl_i := eiffel_universe.classes_with_name (l_cl_i.name)
+--					if l_list_cl_i /= Void and then not l_list_cl_i.is_empty then
+--						l_format_context.set_without_tabs
+--						l_format_context.process_symbol_text (ti_colon)
+--						l_format_context.process_comment_text (" overriden by", Void)
+--						from
+--							l_list_cl_i.start
+--						until
+--							l_list_cl_i.after
+--						loop
+--							l_cluster := l_list_cl_i.item.cluster
+--							if l_cluster /= a_cluster then
+--								l_format_context.put_space
+--								l_format_context.set_without_tabs
+--								l_format_context.process_symbol_text (ti_double_quote)
+--								l_format_context.add_cluster (l_list_cl_i.item.cluster, l_list_cl_i.item.cluster.cluster_name)
+--								l_format_context.set_without_tabs
+--								l_format_context.process_symbol_text (ti_double_quote)
+--							end
+--							l_list_cl_i.forth
+--						end
+--					end
+--					l_format_context.put_new_line
+--					l_classes.forth
+--				end
+--				l_format_context.exdent
+--				l_format_context.put_new_line
+--			end
 
 			l_format_context.exdent
 			l_format_context.put_new_line

@@ -15,6 +15,8 @@ inherit
 			new_toolbar_item
 		end
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -31,7 +33,8 @@ feature -- Basic operations
 			if tool.class_view /= Void then
 				cla_s := tool.class_stone
 				if cla_s /= Void and then cla_s.is_valid then
-					clu := cla_s.class_i.cluster
+					conf_todo
+--					clu := cla_s.class_i.cluster
 				end
 			elseif tool.cluster_view /= Void then
 				clu_s := tool.cluster_stone

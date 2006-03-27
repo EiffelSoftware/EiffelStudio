@@ -261,7 +261,8 @@ feature -- Clusters: 2
 			scope_is_system: s.index = System_scope
 			system_set: s.system_i /= Void
 		do
-			Result := s.system_i.universe.clusters.count
+			conf_todo
+--			Result := s.system_i.universe.clusters.count
 		end
 
 feature -- Compilations: 3

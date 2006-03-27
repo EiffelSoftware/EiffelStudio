@@ -22,6 +22,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -42,7 +44,8 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			eiffel_project.recompile_known_modified_classes
+			conf_todo
+--			eiffel_project.recompile_known_modified_classes
 		end
 
 feature {NONE} -- Attributes

@@ -11,7 +11,9 @@ class
 inherit
 	XMI_ITEM
 
-create 
+	CONF_REFACTORING
+
+create
 	make
 
 feature --Initialization
@@ -42,12 +44,13 @@ feature -- Access
 		local
 			c: CLUSTER_I
 		do
-			c := subtype.compiled_class.cluster
-			if c = supertype.compiled_class.cluster then
-				Result := c
-			else
-				Result := Void
-			end
+			conf_todo
+--			c := subtype.compiled_class.cluster
+--			if c = supertype.compiled_class.cluster then
+--				Result := c
+--			else
+--				Result := Void
+--			end
 		end
 
 feature -- Action
@@ -73,7 +76,7 @@ feature -- Action
 			Result.append (supertype.xmi_id.out)
 			Result.append ("'/> <!-- ")
 			Result.append (supertype.name)
-			Result.append (" -->%N% 
+			Result.append (" -->%N%
 				%</Foundation.Core.Generalization.supertype>%N%
 				%</Foundation.Core.Generalization>%N")
 

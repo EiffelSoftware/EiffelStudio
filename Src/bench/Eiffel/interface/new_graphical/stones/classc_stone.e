@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Stone representing a compiled Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 			make as classi_make
 		redefine
 			is_valid, synchronized_stone,
-			class_i, cluster, class_name, file_name, 
+			class_i, cluster, class_name, file_name,
 			header, stone_signature, history_name
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_class: CLASS_C) is
@@ -37,7 +37,8 @@ feature -- Properties
 
 	cluster: CLUSTER_I is
 		do
-			Result := e_class.cluster
+			conf_todo
+--			Result := e_class.cluster
 		end
 
 	class_name: STRING is
@@ -63,13 +64,13 @@ feature -- Access
 		end
 
 	header: STRING is
-			-- Display class name, class' cluster and class location in 
+			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
 			create Result.make (80)
 			Result.append (stone_signature)
 			Result.append ("  in cluster ")
-			Result.append (e_class.cluster.cluster_name)
+			Result.append (e_class.group.name)
 			if e_class.is_precompiled then
 				Result.append ("  (precompiled)")
 			else
@@ -100,7 +101,7 @@ feature -- Synchronization
 
 	synchronized_stone: CLASSI_STONE is
 			-- Clone of `Current' stone after a recompilation
-			-- (May be Void if not valid anymore. It may also be a 
+			-- (May be Void if not valid anymore. It may also be a
 			-- classi_stone if the class is not compiled anymore)
 		local
 			new_cluster: CLUSTER_I
@@ -114,11 +115,12 @@ feature -- Synchronization
 						Result := create {CLASSC_STONE}.make (e_class)
 					end
 				else
-					new_cluster := Eiffel_universe.cluster_of_name 
-							(e_class.cluster.cluster_name)
+					conf_todo
+--					new_cluster := Eiffel_universe.cluster_of_name
+--							(e_class.cluster.cluster_name)
 					if new_cluster /= Void then
-						new_ci := new_cluster.class_with_name (e_class.lace_class.name)
-						if 
+--						new_ci := new_cluster.class_with_name (e_class.lace_class.name)
+						if
 							new_ci /= Void
 						then
 							if not new_ci.compiled then
@@ -126,7 +128,7 @@ feature -- Synchronization
 							else
 								create {CLASSC_STONE} Result.make (new_ci.compiled_class)
 							end
-							
+
 						end
 					end
 				end

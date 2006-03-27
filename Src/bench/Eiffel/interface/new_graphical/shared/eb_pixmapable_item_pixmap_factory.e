@@ -34,31 +34,32 @@ feature {NONE} -- Implementation
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if
-				a_class.cluster.is_library or else
-				a_class.cluster.is_precompiled or else
-				a_class.is_read_only
-			then
-				if not a_class.compiled then
-					Result := (Pixmaps.Icon_read_only_class_gray)
-				else
-					if a_class.compiled_class.is_deferred then
-						Result := (Pixmaps.Icon_deferred_read_only_class_color)
-					else
-						Result := (Pixmaps.Icon_read_only_class_color)
-					end
-				end
-			else
-				if not a_class.compiled then
-					Result := (Pixmaps.Icon_class_symbol_gray)
-				else
-					if a_class.compiled_class.is_deferred then
-						Result := (Pixmaps.Icon_deferred_class_symbol_color)
-					else
-						Result := (Pixmaps.Icon_class_symbol_color)
-					end
-				end
-			end
+			conf_todo
+--			if
+--				a_class.cluster.is_library or else
+--				a_class.cluster.is_precompiled or else
+--				a_class.is_read_only
+--			then
+--				if not a_class.compiled then
+--					Result := (Pixmaps.Icon_read_only_class_gray)
+--				else
+--					if a_class.compiled_class.is_deferred then
+--						Result := (Pixmaps.Icon_deferred_read_only_class_color)
+--					else
+--						Result := (Pixmaps.Icon_read_only_class_color)
+--					end
+--				end
+--			else
+--				if not a_class.compiled then
+--					Result := (Pixmaps.Icon_class_symbol_gray)
+--				else
+--					if a_class.compiled_class.is_deferred then
+--						Result := (Pixmaps.Icon_deferred_class_symbol_color)
+--					else
+--						Result := (Pixmaps.Icon_class_symbol_color)
+--					end
+--				end
+--			end
 		ensure
 			result_not_void: Result /= Void
 		end

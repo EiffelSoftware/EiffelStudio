@@ -15,6 +15,8 @@ inherit
 
 	EB_SHARED_MANAGERS
 
+	CONF_REFACTORING
+
 feature -- Access
 
 	progress_dialog: EB_PROGRESS_DIALOG is
@@ -39,16 +41,16 @@ feature {NONE} -- Element change
 		do
 			Output_manager_cell.put (a_output_manager)
 		end
-		
+
 	set_external_output_manager (a_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER) is
 			-- Set `a_output_manager' as Output manager for development windows
 		do
 			External_output_manager_cell.put (a_external_output_manager)
 		end
-	
+
 	set_c_compilation_output_manager(a_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER) is
 			-- Set `a_c_compilation_output_manager' as c compilation output manager for development windows.
-		do			
+		do
 			c_compilation_output_manager_cell.put (a_c_compilation_output_manager)
 		end
 
@@ -91,18 +93,19 @@ feature {NONE} -- Shared tools access
 			Result := (dynamic_lib_window /= Void) and then	(not dynamic_lib_window.destroyed)
 		end
 
-	system_window: EB_SYSTEM_WINDOW is
-			-- Project configuration tool
-		do
-			Result := System_window_cell.item
-		end
+--	system_window: EB_SYSTEM_WINDOW is
+--			-- Project configuration tool
+--		do
+--			Result := System_window_cell.item
+--		end
 
 	system_window_is_valid: BOOLEAN is
 			-- Is `system_window' valid?
 		do
-			Result := (system_window /= Void) and then (not system_window.destroyed)
+			conf_todo
+--			Result := (system_window /= Void) and then (not system_window.destroyed)
 		end
-		
+
 	argument_dialog: EB_ARGUMENT_DIALOG is
 			-- Project argument dialog
 		do
@@ -114,7 +117,7 @@ feature {NONE} -- Shared tools access
 		do
 			Result := (argument_dialog /= Void)
 		end
-		
+
 feature {NONE} -- Shared tools change
 
 	set_dynamic_lib_window (a_dynamic_lib_window: EB_DYNAMIC_LIB_WINDOW) is
@@ -128,7 +131,7 @@ feature {NONE} -- Shared tools change
 		do
 			System_window_cell.put (sw)
 		end
-		
+
 	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG) is
 			-- Makes 'a_argument_dialog' shared argument dialog.
 		do
@@ -161,7 +164,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end
-		
+
 	Argument_dialog_cell: CELL [EB_ARGUMENT_DIALOG] is
 			-- Cell for argument dialog
 		once

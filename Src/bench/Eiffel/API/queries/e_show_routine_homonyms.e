@@ -16,6 +16,7 @@ inherit
 			has_valid_feature
 		end;
 	SHARED_EIFFEL_PROJECT
+	CONF_REFACTORING
 
 create
 	make, default_create
@@ -38,6 +39,7 @@ feature -- Execution
 			class_name: STRING
 		do
 			feature_name := current_feature.name;
+			conf_todo
 --S			clusters := Eiffel_universe.clusters;
 			from
 				clusters.start

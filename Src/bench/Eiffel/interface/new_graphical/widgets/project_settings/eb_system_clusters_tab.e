@@ -42,6 +42,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -135,74 +140,75 @@ feature -- Store/Retrieve
 			copy_clusters: like clusters
 			clus_name: ID_SD
 		do
-				-- Default options
-			defaults := root_ast.defaults
-			if defaults = Void then
-					-- No default option, we need to create them.
-				create defaults.make (10)
-				root_ast.set_defaults (defaults)
-			end
-
-				-- Update last selected cluster info.
-			if cluster_tree.selected_item /= Void then
-				check
-					has_text: not cluster_tree.selected_item.text.is_empty
-					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
-				end
-				store_cluster (cluster_tree.selected_item)
-			end
-
-				-- Save clusters
-			copy_clusters := clusters.twin
-			l_clusters := root_ast.clusters
-			if l_clusters = Void then
-					-- No cluster option, we need to create them
-				create l_clusters.make (copy_clusters.count)
-				root_ast.set_clusters (l_clusters)
-			end
-
-				-- Insert cluster in the order in which they were entered
-				-- originally.
-			from
-				l_clusters.start
-			until
-				l_clusters.after
-			loop
-				clus_name := l_clusters.item.cluster_name
-				if copy_clusters.has (clus_name) then
-					l_clusters.put (copy_clusters.item (clus_name))
-					copy_clusters.remove (clus_name)
-					l_clusters.forth
-				else
-					l_clusters.remove
-				end
-			end
-
-				-- Insert at the end new clusters.
-			if not copy_clusters.is_empty then
-				from
-					copy_clusters.start
-				until
-					copy_clusters.after
-				loop
-					l_clusters.extend (copy_clusters.item_for_iteration)
-					copy_clusters.forth
-				end
-			end
-
-				-- Mark override cluster if set.
-			if has_override_cluster then
-				from
-					override_cluster_names.start
-				until
-					override_cluster_names.after
-				loop
-					defaults.extend (new_special_option_sd (
-						{FREE_OPTION_SD}.override_cluster,
-						override_cluster_names.item_for_iteration, False))
-					override_cluster_names.forth
-				end
-			end
+			conf_todo
+--				-- Default options
+--			defaults := root_ast.defaults
+--			if defaults = Void then
+--					-- No default option, we need to create them.
+--				create defaults.make (10)
+--				root_ast.set_defaults (defaults)
+--			end
+--
+--				-- Update last selected cluster info.
+--			if cluster_tree.selected_item /= Void then
+--				check
+--					has_text: not cluster_tree.selected_item.text.is_empty
+--					has_cluster_of_name: clusters.has (cluster_tree.selected_item.text)
+--				end
+--				store_cluster (cluster_tree.selected_item)
+--			end
+--
+--				-- Save clusters
+--			copy_clusters := clusters.twin
+--			l_clusters := root_ast.clusters
+--			if l_clusters = Void then
+--					-- No cluster option, we need to create them
+--				create l_clusters.make (copy_clusters.count)
+--				root_ast.set_clusters (l_clusters)
+--			end
+--
+--				-- Insert cluster in the order in which they were entered
+--				-- originally.
+--			from
+--				l_clusters.start
+--			until
+--				l_clusters.after
+--			loop
+--				clus_name := l_clusters.item.cluster_name
+--				if copy_clusters.has (clus_name) then
+--					l_clusters.put (copy_clusters.item (clus_name))
+--					copy_clusters.remove (clus_name)
+--					l_clusters.forth
+--				else
+--					l_clusters.remove
+--				end
+--			end
+--
+--				-- Insert at the end new clusters.
+--			if not copy_clusters.is_empty then
+--				from
+--					copy_clusters.start
+--				until
+--					copy_clusters.after
+--				loop
+--					l_clusters.extend (copy_clusters.item_for_iteration)
+--					copy_clusters.forth
+--				end
+--			end
+--
+--				-- Mark override cluster if set.
+--			if has_override_cluster then
+--				from
+--					override_cluster_names.start
+--				until
+--					override_cluster_names.after
+--				loop
+--					defaults.extend (new_special_option_sd (
+--						{FREE_OPTION_SD}.override_cluster,
+--						override_cluster_names.item_for_iteration, False))
+--					override_cluster_names.forth
+--				end
+--			end
 		end
 
 	post_store_reset is
@@ -262,8 +268,10 @@ feature {NONE} -- Filling
 					-- associate an action that will display information
 					-- about a cluster and that will store the information.
 				from
+
+					conf_todo
 						-- Detached store information from original.
-					cl := cl.duplicate
+--					cl := cl.duplicate
 
 						-- Initialize graphical information
 					create tree_table.make (cl.count)
@@ -409,23 +417,24 @@ feature {NONE} -- Cluster display and saving
 					until
 						default_options.after
 					loop
-						is_item_removable := False
-						if default_options.item.option.is_assertion then
-							retrieve_cluster_assertions (default_options.item.value)
-						elseif default_options.item.option.is_free_option then
-							retrieve_cluster_free_options (default_options.item)
-						elseif default_options.item.option.is_trace then
-							enable_select (override_default_trace)
-							set_selected (trace_check, default_options.item.value.is_yes)
-							is_item_removable := True
-						elseif default_options.item.option.is_namespace then
-							namespace_name.set_text (default_options.item.value.value)
-						end
-						if is_item_removable then
-							default_options.remove
-						else
-							default_options.forth
-						end
+						conf_todo
+--						is_item_removable := False
+--						if default_options.item.option.is_assertion then
+--							retrieve_cluster_assertions (default_options.item.value)
+--						elseif default_options.item.option.is_free_option then
+--							retrieve_cluster_free_options (default_options.item)
+--						elseif default_options.item.option.is_trace then
+--							enable_select (override_default_trace)
+--							set_selected (trace_check, default_options.item.value.is_yes)
+--							is_item_removable := True
+--						elseif default_options.item.option.is_namespace then
+--							namespace_name.set_text (default_options.item.value.value)
+--						end
+--						if is_item_removable then
+--							default_options.remove
+--						else
+--							default_options.forth
+--						end
 					end
 				end
 			end
@@ -493,122 +502,124 @@ feature {NONE} -- Cluster display and saving
 			cl_name: STRING
 			l_d_option: D_OPTION_SD
 		do
-				-- Setting cluster basics.
-			cl_name := tree_item.text
-			cl := clusters.item (cl_name)
-
-			if not cluster_name.text.is_empty then
-				if not cluster_name.text.is_equal (cl_name) then
-						-- If name of cluster changed, we need to update the
-						-- tree view entry and our internal data.
-					tree_item.set_text (cluster_name.text)
-					clusters.remove (cl_name)
-					clusters.force (cl, cluster_name.text)
-
-					if override_cluster_names.has (cl_name) then
-							-- Remove old override cluster name.
-						override_cluster_names.remove (cl_name)
-					end
-					if override_cluster_check.is_selected then
-						override_cluster_names.force (cluster_name.text)
-					end
-				end
-					-- If previously there were some double quotes, we add them again.
-				cl.set_cluster_name (new_id_sd (cluster_name.text, cl.cluster_name.is_string))
-			else
-				cl.set_cluster_name (new_id_sd ("Invalid_name", False))
-			end
-
-			if not cluster_path.text.is_empty then
-				cl.set_directory_name (new_id_sd (cluster_path.text, True))
-			else
-				cl.set_directory_name (new_id_sd ("Invalid_path", True))
-			end
-
-			cl.set_is_recursive (all_check.is_selected)
-			cl.set_is_library (library_check.is_selected)
-
-				-- Setting cluster properties.
-			prop := cl.cluster_properties
-			if prop = Void then
-				create prop
-				cl.set_cluster_properties (prop)
-			end
-
-			if not use_field.text.is_empty then
-				cl.cluster_properties.set_use_name (new_id_sd (use_field.text, True))
-			end
-
-			if not include_list.is_empty then
-				l_include := prop.include_option
-				if l_include = Void then
-					create l_include.make (include_list.count)
-					prop.set_include_option (l_include)
-				end
-
-				fill_list (l_include, include_list.list, agent new_file_name_sd (?), True)
-			else
-				prop.set_include_option (Void)
-			end
-
-			if not exclude_list.is_empty then
-				l_exclude := prop.exclude_option
-				if l_exclude = Void then
-					create l_exclude.make (exclude_list.count)
-					prop.set_exclude_option (l_exclude)
-				end
-
-				fill_list (l_exclude, exclude_list.list, agent new_file_name_sd (?), True)
-			else
-				prop.set_exclude_option (Void)
-			end
-
-			if visible_list.is_sensitive and then not visible_list.is_empty then
-				l_visible := prop.visible_option
-				if l_visible = Void then
-					create l_visible.make (visible_list.count)
-					prop.set_visible_option (l_visible)
-				end
-
-				fill_list (l_visible, visible_list.list,
-					agent new_clas_visi_sd (?, Void, Void, Void, Void), False)
-			else
-				prop.set_visible_option (Void)
-			end
-
-			if default_options = Void then
-				create default_options.make (10)
-				prop.set_default_option (default_options)
-			end
-
-			if msil_widgets_enabled then
-				if not namespace_name.text.is_empty then
-					from
-						default_options.start
-					until
-						default_options.after
-					loop
-						if default_options.item.option.is_namespace then
-							default_options.remove
-						else
-							default_options.forth
-						end
-					end
-					create l_d_option.initialize (create {NAMESPACE_SD}.default_create,
-						create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
-					default_options.extend (l_d_option)
-				end
-			end
-
-			store_cluster_assertions (prop)
-
-			if override_default_profile.is_selected then
-				default_options.extend (new_special_option_sd ({FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
-			end
-
-			if override_default_trace.is_selected then
-				default_options.extend (new_trace_option_sd (trace_check.is_selected))
-			end
+			conf_todo
+--				-- Setting cluster basics.
+--			cl_name := tree_item.text
+--			cl := clusters.item (cl_name)
+--
+--			if not cluster_name.text.is_empty then
+--				if not cluster_name.text.is_equal (cl_name) then
+--						-- If name of cluster changed, we need to update the
+--						-- tree view entry and our internal data.
+--					tree_item.set_text (cluster_name.text)
+--					clusters.remove (cl_name)
+--					clusters.force (cl, cluster_name.text)
+--
+--					if override_cluster_names.has (cl_name) then
+--							-- Remove old override cluster name.
+--						override_cluster_names.remove (cl_name)
+--					end
+--					if override_cluster_check.is_selected then
+--						override_cluster_names.force (cluster_name.text)
+--					end
+--				end
+--					-- If previously there were some double quotes, we add them again.
+--				cl.set_cluster_name (new_id_sd (cluster_name.text, cl.cluster_name.is_string))
+--			else
+--				cl.set_cluster_name (new_id_sd ("Invalid_name", False))
+--			end
+--
+--			
+--			if not cluster_path.text.is_empty then
+--				cl.set_directory_name (new_id_sd (cluster_path.text, True))
+--			else
+--				cl.set_directory_name (new_id_sd ("Invalid_path", True))
+--			end
+--
+--			cl.set_is_recursive (all_check.is_selected)
+--			cl.set_is_library (library_check.is_selected)
+--
+--				-- Setting cluster properties.
+--			prop := cl.cluster_properties
+--			if prop = Void then
+--				create prop
+--				cl.set_cluster_properties (prop)
+--			end
+--
+--			if not use_field.text.is_empty then
+--				cl.cluster_properties.set_use_name (new_id_sd (use_field.text, True))
+--			end
+--
+--			if not include_list.is_empty then
+--				l_include := prop.include_option
+--				if l_include = Void then
+--					create l_include.make (include_list.count)
+--					prop.set_include_option (l_include)
+--				end
+--
+--				fill_list (l_include, include_list.list, agent new_file_name_sd (?), True)
+--			else
+--				prop.set_include_option (Void)
+--			end
+--
+--			if not exclude_list.is_empty then
+--				l_exclude := prop.exclude_option
+--				if l_exclude = Void then
+--					create l_exclude.make (exclude_list.count)
+--					prop.set_exclude_option (l_exclude)
+--				end
+--
+--				fill_list (l_exclude, exclude_list.list, agent new_file_name_sd (?), True)
+--			else
+--				prop.set_exclude_option (Void)
+--			end
+--
+--			if visible_list.is_sensitive and then not visible_list.is_empty then
+--				l_visible := prop.visible_option
+--				if l_visible = Void then
+--					create l_visible.make (visible_list.count)
+--					prop.set_visible_option (l_visible)
+--				end
+--
+--				fill_list (l_visible, visible_list.list,
+--					agent new_clas_visi_sd (?, Void, Void, Void, Void), False)
+--			else
+--				prop.set_visible_option (Void)
+--			end
+--
+--			if default_options = Void then
+--				create default_options.make (10)
+--				prop.set_default_option (default_options)
+--			end
+--
+--			if msil_widgets_enabled then
+--				if not namespace_name.text.is_empty then
+--					from
+--						default_options.start
+--					until
+--						default_options.after
+--					loop
+--						if default_options.item.option.is_namespace then
+--							default_options.remove
+--						else
+--							default_options.forth
+--						end
+--					end
+--					create l_d_option.initialize (create {NAMESPACE_SD}.default_create,
+--						create {OPT_VAL_SD}.make ((new_id_sd (namespace_name.text, True))))
+--					default_options.extend (l_d_option)
+--				end
+--			end
+--
+--			store_cluster_assertions (prop)
+--
+--			if override_default_profile.is_selected then
+--				default_options.extend (new_special_option_sd ({FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
+--			end
+--
+--			if override_default_trace.is_selected then
+--				default_options.extend (new_trace_option_sd (trace_check.is_selected))
+--			end
 		end
 
 	store_cluster_assertions (prop: CLUST_PROP_SD) is

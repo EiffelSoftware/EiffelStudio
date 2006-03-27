@@ -86,7 +86,8 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			node.put_last (Xml_routines.xml_node (node, "ALL_CLASSES_IN_CLUSTER", model.include_all_classes_of_cluster.out))
 			node.put_last (Xml_routines.xml_node (node, "ONLY_CLASSES_IN_CLUSTER", model.include_only_classes_of_cluster.out))
 			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_NAME", model.center_class.class_i.name_in_upper))
-			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_CLUSTER_NAME", model.center_class.class_i.cluster.cluster_name))
+			conf_todo
+--			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_CLUSTER_NAME", model.center_class.class_i.cluster.cluster_name))
 
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
@@ -201,7 +202,8 @@ feature {NONE} -- Implementation
 			drop_x := context_editor.pointer_position.x
 			drop_y := context_editor.pointer_position.y
 			create dial.make_default (context_editor.development_window)
-			dial.preset_cluster (model.center_class.class_i.cluster)
+			conf_todo
+--			dial.preset_cluster (model.center_class.class_i.cluster)
 			dial.call_default
 			if not dial.cancelled then
 				include_new_class (dial.class_i, drop_x, drop_y)

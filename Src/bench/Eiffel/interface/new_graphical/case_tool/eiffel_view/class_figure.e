@@ -351,31 +351,32 @@ feature {NONE} -- Implementation (adding relations)
 			class_file: PLAIN_TEXT_FILE
 			l_error_window: EV_WARNING_DIALOG
 		do
-			create class_file.make (a_stone.class_i.file_name)
-			if not class_file.exists then
-				create l_error_window.make_with_text ("Class is not editable.%N" +
-					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
-				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
-			elseif class_file.is_writable and then not a_stone.class_i.cluster.is_library then
-				if world.context_editor.is_link_inheritance then
-					if drop_allowed (a_stone) then
-						add_inheritance_relation (a_stone.source)
-					else
-						create dial.make_with_text_and_actions (
-							"An inheritance cycle was created.%N%
-								%Do you still want to add this link?",
-								<<agent add_inheritance_relation (a_stone.source)>>)
-						dial.show_modal_to_window (world.context_editor.development_window.window)
-					end
-				elseif world.context_editor.is_link_client then
-					add_client_relation (a_stone.source, False)
-				elseif world.context_editor.is_link_aggregate then
-					add_client_relation (a_stone.source, True)
-				end
-			else
-				create l_error_window.make_with_text ("Class is not editable")
-				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
-			end
+			conf_todo
+--			create class_file.make (a_stone.class_i.file_name)
+--			if not class_file.exists then
+--				create l_error_window.make_with_text ("Class is not editable.%N" +
+--					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
+--				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
+--			elseif class_file.is_writable and then not a_stone.class_i.cluster.is_library then
+--				if world.context_editor.is_link_inheritance then
+--					if drop_allowed (a_stone) then
+--						add_inheritance_relation (a_stone.source)
+--					else
+--						create dial.make_with_text_and_actions (
+--							"An inheritance cycle was created.%N%
+--								%Do you still want to add this link?",
+--								<<agent add_inheritance_relation (a_stone.source)>>)
+--						dial.show_modal_to_window (world.context_editor.development_window.window)
+--					end
+--				elseif world.context_editor.is_link_client then
+--					add_client_relation (a_stone.source, False)
+--				elseif world.context_editor.is_link_aggregate then
+--					add_client_relation (a_stone.source, True)
+--				end
+--			else
+--				create l_error_window.make_with_text ("Class is not editable")
+--				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
+--			end
 		end
 
 	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE) is

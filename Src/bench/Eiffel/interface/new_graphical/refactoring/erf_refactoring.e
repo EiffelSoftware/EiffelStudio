@@ -24,6 +24,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_REFACTORING
+
 feature {ERF_REFACTORING} -- Initialization
 
 	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
@@ -149,27 +151,28 @@ feature {NONE} -- Implementation convenience
 		local
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
-			create Result.make
-			from
-				universe.clusters.start
-			until
-				universe.clusters.after
-			loop
-				if not universe.clusters.item.is_library then
-					classes := universe.clusters.item.classes
-					from
-						classes.start
-					until
-						classes.after
-					loop
-						if not classes.item_for_iteration.is_read_only then
-							Result.put (classes.item_for_iteration)
-						end
-						classes.forth
-					end
-				end
-				universe.clusters.forth
-			end
+			conf_todo
+--			create Result.make
+--			from
+--				universe.clusters.start
+--			until
+--				universe.clusters.after
+--			loop
+--				if not universe.clusters.item.is_library then
+--					classes := universe.clusters.item.classes
+--					from
+--						classes.start
+--					until
+--						classes.after
+--					loop
+--						if not classes.item_for_iteration.is_read_only then
+--							Result.put (classes.item_for_iteration)
+--						end
+--						classes.forth
+--					end
+--				end
+--				universe.clusters.forth
+--			end
 		end
 
 	descendant_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is

@@ -156,7 +156,8 @@ feature {NONE} -- Implementation
 					create f.make (fn)
 				end
 				if f.exists and then f.is_readable and then f.is_plain then
-					class_i := Eiffel_universe.class_with_file_name (fn)
+					conf_todo
+--					class_i := Eiffel_universe.class_with_file_name (fn)
 					if class_i = Void then
 						if allow_external_files_in_ide then
 							create efs.make (f)

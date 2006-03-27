@@ -20,6 +20,8 @@ inherit
 
 	EV_DIALOG_CONSTANTS
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -83,113 +85,114 @@ feature {NONE} -- Implementation
 			class_file: PLAIN_TEXT_FILE
 			confirmation: EV_CONFIRMATION_DIALOG
 		do
-			cfs ?= a_stone
-			if cfs /= Void then
-				src := cfs.source.model
-			else
-				src := tool.graph.class_from_interface (a_stone.class_i)
-			end
-			if src /= Void then
-				create class_file.make (src.class_i.file_name)
-				if class_file.exists and then class_file.is_writable and not src.class_i.cluster.is_library then
-					from
-						invalid_name := True
-					until
-						not invalid_name
-					loop
-						old_name := src.name.twin
-						create change_name_dialog
-						change_name_dialog.set_name (src.name)
-						if src.generics /= Void then
-							change_name_dialog.set_generics (src.generics)
-							old_generics := src.generics.twin
-						else
-							change_name_dialog.set_generics ("")
-							old_generics := ""
-						end
-						change_name_dialog.show_modal_to_window (tool.development_window.window)
-						if change_name_dialog.ok_pressed then
-							create cnr
-							s := change_name_dialog.name
-							if s /= Void then
-								s.to_upper
-							else
-								s := ""
-							end
-							if not cnr.valid_new_class_name (s) then
-								create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-								invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-							else
-								if cnr.class_name_in_use (s) then
-									create confirmation.make_with_text (Warning_messages.w_Class_already_exists_info (s))
-									confirmation.button (ev_ok).set_text (ev_yes)
-									confirmation.button (ev_cancel).set_text (ev_no)
-									confirmation.show_modal_to_window (tool.development_window.window)
-								end
-								if confirmation = Void or else confirmation.selected_button.is_equal (ev_ok) then
-									g := change_name_dialog.generics
-									if g = Void or g.occurrences (' ') = g.count then
-										g := ""
-									end
-									stone_text := src.class_i.text
-									parse_string (stone_text)
-									if stone_as = Void then
-										create invalid_name_dialog.make_with_text (
-											Warning_messages.w_Class_header_syntax_error (src.class_i.name))
-										invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-									else
-										try_change_name (stone_text, s, g)
-										parse_string (stone_text)
-										if stone_as = Void then
-											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-										else
-											if not change_name_dialog.global_replace then
-												history.do_named_undoable (
-													Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
-													agent change_name_locally (src, s, g),
-													agent change_name_locally (src, old_name, old_generics))
-												invalid_name := False
-											else
-												if change_name_dialog.global_replace_universe then
-													history.do_named_undoable (
-														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
-														[<<agent tool_disable_sensitive,
-															agent change_name_universe_classes (src, cnr, old_name, s, g),
-															agent tool_enable_sensitive>>],
-														[<<agent tool_disable_sensitive,
-															agent change_name_universe_classes (src, cnr, s, old_name, old_generics),
-															agent tool_enable_sensitive>>])
-													invalid_name := False
-												else
-													history.do_named_undoable (
-														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
-														[<<agent tool_disable_sensitive,
-															agent change_name_compiled_classes (src, cnr, old_name, s, g),
-															agent tool_enable_sensitive>>],
-														[<<agent tool_disable_sensitive,
-															agent change_name_compiled_classes (src, cnr, s, old_name, old_generics),
-															agent tool_enable_sensitive>>])
-													invalid_name := False
-												end
-											end
-										end
-									end
-								end
-							end
-						else
-							invalid_name := False
-						end
-					end
-				else
-					create invalid_name_dialog.make_with_text ("Class is not editable")
-					invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-				end
-			else
-				create invalid_name_dialog.make_with_text ("Class must be on the diagram")
-				invalid_name_dialog.show_modal_to_window (tool.development_window.window)
-			end
-			tool.projector.project
+			conf_todo
+--			cfs ?= a_stone
+--			if cfs /= Void then
+--				src := cfs.source.model
+--			else
+--				src := tool.graph.class_from_interface (a_stone.class_i)
+--			end
+--			if src /= Void then
+--				create class_file.make (src.class_i.file_name)
+--				if class_file.exists and then class_file.is_writable and not src.class_i.cluster.is_library then
+--					from
+--						invalid_name := True
+--					until
+--						not invalid_name
+--					loop
+--						old_name := src.name.twin
+--						create change_name_dialog
+--						change_name_dialog.set_name (src.name)
+--						if src.generics /= Void then
+--							change_name_dialog.set_generics (src.generics)
+--							old_generics := src.generics.twin
+--						else
+--							change_name_dialog.set_generics ("")
+--							old_generics := ""
+--						end
+--						change_name_dialog.show_modal_to_window (tool.development_window.window)
+--						if change_name_dialog.ok_pressed then
+--							create cnr
+--							s := change_name_dialog.name
+--							if s /= Void then
+--								s.to_upper
+--							else
+--								s := ""
+--							end
+--							if not cnr.valid_new_class_name (s) then
+--								create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
+--								invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+--							else
+--								if cnr.class_name_in_use (s) then
+--									create confirmation.make_with_text (Warning_messages.w_Class_already_exists_info (s))
+--									confirmation.button (ev_ok).set_text (ev_yes)
+--									confirmation.button (ev_cancel).set_text (ev_no)
+--									confirmation.show_modal_to_window (tool.development_window.window)
+--								end
+--								if confirmation = Void or else confirmation.selected_button.is_equal (ev_ok) then
+--									g := change_name_dialog.generics
+--									if g = Void or g.occurrences (' ') = g.count then
+--										g := ""
+--									end
+--									stone_text := src.class_i.text
+--									parse_string (stone_text)
+--									if stone_as = Void then
+--										create invalid_name_dialog.make_with_text (
+--											Warning_messages.w_Class_header_syntax_error (src.class_i.name))
+--										invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+--									else
+--										try_change_name (stone_text, s, g)
+--										parse_string (stone_text)
+--										if stone_as = Void then
+--											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
+--											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+--										else
+--											if not change_name_dialog.global_replace then
+--												history.do_named_undoable (
+--													Interface_names.t_Diagram_rename_class_locally_cmd (old_name, s),
+--													agent change_name_locally (src, s, g),
+--													agent change_name_locally (src, old_name, old_generics))
+--												invalid_name := False
+--											else
+--												if change_name_dialog.global_replace_universe then
+--													history.do_named_undoable (
+--														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
+--														[<<agent tool_disable_sensitive,
+--															agent change_name_universe_classes (src, cnr, old_name, s, g),
+--															agent tool_enable_sensitive>>],
+--														[<<agent tool_disable_sensitive,
+--															agent change_name_universe_classes (src, cnr, s, old_name, old_generics),
+--															agent tool_enable_sensitive>>])
+--													invalid_name := False
+--												else
+--													history.do_named_undoable (
+--														Interface_names.t_Diagram_rename_class_globally_cmd (old_name, s),
+--														[<<agent tool_disable_sensitive,
+--															agent change_name_compiled_classes (src, cnr, old_name, s, g),
+--															agent tool_enable_sensitive>>],
+--														[<<agent tool_disable_sensitive,
+--															agent change_name_compiled_classes (src, cnr, s, old_name, old_generics),
+--															agent tool_enable_sensitive>>])
+--													invalid_name := False
+--												end
+--											end
+--										end
+--									end
+--								end
+--							end
+--						else
+--							invalid_name := False
+--						end
+--					end
+--				else
+--					create invalid_name_dialog.make_with_text ("Class is not editable")
+--					invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+--				end
+--			else
+--				create invalid_name_dialog.make_with_text ("Class must be on the diagram")
+--				invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+--			end
+--			tool.projector.project
 		end
 
 	change_name_locally (a_class: ES_CLASS; new_name, new_generics: STRING) is

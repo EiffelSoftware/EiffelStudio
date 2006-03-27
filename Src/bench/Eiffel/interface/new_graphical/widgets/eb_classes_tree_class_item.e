@@ -51,7 +51,8 @@ feature -- Status report
 	editable: BOOLEAN is
 			-- Can the class represented by `Current' be edited?
 		do
-			Result := not data.is_read_only and then not data.cluster.is_library
+			conf_todo
+--			Result := not data.is_read_only and then not data.cluster.is_library
 		end
 
 feature -- Status setting
@@ -73,15 +74,16 @@ feature -- Status setting
 --| Uncomment next line when they work.
 --			set_tooltip (name)
 			set_pixmap (pixmap_from_class_i (a_class))
-			if
-				not (a_class.cluster.is_library or else
-				a_class.cluster.is_precompiled or else
-				a_class.is_read_only)
-			then
-				drop_actions.extend (agent on_class_drop)
---| FIXME XR: When clusters can be moved effectively, uncomment this line.
---				drop_actions.extend (~on_cluster_drop)
-			end
+			conf_todo
+--			if
+--				not (a_class.cluster.is_library or else
+--				a_class.cluster.is_precompiled or else
+--				a_class.is_read_only)
+--			then
+--				drop_actions.extend (agent on_class_drop)
+----| FIXME XR: When clusters can be moved effectively, uncomment this line.
+----				drop_actions.extend (~on_cluster_drop)
+--			end
 		end
 
 	set_associated_textable (textable: EV_TEXT_COMPONENT) is
@@ -119,7 +121,8 @@ feature -- Status setting
 		do
 			fparent ?= parent
 			actual := cstone.class_i
-			parent_tree.manager.move_class (actual, actual.cluster, fparent.data.actual_cluster)
+			conf_todo
+--			parent_tree.manager.move_class (actual, actual.cluster, fparent.data.actual_cluster)
 		end
 
 	on_cluster_drop (a_cluster: CLUSTER_STONE) is
@@ -142,7 +145,8 @@ feature {NONE} -- Implementation
 			clu: CLUSTER_I
 		do
 			from
-				clu := data.cluster
+				conf_todo
+--				clu := data.cluster
 			until
 				clu = Void or else
 				Result
@@ -175,13 +179,14 @@ feature {NONE} -- Implementation
 			else
 				conv_st ?= a_pebble
 				fs ?= a_pebble
-				Result :=
-						-- We have a class stone...
-					conv_st /= Void and then
-						-- ...from a different cluster...
-					conv_st.class_i.cluster /= data.cluster and then
-						-- ...and that is not a feature.
-					fs = Void
+				conf_todo
+--				Result :=
+--						-- We have a class stone...
+--					conv_st /= Void and then
+--						-- ...from a different cluster...
+--					conv_st.class_i.cluster /= data.cluster and then
+--						-- ...and that is not a feature.
+--					fs = Void
 			end
 		end
 

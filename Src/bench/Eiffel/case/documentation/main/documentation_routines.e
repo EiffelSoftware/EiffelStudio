@@ -15,6 +15,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	CONF_REFACTORING
+
 feature -- Status setting
 
 	set_excluded_indexing_items (l: LINEAR [STRING]) is
@@ -168,6 +170,7 @@ feature -- Access
 			a_text_formatter.add_new_line
 			a_text_formatter.add_new_line;
 
+			conf_todo
 --			l_indexes := cluster.indexes
 			if l_indexes /= Void then
 				(create {TEXT_FORMATTER_DECORATOR}.make_for_appending (a_text_formatter)).format_ast (l_indexes)

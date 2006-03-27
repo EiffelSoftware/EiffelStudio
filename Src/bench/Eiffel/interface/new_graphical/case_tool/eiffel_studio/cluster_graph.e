@@ -15,7 +15,7 @@ inherit
 			default_create,
 			synchronize
 		end
-	
+
 	EB_CLUSTER_MANAGER_OBSERVER
 		undefine
 			default_create
@@ -23,8 +23,13 @@ inherit
 			on_class_moved,
 			on_cluster_changed
 		end
-	
+
 	EB_CONSTANTS
+		undefine
+			default_create
+		end
+
+	CONF_REFACTORING
 		undefine
 			default_create
 		end
@@ -32,20 +37,20 @@ inherit
 create
 	make,
 	default_create
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
 			-- Create an ES_CLUSTER_GRAPH.
 		do
 			Precursor {ES_GRAPH}
-			
+
 			subcluster_depth := 1
 			supercluster_depth := 1
-			
+
 			manager.add_observer (Current)
 		end
-		
+
 
 	make (a_tool: like context_editor) is
 			-- Create a ES_CLUSTER_GRAPH in `a_tool'.
@@ -68,7 +73,7 @@ feature -- Access
 
 	center_cluster: ES_CLUSTER
 			-- Center cluster of `Current'.
-	
+
 feature -- Element change
 
 	set_supercluster_depth (a_supercluster_depth: like supercluster_depth) is
@@ -100,7 +105,7 @@ feature -- Element change
 		ensure
 			set: center_cluster = a_center_cluster
 		end
-		
+
 	explore_center_cluster is
 			-- Explore relations according to `center_cluster'.
 		require
@@ -111,7 +116,7 @@ feature -- Element change
 			include_all_classes (center_cluster)
 			explore_relations
 		end
-		
+
 	include_all_classes (cluster: ES_CLUSTER) is
 			-- Include all classes in `cluster'.
 		require
@@ -135,10 +140,10 @@ feature -- Element change
 		ensure
 			last_included_classes_not_void: last_included_classes /= Void
 		end
-		
+
 	last_included_classes: LIST [EG_LINKABLE]
 			-- Last classes added by `include_all_classes'.
-			
+
 feature {EB_CONTEXT_EDITOR} -- Synchronization
 
 	synchronize is
@@ -153,7 +158,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 				add_cluster (center_cluster)
 			end
 		end
-		
+
 feature {NONE} -- Cluster manger observer
 
 	on_class_moved (a_class: CLASS_I; old_cluster: CLUSTER_I) is
@@ -165,8 +170,8 @@ feature {NONE} -- Cluster manger observer
 			l_class := class_from_interface (a_class)
 			if l_class /= Void and then l_class.is_needed_on_diagram then
 				old_clus := cluster_from_interface (old_cluster)
-				new_clus := cluster_from_interface (a_class.cluster)
-				
+--				new_clus := cluster_from_interface (a_class.cluster)
+
 				if old_clus /= Void and then old_clus.is_needed_on_diagram and then old_clus.has (l_class) then
 					if new_clus = Void or else not new_clus.is_needed_on_diagram then
 						remove_links (l_class.links)
@@ -207,7 +212,7 @@ feature {NONE} -- Cluster manger observer
 		end
 
 	on_cluster_changed (a_cluster: CLUSTER_I) is
-			-- `a_cluster' was renamed. 
+			-- `a_cluster' was renamed.
 		local
 			l_cluster: ES_CLUSTER
 		do
@@ -220,22 +225,22 @@ feature {NONE} -- Cluster manger observer
 feature {NONE} -- Implementation
 
 	explore_relations is
-			-- 
+			--
 		local
 			nb_of_items: INTEGER
 		do
 			if context_editor /= Void then
-				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) + 
+				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) +
 							   number_of_subclusters (center_cluster.cluster_i, subcluster_depth)
-				
+
 				context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 			end
-						   
+
 			if context_editor /= Void then
 				context_editor.development_window.status_bar.display_message ("Exploring superclusters of " + center_cluster.name)
 			end
 			explore_superclusters (center_cluster, supercluster_depth)
-			
+
 			if context_editor /= Void then
 				context_editor.development_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
 			end
@@ -281,7 +286,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	number_of_subclusters (a_cluster: CLUSTER_I; depth: INTEGER): INTEGER is
 			-- Add subclusters of `a_cluster' until `depth' is reached.
 		require
@@ -372,7 +377,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	last_added_class: ES_CLASS
 
 invariant

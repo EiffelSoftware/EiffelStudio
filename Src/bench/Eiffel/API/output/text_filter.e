@@ -474,7 +474,7 @@ feature -- Text processing
 				if cluster_generated then
 					if format_table.has (f_Cluster_name) then
 						format := format_table.found_item
-
+						conf_todo
 --						set_keyword (kw_File, relative_to_base ("" +
 --								a_cluster.relative_file_name (file_separator) +
 --								"." + file_suffix
@@ -511,6 +511,7 @@ feature -- Text processing
 				if class_generated then
 					if format_table.has (f_Class_name) then
 						format := format_table.found_item
+						conf_todo
 --						set_keyword (kw_File,
 --							relative_to_base ("" +
 --								a_class.document_file_relative_path (file_separator) +
@@ -783,6 +784,7 @@ feature -- Text processing
 
 			feat_suffix := escaped_text (feat_suffix)
 
+			conf_todo
 --			set_keyword (kw_File, relative_to_base ("" +
 --				written_class.lace_class.document_file_relative_path (file_separator) +
 --				feat_suffix

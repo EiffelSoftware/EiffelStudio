@@ -817,7 +817,8 @@ feature -- Class names completion
 				cname := ""
 				from
 					create class_list.make (100)
-					clusters := Universe.clusters
+					conf_todo
+--					clusters := Universe.clusters
 					clusters.start
 				until
 					clusters.after

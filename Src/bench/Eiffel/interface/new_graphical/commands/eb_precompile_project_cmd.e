@@ -29,6 +29,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -130,11 +132,12 @@ feature {NONE} -- Implementation
 		local
 			l_ast: ACE_SD
 		do
-			l_ast := lace.parsed_ast
-				-- `l_ast' could be Void if Ace is not valid.
-			if l_ast /= Void then
-				Result := l_ast.is_dotnet_project
-			end
+			conf_todo
+--			l_ast := lace.parsed_ast
+--				-- `l_ast' could be Void if Ace is not valid.
+--			if l_ast /= Void then
+--				Result := l_ast.is_dotnet_project
+--			end
 		end
 
 indexing

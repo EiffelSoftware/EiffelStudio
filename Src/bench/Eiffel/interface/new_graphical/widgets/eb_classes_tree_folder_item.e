@@ -56,7 +56,8 @@ feature -- Status setting
 			actual: CLUSTER_I
 		do
 			actual := a_cluster.actual_cluster
-			set_text (actual.display_name)
+			conf_todo
+--			set_text (actual.display_name)
 			set_tooltip (actual.cluster_name)
 			data := a_cluster
 			set_pebble (stone)
@@ -206,7 +207,8 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			actual: CLASS_I
 		do
 			actual := cstone.class_i
-			parent_tree.manager.move_class (actual, actual.cluster, data.actual_cluster)
+			conf_todo
+--			parent_tree.manager.move_class (actual, actual.cluster, data.actual_cluster)
 		end
 
 	on_cluster_drop (cluster: CLUSTER_STONE) is

@@ -13,6 +13,7 @@ inherit
 
 	E_OUTPUT_CMD;
 	SHARED_EIFFEL_PROJECT
+	CONF_REFACTORING
 
 create
 
@@ -25,6 +26,7 @@ feature -- Execution
 		local
 			stats: SYSTEM_STATISTICS
 		do
+			conf_todo
 			if Eiffel_project.initialized then
 				stats := Eiffel_system.statistics;
 				text_formatter.add_int (stats.number_of_compilations);

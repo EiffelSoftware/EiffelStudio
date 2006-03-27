@@ -27,6 +27,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_REFACTORING
+
 create
 	make,
 	make_from_entity
@@ -149,15 +151,15 @@ feature -- Execution
 			-- Format consumed type.
 		local
 			prev_class: CLASS_C
-			prev_cluster: CLUSTER_I
+			prev_group: CONF_GROUP
 		do
 			if is_valid then
 				prev_class := System.current_class
-				prev_cluster := Inst_context.cluster
+				prev_group := Inst_context.group
 				execution_error := False
 				ast.format (Current)
 				System.set_current_class (prev_class)
-				Inst_context.set_cluster (prev_cluster)
+				Inst_context.set_group (prev_group)
 			end
 		end
 
@@ -305,7 +307,8 @@ feature {NONE} -- Element Change
 					l_cnt > arguments.count
 				loop
 					l_c_arg := arguments.item (l_cnt)
-					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
+					conf_todo
+--					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
 
 					if not use_dotnet_name_only and l_char_count > 60 then
 						text_formatter.add_new_line
@@ -340,7 +343,8 @@ feature {NONE} -- Element Change
 			if return_type /= Void then
 				text_formatter.add_char (':')
 				text_formatter.add_space
-				l_c_class := class_i.type_from_consumed_type (return_type)
+				conf_todo
+--				l_c_class := class_i.type_from_consumed_type (return_type)
 				if 	class_i.is_compiled then
 					l_ext ?= class_i.compiled_class
 					l_type_a := l_ext.type_from_consumed_type (return_type)
@@ -398,7 +402,8 @@ feature {NONE} -- Element Change
 
 			if is_inherited then
 					-- Retrieve .NET member name depending upon if inherited.	
-				l_namespace_name := class_i.type_from_consumed_type (declared_type).external_name
+				conf_todo
+--				l_namespace_name := class_i.type_from_consumed_type (declared_type).external_name
 			else
 				l_namespace_name := consumed_t.dotnet_name
 			end
@@ -514,7 +519,8 @@ feature {NONE} -- Element Change
 				text_formatter.add_new_line
 				text_formatter.add_indents (3)
 				text_formatter.add_comment ("-- (from ")
-				text_formatter.add_class (class_i.type_from_consumed_type (declared_type))
+				conf_todo
+--				text_formatter.add_class (class_i.type_from_consumed_type (declared_type))
 				text_formatter.add_char (')')
 			end
 		end

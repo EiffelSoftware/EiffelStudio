@@ -56,6 +56,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	default_create,
 	make
@@ -93,10 +98,10 @@ feature {NONE} -- Initialization
 					-- is hidden.
 				window.lock_update
 			end
-			
+
 			store_expanded_state
 				-- Store expanded state of `Current'
-				
+
 			wipe_out
 				-- Remove all items, ready for rebuilding.
 			if Eiffel_project.initialized then
@@ -128,11 +133,11 @@ feature {NONE} -- Initialization
 				end
 				append (tmp_list)
 			end
-			
+
 			restore_expanded_state
 				-- Restore original expanded state, stored during last call to
 				-- `store_expanded_state'.
-			
+
 			if window /= Void then
 					-- Unlock update of window as `Current' has
 					-- been rebuilt.
@@ -234,7 +239,8 @@ feature -- Activation
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
 		do
-			path := cluster_parents (a_class.cluster)
+			conf_todo
+--			path := cluster_parents (a_class.cluster)
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
@@ -270,7 +276,8 @@ feature -- Observer pattern
 		local
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			a_folder := folder_from_cluster (a_class.cluster)
+			conf_todo
+--			a_folder := folder_from_cluster (a_class.cluster)
 			if a_folder /= Void then
 				a_folder.add_class (a_class)
 			else
@@ -282,7 +289,8 @@ feature -- Observer pattern
 			-- Refresh the tree not to display the old class.
 		do
 			--on_class_moved (a_class, a_class.cluster)
-			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
+			conf_todo
+--			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
 		end
 
 	remove_class_from_folder (a_class: CLASS_I; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
@@ -388,14 +396,14 @@ feature -- Observer pattern
 				end
 				create new_folder.make (a_cluster)
 				clist.put_left (new_folder)
-				
+
 				if window /= Void then
 					new_folder.associate_with_window (window)
 				end
 				if textable /= Void then
 					new_folder.associate_textable_with_classes (textable)
 				end
-				from	
+				from
 					classes_double_click_agents.start
 				until
 					classes_double_click_agents.after
@@ -473,23 +481,23 @@ feature -- Memory management
 			manager.remove_observer (Current)
 			window := Void
 		end
-		
+
 feature {NONE} -- Rebuilding
 
 	expanded_clusters: HASH_TABLE [STRING, STRING]
 		-- All cluster names marked as expanded during last call to
 		-- `store_expanded_state'.
-	
+
 	selected_name: STRING
 		-- Full name of item selected in `Current' before rebuilding,
-		-- including path. 
-	
+		-- including path.
+
 	store_expanded_state is
 			-- Store expanded state of `Current' into `expanded_clusters'.
 		do
 			expanded_clusters.wipe_out
 				-- Clear last set of expanded clusters.
-				
+
 			if selected_item /= Void then
 					-- Store inclusive path of item currently selected in `Current'.
 					-- This is used to restore the selected item post rebuilding.
@@ -539,7 +547,7 @@ feature {NONE} -- Rebuilding
 		do
 			keys := expanded_clusters.current_keys
 			from
-				counter := 1				
+				counter := 1
 			until
 				counter > keys.count
 			loop
@@ -563,7 +571,7 @@ feature {NONE} -- Rebuilding
 				ensure_item_visible (first)
 			end
 		end
-		
+
 	select_tree_item (full_path: STRING; tree_list: EV_TREE_NODE_LIST) is
 			-- Select item in `tree_list' recursively, whose data path matches `full_path'.
 		require
@@ -580,7 +588,7 @@ feature {NONE} -- Rebuilding
 					-- If there is no dot, `item_key' is set to `key'.
 				item_key := key
 			else
-					-- Set `item_key' to the next part of `key' up to the dot. 
+					-- Set `item_key' to the next part of `key' up to the dot.
 				item_key := key.substring (1, dot_index - 1)
 			end
 			from
@@ -598,7 +606,7 @@ feature {NONE} -- Rebuilding
 				tree_list.forth
 			end
 		end
-		
+
 	expand_tree_item (full_path: STRING; tree_item: EV_TREE_NODE_LIST) is
 			-- Expand item of `tree_item', whose data matches `full_path'.
 		require
@@ -742,7 +750,8 @@ feature {NONE} -- Implementation
 	class_parents (a_class: CLASS_I): LINKED_LIST [CLUSTER_I] is
 			-- List of parent clusters of `a_class', from the root to `a_class'.
 		do
-			Result := cluster_parents (a_class.cluster)
+			conf_todo
+--			Result := cluster_parents (a_class.cluster)
 		end
 
 	find_cluster_in (clusteri: CLUSTER_I; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
@@ -837,4 +846,4 @@ indexing
 		]"
 
 end -- class EB_CLASSES_TREE
-	
+

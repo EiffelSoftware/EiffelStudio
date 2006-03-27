@@ -19,6 +19,8 @@ inherit
 			same_as
 		end
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -61,29 +63,30 @@ feature -- Access
 			Result.set_file_name (cluster_i.cluster_name)
 			Result.add_extension ("txt")
 		end
- 
+
 	stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Cluster
 		end
- 
+
 	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_cluster
 		end
- 
+
  	is_valid: BOOLEAN is
  			-- Does `Current' represent a valid cluster?
  		do
- 			Result := Eiffel_project.initialized and then
- 				cluster_i /= Void and then
- 				Eiffel_universe.has_cluster_of_name (cluster_i.cluster_name)
+ 			conf_todo
+-- 			Result := Eiffel_project.initialized and then
+-- 				cluster_i /= Void and then
+-- 				Eiffel_universe.has_cluster_of_name (cluster_i.cluster_name)
  		end
- 
+
  	synchronized_stone: STONE is
  			-- Return a valid stone representing the same object after a recompilation.
  		do
@@ -94,7 +97,7 @@ feature -- Access
  				Result := Void
  			end
  		end
- 
+
  	same_as (other: STONE): BOOLEAN is
  			-- Does `other' and `Current' represent the same cluster?
  		local
@@ -104,7 +107,7 @@ feature -- Access
  			Result := conv_clu /= Void and then
  				conv_clu.cluster_i = cluster_i
  		end
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

@@ -48,11 +48,11 @@ feature -- Execution
 			-- Format consumed type.
 		local
 			prev_class: CLASS_C
-			prev_cluster: CLUSTER_I
+			prev_group: CONF_GROUP
 		do
 			if not rescued then
 				prev_class := System.current_class
-				prev_cluster := Inst_context.cluster
+				prev_group := Inst_context.group
 				execution_error := False
 				class_name := consumed_t.eiffel_name.as_upper
 
@@ -68,7 +68,7 @@ feature -- Execution
 				rescued := False
 			end
 			System.set_current_class (prev_class)
-			Inst_context.set_cluster (prev_cluster)
+			Inst_context.set_group (prev_group)
 		end
 
 feature -- Element change

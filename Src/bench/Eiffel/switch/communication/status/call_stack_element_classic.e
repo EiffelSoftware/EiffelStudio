@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			counter			: INTEGER
 			l_names_heap	: like Names_heap
 			l_stat_class	: CLASS_C
-			l_old_cluster   : CLUSTER_I
+			l_old_group   	: CONF_GROUP
 			l_old_class		: CLASS_C
 			l_type_a: TYPE_A
 		do
@@ -297,8 +297,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				if local_decl_grps /= Void then
-					l_old_cluster := inst_context.cluster
-					inst_context.set_cluster (rout.associated_class.cluster)
+					l_old_group := inst_context.group
+					inst_context.set_group (rout.associated_class.group)
 
 					l_old_class := System.current_class
 					System.set_current_class (dynamic_class)
@@ -341,8 +341,8 @@ feature {NONE} -- Implementation
 						end
 						local_decl_grps.forth
 					end
-					if l_old_cluster /= Void then
-						inst_context.set_cluster (l_old_cluster)
+					if l_old_group /= Void then
+						inst_context.set_group (l_old_group)
 					end
 					if l_old_class /= Void then
 						System.set_current_class (l_old_class)

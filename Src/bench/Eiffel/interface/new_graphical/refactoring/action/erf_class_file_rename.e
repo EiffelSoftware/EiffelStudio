@@ -17,6 +17,8 @@ inherit
 			redo
 		end
 
+	CONF_REFACTORING
+
 create
 	make
 
@@ -33,7 +35,8 @@ feature {NONE} -- Initialization
 			new_file_name: FILE_NAME
 		do
 			class_i := a_class
-			create new_file_name.make_from_string (a_class.cluster.path)
+			conf_todo
+--			create new_file_name.make_from_string (a_class.cluster.path)
 			new_file_name.set_file_name (a_new_name)
 			new_file_name.add_extension ("e")
 			create old_name_ext.make_from_string (a_class.base_name)
@@ -49,14 +52,16 @@ feature -- Basic operations
 			-- Undo the actions.
 		do
 			Precursor
-			class_i.set_base_name (old_name_ext)
+			conf_todo
+--			class_i.set_base_name (old_name_ext)
 		end
 
 	redo is
 			-- Redo the actions.
 		do
 			Precursor
-			class_i.set_base_name (new_name_ext)
+			conf_todo
+--			class_i.set_base_name (new_name_ext)
 		end
 
 feature {NONE} -- Implementation

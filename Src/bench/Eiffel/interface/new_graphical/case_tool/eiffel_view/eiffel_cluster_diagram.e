@@ -302,7 +302,8 @@ feature {NONE} -- Implementation
 			cluster_fig: EG_CLUSTER_FIGURE
 		do
 			if not is_dropped_on_diagram then
-				class_cluster := a_class.cluster
+				conf_todo
+--				class_cluster := a_class.cluster
 				if class_cluster /= Void then
 					es_cluster := model.cluster_from_interface (class_cluster)
 					if es_cluster /= Void then
@@ -370,183 +371,184 @@ feature {NONE} -- Implementation
 				class_was_reincluded := True
 			end
 			dropped_on_cluster := top_cluster_at (Current, drop_x, drop_y)
-			if dropped_on_cluster = Void or else a_class.cluster = dropped_on_cluster.model.cluster_i then
-				-- new_class is new
-				--		parent is new
-				--				-> add parent add new_class
-				--		parent is not new
-				--			parent is needed
-				--				-> add new_class
-				--			parent is not needed
-				--				-> reinclude parent add new_class
-				-- new_class is not new
-				--		parent is new
-				--				-> reinclude new_class add parent add new_class
-				--		parent is not new
-				--			parent is needed
-				--				parent has new_class
-				--					--> move class to new drop position
-				--				parent not has new_class
-				--					--> reinclude new_class add new_class
-				--			parent is not needed
-				--				-> reinclude parent reinclude new_class add new_class
-				parent := model.cluster_from_interface (a_class.cluster)
-				if parent = Void then
-					--add parent and put class inside
-					create new_cluster.make (a_class.cluster)
-					model.insert_cluster (new_cluster)
-					new_cluster.extend (new_class)
-					fig ?= figure_from_model (new_class)
-					fig.set_port_position (drop_x, drop_y)
-					new_cluster_figure ?= figure_from_model (new_cluster)
-
-					remove_links := new_cluster.needed_links
-					remove_classes := classes_to_remove_in_cluster (new_cluster)
-					from
-						remove_classes.start
-					until
-						remove_classes.after
-					loop
-						fig ?= remove_classes.item.item (1)
-						remove_links.append (fig.model.needed_links)
-						remove_classes.forth
-					end
-
-					update_cluster_legend
-
-					context_editor.history.register_named_undoable (
-						interface_names.t_diagram_include_class_cmd (new_class.name),
-						[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
-						[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
-				else
-					if not parent.is_needed_on_diagram then
-						parent.enable_needed_on_diagram
-						enable_all_links (parent)
-						new_cluster_figure ?= figure_from_model (parent)
-						if not parent.has (new_class) then
-							parent.extend (new_class)
-						end
-						model.add_children_relations (parent)
-						model.add_parent_relations (parent)
-						fig ?= figure_from_model (new_class)
-						fig.set_port_position (drop_x, drop_y)
-
-						remove_links := parent.needed_links
-						remove_classes := classes_to_remove_in_cluster (parent)
-						from
-							remove_classes.start
-						until
-							remove_classes.after
-						loop
-							fig ?= remove_classes.item.item (1)
-							remove_links.append (fig.model.needed_links)
-							remove_classes.forth
-						end
-
-						update_cluster_legend
-
-						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_include_class_cmd (new_class.name),
-							[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
-							[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
-					else
-						if not parent.has (new_class) then
-							parent.extend (new_class)
-							fig ?= figure_from_model (new_class)
-							fig.set_port_position (drop_x, drop_y)
-							fig.request_update
-							remove_links := new_class.needed_links
-							update_cluster_legend
-							context_editor.history.register_named_undoable (
-								interface_names.t_diagram_include_class_cmd (new_class.name),
-								[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
-								[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
-						else
-							if class_was_reincluded then
-								fig ?= figure_from_model (new_class)
-								fig.set_port_position (drop_x, drop_y)
-								fig.request_update
-								remove_links := new_class.needed_links
-								update_cluster_legend
-								context_editor.history.register_named_undoable (
-									interface_names.t_diagram_include_class_cmd (new_class.name),
-									[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
-									[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
-							else
-								fig ?= figure_from_model (new_class)
-								saved_x := fig.port_x
-								saved_y := fig.port_y
-								fig.set_port_position (drop_x, drop_y)
-								context_editor.history.register_named_undoable (
-									interface_names.t_diagram_move_class_cmd (new_class.name),
-									agent fig.set_port_position (drop_x, drop_y),
-									agent fig.set_port_position (saved_x, saved_y))
-							end
-						end
-					end
-				end
-			else
-				-- move class
-				fig ?= figure_from_model (new_class)
-				saved_x := fig.port_x
-				saved_y := fig.port_y
-				fig.set_port_position (drop_x, drop_y)
-				new_cluster := dropped_on_cluster.model
-				new_cluster_i := new_cluster.cluster_i
-				old_cluster_i := new_class.class_i.cluster
-				old_cluster := new_class.cluster
-
-				new_cluster.extend (new_class)
-
-				l_manager := model.manager
-				l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)
-
-				if new_cluster.cluster_i.classes.has (new_class.class_i.name) then
-					if not class_was_inserted and then not class_was_reincluded then
-
-						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd (new_class.name),
-							[<<agent fig.set_port_position (drop_x, drop_y), agent new_cluster.extend (new_class),
-							   agent l_manager.move_class (new_class.class_i, old_cluster.cluster_i, new_cluster.cluster_i)>>],
-							[<<agent fig.set_port_position (saved_x, saved_y), agent old_cluster.extend (new_class),
-							   agent l_manager.move_class (new_class.class_i, new_cluster.cluster_i, old_cluster.cluster_i)>>])
-					else
-						-- class was not in the diagram before.
-						remove_links := new_class.needed_links
-						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd (new_class.name),
-							[<<agent reinclude_class (fig, remove_links, drop_x, drop_y),
-							   agent new_cluster.extend (new_class),
-							   agent l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)>>],
-							[<<agent remove_class_virtual (fig, remove_links),
-							   agent new_cluster.prune_all (new_class),
-							   agent l_manager.move_class (new_class.class_i, new_cluster_i, old_cluster_i)>>])
-					end
-				else
-					-- Move was not succesfull.
-					fig.set_port_position (saved_x, saved_y)
-					if old_cluster /= Void then
-						old_cluster.extend (new_class)
-					else
-						new_cluster.prune_all (new_class)
-					end
-					if class_was_inserted then
-						from
-							new_class.internal_links.start
-						until
-							new_class.internal_links.is_empty
-						loop
-							model.remove_link (new_class.internal_links.first)
-						end
-						model.remove_node (new_class)
-					elseif class_was_reincluded then
-						new_class.disable_needed_on_diagram
-					end
-				end
-			end
-			if is_right_angles then
-				apply_right_angles
-			end
+			conf_todo
+--			if dropped_on_cluster = Void or else a_class.cluster = dropped_on_cluster.model.cluster_i then
+--				-- new_class is new
+--				--		parent is new
+--				--				-> add parent add new_class
+--				--		parent is not new
+--				--			parent is needed
+--				--				-> add new_class
+--				--			parent is not needed
+--				--				-> reinclude parent add new_class
+--				-- new_class is not new
+--				--		parent is new
+--				--				-> reinclude new_class add parent add new_class
+--				--		parent is not new
+--				--			parent is needed
+--				--				parent has new_class
+--				--					--> move class to new drop position
+--				--				parent not has new_class
+--				--					--> reinclude new_class add new_class
+--				--			parent is not needed
+--				--				-> reinclude parent reinclude new_class add new_class
+--				parent := model.cluster_from_interface (a_class.cluster)
+--				if parent = Void then
+--					--add parent and put class inside
+--					create new_cluster.make (a_class.cluster)
+--					model.insert_cluster (new_cluster)
+--					new_cluster.extend (new_class)
+--					fig ?= figure_from_model (new_class)
+--					fig.set_port_position (drop_x, drop_y)
+--					new_cluster_figure ?= figure_from_model (new_cluster)
+--
+--					remove_links := new_cluster.needed_links
+--					remove_classes := classes_to_remove_in_cluster (new_cluster)
+--					from
+--						remove_classes.start
+--					until
+--						remove_classes.after
+--					loop
+--						fig ?= remove_classes.item.item (1)
+--						remove_links.append (fig.model.needed_links)
+--						remove_classes.forth
+--					end
+--
+--					update_cluster_legend
+--
+--					context_editor.history.register_named_undoable (
+--						interface_names.t_diagram_include_class_cmd (new_class.name),
+--						[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
+--						[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
+--				else
+--					if not parent.is_needed_on_diagram then
+--						parent.enable_needed_on_diagram
+--						enable_all_links (parent)
+--						new_cluster_figure ?= figure_from_model (parent)
+--						if not parent.has (new_class) then
+--							parent.extend (new_class)
+--						end
+--						model.add_children_relations (parent)
+--						model.add_parent_relations (parent)
+--						fig ?= figure_from_model (new_class)
+--						fig.set_port_position (drop_x, drop_y)
+--
+--						remove_links := parent.needed_links
+--						remove_classes := classes_to_remove_in_cluster (parent)
+--						from
+--							remove_classes.start
+--						until
+--							remove_classes.after
+--						loop
+--							fig ?= remove_classes.item.item (1)
+--							remove_links.append (fig.model.needed_links)
+--							remove_classes.forth
+--						end
+--
+--						update_cluster_legend
+--
+--						context_editor.history.register_named_undoable (
+--							interface_names.t_diagram_include_class_cmd (new_class.name),
+--							[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
+--							[<<agent remove_cluster_virtual (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>])
+--					else
+--						if not parent.has (new_class) then
+--							parent.extend (new_class)
+--							fig ?= figure_from_model (new_class)
+--							fig.set_port_position (drop_x, drop_y)
+--							fig.request_update
+--							remove_links := new_class.needed_links
+--							update_cluster_legend
+--							context_editor.history.register_named_undoable (
+--								interface_names.t_diagram_include_class_cmd (new_class.name),
+--								[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
+--								[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
+--						else
+--							if class_was_reincluded then
+--								fig ?= figure_from_model (new_class)
+--								fig.set_port_position (drop_x, drop_y)
+--								fig.request_update
+--								remove_links := new_class.needed_links
+--								update_cluster_legend
+--								context_editor.history.register_named_undoable (
+--									interface_names.t_diagram_include_class_cmd (new_class.name),
+--									[<<agent reinclude_class (fig, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
+--									[<<agent remove_class_virtual (fig, remove_links), agent update_cluster_legend>>])
+--							else
+--								fig ?= figure_from_model (new_class)
+--								saved_x := fig.port_x
+--								saved_y := fig.port_y
+--								fig.set_port_position (drop_x, drop_y)
+--								context_editor.history.register_named_undoable (
+--									interface_names.t_diagram_move_class_cmd (new_class.name),
+--									agent fig.set_port_position (drop_x, drop_y),
+--									agent fig.set_port_position (saved_x, saved_y))
+--							end
+--						end
+--					end
+--				end
+--			else
+--				-- move class
+--				fig ?= figure_from_model (new_class)
+--				saved_x := fig.port_x
+--				saved_y := fig.port_y
+--				fig.set_port_position (drop_x, drop_y)
+--				new_cluster := dropped_on_cluster.model
+--				new_cluster_i := new_cluster.cluster_i
+--				old_cluster_i := new_class.class_i.cluster
+--				old_cluster := new_class.cluster
+--
+--				new_cluster.extend (new_class)
+--
+--				l_manager := model.manager
+--				l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)
+--
+--				if new_cluster.cluster_i.classes.has (new_class.class_i.name) then
+--					if not class_was_inserted and then not class_was_reincluded then
+--
+--						context_editor.history.register_named_undoable (
+--							interface_names.t_diagram_move_class_cmd (new_class.name),
+--							[<<agent fig.set_port_position (drop_x, drop_y), agent new_cluster.extend (new_class),
+--							   agent l_manager.move_class (new_class.class_i, old_cluster.cluster_i, new_cluster.cluster_i)>>],
+--							[<<agent fig.set_port_position (saved_x, saved_y), agent old_cluster.extend (new_class),
+--							   agent l_manager.move_class (new_class.class_i, new_cluster.cluster_i, old_cluster.cluster_i)>>])
+--					else
+--						-- class was not in the diagram before.
+--						remove_links := new_class.needed_links
+--						context_editor.history.register_named_undoable (
+--							interface_names.t_diagram_move_class_cmd (new_class.name),
+--							[<<agent reinclude_class (fig, remove_links, drop_x, drop_y),
+--							   agent new_cluster.extend (new_class),
+--							   agent l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)>>],
+--							[<<agent remove_class_virtual (fig, remove_links),
+--							   agent new_cluster.prune_all (new_class),
+--							   agent l_manager.move_class (new_class.class_i, new_cluster_i, old_cluster_i)>>])
+--					end
+--				else
+--					-- Move was not succesfull.
+--					fig.set_port_position (saved_x, saved_y)
+--					if old_cluster /= Void then
+--						old_cluster.extend (new_class)
+--					else
+--						new_cluster.prune_all (new_class)
+--					end
+--					if class_was_inserted then
+--						from
+--							new_class.internal_links.start
+--						until
+--							new_class.internal_links.is_empty
+--						loop
+--							model.remove_link (new_class.internal_links.first)
+--						end
+--						model.remove_node (new_class)
+--					elseif class_was_reincluded then
+--						new_class.disable_needed_on_diagram
+--					end
+--				end
+--			end
+--			if is_right_angles then
+--				apply_right_angles
+--			end
 		end
 
 	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
@@ -632,11 +634,13 @@ feature {NONE} -- Implementation
 					end
 					cf ?= figure_from_model (es_class)
 					check cf_not_void: cf /= Void end
-					es_cluster := model.cluster_from_interface (a_class.cluster)
+					conf_todo
+--					es_cluster := model.cluster_from_interface (a_class.cluster)
 					if es_cluster = Void or else not es_cluster.is_needed_on_diagram then
 
 						if es_cluster = Void then
-							create es_cluster.make (a_class.cluster)
+							conf_todo
+--							create es_cluster.make (a_class.cluster)
 							model.insert_cluster (es_cluster)
 						else
 							es_cluster.enable_needed_on_diagram

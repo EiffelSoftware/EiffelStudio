@@ -85,7 +85,6 @@ feature -- Basic operation
 				last_system := conf_factory.new_system (l_ast.system_name.as_lower, uuid_generator.generate_uuid)
 				current_target := conf_factory.new_target (l_ast.system_name.as_lower, last_system)
 				last_system.add_target (current_target)
-				last_system.set_library_target (current_target)
 
 				process_defaults (l_ast.defaults)
 				if not l_parser.comments.is_empty then

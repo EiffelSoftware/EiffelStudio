@@ -140,11 +140,11 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-binary_format=''
 cc='gcc'
 ccflags='-pipe -D__BUILTIN_VA_ARG_INCR'
+ccldflags=''
 cpp='g++'
-cppflags='-pipe -D__BUILTIN_VA_ARG_INCR'
+cppflags='$ccflags'
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -157,12 +157,11 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-optimize="-O3 $binary_format $platform_arch"
-platform_arch=''
+optimize="-O3"
 voidflags='15'
 #Check value for next 1
 warning_level='-Wall'
-wkoptimize="-O0 $binary_format $platform_arch"
+wkoptimize="-O0"
 
 #Makefiles
 ar='ar'
@@ -172,7 +171,7 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
-ldflags="$binary_format $platform_arch"
+ldflags=""
 ldsharedflags="$ldflags -G -o"
 libs='-lsocket -lnsl -lm'
 ln='/bin/ln'

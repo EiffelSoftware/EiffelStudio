@@ -140,12 +140,11 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
-binary_format=''
 cc='ccppc'
 ccflags='-ansi -fno-builtin -mlongcall -mstrict-align -DVXWORKS -I$(VXWORKS)/target/h'
 ccldflags='-r -nostdlib -Wl,--whole-archive -Wl,-X -T $(VXWORKS)/target/h/tool/gnu/ldscripts/link.OUT'
 cpp='c++ppc'
-cppflags=''
+cppflags='$ccflags'
 cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
@@ -158,12 +157,11 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -DEIF_THREADS"
 mtcppflags="$cppflags -DEIF_THREADS"
-optimize="-O3 $binary_format $platform_arch"
-platform_arch=''
+optimize="-O3"
 voidflags='15'
 #Check value for next 1
 warning_level='-Wall'
-wkoptimize="-O0 $binary_format $platform_arch"
+wkoptimize="-O0"
 
 #Makefiles
 ar='arppc'
@@ -173,7 +171,7 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ldppc'
-ldflags=" $binary_format $platform_arch"
+ldflags=""
 ldsharedflags="$ldflags -shared -o"
 libs=''
 ln='/bin/ln'

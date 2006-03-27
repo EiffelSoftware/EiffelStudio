@@ -77,7 +77,7 @@ default
 --	$Id$	
 
 cluster
-	override:		"$EIFFEL_SRC/Eiffel_conf/override"
+	override:		"$EIFFEL_SRC/Eiffel/override"
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
@@ -91,33 +91,33 @@ cluster
 			".svn"; "french"; "german"; 
 		end
 
-	beurk:		"$EIFFEL_SRC/Eiffel_conf/beurk"
+	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
-	compiler_support:		"$EIFFEL_SRC/Eiffel_conf/support"
+	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
 
-	all common:		"$EIFFEL_SRC/Eiffel_conf/common"
+	all common:		"$EIFFEL_SRC/Eiffel/common"
 		exclude
 			".svn"; "compiler_override"; "error"; 
 		end
 
-	flat_short_b:		"$EIFFEL_SRC/Eiffel_conf/flat_short/bench"
+	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
 			"hact"; "se"; "ve"; "base"; ".svn"; "other"; 
 		end
 
-	all documentation:		"$EIFFEL_SRC/Eiffel_conf/case/documentation"
+	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
 		exclude
 			".svn"; 
 		end
 
-	all lace:		"$EIFFEL_SRC/Eiffel_conf/lace"
+	all lace:		"$EIFFEL_SRC/Eiffel/lace"
 		exclude
 			".svn"; 
 		end
 
-	all compiler:		"$EIFFEL_SRC/Eiffel_conf/eiffel"
+	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
 			".svn"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows"; 
 		option
@@ -125,12 +125,12 @@ cluster
 			assertion (ensure): cache_history
 		end
 
-	all compiler_api:		"$EIFFEL_SRC/Eiffel_conf/API"
+	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
 			".svn"; "structured_text"; 
 		end
 
-	all eiffel_structured_text:		"$EIFFEL_SRC/Eiffel_conf/API/structured_text"
+	all eiffel_structured_text:		"$EIFFEL_SRC/Eiffel/API/structured_text"
 		exclude
 			".svn"; "common"; 
 		end
@@ -140,7 +140,7 @@ cluster
 			".svn"; "text_formatter.e"; "structured_text.e"; 
 		end
 
-	switch:		"$EIFFEL_SRC/Eiffel_conf/switch"
+	switch:		"$EIFFEL_SRC/Eiffel/switch"
 
 	interface_switch (switch):		"$/interface/batch_only"
 
@@ -152,7 +152,7 @@ cluster
 
 	debuging_class (communications):		"$/debug"
 
-	interface:		"$EIFFEL_SRC/Eiffel_conf/interface"
+	interface:		"$EIFFEL_SRC/Eiffel/interface"
 
 	interface_shared (interface):		"$/shared"
 
@@ -165,7 +165,7 @@ cluster
 
 	profile_tool (interface):		"$/graphical/profile_tool"
 
-	all cli_writer:		"$EIFFEL_SRC/Eiffel_conf/library/cli_writer"
+	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 		exclude
 			".svn"; "md_strong_name.e"; "md_public_key.e"; 
 		end
@@ -184,7 +184,7 @@ cluster
 			".svn"; 
 		end
 
-	all activation_checker:		"$EIFFEL_SRC/Eiffel_conf/library/activation"
+	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude
 			"enterprise"; "free"; ".svn"; 
 		end
@@ -204,7 +204,7 @@ cluster
 			".svn"; 
 		end
 
-	all configuration:		"$EIFFEL_SRC/Eiffel_conf/library/configuration"
+	all configuration:		"$EIFFEL_SRC/Eiffel/library/configuration"
 		exclude
 			".svn"; 
 		visible

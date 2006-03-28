@@ -32,7 +32,6 @@ feature {NONE} -- Initlization
 			internal_mediator := a_docker_mediator
 			create internal_arrow_indicator_center
 			internal_arrow_indicator_center.set_with_named_file (internal_shared.icons.arrow_indicator_center)
-
 			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
 			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
 		ensure
@@ -164,6 +163,8 @@ feature {NONE} -- Implementation functions.
 		do
 			l_shared := internal_shared
 			l_icons := l_shared.icons
+			check rect_not_void: internal_rectangle /= Void end
+			check indicator_not_void: internal_arrow_indicator_center /= Void end
 			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_arrow_indicator_center.width // 2
 			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_arrow_indicator_center.height // 2
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then

@@ -4,8 +4,9 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_MENU_DOT_DRAWER
-
+	SD_TOOL_BAR_DOT_DRAWER
+-- FIXIT: move this to subcluster of "toolbar"
+--        maybe new cluster name is: support
 create
 	make
 

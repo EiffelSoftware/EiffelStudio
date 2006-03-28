@@ -746,9 +746,11 @@ feature -- Status setting
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 			l_text: STRING_32
 		do
-			if a_text /= Void then
+			if not a_text.is_empty then
 					-- Replace "%N" with "%R%N" for Windows.
 				l_text := convert_string (l_text)
+			else
+				l_text := a_text
 			end
 			create stream.make (l_text)
 			text_stream_in (stream)

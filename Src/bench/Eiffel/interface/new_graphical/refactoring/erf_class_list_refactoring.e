@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
             -- Make the changes in `a_class'.
         require
         	a_class_not_void: a_class /= Void
---        	a_class_writable: not a_class.is_read_only
+        	a_class_writable: not a_class.is_read_only
 		deferred
         end
 

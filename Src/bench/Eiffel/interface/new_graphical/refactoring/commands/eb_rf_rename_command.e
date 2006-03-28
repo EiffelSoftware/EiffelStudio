@@ -114,12 +114,16 @@ feature -- Events
 		local
 			rf: ERF_CLASS_RENAME
 			fs: FEATURE_STONE
+			eif_class: EIFFEL_CLASS_I
 		do
 			fs ?= cs
 			if fs = Void then
-				rf := manager.class_rename_refactoring
-				rf.set_class (cs.class_i)
-				manager.execute_refactoring (rf)
+				eif_class ?= cs.class_i
+				if eif_class /= Void then
+					rf := manager.class_rename_refactoring
+					rf.set_class (eif_class)
+					manager.execute_refactoring (rf)
+				end
 			end
 		end
 

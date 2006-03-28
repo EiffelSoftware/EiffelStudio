@@ -102,7 +102,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	overriders: ARRAYED_LIST [CONF_OVERRIDE]
 			-- The overriders that override this group.
 
-	classes: HASH_TABLE [CONF_CLASS, STRING]
+	classes: HASH_TABLE [like class_type, STRING]
 			-- All the classes in this group, indexed by the renamed class name.
 
 	hash_code: INTEGER is
@@ -398,6 +398,10 @@ feature {CONF_VISITOR} -- Implementation, attributes stored in configuration fil
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
+
+feature {NONE} -- Class type anchor
+
+	class_type: CONF_CLASS
 
 feature {NONE} -- Implementation
 

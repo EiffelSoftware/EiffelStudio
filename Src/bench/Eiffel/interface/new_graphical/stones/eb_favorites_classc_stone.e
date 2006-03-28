@@ -27,7 +27,7 @@ inherit
 			file_name,
 			history_name,
 			synchronized_stone,
-			cluster
+			group
 		redefine
 			make_from_favorite
 		end

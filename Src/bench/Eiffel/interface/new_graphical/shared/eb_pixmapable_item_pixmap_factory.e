@@ -15,12 +15,12 @@ inherit
 
 feature {NONE} -- Implementation
 
-	pixmap_from_cluster_i (a_cluster: CLUSTER_I): EV_PIXMAP is
-			-- Return pixmap based on `a_cluster'.
+	pixmap_from_cluster_i (a_group: CONF_GROUP): EV_PIXMAP is
+			-- Return pixmap based on `a_group'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		do
-			if a_cluster.is_readonly then
+			if a_group.is_readonly then
 				Result := (Pixmaps.Icon_read_only_cluster)
 			else
 				Result := (Pixmaps.Icon_cluster_symbol)

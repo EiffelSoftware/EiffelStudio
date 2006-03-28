@@ -172,14 +172,14 @@ feature {NONE} -- Implementation
 			else
 				conv_st ?= a_pebble
 				fs ?= a_pebble
-				conf_todo
---				Result :=
---						-- We have a class stone...
---					conv_st /= Void and then
---						-- ...from a different cluster...
---					conv_st.class_i.cluster /= data.cluster and then
---						-- ...and that is not a feature.
---					fs = Void
+
+				Result :=
+						-- We have a class stone...
+					conv_st /= Void and then
+						-- ...from a different cluster...
+					conv_st.class_i.group /= data.group and then
+						-- ...and that is not a feature.
+					fs = Void
 			end
 		end
 

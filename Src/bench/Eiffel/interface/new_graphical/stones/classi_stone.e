@@ -18,8 +18,6 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -37,8 +35,6 @@ feature -- Properties
 	class_i: CLASS_I is
 		do
 			Result := actual_class_i
-		ensure
-			non_void: Result /= Void
 		end
 
 	class_name: STRING is
@@ -47,11 +43,12 @@ feature -- Properties
 			Result := class_i.name
 		end
 
-	cluster: CLUSTER_I is
-			-- Cluster associated with current.
+	group: CONF_GROUP is
+			-- Group associated with current.
 		do
-			conf_todo
---			Result := class_i.cluster
+			Result := class_i.group
+		ensure
+			group_not_void: Result /= Void
 		end
 
 	stone_cursor: EV_CURSOR is
@@ -111,7 +108,7 @@ feature -- Access
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
-			Result := class_i /= Void
+			Result := class_i /= Void and class_i.is_valid
 		end
 
 	synchronized_stone: CLASSI_STONE is
@@ -119,23 +116,17 @@ feature -- Access
 			-- (May be Void if not valid anymore. It may also
 			-- be a classc_stone if the class is compiled now)
 		local
-			new_cluster: CLUSTER_I
-			new_ci: CLASS_I
+			l_classes: LIST [CLASS_I]
+			l_class: CLASS_I
 		do
 			if class_i /= Void then
-				conf_todo
---				new_cluster := Eiffel_Universe.cluster_of_name
---							(class_i.cluster.cluster_name)
-				if new_cluster /= Void then
---					new_ci := new_cluster.class_with_name (class_i.name)
-					if
-						new_ci /= Void
-					then
-						if new_ci.compiled then
-							create {CLASSC_STONE} Result.make (new_ci.compiled_class)
-						else
-							create {CLASSI_STONE} Result.make (new_ci)
-						end
+				l_classes := Eiffel_Universe.classes_with_name (class_i.name)
+				if l_classes /= Void and l_classes.count = 1 then
+					l_class := l_classes.first
+					if l_class.compiled then
+						create {CLASSC_STONE} Result.make (l_class.compiled_class)
+					else
+						create {CLASSI_STONE} Result.make (l_class)
 					end
 				end
 			end
@@ -144,6 +135,9 @@ feature -- Access
 feature -- Implementation
 
 	actual_class_i: CLASS_I;
+
+invariant
+	actual_class_i_not_void: actual_class_i /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

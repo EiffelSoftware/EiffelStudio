@@ -719,14 +719,15 @@ feature -- Access
 			classi_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
 		do
-			classi_stone ?= stone
-			if classi_stone /= Void then
-				Result := classi_stone.cluster
-			end
-			cluster_stone ?= stone
-			if cluster_stone /= Void then
-				Result := cluster_stone.cluster_i
-			end
+			conf_todo
+--			classi_stone ?= stone
+--			if classi_stone /= Void then
+--				Result := classi_stone.group
+--			end
+--			cluster_stone ?= stone
+--			if cluster_stone /= Void then
+--				Result := cluster_stone.cluster_i
+--			end
 		end
 
 	class_name: STRING is

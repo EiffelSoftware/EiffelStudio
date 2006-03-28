@@ -81,6 +81,11 @@ inherit
 			default_create, copy
 		end
 
+	CONF_REFACTORING
+		undefine
+			default_create, copy
+		end
+
 create
 	make_default
 
@@ -732,14 +737,15 @@ feature {NONE} -- Implementation
 			classi_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
 		do
-			classi_stone ?= target.stone
-			if classi_stone /= Void then
-				Result := classi_stone.cluster
-			end
-			cluster_stone ?= target.stone
-			if cluster_stone /= Void then
-				Result := cluster_stone.cluster_i
-			end
+			conf_todo
+--			classi_stone ?= target.stone
+--			if classi_stone /= Void then
+--				Result := classi_stone.group
+--			end
+--			cluster_stone ?= target.stone
+--			if cluster_stone /= Void then
+--				Result := cluster_stone.cluster_i
+--			end
 		end
 
 	cancel is

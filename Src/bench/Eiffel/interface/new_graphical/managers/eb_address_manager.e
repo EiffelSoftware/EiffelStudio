@@ -431,8 +431,8 @@ feature -- Observer management
 
 					-- Set the appropriate pixmap for nitem.
 					cluster_stone ?= cell.item1
-					if cluster_stone /= Void and then cluster_stone.cluster_i /= Void then
-						nitem.set_pixmap (pixmap_from_cluster_i (cluster_stone.cluster_i))
+					if cluster_stone /= Void and then cluster_stone.group /= Void then
+						nitem.set_pixmap (pixmap_from_cluster_i (cluster_stone.group))
 					end
 					cluster_address.extend (nitem)
 					if cell.item1 = cur_sel then
@@ -2025,7 +2025,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			c_stone := parent.history_manager.active
 			conv_clus ?= c_stone
 			if conv_clus /= Void then
-				text := conv_clus.cluster_i.cluster_name
+				text := conv_clus.group.name
 				cluster_label.set_minimum_width (maximum_label_width (text))
 				cluster_label.set_text (text)
 				cluster_label.set_pebble (conv_clus)
@@ -2047,15 +2047,14 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					class_label.set_text (text)
 					class_label.set_pebble (create {CLASSC_STONE}.make (conv_f.e_feature.associated_class))
 					text := conv_f.e_feature.associated_class.group.name
-					conf_todo
---					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.cluster))
+					cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_f.e_feature.associated_class.group))
 					cluster_label.set_minimum_width (maximum_label_width (text))
 					cluster_label.set_text (text)
 				else
 					conv_class ?= c_stone
 					if conv_class /= Void then
-						text := conv_class.cluster.cluster_name
-						cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_class.cluster))
+						text := conv_class.group.name
+						cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_class.group))
 						cluster_label.set_minimum_width (maximum_label_width (text))
 						cluster_label.set_text (text)
 						text := conv_class.class_i.name_in_upper
@@ -2096,7 +2095,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			conv_clus ?= c_stone
 			if conv_clus /= Void then
 				if mode then
-					cluster_address.set_text (conv_clus.cluster_i.cluster_name)
+					cluster_address.set_text (conv_clus.group.name)
 				end
 				class_address.remove_text
 				feature_address.remove_text
@@ -2120,12 +2119,11 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					if conv_f /= Void then
 						feature_address.set_text (conv_f.feature_name)
 						class_address.set_text (conv_f.e_feature.associated_class.name_in_upper)
-						conf_todo
---						cluster_address.set_text (conv_f.e_feature.associated_class.cluster.cluster_name)
+						cluster_address.set_text (conv_f.e_feature.associated_class.group.name)
 					else
 						conv_class ?= c_stone
 						if conv_class /= Void then
-							cluster_address.set_text (conv_class.cluster.cluster_name)
+							cluster_address.set_text (conv_class.group.name)
 							class_address.set_text (conv_class.class_i.name_in_upper)
 							feature_address.remove_text
 						else

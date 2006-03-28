@@ -23,18 +23,19 @@ create
 
 feature -- Initialization
 
-	initialize (a_content: CLICKABLE_TEXT; a_class_name, a_cluster_name: STRING; after_save: BOOLEAN) is
+	initialize (a_content: CLICKABLE_TEXT; a_class_name: STRING; a_group: like group; after_save: BOOLEAN) is
 			-- initialize the tool before analyzing a class called `a_classname' located in cluster called `a_cluster_name'
 			-- `a_content' is text of this class
 		require
 			a_content_is_not_void: a_content /= Void
 			a_class_name_is_not_void: a_class_name /= Void
-			a_cluster_name_is_not_void: a_cluster_name /= Void
+			a_group_is_not_void: a_group /= Void
+			a_group_is_vaild: a_group.is_valid
 		local
 			class_c: CLASS_C
 		do
 			current_class_name := a_class_name
-			cluster_name := a_cluster_name
+			group := a_group
 			content := a_content
 			is_ready := False
 			can_analyze_current_class := False

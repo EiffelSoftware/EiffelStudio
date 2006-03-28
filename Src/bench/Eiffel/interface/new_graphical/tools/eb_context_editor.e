@@ -1250,7 +1250,7 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 								is_rebuild_world_needed or else
 								cluster_graph = Void or else
 								cluster_graph.center_cluster = Void or else
-								not cluster_graph.center_cluster.cluster_i.cluster_name.is_equal (cluster_stone.cluster_i.cluster_name)
+								not cluster_graph.center_cluster.cluster_i.cluster_name.is_equal (cluster_stone.group.name)
 							then
 								is_rebuild_world_needed := False
 								store

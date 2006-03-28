@@ -35,7 +35,8 @@ feature {NONE} -- Initlization
 			internal_mediator := a_docker_mediator
 			internal_zone := a_zone
 			set_rectangle (a_rect)
-
+			create internal_arrow_indicator_center
+			internal_arrow_indicator_center.set_with_named_file (internal_shared.icons.arrow_indicator_center)
 			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
 			internal_indicator.set_position (internal_rectangle_left.left, internal_rectangle_top.top)
 		ensure

@@ -291,6 +291,9 @@ feature -- Constants
 	Tool_bar_size: INTEGER is 24
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
 
+	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
+			-- Tool bar hidden item dialog maximum allowed width.
+
 	Tool_bar_border_width: INTEGER is
 			--
 		do

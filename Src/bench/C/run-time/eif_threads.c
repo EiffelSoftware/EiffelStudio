@@ -1170,6 +1170,9 @@ rt_shared int eif_is_synchronized (void)
 }
 #endif
 
+#define NB_THREADS_DATA	20
+rt_private void * rt_threads_data [NB_THREADS_DATA];
+
 rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 	/* Synchronize all threads under GC control */
 {
@@ -1196,7 +1199,15 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 				/* We have acquired the lock, now, process all running threads and wait until
 				 * they are all not marked `EIF_THREAD_RUNNING'. */
 			memcpy(&all_thread_list, &rt_globals_list, sizeof(struct stack_list));
-			all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
+				/* Optimization to avoid calling `eif_malloc' in this critical section.
+				 * It is also a way to circumvent a case where `eif_malloc' will deadlock
+				 * when we arrive here after a signal was sent to the application and that
+				 * the platform implementation of malloc is not async-safe. */
+			if (rt_globals_list.count > NB_THREADS_DATA) {
+				all_thread_list.threads.data = eif_malloc (rt_globals_list.count * sizeof(void *));
+			} else {
+				all_thread_list.threads.data = rt_threads_data;
+			}
 			memcpy(all_thread_list.threads.data, rt_globals_list.threads.data,
 				rt_globals_list.count * sizeof(void *));
 
@@ -1210,7 +1221,9 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 						}
 					}
 				}
-				eif_free (all_thread_list.threads.data);
+				if (all_thread_list.threads.data != rt_threads_data) {
+					eif_free (all_thread_list.threads.data);
+				}
 				memcpy(&all_thread_list, &running_thread_list, sizeof(struct stack_list));
 				memset(&running_thread_list, 0, sizeof(struct stack_list));
 

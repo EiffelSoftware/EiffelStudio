@@ -21,6 +21,18 @@ feature -- Access
 			refactoring_correct: Result.is_equal (old_char_text (char))
 		end
 
+	wchar_text (wchar: WIDE_CHARACTER): STRING is
+			-- "Readable" representation of `wchar' using
+			-- special character convention when necessary;
+			-- Syntactically correct when quoted
+		do
+			--| FIXME jfiat [2006/03/28] : to implemente better WIDE_CHARACTER support
+			Result := char_to_string (wchar.to_character_8, False).twin
+		ensure
+			wchar_text_not_void: Result /= Void
+--			refactoring_correct: Result.is_equal (old_wchar_text (wchar))
+		end
+
 	eiffel_string (s: STRING): STRING is
 			-- "eiffel" representation of `s'
 			-- Translation of special characters

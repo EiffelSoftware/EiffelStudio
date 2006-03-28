@@ -43,7 +43,7 @@ feature -- Access
 		deferred
 		end
 
-	group: CONF_GROUP is
+	group: CONF_PHYSICAL_GROUP is
 			-- Group this class belongs to.
 		deferred
 		end
@@ -154,19 +154,21 @@ feature -- Access
 			if options.is_debug then
 				l_d := options.debugs
 				if l_d /= Void and then not l_d.is_empty then
-					l_dp := create {DEBUG_TAG_I}.make
-					Result := l_dp
-					if l_d /= Void then
-						from
-							l_d.start
-						until
-							l_d.after
-						loop
-							if l_d.item_for_iteration then
-								l_dp.tags.extend (l_d.key_for_iteration)
-							end
-							l_d.forth
+					create l_dp.make
+					from
+						l_d.start
+					until
+						l_d.after
+					loop
+						if l_d.item_for_iteration then
+							l_dp.tags.extend (l_d.key_for_iteration)
 						end
+						l_d.forth
+					end
+					if l_dp.tags.is_empty then
+						Result := no_debug
+					else
+						Result := l_dp
 					end
 				else
 					Result := yes_debug
@@ -223,6 +225,11 @@ feature -- Access
 			Result := compiled_class /= Void
 		ensure then
 			is_compiled: Result implies compiled_class /= Void
+		end
+
+	is_read_only: BOOLEAN is
+			-- Is class in read-only mode?
+		deferred
 		end
 
 	exists: BOOLEAN is

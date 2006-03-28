@@ -384,6 +384,7 @@ feature -- Graphical changes
 			glab: EV_GRID_LABEL_ITEM
 			add,res,typ: STRING
 			l_exception_dump_value: DUMP_VALUE
+			l_title: STRING
 		do
 			if not compute_grid_display_done and not refresh_requested then
 				if evaluation_requested then
@@ -451,7 +452,10 @@ feature -- Graphical changes
 							end
 							l_exception_dump_value := expression_evaluator.final_result_value
 							if l_exception_dump_value /= Void and then l_exception_dump_value.is_type_exception then
-								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception)
+								if expression_evaluator.has_error_exception then
+									l_title := "Exception object"
+								end
+								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception, l_title)
 							end
 						else
 							if last_dump_value /= Void then

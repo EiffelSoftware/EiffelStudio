@@ -489,8 +489,10 @@ feature -- Graphical changes
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
-			title := v
-			glab := cell_text_updated (v, Col_name_index)
+			if title = Void then
+				title := v
+			end
+			glab := cell_text_updated (title, Col_name_index)
 			apply_cell_name_properties_on (glab)
 		end
 
@@ -620,46 +622,24 @@ feature -- Updating
 		local
 			l_dmp: DUMP_VALUE
 			l_text: STRING
-			l_integer32_value: INTEGER
-			l_integer64_value: INTEGER_64
-			l_natural32_value: NATURAL_32
-			l_natural64_value: NATURAL_64
 		do
 			l_dmp := last_dump_value
 			if l_dmp /= Void then
 				inspect l_dmp.type
-						-- NOTA: we should factorize this .. maybe having to_hex_string, in NUMERIC would help
-					when {DUMP_VALUE_CONSTANTS}.Type_integer_32 then
-						l_integer32_value := l_dmp.value_integer_32
+						--| We only change the "Hexa"isable value
+					when
+						{DUMP_VALUE_CONSTANTS}.Type_integer_32,
+						{DUMP_VALUE_CONSTANTS}.Type_integer_64,
+						{DUMP_VALUE_CONSTANTS}.Type_natural_32,
+						{DUMP_VALUE_CONSTANTS}.Type_natural_64,
+						{DUMP_VALUE_CONSTANTS}.Type_character,
+						{DUMP_VALUE_CONSTANTS}.Type_wide_character
+					then
 						if hexa_mode_enabled then
-							l_text := "0x" + l_integer32_value.to_hex_string
+							l_text := l_dmp.hexa_output_for_debugger
 						else
-							l_text := l_integer32_value.out
+							l_text := l_dmp.output_for_debugger
 					 	end
-						set_value (l_text)
-					when {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
-						l_integer64_value := l_dmp.value_integer_64
-						if hexa_mode_enabled then
-							l_text := "0x" + l_integer64_value.to_hex_string
-						else
-							l_text := l_integer64_value.out
-						end
-						set_value (l_text)
-					when {DUMP_VALUE_CONSTANTS}.Type_natural_32 then
-						l_natural32_value := l_dmp.value_natural_32
-						if hexa_mode_enabled then
-							l_text := "0x" + l_natural32_value.to_hex_string
-						else
-							l_text := l_natural32_value.out
-						end
-						set_value (l_text)
-					when {DUMP_VALUE_CONSTANTS}.Type_natural_64 then
-						l_natural64_value := l_dmp.value_natural_64
-						if hexa_mode_enabled then
-							l_text := "0x" + l_natural64_value.to_hex_string
-						else
-							l_text := l_natural64_value.out
-						end
 						set_value (l_text)
 					else
 						-- Skip
@@ -859,7 +839,7 @@ feature {NONE} -- Filling
 					list_cursor.after
 				loop
 					l_row_index := l_row_index + 1
-					attach_debug_value_from_line_to_grid_row (grid.row (l_row_index), list_cursor.item, Current)
+					attach_debug_value_from_line_to_grid_row (grid.row (l_row_index), list_cursor.item, Current, Void)
 					list_cursor.forth
 				end
 				if object_is_special_value then
@@ -940,27 +920,28 @@ feature {NONE} -- Filling
 					odv := a_once_values [i]
 						--| Add the once's value to the grid.
 					check odv /= Void end
-					attach_debug_value_from_line_to_grid_row (grid.row (r), odv, Current)
+					attach_debug_value_from_line_to_grid_row (grid.row (r), odv, Current, Void)
 					i := i + 1
 					r := r + 1
 				end
 			end
 		end
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE) is
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING) is
 			-- attach `dv' to row `a_row'
 		require
 			debug_value_not_void: dv /= Void
 		do
-			parent_grid.attach_debug_value_from_line_to_grid_row (a_row, dv, a_line)
+			parent_grid.attach_debug_value_from_line_to_grid_row (a_row, dv, a_line, a_title)
 		end
 
-	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING) is
 			-- attach `dv' to row `a_row'
+			-- if `a_title' is not Void, use this string as name.
 		require
 			debug_value_not_void: dv /= Void
 		do
-			attach_debug_value_from_line_to_grid_row (a_row, dv, Void)
+			attach_debug_value_from_line_to_grid_row (a_row, dv, Void, a_title)
 		end
 
 feature {NONE} -- Implementation
@@ -1034,19 +1015,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

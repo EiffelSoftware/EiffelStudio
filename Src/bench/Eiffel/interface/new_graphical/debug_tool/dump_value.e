@@ -71,7 +71,7 @@ inherit
 
 create
 	make_void,
-	make_boolean, make_character,
+	make_boolean, make_character, make_wide_character,
 	make_integer_32, make_integer_64,
 	make_natural_32, make_natural_64,
 	make_real,
@@ -114,6 +114,18 @@ feature -- Initialization
 			init
 			value_character := value
 			type := Type_character
+			dynamic_class := dtype
+		ensure
+			type /= Type_unknown
+		end
+
+	make_wide_character(value: WIDE_CHARACTER; dtype: CLASS_C) is
+			-- make a wide_character item initialized to `value'
+		do
+			init
+			value_wide_character := value
+			print (generator + ".make_wide_character (" + value.out + " /" + value.natural_32_code.out + "/ %N")
+			type := Type_wide_character
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
@@ -554,6 +566,22 @@ feature -- Status report
 			end
 		end
 
+	hexa_output_for_debugger: STRING is
+			-- Displayed output, including string representation.
+			--| but remove address value
+		do
+			if has_formatted_output then
+				Result := output_for_debugger
+			else
+				Result := hexa_output_value.twin
+			end
+			debug ("debug_recv")
+				print ("Output is ")
+				print (Result)
+				print ("%N")
+			end
+		end
+
 	last_string_representation_length: INTEGER
 			-- Length of last string_representation Result
 
@@ -867,7 +895,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							-- Receive the Result.
 						recv_value (Current)
 						if is_exception_trace then
-							
+
 							reset_recv_value
 						else
 							if item /= Void then
@@ -895,6 +923,8 @@ feature -- Action
 					send_bool_value(value_boolean)
 				when Type_character then
 					send_char_value(value_character)
+				when Type_wide_character then
+					send_wchar_value(value_wide_character)
 				when Type_integer_32 then
 					send_integer_value (value_integer_32)
 				when Type_integer_64 then
@@ -1003,6 +1033,13 @@ feature -- Access
 				Result.append ("/ : %'")
 				Result.append (Character_routines.char_text (value_character))
 				Result.append_character ('%'')
+			when Type_wide_character then
+				create Result.make (10)
+				Result.append_character ('/')
+				Result.append_integer (value_wide_character.code)
+				Result.append ("/ : %'")
+				Result.append (Character_routines.wchar_text (value_wide_character))
+				Result.append_character ('%'')
 			when Type_natural_32 then
 				Result := value_natural_32.out
 			when Type_natural_64 then
@@ -1044,6 +1081,50 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
+	hexa_output_value: STRING is
+			-- String representation of the value of `Current'.
+			--| True
+			--| '/123/ :'C'
+			--| 123
+			--| "value _string"
+			--| <0x12345678>
+			--| Void
+		local
+			l_0x: STRING
+		do
+			l_0x := once "0x"
+			inspect type
+			when Type_character then
+				create Result.make (10)
+				Result.append_character ('/')
+				Result.append_string (l_0x)
+				Result.append_string (value_character.code.to_hex_string)
+				Result.append ("/ : %'")
+				Result.append (Character_routines.char_text (value_character))
+				Result.append_character ('%'')
+			when Type_wide_character then
+				create Result.make (10)
+				Result.append_character ('/')
+				Result.append_string (l_0x)
+				Result.append_string (value_wide_character.code.to_hex_string)
+				Result.append ("/ : %'")
+				Result.append (Character_routines.wchar_text (value_wide_character))
+				Result.append_character ('%'')
+			when Type_natural_32 then
+				Result := l_0x + value_natural_32.to_hex_string
+			when Type_natural_64 then
+				Result := l_0x + value_natural_64.to_hex_string
+			when Type_integer_32 then
+				Result := l_0x + value_integer_32.to_hex_string
+			when Type_integer_64 then
+				Result := l_0x + value_integer_64.to_hex_string
+			else
+				Result := output_value
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 	address: STRING is
 			-- If it makes sense, return the address of current object.
 			-- Void if `is_void' or if `Current' does not represent an object.
@@ -1076,6 +1157,7 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER
+	value_wide_character : WIDE_CHARACTER
 	value_integer_32: INTEGER
 	value_integer_64: INTEGER_64
 	value_natural_32: NATURAL_32

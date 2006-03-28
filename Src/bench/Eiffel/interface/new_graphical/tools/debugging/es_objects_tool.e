@@ -1188,7 +1188,7 @@ feature {NONE} -- Impl : Stack objects grid
 				exc_dv := dotnet_status.exception_debug_value
 				if exc_dv /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					a_target_grid.attach_debug_value_to_grid_row (row, exc_dv)
+					a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, "Exception object")
 				end
 			end
 		end
@@ -1219,7 +1219,7 @@ feature {NONE} -- Impl : Stack objects grid
 				if dv /= Void then
 					internal_result_row.insert_subrows (1, 1)
 					r := internal_result_row.index + 1
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), dv)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), dv, Void)
 				end
 			else
 				internal_result_row := Void
@@ -1248,7 +1248,7 @@ feature {NONE} -- Impl : Stack objects grid
 				until
 					list.after
 				loop
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), list.item)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), list.item, Void)
 					r := r + 1
 					list.forth
 				end
@@ -1295,7 +1295,7 @@ feature {NONE} -- Impl : Stack objects grid
 				until
 					i > dbg_nb
 				loop
-					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i)
+					a_target_grid.attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i, Void)
 					r := r + 1
 					i := i + 1
 				end

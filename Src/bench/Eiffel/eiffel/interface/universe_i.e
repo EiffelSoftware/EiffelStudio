@@ -189,6 +189,35 @@ feature -- Access
 			end
 		end
 
+	class_from_assembly (an_assembly, a_dotnet_name: STRING): EXTERNAL_CLASS_I is
+			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
+			-- from given assembly `an_assembly'. If more than one assembly with
+			-- `an_assembly' as name, look only in first found item.
+			--| An example of usage would be:
+			--|	 l_class := universe.class_from_assembly ("mscorlib", "System.IComparable", False)
+			--| to get the associated `System.IComparable' from `mscorlib'.
+			--|
+			--| Nota: It compares assembly names in lower case
+		require
+			an_assembly_not_void: an_assembly /= Void
+			an_assembly_not_empty: not an_assembly.is_empty
+			a_dotnet_name_not_void: a_dotnet_name /= Void
+			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
+		local
+			l_assembly: CONF_ASSEMBLY
+			l_vis: CONF_FIND_ASSEMBLY_VISITOR
+		do
+			create l_vis.make
+			l_vis.set_name (an_assembly)
+			if l_vis.found_assemblies.count = 1 then
+				l_assembly := l_vis.found_assemblies.item
+				l_assembly.dotnet_classes.search (a_dotnet_name)
+				if l_assembly.dotnet_classes.found then
+					Result ?= l_assembly.dotnet_classes.found_item
+				end
+			end
+		end
+
 feature -- Update
 
 	set_new_target (a_target: like new_target) is

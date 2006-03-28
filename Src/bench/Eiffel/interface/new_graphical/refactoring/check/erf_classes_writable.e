@@ -41,10 +41,10 @@ feature -- Basic operation
         		not success or classes.after
         	loop
         		l_class := classes.item
---        		if l_class.is_read_only then
---        			success := False
---        			error_message := "The class "+l_class.name_in_upper+" is not writable."
---        		end
+        		if l_class.is_read_only then
+        			success := False
+        			error_message := "The class "+l_class.name_in_upper+" is not writable."
+        		end
         		classes.forth
         	end
         end

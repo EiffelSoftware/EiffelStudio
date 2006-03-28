@@ -45,7 +45,7 @@ feature -- Status
 
 feature -- Element change
 
-	set_class (a_class: CLASS_I) is
+	set_class (a_class: like class_i) is
 			-- That class that get's renamed
 		require
 			a_class_not_void: a_class /= void
@@ -66,7 +66,7 @@ feature -- Main operation
 				-- was the class opened? so we have to change the class to show the new class
 				-- must be done after compilation, because we can't get the class before
        		if open_classes.has (preferences.old_class_name) then
-				class_i := universe.class_named (preferences.new_class_name, class_i.group)
+				class_i ?= universe.class_named (preferences.new_class_name, class_i.cluster)
 				if class_i /= Void then
 	       			create class_stone.make (class_i)
 	       			open_classes.item (preferences.old_class_name).do_all (agent {EB_DEVELOPMENT_WINDOW}.set_stone (class_stone))
@@ -146,6 +146,7 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
 			file_rename: ERF_CLASS_FILE_RENAME
+			l_eif_class: EIFFEL_CLASS_I
         do
         		-- if the renamed class was the root class
         	if system.root_class.name.is_case_insensitive_equal (class_i.name) then
@@ -191,7 +192,7 @@ feature {NONE} -- Implementation
         end
 
 
-	class_i: CLASS_I;
+	class_i: EIFFEL_CLASS_I;
 			-- The class to rename.
 
 indexing

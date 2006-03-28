@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_new_name: STRING; a_class: CLASS_I) is
+	make (a_new_name: STRING; a_class: like class_i) is
 			-- Rename the file of `a_class' into `a_new_name'
 			-- (a_new_name is just the file_name without path or extension)
 			-- and update the information in `a_class' accordingly.
@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 			new_file_name: FILE_NAME
 		do
 			class_i := a_class
-			conf_todo
---			create new_file_name.make_from_string (a_class.cluster.path)
+			create new_file_name.make_from_string (a_class.cluster.path)
 			new_file_name.set_file_name (a_new_name)
 			new_file_name.add_extension ("e")
 			create old_name_ext.make_from_string (a_class.base_name)
@@ -52,21 +51,19 @@ feature -- Basic operations
 			-- Undo the actions.
 		do
 			Precursor
-			conf_todo
---			class_i.set_base_name (old_name_ext)
+			class_i.set_base_name (old_name_ext)
 		end
 
 	redo is
 			-- Redo the actions.
 		do
 			Precursor
-			conf_todo
---			class_i.set_base_name (new_name_ext)
+			class_i.set_base_name (new_name_ext)
 		end
 
 feature {NONE} -- Implementation
 
-	class_i: CLASS_I
+	class_i: EIFFEL_CLASS_I
 			-- The class we changed.
 
 	old_name_ext: STRING

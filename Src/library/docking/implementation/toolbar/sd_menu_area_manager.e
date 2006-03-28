@@ -69,15 +69,15 @@ feature -- Basic operation
 			-- Some position will be infinite calculation.
 			if last_screen_y_or_x /= a_screen_y_or_x then
 				Result := move_in (a_screen_y_or_x)
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 1: Result:" + Result.out)
-				end
+--				debug ("docking")
+--					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 1: Result:" + Result.out)
+--				end
 				if not Result then
 					Result := move_out (a_screen_y_or_x)
 				end
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 2: Result:" + Result.out)
-				end
+--				debug ("docking")
+--					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 2: Result:" + Result.out)
+--				end
 				last_screen_y_or_x := a_screen_y_or_x
 			end
 		end
@@ -125,6 +125,7 @@ feature {NONE} -- Implementation functions.
 						prune_internal_caller_from_parent
 						l_tool_bar_row.extend (internal_dock_mediator.caller)
 						l_tool_bar_row.on_pointer_motion (a_screen_y_or_x)
+						internal_docking_manager.command.resize
 						internal_docking_manager.command.unlock_update
 						Result := True
 					end
@@ -177,6 +178,9 @@ feature {NONE} -- Implementation functions.
 			l_new_row.extend (internal_dock_mediator.caller)
 			l_new_row.set_item_position (internal_dock_mediator.caller, a_screen_position)
 			internal_docking_manager.command.resize
+			debug ("docking")
+				print ("%N SD_TOOL_BAR_HOT_ZONE create new row. Docking Manage Resize *****************")
+			end
 		ensure
 			extended: old internal_box.count = internal_box.count - 1
 		end

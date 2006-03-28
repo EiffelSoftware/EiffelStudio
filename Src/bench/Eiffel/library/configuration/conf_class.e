@@ -216,6 +216,13 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			is_valid := False
 		end
 
+	resurect is
+			-- Set `is_valid' to True.
+		do
+			is_valid := True
+		end
+
+
 	rebuild(a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Update the informations during a rebuild.
 			-- More or less the same thing as we during `make'.

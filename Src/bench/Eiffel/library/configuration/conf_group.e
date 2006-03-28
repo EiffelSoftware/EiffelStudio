@@ -49,6 +49,9 @@ feature -- Status
 			Result := classes /= Void
 		end
 
+	is_valid: BOOLEAN
+			-- Is `Current' still valid and exists in the current system?
+
 	is_library: BOOLEAN is
 			-- Is this a library?
 		once
@@ -182,6 +185,13 @@ feature -- Comparison
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
+
+	invalidate is
+			-- Set `is_valid' to False.
+		do
+			is_valid := False
+		end
+
 
 	set_name (a_name: like name) is
 			-- Set `name' to `a_name'.

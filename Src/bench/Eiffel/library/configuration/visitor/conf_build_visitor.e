@@ -261,7 +261,6 @@ feature -- Visit nodes
 
 					-- process removed classes
 				if old_group /= Void then
-					reused_groups.force (old_group)
 					process_removed_classes (old_group.classes)
 				end
 
@@ -1021,11 +1020,15 @@ feature {NONE} -- Implementation
 					l_done := False
 					l_group := a_groups.item_for_iteration
 					if l_group /= Void then
+							-- if we rebuild, groups themselves aren't reused
+						l_group.invalidate
 							-- check if the group has already been handled
 						if reused_groups.has (l_group) then
 							l_done := True
 						end
+
 							-- check if it's a library that still is used and therefore is alredy done
+							-- (needed if the same library is used multiple times)
 						if l_group.is_library then
 							l_library ?= l_group
 							check
@@ -1142,6 +1145,8 @@ feature {NONE} -- Implementation
 							old_group_computed: old_group /= Void implies old_group.classes_set
 							old_group_different: old_group /= l_group
 						end
+						reused_groups.force (old_group)
+
 							-- for assemblies, check if they changed
 						old_assembly ?= old_group
 						if old_assembly /= Void then

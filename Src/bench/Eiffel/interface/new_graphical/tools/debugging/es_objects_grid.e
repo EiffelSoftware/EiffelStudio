@@ -303,7 +303,7 @@ feature -- Change
 
 feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE) is
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING) is
 		require
 			dv /= Void
 		local
@@ -313,14 +313,17 @@ feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJE
 			if a_line /= Void then
 				litem.set_related_line (a_line)
 			end
+			if a_title /= Void then
+				litem.set_title (a_title)
+			end
 			litem.attach_to_row (a_row)
 		end
 
-	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING) is
 		require
 			dv /= Void
 		do
-			attach_debug_value_from_line_to_grid_row (a_row, dv, Void)
+			attach_debug_value_from_line_to_grid_row (a_row, dv, Void, a_title)
 		end
 
 	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_LINE is

@@ -80,7 +80,7 @@ feature -- Access
 			cval: CHARACTER_REF
 			ptrval: POINTER_REF
 			bval: BOOLEAN_REF
---			wcval: WIDE_CHARACTER_REF
+			wcval: WIDE_CHARACTER_REF
 		do
 			inspect sk_type
 			when sk_uint8   then
@@ -116,9 +116,8 @@ feature -- Access
 				cval ?= value
 				create Result.make_character (cval.item, Dynamic_class)
 			when sk_wchar   then
-					--| FIXME XR: Why is there no conversion feature in WIDE_CHARACTER?!!!
---				wcval ?= value
-				create Result.make_character ('%U', Dynamic_class)
+				wcval ?= value
+				create Result.make_wide_character (wcval.item, Dynamic_class)
 			when sk_real32  then
 				realval ?= value
 				create Result.make_real (realval.item, Dynamic_class)

@@ -159,6 +159,7 @@ feature -- Concrete evaluation
 			int_val: INTEGER_CONSTANT
 			real_val: REAL_VALUE_I
 			char_val: CHAR_VALUE_I
+--			wchar_value: CHAR_VALUE_I
 			bit_val: BIT_VALUE_I
 		do
 			cv_cst ?= f
@@ -185,6 +186,9 @@ feature -- Concrete evaluation
 				elseif val.is_character then
 					char_val ?= val
 					create last_result_value.make_character (char_val.character_value, last_result_static_type);
+--				elseif val.is_wide_character then
+--					wchar_val ?= val
+--					create last_result_value.make_wide_character (char_val.wide_character_value, last_result_static_type);
 				elseif val.is_string then
 					create last_result_value.make_manifest_string (val.string_value, last_result_static_type);
 				elseif val.is_bit then

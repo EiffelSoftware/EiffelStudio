@@ -150,7 +150,7 @@ feature
 		end
 
 
-	new_class (a_file_name: STRING; a_group: CONF_GROUP; a_path: STRING): CONF_CLASS is
+	new_class (a_file_name: STRING; a_group: CONF_CLUSTER; a_path: STRING): CONF_CLASS is
 			-- Create a `CONF_CLASS' object.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -176,7 +176,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_GROUP; a_base_location: CONF_LOCATION): CONF_CLASS_PARTIAL is
+	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_LOCATION): CONF_CLASS_PARTIAL is
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void

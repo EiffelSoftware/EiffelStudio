@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_group: CONF_GROUP; a_path: STRING) is
+	make (a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -144,7 +144,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	date: INTEGER
 			-- Date of the last modification of the class.
 
-	group: CONF_GROUP
+	group: CONF_PHYSICAL_GROUP
 			-- The group this class belongs to.
 
 	file_name: STRING
@@ -210,7 +210,7 @@ feature -- Status update
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	rebuild(a_file_name: STRING; a_group: CONF_GROUP; a_path: STRING) is
+	rebuild(a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Update the informations during a rebuild.
 			-- More or less the same thing as we during `make'.
 		require

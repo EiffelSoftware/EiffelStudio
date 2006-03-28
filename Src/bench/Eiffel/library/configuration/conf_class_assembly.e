@@ -11,7 +11,8 @@ inherit
 		redefine
 			set_name,
 			check_changed,
-			group
+			group,
+			is_read_only
 		end
 
 create
@@ -36,6 +37,10 @@ feature {NONE} -- Implementation
 			create file_name.make_empty
 			create path.make_empty
 		end
+
+feature -- Access
+
+	is_read_only: BOOLEAN is True
 
 feature {CONF_ACCESS} -- Update
 

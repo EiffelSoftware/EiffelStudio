@@ -7,7 +7,7 @@ class
 	CONF_CLUSTER
 
 inherit
-	CONF_GROUP
+	CONF_PHYSICAL_GROUP
 		redefine
 			make,
 			options,

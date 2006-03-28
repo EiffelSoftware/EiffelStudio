@@ -240,6 +240,20 @@ rt_public void send_char_value(EIF_CHARACTER value)
 	send_dmpitem_request(&item);
 }
 
+/* send a wchar value to the application */
+rt_public void send_wchar_value(EIF_WIDE_CHAR value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_WCHAR;
+	item.it_wchar = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
 /* send a boolean value to the application */
 rt_public void send_bool_value(EIF_BOOLEAN value)
 {

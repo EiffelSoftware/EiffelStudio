@@ -443,17 +443,11 @@ feature {NONE} -- Implementation
 		local
 			l_pref_hash: HASH_TABLE [EV_GRID_ROW, STRING]
 			l_pref_name,
-			l_pref_parent_name,
-			l_pref_parent_full_name,
-			l_prev_parent_name,
-			l_pref_parent_short_name: STRING
-			l_node_count,
-			l_index: INTEGER
+			l_pref_parent_full_name: STRING
 			l_sorted_preferences: LIST [PREFERENCE]
-			l_split_string: LIST [STRING]
 			l_row: EV_GRID_ROW
-			l_grid_label: EV_GRID_LABEL_ITEM
 			l_pref: PREFERENCE
+			show_this_pref: BOOLEAN
 		do
 			if grid.column_count >= flat_sorting_info.abs then
 				grid.column (flat_sorting_info.abs).header_item.remove_pixmap
@@ -475,95 +469,71 @@ feature {NONE} -- Implementation
 					l_sorted_preferences.before
 				loop
 					l_pref := l_sorted_preferences.item
-					l_pref_name := l_pref.name
-					if l_pref_name.has ('.') then
-						  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
-						l_pref_parent_full_name := l_pref_name.substring (1, l_pref_name.last_index_of ('.', l_pref_name.count) - 1)
-						if l_pref_parent_full_name.has ('.') then
+					if l_pref /= Void then
+						l_pref_name := l_pref.name
+						if l_pref_name.has ('.') then
+							  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
+							l_pref_parent_full_name := parent_preference_name (l_pref_name)
 							if not l_pref_hash.has (l_pref_parent_full_name) then
-								from
-									l_split_string := l_pref_parent_full_name.split ('.')
-									l_node_count := 0
-									l_index := 1
-									create l_pref_parent_name.make_empty
-								until
-									l_node_count = l_split_string.count
-								loop
-									l_pref_parent_short_name := l_split_string.i_th (l_index)
-
-									if not l_pref_parent_name.is_empty then
-										l_pref_parent_name.extend ('.')
-									end
-									l_pref_parent_name.append (l_pref_parent_short_name)
-									l_index := l_index + 1
-
-									if not l_pref_hash.has (l_pref_parent_name) then
-											-- New parent node										
-										create l_grid_label.make_with_text (formatted_name (l_pref_parent_short_name))
-										if grid.row_count < 1 then
-											grid.set_item (1, grid.row_count + 1, l_grid_label)
-											grid.row (1).expand_actions.extend (agent node_expanded (l_row))
-										else
-											if l_prev_parent_name /= Void then
-												l_row := l_pref_hash.item (l_prev_parent_name)
-												l_row.insert_subrow (l_row.subrow_count + 1)
---												l_row.expand_actions.extend (agent node_expanded (l_row))
-												l_row := l_row.subrow (l_row.subrow_count)
-												l_row.set_item (1, l_grid_label)
-											else
-												grid.set_item (1, grid.row_count + 1, l_grid_label)
-												l_row := grid.row (grid.row_count)
-												l_row.expand_actions.extend (agent node_expanded (l_row))
-											end
-										end
-										if folder_icon /= Void then
-											l_grid_label.set_pixmap (folder_icon)
-										end
-										l_pref_hash.put (grid.row (grid.row_count), l_pref_parent_name.twin)
-									end
-									l_prev_parent_name := l_pref_parent_name.twin
-									l_node_count := l_node_count + 1
-								end
+								add_parent_structure_preference_row (l_pref_parent_full_name, l_pref_hash)
 							end
-						end
-						if not l_pref_hash.has (l_pref_parent_full_name) then
-								-- Here we build parent at root, i.e. 'a' of 'a.b', and child 'b'.
-							if l_pref /= Void and then show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
-								create l_grid_label.make_with_text (formatted_name (l_pref_parent_full_name))
-								grid.set_item (1, grid.row_count + 1, l_grid_label)
-								l_row := grid.row (grid.row_count)
-								l_row.expand_actions.extend (agent node_expanded (l_row))
-								l_pref_hash.put (grid.row (grid.row_count), l_pref_parent_full_name.twin)
-								add_preference_row (l_row, l_pref)
-								l_pref_hash.put (grid.row (grid.row_count), l_pref_name.twin)
-								if folder_icon /= Void then
-									l_grid_label.set_pixmap (folder_icon)
-								end
-							end
-							l_prev_parent_name := Void
+							l_row := l_pref_hash.item (l_pref_parent_full_name)
+							check l_row /= Void and then l_row.parent /= Void end
 						else
-								-- We reach the end of building parent, so here we build 'c'.
-							if l_pref /= Void and then show_hidden_preferences or (not show_hidden_preferences and then not l_pref.is_hidden) then
-								l_row ?= l_pref_hash.item (l_pref_parent_full_name)
-								create l_grid_label.make_with_text (formatted_name (short_preference_name (l_pref_name)))
-								add_preference_row (l_row, l_pref)
-								l_row.expand_actions.extend (agent node_expanded (l_row))
-							end
-							l_pref_hash.put (l_row, l_pref_name.twin)
+							l_row := Void
 						end
-					elseif not l_pref_hash.has (l_pref_name) then
-							-- Add as child to root node
-						create l_grid_label.make_with_text (formatted_name (l_pref_name))
-						grid.set_item (1, grid.row_count + 1, l_grid_label)
-
-						if folder_icon /= Void then
-							l_grid_label.set_pixmap (folder_icon)
+						show_this_pref := show_hidden_preferences
+									or (not show_hidden_preferences and then not l_pref.is_hidden)
+						if show_this_pref then
+							add_short_preference_row (l_row, l_pref)
+								--| We assume we build the whole tree at once
+								--| then the last inserted row is the one we care
+							l_pref_hash.put (grid.row (grid.row_count), l_pref_name)
 						end
 					end
 					l_sorted_preferences.back
 				end
 				update_grid_columns
 			end
+		end
+
+	add_parent_structure_preference_row (a_pref_parent_full_name: STRING; a_grid_structure: HASH_TABLE [EV_GRID_ROW, STRING]) is
+		require
+			structured_mode: grid.is_tree_enabled
+			no_row_for_pref: not a_grid_structure.has (a_pref_parent_full_name)
+		local
+			l_parent_name: STRING
+			l_short_name: STRING
+			l_row: EV_GRID_ROW
+			l_grid_label: EV_GRID_LABEL_ITEM
+		do
+			if a_pref_parent_full_name.has ('.') then
+				l_short_name := short_preference_name (a_pref_parent_full_name)
+				l_parent_name := parent_preference_name (a_pref_parent_full_name)
+				if not a_grid_structure.has (l_parent_name) then
+					add_parent_structure_preference_row (l_parent_name, a_grid_structure)
+				end
+				l_row := a_grid_structure.item (l_parent_name)
+				l_row.insert_subrow (l_row.subrow_count + 1)
+				l_row := l_row.subrow (l_row.subrow_count)
+			else
+					--| Precondition requires `a_pref_parent_full_name' is not already inserted
+					--| So it can only be a new top row
+				l_short_name := a_pref_parent_full_name
+				grid.insert_new_row (grid.row_count + 1)
+				l_row := grid.row (grid.row_count)
+			end
+			check l_row /= Void end
+			create l_grid_label.make_with_text (formatted_name (l_short_name))
+			if folder_icon /= Void then
+				l_grid_label.set_pixmap (folder_icon)
+			end
+			l_row.set_item (1, l_grid_label)
+			l_row.expand_actions.extend (agent node_expanded (l_row))
+			a_grid_structure.put (l_row, a_pref_parent_full_name)
+		ensure
+			pref_parent_inserted: a_grid_structure.has (a_pref_parent_full_name)
+							and then a_grid_structure.item (a_pref_parent_full_name) /= Void
 		end
 
 	build_flat is
@@ -600,7 +570,7 @@ feature {NONE} -- Implementation
 					l_sorted_preferences.after
 				loop
 					l_pref := l_sorted_preferences.item
-					add_preference_row (Void, l_pref)
+					add_short_preference_row (Void, l_pref)
 					l_sorted_preferences.forth
 				end
 				update_grid_columns
@@ -708,7 +678,7 @@ feature {NONE} -- Implementation
 			update_status_bar
 		end
 
-	add_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE) is
+	add_short_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE) is
 			-- Add a preference as a new row display in parent `a_row'.  If `a_row' is
 			-- Void then add to end of `grid'.
 		require
@@ -1023,6 +993,17 @@ feature {NONE} -- Implementation
 			name_not_void: a_name /= Void
 		do
 			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
+		ensure
+			a_name /= Result
+		end
+
+	parent_preference_name (a_name: STRING): STRING is
+			-- The short, non-unique name of a preference
+		require
+			name_not_void: a_name /= Void
+			name_has_parent: a_name.has ('.')
+		do
+			Result := a_name.substring (1, a_name.last_index_of ('.', a_name.count) - 1)
 		ensure
 			a_name /= Result
 		end

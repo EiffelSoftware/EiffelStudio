@@ -11,8 +11,6 @@ class
 inherit
 	XMI_ITEM
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -38,19 +36,18 @@ feature -- Access
 	supertype: XMI_CLASS
 			-- Class from which inherits `subtype'.
 
-	enclosing_cluster: CLUSTER_I is
+	enclosing_group: CONF_GROUP is
 			-- If exists, common cluster of `subtype' and `supertype'
 			-- Void otherwise.
 		local
-			c: CLUSTER_I
+			c: CONF_GROUP
 		do
-			conf_todo
---			c := subtype.compiled_class.cluster
---			if c = supertype.compiled_class.cluster then
---				Result := c
---			else
---				Result := Void
---			end
+			c := subtype.compiled_class.group
+			if c = supertype.compiled_class.group then
+				Result := c
+			else
+				Result := Void
+			end
 		end
 
 feature -- Action

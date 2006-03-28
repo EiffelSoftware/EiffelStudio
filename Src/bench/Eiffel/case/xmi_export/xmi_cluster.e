@@ -11,19 +11,19 @@ class
 inherit
 	XMI_ITEM
 
-create 
+create
 	make
 
 feature --Initialization
 
-	make (id: INTEGER; id_ext: INTEGER; c: CLUSTER_I) is
+	make (id: INTEGER; id_ext: INTEGER; c: like group) is
 			-- Initialization of `Current'
 			-- assign `c' to `lace_cluster'
 			-- assign `id_ext' to `id_extender'
 			-- assign `id' to `xmi_id'.
 		do
 			create xmi_classes.make
-			lace_cluster := c
+			group := c
 			xmi_id := id
 			id_extender := id_ext
 		end
@@ -33,7 +33,7 @@ feature -- Access
 	xmi_classes: LINKED_LIST[XMI_CLASS]
 		-- XMI representations of the classes included in `Current'.
 
-	lace_cluster: CLUSTER_I
+	group: CONF_GROUP
 		-- Cluster from which `Current' is a representation.
 
 	id_extender: INTEGER
@@ -60,7 +60,7 @@ feature -- Actions
 			Result.append (xmi_id.out)
 			Result.append ("'>%N%
           		%	<Foundation.Core.ModelElement.name>")
-			Result.append (lace_cluster.name_in_upper)
+			Result.append (group.name)
 			Result.append ("</Foundation.Core.ModelElement.name>%N%
 				%  <Foundation.Core.ModelElement.visibility xmi.value = 'private'/>%N%
 				%  <Foundation.Core.GeneralizableElement.isRoot xmi.value = 'false'/>%N%
@@ -76,7 +76,7 @@ feature -- Actions
 				%  </Foundation.Core.ModelElement.namespace>%N%
 				%  <Foundation.Core.Namespace.ownedElement>%N")
 
-			from 
+			from
 				xmi_classes.start
 			until
 				xmi_classes.after
@@ -84,12 +84,12 @@ feature -- Actions
 				Result.append (xmi_classes.item.code)
 				xmi_classes.forth
 			end
-		
+
 			Result.append ("</Foundation.Core.Namespace.ownedElement>%N%
 				%</Model_Management.Package>  <!-- End Package S.")
 			Result.append (xmi_id.out)
 			Result.append (" -->%N")
-		end	
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

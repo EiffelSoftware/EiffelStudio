@@ -11,6 +11,9 @@ feature -- Access
 	eifgen: STRING
 			-- EIFGEN location.
 
+	arguments: ARRAYED_LIST [STRING]
+			-- List of arguments used by current project.
+
 feature -- Update
 
 	set_eifgen (a_location: like eifgen) is

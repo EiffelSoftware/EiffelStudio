@@ -1104,6 +1104,7 @@ feature {NONE} -- Implementation
 							end
 						end
 
+						l_cl.invalidate
 						if l_cl.is_compiled then
 							removed_classes.force (l_cl)
 						end

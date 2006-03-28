@@ -27,6 +27,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	CONF_ACCESS
+
 feature -- Attributes
 
 	universe: UNIVERSE_I
@@ -373,7 +375,9 @@ feature -- Commands
 				classes.after
 			loop
 				cl := classes.item
-				change_class (cl)
+				if not cl.is_external_class then
+					change_class (cl)
+				end
 				classes.forth
 			end
 		end

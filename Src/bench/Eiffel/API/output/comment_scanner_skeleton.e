@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Scanner skeleton class for COMMENT_SCANNER"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_text_formatter (a_text_formatter: like text_formatter) is
-			--
+			-- Initialization
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		do
@@ -164,21 +164,21 @@ feature {NONE} -- Implementation
 	add_cluster is
 			-- A cluster like [cluster] encountered.
 		local
-			l_text : like text
-			l_cluster_name: STRING
-			l_cluster: CLUSTER_I
+--			l_text : like text
+--			l_cluster_name: STRING
+--			l_cluster: CLUSTER_I
 		do
-			l_text := text
-			check
-				l_text.count > 2
-			end
-			l_cluster_name := l_text.substring (2, l_text.count - 1)
-			l_cluster := cluster_by_name (l_cluster_name)
-			if l_cluster /= Void then
-				text_formatter.process_cluster_name_text (l_cluster_name, l_cluster, False)
-			else
-				add_text (l_text)
-			end
+--			l_text := text
+--			check
+--				l_text.count > 2
+--			end
+--			l_cluster_name := l_text.substring (2, l_text.count - 1)
+--			l_cluster := cluster_by_name (l_cluster_name)
+--			if l_cluster /= Void then
+--				text_formatter.process_cluster_name_text (l_cluster_name, l_cluster, False)
+--			else
+--				add_text (l_text)
+--			end
 		end
 
 	add_text (a_text: STRING) is
@@ -227,13 +227,13 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	cluster_by_name (name: STRING): CLUSTER_I is
-			-- Return cluster with `name'. `Void' if not in system.
-		require
-			name_not_void: name /= Void
-		do
-			Result := Eiffel_universe.cluster_of_name (name)
-		end
+--	cluster_by_name (name: STRING): CLUSTER_I is
+--			-- Return cluster with `name'. `Void' if not in system.
+--		require
+--			name_not_void: name /= Void
+--		do
+--			Result := Eiffel_universe.cluster_of_name (name)
+--		end
 
 	feature_by_name (name: STRING): E_FEATURE is
 			-- Return feature in current class with `name'. `Void' if not in system.

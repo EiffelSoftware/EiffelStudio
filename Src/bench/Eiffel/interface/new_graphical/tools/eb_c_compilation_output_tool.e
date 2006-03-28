@@ -252,7 +252,6 @@ feature{NONE} -- Actions
 			-- Action to be performed when pointer release in `c_compilation_output'
 		local
 			l_need_sensitive: BOOLEAN
-			l_file: RAW_FILE
 		do
 			if button = 1 and then has_selected_file then
 				l_need_sensitive := True

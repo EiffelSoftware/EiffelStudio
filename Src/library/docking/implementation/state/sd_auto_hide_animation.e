@@ -165,9 +165,6 @@ feature {NONE} -- Agents
 		do
 			if not state.tab_stub.has_recursive (a_widget) and not state.zone.has_recursive (a_widget) then
 				internal_pointer_outside := True
-				debug ("docking")
-					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion internal_pointer_outside := True " + a_screen_x.out + " " + a_screen_y.out)
-				end
 			else
 				internal_pointer_outside := False
 			end

@@ -236,7 +236,6 @@ feature -- Visit nodes
 					end
 					if not is_error then
 						create current_classes.make (Classes_per_cluster)
-						l_target.assemblies.linear_representation.do_if (agent merge_classes ({CONF_ASSEMBLY} ?), agent {CONF_ASSEMBLY}.is_enabled (platform, build))
 						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.is_enabled (platform, build))
 						a_library.set_classes (current_classes)
 					end

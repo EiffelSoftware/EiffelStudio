@@ -7,7 +7,7 @@ class
 	CONF_ASSEMBLY
 
 inherit
-	CONF_GROUP
+	CONF_PHYSICAL_GROUP
 		redefine
 			classes_set,
 			make,

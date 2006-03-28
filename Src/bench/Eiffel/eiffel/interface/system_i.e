@@ -64,6 +64,9 @@ inherit
 		export
 			{NONE} all
 		end
+
+	CONF_ACCESS
+
 create
 	make
 
@@ -833,6 +836,9 @@ end
 				if not l_class_i.is_external_class then
 					workbench.change_class (l_class_i)
 				end
+				if compilation_modes.is_precompiling then
+					l_conf_class.enable_precompiled
+				end
 				l_conf_class.set_up_to_date
 				l_classes.forth
 			end
@@ -851,6 +857,9 @@ end
 				end
 				record_new_class_i (l_class_i)
 				l_conf_class.set_up_to_date
+				if compilation_modes.is_precompiling then
+					l_conf_class.enable_precompiled
+				end
 				l_classes.forth
 			end
 				-- removed classes

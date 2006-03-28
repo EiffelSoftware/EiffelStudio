@@ -66,6 +66,11 @@ feature
 			"C"
 		end
 
+	send_wchar_value (value: WIDE_CHARACTER) is
+		external
+			"C"
+		end
+
 	send_bool_value (value: BOOLEAN) is
 		external
 			"C"

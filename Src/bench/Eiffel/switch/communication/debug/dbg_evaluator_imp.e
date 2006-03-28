@@ -76,6 +76,12 @@ feature -- Status
 			Result := error & cst_error_evaluation_aborted /= 0
 		end
 
+	exception_occurred: BOOLEAN is
+			-- Did the evaluation raised an exception ?
+		do
+			Result := error & cst_error_exception_during_evaluation /= 0
+		end
+
 	error_message: STRING is
 		local
 			details: TUPLE [INTEGER, STRING]

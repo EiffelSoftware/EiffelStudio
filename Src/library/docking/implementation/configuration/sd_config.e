@@ -276,7 +276,7 @@ feature {NONE} -- Implementation for save config.
 				create l_row_data.make (1)
 				Result.rows.extend (l_row_data)
 				from
-					l_tool_bars := l_tool_bar.tool_bar_zones
+					l_tool_bars := l_tool_bar.zones
 					l_tool_bars.start
 				until
 					l_tool_bars.after

@@ -91,6 +91,9 @@ feature -- Access
 	user_options: USER_OPTIONS
 			-- User options, like the eifgen path.
 
+	conf_system: CONF_SYSTEM
+			-- Current parsed configuration system.
+
 feature -- Conversion from old
 
 	convert_ace (a_file: STRING) is
@@ -99,10 +102,7 @@ feature -- Conversion from old
 			a_file_not_void: a_file /= Void
 		local
 			l_load: CONF_LOAD_LACE
-			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE
 			vd00: VD00
-			vd72: VD72
 			vd82: VD82
 		do
 				-- load config from ace
@@ -114,6 +114,7 @@ feature -- Conversion from old
 				Error_handler.insert_error (vd00)
 				Error_handler.raise_error
 			end
+			conf_system := l_load.last_system
 
 				-- set file name of the converted config
 			file_name := Execution_environment.current_working_directory
@@ -121,28 +122,14 @@ feature -- Conversion from old
 			file_name.append ("Ace.acex")
 
 				-- write converted config
-			create l_print.make
-			l_load.last_system.process (l_print)
-			check
-				no_error: not l_print.is_error
-			end
-			create l_file.make (file_name)
-			if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
-				l_file.open_write
-				l_file.put_string (l_print.text)
-				l_file.close
-			else
-				create vd72
-				vd72.set_file_name (file_name)
-				Error_handler.insert_error (vd72)
-				Error_handler.raise_error
-			end
+			store
 
 				-- add conversion warning
 			create vd82.make (a_file)
 			Error_Handler.insert_warning (vd82)
 		ensure
 			file_name_set: file_name /= Void
+			conf_system_loaded: conf_system /= Void
 		end
 
 	convert_project (a_file: STRING) is
@@ -245,6 +232,34 @@ feature -- Status setting
 			end
 		end
 
+	store is
+			-- Store updated configuration into `file_name'.
+		require
+			conf_system_set: conf_system /= Void
+		local
+			l_print: CONF_PRINT_VISITOR
+			l_file: PLAIN_TEXT_FILE
+			vd72: VD72
+		do
+			create l_print.make
+			conf_system.process (l_print)
+			check
+				no_error: not l_print.is_error
+			end
+			create l_file.make (file_name)
+			if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
+				l_file.open_write
+				l_file.put_string (l_print.text)
+				l_file.close
+			else
+				create vd72
+				vd72.set_file_name (file_name)
+				Error_handler.insert_error (vd72)
+				Error_handler.raise_error
+			end
+		end
+
+
 	recompile is
 			-- Recompile config description
 		require
@@ -305,9 +320,6 @@ feature -- Status setting
 			-- Are all classes root? i.e. all the classes must be compiled
 
 feature {NONE} -- Implementation
-
-	conf_system: CONF_SYSTEM
-			-- Current parsed configuration system.
 
 	retrieve_config is
 			-- Parse config file.

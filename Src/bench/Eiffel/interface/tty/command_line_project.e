@@ -77,10 +77,10 @@ feature -- Update
 	init_project is
 			-- Initialize the project, look in the project directory for an existing project and load it.
 		local
-			l_file_name: DIRECTORY_NAME
+			l_file_name: FILE_NAME
 			l_file: RAW_FILE
 		do
-			l_file_name := eiffel_gen_path.twin
+			create l_file_name.make_from_string (eiffel_gen_path)
 			l_file_name.extend (project_file_name)
 			create l_file.make (l_file_name)
 

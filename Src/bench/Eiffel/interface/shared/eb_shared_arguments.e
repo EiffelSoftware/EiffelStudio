@@ -8,70 +8,31 @@ indexing
 class
 	EB_SHARED_ARGUMENTS
 
-inherit
-	CONF_REFACTORING
-
 feature -- Access
 
 	current_cmd_line_argument: STRING is
 			-- Current selected command line argument.
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
-			l_args_file: RAW_FILE
 			l_last_string: STRING
-			l_project: PROJECT_CONTEXT
+			l_options: USER_OPTIONS
 		do
 			if current_selected_cmd_line_argument.item /= Void then
 				Result := Current_selected_cmd_line_argument.item
 			else
-				create l_project
-				create l_args_file.make (l_project.Arguments_file_name)
-				if not l_args_file.exists then
-					create shared_eiffel
-					conf_todo
---					if not shared_eiffel.Eiffel_ace.lace.argument_list.is_empty then
---						Result := shared_eiffel.Eiffel_ace.lace.argument_list.i_th (1)
---						if Result.is_equal (" ") then
---							Result := ""
---						else
---								-- If it contains some environment variables, they are translated.
---							Result := (create {ENV_INTERP}).interpreted_string (Result)
---						end
---					else
---						Result := ""
---					end
+				create shared_eiffel
+				l_options := shared_eiffel.eiffel_ace.lace.user_options
+				if l_options /= Void and then l_options.arguments /= Void then
+					Result := (create {ENV_INTERP}).interpreted_string (l_options.arguments.first)
 				else
-					if not l_args_file.is_empty then
-						l_args_file.open_read
-						l_args_file.start
-						l_args_file.read_line
-						l_last_string := l_args_file.last_string.twin
-						l_args_file.close
-						if
-							l_last_string /= Void and
-							not (l_last_string.is_empty or else
-								l_last_string.is_equal (No_argument_string) or else
-								l_last_string.is_equal (" "))
-						then
-							if l_last_string.item (1) = '[' then
-									-- If it contains some environment variables, they are translated.
-								if l_last_string.item (l_last_string.count) = 'o' then
-									l_last_string.remove (l_last_string.count)
-								end
-								l_last_string.remove (1)
-								l_last_string.remove (l_last_string.count)
-								Result := (create {ENV_INTERP}).interpreted_string (l_last_string)
-							else
-								Result := ""
-							end
-						else
-							Result := ""
-						end
+					l_last_string := shared_eiffel.eiffel_universe.target.settings.item ("arguments")
+					if l_last_string /= Void then
+						Result := (create {ENV_INTERP}).interpreted_string (l_last_string)
 					else
 						Result := ""
 					end
 				end
-				Current_selected_cmd_line_argument.put (Result)
+				current_selected_cmd_line_argument.put (Result)
 			end
 		ensure
 			current_cmd_line_argument_not_void: Result /= Void

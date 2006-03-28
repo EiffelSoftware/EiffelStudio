@@ -32,6 +32,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_ACCESS
+
 create
 	make
 
@@ -91,6 +93,8 @@ feature {NONE} -- Implementation
         		affected_classes := usage_classes (class_i)
         	end
 			handle_classes
+				-- update class name information
+			class_i.set_name
 			if success then
 				apply_to_project
 			end
@@ -152,12 +156,13 @@ feature {NONE} -- Implementation
         	if system.root_class.name.is_case_insensitive_equal (class_i.name) then
 	        	create project_modifier
 				project_modifier.prepare
-				to_implement ("implement project file changes")
+				project_modifier.change_root_class (preferences.new_class_name.as_upper)
 				project_modifier.commit
 	        	current_actions.extend (project_modifier)
 	        end
 
 	        	-- TODO handle other cases where the class was in the project file
+	        to_implement ("TODO handle other cases where the class was in the project file")
 
 				-- if the file should be renamed
         	if preferences.file_rename then

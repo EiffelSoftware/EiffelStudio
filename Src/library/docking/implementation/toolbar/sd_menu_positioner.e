@@ -23,7 +23,7 @@ feature {NONE}  -- Initlization
 		do
 			create l_shared
 			create internal_sizer.make (a_tool_bar_row)
-			l_tool_bars := a_tool_bar_row.tool_bar_zones
+			l_tool_bars := a_tool_bar_row.zones
 			internal_tool_bar_row := a_tool_bar_row
 			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 			-- Because tool bar row may be created when dragging. `on_pointer_motion' will call `positions_and_sizes_try'.
@@ -43,14 +43,11 @@ feature -- Command
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_last_end_position: INTEGER
 		do
-			debug ("docking")
-				print ("%N ^^^^^^^^^^^^^^^^^^^ SD_TOOL_BAR_ROW_POSITIONER position_resize_on_extend ^^^^^^^^^^^^^^^^^^")
-			end
 			if is_dragging then
 				check new_tool_bar_is_caller: a_new_tool_bar = internal_mediator.caller end
 				internal_sizer.resize_on_extend (a_new_tool_bar)
 				l_hot_index := put_hot_tool_bar_at (a_relative_pointer_position)
-				l_tool_bars := internal_tool_bar_row.tool_bar_zones
+				l_tool_bars := internal_tool_bar_row.zones
 				l_tool_bars.delete (a_new_tool_bar)
 				if l_hot_index = 0 then
 					internal_tool_bar_row.internal_set_item_position (a_new_tool_bar, 0)
@@ -61,17 +58,11 @@ feature -- Command
 				until
 					l_tool_bars.after
 				loop
-					debug ("docking")
-						print ("%N ^^^^^^^^^^^^^^^^^^^ SD_TOOL_BAR_ROW_POSITIONER position_resize_on_extend 2 l_last_end_position: ^^^^^^^^^^^^^^^^^^" + l_last_end_position.out)
-					end
 					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration, l_last_end_position + 1)
 					l_last_end_position := l_tool_bars.item_for_iteration.position + l_tool_bars.item_for_iteration.size
 
 					if l_tool_bars.index = l_hot_index then
 						internal_tool_bar_row.internal_set_item_position (a_new_tool_bar, l_last_end_position + 1)
-						debug ("docking")
-							print ("%N ^^^^^^^^^^^^^^^^^^^ SD_TOOL_BAR_ROW_POSITIONER position_resize_on_extend 3 l_last_end_position: ^^^^^^^^^^^^^^^^^^" + l_last_end_position.out)
-						end
 						l_last_end_position := a_new_tool_bar.position + a_new_tool_bar.size
 					end
 					l_tool_bars.forth
@@ -87,15 +78,9 @@ feature -- Command
 			l_positions_and_sizes: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]
 		do
 			internal_sizer.resize_on_prune
-			debug ("docking")
-				print ("%NSD_TOOL_BAR_ROW_POSITIONER position_resize_on_prune OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-			end
 			l_positions_and_sizes := zones_last_states (is_dragging)
 			if internal_sizer.is_enough_max_space (False) then
-				l_tool_bars := internal_tool_bar_row.tool_bar_zones
-				debug ("docking")
-					print ("%N                                                   XXXXXXXXXXXXXXXXXXXXXXXXXX l_tool_bars.count: " + l_tool_bars.count.out)
-				end
+				l_tool_bars := internal_tool_bar_row.zones
 				from
 					l_tool_bars.start
 					l_positions_and_sizes.start
@@ -110,9 +95,6 @@ feature -- Command
 					l_positions_and_sizes.forth
 				end
 			end
-			debug ("docking")
-				print ("%N                                                   ENNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNND")
-			end
 		end
 
 	on_pointer_motion (a_relative_position: INTEGER) is
@@ -123,22 +105,17 @@ feature -- Command
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_hot_index: INTEGER
 		do
+			caller_position := a_relative_position
 			l_hot_index := put_hot_tool_bar_at (a_relative_position)
 			try_set_position (a_relative_position, l_hot_index)
 			if is_possible_set_position (a_relative_position, l_hot_index) then
 				from
-					l_tool_bars := internal_tool_bar_row.tool_bar_zones
+					l_tool_bars := internal_tool_bar_row.zones
 					l_tool_bars.delete (internal_mediator.caller)
 					internal_tool_bar_row.internal_set_item_position (internal_mediator.caller, a_relative_position)
 					positions_and_sizes_try.start
 					l_tool_bars.start
-					debug ("docking")
-						if not (positions_and_sizes (True).count = l_tool_bars.count) then
-							print ("%NSD_TOOL_BAR_ROW_POSITIONER: on_pointer_motion: Routine failer")
-							print ("%N                                               positions_and_sizes (False).count: " + positions_and_sizes (False).count.out)
-							print ("%N                                               l_tool_bars.count: " + l_tool_bars.count.out)
-						end
-					end
+
 					check right_size: positions_and_sizes (True).count = l_tool_bars.count end
 				until
 					positions_and_sizes_try.after
@@ -147,6 +124,7 @@ feature -- Command
 					l_tool_bars.forth
 					positions_and_sizes_try.forth
 				end
+				internal_tool_bar_row.internal_set_item_position (internal_mediator.caller, caller_position)
 			end
 		end
 
@@ -182,17 +160,11 @@ feature -- Command
 			internal_sizer.on_resize (a_size)
 			if internal_sizer.is_enough_max_space (False) then
 				-- Position from right to left
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ROW_POSITIONER [enough max space]")
-				end
 				position_tool_bar_back_to_front (a_size)
 			else
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ROW_POSITIONER [NOT enough max space]")
-				end
 				-- All tool bar position must be one by one.
 				from
-					l_zones := internal_tool_bar_row.tool_bar_zones
+					l_zones := internal_tool_bar_row.zones
 					l_last_end_postion := 1
 					l_zones.start
 				until
@@ -201,9 +173,6 @@ feature -- Command
 					internal_tool_bar_row.internal_set_item_position (l_zones.item_for_iteration, l_last_end_postion)
 
 					l_last_end_postion := l_zones.item_for_iteration.size + 1 + l_last_end_postion
-					debug ("docking")
-						print ("%N SD_TOOL_BAR_ROW_POSITIONER on_resize tool_bra_zone position: " + l_zones.item_for_iteration.x_position.out)
-					end
 					l_zones.forth
 				end
 			end
@@ -216,11 +185,8 @@ feature -- Command
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
-			debug ("docking")
-				print ("%N OOOOOOOOOOOOOOOOO SD_TOOL_BAR_POSITIONER record positions and sizes OOOOOOOOOOOO")
-			end
 			from
-				l_tool_bars := internal_tool_bar_row.tool_bar_zones
+				l_tool_bars := internal_tool_bar_row.zones
 				if a_except_dragged_tool_bar then
 					check not_void: internal_mediator /= Void end
 					l_tool_bars.delete (internal_mediator.caller)
@@ -258,8 +224,6 @@ feature {NONE}  -- Implementation
 
 	position_one_by_one (a_hot_index: INTEGER) is
 			-- Position `positions_and_sizes' one by one.
-		require
-			enough_space: internal_sizer.is_enough_space (True, internal_tool_bar_row.size)
 		local
 			l_last_position: INTEGER
 		do
@@ -270,13 +234,21 @@ feature {NONE}  -- Implementation
 				positions_and_sizes_try.after
 			loop
 				if a_hot_index = positions_and_sizes_try.index - 1 then
+					caller_position := l_last_position + 1
 					l_last_position := l_last_position + internal_mediator.caller.size
+
 				end
 				positions_and_sizes_try.item.put_integer_32 (l_last_position, 1)
 				l_last_position := l_last_position + positions_and_sizes_try.item.integer_32_item (2) + 1
 				positions_and_sizes_try.forth
 			end
+			if a_hot_index = positions_and_sizes_try.count then
+				caller_position := l_last_position + 1
+			end
 		end
+
+	caller_position: INTEGER
+			-- Position where we should set caller.
 
 	position_tool_bar_back_to_front (a_size: INTEGER) is
 			-- Position SD_TOOL_BAR_ZONEs when there is enough space,
@@ -289,28 +261,19 @@ feature {NONE}  -- Implementation
 			l_last_start_position: INTEGER
 		do
 			from
-				l_zones := internal_tool_bar_row.tool_bar_zones
+				l_zones := internal_tool_bar_row.zones
 				l_last_start_position := a_size
 				l_zones.finish
 				l_zones.finish
 			until
 				l_zones.before
 			loop
-				debug ("docking")
-					print ("%NSD_TOOL_BAR_ROW_POSITIONER positione_tool_bar_back_to_front a_size: " + a_size.out)
-				end
 				l_zone := l_zones.item_for_iteration
 				if l_zones.item_for_iteration.assistant.last_state.position + l_zone.size < l_last_start_position then
 					-- We can position it to orignal position.
 					internal_tool_bar_row.internal_set_item_position (l_zone, l_zones.item_for_iteration.assistant.last_state.position)
-					debug ("docking")
-						print ("%N********** SD_TOOL_BAR_ROW_POSITIONER position_tool_bar_right_to_left ********** 1")
-					end
 				else
 					internal_tool_bar_row.internal_set_item_position (l_zone, l_last_start_position - 1 - l_zone.size)
-					debug ("docking")
-						print ("%N********** SD_TOOL_BAR_ROW_POSITIONER position_tool_bar_right_to_left ********** 2")
-					end
 				end
 				l_last_start_position := l_zone.position
 				l_zones.back
@@ -353,9 +316,6 @@ feature {NONE}  -- Implementation
 			if not l_found then
 				Result := l_positions_and_sizes.count
 			end
-			debug ("docking")
-				print ("%NSD_TOOL_BAR_ROW_POSITIONER put_hot_tool_bar_at: " + Result.out)
-			end
 		ensure
 			valid: Result >= 0 and Result <= positions_and_sizes (True).count
 		end
@@ -370,7 +330,7 @@ feature {NONE}  -- Implementation
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_zone_last_position, l_zone_last_size: INTEGER
 		do
-			l_zones := internal_tool_bar_row.tool_bar_zones
+			l_zones := internal_tool_bar_row.zones
 			l_zones.delete (internal_mediator.caller)
 			-- Position every tool bar before hot tool bar.
 			from
@@ -424,42 +384,50 @@ feature {NONE}  -- Implementation
 	is_possible_set_position (a_hot_pointer_position: INTEGER; a_hot_index: INTEGER): BOOLEAN is
 			-- After `try_set_position' is it possible to set postion to `positions_and_sizes_try'?
 		do
-			Result := True
+			if internal_tool_bar_row.is_enough_max_space then
+				Result := True
+			end
 			-- Check if first out of border
-			if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 then
+			if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 and then a_hot_pointer_position < last_pointer_position then
 				if positions_and_sizes_try.first.integer_32_item (1) < 0 then
 					if internal_sizer.is_enough_max_space (True) then
 						Result := False
 					else
-						Result := internal_sizer.try_to_solve_no_space_left (positions_and_sizes_try, a_hot_index)
+						Result := internal_sizer.try_solve_no_space_left (positions_and_sizes_try, a_hot_index)
 						if Result then
 							position_one_by_one (a_hot_index)
 						end
 					end
-					debug ("docking")
-						print ("%N XXXXXXXXXXXXXXXX SD_TOOL_BAR_ROW_POSITIONER left out of borderd XXXXXXXXXXXXXXXXX")
-					end
 				end
-				-- Check if last out of border
+			end
+			if not Result and then a_hot_pointer_position > last_pointer_position  then
 				if positions_and_sizes_try.last.integer_32_item (1) + positions_and_sizes_try.last.integer_32_item (2) > internal_tool_bar_row.size then
+					-- Check if last out of border
 					if internal_sizer.is_enough_max_space (True) then
 						Result := False
 					else
-						Result := internal_sizer.try_to_solve_no_space_right (positions_and_sizes_try, a_hot_index)
-					end
-					debug ("docking")
-						print ("%N XXXXXXXXXXXXXXXX SD_TOOL_BAR_ROW_POSITIONER right out of borderd XXXXXXXXXXXXXXXXX")
+						Result := internal_sizer.try_solve_no_space_right (positions_and_sizes_try, a_hot_index, a_hot_pointer_position)
+						position_one_by_one (a_hot_index)
 					end
 				end
 			end
-			-- Check if dragged tool bar right edge outside.
-			if a_hot_pointer_position + internal_mediator.caller.size > internal_tool_bar_row.size then
-				if internal_sizer.is_enough_max_space (True) then
-					Result := False
-				else
-					Result := internal_sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try)
+
+			if not Result and then a_hot_pointer_position > last_pointer_position then
+				if a_hot_index = positions_and_sizes_try.count then
+					if a_hot_pointer_position + internal_mediator.caller.size > internal_tool_bar_row.size then
+					 	-- Check if dragged tool bar right edge outside.
+						if internal_sizer.is_enough_max_space (True) then
+							Result := False
+						else
+							Result := internal_sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try, (a_hot_pointer_position + internal_mediator.caller.size) - internal_tool_bar_row.size, a_hot_pointer_position)
+							if Result then
+								position_one_by_one (a_hot_index)
+							end
+						end
+					end
 				end
 			end
+			last_pointer_position := a_hot_pointer_position
 		end
 
 	zones_last_states (a_except_dragged_zone: BOOLEAN): ARRAYED_LIST [TUPLE [INTEGER, INTEGER]] is
@@ -468,7 +436,7 @@ feature {NONE}  -- Implementation
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_temp_state: SD_TOOL_BAR_ZONE_STATE
 		do
-			l_zones := internal_tool_bar_row.tool_bar_zones
+			l_zones := internal_tool_bar_row.zones
 			if a_except_dragged_zone then
 				l_zones.delete (internal_mediator.caller)
 			end
@@ -485,6 +453,9 @@ feature {NONE}  -- Implementation
 				l_zones.forth
 			end
 		end
+		
+	last_pointer_position: INTEGER
+			-- Last pointer position.
 
 	positions_and_sizes_try: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]
 			-- Try to set tool bar positions and sizes.
@@ -509,7 +480,7 @@ feature {NONE}  -- Implementation
 		do
 			from
 				create Result.make (1)
-				l_list := internal_tool_bar_row.tool_bar_zones
+				l_list := internal_tool_bar_row.zones
 				l_list.start
 			until
 				l_list.after

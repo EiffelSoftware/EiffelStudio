@@ -137,6 +137,10 @@ feature {NONE}
 
 	project_extension: STRING is "epr"
 
+	config_extension: STRING is "acex"
+
+	ace_file_extension: STRING is "ace"
+
 	Debug_info_extension: STRING is "edb"
 			-- Eiffel Debug Breakpoints file (extension)
 

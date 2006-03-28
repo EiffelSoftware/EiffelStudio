@@ -21,7 +21,7 @@ feature -- Initialization
 
 	make (id: INTEGER; c: XMI_CLUSTER) is
 			-- Initialize `Current'.
-		do	
+		do
 			xmi_id := id
 			item := c
 		end
@@ -57,7 +57,7 @@ feature -- Action
 				%                <Model_Management.Package xmi.idref = 'S.")
 			Result.append (item.xmi_id.out)
 			Result.append ("'/> <!-- ")
-			Result.append (item.lace_cluster.name_in_upper)
+			Result.append (item.group.name)
 			Result.append (" -->%N%
 				%             </Foundation.Auxiliary_Elements.Presentation.model>%N%
 				%            </Foundation.Auxiliary_Elements.Presentation>%N")

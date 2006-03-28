@@ -257,17 +257,17 @@ feature {NONE} -- Implementation
 			xmi_classes.go_to (xmi_class_cursor)
 		end
 
-	xmi_diagram_by_cluster (a_cluster: CLUSTER_I): XMI_DIAGRAM is
-			-- Search Rose diagram linked to `a_cluster'.
+	xmi_diagram_by_group (a_group: CONF_GROUP): XMI_DIAGRAM is
+			-- Search Rose diagram linked to `a_group'.
 		require
-				cluster_not_void: a_cluster /= Void
+				cluster_not_void: a_group /= Void
 		do
 			from
 				xmi_diagrams.start
 			until
 				Result /= Void or else xmi_diagrams.after
 			loop
-				if xmi_diagrams.item.associated_cluster.lace_cluster = a_cluster then
+				if xmi_diagrams.item.associated_cluster.group = a_group then
 					Result := xmi_diagrams.item
 				end
 				xmi_diagrams.forth
@@ -323,8 +323,8 @@ feature {NONE} -- Implementation
 					create new_xmi_generalization_presentation.make (idref_counter, new_xmi_generalization)
 					idref_counter := idref_counter + 1
 					xmi_generalizations.extend (new_xmi_generalization)
-					if new_xmi_generalization.enclosing_cluster /= Void then
-						current_diagram := xmi_diagram_by_cluster (new_xmi_generalization.enclosing_cluster)
+					if new_xmi_generalization.enclosing_group /= Void then
+						current_diagram := xmi_diagram_by_group (new_xmi_generalization.enclosing_group)
 						current_diagram.add_presentation (new_xmi_generalization_presentation)
 					end
 				end

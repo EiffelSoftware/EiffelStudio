@@ -12,8 +12,6 @@ class
 inherit
 	REFACTORING_HELPER
 
-	CONF_REFACTORING
-
 	ICOR_EXPORTER
 
 	SHARED_IL_DEBUG_INFO_RECORDER
@@ -294,8 +292,7 @@ feature -- Queries
 				an := only_file_name_without_extension (an)
 					--| FIXME jfiat 2004/04/02 : maybe having
 					--| eiffel_universe.class_from_assembly_filename (...
-				conf_todo_msg ("Find equivalent in new configuration code")
-	--			ci := eiffel_universe.class_from_assembly (an, cn, True)
+				ci := eiffel_universe.class_from_assembly (an, cn)
 				if ci = Void then
 					fixme ("FIXME JFIAT: Ugly .. but for now .. far enought")
 					ci := Eiffel_system.System.system_object_class

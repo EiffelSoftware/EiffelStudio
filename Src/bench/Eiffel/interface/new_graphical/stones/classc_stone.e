@@ -15,7 +15,7 @@ inherit
 			make as classi_make
 		redefine
 			is_valid, synchronized_stone,
-			class_i, cluster, class_name, file_name,
+			class_i, group, class_name, file_name,
 			header, stone_signature, history_name
 		end
 
@@ -35,10 +35,9 @@ feature -- Properties
 
 	e_class: CLASS_C
 
-	cluster: CLUSTER_I is
+	group: CONF_GROUP is
 		do
-			conf_todo
---			Result := e_class.cluster
+			Result := e_class.group
 		end
 
 	class_name: STRING is
@@ -103,9 +102,6 @@ feature -- Synchronization
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a
 			-- classi_stone if the class is not compiled anymore)
-		local
-			new_cluster: CLUSTER_I
-			new_ci: CLASS_I
 		do
 			if e_class /= Void then
 				if e_class.is_valid then
@@ -115,22 +111,7 @@ feature -- Synchronization
 						Result := create {CLASSC_STONE}.make (e_class)
 					end
 				else
-					conf_todo
---					new_cluster := Eiffel_universe.cluster_of_name
---							(e_class.cluster.cluster_name)
-					if new_cluster /= Void then
---						new_ci := new_cluster.class_with_name (e_class.lace_class.name)
-						if
-							new_ci /= Void
-						then
-							if not new_ci.compiled then
-								create {CLASSI_STONE} Result.make (e_class.lace_class)
-							else
-								create {CLASSC_STONE} Result.make (new_ci.compiled_class)
-							end
-
-						end
-					end
+					Result := Precursor {CLASSI_STONE}
 				end
 			end
 		end

@@ -232,6 +232,11 @@ feature -- Access
 		deferred
 		end
 
+	is_valid: BOOLEAN is
+			-- Is class still reachable from the configuration system?
+		deferred
+		end
+
 	exists: BOOLEAN is
 		local
 			file: RAW_FILE

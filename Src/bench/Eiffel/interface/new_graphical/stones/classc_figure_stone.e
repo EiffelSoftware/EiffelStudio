@@ -19,7 +19,7 @@ inherit
 	CLASSI_FIGURE_STONE
 		undefine
 			class_i, class_name, make,
-			cluster, file_name, header, history_name,
+			group, file_name, header, history_name,
 			is_valid, stone_signature, synchronized_stone
 		end
 

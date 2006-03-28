@@ -373,11 +373,15 @@ feature -- Completion-clickable initialization / update
 			click_tool.reset
 			classi_stone ?= stone
 			if classi_stone /= Void and then classi_stone.is_valid then
-				if classi_stone.class_name /= Void and then classi_stone.cluster /= Void and then classi_stone.cluster.cluster_name /= Void then
-					click_tool.initialize (Current, classi_stone.class_name, classi_stone.cluster.cluster_name, after_save)
+				if classi_stone.class_name /= Void and then classi_stone.group /= Void then
+					click_tool.initialize (Current, classi_stone.class_name,
+						classi_stone.group, after_save)
 					current_class_is_clickable := click_tool.can_analyze_current_class
 					if click_tool.last_syntax_error = Void then
-						if current_class_is_clickable and then not classi_stone.class_name.is_equal (click_tool.current_class_as.class_name) then
+						if
+							current_class_is_clickable and then
+							not classi_stone.class_name.is_equal (click_tool.current_class_as.class_name)
+						then
 							current_class_is_clickable := False
 							click_tool_status := class_name_changed
 						end

@@ -77,7 +77,8 @@ feature {NONE} -- Implementation
 			cf: BON_CLASS_FIGURE
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
 			old_color_table, new_color_table: HASH_TABLE [EV_COLOR, STRING]
-			clus_classes: LIST [CLASS_I]
+			clus_classes: LIST [CONF_CLASS]
+			l_class: CLASS_I
 			es_class: ES_CLASS
 		do
 			create change_color_dialog
@@ -88,12 +89,14 @@ feature {NONE} -- Implementation
 				create class_list.make (1)
 				create old_color_table.make (1)
 				create new_color_table.make (1)
-				clus_classes := a_stone.cluster_i.classes.linear_representation
+				clus_classes := a_stone.group.classes.linear_representation
 				clus_classes.start
 			until
 				clus_classes.after
 			loop
-				es_class := tool.graph.class_from_interface (clus_classes.item)
+				l_class ?= clus_classes.item
+				check l_class_not_void: l_class /= Void end
+				es_class := tool.graph.class_from_interface (l_class)
 				if es_class /= Void then
 					cf ?= tool.world.figure_from_model (es_class)
 					if cf /= Void then

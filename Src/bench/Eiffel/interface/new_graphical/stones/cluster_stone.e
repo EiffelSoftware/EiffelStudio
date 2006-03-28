@@ -12,7 +12,7 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 
-	FILED_STONE
+	STONE
 		redefine
 			is_valid,
 			synchronized_stone,
@@ -26,42 +26,47 @@ create
 
 feature {NONE} -- Initialization
 
-	make (clu: CLUSTER_I) is
+	make (clu: CONF_GROUP) is
 		require
 			valid_cluster: clu /= Void
 		do
-			cluster_i := clu
+			group := clu
 		ensure
-			status_up_to_date: cluster_i = clu
+			group_set: group = clu
 		end
 
 feature -- Access
 
-	cluster_i: CLUSTER_I
+	cluster_i: CLUSTER_I is
+		require
+			is_cluster: is_cluster
+		do
+			conf_todo_msg ("[
+				There is nothing to be done here, what needs to be done is checking all callers that
+			 	they can call this routine.
+			  ]")
+			Result ?= group
+		ensure
+			cluster_i_not_void: cluster_i /= Void
+		end
+
+	group: CONF_GROUP
+			-- Underlying group for the stone.
 
 	stone_signature: STRING is
 		do
-			Result := cluster_i.cluster_name.twin
+			Result := group.name.twin
 		end
 
 	header: STRING is
 		do
-			Result := history_name + Interface_names.l_Located_in + cluster_i.path
+			Result := history_name + Interface_names.l_Located_in + group.location.evaluated_path
 		end
 
 	history_name: STRING is
 			-- What represents `Current' in the history.
 		do
 			Result := Interface_names.s_Cluster_stone + stone_signature
-		end
-
-	file_name: FILE_NAME is
-			-- Indexing clause file of the cluster.
---| FIXME XR: What is really the file name of the indexing clause????
-		do
-			create Result.make_from_string (cluster_i.path)
-			Result.set_file_name (cluster_i.cluster_name)
-			Result.add_extension ("txt")
 		end
 
 	stone_cursor: EV_CURSOR is
@@ -80,18 +85,21 @@ feature -- Access
 
  	is_valid: BOOLEAN is
  			-- Does `Current' represent a valid cluster?
+ 		local
+ 			l_group: like group
  		do
- 			conf_todo
--- 			Result := Eiffel_project.initialized and then
--- 				cluster_i /= Void and then
--- 				Eiffel_universe.has_cluster_of_name (cluster_i.cluster_name)
+ 			Result := Eiffel_project.initialized and then group /= Void
+ 			if Result then
+ 				l_group := Eiffel_universe.group_of_name (group.name)
+ 				Result := l_group.is_valid
+ 			end
  		end
 
  	synchronized_stone: STONE is
  			-- Return a valid stone representing the same object after a recompilation.
  		do
  			if is_valid then
- 				cluster_i := Eiffel_universe.cluster_of_name (cluster_i.cluster_name)
+ 				group := Eiffel_universe.group_of_name (group.name)
  				Result := Current
  			else
  				Result := Void
@@ -104,9 +112,20 @@ feature -- Access
  			conv_clu: CLUSTER_STONE
  		do
  			conv_clu ?= other
- 			Result := conv_clu /= Void and then
- 				conv_clu.cluster_i = cluster_i
+ 			Result := conv_clu /= Void and then conv_clu.group = group
  		end
+
+	is_cluster: BOOLEAN is
+			-- Does current represent an instance of CLUSTER_I?
+		local
+			l_clus: CLUSTER_I
+		do
+			l_clus ?= group
+			Result := l_clus /= Void
+		end
+
+invariant
+	group_not_void: group /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

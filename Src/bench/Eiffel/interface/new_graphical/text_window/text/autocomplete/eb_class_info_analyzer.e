@@ -67,8 +67,8 @@ feature -- Access
 	current_class_name: STRING
 			-- name of analyzed class
 
-	cluster_name: STRING
-			-- name of cluster which contains analyzed class
+	group: CONF_GROUP
+			-- Group which contains analyzed class
 
 	content: CLICKABLE_TEXT
 			-- text currently displayed
@@ -121,7 +121,7 @@ feature -- Reinitialization
 			--	System.set_current_class (Void)
 			--end
 			current_class_name := Void
-			cluster_name := Void
+			group := Void
 			content := Void
 			is_ready := False
 			pos_in_file := 1
@@ -324,6 +324,9 @@ feature {NONE}-- Clickable/Editable implementation
 
 	stone_in_click_ast (a_position: INTEGER): STONE is
 			-- search in the click_ast for a stone to associate with `a_position' in text
+		require
+			group_not_void: group /= Void
+			group_is_valid: group.is_valid
 		local
 			index_min, index_max, middle: INTEGER
 			position: INTEGER
@@ -356,7 +359,7 @@ feature {NONE}-- Clickable/Editable implementation
 					click_pos := clickable_position_list @ index_min
 					if a_position <= click_pos.stop then
 						if click_pos.is_feature then
-							class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
+							class_i := Universe.class_named (click_pos.class_name, group)
 							if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then
 								feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
 								if feat /= Void then
@@ -364,7 +367,7 @@ feature {NONE}-- Clickable/Editable implementation
 								end
 							end
 						elseif click_pos.is_class then
-							class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
+							class_i := Universe.class_named (click_pos.class_name, group)
 							if class_i /= Void then
 								if class_i.compiled then
 									create {CLASSC_STONE} Result.make (class_i.compiled_class)
@@ -1040,6 +1043,9 @@ feature {NONE}-- Implementation
 		end
 
 	type_of_class_corresponding_to_current_token: TYPE_A is
+		require
+			group_not_void: group /= Void
+			group_is_valid: group.is_valid
 		local
 			cc_stone: CLASSC_STONE
 			image: STRING
@@ -1053,7 +1059,7 @@ feature {NONE}-- Implementation
 			end
 			if Result = Void then
 				image := current_token.image.as_upper
-				class_i := Universe.class_named (image, Universe.cluster_of_name (cluster_name))
+				class_i := Universe.class_named (image, group)
 				if class_i /= Void and then class_i.compiled then
 					found_class := class_i.compiled_class
 					Result := found_class.actual_type
@@ -1441,18 +1447,11 @@ feature {NONE} -- Implementation
 			-- Initialize `current_class_i'.
 		require
 			current_class_name_is_not_void: current_class_name /= Void
-			cluster_name_is_not_void: cluster_name /= Void
+			group_is_not_void: group /= Void
+			group_is_valid: group.is_valid
 			workbench_is_not_compiling: not workbench.is_compiling
-		local
-			l_cluster: CLUSTER_I
 		do
-				-- Check if we can find the cluster (this happens if a class text is being loaded
-				-- while starting a compilation, i.e. loading while degree 6 is actually computing
-				-- the cluster hierarchy and `cluster_name' might not be found)
-			l_cluster := Universe.cluster_of_name (cluster_name)
-			if l_cluster /= Void then
-				current_class_i := universe.class_named (current_class_name, l_cluster)
-			end
+			current_class_i := universe.class_named (current_class_name, group)
 		end
 
 	current_class_i: CLASS_I

@@ -1879,8 +1879,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		do
 			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
 			if l_item = Void then
-				conf_todo
---				create l_item.make_with_text (a_cluster.display_name)
+				create l_item.make_with_text (a_cluster.cluster_name)
 				l_item.set_pixmap (pixmap_from_cluster_i (a_cluster))
 				scope_list.extend (l_item)
 				l_item.set_data (a_cluster)

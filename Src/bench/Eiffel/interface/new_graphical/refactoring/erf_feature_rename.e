@@ -21,11 +21,6 @@ inherit
 			{NONE} all
 		end
 
-	REFACTORING_HELPER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -153,11 +148,14 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
         do
-        		-- if the class was the root class
-        	if system.root_class.name.is_case_insensitive_equal (feature_i.written_class.name) then
+        		-- if the class was the root class and the feature the root feature
+        	if
+        		system.root_class.name.is_case_insensitive_equal (feature_i.written_class.name) and then
+        		system.root_creation_name.is_case_insensitive_equal (feature_i.feature_name)
+        	then
 	        	create project_modifier
 				project_modifier.prepare
-				to_implement ("rename root feature")
+				project_modifier.change_root_feature (preferences.new_feature_name.as_lower)
 				project_modifier.commit
 	        	current_actions.extend (project_modifier)
 	        end

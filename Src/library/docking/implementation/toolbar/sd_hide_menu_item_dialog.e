@@ -28,6 +28,7 @@ feature {NONE}  -- Initlization
 			create internal_vertical_box
 			extend (internal_vertical_box)
 
+			init_grouping (a_hidden_items)
 			init_hidden_items (a_hidden_items)
 			init_customize_label
 			init_close
@@ -36,6 +37,18 @@ feature {NONE}  -- Initlization
 			parent_tool_bar := a_tool_bar
 		ensure
 			set: parent_tool_bar = a_tool_bar
+		end
+
+	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+			-- Grouping hidden items.
+		local
+			l_divider: SD_TOOL_BAR_HIDDEN_GROUP_DIVIDER
+		do
+			if a_hidden_items.count > 0 then
+				create l_divider.make (a_hidden_items)
+				l_divider.set_max_width_allowed ({SD_SHARED}.Tool_bar_hidden_item_dialog_max_width)
+				l_divider.grouped_items
+			end
 		end
 
 	init_hidden_items (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is

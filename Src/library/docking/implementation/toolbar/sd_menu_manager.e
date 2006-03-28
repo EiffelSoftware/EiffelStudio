@@ -186,6 +186,8 @@ feature {NONE} -- Implementation
 			-- Called by `on_resize'. Notify four tool bar area.
 		local
 			l_container: EV_CONTAINER
+			l_vertical_height: INTEGER
+			l_tool_bar_container: SD_TOOL_BAR_CONTAINER
 		do
 			if a_resize_horizontal then
 				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_top)
@@ -193,10 +195,14 @@ feature {NONE} -- Implementation
 				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_bottom)
 				notify_each_row (l_container, a_width)
 			else
-				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_left)
-				notify_each_row (l_container, a_height)
-				l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_right)
-				notify_each_row (l_container, a_height)
+				l_tool_bar_container := internal_docking_manager.tool_bar_container
+				l_vertical_height := a_height - l_tool_bar_container.top.height - l_tool_bar_container.bottom.height
+				if l_vertical_height >= 0  then
+					l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_left)
+					notify_each_row (l_container, l_vertical_height)
+					l_container := tool_bar_container ({SD_DOCKING_MANAGER}.dock_right)
+					notify_each_row (l_container, l_vertical_height)
+				end
 			end
 		end
 
@@ -206,6 +212,7 @@ feature {NONE} -- Implementation
 			-- a_size is height for left, right tool bar container.
 		require
 			not_void: a_tool_bar_container /= Void
+			valid: a_size >= 0
 		local
 			l_row: SD_TOOL_BAR_ROW
 			l_rows: LINEAR [EV_WIDGET]

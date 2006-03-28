@@ -1207,7 +1207,6 @@ feature {NONE} -- Implementation
 
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
 		local
-			l_operand: OPERAND_AS
 			l_feat: E_FEATURE
 		do
 				-- No type set for this expression?

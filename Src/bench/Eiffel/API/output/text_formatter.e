@@ -493,126 +493,23 @@ feature -- Text operator
 
 feature {NONE} -- Implementation
 
-	separate_string (s: STRING; for_comment: BOOLEAN) is
+	separate_string (s:STRING; for_comment: BOOLEAN) is
 			-- Separate `s' into parts and add them to `Current'.
 			-- Mostly for manifest strings and comments.
 		local
-			tokens, token: EB_STRING
-			phrase, link, fn: STRING
-			last_class: CLASS_I
-			last_feature: E_FEATURE
-			last_cluster: CLUSTER_I
-			last_was_cluster: BOOLEAN
-			i: INTEGER
-			l_is_quoted: BOOLEAN
+			l_string: STRING
 		do
-			create tokens.make_from_string (s)
-			tokens.start
-			create phrase.make (20)
-			from tokens.start until tokens.after loop
-				token := tokens.word_item
+			create l_string.make_from_string (s)
+			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (l_string))
+			comment_scanner.set_text_formatter (Current)
+			comment_scanner.set_for_comment (for_comment)
+			comment_scanner.scan
+		end
 
-				if token.is_email_address then
-					link := token.twin
-					link.prepend ("mailto:")
-				elseif token.is_url then
-					link := token.twin
-				else
-					link := Void
-				end
-
-				if tokens.is_item_delimited_by ('`', '%'') then
-					if for_comment then
-						tokens.remove_item_delimiters
-					end
-					l_is_quoted := True
-				else
-					l_is_quoted := False
-				end
-
-				phrase.append (tokens.leading_phrase)
-				if link /= Void then
-					reset_phrase (phrase, for_comment)
-					if for_comment then
-						process_comment_text (token.twin, link)
-					else
-						process_string_text (token.twin, link)
-					end
-					last_class := Void
-				elseif l_is_quoted then
-					reset_phrase (phrase, for_comment)
-					process_quoted_item (token.twin, for_comment)
-					last_class := Void
-				elseif token.is_class_name then
-					last_class := class_by_name (token)
-					if last_class /= Void then
-						reset_phrase (phrase, for_comment)
-						add_class (last_class)
-					else
-						phrase.append (token)
-					end
-				elseif token.is_plural_class then
-					last_class := class_by_name (token.substring (1, token.count - 1))
-					if last_class /= Void then
-						reset_phrase (phrase, for_comment)
-						add_class (last_class)
-						phrase.extend ('s')
-					else
-						phrase.append (token)
-					end
-				elseif token.is_class_dot_feature_name then
-					i := token.index_of ('.', 1)
-					last_class := class_by_name (token.substring (1, i - 1))
-					if last_class /= Void then
-						reset_phrase (phrase, for_comment)
-						add_class (last_class)
-						phrase.extend ('.')
-						fn := token.substring (i + 1, token.count)
-						if last_class.is_compiled and then last_class.compiled_class.has_feature_table then
-							last_feature := last_class.compiled_class.feature_with_name (fn)
-						end
-						if last_feature /= Void then
-							reset_phrase (phrase, for_comment)
-							add_feature (last_feature, fn)
-						else
-							phrase.append (fn)
-						end
-						last_class := Void
-					else
-						phrase.append (token)
-					end
-				elseif last_class /= Void and then token.is_dot_feature_name then
-					phrase.extend ('.')
-					fn := token.substring (2, token.count)
-					if last_class.is_compiled and then last_class.compiled_class.has_feature_table then
-						last_feature := last_class.compiled_class.feature_with_name (fn)
-					end
-					if last_feature /= Void then
-						reset_phrase (phrase, for_comment)
-						add_feature (last_feature, fn)
-					else
-						phrase.append (fn)
-					end
-				elseif last_was_cluster or else tokens.is_item_delimited_by ('[', ']') then
-					last_cluster := (create {SHARED_EIFFEL_PROJECT}).Eiffel_universe.cluster_of_name (token)
-					if last_cluster /= Void then
-						reset_phrase (phrase, for_comment)
-						add_group (last_cluster, token.twin)
-					else
-						phrase.append (token)
-					end
-				else
-					fn := token.as_lower
-					last_was_cluster := fn.is_equal ("cluster")
-					phrase.append (token)
-					last_class := Void
-				end
-
-				tokens.forth
-			end
-
-			phrase.append (tokens.leading_phrase)
-			reset_phrase (phrase, for_comment)
+	comment_scanner: COMMENT_SCANNER is
+			-- Scanner for comment and manifest string
+		once
+			create Result.make_with_text_formatter (Current)
 		end
 
 	reset_phrase (p: STRING; for_comment: BOOLEAN) is

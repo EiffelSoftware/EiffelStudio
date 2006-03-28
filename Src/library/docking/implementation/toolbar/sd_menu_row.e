@@ -188,7 +188,7 @@ feature -- Query
 	is_vertical: BOOLEAN
 			-- If `Current' is_vertical?
 
-	tool_bar_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
+	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
 			-- All tool bar zone in Current. Order is from left to right (top to bottom).
 		local
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE

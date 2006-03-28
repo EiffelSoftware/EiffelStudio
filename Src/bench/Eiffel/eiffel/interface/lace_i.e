@@ -104,6 +104,7 @@ feature -- Conversion from old
 			l_load: CONF_LOAD_LACE
 			vd00: VD00
 			vd82: VD82
+			l_pos: INTEGER
 		do
 				-- load config from ace
 			create l_load
@@ -117,8 +118,13 @@ feature -- Conversion from old
 			conf_system := l_load.last_system
 
 				-- set file name of the converted config
-			file_name := Execution_environment.current_working_directory
-			file_name.append_character (Operating_environment.directory_separator)
+			file_name := a_file
+			l_pos := file_name.last_index_of (Operating_environment.directory_separator, file_name.count)
+			if l_pos > 0 and then l_pos < file_name.count then
+				file_name := file_name.substring (1, l_pos)
+			else
+				file_name := Execution_environment.current_working_directory
+			end
 			file_name.append ("Ace.acex")
 
 				-- write converted config

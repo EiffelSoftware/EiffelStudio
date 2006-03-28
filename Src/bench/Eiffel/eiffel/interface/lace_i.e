@@ -88,6 +88,9 @@ feature -- Access
 			Result := new_date /= date
 		end
 
+	user_options: USER_OPTIONS
+			-- User options, like the eifgen path.
+
 feature -- Conversion from old
 
 	convert_ace (a_file: STRING) is
@@ -305,9 +308,6 @@ feature {NONE} -- Implementation
 
 	conf_system: CONF_SYSTEM
 			-- Current parsed configuration system.
-
-	user_options: USER_OPTIONS
-			-- User options, like the eifgen path.
 
 	retrieve_config is
 			-- Parse config file.
@@ -1200,6 +1200,10 @@ feature {NONE} -- Implementation
 			l_old_target.precompile.set_library_target (l_target)
 			universe.set_new_target (l_old_target)
 			universe.new_target_to_target
+
+				-- Force a rebuild for the first compilation of a system using
+				-- a precompiled library.
+			system.set_rebuild (True)
 		ensure
 			valid_system: workbench.system /= Void
 		end

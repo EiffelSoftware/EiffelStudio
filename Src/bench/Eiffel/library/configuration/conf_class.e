@@ -128,6 +128,12 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := overriden_by /= Void
 		end
 
+	is_class_assembly: BOOLEAN is
+			-- Is class from an assembly?
+		do
+
+		end
+
 	does_override: BOOLEAN is
 			-- Does the class override other classes?
 		do

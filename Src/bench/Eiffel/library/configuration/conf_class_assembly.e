@@ -12,7 +12,8 @@ inherit
 			set_name,
 			check_changed,
 			group,
-			is_read_only
+			is_read_only,
+			is_class_assembly
 		end
 
 create
@@ -41,6 +42,10 @@ feature {NONE} -- Implementation
 feature -- Access
 
 	is_read_only: BOOLEAN is True
+			-- A class in an assembly is always read-only.
+
+	is_class_assembly: BOOLEAN is True
+			-- We are a class in an assembly.
 
 feature {CONF_ACCESS} -- Update
 

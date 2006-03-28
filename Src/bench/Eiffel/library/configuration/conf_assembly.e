@@ -15,7 +15,8 @@ inherit
 			is_assembly,
 			class_by_name,
 			options,
-			is_group_equivalent
+			is_group_equivalent,
+			class_type
 		end
 
 	CONF_FILE_DATE

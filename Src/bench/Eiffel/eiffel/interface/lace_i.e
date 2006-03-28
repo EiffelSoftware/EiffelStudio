@@ -118,7 +118,7 @@ feature -- Conversion from old
 			conf_system := l_load.last_system
 
 				-- set file name of the converted config
-			file_name := a_file
+			file_name := file_system.absolute_pathname (a_file)
 			l_pos := file_name.last_index_of (Operating_environment.directory_separator, file_name.count)
 			if l_pos > 0 and then l_pos < file_name.count then
 				file_name := file_name.substring (1, l_pos)

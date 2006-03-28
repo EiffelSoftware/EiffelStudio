@@ -35,6 +35,10 @@ feature -- Access
 	
 	Xml_files_description: STRING is "XML Files (*.xml)"
 	
+	Config_files_filter: STRING is "*.acex"
+	
+	Config_files_description: STRING is "Eiffel Config Files (*.acex)"
+
 	Ace_files_filter: STRING is "*.ace"
 	
 	Ace_files_description: STRING is "Eiffel Ace Files (*.ace)"
@@ -77,6 +81,7 @@ feature -- Access
 			create Result.make (14)
 			Result.compare_objects
 			Result.extend (Eiffel_project_files_filter)
+			Result.extend (Config_files_filter)
 			Result.extend (All_files_filter)
 			Result.extend (Text_files_filter)
 			Result.extend (Png_files_filter)
@@ -111,6 +116,8 @@ feature -- Status report
 				Result := png_files_description
 			elseif a_filter.is_equal (xml_files_filter) then
 				Result := xml_files_description
+			elseif a_filter.is_equal (config_files_filter) then
+				Result := config_files_description
 			elseif a_filter.is_equal (ace_files_filter) then
 				Result := ace_files_description
 			elseif a_filter.is_equal (strong_name_key_files_filter) then

@@ -18,6 +18,8 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
+	CONF_REFACTORING
+
 feature {NONE} -- Initialization
 
 	make_with_text_formatter (a_text_formatter: like text_formatter) is

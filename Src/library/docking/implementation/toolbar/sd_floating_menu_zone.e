@@ -194,6 +194,8 @@ feature {NONE} -- Implementation of resize issues.
 							last_group_count := l_temp_group_count
 						end
 					end
+				else
+					-- It maybe just initialized Current.
 				end
 			end
 		end

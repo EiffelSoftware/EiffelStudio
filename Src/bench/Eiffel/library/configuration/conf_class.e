@@ -82,6 +82,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	visible: TUPLE [STRING, HASH_TABLE [STRING, STRING]]
 			-- The visible features, "*" = all, mapped to their renamed name (if any).
 
+	is_valid: BOOLEAN
+			-- Is `Current' still valid, ie. still part of the system?
+
 	is_compiled: BOOLEAN is
 			-- Has the class been compiled?
 		once
@@ -99,15 +102,6 @@ feature -- Access, in compiled only, not stored to configuration file
 
 	is_partial: BOOLEAN
 			-- Is the class generated out of partial classes?
-
-	is_library: BOOLEAN is
-			-- Is the class part of a library?
-		local
-			l_lib: CONF_LIBRARY
-		do
-			l_lib ?= group
-			Result := l_lib /= Void
-		end
 
 	is_read_only: BOOLEAN is
 			-- Is the class read only?
@@ -215,6 +209,12 @@ feature -- Status update
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
+
+	invalidate is
+			-- Set `is_valid' to False.
+		do
+			is_valid := False
+		end
 
 	rebuild(a_file_name: STRING; a_group: like group; a_path: STRING) is
 			-- Update the informations during a rebuild.

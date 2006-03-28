@@ -748,7 +748,7 @@ feature -- Status setting
 		do
 			if not a_text.is_empty then
 					-- Replace "%N" with "%R%N" for Windows.
-				l_text := convert_string (l_text)
+				l_text := convert_string (a_text)
 			else
 				l_text := a_text
 			end

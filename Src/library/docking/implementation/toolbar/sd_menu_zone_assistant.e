@@ -28,7 +28,7 @@ feature -- Command
 	reduce_size (a_size: INTEGER): INTEGER is
 			-- Reduce `a_size', `Result' is how many size actually reduced.
 		require
-
+			valid: a_size >= 0
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -62,18 +62,7 @@ feature -- Command
 			end
 			tool_bar.compute_minmum_size
 			update_indicator
---			last_size_reduced := Result
 		end
-
---	rollback_last_reduce_size is
---			-- Rollback last reduce size
---		local
---			l_result: INTEGER
---		do
---			l_result := expand_size (last_size_reduced)
---			check must_equal: l_result = last_size_reduced end
---			last_size_reduced := 0
---		end
 
 	expand_size (a_size_to_expand: INTEGER): INTEGER is
 			-- Expand `internal_tool_bar' a_size_to_expand, Result is actually size expanded.
@@ -98,11 +87,13 @@ feature -- Command
 					l_separator := Void
 					l_item_after := Void
 					l_separator ?= l_snapshot.item
+					set_item_wrap (l_snapshot.item)
 					tool_bar.extend_one_item (l_snapshot.item)
 					if l_separator /= Void then
 						-- We should extend item after separator.
 						if internal_hidden_items.index_of (l_separator, 1) > 1 then
 							l_item_after := internal_hidden_items.i_th (internal_hidden_items.index_of (l_separator, 1) - 1)
+							set_item_wrap (l_item_after)
 							tool_bar.extend_one_item (l_item_after)
 						end
 					end
@@ -141,7 +132,6 @@ feature -- Command
 			end
 			tool_bar.compute_minmum_size
 			update_indicator
---			last_size_expanded := Result
 		ensure
 			valid: 0 <= Result and Result <= a_size_to_expand
 		end
@@ -186,7 +176,7 @@ feature -- Command
 		do
 			create l_all_hiden_items.make (1)
 			-- Prepare all hiden items in Current row.
-			l_tool_bars := tool_bar.row.tool_bar_zones
+			l_tool_bars := tool_bar.row.zones
 			from
 				l_tool_bars.start
 			until
@@ -314,21 +304,16 @@ feature -- Query
 				l_items.index <= 1 or Result >= a_size
 			loop
 				if tool_bar.has (l_items.item) then
---					internal_hidden_items.extend (l_items.item)
 					if not tool_bar.is_vertical then
 						Result := Result + l_items.item.width
 					else
 						Result := Result + l_items.item.rectangle.height
 					end
---					tool_bar.prune (l_items.item)
-
 					l_separator := Void
 					l_separator ?= l_items.i_th (l_items.index - 1)
 					if l_separator /= Void then
 						check has: tool_bar.has (l_separator) end
---						internal_hidden_items.extend (l_separator)
 						Result := Result + l_separator.width
---						tool_bar.prune (l_separator)
 					end
 				end
 				l_items.back
@@ -347,13 +332,7 @@ feature -- Query
 			l_separator: SD_TOOL_BAR_SEPARATOR
 			l_item_after: SD_TOOL_BAR_ITEM
 		do
-			debug ("docking")
-				print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 0.5")
-			end
 			if internal_hidden_items.count /= 0 then
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 1")
-				end
 				from
 					l_old_size := tool_bar.size
 					l_snapshot := internal_hidden_items.twin
@@ -380,9 +359,6 @@ feature -- Query
 							Result := Result + l_item_after.rectangle.height
 						end
 					end
-					debug ("docking")
-						print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 2")
-					end
 					if Result > a_size_to_expand then
 						l_stop := True
 						Result := l_last_result
@@ -391,9 +367,6 @@ feature -- Query
 					if l_separator /= Void then
 						l_snapshot.back
 					end
-				end
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ZONE_ASSISTANT can_expand_size 3 Result: " + Result.out)
 				end
 			end
 		ensure
@@ -442,11 +415,18 @@ feature -- Query
 			-- Last tool bar docking state.
 
 feature {NONE} -- Implementation
---	last_size_reduced: INTEGER
---			-- Last size reduced.
---			
---	last_size_expanded: INTEGER
---			-- Last expanded size.
+
+	set_item_wrap (a_item: SD_TOOL_BAR_ITEM) is
+			-- Set `a_item' wrap state.
+		require
+			not_void: a_item /= Void
+		do
+			if tool_bar.is_vertical then
+				a_item.set_wrap (True)
+			else
+				a_item.set_wrap (False)
+			end
+		end
 
 	groups_sizes: ARRAYED_LIST [INTEGER] is
 			-- Group sizes.

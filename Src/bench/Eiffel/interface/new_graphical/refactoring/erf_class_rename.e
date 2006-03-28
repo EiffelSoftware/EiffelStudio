@@ -150,7 +150,6 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
 			file_rename: ERF_CLASS_FILE_RENAME
-			l_eif_class: EIFFEL_CLASS_I
         do
         		-- if the renamed class was the root class
         	if system.root_class.name.is_case_insensitive_equal (class_i.name) then

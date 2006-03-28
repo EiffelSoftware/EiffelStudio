@@ -184,8 +184,16 @@ feature -- Access
 		require
 			good_argument: cluster_name /= Void
 		do
+			Result ?= group_of_name (cluster_name)
+		end
+
+	group_of_name (cluster_name: STRING): CONF_GROUP is
+			-- Cluster whose name is `cluster_name' (Void if none)
+		require
+			good_argument: cluster_name /= Void
+		do
 			if target /= Void then
-				Result ?= target.clusters.item (cluster_name)
+				Result := target.clusters.item (cluster_name)
 			end
 		end
 

@@ -1,20 +1,19 @@
 indexing
-	description: "Visitor that looks for a class."
+	description: "Get a list of all classes."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_FIND_CLASS_VISITOR
+	CONF_ALL_CLASSES_VISITOR
 
 inherit
-	CONF_CONDITIONED_ITERATOR
+	CONF_ITERATOR
 		redefine
-			make,
+			process_cluster,
+			process_override,
 			process_assembly,
 			process_library,
-			process_precompile,
-			process_cluster,
-			process_override
+			process_precompile
 		end
 
 create
@@ -22,44 +21,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform, a_build: INTEGER) is
+	make is
 			-- Create.
 		do
-			Precursor (a_platform, a_build)
-			create found_classes.make
+			create classes.make (1000)
 			create targets_done.make (5)
 			create assemblies_done.make (5)
 		end
 
 feature -- Access
 
-	found_classes: LINKED_SET [CLASS_I]
-			-- Classes with `name' retrieved during last process.
-
-	name: STRING
-			-- Name to look for.
-
-feature -- Update
-
-	set_name (a_name: STRING) is
-			-- Set `name' to `a_name'.
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_upper: a_name.is_equal (a_name.as_upper)
-		do
-			name := a_name
-		end
+	classes: ARRAYED_LIST [CONF_CLASS]
+			-- All classes in the target.
 
 feature -- Visit nodes
-
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
-			-- Visit `an_assembly'.
-		do
-			if not assemblies_done.has (an_assembly.guid) then
-				assemblies_done.force (an_assembly.guid)
-				retrieve_from_group (an_assembly)
-			end
-		end
 
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
@@ -71,6 +46,15 @@ feature -- Visit nodes
 			-- Visit `a_precompile'.
 		do
 			retrieve_recursively (a_precompile.library_target)
+		end
+
+	process_assembly (an_assembly: CONF_ASSEMBLY) is
+			-- Visit `an_assembly'.
+		do
+			if not assemblies_done.has (an_assembly.guid) then
+				assemblies_done.force (an_assembly.guid)
+				retrieve_from_group (an_assembly)
+			end
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER) is
@@ -85,7 +69,7 @@ feature -- Visit nodes
 			retrieve_from_group (an_override)
 		end
 
-feature {CONF_FIND_CLASS_VISITOR}
+feature {CONF_ALL_CLASSES_VISITOR}
 
 	set_targets_done (a_targets: like targets_done) is
 			-- Set `targets_done' to `a_targets'.
@@ -107,30 +91,16 @@ feature {CONF_FIND_CLASS_VISITOR}
 			assemblies_done_set: assemblies_done = an_assemblies
 		end
 
-
 feature {NONE} -- Implementation
 
 	targets_done: SEARCH_TABLE [UUID]
-			-- Lookup for libraries where we already searched.
+			-- Lookup for libraries we already handled.
 
 	assemblies_done: SEARCH_TABLE [STRING]
-			-- Lookup for assemblies where we already searched.
-
-	retrieve_from_group (a_group: CONF_GROUP) is
-			-- Retrieve classes with `name' from `a_group'.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			l_class: CLASS_I
-		do
-			l_class ?= a_group.classes.item (name)
-			if l_class /= Void then
-				found_classes.force (l_class)
-			end
-		end
+			-- Lookup for assemblies we already handled.
 
 	retrieve_recursively (a_target: CONF_TARGET) is
-			-- Retrieve classes with `name' recursively from `a_target'.
+			-- Retrieve classes recursively from `a_target'.
 		require
 			a_target_not_void: a_target /= Void
 		local
@@ -140,18 +110,25 @@ feature {NONE} -- Implementation
 			l_uuid := a_target.system.uuid
 			if not targets_done.has (l_uuid) then
 				targets_done.force (l_uuid)
-				create l_vis.make (platform, build)
-				l_vis.set_name (name)
+				create l_vis.make
 				l_vis.set_targets_done (targets_done)
 				l_vis.set_assemblies_done (assemblies_done)
 				a_target.process (l_vis)
-				found_classes.append (l_vis.found_classes)
+				classes.append (l_vis.classes)
 			end
 		end
 
+	retrieve_from_group (a_group: CONF_GROUP) is
+			-- Retrieve classes from `a_group'.
+		require
+			a_group_not_void: a_group /= Void
+		do
+			classes.append (a_group.classes.linear_representation)
+		end
+
 invariant
-	name_set_upper: name /= Void implies name.is_equal (name.as_upper)
-	found_classes_not_void: found_classes /= Void
+	classes_not_void: classes /= Void
 	targets_done_not_void: targets_done /= Void
+	assemblies_done_not_void: assemblies_done /= Void
 
 end

@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
 			filter_string_list: LIST [STRING_32]
-			current_filter_string, current_filter_description: STRING_32
+			current_filter_string, current_filter_description: STRING_GENERAL
 			filter_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				current_filter_string ?= filters.item.item (1)
 				current_filter_description ?= filters.item.item (2)
 				if current_filter_string /= Void then
-					filter_string_list := current_filter_string.split (';')
+					filter_string_list := current_filter_string.to_string_32.split (';')
 					if current_filter_description /= Void then
 						filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
 						a_cs := current_filter_description

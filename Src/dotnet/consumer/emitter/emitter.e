@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			elseif not display_usage_help and clr_version = Void then
 				set_error (Version_should_be_specified, Void)
 			elseif not (compact_cache or list_assemblies or display_usage_help) then
-				if not add_to_eac or remove_from_eac or list_assemblies or compact_cache then
+				if not (add_to_eac or remove_from_eac or list_assemblies or compact_cache or remove_from_eac) then
 					set_error (no_operation, Void)
 				end
 			end
@@ -368,9 +368,11 @@ feature {NONE} -- Implementation
 			-- Displays list of assemblies in EAC
 		local
 			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_assembly: CONSUMED_ASSEMBLY
 			l_desc: STRING
 			l_target_name: STRING
 			l_assembly_desc: STRING
+			l_str_count: STRING
 			l_file_info: FILE_INFO
 			l_show: BOOLEAN
 			l_show_count: INTEGER
@@ -388,7 +390,11 @@ feature {NONE} -- Implementation
 				until
 					i > l_assemblies.count
 				loop
-					l_assembly_desc := l_assemblies.item (i).out
+					l_assembly := l_assemblies.item (i)
+					if l_assembly /= Void and then l_assembly.is_consumed then
+
+					end
+					l_assembly_desc := l_assembly.out
 
 					if l_target_name /= Void then
 						if path_is_full_name then
@@ -397,7 +403,7 @@ feature {NONE} -- Implementation
 							if l_target_name.index_of ((create {OPERATING_ENVIRONMENT}).directory_separator, 1) > 0 then
 								l_show := l_assemblies.item (i).has_same_path (l_target_name)
 							else
-								create l_file_info.make (l_assemblies.item (i).location)
+								create l_file_info.make (l_assembly.location)
 								l_show := l_target_name.is_equal (l_file_info.name.to_lower)
 							end
 						end
@@ -405,10 +411,11 @@ feature {NONE} -- Implementation
 						l_show := True
 					end
 					if l_show then
-						create l_desc.make (l_assemblies.count.out.count + 6 + l_assembly_desc.count)
+						l_str_count := l_assemblies.count.out
+						create l_desc.make (l_str_count.count + 6 + l_assembly_desc.count)
 						l_desc.append ("   ")
 						l_desc.append_integer (i)
-						l_desc.append (create {STRING}.make_filled (' ', l_assemblies.count.out.count - i.out.count + 1))
+						l_desc.append (create {STRING}.make_filled (' ', l_str_count.count - i.out.count + 1))
 						l_desc.append (": ")
 						l_desc.append (l_assembly_desc)
 						display_status (l_desc)

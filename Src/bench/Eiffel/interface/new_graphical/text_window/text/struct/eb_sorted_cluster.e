@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			actual_cluster := data
 			sub_clusters := data.sub_clusters
+			create clusters.make
 			if sub_clusters /= Void then
 					-- First retrieve all sub-clusters and put them into an array
 					-- that we will sort.
@@ -51,7 +52,6 @@ feature {NONE} -- Initialization
 				sorted_clusters.sort
 
 					-- Build the tree.
-				create clusters.make
 				from
 					clusters_count := sorted_clusters.count
 					i := clusters_count
@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
+			create classes.make
 			sub_classes := data.classes
 			if sub_classes /= Void then
 					-- Then retrieve all classes and put them into an array
@@ -86,7 +87,6 @@ feature {NONE} -- Initialization
 				sorted_classes.sort
 
 					-- Build the tree.
-				create classes.make
 				from
 					classes_count := sorted_classes.count
 					i := classes_count

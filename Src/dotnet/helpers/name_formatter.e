@@ -429,8 +429,8 @@ feature {NONE} -- Implementation
 							end
 						elseif p.is_upper and c.is_upper and n.is_lower then
 							if a_class_format then
-									-- allows IInterfaceName = IINTERFACE_NAME, CClassName = CCLASS_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
-								put_us := ((i = 2) implies (p /= 'I' and p /= 'C')) or i > 2
+									-- allows IInterfaceName = IINTERFACE_NAME, CClassName = CCLASS_NAME, SServiceName = SSERVICE_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
+								put_us := ((i = 2) implies (p /= 'I' and p /= 'C' and p /= 'S')) or i > 2
 							else
 									-- allows IUnknown = iunknown, SetIUnknown = set_iunknown and SetFBar = set_f_bar
 								if i >= 3 then

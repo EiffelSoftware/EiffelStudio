@@ -185,10 +185,10 @@ feature {NONE} -- Cluster manger observer
 							interface_names.t_diagram_move_class_cmd (l_class.name),
 							[<<agent old_clus.prune_all (l_class),
 							   agent new_clus.extend (l_class),
-							   agent manager.move_class (l_class.class_i, old_clus.cluster_i, new_clus.cluster_i)>>],
+							   agent manager.move_class (l_class.class_i.config_class, old_clus.cluster_i, new_clus.cluster_i)>>],
 							[<<agent new_clus.prune_all (l_class),
 							   agent old_clus.extend (l_class),
-							   agent manager.move_class (l_class.class_i, new_clus.cluster_i, old_clus.cluster_i)>>])
+							   agent manager.move_class (l_class.class_i.config_class, new_clus.cluster_i, old_clus.cluster_i)>>])
 					end
 				elseif new_clus /= Void and then new_clus.is_needed_on_diagram and then not new_clus.has (l_class) then
 				   	if old_clus = Void or else not old_clus.is_needed_on_diagram then
@@ -202,10 +202,10 @@ feature {NONE} -- Cluster manger observer
 							interface_names.t_diagram_move_class_cmd (l_class.name),
 							[<<agent old_clus.prune_all (l_class),
 							   agent new_clus.extend (l_class),
-							   agent manager.move_class (l_class.class_i, old_clus.cluster_i, new_clus.cluster_i)>>],
+							   agent manager.move_class (l_class.class_i.config_class, old_clus.cluster_i, new_clus.cluster_i)>>],
 							[<<agent new_clus.prune_all (l_class),
 							   agent old_clus.extend (l_class),
-							   agent manager.move_class (l_class.class_i, new_clus.cluster_i, old_clus.cluster_i)>>])
+							   agent manager.move_class (l_class.class_i.config_class, new_clus.cluster_i, old_clus.cluster_i)>>])
 				   	end
 				end
 			end

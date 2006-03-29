@@ -67,16 +67,13 @@ feature -- Status setting
 --| Uncomment next line when they work.
 --			set_tooltip (name)
 			set_pixmap (pixmap_from_class_i (a_class))
-			conf_todo
---			if
---				not (a_class.cluster.is_library or else
---				a_class.cluster.is_precompiled or else
---				a_class.is_read_only)
---			then
---				drop_actions.extend (agent on_class_drop)
+			if
+				not a_class.config_class.is_read_only
+			then
+				drop_actions.extend (agent on_class_drop)
 ----| FIXME XR: When clusters can be moved effectively, uncomment this line.
 ----				drop_actions.extend (~on_cluster_drop)
---			end
+			end
 		end
 
 	set_associated_textable (textable: EV_TEXT_COMPONENT) is
@@ -114,8 +111,7 @@ feature -- Status setting
 		do
 			fparent ?= parent
 			actual := cstone.class_i
-			conf_todo
---			parent_tree.manager.move_class (actual, actual.cluster, fparent.data.actual_cluster)
+--			parent_tree.manager.move_class (actual, actual.group, fparent.data.actual_cluster)
 		end
 
 	on_cluster_drop (a_cluster: CLUSTER_STONE) is
@@ -134,19 +130,8 @@ feature {NONE} -- Implementation
 			-- Does `f' recursively contains `data'?
 		require
 			f_not_void: f /= Void
-		local
-			clu: CLUSTER_I
 		do
-			from
-				conf_todo
---				clu := data.cluster
-			until
-				clu = Void or else
-				Result
-			loop
-				Result := (f = clu)
-				clu := clu.parent_cluster
-			end
+			Result := f = data.group
 		end
 
 	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER

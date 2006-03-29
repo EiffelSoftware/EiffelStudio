@@ -51,6 +51,11 @@ inherit
 			default_create
 		end
 
+	CONF_ACCESS
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -60,57 +65,40 @@ feature {NONE} -- Initialization
 			-- Initialization.
 		do
 			create observer_list.make (10)
+			create libraries.make
+			create assemblies.make
 			create clusters.make
 		end
 
 feature -- Initialization
 
 	load_tree is
-			-- Load all clusters and classes.
+			-- Load libraries, assemblies, clusters.
 		local
-			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			sorted_clusters: SORTABLE_ARRAY [EB_SORTED_CLUSTER]
-			i: INTEGER
-			clusters_item: CLUSTER_I
+			l_target: CONF_TARGET
+			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 		do
-			clusters.wipe_out
-			if
-				Eiffel_project.initialized and then
-				Eiffel_project.system_defined
-			 then
-				sub_clusters := Eiffel_system.sub_clusters
-					-- First retrieve all clusters without a parent and put them into an array
-					-- that we will sort.
-				create sorted_clusters.make (1, sub_clusters.count)
-				from
-					sub_clusters.start
-					i := 1
-				until
-					sub_clusters.after
-				loop
-					clusters_item := sub_clusters.item
-					sorted_clusters.put (create {EB_SORTED_CLUSTER}.make (clusters_item), i)
-					i := i + 1
-
-					sub_clusters.forth
-				end
-
-					-- Sort the clusters.
-				sorted_clusters.sort
-
-					-- Build the tree.
-				from
-					create clusters.make
-					i := sorted_clusters.count
-				until
-					i = 0
-				loop
-					clusters.extend (sorted_clusters @ i)
-					i := i - 1
-				end
-
-				is_initialized := True
-			end
+--			libraries.wipe_out
+--			assemblies.wipe_out
+--			clusters.wipe_out
+--			if
+--				Eiffel_project.initialized and then
+--				Eiffel_project.system_defined and then
+--				Universe.target /= Void
+--			 then
+--			 	l_target := Universe.target
+--				from
+--					l_libs := l_target.libraries
+--					l_libs.start
+--				until
+--					l_libs.after
+--				loop
+--					libraries.extend (l_libs.item_for_iteration)
+--					l_libs.forth
+--				end
+--
+--				is_initialized := True
+--			end
 		end
 
 feature -- Observer Pattern
@@ -288,11 +276,11 @@ feature -- Observer Pattern
 			clusters.wipe_out
 		end
 
-feature -- Load/Save
-
-feature -- Measurement
-
 feature -- Status report
+
+	libraries: SORTED_TWO_WAY_LIST [CONF_LIBRARY]
+
+	assemblies: SORTED_TWO_WAY_LIST [CONF_ASSEMBLY]
 
 	clusters: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 
@@ -300,8 +288,6 @@ feature -- Status setting
 
 	is_initialized: BOOLEAN
 			-- Is the class initialized?
-
-feature -- Cursor movement
 
 feature -- Element change
 
@@ -372,11 +358,11 @@ feature -- Element change
 --			end
 		end
 
-	move_class (a_class: CLASS_I; old_cluster, new_cluster: CLUSTER_I) is
-			-- Move `a_class' from `old_cluster' to `new_cluster'.
+	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CLUSTER_I) is
+			-- Move `a_class' from `old_group' to `new_cluster'.
 		require
 			valid_class: a_class /= Void
-			valid_clusters: old_cluster /= Void and new_cluster /= Void
+			valid_clusters: old_group /= Void and new_cluster /= Void
 		local
 			class_list: SORTED_TWO_WAY_LIST [CLASS_I]
 			actual_parent: CLUSTER_I
@@ -394,22 +380,20 @@ feature -- Element change
 			then
 				if
 					not new_cluster.is_readonly and then
-					not old_cluster.is_readonly and then
-					old_cluster.path /= Void and then
-					new_cluster.path /= Void
+					not old_group.is_readonly
 				then
-					create tdirsrc.make (old_cluster.path)
+					create tdirsrc.make (old_group.location.evaluated_path)
 					create tdirdes.make (new_cluster.path)
 					if
 						tdirsrc.exists and then
 						tdirdes.exists
 					then
 						if
-							not old_cluster.path.is_equal (new_cluster.path)
+							not old_group.location.evaluated_path.is_equal (new_cluster.path)
 						then
 							create old_file.make (a_class.file_name)
 							create fname.make_from_string (new_cluster.path)
-							fname.set_file_name (a_class.base_name)
+							fname.set_file_name (a_class.file_name)
 							create new_file.make (fname)
 							if
 								old_file.exists and then
@@ -427,26 +411,25 @@ feature -- Element change
 								new_file.close
 								old_file.delete
 
-									-- Remove `a_class' from the universe.
-								actual_parent := old_cluster
-								actual_parent.classes.remove (a_class.name)
+									-- Remove `a_class' from the old_group
+								old_group.classes.remove (a_class.name)
+
+									-- Add `a_class' to the new cluster
+								conf_todo
+--								a_class.rebuild (a_class.file_name, new_cluster, new_path)
+--								new_cluster.classes.force (a_class, a_class.name)
 
 									-- Remove `a_class' from the managed clusters.
 								class_list := (folder_from_cluster (actual_parent)).classes
 								class_list.start
-								class_list.prune_all (a_class)
-
-									-- Add `a_class' to the universe.
-								conf_todo
---								a_class.set_cluster (new_cluster)
---								new_cluster.classes.put (a_class, a_class.name)
+--								class_list.prune_all (a_class)
 
 									-- Add `a_class' to the managed clusters.
 								new_sorted_cluster := folder_from_cluster (new_cluster)
-								new_sorted_cluster.classes.extend (a_class)
+--								new_sorted_cluster.classes.extend (a_class)
 
 									-- Notify observers.
-								on_class_moved (a_class, old_cluster)
+--								on_class_moved (a_class, old_group)
 							else
 								create wd.make_with_text (Warning_messages.w_Cannot_move_class)
 								wd.show_modal_to_window (Window_manager.last_focused_window.window)
@@ -1192,26 +1175,6 @@ feature {NONE} -- Implementation
 
 	error_in_ace_parsing: BOOLEAN
 			-- Did an error occur during the last call to `add_cluster_in_ace' or `remove_cluster_from_ace'?
-
-	top_parent (a_cluster: CLUSTER_I): CLUSTER_I is
-			-- Returns the top-parent cluster of `a_cluster'.
-		require
-			valid_cluster: a_cluster /= Void
-		local
-			curclu: CLUSTER_I
-			par: CLUSTER_I
-		do
-			from
-				curclu := a_cluster
-				par := a_cluster.parent_cluster
-			until
-				par = Void
-			loop
-				curclu := par
-				par := curclu.parent_cluster
-			end
-			Result := curclu
-		end
 
 feature {NONE} -- Attributes
 

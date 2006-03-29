@@ -543,6 +543,7 @@ feature {NONE} -- Implementation
 		do
 			guard.lock
 			if not l_retried then
+				l_reader := cache_reader
 				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Removing assembly '{0}'.", a_path))
 				l_ca := consumed_assembly_from_path (a_path)
 				create l_dir.make (l_reader.absolute_assembly_path_from_consumed_assembly (l_ca))

@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 			if l_cluster /= Void and then l_cluster.visible /= Void then
 				visible := l_cluster.visible.item (name)
 			end
+			is_valid := True
+		ensure
+			is_valid: is_valid
 		end
 
 feature -- Access

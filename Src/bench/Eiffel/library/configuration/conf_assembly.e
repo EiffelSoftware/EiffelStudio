@@ -51,12 +51,15 @@ feature {NONE} -- Initialization
 			enable (pf_dotnet, build_all)
 			is_in_gac := True
 			target := a_target
+			is_valid := True
 			set_name (a_name)
 			assembly_name := an_assembly_name
 			assembly_version := an_assembly_version
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
 			create location.make_from_full_path ("", a_target)
+		ensure
+			is_valid: is_valid
 		end
 
 

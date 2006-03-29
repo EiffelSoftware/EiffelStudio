@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			-- Create associated to `a_target'.
 		do
 			target := a_target
+			is_valid := True
 			set_name (a_name)
 			set_location (a_location)
 		end

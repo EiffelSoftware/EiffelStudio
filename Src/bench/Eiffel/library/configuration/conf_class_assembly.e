@@ -37,6 +37,9 @@ feature {NONE} -- Implementation
 			set_name
 			create file_name.make_empty
 			create path.make_empty
+			is_valid := True
+		ensure
+			is_valid: is_valid
 		end
 
 feature -- Access

@@ -94,6 +94,18 @@ feature -- Access
 	conf_system: CONF_SYSTEM
 			-- Current parsed configuration system.
 
+	target: CONF_TARGET is
+			-- Current parsed target as in the configuration file (may not be processed).
+		require
+			conf_system_set: conf_system /= Void
+			target_name_set: target_name /= Void
+			target_name_valid: conf_system.targets.item (target_name) /= Void
+		do
+			Result := conf_system.targets.item (target_name)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Conversion from old
 
 	convert_ace (a_file: STRING) is

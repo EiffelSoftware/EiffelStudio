@@ -26,4 +26,13 @@ feature -- Update
 			eifgen_set: eifgen = a_location
 		end
 
+	set_arguments (an_arguments: like arguments) is
+			-- Set `arguments' to `an_arguments'.
+		do
+			arguments := an_arguments
+		ensure
+			arguments_set: arguments = an_arguments
+		end
+
+
 end

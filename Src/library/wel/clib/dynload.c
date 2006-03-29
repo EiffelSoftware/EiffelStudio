@@ -118,7 +118,7 @@ DWORD cwin_get_dll_version(LPCTSTR pszDllName)
 			// pDllGetVersion not supported --> 4.00 or 4.70
 			// Note: 4.70 does not exist for Shell32.dll
 			//       Shlwapi.dll was first shiped with IE4 so its version start a 4.71.
-			if (wcsicmp(pszDllName, L"comctl32.dll")==0)
+			if (_wcsicmp(pszDllName, L"comctl32.dll")==0)
 				{
 				FARPROC pDllImageList_Copy = GetProcAddress (hinstDll, "ImageList_Copy");
 				if (pDllImageList_Copy != NULL)

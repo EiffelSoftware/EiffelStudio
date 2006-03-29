@@ -192,6 +192,9 @@ feature -- Visit nodes
 			l_uuid: UUID
 			l_vis: like Current
 			l_path: STRING
+			l_ren: CONF_HASH_TABLE [STRING, STRING]
+			l_prefixed_classes: like current_classes
+			l_pre: STRING
 		do
 			if not is_error then
 				l_path := a_library.location.evaluated_path
@@ -237,7 +240,33 @@ feature -- Visit nodes
 					if not is_error then
 						create current_classes.make (Classes_per_cluster)
 						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.is_enabled (platform, build))
-						a_library.set_classes (current_classes)
+							-- do renaming prefixing if necessary
+						l_ren := a_library.renaming
+						if l_ren /= Void then
+							from
+								l_ren.start
+							until
+								l_ren.after
+							loop
+								current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
+								l_ren.forth
+							end
+						end
+						l_pre := a_library.name_prefix
+						if l_pre /= Void and then not l_pre.is_empty then
+							create l_prefixed_classes.make (current_classes.count)
+							from
+								current_classes.start
+							until
+								current_classes.after
+							loop
+								l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
+								current_classes.forth
+							end
+							a_library.set_classes (l_prefixed_classes)
+						else
+							a_library.set_classes (current_classes)
+						end
 					end
 				end
 			end

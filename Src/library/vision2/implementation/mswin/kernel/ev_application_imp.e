@@ -82,6 +82,8 @@ feature {NONE} -- Initialization
 				-- the current platform.
 			update_theme_drawer
 			dispatcher.set_exception_callback (agent on_exception_action)
+
+			create theme_window.make
 		end
 
 	launch  is
@@ -545,6 +547,9 @@ feature {NONE} -- Exceptions
 		end
 
 feature {NONE} -- Implementation
+
+	theme_window: EV_THEME_WINDOW
+			-- Window with responsibility for notify `theme_changed_actions'.
 
 	blocking_windows_stack: ARRAYED_STACK [EV_WINDOW_IMP]
 			-- Windows that are blocking window. The top

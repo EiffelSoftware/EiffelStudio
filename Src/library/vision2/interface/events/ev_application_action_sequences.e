@@ -181,6 +181,14 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	theme_changed_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when operation system theme changed
+		do
+			Result := implementation.theme_changed_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

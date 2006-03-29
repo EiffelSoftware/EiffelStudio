@@ -417,6 +417,28 @@ feature {EV_ANY_I} -- Implementation
 	focus_out_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET]];
 			-- Implementation of once per object `focus_out_actions'.
 
+feature -- Event handling
+
+	theme_changed_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when operating system theme changed.
+		do
+			if theme_changed_actions_internal = Void then
+				theme_changed_actions_internal :=
+					create_theme_changed_actions
+			end
+			Result := theme_changed_actions_internal
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_theme_changed_actions: EV_NOTIFY_ACTION_SEQUENCE	 is
+			-- Create a theme_changed action sequence.
+		deferred
+		end
+
+	theme_changed_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
+			-- Implementation of once per object `theme_changed_actions'.
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

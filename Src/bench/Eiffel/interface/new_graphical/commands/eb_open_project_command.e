@@ -50,6 +50,11 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 	CONF_REFACTORING
 
 create
@@ -82,32 +87,31 @@ feature -- License managment
 feature -- Execution
 
 	execute_with_file (a_project_file_name: STRING) is
-			-- Open the specific project named `project_file_name'
+			-- Open the specific project named `a_project_file_name'
 		require
---			project_file_name_valid: project_file_name /= Void
+			a_project_file_name_valid: a_project_file_name /= Void
 		local
 			wd: EV_WARNING_DIALOG
 			file: RAW_FILE
 			ebench_name: STRING
 			rescued: BOOLEAN
 		do
-			conf_todo_msg ("changed argument from project_file_name to a_project_file_name")
---			if not rescued then
---				create file.make (valid_file_name (project_file_name))
---				if not file.exists or else file.is_directory then
---					create wd.make_with_text (Warning_messages.w_file_not_exist (project_file_name))
---					wd.show_modal_to_window (parent_window)
---				else
---					if not Eiffel_project.initialized then
---						open_project_file (project_file_name)
---					else
---						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
---						ebench_name.append (" ")
---						ebench_name.append (project_file_name)
---						launch_ebench (ebench_name)
---					end
---				end
---			end
+			if not rescued then
+				create file.make (valid_file_name (a_project_file_name))
+				if not file.exists or else file.is_directory then
+					create wd.make_with_text (Warning_messages.w_file_not_exist (a_project_file_name))
+					wd.show_modal_to_window (parent_window)
+				else
+					if not Eiffel_project.initialized then
+						open_project_file (a_project_file_name)
+					else
+						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
+						ebench_name.append (" ")
+						ebench_name.append (a_project_file_name)
+						launch_ebench (ebench_name)
+					end
+				end
+			end
 		rescue
 			add_error_message (Warning_messages.w_Unable_to_retrieve_project)
 			display_error_message (parent_window)
@@ -133,7 +137,7 @@ feature -- Execution
 				fod.set_start_directory (last_directory_opened.substring (1,last_directory_opened.index_of(';',1) -1 ))
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
-			set_dialog_filters_and_add_all (fod, <<eiffel_project_files_filter>>)
+			set_dialog_filters_and_add_all (fod, <<config_files_filter, ace_files_filter, eiffel_project_files_filter>>)
 			fod.open_actions.extend (agent file_choice_callback (fod))
 			fod.show_modal_to_window (parent_window)
 		end
@@ -175,19 +179,50 @@ feature {NONE} -- Project Initialization
 		require
 			file_name_non_void: file_name /= Void
 		local
-			dir_name: STRING
+			l_ext: STRING
+			l_pos: INTEGER
+			l_not_processed: BOOLEAN
+			l_file_name: FILE_NAME
 		do
-			dir_name := file_name.substring (1, file_name.last_index_of
-				(Operating_environment.Directory_separator, file_name.count) - 1)
-				-- of course we could have chosen to take the directory from the file open dialog.
+			workbench.make
+
+			conf_todo_msg ("Handle errors")
+				-- Try to extract the extension of the file.
+			l_pos := file_name.last_index_of ('.', file_name.count)
+			if l_pos > 0 and then l_pos < file_name.count then
+				l_ext := file_name.substring (l_pos + 1, file_name.count)
+				if l_ext.is_equal (config_extension) then
+					lace.set_file_name (file_name)
+					lace.load
+				elseif l_ext.is_equal (project_extension) then
+					lace.convert_project (file_name)
+					lace.load
+				elseif l_ext.is_equal (ace_file_extension) then
+					lace.convert_ace (file_name)
+					lace.load
+				else
+					l_not_processed := True
+				end
+			else
+				l_not_processed := True
+			end
+
+			if l_not_processed then
+					-- We try to load it as a normal config file.
+				lace.set_file_name (file_name)
+				lace.load
+			end
 
 				--| Retrieve existing project
-			create project_file.make (file_name)
-			create project_dir.make (dir_name, project_file)
 			Project_directory_name.wipe_out
-			Project_directory_name.set_directory (dir_name)
+			Project_directory_name.set_directory (lace.project_path)
+			create l_file_name.make_from_string (eiffel_gen_path)
+			l_file_name.set_file_name (project_file_name)
+			create project_file.make (l_file_name)
+			create project_dir.make (eiffel_gen_path, project_file)
 
 			retrieve_project
+			lace.recompile
 		end
 
 	retrieve_project is

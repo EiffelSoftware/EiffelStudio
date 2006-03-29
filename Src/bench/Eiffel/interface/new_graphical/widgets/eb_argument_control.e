@@ -54,11 +54,6 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create, is_equal, copy
-		end
-
 create
 	make
 
@@ -88,63 +83,30 @@ feature -- Access
 
 feature {NONE} -- Retrieval		
 
-	retrieve_ace_arguments is
-			-- Check content of Ace file and if valid set retrieve arguments.
+	retrieve_config_arguments is
+			-- Check content of config file and if valid set retrieve arguments.
 		local
-			defaults: LACE_LIST [D_OPTION_SD]
-			d_opt: D_OPTION_SD
-			opt: OPTION_SD
-			val: OPT_VAL_SD
 			argument_value: STRING
-			free_option: FREE_OPTION_SD
+			wd: STRING
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			l_root_ast: ACE_SD
 		do
-			ace_arguments_list.wipe_out
-			ace_combo.wipe_out
+			config_arguments_list.wipe_out
+			config_combo.wipe_out
 			set_mode (Ace_mode)
-			l_root_ast := retrieve_ace
-			if l_root_ast /= Void then
-				defaults := l_root_ast.defaults
-				if defaults /= Void then
-					from
-						defaults.start
-					until
-						defaults.after
-					loop
-						d_opt := defaults.item
-						opt := d_opt.option
-						val := d_opt.value
-						if opt.is_free_option then
-							free_option ?= opt
-							inspect
-								free_option.code
-							when {FREE_OPTION_SD}.arguments then
-								argument_value := val.value
-								if
-									not (argument_value.is_empty or else
-									argument_value.is_equal (No_argument_string) or else
-									argument_value.is_equal (" "))
-								then
-										-- Add argument to list.
-									create l_row
-									l_row.extend (argument_value.twin)
-									ace_arguments_list.extend (l_row)
-										-- Add argument to combo.
-									ace_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
-								end
-								defaults.remove
-							when {FREE_OPTION_SD}.working_directory then
-								defaults.remove
-								set_working_directory (val.value)
-							else
-								defaults.forth
-							end
-						else
-							defaults.forth
-						end
-					end
-				end
+
+			argument_value := lace.target.settings.item ("arguments")
+			if argument_value /= Void then
+					-- Add argument to list.
+				create l_row
+				l_row.extend (argument_value.twin)
+				config_arguments_list.extend (l_row)
+					-- Add argument to combo.
+				config_combo.extend (create {EV_LIST_ITEM}.make_with_text (argument_value))
+			end
+
+			wd := universe.target.settings.item ("arguments")
+			if wd /= Void then
+				set_working_directory (wd)
 			end
 		end
 
@@ -152,78 +114,33 @@ feature {NONE} -- Retrieval
 			-- Retrieve and initialize the user specific arguments from 'arguments.wb'.
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			l_last_string: STRING
+			l_args: ARRAYED_LIST [STRING]
 		do
 			user_arguments_list.wipe_out
 			user_combo.wipe_out
 			set_mode (User_mode)
-			create arguments_file.make (Arguments_file_name)
-			if not arguments_file.exists then
-					-- Create new arguments file.
-				arguments_file.create_read_write
-			else
-				arguments_file.open_read
-			end
-			if not arguments_file.is_empty then
+			l_args := lace.user_options.arguments
+			if l_args /= Void then
 				from
-					arguments_file.start
+					l_args.start
 				until
-					arguments_file.end_of_file
+					l_args.after
 				loop
-					arguments_file.read_line
-					l_last_string := arguments_file.last_string.twin
-					if
-						not (l_last_string.is_empty or else
-						l_last_string.is_equal (No_argument_string) or else
-						l_last_string.is_equal (" "))
-					then
-						if l_last_string.item (1) = '[' then
-							-- This is the saved argument so don't add it to the list here.
-							if l_last_string.item (l_last_string.count) = 'o' then
-								is_with_argument := True
-								l_last_string.remove (l_last_string.count)
-							end
-							l_last_string.remove (1)
-							l_last_string.remove (l_last_string.count)
-							saved_argument := l_last_string
-							Current_selected_cmd_line_argument.put (saved_argument)
-						else
-							-- Add argument to list.
-						create l_row
-						l_row.extend (l_last_string.twin)
-						user_arguments_list.extend (l_row)
-							-- Add argument to combo.
-						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_last_string))
-						end
-					end
+						-- Add argument to list.
+					create l_row
+					l_row.extend (l_args.item)
+					user_arguments_list.extend (l_row)
+						-- Add argument to combo.
+					user_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_args.item))
+					l_args.forth
 				end
-			else
-					-- File was empty so it must have just been created.
-				saved_argument := ""
-			end
-			arguments_file.close
-		end
-
-	retrieve_ace: ACE_SD is
-			-- Retrieve the current lace file
-		local
-			l_file_name: STRING
-			l_file: PLAIN_TEXT_FILE
-		do
-			l_file_name := Eiffel_ace.file_name
-			create l_file.make (l_file_name)
-			if l_file.exists and then l_file.is_readable then
-				conf_todo
-				--Result := Eiffel_ace.Lace.parsed_ast
 			end
 		end
 
 feature -- Storage
 
-	store_ace_arguments (a_root_ast: ACE_SD) is
-			-- Store new arguments in `a_root_ast'.
-		require
-			a_root_ast_not_void: a_root_ast /= Void
+	store_config_arguments is
+			-- Store new arguments in config file.
 		do
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
@@ -231,16 +148,12 @@ feature -- Storage
 				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
-			if Workbench.system_defined then
-				conf_todo
---				Lace.argument_list.put_front (saved_argument)
-			end
-			save_ace_arguments (a_root_ast)
+			save_config_arguments
 			synch_with_others
 		end
 
 	store_custom_arguments is
-			-- Store new arguments in `a_root_ast'.
+			-- Store new arguments in config file.
 		do
 			if not argument_check.is_selected or current_argument.text.is_empty then
 				saved_argument := ""
@@ -248,15 +161,11 @@ feature -- Storage
 				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
-			if Workbench.system_defined then
-				conf_todo
---				Lace.argument_list.put_front (saved_argument)
-			end
 			save_custom_arguments
 			synch_with_others
 		end
 
-	store_arguments (a_root_ast: ACE_SD) is
+	store_arguments is
 			-- Store the current arguments to their corresponding files and set current
 			-- arguments for system execution.
 		do
@@ -266,152 +175,39 @@ feature -- Storage
 				saved_argument := current_argument.text
 			end
 			current_selected_cmd_line_argument.put (saved_argument)
-			if Workbench.system_defined then
-				conf_todo
---				Lace.argument_list.put_front (saved_argument)
-			end
-			if a_root_ast /= Void then
-				save_ace_arguments (a_root_ast)
-			else
-				save_ace_arguments (retrieve_ace)
-			end
+			save_config_arguments
 			save_custom_arguments
 			synch_with_others
 		end
 
 feature {NONE} -- Storage
 
-	save_ace_arguments (a_root_ast: ACE_SD) is
-			-- Store content of `ace_arguments_list' into `a_root_ast'.
-		require
-			a_root_ast_not_void: a_root_ast /= Void
- 		local
-			defaults: LACE_LIST [D_OPTION_SD]
-			free_option: FREE_OPTION_SD
-			val: OPT_VAL_SD
-			d_option: D_OPTION_SD
-			opt: OPTION_SD
-			wd, argument_text, sel_arg: STRING
+	save_config_arguments is
+			-- Store content of `ace_arguments_list' into config file.
 		do
-			defaults := a_root_ast.defaults
-			if defaults = Void then
-				create defaults.make (10)
-				conf_todo
---				a_root_ast.set_defaults (defaults)
+			if config_arguments_list /= Void and not config_arguments_list.is_empty then
+				lace.target.settings.force (config_arguments_list.first.i_th (1), "arguments")
+			else
+				lace.target.settings.remove ("arguments")
 			end
-
-			from
-				defaults.start
-			until
-				defaults.after
-			loop
-				d_option := defaults.item
-				opt := d_option.option
-				val := d_option.value
-				if opt.is_free_option then
-					free_option ?= opt
-					inspect
-						free_option.code
-					when {FREE_OPTION_SD}.arguments then
-						defaults.remove
-					when {FREE_OPTION_SD}.Working_directory then
-					 	defaults.remove
-					else
-						defaults.forth
-					end
-				else
-					defaults.forth
-				end
-			end
-
-			if ace_arguments_list.count > 0 then
-				if ace_arguments_list.selected_item /= Void then
-					sel_arg := ace_arguments_list.selected_item.i_th (1).twin
-					defaults.extend (new_d_option (sel_arg))
-				end
- 				from
-					ace_arguments_list.start
-				until
-					ace_arguments_list.after
-				loop
-					if
-						sel_arg /= Void and then
-						not ace_arguments_list.item.i_th (1).is_equal (sel_arg)
-					then
-						argument_text := ace_arguments_list.item.i_th (1).twin
-						defaults.extend (new_d_option (argument_text))
-					end
-					ace_arguments_list.forth
-				end
-			end
-
-				-- Save working directory.
-			wd := working_directory_path
-			if not wd.is_empty then
-				defaults.extend (
-					new_special_option_sd ({FREE_OPTION_SD}.working_directory, wd, True))
-			end
-			if Workbench.system_defined then
-				conf_todo
---				Lace.set_application_working_directory (wd)
-			end
-			if not from_project_settings then
-				save_ace (a_root_ast)
-			end
+			lace.store
 		end
 
 	save_custom_arguments is
-			-- Save user custom arguments to 'arguments.wb'.	
-		require
-			file_exists: arguments_file.exists
-			file_not_open: arguments_file.is_closed
+			-- Save user custom arguments to user options.
+		local
+			l_args: ARRAYED_LIST [STRING]
 		do
+			create l_args.make (user_arguments_list.count)
 			from
-				arguments_file.wipe_out
-				arguments_file.open_write
-				arguments_file.start
-					-- Also save current argument here for retrieval in new execution of compiler.
-				arguments_file.put_string ("[" + saved_argument + "]")
-				if argument_check.is_selected then
-					arguments_file.put_string ("o")
-				end
-				arguments_file.put_new_line
 				user_arguments_list.start
 			until
 				user_arguments_list.after
 			loop
-				arguments_file.put_string (user_arguments_list.item.i_th (1))
-				arguments_file.put_new_line
+				l_args.extend (user_arguments_list.item.i_th (1))
 				user_arguments_list.forth
 			end
-			arguments_file.close
-		end
-
-	save_ace (a_root_ast: ACE_SD) is
-			-- Save the arguments to the Ace file.
-		require
-			a_root_ast_not_void: a_root_ast /= Void
-		local
-			l_ast, l_saved_ace: ACE_SD
-			ace_file: PLAIN_TEXT_FILE
-			st: GENERATION_BUFFER
-		do
-			conf_todo
---			l_ast := a_root_ast.duplicate
---			l_saved_ace := retrieve_ace
---			if l_saved_ace = Void or else not l_saved_ace.same_as (l_ast) then
---				create st.make (2048)
---				l_ast.save (st)
---				if Eiffel_ace.file_name = Void then
---					Eiffel_ace.set_file_name ("Ace.ace")
---				end
---				create ace_file.make (Eiffel_ace.file_name)
---				if not ace_file.exists or else ace_file.is_writable then
---					ace_file.open_write
---					st.put_in_file (ace_file)
---					ace_file.close
---				end
---			end
+			lace.user_options.set_arguments (l_args)
 		end
 
 feature {NONE} -- GUI
@@ -427,9 +223,9 @@ feature {NONE} -- GUI
 			create argument_list.make (parent_window)
 			create argument_combo
 			create current_argument
-			create ace_arguments_list.make (parent_window)
-			create ace_combo
-			create ace_current_arg_text
+			create config_arguments_list.make (parent_window)
+			create config_combo
+			create config_current_arg_text
 			create user_arguments_list.make (parent_window)
 			create user_combo
 			create user_current_arg_text
@@ -472,9 +268,9 @@ feature {NONE} -- GUI
 			vbox.extend (notebook)
 			Result.extend (l_frame)
 
-			ace_arguments_list.set_all_columns_editable
+			config_arguments_list.set_all_columns_editable
 			user_arguments_list.set_all_columns_editable
-			ace_combo.disable_edit
+			config_combo.disable_edit
 			user_combo.disable_edit
 
 				-- Global actions.
@@ -487,19 +283,19 @@ feature {NONE} -- GUI
 			notebook.selection_actions.extend (agent on_tab_changed)
 
 				-- List actions.
-			ace_arguments_list.focus_in_actions.extend (agent refresh)
+			config_arguments_list.focus_in_actions.extend (agent refresh)
 			user_arguments_list.focus_in_actions.extend (agent refresh)
-			ace_arguments_list.select_actions.force_extend (agent argument_selected (ace_arguments_list))
+			config_arguments_list.select_actions.force_extend (agent argument_selected (config_arguments_list))
 			user_arguments_list.select_actions.force_extend (agent argument_selected (user_arguments_list))
-			ace_arguments_list.end_edit_actions.extend (agent on_list_edited)
+			config_arguments_list.end_edit_actions.extend (agent on_list_edited)
 			user_arguments_list.end_edit_actions.extend (agent on_list_edited)
 
 				-- Combo actions.
-			ace_combo.select_actions.extend (agent argument_selected (ace_combo))
+			config_combo.select_actions.extend (agent argument_selected (config_combo))
 			user_combo.select_actions.extend (agent argument_selected (user_combo))
 
 				-- Argument text actions.
-			ace_current_arg_text.key_release_actions.extend (agent arg_text_changed)
+			config_current_arg_text.key_release_actions.extend (agent arg_text_changed)
 			user_current_arg_text.key_release_actions.extend (agent arg_text_changed)
 		end
 
@@ -606,16 +402,16 @@ feature -- Status Setting
 				argument_check.enable_select
 				is_with_argument := False
 			end
-			retrieve_ace_arguments
+			retrieve_config_arguments
 			retrieve_user_arguments
 				-- Determine last argument run and set mode and argument to this.
 				-- If not use Ace mode as default.
 
 			if saved_argument /= Void and not saved_argument.is_equal (No_argument_string) then
-				if ace_arguments_list.there_exists (agent row_duplicate (?)) then
+				if config_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (1))
 					set_mode (Ace_mode)
-					ace_arguments_list.select_item (saved_argument, 1)
+					config_arguments_list.select_item (saved_argument, 1)
 					select_combo_item (saved_argument)
 				elseif user_arguments_list.there_exists (agent row_duplicate (?)) then
 					notebook.select_item (notebook.i_th (2))
@@ -655,17 +451,6 @@ feature {NONE} -- Status Setting
 			initialize_mode
 		end
 
-	new_d_option (a_string: STRING): D_OPTION_SD is
-			-- Create a new D_OPTION_SD to add to Ace.
-		local
-			free_option: FREE_OPTION_SD
-			val: OPT_VAL_SD
-		do
-			create free_option.make ({FREE_OPTION_SD}.arguments)
-			create val.make (new_id_sd (a_string, True))
-			create Result.initialize (free_option, val)
-		end
-
 feature {NONE} -- Element Change
 
 	initialize_mode is
@@ -673,9 +458,9 @@ feature {NONE} -- Element Change
 		do
 			inspect mode
 				when Ace_mode then
-					argument_list := ace_arguments_list
-					argument_combo := ace_combo
-					current_argument := ace_current_arg_text
+					argument_list := config_arguments_list
+					argument_combo := config_combo
+					current_argument := config_current_arg_text
 				when User_mode then
 					argument_list := user_arguments_list
 					argument_combo := user_combo
@@ -691,8 +476,8 @@ feature {NONE} -- Element Change
 			inspect mode
 				when Ace_mode then
 					ace_modified := True
-					ace_arguments_list := argument_list
-					store_ace_arguments (retrieve_ace)
+					config_arguments_list := argument_list
+					store_config_arguments
 				when User_mode then
 					user_arguments_list := argument_list
 					store_custom_arguments
@@ -734,11 +519,11 @@ feature {NONE} -- GUI Properties
 	argument_combo: EV_COMBO_BOX
 			-- The current list of arguments (either 'ace_combo' or 'custom_combo').
 
-	ace_arguments_list: EV_EDITABLE_LIST
-			-- Widget displaying arguments from Ace file.
+	config_arguments_list: EV_EDITABLE_LIST
+			-- Widget displaying arguments from config file.
 
-	ace_combo: EV_COMBO_BOX
-			-- Widget displaying arguments from Ace file.
+	config_combo: EV_COMBO_BOX
+			-- Widget displaying arguments from config file.
 
 	user_arguments_list: EV_EDITABLE_LIST
 			-- Widget displaying arguments from user specific file.
@@ -746,8 +531,8 @@ feature {NONE} -- GUI Properties
 	user_combo: EV_COMBO_BOX
 			-- Widget displaying arguments from user specific file.
 
-	ace_current_arg_text: EV_TEXT
-			-- Widget displaying current program argument from ace file.
+	config_current_arg_text: EV_TEXT
+			-- Widget displaying current program argument from config file.
 
 	user_current_arg_text: EV_TEXT
 			-- Widget displaying current program argument from user file.

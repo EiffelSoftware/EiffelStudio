@@ -1,13 +1,10 @@
 indexing
-	description: "Representation of a cluster in the cluster tree."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: "Xavier Rousselot"
+	description: "Representation of a subfolder of a recursive cluster."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_CLASSES_TREE_FOLDER_ITEM
+	EB_CLASSES_TREE_SUBFOLDER_ITEM
 
 inherit
 	EB_CLASSES_TREE_ITEM
@@ -26,11 +23,12 @@ create
 
 feature -- Initialization
 
-	make (a_cluster: EB_SORTED_CLUSTER) is
+	make (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- Create a tree item representing `a_cluster'.
 		do
 			default_create
 			create classes_double_click_agents.make
+			path := a_path
 			set_data (a_cluster)
 			expand_actions.extend (agent load)
 		end
@@ -39,6 +37,9 @@ feature -- Status report
 
 	data: EB_SORTED_CLUSTER
 			-- cluster represented by `Current'.
+
+	path: STRING
+			-- Path we are representing
 
 feature -- Access
 
@@ -54,11 +55,18 @@ feature -- Status setting
 			-- Affect `a_cluster' to `data'.
 		local
 			actual: CLUSTER_I
+			l_name: STRING
+			l_pos: INTEGER
 		do
+			l_pos := path.last_index_of ('/', path.count)
+			if l_pos > 0 then
+				l_name := path.substring (l_pos+1, path.count)
+			else
+				create l_name.make_empty
+			end
 			actual := a_cluster.actual_cluster
-			conf_todo
-			set_text (actual.cluster_name)
-			set_tooltip (actual.cluster_name)
+			set_text (l_name)
+			set_tooltip (l_name)
 			data := a_cluster
 			set_pebble (stone)
 			set_accept_cursor (Cursors.cur_Cluster)
@@ -122,11 +130,9 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 	load is
 			-- Load the classes and the sub_clusters of `data'.
 		local
-			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
 			subfolders: SORTED_TWO_WAY_LIST [STRING]
 			l_set: DS_HASH_SET [STRING]
 			classes: SORTED_LIST [CLASS_I]
-			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			l_subfolder: EB_CLASSES_TREE_SUBFOLDER_ITEM
 			a_class: EB_CLASSES_TREE_CLASS_ITEM
 			orig_count: INTEGER
@@ -136,34 +142,8 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 				-- Build the tree.
 
-			clusters := data.clusters
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				create a_folder.make (clusters.item)
-				if associated_window /= Void then
-					a_folder.associate_with_window (associated_window)
-				end
-				if associated_textable /= Void then
-					a_folder.associate_textable_with_classes (associated_textable)
-				end
-
-				from
-					classes_double_click_agents.start
-				until
-					classes_double_click_agents.after
-				loop
-					a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
-					classes_double_click_agents.forth
-				end
-				extend (a_folder)
-				clusters.forth
-			end
-
 			create subfolders.make
-			l_set := data.sub_folders.item ("/")
+			l_set := data.sub_folders.item (path+"/")
 			if l_set /= Void then
 				from
 					l_set.start
@@ -179,7 +159,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				until
 					subfolders.after
 				loop
-					create l_subfolder.make (data, "/"+subfolders.item)
+					create l_subfolder.make (data, path+"/"+subfolders.item)
 					if associated_window /= Void then
 						l_subfolder.associate_with_window (associated_window)
 					end
@@ -192,7 +172,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 			end
 
-			classes := data.sub_classes.item ("/")
+			classes := data.sub_classes.item (path+"/")
 			if classes /= Void then
 				from
 					classes.start
@@ -237,6 +217,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				-- then expanded.
 			expand_actions.wipe_out
 		end
+
 
 	on_class_drop (cstone: CLASSI_STONE) is
 			-- A class was dropped in `Current'.
@@ -407,6 +388,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	invariant_clause: -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -440,5 +423,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASSES_TREE_FOLDER_ITEM
-
+end

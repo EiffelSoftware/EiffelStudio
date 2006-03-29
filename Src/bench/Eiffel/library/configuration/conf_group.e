@@ -33,6 +33,9 @@ feature {NONE} -- Initialization
 			target := a_target
 			set_name (a_name)
 			set_location (a_location)
+			is_valid := True
+		ensure
+			is_valid: is_valid
 		end
 
 feature -- Status

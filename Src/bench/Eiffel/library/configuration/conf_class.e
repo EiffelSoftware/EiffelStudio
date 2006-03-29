@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			file_name := a_file_name
 			group := a_group
 			path := a_path
+			is_valid := True
 			check_changed
 
 			if not is_error then
@@ -52,6 +53,8 @@ feature {NONE} -- Initialization
 					visible := l_cluster.visible.item (name)
 				end
 			end
+		ensure
+			is_valid: is_valid
 		end
 
 feature -- Status

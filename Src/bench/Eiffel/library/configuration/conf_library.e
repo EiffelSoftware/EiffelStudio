@@ -58,6 +58,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			a_target_not_void: a_target /= Void
 		do
 			library_target := a_target
+			library_target.add_library_usage (Current)
 		ensure
 			library_target_set: library_target = a_target
 		end

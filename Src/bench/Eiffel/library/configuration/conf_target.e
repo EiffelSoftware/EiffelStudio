@@ -69,6 +69,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	location: STRING
 			-- Absolute location of the configuration file.
 
+	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
+			-- Libraries this target is used in.
+
 feature -- Access queries
 
 	version: CONF_VERSION is
@@ -650,6 +653,20 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			location := a_location
 		ensure
 			location_set: location = a_location
+		end
+
+	add_library_usage (a_library: CONF_LIBRARY) is
+			-- `Current' is library of `a_library'.
+		require
+			a_library_not_void: a_library /= Void
+			a_library_target: a_library.library_target = Current
+		do
+			if used_in_libraries = Void then
+				create used_in_libraries.make (1)
+			end
+			used_in_libraries.force (a_library)
+		ensure
+			added_libs: used_in_libraries.has (a_library)
 		end
 
 

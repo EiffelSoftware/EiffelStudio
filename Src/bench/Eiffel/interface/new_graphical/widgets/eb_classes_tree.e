@@ -61,6 +61,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	SHARED_WORKBENCH
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	default_create,
 	make
@@ -89,8 +94,11 @@ feature {NONE} -- Initialization
 	build_tree is
 			-- Remove and replace contents of `Current'.
 		local
-			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
-			an_item: EB_CLASSES_TREE_FOLDER_ITEM
+			l_target: CONF_TARGET
+			l_grps: HASH_TABLE [CONF_GROUP, STRING]
+			l_clu: CLUSTER_I
+			l_clusters: SORTED_TWO_WAY_LIST [CLUSTER_I]
+			l_item: EB_CLASSES_TREE_FOLDER_ITEM
 			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
 		do
 			if window /= Void then
@@ -104,32 +112,52 @@ feature {NONE} -- Initialization
 
 			wipe_out
 				-- Remove all items, ready for rebuilding.
-			if Eiffel_project.initialized then
-				clusters := manager.clusters
-				create tmp_list.make (clusters.count)
-					-- Build the tree.
+			if Eiffel_project.initialized and then Universe.target /= Void then
+				l_target := Universe.target
+
+					-- sort entries
+				l_grps := l_target.clusters
+				create l_clusters.make
 				from
-					clusters.start
+					l_grps.start
 				until
-					clusters.after
+					l_grps.after
 				loop
-					create an_item.make (clusters.item)
-					tmp_list.extend (an_item)
+					l_clu ?= l_grps.item_for_iteration
+					check
+						cluster_i: l_clu /= Void
+					end
+					if l_clu.parent_cluster = Void then
+						l_clusters.extend (l_clu)
+					end
+					l_grps.forth
+				end
+
+					-- Build the tree.
+				create tmp_list.make (l_clusters.count)
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					create l_item.make (create {EB_SORTED_CLUSTER}.make (l_clusters.item))
+
+					tmp_list.extend (l_item)
 					if window /= Void then
-						an_item.associate_with_window (window)
+						l_item.associate_with_window (window)
 					end
 					if textable /= Void then
-						an_item.associate_textable_with_classes (textable)
+						l_item.associate_textable_with_classes (textable)
 					end
 					from
 						classes_double_click_agents.start
 					until
 						classes_double_click_agents.after
 					loop
-						an_item.add_double_click_action_to_classes (classes_double_click_agents.item)
+						l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
 						classes_double_click_agents.forth
 					end
-					clusters.forth
+					l_clusters.forth
 				end
 				append (tmp_list)
 			end

@@ -57,7 +57,7 @@ feature -- Status setting
 		do
 			actual := a_cluster.actual_cluster
 			conf_todo
---			set_text (actual.display_name)
+			set_text (actual.name_in_upper)
 			set_tooltip (actual.cluster_name)
 			data := a_cluster
 			set_pebble (stone)
@@ -133,55 +133,60 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			clusters := data.clusters
 			classes := data.classes
 				-- Build the tree.
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				create a_folder.make (clusters.item)
-				if associated_window /= Void then
-					a_folder.associate_with_window (associated_window)
-				end
-				if associated_textable /= Void then
-					a_folder.associate_textable_with_classes (associated_textable)
-				end
-
+			if clusters /= Void then
 				from
-					classes_double_click_agents.start
+					clusters.start
 				until
-					classes_double_click_agents.after
+					clusters.after
 				loop
-					a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
-					classes_double_click_agents.forth
+					create a_folder.make (clusters.item)
+					if associated_window /= Void then
+						a_folder.associate_with_window (associated_window)
+					end
+					if associated_textable /= Void then
+						a_folder.associate_textable_with_classes (associated_textable)
+					end
+
+					from
+						classes_double_click_agents.start
+					until
+						classes_double_click_agents.after
+					loop
+						a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
+						classes_double_click_agents.forth
+					end
+					extend (a_folder)
+					clusters.forth
 				end
-				extend (a_folder)
-				clusters.forth
 			end
 
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				create a_class.make (classes.item)
-				if associated_window /= Void then
-					a_class.set_associated_window (associated_window)
-				end
-				if associated_textable /= Void then
-					a_class.set_associated_textable (associated_textable)
-				end
-
+			if classes /= Void then
 				from
-					classes_double_click_agents.start
+					classes.start
 				until
-					classes_double_click_agents.after
+					classes.after
 				loop
-					a_class.add_double_click_action (classes_double_click_agents.item)
-					classes_double_click_agents.forth
+					create a_class.make (classes.item)
+					if associated_window /= Void then
+						a_class.set_associated_window (associated_window)
+					end
+					if associated_textable /= Void then
+						a_class.set_associated_textable (associated_textable)
+					end
+
+					from
+						classes_double_click_agents.start
+					until
+						classes_double_click_agents.after
+					loop
+						a_class.add_double_click_action (classes_double_click_agents.item)
+						classes_double_click_agents.forth
+					end
+					extend (a_class)
+					classes.forth
 				end
-				extend (a_class)
-				classes.forth
 			end
+
 				-- We now remove all the items that were present at the beginning.
 				--| We cannot wipe_out at first because under GTK it collapses `Current'.
 			from

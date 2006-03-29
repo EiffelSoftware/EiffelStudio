@@ -12,11 +12,6 @@ class
 inherit
 	COMPARABLE
 
-	CONF_REFACTORING
-		undefine
-			is_equal
-		end
-
 create
 	make
 
@@ -36,67 +31,71 @@ feature {NONE} -- Initialization
 		do
 			actual_cluster := data
 			sub_clusters := data.sub_clusters
-				-- First retrieve all sub-clusters and put them into an array
-				-- that we will sort.
-			create sorted_clusters.make (1, sub_clusters.count)
-			from
-				sub_clusters.start
-				i := 1
-			until
-				sub_clusters.after
-			loop
-				sorted_clusters.put (sub_clusters.item, i)
+			if sub_clusters /= Void then
+					-- First retrieve all sub-clusters and put them into an array
+					-- that we will sort.
+				create sorted_clusters.make (1, sub_clusters.count)
+				from
+					sub_clusters.start
+					i := 1
+				until
+					sub_clusters.after
+				loop
+					sorted_clusters.put (sub_clusters.item, i)
 
-				i := i + 1
-				sub_clusters.forth
+					i := i + 1
+					sub_clusters.forth
+				end
+
+					-- Sort the clusters.
+				sorted_clusters.sort
+
+					-- Build the tree.
+				create clusters.make
+				from
+					clusters_count := sorted_clusters.count
+					i := clusters_count
+				until
+					i = 0
+				loop
+					create a_cluster.make (sorted_clusters @ i)
+					clusters.extend (a_cluster)
+					a_cluster.set_parent (Current)
+					i := i - 1
+				end
 			end
-
-				-- Sort the clusters.
-			sorted_clusters.sort
 
 			sub_classes := data.classes
+			if sub_classes /= Void then
+					-- Then retrieve all classes and put them into an array
+					-- that we will sort.
+				create sorted_classes.make (1, sub_classes.count)
+				from
+					sub_classes.start
+					i := 1
+				until
+					sub_classes.after
+				loop
+					sorted_classes.put (sub_classes.item_for_iteration, i)
 
-				-- Then retrieve all classes and put them into an array
-				-- that we will sort.
-			create sorted_classes.make (1, sub_classes.count)
-			from
-				sub_classes.start
-				i := 1
-			until
-				sub_classes.after
-			loop
-				sorted_classes.put (sub_classes.item_for_iteration, i)
+					i := i + 1
+					sub_classes.forth
+				end
 
-				i := i + 1
-				sub_classes.forth
-			end
+					-- Sort the classes.
+				sorted_classes.sort
 
-				-- Sort the classes.
-			sorted_classes.sort
-
-				-- Build the tree.
-			create clusters.make
-			create classes.make
-			from
-				clusters_count := sorted_clusters.count
-				i := clusters_count
-			until
-				i = 0
-			loop
-				create a_cluster.make (sorted_clusters @ i)
-				clusters.extend (a_cluster)
-				a_cluster.set_parent (Current)
-				i := i - 1
-			end
-
-			from
-				classes_count := sorted_classes.count
-				i := classes_count
-			until
-				i = 0
-			loop
-				classes.extend (sorted_classes @ i)
-				i := i - 1
+					-- Build the tree.
+				create classes.make
+				from
+					classes_count := sorted_classes.count
+					i := classes_count
+				until
+					i = 0
+				loop
+					classes.extend (sorted_classes @ i)
+					i := i - 1
+				end
 			end
 		end
 

@@ -15,7 +15,7 @@ inherit
 			show_modal_to_window,
 			destroy
 		end
-		
+
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} All
@@ -74,14 +74,14 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EIFFEL_ENV
 		export
 			{NONE} all
@@ -101,14 +101,14 @@ feature {NONE} -- Initialization
 			show_open_project_frame := True
 			build_interface
 		end
-	
+
 	make_without_open_project_frame is
 			-- Initialize the dialog with the "Create Project" frame only.
 		do
 			show_open_project_frame := False
 			build_interface
 		end
-		
+
 	build_interface is
 			-- Initialize
 		local
@@ -135,23 +135,21 @@ feature {NONE} -- Initialization
 			new_project_frame.extend (new_project_vb)
 
 				-- Open projects item
-			create open_project_frame.make_with_text (Interface_names.l_Open_project)
-			create open_project_vb
-			open_project_vb.set_border_width (Layout_constants.Small_border_size)
-			open_project_vb.set_padding (Layout_constants.Default_border_size)
-			create open_ace_file_rb.make_with_text (Interface_names.l_Use_existing_ace)
-			add_option_box (pixmaps.large_pixmaps.icon_wizard_ace_project.twin, open_ace_file_rb, open_project_vb)
-
 			if show_open_project_frame then
+				create open_project_frame.make_with_text (Interface_names.l_Open_project)
+				create open_project_vb
+				open_project_vb.set_border_width (Layout_constants.Small_border_size)
+				open_project_vb.set_padding (Layout_constants.Default_border_size)
+
 				create open_epr_project_rb.make_with_text (Interface_names.l_Open_an_existing_project)
 				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
 				open_epr_project_rb.pointer_double_press_actions.force_extend (agent open_existing_project_not_listed)
 				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
 				create_and_fill_compiled_projects_list
 				open_project_vb.extend (compiled_projects_list)
+				open_project_frame.extend (open_project_vb)
 			end
 
-			open_project_frame.extend (open_project_vb)
 
 				--| Option buttons
 			if show_open_project_frame then
@@ -161,7 +159,7 @@ feature {NONE} -- Initialization
 				vb.disable_item_expand (do_not_display_dialog_button)
 				vb.extend (create {EV_CELL})
 			end
-			
+
 				--| Action buttons box
 			create ok_button
 			if show_open_project_frame then
@@ -188,20 +186,19 @@ feature {NONE} -- Initialization
 			main_container.set_border_width (Layout_constants.Small_border_size)
 			main_container.set_padding (Layout_constants.Small_border_size)
 			main_container.extend (new_project_frame)
-			main_container.extend (open_project_frame)
 			if show_open_project_frame then
+				main_container.extend (open_project_frame)
 				main_container.extend (vb)
 				main_container.disable_item_expand (vb)
-			else
-				main_container.disable_item_expand (open_project_frame)
 			end
 			main_container.extend (hb)
 			main_container.disable_item_expand (hb)
 			extend (main_container)
 
-			open_project_vb.merge_radio_button_groups (new_project_vb)
+			if show_open_project_frame then
+				open_project_vb.merge_radio_button_groups (new_project_vb)
+			end
 			wizard_rb.select_actions.extend (agent lookup_selection)
-			open_ace_file_rb.select_actions.extend (agent lookup_selection)
 
 				--| Connect buttons together
 			if show_open_project_frame then
@@ -213,21 +210,21 @@ feature {NONE} -- Initialization
 					do_not_display_dialog_button.enable_select
 				end
 			end
-			
+
 				--| Setting default buttons
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			ok_selected := False
-			
+
 				--| Set the initial size of the dialog.
 			if show_open_project_frame then
 				set_size (Layout_constants.dialog_unit_to_pixels(340), Layout_constants.dialog_unit_to_pixels(440))
 			else
 				set_size (Layout_constants.dialog_unit_to_pixels(340), Layout_constants.dialog_unit_to_pixels(270))
 			end
-			
+
 				--| Select the default item
-			if show_open_project_frame then 
+			if show_open_project_frame then
 				if compiled_projects_list.is_empty then
 					wizard_rb.enable_select
 				else
@@ -249,14 +246,14 @@ feature {NONE} -- Initialization
 		do
 				-- Connect the radio button with `on_ok' via the wrapper `on_double_click'
 			a_radio_button.pointer_double_press_actions.extend (agent on_double_click)
-	
+
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			a_pixmap.set_minimum_size (32, 32)
 			hb.extend (a_pixmap)
 			hb.disable_item_expand (a_pixmap)
 			hb.extend (a_radio_button)
-			
+
 			a_container.extend (hb)
 			a_container.disable_item_expand (hb)
 			a_container.merge_radio_button_groups (hb)
@@ -271,14 +268,14 @@ feature {NONE} -- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
-		do	
+		do
 			Layout_constants.set_default_size_for_button (a_button)
 			create vb
 			vb.extend (create {EV_CELL})
 			vb.extend (a_button)
 			vb.disable_item_expand (a_button)
 			vb.extend (create {EV_CELL})
-			
+
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			a_pixmap.set_minimum_size (32, 32)
@@ -289,7 +286,7 @@ feature {NONE} -- Initialization
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
 			hb.extend (create {EV_CELL})
-			
+
 			a_container.extend (hb)
 			a_container.disable_item_expand (hb)
 			a_container.merge_radio_button_groups (hb)
@@ -320,7 +317,7 @@ feature -- Basic operations
 feature {NONE} -- Execution
 
 	destroy is
-			-- 
+			--
 		do
 			if not controls_disabled then
 				Precursor
@@ -343,10 +340,6 @@ feature {NONE} -- Execution
 				-- Create a new project using an ISE Wizard
 			if wizard_rb.is_selected then
 				create_new_project_using_wizard
-
-				-- Create a new project using an existing ace file
-			elseif open_ace_file_rb.is_selected then
-				create_new_project_using_ace_file
 
 				-- Open an existing project
 			elseif open_epr_project_rb.is_selected then
@@ -456,7 +449,7 @@ feature {NONE} -- Execution
 			li := compiled_projects_list.selected_item
 			if li /= Void then
 				create open_project_cmd.make_with_parent (parent_window)
-				
+
 				set_pointer_style (Pixmaps.Wait_cursor)
 				open_project_cmd.execute_with_file (li.text)
 				set_pointer_style (Pixmaps.standard_cursor)
@@ -641,7 +634,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				create available_wizards.make
-	
+
 				create new_project_directory.make (new_project_wizards_path)
 				entries := new_project_directory.linear_representation
 				from
@@ -651,14 +644,14 @@ feature {NONE} -- Implementation
 				loop
 					extension := entries.item.twin
 					extension.keep_tail(4)
-	
+
 					if extension.is_equal (".dsc") then
 						create filename.make_from_string (new_project_wizards_path)
 						filename.extend (entries.item)
 						create wizard.make_with_file (filename)
 						if wizard.target_platform_supported then
 							available_wizards.extend (wizard)
-						end						
+						end
 					end
 					entries.forth
 				end
@@ -725,7 +718,7 @@ feature {NONE} -- Implementation
 				ebench_name.append (ace_name)
 				if compile_project then
 					ebench_name.append ("%" -compile")
-					compile_project := False			
+					compile_project := False
 				else
 					ebench_name.append ("%"")
 				end
@@ -802,7 +795,6 @@ feature {NONE} -- Implementation
 		do
 			ok_button.disable_sensitive
 			cancel_button.disable_sensitive
-			open_ace_file_rb.disable_sensitive
 			wizard_rb.disable_sensitive
 			wizards_list.disable_sensitive
 			if show_open_project_frame then
@@ -818,7 +810,6 @@ feature {NONE} -- Implementation
 		do
 			ok_button.enable_sensitive
 			cancel_button.enable_sensitive
-			open_ace_file_rb.enable_sensitive
 			wizard_rb.enable_sensitive
 			wizards_list.enable_sensitive
 			if show_open_project_frame then
@@ -845,9 +836,6 @@ feature {NONE} -- Private attributes
 
 	browse_button: EV_BUTTON
 			-- Browse button to browse for existing projects
-
-	open_ace_file_rb: EV_RADIO_BUTTON
-			-- Radio button for "Ace file"
 
 	open_epr_project_rb: EV_RADIO_BUTTON
 			-- Radio button for "Open an existing project"

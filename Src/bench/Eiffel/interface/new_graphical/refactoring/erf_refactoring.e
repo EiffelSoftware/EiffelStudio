@@ -150,29 +150,29 @@ feature {NONE} -- Implementation convenience
 			-- Get all classes that can be changed by the user.
 		local
 			classes: HASH_TABLE [CLASS_I, STRING]
+			l_vis: CONF_ALL_CLASSES_VISITOR
+			l_classes: ARRAYED_LIST [CONF_CLASS]
+			l_cl: CLASS_I
 		do
-			conf_todo
---			create Result.make
---			from
---				universe.clusters.start
---			until
---				universe.clusters.after
---			loop
---				if not universe.clusters.item.is_library then
---					classes := universe.clusters.item.classes
---					from
---						classes.start
---					until
---						classes.after
---					loop
---						if not classes.item_for_iteration.is_read_only then
---							Result.put (classes.item_for_iteration)
---						end
---						classes.forth
---					end
---				end
---				universe.clusters.forth
---			end
+			create l_vis.make
+			if universe.target /= Void then
+				universe.target.process (l_vis)
+			end
+			from
+				l_classes := l_vis.classes
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_cl ?= l_classes.item
+				check
+					class_i: l_cl /= Void
+				end
+				if not l_cl.is_read_only then
+					Result.put (l_cl)
+				end
+				l_classes.forth
+			end
 		end
 
 	descendant_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is

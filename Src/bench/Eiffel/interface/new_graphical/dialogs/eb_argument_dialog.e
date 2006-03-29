@@ -151,7 +151,7 @@ feature {NONE} -- Actions
 	on_ok is
 	 		-- Action to take when user presses 'OK' button.
 		do
-			arguments_control.store_arguments (Void)
+			arguments_control.store_arguments
 			hide
 		end
 
@@ -190,13 +190,13 @@ feature {NONE} -- Implementation
 
 	execute is
 		do
-			arguments_control.store_arguments (Void)
+			arguments_control.store_arguments
 			run.call (Void)
 		end
 
 	execute_and_close is
 		do
-			arguments_control.store_arguments (Void)
+			arguments_control.store_arguments
 			run.call (Void)
 			hide
 		end

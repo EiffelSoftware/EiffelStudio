@@ -276,7 +276,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 	if (flags & EO_STORE)			/* Object is already marked? */
 		return;						/* Then we already dealt with it */
 
-	if (!(flags & EO_EXP)) {		/* Mark the object if not expanded */
+	if (!eif_is_nested_expanded(flags)) {		/* Mark the object if not expanded */
 
 		/* If a maping table is to be built, create a new object and insert it
 		 * in the map table. The reference is protected by requesting insertion
@@ -310,7 +310,7 @@ rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 	if (p_accounting & TR_ACCOUNT) {	/* Possible accounting */
 		account_type (flags & EO_TYPE, p_accounting);
 # ifdef RECOVERABLE_DEBUG
-		if (flags & EO_EXP)
+		if (eif_is_nested_expanded(flags))
 			printf ("      expanded %s [%p]\n", eif_typename ((int16) (flags & EO_TYPE)), object);
 		else
 			printf ("%2ld: %s [%p]\n", obj_nb, eif_typename ((int16) (flags & EO_TYPE)), object);
@@ -970,7 +970,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 		return object_count;
 
 	/* Mark the object if not expanded */
-	if (!(flags & EO_EXP)) {
+	if (!eif_is_nested_expanded(flags)) {
 		if (ht_put(tbl,key,object) == (char *) 0) {
 			ht_xtend(tbl);
 			if (ht_put(tbl,key,object) == (char *) 0)

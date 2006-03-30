@@ -4568,7 +4568,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 #endif
 	REQUIRE ("Attribute order exists", attributes != NULL);
 	REQUIRE ("Offset only for expanded", object == NULL  ||
-			(new_flags & EO_EXP) || expanded_offset == 0);
+			eif_is_nested_expanded(new_flags) || expanded_offset == 0);
 
 #ifdef RECOVERABLE_DEBUG
 	if (expanded_offset > 0)

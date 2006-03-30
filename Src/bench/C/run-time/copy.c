@@ -325,7 +325,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	 * offset within the enclosing object, and we have to get its size through
 	 * its dynamic type.
 	 */
-	if (flags & EO_EXP)						/* Object is expanded */
+	if (eif_is_nested_expanded(flags))						/* Object is expanded */
 		size = EIF_Size(Deif_bid(flags));		/* Get its size though skeleton */
 	else
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
@@ -552,8 +552,8 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 	
 	/* Precompute the enclosing target object */
 	enclosing = target;					/* By default */
-	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
-		if (t_flags & EO_EXP) {
+	if (eif_is_nested_expanded(t_flags) || eif_is_nested_expanded(s_flags)) {
+		if (eif_is_nested_expanded(t_flags)) {
 			enclosing -= t_zone->ov_size & B_SIZE;
 		}
 		size = EIF_Size(Deif_bid(t_flags));
@@ -716,14 +716,14 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 	s_enclosing = source;					/* Default enclosing object is itself */
 	zone = HEADER(target);					/* Malloc info zone */
 	flags = zone->ov_flags;					/* Eiffel object flags */
-	if (flags & EO_EXP) {
+	if (eif_is_nested_expanded(flags)) {
 		offset2 = zone->ov_size & B_SIZE;
 		t_offset = zone->ov_size & B_SIZE;	/* Target expanded offset within object */
 		t_enclosing = target - t_offset;	/* Address of target enclosing object */
 	}
 	zone = HEADER(source);
 	flags = zone->ov_flags;					/* Source eiffel object flags */
-	if (flags & EO_EXP) {
+	if (eif_is_nested_expanded(flags)) {
 		offset1 = zone->ov_size & B_SIZE;
 		s_offset = zone->ov_size & B_SIZE;	/* Expanded offset within object */
 		s_enclosing = source - s_offset;		/* Address of enclosing object */
@@ -744,7 +744,7 @@ rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int 
 		zone = HEADER(t_reference);
 		flags = zone->ov_flags;
 
-		if (flags & EO_EXP) {		/* Object is expanded */
+		if (eif_is_nested_expanded(flags)) {		/* Object is expanded */
 
 			/* We reached an intra reference on an expanded object. There are
 			 * two points to consider:

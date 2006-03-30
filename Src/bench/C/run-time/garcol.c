@@ -1779,7 +1779,7 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker)
 	if (zone->ov_size & B_FWD)
 		return zone->ov_fwd;		/* Already forwarded, i.e. traversed */
 
-	if (!(zone->ov_flags & EO_EXP)) {
+	if (!eif_is_nested_expanded(zone->ov_flags)) {
 			/* It is guaranteed that first call to `marker' will not put it
 			 * in `overflow_stack_set', therefore giving the address of
 			 * `root' is ok. */
@@ -2237,7 +2237,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		 * It's useless to mark an expanded, because it has only one reference
 		 * on itself, in the object which holds it.
 		 */
-		if (!(flags & EO_EXP)) {
+		if (!eif_is_nested_expanded(flags)) {
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
 		}
@@ -3371,7 +3371,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 	 * pointer left) and P the pointed expanded object in the original (root).
 	 * Then the address of the scavenged expanded is A'+(P-A).
 	 */
-	if (zone->ov_flags & EO_EXP) {
+	if (eif_is_nested_expanded(zone->ov_flags)) {
 			/* Compute original object's address (before scavenge) */
 		EIF_REFERENCE exp;					/* Expanded data space */
 		EIF_REFERENCE new;					/* New object's address */
@@ -3729,7 +3729,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		 * marked. The new objects outside the scavenge zone carry the EO_NEW
 		 * mark.
 		 */
-		if (!(flags & EO_OLD) || (flags & EO_EXP)) {
+		if (!(flags & EO_OLD) || eif_is_nested_expanded(flags)) {
 			current = gscavenge(current);	/* Generation scavenging */
 			zone = HEADER(current);			/* Update zone */
 			flags = zone->ov_flags;			/* And Eiffel flags */
@@ -3741,7 +3741,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		 * on itself, in the object which holds it. Scavengend objects need not
 		 * any mark either, as the forwarding mark tells that they are alive.
 		 */
-		if (!(flags & EO_EXP) && (flags & EO_NEW)) {
+		if (!eif_is_nested_expanded(flags) && (flags & EO_NEW)) {
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
 		}
@@ -3887,7 +3887,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
 			return scavenge(root, &sc_to.sc_top);	/* Simple scavenging */
 		
-	if (flags & EO_EXP) {				/* Expanded object */
+	if (eif_is_nested_expanded(flags)) {				/* Expanded object */
 		if (!(flags & EO_NEW))			/* Object inside scavenge zone */
 			return scavenge(root, &sc_to.sc_top);	/* Update reference pointer */
 		else
@@ -4487,7 +4487,7 @@ rt_shared int refers_new_object(register EIF_REFERENCE object)
 		if (root == (EIF_REFERENCE) 0)
 			continue;						/* Skip void references */
 		flags = HEADER(root)->ov_flags;
-		if (flags & EO_EXP)	{				/* Expanded object, grrr... */
+		if (eif_is_nested_expanded(flags))	{				/* Expanded object, grrr... */
 			if (refers_new_object(root))
 				return 1;					/* Object references a young one */
 		} else if (!(flags & EO_OLD))

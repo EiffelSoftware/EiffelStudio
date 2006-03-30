@@ -1250,18 +1250,40 @@ feature {NONE} -- Implementation
 feature {NONE} -- shared instances
 
 	il_emitter: IL_EMITTER is
-			-- Shared instance of IL_EMITOR.
-		require
-			is_assembly_cache_folder_set: is_assembly_cache_folder_set
+			-- Instance of IL_EMITTER
 		local
 			l_il_env: IL_ENVIRONMENT
-		once
-			if il_version /= Void then
-				create Result.make (assembly_cache_folder, il_version)
-			else
-				create l_il_env
-				create Result.make (assembly_cache_folder, l_il_env.installed_runtimes.last)
+		do
+			Result := internal_il_emitter.item
+			if Result = Void then
+				if il_version /= Void then
+					create Result.make (assembly_cache_folder, il_version)
+				else
+					create l_il_env
+					create Result.make (assembly_cache_folder, l_il_env.installed_runtimes.last)
+				end
+				if not Result.exists then
+						-- IL_EMITTER component could not be loaded.
+					add_error (create {CONF_ERROR_EMITTER})
+					Result := Void
+				elseif not Result.is_initialized then
+						-- Path to cache is not valid
+					add_error (create {CONF_ERROR_EMITTER_INIT})
+					Result := Void
+				else
+					internal_il_emitter.put (Result)
+				end
 			end
+		ensure
+			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
+		end
+
+	internal_il_emitter: CELL [IL_EMITTER] is
+			-- Unique instance of IL_EMITTER
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	valid_eiffel_extension_regexp: RX_PCRE_REGULAR_EXPRESSION is

@@ -81,6 +81,8 @@ feature {NONE} -- Initlization
 			end
 			focus_in_actions.extend (agent on_dialog_focus_in)
 			focus_out_actions.extend (agent on_dialog_focus_out)
+			focus_in_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_in)
+			focus_out_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_out)
 			resize_actions.extend (agent on_resize)
 		end
 

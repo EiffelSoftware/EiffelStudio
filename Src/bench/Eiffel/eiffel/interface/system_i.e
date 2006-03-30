@@ -2651,13 +2651,14 @@ feature -- Final mode generation
 
 						-- Build conformance table for CLASS_TYPE instances. This is
 						-- needed for proper processing of computation of `is_polymorphic'
-						-- on polymorphic table.
+						-- on polymorphic table and computation of expanded descendants.
 					process_conformance_table_for_type (agent {CLASS_TYPE}.build_conformance_table)
 
 						-- Generation of C files associated to the classes of
 						-- the system.
 					Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
 					byte_context.clear_system_data
+					byte_context.compute_expanded_descendants
 					process_degree_minus_3
 					Eiffel_table.finish_degree_minus_3
 
@@ -3118,6 +3119,10 @@ feature -- Dead code removal
 				-- Protection of feature `internal_correct_mismatch' of ANY
 			l_class := any_class.compiled_class
 			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
+
+				-- Protection of feature `twin' of ANY
+			l_class := any_class.compiled_class
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.twin_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference BOOLEAN'
 			l_class := boolean_class.compiled_class

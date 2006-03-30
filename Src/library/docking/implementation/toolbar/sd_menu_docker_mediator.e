@@ -34,10 +34,6 @@ feature {NONE} -- Initialization
 			internal_left_hot_zone.start_drag
 			internal_right_hot_zone.start_drag
 
-			if a_caller.is_floating then
-				internal_last_floating := True
-			end
-
 			internal_dockable := True
 			init_key_actions
 
@@ -93,19 +89,14 @@ feature -- Command
 				if internal_dockable then
 					l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y, offset_x, offset_y)
 				end
-
 				if not l_in_four_side then
-
-					if not internal_last_floating then
+					if not caller.is_floating then
 						docking_manager.command.lock_update (Void, True)
 						caller.assistant.record_docking_state
 						caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
 						docking_manager.command.unlock_update
 					end
-					internal_last_floating := True
 					caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
-				else
-					internal_last_floating := False
 				end
 			else
 				if not caller.row.is_vertical then
@@ -169,16 +160,16 @@ feature {NONE} -- Implementation functions
 			l_changed: BOOLEAN
 		do
 			if internal_left_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x)
+				l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
-				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x)
+				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y)  then
-				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_y)
+				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y) then
-				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_y)
+				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			end
 			if Result then
@@ -197,7 +188,7 @@ feature {NONE} -- Implementation functions
 		do
 			inspect
 				a_key.code
-			when {EV_KEY}.key_ctrl then
+			when {EV_KEY_CONSTANTS}.key_ctrl then
 				if internal_dockable /= False then
 					debug ("docking")
 						print ("%N SD_TOOL_BAR_DOCKER_MEDIATOR on_key_press")
@@ -205,7 +196,7 @@ feature {NONE} -- Implementation functions
 					internal_dockable := False
 					on_pointer_motion (internal_last_screen_x, internal_last_screen_y)
 				end
-			when {EV_KEY}.key_escape then
+			when {EV_KEY_CONSTANTS}.key_escape then
 				cancel_tracing_pointer
 			else
 
@@ -217,7 +208,7 @@ feature {NONE} -- Implementation functions
 		do
 			inspect
 				a_key.code
-			when {EV_KEY}.key_ctrl then
+			when {EV_KEY_CONSTANTS}.key_ctrl then
 				debug ("docking")
 					print ("%N SD_TOOL_BAR_DOCKER_MEDIATOR on_key_release")
 				end
@@ -309,9 +300,6 @@ feature {NONE} -- Implementation attributes.
 
 	internal_key_press_actions, internal_key_release_actions: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET, EV_KEY]]
 			-- Golbal key press/release action, so we can prune it after dragging.
-
-	internal_last_floating: BOOLEAN
-			-- If last pointer motion `caller' is floating?
 
 	internal_shared: SD_SHARED
 			-- All singletons.

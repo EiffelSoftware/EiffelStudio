@@ -177,9 +177,13 @@ feature -- Initialization
 			-- (Do not create system until the
 			-- first compilation).
 		do
-			create universe.make
+			if universe = Void then
+				create universe.make
+			end
+			if lace = Void then
+				create lace.make
+			end
 			create precompiled_directories.make (5)
-			create lace.make
 
 			compilation_counter := 1
 			backup_counter := 0

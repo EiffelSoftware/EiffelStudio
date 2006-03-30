@@ -3258,13 +3258,13 @@ feature {NONE} -- Implementation
 --					l_cluster := l_subclu.item.actual_cluster
 --					l_format_context.put_manifest_string (" - ")
 --					l_format_context.add_cluster (l_cluster, l_cluster.cluster_name)
-					l_format_context.put_space
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_L_parenthesis)
-					l_format_context.process_comment_text (l_cluster.classes.count.out, Void)
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_R_parenthesis)
-					l_format_context.put_new_line
+--					l_format_context.put_space
+--					l_format_context.set_without_tabs
+--					l_format_context.process_symbol_text (ti_L_parenthesis)
+--					l_format_context.process_comment_text (l_cluster.classes.count.out, Void)
+--					l_format_context.set_without_tabs
+--					l_format_context.process_symbol_text (ti_R_parenthesis)
+--					l_format_context.put_new_line
 					l_subclu.forth
 				end
 				l_format_context.exdent

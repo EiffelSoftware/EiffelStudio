@@ -95,11 +95,9 @@ feature {NONE} -- Initialization
 			-- Remove and replace contents of `Current'.
 		local
 			l_target: CONF_TARGET
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
-			l_clu: CLUSTER_I
-			l_clusters: SORTED_TWO_WAY_LIST [CLUSTER_I]
-			l_item: EB_CLASSES_TREE_FOLDER_ITEM
-			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
+			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_clu: CONF_CLUSTER
+			l_sort_grps: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
 			if window /= Void then
 					-- Lock update of window, so rebuilding of `Current'
@@ -107,65 +105,54 @@ feature {NONE} -- Initialization
 				window.lock_update
 			end
 
-			store_expanded_state
-				-- Store expanded state of `Current'
-
-			wipe_out
 				-- Remove all items, ready for rebuilding.
 			if Eiffel_project.initialized and then Universe.target /= Void then
+				store_expanded_state
+					-- Store expanded state of `Current'
+
+				wipe_out
+
 				l_target := Universe.target
 
-					-- sort entries
-				l_grps := l_target.clusters
-				create l_clusters.make
-				from
-					l_grps.start
-				until
-					l_grps.after
-				loop
-					l_clu ?= l_grps.item_for_iteration
-					check
-						cluster_i: l_clu /= Void
-					end
-					if l_clu.parent_cluster = Void then
-						l_clusters.extend (l_clu)
-					end
-					l_grps.forth
-				end
-				l_clusters.sort
+					-- sort libraries
+				create l_sort_grps.make
+				l_sort_grps.append (l_target.libraries.linear_representation)
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps)
 
-					-- Build the tree.
-				create tmp_list.make (l_clusters.count)
+					-- sort assemblies
+				create l_sort_grps.make
+				l_sort_grps.append (l_target.assemblies.linear_representation)
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps)
+
+					-- sort clusters
+				l_clusters := l_target.clusters
+				create l_sort_grps.make
 				from
 					l_clusters.start
 				until
 					l_clusters.after
 				loop
-					create l_item.make (create {EB_SORTED_CLUSTER}.make (l_clusters.item))
-
-					tmp_list.extend (l_item)
-					if window /= Void then
-						l_item.associate_with_window (window)
-					end
-					if textable /= Void then
-						l_item.associate_textable_with_classes (textable)
-					end
-					from
-						classes_double_click_agents.start
-					until
-						classes_double_click_agents.after
-					loop
-						l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
-						classes_double_click_agents.forth
+					l_clu := l_clusters.item_for_iteration
+					if l_clu.parent = Void then
+						l_sort_grps.extend (l_clu)
 					end
 					l_clusters.forth
 				end
-				append (tmp_list)
-			end
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps)
 
-			restore_expanded_state
-				-- Restore original expanded state, stored during last call to
-				-- `store_expanded_state'.
+					-- sort overrides
+				create l_sort_grps.make
+				l_sort_grps.append (l_target.overrides.linear_representation)
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps)
+
+				restore_expanded_state
+					-- Restore original expanded state, stored during last call to
+					-- `store_expanded_state'				
+			end
 
 			if window /= Void then
 					-- Unlock update of window as `Current' has
@@ -841,6 +828,43 @@ feature {NONE} -- Implementation
 
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.
+
+	build_group_tree (a_grps: LIST [CONF_GROUP]) is
+			-- Build a tree for `a_grps'.
+		require
+			a_grps_not_void: a_grps /= Void
+		local
+			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
+			l_item: EB_CLASSES_TREE_FOLDER_ITEM
+		do
+			create tmp_list.make (a_grps.count)
+			from
+				a_grps.start
+			until
+				a_grps.after
+			loop
+				create l_item.make (create {EB_SORTED_CLUSTER}.make (a_grps.item))
+
+				tmp_list.extend (l_item)
+				if window /= Void then
+					l_item.associate_with_window (window)
+				end
+				if textable /= Void then
+					l_item.associate_textable_with_classes (textable)
+				end
+				from
+					classes_double_click_agents.start
+				until
+					classes_double_click_agents.after
+				loop
+					l_item.add_double_click_action_to_classes (classes_double_click_agents.item)
+					classes_double_click_agents.forth
+				end
+				a_grps.forth
+			end
+			append (tmp_list)
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

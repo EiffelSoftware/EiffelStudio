@@ -73,6 +73,7 @@ feature -- Status setting
 			l_name: STRING
 			l_pos: INTEGER
 		do
+			data := a_cluster
 			l_group := a_cluster.actual_group
 			l_cluster ?= l_group
 			if l_cluster /= Void then
@@ -83,24 +84,24 @@ feature -- Status setting
 					else
 						create l_name.make_empty
 					end
-				else
-					l_name := l_cluster.cluster_name
 				end
-				set_text (l_name)
-				set_tooltip (l_name)
-				data := a_cluster
 				set_pebble (stone)
-				set_accept_cursor (Cursors.cur_Cluster)
-				set_deny_cursor (Cursors.cur_X_Cluster)
-				set_pixmap (pixmap_from_cluster_i (l_cluster))
-				if not (l_group.is_readonly) then
-					drop_actions.set_veto_pebble_function (agent droppable)
-					drop_actions.extend (agent on_class_drop)
-	--| FIXME XR: When clusters can be moved effectively, uncomment this line.
-	--				drop_actions.extend (~on_cluster_drop)
-				end
-				fake_load
 			end
+			if l_name = Void then
+				l_name := l_group.name
+			end
+			set_text (l_name)
+			set_tooltip (l_name)
+			set_accept_cursor (Cursors.cur_Cluster)
+			set_deny_cursor (Cursors.cur_X_Cluster)
+			set_pixmap (pixmap_from_cluster_i (l_group))
+			if not (l_group.is_readonly) then
+				drop_actions.set_veto_pebble_function (agent droppable)
+				drop_actions.extend (agent on_class_drop)
+--| FIXME XR: When clusters can be moved effectively, uncomment this line.
+--				drop_actions.extend (~on_cluster_drop)
+			end
+			fake_load
 		ensure then
 			data = a_cluster
 		end
@@ -197,7 +198,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 			cluster ?= data.actual_group
-			if cluster.is_recursive then
+			if cluster /= Void and then cluster.is_recursive then
 				create l_dir.make (cluster.location.build_path (path, ""))
 				l_set := l_dir.directory_names
 				if l_set /= Void then
@@ -225,7 +226,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 			end
 
-			classes := data.sub_classes.item (path+"/")
+			if data.actual_group.is_cluster then
+				classes := data.sub_classes.item (path+"/")
+			else
+				classes := data.classes
+			end
 			if classes /= Void then
 				from
 					classes.start
@@ -418,7 +423,7 @@ feature {NONE} -- Implementation
 						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Send a stone corresponding to `Current' to `associated_window'.
 		do
-			if a_button = 1 and then associated_window /= Void then
+			if data.actual_group.is_cluster and then a_button = 1 and then associated_window /= Void then
 				associated_window.set_stone (stone)
 			end
 		end

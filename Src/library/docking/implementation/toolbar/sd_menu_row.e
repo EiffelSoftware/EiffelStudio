@@ -18,7 +18,7 @@ inherit
 			set_item_position as set_item_position_fixed
 		export
 			{NONE} all
-			{ANY} has, parent, count
+			{ANY} has, parent, count, prunable
 			{SD_TOOL_BAR_ZONE} set_item_size
 		redefine
 			prune
@@ -97,18 +97,21 @@ feature -- Command
 
 	on_pointer_motion (a_screen_position: INTEGER) is
 			-- When user dragging, handle pointer motion.
+		local
+			l_relative_position: INTEGER
 		do
-			internal_positioner.on_pointer_motion (to_relative_position (a_screen_position))
+			l_relative_position := to_relative_position (a_screen_position)
+			internal_positioner.on_pointer_motion (l_relative_position)
 		end
 
-	set_item_position (a_widget: EV_WIDGET; a_screen_x_y: INTEGER) is
-			-- Set `a_widget' position with screen position.
-		require
-			a_widget_not_void: a_widget /= Void
-		do
-			set_item_position_relative (a_widget, to_relative_position (a_screen_x_y))
-		ensure
-		end
+--	set_item_position (a_widget: EV_WIDGET; a_screen_x_y: INTEGER) is
+--			-- Set `a_widget' position with screen position.
+--		require
+--			a_widget_not_void: a_widget /= Void
+--		do
+--			set_item_position_relative (a_widget, to_relative_position (a_screen_x_y))
+--		ensure
+--		end
 
 	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is
 			-- Set `a_widget' position with relative position.
@@ -161,6 +164,8 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues
 
 	internal_set_item_position (a_widget: EV_WIDGET; a_relative_position: INTEGER) is
 			-- Only do set item position issues.
+		require
+			valid: a_relative_position >= 0
 		do
 			if has (a_widget) then
 				if is_vertical then
@@ -248,6 +253,9 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 		do
 			if not is_vertical then
 				Result := a_screen_position - screen_x
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ROW to_relative_position: a_screen_position: " + a_screen_position.out + ". screen_x: " + screen_x.out)
+				end
 			else
 				Result := a_screen_position - screen_y
 			end

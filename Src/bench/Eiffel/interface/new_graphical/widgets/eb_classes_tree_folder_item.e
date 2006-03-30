@@ -156,7 +156,6 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
 			subfolders: SORTABLE_ARRAY [STRING]
 			classes: SORTED_LIST [CLASS_I]
-			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			l_subfolder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class: EB_CLASSES_TREE_CLASS_ITEM
 			orig_count: INTEGER
@@ -169,34 +168,12 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 				-- Build the tree.
 
+				-- if we aren't a subfolder show clusters
 			if path.is_empty then
-				clusters := data.clusters
-				from
-					clusters.start
-				until
-					clusters.after
-				loop
-					create a_folder.make (clusters.item)
-					if associated_window /= Void then
-						a_folder.associate_with_window (associated_window)
-					end
-					if associated_textable /= Void then
-						a_folder.associate_textable_with_classes (associated_textable)
-					end
-
-					from
-						classes_double_click_agents.start
-					until
-						classes_double_click_agents.after
-					loop
-						a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
-						classes_double_click_agents.forth
-					end
-					extend (a_folder)
-					clusters.forth
-				end
+				show_groups (data.clusters)
 			end
 
+				-- if we are a recursive cluster show subfolders
 			cluster ?= data.actual_group
 			if cluster /= Void and then cluster.is_recursive then
 				create l_dir.make (cluster.location.build_path (path, ""))
@@ -226,9 +203,17 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 			end
 
-			if data.actual_group.is_cluster then
+			if data.is_library then
+				-- show libraries for libraries
+
+
+				-- show assemblies for libraries
+			end
+
+				-- show classes for clusters and assemblies
+			if data.is_cluster then
 				classes := data.sub_classes.item (path+"/")
-			else
+			elseif data.is_assembly then
 				classes := data.classes
 			end
 			if classes /= Void then
@@ -444,6 +429,40 @@ feature {NONE} -- Implementation
 				Result := fs = Void
 			end
 		end
+
+	show_groups (a_groups: SORTED_LIST [EB_SORTED_CLUSTER]) is
+			-- Show `a_groups'.
+		require
+			a_groups_not_void: a_groups /= Void
+		local
+			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
+		do
+				from
+					a_groups.start
+				until
+					a_groups.after
+				loop
+					create a_folder.make (a_groups.item)
+					if associated_window /= Void then
+						a_folder.associate_with_window (associated_window)
+					end
+					if associated_textable /= Void then
+						a_folder.associate_textable_with_classes (associated_textable)
+					end
+
+					from
+						classes_double_click_agents.start
+					until
+						classes_double_click_agents.after
+					loop
+						a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
+						classes_double_click_agents.forth
+					end
+					extend (a_folder)
+					a_groups.forth
+				end
+		end
+
 invariant
 	path_not_void: path /= Void
 

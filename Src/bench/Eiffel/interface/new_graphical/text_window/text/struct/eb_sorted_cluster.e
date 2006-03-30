@@ -21,42 +21,36 @@ feature {NONE} -- Initialization
 			-- Associate `data' to `Current' and sort children.
 		local
 			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
-			sorted_clusters: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
-			clusters_count: INTEGER
 			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
 			sorted_classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
-			classes_count: INTEGER
-			a_cluster: EB_SORTED_CLUSTER
-			i: INTEGER
 			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
 			l_class_i: CLASS_I
+			l_lib_target: CONF_TARGET
 		do
 			actual_group := data
 
 			create clusters.make
 				-- handle subclusters
-			if actual_group.is_cluster then
-				l_cluster ?= data
-				check
-					cluster: l_cluster /= Void
-				end
+			if is_cluster then
+				l_cluster := actual_cluster
 				sub_clusters := l_cluster.children
 				if sub_clusters /= Void then
-					create sorted_clusters.make
-					sorted_clusters.append (sub_clusters)
-					sorted_clusters.sort
-
-					from
-						sorted_clusters.start
-					until
-						sorted_clusters.after
-					loop
-						create a_cluster.make (sorted_clusters.item)
-						clusters.extend (a_cluster)
-						a_cluster.set_parent (Current)
-						sorted_clusters.forth
-					end
+					clusters := build_groups (sub_clusters)
 				end
+				-- handle libraries
+			elseif is_library then
+				l_library := actual_library
+				l_lib_target := l_library.library_target
+
+					-- clusters
+				clusters := build_groups (l_lib_target.clusters.linear_representation)
+
+					-- libraries
+				libraries := build_groups (l_lib_target.libraries.linear_representation)
+
+					-- assemblies
+				assemblies := build_groups (l_lib_target.assemblies.linear_representation)
 			end
 
 				-- handle classes
@@ -95,6 +89,12 @@ feature -- Access
 	sub_classes: HASH_TABLE [SORTED_TWO_WAY_LIST [CLASS_I], STRING]
 			-- classes mapping for sub folders
 
+	libraries: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+			-- libraries.
+
+	assemblies: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+			-- assemblies.
+
 	is_writable: BOOLEAN is
 			-- Can `Current' be modified?
 		do
@@ -102,10 +102,54 @@ feature -- Access
 		end
 
 	actual_group: CONF_GROUP
+			-- group associated to `Current'.
+
+	actual_cluster: CLUSTER_I is
 			-- cluster associated to `Current'.
+		require
+			is_cluster: is_cluster
+		do
+			Result ?= actual_group
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	actual_library: CONF_LIBRARY is
+			-- library associated to `Current'.
+		require
+			is_library: is_library
+		do
+			Result ?= actual_group
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	parent: EB_SORTED_CLUSTER
 			-- sorted cluster in which `Current' is.
+
+	is_cluster: BOOLEAN is
+			-- Does `Current' represent a cluster?
+		require
+			actual_group_not_void: actual_group /= Void
+		do
+			Result := actual_group.is_cluster
+		end
+
+	is_library: BOOLEAN is
+			-- Does `Current' represent a library?
+		require
+			actual_group_not_void: actual_group /= Void
+		do
+			Result := actual_group.is_library
+		end
+
+	is_assembly: BOOLEAN is
+			-- Does `Current' represent an assembly?
+		require
+			actual_group_not_void: actual_group /= Void
+		do
+			Result := actual_group.is_assembly
+		end
 
 
 feature -- Status setting
@@ -125,6 +169,33 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	build_groups (a_group: LIST [CONF_GROUP]): SORTED_TWO_WAY_LIST [like Current] is
+			-- Build a sorted list out of `a_group'.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_group: like Current
+		do
+			create Result.make
+
+			from
+				a_group.start
+			until
+				a_group.after
+			loop
+				create l_group.make (a_group.item)
+				Result.extend (l_group)
+				if is_cluster then
+					l_group.set_parent (Current)
+				end
+				a_group.forth
+			end
+			Result.sort
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 
 	generate_subfolder_mapping is
 			-- Generate subfolder mapping out of `a_classes'.

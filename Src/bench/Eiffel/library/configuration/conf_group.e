@@ -182,9 +182,9 @@ feature -- Access queries
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Class name alphabetic order
+			-- Group name alphabetic order
 		do
-			Result := location.evaluated_path < other.location.evaluated_path
+			Result := name < other.name
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -194,7 +194,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		do
 			is_valid := False
 		end
-
 
 	set_name (a_name: like name) is
 			-- Set `name' to `a_name'.

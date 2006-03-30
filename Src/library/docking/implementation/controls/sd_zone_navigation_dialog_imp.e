@@ -42,6 +42,7 @@ feature {NONE}-- Initialization
 			create full_title
 			create description
 			create detail
+			create internal_info_box_border
 
 				-- Build widget structure.
 			extend (internal_vertical_box_top)
@@ -56,7 +57,9 @@ feature {NONE}-- Initialization
 			internal_files_box.disable_item_expand (internal_files_label)
 			internal_files_box.extend (files_box)
 			internal_files_box.disable_item_expand (files_box)
-			internal_vertical_box_top.extend (internal_info_box)
+--			internal_vertical_box_top.extend (internal_info_box)
+			internal_vertical_box_top.extend (internal_info_box_border)
+			internal_info_box_border.extend (internal_info_box)
 			internal_info_box.extend (full_title)
 			internal_info_box.extend (description)
 			internal_info_box.extend (detail)
@@ -74,8 +77,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			internal_vertical_box_top.set_padding (10)
-			internal_vertical_box_top.set_border_width (10)
 			create internal_font
 			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
 			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
@@ -92,8 +93,6 @@ feature {NONE}-- Initialization
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			internal_files_label.set_font (internal_font)
 			internal_files_label.set_text ("Files")
-			internal_info_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			internal_info_box.set_border_width (1)
 			internal_info_box.disable_item_expand (full_title)
 			full_title.align_text_left
 			set_title ("Display window")
@@ -108,30 +107,13 @@ feature {NONE}-- Initialization
 			user_initialization
 
 			create internal_shared
-			init_background (internal_shared.tool_tip_color)
-		end
-
-	init_background (a_color: EV_COLOR) is
-			-- Set all widget's background color.
-		do
-			internal_vertical_box_top.set_background_color (a_color)
-			internal_label_box.set_background_color (a_color)
-			internal_tools_box.set_background_color (a_color)
-			internal_tools_label.set_background_color (a_color)
-			tools_box.set_background_color (a_color)
-			internal_files_box.set_background_color (a_color)
-			internal_files_label.set_background_color (a_color)
-			files_box.set_background_color (a_color)
---			internal_info_box.set_background_color (a_color)
-			full_title.set_background_color (a_color)
-			description.set_background_color (a_color)
-			detail.set_background_color (a_color)
 		end
 
 feature -- Access
 
 	internal_label_box: EV_HORIZONTAL_BOX
 	tools_box, files_box: SD_ZONE_NAVIGATION_BOX
+	internal_info_box_border: EV_VERTICAL_BOX
 	internal_vertical_box_top, internal_tools_box, internal_files_box,
 	internal_info_box: EV_VERTICAL_BOX
 	internal_tools_label, internal_files_label, full_title,

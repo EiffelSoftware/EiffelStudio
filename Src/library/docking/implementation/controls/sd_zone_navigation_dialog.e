@@ -43,8 +43,41 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			l_layout: EV_LAYOUT_CONSTANTS
 		do
+			create l_layout
+			internal_vertical_box_top.set_border_width (l_layout.default_border_size)
+			internal_vertical_box_top.set_padding (l_layout.default_padding_size)
 
+			internal_info_box.set_border_width (l_layout.default_border_size)
+			internal_info_box.set_padding_width (l_layout.default_padding_size)
+
+			internal_info_box_border.set_border_width (l_layout.tiny_padding_size)
+			internal_info_box_border.set_background_color (internal_shared.focused_color)
+
+			internal_tools_box.set_border_width (l_layout.default_border_size)
+			internal_tools_box.set_padding (l_layout.default_padding_size)
+
+			internal_files_box.set_border_width (l_layout.default_border_size)
+			internal_files_box.set_padding (l_layout.default_padding_size)
+		end
+
+	init_background (a_color: EV_COLOR) is
+			-- Set all widget's background color.
+		do
+			internal_vertical_box_top.set_background_color (a_color)
+			internal_label_box.set_background_color (a_color)
+			internal_tools_box.set_background_color (a_color)
+			internal_tools_label.set_background_color (a_color)
+			tools_box.set_background_color (a_color)
+			internal_files_box.set_background_color (a_color)
+			internal_files_label.set_background_color (a_color)
+			files_box.set_background_color (a_color)
+			internal_info_box.set_background_color (a_color)
+			full_title.set_background_color (a_color)
+			description.set_background_color (a_color)
+			detail.set_background_color (a_color)
 		end
 
 	add_all_content_label is

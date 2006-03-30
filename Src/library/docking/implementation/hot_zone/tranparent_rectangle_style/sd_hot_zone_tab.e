@@ -13,10 +13,11 @@ inherit
 		rename
 			make as make_docking,
 			internal_zone as internal_zone_docking
+
 		redefine
 			apply_change,
 			set_rectangle,
-			update_for_pointer_position_feedback
+			update_for_feedback
 		end
 
 create
@@ -86,10 +87,9 @@ feature -- Redefine
 			end
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine.
 		local
-
 			l_item: EV_RECTANGLE
 		do
 			if a_dockable then

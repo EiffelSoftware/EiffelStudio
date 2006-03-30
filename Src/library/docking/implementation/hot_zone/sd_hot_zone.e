@@ -18,17 +18,17 @@ feature -- Commands
 		deferred
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Update feedback rectangle when user move pointer.
 		deferred
 		end
 
-	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Update feedback indicator when user move pointer.
 		deferred
 		end
 
-	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
 			-- Clear indicator if pointer is out of area.
 		deferred
 		end

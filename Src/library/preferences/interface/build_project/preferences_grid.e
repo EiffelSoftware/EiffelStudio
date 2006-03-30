@@ -157,6 +157,7 @@ feature {NONE} -- Events
 	on_show is
 		do
 			if grid.is_displayed then
+				on_window_resize
 				grid.set_focus
 			end
 		end

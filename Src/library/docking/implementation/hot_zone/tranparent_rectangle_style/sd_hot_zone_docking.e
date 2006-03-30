@@ -10,6 +10,7 @@ class
 
 inherit
 	SD_HOT_ZONE
+		
 		redefine
 			has_x_y,
 			internal_zone
@@ -67,7 +68,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine.
 		do
 			if a_dockable then
@@ -93,7 +94,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
 			if internal_shared.show_all_feedback_indicator then
@@ -106,7 +107,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
 			-- Redefine
 		do
 			if not internal_rectangle.has_x_y (a_screen_x, a_screen_y) then

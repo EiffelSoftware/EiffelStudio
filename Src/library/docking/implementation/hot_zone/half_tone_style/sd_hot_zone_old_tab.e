@@ -15,7 +15,7 @@ inherit
 		redefine
 			apply_change,
 			set_rectangle,
-			update_for_pointer_position_feedback
+			update_for_feedback
 		end
 create
 	make
@@ -85,7 +85,7 @@ feature -- Redefine
 			internal_shared.feedback.reset_feedback_clearing
 		end
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine.
 		local
 

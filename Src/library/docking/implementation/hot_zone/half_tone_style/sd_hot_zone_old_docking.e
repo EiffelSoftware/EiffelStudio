@@ -35,7 +35,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
 			-- Redefine
 		local
 			l_half_height, l_half_width: INTEGER
@@ -138,12 +138,12 @@ feature -- Redefine
 --			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
-	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine
 		do
 		end
 
-	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
 			-- Redefine
 		do
 		end

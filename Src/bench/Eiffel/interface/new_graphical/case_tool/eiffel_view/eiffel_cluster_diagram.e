@@ -322,18 +322,19 @@ feature {NONE} -- Implementation
 			parent, es_cluster: ES_CLUSTER
 			parent_fig, cluster_fig: EG_CLUSTER_FIGURE
 		do
-			parent := model.cluster_from_interface (a_cluster.actual_cluster.parent_cluster)
-			if parent /= Void then
-				parent_fig ?= figure_from_model (parent)
-				check
-					a_cluster_not_in_graph: model.cluster_from_interface (a_cluster.actual_cluster) = Void
-				end
-				create es_cluster.make (a_cluster.actual_cluster)
-				model.add_cluster (es_cluster)
-				parent.extend (es_cluster)
-				cluster_fig ?= figure_from_model (es_cluster)
-				cluster_fig.set_port_position (parent_fig.port_x, parent_fig.port_y)
-			end
+			conf_todo
+--			parent := model.cluster_from_interface (a_cluster.actual_cluster.parent_cluster)
+--			if parent /= Void then
+--				parent_fig ?= figure_from_model (parent)
+--				check
+--					a_cluster_not_in_graph: model.cluster_from_interface (a_cluster.actual_cluster) = Void
+--				end
+--				create es_cluster.make (a_cluster.actual_cluster)
+--				model.add_cluster (es_cluster)
+--				parent.extend (es_cluster)
+--				cluster_fig ?= figure_from_model (es_cluster)
+--				cluster_fig.set_port_position (parent_fig.port_x, parent_fig.port_y)
+--			end
 		end
 
 	add_to_diagram (a_class: CLASS_I; drop_x, drop_y: INTEGER) is

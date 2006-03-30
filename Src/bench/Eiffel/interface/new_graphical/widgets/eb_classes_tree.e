@@ -132,6 +132,7 @@ feature {NONE} -- Initialization
 					end
 					l_grps.forth
 				end
+				l_clusters.sort
 
 					-- Build the tree.
 				create tmp_list.make (l_clusters.count)
@@ -356,7 +357,7 @@ feature -- Observer pattern
 					found or a_folder.after
 				loop
 					conv_clu ?= a_folder.item.data
-					if conv_clu /= Void and then conv_clu.actual_cluster = a_cluster then
+					if conv_clu /= Void and then conv_clu.actual_group = a_cluster then
 						a_folder.remove
 						found := True
 					else
@@ -371,7 +372,7 @@ feature -- Observer pattern
 					found or after
 				loop
 					conv_clu ?= item.data
-					if conv_clu.actual_cluster = a_cluster then
+					if conv_clu.actual_group = a_cluster then
 						remove
 						found := True
 					else
@@ -399,47 +400,47 @@ feature -- Observer pattern
 			found: BOOLEAN
 			new_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if a_cluster.actual_cluster.parent_cluster = Void then
-				clist := Current
-			else
-				clist := folder_from_cluster (a_cluster.actual_cluster.parent_cluster)
-			end
-			if clist /= Void then
-					-- Parent cluster is displayed.
-				from
-					clist.start
-				until
-					clist.after or else found
-				loop
-					conv_folder ?= clist.item
-					if conv_folder /= Void then
-						if conv_folder.data >= a_cluster then
-							found := True
-						else
-							clist.forth
-						end
-					else
-						found := True
-					end
-				end
-				create new_folder.make (a_cluster)
-				clist.put_left (new_folder)
-
-				if window /= Void then
-					new_folder.associate_with_window (window)
-				end
-				if textable /= Void then
-					new_folder.associate_textable_with_classes (textable)
-				end
-				from
-					classes_double_click_agents.start
-				until
-					classes_double_click_agents.after
-				loop
-					new_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
-					classes_double_click_agents.forth
-				end
-			end
+--			if a_cluster.actual_cluster.parent_cluster = Void then
+--				clist := Current
+--			else
+--				clist := folder_from_cluster (a_cluster.actual_cluster.parent_cluster)
+--			end
+--			if clist /= Void then
+--					-- Parent cluster is displayed.
+--				from
+--					clist.start
+--				until
+--					clist.after or else found
+--				loop
+--					conv_folder ?= clist.item
+--					if conv_folder /= Void then
+--						if conv_folder.data >= a_cluster then
+--							found := True
+--						else
+--							clist.forth
+--						end
+--					else
+--						found := True
+--					end
+--				end
+--				create new_folder.make (a_cluster)
+--				clist.put_left (new_folder)
+--
+--				if window /= Void then
+--					new_folder.associate_with_window (window)
+--				end
+--				if textable /= Void then
+--					new_folder.associate_textable_with_classes (textable)
+--				end
+--				from
+--					classes_double_click_agents.start
+--				until
+--					classes_double_click_agents.after
+--				loop
+--					new_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
+--					classes_double_click_agents.forth
+--				end
+--			end
 		end
 
 	on_cluster_changed (a_cluster: CLUSTER_I) is
@@ -468,7 +469,7 @@ feature -- Observer pattern
 					end
 				end
 			else
-				remove_cluster_from_folder (a_cluster.actual_cluster, folder_from_cluster (old_cluster))
+--				remove_cluster_from_folder (a_cluster.actual_cluster, folder_from_cluster (old_cluster))
 			end
 
 				-- Add `a_cluster' to its new cluster.
@@ -483,9 +484,9 @@ feature -- Observer pattern
 			if a_cluster.parent = Void then
 				folder := Void
 			else
-				folder := folder_from_cluster (a_cluster.parent.actual_cluster)
+--				folder := folder_from_cluster (a_cluster.parent.actual_cluster)
 			end
-			remove_cluster_from_folder (a_cluster.actual_cluster, folder)
+--			remove_cluster_from_folder (a_cluster.actual_cluster, folder)
 		end
 
 	on_project_loaded is
@@ -800,7 +801,7 @@ feature {NONE} -- Implementation
 				folder_list.after or else Result /= Void
 			loop
 				folder ?= folder_list.item
-				if folder /= Void and then folder.data.actual_cluster = clusteri then
+				if folder /= Void and then folder.data.actual_group = clusteri then
 					Result := folder
 				end
 				folder_list.forth

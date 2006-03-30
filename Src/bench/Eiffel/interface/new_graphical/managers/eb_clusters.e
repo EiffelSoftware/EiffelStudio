@@ -475,17 +475,17 @@ feature -- Element change
 			actual_parent: CLUSTER_I
 		do
 				-- Notify observers.
-			on_cluster_removed (a_cluster.actual_cluster)
+--			on_cluster_removed (a_cluster.actual_cluster)
 
 				-- Remove `a_cluster' from the universe.
-			actual_parent := a_cluster.actual_cluster.parent_cluster
-			if actual_parent /= Void then
-				actual_parent.sub_clusters.prune_all (a_cluster.actual_cluster)
-				cluster_list := a_cluster.parent.clusters
-			else
-				Eiffel_system.sub_clusters.prune_all (a_cluster.actual_cluster)
-				cluster_list := clusters
-			end
+--			actual_parent := a_cluster.actual_cluster.parent_cluster
+--			if actual_parent /= Void then
+--				actual_parent.sub_clusters.prune_all (a_cluster.actual_cluster)
+--				cluster_list := a_cluster.parent.clusters
+--			else
+--				Eiffel_system.sub_clusters.prune_all (a_cluster.actual_cluster)
+--				cluster_list := clusters
+--			end
 			conf_todo
 --			Eiffel_universe.clusters.prune_all (a_cluster.actual_cluster)
 
@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 			until
 				parent_cluster_sons.after or Result /= Void
 			loop
-				if parent_cluster_sons.item.actual_cluster = clusteri then
+				if parent_cluster_sons.item.actual_group = clusteri then
 					Result := parent_cluster_sons.item
 				end
 				parent_cluster_sons.forth

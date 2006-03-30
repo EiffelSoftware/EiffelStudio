@@ -3254,9 +3254,9 @@ feature {NONE} -- Implementation
 				until
 					l_subclu.after
 				loop
-					l_cluster := l_subclu.item.actual_cluster
-					l_format_context.put_manifest_string (" - ")
 					conf_todo
+--					l_cluster := l_subclu.item.actual_cluster
+--					l_format_context.put_manifest_string (" - ")
 --					l_format_context.add_cluster (l_cluster, l_cluster.cluster_name)
 					l_format_context.put_space
 					l_format_context.set_without_tabs

@@ -60,7 +60,7 @@ feature -- Access
 	stone: CLUSTER_STONE is
 			-- Cluster stone representing `data'.
 		do
-			create Result.make (data.actual_cluster)
+			create Result.make (data.actual_group)
 		end
 
 feature -- Status setting
@@ -68,35 +68,39 @@ feature -- Status setting
 	set_data (a_cluster: EB_SORTED_CLUSTER) is
 			-- Affect `a_cluster' to `data'.
 		local
-			actual: CLUSTER_I
+			l_cluster: CLUSTER_I
+			l_group: CONF_GROUP
 			l_name: STRING
 			l_pos: INTEGER
 		do
-			actual := a_cluster.actual_cluster
-			if not path.is_empty then
-				l_pos := path.last_index_of ('/', path.count)
-				if l_pos > 0 then
-					l_name := path.substring (l_pos+1, path.count)
+			l_group := a_cluster.actual_group
+			l_cluster ?= l_group
+			if l_cluster /= Void then
+				if not path.is_empty then
+					l_pos := path.last_index_of ('/', path.count)
+					if l_pos > 0 then
+						l_name := path.substring (l_pos+1, path.count)
+					else
+						create l_name.make_empty
+					end
 				else
-					create l_name.make_empty
+					l_name := l_cluster.cluster_name
 				end
-			else
-				l_name := actual.cluster_name
+				set_text (l_name)
+				set_tooltip (l_name)
+				data := a_cluster
+				set_pebble (stone)
+				set_accept_cursor (Cursors.cur_Cluster)
+				set_deny_cursor (Cursors.cur_X_Cluster)
+				set_pixmap (pixmap_from_cluster_i (l_cluster))
+				if not (l_group.is_readonly) then
+					drop_actions.set_veto_pebble_function (agent droppable)
+					drop_actions.extend (agent on_class_drop)
+	--| FIXME XR: When clusters can be moved effectively, uncomment this line.
+	--				drop_actions.extend (~on_cluster_drop)
+				end
+				fake_load
 			end
-			set_text (l_name)
-			set_tooltip (l_name)
-			data := a_cluster
-			set_pebble (stone)
-			set_accept_cursor (Cursors.cur_Cluster)
-			set_deny_cursor (Cursors.cur_X_Cluster)
-			set_pixmap (pixmap_from_cluster_i (actual))
-			if not (actual.is_readonly) then
-				drop_actions.set_veto_pebble_function (agent droppable)
-				drop_actions.extend (agent on_class_drop)
---| FIXME XR: When clusters can be moved effectively, uncomment this line.
---				drop_actions.extend (~on_cluster_drop)
-			end
-			fake_load
 		ensure then
 			data = a_cluster
 		end
@@ -158,6 +162,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			i, up: INTEGER
 			l_dir: KL_DIRECTORY
 			l_set: ARRAY [STRING]
+			cluster: CLUSTER_I
 		do
 			orig_count := count
 
@@ -191,8 +196,9 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 			end
 
-			if data.actual_cluster.is_recursive then
-				create l_dir.make (data.actual_cluster.location.build_path (path, ""))
+			cluster ?= data.actual_group
+			if cluster.is_recursive then
+				create l_dir.make (cluster.location.build_path (path, ""))
 				l_set := l_dir.directory_names
 				if l_set /= Void then
 					create subfolders.make_from_array (l_set)
@@ -203,7 +209,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					until
 						i > up
 					loop
-						if data.actual_cluster.file_rule.is_included (path+"/"+subfolders[i]) then
+						if cluster.file_rule.is_included (path+"/"+subfolders[i]) then
 							create l_subfolder.make_sub (data, path+"/"+subfolders[i])
 							if associated_window /= Void then
 								l_subfolder.associate_with_window (associated_window)
@@ -280,7 +286,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			-- A cluster was dropped in `Current'.
 			-- Add `cluster' to `Current' via the cluster manager.
 		do
-			parent_tree.manager.move_cluster (cluster.cluster_i, data.actual_cluster)
+--			parent_tree.manager.move_cluster (cluster.cluster_i, data.actual_cluster)
 --			parent_tree.manager.remove_cluster_i (cluster.cluster_i)
 --			parent_tree.manager.add_cluster_i (cluster.cluster_i, data.actual_cluster)
 		end
@@ -396,15 +402,15 @@ feature {NONE} -- Implementation
 		local
 			clu: CLUSTER_I
 		do
-			from
-				clu := data.actual_cluster
-			until
-				clu = Void or else
-				Result
-			loop
-				Result := (f = clu)
-				clu := clu.parent_cluster
-			end
+--			from
+--				clu := data.actual_cluster
+--			until
+--				clu = Void or else
+--				Result
+--			loop
+--				Result := (f = clu)
+--				clu := clu.parent_cluster
+--			end
 		end
 
 	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER

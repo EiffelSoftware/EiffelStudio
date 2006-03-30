@@ -17,51 +17,59 @@ create
 
 feature {NONE} -- Initialization
 
-	make (data: CLUSTER_I) is
+	make (data: like actual_group) is
 			-- Associate `data' to `Current' and sort children.
 		local
-			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			sorted_clusters: SORTABLE_ARRAY [CLUSTER_I]
+			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
+			sorted_clusters: SORTABLE_ARRAY [CONF_CLUSTER]
 			clusters_count: INTEGER
-			l_sub_classes: HASH_TABLE [CLASS_I, STRING]
-			sorted_classes: SORTABLE_ARRAY [CLASS_I]
+			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
+			sorted_classes: SORTABLE_ARRAY [CONF_CLASS]
 			classes_count: INTEGER
 			a_cluster: EB_SORTED_CLUSTER
 			i: INTEGER
+			l_cluster: CONF_CLUSTER
+			l_class_i: CLASS_I
 		do
-			actual_cluster := data
-			sub_clusters := data.sub_clusters
-			create clusters.make
-			if sub_clusters /= Void then
-					-- First retrieve all sub-clusters and put them into an array
-					-- that we will sort.
-				create sorted_clusters.make (1, sub_clusters.count)
-				from
-					sub_clusters.start
-					i := 1
-				until
-					sub_clusters.after
-				loop
-					sorted_clusters.put (sub_clusters.item, i)
-
-					i := i + 1
-					sub_clusters.forth
+			actual_group := data
+			if actual_group.is_cluster then
+				l_cluster ?= data
+				check
+					cluster: l_cluster /= Void
 				end
+				sub_clusters := l_cluster.children
+				create clusters.make
+				if sub_clusters /= Void then
+						-- First retrieve all sub-clusters and put them into an array
+						-- that we will sort.
+					create sorted_clusters.make (1, sub_clusters.count)
+					from
+						sub_clusters.start
+						i := 1
+					until
+						sub_clusters.after
+					loop
+						sorted_clusters.put (sub_clusters.item, i)
 
-					-- Sort the clusters.
-				sorted_clusters.sort
+						i := i + 1
+						sub_clusters.forth
+					end
 
-					-- Build the tree.
-				from
-					clusters_count := sorted_clusters.count
-					i := clusters_count
-				until
-					i = 0
-				loop
-					create a_cluster.make (sorted_clusters @ i)
-					clusters.extend (a_cluster)
-					a_cluster.set_parent (Current)
-					i := i - 1
+						-- Sort the clusters.
+					sorted_clusters.sort
+
+						-- Build the tree.
+					from
+						clusters_count := sorted_clusters.count
+						i := clusters_count
+					until
+						i = 0
+					loop
+						create a_cluster.make (sorted_clusters @ i)
+						clusters.extend (a_cluster)
+						a_cluster.set_parent (Current)
+						i := i - 1
+					end
 				end
 			end
 
@@ -93,7 +101,11 @@ feature {NONE} -- Initialization
 				until
 					i = 0
 				loop
-					classes.extend (sorted_classes @ i)
+					l_class_i ?= sorted_classes[i]
+					check
+						class_i: l_class_i /= Void
+					end
+					classes.extend (l_class_i)
 					i := i - 1
 				end
 			end
@@ -115,14 +127,10 @@ feature -- Access
 	is_writable: BOOLEAN is
 			-- Can `Current' be modified?
 		do
-			if (parent = Void) then
-				Result := not actual_cluster.is_library
-			else
-				Result := (not actual_cluster.is_library) and parent.is_writable
-			end
+			Result := actual_group.is_readonly
 		end
 
-	actual_cluster: CLUSTER_I
+	actual_group: CONF_GROUP
 			-- cluster associated to `Current'.
 
 	parent: EB_SORTED_CLUSTER
@@ -142,7 +150,7 @@ feature -- Basic operations
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other' according to their names?
 		do
-			Result := actual_cluster.cluster_name < other.actual_cluster.cluster_name
+			Result := actual_group.name < other.actual_group.name
 		end
 
 feature {NONE} -- Implementation
@@ -221,4 +229,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SORTED_CLUSTER
+end

@@ -432,7 +432,7 @@ feature -- Observer management
 					-- Set the appropriate pixmap for nitem.
 					cluster_stone ?= cell.item1
 					if cluster_stone /= Void and then cluster_stone.group /= Void then
-						nitem.set_pixmap (pixmap_from_cluster_i (cluster_stone.group))
+						nitem.set_pixmap (pixmap_from_group (cluster_stone.group))
 					end
 					cluster_address.extend (nitem)
 					if cell.item1 = cur_sel then
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 				clusteri := cluster_list.item
 				cname := clusteri.cluster_name.twin
 				cluster_names.extend (cname)
-				cluster_pixmaps.extend (pixmap_from_cluster_i (clusteri))
+				cluster_pixmaps.extend (pixmap_from_group (clusteri))
 				cluster_list.forth
 			end
 			if not cluster_names.is_empty then

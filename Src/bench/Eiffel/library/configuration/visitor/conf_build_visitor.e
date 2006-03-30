@@ -1174,7 +1174,9 @@ feature {NONE} -- Implementation
 							old_group_computed: old_group /= Void implies old_group.classes_set
 							old_group_different: old_group /= l_group
 						end
-						reused_groups.force (old_group)
+						if old_group /= Void then
+							reused_groups.force (old_group)
+						end
 
 							-- for assemblies, check if they changed
 						old_assembly ?= old_group

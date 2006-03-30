@@ -65,9 +65,12 @@ feature -- Element change
 		local
 			l_print: CONF_PRINT_VISITOR
 		do
-			lace.load
 			create l_print.make
-			lace.conf_system.process (l_print)
+			check
+					-- we compile before the refactoring so we should always have a conf_system
+				compiled_system: universe.conf_system /= Void
+			end
+			universe.conf_system.process (l_print)
 			check
 				no_error: not l_print.is_error
 			end

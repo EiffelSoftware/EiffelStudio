@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	pixmap_from_cluster_i (a_group: CONF_GROUP): EV_PIXMAP is
+	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP is
 			-- Return pixmap based on `a_group'.
 		require
 			a_group_not_void: a_group /= Void

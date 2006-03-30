@@ -98,7 +98,7 @@ feature -- Access
 	is_writable: BOOLEAN is
 			-- Can `Current' be modified?
 		do
-			Result := actual_group.is_readonly
+			Result := not actual_group.is_readonly
 		end
 
 	actual_group: CONF_GROUP
@@ -238,6 +238,13 @@ feature {NONE} -- Implementation
 		ensure
 			sub_classes_set: sub_classes /= Void
 		end
+
+invariant
+	classes_not_void: classes /= Void
+	clusters_not_void: clusters /= Void
+	sub_classes_not_void: is_cluster implies sub_classes /= Void
+	libraries_not_void: is_library implies libraries /= Void
+	assemblies_not_void: is_library implies assemblies /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

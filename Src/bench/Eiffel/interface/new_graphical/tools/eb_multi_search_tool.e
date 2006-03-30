@@ -1880,7 +1880,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
 			if l_item = Void then
 				create l_item.make_with_text (a_cluster.cluster_name)
-				l_item.set_pixmap (pixmap_from_cluster_i (a_cluster))
+				l_item.set_pixmap (pixmap_from_group (a_cluster))
 				scope_list.extend (l_item)
 				l_item.set_data (a_cluster)
 				l_item.set_pebble_function (agent scope_pebble_function (a_cluster))

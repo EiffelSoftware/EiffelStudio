@@ -94,7 +94,7 @@ feature -- Status setting
 			set_tooltip (l_name)
 			set_accept_cursor (Cursors.cur_Cluster)
 			set_deny_cursor (Cursors.cur_X_Cluster)
-			set_pixmap (pixmap_from_cluster_i (l_group))
+			set_pixmap (pixmap_from_group (l_group))
 			if not (l_group.is_readonly) then
 				drop_actions.set_veto_pebble_function (agent droppable)
 				drop_actions.extend (agent on_class_drop)
@@ -153,7 +153,6 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 	load is
 			-- Load the classes and the sub_clusters of `data'.
 		local
-			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
 			subfolders: SORTABLE_ARRAY [STRING]
 			classes: SORTED_LIST [CLASS_I]
 			l_subfolder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -204,10 +203,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 			if data.is_library then
-				-- show libraries for libraries
+					-- show libraries for libraries
+				show_groups (data.libraries)
 
-
-				-- show assemblies for libraries
+					-- show assemblies for libraries
+				show_groups (data.assemblies)
 			end
 
 				-- show classes for clusters and assemblies

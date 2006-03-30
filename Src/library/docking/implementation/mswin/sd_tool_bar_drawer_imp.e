@@ -30,9 +30,13 @@ feature{NONE} -- Initlization
 			-- Creation method
 		require
 			not_void: a_tool_bar /= Void
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			tool_bar := a_tool_bar
 			init_theme
+			create l_env
+			l_env.application.theme_changed_actions.extend (agent init_theme)
 		ensure
 			set: tool_bar = a_tool_bar
 		end
@@ -54,8 +58,10 @@ feature{NONE} -- Initlization
 			create l_tool_bar
 			l_wel_tool_bar ?= l_tool_bar.implementation
 			check not_void: l_wel_tool_bar /= Void end
+			if theme_data /= default_pointer then
+				theme_drawer.close_theme_data (theme_data)
+			end
 			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Toolbar")
-
 		end
 
 feature -- Redefine

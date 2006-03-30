@@ -217,13 +217,21 @@ feature {NONE} -- Agents
 
 	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle redraw.
+		local
+			l_imp: EV_DRAWING_AREA_IMP
 		do
 			internal_drawing_area.clear
 
 			internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_pixmap_internal, content.pixmap)
 			if is_show_text then
 				internal_drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				internal_drawing_area.draw_text_top_left (start_x_text_internal, start_y_text_internal, internal_text)
+				if not is_vertical then
+					internal_drawing_area.draw_text_top_left (start_x_text_internal, start_y_text_internal, internal_text)
+				else
+					l_imp ?= internal_drawing_area.implementation
+					check not_void: l_imp /= Void end
+					l_imp.draw_rotated_text (start_x_text_internal, start_y_text_internal, {SD_MATH_CONST}.pi * 1.5, internal_text)
+				end
 			end
 
 			internal_drawing_area.set_foreground_color (internal_shared.border_color)
@@ -269,7 +277,11 @@ feature {NONE} -- Implementation
 			if is_draw_separator_left then
 				Result := Result + 1
 			end
-			Result := Result + padding_width
+			if not is_vertical then
+				Result := Result + padding_width
+			else
+				Result := Result + 1
+			end
 		end
 
 	start_y_pixmap_internal: INTEGER is
@@ -289,7 +301,7 @@ feature {NONE} -- Implementation
 			if not is_vertical then
 				Result := start_x_pixmap_internal + content.pixmap.width + padding_width
 			else
-				Result := start_x_pixmap_internal
+				Result := start_x_pixmap_internal + padding_width
 			end
 		end
 
@@ -297,9 +309,9 @@ feature {NONE} -- Implementation
 			-- Start y position when `on_draw' draw text.
 		do
 			if not is_vertical then
-				Result := start_y_pixmap_internal
+				Result := start_y_pixmap_internal + padding_width // 2
 			else
-				Result := start_y_pixmap_internal + content.pixmap.height + padding_width
+				Result := start_y_pixmap_internal + content.pixmap.height + padding_width // 2
 			end
 		end
 

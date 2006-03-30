@@ -3817,6 +3817,9 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 	zone->ov_flags = dftype;		/* Set dynamic type */
+	if (EIF_IS_EXPANDED_TYPE(System (dtype & EO_TYPE))) {
+		zone->ov_flags |= EO_EXP | EO_REF;
+	}
 
 #ifdef ISE_GC
 	if (dftype & EO_NEW) {					/* New object outside scavenge zone */

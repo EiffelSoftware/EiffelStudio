@@ -54,15 +54,15 @@ feature -- Query
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT} -- Internal functions.
 
-	on_resize (a_x, a_y, a_width, a_height: INTEGER) is
+	on_resize (a_x, a_y, a_width, a_height: INTEGER; a_force: BOOLEAN) is
 			-- Handle main window resize event.
 		do
-			if last_width /= a_width or last_height /= a_height then
+			if last_width /= a_width or last_height /= a_height or a_force then
 				internal_docking_manager.command.lock_update (Void, True)
-				if last_width /= a_width then
+				if last_width /= a_width or a_force then
 					notify_four_area (a_width, a_height, True)
 				end
-				if last_height /= a_height then
+				if last_height /= a_height or a_force then
 					notify_four_area (a_width, a_height, False)
 				end
 				internal_docking_manager.command.unlock_update
@@ -73,26 +73,48 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 
 	hide_all_floating is
 			-- Hide all floating tool bars.
+		local
+			l_snapshot: like floating_tool_bars
 		do
 			from
-				floating_tool_bars.start
+				l_snapshot := floating_tool_bars.twin
+				l_snapshot.start
 			until
-				floating_tool_bars.after
+				l_snapshot.after
 			loop
-				floating_tool_bars.item.hide
-				floating_tool_bars.forth
+				l_snapshot.item.hide
+				l_snapshot.forth
 			end
 		end
 
 	show_all_floating is
 			-- Show all floating tool bars.
+		local
+			l_snapshot: like floating_tool_bars
+		do
+			if not is_all_floating_displayed then
+				from
+					l_snapshot := floating_tool_bars.twin
+					l_snapshot.start
+				until
+					l_snapshot.after
+				loop
+					l_snapshot.item.show
+					l_snapshot.forth
+				end
+			end
+		end
+
+	is_all_floating_displayed: BOOLEAN is
+			-- If floating tool bar zones hidden?
 		do
 			from
+				Result := True
 				floating_tool_bars.start
 			until
-				floating_tool_bars.after
+				floating_tool_bars.after or not Result
 			loop
-				floating_tool_bars.item.show
+				Result := floating_tool_bars.item.is_displayed
 				floating_tool_bars.forth
 			end
 		end

@@ -191,29 +191,31 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				end
 			end
 
-			create l_dir.make (data.actual_cluster.location.build_path (path, ""))
-			l_set := l_dir.directory_names
-			if l_set /= Void then
-				create subfolders.make_from_array (l_set)
-				subfolders.sort
-				from
-					i := subfolders.lower
-					up := subfolders.upper
-				until
-					i > up
-				loop
-					if data.actual_cluster.file_rule.is_included (path+"/"+subfolders[i]) then
-						create l_subfolder.make_sub (data, path+"/"+subfolders[i])
-						if associated_window /= Void then
-							l_subfolder.associate_with_window (associated_window)
-						end
-						if associated_textable /= Void then
-							l_subfolder.associate_textable_with_classes (associated_textable)
-						end
+			if data.actual_cluster.is_recursive then
+				create l_dir.make (data.actual_cluster.location.build_path (path, ""))
+				l_set := l_dir.directory_names
+				if l_set /= Void then
+					create subfolders.make_from_array (l_set)
+					subfolders.sort
+					from
+						i := subfolders.lower
+						up := subfolders.upper
+					until
+						i > up
+					loop
+						if data.actual_cluster.file_rule.is_included (path+"/"+subfolders[i]) then
+							create l_subfolder.make_sub (data, path+"/"+subfolders[i])
+							if associated_window /= Void then
+								l_subfolder.associate_with_window (associated_window)
+							end
+							if associated_textable /= Void then
+								l_subfolder.associate_textable_with_classes (associated_textable)
+							end
 
-						extend (l_subfolder)
+							extend (l_subfolder)
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 

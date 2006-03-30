@@ -78,16 +78,21 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_ev_item /= Void
 		local
+			l_tool_bar_toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			l_tool_bar_button: EV_TOOL_BAR_BUTTON
 			l_tool_bar_separator: EV_TOOL_BAR_SEPARATOR
-
 			l_sd_button: SD_TOOL_BAR_BUTTON
 			l_sd_separator: SD_TOOL_BAR_SEPARATOR
 		do
+			l_tool_bar_toggle_button ?= a_ev_item
 			l_tool_bar_button ?= a_ev_item
 			l_tool_bar_separator ?= a_ev_item
 			if l_tool_bar_button /= Void then
-				create l_sd_button.make
+				if l_tool_bar_toggle_button /= Void  then
+					create {SD_TOOL_BAR_TOGGLE_BUTTON} l_sd_button.make
+				else
+					create l_sd_button.make
+				end
 				if l_tool_bar_button.text /= Void  then
 					l_sd_button.set_text (l_tool_bar_button.text)
 				end
@@ -232,7 +237,7 @@ feature -- Query
 
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
 		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER}  -- Internal issues.
-		
+
 	seperator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
 			-- Separator after `a_item' if exist.
 		require

@@ -148,7 +148,7 @@ feature -- Hanlde pointer events
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_feedback (a_screen_x, a_screen_y, is_dockable)
+				l_drawed := hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
 				hot_zones.forth
 			end
 			debug ("docking")
@@ -385,13 +385,13 @@ feature {NONE} -- Implementation functions
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+				l_drawed := hot_zones.item.update_for_indicator (a_screen_x, a_screen_y)
 
 				hot_zones.forth
 			end
 
 			if not hot_zones.after then
-				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+				l_drawed := hot_zones.last.update_for_indicator (a_screen_x, a_screen_y)
 			end
 		end
 
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation functions
 			until
 				hot_zones.after
 			loop
-				hot_zones.item.update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y)
+				hot_zones.item.update_for_indicator_clear (a_screen_x, a_screen_y)
 				hot_zones.forth
 			end
 		end

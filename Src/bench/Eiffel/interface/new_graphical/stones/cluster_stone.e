@@ -85,13 +85,9 @@ feature -- Access
 
  	is_valid: BOOLEAN is
  			-- Does `Current' represent a valid cluster?
- 		local
- 			l_group: like group
  		do
- 			Result := Eiffel_project.initialized and then group /= Void
- 			if Result then
- 				l_group := Eiffel_universe.group_of_name (group.name)
- 				Result := l_group.is_valid
+ 			if Eiffel_project.initialized and then group /= Void then
+ 				Result := group.is_valid
  			end
  		end
 
@@ -99,7 +95,6 @@ feature -- Access
  			-- Return a valid stone representing the same object after a recompilation.
  		do
  			if is_valid then
- 				group := Eiffel_universe.group_of_name (group.name)
  				Result := Current
  			else
  				Result := Void

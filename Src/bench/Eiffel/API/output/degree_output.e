@@ -389,7 +389,7 @@ feature -- Output on per class
 			display_new_line
 		end
 
-	put_case_class_message (a_class: CLASS_C) is
+	put_case_class_message (a_class: CONF_CLASS) is
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for case.
 		require
@@ -400,7 +400,7 @@ feature -- Output on per class
 			processed := processed + 1;
 		end
 
-	put_class_document_message (a_class: CLASS_C) is
+	put_class_document_message (a_class: CONF_CLASS) is
 			-- Put message to indicate that `a_class' is being
 			-- generated for documentation.
 		require

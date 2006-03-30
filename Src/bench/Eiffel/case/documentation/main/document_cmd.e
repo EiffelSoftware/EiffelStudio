@@ -59,8 +59,8 @@ feature {NONE} -- Implementation
 			if not retried then
 				create doc.make
 				doc.set_filter (wizard.filter)
-				doc.set_directory (wizard.directory)
 				doc.set_universe (wizard.documentation_universe)
+				doc.set_directory (wizard.directory)
 				doc.set_excluded_indexing_items (wizard.excluded_indexing_items)
 				doc.set_cluster_formats (
 					wizard.cluster_charts_selected,

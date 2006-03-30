@@ -11,11 +11,11 @@ deferred class
 inherit
 	OUTPUT_ROUTINES
 
-	SHARED_EIFFEL_PROJECT
-
 	EB_SHARED_PREFERENCES
 
 	CONF_REFACTORING
+
+	DOCUMENT_HELPER
 
 feature -- Status setting
 
@@ -38,7 +38,7 @@ feature -- Access
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			subs: LINEAR [CLUSTER_I]
+			subs: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -47,7 +47,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_menu_bar, false)
 
 			append_system_info (a_text_formatter)
-			subs := Eiffel_system.sub_clusters
+			subs := top_level_clusters
 			if subs /= Void and then not subs.is_empty then
 				a_text_formatter.process_keyword_text ("Top-level clusters", Void)
 				a_text_formatter.add_new_line
@@ -99,7 +99,7 @@ feature -- Access
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
-			append_cluster_list (a_text_formatter, du.clusters)
+			append_cluster_list (a_text_formatter, du.groups)
 
 			a_text_formatter.process_filter_item (f_menu_bar, true)
 			insert_global_menu_bar (a_text_formatter, True, False, True)
@@ -116,7 +116,8 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			cluster_list: LIST [CLUSTER_I]
+			l_groups: ARRAYED_LIST [CONF_GROUP]
+			l_cluster: CONF_CLUSTER
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -126,10 +127,21 @@ feature -- Access
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
-			cluster_list := Eiffel_system.sub_clusters
-			from cluster_list.start until cluster_list.after loop
-				append_cluster_hierarchy_leaf (a_text_formatter, du, cluster_list.item, 1)
-				cluster_list.forth
+			l_groups := du.universe.groups
+			from
+				l_groups.start
+			until
+				l_groups.after
+			loop
+				if l_groups.item.is_cluster then
+					l_cluster ?= l_groups.item
+					if l_cluster.parent = Void then
+						append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item, 1)
+					end
+				else
+					append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item, 1)
+				end
+				l_groups.forth
 			end
 
 			a_text_formatter.process_filter_item (f_menu_bar, true)
@@ -139,20 +151,21 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	cluster_index_text (
-		cluster: CLUSTER_I;
-		class_list: LINKED_LIST [CLASS_I];
+	group_index_text (
+		group: CONF_GROUP;
+		class_list: SORTED_TWO_WAY_LIST [CONF_CLASS];
 		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
-			-- Generate documentation cluster index for `cluster' as structured text.
+			-- Generate documentation group index for `group'.
 			-- Add links to diagrams if `diagrams' is True.
 		require
-			cluster_not_void: cluster /= Void
+			group_not_void: group /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			parent: CLUSTER_I
-			subs: ARRAYED_LIST [CLUSTER_I]
-			l_indexes: EIFFEL_LIST [INDEX_AS]
+			subs: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
+			l_name: STRING
+			l_cluster: CONF_CLUSTER
 		do
+			l_name := group_name_presentation (".", "", group)
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
 			a_text_formatter.process_filter_item (f_menu_bar, true)
@@ -162,7 +175,7 @@ feature -- Access
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
 			a_text_formatter.add_indent
-			a_text_formatter.process_cluster_name_text (cluster.cluster_name, cluster, false)
+			a_text_formatter.process_cluster_name_text (l_name, group, false)
 			if diagrams then
 				a_text_formatter.add_indent
 				a_text_formatter.process_string_text ("(diagram)", "./diagram.html")
@@ -170,22 +183,46 @@ feature -- Access
 			a_text_formatter.add_new_line
 			a_text_formatter.add_new_line;
 
-			conf_todo
---			l_indexes := cluster.indexes
-			if l_indexes /= Void then
-				(create {TEXT_FORMATTER_DECORATOR}.make_for_appending (a_text_formatter)).format_ast (l_indexes)
+			conf_todo_msg ("We may need more structured information for indexing of a group")
+					-- Generate indexes for a group.
+					-- We may need more structured information for indexing of a group.
+			a_text_formatter.process_keyword_text (ti_indexing_keyword, Void)
+			a_text_formatter.process_new_line
+			a_text_formatter.add_indent
+			a_text_formatter.process_basic_text ("description")
+			a_text_formatter.process_symbol_text (ti_colon)
+			a_text_formatter.process_basic_text (ti_space)
+			a_text_formatter.process_string_text (ti_double_quote, Void)
+			if group.description /= Void then
+				a_text_formatter.add_indexing_string (group.description)
+			end
+			a_text_formatter.process_string_text (ti_double_quote, Void)
+			a_text_formatter.process_new_line
+			a_text_formatter.add_indent
+			a_text_formatter.process_basic_text ("copyright")
+			a_text_formatter.process_symbol_text (ti_colon)
+			a_text_formatter.process_basic_text (ti_space)
+			a_text_formatter.process_string_text (ti_double_quote, Void)
+			if group.target.version /= Void and then group.target.version.copyright /= Void then
+				a_text_formatter.add_indexing_string (group.target.version.copyright)
+			end
+			a_text_formatter.process_string_text (ti_double_quote, Void)
+			a_text_formatter.process_new_line
+			a_text_formatter.process_new_line
+
+			if group.is_cluster then
+				l_cluster ?= group
+				if l_cluster.parent /= Void then
+					a_text_formatter.process_keyword_text ("Supercluster", Void)
+					a_text_formatter.add_new_line
+					a_text_formatter.add_indent
+					a_text_formatter.process_cluster_name_text (group_name_presentation (".", "", l_cluster.parent), l_cluster.parent, false)
+					a_text_formatter.add_new_line
+					a_text_formatter.add_new_line
+				end
 			end
 
-			parent := cluster.parent_cluster
-			if parent /= Void then
-				a_text_formatter.process_keyword_text ("Supercluster", Void)
-				a_text_formatter.add_new_line
-				a_text_formatter.add_indent
-				a_text_formatter.process_cluster_name_text (parent.cluster_name, parent, false)
-				a_text_formatter.add_new_line
-				a_text_formatter.add_new_line
-			end
-			subs := cluster.sub_clusters
+			subs := subclusters_of_group (group)
 			if subs /= Void and then not subs.is_empty then
 				a_text_formatter.process_keyword_text ("Subclusters", Void)
 				a_text_formatter.add_new_line
@@ -397,7 +434,7 @@ feature -- Routines
 			end
 		end
 
-	append_cluster_list (text: TEXT_FORMATTER; cluster_list: LINEAR [CLUSTER_I]) is
+	append_cluster_list (text: TEXT_FORMATTER; cluster_list: SORTED_TWO_WAY_LIST [CONF_GROUP]) is
 		do
 			from
 				cluster_list.start
@@ -405,7 +442,7 @@ feature -- Routines
 				cluster_list.after
 			loop
 				text.add_indent
-				text.process_cluster_name_text (cluster_list.item.cluster_name, cluster_list.item, false)
+				text.process_cluster_name_text (group_name_presentation (".", "", cluster_list.item), cluster_list.item, false)
 				text.add_new_line
 				cluster_list.forth
 			end
@@ -474,7 +511,7 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: TEXT_FORMATTER; class_list: LINKED_LIST [CLASS_I]; desc: BOOLEAN) is
+	append_class_list (text: TEXT_FORMATTER; class_list: SORTED_TWO_WAY_LIST [CONF_CLASS]; desc: BOOLEAN) is
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -486,12 +523,15 @@ feature {NONE} -- Implementation
 			until
 				class_list.after
 			loop
-				ci := class_list.item
+				ci ?= class_list.item
+				check
+					ci_not_void: ci /= Void
+				end
 				text.add_indent
 				ci.compiled_class.append_signature (text, True)
 				text.add_new_line
 				if desc then
-					s := indexing_item_as_string (class_list.item, "description")
+					s := indexing_item_as_string (ci, "description")
 					if s /= Void then
 						s := s.twin
 						s.remove (1)
@@ -508,28 +548,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_cluster_hierarchy_leaf (
-		text: TEXT_FORMATTER;
-		doc_universe: DOCUMENTATION_UNIVERSE;
-		parent_cluster: CLUSTER_I;
-		indent: INTEGER) is
+	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER) is
 		local
 			n: INTEGER
-			subs: ARRAYED_LIST [CLUSTER_I]
+			subs: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
 		do
-			if doc_universe.is_cluster_leaf_generated (parent_cluster) then
-				from n := 1 until n > indent loop
-					text.add_indent
-					n := n + 1
-				end
-				text.process_cluster_name_text (parent_cluster.cluster_name, parent_cluster, false)
-				text.add_new_line
-				subs := parent_cluster.sub_clusters
-				if subs /= Void then
-					from subs.start until subs.after loop
-						append_cluster_hierarchy_leaf (text, doc_universe, subs.item, indent + 1)
-						subs.forth
-					end
+			from n := 1 until n > indent loop
+				text.add_indent
+				n := n + 1
+			end
+			if du.is_group_leaf_generated (a_group) then
+			 	text.process_cluster_name_text (group_name_presentation (".", "", a_group), a_group, false)
+			else
+				text.process_basic_text (group_name_presentation (".", "", a_group))
+			end
+			text.add_new_line
+			subs := subclusters_of_group (a_group)
+			if subs /= Void then
+				from subs.start until subs.after loop
+					append_cluster_hierarchy_leaf (text, du, subs.item, indent + 1)
+					subs.forth
 				end
 			end
 		end
@@ -625,22 +663,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Indexing clauses
 
-	html_meta_for_class (class_i: CLASS_I): STRING is
+	html_meta_for_class (a_class: CONF_CLASS): STRING is
 			-- Generate string with list of HTML META tags
-			-- describing the indexing clause of `class_i'.
+			-- describing the indexing clause of `a_class'.
 		require
-			class_i_not_void: class_i /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_class_i: CLASS_I
 		do
-			Result := indexes_to_html_meta (class_i.compiled_class.ast.top_indexes, "Eiffel class")
-			Result.append (indexes_to_html_meta (class_i.compiled_class.ast.bottom_indexes, "Eiffel class"))
+			l_class_i ?= a_class
+			check
+				l_class_i /= Void and then l_class_i.is_compiled
+			end
+			Result := indexes_to_html_meta (l_class_i.compiled_class.ast.top_indexes, "Eiffel class")
+			Result.append (indexes_to_html_meta (l_class_i.compiled_class.ast.bottom_indexes, "Eiffel class"))
 		end
 
-	html_meta_for_cluster (cluster_i: CLUSTER_I): STRING is
+	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING is
 			-- Generate strings of HTML meta data.
 		require
 			cluster_i_not_void: cluster_i /= Void
 		do
---			Result := indexes_to_html_meta (cluster_i.indexes, "Eiffel cluster")
+			Result := indexes_to_html_meta_group (cluster_i, "Eiffel cluster")
 		end
 
 	html_meta_for_system: STRING is
@@ -649,11 +693,44 @@ feature {NONE} -- Indexing clauses
 			Result := indexing_tuple_to_string ("keywords", "Eiffel system")
 		end
 
+	indexes_to_html_meta_group (a_group: CONF_GROUP; added_keywords: STRING): STRING is
+			-- Convert `a_group' to a big string of HTML meta data.
+		local
+			content, t: STRING
+			exc: like excluded_indexing_items
+		do
+			create Result.make (20)
+			exc := excluded_indexing_items
+
+			conf_todo_msg ("Related to indexing generation of a group")
+			if a_group.description /= Void then
+				t := "description"
+				content := a_group.description
+				content.replace_substring_all ("%%N", " ")
+				content.prune_all ('%%')
+				content.prune_all ('"')
+				Result.append (indexing_tuple_to_string (t, content))
+			end
+
+			if a_group.target.version /= Void and then a_group.target.version.copyright /= Void then
+				t := "copyright"
+				content := a_group.target.version.copyright
+				content.replace_substring_all ("%%N", " ")
+				content.prune_all ('%%')
+				content.prune_all ('"')
+				Result.append (indexing_tuple_to_string (t, content))
+			end
+
+			if not exc.has ("keywords") and added_keywords /= Void then
+				Result.append (indexing_tuple_to_string ("keywords", added_keywords))
+			end
+		end
+
 	indexes_to_html_meta (indexes: EIFFEL_LIST [INDEX_AS]; added_keywords: STRING): STRING is
 			-- Convert `indexes' to a big string of HTML meta data.
 		local
 			content, t: STRING
-			ic: like indexes_to_table
+			ic: HASH_TABLE [STRING, STRING]
 			exc: like excluded_indexing_items
 		do
 			create Result.make (20)
@@ -802,6 +879,8 @@ feature  -- Menu bars
 			-- Append a menu bar to `text'.
 		deferred
 		end
+
+feature {NONE} -- Implementation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

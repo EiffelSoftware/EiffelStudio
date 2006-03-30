@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Cluster selection for documentation."
+		"Groups selection for documentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,16 +19,16 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize with no clusters in system.
+			-- Initialize with no groups in system.
 		do
-			create clusters.make
-			any_cluster_format_generated := True
+			create groups.make
+			any_group_format_generated := True
 			any_class_format_generated := True
 			any_feature_format_generated := True
 		end
 
 	make_all is
-			-- Initialize with all clusters in system.
+			-- Initialize with all groups in system.
 		do
 			make
 			include_all
@@ -36,106 +36,129 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	include_cluster (cl: CLUSTER_I; include_subclusters: BOOLEAN) is
-			-- Add `cl' (if not yet present) to universe.
-			-- Add subclusters based on `include_subclusters'.
+	include_group (gr: CONF_GROUP) is
+			-- Add `gr' (if not yet present) to universe.
 		require
-			cl_not_void: cl /= Void
-		local
-			sc: LIST [CLUSTER_I]
+			gr_not_void: gr /= Void
 		do
-			if not clusters.has (cl) then
-				clusters.extend (cl)
-			end
-			sc := cl.sub_clusters
-			if include_subclusters and then sc /= Void then
-				from sc.start until sc.after loop
-					include_cluster (sc.item, True)
-					sc.forth
-				end
+			if not groups.has (gr) then
+				groups.extend (gr)
 			end
 		end
 
-	exclude_cluster (cl: CLUSTER_I; exclude_subclusters: BOOLEAN) is
-			-- Remove `cl' if present.
-			-- Remove subclusters based on `exclude_subclusters'.
+	exclude_group (gr: CONF_GROUP) is
+			-- Remove `gr' if present.
 		require
-			cl_not_void: cl /= Void
-		local
-			sc: LIST [CLUSTER_I]
+			gr_not_void: gr /= Void
 		do
-			clusters.prune_all (cl)
-			sc := cl.sub_clusters
-			if sc /= Void and then exclude_subclusters then
-				from sc.start until sc.after loop
-					exclude_cluster (sc.item, True)
-					sc.forth
-				end
-			end
+			groups.prune_all (gr)
 		end
 
 	include_all is
-			-- Include all clusters from the universe in the documentation.
+			-- Include all groups from the universe in the documentation.
 		local
-			cl: ARRAYED_LIST [CLUSTER_I]
+			gr: ARRAYED_LIST [CONF_GROUP]
 		do
---			cl := Universe.clusters
-			from cl.start until cl.after loop
-				clusters.extend (cl.item)
-				cl.forth
+			gr := Universe.groups
+			from gr.start until gr.after loop
+				groups.extend (gr.item)
+				gr.forth
 			end
 		end
 
 feature -- Access
 
-	clusters: SORTED_TWO_WAY_LIST [CLUSTER_I]
-			-- All clusters in universe.
+	groups: SORTED_TWO_WAY_LIST [CONF_GROUP]
+			-- All groups in universe.
 
-	classes: SORTED_TWO_WAY_LIST [CLASS_I] is
-			-- All classes from `clusters'.
+	classes: SORTED_TWO_WAY_LIST [CONF_CLASS] is
+			-- All classes from `groups'.
 		local
-			cl: HASH_TABLE [CLASS_I, STRING]
+			cl: HASH_TABLE [CONF_CLASS, STRING]
+			l_class_i: CLASS_I
 		do
 			create Result.make
-			from clusters.start until clusters.after loop
-				cl := clusters.item.classes
+			from groups.start until groups.after loop
+				cl := groups.item.classes
 				from
 					cl.start
 				until
 					cl.after
 				loop
-					if cl.item_for_iteration.compiled then
+					l_class_i ?= cl.item_for_iteration
+					check
+						l_class_i /= Void
+					end
+					if l_class_i.is_compiled then
 						Result.extend (cl.item_for_iteration)
 					end
 					cl.forth
 				end
-				clusters.forth
+				groups.forth
 			end
 		end
 
-	classes_in_cluster (cluster: CLUSTER_I): like classes is
-			-- List of all items from `classes' whose cluster is `cluster'.
+	classes_in_group (group: CONF_GROUP): like classes is
+			-- List of all items from `classes' whose group is `group'.
 		require
-			cluster_not_void: cluster /= Void
+			group_not_void: group /= Void
 		local
-			cl: HASH_TABLE [CLASS_I, STRING]
+			cl: HASH_TABLE [CONF_CLASS, STRING]
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_subclusters: ARRAYED_LIST [CONF_CLUSTER]
+			l_lib_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_class_i: CLASS_I
 		do
 			create Result.make
-			cl := cluster.classes
+			cl := group.classes
 			from
 				cl.start
 			until
 				cl.after
 			loop
-				if cl.item_for_iteration.compiled then
+				l_class_i ?= cl.item_for_iteration
+				check
+					l_class_i_not_void: l_class_i /= Void
+				end
+				if l_class_i.is_compiled then
 					Result.extend (cl.item_for_iteration)
 				end
 				cl.forth
 			end
+			if group.is_cluster then
+				l_cluster ?= group
+				l_subclusters := l_cluster.children
+				if l_subclusters /= Void then
+					from
+						l_subclusters.start
+					until
+						l_subclusters.after
+					loop
+						Result.merge (classes_in_group (l_subclusters.item))
+						l_subclusters.forth
+					end
+				end
+			elseif group.is_library then
+				l_lib ?= group
+				check
+					l_lib_not_void: l_lib /= Void
+					library_target_not_void: l_lib.library_target /= Void
+				end
+				l_lib_clusters := l_lib.library_target.clusters
+				from
+					l_lib_clusters.start
+				until
+					l_lib_clusters.after
+				loop
+					Result.merge (classes_in_group (l_lib_clusters.item_for_iteration))
+					l_lib_clusters.forth
+				end
+			end
 		end
 
-	any_cluster_format_generated: BOOLEAN
-			-- Is a format generated where a cluster link can be redirected to?
+	any_group_format_generated: BOOLEAN
+			-- Is a format generated where a group link can be redirected to?
 
 	any_class_format_generated: BOOLEAN
 			-- Is a format generated where a class link can be redirected to?
@@ -145,49 +168,38 @@ feature -- Access
 
 feature -- Status report
 
-	is_cluster_generated (a_cluster: CLUSTER_I): BOOLEAN is
-			-- Is documentation for `cluster' generated?
+	is_group_generated (a_group: CONF_GROUP): BOOLEAN is
+			-- Is documentation for `a_group' generated?
 		do
-			Result := any_cluster_format_generated and then clusters.has (a_cluster)
+			Result := any_group_format_generated and then groups.has (a_group)
 		end
 
 	is_class_generated (a_class: CLASS_I): BOOLEAN is
-			-- Is documentation for `cl' generated?
+			-- Is documentation for `a_class' generated?
 		do
---			Result := any_class_format_generated and then clusters.has (a_class.cluster)
+			Result := any_class_format_generated and then groups.has (a_class.group)
 		end
 
 	is_feature_generated (a_feature: E_FEATURE): BOOLEAN is
 			-- Is documentation for `cl' generated?
 		do
---			Result := any_feature_format_generated and then clusters.has (
---				a_feature.written_class.lace_class.cluster
---			)
+			Result := any_feature_format_generated and then groups.has (
+				a_feature.written_class.lace_class.group
+			)
 		end
 
-	is_cluster_leaf_generated (cluster: CLUSTER_I): BOOLEAN is
-			-- Is `cluster' or recursively any of its subclusters generated?
+	is_group_leaf_generated (group: CONF_GROUP): BOOLEAN is
+			-- Is `group' or recursively any of its subgroups generated?
 			-- Used for cluster hierarchy view.
-		local
-			sc: LIST [CLUSTER_I]
 		do
-			Result := any_cluster_format_generated and then clusters.has (cluster)
-			sc := cluster.sub_clusters
-			if sc /= Void then
-				from sc.start until Result or else sc.after loop
-					if is_cluster_leaf_generated (sc.item) then
-						Result := True
-					end
-					sc.forth
-				end
-			end
+			Result := any_group_format_generated and then groups.has (group)
 		end
 
 feature -- Status setting
 
-	set_any_cluster_format_generated (f: BOOLEAN) is
+	set_any_group_format_generated (f: BOOLEAN) is
 		do
-			any_cluster_format_generated := f
+			any_group_format_generated := f
 		end
 
 	set_any_class_format_generated (f: BOOLEAN) is

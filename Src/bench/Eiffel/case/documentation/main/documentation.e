@@ -132,33 +132,33 @@ feature -- Actions
 
 					if cluster_chart_generated then
 						from
-							clusters.start
+							groups.start
 						until
-							clusters.after
+							groups.after
 						loop
-							deg.put_string ("Building cluster chart for " + clusters.item.cluster_name)
+							deg.put_string ("Building cluster chart for " + group_name_presentation (".", "", groups.item))
 							deg.flush_output
 							if filter.is_html then
-								filter.set_keyword ("html_meta", html_meta_for_cluster (clusters.item))
+								filter.set_keyword ("html_meta", html_meta_for_cluster (groups.item))
 							end
-							set_base_cluster (clusters.item)
---							prepare_for_file (clusters.item.relative_path ('%U'), "index")
-							set_document_title ("cluster " + clusters.item.cluster_name)
-							generate_cluster_index (clusters.item)
-							clusters.forth
+							set_base_cluster (groups.item)
+							prepare_for_file (relative_path (groups.item), groups.item.name)
+							set_document_title ("cluster " + groups.item.name)
+							generate_cluster_index (groups.item)
+							groups.forth
 						end
 					end
 
 					if filter.is_html and then cluster_diagram_generated then
 						from
-							clusters.start
+							groups.start
 						until
-							clusters.after
+							groups.after
 						loop
-							deg.put_string ("Building cluster diagram for " + clusters.item.cluster_name)
+							deg.put_string ("Building cluster diagram for " + group_name_presentation (".", "", groups.item))
 							deg.flush_output
-							generate_cluster_diagram (clusters.item)
-							clusters.forth
+							generate_cluster_diagram (groups.item)
+							groups.forth
 						end
 					end
 
@@ -169,9 +169,9 @@ feature -- Actions
 						until
 							classes.after
 						loop
-							deg.put_case_class_message (classes.item.compiled_class)
+							deg.put_case_class_message (classes.item)
 							deg.flush_output
---							set_base_cluster (classes.item.cluster)
+							set_base_cluster (classes.item.group)
 							cl_name := classes.item.name.as_lower
 							set_class_name (cl_name)
 							if filter.is_html then
@@ -182,13 +182,10 @@ feature -- Actions
 								create cf.make (af.item)
 								af.forth
 								if cf.is_generated then
-		--							if pd /= Void then
-		--								pd.set_current_degree (cf.description)
-		--							end
---									prepare_for_file (
---										classes.item.cluster.relative_path ('%U'),
---										cl_name + cf.file_extension
---									)
+									prepare_for_file (
+										create {FILE_NAME}.make_from_string (relative_path (classes.item.group)),
+										cl_name + cf.file_extension
+									)
 									set_document_title (cl_name + " " + cf.description)
 									generate_class (classes.item, cf)
 								end
@@ -248,32 +245,84 @@ feature -- Actions
 			end
 		end
 
-	create_directories (tl_clusters: LIST [CLUSTER_I]) is
+	create_directories is
 			-- Create directories where documentation is
 			-- to be generated.
 		require
 			root_directory /= Void
 		local
-			d: DIRECTORY
-			fi: FILE_NAME
-			fa: STRING
+			l_groups: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
+			l_groups := doc_universe.groups
 			from
-				tl_clusters.start
+				l_groups.start
 			until
-				tl_clusters.after
+				l_groups.after
 			loop
-				create fi.make_from_string (root_directory.name)
---				fa := tl_clusters.item.relative_path ('%U')
-				fi.extend (fa)
-				create d.make (fi)
-				if not d.exists then
-					d.create_dir
-				end
-				create_directories (tl_clusters.item.sub_clusters)
-				tl_clusters.forth
+				create_directory_for_group (l_groups.item)
+				l_groups.forth
 			end
 		end
+
+	create_directory_for_group (a_group: CONF_GROUP) is
+			--
+		require
+			root_directory /= Void
+		local
+			d: DIRECTORY
+			fi: FILE_NAME
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_assem: CONF_ASSEMBLY
+			l_string: STRING
+			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
+		do
+			l_string := relative_path (a_group).out
+			create fi.make_from_string (root_directory.name)
+			fi.extend (l_string)
+			create d.make (fi)
+			if not d.exists then
+				d.create_dir
+			end
+			if a_group.is_cluster then
+				l_cluster ?= a_group
+				if l_cluster.children /= Void then
+					from
+						l_cluster.children.start
+					until
+						l_cluster.children.after
+					loop
+						create_directory_for_group (l_cluster.children.item)
+						l_cluster.children.forth
+					end
+				end
+			elseif a_group.is_assembly then
+				l_assem ?= a_group
+				if l_assem.application_target /= Void then
+					l_clusters := l_assem.application_target.clusters
+					from
+						l_clusters.start
+					until
+						l_clusters.after
+					loop
+						create_directory_for_group (l_clusters.item_for_iteration)
+						l_clusters.forth
+					end
+				end
+			elseif a_group.is_library then
+				l_lib ?= a_group
+				l_clusters := l_lib.library_target.clusters
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					create_directory_for_group (l_clusters.item_for_iteration)
+					l_clusters.forth
+				end
+			end
+		end
+
 
 	copy_additional_file (fn: STRING) is
 			-- Copy `fn' to directory where documentation is to be generated.
@@ -308,7 +357,7 @@ feature -- Settings
 			if not root_directory.exists then
 				root_directory.create_dir
 			end
-			create_directories (Eiffel_system.sub_clusters)
+			create_directories
 		ensure
 			root_directory_assigned: root_directory = p
 			directory_exists: p.exists
@@ -389,7 +438,7 @@ feature {NONE} -- Implementation
 			cf: CLASS_FORMAT
 			i: INTEGER
 		do
-			doc_universe.set_any_cluster_format_generated (cluster_chart_generated)
+			doc_universe.set_any_group_format_generated (cluster_chart_generated)
 			from i := cf_Flatshort until i < cf_Chart loop
 				create cf.make (i)
 				if cf.is_generated then
@@ -408,13 +457,13 @@ feature {NONE} -- Implementation
 			doc_universe.set_any_feature_format_generated (feature_links /= Void)
 		end
 
-	classes: SORTED_TWO_WAY_LIST [CLASS_I]
+	classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	clusters: SORTED_TWO_WAY_LIST [CLUSTER_I] is
-			-- Clusters to be generated.
+	groups: SORTED_TWO_WAY_LIST [CONF_GROUP] is
+			-- Groups to be generated.
 		do
-			Result := doc_universe.clusters
+			Result := doc_universe.groups
 		end
 
 	diagram_views: HASH_TABLE [STRING, STRING]
@@ -525,9 +574,9 @@ feature {NONE} -- Filtered generation
 			target_file_name.add_extension (filter.file_suffix)
 		end
 
-	set_base_cluster (c: CLUSTER_I) is
+	set_base_cluster (c: CONF_GROUP) is
 		do
---			base_path := c.base_relative_path (filter.file_separator)
+			base_path := base_relative_path (c).out
 			filter.set_base_path (base_path)
 		end
 
@@ -591,20 +640,26 @@ feature -- Access
 
 feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 
-	relative_path (a_cluster: CLUSTER_I): FILE_NAME is
+	relative_path (a_cluster: CONF_GROUP): FILE_NAME is
 			-- Path of `a_cluster' relative to `root_directory'.
 		require
 			a_cluster_not_void: a_cluster /= Void
+		local
+			l_string: STRING
 		do
---			Result := a_cluster.relative_path (filter.file_separator)
+			l_string := path_representation (operating_environment.directory_separator.out, a_cluster.name, a_cluster, False)
+			create Result.make_from_string (l_string)
 		end
 
-	base_relative_path (a_cluster: CLUSTER_I): FILE_NAME is
+	base_relative_path (a_cluster: CONF_GROUP): FILE_NAME is
 			-- Path from `a_cluster' to `root_directory'.
 		require
 			a_cluster_not_void: a_cluster /= Void
+		local
+			l_string: STRING
 		do
---			Result := a_cluster.base_relative_path (filter.file_separator)
+			l_string := path_representation (filter.file_separator.out, "..", a_cluster, True)
+			create Result.make_from_string (l_string)
 		end
 
 feature -- Specific Generation
@@ -666,19 +721,19 @@ feature -- Specific Generation
 			generate_from_text_filter (filter)
 		end
 
-	generate_cluster_index (cluster: CLUSTER_I) is
-			-- Write project cluster index to `target_file_name'.
+	generate_cluster_index (a_group: CONF_GROUP) is
+			-- Write project a_group index to `target_file_name'.
 		do
 			filter.prepend_to_file_suffix (class_links)
-			cluster_index_text (
-				cluster,
-				doc_universe.classes_in_cluster (cluster),
+			group_index_text (
+				a_group,
+				doc_universe.classes_in_group (a_group),
 				filter.is_html and cluster_diagram_generated,
 				filter)
 			generate_from_text_filter (filter)
 		end
 
-	generate_cluster_diagram (cluster: CLUSTER_I) is
+	generate_cluster_diagram (cluster: CONF_GROUP) is
 			-- Write project cluster diagram to `target_file_name'.
 		local
 			g: EB_DIAGRAM_HTML_GENERATOR
@@ -687,29 +742,35 @@ feature -- Specific Generation
 			check
 				views_exist: diagram_views /= Void
 			end
-			view_name := diagram_views.item (cluster.cluster_name)
-			if view_name /= Void then
-				create g.make_for_documentation (cluster, view_name, Current)
-			else
-				create g.make_for_documentation (cluster, Void, Current)
-			end
-			g.execute
+			conf_todo_msg ("Diagram generation when generating documentation")
+--			view_name := diagram_views.item (cluster.cluster_name)
+--			if view_name /= Void then
+--				create g.make_for_documentation (cluster, view_name, Current)
+--			else
+--				create g.make_for_documentation (cluster, Void, Current)
+--			end
+--			g.execute
 		end
 
-	generate_class (class_i: CLASS_I; a_format: CLASS_FORMAT) is
+	generate_class (a_class: CONF_CLASS; a_format: CLASS_FORMAT) is
 			-- Write project class `format' to `target_file_name'.
 		require
-			class_i_not_void: class_i /= Void
+			a_class_not_void: a_class /= Void
 			format_not_void: a_format /= Void
 			format_generated: a_format.is_generated
 		local
 			class_c: CLASS_C
 			retried: BOOLEAN
+			l_class_i: CLASS_I
 		do
+			l_class_i ?= a_class
+			check
+				l_class_i /= Void and then l_class_i.is_compiled
+			end
 			format := a_format
 			filter.prepend_to_file_suffix (format.file_extension)
 			if not retried then
-				class_c := class_i.compiled_class
+				class_c := l_class_i.compiled_class
 				inspect
 					format.type
 				when cf_Chart then
@@ -737,18 +798,18 @@ feature -- Specific Generation
 					-- `ti_after_class_declaration' so that `insert_class_menu_bars'
 					-- works properly.
 				filter.process_filter_item (f_menu_bar, true)
-				insert_class_menu_bar (filter, class_i.name.as_lower)
+				insert_class_menu_bar (filter, l_class_i.name.as_lower)
 				filter.process_filter_item (f_menu_bar, false
 				)
 				filter.process_filter_item (f_class_declaration, true)
 				filter.add_new_line
 				filter.add_string ("Internal compiler error while generating documentation %
 					%for class ")
-				filter.add_class (class_i)
+				filter.add_class (l_class_i)
 				filter.add_new_line
 
 				filter.process_filter_item (f_menu_bar, true)
-				insert_class_menu_bar (filter, class_i.name.as_lower)
+				insert_class_menu_bar (filter, l_class_i.name.as_lower)
 				filter.process_filter_item (f_menu_bar, false)
 
 				filter.process_filter_item (f_class_declaration, false)

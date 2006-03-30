@@ -30,7 +30,7 @@ feature -- Access
 			-- Access `i-th' boolean in Current.
 		require
 			valid_index: valid_index (i)
-		do	
+		do
 			Result := area.item(i // Integer_size).bit_test (i \\ Integer_size)
 		end
 
@@ -50,7 +50,7 @@ feature -- Measurement
 	upper: INTEGER is
 			-- Maximum index
 		do
-			Result := count - 1	
+			Result := count - 1
 		end
 
 	count, capacity: INTEGER is
@@ -69,7 +69,7 @@ feature -- Element change
 			valid_index: valid_index (i)
 		local
 			index: INTEGER
-		do	
+		do
 			index := i // Integer_size
 			if v then
 				area.put (area.item (index) | ((1).to_integer_32 |<<  (i \\ Integer_size)), index)
@@ -94,7 +94,30 @@ feature -- Element change
 		ensure
 			inserted: v = item (i)
 		end
-		
+
+	include (other: PACKED_BOOLEANS) is
+			-- Include all items set to `True' from `other' in current.
+			-- (I.e. save a result of "Current or other" into current.)
+		require
+			other_not_void: other /= Void
+			other_small_enough: other.count <= count
+		local
+			i: INTEGER
+			current_area: like area
+			other_area: like area
+		do
+			current_area := area
+			other_area := other.area
+			from
+				i := other_area.count
+			until
+				i <= 0
+			loop
+				i := i - 1
+				current_area.put (current_area.item (i) | other_area.item (i), i)
+			end
+		end
+
 feature -- Resizing
 
 	resize (n: INTEGER) is
@@ -127,7 +150,7 @@ feature -- Constants
 	Integer_size: INTEGER is 32
 			-- Size of INTEGER in bits.
 
-feature {NONE} -- Implementation
+feature {PACKED_BOOLEANS} -- Implementation
 
 	area: SPECIAL [INTEGER]
 			-- Storage for booleans.
@@ -142,19 +165,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

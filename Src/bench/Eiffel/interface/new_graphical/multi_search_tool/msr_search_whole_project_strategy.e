@@ -13,12 +13,14 @@ inherit
 		redefine
 			launch
 		end
-	
+
+	CONF_REFACTORING
+
 create
 	make
-	
+
 feature -- Basic Operation	
-	
+
 	launch is
 			-- Launch the search
 		local
@@ -33,7 +35,8 @@ feature -- Basic Operation
 				until
 					l_clusters.clusters.after
 				loop
-					create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_clusters.clusters.item.actual_cluster, only_compiled_class_searched)
+					conf_todo
+--					create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_clusters.clusters.item.actual_cluster, only_compiled_class_searched)
 					if case_sensitive then
 						l_cluster_strategy.set_case_sensitive
 					else

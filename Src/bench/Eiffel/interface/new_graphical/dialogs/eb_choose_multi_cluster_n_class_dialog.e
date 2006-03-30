@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 			create buttons_box
 			buttons_box.set_padding (Layout_constants.Small_padding_size)
 			buttons_box.set_border_width (Layout_constants.Small_padding_size)
-			
+
 			create add_button.make_with_text_and_action (Interface_names.b_add, agent on_add)
 			extend_button (buttons_box, add_button)
-	
+
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
 			classes_tree.refresh
-			
+
 				-- Create the top panel: a Combo Box to type the name of the class
 				-- and a tree to select the class.
 			create controls_box
@@ -111,24 +111,24 @@ feature -- Access
 		end
 
 feature -- Element Change
-	
+
 	set_class_add_action (action: PROCEDURE [ANY, TUPLE [CLASS_I]]) is
 			-- set class add action
 		do
 			on_class_add := action
 		end
-		
+
 	set_cluster_add_action (action: PROCEDURE [ANY, TUPLE [CLUSTER_I]]) is
 			-- set cluster add action
 		do
 			on_cluster_add := action
 		end
-		
+
 feature {NONE} -- Implementation
 
 	selected_class_name: STRING
 			-- name of the selected class, if any.
-	
+
 	object: ANY
 			-- operations can be committed on this object
 
@@ -147,13 +147,14 @@ feature {NONE} -- Vision2 events
 					on_class_add.call ([l_class])
 				end
 				if l_cluster /= Void then
-					on_cluster_add.call ([l_cluster.actual_cluster])
+					conf_todo
+--					on_cluster_add.call ([l_cluster.actual_cluster])
 				end
 			end
 		end
-		
+
 	on_class_add: PROCEDURE [ANY, TUPLE [CLASS_I]]
-	
+
 	on_cluster_add: PROCEDURE [ANY, TUPLE [CLUSTER_I]]
 
 --	on_ok is
@@ -247,4 +248,4 @@ indexing
 		]"
 
 end -- class EB_CHOOSE_CLASS_DIALOG
-	
+

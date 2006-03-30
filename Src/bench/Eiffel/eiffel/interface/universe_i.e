@@ -192,13 +192,22 @@ feature -- Access
 			Result ?= group_of_name (cluster_name)
 		end
 
-	group_of_name (cluster_name: STRING): CONF_GROUP is
-			-- Cluster whose name is `cluster_name' (Void if none)
+	group_of_name (group_name: STRING): CONF_GROUP is
+			-- Group whose name is `group_name' (Void if none)
 		require
-			good_argument: cluster_name /= Void
+			good_argument: group_name /= Void
 		do
 			if target /= Void then
-				Result := target.clusters.item (cluster_name)
+				Result := target.clusters.item (group_name)
+				if Result = Void then
+					Result := target.libraries.item (group_name)
+					if Result = Void then
+						Result := target.assemblies.item (group_name)
+						if Result = Void then
+							Result := target.overrides.item (group_name)
+						end
+					end
+				end
 			end
 		end
 

@@ -715,19 +715,25 @@ feature -- Access
 
 	cluster: CLUSTER_I is
 			-- Cluster for current class. Void if none.
+		do
+			conf_todo_msg ("Update callers to use `group' instead.")
+			Result ?= group
+		end
+
+	group: CONF_GROUP is
+			-- Group of current class. Void if none.
 		local
 			classi_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
 		do
-			conf_todo
---			classi_stone ?= stone
---			if classi_stone /= Void then
---				Result := classi_stone.group
---			end
---			cluster_stone ?= stone
---			if cluster_stone /= Void then
---				Result := cluster_stone.cluster_i
---			end
+			classi_stone ?= stone
+			if classi_stone /= Void then
+				Result := classi_stone.group
+			end
+			cluster_stone ?= stone
+			if cluster_stone /= Void then
+				Result := cluster_stone.group
+			end
 		end
 
 	class_name: STRING is
@@ -3808,7 +3814,7 @@ feature {NONE} -- Implementation: Editor commands
 		do
 			if a_feature /= Void then
 				address_manager.set_feature_text_simply (a_feature.feature_names.first.internal_name)
-				l_class_i := eiffel_universe.class_named (class_name, cluster)
+				l_class_i := eiffel_universe.class_named (class_name, group)
 				if l_class_i /= Void and then l_class_i.is_compiled then
 					l_classc := l_class_i.compiled_class
 					if l_classc.has_feature_table then

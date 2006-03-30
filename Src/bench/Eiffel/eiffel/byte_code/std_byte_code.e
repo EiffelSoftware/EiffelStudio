@@ -636,7 +636,13 @@ end
 						buf.put_new_line
 						buf.put_string ("((union overhead *) sarg")
 						buf.put_integer (i)
-						buffer.put_string (".data)->ov_size = 0;")
+						buffer.put_string (".data)->ov_size = ")
+						if context.workbench_mode then
+							l_class_type.skeleton.generate_workbench_size (buf)
+						else
+							l_class_type.skeleton.generate_size (buf)
+						end
+						buffer.put_character (';')
 						buf.put_new_line
 					end
 					i := i + 1

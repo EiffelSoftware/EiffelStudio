@@ -1,3 +1,4 @@
+
 indexing
 	description:
 		"Class defining thread attributes."
@@ -16,6 +17,8 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Set default values to the thread attributes.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			priority := default_priority
 			scheduling_policy := default_policy
@@ -36,7 +39,7 @@ feature -- Attribute change
 			-- Set scheduling policy to `policy'.  Possible values are:
 			-- default_policy, other, fifo and round_robin.
 		require
-			valid_policy: (policy >= 0) and (policy <= 3)
+			valid_policy: (policy >= default_policy) and (policy <= round_robin)
 		do
 			scheduling_policy := policy
 		end

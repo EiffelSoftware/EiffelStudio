@@ -59,6 +59,14 @@ feature {NONE} -- Implementation
 	terminated: BOOLEAN
 			-- True if the thread has terminated.
 
+	exit is
+			-- Exit calling thread. Must be called from the thread itself.
+		external
+			"C | %"eif_threads.h%""
+		alias
+			"eif_thr_exit"
+		end
+
 feature {NONE} -- Externals
 
 	thread_wait (term: THREAD_CONTROL) is
@@ -89,18 +97,12 @@ feature {NONE} -- Externals
 
 	last_created_thread: POINTER is
 			-- Returns a pointer to the thread-id of the last created thread.
+		obsolete
+			"Do not use anymore"
 		external
 			"C | %"eif_threads.h%""
 		alias
 			"eif_thr_last_thread"
-		end
-
-	exit is
-			-- Exit calling thread. Must be called from the thread itself.
-		external
-			"C | %"eif_threads.h%""
-		alias
-			"eif_thr_exit"
 		end
 
 indexing

@@ -21,11 +21,12 @@ feature -- Initialization
 	make (count: INTEGER) is
 			-- Create semaphore.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			count_positive:	count >= 0
 		do
 			sem_pointer := eif_thr_sem_create (count)
 		ensure
-			valid_semaphore: sem_pointer /= default_pointer
+			is_set: is_set
 		end
 
 feature -- Access
@@ -38,7 +39,7 @@ feature -- Access
 
 feature -- Status setting
 
-	try_wait, trywait: BOOLEAN is
+	try_wait: BOOLEAN is
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		require
@@ -48,7 +49,7 @@ feature -- Status setting
 		end
 
 	wait is
-			-- Decrement semaphore count, waiting if necessary until 
+			-- Decrement semaphore count, waiting if necessary until
 			-- that becomes possible.
 		require
 			valid_semaphore: is_set
@@ -71,6 +72,19 @@ feature -- Status setting
 		do
 			eif_thr_sem_destroy (sem_pointer)
 			sem_pointer := default_pointer
+		end
+
+feature -- Obsolete
+
+	trywait: BOOLEAN is
+			-- Has client been successful in decrementing semaphore
+			-- count without waiting?
+		obsolete
+			"Use try_wait instead"
+		require
+			valid_semaphore: is_set
+		do
+			Result := try_wait
 		end
 
 feature {NONE} -- Implementation
@@ -115,6 +129,9 @@ feature {NONE} -- Externals
 		external
 			"C | %"eif_threads.h%""
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

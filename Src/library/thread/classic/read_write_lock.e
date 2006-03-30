@@ -14,17 +14,32 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 create
-	default_create
+	default_create,
+	make
 
 feature -- Initialization
 
 	default_create is
 			-- Create read/write lock.
+		obsolete
+			"Use make instead"
+		require else
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			item := eif_thr_rwl_create
 		ensure then
+			item_set: is_set
+		end
+
+	make is
+			-- Create read/write lock.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
+		do
+			item := eif_thr_rwl_create
+		ensure
 			item_set: is_set
 		end
 
@@ -121,6 +136,9 @@ feature {NONE} -- Externals
 		external
 			"C | %"eif_threads.h%""
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

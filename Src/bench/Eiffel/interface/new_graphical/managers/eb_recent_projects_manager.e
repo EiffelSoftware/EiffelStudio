@@ -16,8 +16,6 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -59,42 +57,39 @@ feature -- Basic operations
 			recent_projects_compare_objects: recent_projects.object_comparison
 		local
 			lop: ARRAYED_LIST [FILE_NAME]
---			project_file_name: FILE_NAME
+			l_project_file_name: FILE_NAME
 			i: INTEGER
 		do
-			conf_todo_msg("commented project_file_name")
---				-- We save the environment variable only once and when the system
---				-- has been compiled, otherwise we do not change anything.
---			if Eiffel_project.system /= Void and then Eiffel_project.system.name /= Void then
---					-- Build the name of the entry in the recent projects list.
---				create project_file_name.make_from_string (project_directory_name)
---				project_file_name.set_file_name (eiffel_project.system.name)
---				project_file_name.add_extension (project_extension)
---
---				update_recent_projects_from_datastore
---				load_recent_projects (preferences.recent_projects_data.last_opened_projects)
---
---					-- Update the list of opened projects.
---				if recent_projects.has (project_file_name) then
---					recent_projects.prune_all (project_file_name)
---				end
---				recent_projects.put_front (project_file_name)
---				on_update
---
---					-- Rebuild the preferences entry and save it.
---				from
---					create lop.make (0)
---					recent_projects.start
---				until
---					recent_projects.after or else i >= number_of_recent_projects
---				loop
---					lop.extend (recent_projects.item)
---					recent_projects.forth
---					i := i + 1
---				end
---				preferences.recent_projects_data.last_opened_projects_preference.set_value (lop)
---				saving_done := True
---			end
+				-- We save the environment variable only once and when the system
+				-- has been compiled, otherwise we do not change anything.
+			if Eiffel_project.system /= Void and then Eiffel_project.system.name /= Void then
+					-- Build the name of the entry in the recent projects list.
+				create l_project_file_name.make_from_string (eiffel_ace.lace.file_name)
+
+				update_recent_projects_from_datastore
+				load_recent_projects (preferences.recent_projects_data.last_opened_projects)
+
+					-- Update the list of opened projects.
+				if recent_projects.has (l_project_file_name) then
+					recent_projects.prune_all (l_project_file_name)
+				end
+				recent_projects.put_front (l_project_file_name)
+				on_update
+
+					-- Rebuild the preferences entry and save it.
+				from
+					create lop.make (0)
+					recent_projects.start
+				until
+					recent_projects.after or else i >= number_of_recent_projects
+				loop
+					lop.extend (recent_projects.item)
+					recent_projects.forth
+					i := i + 1
+				end
+				preferences.recent_projects_data.last_opened_projects_preference.set_value (lop)
+				saving_done := True
+			end
 		end
 
 	update_recent_projects_from_datastore is

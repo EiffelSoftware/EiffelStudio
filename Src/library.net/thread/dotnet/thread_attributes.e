@@ -16,6 +16,8 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Set default values to the thread attributes.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			priority := default_priority
 			scheduling_policy := default_policy
@@ -33,7 +35,11 @@ feature -- Attribute change
 		end
 
 	set_policy (policy: INTEGER) is
-			-- Not implemented under dotnet
+			-- Set scheduling policy to `policy'.  Possible values are:
+			-- default_policy, other, fifo and round_robin.
+			-- Has no effect on .NET
+		require
+			valid_policy: (policy >= default_policy) and (policy <= round_robin)
 		do
 			scheduling_policy := policy
 		end
@@ -60,11 +66,11 @@ feature -- Implementation for scheduling_policy
 
 	default_policy: INTEGER is 0
 
---	other: INTEGER is 1
---
---	fifo: INTEGER is 2
---
---	round_robin: INTEGER is 3
+	other: INTEGER is 1
+
+	fifo: INTEGER is 2
+
+	round_robin: INTEGER is 3
 
 feature -- Externals
 
@@ -85,6 +91,9 @@ feature -- Externals
 		do
 			Result := {THREAD_PRIORITY}.highest.to_integer
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

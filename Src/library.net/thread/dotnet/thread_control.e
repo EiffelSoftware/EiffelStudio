@@ -57,6 +57,18 @@ feature -- Basic operations
 		do
 			thread_imp.join
 		end
+
+feature -- Sleep
+
+	sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
+		do
+			{SYSTEM_THREAD}.sleep_time_span
+				({TIME_SPAN}.from_ticks (nanoseconds // 100))
+		end
 	
 feature {NONE} -- Implementation
 
@@ -75,25 +87,15 @@ feature {NONE} -- Implementation
 feature {THREAD_CONTROL} -- Threads id
 
 	thread_imp: SYSTEM_THREAD is
+			-- .NET thread object.			
 		do
 			Result := {SYSTEM_THREAD}.current_thread
 		end
 
 	current_thread_id: INTEGER is
+			-- Id of current .NET thread.
 		do
 			Result := {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
-		end
-
-feature -- Sleep
-
-	sleep (nanoseconds: INTEGER_64) is
-			-- Suspend thread execution for interval specified in
-			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
-		require
-			non_negative_nanoseconds: nanoseconds >= 0
-		do
-			{SYSTEM_THREAD}.sleep_time_span
-				({TIME_SPAN}.from_ticks (nanoseconds // 100))
 		end
 
 feature {NONE} -- Threads management
@@ -166,6 +168,9 @@ feature {NONE} -- Threads management
 			Result := childrens.count
 			childrens_mutex.unlock
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 	
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

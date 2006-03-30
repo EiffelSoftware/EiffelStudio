@@ -15,13 +15,26 @@ inherit
 			thread_imp
 		end
 
+feature -- Access
+
+	frozen thread_id: POINTER is
+            	-- Thread-id of the current thread object.
+		do
+				-- There are no explicit routines for changing an INTEGER to a POINTER
+			Result := Result + internal_thread_id
+		end
+
 feature -- Initialization
 
 	execute is
+			-- Routine executed by new thread.
 		deferred
 		end
 
 	launch is
+			-- Initialize a new thread running `execute'.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
 			thread_imp.start
@@ -30,32 +43,36 @@ feature -- Initialization
 
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
 			-- Initialize a new thread running `execute', using attributes.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		local
 			l_priority: THREAD_PRIORITY
 		do
-
 			create thread_imp.make (create {THREAD_START}.make (Current, $call_execute))
-
-			--| Set attributes
+				-- Set attributes
 			thread_imp.set_priority (l_priority.from_integer (attr.priority))
 			thread_imp.set_is_background (attr.detached)
-
 			thread_imp.start
 			add_children (Current)
 		end
-		
-	thread_id: INTEGER
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	frozen call_execute is
+			-- Call thread routine.
 		do
-			thread_id := current_thread_id
+			internal_thread_id := current_thread_id
 			execute
---			remove_children_creation (Current)
 		end
 
 	thread_imp: SYSTEM_THREAD;
+		-- .NET thread object.
+
+	internal_thread_id: INTEGER
+		-- Thread id of `Current'.
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

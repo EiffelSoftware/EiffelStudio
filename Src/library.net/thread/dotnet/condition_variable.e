@@ -15,6 +15,8 @@ feature -- Initialization
 
 	make is
 			-- Create and initialize condition variable.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			cv_waiters_count := 0
 			cv_was_broadcast := False
@@ -27,7 +29,7 @@ feature -- Initialization
 feature -- Access
 
 	is_set: BOOLEAN
-			-- Is Current initialized ?
+			-- Is condition variable initialized ?
 
 feature -- Status setting
 
@@ -38,7 +40,7 @@ feature -- Status setting
 		do
 			--| If there aren't any waiters, then this
 			--| is a no-op.
-			
+
 			if cv_waiters_count > 0 then
 				cv_sema.post
 			end
@@ -53,14 +55,14 @@ feature -- Status setting
 		do
 			if cv_waiters_count > 0 then
 				-- We are broadcasting even if there is just one waiter
-				
+
 				--| Record that we are broadcasting.
 				--| This helps optimize cond_wait().
 				cv_was_broadcast := True
-				
+
 				--| Wake up all the waiters.
 				cv_sema.post_count (cv_waiters_count)
-				
+
 				--| Wait for all the awakened threads to
 				--| acquire the counting semaphore.
 				l_wait_succeed := cv_waiters_done.wait_one
@@ -74,7 +76,7 @@ feature -- Status setting
 	wait (a_mutex: MUTEX) is
 			-- Block calling thread on current condition variable.
 		require
-			valid_pointer: is_set
+			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
 		local
 			l_set_signal_succeed: BOOLEAN
@@ -83,27 +85,27 @@ feature -- Status setting
 			--| of waiters since <a_mutex>
 			--| must be locked by the caller.
 			cv_waiters_count := cv_waiters_count + 1
-			
+
 			--| Keep the lock held just long enough to
 			--| increment the count of waiters by one.
 			--| We can't keep it held across the call
 			--| to SEMAPHORE.wait() since that will
 			--| deadlock other calls to `cond_signal'
 			--| and `cond_broadcast'.
-			
+
 			-- Release Mutex
 			a_mutex.unlock
-			
+
 			--| Wait to be awakened by a `cond_signal' or
 			--| `cond_broadcast'.
 			cv_sema.wait
-			
+
 			--| Reacquire lock to avoid race conditions
 			cv_waiters_lock.lock
-			
+
 			--| We're no longer waiting...
 			cv_waiters_count := cv_waiters_count - 1
-			
+
 			--| If we're the last waiter thread
 			--| during this particular broadcast then
 			--| let all the other threads proceed.
@@ -114,9 +116,9 @@ feature -- Status setting
 				end
 			end
 			cv_waiters_lock.unlock
-			
+
 			--| Always regain the external mutex since that's 
-			--| the guarantee that we give to our callers.    
+			--| the guarantee that we give to our callers.
 			a_mutex.lock
 		end
 
@@ -135,27 +137,27 @@ feature -- Status setting
 			--| of waiters since <a_mutex>
 			--| must be locked by the caller.
 			cv_waiters_count := cv_waiters_count + 1
-			
+
 			--| Keep the lock held just long enough to
 			--| increment the count of waiters by one.
 			--| We can't keep it held across the call
 			--| to SEMAPHORE.wait() since that will
 			--| deadlock other calls to `cond_signal'
 			--| and `cond_broadcast'.
-			
+
 			-- Release Mutex
 			a_mutex.unlock
-			
+
 			--| Wait to be awakened by a `cond_signal' or `cond_broadcast'.
 			--| but until `a_timeout'
 			Result := cv_sema.wait_with_timeout (a_timeout)
-			
+
 			--| Reacquire lock to avoid race conditions
 			cv_waiters_lock.lock
-			
+
 			--| We're no longer waiting...
 			cv_waiters_count := cv_waiters_count - 1
-			
+
 			--| If we're the last waiter thread
 			--| during this particular broadcast then
 			--| let all the other threads proceed.
@@ -166,9 +168,9 @@ feature -- Status setting
 				end
 			end
 			cv_waiters_lock.unlock
-			
+
 			--| Always regain the external mutex since that's 
-			--| the guarantee that we give to our callers.    
+			--| the guarantee that we give to our callers.
 			a_mutex.lock
 		end
 
@@ -179,6 +181,9 @@ feature {NONE} -- Implementation
 	cv_was_broadcast: BOOLEAN
 	cv_waiters_done: AUTO_RESET_EVENT
 	cv_waiters_lock: MUTEX;
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

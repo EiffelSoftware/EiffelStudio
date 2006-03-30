@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			pointer_button_press_actions.extend (agent agents.on_drag_area_pressed)
 			pointer_motion_actions.extend (agent agents.on_drag_area_motion)
 			pointer_button_release_actions.extend (agent agents.on_drag_area_release)
-			pointer_double_press_actions.force_extend (agent assistant.floating_last_state)
+			pointer_double_press_actions.extend (agent agents.on_drag_area_pointer_double_press)
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 		end
 
@@ -119,6 +119,7 @@ feature -- Command
 			end
 			compute_minmum_size
 			is_vertical := not a_hortizontal
+			update_maximum_size
 		ensure
 			direction_changed: is_vertical = not a_hortizontal
 		end
@@ -132,7 +133,7 @@ feature -- Command
 					if row.parent /= Void then
 						docking_manager.command.lock_update (Void, True)
 						row.parent.prune (row)
-						docking_manager.command.resize
+						docking_manager.command.resize (True)
 						docking_manager.command.unlock_update
 					end
 				end
@@ -212,11 +213,7 @@ feature -- Command
 			tail_indicator.select_actions.extend (agent assistant.on_tail_indicator_selected)
 
 			compute_minmum_size
-			if is_vertical then
-				maximize_size := minimum_height
-			else
-				maximize_size := minimum_width
-			end
+			update_maximum_size
 		ensure
 			set: content = a_content
 		end
@@ -389,6 +386,16 @@ feature {NONE} -- Implmentation
 
 	internal_text: ARRAYED_LIST [STRING]
 			-- When `is_vertical' we hide all texts, store orignal texts here.
+
+	update_maximum_size is
+			-- Update `maximize_size'
+		do
+			if is_vertical then
+				maximize_size := minimum_height
+			else
+				maximize_size := minimum_width
+			end
+		end
 
 feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING_TOOL_BAR_ZONE} -- Internal issues
 

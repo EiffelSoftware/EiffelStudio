@@ -2171,19 +2171,27 @@ feature -- Validity class
 	check_validity is
 			-- Special classes validity check.
 		local
-			l_cor_mism: FEATURE_I
+			l_feature: FEATURE_I
 		do
 			if System.any_class = lace_class then
 					-- We are checking ANY.
-				l_cor_mism := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
+				l_feature := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
 				if
-					l_cor_mism = Void or else
-					not l_cor_mism.is_routine or l_cor_mism.argument_count > 0
+					l_feature = Void or else
+					not l_feature.is_routine or l_feature.argument_count > 0
 				then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))
 				end
-			end-- Do nothing
+				l_feature := feature_table.item_id (names_heap.twin_name_id)
+				if
+					l_feature = Void or else
+					not l_feature.is_routine or else l_feature.argument_count > 0 or else l_feature.type.is_expanded
+				then
+					error_handler.insert_error (
+						create {SPECIAL_ERROR}.make ("Class ANY must have a function `twin' with no arguments", Current))
+				end
+			end
 		end
 
 feature -- default_rescue routine

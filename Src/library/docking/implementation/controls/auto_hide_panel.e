@@ -280,7 +280,7 @@ feature -- Command
 			end
 			update_tab_group_max_size
 		end
-		
+
 feature -- States report
 
 	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN is
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation functions.
 						set_minimum_height (internal_shared.auto_hide_panel_size)
 					end
 					internal_docking_manager.main_container.set_gap (internal_direction, True)
-					internal_docking_manager.command.resize
+					internal_docking_manager.command.resize (True)
 				end
 			end
 		ensure
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation functions.
 					set_minimum_height (0)
 				end
 				internal_docking_manager.main_container.set_gap (internal_direction, False)
-				internal_docking_manager.command.resize
+				internal_docking_manager.command.resize (True)
 			end
 
 		ensure

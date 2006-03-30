@@ -60,7 +60,7 @@ feature  -- Agents
 			end
 		end
 
-	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN) is
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
 		do
 			debug ("docking")
@@ -77,7 +77,7 @@ feature  -- Agents
 				internal_docking_manager.internal_viewport.set_item_height (a_height)
 				internal_docking_manager.fixed_area.set_item_height (internal_docking_manager.query.inner_container_main, internal_docking_manager.fixed_area.height)
 			end
-			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, a_width, a_height)
+			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, a_width, a_height, a_force)
 		end
 
 	on_added_zone (a_zone: SD_ZONE) is
@@ -139,6 +139,38 @@ feature  -- Agents
 			debug ("docking")
 				print ("%NSD_DOCKING_MANAGER_AGENTS on_main_window_focus_in ")
 			end
+		end
+
+	on_top_level_window_focus_out is
+			-- Handle top level window focus out actions.
+		local
+			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
+			l_has_focus: BOOLEAN
+		do
+			l_floating_zones := internal_docking_manager.query.floating_zones
+			l_has_focus := internal_docking_manager.main_window.has_focus
+			if not l_has_focus then
+				from
+					l_floating_zones.start
+				until
+					l_floating_zones.after or l_has_focus
+				loop
+					l_has_focus := l_floating_zones.item.has_focus
+					l_floating_zones.forth
+				end
+			end
+			if not l_has_focus then
+				--FIXIT: Currently we disable this feature.
+				-- Because when show a dialog, it'll get focus, make main window lost focus.
+				-- We should make a window can never get focus first.
+--				internal_docking_manager.tool_bar_manager.hide_all_floating
+			end
+		end
+
+	on_top_level_window_focus_in is
+			-- Handle top level window focus in actions.
+		do
+--			internal_docking_manager.tool_bar_manager.show_all_floating
 		end
 
 feature -- Contract support

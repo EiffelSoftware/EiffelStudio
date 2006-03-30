@@ -86,7 +86,7 @@ feature -- Save/Open inner container data.
 
 			l_file.close
 
-			internal_docking_manager.command.resize
+			internal_docking_manager.command.resize (True)
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update

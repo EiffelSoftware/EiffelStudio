@@ -60,8 +60,9 @@ feature -- Command
 				end
 				l_items.back
 			end
-			tool_bar.compute_minmum_size
+
 			update_indicator
+			tool_bar.compute_minmum_size
 		end
 
 	expand_size (a_size_to_expand: INTEGER): INTEGER is
@@ -130,8 +131,9 @@ feature -- Command
 					end
 				end
 			end
-			tool_bar.compute_minmum_size
 			update_indicator
+			set_item_wrap_before_separator
+			tool_bar.compute_minmum_size
 		ensure
 			valid: 0 <= Result and Result <= a_size_to_expand
 		end
@@ -161,6 +163,14 @@ feature -- Command
 				if l_items.last /= tool_bar.tail_indicator then
 					l_items.prune_all (tool_bar.tail_indicator)
 					l_items.extend (tool_bar.tail_indicator)
+				end
+				if l_items.count > 1 then
+					if tool_bar.is_vertical and not l_items.i_th (l_items.count - 1).is_wrap then
+						l_items.i_th (l_items.count - 1).set_wrap (True)
+					end
+					if not tool_bar.is_vertical and l_items.i_th (l_items.count - 1).is_wrap then
+						l_items.i_th (l_items.count - 1).set_wrap (False)
+					end
 				end
 			end
 		end
@@ -237,7 +247,7 @@ feature -- Command
 
 			l_row.extend (tool_bar)
 			l_row.set_item_position_relative (tool_bar, last_state.position)
-			tool_bar.docking_manager.command.resize
+			tool_bar.docking_manager.command.resize (True)
 		ensure
 			docked: not tool_bar.is_floating
 		end
@@ -354,9 +364,11 @@ feature -- Query
 							Result := Result + l_item_after.width
 						end
 					else
-						Result := Result + l_snapshot.item.rectangle.height
+--						Result := Result + l_snapshot.item.rectangle.height
+						Result := Result + tool_bar.row_height
 						if l_item_after /= Void then
-							Result := Result + l_item_after.rectangle.height
+--							Result := Result + l_item_after.rectangle.height
+							Result := Result + {SD_TOOL_BAR_SEPARATOR}.width
 						end
 					end
 					if Result > a_size_to_expand then
@@ -425,6 +437,30 @@ feature {NONE} -- Implementation
 				a_item.set_wrap (True)
 			else
 				a_item.set_wrap (False)
+			end
+		end
+
+	set_item_wrap_before_separator is
+			-- When `tool_bar' is_vertical, we should set item before separator not wrap.
+		local
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_last_item: SD_TOOL_BAR_ITEM
+		do
+			if tool_bar.is_vertical then
+				l_items := tool_bar.items
+				from
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_separator ?= l_items.item
+					if l_separator /= Void and then l_last_item/= Void then
+						l_last_item.set_wrap (False)
+					end
+					l_last_item := l_items.item
+					l_items.forth
+				end
 			end
 		end
 

@@ -20,7 +20,7 @@ inherit
 			{ANY} destroy, screen_x, screen_y, has_recursive, prune, set_position, set_size
 			{ANY} lock_update, unlock_update
 			{SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT} minimum_width, minimum_height, resize_actions
-			{SD_TOOL_BAR_MANAGER} hide
+			{SD_TOOL_BAR_MANAGER} hide, is_displayed
 		end
 create
 	make

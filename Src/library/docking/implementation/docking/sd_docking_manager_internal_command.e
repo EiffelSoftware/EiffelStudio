@@ -45,13 +45,14 @@ feature {NONE}  -- Initlization
 
 feature -- Commands
 
-	resize is
+	resize (a_force: BOOLEAN) is
 			-- Resize fixed area.
+			-- `a_force' is always perform resize actions, even it's same size.
 		local
 			l_widget: EV_WIDGET
 		do
 			l_widget := internal_docking_manager.internal_viewport
-			internal_docking_manager.agents.on_resize (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height)
+			internal_docking_manager.agents.on_resize (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height, a_force)
 		end
 
 	lock_update (a_zone: EV_WIDGET; a_main_window: BOOLEAN) is
@@ -266,7 +267,9 @@ feature {NONE}  -- Implementation
 				check no_windows_in_locked_window: locked_windows.count = 0 end
 			else
 				if locked_windows.has (lock_call_time) then
-					locked_windows.item (lock_call_time).unlock_update
+					if not locked_windows.item (lock_call_time).is_destroyed then
+						locked_windows.item (lock_call_time).unlock_update
+					end
 					locked_windows.remove (lock_call_time)
 					if not locked_windows.last.is_destroyed then
 						locked_windows.last.lock_update

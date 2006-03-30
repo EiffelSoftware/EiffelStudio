@@ -18,6 +18,8 @@ feature -- Initialization
 
 	make is
 			-- Create and initialize condition variable.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			cond_pointer := eif_thr_cond_create
 		end
@@ -25,7 +27,7 @@ feature -- Initialization
 feature -- Access
 
 	is_set: BOOLEAN is
-			-- Is cond_pointer initialized?
+			-- Is condition variable initialized?
 		do
 			Result := (cond_pointer /= default_pointer)
 		end
@@ -35,7 +37,7 @@ feature -- Status setting
 	signal is
 			-- Unblock one thread blocked on the current condition variable.
 		require
-			valid_pointer: is_set
+			is_set: is_set
 		do
 			eif_thr_cond_signal (cond_pointer)
 		end
@@ -43,7 +45,7 @@ feature -- Status setting
 	broadcast is
 			-- Unblock all threads blocked on the current condition variable.
 		require
-			valid_pointer: is_set
+			is_set: is_set
 		do
 			eif_thr_cond_broadcast (cond_pointer)
 		end
@@ -51,7 +53,7 @@ feature -- Status setting
 	wait (a_mutex: MUTEX) is
 			-- Block calling thread on current condition variable.
 		require
-			valid_pointer: is_set
+			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
 		do
 			eif_thr_cond_wait (cond_pointer, a_mutex.mutex_pointer)
@@ -62,7 +64,7 @@ feature -- Status setting
 			--| Return `True' is we got the condition variable on time
 			--| Otherwise return `False'
 		require
-			valid_pointer: is_set
+			is_set: is_set
 			a_mutex_not_void: a_mutex /= Void
 			timeout_positive: a_timeout >= 0
 		do
@@ -72,7 +74,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy condition variable.
 		require
-			valid_pointer: is_set
+			is_set: is_set
 		do
 			eif_thr_cond_destroy (cond_pointer)
 			cond_pointer := default_pointer
@@ -121,7 +123,7 @@ feature {NONE} -- Externals
 			"[
 				C blocking
 				signature (EIF_POINTER, EIF_POINTER, EIF_INTEGER): EIF_INTEGER
-				use %"eif_threads.h%"				
+				use %"eif_threads.h%"
 			]"
 		end
 

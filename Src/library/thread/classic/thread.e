@@ -14,8 +14,8 @@ inherit
 
 feature -- Access
 
-    thread_id: POINTER
-            -- Pointer to the thread-id of the current thread object.
+    frozen thread_id: POINTER
+            -- Thread-id of the current thread object.
 
 feature -- Basic operations
 
@@ -26,22 +26,25 @@ feature -- Basic operations
 
 	launch is
 			-- Initialize a new thread running `execute'.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create_thread (Current, $thr_main)
-			thread_id := last_created_thread
 		end
 
 	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
 			-- Initialize a new thread running `execute', using attributes.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			create_thread_with_args (Current, $thr_main,
 						attr.priority, attr.scheduling_policy, attr.detached)
-			thread_id := last_created_thread
 		end
 
 feature {NONE} -- Implementation
 
 	frozen thr_main is
+			-- Call thread routine.
 		do
 			thread_id := get_current_id
 			execute
@@ -66,6 +69,9 @@ feature {NONE} -- Externals
 		alias
 			"eif_thr_create_with_args"
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

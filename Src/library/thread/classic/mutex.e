@@ -20,26 +20,30 @@ create
 	default_create,
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create mutex.
+		obsolete
+			"Use make instead"
+		require else
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			mutex_pointer := eif_thr_mutex_create
+			make
 		ensure then
-			valid_mutex: mutex_pointer /= default_pointer
+			is_set: is_set
 		end
 
 	make is
-			-- Create mutex
-		obsolete
-			"Use `default_create'"
+			-- Create mutex.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			default_create
+			mutex_pointer := eif_thr_mutex_create
 		ensure
-			valid_mutex: mutex_pointer /= default_pointer
+			is_set: is_set
 		end
-		
+
 feature -- Access
 
 	is_set: BOOLEAN is
@@ -50,26 +54,26 @@ feature -- Access
 
 feature -- Status setting
 
-	trylock, has_locked: BOOLEAN is
-			-- Has client been successful in locking mutex without waiting?
-		require
-			valid_mutex: is_set
-		do
-			Result := eif_thr_mutex_trylock (mutex_pointer)
-		end
-
 	lock is
 			-- Lock mutex, waiting if necessary until that becomes possible.
 		require
-			valid_mutex: is_set
+			is_set: is_set
 		do
 			eif_thr_mutex_lock (mutex_pointer)
+		end
+
+	try_lock: BOOLEAN is
+			-- Has client been successful in locking mutex without waiting?
+		require
+			is_set: is_set
+		do
+			Result := eif_thr_mutex_trylock (mutex_pointer)
 		end
 
 	unlock is
 			-- Unlock mutex.
 		require
-			valid_mutex: is_set
+			is_set: is_set
 		do
 			eif_thr_mutex_unlock (mutex_pointer)
 		end
@@ -77,17 +81,23 @@ feature -- Status setting
 	destroy is
 			-- Destroy mutex.
 		require
-			valid_mutex: is_set
+			is_set: is_set
 		do
 			eif_thr_mutex_destroy (mutex_pointer)
 			mutex_pointer := default_pointer
 		end
 
+feature -- Obsolete
 
-feature {CONDITION_VARIABLE} -- Implementation
-
-	mutex_pointer: POINTER
-			-- C reference to the mutex.
+	trylock, has_locked: BOOLEAN is
+			-- Has client been successful in locking mutex without waiting?
+		obsolete
+			"Use try_lock instead"
+		require
+			is_set: is_set
+		do
+			Result := try_lock
+		end
 
 feature {NONE} -- Removal
 
@@ -99,6 +109,11 @@ feature {NONE} -- Removal
 				destroy
 			end
 		end
+
+feature {CONDITION_VARIABLE} -- Implementation
+
+	mutex_pointer: POINTER
+			-- C reference to the mutex.
 
 feature {NONE} -- Externals
 
@@ -126,6 +141,9 @@ feature {NONE} -- Externals
 		external
 			"C | %"eif_threads.h%""
 		end
+
+invariant
+	is_thread_capable: {PLATFORM}.is_thread_capable
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

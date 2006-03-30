@@ -15,13 +15,16 @@ inherit
 			execute as execute_procedure
 		end
 
-create 
+create
 
 	make, make_with_procedure
 
 feature {NONE} -- Initialization
 
 	make, make_with_procedure (a_action: PROCEDURE [ANY, TUPLE]) is
+			-- Create worker thread for `a_action'.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
 		do
 			thread_procedure := a_action
 		end

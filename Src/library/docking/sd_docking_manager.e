@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			a_widnow_valid: window_valid (a_window)
 			a_container_valid: container_valid (a_container, a_window)
 		local
-			l_app: EV_ENVIRONMENT
 			l_system_imp: SD_SYSTEM_COLOR_IMP
 		do
 			create internal_shared
@@ -37,10 +36,6 @@ feature {NONE} -- Initialization
 
 			create contents
 
-			contents.add_actions.extend (agent agents.on_added_content)
-			zones.zones.add_actions.extend (agent agents.on_added_zone)
-			zones.zones.remove_actions.extend (agent agents.on_pruned_zone)
-
 			internal_shared.add_docking_manager (Current)
 
 			init_inner_container
@@ -49,9 +44,8 @@ feature {NONE} -- Initialization
 			internal_shared.set_hot_zone_factory (l_system_imp.hot_zone_factory)
 
 			create tool_bar_manager.make (Current)
-			create l_app
-			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
 
+			init_actions
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
@@ -61,7 +55,6 @@ feature {NONE} -- Initialization
 		do
 			create internal_viewport
 			top_container.extend (internal_viewport)
-			internal_viewport.resize_actions.extend (agent agents.on_resize)
 
 			create tool_bar_container
 			internal_viewport.extend (tool_bar_container)
@@ -105,6 +98,21 @@ feature {NONE} -- Initialization
 			l_inner_container.set_minimum_size (0, 0)
 			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
+		end
+
+	init_actions is
+			-- Initlialize actions.
+		local
+			l_app: EV_ENVIRONMENT
+		do
+			contents.add_actions.extend (agent agents.on_added_content)
+			zones.zones.add_actions.extend (agent agents.on_added_zone)
+			zones.zones.remove_actions.extend (agent agents.on_pruned_zone)
+			internal_viewport.resize_actions.extend (agent agents.on_resize (?, ?, ?, ?, False))
+			create l_app
+			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
+			main_window.focus_out_actions.extend (agent agents.on_top_level_window_focus_out)
+			main_window.focus_in_actions.extend (agent agents.on_top_level_window_focus_in)
 		end
 
 feature -- Query

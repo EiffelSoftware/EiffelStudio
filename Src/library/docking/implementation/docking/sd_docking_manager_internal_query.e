@@ -198,6 +198,32 @@ feature -- Querys
 			Result := find_window_by_zone (a_zone_one) = find_window_by_zone (a_zone_two)
 		end
 
+	floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE] is
+			-- All floating zones in Current system.
+		local
+			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
+			l_floating_zone: SD_FLOATING_ZONE
+		do
+			l_containers := internal_docking_manager.inner_containers
+			create Result.make (l_containers.count - 1)
+			from
+				l_containers.start
+			until
+				l_containers.after
+			loop
+				if l_containers.item.parent /= Void then
+					l_floating_zone ?= l_containers.item.parent.parent
+					if l_floating_zone /= Void then
+						Result.extend (l_floating_zone)
+					end
+				end
+				l_containers.forth
+			end
+			check count_right: l_containers.count - 1 = Result.count end
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE} -- Implemnetation
 
 	internal_docking_manager: SD_DOCKING_MANAGER;

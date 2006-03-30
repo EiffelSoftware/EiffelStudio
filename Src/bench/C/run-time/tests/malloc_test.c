@@ -173,7 +173,7 @@ rt_private void check_ref(char *object)
 		root = *(EIF_REFERENCE *) object;
 		if (root == (EIF_REFERENCE) 0)
 			continue;
-		if (HEADER(root)->ov_flags & EO_EXP) {
+		if (eif_is_nested_expanded(HEADER(root)->ov_flags)) {
 			check_flags(root, zone + 1);		/* Explore expanded */
 			has_expanded++;
 		} else
@@ -225,7 +225,7 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 	} else if (from == (char *) 0)
 		obj_use[Deif_bid(flags)]++;
 
-	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
+	if (dtype <= max_dtype && !(flags & EO_SPEC) && !eif_is_nested_expanded(flags)) {
 		int mod;
 		int nbytes = EIF_Size(dtype);
 		int size = HEADER(object)->ov_size & B_SIZE;
@@ -266,7 +266,7 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 		printf("memck: object 0x%lx is EO_C and EO_SPEC.\n", object);
 	}
 
-	if ((flags & EO_EXP) && (flags & EO_SPEC)) {
+	if (eif_is_nested_expanded(flags) && (flags & EO_SPEC)) {
 		num++;
 		printf("memck: object 0x%lx is EO_EXP and EO_SPEC.\n", object);
 	}
@@ -278,7 +278,7 @@ rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
 
 	if (num && from != (char *) 0) {
 		printf("memck: last %d messages while exploring %s0x%lx (DT %d)\n",
-			num, flags & EO_EXP ? "expanded inside " : "", from,
+			num, eif_is_nested_expanded(flags) ? "expanded inside " : "", from,
 			Dtype(from));
 		mempanic;
 	}

@@ -222,7 +222,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 
 	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
-	is_expanded = (flags & EO_EXP) != (uint32) 0;
+	is_expanded = eif_is_nested_expanded(flags) != (uint32) 0;
 	if (!(is_expanded || (flags & EO_STORE)))
 		return a_object_count;		/* Unmarked means already stored */
 	else if (!is_expanded)

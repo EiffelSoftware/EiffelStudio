@@ -79,6 +79,12 @@ RT_LNK struct stack oms_set;	/* Once manifest strings */
 #define EO_UPPER	0xffff0000		/* Mask to get upper half of flags */
 #define EO_MOVED	(EO_NEW | EO_MARK)
 
+/*
+ * Object type.
+ */
+#define eif_is_nested_expanded(flags) (((flags) & (EO_EXP | EO_REF)) == (EO_EXP))
+#define eif_is_boxed_expanded(flags)  (((flags) & (EO_EXP | EO_REF)) == (EO_EXP | EO_REF))
+
 /* Exported data-structure declarations */
 RT_LNK EIF_REFERENCE root_obj;	/* Address of `root' object */	
 

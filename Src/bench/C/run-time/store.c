@@ -900,7 +900,7 @@ rt_private void st_store(EIF_REFERENCE object)
 	int is_expanded;
 
 	flags = zone->ov_flags;
-	is_expanded = (flags & EO_EXP) != (uint32) 0;
+	is_expanded = eif_is_nested_expanded(flags);
 	if (!(is_expanded || (flags & EO_STORE)))
 		return;		/* Unmarked means already stored */
 

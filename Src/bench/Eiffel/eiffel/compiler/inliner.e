@@ -104,6 +104,7 @@ feature {NONE} -- Implementation
 			types: ARRAY [TYPE_I]
 			wc: CLASS_C
 			cid: INTEGER
+			result_type: TYPE_I
 		do
 				-- Make sure we can find the BYTE_CODE
  			if byte_server.server_has (body_index) then
@@ -130,8 +131,10 @@ feature {NONE} -- Implementation
 				not byte_code.is_deferred and then
 				not byte_code.is_once
 			then
+				result_type := byte_code.result_type
 				Result := (a_return_type = Void or else not (a_return_type.is_true_expanded
-					or else a_return_type.is_bit)) and then (byte_code.rescue_clause = Void)
+					or else a_return_type.is_bit or else result_type.is_anchored)) and then
+					byte_code.rescue_clause = Void
 
 				if Result then
 					types := byte_code.locals
@@ -142,7 +145,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.is_anchored)
 							i := i - 1
 						end
 					end
@@ -157,7 +160,7 @@ feature {NONE} -- Implementation
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_true_expanded or else type_i.is_bit)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit or else type_i.is_anchored)
 							i := i - 1
 						end
 					end

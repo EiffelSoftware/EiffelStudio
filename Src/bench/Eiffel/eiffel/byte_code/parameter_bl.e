@@ -90,32 +90,6 @@ feature
 			end
 		end
 
-	generate_metamorphose is
-			-- Change value of parameter by running a metamorphose
-		local
-			source_type: TYPE_I;
-			basic_i: BASIC_I;
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			source_type := real_type (expression.type);
-			if source_type.is_true_expanded then
-					-- Expanded objects are cloned
-				register.print_register;
-				buf.put_string (" = ");
-				buf.put_string ("RTCL(");
-				expression.print_register;
-				buf.put_character(')');
-			else
-					-- Simple type objects are metamorphosed
-				basic_i ?= source_type;		-- Cannot fail
-				basic_i.metamorphose
-					(register, expression, buf, context.workbench_mode);
-			end;
-			buf.put_character(';');
-			buf.put_new_line;
-		end;
-
 	print_register is
 			-- Print expression value
 		local
@@ -130,6 +104,8 @@ feature
 			source_type := real_type (expression.type);
 			if target_type.is_none then
 				buf.put_string ("(EIF_REFERENCE) 0");
+			elseif register /= Void then
+				register.print_register
 			elseif target_type.is_true_expanded then
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;
@@ -184,19 +160,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

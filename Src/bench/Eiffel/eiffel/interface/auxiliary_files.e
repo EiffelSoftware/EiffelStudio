@@ -396,6 +396,7 @@ feature -- Plug and Makefile file
 			set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			correct_mismatch_name: STRING
+			twin_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
 			final_mode: BOOLEAN
@@ -441,6 +442,13 @@ feature -- Plug and Makefile file
 				correct_mismatch_feat.body_index).twin
 			buffer.put_string ("extern void ")
 			buffer.put_string (correct_mismatch_name)
+			buffer.put_string ("();%N")
+
+			twin_name :=
+				Encoder.feature_name (any_cl.types.first.static_type_id,
+					any_cl.feature_table.item_id (Names_heap.twin_name_id).body_index).twin
+			buffer.put_string ("extern void ")
+			buffer.put_string (twin_name)
 			buffer.put_string ("();%N")
 
 				-- Make string declaration
@@ -549,6 +557,11 @@ feature -- Plug and Makefile file
 				-- Pointer on `correct_mismatch' of class ANY
 			buffer.put_string ("%Tegc_correct_mismatch = (void (*)(EIF_REFERENCE)) ")
 			buffer.put_string (correct_mismatch_name)
+			buffer.put_string (";%N")
+
+				-- Pointer on `twin' of class ANY
+			buffer.put_string ("%Tegc_twin = (EIF_REFERENCE (*)(EIF_REFERENCE)) ")
+			buffer.put_string (twin_name)
 			buffer.put_string (";%N")
 
 				-- Pointer on creation feature of class STRING

@@ -423,9 +423,16 @@ feature
 			elseif how = Clone_assignment then
 				print_register
 				buf.put_string (" = ")
-				buf.put_string ("RTCL(")
-				source.print_register
-				buf.put_string (gc_rparan_semi_c)
+				if is_creation_instruction then
+						-- Just reassign source to target.
+					source.print_register
+					buf.put_character (';')
+				else
+						-- Call redefined version of `twin'/`cloned'.
+					buf.put_string ("RTRCL(")
+					source.print_register
+					buf.put_string (gc_rparan_semi_c)
+				end
 				buf.put_new_line
 			end
 		end
@@ -437,6 +444,7 @@ feature
 			buf: GENERATION_BUFFER
 			target_c_type: TYPE_C
 			target_type: CL_TYPE_I
+			source_type: TYPE_I
 		do
 			buf := buffer
 			generate_special (how)
@@ -498,24 +506,24 @@ feature
 	                buf.put_character (';')
 	                buf.put_new_line
 				else
-						-- FIXME: Manu: 05/24/2004: We need to call `copy' if it
-						-- is redefined, not the equivalent of `standard_copy'.
+					target_type ?= context.real_type (target.type)
+					check
+							-- An expanded is a valid class type.
+						target_type_not_void: target_type /= Void
+					end
 					buf.put_string ("memmove(")
 					target.print_register
 					buf.put_string (gc_comma)
 					if register /= Void then
 						print_register
 						buf.put_string (" = ")
-						source.print_register
-					else
-						source.print_register
 					end
-					buf.put_string (gc_comma)
-					target_type ?= context.real_type (target.type)
-					check
-							-- An expanded is a valid class type.
-						target_type_not_void: target_type /= Void
+					if not is_creation_instruction then
+						buf.put_string ("RTRCL")
 					end
+					buf.put_character ('(')
+					source.print_register
+					buf.put_string (gc_rparan_comma)
 					if context.workbench_mode then
 						target_type.associated_class_type.skeleton.generate_workbench_size (buf)
 					else
@@ -555,18 +563,26 @@ feature
 					end
 					buf.put_character (';')
 					buf.put_new_line
-				else
-					if how = Simple_assignment or need_aging_tests then
-						if is_bit_assignment then
-							buf.put_string (gc_comma)
-							target.print_register
-							buf.put_character (')')
+				elseif how = Simple_assignment then
+					if is_bit_assignment then
+						buf.put_string (gc_comma)
+						target.print_register
+						buf.put_character (')')
+					else
+						source_type := context.real_type (source.type)
+						if source_type.is_reference then
+								-- Support boxed expanded types.
+							if register_for_metamorphosis then
+								source.generate_dynamic_clone (Current, source_type)
+							else
+								source.generate_dynamic_clone (source, source_type)
+							end
 						else
 							source_print_register
 						end
-						buf.put_character (';')
-						buf.put_new_line
 					end
+					buf.put_character (';')
+					buf.put_new_line
 				end
 			end
 		end
@@ -675,19 +691,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

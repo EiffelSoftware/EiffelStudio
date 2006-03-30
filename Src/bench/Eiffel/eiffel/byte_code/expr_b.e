@@ -18,7 +18,9 @@ inherit
 			need_enlarging, enlarged, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code
 		end
+
 	SHARED_C_LEVEL
+	SHARED_TABLE
 
 feature -- Access
 
@@ -172,8 +174,13 @@ feature -- C generation
 	is_register_required (target_type: TYPE_I): BOOLEAN is
 			-- Is register required if expression is about
 			-- to be assigned or compared to the type `target_type'?
+		local
+			source_type: TYPE_I
 		do
-			Result := target_type.is_reference and then context.real_type (type).is_expanded
+			source_type := context.real_type (type)
+			Result :=
+				target_type.is_reference and then source_type.is_expanded or else
+				target_type.is_true_expanded or else source_type.is_reference
 		end
 
 	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_I) is
@@ -188,21 +195,74 @@ feature -- C generation
 			buf: GENERATION_BUFFER
 		do
 			generate
+			buf := buffer
 			expression_type := context.real_type (type)
 			if target_type.is_reference and then expression_type.is_expanded then
-				buf := buffer
 				if expression_type.is_basic then
 					basic_i ?= expression_type
 					basic_i.metamorphose (target_register, Current, buf, context.workbench_mode)
 				else
 					target_register.print_register
 					buf.put_string (" = ")
-					buf.put_string ("RTCL(")
+					buf.put_string ("RTRCL(")
 					print_register
 					buf.put_character (')')
 				end
 				buf.put_character (';')
 				buf.put_new_line
+			elseif target_type.is_true_expanded then
+				target_register.print_register
+				buf.put_string (" = ")
+				buf.put_string ("RTRCL(")
+				print_register
+				buf.put_string (gc_rparan_semi_c)
+				buf.put_new_line
+			elseif expression_type.is_reference then
+				target_register.print_register
+				buf.put_string (" = ")
+				generate_dynamic_clone (Current, expression_type)
+				buf.put_character (';')
+				buf.put_new_line
+			end
+		end
+
+	generate_dynamic_clone (source_register: REGISTRABLE; source_type: TYPE_I) is
+			-- Generate expression that clones `source_register' depending on
+			-- dynamic type of object of static type `source_type'.
+		require
+			source_register_not_void: source_register /= Void
+			source_type_not_void: source_type /= Void
+			source_type_is_reference: source_type.is_reference
+		local
+			buf: like buffer
+			cl_type_i: CL_TYPE_I
+			has_expanded_descendants: BOOLEAN
+		do
+			buf := buffer
+			has_expanded_descendants := True
+			if
+				context.original_body_index = context.twin_body_index or else
+				source_type.is_frozen or else
+				source_type.is_none
+			then
+					-- Avoid infinite recursion in "ANY.twin".
+					-- Avoid dynamic check of object type if we know
+					-- in advance that the type cannot be expanded.
+				has_expanded_descendants := False
+			elseif system.in_final_mode then
+					-- Avoid dynamic check of object type if we know
+					-- in advance that the type cannot be expanded.
+				cl_type_i ?= source_type
+				if cl_type_i /= Void then
+					has_expanded_descendants := context.has_expanded_descendants (cl_type_i.associated_class_type.type_id)
+				end
+			end
+			if has_expanded_descendants then
+				buf.put_string ("RTCCL(")
+				source_register.print_register
+				buf.put_character (')')
+			else
+				source_register.print_register
 			end
 		end
 
@@ -234,19 +294,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

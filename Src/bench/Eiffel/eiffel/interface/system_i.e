@@ -1175,7 +1175,6 @@ feature -- Recompilation
 			has_been_changed := False
 			do_recompilation
 
-			is_rebuild := False
 			successful := True
 		rescue
 			if Rescue_status.is_error_exception then

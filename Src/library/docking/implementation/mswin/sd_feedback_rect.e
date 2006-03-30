@@ -70,14 +70,15 @@ feature -- Command
 			l_left: INTEGER
 		do
 			set_size (a_top_rect.width.max (a_bottom_rect.width), a_top_rect.height + a_bottom_rect.height)
-			set_position (a_top_rect.left, a_top_rect.top)
 
 			create l_constants
 			l_left := (a_top_rect.left - a_bottom_rect.left).abs
 			if a_top_rect.left - a_bottom_rect.left >= 0 then
+				set_position (a_bottom_rect.left, a_top_rect.top)
 				create l_temp_region.make_rect (l_left, 0, l_left + a_top_rect.width, a_top_rect.height)
 				create l_temp_region_2.make_rect (0, a_top_rect.height, a_bottom_rect.width, a_top_rect.height + a_bottom_rect.height)
 			else
+				set_position (a_top_rect.left, a_top_rect.top)
 				create l_temp_region.make_rect (0, 0, a_top_rect.width, a_top_rect.height)
 				create l_temp_region_2.make_rect (l_left, a_top_rect.height, l_left + a_bottom_rect.width, a_top_rect.height + a_bottom_rect.height)
 			end
@@ -125,7 +126,7 @@ feature {NONE} -- Implementation
 			"[
 			{
 				FARPROC set_layer_window_attribute = NULL;
-				HMODULE user32_module = LoadLibrary ("user32.dll");
+				HMODULE user32_module = LoadLibrary (L"user32.dll");
 				if (user32_module) {
 					set_layer_window_attribute = GetProcAddress (user32_module, "SetLayeredWindowAttributes");
 					if (set_layer_window_attribute) {

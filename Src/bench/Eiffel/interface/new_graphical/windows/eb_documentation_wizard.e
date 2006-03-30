@@ -155,13 +155,13 @@ feature -- Access
 			-- User selection.
 		local
 			l: EV_LIST
-			cl: CLUSTER_I
+			cl: CONF_GROUP
 		do
 			create Result.make
 			l := cluster_include.include_list
 			from l.start until l.after loop
 				cl ?= l.item.data
-				Result.include_cluster (cl, False)
+				Result.include_group (cl)
 				l.forth
 			end
 		end
@@ -567,31 +567,30 @@ feature {NONE} -- Implementation
 		end
 
 	fill_cluster_box (ie: EB_INCLUDE_EXCLUDE) is
-			-- Fill `ie.include_list' with all clusters in system.
-			-- We assume that new added clusters go into the "include" part.
+			-- Fill `ie.include_list' with all groups in system.
+			-- We assume that new added groups go into the "include" part.
 		local
 			li: EV_LIST_ITEM
-			cl: ARRAYED_LIST [CLUSTER_I]
-			cl_name: STRING
+			cg: ARRAYED_LIST [CONF_GROUP]
+			cg_name: STRING
 			old_exclude: ARRAYED_LIST [STRING]
 		do
 			old_exclude := ie.exclude_list.strings_8
 			old_exclude.compare_objects
 			ie.exclude_list.wipe_out
 			ie.include_list.wipe_out
-			conf_todo
---			cl := Eiffel_universe.clusters
---			from cl.start until cl.after loop
---				cl_name := cl.item.cluster_name.twin
---				create li.make_with_text (cl_name)
---				li.set_data (cl.item)
---				if old_exclude.has (cl_name) then
---					ie.exclude_list.extend (li)
---				else
---					ie.include_list.extend (li)
---				end
---				cl.forth
---			end
+			cg := Eiffel_universe.groups
+			from cg.start until cg.after loop
+				cg_name := cg.item.name.twin
+				create li.make_with_text (cg_name)
+				li.set_data (cg.item)
+				if old_exclude.has (cg_name) then
+					ie.exclude_list.extend (li)
+				else
+					ie.include_list.extend (li)
+				end
+				cg.forth
+			end
 		end
 
 	fill_indexing_box (ie: EB_INCLUDE_EXCLUDE) is
@@ -599,34 +598,33 @@ feature {NONE} -- Implementation
 			-- Except the ones in `exclude_indexing_items'.
 		local
 			li: EV_LIST_ITEM
-			cl: ARRAYED_LIST [CLUSTER_I]
-			classes: HASH_TABLE [CLASS_I, STRING]
+			classes: CLASS_C_SERVER
 			all_tags: LINKED_LIST [STRING]
 			old_exclude: ARRAYED_LIST [STRING]
-			l_cluster: CLUSTER_I
-			l_class: CLASS_I
+			l_class: CLASS_C
+			i: INTEGER
 		do
 			create all_tags.make
 			all_tags.extend ("keywords")
 			all_tags.compare_objects
-			conf_todo
---			cl := Eiffel_universe.clusters
---			from cl.start until cl.after loop
---				l_cluster := cl.item
---				add_indexes (l_cluster.indexes, all_tags)
---				classes := l_cluster.classes
---				if classes /= Void then
---					from classes.start until classes.after loop
---						l_class := classes.item_for_iteration
---						if l_class.compiled then
---							add_indexes (l_class.compiled_class.ast.top_indexes, all_tags)
---							add_indexes (l_class.compiled_class.ast.bottom_indexes, all_tags)
---						end
---						classes.forth
---					end
---				end
---				cl.forth
---			end
+
+				-- Do we have indexing for a group?
+			--add_indexes (l_group, all_tags)
+			classes := eiffel_system.system.classes
+			if classes /= Void then
+				from
+					i := classes.lower
+				until
+					i > classes.upper
+				loop
+					l_class := classes.item (i)
+					if l_class /= Void then
+						add_indexes (l_class.ast.top_indexes, all_tags)
+						add_indexes (l_class.ast.bottom_indexes, all_tags)
+					end
+					i := i + 1
+				end
+			end
 
 			old_exclude := ie.exclude_list.strings_8
 			old_exclude.compare_objects

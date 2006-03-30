@@ -63,7 +63,7 @@ feature -- Actions
 			-- Exports XMI, according to the user selection.
 		local
 			current_compiled_class: CLASS_C
-			current_cluster: HASH_TABLE[CLASS_I,STRING]
+			current_cluster: HASH_TABLE [CONF_CLASS, STRING]
 			current_cluster_id: INTEGER
 			new_xmi_cluster: XMI_CLUSTER
 			new_xmi_class: XMI_CLASS
@@ -72,25 +72,26 @@ feature -- Actions
 			new_xmi_cluster_presentation: XMI_CLUSTER_PRESENTATION
 			cancelled: BOOLEAN
 			ir_error: INTERRUPT_ERROR
+			l_class_i: CLASS_I
 		do
 			if not cancelled then
 				deg.put_string ("Initializing")
 
-				clusters := doc_universe.clusters
+				groups := doc_universe.groups
 
 				classes := doc_universe.classes
 
 					-- Clusters
 				from
-					clusters.start
+					groups.start
 				until
-					clusters.after
+					groups.after
 				loop
-					create new_xmi_cluster.make (id_counter, idref_counter, clusters.item)
+					create new_xmi_cluster.make (id_counter, idref_counter, groups.item)
 					id_counter := id_counter + 1
 					create new_xmi_diagram.make (id_counter, new_xmi_cluster)
 					id_counter := id_counter + 1
-					current_cluster := clusters.item.classes
+					current_cluster := groups.item.classes
 					current_cluster_id := idref_counter
 					idref_counter := idref_counter + 1
 						-- Classes
@@ -99,8 +100,10 @@ feature -- Actions
 					until
 						current_cluster.after
 					loop
-						if current_cluster.item_for_iteration.compiled then
-							current_compiled_class := current_cluster.item_for_iteration.compiled_class
+						l_class_i ?= current_cluster.item_for_iteration
+						check l_class_i_not_void: l_class_i /= Void end
+						if l_class_i.is_compiled then
+							current_compiled_class := l_class_i.compiled_class
 							create new_xmi_class.make (id_counter, current_cluster_id, current_compiled_class)
 							last_class_x := last_class_x + ((id_counter \\ 4) - 1) * 300
 							last_class_y := last_class_y + 300
@@ -116,7 +119,7 @@ feature -- Actions
 					idref_counter := idref_counter + 1
 					xmi_clusters.extend (new_xmi_cluster)
 					xmi_diagrams.extend (new_xmi_diagram)
-					clusters.forth
+					groups.forth
 				end
 
 				deg.put_string ("Adding features")
@@ -146,7 +149,12 @@ feature -- Actions
 				until
 					classes.after
 				loop
-					current_compiled_class := classes.item.compiled_class
+					l_class_i ?= classes.item
+					check
+						l_class_i_not_void: l_class_i /= Void
+						l_class_i_is_compiled: l_class_i.is_compiled
+					end
+					current_compiled_class := l_class_i.compiled_class
 					add_generalizations (current_compiled_class)
 					classes.forth
 				end
@@ -154,7 +162,7 @@ feature -- Actions
 				deg.put_string ("Generating XMI")
 				generate_from_lists
 				classes := Void
-				clusters := Void
+				groups := Void
 				xmi_classes := Void
 				xmi_clusters := Void
 				xmi_diagrams := Void
@@ -196,10 +204,10 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	classes: SORTED_TWO_WAY_LIST [CLASS_I]
+	classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	clusters: SORTED_TWO_WAY_LIST [CLUSTER_I]
+	groups: SORTED_TWO_WAY_LIST [CONF_GROUP]
 			-- Clusters to be generated.
 
 	xmi_clusters: LINKED_LIST [XMI_CLUSTER]
@@ -279,10 +287,15 @@ feature {NONE} -- Implementation
 	is_in_selection (c: CLASS_C): BOOLEAN is
 			-- Is `c' in the clusters selected by the user?
 		local
-			all_classes: SORTED_TWO_WAY_LIST [CLASS_I]
+			all_classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
+			l_class: CONF_CLASS
 		do
+			l_class ?= c.lace_class
+			check
+				l_class_not_void: l_class /= Void
+			end
 			all_classes := doc_universe.classes
-			Result := all_classes.has (c.lace_class)
+			Result := all_classes.has (l_class)
 		end
 
 	add_type (t: XMI_TYPE) is

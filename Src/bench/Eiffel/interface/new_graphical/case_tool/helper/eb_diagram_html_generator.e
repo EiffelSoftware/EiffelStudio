@@ -308,12 +308,13 @@ feature {NONE} -- Implementation
 				if cf.model.class_i.compiled and documentation.doc_universe.is_class_generated (cf.model.class_i) then
 					item_file := base_path.twin
 					conf_todo
---					path := documentation.relative_path (cf.model.class_i.cluster)
+					path := documentation.relative_path (cf.model.class_i.group)
+--					path := cf.model.class_i.group.location.evaluated_directory
 					if path /= Void then
 						item_file.append_character ('/')
 						item_file.append (path)
 					end
-					item_file.append_character ('/')
+--					item_file.append_character ('/')
 					item_file.append (cf.model.class_i.name.as_lower)
 					item_file.append ("_chart.html")
 					bbox := cf.bounding_box
@@ -375,24 +376,25 @@ feature {NONE} -- Implementation
 					local_cluster_figures.after
 				loop
 					clf ?= local_cluster_figures.item
-					if documentation.doc_universe.is_cluster_generated (clf.model.cluster_i) then
-						item_file := base_path.twin
-						path := documentation.relative_path (clf.model.cluster_i)
-						if path /= Void then
-							item_file.append_character ('/')
-							item_file.append (path)
-						end
-						item_file.append ("/index.html")
-						bbox := clf.bounding_box
-						Result.append ("<area shape=rect coords=%""
-							+ (bbox.left - bounds.x).out + ","
-							+ (bbox.top - bounds.y).out + ","
-							+ (bbox.right - bounds.x).out + ","
-							+ (bbox.bottom - bounds.y).out + "%"%
-							% href=%""
-							+ item_file
-							+ "%">%N")
-					end
+					conf_todo
+--					if documentation.doc_universe.is_cluster_generated (clf.model.cluster_i) then
+--						item_file := base_path.twin
+--						path := documentation.relative_path (clf.model.cluster_i)
+--						if path /= Void then
+--							item_file.append_character ('/')
+--							item_file.append (path)
+--						end
+--						item_file.append ("/index.html")
+--						bbox := clf.bounding_box
+--						Result.append ("<area shape=rect coords=%""
+--							+ (bbox.left - bounds.x).out + ","
+--							+ (bbox.top - bounds.y).out + ","
+--							+ (bbox.right - bounds.x).out + ","
+--							+ (bbox.bottom - bounds.y).out + "%"%
+--							% href=%""
+--							+ item_file
+--							+ "%">%N")
+--					end
 					local_cluster_figures.remove
 					if clf.cluster /= Void and then
 						not local_cluster_figures.has (clf.cluster) then

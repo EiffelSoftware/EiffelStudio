@@ -35,6 +35,8 @@ inherit
 
 	FILTER_PARSER
 
+	DOCUMENT_HELPER
+
 create
 	make,
 	make_from_filename
@@ -86,7 +88,7 @@ feature {NONE} -- Initialization
 			if format_table.has (f_File_separator) then
 				file_separator := format_table.found_item.item1 @ 1
 				if file_separator /= '/' and file_separator /= '\' then
-					file_separator := '%U'
+					file_separator := operating_environment.directory_separator
 				end
 			end
 		end
@@ -464,22 +466,19 @@ feature -- Text processing
 			end
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 		local
 			format: CELL2 [STRING, STRING]
 			cluster_generated: BOOLEAN
+			path_pre: STRING
 		do
 			if not skipping then
-				cluster_generated := doc_universe.is_cluster_generated (a_cluster)
+				cluster_generated := doc_universe.is_group_generated (a_cluster)
 				if cluster_generated then
 					if format_table.has (f_Cluster_name) then
 						format := format_table.found_item
-						conf_todo
---						set_keyword (kw_File, relative_to_base ("" +
---								a_cluster.relative_file_name (file_separator) +
---								"." + file_suffix
---							)
---						)
+						path_pre := path_representation (file_separator.out, a_cluster.name, a_cluster, False)
+						set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + a_cluster.name) + "." + file_suffix)
 					end
 				else
 					if format_table.has (f_Non_generated_Cluster) then
@@ -505,19 +504,19 @@ feature -- Text processing
 		local
 			format: CELL2 [STRING, STRING]
 			class_generated: BOOLEAN
+			path_pre: STRING
 		do
 			if not skipping then
 				class_generated := doc_universe.is_class_generated (a_class)
 				if class_generated then
 					if format_table.has (f_Class_name) then
 						format := format_table.found_item
-						conf_todo
---						set_keyword (kw_File,
---							relative_to_base ("" +
---								a_class.document_file_relative_path (file_separator) +
---								class_suffix
---							)
---						)
+						path_pre := path_representation (file_separator.out, a_class.group.name, a_class.group, False)
+						set_keyword (kw_File,
+							relative_to_base (path_pre + file_separator.out + a_class.name.as_lower +
+								class_suffix
+							)
+						)
 					end
 				else
 					if format_table.has (f_Non_generated_class) then
@@ -769,6 +768,8 @@ feature -- Text processing
 			real_feature: E_FEATURE
 			written_class: CLASS_C
 			feat_suffix: STRING
+			l_class_i : CLASS_I
+			path_pre: STRING
 		do
 			written_class := f.written_class
 
@@ -783,12 +784,9 @@ feature -- Text processing
 			end
 
 			feat_suffix := escaped_text (feat_suffix)
-
-			conf_todo
---			set_keyword (kw_File, relative_to_base ("" +
---				written_class.lace_class.document_file_relative_path (file_separator) +
---				feat_suffix
---			))
+			l_class_i := f.written_class.lace_class
+			path_pre := path_representation (file_separator.out, l_class_i.group.name, l_class_i.group, False)
+			set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + l_class_i.name.as_lower + feat_suffix))
 			set_keyword (kw_Feature, escaped_text (real_feature.name))
 		end
 

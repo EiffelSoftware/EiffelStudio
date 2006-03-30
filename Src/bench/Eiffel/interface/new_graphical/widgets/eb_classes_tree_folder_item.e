@@ -22,23 +22,38 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_sub
 
 feature -- Initialization
 
 	make (a_cluster: EB_SORTED_CLUSTER) is
 			-- Create a tree item representing `a_cluster'.
 		do
+			make_sub (a_cluster, "")
+		end
+
+	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
+			-- Create a tree item representing a subfolder of `a_cluster'.
+		do
 			default_create
+			path := a_path
+			if path = Void then
+				create path.make_empty
+			end
 			create classes_double_click_agents.make
 			set_data (a_cluster)
 			expand_actions.extend (agent load)
 		end
 
+
 feature -- Status report
 
 	data: EB_SORTED_CLUSTER
 			-- cluster represented by `Current'.
+
+	path: STRING
+			-- relativ path to cluster location (for recursive clusters).
 
 feature -- Access
 
@@ -54,11 +69,22 @@ feature -- Status setting
 			-- Affect `a_cluster' to `data'.
 		local
 			actual: CLUSTER_I
+			l_name: STRING
+			l_pos: INTEGER
 		do
 			actual := a_cluster.actual_cluster
-			conf_todo
-			set_text (actual.cluster_name)
-			set_tooltip (actual.cluster_name)
+			if not path.is_empty then
+				l_pos := path.last_index_of ('/', path.count)
+				if l_pos > 0 then
+					l_name := path.substring (l_pos+1, path.count)
+				else
+					create l_name.make_empty
+				end
+			else
+				l_name := actual.cluster_name
+			end
+			set_text (l_name)
+			set_tooltip (l_name)
 			data := a_cluster
 			set_pebble (stone)
 			set_accept_cursor (Cursors.cur_Cluster)
@@ -123,76 +149,75 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			-- Load the classes and the sub_clusters of `data'.
 		local
 			clusters: SORTED_LIST [EB_SORTED_CLUSTER]
-			subfolders: SORTED_TWO_WAY_LIST [STRING]
-			l_set: DS_HASH_SET [STRING]
+			subfolders: SORTABLE_ARRAY [STRING]
 			classes: SORTED_LIST [CLASS_I]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			l_subfolder: EB_CLASSES_TREE_SUBFOLDER_ITEM
+			l_subfolder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class: EB_CLASSES_TREE_CLASS_ITEM
 			orig_count: INTEGER
-			i: INTEGER
+			i, up: INTEGER
+			l_dir: KL_DIRECTORY
+			l_set: ARRAY [STRING]
 		do
 			orig_count := count
 
 				-- Build the tree.
 
-			clusters := data.clusters
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				create a_folder.make (clusters.item)
-				if associated_window /= Void then
-					a_folder.associate_with_window (associated_window)
-				end
-				if associated_textable /= Void then
-					a_folder.associate_textable_with_classes (associated_textable)
-				end
-
+			if path.is_empty then
+				clusters := data.clusters
 				from
-					classes_double_click_agents.start
+					clusters.start
 				until
-					classes_double_click_agents.after
+					clusters.after
 				loop
-					a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
-					classes_double_click_agents.forth
-				end
-				extend (a_folder)
-				clusters.forth
-			end
-
-			create subfolders.make
-			l_set := data.sub_folders.item ("/")
-			if l_set /= Void then
-				from
-					l_set.start
-				until
-					l_set.after
-				loop
-					subfolders.force (l_set.item_for_iteration)
-					l_set.forth
-				end
-				subfolders.sort
-				from
-					subfolders.start
-				until
-					subfolders.after
-				loop
-					create l_subfolder.make (data, "/"+subfolders.item)
+					create a_folder.make (clusters.item)
 					if associated_window /= Void then
-						l_subfolder.associate_with_window (associated_window)
+						a_folder.associate_with_window (associated_window)
 					end
 					if associated_textable /= Void then
-						l_subfolder.associate_textable_with_classes (associated_textable)
+						a_folder.associate_textable_with_classes (associated_textable)
 					end
 
-					extend (l_subfolder)
-					subfolders.forth
+					from
+						classes_double_click_agents.start
+					until
+						classes_double_click_agents.after
+					loop
+						a_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
+						classes_double_click_agents.forth
+					end
+					extend (a_folder)
+					clusters.forth
 				end
 			end
 
-			classes := data.sub_classes.item ("/")
+			create l_dir.make (data.actual_cluster.location.build_path (path, ""))
+			l_set := l_dir.directory_names
+			if l_set /= Void then
+				create subfolders.make_from_array (l_set)
+				subfolders.sort
+				from
+					i := subfolders.lower
+					up := subfolders.upper
+				until
+					i > up
+				loop
+					if data.actual_cluster.file_rule.is_included (path+"/"+subfolders[i]) then
+						create l_subfolder.make_sub (data, path+"/"+subfolders[i])
+						if associated_window /= Void then
+							l_subfolder.associate_with_window (associated_window)
+						end
+						if associated_textable /= Void then
+							l_subfolder.associate_textable_with_classes (associated_textable)
+						end
+
+						extend (l_subfolder)
+					end
+					i := i + 1
+				end
+			end
+
+			classes := data.sub_classes.item (path+"/")
 			if classes /= Void then
 				from
 					classes.start
@@ -406,7 +431,8 @@ feature {NONE} -- Implementation
 				Result := fs = Void
 			end
 		end
-
+invariant
+	path_not_void: path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -12,7 +12,8 @@ inherit
 			make,
 			on_pointer_press,
 			on_pointer_release,
-			on_pointer_motion
+			on_pointer_motion,
+			on_pointer_leave
 		end
 
 create
@@ -82,6 +83,17 @@ feature {NONE} -- Agents
 				else
 					is_need_redraw := False
 				end
+			end
+		end
+
+	on_pointer_leave is
+			-- Handle pointer leave actions.
+		do
+			if state /= last_state then
+				state := last_state
+				is_need_redraw := True
+			else
+				is_need_redraw := False
 			end
 		end
 

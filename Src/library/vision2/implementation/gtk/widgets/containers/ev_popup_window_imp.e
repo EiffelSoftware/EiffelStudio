@@ -23,7 +23,8 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize
+			initialize,
+			default_wm_decorations
 		end
 
 create
@@ -44,8 +45,17 @@ feature {NONE} -- Initialization
 			Precursor {EV_WINDOW_IMP}
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			internal_is_border_enabled := False
 			user_can_resize := False
 			set_is_initialized (True)
+		end
+
+feature {NONE} -- Implementation
+
+	default_wm_decorations: INTEGER is
+			-- Default Window Manager decorations of `Current'.
+		do
+			Result := 0
 		end
 
 feature {EV_ANY_I} -- Implementation

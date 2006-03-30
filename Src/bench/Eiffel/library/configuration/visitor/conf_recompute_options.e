@@ -111,6 +111,9 @@ feature {NONE} -- Implementation
 			loop
 				l_group := an_old_groups.item_for_iteration
 				new_group := a_new_groups.item (l_group.name)
+				check
+					new_group_found: new_group /= Void
+				end
 				l_group.process (Current)
 				an_old_groups.forth
 			end

@@ -21,10 +21,10 @@ feature {NONE} -- Initialization
 			-- Associate `data' to `Current' and sort children.
 		local
 			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
-			sorted_clusters: SORTABLE_ARRAY [CONF_CLUSTER]
+			sorted_clusters: SORTED_TWO_WAY_LIST [CONF_CLUSTER]
 			clusters_count: INTEGER
 			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
-			sorted_classes: SORTABLE_ARRAY [CONF_CLASS]
+			sorted_classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
 			classes_count: INTEGER
 			a_cluster: EB_SORTED_CLUSTER
 			i: INTEGER
@@ -32,81 +32,52 @@ feature {NONE} -- Initialization
 			l_class_i: CLASS_I
 		do
 			actual_group := data
+
+			create clusters.make
+				-- handle subclusters
 			if actual_group.is_cluster then
 				l_cluster ?= data
 				check
 					cluster: l_cluster /= Void
 				end
 				sub_clusters := l_cluster.children
-				create clusters.make
 				if sub_clusters /= Void then
-						-- First retrieve all sub-clusters and put them into an array
-						-- that we will sort.
-					create sorted_clusters.make (1, sub_clusters.count)
-					from
-						sub_clusters.start
-						i := 1
-					until
-						sub_clusters.after
-					loop
-						sorted_clusters.put (sub_clusters.item, i)
-
-						i := i + 1
-						sub_clusters.forth
-					end
-
-						-- Sort the clusters.
+					create sorted_clusters.make
+					sorted_clusters.append (sub_clusters)
 					sorted_clusters.sort
 
-						-- Build the tree.
 					from
-						clusters_count := sorted_clusters.count
-						i := clusters_count
+						sorted_clusters.start
 					until
-						i = 0
+						sorted_clusters.after
 					loop
-						create a_cluster.make (sorted_clusters @ i)
+						create a_cluster.make (sorted_clusters.item)
 						clusters.extend (a_cluster)
 						a_cluster.set_parent (Current)
-						i := i - 1
+						sorted_clusters.forth
 					end
 				end
 			end
 
+				-- handle classes
 			create classes.make
 			l_sub_classes := data.classes
 			if l_sub_classes /= Void then
-					-- Then retrieve all classes and put them into an array
-					-- that we will sort.
-				create sorted_classes.make (1, l_sub_classes.count)
-				from
-					l_sub_classes.start
-					i := 1
-				until
-					l_sub_classes.after
-				loop
-					sorted_classes.put (l_sub_classes.item_for_iteration, i)
-
-					i := i + 1
-					l_sub_classes.forth
-				end
-
-					-- Sort the classes.
+				create sorted_classes.make
+				sorted_classes.append (l_sub_classes.linear_representation)
 				sorted_classes.sort
 
-					-- Build the tree.
 				from
-					classes_count := sorted_classes.count
-					i := classes_count
+					sorted_classes.start
 				until
-					i = 0
+					sorted_classes.after
 				loop
-					l_class_i ?= sorted_classes[i]
+					l_class_i ?= sorted_classes.item
 					check
 						class_i: l_class_i /= Void
 					end
 					classes.extend (l_class_i)
-					i := i - 1
+					sorted_classes.forth
 				end
 			end
 

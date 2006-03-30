@@ -118,6 +118,7 @@ feature
 			-- Generate assignment
 		local
 			buf: GENERATION_BUFFER
+			source_type: TYPE_I
 		do
 			buf := buffer
 			generate_line_info;
@@ -138,7 +139,13 @@ feature
 			then
 				print_register;
 				buf.put_string (" = ");
-				source.print_register;
+				source_type := context.real_type (source.type)
+				if source_type.is_reference then
+						-- Clone object of a boxed expanded type.
+					source.generate_dynamic_clone (source, source_type)
+				else
+					source.print_register
+				end
 				buf.put_character (';');
 				buf.put_new_line;
 			end;
@@ -161,7 +168,7 @@ feature
 				info.generate_type_id (buf, context.final_mode)
 
 				buf.put_string (gc_comma);
-				source_print_register;
+				source_print_register
 				buf.put_character (')')
 					-- Perform aging tests when necessary
 				if not target.is_predefined then
@@ -186,19 +193,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

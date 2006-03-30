@@ -213,10 +213,13 @@ RT_LNK int fcount;
 /* Macro used for object cloning:
  *  RTCL(x) clones 'x' and return a pointer to the cloned object
  *  RTCB(x) clones bit `x'
+ *  RTRCL(x) same as RTCL, but uses a user-defined version of `copy'
+ *  RTCCL(c) same as RTRCL, but first checks if `x' is expanded
  */
 #define RTCL(x)		rtclone(x)
 #define RTCB(x)		b_clone(x)
-
+#define RTRCL(x)	egc_twin(x)
+#define RTCCL(x)	((x && eif_is_boxed_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 
 
 /* Macro used for object creation to get the proper creation type:
@@ -238,7 +241,7 @@ RT_LNK int fcount;
 #define RTAM(x)		eremb(x)
 #define RTAR(parent,source) \
 	if (((source) != (EIF_REFERENCE) 0) && (RTAN(source))) { \
-		if (HEADER(parent)->ov_flags & EO_EXP) { \
+		if (eif_is_nested_expanded(HEADER(parent)->ov_flags)) { \
 			EIF_REFERENCE z = (EIF_REFERENCE) parent - (HEADER (parent)->ov_size & B_SIZE); \
 			if (RTAG(z)) RTAM(z); \
 		} else if (RTAG(parent)) RTAM(parent); \
@@ -1133,7 +1136,7 @@ RT_LNK int fcount;
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		xcopy(x, y)
 #define RTEQ(x,y)		xequal(x, y)
-#define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? HEADER(x)->ov_flags & EO_EXP : 0)
+#define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? eif_is_nested_expanded(HEADER(x)->ov_flags) : 0)
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x)			((x) - RTOF(x))
 

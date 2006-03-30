@@ -245,6 +245,8 @@ rt_public long *egc_fnbref ;
 rt_public long *egc_fsize;
 #endif
 
+rt_public EIF_REFERENCE (*egc_twin)(EIF_REFERENCE); /* {ANY}.twin */
+
 rt_public int32 egc_rcdt;				/* E1/einit.c */
 rt_public int32 egc_rcorigin;			/* E1/einit.c */
 rt_public int32 egc_rcoffset;			/* E1/einit.c */

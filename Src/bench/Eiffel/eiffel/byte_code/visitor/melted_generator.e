@@ -193,18 +193,27 @@ feature {NONE} -- Visitors
 						-- is not none
 					ba.append (l_target_node.assign_code)
 				elseif l_target_type.is_expanded then
-						-- Target is expanded: copy with possible exeception
-					ba.append (l_target_node.expanded_assign_code)
+					if a_node.is_creation_instruction and then l_source_type.is_reference then
+						ba.append (l_target_node.assign_code)
+					else
+							-- Target is expanded: copy with possible exception
+						ba.append (l_target_node.expanded_assign_code)
+					end
 				else
-						-- Target is a reference
-					if l_source_type.is_basic then
-							-- Source is basic and target is a reference:
-							-- metamorphose and simple attachment
-						ba.append (Bc_metamorphose)
-					elseif l_source_type.is_true_expanded then
-							-- Source is expanded and target is a reference: clone
-							-- and simple attachment
-						ba.append (Bc_clone)
+					if not a_node.is_creation_instruction then
+							-- Target is a reference
+						if l_source_type.is_basic then
+								-- Source is basic and target is a reference:
+								-- metamorphose and simple attachment
+							ba.append (Bc_metamorphose)
+						elseif l_source_type.is_true_expanded then
+								-- Source is expanded and target is a reference: clone
+								-- and simple attachment
+							ba.append (Bc_clone)
+						else
+								-- Source can be a boxed expanded object.
+							ba.append (bc_cclone)
+						end
 					end
 					ba.append (l_target_node.assign_code)
 				end
@@ -1293,6 +1302,9 @@ feature {NONE} -- Visitors
 						-- Source is expanded and target is a reference: clone
 						-- and simple attachment
 					ba.append (Bc_clone)
+				else
+						-- Source can be a boxed expanded object.
+					ba.append (bc_cclone)
 				end
 				ba.append (a_node.target.reverse_code)
 				melted_assignment_generator.generate_assignment (ba, a_node.target)
@@ -1537,16 +1549,23 @@ feature {NONE} -- Implementation
 		do
 			an_expr.process (Current)
 			l_expression_type := context.real_type (an_expr.type)
-			if a_target_type.is_reference and then l_expression_type.is_expanded then
+			if a_target_type.is_reference then
 				if l_expression_type.is_basic then
 						-- Source is basic and target is a reference:
 						-- metamorphose
 					ba.append (Bc_metamorphose)
-				else
+				elseif l_expression_type.is_expanded then
 						-- Source is expanded and target is a reference:
 						-- clone
 					ba.append (Bc_clone)
+				else
+						-- Source can be a boxed expanded object.
+					ba.append (bc_cclone)
 				end
+			elseif not a_target_type.is_basic and then l_expression_type.is_expanded then
+					-- Source and target are expanded:
+					-- clone
+				ba.append (Bc_clone)
 			end
 		end
 

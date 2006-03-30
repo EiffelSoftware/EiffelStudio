@@ -156,6 +156,9 @@ feature -- Access
 	copy_body_index: INTEGER
 			-- Body index of `copy' from ANY
 
+	twin_body_index: INTEGER
+			-- Body index of `twin' from ANY
+
 feature -- Setting
 
 	set_first_precondition_block_generated (v: BOOLEAN) is
@@ -890,18 +893,26 @@ feature -- Access
 			t_not_void: t /= Void
 		local
 			f: FEATURE_I
+			feature_table: FEATURE_TABLE
 		do
 			class_type_stack.wipe_out
 			original_class_type := t
 			context_class_type := t
 			set_class_type (t)
-			f := System.any_class.compiled_class.feature_table.
-				item_id ({PREDEFINED_NAMES}.copy_name_id)
+			feature_table := System.any_class.compiled_class.feature_table
+			f := feature_table.item_id ({PREDEFINED_NAMES}.copy_name_id)
 			if f = Void then
 					-- "copy" is not found in ANY
 				copy_body_index := -1
 			else
 				copy_body_index := f.body_index
+			end
+			f := feature_table.item_id ({PREDEFINED_NAMES}.twin_name_id)
+			if f = Void then
+					-- "copy" is not found in ANY
+				twin_body_index := -1
+			else
+				twin_body_index := f.body_index
 			end
 		ensure
 			original_class_type_set: original_class_type = t
@@ -1679,10 +1690,12 @@ feature -- Clearing
 			onces.wipe_out
 			once_manifest_string_count_table.wipe_out
 			class_type_stack.wipe_out
+			expanded_descendants := Void
 		ensure
 			global_onces_is_empty: global_onces.is_empty
 			onces_is_empty: onces.is_empty
 			once_manifest_string_count_table_is_empty: once_manifest_string_count_table.is_empty
+			has_no_expanded_descendants_information: not has_expanded_descendants_information
 		end
 
 feature -- Debugger
@@ -1746,10 +1759,65 @@ feature -- Inlining
 			inlined_current_register := r
 		end
 
+feature -- Descendants information
+
+	has_expanded_descendants_information: BOOLEAN is
+			-- Is information about expanded descendants available?
+		require
+			is_final_mode: final_mode
+		do
+			Result := expanded_descendants /= Void
+		ensure
+			definition: Result = (expanded_descendants /= Void)
+		end
+
+	has_expanded_descendants (type_id: INTEGER): BOOLEAN is
+			-- Are there expanded descendants for class type of `type_id'?
+		require
+			is_final_mode: final_mode
+			has_expanded_descendants_information: has_expanded_descendants_information
+			valid_type_id: type_id > 0 and then type_id <= system.class_types.count
+		do
+			Result := expanded_descendants.item (type_id)
+		ensure
+			definition: Result = expanded_descendants.item (type_id)
+		end
+
+	compute_expanded_descendants is
+			-- Compute
+		require
+			is_final_mode: final_mode
+			has_no_expanded_descendants_information: not has_expanded_descendants_information
+		local
+			i: INTEGER
+			class_types: ARRAY [CLASS_TYPE]
+			c: CLASS_TYPE
+		do
+			from
+				class_types := system.class_types
+				i := class_types.count
+				create expanded_descendants.make (i)
+			until
+				i <= 0
+			loop
+				c := class_types.item (i)
+				if c /= Void and then c.is_expanded then
+					expanded_descendants.include (c.conformance_table)
+				end
+				i := i - 1
+			end
+		ensure
+			has_expanded_descendants_information: has_expanded_descendants_information
+			expanded_descendants_is_filled: expanded_descendants.count >= system.class_types.count
+		end
+
 feature {NONE} -- Implementation
 
 	class_type_stack: STACK [PAIR [CLASS_TYPE, CLASS_TYPE]]
 			-- Class types saved due to the context change by `change_class_type_context'
+
+	expanded_descendants: PACKED_BOOLEANS
+			-- Marks for class types whether they have an expanded descendant or not
 
 invariant
 	global_onces_not_void: global_onces /= Void

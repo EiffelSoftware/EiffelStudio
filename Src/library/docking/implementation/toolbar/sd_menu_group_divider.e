@@ -1,6 +1,7 @@
 indexing
 	description: "[
-					When a SD_FLOATING_tool_bar_ZONE is resizing by user. SD_tool_bar_GROUP_DIVIDER will caculate best grouping.
+					When a SD_FLOATING_TOOL_BAR_ZONE is resizing by user.
+					SD_TOOL_BAR_GROUP_DIVIDER will calculate best grouping.
 					It will get total minmum size.
 																														]"
 	date: "$Date$"

@@ -293,7 +293,7 @@ feature {NONE} -- Implementation functions
 		ensure
 			valid: Result > 0
 		end
-
+		
 	internal_maximum_group_index: INTEGER
 			-- When use `maximum_row_width', store maximum group index here.
 

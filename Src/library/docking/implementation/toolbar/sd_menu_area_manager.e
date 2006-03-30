@@ -62,23 +62,22 @@ feature -- Basic operation
 			set: internal_docking_manager = a_docking_manager
 		end
 
-	on_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Handle pointer motion.
 		do
 			-- It we don't compare a_screen_y_or_x with last_screen_y_or_x
 			-- Some position will be infinite calculation.
-			if last_screen_y_or_x /= a_screen_y_or_x then
-				Result := move_in (a_screen_y_or_x)
---				debug ("docking")
---					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 1: Result:" + Result.out)
---				end
+			if last_screen_x /= a_screen_x or last_screen_y /= a_screen_y then
+				Result := move_in (a_screen_x, a_screen_y)
 				if not Result then
-					Result := move_out (a_screen_y_or_x)
+					if not internal_vertical then
+						Result := move_out (a_screen_y)
+					else
+						Result := move_out (a_screen_x)
+					end
 				end
---				debug ("docking")
---					print ("%N SD_TOOL_BAR_HOT_ZONE on_pointer_motion 2: Result:" + Result.out)
---				end
-				last_screen_y_or_x := a_screen_y_or_x
+				last_screen_x := a_screen_x
+				last_screen_y := a_screen_y
 			end
 		end
 
@@ -104,7 +103,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation functions.
 
-	move_in (a_screen_y_or_x: INTEGER): BOOLEAN is
+	move_in (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Handle pointer move in one row/column.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -118,46 +117,66 @@ feature {NONE} -- Implementation functions.
 				check l_tool_bar_row /= Void end
 
 				if not l_tool_bar_row.has (internal_dock_mediator.caller)  then
-					if (l_tool_bar_row.has_screen_y (a_screen_y_or_x) and not internal_vertical)
-						or (l_tool_bar_row.has_screen_x (a_screen_y_or_x) and internal_vertical) then
+					if (l_tool_bar_row.has_screen_y (a_screen_y) and not internal_vertical)
+						or (l_tool_bar_row.has_screen_x (a_screen_x) and internal_vertical) then
 						--Change caller's row.
 						internal_docking_manager.command.lock_update (Void, True)
 						prune_internal_caller_from_parent
 						l_tool_bar_row.extend (internal_dock_mediator.caller)
-						l_tool_bar_row.on_pointer_motion (a_screen_y_or_x)
-						internal_docking_manager.command.resize
+						debug ("docking")
+							print ("%N SD_TOOL_BAR_HOT_ZONE move_in a_screen_x: " + a_screen_x.out + " .a_screen_y: " + a_screen_y.out)
+						end
+						if internal_vertical then
+							l_tool_bar_row.on_pointer_motion (a_screen_y)
+						else
+							l_tool_bar_row.on_pointer_motion (a_screen_x)
+						end
+						internal_docking_manager.command.resize (True)
 						internal_docking_manager.command.unlock_update
 						Result := True
 					end
 				end
-				internal_box.forth
+				if not internal_box.after then
+					internal_box.forth
+				end
 			end
 		end
 
 	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer move into SD_TOOL_BAR_ROW.
+		local
+			l_at_side: BOOLEAN
 		do
 			if not caller_in_current_area or not caller_in_single_row then
-				internal_docking_manager.command.lock_update (Void, True)
-				if internal_dock_mediator.caller.is_floating then
-					internal_dock_mediator.caller.dock
+				l_at_side := (not internal_vertical and a_screen_y_or_x < area.top) or
+							(internal_vertical and a_screen_y_or_x < area.left)	or
+							(not internal_vertical and a_screen_y_or_x > area.bottom) or
+							(internal_vertical and a_screen_y_or_x > area.right)
+				if l_at_side then
+					Result := True
+					internal_docking_manager.command.lock_update (Void, True)
+					if internal_dock_mediator.caller.is_floating then
+						internal_dock_mediator.caller.dock
+					end
+					create_new_row_by_position (a_screen_y_or_x)
+					internal_docking_manager.command.unlock_update
 				end
-				create_new_row_by_position (a_screen_y_or_x)
-				internal_docking_manager.command.unlock_update
-
-				Result := True
 			end
 		end
 
 	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
 			-- Create new row base on `a_screen_or_x'.
+			-- `a_screen_y_or_x' is y for top and bottom tool bar areas.
+			-- `a_screen_y_or_x' is x for left and right tool bar areas.
 		do
 			if (not internal_vertical and a_screen_y_or_x < area.top) or (internal_vertical and a_screen_y_or_x < area.left) then
 				prune_internal_caller_from_parent
 				create_new_row (True, a_screen_y_or_x)
+
 			elseif (not internal_vertical and a_screen_y_or_x > area.bottom) or (internal_vertical and a_screen_y_or_x > area.right) then
 				prune_internal_caller_from_parent
 				create_new_row (False, a_screen_y_or_x)
+
 			end
 		ensure
 			row_first_pruned_then_added:
@@ -176,8 +195,7 @@ feature {NONE} -- Implementation functions.
 				internal_box.extend (l_new_row)
 			end
 			l_new_row.extend (internal_dock_mediator.caller)
-			l_new_row.set_item_position (internal_dock_mediator.caller, a_screen_position)
-			internal_docking_manager.command.resize
+			internal_docking_manager.command.resize (True)
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_HOT_ZONE create new row. Docking Manage Resize *****************")
 			end
@@ -191,7 +209,7 @@ feature {NONE} -- Implementation functions.
 			if internal_dock_mediator.caller.row /= Void then
 				if caller_in_single_row then
 					internal_dock_mediator.caller.row.parent.prune (internal_dock_mediator.caller.row)
-					internal_docking_manager.command.resize
+					internal_docking_manager.command.resize (True)
 				end
 				internal_dock_mediator.caller.row.prune (internal_dock_mediator.caller)
 			end
@@ -249,7 +267,7 @@ feature {NONE} -- Implementation arrtibutes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 
-	last_screen_y_or_x: INTEGER
+	last_screen_x, last_screen_y: INTEGER
 			-- Last pointer screen position when called on_pointer_motion
 
 invariant

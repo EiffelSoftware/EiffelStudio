@@ -2201,8 +2201,8 @@ feature -- Byte code access
 		require
 			access_type_not_void: access_type /= Void
 		do
-			if System.il_generation and then written_in = System.any_id then
-					-- Feature written in ANY in IL code generation.
+			if written_in = System.any_id then
+					-- Feature written in ANY.
 				create {ANY_FEATURE_B} Result.make (Current, access_type, static_type)
 			else
 				create {FEATURE_B} Result.make (Current, access_type, static_type)

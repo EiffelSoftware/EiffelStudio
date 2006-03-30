@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 			l_c_object: POINTER
 		do
+			set_is_initialized (False)
 			l_c_object := c_object
 			create upper_bar
 			create lower_bar
@@ -113,18 +114,15 @@ feature {NONE} -- Initialization
 			signal_connect (l_c_object, app_imp.focus_out_event_string, agent (l_gtk_marshal).window_focus_intermediary (l_c_object, False), Void, True)
 				--Used to handle explicit Window focus handling.
 
-			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, True)
+			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
 
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CONTAINER_IMP}
 				-- Need to set decorations after window is realized.
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_wm_decorations)
-			if interface.is_border_enabled then
-				enable_border
-			else
-				disable_border
-			end
-			enable_user_resize
+			internal_is_border_enabled := True
+			user_can_resize := True
+			set_is_initialized (True)
 		end
 
 feature  -- Access

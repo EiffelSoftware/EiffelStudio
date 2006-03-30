@@ -98,6 +98,7 @@ feature {NONE} -- Initialization
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_clu: CONF_CLUSTER
 			l_sort_grps: SORTED_TWO_WAY_LIST [CONF_GROUP]
+			l_header: EB_CLASSES_TREE_HEADER_ITEM
 		do
 			if window /= Void then
 					-- Lock update of window, so rebuilding of `Current'
@@ -115,18 +116,21 @@ feature {NONE} -- Initialization
 				l_target := Universe.target
 
 					-- sort libraries
+				create l_header.make ("Libraries")
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.libraries.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps)
+				build_group_tree (l_sort_grps, l_header)
 
 					-- sort assemblies
+				create l_header.make ("Assemblies")
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.assemblies.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps)
+				build_group_tree (l_sort_grps, l_header)
 
 					-- sort clusters
+				create l_header.make ("Clusters")
 				l_clusters := l_target.clusters
 				create l_sort_grps.make
 				from
@@ -141,13 +145,14 @@ feature {NONE} -- Initialization
 					l_clusters.forth
 				end
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps)
+				build_group_tree (l_sort_grps, l_header)
 
 					-- sort overrides
+				create l_header.make ("Overrides")
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.overrides.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps)
+				build_group_tree (l_sort_grps, l_header)
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
@@ -829,15 +834,14 @@ feature {NONE} -- Implementation
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.
 
-	build_group_tree (a_grps: LIST [CONF_GROUP]) is
-			-- Build a tree for `a_grps'.
+	build_group_tree (a_grps: LIST [CONF_GROUP]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
+			-- Build a tree for `a_grps' under `a_header' and add it to the tree if we have elements.
 		require
 			a_grps_not_void: a_grps /= Void
+			a_header_not_void: a_header /= Void
 		local
-			tmp_list: ARRAYED_LIST [EV_TREE_ITEM]
 			l_item: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			create tmp_list.make (a_grps.count)
 			from
 				a_grps.start
 			until
@@ -845,7 +849,7 @@ feature {NONE} -- Implementation
 			loop
 				create l_item.make (create {EB_SORTED_CLUSTER}.make (a_grps.item))
 
-				tmp_list.extend (l_item)
+				a_header.extend (l_item)
 				if window /= Void then
 					l_item.associate_with_window (window)
 				end
@@ -862,7 +866,9 @@ feature {NONE} -- Implementation
 				end
 				a_grps.forth
 			end
-			append (tmp_list)
+			if not a_header.is_empty then
+				extend (a_header)
+			end
 		end
 
 

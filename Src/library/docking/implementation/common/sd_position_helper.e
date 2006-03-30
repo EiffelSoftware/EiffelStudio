@@ -71,7 +71,8 @@ feature -- Command
 				-- If enough space set position base on left bottom corner.
 				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
 			else
-				check not_possible_in_this_case: False end
+				-- There's not suitable position.
+				a_dialog.set_position (a_prefer_x - a_dialog.width + a_indicator_width, a_prefer_y + internal_shared.tool_bar_size)
 			end
 		end
 
@@ -98,7 +99,8 @@ feature -- Command
 				-- If enough space set position base on left bottom corner.
 				a_dialog.set_position (a_prefer_x, a_prefer_y - a_dialog.height)
 			else
-				check not_possible_in_this_case: False end
+				-- There's not suitable position.
+				a_dialog.set_position (a_prefer_x - a_dialog.width + internal_shared.tool_bar_size, a_prefer_y + a_indicator_width)				
 			end
 		end
 

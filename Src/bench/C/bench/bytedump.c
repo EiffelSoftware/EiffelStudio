@@ -191,7 +191,7 @@ static  char    *names [] = {
 "BC_CAST_CHAR8" ,
 "BC_ONCE_STRING" ,
 "BC_ALLOCATE_ONCE_STRINGS" ,
-"BC_NOTUSED_146" ,
+"BC_CCLONE" ,
 "BC_NOTUSED_147" ,
 "BC_NOTUSED_148" ,
 "BC_NOTUSED_149" ,
@@ -795,6 +795,7 @@ static  void    print_instructions ()
 
 
 			case  BC_CLONE :
+			case  BC_CCLONE :
 				break;
 
 /* Calls */

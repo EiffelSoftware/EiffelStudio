@@ -9,7 +9,7 @@ indexing
 	revision: "$Revision$"
 
 class BYTE_CONST
-	
+
 feature -- Access
 
 	Bc_start: 			CHARACTER is '%/000/';
@@ -181,32 +181,35 @@ feature -- Access
 
 		-- Conversion
 	bc_cast_char8:		CHARACTER is '%/143/'
-	
+
 		-- Once manifest strings
 	Bc_once_string:		CHARACTER is '%/144/'
 	Bc_allocate_once_strings:	CHARACTER is '%/145/'
 
+		-- Cloning
+	Bc_cclone:		CHARACTER is '%/146/';
+
 		-- NATURAL constants
-	Bc_uint8:			CHARACTER is '%/150/'; 
-	Bc_uint16:			CHARACTER is '%/151/'; 
-	Bc_uint32:			CHARACTER is '%/152/'; 
-	Bc_uint64:			CHARACTER is '%/153/'; 
+	Bc_uint8:			CHARACTER is '%/150/';
+	Bc_uint16:			CHARACTER is '%/151/';
+	Bc_uint32:			CHARACTER is '%/152/';
+	Bc_uint64:			CHARACTER is '%/153/';
 
 		-- Unused opcode
-	Bc_notused_154:		CHARACTER is '%/154/'; 
-	Bc_notused_155:		CHARACTER is '%/155/'; 
+	Bc_notused_154:		CHARACTER is '%/154/';
+	Bc_notused_155:		CHARACTER is '%/155/';
 	Bc_notused_156:		CHARACTER is '%/156/';
 	Bc_notused_157: 	CHARACTER is '%/157/';
-	Bc_notused_158:		CHARACTER is '%/158/'; 
+	Bc_notused_158:		CHARACTER is '%/158/';
 	Bc_notused_159:		CHARACTER is '%/159/';
-	Bc_notused_160:		CHARACTER is '%/160/'; 
-	Bc_notused_161:		CHARACTER is '%/161/'; 
+	Bc_notused_160:		CHARACTER is '%/160/';
+	Bc_notused_161:		CHARACTER is '%/161/';
 	Bc_notused_162:		CHARACTER is '%/162/';
-	Bc_notused_163:		CHARACTER is '%/163/'; 
+	Bc_notused_163:		CHARACTER is '%/163/';
 	Bc_notused_164:		CHARACTER is '%/164/';
-	Bc_notused_165:		CHARACTER is '%/165/'; 
+	Bc_notused_165:		CHARACTER is '%/165/';
 	Bc_notused_166:		CHARACTER is '%/166/';
-	Bc_notused_167:		CHARACTER is '%/167/'; 
+	Bc_notused_167:		CHARACTER is '%/167/';
 
 		-- Manifest tuple
 	Bc_tuple:				CHARACTER is '%/168/'
@@ -224,19 +227,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

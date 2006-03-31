@@ -59,6 +59,9 @@ feature -- Status report
 	path: STRING
 			-- relativ path to cluster location (for recursive clusters).
 
+	name: STRING
+			-- name of the item.
+
 feature -- Access
 
 	stone: CLUSTER_STONE is
@@ -74,7 +77,6 @@ feature -- Status setting
 		local
 			l_cluster: CLUSTER_I
 			l_group: CONF_GROUP
-			l_name: STRING
 			l_pos: INTEGER
 		do
 			data := a_cluster
@@ -84,18 +86,18 @@ feature -- Status setting
 				if not path.is_empty then
 					l_pos := path.last_index_of ('/', path.count)
 					if l_pos > 0 then
-						l_name := path.substring (l_pos+1, path.count)
+						name := path.substring (l_pos+1, path.count)
 					else
-						create l_name.make_empty
+						create name.make_empty
 					end
 				end
 				set_pebble (stone)
 			end
-			if l_name = Void then
-				l_name := l_group.name
+			if name = Void then
+				name := l_group.name
 			end
-			set_text (l_name)
-			set_tooltip (l_name)
+			set_text (name)
+			set_tooltip (name)
 			set_accept_cursor (Cursors.cur_Cluster)
 			set_deny_cursor (Cursors.cur_X_Cluster)
 			set_pixmap (pixmap_from_group (l_group))
@@ -108,6 +110,7 @@ feature -- Status setting
 			fake_load
 		ensure then
 			data = a_cluster
+			name_set: name /= Void
 		end
 
 	add_class (a_class: CLASS_I) is

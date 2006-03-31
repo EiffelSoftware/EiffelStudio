@@ -193,10 +193,24 @@ feature -- Access queries
 
 	external_include: like internal_external_include is
 			-- Global external include files.
+		local
+			l_target: CONF_TARGET
 		do
 			Result := internal_external_include.twin
 			if extends /= Void then
 				Result.append (extends.external_include)
+			end
+				-- get externals from libraries
+			from
+				libraries.start
+			until
+				libraries.after
+			loop
+				l_target := libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					Result.append (l_target.external_include)
+				end
+				libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -204,10 +218,24 @@ feature -- Access queries
 
 	external_object: like internal_external_object is
 			-- Global external object files.
+		local
+			l_target: CONF_TARGET
 		do
 			Result := internal_external_object.twin
 			if extends /= Void then
 				Result.append (extends.external_object)
+			end
+				-- get externals from libraries
+			from
+				libraries.start
+			until
+				libraries.after
+			loop
+				l_target := libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					Result.append (l_target.external_object)
+				end
+				libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -215,24 +243,53 @@ feature -- Access queries
 
 	external_make: like internal_external_make is
 			-- Global external make files.
+		local
+			l_target: CONF_TARGET
 		do
 			Result := internal_external_make.twin
 			if extends /= Void then
 				Result.append (extends.external_make)
 			end
-		end
-
-	external_ressource: like internal_external_ressource is
-			-- Global external ressource files.
-		do
-			Result := internal_external_ressource.twin
-			if extends /= Void then
-				Result.append (extends.external_ressource)
+				-- get externals from libraries
+			from
+				libraries.start
+			until
+				libraries.after
+			loop
+				l_target := libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					Result.append (l_target.external_make)
+				end
+				libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
+	external_ressource: like internal_external_ressource is
+			-- Global external ressource files.
+		local
+			l_target: CONF_TARGET
+		do
+			Result := internal_external_ressource.twin
+			if extends /= Void then
+				Result.append (extends.external_ressource)
+			end
+				-- get externals from libraries
+			from
+				libraries.start
+			until
+				libraries.after
+			loop
+				l_target := libraries.item_for_iteration.library_target
+				if l_target /= Void then
+					Result.append (l_target.external_ressource)
+				end
+				libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	pre_compile_action: ARRAYED_LIST [CONF_ACTION] is
 			-- Actions to be executed before compilation.

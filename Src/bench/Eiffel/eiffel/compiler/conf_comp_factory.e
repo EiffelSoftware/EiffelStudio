@@ -13,7 +13,9 @@ inherit
 			new_class_assembly,
 			new_class_partial,
 			new_cluster,
-			new_override
+			new_override,
+			new_assembly,
+			new_assembly_from_gac
 		end
 
 feature
@@ -46,5 +48,20 @@ feature
 			-- Create a `CONF_OVERRIDE' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
+		end
+
+	new_assembly (a_name: STRING; a_directory: STRING; a_target: CONF_TARGET): ASSEMBLY_I is
+			-- Create a `CONF_ASSEMBLY' object.
+		local
+			l_location: CONF_LOCATION
+		do
+			l_location := new_location_from_full_path (a_directory, a_target)
+			create Result.make (a_name, l_location, a_target)
+		end
+
+	new_assembly_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET): ASSEMBLY_I is
+			-- Create a `CONF_ASSEMBLY' object from gac.
+		do
+			create Result.make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key, a_target)
 		end
 end

@@ -133,7 +133,7 @@ feature -- Visit nodes
 					process_library (l_pre)
 				end
 
-				if not a_target.assemblies.is_empty then
+				if not a_target.assemblies.is_empty and platform = pf_dotnet then
 					consume_assemblies (a_target)
 					process_with_old (a_target.assemblies, l_assemblies)
 				end
@@ -665,6 +665,7 @@ feature {NONE} -- Implementation
 			-- Process `an_assembly' (without dependencies).
 		require
 			an_assembly_not_void: an_assembly /= Void
+			dotnet: platform = pf_dotnet
 		local
 			l_key, l_guid: STRING
 			l_path: like assembly_cache_folder
@@ -677,37 +678,39 @@ feature {NONE} -- Implementation
 			l_p: STRING
 			l_a: CONF_ASSEMBLY
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_emitter: IL_EMITTER
 		do
+			l_emitter := il_emitter
 			if not is_error then
 				l_p := an_assembly.location.evaluated_path
 				l_path := assembly_cache_folder.twin
 
 					-- get assembly info for local assemblies
 				if not l_p.is_empty then
-					il_emitter.retrieve_assembly_info (l_p)
+					l_emitter.retrieve_assembly_info (l_p)
 
-					if not il_emitter.assembly_found or else not il_emitter.is_consumed then
+					if not l_emitter.assembly_found or else not l_emitter.is_consumed then
 						add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
 					else
-						an_assembly.set_assembly_name (il_emitter.name)
-						an_assembly.set_assembly_version (il_emitter.version)
-						an_assembly.set_assembly_culture (il_emitter.culture)
-						l_key := il_emitter.public_key_token
+						an_assembly.set_assembly_name (l_emitter.name)
+						an_assembly.set_assembly_version (l_emitter.version)
+						an_assembly.set_assembly_culture (l_emitter.culture)
+						l_key := l_emitter.public_key_token
 						if l_key /= Void and then not l_key.is_equal (null_key_string) then
 							an_assembly.set_assembly_public_key (l_key)
 						end
-						l_guid := il_emitter.consumed_folder_name
+						l_guid := l_emitter.consumed_folder_name
 						an_assembly.set_guid (l_guid)
-						l_path.extend (il_emitter.relative_folder_name_from_path (l_p))
+						l_path.extend (l_emitter.relative_folder_name_from_path (l_p))
 					end
 				else
-					il_emitter.retrieve_assembly_info_by_fusion_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token)
-					if not il_emitter.assembly_found or else not il_emitter.is_consumed then
+					l_emitter.retrieve_assembly_info_by_fusion_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token)
+					if not l_emitter.assembly_found or else not l_emitter.is_consumed then
 						add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
 					else
-						l_guid := il_emitter.consumed_folder_name
+						l_guid := l_emitter.consumed_folder_name
 						an_assembly.set_guid (l_guid)
-						l_path.extend (il_emitter.relative_folder_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token))
+						l_path.extend (l_emitter.relative_folder_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token))
 					end
 				end
 
@@ -787,7 +790,7 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				il_emitter.unload
+				l_emitter.unload
 			end
 		ensure
 			classes_set: not is_error implies an_assembly.classes_set
@@ -939,7 +942,9 @@ feature {NONE} -- Implementation
 			l_p, l_locals: STRING
 			l_a: CONF_ASSEMBLY
 			l_consumed: BOOLEAN
+			l_emitter: IL_EMITTER
 		do
+			l_emitter := il_emitter
 			if not is_error then
 					-- consume all assemblies
 					-- first the named ones and then the local ones
@@ -960,12 +965,12 @@ feature {NONE} -- Implementation
 							l_p := l_a.location.evaluated_path
 								-- named
 							if l_p.is_empty then
-								il_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
-								il_emitter.retrieve_assembly_info_by_fusion_name (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
-								if not il_emitter.assembly_found or else not il_emitter.is_consumed then
+								l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
+								l_emitter.retrieve_assembly_info_by_fusion_name (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
+								if not l_emitter.assembly_found or else not l_emitter.is_consumed then
 									add_error (create {CONF_ERROR_ASOP}.make (l_a.name))
 								end
-								l_a.set_guid (il_emitter.consumed_folder_name)
+								l_a.set_guid (l_emitter.consumed_folder_name)
 								-- local
 							else
 								l_locals.append (l_p+";")
@@ -976,10 +981,10 @@ feature {NONE} -- Implementation
 				end
 				if l_locals.count > 1 then
 					l_locals.remove_tail (1)
-					il_emitter.consume_assembly_from_path (l_locals)
+					l_emitter.consume_assembly_from_path (l_locals)
 				end
 				if l_consumed then
-					il_emitter.unload
+					l_emitter.unload
 				end
 			end
 		end
@@ -1049,11 +1054,12 @@ feature {NONE} -- Implementation
 					l_done := False
 					l_group := a_groups.item_for_iteration
 					if l_group /= Void then
-							-- if we rebuild, groups themselves aren't reused
-						l_group.invalidate
 							-- check if the group has already been handled
 						if reused_groups.has (l_group) then
 							l_done := True
+						else
+								-- if we rebuild, groups themselves aren't reused
+							l_group.invalidate
 						end
 
 							-- check if it's a library that still is used and therefore is alredy done
@@ -1172,9 +1178,11 @@ feature {NONE} -- Implementation
 						end
 						check
 							old_group_computed: old_group /= Void implies old_group.classes_set
-							old_group_different: old_group /= l_group
 						end
 						if old_group /= Void then
+							if old_group /= l_group then
+								old_group.invalidate
+							end
 							reused_groups.force (old_group)
 						end
 

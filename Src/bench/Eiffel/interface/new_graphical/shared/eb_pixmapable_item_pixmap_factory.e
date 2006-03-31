@@ -20,10 +20,26 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 		do
-			if a_group.is_readonly then
-				Result := (Pixmaps.Icon_read_only_cluster)
-			else
-				Result := (Pixmaps.Icon_cluster_symbol)
+			if a_group.is_cluster then
+				if a_group.is_readonly then
+					Result := Pixmaps.Icon_read_only_cluster
+				else
+					Result := Pixmaps.Icon_cluster_symbol
+				end
+			elseif a_group.is_library then
+				if a_group.is_readonly then
+					Result := Pixmaps.icon_read_only_library
+				else
+					Result := Pixmaps.icon_library_symbol
+				end
+			elseif a_group.is_assembly then
+				Result := Pixmaps.icon_read_only_assembly
+			elseif a_group.is_override then
+				if a_group.is_readonly then
+					Result := Pixmaps.icon_read_only_override
+				else
+					Result := Pixmaps.icon_override_symbol
+				end
 			end
 		ensure
 			result_not_void: Result /= Void

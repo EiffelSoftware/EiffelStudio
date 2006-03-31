@@ -739,6 +739,21 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_light_cluster_color_value)
 		end
 
+	Icon_read_only_assembly: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_read_only_assembly_symbol_color_value)
+		end
+
+	Icon_read_only_library: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_read_only_library_symbol_color_value)
+		end
+
+	Icon_read_only_override: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_read_only_override_symbol_color_value)
+		end
+
 	Icon_favorites_folder: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_favorites_folder_color_value)
@@ -747,6 +762,16 @@ feature -- Icons
 	Icon_cluster_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_cluster_symbol_color_value)
+		end
+
+	Icon_library_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_library_symbol_color_value)
+		end
+
+	Icon_override_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_override_symbol_color_value)
 		end
 
 	Icon_development_window: EV_PIXMAP is
@@ -1310,6 +1335,11 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (4, 13, icon_quick_search_previous_color_value)
 			Result.add_pixmap (5, 13, icon_quick_search_advanced_color_value)
 			Result.add_pixmap (6, 13, icon_trash_can_color_value)
+			Result.add_pixmap (7, 13, icon_read_only_assembly_symbol_color_value)
+			Result.add_pixmap (8, 13, icon_read_only_library_symbol_color_value)
+			Result.add_pixmap (9, 13, icon_read_only_override_symbol_color_value)
+			Result.add_pixmap (10, 13, icon_library_symbol_color_value)
+			Result.add_pixmap (11, 13, icon_override_symbol_color_value)
 		end
 
 feature {NONE} -- Constants
@@ -1507,8 +1537,12 @@ feature {NONE} -- Constants
 			icon_quick_search_previous_color_value,
 			icon_quick_search_advanced_color_value,
 			icon_quick_search_close_color_value,
-			icon_trash_can_color_value	: INTEGER is unique;
-
+			icon_trash_can_color_value,
+			icon_read_only_assembly_symbol_color_value,
+			icon_read_only_library_symbol_color_value,
+			icon_read_only_override_symbol_color_value,
+			icon_library_symbol_color_value,
+			icon_override_symbol_color_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -7,13 +7,20 @@ class
 	CONF_ERROR_GRUNDEF
 
 inherit
-	CONF_ERROR
+	CONF_ERROR_PARSE
+		redefine
+			text
+		end
 
-feature -- Access
+feature {NONE} -- Initialization
 
 	text: STRING is
 		do
-			Result := "Undefined group"
+			if file /= Void then
+				Result := "Parse error in "+file+": Undefined group"
+			else
+				Result := "Parse error: Undefined group"
+			end
 			if group /= Void then
 				Result.append (": "+group)
 			end

@@ -7,10 +7,17 @@ class
 	CONF_ERROR_LIBTAR
 
 inherit
-	CONF_ERROR
+	CONF_ERROR_PARSE
+		redefine
+			default_create
+		end
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	text: STRING is "The defined library target could not be found."
+	default_create is
+			-- Create.
+		do
+			message := "The defined library target could not be found."
+		end
 
 end

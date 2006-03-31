@@ -7,10 +7,17 @@ class
 	CONF_ERROR_UUID
 
 inherit
-	CONF_ERROR
+	CONF_ERROR_PARSE
+		redefine
+			default_create
+		end
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	text: STRING is "Invalid uuid."
+	default_create is
+			-- Create.
+		do
+			message := "Invalid uuid."
+		end
 
 end

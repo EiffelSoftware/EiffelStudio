@@ -35,7 +35,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Is there an error?
 
-	last_error: CONF_ERROR
+	last_error: CONF_ERROR_PARSE
 			-- The last error.
 
 feature -- Access, stored in configuration file
@@ -182,7 +182,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR_PARSE) is
 			-- Set `an_error'.
 		do
 			is_error := True
@@ -193,6 +193,7 @@ feature {NONE} -- Implementation
 			-- (Re)compile the regexp patterns.
 		local
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_er: CONF_ERROR_REGEXP
 		do
 			exclude_regexp.wipe_out
 			include_regexp.wipe_out
@@ -205,7 +206,8 @@ feature {NONE} -- Implementation
 					create l_regexp.make
 					l_regexp.compile (exclude.item)
 					if not l_regexp.is_compiled then
-						set_error (create {CONF_ERROR_REGEXP}.make (exclude.item))
+						create l_er
+						l_er.set_regexp (exclude.item)
 					else
 						l_regexp.optimize
 						exclude_regexp.extend (l_regexp)
@@ -222,7 +224,8 @@ feature {NONE} -- Implementation
 					create l_regexp.make
 					l_regexp.compile (include.item)
 					if not l_regexp.is_compiled then
-						set_error (create {CONF_ERROR_REGEXP}.make (include.item))
+						create l_er
+						l_er.set_regexp (include.item)
 					else
 						l_regexp.optimize
 						include_regexp.extend (l_regexp)

@@ -7,10 +7,17 @@ class
 	CONF_ERROR_LIBOVER
 
 inherit
-	CONF_ERROR
+	CONF_ERROR_PARSE
+		redefine
+			default_create
+		end
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	text: STRING is "Library target has overrides."
+	default_create is
+			-- Create.
+		do
+			message := "Library target has overrides."
+		end
 
 end

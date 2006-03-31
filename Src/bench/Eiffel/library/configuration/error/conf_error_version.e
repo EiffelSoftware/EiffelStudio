@@ -7,10 +7,17 @@ class
 	CONF_ERROR_VERSION
 
 inherit
-	CONF_ERROR
+	CONF_ERROR_PARSE
+		redefine
+			default_create
+		end
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	text: STRING is "Config file format version missmatch."
+	default_create is
+			-- Create.
+		do
+			message := "Config file format version missmatch."
+		end
 
 end

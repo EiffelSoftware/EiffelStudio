@@ -189,6 +189,7 @@ feature -- Callbacks
 		local
 			l_group: CONF_GROUP
 			l_error: CONF_ERROR_GRUNDEF
+			l_e_ov: CONF_ERROR_OVERRIDE
 		do
 			if not is_error then
 				current_content.left_adjust
@@ -253,7 +254,9 @@ feature -- Callbacks
 								l_error.set_group (overrides_list.key_for_iteration)
 								set_error (l_error)
 							elseif l_group.is_override then
-								set_error (create {CONF_ERROR_OVERRIDE}.make (l_group.name))
+								create l_e_ov
+								l_e_ov.set_group (l_group.name)
+								set_error (l_e_ov)
 							else
 								overrides_list.item_for_iteration.do_all (agent {CONF_OVERRIDE}.add_override (l_group))
 							end

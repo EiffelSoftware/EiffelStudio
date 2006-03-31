@@ -165,6 +165,12 @@ feature -- Accelerator, focus label and menu name
 	m_Address_toolbar: STRING is			"&Address Bar"
 	m_Apply: STRING is					"&Apply"
 	m_Breakpoints_tool: STRING is		"Breakpoints"
+
+	l_class_tree_assemblies: STRING is	"Assemblies"
+	l_class_tree_clusters: STRING is	"Clusters"
+	l_class_tree_libraries: STRING is	"Libraries"
+	l_class_tree_overrides: STRING is	"Overrides"
+
 	f_Clear_breakpoints: STRING is		"Remove all breakpoints"
 	m_Clear_breakpoints: STRING is		"Re&move All Breakpoints"
 	m_Comment: STRING is					"&Comment%TCtrl+K"

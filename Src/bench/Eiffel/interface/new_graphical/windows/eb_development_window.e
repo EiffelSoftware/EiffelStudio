@@ -3241,6 +3241,7 @@ feature {NONE} -- Implementation
 			end
 
 			create l_sorted_cluster.make (a_cluster)
+			l_sorted_cluster.initialize
 
 			if not l_sorted_cluster.clusters.is_empty then
 				l_format_context.process_indexing_tag_text ("sub cluster(s)")

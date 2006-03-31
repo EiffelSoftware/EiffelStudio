@@ -98,7 +98,6 @@ feature {NONE} -- Initialization
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_clu: CONF_CLUSTER
 			l_sort_grps: SORTED_TWO_WAY_LIST [CONF_GROUP]
-			l_header: EB_CLASSES_TREE_HEADER_ITEM
 		do
 			if window /= Void then
 					-- Lock update of window, so rebuilding of `Current'
@@ -116,7 +115,7 @@ feature {NONE} -- Initialization
 				l_target := Universe.target
 
 					-- sort clusters
-				create l_header.make ("Clusters", pixmaps.icon_cluster_symbol)
+				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_cluster_symbol)
 				l_clusters := l_target.clusters
 				create l_sort_grps.make
 				from
@@ -131,29 +130,28 @@ feature {NONE} -- Initialization
 					l_clusters.forth
 				end
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
+				build_group_tree (l_sort_grps, cluster_header)
 
 					-- sort overrides
-				create l_header.make ("Overrides", pixmaps.icon_override_symbol)
+				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_override_symbol)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.overrides.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
+				build_group_tree (l_sort_grps, override_header)
 
 					-- sort libraries
-				create l_header.make ("Libraries", pixmaps.icon_library_symbol)
+				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_library_symbol)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.libraries.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
+				build_group_tree (l_sort_grps, library_header)
 
 					-- sort assemblies
-				create l_header.make ("Assemblies", pixmaps.icon_read_only_assembly)
+				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_read_only_assembly)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.assemblies.linear_representation)
 				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
-
+				build_group_tree (l_sort_grps, assembly_header)
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
@@ -226,7 +224,7 @@ feature -- Activation
 	show_cluster (a_cluster: CLUSTER_I) is
 			-- Expand all parents of `a_cluster' and highlight `a_cluster'.
 		local
-			path: LINKED_LIST [CLUSTER_I]
+			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			path := cluster_parents (a_cluster)
@@ -257,12 +255,12 @@ feature -- Activation
 	show_class (a_class: CLASS_I) is
 			-- Expand all parents of `a_class' and highlight `a_class'.
 		local
-			path: LINKED_LIST [CLUSTER_I]
+			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
+			l_sub: LIST [STRING]
 		do
-			conf_todo
---			path := cluster_parents (a_class.cluster)
+			path := cluster_parents (a_class.group)
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
@@ -279,6 +277,22 @@ feature -- Activation
 				end
 				path.forth
 			end
+				-- we may have to look at subfolders
+			l_sub := a_class.path.split ('/')
+			check not_empty: not l_sub.is_empty end
+			from
+				l_sub.start
+				l_sub.forth
+			until
+				l_sub.after
+			loop
+				a_folder := find_subfolder_in (l_sub.item, a_folder)
+				if a_folder /= Void and then not a_folder.is_expanded then
+					a_folder.expand
+				end
+				l_sub.forth
+			end
+
 			a_class_item := find_class_in (a_class, a_folder)
 			if a_class_item /= Void then
 				a_class_item.enable_select
@@ -505,6 +519,18 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Rebuilding
+
+	cluster_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Header for clusters.
+
+	override_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Header for overrides.
+
+	assembly_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Header for assemblies.
+
+	library_header: EB_CLASSES_TREE_HEADER_ITEM
+			-- Header for libraries.
 
 	expanded_clusters: HASH_TABLE [STRING, STRING]
 		-- All cluster names marked as expanded during last call to
@@ -733,7 +759,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			path: LINKED_LIST [CLUSTER_I]
+			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			path := cluster_parents (a_cluster)
@@ -750,19 +776,45 @@ feature {NONE} -- Implementation
 			Result := a_folder
 		end
 
-	cluster_parents (cluster: CLUSTER_I): LINKED_LIST [CLUSTER_I] is
-			-- List of parent clusters of `cluster', from the root to `cluster', `cluster' included.
+	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP] is
+			-- List of parent groups of `group', from the root to `group', `cluster' included.
 		local
-			a_cluster: CLUSTER_I
+			l_group, l_next_group: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_libuse: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			from
 				create Result.make
-				a_cluster := cluster
+				l_group := a_group
 			until
-				a_cluster = Void -- root attained
+				l_group = Void -- root attained
 			loop
-				Result.put_front (a_cluster)
-				a_cluster := a_cluster.parent_cluster
+				Result.put_front (l_group)
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					check cluster: l_cluster /= Void end
+					l_next_group := l_cluster.parent
+				else
+					l_next_group := Void
+				end
+				l_libuse := l_group.target.used_in_libraries
+				if l_next_group = Void and l_libuse /= Void and then not l_libuse.is_empty then
+						-- if one of the libraries is used in the application target use this one, else just take one
+					from
+						l_libuse.start
+					until
+						l_next_group /= Void or l_libuse.after
+					loop
+						if l_libuse.item.target = universe.target then
+							l_next_group := l_libuse.item
+						end
+						l_libuse.forth
+					end
+					if l_next_group = Void then
+						l_next_group := l_libuse.first
+					end
+				end
+				l_group := l_next_group
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -776,14 +828,44 @@ feature {NONE} -- Implementation
 --			Result := cluster_parents (a_class.cluster)
 		end
 
-	find_cluster_in (clusteri: CLUSTER_I; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
+	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
+			-- Fint the tree item associated to `a_name' in `parent_cluster'.
+		require
+			parent_cluster_not_void: parent_cluster /= Void
+		local
+			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
+		do
+			from
+				parent_cluster.start
+			until
+				parent_cluster.after or Result /= Void
+			loop
+				l_folder ?= parent_cluster.item
+				if l_folder /= Void and then l_folder.name.is_equal (a_name) then
+					Result := l_folder
+				end
+				parent_cluster.forth
+			end
+		end
+
+	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
 			-- Find the tree item associated to `clusteri' in `parent_cluster'.
 		local
 			folder_list: EV_TREE_NODE_LIST
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			if parent_cluster = Void then
-				folder_list := Current
+				if clusteri.is_override then
+					folder_list := override_header
+				elseif clusteri.is_cluster then
+					folder_list := cluster_header
+				elseif clusteri.is_library then
+					folder_list := library_header
+				elseif clusteri.is_assembly then
+					folder_list := assembly_header
+				else
+					folder_list := Current
+				end
 			else
 				folder_list := parent_cluster
 			end

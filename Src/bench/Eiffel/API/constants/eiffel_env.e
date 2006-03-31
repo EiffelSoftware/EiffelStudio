@@ -65,10 +65,10 @@ feature -- Access: environment variable
 			Result := Execution_environment.get ("ISE_EIFFEL")
 		end
 
-	Eiffel_license: STRING is
-			-- ISE_LICENSE name.
+	Eiffel_library: STRING is
+			-- ISE_LIBRARY name.
 		once
-			Result := Execution_environment.get ("ISE_LICENSE")
+			Result := Execution_environment.get ("ISE_LIBRARY")
 		end
 
 	Eiffel_c_compiler: STRING is

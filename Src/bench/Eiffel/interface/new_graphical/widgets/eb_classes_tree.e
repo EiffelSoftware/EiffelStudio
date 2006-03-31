@@ -116,21 +116,21 @@ feature {NONE} -- Initialization
 				l_target := Universe.target
 
 					-- sort libraries
-				create l_header.make ("Libraries")
+				create l_header.make ("Libraries", pixmaps.icon_library_symbol)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.libraries.linear_representation)
 				l_sort_grps.sort
 				build_group_tree (l_sort_grps, l_header)
 
 					-- sort assemblies
-				create l_header.make ("Assemblies")
+				create l_header.make ("Assemblies", pixmaps.icon_read_only_assembly)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.assemblies.linear_representation)
 				l_sort_grps.sort
 				build_group_tree (l_sort_grps, l_header)
 
 					-- sort clusters
-				create l_header.make ("Clusters")
+				create l_header.make ("Clusters", pixmaps.icon_cluster_symbol)
 				l_clusters := l_target.clusters
 				create l_sort_grps.make
 				from
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 				build_group_tree (l_sort_grps, l_header)
 
 					-- sort overrides
-				create l_header.make ("Overrides")
+				create l_header.make ("Overrides", pixmaps.icon_override_symbol)
 				create l_sort_grps.make
 				l_sort_grps.append (l_target.overrides.linear_representation)
 				l_sort_grps.sort

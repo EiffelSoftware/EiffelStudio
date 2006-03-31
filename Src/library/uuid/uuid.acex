@@ -12,7 +12,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<library name="base" location="$ISE_LIBRARY\base\base.acex" readonly="true">
-		<cluster name="uuid" location="$ISE_LIBRARY\uuid" recursive="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<cluster name="uuid" location="uuid" recursive="true"/>
 	</target>
 </system>

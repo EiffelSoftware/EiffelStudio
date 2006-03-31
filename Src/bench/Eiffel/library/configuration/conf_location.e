@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- handle relative path
-			if Result.count >= 2 and then Result.item (1).is_alpha_numeric and Result.item (2) /= ':' then
+			if (Result.count >= 2 and then Result.item (1).is_alpha_numeric and Result.item (2) /= ':') or else Result.item (1) = '.' then
 				l_relative_base := target.location
 				if l_relative_base /= Void then
 					Result.prepend (l_relative_base)

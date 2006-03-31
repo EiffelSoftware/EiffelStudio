@@ -115,20 +115,6 @@ feature {NONE} -- Initialization
 
 				l_target := Universe.target
 
-					-- sort libraries
-				create l_header.make ("Libraries", pixmaps.icon_library_symbol)
-				create l_sort_grps.make
-				l_sort_grps.append (l_target.libraries.linear_representation)
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
-
-					-- sort assemblies
-				create l_header.make ("Assemblies", pixmaps.icon_read_only_assembly)
-				create l_sort_grps.make
-				l_sort_grps.append (l_target.assemblies.linear_representation)
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, l_header)
-
 					-- sort clusters
 				create l_header.make ("Clusters", pixmaps.icon_cluster_symbol)
 				l_clusters := l_target.clusters
@@ -153,6 +139,21 @@ feature {NONE} -- Initialization
 				l_sort_grps.append (l_target.overrides.linear_representation)
 				l_sort_grps.sort
 				build_group_tree (l_sort_grps, l_header)
+
+					-- sort libraries
+				create l_header.make ("Libraries", pixmaps.icon_library_symbol)
+				create l_sort_grps.make
+				l_sort_grps.append (l_target.libraries.linear_representation)
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps, l_header)
+
+					-- sort assemblies
+				create l_header.make ("Assemblies", pixmaps.icon_read_only_assembly)
+				create l_sort_grps.make
+				l_sort_grps.append (l_target.assemblies.linear_representation)
+				l_sort_grps.sort
+				build_group_tree (l_sort_grps, l_header)
+
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
@@ -841,13 +842,16 @@ feature {NONE} -- Implementation
 			a_header_not_void: a_header /= Void
 		local
 			l_item: EB_CLASSES_TREE_FOLDER_ITEM
+			l_group: EB_SORTED_CLUSTER
 		do
 			from
 				a_grps.start
 			until
 				a_grps.after
 			loop
-				create l_item.make (create {EB_SORTED_CLUSTER}.make (a_grps.item))
+				create l_group.make (a_grps.item)
+				l_group.initialize
+				create l_item.make (l_group)
 
 				a_header.extend (l_item)
 				if window /= Void then

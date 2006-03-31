@@ -29,12 +29,16 @@ feature -- Initialization
 
 	make (a_cluster: EB_SORTED_CLUSTER) is
 			-- Create a tree item representing `a_cluster'.
+		require
+			a_cluster_ok: a_cluster /= Void and then a_cluster.is_initialized
 		do
 			make_sub (a_cluster, "")
 		end
 
 	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- Create a tree item representing a subfolder of `a_cluster'.
+		require
+			a_cluster_ok: a_cluster /= Void and then a_cluster.is_initialized
 		do
 			default_create
 			path := a_path
@@ -203,10 +207,18 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 			if data.is_library then
+					-- show overrides for libraries
+				show_groups (data.overrides)
+
 					-- show libraries for libraries
 				show_groups (data.libraries)
 
 					-- show assemblies for libraries
+				show_groups (data.assemblies)
+			end
+
+				-- show assembly dependencies for assemblies
+			if data.is_assembly then
 				show_groups (data.assemblies)
 			end
 
@@ -436,13 +448,19 @@ feature {NONE} -- Implementation
 			a_groups_not_void: a_groups /= Void
 		local
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			l_group: EB_SORTED_CLUSTER
 		do
 				from
 					a_groups.start
 				until
 					a_groups.after
 				loop
-					create a_folder.make (a_groups.item)
+					l_group := a_groups.item
+					if not l_group.is_initialized then
+						l_group.initialize
+					end
+					create a_folder.make (l_group)
+
 					if associated_window /= Void then
 						a_folder.associate_with_window (associated_window)
 					end

@@ -288,6 +288,30 @@ feature -- Pixmap Icons
 			result_not_void: Result /= Void
 		end
 
+	icon_small_cross: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (small_close_cross_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_unpined: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (unpined_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	icon_pined: EV_PIXMAP is
+			--
+		once
+			Result := pixmap_from_constant (pined_value)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 	pixmap_width: INTEGER is 8
@@ -351,6 +375,9 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 			Result.add_pixmap (3, 3, bon_interfaced_value)
 			Result.add_pixmap (4, 3, bon_effective_value)
 			Result.add_pixmap (5, 3, bon_deferred_value)
+			Result.add_pixmap (6, 3, small_close_cross_value)
+			Result.add_pixmap (7, 3, unpined_value)
+			Result.add_pixmap (8, 3, pined_value)
 		end
 
 feature {NONE} -- Constants
@@ -391,7 +418,10 @@ feature {NONE} -- Constants
 	bon_persistent_value,
 	bon_interfaced_value,
 	bon_effective_value,
-	bon_deferred_value: INTEGER is unique;
+	bon_deferred_value,
+	small_close_cross_value,
+	unpined_value,
+	pined_value: INTEGER is unique;
 		-- Constants used for pixmap lookup.
 
 indexing

@@ -1109,6 +1109,16 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_trash_can_color_value)
 		end
 
+	Icon_ascending_sort_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_ascending_sort_color_value)
+		end
+
+	Icon_descending_sort_color: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_descending_sort_color_value)
+		end
+
 feature -- Reading
 
 	pixmap_path: DIRECTORY_NAME is
@@ -1340,6 +1350,8 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (9, 13, icon_read_only_override_symbol_color_value)
 			Result.add_pixmap (10, 13, icon_library_symbol_color_value)
 			Result.add_pixmap (11, 13, icon_override_symbol_color_value)
+			Result.add_pixmap (12, 13, icon_ascending_sort_color_value)
+			Result.add_pixmap (13, 13, icon_descending_sort_color_value)
 		end
 
 feature {NONE} -- Constants
@@ -1542,7 +1554,9 @@ feature {NONE} -- Constants
 			icon_read_only_library_symbol_color_value,
 			icon_read_only_override_symbol_color_value,
 			icon_library_symbol_color_value,
-			icon_override_symbol_color_value: INTEGER is unique;
+			icon_override_symbol_color_value,
+			icon_ascending_sort_color_value,
+			icon_descending_sort_color_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1219,21 +1219,9 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_REXP_ASSIGN\n");
 #endif
 		{	EIF_REFERENCE ref = opop()->it_ref;
-			unsigned char *OLD_IC;
-			unsigned long stagval;
-	
-			stagval = tagval;
 
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
-			OLD_IC = IC;
-			ref = egc_twin (ref);
-			IC = OLD_IC;
-			if (tagval != stagval)		/* previous call can call malloc which may
-							 * call the interpreter for creation
-							 * routines of expanded objects.
-							 */
-				sync_registers(MTC scur, stop);
 			eif_std_ref_copy(ref, iresult->it_ref);
 			if (is_once) {
 				last = iresult;
@@ -1285,22 +1273,10 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LEXP_ASSIGN\n");
 #endif
 		{	EIF_REFERENCE ref = opop()->it_ref;
-			unsigned char *OLD_IC;
-			unsigned long stagval;
-	
-			stagval = tagval;
 
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			code = get_int16(&IC);		/* Get the local # (from 1 to locnum) */
-			OLD_IC = IC;
-			ref = egc_twin (ref);
-			IC = OLD_IC;
-			if (tagval != stagval)		/* previous call can call malloc which may
-							 * call the interpreter for creation
-							 * routines of expanded objects.
-							 */
-				sync_registers(MTC scur, stop);
 			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
 		}
 		break;
@@ -1350,10 +1326,6 @@ rt_private void interpret(int flag, int where)
 		{
 			/* struct ac_info *info; */ /* %%ss removed */
 			EIF_REFERENCE ref;
-			unsigned char *OLD_IC;
-			unsigned long stagval;
-	
-			stagval = tagval;
 
 			ref = opop()->it_ref;		/* Expression type */
 			if (ref == (EIF_REFERENCE) 0)
@@ -1362,14 +1334,6 @@ rt_private void interpret(int flag, int where)
 			code = get_int16(&IC);			/* Get the static type */
 			type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
-			OLD_IC = IC;
-			ref = egc_twin (ref);
-			IC = OLD_IC;
-			if (tagval != stagval)		/* previous call can call malloc which may
-							 * call the interpreter for creation
-							 * routines of expanded objects.
-							 */
-				sync_registers(MTC scur, stop);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
@@ -1385,10 +1349,6 @@ rt_private void interpret(int flag, int where)
 			/* struct ac_info *info; */ /* %%ss removed */
 			EIF_REFERENCE ref;
 			int32 origin, ooffset;
-			unsigned char *OLD_IC;
-			unsigned long stagval;
-	
-			stagval = tagval;
 
 			ref = opop()->it_ref;		/* Expression type */
 			if (ref == (EIF_REFERENCE) 0)
@@ -1397,14 +1357,6 @@ rt_private void interpret(int flag, int where)
 			ooffset = get_int32(&IC);		/* Get the offset in origin */
 			type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWPA(origin, ooffset, icur_dtype);
-			OLD_IC = IC;
-			ref = egc_twin (ref);
-			IC = OLD_IC;
-			if (tagval != stagval)		/* previous call can call malloc which may
-							 * call the interpreter for creation
-							 * routines of expanded objects.
-							 */
-				sync_registers(MTC scur, stop);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
@@ -1514,21 +1466,24 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_CLONE\n");
 #endif
 		{	EIF_REFERENCE ref;
-			unsigned long stagval;
-			unsigned char *OLD_IC;
-	
-			stagval = tagval;
+
 			last = otop();
 			ref = last->it_ref;
-			OLD_IC = IC;
-			ref = egc_twin (ref);
-			IC = OLD_IC;
-			if (tagval != stagval)		/* previous call can call malloc which may
-							 * call the interpreter for creation
-							 * routines of expanded objects.
-							 */
-				sync_registers(MTC scur, stop);
-			eif_std_ref_copy(ref, last->it_ref);	/* Copy to complete the clone */
+			if (ref) {
+				unsigned long stagval;
+				unsigned char *OLD_IC;
+
+				stagval = tagval;
+				OLD_IC = IC;
+				ref = egc_twin (ref);
+				IC = OLD_IC;
+				if (tagval != stagval)		/* previous call can call malloc which may
+								 * call the interpreter for creation
+								 * routines of expanded objects.
+								 */
+					sync_registers(MTC scur, stop);
+				last->it_ref = ref;
+			}
 		}
 		break;
 	

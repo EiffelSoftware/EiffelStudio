@@ -193,12 +193,11 @@ feature {NONE} -- Visitors
 						-- is not none
 					ba.append (l_target_node.assign_code)
 				elseif l_target_type.is_expanded then
-					if a_node.is_creation_instruction and then l_source_type.is_reference then
-						ba.append (l_target_node.assign_code)
-					else
-							-- Target is expanded: copy with possible exception
-						ba.append (l_target_node.expanded_assign_code)
+					if not a_node.is_creation_instruction then
+						ba.append (bc_clone)
 					end
+						-- Target is expanded: copy with possible exception
+					ba.append (l_target_node.expanded_assign_code)
 				else
 					if not a_node.is_creation_instruction then
 							-- Target is a reference

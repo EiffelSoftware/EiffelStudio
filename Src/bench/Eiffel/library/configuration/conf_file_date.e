@@ -25,6 +25,10 @@ feature {NONE} -- Externals
 				 * and will return a different date value for the same stamp just because
 				 * you are in different time zone.
 				 */
+				 
+				 /* WARNING: This is using the Ansi version of the Win32 API. Remember
+				  * that if you are doing any change below.
+				  */
 			static ULARGE_INTEGER epoch_date;
 			static int done = 0;
 
@@ -32,7 +36,7 @@ feature {NONE} -- Externals
 			HANDLE l_file_handle;
 			ULARGE_INTEGER l_date;
 
-			l_file_handle = FindFirstFile($a_path, &l_find_data);
+			l_file_handle = FindFirstFileA($a_path, &l_find_data);
 			if (l_file_handle == INVALID_HANDLE_VALUE) {
 				*(EIF_INTEGER*) $r = -1;
 			} else {

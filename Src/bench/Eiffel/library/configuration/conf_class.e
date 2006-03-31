@@ -115,7 +115,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			if not Result then
 					-- check if the file itself is read only
 				create l_file.make (full_file_name)
-				Result := not l_file.exists or else not l_file.writable
+				Result := not l_file.exists or else not l_file.is_writable
 			end
 		end
 

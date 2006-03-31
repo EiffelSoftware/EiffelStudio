@@ -12,6 +12,10 @@ inherit
 			class_type
 		end
 
+create
+	make,
+	make_from_gac
+
 feature -- Access
 
 	full_name: STRING is

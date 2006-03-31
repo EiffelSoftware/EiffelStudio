@@ -765,21 +765,24 @@ end
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
 			l_ise_lib: STRING
+			l_env: EIFFEL_ENV
 		do
+			create l_env
 			l_target := universe.new_target
 			check
 				l_target_not_void: l_target /= Void
 			end
 				-- initialize ISE_LIBRARY with ISE_EIFFEL
-			l_ise_lib := execution_environment.variable_value ("ISE_LIBRARY")
+			l_ise_lib := l_env.eiffel_library
 			if l_ise_lib = Void then
-				l_ise_lib := execution_environment.variable_value ("ISE_EIFFEL")
+				l_ise_lib := l_env.eiffel_installation_dir_name
 			end
 			l_target.environ_variables.force (l_ise_lib, "ise_library")
 
 				-- let the configuration system build "everything"
 			if universe.target /= Void then
-				create l_vis_build.make_build_from_old (universe.platform, universe.build, l_target, universe.target)
+				create l_vis_build.make_build_from_old (universe.platform, universe.build,
+					l_target, universe.target)
 			else
 				create l_vis_build.make_build (universe.platform, universe.build, l_target)
 			end
@@ -787,7 +790,8 @@ end
 				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
 				l_vis_build.set_il_version (msil_version)
 			end
-			l_vis_build.set_partial_location (conf_factory.new_location_from_path (partial_generation_path, l_target))
+			l_vis_build.set_partial_location (
+				conf_factory.new_location_from_path (partial_generation_path, l_target))
 			l_target.process (l_vis_build)
 			if l_vis_build.is_error then
 				from
@@ -828,12 +832,10 @@ end
 				l_classes.after
 			loop
 				l_conf_class := l_classes.item_for_iteration
-				l_class_i ?= l_conf_class
-				check
-					class_i: l_class_i /= Void
-				end
-					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed external classes
-				if not l_class_i.is_external_class then
+					-- FIXME: Patrickr 03/14/2006 for now the compiler can't deal with changed external or precompiled classes
+				if not l_conf_class.is_class_assembly and not l_conf_class.is_precompiled then
+					l_class_i ?= l_conf_class
+					check l_class_i_not_void: l_class_i /= Void end
 					workbench.change_class (l_class_i)
 				end
 				if compilation_modes.is_precompiling then

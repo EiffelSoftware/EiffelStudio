@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="wel" uuid="804e870e-1eed-4f7b-9c7d-4769938a62d7" library_target="wel">
+	<target name="wel">
+		<description>WEL library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+    <external_include location="$ISE_LIBRARY\wel\spec\windows\include">
+            <description>Includes for Wel.</description>
+            <if platform="windows"/>
+    </external_include>
+    <library name="base" location="$ISE_LIBRARY\base\base.acex" readonly="true">
+		<assembly name="mtwel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\mtwel.lib"/>
+		<assembly name="wel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\wel.lib"/>
+		<assembly name="ilwel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\ilwel.lib"/>
+		<assembly name="wel_hook.dll" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\dll\wel_hook.dll"/>
+		<cluster name="consts" location="$ISE_LIBRARY\wel\consts" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="extra" location="$ISE_LIBRARY\wel\extra" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="gdi" location="$ISE_LIBRARY\wel\gdi" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="gdistock" location="$ISE_LIBRARY\wel\gdistock" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="messages" location="$ISE_LIBRARY\wel\messages" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="shared" location="$ISE_LIBRARY\wel\shared" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="stddlgs" location="$ISE_LIBRARY\wel\stddlgs" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="structs" location="$ISE_LIBRARY\wel\structs" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="support" location="$ISE_LIBRARY\wel\support" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="windows" location="$ISE_LIBRARY\wel\windows" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+	</target>
+</system>

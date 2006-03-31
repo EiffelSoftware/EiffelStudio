@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"	 
+	 name="vision2" uuid="ff177272-9e24-4282-941e-60889fc503eb" library_target="vision2">
+	<target name="vision2">
+		<description>Vision2 library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+    <external_include location="$ISE_LIBRARY\vision2\spec\include">
+      <description>Includes for Vision2.</description>
+    </external_include>
+    <library name="base" location="$ISE_LIBRARY\base\base.acex" readonly="true">
+    <library name="wel" location="$ISE_LIBRARY\wel\wel.acex" readonly="true">
+    	<if platform="windows"/>
+    </library>		
+		<assembly name="mtvision2.lib" location="$ISE_LIBRARY\vision2\spec\$ISE_C_COMPILER\lib\mtvision2.lib"/>
+		<assembly name="zlib.lib" location="$ISE_LIBRARY\vision2\spec\$ISE_C_COMPILER\lib\zlib.lib"/>
+		<assembly name="libpng.lib" location="$ISE_LIBRARY\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib"/>
+    
+		<cluster name="components" location="$ISE_LIBRARY\library\vision2\components" recursive="true"/>
+		
+		<cluster name="contrib" location="$ISE_LIBRARY\vision2\contrib" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="contrib" location="$ISE_LIBRARY\vision2\contrib" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+			</file_rule>
+		</cluster>
+		
+		<cluster name="implementation" location="$ISE_LIBRARY\vision2\implementation" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="implementation" location="$ISE_LIBRARY\vision2\implementation" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/gtk.$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="components" location="$ISE_LIBRARY\vision2\components" recursive="true"/>
+		<cluster name="interface" location="$ISE_LIBRARY\vision2\interface" recursive="true"/>
+		<cluster name="obsolete" location="$ISE_LIBRARY\vision2\obsolete" recursive="true"/>
+		<cluster name="perlscript" location="$ISE_LIBRARY\vision2\perlscript" recursive="true"/>
+		<cluster name="release" location="$ISE_LIBRARY\vision2\release" recursive="true"/>
+	</target>
+</system>

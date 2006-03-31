@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="vision2_extension" uuid="72eb29a8-4a3d-4b17-b2f6-365f388d2282" library_target="vision2_extension">
+	<target name="vision2_extension">
+		<description>vision2 extension library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\base\base.acex" readonly="true">
+		<cluster name="independent" location="$ISE_LIBRARY\vision2_extension\independent" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/mswin$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="independent" location="$ISE_LIBRARY\vision2_extension\independent" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/gtk$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="windows" location="$ISE_LIBRARY\vision2_extension\windows" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="windows" location="$ISE_LIBRARY\vision2_extension\windows" recursive="true">
+			<if platform="dotnet"/>
+		</cluster>
+	</target>
+</system>

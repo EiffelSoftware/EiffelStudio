@@ -19,6 +19,21 @@ feature {NONE} -- Initialization
 
 	make (data: like actual_group) is
 			-- Associate `data' to `Current' and sort children.
+		do
+			actual_group := data
+		end
+
+feature -- Status
+
+	is_initialized: BOOLEAN
+			-- Is current initialized?
+
+feature -- Statusupdate
+
+	initialize is
+			-- Initialize current
+		require
+			not_initialized: not is_initialized
 		local
 			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
 			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
@@ -27,9 +42,8 @@ feature {NONE} -- Initialization
 			l_library: CONF_LIBRARY
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
+			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
 		do
-			actual_group := data
-
 			create clusters.make
 				-- handle subclusters
 			if is_cluster then
@@ -46,16 +60,27 @@ feature {NONE} -- Initialization
 					-- clusters
 				clusters := build_groups (l_lib_target.clusters.linear_representation)
 
+					-- overrides
+				overrides := build_groups (l_lib_target.overrides.linear_representation)
+
 					-- libraries
 				libraries := build_groups (l_lib_target.libraries.linear_representation)
 
 					-- assemblies
 				assemblies := build_groups (l_lib_target.assemblies.linear_representation)
+				-- handle assemblies
+			elseif is_assembly then
+				l_ass_dep := actual_assembly.dependencies
+				if l_ass_dep /= Void then
+					assemblies := build_groups (l_ass_dep)
+				else
+					create assemblies.make
+				end
 			end
 
 				-- handle classes
 			create classes.make
-			l_sub_classes := data.classes
+			l_sub_classes := actual_group.classes
 			if l_sub_classes /= Void then
 				create sorted_classes.make
 				sorted_classes.append (l_sub_classes.linear_representation)
@@ -76,7 +101,11 @@ feature {NONE} -- Initialization
 			end
 
 			generate_subfolder_mapping
+			is_initialized := True
+		ensure
+			initialized: is_initialized
 		end
+
 
 feature -- Access
 
@@ -88,6 +117,9 @@ feature -- Access
 
 	sub_classes: HASH_TABLE [SORTED_TWO_WAY_LIST [CLASS_I], STRING]
 			-- classes mapping for sub folders
+
+	overrides: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+			-- overrides.
 
 	libraries: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 			-- libraries.
@@ -118,6 +150,16 @@ feature -- Access
 			-- library associated to `Current'.
 		require
 			is_library: is_library
+		do
+			Result ?= actual_group
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	actual_assembly: ASSEMBLY_I is
+			-- assembly associated to `Current'.
+		require
+			is_assembly: is_assembly
 		do
 			Result ?= actual_group
 		ensure
@@ -240,11 +282,11 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	classes_not_void: classes /= Void
-	clusters_not_void: clusters /= Void
-	sub_classes_not_void: is_cluster implies sub_classes /= Void
-	libraries_not_void: is_library implies libraries /= Void
-	assemblies_not_void: is_library implies assemblies /= Void
+	classes_not_void: is_initialized implies classes /= Void
+	clusters_not_void: is_initialized implies clusters /= Void
+	sub_classes_not_void: is_initialized implies is_cluster implies sub_classes /= Void
+	libraries_not_void: is_initialized implies is_library implies libraries /= Void
+	assemblies_not_void: is_initialized implies is_library implies assemblies /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

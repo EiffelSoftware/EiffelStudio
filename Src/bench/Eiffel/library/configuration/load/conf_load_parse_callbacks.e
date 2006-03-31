@@ -716,8 +716,12 @@ feature {NONE} -- Implementation attribute processing
 
 				group_list.force (current_group, l_name)
 				current_target.add_cluster (current_cluster)
-			else
-				set_parse_error_message ("Invalid cluster tag.")
+			elseif l_name /= Void and l_location /= Void then
+				set_parse_error_message ("Invalid cluster tag. There is already a group with the name '"+l_name+"'")
+			elseif l_name = Void then
+				set_parse_error_message ("Invalid cluster tag without a name.")
+			elseif l_location = Void then
+				set_parse_error_message ("Invalid cluster tag '"+l_name+"' without a location.")
 			end
 		ensure
 			cluster_and_group: current_cluster /= Void and current_group /= Void

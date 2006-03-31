@@ -347,10 +347,13 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			l_classes: like classes
 			l_overridee, l_overrider: CONF_CLASS
 			l_ovs: LINKED_SET [CONF_CLASS]
+			l_er: CONF_ERROR_OVERRIDE
 		do
 			if is_override then
 				is_error := True
-				last_error := create {CONF_ERROR_OVERRIDE}.make (name)
+				create l_er
+				l_er.set_group (name)
+				last_error := l_er
 			else
 				if overriders = Void then
 					create overriders.make (1)

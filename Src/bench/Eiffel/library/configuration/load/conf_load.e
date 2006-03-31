@@ -43,6 +43,7 @@ feature -- Basic operation
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
+				l_callback.last_error.set_file (a_file)
 				last_error := l_callback.last_error
 			elseif not is_error then
 				last_system := l_callback.last_system
@@ -80,6 +81,7 @@ feature -- Basic operation
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
+				l_callback.last_error.set_file (a_file)
 				last_error := l_callback.last_error
 			else
 				last_uuid := l_callback.last_uuid

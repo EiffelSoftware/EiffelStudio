@@ -21,7 +21,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during the parsing.
 
-	last_error: CONF_ERROR
+	last_error: CONF_ERROR_PARSE
 			-- The last error message from the parser.
 
 feature -- Callbacks
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR_PARSE) is
 			-- Set `an_error'.
 		require
 			an_error_ok: an_error /= Void

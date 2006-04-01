@@ -16,14 +16,15 @@ inherit
 	EV_TITLED_WINDOW
 		export {EV_DOCKABLE_SOURCE_I}
 			close_request_actions
-		redefine 
+		redefine
 			implementation,
 			create_implementation,
 			initialize
 		end
 
 create
-	default_create
+	default_create,
+	make_with_title
 
 feature {NONE} -- Initialization
 
@@ -74,7 +75,7 @@ feature -- Access
 		do
 			Result := implementation.is_modal
 		end
-		
+
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		require
@@ -82,7 +83,7 @@ feature -- Access
 		do
 			Result := implementation.is_relative
 		end
-		
+
 	blocking_window: EV_WINDOW is
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
@@ -93,7 +94,7 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.blocking_window
 		end
-		
+
 
 feature -- Status Setting
 
@@ -119,7 +120,7 @@ feature -- Status Setting
 		ensure
 			not_has_default_push_button: default_push_button = Void
 		end
-	
+
 	set_default_cancel_button (a_button: EV_BUTTON) is
 			-- Assign `a_button' to `default_cancel_button'.
 		require
@@ -129,10 +130,10 @@ feature -- Status Setting
 		do
 			implementation.set_default_cancel_button (a_button)
 		ensure
-			default_cancel_button_set: 
+			default_cancel_button_set:
 				default_cancel_button = a_button
 		end
-	
+
 
 	remove_default_cancel_button is
 			-- Remove `default_cancel_button'.
@@ -178,7 +179,7 @@ feature -- Basic operations
 			is_relative_to_window: is_relative
 			blocking_window_set: blocking_window = a_window
 		end
-		
+
 	dialog_key_press_action (a_key: EV_KEY) is
 			-- The action performed to process default push and cancel
 			-- buttons. This is inserted in `key_press_actions' and
@@ -203,7 +204,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DIALOG_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -211,14 +212,14 @@ feature {NONE} -- Implementation
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
 		end
-		
+
 invariant
-	
+
 	modal_or_relative: is_usable implies (is_modal implies not is_relative and is_relative implies not is_modal)
 	blocking_window_correct: is_usable implies (is_modal or is_relative implies blocking_window /= Void)
 	no_blocking_window_correct: is_usable implies (not is_modal and not is_relative implies blocking_window = Void)
 	no_blocking_window_when_hidden: is_usable implies (not is_show_requested implies blocking_window = Void)
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -119,13 +119,13 @@ feature -- Element change
 			wel_set_filter_index (0)
 		end
 
-	set_file_name (a_name: STRING_32) is
+	set_file_name (a_name: STRING_GENERAL) is
 			-- Make `a_name' the selected file.
 		do
 			wel_set_file_name (a_name)
 		end
 
-	set_start_directory (a_path: STRING_32) is
+	set_start_directory (a_path: STRING_GENERAL) is
 			-- Make `a_path' the base directory.
 		do
 			start_directory := a_path.twin

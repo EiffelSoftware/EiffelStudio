@@ -86,12 +86,12 @@ feature -- Element change
 
 feature {EV_FILE_DIALOG} -- Contract support
 
-	valid_file_name (a_name: STRING_GENERAL): BOOLEAN is
+	valid_file_name (a_name: STRING_32): BOOLEAN is
 			-- Is `a_name' a valid file_name on the current platform?
 		deferred
 		end
 
-	valid_file_title (a_title: STRING_GENERAL): BOOLEAN is
+	valid_file_title (a_title: STRING_32): BOOLEAN is
 			-- Is `a_title' a valid file title on the current platform?
 		deferred
 		end

@@ -51,11 +51,6 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	SHARED_CONFIGURE_RESOURCES
 
-	SHARED_LICENSE
-		export
-			{NONE} all
-		end
-
 	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
 
 	SHARED_CONF_FACTORY
@@ -4385,13 +4380,8 @@ feature -- Pattern table generation
 			buffer.put_new_line
 			buffer.indent
 
-			if license.is_evaluating then
-					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.put_string ("egc_type_of_gc = 123173;")
-			else
-					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.put_string ("egc_type_of_gc = 123174;")
-			end
+				-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
+			buffer.put_string ("egc_type_of_gc = 123174;")
 			buffer.put_new_line
 
 			if final_mode and then not byte_context.is_static_system_data_safe then

@@ -58,7 +58,6 @@ feature -- Helper
 		local
 			l_cluster: CONF_CLUSTER
 			l_name: STRING
-			l_sep: BOOLEAN
 		do
 			if a_group.is_cluster then
 				l_cluster ?= a_group
@@ -82,7 +81,6 @@ feature -- Helper
 		ensure
 			path_representation_not_void: Result /= Void
 		end
-
 
 	subclusters_of_group (a_group: CONF_GROUP): SORTED_TWO_WAY_LIST [CONF_CLUSTER] is
 			-- Subclusters of a group.

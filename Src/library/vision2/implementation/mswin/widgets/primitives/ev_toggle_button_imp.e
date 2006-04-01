@@ -164,8 +164,8 @@ feature {NONE} -- Implementation, focus event
 			until
 				i > 16
 			loop	
-				string_bitmap.put ((0x000000AA).to_character, i)
-				string_bitmap.put ((0x00000055).to_character, i + 2)
+				string_bitmap.put ((0x000000AA).to_character_8, i)
+				string_bitmap.put ((0x00000055).to_character_8, i + 2)
 				i := i + 4
 			end
 

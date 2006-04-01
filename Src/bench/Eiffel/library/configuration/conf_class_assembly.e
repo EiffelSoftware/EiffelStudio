@@ -38,6 +38,7 @@ feature {NONE} -- Implementation
 			create file_name.make_empty
 			create path.make_empty
 			is_valid := True
+			path := extract_path_from_dotnet (a_dotnet_name)
 		ensure
 			is_valid: is_valid
 		end
@@ -100,6 +101,26 @@ feature -- Access
 			-- The assembly this class belongs to.
 
 feature {NONE} -- Implementation
+
+	extract_path_from_dotnet (a_name: STRING): STRING is
+			-- Extract path from a dotnet name.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+		local
+			i: INTEGER
+		do
+			Result := a_name.twin
+				-- dotnet name looks like this name1.name2.typename
+			i := Result.last_index_of ('.', Result.count)
+			if i > 0 then
+				Result := Result.substring (1, i-1)
+				Result.replace_substring_all (".", "/")
+				Result.precede ('/')
+			else
+				Result := ""
+			end
+		end
+
 
 	type_position: INTEGER
 			-- Position of class type description.

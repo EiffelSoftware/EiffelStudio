@@ -162,6 +162,19 @@ feature -- File warnings
 			Result.append ("' cannot be read.")
 		end
 
+	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING): STRING is
+		require
+			epr_name_not_void: epr_name /= Void
+			file_name_not_void: file_name /= Void
+		do
+			create Result.make (file_name.count + epr_name.count + 25)
+			Result.append ("Ace file: '")
+			Result.append (file_name)
+			Result.append ("'%Nreferenced from configuration file: '")
+			Result.append (epr_name)
+			Result.append ("' cannot be read.")
+		end
+
 	w_Cannot_read_file_retry (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -811,6 +824,11 @@ feature -- Project creation, retrieval, ...
 			Result := "Unable to load the ace file `" + an_ace_name + "'."
 		end
 
+	w_Unable_to_load_config_file (an_ace_name: STRING): STRING is
+		do
+			Result := "Unable to load the project file `" + an_ace_name + "'."
+		end
+
 	w_Invalid_directory_or_cannot_be_created (a_directory_name: STRING): STRING is
 		do
 			Result := "'" + a_directory_name + "' is not a valid directory and/or cannot be created%N%
@@ -852,6 +870,15 @@ feature -- Warning messages
 
 	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
 									%Exit was cancelled."
+
+	w_cannot_save_file (a_file_name: STRING): STRING is
+		do
+			if a_file_name /= Void then
+				Result := "Could not save file into '" + a_file_name + "'"
+			else
+				Result := "Could not save file to specified location."
+			end
+		end
 
 	w_cannot_save_png_file (a_file_name: STRING): STRING is
 		do

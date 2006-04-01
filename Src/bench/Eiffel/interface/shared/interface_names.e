@@ -554,6 +554,7 @@ feature -- Label texts
 	l_Finalized_mode: STRING is 		"Finalized mode"
 	l_Flat: STRING is					"flat view"
 	l_Flatshort: STRING is				"interface view"
+	l_fresh_compilation: STRING is		"Compile from scratch if already compiled."
 	l_general: STRING is				"General"
 	l_Generate_profile_from_rtir: STRING is "Generate profile from Run-time information record"
 	l_Generate_creation: STRING is		"Generate creation procedure"

@@ -35,11 +35,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_LICENSE
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -50,12 +45,7 @@ feature {NONE} -- Initialization
 		require
 			an_app_not_void: an_app /= Void
 		do
-			license.check_license
-			if license.is_licensed then
-				an_app.post_launch_actions.extend (agent prepare (an_app))
-			else
-				an_app.post_launch_actions.extend (agent license.check_activation_while_running (agent prepare (an_app)))
-			end
+			an_app.post_launch_actions.extend (agent prepare (an_app))
 				-- Make sure any uncaught exceptions are handled
 			an_app.uncaught_exception_actions.extend (agent handle_exception)
 		end
@@ -81,62 +71,60 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			first_window: EB_DEVELOPMENT_WINDOW
 			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
 		do
-			if license.is_licensed or license.can_run then
-					--| If we don't put bench mode here,
-					--| `error_window' will assume batch
-					--| mode and thus it will initialize
-					--| `error_window' as a TERM_WINDOW.
-					--| Also note that `error_window' is a
-					--| once-function!!
+				--| If we don't put bench mode here,
+				--| `error_window' will assume batch
+				--| mode and thus it will initialize
+				--| `error_window' as a TERM_WINDOW.
+				--| Also note that `error_window' is a
+				--| once-function!!
 
-					-- Create and setup the output manager / Error displayer
-				create an_output_manager
-				set_output_manager (an_output_manager)
-				create an_external_output_manager
-				set_external_output_manager (an_external_output_manager)
-				create a_c_compilation_output_manager
-				set_c_compilation_output_manager (a_c_compilation_output_manager)
+				-- Create and setup the output manager / Error displayer
+			create an_output_manager
+			set_output_manager (an_output_manager)
+			create an_external_output_manager
+			set_external_output_manager (an_external_output_manager)
+			create a_c_compilation_output_manager
+			set_c_compilation_output_manager (a_c_compilation_output_manager)
 
-				Eiffel_project.set_error_displayer (an_output_manager)
+			Eiffel_project.set_error_displayer (an_output_manager)
 
-					-- Create and setup the degree output window.
-				if not preferences.development_window_data.graphical_output_disabled then
-					create a_graphical_degree_output.make_with_output_manager (output_manager)
-					Eiffel_project.set_degree_output (a_graphical_degree_output)
-				end
+				-- Create and setup the degree output window.
+			if not preferences.development_window_data.graphical_output_disabled then
+				create a_graphical_degree_output.make_with_output_manager (output_manager)
+				Eiffel_project.set_degree_output (a_graphical_degree_output)
+			end
 
-					-- Create and setup the recent projects manager
-				create a_recent_projects_manager.make
-				set_recent_projects_manager (a_recent_projects_manager)
+				-- Create and setup the recent projects manager
+			create a_recent_projects_manager.make
+			set_recent_projects_manager (a_recent_projects_manager)
 
-					-- Create a development window
-				window_manager.create_window
-				first_window := window_manager.last_created_window
+				-- Create a development window
+			window_manager.create_window
+			first_window := window_manager.last_created_window
 
-				mode.set_item (False)
-				project_index := index_of_word_option ("project")
-				if project_index /= 0 then
-						-- Project opened by `ebench name_of_project.epr'
-					create open_project.make_with_parent (first_window.window)
-					open_project.execute_with_file (argument (project_index + 1))
+			mode.set_item (False)
+			project_index := index_of_word_option ("project")
+			if project_index /= 0 then
+					-- Project opened by `ebench name_of_project.epr'
+				create open_project.make_with_parent (first_window.window)
+				open_project.execute_with_file (argument (project_index + 1))
+			else
+					-- Project created by `ebench -create my_path -ace my_ace'
+				create_project_index := index_of_word_option ("create")
+				create_ace_index := index_of_word_option ("ace")
+				compile_index := index_of_word_option ("compile")
+				if create_project_index /= 0 and then create_ace_index /= 0 then
+					create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0)
 				else
-						-- Project created by `ebench -create my_path -ace my_ace'
-					create_project_index := index_of_word_option ("create")
-					create_ace_index := index_of_word_option ("ace")
-					compile_index := index_of_word_option ("compile")
-					if create_project_index /= 0 and then create_ace_index /= 0 then
-						create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0)
-					else
-							-- Show starting dialog.
-						if preferences.dialog_data.show_starting_dialog then
-							display_starting_dialog
-						end
+						-- Show starting dialog.
+					if preferences.dialog_data.show_starting_dialog then
+						display_starting_dialog
 					end
 				end
-
-					-- Register help engine
-				an_app.set_help_engine (create {EB_HELP_ENGINE}.make)
 			end
+
+				-- Register help engine
+			an_app.set_help_engine (create {EB_HELP_ENGINE}.make)
 		end
 
 	display_starting_dialog is

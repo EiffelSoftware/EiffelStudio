@@ -39,13 +39,6 @@ inherit
 			default_create, copy
 		end
 
-	SHARED_LICENSE
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 create
 	make
 
@@ -112,7 +105,7 @@ feature -- Initialization
 				borland_image := Pixmaps.bm_Borland.twin
 				borland_image.set_minimum_size (borland_image.width, borland_image.height)
 				borland_image.set_background_color (White)
-				
+
 				create borland_box
 				borland_box.set_background_color (White)
 				borland_box.extend (borland_label)
@@ -171,16 +164,7 @@ feature {NONE} -- Implementation
 			-- Clause in the about dialog concerning the license.
 		do
 			create Result.make (50)
-			if license.is_licensed then
-				if license.username /= Void then
-					Result := l_Registered + license.username
-				end
-			else
-				Result := l_Unregistered_version
-			end
-			
-			Result.append ("%N%N")
-			Result.append ("Installation information:%N")
+			Result.append ("%NInstallation information:%N")
 			Result.append ("$ISE_EIFFEL = " + eiffel_installation_dir_name + "%N")
 			Result.append ("$ISE_PLATFORM = " + eiffel_platform)
 			if platform_constants.is_windows then
@@ -206,7 +190,7 @@ feature {NONE} -- Constant strings
 			c_date: C_DATE
 		once
 			create c_date
-			Result := 
+			Result :=
 				"Copyright (C) 1985-" + c_date.year_now.out + " Interactive Software Engineering Inc.%N%
 				%All rights reserved"
 		end
@@ -236,12 +220,6 @@ feature {NONE} -- Constant strings
 				%Visit http://www.borland.com/bcppbuilder")
 
 		end
-
-	l_Unregistered_version: STRING is "Unregistered version.%NPlease contact ISE <sales@eiffel.com>."
-			-- User has not registered his version.
-
-	l_Registered: STRING is "Version registered to ";
-			-- Introductory text for the name of the user.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

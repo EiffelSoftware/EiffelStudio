@@ -118,6 +118,9 @@ feature -- Access
 	sub_classes: HASH_TABLE [SORTED_TWO_WAY_LIST [CLASS_I], STRING]
 			-- classes mapping for sub folders
 
+	sub_folders: HASH_TABLE [DS_HASH_SET [STRING], STRING];
+			-- subfolder mapping for sub folders (for assembly namespaces)
+
 	overrides: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
 			-- overrides.
 
@@ -245,15 +248,23 @@ feature {NONE} -- Implementation
 			l_classes: SORTED_TWO_WAY_LIST [CLASS_I]
 			l_cl: CLASS_I
 			l_lst: SORTED_TWO_WAY_LIST [CLASS_I]
-			l_path: STRING
+			l_folders: DS_HASH_SET [STRING]
+			l_path_comp: LIST [STRING]
+			l_path, l_part_path: STRING
 		do
-			-- we build a classesmapping that looks like this
+			-- we build a classesmapping for paths on normal systems and namespaces on dotnet that looks like this
 			--
 			-- sub_classes
 			-- a => cl1, cl2
 			-- a/b => cl3, cl4
 			-- a/b/c => cl5
+			--
+			-- and for assembly namespaces
+			-- sub_folders
+			-- a => b
+			-- a/b => c			
 			create sub_classes.make (5)
+			create sub_folders.make (5)
 
 			from
 				l_classes := classes
@@ -275,10 +286,37 @@ feature {NONE} -- Implementation
 				end
 				l_lst.extend (l_cl)
 
+					-- for assembly namespaces add the path to the folders mapping
+				if is_assembly then
+					l_path_comp := l_path.split ('/')
+					check
+						at_least_one_element: l_path_comp.count >= 1
+					end
+					from
+						l_path_comp.start
+							-- ignore first element
+						l_path_comp.forth
+						create l_part_path.make_empty
+					until
+						l_path_comp.after
+					loop
+						l_folders := sub_folders.item (l_part_path+"/")
+						if l_folders = Void then
+							create l_folders.make_equal (1)
+							sub_folders.force (l_folders, l_part_path+"/")
+						end
+						l_folders.force (l_path_comp.item)
+						l_part_path := l_part_path.twin
+						l_part_path.append ("/"+l_path_comp.item)
+						l_path_comp.forth
+					end
+				end
+
 				l_classes.forth
 			end
 		ensure
 			sub_classes_set: sub_classes /= Void
+			sub_folders_set: is_assembly implies sub_folders /= Void
 		end
 
 invariant

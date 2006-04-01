@@ -101,7 +101,6 @@ feature -- Properties
 	all_classes: LINKED_SET [CLASS_I] is
 			-- All classes in the system, including uncompiled classes.
 		local
-			classes: HASH_TABLE [CLASS_I, STRING]
 			l_vis: CONF_ALL_CLASSES_VISITOR
 			l_classes: ARRAYED_LIST [CONF_CLASS]
 			l_cl: CLASS_I

@@ -196,16 +196,6 @@ cluster
 			".svn"; 
 		end
 
-	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
-		exclude
-			"enterprise"; "free"; ".svn"; 
-		end
-
-	all keygen:		"$EIFFEL_SRC\library\keygen"
-		exclude
-			"eiffel_envision_10"; "unix"; ".svn"; "EIFGEN"; 
-		end
-
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			".svn"; "xml_implementation"; "graphical"; 

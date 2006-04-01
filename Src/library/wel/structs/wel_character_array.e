@@ -63,7 +63,7 @@ feature -- Conversion
 				i > nb
 			loop
 				($l_val).memory_copy (item + j, 1)
-				Result.put (l_val.to_character, i)
+				Result.put (l_val.to_character_8, i)
 				i := i + 1
 				j := j + 1
 			end

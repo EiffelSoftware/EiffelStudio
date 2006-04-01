@@ -149,7 +149,6 @@ feature {NONE} -- Implementation convenience
 	all_classes: LINKED_SET [CLASS_I] is
 			-- Get all classes that can be changed by the user.
 		local
-			classes: HASH_TABLE [CLASS_I, STRING]
 			l_vis: CONF_ALL_CLASSES_VISITOR
 			l_classes: ARRAYED_LIST [CONF_CLASS]
 			l_cl: CLASS_I

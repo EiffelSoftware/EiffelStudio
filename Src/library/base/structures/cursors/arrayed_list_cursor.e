@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			index := current_index
 		end
 
-feature {ARRAYED_LIST, FIXED_LIST, BINARY_TREE} -- Access
+feature {ARRAYED_LIST, FIXED_LIST, BINARY_TREE, INDEXED_LIST} -- Access
 
 	index: INTEGER;
 		-- Index of current item

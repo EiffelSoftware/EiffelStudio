@@ -44,8 +44,7 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			conf_todo
---			eiffel_project.recompile_known_modified_classes
+			eiffel_project.quick_melt
 		end
 
 feature {NONE} -- Attributes

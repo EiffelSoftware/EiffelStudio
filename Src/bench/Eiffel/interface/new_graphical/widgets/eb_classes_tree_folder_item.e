@@ -83,15 +83,15 @@ feature -- Status setting
 			l_group := a_cluster.actual_group
 			l_cluster ?= l_group
 			if l_cluster /= Void then
-				if not path.is_empty then
-					l_pos := path.last_index_of ('/', path.count)
-					if l_pos > 0 then
-						name := path.substring (l_pos+1, path.count)
-					else
-						create name.make_empty
-					end
-				end
 				set_pebble (stone)
+			end
+			if not path.is_empty then
+				l_pos := path.last_index_of ('/', path.count)
+				if l_pos > 0 then
+					name := path.substring (l_pos+1, path.count)
+				else
+					create name.make_empty
+				end
 			end
 			if name = Void then
 				name := l_group.name
@@ -168,7 +168,9 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			i, up: INTEGER
 			l_dir: KL_DIRECTORY
 			l_set: ARRAY [STRING]
+			l_hash_set: DS_HASH_SET [STRING]
 			cluster: CLUSTER_I
+			group: CONF_GROUP
 		do
 			orig_count := count
 
@@ -180,9 +182,10 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 				-- if we are a recursive cluster show subfolders
-			cluster ?= data.actual_group
+			group := data.actual_group
+			cluster ?= group
 			if cluster /= Void and then cluster.is_recursive then
-				create l_dir.make (cluster.location.build_path (path, ""))
+				create l_dir.make (group.location.build_path (path, ""))
 				l_set := l_dir.directory_names
 				if l_set /= Void then
 					create subfolders.make_from_array (l_set)
@@ -207,6 +210,40 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 						i := i + 1
 					end
 				end
+				-- if we are an assembly show subfolders
+			elseif group.is_assembly then
+				l_hash_set := data.sub_folders.item (path+"/")
+				if l_hash_set /= Void then
+					create subfolders.make (1, l_hash_set.count)
+					from
+						l_hash_set.start
+						i := 1
+					until
+						l_hash_set.after
+					loop
+						subfolders.force (l_hash_set.item_for_iteration, i)
+						i := i + 1
+						l_hash_set.forth
+					end
+					subfolders.sort
+					from
+						i := subfolders.lower
+						up := subfolders.upper
+					until
+						i > up
+					loop
+						create l_subfolder.make_sub (data, path+"/"+subfolders[i])
+						if associated_window /= Void then
+							l_subfolder.associate_with_window (associated_window)
+						end
+						if associated_textable /= Void then
+							l_subfolder.associate_textable_with_classes (associated_textable)
+						end
+
+						extend (l_subfolder)
+						i := i + 1
+					end
+				end
 			end
 
 			if data.is_library then
@@ -226,10 +263,8 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			end
 
 				-- show classes for clusters and assemblies
-			if data.is_cluster then
+			if data.is_cluster or data.is_assembly then
 				classes := data.sub_classes.item (path+"/")
-			elseif data.is_assembly then
-				classes := data.classes
 			end
 			if classes /= Void then
 				from

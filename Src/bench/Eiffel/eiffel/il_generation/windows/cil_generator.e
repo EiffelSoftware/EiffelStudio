@@ -1042,7 +1042,6 @@ feature {NONE} -- File copying
 			end
 		end
 
-
 	copy_to_local (a_source: STRING) is
 			-- Copy `a_source' into `Assemblies' directory.
 		require
@@ -1060,9 +1059,6 @@ feature {NONE} -- File copying
 				create_local_assemblies_directory
 				l_path := a_source
 
-				l_pos := l_path.last_index_of (
-					Platform_constants.Directory_separator, l_path.count)
-
 				create l_source.make (l_path)
 				if is_finalizing then
 					create l_target_name.make_from_string (Final_bin_generation_path)
@@ -1070,6 +1066,16 @@ feature {NONE} -- File copying
 					create l_target_name.make_from_string (Workbench_bin_generation_path)
 				end
 
+				if platform_constants.is_windows then
+						-- Small trick for Windows were both / and \ are accepted.
+						-- The last one of the / or \ will indicate the start of the
+						-- file name
+					l_pos := l_path.last_index_of ('\', l_path.count)
+					l_pos := l_pos.max (l_path.last_index_of ('/', l_path.count))
+				else
+					l_pos := l_path.last_index_of (
+						platform_constants.directory_separator, l_path.count)
+				end
 				if l_pos > 0 then
 					l_target_name.set_file_name (l_path.substring (l_pos + 1,
 						l_path.count))

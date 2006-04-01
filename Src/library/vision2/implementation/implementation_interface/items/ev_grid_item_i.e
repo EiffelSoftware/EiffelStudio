@@ -395,11 +395,7 @@ feature -- Element change
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
-			if a_tooltip /= Void then
-				tooltip := a_tooltip
-			else
-				tooltip := Void
-			end
+			tooltip := a_tooltip
 		ensure
 			tooltip_assigned: equal (tooltip, a_tooltip)
 		end

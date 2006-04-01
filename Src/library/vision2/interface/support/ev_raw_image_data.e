@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			from
 				i := 4
 				j := 255
-				c := j.to_character
+				c := j.to_character_8
 			until
 				i > count
 			loop
@@ -163,13 +163,13 @@ feature -- Element Change
 			a_color_not_void: a_color /= Void
 		do
 			set_character_from_integer (a_x, a_y, 1,
-				a_color.red_8_bit.to_character)
+				a_color.red_8_bit.to_character_8)
 			set_character_from_integer (a_x, a_y, 2,
-				a_color.green_8_bit.to_character)
+				a_color.green_8_bit.to_character_8)
 			set_character_from_integer (a_x, a_y, 3,
-				a_color.blue_8_bit.to_character)
+				a_color.blue_8_bit.to_character_8)
 			--set_character_from_integer (a_x, a_y, 4,
-			--	a_color.alpha_8_bit.to_character)
+			--	a_color.alpha_8_bit.to_character_8)
 		end
 
 	set_pixel_red_component (a_x, a_y: INTEGER; a_intensity: CHARACTER) is
@@ -245,9 +245,9 @@ feature {NONE} -- Implementation
 			valid_code: a_code >= 0 and a_code <= 15
 		do
 			if a_code < 10 then
-				Result := (a_code + 48).to_character
+				Result := (a_code + 48).to_character_8
 			else
-				Result := (a_code + 55).to_character
+				Result := (a_code + 55).to_character_8
 			end
 		end
 

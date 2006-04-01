@@ -7,7 +7,6 @@ root
 default
 	assertion (check)
 	assertion (require)
-	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("_jfiat")
 	disabled_debug ("activity")
@@ -85,7 +84,6 @@ default
 	disabled_debug ("il_info_trace")
 	disabled_debug ("larry")
 	disabled_debug ("lex_output")
-	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("log_exceptions")
 	disabled_debug ("md out-of-order")
 	disabled_debug ("once")
@@ -114,6 +112,7 @@ default
 	disabled_debug ("win_dispatcher")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
+	debug (no)
 	line_generation (no)
 	profile (no)
 	trace (no)
@@ -287,16 +286,6 @@ cluster
 
 	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
 
-	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
-		exclude
-			"free"; "command_line"; ".svn"; "unix"; 
-		end
-
-	all keygen:		"$EIFFEL_SRC\library\keygen"
-		exclude
-			"eiffel_envision_10"; "unix"; ".svn"; "EIFGEN"; 
-		end
-
 	all graph:		"$EIFFEL_SRC\library\graph"
 		exclude
 			".svn"; 
@@ -332,9 +321,9 @@ cluster
 			".svn"; 
 		end
 
-	all configuration:	"$EIFFEL_SRC/Eiffel/library/configuration"
+	all configuration:		"$EIFFEL_SRC/Eiffel/library/configuration"
 		exclude
-			".svn";
+			".svn"; 
 		end
 
 	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"

@@ -237,16 +237,6 @@ cluster
 
 	eac_documentation:		"$EIFFEL_SRC/dotnet/eac_browser/src/deserialization/assembly_informations"
 
-	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
-		exclude
-			"free"; "command_line"; ".svn"; 
-		end
-
-	all keygen:		"$EIFFEL_SRC/library/keygen"
-		exclude
-			"eiffel_envision_10"; "windows"; ".svn"; "EIFGEN"; 
-		end
-
 	all graph:		"$EIFFEL_SRC/library/graph"
 		exclude
 			".svn"; 

@@ -43,11 +43,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_LICENSE
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_PREFERENCES
 
 	EB_SHARED_FLAGS
@@ -128,19 +123,8 @@ feature {NONE} -- Initialization
 						-- Launch graphical compiler
 					l_app.launch
 				else
-					if
-						(argument_count > 1 and then
-						argument (1).is_equal ("-precompile") and then
-						argument (2).is_equal ("-ace"))
-					then
-							-- Start the compilation in batch mode from the bench executable.
-						create compiler.make
-					else
-						license.check_activation
-						if license.is_licensed or license.can_run then
-							create compiler.make
-						end
-					end
+						-- Start the compilation in batch mode from the bench executable.
+					create compiler.make
 				end
 				eifgen_init.dispose
 			end

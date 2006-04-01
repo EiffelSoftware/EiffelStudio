@@ -209,7 +209,8 @@ feature -- Status setting
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
-			tooltip_assigned: a_tooltip = tooltip
+			tooltip_set: (tooltip.same_type (a_tooltip) implies tooltip = a_tooltip) or else
+				not tooltip.same_type (a_tooltip) implies tooltip.is_equal (a_tooltip)
 		end
 
 feature -- Actions

@@ -4,18 +4,18 @@ indexing
 		The rules governing the position of `text' and `pixmap' in relation to `Current' are as follows:
 
 		Both `text' and `pixmap' are always drawn completely within the area goverened by `left_border', `right_border',
-		`top_border' and `bottom_border', which will be referred to as the "redraw_client_area" in this description.
+		`top_border' and `bottom_border', which will be referred to as the `redraw_client_area' in this description.
 		Note that `text' may be automatically ellipsized (clipped with three dots) to ensure this.
 
-		`pixmap' is always displayed to the very left edge of "redraw_client_area" and centered vertically. The only method
+		`pixmap' is always displayed to the very left edge of `redraw_client_area' and centered vertically. The only method
 		of overriding this behavior is to set a custom `layout_procedure'.
 
-		`text' may be aligned within "redraw_client_area" via the following features: 'align_text_left', `align_text_center',
+		`text' may be aligned within `redraw_client_area' via the following features: 'align_text_left', `align_text_center',
 		`align_text_right', `align_text_top', `align_text_vertically_center' and `align_text_bottom'. Note that the text
 		alignment has no effect on the position of the pixmap which follows the rules listed above.
 
 		A `layout_procedure' may be set which permits you to override the position of `text' and `pixmap' by computing the redraw
-		positions manually. The drawing is clipped to "redraw_client_area' although there is no restriction on the positions that
+		positions manually. The drawing is clipped to `redraw_client_area' although there is no restriction on the positions that
 		may be set for `text' and `pixmap'.
 		]"
 	legal: "See notice at end of class."
@@ -49,7 +49,8 @@ feature {NONE} -- Initialization
 			default_create
 			set_text (a_text)
 		ensure
-			text_assigned: text = a_text
+			text_set: (text.same_type (a_text) implies text = a_text) or else
+				not text.same_type (a_text) implies text.is_equal (a_text)
 		end
 
 	initialize is
@@ -79,7 +80,8 @@ feature -- Status Setting
 				parent.implementation.redraw_item (implementation)
 			end
 		ensure
-			text_set: text = a_text
+			text_set: (text.same_type (a_text) implies text = a_text) or else
+				not text.same_type (a_text) implies text.is_equal (a_text)
 		end
 
 	remove_text is

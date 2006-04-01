@@ -2,7 +2,7 @@ indexing
 	description:
 		"[
 			Linear widget container.
-			Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX"
+			Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

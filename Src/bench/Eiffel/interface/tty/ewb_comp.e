@@ -85,7 +85,7 @@ feature -- Setting
 		ensure
 			is_finish_freezing_called_set: is_finish_freezing_called = v
 		end
-		
+
 feature {NONE} -- Update
 
 	select_ace_file is
@@ -251,13 +251,7 @@ feature {NONE} -- Compilation
 			loop
 				if Eiffel_project.save_error then
 					create file_name.make_from_string (Eiffel_project.project_directory.name);
-					if Compilation_modes.is_precompiling then 
-						file_name.set_file_name (dot_workbench)
-					else
-						file_name.set_file_name (Eiffel_system.name)
-						file_name.add_extension (Project_extension)
-					end
-
+					file_name.set_file_name (project_file_name)
 					create temp.make (0);
 					temp.append ("Error: could not write to ");
 					temp.append (file_name);

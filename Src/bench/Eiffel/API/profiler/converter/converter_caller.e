@@ -70,11 +70,10 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			create profile_out_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
-				profile_out_file.extend (W_code);
+				create profile_out_file.make_from_string (workbench_generation_path)
 			else
-				profile_out_file.extend (F_code);
+				create profile_out_file.make_from_string (final_generation_path)
 			end;
 			profile_out_file.set_file_name (profile_name);
 			create file.make (profile_out_file);
@@ -86,11 +85,10 @@ feature {PROF_CONVERTER} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE;
 		do
-			create translat_file.make_from_string (Eiffel_gen_path);
 			if comp_type.is_equal ("workbench") then
-				translat_file.extend (W_code);
+				create translat_file.make_from_string (workbench_generation_path)
 			else
-				translat_file.extend (F_code);
+				create translat_file.make_from_string (workbench_generation_path)
 			end;
 			translat_file.set_file_name (Translation_log_file_name);
 			create file.make (translat_file);

@@ -67,7 +67,7 @@ feature -- Access
 		local
 			d: DIRECTORY
 		do
-			create Result.make_from_string (eiffel_gen_path)
+			create Result.make_from_string (target_path)
 			Result.extend ("Diagrams")
 			create d.make (Result)
 			if not d.exists then

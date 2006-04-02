@@ -3,8 +3,8 @@ indexing
 	description:
 		"Directories management for an Eiffel project."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class PROJECT_CONTEXT
@@ -14,10 +14,10 @@ inherit
 
 feature -- Eiffel Project Directories
 
-	target_path_name: STRING is
+	project_target_name: STRING is
 			-- Target name, used to build paths.
 		do
-			Result := internal_target_name.name
+			Result := internal_project_target_name.name
 		end
 
 	Project_directory_name: DIRECTORY_NAME is
@@ -35,48 +35,41 @@ feature -- Eiffel Project Directories
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
 		once
-			create Result.make_from_string (eiffel_gen_path);
-			Result.extend (Backup);
-		end
-
-	Case_storage_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (eiffel_gen_path);
-			Result.extend_from_array (<<Casegen , Case_storage>>);
-		end
-
-	Case_gen_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (eiffel_gen_path);
-			Result.extend (Casegen);
+			create Result.make_from_string (target_path)
+			Result.extend (Backup)
 		end
 
 	Documentation_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (eiffel_gen_path);
-			Result.extend (Documentation);
+			create Result.make_from_string (Project_directory_name)
+			Result.extend (Documentation)
 		end
 
 	Profiler_path: DIRECTORY_NAME is
 			-- Directory of the profiler's output files
 		once
-			create Result.make_from_string (Eiffel_gen_path);
+			create Result.make_from_string (target_path)
 			Result.extend (Profiler)
 		end
 
 	Eiffel_gen_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (Project_directory_name);
-			Result.extend (target_path_name);
+			create Result.make_from_string (Project_directory_name)
+			Result.extend (eiffelgens)
+		end
+
+	target_path: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (eiffel_gen_path)
+			Result.extend (project_target_name)
 		end
 
 	Partial_generation_path: DIRECTORY_NAME is
 			-- Valid path for partial generation
 		once
-			create Result.make_from_string (Eiffel_gen_path)
+			create Result.make_from_string (target_path)
 			Result.extend (Partials)
 		end
-
 
 	Workbench_generation_path: DIRECTORY_NAME is
 			-- Valid path for compilation
@@ -84,38 +77,15 @@ feature -- Eiffel Project Directories
 			Result := temp_workbench_generation_path
 		end
 
-	Workbench_bin_generation_path: DIRECTORY_NAME is
-			-- Path to `assemblies' directory in EIFGEN/W_code.
-		once
-			create Result.make_from_string (Workbench_generation_path)
-			Result.extend (Local_assemblies)
-		end
-
 	Final_generation_path: DIRECTORY_NAME is
 		once
 			Result := temp_final_generation_path
-		end
-
-	Final_bin_generation_path: DIRECTORY_NAME is
-			-- Path to `assemblies' directory in EIFGEN/F_code.
-		once
-			create Result.make_from_string (Final_generation_path)
-			Result.extend (Local_assemblies)
 		end
 
 	Compilation_path: DIRECTORY_NAME is
 			-- Path to the compilation directory
 		once
 			Result := temp_compilation_path
-		end
-
-	Precompilation_file_name: FILE_NAME is
-			-- Full name of file where current precompilation
-			-- information is stored
-		do
-			create Result.make_from_string (Project_directory_name);
-			Result.extend (target_path_name);
-			Result.set_file_name (Precomp_eif);
 		end
 
 	Precompilation_driver: FILE_NAME is
@@ -128,110 +98,149 @@ feature -- Eiffel Project Directories
 			-- Full name of file where additional arguments
 			-- information for system is stored
 		once
-			create Result.make_from_string (eiffel_gen_path);
-			Result.set_file_name (Additional_args);
+			create Result.make_from_string (target_path)
+			Result.set_file_name (Additional_args)
+		end
+
+	Precompilation_file_name: FILE_NAME is
+			-- Full name of file where current precompilation
+			-- information is stored
+		do
+			create Result.make_from_string (target_path)
+			Result.set_file_name (Precomp_eif)
+		end
+
+	Workbench_bin_generation_path: DIRECTORY_NAME is
+			-- Path to `assemblies' directory in EIFGEN/W_code.
+		do
+			create Result.make_from_string (temp_workbench_generation_path)
+			Result.extend (Local_assemblies)
+		end
+
+	Final_bin_generation_path: DIRECTORY_NAME is
+			-- Path to `assemblies' directory in EIFGEN/F_code.
+		do
+			create Result.make_from_string (temp_final_generation_path)
+			Result.extend (Local_assemblies)
 		end
 
 feature -- Temporary access prior to the creation or the opening of a file.
 
+	temp_eiffel_gen_path: DIRECTORY_NAME is
+			-- Temporary location of project.
+		do
+			create Result.make_from_string (Project_directory_name)
+			Result.extend (eiffelgens)
+		end
+
 	temp_workbench_generation_path: DIRECTORY_NAME is
 			-- Generate a temporary generation path
 		do
-			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<target_path_name, W_code>>);
+			create Result.make_from_string (temp_target_path)
+			Result.extend (W_code)
 		end
 
 	temp_final_generation_path: DIRECTORY_NAME is
 		do
-			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<target_path_name, F_code>>);
+			create Result.make_from_string (temp_target_path)
+			Result.extend (F_code)
+		end
+
+	temp_target_path: DIRECTORY_NAME is
+		do
+			create Result.make_from_string (temp_eiffel_gen_path)
+			Result.extend (project_target_name)
 		end
 
 	temp_compilation_path: DIRECTORY_NAME is
 		do
-			create Result.make_from_string (Project_directory_name);
-			Result.extend_from_array (<<target_path_name, Comp>>);
+			create Result.make_from_string (temp_target_path)
+			Result.extend (Comp)
+		end
+
+	temp_partial_generation_path: DIRECTORY_NAME is
+			-- Valid path for partial generation
+		do
+			create Result.make_from_string (temp_target_path)
+			Result.extend (Partials)
+		end
+
+	temp_profiler_path: DIRECTORY_NAME is
+			-- Directory of the profiler's output files
+		do
+			create Result.make_from_string (temp_target_path)
+			Result.extend (Profiler)
 		end
 
 feature {NONE} -- Directory creation
 
-	Create_generation_directory is
-		local
-			d: DIRECTORY
-		once
-			create_eiffel_gen_directory
-			create d.make (Final_generation_path)
-			if not d.exists then
-				d.create_dir
-			end;
-			create d.make (Workbench_generation_path)
-			if not d.exists then
-				d.create_dir
-			end
-			create d.make (partial_generation_path)
-			if not d.exists then
-				d.create_dir
-			end
-		end
-
-	Create_case_storage_directory is
+	create_generation_directory is
 		local
 			d: DIRECTORY
 		do
-			create d.make (Case_gen_path);
+			create_eiffel_gen_directory
+			create d.make (temp_final_generation_path)
 			if not d.exists then
 				d.create_dir
-			end;
-			create d.make (Case_storage_path);
+			end
+			create d.make (temp_workbench_generation_path)
 			if not d.exists then
 				d.create_dir
-			end;
+			end
+			create d.make (temp_partial_generation_path)
+			if not d.exists then
+				d.create_dir
+			end
 		end
 
-	Create_eiffel_gen_directory is
+	create_eiffel_gen_directory is
 		local
 			d: DIRECTORY
-		once
-			create d.make (Eiffel_gen_path);
+		do
+			create d.make (Temp_eiffel_gen_path)
 			if not d.exists then
 				d.create_dir
-			end;
-		end;
+			end
+			create d.make (temp_target_path)
+			if not d.exists then
+				d.create_dir
+			end
+		end
 
-	Create_compilation_directory is
+	create_compilation_directory is
 			-- Directory where the compilation files are generated
 		local
 			d: DIRECTORY
-		once
-			Create_eiffel_gen_directory;
-			create d.make (compilation_path);
-			if not d.exists then
-				d.create_dir
-			end
-		end;
-
-	Create_profiler_directory is
-			-- Directory where the profiler files are generated
-		local
-			d: DIRECTORY
-		once
-			create d.make (Profiler_path);
+		do
+			create_eiffel_gen_directory
+			create d.make (temp_compilation_path)
 			if not d.exists then
 				d.create_dir
 			end
 		end
 
-	Create_local_assemblies_directory is
+	create_profiler_directory is
+			-- Directory where the profiler files are generated
+		local
+			d: DIRECTORY
+		do
+			create d.make (temp_profiler_path)
+			if not d.exists then
+				d.create_dir
+			end
+		end
+
+	create_local_assemblies_directory is
 			-- Directory where local assemblies will be generated.
 		local
 			d: DIRECTORY
 		do
 			create_generation_directory
-			create d.make (Final_bin_generation_path)
+			create d.make (final_bin_generation_path)
 			if not d.exists then
 				d.create_dir
-			end;
-			create d.make (Workbench_bin_generation_path)
+			end
+			create d.make (workbench_bin_generation_path)
 			if not d.exists then
 				d.create_dir
 			end
@@ -239,7 +248,7 @@ feature {NONE} -- Directory creation
 
 feature {NONE} -- Implementation
 
-	internal_target_name: TARGET_NAME is
+	internal_project_target_name: TARGET_NAME is
 			-- Target name.
 		once
 			create Result

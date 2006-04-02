@@ -40,24 +40,24 @@ feature -- Initialization
 
 feature -- Access
 
-	valid_project_eif: BOOLEAN is
-			-- Is the `project_eif' file valid?
+	valid_project_epr: BOOLEAN is
+			-- Is the `project_epr' file valid?
 		local
-			file: like project_eif_file
+			file: like project_epr_file
 		do
-			file := project_eif_file;
+			file := project_epr_file;
 			Result := file.is_readable and then
 				file.is_plain
 		ensure
 			valid_implies_good_file:
-				project_eif_file.is_readable and then
-					project_eif_file.is_plain
+				project_epr_file.is_readable and then
+					project_epr_file.is_plain
 		end;
 
 	is_readable: BOOLEAN is
 			-- May the project be used for browsing and debugging?
 		require
-			project_eif_file_set: project_eif_file /= Void
+			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
@@ -65,7 +65,7 @@ feature -- Access
 			create w_code_dir.make (temp_workbench_generation_path);
 			create f_code_dir.make (temp_final_generation_path);
 			create comp_dir.make (temp_compilation_path);
-			create project_file.make (project_eif_file.name);
+			create project_file.make (project_epr_file.name);
 			Result := is_base_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
 					and then project_file.is_readable
@@ -77,7 +77,7 @@ feature -- Access
 	is_writable: BOOLEAN is
 			-- May the project be both compiled and used for browsing?
 		require
-			project_eif_file_set: project_eif_file /= Void
+			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 			project_file: RAW_FILE
@@ -85,7 +85,7 @@ feature -- Access
 			create w_code_dir.make (temp_workbench_generation_path)
 			create f_code_dir.make (temp_final_generation_path)
 			create comp_dir.make (temp_compilation_path)
-			create project_file.make (project_eif_file.name)
+			create project_file.make (project_epr_file.name)
 			Result := is_base_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
 					and then project_file.is_writable
@@ -98,7 +98,7 @@ feature -- Access
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
 		require
-			project_eif_file_set: project_eif_file /= Void
+			project_epr_file_set: project_epr_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 			project_file: RAW_FILE
@@ -106,7 +106,7 @@ feature -- Access
 			create w_code_dir.make (temp_workbench_generation_path)
 			create f_code_dir.make (temp_final_generation_path)
 			create comp_dir.make (temp_compilation_path)
-			create project_file.make (project_eif_file.name)
+			create project_file.make (project_epr_file.name)
 			Result := base_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
 				and then project_file.exists
@@ -121,9 +121,9 @@ feature -- Update
 		require
 			project_file_not_void: project_file /= Void
 		do
-			project_eif_file := project_file
+			project_epr_file := project_file
 		ensure
-			project_eif_file_set: project_eif_file = project_file
+			project_epr_file_set: project_epr_file = project_file
 		end
 
 feature -- Access
@@ -131,7 +131,7 @@ feature -- Access
 	initialized: BOOLEAN
 			-- Has the project correctly initialized?
 
-	project_eif_file: PROJECT_EIFFEL_FILE;
+	project_epr_file: PROJECT_EIFFEL_FILE;
 			-- Project.eif file in project directory
 
 indexing

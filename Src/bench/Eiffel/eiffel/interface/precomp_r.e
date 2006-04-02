@@ -37,7 +37,7 @@ feature
 		do
 			project_dir := precompiled_project_directory (a_project_path)
 			if project_dir /= Void then
-				project_eif := project_dir.project_eif_file
+				project_eif := project_dir.project_epr_file
 				project := project_eif.retrieved_project
 				if project_eif.error then
 					if project_eif.is_interrupted then

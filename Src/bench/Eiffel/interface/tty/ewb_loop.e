@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Batch compiler invoked by the -loop option.%
 		%Does not show C compilation options."
 	legal: "See notice at end of class."
@@ -17,11 +17,6 @@ inherit
 			name as loop_cmd_name,
 			help_message as loop_help,
 			abbreviation as loop_abb
-		end
-		
-	COMMAND_LINE_PROJECT
-		undefine
-			Warning_messages
 		end
 
 	EIFFEL_ENV
@@ -247,7 +242,7 @@ feature -- Initialization
 		ensure
 			switches_menu_not_void: Result /= Void
 		end
-			
+
 	queries_menu: EWB_MENU is
 			-- Sub-menu containing commands to manipulate queries.
 		once
@@ -270,12 +265,12 @@ feature -- Execution
 			no_need_for_compiled_project: True
 		do
 				--| At this stage we have the project directory
-			if Eiffel_project.project_directory.project_eif_file = Void then
+			if Eiffel_project.project_directory.project_epr_file = Void then
 				-- The user will have to specify the Ace file
 				-- since it is a new project
 				Eiffel_ace.set_file_name (Void)
 			end
-			ewb_iterate				
+			ewb_iterate
 		end
 
 feature -- Update
@@ -369,13 +364,13 @@ feature -- Update
 					io.put_string (": dot place")
 					io.put_integer (dot_place)
 					io.put_new_line
-				end	
+				end
 				menu := req.substring (1,dot_place -1)
-				if menu.count = 1 then 
+				if menu.count = 1 then
 					menu_abb := menu.item (1)
 				elseif menu.is_empty then
 					menu := "M"
-					menu_abb := main_abb	
+					menu_abb := main_abb
 			 	end
 				option := req.substring (dot_place+1, req.count)
 				next_cmd := main_menu.option_item (menu)
@@ -398,7 +393,7 @@ feature -- Update
 						menu_command_list := main_menu
 						if not option.is_empty then
 							process_request (option)
-						end					
+						end
 					elseif menu.is_equal (parent_cmd_name) or menu_abb = parent_abb then
 						if not menu_command_list.is_main then
 							prev := menu_command_list
@@ -434,7 +429,7 @@ feature -- Update
 						save_to_disk
 					elseif req.is_equal (help_cmd_name) or menu_abb = help_abb or menu_abb = '?' then
 						display_commands
-					elseif req.is_equal (main_cmd_name) or menu_abb = main_abb 
+					elseif req.is_equal (main_cmd_name) or menu_abb = main_abb
 					then
 						prev := menu_command_list
 						menu_command_list := Main_menu
@@ -453,7 +448,7 @@ feature -- Update
 						io.put_string (req)
 						io.put_string (".%N")
 					end
-				end		
+				end
 			end
 		end
 

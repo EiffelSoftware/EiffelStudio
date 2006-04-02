@@ -81,7 +81,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -91,15 +91,14 @@ inherit
 
 create
 	make_blank,
-	make_with_ace,
-	make_with_ace_and_directory_and_flags
+	make_with_ace
 
 feature {NONE} -- Initialization
 
 	make_blank (a_parent_window: EV_WINDOW) is
 			-- Create a new blank project
 			--
-			-- Note: 
+			-- Note:
 			--  + The ace file will be automatically generated
 			--  + The user has to choose the project directory.
 		require
@@ -119,7 +118,7 @@ feature {NONE} -- Initialization
 			-- Create a new project using the ace file named `ace_name'.
 			-- and the suggested project directory `dir_name'.
 			--
-			-- Note: 
+			-- Note:
 			--  The user has to choose the project directory.
 			--  suggested_directory_name can be set to Void to indicate
 			--  no suggested directory.
@@ -140,26 +139,6 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Choose_directory)
 		end
 
-	make_with_ace_and_directory_and_flags (a_parent_window: EV_WINDOW; ace_name: STRING; a_directory_name: STRING; compilation_flag: BOOLEAN; overwrite_existing_project_flag: BOOLEAN) is
-			-- Create a new project using the ace file named `ace_name'.
-			-- and the suggested project directory `dir_name'.
-			--
-			-- Compile the project upon creation if `compilation_flag' is set
-			-- Ask confirmation before deleting the EIFGEN if `confirmation_flag' is set.
-		require
-			valid_parent_window: a_parent_window /= Void
-		do
-			parent_window := a_parent_window
-			ace_file_name := ace_name
-			suggested_directory_name := a_directory_name
-			compile_project := compilation_flag
-			overwrite_project_confirmation_flag := overwrite_existing_project_flag
-			
-			ask_for_system_name := False
-			build_interface
-			set_title (Interface_names.t_Choose_ace_and_directory)
-		end
-
 feature -- Access
 
 	compile_project: BOOLEAN
@@ -168,6 +147,16 @@ feature -- Access
 	success: BOOLEAN
 			-- Was last operation sucessful?
 
+	project_location: STRING is
+			-- Location for selected project
+		require
+			success: success
+		do
+			Result := directory_field.text
+		ensure
+			project_location_not_void: Result /= Void
+		end
+
 feature -- Execution
 
 	show_modal_to_parent is
@@ -175,7 +164,7 @@ feature -- Execution
 		do
 			show_modal_to_window (parent_window)
 		end
-		
+
 	create_blank_project is
 			-- Create a blank project in directory `directory_name'.
 		local
@@ -227,7 +216,7 @@ feature -- Execution
 				blank_project_builder.create_blank_project
 
 					-- Create a new project using the previously generated files.
-				create_project
+				conf_todo
 
 					-- Update `success' state.
 				success := Eiffel_project.initialized and then (not Eiffel_ace.file_name.is_empty)
@@ -243,84 +232,28 @@ feature -- Execution
 			retry
 		end
 
-	create_project is
-			-- Create a project in directory `directory_name', with ace file
+	select_project_path is
+			--  Select a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
 			--
-			-- Ask confirmation before overwriting an existing project is
-			-- `ask_confirmation' is set.
-			--
 			-- Use `parent_window' as parent window when displaying dialogs
-		local
-			cmd: EB_NEW_PROJECT_COMMAND
-			ebench_name: STRING
-			rescued: BOOLEAN
 		do
 			success := False
-
-			if not rescued then
-					-- If the ace file or the directory is not yet specified,
-					-- retrieve it from the text field.
-				if directory_field.text = Void or else directory_field.text.is_empty then
-					add_error_message (Warning_messages.w_Fill_in_location_field)
-					raise_exception (Invalid_directory_exception)
-				end
-				if ace_filename_field /= Void then
-					if ace_filename_field.text = Void or else ace_filename_field.text.is_empty then
-						add_error_message (Warning_messages.w_Fill_in_ace_field)
-						raise_exception (Invalid_ace_exception)
-					else
-						ace_file_name := ace_filename_field.text
-					end
-				end
-				create directory_name.make_from_string (directory_field.text)
-				check_and_create_directory (directory_name)
-
-				compile_project := compile_project_check_button.is_selected
-
-				if not Eiffel_project.initialized then
-					check_ace_file (ace_file_name)
-					if is_displayed then
-						create cmd.make_with_parent (Current)
-					else
-						create cmd.make_with_parent (parent_window)
-					end
-					cmd.create_project (directory_name, not overwrite_project_confirmation_flag)
-					if Eiffel_project.initialized then
-						Eiffel_ace.set_file_name (ace_file_name)
-						success := Eiffel_project.initialized and then 
-							Eiffel_ace.file_name /= Void and then 
-							(not Eiffel_ace.file_name.is_empty)
-						destroy
-					end
-				else
-					ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
-					ebench_name.append (" -create %"")
-					ebench_name.append (directory_name)
-					ebench_name.append ("%" -ace %"")
-					ebench_name.append (ace_file_name)
-					if compile_project then
-						ebench_name.append ("%" -compile")
-						compile_project := False
-					else
-						ebench_name.append ("%"")
-					end
-					launch_ebench (ebench_name)
-					success := True
-
-					destroy
-				end
-			else
+				-- If the ace file or the directory is not yet specified,
+				-- retrieve it from the text field.
+			if directory_field.text.is_empty then
+				add_error_message (Warning_messages.w_fill_in_location_field)
 				if is_displayed then
 					display_error_message (Current)
 				else
 					display_error_message (parent_window)
-					show_modal_to_window (parent_window)
 				end
+				success := False
+			else
+				compile_project := compile_project_check_button.is_selected
+				success := True
 			end
-		rescue
-			rescued := True
-			retry
+			destroy
 		end
 
 feature {NONE} -- Implementation
@@ -391,18 +324,16 @@ feature {NONE} -- Implementation
 				hb.disable_item_expand (fnl)
 				hb.extend (root_feature_field)
 				main_vb.extend (hb)
-				
+
 				system_name_frame.extend (main_vb)
 			else
 					-- Ace file Name
-				create ace_filename_field.make_with_text (ace_file_name)
-				create b.make_with_text_and_action (Interface_names.b_Browse, agent browse_ace_file)
-				create hb
-				hb.set_border_width (Layout_constants.Small_border_size)
-				hb.extend (ace_filename_field)
-				hb.extend (b)
-				hb.disable_item_expand (b)
+				create label.make_with_text (ace_file_name)
 				create system_name_frame.make_with_text (Interface_names.l_Ace_file_for_frame)
+				create hb
+				hb.set_border_width (layout_constants.small_border_size)
+				hb.extend (label)
+				hb.disable_item_expand (label)
 				system_name_frame.extend (hb)
 			end
 
@@ -411,7 +342,7 @@ feature {NONE} -- Implementation
 			create vb
 			vb.set_border_width (Layout_constants.Small_border_size)
 			vb.set_padding (Layout_constants.Small_padding_size)
-			
+
 			create directory_field
 			if suggested_directory_name /= Void then
 				directory_field.set_text (suggested_directory_name)
@@ -467,14 +398,14 @@ feature {NONE} -- Implementation
 			vb.disable_item_expand (hb)
 			extend (vb)
 			set_width (Layout_constants.Dialog_unit_to_pixels (350))
-			
+
 				--| Setting default buttons
 			set_default_push_button (ok_b)
 			set_default_cancel_button (cancel_b)
-		
-			show_actions.extend (agent on_window_shown)	
+
+			show_actions.extend (agent on_window_shown)
 		end
-		
+
 	on_window_shown is
 			-- The window has just been shown.
 			-- Set the focus to the first widget and show the beginning of each text field.
@@ -482,10 +413,9 @@ feature {NONE} -- Implementation
 			if ask_for_system_name then
 				system_name_field.set_caret_position (1)
 			else
-				ace_filename_field.set_caret_position (1)
-			end
-			if not directory_field.text.is_empty then
-				directory_field.set_caret_position (1)
+				if not directory_field.text.is_empty then
+					directory_field.set_caret_position (1)
+				end
 			end
 			directory_field.set_focus
 		end
@@ -527,12 +457,12 @@ feature {NONE} -- Implementation
 			start_directory: STRING
 		do
 			create dd
-			dd.set_title (Interface_names.t_Select_a_directory)
+			dd.set_title (Interface_names.t_select_a_directory)
 			if directory_field /= Void then
 				start_directory := directory_field.text
-				if start_directory /= Void and then not start_directory.is_empty then
+				if not start_directory.is_empty then
 					start_directory := validate_directory_name (start_directory)
-					if start_directory /= Void and then (create {DIRECTORY}.make (start_directory)).exists then
+					if (create {DIRECTORY}.make (start_directory)).exists then
 						dd.set_start_directory (start_directory)
 					end
 				end
@@ -583,27 +513,27 @@ feature {NONE} -- Implementation
 	create_default_directory_name (project_name: STRING): STRING is
 			-- Return the proposed directory for project `project_name'
 		local
-			project_location: STRING
+			l_project_location: STRING
 		do
 			if
 				Eiffel_projects_directory /= Void and then
 				not Eiffel_projects_directory.is_empty
 			then
-				project_location := Eiffel_projects_directory.twin
+				l_project_location := Eiffel_projects_directory.twin
 			else
 				if Platform_constants.is_windows then
-					project_location := Default_project_location_for_windows
+					l_project_location := Default_project_location_for_windows
 				else
-					project_location := Home
+					l_project_location := Home
 				end
 			end
-			if project_location @ project_location.count /= Operating_environment.Directory_separator then
-				project_location.append_character (Operating_environment.Directory_separator)
+			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
+				l_project_location.append_character (Operating_environment.Directory_separator)
 			end
-			project_location.append (project_name)
-			Result := project_location
+			l_project_location.append (project_name)
+			Result := l_project_location
 		end
-		
+
 
 feature {NONE} -- Callbacks
 
@@ -613,14 +543,14 @@ feature {NONE} -- Callbacks
 			success := False
 			destroy
 		end
-		
+
 	on_ok is
 			-- User has clicked "Ok"
 		do
 			if blank_project_creation then
 				create_blank_project
 			else
-				create_project
+				select_project_path
 			end
 		end
 
@@ -639,11 +569,11 @@ feature {NONE} -- Callbacks
 				if curr_project_name /= Void then
 					curr_project_location.append (curr_project_name)
 				end
-	
+
 				directory_field.set_text (curr_project_location)
 			end
 		end
-		
+
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG) is
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
@@ -700,43 +630,43 @@ feature {NONE} -- Private attributes
 	ask_for_system_name: BOOLEAN
 			-- Should `build_interface' be built so that it asks for
 			-- the system name? (if False, ask for the ace file)
-			
+
 	overwrite_project_confirmation_flag: BOOLEAN
 			-- Should we display a confirmation dialog before deleting
 			-- the EIFGEN?
-			
+
 feature {NONE} -- Vision2 architechture
 
 	directory_field: EV_TEXT_FIELD
 
 	system_name_field: EV_TEXT_FIELD
-	
+
 	root_class_field: EV_TEXT_FIELD
-	
+
 	root_cluster_field: EV_TEXT_FIELD
-	
+
 	root_feature_field: EV_TEXT_FIELD
-	
+
 	ace_filename_field: EV_TEXT_FIELD
-	
+
 	compile_project_check_button: EV_CHECK_BUTTON
-	
+
 feature {NONE} -- Constants
 
 	Default_project_name: STRING is "sample"
-	
+
 	Default_root_class_name: STRING is "ROOT_CLASS"
-	
+
 	Default_root_feature_name: STRING is "make"
-	
+
 	Default_root_cluster_name: STRING is "root_cluster"
-	
+
 	Default_project_location_for_windows: STRING is "C:\projects"
-	
+
 	Invalid_ace_exception: STRING is "Invalid_ace"
-	
+
 	Invalid_directory_exception: STRING is "Invalid_directory"
-	
+
 	Invalid_project_name_exception: STRING is "Invalid_project_name";
 
 indexing

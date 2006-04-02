@@ -177,10 +177,9 @@ feature -- Action
 					-- Save the source class in a Backup directory
 				if save_copy and Workbench.automatic_backup then
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
-					l_dir_name.extend (lace_class.cluster.target.name)
 					l_dir_name.extend (lace_class.cluster.cluster_name)
 					create l_dir.make (l_dir_name)
-					l_dir.recursive_create_directory
+					l_dir.create_directory
 					create l_fname.make_from_string (l_dir_name)
 					l_fname.extend (lace_class.base_name)
 					file.copy_file (l_fname)

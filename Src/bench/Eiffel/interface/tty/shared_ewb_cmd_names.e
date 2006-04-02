@@ -36,6 +36,8 @@ feature {NONE}
 
 	class_list_cmd_name: STRING is "classes"
 
+	clean_cmd_name: STRING is "clean"
+
 	clients_cmd_name: STRING is "clients"
 
 	cluster_hierarchy_cmd_name: STRING is "Cluster hierarchy"

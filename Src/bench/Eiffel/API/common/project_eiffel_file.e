@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			retry
 		end;
 
-feature {LACE_I} -- Header retrieval
+feature {PROJECT_LOADER, LACE_I} -- Header retrieval
 
 	parse_project_header is
 			-- Parse the project header file to get the following information:

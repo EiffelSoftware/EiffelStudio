@@ -107,7 +107,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			if project_index /= 0 then
 					-- Project opened by `ebench name_of_project.epr'
 				create open_project.make_with_parent (first_window.window)
-				open_project.execute_with_file (argument (project_index + 1))
+				open_project.execute_with_file (argument (project_index + 1), False)
 			else
 					-- Project created by `ebench -create my_path -ace my_ace'
 				create_project_index := index_of_word_option ("create")
@@ -146,22 +146,17 @@ feature {NONE} -- Implementation (preparation of all widgets)
 	create_project (a_directory_name: STRING; an_ace_file_name: STRING; compilation_flag: BOOLEAN) is
 			-- Create a new project
 		local
-			create_project_dialog: EB_CREATE_PROJECT_DIALOG
 			first_window: EB_DEVELOPMENT_WINDOW
+			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			first_window := window_manager.last_created_window
 			check
 				first_window_not_void: first_window /= Void
 			end
-
-				-- Create the project.
-			create create_project_dialog.make_with_ace_and_directory_and_flags (first_window.window,
-				an_ace_file_name, a_directory_name, compilation_flag, False)
-			create_project_dialog.create_project
-
-				-- Compile if needed.
-			if create_project_dialog.success and then create_project_dialog.compile_project then
-				first_window.Melt_project_cmd.execute
+			create l_loader.make (first_window.window)
+			l_loader.open_project_file (an_ace_file_name, Void, a_directory_name, True)
+			if not l_loader.is_compilation_requested and then compilation_flag then
+				l_loader.compile_project
 			end
 		end
 

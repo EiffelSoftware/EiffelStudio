@@ -147,12 +147,15 @@ feature {NONE} -- Initialization
 				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
 				create_and_fill_compiled_projects_list
 				open_project_vb.extend (compiled_projects_list)
+
+					-- Recompile from scratch check box
+				create recompile_from_scratch_button.make_with_text (Interface_names.l_fresh_compilation)
+				open_project_vb.extend (recompile_from_scratch_button)
+				open_project_vb.disable_item_expand (recompile_from_scratch_button)
+
 				open_project_frame.extend (open_project_vb)
-			end
 
-
-				--| Option buttons
-			if show_open_project_frame then
+					--| Option buttons
 				create do_not_display_dialog_button.make_with_text (Interface_names.l_Discard_starting_dialog)
 				create vb
 				vb.extend (do_not_display_dialog_button)
@@ -367,33 +370,6 @@ feature {NONE} -- Execution
 			end
 		end
 
-	create_new_project_using_ace_file is
-			-- Create a new project using an existing ace file.
-		local
-			file_dialog: EB_FILE_OPEN_DIALOG
-			success: BOOLEAN
-			create_project_dialog: EB_CREATE_PROJECT_DIALOG
-		do
-			create file_dialog.make_with_preference (preferences.dialog_data.last_opened_ace_directory_preference)
-			file_dialog.set_title (Interface_names.t_Choose_ace_file)
-			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
-			file_dialog.show_modal_to_window (Current)
-
-			success := file_dialog.selected_button.is_equal(ev_open)
-			if success then
-				create create_project_dialog.make_with_ace (Current, file_dialog.file_name, file_dialog.file_path)
-				create_project_dialog.show_modal_to_parent
-				success := create_project_dialog.success
-			end
-
-				-- Destroy the current dialog if `create_project_dialog'
-				-- was successful, go on displaying this dialog otherwise.
-			if success then
-				destroy
-				compile_project := create_project_dialog.compile_project
-			end
-		end
-
 	create_blank_project is
 			-- Create a new blank project.
 		local
@@ -451,7 +427,7 @@ feature {NONE} -- Execution
 				create open_project_cmd.make_with_parent (parent_window)
 
 				set_pointer_style (Pixmaps.Wait_cursor)
-				open_project_cmd.execute_with_file (li.text)
+				open_project_cmd.execute_with_file (li.text, recompile_from_scratch_button.is_selected)
 				set_pointer_style (Pixmaps.standard_cursor)
 
 					-- Dialog could be closed if user close it manually
@@ -692,7 +668,7 @@ feature {NONE} -- Implementation
 			directory_name_not_void: directory_name /= Void
 			ace_file_name_not_void: ace_file_name /= Void
 		local
-			cmd: EB_NEW_PROJECT_COMMAND
+			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 			ebench_name: STRING
 			last_char: CHARACTER
 			ace_name, dir_name: STRING
@@ -707,9 +683,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not Eiffel_project.initialized then
-				create cmd.make_with_parent (Current)
-				cmd.create_project (dir_name, True)
-				eiffel_ace.set_file_name (ace_name)
+				create l_loader.make (Current)
+				l_loader.open_project_file (ace_file_name, Void, directory_name, True)
 			else
 				ebench_name := Estudio_command_name.twin
 				ebench_name.append (" -create %"")
@@ -801,6 +776,7 @@ feature {NONE} -- Implementation
 				open_epr_project_rb.disable_sensitive
 				compiled_projects_list.disable_sensitive
 				do_not_display_dialog_button.disable_sensitive
+				recompile_from_scratch_button.disable_sensitive
 			end
 			controls_disabled := True
 		end
@@ -816,6 +792,7 @@ feature {NONE} -- Implementation
 				open_epr_project_rb.enable_sensitive
 				compiled_projects_list.enable_sensitive
 				do_not_display_dialog_button.enable_sensitive
+				recompile_from_scratch_button.enable_sensitive
 			end
 			controls_disabled := False
 		end
@@ -842,6 +819,9 @@ feature {NONE} -- Private attributes
 
 	do_not_display_dialog_button: EV_CHECK_BUTTON
 			-- Check button labeled "Don't show this dialog at start-up"
+
+	recompile_from_scratch_button: EV_CHECK_BUTTON
+			-- Check button to recompile a project from scratch.
 
 	ok_button: EV_BUTTON
 			-- OK/Next button

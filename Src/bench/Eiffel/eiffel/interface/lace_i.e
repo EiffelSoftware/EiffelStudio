@@ -9,7 +9,6 @@ inherit
 	SHARED_WORKBENCH
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
-	SHARED_LACE_PARSER
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
 	SHARED_CONF_FACTORY
@@ -106,83 +105,6 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-feature -- Conversion from old
-
-	convert_ace (a_file: STRING) is
-			-- Convert from an ace file in `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-		local
-			l_load: CONF_LOAD_LACE
-			vd00: VD00
-			vd82: VD82
-			l_pos: INTEGER
-		do
-				-- load config from ace
-			create l_load
-			l_load.retrieve_configuration (a_file)
-			if l_load.is_error then
-				create vd00
-				vd00.set_error (l_load.last_error)
-				Error_handler.insert_error (vd00)
-				Error_handler.raise_error
-			end
-			conf_system := l_load.last_system
-
-				-- set file name of the converted config
-			file_name := file_system.absolute_pathname (a_file)
-			l_pos := file_name.last_index_of (Operating_environment.directory_separator, file_name.count)
-			if l_pos > 0 and then l_pos < file_name.count then
-				file_name := file_name.substring (1, l_pos)
-			else
-				file_name := Execution_environment.current_working_directory
-			end
-			file_name.append ("Ace.acex")
-
-				-- write converted config
-			store
-
-				-- add conversion warning
-			create vd82.make (a_file)
-			Error_Handler.insert_warning (vd82)
-		ensure
-			file_name_set: file_name /= Void
-			conf_system_loaded: conf_system /= Void
-		end
-
-	convert_project (a_file: STRING) is
-			-- Convert from a project file in `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-		local
-			l_old_project: PROJECT_EIFFEL_FILE
-			l_ace: STRING
-			vd21: VD21
-			vd81: VD81
-		do
-				-- get ace file location
-			create l_old_project.make (a_file)
-			if not l_old_project.exists or else not l_old_project.is_readable then
-				create vd21
-				vd21.set_file_name (a_file)
-				Error_handler.insert_error (vd21)
-				Error_handler.raise_error
-			end
-			l_old_project.open_read
-			l_old_project.parse_project_header
-			l_ace := l_old_project.ace_file_path
-			if l_ace = Void or else l_ace.is_empty then
-				create vd81
-				vd81.set_file_name (a_file)
-				Error_handler.insert_error (vd81)
-				Error_handler.raise_error
-			end
-
-				-- convert ace
-			convert_ace (l_ace)
-		end
-
-
 feature -- Status setting
 
 	set_file_name (s: STRING) is
@@ -204,14 +126,14 @@ feature -- Status setting
 			target_name_set: target_name = s
 		end
 
-	set_project_path (s: like project_path) is
-			-- Assign `s' to `project_path'.
+	set_conf_system (s: like conf_system) is
+			-- Assign `s' to `conf_system'.
 		require
-			s_ok: s /= Void and then not s.is_empty
+			s_not_void: s /= Void
 		do
-			project_path := s
+			conf_system := s
 		ensure
-			project_path_set: project_path = s
+			conf_system_set: conf_system = s
 		end
 
 	reset_date_stamp is
@@ -220,34 +142,6 @@ feature -- Status setting
 		do
 				-- Dummy value to make sure it is different from before.
 			date := date - 1
-		end
-
-	load is
-			-- Load configuration system (config file, project if available)
-		local
-			l_file: RAW_FILE
-		do
-				-- default config file
-			if file_name = Void then
-				file_name := Execution_environment.current_working_directory
-				file_name.append_character (Operating_environment.directory_separator)
-				file_name.append ("Ace")
-				create l_file.make (file_name)
-				if not l_file.exists then
-					file_name := Execution_environment.current_working_directory
-					file_name.append_character (Operating_environment.directory_separator)
-					file_name.append ("Ace.acex")
-				end
-			end
-
-			retrieve_config
-			compute_target
-			do_user_file
-		rescue
-			if Rescue_status.is_error_exception then
-					-- Reset `Workbench'
-				successful := False
-			end
 		end
 
 	store is
@@ -337,6 +231,84 @@ feature -- Status setting
 	compile_all_classes: BOOLEAN
 			-- Are all classes root? i.e. all the classes must be compiled
 
+	process_user_file (a_project_path: STRING) is
+			-- Handle the user file.
+			-- If we have a user file retrieve it, else create it
+			-- If we have a -project_directory argument, set the new path, else set the default path.
+			-- Store the new file.
+		require
+			file_name_ok: file_name /= Void and then not file_name.is_empty
+			target_name_set: target_name /= Void and then not target_name.is_empty
+			valid_target: conf_system.targets.has (target_name)
+		local
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+			l_user_file: STRING
+			l_file: RAW_FILE
+			vd21: VD21
+			vd72: VD72
+			l_changed: BOOLEAN
+		do
+			l_user_file := file_name+".user"
+
+				-- if file exists, load it
+			create l_file.make (l_user_file)
+			if l_file.exists then
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_reading
+					create l_sed_facilities
+					user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+					l_file.close
+				else
+					create vd21
+					vd21.set_file_name (l_user_file)
+					Error_handler.insert_error (vd21)
+					Error_handler.raise_error
+				end
+			end
+
+				-- if we don't have a user_options object, create one.
+			if user_options = Void then
+				create user_options
+			end
+
+				 -- update project path
+			if a_project_path /= Void then
+				project_path := a_project_path.twin
+				l_changed := not equal (a_project_path, user_options.eifgen)
+				user_options.set_eifgen (a_project_path)
+			elseif user_options.eifgen /= Void then
+				project_path := user_options.eifgen
+			else
+				project_path := file_system.dirname (file_name)
+				user_options.set_eifgen (project_path)
+				l_changed := True
+			end
+
+				-- store the updated config file
+			if l_changed then
+				l_file.open_write
+				if l_file.is_writable then
+					create l_sed_rw.make (l_file)
+					l_sed_rw.set_for_writing
+					create l_sed_facilities
+					l_sed_facilities.independent_store (user_options, l_sed_rw, True)
+					l_file.close
+				else
+					create vd72
+					vd72.set_file_name (l_user_file)
+					Error_handler.insert_error (vd72)
+					Error_handler.raise_error
+				end
+			end
+		ensure
+			user_options_set: user_options /= Void
+		rescue
+			is_error := True
+		end
+
 feature {NONE} -- Implementation
 
 	retrieve_config is
@@ -390,114 +362,10 @@ feature {NONE} -- Implementation
 			end
 			target_name := l_new_target.name
 
-			internal_target_name.set_name (target_name)
+			internal_project_target_name.set_name (target_name)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)
-		rescue
-			is_error := True
-		end
-
-	do_user_file is
-			-- Handle the user file.
-			-- If we have a user file retrieve it, else create it
-			-- If we have a -project_directory argument, set the new path, else set the default path.
-			-- Store the new file.
-		require
-			file_name_ok: file_name /= Void and then not file_name.is_empty
-			target_name_set: target_name /= Void and then not target_name.is_empty
-			valid_target: conf_system.targets.has (target_name)
-		local
-			l_sed_rw: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			l_user_file: STRING
-			l_file: RAW_FILE
-			vd21: VD21
-			vd72: VD72
-			vd76: VD76
-			l_changed: BOOLEAN
-			i: INTEGER
-			l_dir: DIRECTORY
-		do
-			l_user_file := file_name+".user"
-
-				-- if file exists, load it
-			create l_file.make (l_user_file)
-			if l_file.exists then
-				l_file.open_read
-				if l_file.is_open_read then
-					create l_sed_rw.make (l_file)
-					l_sed_rw.set_for_reading
-					create l_sed_facilities
-					user_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
-					l_file.close
-				else
-					create vd21
-					vd21.set_file_name (l_user_file)
-					Error_handler.insert_error (vd21)
-					Error_handler.raise_error
-				end
-			end
-
-				-- if we don't have a user_options object, create one.
-			if user_options = Void then
-				create user_options
-			end
-
-				 -- update project path
-			if project_path /= Void then
-					-- check if directory is present
-				create l_dir.make (project_path)
-				if not l_dir.exists then
-					create vd76
-					error_handler.insert_error (vd76)
-					error_handler.raise_error
-				end
-				project_path.append_character (Operating_environment.directory_separator)
-				project_path.append ("EIFGENS")
-
-				l_changed := equal (project_path, user_options.eifgen)
-				user_options.set_eifgen (project_path)
-			elseif user_options.eifgen /= Void then
-				project_path := user_options.eifgen
-			else
-				project_path := file_name.twin
-				i := project_path.last_index_of (Operating_environment.directory_separator, project_path.count)
-				project_path.replace_substring ("EIFGENS", i+1, project_path.count)
-
-				user_options.set_eifgen (project_path)
-				l_changed := True
-			end
-
-				-- create EIFGENS directory if necessary
-			create l_dir.make (project_path)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-			if not l_dir.exists then
-				create vd76
-				error_handler.insert_error (vd76)
-				error_handler.raise_error
-			end
-
-				-- store the updated config file
-			if l_changed then
-				l_file.open_write
-				if l_file.is_writable then
-					create l_sed_rw.make (l_file)
-					l_sed_rw.set_for_writing
-					create l_sed_facilities
-					l_sed_facilities.independent_store (user_options, l_sed_rw, True)
-					l_file.close
-				else
-					create vd72
-					vd72.set_file_name (l_user_file)
-					Error_handler.insert_error (vd72)
-					Error_handler.raise_error
-				end
-			end
-		ensure
-			user_options_set: user_options /= Void
 		rescue
 			is_error := True
 		end
@@ -1162,7 +1030,7 @@ feature {NONE} -- Implementation
 			l_sed_rw: SED_MEDIUM_READER_WRITER
 			l_sed_facilities: SED_STORABLE_FACILITIES
 			l_file: RAW_FILE
-			l_pre_path: STRING
+			l_pre_path: FILE_NAME
 			l_user_options: USER_OPTIONS
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
@@ -1202,7 +1070,7 @@ feature {NONE} -- Implementation
 			else
 					-- default
 				create l_user_options
-				l_user_options.set_eifgen (l_pre.location.build_path ("EIFGENS", ""))
+				l_user_options.set_eifgen (l_pre.location.build_path (eiffelgens, ""))
 			end
 			if l_user_options = Void or else l_user_options.eifgen = Void then
 				create vd79
@@ -1218,9 +1086,9 @@ feature {NONE} -- Implementation
 			end
 
 				-- retrieve precompile project
-			l_pre_path := l_user_options.eifgen.twin
-			l_pre_path.append_character (operating_environment.directory_separator)
-			l_pre_path.append (l_system.library_target.name)
+			create l_pre_path.make_from_string (l_user_options.eifgen)
+			l_pre_path.extend (Eiffelgens)
+			l_pre_path.extend (l_system.library_target.name)
 			create l_precomp_r
 			l_precomp_r.retrieve_precompiled (l_pre_path)
 

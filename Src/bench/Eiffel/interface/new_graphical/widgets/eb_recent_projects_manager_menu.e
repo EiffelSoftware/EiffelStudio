@@ -72,11 +72,11 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 				project_file_name := recent_projects.item
 				create open_cmd.make
 				create menu_item.make_with_text (project_file_name)
-				menu_item.select_actions.extend (agent open_cmd.execute_with_file (project_file_name))
+				menu_item.select_actions.extend (agent open_cmd.execute_with_file (project_file_name, False))
 				extend (menu_item)
 				recent_projects.forth
 			end
-		end	
+		end
 
 feature -- Recycle
 
@@ -87,7 +87,7 @@ feature -- Recycle
 		end
 
 feature {NONE} -- Implementation
-		
+
 	recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			-- Associated recent project manager
 

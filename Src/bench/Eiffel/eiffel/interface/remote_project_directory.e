@@ -125,21 +125,21 @@ feature -- Access
 	licensed: BOOLEAN
 			-- Is this precompilation protected by a license?
 
-	project_eif: FILE_NAME is
+	project_epr_location: FILE_NAME is
 			-- Full name of the file where the
 			-- workbench is stored
 		do
 			create Result.make_from_string (name);
-			Result.set_file_name (Dot_workbench);
+			Result.set_file_name (project_file_name);
 		end
 
-	project_eif_file: PROJECT_EIFFEL_FILE is
+	project_epr_file: PROJECT_EIFFEL_FILE is
 			-- File where the workbench is stored
 		do
-			create Result.make (project_eif)
+			create Result.make (project_epr_location)
 		end
 
-	precomp_eif: FILE_NAME is
+	precomp_eif_location: FILE_NAME is
 			-- Full name of the file where the
 			-- precompilation information is stored
 		do
@@ -150,7 +150,7 @@ feature -- Access
 	precomp_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the precompilation information is stored
 		do
-			create Result.make (precomp_eif)
+			create Result.make (precomp_eif_location)
 		end
 
 	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
@@ -256,7 +256,7 @@ feature -- Check
 			vd53: VD53;
 			file: PROJECT_EIFFEL_FILE
 		do
-			file := project_eif_file;
+			file := project_epr_file;
 			file.open_read
 			file.check_version_number (precomp_id);
 			file.close
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 
 				-- project.eif file must be
 				-- readable.
-			check_file (<<>>, Dot_workbench);
+			check_file (<<>>, project_file_name);
 
 				-- W_code file must be
 				-- readable.

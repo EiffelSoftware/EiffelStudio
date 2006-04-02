@@ -54,16 +54,9 @@ inherit
 		end
 
 create
-	make,
 	make_with_parent
 
 feature {NONE} -- Initialization
-
-	make is
-			-- Create the command relative to the last focused window
-		do
-			internal_parent_window := Void
-		end
 
 	make_with_parent (a_window: EV_WINDOW) is
 			-- Create the command relative to the parent window `a_window'
@@ -74,11 +67,6 @@ feature {NONE} -- Initialization
 		ensure
 			internal_parent_window_valid: internal_parent_window /= Void
 		end
-
-feature -- License managment
-
-	license_checked: BOOLEAN is True
-			-- Is the license checked.
 
 feature -- Execution
 
@@ -91,122 +79,7 @@ feature -- Execution
 			new_project_dialog.show_modal_to_window (parent_window)
 		end
 
-feature -- Project initialization
-
-	create_project (dir: STRING; ask_confirmation: BOOLEAN) is
-			-- Create a project in directory `dir'.
-			-- Ask confirmation before deleting the EIFGEN if `ask_confirmation' is set.
-		local
-			wd: EV_WARNING_DIALOG
-			qd: EV_QUESTION_DIALOG
-			curr_directory: DIRECTORY
-			epr_file_name: STRING
-			epr_full_file_name: FILE_NAME
-			epr_file: PROJECT_EIFFEL_FILE
-		do
-			create project_dir.make (dir, Void)
-			Project_directory_name.wipe_out
-			Project_directory_name.set_directory (dir)
-
-			conf_todo
---			if not project_dir.has_base_full_access then
---				choose_again := True
---				create wd.make_with_text (Warning_messages.w_Cannot_create_project_directory (project_dir.name))
---				wd.show_modal_to_window (parent_window)
---			else
---					-- Look for an "epr" file.
---				create curr_directory.make_open_read (dir)
---				from
---					curr_directory.start
---					curr_directory.readentry
---				until
---					epr_file_name /= Void or else curr_directory.lastentry = Void
---				loop
---					if (curr_directory.lastentry.substring_index (".epr", 1) /= 0) then
---						epr_file_name := curr_directory.lastentry.twin
---					end
---					curr_directory.readentry
---				end
---
---				if ask_confirmation and then epr_file_name /= Void then
---					create epr_full_file_name.make_from_string (dir)
---					epr_full_file_name.set_file_name (epr_file_name)
---					create epr_file.make (epr_full_file_name)
---					project_dir.set_project_file (epr_file)
---					if project_dir.exists then
---						create qd.make_with_text (Warning_messages.w_Project_exists (project_dir.name))
---						qd.show_modal_to_window (parent_window)
---						if qd.selected_button /= Void and then qd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes) then
---							init_project
---						end
---					else
---							-- No "EIFGEN" file -> there is no project... go ahead.
---						init_project
---					end
---				else
---						-- No "epr" file or no confirmation asked -> there is no project... go ahead.
---					init_project
---				end
---			end
-		end
-
 feature {NONE} -- Implementation
-
-	init_project is
-			-- Initialize project.
-		local
-			msg: STRING
-			retried: BOOLEAN
-			error_dialog: EV_ERROR_DIALOG
-		do
-			if not retried then
-					-- Create & show the deleting dialog
---				build_deleting_dialog
---				parent_window.disable_sensitive
-
-					-- Create a new project (and delete the content of the
-					-- directory if necessarry)
-				Eiffel_project.make_new (project_dir, True, agent on_delete_directory, agent on_cancel_operation)
-
-					-- Destroy and forget the "deleting" dialog
-				if deleting_dialog /= Void then
-					parent_window.enable_sensitive
-					deleting_dialog.destroy
-					deleting_dialog := Void
-				end
-
-				if Eiffel_project.initialized then
-					msg := Interface_names.t_New_project.twin
-					msg.append (": ")
-					msg.append (project_dir.name)
-				end
-			else
-					-- We were unable to complete the task due to an error
-					-- We display an error message asking the user if he
-					-- want to abort the initialization of the project or
-					-- not.
-				if deleting_dialog /= Void then
-					parent_window.enable_sensitive
-					deleting_dialog.destroy
-					deleting_dialog := Void
-				end
-				create error_dialog.make_with_text (Warning_messages.w_Cannot_create_project_directory (project_dir.name))
-				error_dialog.set_buttons (<<Interface_names.b_Abort, Interface_names.b_Retry>>)
-				error_dialog.set_default_push_button (error_dialog.button (Interface_names.b_Retry))
-				error_dialog.set_default_cancel_button (error_dialog.button (Interface_names.b_Abort))
-				error_dialog.show_modal_to_window (parent_window)
-				if error_dialog.selected_button.is_equal (Interface_names.b_Retry) then
-					init_project -- Restart the initialization of the project
-				else
-					-- If the user has pressed "Abort", the function will do stop and do nothing.
-				end
-			end
-		rescue
-			if not retried then
-				retried := True
-				retry
-			end
-		end
 
 	build_deleting_dialog is
 			-- Build the dialog displayed to have the user wait during the
@@ -302,39 +175,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Callbacks
 
-	execute_callback (dialog: EV_DIRECTORY_DIALOG) is
-			-- Get callback information from `dialog', then create the project if possible
-		local
-			wd: EV_WARNING_DIALOG
-			dir_name, ebench_name: STRING
-			last_char: CHARACTER
-		do
-			dir_name := dialog.directory
-			if dir_name.is_empty then
-				choose_again := True
-				create wd.make_with_text (Warning_messages.w_directory_not_exist (dir_name))
-				wd.show_modal_to_window (parent_window)
-			else
-					--| Since Vision is returning a directory name with
-					--| a directory separator, we need to be sure that we
-					--| will remove it
-				if dir_name.count > 1 then
-					last_char := dir_name.item (dir_name.count)
-					if last_char = Operating_environment.Directory_separator then
-						dir_name.remove (dir_name.count)
-					end
-				end
-				if not Eiffel_Project.initialized then
-					create_project (dir_name, True)
-				else
-					ebench_name := Estudio_command_name.twin
-					ebench_name.append (" -create ")
-					ebench_name.append (dir_name)
-					launch_ebench (ebench_name)
-				end
-			end
-		end
-
 	parent_window: EV_WINDOW is
 			-- Parent window.
 		local
@@ -358,9 +198,6 @@ feature {NONE} -- Callbacks
 			-- Parent window if any, Void if none.
 
 feature {NONE} -- Implementation / Private attributes
-
-	project_dir: PROJECT_DIRECTORY
-			-- Location of the project directory
 
 	deleting_dialog: EV_DIALOG
 			-- Dialog displaying that the program is currently deleting

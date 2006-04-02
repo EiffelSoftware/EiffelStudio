@@ -53,8 +53,6 @@ feature {NONE}
 
 	Dot_h: STRING is ".h"
 
-	Dot_workbench: STRING is "precomp.epr"
-
 	Dot_x: STRING is ".x"
 
 	Dot_xpp: STRING is ".xpp"
@@ -80,6 +78,8 @@ feature {NONE}
 	Efrozen: STRING is "efrozen"
 
 	Ehisto: STRING is "ehisto"
+
+	Eiffelgens: STRING is "EIFGENs"
 
 	Einit: STRING is "einit"
 
@@ -168,7 +168,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 7
-	Build_version_number: STRING is "0826"
+	Build_version_number: STRING is "0901"
 			-- Version number
 
 	Version_number: STRING is

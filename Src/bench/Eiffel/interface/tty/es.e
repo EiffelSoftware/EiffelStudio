@@ -11,11 +11,13 @@ class
 	ES
 
 inherit
-	COMMAND_LINE_PROJECT
-
 	ARGUMENTS
 
+	EB_SHARED_OUTPUT_TOOLS
+
 	SHARED_CONFIGURE_RESOURCES
+
+	SHARED_EIFFEL_PROJECT
 
 	SHARED_EWB_HELP
 
@@ -32,9 +34,16 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
+	SHARED_ERROR_BEHAVIOR
+
 	REFACTORING_HELPER
 
 	COMPILER_EXPORTER
+
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -52,6 +61,7 @@ feature -- Initialization
 			compilation: EWB_COMP
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
+			l_loader: EC_PROJECT_LOADER
 		do
 			if not retried then
 					-- Check that environment variables
@@ -92,41 +102,30 @@ feature -- Initialization
 							--| Initialization of the display
 						create e_displayer.make (Error_window);
 						Eiffel_project.set_error_displayer (e_displayer)
-
-							-- if necessary, do conversions
-						if old_project_file /= Void then
-							lace.convert_project (old_project_file)
-						elseif old_ace_file /= Void then
-							lace.convert_ace (old_ace_file)
-						end
-
-						workbench.lace.load
-						project_path_name := workbench.lace.project_path
-						Project_directory_name.set_directory (project_path_name)
-
-						init_project
-						if not error_occurred then
-							if project_is_new then
-								make_new_project (equal (command.name, loop_cmd_name))
-							else
-								retrieve_project
-							end
-						end
-						lace.recompile
-
 						if output_file_option then
 							create file_degree_output.make (output_file_name)
 							Eiffel_project.set_degree_output (file_degree_output)
 						end
 
-						if not error_occurred then
+							-- Load project
+						create l_loader
+						l_loader.set_should_stop_on_prompt (stop_on_error)
+						if old_project_file /= Void then
+							l_loader.open_project_file (old_project_file, Void, Void, is_clean_requested)
+						elseif old_ace_file /= Void then
+							l_loader.open_project_file (old_ace_file, Void, Void, is_clean_requested)
+						else
+							l_loader.open_project_file (config_file_name, target_name, project_path_name, is_clean_requested)
+						end
+
+						if not error_occurred and not l_loader.has_error then
 							compilation ?= command
 							if compilation /= Void then
 								compilation.set_is_finish_freezing_called (is_finish_freezing_called)
 							end
 							ewb_loop ?= command
 							if
-								project_is_new and then
+								l_loader.is_new_project and then
 								compilation = Void and then ewb_loop = Void
 							then
 								create {EWB_QUICK_MELT} compilation
@@ -174,6 +173,17 @@ feature -- Initialization
 
 feature -- Properties
 
+	project_path_name: STRING;
+			-- Path where to look for the EIFGEN directory and the
+			-- project file.
+
+	error_occurred: BOOLEAN;
+			-- Did an error occur during the initialization
+			-- process?
+
+	retried: BOOLEAN;
+			-- For rescues
+
 	command: EWB_CMD
 			-- Command to be executed corresponding to
 			-- command line options
@@ -215,6 +225,9 @@ feature -- Properties
 	is_precompiling: BOOLEAN
 			-- Should compilation actual precompile?
 
+	is_clean_requested: BOOLEAN
+			-- Should we recompile from scratch?
+
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
 		once
@@ -245,6 +258,7 @@ feature -- Properties
 			Result.put (target_help, target_cmd_name)
 			Result.put (version_help, version_cmd_name)
 			Result.put (batch_help, batch_cmd_name)
+			Result.put (clean_help, clean_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -303,7 +317,7 @@ feature -- Output
 		do
 			io.put_string ("Usage:%N%T")
 			io.put_string (argument (0))
-			io.put_string (" [-help | -version | -batch | ")
+			io.put_string (" [-help | -version | -batch | -clean | ")
 			add_usage_special_cmds
 			io.put_string ("-loop | -quick_melt | -melt | ")
 			if Has_documentation_generation then
@@ -322,9 +336,9 @@ feature -- Output
 					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N")
 			end
 			io.put_string ("%
-				%%T-overwrite_old_project | -stop |%N%
-				%%T-config config.xml | -target target |%N%
+				%%T-config config.acex | -target target |%N%
 				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name|%N%
+				%%T-stop |%N%
 				%%T-project_path Project_directory_path | -file File]%N")
 		end
 
@@ -811,7 +825,7 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						lace.set_project_path (l_arg)
+						project_path := l_arg
 					else
 						option_error := True
 					end
@@ -835,7 +849,7 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						lace.set_file_name (l_arg)
+						config_file_name := l_arg
 					else
 						option_error := True
 					end
@@ -847,17 +861,19 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						lace.set_target_name (l_arg)
+						target_name := l_arg
 					else
 						option_error := True
 					end
 				end
-			elseif option.is_equal ("-overwrite_old_project") then
-				overwrite_old_project := True
 			elseif option.is_equal ("-stop") or else option.is_equal ("-batch") then
 					-- The compiler stops on errors, useful for batch compilation without
 					-- user intervention.
 				set_stop_on_error (True)
+			elseif option.is_equal ("-clean") then
+					-- Compiler will delete project and recompile from scratch without
+					-- asking.
+				is_clean_requested := True
 			elseif option.is_equal ("-file") then
 				if current_option < argument_count then
 					current_option := current_option + 1
@@ -983,11 +999,14 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	Old_ace_file: STRING
+	old_ace_file: STRING
 			-- Old ace file to convert.
 
-	Old_project_file: STRING;
+	old_project_file: STRING
 			-- Old project file to convert.
+
+	config_file_name, target_name, project_path: STRING;
+			-- Name of the config file, target and path where project will be compiled.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

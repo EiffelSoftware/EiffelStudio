@@ -39,6 +39,8 @@ feature {NONE}
 
 	class_list_help: STRING is "show the classes in alphabetic order"
 
+	clean_help: STRING is "delete existing project if any and perform a fresh compilation"
+
 	clients_help: STRING is "show the clients of a class"
 
 	cluster_hierarchy_help: STRING is "display the cluster hierarchy of the system"

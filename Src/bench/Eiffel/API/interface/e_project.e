@@ -63,9 +63,10 @@ feature -- Initialization
 		end
 
 	make_new (
+		base_dir: DIRECTORY;
 		project_dir: PROJECT_DIRECTORY
 		deletion_requested: BOOLEAN
-		deletion_agent: PROCEDURE [ANY, TUPLE]
+		deletion_agent: PROCEDURE [ANY, TUPLE [ARRAYED_LIST [STRING]]]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
 	) is
 			-- Create an Eiffel Project.
@@ -90,9 +91,11 @@ feature -- Initialization
 			--   Make it return `True' to cancel the operation.
 		require
 			not_initialized: not initialized
-			is_readable: project_dir.is_base_readable
-			is_writable: project_dir.is_base_writable
-			is_executable: project_dir.is_base_executable
+			base_dir_not_void: base_dir /= Void
+			project_dir_not_void: project_dir /= Void
+			is_readable: base_dir.is_readable
+			is_writable: base_dir.is_writable
+			is_executable: base_dir.is_executable
 			prev_read_write_error: not read_write_error
 			valid_deletion_agent: deletion_agent /= Void implies deletion_requested
 		local
@@ -100,9 +103,10 @@ feature -- Initialization
 			new_name: STRING
 			l_prev_work: STRING
 		do
-			create d.make (Eiffel_gen_path)
+			l_prev_work := Execution_environment.current_working_directory
+			create d.make (temp_eiffel_gen_path)
 			if d.exists then
-				new_name := Eiffel_gen_path.twin
+				new_name := temp_eiffel_gen_path.twin
 				if new_name.item (new_name.count) = ']' then
 						-- VMS specification. We need to append `_old' before the `]'.
 					new_name.insert_string ("_old", new_name.count - 1)
@@ -114,7 +118,7 @@ feature -- Initialization
 				if deletion_requested then
 						-- Rename the old project to EIFGEN so that we can
 						-- delete it.
-					d.change_name (Eiffel_gen_path)
+					d.change_name (temp_eiffel_gen_path)
 					delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
 					delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
 					delete_generation_directory (Final_generation_path, deletion_agent,
@@ -128,7 +132,6 @@ feature -- Initialization
 				Create_compilation_directory
 				Create_generation_directory
 				set_is_initialized
-				l_prev_work := Execution_environment.current_working_directory
  				Execution_environment.change_working_directory (project_directory.name)
 			end
 			manager.on_project_create
@@ -737,12 +740,8 @@ feature -- Output
 					--| Prepare informations to store
 				Comp_system.server_controler.wipe_out
 				saved_workbench := workbench
-				create file_name.make_from_string (Project_directory.name);
-				if Compilation_modes.is_precompiling then
-					file_name.set_file_name (dot_workbench)
-				else
-					file_name.set_file_name (project_file_name)
-				end
+				create file_name.make_from_string (Target_path);
+				file_name.set_file_name (project_file_name)
 
 				create project_file.make_open_write (file_name)
 				store_project_info (project_file)
@@ -830,10 +829,6 @@ feature {NONE} -- Retrieval
 			file.put_string (":")
 			file.put_string (Comp_system.compilation_id.out)
 			file.put_new_line
-			file.put_string (ace_file_path_tag)
-			file.put_string (":")
-			file.put_string (ace.file_name)
-			file.put_new_line
 			file.put_string (info_flag_end)
 			file.put_new_line
 
@@ -852,7 +847,7 @@ feature {NONE} -- Retrieval
 			project_dir_exists: project_directory.exists
 			file_readable: project_directory.is_readable
 			not_initialized: not initialized
-			project_eif_ok: project_directory.valid_project_eif
+			project_eif_ok: project_directory.valid_project_epr
 			prev_read_write_error: not read_write_error
 		local
 			precomp_r: PRECOMP_R
@@ -867,7 +862,7 @@ feature {NONE} -- Retrieval
 
 			if not error_occurred then
 
-				p_eif := project_directory.project_eif_file
+				p_eif := project_directory.project_epr_file
 				e_project := p_eif.retrieved_project
 				if p_eif.error then
 					if p_eif.is_corrupted then

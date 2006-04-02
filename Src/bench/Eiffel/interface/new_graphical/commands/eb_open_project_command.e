@@ -79,14 +79,9 @@ feature {NONE} -- Initialization
 			internal_parent_window_valid: internal_parent_window /= Void
 		end
 
-feature -- License managment
-
-	license_checked: BOOLEAN is True
-			-- Is the license checked.
-
 feature -- Execution
 
-	execute_with_file (a_project_file_name: STRING) is
+	execute_with_file (a_project_file_name: STRING; is_fresh_compilation: BOOLEAN) is
 			-- Open the specific project named `a_project_file_name'
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
@@ -94,30 +89,22 @@ feature -- Execution
 			wd: EV_WARNING_DIALOG
 			file: RAW_FILE
 			ebench_name: STRING
-			rescued: BOOLEAN
+			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
-			if not rescued then
+			if not Eiffel_project.initialized then
+				create l_project_loader.make (parent_window)
+				l_project_loader.open_project_file (a_project_file_name, Void, Void, is_fresh_compilation)
+			else
 				create file.make (valid_file_name (a_project_file_name))
 				if not file.exists or else file.is_directory then
-					create wd.make_with_text (Warning_messages.w_file_not_exist (a_project_file_name))
+					create wd.make_with_text (warning_messages.w_file_not_exist (a_project_file_name))
 					wd.show_modal_to_window (parent_window)
 				else
-					if not Eiffel_project.initialized then
-						open_project_file (a_project_file_name)
-					else
-						ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
-						ebench_name.append (" ")
-						ebench_name.append (a_project_file_name)
-						launch_ebench (ebench_name)
-					end
+					ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
+					ebench_name.append (" ")
+					ebench_name.append (a_project_file_name)
+					launch_ebench (ebench_name)
 				end
-			end
-		rescue
-			add_error_message (Warning_messages.w_Unable_to_retrieve_project)
-			display_error_message (parent_window)
-			if catch_exception then
-				rescued := True
-				retry
 			end
 		end
 
@@ -147,189 +134,10 @@ feature {NONE} -- Callbacks
 	file_choice_callback (argument: EB_FILE_OPEN_DIALOG) is
 			-- This is a callback from the name chooser.
 			-- We get the project name and then open the project, if possible
-		local
-			file_name: STRING
-			wd: EV_WARNING_DIALOG
-			file: RAW_FILE
 		do
-				-- This is a callback from the name chooser.
 				-- We get the project name and then open the project, if possible
-			file_name := argument.file_name
-			if file_name.is_empty then
-				choose_again := True
-				create wd.make_with_text (Warning_messages.w_file_not_exist (file_name))
-				wd.show_modal_to_window (parent_window)
-			else
-				create file.make (valid_file_name (file_name))
-				if not file.exists or else file.is_directory then
-					choose_again := True
-					create wd.make_with_text (Warning_messages.w_file_not_exist (file_name))
-					wd.show_modal_to_window (parent_window)
-				else
-					execute_with_file (file_name)
-				end
-			end
+			execute_with_file (argument.file_name, False)
 		end
-
-feature {NONE} -- Project Initialization
-
-	open_project_file (file_name: STRING) is
-			-- Initialize project as a new one or retrieving
-			-- existing data in the valid directory `project_dir'.
-		require
-			file_name_non_void: file_name /= Void
-		local
-			l_ext: STRING
-			l_pos: INTEGER
-			l_not_processed: BOOLEAN
-			l_file_name: FILE_NAME
-		do
-			workbench.make
-
-			conf_todo_msg ("Handle errors")
-				-- Try to extract the extension of the file.
-			l_pos := file_name.last_index_of ('.', file_name.count)
-			if l_pos > 0 and then l_pos < file_name.count then
-				l_ext := file_name.substring (l_pos + 1, file_name.count)
-				if l_ext.is_equal (config_extension) then
-					lace.set_file_name (file_name)
-					lace.load
-				elseif l_ext.is_equal (project_extension) then
-					lace.convert_project (file_name)
-					lace.load
-				elseif l_ext.is_equal (ace_file_extension) then
-					lace.convert_ace (file_name)
-					lace.load
-				else
-					l_not_processed := True
-				end
-			else
-				l_not_processed := True
-			end
-
-			if l_not_processed then
-					-- We try to load it as a normal config file.
-				lace.set_file_name (file_name)
-				lace.load
-			end
-
-				--| Retrieve existing project
-			Project_directory_name.wipe_out
-			Project_directory_name.set_directory (lace.project_path)
-			create l_file_name.make_from_string (eiffel_gen_path)
-			l_file_name.set_file_name (project_file_name)
-			create project_file.make (l_file_name)
-			create project_dir.make (eiffel_gen_path, project_file)
-
-			retrieve_project
-			lace.recompile
-		end
-
-	retrieve_project is
-			-- Retrieve a project from the disk.
-		require
-			project_directory_exists: project_dir /= Void
-		local
-			msg: STRING
-			title: STRING
-			project_name: STRING
-			wd: EV_WARNING_DIALOG
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
-			l_display_system_info: BOOLEAN
-		do
-				-- Retrieve the project
-			Eiffel_project.make (project_dir)
-
-			if Eiffel_project.retrieval_error then
-				if Eiffel_project.manager.is_created then
-					Eiffel_project.manager.on_project_close
-				end
-
-				if Eiffel_project.is_incompatible then
-					if Eiffel_project.ace_file_path /= Void then
-							-- Ace file included in the header of the .epr file...we can recompile if needed.
-						create cd.make_initialized (
-							2, preferences.dialog_data.confirm_convert_project_string,
-							Warning_messages.w_Project_incompatible_version (project_dir.name, version_number,
-								Eiffel_project.incompatible_version_number),
-							Interface_names.l_Discard_convert_project_dialog,
-							preferences.preferences
-						)
-						cd.set_ok_action (agent recompile_project (project_dir.name, Eiffel_project.ace_file_path))
-						cd.show_modal_to_window (parent_window)
-					else
-							-- Ace file NOT included in the header of the .epr file...we can't do much
-						msg := Warning_messages.w_Project_incompatible (project_dir.name, version_number,
-							Eiffel_project.incompatible_version_number)
-						create wd.make_with_text (msg)
-						wd.show_modal_to_window (parent_window)
-					end
-				else
-					if Eiffel_project.is_corrupted then
-						msg := Warning_messages.w_Project_corrupted (project_dir.name)
-					elseif Eiffel_project.retrieval_interrupted then
-						msg := Warning_messages.w_Project_interrupted (project_dir.name)
-					end
-					create wd.make_with_text (msg)
-					wd.show_modal_to_window (parent_window)
-				end
-
-			elseif Eiffel_project.incomplete_project then
-				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
-				create wd.make_with_text (msg)
-				wd.show_modal_to_window (parent_window)
-
-			elseif Eiffel_project.read_write_error then
-				msg := Warning_messages.w_Cannot_open_project
-				create wd.make_with_text (msg)
-				wd.show_modal_to_window (parent_window)
-			else
-					-- There was no error, meaning that retrieval was successful
-					-- without a recompilation of the non-compatible project.
-					-- Therefore we display the system information.
-				l_display_system_info := True
-			end
-
-			if not Eiffel_project.error_occurred then
-				init_project
-				title := Interface_names.l_Loaded_project.twin
-				project_name := project_dir.name
-				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
-					project_name.keep_head (project_name.count -1)
-				end
-				title.append (project_name)
-				if Eiffel_system.is_precompiled then
-					title.append ("  (precompiled)")
-				end
-				window_manager.display_message (title)
-				Recent_projects_manager.save_environment
-
-				--| IEK With project session handling this code is no longer needed, remove when fully integrated.
-				if l_display_system_info then
-						-- We print text in the project_tool text concerning the system
-						-- because we were successful retrieving the project without
-						-- errors or conversion.
-					output_manager.display_system_info
-				end
-			end
-		end
-
-	init_project is
-			-- Initialize project.
-		do
-		end
-
-feature {NONE} -- Project directory access
-
-	project_dir: PROJECT_DIRECTORY
-			-- Location of the project directory.
-
-	project_file: PROJECT_EIFFEL_FILE
-			-- Location of the file where all the information
-			-- about the current project are saved.
-
-	choose_again: BOOLEAN
-			-- Do we have to display the project directory dialog box again?
 
 feature {NONE} -- Implementation
 
@@ -370,26 +178,6 @@ feature {NONE} -- Implementation
 				Result.remove (file_name.count)
 			else
 				Result := file_name
-			end
-		end
-
-	recompile_project (a_directory_name: STRING; an_ace_file_name: STRING) is
-			-- Create a new project
-		local
-			create_project_dialog: EB_CREATE_PROJECT_DIALOG
-			dev_window: EB_DEVELOPMENT_WINDOW
-		do
-				-- Create the project.
-			create create_project_dialog.make_with_ace_and_directory_and_flags (
-				parent_window, an_ace_file_name, a_directory_name, True, True)
-			create_project_dialog.create_project
-
-				-- Compile if needed.
-			if create_project_dialog.success and then create_project_dialog.compile_project then
-				dev_window := window_manager.last_focused_development_window
-				if dev_window /= Void then
-					dev_window.Melt_project_cmd.execute
-				end
 			end
 		end
 

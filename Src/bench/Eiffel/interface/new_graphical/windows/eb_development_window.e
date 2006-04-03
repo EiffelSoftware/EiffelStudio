@@ -3174,10 +3174,10 @@ feature {NONE} -- Implementation
 			l_assembly: ASSEMBLY_I
 			l_sorted_cluster: EB_SORTED_CLUSTER
 			l_indexes: INDEXING_CLAUSE_AS
-			l_classes: LIST [CLASS_I]
-			l_subclu: LIST [EB_SORTED_CLUSTER]
+			l_classes: DS_LIST [CLASS_I]
+			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
 			l_cl_i: CLASS_I
-			l_list_cl_i: LIST [CLASS_I]
+			l_list_cl_i: DS_LIST [CLASS_I]
 			l_cluster: CLUSTER_I
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
@@ -3283,7 +3283,7 @@ feature {NONE} -- Implementation
 				until
 					l_classes.after
 				loop
-					l_cl_i := l_classes.item
+					l_cl_i := l_classes.item_for_iteration
 					l_assert_level := l_cl_i.assertion_level
 					l_format_context.put_manifest_string (" - ")
 					l_format_context.put_classi (l_cl_i)

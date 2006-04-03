@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Mon Mar 13 16:35:46 2006
+/* at Thu Mar 30 12:26:16 2006
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -99,7 +99,7 @@ MIDL_DEFINE_GUID(CLSID, CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_C
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Mon Mar 13 16:35:46 2006
+/* at Thu Mar 30 12:26:16 2006
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run,appending)

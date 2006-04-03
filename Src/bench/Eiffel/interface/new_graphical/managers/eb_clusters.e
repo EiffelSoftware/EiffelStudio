@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			create observer_list.make (10)
 			create libraries.make
 			create assemblies.make
-			create clusters.make
+			create clusters.make (10)
 		end
 
 feature -- Initialization
@@ -282,7 +282,7 @@ feature -- Status report
 
 	assemblies: SORTED_TWO_WAY_LIST [CONF_ASSEMBLY]
 
-	clusters: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+	clusters: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 
 feature -- Status setting
 
@@ -364,7 +364,7 @@ feature -- Element change
 			valid_class: a_class /= Void
 			valid_clusters: old_group /= Void and new_cluster /= Void
 		local
-			class_list: SORTED_TWO_WAY_LIST [CLASS_I]
+			class_list: DS_LIST [CLASS_I]
 			actual_parent: CLUSTER_I
 			new_sorted_cluster: EB_SORTED_CLUSTER
 			old_file: RAW_FILE
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 		require
 			clusteri_not_void: clusteri /= Void
 		local
-			parent_cluster_sons: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+			parent_cluster_sons: DS_LIST [EB_SORTED_CLUSTER]
 		do
 			if parent_cluster = Void then
 				parent_cluster_sons := clusters
@@ -855,8 +855,8 @@ feature {NONE} -- Implementation
 			until
 				parent_cluster_sons.after or Result /= Void
 			loop
-				if parent_cluster_sons.item.actual_group = clusteri then
-					Result := parent_cluster_sons.item
+				if parent_cluster_sons.item_for_iteration.actual_group = clusteri then
+					Result := parent_cluster_sons.item_for_iteration
 				end
 				parent_cluster_sons.forth
 			end

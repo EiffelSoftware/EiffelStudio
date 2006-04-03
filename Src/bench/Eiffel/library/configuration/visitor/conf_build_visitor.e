@@ -861,7 +861,7 @@ feature {NONE} -- Implementation
 								old_group := l_assembly
 
 									-- create new assembly and process it
-								l_assembly := conf_factory.new_assembly (l_guid.as_lower, l_cons_ass.location, application_target)
+								l_assembly := conf_factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
 
 								process_assembly_implementation (l_assembly)
 								process_assembly_dependencies_implementation (l_assembly)

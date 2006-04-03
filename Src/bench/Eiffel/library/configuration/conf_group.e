@@ -165,8 +165,8 @@ feature -- Access queries
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 			classes_set: classes_set
-			a_platform_valid: valid_platform (a_platform)
-			a_build_valid: valid_build (a_build)
+			a_platform_valid: a_dependencies implies valid_platform (a_platform)
+			a_build_valid: a_dependencies implies valid_build (a_build)
 		local
 			l_class: CONF_CLASS
 		do

@@ -65,7 +65,7 @@ feature -- Status setting
 			set_deny_cursor (Cursors.cur_X_Class)
 --| FIXME XR: Tooltips do not work on tree items yet.
 --| Uncomment next line when they work.
---			set_tooltip (name)
+			set_tooltip (name)
 			set_pixmap (pixmap_from_class_i (a_class))
 			if
 				not a_class.config_class.is_read_only

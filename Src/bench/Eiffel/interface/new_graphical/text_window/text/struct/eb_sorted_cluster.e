@@ -37,14 +37,14 @@ feature -- Statusupdate
 		local
 			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
 			l_sub_classes: HASH_TABLE [CONF_CLASS, STRING]
-			sorted_classes: SORTED_TWO_WAY_LIST [CONF_CLASS]
+			l_classes: LIST [CONF_CLASS]
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
 			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
 		do
-			create clusters.make
+			create clusters.make_default
 				-- handle subclusters
 			if is_cluster then
 				l_cluster := actual_cluster
@@ -74,30 +74,30 @@ feature -- Statusupdate
 				if l_ass_dep /= Void then
 					assemblies := build_groups (l_ass_dep)
 				else
-					create assemblies.make
+					create assemblies.make_default
 				end
 			end
 
 				-- handle classes
-			create classes.make
 			l_sub_classes := actual_group.classes
 			if l_sub_classes /= Void then
-				create sorted_classes.make
-				sorted_classes.append (l_sub_classes.linear_representation)
-				sorted_classes.sort
-
+				create classes.make (l_sub_classes.count)
 				from
-					sorted_classes.start
+					l_classes := l_sub_classes.linear_representation
+					l_classes.start
 				until
-					sorted_classes.after
+					l_classes.after
 				loop
-					l_class_i ?= sorted_classes.item
+					l_class_i ?= l_classes.item
 					check
 						class_i: l_class_i /= Void
 					end
-					classes.extend (l_class_i)
-					sorted_classes.forth
+					classes.force_last (l_class_i)
+					l_classes.forth
 				end
+				classes.sort (create {DS_QUICK_SORTER [CLASS_I]}.make (create {KL_COMPARABLE_COMPARATOR [CLASS_I]}.make))
+			else
+				create classes.make_default
 			end
 
 			generate_subfolder_mapping
@@ -109,31 +109,55 @@ feature -- Statusupdate
 
 feature -- Access
 
-	classes: SORTED_TWO_WAY_LIST [CLASS_I]
-			-- child classes.
+	classes: DS_ARRAYED_LIST [CLASS_I]
+			-- child classes in a sorted order.
 
-	clusters: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			-- sub-clusters.
+	clusters: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- sub-clusters in a sorted order.
 
-	sub_classes: HASH_TABLE [SORTED_TWO_WAY_LIST [CLASS_I], STRING]
+	sub_classes: HASH_TABLE [DS_ARRAYED_LIST [CLASS_I], STRING]
 			-- classes mapping for sub folders
 
 	sub_folders: HASH_TABLE [DS_HASH_SET [STRING], STRING];
 			-- subfolder mapping for sub folders (for assembly namespaces)
 
-	overrides: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			-- overrides.
+	overrides: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- overrides in a sorted order.
 
-	libraries: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			-- libraries.
+	libraries: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- libraries in a sorted order.
 
-	assemblies: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			-- assemblies.
+	assemblies: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- assemblies in a sorted order.
 
 	is_writable: BOOLEAN is
 			-- Can `Current' be modified?
 		do
 			Result := not actual_group.is_readonly
+		end
+
+	has_children: BOOLEAN is
+			-- Does `Current' have any children (classes, clusters, assemblies, libraries, overrides)?
+		local
+			l_sub_clusters: ARRAYED_LIST [CLUSTER_I]
+			l_library_target: CONF_TARGET
+			l_assembly_deps: LINKED_SET [CONF_ASSEMBLY]
+		do
+			Result := (actual_group.classes /= Void and then not actual_group.classes.is_empty)
+			if not Result then
+				if is_cluster then
+					l_sub_clusters := actual_cluster.sub_clusters
+					Result :=  l_sub_clusters /= Void and then not l_sub_clusters.is_empty
+				elseif is_assembly then
+					l_assembly_deps := actual_assembly.dependencies
+					Result := l_assembly_deps /= Void and then not l_assembly_deps.is_empty
+				elseif is_library then
+					l_library_target := actual_library.library_target
+					Result := l_library_target /= Void and then (not l_library_target.clusters.is_empty or
+							not l_library_target.libraries.is_empty or not l_library_target.assemblies.is_empty or
+							not l_library_target.overrides.is_empty)
+				end
+			end
 		end
 
 	actual_group: CONF_GROUP
@@ -215,14 +239,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	build_groups (a_group: LIST [CONF_GROUP]): SORTED_TWO_WAY_LIST [like Current] is
+	build_groups (a_group: LIST [CONF_GROUP]): DS_ARRAYED_LIST [like Current] is
 			-- Build a sorted list out of `a_group'.
 		require
 			a_group_not_void: a_group /= Void
 		local
 			l_group: like Current
 		do
-			create Result.make
+			create Result.make (a_group.count)
 
 			from
 				a_group.start
@@ -230,13 +254,13 @@ feature {NONE} -- Implementation
 				a_group.after
 			loop
 				create l_group.make (a_group.item)
-				Result.extend (l_group)
+				Result.force_last (l_group)
 				if is_cluster then
 					l_group.set_parent (Current)
 				end
 				a_group.forth
 			end
-			Result.sort
+			Result.sort (create {DS_QUICK_SORTER [like Current]}.make (create {KL_COMPARABLE_COMPARATOR [like Current]}.make))
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -245,9 +269,9 @@ feature {NONE} -- Implementation
 	generate_subfolder_mapping is
 			-- Generate subfolder mapping out of `a_classes'.
 		local
-			l_classes: SORTED_TWO_WAY_LIST [CLASS_I]
+			l_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_cl: CLASS_I
-			l_lst: SORTED_TWO_WAY_LIST [CLASS_I]
+			l_lst: DS_ARRAYED_LIST [CLASS_I]
 			l_folders: DS_HASH_SET [STRING]
 			l_path_comp: LIST [STRING]
 			l_path, l_part_path: STRING
@@ -272,7 +296,7 @@ feature {NONE} -- Implementation
 			until
 				l_classes.after
 			loop
-				l_cl := l_classes.item
+				l_cl := l_classes.item_for_iteration
 				l_path := l_cl.path
 				if l_path = Void then
 					create l_path.make_empty
@@ -281,10 +305,10 @@ feature {NONE} -- Implementation
 					-- add the class to the classes mapping
 				l_lst := sub_classes.item (l_path+"/")
 				if l_lst = Void then
-					create l_lst.make
+					create l_lst.make (5)
 					sub_classes.force (l_lst, l_path+"/")
 				end
-				l_lst.extend (l_cl)
+				l_lst.force_last (l_cl)
 
 					-- for assembly namespaces add the path to the folders mapping
 				if is_assembly then

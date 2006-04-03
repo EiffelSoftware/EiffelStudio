@@ -867,6 +867,9 @@ feature {NONE} -- Implementation
 					folder_list := Current
 				end
 			else
+				if not parent_cluster.is_initialized then
+					parent_cluster.initialize
+				end
 				folder_list := parent_cluster
 			end
 
@@ -932,7 +935,6 @@ feature {NONE} -- Implementation
 				a_grps.after
 			loop
 				create l_group.make (a_grps.item)
-				l_group.initialize
 				create l_item.make (l_group)
 
 				a_header.extend (l_item)

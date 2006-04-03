@@ -21,6 +21,13 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make,
 	make_sub
@@ -30,7 +37,7 @@ feature -- Initialization
 	make (a_cluster: EB_SORTED_CLUSTER) is
 			-- Create a tree item representing `a_cluster'.
 		require
-			a_cluster_ok: a_cluster /= Void and then a_cluster.is_initialized
+			a_cluster_ok: a_cluster /= Void
 		do
 			make_sub (a_cluster, "")
 		end
@@ -38,7 +45,9 @@ feature -- Initialization
 	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- Create a tree item representing a subfolder of `a_cluster'.
 		require
-			a_cluster_ok: a_cluster /= Void and then a_cluster.is_initialized
+			a_path_ok: a_path /= Void
+			a_cluster_ok: a_cluster /= Void
+			sub_elements_imply_initialized: not a_path.is_empty implies a_cluster.is_initialized
 		do
 			default_create
 			path := a_path
@@ -161,7 +170,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			-- Load the classes and the sub_clusters of `data'.
 		local
 			subfolders: SORTABLE_ARRAY [STRING]
-			classes: SORTED_LIST [CLASS_I]
+			classes: DS_LIST [CLASS_I]
 			l_subfolder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class: EB_CLASSES_TREE_CLASS_ITEM
 			orig_count: INTEGER
@@ -171,8 +180,14 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			l_hash_set: DS_HASH_SET [STRING]
 			cluster: CLUSTER_I
 			group: CONF_GROUP
+			l_sub_path: STRING
+			l_fr: CONF_FILE_RULE
 		do
 			orig_count := count
+
+			if not data.is_initialized then
+				data.initialize
+			end
 
 				-- Build the tree.
 
@@ -191,13 +206,15 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 					create subfolders.make_from_array (l_set)
 					subfolders.sort
 					from
+						l_fr := cluster.file_rule
 						i := subfolders.lower
 						up := subfolders.upper
 					until
 						i > up
 					loop
-						if cluster.file_rule.is_included (path+"/"+subfolders[i]) then
-							create l_subfolder.make_sub (data, path+"/"+subfolders[i])
+						l_sub_path := path+"/"+subfolders[i]
+						if l_fr.is_included (l_sub_path) then
+							create l_subfolder.make_sub (data, l_sub_path)
 							if associated_window /= Void then
 								l_subfolder.associate_with_window (associated_window)
 							end
@@ -272,7 +289,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				until
 					classes.after
 				loop
-					create a_class.make (classes.item)
+					create a_class.make (classes.item_for_iteration)
 					if associated_window /= Void then
 						a_class.set_associated_window (associated_window)
 					end
@@ -424,12 +441,52 @@ feature {EB_CLASSES_TREE} -- Implementation
 
 	fake_load is
 			-- Load only one child, preferably a class (quicker to create).
+			-- This is needed to have allow for expansion if we have children.
+		local
+			l_has_children: BOOLEAN
+			l_dir: KL_DIRECTORY
+			l_sub_dirs: ARRAY [STRING]
+			i, up: INTEGER
+			l_fr: CONF_FILE_RULE
+			l_sub_path: STRING
 		do
 			wipe_out
-			if not data.classes.is_empty then
-				extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (data.classes.first))
-			elseif not data.clusters.is_empty then
-				extend (create {EB_CLASSES_TREE_FOLDER_ITEM}.make (data.clusters.first))
+				-- non sub elements
+			if path.is_empty then
+				l_has_children := data.has_children
+				-- sub elements
+			else
+					-- check classes
+				l_has_children := data.sub_classes.has (path + "/")
+
+					-- check folders
+				if not l_has_children then
+					if data.is_assembly then
+						l_has_children := data.sub_folders.has (path + "/")
+					elseif data.is_cluster then
+						create l_dir.make (data.actual_group.location.build_path (path, ""))
+						l_sub_dirs := l_dir.directory_names
+						if l_sub_dirs /= Void then
+							from
+								l_fr := data.actual_cluster.file_rule
+								i := l_sub_dirs.lower
+								up := l_sub_dirs.upper
+							until
+								i > up or l_has_children
+							loop
+								l_sub_path := path+"/"+l_sub_dirs[i]
+								if l_fr.is_included (l_sub_path) then
+									l_has_children := True
+								end
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+			if l_has_children then
+					-- add a dummy item
+				extend (create {EB_CLASSES_TREE_CLASS_ITEM}.make (system.any_class))
 			end
 		end
 
@@ -458,7 +515,7 @@ feature {NONE} -- Implementation
 						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Send a stone corresponding to `Current' to `associated_window'.
 		do
-			if data.actual_group.is_cluster and then a_button = 1 and then associated_window /= Void then
+			if data.is_cluster and then a_button = 1 and then associated_window /= Void then
 				associated_window.set_stone (stone)
 			end
 		end
@@ -480,7 +537,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_groups (a_groups: SORTED_LIST [EB_SORTED_CLUSTER]) is
+	show_groups (a_groups: DS_LIST [EB_SORTED_CLUSTER]) is
 			-- Show `a_groups'.
 		require
 			a_groups_not_void: a_groups /= Void
@@ -493,10 +550,7 @@ feature {NONE} -- Implementation
 				until
 					a_groups.after
 				loop
-					l_group := a_groups.item
-					if not l_group.is_initialized then
-						l_group.initialize
-					end
+					l_group := a_groups.item_for_iteration
 					create a_folder.make (l_group)
 
 					if associated_window /= Void then
@@ -520,7 +574,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
+	data_not_void: data /= Void
 	path_not_void: path /= Void
+	sub_elements_imply_initialized: not path.is_empty implies data.is_initialized
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -554,5 +610,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASSES_TREE_FOLDER_ITEM
-
+end

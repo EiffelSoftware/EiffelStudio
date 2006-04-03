@@ -338,6 +338,7 @@ feature -- Visit nodes
 			end
 		ensure then
 			classes_set: not is_error implies a_library.classes_set
+			uuid_set: not is_error implies a_library.uuid /= Void
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER) is
@@ -1105,7 +1106,7 @@ feature {NONE} -- Implementation
 							check
 								library: l_library /= Void
 							end
-							if libraries.has (l_library.uuid) then
+							if l_library.uuid /= Void and then libraries.has (l_library.uuid) then
 								l_done := True
 							end
 						end

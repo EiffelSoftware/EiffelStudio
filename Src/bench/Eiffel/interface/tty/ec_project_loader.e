@@ -56,7 +56,6 @@ feature {NONE} -- Error reporting
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
-			l_msg: STRING
 			l_vd00: VD00
 		do
 			set_has_error
@@ -70,7 +69,6 @@ feature {NONE} -- Error reporting
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
-			l_msg: STRING
 			l_vd00: VD00
 		do
 			set_has_error

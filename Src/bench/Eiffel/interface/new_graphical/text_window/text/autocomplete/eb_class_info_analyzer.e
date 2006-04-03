@@ -1452,8 +1452,18 @@ feature {NONE} -- Implementation
 			group_is_not_void: group /= Void
 			group_is_valid: group.is_valid
 			workbench_is_not_compiling: not workbench.is_compiling
+		local
+			l_classes: LIST [CONF_CLASS]
 		do
-			current_class_i := universe.class_named (current_class_name, group)
+			l_classes := group.class_by_name (current_class_name, False, 0, 0)
+				-- We should not have an ambiguity, but in case it happens we
+				-- will not try to resolve it and simply set `current_class_i'
+				-- to Void.
+			if l_classes.count = 1 then
+				current_class_i ?= l_classes.first
+			else
+				current_class_i := Void
+			end
 		end
 
 	current_class_i: CLASS_I

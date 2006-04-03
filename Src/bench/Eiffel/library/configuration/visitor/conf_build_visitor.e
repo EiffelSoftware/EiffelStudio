@@ -15,7 +15,8 @@ inherit
 			process_assembly,
 			process_library,
 			process_cluster,
-			process_override
+			process_override,
+			process_group
 		end
 
 	SHARED_CONF_FACTORY
@@ -107,6 +108,65 @@ feature -- Update
 			create reused_groups.make (groups_per_system)
 		end
 
+feature -- Observers
+
+	consume_assembly_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			-- Observer if assemblies are consumed.
+
+	process_group_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_GROUP]]]
+			-- Observer if a group is processed.
+
+	process_directory: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_CLUSTER, STRING]]]
+			-- Observer if a cluster directory is processed.
+
+feature -- Events
+
+	on_consume_assemblies is
+			-- Assemblies are consumed.
+		do
+			from
+				consume_assembly_observer.start
+			until
+				consume_assembly_observer.after
+			loop
+				consume_assembly_observer.item.call ([])
+				consume_assembly_observer.forth
+			end
+		end
+
+	on_process_group (a_group: CONF_GROUP) is
+			-- `A_group' is processed.
+		require
+			a_group_not_void: a_group /= Void
+		do
+			from
+				process_group_observer.start
+			until
+				process_group_observer.after
+			loop
+				process_group_observer.item.call ([a_group])
+				process_group_observer.forth
+			end
+		end
+
+	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING) is
+			-- (Sub)directory `a_path' of `a_cluster' is processed.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_path_not_void: a_path /= Void
+		do
+			from
+				process_directory.start
+			until
+				process_directory.after
+			loop
+				process_directory.item.call ([a_cluster, a_path])
+				process_directory.forth
+			end
+		end
+
+
+
 feature -- Visit nodes
 
 	process_target (a_target: CONF_TARGET) is
@@ -161,6 +221,12 @@ feature -- Visit nodes
 					process_removed (l_overrides)
 				end
 			end
+		end
+
+	process_group (a_group: CONF_GROUP) is
+			-- Visit `a_group'.
+		do
+			on_process_group (a_group)
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
@@ -336,50 +402,26 @@ feature -- Visit nodes
 
 feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 
-	set_modified_classes (a_classes: like modified_classes) is
-			-- Set `modified_classes' to `a_classes'.
+	reset is
+			-- Reset the values for the new visitor.
 		do
-			modified_classes := a_classes
+			current_assembly := Void
+			current_classes := Void
+			current_cluster := Void
+			current_dotnet_classes := Void
+			current_system := Void
+			old_assembly := Void
+			old_group := Void
+			partial_classes := Void
+			reused_classes := Void
+			reused_groups := Void
 		end
 
-	set_added_classes (a_classes: like added_classes) is
-			-- Set `added_classes' to `a_classes'.
-		do
-			added_classes := a_classes
-		end
-
-	set_removed_classes (a_classes: like removed_classes) is
-			-- Set `removed_classes' to `a_classes'.
-		do
-			removed_classes := a_classes
-		end
-
-	set_old_assemblies_handled (an_assemblies: like old_assemblies_handled) is
-			-- Set `old_assemblies_handled' to `an_assemblies'.
-		do
-			old_assemblies_handled := an_assemblies
-		end
-
-
-	set_old_target (a_target: CONF_TARGET) is
+	set_old_target (a_target: like old_target) is
 			-- Set `old_target' to `a_target'.
 		do
 			old_target := a_target
 		end
-
-	set_libraries (a_libraries: like libraries) is
-			-- Set `libraries' to `a_libraries'.
-		do
-			libraries := a_libraries
-		end
-
-	set_assemblies (an_assemblies: like assemblies) is
-			-- Set `assemblies' to `an_assemblies'.
-		do
-			assemblies := an_assemblies
-		end
-
-
 
 feature {NONE} -- Implementation
 
@@ -442,16 +484,8 @@ feature {NONE} -- Implementation
 		local
 			l_lib: CONF_LIBRARY
 		do
-			create Result.make_build (platform, build, application_target)
-			if assembly_cache_folder /= Void then
-				Result.set_assembly_cach_folder (assembly_cache_folder)
-			end
-			Result.set_libraries (libraries)
-			Result.set_assemblies (assemblies)
-			Result.set_modified_classes (modified_classes)
-			Result.set_added_classes (added_classes)
-			Result.set_removed_classes (removed_classes)
-			Result.set_old_assemblies_handled (old_assemblies_handled)
+			Result := Current.twin
+			Result.reset
 			l_lib ?= old_group
 			if l_lib /= Void then
 				Result.set_old_target (l_lib.library_target)
@@ -471,6 +505,7 @@ feature {NONE} -- Implementation
 			l_name: STRING
 			l_path: STRING
 		do
+			on_process_directory (current_cluster, a_path)
 			l_path := current_cluster.location.build_path (a_path, "")
 			create l_dir.make (l_path)
 			l_dir.open_read
@@ -944,6 +979,7 @@ feature {NONE} -- Implementation
 			l_consumed: BOOLEAN
 			l_emitter: IL_EMITTER
 		do
+			on_consume_assemblies
 			l_emitter := il_emitter
 			if not is_error then
 					-- consume all assemblies

@@ -168,10 +168,10 @@ feature {NONE} -- Implementation
 					path := ""
 					file_name := ""
 				else
-					path := group.name
+					path := group.target.system.uuid.out+"/"+group.name
 
 					create l_dir.make (base_location.build_path (path, ""))
-					l_dir.create_directory
+					l_dir.recursive_create_directory
 
 						-- us temporary file to get name of class
 					file_name := "tmp.e"

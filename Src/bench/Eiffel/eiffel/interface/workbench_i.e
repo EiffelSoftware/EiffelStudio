@@ -84,6 +84,20 @@ feature -- Update
 		end
 
 
+feature -- Update from retrieved object.
+
+	update_from_retrieved_project (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		require
+			other_not_void: other /= Void
+			other_lace_not_void: other.lace /= Void
+			lace_not_void: lace /= Void
+		do
+			standard_copy (other)
+			lace.copy (other.lace)
+		end
+
 feature -- Additional properties
 
 	is_already_compiled: BOOLEAN is
@@ -238,6 +252,7 @@ feature -- Commands
 				end
 
 				if successful then
+					system.set_rebuild (False)
 					compilation_counter := compilation_counter + 1
 					if (System.has_been_changed or else System.freezing_occurred) then
 						save_project (Compilation_modes.is_precompiling)

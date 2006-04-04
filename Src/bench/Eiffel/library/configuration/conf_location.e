@@ -213,7 +213,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is it the same location as `other'?
 		do
-			Result := equal (evaluated_path, other.evaluated_path)
+			Result := equal (original_path, other.original_path)
 		end
 
 feature {NONE} -- Implementation, attributes stored in configuration file

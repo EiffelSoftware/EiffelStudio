@@ -522,13 +522,7 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			if not Compilation_modes.is_precompiling then
-				if
-					System_defined and then
-					Ace.successful and then
-					not Ace.date_has_changed
-				then
-					Compilation_modes.set_is_quick_melt
-				end
+				Compilation_modes.set_is_quick_melt
 				melt
 			else
 				Compilation_modes.reset_modes
@@ -878,10 +872,9 @@ feature {NONE} -- Retrieval
 					end
 				else
 --!! FIXME: check Concurrent_Eiffel license
-					e_project.saved_workbench.set_lace (workbench.lace)
 					system := e_project.system
 					dynamic_lib := e_project.dynamic_lib
-					Workbench.copy (e_project.saved_workbench)
+					Workbench.update_from_retrieved_project (e_project.saved_workbench)
 					if Comp_system.is_precompiled then
 						precomp_dirs := Workbench.precompiled_directories
 						Precompilation_directories.copy (precomp_dirs)

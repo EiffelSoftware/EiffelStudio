@@ -42,6 +42,9 @@ feature {NONE} -- Initialization
 			create libraries.make (Libraries_per_target)
 			create assemblies.make (1)
 			create old_assemblies_handled.make (1)
+			create consume_assembly_observer.make (1)
+			create process_group_observer.make (1)
+			create process_directory.make (1)
 			application_target := an_application_target
 			reset_classes
 		end
@@ -101,11 +104,10 @@ feature -- Update
 	reset_classes is
 			-- Reset `modified_classes', `added_classes' and `removed_classes'.
 		do
+			reset
 			create modified_classes.make (modified_classes_per_system)
 			create added_classes.make (added_classes_per_system)
 			create removed_classes.make (removed_classes_per_system)
-			create reused_classes.make (classes_per_system)
-			create reused_groups.make (groups_per_system)
 		end
 
 feature -- Observers
@@ -414,8 +416,8 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 			old_assembly := Void
 			old_group := Void
 			partial_classes := Void
-			reused_classes := Void
-			reused_groups := Void
+			create reused_classes.make (classes_per_system)
+			create reused_groups.make (groups_per_system)
 		end
 
 	set_old_target (a_target: like old_target) is

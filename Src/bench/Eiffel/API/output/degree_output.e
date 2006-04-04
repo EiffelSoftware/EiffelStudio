@@ -68,16 +68,13 @@ feature -- Start output features
 			cancel_compilation_requested := False
 		end
 
-	put_start_degree_6 (total_nbr: INTEGER) is
-			-- Put message indicating the start of degree six
-			-- with `total_nbr' passes to be done.
-		require
-			positive_total_nbr: total_nbr >= 0
+	put_start_degree_6 is
+			-- Put message indicating the start of degree six.
 		do
-			total_number := total_nbr;
 			current_degree := 6;
 			last_reached_degree := 6;
 			processed := 0
+			total_number := 0
 			if is_output_quiet then
 				display_message (degree_description (6))
 				display_new_line
@@ -261,6 +258,39 @@ feature -- Output on per class
 			in_degree_six: current_degree = 6
 		do
 			-- Do nothing, but do something in graphical mode.
+		end
+
+	put_consume_assemblies is
+			-- Put message to indicate that assemblies are consumed.
+		do
+			display_message (consume_assemblies_message);
+			display_new_line
+		end
+
+	put_process_group (a_group: CONF_GROUP) is
+			-- Put message to indicate that `a_group' is processed.
+		require
+			a_group_not_void: a_group /= Void
+		do
+			if not is_output_quiet then
+					-- clusters are displayed with `put_process_directory'.
+				if not a_group.is_cluster then
+					display_message ("Examining "+a_group.name)
+					display_new_line
+				end
+			end
+		end
+
+	put_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING) is
+			-- Put message to indicate that `a_path' of `a_cluster' is processed.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_path_not_void: a_path /= Void
+		do
+			if not is_output_quiet then
+				display_message ("Examining " + a_cluster.name + a_path)
+				display_new_line
+			end
 		end
 
 	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -563,9 +593,11 @@ feature {NONE} -- Constants
 	Case_class_message: STRING is "Analyzing class ";
 	Case_cluster_message: STRING is "Analyzing cluster ";
 	Document_class_message: STRING is "Generating class ";
+	Consume_assemblies_message: STRING is "Consuming assemblies";
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " cluster ";
 	Class_output_string: STRING is " class ";
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

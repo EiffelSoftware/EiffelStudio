@@ -342,10 +342,13 @@ feature -- Equality
 	is_group_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
-			Result := Precursor (other) and then equal (assembly_name, other.assembly_name) and then
-					equal (assembly_version, other.assembly_version) and then
-					equal (assembly_culture, other.assembly_culture) and then
+			Result := Precursor (other)
+			if Result and location.original_path.is_empty then
+				Result := equal (assembly_name, other.assembly_name) and
+					equal (assembly_version, other.assembly_version) and
+					equal (assembly_culture, other.assembly_culture) and
 					equal (assembly_public_key_token, other.assembly_public_key_token)
+			end
 		end
 
 feature -- Visit

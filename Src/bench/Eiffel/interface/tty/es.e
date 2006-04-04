@@ -84,7 +84,6 @@ feature -- Initialization
 							-- so that there is no blocking.
 						enable_automatic_output_flushing
 					end
-					workbench.make
 					analyze_options
 					if option_error then
 						print_option_error

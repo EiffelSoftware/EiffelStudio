@@ -762,6 +762,7 @@ end
 			l_ise_lib: STRING
 			l_env: EIFFEL_ENV
 		do
+			degree_output.put_start_degree_6
 			create l_env
 			l_target := universe.new_target
 			check
@@ -787,6 +788,12 @@ end
 			end
 			l_vis_build.set_partial_location (
 				conf_factory.new_location_from_path (partial_generation_path, l_target))
+
+				-- set observers
+			l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
+			l_vis_build.process_group_observer.extend (agent degree_output.put_process_group)
+			l_vis_build.process_directory.extend (agent degree_output.put_process_directory)
+
 			l_target.process (l_vis_build)
 			if l_vis_build.is_error then
 				from

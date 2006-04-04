@@ -307,13 +307,12 @@ feature -- Observer pattern
 			build_tree
 		end
 
-	on_class_added (a_class: CLASS_I) is
+	on_class_added (a_class: EIFFEL_CLASS_I) is
 			-- Refresh the tree to display the new class.
 		local
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			conf_todo
---			a_folder := folder_from_cluster (a_class.cluster)
+			a_folder := folder_from_cluster (a_class.cluster)
 			if a_folder /= Void then
 				a_folder.add_class (a_class)
 			else
@@ -321,12 +320,11 @@ feature -- Observer pattern
 			end
 		end
 
-	on_class_removed (a_class: CLASS_I) is
+	on_class_removed (a_class: EIFFEL_CLASS_I) is
 			-- Refresh the tree not to display the old class.
 		do
 			--on_class_moved (a_class, a_class.cluster)
-			conf_todo
---			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
+			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
 		end
 
 	remove_class_from_folder (a_class: CLASS_I; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
@@ -389,7 +387,7 @@ feature -- Observer pattern
 			end
 		end
 
-	on_class_moved (a_class: CLASS_I; old_cluster: CLUSTER_I) is
+	on_class_moved (a_class: EIFFEL_CLASS_I; old_cluster: CLUSTER_I) is
 			-- Refresh the tree to display `a_class' in its new folder.
 		do
 				-- Remove `a_class' from `old_cluster'.
@@ -488,12 +486,14 @@ feature -- Observer pattern
 		local
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if a_cluster.parent = Void then
-				folder := Void
-			else
---				folder := folder_from_cluster (a_cluster.parent.actual_cluster)
+			if a_cluster.is_cluster then
+				if a_cluster.parent = Void then
+					folder := Void
+				else
+					folder := folder_from_cluster (a_cluster.parent.actual_cluster)
+				end
+				remove_cluster_from_folder (a_cluster.actual_cluster, folder)
 			end
---			remove_cluster_from_folder (a_cluster.actual_cluster, folder)
 		end
 
 	on_project_loaded is
@@ -821,11 +821,10 @@ feature {NONE} -- Implementation
 			result_not_empty: not Result.is_empty
 		end
 
-	class_parents (a_class: CLASS_I): LINKED_LIST [CLUSTER_I] is
+	class_parents (a_class: CLASS_I): LINKED_LIST [CONF_GROUP] is
 			-- List of parent clusters of `a_class', from the root to `a_class'.
 		do
-			conf_todo
---			Result := cluster_parents (a_class.cluster)
+			Result := cluster_parents (a_class.group)
 		end
 
 	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is

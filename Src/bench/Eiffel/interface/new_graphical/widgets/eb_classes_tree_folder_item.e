@@ -331,12 +331,13 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 	on_class_drop (cstone: CLASSI_STONE) is
 			-- A class was dropped in `Current'.
 			-- Add corresponding class to `Current' via the cluster manager.
+		require
+			cluster: data.is_cluster
 		local
 			actual: CLASS_I
 		do
 			actual := cstone.class_i
-			conf_todo
---			parent_tree.manager.move_class (actual, actual.cluster, data.actual_cluster)
+			parent_tree.manager.move_class (actual.config_class, actual.group, data.actual_cluster)
 		end
 
 	on_cluster_drop (cluster: CLUSTER_STONE) is
@@ -492,24 +493,6 @@ feature {EB_CLASSES_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	cluster_contains_current (f: CLUSTER_I): BOOLEAN is
-			-- Does `f' recursively contain `data'?
-		require
-			f_not_void: f /= Void
-		local
-			clu: CLUSTER_I
-		do
---			from
---				clu := data.actual_cluster
---			until
---				clu = Void or else
---				Result
---			loop
---				Result := (f = clu)
---				clu := clu.parent_cluster
---			end
-		end
-
 	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
 						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
 						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -523,17 +506,17 @@ feature {NONE} -- Implementation
 	droppable (a_pebble: ANY): BOOLEAN is
 			-- Can user drop `a_pebble' on `Current'?
 		local
-			a_folder: CLUSTER_STONE
+			cs: CLASSI_STONE
 			fs: FEATURE_STONE
 		do
-			a_folder ?= a_pebble
-			if a_folder /= Void then
-					-- Do not drop a folder on one of its children or on itself.
-				Result := not cluster_contains_current (a_folder.cluster_i) --a_folder.cluster_i /= data.actual_cluster and then (not cluster_contains_current (a_folder.cluster_i))
-			else
-					-- Some class stone was selected.
-				fs ?= a_pebble
-				Result := fs = Void
+				-- we can only drop on clusters
+			if data.is_cluster then
+				cs ?= a_pebble
+				if cs /= Void then
+						-- Some class stone was selected.
+					fs ?= a_pebble
+					Result := fs = Void
+				end
 			end
 		end
 

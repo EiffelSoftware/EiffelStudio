@@ -762,7 +762,6 @@ end
 			l_ise_lib: STRING
 			l_env: EIFFEL_ENV
 		do
-			degree_output.put_start_degree_6
 			create l_env
 			l_target := universe.new_target
 			check
@@ -977,13 +976,7 @@ end
 			l_rebuild: BOOLEAN
 			l_grp: CONF_GROUP
 		do
-			if not compilation_modes.is_quick_melt then
-					-- Patrickr 03/07/2006
-					-- for now always rebuild
-				is_rebuild := True
-			else
-				is_rebuild := is_rebuild or first_compilation
-			end
+			degree_output.put_start_degree_6
 
 				-- Mark classes to be recompiled.
 			if any_class = Void or else not any_class.is_compiled then
@@ -997,6 +990,7 @@ end
 				else
 						-- Let the configuration system check for compiled classes that have been modified.
 					create l_vis_modified.make (universe.platform, universe.build)
+					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 					l_classes := l_vis_modified.modified_classes
 					from

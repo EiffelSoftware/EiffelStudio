@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 	make_build (a_platform, a_build: INTEGER; an_application_target: like application_target) is
 			-- Create.
 		do
+			reset_classes
 			make (a_platform, a_build)
 			create libraries.make (Libraries_per_target)
 			create assemblies.make (1)
@@ -46,15 +47,14 @@ feature {NONE} -- Initialization
 			create process_group_observer.make (1)
 			create process_directory.make (1)
 			application_target := an_application_target
-			reset_classes
 		end
 
 	make_build_from_old (a_platform, a_build: INTEGER; an_application_target, an_old_target: CONF_TARGET) is
 			-- Create.
 		do
+			reset_classes
 			make_build (a_platform, a_build, an_application_target)
 			old_target := an_old_target
-			reset_classes
 		end
 
 feature -- Status
@@ -178,6 +178,8 @@ feature -- Visit nodes
 			l_pre, l_old_pre: CONF_PRECOMPILE
 		do
 			if not is_error then
+					-- add the target to the libraries
+				libraries.force (a_target, a_target.system.uuid)
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
 					l_assemblies := old_target.assemblies
@@ -185,6 +187,7 @@ feature -- Visit nodes
 					l_clusters := old_target.clusters
 					l_overrides := old_target.overrides
 					l_old_pre := old_target.precompile
+					old_libraries := old_target.all_libraries
 				end
 
 				l_pre := a_target.precompile
@@ -221,8 +224,13 @@ feature -- Visit nodes
 					process_removed (l_assemblies)
 					process_removed (l_clusters)
 					process_removed (l_overrides)
+
+						-- set all libraries
+					a_target.set_all_libraries (libraries)
 				end
 			end
+		ensure then
+			all_libraries_set: not is_error implies a_target.all_libraries /= Void
 		end
 
 	process_group (a_group: CONF_GROUP) is
@@ -293,7 +301,14 @@ feature -- Visit nodes
 									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
 								end
 								libraries.force (l_target, l_uuid)
-								l_vis := get_visitor
+
+									-- get and initialize visitor
+								l_vis := twin
+								l_vis.reset
+								if old_libraries /= Void and then old_libraries.has (l_uuid) then
+									l_vis.set_old_target (old_libraries.found_item)
+								end
+
 								l_target.process (l_vis)
 								if l_vis.is_error then
 									is_error := True
@@ -415,6 +430,7 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 			current_system := Void
 			old_assembly := Void
 			old_group := Void
+			old_target := Void
 			partial_classes := Void
 			create reused_classes.make (classes_per_system)
 			create reused_groups.make (groups_per_system)
@@ -449,6 +465,9 @@ feature {NONE} -- Implementation
 	libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
 
+	old_libraries: HASH_TABLE [CONF_TARGET, UUID]
+			-- Mapping of processed library targets of the old target, mapped with their uuid.
+
 	assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			-- Mapping of processed assemblies, mapped with their guid.
 
@@ -481,19 +500,6 @@ feature {NONE} -- Implementation
 
 	partial_location: CONF_LOCATION
 			-- Location where the merged partial classes will be stored (normally somewhere inside eifgen)
-
-	get_visitor: like Current is
-			-- Get a visitor like `Current' to process a library.
-		local
-			l_lib: CONF_LIBRARY
-		do
-			Result := Current.twin
-			Result.reset
-			l_lib ?= old_group
-			if l_lib /= Void then
-				Result.set_old_target (l_lib.library_target)
-			end
-		end
 
 	process_cluster_recursive (a_path: STRING) is
 			-- Recursively process `a_path'.

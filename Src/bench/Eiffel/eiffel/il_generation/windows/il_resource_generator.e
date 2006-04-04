@@ -55,6 +55,7 @@ feature -- Generation
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
 			l_res: CONF_EXTERNAL_RESSOURCE
+			l_res_added: SEARCH_TABLE [STRING]
 		do
 			from
 				last_resource_offset := 0
@@ -62,28 +63,32 @@ feature -- Generation
 			until
 				resources.after
 			loop
+				create l_res_added.make (10)
 				l_res := resources.item
 				if l_res.is_enabled (universe.platform, universe.build) then
 					l_name := l_res.location.evaluated_path
-					nb := l_name.count
-					l_not_is_resource_generated :=
-						((nb > 5) and l_name.substring (nb - 4, nb).as_lower.is_equal (".resx")) or
-						((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
-					if l_not_is_resource_generated then
-						l_new_name := new_compiled_resource_file_name (l_name)
-						generate_resource (l_name, l_new_name)
-						if (create {RAW_FILE}.make (l_new_name)).exists then
-							l_name := resource_name (l_name, True)
-							l_name.append_character ('.')
-							l_name.append (resources_extension)
-							define_resource (module, l_new_name, l_name)
+					if not l_res_added.has (l_name) then
+						l_res_added.force (l_name)
+						nb := l_name.count
+						l_not_is_resource_generated :=
+							((nb > 5) and l_name.substring (nb - 4, nb).as_lower.is_equal (".resx")) or
+							((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
+						if l_not_is_resource_generated then
+							l_new_name := new_compiled_resource_file_name (l_name)
+							generate_resource (l_name, l_new_name)
+							if (create {RAW_FILE}.make (l_new_name)).exists then
+								l_name := resource_name (l_name, True)
+								l_name.append_character ('.')
+								l_name.append (resources_extension)
+								define_resource (module, l_new_name, l_name)
+							else
+								Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+							end
 						else
-							Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+								-- It is either a compiled resource or another type of files,
+								-- we simply embed them in the generated assembly.
+							define_resource (module, l_name, resource_name (l_name, False))
 						end
-					else
-							-- It is either a compiled resource or another type of files,
-							-- we simply embed them in the generated assembly.
-						define_resource (module, l_name, resource_name (l_name, False))
 					end
 				end
 				resources.forth

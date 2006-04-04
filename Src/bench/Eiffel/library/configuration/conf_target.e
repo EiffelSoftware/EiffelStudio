@@ -72,6 +72,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
 			-- Libraries this target is used in.
 
+	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
+			-- All libraries in the current system.
+
 feature -- Access queries
 
 	version: CONF_VERSION is
@@ -191,6 +194,78 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	all_external_include: like internal_external_include is
+			-- All external include files including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_include)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_object: like internal_external_object is
+			-- All external object files including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_object)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_ressource: like internal_external_ressource is
+			-- All external ressource files including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_ressource)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_make: like internal_external_make is
+			-- All external make files including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_make)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	external_include: like internal_external_include is
 			-- Global external include files.
 		local
@@ -199,18 +274,6 @@ feature -- Access queries
 			Result := internal_external_include.twin
 			if extends /= Void then
 				Result.append (extends.external_include)
-			end
-				-- get externals from libraries
-			from
-				libraries.start
-			until
-				libraries.after
-			loop
-				l_target := libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					Result.append (l_target.external_include)
-				end
-				libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -225,18 +288,6 @@ feature -- Access queries
 			if extends /= Void then
 				Result.append (extends.external_object)
 			end
-				-- get externals from libraries
-			from
-				libraries.start
-			until
-				libraries.after
-			loop
-				l_target := libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					Result.append (l_target.external_object)
-				end
-				libraries.forth
-			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -250,18 +301,6 @@ feature -- Access queries
 			if extends /= Void then
 				Result.append (extends.external_make)
 			end
-				-- get externals from libraries
-			from
-				libraries.start
-			until
-				libraries.after
-			loop
-				l_target := libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					Result.append (l_target.external_make)
-				end
-				libraries.forth
-			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -274,18 +313,6 @@ feature -- Access queries
 			Result := internal_external_ressource.twin
 			if extends /= Void then
 				Result.append (extends.external_ressource)
-			end
-				-- get externals from libraries
-			from
-				libraries.start
-			until
-				libraries.after
-			loop
-				l_target := libraries.item_for_iteration.library_target
-				if l_target /= Void then
-					Result.append (l_target.external_ressource)
-				end
-				libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -726,6 +753,15 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			added_libs: used_in_libraries.has (a_library)
 		end
 
+	set_all_libraries (a_libraries: like all_libraries) is
+			-- Set `all_libraries' to `a_libraries'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+		do
+			all_libraries := a_libraries
+		ensure
+			libraries_set: all_libraries = a_libraries
+		end
 
 feature -- Equality
 

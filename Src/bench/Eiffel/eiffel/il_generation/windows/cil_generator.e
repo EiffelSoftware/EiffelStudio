@@ -88,6 +88,7 @@ feature -- Generation
 			l_last_error_msg: STRING
 			l_key_file_name: STRING
 			l_public_key: MD_PUBLIC_KEY
+			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESSOURCE]
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -203,8 +204,9 @@ feature -- Generation
 				generate_entry_point
 
 					-- Generate resources if any
-				if not universe.target.external_ressource.is_empty then
-					cil_generator.generate_resources (universe.target.external_ressource)
+				l_res := universe.target.all_external_ressource
+				if not l_res.is_empty then
+					cil_generator.generate_resources (l_res)
 				end
 					-- Finish code generation.
 				cil_generator.end_assembly_generation (signing)

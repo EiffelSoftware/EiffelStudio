@@ -234,6 +234,7 @@ feature -- Commands
 				end
 
 				if Lace.successful then
+					System.set_rebuild (False)
 					if Lace.has_changed then
 						System.set_melt
 						System.set_finalize
@@ -242,6 +243,10 @@ feature -- Commands
 						System.set_rebuild (True)
 					end
 					if missing_class_error then
+						system.set_rebuild (True)
+					end
+						-- Patrickr 04/04/06: For now, if we aren't quick compiling always rebuild
+					if not compilation_modes.is_quick_melt then
 						system.set_rebuild (True)
 					end
 					System.recompile

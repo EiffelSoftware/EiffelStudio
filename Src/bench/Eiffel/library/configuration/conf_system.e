@@ -59,7 +59,6 @@ feature -- Update, in compiled only
 			file_name := a_file_name
 		end
 
-
 feature -- Access queries
 
 	compilable_targets: like targets is

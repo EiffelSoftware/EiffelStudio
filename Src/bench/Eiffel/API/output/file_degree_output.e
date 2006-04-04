@@ -13,7 +13,6 @@ inherit
 		redefine
 			display_degree_output,
 			display_degree,
-			put_end_degree_6,
 			put_melting_changes_message,
 			put_freezing_message,
 			put_start_dead_code_removal_message,
@@ -37,17 +36,6 @@ feature -- Initialization
 		end
 
 feature -- Basic operations
-
-	put_end_degree_6 is
-			-- Put message indicating the end of degree six.
-		do
-			if not output_file.is_closed then
-				open_file
-				output_file.put_string ("6%T100%%")
-				output_file.put_new_line
-				close_file
-			end
-		end
 
 	put_melting_changes_message is
 			-- Put message indicating that melting changes is ocurring.
@@ -82,7 +70,7 @@ feature -- Basic operations
 
 	put_system_compiled is
 			-- Put message indicating that the system has been compiled.
-		do	
+		do
 				-- Wait for the file to be writable.
 			from
 			until
@@ -117,7 +105,7 @@ feature {NONE} -- Implementation
 
 	output_file: PLAIN_TEXT_FILE
 			-- Output file.
-	
+
 	output_file_name: STRING
 			-- Output file name
 

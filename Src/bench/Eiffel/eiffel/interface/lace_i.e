@@ -136,6 +136,24 @@ feature -- Status setting
 			conf_system_set: conf_system = s
 		end
 
+	set_successful is
+			-- Set `successful' to True.
+		do
+			successful := True
+		ensure
+			successful
+		end
+
+
+	set_date_stamp is
+			-- Set `date' information to the current timestamp of the file.
+		local
+			ptr: ANY
+		do
+			ptr := file_name.to_c
+			date := eif_date ($ptr)
+		end
+
 	reset_date_stamp is
 			-- Reset `date' information, that way a complete recompilation
 			-- is done on Lace.
@@ -177,7 +195,6 @@ feature -- Status setting
 		require
 			file_name_exists: file_name /= Void
 		local
-			ptr: ANY
 			file: PLAIN_TEXT_FILE
 			vd21: VD21
 			d1, d2: DATE_TIME
@@ -186,7 +203,6 @@ feature -- Status setting
 				create d1.make_now
 			end
 
-			ptr := file_name.to_c
 			create file.make (file_name)
 			has_group_changed := False
 			has_changed := False
@@ -208,7 +224,7 @@ feature -- Status setting
 			then
 				has_changed := True
 				do_recompilation
-				date := eif_date ($ptr)
+				set_date_stamp
 			else
 				if universe.new_target = Void then
 						-- target hasn't changed so use this as the new one

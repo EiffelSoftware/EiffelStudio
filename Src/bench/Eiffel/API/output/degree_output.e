@@ -81,15 +81,6 @@ feature -- Start output features
 			end
 		end
 
-	put_end_degree_6 is
-			-- Put message indicating the end of degree six.
-		do
-			if not is_output_quiet then
-				display_message (once "Processing options");
-				display_new_line
-			end
-		end;
-
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
 			-- Put message indicating the start of a degree
 			-- with `total_nbr' passes to be done.
@@ -235,30 +226,6 @@ feature -- Start output features
 		end
 
 feature -- Output on per class
-
-	put_degree_6 (a_name: STRING; nbr_to_go: INTEGER) is
-			-- Put message to indicate that `a_name' is being
-			-- compiled during degree six' clusters to go.
-		require
-			a_name_not_void: a_name /= Void
-			positive_nbr_to_go: nbr_to_go >= 0
-			in_degree_six: current_degree = 6
-		do
-			total_number := nbr_to_go + processed
-			display_degree (degree_message (6), nbr_to_go, a_name)
-			processed := processed + 1
-		end
-
-	put_recursive_degree_6 (a_cluster: CLUSTER_I; a_path: STRING) is
-			-- Put message to indicate that `a_cluster' is being compiled
-			-- during degree six and that it is a recursive cluster so we have
-			-- to display the path too.
-		require
-			cluster_not_void: a_cluster /= Void
-			in_degree_six: current_degree = 6
-		do
-			-- Do nothing, but do something in graphical mode.
-		end
 
 	put_consume_assemblies is
 			-- Put message to indicate that assemblies are consumed.

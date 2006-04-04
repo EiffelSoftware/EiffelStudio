@@ -600,7 +600,7 @@ feature -- Generation, Header
 			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
 			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
 
-			if not universe.target.external_make.is_empty then
+			if not universe.target.all_external_make.is_empty then
 				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
 				make_file.put_string ("COMMAND_MAKEFILE = $command_makefile%N")
 			else
@@ -671,8 +671,11 @@ feature -- Generation, External archives and object files.
 			object_file_names: LIST [CONF_EXTERNAL_OBJECT]
 			i, nb: INTEGER
 			l_ext: CONF_EXTERNAL_OBJECT
+			l_added_objects: SEARCH_TABLE [STRING]
+			l_path: STRING
 		do
-			object_file_names := universe.target.external_object
+			create l_added_objects.make (10)
+			object_file_names := universe.target.all_external_object
 			if object_file_names /= Void then
 				make_file.put_string ("EXTERNALS = ")
 				from
@@ -683,10 +686,15 @@ feature -- Generation, External archives and object files.
 				loop
 					l_ext := object_file_names.i_th (i)
 					if l_ext.is_enabled (universe.platform, universe.build) then
-						make_file.put_character (' ')
-						make_file.put_character (Continuation)
-						make_file.put_string ("%N%T")
-						make_file.put_string (l_ext.location.evaluated_path)
+						l_path := l_ext.location.evaluated_path
+							-- don't add the same object multiple times
+						if not l_added_objects.has (l_path) then
+							l_added_objects.force (l_path)
+							make_file.put_character (' ')
+							make_file.put_character (Continuation)
+							make_file.put_string ("%N%T")
+							make_file.put_string (l_path)
+						end
 					end
 					i := i + 1
 				end
@@ -702,8 +710,10 @@ feature -- Generation, External archives and object files.
 			i, nb: INTEGER
 			l_ext: CONF_EXTERNAL_INCLUDE
 			l_path: STRING
+			l_added_includes: SEARCH_TABLE [STRING]
 		do
-			include_paths := universe.target.external_include
+			create l_added_includes.make (10)
+			include_paths := universe.target.all_external_include
 			if include_paths /= Void then
 				make_file.put_string ("INCLUDE_PATH = ")
 				from
@@ -714,15 +724,19 @@ feature -- Generation, External archives and object files.
 				loop
 					l_ext := include_paths.i_th (i)
 					if l_ext.is_enabled (universe.platform, universe.build) then
-						make_file.put_string ("-I")
 						l_path := l_ext.location.evaluated_path
 							-- all remaining $ are by choice so mask them
 						l_path.replace_substring_all ("$", "\$")
 							-- because its possible that they were already masked, correct double masking
 						l_path.replace_substring_all ("\\$", "\$")
-						make_file.put_string (l_path)
-						if i /= nb then
-							make_file.put_character (' ')
+							-- don't add the same include multiple times
+						if not l_added_includes.has (l_path) then
+							l_added_includes.force (l_path)
+							make_file.put_string ("-I")
+							make_file.put_string (l_path)
+							if i /= nb then
+								make_file.put_character (' ')
+							end
 						end
 					end
 					i := i + 1
@@ -736,8 +750,11 @@ feature -- Generation, External archives and object files.
 			makefile_names: LIST [CONF_EXTERNAL_MAKE]
 			i, nb: INTEGER
 			l_ext: CONF_EXTERNAL_MAKE
+			l_added_make: SEARCH_TABLE [STRING]
+			l_path: STRING
 		do
-			makefile_names := universe.target.external_make
+			create l_added_make.make (1)
+			makefile_names := universe.target.all_external_make
 			from
 				make_file.put_string ("EXTERNAL_MAKEFILES = ")
 				i := 1
@@ -747,8 +764,12 @@ feature -- Generation, External archives and object files.
 			loop
 				l_ext := makefile_names.i_th (i)
 				if l_ext.is_enabled (universe.platform, universe.build) then
-					make_file.put_string (" ")
-					make_file.put_string (l_ext.location.evaluated_path)
+					l_path := l_ext.location.evaluated_path
+					if not l_added_make.has (l_path) then
+						l_added_make.force (l_path)
+						make_file.put_string (" ")
+						make_file.put_string (l_path)
+					end
 				end
 				i := i + 1
 			end
@@ -816,7 +837,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("/emain.o Makefile%N%T$(RM) ")
 			make_file.put_string (system_name)
 			make_file.put_new_line
-			if not universe.target.external_make.is_empty then
+			if not universe.target.all_external_make.is_empty then
 				make_file.put_string ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			end
 			if System.has_cpp_externals then
@@ -839,7 +860,7 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 			generate_other_objects
 			make_file.put_string ("%T%T")
-			if not universe.target.external_object.is_empty then
+			if not universe.target.all_external_object.is_empty then
 				make_file.put_string ("$(EXTERNALS) ")
 			end
 			make_file.put_string ("$(EIFLIB)")

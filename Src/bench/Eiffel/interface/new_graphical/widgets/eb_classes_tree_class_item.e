@@ -105,13 +105,17 @@ feature -- Status setting
 
 	on_class_drop (cstone: CLASSI_STONE) is
 			-- Add class corresponding to `cstone' to parent folder.
+		require
+			stone_ok: cstone /= Void
 		local
 			fparent: EB_CLASSES_TREE_FOLDER_ITEM
 			actual: CLASS_I
 		do
 			fparent ?= parent
 			actual := cstone.class_i
---			parent_tree.manager.move_class (actual, actual.group, fparent.data.actual_cluster)
+			if fparent.data.is_cluster then
+				parent_tree.manager.move_class (actual.config_class, actual.group, fparent.data.actual_cluster)
+			end
 		end
 
 	on_cluster_drop (a_cluster: CLUSTER_STONE) is
@@ -150,21 +154,26 @@ feature {NONE} -- Implementation
 			conv_folder: CLUSTER_STONE
 			conv_st: CLASSI_STONE
 			fs: FEATURE_STONE
+			fparent: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			conv_folder ?= a_pebble
-			if conv_folder /= Void then
-				Result := not cluster_contains_class (conv_folder.cluster_i)
-			else
-				conv_st ?= a_pebble
-				fs ?= a_pebble
+				-- we can only drop things on clusters
+			fparent ?= parent
+			if fparent /= Void and then fparent.data.is_cluster then
+				conv_folder ?= a_pebble
+				if conv_folder /= Void then
+					Result := not cluster_contains_class (conv_folder.cluster_i)
+				else
+					conv_st ?= a_pebble
+					fs ?= a_pebble
 
-				Result :=
-						-- We have a class stone...
-					conv_st /= Void and then
-						-- ...from a different cluster...
-					conv_st.class_i.group /= data.group and then
-						-- ...and that is not a feature.
-					fs = Void
+					Result :=
+							-- We have a class stone...
+						conv_st /= Void and then
+							-- ...from a different cluster...
+						conv_st.class_i.group /= data.group and then
+							-- ...and that is not a feature.
+						fs = Void
+				end
 			end
 		end
 

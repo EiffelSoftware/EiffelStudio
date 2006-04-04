@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	eiffel_dir: STRING		
+	eiffel_dir: STRING
 			-- EIFFEL installation environment variable
 
 	Max_path_length: INTEGER is 1024
@@ -23,21 +23,16 @@ feature -- Access
 			non_void_long_path: long_path /= Void
 			valid_long_path: not long_path.is_empty
 		local
-			p: POINTER
-			a1, a2: ANY
-			buf: STRING
+			a1, a2: WEL_STRING
 			ret: INTEGER
 		do
-			create buf.make (Max_path_length)
-			a1 := long_path.to_c
-			a2 := buf.to_c
-			p := $a2
-			ret := convert_path ($a1, p, Max_path_length)
+			create a1.make (long_path)
+			create a2.make_empty (Max_path_length)
+			ret := convert_path (a1.item, a2.item, Max_path_length)
 			if ret > 0 and ret <= Max_path_length then
-				create Result.make_from_c (p)
+				Result := a2.string
 			else
 				Result := long_path
-
 			end
 		ensure
 			non_void_short_path: Result /= Void
@@ -49,11 +44,11 @@ feature {NONE} -- Externals
 	convert_path (a1, a2: POINTER; sz: INTEGER): INTEGER is
 			-- Convert a long path name to a short path name.
 		external
-			"C | <windows.h>"
+			"C signature (LPCTSTR, LPTSTR, DWORD): DWORD use <windows.h>"
 		alias
 			"GetShortPathName"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

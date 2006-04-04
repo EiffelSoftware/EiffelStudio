@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="preferences" uuid="b453e790-c89e-45dc-ba9c-e00e4c4be87a" library_target="preferences">
+	<target name="preferences">
+		<description>Preferences library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+
+    <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+    <library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+    <library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+    <library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+    
+    <cluster name="interface" location="interface" recursive="true"/>
+    <cluster name="preference" location="preference" recursive="true"/>
+    <cluster name="storage" location="storage" recursive="true"/>
+    	<file_rule>
+    		<exclude>/registry_implementation$</exclude>
+    	</file_rule>
+    <cluster name="preferences" location="." recursive="false"/>
+	</target>
+</system>

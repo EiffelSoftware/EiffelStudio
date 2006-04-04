@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="store" uuid="2f4368c4-b48f-454f-9206-f7ef7c39b23d" library_target="store">
+	<target name="store">
+		<description>Store library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
+		<cluster name="converter" location="converter" recursive="true"/>
+		<cluster name="dataview" location="dataview" recursive="true"/>
+		<cluster name="dbms" location="dbms" recursive="true"/>
+		<cluster name="generation" location="generation" recursive="true"/>
+		<cluster name="interface" location="interface" recursive="true"/>
+		<cluster name="mapping" location="mapping" recursive="true"/>
+		<cluster name="support" location="support" recursive="true"/>
+	</target>
+</system>

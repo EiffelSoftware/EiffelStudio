@@ -3,16 +3,19 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="thread" uuid="8d4ab86a-5613-42c9-a181-925deb27843a" library_target="thread">
-	<target name="thread">
-		<description>thread library</description>
+	 name="time" uuid="78d80981-ef3c-42ec-8919-ef7d7bb61701" library_target="time">
+	<target name="time">
+		<description>Time library</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
+			<exclude>/french$</exclude>
+			<exclude>/german$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<cluster name="thread" location="." recursive="true"/>
+		<cluster name="format" location="format" recursive="true"/>
+		<cluster name="time" location="." recursive="false"/>
 	</target>
 </system>

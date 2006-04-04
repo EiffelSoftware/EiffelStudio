@@ -3,9 +3,9 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="thread" uuid="8d4ab86a-5613-42c9-a181-925deb27843a" library_target="thread">
-	<target name="thread">
-		<description>thread library</description>
+	 name="Eiffel2Java" uuid="204c4735-8214-4102-8fe8-31b24b06547d" library_target="Eiffel2Java">
+	<target name="Eiffel2Java">
+		<description>Eiffel2Java library</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
@@ -13,6 +13,8 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<cluster name="thread" location="." recursive="true"/>
+		
+		<cluster name="structures" location="structures" recursive="true"/>
+		<cluster name="Eiffel2Java" location="." recursive="false"/>
 	</target>
 </system>

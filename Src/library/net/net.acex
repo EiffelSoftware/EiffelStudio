@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="net" uuid="65e3e91a-6c89-45b1-9f59-079a081d32dc" library_target="net">
+	<target name="net">
+		<description>Net library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+				<exclude>/mel_socket_poller\.e$</exclude>
+				<exclude>/vision_socket_poller\.e$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
+			<if platform="windows"/>
+		</library>
+		<external_object location="spec\$ISE_C_COMPILER\lib\mtnet.lib"/>
+		<cluster name="abstract" location="abstract" recursive="true"/>
+		<cluster name="local" location="local" recursive="true"/>
+		<cluster name="mail" location="mail" recursive="true"/>
+		<cluster name="network" location="network" recursive="true"/>
+		<cluster name="polling" location="polling" recursive="true"/>
+		<cluster name="transfer" location="transfer" recursive="true"/>
+	</target>
+</system>

@@ -12,43 +12,46 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-    <external_include location="$ISE_LIBRARY\wel\spec\windows\include">
+    <external_include location="spec\windows\include">
             <description>Includes for Wel.</description>
             <if platform="windows"/>
     </external_include>
-    <library name="base" location="$ISE_LIBRARY\base\base.acex" readonly="true">
-		<assembly name="mtwel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\mtwel.lib"/>
-		<assembly name="wel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\wel.lib"/>
-		<assembly name="ilwel.lib" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\lib\ilwel.lib"/>
-		<assembly name="wel_hook.dll" location="$ISE_LIBRARY\wel\spec\$ISE_C_COMPILER\dll\wel_hook.dll"/>
-		<cluster name="consts" location="$ISE_LIBRARY\wel\consts" recursive="true">
+    <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<external_object location="spec\$ISE_C_COMPILER\lib\mtwel.lib"/>
+		<external_object location="spec\$ISE_C_COMPILER\lib\wel.lib"/>
+		<external_object location="spec\$ISE_C_COMPILER\lib\ilwel.lib"/>
+		<external_object location="spec\$ISE_C_COMPILER\dll\wel_hook.dll"/>
+		<cluster name="consts" location="consts" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="extra" location="$ISE_LIBRARY\wel\extra" recursive="true">
+		<cluster name="controls" location="controls" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="gdi" location="$ISE_LIBRARY\wel\gdi" recursive="true">
+		<cluster name="extra" location="extra" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="gdistock" location="$ISE_LIBRARY\wel\gdistock" recursive="true">
+		<cluster name="gdi" location="gdi" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="messages" location="$ISE_LIBRARY\wel\messages" recursive="true">
+		<cluster name="gdistock" location="gdistock" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="shared" location="$ISE_LIBRARY\wel\shared" recursive="true">
+		<cluster name="messages" location="messages" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="stddlgs" location="$ISE_LIBRARY\wel\stddlgs" recursive="true">
+		<cluster name="shared" location="shared" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="structs" location="$ISE_LIBRARY\wel\structs" recursive="true">
+		<cluster name="stddlgs" location="stddlgs" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="support" location="$ISE_LIBRARY\wel\support" recursive="true">
+		<cluster name="structs" location="structs" recursive="true">
 				<if platform="windows"/>
 		</cluster>
-		<cluster name="windows" location="$ISE_LIBRARY\wel\windows" recursive="true">
+		<cluster name="support" location="support" recursive="true">
+				<if platform="windows"/>
+		</cluster>
+		<cluster name="windows" location="windows" recursive="true">
 				<if platform="windows"/>
 		</cluster>
 	</target>

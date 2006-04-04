@@ -3,9 +3,9 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="thread" uuid="8d4ab86a-5613-42c9-a181-925deb27843a" library_target="thread">
-	<target name="thread">
-		<description>thread library</description>
+	 name="parse" uuid="6e3e2790-880e-4193-abe6-27d129a0e48d" library_target="parse">
+	<target name="parse">
+		<description>Parse library</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
@@ -13,6 +13,7 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<cluster name="thread" location="." recursive="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
+		<cluster name="parse" location="." recursive="true"/>
 	</target>
 </system>

@@ -448,6 +448,8 @@ feature {NONE} -- Implementation
 	internal_hash_code: INTEGER
 			-- Cashed value of the hash_code
 
+feature {CONF_ACCESS} -- Stored in configuration file
+
 	internal_read_only: BOOLEAN
 			-- Internal read only value
 

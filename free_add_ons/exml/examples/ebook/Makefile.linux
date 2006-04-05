@@ -1,7 +1,0 @@
-
-EIFFEL_ROOT_CLASS=ebook
-EIFFEL_CREATION_ROUTINE=make
-ROOT_DIR=$(EXML)/examples/ebook
-
-include $(EXML)/compiler_specific/se/exml_make_incl.linux
-

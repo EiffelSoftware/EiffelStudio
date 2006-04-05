@@ -1,7 +1,0 @@
-
-EIFFEL_ROOT_CLASS=root_class
-EIFFEL_CREATION_ROUTINE=make
-ROOT_DIR=$(EXML)/examples/tree_test
-
-include $(EXML)/compiler_specific/se/exml_make_incl.linux
-

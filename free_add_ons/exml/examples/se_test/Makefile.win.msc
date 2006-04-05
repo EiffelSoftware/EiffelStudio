@@ -1,8 +1,0 @@
-
-EIFFEL_ROOT_CLASS= root_class
-EIFFEL_CREATION_ROUTINE=make
-ROOT_DIR=$(EXML)\examples\se_test
-INCLUDE =$(EXML)\compiler_specific\se;$(INCLUDE)
-
-include <exml_make_incl.win.msc>
-

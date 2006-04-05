@@ -450,8 +450,8 @@ feature -- Element change
 			a_folder: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
-			remove_cluster_from_ace (a_cluster)
-			if not error_in_ace_parsing then
+			remove_group_from_config (a_cluster)
+			if not error_in_config_parsing then
 				a_folder := folder_from_cluster (a_cluster)
 				remove_cluster (a_folder)
 			else
@@ -592,7 +592,7 @@ feature -- Element change
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
 			add_cluster_in_ace (a_cluster, receiver, ace_path, is_recursive, is_library)
-			if not error_in_ace_parsing then
+			if not error_in_config_parsing then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
 						-- `a_cluster' was not in the system.
@@ -619,7 +619,7 @@ feature -- Element change
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
 			add_top_cluster_in_ace (a_cluster, ace_path, is_recursive, is_library)
-			if not error_in_ace_parsing then
+			if not error_in_config_parsing then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
 						-- `a_cluster' was not in the system.
@@ -911,7 +911,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			new_csd: CLUSTER_SD
 		do
-			error_in_ace_parsing := False
+			error_in_config_parsing := False
 			if not retried then
 				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
 						-- Create a new freshly parsed AST. If there is a
@@ -921,50 +921,48 @@ feature {NONE} -- Implementation
 --					root_ast := Eiffel_ace.Lace.parsed_ast
 				end
 			else
-				error_in_ace_parsing := True
+				error_in_config_parsing := True
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	remove_cluster_from_ace (a_cluster: CLUSTER_I) is
-			-- Remove the entry corresponding to `a_cluster' from the Ace file.
-			-- If `a_cluster' belongs to a all clause, add an exclude clause to its top parent.
+	remove_group_from_config (a_group: CONF_GROUP) is
+			-- Remove the entry corresponding to `a_cluster' from the config file.
+			-- If `a_cluster' belongs to a recursive cluster, add an exclude clause to its top parent.
 		require
-			valid_old_cluster: a_cluster /= Void
-			not_library: not a_cluster.is_library
+			valid_group: a_group /= Void
+			not_readonly: not a_group.is_readonly
 		local
-			ace_clusters: LACE_LIST [CLUSTER_SD]
-			explored: LACE_LIST [CLUSTER_SD]
-			children: LACE_LIST [CLUSTER_SD]
-			cl_name: ID_SD
 			retried: BOOLEAN
-			found: BOOLEAN
-			child: BOOLEAN
-			cp: CLUST_PROP_SD
-			excl_sd: FILE_NAME_SD
-			new_csd: CLUSTER_SD
-			list_sd: LACE_LIST [FILE_NAME_SD]
+			l_target: CONF_TARGET
 		do
-			error_in_ace_parsing := False
+			error_in_config_parsing := False
 			if not retried then
-				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
-						-- Create a new freshly parsed AST. If there is a
-						-- syntax error during parsing of chose Ace file,
-						-- we open an empty window.
-					conf_todo
+				if not lace.has_changed then
+					if a_group.is_cluster then
+						a_group.target.clusters.remove (a_group.name)
+					elseif a_group.is_library then
+						a_group.target.libraries.remove (a_group.name)
+					elseif a_group.is_assembly then
+						a_group.target.assemblies.remove (a_group.name)
+					elseif a_group.is_override then
+						a_group.target.overrides.remove (a_group.name)
+					else
+						check should_not_reach: False end
+					end
 				end
 			else
-				error_in_ace_parsing := True
+				error_in_config_parsing := True
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	error_in_ace_parsing: BOOLEAN
-			-- Did an error occur during the last call to `add_cluster_in_ace' or `remove_cluster_from_ace'?
+	error_in_config_parsing: BOOLEAN
+			-- Did an error occur during the last call to `add_cluster_in_ace' or `remove_group_from_config'?
 
 feature {NONE} -- Attributes
 
@@ -1002,4 +1000,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLUSTERS
+end

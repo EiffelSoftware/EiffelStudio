@@ -219,6 +219,24 @@ feature -- Access queries
 			end
 		end
 
+	sub_group_by_name (a_name: STRING): CONF_GROUP is
+			-- Return sub cluster with `a_name' if there is any.
+		do
+			if children /= Void then
+				from
+					children.start
+				until
+					Result /= Void or children.after
+				loop
+					if children.item.name.is_equal (a_name) then
+						Result := children.item
+					end
+					children.forth
+				end
+			end
+		end
+
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_parent (a_cluster: like parent) is

@@ -39,6 +39,14 @@ feature -- Access queries
 	uuid: UUID
 			-- uuid of the used library.
 
+	sub_group_by_name (a_name: STRING): CONF_GROUP is
+			-- Return sub group with `a_name' if there is any.
+		do
+			if library_target /= Void then
+				Result := library_target.groups.item (a_name)
+			end
+		end
+
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
 	set_uuid (an_uuid: UUID) is

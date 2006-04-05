@@ -179,6 +179,15 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	sub_group_by_name (a_name: STRING): CONF_GROUP is
+			-- Return sub group with `a_name' if there is any.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_name_lower: a_name.is_equal (a_name.as_lower)
+		deferred
+		end
+
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

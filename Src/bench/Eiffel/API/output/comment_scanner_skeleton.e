@@ -63,6 +63,21 @@ feature -- Element change
 			for_comment_set: for_comment = a_for_comment
 		end
 
+	set_current_class (a_class: like current_class) is
+			-- Set `a_class' to `current_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			current_class := a_class
+		ensure
+			current_class_not_void: current_class = a_class
+		end
+
+feature -- Access
+
+	current_class : CLASS_C
+			-- Current class for analyze context.
+
 feature {NONE} -- Implementation
 
 	add_email_tokens is
@@ -129,8 +144,8 @@ feature {NONE} -- Implementation
 			end
 			l_feat_name := l_text
 			l_feat_name := l_text.substring (2, l_text.count - 1)
-			if eiffel_system.system.current_class /= Void then
-				last_type := eiffel_system.system.current_class.actual_type
+			if current_class /= Void then
+				last_type := current_class.actual_type
 			end
 			l_feat := feature_by_name (l_feat_name)
 			if l_feat /= Void then
@@ -168,21 +183,53 @@ feature {NONE} -- Implementation
 	add_cluster is
 			-- A cluster like [cluster] encountered.
 		local
---			l_text : like text
---			l_cluster_name: STRING
---			l_cluster: CLUSTER_I
+			l_text : like text
+			l_cluster_name: STRING
+			l_cluster: CONF_GROUP
+			l_strings: LIST [STRING]
+			l_groups: ARRAYED_LIST [CONF_GROUP]
+			l_str: STRING
 		do
---			l_text := text
---			check
---				l_text.count > 2
---			end
---			l_cluster_name := l_text.substring (2, l_text.count - 1)
---			l_cluster := cluster_by_name (l_cluster_name)
---			if l_cluster /= Void then
---				text_formatter.process_cluster_name_text (l_cluster_name, l_cluster, False)
---			else
---				add_text (l_text)
---			end
+			l_text := text
+			check
+				l_text.count > 2
+			end
+			l_cluster_name := l_text.substring (2, l_text.count - 1)
+			l_strings := l_cluster_name.split ('.')
+			l_groups := eiffel_universe.groups
+			if not l_strings.is_empty and then not l_strings.first.is_empty then
+				l_str := l_strings.first
+				l_cluster := eiffel_universe.target.groups.item (l_str)
+			end
+			if l_cluster /= Void then
+				text_formatter.process_cluster_name_text (l_cluster.name, l_cluster, False)
+				from
+					l_strings.start
+					if not l_strings.after then
+						l_strings.forth
+					end
+				until
+					l_strings.after
+				loop
+					if not l_strings.item.is_empty then
+						l_cluster_name := l_strings.item
+						add_text (".")
+						if l_cluster /= Void then
+							l_cluster := l_cluster.sub_group_by_name (l_cluster_name)
+						end
+						if l_cluster /= Void then
+							text_formatter.process_cluster_name_text (l_cluster.name, l_cluster, False)
+						else
+							add_text (l_cluster_name)
+						end
+					else
+						add_text (".")
+					end
+					l_strings.forth
+				end
+			else
+				add_text (l_text)
+			end
 		end
 
 	add_text (a_text: STRING) is
@@ -230,14 +277,6 @@ feature {NONE} -- Helpers
 				Result := cl.first
 			end
 		end
-
---	cluster_by_name (name: STRING): CLUSTER_I is
---			-- Return cluster with `name'. `Void' if not in system.
---		require
---			name_not_void: name /= Void
---		do
---			Result := Eiffel_universe.cluster_of_name (name)
---		end
 
 	feature_by_name (name: STRING): E_FEATURE is
 			-- Return feature in current class with `name'. `Void' if not in system.

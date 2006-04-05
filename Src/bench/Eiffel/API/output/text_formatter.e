@@ -503,6 +503,7 @@ feature {NONE} -- Implementation
 			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (l_string))
 			comment_scanner.set_text_formatter (Current)
 			comment_scanner.set_for_comment (for_comment)
+			comment_scanner.set_current_class (comment_context_class)
 			comment_scanner.scan
 		end
 
@@ -550,6 +551,12 @@ feature {NONE} -- Implementation
 			else
 				process_quoted_text (text)
 			end
+		end
+
+	comment_context_class : CLASS_C is
+			-- Current class for comment context.
+		do
+			Result := eiffel_system.system.current_class
 		end
 
 indexing

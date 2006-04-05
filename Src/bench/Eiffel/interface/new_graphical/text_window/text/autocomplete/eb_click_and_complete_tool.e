@@ -790,9 +790,8 @@ feature -- Class names completion
 			cursor_not_void: cursor /= Void
 		local
 			cname				: STRING
-			clusters			: ARRAYED_LIST [CLUSTER_I]
 			class_list			: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes				: HASH_TABLE [CLASS_I, STRING]
+			classes				: DS_HASH_SET [CLASS_I]
 			token				: EDITOR_TOKEN
 			show_all	: BOOLEAN
 			class_name			: EB_CLASS_FOR_COMPLETION
@@ -815,77 +814,61 @@ feature -- Class names completion
 					end
 				end
 			end
-				cname := ""
+			cname := ""
+
+			classes := universe.all_classes
+			create class_list.make (100)
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				if show_all then
+					create class_name.make (classes.item_for_iteration)
+				 	class_list.extend (class_name)
+				else
+					if matches (classes.item_for_iteration.name, cname) then
+						create class_name.make (classes.item_for_iteration)
+					 	class_list.extend (class_name)
+					end
+				end
+				classes.forth
+			end
+
+			cnt := class_list.count
+			if current_class_as /= Void and then current_class_as.generics /= Void then
+				create class_completion_possibilities.make (1, current_class_as.generics.count + cnt)
 				from
-					create class_list.make (100)
-					conf_todo
---					clusters := Universe.clusters
-					clusters.start
+					current_class_as.generics.start
 				until
-					clusters.after
+					current_class_as.generics.after
 				loop
-					if show_all then
-						from
-							classes := clusters.item.classes
-							classes.start
-						until
-							classes.after
-						loop
-							create class_name.make (classes.item_for_iteration)
-						 	class_list.extend (class_name)
-							classes.forth
-						end
-					else
-						from
-							classes := clusters.item.classes
-							classes.start
-						until
-							classes.after
-						loop
-							if matches (classes.key_for_iteration, cname) then
-								create class_name.make (classes.item_for_iteration)
-							 	class_list.extend (class_name)
-							end
-							classes.forth
-						end
-					end
-					clusters.forth
+					create name_name.make_with_name (current_class_as.generics.item.name)
+					class_list.put_front (name_name)
+					current_class_as.generics.forth
 				end
+			end
 
-				cnt := class_list.count
-				if current_class_as /= Void and then current_class_as.generics /= Void then
-					create class_completion_possibilities.make (1, current_class_as.generics.count + cnt)
-					from
-						current_class_as.generics.start
-					until
-						current_class_as.generics.after
-					loop
-						create name_name.make_with_name (current_class_as.generics.item.name)
-						class_list.put_front (name_name)
-						current_class_as.generics.forth
-					end
+			if cnt > 0 then
+				if class_completion_possibilities = Void then
+					create class_completion_possibilities.make (1, cnt)
+				else
+					cnt := class_list.count
 				end
-
-				if cnt > 0 then
-					if class_completion_possibilities = Void then
-						create class_completion_possibilities.make (1, cnt)
-					else
-						cnt := class_list.count
-					end
-					from
-						i := 1
-						class_list.start
-					until
-						i > cnt
-					loop
-						class_completion_possibilities.put (class_list.item, i)
-						i := i + 1
-						class_list.forth
-					end
-					class_completion_possibilities.sort
+				from
+					i := 1
+					class_list.start
+				until
+					i > cnt
+				loop
+					class_completion_possibilities.put (class_list.item, i)
+					i := i + 1
+					class_list.forth
 				end
-				reset_after_search
-				calculate_insertion (cursor, cursor.token)
+				class_completion_possibilities.sort
+			end
+			reset_after_search
+			calculate_insertion (cursor, cursor.token)
 		end
 
 	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Editor tokens are created and put into last line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -21,6 +21,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+create {NONE}
+
 feature {NONE} -- Initialization
 
 	make is
@@ -33,6 +35,8 @@ feature -- Access
 	count : INTEGER
 
 	last_line: EIFFEL_EDITOR_LINE
+
+feature -- New line
 
 	new_line is
 			-- Create new `last_line'

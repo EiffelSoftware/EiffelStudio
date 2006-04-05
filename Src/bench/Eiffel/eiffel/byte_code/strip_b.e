@@ -8,7 +8,7 @@ class STRIP_B
 inherit
 	EXPR_B
 		redefine
-			enlarged, size
+			enlarged, is_type_fixed, size
 		end
 
 	SHARED_INSTANTIATOR
@@ -73,6 +73,12 @@ feature
 				feature_ids.forth;
 			end;
 		end;
+
+feature -- Status report
+
+	is_type_fixed: BOOLEAN is True
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
 
 feature -- Inlining
 

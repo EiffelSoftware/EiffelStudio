@@ -13,7 +13,7 @@ inherit
 	EXPR_B
 		redefine
 			enlarged,
-			is_simple_expr, allocates_memory, size
+			is_simple_expr, is_type_fixed, allocates_memory, size
 		end
 
 create
@@ -44,6 +44,12 @@ feature -- Access
 
 	is_dotnet_string: BOOLEAN
 			-- Is current a manifest System.String constant?
+
+feature -- Status report
+
+	is_type_fixed: BOOLEAN is True
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
 
 feature -- Visitor
 

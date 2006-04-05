@@ -180,7 +180,7 @@ feature {NONE} -- Visitors
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
-			l_source_type ?= context.real_type (a_node.source.type)
+			l_source_type := context.real_type (a_node.source.type)
 			l_target_node := a_node.target
 			l_target_type := Context.real_type (l_target_node.type)
 			if l_target_type.is_expanded and l_source_type.is_none then
@@ -211,7 +211,7 @@ feature {NONE} -- Visitors
 							ba.append (Bc_clone)
 						else
 								-- Source can be a boxed expanded object.
-							ba.append (bc_cclone)
+							generate_dynamic_clone (a_node.source, l_source_type)
 						end
 					end
 					ba.append (l_target_node.assign_code)
@@ -1303,7 +1303,7 @@ feature {NONE} -- Visitors
 					ba.append (Bc_clone)
 				else
 						-- Source can be a boxed expanded object.
-					ba.append (bc_cclone)
+					generate_dynamic_clone (a_node.source, l_source_type)
 				end
 				ba.append (a_node.target.reverse_code)
 				melted_assignment_generator.generate_assignment (ba, a_node.target)
@@ -1559,12 +1559,25 @@ feature {NONE} -- Implementation
 					ba.append (Bc_clone)
 				else
 						-- Source can be a boxed expanded object.
-					ba.append (bc_cclone)
+					generate_dynamic_clone (an_expr, l_expression_type)
 				end
 			elseif not a_target_type.is_basic and then l_expression_type.is_expanded then
 					-- Source and target are expanded:
 					-- clone
 				ba.append (Bc_clone)
+			end
+		end
+
+	generate_dynamic_clone (expression: EXPR_B; type: TYPE_I) is
+			-- Generate code that clones result of an `expression' depending on
+			-- dynamic type of object of static type `type'.
+		require
+			expression_not_void: expression /= Void
+			type_not_void: type /= Void
+			type_is_reference: type.is_reference
+		do
+			if expression.is_dynamic_clone_required (type) then
+				ba.append (bc_cclone)
 			end
 		end
 

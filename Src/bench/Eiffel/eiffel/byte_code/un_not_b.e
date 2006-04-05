@@ -7,8 +7,8 @@ inherit
 	UNARY_B
 		redefine
 			generate_operator, is_built_in, print_register,
-			enlarged
-		end;
+			enlarged, is_type_fixed
+		end
 
 feature -- Visitor
 
@@ -41,6 +41,13 @@ feature
 		do
 			Result := context.real_type (expr.type).is_boolean;
 		end;
+
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := is_built_in
+		end
 
 feature -- Enlarging
 

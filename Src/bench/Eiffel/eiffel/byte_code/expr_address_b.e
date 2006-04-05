@@ -7,7 +7,7 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged,
+			enlarged, is_type_fixed,
 			allocates_memory, has_call, has_gcable_variable,
 			is_hector, inlined_byte_code, pre_inlined_code, size,
 			optimized_byte_node, is_unsafe, calls_special_features
@@ -40,6 +40,12 @@ feature -- Attributes
 
 	expr: EXPR_B;
 		-- Expression to address
+
+feature -- Status report
+
+	is_type_fixed: BOOLEAN is True
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
 
 feature
 

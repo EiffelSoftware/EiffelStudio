@@ -65,40 +65,6 @@ feature {NONE} -- Initialization
 			-- Initialization.
 		do
 			create observer_list.make (10)
-			create libraries.make
-			create assemblies.make
-			create clusters.make (10)
-		end
-
-feature -- Initialization
-
-	load_tree is
-			-- Load libraries, assemblies, clusters.
-		local
-			l_target: CONF_TARGET
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
-		do
---			libraries.wipe_out
---			assemblies.wipe_out
---			clusters.wipe_out
---			if
---				Eiffel_project.initialized and then
---				Eiffel_project.system_defined and then
---				Universe.target /= Void
---			 then
---			 	l_target := Universe.target
---				from
---					l_libs := l_target.libraries
---					l_libs.start
---				until
---					l_libs.after
---				loop
---					libraries.extend (l_libs.item_for_iteration)
---					l_libs.forth
---				end
---
---				is_initialized := True
---			end
 		end
 
 feature -- Observer Pattern
@@ -123,8 +89,6 @@ feature -- Observer Pattern
 			-- Useful in case clusters are modified directly without
 			-- notifying `Current'. (during compilations for instance)
 		do
-			load_tree
-
 			from
 				observer_list.start
 			until
@@ -250,8 +214,6 @@ feature -- Observer Pattern
 	on_project_loaded is
 			-- A new project has been loaded.
 		do
-			load_tree
-
 			from
 				observer_list.start
 			until
@@ -273,21 +235,7 @@ feature -- Observer Pattern
 				observer_list.item.on_project_unloaded
 				observer_list.forth
 			end
-			clusters.wipe_out
 		end
-
-feature -- Status report
-
-	libraries: SORTED_TWO_WAY_LIST [CONF_LIBRARY]
-
-	assemblies: SORTED_TWO_WAY_LIST [CONF_ASSEMBLY]
-
-	clusters: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
-
-feature -- Status setting
-
-	is_initialized: BOOLEAN
-			-- Is the class initialized?
 
 feature -- Element change
 
@@ -845,7 +793,7 @@ feature {NONE} -- Implementation
 			parent_cluster_sons: DS_LIST [EB_SORTED_CLUSTER]
 		do
 			if parent_cluster = Void then
-				parent_cluster_sons := clusters
+--				parent_cluster_sons := clusters
 			else
 				parent_cluster_sons := parent_cluster.clusters
 			end
@@ -965,23 +913,12 @@ feature {NONE} -- Implementation
 		do
 			error_in_ace_parsing := False
 			if not retried then
-				root_ast := Void
 				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
 						-- Create a new freshly parsed AST. If there is a
 						-- syntax error during parsing of chose Ace file,
 						-- we open an empty window.
 					conf_todo
 --					root_ast := Eiffel_ace.Lace.parsed_ast
-				end
-				if root_ast /= Void then
-					ace_clusters := root_ast.clusters
-					create new_csd.initialize (new_id_sd (a_cluster.cluster_name, False),
-						Void, new_id_sd (ace_path, True), Void, is_recursive, is_library)
-					ace_clusters.extend (new_csd)
-					save_content
-				else
-						-- We could not retrieve the `root_ast'.
-					error_in_ace_parsing := True
 				end
 			else
 				error_in_ace_parsing := True
@@ -1012,129 +949,11 @@ feature {NONE} -- Implementation
 		do
 			error_in_ace_parsing := False
 			if not retried then
-				root_ast := Void
 				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
 						-- Create a new freshly parsed AST. If there is a
 						-- syntax error during parsing of chose Ace file,
 						-- we open an empty window.
 					conf_todo
---					root_ast := Eiffel_ace.Lace.parsed_ast
-				end
-				if root_ast /= Void then
-					conf_todo
---					if not a_cluster.belongs_to_all then
---							-- We remove a top-level cluster from the Ace, as well as all its children.
---						error_in_ace_parsing := False
---						cl_name := new_id_sd (a_cluster.cluster_name, False)
---						create explored.make (10)
---						ace_clusters := root_ast.clusters
---							-- First, we find the cluster_sd corresponding to `a_cluster'.
---						from
---							ace_clusters.start
---						until
---							found or ace_clusters.after
---						loop
---							found := cl_name.is_equal (ace_clusters.item.cluster_name)
---							if found then
---								explored.extend (ace_clusters.item)
---								ace_clusters.remove
---							else
---								ace_clusters.forth
---							end
---						end
---							-- Then, we remove all the children.
---						from
---						until
---							explored.is_empty
---						loop
---							from
---								create children.make (10)
---								ace_clusters.start
---							until
---								ace_clusters.after
---							loop
---									-- We remove all the children of `explored' clusters.
---								if ace_clusters.item.has_parent then
---									cl_name := ace_clusters.item.parent_name
---									from
---										explored.start
---										child := False
---									until
---										explored.after or child
---									loop
---										if explored.item.cluster_name.same_as (cl_name) then
---											child := True
---										else
---											explored.forth
---										end
---									end
---									if child then
---											-- `ace_clusters.item' is a child of one of the explored clusters.
---										children.extend (ace_clusters.item)
---										ace_clusters.remove
---									else
---										ace_clusters.forth
---									end
---								else
---									ace_clusters.forth
---								end
---							end
---							explored := children
---						end
---						if not found then
---							error_in_ace_parsing := True
---						else
---							save_content
---						end
---					else
---							-- We have to add an exclude clause.
---						cl_name := new_id_sd (top_parent (a_cluster).cluster_name, False)
---						ace_clusters := root_ast.clusters
---						from
---							ace_clusters.start
---						until
---							ace_clusters.after or else
---							found
---						loop
---							found := cl_name.is_equal (ace_clusters.item.cluster_name)
---							if found then
---									-- We add an exclude clause to the top parent.
---								create excl_sd.initialize (new_id_sd (a_cluster.display_name, False))
---								cp := ace_clusters.item.cluster_properties
---								if cp = Void then
---									create list_sd.make (5)
---									list_sd.extend (excl_sd)
---									create cp.initialize (Void, Void, Void, list_sd,
---										Void, Void, Void, Void)
---								else
---									if cp.exclude_option = Void then
---										create list_sd.make (5)
---										list_sd.extend (excl_sd)
---									else
---										list_sd := cp.exclude_option
---										list_sd.extend (excl_sd)
---									end
---									create cp.initialize (cp.dependencies, cp.use_name,
---										cp.include_option, list_sd, cp.adapt_option,
---										cp.default_option, cp.options, cp.visible_option)
---								end
---								new_csd := ace_clusters.item
---								create new_csd.initialize (new_csd.cluster_name,
---									new_csd.parent_name, new_csd.directory_name, cp,
---									new_csd.is_recursive, new_csd.is_library)
---								ace_clusters.replace (new_csd)
---								save_content
---							else
---								ace_clusters.forth
---							end
---						end
---						if not found then
---							error_in_ace_parsing := True
---						end
---					end
-				else
-						-- We could not retrieve the `root_ast'.
-					error_in_ace_parsing := True
 				end
 			else
 				error_in_ace_parsing := True
@@ -1143,35 +962,6 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-
-	save_content is
-			-- Store `Ace' file with/without new cluster.
-		local
-			st: GENERATION_BUFFER
-			ace_file: PLAIN_TEXT_FILE
-			ast: like root_ast
-		do
-			conf_todo
---			if Eiffel_ace.file_name = Void or else root_ast = Void then
---					-- Creation of AST.
---				create root_ast
---			end
---
---			ast := root_ast.duplicate
---
---			create st.make (2048)
---			ast.save (st)
---			if Eiffel_ace.file_name = Void then
---				error_in_ace_parsing := True
---			else
---				create ace_file.make_open_write (Eiffel_ace.file_name)
---				st.put_in_file (ace_file)
---				ace_file.close
---			end
-		end
-
-	root_ast: ACE_SD
-			-- Current Ace representation we are working on (to add/remove clusters).
 
 	error_in_ace_parsing: BOOLEAN
 			-- Did an error occur during the last call to `add_cluster_in_ace' or `remove_cluster_from_ace'?

@@ -1137,7 +1137,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				add_class_item (l_classi_stone.class_i)
 			end
 			if l_cluster_stone /= Void then
-				add_cluster_item (l_cluster_stone.cluster_i)
+				add_cluster_item (l_cluster_stone.group)
 			end
 		end
 
@@ -1155,7 +1155,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				remove_class_item (l_classi_stone.class_i)
 			end
 			if l_cluster_stone /= Void then
-				remove_cluster_item (l_cluster_stone.cluster_i)
+				remove_cluster_item (l_cluster_stone.group)
 			end
 		end
 
@@ -1858,35 +1858,37 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			force_new_search
 		end
 
-	remove_cluster_item (a_cluster: CLUSTER_I) is
+	remove_cluster_item (a_group: CONF_GROUP) is
 			-- Remove a class item from the list.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			l_item: EV_LIST_ITEM
 		do
-			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
+			l_item := scope_list.retrieve_item_by_data (a_group, false)
 			scope_list.prune_all (l_item)
 			force_new_search
 		end
 
-	add_cluster_item (a_cluster: CLUSTER_I) is
-			-- Add a cluster item to the list.
+	add_cluster_item (a_group: CONF_GROUP) is
+			-- Add a group item to the list.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			l_item: EV_LIST_ITEM
 		do
-			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
-			if l_item = Void then
-				create l_item.make_with_text (a_cluster.cluster_name)
-				l_item.set_pixmap (pixmap_from_group (a_cluster))
-				scope_list.extend (l_item)
-				l_item.set_data (a_cluster)
-				l_item.set_pebble_function (agent scope_pebble_function (a_cluster))
-				l_item.set_accept_cursor (Cursors.cur_cluster)
-				l_item.set_deny_cursor (Cursors.cur_x_class)
-				force_new_search
+			if not a_group.is_assembly then
+				l_item := scope_list.retrieve_item_by_data (a_group, false)
+				if l_item = Void then
+					create l_item.make_with_text (a_group.name)
+					l_item.set_pixmap (pixmap_from_group (a_group))
+					scope_list.extend (l_item)
+					l_item.set_data (a_group)
+					l_item.set_pebble_function (agent scope_pebble_function (a_group))
+					l_item.set_accept_cursor (Cursors.cur_cluster)
+					l_item.set_deny_cursor (Cursors.cur_x_class)
+					force_new_search
+				end
 			end
 		end
 

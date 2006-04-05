@@ -21,7 +21,12 @@ creation
 
 feature -- Initialization
 
-	make_with_start (a_keyword: STRING; a_range: INTEGER; a_class_name: STRING; a_path: FILE_NAME; a_source_text: STRING; a_start: INTEGER) is
+	make_with_start (a_keyword: STRING;
+					a_range: INTEGER;
+					a_class_name: STRING;
+					a_path: FILE_NAME;
+					a_source_text: STRING;
+					a_start: INTEGER) is
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -43,7 +48,9 @@ feature -- Access
 			-- Start position of `text_to_be_searched'
 		do
 			if is_text_to_be_searched_set then
-				if start_position_internal <= text_to_be_searched.count and start_position_internal >= 1 then
+				if start_position_internal <= text_to_be_searched.count and
+					start_position_internal >= 1
+				then
 					Result := start_position_internal
 				else
 					Result := 1
@@ -52,7 +59,8 @@ feature -- Access
 				Result := 1
 			end
 		ensure then
-			start_position_in_the_scope: Result >= 1 and (is_keyword_set implies Result <= text_to_be_searched.count)
+			start_position_in_the_scope: Result >= 1 and 
+										(is_keyword_set implies Result <= text_to_be_searched.count)
 		end
 
 feature --Element change

@@ -249,7 +249,11 @@ feature {NONE} -- Implementation
 			line_number: INTEGER
 			start_count_line_position: INTEGER
 		do
-			create new_item.make (class_name_internal, text_in_file_path, text_to_be_searched_internal, pcre_regex.captured_start_position (0), pcre_regex.captured_end_position (0))
+			create new_item.make (class_name_internal,
+								 text_in_file_path,
+								 text_to_be_searched_internal,
+								 pcre_regex.captured_start_position (0),
+								 pcre_regex.captured_end_position (0))
 			new_item.set_text (pcre_regex.captured_substring (0))
 			new_item.set_pcre_regex (pcre_regex)
 			if data /= Void then
@@ -261,12 +265,26 @@ feature {NONE} -- Implementation
 			end
 			if last_item /= Void and then new_item.source_text = last_item.source_text then
 				start_count_line_position := last_item.start_index
-				line_number := last_item.line_number + string_formatter.occurrences_in_bound('%N', new_item.source_text, start_count_line_position, new_item.start_index)
-				new_item.set_percent_r_count (last_item.percent_r_count + string_formatter.occurrences_in_bound ('%R', new_item.source_text, start_count_line_position, new_item.start_index))
+				line_number := last_item.line_number +
+							string_formatter.occurrences_in_bound('%N',
+																new_item.source_text,
+																start_count_line_position,
+																new_item.start_index)
+				new_item.set_percent_r_count (last_item.percent_r_count +
+											 string_formatter.occurrences_in_bound ('%R',
+											 									new_item.source_text,
+											 									start_count_line_position,
+											 									new_item.start_index))
 			else
 				start_count_line_position := 1
-				line_number := string_formatter.occurrences_in_bound('%N', new_item.source_text, start_count_line_position, new_item.start_index) + 1
-				new_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R', new_item.source_text, start_count_line_position, new_item.start_index))
+				line_number := string_formatter.occurrences_in_bound('%N',
+																	new_item.source_text,
+																	start_count_line_position,
+																	new_item.start_index) + 1
+				new_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R',
+																					new_item.source_text,
+																					start_count_line_position,
+																					new_item.start_index))
 			end
 			new_item.set_line_number (line_number)
 			if pcre_regex.captured_start_position (0) - surrounding_text_range_internal > 0 then
@@ -303,7 +321,8 @@ feature {NONE} -- Implementation
 			l_list_string := l_class_name.split (operating_environment.directory_separator)
 			l_class_name := l_list_string [l_list_string.count]
 			if l_class_name.has ('.') then
-				l_class_name := l_class_name.substring (1, l_class_name.last_index_of ('.', l_class_name.count) - 1)
+				l_class_name := l_class_name.substring (1,
+														l_class_name.last_index_of ('.', l_class_name.count) - 1)
 			end
 			l_class_name.to_upper
 			if l_class_name.count = 0 then

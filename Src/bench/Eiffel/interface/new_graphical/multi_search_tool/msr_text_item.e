@@ -13,7 +13,7 @@ inherit
 		rename
 			make as make_item
 		end
-	
+
 	MSR_FORMATTER
 
 create
@@ -21,7 +21,11 @@ create
 
 feature -- Initialization
 
-	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER; a_start: like start_index; a_end: like end_index) is
+	make (a_name: like class_name;
+			a_path: like path;
+			a_text: MSR_STRING_ADAPTER;
+			a_start: like start_index;
+			a_end: like end_index) is
 			-- Initialization
 		require
 			name_attached: a_name /= Void
@@ -29,7 +33,7 @@ feature -- Initialization
 			path_attached: a_path /= Void
 			text_attached: a_text /= Void
 			a_start_positive: a_start >= 0
-			a_end_positive: a_end >= 0 
+			a_end_positive: a_end >= 0
 		do
 			make_item (a_name, a_path, a_text)
 			start_index := a_start
@@ -41,16 +45,16 @@ feature -- Initialization
 			source_text_set: source_text_internal = a_text
 			start_index_set: start_index = a_start
 			end_index_set: end_index = a_end
-		end	
+		end
 
 feature -- Access
-	
+
 	text : STRING
 			-- Exact text found
-	
+
 	start_index : INTEGER
 			-- Start position of the found text
-	
+
 	end_index : INTEGER
 			-- End position of the found text
 
@@ -58,14 +62,14 @@ feature -- Access
 			-- Start position of the found text, "%R"s are ignored
 		do
 			Result := start_index - percent_r_count
-		end	
-	
+		end
+
 	end_index_in_unix_text : INTEGER is
 			-- End position of the found text, "%R"s are ignored
 		do
 			Result := end_index - percent_r_count + text.occurrences ('%R')
 		end
-		
+
 	start_index_in_context_text : INTEGER is
 			-- Start position of `text' in `context_text'
 		do
@@ -73,20 +77,20 @@ feature -- Access
 		ensure
 			start_index_in_context_text: Result = start_index_in_context_text_internal
 		end
-	
+
 	context_text : STRING
 			-- Text to be presented with surroundings
-	
+
 	line_number : INTEGER is
 			-- Line number of current match in `source_text'
 		do
-			Result := line_number_internal	
-		end	
-			
+			Result := line_number_internal
+		end
+
 	percent_r_count : INTEGER is
 			--  Number of '%R' before text in `source_text'
 		do
-			Result := percent_r_count_internal	
+			Result := percent_r_count_internal
 		end
 
 	captured_submatches: ARRAYED_LIST [STRING] is
@@ -96,9 +100,9 @@ feature -- Access
 		ensure
 			captured_submatches_not_void: Result = captured_submatches_internal
 		end
-		
+
 	pcre_regex: MSR_RX_PCRE_REGULAR_EXPRESSION
-		
+
 feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 
 	set_start_index (a_start: like start_index) is
@@ -120,7 +124,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 		ensure
 			end_index_set: end_index = a_end
 		end
-		
+
 	set_text (a_text : STRING) is
 			-- Set what exactly is found.
 		require
@@ -129,10 +133,10 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 			text := a_text
 		ensure
 			text_set: text = a_text
-		end	
+		end
 
 feature -- Element Change
-	
+
 	set_context_text (context: STRING) is
 			-- Set `context_text' with context.
 		do
@@ -141,19 +145,19 @@ feature -- Element Change
 			context_text_contains_no_new_lines: not context_text.has ('%N')
 			context_text_contains_no_tabs: not context_text.has ('%T')
 		end
-		
+
 	set_line_number (i: INTEGER) is
 			-- Set `line_number' with i.
 		do
-			line_number_internal := i	
-		end		
-		
+			line_number_internal := i
+		end
+
 	set_percent_r_count (i: INTEGER) is
 			-- Set `percent_r_count' with i.
 		do
-			percent_r_count_internal := i	
+			percent_r_count_internal := i
 		end
-	
+
 	set_submatches (strings: ARRAYED_LIST [STRING]) is
 			-- Set `submatches' with strings.
 		require
@@ -163,7 +167,7 @@ feature -- Element Change
 		ensure
 			start_index_internal_not_void: captured_submatches_internal = strings
 		end
-		
+
 	set_pcre_regex (a_pcre_regex: MSR_RX_PCRE_REGULAR_EXPRESSION) is
 			-- Set `pcre_regex' with a_pcre_regex.
 		require
@@ -171,15 +175,15 @@ feature -- Element Change
 		do
 			pcre_regex := a_pcre_regex
 		end
-	
+
 feature {NONE} -- Implementation
 
 	captured_submatches_internal: ARRAYED_LIST [STRING]
 			-- Submatches that are captured from between parenthesises
-	
+
 	line_number_internal: INTEGER
 			-- Line number `text' at in `source_text'
-	
+
 	percent_r_count_internal: INTEGER
 			-- Count of "%R" in front of `text' in `source_text'.
 

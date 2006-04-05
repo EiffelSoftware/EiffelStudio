@@ -83,7 +83,10 @@ feature -- Basic operatioin
 					until
 						subcluster.after
 					loop
-						create cluster_strategy.make (keyword, surrounding_text_range_internal, subcluster.item, only_compiled_class_searched)
+						create cluster_strategy.make (keyword,
+													surrounding_text_range_internal,
+													subcluster.item,
+													only_compiled_class_searched)
 						if case_sensitive then
 							cluster_strategy.set_case_sensitive
 						else
@@ -108,7 +111,10 @@ feature -- Basic operatioin
 				until
 					classes.after
 				loop
-					create class_strategy.make (keyword, surrounding_text_range_internal, classes.item_for_iteration, only_compiled_class_searched)
+					create class_strategy.make (keyword,
+											surrounding_text_range_internal,
+											classes.item_for_iteration,
+											only_compiled_class_searched)
 					if case_sensitive then
 						class_strategy.set_case_sensitive
 					else

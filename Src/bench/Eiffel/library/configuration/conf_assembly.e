@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_name, a_location, a_target)
 			enable (pf_dotnet, build_all)
+			is_readonly := True
 		end
 
 	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
@@ -58,6 +59,7 @@ feature {NONE} -- Initialization
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
 			create location.make_from_full_path ("", a_target)
+			is_readonly := True
 		ensure
 			is_valid: is_valid
 		end

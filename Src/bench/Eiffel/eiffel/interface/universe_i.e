@@ -87,15 +87,7 @@ feature -- Properties
 	groups: ARRAYED_LIST [CONF_GROUP] is
 			-- Groups of the universe (not including groups of libraries/precompiles).
 		do
-			create Result.make (target.libraries.count + target.assemblies.count +
-				target.clusters.count + target.overrides.count + 1)
-			Result.merge_right (target.libraries.linear_representation)
-			Result.merge_right (target.assemblies.linear_representation)
-			Result.merge_right (target.clusters.linear_representation)
-			Result.merge_right (target.overrides.linear_representation)
-			if target.precompile /= Void then
-				Result.extend (target.precompile)
-			end
+			Result := target.groups.linear_representation
 		end
 
 	all_classes: DS_HASH_SET [CLASS_I] is

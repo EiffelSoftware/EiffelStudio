@@ -122,7 +122,7 @@ feature -- Helper
 				end
 			elseif a_group.is_assembly then
 				l_assem ?= a_group
-				l_clusters := l_assem.application_target.clusters
+				l_clusters := l_assem.target.application_target.clusters
 				from
 					l_clusters.start
 				until

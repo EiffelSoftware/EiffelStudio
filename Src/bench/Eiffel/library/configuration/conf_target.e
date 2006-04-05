@@ -77,6 +77,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- All libraries in the current system.
 
+	application_target: CONF_TARGET
+			-- The application target.
+
 feature -- Access queries
 
 	version: CONF_VERSION is
@@ -778,6 +781,17 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			all_libraries := a_libraries
 		ensure
 			libraries_set: all_libraries = a_libraries
+		end
+
+	set_application_target (a_target: CONF_TARGET) is
+			-- Set `application_target' to `a_target'.
+			-- (export status {CONF_ACCESS})
+		require
+			a_target_not_void: a_target /= Void
+		do
+			application_target := a_target
+		ensure
+			application_target_set: application_target = a_target
 		end
 
 feature -- Equality

@@ -85,7 +85,7 @@ feature -- Status
 	is_used_library: BOOLEAN is
 			-- Is this this cluster used in a library? (as opposed to directly in the application system)
 		do
-			Result := application_target /= target
+			Result := target.application_target /= target
 		end
 
 feature -- Access, stored in configuration file
@@ -131,10 +131,6 @@ feature -- Access, in compiled only, not stored to configuration file
 			end
 			Result := internal_hash_code
 		end
-
-	application_target: CONF_TARGET
-			-- The application target.
-
 
 feature -- Access queries
 
@@ -416,16 +412,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			end
 		ensure
 			overrider_added: overriders.has (an_overrider)
-		end
-
-	set_application_target (a_target: CONF_TARGET) is
-			-- Set `application_target' to `a_target'.
-		require
-			a_target_not_void: a_target /= Void
-		do
-			application_target := a_target
-		ensure
-			application_target_set: application_target = a_target
 		end
 
 feature -- Equality

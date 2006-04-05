@@ -222,7 +222,7 @@ feature -- Access queries
 				if l_assembly /= Void then
 					Result := l_assembly.options
 				else
-					Result := application_target.options
+					Result := target.application_target.options
 				end
 			else
 				if internal_options /= Void then
@@ -388,13 +388,13 @@ feature {NONE} -- Implementation
 	find_current_in_application_target: like Current is
 			-- Find `Current' in `application_target' if it is defined there directly.
 		require
-			application_target_not_void: application_target /= Void
+			application_target_not_void: target.application_target /= Void
 		local
 			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_assembly: like Current
 		do
 			from
-				l_assemblies := application_target.assemblies
+				l_assemblies := target.application_target.assemblies
 				l_assemblies.start
 			until
 				Result /= Void or l_assemblies.after

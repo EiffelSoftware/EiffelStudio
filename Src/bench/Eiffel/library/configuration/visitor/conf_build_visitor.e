@@ -39,6 +39,10 @@ feature {NONE} -- Initialization
 
 	make_build (a_platform, a_build: INTEGER; an_application_target: like application_target) is
 			-- Create.
+		require
+			valid_platform: valid_platform (a_platform)
+			valid_build: valid_build (a_build)
+			an_application_target_not_void: an_application_target /= Void
 		do
 			reset_classes
 			make (a_platform, a_build)
@@ -53,6 +57,11 @@ feature {NONE} -- Initialization
 
 	make_build_from_old (a_platform, a_build: INTEGER; an_application_target, an_old_target: CONF_TARGET) is
 			-- Create.
+		require
+			valid_platform: valid_platform (a_platform)
+			valid_build: valid_build (a_build)
+			an_application_target_not_void: an_application_target /= Void
+			an_old_target_not_void: an_old_target /= Void
 		do
 			reset_classes
 			make_build (a_platform, a_build, an_application_target)
@@ -180,6 +189,9 @@ feature -- Visit nodes
 			l_pre, l_old_pre: CONF_PRECOMPILE
 		do
 			if not is_error then
+					-- set application target
+				a_target.set_application_target (application_target)
+
 					-- add the target to the libraries
 				libraries.force (a_target, a_target.system.uuid)
 				if old_target /= Void then
@@ -233,13 +245,13 @@ feature -- Visit nodes
 			end
 		ensure then
 			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+			application_target_set: not is_error implies a_target.application_target /= Void
 		end
 
 	process_group (a_group: CONF_GROUP) is
 			-- Visit `a_group'.
 		do
 			on_process_group (a_group)
-			a_group.set_application_target (application_target)
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
@@ -1402,6 +1414,7 @@ invariant
 	added_classes_not_void: added_classes /= Void
 	removed_classes_not_void: removed_classes /= Void
 	old_assembly_group: old_assembly /= Void implies old_assembly = old_group
+	application_target_not_void: application_target /= Void
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

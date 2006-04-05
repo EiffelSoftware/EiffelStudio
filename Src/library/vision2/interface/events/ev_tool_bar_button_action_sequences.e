@@ -32,7 +32,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-feature {NONE} -- Speciall event handling
+feature {NONE} -- Special event handling
 
 	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when dropdown button is pressed.

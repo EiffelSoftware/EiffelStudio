@@ -12,12 +12,18 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 			<exclude>/eiffel$</exclude>
+			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
-		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.acex" readonly="true"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+			<if platform="windows"/>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+			<ifnot platform="windows"/>
+		</library>
 		<cluster name="document" location="document" recursive="true"/>
 		<cluster name="bitmaps" location="bitmaps" recursive="true"/>
 		<cluster name="text_window" location="text_window" recursive="true"/>

@@ -15,9 +15,9 @@ inherit
 			reset_all,
 			is_search_prepared
 		end
-	
+
 create
-	
+
 	make
 
 feature -- Initialization
@@ -36,7 +36,7 @@ feature -- Initialization
 			scope_container_not_void: scope_container /= Void
 			only_compiled_class_set: only_compiled_class_searched_internal = only_compiled_class
 		end
-		
+
 feature	-- Status report
 
 	is_scope_container_set: BOOLEAN is
@@ -44,25 +44,25 @@ feature	-- Status report
 		do
 			Result:= (scope_container /= Void)
 		end
-		
+
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
 			Result := true
-		end		
-		
+		end
+
 	is_subcluster_searched: BOOLEAN is
 			-- Are subclusters searched?
 		do
 			Result := is_subcluster_searched_internal
 		end
-	
+
 	only_compiled_class_searched: BOOLEAN is
 			-- Only compiled class are searched?
 		do
-			Result := only_compiled_class_searched_internal	
-		end		
-		
+			Result := only_compiled_class_searched_internal
+		end
+
 feature -- Basic operation
 
 	launch is
@@ -70,9 +70,9 @@ feature -- Basic operation
 		local
 			l_list: EV_LIST
 			l_class_i: CLASS_I
-			l_cluster_i: CLUSTER_I
-			l_cluster_strategy: MSR_SEARCH_CLUSTER_STRATEGY
-			l_class_strategy:MSR_SEARCH_CLASS_STRATEGY
+			l_group: CONF_GROUP
+			l_group_strategy: MSR_SEARCH_GROUP_STRATEGY
+			l_class_strategy: MSR_SEARCH_CLASS_STRATEGY
 		do
 			create item_matched_internal.make (0)
 			l_list ?= scope_container
@@ -83,22 +83,28 @@ feature -- Basic operation
 					l_list.after
 				loop
 					l_class_i ?= l_list.item.data
-					l_cluster_i ?= l_list.item.data
-					if l_cluster_i /= Void then
-						create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_cluster_i, only_compiled_class_searched)
+					l_group ?= l_list.item.data
+					if l_group /= Void then
+						create l_group_strategy.make (keyword,
+														surrounding_text_range_internal,
+														l_group,
+														only_compiled_class_searched)
 						if case_sensitive then
-							l_cluster_strategy.set_case_sensitive
+							l_group_strategy.set_case_sensitive
 						else
-							l_cluster_strategy.set_case_insensitive
+							l_group_strategy.set_case_insensitive
 						end
-						l_cluster_strategy.set_regular_expression_used (is_regular_expression_used)
-						l_cluster_strategy.set_subcluster_searched (is_subcluster_searched)
-						l_cluster_strategy.set_whole_word_matched (is_whole_word_matched)
-						l_cluster_strategy.launch
-						item_matched.append (l_cluster_strategy.item_matched)
+						l_group_strategy.set_regular_expression_used (is_regular_expression_used)
+						l_group_strategy.set_subgroup_searched (is_subcluster_searched)
+						l_group_strategy.set_whole_word_matched (is_whole_word_matched)
+						l_group_strategy.launch
+						item_matched.append (l_group_strategy.item_matched)
 					end
 					if l_class_i /= Void then
-						create l_class_strategy.make (keyword, surrounding_text_range_internal, l_class_i, only_compiled_class_searched)
+						create l_class_strategy.make (keyword,
+														surrounding_text_range_internal,
+														l_class_i,
+														only_compiled_class_searched)
 						if case_sensitive then
 							l_class_strategy.set_case_sensitive
 						else
@@ -117,7 +123,7 @@ feature -- Basic operation
 			launched := true
 			item_matched.start
 		end
-		
+
 	reset_all is
 			-- Reset all.
 		do
@@ -137,16 +143,16 @@ feature -- Implementation
 
 	scope_container: ANY
 			-- Container that contains data to be searched.
-			
+
 	class_strategy: MSR_SEARCH_CLASS_STRATEGY
 			-- Class strategy to search in classes in current cluster
-	
+
 	cluster_strategy: MSR_SEARCH_CLUSTER_STRATEGY
 			-- Cluster strategy to search in subclusters in current cluster
-			
+
 	is_subcluster_searched_internal: BOOLEAN
 			-- Are subclusters in `cluster_i' searched.
-			
+
 	only_compiled_class_searched_internal: BOOLEAN;
 			-- Only compiled class are searched?
 

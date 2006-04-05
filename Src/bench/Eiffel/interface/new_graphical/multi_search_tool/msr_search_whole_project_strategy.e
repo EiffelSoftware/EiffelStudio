@@ -14,7 +14,7 @@ inherit
 			launch
 		end
 
-	CONF_REFACTORING
+	SHARED_WORKBENCH
 
 create
 	make
@@ -24,37 +24,39 @@ feature -- Basic Operation
 	launch is
 			-- Launch the search
 		local
-			l_clusters: EB_CLUSTERS
-			l_cluster_strategy: MSR_SEARCH_CLUSTER_STRATEGY
+			classes: DS_HASH_SET [CLASS_I]
 		do
-			create item_matched_internal.make (0)
-			l_clusters ?= scope_container
-			if l_clusters /= Void then
-				conf_todo
---				from
---					l_clusters.clusters.start
---				until
---					l_clusters.clusters.after
---				loop
---					create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_clusters.clusters.item.actual_cluster, only_compiled_class_searched)
---					if case_sensitive then
---						l_cluster_strategy.set_case_sensitive
---					else
---						l_cluster_strategy.set_case_insensitive
---					end
---					l_cluster_strategy.set_regular_expression_used (is_regular_expression_used)
---					l_cluster_strategy.set_subcluster_searched (true)
---					l_cluster_strategy.set_whole_word_matched (is_whole_word_matched)
---					l_cluster_strategy.launch
---					if l_cluster_strategy.is_launched then
---						item_matched_internal.finish
---						item_matched_internal.merge_right (l_cluster_strategy.item_matched)
---					end
---					l_clusters.clusters.forth
---				end
+			create item_matched_internal.make (1000)
+			classes := universe.all_classes
+			if classes /= Void and then not classes.is_empty then
+				from
+					classes.start
+				until
+					classes.after
+				loop
+					create class_strategy.make (keyword,
+											surrounding_text_range_internal,
+											classes.item_for_iteration,
+											only_compiled_class_searched)
+					if case_sensitive then
+						class_strategy.set_case_sensitive
+					else
+						class_strategy.set_case_insensitive
+					end
+					class_strategy.set_regular_expression_used (is_regular_expression_used)
+					class_strategy.set_whole_word_matched (is_whole_word_matched)
+					class_strategy.launch
+					if class_strategy.is_launched then
+						item_matched_internal.finish
+						item_matched_internal.merge_right (class_strategy.item_matched)
+					end
+					classes.forth
+				end
 			end
 			launched := true
-			item_matched.start
+			if not item_matched_internal.is_empty then
+				item_matched_internal.start
+			end
 		end
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

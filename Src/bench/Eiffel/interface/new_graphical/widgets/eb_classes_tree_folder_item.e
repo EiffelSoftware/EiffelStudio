@@ -421,7 +421,9 @@ feature -- Interactivity
 					conv_folder.add_double_click_action_to_classes (p)
 				else
 					conv_class ?= item
-					conv_class.add_double_click_action (p)
+					if conv_class /= Void then
+						conv_class.add_double_click_action (p)
+					end
 				end
 				forth
 			end

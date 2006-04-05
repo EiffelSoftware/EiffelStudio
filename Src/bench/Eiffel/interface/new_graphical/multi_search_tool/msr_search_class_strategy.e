@@ -15,12 +15,12 @@ inherit
 			reset_all,
 			is_search_prepared
 		end
-		
+
 create
 	make
 
 feature {NONE} -- Initialization
-		
+
 	make (a_keyword: STRING; a_range: INTEGER; a_class: CLASS_I; only_compiled_class: BOOLEAN) is
 			-- Initialization with a class to be searched
 		require
@@ -45,11 +45,14 @@ feature -- Basic operation
 		do
 			create item_matched_internal.make (0)
 			if (not only_compiled_class_searched) or else class_i.is_compiled then
-				create text_strategy.make (keyword, surrounding_text_range_internal, class_i.name, class_i.file_name, class_text)
-				if case_sensitive then 
-					text_strategy.set_case_sensitive 
+				create text_strategy.make (keyword,
+											surrounding_text_range_internal,
+											class_i.name, class_i.file_name,
+											class_text)
+				if case_sensitive then
+					text_strategy.set_case_sensitive
 				else
-					text_strategy.set_case_insensitive 
+					text_strategy.set_case_insensitive
 				end
 				text_strategy.set_whole_word_matched (is_whole_word_matched)
 				text_strategy.set_regular_expression_used (is_regular_expression_used)
@@ -58,11 +61,13 @@ feature -- Basic operation
 				text_strategy.launch
 				if text_strategy.is_launched then
 					if text_strategy.item_matched.count > 0 then
-						create l_class_item.make (text_strategy.class_name, class_i.file_name, text_strategy.text_to_be_searched_adapter)
+						create l_class_item.make (text_strategy.class_name,
+												class_i.file_name,
+												text_strategy.text_to_be_searched_adapter)
 						l_class_item.set_data (class_i)
 						l_class_item.set_date (class_i.date)
 						item_matched_internal.extend (l_class_item)
-						
+
 						l_matched := text_strategy.item_matched
 						create l_children.make (l_matched.count)
 						from
@@ -75,7 +80,7 @@ feature -- Basic operation
 								l_item_attached: l_item /= Void
 							end
 							if l_item /= Void then
-								l_children.extend (l_item)	
+								l_children.extend (l_item)
 							end
 							l_matched.forth
 						end
@@ -89,7 +94,7 @@ feature -- Basic operation
 				item_matched_internal.start
 			end
 		end
-	
+
 	reset_all is
 			-- Reset all
 		do
@@ -102,20 +107,20 @@ feature -- Basic operation
 
 feature -- Status report
 
-	is_class_set: BOOLEAN is	
+	is_class_set: BOOLEAN is
 			-- Is the `class_i' set?
 		do
 			Result := (class_i /= Void)
 		end
-		
+
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result := 
+			Result :=
 			Precursor and
-			is_class_set	
+			is_class_set
 		end
-	
+
 	only_compiled_class_searched: BOOLEAN
 
 feature -- Element change
@@ -134,17 +139,17 @@ feature -- Element change
 			class_i_not_void: class_i /= Void
 			class_text_attached: class_text /= Void
 		end
-		
+
 
 
 feature {NONE} -- Implementation
 
 	text_strategy: MSR_SEARCH_TEXT_STRATEGY
 			-- Actual search strategy used to search in a class text
-	
+
 	class_i: CLASS_I
 			-- Class to be searched
-	
+
 	class_text: STRING
 			-- String buffer to store class text temporarily
 

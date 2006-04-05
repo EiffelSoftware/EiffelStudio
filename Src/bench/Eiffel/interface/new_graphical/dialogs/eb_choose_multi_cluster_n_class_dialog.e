@@ -64,13 +64,9 @@ feature {NONE} -- Initialization
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
 			extend_button (buttons_box, ok_button)
 
---			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
---			extend_button (buttons_box, cancel_button)
-
 			buttons_box.extend (create {EV_CELL})
 
 				-- Create the controls.
---			create class_name_entry.make
 			create classes_tree.make
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
@@ -81,7 +77,6 @@ feature {NONE} -- Initialization
 			create controls_box
 			controls_box.set_padding (Layout_constants.small_padding_size)
 			controls_box.set_border_width (Layout_constants.small_padding_size)
---			extend_no_expand (controls_box, class_name_entry)
 			controls_box.extend (classes_tree)
 
 				-- Pack the buttons_box and the controls.
@@ -91,9 +86,7 @@ feature {NONE} -- Initialization
 			extend (vb)
 			set_default_push_button (add_button)
 			set_default_cancel_button (ok_button)
---			classes_tree.associate_textable_with_classes (class_name_entry)
-			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
---			show_actions.extend (agent class_name_entry.set_focus)
+--			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
 		end
 
 feature -- Access
@@ -118,7 +111,7 @@ feature -- Element Change
 			on_class_add := action
 		end
 
-	set_cluster_add_action (action: PROCEDURE [ANY, TUPLE [CLUSTER_I]]) is
+	set_cluster_add_action (action: PROCEDURE [ANY, TUPLE [CONF_GROUP]]) is
 			-- set cluster add action
 		do
 			on_cluster_add := action
@@ -146,37 +139,15 @@ feature {NONE} -- Vision2 events
 				if l_class /= Void then
 					on_class_add.call ([l_class])
 				end
-				if l_cluster /= Void then
-					conf_todo
---					on_cluster_add.call ([l_cluster.actual_cluster])
+				if l_cluster /= Void and then l_cluster.actual_group /= Void then
+					on_cluster_add.call ([l_cluster.actual_group])
 				end
 			end
 		end
 
 	on_class_add: PROCEDURE [ANY, TUPLE [CLASS_I]]
 
-	on_cluster_add: PROCEDURE [ANY, TUPLE [CLUSTER_I]]
-
---	on_ok is
---			-- Terminate the dialog.
---		local
---			loclist: LIST [CLASS_I]
---		do
---			selected_class_name := class_name_entry.text.as_upper
---			selected := not selected_class_name.is_empty
---			if selected then -- User typed a class name.
---				loclist := Eiffel_universe.classes_with_name (selected_class_name)
---				if loclist.is_empty then -- No class has such a name.
---					class_name_entry.set_text (Interface_names.l_Unknown_class_name)
---					class_name_entry.set_focus
---					class_name_entry.select_all
---				else
---					destroy
---				end
---			else
---				class_name_entry.set_focus
---			end
---		end
+	on_cluster_add: PROCEDURE [ANY, TUPLE [CONF_GROUP]]
 
 	on_ok is
 			-- Terminate the dialog and clear the selection.
@@ -205,12 +176,6 @@ feature {NONE} -- Controls
 
 	ok_button: EV_BUTTON
 			-- "Ok" button.
-
---	cancel_button: EV_BUTTON
---			-- "Cancel" button.
-
---	class_name_entry: EB_CHOOSE_CLASS_COMBO_BOX
-			-- Combo box where the user can type its class name.
 
 	classes_tree: EB_CLASSES_TREE;
 			-- Tree where the user can choose its class.

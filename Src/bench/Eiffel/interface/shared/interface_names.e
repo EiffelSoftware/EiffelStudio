@@ -644,7 +644,7 @@ feature -- Label texts
 	l_Stepped: STRING is				"Step completed"
 	l_Stop_point_reached: STRING is		"Breakpoint reached"
 	l_Sub_cluster: STRING is			"Subcluster"
-	l_Sub_clusters: STRING is			"Subclusters"
+	l_Sub_clusters: STRING is			"Recusive"
 	l_Subquery: STRING is				"Define new subquery"
 	l_Suppliers: STRING is				"suppliers"
 	l_Switch_num_format: STRING is 		"Switch numerical formating"

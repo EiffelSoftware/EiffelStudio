@@ -127,7 +127,9 @@ feature -- Basic operations
 				if l_item /= Void then
 					if is_current_replaced_as_cluster (l_item) then
 						l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
-						if l_last_item = Void or (l_last_item /= Void and then l_last_item.pcre_regex /= l_item.pcre_regex) then
+						if l_last_item = Void or (l_last_item /= Void and then
+												l_last_item.pcre_regex /= l_item.pcre_regex)
+						then
 							l_item.pcre_regex.first_match
 							l_string :=	l_item.pcre_regex.replace_all (replace_string)
 							l_item.set_source_text_real_string (l_string)
@@ -278,11 +280,11 @@ feature {NONE} -- Implementation
 			if l_item /= Void then
 				l_actual_replacement := actual_replacement (l_item)
 			 	l_item.source_text.replace_substring (l_actual_replacement,
-			 													l_item.start_index,
-			 													l_item.end_index)
+	 													l_item.start_index,
+	 													l_item.end_index)
 				l_item.context_text.replace_substring (l_actual_replacement,
-																l_item.start_index_in_context_text,
-																l_item.text.count + l_item.start_index_in_context_text - 1)
+														l_item.start_index_in_context_text,
+														l_item.text.count + l_item.start_index_in_context_text - 1)
 				l_offset := l_actual_replacement.count - l_item.text.count
 				l_item.set_end_index (l_item.end_index + l_offset)
 			 	refresh_item_capture_positions (l_offset)
@@ -334,12 +336,26 @@ feature {NONE} -- Implementation
 			end
 			if last_item /= Void and then l_text_item.source_text = last_item.source_text then
 				start_count_line_position := last_item.start_index
-				line_number := last_item.line_number + string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index)
-				l_text_item.set_percent_r_count (last_item.percent_r_count + string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))
+				line_number := last_item.line_number +
+								string_formatter.occurrences_in_bound('%N',
+																	l_text_item.source_text,
+																	start_count_line_position,
+																	l_text_item.start_index)
+				l_text_item.set_percent_r_count (last_item.percent_r_count +
+												string_formatter.occurrences_in_bound ('%R',
+																					l_text_item.source_text,
+																					start_count_line_position,
+																					l_text_item.start_index))
 			else
 				start_count_line_position := 1
-				line_number := string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index) + 1
-				l_text_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))
+				line_number := string_formatter.occurrences_in_bound('%N',
+																	l_text_item.source_text,
+																	start_count_line_position,
+																	l_text_item.start_index) + 1
+				l_text_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R',
+																						l_text_item.source_text,
+																						start_count_line_position,
+																						l_text_item.start_index))
 			end
 			l_text_item.set_line_number (line_number)
 

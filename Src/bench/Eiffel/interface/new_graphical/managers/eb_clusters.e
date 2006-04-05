@@ -940,6 +940,9 @@ feature {NONE} -- Implementation
 		do
 			error_in_config_parsing := False
 			if not retried then
+				if lace.has_changed then
+					conf_todo_msg ("Inform user that configuration has changed, ask user if he wants to recompile.")
+				end
 				if not lace.has_changed then
 					if a_group.is_cluster then
 						a_group.target.clusters.remove (a_group.name)

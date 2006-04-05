@@ -194,6 +194,9 @@ feature -- Properties
 	has_been_changed: BOOLEAN
 			-- Did last recompilation changed data of compiler?
 
+	has_compilation_started: BOOLEAN
+			-- Has compilation part after processing configuration started?
+
 	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
 		do
@@ -1155,6 +1158,13 @@ feature -- Recompilation
 			is_rebuild := b
 		end
 
+	reset_has_compilation_started is
+			-- Reset `has_compilation_started'.
+		do
+			has_compilation_started := False
+		end
+
+
 	recompile is
 			-- Incremetal recompilation of the system.
 		require
@@ -1296,7 +1306,9 @@ feature -- Recompilation
 				-- The time checker just checks if there is a possible
 				-- conflict for the suppliers of a class, i.e. a new class
 				-- has been introduced and can create a conflict
-			Time_checker.check_suppliers_of_unchanged_classes
+			if not first_compilation or else has_compilation_started then
+				Time_checker.check_suppliers_of_unchanged_classes
+			end
 
 				-- The `new_classes' list is not used after the time
 				-- check. If it was successful, the list can be wiped out.
@@ -1324,6 +1336,7 @@ feature -- Recompilation
 			then
 					-- We compiled something we need to save project file.
 				has_been_changed := True
+				has_compilation_started := True
 
 				recheck_missing_classes
 

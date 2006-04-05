@@ -16,7 +16,10 @@ inherit
 			is_group_equivalent,
 			process,
 			class_by_name,
-			is_cluster
+			is_cluster,
+			is_readonly,
+			accessible_groups,
+			accessible_classes
 		end
 
 create
@@ -51,18 +54,7 @@ feature -- Access, stored in configuration file
 	children: ARRAYED_LIST [CONF_CLUSTER]
 			-- Optionally multiple children.
 
-feature -- Access, in compiled only, not stored to configuration file
-
-	application_target: CONF_TARGET
-			-- The application target.
-
 feature -- Access queries
-
-	is_used_library: BOOLEAN is
-			-- Is this this cluster used in a library? (as opposed to directly in the application system)
-		do
-			Result := application_target /= target
-		end
 
 	dependencies: LINKED_SET [CONF_GROUP] is
 			-- Dependencies to other groups.
@@ -100,30 +92,13 @@ feature -- Access queries
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_lib: CONF_LIBRARY
 			l_uuid: UUID
-			l_options: CONF_OPTION
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
 			if is_used_library then
-				l_uuid := target.system.uuid
-				if application_target.precompile /= Void and then application_target.precompile.uuid.is_equal (l_uuid) then
-					l_options := application_target.precompile.options
-				else
-					from
-						l_libs := application_target.libraries
-						l_libs.start
-					until
-						l_options /= Void or l_libs.after
-					loop
-						l_lib := l_libs.item_for_iteration
-						if l_lib.uuid /= Void and then l_lib.uuid.is_equal (l_uuid) then
-							l_options := l_lib.options
-						end
-						l_libs.forth
-					end
-				end
-				if l_options /= Void then
-					Result := l_options
+				l_lib := find_parent_library_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.options
 				else
 					Result := application_target.options
 				end
@@ -191,20 +166,7 @@ feature -- Access queries
 			end
 
 			if a_dependencies then
-				if dependencies = Void then
-					create l_groups.make
-					l_groups.merge (target.assemblies)
-					l_groups.merge (target.libraries)
-					l_groups.merge (target.clusters)
-					l_groups.merge (target.overrides)
-					if target.precompile /= Void then
-						l_groups.extend (target.precompile)
-					end
-					l_groups.search (Current)
-					l_groups.remove
-				else
-					l_groups := dependencies
-				end
+				l_groups := accessible_groups
 				if l_groups /= Void then
 					from
 						l_groups.start
@@ -217,6 +179,47 @@ feature -- Access queries
 						end
 						l_groups.forth
 					end
+				end
+			end
+		end
+
+	accessible_groups: LINKED_SET [CONF_GROUP] is
+			-- Groups that are accessible within `Current'.
+			-- Dependencies if we have them, else everything except `Current'.
+		do
+			if dependencies = Void then
+				create Result.make
+				Result.merge (target.assemblies)
+				Result.merge (target.libraries)
+				Result.merge (target.clusters)
+				Result.merge (target.overrides)
+				if target.precompile /= Void then
+					Result.extend (target.precompile)
+				end
+				Result.search (Current)
+				Result.remove
+			else
+				Result := dependencies
+			end
+		end
+
+	accessible_classes: like classes is
+			-- Classes that are accessible within `Current'.
+		local
+			l_groups: LINKED_SET [CONF_GROUP]
+			l_grp: CONF_GROUP
+		do
+			Result :=  Precursor
+			l_groups := accessible_groups
+			if l_groups /= Void then
+				from
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					l_grp := l_groups.item
+					Result.merge (l_grp.classes)
+					l_groups.forth
 				end
 			end
 		end
@@ -238,6 +241,23 @@ feature -- Access queries
 			end
 		end
 
+	is_readonly: BOOLEAN is
+			-- Is this group read only?
+		local
+			l_lib: CONF_LIBRARY
+		do
+			Result := True
+			if not internal_read_only then
+					-- if used as library and the library defined in the application target itself, take value from there
+					-- else it is read only.
+				if is_used_library then
+					l_lib := find_parent_library_in_application_target
+					if l_lib /= Void then
+						Result := l_lib.is_readonly
+					end
+				end
+			end
+		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
@@ -346,20 +366,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			visible.force (l_tpl, a_class)
 		end
 
-
-feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
-
-	set_application_target (a_target: CONF_TARGET) is
-			-- Set `application_target' to `a_target'.
-		require
-			a_target_not_void: a_target /= Void
-		do
-			application_target := a_target
-		ensure
-			application_target_set: application_target = a_target
-		end
-
-
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
@@ -389,6 +395,36 @@ feature {CONF_VISITOR, CONF_CLASS} -- Implementation, attributes stored in confi
 	visible: HASH_TABLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]], STRING]
 			-- Table of table of features of classes that are visible (feature name "*" = all features visible).
 			-- Mapped to their rename (if any).
+
+feature {NONE} -- Implementation
+
+	find_parent_library_in_application_target: CONF_LIBRARY is
+			-- Find system as a library in `application_target' if it is defined there directly.
+		require
+			application_target_not_void: application_target /= Void
+		local
+			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_lib: CONF_LIBRARY
+			l_uuid: UUID
+		do
+			l_uuid := target.system.uuid
+			if application_target.precompile /= Void and then application_target.precompile.uuid.is_equal (l_uuid) then
+				Result := application_target.precompile
+			else
+				from
+					l_libs := application_target.libraries
+					l_libs.start
+				until
+					Result /= Void or l_libs.after
+				loop
+					l_lib := l_libs.item_for_iteration
+					if l_lib.uuid /= Void and then l_lib.uuid.is_equal (l_uuid) then
+						Result := l_lib
+					end
+					l_libs.forth
+				end
+			end
+		end
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void

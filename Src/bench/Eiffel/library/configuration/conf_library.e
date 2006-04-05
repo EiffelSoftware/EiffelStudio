@@ -49,6 +49,30 @@ feature -- Access queries
 			end
 		end
 
+	options: CONF_OPTION is
+			-- Options (Debuglevel, assertions, ...)
+		local
+			l_lib: like Current
+		do
+				-- if used as library, get options from application level
+				-- either if the library is defined there or otherwise directly from the application target
+			if is_used_library then
+				l_lib := find_current_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.options
+				else
+					Result := application_target.options
+				end
+			else
+				if internal_options /= Void then
+					Result := internal_options.twin
+				else
+					create Result
+				end
+				Result.merge (target.options)
+			end
+		end
+
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
 	set_uuid (an_uuid: UUID) is
@@ -82,6 +106,36 @@ feature -- Visit
 			Precursor (a_visitor)
 			a_visitor.process_library (Current)
 		end
+
+feature {NONE} -- Implementation
+
+	find_current_in_application_target: like Current is
+			-- Find `Current' in `application_target' if it is defined there directly.
+		require
+			application_target_not_void: application_target /= Void
+		local
+			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_lib: like Current
+		do
+			if application_target.precompile /= Void and then application_target.precompile.uuid.is_equal (uuid) then
+				Result := application_target.precompile
+			else
+				from
+					l_libs := application_target.libraries
+					l_libs.start
+				until
+					Result /= Void or l_libs.after
+				loop
+					l_lib := l_libs.item_for_iteration
+					if l_lib.uuid /= Void and then l_lib.uuid.is_equal (uuid) then
+						Result := l_lib
+					end
+					l_libs.forth
+				end
+			end
+		end
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

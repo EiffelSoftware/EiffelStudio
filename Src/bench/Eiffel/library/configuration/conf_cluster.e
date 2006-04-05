@@ -114,7 +114,7 @@ feature -- Access queries
 						l_options /= Void or l_libs.after
 					loop
 						l_lib := l_libs.item_for_iteration
-						if l_lib.uuid.is_equal (l_uuid) then
+						if l_lib.uuid /= Void and then l_lib.uuid.is_equal (l_uuid) then
 							l_options := l_lib.options
 						end
 						l_libs.forth

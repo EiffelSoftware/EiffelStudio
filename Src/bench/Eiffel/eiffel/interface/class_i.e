@@ -31,6 +31,8 @@ inherit
 
 	CONF_FILE_DATE
 
+	HASHABLE
+
 feature -- Access
 
 	name: STRING is

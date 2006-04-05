@@ -146,35 +146,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Callbacks
 -- TODO: Change this stuff to use the query interface that will be created
 feature {NONE} -- Implementation convenience
 
-	all_classes: LINKED_SET [CLASS_I] is
-			-- Get all classes that can be changed by the user.
-		local
-			l_vis: CONF_ALL_CLASSES_VISITOR
-			l_classes: ARRAYED_LIST [CONF_CLASS]
-			l_cl: CLASS_I
-		do
-			create l_vis.make
-			if universe.target /= Void then
-				universe.target.process (l_vis)
-			end
-			from
-				l_classes := l_vis.classes
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				l_cl ?= l_classes.item
-				check
-					class_i: l_cl /= Void
-				end
-				if not l_cl.is_read_only then
-					Result.put (l_cl)
-				end
-				l_classes.forth
-			end
-		end
-
-	descendant_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is
+	descendant_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all descendant classes of `a_class'.
 		require
 			compiled_class: a_class.compiled
@@ -182,7 +154,7 @@ feature {NONE} -- Implementation convenience
 			descendants: ARRAYED_LIST [CLASS_C]
 			descendant_class: CLASS_C
 		do
-			create Result.make
+			create Result.make (100)
 			descendants := a_class.compiled_class.descendants
 			if not descendants.is_empty then
 				from
@@ -194,7 +166,7 @@ feature {NONE} -- Implementation convenience
 
 						-- if not already added, add class and its descendants
 					if not Result.has (descendant_class.lace_class) then
-						Result.extend (descendant_class.lace_class)
+						Result.force (descendant_class.lace_class)
 						descendants.append (descendant_class.descendants)
 					end
 
@@ -205,35 +177,35 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	client_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is
+	client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all client classes of `a_class'.
 		require
 			compiled_class: a_class.compiled
 		local
 			clients: ARRAYED_LIST [CLASS_C]
 		do
-			create Result.make
+			create Result.make (100)
 			clients := a_class.compiled_class.syntactical_clients
 			from
 				clients.start
 			until
 				clients.after
 			loop
-				Result.extend (clients.item.lace_class)
+				Result.force (clients.item.lace_class)
 				clients.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	recursive_client_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is
+	recursive_client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all client classes of `a_class' or a descendant of `a_class'.
 		require
 			compiled_class: a_class.compiled
 		local
-			descendants: LINKED_SET [CLASS_I]
+			descendants: DS_HASH_SET [CLASS_I]
 		do
-			create Result.make
+			create Result.make (100)
 			Result.append (client_classes (a_class))
 
 			descendants := descendant_classes (a_class)
@@ -242,20 +214,20 @@ feature {NONE} -- Implementation convenience
 			until
 				descendants.after
 			loop
-				Result.append (client_classes (descendants.item))
+				Result.append (client_classes (descendants.item_for_iteration))
 				descendants.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	usage_classes (a_class: CLASS_I): LINKED_SET [CLASS_I] is
+	usage_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all classes that somehow use `a_class' directly or indirectly.
 		require
 			compiled_class: a_class.compiled
 		do
-			create Result.make
-			Result.extend (a_class)
+			create Result.make (100)
+			Result.force (a_class)
 			Result.append (descendant_classes (a_class))
 			Result.append (recursive_client_classes (a_class))
 		ensure

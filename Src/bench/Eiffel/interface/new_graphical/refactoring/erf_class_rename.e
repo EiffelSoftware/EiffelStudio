@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			class_set: class_set
 		do
         	if preferences.all_classes then
-        		affected_classes := all_classes
+        		affected_classes := universe.all_writable_classes
         	else
         		affected_classes := usage_classes (class_i)
         	end

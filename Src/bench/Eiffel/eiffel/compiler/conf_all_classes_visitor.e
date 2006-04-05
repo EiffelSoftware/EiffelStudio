@@ -39,19 +39,24 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
 		do
-			retrieve_recursively (a_library.library_target)
+			if a_library.library_target /= Void then
+				retrieve_recursively (a_library.library_target)
+			end
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE) is
 			-- Visit `a_precompile'.
 		do
-			retrieve_recursively (a_precompile.library_target)
+			if a_precompile.library_target /= Void then
+
+				retrieve_recursively (a_precompile.library_target)
+			end
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
-			if not assemblies_done.has (an_assembly.guid) then
+			if an_assembly.guid /= Void and then not assemblies_done.has (an_assembly.guid) then
 				assemblies_done.force (an_assembly.guid)
 				retrieve_from_group (an_assembly)
 			end
@@ -123,7 +128,9 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 		do
-			classes.append (a_group.classes.linear_representation)
+			if a_group.classes_set then
+				classes.append (a_group.classes.linear_representation)
+			end
 		end
 
 invariant

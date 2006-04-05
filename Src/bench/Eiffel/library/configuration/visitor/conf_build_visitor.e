@@ -257,6 +257,7 @@ feature -- Visit nodes
 					-- directly
 			end
 		ensure then
+			guid_set: not is_error implies an_assembly.guid /= Void
 			classes_set: not is_error implies an_assembly.classes_set
 		end
 

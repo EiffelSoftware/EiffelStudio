@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	affected_classes: LINKED_SET [CLASS_I]
+	affected_classes: DS_HASH_SET [CLASS_I]
 			-- The classes that are affected by this refactoring.
 
 	handle_classes is
@@ -22,6 +22,7 @@ feature {NONE} -- Implementation
 			chk_writable: ERF_CLASSES_WRITABLE
 			wd: EV_WARNING_DIALOG
 			l_class: CLASS_I
+			i: INTEGER
 		do
         		-- check if all classes are writable
         	create chk_writable.make (affected_classes)
@@ -35,13 +36,15 @@ feature {NONE} -- Implementation
 				from
 					affected_classes.start
 					status_bar.reset_progress_bar_with_range (0 |..| affected_classes.count)
+					i := 0
 				until
 					affected_classes.after
 				loop
-					status_bar.display_progress_value (affected_classes.index)
-					l_class := affected_classes.item
+					status_bar.display_progress_value (i)
+					l_class := affected_classes.item_for_iteration
 					status_bar.display_message ("Updating " + l_class.name_in_upper)
 					apply_to_class (l_class)
+					i := i + 1
 					affected_classes.forth
 				end
 				status_bar.reset

@@ -95,7 +95,7 @@ feature -- Update from retrieved object.
 			lace_not_void: lace /= Void
 		do
 			standard_copy (other)
-			lace.copy (other.lace)
+			lace.update_from_retrieved_project (other.lace)
 		end
 
 feature -- Additional properties

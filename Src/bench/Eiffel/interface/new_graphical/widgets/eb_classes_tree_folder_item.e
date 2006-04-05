@@ -274,8 +274,8 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				show_groups (data.assemblies)
 			end
 
-				-- show assembly dependencies for assemblies
-			if data.is_assembly then
+				-- show assembly dependencies for assemblies if we are on not a subfolder
+			if path.is_empty and data.is_assembly then
 				show_groups (data.assemblies)
 			end
 

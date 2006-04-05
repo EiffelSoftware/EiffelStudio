@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_classes: LINKED_SET [CLASS_I]) is
+	make (a_classes: DS_HASH_SET [CLASS_I]) is
 			-- Create check for `a_classes'.
 		require
 			a_classes_not_void: a_classes /= void
@@ -40,7 +40,7 @@ feature -- Basic operation
         	until
         		not success or classes.after
         	loop
-        		l_class := classes.item
+        		l_class := classes.item_for_iteration
         		if l_class.is_read_only then
         			success := False
         			error_message := "The class "+l_class.name_in_upper+" is not writable."
@@ -51,7 +51,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	classes: LINKED_SET [CLASS_I]
+	classes: DS_HASH_SET [CLASS_I]
 			-- The list of classes to check.
 
 invariant

@@ -7,7 +7,7 @@ indexing
 
 class
 	MSR_SEARCH_CLUSTER_STRATEGY
-	
+
 inherit
 	MSR_SEARCH_STRATEGY
 		redefine
@@ -18,9 +18,9 @@ inherit
 
 create
 	make
-		
+
 feature {NONE} -- Initialization
-	
+
 	make (a_keyword: STRING; a_range: INTEGER; a_cluster: CLUSTER_I; only_compiled_class: BOOLEAN) is
 			-- Initialization with a cluster
 		require
@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 			set_cluster (a_cluster)
 			only_compiled_class_searched := only_compiled_class
 		end
-		
+
 feature -- Status report
-	
+
 	is_cluster_set: BOOLEAN is
 			-- Is `cluster_i' set?
 		do
-			Result := (cluster_i /= Void)	
+			Result := (cluster_i /= Void)
 		end
 
 	is_subcluster_searched: BOOLEAN is
@@ -46,15 +46,15 @@ feature -- Status report
 		do
 			Result := is_subcluster_searched_internal
 		end
-	
+
 	is_search_prepared: BOOLEAN is
 			-- Is search prepared?
 		do
-			Result := 
+			Result :=
 			Precursor and
-			is_cluster_set	
-		end	
-		
+			is_cluster_set
+		end
+
 	only_compiled_class_searched: BOOLEAN
 			-- Only compiled class are searched?
 
@@ -65,7 +65,7 @@ feature -- Element change
 		do
 			is_subcluster_searched_internal := a_bool
 		end
-		
+
 feature -- Basic operatioin
 
 	launch is
@@ -102,8 +102,8 @@ feature -- Basic operatioin
 				end
 			end
 			classes := cluster_i.classes
-			if not classes.is_empty then
-				from 
+			if classes /= Void and then not classes.is_empty then
+				from
 					classes.start
 				until
 					classes.after
@@ -129,7 +129,7 @@ feature -- Basic operatioin
 				item_matched_internal.start
 			end
 		end
-	
+
 	reset_all is
 			-- Reset all
 		do
@@ -153,13 +153,13 @@ feature {NONE} -- Implementation
 
 	class_strategy: MSR_SEARCH_CLASS_STRATEGY
 			-- Class strategy to search in classes in current cluster
-	
+
 	cluster_strategy: MSR_SEARCH_CLUSTER_STRATEGY
 			-- Cluster strategy to search in subclusters in current cluster
-	
+
 	cluster_i: CLUSTER_I
 			-- Cluster to be searched in
-			
+
 	is_subcluster_searched_internal: BOOLEAN
 			-- Are subclusters in `cluster_i' searched.
 

@@ -64,7 +64,6 @@ default
 	disabled_debug ("display_exception_trace")
 	disabled_debug ("dle topo")
 	disabled_debug ("dlg_dispatcher")
-	disabled_debug ("document")
 	disabled_debug ("dollar")
 	disabled_debug ("editor")
 	disabled_debug ("eiffelnet")

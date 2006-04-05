@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system
-	 xmlns="http://www.eiffel.com/xml/configuration-1-0-0"
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/xml/configuration-1-0-0 http://www.ise/~patrickr/Public/configuration-1-0-0.xsd"
-	 name="ec" uuid="7B16C58C-377C-4EF4-B10C-D6CD9D75D9F1">
-	<target name="ec">
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+	
+	<target name="batch">
 		<root class="ES" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -84,38 +85,49 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="False"/>
-		<external_include location="$(EIFFEL_SRC)\C\bench"/>
-		<external_include location="$(EIFFEL_SRC)\C\platform"/>
-		<external_include location="$(EIFFEL_SRC)\library\wel\spec\windows\include">
+		<external_include location="$EIFFEL_SRC\C\bench"/>
+		<external_include location="$EIFFEL_SRC\C\platform"/>
+		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<if platform="windows"/>
 		</external_include>
-		<external_include location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
-			<if platform="windows"/>
-		</external_include>
-		<external_object location="$(EIFFEL_SRC)\C\bench\libmtcompiler.a">
+		<external_object location="$EIFFEL_SRC\C\bench\libmtcompiler.a">
 			<if platform="unix" build="finalize"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\bench\libmtwcompiler.a">
+		<external_object location="$EIFFEL_SRC\C\bench\libmtwcompiler.a">
 			<if platform="unix" build="workbench"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\platform\libplatform.a">
+		<external_object location="$EIFFEL_SRC\C\platform\libplatform.a">
 			<if platform="unix"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\bench\mtcompiler.lib">
+		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
 			<if platform="windows" build="finalize"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\bench\mtwcompiler.lib">
+		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
 			<if platform="windows" build="workbench"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\C\platform\platform.lib">
+		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
 			<if platform="windows"/>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<if platform="windows"/>
 		</external_object>
-		<cluster name="base" location="$EIFFEL_SRC\library\base\" recursive="true">
+		
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+			<if platform="windows"/>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+			<ifnot platform="windows"/>
+		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		
+		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
-				<exclude>/table$</exclude>
+				<exclude>/compiler_override$</exclude>
+				<exclude>/error$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\"/>
@@ -128,12 +140,6 @@
 		</cluster>
 		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<if platform="windows"/>
-		</cluster>
-		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
-			<file_rule>
-				<exclude>/compiler_override$</exclude>
-				<exclude>/error$</exclude>
-			</file_rule>
 		</cluster>
 		<cluster name="common_structured_text" location="$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common\" recursive="true">
 			<file_rule>
@@ -188,18 +194,6 @@
 			</file_rule>
 		</cluster>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
-		<cluster name="gobo" location="$EIFFEL_SRC\library\gobo\library\" recursive="true">
-			<file_rule>
-				<exclude>/hact$</exclude>
-				<exclude>/se$</exclude>
-				<exclude>/ve$</exclude>
-				<exclude>/base$</exclude>
-				<exclude>/other$</exclude>
-				<exclude>/xpath$</exclude>
-				<exclude>/expat$</exclude>
-				<exclude>/no_expat$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\">
 			<cluster name="interface_shared" location="$|shared\"/>
 			<cluster name="preference_tool" location="$|graphical\preference_tool\"/>
@@ -212,20 +206,6 @@
 				<exclude>/EIFGEN$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="preferences_unix" location="$EIFFEL_SRC\library\preferences\" recursive="true">
-			<ifnot platform="windows"/>
-			<file_rule>
-				<exclude>/registry_implementation$</exclude>
-				<exclude>/graphical$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="preferences_win" location="$EIFFEL_SRC\library\preferences\" recursive="true">
-			<if platform="windows"/>
-			<file_rule>
-				<exclude>/xml_implementation$</exclude>
-				<exclude>/graphical$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|no_communication\">
 				<cluster name="debuging_class" location="$|debug\"/>
@@ -234,17 +214,312 @@
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 			<cluster name="license_switch" location="$|license\no_license\"/>
 		</cluster>
-		<cluster name="table_eiffel_3" location="$EIFFEL_SRC\library\obsolete\base\table_eiffel3\"/>
-		<cluster name="time" location="$EIFFEL_SRC\library\time\" recursive="true">
+		<cluster name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
+	</target>
+	
+	<target name="bench">
+		<description>Eiffel Studio</description>
+		<root class="EB_KERNEL" feature="make"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+	<option trace="false" profile="false" debug="true">
+			<debug name="__unnamed_debug__" enabled="false"/>
+			<debug name="_jfiat" enabled="false"/>
+			<debug name="activity" enabled="false"/>
+			<debug name="actual_replication" enabled="false"/>
+			<debug name="anchored_features" enabled="false"/>
+			<debug name="assertion" enabled="false"/>
+			<debug name="assertions" enabled="false"/>
+			<debug name="auto_completion" enabled="false"/>
+			<debug name="c_debugger" enabled="false"/>
+			<debug name="cache" enabled="false"/>
+			<debug name="cache_compiler" enabled="false"/>
+			<debug name="cache_research" enabled="false"/>
+			<debug name="cache_server" enabled="false"/>
+			<debug name="cache_stat" enabled="false"/>
+			<debug name="cecil" enabled="false"/>
+			<debug name="check_expanded" enabled="false"/>
+			<debug name="class_of_id" enabled="false"/>
+			<debug name="com_object" enabled="false"/>
+			<debug name="count" enabled="false"/>
+			<debug name="dbg" enabled="false"/>
+			<debug name="dbg_extra_display" enabled="false"/>
+			<debug name="dbg_trace" enabled="false"/>
+			<debug name="dead_code" enabled="false"/>
+			<debug name="dead_code_removal" enabled="false"/>
+			<debug name="debbugger_hook" enabled="false"/>
+			<debug name="debug_recv" enabled="false"/>
+			<debug name="debugger" enabled="false"/>
+			<debug name="debugger_caching" enabled="false"/>
+			<debug name="debugger_eifnet_data" enabled="false"/>
+			<debug name="debugger_eifnet_data_extra" enabled="false"/>
+			<debug name="debugger_eifnet_synchro" enabled="false"/>
+			<debug name="debugger_evaluator" enabled="false"/>
+			<debug name="debugger_hook" enabled="false"/>
+			<debug name="debugger_icor_data" enabled="false"/>
+			<debug name="debugger_il_info_trace" enabled="false"/>
+			<debug name="debugger_il_info_trace_extra" enabled="false"/>
+			<debug name="debugger_interface" enabled="false"/>
+			<debug name="debugger_ipc" enabled="false"/>
+			<debug name="debugger_trace" enabled="false"/>
+			<debug name="debugger_trace_breakpoint" enabled="false"/>
+			<debug name="debugger_trace_cache" enabled="false"/>
+			<debug name="debugger_trace_callback" enabled="false"/>
+			<debug name="debugger_trace_callback_data" enabled="false"/>
+			<debug name="debugger_trace_callback_notify" enabled="false"/>
+			<debug name="debugger_trace_callstack" enabled="false"/>
+			<debug name="debugger_trace_callstack_data" enabled="false"/>
+			<debug name="debugger_trace_children" enabled="false"/>
+			<debug name="debugger_trace_eifnet" enabled="false"/>
+			<debug name="debugger_trace_eval" enabled="false"/>
+			<debug name="debugger_trace_eval_data" enabled="false"/>
+			<debug name="debugger_trace_operation" enabled="false"/>
+			<debug name="debugger_trace_stepping" enabled="false"/>
+			<debug name="debugger_trace_synchro" enabled="false"/>
+			<debug name="display_exception_trace" enabled="false"/>
+			<debug name="dle topo" enabled="false"/>
+			<debug name="dlg_dispatcher" enabled="false"/>
+			<debug name="document" enabled="false"/>
+			<debug name="dollar" enabled="false"/>
+			<debug name="editor" enabled="false"/>
+			<debug name="eiffelnet" enabled="false"/>
+			<debug name="eifnet_debugger" enabled="false"/>
+			<debug name="es_dockable_notebook" enabled="false"/>
+			<debug name="es_grid_layout" enabled="false"/>
+			<debug name="es_grid_layout_positioning" enabled="false"/>
+			<debug name="filters" enabled="false"/>
+			<debug name="fixme" enabled="false"/>
+			<debug name="flat_short" enabled="false"/>
+			<debug name="flush_file" enabled="false"/>
+			<debug name="formal_generic" enabled="false"/>
+			<debug name="gelex" enabled="false"/>
+			<debug name="genericity" enabled="false"/>
+			<debug name="geyacc" enabled="false"/>
+			<debug name="has_calls" enabled="false"/>
+			<debug name="hector" enabled="false"/>
+			<debug name="il_info_trace" enabled="false"/>
+			<debug name="larry" enabled="false"/>
+			<debug name="lex_output" enabled="false"/>
+			<debug name="local_feat_adaptation" enabled="false"/>
+			<debug name="log_exceptions" enabled="false"/>
+			<debug name="md out-of-order" enabled="false"/>
+			<debug name="once" enabled="false"/>
+			<debug name="optimization" enabled="false"/>
+			<debug name="options" enabled="false"/>
+			<debug name="parse" enabled="false"/>
+			<debug name="profile_convert" enabled="false"/>
+			<debug name="refactor_fixme" enabled="false"/>
+			<debug name="refactor_to_implement" enabled="false"/>
+			<debug name="regexp" enabled="false"/>
+			<debug name="remove_class" enabled="false"/>
+			<debug name="replication" enabled="false"/>
+			<debug name="server" enabled="false"/>
+			<debug name="show_prof_query" enabled="false"/>
+			<debug name="timing" enabled="false"/>
+			<debug name="to_implement" enabled="false"/>
+			<debug name="trace_table" enabled="false"/>
+			<debug name="transfer" enabled="false"/>
+			<debug name="update_on_idle" enabled="false"/>
+			<debug name="verbose" enabled="false"/>
+			<debug name="vision2_windows" enabled="false"/>
+			<debug name="vision2_windows_gdi" enabled="false"/>
+			<debug name="wel" enabled="false"/>
+			<debug name="wel_gdi_count" enabled="false"/>
+			<debug name="wel_gdi_references" enabled="false"/>
+			<debug name="win_dispatcher" enabled="false"/>
+			<debug name="xml_input_stream" enabled="false"/>
+			<debug name="xml_parser" enabled="false"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<setting name="address_expression" value="False"/>
+		<setting name="array_optimization" value="False"/>
+		<setting name="check_vape" value="True"/>
+		<setting name="console_application" value="True"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dynamic_runtime" value="False"/>
+		<setting name="exception_trace" value="True"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="multithreaded" value="True"/>
+		<setting name="syntax_warning" value="True"/>
+		
+		<external_include location="$EIFFEL_SRC\C\bench"/>
+		<external_include location="$EIFFEL_SRC\C\platform"/>
+		<external_include location="$EIFFEL_SRC\C_library\zlib"/>
+		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib"/>
+		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib"/>
+		<external_object location="htmlhelp.lib"/>
+		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
+			<if platform="windows"/>
+		</external_object>
+		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+			<if platform="windows"/>
+		</external_include>
+		<external_object location="$EIFFEL_SRC\C\bench\libmtcompiler.a">
+			<if platform="unix" build="finalize"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\bench\libmtwcompiler.a">
+			<if platform="unix" build="workbench"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\platform\libplatform.a">
+			<if platform="unix"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
+			<if platform="windows" build="finalize"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
+			<if platform="windows" build="workbench"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
+			<if platform="windows"/>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+			<if platform="windows"/>
+		</external_object>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.acex" readonly="true"/>
+		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex" readonly="true"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+			<if platform="windows"/>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+			<ifnot platform="windows"/>
+		</library>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>		
+		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex" readonly="true"/>
+		<!--This library is not pure one.<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex" readonly="true"/>-->
+		<library name="process" location="$ISE_LIBRARY\library\process\process.acex" readonly="true"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
+		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex" readonly="true"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
+		
+		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer" recursive="true"/>
+		<cluster name="common" location="$ISE_LIBRARY\Eiffel\common\" recursive="true">
 			<file_rule>
-				<exclude>/french$</exclude>
-				<exclude>/german$</exclude>
+				<exclude>/compiler_override$</exclude>
+				<exclude>/error$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="uuid" location="$EIFFEL_SRC\library\uuid\" recursive="true"/>
-		<cluster name="wel" location="$EIFFEL_SRC\library\wel\" recursive="true">
+		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk" recursive="true"/>
+		<cluster name="eiffel_support" location="$EIFFEL_SRC\Eiffel\support" recursive="true"/>
+		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
+		<cluster name="lace" location="$EIFFEL_SRC\Eiffel\lace\" recursive="true"/>
+		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
+		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/unix$</exclude>
+				<exclude>/Clib$</exclude>
+				<exclude>/Core$</exclude>
+				<exclude>/junk$</exclude>
+				<exclude>/kernel$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/windows$</exclude>
+				<exclude>/com_il_generation$</exclude>
+				<exclude>/Core$</exclude>
+				<exclude>/kernel$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
+			<cluster name="communications" location="$|communication\">
+				<cluster name="debuging_class" location="$|debug\"/>
+				<cluster name="debuging_formatters" location="$|formatters\"/>
+				<cluster name="io_watcher_mswin" location="$|spec\mswin\">
+					<if platform="windows"/>
+				</cluster>
+				<cluster name="io_watcher_gtk" location="$|spec\gtk\">
+					<ifnot platform="windows"/>
+				</cluster>
+				<cluster name="ipc" location="$|ipc\"/>
+				<cluster name="status" location="$|status\" recursive="true">
+					<file_rule>
+						<exclude>/no_dotnet$</exclude>
+					</file_rule>
+				</cluster>
+			</cluster>
+			<cluster name="interface_switch" location="$|interface\new_graphical\"/>
+			<cluster name="time_lock" location="$|license\time_lock\"/>
+		</cluster>
+		
+		<cluster name="interface_windows" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/graphical$</exclude>
+				<exclude>/gtk$</exclude>
+				<exclude>/tty$</exclude>
+				<exclude>/Not_in_System$</exclude>
+				<exclude>/xml_implementation$</exclude>
+				<exclude>/preferences$</exclude>
+				<exclude>/no_dotnet$</exclude>
+				<exclude>/ewb_case_storage.e$</exclude>
+			</file_rule>
+		</cluster>
+		
+		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/graphical$</exclude>
+				<exclude>/win32$</exclude>
+				<exclude>/mswin$</exclude>
+				<exclude>/tty$</exclude>
+				<exclude>/Not_in_System$</exclude>
+				<exclude>/preferences$</exclude>
+				<exclude>/dotnet$</exclude>
+				<exclude>/ewb_case_storage\.e$</exclude>
+			</file_rule>
+		</cluster>
+		
+		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty" recursive="true">
+			<file_rule>
+				<exclude>/eb_diagram_html_generator\.e$</exclude>
+				<exclude>/eb_gui_preferences\.e$</exclude>
+				<exclude>/ewb_case_storage\.e$</exclude>
+			</file_rule>
+		</cluster>
+		
+		<cluster name="cli_debugger" location="$EIFFEL_SRC\Eiffel\library\cli_debugger\" recursive="true">
 			<if platform="windows"/>
 		</cluster>
-		<override name="override" location="$EIFFEL_SRC\Eiffel\override\"/>
+		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/clib$</exclude>
+				<exclude>/spec$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/md_strong_name\.e$</exclude>
+				<exclude>/md_public_key\.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="dotnet_helpers" location="$EIFFEL_SRC\dotnet\helpers\"/>
+		<cluster name="dotnet_logger" location="$EIFFEL_SRC\dotnet\helpers\logger\classic\"/>
+		<cluster name="eac_components" location="$EIFFEL_SRC\dotnet\consumer\components\" recursive="true"/>
+		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
+		<cluster name="eac_serialization" location="$EIFFEL_SRC\dotnet\consumer\serialization\" recursive="true"/>
+		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true"/>
+		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGEN$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
+		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
+		<override name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
 	</target>
 </system>

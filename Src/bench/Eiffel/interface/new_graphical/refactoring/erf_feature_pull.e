@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: ERF_CLASS_SELECT
 			l_feature: FEATURE_I
-			l_classes: LINKED_SET [CLASS_I]
+			l_classes: DS_HASH_SET [CLASS_I]
         do
 			create dialog
 
@@ -171,9 +171,9 @@ feature {NONE} -- Implementation
 				create recursive_descendants.make (20)
 				compute_recursive_descendants (feature_i.written_class)
 	        	checks.wipe_out
-	        	create l_classes.make
-	        	l_classes.extend (feature_i.written_class.lace_class)
-	        	l_classes.extend (parent_class)
+	        	create l_classes.make (100)
+	        	l_classes.force (feature_i.written_class.lace_class)
+	        	l_classes.force (parent_class)
 	        	checks.extend (create {ERF_CLASSES_WRITABLE}.make (l_classes))
 
 		       		-- if the feature is deferred in the parent this is ok

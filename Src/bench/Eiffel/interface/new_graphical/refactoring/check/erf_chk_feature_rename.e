@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			new_name := a_new_name
 			refactoring := a_refactoring
 			create recursive_descendants.make (Chunk)
-			create syntactical_clients.make
+			create syntactical_clients.make (Chunk)
 			create topological.make (Chunk)
 			create topological_mapping.make (Chunk)
 			create type_a_generator
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				until
 					l_clients.after
 				loop
-					syntactical_clients.extend (l_clients.item.lace_class)
+					syntactical_clients.force (l_clients.item.lace_class)
 					l_clients.forth
 				end
 
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	topological_mapping: HASH_TABLE [CLASS_C, INTEGER]
 			-- Map topological ids to CLASS_C.
 
-	syntactical_clients: LINKED_SET [CLASS_I]
+	syntactical_clients: DS_HASH_SET [CLASS_I]
 			-- Clients and descendands we have to process during the refactoring.
 
 feature {NONE} -- Implementation constants

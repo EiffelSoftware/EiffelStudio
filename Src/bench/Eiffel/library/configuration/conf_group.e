@@ -82,6 +82,12 @@ feature -- Status
 		once
 		end
 
+	is_used_library: BOOLEAN is
+			-- Is this this cluster used in a library? (as opposed to directly in the application system)
+		do
+			Result := application_target /= target
+		end
+
 feature -- Access, stored in configuration file
 
 	name: STRING
@@ -99,8 +105,11 @@ feature -- Access, stored in configuration file
 	renaming: CONF_HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	is_readonly: BOOLEAN
+	is_readonly: BOOLEAN is
 			-- Is this group read only?
+		do
+			Result := internal_read_only
+		end
 
 	target: CONF_TARGET
 			-- The target where this group is written in.
@@ -123,6 +132,10 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := internal_hash_code
 		end
 
+	application_target: CONF_TARGET
+			-- The application target.
+
+
 feature -- Access queries
 
 	is_overriden: BOOLEAN is
@@ -134,13 +147,7 @@ feature -- Access queries
 
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
-		do
-			if internal_options /= Void then
-				Result := internal_options.twin
-				Result.merge (target.options)
-			else
-				Result := target.options
-			end
+		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -180,6 +187,26 @@ feature -- Access queries
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	accessible_groups: LINKED_SET [CONF_GROUP] is
+			-- Groups that are accessible within `Current'.
+			-- Dependencies if we have them, else everything except `Current'.
+		do
+			create Result.make
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	accessible_classes: like classes is
+			-- Classes that are accessible within `Current'.
+		require
+			classes_set: classes_set
+		do
+			Result :=  classes.twin
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return sub group with `a_name' if there is any.
@@ -272,19 +299,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 
 	enable_readonly is
-			-- Set `is_readonly' to true.
+			-- Set `internal_readonly' to true.
 		do
-			is_readonly := True
+			internal_read_only := True
 		ensure
 			is_readonly: is_readonly
-		end
-
-	disable_readonly is
-			-- Set `is_readonly' to false.
-		do
-			is_readonly := False
-		ensure
-			not_is_readonly: not is_readonly
 		end
 
 	set_options (a_option: like internal_options) is
@@ -399,6 +418,15 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			overrider_added: overriders.has (an_overrider)
 		end
 
+	set_application_target (a_target: CONF_TARGET) is
+			-- Set `application_target' to `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			application_target := a_target
+		ensure
+			application_target_set: application_target = a_target
+		end
 
 feature -- Equality
 
@@ -433,6 +461,9 @@ feature {NONE} -- Implementation
 
 	internal_hash_code: INTEGER
 			-- Cashed value of the hash_code
+
+	internal_read_only: BOOLEAN
+			-- Internal read only value
 
 invariant
 	name_ok: name /= Void and then not name.is_empty

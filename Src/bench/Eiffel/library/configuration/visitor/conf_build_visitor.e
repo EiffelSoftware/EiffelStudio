@@ -239,6 +239,7 @@ feature -- Visit nodes
 			-- Visit `a_group'.
 		do
 			on_process_group (a_group)
+			a_group.set_application_target (application_target)
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
@@ -252,7 +253,6 @@ feature -- Visit nodes
 					is_assembly_cache_folder_set: is_assembly_cache_folder_set
 				end
 				current_assembly := an_assembly
-				an_assembly.set_application_target (application_target)
 				process_assembly_implementation (an_assembly)
 					-- dependencies will be handled after all assemblies have been processed
 					-- because then we can get the correct assembly if the assembly is also used
@@ -260,6 +260,7 @@ feature -- Visit nodes
 			end
 		ensure then
 			guid_set: not is_error implies an_assembly.guid /= Void
+			consumed: not is_error implies an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
 			classes_set: not is_error implies an_assembly.classes_set
 		end
 
@@ -366,7 +367,6 @@ feature -- Visit nodes
 		do
 			if not is_error then
 				current_cluster := a_cluster
-				a_cluster.set_application_target (application_target)
 				create current_classes.make (Classes_per_cluster)
 				process_cluster_recursive ("")
 
@@ -846,7 +846,8 @@ feature {NONE} -- Implementation
 	process_assembly_dependencies_implementation (an_assembly: CONF_ASSEMBLY) is
 			-- Process the dependencies of `an_assembly'.
 		require
-			an_assembly_not_void: an_assembly /= Void
+			an_assembly_ok: an_assembly /= Void and then an_assembly.guid /= Void
+			an_assembly_consumed: an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
 			dotnet: platform = pf_dotnet
 			old_assembly_different: old_assembly /= an_assembly
 		local

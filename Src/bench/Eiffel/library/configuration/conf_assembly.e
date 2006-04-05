@@ -18,7 +18,10 @@ inherit
 			class_by_name,
 			options,
 			is_group_equivalent,
-			class_type
+			class_type,
+			is_readonly,
+			accessible_groups,
+			accessible_classes
 		end
 
 	CONF_FILE_DATE
@@ -38,7 +41,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_name, a_location, a_target)
 			enable (pf_dotnet, build_all)
-			is_readonly := True
 		end
 
 	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
@@ -61,7 +63,6 @@ feature {NONE} -- Initialization
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
 			create location.make_from_full_path ("", a_target)
-			is_readonly := True
 		ensure
 			is_valid: is_valid
 		end
@@ -99,6 +100,9 @@ feature -- Access, stored in configuration file if location is empty
 	assembly_public_key_token: STRING
 			-- Public key of the assembly.
 
+	is_readonly: BOOLEAN is True
+			-- Assemblies are always read only.
+
 feature -- Access, in compiled only
 
 	dotnet_classes: HASH_TABLE [like class_type, STRING]
@@ -113,9 +117,6 @@ feature -- Access, in compiled only
 	dependencies: LINKED_SET [CONF_ASSEMBLY]
 			-- Dependencies on other assemblies.
 
-	application_target: CONF_TARGET
-			-- The application target.
-
 	date: INTEGER
 			-- Date of last modification of the cached information.
 
@@ -124,30 +125,55 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	is_used_library: BOOLEAN is
-			-- The application target.
-			-- Access queries
+	accessible_groups: LINKED_SET [CONF_GROUP] is
+			-- Groups that are accessible within `Current'.
+			-- Dependencies if we have them, else nothing.
 		do
-			Result := application_target /= target
+			if dependencies /= Void then
+				Result := dependencies
+			else
+				create Result.make
+			end
+		end
+
+	accessible_classes: like classes is
+			-- Classes that are accessible within `Current'.
+		local
+			l_groups: LINKED_SET [CONF_GROUP]
+			l_grp: CONF_GROUP
+		do
+			Result := Precursor
+			l_groups := accessible_groups
+			from
+				l_groups.start
+			until
+				l_groups.after
+			loop
+				l_grp := l_groups.item
+				Result.merge (l_grp.classes)
+				l_groups.forth
+			end
 		end
 
 	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [like class_type] is
 			-- Get class by name.
 		local
-			l_dep: CONF_ASSEMBLY
+			l_dep: CONF_GROUP
+			l_groups: like accessible_groups
 		do
 			Result := Precursor (a_class, a_dependencies, a_platform, a_build)
-			if a_dependencies and dependencies /= Void then
+			if a_dependencies then
+				l_groups := accessible_groups
 				from
-					dependencies.start
+					l_groups.start
 				until
-					dependencies.after
+					l_groups.after
 				loop
-					l_dep := dependencies.item
+					l_dep := l_groups.item
 					if l_dep.is_enabled (a_platform, a_build) then
 						Result.append (l_dep.class_by_name (a_class, False, a_platform, a_build))
 					end
-					dependencies.forth
+					l_groups.forth
 				end
 			end
 		end
@@ -187,27 +213,14 @@ feature -- Access queries
 
 	options: CONF_OPTION is
 		local
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_assembly: CONF_ASSEMBLY
-			l_uuid: STRING
-			l_options: CONF_OPTION
 		do
+				-- if used as library, get options from application level
+				-- either if the assembly is defined there or otherwise directly from the application target
 			if is_used_library then
-				from
-					l_uuid := guid
-					l_assemblies := application_target.assemblies
-					l_assemblies.start
-				until
-					l_options /= Void or l_assemblies.after
-				loop
-					l_assembly := l_assemblies.item_for_iteration
-					if l_assembly.guid = l_uuid then
-						l_options := l_assembly.options
-					end
-					l_assemblies.forth
-				end
-				if l_options /= Void then
-					Result := l_options
+				l_assembly := find_current_in_application_target
+				if l_assembly /= Void then
+					Result := l_assembly.options
 				else
 					Result := application_target.options
 				end
@@ -323,22 +336,11 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			dependencies := a_dependencies
 		end
 
-	set_application_target (a_target: CONF_TARGET) is
-			-- Set `application_target' to `a_target'.
-		require
-			a_target_not_void: a_target /= Void
-		do
-			application_target := a_target
-		ensure
-			application_target_set: application_target = a_target
-		end
-
 	set_date (a_date: like date) is
 			-- Set `date' to `a_date'.
 		do
 			date := a_date
 		end
-
 
 	check_changed is
 			-- Check if the cached information of the assembly have changed.
@@ -379,6 +381,30 @@ feature -- Visit
 		do
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
+		end
+
+feature {NONE} -- Implementation
+
+	find_current_in_application_target: like Current is
+			-- Find `Current' in `application_target' if it is defined there directly.
+		require
+			application_target_not_void: application_target /= Void
+		local
+			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			l_assembly: like Current
+		do
+			from
+				l_assemblies := application_target.assemblies
+				l_assemblies.start
+			until
+				Result /= Void or l_assemblies.after
+			loop
+				l_assembly := l_assemblies.item_for_iteration
+				if l_assembly.guid = guid then
+					Result := l_assembly
+				end
+				l_assemblies.forth
+			end
 		end
 
 feature {NONE} -- Class type anchor

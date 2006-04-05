@@ -258,6 +258,7 @@ feature -- Commands
 
 				if successful then
 					system.set_rebuild (False)
+					system.reset_has_compilation_started
 					compilation_counter := compilation_counter + 1
 					if (System.has_been_changed or else System.freezing_occurred) then
 						save_project (Compilation_modes.is_precompiling)

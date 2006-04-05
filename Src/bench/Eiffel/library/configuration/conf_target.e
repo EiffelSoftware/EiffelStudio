@@ -149,6 +149,21 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	groups: HASH_TABLE [CONF_GROUP, STRING] is
+			-- All groups of this target (union of clusters, assemblies, overrides and libraries)
+		do
+			create Result.make (libraries.count + assemblies.count + clusters.count + overrides.count + 1)
+			Result.merge (libraries)
+			Result.merge (assemblies)
+			Result.merge (clusters)
+			Result.merge (overrides)
+			if precompile /= Void then
+				Result.force (precompile, precompile.name)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	root: CONF_ROOT is
 			-- The root feature.
 		do

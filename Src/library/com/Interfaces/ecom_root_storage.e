@@ -34,10 +34,10 @@ feature -- Basic Operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
-			ccom_switch_to_file (initializer, wide_string.item)
+			create l_string.make (a_name)
+			ccom_switch_to_file (initializer, l_string.item)
 		end
 
 feature {NONE} -- Implementation

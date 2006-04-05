@@ -45,11 +45,11 @@ feature {NONE} -- Initialization
 			valid_filename: filename /= Void
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
 			initializer := ccom_create_c_storage;
-			create wide_string.make_from_string (filename)
-			ccom_create_doc_file (initializer, wide_string.item, a_mode)
+			create l_string.make (filename)
+			ccom_create_doc_file (initializer, l_string.item, a_mode)
 			item := ccom_item (initializer)
 		ensure
 			compound_file_created: exists
@@ -77,11 +77,11 @@ feature {NONE} -- Initialization
 			valid_file: filename /= Void and then is_compound_file (filename)
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
 			initializer := ccom_create_c_storage;				
-			create wide_string.make_from_string (filename)
-			ccom_open_root_storage (initializer, wide_string.item, a_mode)	
+			create l_string.make (filename)
+			ccom_open_root_storage (initializer, l_string.item, a_mode)	
 			item := ccom_item (initializer)
 		ensure
 			compound_file_open: exists			
@@ -100,11 +100,11 @@ feature -- Access
 			valid_storage_name: not a_name.is_empty
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
+			create l_string.make (a_name)
 			create Result.make_from_pointer (ccom_create_stream (initializer, 
-					wide_string.item, a_mode))
+					l_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
 			valid_stream: Result.exists
@@ -120,11 +120,11 @@ feature -- Access
 			valid_name: is_valid_name (a_name)
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
+			create l_string.make (a_name)
 			create Result.make_from_pointer (ccom_open_stream (initializer, 
-					wide_string.item, a_mode))
+					l_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
 			valid_stream: Result.exists
@@ -139,11 +139,11 @@ feature -- Access
 			valid_storage_name: not a_name.is_empty
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
+			create l_string.make (a_name)
 			create Result.make_from_pointer (ccom_create_storage (initializer, 
-					wide_string.item, a_mode))
+					l_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
 			valid_storage: Result.exists
@@ -160,11 +160,11 @@ feature -- Access
 			valid_name: is_valid_name (a_name)
 			valid_mode: is_valid_stgm (a_mode)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
+			create l_string.make (a_name)
 			create Result.make_from_pointer (ccom_open_storage (initializer, 
-					wide_string.item, a_mode))
+					l_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
 			valid_storage: Result.exists
@@ -307,10 +307,10 @@ feature -- Basic Operations
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)	
-			ccom_destroy_element (initializer, wide_string.item)
+			create l_string.make (a_name)	
+			ccom_destroy_element (initializer, l_string.item)
 		ensure
 			element_removed: not is_valid_name (a_name)
 		end
@@ -323,12 +323,11 @@ feature -- Basic Operations
 			non_void_new_name: new_name /= Void
 			valid_new_name: is_valid_name (new_name)
 		local
-			wide_string1, wide_string2: ECOM_WIDE_STRING
+			l_string1, l_string2: WEL_STRING
 		do
-			create wide_string1.make_from_string (old_name)
-			create wide_string2.make_from_string (new_name)
-			ccom_rename_element (initializer, wide_string1.item, 
-						wide_string2.item)
+			create l_string1.make (old_name)
+			create l_string2.make (new_name)
+			ccom_rename_element (initializer, l_string1.item, l_string2.item)
 		ensure
 			not_valid_old_name: not is_valid_name (old_name)
 			valid_new_name: is_valid_name (new_name)
@@ -353,12 +352,12 @@ feature -- Element Change
 			valid_new_name: not new_name.is_empty
 			valid_mode: is_valid_stgmove (a_mode)
 		local
-			wide_string1, wide_string2: ECOM_WIDE_STRING
+			l_string1, l_string2: WEL_STRING
 		do
-			create wide_string1.make_from_string (a_element_name)
-			create wide_string2.make_from_string (new_name)
-			ccom_move_element_to (initializer, wide_string1.item, dest_storage.item, 
-							wide_string2.item, a_mode)
+			create l_string1.make (a_element_name)
+			create l_string2.make (new_name)
+			ccom_move_element_to (initializer, l_string1.item, dest_storage.item, 
+							l_string2.item, a_mode)
 		ensure
 			element_moved: dest_storage.is_valid_name (new_name)
 		end
@@ -370,10 +369,10 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_creation_time: a_creation_time /= Void
 		local
-			wide_string: ECOM_WIDE_STRING	
+			l_string: WEL_STRING	
 		do
-			create wide_string.make_from_string (a_element_name)
-			ccom_set_element_times (initializer, wide_string.item, a_creation_time.item,
+			create l_string.make (a_element_name)
+			ccom_set_element_times (initializer, l_string.item, a_creation_time.item,
 						default_pointer, default_pointer)
 		ensure
 			element_creation_time_set: element_creation_time (a_element_name).is_equal (a_creation_time)
@@ -386,10 +385,10 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_access_time: an_access_time /= Void
 		local
-			wide_string: ECOM_WIDE_STRING	
+			l_string: WEL_STRING	
 		do
-			create wide_string.make_from_string (a_element_name)
-			ccom_set_element_times (initializer, wide_string.item, default_pointer,
+			create l_string.make (a_element_name)
+			ccom_set_element_times (initializer, l_string.item, default_pointer,
 						an_access_time.item, default_pointer)
 		ensure
 			element_access_time_set: element_access_time (a_element_name).is_equal (an_access_time)
@@ -402,10 +401,10 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_modification_time: a_modification_time /= Void
 		local
-			wide_string: ECOM_WIDE_STRING	
+			l_string: WEL_STRING	
 		do
-			create wide_string.make_from_string (a_element_name)
-			ccom_set_element_times (initializer, wide_string.item, default_pointer,
+			create l_string.make (a_element_name)
+			ccom_set_element_times (initializer, l_string.item, default_pointer,
 						default_pointer, a_modification_time.item)
 		ensure
 			element_access_time_set: element_modification_time (a_element_name).is_equal (a_modification_time)

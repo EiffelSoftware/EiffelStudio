@@ -105,6 +105,20 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+feature -- Update from retrieved object.
+
+	update_from_retrieved_project (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		require
+			other_not_void: other /= Void
+		do
+			-- standard_copy (other)
+			date := other.date
+			compile_all_classes := other.compile_all_classes
+			application_working_directory := other.application_working_directory
+			successful := True
+		end
 feature -- Status setting
 
 	set_file_name (s: STRING) is
@@ -135,15 +149,6 @@ feature -- Status setting
 		ensure
 			conf_system_set: conf_system = s
 		end
-
-	set_successful is
-			-- Set `successful' to True.
-		do
-			successful := True
-		ensure
-			successful
-		end
-
 
 	set_date_stamp is
 			-- Set `date' information to the current timestamp of the file.

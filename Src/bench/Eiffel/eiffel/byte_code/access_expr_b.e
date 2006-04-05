@@ -14,7 +14,7 @@ inherit
 			free_register, enlarged, used,
 			has_gcable_variable, has_call,
 			allocates_memory,
-			is_unsafe,
+			is_unsafe, is_type_fixed,
 			calls_special_features,
 			optimized_byte_node, size,
 			pre_inlined_code,
@@ -35,6 +35,15 @@ feature
 
 	expr: EXPR_B;
 			-- The expression
+
+feature -- Status report
+
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := expr.is_type_fixed
+		end
 
 feature -- Status
 

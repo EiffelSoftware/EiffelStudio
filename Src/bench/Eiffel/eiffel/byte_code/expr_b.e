@@ -72,6 +72,43 @@ feature -- Status report
 			-- Default: False
 		end
 
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := is_constant_expression
+		end
+
+	is_dynamic_clone_required (source_type: TYPE_I): BOOLEAN is
+			-- Does expression need to be cloned at run-time depending on
+			-- the dynamic type of its value of static type `source_type'.
+		require
+			source_type_not_void: source_type /= Void
+			source_type_is_reference: source_type.is_reference
+		local
+			cl_type_i: CL_TYPE_I
+		do
+			Result := True
+			if
+				context.original_body_index = context.twin_body_index or else
+				source_type.is_frozen or else
+				source_type.is_none or else
+				is_type_fixed
+			then
+					-- Avoid infinite recursion in "ANY.twin".
+					-- Avoid dynamic check of object type if we know
+					-- in advance that the type cannot be expanded.
+				Result := False
+			elseif system.in_final_mode then
+					-- Avoid dynamic check of object type if we know
+					-- in advance that the type cannot be expanded.
+				cl_type_i ?= source_type
+				if cl_type_i /= Void then
+					Result := context.has_expanded_descendants (cl_type_i.associated_class_type.type_id)
+				end
+			end
+		end
+
 feature -- C generation
 
 	get_register is
@@ -235,29 +272,9 @@ feature -- C generation
 			source_type_is_reference: source_type.is_reference
 		local
 			buf: like buffer
-			cl_type_i: CL_TYPE_I
-			has_expanded_descendants: BOOLEAN
 		do
-			buf := buffer
-			has_expanded_descendants := True
-			if
-				context.original_body_index = context.twin_body_index or else
-				source_type.is_frozen or else
-				source_type.is_none
-			then
-					-- Avoid infinite recursion in "ANY.twin".
-					-- Avoid dynamic check of object type if we know
-					-- in advance that the type cannot be expanded.
-				has_expanded_descendants := False
-			elseif system.in_final_mode then
-					-- Avoid dynamic check of object type if we know
-					-- in advance that the type cannot be expanded.
-				cl_type_i ?= source_type
-				if cl_type_i /= Void then
-					has_expanded_descendants := context.has_expanded_descendants (cl_type_i.associated_class_type.type_id)
-				end
-			end
-			if has_expanded_descendants then
+			if is_dynamic_clone_required (source_type) then
+				buf := buffer
 				buf.put_string ("RTCCL(")
 				source_register.print_register
 				buf.put_character (')')

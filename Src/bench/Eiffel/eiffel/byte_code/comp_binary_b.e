@@ -4,12 +4,12 @@ indexing
 -- Binary expression byte code for a comparable expression
 
 deferred class
-	COMP_BINARY_B 
+	COMP_BINARY_B
 
 inherit
 	NUM_BINARY_B
 		redefine
-			is_built_in
+			is_built_in, is_type_fixed
 		end
 
 feature
@@ -19,6 +19,13 @@ feature
 		do
 			Result := Precursor {NUM_BINARY_B}
 					or else context.real_type (left.type).is_char
+		end
+
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := is_built_in
 		end
 
 indexing

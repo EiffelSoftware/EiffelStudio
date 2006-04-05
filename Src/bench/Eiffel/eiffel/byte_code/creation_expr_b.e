@@ -13,7 +13,7 @@ inherit
 		redefine
 			analyze, unanalyze,
 			generate, register, get_register,
-			enlarged, size, is_simple_expr, is_single,
+			enlarged, size, is_simple_expr, is_single, is_type_fixed,
 			line_number, set_line_number, has_call, allocates_memory
 		end
 
@@ -129,6 +129,13 @@ feature -- Status report
 			-- `is_simple_expr'.
 		do
 			Result := call = Void or else call.is_simple_expr
+		end
+
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := info = Void and then type.is_standalone
 		end
 
 feature -- Access

@@ -3,19 +3,29 @@ indexing
 	status: "See notice at end of class."
 -- Binary expression byte code for a possible boolean expression
 
-deferred class BOOL_BINARY_B 
+deferred class BOOL_BINARY_B
 
 inherit
 
 	BINARY_B
-	
-feature 
+		redefine
+			is_type_fixed
+		end
+
+feature
 
 	is_built_in: BOOLEAN is
 			-- Is the current binary operator a built-in one ?
 		do
 			Result := context.real_type (left.type).is_boolean;
 		end;
+
+	is_type_fixed: BOOLEAN is
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
+		do
+			Result := is_built_in
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

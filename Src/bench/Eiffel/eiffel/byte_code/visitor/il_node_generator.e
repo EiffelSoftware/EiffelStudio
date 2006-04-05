@@ -279,7 +279,7 @@ feature -- Generation
 			generate_il_simple_assignment (a_node, target_type, source_type)
 		end
 
-	generate_reattachment (source_type, target_type: TYPE_I) is
+	generate_reattachment (source: EXPR_B; source_type, target_type: TYPE_I) is
 			-- Generate code that ensures semantics of reattachment
 			-- of expression of `source_type' to entity of `target_type'
 			-- assuming the expression value is on the stack.
@@ -299,13 +299,14 @@ feature -- Generation
 					generate_twin_routine ({PREDEFINED_NAMES}.twin_name_id, target_type)
 				end
 			elseif
-				source_type.is_external and then
+				source.is_dynamic_clone_required (source_type) and then
+				(source_type.is_external and then
 				target_type.is_external and then
 				source_type.type_a.associated_class.is_interface and then
 				target_type.type_a.associated_class.is_interface or else
 				not source_type.is_external and then
 				not source_type.is_generated_as_single_type and then
-				not source_type.is_frozen
+				not source_type.is_frozen)
 			then
 					-- Generate code to copy object at run-time
 					-- depending on its dynamic type
@@ -790,7 +791,7 @@ feature {NONE} -- Visitors
 				-- creation instruction.
 			if not a_node.is_creation_instruction then
 					-- Generate code for reattachment.
-				generate_reattachment (source_type, target_type)
+				generate_reattachment (a_node.source, source_type, target_type)
 			end
 
 				-- Generate assignment.
@@ -2111,7 +2112,7 @@ feature {NONE} -- Visitors
 			is_this_argument_current := False
 			target_type := context.real_type (a_node.attachment_type)
 			generate_expression_il_for_type (a_node.expression, target_type)
-			generate_reattachment (context.real_type (a_node.type), target_type)
+			generate_reattachment (a_node.expression, context.real_type (a_node.type), target_type)
 		end
 
 	process_paran_b (a_node: PARAN_B) is
@@ -2224,7 +2225,7 @@ feature {NONE} -- Visitors
 				il_generator.mark_label (failure_label)
 			end
 
-			generate_reattachment (l_source_type, l_target_type)
+			generate_reattachment (a_node.source, l_source_type, l_target_type)
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).

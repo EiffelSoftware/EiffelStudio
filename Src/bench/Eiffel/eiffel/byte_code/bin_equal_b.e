@@ -9,19 +9,23 @@ inherit
 			register as left_register,
 			set_register as set_left_register
 		redefine
-			free_register, unanalyze,
+			free_register, unanalyze, is_type_fixed,
 			is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
 			calls_special_features, pre_inlined_code, inlined_byte_code
 		end
 
-feature -- Status
+feature -- Status report
 
 	is_built_in: BOOLEAN is True
 			-- Is the current binary operator a built-in one ?
 
 	is_commutative: BOOLEAN is True
 			-- Operation is commutative.
+
+	is_type_fixed: BOOLEAN is True
+			-- Is type of the expression statically fixed,
+			-- so that there is no variation at run-time?
 
 feature
 

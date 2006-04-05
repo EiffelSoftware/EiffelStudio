@@ -8,6 +8,9 @@ indexing
 class
 	ECOM_WIDE_STRING
 
+obsolete
+	"This class is obsolete, use WEL_STRING instead"
+
 inherit
 	DISPOSABLE
 
@@ -22,10 +25,10 @@ feature {NONE} -- Initialization
 		require
 			nonvoid_string: string /= Void
 		local
-			wel_string: WEL_STRING
+			l_string: C_STRING
 		do
-			create wel_string.make (string)
-			item := ccom_create_from_string (wel_string.item)	
+			create l_string.make (string)
+			item := ccom_create_from_string (l_string.item)
 			shared := False
 		ensure
 			non_default_item: exists
@@ -44,7 +47,7 @@ feature {NONE} -- Initialization
 			valid_item: item = a_wide_string
 			shared: shared
 		end
-			
+
 feature -- Accsess
 
 	item: POINTER
@@ -70,7 +73,7 @@ feature -- Basic Operations
 			-- Convert wide string to string
 		do
 			Result := ccom_wide_str_to_string (item)
-		ensure 
+		ensure
 			nonvoid_result: Result /= Void
 		end
 

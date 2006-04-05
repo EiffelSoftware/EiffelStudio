@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 			end
 			append_text_indent ("<"+a_tag+" name=%""+a_group.name+"%"")
 			append_text (" location=%""+l_str+"%"")
-			if a_group.is_readonly then
+			if a_group.internal_read_only then
 				append_text (" readonly=%"true%"")
 			end
 			l_str := a_group.name_prefix

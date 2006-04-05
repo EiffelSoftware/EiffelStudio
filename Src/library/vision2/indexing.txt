@@ -3,7 +3,7 @@ indexing
 		"EiffelVision2: Multiplatform graphical library of reusable components for Eiffel"
 
 	copyright:
-		"Copyright (C) 1986-2003 Interactive Software Engineering, Inc. (ISE)"
+		"Copyright (C) 1986-2006 Interactive Software Engineering, Inc. (ISE)"
 
 	information:
 		"[

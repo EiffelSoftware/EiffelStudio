@@ -16,10 +16,10 @@ feature -- Basic Operations
 	is_compound_file (a_name: STRING): BOOLEAN is
 			-- Does file `a_name' contain a storage object?
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (a_name)
-			Result := ccom_is_compound_file (initializer_routines, wide_string.item) = 1
+			create l_string.make (a_name)
+			Result := ccom_is_compound_file (initializer_routines, l_string.item) = 1
 		end
 
 feature {NONE} -- Externals

@@ -1,6 +1,5 @@
 indexing
 	description: "Process ast to decorated output text."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -846,6 +845,8 @@ feature {NONE} -- Implementation
 	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
 		do
 			if not expr_type_visiting then
+				text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
+				text_formatter_decorator.process_symbol_text (ti_space)
 				text_formatter_decorator.process_symbol_text (ti_l_curly)
 			end
 			l_as.type.process (Current)
@@ -853,7 +854,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.process_symbol_text (ti_r_curly)
 			end
 			if l_as.call /= Void then
-				if l_as.type /= Void and expr_type_visiting then
+				if not expr_type_visiting then
 					text_formatter_decorator.process_symbol_text (ti_dot)
 				end
 				l_as.call.process (Current)
@@ -1157,7 +1158,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_dollar)
 				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_reserved_word_text (ti_result)
+				text_formatter_decorator.process_keyword_text (ti_result, Void)
 			end
 			l_type ?= current_feature.type
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
@@ -1182,25 +1183,31 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 		do
 			reset_last_class_and_type
-			if l_as.routine_ids /= Void and then not has_error then
-				l_feat := feature_in_class (current_class, l_as.routine_ids)
-			end
-			if not expr_type_visiting then
-				text_formatter_decorator.begin
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_dollar)
-				if l_feat /= Void then
-					text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name, l_feat, False)
-				else
-					text_formatter_decorator.process_local_text (l_as.feature_name.internal_name)
-				end
-				text_formatter_decorator.commit
-			end
 			if not has_error then
-				if l_feat /= Void and then l_feat.is_attribute then
-					create {TYPED_POINTER_A} last_type.make_typed (l_feat.type.actual_type)
+				if l_as.is_argument then
+					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
+				elseif l_as.is_local then
+					if locals_for_current_feature.has (l_as.feature_name.internal_name) then
+						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
+					end
 				else
-					last_type := Pointer_type
+					l_feat := feature_in_class (current_class, l_as.routine_ids)
+					if l_feat /= Void and then l_feat.is_attribute then
+						create {TYPED_POINTER_A} last_type.make_typed (l_feat.type.actual_type)
+					else
+						last_type := Pointer_type
+					end
+				end
+				if not expr_type_visiting then
+					text_formatter_decorator.begin
+					text_formatter_decorator.set_without_tabs
+					text_formatter_decorator.process_symbol_text (ti_dollar)
+					if l_feat /= Void then
+						text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name, l_feat, False)
+					else
+						text_formatter_decorator.process_local_text (l_as.feature_name.internal_name)
+					end
+					text_formatter_decorator.commit
 				end
 			end
 		end

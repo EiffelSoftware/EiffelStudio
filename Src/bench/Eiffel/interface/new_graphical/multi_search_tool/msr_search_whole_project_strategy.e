@@ -30,28 +30,28 @@ feature -- Basic Operation
 			create item_matched_internal.make (0)
 			l_clusters ?= scope_container
 			if l_clusters /= Void then
-				from
-					l_clusters.clusters.start
-				until
-					l_clusters.clusters.after
-				loop
-					conf_todo
+				conf_todo
+--				from
+--					l_clusters.clusters.start
+--				until
+--					l_clusters.clusters.after
+--				loop
 --					create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_clusters.clusters.item.actual_cluster, only_compiled_class_searched)
-					if case_sensitive then
-						l_cluster_strategy.set_case_sensitive
-					else
-						l_cluster_strategy.set_case_insensitive
-					end
-					l_cluster_strategy.set_regular_expression_used (is_regular_expression_used)
-					l_cluster_strategy.set_subcluster_searched (true)
-					l_cluster_strategy.set_whole_word_matched (is_whole_word_matched)
-					l_cluster_strategy.launch
-					if l_cluster_strategy.is_launched then
-						item_matched_internal.finish
-						item_matched_internal.merge_right (l_cluster_strategy.item_matched)
-					end
-					l_clusters.clusters.forth
-				end
+--					if case_sensitive then
+--						l_cluster_strategy.set_case_sensitive
+--					else
+--						l_cluster_strategy.set_case_insensitive
+--					end
+--					l_cluster_strategy.set_regular_expression_used (is_regular_expression_used)
+--					l_cluster_strategy.set_subcluster_searched (true)
+--					l_cluster_strategy.set_whole_word_matched (is_whole_word_matched)
+--					l_cluster_strategy.launch
+--					if l_cluster_strategy.is_launched then
+--						item_matched_internal.finish
+--						item_matched_internal.merge_right (l_cluster_strategy.item_matched)
+--					end
+--					l_clusters.clusters.forth
+--				end
 			end
 			launched := true
 			item_matched.start

@@ -220,6 +220,23 @@ feature -- Access queries
 			end
 		end
 
+	sub_group_by_name (a_name: STRING): CONF_GROUP is
+			-- Return assembly dependency with `a_name' if there is any.
+		do
+			if dependencies /= Void then
+				from
+					dependencies.start
+				until
+					Result /= Void or dependencies.after
+				loop
+					if dependencies.item.name.is_equal (a_name) then
+						Result := dependencies.item
+					end
+					dependencies.forth
+				end
+			end
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_assembly_name (a_name: like assembly_name) is

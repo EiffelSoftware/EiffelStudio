@@ -11,7 +11,7 @@ class
 inherit
 	ECOM_STRUCTURE
 		redefine
-			is_equal,	
+			is_equal,
 			out
 		end
 
@@ -41,7 +41,7 @@ feature -- Basic operation
 	generate is
 			-- Generate a new GUID
 		do
-			ccom_generate_guid (item)
+			is_initialized := c_generate_guid (item) = 0
 		end
 
 feature {NONE} -- Initialization
@@ -52,11 +52,11 @@ feature {NONE} -- Initialization
 			non_void_string: string /= Void
 			valid_guid_string: guid_routines.is_valid_guid_string (string)
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_string (string)
 			make
-			ccom_string_to_guid (wide_string.item, item)
+			create l_string.make (string)
+			is_initialized := c_string_to_guid (l_string.item, item) = 0
 		ensure
 			valid_item: item /= default_pointer
 		end
@@ -71,14 +71,17 @@ feature {NONE} -- Initialization
 		ensure
 			valid_item: item /= default_pointer
 		end
- 
+
 feature -- Status Report
 
 	is_equal (a_guid: ECOM_GUID): BOOLEAN is
 			-- Is `a_guid' equal to `Current'?
 		do
-			Result := ccom_is_equal_guid (item, a_guid.item)
+			Result := c_is_equal_guid (item, a_guid.item)
 		end
+
+	is_initialized: BOOLEAN
+			-- Is underlying C structure correctly initialized?
 
 feature -- Measurement
 
@@ -95,11 +98,14 @@ feature -- Conversion
 		require
 			valid_item: item /= default_pointer
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_pointer (ccom_guid_to_wide_string (item))
-			wide_string.set_unshared
-			Result := wide_string.to_string
+			create l_string.make_empty (39)
+			if c_guid_to_string (item, l_string.item, 39) = 0 then
+				Result := ""
+			else
+				Result := l_string.string
+			end
 		ensure
 			non_void_representation: Result /= Void
 		end
@@ -108,12 +114,16 @@ feature -- Conversion
 			-- String representation needed for code generation.
 		require
 			valid_item: item /= default_pointer
+		local
+			l_string: C_STRING
 		do
-			Result := ccom_guid_to_defstring (item)
+			create l_string.make_empty (69)
+			c_guid_to_defstring (item, l_string.item)
+			Result := l_string.string
 		ensure
 			non_void_representation: Result /= Void
 		end
-	
+
 	out: STRING is
 			-- String representation
 		do
@@ -123,36 +133,51 @@ feature -- Conversion
 feature {NONE} -- Externals
 
 	c_size_of_guid: INTEGER is
-		external 
-			"C [macro %"ecom_guid.h%"]"
+		external
+			"C macro use <windows.h>"
 		alias
 			"sizeof(GUID)"
 		end
 
-	ccom_string_to_guid (wide_str: POINTER; a_guid: POINTER) is
+	c_string_to_guid (a_str: POINTER; a_guid: POINTER): INTEGER is
 		external
-			"C [macro %"ecom_guid.h%"]"
+			"C signature (LPOLESTR, LPCLSID): EIF_INTEGER use <windows.h>"
+		alias
+			"CLSIDFromString"
 		end
 
-	ccom_generate_guid (a_guid: POINTER) is
+	c_guid_to_string (a_guid, a_string: POINTER; a_count: INTEGER): INTEGER is
 		external
-			"C (GUID *)| %"ecom_guid.h%""
+			"C signature (REFGUID, LPOLESTR, int): EIF_INTEGER use <windows.h>"
+		alias
+			"StringFromGUID2"
 		end
 
-	ccom_guid_to_wide_string (a_guid: POINTER): POINTER is
+	c_is_equal_guid (a_guid1, a_guid2: POINTER): BOOLEAN is
 		external
-			"C (GUID *): EIF_POINTER | %"ecom_guid.h%""
+			"C signature (REFGUID, REFGUID): EIF_BOOLEAN use <windows.h>"
+		alias
+			"IsEqualGUID"
 		end
 
-	ccom_is_equal_guid (giud1, guid2: POINTER): BOOLEAN is
+	c_generate_guid (a_guid: POINTER): INTEGER is
 		external
-			"C [macro %"ecom_guid.h%"]"
+			"C signature (GUID*): EIF_INTEGER use <windows.h>"
+		alias
+			"CoCreateGuid"
 		end
 
-	ccom_guid_to_defstring (a_guid: POINTER): STRING is
+	c_guid_to_defstring (a_guid, a_string: POINTER) is
 		external
-			"C (GUID *): EIF_REFERENCE | %"ecom_guid.h%""
-		end
+			"C inline use <windows.h>"
+		alias
+			"[
+				sprintf ($a_string, "{0x%.8x,0x%.4x,0x%.4x,{0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x}}",
+      				((GUID*)$a_guid)->Data1, ((GUID*)$a_guid)->Data2, ((GUID*)$a_guid)->Data3,
+      				((GUID*)$a_guid)->Data4[0], ((GUID*)$a_guid)->Data4[1], ((GUID*)$a_guid)->Data4[2], ((GUID*)$a_guid)->Data4[3],
+      				((GUID*)$a_guid)->Data4[4], ((GUID*)$a_guid)->Data4[5], ((GUID*)$a_guid)->Data4[6], ((GUID*)$a_guid)->Data4[7])
+      		]"
+      	end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -164,9 +189,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class ECOM_GUID
 

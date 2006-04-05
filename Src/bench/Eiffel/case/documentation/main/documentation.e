@@ -298,8 +298,8 @@ feature -- Actions
 				end
 			elseif a_group.is_assembly then
 				l_assem ?= a_group
-				if l_assem.application_target /= Void then
-					l_clusters := l_assem.application_target.clusters
+				if l_assem.target.application_target /= Void then
+					l_clusters := l_assem.target.application_target.clusters
 					from
 						l_clusters.start
 					until

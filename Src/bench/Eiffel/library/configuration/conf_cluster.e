@@ -100,7 +100,7 @@ feature -- Access queries
 				if l_lib /= Void then
 					Result := l_lib.options
 				else
-					Result := application_target.options
+					Result := target.application_target.options
 				end
 			else
 				if internal_options /= Void then
@@ -246,15 +246,15 @@ feature -- Access queries
 		local
 			l_lib: CONF_LIBRARY
 		do
-			Result := True
-			if not internal_read_only then
-					-- if used as library and the library defined in the application target itself, take value from there
-					-- else it is read only.
-				if is_used_library then
-					l_lib := find_parent_library_in_application_target
-					if l_lib /= Void then
-						Result := l_lib.is_readonly
-					end
+			Result := internal_read_only
+			if not Result and then is_used_library then
+				-- if used as library and the library defined in the application target itself, take value from there
+				-- else it is read only.
+				l_lib := find_parent_library_in_application_target
+				if l_lib /= Void then
+					Result := l_lib.is_readonly
+				else
+					Result := True
 				end
 			end
 		end
@@ -401,18 +401,20 @@ feature {NONE} -- Implementation
 	find_parent_library_in_application_target: CONF_LIBRARY is
 			-- Find system as a library in `application_target' if it is defined there directly.
 		require
-			application_target_not_void: application_target /= Void
+			application_target_not_void: target.application_target /= Void
 		local
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_lib: CONF_LIBRARY
 			l_uuid: UUID
+			l_app_target: CONF_TARGET
 		do
 			l_uuid := target.system.uuid
-			if application_target.precompile /= Void and then application_target.precompile.uuid.is_equal (l_uuid) then
-				Result := application_target.precompile
+			l_app_target := target.application_target
+			if l_app_target.precompile /= Void and then l_app_target.precompile.uuid.is_equal (l_uuid) then
+				Result := l_app_target.precompile
 			else
 				from
-					l_libs := application_target.libraries
+					l_libs := l_app_target.libraries
 					l_libs.start
 				until
 					Result /= Void or l_libs.after

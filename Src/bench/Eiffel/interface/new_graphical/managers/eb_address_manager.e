@@ -2142,13 +2142,11 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			for_context_tool: mode
 		local
 			window: EV_WINDOW
-			a_screen: EV_SCREEN
 		do
 			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
-			create a_screen
 			address_dialog.set_position (header_info.screen_x, header_info.screen_y)
 			address_dialog.set_width (header_info.width)
 			address_dialog.set_height (header_info.height)
@@ -2166,10 +2164,12 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			for_context_tool: mode
 		do
 			if b = 1 then
+				lost_focus_action_enabled := False
 				pop_up_address_bar
 				if combo.is_displayed then
 					combo.set_focus
 				end
+				lost_focus_action_enabled := True
 			end
 		end
 
@@ -2257,7 +2257,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -49,14 +49,24 @@ feature {NONE} -- Basic operation
 
 	get_platform_name (a_bits: INTEGER): STRING is
 			-- Get the name of the platform in `a_bits'.
+		local
+			l_pf: INTEGER
 		do
-			Result := platform_names.item (a_bits & 0x00FF)
+			l_pf := a_bits & 0x00FF
+			if l_pf /= 0 then
+				Result := platform_names.item (l_pf)
+			end
 		end
 
 	get_build_name (a_bits: INTEGER): STRING is
 			-- Get the name of the build in `a_bits'.
+		local
+			l_build: INTEGER
 		do
-			Result := build_names.item (a_bits & 0xFF00)
+			l_build := a_bits & 0xFF00
+			if l_build /= 0 then
+				Result := build_names.item (l_build)
+			end
 		end
 
 	get_platform (a_name: STRING): INTEGER is

@@ -49,6 +49,8 @@ feature -- Basic operation
 				last_error := l_callback.last_error
 			elseif not is_error then
 				last_system := l_callback.last_system
+				last_system.set_file_name (a_file)
+				last_system.set_file_date
 				cnt := a_file.count
 				i := a_file.last_index_of ('/',cnt)
 				if i = 0 then

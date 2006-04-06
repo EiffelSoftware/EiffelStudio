@@ -11,6 +11,8 @@ class
 inherit
 	CONF_VISITABLE
 
+	CONF_FILE_DATE
+
 create
 	make
 
@@ -28,6 +30,21 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name = a_name
 			uuid_set: uuid = an_uuid
+		end
+
+feature -- Status
+
+	store_successful: BOOLEAN
+			-- Was the last `store' operation successful?
+
+	date_has_changed: BOOLEAN is
+		local
+			str: ANY
+			new_date: INTEGER
+		do
+			str := file_name.to_c
+			eif_date ($str, $new_date)
+			Result := new_date /= file_date
 		end
 
 feature -- Access, stored in configuration file
@@ -50,6 +67,10 @@ feature -- Access, stored in configuration file
 feature -- Access, in compiled only
 
 	file_name: STRING
+			-- File name of config file.
+
+	file_date: INTEGER
+			-- File modification date of config file.
 
 feature -- Update, in compiled only
 
@@ -59,7 +80,43 @@ feature -- Update, in compiled only
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
 		do
 			file_name := a_file_name
+		ensure
+			name_set: file_name = a_file_name
 		end
+
+	set_file_date is
+			-- Set `file_date' to last modified date of `file_name'.
+		local
+			str: ANY
+		do
+			str := file_name.to_c
+			eif_date ($str, $file_date)
+		end
+
+feature -- Store to disk
+
+	store is
+			-- Store system back to its config file (only system itself is stored, libraries are not stored).
+		require
+			file_name_set: file_name /= Void and then not file_name.is_empty
+		local
+			l_print: CONF_PRINT_VISITOR
+			l_file: PLAIN_TEXT_FILE
+			l_sys: CONF_SYSTEM
+		do
+			create l_print.make
+			process (l_print)
+			if not l_print.is_error then
+				create l_file.make (file_name)
+				if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
+					l_file.open_write
+					l_file.put_string (l_print.text)
+					l_file.close
+					store_successful := True
+				end
+			end
+		end
+
 
 feature -- Access queries
 

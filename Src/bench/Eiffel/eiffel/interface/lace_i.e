@@ -167,6 +167,33 @@ feature -- Status setting
 			date := date - 1
 		end
 
+	store_user_options is
+			-- Store user options to disk.
+			-- `successful' is True if there is no error.
+		require
+			user_options_set: user_options /= Void
+		local
+			l_user_file: STRING
+			l_file: RAW_FILE
+			l_sed_rw: SED_MEDIUM_READER_WRITER
+			l_sed_facilities: SED_STORABLE_FACILITIES
+		do
+			l_user_file := file_name+".user"
+			create l_file.make (l_user_file)
+			l_file.open_write
+			if l_file.is_writable then
+				create l_sed_rw.make (l_file)
+				l_sed_rw.set_for_writing
+				create l_sed_facilities
+				l_sed_facilities.independent_store (user_options, l_sed_rw, True)
+				l_file.close
+				successful := True
+			else
+				successful := False
+			end
+		end
+
+
 	store is
 			-- Store updated configuration into `file_name'.
 		require
@@ -310,14 +337,8 @@ feature -- Status setting
 
 				-- store the updated config file
 			if l_changed then
-				l_file.open_write
-				if l_file.is_writable then
-					create l_sed_rw.make (l_file)
-					l_sed_rw.set_for_writing
-					create l_sed_facilities
-					l_sed_facilities.independent_store (user_options, l_sed_rw, True)
-					l_file.close
-				else
+				store_user_options
+				if not successful then
 					create vd72
 					vd72.set_file_name (l_user_file)
 					Error_handler.insert_error (vd72)
@@ -485,7 +506,6 @@ feature {NONE} -- Implementation
 			else
 					-- set the new options on the old target
 				create l_option_vis.make (l_new_target)
-				l_option_vis.set_application_target (l_old_target)
 				l_old_target.process (l_option_vis)
 				if l_option_vis.is_error then
 					from
@@ -1117,6 +1137,7 @@ feature {NONE} -- Implementation
 			l_target := universe.target
 			l_old_target := a_target
 			l_old_target.precompile.set_library_target (l_target)
+			l_old_target.set_all_libraries (l_target.all_libraries)
 			universe.set_new_target (l_old_target)
 			universe.new_target_to_target
 

@@ -208,6 +208,7 @@ feature {NONE} -- Storage
 				user_arguments_list.forth
 			end
 			lace.user_options.set_arguments (l_args)
+			lace.store_user_options
 		end
 
 feature {NONE} -- GUI

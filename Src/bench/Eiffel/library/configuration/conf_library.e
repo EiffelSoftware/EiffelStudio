@@ -48,7 +48,6 @@ feature -- Status
 			end
 		end
 
-
 feature -- Access, in compiled only, not stored to configuration file
 
 	library_target: CONF_TARGET

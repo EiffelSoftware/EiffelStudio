@@ -89,9 +89,7 @@ feature -- Access queries
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
 		local
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_lib: CONF_LIBRARY
-			l_uuid: UUID
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target

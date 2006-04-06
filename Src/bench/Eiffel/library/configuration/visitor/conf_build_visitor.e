@@ -206,9 +206,6 @@ feature -- Visit nodes
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
-					if l_old_pre /= Void then
-						old_group := l_old_pre
-					end
 					process_library (l_pre)
 				end
 

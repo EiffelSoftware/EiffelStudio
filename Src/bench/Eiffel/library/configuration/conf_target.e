@@ -288,8 +288,6 @@ feature -- Access queries
 
 	external_include: like internal_external_include is
 			-- Global external include files.
-		local
-			l_target: CONF_TARGET
 		do
 			Result := internal_external_include.twin
 			if extends /= Void then
@@ -301,8 +299,6 @@ feature -- Access queries
 
 	external_object: like internal_external_object is
 			-- Global external object files.
-		local
-			l_target: CONF_TARGET
 		do
 			Result := internal_external_object.twin
 			if extends /= Void then
@@ -314,8 +310,6 @@ feature -- Access queries
 
 	external_make: like internal_external_make is
 			-- Global external make files.
-		local
-			l_target: CONF_TARGET
 		do
 			Result := internal_external_make.twin
 			if extends /= Void then
@@ -327,8 +321,6 @@ feature -- Access queries
 
 	external_ressource: like internal_external_ressource is
 			-- Global external ressource files.
-		local
-			l_target: CONF_TARGET
 		do
 			Result := internal_external_ressource.twin
 			if extends /= Void then

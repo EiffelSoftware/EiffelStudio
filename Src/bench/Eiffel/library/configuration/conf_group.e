@@ -302,6 +302,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_readonly: is_readonly
 		end
 
+	set_readonly (b: BOOLEAN) is
+			-- Set `internal_readonly' bo `b'.
+		do
+			internal_read_only := b
+		ensure
+			internal_read_only_set: internal_read_only = b
+		end
+
+
 	set_options (a_option: like internal_options) is
 			-- Set `a_option'.
 		do

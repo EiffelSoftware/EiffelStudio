@@ -32,16 +32,6 @@ feature {NONE} -- Initialization
 			new_target := a_new_target
 		end
 
-feature -- Update
-
-	set_application_target (a_target: CONF_TARGET) is
-			-- Set `application_target'.
-		require
-			a_target_not_void: a_target /= Void
-		do
-			application_target := a_target
-		end
-
 feature -- Visit nodes
 
 	process_target (a_target: CONF_TARGET) is
@@ -84,14 +74,12 @@ feature -- Visit nodes
 			if not is_error then
 				a_group.set_options (new_group.internal_options)
 				a_group.set_class_options (new_group.class_options)
+				a_group.set_readonly (new_group.internal_read_only)
 			end
 		end
 
 
 feature -- Access
-
-	application_target: CONF_TARGET
-			-- The application target of the system.
 
 	new_target: CONF_TARGET
 			-- The new, compiled target that is group equivalent to the old target.

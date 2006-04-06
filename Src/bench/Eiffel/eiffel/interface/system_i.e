@@ -907,6 +907,9 @@ end
 
 				-- update/check root class
 			update_root_class
+
+				-- We rebuilt the configuration, so we need to save project file.
+			has_been_changed := True
 		end
 
 	update_root_class is

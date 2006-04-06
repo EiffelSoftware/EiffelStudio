@@ -55,6 +55,34 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	font_families_8: LINEAR [STRING] is
+			-- All fonts families available on current platform.
+		require
+			not_destroyed: not is_destroyed
+		local
+			l_list: like font_families
+			l_family: STRING
+			l_result: ARRAYED_LIST [STRING]
+		do
+			l_list := implementation.font_families
+			create l_result.make (50)
+			from
+				l_list.start
+			until
+				l_list.after
+			loop
+				l_family := l_list.item
+				if l_family.is_valid_as_string_8 then
+					l_result.extend (l_family.to_string_8)
+				end
+				l_list.forth
+			end
+			Result := l_result
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.

@@ -27,6 +27,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_unicode_data: BOOLEAN
+			-- Is current stream unicode based?
+
 	error: INTEGER is
 			-- Error encountered while streaming. If there was no
 			-- error, the value is zero.
@@ -46,6 +49,18 @@ feature -- Element change
 			cwel_editstream_set_dwerror (item, an_error)
 		ensure
 			error_set: error = an_error
+		end
+
+feature {NONE} -- Element change
+
+	set_is_unicode_data (v: like is_unicode_data) is
+			-- Set `is_unicode_data' with `v'.
+			-- It is not exported here because some descendants
+			-- cannot handle a switch of mode once created.
+		do
+			is_unicode_data := v
+		ensure
+			is_unicode_data_set: is_unicode_data = v
 		end
 
 feature -- Basic operations

@@ -46,10 +46,10 @@ feature {NONE} -- Implementation
 	file: RAW_FILE
 			-- File to save
 
-	write_buffer (buffer: STRING) is
-			-- Write `buffer' in `file'.
+	write_buffer is
+			-- Write `a_buffer' in `file'.
 		do
-			file.put_string (buffer)
+			file.put_managed_pointer (buffer, 0, buffer.count)
 		end
 
 	finish_action is
@@ -62,6 +62,7 @@ feature {NONE} -- Implementation
 
 invariant
 	file_not_void: file /= Void
+	not_is_unicode_data: not is_unicode_data
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

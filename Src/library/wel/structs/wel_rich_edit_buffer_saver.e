@@ -16,8 +16,10 @@ class
 
 inherit
 	WEL_RICH_EDIT_STREAM_OUT
-		rename
-			make as rich_edit_stream_out_make
+		export
+			{ANY} set_is_unicode_data
+		redefine
+			make
 		end
 
 create
@@ -28,23 +30,32 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `text'.
 		do
-			rich_edit_stream_out_make
+			Precursor {WEL_RICH_EDIT_STREAM_OUT}
 			create text.make (0)
 		end
 
 feature -- Access
 
-	text: STRING
+	text: STRING_32
 			-- Contents of the rich edit control
 
 feature {NONE} -- Implementation
 
-	write_buffer (buffer: STRING) is
-			-- Append `buffer' in `text'.
+	write_buffer is
+			-- Append `a_buffer' in `text'.
+		local
+			l_uni_str: WEL_STRING
+			l_c_str: C_STRING
+			l_text: STRING_32
 		do
-			text.append (buffer)
-		ensure then
-			valid_count: text.count = old text.count + buffer.count
+			if is_unicode_data then
+				create l_uni_str.share_from_pointer_and_count (buffer.item, buffer.count)
+				l_text := l_uni_str.substring (1, l_uni_str.count)
+			else
+				create l_c_str.share_from_pointer_and_count (buffer.item, buffer.count)
+				l_text := l_c_str.substring (1, l_c_str.count)
+			end
+			text.append (l_text)
 		end
 
 invariant
@@ -60,9 +71,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_RICH_EDIT_BUFFER_SAVER
 

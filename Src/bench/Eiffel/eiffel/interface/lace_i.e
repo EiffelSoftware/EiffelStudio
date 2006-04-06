@@ -439,6 +439,7 @@ feature {NONE} -- Implementation
 			l_old_pre, l_new_pre: CONF_PRECOMPILE
 			l_first: BOOLEAN
 			l_root: CONF_ROOT
+			l_all_libs: HASH_TABLE [CONF_TARGET, UUID]
 		do
 				-- get new target
 			l_new_target := conf_system.targets.item (target_name)
@@ -520,6 +521,20 @@ feature {NONE} -- Implementation
 						l_errors.forth
 					end
 					Error_handler.raise_error
+				end
+
+					-- update dates of used config files
+				l_all_libs := l_old_target.all_libraries
+				check
+					libraries_set: l_all_libs /= Void
+				end
+				from
+					l_all_libs.start
+				until
+					l_all_libs.after
+				loop
+					l_all_libs.item_for_iteration.system.set_file_date
+					l_all_libs.forth
 				end
 				l_new_target := l_old_target
 			end

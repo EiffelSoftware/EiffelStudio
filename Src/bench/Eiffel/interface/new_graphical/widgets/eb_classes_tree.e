@@ -116,42 +116,19 @@ feature {NONE} -- Initialization
 
 					-- sort clusters
 				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_cluster_symbol)
-				l_clusters := l_target.clusters
-				create l_sort_grps.make
-				from
-					l_clusters.start
-				until
-					l_clusters.after
-				loop
-					l_clu := l_clusters.item_for_iteration
-					if l_clu.parent = Void then
-						l_sort_grps.extend (l_clu)
-					end
-					l_clusters.forth
-				end
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, cluster_header)
+				build_group_tree (manager.clusters, cluster_header)
 
 					-- sort overrides
 				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_override_symbol)
-				create l_sort_grps.make
-				l_sort_grps.append (l_target.overrides.linear_representation)
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, override_header)
+				build_group_tree (manager.overrides, override_header)
 
 					-- sort libraries
 				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_library_symbol)
-				create l_sort_grps.make
-				l_sort_grps.append (l_target.libraries.linear_representation)
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, library_header)
+				build_group_tree (manager.libraries, library_header)
 
 					-- sort assemblies
 				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_read_only_assembly)
-				create l_sort_grps.make
-				l_sort_grps.append (l_target.assemblies.linear_representation)
-				l_sort_grps.sort
-				build_group_tree (l_sort_grps, assembly_header)
+				build_group_tree (manager.assemblies, assembly_header)
 
 				restore_expanded_state
 					-- Restore original expanded state, stored during last call to
@@ -349,7 +326,7 @@ feature -- Observer pattern
 			end
 		end
 
-	remove_cluster_from_folder (a_cluster: CLUSTER_I; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
+	remove_cluster_from_folder (a_cluster: CONF_GROUP; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
 			-- Remove `a_cluster' from `a_folder'.
 		local
 			found: BOOLEAN
@@ -486,14 +463,10 @@ feature -- Observer pattern
 		local
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if a_cluster.is_cluster then
-				if a_cluster.parent = Void then
-					folder := Void
-				else
-					folder := folder_from_cluster (a_cluster.parent.actual_cluster)
-				end
-				remove_cluster_from_folder (a_cluster.actual_cluster, folder)
+			if a_cluster.parent /= Void then
+				folder := folder_from_cluster (a_cluster.parent.actual_group)
 			end
+			remove_cluster_from_folder (a_cluster.actual_group, folder)
 		end
 
 	on_project_loaded is
@@ -573,10 +546,6 @@ feature {NONE} -- Rebuilding
 			loop
 				current_node := tree_list.item
 				if current_node.is_expanded then
-					cluster ?= current_node.data
-					check
-						data_was_cluster: cluster /= Void
-					end
 					recursive_store (current_node)
 					l_parent ?= current_node.parent
 					l_name := path_name_from_tree_node (current_node)
@@ -754,15 +723,15 @@ feature {NONE} -- Implementation
 			manager.move_cluster (a_cluster.cluster_i, Void)
 		end
 
-	folder_from_cluster (a_cluster: CLUSTER_I): EB_CLASSES_TREE_FOLDER_ITEM is
+	folder_from_cluster (a_group: CONF_GROUP): EB_CLASSES_TREE_FOLDER_ITEM is
 			-- Find a tree folder representing `a_cluster'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			path := cluster_parents (a_cluster)
+			path := cluster_parents (a_group)
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
@@ -854,16 +823,16 @@ feature {NONE} -- Implementation
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			if parent_cluster = Void then
-				if clusteri.is_override then
-					folder_list := override_header
-				elseif clusteri.is_cluster then
+				if clusteri.is_cluster then
 					folder_list := cluster_header
-				elseif clusteri.is_library then
-					folder_list := library_header
 				elseif clusteri.is_assembly then
 					folder_list := assembly_header
+				elseif clusteri.is_library then
+					folder_list := library_header
+				elseif clusteri.is_override then
+					folder_list := override_header
 				else
-					folder_list := Current
+					check should_not_reach: False end
 				end
 			else
 				if not parent_cluster.is_initialized then
@@ -919,7 +888,7 @@ feature {NONE} -- Implementation
 	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
 			-- Agents associated to double-clicks on classes.
 
-	build_group_tree (a_grps: LIST [CONF_GROUP]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
+	build_group_tree (a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
 			-- Build a tree for `a_grps' under `a_header' and add it to the tree if we have elements.
 		require
 			a_grps_not_void: a_grps /= Void
@@ -933,7 +902,7 @@ feature {NONE} -- Implementation
 			until
 				a_grps.after
 			loop
-				create l_group.make (a_grps.item)
+				l_group := a_grps.item_for_iteration
 				create l_item.make (l_group)
 
 				a_header.extend (l_item)

@@ -63,8 +63,31 @@ feature {NONE} -- Initialization
 
 	default_create is
 			-- Initialization.
+		local
+			l_target: CONF_TARGET
+			l_grps: HASH_TABLE [CONF_GROUP, STRING]
 		do
 			create observer_list.make (10)
+			create clusters.make_default
+			create overrides.make_default
+			create libraries.make_default
+			create assemblies.make_default
+		end
+
+feature -- Initialization
+
+	load_tree is
+			-- Load all clusters and classes.
+		local
+			l_target: CONF_TARGET
+		do
+			l_target := universe.target
+			if l_target /= Void then
+				clusters := create_groups (l_target.clusters)
+				overrides := create_groups (l_target.overrides)
+				libraries := create_groups (l_target.libraries)
+				assemblies := create_groups (l_target.assemblies)
+			end
 		end
 
 feature -- Observer Pattern
@@ -89,6 +112,8 @@ feature -- Observer Pattern
 			-- Useful in case clusters are modified directly without
 			-- notifying `Current'. (during compilations for instance)
 		do
+			load_tree
+
 			from
 				observer_list.start
 			until
@@ -193,14 +218,14 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_removed (a_cluster: CLUSTER_I) is
+	on_cluster_removed (a_group: CONF_GROUP) is
 			-- `a_cluster' has been removed.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_cluster_not_void: a_group /= Void
 		local
 			sorted: EB_SORTED_CLUSTER
 		do
-			sorted := folder_from_cluster (a_cluster)
+			sorted := folder_from_cluster (a_group)
 			from
 				observer_list.start
 			until
@@ -214,6 +239,8 @@ feature -- Observer Pattern
 	on_project_loaded is
 			-- A new project has been loaded.
 		do
+			load_tree
+
 			from
 				observer_list.start
 			until
@@ -235,7 +262,26 @@ feature -- Observer Pattern
 				observer_list.item.on_project_unloaded
 				observer_list.forth
 			end
+
+			clusters.wipe_out
+			libraries.wipe_out
+			overrides.wipe_out
+			assemblies.wipe_out
 		end
+
+feature -- Access
+
+	clusters: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- Root clusters in sorted order.
+
+	overrides: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- Root overrides in a sorted order.
+
+	libraries: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- Root libraries in a sorted order.
+
+	assemblies: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
+			-- Root assemblies in a sorted order.
 
 feature -- Element change
 
@@ -442,18 +488,21 @@ feature -- Element change
 			cluster_list.prune_all (a_cluster)
 		end
 
-	remove_cluster_i (a_cluster: CLUSTER_I) is
+	remove_cluster_i (a_group: CONF_GROUP; a_path: STRING) is
 			-- Remove `a_cluster' from its parent and notify observers.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
+			a_path_not_void: a_path /= Void
 		local
 			a_folder: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
-			remove_group_from_config (a_cluster)
-			if not error_in_config_parsing then
-				a_folder := folder_from_cluster (a_cluster)
-				remove_cluster (a_folder)
+			if not error_in_config then
+				remove_group_from_config (a_group, a_path)
+				on_cluster_removed (a_group)
+--
+--				a_folder := folder_from_cluster (a_cluster)
+--				remove_cluster (a_folder)
 			else
 				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
 				wd.show_modal_to_window (Window_manager.last_focused_window.window)
@@ -592,7 +641,7 @@ feature -- Element change
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
 			add_cluster_in_ace (a_cluster, receiver, ace_path, is_recursive, is_library)
-			if not error_in_config_parsing then
+			if not error_in_config then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
 						-- `a_cluster' was not in the system.
@@ -619,7 +668,7 @@ feature -- Element change
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
 			add_top_cluster_in_ace (a_cluster, ace_path, is_recursive, is_library)
-			if not error_in_config_parsing then
+			if not error_in_config then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
 						-- `a_cluster' was not in the system.
@@ -632,25 +681,30 @@ feature -- Element change
 			end
 		end
 
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {NONE} -- Implementation
+
+	create_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]): DS_ARRAYED_LIST [EB_SORTED_CLUSTER] is
+			-- Create sorted groups out of `a_groups'.
+		require
+			a_groups_not_void: a_groups /= Void
+		local
+			l_grp: EB_SORTED_CLUSTER
+		do
+			create Result.make (a_groups.count)
+			from
+				a_groups.start
+			until
+				a_groups.after
+			loop
+				create l_grp.make (a_groups.item_for_iteration)
+				Result.force_last (l_grp)
+				a_groups.forth
+			end
+			Result.sort (create {DS_QUICK_SORTER [EB_SORTED_CLUSTER]}.make (create {KL_COMPARABLE_COMPARATOR [EB_SORTED_CLUSTER]}.make))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 
 	name: STRING is "Clusters"
 			-- Name of the item.
@@ -740,14 +794,14 @@ feature {NONE} -- Implementation
 --			io.put_string ("Cant move directory")
 		end
 
-	folder_from_cluster (a_cluster: CLUSTER_I): EB_SORTED_CLUSTER is
+	folder_from_cluster (a_group: CONF_GROUP): EB_SORTED_CLUSTER is
 			-- Find a sorted cluster representing `a_cluster'.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_cluster_not_void: a_group /= Void
 		local
-			path: LINKED_LIST [CLUSTER_I]
+			path: LINKED_LIST [CONF_GROUP]
 		do
-			path := cluster_parents (a_cluster)
+			path := cluster_parents (a_group)
 			from
 				path.start
 			until
@@ -758,34 +812,60 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cluster_parents (cluster: CLUSTER_I): LINKED_LIST [CLUSTER_I] is
-			-- list of parent clusters of `cluster', from the root to the cluster, `cluster' included.
-		require
-			valid_cluster: cluster /= Void
+	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP] is
+			-- List of parent groups of `group', from the root to `group', `cluster' included.
 		local
-			a_cluster: CLUSTER_I
+			l_group, l_next_group: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_libuse: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			from
 				create Result.make
-				a_cluster := cluster
+				l_group := a_group
 			until
-				a_cluster = Void -- root attained
+				l_group = Void -- root attained
 			loop
-				Result.put_front (a_cluster)
-				a_cluster := a_cluster.parent_cluster
+				Result.put_front (l_group)
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					check cluster: l_cluster /= Void end
+					l_next_group := l_cluster.parent
+				else
+					l_next_group := Void
+				end
+				l_libuse := l_group.target.used_in_libraries
+				if l_next_group = Void and l_libuse /= Void and then not l_libuse.is_empty then
+						-- if one of the libraries is used in the application target use this one, else just take one
+					from
+						l_libuse.start
+					until
+						l_next_group /= Void or l_libuse.after
+					loop
+						if l_libuse.item.target = universe.target then
+							l_next_group := l_libuse.item
+						end
+						l_libuse.forth
+					end
+					if l_next_group = Void then
+						l_next_group := l_libuse.first
+					end
+				end
+				l_group := l_next_group
 			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
-	class_parents (a_class: CLASS_I): LINKED_LIST [CLUSTER_I] is
+	class_parents (a_class: CLASS_I): LINKED_LIST [CONF_GROUP] is
 			-- list of parent clusters of `a_class', from the root to the class.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			conf_todo
---			Result := cluster_parents (a_class.cluster)
+			Result := cluster_parents (a_class.group)
 		end
 
-	find_cluster_in (clusteri: CLUSTER_I; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER is
+	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER is
 			-- Find the sorted cluster associated to `clusteri' in `parent_cluster'.
 		require
 			clusteri_not_void: clusteri /= Void
@@ -793,7 +873,17 @@ feature {NONE} -- Implementation
 			parent_cluster_sons: DS_LIST [EB_SORTED_CLUSTER]
 		do
 			if parent_cluster = Void then
---				parent_cluster_sons := clusters
+				if clusteri.is_cluster then
+					parent_cluster_sons := clusters
+				elseif clusteri.is_assembly then
+					parent_cluster_sons := assemblies
+				elseif clusteri.is_library then
+					parent_cluster_sons := libraries
+				elseif clusteri.is_override then
+					parent_cluster_sons := overrides
+				else
+					check should_not_reach: False end
+				end
 			else
 				parent_cluster_sons := parent_cluster.clusters
 			end
@@ -911,7 +1001,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			new_csd: CLUSTER_SD
 		do
-			error_in_config_parsing := False
+			error_in_config := False
 			if not retried then
 				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
 						-- Create a new freshly parsed AST. If there is a
@@ -921,29 +1011,37 @@ feature {NONE} -- Implementation
 --					root_ast := Eiffel_ace.Lace.parsed_ast
 				end
 			else
-				error_in_config_parsing := True
+				error_in_config := True
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	remove_group_from_config (a_group: CONF_GROUP) is
-			-- Remove the entry corresponding to `a_cluster' from the config file.
-			-- If `a_cluster' belongs to a recursive cluster, add an exclude clause to its top parent.
+	remove_group_from_config (a_group: CONF_GROUP; a_path: STRING) is
+			-- Remove the entry corresponding to `a_group' from the config file.
+			-- If `a_group' is a recursive cluster and a_path is not empty, add a file rule excluding `a_path'.
 		require
 			valid_group: a_group /= Void
 			not_readonly: not a_group.is_readonly
+			valid_path: a_path /= Void
+			path_implies_cluster: not a_path.is_empty implies is_recursive_cluster (a_group)
+			config_up_to_date: not a_group.target.system.date_has_changed
 		local
 			retried: BOOLEAN
 			l_target: CONF_TARGET
+			l_cancel: BOOLEAN
+			l_cl: CONF_CLUSTER
+			l_print: CONF_PRINT_VISITOR
+			l_file: PLAIN_TEXT_FILE
+			l_sys: CONF_SYSTEM
+			l_fr: CONF_FILE_RULE
 		do
-			error_in_config_parsing := False
+			error_in_config := False
 			if not retried then
-				if lace.has_changed then
-					conf_todo_msg ("Inform user that configuration has changed, ask user if he wants to recompile.")
-				end
-				if not lace.has_changed then
+				l_sys := a_group.target.system
+					-- update config
+				if a_path.is_empty then
 					if a_group.is_cluster then
 						a_group.target.clusters.remove (a_group.name)
 					elseif a_group.is_library then
@@ -955,21 +1053,69 @@ feature {NONE} -- Implementation
 					else
 						check should_not_reach: False end
 					end
+				else
+					l_cl ?= a_group
+					l_fr := l_cl.internal_file_rule
+					if l_fr = Void then
+						create l_fr.make
+					end
+					l_fr.add_exclude (build_pattern (a_path))
+					l_cl.set_file_rule (l_fr)
 				end
+					-- store it to disk
+				l_sys.store
+				error_in_config := not l_sys.store_successful
+					-- force reparsing of file
+				lace.reset_date_stamp
 			else
-				error_in_config_parsing := True
+				error_in_config := True
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	error_in_config_parsing: BOOLEAN
+	error_in_config: BOOLEAN
 			-- Did an error occur during the last call to `add_cluster_in_ace' or `remove_group_from_config'?
 
 feature {NONE} -- Attributes
 
 	observer_list: ARRAYED_LIST [EB_CLUSTER_MANAGER_OBSERVER];
+
+feature {NONE} -- Implementation
+
+	build_pattern (a_path: STRING): STRING is
+			-- Build a regular expression for `a_path'.
+		require
+			a_path_ok: a_path /= Void and then not a_path.is_empty
+		do
+			Result := a_path.twin
+			Result.prepend_character ('^')
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+
+	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN is
+			-- Is `a_grp' a recursive cluster?
+			-- (export status {NONE})
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_cl: CONF_CLUSTER
+		do
+			if a_group.is_cluster then
+				l_cl ?= a_group
+				Result := l_cl.is_recursive
+			end
+		end
+
+
+invariant
+	clusters_not_void: clusters /= Void
+	overrides_not_void: overrides /= Void
+	libraries_not_void: libraries /= Void
+	assemblies_not_void: assemblies /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1455,7 +1455,7 @@ feature {NONE} -- Implementation
 		local
 			l_classes: LIST [CONF_CLASS]
 		do
-			l_classes := group.class_by_name (current_class_name, False, 0, 0)
+			l_classes := group.class_by_name (current_class_name, False)
 				-- We should not have an ambiguity, but in case it happens we
 				-- will not try to resolve it and simply set `current_class_i'
 				-- to Void.

@@ -16,6 +16,8 @@ inherit
 			process_override
 		end
 
+	CONF_ACCESS
+
 create
 	make
 

@@ -155,13 +155,13 @@ feature -- Access queries
 			end
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [like class_type] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type] is
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
 			l_groups: like accessible_groups
 		do
-			Result := Precursor (a_class, a_dependencies, a_platform, a_build)
+			Result := Precursor (a_class, a_dependencies)
 			if a_dependencies then
 				l_groups := accessible_groups
 				from
@@ -170,8 +170,8 @@ feature -- Access queries
 					l_groups.after
 				loop
 					l_dep := l_groups.item
-					if l_dep.is_enabled (a_platform, a_build) then
-						Result.append (l_dep.class_by_name (a_class, False, a_platform, a_build))
+					if l_dep.classes_set then
+						Result.append (l_dep.class_by_name (a_class, False))
 					end
 					l_groups.forth
 				end

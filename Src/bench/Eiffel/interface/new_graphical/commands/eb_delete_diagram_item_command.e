@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 		end
 
 	delete_cluster is
-			-- Remove `cluster_i' from the system.
+			-- Remove `group' from the system.
 		do
 			tool.reset_history
 			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}

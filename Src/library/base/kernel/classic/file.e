@@ -1365,10 +1365,8 @@ feature -- Input
 			p_not_void: p /= Void
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
-		local
-			l_read: INTEGER
 		do
-			l_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
+			bytes_read := file_gss (file_pointer, p.item + start_pos, nb_bytes)
 		end
 
 	read_word, readword is

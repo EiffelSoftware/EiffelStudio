@@ -273,10 +273,7 @@ feature {NONE} -- Implementation
 
 	str_true: STRING is "True"
 	str_false: STRING is "False"
-	str_lower_true: STRING is "true"
-
-invariant
-	has_control_key: value.boolean_item (1) or value.boolean_item (2) or value.boolean_item (3)
+	str_lower_true: STRING is "true";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

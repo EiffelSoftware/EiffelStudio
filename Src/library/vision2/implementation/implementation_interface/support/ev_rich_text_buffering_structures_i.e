@@ -176,8 +176,14 @@ feature -- Status Setting
 					internal_text.append (rtf_open_brace)
 				elseif character_code = ('}').natural_32_code then
 					internal_text.append (rtf_close_brace)
-				else
+				elseif character_code <= {CHARACTER}.max_value.to_natural_32 then
 					internal_text.append_code (character_code)
+				else
+					internal_text.append (rtf_unicode_character)
+					internal_text.append_integer (character_code.to_integer_32)
+						-- Add ANSI representation of the Unicode characters for
+						-- those who cannot read unicode characters.
+					internal_text.append_character ('?')
 				end
 				counter := counter + 1
 			end
@@ -247,6 +253,9 @@ feature {EV_ANY_I} -- Status Setting
 				create format_stack.make (8)
 				create all_fonts.make (0, 50)
 				create all_colors.make (0, 50)
+					-- If there are no color table in the RTF, we default to the
+					-- foreground color of `rich_text'.
+				all_colors.force (rich_text.foreground_color, 0)
 				create all_formats.make (50)
 				create all_paragraph_formats.make (50)
 				create all_paragraph_indexes.make (50)
@@ -533,7 +542,7 @@ feature {NONE} -- Implementation
 		local
 			l_index: INTEGER
 			current_character: WIDE_CHARACTER
-			tag: STRING_32
+			tag, l_char: STRING_32
 			tag_value: STRING_32
 			performed_one_iteration: BOOLEAN
 			tag_completed: BOOLEAN
@@ -589,6 +598,12 @@ feature {NONE} -- Implementation
 				current_format.set_text_color (tag_value.to_integer)
 			elseif tag.is_equal (line_string) then
 				buffer_formatting (new_line_string)
+			elseif tag.is_equal (rtf_unicode_string) then
+					-- Removed ANSI representation of the character
+				tag_value.remove_tail (1)
+				create l_char.make (1)
+				l_char.append_code (tag_value.to_integer_32.as_natural_32)
+				buffer_formatting (l_char)
 			elseif tag.is_equal (rtf_bold_string) then
 				if tag_value.is_empty then
 					current_format.set_bold (True)

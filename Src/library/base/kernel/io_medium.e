@@ -146,6 +146,9 @@ feature -- Status report
 	last_double: DOUBLE
 			-- Last double read by `read_double'
 
+	bytes_read: INTEGER
+			-- Last number of bytes read by `read_to_managed_pointer'.
+
 	exists: BOOLEAN is
 			-- Does medium exist?
 		deferred
@@ -454,6 +457,9 @@ feature -- Input
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: readable
 		deferred
+		ensure
+			bytes_read_non_negative: bytes_read >= 0
+			bytes_read_not_too_big: bytes_read <= nb_bytes
 		end
 
 feature -- Obsolete

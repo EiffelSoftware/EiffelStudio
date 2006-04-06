@@ -26,7 +26,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 create {SOCKET}
 
 	create_from_descriptor
@@ -60,7 +60,7 @@ feature -- Initialization
 		end;
 
 feature -- Access
- 
+
 	retrieved: ANY is
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
@@ -82,7 +82,7 @@ feature -- Access
 				set_non_blocking
 			end
 		end
- 
+
 feature -- Status report
 
 	support_storable: BOOLEAN is
@@ -100,7 +100,7 @@ feature -- Status report
 		end
 
 feature -- Element change
- 
+
 	basic_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -112,7 +112,7 @@ feature -- Element change
 		do
 			eif_net_basic_store (descriptor, $object)
 		end;
- 
+
 	general_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -128,7 +128,7 @@ feature -- Element change
 		do
 			eif_net_general_store (descriptor, $object)
 		end
- 
+
 	independent_store (object: ANY) is
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
@@ -144,7 +144,7 @@ feature -- Element change
 
 feature -- Basic commands
 
-	bind is 
+	bind is
 			-- Bind socket to local address in `address'.
 		require
 			socket_exists: exists;
@@ -209,7 +209,7 @@ feature -- Basic commands
 	close is
 			-- Close socket for all context.
 		require else
-			socket_exists: exists 
+			socket_exists: exists
 		do
 			if is_open_read or is_open_write then
 				c_shutdown (descriptor, 2)
@@ -232,7 +232,7 @@ feature -- Basic commands
 			is_closed: is_closed
 			not_is_open: not is_open_read and not is_open_write
 		end
-		
+
 	is_closed: BOOLEAN is
 			-- Is socket closed?
 		do
@@ -355,7 +355,7 @@ feature -- Output
 		do
 			c_put_int (descriptor, i)
 		end
-		
+
 	put_integer_8 (i: INTEGER_8) is
 			-- Write integer `i' to socket.
 		require else
@@ -374,8 +374,8 @@ feature -- Output
 		do
 			integer_buffer.put_integer_16_be (i, 0)
 			put_managed_pointer (integer_buffer, 0, 2)
-		end		
-		
+		end
+
 	put_integer_64 (i: INTEGER_64) is
 			-- Write integer `i' to socket.
 		require else
@@ -385,7 +385,7 @@ feature -- Output
 			integer_buffer.put_integer_64_be (i, 0)
 			put_managed_pointer (integer_buffer, 0, 8)
 		end
-		
+
 	put_natural_8 (i: NATURAL_8) is
 			-- Write natural `i' to socket.
 		require else
@@ -393,9 +393,9 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			integer_buffer.put_natural_8_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 1)			
+			put_managed_pointer (integer_buffer, 0, 1)
 		end
-		
+
 	put_natural_16 (i: NATURAL_16) is
 			-- Write natural `i' to socket.
 		require else
@@ -403,7 +403,7 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			integer_buffer.put_natural_16_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 2)			
+			put_managed_pointer (integer_buffer, 0, 2)
 		end
 
 	put_natural, put_natural_32 (i: NATURAL_32) is
@@ -413,9 +413,9 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			integer_buffer.put_natural_32_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 4)			
+			put_managed_pointer (integer_buffer, 0, 4)
 		end
-		
+
 	put_natural_64 (i: NATURAL_64) is
 			-- Write natural `i' to socket.
 		require else
@@ -423,8 +423,8 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			integer_buffer.put_natural_64_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 8)			
-		end			
+			put_managed_pointer (integer_buffer, 0, 8)
+		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write boolean `b' to socket.
@@ -450,7 +450,7 @@ feature -- Output
 
 	write (a_packet: PACKET) is
 			-- Write packet `a_packet' to socket.
-		require 
+		require
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		local
@@ -459,7 +459,7 @@ feature -- Output
 			return_val: INTEGER;
 			count: INTEGER
 		do
-			from 
+			from
 				ext_data := a_packet.data.item;
 				count := a_packet.count
 			until
@@ -475,7 +475,7 @@ feature -- Output
 
 	send (a_packet: PACKET; flags: INTEGER) is
 			-- Send a packet `a_packet' of data to socket.
-		require 
+		require
 			socket_exists: exists;
 			opened_for_write: is_open_write;
 			valid_packet: a_packet /= Void
@@ -485,11 +485,11 @@ feature -- Output
 			return_val: INTEGER;
 			count: INTEGER
 		do
-			from 
+			from
 				ext_data := a_packet.data.item
 				count := a_packet.count
 			until
-				count = amount_sent 
+				count = amount_sent
 			loop
 				return_val := c_send (descriptor, ext_data, count - amount_sent, flags);
 				if return_val > 0 then
@@ -600,7 +600,7 @@ feature -- Input
 		do
 			last_integer := c_read_int (descriptor)
 		end;
-		
+
 	read_integer_8 is
 			-- Read a new 8-bit integer.
 			-- Make result available in `last_integer_8'.
@@ -610,8 +610,8 @@ feature -- Input
 		do
 			read_to_managed_pointer (integer_buffer, 0, 1)
 			last_integer_8 := integer_buffer.read_integer_8_be (0)
-		end		
-		
+		end
+
 	read_integer_16 is
 			-- Read a new 16-bit integer.
 			-- Make result available in `last_integer_16'.
@@ -620,7 +620,7 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 2)
-			last_integer_16 := integer_buffer.read_integer_16_be (0)			
+			last_integer_16 := integer_buffer.read_integer_16_be (0)
 		end
 
 	read_integer_64 is
@@ -631,9 +631,9 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 8)
-			last_integer_64 := integer_buffer.read_integer_64_be (0)	
+			last_integer_64 := integer_buffer.read_integer_64_be (0)
 		end
-		
+
 	read_natural_8 is
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
@@ -642,9 +642,9 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 1)
-			last_natural_8 := integer_buffer.read_natural_8_be (0)			
+			last_natural_8 := integer_buffer.read_natural_8_be (0)
 		end
-		
+
 	read_natural_16 is
 			-- Read a new 16-bit natural.
 			-- Make result available in `last_natural_16'.
@@ -653,9 +653,9 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 2)
-			last_natural_16 := integer_buffer.read_natural_16_be (0)			
-		end	
-		
+			last_natural_16 := integer_buffer.read_natural_16_be (0)
+		end
+
 	read_natural, read_natural_32 is
 			-- Read a new 32-bit natural.
 			-- Make result available in `last_natural'.
@@ -664,9 +664,9 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 4)
-			last_natural := integer_buffer.read_natural_32_be (0)			
-		end	
-		
+			last_natural := integer_buffer.read_natural_32_be (0)
+		end
+
 	read_natural_64 is
 			-- Read a new 64-bit natural.
 			-- Make result available in `last_natural_64'.
@@ -675,8 +675,8 @@ feature -- Input
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 8)
-			last_natural_64 := integer_buffer.read_natural_64_be (0)			
-		end							
+			last_natural_64 := integer_buffer.read_natural_64_be (0)
+		end
 
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' characters.
@@ -718,6 +718,7 @@ feature -- Input
 				l_read := l_read + c_read_stream (descriptor, nb_bytes - l_read,
 					p.item + start_pos + l_read);
 			end
+			bytes_read := l_read
 		end
 
 	read_line, readline is
@@ -739,7 +740,7 @@ feature -- Input
 
 	read (size: INTEGER): PACKET is
 			-- Read a packet of data of maximum size `size'.
-		require 
+		require
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
@@ -752,7 +753,7 @@ feature -- Input
 			from
 				amount_read := 0
 			until
-				amount_read = size 
+				amount_read = size
 			loop
 				return_val := c_read_stream (descriptor, size - amount_read, ext_data);
 				if return_val > 0 then
@@ -776,7 +777,7 @@ feature -- Input
 
 	receive (size, flags: INTEGER): PACKET is
 			-- Receive a packet of maximum size `size'.
-		require 
+		require
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
@@ -1000,14 +1001,14 @@ feature {NONE} -- Externals
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
 		do
 			if internal_integer_buffer = Void then
-				create internal_integer_buffer.make (16)	
+				create internal_integer_buffer.make (16)
 			end
-			Result := internal_integer_buffer			
+			Result := internal_integer_buffer
 		end
-		
+
 	internal_integer_buffer: MANAGED_POINTER
 			-- Internal integer buffer
-	
+
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
 			-- External c routine to create the socket descriptor
 		external
@@ -1196,21 +1197,21 @@ feature {NONE} -- Externals
 		external
 			"C blocking"
 		end;
- 
+
 	eif_net_general_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C blocking"
 		end;
- 
+
 	eif_net_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C blocking"
 		end;
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

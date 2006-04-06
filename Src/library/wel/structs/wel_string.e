@@ -36,7 +36,7 @@ feature --{NONE} -- Initialization
 		require
 			a_length_positive: a_length >= 0
 		do
-			create managed_data.make ((a_length + 1) * tchar_size)
+			create managed_data.make ((a_length + 1) * character_size)
 			count := 0
 		end
 
@@ -54,8 +54,8 @@ feature --{NONE} -- Initialization
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
 		do
-			count := a_length // tchar_size
-			create managed_data.make (a_length + tchar_size)
+			count := a_length // character_size
+			create managed_data.make (a_length + character_size)
 			managed_data.item.memory_copy (a_ptr, a_length)
 		end
 
@@ -75,11 +75,11 @@ feature -- Initialization
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
 		do
-			count := a_length // tchar_size
+			count := a_length // character_size
 			if managed_data = Void or else not managed_data.is_shared then
-				create managed_data.share_from_pointer (a_ptr, a_length + tchar_size)
+				create managed_data.share_from_pointer (a_ptr, a_length + character_size)
 			else
-				managed_data.set_from_pointer (a_ptr, a_length + tchar_size)
+				managed_data.set_from_pointer (a_ptr, a_length + character_size)
 			end
 		end
 
@@ -91,7 +91,7 @@ feature -- Access
 		require
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= capacity
+			end_position_not_too_big: end_pos <= (capacity // character_size)
 		local
 			l_count: INTEGER
 		do
@@ -118,7 +118,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= capacity
+			end_position_not_too_big: end_pos <= (capacity // character_size)
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
 			l_data: like managed_data
@@ -131,7 +131,7 @@ feature -- Access
 			until
 				i = nb
 			loop
-				a_string.put_code (l_data.read_natural_16 (i * tchar_size), i + 1)
+				a_string.put_code (l_data.read_natural_16 (i * character_size), i + 1)
 				i := i + 1
 			end
 		end
@@ -200,6 +200,14 @@ feature -- Measurement
 			Result := managed_data.count
 		end
 
+	bytes_count: INTEGER is
+			-- Number of bytes which makes up Current.
+		do
+			Result := count * character_size
+		ensure
+			bytes_count_non_negative: Result >= 0
+		end
+
 	count: INTEGER
 			-- Number of characters in Current.
 
@@ -211,20 +219,39 @@ feature -- Measurement
 			length_not_negative: Result >= 0
 		end
 
+	character_size: INTEGER is
+			-- Number of bytes occupied by a TCHAR.
+		external
+			"C inline use <tchar.h>"
+		alias
+			"sizeof(TCHAR)"
+		end
+
 feature -- Element change
 
 	set_string (a_string: STRING_GENERAL) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+		do
+			set_substring (a_string, 1, a_string.count)
+		end
+
+	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+			-- Set `string' with `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= a_string.count
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
 		do
-			nb := a_string.count
+			nb := end_pos - start_pos + 1
 			count := nb
 
-			new_size := (nb + 1) * tchar_size
+			new_size := (nb + 1) * character_size
 
 			if managed_data.count < new_size  then
 				managed_data.resize (new_size)
@@ -235,10 +262,10 @@ feature -- Element change
 			until
 				i = nb
 			loop
-				managed_data.put_natural_16 (a_string.code (i + 1).to_natural_16, i * tchar_size)
+				managed_data.put_natural_16 (a_string.code (i + start_pos).to_natural_16, i * character_size)
 				i := i +  1
 			end
-			managed_data.put_natural_16 (0, new_size - tchar_size)
+			managed_data.put_natural_16 (0, new_size - character_size)
 		end
 
 	set_count (a_count: INTEGER) is
@@ -250,7 +277,7 @@ feature -- Element change
 		local
 			new_size: INTEGER
 		do
-			new_size := (a_count + 1) * tchar_size
+			new_size := (a_count + 1) * character_size
 			if managed_data.count < new_size then
 				managed_data.resize (new_size)
 			end
@@ -279,11 +306,11 @@ feature -- Element change
 			-- Set `%U' at `offset' position of `Current'.
 			-- First position being  at `0' index.
 		require
-			valid_offset: offset >= 0 and offset < capacity
+			valid_offset: offset >= 0 and offset <= (capacity // character_size)
 		do
-			managed_data.put_integer_8 (0, offset)
+			managed_data.put_integer_16 (0, offset)
 		ensure
-			string_set: managed_data.read_integer_8 (offset) = 0
+			string_set: managed_data.read_integer_16 (offset) = 0
 		end
 
 	set_size_in_string (n: INTEGER) is
@@ -334,15 +361,7 @@ feature {NONE} -- Implementation
 	buffer_length (ptr: POINTER): INTEGER is
 			-- Number of bytes to hold `ptr'.
 		do
-			Result := c_strlen (ptr) * tchar_size
-		end
-
-	tchar_size: INTEGER is
-			-- Number of bytes occupied by a TCHAR.
-		external
-			"C inline use <tchar.h>"
-		alias
-			"sizeof(TCHAR)"
+			Result := c_strlen (ptr) * character_size
 		end
 
 	c_strlen (ptr: POINTER): INTEGER is

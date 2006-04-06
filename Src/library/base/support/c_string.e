@@ -168,8 +168,20 @@ feature -- Measurement
 			Result := managed_data.count
 		end
 
+	bytes_count: INTEGER is
+			-- Number of bytes represented by the string.
+		do
+			Result := count
+		end
+
 	count: INTEGER
 			-- Number of characters in Current.
+
+	character_size: INTEGER is
+			-- Size of a character
+		do
+			Result := 1
+		end
 
 feature -- Element change
 
@@ -178,11 +190,22 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 			a_string_is_string_8: a_string.is_valid_as_string_8
+		do
+			set_substring (a_string, 1, a_string.count)
+		end
+
+	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+			-- Set `string' with `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= a_string.count
 		local
 			i, nb: INTEGER
 			new_size: INTEGER
 		do
-			nb := a_string.count
+			nb := end_pos - start_pos + 1
 			count := nb
 
 			new_size := nb + 1
@@ -196,8 +219,8 @@ feature -- Element change
 			until
 				i = nb
 			loop
-				managed_data.put_natural_8 (a_string.code (i + 1).to_natural_8, i)
-				i := i + 1
+				managed_data.put_natural_8 (a_string.code (i + start_pos).to_natural_8, i)
+				i := i +  1
 			end
 			managed_data.put_natural_8 (0, nb)
 		end

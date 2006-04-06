@@ -13,8 +13,6 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -435,8 +433,7 @@ feature {NONE} -- Formatting
 				until
 					ancestors.after
 				loop
-					conf_todo
---					a_ctxt.put_classi (a_ctxt.class_i.type_from_consumed_type (ancestors.item))
+					a_ctxt.put_classi (a_ctxt.class_i.type_from_consumed_type (ancestors.item))
 					a_ctxt.put_new_line
 					ancestors.forth
 				end

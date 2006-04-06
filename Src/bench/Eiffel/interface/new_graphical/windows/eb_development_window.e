@@ -2213,17 +2213,19 @@ feature -- Position provider
 			-- Current selected formatter
 		local
 			l_end : BOOLEAN
+			l_formatter: like managed_main_formatters
 		do
+			l_formatter := managed_main_formatters.twin
 			from
-				managed_main_formatters.start
+				l_formatter.start
 			until
-				managed_main_formatters.after or l_end
+				l_formatter.after or l_end
 			loop
-				if managed_main_formatters.item.selected then
+				if l_formatter.item.selected then
 					l_end := true
-					Result := managed_main_formatters.item
+					Result := l_formatter.item
 				end
-				managed_main_formatters.forth
+				l_formatter.forth
 			end
 		end
 
@@ -3044,7 +3046,9 @@ feature {NONE} -- Implementation
 								managed_main_formatters.item.set_stone (new_class_stone)
 								managed_main_formatters.forth
 							end
-							managed_main_formatters.i_th (2).execute
+							if not is_stone_external then
+								managed_main_formatters.i_th (2).execute
+							end
 						else
 							if not changed or not same_class then
 									--| Enable all formatters.
@@ -3516,21 +3520,23 @@ feature {NONE} -- Implementation
 
 	enable_dotnet_formatters is
 			-- Enable only the .NET class text formatters.
+		local
+			l_formatters: like managed_main_formatters
 		do
+			l_formatters := managed_main_formatters.twin
 			from
-				managed_main_formatters.start
+				l_formatters.start
 			until
-				managed_main_formatters.after
+				l_formatters.after
 			loop
-				if managed_main_formatters.item.is_dotnet_formatter then
-					managed_main_formatters.item.enable_sensitive
+				if l_formatters.item.is_dotnet_formatter then
+					l_formatters.item.enable_sensitive
 				else
-					managed_main_formatters.item.disable_sensitive
+					l_formatters.item.disable_sensitive
 				end
-				managed_main_formatters.forth
+				l_formatters.forth
 			end
 		end
-
 
 	on_text_reset is
 			-- The main editor has just been wiped out

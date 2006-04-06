@@ -132,12 +132,7 @@ feature {NONE} -- Implementation
 		local
 			l_ast: ACE_SD
 		do
-			conf_todo
---			l_ast := lace.parsed_ast
---				-- `l_ast' could be Void if Ace is not valid.
---			if l_ast /= Void then
---				Result := l_ast.is_dotnet_project
---			end
+			Result := system.il_generation
 		end
 
 indexing

@@ -403,7 +403,9 @@ feature -- Graphical changes
 						else
 							set_title (expression.context_address)
 						end
-						l_tooltip.append_string ("OBJECT NAME: " + title)
+						if title /= Void then
+							l_tooltip.append_string ("OBJECT NAME: " + title)
+						end
 					else
 						set_expression_text (expression.expression)
 						l_tooltip.append_string ("EXPRESSION: " + expression.expression)

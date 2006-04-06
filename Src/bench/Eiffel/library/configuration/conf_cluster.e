@@ -148,10 +148,9 @@ feature -- Access queries
 			end
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
-			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency that
-			-- is enabled for `a_platform' and `a_build'.
+			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
 		local
 			l_groups: LINKED_SET [CONF_GROUP]
 			l_class: CONF_CLASS
@@ -172,8 +171,8 @@ feature -- Access queries
 						l_groups.after
 					loop
 						l_grp := l_groups.item
-						if l_grp.is_enabled (a_platform, a_build) then
-							Result.append (l_grp.class_by_name (a_class, False, a_platform, a_build))
+						if l_grp.classes_set then
+							Result.append (l_grp.class_by_name (a_class, False))
 						end
 						l_groups.forth
 					end
@@ -382,7 +381,7 @@ feature -- Visit
 			a_visitor.process_cluster (Current)
 		end
 
-feature {CONF_VISITOR, CONF_CLASS} -- Implementation, attributes stored in configuration file
+feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_dependencies: LINKED_SET [CONF_GROUP]
 			-- Dependencies to other groups of this cluster itself.

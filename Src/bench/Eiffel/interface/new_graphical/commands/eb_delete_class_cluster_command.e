@@ -28,8 +28,6 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -120,7 +118,8 @@ feature -- Events
 	drop_cluster (st: CLUSTER_STONE) is
 			-- Extract the cluster that should be removed from `st' and erase it.
 		do
-			cluster_i := st.cluster_i
+			group := st.group
+			path := st.path
 			real_execute
 		end
 
@@ -143,7 +142,7 @@ feature -- Basic operations
 			else
 				clust ?= window.stone
 				if clust /= Void then
-					cluster_i := clust.cluster_i
+					group := clust.cluster_i
 					real_execute
 					if not could_not_delete then
 						window.set_stone (Void)
@@ -158,13 +157,20 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	real_execute is
-			-- Ask confirmation before removing `class_i' or `cluster_i'
+			-- Ask confirmation before removing `class_i' or `group'
 			-- from the system and from the disk.
 		local
 			cd: EV_CONFIRMATION_DIALOG
 			wd: EV_WARNING_DIALOG
 			str: STRING
+			l_cluster: CONF_CLUSTER
+			l_sort_cl: EB_SORTED_CLUSTER
+			l_empty: BOOLEAN
+			l_sub_cl: DS_ARRAYED_LIST [CLASS_I]
 		do
+			str := group.name.twin
+			str.append (path)
+
 			could_not_delete := True
 			if class_i /= Void then
 				if
@@ -185,29 +191,52 @@ feature {NONE} -- Implementation
 					wd.show_modal_to_window (window.window)
 					class_i := Void
 				end
-			elseif cluster_i /= Void then
+			elseif group /= Void then
 				if
-					not cluster_i.is_readonly
+					not group.is_readonly
 				then
-					if cluster_i.classes = Void or else cluster_i.classes.is_empty and then cluster_i.sub_clusters.is_empty then
-						str := cluster_i.cluster_name.twin
-						if eb_debugger_manager.application_is_executing then
-							create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_cluster>>)
-							cd.show_modal_to_window (window.window)
+
+					if group.is_cluster and not path.is_empty then
+							-- create an EB_SORTED_CLUSTER because this allows as to easily access information about subfolders
+						create l_sort_cl.make (group)
+						l_sort_cl.initialize
+						l_sub_cl := l_sort_cl.sub_classes.item (path+"/")
+						l_empty := l_sub_cl = Void or else l_sub_cl.is_empty
+					else
+						if group.is_cluster then
+							l_cluster ?= group
+							check cluster: l_cluster /= Void end
+							l_empty := l_cluster.children = Void or else l_cluster.children.is_empty
+						end
+						l_empty := l_empty and group.classes = Void or else group.classes.is_empty
+					end
+
+					if
+						l_empty
+					then
+						if group.target.system.date_has_changed then
+							create wd.make_with_text (Warning_messages.w_cannot_delete_need_recompile)
+							wd.show_modal_to_window (window.window)
 						else
-							create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
-														<<agent delete_cluster>>)
-							cd.show_modal_to_window (window.window)
+							if eb_debugger_manager.application_is_executing then
+								create cd.make_with_text_and_actions (Warning_messages.W_Confirm_delete_cluster_debug (str),
+															<<agent delete_cluster>>)
+								cd.show_modal_to_window (window.window)
+							else
+								create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
+															<<agent delete_cluster>>)
+								cd.show_modal_to_window (window.window)
+							end
 						end
 					else
-						create wd.make_with_text (Warning_messages.w_cannot_delete_none_empty_cluster (cluster_i.cluster_name))
+						create wd.make_with_text (Warning_messages.w_cannot_delete_none_empty_cluster (str))
 						wd.show_modal_to_window (window.window)
 					end
-					cluster_i := Void
+					group := Void
 				else
-					create wd.make_with_text (Warning_messages.w_Cannot_delete_library_cluster (cluster_i.cluster_name))
+					create wd.make_with_text (Warning_messages.w_Cannot_delete_library_cluster (str))
 					wd.show_modal_to_window (window.window)
-					cluster_i := Void
+					group := Void
 				end
 			end
 		end
@@ -250,13 +279,13 @@ feature {NONE} -- Implementation
 		end
 
 	delete_cluster is
-			-- Remove `cluster_i' from the system.
+			-- Remove `group' from the system.
 		do
 			if eb_debugger_manager.application_is_executing then
 				eb_debugger_manager.application.kill
 			end
 			Eb_debugger_manager.disable_debug
-			manager.remove_cluster_i (cluster_i)
+			manager.remove_cluster_i (group, path)
 			Eb_debugger_manager.resynchronize_breakpoints
 			Window_manager.synchronize_all
 			could_not_delete := False
@@ -265,14 +294,20 @@ feature {NONE} -- Implementation
 	class_i: CLASS_I
 			-- Class that should be removed.
 
-	cluster_i: CLUSTER_I
+	group: CONF_GROUP
 			-- Cluster that should be removed.
+
+	path: STRING
+			-- Subfolder path taht should be removed.
 
 	window: EB_DEVELOPMENT_WINDOW
 			-- Default window `Current' communicates with.
 
 	could_not_delete: BOOLEAN;
 			-- Was the class/cluster impossible to delete?
+
+invariant
+	cluster_i_implies_path: group /= Void implies path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

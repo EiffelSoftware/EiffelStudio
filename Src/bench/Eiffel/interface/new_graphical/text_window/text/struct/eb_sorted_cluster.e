@@ -44,6 +44,8 @@ feature -- Statusupdate
 			l_lib_target: CONF_TARGET
 			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
 		do
+			create libraries.make (0)
+			create assemblies.make (0)
 			create clusters.make_default
 				-- handle subclusters
 			if is_cluster then
@@ -255,9 +257,7 @@ feature {NONE} -- Implementation
 			loop
 				create l_group.make (a_group.item)
 				Result.force_last (l_group)
-				if is_cluster then
-					l_group.set_parent (Current)
-				end
+				l_group.set_parent (Current)
 				a_group.forth
 			end
 			Result.sort (create {DS_QUICK_SORTER [like Current]}.make (create {KL_COMPARABLE_COMPARATOR [like Current]}.make))
@@ -340,15 +340,16 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			sub_classes_set: sub_classes /= Void
-			sub_folders_set: is_assembly implies sub_folders /= Void
+			sub_folders_set: sub_folders /= Void
 		end
 
 invariant
 	classes_not_void: is_initialized implies classes /= Void
 	clusters_not_void: is_initialized implies clusters /= Void
-	sub_classes_not_void: is_initialized implies is_cluster implies sub_classes /= Void
-	libraries_not_void: is_initialized implies is_library implies libraries /= Void
-	assemblies_not_void: is_initialized implies is_library implies assemblies /= Void
+	sub_classes_not_void: is_initialized implies sub_classes /= Void
+	libraries_not_void: is_initialized implies libraries /= Void
+	assemblies_not_void: is_initialized implies assemblies /= Void
+	sub_folders_not_void: is_initialized implies sub_folders /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

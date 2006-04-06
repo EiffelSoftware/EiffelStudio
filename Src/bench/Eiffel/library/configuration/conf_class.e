@@ -25,6 +25,8 @@ inherit
 
 	HASHABLE
 
+	CONF_ACCESS
+
 create
 	make
 

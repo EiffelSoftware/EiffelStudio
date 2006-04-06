@@ -206,7 +206,7 @@ feature -- Access
 			l_cl: LINKED_SET [CONF_CLASS]
 			vscn: VSCN
 		do
-			l_cl := a_group.class_by_name (class_name, True, universe.platform, universe.build)
+			l_cl := a_group.class_by_name (class_name, True)
 
 			if l_cl /= Void then
 				if l_cl.count = 1 then

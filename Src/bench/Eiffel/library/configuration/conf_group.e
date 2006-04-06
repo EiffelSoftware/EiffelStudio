@@ -163,15 +163,13 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): LINKED_SET [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
 			-- Get the class with the final (after renaming/prefix) name `a_class'
-			-- (if `a_dependencies' then we check dependencies with `a_platform' and `a_build')
+			-- (if `a_dependencies' then we check dependencies)
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 			classes_set: classes_set
-			a_platform_valid: a_dependencies implies valid_platform (a_platform)
-			a_build_valid: a_dependencies implies valid_build (a_build)
 		local
 			l_class: CONF_CLASS
 		do
@@ -402,7 +400,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					l_classes.after
 				loop
 					l_overrider := l_classes.item_for_iteration
-					l_ovs := class_by_name (l_overrider.renamed_name, False, pf_all, build_all)
+					l_ovs := class_by_name (l_overrider.renamed_name, False)
 					if l_ovs /= Void and then l_ovs.count > 0 then
 						l_overridee := l_ovs.first
 						if l_overridee.is_overriden then

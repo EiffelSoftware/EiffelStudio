@@ -91,11 +91,16 @@ feature -- Update from retrieved object.
 			-- to `other', so as to yield equal objects.
 		require
 			other_not_void: other /= Void
-			other_lace_not_void: other.lace /= Void
 			lace_not_void: lace /= Void
+		local
+			l_lace: LACE_I
 		do
+			l_lace := lace
 			standard_copy (other)
+			lace := l_lace
 			lace.update_from_retrieved_project (other.lace)
+		ensure
+			lace_preserved: lace = old lace
 		end
 
 feature -- Additional properties
@@ -236,8 +241,11 @@ feature -- Commands
 				if Lace.successful then
 					System.set_rebuild (False)
 					if Lace.has_changed then
+						System.set_config_changed (True)
 						System.set_melt
 						System.set_finalize
+					else
+						System.set_config_changed (False)
 					end
 					if Lace.has_group_changed then
 						System.set_rebuild (True)

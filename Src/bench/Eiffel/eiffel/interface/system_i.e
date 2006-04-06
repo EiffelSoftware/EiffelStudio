@@ -191,6 +191,9 @@ feature -- Properties
 	successful: BOOLEAN
 			-- Was the last recompilation successful?
 
+	is_config_changed: BOOLEAN
+			-- Has configuration file changed?
+
 	has_been_changed: BOOLEAN
 			-- Did last recompilation changed data of compiler?
 
@@ -907,9 +910,6 @@ end
 
 				-- update/check root class
 			update_root_class
-
-				-- We rebuilt the configuration, so we need to save project file.
-			has_been_changed := True
 		end
 
 	update_root_class is
@@ -1161,12 +1161,17 @@ feature -- Recompilation
 			is_rebuild := b
 		end
 
+	set_config_changed (b: BOOLEAN) is
+			-- Set `is_config_changed'.
+		do
+			is_config_changed := b
+		end
+
 	reset_has_compilation_started is
 			-- Reset `has_compilation_started'.
 		do
 			has_compilation_started := False
 		end
-
 
 	recompile is
 			-- Incremetal recompilation of the system.
@@ -1183,7 +1188,7 @@ feature -- Recompilation
 				precomp_r.check_version_number
 			end
 
-			has_been_changed := False
+			has_been_changed := is_config_changed
 			do_recompilation
 
 			successful := True

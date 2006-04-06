@@ -395,8 +395,7 @@ feature -- Cluster tree warnings
 			create Result.make (100)
 			Result.append ("Cannot delete cluster ")
 			Result.append (cluster_name.as_upper)
-			Result.append ("%Nbecause it is either a precompiled%N%
-							%or a library cluster.")
+			Result.append ("%Nbecause it is read only.")
 		end
 
 	w_Cannot_delete_none_empty_cluster (cluster_name: STRING): STRING is
@@ -575,6 +574,16 @@ feature -- Cluster tree warnings
 						%removed from the system.%N%N%
 						%Are you sure this is what you want?"
 		end
+
+	w_Confirm_delete_cluster_debug (cluster_name: STRING): STRING is
+		do
+			Result := "Stop debug and remove cluster " + cluster_name + " permanently%N%
+						%from the system.%N%N%
+						%Are you sure this is what you want?"
+		end
+
+	w_Cannot_delete_need_recompile: STRING is "Compiled configuration is not up to date, please recompile."
+
 
 	w_Could_not_locate (cl_name: STRING): STRING is
 			-- Class/cluster could not be found in the cluster tree.

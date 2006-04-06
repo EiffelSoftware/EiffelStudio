@@ -22,7 +22,8 @@ inherit
 	CONF_REFACTORING
 
 create
-	make
+	make,
+	make_subfolder
 
 feature {NONE} -- Initialization
 
@@ -30,9 +31,25 @@ feature {NONE} -- Initialization
 		require
 			valid_cluster: clu /= Void
 		do
+			conf_todo_msg ("Check if realy make should be called and not make_subfolder")
 			group := clu
+			create path.make_empty
 		ensure
 			group_set: group = clu
+		end
+
+	make_subfolder (clu: CONF_GROUP; a_path: STRING) is
+			-- Create for a subfolder `path' of `clu'.
+		require
+			valid_cluster: clu /= Void
+			valid_path: a_path /= Void
+			path_implies_recursive_cluster: not a_path.is_empty implies is_recursive_cluster (clu)
+		do
+			group := clu
+			path := a_path
+		ensure
+			group_set: group = clu
+			path_set: path = a_path
 		end
 
 feature -- Access
@@ -52,6 +69,9 @@ feature -- Access
 
 	group: CONF_GROUP
 			-- Underlying group for the stone.
+
+	path: STRING
+			-- Subfolder path in unix format eg "/test/a/b"
 
 	stone_signature: STRING is
 		do
@@ -119,8 +139,24 @@ feature -- Access
 			Result := l_clus /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN is
+			-- Is `a_grp' a recursive cluster?
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_cl: CONF_CLUSTER
+		do
+			if a_group.is_cluster then
+				l_cl ?= a_group
+				Result := l_cl.is_recursive
+			end
+		end
+
 invariant
 	group_not_void: group /= Void
+	path_not_void: path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

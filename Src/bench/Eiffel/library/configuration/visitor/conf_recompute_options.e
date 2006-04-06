@@ -78,7 +78,6 @@ feature -- Visit nodes
 			end
 		end
 
-
 feature -- Access
 
 	new_target: CONF_TARGET

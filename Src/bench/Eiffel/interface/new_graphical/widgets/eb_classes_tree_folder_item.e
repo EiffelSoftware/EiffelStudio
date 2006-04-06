@@ -76,7 +76,7 @@ feature -- Access
 	stone: CLUSTER_STONE is
 			-- Cluster stone representing `data'.
 		do
-			create Result.make (data.actual_group)
+			create Result.make_subfolder (data.actual_group, path)
 		end
 
 feature -- Status setting
@@ -84,16 +84,12 @@ feature -- Status setting
 	set_data (a_cluster: EB_SORTED_CLUSTER) is
 			-- Affect `a_cluster' to `data'.
 		local
-			l_cluster: CLUSTER_I
 			l_group: CONF_GROUP
 			l_pos: INTEGER
 		do
 			data := a_cluster
 			l_group := a_cluster.actual_group
-			l_cluster ?= l_group
-			if l_cluster /= Void then
-				set_pebble (stone)
-			end
+			set_pebble (stone)
 			if not path.is_empty then
 				l_pos := path.last_index_of ('/', path.count)
 				if l_pos > 0 then

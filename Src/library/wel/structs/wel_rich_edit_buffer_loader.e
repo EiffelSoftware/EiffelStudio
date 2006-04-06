@@ -18,6 +18,8 @@ inherit
 	WEL_RICH_EDIT_STREAM_IN
 		rename
 			make as rich_edit_stream_in_make
+		export
+			{ANY} set_is_unicode_data
 		end
 
 create
@@ -45,15 +47,29 @@ feature {NONE} -- Implementation
 	string: STRING_GENERAL
 			-- String to set in the rich edit control
 
-	read_buffer (length: INTEGER) is
+	read_buffer is
 			-- Set to buffer a substring of `string'.
+		local
+			l_uni_str: WEL_STRING
+			l_c_str: C_STRING
+			l_upper: INTEGER
 		do
 			if last_position > string.count then
-				create buffer.make_empty (0)
+				buffer.set_from_pointer (buffer.item, 0)
 			else
-				create buffer.make (string.substring (last_position,
-					(last_position + length - 1).min (string.count)))
-				last_position := last_position + length
+				if is_unicode_data then
+					create l_uni_str.share_from_pointer_and_count (buffer.item, buffer.count)
+					l_upper := (last_position + l_uni_str.count - 1).min (string.count)
+					l_uni_str.set_substring (string, last_position, l_upper)
+					buffer.set_from_pointer (buffer.item, (l_upper - last_position + 1) * l_uni_str.character_size)
+					last_position := last_position + l_uni_str.count
+				else
+					create l_c_str.share_from_pointer_and_count (buffer.item, buffer.count)
+					l_upper := (last_position + l_c_str.count - 1).min (string.count)
+					l_c_str.set_substring (string, last_position, l_upper)
+					buffer.set_from_pointer (buffer.item, (l_upper - last_position + 1) * l_c_str.character_size)
+					last_position := last_position + l_c_str.count
+				end
 			end
 		end
 

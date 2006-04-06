@@ -35,8 +35,10 @@ feature {NONE} -- Initialization
 		do
 			rich_edit_stream_in_make
 			file := a_file
+			is_unicode_data := False
 		ensure
 			file_set: file = a_file
+			not_is_unicode: not is_unicode_data
 		end
 
 feature {NONE} -- Implementation
@@ -44,14 +46,17 @@ feature {NONE} -- Implementation
 	file: RAW_FILE
 			-- File to load
 
-	read_buffer (length: INTEGER) is
+	read_buffer is
 			-- Read from `file' `length' characters.
 		do
+				-- FIXME: we do not handle `is_unicode' because it would imply
+				-- that we know which encoding is used in `file'. This explains
+				-- the not_is_unicode invariant.
 			if file.readable then
-				file.read_stream (length)
-				create buffer.make (file.last_string)
+				file.read_to_managed_pointer (buffer, 0, buffer.count)
+				buffer.set_from_pointer (buffer.item, file.bytes_read)
 			else
-				create buffer.make_empty (0)
+				buffer.set_from_pointer (buffer.item, 0)
 			end
 		end
 
@@ -65,6 +70,7 @@ feature {NONE} -- Implementation
 
 invariant
 	file_not_void: file /= Void
+	not_is_unicode: not is_unicode_data
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -76,9 +82,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WEL_RICH_EDIT_FILE_LOADER
 

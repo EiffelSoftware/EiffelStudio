@@ -27,20 +27,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer: WEL_STRING
+	buffer: MANAGED_POINTER
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
 
-	read_buffer (length: INTEGER) is
-			-- Set to `buffer' a string of `length' (or
-			-- less) characters.
+	read_buffer is
+			-- Write into `buffer' a certain amount of bytes less than the
+			-- original `buffer.count'.
 		require
-			positive_length: length >= 0
+			a_buffer_not_null: buffer /= Void
 		deferred
 		ensure
 			buffer_not_void: buffer /= Void
-			valid_buffer_length: buffer.count <= length
+			valid_buffer_length: buffer.count <= old buffer.count
 		end
 
 feature {NONE} -- Implementation
@@ -52,8 +52,12 @@ feature {NONE} -- Implementation
 			-- written into `a_buffer'.
 		do
 			stream_result := 0
-			read_buffer (a_buffer_length)
-			a_buffer.memory_copy (buffer.item, buffer.count)
+			if buffer = Void then
+				create buffer.share_from_pointer (a_buffer, a_buffer_length)
+			else
+				buffer.set_from_pointer (a_buffer, a_buffer_length)
+			end
+			read_buffer
 			cwel_set_integer_reference_value (a_data_length, buffer.count)
 			Result := stream_result
 		end

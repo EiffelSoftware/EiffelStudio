@@ -25,9 +25,14 @@ feature {NONE} -- Initialization
 			cwel_editstream_set_pfncallback_out (item)
 		end
 
+feature -- Access
+
+	buffer: MANAGED_POINTER
+			-- Buffer to set in `read_buffer'.
+
 feature -- Basic operations
 
-	write_buffer (buffer: STRING) is
+	write_buffer is
 			-- Write `buffer'.
 		require
 			buffer_not_void: buffer /= Void
@@ -36,15 +41,16 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_callback (buffer: POINTER; length: INTEGER): INTEGER is
+	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
 			-- `buffer' contains `length' characters.
-		local
-			l_value: STRING
 		do
-			create l_value.make (length + 1)
-			l_value.from_c_substring (buffer, 1, length)
+			if buffer = Void then
+				create buffer.share_from_pointer (a_buffer, a_length)
+			else
+				buffer.set_from_pointer (a_buffer, a_length)
+			end
 			stream_result := 0
-			write_buffer (l_value)
+			write_buffer
 			Result := stream_result
 		end
 

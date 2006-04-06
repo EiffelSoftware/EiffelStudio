@@ -288,6 +288,7 @@ feature -- Status report
 			stream: WEL_RICH_EDIT_BUFFER_SAVER
 		do
 			create stream.make
+			stream.set_is_unicode_data (True)
 			text_stream_out (stream)
 			Result := stream.text
 			stream.release_stream
@@ -393,12 +394,13 @@ feature -- Status setting
 			cwin_send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
 			create stream.make (a_text)
+			stream.set_is_unicode_data (True)
 			text_stream_in (stream)
 			stream.release_stream
 		end
@@ -410,6 +412,7 @@ feature -- Status setting
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 		do
 			create stream.make (a_text)
+			stream.set_is_unicode_data (True)
 			insert_text_stream_in (stream)
 			stream.release_stream
 		end
@@ -541,7 +544,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_in_message (Sf_text, stream)
+			send_stream_in_message (Sf_text | Sf_unicode, stream)
 		end
 
 	text_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
@@ -550,7 +553,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_out_message (Sf_text, stream)
+			send_stream_out_message (Sf_text | Sf_unicode, stream)
 		end
 
 	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
@@ -577,7 +580,7 @@ feature -- Basic operations
 			exists: exists
 			stream_not_void: stream /= Void
 		do
-			send_stream_in_message (Sf_text + Sff_selection, stream)
+			send_stream_in_message (Sf_text | Sf_unicode | Sff_selection, stream)
 		end
 
 	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is

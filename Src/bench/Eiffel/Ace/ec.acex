@@ -4,8 +4,50 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 	 name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
-	
-	<target name="batch">
+		<target name="common">
+		<root all_classes="true"/>
+		<external_include location="$ISE_LIBRARY\C\bench"/>
+		<external_include location="$ISE_LIBRARY\C\platform"/>
+		<external_include location="$ISE_LIBRARY\library\wel\spec\windows\include">
+			<if platform="windows"/>
+		</external_include>
+		<external_include location="$ISE_LIBRARY\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+			<if platform="windows"/>
+		</external_include>
+		
+		<external_include location="$ISE_LIBRARY\C\bench"/>
+		<external_include location="$ISE_LIBRARY\C\platform"/>
+		<external_include location="$ISE_LIBRARY\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM"/>
+		
+		<external_object location="$ISE_LIBRARY\C\bench\libmtcompiler.a">
+			<if platform="unix" build="finalize"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\C\bench\libmtwcompiler.a">
+			<if platform="unix" build="workbench"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\C\platform\libplatform.a">
+			<if platform="unix"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\C\bench\mtcompiler.lib">
+			<if platform="windows" build="finalize"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\C\bench\mtwcompiler.lib">
+			<if platform="windows" build="workbench"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\C\platform\platform.lib">
+			<if platform="windows"/>
+		</external_object>
+		<external_object location="$ISE_LIBRARY\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+			<if platform="windows"/>
+		</external_object>
+		
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+	</target>
+	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -85,32 +127,6 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="False"/>
-		<external_include location="$EIFFEL_SRC\C\bench"/>
-		<external_include location="$EIFFEL_SRC\C\platform"/>
-		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
-			<if platform="windows"/>
-		</external_include>
-		<external_object location="$EIFFEL_SRC\C\bench\libmtcompiler.a">
-			<if platform="unix" build="finalize"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\libmtwcompiler.a">
-			<if platform="unix" build="workbench"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\platform\libplatform.a">
-			<if platform="unix"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
-			<if platform="windows" build="finalize"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
-			<if platform="windows" build="workbench"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
-			<if platform="windows"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
-			<if platform="windows"/>
-		</external_object>
 		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
@@ -168,6 +184,7 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
+		
 		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
@@ -214,16 +231,16 @@
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 			<cluster name="license_switch" location="$|license\no_license\"/>
 		</cluster>
-		<cluster name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
+		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	
-	<target name="bench">
+	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-	<option trace="false" profile="false" debug="true">
+		<option trace="false" profile="false" debug="true">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="_jfiat" enabled="false"/>
 			<debug name="activity" enabled="false"/>
@@ -345,37 +362,11 @@
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="True"/>
 		
-		<external_include location="$EIFFEL_SRC\C\bench"/>
-		<external_include location="$EIFFEL_SRC\C\platform"/>
 		<external_include location="$EIFFEL_SRC\C_library\zlib"/>
 		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib"/>
 		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib"/>
 		<external_object location="htmlhelp.lib"/>
 		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
-			<if platform="windows"/>
-		</external_object>
-		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
-			<if platform="windows"/>
-		</external_include>
-		<external_object location="$EIFFEL_SRC\C\bench\libmtcompiler.a">
-			<if platform="unix" build="finalize"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\libmtwcompiler.a">
-			<if platform="unix" build="workbench"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\platform\libplatform.a">
-			<if platform="unix"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
-			<if platform="windows" build="finalize"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
-			<if platform="windows" build="workbench"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
-			<if platform="windows"/>
-		</external_object>
-		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<if platform="windows"/>
 		</external_object>
 
@@ -395,13 +386,13 @@
 		</library>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>		
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex" readonly="true"/>
-		<!--This library is not pure one.<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex" readonly="true"/>-->
+		<!--memory_analyzer is not pure library.-->
+		<!--<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex" readonly="true"/>-->
 		<library name="process" location="$ISE_LIBRARY\library\process\process.acex" readonly="true"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex" readonly="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex" readonly="true"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
-		
 		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer" recursive="true"/>
 		<cluster name="common" location="$ISE_LIBRARY\Eiffel\common\" recursive="true">
 			<file_rule>
@@ -453,7 +444,6 @@
 			<cluster name="interface_switch" location="$|interface\new_graphical\"/>
 			<cluster name="time_lock" location="$|license\time_lock\"/>
 		</cluster>
-		
 		<cluster name="interface_windows" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<if platform="windows"/>
 			<file_rule>
@@ -467,7 +457,6 @@
 				<exclude>/ewb_case_storage.e$</exclude>
 			</file_rule>
 		</cluster>
-		
 		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
@@ -481,7 +470,6 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
-		
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty" recursive="true">
 			<file_rule>
 				<exclude>/eb_diagram_html_generator\.e$</exclude>
@@ -489,7 +477,6 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
-		
 		<cluster name="cli_debugger" location="$EIFFEL_SRC\Eiffel\library\cli_debugger\" recursive="true">
 			<if platform="windows"/>
 		</cluster>

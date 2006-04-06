@@ -65,8 +65,6 @@ feature -- Element change
 
 	set_current_class (a_class: like current_class) is
 			-- Set `a_class' to `current_class'.
-		require
-			a_class_not_void: a_class /= Void
 		do
 			current_class := a_class
 		ensure

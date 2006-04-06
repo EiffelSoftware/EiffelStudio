@@ -748,11 +748,11 @@ feature -- Status setting
 		do
 			if not a_text.is_empty then
 					-- Replace "%N" with "%R%N" for Windows.
-				l_text := convert_string (a_text)
+				create stream.make (convert_string (a_text))
 			else
-				l_text := a_text
+				create stream.make (a_text)
 			end
-			create stream.make (l_text)
+			stream.set_is_unicode_data (True)
 			text_stream_in (stream)
 			stream.release_stream
 		end
@@ -1127,6 +1127,7 @@ feature -- Status setting
 			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
 			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
 			old_text_as_rtf: STRING
+			l_is_read_only: BOOLEAN
 		do
 			safe_store_caret
 			if change_actions_internal /= Void then
@@ -1139,6 +1140,7 @@ feature -- Status setting
 			stream_out.release_stream
 			old_text_as_rtf := stream_out.text
 
+			l_is_read_only := is_editable
 			wel_destroy
 			if word_wrapping then
 				internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
@@ -1174,6 +1176,7 @@ feature -- Status setting
 			if change_actions_internal /= Void then
 				change_actions_internal.resume
 			end
+			set_editable (l_is_read_only)
 			safe_restore_caret
 		ensure
 			option_set: has_word_wrapping = word_wrapping

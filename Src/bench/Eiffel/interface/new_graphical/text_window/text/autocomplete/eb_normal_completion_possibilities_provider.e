@@ -95,8 +95,7 @@ feature -- Basic operation
 			watching_line := text_field.current_line
 			if context_class_c /= Void then
 				current_class_name := context_class_c.name
-				conf_todo
---				cluster_name := context_class_c.cluster.cluster_name
+				group := context_class_c.group
 				if provide_features then
 					build_completion_list
 				end
@@ -386,9 +385,8 @@ feature {NONE} -- Build completion possibilities
 			-- associated with `cursor'
 		local
 			cname				: STRING
-			clusters			: ARRAYED_LIST [CLUSTER_I]
 			class_list			: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
-			classes				: HASH_TABLE [CLASS_I, STRING]
+			classes				: DS_HASH_SET [CLASS_I]
 			token				: EDITOR_TOKEN
 			show_all	: BOOLEAN
 			class_name			: EB_CLASS_FOR_COMPLETION
@@ -413,42 +411,26 @@ feature {NONE} -- Build completion possibilities
 					end
 				end
 			end
-				cname := ""
-				from
-					create class_list.make (100)
-					conf_todo
---					clusters := Universe.clusters
-					clusters.start
-				until
-					clusters.after
-				loop
-					if show_all then
-						from
-							classes := clusters.item.classes
-							classes.start
-						until
-							classes.after
-						loop
-							create class_name.make (classes.item_for_iteration)
-						 	class_list.extend (class_name)
-							classes.forth
-						end
-					else
-						from
-							classes := clusters.item.classes
-							classes.start
-						until
-							classes.after
-						loop
-							if matches (classes.key_for_iteration, cname) then
-								create class_name.make (classes.item_for_iteration)
-							 	class_list.extend (class_name)
-							end
-							classes.forth
-						end
+			cname := ""
+
+			classes := universe.all_classes
+			create class_list.make (100)
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				if show_all then
+					create class_name.make (classes.item_for_iteration)
+				 	class_list.extend (class_name)
+				else
+					if matches (classes.item_for_iteration.name, cname) then
+						create class_name.make (classes.item_for_iteration)
+					 	class_list.extend (class_name)
 					end
-					clusters.forth
 				end
+				classes.forth
+			end
 
 				cnt := class_list.count
 				if current_class_as /= Void and then current_class_as.generics /= Void then
@@ -878,7 +860,7 @@ feature {NONE} -- Build completion possibilities
             end
 		end
 
-			create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
+	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
 			-- is "create" preceeding current position ?
 		local
 			line: EDITOR_LINE

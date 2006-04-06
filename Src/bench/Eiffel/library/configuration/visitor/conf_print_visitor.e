@@ -391,6 +391,7 @@ feature {NONE} -- Implementation
 			l_name: STRING
 			l_tag: STRING
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
+			l_pf, l_build: INTEGER
 		do
 			if a_conditions /= Void then
 				from
@@ -400,18 +401,25 @@ feature {NONE} -- Implementation
 				loop
 					l_condition := a_conditions.item
 					l_name := get_platform_name (l_condition)
+					create l_a_name.make (2)
+					create l_a_val.make (2)
 					if l_name = Void then
 						l_tag := "ifnot"
 						l_condition := l_condition.bit_not
 					else
 						l_tag := "if"
 					end
-					create l_a_name.make (2)
-					l_a_name.extend ("platform")
-					l_a_name.extend ("build")
-					create l_a_val.make (2)
-					l_a_val.extend (get_platform_name (l_condition).as_lower)
-					l_a_val.extend (get_build_name (l_condition).as_lower)
+					l_pf := l_condition & 0x00FF
+					l_build := l_condition & 0xFF00
+					if valid_platform (l_pf) and l_pf /= pf_all then
+						l_a_name.extend ("platform")
+						l_a_val.extend (get_platform_name (l_condition).as_lower)
+					end
+					if valid_build (l_build) and l_build /= build_all then
+						l_a_name.extend ("build")
+						l_a_val.extend (get_build_name (l_condition).as_lower)
+					end
+
 					append_tag (l_tag, Void, l_a_name, l_a_val)
 					a_conditions.forth
 				end

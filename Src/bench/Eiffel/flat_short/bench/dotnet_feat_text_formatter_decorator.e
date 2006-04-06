@@ -27,8 +27,6 @@ inherit
 			{NONE} all
 		end
 
-	CONF_REFACTORING
-
 create
 	make,
 	make_from_entity
@@ -307,9 +305,7 @@ feature {NONE} -- Element Change
 					l_cnt > arguments.count
 				loop
 					l_c_arg := arguments.item (l_cnt)
-					conf_todo
---					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
-
+					l_c_class := class_i.type_from_consumed_type (l_c_arg.type)
 					if not use_dotnet_name_only and l_char_count > 60 then
 						text_formatter.add_new_line
 						text_formatter.add_indents (4)
@@ -343,8 +339,7 @@ feature {NONE} -- Element Change
 			if return_type /= Void then
 				text_formatter.add_char (':')
 				text_formatter.add_space
-				conf_todo
---				l_c_class := class_i.type_from_consumed_type (return_type)
+				l_c_class := class_i.type_from_consumed_type (return_type)
 				if 	class_i.is_compiled then
 					l_ext ?= class_i.compiled_class
 					l_type_a := l_ext.type_from_consumed_type (return_type)
@@ -402,8 +397,7 @@ feature {NONE} -- Element Change
 
 			if is_inherited then
 					-- Retrieve .NET member name depending upon if inherited.	
-				conf_todo
---				l_namespace_name := class_i.type_from_consumed_type (declared_type).external_name
+				l_namespace_name := class_i.type_from_consumed_type (declared_type).name
 			else
 				l_namespace_name := consumed_t.dotnet_name
 			end
@@ -519,8 +513,7 @@ feature {NONE} -- Element Change
 				text_formatter.add_new_line
 				text_formatter.add_indents (3)
 				text_formatter.add_comment ("-- (from ")
-				conf_todo
---				text_formatter.add_class (class_i.type_from_consumed_type (declared_type))
+				text_formatter.add_class (class_i.type_from_consumed_type (declared_type))
 				text_formatter.add_char (')')
 			end
 		end

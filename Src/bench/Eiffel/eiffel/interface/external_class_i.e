@@ -58,6 +58,42 @@ feature -- Access
 			Result := Current
 		end
 
+	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CLASS_I is
+			-- Given an external type `c' get its associated CLASS_I.
+		require
+			c_not_void: c /= Void
+		local
+			l_assembly: ASSEMBLY_I
+			l_name: STRING
+			l_is_array: BOOLEAN
+			l_array_type: CONSUMED_ARRAY_TYPE
+			l_list: ARRAYED_LIST [EXTERNAL_CLASS_I]
+		do
+			l_array_type ?= c
+			l_is_array := l_array_type /= Void
+			if l_is_array then
+				Result := System.native_array_class
+			else
+				if c.is_by_ref then
+					Result := System.typed_pointer_class
+				else
+					l_name := c.name
+							-- Case where this is a class from `mscorlib' that is in fact
+							-- written as an Eiffel class, e.g. INTEGER, ....
+					Result := basic_type_mapping.item (l_name)
+					if Result = Void then
+						l_list := assembly.class_by_dotnet_name (l_name, True, universe.platform, universe.build)
+						check
+							l_list_not_empty: not l_list.is_empty
+						end
+						Result := l_list.first
+					end
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status Report
 
 	is_external_class: BOOLEAN is True

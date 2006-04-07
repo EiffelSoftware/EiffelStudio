@@ -339,8 +339,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_class_upper: a_class.is_equal (a_class.as_upper)
 			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
 		local
-			l_v_cl: HASH_TABLE [STRING, STRING]
-			l_tpl: TUPLE [STRING, HASH_TABLE [STRING, STRING]]
+			l_v_cl: CONF_HASH_TABLE [STRING, STRING]
+			l_tpl: TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]]
 			l_visible_name: STRING
 		do
 			if visible = Void then
@@ -389,7 +389,7 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 	internal_file_rule: CONF_FILE_RULE
 			-- Rules for files to be included or excluded of this cluster itself.
 
-	visible: HASH_TABLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]], STRING]
+	visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]
 			-- Table of table of features of classes that are visible (feature name "*" = all features visible).
 			-- Mapped to their rename (if any).
 

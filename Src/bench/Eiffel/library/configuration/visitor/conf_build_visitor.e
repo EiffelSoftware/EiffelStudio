@@ -187,13 +187,12 @@ feature -- Visit nodes
 		local
 			l_assemblies, l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
 			l_pre, l_old_pre: CONF_PRECOMPILE
+			l_old_group: CONF_GROUP
 		do
 			if not is_error then
 					-- set application target
 				a_target.set_application_target (application_target)
 
-					-- add the target to the libraries
-				libraries.force (a_target, a_target.system.uuid)
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
 					l_assemblies := old_target.assemblies
@@ -201,7 +200,18 @@ feature -- Visit nodes
 					l_clusters := old_target.clusters
 					l_overrides := old_target.overrides
 					l_old_pre := old_target.precompile
-					old_libraries := old_target.all_libraries
+						-- if it's the application target, set the old_libraries and old_assemblies
+						-- twin, so that we can remove the libraries/assemblies we have handled without
+						-- modifying the old data which is still needed in case of an error
+					if a_target = application_target then
+						old_libraries := old_target.all_libraries.twin
+						old_assemblies := old_target.all_assemblies.twin
+					end
+				end
+					-- add the target to the libraries
+				libraries.force (a_target, a_target.system.uuid)
+				if old_libraries /= Void then
+					old_libraries.remove (a_target.system.uuid)
 				end
 
 				l_pre := a_target.precompile
@@ -211,20 +221,33 @@ feature -- Visit nodes
 
 				if not a_target.assemblies.is_empty and platform = pf_dotnet then
 					consume_assemblies (a_target)
-					process_with_old (a_target.assemblies, l_assemblies)
+					process_with_old (a_target.assemblies, Void)
 				end
 
 				if not is_error then
 						-- do libraries after assemblies, so that the assemblies is already filled with the assemblies defined in the application configuration itself
-					process_with_old (a_target.libraries, l_libraries)
+					process_with_old (a_target.libraries, Void)
 					process_with_old (a_target.clusters, l_clusters)
 						-- must be done at the end
 					process_with_old (a_target.overrides, l_overrides)
 
 
-						-- must be done one time per system after all assemblies have been processed
+						-- must be done one time per system after everything is processed
 					if a_target = application_target then
 						handle_assembly_dependencies
+							-- only assemblies that have not been reused remain in `old_assemblies'
+						if old_assemblies /= Void then
+							from
+								old_assemblies.start
+							until
+								old_assemblies.after
+							loop
+								l_old_group := old_assemblies.item_for_iteration
+								l_old_group.invalidate
+								process_removed_classes (l_old_group.classes)
+								old_assemblies.forth
+							end
+						end
 					end
 
 						-- add the classes that are still in `old_target' to `removed_classes'
@@ -232,16 +255,18 @@ feature -- Visit nodes
 							-- changes in libraries itself have already been handled
 					process_removed (l_libraries)
 
-					process_removed (l_assemblies)
+						-- assemblies are already handled
 					process_removed (l_clusters)
 					process_removed (l_overrides)
 
-						-- set all libraries
+						-- set all libraries, all assemblies
 					a_target.set_all_libraries (libraries)
+					a_target.set_all_assemblies (assemblies)
 				end
 			end
 		ensure then
 			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+			all_assemblies_set: not is_error implies a_target.all_assemblies /= Void
 			application_target_set: not is_error implies a_target.application_target /= Void
 		end
 
@@ -313,14 +338,14 @@ feature -- Visit nodes
 								check
 									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
 								end
-								libraries.force (l_target, l_uuid)
-
 									-- get and initialize visitor
 								l_vis := twin
 								l_vis.reset
 								if old_libraries /= Void and then old_libraries.has (l_uuid) then
 									l_vis.set_old_target (old_libraries.found_item)
+									old_libraries.remove (l_uuid)
 								end
+								libraries.force (l_target, l_uuid)
 
 								l_target.process (l_vis)
 								if l_vis.is_error then
@@ -482,6 +507,9 @@ feature {NONE} -- Implementation
 
 	assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			-- Mapping of processed assemblies, mapped with their guid.
+
+	old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			-- Mapping of processed assemblies of the old target, mapped with their guid.
 
 	current_classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- The classes of the group we are currently processing.
@@ -719,9 +747,13 @@ feature {NONE} -- Implementation
 
 	process_assembly_implementation (an_assembly: CONF_ASSEMBLY) is
 			-- Process `an_assembly' (without dependencies).
+			-- tries to reuse information from `libraries'
+			-- or from `old_libraries'
 		require
 			an_assembly_not_void: an_assembly /= Void
 			dotnet: platform = pf_dotnet
+			old_assembly_void: old_assembly = Void
+			old_group_void: old_group = Void
 		local
 			l_key, l_guid: STRING
 			l_path: like assembly_cache_folder
@@ -735,6 +767,7 @@ feature {NONE} -- Implementation
 			l_a: CONF_ASSEMBLY
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_emitter: IL_EMITTER
+			l_done: BOOLEAN
 		do
 			l_emitter := il_emitter
 			if not is_error then
@@ -758,6 +791,7 @@ feature {NONE} -- Implementation
 						l_guid := l_emitter.consumed_folder_name
 						an_assembly.set_guid (l_guid)
 						l_path.extend (l_emitter.relative_folder_name_from_path (l_p))
+						an_assembly.set_is_in_gac (l_emitter.is_in_gac)
 					end
 				else
 					l_emitter.retrieve_assembly_info_by_fusion_name (an_assembly.assembly_name, an_assembly.assembly_version, an_assembly.assembly_culture, an_assembly.assembly_public_key_token)
@@ -778,36 +812,49 @@ feature {NONE} -- Implementation
 
 						-- if we already have an assembly with the same guid we can directly use this classes/dependencies
 						-- used if an assembly is declared in multiple libraries/application in the same configuration
-					if assemblies /= Void then
-						l_a := assemblies.item (l_guid)
-					end
+					l_a := assemblies.item (l_guid)
 					if l_a /= Void then
 						an_assembly.set_consumed_path (l_a.consumed_path)
 						an_assembly.set_classes (l_a.classes)
 						an_assembly.set_dotnet_classes (l_a.dotnet_classes)
 						an_assembly.set_dependencies (l_a.dependencies)
-						an_assembly.check_changed
+						an_assembly.set_date (l_a.date)
 					else
 						assemblies.force (an_assembly, l_guid)
 
 							-- set consumed path
 						an_assembly.set_consumed_path (l_path)
 
-							-- if we have an old assembly and it wasn't modified, directly use the old classes.
-						if old_assembly /= Void and then not old_assembly.is_modified then
-							an_assembly.set_date (old_assembly.date)
-							l_classes := old_assembly.classes
-							an_assembly.set_classes (l_classes)
-							an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)
-							from
-								l_classes.start
-							until
-								l_classes.after
-							loop
-								reused_classes.force (l_classes.item_for_iteration)
-								l_classes.forth
+							-- if we have an old assembly
+						if old_assemblies /= Void and then old_assemblies.has (l_guid) then
+							old_assembly := old_assemblies.found_item
+							old_group := old_assembly
+							if old_assembly /= an_assembly then
+								old_group.invalidate
 							end
-						else
+							old_assemblies.remove (l_guid)
+							old_assembly.check_changed
+
+								-- if it wasn't modified, directly use the old classes.
+							if not old_assembly.is_modified then
+								an_assembly.set_date (old_assembly.date)
+								l_classes := old_assembly.classes
+								an_assembly.set_classes (l_classes)
+								an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)
+								from
+									l_classes.start
+								until
+									l_classes.after
+								loop
+									reused_classes.force (l_classes.item_for_iteration)
+									l_classes.forth
+								end
+								l_done := True
+								-- else rebuild
+							end
+						end
+							-- (re)build
+						if not l_done then
 							create l_reader
 
 								-- get classes
@@ -820,8 +867,6 @@ feature {NONE} -- Implementation
 							an_assembly.check_changed
 							create current_classes.make (classes_per_assembly)
 							create current_dotnet_classes.make (classes_per_assembly)
-							an_assembly.set_classes (current_classes)
-							an_assembly.set_dotnet_classes (current_dotnet_classes)
 							if l_types /= Void then
 								from
 									i := l_types.eiffel_names.lower
@@ -842,14 +887,26 @@ feature {NONE} -- Implementation
 									i := i + 1
 								end
 							end
+
+								-- process removed classes
+							if old_group /= Void then
+								process_removed_classes (old_group.classes)
+							end
+
+								-- set classes
+							an_assembly.set_classes (current_classes)
+							an_assembly.set_dotnet_classes (current_dotnet_classes)
 						end
 					end
 				end
-
 				l_emitter.unload
 			end
+			old_assembly := Void
+			old_group := Void
 		ensure
 			classes_set: not is_error implies an_assembly.classes_set
+			old_assembly_void: old_assembly = Void
+			old_group_void: old_group = Void
 		end
 
 	process_assembly_dependencies_implementation (an_assembly: CONF_ASSEMBLY) is
@@ -865,10 +922,9 @@ feature {NONE} -- Implementation
 			l_referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
 			i, cnt: INTEGER
 			l_cons_ass: CONSUMED_ASSEMBLY
-			l_old_assembly, l_assembly: CONF_ASSEMBLY
+			l_assembly: CONF_ASSEMBLY
 			l_reader: EIFFEL_DESERIALIZER
 			l_guid, l_dep_guid: STRING
-			l_deps: LINKED_SET [CONF_ASSEMBLY]
 		do
 			l_path := an_assembly.consumed_path
 			l_guid := an_assembly.guid
@@ -894,55 +950,25 @@ feature {NONE} -- Implementation
 							if l_assembly /= Void then
 								an_assembly.add_dependency (l_assembly)
 							else
-									-- first try to get the old assembly
-								if old_assembly /= Void then
-									l_deps := old_assembly.dependencies
-									if l_deps /= Void then
-										from
-											l_deps.start
-										until
-											l_assembly /= Void or l_deps.after
-										loop
-											l_assembly := l_deps.item
-											if not l_assembly.guid.is_equal (l_dep_guid) then
-												l_assembly := Void
-											end
-											l_deps.forth
-										end
-									end
-								end
-
-									-- save value of old_assembly and old_group
-								l_old_assembly := old_assembly
-								old_assembly := l_assembly
-								old_group := l_assembly
-
 									-- create new assembly and process it
 								l_assembly := conf_factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
 
 								process_assembly_implementation (l_assembly)
 								process_assembly_dependencies_implementation (l_assembly)
 								an_assembly.add_dependency (l_assembly)
-								assemblies.force (l_assembly, l_assembly.guid)
-
-									-- restore value
-								old_assembly := l_old_assembly
-								old_group := l_old_assembly
 							end
 						end
 					end
 					i := i + 1
 				end
 			end
-	end
+		end
 
 	handle_assembly_dependencies is
 			-- Handle the dependencies of assemblies.
 		local
 			l_assemblies: like assemblies
 			l_a: CONF_ASSEMBLY
-			l_old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			l_guid: STRING
 		do
 			if not is_error then
 					-- holds the list of all assemblies
@@ -958,31 +984,8 @@ feature {NONE} -- Implementation
 							l_assemblies.after
 						loop
 							l_a := l_assemblies.item_for_iteration
+								-- only process assemblies that have not yet been handled
 							if l_a.dependencies = Void then
-								if old_target /= Void then
-									l_old_assemblies := old_target.assemblies
-								end
-								if l_old_assemblies /= Void then
-									l_guid := l_a.guid
-									from
-										old_assembly := Void
-										old_group := Void
-										l_old_assemblies.start
-									until
-										old_assembly /= Void or l_old_assemblies.after
-									loop
-										if l_old_assemblies.item_for_iteration.guid.is_equal (l_guid) then
-												-- when we load a precompile we use the new target as old target
-												-- in this case old_assembly and l_a are equal, so ignore the old
-											old_assembly := l_old_assemblies.item_for_iteration
-											if old_assembly = l_a then
-												old_assembly := Void
-											end
-											old_group := old_assembly
-										end
-										l_old_assemblies.forth
-									end
-								end
 								process_assembly_dependencies_implementation (l_a)
 							end
 							l_assemblies.forth
@@ -1097,10 +1100,7 @@ feature {NONE} -- Implementation
 			-- Add the classes that have been removed to `removed_classes'
 		local
 			l_group: CONF_GROUP
-			l_assembly: CONF_ASSEMBLY
 			l_library: CONF_LIBRARY
-			l_deps: LINKED_SET [CONF_ASSEMBLY]
-			l_rec: like a_groups
 			l_done: BOOLEAN
 		do
 			if a_groups /= Void then
@@ -1111,6 +1111,9 @@ feature {NONE} -- Implementation
 				loop
 					l_done := False
 					l_group := a_groups.item_for_iteration
+					check
+						not_assembly: not l_group.is_assembly
+					end
 					if l_group /= Void then
 							-- check if the group has already been handled
 						if reused_groups.has (l_group) then
@@ -1134,23 +1137,6 @@ feature {NONE} -- Implementation
 
 						if not l_done and then l_group.classes_set then
 							process_removed_classes (l_group.classes)
-
-								-- for assemblies recursively do this for the dependencies
-							l_assembly ?= l_group
-							if l_assembly /= Void and then not old_assemblies_handled.has (l_assembly.guid) and then l_assembly.dependencies /= Void then
-								old_assemblies_handled.force (l_assembly.guid)
-								from
-									l_deps := l_assembly.dependencies
-									create l_rec.make (l_deps.count)
-									l_deps.start
-								until
-									l_deps.after
-								loop
-									l_rec.force (l_deps.item, l_deps.item.name)
-									l_deps.forth
-								end
-								process_removed (l_rec)
-							end
 						end
 					end
 					a_groups.forth
@@ -1242,12 +1228,6 @@ feature {NONE} -- Implementation
 								old_group.invalidate
 							end
 							reused_groups.force (old_group)
-						end
-
-							-- for assemblies, check if they changed
-						old_assembly ?= old_group
-						if old_assembly /= Void then
-							old_assembly.check_changed
 						end
 					end
 					l_group.process (Current)
@@ -1368,6 +1348,61 @@ feature {NONE} -- shared instances
 			Result.optimize
 		end
 
+	libraries_intersection (a, b: like libraries): BOOLEAN is
+			-- Is there an intersection between `a' and `b'?
+		local
+			l1, l2: like libraries
+		do
+			if a /= Void and b /= Void then
+				if a.count >= b.count then
+					l1 := a
+					l2 := b
+				else
+					l1 := b
+					l2 := a
+				end
+				check
+					l1_not_less_than_l2: l1.count >= l2.count
+				end
+
+				from
+					l1.start
+				until
+					l1.after or Result
+				loop
+					Result := l2.has (l1.key_for_iteration)
+					l1.forth
+				end
+			end
+		end
+
+	assemblies_intersection (a, b: like assemblies): BOOLEAN is
+			-- Is there an intersection between `a' and `b'?
+		local
+			l1, l2: like assemblies
+		do
+			if a /= Void and b /= Void then
+				if a.count >= b.count then
+					l1 := a
+					l2 := b
+				else
+					l1 := b
+					l2 := a
+				end
+				check
+					l1_not_less_than_l2: l1.count >= l2.count
+				end
+
+				from
+					l1.start
+				until
+					l1.after or Result
+				loop
+					Result := l2.has (l1.key_for_iteration)
+					l1.forth
+				end
+			end
+		end
 
 
 feature {NONE} -- Constants
@@ -1410,8 +1445,10 @@ invariant
 	modified_classes_not_void: modified_classes /= Void
 	added_classes_not_void: added_classes /= Void
 	removed_classes_not_void: removed_classes /= Void
-	old_assembly_group: old_assembly /= Void implies old_assembly = old_group
+	old_assembly_group: old_assembly /= Void and old_group /= Void implies old_assembly = old_group
 	application_target_not_void: application_target /= Void
+	libraries_no_intersection: not libraries_intersection (libraries, old_libraries)
+	assemblies_no_intersection: not assemblies_intersection (assemblies, old_assemblies)
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

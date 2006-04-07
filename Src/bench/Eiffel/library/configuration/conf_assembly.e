@@ -286,6 +286,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_public_key_token_set: assembly_public_key_token = a_public_key
 		end
 
+	set_is_in_gac (b: like is_in_gac) is
+			-- Set `is_in_gac' to `b'.
+		do
+			is_in_gac := b
+		ensure
+			is_in_gac_set: is_in_gac = b
+		end
+
+
 feature {CONF_ACCESS} -- Update, in compiled only
 
 	set_dotnet_classes (a_classes: like dotnet_classes) is

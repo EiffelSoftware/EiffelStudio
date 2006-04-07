@@ -257,20 +257,23 @@ feature -- Generation
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
 			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			l_as: CONF_ASSEMBLY
 		do
 			if not retried then
 					-- Copy referenced local assemblies
 				from
-					l_assemblies := universe.target.assemblies
-					create assemblies_done.make (l_assemblies.count)
+					l_assemblies := universe.target.all_assemblies
 					l_assemblies.start
 				until
 					l_assemblies.after
 				loop
-					copy_recursively (l_assemblies.item_for_iteration)
+					l_as := l_assemblies.item_for_iteration
+					if l_as.is_enabled (universe.platform, universe.build) and then not l_as.is_in_gac then
+						copy_to_local (l_as.location.evaluated_path)
+						l_has_local := True
+					end
 					l_assemblies.forth
 				end
-				assemblies_done.wipe_out
 
 					-- Copy precompiled assemblies.
 				if
@@ -1013,36 +1016,6 @@ feature {NONE} -- Sort
 		end
 
 feature {NONE} -- File copying
-
-	assemblies_done: SEARCH_TABLE [STRING]
-			-- Lookup for the handled assemblies (during copy).
-
-	copy_recursively (an_assembly: CONF_ASSEMBLY) is
-			-- Copy `an_assembly' (if necessary) and check recursively for dependencies.
-		require
-			assemblies_copied_not_void: assemblies_done /= Void
-			an_assembly_not_void: an_assembly /= Void
-		local
-			l_deps: LINKED_SET [CONF_ASSEMBLY]
-		do
-			if not assemblies_done.has (an_assembly.guid) then
-				assemblies_done.force (an_assembly.guid)
-				if not an_assembly.is_in_gac then
-					copy_to_local (an_assembly.location.evaluated_path)
-				end
-				l_deps :=an_assembly.dependencies
-				if l_deps /= Void then
-					from
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						copy_recursively (l_deps.item)
-						l_deps.forth
-					end
-				end
-			end
-		end
 
 	copy_to_local (a_source: STRING) is
 			-- Copy `a_source' into `Assemblies' directory.

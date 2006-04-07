@@ -55,8 +55,6 @@ inherit
 			{NONE} all
 		end
 
-	CONF_REFACTORING
-
 create
 	make,
 	make_with_parent

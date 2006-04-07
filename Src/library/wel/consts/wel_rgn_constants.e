@@ -31,7 +31,7 @@ feature -- Access
 			"RGN_XOR"
 		end
 
-	Rgn_diff: INTEGER is
+	frozen Rgn_diff: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias

@@ -110,7 +110,7 @@ feature
 		do
 			Result := (expression = Void) and then (target = Void)
 		ensure
-			Result = (expression = Void) and then (target = Void)
+			Result = ((expression = Void) and then (target = Void))
 		end
 
 indexing

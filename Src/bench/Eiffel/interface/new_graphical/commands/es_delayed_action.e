@@ -92,8 +92,6 @@ feature -- Delayed action access
 		do
 			cancel_request
 			delayed_action.call (Void)
-		ensure
-			delayed_action_timer_destroyed: delayed_action_timer = Void
 		end
 
 	request_call is

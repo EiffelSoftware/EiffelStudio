@@ -55,7 +55,14 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
+	DOCUMENT_HELPER
+		export
+			{NONE} all
+		end
 create
 	make
 
@@ -580,6 +587,51 @@ feature -- Action
 			end
 		end
 
+	rebuild_scope_list is
+			-- Rebuild scope list, validate existing items in it.
+		local
+			l_item: EV_LIST_ITEM
+			l_class: CLASS_I
+			l_group: CONF_GROUP
+			l_items_tbr: ARRAYED_LIST [EV_LIST_ITEM]
+		do
+			create l_items_tbr.make (3)
+			from
+				scope_list.start
+			until
+				scope_list.after
+			loop
+				l_item := scope_list.item
+				l_class ?= l_item.data
+				l_group ?= l_item.data
+				if l_class /= Void then
+					if not l_class.is_valid then
+						l_items_tbr.extend (l_item)
+					else
+						l_item.set_text (l_class.name)
+						l_item.set_tooltip (group_name_presentation (".", "", l_class.group))
+					end
+				elseif l_group /= Void then
+					if not l_group.is_valid then
+						l_items_tbr.extend (l_item)
+					else
+						l_item.set_text (group_name_presentation (".", "", l_group))
+					end
+				else
+					l_items_tbr.extend (l_item)
+				end
+				scope_list.forth
+			end
+			from
+				l_items_tbr.start
+			until
+				l_items_tbr.after
+			loop
+				scope_list.prune (l_items_tbr.item)
+				l_items_tbr.forth
+			end
+		end
+
 feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_REPORT_GRID} -- Implementation
 
 	check_class_succeed: BOOLEAN assign set_check_class_succeed
@@ -603,7 +655,6 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 			l_class_i ?= a_item.data
 			if old_editor = Void or old_editor = editor then
 				if l_class_i /= Void then
-	--				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date or changed_classes.has (l_class_i)
 					if is_current_editor_searched then
 						Result := is_text_changed_in_editor
 					else
@@ -612,14 +663,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 						else
 							Result := is_text_changed_in_editor or changed_classes.has (l_class_i) or a_item.date /= l_class_i.date
 						end
-	--					if is_text_changed_in_editor then
-	--						Result := editor.changed and Result
-	--					else
-	--						Result := editor.changed or Result
-	--					end
 					end
-				else
---					Result := true
 				end
 			end
 		end
@@ -1836,6 +1880,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			l_item := scope_list.retrieve_item_by_data (a_class, false)
 			if l_item = Void then
 				create l_item.make_with_text (a_class.name)
+				l_item.set_tooltip (group_name_presentation (".", "", a_class.group))
 				l_item.set_pixmap (pixmap_from_class_i (a_class))
 				scope_list.extend (l_item)
 				l_item.set_data (a_class)
@@ -1880,7 +1925,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			if not a_group.is_assembly then
 				l_item := scope_list.retrieve_item_by_data (a_group, false)
 				if l_item = Void then
-					create l_item.make_with_text (a_group.name)
+					create l_item.make_with_text (group_name_presentation (".", "", a_group))
 					l_item.set_pixmap (pixmap_from_group (a_group))
 					scope_list.extend (l_item)
 					l_item.set_data (a_group)

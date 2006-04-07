@@ -75,8 +75,16 @@ feature -- Access
 
 	stone: CLUSTER_STONE is
 			-- Cluster stone representing `data'.
+		local
+			l_group: CONF_GROUP
 		do
-			create Result.make_subfolder (data.actual_group, path)
+			l_group := data.actual_group
+			if l_group.is_cluster then
+				create Result.make_subfolder (data.actual_group, path)
+			else
+				create Result.make (data.actual_group)
+			end
+
 		end
 
 feature -- Status setting

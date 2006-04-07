@@ -755,13 +755,11 @@ end
 			-- Build or rebuild the configuration information
 		local
 			l_vis_build: CONF_BUILD_VISITOR
-			l_vis_check: CONF_CHECKER_VISITOR
 			l_classes: DS_HASH_SET [CONF_CLASS]
 			l_conf_class: CONF_CLASS
 			l_class_i: CLASS_I
 			l_errors: LIST [CONF_ERROR]
 			vd71: VD71
-			vd80: VD80
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
@@ -812,23 +810,6 @@ end
 					l_errors.forth
 				end
 				Error_handler.raise_error
-			end
-
-				-- check configuration and add warnings
-			create l_vis_check.make (universe.platform, universe.build)
-			l_target.process (l_vis_check)
-			if l_vis_check.is_error then
-				from
-					l_errors := l_vis_check.last_errors
-					l_errors.start
-				until
-					l_errors.after
-				loop
-					create vd80
-					vd80.set_warning (l_errors.item)
-					Error_handler.insert_warning (vd80)
-					l_errors.forth
-				end
 			end
 
 				-- modified classes
@@ -981,6 +962,9 @@ end
 			l_conf_class: CONF_CLASS
 			l_rebuild: BOOLEAN
 			l_grp: CONF_GROUP
+			l_vis_check: CONF_CHECKER_VISITOR
+			l_errors: LIST [CONF_ERROR]
+			vd80: VD80
 		do
 			degree_output.put_start_degree_6
 
@@ -1037,6 +1021,24 @@ end
 				end
 				add_visible_classes
 			end
+
+				-- check configuration and add warnings
+			create l_vis_check.make (universe.platform, universe.build)
+			universe.target.process (l_vis_check)
+			if l_vis_check.is_error then
+				from
+					l_errors := l_vis_check.last_errors
+					l_errors.start
+				until
+					l_errors.after
+				loop
+					create vd80
+					vd80.set_warning (l_errors.item)
+					Error_handler.insert_warning (vd80)
+					l_errors.forth
+				end
+			end
+
 			if
 				Lace.compile_all_classes or
 				(Compilation_modes.is_precompiling and root_class = any_class)

@@ -201,7 +201,6 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return sub group with `a_name' if there is any.
 		require

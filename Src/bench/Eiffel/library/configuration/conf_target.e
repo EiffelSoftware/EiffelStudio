@@ -75,7 +75,10 @@ feature -- Access, in compiled only, not stored to configuration file
 			-- Libraries this target is used in.
 
 	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
-			-- All libraries in the current system.
+			-- All libraries in current system.
+
+	all_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			-- All assemblies in current system.
 
 	application_target: CONF_TARGET
 			-- The application target.
@@ -773,6 +776,16 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			all_libraries := a_libraries
 		ensure
 			libraries_set: all_libraries = a_libraries
+		end
+
+	set_all_assemblies (an_assemblies: like all_assemblies) is
+			-- Set `all_assemlibes' to `an_assemblies'.
+		require
+			an_assemblies_not_void: an_assemblies /= Void
+		do
+			all_assemblies := an_assemblies
+		ensure
+			assemblies_set: all_assemblies = an_assemblies
 		end
 
 	set_application_target (a_target: CONF_TARGET) is

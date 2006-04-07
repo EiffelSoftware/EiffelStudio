@@ -900,6 +900,7 @@ feature -- Update
 			update_save_symbol
 			address_manager.refresh
 			during_synchronization := False
+			search_tool.rebuild_scope_list
 		end
 
 	synchronize_routine_tool_to_default is

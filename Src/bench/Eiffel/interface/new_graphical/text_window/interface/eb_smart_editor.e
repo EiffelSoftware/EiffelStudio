@@ -929,7 +929,7 @@ feature {NONE} -- Code completable implementation
 		end
 
 	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
-			-- Can completing by these keys?
+			-- Can complete by these keys?
 		local
 			l_shortcut_pref: SHORTCUT_PREFERENCE
 		do
@@ -1062,39 +1062,59 @@ feature {NONE} -- Code completable implementation
 			-- Allow tab selecting?
 		local
 			l_current_line: like current_line
-			l_current_token: EDITOR_TOKEN
+			l_current_token, l_cur_token: EDITOR_TOKEN
+			l_comment: EDITOR_TOKEN_COMMENT
 			l_has_left_brace_ahead, l_has_right_brace_following, l_has_right_brace_ahead, seperator_ahead: BOOLEAN
+			l_comment_ahead: BOOLEAN
 		do
 			if has_selection implies text_displayed.selection_start.y_in_lines = text_displayed.selection_end.y_in_lines then
 				l_current_line := current_line
-				from
-					l_current_line.start
-				until
-					l_current_line.after or l_current_line.item = text_displayed.cursor.token
-				loop
-					if l_current_line.item.is_text and then l_current_line.item.image.is_equal ("(") then
-						l_has_left_brace_ahead := true
-					end
-					if l_current_line.item.is_text and then l_current_line.item.image.is_equal (")") then
-						l_has_right_brace_ahead := true
-					end
-					if l_current_line.item.is_text and then (l_current_line.item.image.is_equal (",") or else l_current_line.item.image.is_equal (";")) then
-						seperator_ahead := true
-					end
-					l_current_line.forth
-				end
 
+				l_cur_token := current_token_in_line (l_current_line)
+				l_current_token := l_cur_token
 				from
-					l_current_token := current_token_in_line (l_current_line)
 				until
-					l_current_token = Void or else l_current_token = l_current_line.eol_token
+					l_cur_token = Void or else l_cur_token.is_text
 				loop
-					if l_current_token.image.is_equal (")") then
-						l_has_right_brace_following := true
-					end
-					l_current_token := l_current_token.next
+					l_cur_token := l_cur_token.previous
 				end
-				Result := l_has_left_brace_ahead or (l_has_right_brace_following and seperator_ahead) or l_has_right_brace_ahead
+				if l_cur_token /= Void then
+					l_comment ?= l_cur_token
+					l_comment_ahead := (l_comment /= Void)
+				end
+				Result := not l_comment_ahead
+				if Result then
+					from
+						l_current_line.start
+					until
+						l_current_line.after or l_current_line.item = text_displayed.cursor.token
+					loop
+						if l_current_line.item.is_text and then l_current_line.item.image.is_equal ("(") then
+							l_has_left_brace_ahead := true
+						end
+						if l_current_line.item.is_text and then l_current_line.item.image.is_equal (")") then
+							l_has_right_brace_ahead := true
+						end
+						if l_current_line.item.is_text and then (l_current_line.item.image.is_equal (",") or else l_current_line.item.image.is_equal (";")) then
+							seperator_ahead := true
+						end
+						l_current_line.forth
+					end
+
+					from
+						l_current_token := current_token_in_line (l_current_line)
+					until
+						l_current_token = Void or else l_current_token = l_current_line.eol_token
+					loop
+						if l_current_token.image.is_equal (")") then
+							l_has_right_brace_following := true
+						end
+						l_current_token := l_current_token.next
+					end
+					Result := 	l_has_left_brace_ahead or
+								(l_has_right_brace_following and seperator_ahead) or
+								l_has_right_brace_ahead
+				end
 			end
 		end
 

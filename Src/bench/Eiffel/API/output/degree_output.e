@@ -75,10 +75,7 @@ feature -- Start output features
 			last_reached_degree := 6;
 			processed := 0
 			total_number := 0
-			if is_output_quiet then
-				display_message (degree_description (6))
-				display_new_line
-			end
+			put_start_degree (6, 1)
 		end
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
@@ -239,12 +236,9 @@ feature -- Output on per class
 		require
 			a_group_not_void: a_group /= Void
 		do
-			if not is_output_quiet then
-					-- clusters are displayed with `put_process_directory'.
-				if not a_group.is_cluster then
-					display_message ("Examining "+a_group.name)
-					display_new_line
-				end
+				-- clusters are displayed with `put_process_directory'.
+			if not a_group.is_cluster then
+				display_degree (degree_message(6), 1, a_group.name)
 			end
 		end
 
@@ -254,10 +248,7 @@ feature -- Output on per class
 			a_cluster_not_void: a_cluster /= Void
 			a_path_not_void: a_path /= Void
 		do
-			if not is_output_quiet then
-				display_message ("Examining " + a_cluster.name + a_path)
-				display_new_line
-			end
+			display_degree (degree_message(6), 1, a_cluster.name + a_path)
 		end
 
 	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -562,7 +553,7 @@ feature {NONE} -- Constants
 	Document_class_message: STRING is "Generating class ";
 	Consume_assemblies_message: STRING is "Consuming assemblies";
 	Degree_output_string: STRING is "Degree ";
-	Cluster_output_string: STRING is " cluster ";
+	Cluster_output_string: STRING is " group ";
 	Class_output_string: STRING is " class ";
 
 

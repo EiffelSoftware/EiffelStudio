@@ -476,6 +476,13 @@ feature -- C enums
 			"GDK_3BUTTON_PRESS"
 		end
 
+	frozen gdk_button_release_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_BUTTON_RELEASE"
+		end
+
 	frozen gtk_state_normal_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

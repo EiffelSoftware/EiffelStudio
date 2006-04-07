@@ -16,7 +16,8 @@ inherit
 		redefine
 			user_initialization,
 			gain_focus,
-			lose_focus
+			lose_focus,
+			recycle
 		end
 
 create
@@ -159,19 +160,15 @@ feature {NONE} -- Quick search bar.
 		require
 			bottom_widget_created: bottom_widget /= Void
 		do
-			create search_bar
+			create search_bar.make (search_tool)
 			bottom_widget.extend (search_bar)
 			hide_search_bar
 			search_bar.advanced_button.select_actions.extend (agent trigger_advanced_search)
 			search_bar.close_button.select_actions.extend (agent close_quick_search_bar)
 			search_bar.next_button.select_actions.extend (agent quick_find_next)
 			search_bar.previous_button.select_actions.extend (agent quick_find_previous)
-			search_bar.match_case_button.select_actions.extend (agent option_changed)
-			search_bar.regular_expression_button.select_actions.extend (agent option_changed)
-
 
 			search_bar.keyword_field.change_actions.extend (agent quick_incremental_search)
-			search_bar.keyword_field.change_actions.extend (agent option_changed)
 			search_bar.keyword_field.focus_in_actions.extend (agent search_tool.focusing_keyword_field)
 			search_bar.keyword_field.focus_in_actions.extend (agent prepare_quick_search)
 			search_bar.keyword_field.return_actions.extend (agent return_on_quick_search_field)
@@ -233,12 +230,6 @@ feature {NONE} -- Quick search bar.
 				end
 			end
 			search_tool.trigger_keyword_field_color (search_bar.keyword_field)
-		end
-
-	option_changed is
-			-- Option changed on quick search bar.
-		do
-			search_tool.force_new_search
 		end
 
 	trigger_advanced_search is
@@ -405,6 +396,13 @@ feature -- Search commands
 
 feature {NONE} -- Implementation
 
+	recycle is
+			-- Recycle
+		do
+			Precursor {EB_EDITOR}
+			search_bar.recycle
+		end
+
 	shared_quick_search_mode: CELL [BOOLEAN] is
 			-- Shared quick search mode.
 		once
@@ -451,6 +449,7 @@ feature {NONE} -- Implementation
 					search_bar.keyword_field.change_actions.block
 					search_bar.keyword_field.set_text (search_tool.currently_searched)
 					search_bar.keyword_field.change_actions.resume
+					search_bar.trigger_sensibility
 				end
 			end
 		end
@@ -477,6 +476,7 @@ feature {NONE} -- Implementation
 					search_bar.keyword_field.change_actions.block
 					search_bar.keyword_field.set_text (l_search_tool.currently_searched)
 					search_bar.keyword_field.change_actions.resume
+					search_bar.trigger_sensibility
 				end
 			end
 		end

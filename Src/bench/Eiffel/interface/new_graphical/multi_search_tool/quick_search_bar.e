@@ -11,6 +11,9 @@ class
 
 inherit
 	QUICK_SEARCH_BAR_IMP
+		redefine
+			destroy
+		end
 
 	EB_SHARED_PIXMAPS
 		rename
@@ -30,7 +33,34 @@ inherit
 			copy
 		end
 
+	EB_SEARCH_OPTION_OBSERVER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	EB_RECYCLABLE
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make (a_option_manager: EB_SEARCH_OPTION_OBSERVER_MANAGER) is
+			-- Set `option_manager' with `a_option_manager'
+		require
+			a_option_manager_not_void: a_option_manager /= Void
+		do
+			default_create
+			option_manager := a_option_manager
+			option_manager.add_observer (Current)
+		end
 
 	user_initialization is
 			-- Called by `initialize'.
@@ -44,6 +74,8 @@ feature {NONE} -- Initialization
 			advanced_button.set_pixmap (icon_quick_search_advanced_color)
 			close_button.set_pixmap (icon_quick_search_close_color)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
+			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))
+			regular_expression_button.select_actions.extend (agent check_button_changed (regular_expression_button))
 			trigger_sensibility
 			initialize_lose_focus_action (Current)
 			initialize_key_pressed_action (Current)
@@ -75,6 +107,14 @@ feature -- Status report
 			-- Is regular expression used?
 		do
 			Result := regular_expression_button.is_selected
+		end
+
+feature -- Recyclable
+
+	recycle is
+			-- Recycle
+		do
+			option_manager.remove_observer (Current)
 		end
 
 feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Element change
@@ -117,7 +157,69 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Element change
 			end
 		end
 
+feature {NONE} -- Option observer
+
+	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN) is
+			-- Case sensitivity option changed
+		do
+			if match_case_button.is_selected /= a_case_sensitive then
+				match_case_button.select_actions.block
+				if a_case_sensitive then
+					match_case_button.enable_select
+				else
+					match_case_button.disable_select
+				end
+				match_case_button.select_actions.resume
+			end
+		end
+
+	on_match_regex_changed (a_match_regex: BOOLEAN) is
+			-- Match regex option changed
+		do
+			if regular_expression_button.is_selected /= a_match_regex then
+				regular_expression_button.select_actions.block
+				if a_match_regex then
+					regular_expression_button.enable_select
+				else
+					regular_expression_button.disable_select
+				end
+				regular_expression_button.select_actions.resume
+			end
+		end
+
+	on_whole_word_changed (a_whole_word: BOOLEAN) is
+			-- Whole word option changed
+		do
+		end
+
+	on_backwards_changed (a_bachwards: BOOLEAN) is
+			-- Backwards option changed
+		do
+		end
+
+	check_button_changed (a_button: EV_CHECK_BUTTON) is
+			-- Option check button changed.
+		do
+			if a_button = match_case_button then
+				option_manager.case_sensitivity_changed (a_button.is_selected)
+			elseif a_button = regular_expression_button then
+				option_manager.match_regex_changed (a_button.is_selected)
+			end
+		end
+
+feature -- Destroy
+
+	destroy is
+			-- Destroy
+		do
+			recycle
+			Precursor {QUICK_SEARCH_BAR_IMP}
+		end
+
 feature {NONE} -- Implementation
+
+	option_manager: EB_SEARCH_OPTION_OBSERVER_MANAGER
+			-- Search option manager
 
 	initialize_lose_focus_action (a_widget: EV_WIDGET) is
 			-- Set lose focus action for all child widgets of `a_widget', `a_widget' included.
@@ -237,6 +339,9 @@ feature {NONE} -- Implementation
 		end
 
 	search_history_size: INTEGER is 10;
+
+invariant
+	option_manager_not_void: option_manager /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

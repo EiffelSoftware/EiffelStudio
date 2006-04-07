@@ -532,6 +532,22 @@ feature -- Status setting
 			disabled: not enabled
 		end
 
+	enable_drag_accept_files is
+			-- Allow `Current' to be a file drag and drop target.
+		require
+			exists
+		do
+			cwin_drag_accept_files (item, True)
+		end
+
+	disable_drag_accept_files is
+			-- Disallow `Current' from being a file drag and drop target.
+		require
+			exists
+		do
+			cwin_drag_accept_files (item, False)
+		end
+
 	show is
 			-- Show the window
 		require
@@ -1198,7 +1214,6 @@ feature -- Basic operations
 			cwin_validate_rect (item, default_pointer)
 		end
 
-
 	validate_rect (rect: WEL_RECT) is
 			-- Validate the area `rect'.
 		require
@@ -1697,6 +1712,39 @@ feature {WEL_WINDOW} -- Implementation
 			end
 		end
 
+	on_wm_dropfiles (wparam: POINTER) is
+			-- Wm_dropfile message
+		require
+			exists: exists
+		local
+			l_filecount, l_chars_copied: INTEGER
+			l_string: WEL_STRING
+			l_max_length: INTEGER
+			i: INTEGER
+			l_file_list: ARRAYED_LIST [STRING]
+		do
+				-- Retrieve number of filenames dropped
+			l_filecount := cwin_drag_query_file (wparam, -1, default_pointer, 0)
+
+			if l_filecount > 0 then
+					-- Retrieve filenames
+				from
+					i := 0
+					l_max_length := 255
+					create l_string.make_empty (l_max_length)
+					create l_file_list.make_filled (l_filecount)
+				until
+					i >= l_filecount
+				loop
+					l_chars_copied := cwin_drag_query_file (wparam, i, l_string.item, l_max_length)
+						-- We reverse the file order to match the order in which the user selected the items
+					l_file_list.put_i_th (l_string.substring (1, l_chars_copied), l_filecount - i)
+					i := i + 1
+				end
+			end
+			--| FIXME Move code to Vision2 
+		end
+
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -1801,6 +1849,8 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_activate (wparam.to_integer_32)
 			when wm_getdlgcode then
 				on_getdlgcode
+			when Wm_dropfiles then
+				on_wm_dropfiles (wparam)
 			when wm_themechanged then
 				on_wm_theme_changed
 			when wm_queryuistate, wm_changeuistate, wm_updateuistate then
@@ -2039,6 +2089,22 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND): BOOL"
 		alias
 			"DestroyWindow"
+		end
+
+	cwin_drag_accept_files (hwnd: POINTER; accept: BOOLEAN) is
+			-- SDK DragAcceptFiles
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DragAcceptFiles ((HWND) $hwnd, (BOOL) $accept)"
+		end
+
+	cwin_drag_query_file (hdrop: POINTER; ifile: INTEGER; buffer_pointer: POINTER; buffer_size: INTEGER): INTEGER is
+			-- SDK DragQueryFile
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DragQueryFile ((HDROP) $hdrop, (UINT) $ifile, (LPTSTR) $buffer_pointer, (UINT) $buffer_size)"
 		end
 
 	cwin_is_iconic (hwnd: POINTER): BOOLEAN is

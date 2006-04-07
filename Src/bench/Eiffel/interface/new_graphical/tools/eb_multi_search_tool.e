@@ -63,6 +63,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_SEARCH_OPTION_OBSERVER_MANAGER
+
+	EB_SEARCH_OPTION_OBSERVER
+
 create
 	make
 
@@ -81,6 +86,7 @@ feature {NONE} -- Initialization
 			create show_actions
 			create last_keyword_queue.make
 			incremental_search_start_pos := 1
+			add_observer (Current)
 		end
 
 	build_interface is
@@ -187,21 +193,24 @@ feature {NONE} -- Initialization
 			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
 			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
 			case_sensitive_button.select_actions.extend (agent force_new_search)
+			case_sensitive_button.select_actions.extend (agent check_button_changed (case_sensitive_button))
 
 				-- Option "Whole word"
 			create whole_word_button.make_with_text (Interface_names.l_Whole_word)
 			whole_word_button.key_press_actions.extend (agent key_pressed (?, True))
 			whole_word_button.select_actions.extend (agent force_new_search)
+			whole_word_button.select_actions.extend (agent check_button_changed (whole_word_button))
 
 				-- Option "Use regular expression"
 			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
 			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
 			use_regular_expression_button.select_actions.extend (agent force_new_search)
-
+			use_regular_expression_button.select_actions.extend (agent check_button_changed (use_regular_expression_button))
 
 				-- Option "Search backward"
 			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
 			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
+			search_backward_button.select_actions.extend (agent check_button_changed (search_backward_button))
 
 			create vbox
 			hbox.extend (vbox)
@@ -1609,6 +1618,81 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search report
 			-- Search has result?
 		do
 			Result := not multi_search_performer.is_empty
+		end
+
+feature {NONE} -- Option observer
+
+	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN) is
+			-- Case sensitivity option changed
+		do
+			if case_sensitive_button.is_selected /= a_case_sensitive then
+				case_sensitive_button.select_actions.block
+				if a_case_sensitive then
+					case_sensitive_button.enable_select
+				else
+					case_sensitive_button.disable_select
+				end
+				case_sensitive_button.select_actions.resume
+				force_new_search
+			end
+		end
+
+	on_match_regex_changed (a_match_regex: BOOLEAN) is
+			-- Match regex option changed
+		do
+			if use_regular_expression_button.is_selected /= a_match_regex then
+				use_regular_expression_button.select_actions.block
+				if a_match_regex then
+					use_regular_expression_button.enable_select
+				else
+					use_regular_expression_button.disable_select
+				end
+				use_regular_expression_button.select_actions.resume
+				force_new_search
+			end
+		end
+
+	on_whole_word_changed (a_whole_word: BOOLEAN) is
+			-- Whole word option changed
+		do
+			if whole_word_button.is_selected /= a_whole_word then
+				whole_word_button.select_actions.block
+				if a_whole_word then
+					whole_word_button.enable_select
+				else
+					whole_word_button.disable_select
+				end
+				whole_word_button.select_actions.resume
+				force_new_search
+			end
+		end
+
+	on_backwards_changed (a_bachwards: BOOLEAN) is
+			-- Backwards option changed
+		do
+			if search_backward_button.is_selected /= a_bachwards then
+				search_backward_button.select_actions.block
+				if a_bachwards then
+					search_backward_button.enable_select
+				else
+					search_backward_button.disable_select
+				end
+				search_backward_button.select_actions.resume
+			end
+		end
+
+	check_button_changed (a_button: EV_CHECK_BUTTON) is
+			-- Option check button changed.
+		do
+			if a_button = case_sensitive_button then
+				case_sensitivity_changed (a_button.is_selected)
+			elseif a_button = use_regular_expression_button then
+				match_regex_changed (a_button.is_selected)
+			elseif a_button = whole_word_button then
+				whole_word_changed (a_button.is_selected)
+			elseif a_button = search_backward_button then
+				backwards_changed (a_button.is_selected)
+			end
 		end
 
 feature {NONE} -- Replacement Implementation

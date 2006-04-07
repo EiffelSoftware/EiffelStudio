@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="base" uuid="6d7ff712-bba5-4ac0-aabf-2d9880493a01" library_target="base">
+	<target name="base">
+		<description>Base library</description>
+		<root class="ANY"/>
+		<option>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="multithreaded" value="True"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+		<cluster name="base" location="$ISE_LIBRARY\library\base" recursive="true">
+			<ifnot platform="dotnet"/>
+		</cluster>
+		<cluster name="dotnet_base" location="$ISE_LIBRARY\library\base" recursive="true">
+			<if platform="dotnet"/>
+			<file_rule>
+				<exclude>classic</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="base_net" location="$ISE_LIBRARY\library.net\base" recursive="true">
+			<if platform="dotnet"/>
+		</cluster>
+		<cluster name="thread" location="$ISE_LIBRARY\library\thread" recursive="true">
+			<ifnot platform="dotnet"/>
+		</cluster>
+		<cluster name="dotnet_thread" location="$ISE_LIBRARY\library\thread" recursive="true">
+			<if platform="dotnet"/>
+			<file_rule>
+				<exclude>classic</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="thread_net" location="$ISE_LIBRARY\library.net\thread" recursive="true">
+			<if platform="dotnet"/>
+		</cluster>
+	</target>
+</system>

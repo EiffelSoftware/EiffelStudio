@@ -362,7 +362,7 @@ feature -- Drawing operations
 
 	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL) is
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
-			-- Rotation is number of degrees counter-clockwise from horizontal plane.
+			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
 			draw_text_internal (x, y, a_text, True, -1, angle)
 		end

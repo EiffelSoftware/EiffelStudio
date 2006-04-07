@@ -1,0 +1,115 @@
+ <document title="Release notes for EiffelStudio 5.7" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading><size>2</size>Graphical environment</heading>
+			<heading><size>3</size>Improvements</heading>
+			<list ordered="false">
+				<item>New refactoring facilities: renaming and feature pull-up.</item>
+				<item>Output of C compilations now appears within the EiffelStudio environment.</item>
+				<item>Improved tool for launching external commands from within the EiffelStudio environment.</item>
+				<item>Introduced basic support for Unicode in Eiffel libraries, namely EiffelBase, EiffelVision2 and WEL.</item>
+				<item>New library UUID for generating UUID.</item>
+				<item>New library Process for launching, waiting, redirecting outputs of processes.</item>
+				<item>New configuration system. It brings a new dimension to the way you manage multiple projects and also simplifying it.</item>
+				<item>Improved display of clusters, libraries and assemblies.</item>
+				<item>Added ability to see more relations in the diagram tool. For example, you can select a class and choose to see its descendants in the diagram.</item>
+			</list>
+			<heading><size>3</size>Changes</heading>
+			<list ordered="false">
+				<item>New configuration system. EiffelStudio will automatically convert your existing ace or epr files to the new format.</item>
+				<item>Compilation progress is now displayed in the status bar and in the output pane, no more dialog box.</item>
+				<item>Display of errors and warnings is now done in different panes, so that you do not loose their content when the output pane was changed.</item>
+			</list>
+			<heading><size>3</size>Bug fixes</heading>
+			<list ordered="false">
+				<item>When in a different format than the editable format, one can now select a feature and it will bring you to the feature in the selected format, rather than going back to the editable format.</item>
+			</list>
+		<heading><size>2</size>Compiler</heading>
+		<list ordered="false">
+			<item>Click <link><url>../30_compiler/60_version_history/07_57_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
+		</list>
+		<heading><size>2</size>Debugger</heading>
+			<list ordered="false">
+				<item>Click <link><url>../40_debugger/80_version_history/Eiffel57.xml</url><label>here</label></link> for the EiffelStudio's debugger release notes.</item>
+			</list>
+		<heading><size>2</size>EiffelBuild</heading>
+			<list ordered="false">
+				<item>Click <link><url>../../../eiffelbuild/version_history/index.xml</url><label>here</label></link> for the EiffelBuild release notes.</item>
+			</list>
+		<heading><size>2</size>Libraries</heading>
+		<heading><size>3</size>CECIL</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>EiffelBase</heading>
+		<list ordered="false">
+			<item><class_name>STRING</class_name>, <class_name>STRING_8</class_name>, <class_name>STRING_32</class_name> and <class_name>STRING_GENERAL</class_name>:
+				<list ordered="false">
+					<item>Added Unicode support through the addition of STRING_32. For the moment Unicode support is limited to the data-structure.</item>
+					<item>Added <class_name>STRING_GENERAL</class_name>, a common ancestor to <class_name>STRING_8</class_name> and <class_name>STRING_32</class_name>. It is useful if you want to handle both ASCII and Unicode
+						string. For example this facility is used in EiffelVision2 and WEL.
+					</item>
+					<item><class_name>STRING</class_name> can be either <class_name>STRING_8</class_name> or <class_name>STRING_32</class_name> depending on your configuration. Default is <class_name>STRING_8</class_name>.</item>
+				</list>
+			</item>
+			<item><class_name>REAL_32</class_name> and <class_name>REAL_64</class_name>:
+				<list ordered="false">
+					<item>Renamed REAL into <class_name>REAL_32</class_name>, and <class_name>DOUBLE</class_name> into <class_name>REAL_64</class_name>. <class_name>REAL</class_name> can be either <class_name>REAL_32</class_name> or <class_name>REAL_64</class_name> depending on your configuration. Default is <class_name>REAL_32</class_name>.</item>
+					<item>Added <feature_name>rounded_xxx</feature_name>, <feature_name>floor_xxx</feature_name> and <feature_name>ceiling_xxx</feature_name> where xxx is the current floating point type, as the version returning an <class_name>INTEGER</class_name> are definitely not precise for large numbers.</item>
+				</list>
+			</item>
+			<item>SED serialization facility:
+				<list ordered="false">
+					<item></item>
+				</list>
+			</item>
+		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+				<item></item>
+		</list>
+		<heading><size>3</size>EiffelThread</heading>
+		<list ordered="false">
+				<item></item>
+		</list>
+		<heading><size>3</size>EiffelTime</heading>
+		<list ordered="false">
+				<item></item>
+		</list>
+		<heading><size>3</size>EiffelVision2</heading>
+		<list ordered="false">
+			<item>Added Unicode support. Read the WEL entry for Unicode below to see the impact on your code.</item>
+			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
+		</list>
+		<heading><size>3</size>Process</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>UUID</heading>
+		<list ordered="false">
+			<item></item>
+		</list>
+		<heading><size>3</size>WEL</heading>
+		<list ordered="false">
+				<item>Added Unicode support:
+					<list ordered="false">
+						<item>All routines taking an argument of type <class_name>STRING</class_name> or a generic type with <class_name>STRING</class_name> in one of the actual generic parameter
+							have been changed to take an argument of type <class_name>STRING_GENERAL</class_name> which should not impact you at all, however make sure
+							that if your redefine such a routine, you need to change the signature to <class_name>STRING_GENERAL</class_name>, otherwise you may
+							introduce a CATCALL.
+						</item>
+						<item>All queries of type <class_name>STRING</class_name> have been changed to <class_name>STRING_32</class_name>. Because <class_name>STRING_32</class_name> should not be convertible to <class_name>STRING</class_name>, it
+							would break a lot of existing code, as a result and only for a transition period, we made <class_name>STRING_32</class_name> convert to <class_name>STRING</class_name>.
+							In the next release this conversion will be marked obsolete, and in the release after the next it will be removed.
+						</item>
+						<item>For queries whose type is a generic with <class_name>STRING</class_name> as one of the actual generic parameter, we changed <class_name>STRING</class_name> into
+							<class_name>STRING_32</class_name>. Because no automatic conversion can be done in this case, we have introduced for a routine nnnnn following
+							this pattern a new routine nnnnn_8 whose actual generic parameter is still <class_name>STRING</class_name>.
+						</item>
+					</list>
+				</item>
+		</list>
+	</paragraph>
+</document>

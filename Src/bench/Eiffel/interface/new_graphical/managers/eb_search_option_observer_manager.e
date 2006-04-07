@@ -92,7 +92,7 @@ feature -- Observer Change
 			a_observer_not_void: a_observer /= Void
 		do
 			if observers /= Void then
-				observers.prune (a_observer)
+				observers.prune_all (a_observer)
 			end
 		ensure
 			a_observer_not_exist: not observers.has (a_observer)

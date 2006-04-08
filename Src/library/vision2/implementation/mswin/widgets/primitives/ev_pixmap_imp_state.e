@@ -107,7 +107,7 @@ feature -- Saving
 				else
 					a_height := l_raw_image_data.height
 				end
-	
+
 				if png_format.scale_width /= 0 then
 					a_width := png_format.scale_width
 				else
@@ -180,7 +180,7 @@ feature -- Misc.
 		end
 
 	gdi_compact is
-			-- Spare GDI ressource by freeing icons, cursors, ... that
+			-- Spare GDI resource by freeing icons, cursors, ... that
 			-- can be reloaded from file.
 		do
 		end
@@ -200,7 +200,7 @@ feature -- Misc.
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -224,15 +224,20 @@ feature {NONE} -- Implementation
 			empty_mask_bitmap: WEL_BITMAP
 			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
 			ev_cursor_interface: EV_CURSOR
+			l_bitmap: WEL_BITMAP
 			tmp_bitmap: WEL_BITMAP
 			tmp_mask_bitmap: WEL_BITMAP
+			l_mask_bitmap_dc: WEL_MEMORY_DC
+			l_bitmap_dc: WEL_MEMORY_DC
 		do
 			create icon_info.make
 			icon_info.set_unshared
 			icon_info.set_is_icon (is_icon)
-			tmp_bitmap := get_bitmap
-			icon_info.set_color_bitmap (tmp_bitmap)
-			
+			l_bitmap := get_bitmap
+			create tmp_bitmap.make_by_bitmap (l_bitmap)
+			tmp_bitmap.enable_reference_tracking
+			l_bitmap.decrement_reference
+
 			if not is_icon then
 				ev_cursor_interface ?= interface
 				if ev_cursor_interface /= Void then
@@ -242,37 +247,48 @@ feature {NONE} -- Implementation
 				end
 			end
 
+				-- create an empty mask
+			create mem_dc.make
+			create empty_mask_bitmap.make_compatible (
+				mem_dc,
+				width,
+				height
+				)
+			empty_mask_bitmap.enable_reference_tracking
+			mem_dc.select_bitmap (empty_mask_bitmap)
+
+			create raster_operations
+			mem_dc.pat_blt (0, 0, width, height,
+				raster_operations.whiteness)
 			if has_mask then
 				tmp_mask_bitmap := get_mask_bitmap
-				icon_info.set_mask_bitmap (tmp_mask_bitmap)
-				if is_icon then
-					create {WEL_ICON} Result.make_by_icon_info (icon_info)
-				else
-					create {WEL_CURSOR} Result.make_by_icon_info (icon_info)
-				end
+				create l_mask_bitmap_dc.make_by_dc (mem_dc)
+				l_mask_bitmap_dc.select_bitmap (tmp_mask_bitmap)
+					-- We need to invert the mask as Windows uses 0 for Opaque and 1 for Transparent.
+				mem_dc.bit_blt (0, 0, width, height, l_mask_bitmap_dc, 0, 0, raster_operations.srcinvert)
+
+				create l_bitmap_dc.make
+				l_bitmap_dc.select_bitmap (tmp_bitmap)
+				l_bitmap_dc.bit_blt (0, 0, width, height, mem_dc, 0, 0, raster_operations.maskpaint)
+				l_bitmap_dc.unselect_bitmap
+				l_bitmap_dc.delete
+
+				l_mask_bitmap_dc.unselect_bitmap
+				l_mask_bitmap_dc.delete
 			else
-				-- create an empty mask
-				create mem_dc.make
-				create empty_mask_bitmap.make_compatible (
-					mem_dc,
-					width,
-					height
-					)
-				empty_mask_bitmap.enable_reference_tracking
-				mem_dc.select_bitmap (empty_mask_bitmap)
-				create raster_operations
-				mem_dc.pat_blt (0, 0, width, height, 
-					raster_operations.blackness)
-				mem_dc.unselect_bitmap
-				mem_dc.delete
-				icon_info.set_mask_bitmap (empty_mask_bitmap)
-				if is_icon then
-					create {WEL_ICON} Result.make_by_icon_info (icon_info)
-				else
-					create {WEL_CURSOR} Result.make_by_icon_info (icon_info)
-				end
-				empty_mask_bitmap.decrement_reference
+
 			end
+			mem_dc.unselect_bitmap
+			mem_dc.delete
+
+			icon_info.set_color_bitmap (tmp_bitmap)
+			icon_info.set_mask_bitmap (empty_mask_bitmap)
+			if is_icon then
+				create {WEL_ICON} Result.make_by_icon_info (icon_info)
+			else
+				create {WEL_CURSOR} Result.make_by_icon_info (icon_info)
+			end
+			empty_mask_bitmap.decrement_reference
 			icon_info.delete
 			tmp_bitmap.decrement_reference
 			tmp_bitmap := Void
@@ -303,7 +319,7 @@ feature {NONE} -- External
 		end
 
 feature {
-		EV_PIXMAP_IMP, 
+		EV_PIXMAP_IMP,
 		EV_PIXMAP_IMP_DRAWABLE,
 		EV_PIXMAP_IMP_WIDGET
 		} -- Implementation

@@ -6,16 +6,16 @@ indexing
 	keywords: "press, push, label, pixmap"
 	date: "$Date$"
 	revision: "$Revision$"
-        
+
 class
 	EV_BUTTON_IMP
-        
+
 inherit
 	EV_BUTTON_I
 		redefine
 			interface
 		end
-        
+
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
@@ -27,13 +27,13 @@ inherit
 			needs_event_box,
 			event_widget
 		end
- 
+
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface,
 			initialize
 		end
-     
+
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 		ensure
 			button_box /= NULL
 		end
-		
+
 	fontable_widget: POINTER is
 			-- Pointer to the widget that may have fonts set.
 		do
@@ -116,9 +116,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_default_push_button: BOOLEAN
-			-- Is this button currently a default push button 
+			-- Is this button currently a default push button
 			-- for a particular container?
-		
+
 feature -- Status Setting
 
 	align_text_center is
@@ -152,8 +152,8 @@ feature -- Status Setting
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
-		do		
-			is_default_push_button := False		
+		do
+			is_default_push_button := False
 		end
 
 	enable_can_default is
@@ -168,7 +168,7 @@ feature -- Status Setting
 			Precursor {EV_PRIMITIVE_IMP} (a_color)
 			real_set_foreground_color (text_label, a_color)
 		end
-	
+
 feature {NONE} -- implementation
 
 	on_focus_changed (a_has_focus: BOOLEAN) is

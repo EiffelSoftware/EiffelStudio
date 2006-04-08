@@ -59,7 +59,9 @@ inherit
 			on_sys_key_down,
 			wel_font, wel_set_font, on_getdlgcode
 		redefine
-			on_paint, on_erase_background, class_background, default_style,
+			on_paint, on_erase_background,
+			class_background,
+			default_style,
 			class_style
 		end
 
@@ -410,7 +412,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (other_interface)
 				-- As `Current' may be parented, invalidate
 				-- so it is updated on screen.
-			invalidate
+			invalidate_without_background
 		end
 
 	destroy is
@@ -445,43 +447,11 @@ feature {NONE} -- Implementation
 			-- the `paint_dc'. `invalid_rect' defines
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
-		do
-				-- Switch the dc from screen_dc to paint_dc.
-			display_dc := paint_dc
-
-				-- Call actions
-			call_expose_actions (invalid_rect)
-
-				-- Switch back the dc fron paint_dc to Void.
-				-- (To avoid using the DC outside paint msg)
-			display_dc := Void
-		end
-
-	call_expose_actions (invalid_rect: WEL_RECT) is
-			-- Call `expose_actions' with `invalid_rect' defining
-			-- the invalid area and repaint bitmap image.
-		require
-			rect_not_void: invalid_rect /= Void
-		do
-			if parent /= Void then
-					-- We must refresh the bitmap before calling the
-					-- expose actions.
-				paint_bitmap (invalid_rect.x, invalid_rect.y,
-					invalid_rect.width, invalid_rect.height)
-			end
-			if expose_actions_internal /= Void then
-					-- Actually call the expose actions.
-				expose_actions_internal.call ([
-					invalid_rect.x, invalid_rect.y,
-					invalid_rect.width, invalid_rect.height
-					])
-			end
-		end
-
-
-	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Paint the bitmap onto the screen (i.e. the display_dc).
 		local
+			l_bitmap_dc: WEL_MEMORY_DC
+			l_bitmap: WEL_BITMAP
+			l_mask_bitmap: WEL_BITMAP
+			l_mask_dc: WEL_MEMORY_DC
 			bitmap_top, bitmap_left: INTEGER
 				-- Coordinates of the top-left corner of the
 				-- bitmap inside the drawn area
@@ -490,110 +460,77 @@ feature {NONE} -- Implementation
 				--- bitmap inside the drawn area
 			bitmap_width, bitmap_height: INTEGER
 			window_width, window_height: INTEGER
-			container_background_brush: WEL_BRUSH
-			display_bitmap: WEL_BITMAP
-			display_mask_bitmap: WEL_BITMAP
-			display_bitmap_dc: WEL_MEMORY_DC
-			display_mask_dc: WEL_MEMORY_DC
+			l_background_brush: WEL_BRUSH
+			l_rect: WEL_RECT
 			theme_drawer: EV_THEME_DRAWER_IMP
+			l_background_region, l_image_region, l_combined_region: WEL_REGION
+			l_back_buffer: WEL_BITMAP
+			l_back_buffer_dc: WEL_MEMORY_DC
+			l_dc: WEL_DC
 		do
-			theme_drawer := application_imp.theme_drawer
-				-- Get the background color of the container to be used around `Current'.
-			if parent_imp /= Void and then parent_imp.background_color_imp /= Void then
-				create container_background_brush.make_solid (parent_imp.background_color_imp)
-			else
-				create container_background_brush.make_solid (wel_background_color)
+			if parent /= Void then
+					-- Call expose actions first, any pending invalidations called from 'expose_actions'
+					-- will be expunged at the end of this WM_PAINT message.
+				if expose_actions_internal /= Void then
+					expose_actions_internal.call ([
+						invalid_rect.x, invalid_rect.y,
+						invalid_rect.width, invalid_rect.height
+						])
+				end
+
+				theme_drawer := application_imp.theme_drawer
+
+				if parent_imp.background_color_imp /= Void then
+					create l_background_brush.make_solid (parent_imp.background_color_imp)
+				else
+					create l_background_brush.make_solid (wel_background_color)
+				end
+
+				l_bitmap := internal_bitmap
+				l_bitmap_dc := dc
+
+				bitmap_height := height
+				bitmap_width := width
+				window_width := ev_width
+				window_height := ev_height
+				bitmap_left := (window_width - bitmap_width) // 2
+				bitmap_top := (window_height - bitmap_height) // 2
+				bitmap_right := bitmap_left + bitmap_width
+				bitmap_bottom := bitmap_top + bitmap_height
+
+				l_rect := wel_rect
+				l_rect.set_rect (0, 0, window_width, window_height)
+
+				if internal_mask_bitmap = Void then
+					create l_background_region.make_rect (0, 0, window_width, window_height)
+					create l_image_region.make_rect (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
+					l_combined_region := l_background_region.combine (l_image_region, {WEL_RGN_CONSTANTS}.rgn_diff)
+					paint_dc.select_clip_region (l_combined_region)
+					theme_drawer.draw_widget_background (Current, paint_dc, l_rect, l_background_brush)
+					paint_dc.remove_clip_region
+					l_background_region.delete
+					l_image_region.delete
+					l_combined_region.delete
+					paint_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, l_bitmap_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+				else
+					l_mask_bitmap := internal_mask_bitmap
+					l_mask_dc := mask_dc
+						-- Need to blit to a back buffer to avoid blitting the same pixel twice, which causes flicker.
+					create l_back_buffer.make_compatible (l_bitmap_dc, window_width, window_height)
+					create l_back_buffer_dc.make_by_dc (l_bitmap_dc)
+					l_back_buffer_dc.select_bitmap (l_back_buffer)
+					theme_drawer.draw_widget_background (Current, l_back_buffer_dc, l_rect, l_background_brush)
+					l_back_buffer_dc.mask_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, l_bitmap_dc, 0, 0, l_mask_bitmap, 0, 0,
+						{WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
+
+					paint_dc.bit_blt (0, 0, window_width, window_height, l_back_buffer_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+
+					l_back_buffer_dc.unselect_bitmap
+					l_back_buffer_dc.delete
+					l_back_buffer.delete
+				end
+				l_background_brush.delete
 			end
-
-				-- Compute usefull constants
-			bitmap_height := height
-			bitmap_width := width
-			window_width := ev_width
-			window_height := ev_height
-			bitmap_left := (window_width - bitmap_width) // 2
-			bitmap_top := (window_height - bitmap_height) // 2
-			bitmap_right := bitmap_left + bitmap_width
-			bitmap_bottom := bitmap_top + bitmap_height
-
-				-- Draw the bitmap (If it is larger than the displayed
-				-- area, it will be clipped by Windows.
-			if has_mask then
-					-- Create the mask and image used for display.
-					-- They are different than the real image because
-					-- we need to apply logical operation in order
-					-- to display the masked bitmap.
-				display_mask_bitmap := get_mask_bitmap
-				create display_mask_dc.make
-				display_mask_dc.select_bitmap (display_mask_bitmap)
-				display_mask_dc.pat_blt (0, 0, bitmap_width, bitmap_height, Dstinvert)
-
-				display_bitmap := get_bitmap
-				create display_bitmap_dc.make_by_dc (display_dc)
-				display_bitmap_dc.select_bitmap (display_bitmap)
-				display_bitmap_dc.bit_blt (0, 0, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Srcand)
-
-					-- Erase the background (otherwise we cannot apply
-					-- the mask).
-				wel_rect.set_rect (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
-				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
-
-					-- Paint the bitmap using mask.
-				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Maskpaint)
-				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_bitmap_dc,0, 0, Srcpaint)
-
-					-- Free GDI ressources
-				display_mask_bitmap.decrement_reference
-				display_bitmap.decrement_reference
-				display_mask_dc.delete
-				display_bitmap_dc.delete
-			else
-				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, dc, 0, 0, Srccopy)
-			end
-
-
-				--|  If the displayed area is larger than the bitmap,
-				--|  we erase the background that is outside the bitmap
-				--|  (i.e: AREA 1, 2, 3 & 4)
-				--|
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X                             X
-				--|  X          AREA 1             X
-				--|  X                             X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X         X         X         X
-				--|  X AREA 3  X BITMAP  X  AREA 4 X
-				--|  X         X         X         X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-				--|  X                             X
-				--|  X          AREA 2             X
-				--|  X                             X
-				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-			wel_rect.set_rect (0, 0, 0, 0)
-				-- fill AREA 1
-			if bitmap_top > 0 then
-				wel_rect.set_rect (0, 0, window_width, bitmap_top)
-				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
-			end
-
-				-- fill AREA 2
-			if bitmap_bottom < window_height then
-				wel_rect.set_rect (0, bitmap_bottom, window_width, window_height)
-				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
-			end
-
-				-- fill AREA 3
-			if bitmap_left > 0 then
-				wel_rect.set_rect (0, bitmap_top, bitmap_left, bitmap_bottom)
-				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
-			end
-
-				-- fill AREA 4
-			if bitmap_right < window_width then
-				wel_rect.set_rect (bitmap_right, bitmap_top, window_width, bitmap_bottom)
-				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
-			end
-			container_background_brush.delete
 		end
 
 feature {NONE} -- Implementation
@@ -605,12 +542,9 @@ feature {NONE} -- Implementation
 				-- redrawing it (`invalidate' causes
 				-- `paint_bitmap' to be called)
 			if parent /= Void then
-				invalidate
+				invalidate_without_background
 			end
 		end
-
-	display_dc: WEL_PAINT_DC
-			-- Paint DC from on_paint message.
 
 feature {NONE} -- Windows events
 
@@ -690,11 +624,10 @@ feature {NONE} -- Private Implementation
    			-- (from WEL_FRAME_WINDOW)
    		once
 			Result :=
-				cs_hredraw +
-				cs_vredraw +
-				cs_dblclks +
-				Cs_owndc +
-				Cs_savebits
+				cs_hredraw |
+				cs_vredraw |
+				cs_dblclks |
+				Cs_owndc
  		end
 
  	interface: EV_PIXMAP;

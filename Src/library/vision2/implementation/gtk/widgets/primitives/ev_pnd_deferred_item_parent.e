@@ -18,7 +18,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	start_transport_filter (
+	on_mouse_button_event (
 			a_type: INTEGER
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -31,7 +31,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	call_selection_action_sequences is
-			-- Call appropriate selection action sequences 
+			-- Call appropriate selection action sequences
 		deferred
 		end
 

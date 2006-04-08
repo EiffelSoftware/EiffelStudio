@@ -27,7 +27,7 @@ inherit
 			on_mouse_enter,
 			on_mouse_leave
 		end
-   
+
 	EV_TEXT_ALIGNABLE_IMP
 		redefine
 			set_default_minimum_size,
@@ -43,7 +43,7 @@ inherit
 			remove_pixmap,
 			interface
 		end
-		
+
 	EV_FONTABLE_IMP
 		rename
 			interface as ev_fontable_interface
@@ -60,7 +60,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_DRAWING_ROUTINES
 
 	WEL_BITMAP_BUTTON
@@ -127,22 +127,22 @@ inherit
 		end
 
 	EV_BUTTON_ACTION_SEQUENCES_IMP
-	
+
 	WEL_THEME_PBS_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_THEME_PART_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_ODS_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
 
@@ -158,7 +158,7 @@ feature {NONE} -- Initialization
 				-- Retrieve the theme for the button.
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -172,7 +172,7 @@ feature -- Access
 			-- Extra width on the size.
 
 	is_default_push_button: BOOLEAN
-			-- Is this button currently a default push button 
+			-- Is this button currently a default push button
 			-- for a particular container?
 
 feature -- Status setting
@@ -182,31 +182,33 @@ feature -- Status setting
 		local
 			font_imp: EV_FONT_IMP
 			w,h: INTEGER
+			l_text: like wel_text
 		do
-			if not text.is_empty then
+			l_text := wel_text
+			if not l_text.is_empty then
 				if private_font /= Void then
 					font_imp ?= private_font.implementation
 					check
 						font_not_void: font_imp /= Void
 					end
-					w := extra_width + font_imp.string_width (wel_text)
+					w := extra_width + font_imp.string_width (l_text)
 					h := h.max (19 * font_imp.height // 9)
 				else
-					w := extra_width + private_wel_font.string_width (wel_text)
+					w := extra_width + private_wel_font.string_width (l_text)
 					h := h.max (19 * private_wel_font.height // 9)
 				end
 			end
-			
-			
+
+
 			if pixmap_imp /= Void then
-				if text.is_empty then
+				if l_text.is_empty then
 					w := private_pixmap.width + pixmap_border * 2
 				else
 					w := w + private_pixmap.width + pixmap_border
 				end
 				h := h.max (private_pixmap.height + pixmap_border * 2)
 			end
-			if text.is_empty and pixmap_imp = Void then
+			if l_text.is_empty and pixmap_imp = Void then
 				w := w + extra_width
 				h := h + internal_default_height
 			end
@@ -271,7 +273,7 @@ feature -- Status setting
 		end
 
 	disable_default_push_button is
-			-- Remove the style "default_push_button"  of `Current'. 
+			-- Remove the style "default_push_button"  of `Current'.
 		do
 			is_default_push_button := False
 			if flag_set (style, bs_ownerdraw) then
@@ -288,9 +290,9 @@ feature -- Status setting
 		do
 			--| Do nothing as this is the default on Win32.
 		end
-		
+
 feature -- Element change
-		
+
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the pixmap of `Current'.
 		local
@@ -317,7 +319,7 @@ feature -- Element change
 			set_default_minimum_size
 			invalidate
 		end
-	
+
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
@@ -388,7 +390,7 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
-		
+
 	on_wm_theme_changed is
 			-- WM_THEMECHANGED message received so update current theme object.
 		do
@@ -396,23 +398,23 @@ feature {NONE} -- WEL Implementation
 			application_imp.update_theme_drawer
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
-		
+
 	open_theme: POINTER
 		-- Theme currently open for `Current'. May be Void while running on Windows versions that
 		-- do no support theming.
 
 feature {EV_ANY_I} -- Drawing implementation
-		
+
 	has_pushed_appearence (state: INTEGER): BOOLEAN is
 			-- Should `Current' have the appearence of being
 			-- pressed?
 		do
-			Result := flag_set (state, Ods_selected)			
+			Result := flag_set (state, Ods_selected)
 		end
-		
+
 	pixmap_border: INTEGER is 4
 		-- spacing between image and edge of `Current'.
-		
+
 	focus_rect_border: INTEGER is 3
 		-- Distance of focus rectangle from edge of button.
 
@@ -482,16 +484,17 @@ feature {EV_ANY_I} -- Drawing implementation
 			mask_bitmap: WEL_BITMAP
 				-- Mask bitmap of current image.
 			l_background_brush: WEL_BRUSH
-			
-			color_ref: WEL_COLOR_REF			
-			coordinate: EV_COORDINATE			
+
+			color_ref: WEL_COLOR_REF
+			coordinate: EV_COORDINATE
 			drawstate: INTEGER
 				-- Drawstate of the button.
 			theme_drawer: EV_THEME_DRAWER_IMP
 				-- Theme drawer currently in use.
+			l_internal_brush: WEL_BRUSH
 		do
 			theme_drawer := application_imp.theme_drawer
-		
+
 				-- Local access to information in `draw_item'.
 			dc := draw_item.dc
 			rect := draw_item.rect_item
@@ -517,13 +520,13 @@ feature {EV_ANY_I} -- Drawing implementation
 			else
 				memory_dc.select_font (private_wel_font)
 			end
-						
+
 					-- Calculate the draw state flags and then draw the background
 			if has_pushed_appearence (state) then
 				drawstate := pbs_pressed
 			else
 				drawstate := pbs_normal
-				if flag_set (state, ods_hotlight) or mouse_on_button then	
+				if flag_set (state, ods_hotlight) or mouse_on_button then
 						--| FIXME This is a big hack as `mouse_on_button' is used as we do not seem to
 						--| get the ODS_HOTLIGHT notification?
 					drawstate := pbs_hot
@@ -533,47 +536,51 @@ feature {EV_ANY_I} -- Drawing implementation
 					drawstate := pbs_disabled
 				end
 			end
-			
+
 							-- Need to first clear the area to the background color of `parent_imp'
 			theme_drawer.draw_theme_parent_background (wel_item, memory_dc, rect, Void)
-			
+
 				-- We set the text color of `memory_dc' to white, so that if we are
 				-- a toggle button, and must draw the checked background, it uses white combined with
 				-- the current background color. We then restore the original `text_color' back into `memory_dc'.
 			color_ref := memory_dc.text_color
 			memory_dc.set_text_color (white)
-			theme_drawer.draw_theme_background (open_theme, memory_dc, bp_pushbutton, drawstate, rect, Void, internal_background_brush)
+
+			l_internal_brush := internal_background_brush
+			theme_drawer.draw_theme_background (open_theme, memory_dc, bp_pushbutton, drawstate, rect, Void, l_internal_brush)
+			l_internal_brush.delete
+
 			memory_dc.set_text_color (color_ref)
-			
+
 			create focus_rect.make (rect.left, rect.top, rect.right, rect.bottom)
 			create text_rect.make (rect.left, rect.top, rect.right, rect.bottom)
 			focus_rect.inflate (-focus_rect_border, -focus_rect_border)
 
 			if has_pushed_appearence (state) then
 					drawstate := ods_selected
+			else
+				if is_default_push_button then
+					drawstate := ods_default
 				else
-					if is_default_push_button then
-						drawstate := ods_default
-					else
-						drawstate := ods_grayed
-					end
+					drawstate := ods_grayed
 				end
-				
+			end
+
 				-- Draw the edge of the button.
 			theme_drawer.draw_button_edge (memory_dc, drawstate, text_rect)
-				
+
 				-- If there is a pixmap on `Current', then assign its implementation to
 				--`internal_pixmap_state' and store its width in `image_width'.
 			if private_pixmap /= Void then
-				internal_pixmap_state ?= private_pixmap.implementation				
+				internal_pixmap_state ?= private_pixmap.implementation
 					-- Compute values for re-sizing
-				image_width := internal_pixmap_state.width	
+				image_width := internal_pixmap_state.width
 			end
-			
+
 				-- Compute width required to display `text' of `Current', and
 				-- aassign it to `text_width'.
 			text_width := memory_dc.tabbed_text_size (text).width
-				
+
 				-- Compute number of pixels space between an image and a text. This is also
 				-- used as the extra spacing on each side of the text of `Current'.
 			image_pixmap_space := extra_width // 2
@@ -604,7 +611,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			elseif interface.is_right_aligned then
 				left_position := width - combined_width - right_spacing
 			end
-			
+
 				-- Now assign the left edge of the text rectangle.
 				-- Note that if there is no image, `image_width' is 0, and we do not
 				-- add on `image_pixmap_space'.
@@ -618,7 +625,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				color_imp ?= default_foreground_color_imp
 			end
 			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, wel_text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
-			
+
 				-- If we have a pixmap set on `Current', then we must draw it.
 			if internal_pixmap_state /= Void then
 					-- Compute distance from top of button to display image.
@@ -631,7 +638,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				end
 					-- Modify the coordinates of the image one pixel to right
 					-- and one pixel down if the button is currently depressed.
-				
+
 				create coordinate.make (left_position, pixmap_border + height_offset)
 				theme_drawer.update_button_pixmap_coordinates_for_state (open_theme, state, coordinate)
 
@@ -660,10 +667,10 @@ feature {EV_ANY_I} -- Drawing implementation
 				l_background_brush.delete
 			end
 			if mask_bitmap /= Void then
-				mask_bitmap.decrement_reference	
+				mask_bitmap.decrement_reference
 			end
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erase_background message has been received by Windows.
 			-- We must override the default processing, as if we do not, then
@@ -672,13 +679,13 @@ feature {EV_ANY_I} -- Drawing implementation
 		do
 			disable_default_processing
 		end
-		
+
 	white: WEL_COLOR_REF is
 			-- `Result' is color corresponding to white
 		once
 			Create Result.make_rgb (255, 255, 255)
 		end
-		
+
 	default_foreground_color_imp: EV_COLOR_IMP is
 			-- Default foreground color for widgets.
 		once
@@ -686,7 +693,7 @@ feature {EV_ANY_I} -- Drawing implementation
 		ensure
 			result_not_void: result /= Void
 		end
-		
+
 	mouse_on_button: BOOLEAN
 		-- Is the mouse pointer currently held above `Current'? Used as
 		-- a temporary hack until it can be found why Ods_hottrack does not seem to
@@ -699,7 +706,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			mouse_on_button := True
 			invalidate
 		end
-	
+
 	on_mouse_leave is
 			-- Called when the mouse leaves `Current'.
 		do

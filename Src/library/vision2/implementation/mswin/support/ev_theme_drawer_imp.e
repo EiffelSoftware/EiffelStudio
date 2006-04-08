@@ -153,8 +153,7 @@ feature -- Basic operations
 					buffer_dc.draw_state_bitmap (Void, a_bitmap, 0, 0, draw_state_flags)
 						-- Copy the image from `buffer_dc' to `dc'.
 					dc.mask_blt (an_x, a_y, a_bitmap.width, a_bitmap.height, buffer_dc, 0, 0, mask_bitmap, 0 , 0,
-						buffer_dc.make_rop4 ({WEL_RASTER_OPERATIONS_CONSTANTS}.srcpaint, {WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy))
-						-- Clean up GDI.
+						{WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
 				else
 						-- Windows platform does not support mask_blt, so we must simulate this ourselves with `bit_blt'.
 

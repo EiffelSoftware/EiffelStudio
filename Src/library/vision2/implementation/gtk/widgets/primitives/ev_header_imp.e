@@ -26,7 +26,6 @@ inherit
 			interface,
 			initialize,
 			needs_event_box,
-			on_button_release,
 			button_press_switch
 		end
 
@@ -218,17 +217,6 @@ feature {NONE} -- Implementation
 				set_call_item_resize_start_actions (True)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Used for pointer button release events
-		do
-			if call_item_resize_end_actions then
-					-- This is needed as the there may be a slight difference between when the button was released
-					-- and when the column width was calculated.
-				app_implementation.do_once_on_idle (agent call_item_resize_actions)
-			end
-			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	call_item_resize_actions is

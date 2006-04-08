@@ -20,8 +20,7 @@ inherit
 			call_pebble_function,
 			initialize,
 			interface,
-			pre_pick_steps,
-			enable_transport
+			pre_pick_steps
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
@@ -100,28 +99,11 @@ feature -- Status report
 		do
 			if not is_transport_enabled then
 				if a_enable or pebble /= Void then
-					connect_pnd_callback
+					is_transport_enabled := True
 				end
 			elseif not a_enable and pebble = Void then
-				disable_transport_signals
 				is_transport_enabled := False
 			end
-		end
-
-	connect_pnd_callback is
-		do
-			check
-				button_release_not_connected: button_release_connection_id = 0
-			end
-			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
-			end
-			real_signal_connect (visual_widget,
-				once "button-press-event",
-				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate)
-			button_press_connection_id := last_signal_connection_id
-			is_transport_enabled := True
 		end
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
@@ -203,11 +185,6 @@ feature -- Status report
 				pebble_function.call ([a_x, a_y]);
 				pebble := pebble_function.last_result
 			end
-		end
-
-	enable_transport is
-		do
-			connect_pnd_callback
 		end
 
 feature -- Status setting

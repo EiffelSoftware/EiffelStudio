@@ -5,7 +5,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$" 
+	revision: "$Revision$"
 
 deferred class
 	EV_SIZEABLE_IMP
@@ -238,8 +238,7 @@ feature {EV_ANY_I} -- deferred feature
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		do
-			child_cell.move_and_resize
-				(a_x_position, a_y_position, a_width, a_height)
+			child_cell.move_and_resize (a_x_position, a_y_position, a_width, a_height)
 			if is_show_requested then
 				wel_move_and_resize
 					(a_x_position, a_y_position, a_width, a_height, True)
@@ -324,12 +323,12 @@ feature -- Obsolete
 
 	Nc_minwidth: INTEGER is 1
 			-- Used only in the `notify_change' feature to
-			-- notify the parent that the minimum width of 
+			-- notify the parent that the minimum width of
 			-- `Current' has changed.
 
 	Nc_minheight: INTEGER is 2
 			-- Used only in the `notify_change' feature to
-			-- notify the parent that the minimum height of 
+			-- notify the parent that the minimum height of
 			-- `Current' has changed.
 
 	Nc_minsize: INTEGER is 3;

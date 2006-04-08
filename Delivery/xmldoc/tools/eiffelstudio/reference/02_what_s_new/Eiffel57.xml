@@ -89,6 +89,7 @@
 			</item>
 			<item>Added a bracket feature to <feature_name>item</feature_name> from <class_name>ARRAY2</class_name>.</item>
 			<item>In <class_name>ACTIVE_INTEGER_INTERVAL</class_name> the action sequence will only be called if the range actually changes.</item>
+			<item>Fixed <feature_name>launch</feature_name> from <class_name>EXECUTION_ENVIRONMENT</class_name> to not inherit handles on Windows.</item>
 			<item>Moved <cluster_name>list_eiffel3</cluster_name> and <cluster_name>table_eiffel3</cluster_name> to the <cluster_name>obsolete</cluster_name> library.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>

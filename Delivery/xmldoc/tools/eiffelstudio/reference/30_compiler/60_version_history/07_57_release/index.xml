@@ -7,55 +7,58 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>2</size>What's new
-		</heading>
+		<heading><size>2</size>What's new</heading>
 		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
 				<item></item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-				<item></item>
+			<item>Improved memory management:
+				<list ordered="false">
+					<item>Ensure that if a block of allocated memory is not used it will eventually be freed. Before it will only be freed if it was the last allocated block.</item>
+					<item>Compaction is actually working. Before it was working if you had a lot of dead objects, now it will compact even if all you have is alive objects and that the memory is fragmented.</item>
+					<item>For large memory heap (i.e. larger than 1GB) improved speed of collections where there is a lot of dead objects.</item>
+				</list>
+			</item>
+			<item>Changed the way we search melted file, it is done in the following order:
+				<list ordered="false">
+					<item>Directory specified by environment parameter MELT_PATH</item>
+					<item>Current working directory</item>
+					<item>Directory where application is launched</item>
+					<item>Original directory where .melted file was generated the first time.</item>
+				</list>
+			</item>
 		</list>
-		<heading>
-			<size>2</size>Changes
-		</heading>
+		<heading><size>2</size>Changes</heading>
+		<list ordered="false">
+				<item>Implemented the new ECMA-367 specification for expanded. That is to say updated conformance and semantics rules.</item>
+		</list>
+		<heading><size>2</size>Bug fixes</heading>
+		<list ordered="false">
+			<item>Fixed an issue with x2c if you had inlined C code which contains comments with single or double quote. Then it will not properly convert .x into .c file.</item>
+		</list>
+		<heading><size>3</size>Language issues</heading>
 		<list ordered="false">
 				<item></item>
 		</list>
-		<heading>
-			<size>2</size>Bug fixes
-		</heading>
-		<heading>
-			<size>3</size>Language issues
-		</heading>
+		<heading><size>3</size>Compiler issues</heading>
 		<list ordered="false">
 				<item></item>
 		</list>
-		<heading>
-			<size>3</size>Compiler issues
-		</heading>
+		<heading><size>3</size>Runtime/code generation issues</heading>
 		<list ordered="false">
-				<item></item>
+				<item>Ensured that our runtime is async-safe for signals for all the runtime routines using some locking mechanisms.</item>
+				<item>Fixed a memory corruption issue in <feature_name>arycpy</feature_name> if a GC cycle was triggered as part of the processus of reallocating the SPECIAL object.</item>
 		</list>
-		<heading>
-			<size>3</size>Runtime/code generation issues
-		</heading>
+		<heading><size>3</size>.NET issues</heading>
 		<list ordered="false">
-				<item></item>
+				<item>Removed limitation to inherit an Eiffel class which inherited from a .NET class.</item>
 		</list>
-		<heading>
-			<size>3</size>.NET issues
-		</heading>
+		<heading><size>3</size>Store/Retrieve issues</heading>
 		<list ordered="false">
-				<item></item>
-		</list>
-		<heading>
-			<size>3</size>Store/Retrieve issues
-		</heading>
-		<list ordered="false">
-				<item></item>
+				<item>Fixed a memory leak in the recoverable retrieval when an exception is raised from a <feature_name>correct_mismatch</feature_name> routine call.</item>
+				<item>Fixed test#store008 regarding a crash when retrieving a type that does not exist in retrieved system.</item>
 		</list>
 	</paragraph>
 </document>

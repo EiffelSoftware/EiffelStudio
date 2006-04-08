@@ -1172,35 +1172,6 @@ unsigned char c_ev_is_ppm_file(BufferedFile *pBufFile)
 	return TRUE;
 }
 
-
-/*---------------------------------------------------------------------------*/
-/* FUNC: c_ev_set_bit                                                        */
-/*---------------------------------------------------------------------------*/
-/* Set the bit at position `iData' in `pData' to `bit'. iData represent an   */
-/* index in BITS.                                                            */
-/*---------------------------------------------------------------------------*/
-void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
-{
-	long iOff = iData / 8;	/* Offset of the bit in byte */
-#ifdef EIF_WINDOWS
-	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
-#else
-	long iBitPos = iData % 8;		/* Position of the bit within the byte */
-#endif
-	unsigned char bitValue;
-
-	bitValue = (unsigned char)(1 << iBitPos);
-#ifdef EIF_WINDOWS
-	if (bit == 0) {
-#else
-	if (bit == 1) {
-#endif
-		pData[iOff] = (unsigned char) (pData[iOff] & (~bitValue));
-	} else {
-		pData[iOff] = (unsigned char) (pData[iOff] | bitValue);
-	}
-}
-
 /*---------------------------------------------------------------------------*/
 /* FUNC: c_ev_load_png_file                                                  */
 /* ARGS: - pCtx: context of the application (file to read, callback, ...)    */
@@ -1501,4 +1472,33 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 		/* that's it */
 	return;
+}
+
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: c_ev_set_bit                                                        */
+/*---------------------------------------------------------------------------*/
+/* Set the bit at position `iData' in `pData' to `bit'. iData represent an   */
+/* index in BITS.                                                            */
+/*---------------------------------------------------------------------------*/
+void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
+{
+	long iOff = iData / 8;	/* Offset of the bit in byte */
+#ifdef EIF_WINDOWS
+	long iBitPos = 7 - (iData % 8);		/* Position of the bit within the byte */
+#else
+	long iBitPos = iData % 8;		/* Position of the bit within the byte */
+#endif
+	unsigned char bitValue;
+
+	bitValue = (unsigned char)(1 << iBitPos);
+//#ifdef EIF_WINDOWS
+//	if (bit == 0) {
+//#else
+	if (bit == 1) {
+//#endif
+		pData[iOff] = (unsigned char) (pData[iOff] & (~bitValue));
+	} else {
+		pData[iOff] = (unsigned char) (pData[iOff] | bitValue);
+	}
 }

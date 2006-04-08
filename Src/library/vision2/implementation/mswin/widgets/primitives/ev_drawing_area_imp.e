@@ -296,11 +296,10 @@ feature {NONE} -- Implementation
    			-- (from WEL_FRAME_WINDOW).
    		once
 			Result :=
-				cs_hredraw +
-				cs_vredraw +
-				cs_dblclks +
-				Cs_owndc +
-				Cs_savebits
+				cs_hredraw |
+				cs_vredraw |
+				cs_dblclks |
+				Cs_owndc |
  		end
 
  	enable_tabable_to is

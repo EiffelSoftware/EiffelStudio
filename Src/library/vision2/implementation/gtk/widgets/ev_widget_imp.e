@@ -24,8 +24,6 @@ inherit
 			destroy,
 			minimum_width,
 			minimum_height,
-			enable_capture,
-			disable_capture,
 			on_key_event
 		end
 
@@ -64,34 +62,11 @@ feature {NONE} -- Initialization
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
-		local
-			a_event_widget: POINTER
-			a_c_object: POINTER
-			app_imp: like app_implementation
-			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			app_imp := app_implementation
-			l_gtk_marshal := app_imp.gtk_marshal
-			a_event_widget := event_widget
-			a_c_object := c_object
-
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
 			internal_minimum_height := -1
-
-			if is_parentable then
-				signal_connect (a_event_widget, app_imp.map_event_string, agent (l_gtk_marshal).on_widget_show (a_c_object), Void, False)
-					-- We need the map event to correctly set the cursor if available.
-			end
-
-			signal_connect (
-				a_event_widget,
-				app_imp.button_press_event_string,
-				agent (l_gtk_marshal).button_press_switch_intermediary (a_c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				app_imp.default_translate,
-				False
-			)
 			set_is_initialized (True)
 		end
 
@@ -121,19 +96,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
-
-	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Used for pointer button release events
-		do
-			if a_button >= 1 and a_button <= 3 then
-				if app_implementation.pointer_button_release_actions_internal /= Void then
-					app_implementation.pointer_button_release_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
-				end
-				if pointer_button_release_actions_internal /= Void then
-					pointer_button_release_actions_internal.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-				end
-			end
-		end
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
@@ -241,15 +203,17 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 	on_pointer_enter_leave (a_pointer_enter: BOOLEAN) is
 			-- Called from pointer enter leave intermediary agents when the mouse pointer either enters or leaves `Current'.
 		do
-			if a_pointer_enter then
-				-- The mouse pointer has entered `Current'.
-				if pointer_enter_actions_internal /= Void then
-					pointer_enter_actions_internal.call (Void)
-				end
-			else
-				-- The mouse pointer has left `Current'.
-				if pointer_leave_actions_internal /= Void then
-					pointer_leave_actions_internal.call (Void)
+			if not app_implementation.is_in_transport then
+				if a_pointer_enter then
+						-- The mouse pointer has entered `Current'.
+					if pointer_enter_actions_internal /= Void then
+						pointer_enter_actions_internal.call (Void)
+					end
+				else
+						-- The mouse pointer has left `Current'.
+					if pointer_leave_actions_internal /= Void then
+						pointer_leave_actions_internal.call (Void)
+					end
 				end
 			end
 		end
@@ -277,49 +241,82 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
-			if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			end
-			if a_button = 4 and mouse_wheel_delta > 0 then
-					-- This is for scrolling up
-				if app_implementation.mouse_wheel_actions_internal /= Void then
-					app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
-				end
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
-				end
-			elseif a_button = 5 and mouse_wheel_delta > 0 then
-					-- This is for scrolling down
-				if app_implementation.mouse_wheel_actions_internal /= Void then
-					app_implementation.mouse_wheel_actions_internal.call ([interface, - mouse_wheel_delta])
-				end
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
-				end
-			end
-
-			if a_button >= 1 and then a_button <= 3 then
+			if a_type /= {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_ENUM then
+					-- A button press must have occurred
 				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-					if app_implementation.pointer_button_press_actions_internal /= Void then
-						app_implementation.pointer_button_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
-					end
-					if pointer_button_press_actions_internal /= Void then
-						pointer_button_press_actions_internal.call (t)
-					end
+					mouse_wheel_delta := 1
 				elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-					if app_implementation.pointer_double_press_actions_internal /= Void then
-						app_implementation.pointer_double_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+					mouse_wheel_delta := 1
+				elseif a_type = {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				end
+				if a_button = 4 and mouse_wheel_delta > 0 then
+						-- This is for scrolling up
+					if app_implementation.mouse_wheel_actions_internal /= Void then
+						app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
 					end
-					if pointer_double_press_actions_internal /= Void then
-						pointer_double_press_actions_internal.call (t)
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+					end
+				elseif a_button = 5 and mouse_wheel_delta > 0 then
+						-- This is for scrolling down
+					if app_implementation.mouse_wheel_actions_internal /= Void then
+						app_implementation.mouse_wheel_actions_internal.call ([interface, -mouse_wheel_delta])
+					end
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([-mouse_wheel_delta])
+					end
+				end
+
+				if a_button >= 1 and then a_button <= 3 then
+					if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+						if app_implementation.pointer_button_press_actions_internal /= Void then
+							app_implementation.pointer_button_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+						end
+						if pointer_button_press_actions_internal /= Void then
+							pointer_button_press_actions_internal.call (t)
+						end
+					elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+						if app_implementation.pointer_double_press_actions_internal /= Void then
+							app_implementation.pointer_double_press_actions_internal.call ([interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+						end
+						if pointer_double_press_actions_internal /= Void then
+							pointer_double_press_actions_internal.call (t)
+						end
+					end
+				end
+			else
+					-- We have a button release event
+				if a_button >= 1 and a_button <= 3 then
+					if app_implementation.pointer_button_release_actions_internal /= Void then
+						app_implementation.pointer_button_release_actions_internal.call ([interface, a_button, a_screen_x, a_screen_y])
+					end
+					if pointer_button_release_actions_internal /= Void then
+						pointer_button_release_actions_internal.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 					end
 				end
 			end
-       end
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+			-- Handle motion event for `Current'.
+		do
+			if app_implementation.is_in_transport then
+				execute (
+					a_motion_tuple.integer_32_item (1),
+					a_motion_tuple.integer_32_item (2),
+					a_motion_tuple.double_item (3),
+					a_motion_tuple.double_item (4),
+					a_motion_tuple.double_item (5),
+					a_motion_tuple.integer_32_item (6),
+					a_motion_tuple.integer_32_item (7)
+				)
+			elseif pointer_motion_actions_internal /= Void then
+				pointer_motion_actions_internal.call (a_motion_tuple)
+			end
+		end
 
 feature -- Access
 
@@ -395,21 +392,6 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
-		end
-
-	enable_capture is
-			-- Grab all the mouse and keyboard events.
-		do
-			App_implementation.set_captured_widget (interface)
-			Precursor {EV_PICK_AND_DROPABLE_IMP}
-		end
-
-	disable_capture is
-			-- Ungrab all the mouse and keyboard events.
-			--| Used by pick and drop.
-		do
-			App_implementation.set_captured_widget (Void)
-			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 feature -- Element change

@@ -115,16 +115,16 @@ feature -- Status setting
 			height_assigned: height = a_height
 		end
 
---	reset_for_buffering (a_width, a_height: INTEGER) is
---			-- Resets the size of the pixmap without keeping original image or clearing background.
---			-- Useful when reusing `Current' as a back-buffer for blitting to other drawables.
---		require
---			width_valid: a_width > 0
---			height_valid: a_height > 0
---			not_destroyed: not is_destroyed
---		do
---			implementation.reset_for_buffering (a_width, a_height)
---		end
+	reset_for_buffering (a_width, a_height: INTEGER) is
+			-- Resets the size of the pixmap without keeping original image or clearing background.
+			-- Useful when reusing `Current' as a back-buffer for blitting to other drawables.
+		require
+			width_valid: a_width > 0
+			height_valid: a_height > 0
+			not_destroyed: not is_destroyed
+		do
+			implementation.reset_for_buffering (a_width, a_height)
+		end
 
 	stretch (a_width, a_height: INTEGER) is
 			-- Assign `a_width' and `a_height' to `width' and `weight'.

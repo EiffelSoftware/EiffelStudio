@@ -7,13 +7,13 @@ indexing
 
 deferred class
 	EV_DOCKABLE_SOURCE_IMP
-	
+
 inherit
 	EV_DOCKABLE_SOURCE_I
 		redefine
 			interface
 		end
-	
+
 	EV_ANY_IMP
 		undefine
 			destroy,
@@ -40,27 +40,13 @@ feature -- Status setting
 							original_screen_x := a_screen_x
 							original_screen_y := a_screen_y
 							dawaiting_movement := True
-							real_signal_connect (
-								c_object,
-								"motion-notify-event",
-								agent dragable_motion (?,?,?,?,?,?,?),
-								App_implementation.default_translate
-							)
-							drag_motion_notify_connection_id := last_signal_connection_id
-							real_signal_connect (
-								c_object,
-								"button-release-event",
-								agent end_dragable (?, ?, ?, ?, ?, ?, ?, ?),
-								App_implementation.default_translate
-							)
-							drag_button_release_connection_id := last_signal_connection_id
 					end
 				end
 			end
-		
+
 	dawaiting_movement: BOOLEAN
 	original_screen_x, original_screen_y: INTEGER
-		
+
 	dragable_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- If in drag/pick and drop then update.
 			--| This is executed every time the pointer is moved over
@@ -85,7 +71,7 @@ feature -- Status setting
 							0.0, 0.0, 0.0,
 							a_screen_x + (original_x_offset - a_x), a_screen_y +
 							(original_y_offset - a_y))
-						
+
 				end
 			else
 				execute_dragging (a_x, a_y, 0, 0, 0.5, a_screen_x, a_screen_y)
@@ -97,24 +83,13 @@ feature {NONE} -- Implementation
 	internal_enable_dockable is
 			-- Activate drag mechanism.
  		do
-			if drag_button_press_connection_id = 0 then
-				real_signal_connect (
-					c_object,
-					"button-press-event",
-					agent (App_implementation.gtk_marshal).start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate
-				)
-				drag_button_press_connection_id := last_signal_connection_id				
-			end
+			-- Nothing to be done
 		end
-		
+
 	internal_disable_dockable is
 			-- Deactivate drag mechanism
 		do
-			if drag_button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_press_connection_id)
-				drag_button_press_connection_id := 0
-			end
+			-- Nothing to be done
 		end
 
 	drag_and_drop_starting_movement: INTEGER is 3
@@ -130,9 +105,6 @@ feature {NONE} -- Implementation
 			initialize_transport (a_screen_x, a_screen_y, interface)
 			App_implementation.enable_is_in_transport
 		end
-		
-	drag_button_press_connection_id, drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
-			-- Signal id's for drag event connection.
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -140,23 +112,15 @@ feature {NONE} -- Implementation
 		do
 			set_pointer_style (Drag_cursor)
 		end
-		
+
 	orig_cursor: EV_CURSOR
-		
+
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		do
 			disable_capture
 			set_composite_widget_pointer_style (NULL)
-			if drag_button_release_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_release_connection_id)
-				drag_button_release_connection_id := 0
-			end
-			if drag_motion_notify_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_motion_notify_connection_id)
-				drag_motion_notify_connection_id := 0
-			end
 			if not dawaiting_movement then
 				if orig_cursor /= Void then
 						-- Restore the cursor style of `Current' if necessary.
@@ -177,22 +141,22 @@ feature {NONE} -- Implementation
 				dawaiting_movement := False
 			end
 		end
-		
+
 	enable_capture is
-			-- 
+			--
 		deferred
 		end
-		
+
 	disable_capture is
-			-- 
+			--
 		deferred
 		end
-		
+
 	set_pointer_style (a_cursor: EV_CURSOR) is
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end
-		
+
 	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
@@ -200,7 +164,7 @@ feature {NONE} -- Implementation
 		do
 			-- For now do nothing until further investigation has taken place.
 		end
-		
+
 feature {NONE} -- Implementation
 
 	signal_emit_stop (a_c_object: POINTER; signal: STRING_GENERAL) is
@@ -210,17 +174,17 @@ feature {NONE} -- Implementation
 	event_widget: POINTER is
 			-- Pointer to the GtkWidget to which the events are hooked up to
 		deferred
-		end	
-		
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	set_composite_widget_pointer_style (a_cursor: POINTER) is
-			-- 
+			--
 		deferred
 		end
 
 	pointer_style: EV_CURSOR is
-			-- 
+			--
 		deferred
 		end
 

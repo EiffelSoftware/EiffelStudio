@@ -20,21 +20,9 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
 			a_timeout_imp ?= eif_id_object (a_object_id)
-			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed then
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.actions_called then
 				-- Timeout may possibly have been gc'ed.
-				a_timeout_imp.call_timeout_actions
-			end
-		end
-
-	on_timeout_kamikaze_intermediary (a_object_id: INTEGER) is
-			-- Kamikaze Timeout has occurred.
-		local
-			a_timeout_imp: EV_TIMEOUT_IMP
-		do
-			a_timeout_imp ?= eif_id_object (a_object_id)
-			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed then
-				-- Timeout may possibly have been gc'ed.
-				a_timeout_imp.call_timeout_actions
+				a_timeout_imp.on_timeout
 			end
 		end
 
@@ -90,24 +78,15 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 
-	on_key_event_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event_intermediary (a_object_id: INTEGER; a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Key event
 		local
 			a_widget: EV_GTK_WIDGET_IMP
 		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_widget /= Void then
+			a_widget ?= eif_id_object (a_object_id)
+			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_key_event (a_key, a_key_string, a_key_press)
 			end
-		end
-
-	mcl_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Intermediary agent for a multi column list pnd transport event
-		local
-			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
-		do
-			mcl_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			mcl_imp.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 feature {EV_ANY_IMP} -- Widget intermediary agent routines
@@ -123,12 +102,12 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			end
 		end
 
-	window_focus_intermediary (a_c_object: POINTER; a_focused: BOOLEAN) is
+	window_focus_intermediary (a_object_id: INTEGER; a_focused: BOOLEAN) is
 			-- Focus handling intermediary.
 		local
 			a_widget: EV_WIDGET_IMP
 		do
-			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			a_widget ?= eif_id_object (a_object_id)
 			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_focus_changed (a_focused)
 			end
@@ -192,7 +171,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if a_widget /= Void and then not a_widget.is_destroyed then
 				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
-						-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
+					-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
 				else
 					a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 				end
@@ -224,17 +203,6 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Tree intermediary agent routines	
-
-	tree_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE;	a_screen_x, a_screen_y: INTEGER) is
-			-- Start of pick and drop transport
-		local
-			tree_imp: EV_TREE_IMP
-		do
-			tree_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			tree_imp.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
 feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
 	menu_item_activate_intermediary (a_c_object: POINTER) is
@@ -248,106 +216,16 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
-
-	start_drag_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Start filtering out double-click events
-		local
-			a_pick_and_dropable_imp: EV_WIDGET_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Start filtering out double-click events
-		local
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	end_transport_filter_intermediary (a_c_object: POINTER; a_type, a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- End filtering out of double-click events
-		local
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.end_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	end_transport_intermediary (a_c_object: POINTER ;a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- End pick and drop transport
-		local
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	execute_intermediary (a_c_object: POINTER; a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Executed when pebble is being moved
-		local
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.execute (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	signal_emit_stop_intermediary (a_object_id: INTEGER; a_c_object: POINTER; signal: STRING_GENERAL) is
-			-- Emit stop signal
-		local
-			a_cs: EV_GTK_C_STRING
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_cs := signal
-			a_pick_and_dropable_imp ?= eif_id_object (a_object_id)
-			{EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
-		end
-
-	add_grab_cb_intermediary (a_c_object: POINTER) is
-			-- Disconnect callback that called us and enable capture
-		local
-			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
-		do
-			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.add_grab_cb
-		end
-
 feature {EV_ANY_IMP} -- Pointer intermediary agent routines	
 
-	pointer_button_release_action_intermediary (a_c_object: POINTER; a_x, a_y, a_button: INTEGER;
-		a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Pointer button released
-		local
-			widget: EV_WIDGET_IMP
-		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if widget /= Void then
-				widget.on_button_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			end
-		end
-
-	pointer_enter_actions_intermediary (a_c_object: POINTER) is
+	pointer_enter_leave_action_intermediary (a_c_object: POINTER; a_enter_leave: BOOLEAN) is
 			-- Pointer entered
 		local
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if widget /= Void then
-				widget.on_pointer_enter_leave (True)
-			end
-		end
-
-	pointer_leave_action_intermediary (a_c_object: POINTER) is
-			-- Pointer left
-		local
-			widget: EV_WIDGET_IMP
-		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if widget /= Void then
-				widget.on_pointer_enter_leave (False)
+				widget.on_pointer_enter_leave (a_enter_leave)
 			end
 		end
 

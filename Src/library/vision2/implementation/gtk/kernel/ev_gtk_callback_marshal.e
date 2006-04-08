@@ -66,18 +66,18 @@ feature {EV_ANY_IMP} -- Access
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 
-	motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER):like internal_motion_tuple is
-			-- Return a motion tuple from given arguments.
-		do
-			Result := internal_motion_tuple
-			Result.put_integer (a_1, 1)
-			Result.put_integer (a_2, 2)
-			Result.put_double (a_3, 3)
-			Result.put_double (a_4, 4)
-			Result.put_double (a_5, 5)
-			Result.put_integer (a_6, 6)
-			Result.put_integer (a_7, 7)
-		end
+--	motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER):like internal_motion_tuple is
+--			-- Return a motion tuple from given arguments.
+--		do
+--			Result := internal_motion_tuple
+--			Result.put_integer (a_1, 1)
+--			Result.put_integer (a_2, 2)
+--			Result.put_double (a_3, 3)
+--			Result.put_double (a_4, 4)
+--			Result.put_double (a_5, 5)
+--			Result.put_integer (a_6, 6)
+--			Result.put_integer (a_7, 7)
+--		end
 
 	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER): like internal_dimension_tuple is
 			-- Return a dimension tuple from given arguments.
@@ -98,7 +98,6 @@ feature {EV_ANY_IMP} -- Access
 			Result.put_boolean (a_key_press, 3)
 		end
 
-
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
@@ -116,18 +115,18 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 				event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 
-				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
-				then
-					Result := motion_tuple (
-						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-						0.5,
-						0.5,
-						0.5,
-						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-					)
-				elseif event_type = {EV_GTK_ENUMS}.Gdk_configure_enum then
+--				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
+--				then
+--					Result := motion_tuple (
+--						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+--						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+--						0.5,
+--						0.5,
+--						0.5,
+--						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+--						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+--					)
+				if event_type = {EV_GTK_ENUMS}.Gdk_configure_enum then
 					Result := dimension_tuple	 (
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
@@ -328,12 +327,6 @@ feature {NONE} -- Tuple optimizations.
 			Result := [0, 0, 0, 0]
 		end
 
-	internal_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
-			-- Once function used for global access of motion tuple.
-		once
-			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
-		end
-
 	internal_key_tuple: TUPLE [EV_KEY, STRING_32, BOOLEAN] is
 			-- Once function used for global access of key tuple.
 		once
@@ -419,13 +412,6 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
-		end
-
-	frozen c_ev_gtk_callback_marshal_delayed_agent_call
-				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
-			-- Call `an_agent' after `a_delay'.
-		external
-			"C (gint, EIF_OBJECT) | %"ev_gtk_callback_marshal.h%""
 		end
 
 indexing

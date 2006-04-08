@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING_32, BOOLEAN]]
 		do
 			Precursor {EV_GTK_WINDOW_IMP}
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
 			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 		end
 
@@ -144,11 +144,7 @@ feature {NONE} -- Implementation
 			until
 				is_destroyed or else selected_button /= Void
 			loop
-				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
-						-- There are no more events left
-					l_app_imp.call_idle_actions
-					l_app_imp.relinquish_cpu_slice
-				end
+				l_app_imp.event_loop_iteration (True)
 			end
 		end
 

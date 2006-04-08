@@ -46,14 +46,24 @@ feature {NONE} -- Implementation
 			-- Grab all the mouse and keyboard events.
 		local
 			i: INTEGER
+			l_interface: EV_WIDGET
 		do
 			if not has_capture then
 				App_implementation.disable_debugger
 				if not has_focus then
 					set_focus
 				end
+				l_interface ?= interface
+				app_implementation.set_captured_widget (l_interface)
 				{EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
-				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), 1, {EV_GTK_EXTERNALS}.gdk_button_release_mask_enum + {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum + {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum, null, null, 0)
+				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
+					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
+					1,
+					{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum | {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum | {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum,
+					null,
+					null,
+					0
+				)
 				i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), True, 0)
 			end
 		end
@@ -70,6 +80,7 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
 				App_implementation.enable_debugger
 			end
+			App_implementation.set_captured_widget (Void)
 		end
 
 	has_capture: BOOLEAN is
@@ -85,16 +96,6 @@ feature -- Implementation
 			-- Activate pick/drag and drop mechanism.
  		do
  			if not is_destroyed then
-				if button_press_connection_id > 0 then
-					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
-				end
-				real_signal_connect (
-					event_widget,
-					"button-press-event",
-					agent (App_implementation.gtk_marshal).start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate
-				)
-				button_press_connection_id := last_signal_connection_id
 				is_transport_enabled := True
 			end
 		end
@@ -102,47 +103,9 @@ feature -- Implementation
 	disable_transport is
 			-- Deactivate pick/drag and drop mechanism.
 		do
-			disable_transport_signals
 			is_transport_enabled := False
 		ensure then
 			is_transport_disabled: not is_transport_enabled
-			button_press_disconnected: button_press_connection_id = 0
-			button_release_disconnected: button_release_connection_id = 0
-		end
-
-	disable_transport_signals is
-		do
-			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
-				button_press_connection_id := 0
-			end
-			if button_release_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
-				button_release_connection_id := 0
-			end
-		end
-
-	start_transport_filter (
-			a_type: INTEGER;
-			a_x, a_y, a_button: INTEGER;
-			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-			a_screen_x, a_screen_y: INTEGER)
-		is
-			-- Filter out double click events.
-		do
-			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then app_implementation.gtk_widget_imp_at_pointer_position = Current
-			and then not App_implementation.is_in_transport then
-				start_transport (
-					a_x,
-					a_y,
-					a_button,
-					a_x_tilt,
-					a_y_tilt,
-					a_pressure,
-					a_screen_x,
-					a_screen_y
-				)
-			end
 		end
 
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
@@ -168,20 +131,50 @@ feature -- Implementation
 			end
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
-		do
-			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
-				(mode_is_pick_and_drop and then a_button = 3)
-		end
-
 	is_dockable: BOOLEAN is
 			-- Is `Current' dockable?
 		deferred
 		end
 
 	set_to_drag_and_drop: BOOLEAN is
+			-- Set `Current' to drag and drop mode.
 		do
 			Result := mode_is_drag_and_drop
+		end
+
+	able_to_transport (a_button: INTEGER): BOOLEAN is
+			-- Is `Current' able to initiate transport with `a_button'.
+		do
+			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
+				(mode_is_pick_and_drop and then a_button = 3)
+		end
+
+	on_mouse_button_event (
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Filter out double click events.
+		do
+			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not App_implementation.is_in_transport and then able_to_transport (a_button) then
+				start_transport (
+					a_x,
+					a_y,
+					a_button,
+					a_x_tilt,
+					a_y_tilt,
+					a_pressure,
+					a_screen_x,
+					a_screen_y
+				)
+			else
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_implementation.is_in_transport and then app_implementation.captured_widget = interface then
+					end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+				else
+					button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+				end
+			end
 		end
 
 	start_transport (
@@ -192,174 +185,66 @@ feature -- Implementation
 			-- Initialize a pick and drop transport.
 		local
 			app_imp: EV_APPLICATION_IMP
-			l_motion_notify_connection_id, l_enter_notify_connection_id, l_leave_notify_connection_id: INTEGER
+			l_cursor: EV_CURSOR
 		do
-			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			if able_to_transport (a_button) or else ready_for_pnd_menu (a_button) then
-				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
-			end
-
+				-- Retrieve/calculate pebble
+			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 			if pebble /= Void then
 				if
 					able_to_transport (a_button)
-					--FIXME and then not data.shift_key_pressed
-					--FIXME and then not data.control_key_pressed
 				then
-					check
-						grab_callback_not_connected: grab_callback_connection_id = 0
-						start_transport_connected: button_press_connection_id > 0
-						motion_notify_not_connected: motion_notify_connection_id = 0
-						enter_notify_not_connected: enter_notify_connection_id = 0
-						leave_notify_not_connected: leave_notify_connection_id = 0
-					end
-					interface.pointer_motion_actions.block
+					app_imp := app_implementation
 					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
-					real_signal_connect (
-						event_widget,
-						"motion-notify-event",
-						agent (App_implementation.gtk_marshal).add_grab_cb_intermediary (c_object),
-						App_implementation.default_translate
-					)
-					App_implementation.set_grab_callback_connection_id (last_signal_connection_id)
-
-					enable_capture
-
 					if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
-						-- Set correct accept cursor
+							-- Set correct accept cursor
 						if accept_cursor /= Void then
-							internal_set_pointer_style (accept_cursor)
+							l_cursor := accept_cursor
 						else
-							internal_set_pointer_style (default_accept_cursor)
+							l_cursor := default_accept_cursor
 						end
 					else
-						-- Set correct deny cursor
+							-- Set correct deny cursor
 						if deny_cursor /= Void then
-							internal_set_pointer_style (deny_cursor)
+							l_cursor := deny_cursor
 						else
-							internal_set_pointer_style (default_deny_cursor)
+							l_cursor := default_deny_cursor
 						end
 					end
-
-					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
-					real_signal_connect (
-						event_widget,
-						"button-press-event",
-						agent (App_implementation.gtk_marshal).end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-						App_implementation.default_translate
-					)
-					button_press_connection_id := last_signal_connection_id
-					if set_to_drag_and_drop then
-						check
-							release_not_connected: button_release_connection_id = 0
-						end
-						real_signal_connect (
-							event_widget,
-							"button-release-event",
-							agent (App_implementation.gtk_marshal).end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
-							App_implementation.default_translate
-						)
-						button_release_connection_id := last_signal_connection_id
-					end
-
-					real_signal_connect (
-						event_widget,
-						"motion-notify-event",
-						agent (App_implementation.gtk_marshal).execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
-						App_implementation.default_translate
-					)
-					l_motion_notify_connection_id := last_signal_connection_id
-					real_signal_connect (
-						event_widget,
-						"enter_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "enter_notify_event"),
-						App_implementation.default_translate
-					)
-					l_enter_notify_connection_id := last_signal_connection_id
-					real_signal_connect (
-						event_widget,
-						"leave_notify_event",
-						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "leave_notify_event"),
-						App_implementation.default_translate
-					)
-					l_leave_notify_connection_id := last_signal_connection_id
-					App_implementation.set_pnd_signal_ids (l_motion_notify_connection_id, l_leave_notify_connection_id, l_enter_notify_connection_id)
-					check
-						motion_notify_connected: motion_notify_connection_id > 0
-						enter_notify_connected: enter_notify_connection_id > 0
-						leave_notify_connected: leave_notify_connection_id > 0
-						mode_is_drag_and_drop_implies_release_connected:
-							mode_is_drag_and_drop implies
-							button_release_connection_id > 0
-					end
-					(App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "button-press-event")
-
+					internal_set_pointer_style (l_cursor)
+					enable_capture
 				elseif ready_for_pnd_menu (a_button) then
-					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-					check
-						app_imp_not_void: app_imp /= Void
-					end
 					app_imp.target_menu (pebble).show
 				end
 			end
 		end
 
 	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+			-- Will `Current' display a menu with button `a_button'.
 		do
 			Result := mode_is_target_menu and a_button = 3
 		end
 
-	signal_emit_stop (a_c_object: POINTER; signal: STRING_GENERAL) is
+	signal_emit_stop (a_c_object: POINTER; a_signal: STRING_GENERAL) is
+			-- Stop emission of signal `signal' on `a_c_object'.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := signal
+			a_cs := a_signal
 			{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
-		end
-
-	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;
-				a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-				a_screen_x, a_screen_y: INTEGER) is
-			-- Filter out double click events.
-		do
-			if a_type = {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
-				end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			end
 		end
 
 	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- End a pick and drop transport.
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			--a_mouse_x, a_mouse_y: INTEGER
-			--a_mouse_window: POINTER
-			l_motion_notify_connection_id, l_enter_notify_connection_id, l_leave_notify_connection_id: INTEGER
+			l_pebble_tuple: TUPLE [like pebble]
+			app_imp: EV_APPLICATION_IMP
 		do
-			check
-				motion_notify_connected: motion_notify_connection_id > 0
-				enter_notify_connected: enter_notify_connection_id > 0
-				leave_notify_connected: leave_notify_connection_id > 0
-			end
-			erase_rubber_band
 			disable_capture
-			if button_release_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_release_connection_id)
-				button_release_connection_id := 0
-			end
-			if motion_notify_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, motion_notify_connection_id)
-				l_motion_notify_connection_id := 0
-			end
-			if enter_notify_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, enter_notify_connection_id)
-				l_enter_notify_connection_id := 0
-			end
-			if leave_notify_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, leave_notify_connection_id)
-				l_leave_notify_connection_id := 0
-			end
-			if grab_callback_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
-				App_implementation.set_grab_callback_connection_id (0)
+			app_imp := app_implementation
+			if rubber_band_is_drawn then
+				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
+				rubber_band_is_drawn := False
 			end
 			if not is_destroyed then
 				if pointer_style /= Void then
@@ -369,28 +254,26 @@ feature -- Implementation
 					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
 					{EV_GTK_EXTERNALS}.gdk_window_set_cursor ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget), NULL)
 				end
-				{EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
-				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)
+				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 			end
 
-			App_implementation.set_pnd_signal_ids (l_motion_notify_connection_id, l_leave_notify_connection_id, l_enter_notify_connection_id)
-
 				-- Make sure 'in_transport' returns False before firing any drop actions.
-			App_implementation.on_drop (pebble)
+			App_imp.on_drop (pebble)
 
 				-- Call appropriate action sequences
+			l_pebble_tuple := [pebble]
 			if
 				able_to_transport (a_button)
 			then
 				target := pointed_target
 				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then
-					target.drop_actions.call ([pebble])
-					App_implementation.drop_actions.call ([pebble])
+					target.drop_actions.call (l_pebble_tuple)
+					App_imp.drop_actions.call (l_pebble_tuple)
 				else
-					App_implementation.cancel_actions.call ([pebble])
+					App_imp.cancel_actions.call (l_pebble_tuple)
 				end
 			else
-				App_implementation.cancel_actions.call ([pebble])
+				App_imp.cancel_actions.call (l_pebble_tuple)
 			end
 
 			if pick_ended_actions_internal /= Void then
@@ -399,44 +282,14 @@ feature -- Implementation
 
 			if not is_destroyed then
 				enable_transport
-				interface.pointer_motion_actions.resume
 			end
 
 			post_drop_steps (a_button)
-			if a_button > 0 and then able_to_transport (a_button) then
-				call_press_actions (target, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			end
-			check
-				motion_notify_not_connected: motion_notify_connection_id = 0
-				enter_notify_not_connected: enter_notify_connection_id = 0
-				leave_notify_not_connected: leave_notify_connection_id = 0
-				grab_callback_not_connected: grab_callback_connection_id = 0
-				button_release_not_connected: button_release_connection_id = 0
-			end
-		end
-
-	call_press_actions (targ: EV_ABSTRACT_PICK_AND_DROPABLE; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-		local
-			wid: EV_WIDGET
-			wid_imp: EV_WIDGET_IMP
-		do
-			wid ?= targ
-			if wid /= Void then
-				wid_imp ?= wid.implementation
-				if wid_imp /= Void and not wid_imp.is_destroyed then
-					if (a_x >= 0 and a_x <= wid_imp.width) and (a_y >= 0 and a_y <= wid_imp.height) then
-						wid_imp.button_press_switch ({EV_GTK_ENUMS}.gdk_button_press_enum, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-					end
-				end
-			end
 		end
 
 	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
-				signal_emit_stop (event_widget, "button-press-event")
-			end
 			App_implementation.set_x_y_origin (0, 0)
 			last_pointed_target := Void
 			if pebble_function /= Void then
@@ -445,32 +298,29 @@ feature -- Implementation
 			end
 		end
 
-	add_grab_cb is
-			-- Disconnect callback that called us and `enable_capture'.
-		do
-			check
-				grab_callback_connected: grab_callback_connection_id > 0
-			end
-			{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
-			App_implementation.set_grab_callback_connection_id (0)
-			enable_capture
-		end
-
 	draw_rubber_band is
 			-- Draw a segment between initial pick point and `destination'.
 		local
+			app_imp: EV_APPLICATION_IMP
 		do
-				erase_rubber_band
-				App_implementation.set_old_pointer_x_y_origin (pointer_x, pointer_y)
-				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
-				rubber_band_is_drawn := True
+			app_imp := app_implementation
+			if rubber_band_is_drawn then
+					-- Undraw previous rubber band if any
+				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
+			end
+			App_imp.set_old_pointer_x_y_origin (pointer_x, pointer_y)
+			pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
+			rubber_band_is_drawn := True
 		end
 
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
+		local
+			app_imp: EV_APPLICATION_IMP
 		do
+			app_imp := app_implementation
 			if rubber_band_is_drawn then
-				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
+				pnd_screen.draw_segment (app_imp.x_origin, app_imp.y_origin, app_imp.old_pointer_x, app_imp.old_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
@@ -487,28 +337,35 @@ feature -- Implementation
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
-			gdkwin: POINTER
-			x, y: INTEGER
+			gdkwin, gtkwid: POINTER
+			a_x, a_y: INTEGER
 			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 			a_row_imp: EV_PND_DEFERRED_ITEM
-			pnd_targets: ARRAYED_LIST [INTEGER]
 			l_app_imp: like app_implementation
 		do
 			l_app_imp := app_implementation
-			a_wid_imp ?= l_app_imp.gtk_widget_imp_at_pointer_position
-			if a_wid_imp /= Void and then has_struct_flag (a_wid_imp.c_object, {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) then
-				if l_app_imp.pnd_targets.has (a_wid_imp.interface.object_id) then
-					Result := a_wid_imp.interface
+			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			if gdkwin /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
+				if gtkwid /= default_pointer then
+					a_wid_imp ?= l_app_imp.eif_object_from_gtk_object (gtkwid)
 				end
-				a_pnd_deferred_item_parent ?= a_wid_imp
-				if a_pnd_deferred_item_parent /= Void then
-						-- We need to explicitly search for PND deferred items
-					gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
-					pnd_targets := App_implementation.pnd_targets
-					a_row_imp := a_pnd_deferred_item_parent.row_from_y_coord (y)
-					if a_row_imp /= Void and then pnd_targets.has (a_row_imp.interface.object_id) then
-						Result := a_row_imp.interface
+				if
+					a_wid_imp /= Void and then
+					has_struct_flag (a_wid_imp.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) and then
+					not a_wid_imp.is_destroyed
+				then
+					if l_app_imp.pnd_targets.has (a_wid_imp.interface.object_id) then
+						Result := a_wid_imp.interface
+					end
+					a_pnd_deferred_item_parent ?= a_wid_imp
+					if a_pnd_deferred_item_parent /= Void then
+							-- We need to explicitly search for PND deferred items
+						a_row_imp := a_pnd_deferred_item_parent.row_from_y_coord (a_y)
+						if a_row_imp /= Void and then l_app_imp.pnd_targets.has (a_row_imp.interface.object_id) then
+							Result := a_row_imp.interface
+						end
 					end
 				end
 			end
@@ -522,64 +379,6 @@ feature -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	x_origin: INTEGER is
-			-- Temp coordinate value for origin of Pick and Drop.
-		do
-			Result := app_implementation.x_origin
-		end
-
-	y_origin: INTEGER is
-			-- Temp coordinate value for origin of Pick and Drop.
-		do
-			Result := app_implementation.y_origin
-		end
-
-	old_pointer_x: INTEGER is
-			--
-		do
-			Result := app_implementation.old_pointer_x
-		end
-
-	old_pointer_y: INTEGER is
-			--
-		do
-			Result := app_implementation.old_pointer_y
-		end
-
-	grab_callback_connection_id: INTEGER is
-			-- GTK signal connection id for motion-notify-event.
-			-- (Used to trigger a global user input grab)
-		do
-			Result := app_implementation.grab_callback_connection_id
-		end
-
-	motion_notify_connection_id: INTEGER is
-			-- GTK signal connection id for motion-notify-event.
-			-- (Used to draw rubber band line between pick point and pointer)
-		do
-			Result := app_implementation.motion_notify_connection_id
-		end
-
-	leave_notify_connection_id: INTEGER is
-			-- GTK signal connection id for leave-notify-event.
-			-- (Used to suspend leave events during rubber band line drawing)
-		do
-			Result := app_implementation.leave_notify_connection_id
-		end
-
-	enter_notify_connection_id: INTEGER is
-			-- GTK signal connection id for enter-notify-event.
-			-- (Used to suspend enter events during rubber band line drawing)
-		do
-			Result := app_implementation.enter_notify_connection_id
-		end
-
-	button_press_connection_id: INTEGER
-			-- GTK signal connection id for button-press-event.
-
-	button_release_connection_id: INTEGER
-			-- GTK signal connection id for button-release-event.
 
 	gdk_widget_no_window (a_widget: POINTER): BOOLEAN is
 		external

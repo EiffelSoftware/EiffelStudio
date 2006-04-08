@@ -83,13 +83,14 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature {NONE} -- Event loop
+
 	 launch is
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
 			if gtk_is_launchable then
 				gtk_dependent_launch_initialize
-				interface.post_launch_actions.call (Void)
 				main_loop
 					-- Unhook marshal object.
 				gtk_marshal.destroy
@@ -98,29 +99,34 @@ feature {NONE} -- Initialization
 		end
 
 	main_loop is
-			-- Our main loop		
-		local
-			l_is_destroyed: BOOLEAN
+			-- Execute main loop of `Current'.
 		do
 			from
+				interface.post_launch_actions.call (Void)
 			until
-				l_is_destroyed
+				is_destroyed
 			loop
-				process_gdk_events
-				if not {EV_GTK_EXTERNALS}.g_main_context_pending (default_pointer) then
-					l_is_destroyed := is_destroyed
-					if not l_is_destroyed then
-						call_idle_actions
-						relinquish_cpu_slice
-					end
-				else
-						-- Dispatch context events to trigger gtk signals, idle handling and expose events.
-					{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
-				end
+				event_loop_iteration (True)
 			end
 		end
 
-feature {EV_ANY_IMP} -- Access
+feature {EV_ANY_IMP} -- Implementation
+
+	event_loop_iteration (a_relinquish: BOOLEAN) is
+			-- Run a single iteration of the event loop.
+			-- CPU will be relinquished if `a_relinquish'.
+		do
+			process_gdk_events
+			if locked_window = Void and then {EV_GTK_EXTERNALS}.g_main_context_pending ({EV_GTK_EXTERNALS}.g_main_context_default) then
+					-- This handles remaining idle handling such as timeouts, internal gtk/gdk idles and expose events.
+				{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
+			else
+				call_idle_actions
+				if a_relinquish then
+					relinquish_cpu_slice
+				end
+			end
+		end
 
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
@@ -190,25 +196,14 @@ feature -- Basic operation
 			until
 				stop_processing_requested
 			loop
-				process_events
-				process_graphical_events
-				call_idle_actions
-					-- Relinquish CPU so as to not take up 100% kernel
-				relinquish_cpu_slice
+				event_loop_iteration (True)
 			end
 		end
 
 	process_events is
 			-- Process all pending events and redraws.
 		do
-			process_gdk_events
-			process_graphical_events
-		end
-
-	process_graphical_events is
-			-- Process any invalidated Windows.
-		do
-			{EV_GTK_EXTERNALS}.gdk_window_process_all_updates
+			event_loop_iteration (False)
 		end
 
 	stop_processing is
@@ -218,6 +213,39 @@ feature -- Basic operation
 			stop_processing_requested := True
 		end
 
+	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
+			-- Tuple optimizations
+		once
+			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
+		end
+
+	process_button_event (a_gdk_event: POINTER) is
+			-- Process button event `a_gdk_event'.
+		require
+			a_gdkevent_not_null: a_gdk_event /= default_pointer
+		local
+			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
+		do
+			if captured_widget /= Void then
+				l_pnd_item ?= captured_widget.implementation
+			else
+				l_pnd_item ?= gtk_widget_imp_at_pointer_position
+			end
+			if l_pnd_item /= Void and then l_pnd_item.has_struct_flag (l_pnd_item.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) then
+				l_pnd_item.on_mouse_button_event (
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event),
+					0.5,
+					0.5,
+					0.5,
+					{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (a_gdk_event).truncated_to_integer,
+					{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (a_gdk_event).truncated_to_integer
+				)
+			end
+		end
+
 	process_gdk_events is
 			-- Process all current GDK events
 		local
@@ -225,13 +253,11 @@ feature -- Basic operation
 			event_widget, grab_widget: POINTER
 			l_call_event, l_propagate_event, l_event_handled: BOOLEAN
 			l_widget_imp: EV_WIDGET_IMP
-			l_app_motion_tuple: TUPLE [EV_WIDGET, INTEGER, INTEGER]
 			l_widget_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			l_no_more_events: BOOLEAN
 		do
 			from
-				l_app_motion_tuple := [Void, 0, 0]
-				l_widget_motion_tuple := [0, 0, 0.0, 0.0, 0.0, 0, 0]
+				l_widget_motion_tuple := motion_tuple
 			until
 				l_no_more_events
 			loop
@@ -258,12 +284,15 @@ feature -- Basic operation
 							end
 							if l_widget_imp /= Void then
 								if pointer_motion_actions_internal /= Void then
-									l_app_motion_tuple.put_reference (l_widget_imp.interface, 1)
-									l_app_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 2)
-									l_app_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 3)
-									pointer_motion_actions_internal.call (l_app_motion_tuple)
+									pointer_motion_actions_internal.call (
+										[
+											l_widget_imp.interface,
+											{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+											{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+										]
+									)
 								end
-								if l_widget_imp.pointer_motion_actions_internal /= Void and then l_widget_imp.is_sensitive then
+								if l_widget_imp.is_sensitive then
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_widget_imp.screen_x, 1)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_widget_imp.screen_y, 2)
 									l_widget_motion_tuple.put_double (0.5, 3)
@@ -271,31 +300,40 @@ feature -- Basic operation
 									l_widget_motion_tuple.put_double (0.5, 5)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
 									l_widget_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
-									l_widget_imp.pointer_motion_actions_internal.call (l_widget_motion_tuple)
+									l_widget_imp.on_pointer_motion (l_widget_motion_tuple)
 								end
 							end
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							l_widget_imp := Void
 						when GDK_BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_PRESS%N")
 							end
-							l_propagate_event := True
+							process_button_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_2BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_2BUTTON_PRESS%N")
 							end
-							l_propagate_event := True
+							process_button_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_3BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_3BUTTON_PRESS%N")
 							end
-							l_propagate_event := True
+							process_button_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_BUTTON_RELEASE then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_RELEASE%N")
 							end
-							l_propagate_event := True
+							process_button_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_SCROLL then
 							debug ("GDK_EVENT")
 								print ("GDK_SCROLL%N")
@@ -363,14 +401,14 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_ENTER_NOTIFY%N")
 							end
-							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							--l_call_event := False
+							--{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_LEAVE_NOTIFY then
 							debug ("GDK_EVENT")
 								print ("GDK_LEAVE_NOTIFY%N")
 							end
-							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							--l_call_event := False
+							--{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_KEY_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_KEY_PRESS%N")
@@ -409,14 +447,20 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_DROP_START")
 							end
+								-- Some text has been drag dropped on a widget.
 						when GDK_DROP_FINISHED then
 							debug ("GDK_EVENT")
 								print ("GDK_DROP_FINISHED")
 							end
+						when GDK_SETTING then
+							debug ("GDK_SETTING")
+								print ("GDK_SETTING")
+						 	end
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						else
 							l_call_event := False
 						end
-
 						if l_call_event then
 							if l_propagate_event then
 								{EV_GTK_EXTERNALS}.gtk_propagate_event (grab_widget, gdk_event)
@@ -599,8 +643,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			until
 				Result /= Void or else gtkwid = default_pointer
 			loop
-					Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
+				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
+				gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 			end
 		end
 
@@ -615,10 +659,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				if gtkwid /= default_pointer then
 					Result ?= eif_object_from_gtk_object (gtkwid)
+					if Result /= Void and then Result.interface.is_destroyed then
+						Result := Void
+					end
 				end
-			end
-			if Result /= Void and then Result.interface.is_destroyed then
-				Result := Void
 			end
 		end
 
@@ -653,13 +697,13 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		end
 
 	default_window_imp: EV_WINDOW_IMP is
-			--
+			-- Default window implementation.
 		once
 			Result ?= default_window.implementation
 		end
 
 	default_font_height: INTEGER is
-			--
+			-- Default font height.
 		local
 			temp_style: POINTER
 		do
@@ -668,7 +712,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		end
 
 	default_font_ascent: INTEGER is
-			--
+			-- Default font ascent.
 		local
 			temp_style: POINTER
 		do
@@ -677,7 +721,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		end
 
 	default_font_descent: INTEGER is
-			--
+			-- Default font descent.
 		local
 			temp_style: POINTER
 		do
@@ -686,6 +730,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		end
 
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Default Gdk event marshaller.
 		once
 			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
@@ -751,7 +796,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 		-- Temp coordinate values for origin of Pick and Drop.
 
 	set_x_y_origin (a_x_origin, a_y_origin: INTEGER) is
-			--
+			-- Set `x_origin' and `y_origin' to `a_x_origin' and `a_y_origin' respectively.
 		do
 			x_origin := a_x_origin
 			y_origin := a_y_origin
@@ -767,36 +812,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 			old_pointer_x := a_old_pointer_x
 			old_pointer_y := a_old_pointer_y
 		end
-
-	set_pnd_signal_ids (a_motion, a_leave, a_enter: INTEGER) is
-			-- Set the PnD signal ids so that they may be disconnected at a later date.
-		do
-			motion_notify_connection_id := a_motion
-			leave_notify_connection_id := a_leave
-			enter_notify_connection_id := a_enter
-		end
-
-	set_grab_callback_connection_id (a_grab: INTEGER) is
-			-- Set grab connection id to `a_grab'
-		do
-			grab_callback_connection_id := a_grab
-		end
-
-	grab_callback_connection_id: INTEGER
-			-- GTK signal connection id for motion-notify-event.
-			-- (Used to trigger a global user input grab)
-
-	motion_notify_connection_id: INTEGER
-			-- GTK signal connection id for motion-notify-event.
-			-- (Used to draw rubber band line between pick point and pointer)
-
-	leave_notify_connection_id: INTEGER
-			-- GTK signal connection id for leave-notify-event.
-			-- (Used to suspend leave events during rubber band line drawing)
-
-	enter_notify_connection_id: INTEGER
-			-- GTK signal connection id for enter-notify-event.
-			-- (Used to suspend enter events during rubber band line drawing)
 
 feature {NONE} -- External implementation
 

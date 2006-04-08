@@ -551,7 +551,6 @@ feature -- Drawing operations
 			create Result
 		end
 
-	--| FIXME IEK Update with new feature when pixmap masking code is fully integrated
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local
@@ -569,8 +568,8 @@ feature -- Drawing operations
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
 			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
 			dest_dc				: WEL_DC
-			temp_foreground_color	: WEL_COLOR_REF
-			temp_background_color	: WEL_COLOR_REF
+			l_backbuffer: WEL_BITMAP
+			l_backbuffer_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height
@@ -623,25 +622,21 @@ feature -- Drawing operations
 						source_mask_dc.select_bitmap (source_mask_bitmap)
 					end
 
-						-- Store original colors as they need to be unset for masking
-					temp_background_color := dest_dc.background_color
-					temp_foreground_color := dest_dc.text_color
 
-					dest_dc.set_text_color (create {WEL_COLOR_REF}.make_rgb (0, 0, 0))
-					dest_dc.set_background_color (create {WEL_COLOR_REF}.make_rgb (255, 255, 255))
+					create l_backbuffer.make_compatible (dest_dc, source_width, source_height)
+					create l_backbuffer_dc.make_by_dc (dest_dc)
+					l_backbuffer_dc.select_bitmap (l_backbuffer)
 
-						-- Xor source to destination
-					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
+					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_bitmap_dc, source_x, source_y, srccopy)
+					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_mask_dc, source_x, source_y, srcand)
 
-						-- Set opaque pixels to black on destination
-					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, Srcand)
+					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, maskpaint)
 
-						-- Re Xor source to destination to restore original pixels
-					dest_dc.bit_blt (x, y, source_width, source_height, source_bitmap_dc, source_x, source_y, Srcinvert)
+					dest_dc.bit_blt (x, y, source_width, source_height, l_backbuffer_dc, 0, 0, srcpaint)
 
-						-- Reset colors
-					dest_dc.set_text_color (temp_foreground_color)
-					dest_dc.set_background_color (temp_background_color)
+					l_backbuffer_dc.unselect_bitmap
+					l_backbuffer_dc.delete
+					l_backbuffer.delete
 
 						-- Free newly created GDI Objects if source isn't a pixmap drawable
 					if source_drawable = Void then
@@ -687,140 +682,6 @@ feature -- Drawing operations
 			end
 			release_dc
 		end
-
---	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
---			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
---		local
---			pixmap_height		: INTEGER
---			pixmap_width		: INTEGER
---			source_x			: INTEGER
---			source_y			: INTEGER
---			source_width		: INTEGER
---			source_height		: INTEGER
---			source_mask_bitmap	: WEL_BITMAP
---			source_bitmap		: WEL_BITMAP
---			s_dc				: WEL_SCREEN_DC
---			source_mask_dc		: WEL_MEMORY_DC
---			source_bitmap_dc	: WEL_MEMORY_DC
---			pixmap_imp			: EV_PIXMAP_IMP_STATE
---			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
---			dest_dc				: WEL_DC
---			temp_foreground_color	: WEL_COLOR_REF
---			temp_background_color	: WEL_COLOR_REF
---			l_backbuffer: WEL_BITMAP
---			l_backbuffer_dc: WEL_MEMORY_DC
---		do
---			pixmap_imp ?= a_pixmap.implementation
---			pixmap_height := pixmap_imp.height
---			pixmap_width := pixmap_imp.width
---			source_x := area.x
---			source_y := area.y
---			source_width := area.width
---			source_height := area.height
---			get_dc
---			if
---				pixmap_imp.icon /= Void and then
---				source_x = 0 and then source_y = 0 and then
---				source_width = pixmap_width and then
---				source_height = pixmap_height
---			then
---				dc.draw_icon_ex (
---					pixmap_imp.icon,
---					x, y,
---					pixmap_width, pixmap_height,
---					0, Void, Drawing_constants.Di_normal
---				)
---			else
---					-- Allocate GDI objects
---				create s_dc
---				s_dc.get
---
---				dest_dc := dc
---
---				if pixmap_imp.has_mask then -- Display a masked pixmap
---
---					source_drawable ?= pixmap_imp
---
---					if source_drawable /= Void then
---							-- If the dc's are already available then we use them without reffing
---						source_bitmap_dc := source_drawable.dc
---						source_mask_dc := source_drawable.mask_dc
---					else
---							-- Retrieve Source bitmap
---						source_bitmap := pixmap_imp.get_bitmap
---
---							-- Create dc for Source bitmap
---						create source_bitmap_dc.make_by_dc (s_dc)
---						source_bitmap_dc.select_bitmap (source_bitmap)
---
---							-- Retrieve Mask bitmap
---						source_mask_bitmap := pixmap_imp.get_mask_bitmap
---
---							-- Create dc for Mask bitmap
---						create source_mask_dc.make_by_dc (s_dc)
---						source_mask_dc.select_bitmap (source_mask_bitmap)
---					end
---
---
---					create l_backbuffer.make_compatible (dest_dc, source_width, source_height)
---					create l_backbuffer_dc.make_by_dc (dest_dc)
---					l_backbuffer_dc.select_bitmap (l_backbuffer)
---
---					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_bitmap_dc, source_x, source_y, srccopy)
---					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_mask_dc, source_x, source_y, srcand)
---
---					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, maskpaint)
---
---					dest_dc.bit_blt (x, y, source_width, source_height, l_backbuffer_dc, 0, 0, srcpaint)
---
---					l_backbuffer_dc.unselect_bitmap
---					l_backbuffer_dc.delete
---					l_backbuffer.delete
---
---						-- Free newly created GDI Objects if source isn't a pixmap drawable
---					if source_drawable = Void then
---						source_bitmap_dc.unselect_bitmap
---						source_bitmap_dc.delete
---						source_mask_dc.unselect_bitmap
---						source_mask_dc.delete
---						source_bitmap.decrement_reference
---						source_mask_bitmap.decrement_reference
---					end
---
---				else -- Display a not masked pixmap.
---
---					source_drawable ?= pixmap_imp
---					if source_drawable = Void then
---							-- Source bitmap dc
---						source_bitmap := pixmap_imp.get_bitmap
---						create source_bitmap_dc.make_by_dc (s_dc)
---						source_bitmap_dc.select_bitmap (source_bitmap)
---
---						dest_dc.bit_blt (
---							x, y,
---							source_width, source_height,
---							source_bitmap_dc, source_x, source_y, src_drawing_mode
---						)
---							-- Free GDI Objects
---						source_bitmap_dc.unselect_bitmap
---						source_bitmap_dc.delete
---						source_bitmap.decrement_reference
---					else
---						source_bitmap_dc := source_drawable.dc
---						dest_dc.bit_blt (
---							x, y,
---							source_width, source_height,
---							source_bitmap_dc, source_x, source_y, src_drawing_mode
---						)
---					end
---
---				end
---
---					-- Free GDI objects
---				s_dc.release
---			end
---			release_dc
---		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
 			-- Draw rectangle with upper-left corner on (`x', `y')

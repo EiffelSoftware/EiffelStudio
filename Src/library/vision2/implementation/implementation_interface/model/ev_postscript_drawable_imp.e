@@ -472,6 +472,13 @@ feature -- Drawing operations
 			fixme ("draw_ellipsed_text_top_left: To be implemented")
 		end
 
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL) is
+			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Rotation is number of radians counter-clockwise from horizontal plane.
+		do
+			fixme ("draw_rotated_text: To be implemented")
+		end
+
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do

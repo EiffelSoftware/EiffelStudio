@@ -52,6 +52,14 @@
 						string. For example this facility is used in EiffelVision2 and WEL.
 					</item>
 					<item><class_name>STRING</class_name> can be either <class_name>STRING_8</class_name> or <class_name>STRING_32</class_name> depending on your configuration. Default is <class_name>STRING_8</class_name>.</item>
+					<item>Added <feature_name>is_integer_xx</feature_name>, <feature_name>is_natural_xx</feature_name>, <feature_name>to_integer_xx</feature_name> and <feature_name>to_natural_xx</feature_name> where xx stands for 8, 16, 32 or 64.</item>
+					<item>Updated <feature_name>is_double</feature_name>, <feature_name>is_real</feature_name>, <feature_name>is_real_32</feature_name>, <feature_name>is_real_64</feature_name> so that the specification allow optional integral part or decimal part, but not both (as per the ECMA specification of a real constant). This fixes the bug where <code>1.e-4</code> was not considered a valid floating point value.</item>
+					<item>Changed behavior of <feature_name>is_boolean</feature_name>  to match the ELKS specification which says the lower case version of the string should either be true or false.</item>
+				</list>
+			</item>
+			<item><class_name>CHARACTER</class_name>, <class_name>CHARACTER_8</class_name> and <class_name>CHARACTER_32</class_name>:
+				<list ordered="false">
+					<item>Removed <class_name>WIDE_CHARACTER</class_name> and <class_name>WIDE_CHARACTER_REF</class_name>, they are replaced by <class_name>CHARACTER_32</class_name> and <class_name>CHARACTER_32_REF</class_name>.</item>
 				</list>
 			</item>
 			<item><class_name>REAL_32</class_name> and <class_name>REAL_64</class_name>:
@@ -62,17 +70,37 @@
 			</item>
 			<item>SED serialization facility:
 				<list ordered="false">
-					<item></item>
+					<item>Fixed <feature_name>read_attributes</feature_name> in <class_name>SED_INDEPENDENT_DESERIALIZER</class_name> because we simply forgot to check that between the retrieved system and the stored system, a type has the same number of attributes.</item>
+					<item>Fixed <feature_name>wipe_out</feature_name> in <class_name>SED_OBJECTS_TABLE</class_name>' which did not reset <feature_name>last_index</feature_name>. As a consequence if you were doing several storing in a row, then <feature_name>last_index</feature_name> kept being incremented but when retrieving the data it would fail because it would expect <feature_name>last_index</feature_name> to start at 1, not at the last incremented value.</item>
+					<item>Changed <class_name>SED_MEDIUM_READER_WRITER</class_name> encoding so that it can also be used in a networking context. Basically now before sending the data, we first send the number of bytes of the data, and then the data. The old encoding is still available in <class_name>SED_MEDIUM_READER_WRITER_1</class_name>.</item>
 				</list>
 			</item>
+			<item>Added <feature_name>lock_marking</feature_name> and <feature_name>unlock_marking</feature_name> to use <feature_name>lock</feature_name> and <feature_name>unlock</feature_name> in <class_name>INTERNAL</class_name> in a multithreaded context. Currently used by the serialization classes.</item>
+			<item><class_name>IO_MEDIUM</class_name>:
+				<list ordered="false">
+					<item>Added <feature_name>read_integer_XX</feature_name>, <feature_name>put_integer_XX</feature_name>, <feature_name>last_integer_xx</feature_name> and <feature_name>read_natural_XX</feature_name>, <feature_name>put_natural_XX</feature_name>, <feature_name>last_natural_XX</feature_name> where XX stands for 8, 16, 32, 64.</item>
+				</list>
+			</item>
+			<item><class_name>HASH_TABLE</class_name>:
+				<list ordered="false">
+					<item>Fixed an infinite cycle when using <feature_name>replace_key</feature_name> with a key which is not present in the table.</item>
+					<item>Improved correct_mismatch to also retrieve <class_name>HASH_TABLE</class_name>s from version 5.4.</item>
+				</list>
+			</item>
+			<item>Added a bracket feature to <feature_name>item</feature_name> from <class_name>ARRAY2</class_name>.</item>
+			<item>In <class_name>ACTIVE_INTEGER_INTERVAL</class_name> the action sequence will only be called if the range actually changes.</item>
+			<item>Moved <cluster_name>list_eiffel3</cluster_name> and <cluster_name>table_eiffel3</cluster_name> to the <cluster_name>obsolete</cluster_name> library.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">
-				<item></item>
+			<item>Added in <class_name>SOCKET</class_name> <feature_name>read_integer_XX</feature_name>, <feature_name>put_integer_XX</feature_name>, <feature_name>last_integer_xx</feature_name> and <feature_name>read_natural_XX</feature_name>, <feature_name>put_natural_XX</feature_name>, <feature_name>last_natural_XX</feature_name> where XX stands for 8, 16, 32, 64.</item>
+			<item>Modified <feature_name>read_to_managed_pointer</feature_name> in <class_name>SOCKET</class_name> so that it reads the specified number of bytes. Therefore now it might pause in this routine if it does not receive enough data.</item>
+			<item>Modified <feature_name>put</feature_name> and <feature_name>read</feature_name> in <class_name>NETWORK_RESOURCE</class_name>, <class_name>FTP_PROTOCOL</class_name>, <class_name>HTTP_PROTOCOL</class_name>, <class_name>FILE_PROTOCOL</class_name> so that the error checking code is not using <feature_name>socket_ok</feature_name> which might triggers error when there are none.</item>
+			<item>Improved handling of <feature_name>recipients</feature_name> and <feature_name>header_from</feature_name> in <class_name>SMTP_PROTOCOL</class_name> so that you can provide a nice `From' or `To' in the message since they are different from the addresses you have to pass from MAIL FROM and RCPT TO.</item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">
-				<item></item>
+				<item>Refactored the library so that even if you do not have the multithreaded option set, it will be compilable.</item>
 		</list>
 		<heading><size>3</size>EiffelTime</heading>
 		<list ordered="false">
@@ -85,11 +113,11 @@
 		</list>
 		<heading><size>3</size>Process</heading>
 		<list ordered="false">
-			<item></item>
+			<item>New library to launch processes and redirect their output.</item>
 		</list>
 		<heading><size>3</size>UUID</heading>
 		<list ordered="false">
-			<item></item>
+			<item>New library to generate UUID.</item>
 		</list>
 		<heading><size>3</size>WEL</heading>
 		<list ordered="false">
@@ -110,6 +138,26 @@
 						</item>
 					</list>
 				</item>
+				<item><class_name>WEL_TREE_VIEW</class_name>:
+					<list ordered="false">
+						<item>Fixed <feature_name>get_item_rect</feature_name> which was always returning a 0,0,0,0 rect as we were not correctly initializing the rect structure with the pointer to the item.</item>
+						<item>Added <feature_name>get_item_text_rect</feature_name> which returns a rect only for the text of the items.</item>
+					</list>
+				</item>
+				<item>WEL_WINDOWS_ROUTINES:
+					<list ordered="false">
+						<item>Improved <feature_name>window_of_item</feature_name> to reduce the number of cases where we might get an exception. This makes debugging easier.</item>
+						<item>Fixed <feature_name>resource_string_id</feature_name> which generated a call on Void target exception.</item>
+					</list>
+				</item>
+				<item>Added ability to have drop down menus in <class_name>WEL_TOOL_BAR_BUTTON</class_name>.</item>
+				<item>Added the ability to add an icon to the SystemTray.</item>
+				<item>Added ability to drop files to WEL_WINDOW components.</item>
+				<item>Made all contextual menus being selectable from both left and right click (formerly it was only left click).</item>
+				<item>Fixed issue with contextual menus which might not appear correctly, nor respond to click or Esc key properly because the menu is not at the front.</item>
+				<item>Fixed in <class_name>WEL_LIST_VIEW</class_name> a bug where if the text of the string is too long, it would be displayed but truncated.</item>
+				<item>Fixed incorrect result for <feature_name>title_bar_height</feature_name> in <class_name>WEL_SYSTEM_METRICS</class_name>.</item>
+				<item>Fixed a memory corruption due to Windows not sending a WM_DESTROY or WM_NCDESTROY message in all cases when a window is actually destroyed.</item>
 		</list>
 	</paragraph>
 </document>

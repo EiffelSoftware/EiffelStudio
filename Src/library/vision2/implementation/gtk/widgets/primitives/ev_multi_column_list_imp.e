@@ -25,12 +25,11 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		redefine
-			enable_transport,
 			disable_transport,
 			pre_pick_steps,
 			call_pebble_function,
 			post_drop_steps,
-			start_transport_filter,
+			on_mouse_button_event,
 			initialize,
 			interface,
 			destroy,
@@ -39,8 +38,7 @@ inherit
 			set_to_drag_and_drop,
 			button_press_switch,
 			create_pointer_motion_actions,
-			visual_widget,
-			on_button_release
+			visual_widget
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -209,46 +207,47 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				INTEGER, INTEGER]
 			a_row_number: INTEGER
 			clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a_gdkwin, a_gtkwid: POINTER
+			l_x, l_y: INTEGER
 		do
-			mouse_button_pressed := True
-			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y]
-			a_row_number := row_index_from_y_coord (a_y)
-			if a_row_number > 0 and then a_row_number <= count then
-				clicked_row := ev_children @ a_row_number
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+				a_gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
+				if a_gdkwin /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
+					if a_gtkwid = tree_view then
+							-- This prevents item actions from being called if clicking on a scrollbar
+						mouse_button_pressed := True
+						t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+							a_screen_x, a_screen_y]
+						a_row_number := row_index_from_y_coord (a_y)
+						if a_row_number > 0 and then a_row_number <= count then
+							clicked_row := ev_children @ a_row_number
+						else
+							clear_selection
+								-- This follows the Windows behavior of clearing selection if list is clicked on
+						end
+						if a_type = {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
+							if
+								clicked_row /= Void and then
+								clicked_row.pointer_button_press_actions_internal /= Void
+							then
+								clicked_row.pointer_button_press_actions_internal.call (t)
+							end
+						elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
+							if
+								clicked_row /= Void and then
+								clicked_row.pointer_double_press_actions_internal /= Void
+							then
+								clicked_row.pointer_double_press_actions_internal.call (t)
+							end
+						end
+					end
+				end
 			else
-				clear_selection
-					-- This follows the Windows behavior of clearing selection if list is clicked on
+				mouse_button_pressed := False
+				call_selection_action_sequences
 			end
-			if a_type = {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
-				if pointer_button_press_actions_internal /= Void then
-					pointer_button_press_actions_internal.call (t)
-				end
-				if
-					clicked_row /= Void and then
-					clicked_row.pointer_button_press_actions_internal /= Void
-				then
-					clicked_row.pointer_button_press_actions_internal.call (t)
-				end
-			elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
-				if pointer_double_press_actions_internal /= Void then
-					pointer_double_press_actions_internal.call (t)
-				end
-				if
-					clicked_row /= Void and then
-					clicked_row.pointer_double_press_actions_internal /= Void
-				then
-					clicked_row.pointer_double_press_actions_internal.call (t)
-				end
-			end
-		end
-
-	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Used for pointer button release events
-		do
-			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			mouse_button_pressed := False
-			call_selection_action_sequences
 		end
 
 	mouse_button_pressed: BOOLEAN
@@ -341,7 +340,6 @@ feature {NONE} -- Implementation
 			until
 				i > a_columns
 			loop
-
 				a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (a_column, True)
@@ -791,29 +789,6 @@ feature -- Implementation
 			end
 		end
 
-	enable_transport is
-			-- Enable PND transport to occur
-		do
-			connect_pnd_callback
-		end
-
-	connect_pnd_callback is
-			-- Connect Pick event for PND
-		do
-			check
-				button_release_not_connected: button_release_connection_id = 0
-			end
-			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
-			end
-			real_signal_connect (visual_widget,
-				once "button-press-event",
-				agent (App_implementation.gtk_marshal).mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				App_implementation.default_translate)
-			button_press_connection_id := last_signal_connection_id
-			is_transport_enabled := True
-		end
-
 	disable_transport is
 			-- Disable PND transport
 		do
@@ -842,15 +817,14 @@ feature -- Implementation
 		do
 			if not is_transport_enabled then
 				if a_enable or pebble /= Void then
-					connect_pnd_callback
+					is_transport_enabled := True
 				end
 			elseif not a_enable and pebble = Void then
-				disable_transport_signals
 				is_transport_enabled := False
 			end
 		end
 
-	start_transport_filter (
+	on_mouse_button_event (
 			a_type: INTEGER
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -869,15 +843,12 @@ feature -- Implementation
 				end
 			end
 
-			if pnd_row_imp /= Void or else pebble /= Void then
-				Precursor (
-				a_type,
-				a_x, a_y, a_button,
-				a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y)
-			else
-				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			end
+			Precursor (
+					a_type,
+					a_x, a_y, a_button,
+					a_x_tilt, a_y_tilt, a_pressure,
+					a_screen_x, a_screen_y
+				)
 		end
 
 	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -963,15 +934,6 @@ feature -- Implementation
 	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0  then
-				if pnd_row_imp /= Void and not is_destroyed then
-					if pnd_row_imp.mode_is_pick_and_drop then
-						signal_emit_stop (event_widget, "button-press-event")
-					end
-				elseif mode_is_pick_and_drop and not is_destroyed then
-						signal_emit_stop (event_widget, "button-press-event")
-				end
-			end
 			App_implementation.set_x_y_origin (0, 0)
 			last_pointed_target := Void
 

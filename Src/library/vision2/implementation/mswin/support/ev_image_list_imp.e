@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
-			-- Create image list with all images 
+			-- Create image list with all images
 			-- `a_width' by `a_height' pixels
 		do
 			make (a_width, a_height, Ilc_color24, True)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 	add_transparent_pixmap is
 			-- Add a transparent pixmap to the image list.
-			-- 
+			--
 			-- `last_position' is updated.
 		local
 			empty_mask: WEL_BITMAP
@@ -68,10 +68,10 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-		
+
 	pixmap_position (a_pixmap: EV_PIXMAP) is
 			-- Update `last_position' with the position of `a_pixmap'
-			-- in the image list. Set `last_position' to -1 if `a_pixmap' 
+			-- in the image list. Set `last_position' to -1 if `a_pixmap'
 			-- is not present in the image list.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -84,9 +84,9 @@ feature -- Status report
 
 				-- Try to find the cached version of the pixmap with its name.
 			pixmap_imp ?= a_pixmap.implementation
-			if pixmap_imp /= Void then  
+			if pixmap_imp /= Void then
 				pixmap_filename := pixmap_imp.pixmap_filename
-				if pixmap_filename /= Void and then 
+				if pixmap_filename /= Void and then
 				   filenames_index.has (pixmap_filename)
 				then
 					last_position := filenames_index.item (pixmap_filename)
@@ -97,7 +97,7 @@ feature -- Status report
 				end
 			end
 
-				-- Try to find the cached version of the pixmap with its 
+				-- Try to find the cached version of the pixmap with its
 				-- graphical object.
 			if last_position = -1 then
 				internal_pixmap_position (a_pixmap)
@@ -105,10 +105,10 @@ feature -- Status report
 		end
 
 feature -- Element change
-		
+
 	add_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Add the pixmap `a_pixmap' into the image list.
-			-- 
+			--
 			-- `last_position' is updated.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -116,7 +116,7 @@ feature -- Element change
 			l_id: INTEGER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			if pixmap_imp /= Void then  
+			if pixmap_imp /= Void then
 				pixmap_filename := pixmap_imp.pixmap_filename
 				if pixmap_filename /= Void then
 					if filenames_index.has (pixmap_filename) then
@@ -153,14 +153,14 @@ feature -- Element change
 	extend_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Add the pixmap `a_pixmap' at the end of the image list.
 			-- Do not test for possible cached version.
-			-- 
+			--
 			-- `last_position' is updated.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 			pixmap_filename: STRING
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			if pixmap_imp /= Void then  
+			if pixmap_imp /= Void then
 				pixmap_filename := pixmap_imp.pixmap_filename
 			end
 
@@ -178,10 +178,10 @@ feature {NONE} -- Implementation (Private features)
 
 	internal_add_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Add `a_pixmap' to the image list.
-			-- The pixmap is resized if needed to fit into the 
+			-- The pixmap is resized if needed to fit into the
 			-- image list.
 			--
-			-- The position in the image list of the pixmap is 
+			-- The position in the image list of the pixmap is
 			-- set to `last_position'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -197,12 +197,12 @@ feature {NONE} -- Implementation (Private features)
 
 				-- Try to get the icon
 			graphres := pixmap_imp.icon
-				
+
 				-- If there is no icon, try a cursor
 			if graphres = Void then
 				graphres := pixmap_imp.cursor
 			end
-			
+
 			if graphres = Void then
 				graphres := pixmap_imp.build_icon
 				graphres.enable_reference_tracking
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation (Private features)
 				add_icon (graphres)
 				info.put ([last_position, 1], item_value)
 			else
-					-- `icon' already in image list so set 
+					-- `icon' already in image list so set
 					-- `image_index' to this.
 				loc_tuple := info.item (item_value)
 				last_position := loc_tuple.integer_item (1)
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation (Private features)
 
 	internal_pixmap_position (a_pixmap: EV_PIXMAP) is
 			-- Update `last_position' with the position of `a_pixmap'
-			-- in the image list. Set `last_position' to -1 if `a_pixmap' 
+			-- in the image list. Set `last_position' to -1 if `a_pixmap'
 			-- is not present in the image list.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation (Private features)
 
 				-- Try to get the icon
 			graphres := pixmap_imp.icon
-				
+
 				-- If there is no icon, try a cursor
 			if graphres = Void then
 				graphres := pixmap_imp.cursor
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation (Private features)
 	internal_extend_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Add the pixmap `a_pixmap' at the end of the image list.
 			-- Do not test for possible cached version.
-			-- 
+			--
 			-- `last_position' is updated.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation (Private features)
 
 				-- Try to get the icon
 			graphres := pixmap_imp.icon
-				
+
 				-- If there is no icon, try a cursor
 			if graphres = Void then
 				graphres := pixmap_imp.cursor
@@ -300,19 +300,22 @@ feature {NONE} -- Implementation (Private features)
 		end
 
 	add_pixmap_bitmap (a_pixmap: EV_PIXMAP) is
-			-- Add the pixmap `a_pixmap' internally holding a HBITMAP 
+			-- Add the pixmap `a_pixmap' internally holding a HBITMAP
 			-- at the end of the image list.
 			-- Do not test for possible cached version.
-			-- 
+			--
 			-- `last_position' is updated.
 		local
 			resized_pixmap	: EV_PIXMAP
 			pixmap_imp		: EV_PIXMAP_IMP_STATE
 			bitmap			: WEL_BITMAP
 			mask_bitmap		: WEL_BITMAP
+			l_mask_bitmap_dc: WEL_MEMORY_DC
+			l_converted_bitmap: WEL_BITMAP
+			l_converted_bitmap_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			if (pixmap_imp.height /= bitmaps_height) or 	
+			if (pixmap_imp.height /= bitmaps_height) or
 			   (pixmap_imp.width /= bitmaps_width)
 			then
 				create resized_pixmap
@@ -327,7 +330,19 @@ feature {NONE} -- Implementation (Private features)
 			bitmap := pixmap_imp.get_bitmap
 			if pixmap_imp.has_mask then
 				mask_bitmap := pixmap_imp.get_mask_bitmap
-				add_masked_bitmap (bitmap, mask_bitmap)
+				create l_mask_bitmap_dc.make
+				l_mask_bitmap_dc.select_bitmap (mask_bitmap)
+				create l_converted_bitmap_dc.make_by_dc (l_mask_bitmap_dc)
+				create l_converted_bitmap.make_compatible (l_converted_bitmap_dc, mask_bitmap.width, mask_bitmap.height)
+				l_converted_bitmap_dc.select_bitmap (l_converted_bitmap)
+				l_converted_bitmap_dc.pat_blt (0, 0, mask_bitmap.width, mask_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.whiteness)
+				l_converted_bitmap_dc.bit_blt (0, 0, mask_bitmap.width, mask_bitmap.height, l_mask_bitmap_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcinvert)
+				l_mask_bitmap_dc.unselect_bitmap
+				l_mask_bitmap_dc.delete
+				l_converted_bitmap_dc.unselect_bitmap
+				l_converted_bitmap_dc.delete
+				add_masked_bitmap (bitmap, l_converted_bitmap)
+				l_converted_bitmap.decrement_reference
 				mask_bitmap.decrement_reference
 				mask_bitmap := Void
 			else
@@ -335,13 +350,13 @@ feature {NONE} -- Implementation (Private features)
 			end
 			bitmap.decrement_reference
 			bitmap := Void
-			
+
 			if resized_pixmap /= Void then
 				resized_pixmap.destroy
 				resized_pixmap := Void
 			end
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	filenames_index: HASH_TABLE [INTEGER, STRING]
@@ -349,7 +364,7 @@ feature {EV_ANY_I} -- Implementation
 
 	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]
 			-- Table indexing image indexes in images list to bitmap object id
-			
+
 	image_id_to_bitmap_id_index: HASH_TABLE [INTEGER, INTEGER]
 			-- Table indexing image bitmap object ids to indexes in images list.
 

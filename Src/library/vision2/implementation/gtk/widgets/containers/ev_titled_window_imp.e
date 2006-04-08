@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 				False
 			)
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
-			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, True)
+			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, False)
 		end
 
 	initialize_client_area is

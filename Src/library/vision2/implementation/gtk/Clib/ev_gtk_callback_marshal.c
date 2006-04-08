@@ -148,37 +148,6 @@ int c_ev_gtk_callback_marshal_true_event_callback (
       return TRUE;
 }
 
-int c_ev_gtk_callback_marshal_delayed_agent_callback (EIF_OBJECT agent)
-		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
-		// and returns FALSE to prevent subsequent calls.
-{
-      ev_gtk_callback_marshal (
-          eif_access (ev_gtk_callback_marshal_object),
-          eif_access (agent),
-          0,
-          (EIF_POINTER) NULL
-      );
-      return FALSE;
-}
-
-void c_ev_gtk_callback_marshal_delayed_agent_call (
-    gint delay, EIF_OBJECT agent
-)
-        // Call an `agent' after `delay' milliseconds.
-		// Uses c_ev_gtk_callback_marshal_false_callback so that `agent' is
-		// only called once.
-{
-      gint connection_id;
-      connection_id = g_timeout_add_full (
-				G_PRIORITY_HIGH_IDLE,
-				delay,
-				(GSourceFunc)
-        c_ev_gtk_callback_marshal_delayed_agent_callback,
-        eif_adopt (agent), // User data for function
-	(GDestroyNotify) eif_wean // To call on hook disconnect.
-			);
-}
-
 guint c_ev_gtk_callback_marshal_timeout_connect (
     gint delay, EIF_OBJECT agent
 )

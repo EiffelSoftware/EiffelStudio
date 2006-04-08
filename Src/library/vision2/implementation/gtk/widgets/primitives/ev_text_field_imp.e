@@ -107,6 +107,7 @@ feature -- Status setting
 		end
 
 	set_capacity (len: INTEGER) is
+			-- Set the maximum number of characters that `Current' can hold to `len'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
@@ -229,23 +230,14 @@ feature -- Basic operation
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
-			if a_timeout_imp = Void then
-				a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			else
-				a_timeout_imp.interface.actions.wipe_out
-			end
-
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
 
 				-- Hack to ensure text field is selected when called from change actions
 			if not last_key_backspace and then change_actions_internal /= Void and then change_actions_internal.state = change_actions_internal.blocked_state and then end_pos = text.count then
-				a_timeout_imp.interface.actions.extend (agent select_from_start_pos (start_pos, end_pos))
-				a_timeout_imp.set_interval_kamikaze (0)
+				app_implementation.do_once_on_idle (agent select_from_start_pos (start_pos, end_pos))
 			end
 		end
-
-	a_timeout_imp: EV_TIMEOUT_IMP
 
 	select_from_start_pos (start_pos, end_pos: INTEGER) is
 			-- Hack to select region from change actions

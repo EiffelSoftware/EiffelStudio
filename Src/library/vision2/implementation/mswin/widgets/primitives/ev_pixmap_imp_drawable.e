@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 		end
 
 	read_from_named_file (file_name: STRING) is
-			-- Load the pixmap described in 'file_name'. 
+			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
@@ -391,6 +391,47 @@ feature -- Status setting
 			height := internal_bitmap.height
 		end
 
+	reset_for_buffering (a_width, a_height: INTEGER) is
+			-- Resets the size of the pixmap without keeping original image or clearing background.
+		local
+			new_bitmap: WEL_BITMAP
+			s_dc: WEL_SCREEN_DC
+		do
+				-- Get a screen dc to create our temporary DCs
+			create s_dc
+			s_dc.get
+
+			create new_bitmap.make_compatible (
+				s_dc,
+				a_width,
+				a_height
+				)
+			new_bitmap.enable_reference_tracking
+
+
+				-- Get rid of the old bitmap
+			internal_bitmap.decrement_reference
+			internal_bitmap := Void
+
+				-- Assign the new bitmap
+			internal_bitmap := new_bitmap
+			dc.select_bitmap (new_bitmap)
+
+
+				-- Remove the mask (if any)
+			if has_mask then
+
+					-- Get rid of the old bitmap
+				internal_mask_bitmap.decrement_reference
+				internal_mask_bitmap := Void
+				mask_dc.unselect_bitmap
+			end
+
+				-- Update width & height attributes
+			width := new_bitmap.width
+			height := new_bitmap.height
+		end
+
 feature -- Measurement
 
 	width: INTEGER
@@ -408,6 +449,19 @@ feature -- Element change
 			check
 				not_yet_implemented: False
 			end
+		end
+
+	set_mask (a_mask: EV_BITMAP) is
+			-- Height of `Current'.
+		local
+			l_bitmap_imp: EV_BITMAP_IMP
+		do
+			if internal_mask_bitmap /= Void then
+				internal_mask_bitmap.decrement_reference
+			end
+			l_bitmap_imp ?= a_mask.implementation
+			internal_mask_bitmap := l_bitmap_imp.drawable
+			internal_mask_bitmap.increment_reference
 		end
 
 feature {
@@ -535,20 +589,22 @@ feature {NONE} -- Private Implementation
 			create s_dc
 			s_dc.get
 
-				-- Retrieve the current values
-			old_width := old_bitmap.width
-			old_height := old_bitmap.height
-			create old_dc.make_by_dc(s_dc)
-			old_dc.select_bitmap(old_bitmap)
-
 				-- create and assign a new bitmap & dc
-			create new_dc.make_by_dc (s_dc)
+
 			create new_bitmap.make_compatible (
 				s_dc,
 				new_width,
 				new_height
 				)
 			new_bitmap.enable_reference_tracking
+
+				-- Retrieve the current values
+			old_width := old_bitmap.width
+			old_height := old_bitmap.height
+			create old_dc.make_by_dc(s_dc)
+			old_dc.select_bitmap(old_bitmap)
+
+			create new_dc.make_by_dc (s_dc)
 			new_dc.select_bitmap (new_bitmap)
 
 			if new_width > old_width or new_height > old_height then
@@ -574,9 +630,11 @@ feature {NONE} -- Private Implementation
 			new_dc.unselect_bitmap
 			new_dc.delete
 			new_dc := Void	-- The GC can collect it.
+
 			old_dc.unselect_bitmap
 			old_dc.delete
 			old_dc := Void	-- The GC can collect it.
+
 			s_dc.release
 			s_dc := Void	-- The GC can collect it.
 

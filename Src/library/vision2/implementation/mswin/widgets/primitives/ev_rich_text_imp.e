@@ -1286,13 +1286,13 @@ feature -- Status setting
 			actual_start, actual_end: INTEGER
 		do
 			if start_pos < end_pos then
-				actual_start := start_pos
+				actual_start := start_pos - 1
 				actual_end := end_pos
 			else
-				actual_start := end_pos
-				actual_end := start_pos
+				actual_start := start_pos
+				actual_end := end_pos - 1
 			end
-			set_selection (actual_start - 1, actual_end)
+			set_selection (actual_start, actual_end)
 		end
 
 	set_current_format (format: EV_CHARACTER_FORMAT) is

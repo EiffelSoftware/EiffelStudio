@@ -124,6 +124,16 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			update_needed := True
 		end
 
+	set_mask (a_mask: EV_BITMAP) is
+			-- Set mask of `Current' to `a_mask'.
+		local
+			l_bitmap_imp: EV_BITMAP_IMP
+		do
+			l_bitmap_imp ?= a_mask.implementation
+			private_mask_bitmap := l_bitmap_imp.drawable
+			private_mask_bitmap.increment_reference
+		end
+
 feature {NONE} -- Saving
 
 	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
@@ -287,7 +297,7 @@ feature {EV_ANY_I} -- Status setting
 			private_height := new_height
 		end
 
-feature {EV_ANY_I} -- Measurement
+feature  -- Measurement
 
 	width: INTEGER is
 			-- Width of `Current'.
@@ -302,7 +312,6 @@ feature {EV_ANY_I} -- Measurement
 			update_content
 			Result := private_height
 		end
-
 
 feature {EV_ANY_I} -- Delegated features
 
@@ -365,6 +374,13 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.set_size (new_width, new_height)
 		end
 
+	reset_for_buffering (a_width, a_height: INTEGER) is
+			-- Resets the size of the pixmap without keeping original image or clearing background.
+		do
+			promote_to_drawable
+			interface.implementation.reset_for_buffering (a_width, a_height)
+		end
+
 	redraw is
 			-- Force `Current' to redraw itself.
 		do
@@ -398,6 +414,13 @@ feature {EV_ANY_I} -- Delegated features
 		do
 			promote_to_drawable
 			interface.implementation.draw_text (a_x, a_y, a_text)
+		end
+
+	draw_rotated_text (a_x, a_y: INTEGER; a_angle: REAL; a_text: STRING) is
+			-- Draw `a_text' at (`x', 'y') using `font'.
+		do
+			promote_to_drawable
+			interface.implementation.draw_rotated_text (a_x, a_y, a_angle, a_text)
 		end
 
 	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING_GENERAL) is
@@ -1240,7 +1263,7 @@ feature {NONE} -- Implementation
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
-			source_dc: WEL_MEMORY_DC
+--			source_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
@@ -1313,17 +1336,17 @@ feature {NONE} -- Implementation
 							)
 						private_mask_bitmap.enable_reference_tracking
 
-						memory_dc.select_bitmap (private_bitmap)
+--						memory_dc.select_bitmap (private_bitmap)
 
 							--| FIXME To get the icon masking to work properly we have to always make sure
 							--| that the color masked out is always black, this is achieved by blitting
 							--| the black part of the mask on to the source pixmap
 							--| Studio uses black as the color underneath for all icons
-						create source_dc.make
-						source_dc.select_bitmap (private_mask_bitmap)
-						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Maskpaint)
-						source_dc.unselect_bitmap
-						source_dc.delete
+--						create source_dc.make
+--						source_dc.select_bitmap (private_mask_bitmap)
+--						memory_dc.bit_blt (0, 0, private_width, private_height, source_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskpaint)
+--						source_dc.unselect_bitmap
+--						source_dc.delete
 
 						memory_dc.unselect_all
 						memory_dc.delete
@@ -1544,6 +1567,7 @@ feature {NONE} -- Implementation
 			new_height: INTEGER
 			icon_mask_bitmap: WEL_BITMAP
 			a_wel_bitmap: WEL_BITMAP
+			mask_src_dc, mask_dest_dc: WEL_MEMORY_DC
 		do
 				-- Retrieve the information from the icon/cursor
 			if icon /= Void then
@@ -1620,8 +1644,15 @@ feature {NONE} -- Implementation
 				private_bitmap := icon_info.color_bitmap
 				private_bitmap_id := private_bitmap.object_id
 				private_bitmap.increment_reference
-				private_mask_bitmap := icon_info.mask_bitmap
-				private_mask_bitmap.increment_reference
+
+					-- Flip the mask as 1 means full opacity in Vision2.
+				create private_mask_bitmap.make_by_bitmap (icon_info.mask_bitmap)
+				private_mask_bitmap.enable_reference_tracking
+				create mask_dest_dc.make
+				mask_dest_dc.select_bitmap (private_mask_bitmap)
+				mask_dest_dc.pat_blt (0, 0, private_mask_bitmap.width, private_mask_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.dstinvert)
+				mask_dest_dc.unselect_bitmap
+				mask_dest_dc.delete
 			end
 
 				-- Clean up the structure and free GDI Objects.

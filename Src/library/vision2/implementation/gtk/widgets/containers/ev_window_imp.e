@@ -14,9 +14,7 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface,
-			lock_update,
-			unlock_update
+			interface
 		end
 
 	EV_CONTAINER_IMP
@@ -103,15 +101,15 @@ feature {NONE} -- Initialization
 			default_height := -1
 			default_width := -1
 
-			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (l_c_object, ?, ?, ?)
+			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
 			signal_connect (l_c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
 			signal_connect (l_c_object, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
 
 			signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), set_focus_event_translate_agent, True)
 				-- Used to propagate focus events between internal gtk widgets.
 
-			signal_connect (l_c_object, app_imp.focus_in_event_string, agent (l_gtk_marshal).window_focus_intermediary (l_c_object, True), Void, True)
-			signal_connect (l_c_object, app_imp.focus_out_event_string, agent (l_gtk_marshal).window_focus_intermediary (l_c_object, False), Void, True)
+			signal_connect (l_c_object, app_imp.focus_in_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, True), Void, True)
+			signal_connect (l_c_object, app_imp.focus_out_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, False), Void, True)
 				--Used to handle explicit Window focus handling.
 
 			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
@@ -206,11 +204,7 @@ feature -- Status setting
 			until
 				is_destroyed or else not is_show_requested
 			loop
-				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
-						-- There are no more events pending.
-					l_app_imp.call_idle_actions
-					l_app_imp.relinquish_cpu_slice
-				end
+				l_app_imp.event_loop_iteration (True)
 			end
 		end
 
@@ -380,23 +374,8 @@ feature {NONE} -- Implementation
 			-- Gtk_Widget."size-allocate" happened.
 		local
 			a_x_pos, a_y_pos: INTEGER
---			a_rect: POINTER
 		do
---			a_rect := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
---			{EV_GTK_EXTERNALS}.gdk_window_get_frame_extents ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_rect)
---
---			print ("Frame extents width = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (a_rect).out + "%N")
---			print ("Frame extents height = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (a_rect).out + "%N")
---			print ("Frame extents x = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (a_rect).out + "%N")
---			print ("Frame extents y = " +{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (a_rect).out + "%N")
---
---			print ("Window x position = " + x_position.out + "%N")
---			print ("Window y position = " + y_position.out + "%N")
---			print ("Window width = " + width.out + "%N")
---			print ("Window height = " + height.out + "%N")
---			a_rect.memory_free
-
-			--| `default_width' and `default_height' are not useful anymore.
+				--| `default_width' and `default_height' are not useful anymore.
 			a_x_pos := x_position
 			a_y_pos := y_position
 			default_width := -1
@@ -521,27 +500,6 @@ feature {EV_ACCELERATOR_IMP} -- Implementation
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
-
-feature {EV_ANY_I} -- Implementation
-
-	lock_update is
-			-- Lock drawing updates for `Current'
-		do
-			Precursor {EV_WINDOW_I}
-			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
-		end
-
-	event_mask: INTEGER
-		-- Current events mask of GdkWindow
-
-	unlock_update is
-			-- Restore drawing updates for `Current'
-		do
-			Precursor {EV_WINDOW_I}
-			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, False)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
-		end
 
 feature {EV_INTERMEDIARY_ROUTINES}
 

@@ -142,9 +142,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	set_focus is
 			-- Grab keyboard focus.
+		local
+			l_window: POINTER
 		do
 			if not has_focus then
-				{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+				l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, visual_widget)
 			end
 		end
 

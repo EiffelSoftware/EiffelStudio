@@ -44,7 +44,7 @@ feature {EV_ANY_I} -- Implementation
 			pnd_par: EV_PND_DEFERRED_ITEM_PARENT
 		do
 			pnd_par ?= c_get_eif_reference_from_object_id (a_c_object)
-			pnd_par.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			pnd_par.on_mouse_button_event (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	mcl_column_click_callback (a_object_id: INTEGER; int: INTEGER) is

@@ -4,7 +4,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$" 
+	revision: "$Revision$"
 
 deferred class
 	EV_SIZEABLE_CONTAINER_IMP
@@ -238,7 +238,7 @@ feature -- Basic operations
 	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
-			-- in class EV_SIZEABLE_IMP. If the container is shown, 
+			-- in class EV_SIZEABLE_IMP. If the container is shown,
 			-- we integrate the changes immediatly, otherwise, we postpone
 			-- them.
 			-- Use the constants defined in EV_SIZEABLE_IMP

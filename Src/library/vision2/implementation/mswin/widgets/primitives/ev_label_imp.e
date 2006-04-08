@@ -110,6 +110,9 @@ inherit
 		export
 			{NONE} all
 		end
+
+	SINGLE_MATH
+
 create
 	make
 
@@ -130,7 +133,37 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
+feature -- Access
+
+	angle: REAL
+			-- Amount text is rotated counter-clockwise from horizontal plane in radians.
+			-- Default is 0.
+
 feature -- Element change
+
+	set_angle (a_angle: REAL) is
+			-- Set counter-clockwise rotation of text from horizontal plane.
+			-- `a_angle' is expressed in radians.
+		local
+			l_font: EV_FONT
+			l_font_imp: EV_FONT_IMP
+			l_log_font: WEL_LOG_FONT
+		do
+			if a_angle /= angle then
+				angle := a_angle
+					-- We need to create a new `private_font' that has an escapement set.
+				l_font := font
+				l_font_imp ?= l_font.implementation
+				l_log_font := l_font_imp.wel_font.log_font
+				l_log_font.set_escapement ((angle * 1800 / 3.14).rounded)
+				--l_log_font.set_orientation ((angle * 1800 / 3.14).rounded)
+				l_font_imp.wel_font.set_indirect (l_log_font)
+				wel_set_font (l_font_imp.wel_font)
+				set_font (l_font)
+				accomodate_text (text)
+				invalidate
+			end
+		end
 
 	set_text (a_text: STRING_GENERAL) is
 			-- Assign `a_text' to `text'.
@@ -196,14 +229,25 @@ feature {EV_ANY_I} -- Initialization
 			a_text_not_empty: not a_text.is_empty
 		local
 			t: TUPLE [INTEGER, INTEGER]
+			a_width, a_height: INTEGER
+			l_angle: REAL
 		do
 			if private_font /= Void then
 				t := private_font.string_size (a_text)
 			else
 				t := private_wel_font.string_size (a_text)
 			end
-			text_height := t.integer_item (2)
-			ev_set_minimum_size (t.integer_item (1), text_height)
+			a_width := t.integer_item (1)
+			a_height := t.integer_item (2)
+
+			l_angle := angle
+			if l_angle /= 0.0 then
+				a_height := (a_width * sine (l_angle) + a_height * cosine (l_angle)).rounded
+				a_width := (a_width * cosine (l_angle) + a_height * sine (l_angle)).rounded
+			end
+			text_height := a_height
+			text_width := a_width
+			ev_set_minimum_size (a_width.abs, a_height.abs)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -212,7 +256,7 @@ feature {NONE} -- WEL Implementation
    			-- Default style used to create `Current'.
    		do
  			Result := Ws_visible | Ws_child | Ss_notify | Ss_ownerdraw
- 				| Ws_clipchildren | Ws_clipsiblings
+ 			--	| Ws_clipchildren | Ws_clipsiblings
  		end
 
 feature {EV_CONTAINER_IMP} -- WEL Implementation
@@ -244,6 +288,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					font_imp ?= internal_font.implementation
 					draw_font := font_imp.wel_font
 				end
+
 					-- Set the flag for the forthcoming call to
 					-- `draw_text'.
 				inspect text_alignment
@@ -258,7 +303,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 						Unexpected_alignment: False
 					end
 				end
-				draw_flags := draw_flags | Dt_expandtabs
+				draw_flags := draw_flags | Dt_expandtabs | dt_vcenter
 
 				-- Compute the bounding rectangle where the text need
 				-- to be displayed.
@@ -276,6 +321,10 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				draw_dc.select_font (draw_font)
 				color_imp ?= foreground_color.implementation
 				draw_dc.set_text_color (color_imp)
+
+
+--				draw_dc.text_out (draw_item_struct_rect.x, draw_item_struct_rect.y + text_height, internal_text)
+
 				if not is_sensitive then
 					-- Label is disabled
 					draw_dc.draw_disabled_text (internal_text, draw_rect,
@@ -296,6 +345,9 @@ feature {NONE} -- Implementation
 
 	text_height: INTEGER
 			-- Height in pixels of the current text.
+
+	text_width: INTEGER
+			-- Width of pixels of the current text.
 
 feature {EV_ANY_I}
 

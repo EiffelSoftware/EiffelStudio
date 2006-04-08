@@ -241,6 +241,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			event_type: INTEGER
 			a_button: POINTER
 			l_x: INTEGER
+			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 		do
 			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
@@ -251,16 +252,16 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 					event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 					if event_type = {EV_GTK_ENUMS}.gdk_motion_notify_enum then
 						if pointer_motion_actions_internal /= Void then
+							l_motion_tuple := app_implementation.motion_tuple
+							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer, 1)
+							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer, 2)
+							l_motion_tuple.put_double (0.5, 3)
+							l_motion_tuple.put_double (0.5, 4)
+							l_motion_tuple.put_double (0.5, 5)
+							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
+							l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
 							pointer_motion_actions_internal.call (
-								app_implementation.gtk_marshal.motion_tuple (
-									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-									0.5,
-									0.5,
-									0.5,
-									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-									)
+								l_motion_tuple
 							)
 						end
 					elseif

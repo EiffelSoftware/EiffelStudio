@@ -41,24 +41,21 @@ feature -- Event handling
 			-- Attach to GTK "button-release-event" signal.
 		do
 			create Result
-			real_signal_connect (
-					event_widget,
-					once "button-release-event",
-					agent (App_implementation.gtk_marshal).pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate
-				)
 		end
 
 	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_enter action sequence.
 			-- Attach to GTK "enter-notify-event" signal.
+		local
+			app_imp: EV_APPLICATION_IMP
 		do
+			app_imp := app_implementation
 			create Result
 			signal_connect (
 				event_widget,
-				App_implementation.enter_notify_event_string,
-				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
-				App_implementation.default_translate,
+				App_imp.enter_notify_event_string,
+				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, True),
+				App_imp.default_translate,
 				False
 			)
 		end
@@ -66,13 +63,16 @@ feature -- Event handling
 	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pointer_leave action sequence.
 			-- Attach to GTK "leave-notify-event" signal.
+		local
+			app_imp: EV_APPLICATION_IMP
 		do
+			app_imp := app_implementation
 			create Result
 			signal_connect (
 				event_widget,
-				App_implementation.leave_notify_event_string,
-				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
-				App_implementation.default_translate,
+				App_imp.leave_notify_event_string,
+				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, False),
+				App_imp.default_translate,
 				False
 			)
 		end

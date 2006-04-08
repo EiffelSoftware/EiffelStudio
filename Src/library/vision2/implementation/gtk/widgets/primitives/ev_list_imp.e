@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_LIST_IMP
 
 inherit
@@ -25,7 +25,7 @@ inherit
 			visual_widget,
 			initialize,
 			row_from_y_coord,
-			start_transport_filter,
+			on_mouse_button_event,
 			row_height
 		end
 
@@ -46,7 +46,7 @@ feature -- Initialize
 			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
 			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 		end
-	
+
 	scrollable_area: POINTER
 		-- Scrollable area used for `Current'
 
@@ -58,7 +58,7 @@ feature -- Initialize
 			a_selection: POINTER
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
@@ -66,29 +66,28 @@ feature -- Initialize
 			)
 
 			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
-			
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
-			
+
 			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
 
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)				
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
 			a_gtk_c_str := "text"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
-			
-			
+
+
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
 			a_gtk_c_str := "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
-			
+
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
-			
+
 			previous_selection := selected_items
-			
+
 			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 			initialize_pixmaps
@@ -109,7 +108,7 @@ feature -- Access
 		do
 			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
-			
+
 			if a_tree_path_list /= NULL then
 					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
@@ -124,7 +123,7 @@ feature -- Access
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
-			-- should use `selected_item' rather than 
+			-- should use `selected_item' rather than
 			-- `selected_items' for a single selection list.
 		local
 			a_selection: POINTER
@@ -152,7 +151,7 @@ feature -- Access
 				{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
-		
+
 feature -- Status Report
 
 	multiple_selection_enabled: BOOLEAN is
@@ -172,7 +171,7 @@ feature -- Status setting
 		local
 			list_item_imp: EV_LIST_ITEM_IMP
 			a_path: POINTER
-		do	
+		do
 			list_item_imp ?= an_item.implementation
 			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
@@ -220,7 +219,7 @@ feature -- Status setting
 			a_item_imp ?= (child_array @ an_index).implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, a_item_imp.list_iter.item)
 		end
-		
+
 	clear_selection is
 			-- Clear the selection of the list.
 		local
@@ -244,7 +243,7 @@ feature -- PND
 			if a_success then
 				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
-				Result := mp.read_integer_32 (0) + 1	
+				Result := mp.read_integer_32 (0) + 1
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end
 		end
@@ -260,7 +259,7 @@ feature -- PND
 			end
 		end
 
-	start_transport_filter (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_event (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize a pick and drop transport.
 		local
 			a_row_index: INTEGER
@@ -272,11 +271,10 @@ feature -- PND
 					pnd_row_imp := Void
 				end
 			end
-			if pnd_row_imp /= Void or else pebble /= Void then
-				Precursor {EV_LIST_ITEM_LIST_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			else
-				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if a_type = {EV_GTK_EXTERNALS}.gdk_2button_press_enum then
+				print ("List 2 double press%N")
 			end
+			Precursor {EV_LIST_ITEM_LIST_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
 	row_height: INTEGER is
@@ -291,7 +289,7 @@ feature -- PND
 			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
-			a_gtk_c_str := "vertical-separator"
+			a_gtk_c_str := once "vertical-separator"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			Result := Result + a_vert_sep
 		end
@@ -304,7 +302,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_LIST
-	
+
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	previous_selection: ARRAYED_LIST [EV_LIST_ITEM]
@@ -360,7 +358,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			previous_selection := new_selection
 		end
-	
+
 feature {NONE} -- Implementation
 
 	disable_default_key_processing is

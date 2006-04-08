@@ -33,7 +33,8 @@ inherit
 			set_caret_position,
 			caret_position,
 			insert_text,
-			on_key_down
+			on_key_down,
+			select_region
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -387,6 +388,31 @@ feature -- Status Settings
 				-- We store `pos' so caret position can be restored
 				-- after operations that should not move caret, but do.
 			internal_set_caret_position (pos - 1 + new_lines)
+		end
+
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) text between
+			-- 'start_pos' and 'end_pos'
+		local
+			new_lines_to_start: INTEGER
+			new_lines_to_end: INTEGER
+			actual_start, actual_end: INTEGER
+			l_text: STRING
+		do
+			l_text := text
+			if start_pos < end_pos then
+				actual_start := start_pos
+				actual_end := end_pos
+				new_lines_to_start := l_text.substring (1, actual_start).occurrences ('%N')
+				new_lines_to_end := l_text.substring (actual_start + 1, actual_end).occurrences ('%N')
+				set_selection (actual_start - 1 + new_lines_to_start, actual_end + new_lines_to_start + new_lines_to_end)
+			else
+				actual_start := start_pos
+				actual_end := end_pos
+				new_lines_to_start := l_text.substring (1, actual_end).occurrences ('%N')
+				new_lines_to_end := l_text.substring (actual_end + 1, actual_start).occurrences ('%N')
+				set_selection (actual_start + new_lines_to_start + new_lines_to_end, actual_end - 1 + new_lines_to_start)
+			end
 		end
 
 feature -- Basic operation

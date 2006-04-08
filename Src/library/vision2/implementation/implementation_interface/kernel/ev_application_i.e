@@ -232,7 +232,9 @@ feature -- Basic operation
 		require
 			a_idle_action_not_void: a_idle_action /= Void
 		do
-			idle_actions.extend (a_idle_action)
+			if not idle_actions.has (a_idle_action) then
+				idle_actions.extend (a_idle_action)
+			end
 		end
 
 	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is

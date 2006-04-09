@@ -131,7 +131,7 @@ feature -- Loading
 							-- Try to retrieve project if already compiled.
 						retrieve_or_create_project (a_project_path)
 
-						if is_compilation_requested then
+						if not has_error and then is_compilation_requested then
 							compile_project
 						end
 					end

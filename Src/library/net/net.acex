@@ -19,7 +19,12 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
 			<if platform="windows"/>
 		</library>
-		<external_object location="spec\$ISE_C_COMPILER\lib\mtnet.lib"/>
+		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
+			<ifnot platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\lib\mtnet.lib">
+			<if platform="windows"/>
+		</external_object>
 		<cluster name="abstract" location="abstract" recursive="true"/>
 		<cluster name="local" location="local" recursive="true"/>
 		<cluster name="mail" location="mail" recursive="true"/>

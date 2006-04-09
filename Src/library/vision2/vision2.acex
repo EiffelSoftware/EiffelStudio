@@ -17,16 +17,16 @@
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
 		</file_rule>
-    <external_include location="$ISE_LIBRARY\vision2\spec\include">
-      <description>Includes for Vision2.</description>
-    </external_include>
-    <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-    <library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
-    	<if platform="windows"/>
-    </library>		
-		<external_object location="spec\$ISE_C_COMPILER\lib\mtvision2.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\zlib.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\libpng.lib"/>
+		<external_include location="$ISE_LIBRARY\library\vision2\spec\include">
+		  <description>Includes for Vision2.</description>
+		</external_include>
+		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\mtvision2.lib"/>
+		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\zlib.lib"/>
+		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
+			<if platform="windows"/>
+		</library>		
 		
 		<cluster name="contrib_gtk" location="contrib" recursive="true">
 			<ifnot platform="windows"/>

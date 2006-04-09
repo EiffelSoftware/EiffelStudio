@@ -25,18 +25,18 @@ feature {NONE} -- Initialization
 			create search_results.make (0)
 			create current_pattern.make (0)
 		ensure
-			search_results_is_not_void: search_results /= void	
+			search_results_is_not_void: search_results /= void
 		end
 
 feature -- Access
 
 	search_results: ARRAYED_LIST [SEARCH_POSITION]
 			-- Stores the result of the search computed by `search_text'.
-	
+
 	current_position: INTEGER
 			-- Number of the current occurrence of the searched word in the file.
-	
-	editor: EB_EDITOR 
+
+	editor: EB_EDITOR
 			-- Editor in which the search is performed.
 
 	text: EDITABLE_TEXT is
@@ -85,7 +85,7 @@ feature -- status report
 
 	reverse: BOOLEAN
 			-- search backward ?
-	
+
 feature -- status setting
 
 	go_reverse is
@@ -109,7 +109,7 @@ feature -- status setting
 		end
 
 	set_replace_all (ra: BOOLEAN) is
-			-- set whether all the occurrences of the searched word must be replaced 
+			-- set whether all the occurrences of the searched word must be replaced
 		do
 			search_again := search_again or (ra /= replace_all)
 			replace_all := ra
@@ -125,7 +125,7 @@ feature -- status setting
 			-- set whether pattern contains wildcards
 		do
 			search_again := search_again or (uw /= use_wildcards)
-			use_wildcards := uw	
+			use_wildcards := uw
 		end
 
 feature -- Basic operations
@@ -169,7 +169,7 @@ feature -- Basic operations
 				replace_all_occurrences (searched_string, replacing_string)
 			else
 				replace_current (searched_string, replacing_string)
-			end			
+			end
 		end
 
 feature {NONE} -- Replacement
@@ -212,7 +212,7 @@ feature {NONE} -- Replacement
 			end
 			save_cursor_position
 		end
-	
+
 	replace_all_occurrences (searched_string: STRING; replacing_string: STRING) is
 			-- replace found word with the content of `the_replace_field'
 		local
@@ -221,7 +221,7 @@ feature {NONE} -- Replacement
 			total_difference: INTEGER
 		do
 			internal_search (searched_string)
-			from 
+			from
 				search_results.start
 			until
 				search_results.after
@@ -230,7 +230,7 @@ feature {NONE} -- Replacement
 				search_results.forth
 				pos_in_file := current_result.character_count + total_difference
 				text.replace_for_replace_all (pos_in_file, current_result.length + pos_in_file, replacing_string)
-				total_difference := total_difference - current_result.length + replacing_string.count 
+				total_difference := total_difference - current_result.length + replacing_string.count
 			end
 			editor.refresh
 			search_again := True
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 				store := True
 				if search_whole_word then
 					start := indices.item
-					stop := indices.item + lengths.item - 1 
+					stop := indices.item + lengths.item - 1
 					word := txt.substring (start, stop)
 					store := 	 (start = 1 or else is_separator (txt @ (start - 1)))
 								and then
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			-- if `show' is true, center the display on the selection.
 		local
 			pos_in_file: INTEGER
-			s_a :BOOLEAN 
+			s_a :BOOLEAN
 		do
 			if search_results.off then
 				editor.deselect_all
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 				s_a := search_again
 				pos_in_file := search_results.item.character_count
 				editor.select_region (pos_in_file , search_results.item.length + pos_in_file)
-				if show then 
+				if show then
 					editor.show_selection (False)
 						-- FIXME: Manu 10/10/2003:
 						-- On GTK, there is a refresh problem due to the ordering of events:
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 				search_again := s_a
 			end
 		end
-	
+
 	is_separator (c: CHARACTER): BOOLEAN is
 		do
 			Result := not (c.is_alpha or else c = '_')
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			cur: TEXT_CURSOR
 		do
 			cur := text.cursor
-			Result := 
+			Result :=
 					x_pos_when_moved /= cur.x_in_characters
 						or else
 					y_pos_when_moved /= cur.y_in_lines
@@ -438,18 +438,18 @@ feature {NONE} -- Implementation
 
 	x_pos_when_moved: INTEGER
 			-- x position of cursor when saved.
-			
+
 	y_pos_when_moved: INTEGER
 			-- y position of cursor when saved.
 
-			
+
 feature {UNDO_REDO_STACK} -- Observer pattern
 
 	on_changed is
 		do
 			search_again := True
-		end 
-	
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

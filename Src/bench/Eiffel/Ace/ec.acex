@@ -6,46 +6,51 @@
 	 name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 		<target name="common">
 		<root all_classes="true"/>
-		<external_include location="$ISE_LIBRARY\C\bench"/>
-		<external_include location="$ISE_LIBRARY\C\platform"/>
+		<external_include location="$EIFFEL_SRC/C/bench">
+			<ifnot platform="windows"/>
+		</external_include>
+		<external_include location="$EIFFEL_SRC/C/platform">
+			<ifnot platform="windows"/>
+		</external_include>
+		<external_include location="$EIFFEL_SRC\C\bench">
+			<if platform="windows"/>
+		</external_include>
+		<external_include location="$EIFFEL_SRC\C\platform">
+			<if platform="windows"/>
+		</external_include>
 		<external_include location="$ISE_LIBRARY\library\wel\spec\windows\include">
 			<if platform="windows"/>
 		</external_include>
-		<external_include location="$ISE_LIBRARY\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<if platform="windows"/>
 		</external_include>
-		
-		<external_include location="$ISE_LIBRARY\C\bench"/>
-		<external_include location="$ISE_LIBRARY\C\platform"/>
-		<external_include location="$ISE_LIBRARY\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM"/>
-		
-		<external_object location="$ISE_LIBRARY\C\bench\libmtcompiler.a">
+		<external_object location="$EIFFEL_SRC/C/bench/libmtcompiler.a">
 			<if platform="unix" build="finalize"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\C\bench\libmtwcompiler.a">
+		<external_object location="$EIFFEL_SRC/C/bench/libmtwcompiler.a">
 			<if platform="unix" build="workbench"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\C\platform\libplatform.a">
+		<external_object location="$EIFFEL_SRC/C/platform/libplatform.a">
 			<if platform="unix"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\C\bench\mtcompiler.lib">
+		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
 			<if platform="windows" build="finalize"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\C\bench\mtwcompiler.lib">
+		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
 			<if platform="windows" build="workbench"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\C\platform\platform.lib">
+		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
 			<if platform="windows"/>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<if platform="windows"/>
 		</external_object>
 		
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
@@ -127,18 +132,18 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="False"/>
-		
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
-		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
 			<if platform="windows"/>
 		</library>
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
 			<ifnot platform="windows"/>
 		</library>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 		
 		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
@@ -370,31 +375,31 @@
 			<if platform="windows"/>
 		</external_object>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net.acex" readonly="true"/>
-		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex" readonly="true"/>
-		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
-		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.acex"/>
+		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
 			<if platform="windows"/>
 		</library>
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
 			<ifnot platform="windows"/>
 		</library>
-		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>		
-		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex" readonly="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex"/>		
+		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex"/>
 		<!--memory_analyzer is not pure library.-->
-		<!--<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex" readonly="true"/>-->
-		<library name="process" location="$ISE_LIBRARY\library\process\process.acex" readonly="true"/>
-		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex" readonly="true"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
-		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex" readonly="true"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex" readonly="true"/>
+		<!--<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex"/>-->
+		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex"/>
+		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer" recursive="true"/>
-		<cluster name="common" location="$ISE_LIBRARY\Eiffel\common\" recursive="true">
+		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
 				<exclude>/compiler_override$</exclude>
 				<exclude>/error$</exclude>

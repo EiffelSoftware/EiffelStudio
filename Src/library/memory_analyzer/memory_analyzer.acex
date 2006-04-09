@@ -16,7 +16,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex" readonly="true"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
 		<cluster name="object_graph" location="object_graph" recursive="true"/>
 		<cluster name="singletons" location="singletons" recursive="true"/>
 		<cluster name="stone" location="stone" recursive="true"/>

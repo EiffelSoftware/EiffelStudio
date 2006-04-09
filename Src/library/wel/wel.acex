@@ -12,47 +12,51 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-    <external_include location="spec\windows\include">
-            <description>Includes for Wel.</description>
-            <if platform="windows"/>
-    </external_include>
-    <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\mtwel.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\wel.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\ilwel.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\dll\wel_hook.dll"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
+			<if platform="windows"/>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib">
+			<if platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib">
+			<if platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib">
+			<if platform="windows"/>
+		</external_object>
 		<cluster name="consts" location="consts" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="controls" location="controls" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="extra" location="extra" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="gdi" location="gdi" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="gdistock" location="gdistock" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="messages" location="messages" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="shared" location="shared" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="stddlgs" location="stddlgs" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="structs" location="structs" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="support" location="support" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 		<cluster name="windows" location="windows" recursive="true">
-				<if platform="windows"/>
+			<if platform="windows"/>
 		</cluster>
 	</target>
 </system>

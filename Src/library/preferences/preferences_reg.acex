@@ -16,7 +16,7 @@
     <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
     <library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
     <library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
-    <library name="gobo" location="$ISE_LIBRARY\library\gobo\library\gobo.acex" readonly="true"/>
+    <library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
     
     <cluster name="interface" location="interface" recursive="true"/>
     <cluster name="preference" location="preference" recursive="true"/>

@@ -46,6 +46,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_LAYOUT_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -345,12 +350,14 @@ feature {NONE} -- User interaction
 			l_dialog: EV_DIALOG
 			l_list: EV_LIST
 			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+			l_button: EV_BUTTON
+			l_item: EV_LIST_ITEM
 		do
 			if a_targets.count = 1 then
 				a_targets.start
 				target_name := a_targets.key_for_iteration
 			else
-				conf_todo_msg ("Produce a high quality dialog to choose targets.")
 				create l_dialog.make_with_title ("Select a target")
 				create l_list
 				from
@@ -358,11 +365,34 @@ feature {NONE} -- User interaction
 				until
 					a_targets.after
 				loop
-					l_list.extend (create {EV_LIST_ITEM}.make_with_text (a_targets.key_for_iteration))
+					create l_item.make_with_text (a_targets.key_for_iteration)
+					l_item.pointer_double_press_actions.force_extend (agent on_target_selected (l_dialog, l_item))
+					l_list.extend (l_item)
 					a_targets.forth
 				end
-				l_dialog.extend (l_vbox)
+					-- Select first item by default.
+				l_list.first.enable_select
+				l_list.set_minimum_size (100, 150)
+
+				create l_vbox
+				l_vbox.set_border_width (default_border_size)
+				l_vbox.set_padding (small_padding_size)
 				l_vbox.extend (l_list)
+
+				create l_hbox
+				l_vbox.extend (l_hbox)
+				l_vbox.disable_item_expand (l_hbox)
+
+				l_hbox.extend (create {EV_CELL})
+				create l_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
+				l_button.set_minimum_height (default_button_height)
+				l_hbox.extend (l_button)
+				l_hbox.disable_item_expand (l_button)
+				l_hbox.extend (create {EV_CELL})
+
+				l_dialog.extend (l_vbox)
+
+				l_dialog.show_modal_to_window (parent_window)
 			end
 		end
 
@@ -462,7 +492,6 @@ feature {NONE} -- Actions
 		do
 			if deleting_dialog = Void then
 				build_deleting_dialog
-				parent_window.disable_sensitive
 			end
 			create ise_directory_utils
 			deleted_file_pathname := ise_directory_utils.path_ellipsis (deleted_files.first, Path_ellipsis_width)
@@ -484,6 +513,34 @@ feature {NONE} -- Actions
 			-- Has the user pushed the "Cancel" in the deleting dialog?
 		do
 			Result := is_deletion_cancelled
+		end
+
+	on_select_button_pushed (a_dlg: EV_DIALOG; a_list: EV_LIST) is
+			-- Action when user click Select button for a target.
+		require
+			a_dlg_not_void: a_dlg /= Void
+			a_dlg_not_destroyed: not a_dlg.is_destroyed
+			a_list_not_void: a_list /= Void
+			a_list_not_destroyed: not a_list.is_destroyed
+		do
+			if a_list.selected_item /= Void then
+				target_name := a_list.selected_item.text
+				a_dlg.destroy
+			end
+		ensure
+			target_name_set: old a_list.selected_item /= Void implies (target_name /= Void)
+		end
+
+	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM) is
+			-- Action when user select a target with a double click.
+		require
+			a_dlg_not_void: a_dlg /= Void
+			a_dlg_not_destroyed: not a_dlg.is_destroyed
+			a_item_not_void: a_item /= Void
+			a_item_not_destroyed: not a_item.is_destroyed
+		do
+			target_name := a_item.text
+			a_dlg.destroy
 		end
 
 feature {NONE} -- Implementation / Private constants.

@@ -640,7 +640,7 @@ feature -- Basic Operations
 			insert_string (local_clipboard)
 		end
 
-feature {EB_SEARCH_PERFORMER} -- for search only
+feature -- for search only
 
 	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING) is
 			-- replace the selected text with `a_word'

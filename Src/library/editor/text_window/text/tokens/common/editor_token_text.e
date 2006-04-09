@@ -309,7 +309,7 @@ feature -- Visitor
 			a_visitor.process_editor_token_text (Current)
 		end
 
-feature {EB_CLASS_INFO_ANALYZER} -- implementation of clickable and editable text
+feature -- implementation of clickable and editable text
 
 	is_text: BOOLEAN is True
 

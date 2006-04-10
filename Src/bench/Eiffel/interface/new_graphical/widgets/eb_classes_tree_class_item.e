@@ -63,17 +63,8 @@ feature -- Status setting
 			drop_actions.set_veto_pebble_function (agent droppable)
 			set_accept_cursor (Cursors.cur_Class)
 			set_deny_cursor (Cursors.cur_X_Class)
---| FIXME XR: Tooltips do not work on tree items yet.
---| Uncomment next line when they work.
 			set_tooltip (name)
 			set_pixmap (pixmap_from_class_i (a_class))
-			if
-				not a_class.config_class.is_read_only
-			then
-				drop_actions.extend (agent on_class_drop)
-----| FIXME XR: When clusters can be moved effectively, uncomment this line.
-----				drop_actions.extend (~on_cluster_drop)
-			end
 		end
 
 	set_associated_textable (textable: EV_TEXT_COMPONENT) is
@@ -101,31 +92,6 @@ feature -- Status setting
 			-- Add a double click action `p' on `Current'.
 		do
 			pointer_double_press_actions.extend (p)
-		end
-
-	on_class_drop (cstone: CLASSI_STONE) is
-			-- Add class corresponding to `cstone' to parent folder.
-		require
-			stone_ok: cstone /= Void
-		local
-			fparent: EB_CLASSES_TREE_FOLDER_ITEM
-			actual: CLASS_I
-		do
-			fparent ?= parent
-			actual := cstone.class_i
-			if fparent.data.is_cluster then
-				parent_tree.manager.move_class (actual.config_class, actual.group, fparent.data.actual_cluster)
-			end
-		end
-
-	on_cluster_drop (a_cluster: CLUSTER_STONE) is
-			-- `a_cluster' was dropped in `Current'.
-			-- Add `a_cluster' to `Current' via the cluster manager.
-		local
-			pcluster: EB_CLASSES_TREE_FOLDER_ITEM
-		do
-			pcluster ?= parent
-			pcluster.on_cluster_drop (a_cluster)
 		end
 
 feature {NONE} -- Implementation

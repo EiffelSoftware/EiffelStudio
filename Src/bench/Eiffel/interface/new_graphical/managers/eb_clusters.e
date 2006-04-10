@@ -63,9 +63,6 @@ feature {NONE} -- Initialization
 
 	default_create is
 			-- Initialization.
-		local
-			l_target: CONF_TARGET
-			l_grps: HASH_TABLE [CONF_GROUP, STRING]
 		do
 			create observer_list.make (10)
 			create clusters.make_default
@@ -159,18 +156,18 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_moved (a_class: CLASS_I; old_cluster: CLUSTER_I) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP) is
 			-- `a_class' has been moved away from `old_cluster'.
 		require
 			a_class_not_void: a_class /= Void
-			old_cluster_not_void: old_cluster /= Void
+			old_group_not_void: old_group /= Void
 		do
 			from
 				observer_list.start
 			until
 				observer_list.after
 			loop
-				observer_list.item.on_class_moved (a_class, old_cluster)
+				observer_list.item.on_class_moved (a_class, old_group)
 				observer_list.forth
 			end
 		end
@@ -319,17 +316,12 @@ feature -- Element change
 			-- Remove `a_class' from its parent and notify observers.
 		require
 			a_class_not_void: a_class /= Void
-		local
-			l_grp: CONF_GROUP
-			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 				-- Notify observers.
 			on_class_removed (a_class)
 
-				-- Remove `a_class' from the universe.
-				-- remove it from its group
-			l_grp := a_class.group
-			l_grp.classes.remove (a_class.name)
+				-- Mark `a_class' as invalid
+			a_class.config_class.invalidate
 				-- we need to rebuild and then the rest will be done during rebuild
 			system.force_rebuild
 		end
@@ -340,7 +332,7 @@ feature -- Element change
 			a_class_not_void: a_class /= Void
 			a_cluster_not_void: a_cluster /= Void
 		local
-			new_class: CLASS_I
+--			new_class: CLASS_I
 		do
 				-- Add `a_class' to the universe.
 			conf_todo
@@ -356,22 +348,22 @@ feature -- Element change
 --			end
 		end
 
-	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CLUSTER_I) is
-			-- Move `a_class' from `old_group' to `new_cluster'.
+	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: STRING) is
+			-- Move `a_class' from `old_group' to `new_cluster'/`new_path'.
 		require
 			valid_class: a_class /= Void
 			valid_clusters: old_group /= Void and new_cluster /= Void
+			valid_path: new_path /= Void
 		local
-			class_list: DS_LIST [CLASS_I]
-			actual_parent: CLUSTER_I
-			new_sorted_cluster: EB_SORTED_CLUSTER
 			old_file: RAW_FILE
 			new_file: RAW_FILE
 			input: STRING
 			wd: EV_WARNING_DIALOG
 			retried: BOOLEAN
 			fname: FILE_NAME
-			tdirsrc, tdirdes: DIRECTORY
+			tdirsrc, tdirdes: KL_DIRECTORY
+			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
+			l_src_path, l_dst_path: STRING
 		do
 			if
 				not retried
@@ -380,17 +372,19 @@ feature -- Element change
 					not new_cluster.is_readonly and then
 					not old_group.is_readonly
 				then
-					create tdirsrc.make (old_group.location.evaluated_path)
-					create tdirdes.make (new_cluster.path)
+					l_src_path := old_group.location.build_path (a_class.path, "")
+					l_dst_path := new_cluster.location.build_path (new_path, "")
+					create tdirsrc.make (l_src_path)
+					create tdirdes.make (l_dst_path)
 					if
 						tdirsrc.exists and then
 						tdirdes.exists
 					then
 						if
-							not old_group.location.evaluated_path.is_equal (new_cluster.path)
+							not l_src_path.is_equal (l_dst_path)
 						then
-							create old_file.make (a_class.file_name)
-							create fname.make_from_string (new_cluster.path)
+							create old_file.make (a_class.full_file_name)
+							create fname.make_from_string (l_dst_path)
 							fname.set_file_name (a_class.file_name)
 							create new_file.make (fname)
 							if
@@ -409,25 +403,38 @@ feature -- Element change
 								new_file.close
 								old_file.delete
 
-									-- Remove `a_class' from the old_group
-								old_group.classes.remove (a_class.name)
+									-- if the group changed we have to do some things
+								if old_group /= new_cluster then
+										-- Remove `a_class' from the old_group
+									old_group.classes.remove (a_class.name)
+									l_lib_usage := old_group.target.used_in_libraries
+									if l_lib_usage /= Void then
+										from
+											l_lib_usage.start
+										until
+											l_lib_usage.after
+										loop
+											l_lib_usage.item.classes.remove (a_class.renamed_name)
+											l_lib_usage.forth
+										end
+									end
 
-									-- Add `a_class' to the new cluster
-								conf_todo
---								a_class.rebuild (a_class.file_name, new_cluster, new_path)
---								new_cluster.classes.force (a_class, a_class.name)
+										-- Add `a_class' to the new cluster
+									a_class.rebuild (a_class.file_name, new_cluster, new_path)
+									new_cluster.classes.force (a_class, a_class.renamed_name)
 
-									-- Remove `a_class' from the managed clusters.
-								class_list := (folder_from_cluster (actual_parent)).classes
-								class_list.start
---								class_list.prune_all (a_class)
+										-- force a rebuild to handle the rest
+									system.force_rebuild
+								else
+									a_class.rebuild (a_class.file_name, new_cluster, new_path)
+								end
 
-									-- Add `a_class' to the managed clusters.
-								new_sorted_cluster := folder_from_cluster (new_cluster)
---								new_sorted_cluster.classes.extend (a_class)
+									-- Rebuild old and new folders
+								folder_from_cluster (old_group).reinitialize
+								folder_from_cluster (new_cluster).reinitialize
 
 									-- Notify observers.
---								on_class_moved (a_class, old_group)
+								on_class_moved (a_class, old_group)
 							else
 								create wd.make_with_text (Warning_messages.w_Cannot_move_class)
 								wd.show_modal_to_window (Window_manager.last_focused_window.window)
@@ -470,7 +477,6 @@ feature -- Element change
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
-			a_folder: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
 			if not error_in_config then
@@ -486,18 +492,18 @@ feature -- Element change
 			-- Move `a_cluster' from `old_cluster' to `new_cluster'.
 		require
 			moved_cluster_not_void: moved_cluster /= Void
-		local
-			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			actual_parent: CLUSTER_I
-			a_cluster: EB_SORTED_CLUSTER
-			receiver: EB_SORTED_CLUSTER
-			old_cluster: CLUSTER_I
-			dir: DIRECTORY
-			test_dir: DIRECTORY
-			wd: EV_WARNING_DIALOG
-			new_name: DIRECTORY_NAME
-			retried: BOOLEAN
-			saved_dollar_path: STRING
+--		local
+--			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
+--			actual_parent: CLUSTER_I
+--			a_cluster: EB_SORTED_CLUSTER
+--			receiver: EB_SORTED_CLUSTER
+--			old_cluster: CLUSTER_I
+--			dir: DIRECTORY
+--			test_dir: DIRECTORY
+--			wd: EV_WARNING_DIALOG
+--			new_name: DIRECTORY_NAME
+--			retried: BOOLEAN
+--			saved_dollar_path: STRING
 		do
 			conf_todo
 --			if not retried then
@@ -572,9 +578,9 @@ feature -- Element change
 --				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 --				moved_cluster.set_dollar_path (saved_dollar_path)
 --			end
-		rescue
-			retried := True
-			retry
+--		rescue
+--			retried := True
+--			retry
 		end
 
 	add_cluster (a_cluster: EB_SORTED_CLUSTER; receiver: EB_SORTED_CLUSTER) is
@@ -882,11 +888,11 @@ feature {NONE} -- Implementation
 --			valid_receiver: receiver /= Void and then Eiffel_universe.clusters.has (receiver)
 			ace_path_not_void: ace_path /= Void
 		local
-			ace_clusters: LACE_LIST [CLUSTER_SD]
-			cl_name: ID_SD
-			retried: BOOLEAN
-			found: BOOLEAN
-			new_csd: CLUSTER_SD
+--			ace_clusters: LACE_LIST [CLUSTER_SD]
+--			cl_name: ID_SD
+--			retried: BOOLEAN
+--			found: BOOLEAN
+--			new_csd: CLUSTER_SD
 		do
 			conf_todo_msg ("precondition")
 			conf_todo
@@ -959,9 +965,9 @@ feature {NONE} -- Implementation
 --			else
 --				error_in_ace_parsing := True
 --			end
-		rescue
-			retried := True
-			retry
+--		rescue
+--			retried := True
+--			retry
 		end
 
 	add_top_cluster_in_ace (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
@@ -970,25 +976,26 @@ feature {NONE} -- Implementation
 			valid_new_cluster: a_cluster /= Void
 			ace_path_not_void: ace_path /= Void
 		local
-			ace_clusters: LACE_LIST [CLUSTER_SD]
-			retried: BOOLEAN
-			new_csd: CLUSTER_SD
+--			ace_clusters: LACE_LIST [CLUSTER_SD]
+--			retried: BOOLEAN
+--			new_csd: CLUSTER_SD
 		do
-			error_in_config := False
-			if not retried then
-				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
-						-- Create a new freshly parsed AST. If there is a
-						-- syntax error during parsing of chose Ace file,
-						-- we open an empty window.
-					conf_todo
---					root_ast := Eiffel_ace.Lace.parsed_ast
-				end
-			else
-				error_in_config := True
-			end
-		rescue
-			retried := True
-			retry
+			conf_todo
+--			error_in_config := False
+--			if not retried then
+--				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
+--						-- Create a new freshly parsed AST. If there is a
+--						-- syntax error during parsing of chose Ace file,
+--						-- we open an empty window.
+--					conf_todo
+----					root_ast := Eiffel_ace.Lace.parsed_ast
+--				end
+--			else
+--				error_in_config := True
+--			end
+--		rescue
+--			retried := True
+--			retry
 		end
 
 	remove_group_from_config (a_group: CONF_GROUP; a_path: STRING) is
@@ -1002,11 +1009,7 @@ feature {NONE} -- Implementation
 			config_up_to_date: not a_group.target.system.date_has_changed
 		local
 			retried: BOOLEAN
-			l_target: CONF_TARGET
-			l_cancel: BOOLEAN
 			l_cl: CONF_CLUSTER
-			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE
 			l_sys: CONF_SYSTEM
 			l_fr: CONF_FILE_RULE
 		do
@@ -1026,6 +1029,7 @@ feature {NONE} -- Implementation
 					else
 						check should_not_reach: False end
 					end
+					a_group.invalidate
 				else
 					l_cl ?= a_group
 					l_fr := l_cl.internal_file_rule
@@ -1038,7 +1042,7 @@ feature {NONE} -- Implementation
 					-- store it to disk
 				l_sys.store
 				error_in_config := not l_sys.store_successful
-					-- force reparsing of file
+					-- force reparsing of configuration
 				lace.reset_date_stamp
 			else
 				error_in_config := True

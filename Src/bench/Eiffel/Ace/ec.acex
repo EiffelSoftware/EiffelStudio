@@ -6,6 +6,9 @@
 	 name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 		<target name="common">
 		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>		
 		<external_include location="$EIFFEL_SRC/C/bench">
 			<ifnot platform="windows"/>
 		</external_include>
@@ -45,7 +48,7 @@
 		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<if platform="windows"/>
 		</external_object>
-		
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
@@ -54,9 +57,6 @@
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
 		<option trace="false" profile="false" debug="false">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="activity" enabled="false"/>
@@ -144,7 +144,7 @@
 			<ifnot platform="windows"/>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
-		
+
 		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
 				<exclude>/compiler_override$</exclude>
@@ -189,7 +189,7 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
-		
+
 		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>
@@ -238,13 +238,10 @@
 		</cluster>
 		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
-	
+
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
 		<option trace="false" profile="false" debug="true">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="_jfiat" enabled="false"/>
@@ -366,7 +363,7 @@
 		<setting name="line_generation" value="False"/>
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="True"/>
-		
+
 		<external_include location="$EIFFEL_SRC\C_library\zlib"/>
 		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib"/>
 		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib"/>
@@ -389,7 +386,7 @@
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
 			<ifnot platform="windows"/>
 		</library>
-		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex"/>		
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex"/>
 		<!--memory_analyzer is not pure library.-->
 		<!--<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex"/>-->

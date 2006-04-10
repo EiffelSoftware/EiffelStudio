@@ -130,7 +130,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	cluster_contains_class (f: CLUSTER_I): BOOLEAN is
+	cluster_contains_class (f: CONF_GROUP): BOOLEAN is
 			-- Does `f' recursively contains `data'?
 		require
 			f_not_void: f /= Void
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			if fparent /= Void and then fparent.data.is_cluster then
 				conv_folder ?= a_pebble
 				if conv_folder /= Void then
-					Result := not cluster_contains_class (conv_folder.cluster_i)
+					Result := not cluster_contains_class (conv_folder.group)
 				else
 					conv_st ?= a_pebble
 					fs ?= a_pebble

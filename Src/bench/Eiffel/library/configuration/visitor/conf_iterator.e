@@ -16,15 +16,15 @@ feature -- Visit nodes
 	process_system (a_system: CONF_SYSTEM) is
 			-- Visit `a_system'.
 		local
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
+			l_targets: ARRAYED_LIST [CONF_TARGET]
 		do
 			from
-				l_targets := a_system.targets
+				l_targets := a_system.target_order
 				l_targets.start
 			until
 				l_targets.after
 			loop
-				l_targets.item_for_iteration.process (Current)
+				l_targets.item.process (Current)
 				l_targets.forth
 			end
 		end

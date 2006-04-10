@@ -43,6 +43,7 @@ feature -- Statusupdate
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
 			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
+			l_libs: LIST [CONF_GROUP]
 		do
 			create libraries.make (0)
 			create assemblies.make (0)
@@ -66,7 +67,11 @@ feature -- Statusupdate
 				overrides := build_groups (l_lib_target.overrides.linear_representation)
 
 					-- libraries
-				libraries := build_groups (l_lib_target.libraries.linear_representation)
+				l_libs := l_lib_target.libraries.linear_representation
+				if l_lib_target.precompile /= Void then
+					l_libs.force (l_lib_target.precompile)
+				end
+				libraries := build_groups (l_libs)
 
 					-- assemblies
 				assemblies := build_groups (l_lib_target.assemblies.linear_representation)

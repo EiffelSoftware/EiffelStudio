@@ -123,7 +123,7 @@ feature -- Update
 
 feature -- Observers
 
-	consume_assembly_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	consume_assembly_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_TARGET]]]
 			-- Observer if assemblies are consumed.
 
 	process_group_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_GROUP]]]
@@ -134,15 +134,17 @@ feature -- Observers
 
 feature -- Events
 
-	on_consume_assemblies is
-			-- Assemblies are consumed.
+	on_consume_assemblies (a_target: CONF_TARGET) is
+			-- Assemblies of `a_target' are consumed.
+		require
+			a_target_not_void: a_target /= Void
 		do
 			from
 				consume_assembly_observer.start
 			until
 				consume_assembly_observer.after
 			loop
-				consume_assembly_observer.item.call ([])
+				consume_assembly_observer.item.call ([a_target])
 				consume_assembly_observer.forth
 			end
 		end
@@ -850,7 +852,8 @@ feature {NONE} -- Implementation
 									l_classes.forth
 								end
 								l_done := True
-								-- else rebuild
+								old_assembly := Void
+								old_group := Void
 							end
 						end
 							-- (re)build
@@ -892,17 +895,18 @@ feature {NONE} -- Implementation
 							if old_group /= Void then
 								process_removed_classes (old_group.classes)
 							end
+							old_assembly := Void
+							old_group := Void
 
 								-- set classes
 							an_assembly.set_classes (current_classes)
 							an_assembly.set_dotnet_classes (current_dotnet_classes)
 						end
+
 					end
 				end
 				l_emitter.unload
 			end
-			old_assembly := Void
-			old_group := Void
 		ensure
 			classes_set: not is_error implies an_assembly.classes_set
 			old_assembly_void: old_assembly = Void
@@ -915,7 +919,6 @@ feature {NONE} -- Implementation
 			an_assembly_ok: an_assembly /= Void and then an_assembly.guid /= Void
 			an_assembly_consumed: an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
 			dotnet: platform = pf_dotnet
-			old_assembly_different: old_assembly /= an_assembly
 		local
 			l_path: STRING
 			l_reference_file: FILE_NAME
@@ -1004,7 +1007,7 @@ feature {NONE} -- Implementation
 			l_consumed: BOOLEAN
 			l_emitter: IL_EMITTER
 		do
-			on_consume_assemblies
+			on_consume_assemblies (a_target)
 			l_emitter := il_emitter
 			if not is_error then
 					-- consume all assemblies
@@ -1200,6 +1203,8 @@ feature {NONE} -- Implementation
 
 	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING]) is
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
+		require
+			old_group_void: old_group = Void
 		local
 			l_group: CONF_GROUP
 		do
@@ -1231,10 +1236,13 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_group.process (Current)
+					old_group := Void
 				end
 
 				a_new_groups.forth
 			end
+		ensure
+			old_group_void: old_group = Void
 		end
 
 	process_partial_classes is

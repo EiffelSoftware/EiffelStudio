@@ -331,6 +331,7 @@ feature -- Observer pattern
 		local
 			found: BOOLEAN
 			conv_clu: EB_SORTED_CLUSTER
+			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
 		do
 			if a_folder /= Void then
 				from
@@ -348,17 +349,26 @@ feature -- Observer pattern
 				end
 			else
 					-- We have to remove a top-cluster, or a cluster whose parent is not displayed (nothing to do).
+				if a_cluster.is_override then
+					l_hdr := override_header
+				elseif a_cluster.is_cluster then
+					l_hdr := cluster_header
+				elseif a_cluster.is_assembly then
+					l_hdr := assembly_header
+				elseif a_cluster.is_library then
+					l_hdr := library_header
+				end
 				from
-					start
+					l_hdr.start
 				until
-					found or after
+					found or l_hdr.after
 				loop
-					conv_clu ?= item.data
+					conv_clu ?= l_hdr.item.data
 					if conv_clu.actual_group = a_cluster then
-						remove
+						l_hdr.remove
 						found := True
 					else
-						forth
+						l_hdr.forth
 					end
 				end
 			end
@@ -458,15 +468,15 @@ feature -- Observer pattern
 			on_cluster_added (a_cluster)
 		end
 
-	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER) is
+	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- Refresh the tree not to display the old cluster.
 		local
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if a_cluster.parent /= Void then
-				folder := folder_from_cluster (a_cluster.parent.actual_group)
+			if a_group.parent /= Void then
+				folder := folder_from_cluster (a_group.parent.actual_group)
 			end
-			remove_cluster_from_folder (a_cluster.actual_group, folder)
+			remove_cluster_from_folder (a_group.actual_group, folder)
 		end
 
 	on_project_loaded is
@@ -720,7 +730,7 @@ feature {NONE} -- Implementation
 	on_cluster_drop (a_cluster: CLUSTER_STONE) is
 			-- Move `a_cluster' to the tree root.
 		do
-			manager.move_cluster (a_cluster.cluster_i, Void)
+--			manager.move_cluster (a_cluster.cluster_i, Void)
 		end
 
 	folder_from_cluster (a_group: CONF_GROUP): EB_CLASSES_TREE_FOLDER_ITEM is
@@ -823,14 +833,14 @@ feature {NONE} -- Implementation
 			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 			if parent_cluster = Void then
-				if clusteri.is_cluster then
+				if clusteri.is_override then
+					folder_list := override_header
+				elseif clusteri.is_cluster then
 					folder_list := cluster_header
 				elseif clusteri.is_assembly then
 					folder_list := assembly_header
 				elseif clusteri.is_library then
 					folder_list := library_header
-				elseif clusteri.is_override then
-					folder_list := override_header
 				else
 					check should_not_reach: False end
 				end

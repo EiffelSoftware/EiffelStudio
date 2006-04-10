@@ -31,7 +31,7 @@ feature -- Status
 	is_empty: BOOLEAN is
 			-- Is this file rule empty?
 		do
-			Result := exclude_regexp.is_empty and include_regexp.is_empty
+			Result := (exclude = Void or else exclude.is_empty) and (include = Void or else include.is_empty)
 		end
 
 	is_error: BOOLEAN
@@ -241,10 +241,34 @@ feature {NONE} -- Implementation
 	include_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
 			-- The compiled regexp objects of the strings.
 
+feature {NONE} -- Contracts
+
+	valid_excludes: BOOLEAN is
+			-- Are excludes valid?
+		do
+			if not exclude_regexp.is_empty then
+				Result := exclude /= Void and then exclude.count = exclude_regexp.count
+			else
+				Result := exclude = Void or else exclude.is_empty
+			end
+		end
+
+	valid_includes: BOOLEAN is
+			-- Are includes valid?
+		do
+			if not include_regexp.is_empty then
+				Result := include /= Void and then include.count = include_regexp.count
+			else
+				Result := include = Void or else include.is_empty
+			end
+		end
+
 invariant
 	exclude_regexp_not_void: exclude_regexp /= Void
 	include_regexp_not_void: include_regexp /= Void
 	error_message: is_error implies last_error /= Void
+	exclude_patterns_valid: valid_excludes
+	include_patterns_valid: valid_includes
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

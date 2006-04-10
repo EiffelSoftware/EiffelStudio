@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			a_name_lower: a_name.is_equal (a_name.as_lower)
 		do
 			create targets.make (1)
+			create target_order.make (1)
 			name := a_name
 			uuid := an_uuid
 		ensure
@@ -102,7 +103,6 @@ feature -- Store to disk
 		local
 			l_print: CONF_PRINT_VISITOR
 			l_file: PLAIN_TEXT_FILE
-			l_sys: CONF_SYSTEM
 		do
 			create l_print.make
 			process (l_print)
@@ -178,6 +178,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_target_not_void: a_target /= Void
 		do
 			targets.force (a_target, a_target.name)
+			target_order.force (a_target)
 		end
 
 	remove_target (a_name: STRING) is
@@ -185,7 +186,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			targets.remove (a_name)
+			if targets.has (a_name) then
+				target_order.search (targets.found_item)
+				target_order.remove
+				targets.remove (a_name)
+			end
 
 			if library_target /= Void and then library_target.name.is_equal (a_name) then
 				library_target := Void
@@ -235,10 +240,36 @@ feature -- Dummy
 
 	compile_all_classes: BOOLEAN
 
+feature {CONF_VISITOR} -- Implementation
+
+	target_order: ARRAYED_LIST [CONF_TARGET]
+			-- Order the targets appear in configuration file.
+
+feature {NONE} -- Implementation
+
+	same_targets: BOOLEAN is
+			-- Do targets and target_order have the same content?
+		do
+			Result := targets.count = target_order.count
+			if Result then
+				from
+					target_order.start
+				until
+					not Result or target_order.after
+				loop
+					Result := targets.has (target_order.item.name) and then targets.found_item = target_order.item
+					target_order.forth
+				end
+			end
+		end
+
 invariant
 	name_ok: name /= Void and then not name.is_empty
 	name_lower: name.is_equal (name.as_lower)
 	targets_not_void: targets /= Void
+	target_order_not_void: target_order /= Void
+	target_and_order_same_content: same_targets
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

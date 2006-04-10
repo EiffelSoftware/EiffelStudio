@@ -142,7 +142,7 @@ feature -- Basic operations
 			else
 				clust ?= window.stone
 				if clust /= Void then
-					group := clust.cluster_i
+					group := clust.group
 					real_execute
 					if not could_not_delete then
 						window.set_stone (Void)
@@ -168,9 +168,6 @@ feature {NONE} -- Implementation
 			l_empty: BOOLEAN
 			l_sub_cl: DS_ARRAYED_LIST [CLASS_I]
 		do
-			str := group.name.twin
-			str.append (path)
-
 			could_not_delete := True
 			if class_i /= Void then
 				if
@@ -192,6 +189,8 @@ feature {NONE} -- Implementation
 					class_i := Void
 				end
 			elseif group /= Void then
+				str := group.name.twin
+				str.append (path)
 				if
 					not group.is_readonly
 				then

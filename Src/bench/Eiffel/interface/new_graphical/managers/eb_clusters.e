@@ -80,12 +80,17 @@ feature -- Initialization
 			-- Load all clusters and classes.
 		local
 			l_target: CONF_TARGET
+			l_libs: HASH_TABLE [CONF_GROUP, STRING]
 		do
 			l_target := universe.target
 			if l_target /= Void then
 				clusters := create_groups (l_target.clusters)
 				overrides := create_groups (l_target.overrides)
-				libraries := create_groups (l_target.libraries)
+				l_libs := l_target.libraries
+				if l_target.precompile /= Void then
+					l_libs.force (l_target.precompile, l_target.precompile.name)
+				end
+				libraries := create_groups (l_libs)
 				assemblies := create_groups (l_target.assemblies)
 			end
 		end
@@ -218,10 +223,12 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_removed (a_group: CONF_GROUP) is
+	on_cluster_removed (a_group: CONF_GROUP; a_path: STRING) is
 			-- `a_cluster' has been removed.
 		require
 			a_cluster_not_void: a_group /= Void
+			a_path_not_void: a_path /= Void
+			path_implies_cluster: not a_path.is_empty implies a_group.is_cluster
 		local
 			sorted: EB_SORTED_CLUSTER
 		do
@@ -231,7 +238,7 @@ feature -- Observer Pattern
 			until
 				observer_list.after
 			loop
-				observer_list.item.on_cluster_removed (sorted)
+				observer_list.item.on_cluster_removed (sorted, a_path)
 				observer_list.forth
 			end
 		end
@@ -313,21 +320,18 @@ feature -- Element change
 		require
 			a_class_not_void: a_class /= Void
 		local
-			class_list: SORTED_TWO_WAY_LIST [CLASS_I]
-			actual_parent: CLUSTER_I
+			l_grp: CONF_GROUP
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 				-- Notify observers.
 			on_class_removed (a_class)
 
 				-- Remove `a_class' from the universe.
-			conf_todo
---			actual_parent := a_class.cluster
---			actual_parent.remove_class (a_class)
---
---				-- Remove `a_class' from the managed clusters.
---			class_list := (folder_from_cluster (actual_parent)).classes
---			class_list.start
---			class_list.prune_all (a_class)
+				-- remove it from its group
+			l_grp := a_class.group
+			l_grp.classes.remove (a_class.name)
+				-- we need to rebuild and then the rest will be done during rebuild
+			system.force_rebuild
 		end
 
 	add_class (a_class: STRING; a_cluster: EB_SORTED_CLUSTER) is
@@ -460,36 +464,8 @@ feature -- Element change
 			add_class (a_class, a_folder)
 		end
 
-	remove_cluster (a_cluster: EB_SORTED_CLUSTER) is
-			-- Remove `a_cluster' from its parent and notify observers.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
-			actual_parent: CLUSTER_I
-		do
-				-- Notify observers.
---			on_cluster_removed (a_cluster.actual_cluster)
-
-				-- Remove `a_cluster' from the universe.
---			actual_parent := a_cluster.actual_cluster.parent_cluster
---			if actual_parent /= Void then
---				actual_parent.sub_clusters.prune_all (a_cluster.actual_cluster)
---				cluster_list := a_cluster.parent.clusters
---			else
---				Eiffel_system.sub_clusters.prune_all (a_cluster.actual_cluster)
---				cluster_list := clusters
---			end
-			conf_todo
---			Eiffel_universe.clusters.prune_all (a_cluster.actual_cluster)
-
-				-- Remove `a_cluster' from the managed clusters.
-			cluster_list.start
-			cluster_list.prune_all (a_cluster)
-		end
-
 	remove_cluster_i (a_group: CONF_GROUP; a_path: STRING) is
-			-- Remove `a_cluster' from its parent and notify observers.
+			-- Remove `a_group' from its parent and notify observers.
 		require
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
@@ -499,10 +475,7 @@ feature -- Element change
 		do
 			if not error_in_config then
 				remove_group_from_config (a_group, a_path)
-				on_cluster_removed (a_group)
---
---				a_folder := folder_from_cluster (a_cluster)
---				remove_cluster (a_folder)
+				on_cluster_removed (a_group, a_path)
 			else
 				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
 				wd.show_modal_to_window (Window_manager.last_focused_window.window)

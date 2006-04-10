@@ -54,10 +54,12 @@ feature -- Updates
 		do
 		end
 
-	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER) is
+	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- `a_cluster' has been removed.
 		require
 			valid_cluster: a_cluster /= Void
+			valid_path: a_path /= Void
+			path_implies_cluster: not a_path.is_empty implies a_cluster.is_cluster
 		do
 		end
 

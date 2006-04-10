@@ -974,7 +974,7 @@ end
 				is_rebuild := True
 				init
 			else
-				if is_rebuild then
+				if is_rebuild or is_force_rebuild then
 						-- Full rebuild
 					rebuild_configuration
 				else
@@ -1162,6 +1162,13 @@ feature -- Recompilation
 		do
 			is_rebuild := b
 		end
+
+	force_rebuild is
+			-- Force a rebuild
+		do
+			is_force_rebuild := True
+		end
+
 
 	set_config_changed (b: BOOLEAN) is
 			-- Set `is_config_changed'.
@@ -4756,6 +4763,11 @@ feature {NONE} -- Conveniences.
 			print ("Used memory is " + (l_mem_info.used + l_mem_info.overhead).out + "%N")
 			print ("Free memory is " + l_mem_info.free.out + "%N%N")
 		end
+
+feature {NONE} -- Implementation
+
+	is_force_rebuild: BOOLEAN
+			-- Is a rebuild of the configuration system forced?
 
 feature {NONE} -- External features
 

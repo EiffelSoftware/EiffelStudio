@@ -410,6 +410,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 							l_overrider.add_does_override (l_overridee)
 							if l_overridee.is_modified then
 								a_modified_classes.force (l_overridee)
+							else
+								a_modified_classes.remove (l_overridee)
 							end
 						end
 					end

@@ -59,7 +59,7 @@ feature -- Access
 
 	--| Constants for mask_blt only
 
-	Maskcopy: INTEGER is
+	frozen Maskcopy: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias

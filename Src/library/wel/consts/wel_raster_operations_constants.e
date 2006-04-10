@@ -60,10 +60,11 @@ feature -- Access
 	--| Constants for mask_blt only
 
 	frozen Maskcopy: INTEGER is
+			-- Use SRCCOPY for foreground and R2_NOOP for background
 		external
 			"C [macro %"wel.h%"]"
 		alias
-			"MAKEROP4(SRCCOPY, PATCOPY)"
+			"MAKEROP4(SRCCOPY, 0xAA0029)"
 		end
 
 indexing

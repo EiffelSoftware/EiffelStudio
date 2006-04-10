@@ -117,14 +117,17 @@ feature {CONF_ACCESS} -- Merging
 		do
 			if other /= Void then
 				if exclude = Void then
-					exclude := other.exclude
+					if other.exclude /= Void then
+						exclude := other.exclude.twin
+					end
 				elseif other.exclude /= Void then
 					exclude.merge (other.exclude)
 				end
 				if include = Void then
-					include := other.include
+					if other.include /= Void then
+						include := other.include.twin
+					end
 				elseif other.include /= Void then
-
 					include.merge (other.include)
 				end
 			end

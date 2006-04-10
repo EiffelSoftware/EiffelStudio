@@ -30,6 +30,18 @@ feature -- Status
 
 feature -- Statusupdate
 
+	reinitialize is
+			-- Reinitialize current
+		require
+			initialized: is_initialized
+		do
+			is_initialized := False
+			initialize
+		ensure
+			initialized: is_initialized
+		end
+
+
 	initialize is
 			-- Initialize current
 		require
@@ -99,7 +111,10 @@ feature -- Statusupdate
 					check
 						class_i: l_class_i /= Void
 					end
-					classes.force_last (l_class_i)
+						-- only add valid classes
+					if l_class_i.is_valid then
+						classes.force_last (l_class_i)
+					end
 					l_classes.forth
 				end
 				classes.sort (create {DS_QUICK_SORTER [CLASS_I]}.make (create {KL_COMPARABLE_COMPARATOR [CLASS_I]}.make))
@@ -154,7 +169,8 @@ feature -- Access
 			if not Result then
 				if is_cluster then
 					l_sub_clusters := actual_cluster.sub_clusters
-					Result :=  l_sub_clusters /= Void and then not l_sub_clusters.is_empty
+					Result :=  l_sub_clusters /= Void and then not l_sub_clusters.is_empty or
+						actual_cluster.is_recursive
 				elseif is_assembly then
 					l_assembly_deps := actual_assembly.dependencies
 					Result := l_assembly_deps /= Void and then not l_assembly_deps.is_empty
@@ -260,9 +276,11 @@ feature {NONE} -- Implementation
 			until
 				a_group.after
 			loop
-				create l_group.make (a_group.item)
-				Result.force_last (l_group)
-				l_group.set_parent (Current)
+				if a_group.item.is_valid then
+					create l_group.make (a_group.item)
+					Result.force_last (l_group)
+					l_group.set_parent (Current)
+				end
 				a_group.forth
 			end
 			Result.sort (create {DS_QUICK_SORTER [like Current]}.make (create {KL_COMPARABLE_COMPARATOR [like Current]}.make))
@@ -273,6 +291,8 @@ feature {NONE} -- Implementation
 
 	generate_subfolder_mapping is
 			-- Generate subfolder mapping out of `a_classes'.
+		require
+			classes_not_void: classes /= Void
 		local
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_cl: CLASS_I

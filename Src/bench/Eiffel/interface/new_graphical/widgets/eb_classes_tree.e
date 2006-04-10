@@ -286,153 +286,26 @@ feature -- Observer pattern
 
 	on_class_added (a_class: EIFFEL_CLASS_I) is
 			-- Refresh the tree to display the new class.
-		local
-			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			a_folder := folder_from_cluster (a_class.cluster)
-			if a_folder /= Void then
-				a_folder.add_class (a_class)
-			else
-				-- The cluster is probably not loaded.
-			end
+			refresh
 		end
 
 	on_class_removed (a_class: EIFFEL_CLASS_I) is
 			-- Refresh the tree not to display the old class.
 		do
-			--on_class_moved (a_class, a_class.cluster)
-			remove_class_from_folder (a_class, folder_from_cluster (a_class.cluster))
+			refresh
 		end
 
-	remove_class_from_folder (a_class: CLASS_I; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
-			-- Remove `a_class' from `a_folder'.
-		local
-			found: BOOLEAN
-		do
-			if a_folder /= Void then
-					-- If `a_folder' is Void, it probably means that the class is not loaded: we do not have to erase it.
-				from
-					a_folder.start
-				until
-					found or a_folder.after
-				loop
-					if a_folder.item.data = a_class then
-						a_folder.remove
-						found := True
-					else
-						a_folder.forth
-					end
-				end
-			end
-		end
-
-	remove_cluster_from_folder (a_cluster: CONF_GROUP; a_folder: EB_CLASSES_TREE_FOLDER_ITEM) is
-			-- Remove `a_cluster' from `a_folder'.
-		local
-			found: BOOLEAN
-			conv_clu: EB_SORTED_CLUSTER
-			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
-		do
-			if a_folder /= Void then
-				from
-					a_folder.start
-				until
-					found or a_folder.after
-				loop
-					conv_clu ?= a_folder.item.data
-					if conv_clu /= Void and then conv_clu.actual_group = a_cluster then
-						a_folder.remove
-						found := True
-					else
-						a_folder.forth
-					end
-				end
-			else
-					-- We have to remove a top-cluster, or a cluster whose parent is not displayed (nothing to do).
-				if a_cluster.is_override then
-					l_hdr := override_header
-				elseif a_cluster.is_cluster then
-					l_hdr := cluster_header
-				elseif a_cluster.is_assembly then
-					l_hdr := assembly_header
-				elseif a_cluster.is_library then
-					l_hdr := library_header
-				end
-				from
-					l_hdr.start
-				until
-					found or l_hdr.after
-				loop
-					conv_clu ?= l_hdr.item.data
-					if conv_clu.actual_group = a_cluster then
-						l_hdr.remove
-						found := True
-					else
-						l_hdr.forth
-					end
-				end
-			end
-		end
-
-	on_class_moved (a_class: EIFFEL_CLASS_I; old_cluster: CLUSTER_I) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP) is
 			-- Refresh the tree to display `a_class' in its new folder.
 		do
-				-- Remove `a_class' from `old_cluster'.
-			remove_class_from_folder (a_class, folder_from_cluster (old_cluster))
-
-				-- Add `a_class' to its new cluster.
-			on_class_added (a_class)
+			refresh
 		end
 
 	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
 			-- Refresh the tree to display the new cluster.
-		local
-			clist: EV_TREE_NODE_LIST
-			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			found: BOOLEAN
-			new_folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
---			if a_cluster.actual_cluster.parent_cluster = Void then
---				clist := Current
---			else
---				clist := folder_from_cluster (a_cluster.actual_cluster.parent_cluster)
---			end
---			if clist /= Void then
---					-- Parent cluster is displayed.
---				from
---					clist.start
---				until
---					clist.after or else found
---				loop
---					conv_folder ?= clist.item
---					if conv_folder /= Void then
---						if conv_folder.data >= a_cluster then
---							found := True
---						else
---							clist.forth
---						end
---					else
---						found := True
---					end
---				end
---				create new_folder.make (a_cluster)
---				clist.put_left (new_folder)
---
---				if window /= Void then
---					new_folder.associate_with_window (window)
---				end
---				if textable /= Void then
---					new_folder.associate_textable_with_classes (textable)
---				end
---				from
---					classes_double_click_agents.start
---				until
---					classes_double_click_agents.after
---				loop
---					new_folder.add_double_click_action_to_classes (classes_double_click_agents.item)
---					classes_double_click_agents.forth
---				end
---			end
+			refresh
 		end
 
 	on_cluster_changed (a_cluster: CLUSTER_I) is
@@ -443,40 +316,14 @@ feature -- Observer pattern
 
 	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I) is
 			-- Refresh the tree to display `a_cluster' in its new folder.
-		local
-			found: BOOLEAN
 		do
-				-- Remove `a_cluster' from `old_cluster'.
-			if old_cluster = Void then
-				from
-					start
-				until
-					found or after
-				loop
-					if item.data = a_cluster then
-						remove
-						found := True
-					else
-						forth
-					end
-				end
-			else
---				remove_cluster_from_folder (a_cluster.actual_cluster, folder_from_cluster (old_cluster))
-			end
-
-				-- Add `a_cluster' to its new cluster.
-			on_cluster_added (a_cluster)
+			refresh
 		end
 
 	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING) is
 			-- Refresh the tree not to display the old cluster.
-		local
-			folder: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if a_group.parent /= Void then
-				folder := folder_from_cluster (a_group.parent.actual_group)
-			end
-			remove_cluster_from_folder (a_group.actual_group, folder)
+			refresh
 		end
 
 	on_project_loaded is
@@ -733,28 +580,6 @@ feature {NONE} -- Implementation
 --			manager.move_cluster (a_cluster.cluster_i, Void)
 		end
 
-	folder_from_cluster (a_group: CONF_GROUP): EB_CLASSES_TREE_FOLDER_ITEM is
-			-- Find a tree folder representing `a_cluster'.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			path: LINKED_LIST [CONF_GROUP]
-			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
-		do
-			path := cluster_parents (a_group)
-			from
-				path.start
-				a_folder := find_cluster_in (path.item, a_folder)
-				path.forth
-			until
-				path.after or else a_folder = Void
-			loop
-				a_folder := find_cluster_in (path.item, a_folder)
-				path.forth
-			end
-			Result := a_folder
-		end
-
 	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP] is
 			-- List of parent groups of `group', from the root to `group', `cluster' included.
 		local
@@ -798,12 +623,6 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
-		end
-
-	class_parents (a_class: CLASS_I): LINKED_LIST [CONF_GROUP] is
-			-- List of parent clusters of `a_class', from the root to `a_class'.
-		do
-			Result := cluster_parents (a_class.group)
 		end
 
 	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
@@ -970,5 +789,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASSES_TREE
-
+end

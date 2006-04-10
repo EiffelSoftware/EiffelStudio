@@ -47,9 +47,9 @@ create {CONF_COMP_FACTORY}
 feature -- Attributes
 
 	path: STRING is
-			-- Path to the cluster (without environment variables)
+			-- Path to the cluster (without environment variables and trailing \ or /)
 		do
-			Result := location.evaluated_path
+			Result := location.evaluated_directory
 		end
 
 	classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]

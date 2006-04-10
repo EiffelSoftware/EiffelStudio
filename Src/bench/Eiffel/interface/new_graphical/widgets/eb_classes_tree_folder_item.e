@@ -341,7 +341,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			actual: CLASS_I
 		do
 			actual := cstone.class_i
-			parent_tree.manager.move_class (actual.config_class, actual.group, data.actual_cluster)
+			parent_tree.manager.move_class (actual.config_class, actual.group, data.actual_cluster, path)
 		end
 
 	on_cluster_drop (cluster: CLUSTER_STONE) is

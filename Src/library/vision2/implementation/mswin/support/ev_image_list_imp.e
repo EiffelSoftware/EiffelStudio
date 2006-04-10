@@ -334,6 +334,7 @@ feature {NONE} -- Implementation (Private features)
 				l_mask_bitmap_dc.select_bitmap (mask_bitmap)
 				create l_converted_bitmap_dc.make_by_dc (l_mask_bitmap_dc)
 				create l_converted_bitmap.make_compatible (l_converted_bitmap_dc, mask_bitmap.width, mask_bitmap.height)
+				l_converted_bitmap.enable_reference_tracking
 				l_converted_bitmap_dc.select_bitmap (l_converted_bitmap)
 				l_converted_bitmap_dc.pat_blt (0, 0, mask_bitmap.width, mask_bitmap.height, {WEL_RASTER_OPERATIONS_CONSTANTS}.whiteness)
 				l_converted_bitmap_dc.bit_blt (0, 0, mask_bitmap.width, mask_bitmap.height, l_mask_bitmap_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.srcinvert)

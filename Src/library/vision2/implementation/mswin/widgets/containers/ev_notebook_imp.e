@@ -106,7 +106,6 @@ inherit
 			default_style,
 			default_ex_style,
 			hide_current_selection,
-			show_current_selection,
 			on_tcn_selchange,
 			wel_move_and_resize,
 			wel_resize,
@@ -499,23 +498,29 @@ feature {NONE} -- Implementation
 	ev_apply_new_size (a_x_position, a_y_position,
 				a_width, a_height: INTEGER; repaint: BOOLEAN) is
 				-- Apply new size when minimum size changed but not size.
-		local
-			child_imp: EV_WIDGET_IMP
-			tab_rect: WEL_RECT
 		do
 				-- Resize ourself first.
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			resize_children
+		end
 
-				-- Only resize active tab. Resizing the other tabs is useless
-				-- because they are hidden and our implementation will not
-				-- update their real size (i.e. no windows call is made to
-				-- force a resize of the hidden tab) and the call to `sheet_rect'
-				-- will therefore return a bogus size.
-			child_imp ?= selected_window
-			if child_imp /= Void then
+	resize_children is
+			-- Resize children to match `sheet_rect'.
+		local
+			i: INTEGER
+			tab_rect: WEL_RECT
+			child_imp: EV_WIDGET_IMP
+		do
+			from
 				tab_rect := sheet_rect
-				child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y,
-					tab_rect.width, tab_rect.height, True)
+				i := 1
+			until
+				i > count
+			loop
+				child_imp ?= get_item (i - 1).window
+				child_imp.child_cell.move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
+				child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
+				i := i + 1
 			end
 		end
 
@@ -583,22 +588,6 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	show_current_selection is
-			-- Show the currently selected page.
-			-- Do not use directly show, because there is no use to notify
-			-- back the parent. Though, if there was any change done on the
-			-- child, it should be reset directly on the child.
-		local
-			ww: EV_WIDGET_IMP
-		do
-			ww ?= selected_window
-			if ww /= Void and then ww.exists then
-				ww.wel_move_and_resize (ww.x_position, ww.y_position,
-					ww.width, ww.height, True)
-				ww.show_window (ww.wel_item, Sw_show)
-			end
-		end
-
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- `Current' has been resized.
 		local
@@ -606,12 +595,7 @@ feature {NONE} -- WEL Implementation
 			tab_rect: WEL_RECT
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
-			child_imp ?= selected_window
-			if child_imp /= Void then
-				tab_rect := sheet_rect
-				child_imp.set_move_and_size (tab_rect.x, tab_rect.y,
-					tab_rect.width, tab_rect.height)
-			end
+			resize_children
 		end
 
 	on_tcn_selchange is
@@ -621,13 +605,8 @@ feature {NONE} -- WEL Implementation
 			ww: EV_WIDGET_IMP
 			tab_rect: WEL_RECT
 		do
-			show_current_selection
-
-				-- New sizes have been computed, simply apply them
-			tab_rect := sheet_rect
 			ww ?= selected_window
-			ww.ev_move_and_resize (tab_rect.x, tab_rect.y,
-							tab_rect.width, tab_rect.height, True)
+			ww.show_window (ww.wel_item, sw_show)
 
 			if selection_actions_internal /= Void then
 				selection_actions_internal.call (Void)

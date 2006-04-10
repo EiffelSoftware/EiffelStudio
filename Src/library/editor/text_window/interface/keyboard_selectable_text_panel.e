@@ -905,15 +905,16 @@ feature {NONE} -- Implementation
 			l_int: INTEGER
 		do
 			cur_pos := a_cursor.y_in_lines
-			if cur_pos < first_line_displayed then
-				set_first_line_displayed (cur_pos, False)
-			elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
-				set_first_line_displayed (cur_pos - number_of_lines_displayed + 1, False)
-			end
 				-- Only when a viewport is displayed,
-				-- its width and height are set (not zero).
+				-- its width and height are set (not zero). -- This is a bug in vision2.
 				-- We move viewport offset leftward or rightward.
+				-- Fixme: When not displayed, check position does not work properly.
 			if editor_viewport.is_displayed then
+				if cur_pos < first_line_displayed then
+					set_first_line_displayed (cur_pos, False)
+				elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
+					set_first_line_displayed (cur_pos - number_of_lines_displayed + 1, False)
+				end
 				cur_pos := x_position_of_cursor (a_cursor)
 				l_int := offset + editor_viewport.width - 30
 				if cur_pos < offset then

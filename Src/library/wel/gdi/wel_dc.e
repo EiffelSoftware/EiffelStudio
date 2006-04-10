@@ -1508,23 +1508,26 @@ feature -- Basic operations
 			dc_source: WEL_DC; x_source, y_source: INTEGER;
 			mask_bitmap: WEL_BITMAP; x_mask, y_mask,
 			raster_operation: INTEGER) is
-		-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
+			-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
 		require
 			exists: exists
 			positive_width: a_width >= 0
 			positive_height: a_height >= 0
-			dc_source_not_void: dc_source /= Void
-			dc_source_exists: dc_source.exists
 			mask_bitmap_not_void: mask_bitmap /= Void
 			function_is_supported: mask_blt_supported
+		local
+			l_dc_item: POINTER
 		do
 			if not mask_blt_funcaddr_retrieved then
 				retrieve_mask_blt_funcaddr
 			end
+			if dc_source /= Void then
+				l_dc_item := dc_source.item
+			end
 			cwin_mask_blt (mask_blt_funcaddr, item, x_destination, y_destination,
-				a_width, a_height, dc_source.item, x_source, y_source,
+				a_width, a_height, l_dc_item, x_source, y_source,
 				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
 

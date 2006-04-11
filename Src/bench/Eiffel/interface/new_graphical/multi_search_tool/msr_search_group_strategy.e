@@ -79,10 +79,10 @@ feature -- Basic operatioin
 		do
 			create item_matched_internal.make (100)
 			if group.is_cluster then
+				l_cluster ?= group
 				check
 					l_cluster_not_void: l_cluster /= Void
 				end
-				l_cluster ?= group
 				if is_subgroup_searched then
 					subcluster := l_cluster.sub_clusters
 					if not subcluster.is_empty then

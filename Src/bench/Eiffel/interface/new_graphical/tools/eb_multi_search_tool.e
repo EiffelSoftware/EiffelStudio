@@ -469,12 +469,22 @@ feature -- Status setting
 		end
 
 	set_focus is
-			-- give the focus to the pattern field
+			-- Give the focus to the pattern field
 		do
 			if notebook.selected_item_index /= 1 then
 				notebook.select_item (notebook.i_th (1))
 			end
 			keyword_field.set_focus
+		end
+
+	show_and_set_focus_replace is
+			-- Give the focus to replace field.
+		do
+			explorer_bar_item.show
+			if notebook.selected_item_index /= 1 then
+				notebook.select_item (notebook.i_th (1))
+			end
+			replace_combo_box.set_focus
 		end
 
 feature -- Action
@@ -1250,7 +1260,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 				if not editor.is_empty and then is_incremental_search then
 					l_editor := old_editor
 					old_editor := editor
-					incremental_search (keyword_field.text, incremental_search_start_pos)
+					incremental_search (keyword_field.text, incremental_search_start_pos, is_whole_word_matched)
 					if has_result then
 						select_in_current_editor
 					else
@@ -1342,6 +1352,13 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 			-- Trigger keyword field color after incremental search.
 			-- Highlight background if no result.
 		do
+			extend_and_run_loaded_action (agent trigger_keyword_field_color_perform (a_keyword_field))
+		end
+
+	trigger_keyword_field_color_perform (a_keyword_field: EV_COMBO_BOX) is
+			-- Trigger keyword field color after incremental search.
+			-- Highlight background if no result.
+		do
 			if is_incremental_search then
 				if a_keyword_field.text_length > 0 and (not multi_search_performer.is_search_launched or multi_search_performer.is_empty) then
 					a_keyword_field.set_background_color (no_result_bgcolor)
@@ -1386,7 +1403,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			end
 		end
 
-	incremental_search (a_word: STRING; a_start_pos: INTEGER) is
+	incremental_search (a_word: STRING; a_start_pos: INTEGER; a_whole_word: BOOLEAN) is
 			-- Incremental search in the editor displayed text
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
@@ -1422,7 +1439,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 						incremental_search_strategy.set_case_insensitive
 					end
 					incremental_search_strategy.set_regular_expression_used (use_regular_expression_button.is_selected)
-					incremental_search_strategy.set_whole_word_matched (whole_word_button.is_selected)
+					incremental_search_strategy.set_whole_word_matched (a_whole_word)
 					if class_i /= Void then
 						incremental_search_strategy.set_data (class_i)
 						incremental_search_strategy.set_date (class_i.date)

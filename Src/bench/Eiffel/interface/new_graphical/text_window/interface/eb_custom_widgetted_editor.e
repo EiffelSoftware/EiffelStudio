@@ -181,6 +181,7 @@ feature {NONE} -- Quick search bar.
 			-- Prepare search options and keyword on search panel for quick search.
 		local
 			l_incremental_search: BOOLEAN
+			l_keyword: STRING
 		do
 			if search_bar.is_case_sensitive /= search_tool.case_sensitive_button.is_selected then
 				if search_bar.is_case_sensitive then
@@ -196,12 +197,13 @@ feature {NONE} -- Quick search bar.
 					search_tool.use_regular_expression_button.disable_select
 				end
 			end
-			if search_bar.keyword_field.text /= Void then
+			l_keyword := search_bar.keyword_field.text
+			if not l_keyword.is_empty then
 				search_tool.set_check_class_succeed (True)
 				l_incremental_search := search_tool.is_incremental_search
 				search_tool.disable_incremental_search
-				if search_tool.currently_searched = Void or else not search_tool.currently_searched.is_equal (search_bar.keyword_field.text) then
-					search_tool.set_current_searched (search_bar.keyword_field.text)
+				if not search_tool.keyword_field.text.is_equal (l_keyword) then
+					search_tool.set_current_searched (l_keyword)
 				end
 				if l_incremental_search then
 					search_tool.enable_incremental_search
@@ -218,7 +220,7 @@ feature {NONE} -- Quick search bar.
 				if search_bar.keyword_field.text_length /= 0 then
 					l_editor := search_tool.old_editor
 					search_tool.set_old_editor (Current)
-					search_tool.incremental_search (search_bar.keyword_field.text, search_tool.incremental_search_start_pos)
+					search_tool.incremental_search (search_bar.keyword_field.text, search_tool.incremental_search_start_pos, False)
 					if search_tool.has_result then
 						search_tool.select_in_current_editor
 					else
@@ -379,7 +381,7 @@ feature -- Search commands
 				if not search_tool.mode_is_search then
 					search_tool.set_mode_is_search (True)
 				end
-				prepare_search_tool
+				prepare_search_tool (False)
 			end
 		end
 
@@ -390,7 +392,7 @@ feature -- Search commands
 				if search_tool.mode_is_search then
 					search_tool.set_mode_is_search (False)
 				end
-				prepare_search_tool
+				prepare_search_tool (True)
 			end
 		end
 
@@ -409,17 +411,25 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	prepare_search_tool is
+	prepare_search_tool (a_replace: BOOLEAN) is
 			-- Show and give focus to search panel.
 		do
 			if search_tool.is_visible then
-				search_tool.set_focus
+				if not a_replace then
+					search_tool.set_focus
+				else
+					search_tool.show_and_set_focus_replace
+				end
 			else
 				if search_tool.explorer_bar_item.is_minimized then
 					search_tool.explorer_bar_item.restore
 				end
 				search_tool.notebook.select_item (search_tool.notebook.i_th (1))
-				search_tool.show_and_set_focus
+				if not a_replace then
+					search_tool.show_and_set_focus
+				else
+					search_tool.show_and_set_focus_replace
+				end
 			end
 			if not text_displayed.is_empty and then not text_displayed.selection_is_empty then
 				search_tool.set_current_searched (text_displayed.selected_string)

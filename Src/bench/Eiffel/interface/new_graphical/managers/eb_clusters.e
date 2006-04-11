@@ -864,7 +864,28 @@ feature {NONE} -- Implementation
 					check should_not_reach: False end
 				end
 			else
-				parent_cluster_sons := parent_cluster.clusters
+				if parent_cluster.is_cluster then
+					parent_cluster_sons := parent_cluster.clusters
+				elseif parent_cluster.is_assembly then
+					parent_cluster_sons := parent_cluster.assemblies
+				elseif parent_cluster.is_library then
+					if clusteri.is_cluster then
+						parent_cluster_sons := parent_cluster.clusters
+					elseif clusteri.is_assembly then
+						parent_cluster_sons := parent_cluster.assemblies
+					elseif clusteri.is_library then
+						parent_cluster_sons := parent_cluster.libraries
+					elseif clusteri.is_override then
+						parent_cluster_sons := parent_cluster.overrides
+					else
+						check should_not_reach: False end
+					end
+				else
+					check should_not_reach: False end
+				end
+			end
+			check
+				parent_cluster_sons_not_void: parent_cluster_sons /= Void
 			end
 
 			from

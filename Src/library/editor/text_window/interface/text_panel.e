@@ -706,7 +706,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	show_vertical_scrollbar: BOOLEAN is
 			-- Is it necessary to show the vertical scroll bar ?
 		do
-			Result := text_displayed /= Void and then (number_of_lines_displayed_from_text < text_displayed.number_of_lines)
+			Result := text_displayed /= Void and then (text_displayed.number_of_lines > number_of_lines_displayed // 2)
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
@@ -741,7 +741,7 @@ feature -- Status Setting
 		require
 			fld_large_enough: fld > 0
 			fld_small_enough: fld <= text_displayed.number_of_lines.max (1)
-			fld_in_range: fld <= vertical_scrollbar.value_range.upper
+			fld_in_range: vertical_scrollbar.value_range.has (fld)
 		do
 			first_line_displayed := fld
 			vertical_scrollbar.set_value (fld)

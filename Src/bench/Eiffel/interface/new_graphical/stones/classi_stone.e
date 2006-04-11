@@ -123,10 +123,12 @@ feature -- Access
 				l_classes := Eiffel_Universe.classes_with_name (class_i.name)
 				if l_classes /= Void and l_classes.count = 1 then
 					l_class := l_classes.first
-					if l_class.compiled then
-						create {CLASSC_STONE} Result.make (l_class.compiled_class)
-					else
-						create {CLASSI_STONE} Result.make (l_class)
+					if l_class.is_valid then
+						if l_class.compiled then
+							create {CLASSC_STONE} Result.make (l_class.compiled_class)
+						else
+							create {CLASSI_STONE} Result.make (l_class)
+						end
 					end
 				end
 			end

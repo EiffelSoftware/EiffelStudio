@@ -85,7 +85,7 @@ feature -- Status
 	is_used_library: BOOLEAN is
 			-- Is this this cluster used in a library? (as opposed to directly in the application system)
 		do
-			Result := target.application_target /= target
+			Result := target.application_target.system /= target.system
 		end
 
 feature -- Access, stored in configuration file

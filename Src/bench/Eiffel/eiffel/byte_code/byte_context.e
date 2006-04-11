@@ -1792,6 +1792,7 @@ feature -- Descendants information
 			i: INTEGER
 			class_types: ARRAY [CLASS_TYPE]
 			c: CLASS_TYPE
+			t: CL_TYPE_I
 		do
 			from
 				class_types := system.class_types
@@ -1803,6 +1804,11 @@ feature -- Descendants information
 				c := class_types.item (i)
 				if c /= Void and then c.is_expanded then
 					expanded_descendants.include (c.conformance_table)
+					t := c.type.duplicate
+					t.set_reference_mark
+					if t.has_associated_class_type then
+						expanded_descendants.put (True, t.associated_class_type.type_id)
+					end
 				end
 				i := i - 1
 			end

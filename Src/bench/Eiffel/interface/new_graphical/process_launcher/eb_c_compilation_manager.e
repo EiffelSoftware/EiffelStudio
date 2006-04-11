@@ -210,12 +210,14 @@ feature{NONE} -- Implementation
 			a_msg_not_void: a_msg /= Void
 			a_msg_not_emtpy: not a_msg.is_empty
 		do
+			output_manager.start_processing (True)
 			output_manager.add_string (a_msg)
 			if a_suffix then
 				output_manager.add_char ('.')
 				output_manager.add_new_line
 			end
 			output_manager.scroll_to_end
+			output_manager.end_processing
 		end
 
 	open_console is

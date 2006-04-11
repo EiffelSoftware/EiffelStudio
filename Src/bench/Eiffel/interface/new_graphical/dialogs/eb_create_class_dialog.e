@@ -116,8 +116,9 @@ feature {NONE} -- Initialization
 			class_entry.change_actions.extend (agent update_file_entry)
 			create file_entry
 			create creation_entry
-			create cluster_list
+			create cluster_list.make
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
+			cluster_list.refresh
 			create deferred_check.make_with_text (Interface_names.L_deferred)
 			deferred_check.select_actions.extend (agent on_deferred)
 			create expanded_check.make_with_text (Interface_names.L_expanded)
@@ -228,8 +229,11 @@ feature -- Status Report
 	class_i: CLASS_I
 			-- Created class
 
-	cluster: CLUSTER_I
+	cluster: CONF_CLUSTER
 			-- Selected cluster
+
+	path: STRING
+			-- Selected subfolder path
 
 	is_deferred: BOOLEAN
 			-- Is new class deferred?
@@ -242,7 +246,7 @@ feature -- Status Settings
 			set_stone := True
 		end
 
-	preset_cluster (a_cluster: CLUSTER_I) is
+	preset_cluster (a_cluster: CONF_CLUSTER) is
 			-- Assign `a_cluster' to `cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -278,46 +282,8 @@ feature -- Basic operations
 			end
 			str := class_n.as_upper
 			class_entry.set_text (str)
-			conf_todo
---			clus_list := Eiffel_universe.clusters_sorted_by_tag
-			if not clus_list.is_empty then
-				from
-					clus_list.start
-				until
-					clus_list.after
-				loop
-					clus := clus_list.item
-					if
-						not clus.is_readonly and then
-						clus.parent_cluster = Void
-					 then
-						create i.make_with_text (clus.cluster_name)
-						i.set_pixmap (pixmaps.icon_cluster_symbol)
-						cluster_list.extend (i)
-						i.set_data (clus)
-						if not clus.sub_clusters.is_empty then
-							fill_subclusters (i)
-						end
-					end
-					clus_list.forth
-				end
-				if cluster_list.count = 0 then
-					create_button.disable_sensitive
-				else
-					i := Void
-					if cluster /= Void then
-						i ?= cluster_list.retrieve_item_recursively_by_data (cluster, True)
-					end
-					if i = Void then
-						i ?= cluster_list.first
-						check
-							i_not_void: i /= Void --| Since `cluster_list' is not empty, there must be a first item.
-						end
-					end
-					i.enable_select
-				end
-			else
-				create_button.disable_sensitive
+			if cluster /= Void then
+				cluster_list.show_subfolder (cluster, path)
 			end
 			show_modal_to_window (target.window)
 		end
@@ -325,59 +291,34 @@ feature -- Basic operations
 feature {NONE} -- Access
 
 	change_cluster is
-			-- Howdy Howdy
+			-- Set `cluster' to selected cluster from tree.
 		local
-			clu: CLUSTER_I
+			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			clu: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
-				clu ?= cluster_list.selected_item.data
-				if clu = Void then
+				l_folder ?= cluster_list.selected_item
+				if l_folder /= Void then
+					clu := l_folder.data
+				else
+					l_folder ?= cluster_list.selected_item.parent
+					if l_folder /= Void then
+						clu := l_folder.data
+					end
+				end
+				if clu = Void or else not clu.is_cluster then
 					aok := False
 					create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
 					wd.show_modal_to_window (Current)
 				else
 					aok := True
-					cluster := clu
+					cluster := clu.actual_cluster
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	fill_subclusters (parent_item: EV_TREE_ITEM) is
-			-- Add subclusters to `parent_item' representing cluster
-			-- assigned as `data' of `parent_item'
-		require
-			parent_item_not_void: parent_item /= Void
-			parent_item_has_data: parent_item.data /= Void
-		local
-			i: EV_TREE_ITEM
-			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			clus: CLUSTER_I
-		do
-			clus ?= parent_item.data
-			check
-				data_was_cluster: clus /= Void
-			end
-			sub_clusters := clus.sub_clusters
-			from
-				sub_clusters.start
-			until
-				sub_clusters.off
-			loop
-				clus := sub_clusters.item
-				conf_todo
---				create i.make_with_text (clus.display_name)
-				i.set_pixmap (pixmaps.icon_cluster_symbol)
-				parent_item.extend (i)
-				i.set_data (clus)
-				if not clus.sub_clusters.is_empty then
-					fill_subclusters (i)
-				end
-				sub_clusters.forth
-			end
-		end
 
 	class_name: STRING is
 			-- Name of the class entered by the user.
@@ -452,74 +393,28 @@ feature {NONE} -- Implementation
 					check_valid_creation_procedure
 				end
 				if aok then
-					create f_name.make_from_string (cluster.path)
+					create f_name.make_from_string (cluster.location.build_path (path, ""))
 					f_name.set_file_name (file_name)
 					base_name := file_name
 					create file.make (f_name)
-					conf_todo
---					if cluster.has_base_name (base_name) then
---						if file.exists then
---							create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
---						else
---							create wd.make_with_text (Warning_messages.w_class_still_in_cluster (base_name))
---						end
---						wd.show_modal_to_window (Current)
---						class_entry.set_focus
---					elseif
---						(not file.exists and then not file.is_creatable)
---					then
---						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
---						wd.show_modal_to_window (target.window)
---					else
---						if not file.exists then
---							destroy
---							load_default_class_text (file)
---							if not could_not_load_file then
---								manager.add_class_to_cluster_i (base_name, cluster)
---								class_i := cluster.class_with_base_name (base_name)
---								if set_stone and class_i /= Void then
---									target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
---								end
---							end
---						elseif
---							not (file.is_readable and then file.is_plain)
---						then
---							create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
---							wd.show_modal_to_window (target.window)
---							file_entry.set_focus
---						else
---								--| Reading in existing file (created outside
---								--| ebench). Ask for confirmation
---							create cd.make_with_text (Warning_messages.w_file_exists_edit_it (f_name))
---							cd.button (ev_ok).select_actions.extend (agent edit_class)
---							cd.show_modal_to_window (target.window)
---						end
---					end
-				end
-			else
-					-- We were rescued.
-				class_entry.remove_text
-				file_entry.remove_text
-				class_entry.set_focus
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	edit_class is
-			-- The file name of the new class already exists.
-			-- The user wants to keep it.
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				manager.add_class_to_cluster_i (file_name, cluster)
-				conf_todo
---				class_i := cluster.class_with_base_name (file_name)
-				destroy
-				if set_stone and then class_i /= Void then
-					target.set_stone (create {CLASSI_STONE}.make (class_i))
+					if file.exists then
+						create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
+						wd.show_modal_to_window (Current)
+						class_entry.set_focus
+					elseif not file.is_creatable then
+						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
+						wd.show_modal_to_window (target.window)
+					else
+						destroy
+						load_default_class_text (file)
+						if not could_not_load_file then
+							manager.add_class_to_cluster (base_name, cluster, path)
+							class_i := manager.last_added_class
+							if set_stone and class_i /= Void then
+								target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
+							end
+						end
+					end
 				end
 			else
 					-- We were rescued.
@@ -731,21 +626,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	target_cluster: CLUSTER_I is
+	target_cluster: CONF_CLUSTER is
 			-- Cluster of the target. Void if none.
 		local
 			classi_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
+			l_grp: CONF_GROUP
 		do
-			conf_todo
---			classi_stone ?= target.stone
---			if classi_stone /= Void then
---				Result := classi_stone.group
---			end
---			cluster_stone ?= target.stone
---			if cluster_stone /= Void then
---				Result := cluster_stone.cluster_i
---			end
+			classi_stone ?= target.stone
+			if classi_stone /= Void then
+				l_grp := classi_stone.group
+				path := classi_stone.class_i.config_class.path
+			end
+			cluster_stone ?= target.stone
+			if cluster_stone /= Void then
+				l_grp := cluster_stone.group
+				path := cluster_stone.path
+			end
+			if l_grp.is_cluster then
+				Result ?= l_grp
+				check result_not_void: Result /= Void end
+			end
 		end
 
 	cancel is
@@ -817,7 +718,7 @@ feature {NONE} -- Vision2 widgets
 	create_button: EV_BUTTON
 			-- Button to create the class
 
-	cluster_list: EV_TREE
+	cluster_list: EB_CLASSES_TREE
 			-- List of all available clusters.
 
 	class_entry: EV_TEXT_FIELD
@@ -879,6 +780,7 @@ invariant
 	creation_entry_valid: creation_entry /= Void and then not creation_entry.is_destroyed
 	creation_entry_parented: creation_entry.parent /= Void
 	target_not_void: target /= Void
+	cluster_implies_path: cluster /= Void implies path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -912,4 +814,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CREATE_CLASS_DIALOG
+end

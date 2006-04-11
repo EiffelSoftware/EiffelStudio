@@ -198,46 +198,17 @@ feature -- Activation
 			end
 		end
 
-	show_cluster (a_cluster: CLUSTER_I) is
-			-- Expand all parents of `a_cluster' and highlight `a_cluster'.
+	show_subfolder (a_group: CONF_GROUP; a_path: STRING) is
+			-- Expand all parents of `a_group' and `a_path' and show the folder.
+		require
+			a_group_not_void: a_group /= Void
+			a_path_not_void: a_path /= Void
 		local
 			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
-		do
-			path := cluster_parents (a_cluster)
-			path.finish
-			path.remove
-			if not path.is_empty then
-				from
-					path.start
-					a_folder := find_cluster_in (path.item, a_folder)
-					if not a_folder.is_expanded then
-						a_folder.expand
-					end
-					path.forth
-				until
-					path.after or else a_folder = Void
-				loop
-					a_folder := find_cluster_in (path.item, a_folder)
-					if not a_folder.is_expanded then
-						a_folder.expand
-					end
-					path.forth
-				end
-			end
-			a_folder := find_cluster_in (a_cluster, a_folder)
-			a_folder.enable_select
-		end
-
-	show_class (a_class: CLASS_I) is
-			-- Expand all parents of `a_class' and highlight `a_class'.
-		local
-			path: LINKED_LIST [CONF_GROUP]
-			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
 			l_sub: LIST [STRING]
 		do
-			path := cluster_parents (a_class.group)
+			path := cluster_parents (a_group)
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
@@ -254,9 +225,10 @@ feature -- Activation
 				end
 				path.forth
 			end
-				-- we may have to look at subfolders
-			l_sub := a_class.path.split ('/')
-			check not_empty: not l_sub.is_empty end
+			l_sub := a_path.split ('/')
+			check
+				not_empty: not l_sub.is_empty
+			end
 			from
 				l_sub.start
 				l_sub.forth
@@ -269,10 +241,26 @@ feature -- Activation
 				end
 				l_sub.forth
 			end
+			if a_folder /= Void then
+				a_folder.enable_select
+			end
+		end
 
-			a_class_item := find_class_in (a_class, a_folder)
-			if a_class_item /= Void then
-				a_class_item.enable_select
+	show_class (a_class: CLASS_I) is
+			-- Expand all parents of `a_class' and highlight `a_class'.
+		local
+			path: LINKED_LIST [CONF_GROUP]
+			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
+			l_sub: LIST [STRING]
+		do
+			show_subfolder (a_class.group, a_class.config_class.path)
+			a_folder ?= selected_item
+			if a_folder /= Void then
+				a_class_item := find_class_in (a_class, a_folder)
+				if a_class_item /= Void then
+					a_class_item.enable_select
+				end
 			end
 		end
 

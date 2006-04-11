@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			file_rename: ERF_CLASS_FILE_RENAME
         do
         		-- if the renamed class was the root class
-        	if system.root_class.name.is_case_insensitive_equal (class_i.name) then
+        	if system.root_cluster.classes.has (preferences.new_class_name.as_upper) then
 	        	create project_modifier
 				project_modifier.prepare
 				project_modifier.change_root_class (preferences.new_class_name.as_upper)

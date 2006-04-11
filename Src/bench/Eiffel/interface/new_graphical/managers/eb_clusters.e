@@ -350,6 +350,7 @@ feature -- Element change
 			tdirsrc, tdirdes: KL_DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: STRING
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			if
 				not retried
@@ -407,6 +408,10 @@ feature -- Element change
 
 										-- Add `a_class' to the new cluster
 									a_class.rebuild (a_class.file_name, new_cluster, new_path)
+									if not new_cluster.classes_set then
+										create l_classes.make (1)
+										new_cluster.set_classes (l_classes)
+									end
 									new_cluster.classes.force (a_class, a_class.renamed_name)
 
 										-- force a rebuild to handle the rest

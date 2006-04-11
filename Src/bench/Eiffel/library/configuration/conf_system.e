@@ -73,6 +73,9 @@ feature -- Access, in compiled only
 	file_date: INTEGER
 			-- File modification date of config file.
 
+	application_target: CONF_TARGET
+			-- Target of application this system is part of.
+
 feature -- Update, in compiled only
 
 	set_file_name (a_file_name: like file_name) is
@@ -92,6 +95,17 @@ feature -- Update, in compiled only
 		do
 			str := file_name.to_c
 			eif_date ($str, $file_date)
+		end
+
+	set_application_target (a_target: CONF_TARGET) is
+			-- Set `application_target' to `a_target'.
+			-- (export status {CONF_ACCESS})
+		require
+			a_target_not_void: a_target /= Void
+		do
+			application_target := a_target
+		ensure
+			application_target_set: application_target = a_target
 		end
 
 feature -- Store to disk

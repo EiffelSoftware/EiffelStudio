@@ -80,10 +80,13 @@ feature -- Access, in compiled only, not stored to configuration file
 	all_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			-- All assemblies in current system.
 
-	application_target: CONF_TARGET
-			-- The application target.
-
 feature -- Access queries
+
+	application_target: CONF_TARGET is
+			-- Target of application this system is part of.
+		do
+			Result := system.application_target
+		end
 
 	version: CONF_VERSION is
 			-- Version number of the target.
@@ -786,17 +789,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			all_assemblies := an_assemblies
 		ensure
 			assemblies_set: all_assemblies = an_assemblies
-		end
-
-	set_application_target (a_target: CONF_TARGET) is
-			-- Set `application_target' to `a_target'.
-			-- (export status {CONF_ACCESS})
-		require
-			a_target_not_void: a_target /= Void
-		do
-			application_target := a_target
-		ensure
-			application_target_set: application_target = a_target
 		end
 
 feature -- Equality

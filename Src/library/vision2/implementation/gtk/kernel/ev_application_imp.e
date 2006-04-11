@@ -90,24 +90,18 @@ feature {NONE} -- Event loop
 			-- and start the event loop.
 		do
 			if gtk_is_launchable then
-				gtk_dependent_launch_initialize
-				main_loop
+				from
+					gtk_dependent_launch_initialize
+					interface.post_launch_actions.call (Void)
+				until
+					is_destroyed
+				loop
+					event_loop_iteration (True)
+				end
 					-- Unhook marshal object.
 				gtk_marshal.destroy
 			end
 			--{EV_GTK_EXTERNALS}.g_mem_profile
-		end
-
-	main_loop is
-			-- Execute main loop of `Current'.
-		do
-			from
-				interface.post_launch_actions.call (Void)
-			until
-				is_destroyed
-			loop
-				event_loop_iteration (True)
-			end
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -117,9 +111,11 @@ feature {EV_ANY_IMP} -- Implementation
 			-- CPU will be relinquished if `a_relinquish'.
 		do
 			process_gdk_events
-			if locked_window = Void and then {EV_GTK_EXTERNALS}.g_main_context_pending ({EV_GTK_EXTERNALS}.g_main_context_default) then
+			if {EV_GTK_EXTERNALS}.g_main_context_pending ({EV_GTK_EXTERNALS}.g_main_context_default) then
 					-- This handles remaining idle handling such as timeouts, internal gtk/gdk idles and expose events.
-				{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
+				if locked_window = Void then
+					{EV_GTK_EXTERNALS}.g_main_context_dispatch ({EV_GTK_EXTERNALS}.g_main_context_default)
+				end
 			else
 				call_idle_actions
 				if a_relinquish then
@@ -231,7 +227,10 @@ feature -- Basic operation
 			else
 				l_pnd_item ?= gtk_widget_imp_at_pointer_position
 			end
-			if l_pnd_item /= Void and then l_pnd_item.has_struct_flag (l_pnd_item.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) then
+			if
+				l_pnd_item /= Void and then
+				l_pnd_item.has_struct_flag (l_pnd_item.c_object, {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM)
+			then
 				l_pnd_item.on_mouse_button_event (
 					{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
 					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
@@ -277,6 +276,8 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_MOTION_NOTIFY%N")
 							end
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 								-- This will force another motion notify as we have the motion hint flag set for all widgets.
 							l_widget_imp ?= gtk_widget_imp_at_pointer_position
 							if captured_widget /= Void then
@@ -303,37 +304,35 @@ feature -- Basic operation
 									l_widget_imp.on_pointer_motion (l_widget_motion_tuple)
 								end
 							end
-							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							l_widget_imp := Void
 						when GDK_BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_PRESS%N")
 							end
-							process_button_event (gdk_event)
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							process_button_event (gdk_event)
 						when GDK_2BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_2BUTTON_PRESS%N")
 							end
-							process_button_event (gdk_event)
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							process_button_event (gdk_event)
 						when GDK_3BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_3BUTTON_PRESS%N")
 							end
-							process_button_event (gdk_event)
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							process_button_event (gdk_event)
 						when GDK_BUTTON_RELEASE then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_RELEASE%N")
 							end
-							process_button_event (gdk_event)
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							process_button_event (gdk_event)
 						when GDK_SCROLL then
 							debug ("GDK_EVENT")
 								print ("GDK_SCROLL%N")
@@ -343,12 +342,12 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_PROXIMITY_IN%N")
 							end
-							l_propagate_event := True
+							--l_propagate_event := True
 						when GDK_PROXIMITY_OUT then
 							debug ("GDK_EVENT")
 								print ("GDK_PROXIMITY_OUT%N")
 							end
-							l_propagate_event := True
+							--l_propagate_event := True
 						when GDK_PROPERTY_NOTIFY then
 							debug ("GDK_EVENT")
 								print ("GDK_PROPERTY_NOTIFY%N")
@@ -401,14 +400,14 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_ENTER_NOTIFY%N")
 							end
-							--l_call_event := False
-							--{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_LEAVE_NOTIFY then
 							debug ("GDK_EVENT")
 								print ("GDK_LEAVE_NOTIFY%N")
 							end
-							--l_call_event := False
-							--{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+							l_call_event := False
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 						when GDK_KEY_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_KEY_PRESS%N")

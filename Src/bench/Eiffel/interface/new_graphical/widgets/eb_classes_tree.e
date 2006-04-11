@@ -212,7 +212,7 @@ feature -- Activation
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
-				if a_folder /= Void and then not a_folder.is_expanded then
+				if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then
 					a_folder.expand
 				end
 				path.forth
@@ -220,7 +220,7 @@ feature -- Activation
 				path.after or else a_folder = Void
 			loop
 				a_folder := find_cluster_in (path.item, a_folder)
-				if a_folder /= Void and then not a_folder.is_expanded then
+				if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then
 					a_folder.expand
 				end
 				path.forth
@@ -236,7 +236,7 @@ feature -- Activation
 				l_sub.after
 			loop
 				a_folder := find_subfolder_in (l_sub.item, a_folder)
-				if a_folder /= Void and then not a_folder.is_expanded then
+				if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then
 					a_folder.expand
 				end
 				l_sub.forth
@@ -421,7 +421,7 @@ feature {NONE} -- Rebuilding
 					-- If an item was selected before the rebuild, re-select
 					-- the item.
 				select_tree_item (selected_name, Current)
-				if selected_item /= Void then
+				if selected_item /= Void and is_displayed then
 						-- Ensure that the selected item is visible on screen.
 					ensure_item_visible (selected_item)
 				end

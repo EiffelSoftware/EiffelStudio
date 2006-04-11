@@ -1143,10 +1143,26 @@ feature -- Byte code generation
 feature -- Parent table generation
 
 	generate_parent_table (buffer: GENERATION_BUFFER;
-						   final_mode   : BOOLEAN) is
-			-- Generate parent table
+						   final_mode: BOOLEAN) is
+			-- Generate parent table.
 		require
-			valid_file   : buffer /= Void;
+			valid_file   : buffer /= Void
+		do
+			compute_parent_table (final_mode)
+			Par_table.generate (buffer, final_mode)
+		end
+
+	make_parent_table_byte_code (ba: BYTE_ARRAY) is
+			-- Generate parent table.
+		do
+			compute_parent_table (False)
+			Par_table.make_byte_code (ba)
+		end
+
+feature {NONE} -- Implementation
+
+	compute_parent_table (final_mode: BOOLEAN) is
+			-- Compute parent table and make it available in `Par_table'.
 		local
 			parents     : FIXED_LIST [CL_TYPE_A];
 			parent_type : CL_TYPE_I
@@ -1165,61 +1181,34 @@ feature -- Parent table generation
 								a_class.name, a_class.is_expanded);
 			end
 
-			from
-				parents := a_class.parents
-				parents.start
-			until
-				parents.after
-			loop
-				parent_type := parents.item.type_i
-				if gen_type /= Void then
-					parent_type := parent_type.instantiation_in (Current)
+			if is_expanded then
+					-- Use a reference counterpart as a parent to ensure
+					-- that reattachment of expanded to reference works
+					-- as expectde
+				parent_type := type.duplicate
+				parent_type.set_reference_mark
+				if parent_type.has_associated_class_type then
+					par_table.append_type (parent_type)
+				else
+					parent_type := Void
 				end
-				Par_table.append_type (parent_type)
-				parents.forth
 			end
-
-			Par_table.generate (buffer, final_mode)
-		end;
-
-	make_parent_table_byte_code (ba: BYTE_ARRAY) is
-			-- Generate parent table
-		local
-			parents     : FIXED_LIST [CL_TYPE_A];
-			parent_type : CL_TYPE_I
-			gen_type    : GEN_TYPE_I;
-			a_class     : CLASS_C
-		do
-			gen_type ?= type
-			a_class  := associated_class
-
-			if gen_type /= Void and then gen_type.meta_generic /= Void then
-				Par_table.init (type.generated_id (False),
-								gen_type.meta_generic.count,
-								a_class.name, a_class.is_expanded);
-			else
-				Par_table.init (type.generated_id (False), 0,
-								a_class.name, a_class.is_expanded);
-			end
-
-			from
-				parents := a_class.parents;
-				parents.start;
-			until
-				parents.after
-			loop
-				parent_type := parents.item.type_i
-
-				if gen_type /= Void then
-					parent_type := parent_type.instantiation_in (Current)
+			if parent_type = Void then
+				from
+					parents := a_class.parents
+					parents.start
+				until
+					parents.after
+				loop
+					parent_type := parents.item.type_i
+					if gen_type /= Void then
+						parent_type := parent_type.instantiation_in (Current)
+					end
+					Par_table.append_type (parent_type)
+					parents.forth
 				end
-
-				Par_table.append_type (parent_type)
-				parents.forth
 			end
-
-			Par_table.make_byte_code (ba);
-		end;
+		end
 
 	Par_table: PARENT_TABLE is
 			-- Buffer for parent table generation

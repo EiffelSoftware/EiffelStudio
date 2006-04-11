@@ -193,7 +193,7 @@ feature -- Visit nodes
 		do
 			if not is_error then
 					-- set application target
-				a_target.set_application_target (application_target)
+				a_target.system.set_application_target (application_target)
 
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
@@ -269,7 +269,6 @@ feature -- Visit nodes
 		ensure then
 			all_libraries_set: not is_error implies a_target.all_libraries /= Void
 			all_assemblies_set: not is_error implies a_target.all_assemblies /= Void
-			application_target_set: not is_error implies a_target.application_target /= Void
 		end
 
 	process_group (a_group: CONF_GROUP) is
@@ -329,6 +328,7 @@ feature -- Visit nodes
 						if l_load.is_error then
 							add_error (l_load.last_error)
 						else
+							l_load.last_system.set_application_target (application_target)
 							l_target := l_load.last_system.library_target
 
 								-- set environment to our global environment

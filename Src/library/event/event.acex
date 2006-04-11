@@ -5,13 +5,14 @@
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 	 name="event" uuid="ba362416-9c3f-4185-acb5-7c4040a25996" library_target="event">
 	<target name="event">
-		<description>Graph library</description>
+		<description>Event library</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<cluster name="event" location="."/>
 	</target>
 </system>

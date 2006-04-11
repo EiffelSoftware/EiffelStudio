@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 				eb_debugger_manager.application.kill
 			end
 			Eb_debugger_manager.disable_debug
-			manager.remove_cluster_i (group, path)
+			manager.remove_group (group, path)
 			Eb_debugger_manager.resynchronize_breakpoints
 			Window_manager.synchronize_all
 			could_not_delete := False

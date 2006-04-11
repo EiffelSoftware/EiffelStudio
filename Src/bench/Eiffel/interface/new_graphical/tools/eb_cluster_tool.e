@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (sep)
 			but := show_current_class_cluster_cmd.new_mini_toolbar_item
 			but.drop_actions.extend (agent show_class)
-			but.drop_actions.extend (agent show_cluster)
+			but.drop_actions.extend (agent show_group)
 			mini_toolbar.extend (but)
 
 			widget.refresh
@@ -192,10 +192,10 @@ feature {NONE} -- Implementation
 			widget.show_class (st.class_i)
 		end
 
-	show_cluster (st: CLUSTER_STONE) is
+	show_group (st: CLUSTER_STONE) is
 			-- Display the class relative to `st' in the cluster tree.
 		do
-			widget.show_cluster (st.cluster_i)
+			widget.show_subfolder (st.group, st.path)
 		end
 
 	show_current_class_cluster is
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 				else
 					conv_cluster ?= window.stone
 					if conv_cluster /= Void then
-						widget.show_cluster (conv_cluster.cluster_i)
+						widget.show_subfolder (conv_cluster.group, conv_cluster.path)
 					else
 							-- The current stone is neither a class stone nor a cluster stone.
 						create wd.make_with_text (Warning_messages.w_Choose_class_or_cluster)

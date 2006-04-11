@@ -56,6 +56,11 @@ inherit
 			default_create
 		end
 
+	SHARED_CONF_FACTORY
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -287,6 +292,9 @@ feature -- Access
 	assemblies: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 			-- Root assemblies in a sorted order.
 
+	last_added_class: CLASS_I
+			-- Last class which was added during a call to `add_class_to_cluster'.
+
 feature -- Element change
 
 	wipe_out is
@@ -324,28 +332,6 @@ feature -- Element change
 			a_class.config_class.invalidate
 				-- we need to rebuild and then the rest will be done during rebuild
 			system.force_rebuild
-		end
-
-	add_class (a_class: STRING; a_cluster: EB_SORTED_CLUSTER) is
-			-- Add class with file name `a_class' to `a_cluster' and notify observers.
-		require
-			a_class_not_void: a_class /= Void
-			a_cluster_not_void: a_cluster /= Void
-		local
---			new_class: CLASS_I
-		do
-				-- Add `a_class' to the universe.
-			conf_todo
---			a_cluster.actual_cluster.force_compilation_on_class_from_file (a_class)
---
---				-- Get the created CLASS_I.
---			new_class := a_cluster.actual_cluster.class_with_base_name (a_class)
---
---				-- Notify observers.
---			if new_class /= Void then
---				a_cluster.classes.extend (new_class)
---				on_class_added (new_class)
---			end
 		end
 
 	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: STRING) is
@@ -459,19 +445,43 @@ feature -- Element change
 			retry
 		end
 
-	add_class_to_cluster_i (a_class: STRING; a_cluster: CLUSTER_I) is
-			-- Add class with file name `a_class' to `a_cluster' and notify observers.
+	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING) is
+			-- Add class with file name `a_class' to `a_cluster' under `a_path' and notify observers.
 		require
 			a_class_not_void: a_class /= Void
 			a_cluster_not_void: a_cluster /= Void
+			a_path_not_void: a_path /= Void
 		local
-			a_folder: EB_SORTED_CLUSTER
+			l_folder: EB_SORTED_CLUSTER
+			l_new_class: EIFFEL_CLASS_I
+			l_clu: CLUSTER_I
+			l_classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
 		do
-			a_folder := folder_from_cluster (a_cluster)
-			add_class (a_class, a_folder)
+			l_clu ?= a_cluster
+			check cluster_i: l_clu /= Void end
+			l_new_class := compiler_conf_factory.new_class (a_class, l_clu, a_path)
+			if not l_clu.classes_set then
+				create l_classes.make (1)
+				l_clu.set_classes (l_classes)
+			end
+			l_clu.classes.force (l_new_class, l_new_class.name)
+
+				-- update folder
+			l_folder := folder_from_cluster (a_cluster)
+			l_folder.reinitialize
+			on_class_added (l_new_class)
+
+				-- force rebuild
+			system.force_rebuild
+				-- force compilation of class
+			system.add_unref_class (l_new_class)
+
+			last_added_class := l_new_class
+		ensure
+			last_added_class_set: last_added_class /= Void
 		end
 
-	remove_cluster_i (a_group: CONF_GROUP; a_path: STRING) is
+	remove_group (a_group: CONF_GROUP; a_path: STRING) is
 			-- Remove `a_group' from its parent and notify observers.
 		require
 			a_group_not_void: a_group /= Void

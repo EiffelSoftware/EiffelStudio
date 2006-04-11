@@ -94,13 +94,14 @@ feature -- Visit nodes
 				create l_a_val.make (4)
 				l_a_name.force ("cluster")
 				l_a_val.force (l_root.cluster_name)
-				l_a_name.force ("class")
-				l_a_val.force (l_root.class_name)
 				l_a_name.force ("feature")
 				l_a_val.force (l_root.feature_name)
 				if l_root.is_all_root then
 					l_a_name.force ("all_classes")
 					l_a_val.force (l_root.is_all_root.out.as_lower)
+				else
+					l_a_name.force ("class")
+					l_a_val.force (l_root.class_name)
 				end
 				append_tag ("root", Void, l_a_name, l_a_val)
 			end

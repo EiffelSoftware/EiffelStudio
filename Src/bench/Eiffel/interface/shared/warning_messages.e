@@ -415,8 +415,7 @@ feature -- Cluster tree warnings
 			create Result.make (100)
 			Result.append ("Cannot add a cluster to cluster%N")
 			Result.append (cluster_name.as_upper)
-			Result.append ("%Nbecause it is either a precompiled%N%
-							%or a library cluster.")
+			Result.append ("%Nbecause it is read only.")
 		end
 
 	w_Cannot_find_class (class_name: STRING): STRING is
@@ -450,17 +449,7 @@ feature -- Cluster tree warnings
 			create Result.make (30)
 			Result.append ("Class with file name ")
 			Result.append (base_name)
-			Result.append (" already exists in cluster.")
-		end
-
-	w_Class_still_in_cluster (base_name: STRING): STRING is
-		require
-			base_name_not_void: base_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("A class with file name ")
-			Result.append (base_name)
-			Result.append ("%Nis still referenced in this cluster.%NPlease recompile to update the system.")
+			Result.append (" already exists.")
 		end
 
 	w_Class_already_exists (class_name: STRING): STRING is

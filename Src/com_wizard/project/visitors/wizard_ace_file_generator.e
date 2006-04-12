@@ -226,7 +226,6 @@ feature {NONE} -- Implementation
 					%			ECOM_ROOT_STORAGE;%N%
 					%			ECOM_ENUM_STATSTG;%N%
 					%			ECOM_HRESULT;%N%
-					%			ECOM_WIDE_STRING;%N%
 					%			ECOM_LARGE_INTEGER;%N%
 					%			ECOM_ULARGE_INTEGER;%N%
 					%			ECOM_UNKNOWN_INTERFACE;%N%

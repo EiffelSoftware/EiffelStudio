@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
+	on_cluster_added (a_cluster: CLUSTER_I) is
 			-- `a_cluster' was added to the system.
 		local
 			parent, es_cluster: ES_CLUSTER

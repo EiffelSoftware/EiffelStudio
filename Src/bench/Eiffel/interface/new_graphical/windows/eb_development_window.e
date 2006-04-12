@@ -3099,7 +3099,7 @@ feature {NONE} -- Implementation
 						managed_main_formatters.item.set_stone (Void)
 						managed_main_formatters.forth
 					end
-					if cluster_st /= Void then
+					if cluster_st /= Void and then cluster_st.is_cluster then
 	--| FIXME XR: Really manage cluster display in the main editor
 						formatted_context_for_cluster (cluster_st.cluster_i)
 						if cluster_st.position > 0 then

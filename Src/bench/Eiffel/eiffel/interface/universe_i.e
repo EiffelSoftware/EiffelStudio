@@ -260,6 +260,21 @@ feature -- Access
 			end
 		end
 
+	cluster_of_location (a_directory: STRING): LIST [CONF_CLUSTER] is
+			-- Find cluster for `a_directory'.
+		require
+			a_directory_valid: a_directory /= Void and then not a_directory.is_empty
+		local
+			l_vis: CONF_FIND_LOCATION_VISITOR
+		do
+			create l_vis.make
+			l_vis.set_directory (a_directory)
+			target.process (l_vis)
+			Result := l_vis.found_clusters
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	class_from_assembly (an_assembly, a_dotnet_name: STRING): EXTERNAL_CLASS_I is
 			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with

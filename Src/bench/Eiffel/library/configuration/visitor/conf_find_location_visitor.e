@@ -1,19 +1,21 @@
 indexing
-	description: "Visitor that looks for an assembly name."
+	description: "Visitor that looks for cluster with a certain location."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_FIND_ASSEMBLY_VISITOR
+	CONF_FIND_LOCATION_VISITOR
 
 inherit
 	CONF_ITERATOR
 		redefine
 			process_assembly,
 			process_library,
-			process_precompile
+			process_precompile,
+			process_cluster,
+			process_override
 		end
 
 create
@@ -24,26 +26,28 @@ feature {NONE} -- Initialization
 	make is
 			-- Create.
 		do
-			create found_assemblies.make
+			create found_clusters.make
 			create targets_done.make (5)
 		end
 
 feature -- Access
 
-	found_assemblies: LINKED_SET [CONF_ASSEMBLY]
+	found_clusters: LINKED_SET [CONF_CLUSTER]
 			-- Classes with `name' retrieved during last process.
 
-	name: STRING
-			-- Name to look for.
+	directory: STRING
+			-- Directory to look for.
 
 feature -- Update
 
-	set_name (a_name: STRING) is
-			-- Set `name' to `a_name'.
+	set_directory (a_directory: STRING) is
+			-- Set `directory' to `a_directory'.
 		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_directory_ok: a_directory /= Void and then not a_directory.is_empty
 		do
-			name := a_name
+			directory := a_directory
+		ensure
+			directory_set: directory = a_directory
 		end
 
 feature -- Visit nodes
@@ -51,30 +55,49 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
-			if
-				an_assembly.assembly_name /= Void and then
-				an_assembly.assembly_name.is_case_insensitive_equal (name)
-			then
-				found_assemblies.force (an_assembly)
-			end
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
 		do
-			retrieve_recursively (a_library.library_target)
+			if a_library.library_target /= Void then
+				retrieve_recursively (a_library.library_target)
+			end
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE) is
 			-- Visit `a_precompile'.
 		do
-			retrieve_recursively (a_precompile.library_target)
+			process_library (a_precompile)
+		end
+
+	process_cluster (a_cluster: CONF_CLUSTER) is
+			-- Visit `a_cluster'.
+		do
+			retrieve_from_group (a_cluster)
+		end
+
+	process_override (an_override: CONF_OVERRIDE) is
+			-- Visit `an_override'.
+		do
+			retrieve_from_group (an_override)
 		end
 
 feature {NONE} -- Implementation
 
 	targets_done: SEARCH_TABLE [UUID]
 			-- Lookup for libraries where we already searched.
+
+	retrieve_from_group (a_group: CONF_CLUSTER) is
+			-- Retrieve classes with `name' from `a_group'.
+		require
+			directory_set: directory /= Void
+			a_group_not_void: a_group /= Void
+		do
+			if a_group.location.evaluated_directory.is_equal (directory) then
+				found_clusters.force (a_group)
+			end
+		end
 
 	retrieve_recursively (a_target: CONF_TARGET) is
 			-- Retrieve classes with `name' recursively from `a_target'.
@@ -90,11 +113,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
 invariant
-	name_set_upper: name /= Void implies name.is_equal (name.as_upper)
-	found_assemblies_not_void: found_assemblies /= Void
+	found_clusters_not_void: found_clusters /= Void
 	targets_done_not_void: targets_done /= Void
 
 indexing

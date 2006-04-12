@@ -67,7 +67,6 @@ inherit
 		end
 
 create
-	default_create,
 	make
 
 feature {NONE} -- Initialization
@@ -198,6 +197,36 @@ feature -- Activation
 			end
 		end
 
+	show_stone (a_stone: STONE) is
+			-- Display node that represents `a_stone'.
+		require
+			a_stone_not_void: a_stone /= Void
+		local
+			classi_stone: CLASSI_STONE
+			cluster_stone: CLUSTER_STONE
+			l_grp: CONF_GROUP
+			l_path: STRING
+		do
+			classi_stone ?= a_stone
+			if classi_stone /= Void then
+				l_grp := classi_stone.group
+				l_path := classi_stone.class_i.config_class.path
+			end
+			if l_grp = Void then
+				cluster_stone ?= a_stone
+				if cluster_stone /= Void then
+					l_grp := cluster_stone.group
+					l_path := cluster_stone.path
+				end
+			end
+			if l_grp /= Void then
+				check
+					path_set: l_path /= Void
+				end
+				show_subfolder (l_grp, l_path)
+			end
+		end
+
 	show_subfolder (a_group: CONF_GROUP; a_path: STRING) is
 			-- Expand all parents of `a_group' and `a_path' and show the folder.
 		require
@@ -290,7 +319,7 @@ feature -- Observer pattern
 			refresh
 		end
 
-	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
+	on_cluster_added (a_cluster: CLUSTER_I) is
 			-- Refresh the tree to display the new cluster.
 		do
 			refresh
@@ -744,6 +773,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	classes_double_click_agents_not_void: classes_double_click_agents /= Void
+	expanded_clusters_not_void: expanded_clusters /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

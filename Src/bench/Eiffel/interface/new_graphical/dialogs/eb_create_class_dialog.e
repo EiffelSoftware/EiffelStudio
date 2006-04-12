@@ -252,6 +252,7 @@ feature -- Status Settings
 			a_cluster_not_void: a_cluster /= Void
 		do
 			cluster := a_cluster
+			path := ""
 			cluster_preset := True
 		ensure
 			cluster_set: cluster = a_cluster
@@ -278,7 +279,11 @@ feature -- Basic operations
 			i: EV_TREE_ITEM
 		do
 			if not cluster_preset then
-				cluster := target_cluster
+				if target.stone /= Void then
+					cluster_list.show_stone (target.stone)
+				end
+			else
+				cluster_list.show_subfolder (cluster, path)
 			end
 			str := class_n.as_upper
 			class_entry.set_text (str)
@@ -623,29 +628,6 @@ feature {NONE} -- Implementation
 				str.to_lower
 				str.append (".e")
 				file_entry.set_text (str)
-			end
-		end
-
-	target_cluster: CONF_CLUSTER is
-			-- Cluster of the target. Void if none.
-		local
-			classi_stone: CLASSI_STONE
-			cluster_stone: CLUSTER_STONE
-			l_grp: CONF_GROUP
-		do
-			classi_stone ?= target.stone
-			if classi_stone /= Void then
-				l_grp := classi_stone.group
-				path := classi_stone.class_i.config_class.path
-			end
-			cluster_stone ?= target.stone
-			if cluster_stone /= Void then
-				l_grp := cluster_stone.group
-				path := cluster_stone.path
-			end
-			if l_grp.is_cluster then
-				Result ?= l_grp
-				check result_not_void: Result /= Void end
 			end
 		end
 

@@ -84,7 +84,6 @@ feature -- Access
 			else
 				create Result.make (data.actual_group)
 			end
-
 		end
 
 feature -- Status setting
@@ -504,7 +503,7 @@ feature {NONE} -- Implementation
 						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Send a stone corresponding to `Current' to `associated_window'.
 		do
-			if data.is_cluster and then a_button = 1 and then associated_window /= Void then
+			if a_button = 1 and then associated_window /= Void then
 				associated_window.set_stone (stone)
 			end
 		end

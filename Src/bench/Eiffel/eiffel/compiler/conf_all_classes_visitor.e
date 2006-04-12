@@ -76,28 +76,6 @@ feature -- Visit nodes
 			retrieve_from_group (an_override)
 		end
 
-feature {CONF_ALL_CLASSES_VISITOR}
-
-	set_targets_done (a_targets: like targets_done) is
-			-- Set `targets_done' to `a_targets'.
-		require
-			a_targets_not_void: a_targets /= Void
-		do
-			targets_done := a_targets
-		ensure
-			targets_done_set: targets_done = a_targets
-		end
-
-	set_assemblies_done (an_assemblies: like assemblies_done) is
-			-- Set `assemblies_done' to `a_assemblies'.
-		require
-			an_assemblies_done_not_void: an_assemblies /= Void
-		do
-			assemblies_done := an_assemblies
-		ensure
-			assemblies_done_set: assemblies_done = an_assemblies
-		end
-
 feature {NONE} -- Implementation
 
 	targets_done: SEARCH_TABLE [UUID]
@@ -111,17 +89,12 @@ feature {NONE} -- Implementation
 		require
 			a_target_not_void: a_target /= Void
 		local
-			l_vis: like Current
 			l_uuid: UUID
 		do
 			l_uuid := a_target.system.uuid
 			if not targets_done.has (l_uuid) then
 				targets_done.force (l_uuid)
-				create l_vis.make
-				l_vis.set_targets_done (targets_done)
-				l_vis.set_assemblies_done (assemblies_done)
-				a_target.process (l_vis)
-				classes.append (l_vis.classes)
+				a_target.process (Current)
 			end
 		end
 

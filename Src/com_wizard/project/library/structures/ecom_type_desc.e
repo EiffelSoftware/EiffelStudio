@@ -16,7 +16,7 @@ inherit
 			copy, is_equal
 		end
 
-creation	
+creation
 	make,
 	make_from_pointer
 
@@ -34,16 +34,16 @@ feature -- Access
 			-- Type
 			-- See class ECOM_VAR_TYPE for Result values.
 		do
-			Result := ccom_typedesc_vartype (item)
+			Result := c_typedesc_vartype (item)
 		end
 
 	type_desc: ECOM_TYPE_DESC is
 			-- Nested TYPEDESC structure
 			-- that specifies safearray element type
-		require 
+		require
 			valid_type: is_ptr (var_type) or is_safearray (var_type)
 		do
-			!! Result.make_from_pointer (ccom_typedesc_typedesc (item))
+			!! Result.make_from_pointer (c_typedesc_typedesc (item))
 		end
 
 	array_desc: ECOM_ARRAY_DESC is
@@ -53,18 +53,18 @@ feature -- Access
 		local
 			l_pointer: POINTER
 		do
-			l_pointer := ccom_typedesc_arraydesc (item)
+			l_pointer := c_typedesc_arraydesc (item)
 			if l_pointer /= default_pointer then
 				create Result.make_from_pointer (l_pointer)
 			end
 		end
 
-	href_type: INTEGER is
+	href_type: NATURAL_32 is
 			-- Handle to type description
 		require
-			valid_type: is_user_defined (var_type) 
+			valid_type: is_user_defined (var_type)
 		do
-			Result := ccom_typedesc_href_type (item)
+			Result := c_typedesc_href_type (item)
 		end
 
 feature -- Measurement
@@ -78,30 +78,38 @@ feature -- Measurement
 feature {NONE} -- Externals
 
 	c_size_of_type_desc: INTEGER is
-		external 
-			"C [macro %"E_typedesc.h%"]"
+		external
+			"C [macro %"windows.h%"]"
 		alias
 			"sizeof(TYPEDESC)"
 		end
 
-	ccom_typedesc_vartype (a_ptr: POINTER): INTEGER is
+	c_typedesc_vartype (a_ptr: POINTER): INTEGER is
 		external
-			"C [macro %"E_typedesc.h%"](EIF_POINTER): EIF_INTEGER"
+			"C inline use <windows.h>"
+		alias
+			"((TYPEDESC*)$a_ptr)->vt"
 		end
 
-	ccom_typedesc_typedesc (a_ptr: POINTER): POINTER is
+	c_typedesc_typedesc (a_ptr: POINTER): POINTER is
 		external
-			"C [macro %"E_typedesc.h%"](EIF_POINTER): EIF_POINTER"
+			"C inline use <windows.h>"
+		alias
+			"((TYPEDESC*)$a_ptr)->lptdesc"
 		end
 
-	ccom_typedesc_arraydesc (a_ptr: POINTER): POINTER is
+	c_typedesc_arraydesc (a_ptr: POINTER): POINTER is
 		external
-			"C [macro %"E_typedesc.h%"](EIF_POINTER): EIF_POINTER"
+			"C inline use <windows.h>"
+		alias
+			"((TYPEDESC*)$a_ptr)->lpadesc"
 		end
 
-	ccom_typedesc_href_type (a_ptr: POINTER): INTEGER is
+	c_typedesc_href_type (a_ptr: POINTER): NATURAL_32 is
 		external
-			"C [macro %"E_typedesc.h%"](EIF_POINTER): EIF_INTEGER"
+			"C inline use <windows.h>"
+		alias
+			"((TYPEDESC*)$a_ptr)->hreftype"
 		end
 
 indexing

@@ -22,17 +22,20 @@ inherit
 	ECOM_TYPE_FLAGS
 
 creation
-	make_from_pointer
+	make
 
 feature -- Access
 
-	address_of_member (memid: INTEGER; invkind: INTEGER): POINTER is
+	last_result: ECOM_HRESULT
+			-- Result from last call
+
+	address_of_member (a_memid: INTEGER; invkind: INTEGER): POINTER is
 			-- Address of static function or variable defined by
-			-- `memid' and `invkind'
+			-- `a_memid' and `invkind'
 		require
 			valid_invke_kind: is_valid_invoke_kind (invkind)
 		do
-			Result := ccom_address_of_member (initializer, memid, invkind)
+			create last_result.make_from_integer (c_address_of_member (item, a_memid, invkind, $Result))
 		end
 
 	new_instance (outer: POINTER; a_refiid: ECOM_GUID): POINTER is
@@ -41,14 +44,14 @@ feature -- Access
 			com_class: is_com_class
 			can_create: is_typeflag_fcancreate (type_attr.flags)
 		do
-			Result := ccom_create_instance (initializer, outer, a_refiid.item)
+			create last_result.make_from_integer (c_create_instance (item, outer, a_refiid.item, $Result))
 		end
 
 	containing_type_lib: ECOM_TYPE_LIB is
 			-- Containing type library
 		do
 			if not is_type_lib_valid then
-				get_containing_type_lib
+				retrieve_containing_type_lib
 			end
 			Result := containing_type_lib_impl
 		ensure
@@ -59,25 +62,49 @@ feature -- Access
 			-- Index in containing type library
 		do
 			if not is_type_lib_valid then
-				get_containing_type_lib
+				retrieve_containing_type_lib
 			end
 			Result := index_in_type_lib_impl
 		end
 
-	dll_entry (memid: INTEGER; invkind: INTEGER): ECOM_DLL_ENTRY is
+	dll_entry (a_memid: INTEGER; invkind: INTEGER): ECOM_DLL_ENTRY is
 			-- Description of entry point for function in DLL
 		require
-			is_valid_invoke_kind (invkind)
+			valid_kind: is_valid_invoke_kind (invkind)
+		local
+			l_name, l_entry_point: POINTER
+			l_ordinal: INTEGER
+			l_name_bstr, l_ep_bstr: ECOM_BSTR
 		do
-			Result := ccom_get_dll_entry (initializer, memid, invkind)
-		ensure
-			non_void_dll_entry: Result /= Void
+			create last_result.make_from_integer (c_get_dll_entry (item, a_memid, invkind, $l_name, $l_entry_point, $l_ordinal))
+			if last_result.succeeded then
+				create l_name_bstr.make (l_name)
+				create l_ep_bstr.make (l_entry_point)
+				create Result.make (l_name_bstr.string, l_ep_bstr.string, l_ordinal)
+			end
 		end
 
-	documentation (memid: INTEGER): ECOM_DOCUMENTATION is
+	documentation (a_memid: INTEGER): ECOM_DOCUMENTATION is
 			-- Documentation for type description
+		local
+			l_name, l_doc, l_file: POINTER
+			l_context: NATURAL_32
+			l_name_bstr: ECOM_BSTR
+			l_doc_text, l_file_text: STRING
 		do
-			Result := ccom_get_documentation (initializer, memid)
+			create last_result.make_from_integer (c_get_documentation (item, a_memid, $l_name, $l_doc, $l_context, $l_file))
+			if last_result.succeeded then
+				create l_name_bstr.make (l_name)
+				if l_doc /= default_pointer then
+					l_doc_text := (create {ECOM_BSTR}.make (l_doc)).string
+				end
+				if l_file /= default_pointer then
+					l_file_text := (create {ECOM_BSTR}.make (l_file)).string
+				end
+				create Result.make (l_name_bstr.string, l_doc_text, l_context, l_file_text)
+			else
+				create Result.make ("", "", 0, "")
+			end
 		ensure
 			non_void_documentation: Result /= Void
 		end
@@ -87,108 +114,128 @@ feature -- Access
 		require
 			valid_index: a_index >= 0 and a_index < type_attr.count_func
 		local
-			tmp_pointer: POINTER
+			l_pointer: POINTER
 		do
-			if func_descs = Void then
-				create {ARRAYED_LIST [ECOM_FUNC_DESC]} func_descs.make (20)
+			create last_result.make_from_integer (c_get_func_desc (item, a_index, $l_pointer))
+			if last_result.succeeded then
+				create Result.make_from_pointer (l_pointer)
+				Result.set_parent (Current)
 			end
-			tmp_pointer := ccom_get_func_desc (initializer, a_index)
-			create Result.make_from_pointer (tmp_pointer)
-			Result.set_parent (Current)
-			func_descs.extend (Result)
 		ensure
-			non_void_description: Result /= Void
-			valid_description: Result.is_parent_valid
+			valid_description: Result /= Void implies Result.is_parent_valid
 		end
 
-	ids_of_names (some_names: ARRAY[STRING]): ARRAY[INTEGER] is
+	ids_of_names (a_names: ARRAY [STRING]): ARRAY [INTEGER] is
 			-- Mapping between member names and member IDs,
 			-- and parameter names and parameter IDs.
 		local
-			i: INTEGER
-			any: ANY
-			a_p: ARRAY [POINTER]
-			wide_string: ECOM_WIDE_STRING
+			l_array: WEL_STRING_ARRAY
+			i, l_count: INTEGER
+			l_ids: MANAGED_POINTER
+			l_pointer: POINTER
 		do
-			create a_p.make (some_names.lower, some_names.count)
-			from
-				i := some_names.lower
-			until
-				i > some_names.upper
-			loop
-				create wide_string.make_from_string (some_names.item (i))
-				a_p.put (wide_string.item, i)
-				i := i + 1
+			create l_array.make (a_names)
+			l_count := a_names.count
+			l_pointer := l_pointer.memory_alloc (l_count * Integer_32_bytes)
+			create last_result.make_from_integer (c_get_ids_of_names (item, l_array.item.item, l_count, $l_pointer))
+			if last_result.succeeded then
+				create l_ids.share_from_pointer (l_pointer, l_count)
+				from
+					i := 1
+					create Result.make (1, l_count)
+				until
+					i > l_count
+				loop
+					Result.put (l_ids.read_integer_32 ((i - 1) * Integer_32_bytes), i)
+					i := i + 1
+				end
+				l_pointer.memory_free
 			end
-			any := a_p.to_c
-			Result := ccom_get_ids_of_names (initializer, $any, some_names.count)
-		ensure
-			non_void_ids: Result /= Void
 		end
 
 	impl_type_flag (a_index: INTEGER): INTEGER is
 			-- See ECOM_IMPL_TYPE_FLAGS for return values.
 		do
-			Result := ccom_get_impl_type_flags (initializer, a_index)
+			create last_result.make_from_integer (c_get_impl_type_flags (item, a_index, $Result))
 		ensure
 			valid_flag: is_valid_impltypeflag (Result)
 		end
 
-	mops (memid: INTEGER): STRING is
+	mops (a_memid: INTEGER): STRING is
 			-- Marshaling information
+		local
+			l_bstr: ECOM_BSTR
+			l_pointer: POINTER
 		do
-			Result := ccom_get_mops (initializer, memid)
+			create last_result.make_from_integer (c_get_mops (item, a_memid, $l_pointer))
+			if last_result.succeeded then
+				create l_bstr.make (l_pointer)
+				Result := l_bstr.string
+			end
 		ensure
-			non_void_mops: Result /= Void
+
 		end
 
-	names (id: INTEGER; max_names: INTEGER): ARRAY[STRING] is
+	names (a_memid: INTEGER; a_max_names: INTEGER): ARRAY [STRING] is
 			-- Variable name or method name and its parameters
 			-- that correspond to specified `id'.
 			-- `max_names' maximal number of names to be returned
+		local
+			l_names: MANAGED_POINTER
+			i, l_count: INTEGER
+			l_bstr: ECOM_BSTR
 		do
-			Result := ccom_get_names (initializer, id, max_names)
+			create l_names.make (a_max_names * Pointer_bytes)
+			create last_result.make_from_integer (c_get_names (item, a_memid, l_names.item, a_max_names, $l_count))
+			if last_result.succeeded then
+				from
+					i := 1
+					create Result.make (1, l_count)
+				until
+					i > l_count
+				loop
+					create l_bstr.make (l_names.read_pointer ((i - 1) * Pointer_bytes))
+					Result.put (l_bstr.string, i)
+					i := i + 1
+				end
+			end
 		end
 
-	type_info (a_handle: INTEGER): ECOM_TYPE_INFO is
+	type_info (a_handle: NATURAL_32): ECOM_TYPE_INFO is
 			-- ITypeInfo interface refernced by `a_handle'
 			-- which is returned by `ref_type_of_impl_type'
+		local
+			l_pointer: POINTER
 		do
-			create Result.make_from_pointer (ccom_get_ref_type_info (initializer, a_handle))
+			create last_result.make_from_integer (c_get_ref_type_info (item, a_handle, $l_pointer))
+			if last_result.succeeded then
+				create Result.make (l_pointer)
+			end
 		end
 
-	ref_type_of_impl_type (a_index: INTEGER): INTEGER is
-			-- handle of inmplemented interface type, which can be passed to 
+	ref_type_of_impl_type (a_index: INTEGER): NATURAL_32 is
+			-- handle of inmplemented interface type, which can be passed to
 			-- `type_info'
 			-- Valid range is 0 to `count_implemented_types' of `type_attr'
 		require
 			valid_index: a_index >= -1 and then a_index <= type_attr.count_implemented_types
 		do
-			Result := ccom_get_ref_type_of_impl_type (initializer, a_index)
+			create last_result.make_from_integer (c_get_ref_type_of_impl_type (item, a_index, $Result))
 		end
 
 	type_attr: ECOM_TYPE_ATTR is
 			-- TYPEATTR structure
 		local
-			tmp_pointer: POINTER
+			l_pointer: POINTER
 		do
 			if not is_type_attr_set then
-				tmp_pointer := ccom_get_type_attr (initializer)
-				create type_attr_impl.make_from_pointer (tmp_pointer)
-				is_type_attr_set := True
+				create last_result.make_from_integer (c_get_type_attr (item, $l_pointer))
+				if last_result.succeeded then
+					create type_attr_impl.make_from_pointer (l_pointer)
+					is_type_attr_set := True
+				end
 			end
 			Result := type_attr_impl
-		ensure
-			non_void_attributes: Result /= Void
-			valid_attributes: Result.exists
-		end
-
-	type_comp: ECOM_TYPE_COMP is
-			-- ITypeComp inteface
-		do
-			create Result.make_from_pointer (ccom_get_type_comp (initializer))
-		ensure
-			non_void_interface: type_comp /= Void
 		end
 
 	var_desc (a_index: INTEGER): ECOM_VAR_DESC is
@@ -196,18 +243,15 @@ feature -- Access
 		require
 			valid_index: a_index >= 0 and a_index < type_attr.count_variables
 		local
-			tmp_pointer: POINTER
+			l_pointer: POINTER
 		do
-			if var_descs = Void then
-				create {ARRAYED_LIST [ECOM_VAR_DESC]} var_descs.make (20)
+			create last_result.make_from_integer (c_get_var_desc (item, a_index, $l_pointer))
+			if last_result.succeeded then
+				create Result.make_from_pointer (l_pointer)
+				Result.set_parent (Current)
 			end
-			tmp_pointer := ccom_get_var_desc (initializer, a_index)
-			create Result.make_from_pointer (tmp_pointer)
-			Result.set_parent (Current)
-			var_descs.extend (Result)
 		ensure
-			non_void_description: Result /= Void
-			valid_description: Result.is_parent_valid
+			valid_description: Result /= Void implies Result.is_parent_valid
 		end
 
 feature -- Status report
@@ -223,51 +267,51 @@ feature -- Status report
 
 feature -- Status setting
 
-	get_containing_type_lib is
+	retrieve_containing_type_lib is
 			-- Retrieve containing type library and index
 			-- of type description within type library
+		local
+			l_pointer: POINTER
 		do
-			ccom_get_containing_type_lib (initializer)
-			create containing_type_lib_impl.make_from_pointer (ccom_containing_type_lib (initializer))
-			index_in_type_lib_impl := ccom_index_type_lib (initializer)
-			is_type_lib_valid := True
+			create last_result.make_from_integer (c_get_containing_type_lib (item, $l_pointer, $index_in_type_lib_impl))
+			if last_result.succeeded then
+				create containing_type_lib_impl.make (l_pointer)
+				is_type_lib_valid := True
+			end
 		end
 
 feature -- Basic operations
 
-	invoke (an_instance: POINTER; memid: INTEGER; flags: INTEGER; 
-				disp_params: ECOM_DISP_PARAMS; var_result: ECOM_VARIANT;
-				excep_info: ECOM_EXCEP_INFO) is
+	invoke (a_instance: POINTER; a_memid: INTEGER; a_flags: INTEGER;
+				a_disp_params: ECOM_DISP_PARAMS; a_var_result: ECOM_VARIANT;
+				a_excep_info: ECOM_EXCEP_INFO) is
 			-- invoke method
-			-- `an_instance' is returned by `new_instance'
+			-- `a_instance' is returned by `new_instance'
 		require
-			an_instance /= default_pointer
-			is_valid_method_flag (flags)
-			disp_params /= Void
-			var_result /= Void
-			excep_info /= Void
+			valid_a_instance: a_instance /= default_pointer
+			valid_flags: is_valid_method_flag (a_flags)
+			attached_a_disp_params: a_disp_params /= Void
+			attached_a_var_result: a_var_result /= Void
+			attached_a_excep_info: a_excep_info /= Void
+		local
+			l_arg_err: INTEGER
 		do
-			ccom_invoke (initializer, an_instance, memid, flags, disp_params.item, var_result.item, excep_info.item)
+			create last_result.make_from_integer (c_invoke (item, a_instance, a_memid, a_flags, l_arg_err, a_disp_params.item, a_var_result.item, a_excep_info.item))
 		end
 
 feature {NONE} -- Implementation
 
-	create_wrapper (a_pointer: POINTER): POINTER is
-			-- Create interface
+	memory_free is
+			-- Free interface pointer
 		do
-			Result := ccom_create_c_type_info_from_pointer (a_pointer)
+			c_release (item)
+			item := default_pointer
 		end
 
-	delete_wrapper is
-			-- Delete structure
-		do
-			ccom_delete_c_type_info (initializer);
-		end
-
-	containing_type_lib_impl: ECOM_TYPE_LIB 
+	containing_type_lib_impl: ECOM_TYPE_LIB
 			-- Containing type library
-	
-	index_in_type_lib_impl: INTEGER 
+
+	index_in_type_lib_impl: INTEGER
 			-- Index in containg type library
 
 	type_attr_impl: ECOM_TYPE_ATTR
@@ -276,115 +320,118 @@ feature {NONE} -- Implementation
 	is_type_attr_set: BOOLEAN
 			-- Is TYPEATTR structure initialized?
 
-	func_descs: LIST [ECOM_FUNC_DESC]
-			-- FUNCDESC structures
-
-	var_descs: LIST [ECOM_VAR_DESC]
-			-- VARDESC structures
-
 feature {NONE} -- Externals
 
-	ccom_create_c_type_info_from_pointer (a_pointer: POINTER): POINTER is
+	c_release (a_item: POINTER) is
 		external
-			"C++ [new E_IType_Info %"E_ITypeInfo.h%"](ITypeInfo *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->Release((ITypeInfo*)$a_item)"
 		end
 
-	ccom_delete_c_type_info (cpp_obj: POINTER) is
+	c_address_of_member (a_item: POINTER; a_memid, a_invkind: INTEGER; a_address: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [delete E_IType_Info %"E_ITypeInfo.h%"]()"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->AddressOfMember ((ITypeInfo*)$a_item, (MEMBERID)$a_memid, (INVOKEKIND)$a_invkind, ((void**)$a_address))"
 		end
 
-	ccom_get_containing_type_lib (cpp_obj: POINTER) is
+	c_create_instance (a_item: POINTER; a_punk, a_refiid: POINTER; a_address: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"]()"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->CreateInstance ((ITypeInfo*)$a_item, (IUnknown*)$a_punk, (REFIID)$a_refiid, ((void**)$a_address))"
 		end
 
-	ccom_invoke(cpp_obj: POINTER; a_instance: POINTER;
-			a_memid: INTEGER; a_flags: INTEGER; a_disp_params: POINTER;
-			a_result: POINTER; a_excep_info: POINTER) is
+	c_invoke (a_item, a_instance: POINTER; a_memid, a_flags, a_arg_err: INTEGER; a_disp_params, a_result, a_except_info: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER, EIF_INTEGER, %
-				% EIF_INTEGER, EIF_POINTER, EIF_POINTER, EIF_POINTER)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->Invoke ((ITypeInfo*)$a_item, (void *)$a_instance, (MEMBERID)$a_memid, (unsigned short)$a_flags, (DISPPARAMS *)$a_disp_params, (VARIANT *)$a_result, (EXCEPINFO *)$a_except_info, (unsigned int*)&$a_arg_err)"
 		end
 
-	ccom_address_of_member (cpp_obj: POINTER; a_memid, an_invkind: INTEGER):POINTER is
+	c_get_containing_type_lib (a_item: POINTER; a_type_lib: TYPED_POINTER [POINTER]; a_index: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER, EIF_INTEGER): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetContainingTypeLib ((ITypeInfo*)$a_item, (ITypeLib**)$a_type_lib, (unsigned int *)$a_index)"
 		end
 
-	ccom_create_instance (cpp_obj: POINTER; outer, a_refiid: POINTER):POINTER is
+	c_get_dll_entry (a_item: POINTER; a_memid, a_invkind: INTEGER; a_name, a_entry_point: POINTER; a_ordinal: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER, EIF_POINTER): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetDllEntry ((ITypeInfo*)$a_item, (MEMBERID)$a_memid, (INVOKEKIND)$a_invkind, (BSTR*)$a_name, (BSTR*)$a_entry_point, (unsigned short*)($a_ordinal))"
 		end
 
-	ccom_containing_type_lib (cpp_obj: POINTER): POINTER is
+	c_get_documentation (a_item: POINTER; a_memid: INTEGER; a_name, a_doc: POINTER; a_context: TYPED_POINTER [NATURAL_32]; a_file: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](): (ITypeLib *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetDocumentation ((ITypeInfo*)$a_item, (MEMBERID)$a_memid, (BSTR*)$a_name, (BSTR*)$a_doc, (unsigned long*)$a_context, (BSTR*)$a_file)"
 		end
 
-	ccom_index_type_lib (cpp_obj: POINTER): INTEGER is
+	c_get_func_desc (a_item: POINTER; a_index: INTEGER; a_desc: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](): EIF_INTEGER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetFuncDesc ((ITypeInfo*)$a_item, (unsigned int)$a_index, (FUNCDESC**)$a_desc)"
 		end
 
-	ccom_get_dll_entry (cpp_obj: POINTER; a_memid, an_invkind: INTEGER): ECOM_DLL_ENTRY is
+	c_get_ids_of_names (a_item: POINTER; a_names: POINTER; a_count: INTEGER; a_id: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetIDsOfNames ((ITypeInfo*)$a_item, (OLECHAR**)$a_names, (unsigned int)$a_count, (MEMBERID*)$a_id)"
 		end
 
-	ccom_get_documentation (cpp_obj: POINTER; a_memid: INTEGER): ECOM_DOCUMENTATION is
+	c_get_impl_type_flags (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetImplTypeFlags ((ITypeInfo*)$a_item, (unsigned int)$a_index, (int*)$a_res)"
 		end
 
-	ccom_get_func_desc (cpp_obj: POINTER; a_index: INTEGER): POINTER is
+	c_get_mops (a_item: POINTER; a_memid: INTEGER; a_res: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (FUNCDESC *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetMops ((ITypeInfo*)$a_item, (MEMBERID)$a_memid, (BSTR*)$a_res)"
 		end
 
-	ccom_get_ids_of_names (cpp_obj: POINTER; some_names: POINTER; count: INTEGER): ARRAY[INTEGER] is
+	c_get_names (a_item: POINTER; a_memid: INTEGER; a_res: POINTER; a_max_names: INTEGER; a_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_POINTER, EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetNames ((ITypeInfo*)$a_item, (MEMBERID)$a_memid, (BSTR*)$a_res, (unsigned int)$a_max_names, (unsigned int*)$a_count)"
 		end
 
-	ccom_get_impl_type_flags (cpp_obj: POINTER; a_index: INTEGER): INTEGER is
+	c_get_ref_type_info (a_item: POINTER; a_handle: NATURAL_32; a_res: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_INTEGER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetRefTypeInfo ((ITypeInfo*)$a_item, (HREFTYPE)$a_handle, (ITypeInfo**)$a_res)"
 		end
 
-	ccom_get_mops (cpp_obj: POINTER; memid: INTEGER): STRING is
+	c_get_ref_type_of_impl_type (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [NATURAL_32]): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_REFERNCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetRefTypeOfImplType ((ITypeInfo*)$a_item, (unsigned int)$a_index, (HREFTYPE*)$a_res)"
 		end
 
-	ccom_get_names (cpp_obj: POINTER; memid: INTEGER; max_names: INTEGER): ARRAY[STRING] is
+	c_get_type_attr (a_item, a_res: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetTypeAttr ((ITypeInfo*)$a_item, (TYPEATTR**)$a_res)"
 		end
 
-	ccom_get_ref_type_info (cpp_obj: POINTER; a_handle: INTEGER): POINTER is
+	c_get_var_desc (a_item: POINTER; a_index: INTEGER; a_res: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (ITypeInfo *)"
-		end
-
-	ccom_get_ref_type_of_impl_type (cpp_obj: POINTER; a_index: INTEGER): INTEGER is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): EIF_INTEGER"
-		end
-
-	ccom_get_type_attr (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](): (TYPEATTR *)"
-		end
-
-	ccom_get_type_comp (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](): (ITypeComp *)"
-		end
-
-	ccom_get_var_desc  (cpp_obj: POINTER; a_index: INTEGER): POINTER is
-		external
-			"C++ [E_IType_Info %"E_ITypeInfo.h%"](EIF_INTEGER): (VARDESC *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeInfo*)$a_item)->lpVtbl->GetVarDesc ((ITypeInfo*)$a_item, (unsigned int)$a_index, (VARDESC**)$a_res)"
 		end
 
 indexing

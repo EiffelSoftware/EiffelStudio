@@ -23,14 +23,14 @@ feature -- Initialization
 			item := 0
 		end
 
-	make_from_integer (an_integer: INTEGER) is
+	make_from_integer (a_integer: INTEGER) is
 			-- Initialize hresult according to 'an_integer'.
 		do
-			set_item (an_integer)
+			set_item (a_integer)
 		end
 
 feature -- Access
-	
+
 	item: INTEGER
 			-- HRESULT
 
@@ -63,7 +63,7 @@ feature -- Access
 			end
 			Result.left_adjust
 			Result.right_adjust
-			
+
 			if Result.is_empty then
 				create error_messages
 				Result := error_messages.error_messages.item (error_code)
@@ -74,7 +74,7 @@ feature -- Access
 		ensure
 			non_void_message: Result /= Void
 		end
-		
+
 feature -- Element change
 
 	set_item (an_item: like item) is
@@ -84,9 +84,9 @@ feature -- Element change
 		ensure
 			item_set: item = an_item
 		end
-	
+
 	set_succeeded is
-			-- Set severity bit to indicate succeeded 
+			-- Set severity bit to indicate succeeded
 		do
 			item := (cwin_hresult_make_hresult (0, facility_code, error_code))
 		end
@@ -125,7 +125,7 @@ feature -- Status report
 		do
 			Result := (severity_bit = 0)
 		end
-			
+
 feature {NONE} -- Externals
 
 	cwin_hresult_make_hresult (tmp_sev, a_facility_code, an_error_code: INTEGER): INTEGER is
@@ -162,9 +162,9 @@ feature {NONE} -- Externals
 		alias
 			"SUCCEEDED"
 		end
-	
+
 invariant
-	valid_severity_value: severity_bit = 0 or severity_bit = 1		
+	valid_severity_value: severity_bit = 0 or severity_bit = 1
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -8,6 +8,33 @@ indexing
 class
 	ECOM_DOCUMENTATION
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name; a_doc_string: like doc_string; a_context_id: like context_id; a_help_file: like help_file) is
+			-- Initialize instance
+		do
+			name := a_name
+			if a_doc_string = Void then
+				doc_string := ""
+			else
+				doc_string := a_doc_string
+			end
+			context_id := a_context_id
+			if a_help_file = Void then
+				help_file := ""
+			else
+				help_file := a_help_file
+			end
+		ensure
+			name_set: name = a_name
+			doc_string_set: (a_doc_string /= Void implies doc_string = a_doc_string) and (a_doc_string = Void implies doc_string.is_equal (""))
+			context_set: context_id = a_context_id
+			help_file_set: (a_help_file /= Void implies help_file = a_help_file) and (a_help_file = Void implies help_file.is_equal (""))
+		end
+
 feature -- Access
 
 	name: STRING
@@ -16,50 +43,20 @@ feature -- Access
 	doc_string: STRING
 			-- Documentation string
 
-	context_id: INTEGER 
+	context_id: NATURAL_32
 			-- Context identifier for library help topic in help file
 
-	help_file: STRING
+	help_file: STRING;
 			-- Full path of help file
 
-feature -- Element change
+feature -- Element Settings
 
-	set_name (a_name: string) is
-			-- Set `name' with `a_name'
-		require
-			a_name /= Void
+	set_name (a_name: like name) is
+			-- Set `name' with `a_name'.
 		do
-			name := a_name.twin
+			name := a_name
 		ensure
-			name /= Void and then name.is_equal (a_name)
-		end
-
-	set_doc_string (a_doc_string: STRING) is
-			-- Set `doc_string' with `a_doc_string'
-		require
-			a_doc_string /= Void
-		do
-			doc_string := a_doc_string.twin
-		ensure
-			doc_string /= Void and then doc_string.is_equal (a_doc_string)
-		end
-
-	set_context_id (id: INTEGER) is
-			-- Sset `cintext_id' with `id'
-		do
-			context_id := id
-		ensure
-			context_id = id
-		end
-
-	set_help_file (a_help_file: STRING) is
-			-- Set `help_file' with `a_help_file'
-		require
-			a_help_file /= Void
-		do
-			help_file := a_help_file.twin
-		ensure
-			help_file /= Void and then help_file.is_equal (a_help_file)
+			name_set: name = a_name
 		end
 
 indexing

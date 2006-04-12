@@ -7,40 +7,37 @@ indexing
 
 class
 	ECOM_DLL_ENTRY
-		
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_dll_name, a_entry_point: STRING; a_ordinal: INTEGER) is
+			-- Initialize instance with arguments.
+		do
+			dll_name := a_dll_name
+			entry_point := a_entry_point
+			ordinal := a_ordinal
+		ensure
+			dll_name_set: dll_name = a_dll_name
+			entry_point_set: entry_point = a_entry_point
+			ordinal_set: ordinal = a_ordinal
+		end
+
 feature -- Access
 
 	dll_name: STRING
 			-- Dll name
-		
+
 	entry_point: STRING
 			-- Entry point name (if function
 			-- not defined by ordinal)
-		
-	ordinal: INTEGER
+
+	ordinal: INTEGER;
 			-- Ordinal that defines function
 			-- (if function defined by ordinal)
-		
-feature -- Element change
 
-	set_dll_name (n: STRING) is
-			-- set `dll_name' with `n'
-		do
-			dll_name := n
-		end
-
-	set_entry_point (n: STRING) is
-			-- set `entry_point_name' with `n'
-		do
-			entry_point := n
-		end
-
-	set_ordinal (ord: INTEGER) is
-			-- set `function_ordinal' with `ord'
-		do
-			ordinal := ord
-		end
-		
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -72,6 +69,7 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class ECOM_DLL_ENTRY
 
 --+----------------------------------------------------------------

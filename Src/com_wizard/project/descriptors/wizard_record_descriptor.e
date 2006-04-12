@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 			valid_creator: a_creator /= Void
 		do
 			a_creator.initialize_descriptor (Current)
-		ensure 
+		ensure
 			non_void_fields: fields /= Void
 			non_void_class_name: eiffel_class_name /= Void
 			non_void_name: name /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
-	size_of_instance: INTEGER
+	size_of_instance: NATURAL_32
 			-- Size of instance of this type
 
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
@@ -60,7 +60,7 @@ feature -- Access
 				Result.append ("Record ")
 			end
 			Result.append (name)
-			from 
+			from
 				fields.start
 				Result.append ("%R%N%T")
 			until
@@ -92,7 +92,7 @@ feature -- Basic operations
 			valid_fields: fields /= Void and fields = some_fields
 		end
 
-	set_size (a_size: INTEGER) is
+	set_size (a_size: like size_of_instance) is
 			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size

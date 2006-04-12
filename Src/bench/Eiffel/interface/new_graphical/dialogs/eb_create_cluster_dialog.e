@@ -75,6 +75,11 @@ inherit
 			default_create, copy
 		end
 
+	CONF_ACCESS
+		undefine
+			default_create, copy
+		end
+
 create
 	make_default
 
@@ -104,11 +109,8 @@ feature {NONE} -- Initialization
 				-- Build the widgets
 			create cluster_entry
 			create folder_entry
-			create cluster_list
-			create library_box.make_with_text (Interface_names.l_Library)
-			create all_box.make_with_text (Interface_names.l_All)
-			create top_radio.make_with_text (Interface_names.l_Top_level)
-			create sub_radio.make_with_text (Interface_names.l_Sub_cluster)
+			create cluster_list.make
+			create recursive_box.make_with_text (Interface_names.l_All)
 			create name_label.make_with_text (Interface_names.L_cluster_name)
 			create path_label.make_with_text (Interface_names.l_Path)
 
@@ -125,9 +127,6 @@ feature {NONE} -- Initialization
 
 				-- Setup the agents
 			browse_button.select_actions.extend (agent start_browsing)
-			top_radio.select_actions.extend (agent top_cluster_selected)
-			sub_radio.select_actions.extend (agent sub_cluster_selected)
-			library_box.select_actions.extend (agent library_selected)
 
 				-- Organize the options
 			wid := name_label.minimum_width.max (path_label.minimum_width)
@@ -148,11 +147,7 @@ feature {NONE} -- Initialization
 			extend_no_expand (hb, browse_button)
 			vb.extend (hb)
 			create hb
-			hb.extend (create {EV_CELL})
-			hb.extend (all_box)
-			hb.extend (create {EV_CELL})
-			hb.extend (library_box)
-			hb.extend (create {EV_CELL})
+			hb.extend (recursive_box)
 			vb.extend (hb)
 			name_frame.extend (vb)
 
@@ -160,9 +155,8 @@ feature {NONE} -- Initialization
 			create vb
 			vb.set_padding (Layout_constants.Small_border_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
-			extend_no_expand (vb, top_radio)
-			extend_no_expand (vb, sub_radio)
 			cluster_list.set_minimum_size (Cluster_list_minimum_width, Cluster_list_minimum_height)
+			cluster_list.refresh
 			vb.extend (cluster_list)
 			cluster_frame.extend (vb)
 
@@ -180,7 +174,6 @@ feature {NONE} -- Initialization
 			extend_no_expand (vb, name_frame)
 			vb.extend (cluster_frame) -- Expandable item
 			extend_no_expand (vb, buttons_box)
-			sub_radio.enable_select
 
 				-- Add the main container to the dialog.
 			extend (vb)
@@ -188,7 +181,6 @@ feature {NONE} -- Initialization
 				-- Setup the default buttons and show actions.
 			set_default_cancel_button (cancel_b)
 			set_default_push_button (create_button)
-			show_actions.extend (agent on_show_actions)
 		ensure
 			target_set: target = a_target
 		end
@@ -222,56 +214,11 @@ feature {NONE} -- Implementation
 			-- Give `cluster_n' as the default cluster name in it.
 		require
 			valid_args: cluster_n /= Void
-		local
-			str: STRING
-			clus_list: ARRAYED_LIST [CLUSTER_I]
-			clus: CLUSTER_I
-			i: EV_LIST_ITEM
-			was_sensitive: BOOLEAN
 		do
-			cluster := target.cluster
-			str := cluster_n.as_lower
-			cluster_entry.set_text (str)
-			conf_todo
---			clus_list := Eiffel_universe.clusters_sorted_by_tag
-			if not clus_list.is_empty then
-				from
-					clus_list.start
-				until
-					clus_list.after
-				loop
-					clus := clus_list.item
-					if
-						not clus.is_readonly
-					 then
-						create i.make_with_text (clus.cluster_name)
-						cluster_list.extend (i)
-						i.set_data (clus)
-					end
-					clus_list.forth
-				end
-				if cluster_list.count = 0 then
-					create_button.disable_sensitive
-				else
-					i := Void
-					was_sensitive := cluster_list.is_sensitive
-					if not was_sensitive then
-						cluster_list.enable_sensitive
-					end
-					if cluster /= Void then
-						i := cluster_list.retrieve_item_by_data (cluster, True)
-					end
-					if i = Void then
-						i := cluster_list.first
-					end
-					i.enable_select
-					if not was_sensitive then
-						cluster_list.disable_sensitive
-					end
-				end
-			else
-				create_button.disable_sensitive
+			if target.stone /= Void then
+				cluster_list.show_stone (target.stone)
 			end
+			cluster_entry.set_text (cluster_n.as_lower)
 			show_modal_to_window (target.window)
 		end
 
@@ -289,17 +236,20 @@ feature {NONE} -- Implementation
 	is_default_cluster_name_set: BOOLEAN
 			-- Is default_cluster_name set?
 
-	cluster: CLUSTER_I
-			-- The optional parent to the cluster that is about to be created.
+	group: CONF_GROUP
+			-- Group where to put newly created cluster.
+
+	path: STRING
+			-- Selected subfolder path to put newly created cluster.
+
+	is_top_level: BOOLEAN
+			-- Create a new top level cluster.
 
 	chosen_dir: FILE_NAME
 			-- The path to the created cluster.
 
-	dollar_path: STRING
+	original_path: STRING
 			-- The path with environment variables.
-
-	ace_path: FILE_NAME
-			-- The path written in the Ace file.
 
 	cluster_name: STRING is
 			-- Name of the cluster entered by the user, in lower case.
@@ -309,42 +259,51 @@ feature {NONE} -- Implementation
 			cluster_name_not_void: Result /= Void
 		end
 
-	file_name: FILE_NAME is
-			-- File name of the cluster chosen by the user.
-		do
-			create Result.make_from_string (folder_entry.text)
-		end
-
 	aok: BOOLEAN
 			-- Is the current state valid?
 
-	change_parent_cluster is
-			-- Set `cluster' to the selected cluster in the list.
+	change_parent_group is
+			-- Set `group' to selected cluster/library from tree.
 		local
-			clu: CLUSTER_I
+			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
+			clu: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
-				clu ?= cluster_list.selected_item.data
-				if clu = Void then
-					aok := False
-					create wd.make_with_text (Warning_messages.w_Unknown_cluster_name)
-					wd.show_modal_to_window (Current)
-				else
+				l_hdr ?= cluster_list.selected_item
+				if l_hdr /= Void then
 					aok := True
-					cluster := clu
+					is_top_level := True
+				else
+					l_folder ?= cluster_list.selected_item
+					if l_folder = Void then
+						l_folder ?= cluster_list.selected_item.parent
+					end
+					if l_folder /= Void then
+						clu := l_folder.data
+					end
+					if clu = Void or else not (clu.is_cluster or clu.is_library) then
+						aok := False
+						create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
+						wd.show_modal_to_window (Current)
+					elseif clu.actual_group.is_readonly then
+						aok := False
+						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (clu.actual_group.name))
+						wd.show_modal_to_window (Current)
+					else
+						aok := True
+						group := clu.actual_group
+						path := l_folder.path
+					end
 				end
 			else
 				aok := False
 				create wd.make_with_text (Warning_messages.w_Select_parent_cluster)
 				wd.show_modal_to_window (Current)
 			end
-		end
-
-	sub_cluster: BOOLEAN is
-			-- Should the dialog create a sub-cluster?
-		do
-			Result := sub_radio.is_selected
+		ensure
+			ok_implies_set: aok implies is_top_level or (group /= Void and then (group.is_cluster or group.is_library))
 		end
 
 	create_new_cluster is
@@ -355,6 +314,7 @@ feature {NONE} -- Implementation
 			base_name: STRING
 			wd: EV_WARNING_DIALOG
 			in_recursive: BOOLEAN
+			l_clu: CONF_CLUSTER
 		do
 			aok := True
 			if aok then
@@ -366,41 +326,36 @@ feature {NONE} -- Implementation
 					-- The name wouldn't be valid otherwise.
 				end
 				base_name := cluster_name
-				aok := Eiffel_universe.cluster_of_name (base_name) = Void
+				aok := Eiffel_universe.group_of_name (base_name) = Void
 				if not aok then
 					create wd.make_with_text (Warning_messages.w_cluster_name_already_exists (base_name))
 					wd.show_modal_to_window (target.window)
 				end
 			end
-			if aok and sub_cluster then
-				change_parent_cluster
+			if aok then
+				change_parent_group
 			end
 			if aok then
 				check_valid_cluster_path
 			end
 			if aok then
-				if sub_cluster then
-					check
-						cluster /= Void
-						-- Otherwise `change_parent_cluster' didn't do its job.
+				if not is_top_level then
+					check group_not_void: group /= Void end
+					if group.is_cluster then
+						l_clu ?= group
+						in_recursive := l_clu /= Void and then l_clu.is_recursive
 					end
-					conf_todo
---					if cluster.is_library or cluster.is_precompiled then
---						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (cluster.cluster_name))
---						wd.show_modal_to_window (Current)
---						aok := False
---					elseif
---							-- FIXME XR: If the cluster is `all' in the Ace, but it has no child,
---							-- WE HAVE NO WAY OF KNOWING IT IS RECURSIVE except parsing the Ace again!!!!! (gr)
---							-- As a consequence, this will bug.
---						cluster.is_recursive or
---						not cluster.sub_clusters.is_empty and then
---						cluster.sub_clusters.first.belongs_to_all or
---						cluster.belongs_to_all
---					then
---						in_recursive := True
---						base_name := cluster.cluster_name + "." + base_name
---					end
+				end
+				if aok and not in_recursive then
+					if is_top_level then
+						aok := not eiffel_universe.target.system.date_has_changed
+					else
+						aok := not group.target.system.date_has_changed
+					end
+					if not aok then
+						create wd.make_with_text (warning_messages.w_cannot_delete_need_recompile)
+						wd.show_modal_to_window (Current)
+					end
 				end
 				if aok then
 					create dir.make (chosen_dir)
@@ -411,29 +366,36 @@ feature {NONE} -- Implementation
 					elseif not dir.exists then
 						create_directory (dir)
 						if aok then
-							real_create_cluster (in_recursive, base_name, dollar_path, ace_path)
+								-- if we are in a recursive cluster we don't need to do anything except refreshing
+							if in_recursive then
+								manager.refresh
+							else
+								real_create_cluster (base_name)
+							end
 						else
 							create wd.make_with_text (Warning_messages.w_Cannot_create_directory (chosen_dir))
 							wd.show_modal_to_window (Current)
 						end
 					else
-						real_create_cluster (in_recursive, base_name, dollar_path, ace_path)
+							-- if we are in a recursive cluster we don't need to do anything except refreshing
+						if in_recursive then
+							manager.refresh
+						else
+							real_create_cluster (base_name)
+						end
 					end
+					destroy
 				end
 			end
 		end
 
-	real_create_cluster (rec: BOOLEAN; name: STRING; path: STRING; ace_pth: STRING) is
+	real_create_cluster (name: STRING) is
 			-- Really create the cluster.
-			-- `rec': is in recursive cluster?
 			-- `name': name of the new cluster.
-			-- `path': path of the new cluster.
-			-- `ace_path': path of the new cluster in the Ace file.
 		require
-			valid_params: path /= Void and name /= Void and ace_pth /= Void
-		local
-			cluster_i: CLUSTER_I
+			valid_params: name /= Void and then not name.is_empty and name.as_lower.is_equal (name)
 		do
+			manager.add_cluster (name, group, original_path)
 			conf_todo
 --			if sub_cluster then
 --				create cluster_i.make_with_parent (path, cluster)
@@ -464,24 +426,6 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	on_show_actions is
-			-- The dialog has just been shown, set it up.
-		local
-			curr_selected_item: EV_LIST_ITEM
-		do
-				--| Make sure the currently selected item is visible
-			curr_selected_item := cluster_list.selected_item
-			if curr_selected_item /= Void then
-				cluster_list.ensure_item_visible (curr_selected_item)
-			end
-
-				--| Make sure the text in the cluster entry is entirely visible
-				--| and is selected.
-			cluster_entry.set_focus
-			cluster_entry.set_caret_position (1)
-			cluster_entry.select_all
-		end
-
 	check_valid_cluster_name is
 			-- Check that name `cluster_name' is a valid cluster name.
 			-- Only alphanumeric characters and underscores are allowed.
@@ -503,40 +447,40 @@ feature {NONE} -- Implementation
 			-- Check, via `aok', that the path entered is a valid one, and is not already used.
 			-- Set `chosen_dir' and `ace_path' accordingly.
 		require
-			valid_state: aok and (sub_cluster implies cluster /= Void)
+			valid_state: aok
 		local
 			cp: STRING
 			icp: STRING
 			wd: EV_WARNING_DIALOG
+			l_loc: CONF_LOCATION
 		do
 			cp := folder_entry.text
-			if cp.is_empty then
-				if top_radio.is_selected then
-					aok := False
-					create wd.make_with_text (Warning_messages.w_Enter_path)
-					wd.show_modal_to_window (target.window)
-				else
-					create chosen_dir.make_from_string (cluster.path)
-					chosen_dir.set_file_name (cluster_name)
-					create ace_path.make_from_string ("$")
-					ace_path.set_file_name (cluster_name)
-					dollar_path := chosen_dir
-				end
+				-- top level clusters need a path
+			if is_top_level and cp.is_empty then
+				aok := False
+				create wd.make_with_text (warning_messages.w_cluster_path_not_valid)
+				wd.show_modal_to_window (target.window)
+			elseif cp.is_empty then
+				create chosen_dir.make_from_string (group.location.build_path (path, ""))
+				chosen_dir.set_file_name (cluster_name)
+				original_path := chosen_dir
 			else
-				icp := (create {ENV_INTERP}).interpreted_string (cp)
-				conf_todo
---				aok := Eiffel_universe.cluster_of_path (icp) = Void
+				create l_loc.make_from_path (cp, Eiffel_universe.target)
+				if not is_top_level and then group.is_cluster then
+					l_loc.set_parent (group.location)
+				end
+				icp := l_loc.evaluated_directory
+				aok := Eiffel_universe.cluster_of_location (icp).is_empty
 				if not aok then
 					create wd.make_with_text (Warning_messages.w_cluster_path_already_exists (icp))
 					wd.show_modal_to_window (target.window)
 				else
-					create ace_path.make_from_string (cp)
 					create chosen_dir.make_from_string (icp)
-					dollar_path := cp
+					original_path := cp
 				end
 			end
 		ensure
-			aok implies (chosen_dir /= Void and ace_path /= Void)
+			aok implies (chosen_dir /= Void and original_path /= Void)
 		end
 
 	last_browsed_directory: STRING is
@@ -601,31 +545,6 @@ feature {NONE} -- Graphic interface
 			end
 		end
 
-	top_cluster_selected is
-			-- The user wants to create a top-cluster.
-			-- Disable the cluster list.
-		do
-			cluster_list.disable_sensitive
-		end
-
-	sub_cluster_selected is
-			-- The user wants to create a sub-cluster.
-			-- Enable the cluster list.
-		do
-			cluster_list.enable_sensitive
-		end
-
-	library_selected is
-			-- The user wants to create a library cluster.
-			-- Disable the `all_box' check box.
-		do
-			if library_box.is_selected then
-				all_box.disable_sensitive
-			else
-				all_box.enable_sensitive
-			end
-		end
-
 feature {NONE} -- Vision2 widgets
 
 	cluster_entry: EV_TEXT_FIELD
@@ -637,22 +556,13 @@ feature {NONE} -- Vision2 widgets
 	browse_button: EV_BUTTON
 			-- Button that lets the user browse to give a directory.
 
-	all_box: EV_CHECK_BUTTON
+	recursive_box: EV_CHECK_BUTTON
 			-- Check box that sets whether the cluster is recursive or not.
-
-	library_box: EV_CHECK_BUTTON
-			-- Check box that sets whether the cluster is a library or not.
-
-	top_radio: EV_RADIO_BUTTON
-			-- Radio button that creates a top-level cluster.
-
-	sub_radio: EV_RADIO_BUTTON
-			-- Radio button that creates a sub-cluster.
 
 	create_button: EV_BUTTON
 			-- Button to create the class
 
-	cluster_list: EV_LIST
+	cluster_list: EB_CLASSES_TREE
 			-- List of all available clusters.
 
 feature {NONE} -- Constants
@@ -670,17 +580,15 @@ feature {NONE} -- Constants
 		end
 
 invariant
-	all_box_valid: all_box /= Void and then not all_box.is_destroyed
+	recursive_box_valid: recursive_box /= Void and then not recursive_box.is_destroyed
 	browse_button_valid: browse_button /= Void and then not browse_button.is_destroyed
 	cluster_entry_valid: cluster_entry /= Void and then not cluster_entry.is_destroyed
 	cluster_list_valid: cluster_list /= Void and then not cluster_list.is_destroyed
 	create_button_valid: create_button /= Void and then not create_button.is_destroyed
 	folder_entry_valid: folder_entry /= Void and then not folder_entry.is_destroyed
-	library_box_valid: library_box /= Void and then not library_box.is_destroyed
-	sub_radio_valid: sub_radio /= Void and then not sub_radio.is_destroyed
-	top_radio_valid: top_radio /= Void and then not top_radio.is_destroyed
 	default_cluster_name_not_void: is_default_cluster_name_set implies default_cluster_name /= Void
 	target_not_void: target /= Void
+	group_implies_path: group /= Void implies path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -714,4 +622,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CREATE_CLUSTER_DIALOG
+end

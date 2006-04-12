@@ -10,7 +10,7 @@ class
 
 inherit
 	EB_RECYCLABLE
-	
+
 	EB_RECYCLER
 		rename
 			destroy as recycle
@@ -52,6 +52,9 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := history.i_th (index_active)
+				if Result /= Void and then not Result.is_valid then
+					Result := Void
+				end
 			end
 		ensure
 			return_only_valid_stones: (Result /= Void) implies Result.is_valid
@@ -70,7 +73,7 @@ feature -- Access
 		do
 			Result := history
 		end
-		
+
 	class_display_list: ARRAYED_LIST [CELL2 [CLASSI_STONE, INTEGER]]
 			-- Representation of the class history without repeating classes.
 
@@ -85,7 +88,7 @@ feature -- Access
 
 	back_command: EB_HISTORY_BACK_COMMAND
 			-- Command to go back in the history
-	
+
 	forth_command: EB_HISTORY_FORTH_COMMAND
 			-- Command to go forth in the history
 
@@ -301,7 +304,7 @@ feature -- Element change
 						i := i + 1
 					end
 				end
-	
+
 					-- Add the new stone at the end of the history.
 				fst := Void
 				fst2 ?= a_stone
@@ -311,12 +314,12 @@ feature -- Element change
 				else
 					history.extend (a_stone)
 				end
-	
+
 					-- Set the new stone to be the active one.
 				index_active := history.count
-	
+
 				build_display_lists
-	
+
 				if fst = Void then
 					notify_observers (notify_add, a_stone, index_active)
 				else
@@ -407,7 +410,7 @@ feature {NONE} -- Observer pattern / Implementation
 	notify_add: INTEGER is 1
 	notify_remove: INTEGER is 2
 	notify_changed: INTEGER is 3
-	
+
 feature {NONE} -- Implementation
 
 	history: ARRAYED_LIST [STONE]
@@ -415,7 +418,7 @@ feature {NONE} -- Implementation
 
 	index_active: INTEGER
 			-- Index of the active item.
-			
+
 	build_display_lists is
 			-- Generate the *_display_list according to the history state.
 		local
@@ -442,7 +445,7 @@ feature {NONE} -- Implementation
 				loop
 					history.back
 				end
-				
+
 				already_displayed := False
 				if not history.before then
 						--| Is it a feature?
@@ -534,7 +537,7 @@ feature {NONE} -- Implementation
 					active.set_pos_container (target.pos_container)
 				else
 					active.set_pos_container (Void)
-				end			
+				end
 			end
 		end
 

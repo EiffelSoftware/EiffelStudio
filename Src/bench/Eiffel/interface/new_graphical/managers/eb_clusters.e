@@ -131,6 +131,22 @@ feature -- Observer Pattern
 			end
 		end
 
+	on_cluster_added (a_cluster: CLUSTER_I) is
+			-- `a_cluster' has been added.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			from
+				observer_list.start
+			until
+				observer_list.after
+			loop
+				observer_list.item.on_cluster_added (a_cluster)
+				observer_list.forth
+			end
+		end
+
+
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' has been added.
 		require
@@ -173,24 +189,6 @@ feature -- Observer Pattern
 				observer_list.after
 			loop
 				observer_list.item.on_class_moved (a_class, old_group)
-				observer_list.forth
-			end
-		end
-
-	on_cluster_added (a_cluster: CLUSTER_I) is
-			-- `a_cluster' has been added
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			sorted: EB_SORTED_CLUSTER
-		do
-			sorted := folder_from_cluster (a_cluster)
-			from
-				observer_list.start
-			until
-				observer_list.after
-			loop
-				observer_list.item.on_cluster_added (sorted)
 				observer_list.forth
 			end
 		end
@@ -294,6 +292,9 @@ feature -- Access
 
 	last_added_class: CLASS_I
 			-- Last class which was added during a call to `add_class_to_cluster'.
+
+	last_added_cluster: CLUSTER_I
+			-- Last cluster which was added during a call to `add_cluster'.
 
 feature -- Element change
 
@@ -503,176 +504,41 @@ feature -- Element change
 			end
 		end
 
-	move_cluster (moved_cluster: CLUSTER_I; new_cluster: CLUSTER_I) is
-			-- Move `a_cluster' from `old_cluster' to `new_cluster'.
+	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING) is
+			-- Add new cluster with `a_name' optionally `a_parent' and `a_path'.
 		require
-			moved_cluster_not_void: moved_cluster /= Void
---		local
---			cluster_list: SORTED_TWO_WAY_LIST [EB_SORTED_CLUSTER]
---			actual_parent: CLUSTER_I
---			a_cluster: EB_SORTED_CLUSTER
---			receiver: EB_SORTED_CLUSTER
---			old_cluster: CLUSTER_I
---			dir: DIRECTORY
---			test_dir: DIRECTORY
---			wd: EV_WARNING_DIALOG
---			new_name: DIRECTORY_NAME
---			retried: BOOLEAN
---			saved_dollar_path: STRING
-		do
-			conf_todo
---			if not retried then
---				old_cluster := moved_cluster.parent_cluster
---				if new_cluster = Void then
---					create new_name.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
---					new_name.set_subdirectory ("library")
---				else
---					create new_name.make_from_string (new_cluster.path)
---				end
---				new_name.set_subdirectory (moved_cluster.display_name)
---				create test_dir.make (new_name)
---				if test_dir.exists then
---					create wd.make_with_text ("Directory with name:%N" + new_name + "already exists.")
---					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
---				else
---						-- Move the cluster directory for real.
---					create dir.make (moved_cluster.path)
---					if new_cluster = Void then
---						create new_name.make_from_string (Eiffel_project.name)
---					else
---						create new_name.make_from_string (new_cluster.dollar_path)
---					end
---					new_name.set_subdirectory (moved_cluster.display_name)
---					saved_dollar_path := moved_cluster.dollar_path.twin
---					moved_cluster.set_dollar_path (new_name)
---					move_directory (dir.name, moved_cluster.path)
---					moved_cluster.set_dollar_path (saved_dollar_path)
---
---					a_cluster := folder_from_cluster (moved_cluster)
---						-- Remove `a_cluster' from the universe.
---					actual_parent := old_cluster
---					if actual_parent /= Void then
---						actual_parent.sub_clusters.prune_all (a_cluster.actual_cluster)
---						cluster_list := a_cluster.parent.clusters
---					else
---						Eiffel_system.sub_clusters.prune_all (a_cluster.actual_cluster)
---						cluster_list := clusters
---					end
---					Eiffel_universe.clusters.prune_all (a_cluster.actual_cluster)
---
---						-- Remove `a_cluster' from the managed clusters.
---					cluster_list.start
---					cluster_list.prune_all (a_cluster)
---
---					if new_cluster = Void then
---						a_cluster.actual_cluster.set_parent_cluster (Void)
---						clusters.extend (a_cluster)
---						a_cluster.set_parent (Void)
---						Eiffel_system.sub_clusters.extend (a_cluster.actual_cluster)
---					else
---						receiver := folder_from_cluster (new_cluster)
---						a_cluster.actual_cluster.set_parent_cluster (Void)
---						receiver.actual_cluster.add_sub_cluster (a_cluster.actual_cluster)
---						receiver.clusters.extend (a_cluster)
---						a_cluster.set_parent (receiver)
---						new_cluster.sub_clusters.extend (moved_cluster)
---					end
---					Eiffel_universe.clusters.extend (a_cluster.actual_cluster)
---
---						-- Add `a_cluster' to the universe.
---					moved_cluster.set_parent_cluster (new_cluster)
---
---					moved_cluster.set_dollar_path (new_name)
---						-- Notify observers.
---					on_cluster_moved (a_cluster, old_cluster)
---				end
---			else
---					-- We could not move the cluster.
---				create wd.make_with_text ("Error: directory could not be moved.%N%
---										%Please check that files are still in their place and unique.")
---				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
---				moved_cluster.set_dollar_path (saved_dollar_path)
---			end
---		rescue
---			retried := True
---			retry
-		end
-
-	add_cluster (a_cluster: EB_SORTED_CLUSTER; receiver: EB_SORTED_CLUSTER) is
-			-- Add `a_cluster' to `receiver' and notify observers.
-			-- Set `receiver' to `Void' if `a_cluster' should be at root-level.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			conf_todo
---			if receiver = Void then
---				a_cluster.actual_cluster.set_parent_cluster (Void)
---				clusters.extend (a_cluster)
---				a_cluster.set_parent (Void)
---				Eiffel_system.sub_clusters.extend (a_cluster.actual_cluster)
---			else
---				a_cluster.actual_cluster.set_parent_cluster (Void)
---				receiver.actual_cluster.add_sub_cluster (a_cluster.actual_cluster)
---				receiver.clusters.extend (a_cluster)
---				a_cluster.set_parent (receiver)
---			end
---			Eiffel_universe.clusters.extend (a_cluster.actual_cluster)
---			on_cluster_added (a_cluster.actual_cluster)
-		end
-
-	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
-			-- Add `a_cluster' to `receiver' and notify observers.
-			-- `ace_path' is the
-		require
-			a_cluster_not_void: a_cluster /= Void
-			receiver_not_void: receiver /= Void
-			ace_path_not_void: ace_path /= Void
+			a_name_ok: a_name /= Void and then not a_name.is_empty and a_name.as_lower.is_equal (a_name)
+			a_path_ok: a_path /= Void and then not a_path.is_empty
+			a_parent_ok: a_parent /= Void implies a_parent.is_cluster or a_parent.is_library
+			config_up_to_date: a_parent /= Void implies not a_parent.target.system.date_has_changed
+			config_up_to_date: a_parent = Void implies not universe.target.system.date_has_changed
 		local
-			new_subcluster, new_supercluster: EB_SORTED_CLUSTER
-			wd: EV_WARNING_DIALOG
+			l_target: CONF_TARGET
+			l_clu: CLUSTER_I
+			l_sys: CONF_SYSTEM
 		do
-			if a_cluster.parent_cluster /= Void then
-				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
-			end
-			add_cluster_in_ace (a_cluster, receiver, ace_path, is_recursive, is_library)
-			if not error_in_config then
-				new_subcluster := folder_from_cluster (a_cluster)
-				if new_subcluster = Void then
-						-- `a_cluster' was not in the system.
-					create new_subcluster.make (a_cluster)
-				end
-				new_supercluster := folder_from_cluster (receiver)
-				add_cluster (new_subcluster, new_supercluster)
+			error_in_config := False
+			if a_parent = Void then
+				l_target := universe.target
 			else
-				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
-				wd.show_modal_to_window (Window_manager.last_focused_window.window)
+				l_target := a_parent.target
 			end
-		end
+			last_added_cluster := compiler_conf_factory.new_cluster (a_name, compiler_conf_factory.new_location_from_path (a_path, l_target), l_target)
+			if a_parent /= Void and then a_parent.is_cluster then
+				l_clu ?= a_parent
+				last_added_cluster.set_parent (l_clu)
+			end
+			l_target.clusters.force (last_added_cluster, a_name)
+			l_sys := l_target.system
+			l_sys.store
+			error_in_config := not l_sys.store_successful
+			l_sys.set_file_date
+				-- force rebuild as we know, that we changed the group layout
+			system.force_rebuild
 
-	add_top_cluster_i (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
-			-- Add `a_cluster' to the root of the universe and notify observers.
-		require
-			a_cluster_not_void: a_cluster /= Void
-			ace_path_not_void: ace_path /= Void
-		local
-			new_subcluster: EB_SORTED_CLUSTER
-			wd: EV_WARNING_DIALOG
-		do
-			if a_cluster.parent_cluster /= Void then
-				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
-			end
-			add_top_cluster_in_ace (a_cluster, ace_path, is_recursive, is_library)
-			if not error_in_config then
-				new_subcluster := folder_from_cluster (a_cluster)
-				if new_subcluster = Void then
-						-- `a_cluster' was not in the system.
-					create new_subcluster.make (a_cluster)
-				end
-				add_cluster (new_subcluster, Void)
-			else
-				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
-				wd.show_modal_to_window (Window_manager.last_focused_window.window)
-			end
+			refresh
+		ensure
+			last_added_cluster_set: last_added_cluster /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -703,90 +569,90 @@ feature {NONE} -- Implementation
 	name: STRING is "Clusters"
 			-- Name of the item.
 
-	move_directory (old_path: STRING; new_path: STRING) is
-			-- Recursively move a directory from `old_path' to `new_path'.
-			-- If renaming fails, copy recursively and delete.
-		require
-			old_path_not_void: old_path /= Void
-			old_path_not_empty: not old_path.is_empty
-			new_path_not_void: new_path /= Void
-			new_path_not_empty: not new_path.is_empty
-		local
-			dir: DIRECTORY
-			retried: BOOLEAN
-		do
-			if not retried then
-				create dir.make (old_path)
-				dir.change_name (new_path)
-			end
-		rescue
-			create dir.make (new_path)
-			dir_rec_copy (old_path, new_path)
-			retried := True
-			retry
-		end
-
-	dir_rec_copy (old_path: STRING; new_path: STRING) is
-			-- Recursively move a directory from `old_path' to `new_path'.
-		require
-			old_path_not_void: old_path /= Void
-			old_path_not_empty: not old_path.is_empty
-			new_path_not_void: new_path /= Void
-			new_path_not_empty: not new_path.is_empty
-		local
-			dir1, dir2: DIRECTORY
-			tmpdir: DIRECTORY
-			tmpfile: RAW_FILE
-			file2: RAW_FILE
-			fname1, fname2: FILE_NAME
-			entry: STRING
-			content: STRING
-		do
-			create dir1.make_open_read (old_path)
-			create dir2.make (new_path)
-			dir2.create_dir
-			from
-				dir1.start
-
-					-- '.' and '..' must not be moved.
-				dir1.readentry
-				dir1.readentry
-
-				dir1.readentry
-				entry := dir1.lastentry
-			until
-				entry = Void
-			loop
-				create fname1.make_from_string (old_path)
-				fname1.set_subdirectory (entry)
-				create tmpdir.make (fname1)
-				if tmpdir.exists then
-					create fname2.make_from_string (new_path)
-					fname2.set_subdirectory (entry)
-					dir_rec_copy (fname1, fname2)
-				else
-					create tmpfile.make (fname1)
-					if tmpfile.exists then
-						tmpfile.open_read
-						tmpfile.read_stream (tmpfile.count)
-						content := tmpfile.last_string
-						tmpfile.close
-						create fname2.make_from_string (new_path)
-						fname2.set_subdirectory (entry)
-						create file2.make_create_read_write (fname2)
-						file2.put_string (content)
-						file2.close
-						tmpfile.delete
-					end
-				end
-				dir1.readentry
-				entry := dir1.lastentry
-			end
-			dir1.close
-			dir1.delete
+--	move_directory (old_path: STRING; new_path: STRING) is
+--			-- Recursively move a directory from `old_path' to `new_path'.
+--			-- If renaming fails, copy recursively and delete.
+--		require
+--			old_path_not_void: old_path /= Void
+--			old_path_not_empty: not old_path.is_empty
+--			new_path_not_void: new_path /= Void
+--			new_path_not_empty: not new_path.is_empty
+--		local
+--			dir: DIRECTORY
+--			retried: BOOLEAN
+--		do
+--			if not retried then
+--				create dir.make (old_path)
+--				dir.change_name (new_path)
+--			end
 --		rescue
---			io.put_string ("Cant move directory")
-		end
+--			create dir.make (new_path)
+--			dir_rec_copy (old_path, new_path)
+--			retried := True
+--			retry
+--		end
+
+--	dir_rec_copy (old_path: STRING; new_path: STRING) is
+--			-- Recursively move a directory from `old_path' to `new_path'.
+--		require
+--			old_path_not_void: old_path /= Void
+--			old_path_not_empty: not old_path.is_empty
+--			new_path_not_void: new_path /= Void
+--			new_path_not_empty: not new_path.is_empty
+--		local
+--			dir1, dir2: DIRECTORY
+--			tmpdir: DIRECTORY
+--			tmpfile: RAW_FILE
+--			file2: RAW_FILE
+--			fname1, fname2: FILE_NAME
+--			entry: STRING
+--			content: STRING
+--		do
+--			create dir1.make_open_read (old_path)
+--			create dir2.make (new_path)
+--			dir2.create_dir
+--			from
+--				dir1.start
+--
+--					-- '.' and '..' must not be moved.
+--				dir1.readentry
+--				dir1.readentry
+--
+--				dir1.readentry
+--				entry := dir1.lastentry
+--			until
+--				entry = Void
+--			loop
+--				create fname1.make_from_string (old_path)
+--				fname1.set_subdirectory (entry)
+--				create tmpdir.make (fname1)
+--				if tmpdir.exists then
+--					create fname2.make_from_string (new_path)
+--					fname2.set_subdirectory (entry)
+--					dir_rec_copy (fname1, fname2)
+--				else
+--					create tmpfile.make (fname1)
+--					if tmpfile.exists then
+--						tmpfile.open_read
+--						tmpfile.read_stream (tmpfile.count)
+--						content := tmpfile.last_string
+--						tmpfile.close
+--						create fname2.make_from_string (new_path)
+--						fname2.set_subdirectory (entry)
+--						create file2.make_create_read_write (fname2)
+--						file2.put_string (content)
+--						file2.close
+--						tmpfile.delete
+--					end
+--				end
+--				dir1.readentry
+--				entry := dir1.lastentry
+--			end
+--			dir1.close
+--			dir1.delete
+----		rescue
+----			io.put_string ("Cant move directory")
+--		end
 
 	folder_from_cluster (a_group: CONF_GROUP): EB_SORTED_CLUSTER is
 			-- Find a sorted cluster representing `a_cluster'.
@@ -851,14 +717,6 @@ feature {NONE} -- Implementation
 			result_not_empty: not Result.is_empty
 		end
 
-	class_parents (a_class: CLASS_I): LINKED_LIST [CONF_GROUP] is
-			-- list of parent clusters of `a_class', from the root to the class.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			Result := cluster_parents (a_class.group)
-		end
-
 	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER is
 			-- Find the sorted cluster associated to `clusteri' in `parent_cluster'.
 		require
@@ -915,125 +773,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_cluster_in_ace (a_cluster: CLUSTER_I; receiver: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
-			-- Add an entry for `a_cluster' in the Ace file under `receiver'.
-			-- If `receiver' is a recursive cluster, we set the flag `belongs_to_all'
-			-- in `a_cluster'.
-		require
-			valid_new_cluster: a_cluster /= Void
---			valid_receiver: receiver /= Void and then Eiffel_universe.clusters.has (receiver)
-			ace_path_not_void: ace_path /= Void
-		local
---			ace_clusters: LACE_LIST [CLUSTER_SD]
---			cl_name: ID_SD
---			retried: BOOLEAN
---			found: BOOLEAN
---			new_csd: CLUSTER_SD
-		do
-			conf_todo_msg ("precondition")
-			conf_todo
---			error_in_ace_parsing := False
---			if not retried then
---				root_ast := Void
---				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
---						-- Create a new freshly parsed AST. If there is a
---						-- syntax error during parsing of chose Ace file,
---						-- we open an empty window.
---					root_ast := Eiffel_ace.Lace.parsed_ast
---				end
---				if root_ast /= Void then
---						-- We find the cluster_sd corresponding to `receiver' just because the flag
---						-- `is_recursive' in CLUSTER_I is not reliable (works only with override clusters).
---						-- Besides, we are thus ensured to be in conformance with the Ace file.
---					from
---						ace_clusters := root_ast.clusters
---						cl_name := new_id_sd (receiver.cluster_name, False)
---						ace_clusters.start
---						found := False
---					until
---						ace_clusters.after or
---						found
---					loop
---						found := ace_clusters.item.cluster_name.same_as (cl_name)
---						if found then
---							new_csd := ace_clusters.item
---						else
---							ace_clusters.forth
---						end
---					end
---					if
---							--| Useless test: found implies not receiver.belongs_to_all.
---						--|not receiver.belongs_to_all and
---						found and
---						not new_csd.is_recursive and
---						not receiver.is_library
---					then
---						ace_clusters := root_ast.clusters
---						create new_csd.initialize (new_id_sd (a_cluster.cluster_name, False),
---							new_id_sd (receiver.cluster_name, False),
---							new_id_sd (ace_path, True), Void, is_recursive, is_library)
---						ace_clusters.extend (new_csd)
---						save_content
---					else
---							-- We don't have to do anything.
---							-- Side effect: we set the correct flag to `a_cluster'.
---							-- It is the only place where the Ace is parsed, and since {CLUSTER_I}.`is_recursive'
---							-- does not work as expected, so we have to do it here.
---						a_cluster.set_belongs_to_all (True)
---							-- We didn't modify the Ace file.
---							-- However, we must perform a full degree 6 next time to keep the new cluster.
---						if root_ast.defaults = Void then
---							root_ast.set_defaults (create {LACE_LIST [D_OPTION_SD]}.make (5))
---						end
---						if not Lace.full_degree_6_needed then
---							root_ast.defaults.put_front (create {D_OPTION_SD}.initialize (
---								create {FREE_OPTION_SD}.initialize (
---									new_id_sd ("force_recompile", False)),
---									create {OPT_VAL_SD}.make_yes))
---							Lace.set_full_degree_6_needed (True)
---							save_content
---						end
---					end
---				else
---						-- We could not retrieve the `root_ast'.
---					error_in_ace_parsing := True
---				end
---			else
---				error_in_ace_parsing := True
---			end
---		rescue
---			retried := True
---			retry
-		end
-
-	add_top_cluster_in_ace (a_cluster: CLUSTER_I; ace_path: STRING; is_recursive, is_library: BOOLEAN) is
-			-- Add an entry for `a_cluster' in the Ace file at the top level.
-		require
-			valid_new_cluster: a_cluster /= Void
-			ace_path_not_void: ace_path /= Void
-		local
---			ace_clusters: LACE_LIST [CLUSTER_SD]
---			retried: BOOLEAN
---			new_csd: CLUSTER_SD
-		do
-			conf_todo
---			error_in_config := False
---			if not retried then
---				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
---						-- Create a new freshly parsed AST. If there is a
---						-- syntax error during parsing of chose Ace file,
---						-- we open an empty window.
---					conf_todo
-----					root_ast := Eiffel_ace.Lace.parsed_ast
---				end
---			else
---				error_in_config := True
---			end
---		rescue
---			retried := True
---			retry
-		end
-
 	remove_group_from_config (a_group: CONF_GROUP; a_path: STRING) is
 			-- Remove the entry corresponding to `a_group' from the config file.
 			-- If `a_group' is a recursive cluster and a_path is not empty, add a file rule excluding `a_path'.
@@ -1078,6 +817,7 @@ feature {NONE} -- Implementation
 					-- store it to disk
 				l_sys.store
 				error_in_config := not l_sys.store_successful
+				l_sys.set_file_date
 					-- force reparsing of configuration
 				lace.reset_date_stamp
 			else
@@ -1108,10 +848,10 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
+feature {NONE} -- Contracts
 
 	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN is
 			-- Is `a_grp' a recursive cluster?
-			-- (export status {NONE})
 		require
 			a_group_not_void: a_group /= Void
 		local
@@ -1122,7 +862,6 @@ feature {NONE} -- Implementation
 				Result := l_cl.is_recursive
 			end
 		end
-
 
 invariant
 	clusters_not_void: clusters /= Void

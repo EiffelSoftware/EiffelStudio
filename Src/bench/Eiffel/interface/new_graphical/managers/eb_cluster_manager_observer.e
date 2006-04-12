@@ -40,7 +40,7 @@ feature -- Updates
 		do
 		end
 
-	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
+	on_cluster_added (a_cluster: CLUSTER_I) is
 			-- `a_cluster' has been added.
 		require
 			valid_cluster: a_cluster /= Void

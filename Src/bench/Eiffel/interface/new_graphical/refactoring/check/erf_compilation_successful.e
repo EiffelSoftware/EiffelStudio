@@ -40,13 +40,13 @@ feature -- Basic operation
 			l_sensitive: BOOLEAN
 			l_comp_count: INTEGER
 		do
-			l_sensitive := melt_project_cmd.is_sensitive
-			melt_project_cmd.enable_sensitive
+			l_sensitive := quick_melt_project_cmd.is_sensitive
+			quick_melt_project_cmd.enable_sensitive
 			l_comp_count := workbench.compilation_counter
-			melt_project_cmd.execute
+			quick_melt_project_cmd.execute
 			success := workbench.successful and l_comp_count = workbench.compilation_counter - 1
 			if not l_sensitive then
-				melt_project_cmd.disable_sensitive
+				quick_melt_project_cmd.disable_sensitive
 			end
 		end
 

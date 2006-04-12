@@ -10,62 +10,104 @@ class
 
 inherit
 	ECOM_WRAPPER
-		redefine
-			dispose
-		end
-	
+
 	ECOM_TYPE_KIND
 		export
 			{NONE} all
 		end
 
 creation
-	make_from_pointer,
+	make,
 	make_from_name
 
 feature {NONE} -- Initialization
 
-	make_from_name (file_name: STRING) is
+	make_from_name (a_name: STRING) is
 			-- Load type library with `file_name'.
 		require
-			non_void_file_name: file_name /= Void
-			valid_file_name: not file_name.is_empty
-		local 
-			l_wide_string: ECOM_WIDE_STRING
+			non_void_file_name: a_name /= Void
+			valid_file_name: not a_name.is_empty
+		local
+			l_string: WEL_STRING
+			l_pointer: POINTER
 		do
-			create l_wide_string.make_from_string (file_name)
-			initializer := ccom_create_c_type_lib_from_name (l_wide_string.item)
-			item := ccom_item (initializer)
-		ensure
-			interface_exist: initializer /= default_pointer and then exists
+			create l_string.make (a_name)
+			create last_result.make_from_integer (c_load_type_lib (l_string.item, $l_pointer))
+			if last_result.succeeded then
+				item := l_pointer
+			end
 		end
+
+feature -- Status Report
+
+	initialized: BOOLEAN is
+			-- Was instance successfully initialized?
+		do
+			Result := item /= Default_pointer
+		end
+
+	disposed: BOOLEAN
+			-- Was structure released?
 
 feature -- Access
 
-	find_name (a_name: STRING; count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT is
+	find_name (a_name: STRING; a_count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT is
 			-- Finds occurences of type description `a_name' in type library.
 			-- `count' indicates number of instances to look for.
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
+			initialized: initialized
+			not_disposed: not disposed
 		local
-			l_wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
+			l_type_infos, l_ids: MANAGED_POINTER
+			l_type_info: ECOM_TYPE_INFO
+			i: INTEGER
 		do
-			if not disposed then
-				create l_wide_string.make_from_string (a_name)
-				Result := ccom_find_name (initializer, l_wide_string.item, count)
+			create l_string.make (a_name)
+			create l_type_infos.make (a_count * Pointer_bytes)
+			create l_ids.make (a_count * Integer_bytes)
+			create last_result.make_from_integer (c_find_name (item, l_string.item, l_type_infos.item, l_ids.item, $a_count))
+			if last_result.succeeded then
+				create Result.make (a_count)
+				from
+					i := 1
+				until
+					i > a_count
+				loop
+					create l_type_info.make (l_type_infos.read_pointer ((i - 1) * Pointer_bytes))
+					Result.put_type_info (l_type_info, i)
+					Result.put_member_ids (l_ids.read_integer_32 ((i - 1) * Integer_bytes), i)
+					i := i + 1
+				end
 			end
 		end
 
 	documentation (a_index: INTEGER): ECOM_DOCUMENTATION is
 			-- Documentation of library if `a_index' is equal to -1,
-			-- or type description, if `a_index' is equal 
+			-- or type description, if `a_index' is equal
 			-- to index of type description
 		require
 			valid_index: a_index >= -1 and a_index < type_info_count
+			not_disposed: not disposed
+		local
+			l_name_pointer, l_doc_pointer, l_help_pointer: POINTER
+			l_name, l_doc, l_help: STRING
+			l_context: NATURAL_32
 		do
-			if not disposed then
-				Result := ccom_get_documentation (initializer, a_index)
+			create last_result.make_from_integer (c_get_documentation (item, a_index, $l_name_pointer, $l_doc_pointer, $l_context, $l_help_pointer))
+			if last_result.succeeded then
+				if l_name_pointer /= default_pointer then
+					l_name := (create {ECOM_BSTR}.make (l_name_pointer)).string
+				end
+				if l_doc_pointer /= default_pointer then
+					l_doc := (create {ECOM_BSTR}.make (l_doc_pointer)).string
+				end
+				if l_help_pointer /= default_pointer then
+					l_help := (create {ECOM_BSTR}.make (l_help_pointer)).string
+				end
+				create Result.make (l_name, l_doc, l_context, l_help)
 			end
 		ensure
 			non_void_documentation: not disposed implies Result /= Void
@@ -73,49 +115,45 @@ feature -- Access
 
 	library_attributes: ECOM_TLIB_ATTR is
 			-- Library's attributes
+		require
+			not_disposed: not disposed
+		local
+			l_pointer: POINTER
 		do
-			if not disposed then
-				if not are_attributes_valid then
-					type_attr_pointer := ccom_get_lib_attr (initializer)
-					create library_attributes_impl.make_from_pointer (type_attr_pointer)
-					are_attributes_valid := True
+			if library_attributes_impl = Void then
+				create last_result.make_from_integer (c_get_lib_attr (item, $l_pointer))
+				if last_result.succeeded then
+					create library_attributes_impl.make_from_pointer (l_pointer)
 				end
-				Result := library_attributes_impl
 			end
+			Result := library_attributes_impl
 		ensure
 			non_void_attributes: not disposed implies Result /= Void
 			valid_attributes: not disposed implies Result.exists
-		end
-
-	type_comp: ECOM_TYPE_COMP is
-			-- ITypeComp interface
-		do
-			if not disposed then
-				create Result.make_from_pointer (ccom_get_type_comp (initializer))
-			end
-		ensure
-			non_void_type_comp_interface: not disposed implies Result /= Void 
 		end
 
 	type_info (a_index: INTEGER): ECOM_TYPE_INFO is
 			-- Type description in library at `a_index'
 		require
 			valid_index: a_index >= 0 and a_index < type_info_count
+			not_disposed: not disposed
+		local
+			l_pointer: POINTER
 		do
-			if not disposed then
-				create Result.make_from_pointer (ccom_get_type_info (initializer, a_index))
+			create last_result.make_from_integer (c_get_type_info (item, a_index, $l_pointer))
+			if last_result.succeeded then
+				create Result.make (l_pointer)
 			end
 		ensure
-			non_void_type_info: not disposed implies Result /= Void 
-			valid_type_info: not disposed implies Result.exists
+			non_void_type_info: Result /= Void
 		end
 
 	type_info_count: INTEGER is
 			-- Number of type descriptions in type library
+		require
+			not_disposed: not disposed
 		do
-			if not disposed then
-				Result := ccom_get_type_info_count (initializer)
-			end
+			Result := c_get_type_info_count (item)
 		ensure
 			valid_count: not disposed implies Result >= 0
 		end
@@ -125,12 +163,16 @@ feature -- Access
 		require
 			non_void_guid: a_guid /= Void
 			valid_guid: a_guid.exists
+			not_disposed: not disposed
+		local
+			l_pointer: POINTER
 		do
-			if not disposed then
-				create Result.make_from_pointer (ccom_get_type_info_of_guid (initializer, a_guid.item))
+			create last_result.make_from_integer (c_get_type_info_of_guid (item, a_guid.item, $l_pointer))
+			if last_result.succeeded then
+				create Result.make (l_pointer)
 			end
 		ensure
-			non_void_type_info: not disposed implies Result /= Void 
+			non_void_type_info: not disposed implies Result /= Void
 		end
 
 	type_info_type (a_index: INTEGER): INTEGER is
@@ -138,29 +180,30 @@ feature -- Access
 			-- See ECOM_TYPE_KIND for return values
 		require
 			valid_index: a_index >= 0 and a_index < type_info_count
+			not_disposed: not disposed
 		do
-			if not disposed then
-				Result := ccom_get_type_info_type (initializer, a_index)
-			end
+			create last_result.make_from_integer (c_get_type_info_type (item, a_index, $Result))
 		ensure
 			valid_type: not disposed implies is_valid_type_kind (Result)
 		end
 
-feature -- Status report
+feature -- Access
 
 	is_name (a_name: STRING): BOOLEAN is
 			-- Is name described in library?
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
+			not_disposed: not disposed
 		local
-			l_wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			if not disposed then
-				create l_wide_string.make_from_string (a_name)
-				Result := ccom_is_name (initializer, l_wide_string.item)
-			end
+			create l_string.make (a_name)
+			create last_result.make_from_integer (c_is_name (item, l_string.item, $Result))
 		end
+
+	last_result: ECOM_HRESULT
+			-- Result from last call
 
 feature -- Basic Operations
 
@@ -168,125 +211,114 @@ feature -- Basic Operations
 			-- Release underlying ITypeLib interface pointer thereby releasing lock on file.
 			-- Do not call anything else on this instance after calling `release'.
 		do
-			dispose
+			memory_free
 		end
-		
+
 feature {NONE} -- Implementation
-
-	create_wrapper (a_pointer: POINTER): POINTER is
-			-- Initialize wrapper according to `a_pointer'.
-		do
-			Result := ccom_create_c_type_lib_from_pointer (a_pointer)
-		end
-
-	delete_wrapper is
-			-- Delete structure.
-		do
-			ccom_delete_c_type_lib (initializer);
-		end
 
 	library_attributes_impl: ECOM_TLIB_ATTR
 			-- Library' attributes
 
-	are_attributes_valid: BOOLEAN
-			-- Is TLIBATTR structure initialized?
-
 	release_tlib_attr is
 			-- Releases TLIBATTR structure
 		do
-			if are_attributes_valid then
-				ccom_release_tlib_attr (initializer, type_attr_pointer)
+			if library_attributes_impl /= Void then
+				c_release_tlib_attr (item, type_attr_pointer)
 			end
-		end
-
-	dispose is
-			-- Release also TLIBATTR structure
-		do
-			if not disposed then
-				release_tlib_attr
-				Precursor
-			end
-			disposed := True
 		end
 
 	type_attr_pointer: POINTER
 			-- Pointer to TYPEATTR structure
 
-	disposed: BOOLEAN
-			-- Was structure released?
+	memory_free is
+			--
+		do
+			if not disposed then
+				release_tlib_attr
+				c_release (item)
+				item := default_pointer
+			end
+			disposed := True
+		end
 
 feature {NONE} -- Externals
 
-	ccom_create_c_type_lib_from_pointer (a_pointer: POINTER): POINTER is
+	c_release (a_item: POINTER) is
 		external
-			"C++ [new E_IType_Lib %"E_ITypeLib.h%"](ITypeLib *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->Release((ITypeLib*)$a_item)"
 		end
 
-	ccom_create_c_type_lib_from_name (a_name: POINTER): POINTER is
+	c_load_type_lib (a_file_name, a_type_lib: POINTER): INTEGER is
 		external
-			"C++ [new E_IType_Lib %"E_ITypeLib.h%"](OLECHAR *)"
+			"C inline use <windows.h>"
+		alias
+			"LoadTypeLib ((const OLECHAR*)$a_file_name, (ITypeLib**)$a_type_lib)"
 		end
 
-	ccom_delete_c_type_lib (cpp_obj: POINTER) is
+	c_find_name (a_item, a_name, a_infos, a_ids: POINTER; a_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [delete E_IType_Lib %"E_ITypeLib.h%"]()"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->FindName ((ITypeLib*)$a_item, (OLECHAR*)$a_name, 0, (ITypeInfo**)$a_infos, (MEMBERID*)$a_ids, (unsigned int*)$a_count)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	c_get_documentation (a_item: POINTER; a_index: INTEGER; a_name, a_doc: TYPED_POINTER [POINTER]; a_context: TYPED_POINTER [NATURAL_32]; a_help: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"]:(ITypeLib *)"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetDocumentation ((ITypeLib*)$a_item, (int)$a_index, (BSTR*)$a_name, (BSTR*)$a_doc, (unsigned long*)$a_context, (BSTR*)$a_help)"
 		end
 
-	ccom_find_name (a_ptr: POINTER; a_name: POINTER; count: INTEGER): ECOM_TYPE_LIB_FIND_NAME_RESULT is
+	c_get_lib_attr (a_item: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](WCHAR *, EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetLibAttr ((ITypeLib*)$a_item, (TLIBATTR**)$a_res)"
 		end
 
-	ccom_get_documentation (a_ptr: POINTER; a_index: INTEGER): ECOM_DOCUMENTATION is
+	c_get_type_info (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](EIF_INTEGER): EIF_REFERENCE"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfo ((ITypeLib*)$a_item, (unsigned int)$a_index, (ITypeInfo**)$a_res)"
 		end
 
-	ccom_get_lib_attr (a_ptr: POINTER): POINTER is
+	c_get_type_info_count(a_item: POINTER): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoCount((ITypeLib*)$a_item)"
 		end
 
-	ccom_get_type_comp (a_ptr: POINTER): POINTER is
+	c_get_type_info_of_guid (a_item: POINTER; a_guid: POINTER; a_res: TYPED_POINTER [POINTER]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoOfGuid((ITypeLib*)$a_item, (REFGUID)$a_guid, (ITypeInfo**)$a_res)"
 		end
 
-	ccom_get_type_info (a_ptr: POINTER; index: INTEGER): POINTER is
+	c_get_type_info_type (a_item: POINTER; a_index: INTEGER; a_res: TYPED_POINTER [INTEGER]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](EIF_INTEGER): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->GetTypeInfoType((ITypeLib*)$a_item, (unsigned int)$a_index, (TYPEKIND*)$a_res)"
 		end
 
-	ccom_get_type_info_count(a_ptr: POINTER): INTEGER is
+	c_is_name (a_item: POINTER; a_name: POINTER; a_res: TYPED_POINTER [BOOLEAN]): INTEGER is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](): EIF_INTEGER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->IsName((ITypeLib*)$a_item, (OLECHAR*)$a_name, 0, (BOOL*)$a_res)"
 		end
 
-	ccom_get_type_info_of_guid (a_ptr: POINTER; guid: POINTER): POINTER is
+	c_release_tlib_attr (a_item: POINTER; a_tlib_attr: POINTER) is
 		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](EIF_POINTER): EIF_POINTER"
+			"C inline use <oaidl.h>"
+		alias
+			"((ITypeLib*)$a_item)->lpVtbl->ReleaseTLibAttr((ITypeLib*)$a_item, (TLIBATTR*)$a_tlib_attr)"
 		end
-
-	ccom_get_type_info_type (a_ptr: POINTER; index: INTEGER): INTEGER is
-		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](EIF_INTEGER): EIF_INTEGER"
-		end
-
-	ccom_is_name (a_ptr: POINTER; a_name: POINTER): BOOLEAN is
-		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](WCHAR *): EIF_BOOLEAN"
-		end
-
-	ccom_release_tlib_attr (a_ptr: POINTER; a_tlib_attr: POINTER) is
-		external
-			"C++ [E_IType_Lib %"E_ITypeLib.h%"](TLIBATTR *)"
-		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

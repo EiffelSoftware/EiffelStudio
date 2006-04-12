@@ -3,7 +3,7 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="gobo" uuid="d5b6b287-de92-45F6-9c30-7acf68d3cad7" library_target="gobo">
+	 name="gobo" uuid="ccb152f0-2d87-42af-ad4a-0d5514133c1a" library_target="gobo">
 	<target name="gobo">
 		<description>gobo library</description>
 		<option>
@@ -11,20 +11,111 @@
 		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/other$</exclude>
+			<exclude>/free_elks$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
-		<cluster name="gobo" location="$ISE_LIBRARY\library\gobo\library" recursive="true">
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>		
+		<cluster name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\library\kernel\" recursive="true">
 			<file_rule>
+				<exclude>/.svn$</exclude>
 				<exclude>/hact$</exclude>
 				<exclude>/se$</exclude>
 				<exclude>/ve$</exclude>
 				<exclude>/base$</exclude>
 				<exclude>/other$</exclude>
-				<exclude>/xpath$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\library\lexical\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/regexp$</exclude>
+				<exclude>/lex$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_math" location="$ISE_LIBRARY\library\gobo\library\math\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/hact$</exclude>
+				<exclude>/se$</exclude>
+				<exclude>/ve$</exclude>
+				<exclude>/base$</exclude>
+				<exclude>/other$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_parse" location="$ISE_LIBRARY\library\gobo\library\parse\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/generation$</exclude>
+				<exclude>/parser$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\library\pattern\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\library\regexp\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_string" location="$ISE_LIBRARY\library\gobo\library\string\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/formatter$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_structure" location="$ISE_LIBRARY\library\gobo\library\structure\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_time" location="$ISE_LIBRARY\library\gobo\library\time\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/format$</exclude>
+				<exclude>/time_zone$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_utility" location="$ISE_LIBRARY\library\gobo\library\utility\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/command$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="gobo_xml" location="$ISE_LIBRARY\library\gobo\library\xml\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
 				<exclude>/expat$</exclude>
-				<exclude>/no_expat$</exclude>
-				<exclude>/free_elks$</exclude>
+				<exclude>/xslt$</exclude>
+				<exclude>/EIFGEN$</exclude>
+				<exclude>/Documentation$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

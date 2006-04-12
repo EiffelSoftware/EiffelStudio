@@ -54,13 +54,7 @@ feature -- Eiffel types
 
 	Exceptions_type: STRING is "EXCEPTIONS"
 
-	Wrapper_type: STRING is "ECOM_WRAPPER"
-
 	Queriable_type: STRING is "ECOM_QUERIABLE"
-
-	Wel_string_type: STRING is "WEL_STRING"
-
-	Ecom_wide_string_type: STRING is "ECOM_WIDE_STRING"
 
 	Error_handler_type: STRING is "ECOM_ERROR_HANDLER"
 

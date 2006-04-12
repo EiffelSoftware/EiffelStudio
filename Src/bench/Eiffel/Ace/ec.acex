@@ -133,17 +133,12 @@
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="False"/>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
 			<if platform="windows"/>
 		</library>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
 			<ifnot platform="windows"/>
 		</library>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 
 		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
@@ -372,14 +367,10 @@
 			<if platform="windows"/>
 		</external_object>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.acex"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
 			<if platform="windows"/>
 		</library>
@@ -394,7 +385,9 @@
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
+		<library name="event" location="$ISE_LIBRARY\library\event\event.acex">
+			<ifnot platform="windows"/>
+		</library>
 		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer" recursive="true"/>
 		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
 			<file_rule>
@@ -426,6 +419,7 @@
 				<exclude>/kernel$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|communication\">
 				<cluster name="debuging_class" location="$|debug\"/>
@@ -437,9 +431,16 @@
 					<ifnot platform="windows"/>
 				</cluster>
 				<cluster name="ipc" location="$|ipc\"/>
-				<cluster name="status" location="$|status\" recursive="true">
+				<cluster name="status_mswin" location="$|status\" recursive="true">
+					<if platform="windows"/>
 					<file_rule>
 						<exclude>/no_dotnet$</exclude>
+					</file_rule>
+				</cluster>
+				<cluster name="status_unix" location="$|status\" recursive="true">
+					<ifnot platform="windows"/>
+					<file_rule>
+						<exclude>/dotnet$</exclude>
 					</file_rule>
 				</cluster>
 			</cluster>
@@ -509,6 +510,5 @@
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
-		<override name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
 	</target>
 </system>

@@ -19,8 +19,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -34,7 +32,6 @@ feature -- Basic operations
 			cg: CLASS_TEXT_MODIFIER
 			wd: EV_WARNING_DIALOG
 			class_c: CLASS_C
-			test_file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if retried then
@@ -49,21 +46,13 @@ feature -- Basic operations
 						class_i := c.class_i
 						if class_i /= Void then
 							class_c := class_i.compiled_class
-							create test_file.make (class_i.file_name)
-							conf_todo
---							if
---								test_file.exists and then test_file.is_writable and then
---								(
---									class_c = Void or else class_i.cluster = Void or else
---									not (class_i.cluster.is_library or class_c.is_precompiled)
---								)
---							then
---								create cg.make (class_i)
---								cg.new_feature
---							else
---								create wd.make_with_text (Warning_messages.W_class_not_modifiable)
---								wd.show_modal_to_window (target.window)
---							end
+							if not class_i.is_read_only then
+								create cg.make (class_i)
+								cg.new_feature
+							else
+								create wd.make_with_text (Warning_messages.W_class_not_modifiable)
+								wd.show_modal_to_window (target.window)
+							end
 						end
 					end
 				else

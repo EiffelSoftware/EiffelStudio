@@ -43,8 +43,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-	CONF_REFACTORING
-
 create
 	make,
 	make_from_string,
@@ -311,8 +309,7 @@ feature{NONE} -- Command substitution
 			if dev /= Void then
 				cv_cst ?= dev.stone
 				if cv_cst /= Void then
-					conf_todo
---					cmd.replace_substring_all (sub_string_list.i_th (sub_directory_name), cv_cst.class_i.cluster.path)
+					cmd.replace_substring_all (sub_string_list.i_th (sub_directory_name), cv_cst.class_i.group.location.evaluated_directory)
 				else
 					set_is_command_ok (False)
 					show_warning_dialog (Warning_messages.w_Command_needs_directory)

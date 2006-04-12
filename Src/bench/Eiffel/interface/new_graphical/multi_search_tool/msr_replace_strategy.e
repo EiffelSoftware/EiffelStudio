@@ -36,6 +36,17 @@ feature -- Access
 			replace_string_not_void: Result = replace_string_internal
 		end
 
+	replace_report: MSR_REPLACE_REPORT is
+			-- Replace report
+		do
+			if replace_report_internal = Void then
+				create replace_report_internal
+			end
+			Result := replace_report_internal
+		ensure
+			replace_report_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	set_replace_items (items: ARRAYED_LIST [MSR_ITEM]) is
@@ -97,7 +108,6 @@ feature -- Basic operations
 			replace_items_set: is_replace_items_set
 			replace_string_set : is_replace_string_set
 			replace_item_not_off : not replace_items.off
-		local
 		do
 			replace_current_item (true)
 			is_replace_launched_internal := true
@@ -123,7 +133,11 @@ feature -- Basic operations
 				replace_items.after
 			loop
 				l_saved_item := replace_items.item
-				l_item ?= replace_items.item
+				l_item ?= l_saved_item
+				if l_item = Void then
+					last_class_item ?= l_saved_item
+					check last_class_item_not_void: last_class_item /= Void end
+				end
 				if l_item /= Void then
 					if is_current_replaced_as_cluster (l_item) then
 						l_item.pcre_regex.set_on_new_position_yielded (agent on_new_position_yielded (?, ?, l_item))
@@ -138,6 +152,11 @@ feature -- Basic operations
 							l_last_item := l_item
 						end
 						remove_item (l_item)
+						replace_report.set_text_replaced (replace_report.text_replaced + 1)
+						if last_class_item /= Void then
+							replace_report.set_class_replaced (replace_report.class_replaced + 1)
+							last_class_item := Void
+						end
 					else
 						replace
 					end
@@ -148,10 +167,13 @@ feature -- Basic operations
 				end
 				item_replaced
 			end
-			is_replace_launched_internal := true
 			all_item_replaced
-		ensure
-			replace_items_empty: replace_items.is_empty
+			if replace_report.text_replaced = 0 then
+			 	replace_report.set_class_replaced (0)
+			else
+				replace_report.set_class_replaced (replace_report.class_replaced.max (1))
+			end
+			is_replace_launched_internal := true
 		end
 
 feature {NONE} -- Implementation
@@ -244,6 +266,9 @@ feature {NONE} -- Implementation
 			Result := create {MSR_FORMATTER}
 		end
 
+	last_class_item: MSR_CLASS_ITEM
+			-- Used in replace all
+
 	replace_item_internal: ARRAYED_LIST [MSR_ITEM]
 			-- Items to be replaced
 
@@ -259,6 +284,9 @@ feature {NONE} -- Implementation
 			a_item_not_void: a_item /= Void
 		do
 		end
+
+	replace_report_internal: MSR_REPLACE_REPORT
+			-- Replace report.
 
 	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN  is
 			-- When replacing all, should a_item be replaced as in a cluster as a fast way? Once Result returns
@@ -295,6 +323,11 @@ feature {NONE} -- Implementation
 			 		refresh_item_text
 			 	end
 			 	remove_item (replace_items.item)
+			 	replace_report.set_text_replaced (replace_report.text_replaced + 1)
+				if last_class_item /= Void then
+					replace_report.set_class_replaced (replace_report.class_replaced + 1)
+					last_class_item := Void
+				end
 			end
 		end
 

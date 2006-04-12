@@ -84,7 +84,7 @@ feature -- Basic operations
 
 			create c_type_name.make (100)
 			c_type_name.append (name)
-			
+
 			create c_header_file_name.make (100)
 			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
 				c_header_file_name := header_name (namespace, name)
@@ -97,7 +97,7 @@ feature -- Basic operations
 			end
 		ensure then
 			non_void_interface_descriptors: interface_descriptors /= Void
-			valid_interface_descriptors: (interface_descriptors.count + source_interface_descriptors.count)  = 
+			valid_interface_descriptors: (interface_descriptors.count + source_interface_descriptors.count)  =
 				(a_type_info.type_attr.count_implemented_types - number_unknown_interfaces)
 		end
 
@@ -106,13 +106,14 @@ feature -- Basic operations
 		require
 			valid_type_info: a_type_info /= void
 		local
-			i, l_count, l_handle: INTEGER;
-			l_interface: WIZARD_INTERFACE_DESCRIPTOR;
-			l_documentation: ECOM_DOCUMENTATION;
-			l_type_info: ECOM_TYPE_INFO;
-			l_index: INTEGER;
-			l_type_lib: ECOM_TYPE_LIB;
-			l_guid: ECOM_GUID;
+			i, l_count: INTEGER
+			l_handle: NATURAL_32
+			l_interface: WIZARD_INTERFACE_DESCRIPTOR
+			l_documentation: ECOM_DOCUMENTATION
+			l_type_info: ECOM_TYPE_INFO
+			l_index: INTEGER
+			l_type_lib: ECOM_TYPE_LIB
+			l_guid: ECOM_GUID
 			l_library: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			l_flag: INTEGER
 			l_interfaces: ARRAYED_LIST [WIZARD_INTERFACE_DESCRIPTOR]
@@ -128,7 +129,7 @@ feature -- Basic operations
 			until
 				i = l_count
 			loop
-				l_flag := a_type_info.impl_type_flag (i)			
+				l_flag := a_type_info.impl_type_flag (i)
 				l_handle := a_type_info.ref_type_of_impl_type (i)
 				l_type_info := a_type_info.type_info (l_handle)
 				check
@@ -151,7 +152,7 @@ feature -- Basic operations
 					l_interface ?= type_descriptor_factory.create_type_descriptor (l_documentation, l_type_info)
 					l_library.add_descriptor (l_interface, l_index)
 				end
-			
+
 				if is_fsource (l_flag) then
 					source_interface_descriptors.force (l_interface)
 					if is_fdefault (l_flag) and l_type_info.type_attr.type_kind = Tkind_dispatch then
@@ -175,12 +176,12 @@ feature -- Basic operations
 				end
 				i := i + 1
 			end
-			
+
 			if default_interface_descriptor = Void then
 				default_interface_descriptor := l_interfaces.first
 			end
-		ensure 
-			valid_interface_count: (interface_descriptors.count + source_interface_descriptors.count) = 
+		ensure
+			valid_interface_count: (interface_descriptors.count + source_interface_descriptors.count) =
 									(a_type_info.type_attr.count_implemented_types - number_unknown_interfaces)
 			non_void_default_interface: default_interface_descriptor /= Void
 		end

@@ -79,10 +79,10 @@ feature -- Basic operations
 		local
 			i, element_count: INTEGER
 			element_description: WIZARD_ENUM_ELEMENT_DESCRIPTOR
-			a_documentation: ECOM_DOCUMENTATION
+			l_doc: ECOM_DOCUMENTATION
 			member_id, a_value: INTEGER
 			elem_name: STRING
-			a_variant: ECOM_VARIANT
+			l_variant: ECOM_VARIANT
 		do
 			create {ARRAYED_LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]} elements.make (20)
 			element_count := a_type_info.type_attr.count_variables
@@ -94,24 +94,24 @@ feature -- Basic operations
 				i = element_count
 			loop
 				member_id := a_type_info.var_desc (i).member_id
-				a_documentation := a_type_info.documentation (member_id)
-				elem_name := a_documentation.name.twin
+				l_doc := a_type_info.documentation (member_id)
+				elem_name := l_doc.name.twin
 				if elem_name = Void or else elem_name.count = 0 then
 					create elem_name.make (100)
 					elem_name.append (name)
 					elem_name.append ("_element_")
 					elem_name.append_integer(i + 1)
-					a_documentation.set_name (elem_name)
+					l_doc.set_name (elem_name)
 				end
-				a_variant := a_type_info.var_desc (i).constant_variant
-				if a_variant.is_integer2 (a_variant.variable_type) then
-					a_value := a_variant.integer2
-				elseif a_variant.is_integer4 (a_variant.variable_type) then
-					a_value := a_variant.integer4
+				l_variant := a_type_info.var_desc (i).constant_variant
+				if l_variant.is_integer2 (l_variant.variable_type) then
+					a_value := l_variant.integer2
+				elseif l_variant.is_integer4 (l_variant.variable_type) then
+					a_value := l_variant.integer4
 				else
 					raise ("Unknown element type")
 				end
-				element_description := enum_element_factory.create_descriptor (a_documentation, a_value)
+				element_description := enum_element_factory.create_descriptor (l_doc, a_value)
 				elements.force (element_description)
 				i := i + 1
 			end
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 	elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
 
-	size_of_instance: INTEGER;
+	size_of_instance: NATURAL_32;
 			-- Size of instance of this type
 
 indexing

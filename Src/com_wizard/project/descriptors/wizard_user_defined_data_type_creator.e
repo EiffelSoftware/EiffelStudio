@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC; 
+	create_descriptor (a_type_info: ECOM_TYPE_INFO; a_type_desc: ECOM_TYPE_DESC;
 				a_system_descriptor: WIZARD_SYSTEM_DESCRIPTOR): WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR is
 		require
 			valid_type_desc: a_type_desc /= Void
@@ -23,22 +23,23 @@ feature -- Basic operations
 			valid_system_descriptor: a_system_descriptor /= Void
 			valid_type_desc_type: a_type_desc.var_type = Vt_userdefined
 		local
-			handle, a_index: INTEGER
+			l_handle: NATURAL_32
+			l_index: INTEGER
 			tmp_type_info: ECOM_TYPE_INFO
 			tmp_guid: ECOM_GUID
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
 			type := a_type_desc.var_type
-			
-			handle := a_type_desc.href_type
-			tmp_type_info := a_type_info.type_info (handle)
-			a_index := tmp_type_info.index_in_type_lib + 1
-			type_descriptor_index := a_index
+
+			l_handle := a_type_desc.href_type
+			tmp_type_info := a_type_info.type_info (l_handle)
+			l_index := tmp_type_info.index_in_type_lib + 1
+			type_descriptor_index := l_index
 			tmp_type_lib := tmp_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			if a_system_descriptor.has_library (tmp_guid) then
-				tmp_library_descriptor := a_system_descriptor.library_descriptor (tmp_guid)		
+				tmp_library_descriptor := a_system_descriptor.library_descriptor (tmp_guid)
 			else
 				create tmp_library_descriptor.make (tmp_type_lib)
 				a_system_descriptor.add_library_descriptor (tmp_library_descriptor)
@@ -65,7 +66,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	type_descriptor_index: INTEGER 
+	type_descriptor_index: INTEGER
 			-- Index of type_descriptor in `descriptors' array
 			-- of WIZARD_TYPE_LIBRARY_DESCRIPTOR
 

@@ -34,7 +34,7 @@ feature -- Basic operations
 			-- Initialize `fields'
 			-- and `eiffel_class_name'
 		require
-			non_void_type_info: a_type_info /= Void  
+			non_void_type_info: a_type_info /= Void
 			valid_type_info: a_type_info.type_attr.type_kind = Tkind_record or a_type_info.type_attr.type_kind = Tkind_union
 			valid_documentation: a_documentation /= Void
 		local
@@ -74,7 +74,7 @@ feature -- Basic operations
 
 			create c_type_name.make (100)
 			c_type_name.append (name)
-			
+
 			create c_header_file_name.make (100)
 			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
 				c_header_file_name := header_name (namespace, name)
@@ -112,7 +112,7 @@ feature -- Basic operations
 			end
 		ensure
 			fields_created: a_type_info.type_attr.count_variables > 0 implies
-					fields /= Void and then 
+					fields /= Void and then
 					fields.count = a_type_info.type_attr.count_variables
 		end
 
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
 			-- Descriptions of structure's fields
 
-	size_of_instance: INTEGER
+	size_of_instance: NATURAL_32
 			-- Size of instance of this type
 
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR

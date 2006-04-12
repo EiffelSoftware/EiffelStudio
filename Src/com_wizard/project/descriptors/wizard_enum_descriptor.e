@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			valid_creator: a_creator /= Void
 		do
 			a_creator.initialize_descriptor (Current)
-		ensure 
+		ensure
 			non_void_elements: elements /= Void
 			non_void_class_name: eiffel_class_name /= Void
 		end
@@ -38,7 +38,7 @@ feature -- Access
 	elements: LIST [WIZARD_ENUM_ELEMENT_DESCRIPTOR]
 			-- list of element descriptors
 
-	size_of_instance: INTEGER
+	size_of_instance: NATURAL_32
 			-- Size of instance of this type
 
 	creation_message: STRING is
@@ -92,8 +92,8 @@ feature -- Basic Operations
 		ensure
 			valid_elements: elements /= Void and elements = some_elements
 		end
- 
-	set_size (a_size: INTEGER) is
+
+	set_size (a_size: like size_of_instance) is
 			-- Set `size_of_instance' with `a_size'.
 		do
 			size_of_instance := a_size

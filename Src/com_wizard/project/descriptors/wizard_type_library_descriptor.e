@@ -126,7 +126,7 @@ feature -- Access
 	doc_string: STRING
 			-- Documentation string.
 
-	context_id: INTEGER
+	context_id: NATURAL_32
 			-- Context identifier for library help topic in help file.
 
 	help_file: STRING

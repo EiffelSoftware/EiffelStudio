@@ -295,6 +295,9 @@ feature -- Status report
 			end
 		end
 
+	replace_report: MSR_REPLACE_REPORT
+			-- Replace report
+
 feature -- Status setting
 
 	set_search_strategy (p_strategy: MSR_SEARCH_STRATEGY) is
@@ -670,13 +673,16 @@ feature -- Basic operations
 			is_search_launched : is_search_launched
 			item_matched_not_off: not off
 		do
-
 			replace_strategy.set_surrounding_text_range (search_strategy.surrounding_text_range)
 			replace_strategy.set_replace_items (search_strategy_internal.item_matched)
+			replace_strategy.replace_report.reset
+			replace_strategy.replace_report.set_class_replaced (1)
 			replace_strategy_internal.replace
+			replace_report := replace_strategy.replace_report
 		ensure
 			last_replaced_text_not_void: last_replaced_text_internal /= Void
 			is_replace_launched: is_replace_launched
+			replace_report_not_void: replace_report /= Void
 		end
 
 	replace_all is
@@ -687,7 +693,12 @@ feature -- Basic operations
 		do
 			replace_strategy.set_surrounding_text_range (search_strategy.surrounding_text_range)
 			replace_strategy.set_replace_items (search_strategy_internal.item_matched)
+			replace_strategy.replace_report.reset
 			replace_strategy.replace_all
+			replace_report := replace_strategy.replace_report
+		ensure
+			is_replace_launched: is_replace_launched
+			replace_report_not_void: replace_report /= Void
 		end
 
 feature -- Sorting

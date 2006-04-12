@@ -448,6 +448,12 @@ feature -- Status report
 			end
 		end
 
+	last_replaced_item: INTEGER
+			-- Numbers of items replaced last time.
+
+	last_replaced_class: INTEGER
+			-- Numbers of classes replaced last time.
+
 feature -- Status setting
 
 	force_new_search is
@@ -520,6 +526,7 @@ feature -- Action
 			l_end: INTEGER
 			l_class_i : CLASS_I
 			l_check: BOOLEAN
+			l_replaced: BOOLEAN
 		do
 			l_start := 0
 			l_end := 1
@@ -558,15 +565,20 @@ feature -- Action
 							else
 								extend_and_run_loaded_action (agent replace_current_perform)
 							end
+							l_replaced := True
 							extend_and_run_loaded_action (agent go_to_next_found)
 							extend_and_run_loaded_action (agent search_report_grid.redraw_grid)
 							extend_and_run_loaded_action (agent select_current_row)
 							extend_and_run_loaded_action (agent force_not_changed)
+							extend_and_run_loaded_action (agent put_replace_report (False))
 						end
 					end
 				else
 					editor.display_not_editable_warning_message
 				end
+			end
+			if not l_replaced then
+				extend_and_run_loaded_action (agent put_replace_report (True))
 			end
 		end
 
@@ -1747,14 +1759,34 @@ feature {NONE} -- Replacement Implementation
 				end
 			end
 			if multi_search_performer.is_search_launched then
-				create editor_replace_strategy.make (current)
+				create editor_replace_strategy.make (Current)
 				multi_search_performer.set_replace_strategy (editor_replace_strategy)
 				multi_search_performer.set_replace_string (currently_replacing)
 				multi_search_performer.replace_all
 				update_combo_box_specific (replace_combo_box, currently_replacing)
 				search_report_grid.redraw_grid
+				put_replace_report (False)
+			else
+				put_replace_report (True)
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
+
+		end
+
+	put_replace_report (a_did_nothing: BOOLEAN) is
+			-- Put replace report.
+		require
+			valid_replace_report: not a_did_nothing implies multi_search_performer.replace_report /= Void
+		do
+			if not a_did_nothing then
+				summary_label.set_text ("   " +
+										multi_search_performer.replace_report.text_replaced.out +
+										" replaced in " +
+										multi_search_performer.replace_report.class_replaced.out +
+										" class(es)")
+			else
+				summary_label.set_text ("0 replaced in 0 class(es)")
+			end
 		end
 
 feature {NONE} -- Destroy behavior.

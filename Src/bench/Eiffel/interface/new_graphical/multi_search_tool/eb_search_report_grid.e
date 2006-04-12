@@ -113,12 +113,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 					end
 				end
 				remove_and_clear_all_rows
-				report_summary_string := "   " +
-										multi_search_performer.text_found_count.out +
-										" found(s) in " +
-										multi_search_performer.class_count.out +
-										" class(es)"
-				search_tool.summary_label.set_text (report_summary_string)
+				put_report_summary
 				search_tool.new_search_tool_bar.hide
 
 				l_index := multi_search_performer.index
@@ -444,6 +439,19 @@ feature {NONE} -- Sort data
 			-- If True, sort from the smaller to the larger.
 
 feature {EB_MULTI_SEARCH_TOOL} -- Implementation
+
+	put_report_summary is
+			-- Put report summary
+		require
+			performer_launched: multi_search_performer.is_search_launched
+		do
+			report_summary_string := "   " +
+										multi_search_performer.text_found_count.out +
+										" found(s) in " +
+										multi_search_performer.class_count.out +
+										" class(es)"
+			search_tool.summary_label.set_text (report_summary_string)
+		end
 
 	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
 			-- Grid pebble function

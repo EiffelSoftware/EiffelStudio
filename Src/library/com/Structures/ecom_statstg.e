@@ -9,7 +9,6 @@ class
 	ECOM_STATSTG
 
 inherit
-
 	ECOM_WRAPPER
 
 	ECOM_STGTY
@@ -28,30 +27,28 @@ inherit
 		end
 
 create
-
-	make_from_pointer
+	make
 
 feature -- Access
 
 	name: STRING is
 			-- name
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string: WEL_STRING
 		do
-			create wide_string.make_from_pointer (ccom_name (initializer))
-			Result := wide_string.to_string
+			create l_string.make_by_pointer (c_name (item))
+			Result := l_string.string
 		end
 
 	is_same_name (other_name: STRING): BOOLEAN is
 		require
 			valid_other_name: other_name /= Void
 		local
-			wide_string: ECOM_WIDE_STRING
+			l_string, l_string2: WEL_STRING
 		do
-			create wide_string.make_from_string(other_name);
-			if (ccom_is_same_name (initializer, wide_string.item) = 1) then
-				Result := true;
-			end
+			create l_string.make (other_name);
+			create l_string2.make_by_pointer (c_name (item))
+			Result := l_string.is_equal (l_string2)
 		end
 
 	type: INTEGER is
@@ -59,7 +56,7 @@ feature -- Access
 			-- Returns one of the values from the STGTY enumeration.
 			-- See class ECOM_STGTY for values 
 		do
-			Result := ccom_type (initializer)
+			Result := c_type (item)
 		ensure
 			valid_type: is_valid_stgty (Result)
 		end
@@ -67,7 +64,7 @@ feature -- Access
 	size: ECOM_ULARGE_INTEGER is
 			-- Size in bytes of stream or byte array. 
 		do
-			create Result.make_from_pointer (ccom_size(initializer))
+			create Result.make_from_pointer (c_size (item))
 		ensure
 			Result /= Void and Result.item /= Default_pointer
 		end
@@ -75,7 +72,7 @@ feature -- Access
 	modification_time: WEL_FILE_TIME is
 			-- Last modification time 
 		do
-			create Result.make_by_pointer (ccom_modification_t (initializer))
+			create Result.make_by_pointer (c_modification_time (item))
 		ensure
 			Result /= Void
 		end
@@ -83,7 +80,7 @@ feature -- Access
 	creation_time: WEL_FILE_TIME is
 			-- Creation time  
 		do
-			create Result.make_by_pointer (ccom_creation_t (initializer))
+			create Result.make_by_pointer (c_creation_time (item))
 		ensure
 			Result /= Void
 		end
@@ -91,7 +88,7 @@ feature -- Access
 	access_time: WEL_FILE_TIME is
 			-- Last access time 
 		do
-			create Result.make_by_pointer (ccom_access_t (initializer))
+			create Result.make_by_pointer (c_access_time (item))
 		ensure
 			Result /= Void
 		end
@@ -99,8 +96,9 @@ feature -- Access
 	mode: INTEGER is
 			-- Access mode specified when the 
 			-- object was opened. 
+			-- See class ECOM_STGM for values 
 		do
-			Result := ccom_mode (initializer)
+			Result := c_mode (item)
 		ensure
 			valid_mode: is_valid_stgm (Result)
 		end
@@ -111,7 +109,7 @@ feature -- Access
 			-- enumeration for the values available. This member 
 			-- is not used for storage objects. 
 		do
-			Result := ccom_locks_supported (initializer)
+			Result := c_locks_supported (item)
 		end
 
 	clsid: POINTER is
@@ -119,82 +117,112 @@ feature -- Access
 			-- set to CLSID_NULL for new storage objects. This member 
 			-- is not used for streams or byte arrays. 
 		do
-			Result := ccom_clsid (initializer)
+			Result := c_clsid (item)
 		end
 
 feature {NONE} -- Implementation
 
-	create_wrapper (a_pointer: POINTER): POINTER is
+	memory_free is
+			-- Free STATSTG structure
+		local
+			l_pointer: POINTER
 		do
-			Result := ccom_create_c_statstg (a_pointer)
-		end
-
-	delete_wrapper is
-			-- delete corresponding C++ object
-		do
-			ccom_delete_c_statstg (initializer)
+			l_pointer := c_name (item)
+			if l_pointer /= default_pointer then
+				c_co_task_mem_free (l_pointer)
+			end
+			item.memory_free
+			item = default_pointer
 		end
 
 feature {NONE} -- Externals
 
-	ccom_create_c_statstg(a_pointer: POINTER): POINTER is
+	c_co_task_mem_free (a_item: like item) is
+			-- Call `CoTaskMemFree' on `a_item'.
 		external
-			"C++ [new E_STATSTG %"E_statstg.h%"] (STATSTG *)"
+			"C inline use <windows.h>"
+		alias
+			"CoTaskMemFree((void*)$a_item)"
 		end
 
-	ccom_delete_c_statstg (cpp_obj: POINTER) is
+	c_name (a_item: like item): POINTER is
+			-- Retrieve `pwcsName' field of STATSTG structure
 		external
-			"C++ [delete E_STATSTG %"E_statstg.h%"] ()"
+			"C inline use <windows.h>"
+		alias
+			"((STATSTG*)$a_item)->pwcsName"
 		end
 
-	ccom_name (cpp_obj: POINTER): POINTER is
+	c_size (a_item: like item): POINTER is
+			-- Retrieve pointer on `cbSize' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] (): LPWSTR"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->cbSize)"
 		end
 
-	ccom_is_same_name (cpp_obj: POINTER; other_name: POINTER): INTEGER is
+	c_type (a_item: like item): POINTER is
+			-- Retrieve `type' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] (LPWSTR):EIF_INTEGER"
+			"C inline use <windows.h>"
+		alias
+			"((STATSTG*)$a_item)->type"
 		end
 
-	ccom_type (cpp_obj: POINTER) : INTEGER is
+	c_modification_time (a_item: like item): POINTER is
+			-- Retrieve pointer on `mtime' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] (): EIF_INTEGER"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->mtime)"
 		end
 
-	ccom_size (cpp_obj: POINTER): POINTER is
+	c_modification_time (a_item: like item): POINTER is
+			-- Retrieve pointer on `mtime' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] (): (ULARGE_INTEGER *)"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->mtime)"
 		end
 
-	ccom_modification_t (cpp_obj: POINTER): POINTER is
+	c_creation_time (a_item: like item): POINTER is
+			-- Retrieve pointer on `ctime' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] ():(FILETIME *)"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->ctime)"
 		end
 
-	ccom_creation_t (cpp_obj: POINTER): POINTER is
+	c_access_time (a_item: like item): POINTER is
+			-- Retrieve pointer on `atime' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] ():(FILETIME *)"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->atime)"
 		end
 
-	ccom_access_t (cpp_obj: POINTER): POINTER is
+	c_mode (a_item: like item): POINTER is
+			-- Retrieve `grfMode' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] ():(FILETIME *)"
+			"C inline use <windows.h>"
+		alias
+			"((STATSTG*)$a_item)->grfMode"
 		end
 
-	ccom_mode (cpp_obj: POINTER): INTEGER is
+	c_locks_supported (a_item: like item): BOOLEAN is
+			-- Retrieve `grfMode' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"] ():DWORD"
+			"C inline use <windows.h>"
+		alias
+			"(EIF_BOOLEAN)(((STATSTG*)$a_item)->grfLocksSupported)"
 		end
 
-	ccom_locks_supported (cpp_obj: POINTER): INTEGER is
+	c_clsid (a_item: like item): POINTER is
+			-- Retrieve pointer on `clsid' field of STATSTG structure
 		external
-			"C++ [E_STATSTG %"E_statstg.h%"](): DWORD"
-		end
-
-	ccom_clsid (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_STATSTG %"E_statstg.h%"](): (CLSID*)"
+			"C inline use <windows.h>"
+		alias
+			"&(((STATSTG*)$a_item)->clsid)"
 		end
 
 indexing
@@ -207,9 +235,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class ECOM_STATSTG
 

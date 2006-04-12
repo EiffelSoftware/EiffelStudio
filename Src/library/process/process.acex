@@ -15,6 +15,9 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true">
+			<ifnot platform="windows"/>
+		</library>
 		<cluster name="classic_unix" location="classic" recursive="true">
 			<ifnot platform="windows"/>
 			<file_rule>

@@ -15,7 +15,7 @@ inherit
 	ECOM_WRAPPER
 
 create
-	make_from_pointer
+	make
 
 feature -- Access
 
@@ -23,11 +23,12 @@ feature -- Access
 			-- Next item in enumeration sequence
 			-- Void if there is no next_item item
 		local
-			ptr: POINTER
+			l_pointer: POINTER
+			l_count: INTEGER
 		do
-			ptr := ccom_next_item (initializer)
-			if (ptr /= default_pointer) then
-				create Result.make_from_pointer (ptr)
+			l_pointer := l_pointer.memory_alloc (c_sizeof_statstg)
+			if c_next_item (item, l_pointer, $l_count) = 0 and then l_count = 1 then
+				create Result.make_from_pointer (l_pointer)
 			end
 		end
 
@@ -38,18 +39,18 @@ feature -- Access
 			non_void_name: name /= Void
 			valid_name: not name.is_empty
 		local
-			local_statstg: ECOM_STATSTG
+			l_statstg: ECOM_STATSTG
 		do
 			from
 				reset	
-				local_statstg := next_item			
+				l_statstg := next_item			
 			until
-				local_statstg = Void
+				l_statstg = Void or Result
 			loop				
-				if (local_statstg.is_same_name(name)) then
-					Result := True
+				Result := l_statstg.is_same_name (name)
+				if not Result then
+					l_statstg := next_item
 				end
-				local_statstg := next_item
 			end
 		end
 
@@ -60,18 +61,19 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		local
-			local_statstg: ECOM_STATSTG
+			l_statstg: ECOM_STATSTG
 		do
 			from
 				reset	
-				local_statstg := next_item			
+				l_statstg := next_item			
 			until
 				Result /= Void
 			loop				
-				if (local_statstg.is_same_name(a_name)) then
-					Result := local_statstg.creation_time
+				if l_statstg.is_same_name (a_name) then
+					Result := l_statstg.creation_time
+				else
+					l_statstg := next_item
 				end
-				local_statstg := next_item
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -84,18 +86,19 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		local
-			local_statstg: ECOM_STATSTG
+			l_statstg: ECOM_STATSTG
 		do
 			from
 				reset	
-				local_statstg := next_item			
+				l_statstg := next_item			
 			until
 				Result /= Void
 			loop				
-				if (local_statstg.is_same_name(a_name)) then
-					Result := local_statstg.access_time
+				if l_statstg.is_same_name(a_name) then
+					Result := l_statstg.access_time
+				else
+					l_statstg := next_item
 				end
-				local_statstg := next_item
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -108,18 +111,19 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		local
-			local_statstg: ECOM_STATSTG
+			l_statstg: ECOM_STATSTG
 		do
 			from
 				reset	
-				local_statstg := next_item			
+				l_statstg := next_item			
 			until
 				Result /= Void
 			loop				
-				if (local_statstg.is_same_name(a_name)) then
-					Result := local_statstg.modification_time
+				if l_statstg.is_same_name (a_name) then
+					Result := l_statstg.modification_time
+				else
+					l_statstg := next_item
 				end
-				local_statstg := next_item
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -127,78 +131,58 @@ feature -- Access
 
 feature -- Basic Operations
 
-	skip (n: INTEGER) is
+	skip (n: NATURAL) is
 			-- Skips over `n' items in enumeration sequence.
-		require
-			valid_skip_count: n >= 0
 		do
-			ccom_skip(initializer, n)
+			c_skip (item, n)
 		end
 
 	reset is
 			-- Resets enumeration sequence to beginning.
 		do
-			ccom_reset(initializer)
+			c_reset (item)
 		end
 
 	clone_enum: like Current is
 			-- Creates another enumerator that has 
 			-- same enumeration state as `Current'. 
+		local
+			l_pointer: POINTER
 		do
-			create Result.make_from_pointer (ccom_clone (initializer))
-		ensure
-			Result /= Void
-		end
-
-feature {NONE} -- Implementation	
-
-	create_wrapper (a_pointer: POINTER): POINTER is
-			-- Create C wrapper using interface pointer.
-		do
-			Result := ccom_create_c_ienum_stastg (a_pointer)
-		end
-
-	delete_wrapper is
-			-- Free corresponding C++ object.
-		do
-			ccom_delete_c_ienum (initializer)
+			c_clone (item, $l_pointer)
+			if l_pointer /= default_pointer then
+				create Result.make_from_pointer (l_pointer)
+			end
 		end
 
 feature {NONE} -- Externals
 
-	ccom_create_c_ienum_stastg (a_pointer: POINTER): POINTER is
+	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL]): NATURAL is
 		external
-			"C++ [new E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"](IEnumSTATSTG *)"
+			"C inline use <windows.h>"
+		alias
+			"((IEnumSTATSTG*)$a_item)->Next (1, (STATSTG*)a_res, (ULONG*)$a_count)"
 		end
 
-	ccom_delete_c_ienum (cpp_obj: POINTER) is
+	c_skip (a_item: POINTER; n: NATURAL) is
 		external
-			"C++ [delete E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"]()"
+			"C inline use <windows.h>"
+		alias
+			"((IEnumSTATSTG*)$a_item)->Skip ((ULONG*)$n)"
 		end
 
-	ccom_next_item (cpp_obj: POINTER): POINTER is
+	c_reset (a_item: POINTER) is
 		external
-			"C++ [E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"](): EIF_POINTER"
+			"C inline use <windows.h>"
+		alias
+			"((IEnumSTATSTG*)$a_item)->Reset()"
 		end
 
-	ccom_skip (cpp_obj: POINTER; n: INTEGER) is
+	c_clone (a_item, a_res: POINTER) is
 		external
-			"C++ [E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"](ULONG)"
-		end
-
-	ccom_reset (cpp_obj: POINTER) is
-		external
-			"C++ [E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"]()"
-		end
-
-	ccom_clone (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"](): EIF_POINTER"
-		end
-
-	ccom_item (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_IEnumSTATSTG %"E_IEnumSTATSTG.h%"](): EIF_POINTER"
+			"C inline use <windows.h>"
+		alias
+			"((IEnumSTATSTG*)$a_item)->Clone ((IEnumSTATSTG**)a_res)"
 		end
 
 indexing

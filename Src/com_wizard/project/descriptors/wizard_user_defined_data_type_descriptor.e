@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_descriptor_index: INTEGER 
+	type_descriptor_index: INTEGER
 			-- Index of type_descriptor in `descriptors' array
 			-- of WIZARD_TYPE_LIBRARY_DESCRIPTOR
 
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_type_descriptor_index (a_index: INTEGER) is
+	set_type_descriptor_index (a_index: like type_descriptor_index) is
 			-- Set `type_descriptor_index' with `a_index'
 		require
 			valid_index: a_index /= 0
@@ -89,7 +89,7 @@ feature -- Basic operations
 		end
 
 	set_library_descriptor (a_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
-			-- 
+			--
 		require
 			valid_descriptor: a_library_descriptor /= Void
 		do

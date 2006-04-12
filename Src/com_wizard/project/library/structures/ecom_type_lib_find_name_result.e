@@ -16,16 +16,15 @@ feature -- Initialization
 	make (cnt: INTEGER) is
 			-- Initialize attributes
 		do
-			!! type_info.make (1, cnt)
-			!! member_ids.make (1, cnt)
+			create type_info.make (1, cnt)
+			create member_ids.make (1, cnt)
 			count := cnt
 		end
 		
 feature -- Access 
 
 	type_info: ARRAY [ECOM_TYPE_INFO]
-			-- Array of pointers on ITypeInfo interfaces matching `find_name'
-			-- These pointer should by attached to an object EOLE_TYPE_INFO.
+			-- Instances of ECOM_TYPE_INFO that matched name passed to ECOM_TYPE_LIB.`find_name'
 		
 	member_ids: ARRAY [INTEGER]
 			-- Array of identifiers of ITypeInfo interfaces

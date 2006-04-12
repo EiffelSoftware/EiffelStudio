@@ -10,17 +10,17 @@ class
 
 inherit
 	WIZARD_PROGRESS_REPORTING_TASK
-	
+
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
-	
+
 	WIZARD_SPECIAL_TYPE_LIBRARIES
 		export
 			{NONE} all
 		end
-	
+
 	ECOM_VAR_TYPE
 		export
 			{NONE} all
@@ -35,7 +35,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Access
 
 	title: STRING is "Analyzing type library"
@@ -95,7 +95,8 @@ feature {NONE} -- Implementation
 	type_info_analysis_steps_count (a_type_info: ECOM_TYPE_INFO): INTEGER is
 			-- Number of steps needed to analyze `a_type_info'
 		local
-			l_type, i, l_count, l_handle: INTEGER
+			l_type, i, l_count: INTEGER
+			l_handle: NATURAL_32
 		do
 			l_type := a_type_info.type_attr.type_kind
 			if l_type = Tkind_record then
@@ -153,7 +154,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	referred_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_handle: INTEGER): INTEGER is
+	referred_type_analysis_steps_count (a_type_info: ECOM_TYPE_INFO; a_handle: NATURAL_32): INTEGER is
 			-- Number of steps needed to analyze type referred to by `a_handle' in `a_type_info'
 		require
 			non_void_void_type_info: a_type_info /= Void

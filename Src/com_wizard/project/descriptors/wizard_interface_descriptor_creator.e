@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATION_ENVIRONMENT	
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -32,7 +32,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	ECOM_VAR_TYPE
 		export
 			{NONE} all
@@ -62,7 +62,7 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_interface
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		local
-			l_handle: INTEGER
+			l_handle: NATURAL_32
 			l_type_info: ECOM_TYPE_INFO
 			l_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR
 		do
@@ -76,8 +76,8 @@ feature -- Basic operations
 			dual := is_typeflag_fdual (flags)
 
 			if dual and dispinterface then
-	
-			-- From MSDN: 
+
+			-- From MSDN:
 			-- If the TKIND_DISPATCH type description is for a dual interface,
 			-- the TKIND_INTERFACE type description can be obtained by calling
 			-- GetRefTypeOfImplType with an index of –1, and by passing the
@@ -126,7 +126,7 @@ feature -- Basic operations
 			l_guid: ECOM_GUID
 		do
 			l_type_lib := a_type_info.containing_type_lib
-			l_guid := l_type_lib.library_attributes.guid	
+			l_guid := l_type_lib.library_attributes.guid
 			l_type_attr := a_type_info.type_attr
 			create guid.make_from_guid (l_type_attr.guid)
 
@@ -174,7 +174,7 @@ feature -- Basic operations
 		ensure then
 			valid_guid: guid /= Void
 			valid_functions: a_type_info.type_attr.count_func > 0 implies function_table /= Void
-			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void 
+			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void
 			valid_interface: a_type_info.type_attr.count_implemented_types > 0 implies
 						inherited_interface /= Void or inherited_interface_descriptor /= Void
 		end
@@ -267,7 +267,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void 
+			valid_properties: a_type_info.type_attr.count_variables > 0 implies properties /= Void
 		end
 
 	create_inherited_interface (a_type_info: ECOM_TYPE_INFO) is
@@ -276,7 +276,7 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= void
 			have_inherited_interface: a_type_info.type_attr.count_implemented_types > 0
 		local
-			l_handle: INTEGER
+			l_handle: NATURAL_32
 			l_type_info: ECOM_TYPE_INFO
 			l_index: INTEGER
 			l_type_lib: ECOM_TYPE_LIB
@@ -299,7 +299,7 @@ feature -- Basic operations
 			end
 			l_type := l_library_descriptor.descriptors.item (l_index)
 			if l_type = Void then
-				create inherited_interface_descriptor.make (l_library_descriptor, l_index)		
+				create inherited_interface_descriptor.make (l_library_descriptor, l_index)
 			else
 				inherited_interface ?= l_type
 			end
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 
 	inherited_interface: WIZARD_INTERFACE_DESCRIPTOR
 			-- Description of inherited interface
-	
+
 	inherited_interface_descriptor: WIZARD_INHERITED_INTERFACE_DESCRIPTOR
 			-- Interface descriptor.
 

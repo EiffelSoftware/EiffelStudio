@@ -713,13 +713,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cluster: CLUSTER_I is
-			-- Cluster for current class. Void if none.
-		do
-			conf_todo_msg ("Update callers to use `group' instead.")
-			Result ?= group
-		end
-
 	group: CONF_GROUP is
 			-- Group of current class. Void if none.
 		local

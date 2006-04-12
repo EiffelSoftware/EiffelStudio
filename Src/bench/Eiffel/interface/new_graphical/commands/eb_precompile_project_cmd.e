@@ -127,10 +127,6 @@ feature {NONE} -- Implementation
 
 	is_dotnet_project: BOOLEAN is
 			-- is current loaded ace a .net project
-		require
-			non_void_lace: lace /= Void
-		local
-			l_ast: ACE_SD
 		do
 			Result := system.il_generation
 		end

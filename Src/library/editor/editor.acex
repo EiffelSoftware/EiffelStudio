@@ -3,19 +3,18 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="editor" uuid="7521917c-f584-4f7f-af8b-df0f91bfa290" library_target="editor">
+	 name="editor" uuid="7521917C-F584-4F7F-AF8B-DF0F91BFA290" library_target="editor">
 	<target name="editor">
 		<description>Editor library</description>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 			<exclude>/eiffel$</exclude>
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
@@ -24,10 +23,14 @@
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
 			<ifnot platform="windows"/>
 		</library>
-		<cluster name="document" location="document" recursive="true"/>
-		<cluster name="bitmaps" location="bitmaps" recursive="true"/>
-		<cluster name="text_window" location="text_window" recursive="true"/>
-		<cluster name="managers" location="managers" recursive="true"/>
-		<cluster name="editor" location="." recursive="false"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<cluster name="document" location="document\" recursive="true"/>
+		<cluster name="editor" location=".\"/>
+		<cluster name="managers" location="managers\" recursive="true"/>
+		<cluster name="text_window" location="text_window\" recursive="true">
+			<file_rule>
+				<exclude>^/text/lexer/syntax_definitions</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

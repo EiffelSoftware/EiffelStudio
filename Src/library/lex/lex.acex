@@ -3,16 +3,20 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="lex" uuid="854682eb-91bd-4dbd-9224-358b3122fbe0" library_target="lex">
+	 name="lex" uuid="854682EB-91BD-4DBD-9224-358B3122FBE0" library_target="lex">
 	<target name="lex">
 		<description>Lex library</description>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<cluster name="lex" location="." recursive="true"/>
+		<cluster name="lex" location=".\" recursive="true">
+			<file_rule>
+				<exclude>^/Clib</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

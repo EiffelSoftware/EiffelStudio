@@ -475,9 +475,17 @@ feature {NONE} -- Implementation attribute processing
 		do
 			current_file_rule := conf_factory.new_file_rule
 			if current_cluster /= Void then
-				current_cluster.set_file_rule (current_file_rule)
+				if current_cluster.internal_file_rule.is_empty then
+					current_cluster.set_file_rule (current_file_rule)
+				else
+					set_parse_error_message ("Multiple file_rule tags on cluster "+current_cluster.name)
+				end
 			elseif current_target /= Void then
-				current_target.set_file_rule (current_file_rule)
+				if current_target.internal_file_rule.is_empty then
+					current_target.set_file_rule (current_file_rule)
+				else
+					set_parse_error_message ("Multiple file_rule tags on target "+current_target.name)
+				end
 			else
 				set_parse_error_message ("Invalid file_rule tag.")
 			end

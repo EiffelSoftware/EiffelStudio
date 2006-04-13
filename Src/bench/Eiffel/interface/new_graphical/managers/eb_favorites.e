@@ -27,13 +27,6 @@ inherit
 			copy
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 create
 	default_create,
 	make_with_string
@@ -165,10 +158,6 @@ feature -- Observer Pattern
 			end
 		end
 
-feature -- Load/Save
-
-feature -- Measurement
-
 feature -- Status report
 
 	sensitive: BOOLEAN
@@ -176,10 +165,6 @@ feature -- Status report
 
 	loading_error: BOOLEAN
 			-- Did an error occur while loading the favorites?
-
-feature -- Status setting
-
-feature -- Cursor movement
 
 feature -- Element change
 
@@ -221,24 +206,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {NONE} -- Implementation
 
 	parent: EB_FAVORITES_ITEM_LIST is
@@ -263,7 +230,7 @@ feature {NONE} -- Implementation
 			file: RAW_FILE
 			cli: CLASS_I
 			clc: CLASS_C
-			clu: CLUSTER_I
+			clu: CONF_GROUP
 		do
 			from
 				f.start
@@ -276,28 +243,27 @@ feature {NONE} -- Implementation
 					conv_c ?= l_item
 					cli := conv_c.associated_class_i
 					if cli /= Void then
-						conf_todo
---						clu := cli.cluster
---						if Eiffel_universe.clusters.has (clu) then
---							if not clu.is_precompiled then
---								if conv_c.associated_file_name /= Void then
---									create file.make (conv_c.associated_file_name)
---									if not file.exists then
---										f.remove
---									else
---										refresh_folder (conv_c)
---										f.forth
---									end
---								else
---									f.remove
---								end
---							else
---								refresh_folder (conv_c)
---								f.forth
---							end
---						else
---							f.remove
---						end
+						clu := cli.group
+						if Eiffel_universe.groups.has (clu) then
+							if not clu.is_precompile then
+								if conv_c.associated_file_name /= Void then
+									create file.make (conv_c.associated_file_name)
+									if not file.exists then
+										f.remove
+									else
+										refresh_folder (conv_c)
+										f.forth
+									end
+								else
+									f.remove
+								end
+							else
+								refresh_folder (conv_c)
+								f.forth
+							end
+						else
+							f.remove
+						end
 					else
 						f.remove
 					end
@@ -331,7 +297,7 @@ feature {NONE} -- Implementation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

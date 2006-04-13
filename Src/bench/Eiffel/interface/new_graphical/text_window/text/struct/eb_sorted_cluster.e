@@ -31,9 +31,7 @@ feature -- Status
 feature -- Statusupdate
 
 	reinitialize is
-			-- Reinitialize current
-		require
-			initialized: is_initialized
+			-- (Re)initialize current
 		do
 			is_initialized := False
 			initialize

@@ -597,7 +597,9 @@ feature {NONE} -- Implementation
 			l_group, l_next_group: CONF_GROUP
 			l_cluster: CONF_CLUSTER
 			l_libuse: ARRAYED_LIST [CONF_LIBRARY]
+			l_sys: CONF_SYSTEM
 		do
+			l_sys := universe.target.system
 			from
 				create Result.make
 				l_group := a_group
@@ -620,7 +622,7 @@ feature {NONE} -- Implementation
 					until
 						l_next_group /= Void or l_libuse.after
 					loop
-						if l_libuse.item.target = universe.target then
+						if l_libuse.item.target.system = l_sys then
 							l_next_group := l_libuse.item
 						end
 						l_libuse.forth

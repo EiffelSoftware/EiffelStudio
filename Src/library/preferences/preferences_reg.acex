@@ -20,10 +20,11 @@
     
     <cluster name="interface" location="interface" recursive="true"/>
     <cluster name="preference" location="preference" recursive="true"/>
-    <cluster name="storage" location="storage" recursive="true"/>
+    <cluster name="storage" location="storage" recursive="true">
     	<file_rule>
     		<exclude>/xml_implementation$</exclude>
-    	</file_rule>
+		</file_rule>
+	</cluster>
     <cluster name="preferences" location="." recursive="false"/>
 	</target>
 </system>

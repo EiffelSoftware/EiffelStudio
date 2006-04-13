@@ -3,36 +3,37 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="process" uuid="228afc09-21bc-47c8-a0a2-54a69274cd32" library_target="process">
+	 name="process" uuid="228AFC09-21BC-47C8-A0A2-54A69274CD32" library_target="process">
 	<target name="process">
 		<description>process library</description>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true">
 			<ifnot platform="windows"/>
 		</library>
-		<cluster name="classic_unix" location="classic" recursive="true">
-			<ifnot platform="windows"/>
-			<file_rule>
-				<exclude>/windows$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="classic_mswin" location="classic" recursive="true">
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+		<cluster name="classic_mswin" location="classic\" recursive="true">
 			<if platform="windows"/>
 			<file_rule>
 				<exclude>/unix$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="dotnet" location="dotnet" recursive="true">
+		<cluster name="classic_unix" location="classic\" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/windows$</exclude>
+				<exclude>^/unix/Clib</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="dotnet" location="dotnet\" recursive="true">
 			<if platform="dotnet"/>
 		</cluster>
-		<cluster name="process" location="." recursive="false"/>
+		<cluster name="process" location=".\"/>
 	</target>
 </system>

@@ -77,7 +77,8 @@ feature -- Access queries
 	file_rule: CONF_FILE_RULE is
 			-- Rules for files to be included or excluded.
 		do
-			Result := internal_file_rule.twin
+			create Result.make
+			Result.merge (internal_file_rule)
 			if parent /= Void then
 				Result.merge (parent.file_rule)
 			end
@@ -428,6 +429,8 @@ feature {NONE} -- Implementation
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
 	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
+	classes_by_filename_ok: classes_set implies classes_by_filename /= Void and then classes.count = classes_by_filename.count
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

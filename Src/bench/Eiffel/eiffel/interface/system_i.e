@@ -765,7 +765,13 @@ end
 			l_file_name: FILE_NAME
 			l_ise_lib: STRING
 			l_env: EIFFEL_ENV
+			d1, d2: DATE_TIME
 		do
+			debug ("timing")
+				print_memory_statistics
+				create d1.make_now
+			end
+
 			create l_env
 			l_target := universe.new_target
 			check
@@ -825,6 +831,9 @@ end
 					l_class_i ?= l_conf_class
 					check l_class_i_not_void: l_class_i /= Void end
 					workbench.change_class (l_class_i)
+					if l_conf_class.is_renamed then
+						l_class_i.compiled_class.recompile_syntactical_clients
+					end
 				end
 				if compilation_modes.is_precompiling then
 					l_conf_class.enable_precompiled
@@ -833,25 +842,28 @@ end
 				l_classes.forth
 			end
 				-- added classes
+				-- we don't need them on the first compilation
 			create new_classes.make
-			l_classes := l_vis_build.added_classes
-			from
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				l_conf_class := l_classes.item_for_iteration
-				l_class_i ?= l_conf_class
-				check
-					class_i: l_class_i /= Void
+			if not first_compilation or else has_compilation_started or compilation_modes.is_precompiling then
+				l_classes := l_vis_build.added_classes
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_conf_class := l_classes.item_for_iteration
+					l_class_i ?= l_conf_class
+					check
+						class_i: l_class_i /= Void
+					end
+					record_new_class_i (l_class_i)
+					if compilation_modes.is_precompiling then
+						l_conf_class.enable_precompiled
+					end
+					l_classes.forth
 				end
-				record_new_class_i (l_class_i)
-				l_conf_class.set_up_to_date
-				if compilation_modes.is_precompiling then
-					l_conf_class.enable_precompiled
-				end
-				l_classes.forth
 			end
+
 				-- removed classes
 			if workbench.automatic_backup then
 				create l_file_name.make_from_string (workbench.backup_subdirectory)
@@ -878,6 +890,15 @@ end
 			end
 			if workbench.automatic_backup then
 				l_file.close
+			end
+
+			debug ("Timing")
+				create d2.make_now
+				print ("Degree 6 rebuild duration: ")
+				print (d2.relative_duration (d1).fine_seconds_count)
+				print ("%N")
+				print_memory_statistics
+				create d1.make_now
 			end
 
 				-- everything with the configuration system went ok, move new_target to target
@@ -995,6 +1016,9 @@ end
 							class_i: l_class /= Void
 						end
 						l_rebuild := l_conf_class.is_renamed and then (l_grp.is_overriden or l_grp.is_override)
+						if l_conf_class.is_renamed then
+							l_class.compiled_class.recompile_syntactical_clients
+						end
 						workbench.change_class (l_class)
 						l_conf_class.set_up_to_date
 						l_classes.forth
@@ -1285,11 +1309,6 @@ feature -- Recompilation
 			l_file: KL_TEXT_INPUT_FILE
 			l_file_name: FILE_NAME
 		do
-			debug ("timing")
-				print_memory_statistics
-				create d1.make_now
-			end
-
 				-- create new backup subdir and copy config file in there
 			if workbench.automatic_backup then
 				workbench.create_backup_directory
@@ -1358,6 +1377,10 @@ feature -- Recompilation
 				recheck_missing_classes
 
 					-- Perform parsing of Eiffel code
+				debug ("timing")
+					print_memory_statistics
+					create d1.make_now
+				end
 				process_degree_5
 				debug ("Timing")
 					create d2.make_now

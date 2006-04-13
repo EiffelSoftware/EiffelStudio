@@ -114,6 +114,8 @@ feature {CONF_ACCESS} -- Merging
 
 	merge (other: like Current) is
 			-- Merge with other.
+		require
+			other_valid: other.valid_excludes and other.valid_includes
 		do
 			if other /= Void then
 				if exclude = Void then
@@ -130,8 +132,10 @@ feature {CONF_ACCESS} -- Merging
 				elseif other.include /= Void then
 					include.merge (other.include)
 				end
+
+				exclude_regexp.merge (other.exclude_regexp)
+				include_regexp.merge (other.include_regexp)
 			end
-			compile
 		end
 
 feature -- Comparison
@@ -213,6 +217,7 @@ feature {NONE} -- Implementation
 					if not l_regexp.is_compiled then
 						create l_er
 						l_er.set_regexp (exclude.item)
+						set_error (l_er)
 					else
 						l_regexp.optimize
 						exclude_regexp.extend (l_regexp)
@@ -231,6 +236,7 @@ feature {NONE} -- Implementation
 					if not l_regexp.is_compiled then
 						create l_er
 						l_er.set_regexp (include.item)
+						set_error (l_er)
 					else
 						l_regexp.optimize
 						include_regexp.extend (l_regexp)
@@ -240,19 +246,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {CONF_FILE_RULE} -- Implementation, merging
+
 	exclude_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
 	include_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
 			-- The compiled regexp objects of the strings.
 
-feature {NONE} -- Contracts
+feature -- Contracts
 
 	valid_excludes: BOOLEAN is
 			-- Are excludes valid?
 		do
 			if not exclude_regexp.is_empty then
-				Result := exclude /= Void and then exclude.count = exclude_regexp.count
+					-- because of how we do the merging its possible that we have two regexps for the same expression
+				Result := exclude /= Void and then exclude.count <= exclude_regexp.count
 			else
 				Result := exclude = Void or else exclude.is_empty
+			end
+			from
+				exclude_regexp.start
+			until
+				not Result or exclude_regexp.after
+			loop
+				Result := exclude_regexp.item.is_compiled
+				exclude_regexp.forth
 			end
 		end
 
@@ -260,9 +277,18 @@ feature {NONE} -- Contracts
 			-- Are includes valid?
 		do
 			if not include_regexp.is_empty then
-				Result := include /= Void and then include.count = include_regexp.count
+					-- because of how we do the merging its possible that we have two regexps for the same expression
+				Result := include /= Void and then include.count <= include_regexp.count
 			else
 				Result := include = Void or else include.is_empty
+			end
+			from
+				include_regexp.start
+			until
+				not Result or include_regexp.after
+			loop
+				Result := include_regexp.item.is_compiled
+				include_regexp.forth
 			end
 		end
 
@@ -270,8 +296,8 @@ invariant
 	exclude_regexp_not_void: exclude_regexp /= Void
 	include_regexp_not_void: include_regexp /= Void
 	error_message: is_error implies last_error /= Void
-	exclude_patterns_valid: valid_excludes
-	include_patterns_valid: valid_includes
+	exclude_patterns_valid: not is_error implies valid_excludes
+	include_patterns_valid: not is_error implies valid_includes
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

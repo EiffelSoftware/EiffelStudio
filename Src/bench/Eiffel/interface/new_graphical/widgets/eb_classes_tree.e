@@ -94,9 +94,6 @@ feature {NONE} -- Initialization
 			-- Remove and replace contents of `Current'.
 		local
 			l_target: CONF_TARGET
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
-			l_clu: CONF_CLUSTER
-			l_sort_grps: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
 			if window /= Void then
 					-- Lock update of window, so rebuilding of `Current'
@@ -278,10 +275,8 @@ feature -- Activation
 	show_class (a_class: CLASS_I) is
 			-- Expand all parents of `a_class' and highlight `a_class'.
 		local
-			path: LINKED_LIST [CONF_GROUP]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
-			l_sub: LIST [STRING]
 		do
 			show_subfolder (a_class.group, a_class.config_class.path)
 			a_folder ?= selected_item
@@ -408,7 +403,6 @@ feature {NONE} -- Rebuilding
 		require
 			tree_list_not_void: tree_list /= Void
 		local
-			cluster: EB_SORTED_CLUSTER
 			current_node: EV_TREE_NODE
 			l_parent: EV_TREE_NODE
 			l_name: STRING

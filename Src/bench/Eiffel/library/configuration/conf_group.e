@@ -352,6 +352,16 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			classes_set: classes = a_classes
 		end
 
+	set_classes_by_filename (a_classes: like classes_by_filename) is
+			-- Set `classes_by_filename' to `a_classes'
+		require
+			a_classes_not_void: a_classes /= Void
+		do
+			classes_by_filename := a_classes
+		ensure
+			classes_set: classes_by_filename = a_classes
+		end
+
 	clean_classes is
 			-- Clean the classes.
 		do
@@ -446,6 +456,11 @@ feature {CONF_VISITOR} -- Implementation, attributes stored in configuration fil
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options.
+
+feature {CONF_VISITOR} -- Implementation, not stored in configuration fi
+
+	classes_by_filename: HASH_TABLE [like class_type, STRING]
+			-- Classes index by filename
 
 feature {NONE} -- Class type anchor
 

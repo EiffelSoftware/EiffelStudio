@@ -188,10 +188,13 @@ feature -- Access queries
 	file_rule: CONF_FILE_RULE is
 			-- Rules for files to be included or excluded.
 		do
-			Result := internal_file_rule.twin
+			create Result.make
+			Result.merge (internal_file_rule)
 			if extends /= Void then
 				Result.merge (extends.file_rule)
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	options: CONF_OPTION is

@@ -403,7 +403,9 @@ feature -- Visit nodes
 		do
 			if not is_error then
 				current_cluster := a_cluster
+				current_file_rule := a_cluster.file_rule
 				create current_classes.make (Classes_per_cluster)
+				create current_classes_by_filename.make (Classes_per_cluster)
 				process_cluster_recursive ("")
 
 				if partial_classes /= Void then
@@ -417,6 +419,7 @@ feature -- Visit nodes
 				end
 
 				a_cluster.set_classes (current_classes)
+				a_cluster.set_classes_by_filename (current_classes_by_filename)
 			end
 		ensure then
 			classes_set: not is_error implies a_cluster.classes_set
@@ -516,11 +519,17 @@ feature {NONE} -- Implementation
 	current_classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- The classes of the group we are currently processing.
 
+	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING]
+			-- Classes of the group we are currently processing indexed by filename.
+
 	current_dotnet_classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- Same as `current_classes' but indexed by dotnet name.
 
 	current_cluster: CONF_CLUSTER
 			-- The cluster we are currently processing.
+
+	current_file_rule: CONF_FILE_RULE
+			-- File rule of `current_cluster'.
 
 	current_assembly: CONF_ASSEMBLY
 			-- The assembly we are currently processing.
@@ -546,6 +555,7 @@ feature {NONE} -- Implementation
 	process_cluster_recursive (a_path: STRING) is
 			-- Recursively process `a_path'.
 		require
+			current_file_rule_not_void: current_file_rule /= Void
 			current_cluster_not_void: current_cluster /= Void
 			a_path_not_void: a_path /= Void
 		local
@@ -559,14 +569,12 @@ feature {NONE} -- Implementation
 			on_process_directory (current_cluster, a_path)
 			l_path := current_cluster.location.build_path (a_path, "")
 			create l_dir.make (l_path)
-			l_dir.open_read
 
-			if not l_dir.is_open_read then
+			if not l_dir.is_readable then
 				add_error (create {CONF_ERROR_DIR}.make (l_path))
 			else
 					-- look for classes in directory itself.
 				l_files := l_dir.filenames
-				l_dir.close
 				if l_files = Void then
 					add_error (create {CONF_ERROR_DIR}.make (l_path))
 				else
@@ -577,7 +585,7 @@ feature {NONE} -- Implementation
 						i > cnt
 					loop
 						l_name := l_files.item (i)
-						if current_cluster.file_rule.is_included (a_path+"/"+l_name) then
+						if current_file_rule.is_included (a_path+"/"+l_name) then
 							put_class (l_name, a_path)
 						end
 						i := i + 1
@@ -593,7 +601,7 @@ feature {NONE} -- Implementation
 							i > cnt
 						loop
 							l_name := l_subdirs.item (i)
-							if current_cluster.file_rule.is_included (a_path+"/"+l_name) then
+							if current_file_rule.is_included (a_path+"/"+l_name) then
 								process_cluster_recursive (a_path+"/"+l_name)
 							end
 							i := i +1
@@ -607,6 +615,7 @@ feature {NONE} -- Implementation
 			-- Put the class in `a_path' `a_file' into `current_classes'.
 		require
 			current_classes_not_void: current_classes /= Void
+			old_group_classes_set: old_group /= Void implies old_group.classes_set
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_class: CONF_CLASS
@@ -614,76 +623,104 @@ feature {NONE} -- Implementation
 			l_full_file: STRING
 			l_pc: ARRAYED_LIST [STRING]
 			l_renamings: HASH_TABLE [STRING, STRING]
+			l_file_name: STRING
 		do
 			if valid_eiffel_extension (a_file) then
-				l_full_file := current_cluster.location.evaluated_directory
-				l_full_file.append (a_path+"/"+a_file)
-				create l_file.make (l_full_file)
-				l_file.open_read
-				if not l_file.is_open_read then
-					add_error (create {CONF_ERROR_FILE}.make (l_full_file))
-				else
-						-- get class name
-					classname_finder.parse (l_file)
-					l_tmp := classname_finder.classname
-					if l_tmp = Void then
-						add_error (create {CONF_ERROR_CLASSN}.make (a_file))
-					elseif l_tmp.is_case_insensitive_equal ("NONE") then
-						add_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
+				l_file_name := a_path+"/"+a_file
+					-- try to get it directly from old_group by filename
+				if old_group /= Void and then old_group.classes_by_filename.has (l_file_name) then
+					l_class := old_group.classes_by_filename.found_item
+						-- update class
+					l_class.rebuild (a_file, current_cluster, a_path)
+					if l_class.is_error then
+						add_error (l_class.last_error)
+					end
+					l_name := l_class.renamed_name
+					if l_class.is_compiled and l_class.is_modified then
+						modified_classes.force (l_class)
+					end
+						-- add it to `reused_classes'
+					reused_classes.force (l_class)
+					if current_classes.has (l_name) then
+						add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
 					else
-						l_tmp.to_upper
-						l_renamings := current_cluster.renaming
-						if l_renamings /= Void then
-							l_name := l_renamings.item (l_tmp)
-						end
-						if l_name = Void then
-							l_name := l_tmp.twin
-						end
-						if current_cluster.name_prefix /= Void then
-							l_name.prepend (current_cluster.name_prefix)
-						end
-
-							-- partial classes					
-						if classname_finder.is_partial_class then
-							if partial_classes = Void then
-								create partial_classes.make (1)
-							end
-							l_pc := partial_classes.item (l_name)
-							if l_pc = Void then
-								create l_pc.make (1)
-							end
-							l_pc.extend (l_full_file)
-							partial_classes.force (l_pc, l_name)
-							-- normal classes
+						current_classes.force (l_class, l_name)
+						current_classes_by_filename.force (l_class, l_file_name)
+					end
+				else
+					l_full_file := current_cluster.location.evaluated_directory
+					l_full_file.append (l_file_name)
+					create l_file.make (l_full_file)
+					l_file.open_read
+					if not l_file.is_open_read then
+						add_error (create {CONF_ERROR_FILE}.make (l_full_file))
+					else
+							-- get class name
+						classname_finder.parse (l_file)
+						l_file.close
+						l_tmp := classname_finder.classname
+						if l_tmp = Void then
+							add_error (create {CONF_ERROR_CLASSN}.make (a_file))
+						elseif l_tmp.is_case_insensitive_equal ("NONE") then
+							add_error (create {CONF_ERROR_CLASSNONE}.make (a_file))
 						else
-							if old_group /= Void and then old_group.classes /= Void then
-								l_class := old_group.classes.item (l_name)
-							end
-							if l_class /= Void then
-									-- update path
-								l_class.rebuild (a_file, current_cluster, a_path)
-								if l_class.is_error then
-									add_error (l_class.last_error)
-								end
-								if l_class.is_compiled and l_class.is_modified then
-									modified_classes.force (l_class)
-								end
-									-- add it to `reused_classes'
-								reused_classes.force (l_class)
+							l_tmp.to_upper
+							l_renamings := current_cluster.renaming
+							if l_renamings /= Void then
+								l_name := l_renamings.item (l_tmp)
 							else
-									-- not found => new class
-								l_class := conf_factory.new_class (a_file, current_cluster, a_path)
-								if l_class.is_error then
-									add_error (l_class.last_error)
+								l_name := l_tmp.twin
+							end
+							if current_cluster.name_prefix /= Void then
+								l_name.prepend (current_cluster.name_prefix)
+							end
+
+								-- partial classes					
+							if classname_finder.is_partial_class then
+								if partial_classes = Void then
+									create partial_classes.make (1)
 								end
-								added_classes.force (l_class)
-							end
-							if current_classes.has (l_name) then
-								add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+								l_pc := partial_classes.item (l_name)
+								if l_pc = Void then
+									create l_pc.make (1)
+								end
+								l_pc.extend (l_full_file)
+								partial_classes.force (l_pc, l_name)
+								-- normal classes
 							else
-								current_classes.force (l_class, l_name)
+								if old_group /= Void then
+									l_class := old_group.classes.item (l_name)
+								end
+								if l_class /= Void then
+										-- update class
+									l_class.rebuild (a_file, current_cluster, a_path)
+									if l_class.is_error then
+										add_error (l_class.last_error)
+									end
+									if l_class.is_compiled and l_class.is_modified then
+										modified_classes.force (l_class)
+									end
+										-- add it to `reused_classes'
+									reused_classes.force (l_class)
+								else
+										-- not found => new class
+									l_class := conf_factory.new_class (a_file, current_cluster, a_path)
+									if l_class.is_error then
+										add_error (l_class.last_error)
+									end
+									added_classes.force (l_class)
+									l_class.set_up_to_date
+								end
+								check
+									name_same: l_name.is_equal (l_class.renamed_name)
+								end
+								if current_classes.has (l_name) then
+									add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+								else
+									current_classes.force (l_class, l_name)
+									current_classes_by_filename.force (l_class, l_file_name)
+								end
 							end
-							l_file.close
 						end
 					end
 				end
@@ -727,6 +764,7 @@ feature {NONE} -- Implementation
 				current_dotnet_classes.force (l_class, a_dotnet_name)
 				added_classes.force (l_class)
 			end
+			l_class.set_up_to_date
 		ensure
 			added: not is_error implies (current_classes.count = old current_classes.count + 1)
 		end
@@ -1345,6 +1383,7 @@ feature {NONE} -- shared instances
 		once
 			create Result.make
 			Result.compile ("\.[pP]?[eE]$")
+			print ("blub")
 			Result.optimize
 		end
 
@@ -1353,6 +1392,7 @@ feature {NONE} -- shared instances
 		once
 			create Result.make
 			Result.compile ("\.[pP][eE]$")
+			print ("blub")
 			Result.optimize
 		end
 

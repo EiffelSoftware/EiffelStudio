@@ -12,13 +12,19 @@ class
 inherit
 
 	EXCEP_CONST
-		redefine
-			default_create
-		end
+
+create
+	make_handling_by_code,
+	make_handling_by_name
 
 feature -- Init
 
-	default_create is
+	make_handling_by_code is
+		do
+			set_handling_by_code_mode
+		end
+
+	make_handling_by_name is
 		do
 			set_handling_by_name_mode
 		end

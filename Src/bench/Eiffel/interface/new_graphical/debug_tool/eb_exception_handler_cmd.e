@@ -57,16 +57,16 @@ feature -- Dialog
 			app_exec: APPLICATION_EXECUTION
 		do
 			app_exec := Eb_debugger_manager.application
-			if app_exec.is_dotnet then
-				if not app_exec.exceptions_handler.handling_mode_is_by_code then
-					app_exec.exceptions_handler.set_handling_by_name_mode
-				end
+			if app_exec.exceptions_handler.handling_mode_is_by_name then
+				check app_exec.is_dotnet end
 				create dialog
 				dialog.set_handler (app_exec.exceptions_handler)
 				handler_dialog := dialog
 			else
+				check app_exec.is_classic end
 				build_handler_by_code_dialog
 			end
+
 		end
 
 	handler_dialog: EV_DIALOG

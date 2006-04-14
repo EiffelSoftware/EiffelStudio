@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			r.index = grid.first_visible_row.index
+			r.parent /= Void implies r.index = grid.first_visible_row.index
 		end
 
 	row_is_ready_for_identification (a_row: EV_GRID_ROW): BOOLEAN is

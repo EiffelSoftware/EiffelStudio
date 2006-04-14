@@ -161,38 +161,43 @@ feature -- Change
 
 feature -- Debugging events
 
+	debugging_operation_id: NATURAL_32
+
 	on_application_before_launching is
-		deferred
+		do
+			debugging_operation_id := 0
 		end
 
 	on_application_launched is
-		deferred
+		do
 		end
 
 	on_application_before_stopped is
-		deferred
+		do
 		end
 
 	on_application_just_stopped is
 		require
 			app_is_executing: application.is_running and then application.is_stopped
-		deferred
+		do
+			debugging_operation_id := debugging_operation_id + 1
 		end
 
 	on_application_before_resuming is
 		require
 			app_is_executing: application.is_running and then application.is_stopped
-		deferred
+		do
 		end
 
 	on_application_resumed is
 		require
 			app_is_executing: application.is_running and then not application.is_stopped
-		deferred
+		do
+			debugging_operation_id := debugging_operation_id + 1
 		end
 
 	on_application_quit is
-		deferred
+		do
 		end
 
 invariant

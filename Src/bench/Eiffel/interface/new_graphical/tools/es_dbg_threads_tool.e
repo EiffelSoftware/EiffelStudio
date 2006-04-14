@@ -235,6 +235,7 @@ feature {NONE} -- Implementation
 		local
 			l_status: APPLICATION_STATUS
 		do
+			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			if Application.is_running then
 				l_status := application.status
 				if dbg_was_stopped then

@@ -53,6 +53,7 @@ feature {DBG_EVALUATOR} -- Interface
 			l_icdv_obj: ICOR_DEBUG_VALUE
 			l_icd_function: ICOR_DEBUG_FUNCTION
 			l_ctype: CLASS_TYPE
+			exc_dv: EXCEPTION_DEBUG_VALUE
 		do
 			debug ("debugger_trace_eval")
 				print (generating_type + ".impl_dotnet_evaluate_function : ")
@@ -90,6 +91,19 @@ feature {DBG_EVALUATOR} -- Interface
 						l_error_message := "%"" + realf.feature_name + "%" : "
 						if evaluation_aborted then
 							l_error_message.append_string ("Evaluation aborted")
+						elseif exception_occurred then
+							exc_dv := last_result_value.value_exception
+							if exc_dv /= Void then
+								exc_dv.set_name (f.feature_name)
+								exc_dv.set_tag ("Feature [" + f.feature_name + "]: an exception occurred")
+								l_error_message.append_string ("Exception occurred during evaluation"
+										+ " of {" + f.written_class.name_in_upper + "}." + f.feature_name + ": %N"
+										+ exc_dv.display_message
+--										+ last_exception_trace
+									)
+							else
+								l_error_message.append_string (error_message)
+							end
 						elseif error_occurred then
 							l_error_message.append_string (error_message)
 						else
@@ -274,6 +288,7 @@ feature {DBG_EVALUATOR} -- Interface
 					notify_error (cst_error_occurred, "Once feature [" + f.feature_name + "]: not yet called")
 				elseif last_once_failed then
 					create exc_dv.make_with_name (f.feature_name)
+					exc_dv.set_wrapper_mode (True)
 					exc_dv.set_tag ("Once feature [" + f.feature_name + "]: an exception occurred")
 					if l_adv /= Void then
 						exc_dv.set_exception_value (l_adv)
@@ -501,6 +516,8 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
+	last_exception_trace: STRING
+
 	dotnet_evaluate_icd_function (target_icdv: ICOR_DEBUG_VALUE; func: ICOR_DEBUG_FUNCTION;
 					a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 		require
@@ -511,10 +528,13 @@ feature {NONE} -- Implementation
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icdv_args: ARRAY [ICOR_DEBUG_VALUE]
 			l_result: ICOR_DEBUG_VALUE
+			l_exc_dv: EXCEPTION_DEBUG_VALUE
 		do
 			debug ("debugger_trace_eval_data")
 				display_funct_info_on_object (func)
 			end
+
+			last_exception_trace := Void
 
 				--| Build the arguments for dotnet
 			l_icdv_args := prepared_parameters (a_params, True)
@@ -535,19 +555,26 @@ feature {NONE} -- Implementation
 				if eifnet_evaluator.last_eval_aborted then
 					notify_error (Cst_error_evaluation_aborted, Void)
 				elseif eifnet_evaluator.last_eval_is_exception then
-
---					print (eifnet_debugger.exception_text_from (l_result))
---					l_result := Void
 					l_adv := debug_value_from_icdv (l_result, Void)
-					Result := l_adv.dump_value
-
+					create l_exc_dv.make_with_name (once "Unknown")
+					l_exc_dv.set_wrapper_mode (True)
+					l_exc_dv.set_tag ("An exception occurred")
+					l_exc_dv.set_message (eifnet_debugger.exception_text_from (l_result))
+					if l_adv /= Void then
+						l_exc_dv.set_exception_value (l_adv)
+					end
+					Result := l_exc_dv.dump_value
 					notify_error (Cst_error_exception_during_evaluation, Void)
 				elseif not eifnet_evaluator.last_call_succeed then
 					notify_error (Cst_error_occurred, Void)
 				end
 				if not error_occurred then
-					l_adv := debug_value_from_icdv (l_result, Void)
-					Result := l_adv.dump_value
+					if l_result /= Void then
+						l_adv := debug_value_from_icdv (l_result, Void)
+						Result := l_adv.dump_value
+					else
+						fixme("How come l_result is Void with no Error message ?")
+					end
 				end
 			end
 			debug ("debugger_trace_eval_data")
@@ -741,19 +768,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

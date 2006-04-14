@@ -314,6 +314,7 @@ feature -- Status setting
 			if can_refresh then
 				cst ?= a_stone
 				if cst /= Void and then application.is_stopped then
+					fixme ("Check if we should not call `update' to benefit real_update optimisation")
 					if
 						not Application.is_dotnet
 						or else not Application.imp_dotnet.callback_notification_processing
@@ -1119,6 +1120,7 @@ feature {NONE} -- Implementation
 			l_expr: EB_EXPRESSION
 			l_item: like watched_item_from
 		do
+			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			if application.is_running and application.is_stopped and dbg_was_stopped then
 				eval := True
 			end

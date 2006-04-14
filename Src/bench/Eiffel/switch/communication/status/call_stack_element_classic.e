@@ -64,31 +64,40 @@ create {STOPPED_HDLR,APPLICATION_EXECUTION_CLASSIC}
 feature {NONE} -- Initialization
 
 	make (level: INTEGER; tid: INTEGER) is
+		local
+			retried: BOOLEAN
 		do
-			Precursor (level, tid)
+			if not retried then
+				Precursor (level, tid)
 
-				-- set the private to a fake value
-			private_body_index := -1
+					-- set the private to a fake value
+				private_body_index := -1
 
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
-			create unprocessed_values.make(10)
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
-			Init_recv_c
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%%T" + generator + ": init_rout_c%N"); end
-			Init_rout_c
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%%T" + generator + ": c_recv_rout_info%N"); end
-			c_recv_rout_info (Current)
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Creating item%N"); end
+				create unprocessed_values.make(10)
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_recv_c%N"); end
+				Init_recv_c
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": init_rout_c%N"); end
+				Init_rout_c
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": c_recv_rout_info%N"); end
+				c_recv_rout_info (Current)
 
-			debug ("DEBUGGER_TRACE")
-				if is_exhausted then
-					io.error.put_string("%T%TEXHAUSTED")
-				else
-					io.error.put_string("%T%T")
-					io.error.put_string(routine_name)
+				debug ("DEBUGGER_TRACE")
+					if is_exhausted then
+						io.error.put_string("%T%TEXHAUSTED")
+					else
+						io.error.put_string("%T%T")
+						io.error.put_string(routine_name)
+					end
+					io.error.put_new_line
 				end
-				io.error.put_new_line
+				debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Finished creating%N"); end
+			else
+				is_not_valid := True
 			end
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T%T" + generator + ": Finished creating%N"); end
+		rescue
+			retried := True
+			retry
 		end
 
 	dummy_make (fn: STRING; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING; type, origin: INTEGER) is
@@ -483,19 +492,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

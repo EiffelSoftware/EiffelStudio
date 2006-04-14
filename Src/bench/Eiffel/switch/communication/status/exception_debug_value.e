@@ -25,6 +25,15 @@ feature {NONE} -- Initialization
 
 feature -- change
 
+	is_wrapper_mode: BOOLEAN
+			-- Is Current a "fake" Exception debug value ?
+			-- i.e: it was created to hold an effective exception debug value.
+
+	set_wrapper_mode (b: BOOLEAN) is
+		do
+			is_wrapper_mode := b
+		end
+
 	set_code (a_code: INTEGER) is
 		do
 			code := a_code

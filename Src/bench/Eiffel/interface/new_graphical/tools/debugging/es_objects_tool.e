@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 			create objects_grids_positions.make (Position_current, Position_objects)
 			objects_grids_positions[Position_current] 	:= debugged_objects_grid_id
-			objects_grids_positions[Position_stack] 	:= debugged_objects_grid_id
+			objects_grids_positions[Position_stack] 	:= stack_objects_grid_id
 			objects_grids_positions[Position_locals] 	:= stack_objects_grid_id
 			objects_grids_positions[Position_arguments] := stack_objects_grid_id
 			objects_grids_positions[Position_result] 	:= stack_objects_grid_id

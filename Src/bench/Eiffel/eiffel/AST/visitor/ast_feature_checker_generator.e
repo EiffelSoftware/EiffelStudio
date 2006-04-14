@@ -1486,7 +1486,7 @@ feature -- Implementation
 			l_feature: FEATURE_I
 		do
 			l_type_a := constrained_type (last_type.actual_type)
-			if l_type_a.is_none then
+			if l_type_a.is_none or l_type_a.is_void then
 				l_class_id := -1
 			else
 				l_class_id := l_type_a.associated_class.class_id
@@ -1522,7 +1522,7 @@ feature -- Implementation
 			l_feature: FEATURE_I
 		do
 			l_type_a := constrained_type (last_type.actual_type)
-			if l_type_a.is_none then
+			if l_type_a.is_none or l_type_a.is_void then
 				l_class_id := -1
 			else
 				l_class_id := l_type_a.associated_class.class_id
@@ -1588,7 +1588,7 @@ feature -- Implementation
 					l_as.enable_argument
 					l_as.set_argument_position (l_arg_pos)
 					l_type_a := constrained_type (l_type.actual_type)
-					if not l_type_a.is_none then
+					if not (l_type_a.is_none or l_type_a.is_void) then
 						l_class_id := l_type_a.associated_class.class_id
 					else
 						l_class_id := -1
@@ -1629,7 +1629,7 @@ feature -- Implementation
 							-- set some type attributes of the node
 						l_as.enable_local
 						l_type_a := constrained_type (l_type.actual_type)
-						if not l_type_a.is_none then
+						if not (l_type_a.is_none or l_type_a.is_void) then
 							l_class_id := l_type_a.associated_class.class_id
 						else
 							l_class_id := -1
@@ -1713,7 +1713,7 @@ feature -- Implementation
 					l_as.enable_argument
 					l_as.set_argument_position (l_arg_pos)
 					l_type_a := constrained_type (last_type.actual_type)
-					if not l_type_a.is_none then
+					if not (l_type_a.is_none or l_type_a.is_void) then
 						l_class_id := l_type_a.associated_class.class_id
 					else
 						l_class_id := -1
@@ -2729,7 +2729,7 @@ feature -- Implementation
 			end
 			if not is_inherited then
 				l_type_a := constrained_type (last_type.actual_type)
-				if not l_type_a.is_none then
+				if not (l_type_a.is_none or l_type_a.is_void) then
 					l_as.set_class_id (l_type_a.associated_class.class_id)
 				else
 					l_as.set_class_id (-1)
@@ -3027,7 +3027,7 @@ feature -- Implementation
 
 			if not is_inherited then
 				l_type_a := constrained_type (l_left_type.actual_type)
-				if not l_type_a.is_none then
+				if not (l_type_a.is_none or l_type_a.is_void) then
 					l_as.set_class_id (l_type_a.associated_class.class_id)
 				else
 					l_as.set_class_id (-1)

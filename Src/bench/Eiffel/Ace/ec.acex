@@ -21,9 +21,6 @@
 		<external_include location="$EIFFEL_SRC\C\platform">
 			<if platform="windows"/>
 		</external_include>
-		<external_include location="$ISE_LIBRARY\library\wel\spec\windows\include">
-			<if platform="windows"/>
-		</external_include>
 		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<if platform="windows"/>
 		</external_include>

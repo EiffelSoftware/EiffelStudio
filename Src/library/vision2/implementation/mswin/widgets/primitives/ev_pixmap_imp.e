@@ -1567,7 +1567,7 @@ feature {NONE} -- Implementation
 			new_height: INTEGER
 			icon_mask_bitmap: WEL_BITMAP
 			a_wel_bitmap: WEL_BITMAP
-			mask_src_dc, mask_dest_dc: WEL_MEMORY_DC
+			mask_dest_dc: WEL_MEMORY_DC
 		do
 				-- Retrieve the information from the icon/cursor
 			if icon /= Void then

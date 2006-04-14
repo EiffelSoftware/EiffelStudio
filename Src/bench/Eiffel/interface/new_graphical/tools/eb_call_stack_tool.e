@@ -428,6 +428,7 @@ feature {NONE} -- Grid Implementation
 						if level > 0 then
 							select_element_by_level (level)
 						end
+						l_row.set_background_color (row_highlight_bg_color)
 					end
 				end
 			end
@@ -498,6 +499,7 @@ feature {NONE} -- Implementation
 			glab: EV_GRID_LABEL_ITEM
 			l_status: APPLICATION_STATUS
 		do
+			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			request_clean_stack_grid
 			if eb_debugger_manager.application_is_executing then
 				l_status := eb_debugger_manager.application.status
@@ -1186,19 +1188,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

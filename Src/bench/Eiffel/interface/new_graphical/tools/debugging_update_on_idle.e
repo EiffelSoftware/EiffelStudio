@@ -27,6 +27,17 @@ feature {NONE} -- Initialization
 
 feature -- update
 
+	request_update is
+			-- Request an update, this should call update only 
+			-- once per debugging "operation"
+			-- This is to avoid computing twice the data
+			-- on specific cases
+		do
+			if not update_already_done then
+				update
+			end
+		end
+
 	update is
 		local
 			l_status: APPLICATION_STATUS
@@ -36,7 +47,7 @@ feature -- update
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
 			end
-			-- To redefine
+				-- To redefine
 		end
 
 	cancel_idled_update is
@@ -45,6 +56,13 @@ feature -- update
 		end
 
 feature {NONE} -- real_update
+
+	last_real_update_id: NATURAL_32
+
+	update_already_done: BOOLEAN is
+		do
+			Result := debugger_manager.debugging_operation_id = last_real_update_id
+		end
 
 	real_update_on_idle is
 		local
@@ -75,7 +93,8 @@ feature {NONE} -- real_update
 
 	real_update (arg_is_stopped: BOOLEAN) is
 			-- Display current execution status.
-		deferred
+		do
+			last_real_update_id := Debugger_manager.debugging_operation_id
 		end
 
 	postpone_real_update_on_next_idle (a_dbg_stopped: BOOLEAN) is

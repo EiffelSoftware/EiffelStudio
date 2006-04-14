@@ -182,6 +182,7 @@ feature -- Graphical changes
 			dv: ABSTRACT_DEBUG_VALUE
 			dmdv: DUMMY_MESSAGE_DEBUG_VALUE
 			excdv: EXCEPTION_DEBUG_VALUE
+			cell: EV_GRID_ITEM
 		do
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
@@ -205,11 +206,18 @@ feature -- Graphical changes
 						set_pixmap (Icons @ (dmdv.display_kind))
 					elseif dv.kind = Exception_message_value then
 						excdv ?= dv
+						if excdv.is_wrapper_mode then
+							set_title ("Exception's details ...")
+						end
 						set_value (excdv.display_tag)
+						cell := value_cell
+						if cell /= Void then
+							cell.set_tooltip (excdv.display_message)
+						end
 						set_type (once "Exception data")
 						set_pixmap (Icons @ (dv.kind))
 						if excdv.debug_value /= Void then
-							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, "Exception object")
+							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
 						end
 					else
 						last_dump_value := dv.dump_value

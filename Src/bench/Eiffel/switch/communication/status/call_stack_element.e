@@ -30,6 +30,10 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
+	is_not_valid: BOOLEAN
+			-- Current call stack element is not valid ?
+			-- (i.e: issue retrieving the data...)
+
 	is_eiffel_call_stack_element: BOOLEAN is
 			-- Is, Current, an eiffel call stack element or not (external stack) ?
 		deferred
@@ -96,13 +100,13 @@ indexing
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -2282,6 +2282,12 @@ feature -- Specific function evaluation
 					last_once_already_called := False
 				end
 			end
+			debug ("debugger_trace_eval")
+				print ("Last once feature          = " + a_class_c.name_in_upper + "." + a_feat.feature_name + "%N")
+				print ("  last_once_already_called = " + last_once_already_called.out + "%N")
+				print ("  last_once_available      = " + last_once_available.out + "%N")
+				print ("  last_once_failed         = " + last_once_failed.out + "%N")
+			end
 		end
 
 	last_once_available: BOOLEAN

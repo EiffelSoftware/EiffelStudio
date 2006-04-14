@@ -14,7 +14,14 @@ inherit
 	DEBUGGER_MANAGER
 		redefine
 			make,
-			set_current_thread_id
+			set_current_thread_id,
+			on_application_before_launching,
+			on_application_launched,
+			on_application_before_resuming,
+			on_application_resumed,
+			on_application_before_stopped,
+			on_application_just_stopped,
+			on_application_quit
 		end
 
 	EB_CONSTANTS
@@ -539,7 +546,7 @@ feature -- Status setting
 			end
 			objects_tool.set_debugger_manager (Current)
 			objects_tool.set_cleaning_delay (Preferences.Debug_tool_data.delay_before_cleaning_objects_grid)
-			objects_tool.update
+			objects_tool.request_update
 
 				--| Watches tool
 			nwt := Preferences.debug_tool_data.number_of_watch_tools.min (1)
@@ -565,7 +572,7 @@ feature -- Status setting
 				end
 			end
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 				--| Threads Tool
 			if threads_tool = Void then
@@ -574,7 +581,7 @@ feature -- Status setting
 			else
 				threads_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
-			threads_tool.update
+			threads_tool.request_update
 
 				--| Call Stack Tool
 			if call_stack_tool = Void then
@@ -583,7 +590,7 @@ feature -- Status setting
 			else
 				call_stack_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
-			call_stack_tool.update
+			call_stack_tool.request_update
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -740,16 +747,19 @@ feature -- Status setting
 			-- Propagate `st' to tools.
 		local
 			cst: CALL_STACK_STONE
+			propagate_stone: BOOLEAN
 		do
 			if raised then
 				cst ?= st
 				if cst /= Void then
+					propagate_stone := Application.current_execution_stack_number /= cst.level_number
 					Application.set_current_execution_stack_number (cst.level_number)
 				end
-
-				call_stack_tool.set_stone (st)
-				objects_tool.set_stone (st)
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
+				if propagate_stone then
+					call_stack_tool.set_stone (st)
+					objects_tool.set_stone (st)
+					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
+				end
 			end
 		end
 
@@ -796,11 +806,13 @@ feature -- Debugging events
 	on_application_before_launching is
 			-- Application is about to be launched.
 		do
+			Precursor
 		end
 
 	on_application_launched is
 			-- Application has just been launched.
 		do
+			Precursor
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched %N")
 			end
@@ -842,7 +854,7 @@ feature -- Debugging events
 			end
 
 				-- Update Watch tool
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched : done%N")
 			end
@@ -856,6 +868,7 @@ feature -- Debugging events
 			status: APPLICATION_STATUS
 --			call_stack_elem	: CALL_STACK_ELEMENT
 		do
+			Precursor
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_before_stopped %N")
 			end
@@ -891,6 +904,7 @@ feature -- Debugging events
 			st: CALL_STACK_STONE
 			cd: EV_CONFIRMATION_DIALOG
 		do
+			Precursor
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_just_stopped : start%N")
 			end
@@ -917,19 +931,20 @@ feature -- Debugging events
 					launch_stone (st)
 				end
 			end
-			objects_tool.enable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
-
 			window_manager.quick_refresh_all_margins
 
 				-- Fill in the threads tool.
-			threads_tool.update
+			threads_tool.request_update
 				-- Fill in the stack tool.
-			call_stack_tool.update
+			call_stack_tool.request_update
 				-- Fill in the objects tool.
-			objects_tool.update
+
+			objects_tool.enable_refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
+
+			objects_tool.request_update
 				-- Update Watch tool
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 			output_manager.add_string ("Application stopped")
 			output_manager.add_new_line
@@ -963,6 +978,7 @@ feature -- Debugging events
 
 	on_application_before_resuming is
 		do
+			Precursor
 			objects_tool.record_grids_layout
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
@@ -970,6 +986,8 @@ feature -- Debugging events
 	on_application_resumed is
 			-- Application was resumed after a stop.
 		do
+			Precursor
+
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_resumed%N")
 			end
@@ -987,15 +1005,23 @@ feature -- Debugging events
 			set_critical_stack_depth_cmd.disable_sensitive
 			assertion_checking_handler_cmd.disable_sensitive
 
+			objects_tool.disable_refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
+
+
 				-- Fill in the threads tool.
-			threads_tool.update
+			threads_tool.request_update
 				-- Fill in the stack tool.
-			call_stack_tool.update
+			call_stack_tool.request_update
+
+			objects_tool.enable_refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
+
 				-- Fill in the objects tool.
-			objects_tool.update
+			objects_tool.request_update
 
 				-- Update Watch tool
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 			output_manager.add_string ("Application is running")
 			if Application.execution_mode = Application.No_stop_points then
@@ -1024,6 +1050,7 @@ feature -- Debugging events
 	on_application_quit is
 			-- Application just quit.
 		do
+			Precursor
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit %N")
 			end

@@ -446,6 +446,9 @@ feature -- Graphical changes
 			end
 			if row /= Void and then c <= row.count then
 				Result := row.item (c)
+				if Result = Void then
+					create Result
+				end
 			end
 		ensure
 			result_not_void_if_stopped: (application.is_running and then application.is_stopped) implies Result /= Void
@@ -524,6 +527,11 @@ feature -- Graphical changes
 		do
 			glab := cell_text_updated (v, Col_value_index)
 			apply_cell_value_properties_on (glab)
+		end
+
+	value_cell: EV_GRID_ITEM is
+		do
+			Result := es_cell (Col_value_index)
 		end
 
 	set_context (v: STRING) is

@@ -134,7 +134,8 @@ feature -- Implementation
 			l_index: INTEGER
 			l_type: INTEGER
 			l_once_func: ONCE_FUNC_I
-			err_v: EXCEPTION_DEBUG_VALUE
+			exc_v: EXCEPTION_DEBUG_VALUE
+			err_v: DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			clear_last_values
 			l_index := once_index (once_routine)
@@ -164,10 +165,10 @@ feature -- Implementation
 					end
 					recv_value (Current)
 					if is_exception_trace then
-						create err_v.make_with_name (once_routine.feature_name)
-						err_v.set_tag ("Exception occurred")
-						err_v.set_message (exception_trace)
-						Result := err_v
+						create exc_v.make_with_name (once_routine.feature_name)
+						exc_v.set_tag ("Exception occurred")
+						exc_v.set_message (exception_trace)
+						Result := exc_v
 						reset_recv_value
 					else
 						Result := item
@@ -178,15 +179,15 @@ feature -- Implementation
 							Result.set_hector_addr
 						else
 							create err_v.make_with_name (once_routine.feature_name)
-							err_v.set_tag ("Error : unable to retrieve the data.")
+							err_v.set_message ("Error : unable to retrieve the data.")
 							Result := err_v
 						end
 					end
 				else
 					last_exception_code := c_tread.to_integer
-					create err_v.make_with_name (once_routine.feature_name)
-					err_v.set_tag (exception_tag_from_code (last_exception_code))
-					Result := err_v
+					create exc_v.make_with_name (once_routine.feature_name)
+					exc_v.set_tag (exception_tag_from_code (last_exception_code))
+					Result := exc_v
 
 					debug ("debugger_ipc")
 						print (once_routine.feature_name + " : failed%N")
@@ -198,14 +199,14 @@ feature -- Implementation
 				end
 			else
 				create err_v.make_with_name (once_routine.feature_name)
-				err_v.set_tag ("Not yet called")
+				err_v.set_message ("Not yet called")
 				Result := err_v
 			end
 
 			if Result = Void then
 				check should_not_occur: False end
 				create err_v.make_with_name (once_routine.feature_name)
-				err_v.set_tag ("Error! : unable to retrieve the data.")
+				err_v.set_message ("Error! : unable to retrieve the data.")
 				Result := err_v
 			end
 		ensure

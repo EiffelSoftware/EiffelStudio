@@ -8,12 +8,6 @@ indexing
 class
 	DIFF [G -> HASHABLE ]
 
-inherit
-	REFACTORING_HELPER
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	match: LINKED_LIST [DIFF_LINE_MATCH]

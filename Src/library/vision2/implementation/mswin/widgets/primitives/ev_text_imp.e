@@ -397,7 +397,7 @@ feature -- Status Settings
 			new_lines_to_start: INTEGER
 			new_lines_to_end: INTEGER
 			actual_start, actual_end: INTEGER
-			l_text: STRING
+			l_text: like text
 		do
 			l_text := text
 			if start_pos < end_pos then

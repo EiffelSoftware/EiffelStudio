@@ -169,7 +169,6 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (50)
 			Result.force ("address_expression")
-			Result.force ("arguments")
 			Result.force ("array_optimization")
 			Result.force ("check_generic_creation_constraint")
 			Result.force ("check_vape")
@@ -200,7 +199,6 @@ feature {NONE} -- Implementation
 			Result.force ("external_runtime")
 			Result.force ("shared_library_definition")
 			Result.force ("syntax_warning")
-			Result.force ("working_directory")
 			Result.force ("use_cluster_name_as_namespace")
 			Result.force ("use_all_cluster_name_as_namespace")
 		ensure

@@ -14,52 +14,34 @@ feature -- Access
 			-- Current selected command line argument.
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
-			l_last_string: STRING
 			l_options: USER_OPTIONS
 		do
-			if current_selected_cmd_line_argument.item /= Void then
-				Result := Current_selected_cmd_line_argument.item
+			create shared_eiffel
+			l_options := shared_eiffel.eiffel_ace.lace.user_options
+			if l_options /= Void and then (l_options.use_arguments and l_options.last_argument /= Void) then
+				Result := (create {ENV_INTERP}).interpreted_string (l_options.last_argument)
 			else
-				create shared_eiffel
-				l_options := shared_eiffel.eiffel_ace.lace.user_options
-				if l_options /= Void and then l_options.arguments /= Void then
-					Result := (create {ENV_INTERP}).interpreted_string (l_options.arguments.first)
-				else
-					l_last_string := shared_eiffel.eiffel_universe.target.settings.item ("arguments")
-					if l_last_string /= Void then
-						Result := (create {ENV_INTERP}).interpreted_string (l_last_string)
-					else
-						Result := ""
-					end
-				end
-				current_selected_cmd_line_argument.put (Result)
+				Result := ""
 			end
 		ensure
 			current_cmd_line_argument_not_void: Result /= Void
 		end
 
-	current_selected_cmd_line_argument: CELL [STRING] is
-			-- Argument last selected by user, if any.
-		once
-			create Result.put (Void)
-		end
-
 feature {NONE} -- Constants
-
-	No_argument_string: STRING is "(No argument)"
 
 	application_working_directory: STRING is
 			-- Current directory selected for running application.
 		local
 			shared_eiffel: SHARED_EIFFEL_PROJECT
+			l_options: USER_OPTIONS
 		do
 			create shared_eiffel
-			Result := shared_eiffel.Eiffel_ace.lace.application_working_directory
-			if Result = Void or else Result.is_empty then
-				Result := "."
-			else
+			l_options := shared_eiffel.eiffel_ace.lace.user_options
+			if l_options /= Void and then (l_options.working_directory /= Void and then not l_options.working_directory.is_empty) then
 					-- If it contains some environment variables, they are translated.			
-				Result := (create {ENV_INTERP}).interpreted_string (Result)
+				Result := (create {ENV_INTERP}).interpreted_string (l_options.working_directory)
+			else
+				Result := "."
 			end
 		ensure
 			application_working_directory_not_void: Result /= Void

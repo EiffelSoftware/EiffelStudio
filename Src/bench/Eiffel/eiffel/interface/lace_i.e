@@ -53,9 +53,6 @@ feature -- Status
 
 feature -- Access
 
-	application_working_directory: STRING
-			-- Current directory stored in Ace file.
-
 	file_name: STRING
 			-- Full path to the universe/system description
 
@@ -116,7 +113,6 @@ feature -- Update from retrieved object.
 			-- standard_copy (other)
 			date := other.date
 			compile_all_classes := other.compile_all_classes
-			application_working_directory := other.application_working_directory
 			successful := True
 		end
 feature -- Status setting
@@ -1005,11 +1001,6 @@ feature {NONE} -- Implementation
 				end
 			else
 				system.set_has_syntax_warning (False)
-			end
-
-			l_s := l_settings.item ("working_directory")
-			if l_s /= Void then
-				application_working_directory := conf_factory.new_location_from_path (l_s, a_target).evaluated_directory
 			end
 
 			l_s := l_settings.item ("use_cluster_name_as_namespace")

@@ -178,6 +178,7 @@ feature {NONE} -- Implementation
 			Result.force ("dotnet_naming_convention")
 			Result.force ("dynamic_runtime")
 			Result.force ("exception_trace")
+			Result.force ("executable_name")
 			Result.force ("full_type_checking")
 			Result.force ("il_verifiable")
 			Result.force ("inlining")

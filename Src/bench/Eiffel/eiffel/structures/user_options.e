@@ -16,6 +16,15 @@ feature -- Access
 	arguments: ARRAYED_LIST [STRING]
 			-- List of arguments used by current project.
 
+	last_argument: STRING
+			-- Last used argument.
+
+	use_arguments: BOOLEAN
+			-- Use arguments?
+
+	working_directory: STRING
+			-- Working directory.
+
 feature -- Update
 
 	set_eifgen (a_location: like eifgen) is
@@ -36,6 +45,37 @@ feature -- Update
 			arguments_set: arguments = an_arguments
 		end
 
+	set_last_argument (an_argument: like last_argument) is
+			-- Set `last_argument' to `an_argument'.
+		do
+			last_argument := an_argument
+		ensure
+			last_argument_set: last_argument = an_argument
+		end
+
+	enable_arguments is
+			-- Enable use of arguments.
+		do
+			use_arguments := True
+		ensure
+			use_arguments: use_arguments
+		end
+
+	disable_arguments is
+			-- Disable use of arguments.
+		do
+			use_arguments := False
+		ensure
+			not_use_arguments: not use_arguments
+		end
+
+	set_working_directory (a_directory: like working_directory) is
+			-- Set `working_directory' to `a_directory'.
+		do
+			working_directory := a_directory
+		ensure
+			working_directory_set: working_directory = a_directory
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

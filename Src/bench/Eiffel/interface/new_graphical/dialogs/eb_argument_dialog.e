@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			run := cmd
 
 				-- Build Dialog GUI
-			create arguments_control.make (Current, False)
+			create arguments_control.make (Current)
 			extend (execution_frame)
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)

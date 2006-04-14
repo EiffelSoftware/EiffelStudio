@@ -18,7 +18,7 @@ inherit
 		redefine
 			make_by_pointer, dispose
 		end
-		
+
 create
 	make_by_pointer
 
@@ -48,27 +48,27 @@ feature -- dispose
 		do
 			clean_on_dispose
 		end
-		
+
 feature -- Enumerating collections
 
 	close_enum (a_enum_hdl: POINTER) is
 			-- Frees the memory previously allocated for the enumeration.
 			-- Note that the hEnum argument is that obtained from a previous
-			-- EnumXXX call (for example, EnumTypeDefs) 
+			-- EnumXXX call (for example, EnumTypeDefs)
 		do
 			cpp_close_enum (item, a_enum_hdl)
 		end
 
 	count_enum (a_enum_hdl: POINTER): INTEGER is
-			-- Returns the number of items in the enumeration. 
+			-- Returns the number of items in the enumeration.
 			-- Note that the hEnum argument is that obtained from a previous
-			-- EnumXXX call (for example, EnumTypeDefs). 
+			-- EnumXXX call (for example, EnumTypeDefs).
 		do
 			last_call_success := cpp_count_enum (item, a_enum_hdl, $Result)
-		end	
-		
+		end
+
 	reset_enum (a_enum_hdl: POINTER; a_pos: INTEGER) is
-			-- Nb: 
+			-- Nb:
 			-- Reset the enumeration to the position specified by pulCount.
 			-- So, if you reset the enumeration to the value 5, say,
 			-- then a subsequent call to the corresponding EnumXXX method
@@ -80,7 +80,7 @@ feature -- Enumerating collections
 		end
 
 	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
-			-- Enumerates all TypedDefs within the current scope.  
+			-- Enumerates all TypedDefs within the current scope.
 			-- Note: the collection will contain Classes, Interfaces, etc,
 			-- as well as any TypeDefs added via an extensibility mechanism.
 		local
@@ -92,17 +92,17 @@ feature -- Enumerating collections
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
 			last_call_success := cpp_enum_type_defs (item, a_enum_hdl, l_mp_tokens.item , a_max_count, $l_count)
-			if 
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
-		
+
 	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_size: INTEGER): ARRAY [INTEGER] is
-			-- Enumerates all interfaces implemented by the specified TypeDef.  
-			-- Tokens will be returned in the order the interfaces were specified 
+			-- Enumerates all interfaces implemented by the specified TypeDef.
+			-- Tokens will be returned in the order the interfaces were specified
 			-- (through DefineTypeDef or SetTypeDefProps).
 			-- [See GetInterfaceImplProps for more detail of how this method works]
 		local
@@ -113,18 +113,18 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdInterfaceImpl
 			create l_mp_tokens.make (a_size * l_md_size)
 
-			last_call_success := cpp_enum_members (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_size, $l_count)
-			if 
+			last_call_success := cpp_enum_interface_impls (item, a_enum_hdl, a_typedef, l_mp_tokens.item, a_size, $l_count)
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
-		
+
 	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all members (fields and methods, but not properties or events)
-			-- defined by the class specified by cl.  
+			-- defined by the class specified by cl.
 			-- This does not include any members inherited by that class;
 			-- even in the case where this TypeDef actually implements an inherited method.
 		local
@@ -136,17 +136,17 @@ feature -- Enumerating collections
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
 			last_call_success := cpp_enum_members (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
-			if 
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
 	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
-			-- Enumerates all methods defined by the specified TypeDef.  
-			-- Tokens are returned in the same order they were emitted.  
+			-- Enumerates all methods defined by the specified TypeDef.
+			-- Tokens are returned in the same order they were emitted.
 			-- If you supply a nil token for the cl argument the method will enumerate
 			-- the global functions defined for the module as a whole.
 		local
@@ -158,16 +158,16 @@ feature -- Enumerating collections
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
 			last_call_success := cpp_enum_methods (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
-			if 
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
 	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
-			-- Enumerates all fields defined on a specified TypeDef.  
+			-- Enumerates all fields defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
 			-- static data members defined in the current scope.
@@ -181,17 +181,17 @@ feature -- Enumerating collections
 
 			last_call_success := cpp_enum_fields (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
 
-			if 
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
 		end
 
 	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
-			-- Enumerates all attributed parameters for the method specified by md.  
-			-- By attributed parameters, we mean those parameters of a method 
+			-- Enumerates all attributed parameters for the method specified by md.
+			-- By attributed parameters, we mean those parameters of a method
 			-- which have been explicitly defined via a call to DefineParam
 		local
 			l_md_size: INTEGER
@@ -202,9 +202,9 @@ feature -- Enumerating collections
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
 			last_call_success := cpp_enum_params (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
-			if 
+			if
 				(last_call_success = 0 or last_call_success = 1 )
-				and then l_count > 0 
+				and then l_count > 0
 			then
 				Result := array_of_integer_from (l_mp_tokens, l_md_size, l_count)
 			end
@@ -217,7 +217,7 @@ feature -- Finding specific item in MetaData
 			l_name: UNI_STRING
 		do
 			create l_name.make (a_name)
-			last_call_success := cpp_find_type_def_by_name (item, l_name.item, a_encloser_tok, $Result)			
+			last_call_success := cpp_find_type_def_by_name (item, l_name.item, a_encloser_tok, $Result)
 		end
 
 	find_member (a_typedef: INTEGER; a_name: STRING): INTEGER is
@@ -225,7 +225,7 @@ feature -- Finding specific item in MetaData
 			l_name: UNI_STRING
 		do
 			create l_name.make (a_name)
-			last_call_success := cpp_find_member (item, a_typedef, l_name.item, 
+			last_call_success := cpp_find_member (item, a_typedef, l_name.item,
 					Default_pointer, 0, -- Signature purpose ...
 					$Result)
 		end
@@ -235,7 +235,7 @@ feature -- Finding specific item in MetaData
 			l_name: UNI_STRING
 		do
 			create l_name.make (a_name)
-			last_call_success := cpp_find_method (item, a_typedef, l_name.item, 
+			last_call_success := cpp_find_method (item, a_typedef, l_name.item,
 					Default_pointer, 0, -- Signature purpose ...
 					$Result)
 		end
@@ -245,15 +245,15 @@ feature -- Finding specific item in MetaData
 			l_name: UNI_STRING
 		do
 			create l_name.make (a_name)
-			last_call_success := cpp_find_field (item, a_typedef, l_name.item, 
+			last_call_success := cpp_find_field (item, a_typedef, l_name.item,
 					Default_pointer, 0, -- Signature purpose ...
 					$Result)
 		end
-		
+
 feature -- Obtaining Properties of a Specified Object
 
 	get_typedef_props (a_tok: INTEGER): STRING is
-			-- 
+			--
 		local
 			mp_name: MANAGED_POINTER
 			l_rsize: INTEGER
@@ -265,7 +265,7 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_typedef_props (item, a_tok, mp_name.item, 255, $l_rsize, l_flag, $l_tkext)
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
-		
+
 	get_interface_impl_props (a_interface_impl: INTEGER): INTEGER is
 			-- Gets the information stored in metadata for a specified interface implementation
 		local
@@ -273,7 +273,7 @@ feature -- Obtaining Properties of a Specified Object
 		do
 			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
 		end
-		
+
 	get_member_props (a_tok: INTEGER): STRING is
 			-- Get member 's name property
 		local
@@ -287,7 +287,7 @@ feature -- Obtaining Properties of a Specified Object
 			l_pdwimpl_flags, l_cplustype_flag: POINTER
 			l_cst_ppvalue: POINTER
 			l_pcchvalue: INTEGER
-			
+
 		do
 			create mp_name.make (256 * 2)
 
@@ -308,15 +308,15 @@ feature -- Obtaining Properties of a Specified Object
 			l_sigsize: INTEGER
 			l_rva: POINTER
 			l_pdw: POINTER
-			
+
 		do
 			create mp_name.make (256 * 2)
 
-			last_call_success := cpp_get_method_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, 
+			last_call_success := cpp_get_method_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
 				l_flag, l_sig, $l_sigsize, $l_rva, $l_pdw)
 
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
-		end	
+		end
 
 	get_field_props (a_tok: INTEGER): STRING is
 			-- Get field 's name property
@@ -332,33 +332,33 @@ feature -- Obtaining Properties of a Specified Object
 		do
 			create mp_name.make (256 * 2)
 
-			last_call_success := cpp_get_field_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, 
+			last_call_success := cpp_get_field_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
 				$last_get_field_dwattr, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
-				
+
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
-		
+
 	last_field_is_static: BOOLEAN is
 			-- Last `get_field_props' is_static property
 		do
 			Result := (last_get_field_dwattr & fdStatic) /= 0
 		end
-		
+
 	last_field_is_literal: BOOLEAN is
 			-- Last `get_field_props' is_literal property
 		do
 			Result := (last_get_field_dwattr & fdLiteral) /= 0
 		end
-		
+
 	last_get_field_dwattr: INTEGER
 			-- Last `get_field_props' property
-	
-			
+
+
 feature -- Status
 
 	is_valid_token (a_tok: INTEGER): BOOLEAN is
 			-- Returns true if tk is a valid metadata token in the current scope.
-			-- [The method checks the token type is one of those in the CorTokenType 
+			-- [The method checks the token type is one of those in the CorTokenType
 			-- enumeration in CorHdr.h, and then that its RID is less than or equal
 			-- to the current count of those token types]
 		local
@@ -368,7 +368,7 @@ feature -- Status
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
-		end		
+		end
 
 	is_global (a_tok: INTEGER): BOOLEAN is
 			-- is type, field or method identified by `_a_tok' global ?
@@ -379,7 +379,7 @@ feature -- Status
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_success = 0
-		end		
+		end
 
 feature {NONE} -- Implementation Enum...
 
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"CloseEnum"
-		end	
+		end
 
 	frozen cpp_count_enum (obj: POINTER; a_enum_hdl: POINTER; r_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"CountEnum"
-		end		
+		end
 
 	frozen cpp_reset_enum (obj: POINTER; a_enum_hdl: POINTER; a_pos: INTEGER): INTEGER is
 		external
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"ResetEnum"
-		end	
+		end
 
 	frozen cpp_enum_type_defs (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; r_typedefs: POINTER; a_max: INTEGER; r_typedefs_count: POINTER): INTEGER is
 		external
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumTypeDefs"
-		end	
+		end
 
 	frozen cpp_enum_interface_impls (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_tokens_size: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumInterfaceImpls"
-		end	
+		end
 
 	frozen cpp_enum_members (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_tokens: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumMembers"
-		end	
+		end
 
 	frozen cpp_enum_methods (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_methods: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumMethods"
-		end	
+		end
 
 	frozen cpp_enum_fields (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_fields: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumFields"
-		end	
+		end
 
 	frozen cpp_enum_params (obj: POINTER; a_enum_hdl_p: TYPED_POINTER [POINTER]; a_typedef: INTEGER; r_params: POINTER; a_max: INTEGER; r_tokens_count: TYPED_POINTER [INTEGER]): INTEGER is
 		external
@@ -471,11 +471,11 @@ feature {NONE} -- Implementation Enum...
 			]"
 		alias
 			"EnumParams"
-		end	
+		end
 
 feature {NONE} -- Implementation Finding
 
-	frozen cpp_find_type_def_by_name (obj: POINTER; a_name: POINTER; a_token: INTEGER; 
+	frozen cpp_find_type_def_by_name (obj: POINTER; a_name: POINTER; a_token: INTEGER;
 			r_typedef: TYPED_POINTER [INTEGER]): INTEGER is
 		external
 			"[
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation Finding
 			]"
 		alias
 			"FindTypeDefByName"
-		end	
+		end
 
 	frozen cpp_find_member (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation Finding
 			]"
 		alias
 			"FindMember"
-		end	
+		end
 
 	frozen cpp_find_method (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation Finding
 			]"
 		alias
 			"FindMethod"
-		end	
+		end
 
 	frozen cpp_find_field (obj: POINTER; md_typedef: INTEGER; a_name: POINTER;
 			a_sig: POINTER; a_sig_size: INTEGER;
@@ -520,12 +520,12 @@ feature {NONE} -- Implementation Finding
 			]"
 		alias
 			"FindField"
-		end	
+		end
 
 feature {NONE} -- Implementation Obtaining information
 
-	frozen cpp_get_typedef_props (obj: POINTER; a_typedef: INTEGER; r_name: POINTER; 
-										a_wcharsize: INTEGER; r_wchsize: POINTER; 
+	frozen cpp_get_typedef_props (obj: POINTER; a_typedef: INTEGER; r_name: POINTER;
+										a_wcharsize: INTEGER; r_wchsize: POINTER;
 										r_flags: POINTER; r_ext: POINTER): INTEGER is
 		external
 			"[
@@ -534,9 +534,9 @@ feature {NONE} -- Implementation Obtaining information
 			]"
 		alias
 			"GetTypeDefProps"
-		end	
-	
-	frozen cpp_get_interface_impl_props (obj: POINTER; a_inter_impl: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
+		end
+
+	frozen cpp_get_interface_impl_props (obj: POINTER; a_inter_impl: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
 										r_interface_token: TYPED_POINTER [INTEGER]
 										): INTEGER is
 		external
@@ -546,15 +546,15 @@ feature {NONE} -- Implementation Obtaining information
 			]"
 		alias
 			"GetInterfaceImplProps"
-		end			
+		end
 
-	frozen cpp_get_member_props (obj: POINTER; 
-				a_member_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
-				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
-				r_pdwattr_flags: POINTER; 
+	frozen cpp_get_member_props (obj: POINTER;
+				a_member_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
+				r_pdwattr_flags: POINTER;
 				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
 				pulcode_rva: TYPED_POINTER [INTEGER]; pdwimpl_flags: POINTER;
-				pdwcplustype_flag: POINTER; a_cst_ppvalue: POINTER; 
+				pdwcplustype_flag: POINTER; a_cst_ppvalue: POINTER;
 				pcchvalue: TYPED_POINTER [INTEGER]
 						): INTEGER is
 		external
@@ -571,14 +571,14 @@ feature {NONE} -- Implementation Obtaining information
 						(DWORD*) $pdwcplustype_flag, (void const **) $a_cst_ppvalue,
 						(ULONG*) $pcchvalue)
 			]"
-		end	
+		end
 
-	frozen cpp_get_method_props (obj: POINTER; 
-				a_method_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
-				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
-				r_flags: POINTER; 
+	frozen cpp_get_method_props (obj: POINTER;
+				a_method_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
+				r_flags: POINTER;
 				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
-				pulcode_rva: POINTER; pdwimpl_flags: POINTER; 
+				pulcode_rva: POINTER; pdwimpl_flags: POINTER;
 						): INTEGER is
 		external
 			"[
@@ -591,13 +591,13 @@ feature {NONE} -- Implementation Obtaining information
 						(DWORD*)$r_flags, (PCCOR_SIGNATURE*)$ppvsigblob, (ULONG*)$pcbsigblob,
 						(ULONG*)$pulcode_rva, (DWORD*)$pdwimpl_flags)
 			]"
-		end			
+		end
 
-	frozen cpp_get_field_props (obj: POINTER; 
-				a_field_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
-				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
+	frozen cpp_get_field_props (obj: POINTER;
+				a_field_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER];
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER];
 				r_flags: POINTER; ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
-				a_elt_type_cst_value: POINTER; a_def_val_p: POINTER; 
+				a_elt_type_cst_value: POINTER; a_def_val_p: POINTER;
 				a_def_val_byte_count: TYPED_POINTER [INTEGER]
 						): INTEGER is
 		external
@@ -610,10 +610,10 @@ feature {NONE} -- Implementation Obtaining information
 						(LPWSTR)$r_name, (ULONG)$a_wcharsize, (ULONG*)$r_wchsize,
 						(DWORD*)$r_flags, (PCCOR_SIGNATURE*)$ppvsigblob, (ULONG*)$pcbsigblob,
 						(DWORD*)$a_elt_type_cst_value, (void const **)$a_def_val_p,
-						(ULONG*)$a_def_val_byte_count)				
+						(ULONG*)$a_def_val_byte_count)
 			]"
-		end	
-		
+		end
+
 feature {NONE} -- Implementation Status
 
 	frozen cpp_is_valid_token (obj: POINTER; a_tok: INTEGER): INTEGER is
@@ -625,9 +625,9 @@ feature {NONE} -- Implementation Status
 		alias
 			"IsValidToken"
 		end
-		
-	frozen cpp_is_global (obj: POINTER; 
-				a_md_token: INTEGER; r_b_global: TYPED_POINTER [INTEGER]; 
+
+	frozen cpp_is_global (obj: POINTER;
+				a_md_token: INTEGER; r_b_global: TYPED_POINTER [INTEGER];
 							): INTEGER is
 		external
 			"[
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation Status
 			]"
 		alias
 			"IsGlobal"
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 			"C++ macro use %"cli_headers.h%" "
 		alias
 			"sizeof(mdInterfaceImpl)"
-		end		
+		end
 
 	array_of_integer_from (a_mp: MANAGED_POINTER; a_elt_size: INTEGER; a_count: INTEGER): ARRAY [INTEGER] is
 			-- ARRAY [INTEGER] filled with `a_count' elements from the MANAGED_POINTER `a_mp' with element of size `a_elt_size'.
@@ -707,11 +707,11 @@ feature {NONE} -- Implementation
 				l_mdtypedef_value := a_mp.read_integer_32 ((i - 1) * a_elt_size)
 				Result.put (l_mdtypedef_value, i)
 				i := i + 1
-			end		
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation : helper
 
 	frozen fdStatic: INTEGER is
@@ -730,7 +730,7 @@ feature {NONE} -- Implementation : helper
 			]"
 		alias
 			"fdLiteral"
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

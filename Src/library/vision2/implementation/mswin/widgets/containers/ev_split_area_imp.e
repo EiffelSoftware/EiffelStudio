@@ -417,8 +417,8 @@ feature {NONE} -- Implementation
 			until
 				i > 16
 			loop
-				Result.put ((0x000000AA).to_character, i)
-				Result.put ((0x00000055).to_character, i + 2)
+				Result.put ((0x000000AA).to_character_8, i)
+				Result.put ((0x00000055).to_character_8, i + 2)
 				i := i + 4
 			end
 		ensure

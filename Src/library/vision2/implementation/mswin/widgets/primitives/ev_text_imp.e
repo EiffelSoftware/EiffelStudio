@@ -372,7 +372,7 @@ feature -- Status Settings
 			from
 				l_r_code := ('%R').natural_32_code
 				l_text := wel_text
-				counter := 0
+				counter := 1
 				nb := pos - 1
 			until
 				counter >= nb

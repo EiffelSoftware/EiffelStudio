@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			if success and not is_stop_hierarchy then
 					-- add clients
 				from
-					l_clients := a_class.syntactical_clients
+					l_clients := a_class.clients
 					l_clients.start
 				until
 					l_clients.after

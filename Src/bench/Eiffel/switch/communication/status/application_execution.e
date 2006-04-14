@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			end
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
-			create exceptions_handler
 		ensure
 			displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
 			max_evaluation_duration_set: preferences.debug_tool_data /= Void implies
@@ -311,7 +310,20 @@ feature -- Query
 
 feature -- Exception handling
 
-	exceptions_handler: DBG_EXCEPTION_HANDLER
+	exceptions_handler: DBG_EXCEPTION_HANDLER is
+		do
+			Result := internal_exceptions_handler
+			if Result = Void then
+				if is_classic then
+					create Result.make_handling_by_code
+				else
+					create Result.make_handling_by_name
+				end
+				internal_exceptions_handler := Result
+			end
+		end
+
+	internal_exceptions_handler: DBG_EXCEPTION_HANDLER
 
 feature -- Access
 

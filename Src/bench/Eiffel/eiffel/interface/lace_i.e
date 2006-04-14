@@ -462,10 +462,6 @@ feature {NONE} -- Implementation
 				date := sys.lace.date
 				successful := sys.lace.successful
 			end
-				-- if the system name has changed, update it
-			if sys.name = Void or else not sys.name.is_equal (conf_system.name) then
-				sys.set_name (conf_system.name)
-			end
 
 				-- we are only here if something in the ace changed, so we always melt
 			sys.set_melt
@@ -738,6 +734,13 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item ("external_runtime")
 			if l_s /= Void then
 				system.set_external_runtime (l_s)
+			end
+
+			l_s := l_settings.item ("executable_name")
+			if l_s /= Void and then not l_s.is_equal (system.name) then
+				system.set_name (l_s)
+			elseif not system.name.is_equal (conf_system.name) then
+				system.set_name (conf_system.name)
 			end
 
 			l_s := l_settings.item ("full_type_checking")

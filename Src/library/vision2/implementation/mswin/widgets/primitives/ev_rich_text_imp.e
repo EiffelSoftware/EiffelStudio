@@ -744,7 +744,6 @@ feature -- Status setting
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
-			l_text: STRING_32
 		do
 			if not a_text.is_empty then
 					-- Replace "%N" with "%R%N" for Windows.

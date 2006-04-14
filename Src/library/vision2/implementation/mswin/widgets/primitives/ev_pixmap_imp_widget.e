@@ -466,7 +466,6 @@ feature {NONE} -- Implementation
 			l_background_region, l_image_region, l_combined_region: WEL_REGION
 			l_back_buffer: WEL_BITMAP
 			l_back_buffer_dc: WEL_MEMORY_DC
-			l_dc: WEL_DC
 		do
 			if parent /= Void then
 					-- Call expose actions first, any pending invalidations called from 'expose_actions'

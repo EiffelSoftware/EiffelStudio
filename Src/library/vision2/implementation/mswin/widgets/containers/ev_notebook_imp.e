@@ -590,9 +590,6 @@ feature {NONE} -- WEL Implementation
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- `Current' has been resized.
-		local
-			child_imp: EV_WIDGET_IMP
-			tab_rect: WEL_RECT
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 			resize_children
@@ -603,7 +600,6 @@ feature {NONE} -- WEL Implementation
 			-- Shows the current selected page by default.
 		local
 			ww: EV_WIDGET_IMP
-			tab_rect: WEL_RECT
 		do
 			ww ?= selected_window
 			ww.show_window (ww.wel_item, sw_show)

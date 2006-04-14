@@ -1125,7 +1125,7 @@ feature -- Status setting
 		local
 			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
 			stream_out: WEL_RICH_EDIT_BUFFER_SAVER
-			old_text_as_rtf: STRING
+			old_text_as_rtf: STRING_32
 			l_is_read_only: BOOLEAN
 		do
 			safe_store_caret

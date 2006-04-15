@@ -737,10 +737,10 @@ feature {NONE} -- Implementation
 			end
 
 			l_s := l_settings.item ("executable_name")
-			if l_s /= Void and then not l_s.is_equal (system.name) then
+			if l_s /= Void and then not l_s.is_equal (a_target.system.name) then
 				system.set_name (l_s)
-			elseif not system.name.is_equal (conf_system.name) then
-				system.set_name (conf_system.name)
+			elseif system.name = Void or else not system.name.is_equal (a_target.system.name) then
+				system.set_name (a_target.system.name)
 			end
 
 			l_s := l_settings.item ("full_type_checking")

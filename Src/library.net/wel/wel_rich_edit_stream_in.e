@@ -22,26 +22,26 @@ feature {NONE} -- Initialization
 		do
 			Precursor {WEL_RICH_EDIT_STREAM}
 			create stream_in_delegate.make (Current, $internal_callback)
-			cwel_set_editstream_in_procedure_address (stream_in_delegate)									
+			cwel_set_editstream_in_procedure_address (stream_in_delegate)
 			cwel_editstream_set_pfncallback_in (item)
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
-	buffer: WEL_STRING
+	buffer: MANAGED_POINTER
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
 
-	read_buffer (length: INTEGER) is
-			-- Set to `buffer' a string of `length' (or
-			-- less) characters.
+	read_buffer is
+			-- Write into `buffer' a certain amount of bytes less than the
+			-- original `buffer.count'.
 		require
-			positive_length: length >= 0
+			a_buffer_not_null: buffer /= Void
 		deferred
 		ensure
 			buffer_not_void: buffer /= Void
-			valid_buffer_length: buffer.count <= length
+			valid_buffer_length: buffer.count <= old buffer.count
 		end
 
 feature {NONE} -- Implementation
@@ -51,14 +51,18 @@ feature {NONE} -- Implementation
 			-- `a_data_length' is a C-pointer to an integer, that has to
 			-- be set to the length of the data that was actually
 			-- written into `a_buffer'.
-		do		
+		do
 			stream_result := 0
-			read_buffer (a_buffer_length)
-			a_buffer.memory_copy (buffer.item, buffer.count)
+			if buffer = Void then
+				create buffer.share_from_pointer (a_buffer, a_buffer_length)
+			else
+				buffer.set_from_pointer (a_buffer, a_buffer_length)
+			end
+			read_buffer
 			cwel_set_integer_reference_value (a_data_length, buffer.count)
 			Result := stream_result
 		end
-		
+
 	stream_in_delegate: WEL_RICH_EDIT_STREAM_IN_DELEGATE
 
 feature {NONE} -- Externals

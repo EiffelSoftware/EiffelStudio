@@ -432,7 +432,7 @@ feature -- Observer management
 					-- Set the appropriate pixmap for nitem.
 					cluster_stone ?= cell.item1
 					if cluster_stone /= Void and then cluster_stone.group /= Void then
-						nitem.set_pixmap (pixmap_from_group (cluster_stone.group))
+						nitem.set_pixmap (pixmap_from_group_path (cluster_stone.group, cluster_stone.path))
 					end
 					cluster_address.extend (nitem)
 					if cell.item1 = cur_sel then

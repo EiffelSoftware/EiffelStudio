@@ -109,10 +109,10 @@ feature -- Status setting
 				name := l_group.name
 			end
 			set_text (name)
-			set_tooltip (name)
+			set_tooltip (tooltip_text)
 			set_accept_cursor (Cursors.cur_Cluster)
 			set_deny_cursor (Cursors.cur_X_Cluster)
-			set_pixmap (pixmap_from_group (l_group))
+			set_pixmap (pixmap_from_group_path (l_group, path))
 			if not (l_group.is_readonly) then
 				drop_actions.set_veto_pebble_function (agent droppable)
 				drop_actions.extend (agent on_class_drop)
@@ -497,6 +497,51 @@ feature {EB_CLASSES_TREE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	tooltip_text: STRING is
+			-- Generate tooltip text for `data' and `path'.
+		local
+			l_as: CONF_ASSEMBLY
+			l_lib: CONF_LIBRARY
+			l_tmp: STRING
+		do
+			create Result.make_empty
+			if data.is_assembly then
+				l_as := data.actual_assembly
+				Result.append (l_as.assembly_name)
+				if not path.is_empty then
+					l_tmp := path.twin
+					l_tmp.replace_substring_all ("/", ".")
+					Result.append (l_tmp)
+				end
+				Result.append ("%N")
+				Result.append (l_as.assembly_culture+"%N")
+				Result.append (l_as.assembly_version+"%N")
+				Result.append (l_as.assembly_public_key_token+"%N")
+				Result.append (data.actual_group.location.evaluated_path)
+			elseif data.is_library then
+				l_lib := data.actual_library
+				if l_lib.library_target /= Void then
+					Result.append (l_lib.library_target.system.name+"%N")
+				else
+					Result.append (l_lib.name+"%N")
+				end
+				Result.append (data.actual_group.location.evaluated_path)
+			elseif data.is_cluster then
+				l_tmp := data.actual_group.name.twin
+				if not path.is_empty then
+					l_tmp.append (path)
+				end
+				Result.append (l_tmp+"%N")
+				Result.append (data.actual_group.location.build_path (path, ""))
+			else
+				check should_not_reach: False end
+			end
+
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 
 	double_press_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
 						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE

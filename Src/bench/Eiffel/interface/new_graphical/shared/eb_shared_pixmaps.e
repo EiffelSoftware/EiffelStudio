@@ -477,12 +477,6 @@ feature -- Icons
 			Result := Icon_exec_stop
 		end
 
-	Icon_cluster_tool: EV_PIXMAP is
-			-- Icon for cluster tool
-		once
-			Result := pixmap_from_constant (icon_cluster_tool_color_value)
-		end
-
 	Icon_context_tool: EV_PIXMAP is
 			-- Icon for context tool
 		once
@@ -734,6 +728,86 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_light_class_gray_value)
 		end
 
+	Icon_overriden_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_class_color_value)
+		end
+
+	Icon_overriden_light_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_light_class_color_value)
+		end
+
+	Icon_overriden_grey_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_grey_class_color_value)
+		end
+
+	Icon_overriden_light_grey_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_light_grey_class_color_value)
+		end
+
+	Icon_overriden_deferred_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_deferred_class_color_value)
+		end
+
+	Icon_overriden_deferred_light_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overriden_deferred_light_class_color_value)
+		end
+
+	Icon_overrider_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_class_color_value)
+		end
+
+	Icon_overrider_light_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_light_class_color_value)
+		end
+
+	Icon_overrider_grey_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_grey_class_color_value)
+		end
+
+	Icon_overrider_light_grey_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_light_grey_class_color_value)
+		end
+
+	Icon_overrider_deferred_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_deferred_class_color_value)
+		end
+
+	Icon_overrider_deferred_light_class: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrider_deferred_light_class_color_value)
+		end
+
+	Icon_clusters_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_clusters_symbol_color_value)
+		end
+
+	Icon_overrides_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_overrides_symbol_color_value)
+		end
+
+	Icon_libraries_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_libraries_symbol_color_value)
+		end
+
+	Icon_assemblies_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_assemblies_symbol_color_value)
+		end
+
 	Icon_read_only_cluster: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_light_cluster_color_value)
@@ -754,6 +828,11 @@ feature -- Icons
 			Result := pixmap_from_constant (icon_read_only_override_symbol_color_value)
 		end
 
+	Icon_assembly_namespace: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_assembly_namespace_symbol_color_value)
+		end
+
 	Icon_favorites_folder: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_favorites_folder_color_value)
@@ -762,6 +841,16 @@ feature -- Icons
 	Icon_cluster_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (icon_cluster_symbol_color_value)
+		end
+
+	Icon_folder_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_folder_symbol_color_value)
+		end
+
+	Icon_override_folder_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (icon_override_folder_symbol_color_value)
 		end
 
 	Icon_library_symbol: EV_PIXMAP is
@@ -1145,7 +1234,7 @@ feature {NONE} -- Implementation
 	pixmap_lookup_table: ES_PIXMAP_LOOKUP_TABLE is
 			-- Lookup hash table for Studio pixmaps
 		once
-			create Result.make_with_values (16, 13)
+			create Result.make_with_values (16, 16)
 				-- Icons
 			Result.add_pixmap (1, 1, icon_add_exported_feature_color_value)
 			Result.add_pixmap (2, 1, icon_stopped_value)
@@ -1156,11 +1245,6 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (7, 1, icon_center_diagram_color_value)
 			Result.add_pixmap (8, 1, icon_check_exports_color_value)
 			Result.add_pixmap (9, 1, icon_class_header_color_value)
-			Result.add_pixmap (10, 1, icon_class_symbol_color_value)
-			Result.add_pixmap (11, 1, icon_class_symbol_color_value)
-			Result.add_pixmap (12, 1, icon_class_symbol_gray_value)
-			Result.add_pixmap (13, 1, icon_cluster_symbol_color_value)
-			Result.add_pixmap (14, 1, icon_cluster_tool_color_value)
 			Result.add_pixmap (15, 1, icon_cmd_history_color_value)
 			Result.add_pixmap (16, 1, icon_color_color_value)
 			Result.add_pixmap (1, 2, icon_compilation_error_value)
@@ -1174,9 +1258,7 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (9, 2, icon_copy_color_value)
 			Result.add_pixmap (10, 2, icon_crop_color_value)
 			Result.add_pixmap (11, 2, icon_cut_color_value)
-			Result.add_pixmap (12, 2, icon_deferred_class_symbol_color_value)
 			Result.add_pixmap (13, 2, icon_deferred_feature_value)
-			Result.add_pixmap (14, 2, icon_light_deferred_class_color_value)
 			Result.add_pixmap (15, 2, icon_delete_measure_color_value)
 			Result.add_pixmap (16, 2, icon_delete_small_color_value)
 			Result.add_pixmap (1, 3, icon_delete_view_color_value)
@@ -1263,9 +1345,6 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (2, 8, icon_quick_compile_color_value)
 			Result.add_pixmap (3, 8, icon_restore_all_color_value)
 			Result.add_pixmap (4, 8, icon_restore_all_unsaved_color_value)
-			Result.add_pixmap (5, 8, icon_light_class_color_value)
-			Result.add_pixmap (6, 8, icon_light_class_gray_value)
-			Result.add_pixmap (7, 8, icon_light_cluster_color_value)
 			Result.add_pixmap (8, 8, icon_recycle_bin_color_value)
 			Result.add_pixmap (9, 8, icon_red_cross_value)
 			Result.add_pixmap (10, 8, icon_redo_color_value)
@@ -1345,13 +1424,40 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (4, 13, icon_quick_search_previous_color_value)
 			Result.add_pixmap (5, 13, icon_quick_search_advanced_color_value)
 			Result.add_pixmap (6, 13, icon_trash_can_color_value)
-			Result.add_pixmap (7, 13, icon_read_only_assembly_symbol_color_value)
-			Result.add_pixmap (8, 13, icon_read_only_library_symbol_color_value)
-			Result.add_pixmap (9, 13, icon_read_only_override_symbol_color_value)
-			Result.add_pixmap (10, 13, icon_library_symbol_color_value)
-			Result.add_pixmap (11, 13, icon_override_symbol_color_value)
 			Result.add_pixmap (12, 13, icon_ascending_sort_color_value)
 			Result.add_pixmap (13, 13, icon_descending_sort_color_value)
+			Result.add_pixmap (1, 14, icon_folder_symbol_color_value)
+			Result.add_pixmap (2, 14, icon_clusters_symbol_color_value)
+			Result.add_pixmap (3, 14, icon_overrides_symbol_color_value)
+			Result.add_pixmap (4, 14, icon_cluster_symbol_color_value)
+			Result.add_pixmap (5, 14, icon_light_cluster_color_value)
+			Result.add_pixmap (6, 14, icon_override_symbol_color_value)
+			Result.add_pixmap (7, 14, icon_read_only_override_symbol_color_value)
+			Result.add_pixmap (8, 14, icon_override_folder_symbol_color_value)
+			Result.add_pixmap (9, 14, icon_class_symbol_color_value)
+			Result.add_pixmap (10, 14, icon_light_class_color_value)
+			Result.add_pixmap (11, 14, icon_class_symbol_gray_value)
+			Result.add_pixmap (12, 14, icon_light_class_gray_value)
+			Result.add_pixmap (13, 14, icon_deferred_class_symbol_color_value)
+			Result.add_pixmap (14, 14, icon_light_deferred_class_color_value)
+			Result.add_pixmap (15, 14, icon_overriden_class_color_value)
+			Result.add_pixmap (16, 14, icon_overriden_light_class_color_value)
+			Result.add_pixmap (1, 15, icon_overriden_grey_class_color_value)
+			Result.add_pixmap (2, 15, icon_overriden_light_grey_class_color_value)
+			Result.add_pixmap (3, 15, icon_overriden_deferred_class_color_value)
+			Result.add_pixmap (4, 15, icon_overriden_deferred_light_class_color_value)
+			Result.add_pixmap (5, 15, icon_assemblies_symbol_color_value)
+			Result.add_pixmap (6, 15, icon_read_only_assembly_symbol_color_value)
+			Result.add_pixmap (7, 15, icon_assembly_namespace_symbol_color_value)
+			Result.add_pixmap (8, 15, icon_overrider_class_color_value)
+			Result.add_pixmap (9, 15, icon_overrider_light_class_color_value)
+			Result.add_pixmap (10, 15, icon_overrider_grey_class_color_value)
+			Result.add_pixmap (11, 15, icon_overrider_light_grey_class_color_value)
+			Result.add_pixmap (12, 15, icon_overrider_deferred_class_color_value)
+			Result.add_pixmap (13, 15, icon_overrider_deferred_light_class_color_value)
+			Result.add_pixmap (14, 15, icon_libraries_symbol_color_value)
+			Result.add_pixmap (15, 15, icon_library_symbol_color_value)
+			Result.add_pixmap (16, 15, icon_read_only_library_symbol_color_value)
 		end
 
 feature {NONE} -- Constants
@@ -1367,7 +1473,6 @@ feature {NONE} -- Constants
 			icon_class_symbol_color_value,
 			icon_class_symbol_gray_value,
 			icon_cluster_symbol_color_value,
-			icon_cluster_tool_color_value,
 			icon_cmd_history_color_value,
 			icon_color_color_value,
 			icon_compilation_error_value,
@@ -1553,10 +1658,29 @@ feature {NONE} -- Constants
 			icon_read_only_assembly_symbol_color_value,
 			icon_read_only_library_symbol_color_value,
 			icon_read_only_override_symbol_color_value,
+			icon_folder_symbol_color_value,
+			icon_override_folder_symbol_color_value,
 			icon_library_symbol_color_value,
 			icon_override_symbol_color_value,
 			icon_ascending_sort_color_value,
-			icon_descending_sort_color_value: INTEGER is unique;
+			icon_descending_sort_color_value,
+			icon_assembly_namespace_symbol_color_value,
+			icon_overriden_class_color_value,
+			icon_overriden_light_class_color_value,
+			icon_overriden_grey_class_color_value,
+			icon_overriden_light_grey_class_color_value,
+			icon_overriden_deferred_class_color_value,
+			icon_overriden_deferred_light_class_color_value,
+			icon_clusters_symbol_color_value,
+			icon_overrides_symbol_color_value,
+			icon_libraries_symbol_color_value,
+			icon_assemblies_symbol_color_value,
+			icon_overrider_class_color_value,
+			icon_overrider_light_class_color_value,
+			icon_overrider_grey_class_color_value,
+			icon_overrider_light_grey_class_color_value,
+			icon_overrider_deferred_class_color_value,
+			icon_overrider_deferred_light_class_color_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

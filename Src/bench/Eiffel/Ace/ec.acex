@@ -137,7 +137,7 @@
 			<ifnot platform="windows"/>
 		</library>
 
-		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
+		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
 			<file_rule>
 				<exclude>/compiler_override$</exclude>
 				<exclude>/error$</exclude>

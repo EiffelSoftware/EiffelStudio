@@ -182,7 +182,7 @@ cluster
 			".svn"; 
 		end
 
-	all common:		"$EIFFEL_SRC\Eiffel\common"
+	all parser:		"$EIFFEL_SRC\Eiffel\parser"
 		exclude
 			".svn"; "compiler_override"; "error"; 
 		end
@@ -257,7 +257,7 @@ cluster
 
 	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
 		exclude
-			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"; ".svn";
 		end
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"

@@ -110,7 +110,7 @@ cluster
 
 	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
 
-	all common:		"$EIFFEL_SRC\Eiffel\common"
+	all parser:		"$EIFFEL_SRC\Eiffel\parser"
 		exclude
 			".svn"; "compiler_override"; "error"; 
 		end

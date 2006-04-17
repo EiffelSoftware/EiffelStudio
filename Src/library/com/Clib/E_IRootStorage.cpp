@@ -1,16 +1,17 @@
-//--------------------------------------------------------------------------
-//
-//  EiffelCOM
-//  Copyright (C) Interactive Software Engineering, 2001.
-//
-//  File:   E_IRootStorage.cpp
-//
-//  Contents:   IStorage interface implementation class.
-//        Wrapping of OLE compound file implementation 
-//        of the IStorage interface.
-//
-//
-//--------------------------------------------------------------------------
+/*
+indexing
+	description: "EiffelCOM: library of reusable components for COM."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
 
 #include "E_IRootStorage.h"
 

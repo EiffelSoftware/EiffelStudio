@@ -117,6 +117,7 @@ feature {NONE} -- Internal Results
 		local
 			node_list: LIST [STRING_GENERAL]
 			i: POINTER
+			item: STRING_GENERAL
 		do
 			node_list := value_keys_list (key_path)
 			check
@@ -130,12 +131,15 @@ feature {NONE} -- Internal Results
 			until
 				node_list.after or Result = default_pointer
 			loop
-				i := open_key (Result, node_list.item, access)
-				if i = default_pointer and generate then
-					i := create_key (Result, node_list.item, access)
+				item := node_list.item
+				if not item.is_empty then
+					i := open_key (Result, item, access)
+					if i = default_pointer and generate then
+						i := create_key (Result, item, access)
+					end
+					close_key (Result)
+					Result := i
 				end
-				close_key (Result)
-				Result := i
 				node_list.forth
 			end
 		end

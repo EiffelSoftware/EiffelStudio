@@ -135,7 +135,12 @@ feature {NONE} -- Implementation
 				--| This is far from good. Another way to see this bug in action is to use a 5.4 or earlier
 				--| of EiffelStudio, open a class in the editor and introduce a syntax error. Compile, and
 				--| the development window is then obscured by the window that was behind it. Julian.
-			if has_focus then
+			if
+				has_focus and then
+				not parent_window.is_destroyed and then
+				parent_window.is_displayed and then
+				parent_window.is_sensitive
+			then
 				parent_window.set_focus
 			end
 			Precursor {EV_DIALOG_IMP_COMMON}
@@ -145,7 +150,12 @@ feature {NONE} -- Implementation
 			-- Destroy `Current'.
 		do
 				--| FIXME, this is the same hack as in `hide' which has a full explanation.
-			if has_focus then
+			if
+				has_focus and then
+				not parent_window.is_destroyed and then
+				parent_window.is_displayed and then
+				parent_window.is_sensitive
+			then
 				parent_window.set_focus
 			end
 			Precursor {EV_DIALOG_IMP_COMMON}

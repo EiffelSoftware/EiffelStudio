@@ -1,6 +1,6 @@
 indexing
 	description: "Fixed integer array for WEL_STRUCTURE. Used internally by WEL. %
-				 % useful to protect integer arrays within an external call"
+				 % useful to protect string arrays within an external call"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

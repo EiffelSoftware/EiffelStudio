@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	name="$system_name" uuid="FD309496-F297-4BA0-8408-A7DDEBC4A9C6">
+	<target name="$system_name">
+		<root feature="$root_class_feature" class="$root_class_name"/>
+		<option profile="false">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="array_optimization" value="False"/>
+		<setting name="console_application" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dynamic_runtime" value="False"/>
+		<setting name="inlining" value="False"/>
+		<setting name="inlining_size" value="10"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="multithreaded" value="False"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="True"/>
+		<cluster name="$root_cluster_name" location="$root_cluster_location"/>
+	</target>
+</system>

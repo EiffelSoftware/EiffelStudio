@@ -1,3 +1,17 @@
+/*
+indexing
+	description: "Wrappers to draw disabled text."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
 #include "wel_globals.h"
 #include "wel_drawstate.h"
 
@@ -58,17 +72,3 @@ int cwin_draw_disabled_text(HDC hDC, LPCTSTR lpString, int nCount, LPRECT
 		rect.right, rect.bottom,
 		DST_COMPLEX | DSS_DISABLED);
 	}
-
-/*
---|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
---| All rights reserved. Duplication and distribution prohibited.
---|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
---| Telephone 805-685-1006
---| Fax 805-685-6869
---| Information e-mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---|-------------------------------------------------------------------------
-*/

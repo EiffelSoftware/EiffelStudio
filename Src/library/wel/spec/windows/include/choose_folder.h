@@ -1,6 +1,16 @@
 /*
- * BIF.H
- */
+indexing
+description: "WEL: library of reusable components for Windows."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
 
 #ifndef __WEL_BROWSEINFO__
 #define __WEL_BROWSEINFO__
@@ -41,17 +51,3 @@ int cwel_sh_browse_for_folder (LPBROWSEINFO info, LPCTSTR name);
 #endif
 
 #endif /* __WEL_BROWSEINFO__ */
-
-/*
---|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1995-1999, Interactive Software Engineering, Inc.
---| All rights reserved. Duplication and distribution prohibited.
---|
---| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
---| Telephone 805-685-1006
---| Fax 805-685-6869
---| Information e-mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---|-------------------------------------------------------------------------
-*/

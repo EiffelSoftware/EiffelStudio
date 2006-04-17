@@ -10,6 +10,9 @@ class
 
 inherit
 	STRING_HANDLER
+		redefine
+			is_equal
+		end
 
 create
 	make,
@@ -225,6 +228,14 @@ feature -- Measurement
 			"C inline use <tchar.h>"
 		alias
 			"sizeof(TCHAR)"
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is content of string identical to content of string `other'?
+		do
+			Result := item.is_equal (other.item)
 		end
 
 feature -- Element change

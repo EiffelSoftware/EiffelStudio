@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 		do
 			next_button.set_pixmap (icon_quick_search_next_color)
 			previous_button.set_pixmap (icon_quick_search_previous_color)
-			advanced_button.set_pixmap (icon_quick_search_advanced_color)
+			advanced_button.set_pixmap (icon_search)
 			close_button.set_pixmap (icon_quick_search_close_color)
 			keyword_field.change_actions.extend (agent trigger_sensibility)
 			match_case_button.select_actions.extend (agent check_button_changed (match_case_button))

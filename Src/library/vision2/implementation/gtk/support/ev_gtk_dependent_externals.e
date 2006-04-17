@@ -10,6 +10,36 @@ class
 
 feature -- Externals
 
+	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER]): INTEGER is
+		external
+			"C signature (GdkWindow*, GdkAtom, GdkAtom*, gint*): gint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_selection_convert (a_requestor, a_selection, a_target: POINTER; a_time: NATURAL_32) is
+		external
+			"C signature (GdkWindow*, GdkAtom, GdkAtom, guint32) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_drop_succeeded (a_drag_context: POINTER): BOOLEAN is
+		external
+			"C signature (GdkDragContext*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access source_window use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_dest_window (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access dest_window use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drag_context_struct_targets (a_drag_context: POINTER): POINTER is
+		external
+			"C struct GdkDragContext access targets use <gtk/gtk.h>"
+		end
+
 	frozen gtk_toolbar_set_orientation (a_toolbar: POINTER; a_orientation: INTEGER) is
 		external
 			"C signature (GtkToolbar*, gint) use <gtk/gtk.h>"

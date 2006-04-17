@@ -3734,6 +3734,11 @@ feature -- External C functions
 			"C (gchar*, gint): GdkAtom | <gtk/gtk.h>"
 		end
 
+	frozen gdk_atom_name (a_atom: POINTER): POINTER is
+		external
+			"C (GdkAtom): gchar* | <gtk/gtk.h>"
+		end
+
 	frozen gdk_color_copy (a_color: POINTER): POINTER is
 			-- GdkColor*    gdk_color_copy               (const GdkColor *color);
 			-- (from C_GDK)
@@ -4258,11 +4263,7 @@ feature -- External C functions
 			"C (GdkDrawable*, gchar*, gpointer, GDestroyNotify) | <gtk/gtk.h>"
 		end
 
-	frozen gdk_drop_finish (a_context: POINTER; a_success: BOOLEAN; a_time: INTEGER) is
-			-- void             gdk_drop_finish        (GdkDragContext   *context,
-			-- 					 gboolean          success,
-			-- 					 guint32           time);
-			-- (from C_GDK)
+	frozen gdk_drop_finish (a_context: POINTER; a_success: BOOLEAN; a_time: NATURAL_32) is
 		external
 			"C (GdkDragContext*, gboolean, guint32) | <gtk/gtk.h>"
 		end
@@ -12520,6 +12521,16 @@ feature -- External C structs
 			"C [struct <gtk/gtk.h>] (GdkEventMotion): EIF_DOUBLE"
 		alias
 			"y_root"
+		end
+
+	frozen gdk_event_dnd_struct_context (a_c_struct: POINTER): POINTER is
+		external
+			"C struct GdkEventDND access context use <gtk/gtk.h>"
+		end
+
+	frozen gdk_event_dnd_struct_time (a_c_struct: POINTER): NATURAL_32 is
+		external
+			"C struct GdkEventDND access time use <gtk/gtk.h>"
 		end
 
 	frozen gdk_font_struct_ascent (a_c_struct: POINTER): INTEGER is

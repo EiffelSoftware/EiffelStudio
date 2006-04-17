@@ -105,11 +105,23 @@ feature {NONE} -- Initialization
 			notebook.extend (c_compilation_output_view.widget)
 			notebook.extend (error_output_view.widget)
 			notebook.extend (warning_output_view.widget)
+
+			notebook.item_tab (output_view.widget).set_pixmap (icon_output_view_icon)
+			notebook.item_tab (editor.widget).set_pixmap (icon_diagram_tool_icon)
+			notebook.item_tab (class_view.widget).set_pixmap (icon_class_view_icon)
+			notebook.item_tab (feature_view.widget).set_pixmap (icon_feature_view_icon)
+			notebook.item_tab (metrics.widget).set_pixmap (icon_select_metrics)
+			notebook.item_tab (external_output_view.widget).set_pixmap (icon_shell)
+			notebook.item_tab (c_compilation_output_view.widget).set_pixmap (icon_compiling[icon_compiling.count])
+			notebook.item_tab (error_output_view.widget).set_pixmap (icon_error_output_view_icon)
+			notebook.item_tab (warning_output_view.widget).set_pixmap (icon_warning_output_view_icon)
+
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
 			notebook.set_item_text (external_output_view.widget, interface_names.l_Tab_external_output)
 			notebook.set_item_text (c_compilation_output_view.widget, interface_names.l_Tab_c_output)
 			notebook.set_item_text (error_output_view.widget,	interface_names.l_Tab_error_output)
 			notebook.set_item_text (warning_output_view.widget,	interface_names.l_Tab_warning_output)
+
 			if has_case then
 				notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
 			end

@@ -1183,11 +1183,6 @@ feature -- Icons
 			Result := pixmap_from_constant (Icon_quick_search_previous_color_value)
 		end
 
-	Icon_quick_search_advanced_color: EV_PIXMAP is
-		once
-			Result := pixmap_from_constant (Icon_quick_search_advanced_color_value)
-		end
-
 	Icon_quick_search_close_color: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (Icon_quick_search_close_color_value)
@@ -1206,6 +1201,36 @@ feature -- Icons
 	Icon_descending_sort_color: EV_PIXMAP is
 		once
 			Result := pixmap_from_constant (Icon_descending_sort_color_value)
+		end
+
+	Icon_output_view_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_output_view_icon_value)
+		end
+
+	Icon_error_output_view_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_error_output_view_icon_value)
+		end
+
+	Icon_warning_output_view_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_warning_output_view_icon_value)
+		end
+
+	Icon_diagram_tool_icon: EV_PIXMAP is
+		once
+			Result := pixmap_from_constant (Icon_diagram_tool_icon_value)
+		end
+
+	Icon_class_view_icon: EV_PIXMAP is
+		once
+			Result := icon_class_symbol_color
+		end
+
+	Icon_feature_view_icon: EV_PIXMAP is
+		once
+			Result := icon_feature
 		end
 
 feature -- Reading
@@ -1422,7 +1447,6 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (2, 13, icon_quick_search_close_color_value)
 			Result.add_pixmap (3, 13, icon_quick_search_next_color_value)
 			Result.add_pixmap (4, 13, icon_quick_search_previous_color_value)
-			Result.add_pixmap (5, 13, icon_quick_search_advanced_color_value)
 			Result.add_pixmap (6, 13, icon_trash_can_color_value)
 			Result.add_pixmap (12, 13, icon_ascending_sort_color_value)
 			Result.add_pixmap (13, 13, icon_descending_sort_color_value)
@@ -1458,6 +1482,10 @@ feature {NONE} -- Implementation
 			Result.add_pixmap (14, 15, icon_libraries_symbol_color_value)
 			Result.add_pixmap (15, 15, icon_library_symbol_color_value)
 			Result.add_pixmap (16, 15, icon_read_only_library_symbol_color_value)
+			Result.add_pixmap (1, 16, Icon_warning_output_view_icon_value)
+			Result.add_pixmap (2, 16, Icon_error_output_view_icon_value)
+			Result.add_pixmap (3, 16, Icon_diagram_tool_icon_value)
+			Result.add_pixmap (4, 16, Icon_output_view_icon_value)
 		end
 
 feature {NONE} -- Constants
@@ -1652,7 +1680,6 @@ feature {NONE} -- Constants
 			icon_new_tab_color_value,
 			icon_quick_search_next_color_value,
 			icon_quick_search_previous_color_value,
-			icon_quick_search_advanced_color_value,
 			icon_quick_search_close_color_value,
 			icon_trash_can_color_value,
 			icon_read_only_assembly_symbol_color_value,
@@ -1680,7 +1707,11 @@ feature {NONE} -- Constants
 			icon_overrider_grey_class_color_value,
 			icon_overrider_light_grey_class_color_value,
 			icon_overrider_deferred_class_color_value,
-			icon_overrider_deferred_light_class_color_value: INTEGER is unique;
+			icon_overrider_deferred_light_class_color_value,
+			Icon_output_view_icon_value,
+			Icon_error_output_view_icon_value,
+			Icon_warning_output_view_icon_value,
+			Icon_diagram_tool_icon_value: INTEGER is unique;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -447,6 +447,7 @@ feature -- Basic operation
 								print ("GDK_DROP_START")
 							end
 								-- Some text has been drag dropped on a widget.
+							handle_dnd (gdk_event)
 						when GDK_DROP_FINISHED then
 							debug ("GDK_EVENT")
 								print ("GDK_DROP_FINISHED")
@@ -476,6 +477,63 @@ feature -- Basic operation
 				end
 			end
 		end
+
+	handle_dnd (a_event: POINTER) is
+			-- Handle drag and drop event.
+		local
+			a_context: POINTER
+			a_target_list: POINTER
+			a_target: POINTER
+			src_window, a_selection: POINTER
+			a_time: NATURAL_32
+			prop_data: POINTER
+			prop_type, prop_format, prop_length: INTEGER
+			a_string: STRING_32
+			l_file_list: LIST [STRING_32]
+			l_success: BOOLEAN
+		do
+			a_context := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_context (a_event)
+			src_window := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_source_window (a_context)
+			a_selection := {EV_GTK_EXTERNALS}.gdk_drag_get_selection (a_context)
+			a_time := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_time (a_event)
+			from
+				a_target_list := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_targets (a_context)
+			until
+				a_target_list = default_pointer
+			loop
+				a_target := {EV_GTK_EXTERNALS}.glist_struct_data (a_target_list)
+				if a_target /= default_pointer then
+						-- This is a target atom indicating the type of the drop.
+					{EV_GTK_EXTERNALS}.gdk_selection_convert (src_window, a_selection, a_target, a_time)
+					prop_length := {EV_GTK_EXTERNALS}.gdk_selection_property_get (src_window, $prop_data, $prop_type, $prop_format)
+					if prop_data /= default_pointer then
+						create a_string.make_from_c ({EV_GTK_EXTERNALS}.gdk_atom_name (a_target))
+						if a_string.is_equal ("STRING") then
+							create a_string.make_from_c (prop_data)
+							l_file_list := a_string.split ('%N')
+							from
+								l_file_list.start
+							until
+								l_file_list.after
+							loop
+								if l_file_list.item.substring_index ("file://", 1) = 1 then
+									l_file_list.replace (l_file_list.item.substring (8, l_file_list.item.count))
+									print (l_file_list.item + "%N")
+									l_success := True
+									l_file_list.forth
+								else
+									l_file_list.remove
+								end
+							end
+						end
+					end
+
+				end
+				a_target_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_target_list)
+			end
+			{EV_GTK_EXTERNALS}.gdk_drop_finish (a_context, l_success, a_time)
+		end
+
 
 	GDK_NOTHING: INTEGER is -1
 	GDK_DELETE: INTEGER is 0

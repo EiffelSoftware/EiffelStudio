@@ -75,22 +75,16 @@ feature {NONE} -- Initialization
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
-				GtkTargetEntry target_entry[3];
-				target_entry[0].target = "text/plain";
+				GtkTargetEntry target_entry[1];
+				target_entry[0].target = "STRING";
 				target_entry[0].flags = 0;
 				target_entry[0].info = 0;
-				target_entry[1].target = "text/uri-list";
-				target_entry[1].flags = 0;
-				target_entry[1].info = 1;
-				target_entry[2].target = "STRING";
-				target_entry[2].flags = 0;
-				target_entry[2].info = 2;
 				gtk_drag_dest_set (
 					(GtkWidget*) $a_widget,
-					GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
+					GTK_DEST_DEFAULT_DROP,
 					target_entry,
 					sizeof (target_entry) / sizeof (GtkTargetEntry),
-					GDK_ACTION_MOVE | GDK_ACTION_COPY
+					GDK_ACTION_LINK
 				);
 			]"
 		end

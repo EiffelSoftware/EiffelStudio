@@ -59,7 +59,11 @@ feature {NONE} -- Implementation
 				i := {EV_GTK_EXTERNALS}.gdk_pointer_grab (
 					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
 					1,
-					{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum | {EV_GTK_EXTERNALS}.gdk_button_press_mask_enum | {EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum,
+					{EV_GTK_EXTERNALS}.gdk_button_release_mask_enum |
+					{EV_GTK_EXTERNALS}.gdk_button_press_mask_enum |
+					{EV_GTK_EXTERNALS}.gdk_pointer_motion_mask_enum |
+					{EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
+					,
 					null,
 					null,
 					0

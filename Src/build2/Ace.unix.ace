@@ -69,17 +69,12 @@ cluster
 			".svn"; "registry_implementation"; 
 		end
 		
-	all eifp_reader: "$EIFFEL_SRC/dotnet/VisualStudio/tools/eifp_reader"
-		exclude
-			".svn"
-		end
-
 	all patterns: "$EIFFEL_SRC/library/patterns"
 		exclude
 			".svn"
 		end
 
-	all ast:		"$EIFFEL_SRC/Eiffel/common"
+	all ast:		"$EIFFEL_SRC/Eiffel/parser"
 		exclude
 			".svn"
 		end

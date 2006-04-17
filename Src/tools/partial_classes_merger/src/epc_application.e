@@ -175,9 +175,8 @@ feature {NONE} -- Implementation
 		local
 			l_files: ARRAY [STRING]
 			i, l_count: INTEGER
-			l_dir_name, l_file_name, l_abs_path, l_class_name: STRING
+			l_dir_name, l_file_name, l_abs_path: STRING
 			l_new_list: ARRAYED_LIST [STRING]
-			l_file, l_dest_file: RAW_FILE
 		do
 			l_files := a_dir.filenames
 			l_count := l_files.count

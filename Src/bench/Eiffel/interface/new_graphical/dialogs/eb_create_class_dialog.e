@@ -274,9 +274,6 @@ feature -- Basic operations
 			valid_args: class_n /= Void
 		local
 			str: STRING
-			clus_list: ARRAYED_LIST [CLUSTER_I]
-			clus: CLUSTER_I
-			i: EV_TREE_ITEM
 		do
 			if not cluster_preset then
 				if target.stone /= Void then
@@ -382,7 +379,6 @@ feature {NONE} -- Implementation
 			file: RAW_FILE -- Windows specific
 			base_name: STRING
 			wd: EV_WARNING_DIALOG
-			cd: EV_CONFIRMATION_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then

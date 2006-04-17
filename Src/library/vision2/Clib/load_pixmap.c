@@ -1492,11 +1492,7 @@ void c_ev_set_bit(unsigned char bit, unsigned char *pData, long iData)
 	unsigned char bitValue;
 
 	bitValue = (unsigned char)(1 << iBitPos);
-//#ifdef EIF_WINDOWS
-//	if (bit == 0) {
-//#else
 	if (bit == 1) {
-//#endif
 		pData[iOff] = (unsigned char) (pData[iOff] & (~bitValue));
 	} else {
 		pData[iOff] = (unsigned char) (pData[iOff] | bitValue);

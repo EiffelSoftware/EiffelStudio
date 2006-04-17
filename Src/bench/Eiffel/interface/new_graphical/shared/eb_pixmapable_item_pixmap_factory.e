@@ -20,25 +20,52 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 		do
-			if a_group.is_cluster then
-				if a_group.is_readonly then
-					Result := Pixmaps.Icon_read_only_cluster
+			conf_todo_msg ("Make sure that pixmap_from_group should be called and not pixmap_from_group_path.")
+			Result := pixmap_from_group_path (a_group, "")
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP is
+			-- Return pixmap based on `a_group' and `a_path'.
+		require
+			a_group_not_void: a_group /= Void
+			a_path_not_void: a_path /= Void
+			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
+		do
+			if not a_path.is_empty then
+				if a_group.is_override then
+					Result := pixmaps.icon_override_folder_symbol
+				elseif a_group.is_cluster then
+					Result := pixmaps.icon_folder_symbol
+				elseif a_group.is_assembly then
+					Result := pixmaps.icon_assembly_namespace
 				else
-					Result := Pixmaps.Icon_cluster_symbol
+					check should_not_reach: false end
 				end
-			elseif a_group.is_library then
-				if a_group.is_readonly then
-					Result := Pixmaps.icon_read_only_library
+			else
+				if a_group.is_override then
+					if a_group.is_readonly then
+						Result := Pixmaps.icon_read_only_override
+					else
+						Result := Pixmaps.icon_override_symbol
+					end
+				elseif a_group.is_cluster then
+					if a_group.is_readonly then
+						Result := Pixmaps.Icon_read_only_cluster
+					else
+						Result := Pixmaps.Icon_cluster_symbol
+					end
+				elseif a_group.is_library then
+					if a_group.is_readonly then
+						Result := Pixmaps.icon_read_only_library
+					else
+						Result := Pixmaps.icon_library_symbol
+					end
+				elseif a_group.is_assembly then
+					Result := Pixmaps.icon_read_only_assembly
 				else
-					Result := Pixmaps.icon_library_symbol
-				end
-			elseif a_group.is_assembly then
-				Result := Pixmaps.icon_read_only_assembly
-			elseif a_group.is_override then
-				if a_group.is_readonly then
-					Result := Pixmaps.icon_read_only_override
-				else
-					Result := Pixmaps.icon_override_symbol
+					check should_not_reach: false end
 				end
 			end
 		ensure
@@ -49,28 +76,65 @@ feature {NONE} -- Implementation
 			-- Return pixmap based on `a_class'.
 		require
 			a_class_not_void: a_class /= Void
+		local
+			l_conf_class: CONF_CLASS
+			l_pixcode: INTEGER
+			l_map: HASH_TABLE [EV_PIXMAP, INTEGER]
 		do
+				-- state encoding instead of dozens of ifs
+				--
+				-- 1 read_only
+				-- 2 compiled not deferred
+				-- 3 compiled deferred
+				-- 4 overriden
+				-- 5 does_override
+				--				
 			if a_class.is_read_only then
-				if not a_class.compiled then
-					Result := (Pixmaps.Icon_read_only_class_gray)
+				l_pixcode := l_pixcode | 0x1
+			end
+
+			if a_class.is_compiled then
+				if a_class.compiled_class.is_deferred then
+					l_pixcode := l_pixcode | 0x4
 				else
-					if a_class.compiled_class.is_deferred then
-						Result := (Pixmaps.Icon_deferred_read_only_class_color)
-					else
-						Result := (Pixmaps.Icon_read_only_class_color)
-					end
-				end
-			else
-				if not a_class.compiled then
-					Result := (Pixmaps.Icon_class_symbol_gray)
-				else
-					if a_class.compiled_class.is_deferred then
-						Result := (Pixmaps.Icon_deferred_class_symbol_color)
-					else
-						Result := (Pixmaps.Icon_class_symbol_color)
-					end
+					l_pixcode := l_pixcode | 0x2
 				end
 			end
+
+			l_conf_class := a_class.config_class
+			if l_conf_class.is_overriden then
+				l_pixcode := l_pixcode | 0x8
+			elseif l_conf_class.does_override then
+				l_pixcode := l_pixcode | 0x10
+			end
+
+				-- add +1 to avoid problem with 0 value key
+			l_pixcode := l_pixcode + 1
+			create l_map.make (18)
+			l_map.force (pixmaps.icon_class_symbol, 0x2+1)
+			l_map.force (pixmaps.icon_read_only_class_color, 0x3+1)
+			l_map.force (pixmaps.icon_class_symbol_gray, 0+1)
+			l_map.force (pixmaps.icon_read_only_class_gray, 0x1+1)
+			l_map.force (pixmaps.icon_deferred_class_symbol_color, 0x4+1)
+			l_map.force (pixmaps.icon_deferred_read_only_class_color, 0x5+1)
+			l_map.force (pixmaps.icon_overriden_class, 0xA+1)
+			l_map.force (pixmaps.icon_overriden_light_class, 0xB+1)
+			l_map.force (pixmaps.icon_overriden_grey_class, 0x8+1)
+			l_map.force (pixmaps.icon_overriden_light_grey_class, 0x9+1)
+			l_map.force (pixmaps.icon_overriden_deferred_class, 0xC+1)
+			l_map.force (pixmaps.icon_overriden_deferred_light_class, 0xD+1)
+			l_map.force (pixmaps.icon_overrider_class, 0x12+1)
+			l_map.force (pixmaps.icon_overrider_light_class, 0x13+1)
+			l_map.force (pixmaps.icon_overrider_grey_class, 0x10+1)
+			l_map.force (pixmaps.icon_overrider_light_grey_class, 0x11+1)
+			l_map.force (pixmaps.icon_overrider_deferred_class, 0x14+1)
+			l_map.force (pixmaps.icon_overrider_deferred_light_class, 0x15+1)
+
+			check
+				correct_pixcode: l_map.has (l_pixcode)
+			end
+
+			Result := l_map.item (l_pixcode)
 		ensure
 			result_not_void: Result /= Void
 		end

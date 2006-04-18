@@ -1,12 +1,19 @@
-/*==============================================================================
- EiffelVision/GTK External C library
- gtk_eiffel.h
---------------------------------------------------------------------------------
- description: "Functions for using gtk from Eiffel"
- date:        "$Date$"
- revision:    "$Revision$"
- status:      "See notice at end of file"
-==============================================================================*/
+/*
+indexing
+	description: "C features for GTK interface."
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
 #ifndef _GTK_EIFFEL_H_INCLUDED_
 #define _GTK_EIFFEL_H_INCLUDED_
 

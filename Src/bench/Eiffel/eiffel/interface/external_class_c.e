@@ -1252,7 +1252,7 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
-				l_classes := assembly.class_by_dotnet_name (l_type_name, True, universe.platform, universe.build)
+				l_classes := assembly.class_by_dotnet_name (l_type_name, True)
 				if not l_classes.is_empty then
 					l_result := l_classes.first
 				end

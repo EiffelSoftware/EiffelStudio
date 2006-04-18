@@ -13,95 +13,47 @@ inherit
 
 feature -- Status report
 
-	is_enabled (a_platform, a_build: INTEGER): BOOLEAN is
-			-- Is `Current' enabled for `a_build' on `a_platform'?
+	is_enabled (a_state: CONF_STATE): BOOLEAN is
+			-- Is `Current' enabled for `a_state'?
 		require
-			valid_platform: valid_platform (a_platform)
-			valid_build: valid_build (a_build)
-		local
-			l_flags: INTEGER
+			a_state_not_void: a_state /= Void
 		do
-			Result := internal_enabled = Void or else internal_enabled.is_empty
+			Result := internal_conditions = Void
 			if not Result then
-				l_flags := a_platform | a_build
 				from
-					internal_enabled.start
+					internal_conditions.start
 				until
-					Result or internal_enabled.after
+					Result or internal_conditions.after
 				loop
-					Result := internal_enabled.item & l_flags = l_flags
-					internal_enabled.forth
+					Result := internal_conditions.item.satisfied (a_state)
+					internal_conditions.forth
 				end
 			end
 		end
 
 feature {CONF_ACCESS} -- Status update
 
-	enable (a_platform, a_build: INTEGER) is
-			-- Enable `Current' for `a_build' on `a_platform'.
+	add_condition (a_condition: CONF_CONDITION) is
+			-- Add `a_condition'.
 		require
-			valid_platform: valid_platform (a_platform)
-			valid_build: valid_build (a_build)
+			a_condition_not_void: a_condition /= Void
 		do
-			if internal_enabled = Void then
-				create internal_enabled.make (1)
+			if internal_conditions = Void then
+				create internal_conditions.make (1)
 			end
-			internal_enabled.extend (a_platform | a_build)
-		end
-
-	inverse_enable (a_platform, a_build: INTEGER) is
-			-- Enable `Current' for everything but `a_build' on `a_platform'.
-		require
-			valid_platform: valid_platform (a_platform)
-			valid_build: valid_build (a_build)
-		do
-			if internal_enabled = Void then
-				create internal_enabled.make (1)
-			end
-			if a_platform = pf_all then
-				inverse_enable_build (a_build)
-			elseif a_build = build_all then
-				inverse_enable_platform (a_platform)
-			else
-				internal_enabled.extend ((a_platform | a_build).bit_not)
-			end
-		end
-
-	inverse_enable_platform (a_platform: INTEGER) is
-			-- Enable `Current' for everything but `a_platform'.
-		require
-			valid_platform: valid_platform (a_platform)
-		do
-			if internal_enabled = Void then
-				create internal_enabled.make (1)
-			end
-			internal_enabled.extend (a_platform.bit_not)
-		end
-
-	inverse_enable_build (a_build: INTEGER) is
-			-- Enable `Current' for everything but `a_build'.
-		require
-			valid_build: valid_build (a_build)
-		do
-			if internal_enabled = Void then
-				create internal_enabled.make (1)
-			end
-			internal_enabled.extend (a_build.bit_not)
-		end
-
-
-
-	wipe_out is
-			-- Clear all enable flags.
-		do
-			internal_enabled.wipe_out
+			internal_conditions.force (a_condition)
+		ensure
+			condition_added: internal_conditions /= Void and then internal_conditions.has (a_condition)
 		end
 
 
 feature {CONF_VISITOR} -- Implementation, attributes stored in configuration file
 
-	internal_enabled: ARRAYED_LIST [INTEGER];
-			-- The list of enabled bits.
+	internal_conditions: ARRAYED_LIST [CONF_CONDITION];
+			-- The list of conditions.
+
+invariant
+	internal_conditions_not_empty: internal_conditions = Void or else not internal_conditions.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

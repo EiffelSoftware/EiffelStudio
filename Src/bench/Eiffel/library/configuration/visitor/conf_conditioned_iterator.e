@@ -11,8 +11,6 @@ class
 inherit
 	CONF_VISITOR
 
-	CONF_VALIDITY
-
 	CONF_ITERATOR
 		redefine
 			process_target
@@ -23,23 +21,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform, a_build: INTEGER) is
+	make (a_state: like state) is
 			-- Create.
 		require
-			platform_valid: valid_platform (a_platform)
-			build_valid: valid_build (a_build)
+			a_state_not_void: a_state /= Void
 		do
-			platform := a_platform
-			build := a_build
+			state := a_state
+		ensure
+			state_set: state = a_state
 		end
 
 feature -- Access
 
-	platform: INTEGER
-			-- The current platform.
-
-	build: INTEGER
-			-- The current build.
+	state: CONF_STATE
+			-- Current state.
 
 feature -- Visit nodes
 
@@ -49,15 +44,18 @@ feature -- Visit nodes
 			l_pre: CONF_PRECOMPILE
 		do
 			l_pre := a_target.precompile
-			if l_pre /= Void and then l_pre.is_enabled (platform, build) then
+			if l_pre /= Void and then l_pre.is_enabled (state) then
 				a_target.precompile.process (Current)
 			end
-			a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (platform, build))
-			a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (platform, build))
-			a_target.clusters.linear_representation.do_if (agent {CONF_CLUSTER}.process (Current), agent {CONF_CLUSTER}.is_enabled (platform, build))
+			a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
+			a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
+			a_target.clusters.linear_representation.do_if (agent {CONF_CLUSTER}.process (Current), agent {CONF_CLUSTER}.is_enabled (state))
 				-- overrides must be processed at the end
-			a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (platform, build))
+			a_target.overrides.linear_representation.do_if (agent {CONF_OVERRIDE}.process (Current), agent {CONF_OVERRIDE}.is_enabled (state))
 		end
+
+invariant
+	state_not_void: state /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

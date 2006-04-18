@@ -56,11 +56,6 @@ inherit
 			default_create
 		end
 
-	SHARED_CONF_FACTORY
-		undefine
-			default_create
-		end
-
 create
 	default_create
 
@@ -83,10 +78,26 @@ feature -- Initialization
 		local
 			l_target: CONF_TARGET
 			l_libs: HASH_TABLE [CONF_GROUP, STRING]
+			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_cls_lst: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_cluster: CONF_CLUSTER
 		do
 			l_target := universe.target
 			if l_target /= Void then
-				clusters := create_groups (l_target.clusters)
+				from
+					l_cls := l_target.clusters
+					create l_cls_lst.make (l_cls.count)
+					l_cls.start
+				until
+					l_cls.after
+				loop
+					l_cluster := l_cls.item_for_iteration
+					if l_cluster.parent = Void then
+						l_cls_lst.force (l_cluster, l_cluster.name)
+					end
+					l_cls.forth
+				end
+				clusters := create_groups (l_cls_lst)
 				overrides := create_groups (l_target.overrides)
 				l_libs := l_target.libraries
 				if l_target.precompile /= Void then
@@ -462,10 +473,12 @@ feature -- Element change
 			l_new_class: EIFFEL_CLASS_I
 			l_clu: CLUSTER_I
 			l_classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
+			l_fact: CONF_COMP_FACTORY
 		do
+			create l_fact
 			l_clu ?= a_cluster
 			check cluster_i: l_clu /= Void end
-			l_new_class := compiler_conf_factory.new_class (a_class, l_clu, a_path)
+			l_new_class := l_fact.new_class (a_class, l_clu, a_path)
 			if not l_clu.classes_set then
 				create l_classes.make (1)
 				l_clu.set_classes (l_classes)
@@ -516,14 +529,16 @@ feature -- Element change
 			l_target: CONF_TARGET
 			l_clu: CLUSTER_I
 			l_sys: CONF_SYSTEM
+			l_fact: CONF_COMP_FACTORY
 		do
+			create l_fact
 			error_in_config := False
 			if a_parent = Void then
 				l_target := universe.target
 			else
 				l_target := a_parent.target
 			end
-			last_added_cluster := compiler_conf_factory.new_cluster (a_name, compiler_conf_factory.new_location_from_path (a_path, l_target), l_target)
+			last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
 			if a_parent /= Void and then a_parent.is_cluster then
 				l_clu ?= a_parent
 				last_added_cluster.set_parent (l_clu)

@@ -685,7 +685,7 @@ feature -- Generation, External archives and object files.
 					i > nb
 				loop
 					l_ext := object_file_names.i_th (i)
-					if l_ext.is_enabled (universe.platform, universe.build) then
+					if l_ext.is_enabled (universe.conf_state) then
 						l_path := l_ext.location.original_path
 							-- don't add the same object multiple times
 						if not l_added_objects.has (l_path) then
@@ -723,7 +723,7 @@ feature -- Generation, External archives and object files.
 					i > nb
 				loop
 					l_ext := include_paths.i_th (i)
-					if l_ext.is_enabled (universe.platform, universe.build) then
+					if l_ext.is_enabled (universe.conf_state) then
 						l_path := l_ext.location.original_path
 							-- all remaining $ are by choice so mask them
 						l_path.replace_substring_all ("$", "\$")
@@ -763,7 +763,7 @@ feature -- Generation, External archives and object files.
 				i > nb
 			loop
 				l_ext := makefile_names.i_th (i)
-				if l_ext.is_enabled (universe.platform, universe.build) then
+				if l_ext.is_enabled (universe.conf_state) then
 					l_path := l_ext.location.evaluated_path
 					if not l_added_make.has (l_path) then
 						l_added_make.force (l_path)

@@ -82,7 +82,7 @@ feature -- Access
 							-- written as an Eiffel class, e.g. INTEGER, ....
 					Result := basic_type_mapping.item (l_name)
 					if Result = Void then
-						l_list := assembly.class_by_dotnet_name (l_name, True, universe.platform, universe.build)
+						l_list := assembly.class_by_dotnet_name (l_name, True)
 						check
 							l_list_not_empty: not l_list.is_empty
 						end

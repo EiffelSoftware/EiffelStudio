@@ -385,46 +385,100 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_conditionals (a_conditions: ARRAYED_LIST [INTEGER]) is
-			-- Append `a_conditions'.
+	append_conditionals (a_conditions: ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN) is
+			-- Append `a_conditions' ignore platform if it `is_assembly'.
 		local
-			l_condition: INTEGER
+			l_condition: CONF_CONDITION
+			l_done: BOOLEAN
+			l_platforms, l_builds: ARRAYED_LIST [TUPLE [value: INTEGER; invert: BOOLEAN]]
+			l_custs: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
+			l_pf, l_build: TUPLE [value: INTEGER; invert: BOOLEAN]
+			l_custom: TUPLE [value: STRING; invert: BOOLEAN]
 			l_name: STRING
+
+
 			l_tag: STRING
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_pf, l_build: INTEGER
+
 		do
 			if a_conditions /= Void then
-				from
-					a_conditions.start
-				until
-					a_conditions.after
-				loop
-					l_condition := a_conditions.item
-					l_name := get_platform_name (l_condition)
-					create l_a_name.make (2)
-					create l_a_val.make (2)
-					if l_name = Void then
-						l_tag := "ifnot"
-						l_condition := l_condition.bit_not
-					else
-						l_tag := "if"
-					end
-					l_pf := l_condition & 0x00FF
-					l_build := l_condition & 0xFF00
-					if valid_platform (l_pf) and l_pf /= pf_all then
-						l_a_name.extend ("platform")
-						l_a_val.extend (get_platform_name (l_condition).as_lower)
-					end
-					if valid_build (l_build) and l_build /= build_all then
-						l_a_name.extend ("build")
-						l_a_val.extend (get_build_name (l_condition).as_lower)
-					end
+					-- assembly and only the default rule? => don't print it
+				if is_assembly and then a_conditions.count = 1 then
+					l_condition := a_conditions.first
+					l_done := l_condition.build.is_empty and l_condition.multithreaded = Void and l_condition.custom.is_empty
+				end
+				if not l_done then
+					append_text_indent ("<condition>%N")
+					indent := indent + 1
+					from
+						a_conditions.start
+					until
+						a_conditions.after
+					loop
+						l_condition := a_conditions.item
+							-- don't print platform for assemblies
+						if not is_assembly then
+							from
+								l_platforms := l_condition.platform
+								l_platforms.start
+							until
+								l_platforms.after
+							loop
+								l_pf := l_platforms.item
+								if l_pf.invert then
+									l_name := "excluded-value"
+								else
+									l_name := "value"
+								end
+								append_text_indent ("<platform "+l_name+"=%""+get_platform_name (l_pf.value)+"%"/>")
+								l_platforms.forth
+							end
+						end
 
-					append_tag (l_tag, Void, l_a_name, l_a_val)
-					a_conditions.forth
+						from
+							l_builds := l_condition.build
+							l_builds.start
+						until
+							l_builds.after
+						loop
+							l_build := l_builds.item
+							if l_build.invert then
+								l_name := "excluded-value"
+							else
+								l_name := "value"
+							end
+							append_text_indent ("<build "+l_name+"=%""+get_build_name (l_build.value)+"%"/>")
+							l_builds.forth
+						end
+
+						if l_condition.multithreaded /= Void then
+							append_text_indent ("<multithreaded value=%""+l_condition.multithreaded.value.out.as_lower+"%"")
+						end
+
+						from
+							l_custs := l_condition.custom
+							l_custs.start
+						until
+							l_custs.after
+						loop
+							l_custom := l_custs.item_for_iteration
+							if l_custom.invert then
+								l_name := "excluded-value"
+							else
+								l_name := "value"
+							end
+							append_text_indent ("<build name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>")
+							l_custs.forth
+						end
+
+						a_conditions.forth
+					end
+					indent := indent - 1
+					append_text_indent ("</condition>%N")
 				end
 			end
+		ensure
+			indent_back: indent = old indent
 		end
 
 
@@ -453,7 +507,7 @@ feature {NONE} -- Implementation
 					if l_desc /= Void and not l_desc.is_empty then
 						append_tag ("description", l_desc, Void, Void)
 					end
-					append_conditionals (l_ext.internal_enabled)
+					append_conditionals (l_ext.internal_conditions, False)
 					indent := indent - 1
 
 					if text.count = last_count then
@@ -484,7 +538,7 @@ feature {NONE} -- Implementation
 				append_text (" command=%""+l_action.command+"%">%N")
 				indent := indent + 1
 				append_description_tag (l_action.description)
-				append_conditionals (l_action.internal_enabled)
+				append_conditionals (l_action.internal_conditions, False)
 				indent := indent - 1
 				append_text_indent ("</"+a_name+"_compile_action>%N")
 				an_actions.forth
@@ -654,17 +708,12 @@ feature {NONE} -- Implementation
 		local
 			l_renaming: HASH_TABLE [STRING, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
-			l_cond: ARRAYED_LIST [INTEGER]
 		do
 			append_text (">%N")
 			indent := indent + 1
 			last_count := text.count
 			append_description_tag (a_group.description)
-				-- don't append default assembly conditional
-			l_cond := a_group.internal_enabled
-			if l_cond /= Void and then not a_group.is_assembly or not a_group.is_enabled (pf_dotnet, build_all) then
-				append_conditionals (l_cond)
-			end
+			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
 			append_options (a_group.internal_options, Void)
 			l_renaming := a_group.renaming
 			if l_renaming /= Void then

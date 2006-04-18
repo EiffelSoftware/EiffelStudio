@@ -54,6 +54,8 @@ feature -- Statusupdate
 			l_lib_target: CONF_TARGET
 			l_ass_dep: LINKED_SET [CONF_ASSEMBLY]
 			l_libs: LIST [CONF_GROUP]
+			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
+			l_cls_lst: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			create libraries.make (0)
 			create assemblies.make (0)
@@ -71,7 +73,20 @@ feature -- Statusupdate
 				l_lib_target := l_library.library_target
 
 					-- clusters
-				clusters := build_groups (l_lib_target.clusters.linear_representation)
+				from
+					l_cls := l_lib_target.clusters
+					create l_cls_lst.make (l_cls.count)
+					l_cls.start
+				until
+					l_cls.after
+				loop
+					l_cluster := l_cls.item_for_iteration
+					if l_cluster.parent = Void then
+						l_cls_lst.force (l_cluster)
+					end
+					l_cls.forth
+				end
+				clusters := build_groups (l_cls_lst)
 
 					-- overrides
 				overrides := build_groups (l_lib_target.overrides.linear_representation)

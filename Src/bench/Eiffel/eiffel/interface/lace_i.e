@@ -11,7 +11,6 @@ inherit
 	SHARED_RESCUE_STATUS
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
-	SHARED_CONF_FACTORY
 	PROJECT_CONTEXT
 	CONF_ACCESS
 	SHARED_EXEC_ENVIRONMENT
@@ -356,9 +355,11 @@ feature {NONE} -- Implementation
 		local
 			l_load: CONF_LOAD
 			vd00: VD00
+			l_factory: CONF_COMP_FACTORY
 		do
+			create l_factory
 				-- load configuration file
-			create l_load
+			create l_load.make (l_factory)
 			l_load.retrieve_configuration (file_name)
 			if l_load.is_error then
 				create vd00
@@ -553,7 +554,10 @@ feature {NONE} -- Implementation
 			vd15: VD15
 			vd83: VD83
 			l_settings: HASH_TABLE [STRING, STRING]
+			l_factory: CONF_COMP_FACTORY
 		do
+			create l_factory
+
 			l_settings := a_target.settings
 
 			update_settings_for_eweasel (l_settings)
@@ -838,7 +842,7 @@ feature {NONE} -- Implementation
 			if l_s = Void then
 				l_s := overridden_metadata_cache_path
 			else
-				l_s := conf_factory.new_location_from_path (l_s, a_target).evaluated_directory
+				l_s := l_factory.new_location_from_path (l_s, a_target).evaluated_directory
 			end
 				-- value can't change from a precompile or in a compiled system
 			if l_s /= Void and then not equal (l_s, system.metadata_cache_path) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
@@ -847,7 +851,7 @@ feature {NONE} -- Implementation
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 				if l_s = Void then
-					l_s := conf_factory.new_location_from_path ((create {EIFFEL_ENV}).assemblies_path, a_target).evaluated_directory
+					l_s := l_factory.new_location_from_path ((create {EIFFEL_ENV}).assemblies_path, a_target).evaluated_directory
 				end
 				system.set_metadata_cache_path (l_s)
 			end
@@ -917,7 +921,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item ("msil_key_file_name")
 			if l_s /= Void then
-				system.set_msil_key_file_name (conf_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+				system.set_msil_key_file_name (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 
 			l_s := l_settings.item ("msil_use_optimized_precompile")
@@ -989,7 +993,7 @@ feature {NONE} -- Implementation
 				-- If the release doesn't generate DLL's,
 				-- we do not take the option into account in the Ace.
 			if l_s /= Void and has_dll_generation then
-				system.set_dynamic_def_file (conf_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
+				system.set_dynamic_def_file (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 
 			l_s := l_settings.item ("syntax_warning")
@@ -1085,12 +1089,14 @@ feature {NONE} -- Implementation
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
+			l_factory: CONF_COMP_FACTORY
 		do
+			create l_factory
 			l_pre := a_target.precompile
 
 				-- check if the configuration file is ok
 			l_file_name := l_pre.location.evaluated_path
-			create l_load
+			create l_load.make (l_factory)
 			l_load.retrieve_configuration (l_file_name)
 			if l_load.is_error then
 				create vd77

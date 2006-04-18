@@ -9,39 +9,29 @@ class
 	CONF_LOAD_LACE
 
 inherit
-	SHARED_CONF_FACTORY
-		undefine
-			default_create
-		end
-
 	CONF_ACCESS
-		undefine
-			default_create
-		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 	CONF_VALIDITY
-		undefine
-			default_create
-		end
 
-	ANY
-		redefine
-			default_create
-		end
+create
+	make
 
 feature {NONE} -- Initialization
 
-		default_create is
+		make (a_factory: like factory) is
 				-- Create.
+			require
+				a_factory_not_void: a_factory /= Void
 			do
+				factory := a_factory
 				create current_overrides.make (1)
+			ensure
+				factory_set: factory = a_factory
 			end
 
 
@@ -84,8 +74,8 @@ feature -- Basic operation
 					set_error (create {CONF_ERROR_PARSE})
 				end
 			else
-				last_system := conf_factory.new_system (l_ast.system_name.as_lower, uuid_generator.generate_uuid)
-				current_target := conf_factory.new_target (l_ast.system_name.as_lower, last_system)
+				last_system := factory.new_system (l_ast.system_name.as_lower, uuid_generator.generate_uuid)
+				current_target := factory.new_target (l_ast.system_name.as_lower, last_system)
 				last_system.add_target (current_target)
 
 				process_defaults (l_ast.defaults)
@@ -117,6 +107,9 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation of data retrieval
 
+	factory: CONF_FACTORY
+			-- Factory for node creation.
+
 	current_target: CONF_TARGET
 
 	current_cluster: CONF_CLUSTER
@@ -134,9 +127,9 @@ feature {NONE} -- Implementation of data retrieval
 			l_assembly: CONF_ASSEMBLY
 		do
 			if an_assembly.version /= Void then
-				l_assembly := conf_factory.new_assembly_from_gac (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
+				l_assembly := factory.new_assembly_from_gac (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, an_assembly.version, an_assembly.culture, an_assembly.public_key_token, current_target)
 			else
-				l_assembly := conf_factory.new_assembly (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, current_target)
+				l_assembly := factory.new_assembly (an_assembly.cluster_name.as_lower, an_assembly.assembly_name, current_target)
 			end
 			l_assembly.set_name_prefix (an_assembly.prefix_name)
 			current_target.add_assembly (l_assembly)
@@ -154,13 +147,13 @@ feature {NONE} -- Implementation of data retrieval
 			l_location: CONF_LOCATION
 		do
 			l_name := a_cluster.cluster_name
-			l_location := conf_factory.new_location_from_path (a_cluster.directory_name, current_target)
+			l_location := factory.new_location_from_path (a_cluster.directory_name, current_target)
 			if current_overrides.has (l_name) then
-				l_over := conf_factory.new_override (l_name, l_location, current_target)
+				l_over := factory.new_override (l_name, l_location, current_target)
 				current_cluster := l_over
 				current_target.add_override (l_over)
 			else
-				current_cluster := conf_factory.new_cluster (l_name, l_location, current_target)
+				current_cluster := factory.new_cluster (l_name, l_location, current_target)
 				current_target.add_cluster (current_cluster)
 			end
 			if a_cluster.is_library then
@@ -492,7 +485,7 @@ feature {NONE} -- Implementation of data retrieval
 						if l_precomp.value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Incorrect precompile."))
 						else
-							l_conf_pre := conf_factory.new_precompile ("precompile", l_precomp.value.value, current_target)
+							l_conf_pre := factory.new_precompile ("precompile", l_precomp.value.value, current_target)
 							l_rename := l_precomp.renamings
 							if l_rename /= Void then
 								from
@@ -613,9 +606,9 @@ feature {NONE} -- Implementation of data retrieval
 						l_feature.to_lower
 					end
 					if l_class.is_equal ("none") then
-						l_root := conf_factory.new_root (Void, Void, Void, True)
+						l_root := factory.new_root (Void, Void, Void, True)
 					else
-						l_root := conf_factory.new_root (l_cluster, l_class, l_feature, False)
+						l_root := factory.new_root (l_cluster, l_class, l_feature, False)
 					end
 
 					current_target.set_root (l_root)
@@ -648,8 +641,8 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := conf_factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_include (conf_factory.new_external_include (l_location))
+							l_location := factory.new_location_from_full_path (l_files.item, current_target)
+							current_target.add_external_include (factory.new_external_include (l_location))
 							l_files.forth
 						end
 					elseif l_type.is_object then
@@ -658,8 +651,8 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := conf_factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_object (conf_factory.new_external_object (l_location))
+							l_location := factory.new_location_from_full_path (l_files.item, current_target)
+							current_target.add_external_object (factory.new_external_object (l_location))
 							l_files.forth
 						end
 					elseif l_type.is_dotnet_resource then
@@ -668,8 +661,8 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := conf_factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_ressource (conf_factory.new_external_ressource (l_location))
+							l_location := factory.new_location_from_full_path (l_files.item, current_target)
+							current_target.add_external_ressource (factory.new_external_ressource (l_location))
 							l_files.forth
 						end
 					elseif l_type.is_make then
@@ -678,8 +671,8 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := conf_factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_make (conf_factory.new_external_make (l_location))
+							l_location := factory.new_location_from_full_path (l_files.item, current_target)
+							current_target.add_external_make (factory.new_external_make (l_location))
 							l_files.forth
 						end
 					else
@@ -740,6 +733,8 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+invariant
+	factory_not_void: factory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

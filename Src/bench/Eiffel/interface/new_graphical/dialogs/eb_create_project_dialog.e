@@ -172,6 +172,7 @@ feature -- Execution
 			rescued: BOOLEAN
 			cla, clu, f: STRING
 			sc: EIFFEL_SYNTAX_CHECKER
+			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			success := False
 			if not rescued then
@@ -216,11 +217,24 @@ feature -- Execution
 				blank_project_builder.create_blank_project
 
 					-- Create a new project using the previously generated files.
-				conf_todo
+				create l_project_loader.make (parent_window)
+				l_project_loader.set_is_project_location_requested (False)
+				l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
+				if not l_project_loader.has_error and then compile_project then
+					check
+						project_is_new: l_project_loader.is_new_project
+					end
+					l_project_loader.set_is_compilation_requested (compile_project)
+					l_project_loader.compile_project
+				end
 
 					-- Update `success' state.
-				success := Eiffel_project.initialized and then (not Eiffel_ace.file_name.is_empty)
-			else
+				success := not l_project_loader.has_error and then Eiffel_project.initialized and then
+					(not Eiffel_ace.file_name.is_empty)
+
+				destroy
+			end
+			if rescued or else not success then
 				if is_displayed then
 					display_error_message (Current)
 				else

@@ -13,7 +13,8 @@ inherit
 		undefine
 			warning_messages
 		redefine
-			is_project_location_requested
+			is_project_location_requested,
+			post_create_project
 		end
 
 	EB_CONSTANTS
@@ -66,8 +67,10 @@ feature {NONE} -- Initialization
 			parent_window := a_parent
 			deletion_agent := agent on_delete_directory
 			cancel_agent := agent on_cancel_operation
+			is_project_location_requested := True
 		ensure
 			parent_window_set: parent_window = a_parent
+			is_project_location_requested_set: is_project_location_requested
 		end
 
 feature -- Access
@@ -77,17 +80,37 @@ feature -- Access
 
 feature -- Status report
 
-	is_project_location_requested: BOOLEAN is True
+	is_project_location_requested: BOOLEAN
 			-- If `True', ask user for a project location, otherwise simply create
 			-- project where configuration file is located.
 
 feature -- Settings
+
+	set_is_project_location_requested (v: like is_project_location_requested) is
+			-- Set `is_project_location_requested' with `v'.
+		do
+			is_project_location_requested := v
+		ensure
+			is_project_location_requested_set: is_project_location_requested = v
+		end
 
 	compile_project is
 			-- Compile newly created project.
 		do
 			ev_application.do_once_on_idle (
 				agent (window_manager.last_focused_development_window.quick_melt_project_cmd).execute)
+		end
+
+feature {NONE} -- Actions
+
+	post_create_project is
+			-- Actions performed after creating a new project.
+		do
+				-- Destroy and forget `deleting_dialog' if it was used.
+			if deleting_dialog /= Void and then not deleting_dialog.is_destroyed then
+				deleting_dialog.destroy
+				deleting_dialog := Void
+			end
 		end
 
 feature {NONE} -- Error reporting
@@ -444,14 +467,14 @@ feature {NONE} -- Actions
 
 			create deleting_dialog_label
 			deleting_dialog_label.align_text_left
-			deleting_dialog_label.set_text (Interface_names.l_Deleting_dialog_default)
+			deleting_dialog_label.set_text (Interface_names.l_deleting_dialog_default)
 			label_font := deleting_dialog_label.font
 			deleting_dialog_label.set_minimum_size (
-				label_font.width * Minimum_width_of_Deleting_dialog,
-				label_font.height * Minimum_height_of_Deleting_dialog
+				label_font.width * minimum_width_of_deleting_dialog,
+				label_font.height * minimum_height_of_deleting_dialog
 				)
 
-			create cancel_button.make_with_text (Interface_names.b_Cancel)
+			create cancel_button.make_with_text (Interface_names.b_cancel)
 			Layout_constants.set_default_size_for_button (cancel_button)
 			cancel_button.select_actions.extend (agent on_cancel_button_pushed)
 
@@ -478,7 +501,7 @@ feature {NONE} -- Actions
 			create deleting_dialog
 			deleting_dialog.extend (vb)
 			deleting_dialog.set_default_cancel_button (cancel_button)
-			deleting_dialog.set_title (Interface_names.t_Deleting_files)
+			deleting_dialog.set_title (Interface_names.t_deleting_files)
 			deleting_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 			deleting_dialog.show_relative_to_window (parent_window)
 		end
@@ -545,16 +568,16 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Implementation / Private constants.
 
-	Minimum_width_of_Deleting_dialog: INTEGER is 70
+	minimum_width_of_deleting_dialog: INTEGER is 70
 			-- Minimum width of the deleting dialog in characters.
 
-	Minimum_height_of_Deleting_dialog: INTEGER is 2
+	minimum_height_of_deleting_dialog: INTEGER is 2
 			-- Minimum height of the deleting dialog in characters.
 
 	Path_ellipsis_width: INTEGER is
 			-- Maximum number of characters per item.
 		once
-			Result := Minimum_width_of_Deleting_dialog - 10
+			Result := minimum_width_of_deleting_dialog - 10
 		end
 
 invariant

@@ -37,7 +37,7 @@ feature {NONE}
 
 	Comp: STRING is "COMP"
 
-	Default_ace_file: STRING is "default.ace"
+	Default_config_file: STRING is "default.acex"
 
 	Default_class_filename: STRING is "default.cls"
 
@@ -134,6 +134,8 @@ feature {NONE}
 	Local_assemblies: STRING is "Assemblies"
 
 	W_code: STRING is "W_code"
+
+	eiffel_extension: STRING is "e"
 
 	project_extension: STRING is "epr"
 

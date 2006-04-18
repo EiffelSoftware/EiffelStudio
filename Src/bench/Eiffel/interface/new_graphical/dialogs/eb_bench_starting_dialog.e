@@ -352,10 +352,6 @@ feature {NONE} -- Execution
 				check no_item_selected: False end
 			end
 
-			if compile_project then
-				window_manager.last_focused_development_window.Melt_project_cmd.execute
-			end
-
 			update_preferences
 		end
 

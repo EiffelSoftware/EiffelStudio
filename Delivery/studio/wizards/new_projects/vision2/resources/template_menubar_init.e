@@ -82,7 +82,7 @@ feature {NONE} -- Menu Implementation
 			
 			create menu_item.make_with_text (Menu_help_contents_item)
 				--| TODO: Add the action associated with "Contents and Index" here.
-			help_menu.extend (menu_item)$FL_HELP_ABOUT_ADD
+			help_menu.extend (menu_item)${FL_HELP_ABOUT_ADD}
 		ensure
 			help_menu_created: help_menu /= Void and then not help_menu.is_empty
 		end

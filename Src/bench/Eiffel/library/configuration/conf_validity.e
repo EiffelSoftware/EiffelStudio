@@ -201,6 +201,7 @@ feature {NONE} -- Implementation
 			Result.force ("multithreaded")
 			Result.force ("old_verbatim_strings")
 			Result.force ("old_verbatim_strings_warning")
+			Result.force ("platform")
 			Result.force ("external_runtime")
 			Result.force ("shared_library_definition")
 			Result.force ("syntax_warning")

@@ -8,6 +8,9 @@ indexing
 class
 	SYSTEM_OPTIONS
 
+inherit
+	CONF_VALIDITY
+
 feature -- Access
 
 	remover_off: BOOLEAN
@@ -82,6 +85,9 @@ feature -- Access
 
 	full_type_checking: BOOLEAN
 			-- Does compiler checks inherited feature as well as local feature.
+
+	platform: INTEGER
+			-- User specified platform.
 
 feature -- Access: IL code generation
 
@@ -523,6 +529,17 @@ feature -- Update
 		ensure
 			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
+
+	set_platform (a_platform: INTEGER) is
+			-- Override platform.
+		require
+			valid_platform: valid_platform (a_platform)
+		do
+			platform := a_platform
+		ensure
+			platform_set: platform = a_platform
+		end
+
 
 feature {SYSTEM_I} -- Implementation
 

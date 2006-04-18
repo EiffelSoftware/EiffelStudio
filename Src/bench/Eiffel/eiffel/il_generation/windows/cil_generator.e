@@ -258,9 +258,11 @@ feature -- Generation
 			l_use_optimized_precomp: BOOLEAN
 			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_as: CONF_ASSEMBLY
+			l_state: CONF_STATE
 		do
 			if not retried then
 					-- Copy referenced local assemblies
+				l_state := universe.conf_state
 				from
 					l_assemblies := universe.target.all_assemblies
 					l_assemblies.start
@@ -268,7 +270,7 @@ feature -- Generation
 					l_assemblies.after
 				loop
 					l_as := l_assemblies.item_for_iteration
-					if l_as.is_enabled (universe.platform, universe.build) and then not l_as.is_in_gac then
+					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
 						copy_to_local (l_as.location.evaluated_path)
 						l_has_local := True
 					end

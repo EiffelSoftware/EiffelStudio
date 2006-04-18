@@ -24,10 +24,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform, a_build: INTEGER) is
+	make (a_state: like state) is
 			-- Create.
 		do
-			Precursor (a_platform, a_build)
+			Precursor (a_state)
 			create found_classes.make
 			create targets_done.make (5)
 			create assemblies_done.make (5)

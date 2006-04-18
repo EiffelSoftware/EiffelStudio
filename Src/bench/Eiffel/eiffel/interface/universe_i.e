@@ -57,6 +57,14 @@ feature -- Properties
 	conf_system: CONF_SYSTEM
 			-- Complete configuration system.
 
+	conf_state: CONF_STATE is
+			-- Current state, needed for conditioning.
+		require
+			target_not_void: target /= Void
+		do
+			create Result.make (platform, build, system.has_multithreaded, target.variables)
+		end
+
 	platform: INTEGER is
 			-- Universe type of platform.
 		local
@@ -162,7 +170,7 @@ feature -- Access
 		do
 			buffered_classes.search (class_name)
 			if not buffered_classes.found then
-				create l_vis.make (platform, build)
+				create l_vis.make (conf_state)
 				l_vis.set_name (class_name)
 				target.process (l_vis)
 				Result := l_vis.found_classes

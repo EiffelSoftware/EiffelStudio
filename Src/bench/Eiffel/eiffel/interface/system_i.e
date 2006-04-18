@@ -53,8 +53,6 @@ inherit
 
 	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
 
-	SHARED_CONF_FACTORY
-
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -766,6 +764,8 @@ end
 			l_ise_lib: STRING
 			l_env: EIFFEL_ENV
 			d1, d2: DATE_TIME
+			l_factory: CONF_COMP_FACTORY
+			l_state: CONF_STATE
 		do
 			debug ("timing")
 				print_memory_statistics
@@ -785,18 +785,20 @@ end
 			l_target.environ_variables.force (l_ise_lib, "ise_library")
 
 				-- let the configuration system build "everything"
+			create l_factory
 			if universe.target /= Void then
-				create l_vis_build.make_build_from_old (universe.platform, universe.build,
-					l_target, universe.target)
+				create l_vis_build.make_build_from_old (universe.conf_state,
+					l_target, universe.target, l_factory)
 			else
-				create l_vis_build.make_build (universe.platform, universe.build, l_target)
+				create l_state.make (universe.platform, universe.build, has_multithreaded, l_target.variables)
+				create l_vis_build.make_build (l_state, l_target, l_factory)
 			end
 			if il_generation then
 				l_vis_build.set_assembly_cach_folder (metadata_cache_path)
 				l_vis_build.set_il_version (msil_version)
 			end
 			l_vis_build.set_partial_location (
-				conf_factory.new_location_from_path (partial_generation_path, l_target))
+				l_factory.new_location_from_path (partial_generation_path, l_target))
 
 				-- set observers
 			l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
@@ -1000,7 +1002,7 @@ end
 					rebuild_configuration
 				else
 						-- Let the configuration system check for compiled classes that have been modified.
-					create l_vis_modified.make (universe.platform, universe.build)
+					create l_vis_modified.make (universe.conf_state)
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 					l_classes := l_vis_modified.modified_classes
@@ -1047,7 +1049,7 @@ end
 			end
 
 				-- check configuration and add warnings
-			create l_vis_check.make (universe.platform, universe.build)
+			create l_vis_check.make (universe.conf_state)
 			universe.target.process (l_vis_check)
 			if l_vis_check.is_error then
 				from

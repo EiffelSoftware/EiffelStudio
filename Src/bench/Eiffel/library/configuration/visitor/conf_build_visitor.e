@@ -21,12 +21,12 @@ inherit
 			process_group
 		end
 
-	SHARED_CONF_FACTORY
-
 	SHARED_CLASSNAME_FINDER
 		export
 			{NONE} all
 		end
+
+	CONF_VALIDITY
 
 	CONF_ACCESS
 
@@ -37,15 +37,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_build (a_platform, a_build: INTEGER; an_application_target: like application_target) is
+	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory) is
 			-- Create.
 		require
-			valid_platform: valid_platform (a_platform)
-			valid_build: valid_build (a_build)
+			a_state_not_void: a_state /= Void
 			an_application_target_not_void: an_application_target /= Void
+			a_factory_not_void: a_factory /= Void
 		do
+			factory := a_factory
 			reset_classes
-			make (a_platform, a_build)
+			make (a_state)
 			create libraries.make (Libraries_per_target)
 			create assemblies.make (1)
 			create old_assemblies_handled.make (1)
@@ -55,16 +56,17 @@ feature {NONE} -- Initialization
 			application_target := an_application_target
 		end
 
-	make_build_from_old (a_platform, a_build: INTEGER; an_application_target, an_old_target: CONF_TARGET) is
+	make_build_from_old (a_state: like state; an_application_target, an_old_target: CONF_TARGET; a_factory: like factory) is
 			-- Create.
 		require
-			valid_platform: valid_platform (a_platform)
-			valid_build: valid_build (a_build)
+			a_state_not_void: a_state /= Void
 			an_application_target_not_void: an_application_target /= Void
 			an_old_target_not_void: an_old_target /= Void
+			a_factory_not_void: a_factory /= Void
 		do
+			factory := a_factory
 			reset_classes
-			make_build (a_platform, a_build, an_application_target)
+			make_build (a_state, an_application_target, a_factory)
 			old_target := an_old_target
 		end
 
@@ -210,32 +212,36 @@ feature -- Visit nodes
 						old_assemblies := old_target.all_assemblies.twin
 					end
 				end
-					-- add the target to the libraries
-				libraries.force (a_target, a_target.system.uuid)
-				if old_libraries /= Void then
-					old_libraries.remove (a_target.system.uuid)
+					-- if it is the library target, add the target to the libraries
+				if a_target = a_target.system.library_target then
+					libraries.force (a_target, a_target.system.uuid)
+					if old_libraries /= Void then
+						old_libraries.remove (a_target.system.uuid)
+					end
 				end
+
+					-- process clusters first, because we need those information while processing libraries if we have circular dependencies
+				process_with_old (a_target.clusters, l_clusters)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
 					process_library (l_pre)
 				end
 
-				if not a_target.assemblies.is_empty and platform = pf_dotnet then
+				if not a_target.assemblies.is_empty and state.platform = pf_dotnet then
 					consume_assemblies (a_target)
 					process_with_old (a_target.assemblies, Void)
 				end
 
 				if not is_error then
-						-- do libraries after assemblies, so that the assemblies is already filled with the assemblies defined in the application configuration itself
+						-- do libraries after clusters, assemblies, so that the assemblies is already filled with the assemblies defined in the application configuration itself and the clusters have been processed
 					process_with_old (a_target.libraries, Void)
-					process_with_old (a_target.clusters, l_clusters)
-						-- must be done at the end
-					process_with_old (a_target.overrides, l_overrides)
-
 
 						-- must be done one time per system after everything is processed
 					if a_target = application_target then
+							-- overrides can only be in the application target
+						process_with_old (a_target.overrides, l_overrides)
+
 						handle_assembly_dependencies
 							-- only assemblies that have not been reused remain in `old_assemblies'
 						if old_assemblies /= Void then
@@ -280,7 +286,7 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
-			if platform /= pf_dotnet then
+			if state.platform /= pf_dotnet then
 				add_error (create {CONF_ERROR_DOTNET})
 			end
 			if not is_error then
@@ -313,7 +319,7 @@ feature -- Visit nodes
 		do
 			if not is_error then
 				l_path := a_library.location.evaluated_path
-				create l_load
+				create l_load.make (factory)
 				l_load.retrieve_uuid (l_path)
 				if l_load.is_error then
 					add_error (l_load.last_error)
@@ -362,7 +368,7 @@ feature -- Visit nodes
 					end
 					if not is_error then
 						create current_classes.make (Classes_per_cluster)
-						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.is_enabled (platform, build))
+						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
 							-- do renaming prefixing if necessary
 						l_ren := a_library.renaming
 						if l_ren /= Void then
@@ -446,7 +452,7 @@ feature -- Visit nodes
 					is_error or l_groups.after
 				loop
 					l_overridee := l_groups.item
-					if l_overridee.is_enabled (platform, build) then
+					if l_overridee.is_enabled (state) then
 						l_overridee.add_overriders (an_override, modified_classes)
 						if l_overridee.is_error then
 							add_error (l_overridee.last_error)
@@ -485,6 +491,9 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 		end
 
 feature {NONE} -- Implementation
+
+	factory: CONF_FACTORY
+			-- Factory to use for creation of new nodes.
 
 	reused_classes: SEARCH_TABLE [CONF_CLASS]
 			-- List of classes that are reused (and therefore should not be added to `removed_classes').
@@ -704,7 +713,7 @@ feature {NONE} -- Implementation
 									reused_classes.force (l_class)
 								else
 										-- not found => new class
-									l_class := conf_factory.new_class (a_file, current_cluster, a_path)
+									l_class := factory.new_class (a_file, current_cluster, a_path)
 									if l_class.is_error then
 										add_error (l_class.last_error)
 									end
@@ -759,7 +768,7 @@ feature {NONE} -- Implementation
 					-- add it to `reused_classes'
 				reused_classes.force (l_class)
 			else
-				l_class := conf_factory.new_class_assembly (a_name, a_dotnet_name, current_assembly, a_position)
+				l_class := factory.new_class_assembly (a_name, a_dotnet_name, current_assembly, a_position)
 				current_classes.force (l_class, l_class.renamed_name)
 				current_dotnet_classes.force (l_class, a_dotnet_name)
 				added_classes.force (l_class)
@@ -791,7 +800,7 @@ feature {NONE} -- Implementation
 			-- or from `old_libraries'
 		require
 			an_assembly_not_void: an_assembly /= Void
-			dotnet: platform = pf_dotnet
+			dotnet: state.platform = pf_dotnet
 			old_assembly_void: old_assembly = Void
 			old_group_void: old_group = Void
 		local
@@ -956,7 +965,7 @@ feature {NONE} -- Implementation
 		require
 			an_assembly_ok: an_assembly /= Void and then an_assembly.guid /= Void
 			an_assembly_consumed: an_assembly.consumed_path /= Void and then not an_assembly.consumed_path.is_empty
-			dotnet: platform = pf_dotnet
+			dotnet: state.platform = pf_dotnet
 		local
 			l_path: STRING
 			l_reference_file: FILE_NAME
@@ -993,7 +1002,7 @@ feature {NONE} -- Implementation
 								an_assembly.add_dependency (l_assembly)
 							else
 									-- create new assembly and process it
-								l_assembly := conf_factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
+								l_assembly := factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
 								l_old_current_assembly := current_assembly
 								current_assembly := l_assembly
 								process_assembly_implementation (l_assembly)
@@ -1017,7 +1026,7 @@ feature {NONE} -- Implementation
 			if not is_error then
 					-- holds the list of all assemblies
 				if not assemblies.is_empty then
-					if platform /= pf_dotnet then
+					if state.platform /= pf_dotnet then
 						add_error (create {CONF_ERROR_DOTNET})
 					else
 						from
@@ -1062,8 +1071,8 @@ feature {NONE} -- Implementation
 					l_assemblies.after
 				loop
 					l_a := l_assemblies.item_for_iteration
-					if l_a.is_enabled (platform, build) then
-						if platform /= pf_dotnet then
+					if l_a.is_enabled (state) then
+						if state.platform /= pf_dotnet then
 							add_error (create {CONF_ERROR_DOTNET})
 						else
 							l_consumed := True
@@ -1256,7 +1265,7 @@ feature {NONE} -- Implementation
 			loop
 				l_group := a_new_groups.item_for_iteration
 
-				if l_group.is_enabled (platform, build) then
+				if l_group.is_enabled (state) then
 						-- look for a group in old groups with the same name
 						-- this should work in most situations, in the rest of
 						-- the situations we don't find the old classes and have
@@ -1320,7 +1329,7 @@ feature {NONE} -- Implementation
 						added_classes.force (l_class)
 					end
 				else
-					l_class := conf_factory.new_class_partial (partial_classes.item_for_iteration, current_cluster, partial_location)
+					l_class := factory.new_class_partial (partial_classes.item_for_iteration, current_cluster, partial_location)
 					if l_class.is_error then
 						add_error (l_class.last_error)
 					else
@@ -1386,7 +1395,6 @@ feature {NONE} -- shared instances
 		once
 			create Result.make
 			Result.compile ("\.[pP]?[eE]$")
-			print ("blub")
 			Result.optimize
 		end
 
@@ -1395,7 +1403,6 @@ feature {NONE} -- shared instances
 		once
 			create Result.make
 			Result.compile ("\.[pP][eE]$")
-			print ("blub")
 			Result.optimize
 		end
 
@@ -1500,6 +1507,7 @@ invariant
 	application_target_not_void: application_target /= Void
 	libraries_no_intersection: not libraries_intersection (libraries, old_libraries)
 	assemblies_no_intersection: not assemblies_intersection (assemblies, old_assemblies)
+	factory_not_void: factory /= Void
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

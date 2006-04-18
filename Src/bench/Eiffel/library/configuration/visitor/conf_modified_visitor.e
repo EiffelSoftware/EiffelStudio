@@ -29,10 +29,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_platform, a_build: INTEGER) is
+	make (a_state: like state) is
 			-- Create.
 		do
-			Precursor (a_platform, a_build)
+			Precursor (a_state)
 			create modified_classes.make (0)
 			create process_group_observer.make (1)
 			create processed_libraries.make (100)

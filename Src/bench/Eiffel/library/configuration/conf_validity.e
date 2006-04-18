@@ -47,31 +47,32 @@ feature -- Basic validity queries
 
 feature {NONE} -- Basic operation
 
-	get_platform_name (a_bits: INTEGER): STRING is
-			-- Get the name of the platform in `a_bits'.
-		local
-			l_pf: INTEGER
+	get_platform_name (a_platform: INTEGER): STRING is
+			-- Get the name of `a_platform'.
+		require
+			valid_platform: valid_platform (a_platform)
 		do
-			l_pf := a_bits & 0x00FF
-			if l_pf /= 0 then
-				Result := platform_names.item (l_pf)
-			end
+			Result := platform_names.item (a_platform)
+		ensure
+			result_not_void: Result /= Void
 		end
 
-	get_build_name (a_bits: INTEGER): STRING is
-			-- Get the name of the build in `a_bits'.
-		local
-			l_build: INTEGER
+	get_build_name (a_build: INTEGER): STRING is
+			-- Get the name of `a_build'.
+		require
+			valid_build: valid_build (a_build)
 		do
-			l_build := a_bits & 0xFF00
-			if l_build /= 0 then
-				Result := build_names.item (l_build)
-			end
+			Result := build_names.item (a_build)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	get_platform (a_name: STRING): INTEGER is
 			-- Get the platform with `a_name', otherwise return 0.
 		do
+			if a_name = Void then
+				Result := 0
+			end
 			from
 				platform_names.start
 			until
@@ -87,6 +88,9 @@ feature {NONE} -- Basic operation
 	get_build (a_name: STRING): INTEGER is
 			-- Get the build with `a_name', otherwise return 0.
 		do
+			if a_name = Void then
+				Result := 0
+			end
 			from
 				build_names.start
 			until

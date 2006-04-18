@@ -21,7 +21,8 @@ inherit
 			class_type,
 			is_readonly,
 			accessible_groups,
-			accessible_classes
+			accessible_classes,
+			add_condition
 		end
 
 	CONF_FILE_DATE
@@ -36,11 +37,34 @@ create
 
 feature {NONE} -- Initialization
 
+	initialize_conditions is
+			-- Restrict to platform dotnet
+		local
+			l_cond: CONF_CONDITION
+		do
+			if internal_conditions = Void then
+				create l_cond.make
+				l_cond.add_platform (pf_dotnet)
+				add_condition (l_cond)
+			else
+				from
+					internal_conditions.start
+				until
+					internal_conditions.after
+				loop
+					l_cond := internal_conditions.item
+					l_cond.wipe_out_platform
+					l_cond.add_platform (pf_dotnet)
+					internal_conditions.forth
+				end
+			end
+		end
+
 	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
 			-- Create
 		do
 			Precursor (a_name, a_location, a_target)
-			enable (pf_dotnet, build_all)
+			initialize_conditions
 		end
 
 	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
@@ -53,7 +77,7 @@ feature {NONE} -- Initialization
 			an_assembly_key_not_void: an_assembly_key /= Void
 			a_target_not_void: a_target /= Void
 		do
-			enable (pf_dotnet, build_all)
+			initialize_conditions
 			is_in_gac := True
 			target := a_target
 			is_valid := True
@@ -66,7 +90,6 @@ feature {NONE} -- Initialization
 		ensure
 			is_valid: is_valid
 		end
-
 
 feature -- Status
 
@@ -178,13 +201,11 @@ feature -- Access queries
 			end
 		end
 
-	class_by_dotnet_name (a_class: STRING; a_dependencies: BOOLEAN; a_platform, a_build: INTEGER): ARRAYED_LIST [like class_type] is
+	class_by_dotnet_name (a_class: STRING; a_dependencies: BOOLEAN): ARRAYED_LIST [like class_type] is
 			-- Get class by dotnet name.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			classes_set: classes_set
-			a_platform_valid: valid_platform (a_platform)
-			a_build_valid: valid_build (a_build)
 		local
 			l_class: like class_type
 			l_dep: CONF_ASSEMBLY
@@ -201,8 +222,8 @@ feature -- Access queries
 					dependencies.after
 				loop
 					l_dep := dependencies.item
-					if l_dep.is_enabled (a_platform, a_build) then
-						Result.append (l_dep.class_by_dotnet_name (a_class, False, a_platform, a_build))
+					if l_dep.classes_set then
+						Result.append (l_dep.class_by_dotnet_name (a_class, False))
 					end
 					dependencies.forth
 				end
@@ -294,6 +315,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_in_gac_set: is_in_gac = b
 		end
 
+	add_condition (a_condition: CONF_CONDITION) is
+			-- Add `a_condition'.
+		do
+			Precursor (a_condition)
+			initialize_conditions
+		end
 
 feature {CONF_ACCESS} -- Update, in compiled only
 

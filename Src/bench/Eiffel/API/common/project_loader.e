@@ -52,7 +52,9 @@ feature -- Loading
 			l_load_ace: CONF_LOAD_LACE
 			l_load_config: CONF_LOAD
 			l_dir_name: STRING
+			l_factory: CONF_COMP_FACTORY
 		do
+			create l_factory
 			reset
 			is_recompile_from_scrach := from_scratch
 			if a_file_name = Void or else a_file_name.is_empty then
@@ -68,7 +70,7 @@ feature -- Loading
 					l_default_file_name.set_file_name ("Ace")
 					if is_file_readable (l_default_file_name) then
 							-- Special case where `Ace' can mean either the old or new format.
-						create l_load_ace
+						create l_load_ace.make (l_factory)
 						l_load_ace.retrieve_configuration (l_default_file_name)
 						if l_load_ace.is_error then
 								-- Most likely it is not an Ace file, so it must be in the new format.
@@ -114,7 +116,7 @@ feature -- Loading
 				workbench.make
 
 					-- We try to load it as a normal config file.
-				create l_load_config
+				create l_load_config.make (l_factory)
 				l_load_config.retrieve_configuration (config_file_name)
 				if l_load_config.is_error then
 					report_cannot_read_config_file (config_file_name, l_load_config.last_error)
@@ -308,9 +310,11 @@ feature {NONE} -- Settings
 		local
 			l_load: CONF_LOAD_LACE
 			l_dir_name: STRING
+			l_factory: CONF_COMP_FACTORY
 		do
 				-- load config from ace
-			create l_load
+			create l_factory
+			create l_load.make (l_factory)
 			l_load.retrieve_configuration (a_file_name)
 			if l_load.is_error then
 				report_cannot_read_ace_file (a_file_name, l_load.last_error)

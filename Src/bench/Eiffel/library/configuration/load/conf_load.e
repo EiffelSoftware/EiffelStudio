@@ -9,9 +9,21 @@ class
 	CONF_LOAD
 
 inherit
-	SHARED_CONF_FACTORY
-
 	CONF_ACCESS
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_factory: like factory) is
+			-- Create.
+		do
+			factory := a_factory
+		ensure
+			factory_set: factory = a_factory
+		end
+
 
 feature -- Status
 
@@ -41,7 +53,7 @@ feature -- Basic operation
 			i, cnt: INTEGER
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
-			create l_callback.make
+			create l_callback.make_with_factory (factory)
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
@@ -97,6 +109,9 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
+	factory: CONF_FACTORY
+			-- Factory to create nodes.
+
 	parse_file (a_file: STRING; a_callback: CONF_LOAD_CALLBACKS) is
 			-- Parse `a_file' using `a_callbacks'.
 		require
@@ -126,6 +141,9 @@ feature {NONE} -- Implementation
 				l_file.close
 			end
 		end
+
+invariant
+	factory_not_void: factory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

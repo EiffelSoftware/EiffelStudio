@@ -23,7 +23,7 @@
 			<if platform="windows"/>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib">
-			<if platform="windows"/>
+			<if platform="dotnet"/>
 		</external_object>
 		<cluster name="consts" location="consts" recursive="true">
 			<if platform="windows"/>

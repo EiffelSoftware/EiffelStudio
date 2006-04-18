@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="parse" uuid="6e3e2790-880e-4193-abe6-27d129a0e48d" library_target="parse">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="parse" uuid="6e3e2790-880e-4193-abe6-27d129a0e48d" library_target="parse">
 	<target name="parse">
 		<description>Parse library</description>
 		<option>

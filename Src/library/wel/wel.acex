@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="wel" uuid="804e870e-1eed-4f7b-9c7d-4769938a62d7" library_target="wel">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="wel" uuid="804e870e-1eed-4f7b-9c7d-4769938a62d7" library_target="wel">
 	<target name="wel">
 		<description>WEL library</description>
 		<option>
@@ -14,49 +9,49 @@
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib">
-			<if platform="dotnet"/>
+			<condition><platform value="dotnet"/></condition>
 		</external_object>
 		<cluster name="consts" location="consts" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="controls" location="controls" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="extra" location="extra" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="gdi" location="gdi" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="gdistock" location="gdistock" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="messages" location="messages" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="shared" location="shared" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="stddlgs" location="stddlgs" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="structs" location="structs" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="support" location="support" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="windows" location="windows" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 	</target>
 </system>

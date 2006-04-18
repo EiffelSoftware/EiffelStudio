@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="time" uuid="78d80981-ef3c-42ec-8919-ef7d7bb61701" library_target="time">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="time" uuid="78d80981-ef3c-42ec-8919-ef7d7bb61701" library_target="time">
 	<target name="time">
 		<description>Time library</description>
 		<option>

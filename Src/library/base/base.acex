@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
 	<target name="base">
 		<description>Base library</description>
 		<file_rule>
@@ -17,17 +12,17 @@
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		<cluster name="base" location="$ISE_LIBRARY\library\base\" recursive="true">
-			<ifnot platform="dotnet"/>
+			<condition><platform excluded_value="dotnet"/></condition>
 			<file_rule>
 				<exclude>^/desc</exclude>
 				<exclude>^/dle</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="base_net" location="$ISE_LIBRARY\library.net\base\" recursive="true">
-			<if platform="dotnet"/>
+			<condition><platform value="dotnet"/></condition>
 		</cluster>
 		<cluster name="dotnet_base" location="$ISE_LIBRARY\library\base\" recursive="true">
-			<if platform="dotnet"/>
+			<condition><platform value="dotnet"/></condition>
 			<file_rule>
 				<exclude>classic</exclude>
 				<exclude>^/desc</exclude>

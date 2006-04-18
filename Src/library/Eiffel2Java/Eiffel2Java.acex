@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="Eiffel2Java" uuid="204c4735-8214-4102-8fe8-31b24b06547d" library_target="Eiffel2Java">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="Eiffel2Java" uuid="204c4735-8214-4102-8fe8-31b24b06547d" library_target="Eiffel2Java">
 	<target name="Eiffel2Java">
 		<description>Eiffel2Java library</description>
 		<option>

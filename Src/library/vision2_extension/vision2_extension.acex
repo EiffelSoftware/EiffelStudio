@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="vision2_extension" uuid="72eb29a8-4a3d-4b17-b2f6-365f388d2282" library_target="vision2_extension">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2_extension" uuid="72eb29a8-4a3d-4b17-b2f6-365f388d2282" library_target="vision2_extension">
 	<target name="vision2_extension">
 		<description>vision2 extension library</description>
 		<option>
@@ -14,13 +9,13 @@
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<cluster name="independent_gtk" location="independent" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/mswin$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="independent_mswin" location="independent" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/gtk$</exclude>
 			</file_rule>

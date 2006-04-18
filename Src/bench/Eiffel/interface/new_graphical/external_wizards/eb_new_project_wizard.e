@@ -11,7 +11,7 @@ class
 
 inherit
 	EB_EXTERNAL_WIZARD
-	
+
 	EIFFEL_ENV
 		export
 			{NONE} all
@@ -76,8 +76,9 @@ feature -- Access
 	target_platform_supported: BOOLEAN is
 			-- Is the target platform supported by the current platform?
 		do
-			Result := target_platform.is_equal ("all") or else 
-				Eiffel_platform.is_equal (target_platform)
+			Result := target_platform.is_equal ("all") or else
+				Eiffel_platform.is_equal (target_platform) or else
+				(platform_constants.is_windows and then target_platform.is_equal ("windows"))
 		end
 
 feature -- Status Setting

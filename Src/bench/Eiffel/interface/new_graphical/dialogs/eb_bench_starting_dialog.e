@@ -680,7 +680,15 @@ feature {NONE} -- Implementation
 			end
 			if not Eiffel_project.initialized then
 				create l_loader.make (Current)
+				l_loader.set_is_project_location_requested (False)
 				l_loader.open_project_file (ace_file_name, Void, directory_name, True)
+				if not l_loader.has_error and then compile_project then
+					check
+						project_is_new: l_loader.is_new_project
+					end
+					l_loader.set_is_compilation_requested (compile_project)
+					l_loader.compile_project
+				end
 			else
 				ebench_name := Estudio_command_name.twin
 				ebench_name.append (" -create %"")

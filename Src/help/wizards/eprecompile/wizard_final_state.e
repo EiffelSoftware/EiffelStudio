@@ -12,23 +12,33 @@ class
 inherit
 	WIZARD_FINAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info
-		select
-			default_create
+			proceed_with_current_info,
+			wizard_information
 		end
 
 	EXECUTION_ENVIRONMENT
 		rename
-			command_line as exec_command_line,
-			default_create as ex_create
+			command_line as exec_command_line
+		undefine
+			default_create
+		end
+
+	WIZARD_PROJECT_SHARED
+		undefine
+			default_create
 		end
 
 create
 	make
 
+feature -- Access
+
+	wizard_information: WIZARD_INFORMATION
+			-- Information about current state.
+
 feature -- Basic Operations
 
-	build_finish is 
+	build_finish is
 			-- Build user entries.
 		local
 			cell: EV_CELL
@@ -37,7 +47,7 @@ feature -- Basic Operations
 			choice_box.set_border_width (Default_border_size)
 			choice_box.set_padding (Small_padding_size)
 
-			create progress 
+			create progress
 			progress.set_minimum_height (Dialog_unit_to_pixels(20))
 			progress.set_minimum_width (Dialog_unit_to_pixels(100))
 			create progress_text
@@ -128,8 +138,8 @@ feature {NONE} -- Implementation
 				progress_2.set_proportion (0)
 				progress_text.set_text ("Total Progress: ")
 				progress_text_2.set_text ("Preparing precompilations ...")
-	
-				from 
+
+				from
 					wizard_information.l_to_precompile.start
 					n_lib_to_precompile:= wizard_information.l_to_precompile.count
 					n_lib_done:= 0
@@ -141,7 +151,7 @@ feature {NONE} -- Implementation
 					lib_info ?= current_it.data
 					ace_path ?= lib_info.item (1)
 					already_precompiled ?= lib_info.item (2)
-	
+
 					precompile (sys_name, ace_path, already_precompiled.item)
 					wizard_information.l_to_precompile.forth
 				end
@@ -207,7 +217,7 @@ feature {NONE} -- Implementation
 					to_end = True
 				loop
 					new_time_left := find_time (progress_file_path)
-					if new_time_left /= -1 then	
+					if new_time_left /= -1 then
 						if new_time_left >= 100 then
 							to_end := True
 							time_left := 100
@@ -217,7 +227,7 @@ feature {NONE} -- Implementation
 					end
 					progress_2.set_proportion (time_left / 100)
 					progress_text_2.set_text ("Precompiling " + lib_name + " library: " + time_left.out + "%%")
-						
+
 					total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
 					progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
 					progress_text.set_text ("Total progress: " + total_prog.out + "%%")
@@ -238,10 +248,10 @@ feature {NONE} -- Implementation
 					-- Remove the EIFGEN dir if it exists.
 				create eifgen_dir.make (eifgen_path)
 				if eifgen_dir.exists then
-					new_name := clone (Eifgen_path)
+					new_name := Eifgen_path.twin
 					if new_name.item (new_name.count) = ']' then
 							-- VMS specification. We need to append `_old' before the `]'.
-						new_name.insert ("_old", new_name.count - 1)
+						new_name.insert_string ("_old", new_name.count - 1)
 					else
 						new_name.append ("_old")
 					end
@@ -327,7 +337,7 @@ feature {NONE} -- Implementation
 					Result := degree_substring.to_integer
 				end
 			end
-			
+
 			if Result = -1 then
 				Result := 1
 			elseif Result = -2 then
@@ -369,7 +379,7 @@ feature -- Access
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 	Progress_filename: STRING is "progress.eif"
 
 	progress_text_2: EV_LABEL

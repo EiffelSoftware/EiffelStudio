@@ -12,6 +12,8 @@ class
 inherit
 	WIZARD_ERROR_STATE_WINDOW
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -37,7 +39,7 @@ feature -- Access
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	display_state_text is

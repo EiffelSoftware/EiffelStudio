@@ -14,16 +14,23 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build
+			build,
+			wizard_information
 		end
+
+	WIZARD_PROJECT_SHARED
 
 create
 	make
 
+feature -- Access
+
+	wizard_information: WIZARD_INFORMATION
+
 feature -- Basic Operation
 
 	build is
-			-- Build interface 
+			-- Build interface
 		local
 			h1: EV_HORIZONTAL_BOX
 			lab: EV_LABEL
@@ -31,7 +38,7 @@ feature -- Basic Operation
 			buttons_box: EV_VERTICAL_BOX
 			compilable_box: EV_VERTICAL_BOX
 			to_compile_box: EV_VERTICAL_BOX
-		do 
+		do
 			create to_precompile_libraries
 			create precompilable_libraries
 			to_precompile_libraries.set_column_titles (<<Interface_names.l_Library_name, Interface_names.l_Done>>)
@@ -85,7 +92,7 @@ feature -- Basic Operation
 			lab.align_text_left
 			to_compile_box.extend(lab)
 			to_compile_box.disable_item_expand(lab)
-			to_compile_box.extend (to_precompile_libraries)		
+			to_compile_box.extend (to_precompile_libraries)
 
 			create h1
 			h1.extend (compilable_box)
@@ -104,7 +111,7 @@ feature -- Basic Operation
 			h1.extend (cell)
 			h1.extend (add_your_own_b)
 			h1.disable_item_expand (add_your_own_b)
-			choice_box.extend (h1)			
+			choice_box.extend (h1)
 
 				-- Fill lists.
 			if wizard_information.l_to_precompile /= Void then
@@ -129,7 +136,7 @@ feature -- Basic Operation
 
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			if to_precompile_libraries.is_empty then
@@ -149,7 +156,7 @@ feature -- Basic Operation
 		do
 			lin_list := to_precompile_libraries.linear_representation
 			lin_list_2 := precompilable_libraries.linear_representation
-			from 
+			from
 				lin_list.start
 				create list.make
 			until
@@ -165,7 +172,7 @@ feature -- Basic Operation
 				wizard_information.set_l_to_precompile (list)
 			end
 
-			from 
+			from
 				lin_list_2.start
 				create list.make
 			until
@@ -203,7 +210,7 @@ feature {NONE} -- Tools
 			if eiffel_directory.exists then
 				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation
 
-				from 
+				from
 					list_of_preprecompilable_libraries.start
 				until
 					list_of_preprecompilable_libraries.after
@@ -212,7 +219,7 @@ feature {NONE} -- Tools
 					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
 						create current_precomp.make_from_string (eiffel_directory.name)
 						current_precomp.extend (current_lib)
-						it:= fill_ev_list_items (current_precomp, "Ace.ace")
+						it:= fill_ev_list_items (current_precomp, "Ace.acex")
 						if it /= Void then
 							precompilable_libraries.extend (it)
 						end
@@ -223,7 +230,7 @@ feature {NONE} -- Tools
 		end
 
 	fill_ev_list_items (path_lib: STRING; ace_name: STRING): EV_MULTI_COLUMN_LIST_ROW is
-			-- retrun an ev_multi_column_list_item with the name of the system for text 
+			-- retrun an ev_multi_column_list_item with the name of the system for text
 			-- and the path of the ace file for data.
 			-- 'dir/lib' is the directory where the ace file should be
 			-- for the ISE precompile libraries
@@ -249,7 +256,7 @@ feature {NONE} -- Tools
 				if has__case_insensitive_comparison (list_of_file, ace_name) then
 					create fi.make_open_read (path_name)
 					fi.read_stream (fi.count)
-					s:= clone (fi.last_string)
+					s:= fi.last_string.twin
 					fi.close
 					ind_1:= s.substring_index ("system", 1)
 					ind_2:= s.substring_index ("root", 1)
@@ -260,7 +267,7 @@ feature {NONE} -- Tools
 					sys_name.replace_substring_all ("%T", "")
 
 					if not sys_name.is_empty then
-						create it			
+						create it
 						create info_lib
 						info_lib.put (path_name, 1)
 
@@ -281,9 +288,9 @@ feature {NONE} -- Tools
 					error_no_ace:= TRUE
 				end
 			end
-			Result:= it			
+			Result:= it
 		end
-		
+
 	has__case_insensitive_comparison (list_of_strings: ARRAYED_LIST [STRING]; a_string: STRING): BOOLEAN is
 			-- Is `a_string' present in `list_of_strings'?
 			-- The comparison is made upon upon object content rather than object references and
@@ -309,7 +316,7 @@ feature {NONE} -- Tools
 
 	fill_lists_from_previous_state is
 			-- Fill the "To precompile" and "precompilable"
-			-- MULTI_COLUMN_LISTs when the user has previously 
+			-- MULTI_COLUMN_LISTs when the user has previously
 			-- choose its library to precompile.
 			-- Can occur only if the user has pushed the Back button
 		do
@@ -318,13 +325,13 @@ feature {NONE} -- Tools
 		end
 
 	fill_list_from_previous_state (a_mc_list: EV_MULTI_COLUMN_LIST; a_list: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]) is
-			-- Fill `a_mc_list' with `a_list' when the user has previously 
+			-- Fill `a_mc_list' with `a_list' when the user has previously
 			-- choose its library to precompile.
 			-- Can occur only if the user has pushed the Back button
 		local
 			curr_item: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from 
+			from
 				a_list.start
 			until
 				a_list.after
@@ -335,13 +342,13 @@ feature {NONE} -- Tools
 				a_list.forth
 			end
 		end
-	
+
 	add_all_items is
 			-- Add all the item from precompilable_libraries to to_precompile_libraries
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from 
+			from
 				precompilable_libraries.start
 			until
 				precompilable_libraries.after
@@ -362,10 +369,10 @@ feature {NONE} -- Tools
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
 			currently_selected_items := precompilable_libraries.selected_items
-			from 
+			from
 				currently_selected_items.start
 			until
-				currently_selected_items.after 
+				currently_selected_items.after
 			loop
 				it := currently_selected_items.item
 				precompilable_libraries.prune (it)
@@ -380,7 +387,7 @@ feature {NONE} -- Tools
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from 
+			from
 				to_precompile_libraries.start
 			until
 				to_precompile_libraries.after
@@ -401,7 +408,7 @@ feature {NONE} -- Tools
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
 			currently_selected_items := to_precompile_libraries.selected_items
-			from 
+			from
 				currently_selected_items.start
 			until
 				currently_selected_items.after
@@ -435,22 +442,22 @@ feature {NONE} -- Tools
 	browse is
 			-- Launch a computer file Browser.
 		local
-			file_open_dialog: EV_FILE_OPEN_DIALOG  
+			file_open_dialog: EV_FILE_OPEN_DIALOG
 			it: EV_MULTI_COLUMN_LIST_ROW
 			file_path: STRING
 			file_title: STRING
 			error_dialog: EV_WARNING_DIALOG
 		do
 			create file_open_dialog
-			file_open_dialog.set_filter ("*.ace")
+			file_open_dialog.filters.extend (["*.acex", "Eiffel Configuration Files (acex)"])
 			file_open_dialog.show_modal_to_window (first_window)
-			
+
 			file_path := file_open_dialog.file_path
 			file_title := file_open_dialog.file_title
-			if file_path /= Void and then file_title /= Void then
+			if not file_path.is_empty and then not file_title.is_empty then
 					-- User has selected "OK"
 				it := fill_ev_list_items (file_path, file_title)
-				if it /= Void then 
+				if it /= Void then
 					if not is_row_already_present (to_precompile_libraries, it) and then
 						not is_row_already_present (precompilable_libraries, it)
 					then
@@ -460,16 +467,16 @@ feature {NONE} -- Tools
 						it.enable_select
 						it.disable_select
 					else
-						create error_dialog.make_with_text ("The ace file you have selected is already listed.")
+						create error_dialog.make_with_text ("The configuration file you have selected is already listed.")
 						error_dialog.show_modal_to_window (first_window)
 					end
 				else
-					create error_dialog.make_with_text ("The ace file you have selected is not valid.")
+					create error_dialog.make_with_text ("The configuration file you have selected is not valid.")
 					error_dialog.show_modal_to_window (first_window)
 				end
 			end
 		end
-		
+
 	is_row_already_present (a_mc_list: EV_MULTI_COLUMN_LIST; a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
 			-- Is the row `a_row' represent the same row as a row found in `a_mc_list'?
 		local
@@ -497,7 +504,7 @@ feature {NONE} -- Tools
 					cur_ace ?= cur_info_lib.item (1)
 					check cur_ace_not_void: cur_ace /= Void end
 					Result := ref_ace.is_equal (cur_ace.as_lower)
-					
+
 					a_mc_list.forth
 				end
 			else
@@ -518,7 +525,7 @@ feature {NONE} -- Implementation
 		end
 
 	error_no_ace: BOOLEAN
-			-- Is there an ace file "ace.ace" in the library directory
+			-- Is there an ace file "ace.acex" in the library directory
 
 	precompilable_libraries: EV_MULTI_COLUMN_LIST
 			-- List of precombilable libraries

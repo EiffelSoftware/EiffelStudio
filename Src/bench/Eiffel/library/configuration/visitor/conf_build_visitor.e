@@ -966,6 +966,7 @@ feature {NONE} -- Implementation
 			l_assembly: CONF_ASSEMBLY
 			l_reader: EIFFEL_DESERIALIZER
 			l_guid, l_dep_guid: STRING
+			l_old_current_assembly: like current_assembly
 		do
 			l_path := an_assembly.consumed_path
 			l_guid := an_assembly.guid
@@ -993,10 +994,12 @@ feature {NONE} -- Implementation
 							else
 									-- create new assembly and process it
 								l_assembly := conf_factory.new_assembly (l_cons_ass.name.as_lower, l_cons_ass.location, application_target)
-
+								l_old_current_assembly := current_assembly
+								current_assembly := l_assembly
 								process_assembly_implementation (l_assembly)
 								process_assembly_dependencies_implementation (l_assembly)
 								an_assembly.add_dependency (l_assembly)
+								current_assembly := l_old_current_assembly
 							end
 						end
 					end

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="wizard" uuid="68F1C6F4-ADCF-4E47-BC9A-417FB38D03C2" library_target="wizard">
+	<target name="wizard">
+		<description>WEL library</description>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.acex"/>
+
+
+		<external_include location="$(ISE_LIBRARY)\library\wizard\help\Clib">
+			<if platform="windows"/>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\library\wizard\help\Clib\htmlhelp.lib">
+			<if platform="windows"/>
+		</external_object>
+
+		<cluster name="windows_wizard" location="$ISE_LIBRARY/library/wizard" recursive="true">
+			<if platform="windows"/>
+			<file_rule>
+				<exclude>/\unix$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="unix_wizard" location="$ISE_LIBRARY/library/wizard" recursive="true">
+			<ifnot platform="windows"/>
+			<file_rule>
+				<exclude>/\mswin$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

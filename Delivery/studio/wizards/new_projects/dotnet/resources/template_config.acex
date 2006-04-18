@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
+	<target name="${FL_PROJECT_NAME}">
+		<description>This ace file has been generated for you by "The Vision2 Application Wizard".</description>
+		<root cluster="root_cluster" feature="${FL_CREATION_ROUTINE_NAME}" class="${FL_ROOT_CLASS_NAME}" ${FL_ALL_CLASSES}/>
+
+		<option profile="false" debug="false">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="array_optimization" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dynamic_runtime" value="False"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="multithreaded" value="False"/>
+		<setting name="console_application" value="${FL_CONSOLE_APPLICATION}"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="${FL_APPLICATION_TYPE}"/>
+		${FL_CLR_VERSION}
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="True"/>
+
+		<cluster name="root_cluster" location="${FL_LOCATION}"/>
+	</target>
+</system>

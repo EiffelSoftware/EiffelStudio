@@ -2,14 +2,14 @@ indexing
 	description: "Project root class"
 	
 class
-	<FL_ROOT_CLASS_NAME>
+	${FL_ROOT_CLASS_NAME}
 
 create
-	<FL_CREATION_ROUTINE_NAME>
+	${FL_CREATION_ROUTINE_NAME}
 
 feature {NONE} -- Initialization
 
-	<FL_CREATION_ROUTINE_NAME> is
+	${FL_CREATION_ROUTINE_NAME} is
 			-- Entry point.
 		do
 			-- Write your code here.

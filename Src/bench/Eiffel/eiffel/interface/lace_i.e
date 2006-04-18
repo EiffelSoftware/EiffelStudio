@@ -34,6 +34,10 @@ inherit
 		export
 			{NONE} all
 		end
+	CONF_VALIDITY
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -987,6 +991,18 @@ feature {NONE} -- Implementation
 				end
 			else
 				system.set_has_old_verbatim_strings_warning (False)
+			end
+
+			l_s := l_settings.item ("platform")
+			if l_s /= Void then
+				if get_platform (l_s) /= 0 then
+					system.set_platform (get_platform (l_s))
+				else
+					create vd15
+					vd15.set_option_name ("platform")
+					vd15.set_option_value (l_s)
+					Error_handler.insert_error (vd15)
+				end
 			end
 
 			l_s := l_settings.item ("shared_library_definition")

@@ -73,12 +73,16 @@ feature -- Properties
 			create l_pf
 			if system.il_generation then
 				Result := pf_dotnet
-			elseif l_pf.is_unix then
-				Result := pf_unix
-			elseif l_pf.is_windows then
-				Result := pf_windows
+			elseif system.platform /= 0 then
+				Result := system.platform
 			else
-				Result := pf_unix
+				if l_pf.is_unix then
+					Result := pf_unix
+				elseif l_pf.is_windows then
+					Result := pf_windows
+				else
+					Result := pf_unix
+				end
 			end
 		end
 

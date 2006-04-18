@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="wizard" uuid="06F8A4B3-B168-4767-97D5-D833509C82B3">
+	<target name="wizard">
+		<root class="WIZARD_MANAGER" feature="make_and_launch"/>
+
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="exception_trace" value="True"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.acex"/>
+		<library name="wizard" location="$ISE_LIBRARY/library/wizard/wizard.acex"/>
+		<library name="uuid" location="$ISE_LIBRARY/library/uuid/uuid.acex"/>
+
+		<cluster name="precompile_wizard" location="$EIFFEL_SRC/help/wizards/eprecompile/"/>
+	</target>
+</system>

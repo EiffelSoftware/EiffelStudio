@@ -6,7 +6,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
+deferred class
 	BENCH_WIZARD_MANAGER
 
 inherit
@@ -14,6 +14,11 @@ inherit
 		redefine
 			prepare,
 			make_and_launch
+		end
+
+	BENCH_WIZARD_SHARED
+		undefine
+			default_create, copy, is_equal
 		end
 
 feature {NONE} -- Initialization
@@ -42,7 +47,7 @@ feature {NONE} -- Initialization
 		do
 			if not retried then
 				Precursor
-				
+
 				create icon_pixmap
 				wizard_icon_filename := clone (wizard_pixmaps_path)
 				wizard_icon_filename.set_file_name ("wizard")

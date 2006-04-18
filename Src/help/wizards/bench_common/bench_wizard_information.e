@@ -10,7 +10,11 @@ deferred class
 	BENCH_WIZARD_INFORMATION
 
 inherit
+	WIZARD_STATE_DATA
+
 	WIZARD_SHARED
+
+	BENCH_WIZARD_SHARED
 
 feature {NONE} -- Initialization
 
@@ -42,7 +46,7 @@ feature {NONE} -- Initialization
 			loop
 				create l_dir.make (project_path)
 				if l_dir.exists then
-					project_name := default_project_name + "_" + l_count.out 
+					project_name := default_project_name + "_" + l_count.out
 				end
 				l_count := l_count + 1
 			end
@@ -118,7 +122,7 @@ feature {NONE} -- Implementation
 		ensure
 			valid_result: Result /= Void and then not Result.is_empty
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -14,7 +14,9 @@ inherit
 		redefine
 			cancel
 		end
-			
+
+	BENCH_WIZARD_SHARED
+
 feature -- Basic operations
 
 	cancel is

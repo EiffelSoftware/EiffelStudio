@@ -24,7 +24,7 @@ feature  -- Initialization
 			-- Assign default values
 		do
 			Precursor
-			icon_location := clone (wizard_resources_path)
+			icon_location := wizard_resources_path.twin
 			icon_location.extend ("eiffel.ico")
 			dialog_application := False
 			has_status_bar := False
@@ -85,10 +85,10 @@ feature -- Access
 
 	icon_location: FILE_NAME
 			-- Location of the icon choose by the user
-	
+
 	dialog_application: BOOLEAN
 			-- Does the user want to generate a dialog application
-			
+
 feature {NONE} -- Implementation
 
 	Default_project_name: STRING is

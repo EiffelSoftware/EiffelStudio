@@ -15,6 +15,8 @@ inherit
 			make
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -24,7 +26,7 @@ feature {NONE} -- Implementation
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info) 
+			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info)
 		end
 
 feature -- Access
@@ -34,7 +36,7 @@ feature -- Access
 
 feature -- Basic Operation
 
-	build is 
+	build is
 			-- Build entries.
 		local
 			l_horiz_box: EV_HORIZONTAL_BOX
@@ -43,7 +45,7 @@ feature -- Basic Operation
 			l_il_env: IL_ENVIRONMENT
 			l_runtimes: DS_LINEAR [STRING]
 			l_item: EV_LIST_ITEM
-		do 
+		do
 			create rb_project_type_exe.make_with_text (Exe_type)
 			rb_project_type_exe.select_actions.extend (agent on_change_generation_type)
 			create rb_project_type_dll.make_with_text (Dll_type)
@@ -62,10 +64,10 @@ feature -- Basic Operation
 			l_vert.disable_item_expand (rb_project_type_exe)
 			l_vert.extend (rb_project_type_dll)
 			l_vert.disable_item_expand (rb_project_type_dll)
-			
+
 			l_horiz_box.extend (l_vert)
 			l_horiz_box.disable_item_expand (l_vert)
-			
+
 			create l_vert
 			l_vert.extend (console_app_b)
 			l_vert.disable_item_expand (console_app_b)
@@ -75,7 +77,7 @@ feature -- Basic Operation
 			choice_box.set_padding (dialog_unit_to_pixels(10))
 			choice_box.extend (l_horiz_box)
 			choice_box.disable_item_expand (l_horiz_box)
-			
+
 			choice_box.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 			create root_class_name.make (Current)
@@ -99,14 +101,14 @@ feature -- Basic Operation
 
 			choice_box.extend (l_vert)
 			choice_box.extend (create {EV_CELL})
-			
+
 			create l_il_env
 			l_runtimes := l_il_env.installed_runtimes
 			most_recent_clr_version := l_il_env.default_version
-			
+
 			create clr_version_cb
 			clr_version_cb.set_minimum_width (130)
-			
+
 			from
 				l_runtimes.start
 			until
@@ -116,7 +118,7 @@ feature -- Basic Operation
 				clr_version_cb.extend (l_item)
 				l_runtimes.forth
 			end
-			
+
 			clr_version_cb.disable_edit
 
 			from
@@ -128,17 +130,17 @@ feature -- Basic Operation
 					clr_version_cb.item.enable_select
 				end
 				clr_version_cb.forth
-			end		
-			
+			end
+
 			create clr_version_lab.make_with_text (interface_names.l_clr_version)
 			create clr_version_check.make_with_text (interface_names.l_clr_most_recent_version)
 			clr_version_check.select_actions.extend (agent on_change_clr_version_combo)
 			if wizard_information.is_most_recent_clr_version then
 				clr_version_check.enable_select
-			else			
+			else
 				clr_version_check.disable_select
 			end
-			
+
 			create l_horiz_box
 			l_horiz_box.extend (clr_version_check)
 			l_horiz_box.disable_item_expand (clr_version_check)
@@ -151,7 +153,7 @@ feature -- Basic Operation
 			clr_version_check.enable_select
 			choice_box.extend (l_horiz_box)
 			choice_box.disable_item_expand (l_horiz_box)
-			
+
 			if wizard_information.generate_dll then
 				rb_project_type_dll.enable_select
 			else
@@ -165,17 +167,17 @@ feature -- Basic Operation
 				creation_routine_name.change_actions,
 				console_app_b.select_actions,
 				clr_version_check.select_actions,
-				clr_version_cb.select_actions				
+				clr_version_cb.select_actions
 				>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		local
 			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
 			retried, com_problem: BOOLEAN
 		do
-			if not retried then				
+			if not retried then
 				if root_class_name.text /= Void and then not root_class_name.text.is_empty then
 					root_class_name_text := clone (root_class_name.text)
 					root_class_name_text.to_lower
@@ -230,7 +232,7 @@ feature -- Basic Operation
 			else
 				wizard_information.set_console_application (console_app_b.is_selected)
 			end
-			if clr_version_check.is_selected then				
+			if clr_version_check.is_selected then
 				wizard_information.set_clr_version (most_recent_clr_version)
 			else
 				wizard_information.set_clr_version (clr_version_cb.text)
@@ -264,7 +266,7 @@ feature {NONE} -- Implementation
 		local
 			first_character: CHARACTER
 			i: INTEGER
-			a_character: CHARACTER			
+			a_character: CHARACTER
 		do
 			first_character := a_name.item (1)
 			if not first_character.is_alpha then
@@ -299,7 +301,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_change_generation_type is
 			-- action performed when user changes generation type of application
 		do
@@ -309,19 +311,19 @@ feature {NONE} -- Implementation
 				console_app_b.disable_sensitive
 			end
 		end
-		
+
 	on_change_clr_version_combo is
 			-- Action to perform when user changes the CLR version check button
-		do			
+		do
 			if clr_version_check.is_selected then
 				clr_version_lab.disable_sensitive
-				clr_version_cb.disable_sensitive				
+				clr_version_cb.disable_sensitive
 			else
 				clr_version_lab.enable_sensitive
 				clr_version_cb.enable_sensitive
-			end	
+			end
 			wizard_information.set_is_most_recent_clr_version (clr_version_check.is_selected)
-		end			
+		end
 
 feature {NONE} -- Constants
 
@@ -342,13 +344,13 @@ feature {NONE} -- Constants
 
 	console_app_b: EV_CHECK_BUTTON
 			-- Console application check box.
-			
+
 	clr_version_check: EV_CHECK_BUTTON
 			-- Check button for using most recent CLR version
-			
+
 	clr_version_lab: EV_LABEL
 			-- Label to indicate CLR version selection combo
-			
+
 	clr_version_cb: EV_COMBO_BOX;
 			-- Clr versions selection combo box
 

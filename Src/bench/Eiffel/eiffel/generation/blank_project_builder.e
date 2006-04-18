@@ -76,7 +76,11 @@ feature {NONE} -- Implementation
 			valid_contents: contents /= Void and then not contents.is_empty
 			valid_system_name: system_name /= Void and then not system_name.is_empty
 			valid_project_directory: project_directory /= Void and then not project_directory.is_empty
+		local
+			l_uuid: UUID_GENERATOR
 		do
+			create l_uuid
+			contents.replace_substring_all ("$uuid", l_uuid.generate_uuid.out)
 			contents.replace_substring_all ("$system_name", system_name)
 			contents.replace_substring_all ("$root_class_name", root_class_name)
 			contents.replace_substring_all ("$root_class_feature", root_feature_name)

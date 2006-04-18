@@ -118,6 +118,14 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_plug.h%""
 		end
 
+	frozen in_assertion: BOOLEAN is
+			-- Are we currently checking some assertions?
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"EIF_TEST(in_assertion!=0)"
+		end
+
 feature -- Internal C routines
 
 	frozen type_id_from_name (s: POINTER): INTEGER is
@@ -135,7 +143,7 @@ feature -- Internal C routines
 		alias
 			"Dftype"
 		end
-		
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

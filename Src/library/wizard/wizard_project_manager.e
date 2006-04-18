@@ -6,26 +6,19 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
+deferred class
 	WIZARD_PROJECT_MANAGER
 
 inherit
 	EV_APPLICATION
-		rename 
-			copy as copy_application
 		undefine
 			help_engine
-		select 
-			copy_application
 		end
 
 	WIZARD_SHARED
 		undefine
-			default_create
+			default_create, copy
 		end
-
-create
-	make_and_launch 
 
 feature {NONE} -- Initialization
 
@@ -46,7 +39,13 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
+		local
+			l_window: WIZARD_WINDOW
 		do
+			create l_window.make (wizard_factory)
+			first_window_cell.put (l_window)
+			l_window.load_first_state
+
 			first_window.set_title (Wizard_title)
 			first_window.close_request_actions.extend (agent end_application)
 			first_window.show
@@ -58,14 +57,21 @@ feature {NONE} -- Initialization
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
-	Wizard_title: STRING is 
+	Wizard_title: STRING is
 			-- Window title for this wizard.
 		once
 			Result := "Wizard Version 1.1"
 		ensure
 			Valid_result: Result /= Void and then not Result.is_empty
 		end
-	
+
+	wizard_factory: WIZARD_FACTORY is
+			-- Factory for current project.
+		deferred
+		ensure
+			wizard_factory_not_void: Result /= Void
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -10,7 +10,7 @@ class
 	WIZARD_WINDOW
 
 inherit
-	EV_TITLED_WINDOW 
+	EV_TITLED_WINDOW
 		rename
 			copy as copy_titled_window
 		redefine
@@ -27,15 +27,19 @@ inherit
 		end
 
 create
-	make, default_create
+	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_factory: WIZARD_FACTORY) is
 			-- Initialize Current window.
-		obsolete "Use `default_create' instead"
+		require
+			a_factory_not_void: a_factory /= Void
 		do
 			default_create
+			factory := a_factory
+		ensure
+			factory_set: factory = a_factory
 		end
 
 	initialize is
@@ -47,7 +51,7 @@ feature {NONE} -- Initialization
 			set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1
-			v1.extend (wizard_page)	
+			v1.extend (wizard_page)
 			build_navigation_bar (v1)
 			extend (v1)
 			Precursor {EV_TITLED_WINDOW}
@@ -58,12 +62,12 @@ feature {NONE} -- Initialization
 		local
 			h1: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
-		do	
+		do
 			create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
 			previous_b.align_text_center
 			set_default_size_for_button (previous_b)
 
-			create next_b.make_with_text_and_action ("Next >", agent next_page)	
+			create next_b.make_with_text_and_action ("Next >", agent next_page)
 			next_b.align_text_center
 			set_default_size_for_button (next_b)
 
@@ -92,22 +96,22 @@ feature {NONE} -- Initialization
 			navigation_bar.disable_item_expand (h1)
 			navigation_bar.extend (cancel_b)
 			navigation_bar.disable_item_expand (cancel_b)
-			
+
 			create h_sep
 			a_box.extend (h_sep)
 			a_box.disable_item_expand (h_sep)
 			a_box.extend (navigation_bar)
 			a_box.disable_item_expand (navigation_bar)
 		end
-		
+
 feature {WIZARD_SHARED} -- Basic Opertations
-		
+
 	load_first_state is
 			-- Load first state.
 		local
-			wizard_initial_state: WIZARD_INITIAL_STATE
+			wizard_initial_state: WIZARD_STATE_WINDOW
 		do
-			Create wizard_initial_state.make (create {WIZARD_INFORMATION}.make)
+			wizard_initial_state := factory.new_wizard_initial_state
 			proceed_with_new_state (wizard_initial_state)
 			update_navigation
 		end
@@ -122,7 +126,7 @@ feature -- Basic Operations
 			end
 			help_b.show
 		end
-		
+
 feature -- Command
 
 	destroy is
@@ -139,6 +143,9 @@ feature -- Access
 			-- Page on which is displayed the information
 			-- needed to be completed by the user in order
 			-- to be performed.
+
+	factory: WIZARD_FACTORY
+			-- Factory to create initial wizard window.
 
 feature {NONE} -- Implementation
 
@@ -181,13 +188,13 @@ feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations
 		do
 			previous_b.disable_sensitive
 		end
-		
+
 	disable_cancel_button is
 			-- Disable the cancel button
 		do
 			cancel_b.disable_sensitive
 		end
-		
+
 	enable_next_button is
 			-- Ensable the Next/Finish button
 		do
@@ -199,7 +206,7 @@ feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations
 		do
 			previous_b.enable_sensitive
 		end
-		
+
 	enable_cancel_button is
 			-- Enable the cancel button
 		do
@@ -216,7 +223,7 @@ feature -- Basic Operations
 			end
 			update_navigation
 		end
-	
+
 	update_navigation is
 			-- Update navigation buttons.
 		do
@@ -226,7 +233,7 @@ feature -- Basic Operations
 				previous_b.enable_sensitive
 			else
 				previous_b.enable_sensitive
-				next_b.set_text("Next >")				
+				next_b.set_text("Next >")
 			end
 		end
 
@@ -244,6 +251,9 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is True;
 		-- Is `Current' in its default state?
 
+invariant
+	factory_not_void: factory /= Void
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -254,9 +264,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class WIZARD_WINDOW
 

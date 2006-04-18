@@ -31,16 +31,16 @@ feature -- Access
 
 	current_help_context: WIZARD_HELP_CONTEXT is
 			-- Help context for this window
-		deferred		
-		end	
-		
+		deferred
+		end
+
 	help_filename: STRING
 			-- Path to HTML help file for current state window (without path on windows, with complete path on gtk)
-		
+
 feature -- Basic Operations
 
 	clean_screen is
-			-- Clean Current screen, in order to display only 
+			-- Clean Current screen, in order to display only
 			-- the current sub-window.
 		do
 			main_box.wipe_out
@@ -88,7 +88,7 @@ feature -- Basic Operations
 		end
 
 	proceed_with_current_info is
-			-- Process user entries, and 
+			-- Process user entries, and
 			-- perform actions accordingly.
 			-- This is executed when user press 'Next'.
 		do
@@ -104,7 +104,7 @@ feature -- Basic Operations
 		do
 			entries_checked := True
 		ensure
-			read_the_entries: entries_checked	
+			read_the_entries: entries_checked
 		end
 
 	cancel is
@@ -133,12 +133,12 @@ feature -- Basic Operations
 
 	create_help_context (args: TUPLE): WIZARD_HELP_CONTEXT is
 			-- Create help context
-		do			
-			create Result.make (Help_filename)			
+		do
+			create Result.make (Help_filename)
 		ensure
 			help_context_created: Result /= Void
 		end
-		
+
 feature -- Settings
 
 	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE[]]]) is
@@ -160,14 +160,14 @@ feature -- Settings
 		end
 
 	change_entries is
-			-- The user clicked on the page, which 
+			-- The user clicked on the page, which
 			-- implies state_information re-computation.
 		do
 			entries_changed := True
 		ensure
 			entries_changed: entries_changed
 		end
-	
+
 	set_help_filename (a_filename: like help_filename) is
 			-- Set `help_filename' with `a_filename'.
 		require
@@ -177,7 +177,7 @@ feature -- Settings
 		ensure
 			help_filename_set: help_filename.is_equal (a_filename)
 		end
-		
+
 feature -- Access
 
 	entries_checked: BOOLEAN

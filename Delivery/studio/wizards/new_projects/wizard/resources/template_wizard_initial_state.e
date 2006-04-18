@@ -27,11 +27,14 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Welcome to the%N<FL_WIZARD_NAME> Wizard")
+			title.set_text ("Welcome to the%N${FL_WIZARD_NAME} Wizard")
 			message.set_text ("Describe here what your wizard does.")
 		end
 	
-	pixmap_icon_location: FILE_NAME is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Store Wizard
+		once
+			create Result.make_from_string ("eiffel_wizard_icon.png")
+		end
 
 end -- class WIZARD_INITIAL_STATE

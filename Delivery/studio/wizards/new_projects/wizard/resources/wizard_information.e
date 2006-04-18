@@ -7,7 +7,10 @@ indexing
 class
 	WIZARD_INFORMATION
 
-Creation
+inherit
+	WIZARD_STATE_DATA
+
+create
 	make
 
 feature  -- Initialization

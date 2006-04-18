@@ -10,20 +10,27 @@ class
 	WIZARD_SHARED
 
 inherit
-	WIZARD_PROJECT_SHARED
-
 	EV_LAYOUT_CONSTANTS
 
 	ARGUMENTS
 
 feature -- Access
 
-	first_window:  WIZARD_WINDOW is
+	first_window: WIZARD_WINDOW is
+			-- Main Window
+		require
+			first_window_cell_not_empty: first_window_cell.item /= Void
+		do
+			Result := first_window_cell.item
+		ensure
+			first_window_not_void: Result /= Void
+		end
+
+	first_window_cell: CELL [WIZARD_WINDOW] is
 			-- Main Window ( i.e. the wizard window frame )
 		once
-			create Result
-			Result.load_first_state
-		ensure	
+			create Result.put (Void)
+		ensure
 			exists: Result /= Void
 		end
 
@@ -49,14 +56,14 @@ feature -- Access
 	wizard_source: STRING is
 			-- Wizard sources
 		require
-			argument(1).count>0   
+			argument(1).count>0
 		once
 			Result := argument(1)
 		ensure
 			exists: Result /= Void
 		end
 
-	wizard_pixmaps_path: FILE_NAME is 
+	wizard_pixmaps_path: FILE_NAME is
 			-- Bitmaps location
 		once
 			create Result.make_from_string (wizard_source)
@@ -80,7 +87,7 @@ feature -- Access
 			-- False because this class is windows-related.
 
 	pixmap: EV_PIXMAP is
-			-- Pixmap on which can be displayed a picture which 
+			-- Pixmap on which can be displayed a picture which
 			-- goes with the state.
 		once
 			create Result
@@ -113,8 +120,8 @@ feature -- Access
 			create Result.make
 		ensure
 			help_engine_created: Result /= Void
-		end	
-	
+		end
+
 feature -- Colors
 
 	White_color: EV_COLOR is
@@ -191,7 +198,7 @@ feature -- Colors
 			Result := dialog_unit_to_pixels (22)
 		end
 
-	Title_right_border_width: INTEGER is 
+	Title_right_border_width: INTEGER is
 			-- Border on the right of the title
 		once
 			Result := dialog_unit_to_pixels (5)
@@ -202,7 +209,7 @@ feature -- Colors
 		once
 			Result := dialog_unit_to_pixels (20)
 		end
-	
+
 	Interior_border_width: INTEGER is
 			-- Border on the left of the text in the core of the wizard.
 		once

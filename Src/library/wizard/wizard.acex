@@ -20,7 +20,7 @@
 		<external_include location="$(ISE_LIBRARY)\library\wizard\help\Clib">
 			<if platform="windows"/>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\library\wizard\help\Clib\htmlhelp.lib">
+		<external_object location="htmlhelp.lib">
 			<if platform="windows"/>
 		</external_object>
 

@@ -21,7 +21,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 			can_move: can_go_back
 		do
 			first_window.lock_update
-			
+
 			if history.item.entries_changed then
 				history.item.update_state_information
 			end
@@ -34,7 +34,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 		ensure
 			moved_back: history.index = old history.index - 1
 		end
-	
+
 	next is
 			-- Go to the next step.
 		require
@@ -71,7 +71,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 		ensure
 			moved_forth: not history.item.is_final_state implies history.index = old history.index + 1
 		end
-	
+
 	cancel_actions is
 			-- Actions performed by Current when the user
 			-- exits the wizard ( i.e. he presses "Cancel") .
@@ -111,7 +111,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 		do
 			history.item.display_help
 		end
-		
+
 feature {NONE} -- Internal Operations
 
 	proceed_with_new_state(a_window: WIZARD_STATE_WINDOW) is
@@ -136,19 +136,19 @@ feature -- Validation
 		do
 			Result := True
 		end
-		
+
 	can_go_next: BOOLEAN is
 			-- can wizard move forward?
 		do
 			Result := True
 		end
-		
+
 	can_cancel: BOOLEAN is
 			-- can wizard cancel?
 		do
 			Result := True
 		end
-		
+
 	check_wizard_status is
 			-- checks wizard status to see if it can back or next and enables
 			-- disables next and back navigation methods
@@ -172,8 +172,8 @@ feature -- Validation
 
 feature {NONE} -- Implementation
 
-	wizard_information: WIZARD_INFORMATION
-			-- State relative to Current State.
+	wizard_information: WIZARD_STATE_DATA
+			-- Data about current state.
 
 	destroying_wizard: BOOLEAN;
 			-- Is the wizard being currently destroyed?

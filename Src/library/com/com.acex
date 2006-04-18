@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="com" uuid="6e3e2790-880e-4193-abe6-27d129a0e48d" library_target="com">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="com" uuid="6e3e2790-880e-4193-abe6-27d129a0e48d" library_target="com">
 	<target name="com">
 		<description>Com library</description>
 		<option>
@@ -13,19 +8,19 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include">
-        	<if platform="windows"/>
+        	<condition><platform value="windows"/></condition>
     	</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib">
-        	<if platform="windows"/>
+        	<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib">
-        	<if platform="windows"/>
+        	<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib">
-        	<if platform="windows"/>
+        	<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib">
-        	<if platform="windows"/>
+        	<condition><platform value="windows"/></condition>
 		</external_object>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>

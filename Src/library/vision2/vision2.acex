@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"	 
-	 name="vision2" uuid="ff177272-9e24-4282-941e-60889fc503eb" library_target="vision2">
+<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="vision2" uuid="ff177272-9e24-4282-941e-60889fc503eb" library_target="vision2">
 	<target name="vision2">
 		<description>Vision2 library</description>
 		<option>
@@ -25,30 +20,30 @@
 		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</library>		
 		
 		<cluster name="contrib_gtk" location="contrib" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/mswin$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="contrib_mswin" location="contrib" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/gtk$</exclude>
 			</file_rule>
 		</cluster>
 		
 		<cluster name="implementation_gtk" location="implementation" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/mswin$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="implementation_mswin" location="implementation" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/gtk.{0,1}$</exclude>
 			</file_rule>

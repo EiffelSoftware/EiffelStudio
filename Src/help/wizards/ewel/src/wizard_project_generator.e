@@ -39,41 +39,40 @@ feature {NONE} -- Implementation
 			project_location: STRING
 		do
 				-- cached variables
-			project_name_lowercase := clone (wizard_information.project_name)
-			project_name_lowercase.to_lower
+			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
 
 			create map_list.make
 			add_common_parameters (map_list)
 
 			create tuple
-			tuple.put ("<FL_MAIN_CLASS>", 1)
+			tuple.put ("${FL_MAIN_CLASS}", 1)
 			tuple.put ("MAIN_WINDOW", 2)
 			map_list.extend (tuple)
 
 			create tuple
-			tuple.put ("<FL_APPLICATION_TYPE>", 1)
+			tuple.put ("${FL_APPLICATION_TYPE}", 1)
 			tuple.put ("WEL_MAIN_DIALOG", 2)
 			map_list.extend (tuple)
-			
+
 			create main_dialog_id.make (0)
 			main_dialog_id.append (wizard_information.project_name)
 			main_dialog_id.to_lower
 			main_dialog_id.prepend ("Idd_")
 			main_dialog_id.append ("_dialog")
 			create tuple
-			tuple.put ("<FL_CREATION>", 1)
+			tuple.put ("${FL_CREATION}", 1)
 			tuple.put ("make_by_id ("+main_dialog_id+")", 2)
 			map_list.extend (tuple)
 
-			from_template_to_project (wizard_resources_path, "ace.ace", 					project_location, project_name_lowercase + ".ace", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.acex", 					project_location, project_name_lowercase + ".acex", map_list)
 			from_template_to_project (wizard_resources_path, "root_template.e", 			project_location, "root_class.e", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_main_window.e", 		project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_resource.h", 			project_location, "resource.h", map_list)
 			from_template_to_project (wizard_resources_path, "dialog_application_ids.e", 	project_location, "application_ids.e", map_list)
 			copy_icon
-			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ace")
+			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".acex")
 		end
 
 
@@ -86,30 +85,29 @@ feature {NONE} -- Implementation
 			project_location: STRING
 		do
 				-- cached variables
-			project_name_lowercase := clone (wizard_information.project_name)
-			project_name_lowercase.to_lower
+			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
 
 				-- Create the replacement strings.
 			create map_list.make
 			add_common_parameters (map_list)
 
-			create tuple.make
-			tuple.put ("<FL_ICON_NAME>", 1)
+			create tuple
+			tuple.put ("${FL_ICON_NAME}", 1)
 			tuple.put (project_name_lowercase + ".ico", 2)
 			map_list.extend (tuple)
 
-			create tuple.make
-			tuple.put ("<FL_APPLICATION_TYPE>", 1)
+			create tuple
+			tuple.put ("${FL_APPLICATION_TYPE}", 1)
 			tuple.put ("WEL_FRAME_WINDOW", 2)
 			map_list.extend (tuple)
 
-			create tuple.make
-			tuple.put ("<FL_MAIN_CLASS>", 1)
+			create tuple
+			tuple.put ("${FL_MAIN_CLASS}", 1)
 			tuple.put ("MAIN_WINDOW", 2)
 			map_list.extend (tuple)
 
-			from_template_to_project (wizard_resources_path, "ace.ace", 				project_location, project_name_lowercase + ".ace", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.acex", 				project_location, project_name_lowercase + ".acex", map_list)
 			from_template_to_project (wizard_resources_path, "root_template.e", 		project_location, "root_class.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_main_window.e",		project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_template.rc",	 	project_location, project_name_lowercase + ".rc", map_list)
@@ -117,7 +115,7 @@ feature {NONE} -- Implementation
 			from_template_to_project (wizard_resources_path, "frame_application_ids.e", project_location, "application_ids.e", map_list)
 
 			copy_icon
-			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ace")
+			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".acex")
 		end
 
 	copy_icon is
@@ -127,8 +125,7 @@ feature {NONE} -- Implementation
 			s: STRING
 			project_name_lowercase: STRING
 		do
-			project_name_lowercase := clone (wizard_information.project_name)
-			project_name_lowercase.to_lower
+			project_name_lowercase := wizard_information.project_name.as_lower
 
 			create fi.make_open_read (wizard_information.icon_location)
 			fi.read_stream (fi.count)

@@ -16,6 +16,11 @@ inherit
 			prepare
 		end
 
+	WIZARD_PROJECT_SHARED
+		undefine
+			default_create, copy, is_equal
+		end
+
 create
 	make_and_launch
 
@@ -23,14 +28,19 @@ feature -- Initialization
 
 	prepare is
 			-- Prepare window.
-		do			
-			Precursor {BENCH_WIZARD_MANAGER}	
+		do
+			Precursor {BENCH_WIZARD_MANAGER}
 		end
 
-	Wizard_title: STRING is 
+	Wizard_title: STRING is
 			-- Window title for this wizard.
 		once
 			Result := Interface_names.t_Wizard_title
+		end
+
+	wizard_factory: BENCH_WIZARD_FACTORY is
+		once
+			create Result
 		end
 
 indexing

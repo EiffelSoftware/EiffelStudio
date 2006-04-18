@@ -12,8 +12,15 @@ deferred class
 inherit
 	WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
-			cancel
+			cancel, wizard_information
 		end
+
+	BENCH_WIZARD_SHARED
+
+feature -- Access
+
+	wizard_information: WIZARD_INFORMATION
+			-- Information about current state.
 
 feature -- Basic operations
 

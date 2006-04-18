@@ -9,6 +9,8 @@ class
 inherit
 	BENCH_WIZARD_PROJECT_GENERATOR
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -25,77 +27,85 @@ feature -- Basic Operations
 			root_class_name_lowercase: STRING
 		do
 				-- cached variables
-			project_name_lowercase := clone (wizard_information.project_name)
-			project_name_lowercase.to_lower
+			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
 
 				-- Update the ace file location.
 			create ace_location.make_from_string (project_location)
 			ace_location.append_character ((create {OPERATING_ENVIRONMENT}.default_create).Directory_separator)
-			ace_location.append (project_name_lowercase + Ace_extension)
+			ace_location.append (project_name_lowercase + Config_extension)
 			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
 			add_common_parameters (map_list)
 				-- Add the project type
-			create tuple.make
+			create tuple
 			tuple.put (Application_type_template, 1)
 			tuple.put (wizard_information.application_type, 2)
 			map_list.extend (tuple)
 
 				-- Add the root class name
-			root_class_name_lowercase := clone (wizard_information.root_class_name)
-			root_class_name_lowercase.to_lower
+			root_class_name_lowercase := wizard_information.root_class_name.as_lower
 			if not root_class_name_lowercase.is_equal (None_class) then
-				create tuple.make
+				create tuple
 				tuple.put (Root_class_name_template, 1)
 				tuple.put (wizard_information.root_class_name, 2)
 				map_list.extend (tuple)
 
 					-- Add the creation routine name
-				create tuple.make
+				create tuple
 				tuple.put (Creation_routine_name_template, 1)
 				tuple.put (wizard_information.creation_routine_name, 2)
+				map_list.extend (tuple)
+
+				create tuple
+				tuple.put (all_classes_template, 1)
+				tuple.put ("", 2)
+				map_list.extend (tuple)
+			else
+				create tuple
+				tuple.put (Root_class_name_template, 1)
+				tuple.put ("ROOT_CLASS", 2)
+				map_list.extend (tuple)
+
+					-- Add the creation routine name
+				create tuple
+				tuple.put (Creation_routine_name_template, 1)
+				tuple.put ("make", 2)
+				map_list.extend (tuple)
+
+
+				create tuple
+				tuple.put (all_classes_template, 1)
+				tuple.put ("all_classes=%"true%"", 2)
 				map_list.extend (tuple)
 			end
 
 				-- Add console application (yes\no)
-			create tuple.make
+			create tuple
 			tuple.put (Console_application, 1)
 			if wizard_information.console_application then
-				tuple.put ("yes", 2)
+				tuple.put ("true", 2)
 			else
-				tuple.put ("no", 2)
+				tuple.put ("false", 2)
 			end
 			map_list.extend (tuple)
 
 				-- Add target clr version
-			create tuple.make
+			create tuple
 			tuple.put (clr_version_template, 1)
 			if not wizard_information.is_most_recent_clr_version then
-				tuple.put ("msil_clr_version (%"" + wizard_information.clr_version + "%")", 2)
+				tuple.put ("<setting name=%"msil_clr_version%" value=%"" + wizard_information.clr_version + "%"/>", 2)
 			else
 				tuple.put ("", 2)
 			end
 			map_list.extend (tuple)
 
-				-- Add framework version
-			create tuple.make
-			tuple.put (assembly_version_template, 1)
-			if wizard_information.clr_version.is_equal (wizard_information.clr_version_10) then
-				tuple.put ("3300", 2)
-			else
-				tuple.put ("5000", 2)
-			end
-			map_list.extend (tuple)
-
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
-			else
-				from_template_to_project (wizard_resources_path, Ace_template_with_root_class_none_filename, project_location, project_name_lowercase + Ace_extension, map_list)
 			end
+			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
 		end
 
 	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING] is
@@ -110,10 +120,10 @@ feature -- Basic Operations
 			create file.make_open_read (file_name)
 			file.read_stream (file.count)
 
-			file_content := clone (file.last_string)
+			file_content := file.last_string.twin
 			file_content.replace_substring_all (Windows_new_line, New_line)
 
-			create Result.make
+			create Result
 			Result.put (an_index, 1)
 			Result.put (file_content, 2)
 
@@ -122,41 +132,38 @@ feature -- Basic Operations
 
 	empty_tuple (an_index: STRING): TUPLE [STRING, STRING] is
 		do
-			create Result.make
+			create Result
 			Result.put (an_index, 1)
 			Result.put (Empty_string, 2)
 		end
 
 feature {NONE} -- Constants
 
-	Application_type_template: STRING is "<FL_APPLICATION_TYPE>"
+	Application_type_template: STRING is "${FL_APPLICATION_TYPE}"
 			-- String to be replaced by the chosen application type
 
-	Root_class_name_template: STRING is "<FL_ROOT_CLASS_NAME>"
+	Root_class_name_template: STRING is "${FL_ROOT_CLASS_NAME}"
 			-- String to be replaced by the chosen root class name
 
-	Creation_routine_name_template: STRING is "<FL_CREATION_ROUTINE_NAME>"
+	Creation_routine_name_template: STRING is "${FL_CREATION_ROUTINE_NAME}"
 			-- String to be replaced by the chosen creation routine name
 
-	Console_application: STRING is "<FL_CONSOLE_APPLICATION>"
+	Console_application: STRING is "${FL_CONSOLE_APPLICATION}"
 			-- String to be replaced by yes or no.
 
-	clr_version_template: STRING is "<FL_CLR_VERSION>"
+	clr_version_template: STRING is "${FL_CLR_VERSION}"
 			-- String to be replaced by the chosen version of CLR
-	
-	assembly_version_template: STRING is "<FL_ASSEMBLY_VERSION>"
-			-- String to be replaced by the infered .net framework assembly version
 
-	Ace_extension: STRING is ".ace"
+	all_classes_template: STRING is "${FL_ALL_CLASSES}"
+			-- String to be replaced if NONE is root class.
+
+	Config_extension: STRING is ".acex"
 			-- Ace files extension
 
 	Eiffel_extension: STRING is ".e"
 			-- Eiffel classes extension
 
-	Ace_template_filename: STRING is "template_ace.ace"
-			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
-
-	Ace_template_with_root_class_none_filename: STRING is "template_ace_with_root_class_none.ace"
+	Ace_template_filename: STRING is "template_config.acex"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
 	Application_template_filename: STRING is "template_application.e"

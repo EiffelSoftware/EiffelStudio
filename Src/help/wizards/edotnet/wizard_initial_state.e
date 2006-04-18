@@ -16,6 +16,8 @@ inherit
 			make
 		end
 
+	WIZARD_PROJECT_SHARED
+
 creation
 	make
 
@@ -35,7 +37,7 @@ feature -- Access
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			proceed_with_new_state(Create {DOTNET_WIZARD_PROJECT_NAME_AND_LOCATION_STATE}.make(wizard_information))

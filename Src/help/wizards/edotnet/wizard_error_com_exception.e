@@ -13,6 +13,8 @@ inherit
 			build
 		end
 
+	WIZARD_PROJECT_SHARED
+
 creation
 	make
 
@@ -22,7 +24,7 @@ feature {NONE} -- Implementation
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info) 
+			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info)
 		end
 
 	build is

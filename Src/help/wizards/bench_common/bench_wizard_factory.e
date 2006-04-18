@@ -1,18 +1,23 @@
 indexing
-	description	: "This class is inherit by all the application"
+	description: "Factory for compiler wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	WIZARD_PROJECT_SHARED
+	BENCH_WIZARD_FACTORY
 
 inherit
-	BENCH_WIZARD_SHARED
+	WIZARD_FACTORY
 
-feature -- Access
+feature -- Factory
+
+	new_wizard_initial_state: WIZARD_INITIAL_STATE is
+			-- New initial state for wizard.
+		do
+			create Result.make (create {WIZARD_INFORMATION}.make)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -45,4 +50,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_PROJECT_SHARED
+
+end

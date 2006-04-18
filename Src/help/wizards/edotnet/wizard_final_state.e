@@ -15,6 +15,8 @@ inherit
 			build
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -24,7 +26,7 @@ feature {NONE} -- Implementation
 			-- Set `help_filename' with `h_filename'.
 		do
 			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_FINAL_STATE_WINDOW} (an_info) 
+			Precursor {BENCH_WIZARD_FINAL_STATE_WINDOW} (an_info)
 		end
 
 feature -- Basic Operations
@@ -88,7 +90,7 @@ feature {NONE} -- Widgets
 feature {NONE} -- Implementation
 
 	message_text: STRING
-			-- Final message 
+			-- Final message
 
 	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
 			-- Fill `message_and_title_box' with needed widgets.
@@ -110,7 +112,7 @@ feature {NONE} -- Constants
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
 			-- Path to HTML help file
 
-	Common_message: STRING is 
+	Common_message: STRING is
 			-- Message to the user (no matter if there are selected assemblies)
 		local
 			creation_routine_name,
@@ -148,12 +150,12 @@ feature {NONE} -- Constants
 				Result.append ("Most recent clr version")
 			else
 				Result.append (wizard_information.clr_version)
-			end 
+			end
 			Result.append (New_line)
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty
-		end	
+		end
 
 	Space: STRING is " "
 			-- Space

@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			s: STRING
 		do
 			create f1.make_from_string (wizard_resources_path)
-			f_name := clone (f1)
+			f_name := f1.twin
 			f_name.extend (name)
 			f_name.add_extension (extension)
 			create fi.make_open_read (f_name)
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			f_n1.set_file_name (template_name)
 			create fi.make_open_read (f_n1)
 			fi.read_stream (fi.count)
-			s:= clone (fi.last_string)
+			s:= fi.last_string.twin
 			if map_list /= Void then
 				from
 					map_list.start
@@ -104,40 +104,46 @@ feature {NONE} -- Implementation
 			project_name: STRING
 			project_name_lowercase: STRING
 			project_name_uppercase: STRING
+			l_uuid: UUID_GENERATOR
 		do
 				-- Add the project name.
 			project_name := wizard_information.project_name
 			create tuple
-			tuple.put ("<FL_PROJECT_NAME>", 1)
+			tuple.put ("${FL_PROJECT_NAME}", 1)
 			tuple.put (project_name, 2)
 			map_list.extend (tuple)
 
 				-- Add the project name (in uppercase)
-			project_name_uppercase := clone (project_name)
-			project_name_uppercase.to_upper
+			project_name_uppercase := project_name.as_upper
 			create tuple
-			tuple.put ("<FL_PROJECT_NAME_UPPERCASE>", 1)
+			tuple.put ("${FL_PROJECT_NAME_UPPERCASE}", 1)
 			tuple.put (project_name_uppercase, 2)
 			map_list.extend (tuple)
 
 				-- Add the project name (in lowercase)
-			project_name_lowercase := clone (project_name)
-			project_name_lowercase.to_lower
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME_LOWERCASE>", 1)
+			project_name_lowercase := project_name.as_lower
+			create tuple
+			tuple.put ("${FL_PROJECT_NAME_LOWERCASE}", 1)
 			tuple.put (project_name_lowercase, 2)
 			map_list.extend (tuple)
 
 				-- Add the project location
 			create tuple
-			tuple.put ("<FL_LOCATION>", 1)
+			tuple.put ("${FL_LOCATION}", 1)
 			tuple.put (wizard_information.project_location, 2)
+			map_list.extend (tuple)
+
+				-- Add UUID for project
+			create l_uuid
+			create tuple
+			tuple.put ("${FL_UUID}", 1)
+			tuple.put (l_uuid.generate_uuid.out, 2)
 			map_list.extend (tuple)
 
 				-- Add the date for indexing clause.
 			create current_time.make_by_current_time
 			create tuple
-			tuple.put ("<FL_DATE>", 1)
+			tuple.put ("${FL_DATE}", 1)
 			tuple.put (
 				"$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+
 				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $", 2)

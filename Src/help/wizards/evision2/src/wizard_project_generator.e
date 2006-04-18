@@ -30,61 +30,60 @@ feature -- Basic Operations
 			a_string2: STRING
 		do
 				-- cached variables
-			project_name_lowercase := clone (wizard_information.project_name)
-			project_name_lowercase.to_lower
+			project_name_lowercase := wizard_information.project_name.as_lower
 			create project_location.make_from_string (wizard_information.project_location)
 
 				-- Update the ace file location.
 			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (project_name_lowercase + ".ace")
+			ace_location.set_file_name (project_name_lowercase + ".acex")
 			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
 			add_common_parameters (map_list)
 
 			if wizard_information.has_menu_bar then
-				map_list.extend (tuple_from_file_content ("<FL_MENUBAR_ADD>", "template_menubar_add.e"))
-				tuple := tuple_from_file_content ("<FL_MENUBAR_INIT>", "template_menubar_init.e")
+				map_list.extend (tuple_from_file_content ("${FL_MENUBAR_ADD}", "template_menubar_add.e"))
+				tuple := tuple_from_file_content ("${FL_MENUBAR_INIT}", "template_menubar_init.e")
 				if wizard_information.has_about_dialog then
-					tuple2 := tuple_from_file_content ("<FL_HELP_ABOUT_ADD>", "template_menu_help_about_add.e")
+					tuple2 := tuple_from_file_content ("${FL_HELP_ABOUT_ADD}", "template_menu_help_about_add.e")
 				else
-					tuple2 := empty_tuple ("<FL_HELP_ABOUT_ADD>")
+					tuple2 := empty_tuple ("${FL_HELP_ABOUT_ADD}")
 				end
 				a_string ?= tuple.item(2); check a_string_not_void: a_string /= Void end;
 				a_string2 ?= tuple2.item(2); check a_string2_not_void: a_string2 /= Void end;
-				a_string.replace_substring_all ("<FL_HELP_ABOUT_ADD>", a_string2)
+				a_string.replace_substring_all ("${FL_HELP_ABOUT_ADD}", a_string2)
 				map_list.extend (tuple)
 			else
-				map_list.extend (empty_tuple ("<FL_MENUBAR_INIT>"))
-				map_list.extend (empty_tuple ("<FL_MENUBAR_ADD>"))
+				map_list.extend (empty_tuple ("${FL_MENUBAR_INIT}"))
+				map_list.extend (empty_tuple ("${FL_MENUBAR_ADD}"))
 			end
 
 			if wizard_information.has_status_bar then
-				map_list.extend (tuple_from_file_content ("<FL_STATUSBAR_ADD>", "template_statusbar_add.e"))
-				map_list.extend (tuple_from_file_content ("<FL_STATUSBAR_INIT>", "template_statusbar_init.e"))	
+				map_list.extend (tuple_from_file_content ("${FL_STATUSBAR_ADD}", "template_statusbar_add.e"))
+				map_list.extend (tuple_from_file_content ("${FL_STATUSBAR_INIT}", "template_statusbar_init.e"))
 			else
-				map_list.extend (empty_tuple ("<FL_STATUSBAR_ADD>"))
-				map_list.extend (empty_tuple ("<FL_STATUSBAR_INIT>"))	
+				map_list.extend (empty_tuple ("${FL_STATUSBAR_ADD}"))
+				map_list.extend (empty_tuple ("${FL_STATUSBAR_INIT}"))
 			end
 
 			if wizard_information.has_tool_bar then
-				map_list.extend (tuple_from_file_content ("<FL_TOOLBAR_ADD>", "template_toolbar_add.e"))
-				map_list.extend (tuple_from_file_content ("<FL_TOOLBAR_INIT>", "template_toolbar_init.e"))
+				map_list.extend (tuple_from_file_content ("${FL_TOOLBAR_ADD}", "template_toolbar_add.e"))
+				map_list.extend (tuple_from_file_content ("${FL_TOOLBAR_INIT}", "template_toolbar_init.e"))
 			else
-				map_list.extend (empty_tuple ("<FL_TOOLBAR_ADD>"))
-				map_list.extend (empty_tuple ("<FL_TOOLBAR_INIT>"))	
+				map_list.extend (empty_tuple ("${FL_TOOLBAR_ADD}"))
+				map_list.extend (empty_tuple ("${FL_TOOLBAR_INIT}"))
 			end
 
 			if wizard_information.has_about_dialog then
-				map_list.extend (tuple_from_file_content ("<FL_ABOUTDIALOG_INIT>", "template_aboutdialog_init.e"))
+				map_list.extend (tuple_from_file_content ("${FL_ABOUTDIALOG_INIT}", "template_aboutdialog_init.e"))
 			else
-				map_list.extend (empty_tuple ("<FL_ABOUTDIALOG_INIT>"))
+				map_list.extend (empty_tuple ("${FL_ABOUTDIALOG_INIT}"))
 			end
 
 			from_template_to_project (wizard_resources_path, "template_main_window.e", 	project_location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "interface_names.e", 		project_location, "interface_names.e", map_list)
 			from_template_to_project (wizard_resources_path, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
-			from_template_to_project (wizard_resources_path, "template_ace.ace", 		project_location, project_name_lowercase + ".ace", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.acex", 		project_location, project_name_lowercase + ".acex", map_list)
 			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
 
 			if wizard_information.has_tool_bar then
@@ -102,14 +101,14 @@ feature -- Basic Operations
 		do
 			create file_name.make_from_string (wizard_resources_path)
 			file_name.set_file_name (a_content_file)
-			
+
 			create file.make_open_read (file_name)
 			file.read_stream (file.count)
 
-			file_content := clone (file.last_string)
+			file_content := file.last_string.twin
 			file_content.replace_substring_all ("%R%N", "%N")
 
-			create Result.make
+			create Result
 			Result.put (an_index, 1)
 			Result.put (file_content, 2)
 
@@ -118,7 +117,7 @@ feature -- Basic Operations
 
 	empty_tuple (an_index: STRING): TUPLE [STRING, STRING] is
 		do
-			create Result.make
+			create Result
 			Result.put (an_index, 1)
 			Result.put ("", 2)
 		end
@@ -141,7 +140,7 @@ indexing
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -154,4 +153,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
+
 end -- class WIZARD_PROJECT_GENERATOR

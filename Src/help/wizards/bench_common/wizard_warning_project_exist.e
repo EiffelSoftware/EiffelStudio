@@ -10,9 +10,10 @@ class
 	WIZARD_WARNING_PROJECT_EXIST
 
 inherit
-	WIZARD_INITIAL_STATE_WINDOW
+	BENCH_WIZARD_INITIAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info
+			proceed_with_current_info,
+			cancel
 		end
 
 	BENCH_WIZARD_CONSTANTS
@@ -37,9 +38,12 @@ feature -- basic Operations
 			Precursor
 			proceed_with_new_state(create {WIZARD_SECOND_STATE}.make (wizard_information))
 		end
-		
 
 	final_message: STRING is
+		do
+		end
+
+	cancel is
 		do
 		end
 
@@ -51,7 +55,7 @@ feature {WIZARD_STATE_WINDOW}
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

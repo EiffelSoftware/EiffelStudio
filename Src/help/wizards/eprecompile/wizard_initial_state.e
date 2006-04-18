@@ -12,11 +12,19 @@ class
 inherit
 	WIZARD_INITIAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info
+			proceed_with_current_info,
+			wizard_information
 		end
+
+	WIZARD_PROJECT_SHARED
 
 create
 	make
+
+feature -- Access
+
+	wizard_information: WIZARD_INFORMATION
+			-- Information about current state.
 
 feature -- basic Operations
 
@@ -51,7 +59,7 @@ feature -- basic Operations
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

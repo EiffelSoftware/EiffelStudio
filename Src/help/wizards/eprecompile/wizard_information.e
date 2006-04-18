@@ -9,6 +9,9 @@ indexing
 class
 	WIZARD_INFORMATION
 
+inherit
+	WIZARD_STATE_DATA
+
 create
 	make
 

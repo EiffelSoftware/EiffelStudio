@@ -138,7 +138,7 @@ feature -- Access: file name
 			-- Location of templates.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
+			Result.extend_from_array (<<short_studio_name, "help", "defaults">>)
 		end
 
 	Generation_templates_path: FILE_NAME is
@@ -163,11 +163,10 @@ feature -- Access: file name
 			Result.set_file_name (Default_class_filename)
 		end
 
-	Default_ace_name: FILE_NAME is
+	Default_config_name: FILE_NAME is
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "help", "defaults", Eiffel_platform>>)
-			Result.set_file_name (Default_ace_file)
+			create Result.make_from_string (Templates_path)
+			Result.set_file_name (Default_config_file)
 		end
 
 	Bitmaps_path: DIRECTORY_NAME is

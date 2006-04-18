@@ -36,12 +36,12 @@ feature {NONE} -- Implementation
 				-- Create the pathname of the ace file
 			create ace_filename.make_from_string (project_directory)
 			ace_filename.set_file_name (system_name.as_lower)
-			ace_filename.add_extension ("ace")
+			ace_filename.add_extension (config_extension)
 
 				-- Create the pathname of the root class.
 			create root_class_filename.make_from_string (project_directory)
 			root_class_filename.set_file_name (a_root_class_name.as_lower)
-			root_class_filename.add_extension ("e")
+			root_class_filename.add_extension (eiffel_extension)
 		end
 
 feature -- Access
@@ -60,7 +60,7 @@ feature -- Basic operations.
 			ace_file_content: STRING
 		do
 				-- Create the ace file
-			ace_file_content := default_ace_file_contents
+			ace_file_content := default_config_file_contents
 			process_ace_file_content (ace_file_content)
 			save_ace_file_content (ace_file_content)
 
@@ -76,31 +76,12 @@ feature {NONE} -- Implementation
 			valid_contents: contents /= Void and then not contents.is_empty
 			valid_system_name: system_name /= Void and then not system_name.is_empty
 			valid_project_directory: project_directory /= Void and then not project_directory.is_empty
-		local
-			default_options: STRING
 		do
 			contents.replace_substring_all ("$system_name", system_name)
-			contents.replace_substring_all ("$root_class_line", root_class_name + ": %"" + root_feature_name + "%"")
-
-				-- Generate Default options.
-			create default_options.make (0)
-			default_options.append (generate_option (False, "multithreaded"))
-			default_options.append (generate_option (False, "console_application"))
-			default_options.append (generate_option (False, "dynamic_runtime"))
-			default_options.append (generate_option (True,  "dead_code_removal"))
-			default_options.append (generate_option (False, "profile"))
-			default_options.append (generate_option (False, "line_generation"))
-			default_options.append (generate_option (False, "array_optimization"))
-			default_options.append (generate_option (False, "inlining"))
-			default_options.append ("%Tinlining_size (%"10%")")
-			contents.replace_substring_all ("$default_options", default_options)
-			contents.replace_substring_all ("$assertion_value", "require")
-
-				-- No precompiled libraries.
-			contents.replace_substring_all ("$precompile", "")
-
-				-- Root cluster
-			contents.replace_substring_all ("$root_cluster_line", "%N%T" + root_cluster_name + ": %"" + project_directory + "%"")
+			contents.replace_substring_all ("$root_class_name", root_class_name)
+			contents.replace_substring_all ("$root_class_feature", root_feature_name)
+			contents.replace_substring_all ("$root_cluster_name", root_cluster_name)
+			contents.replace_substring_all ("$root_cluster_location", project_directory)
 		end
 
 	save_ace_file_content (contents: STRING) is
@@ -118,7 +99,7 @@ feature {NONE} -- Implementation
 				contents.replace_substring_all ("%R", "")
 				new_file.put_string (contents)
 				char := contents.item (contents.count)
-				if Platform_constants.is_unix and 
+				if Platform_constants.is_unix and
 					then char /= '%N' and
 					then char /= '%R'
 						-- Add a carriage return like vi if there's none at
@@ -134,43 +115,24 @@ feature {NONE} -- Implementation
 				%Check your write permissions in this directory")
 		end
 
-	default_ace_file_contents: STRING is
+	default_config_file_contents: STRING is
 			-- Contents of the default ace file
 		local
 			a_file: RAW_FILE
 		do
-			create a_file.make (Default_ace_name)
+			create a_file.make (Default_config_name)
 			a_file.open_read
 			a_file.read_stream (a_file.count)
 			a_file.close
 			Result := a_file.last_string
 		rescue
 			add_error_message (
-				"Unable to read the template ace file '"+Default_ace_name+"'%N%
+				"Unable to read the template ace file '"+Default_config_name+"'%N%
 				%Check that the file exists and that you are allowed to read it.")
 		end
 
-	generate_option (option_set: BOOLEAN; option_name: STRING): STRING is
-			-- Generate the Lace token corresponding to `option_name'.
-		require
-			valid_option: option_name /= Void and then not option_name.is_empty
-		do
-			create Result.make (0)
-			Result.append ("%T")
-			Result.append (option_name)
-			Result.append (" (")
-			if option_set then
-				Result.append ("yes")
-			else
-				Result.append ("no")
-			end
-			Result.append (")%N")
-		ensure
-			valid_result: Result /= Void and then not Result.is_empty
-		end
-
 	create_root_class is
-			-- Create the file named `root_class_filename' and flush the content 
+			-- Create the file named `root_class_filename' and flush the content
 			-- of the default root class in it.
 		local
 			new_class: PLAIN_TEXT_FILE

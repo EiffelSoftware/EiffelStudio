@@ -146,7 +146,7 @@ feature {NONE} -- Update
 					if file_name.is_empty then
 						exit := True;
 					else
-						create file.make_open_read (Default_ace_name)
+						create file.make_open_read (Default_config_name)
 						create dest.make_open_write (file_name)
 						file.copy_to (dest)
 						file.close

@@ -159,6 +159,16 @@ feature -- Access
 	is_compilation_requested: BOOLEAN
 			-- Is a compilation requested after loading the project?
 
+feature -- Settings
+
+	set_is_compilation_requested (v: like is_compilation_requested) is
+			-- Set `is_compilation_requested' with `v'.
+		do
+			is_compilation_requested := v
+		ensure
+			is_compilation_requested_set: is_compilation_requested = v
+		end
+
 feature {NONE} -- Settings
 
 	set_should_override_project (v: like should_override_project) is
@@ -400,11 +410,13 @@ feature {NONE} -- Settings
 						-- override the existing project and recompile from scratch.
 					if should_override_project then
 						create_project (lace.project_path, False)
+						post_create_project
 					end
 				end
 			else
 					-- Project file did not exist.
 				create_project (lace.project_path, is_project_location_requested)
+				post_create_project
 			end
 		end
 
@@ -452,6 +464,11 @@ feature {NONE} -- Settings
 		rescue
 			retried := True
 			retry
+		end
+
+	post_create_project is
+			-- Action to be done just after creating a project.
+		do
 		end
 
 	compile_project is

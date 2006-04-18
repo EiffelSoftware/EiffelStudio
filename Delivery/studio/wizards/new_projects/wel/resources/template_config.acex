@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	name="${FL_PROJECT_NAME}" uuid="${FL_UUID}">
+	<target name="${FL_PROJECT_NAME}">
+		<description>This ace file has been generated for you by "The Vision2 Application Wizard".</description>
+		<root cluster="root_cluster" feature="make" class="ROOT_CLASS"/>
+
+		<option profile="false" debug="false">
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="array_optimization" value="False"/>
+		<setting name="console_application" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dynamic_runtime" value="False"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="multithreaded" value="False"/>
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="True"/>
+		<library name="wel" location="$ISE_LIBRARY/library/wel/wel.acex" readonly="True"/>
+
+		<cluster name="root_cluster" location="${FL_LOCATION}"/>
+	</target>
+</system>

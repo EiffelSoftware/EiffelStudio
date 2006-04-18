@@ -1,11 +1,18 @@
-//------------------------------------------------------------------------------
-// ev_c_util.c
-//------------------------------------------------------------------------------
-// description: "C features of EV_C_UTILS"
-// status: "See notice at end of file"
-// date: "$Date$"
-// revision: "$Revision$"
-//------------------------------------------------------------------------------
+/*
+indexing
+	description: "C features of EV_C_UTILS."
+	date: "$Date: $"
+	revision: "$Revision: $"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
 
 #include "ev_c_util.h"
 #include "eif_except.h"
@@ -1148,155 +1155,3 @@ char *wait_cursor_data[] = {
 char **wait_cursor_xpm (void) {
         return wait_cursor_data;
 }
-
-
-//------------------------------------------------------------------------------
-// EiffelVision2: library of reusable components for ISE Eiffel.
-// Copyright (C) 1986-1999 Interactive Software Engineering Inc.
-// All rights reserved. Duplication and distribution prohibited.
-// May be used only with ISE Eiffel, under terms of user license.
-// Contact ISE for any other use.
-//
-// Interactive Software Engineering Inc.
-// ISE Building, 2nd floor
-// 270 Storke Road, Goleta, CA 93117 USA
-// Telephone 805-685-1006, Fax 805-685-6869
-// Electronic mail <info@eiffel.com>
-// Customer support e-mail <support@eiffel.com>
-// For latest info see award-winning pages: http://www.eiffel.com
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// CVS log
-//------------------------------------------------------------------------------
-//
-// $Log$
-// Revision 1.19  2005/07/07 17:13:09  king
-// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
-//
-// Revision 1.9  2005/05/31 23:51:00  king
-// Added combo box toggle button retrieval hack
-//
-// Revision 1.8  2005/05/31 18:07:25  king
-// Moved menu functions to ev_c_util.c
-//
-// Revision 1.7  2005/02/12 01:23:42  manus
-// Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
-//   or from a pointer.
-//
-// Revision 1.6  2004/08/04 20:08:25  king
-// Added RECURSION glog flag as previously this was missing and going to the default handler which would abort the program
-// Formatting
-//
-// Revision 1.5  2004/02/12 22:38:47  king
-// Added default_pixmap_xpm
-//
-// Revision 1.4  2004/02/06 00:31:23  king
-// Removed externals that are now written in Eiffel using inline
-//
-// Revision 1.3  2003/04/16 17:13:10  king
-// Initial gtk2 default marshaller implementation
-//
-// Revision 1.2  2003/04/15 01:32:31  king
-// Now new marshal proxy is correctly executed, updated arg function to gtk2
-//
-// Revision 1.1  2003/04/03 01:40:50  king
-// Initial gtk 2 conversion
-//
-// Revision 1.18  2002/11/26 21:21:19  king
-// Merged with changes from 52 branch
-//
-// Revision 1.17.6.1  2002/10/11 01:24:38  king
-// Fixed error and warning xpm issue
-//
-// Revision 1.17  2001/11/06 02:12:28  king
-// Corrected pixmap externals
-//
-// Revision 1.16  2001/11/06 00:17:13  king
-// Added public functions to private xpm data
-//
-// Revision 1.15  2001/10/18 20:20:17  king
-// Tidied up cursors
-//
-// Revision 1.14  2001/10/16 17:29:36  king
-// Shortened the default cursor tail to be equal to that of the default X one
-//
-// Revision 1.13  2001/10/15 23:35:20  king
-// Removed static declaration on xpms
-//
-// Revision 1.12  2001/10/15 23:04:14  manus
-// Updated cursors
-//
-// Revision 1.11  2001/10/15 22:30:27  manus
-// Moved pixmap definitions from header to c file
-//
-// Revision 1.10  2001/08/30 19:17:09  king
-// Made log message buffer static
-//
-// Revision 1.9  2001/08/24 20:50:08  king
-// Removed unused external
-//
-// Revision 1.8  2001/08/03 18:41:26  king
-// Removed no longer needed externals
-//
-// Revision 1.7  2001/07/24 19:00:30  king
-// Corrected debugging output, slight optimization of logging
-//
-// Revision 1.6  2001/06/07 23:07:59  rogers
-// Merged DEVEL branch into Main trunc.
-//
-// Revision 1.5.2.9  2001/06/05 17:32:09  king
-// Including all gtk message logging domains
-//
-// Revision 1.5.2.8  2001/06/05 01:29:55  king
-// Updated message logging modes
-//
-// Revision 1.5.2.7  2001/06/04 20:05:01  king
-// Updated enable_ev_gtk_log to include debig signature
-//
-// Revision 1.5.2.6  2001/06/04 19:05:19  king
-// Removed printing of error messages for later debug mechanism
-//
-// Revision 1.5.2.5  2000/11/29 00:40:42  king
-// Implemented gtk_args_array_i_th
-//
-// Revision 1.5.2.4  2000/10/12 16:20:49  king
-// Removed set_pixmap_and_mask
-//
-// Revision 1.5.2.3  2000/10/02 23:14:10  king
-// Added test set_pixmap_and_mask
-//
-// Revision 1.5.2.2  2000/07/20 18:38:33  king
-// Added double_array_i_th
-//
-// Revision 1.5.2.1  2000/05/03 19:08:33  oconnor
-// mergred from HEAD
-//
-// Revision 1.5  2000/04/18 21:43:23  king
-// Moved string_pointer_deref definition from header to source
-//
-// Revision 1.4  2000/04/18 17:58:01  oconnor
-// Renamed get_pointer_from_array_by_index -> pointer_array_i_th
-// Added string_pointer_deref (pointer: POINTER): POINTER
-//
-// Revision 1.3  2000/02/17 22:40:58  oconnor
-// modified eraise call to not need snprintf, NOt avalible on Solaris.
-//
-// Revision 1.2  2000/02/14 12:05:08  oconnor
-// added from prerelease_20000214
-//
-// Revision 1.1.2.4  2000/02/11 04:53:18  oconnor
-// tweaked log
-//
-// Revision 1.1.2.3  2000/02/11 04:48:50  oconnor
-// attached GTK+ exception system to Eiffel
-//
-// Revision 1.1.2.2  2000/01/17 17:58:35  brendel
-// Removed strange CVS log.
-//
-// Revision 1.1.2.1  2000/01/14 22:17:14  brendel
-// Initial.
-//
-//------------------------------------------------------------------------------
-// End of CVS log
-//------------------------------------------------------------------------------

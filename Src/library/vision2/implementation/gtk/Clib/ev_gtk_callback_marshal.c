@@ -1,12 +1,18 @@
-//------------------------------------------------------------------------------
-// ev_gtk_callback_marshal.c
-//------------------------------------------------------------------------------
-// description:
-//     "C features of EV_GTK_CALLBACK_MARSHAL, see ev_callback_marshal.e" 
-// status: "See notice at end of file"
-// date: "$Date$"
-// revision: "$Revision$"
-//------------------------------------------------------------------------------
+/*
+indexing
+	description: "C features of EV_GTK_CALLBACK_MARSHAL, see ev_callback_marshal.e."
+	date: "$Date: $"
+	revision: "$Revision: $"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
 
 #include <eif_eiffel.h>
 #include <gtk/gtk.h>

@@ -12,14 +12,24 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-    <external_include location="spec\windows\include">
-        <if platform="windows"/>
-    </external_include>
-		<external_object location="spec\$ISE_C_COMPILER\lib\com_runtime.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\mtcom_runtime.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\com.lib"/>
-		<external_object location="spec\$ISE_C_COMPILER\lib\mtcom.lib"/>
+		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include">
+        	<if platform="windows"/>
+    	</external_include>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib">
+        	<if platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib">
+        	<if platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib">
+        	<if platform="windows"/>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib">
+        	<if platform="windows"/>
+		</external_object>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+
 		<cluster name="Constants" location="Constants" recursive="true"/>
 		<cluster name="Interfaces" location="Interfaces" recursive="true"/>
 		<cluster name="Structures" location="Structures" recursive="true"/>

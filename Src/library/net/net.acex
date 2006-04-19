@@ -15,10 +15,29 @@
 			<condition><platform value="windows"/></condition>
 		</library>
 		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
-			<condition><platform excluded_value="windows"/></condition>
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\lib\mtnet.lib">
-			<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
+		</external_object>
+
+		<external_object location="$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
 		</external_object>
 		<cluster name="abstract" location="abstract" recursive="true"/>
 		<cluster name="local" location="local" recursive="true"/>

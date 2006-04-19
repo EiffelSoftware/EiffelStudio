@@ -12,10 +12,16 @@
 			<condition><platform value="windows"/></condition>
 		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib">
-			<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib">
-			<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib">
 			<condition><platform value="dotnet"/></condition>

@@ -64,6 +64,8 @@ cluster
 			"error_handler.e"; "syntax_error.e"; 
 		end
 
+	all_lace: "$EIFFEL_SRC\Eiffel\library\configuration\lace\lace_compile"
+
 	all eclop:		"$EIFFEL_SRC\free_add_ons\eclop\eclop"
 		exclude
 			".svn"; 

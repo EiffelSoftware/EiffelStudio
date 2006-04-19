@@ -91,19 +91,19 @@ cluster
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table"; ".svn"; 
+			"table"; ".svn";
 		end
 
 	table_eiffel_3:		"$EIFFEL_SRC\library\obsolete\base\table_eiffel3"
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
-			".svn"; "french"; "german"; 
+			".svn"; "french"; "german";
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
@@ -112,44 +112,39 @@ cluster
 
 	all parser:		"$EIFFEL_SRC\Eiffel\parser"
 		exclude
-			".svn"; "compiler_override"; "error"; 
+			".svn"; "compiler_override"; "error";
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; ".svn"; "other"; 
+			"hact"; "se"; "ve"; "base"; ".svn"; "other";
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
 		exclude
-			".svn"; 
-		end
-
-	all lace:		"$EIFFEL_SRC\Eiffel\lace"
-		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
-			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel";
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
-			".svn"; "structured_text"; "eb_preference_manager.e"; 
+			".svn"; "structured_text"; "eb_preference_manager.e";
 		end
 
 	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel\API\structured_text"
 		exclude
-			".svn"; "common"; 
+			".svn"; "common";
 		end
 
 	all common_structured_text:		"$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common"
 		exclude
-			".svn"; "text_formatter.e"; "structured_text.e"; 
+			".svn"; "text_formatter.e"; "structured_text.e";
 		end
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
@@ -170,7 +165,7 @@ cluster
 
 	all tty (interface):		"$\tty"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	preference_tool (interface):		"$\graphical\preference_tool"
@@ -179,7 +174,7 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
@@ -188,22 +183,22 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			".svn"; "xml_implementation"; "graphical"; 
+			".svn"; "xml_implementation"; "graphical";
 		end
 
 	all configuration:		"$EIFFEL_SRC\Eiffel\library\configuration"
 		exclude
-			".svn"; 
+			".svn";
 		visible
 			CONF_PRINT_VISITOR
 				end
@@ -217,12 +212,12 @@ cluster
 
 	all uuid:		"$EIFFEL_SRC\library\uuid"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
 		exclude
-			".svn"; "EIFGEN"; 
+			".svn"; "EIFGEN";
 		end
 
 external

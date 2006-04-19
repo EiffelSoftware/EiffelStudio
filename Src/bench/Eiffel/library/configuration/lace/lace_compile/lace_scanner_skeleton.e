@@ -23,12 +23,6 @@ inherit
 	BASIC_ROUTINES
 		export {NONE} all end
 
-	SHARED_ERROR_HANDLER
-		export {NONE} all end
-
-	COMPILER_EXPORTER
-		export {NONE} all end
-
 	PLATFORM
 		export
 			{NONE} all

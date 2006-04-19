@@ -3,10 +3,6 @@ indexing
 	status: "See notice at end of class."
 class ENV_INTERP
 
-inherit
-
-	SHARED_EXEC_ENVIRONMENT
-
 feature -- Access
 
 	interpreted_string (s: STRING): STRING is
@@ -33,6 +29,11 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	execution_environment: EXECUTION_ENVIRONMENT is
+		once
+			create Result
+		end
 
 	processed_string (s: STRING; interpreted: BOOLEAN): STRING is
 			-- Interpretation of string `s' where the environment variables

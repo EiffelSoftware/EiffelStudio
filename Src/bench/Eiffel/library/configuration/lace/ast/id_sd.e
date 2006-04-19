@@ -19,13 +19,6 @@ inherit
 			set as string_set
 		end
 
-	CHARACTER_ROUTINES
-		export
-			{NONE} all
-		undefine
-			copy, out, is_equal
-		end
-
 create
 	make, initialize
 

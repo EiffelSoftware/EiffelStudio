@@ -337,12 +337,12 @@ feature -- Visit nodes
 							l_load.last_system.set_application_target (application_target)
 							l_target := l_load.last_system.library_target
 
-								-- set environment to our global environment
-							l_target.set_environ_variables (application_target.environ_variables)
-
 							if l_target = Void then
 								add_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
 							else
+									-- set environment to our global environment
+								l_target.set_environ_variables (application_target.environ_variables)
+
 								check
 									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
 								end

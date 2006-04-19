@@ -185,7 +185,7 @@ feature -- Status report
 			the_result: BOOLEAN
 		do
 			create buffer.make_empty (11)
-			the_result := cwin_get_key_name_text (key_data, buffer.item, buffer.capacity)
+			the_result := cwin_get_key_name_text (key_data, buffer.item, buffer.character_capacity)
 			check
 				successfull_call: the_result
 			end

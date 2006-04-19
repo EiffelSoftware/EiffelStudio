@@ -11,16 +11,28 @@
         	<condition><platform value="windows"/></condition>
     	</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib">
-        	<condition><platform value="windows"/></condition>
-		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib">
-        	<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib">
-        	<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib">
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib">
-        	<condition><platform value="windows"/></condition>
+			<condition>
+				<platform value="windows"/>
+				<multithreaded value="true"/>
+			</condition>
 		</external_object>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>

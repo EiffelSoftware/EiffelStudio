@@ -212,8 +212,8 @@ feature -- Visit nodes
 						old_assemblies := old_target.all_assemblies.twin
 					end
 				end
-					-- if it is the library target, add the target to the libraries
-				if a_target = a_target.system.library_target then
+					-- if it is the library or application target, add the target to the libraries
+				if a_target = a_target.system.library_target or a_target = application_target then
 					libraries.force (a_target, a_target.system.uuid)
 					if old_libraries /= Void then
 						old_libraries.remove (a_target.system.uuid)

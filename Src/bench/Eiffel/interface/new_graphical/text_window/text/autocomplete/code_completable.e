@@ -628,7 +628,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			until
 				i = 256
 			loop
-				c := i.to_character
+				c := i.to_character_8
 				Result.put (c.is_control, i)
 				i := i + 1
 			end

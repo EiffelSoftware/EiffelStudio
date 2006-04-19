@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
-		<target name="common">
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+	<target name="common">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
-		</file_rule>		
+		</file_rule>
 		<external_include location="$EIFFEL_SRC/C/bench">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</external_include>
 		<external_include location="$EIFFEL_SRC/C/platform">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</external_include>
 		<external_include location="$EIFFEL_SRC\C\bench">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_include>
 		<external_include location="$EIFFEL_SRC\C\platform">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_include>
 		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_include>
 		<external_object location="$EIFFEL_SRC/C/bench/libmtcompiler.a">
-			<if platform="unix" build="finalize"/>
+			<condition><platform excluded_value="windows"/><build value="finalize"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC/C/bench/libmtwcompiler.a">
-			<if platform="unix" build="workbench"/>
+			<condition><platform excluded_value="windows"/><build value="workbench"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC/C/platform/libplatform.a">
-			<if platform="unix"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
-			<if platform="windows" build="finalize"/>
+			<condition><platform value="windows"/><build value="finalize"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
-			<if platform="windows" build="workbench"/>
+			<condition><platform value="windows"/><build value="workbench"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_object>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
@@ -131,10 +131,10 @@
 		<setting name="syntax_warning" value="False"/>
 
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</library>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</library>
 
 		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
@@ -145,14 +145,14 @@
 		</cluster>
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\"/>
 		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/md_strong_name.e$</exclude>
 				<exclude>/md_public_key.e$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="common_structured_text" location="$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common\" recursive="true">
 			<file_rule>
@@ -161,7 +161,7 @@
 			</file_rule>
 		</cluster>
 		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>
 				<exclude>/Clib$</exclude>
@@ -172,7 +172,7 @@
 			</file_rule>
 		</cluster>
 		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/unix$</exclude>
 				<exclude>/Clib$</exclude>
@@ -183,13 +183,13 @@
 		</cluster>
 
 		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/structured_text$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="compiler_api_windows" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/structured_text$</exclude>
 				<exclude>/eb_preference_manager.e$</exclude>
@@ -355,12 +355,29 @@
 		<setting name="multithreaded" value="True"/>
 		<setting name="syntax_warning" value="True"/>
 
-		<external_include location="$EIFFEL_SRC\C_library\zlib"/>
-		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib"/>
-		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib"/>
-		<external_object location="htmlhelp.lib"/>
+		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
+			<condition><platform excluded_value="windows"/><build value="workbench"/></condition>
+		</external_object>
+		<external_object location="$EIFFEL_SRC/C/ipc/ewb/libmtewb.a">
+			<condition><platform excluded_value="windows"/><build value="finalize"/></condition>
+		</external_object>
+		<external_object location="$EIFFEL_SRC/C/ipc/shared/libipc.a">
+			<condition><platform excluded_value="windows"/></condition>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtwewb.lib">
+			<condition><platform value="windows"/><build value="workbench"/></condition>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib">
+			<condition><platform value="windows"/><build value="finalize"/></condition>
+		</external_object>
+		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib">
+			<condition><platform value="windows"/></condition>
+		</external_object>
+		<external_object location="htmlhelp.lib">
+			<condition><platform value="windows"/></condition>
+		</external_object>
 		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</external_object>
 
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
@@ -368,24 +385,24 @@
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
 		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</library>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</library>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex"/>
-		<!--memory_analyzer is not pure library.-->
-		<!--<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.acex"/>-->
+		
+		
 		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex"/>
 		<library name="event" location="$ISE_LIBRARY\library\event\event.acex">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 		</library>
 		<cluster name="memory_analyser" location="$EIFFEL_SRC\library\memory_analyzer" recursive="true"/>
-		<cluster name="common" location="$EIFFEL_SRC\Eiffel\common\" recursive="true">
+		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
 			<file_rule>
 				<exclude>/compiler_override$</exclude>
 				<exclude>/error$</exclude>
@@ -396,7 +413,7 @@
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/unix$</exclude>
 				<exclude>/Clib$</exclude>
@@ -406,7 +423,7 @@
 			</file_rule>
 		</cluster>
 		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/windows$</exclude>
 				<exclude>/com_il_generation$</exclude>
@@ -420,20 +437,20 @@
 				<cluster name="debuging_class" location="$|debug\"/>
 				<cluster name="debuging_formatters" location="$|formatters\"/>
 				<cluster name="io_watcher_mswin" location="$|spec\mswin\">
-					<if platform="windows"/>
+					<condition><platform value="windows"/></condition>
 				</cluster>
 				<cluster name="io_watcher_gtk" location="$|spec\gtk\">
-					<ifnot platform="windows"/>
+					<condition><platform excluded_value="windows"/></condition>
 				</cluster>
 				<cluster name="ipc" location="$|ipc\"/>
 				<cluster name="status_mswin" location="$|status\" recursive="true">
-					<if platform="windows"/>
+					<condition><platform value="windows"/></condition>
 					<file_rule>
 						<exclude>/no_dotnet$</exclude>
 					</file_rule>
 				</cluster>
 				<cluster name="status_unix" location="$|status\" recursive="true">
-					<ifnot platform="windows"/>
+					<condition><platform excluded_value="windows"/></condition>
 					<file_rule>
 						<exclude>/dotnet$</exclude>
 					</file_rule>
@@ -443,7 +460,7 @@
 			<cluster name="time_lock" location="$|license\time_lock\"/>
 		</cluster>
 		<cluster name="interface_windows" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/graphical$</exclude>
 				<exclude>/gtk$</exclude>
@@ -456,7 +473,7 @@
 			</file_rule>
 		</cluster>
 		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/graphical$</exclude>
 				<exclude>/win32$</exclude>
@@ -476,17 +493,17 @@
 			</file_rule>
 		</cluster>
 		<cluster name="cli_debugger" location="$EIFFEL_SRC\Eiffel\library\cli_debugger\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 		</cluster>
 		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<if platform="windows"/>
+			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/clib$</exclude>
 				<exclude>/spec$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<ifnot platform="windows"/>
+			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/md_strong_name\.e$</exclude>
 				<exclude>/md_public_key\.e$</exclude>

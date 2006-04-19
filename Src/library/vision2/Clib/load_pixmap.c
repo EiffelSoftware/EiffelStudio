@@ -982,6 +982,10 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 /*---------------------------------------------------------------------------*/
 unsigned char c_ev_find_file_format(BufferedFile *pBufFile)
 {
+		/* Does the current format match against the PNG format */
+	if (c_ev_is_png_file(pBufFile))
+		return FILEFORMAT_PNG;
+
 		/* Does the current format match against the ICO format */
 	if (c_ev_is_ico_file(pBufFile))
 		return FILEFORMAT_ICO;
@@ -989,10 +993,6 @@ unsigned char c_ev_find_file_format(BufferedFile *pBufFile)
 		/* Does the current format match against the BMP format */
 	if (c_ev_is_bmp_file(pBufFile))
 		return FILEFORMAT_BMP;
-
-		/* Does the current format match against the PNG format */
-	if (c_ev_is_png_file(pBufFile))
-		return FILEFORMAT_PNG;
 
 		/* Unknown Format */
 	return FILEFORMAT_UNKNOWN;

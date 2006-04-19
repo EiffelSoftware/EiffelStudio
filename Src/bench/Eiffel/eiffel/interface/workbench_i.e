@@ -283,7 +283,7 @@ feature -- Commands
 
 				if Lace.successful then
 					if not l_pre_actions_done then
-						process_actions (universe.new_target.all_pre_compile_action)
+						process_actions (universe.new_target.pre_compile_action)
 						l_pre_actions_done := True
 					end
 
@@ -307,7 +307,7 @@ feature -- Commands
 					end
 					System.recompile
 
-					process_actions (universe.new_target.all_post_compile_action)
+					process_actions (universe.target.post_compile_action)
 				else
 					if not Error_handler.error_list.is_empty then
 						Error_handler.raise_error

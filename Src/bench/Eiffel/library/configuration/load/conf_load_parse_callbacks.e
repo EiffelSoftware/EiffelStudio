@@ -557,6 +557,9 @@ feature {NONE} -- Implementation attribute processing
 			l_command := current_attributes.item (at_command)
 			l_succeed := current_attributes.item (at_succeed)
 			l_wd := current_attributes.item (at_working_directory)
+			if l_succeed = Void then
+				l_succeed := "false"
+			end
 			if l_wd = Void then
 				create l_wd.make_empty
 			end

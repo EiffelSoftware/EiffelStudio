@@ -176,6 +176,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_path_not_void: a_path /= Void
 		do
 			original_path := to_internal (a_path)
+			if original_path.count = 0 then
+				original_path.append_character ('.')
+			end
 			if original_path.item (original_path.count) /= '\' then
 				original_path.append_character ('\')
 			end

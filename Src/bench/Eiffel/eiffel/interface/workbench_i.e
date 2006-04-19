@@ -70,7 +70,7 @@ feature -- Attributes
 	successful: BOOLEAN is
 			-- Is the last compilation successful?
 		do
-			Result := lace.successful and then system.successful
+			Result := lace.successful and then system.successful and not not_actions_successful
 		end
 
 feature -- Update
@@ -246,6 +246,7 @@ feature -- Commands
 						create vd84.make (l_action.command)
 						error_handler.insert_error (vd84)
 						error_handler.checksum
+						not_actions_successful := True
 					else
 						create vd85.make (l_action.command)
 						error_handler.insert_warning (vd85)
@@ -263,6 +264,7 @@ feature -- Commands
 			degree_6_done: BOOLEAN
 			l_pre_actions_done: BOOLEAN
 		do
+			not_actions_successful := False
 			start_compilation
 				-- We perform a degree 6 only when it is the first the compilation or
 				-- when there was an error during the compilation concerning a missing
@@ -573,6 +575,11 @@ feature {NONE} -- Automatic Backup
 
 	forbid_degree_6: BOOLEAN
 			-- Should the next compilation avoid to perform a degree 6?
+
+feature {NONE} -- Implementation
+
+	not_actions_successful: BOOLEAN
+			-- Was there a problem during running the pre and post compile actions?
 
 feature {NONE} -- Externals
 

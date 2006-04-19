@@ -35,6 +35,14 @@ MT_OBJECTS = \
 	MTeif_out.$obj \
 	MTewb_init.$obj
 
+MT_WOBJECTS = \
+	MTwewb_dumped.$obj \
+	MTwewb_proto.$obj \
+	MTweproto.$obj \
+	MTweif_in.$obj \
+	MTweif_out.$obj \
+	MTwewb_init.$obj
+
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
@@ -43,12 +51,15 @@ all:: $output_libraries
 dll: standard
 mtdll: mtstandard
 standard: ewb.$lib
-mtstandard: mtewb.$lib
+mtstandard: mtewb.$lib mtwewb.$lib
 
 ewb.$lib: $(OBJECTS)
 	$link_line
 
 mtewb.$lib: $(MT_OBJECTS)
+	$link_line
+
+mtwewb.$lib: $(MT_WOBJECTS)
 	$link_line
 
 MTewb_dumped.$obj: ewb_dumped.c
@@ -68,5 +79,24 @@ MTeif_in.$obj: eif_in.c
 
 MTeif_out.$obj: eif_out.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+
+MTwewb_dumped.$obj: ewb_dumped.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTwewb_proto.$obj: ewb_proto.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTwewb_init.$obj: ewb_init.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTweproto.$obj: eproto.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTweif_in.$obj: eif_in.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTweif_out.$obj: eif_out.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
 

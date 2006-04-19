@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class
+partial class
 	INDEXING_CLAUSES_3
 
 feature

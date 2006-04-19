@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-deferred class
+deferred partial class
 	DEFERRED_1
 
 feature

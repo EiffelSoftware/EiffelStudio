@@ -1,8 +1,8 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-expanded class
-	CLASS_1
+expanded partial class
+	partial class_1
 
 feature
 

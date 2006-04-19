@@ -182,8 +182,6 @@ feature -- Events
 			end
 		end
 
-
-
 feature -- Visit nodes
 
 	process_target (a_target: CONF_TARGET) is
@@ -194,9 +192,6 @@ feature -- Visit nodes
 			l_old_group: CONF_GROUP
 		do
 			if not is_error then
-					-- set application target
-				a_target.system.set_application_target (application_target)
-
 				if old_target /= Void then
 					a_target.set_environ_variables (old_target.environ_variables)
 					l_assemblies := old_target.assemblies
@@ -267,13 +262,11 @@ feature -- Visit nodes
 					process_removed (l_clusters)
 					process_removed (l_overrides)
 
-						-- set all libraries, all assemblies
-					a_target.set_all_libraries (libraries)
+						-- set all assemblies
 					a_target.set_all_assemblies (assemblies)
 				end
 			end
 		ensure then
-			all_libraries_set: not is_error implies a_target.all_libraries /= Void
 			all_assemblies_set: not is_error implies a_target.all_assemblies /= Void
 		end
 
@@ -309,99 +302,68 @@ feature -- Visit nodes
 			-- Visit `a_library'.
 		local
 			l_target: CONF_TARGET
-			l_load: CONF_LOAD
 			l_uuid: UUID
 			l_vis: like Current
-			l_path: STRING
 			l_ren: CONF_HASH_TABLE [STRING, STRING]
 			l_prefixed_classes: like current_classes
 			l_pre: STRING
 		do
 			if not is_error then
-				l_path := a_library.location.evaluated_path
-				create l_load.make (factory)
-				l_load.retrieve_uuid (l_path)
-				if l_load.is_error then
-					add_error (l_load.last_error)
-				else
-					l_uuid := l_load.last_uuid
-					l_target := libraries.item (l_uuid)
-					if l_target /= Void then
-						a_library.set_library_target (l_target)
-						a_library.set_uuid (l_uuid)
-					else
-						l_load.retrieve_configuration (l_path)
-						if l_load.is_error then
-							add_error (l_load.last_error)
-						else
-							l_load.last_system.set_application_target (application_target)
-							l_target := l_load.last_system.library_target
+				l_uuid := a_library.uuid
+				l_target := a_library.library_target
+				check
+					library_target_set: l_target /= Void
+				end
+				if not libraries.has (l_uuid) then
+						-- get and initialize visitor
+					l_vis := twin
+					l_vis.reset
+					if old_libraries /= Void and then old_libraries.has (l_uuid) then
+						l_vis.set_old_target (old_libraries.found_item)
+						old_libraries.remove (l_uuid)
+					end
+					libraries.force (l_target, l_uuid)
 
-							if l_target = Void then
-								add_error (create {CONF_ERROR_NOLIB}.make (a_library.name))
-							else
-									-- set environment to our global environment
-								l_target.set_environ_variables (application_target.environ_variables)
-
-								check
-									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
-								end
-									-- get and initialize visitor
-								l_vis := twin
-								l_vis.reset
-								if old_libraries /= Void and then old_libraries.has (l_uuid) then
-									l_vis.set_old_target (old_libraries.found_item)
-									old_libraries.remove (l_uuid)
-								end
-								libraries.force (l_target, l_uuid)
-
-								l_target.process (l_vis)
-								if l_vis.is_error then
-									is_error := True
-									last_errors := l_vis.last_errors
-								else
-									a_library.set_library_target (l_target)
-									a_library.set_uuid (l_uuid)
-								end
-							end
+					l_target.process (l_vis)
+					if l_vis.is_error then
+						is_error := True
+						last_errors := l_vis.last_errors
+					end
+				end
+				if not is_error then
+					create current_classes.make (Classes_per_cluster)
+					l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
+						-- do renaming prefixing if necessary
+					l_ren := a_library.renaming
+					if l_ren /= Void then
+						from
+							l_ren.start
+						until
+							l_ren.after
+						loop
+							current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
+							l_ren.forth
 						end
 					end
-					if not is_error then
-						create current_classes.make (Classes_per_cluster)
-						l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
-							-- do renaming prefixing if necessary
-						l_ren := a_library.renaming
-						if l_ren /= Void then
-							from
-								l_ren.start
-							until
-								l_ren.after
-							loop
-								current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
-								l_ren.forth
-							end
+					l_pre := a_library.name_prefix
+					if l_pre /= Void and then not l_pre.is_empty then
+						create l_prefixed_classes.make (current_classes.count)
+						from
+							current_classes.start
+						until
+							current_classes.after
+						loop
+							l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
+							current_classes.forth
 						end
-						l_pre := a_library.name_prefix
-						if l_pre /= Void and then not l_pre.is_empty then
-							create l_prefixed_classes.make (current_classes.count)
-							from
-								current_classes.start
-							until
-								current_classes.after
-							loop
-								l_prefixed_classes.put (current_classes.item_for_iteration, l_pre+current_classes.key_for_iteration)
-								current_classes.forth
-							end
-							a_library.set_classes (l_prefixed_classes)
-						else
-							a_library.set_classes (current_classes)
-						end
+						a_library.set_classes (l_prefixed_classes)
+					else
+						a_library.set_classes (current_classes)
 					end
 				end
 			end
 		ensure then
 			classes_set: not is_error implies a_library.classes_set
-			uuid_set: not is_error implies a_library.uuid /= Void
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER) is

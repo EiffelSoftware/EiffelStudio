@@ -52,6 +52,8 @@ feature -- Visit nodes
 				a_target.set_external_objects (new_target.internal_external_object)
 				a_target.set_external_ressources (new_target.internal_external_ressource)
 				a_target.set_external_make (new_target.internal_external_make)
+				a_target.set_pre_compile (new_target.internal_pre_compile_action)
+				a_target.set_post_compile (new_target.internal_post_compile_action)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then

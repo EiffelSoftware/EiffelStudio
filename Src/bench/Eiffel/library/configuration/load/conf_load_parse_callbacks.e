@@ -1072,7 +1072,7 @@ feature {NONE} -- Implementation attribute processing
 				set_parse_error_message ("No value or excluded-value specified in build condition.")
 			elseif l_value /= Void then
 				l_build := get_build (l_value)
-				if valid_platform (l_build) then
+				if valid_build (l_build) then
 					current_condition.add_build (l_build)
 				else
 					set_parse_error_message ("Invalid build "+l_value+".")

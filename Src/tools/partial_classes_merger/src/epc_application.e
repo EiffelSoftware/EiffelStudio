@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 				if l_output_dir_name.item (l_output_dir_name.count) /= Directory_separator then
 					l_output_dir_name.append_character (Directory_separator)
 				end
+				keep := not l_parser.valid_options.has ("-d")
 				process_directories (l_dir_names, l_output_dir_name, l_parser.valid_options.has ("-r"))
 			else
 				print (l_parser.error_message)
@@ -90,9 +91,11 @@ feature -- Basic Operations
 					l_merger.merge (partial_classes_files.item_for_iteration)
 					if l_merger.successful then
 						save_class_text (l_merger.class_text, a_output_dir_name + Directory_separator.out + partial_classes_files.key_for_iteration.as_lower + ".e")
-						delete_files (partial_classes_files.item_for_iteration)
+						if not keep then
+							delete_files (partial_classes_files.item_for_iteration)
+						end
 					else
-						display_warning ("Could not merge class " + partial_classes_files.key_for_iteration)
+						display_warning ("Could not merge class " + partial_classes_files.key_for_iteration + ", the following error occurred: " + l_merger.error_message)
 					end
 					partial_classes_files.forth
 				end
@@ -210,7 +213,7 @@ feature {NONE} -- Implementation
 
 	class_name: STRING
 			-- Result of `parse'
-	
+
 	is_partial: BOOLEAN
 			-- Was last parsed class partial?
 
@@ -312,12 +315,16 @@ feature {NONE} -- Implementation
 						 "-h,--help#Help on using this program.",
 						 "-i,--input=DIRECTORIES!#Input directories to be parsed.",
 						 "-o,--output=OUTPUT!#Output directory.",
-						 "-r,--recursive#Recurse in subdirectories of input directories."
+						 "-r,--recursive#Recurse in subdirectories of input directories.",
+						 "-d,--delete#Delete partial classes."
 						>>
 		end
 
 	exe_name: STRING
 			-- Name of this executable
+
+	keep: BOOLEAN
+			-- Should partial classes not be deleted?
 
 	partial_classes_files: HASH_TABLE [ARRAYED_LIST [STRING], STRING];
 			-- List of file names making up Eiffel type from partial classes

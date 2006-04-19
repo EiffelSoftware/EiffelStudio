@@ -1,0 +1,5 @@
+This folder contains partial classes testing the various elements of classes being merged. To run the test, run the following command line:
+
+class_merger -i "%EIFFEL_SRC%\tools\partial_classes_merger\tests" -o "%EIFFEL_SRC%\tools\partial_classes_merger\res" -r
+
+The results will be stored in the 'res' folder.

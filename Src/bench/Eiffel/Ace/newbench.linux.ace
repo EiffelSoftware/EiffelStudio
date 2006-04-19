@@ -110,7 +110,7 @@ cluster
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
-			"table"; ".svn"; 
+			"table"; ".svn";
 		end
 
 	table_eiffel_3:		"$EIFFEL_SRC/library/obsolete/base/table_eiffel3"
@@ -119,24 +119,24 @@ cluster
 
 	all vision:		"$EIFFEL_SRC/library/vision2"
 		exclude
-			".svn"; "mswin"; "obsolete"; "gtk2"; 
+			".svn"; "mswin"; "obsolete"; "gtk2";
 		end
 
 	all net:		"$EIFFEL_SRC/library/net"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all time:		"$EIFFEL_SRC/library/time"
 		exclude
-			".svn"; "french"; "german"; 
+			".svn"; "french"; "german";
 		end
 
 	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
 
 	all editor:		"$EIFFEL_SRC/library/editor"
 		exclude
-			".svn"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
+			".svn"; "eiffel"; "text_formatter.e"; "structured_text.e";
 		end
 
 	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
@@ -152,27 +152,22 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			".svn"; "hact"; "se"; "ve"; "base"; "other"; "free_elks"; 
+			".svn"; "hact"; "se"; "ve"; "base"; "other"; "free_elks";
 		end
 
 	all case:		"$EIFFEL_SRC/Eiffel/case"
 		exclude
-			".svn"; 
-		end
-
-	all lace:		"$EIFFEL_SRC/Eiffel/lace"
-		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			".svn"; "com_il_generation"; "kernel"; "windows"; 
+			".svn"; "com_il_generation"; "kernel"; "windows";
 		end
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	switch:		"$EIFFEL_SRC/Eiffel/switch"
@@ -185,7 +180,7 @@ cluster
 
 	all status (communications):		"$/status"
 		exclude
-			".svn"; "dotnet"; 
+			".svn"; "dotnet";
 		end
 
 	ipc (communications):		"$/ipc"
@@ -198,27 +193,27 @@ cluster
 
 	all lex:		"$EIFFEL_SRC/library/lex"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude
-			".svn"; "graphical"; "win32"; "mswin"; "tty"; "Not_in_System"; "registry"; "preferences"; "dotnet"; 
+			".svn"; "graphical"; "win32"; "mswin"; "tty"; "Not_in_System"; "registry"; "preferences"; "dotnet";
 		end
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			".svn"; "registry_implementation"; 
+			".svn"; "registry_implementation";
 		end
 
 	all tty (interface):		"$/tty"
 		exclude
-			".svn"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
+			".svn"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e";
 		end
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 		exclude
-			"md_strong_name.e"; "md_public_key.e"; 
+			"md_strong_name.e"; "md_public_key.e";
 		end
 
 	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
@@ -227,51 +222,51 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC/dotnet/consumer/components"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all eac_serialization:		"$EIFFEL_SRC/dotnet/consumer/serialization"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	eac_documentation:		"$EIFFEL_SRC/dotnet/eac_browser/src/deserialization/assembly_informations"
 
 	all graph:		"$EIFFEL_SRC/library/graph"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all memory_analyzer:		"$EIFFEL_SRC/library/memory_analyzer"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all process:		"$EIFFEL_SRC/library/process"
 		exclude
-			".svn"; "dotnet"; "windows"; 
+			".svn"; "dotnet"; "windows";
 		end
 
 	all vision2_extension:		"$EIFFEL_SRC/library/vision2_extension/independent"
 		exclude
-			".svn"; "mswin"; 
+			".svn"; "mswin";
 		end
 
 	all thread:		"$EIFFEL_SRC/library/thread"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all diff:		"$EIFFEL_SRC/library/diff"
 		exclude
-			".svn"; 
+			".svn";
 		end
 
 	all uuid:		"$EIFFEL_SRC/library/uuid"
 		exclude
-			".svn"; 
+			".svn";
 		end
-	
+
 	all configuration:	"$EIFFEL_SRC/Eiffel/library/configuration"
 		exclude
 			".svn";
@@ -279,7 +274,7 @@ cluster
 
 	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
 		exclude
-			".svn"; "EIFGEN"; 
+			".svn"; "EIFGEN";
 		end
 
 external

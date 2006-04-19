@@ -112,11 +112,6 @@ cluster
 			".svn";
 		end
 
-	all lace:		"$EIFFEL_SRC/Eiffel/lace"
-		exclude
-			".svn";
-		end
-
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
 			".svn"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows";

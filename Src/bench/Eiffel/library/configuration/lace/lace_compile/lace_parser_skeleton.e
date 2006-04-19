@@ -27,9 +27,6 @@ inherit
 			reset
 		end
 
-	SHARED_PARSER_FILE_BUFFER
-		export {NONE} all end
-
 	LACE_AST_FACTORY
 		export {NONE} all end
 
@@ -209,6 +206,15 @@ feature {NONE} -- Keywords
 			yes_keyword_not_void: Result /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	File_buffer: YY_FILE_BUFFER is
+			-- Parser input file buffer
+		once
+			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+		ensure
+			file_buffer_not_void: Result /= Void
+		end
 
 feature {NONE} -- Error handling
 

@@ -45,14 +45,14 @@ feature -- Parsing
 
 feature -- Shared once
 
-	last_syntax_error: SYNTAX_ERROR is
+	last_syntax_error: STRING is
 			-- Last syntax error generated after calling
 			-- routine `parse_ast'
 		do
 			Result := last_syntax_cell.item
 		end
 
-	set_last_syntax_error (s: SYNTAX_ERROR) is
+	set_last_syntax_error (s: STRING) is
 			-- Put the last syntax error in last_syntax_error
 		do
 			last_syntax_cell.put (s)
@@ -60,7 +60,7 @@ feature -- Shared once
 
 feature {NONE} -- Implementation
 
-	last_syntax_cell: CELL [SYNTAX_ERROR] is
+	last_syntax_cell: CELL [STRING] is
 			-- Stored value of last generated syntax error generated calling
 			-- routine `parse_ast'
 		once

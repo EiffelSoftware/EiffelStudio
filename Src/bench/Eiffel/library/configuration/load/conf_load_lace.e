@@ -69,7 +69,7 @@ feature -- Basic operation
 			l_ast ?= l_parser.ast
 			if l_ast = Void then
 				if l_parser.last_syntax_error /= Void then
-					set_error (create {CONF_ERROR_PARSE}.make (l_parser.last_syntax_error.syntax_message))
+					set_error (create {CONF_ERROR_PARSE}.make (l_parser.last_syntax_error))
 				else
 					set_error (create {CONF_ERROR_PARSE})
 				end

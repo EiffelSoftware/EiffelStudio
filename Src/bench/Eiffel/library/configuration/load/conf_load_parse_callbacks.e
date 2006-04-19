@@ -744,7 +744,7 @@ feature {NONE} -- Implementation attribute processing
 				set_parse_error_message ("Invalid cluster tag '"+l_name+"' without a location.")
 			end
 		ensure
-			cluster_and_group: current_cluster /= Void and current_group /= Void
+			cluster_and_group: not is_error implies current_cluster /= Void and current_group /= Void
 		end
 
 	process_override_attributes is

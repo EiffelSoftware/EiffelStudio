@@ -214,7 +214,6 @@
 			<cluster name="profile_tool" location="$|graphical\profile_tool\"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
-		<cluster name="lace" location="$EIFFEL_SRC\Eiffel\lace\" recursive="true"/>
 		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGEN$</exclude>
@@ -395,7 +394,6 @@
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk" recursive="true"/>
 		<cluster name="eiffel_support" location="$EIFFEL_SRC\Eiffel\support" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
-		<cluster name="lace" location="$EIFFEL_SRC\Eiffel\lace\" recursive="true"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<if platform="windows"/>

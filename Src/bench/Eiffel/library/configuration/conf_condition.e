@@ -174,7 +174,7 @@ feature -- Update
 	wipe_out_custom is
 			-- Wipe out custom.
 		do
-			custom.wipe_out
+			custom.clear_all
 		ensure
 			custom_empty: custom.is_empty
 		end

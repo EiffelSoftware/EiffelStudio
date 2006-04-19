@@ -996,9 +996,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
 end -- class MANAGED_POINTER

@@ -861,6 +861,7 @@ feature {NONE} -- Implementation
 		do
 			Result := a_path.twin
 			Result.prepend_character ('^')
+			Result.append_character ('$')
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -508,16 +508,18 @@ feature {NONE} -- Implementation
 			create Result.make_empty
 			if data.is_assembly then
 				l_as := data.actual_assembly
-				Result.append (l_as.assembly_name)
-				if not path.is_empty then
-					l_tmp := path.twin
-					l_tmp.replace_substring_all ("/", ".")
-					Result.append (l_tmp)
+				if l_as.classes_set then
+					Result.append (l_as.assembly_name)
+					if not path.is_empty then
+						l_tmp := path.twin
+						l_tmp.replace_substring_all ("/", ".")
+						Result.append (l_tmp)
+					end
+					Result.append ("%N")
+					Result.append (l_as.assembly_culture+"%N")
+					Result.append (l_as.assembly_version+"%N")
+					Result.append (l_as.assembly_public_key_token+"%N")
 				end
-				Result.append ("%N")
-				Result.append (l_as.assembly_culture+"%N")
-				Result.append (l_as.assembly_version+"%N")
-				Result.append (l_as.assembly_public_key_token+"%N")
 				Result.append (data.actual_group.location.evaluated_path)
 			elseif data.is_library then
 				l_lib := data.actual_library

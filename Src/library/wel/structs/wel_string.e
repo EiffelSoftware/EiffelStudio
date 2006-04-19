@@ -198,9 +198,15 @@ feature -- Access
 feature -- Measurement
 
 	capacity: INTEGER is
-			-- Number of characters in Current.
+			-- Number of bytes in Current.
 		do
 			Result := managed_data.count
+		end
+
+	character_capacity: INTEGER is
+			-- Number of characters in Current.
+		do
+			Result := managed_data.count // character_size
 		end
 
 	bytes_count: INTEGER is

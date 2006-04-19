@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			set_mask (Lvif_text)
 		end
 
-	make_with_attributes (a_mask, a_iitem, a_isubitem, an_iimage: INTEGER; 
+	make_with_attributes (a_mask, a_iitem, a_isubitem, an_iimage: INTEGER;
 				a_text: STRING_GENERAL) is
 		do
 			structure_make
@@ -67,13 +67,13 @@ feature -- Access
 		end
 
 	iitem: INTEGER is
-			-- Index of the row of the item. 
+			-- Index of the row of the item.
 		do
 			Result := cwel_lv_item_get_iitem (item)
 		end
 
 	isubitem: INTEGER is
-			-- Index of the item in his row. 0 if it is an item and not a 
+			-- Index of the item in his row. 0 if it is an item and not a
 			-- subitem.
 		do
 			Result := cwel_lv_item_get_isubitem (item)
@@ -168,7 +168,7 @@ feature -- Element change
 		ensure
 			text_set: text.is_equal (a_text)
 		end
-		
+
 	set_text_with_wel_string (a_text: WEL_STRING) is
 			-- Set `text' directly with `a_text'.
 			-- Faster than calling `set_text' as string conversion
@@ -178,7 +178,7 @@ feature -- Element change
 		do
 			str_text := a_text
 			cwel_lv_item_set_psztext (item, a_text.item)
-			cwel_lv_item_set_cchtextmax (item, a_text.capacity)
+			cwel_lv_item_set_cchtextmax (item, a_text.character_capacity)
 		end
 
 	set_image (image_normal: INTEGER) is

@@ -13,7 +13,7 @@ inherit
 		redefine
 			copy, is_equal
 		end
-		
+
 create
 	make,
 	make_from_managed_pointer
@@ -37,7 +37,7 @@ feature -- Initialization
 		ensure
 			data_set: data = a_data
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -51,11 +51,11 @@ feature -- Access
 	element alias "[]", infix "@" (i: INTEGER): CHARACTER assign put_element is
 			-- Entry at index `i'.
 		require
-			valid_position: valid_position (i)			
+			valid_position: valid_position (i)
 		do
-			Result := data.read_integer_8 (i).to_character
+			Result := data.read_integer_8 (i).to_character_8
 		end
-		
+
 feature -- Status report
 
 	valid_position (i: INTEGER): BOOLEAN is
@@ -63,7 +63,7 @@ feature -- Status report
 		do
 			Result := (0 <= i) and then (i < count)
 		end
-		
+
 feature -- Element change
 
 	put_element (v: CHARACTER; i: INTEGER) is
@@ -100,7 +100,7 @@ feature -- Storage
 
 	data: MANAGED_POINTER
 			-- Place holder
-			
+
 invariant
 	data_not_equal_void: data /= Void
 

@@ -1,15 +1,12 @@
 indexing
-	description: "[
-		Error when an assembly refers to another assembly which is not
-		listed in the Ace file.
-		]"
+	description: "Error that a pre or post compile action could not be executed successfully."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision $"
 
 class
-	VD60
+	VD84
 
 inherit
 	LACE_ERROR
@@ -22,42 +19,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_assembly: like assembly; a_referred_assembly: like referred_assembly) is
-			-- Create VD60 error using data from `an_assembly' and `a_referred_assembly'.
+	make (a_command: STRING) is
+			-- Create.
 		require
-			an_assembly_not_void: an_assembly /= Void
-			a_referred_assembly_not_void: a_referred_assembly /= Void
+			a_command_not_void: a_command /= Void
 		do
-			assembly := an_assembly
-			referred_assembly := a_referred_assembly
-		ensure
-			assembly_set: assembly = an_assembly
-			referred_assembly_set: referred_assembly = a_referred_assembly
+			command := a_command
 		end
 
-feature {NONE} -- Properties
+feature -- Properties
 
-	assembly: ASSEMBLY_I
-			-- Assembly which refer to `referred_assembly' which is unknown.
-
-	referred_assembly: CONSUMED_ASSEMBLY
-			-- Referred assembly from `assembly' that is unknown in system.
+	command: STRING;
+			-- Command.
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add ("Assembly: ")
-			a_text_formatter.add (assembly.cluster_name)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Referred assembly: ")
-			a_text_formatter.add (referred_assembly.out)
-			a_text_formatter.add_new_line
-		end
-
-invariant
-	assembly_not_void: assembly /= Void
-	referred_assembly_not_void: referred_assembly /= Void
+			st.add_string ("Action could not be executed successfully: ");
+			st.add_string (command);
+			st.add_new_line;
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -91,4 +73,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VD60
+end

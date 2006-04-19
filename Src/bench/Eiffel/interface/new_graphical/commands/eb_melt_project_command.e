@@ -60,7 +60,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_FLAGS
+	SHARED_FLAGS
 
 create
 	make

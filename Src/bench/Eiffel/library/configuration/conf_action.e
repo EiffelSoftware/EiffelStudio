@@ -16,14 +16,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: STRING) is
+	make (a_command: like command; a_must_succeed: like must_succeed; a_working_directory: like working_directory) is
 			-- Create with `a_command'.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
+			a_working_directory_ok: a_working_directory /= Void
 		do
 			command := a_command
+			must_succeed := a_must_succeed
+			working_directory := a_working_directory
 		ensure
 			command_set: command = a_command
+			must_succeed_set: must_succeed = a_must_succeed
+			working_directory_set: working_directory = a_working_directory
 		end
 
 
@@ -31,6 +36,12 @@ feature -- Access, stored in configuration file
 
 	command: STRING
 			-- The command to execute.
+
+	working_directory: CONF_LOCATION
+			-- Working directory to execute action.
+
+	must_succeed: BOOLEAN
+			-- Does the command have to be successful to continue?
 
 	description: STRING
 			-- A description about the command.
@@ -47,6 +58,32 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			command_set: command = a_command
 		end
 
+	set_working_directory (a_directory: like working_directory) is
+			-- Set `working_directory' to `a_directory'.
+		require
+			a_directory_not_void: a_directory /= Void
+		do
+			working_directory := a_directory
+		ensure
+			working_directory_set: working_directory = a_directory
+		end
+
+	enable_must_succeed is
+			-- Command has to succeed.
+		do
+			must_succeed := True
+		ensure
+			must_succeed: must_succeed
+		end
+
+	disable_must_succeed is
+			-- Command doesn't have to succeed.
+		do
+			must_succeed := False
+		ensure
+			must_succeed: not must_succeed
+		end
+
 	set_description (a_description: like description) is
 			-- Set `description' to `a_description'.
 		do
@@ -57,6 +94,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 invariant
 	command_ok: command /= Void and then not command.is_empty
+	working_directory_ok: working_directory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

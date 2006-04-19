@@ -339,7 +339,43 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	pre_compile_action: ARRAYED_LIST [CONF_ACTION] is
+	all_pre_compile_action: like internal_pre_compile_action is
+			-- All actions to be executed before compilation including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.pre_compile_action)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_post_compile_action: like internal_post_compile_action is
+			-- All actions to be executed after compilation including the ones from libraries.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.post_compile_action)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	pre_compile_action: like internal_pre_compile_action is
 			-- Actions to be executed before compilation.
 		do
 			if internal_pre_compile_action /= Void then
@@ -353,7 +389,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	post_compile_action: ARRAYED_LIST [CONF_ACTION] is
+	post_compile_action: like internal_post_compile_action is
 			-- Actions to be executed after compilation.
 		do
 			if internal_post_compile_action /= Void then

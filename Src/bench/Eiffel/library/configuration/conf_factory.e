@@ -135,10 +135,10 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_action (a_command: STRING): CONF_ACTION is
+	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_LOCATION): CONF_ACTION is
 			-- Create a `CONF_ACTION' object.
 		do
-			create Result.make (a_command)
+			create Result.make (a_command, a_must_succeed, a_working_directory)
 		ensure
 			Result_not_void: Result /= Void
 		end

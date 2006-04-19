@@ -552,19 +552,28 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_command: STRING
+			l_command, l_succeed, l_wd: STRING
 		do
 			l_command := current_attributes.item (at_command)
+			l_succeed := current_attributes.item (at_succeed)
+			l_wd := current_attributes.item (at_working_directory)
+			if l_wd = Void then
+				create l_wd.make_empty
+			end
 			if l_command /= Void then
-				current_action :=  factory.new_action (l_command)
-				inspect
-					current_tag.item
-				when t_pre_compile_action then
-					current_target.add_pre_compile (current_action)
-				when t_post_compile_action then
-					current_target.add_post_compile (current_action)
+				if l_succeed.is_boolean then
+					current_action :=  factory.new_action (l_command, l_succeed.to_boolean, factory.new_location_from_path (l_wd, current_target))
+					inspect
+						current_tag.item
+					when t_pre_compile_action then
+						current_target.add_pre_compile (current_action)
+					when t_post_compile_action then
+						current_target.add_post_compile (current_action)
+					else
+						set_parse_error_message ("Invalid action tag.")
+					end
 				else
-					set_parse_error_message ("Invalid action tag.")
+					set_parse_error_message ("Non boolean value for succeed attribute.")
 				end
 			else
 				set_parse_error_message ("Invalid action tag.")
@@ -1463,8 +1472,12 @@ feature {NONE} -- Implementation state transitions
 
 				-- (pre|post)_compile_action
 				-- * command
-			create l_attr.make (1)
+				-- * working_directory
+				-- * succeed
+			create l_attr.make (2)
 			l_attr.force (at_command, "command")
+			l_attr.force (at_working_directory, "working_directory")
+			l_attr.force (at_succeed, "succeed")
 			Result.force (l_attr, t_pre_compile_action)
 			Result.force (l_attr, t_post_compile_action)
 
@@ -1674,7 +1687,9 @@ feature {NONE} -- Implementation constants
 	at_platform,
 	at_old_name,
 	at_new_name,
-	at_group: INTEGER is unique
+	at_group,
+	at_succeed,
+	at_working_directory: INTEGER is unique
 
 feature -- Assertions
 

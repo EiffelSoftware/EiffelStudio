@@ -45,7 +45,7 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	EB_SHARED_FLAGS
+	SHARED_FLAGS
 
 create
 	make

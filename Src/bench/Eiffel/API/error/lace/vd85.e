@@ -1,67 +1,45 @@
 indexing
-	description: "[
-		Error when XML representation of a class that belongs to an assembly
-		is missing from the Eiffel assembly cache.
-		]"
+	description: "Warning that a pre or post compile action could not be executed successfully."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VD62
+	VD85
 
 inherit
-	LACE_ERROR
+	LACE_WARNING
 		redefine
 			build_explain
-		end
+		end;
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_assembly: like assembly; a_class: like external_class) is
-			-- Create VD62 error using data from `an_assembly'.
+	make (a_command: STRING) is
+			-- Create.
 		require
-			an_assembly_not_void: an_assembly /= Void
-			a_class_not_void: a_class /= Void
+			a_command_not_void: a_command /= Void
 		do
-			assembly := an_assembly
-			external_class := a_class	
-		ensure
-			assembly_set: assembly = an_assembly
-			external_class_set: external_class = a_class
+			command := a_command
 		end
 
-feature {NONE} -- Properties
+feature -- Properties
 
-	assembly: ASSEMBLY_I
-			-- Assembly which refer to `referred_assembly' which is unknown.
-
-	external_class: EXTERNAL_CLASS_I
-			-- External class whose XML file representation is missing.
+	command: STRING;
+			-- Command.
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add ("Assembly cluster name: ")
-			a_text_formatter.add (assembly.cluster_name)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Assembly details: %"")
-			assembly.format (a_text_formatter)
-			a_text_formatter.add ("%"")
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Missing file: ")
-			a_text_formatter.add (external_class.file_name)
-			a_text_formatter.add_new_line
-		end
-
-invariant
-	assembly_not_void: assembly /= Void
-	external_class_not_void: external_class /= Void
+			st.add_string ("Action could not be executed successfully: ");
+			st.add_string (command);
+			st.add_new_line;
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -95,4 +73,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VD62
+end

@@ -15,6 +15,8 @@ inherit
 
 	SHARED_RESCUE_STATUS
 
+	SHARED_FLAGS
+
 	SHARED_DEGREES
 
 	SHARED_COMPILATION_MODES
@@ -213,12 +215,53 @@ feature -- Initialization
 
 feature -- Commands
 
+	process_actions (an_actions: ARRAYED_LIST [CONF_ACTION]) is
+			-- Process pre/post compilation actions.
+		require
+			an_actions_not_void: an_actions /= Void
+		local
+			l_action: CONF_ACTION
+			vd84: VD84
+			vd85: VD85
+			l_prc_factory:  PROCESS_FACTORY
+			l_prc_launcher: PROCESS
+			l_success: BOOLEAN
+		do
+			create l_prc_factory
+			from
+				an_actions.start
+			until
+				an_actions.after
+			loop
+				l_action := an_actions.item
+				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_action.working_directory.evaluated_directory)
+				l_prc_launcher.set_separate_console (is_gui)
+				l_prc_launcher.launch
+				if l_prc_launcher.launched then
+					l_prc_launcher.wait_for_exit
+					l_success := l_prc_launcher.exit_code = 0
+				end
+				if not l_success then
+					if l_action.must_succeed then
+						create vd84.make (l_action.command)
+						error_handler.insert_error (vd84)
+						error_handler.checksum
+					else
+						create vd85.make (l_action.command)
+						error_handler.insert_warning (vd85)
+					end
+				end
+				an_actions.forth
+			end
+		end
+
 	recompile is
 			-- Incremental recompilation
 		local
 			retried: INTEGER
 			missing_class_error: BOOLEAN
 			degree_6_done: BOOLEAN
+			l_pre_actions_done: BOOLEAN
 		do
 			start_compilation
 				-- We perform a degree 6 only when it is the first the compilation or
@@ -239,6 +282,11 @@ feature -- Commands
 				end
 
 				if Lace.successful then
+					if not l_pre_actions_done then
+						process_actions (universe.new_target.all_pre_compile_action)
+						l_pre_actions_done := True
+					end
+
 					System.set_rebuild (False)
 					if Lace.has_changed then
 						System.set_config_changed (True)
@@ -258,6 +306,8 @@ feature -- Commands
 						system.set_rebuild (True)
 					end
 					System.recompile
+
+					process_actions (universe.new_target.all_post_compile_action)
 				else
 					if not Error_handler.error_list.is_empty then
 						Error_handler.raise_error
@@ -343,16 +393,6 @@ feature -- Commands
 			else
 				stop_compilation
 			end
-		end
-
-	recompile_no_degree_6 is
-			-- Perform an incremental recompilation without performing a degree 6.
-		do
-			forbid_degree_6 := True
-			recompile
-			forbid_degree_6 := False
-		rescue
-			forbid_degree_6 := False
 		end
 
 	save_project (was_precompiling: BOOLEAN) is

@@ -14,7 +14,7 @@ inherit
 
 	EB_SHARED_MANAGERS
 
-	EB_SHARED_FLAGS
+	SHARED_FLAGS
 
 feature -- Command Execution
 

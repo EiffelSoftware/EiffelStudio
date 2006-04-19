@@ -268,6 +268,8 @@ feature -- Status setting
 				print (d2.relative_duration (d1).fine_seconds_count)
 				print ("%N")
 			end
+		ensure
+			new_target_set: successful implies universe.new_target /= Void
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'

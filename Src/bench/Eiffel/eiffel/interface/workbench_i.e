@@ -234,7 +234,7 @@ feature -- Commands
 				an_actions.after
 			loop
 				l_action := an_actions.item
-				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_action.working_directory.evaluated_directory)
+				l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_action.command, l_action.working_directory.evaluated_path)
 				l_prc_launcher.set_separate_console (is_gui)
 				l_prc_launcher.launch
 				if l_prc_launcher.launched then

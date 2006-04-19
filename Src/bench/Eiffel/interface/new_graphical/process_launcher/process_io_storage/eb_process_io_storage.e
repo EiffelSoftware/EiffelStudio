@@ -17,7 +17,7 @@ feature{NONE}  -- Initialization
 			-- Initialize.
 		do
 			create data_list.make
-			create mutex
+			create mutex.make
 			capacity := initial_capacity
 			count := 0
 		ensure
@@ -213,7 +213,7 @@ invariant
 	data_list_not_null: data_list /= Void
 	mutex_not_null: mutex /= Void
 	count_not_larger_than_capacity: count <= capacity
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

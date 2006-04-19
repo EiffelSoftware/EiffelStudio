@@ -577,13 +577,13 @@ feature {NONE} -- Execution
 	process_cluster_callback (pos: INTEGER) is
 			-- The choice `pos' has been selected, process the choice.
 		require
-			looking_for_a_cluster: cluster_list /= Void
+			looking_for_a_cluster: group_list /= Void
 		do
 			if pos /= 0 then
-				current_cluster := cluster_list.i_th (pos)
-				cluster_address.set_text (current_cluster.cluster_name.twin)
+				current_group := group_list.i_th (pos)
+				cluster_address.set_text (current_group.name.twin)
 			end
-			cluster_list := Void
+			group_list := Void
 			process_cluster
 		end
 
@@ -624,7 +624,7 @@ feature {NONE} -- Execution
 	process_cluster is
 			-- Finish processing the cluster after the user chose it.
 		do
-			if current_cluster = Void then
+			if current_group = Void then
 				if output_line /= Void then
 					output_line.set_text (Warning_messages.w_No_cluster_matches)
 				else
@@ -640,7 +640,7 @@ feature {NONE} -- Execution
 				if output_line /= Void then
 					output_line.remove_text
 				end
-				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_cluster))
+				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_group))
 			end
 		end
 
@@ -793,8 +793,8 @@ feature {NONE} -- Implementation
 	current_feature: E_FEATURE
 			-- Current selected feature.
 
-	current_cluster: CLUSTER_I
-			-- Current selected cluster.
+	current_group: CONF_GROUP
+			-- Current selected group.
 
 	choosing_class: BOOLEAN
 			-- Do we want a feature or a class?
@@ -805,8 +805,8 @@ feature {NONE} -- Implementation
 	class_list: LIST [CLASS_I]
 			-- List of classes displayed in `choice'.
 
-	cluster_list: LIST [CLUSTER_I]
-			-- List of clusters displayed in `choice'.
+	group_list: LIST [CONF_GROUP]
+			-- List of groups displayed in `choice'.
 
 	feature_list: LIST [E_FEATURE]
 			-- List of features of current class, if any.
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 		end
 
 	choice: EB_CHOICE_DIALOG
-			-- Dialog that gives the user the choice between possible classes, clusters or features.
+			-- Dialog that gives the user the choice between possible classes, groups or features.
 			-- It may be Void, destroyed, anything, so use with care.
 
 	drop_class (cst: CLASSI_STONE) is
@@ -840,27 +840,27 @@ feature {NONE} -- Implementation
 		end
 
 	display_cluster_choice is
-				-- Display cluster names from `cluster_list' to `choice'.
+				-- Display cluster names from `group_list' to `choice'.
 		require
-			cluster_list_not_void: cluster_list /= Void
+			group_list_not_void: group_list /= Void
 		local
 			cluster_names: ARRAYED_LIST [STRING]
 			cluster_pixmaps: ARRAYED_LIST [EV_PIXMAP]
-			clusteri: CLUSTER_I
+			clusteri: CONF_GROUP
 			cname: STRING
 		do
-			create cluster_names.make (cluster_list.count)
-			create cluster_pixmaps.make (cluster_list.count)
+			create cluster_names.make (group_list.count)
+			create cluster_pixmaps.make (group_list.count)
 			from
-				cluster_list.start
+				group_list.start
 			until
-				cluster_list.after
+				group_list.after
 			loop
-				clusteri := cluster_list.item
-				cname := clusteri.cluster_name.twin
+				clusteri := group_list.item
+				cname := clusteri.name.twin
 				cluster_names.extend (cname)
 				cluster_pixmaps.extend (pixmap_from_group (clusteri))
-				cluster_list.forth
+				group_list.forth
 			end
 			if not cluster_names.is_empty then
 				if output_line /= Void then
@@ -989,47 +989,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_cluster_from_name (a_cluster_name: STRING): CLUSTER_I is
-			-- Get the CLUSTER_I corresponding named `a_cluster_name'.
-		do
-			Result := Universe.cluster_of_name (a_cluster_name)
-		end
-
---	get_classi_from_name (a_class_name: STRING): CLASS_I is
-			-- Get the CLASS_I corresponding to the class named `a_class_name'.
---		local
---			loc_list: LINKED_LIST [CLASS_I]
---		do
---			loc_list := Universe.classes_with_name (class_name)
-
-				-- Return the first element of the list.
---			if loc_list /= Void and then not loc_list.is_empty then
---				Result := loc_list.first
---			end
---		end
-
-	change_format is
-			-- Change the display format: a new one has been selected.
-		obsolete
-			"Do not use"
-		do
---			set_format_name (format_selector.text)
-		end
-
 	give_parent_widget_focus: BOOLEAN
 			-- Should editor get focus after selection chahnce in choice?
 
 feature {NONE} -- open new class
 
 	extract_cluster_from_user_entry is
-			-- Process the user entry in `cluster_address' to generate `current_cluster'.
+			-- Process the user entry in `cluster_address' to generate `current_group'.
 		local
 			fname: STRING
-			cl: ARRAYED_LIST [CLUSTER_I]
+			cl: ARRAYED_LIST [CONF_GROUP]
 			matcher: KMP_WILD
-			matching: SORTED_TWO_WAY_LIST [CLUSTER_I]
+			matching: SORTED_TWO_WAY_LIST [CONF_GROUP]
 		do
-			current_cluster := Void
+			current_group := Void
 			fname := cluster_address.text
 			if fname /= Void then
 				fname.left_adjust
@@ -1042,36 +1015,26 @@ feature {NONE} -- open new class
 				create matcher.make_empty
 				matcher.set_pattern (fname)
 				if not matcher.has_wild_cards then
-					current_cluster := get_cluster_from_name (fname)
+					current_group := Universe.cluster_of_name (fname)
 					process_cluster
 				else
 					from
-						conf_todo
---						cl := Universe.clusters
+						cl := Universe.groups
 						cl.start
 						create matching.make
 					until
 						cl.after
 					loop
-						matcher.set_text (cl.item.cluster_name)
+						matcher.set_text (cl.item.name)
 						if matcher.pattern_matches then
 							matching.extend (cl.item)
 						end
 						cl.forth
 					end
 					matching.sort
-					cluster_list := matching
+					group_list := matching
 					display_cluster_choice
 				end
---				if current_cluster = Void then
---						-- Cluster does not exist, create it (?).
---					if cluster_address.is_displayed then
---						cluster_address.set_focus
---					end
-----| FIXME XR: propose to create a new cluster named fname (?).
---				else
---					launch_cluster
---				end
 			end
 		end
 
@@ -1079,14 +1042,13 @@ feature {NONE} -- open new class
 			-- process the user entry
 		local
 			cname: STRING
-			clusters: ARRAYED_LIST [CLUSTER_I]
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I]
 			at_pos: INTEGER
 			cluster: CLUSTER_I
 			cluster_name: STRING
 			matcher: KMP_WILD
-			classes: HASH_TABLE [CLASS_I, STRING]
 			wd: EV_WARNING_DIALOG
+			l_classes: DS_HASH_SET [CLASS_I]
 		do
 			class_i := Void
 			cname := class_address.text
@@ -1115,8 +1077,6 @@ feature {NONE} -- open new class
 						class_list := Universe.classes_with_name (cname)
 						if class_list.is_empty then
 							class_list := Void
---							create new_class_win.make_default (parent)
---							new_class_win.call (cname)
 							if choosing_class then
 								process_class
 							else
@@ -1124,8 +1084,6 @@ feature {NONE} -- open new class
 							end
 						elseif class_list.count = 1 then
 							class_i := class_list.first
---							process
---							class_list := Void
 							if choosing_class then
 								process_class
 							else
@@ -1161,25 +1119,16 @@ feature {NONE} -- open new class
 				else
 					from
 						create sorted_classes.make
-						conf_todo
---						clusters := Universe.clusters
-						clusters.start
+						l_classes := universe.all_classes
+						l_classes.start
 					until
-						clusters.after
+						l_classes.after
 					loop
-						from
-							classes := clusters.item.classes
-							classes.start
-						until
-							classes.after
-						loop
-							matcher.set_text (classes.key_for_iteration)
-							if matcher.pattern_matches then
-								sorted_classes.put_front (classes.item_for_iteration)
-							end
-							classes.forth
+						matcher.set_text (l_classes.item_for_iteration.name)
+						if matcher.pattern_matches then
+							sorted_classes.put_front (l_classes.item_for_iteration)
 						end
-						clusters.forth
+						l_classes.forth
 					end
 					sorted_classes.sort
 					class_list := sorted_classes
@@ -1648,7 +1597,7 @@ feature {NONE} -- open new class
 			str: STRING
 			nb, minc: INTEGER
 			j: INTEGER
-			list: ARRAYED_LIST [CLUSTER_I]
+			list: ARRAYED_LIST [CONF_GROUP]
 			current_found: STRING
 			cname: STRING
 			do_not_complete: BOOLEAN
@@ -1675,15 +1624,14 @@ feature {NONE} -- open new class
 				end
 
 				if not do_not_complete and nb > 0 then
-					conf_todo
---					list := Universe.clusters
+					list := universe.groups
 					from
 						str_area := str.area
 						list.start
 					until
 						list.after
 					loop
-						cname := list.item.cluster_name
+						cname := list.item.name
 						other_area := cname.area
 							-- We first check that other_area and str_area have the same start.
 						if other_area.count >= nb then
@@ -1866,8 +1814,6 @@ feature {NONE} -- open new class
 	current_class: CLASS_C is
 			-- Currently examined class_c.
 			-- Either what the user typed in `class_address' or manager's stone.
-		local
---			st: CLASSC_STONE
 		do
 			if class_i /= Void then
 				if class_i.compiled then
@@ -1875,21 +1821,16 @@ feature {NONE} -- open new class
 				else
 					Result := Void
 				end
---			else
---				st ?= parent.stone
---				if st /= Void then
---					Result := st.e_class
---				end
 			end
 		end
 
 	launch_cluster is
-			-- Send a stone representing `current_cluster' to `parent'.
+			-- Send a stone representing `current_group' to `parent'.
 		require
-			cluster_selected: current_cluster /= Void
+			cluster_selected: current_group /= Void
 		do
-			if current_cluster /= Void then
-				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_cluster))
+			if current_group /= Void then
+				parent.advanced_set_stone (create {CLUSTER_STONE}.make (current_group))
 			end
 		end
 

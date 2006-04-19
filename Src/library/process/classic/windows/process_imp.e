@@ -362,7 +362,7 @@ feature{NONE} -- Implementation
 			-- Start listening threads.
 		do
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
-				create input_mutex.default_create
+				create input_mutex.make
 				create input_file_handle
 				create input_buffer.make (4096)
 				create in_thread.make (Current)

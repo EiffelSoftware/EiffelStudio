@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			process_launcher := prc_launcher
 			should_exit_signal:= False
 			sleep_time := initial_sleep_time
-			create mutex
+			create mutex.make
 		ensure
 			process_launched_set: prc_launcher = prc_launcher
 			should_exit_signal_set_to_false: not should_exit_signal

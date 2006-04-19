@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			interval_positive: a_sleep_time > 0
 		do
 			sleep_time := a_sleep_time
-			create mutex
+			create mutex.make
 			has_started := False
 		ensure
 			slee_time_set: sleep_time = a_sleep_time

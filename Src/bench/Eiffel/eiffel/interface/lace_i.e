@@ -478,7 +478,9 @@ feature {NONE} -- Implementation
 				-- else we can just update the options
 
 				-- changes in application configuration are handled specially so that we don't need to rebuild if we only change an option
-			l_old_target.system.set_file_date
+			if universe.conf_system /= Void then
+				universe.conf_system.set_file_date
+			end
 			has_group_changed := universe.conf_system = Void or l_old_target = Void or else l_old_target.date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
 			if has_group_changed then
 					-- check if a precompile was modified

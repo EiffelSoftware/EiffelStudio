@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class."
 	another: "blih blih"
 
-class
+partial class
 	INDEXING_CLAUSES_1
 
 feature

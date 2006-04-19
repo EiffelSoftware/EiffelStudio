@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class
+partial class
 	INHERITANCE_CLAUSES_2
 
 inherit

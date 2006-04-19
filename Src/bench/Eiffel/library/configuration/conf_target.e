@@ -48,6 +48,22 @@ feature {NONE} -- Initialization
 			system_set: system = a_system
 		end
 
+feature -- Status
+
+	date_has_changed: BOOLEAN is
+			-- Did the date on any configuration file used in this target change?
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			from
+				all_libraries.start
+			until
+				Result or all_libraries.after
+			loop
+				Result := all_libraries.item_for_iteration.system.date_has_changed
+				all_libraries.forth
+			end
+		end
 
 feature -- Access, stored in configuration file
 
@@ -334,6 +350,42 @@ feature -- Access queries
 			Result := internal_external_ressource.twin
 			if extends /= Void then
 				Result.append (extends.external_ressource)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_pre_compile_action: like internal_pre_compile_action is
+			-- All Aactions to be executed before compilation.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.pre_compile_action)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_post_compile_action: like internal_post_compile_action is
+			-- All Aactions to be executed after compilation.
+		require
+			all_libraries_set: all_libraries /= Void
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.post_compile_action)
+				all_libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void

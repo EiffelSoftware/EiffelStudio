@@ -220,7 +220,6 @@ feature -- Status setting
 			end
 		end
 
-
 	recompile is
 			-- Recompile config description
 		require
@@ -245,13 +244,12 @@ feature -- Status setting
 				Error_handler.raise_error
 			end
 
-				-- If last compilation was not successful, we have to trigger
-				-- the parse again even though the `date' on file did not change.
 			if
 				conf_system = Void or else
 				(universe.target = Void and universe.new_target = Void) or else
-				date_has_changed or else
-				not successful
+				date_has_changed or else not successful or else
+				(universe.target /= Void and then universe.target.date_has_changed) or else
+				(universe.new_target /= Void and then universe.new_target.date_has_changed)
 			then
 				has_changed := True
 				do_recompilation
@@ -476,11 +474,12 @@ feature {NONE} -- Implementation
 				-- set the old target
 			l_old_target := universe.target
 
-				-- set the new target
-			universe.set_new_target (l_new_target)
+				-- if groups in application configuration have changed or if any other configuration file has changed, we are not sure to be group equivalent anymore
+				-- else we can just update the options
 
-				-- check if target has changed, update target or options if necessary
-			has_group_changed := universe.conf_system = Void or l_old_target = Void or else not conf_system.is_group_equivalent (universe.conf_system)
+				-- changes in application configuration are handled specially so that we don't need to rebuild if we only change an option
+			l_old_target.system.set_file_date
+			has_group_changed := universe.conf_system = Void or l_old_target = Void or else l_old_target.date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
 			if has_group_changed then
 					-- check if a precompile was modified
 				if l_old_target /= Void then
@@ -503,6 +502,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd75)
 					Error_handler.raise_error
 				end
+				universe.set_conf_system (conf_system)
 			else
 					-- set the new options on the old target
 				create l_option_vis.make (l_new_target)
@@ -537,16 +537,63 @@ feature {NONE} -- Implementation
 				end
 				l_new_target := l_old_target
 			end
-			universe.set_conf_system (conf_system)
 
 			update_settings (l_new_target)
 
+				-- set the new target
+			universe.set_new_target (l_new_target)
+
+			if has_group_changed then
+				check libraries_not_set: l_new_target.all_libraries = Void end
+				parse_target (l_new_target)
+			end
+
 			successful := True
+		ensure
+			new_target_ok: universe.new_target /= Void and then
+					universe.new_target.all_libraries /= Void and universe.new_target.application_target /= Void
+			old_target_ok: universe.target = old universe.target and universe.target /= Void implies
+					universe.target.application_target /= Void and universe.target.all_libraries /= Void
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
 				successful := False
 			end
+		end
+
+	parse_target (a_target: CONF_TARGET) is
+			-- Parse `a_target' completely (incl. all libraries)
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_factory: CONF_COMP_FACTORY
+			l_parse_vis: CONF_PARSE_VISITOR
+			l_state: CONF_STATE
+			vd00: VD00
+			l_errors: LIST [CONF_ERROR]
+		do
+			create l_factory
+			create l_state.make (universe.platform, universe.build, system.has_multithreaded, a_target.variables)
+			create l_parse_vis.make_build (l_state, a_target, l_factory)
+			a_target.process (l_parse_vis)
+			if l_parse_vis.is_error then
+				is_error := True
+				from
+					l_errors := l_parse_vis.last_errors
+					l_errors.start
+				until
+					l_errors.after
+				loop
+					create vd00
+					vd00.set_error (l_errors.item)
+					error_handler.insert_error (vd00)
+					l_errors.forth
+				end
+				error_handler.raise_error
+			end
+		ensure
+			application_target_set: not is_error implies a_target.application_target /= Void
+			all_libraries_set: not is_error implies a_target.all_libraries /= Void
 		end
 
 	update_settings (a_target: CONF_TARGET) is

@@ -70,36 +70,34 @@ feature {NONE} -- Basic operation
 	get_platform (a_name: STRING): INTEGER is
 			-- Get the platform with `a_name', otherwise return 0.
 		do
-			if a_name = Void then
-				Result := 0
-			end
-			from
-				platform_names.start
-			until
-				Result /= 0 or platform_names.after
-			loop
-				if platform_names.item_for_iteration.is_case_insensitive_equal (a_name) then
-					Result := platform_names.key_for_iteration
+			if a_name /= Void then
+				from
+					platform_names.start
+				until
+					Result /= 0 or platform_names.after
+				loop
+					if platform_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+						Result := platform_names.key_for_iteration
+					end
+					platform_names.forth
 				end
-				platform_names.forth
 			end
 		end
 
 	get_build (a_name: STRING): INTEGER is
 			-- Get the build with `a_name', otherwise return 0.
 		do
-			if a_name = Void then
-				Result := 0
-			end
-			from
-				build_names.start
-			until
-				Result /= 0 or build_names.after
-			loop
-				if build_names.item_for_iteration.is_case_insensitive_equal (a_name) then
-					Result := build_names.key_for_iteration
+			if a_name /= Void then
+				from
+					build_names.start
+				until
+					Result /= 0 or build_names.after
+				loop
+					if build_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+						Result := build_names.key_for_iteration
+					end
+					build_names.forth
 				end
-				build_names.forth
 			end
 		end
 

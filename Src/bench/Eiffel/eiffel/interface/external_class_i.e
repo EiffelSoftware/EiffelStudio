@@ -63,7 +63,6 @@ feature -- Access
 		require
 			c_not_void: c /= Void
 		local
-			l_assembly: ASSEMBLY_I
 			l_name: STRING
 			l_is_array: BOOLEAN
 			l_array_type: CONSUMED_ARRAY_TYPE

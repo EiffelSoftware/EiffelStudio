@@ -61,10 +61,7 @@ feature {EB_PRINTER} -- Basic operations
 			wnd: WEL_FRAME_WINDOW -- Needed to create the rich edit component.
 			rich: WEL_RICH_EDIT
 			pdc: WEL_PRINTER_DC
-			form: WEL_CHARACTER_FORMAT
 			txt: STRING
-			fnt: EV_FONT
-			imp: EV_FONT_IMP
 			l_loader: WEL_RICH_EDIT_BUFFER_LOADER
 		do
 			create wnd.make_top (Interface_names.t_Dummy)

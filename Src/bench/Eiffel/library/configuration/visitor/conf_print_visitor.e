@@ -395,11 +395,6 @@ feature {NONE} -- Implementation
 			l_pf, l_build: TUPLE [value: INTEGER; invert: BOOLEAN]
 			l_custom: TUPLE [value: STRING; invert: BOOLEAN]
 			l_name: STRING
-
-
-			l_tag: STRING
-			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-
 		do
 			if a_conditions /= Void then
 					-- assembly and only the default rule? => don't print it
@@ -480,7 +475,6 @@ feature {NONE} -- Implementation
 		ensure
 			indent_back: indent = old indent
 		end
-
 
 	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING) is
 			-- Append `an_externals'.

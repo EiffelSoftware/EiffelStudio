@@ -595,13 +595,9 @@ feature -- Drawing operations
 					-- Allocate GDI objects
 				create s_dc
 				s_dc.get
-
 				dest_dc := dc
-
 				if pixmap_imp.has_mask then -- Display a masked pixmap
-
 					source_drawable ?= pixmap_imp
-
 					if source_drawable /= Void then
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
@@ -616,34 +612,12 @@ feature -- Drawing operations
 
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
-
-							-- Create dc for Mask bitmap
-						create source_mask_dc.make_by_dc (s_dc)
-						source_mask_dc.select_bitmap (source_mask_bitmap)
 					end
-
-
-					create l_backbuffer.make_compatible (dest_dc, source_width, source_height)
-					create l_backbuffer_dc.make_by_dc (dest_dc)
-					l_backbuffer_dc.select_bitmap (l_backbuffer)
-
-					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_bitmap_dc, source_x, source_y, srccopy)
-					l_backbuffer_dc.bit_blt (0, 0, source_width, source_height, source_mask_dc, source_x, source_y, srcand)
-
-					dest_dc.bit_blt (x, y, source_width, source_height, source_mask_dc, source_x, source_y, maskpaint)
-
-					dest_dc.bit_blt (x, y, source_width, source_height, l_backbuffer_dc, 0, 0, srcpaint)
-
-					l_backbuffer_dc.unselect_bitmap
-					l_backbuffer_dc.delete
-					l_backbuffer.delete
-
+					dest_dc.mask_blt (x, y, source_width, source_height, source_bitmap_dc, 0, 0, source_mask_bitmap, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
 						-- Free newly created GDI Objects if source isn't a pixmap drawable
 					if source_drawable = Void then
 						source_bitmap_dc.unselect_bitmap
 						source_bitmap_dc.delete
-						source_mask_dc.unselect_bitmap
-						source_mask_dc.delete
 						source_bitmap.decrement_reference
 						source_mask_bitmap.decrement_reference
 					end

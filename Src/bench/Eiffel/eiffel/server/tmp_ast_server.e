@@ -108,7 +108,6 @@ feature -- Body element change
 			has_new: body_has (a_new_body_index)
 		end
 
-
 	desactive (a_body_index: INTEGER) is
 			-- Put `a_body_index' in `useless_body_indexes'.
 		require
@@ -142,7 +141,6 @@ feature -- Body element change
 			end
 		end
 
-
 feature -- Invariant element change
 
 	invariant_remove (a_class_id: INTEGER) is
@@ -155,9 +153,7 @@ feature -- Invariant element change
 			end
 		end
 
-
 feature -- Unique values element change
-
 
 	unique_values_put (a_unique_values: HASH_TABLE [INTEGER, STRING]; a_class_id: INTEGER) is
 			-- Put the `a_unique_values' of `a_class_id'.
@@ -165,9 +161,11 @@ feature -- Unique values element change
 			a_unique_values_not_void: a_unique_values /= Void
 			a_class_id_positive: a_class_id >= 0
 		do
-			unique_values.put (a_unique_values, a_class_id)
+				-- We use `force' since we could replace the unique values of a class
+				-- each time the class is recompiled and that we haven't reached a successful
+				-- compilation yet.
+			unique_values.force (a_unique_values, a_class_id)
 		end
-
 
 feature -- Element access
 
@@ -197,7 +195,6 @@ feature -- Element access
 		do
 			Result := body_storage.has (a_body_id) or else body_info.has (a_body_id)
 		end
-
 
 	body_item (a_body_id: INTEGER): FEATURE_AS is
 			-- Get feature with `a_body_id'.
@@ -314,7 +311,6 @@ feature -- Finalization
 			body_storage.wipe_out
 			tmp_body_info.wipe_out
 
-
 				-- Desactive useless body ids
 			from
 				l_useless := useless_body_indexes
@@ -355,6 +351,9 @@ feature -- Finalization
 				-- Clear cache and merge with server
 			Inv_ast_server.cache.wipe_out
 			Inv_ast_server.merge (invariant_info);
+
+				-- Remove unique values.
+			unique_values.clear_all
 		end
 
 feature {NONE} -- Implementation (in memory)

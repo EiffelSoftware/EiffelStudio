@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Convertibility</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+
+</head>
+
+<body>
+
+<h1>Convertibility syntax</h1>
+
+<h2>Compiler changes</h2>
+<ul>
+  <li>Removed all feature and classes whose name was <span class="ekeyword">convert</span>.</li>
+  <li>Added <span class="ekeyword">convert</span> clause support in class 
+  description (see below)</li>
+</ul>
+
+<pre><span class="ekeyword">clas</span> <span class="eclass">STRING</span>
+<span class="ekeyword">create</span>
+	<span class="efeature">make</span>, <span class="efeature">make_from_cil</span>
+<span class="ekeyword">convert</span>
+	<span class="efeature">make_from_cil</span> ({<span class="eclass">SYSTEM_STRING</span>}),
+	<span class="efeature">to_cil</span>: {<span class="eclass">SYSTEM_STRING</span>}
+<span class="ekeyword">feature</span>
+...
+<span class="ekeyword">end</span></pre>
+<h2>To be done</h2>
+<ul>
+  <li>Adding <span class="ekeyword">convert</span> in infix functions</li>
+</ul>
+
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient expanded implementation</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient expanded implementation</h1>
+<h2>Current issues</h2>
+
+<p>Expanded were hard to implement correctly because of the high requirement on 
+the GC. It was done so that  embedded expanded references were just treated as 
+normal references except they were pointing to a subpart of their enclosing object. 
+Therefore when within the expanded object, we were assigning a new object to an 
+attribute, we 
+needed to go back not to the expanded header, but to the enclosing object 
+header to see if it needed to be marked so that the GC update some references if 
+needed. Most of the bugs we had were related to an incorrect header update.</p>
+
+<h2>Generalities and requirements about expanded</h2>
+
+<ul>
+  <li>When you have an expanded type, the compiler knows exactly when it is used 
+  and therefore it not needs any special runtime information during execution to 
+  perform a correct binding to one of its attributes or routines.</li>
+  <li>An expanded class which has only one attribute and this attribute is a 
+  basic type should be as fast as the manipulation of the basic type.</li>
+  <li>A SPECIAL of expanded types, where expanded type only contains basic 
+  types, should not provide an header for each entries and the GC should not 
+  traverse it. (Very important for ARRAY of COMPLEX which are made of two DOUBLE 
+  attributes, important because of the size consideration, if you have 1GB of 
+  elements, then it corresponds to 8GB of data + 8GB of headers, you definitely 
+  don't want that).</li>
+  <li>A SPECIAL of expanded types, where expanded type contains some references 
+  needs to be handled in a special way. We really don't want a header for each 
+  object (See previous case), however the marking needs to be done is a smart way. For example we 
+  could store somewhere  the number of references per object, then the GC can 
+  mark those `n' references, go to the next element and do that over and over. 
+  We do not need a special marking routine stored somewhere in the header.</li>
+  <li>reference COMPLEX and expanded COMPLEX are two distinct types and needs to 
+  be considered as such.</li>
+  <li>They should satisfy the following validity rules: VLEC, VTEC, VGCP.<ul>
+    <li>VLEC: It is valid for a class C to be an expanded client of a classs SC 
+    if and only if SC is not a direct or indirect expanded client of C.</li>
+    <li>VTEC: You can use `expanded' only if base class is not deferred and it 
+    contains `default_create' as a creation procedure.</li>
+    <li>VGCP: in an expanded class, `default_create' should be listed as a 
+    creation procedure.</li>
+  </ul>
+  </li>
+</ul>
+
+<h2>Implementation</h2>
+<ul>
+  <li><a href="classic_implementation.html">Classic implementation</a></li>
+  <li><a href="dotnet_implementation.html">IL implementation</a></li>
+</ul>
+
+</body>
+
+</html>

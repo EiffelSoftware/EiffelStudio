@@ -1,0 +1,165 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient C implementation of expanded (Draft 2)</title>
+<link rel="stylesheet" type="text/css" href="../../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient C implementation of expanded (Draft 2)</h1>
+
+<h2>General Idea</h2>
+
+<p>Instead of having expanded objects within normal objects, we decide to 
+flatten the hierarchy of attributes. This has the following advantage of 
+removing almost all knowledge about expanded types in the C generated code. It 
+means that we can get rid of the EO_COMP and EO_EXP flags as they become 
+useless.</p>
+
+<h2>Structure</h2>
+
+<h3>Expanded structure</h3>
+
+<p>We generate for every expanded types three structures. For example if you have:</p>
+
+<pre>expanded class A
+feature
+	i: INTEGER
+	s: STRING
+	b: expanded class B
+end
+
+expanded class B
+feature
+	i: INTEGER
+end</pre>
+
+<p>For class A we generate two structures:
+</p>
+
+<pre>struct ex_A {
+	EIF_TYPE_ID type_id;	// Optional field. Only inserted
+				// when there are a references
+	EIF_REFERENCE s;
+	EIF_INTEGER i;
+	EIF_INTEGER b_i;
+}</pre>
+
+<pre>struct ex_A_for_call {
+	EIF_TYPE_ID type_id;	// Optional field. Only inserted
+				// when there are a references
+	EIF_REFERENCE *s;
+	EIF_INTEGER *i;
+	EIF_INTEGER *b_i;
+}</pre>
+
+<p>The first structure `ex_A' describes object content. It is used when A is 
+used as as locals, Result or 
+arguments of type A. The first field `type_id' is optional. It is only used when 
+the expanded type contains a reference to other object. So when it is a local, then the GC is not smart enough to find out which 
+expanded we are storing, therefore the added `type_id' to help the GC to mark 
+the structure.</p>
+
+<p>The last structure is used when doing a call on an expanded target. Because 
+the expanded is either part of a normal object or a local/Result/argument (which have different layout), we have a common layout used only for calls. It 
+might not be efficient but calls being quite rare it should not be too damaging. 
+Keep in mind that we are trying to improve the access speed 
+of attribute.</p>
+
+<h3>Composite structure</h3>
+
+<p>For a composite object, we flatten completely the object and at the end we 
+have no notion of sub-object. This makes the GC implementation much easier as it 
+only needs to know about local expanded with only a special marking, otherwise 
+nothing needs to be done.</p>
+
+<h2>Updating a reference from an expanded object</h2>
+
+<p>Let's say we have in expanded class A (above) the following code:</p>
+
+<pre>set_s (a_s: like s) is
+	do
+		s := a_s
+	end</pre>
+
+<p>And somewhere we have:</p>
+<pre>a: A
+a.set_s (&quot;Fdsfds&quot;)</pre>
+
+<p>Here is what would be generated:</p>
+<pre>set_s (EIF_REFERENCE parent, struct ex_A_for_call * Current, EIF_REFERENCE a_s) {
+	*(Current-&gt;s) = a_s;
+	RTAR(parent, a_s);
+} </pre>
+<p>As you notice we generate an extra argument compared to the usual case. This 
+is the reference to the object, if any. that contains Current. When `Current' is 
+actually a local variable, then it is NULL, otherwise it is a reference to the 
+parent object.</p>
+
+<p class="note"><b>Note:</b><br>
+We could also generate a second variant for `set_s' which signature is only:<br>
+&nbsp;&nbsp;&nbsp; set_s (struct ex_A *Current, EIF_REFERENCE a_s)<br>
+to be used with calls of local/arguments/expanded which will be more efficient. 
+But for simplification we will not do it yet.</p>
+
+<h2>Calling feature on expanded object</h2>
+
+<p>When you do:</p>
+
+<pre>a: A
+...
+a.f (x)</pre>
+
+<h3>If a is a local</h3>
+<pre>struct Tex_A a;
+struct ex_A_for_call a_call;
+
+a_call.attrib_1 = &amp;(a.item.attrib_1)
+...
+a_call.attrib_n = &amp;(a.item.attrib_n)
+f(NULL, &amp;a_call, x);</pre>
+
+<h3>If a is an attribute</h3>
+<pre>EIF_REFERENCE Current;
+struct ex_A_for_call a_call;
+
+a_call.attrib_1 = Current + offsets (Current, attrib_1)
+...
+a_call.attrib_n = Current + offsets (Current, attrib_n)
+f(Current, &amp;a_call, x);</pre>
+
+<p class="note"><b>Note:</b><br>
+When `a' is an attribute of an object X, we pass X as first argument of `f'.</p>
+
+<p class="note"><b>Note:</b><br>
+When an expanded as no attribute, then we do not pass anything.</p>
+
+<h2>Assigning expanded attributes or locals</h2>
+<h3>From a local to an attribute</h3>
+
+<pre>struct ex_A a;
+EIF_REFERENCE obj;
+
+*(XX *) (obj + offset_to_attrib_1) = a.attrib_1
+...
+*(XX *) (obj + offset_to_attrib_n) = a.attrib_n
+</pre>
+
+<h3>From an attribute to a local</h3>
+
+<pre>struct ex_A a;
+EIF_REFERENCE obj;
+
+a.type_id = YYY;	// If necessary
+a.attrib_n = *(XX *) (obj + offset_to_attrib_1)
+...
+a.attrib_n = *(XX *) (obj + offset_to_attrib_n)</pre>
+
+</body>
+
+</html>

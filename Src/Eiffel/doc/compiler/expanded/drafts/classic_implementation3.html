@@ -1,0 +1,116 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient C implementation of expanded (Draft 3)</title>
+<link rel="stylesheet" type="text/css" href="../../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient C implementation of expanded (Draft 3)</h1>
+
+<h2>General Idea</h2>
+
+<p>We preserve the current layout of expanded and composite object. However 
+instead of doing copy and allocation of expanded when used as local or passed as 
+argument in the GC heap, we do them on the stack</p>
+
+<h2>Structure</h2>
+
+<h3>Expanded structure</h3>
+
+<p>We generate for every expanded types a structure. For example if you have:</p>
+
+<pre>expanded class A
+feature
+	i: INTEGER
+	s: STRING
+	b: expanded class B
+end
+
+expanded class B
+feature
+	i: INTEGER
+end</pre>
+
+<p>For class A we generate the following structure:
+</p>
+
+<pre>struct ex_A {
+	char data [sizeof_object_of_type_A_with_overhead];
+}</pre>
+
+<h2>Updating a reference from an expanded object</h2>
+
+<p>We do the way we were doing it before. So the magic is in the RTAR macro 
+which will go back to its parent. However we do not store the temporary address 
+of the expanded attribute as a local controled by the GC. It is not needed. As 
+we are guaranteed that no GC will be triggered while we access the attribute of 
+the expanded attribute.</p>
+
+<p>As a consequence we improve dramatically the access speed to attributes of 
+expanded. In assembly language, we go from 4 instructions down to 2 and only one 
+memory access to the top of the object in which the expanded attribute is 
+located.</p>
+
+<h2>Calling feature on expanded object</h2>
+
+<p>When you do:</p>
+
+<pre>a: A
+...
+a.f (x)</pre>
+
+<h3>If a is a local</h3>
+<pre>struct ex_A a;
+f (a.data + OVERHEAD, x);</pre>
+
+<h3>If a is an attribute</h3>
+<pre>EIF_REFERENCE Current;
+f (Current + offsets_to_a, x);</pre>
+
+<h2>Local stack management</h2>
+
+<p>When you have a local variable A which contains references, then we store it 
+into the normal stack of local variable by doing something like:</p>
+
+<pre>struct ex_A object;
+EIF_REFERENCE a = object.data + OVERHEAD; 
+RTLR(?, a);
+</pre>
+<p>Because `a' is expanded for the compiler, then it is not going to be moved, 
+so `a' will always point the the start of the object in `object.data'.</p>
+
+<h2>Assigning expanded attributes or locals</h2>
+<h3>From a local to an attribute</h3>
+
+<pre>struct ex_A object;
+EIF_REFRENCE local = object.data + OVERHEAD;
+EIF_REFERENCE obj;
+
+memcpy (obj + offset_to_expanded_attribute, local, sizeofobject);</pre>
+
+<h3>From an attribute to a local</h3>
+
+<pre>struct ex_A object
+EIF_REFERENCE local = object.data + OVERHEAD;
+EIF_REFERENCE obj;
+
+memcpy (local, obj + offset_to_expanded_attribute, sizeofobject);</pre>
+
+<h2>Finalization optimization</h2>
+
+<p>No need to make space for OVERHEAD in structure that do not have references 
+in them. In which case everything works just fine except that we do not have a 
+reference to the subobject, but the skeleton knows where to find the expanded.</p>
+
+<p>Then every call on the expanded without an overhead must be either inlined or 
+a new body must be generated to take into account the missing header.</p>
+
+</body>
+
+</html>

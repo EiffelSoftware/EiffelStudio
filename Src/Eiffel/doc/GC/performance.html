@@ -1,0 +1,125 @@
+<html>
+
+<head>
+<title>Improving GC performance</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body>
+
+<h1>Improving GC performance</h1>
+<h2>GC itself</h2>
+<p>We should try to optimize the scavenging which is in my opinion not filling 
+his role as well as it should.</p>
+<h2>Generated code</h2>
+<h3>Comparison to Boehm GC</h3>
+<p>When you compare the performance of an application linked with the Boehm GC 
+instead of our GC, you notice that the application linked with Boehm takes 75% 
+of the time of the application linked with our GC. However you notice that the 
+time spent in the GC is really different to the advantage of the ISE as we also 
+take less memory (we take twice as less time and use 35MB less than the Boehm 
+GC). So the only difference that remains is the generated code, and 
+between Boehm GC and our GC, the real major difference is the stack management. 
+Ours is manual, Boehm's one is done by using the hardware stack.</p>
+<table border="1" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td>Time</td>
+    <td>Memory</td>
+  </tr>
+  <tr>
+    <td>Boehm</td>
+    <td>3m4s</td>
+    <td>85MB</td>
+  </tr>
+  <tr>
+    <td>Boehm in MT</td>
+    <td>3m9s</td>
+    <td>85MB</td>
+  </tr>
+  <tr>
+    <td>ISE</td>
+    <td>4m9s</td>
+    <td>51MB</td>
+  </tr>
+  <tr>
+    <td>ISE in MT</td>
+    <td>5m17s</td>
+    <td>51MB</td>
+  </tr>
+</table>
+<p>The thing that strikes is the difference between non-MT and MT in ISE. The 
+reason is that local specific data is used extensively in ISE GC, but not used 
+at all in Boehm. As a consequence all the stack management routines are done 
+through an indirection (&quot;eif_globals&quot;) which is the only difference I can see at 
+this point.</p>
+<p>I thought that EIF_GET_CONTEXT had a cost because it might be inefficient, 
+but it does not seems to be the case. To test that, instead of using 
+EIF_GET_CONTEXT to retrieve `eif_globals', I've decided to pass it as first 
+argument of all our routines. We avoid a call, but we put more on the stack. We 
+get an improvement in speed, but only 8s on over 5m. We also get an improvement 
+on the size of the generated code.</p>
+<table border="1" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td>Time</td>
+    <td>Executable Size</td>
+  </tr>
+  <tr>
+    <td>ISE in MT using EIF_GET_CONTEXT</td>
+    <td>5m17s</td>
+    <td>7,843,840 bytes</td>
+  </tr>
+  <tr>
+    <td>ISE in MT using argument passing of eif_globals</td>
+    <td>5m9s</td>
+    <td>7,741,440 bytes</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h3>Improving stack management</h3>
+<p>At the moment we have a global variable `loc_set' which tracks all references 
+pushed on stack. It works like:</p>
+<pre>void Eiffel_routine (EIF_REFERENCE Current, EIF_REFERENCE arg1, EIF_INTEGER arg2) {
+	EIF_REFERENCE loc1 = NULL;
+	EIF_REFERENCE loc2 = NULL;
+	RTLI (4);
+	RTLR(0, Current);
+	RTLR(1, arg1);
+	RTLR(2, loc1);
+	RTLR(3, loc2);
+	...
+	RTLE;
+}</pre>
+<p>A new idea would be to do:</p>
+<pre>void Eiffel_routine (EIF_REFERENCE Current, EIF_REFERENCE arg1, EIF_INTEGER arg2) {
+	struct locals {
+		EIF_REFERENCE loc1;
+		EIF_REFERENCE loc2;
+		EIF_REFERENCE Current;
+		EIF_REFERENCE arg1;
+	} l;
+	memset(&amp;l, 0, 2 * sizeof(EIF_REFERENCE));
+	l.Current = Current;
+	l.arg1 = arg1;
+	add_loc_set (&amp;l, 4);
+	...
+	remove_loc_set;
+}</pre>
+<p>The advantage I see are:</p>
+<ul>
+  <li>Only one address computation is required and `loc_set' structure is always 
+  incremented by one element (less resizing of loc_set)</li>
+  <li>Instead of performing manually the zeroing of `locx' variables, we use `memset' 
+  which might be more efficient.</li>
+</ul>
+<p>The disadvantage I see are:</p>
+<ul>
+  <li>The stack might be larger as we create a space in the C stack for all 
+  reference arguments.</li>
+  <li>memset might not be inlined on some platforms and therefore be inefficient</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

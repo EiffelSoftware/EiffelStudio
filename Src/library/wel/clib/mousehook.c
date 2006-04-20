@@ -49,7 +49,6 @@ HWND cwel_get_hook_window() {
 	
 	get_hook_window_func = GetProcAddress(hLibrary, "get_hook_window");
 	if (get_hook_window_func == NULL) {
-		MessageBox(NULL, L"An error occurred while trying to access the function `get_hook_window'\nfrom the DLL `wel_hook.dll'.\nCheck that you have the latest copy of the DLL.", L"Unable to access a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return NULL; // Unable to locate the function inside the DLL
 	}
 
@@ -76,8 +75,6 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd) {
 	load_library();
 
 	if (hLibrary == NULL) {
-		// Display an error box
-		MessageBox(hWnd, L"An error occurred while loading the file 'wel_hook.dll'\nCheck that it can be found in your path or your working directory", L"Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return FALSE;
 	}
 

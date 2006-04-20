@@ -21,6 +21,13 @@ inherit
 			default_create
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -42,100 +49,111 @@ feature -- Status Report
 	successful: BOOLEAN
 			-- Was last call to `merge' successful?
 
-	merge (a_file_names: LIST [STRING]) is
-			-- Merge content of files in `a_file_names' into one class.
-			-- `a_file_names': Files to be merged.
+	ast_from_file (a_file: STRING): CLASS_AS is
+			-- AST from text in file `a_file' if syntactically correct
+			-- Otherwise set `successful' to False and initialize `error_message'
 		require
-			attached_file_names: a_file_names /= Void
-			-- Contain source for same class
+			attached_file: a_file /= Void
 		local
-			l_ast, l_new_ast: CLASS_AS
-			l_match_list, l_new_match_list: LEAF_AS_LIST
-			l_is_deferred, l_is_expanded: BOOLEAN
+			l_errors: LIST [SYNTAX_ERROR]
 			l_content, l_new_pragma: STRING
 			l_index, l_index2: INTEGER
+			l_match_list: LEAF_AS_LIST
 		do
-			from
-				a_file_names.start
-			until
-				a_file_names.after or l_ast /= Void
-			loop
-				l_content := file_content (a_file_names.item)
-				if l_content /= Void then
-					roundtrip_eiffel_parser.parse_from_string (l_content)
-					l_ast := roundtrip_eiffel_parser.root_node
-					l_match_list := roundtrip_eiffel_parser.match_list
+			l_content := file_content (a_file)
+			if l_content = Void then
+				successful := False
+				error_message := "Could not read content of file " + a_file
+			else
+				roundtrip_eiffel_parser.parse_from_string (l_content)
+				Result := roundtrip_eiffel_parser.root_node
+				if Result = Void then
+					successful := False
+					l_errors := Error_handler.error_list
+					if l_errors /= Void and then not l_errors.is_empty then
+						create error_message.make (256)
+						error_message.append ("Syntax error at line ")
+						error_message.append (l_errors.first.line.out)
+						if not l_errors.first.error_message.is_empty then
+							error_message.append (": ")
+							error_message.append (l_errors.first.error_message)
+						end
+					else
+						error_message := "Syntax error"
+					end
+				else
 					if l_content.substring (1, 8).is_equal ("--#line ") then
 						l_index := l_content.index_of ('"', 1)
 						if l_index > 0 then
 							l_index2 := l_content.index_of ('%N', l_index + 1)
 							if l_index2 > 0 then
+								l_match_list := roundtrip_eiffel_parser.match_list
 								create l_new_pragma.make (300)
 								l_new_pragma.append ("--#line ")
-								l_new_pragma.append ((l_ast.features.first_token (l_match_list).line - 1).out)
+								l_new_pragma.append ((Result.features.first_token (l_match_list).line - 1).out)
 								l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
-								l_ast.features.prepend_text (l_new_pragma, l_match_list)
+								Result.features.prepend_text (l_new_pragma, l_match_list)
 							end
 						end
 					end
-					if l_ast.is_partial then
-						l_ast.class_keyword.replace_text ("class", l_match_list)
-					end
+					successful := True
+					error_message := Void
 				end
-				a_file_names.forth
 			end
+		end
 
-			from
+	merge (a_file_names: LIST [STRING]) is
+			-- Merge content of files in `a_file_names' into one class.
+			-- `a_file_names': Files to be merged.
+		require
+			attached_file_names: a_file_names /= Void
+			valid_file_names: not a_file_names.is_empty
+			-- Contain source for same class
+		local
+			l_ast, l_new_ast: CLASS_AS
+			l_match_list, l_new_match_list: LEAF_AS_LIST
+			l_is_deferred, l_is_expanded: BOOLEAN
+		do
+			successful := False
+			error_message := Void
+			class_text := Void
+			a_file_names.start
+			l_ast := ast_from_file (a_file_names.item)
+			if successful then
+				l_match_list := roundtrip_eiffel_parser.match_list
+				if l_ast.is_partial then
+					l_ast.class_keyword.replace_text ("class", l_match_list)
+				end
 				l_is_deferred := l_ast.is_deferred
 				l_is_expanded := l_ast.is_expanded
-			until
-				a_file_names.after
-			loop
-				l_content := file_content (a_file_names.item)
-				if l_content /= Void then
-					roundtrip_eiffel_parser.parse_from_string (l_content)
-					l_new_ast := roundtrip_eiffel_parser.root_node
-					l_new_match_list := roundtrip_eiffel_parser.match_list
-					if l_new_ast /= Void then
+
+				from
+					a_file_names.forth
+				until
+					a_file_names.after or not successful
+				loop
+					l_new_ast := ast_from_file (a_file_names.item)
+					if successful then
+						l_new_match_list := roundtrip_eiffel_parser.match_list
 						l_is_deferred := l_is_deferred or l_new_ast.is_deferred
 						l_is_expanded := l_is_expanded or l_new_ast.is_expanded
-						if l_content.substring (1, 8).is_equal ("--#line ") then
-							l_index := l_content.index_of ('"', 1)
-							if l_index > 0 then
-								l_index2 := l_content.index_of ('%N', l_index + 1)
-								if l_index2 > 0 then
-									create l_new_pragma.make (300)
-									l_new_pragma.append ("--#line ")
-									l_new_pragma.append ((l_new_ast.features.first_token (l_new_match_list).line - 1).out)
-									l_new_pragma.append (l_content.substring (l_index - 1, l_index2))
-									l_ast.features.append_text (l_new_pragma, l_match_list)
-								end
-							end
-						end
 						append_features (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						append_invariants (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						merge_inheritance_clauses (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						append_indexing_clauses (l_match_list, l_new_match_list, l_ast, l_new_ast)
 						merge_creation_routines (l_match_list, l_new_match_list, l_ast, l_new_ast)
 					end
+					a_file_names.forth
 				end
-				a_file_names.forth
-			end
-
-			if l_ast /= Void then
-				if not l_ast.is_deferred and l_is_deferred then
-					l_ast.class_keyword.prepend_text ("deferred ", l_match_list)
+				if successful then
+					if not l_ast.is_deferred and l_is_deferred then
+						l_ast.class_keyword.prepend_text ("deferred ", l_match_list)
+					end
+					if not l_ast.is_expanded and l_is_expanded then
+						l_ast.class_keyword.prepend_text ("expanded ", l_match_list)
+					end
+					class_text := l_ast.text (l_match_list)
 				end
-				if not l_ast.is_expanded and l_is_expanded then
-					l_ast.class_keyword.prepend_text ("expanded ", l_match_list)
-				end
-				class_text := l_ast.text (l_match_list)
-				successful := True
-				error_message := Void
-			else
-				successful := False
-				error_message := "Could not merge files."
-				class_text := Void
 			end
 		ensure
 			successful_iff_attached_class_text_and_name: successful = (class_text /= Void)
@@ -306,7 +324,7 @@ feature {NONE} -- Implementation
 				a_creators.forth
 			end
 		ensure
-			Definition: (Result > 0) implies (a_creators.i_th (Result).clients.is_equiv (a_creator.clients))
+			Definition: (Result > 0) implies ((a_creators.i_th (Result).clients = Void and a_creator.clients = Void) or a_creators.i_th (Result).clients.is_equiv (a_creator.clients))
 		end
 
 	file_content (a_file_name: STRING): STRING is

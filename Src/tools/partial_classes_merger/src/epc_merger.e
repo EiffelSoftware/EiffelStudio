@@ -72,13 +72,17 @@ feature -- Status Report
 					successful := False
 					l_errors := Error_handler.error_list
 					if l_errors /= Void and then not l_errors.is_empty then
-						create error_message.make (256)
-						error_message.append ("Syntax error at line ")
-						error_message.append (l_errors.first.line.out)
 						l_syntax_error ?= l_errors.first
-						if l_syntax_error /= Void and then not l_syntax_error.error_message.is_empty then
-							error_message.append (": ")
-							error_message.append (l_syntax_error.error_message)
+						if l_syntax_error /= Void then
+							create error_message.make (256)
+							error_message.append ("Syntax error at line ")
+							error_message.append (l_syntax_error.line.out)
+							if not l_syntax_error.error_message.is_empty then
+								error_message.append (": ")
+								error_message.append (l_syntax_error.error_message)
+							end
+						else
+							error_message := "Syntax error"
 						end
 					else
 						error_message := "Syntax error"

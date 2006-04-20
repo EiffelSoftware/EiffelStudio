@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 				Precursor
 
 				create icon_pixmap
-				wizard_icon_filename := clone (wizard_pixmaps_path)
+				wizard_icon_filename := wizard_pixmaps_path.twin
 				wizard_icon_filename.set_file_name ("wizard")
 				wizard_icon_filename.add_extension ("png")
 				icon_pixmap.set_with_named_file (wizard_icon_filename)

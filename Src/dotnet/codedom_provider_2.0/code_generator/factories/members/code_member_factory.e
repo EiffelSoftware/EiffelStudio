@@ -11,11 +11,6 @@ class
 inherit
 	CODE_FACTORY
 	
-	CODE_SHARED_CONTEXT
-		export
-			{NONE} all
-		end
-	
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_event (a_source: SYSTEM_DLL_CODE_MEMBER_EVENT) is
@@ -83,58 +78,21 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_snippet_feature: CODE_SNIPPET_FEATURE
-			l_text, l_name, l_tag, l_desc: STRING
-			l_ok, l_in_tag, l_in_quote: BOOLEAN
+			l_text, l_name: STRING
+			l_ok: BOOLEAN
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
 			i: INTEGER
-			l_clause: CODE_INDEXING_CLAUSE
-			c: CHARACTER
+			l_analyzer: CODE_SNIPPET_ANALYZER
 		do
 			l_text := a_source.text
 			if l_text /= Void then
 				l_text.left_justify
-				if l_text.as_lower.substring (1, 7).is_equal ("inherit") and not l_text.item (8).is_alpha_numeric and not (l_text.item (8) = '_') then
+				create l_analyzer
+				l_analyzer.parse (l_text)
+				if l_analyzer.is_inheritance_clause then
 					current_type.set_snippet_inherit_clause (l_text)
 					set_last_feature (Empty_snippet_feature)
-				elseif l_text.as_lower.substring (1, 8).is_equal ("indexing") and not l_text.item (9).is_alpha_numeric and not (l_text.item (9) = '_') then
-					l_text.keep_tail (l_text.count - 9)
-					from
-						i := 1
-						l_in_tag := True
-						create l_tag.make (50)
-					until
-						i > l_text.count
-					loop
-						c := l_text.item (i)
-						if l_in_tag  then
-							if c.is_alpha_numeric or c='_' then
-								l_tag.append_character (c)
-							elseif c = ':' then
-								l_in_tag := False
-								create l_desc.make (100)
-							end
-						else
-							if l_in_quote then
-								if c = '"' and l_text.item (i - 1) /= '%%' then
-									l_in_quote := false
-									l_in_tag := true
-									create l_clause.make
-									l_clause.set_tag (l_tag)
-									l_clause.set_text (l_desc)
-									current_type.add_indexing_clause (l_clause)
-									if l_tag.as_lower.is_equal ("precompile_definition_file") then
-										Compilation_context.set_precompile_file (l_desc)
-									end
-									create l_tag.make (50)
-								else
-									l_desc.append_character (c)
-								end
-							else
-								l_in_quote := c = '"' and l_text.item (i - 1) /= '%%'
-							end
-						end
-						i := i + 1
-					end						
+				elseif l_analyzer.is_indexing_clause then
 					set_last_feature (Empty_snippet_feature)
 				else
 					l_name := "snippet"

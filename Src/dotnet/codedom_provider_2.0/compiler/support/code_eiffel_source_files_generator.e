@@ -82,7 +82,7 @@ feature -- Basic Operation
 		require
 			non_void_content: a_content /= Void
 		local
-			l_index, l_index2, l_old_index: INTEGER
+			l_index, l_old_index: INTEGER
 		do
 			from
 				l_old_index := 1

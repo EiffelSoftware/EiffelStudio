@@ -16,6 +16,6 @@
 		<setting name="inlining_size" value="0"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<cluster name="fast_compile" location="$EIFFEL_SRC\Eiffel\extra\quick_c_compilation\"/>
+		<cluster name="fast_compile" location="."/>
 	</target>
 </system>

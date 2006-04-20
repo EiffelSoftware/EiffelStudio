@@ -1,1 +1,0 @@
-cc='cc -systype sysv'

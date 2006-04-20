@@ -9,7 +9,7 @@ default
 	console_application (no)
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\com_wizard\launcher"
+	root_cluster:		"$EIFFEL_SRC\tools\com_wizard\launcher"
 
 	library base:		"$EIFFEL_SRC\library\base"
 		exclude

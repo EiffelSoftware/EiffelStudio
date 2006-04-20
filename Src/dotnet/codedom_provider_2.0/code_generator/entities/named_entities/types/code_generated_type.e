@@ -154,7 +154,7 @@ feature -- Access
 	direct_parent (a_parent: CODE_TYPE_REFERENCE): CODE_TYPE_REFERENCE is
 			-- Direct parent which is or inherits from `a_parent'
 		local
-			l_found, l_is_external: BOOLEAN
+			l_is_external: BOOLEAN
 			l_external_type: SYSTEM_TYPE
 			l_parent_type: CODE_TYPE_REFERENCE
 		do

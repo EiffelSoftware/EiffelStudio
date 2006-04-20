@@ -535,7 +535,7 @@ feature {NONE} -- Events
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
-					l_strings := applications_list.strings
+					l_strings := applications_list.strings_8
 					l_strings.compare_objects
 					if not l_strings.has (l_path) then
 						applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_path))

@@ -1,0 +1,70 @@
+Eiffel to Java Byte Code TODO list:
+This file is using the emacs outline-mode format conventions
+
+* JEmittor 
+  generate Eiffel external classes for an abitrary JVM (Java binary) class 
+  done, minor bug (static features are not correctly resolved when descentant shadow them)
+* Generate of Java Byte Code classes 
+  done
+* Generate Java Applets 
+  done
+* Generate Java Applications 
+  done
+* Code passes verification 
+  currently possible, but it is also possible to break it (external constructors)
+  same problem in MSIL, needs probably unified solution
+* Interface adaption
+  done
+* Deferred externals 
+  done using workaround 
+  needs change in language
+  possibly together with external attributes and constants
+* Use of static Java features 
+  done
+* Support "once" features
+  done
+* Support DBC
+  done, ensure is missing, requires compiler changes
+* Support "expanded" classes
+  todo
+  java only suports primitive value types, so generic expanded object
+  need to be implemented just as regular objects, except that assignement
+  semantics must be overriden. problematic when exp. class is a generic type
+  (same problem as with regular eiffel)
+* Support local variables
+  done
+* Generation of Java Interfaces from fully deferred Eiffel classes 
+  done, needs testing
+* Genericity
+** Use of Java arrays as ARRAY [G] in Eiffel 
+	done, needs testing
+** Use of ARRAY [G] in Eiffel and present it as g[] in Java 
+	done
+** Array access and modfication from Eiffel 
+	done, multi dimensional arrays needs testing
+* Access of external classes and features 
+  done
+* Inhertance
+** Inheritance from external classes 
+	done
+** Inheritance from internal classes 
+	done
+** Multiple Inheritance 
+	TODO
+	Research implementation details
+* Renaming 
+  TODO
+  Research implementation details
+* Covariant Redefinitions 
+  TODO
+  Research implementation details
+* Include Debug information into JVM classes 
+  done
+* Optimizations
+  There is a lot of room for optimizations (Speed and Size)
+  It is very important to keep applets small since they are often retrieved via the internet.
+  For performance optimizations testing needs to be done, where JIT compilers do optimizations already, and what they don't do.
+* Static and non static field setters
+  mostly done
+  missing is setting external fields
+  TODO: implement feature `field' in class JVM_WRITTEN_FEATURE

@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient C implementation of expanded (Draft 4)</title>
+<link rel="stylesheet" type="text/css" href="../../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient C implementation of expanded (Draft 4)</h1>
+
+<h2>Implementation</h2>
+
+<p>To describe it, we are going to take 
+an example, with two classes A and B:</p>
+
+<pre>class A
+feature
+	a: STRING
+	b: expanded B
+	f is
+		local
+			i: INTEGER
+		do
+			b.g
+			i := b.i
+		end
+end</pre>
+
+<pre>class B
+feature
+	i: INTEGER
+	s: STRING
+	g is
+		do
+			print (i)
+		end
+end</pre>
+
+<p>For class A we can generate the following attribute layout, that does not 
+take into account the way an instance of B is laid out.</p>
+
+<ol>
+  <li>s: STRING</li>
+  <li>a: STRING</li>
+  <li>i: INTEGER</li>
+</ol>
+<p>For class B, a possibly layout is:</p>
+<ol>
+  <li>s: STRING</li>
+  <li>i: INTEGER</li>
+</ol>
+<p>Don't forget that reference types have to be before the basic types.</p>
+<p>So when we generate the code for f in A, we generate something like:</p>
+<pre>void f (EIF_REFERENCE Current) {
+	EIF_INTEGER i;
+	B_g (Current);	// Call b.g
+	i = Current-&gt;i;	// Call b.i
+}</pre>
+
+<p>Let's see what is `B_g' in code generated for `expanded B':</p>
+<pre>void B_g (EIF_REFERENCE Current) {
+	print (Current-&gt;(access_i (Current)))
+}</pre>
+
+<p>where `access_i' is a function returning the offset of `i' in `Current' 
+object. This offset depends on where the expanded B is located. For the case of 
+A, it points to the following function:</p>
+<pre>EIF_INTEGER access_i (EIF_REFERENCE Current) {
+	return offset (Current, &amp;Current-&gt;i)
+}</pre>
+
+</body>
+
+</html>

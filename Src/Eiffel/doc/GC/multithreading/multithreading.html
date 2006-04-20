@@ -1,0 +1,54 @@
+<html>
+
+<head>
+<title>Multithreaded GC</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Multithreaded GC</h1>
+
+<h2>Stop the world solution</h2>
+
+<p>How to implement a portable stop the world solution?</p>
+<p>In the Eiffel code, each Eiffel C generated routine is equipped with the 
+following code:</p>
+<pre>if (gc_collecting) {
+	current_thread.status = thread_suspended
+	gc_collecting_mutex.lock
+	current_thread.status = thread_running
+	gc_collecting_mutex.unlock
+}</pre>
+<p>For all routines from the thread library that might 
+block we have:</p>
+<pre>current_thread.status = blocked;
+CALL TO BLOCKING STUFF
+if (gc_collecting) {
+	current_thread.status = thread_suspended
+	gc_collecting_mutex.lock
+	current_thread.status = thread_running
+	gc_collecting_mutex.unlock
+} else {
+	current_thread.status = thread_running
+}</pre>
+<p>In the code which performs the GC we have the following:</p>
+<pre>current_thread.status = thread_gc_starting
+
+gc_collecting_mutex.lock
+current_thread.status = thread_gc_started
+gc_collecting = true
+
+	// Wait until all threads are in a GC safe point.
+Loop until all threads but current one are marked `suspended' or `starting_gc' or `blocked'.
+
+Perform GC operation
+
+gc_collecting = false
+
+current_thread.status = thread_running
+gc_collecting_mutex.unlock</pre>
+<p>Of course the members are:</p>
+<p>volatile int gc_collecting = 0;</p>
+</body>
+</html>

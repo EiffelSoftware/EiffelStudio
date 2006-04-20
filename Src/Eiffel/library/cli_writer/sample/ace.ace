@@ -1,0 +1,59 @@
+system
+	"pe_writer"
+
+root
+	ROOT_CLASS: make
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
+	array_optimization (no)
+	dead_code_removal (yes)
+	exception_trace (no)
+	inlining (yes)
+	inlining_size ("0")
+
+cluster
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "CVS"; 
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+		exclude
+			"EIFGEN"
+		end
+
+	all helpers: 		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\\Eiffel\library\cli_writer\Clib"
+
+	object:
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
+
+end

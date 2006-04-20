@@ -1,0 +1,72 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>New Page 0</title>
+<style>
+<!--
+BODY {
+	BACKGROUND:#FFFEEF;
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	MARGIN:5px 5px 5px 5px;
+	PADDING:0px 0px 0px 0px;
+	COLOR:#000000;
+	FONT-SIZE:70%;
+	WIDTH:100%;
+}
+
+h1 {
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	FONT-WEIGHT:bold;
+}
+H1 {
+	COLOR:#990000;
+	FONT-SIZE:150%;
+}
+
+h2 {
+	FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;
+	FONT-WEIGHT:bold;
+}
+H2 {
+	MARGIN-TOP: 1.6em;
+}
+H2 {
+	COLOR:#700000;
+	BACKGROUND:#FFCC00;
+	FONT-SIZE:120%;
+	WIDTH:90%;
+	PADDING: 1px 6px;
+}
+A {
+	FONT-FAMILY:Verdana, Lucida, Arial, Helvetica, sans-serif;
+	COLOR:#003399;
+	TEXT-DECORATION:none;
+}
+
+-->
+</style>
+</head>
+
+<body>
+
+<h1>Multiple Inheritance for other languages</h1>
+<h2>Introduction</h2>
+<p>It would be great if in Eiffel we could multiply inherit from other classes 
+written in a different language that does not support multiple inheritance. One 
+easy way to do so is to create a tool that consumes an assembly and for each 
+class of the assembly, it generates two new entities:</p>
+<ul>
+  <li>an interface that collects all methods implemented in the existing class</li>
+  <li>an implementation class that implements the above interface by using the 
+  bridge pattern (all calls are delegated to an existing object) and following 
+  what the Eiffel compiler expect to be generated so that it can do a correct 
+  dispatch.</li>
+</ul>
+
+</body>
+
+</html>

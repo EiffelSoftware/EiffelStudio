@@ -1,0 +1,312 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Usage of runtime variables</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Runtime variables</h1>
+<p>The purpose of this page is to collect all variables used by runtime and to 
+properly identify them and their usage. This list should be exhaustive and will 
+help person working on the runtime to quickly identify how and when to use such 
+variables.</p>
+<h2>argv.c</h2>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber2">
+  <tr>
+    <td valign="top" width="15%">
+    <h3>Variables</h3>
+    </td>
+    <td valign="top" width="10%">
+    <h3>Runtime&nbsp;files</h3>
+    </td>
+    <td valign="top" width="15%">
+    <h3>Eiffel files</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Thread safety</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Purpose</h3>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%">eif_argc, eif_argv</td>
+    <td valign="top" width="10%">eif_argv.h<br>
+    argv.c</td>
+    <td valign="top" width="15%">ARGUMENTS<br>
+    MEL_DISPLAY<br>
+    EV_APPLICATION_IMP (gtk implementation)</td>
+    <td valign="top" width="30%">Initialized by `arg_init' in `eif_rtinit' so no need for 
+    synchronization.</td>
+    <td valign="top" width="30%">To get access to command line arguments.</td>
+  </tr>
+  </table>
+
+<h2>bits.c</h2>
+
+<p>None</p>
+
+<h2>boolstr.c</h2>
+
+<p>None</p>
+
+<h2>cecil.c</h2>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber2">
+  <tr>
+    <td valign="top" width="15%">
+    <h3>Variables</h3>
+    </td>
+    <td valign="top" width="10%">
+    <h3>Runtime&nbsp;files</h3>
+    </td>
+    <td valign="top" width="15%">
+    <h3>Eiffel files</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Thread safety</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Purpose</h3>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%">eif_visible_is_off</td>
+    <td valign="top" width="10%">&nbsp;</td>
+    <td valign="top" width="15%">&nbsp;</td>
+    <td valign="top" width="30%">Access through `cecil_lock' mutex</td>
+    <td valign="top" width="30%">Turn on or off exception when routine is not visible.</td>
+  </tr>
+</table>
+
+<h2>compress.c</h2>
+
+<p>None</p>
+
+<h2>console.c</h2>
+
+<p>None</p>
+
+<h2>copy.c</h2>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber3">
+  <tr>
+    <td valign="top" width="15%">
+    <h3>Variables</h3>
+    </td>
+    <td valign="top" width="10%">
+    <h3>Runtime&nbsp;files</h3>
+    </td>
+    <td valign="top" width="15%">
+    <h3>Eiffel files</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Thread safety</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Purpose</h3>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%">hclone</td>
+    <td valign="top" width="10%">&nbsp;</td>
+    <td valign="top" width="15%">ISE_RUNTIME</td>
+    <td valign="top" width="30%">
+    <p class="warning">FIXME: hclone is access is not protected. Therefore to 
+    deep clone/copy operation occurring at the same time in two different 
+    threads will certainly fail. Solution is to put `hclone' in the `eif_globals' 
+    structure, so that two threads can perform parallel deep copy/clone.</td>
+    <td valign="top" width="30%">To perform deep cloning</td>
+  </tr>
+</table>
+
+<h2>debug.c</h2>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber4" height="409">
+  <tr>
+    <td valign="top" width="15%" height="37">
+    <h3>Variables</h3>
+    </td>
+    <td valign="top" width="10%" height="37">
+    <h3>Runtime&nbsp;files</h3>
+    </td>
+    <td valign="top" width="15%" height="37">
+    <h3>Eiffel files</h3>
+    </td>
+    <td valign="top" width="20%" height="37">
+    <h3>Thread safety</h3>
+    </td>
+    <td valign="top" width="10%" height="37">
+    Mutex</td>
+    <td valign="top" width="30%" height="37">
+    <h3>Purpose</h3>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">db_stack</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Per thread data</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="30%" height="17">Debugging stack</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">once_list</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Per thread data</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="30%" height="17">Display of once function values in 
+    debugger</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="14">d_data</td>
+    <td valign="top" width="10%" height="14"></td>
+    <td valign="top" width="15%" height="14"></td>
+    <td valign="top" width="20%" height="14">Per thread data</td>
+    <td valign="top" width="10%" height="14"></td>
+    <td valign="top" width="30%" height="14">Debugger status</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">d_cxt</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Per thread data</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="30%" height="17">Main program context</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">cop_stack</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Per thread data</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="30%" height="17">Store local/argument values in 
+    debugger</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="58">d_globaldata</td>
+    <td valign="top" width="10%" height="58">&nbsp;</td>
+    <td valign="top" width="15%" height="58">&nbsp;</td>
+    <td valign="top" width="20%" height="58">
+    <p class="warning">FIXME: no synchronization is done on accessing fields of 
+    this structure</td>
+    <td valign="top" width="10%" height="58">&nbsp;</td>
+    <td valign="top" width="30%" height="58">Is debugging disabled for a while?<br>
+    Is current code location a breakpoint which is set?</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="34">db_mutex</td>
+    <td valign="top" width="10%" height="34">&nbsp;</td>
+    <td valign="top" width="15%" height="34">&nbsp;</td>
+    <td valign="top" width="20%" height="34">Safe, created during initialization 
+    in`dbreak_create_table'.</td>
+    <td valign="top" width="10%" height="34">&nbsp;</td>
+    <td valign="top" width="30%" height="34">To ensure that only one thread is 
+    stopped at a time in EiffelStudio debugger.</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="85">breakpoint_count</td>
+    <td valign="top" width="10%" height="85">&nbsp;</td>
+    <td valign="top" width="15%" height="85">&nbsp;</td>
+    <td valign="top" width="20%" height="85">Safe as it is only modified by `set_breakpoint_count' 
+    called from `ipc/app/app_proto.c' while the application is stopped during 
+    debugging. So there will be no concurrent access to this variable.</td>
+    <td valign="top" width="10%" height="85">Indirectly through `db_mutex'</td>
+    <td valign="top" width="30%" height="85">Interval of time we use to check if 
+    we should stop in debugger.</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="51">recorded_breakpoint_count</td>
+    <td valign="top" width="10%" height="51">&nbsp;</td>
+    <td valign="top" width="15%" height="51">&nbsp;</td>
+    <td valign="top" width="20%" height="51">Safe as it is only modified and 
+    accessed by `should_be_interrupted' which is only called through mutex</td>
+    <td valign="top" width="10%" height="51">db_mutex</td>
+    <td valign="top" width="30%" height="51">Count how many times we have been 
+    called, use in conjonction with `breakpoint_count'.</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="34">previous_bodyid</td>
+    <td valign="top" width="10%" height="34">&nbsp;</td>
+    <td valign="top" width="15%" height="34">&nbsp;</td>
+    <td valign="top" width="20%" height="34">Safe through mutex</td>
+    <td valign="top" width="10%" height="34">db_mutex</td>
+    <td valign="top" width="30%" height="34">To record last body_id where we 
+    stopped last time.</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">previous_break_index</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Safe through mutex</td>
+    <td valign="top" width="10%" height="17">db_mutex</td>
+    <td valign="top" width="30%" height="17">To record last position where we 
+    stopped last time. </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">critical_stack_depth</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Safe through mutex</td>
+    <td valign="top" width="10%" height="17">db_mutex</td>
+    <td valign="top" width="30%" height="17">Limit to which we warn EiffelStudio 
+    there might be a stack overflow occurring.</td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%" height="17">already_warned</td>
+    <td valign="top" width="10%" height="17"></td>
+    <td valign="top" width="15%" height="17"></td>
+    <td valign="top" width="20%" height="17">Safe through mutex</td>
+    <td valign="top" width="10%" height="17">db_mutex</td>
+    <td valign="top" width="30%" height="17">Did we already warn user of a 
+    potential stack overflow.</td>
+  </tr>
+</table>
+
+<h2>dir.c</h2>
+
+<p>None</p>
+
+<h2>eif_project.c</h2>
+
+<p>&nbsp;</p>
+
+<h2>fd</h2>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber3">
+  <tr>
+    <td valign="top" width="15%">
+    <h3>Variables</h3>
+    </td>
+    <td valign="top" width="10%">
+    <h3>Runtime&nbsp;files</h3>
+    </td>
+    <td valign="top" width="15%">
+    <h3>Eiffel files</h3>
+    </td>
+    <td valign="top" width="20%">
+    <h3>Thread safety</h3>
+    </td>
+    <td valign="top" width="10%">
+    <h3>Mutex</h3>
+    </td>
+    <td valign="top" width="30%">
+    <h3>Purpose</h3>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="15%">&nbsp;</td>
+    <td valign="top" width="10%">&nbsp;</td>
+    <td valign="top" width="15%">&nbsp;</td>
+    <td valign="top" width="20%">&nbsp;</td>
+    <td valign="top" width="10%">&nbsp;</td>
+    <td valign="top" width="30%">&nbsp;</td>
+  </tr>
+</table>
+
+</body>
+
+</html>

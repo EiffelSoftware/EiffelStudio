@@ -1,0 +1,59 @@
+Date: 05/23/2000
+Author: Emmanuel STAPF
+email: manus@eiffel.com
+
+
+What is an execution unit?
+==========================
+
+This is an entity associated to each Eiffel routines in workbench mode only.
+For a normal Eiffel features, it contains the encoded name of an Eiffel
+routine (body_index + class_type), its pattern identification and its
+return type if any. For an external it contains in addition the external
+name, the complete signature if any and the list of header files if any.
+
+All execution unit are put together in the execution table and they are indexed
+by their `body_index'. When performing a call to a feature in workbench mode, we
+find at the end a `body_index'. This info enables us to call the corresponding
+Eiffel routine by simply looking at the Execution table.
+
+
+Old way of computing EXECUTION_UNIT:
+====================================
+
+At degree 3, we were storing in `melted_set' the list of melted routine of
+current class (stored through a TWO_WAY_SORTED_SET [MELTED_INFO]). A MELTED_INFO
+contained only the feature_name of the melted feature.
+
+Then a degree 2, we were traversing this structure and for each class, we were
+loading the FEATURE_TABLE and look for the corresponding FEATURE_I with the name
+stored in MELTED_INFO. With the retrieved FEATURE_I, we created the corresponding
+EXECUTION_UNIT.
+
+This was simple but there was a huge bottleneck: the use of FEATURE_TABLE.
+By looking at what we needed from the FEATURE_I to create the execution unit
+we found that we did not need it all the time.
+
+
+New way of computing EXECUTION_UNIT:
+====================================
+
+At degree 3 instead of storing only the name, we decided to store instead:
+- body_index
+- pattern_id
+- return_type
+Also instead of using a TWO_WAY_SORTED_SET, we are using a SEARCH_TABLE.
+
+Therefore at degree 2, we have all the required information to create the
+EXECUTION_UNIT without having to go through the FEATURE_TABLE.
+
+The speed improvement at degree 2 is about 10/20 seconds versus 3 to 8 minutes
+before.
+
+
+Missed details:
+===============
+
+I did not go through the details of the different kind of EXECUTION_UNIT and the
+different kind of MELTED_INFO. But by looking at the code it should be enough
+and simple to extend this explanation.

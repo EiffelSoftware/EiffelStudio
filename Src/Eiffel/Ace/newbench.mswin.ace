@@ -1,0 +1,353 @@
+system
+	"ec"
+
+root
+	EB_KERNEL: make
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	disabled_debug (yes)
+	disabled_debug ("_jfiat")
+	disabled_debug ("activity")
+	disabled_debug ("actual_replication")
+	disabled_debug ("anchored_features")
+	disabled_debug ("assertion")
+	disabled_debug ("assertions")
+	disabled_debug ("auto_completion")
+	disabled_debug ("c_debugger")
+	disabled_debug ("cache")
+	disabled_debug ("cache_compiler")
+	disabled_debug ("cache_research")
+	disabled_debug ("cache_server")
+	disabled_debug ("cache_stat")
+	disabled_debug ("cecil")
+	disabled_debug ("check_expanded")
+	disabled_debug ("class_of_id")
+	disabled_debug ("com_object")
+	disabled_debug ("count")
+	disabled_debug ("dbg")
+	disabled_debug ("dbg_extra_display")
+	disabled_debug ("dbg_trace")
+	disabled_debug ("dead_code")
+	disabled_debug ("dead_code_removal")
+	disabled_debug ("debbugger_hook")
+	disabled_debug ("debug_recv")
+	disabled_debug ("debugger")
+	disabled_debug ("debugger_caching")
+	disabled_debug ("debugger_eifnet_data")
+	disabled_debug ("debugger_eifnet_data_extra")
+	disabled_debug ("debugger_eifnet_synchro")
+	disabled_debug ("debugger_evaluator")
+	disabled_debug ("debugger_hook")
+	disabled_debug ("debugger_icor_data")
+	disabled_debug ("debugger_il_info_trace")
+	disabled_debug ("debugger_il_info_trace_extra")
+	disabled_debug ("debugger_interface")
+	disabled_debug ("debugger_ipc")
+	disabled_debug ("debugger_trace")
+	disabled_debug ("debugger_trace_breakpoint")
+	disabled_debug ("debugger_trace_cache")
+	disabled_debug ("debugger_trace_callback")
+	disabled_debug ("debugger_trace_callback_data")
+	disabled_debug ("debugger_trace_callback_notify")
+	disabled_debug ("debugger_trace_callstack")
+	disabled_debug ("debugger_trace_callstack_data")
+	disabled_debug ("debugger_trace_children")
+	disabled_debug ("debugger_trace_eifnet")
+	disabled_debug ("debugger_trace_eval")
+	disabled_debug ("debugger_trace_eval_data")
+	disabled_debug ("debugger_trace_operation")
+	disabled_debug ("debugger_trace_stepping")
+	disabled_debug ("debugger_trace_synchro")
+	disabled_debug ("display_exception_trace")
+	disabled_debug ("dle topo")
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("dollar")
+	disabled_debug ("editor")
+	disabled_debug ("eiffelnet")
+	disabled_debug ("eifnet_debugger")
+	disabled_debug ("es_dockable_notebook")
+	disabled_debug ("es_grid_layout")
+	disabled_debug ("es_grid_layout_positioning")
+	disabled_debug ("filters")
+	disabled_debug ("fixme")
+	disabled_debug ("flat_short")
+	disabled_debug ("flush_file")
+	disabled_debug ("formal_generic")
+	disabled_debug ("gelex")
+	disabled_debug ("genericity")
+	disabled_debug ("geyacc")
+	disabled_debug ("has_calls")
+	disabled_debug ("hector")
+	disabled_debug ("il_info_trace")
+	disabled_debug ("larry")
+	disabled_debug ("lex_output")
+	disabled_debug ("log_exceptions")
+	disabled_debug ("md out-of-order")
+	disabled_debug ("once")
+	disabled_debug ("optimization")
+	disabled_debug ("options")
+	disabled_debug ("parse")
+	disabled_debug ("profile_convert")
+	disabled_debug ("refactor_fixme")
+	disabled_debug ("refactor_to_implement")
+	disabled_debug ("regexp")
+	disabled_debug ("remove_class")
+	disabled_debug ("replication")
+	disabled_debug ("server")
+	disabled_debug ("show_prof_query")
+	disabled_debug ("timing")
+	disabled_debug ("to_implement")
+	disabled_debug ("trace_table")
+	disabled_debug ("transfer")
+	disabled_debug ("update_on_idle")
+	disabled_debug ("verbose")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	override_cluster ("override")
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (yes)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
+	inlining (yes)
+	inlining_size ("0")
+	multithreaded (yes)
+
+
+cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
+
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table"; "desc"; ".svn"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	table_eiffel_3:		"$EIFFEL_SRC\library\obsolete\base\table_eiffel3"
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			".svn"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; ".svn"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	all net:		"$EIFFEL_SRC\library\net"
+		exclude
+			".svn"; 
+		end
+
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			".svn"; "french"; "german"; 
+		end
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	all editor:		"$EIFFEL_SRC\library\editor"
+		exclude
+			".svn"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
+		end
+
+	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+		exclude
+			".svn"; 
+		end
+
+	all parser:		"$EIFFEL_SRC\Eiffel\parser"
+		exclude
+			".svn"; "compiler_override"; "error"; 
+		end
+
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
+	observer:		"$EIFFEL_SRC\library\patterns\observer"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; ".svn"; "other"; "free_elks"; 
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	all documentation:		"$EIFFEL_SRC\Eiffel\case"
+		exclude
+			".svn"; 
+		end
+
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+		exclude
+			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+		end
+
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+		exclude
+			".svn"; 
+		end
+
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			".svn"; "xml_implementation"; 
+		end
+
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
+
+	interface_switch (switch):		"$\interface\new_graphical"
+
+	time_lock (switch):		"$\license\time_lock"
+
+	communications (switch):		"$\communication"
+
+	all status (communications):		"$\status"
+		exclude
+			"no_dotnet"; ".svn"; 
+		end
+
+	ipc (communications):		"$\ipc"
+
+	debuging_class (communications):		"$\debug"
+
+	debuging_formatters (communications):		"$\formatters"
+
+	io_watcher (communications):		"$\spec\mswin"
+
+	all lex:		"$EIFFEL_SRC\library\lex"
+		exclude
+			".svn"; 
+		end
+
+	all interface:		"$EIFFEL_SRC\Eiffel\interface"
+		exclude
+			".svn"; "graphical"; "gtk"; "Not_in_System"; "tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
+		end
+
+	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
+		exclude
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"; ".svn";
+		end
+
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+		exclude
+			".svn"; "clib"; "spec"; 
+		end
+
+	all cli_debugger:		"$EIFFEL_SRC\Eiffel\library\cli_debugger"
+		exclude
+			".svn"; 
+		end
+
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
+	dotnet_logger:		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+		exclude
+			".svn"; 
+		end
+
+	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+		exclude
+			".svn"; 
+		end
+
+	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+
+	all graph:		"$EIFFEL_SRC\library\graph"
+		exclude
+			".svn"; 
+		end
+
+	all memory_analyzer:		"$EIFFEL_SRC\library\memory_analyzer"
+		exclude
+			".svn"; 
+		end
+
+	all process:		"$EIFFEL_SRC\library\process"
+		exclude
+			".svn"; "dotnet"; "unix"; 
+		end
+
+	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension\independent"
+		exclude
+			".svn"; "gtk"; 
+		end
+
+	all thread:		"$EIFFEL_SRC\library\thread"
+		exclude
+			".svn"; 
+		end
+
+	all diff:		"$EIFFEL_SRC\library\diff"
+		exclude
+			".svn"; 
+		end
+
+	all uuid:		"$EIFFEL_SRC\library\uuid"
+		exclude
+			".svn"; 
+		end
+
+	all configuration:		"$EIFFEL_SRC/Eiffel/library/configuration"
+		exclude
+			".svn"; 
+		end
+
+	all merger:		"$EIFFEL_SRC/tools/partial_classes_merger/src"
+		exclude
+			".svn"; "EIFGEN"; 
+		end
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\C\platform",
+		"$(EIFFEL_SRC)\C_library\zlib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\mtvision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\C\ipc\ewb\mtewb.lib",
+		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
+		"$(EIFFEL_SRC)\C\bench\mtcompiler.lib",
+		"$(EIFFEL_SRC)\C\platform\platform.lib",
+		"htmlhelp.lib",
+		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\mtnet.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib"
+
+end

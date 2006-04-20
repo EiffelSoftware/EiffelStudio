@@ -1,0 +1,27 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include <windows.h>
+
+#define Project_icon                    1
+#define Object_icon                     2
+#define Feature_icon                    3
+#define Explain_icon                    4
+#define Class_icon                      5
+#define System_icon                     6
+#define Document_icon                   7
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Project_icon            ICON    DISCARDABLE     "ec.ico"
+Object_icon             ICON    DISCARDABLE     "ecdoc.ico"
+Feature_icon            ICON    DISCARDABLE     "ecdoc.ico"
+Explain_icon            ICON    DISCARDABLE     "ecdoc.ico"
+Class_icon              ICON    DISCARDABLE     "ecdoc.ico"
+System_icon             ICON    DISCARDABLE     "ecdoc.ico"
+Document_icon           ICON    DISCARDABLE     "ecdoc.ico"
+
+// It should be 
+// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "ec.exe.manifest"
+// but on older version of VC or older version of the Platform SDK they
+// are not defined.
+1 24 "ec.exe.manifest"

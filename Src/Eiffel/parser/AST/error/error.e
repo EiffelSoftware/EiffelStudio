@@ -1,73 +1,14 @@
 indexing
-	description: "Syntax error."
+	description: "Dummy class used to reflect hierarchy of ERROR classes in compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision $"
 
 class
-	SYNTAX_ERROR
-
-inherit
 	ERROR
 
-create {ERROR_HANDLER}
-	init
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (s, e: INTEGER; f: STRING; m: STRING; u: BOOLEAN) is
-			-- Create a new SYNTAX_ERROR.
-		require
-			f_not_void: f /= Void
-			m_not_void: m /= Void
-		do
-			line := s
-			column := e
-			file_name := f
-			error_message := m
-		ensure
-			line_set: line = s
-			column_set: column = e
-			file_name_set: file_name = f
-			error_message_set: error_message = m
-		end
-
-	init is
-			-- Dummy implementation, kept for backward compatibility.
-		do
-			file_name := ""
-			error_message := ""
-		end
-
-feature -- Access
-
-	line: INTEGER
-			-- Line number
-
-	column: INTEGER
-			-- Column number
-
-	file_name: STRING
-			-- File name containing text with syntax error
-
-	error_message: STRING
-			-- Syntax error message
-
-feature {NONE} -- Implementation
-
-	syntax_message: STRING is
-			-- Syntax error message, kept for backward compatibility.
-		do
-			Result := error_message
-		end
-
-invariant
-	attached_file_name: file_name /= Void
-	attached_error_message: error_message /= Void
+feature
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

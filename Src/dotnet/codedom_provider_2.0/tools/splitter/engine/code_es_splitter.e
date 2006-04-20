@@ -9,9 +9,12 @@ class
 	CODE_ES_SPLITTER
 
 inherit
-	CODE_ES_SHARED_DIRECTORY_SEPARATOR
-
 	CODE_SHARED_CLASS_SEPARATOR
+		export
+			{NONE} all
+		end
+
+	OPERATING_ENVIRONMENT
 		export
 			{NONE} all
 		end

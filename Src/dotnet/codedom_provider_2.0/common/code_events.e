@@ -211,6 +211,8 @@ feature {NONE} -- Implementation
 						Missing_argument)
 			Result.extend (["Missing Type Name", "consumer", "Type in namespace `{1}' is missing name", Error],
 						Missing_type_name)
+			Result.extend (["Partial Class Merging Failed", "consumer", "The following error occurred while trying to merge partial classes: {1}", Error],
+						Failed_merge)
 
 			-- Consumer Warnings
 			Result.extend (["Missing Array Size", "consumer", "Array creation expression is missing size information", Warning],

@@ -1,0 +1,32 @@
+?X:
+?X:	Look wether <sys/select.h> defines struct fd_set
+?X:
+?MAKE:i_fd_setsyss: Inhdr contains test Loc Setvar Findhdr
+?MAKE:	-pick add $@ %<
+?S:i_fd_setsyss:
+?S:	This variable conditionally defines I_FD_SET_SYS_SELECT, which indicates
+?S:	to the C program that it should include <sys/select.h> in order to
+?S:	get the definition of struct fd_set.
+?S:.
+?C:I_FD_SET_SYS_SELECT:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <sys/select.h> in order to get definition of struct fd_set.
+?C:.
+?H:#$i_fd_setsyss I_FD_SET_SYS_SELECT	/**/
+?H:.
+?D:i_fd_setsyss=''
+?LINT:set i_fd_setsyss
+: see if sys/select.h has to be included
+xxx=`./findhdr sys/select.h`
+if $test "$xxx"; then
+    if $contains 'fd_set.*{' $xxx >/dev/null 2>&1; then
+        val="$define"
+        echo "You have struct fd_set defined in <sys/select.h>." >&4
+	else
+		val="$undef"
+    fi
+else
+    val="$undef"
+fi
+set i_fd_setsyss
+eval $setvar

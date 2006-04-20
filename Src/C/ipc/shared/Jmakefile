@@ -1,0 +1,43 @@
+/*
+ * Jmakefile for shared files
+ */
+
+#include "../../U/runtime.H"
+
+>JMTCFLAGS
+
+/* We build a libshared.a archive for shared routines needed by both the
+ * daemon and the client.
+ */
+
+DPFLAGS = -I$(TOP) -I$(TOP)/run-time -I$(TOP)/idrs -I$(TOP)/run-time/include
+CFLAGS = $(DPFLAGS) -DWORKBENCH -DEIF_IPC
+
+LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
+	stream.c system.c transfer.c rqst_idrs.c
+
+/* Object files are derived from source files */
+LOBJ = \
+|expand f!$(LSRC)!
+	!f:\.c=.o \
+-expand \\
+
+MT_LOBJ = \
+|expand f!$(LSRC)!
+	MT!f:\.c=.o \
+-expand \\
+
+|expand f!$(LSRC)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DEIF_IPC $? -o $@
+
+-expand
+
+NormalObjectRule()
+AddSource($(LSRC))
+
+CustomLibraryTarget(ipc,$(LOBJ))
+CustomLibraryTarget(mtipc,$(MT_LOBJ))
+
+DependTarget()
+LintTarget()

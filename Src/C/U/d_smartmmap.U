@@ -1,0 +1,47 @@
+?X:
+?X:	Look wether  MAP_ANONYMOUS, MAP_VARIABLE and MAP_PRIVATE are defined
+?X:
+?MAKE:d_smartmmap: Inhdr contains test Loc Setvar Findhdr d_mmap
+?MAKE:	-pick add $@ %<
+?S:d_smartmmap:
+?S:	This variable conditionally defines HAS_SMART_MMAP
+?S:.
+?C:HAS_SMART_MMAP:
+?C:	This symbol, if defined, indicates to the C program that it can
+?C:	use mmap and munmap for shared memory.
+?C:.
+?H:#$d_smartmmap HAS_SMART_MMAP	/**/
+?H:.
+?D:d_smartmmap=''
+?LINT:set d_smartmmap
+val="$undef"
+if $test $d_mmap = "$define"; then
+	xxx=`./findhdr sys/mman.h`
+	if $test "$xxx"; then
+    	if $contains 'MAP_ANONYMOUS' $xxx >/dev/null 2>&1; then
+			if $contains 'MAP_VARIABLE' $xxx >/dev/null 2>&1; then
+				if $contains 'MAP_PRIVATE' $xxx >/dev/null 2>&1; then
+        			val="$define"
+        			echo "MAP_ANONYMOUS, MAP_VARIABLE and MAP_PRIVATE are defined." >&4
+        			echo "mmap and munmap can be used for shared memory." >&4
+				else
+					echo "MAP_PRIVATE is not defined." >&4
+					echo "HAS_SMART_MMAP is not defined." >&4
+    			fi
+			else
+				echo "MAP_VARIABLE is not defined." >&4
+				echo "HAS_SMART_MMAP is not defined." >&4
+    		fi
+		else
+			echo "MAP_ANONYMOUS is not defined." >&4
+		echo "HAS_SMART_MMAP is not defined." >&4
+    	fi
+	else
+		echo "<sys/mman.h> not found." >&4
+		echo "HAS_SMART_MMAP is not defined." >&4
+	fi
+else
+	echo "Your system does not support mmap, HAS_SMART_MMAP is not defined." >&4
+fi
+set d_smartmmap
+eval $setvar

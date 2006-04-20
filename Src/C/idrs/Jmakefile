@@ -1,0 +1,36 @@
+/*
+ * Jmakefile for IDR library
+ */
+
+#include "../U/runtime.H"
+
+>JMTCFLAGS
+
+DPFLAGS = -I$(TOP) -I$(TOP)/run-time
+CFLAGS = $(DPFLAGS)
+
+LSRC = idrs.c
+
+/* Object files are derived from source files */
+LOBJ = \
+|expand f!$(LSRC)!
+	!f:\.c=.o \
+-expand \\
+
+MT_LOBJ = \
+|expand f!$(LSRC)!
+	MT!f:\.c=.o \
+-expand \\
+
+|expand f!$(LSRC)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) $? -o $@
+
+-expand
+
+AddSource($(LSRC))
+NormalObjectRule()
+DependTarget()
+CustomObjectTarget(idrs.o)
+CustomObjectTarget(MTidrs.o)
+LintTarget()

@@ -1,0 +1,29 @@
+?RCS: $Id$
+?RCS:
+?RCS: Copyright (c) 1991, Raphael Manfredi
+?RCS:
+?RCS: You may redistribute only under the terms of the GNU General Public
+?RCS: Licence as specified in the README file that comes with dist.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.4  1997/10/06 19:13:03  paulv
+?RCS: Renaming of all Eiffel include files (foo.h -> eif_foo.h)
+?RCS:
+?RCS: Revision 2.8  91/07/08  13:30:45  ram
+?RCS: 3.0 alpha baseline.
+?RCS: 
+?X: 
+?X: If you want to initialize any default values, copy this unit to your
+?X: personal U directory and add the assignments to the end.  This file
+?X: is included after variables are initialized but before any old
+?X: config.sh file is read in.
+?X:
+?MAKE:Myinit: Init
+?MAKE:	-pick add $@ %<
+: libraries wanted for XDR support and socket support
+?X: On SONY RISC, -lsocket needs -lnsl to resolve getnetbyname and al.
+?X: The XDR routines are also located there
+?X: Math library wanted for math.c
+libswanted="c_s rpc xdr bsd socket inet nsl m"
+lex="flex"
+lexflags="-lB8 -C"

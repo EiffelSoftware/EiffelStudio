@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="finish_freezing" uuid="4054F4B6-BAD4-4CA2-8732-682E43F9FC39">
+	<target name="finish_freezing">
+		<root feature="make" class="FINISH_FREEZING"/>
+		<option trace="false" profile="false" debug="false">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="True"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="exception_trace" value="True"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="multithreaded" value="False"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<cluster name="finish_freezing" location="$EIFFEL_SRC\Eiffel\extra\finish_freezing\main\"/>
+		<cluster name="resources" location="$EIFFEL_SRC\Eiffel\interface\tty\resources\"/>
+		<cluster name="spec" location="$EIFFEL_SRC\Eiffel\extra\finish_freezing\spec\windows\"/>
+	</target>
+</system>

@@ -151,6 +151,9 @@ feature -- Consumer Errors
 	Missing_argument: INTEGER is 3022
 			-- Argument is missing
 
+	Failed_merge: INTEGER is 3023
+			-- Partial class merging failed
+
 feature -- Consumer Warnings
 
 	Missing_creation_type: INTEGER is 4001

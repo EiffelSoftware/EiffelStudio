@@ -46,11 +46,24 @@
 			<condition><platform value="windows"/></condition>
 		</external_object>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex">
+			<option>
+				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+		</library>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex">
+			<option>
+				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+		</library>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex">
+			<option>
+				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+		</library>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
@@ -380,7 +393,11 @@
 			<condition><platform value="windows"/></condition>
 		</external_object>
 
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex">
+			<option>
+				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+		</library>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.acex"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
@@ -394,7 +411,6 @@
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.acex"/>
 		
 		
-		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.acex"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.acex"/>

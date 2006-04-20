@@ -15,6 +15,11 @@ LOBJ = \
 	!f:\.c=.o \
 -expand \\
 
+MT_WOBJ = \
+|expand f!$(LSRC)!
+	MTw!f:\.c=.o \
+-expand \\
+
 MT_LOBJ = \
 |expand f!$(LSRC)!
 	MT!f:\.c=.o \
@@ -28,6 +33,14 @@ MT!f:\.c=.o: !f
 
 -expand
 
+;# Rule for compiling MTw*.o files
+|expand f!$(LSRC)!
+MTw!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+
 ;# Where shared archive is located (path and name)
 LIB_SHARED = ../shared
 LIB_IDR = ../../idrs
@@ -40,5 +53,6 @@ CFLAGS = $(DPFLAGS) -DEIF_IPC
 NormalObjectRule()
 NormalLibraryTarget(ewb,$(LSRC),$(LOBJ))
 CustomLibraryTarget(mtewb, $(MT_LOBJ))
+CustomLibraryTarget(mtwewb, $(MT_WOBJ))
 DependTarget()
 LintTarget()

@@ -127,7 +127,7 @@ cluster
 			assertion (require)
 		end
 
-	vs_setup:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
+	vs_setup:		"$EIFFEL_SRC\tools\finish_freezing\main"
 
 	library eclop:		"$EIFFEL_SRC\free_add_ons\eclop"
 

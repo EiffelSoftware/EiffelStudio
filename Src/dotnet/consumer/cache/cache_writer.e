@@ -92,7 +92,7 @@ feature -- Basic Operations
 				l_reader := cache_reader
 				l_ca := l_reader.consumed_assembly_from_path (a_path)
 				if l_ca = Void then
-					l_lower_path := a_path.as_lower
+					l_lower_path := {PATH}.get_full_path (a_path.as_lower)
 				else
 					l_lower_path := l_ca.location
 				end
@@ -436,13 +436,15 @@ feature -- Basic Operations
 		local
 			l_id: STRING
 			l_info: CACHE_INFO
+			l_path: like a_path
 		do
 			guard.lock
-			Result := cache_reader.consumed_assembly_from_path (a_path)
+			l_path := {PATH}.get_full_path (a_path)
+			Result := cache_reader.consumed_assembly_from_path (l_path)
 			if Result = Void then
 				l_id := feature {GUID}.new_guid.to_string
 				l_id.to_upper
-				Result := create_consumed_assembly_from_path (l_id, a_path)
+				Result := create_consumed_assembly_from_path (l_id, l_path)
 				if Result /= Void then
 					l_info := cache_reader.info
 					l_info.add_assembly (Result)

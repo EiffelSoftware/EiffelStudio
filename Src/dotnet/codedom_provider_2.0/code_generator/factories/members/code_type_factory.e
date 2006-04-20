@@ -66,20 +66,16 @@ feature {NONE} -- Type generation
 			l_parent: SYSTEM_DLL_CODE_TYPE_REFERENCE
 			l_object_parent: CODE_PARENT
 			l_parent_type: CODE_TYPE_REFERENCE
+			l_type: SYSTEM_TYPE
 		do
 			l_parents := a_source.base_types
 			if a_source.is_partial then
 				-- We need to artificially add the parent to the class
-				-- because ASP.NET doesn't do it. We use a set of preset
-				-- class name prefixes to infer the parent type.
-				if a_source.name.to_lower.starts_with (("master_page_").to_cil) then
-					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.MasterPage").to_cil))
-				elseif a_source.name.to_lower.starts_with (("user_control_").to_cil) then
-					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.UserControl").to_cil))
-				elseif a_source.name.to_lower.starts_with (("mobile_user_control_").to_cil) then
-					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.MobileUserControl").to_cil))
-				else
-					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (("System.Web.UI.Page").to_cil))
+				-- because ASP.NET doesn't do it. Microsoft added the type of
+				-- the parent class in the `UserData' field of the codedom node.
+				l_type ?= a_source.user_data.item (("BaseClassDefinition").to_cil)
+				if l_type /= Void then
+					i := l_parents.add (create {SYSTEM_DLL_CODE_TYPE_REFERENCE}.make (l_type))
 				end
 			end
 			if l_parents /= Void then

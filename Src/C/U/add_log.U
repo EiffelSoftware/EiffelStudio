@@ -1,0 +1,34 @@
+?RCS: $Id$
+?RCS:
+?RCS: Copyright (c) 1992, Raphael Manfredi
+?RCS:
+?RCS: This software belongs to the public domain. You may redistribute
+?RCS: freely and/or use parts of this software in any other application,
+?RCS: as explained in the README file which comes with dist.
+?RCS:
+?RCS: $Log$
+?RCS: Revision 1.3  1997/10/06 19:13:04  paulv
+?RCS: Renaming of all Eiffel include files (foo.h -> eif_foo.h)
+?RCS:
+?MAKE:add_log: Nothing
+?MAKE:	-pick add $@ %<
+?S:add_log:
+?S:	Always set to "$undef".
+?S:.
+?C:USE_ADD_LOG:
+?C:	This symbol is defined if the run time logging is enabled, mainly for
+?C:	debugging purposes (although the logging level may be set to a low level
+?C:	to leave only critical error messages). This will never be defined by
+?C:	default.
+?C:.
+?C:LOGGING_LEVEL:
+?C:	This is the default logging level, which is meanginful only when
+?C:	USE_ADD_LOG is defined. The logging level typically ranges from 0 (no
+?C:	log) to 20 (maximum logging level).
+?C:.
+?H:#$add_log USE_ADD_LOG		/* Allow logging */
+?H:?%<:#define LOGGING_LEVEL	9	/* Logging level */
+?H:.
+: logging level stuff
+add_log="$undef"
+

@@ -1,0 +1,11 @@
+/*
+ * Main Jmakefile
+ */
+
+SUB = shared daemon ewb app
+
+all::
+
+SetSubdirs($(SUB))
+DependSubdirs()
+LintSubdirs()

@@ -1,0 +1,150 @@
+#!/bin/sh
+
+# quick_configure generate run-times libraries for the platforms given as 
+# arguments.
+
+usage () {
+    cat <<EOF
+Usage: quick_configure [platform run-time] 
+EOF
+}
+
+
+help () {
+cat <<EOF
+quick_configure only generates the run-times libraries
+Must be run from the C/ directory.
+
+run-time:
+	all -> all libraries (not only run-times)
+	<nothing>-> all run-times 
+	lib<name>.{a,so} -> this run-time
+	shared -> static shared library
+	mt ->only MT static libraries
+	mtshared -> MT shared libraries
+
+platforms:
+	default -> $ISE_PLATFORM
+	linux-x86 
+	solaris
+	sgi
+	unicos-c90
+	unicos-t3d
+	alpha
+	...
+
+EOF
+
+}
+
+echo quick_configure begins...
+
+allmakefiles=yes
+
+if [ $# -gt 2 ] ; then
+	echo Too many arguments
+	usage
+	exit
+fi
+
+if [ $# = 0 ]; then
+	echo No arguments entered, check default...
+	echo Default platform is $ISE_PLATFORM
+	echo Default library is all
+	platform=$ISE_PLATFORM
+	runtimes=all
+elif [ $# = 1 ]; then
+	runtimes=all
+elif [ $# = 2 ]; then
+	runtimes=$2
+fi
+if [ $# -gt 0 ]; then
+	if [ $1 = -help ]; then
+		help
+		exit
+	else
+		platform=$1
+		cd CONFIGS
+		if [ -f $platform ]; then
+			#Run compilation	
+			echo Compiling run-time for $platform
+			cd ..
+		else
+			# No corresponding platform
+			echo No $platform in CONFIGS directory
+			usage
+			exit
+		fi
+	fi
+fi
+
+if [ -f Makefile ]; then
+	echo Makefile exists, make clobber [y]?
+	read rep
+	if [ $rep != y ]; then
+		echo Regenerate all Makefiles? [y]
+		read rep
+		if [ $rep != y ]; then
+			echo Only regenerate run-time/Makefile
+			cd run-time; sh Makefile.SH; cd ..
+			allmakefiles=no
+			echo clean run-time [y]?
+			read rep
+			if [ $rep != y ]; then
+				echo No cleaning
+			else
+				echo Cleaning in run-time...
+				cd run-time; make clean; cd ..
+			fi
+		else
+			echo Regenerate all Makefiles
+		fi
+	else	
+		make clobber
+		
+	fi
+fi	
+
+
+if [ -f config.sh ]; then
+	rm -f config.sh
+fi
+cp CONFIGS/$platform config.sh
+if [ $allmakefiles != no ]; then
+	./Configure -S
+fi
+
+#Taken from finish_freezing scripts to determine how many CPUs are available on a given platform
+case `uname` in
+    Linux)
+	if [ -f /proc/cpuinfo ] ; then
+		ncpus=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
+	fi
+	;;
+	SunOS)
+	ncpus=`/usr/sbin/psrinfo | wc -l`
+	;;
+    IRIX*)
+	ncpus=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'`
+	;;
+esac
+if [ -z "$ncpus" ]; then ncpus=1; fi
+if [ "$ncpus" -eq "0" ]; then ncpus=1; fi
+
+if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
+    make_args="-j $ncpus"
+else
+    make_args=
+fi
+
+if [ $runtimes = all ]; then
+	echo Copying mkdep...
+	cp mkdep.unix mkdep; make depend
+	make $make_args
+else
+	cd run-time; make $2 
+	cd ..
+
+fi
+
+echo quick_configure terminated.

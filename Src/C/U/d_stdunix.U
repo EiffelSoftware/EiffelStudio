@@ -1,0 +1,42 @@
+?MAKE:d_getpwuid d_getgrgid d_geteuid: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_getpwuid:
+?S:	This variable conditionally defines HAS_GETPWUID if getpwuid() is
+?S:	available
+?S:.
+?S:d_getgrgid:
+?S:	This variable conditionally defines HAS_GETGRGID if getgrgid() is
+?S:	available
+?S:.
+?S:d_geteuid:
+?S:	This variable conditionally defines HAS_GETEUID if geteuid() is
+?S:	available
+?S:.
+?C:HAS_GETPWUID:
+?C:	This symbol, if defined, indicates that the getpwuid system call is
+?C:	available
+?C:.
+?C:HAS_GETGRGID:
+?C:	This symbol, if defined, indicates that the getgrgid system call is
+?C:	available
+?C:.
+?C:HAS_GETEUID:
+?C:	This symbol, if defined, indicates that the geteuid system call is
+?C:	available
+?C:.
+?H:#$d_getpwuid HAS_GETPWUID	/**/
+?H:.
+?H:#$d_getgrgid HAS_GETGRGID	/**/
+?H:.
+?H:#$d_geteuid HAS_GETEUID	/**/
+?H:.
+: see if getpwuid exists
+set getpwuid d_getpwuid
+eval $inlibc
+: see if getgrgid exists
+set getgrgid d_getgrgid
+eval $inlibc
+: see if geteuid exists
+set geteuid d_geteuid
+eval $inlibc
+

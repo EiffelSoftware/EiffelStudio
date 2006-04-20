@@ -1,0 +1,17 @@
+?MAKE:d_utime: Inlibc
+?MAKE:	-pick add $@ %<
+?S:d_utime:
+?S:	This variable conditionally defines HAS_UTIME if utime() is
+?S:	available.
+?S:.
+?C:HAS_UTIME:
+?C:	This symbol, if defined, indicates that the utime routine is
+?C:	available.
+?C:.
+?H:#$d_utime HAS_UTIME	/**/
+?H:.
+?LINT:set d_utime
+: see if utime exists
+set utime d_utime
+eval $inlibc
+

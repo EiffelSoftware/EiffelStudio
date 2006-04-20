@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			ace_location := ""
 
 			if Eiffel_projects_directory /= Void and then not Eiffel_projects_directory.is_empty then
-				project_location := clone (Eiffel_projects_directory)
+				project_location := Eiffel_projects_directory.twin
 			else
 				if not platform_is_unix then
 					project_location := "C:\projects"

@@ -11,6 +11,9 @@
 
 -->
 
+<!-- specify encoding of output -->
+<xsl:output encoding="ISO-8859-1"/>
+
 <!-- convert if and ifnot nodes into new condition nodes -->
 <xsl:template match="//cf:if">
 	<xsl:element name="condition">

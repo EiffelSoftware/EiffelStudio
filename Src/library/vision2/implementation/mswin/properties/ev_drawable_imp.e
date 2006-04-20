@@ -568,8 +568,6 @@ feature -- Drawing operations
 			pixmap_imp			: EV_PIXMAP_IMP_STATE
 			source_drawable	: EV_PIXMAP_IMP_DRAWABLE
 			dest_dc				: WEL_DC
-			l_backbuffer: WEL_BITMAP
-			l_backbuffer_dc: WEL_MEMORY_DC
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			pixmap_height := pixmap_imp.height

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				if l_output_dir_name.item (l_output_dir_name.count) /= Directory_separator then
 					l_output_dir_name.append_character (Directory_separator)
 				end
-				keep := not l_parser.valid_options.has ("-d")
+				keep := l_parser.valid_options.has ("-k")
 				process_directories (l_dir_names, l_output_dir_name, l_parser.valid_options.has ("-r"))
 			else
 				print (l_parser.error_message)
@@ -76,6 +76,17 @@ feature -- Basic Operations
 			-- Process directories `a_dir_names' recursively if `a_recursive'.
 		require
 			attached_dir_names: a_dir_names /= Void
+			attached_output_dir_name: a_output_dir_name /= Void
+		do
+			process_directories_with_error_handler (a_dir_names, a_output_dir_name, a_recursive, agent display_warning)
+		end
+
+	process_directories_with_error_handler (a_dir_names: LIST [STRING]; a_output_dir_name: STRING; a_recursive: BOOLEAN; a_error_handler: ROUTINE [ANY, TUPLE [STRING]]) is
+			-- Process directories `a_dir_names' recursively if `a_recursive'.
+			-- Call `a_error_handler' in case of error.
+		require
+			attached_dir_names: a_dir_names /= Void
+			attached_output_dir_name: a_output_dir_name /= Void
 		local
 			l_merger: EPC_MERGER
 		do
@@ -94,8 +105,8 @@ feature -- Basic Operations
 						if not keep then
 							delete_files (partial_classes_files.item_for_iteration)
 						end
-					else
-						display_warning ("Could not merge class " + partial_classes_files.key_for_iteration + ", the following error occurred: " + l_merger.error_message)
+					elseif a_error_handler /= Void then
+						a_error_handler.call (["Could not merge class " + partial_classes_files.key_for_iteration + ", the following error occurred: " + l_merger.error_message])
 					end
 					partial_classes_files.forth
 				end
@@ -316,7 +327,7 @@ feature {NONE} -- Implementation
 						 "-i,--input=DIRECTORIES!#Input directories to be parsed.",
 						 "-o,--output=OUTPUT!#Output directory.",
 						 "-r,--recursive#Recurse in subdirectories of input directories.",
-						 "-d,--delete#Delete partial classes."
+						 "-k,--keep#Keep partial classes files."
 						>>
 		end
 

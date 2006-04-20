@@ -72,7 +72,7 @@ cluster
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
-	env_interp:		"$EIFFEL_SRC\eiffel\lace\env"
+	all config:		"$EIFFEL_SRC\eiffel\library\configuration"
 		exclude
 			".svn";
 		default
@@ -100,7 +100,7 @@ cluster
 			namespace ("EiffelSoftware.Library.Gobo")
 		end
 
-	all ast:		"$EIFFEL_SRC\Eiffel\common"
+	all ast:		"$EIFFEL_SRC\eiffel\parser"
 		exclude
 			".svn";
 		default

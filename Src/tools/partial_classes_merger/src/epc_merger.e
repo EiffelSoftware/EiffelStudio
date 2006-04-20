@@ -55,7 +55,8 @@ feature -- Status Report
 		require
 			attached_file: a_file /= Void
 		local
-			l_errors: LIST [SYNTAX_ERROR]
+			l_errors: LIST [ERROR]
+			l_syntax_error: SYNTAX_ERROR
 			l_content, l_new_pragma: STRING
 			l_index, l_index2: INTEGER
 			l_match_list: LEAF_AS_LIST
@@ -74,9 +75,10 @@ feature -- Status Report
 						create error_message.make (256)
 						error_message.append ("Syntax error at line ")
 						error_message.append (l_errors.first.line.out)
-						if not l_errors.first.error_message.is_empty then
+						l_syntax_error ?= l_errors.first
+						if l_syntax_error /= Void and then not l_syntax_error.error_message.is_empty then
 							error_message.append (": ")
-							error_message.append (l_errors.first.error_message)
+							error_message.append (l_syntax_error.error_message)
 						end
 					else
 						error_message := "Syntax error"

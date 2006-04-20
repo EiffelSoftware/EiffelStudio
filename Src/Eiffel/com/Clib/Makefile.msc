@@ -1,0 +1,316 @@
+# ecom.lib - Makefile for Microsoft C
+
+MV = copy
+CC = cl
+OUTPUT_CMD = -Fo 
+#CFLAGS = -MT -Zi -W0 -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include 
+CFLAGS = -MT -W0 -Ox -D_WIN32_DCOM -c -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(EIFFEL_SRC)\library\com\spec\windows\include
+
+OBJ = ceiffelcompiler_factory.obj \
+ceiffelproject_factory.obj \
+ceiffelcompletioninfo_factory.obj \
+ecom_eiffelcomcompiler_ceiffelcompiler_s.obj \
+ecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelcompiler_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelcompilerevents_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ceiffelproject_s.obj \
+ecom_eiffelcomcompiler_ieiffelproject_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelproject_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ceiffelcompletioninfo_s.obj \
+ecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj \
+ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ienumcluster_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelprojectproperties_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsystembrowser_impl_proxy_s.obj \
+ecom_eiffelcomcompiler_ienumclusterprop_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelsupport_impl_proxy_s.obj \
+ecom_gce_eiffelsoftwarecompiler.obj \
+ecom_gce_eiffelsoftwarecompiler_2.obj \
+ecom_gce_eiffelsoftwarecompiler_3.obj \
+ecom_gce_eiffelsoftwarecompiler_4.obj \
+ecom_gec_eiffelsoftwarecompiler.obj \
+ecom_gec_eiffelsoftwarecompiler_2.obj \
+ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
+ecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
+server_registration.obj 
+
+WOBJ = wceiffelcompiler_factory.obj \
+wceiffelproject_factory.obj \
+wceiffelcompletioninfo_factory.obj \
+wecom_eiffelcomcompiler_ceiffelcompiler_s.obj \
+wecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelcompiler_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelcompilerevents_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ceiffelproject_s.obj \
+wecom_eiffelcomcompiler_ieiffelproject_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelproject_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ceiffelcompletioninfo_s.obj \
+wecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj \
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy.obj \
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ienumcluster_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelprojectproperties_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_proxy_s.obj \
+wecom_eiffelcomcompiler_ienumclusterprop_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj \
+wecom_gce_eiffelsoftwarecompiler.obj \
+wecom_gce_eiffelsoftwarecompiler_2.obj \
+wecom_gce_eiffelsoftwarecompiler_3.obj \
+wecom_gce_eiffelsoftwarecompiler_4.obj \
+wecom_gec_eiffelsoftwarecompiler.obj \
+wecom_gec_eiffelsoftwarecompiler_2.obj \
+wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj \
+wecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj \
+wserver_registration.obj 
+
+
+all:: ecom.lib ecom_final.lib
+
+ecom.lib: $(WOBJ)
+  if exist $@ del $@
+  lib -OUT:$@ $(WOBJ)
+  if not exist msc mkdir msc
+  $(MV) $@ msc
+  del $@
+
+ecom_final.lib: $(OBJ)
+  if exist $@ del $@
+  lib -OUT:$@ $(OBJ)
+  if not exist msc mkdir msc
+  $(MV) $@ msc
+  del $@
+
+.cpp.obj:
+  $(CC) $(CFLAGS) $<
+
+.c.obj:
+  $(CC) $(CFLAGS) $<
+
+wceiffelcompiler_factory.obj: ceiffelcompiler_factory.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wceiffelcompletioninfo_factory.obj: ceiffelcompletioninfo_factory.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wceiffelproject_factory.obj: ceiffelproject_factory.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ceiffelcompiler_s.obj: ecom_eiffelcomcompiler_ceiffelcompiler_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ceiffelproject_s.obj: ecom_eiffelcomcompiler_ceiffelproject_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffeldefinitionresult_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffeldefinitionfeatureresult_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ceiffelcompletioninfo_s.obj: ecom_eiffelcomcompiler_ceiffelcompletioninfo_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelcompletioninfo_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelcompiler_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.obj: ecom_eiffelcomcompiler_ceiffelhtmldocumentationgenerator_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationevents_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelproject_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelproject_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsystembrowser_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler.obj: ecom_gce_eiffelsoftwarecompiler.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler_2.obj: ecom_gce_eiffelsoftwarecompiler_2.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler_3.obj: ecom_gce_eiffelsoftwarecompiler_3.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gce_eiffelsoftwarecompiler_4.obj: ecom_gce_eiffelsoftwarecompiler_4.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gec_eiffelsoftwarecompiler.obj: ecom_gec_eiffelsoftwarecompiler.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_gec_eiffelsoftwarecompiler_2.obj: ecom_gec_eiffelsoftwarecompiler_2.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_xcp_ieiffelcompilerevents_ceiffelcompiler.obj: ecom_xcp_ieiffelcompilerevents_ceiffelcompiler.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.obj: ecom_xcp_ieiffelhtmldocumentationevents_ceiffelhtmldocumentationgenerator.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wserver_registration.obj: server_registration.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelparameterdescriptor_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelclassdescriptor_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelclusterdescriptor_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelcompilerevents_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelcompilerevents_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelcompiler_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelcompiler_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelhtmldocumentationgenerator_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelprojectproperties_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelprojectproperties_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelproject_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelproject_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelsystembrowser_impl_proxy_s.obj: ecom_eiffelcomcompiler_ieiffelsystembrowser_impl_proxy_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumeiffelclass_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ienumcluster_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumcluster_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ienumparameter_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumparameter_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ienumfeature_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumfeature_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+
+wecom_eiffelcomcompiler_ienumclusterprop_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumclusterprop_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumassembly_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+   
+wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+  
+wecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelsupport_impl_stub_s.cpp
+  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?

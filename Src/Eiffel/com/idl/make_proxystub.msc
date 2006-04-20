@@ -1,0 +1,31 @@
+# EiffelSoftware.CompilerPS.dll - Makefile for Microsoft C
+
+CC = cl
+LINKER = link
+OUTPUT_CMD = -Fo
+CFLAGS = /ML /W0 /GD /Ox /D "REGISTER_PROXY_DLL" /D "_WIN32_DCOM" /D "_WIN32_WINNT=0x0500" /D WIN32 /YX /c
+#CFLAGS = /ML /W0 /GD /Zi /D "REGISTER_PROXY_DLL" /D "_WIN32_DCOM" /D "_WIN32_WINNT=0x0500" /D WIN32 /YX /c
+LINK_FLAGS = /DLL /RELEASE /INCREMENTAL:NO
+#LINK_FLAGS = /DLL /DEBUG /INCREMENTAL:NO
+
+OBJ = EiffelSoftware.CompilerPS_data.obj \
+EiffelSoftware.CompilerPS_proxy.obj \
+EiffelSoftware.CompilerPS_iid.obj \
+
+all:: EiffelSoftware.CompilerPS.dll
+
+EiffelSoftware.CompilerPS.dll: $(OBJ)
+  if exist $@ del $@
+  $(LINKER) $(LINK_FLAGS) -DEF:EiffelSoftware.CompilerPS.def -OUT:$@ $(OBJ) kernel32.lib rpcndr.lib rpcns4.lib rpcrt4.lib uuid.lib oleaut32.lib
+
+.c.obj:
+  $(CC) $(CFLAGS) $<
+
+EiffelSoftware.CompilerPS_iid.obj: eiffelsoftware.compilerps_iid.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?
+
+EiffelSoftware.CompilerPS_data.obj: eiffelsoftware.compilerps_data.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?
+  
+EiffelSoftware.CompilerPS_proxy.obj: eiffelsoftware.compilerps_proxy.c
+  $(CC) $(CFLAGS) $(OUTPUT_CMD)$@ $?

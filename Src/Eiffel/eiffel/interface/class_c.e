@@ -587,7 +587,7 @@ feature -- Third pass: byte code production and type check
 				dependances.put (f_suppliers, body_index)
 			end
 		ensure
-			inserted: dependances.has (feature_i.body_index)
+			inserted: feature_i.body_index /= 0 implies dependances.has (feature_i.body_index)
 		end
 
 	update_suppliers (new_suppliers: like suppliers) is
@@ -3750,7 +3750,7 @@ feature {NONE} -- Implementation
 			non_void_st: a_text_formatter /= Void
 		local
 			formal_dec: FORMAL_CONSTRAINT_AS
-			old_group: CONF_GROUP 
+			old_group: CONF_GROUP
 			gens: like generics
 		do
 			append_name (a_text_formatter)
@@ -3781,7 +3781,7 @@ feature {NONE} -- Implementation
 				Inst_context.set_group (old_group)
 			end
 		end
-			
+
 invariant
 
 		-- Default invariants common to all kind of generation.

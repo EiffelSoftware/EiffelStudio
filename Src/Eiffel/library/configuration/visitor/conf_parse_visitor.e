@@ -14,7 +14,8 @@ inherit
 			{NONE} process_system
 		redefine
 			process_target,
-			process_library
+			process_library,
+			process_precompile
 		end
 
 	CONF_ACCESS
@@ -57,7 +58,7 @@ feature -- Visit nodes
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
-					process_library (l_pre)
+					l_pre.process (Current)
 				end
 
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
@@ -73,7 +74,6 @@ feature -- Visit nodes
 			l_load: CONF_LOAD
 			l_uuid: UUID
 			l_path: STRING
-			l_pre: STRING
 		do
 			if not is_error then
 				l_path := a_library.location.evaluated_path
@@ -118,11 +118,17 @@ feature -- Visit nodes
 			uuid_set: not is_error implies a_library.uuid /= Void
 		end
 
-feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
-
-	reset is
-			-- Reset the values for the new visitor.
+	process_precompile (a_precompile: CONF_PRECOMPILE) is
+			-- Visit `a_precompile'.
+		local
+			l_libs: like libraries
 		do
+				-- if precompile has all_libraries set, use those
+			l_libs := a_precompile.library_target.all_libraries
+			if l_libs /= Void then
+				libraries.merge (l_libs)
+			end
+			process_library (a_precompile)
 		end
 
 feature {NONE} -- Implementation

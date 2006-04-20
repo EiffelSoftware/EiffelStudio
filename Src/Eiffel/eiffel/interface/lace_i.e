@@ -546,7 +546,6 @@ feature {NONE} -- Implementation
 			universe.set_new_target (l_new_target)
 
 			if has_group_changed then
-				check libraries_not_set: l_new_target.all_libraries = Void end
 				parse_target (l_new_target)
 			end
 

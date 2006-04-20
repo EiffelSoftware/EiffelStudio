@@ -26,8 +26,17 @@ feature {NONE} -- Initialization
 		require
 			non_void_value: a_value /= Void
 			valid_value: not a_value.is_empty
+		local
+			l_analyzer: CODE_SNIPPET_ANALYZER
 		do
-			value := a_value
+			-- Analyze snippet to detect specified precompilation ace file if any
+			create l_analyzer
+			l_analyzer.parse (a_value)
+			if l_analyzer.is_indexing_clause then
+				value := ""
+			else
+				value := a_value
+			end
 		ensure
 			value_set: value = a_value
 		end

@@ -54,7 +54,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
+OBJECTS =  \$(LOBJ) \$(MT_LOBJ) \$(MT_WOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -89,6 +89,14 @@ LOBJ = \
 	       ewb_init.o \
 	       ewb_dumped.o 
 
+MT_WOBJ = \
+	       MTwewb_proto.o \
+	       MTweproto.o \
+	       MTweif_in.o \
+	       MTweif_out.o \
+	       MTwewb_init.o \
+	       MTwewb_dumped.o 
+
 MT_LOBJ = \
 	       MTewb_proto.o \
 	       MTeproto.o \
@@ -117,6 +125,26 @@ MTewb_dumped.o: ewb_dumped.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
 
+# Rule for compiling MTw*.o files
+MTwewb_proto.o: ewb_proto.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTweproto.o: eproto.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTweif_in.o: eif_in.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTweif_out.o: eif_out.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwewb_init.o: ewb_init.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwewb_dumped.o: ewb_dumped.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+
 # Where shared archive is located (path and name)
 LIB_SHARED = ../shared
 LIB_IDR = ../../idrs
@@ -143,6 +171,16 @@ local_realclean::
 libmtewb.a: $(MT_LOBJ)
 	$(RM) $@
 	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
+
+all:: libmtwewb.a
+
+local_realclean::
+	$(RM) libmtwewb.a
+
+libmtwewb.a: $(MT_WOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
 
 depend:: ../../mkdep

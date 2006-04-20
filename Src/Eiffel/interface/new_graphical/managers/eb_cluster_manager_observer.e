@@ -32,11 +32,13 @@ feature -- Updates
 		do
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
 			-- `a_class' has been moved away from `old_group'.
+			-- `old_path' is old relative path in `old_group'
 		require
 			a_class_not_void: a_class /= Void
 			old_cluster_not_void: old_group /= Void
+			old_path_not_void: old_path /= Void
 		do
 		end
 

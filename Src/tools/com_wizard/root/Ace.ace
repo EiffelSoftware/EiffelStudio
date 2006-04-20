@@ -47,9 +47,9 @@ default
 -- EiffelVision2
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
+	root_cluster:		"$EIFFEL_SRC\tools\com_wizard\root"
 
-	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
+	all new_gui:		"$EIFFEL_SRC\tools\com_wizard\project\new_gui"
 		exclude
 			"EIFGEN"; "resources"; "Diagrams"; ".svn"; 
 		end
@@ -79,7 +79,7 @@ cluster
 			assertion (no)
 		end
 
-	all wizard:		"$EIFFEL_SRC\com_wizard\project"
+	all wizard:		"$EIFFEL_SRC\tools\com_wizard\project"
 		exclude
 			"new_gui"; ".svn"; 
 		visible
@@ -97,7 +97,7 @@ cluster
 				end
 		end
 
-	all eiffel_to_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
+	all eiffel_to_idl:		"$EIFFEL_SRC\tools\com_wizard\eiffeltoidl"
 		exclude
 			".svn"; 
 		end

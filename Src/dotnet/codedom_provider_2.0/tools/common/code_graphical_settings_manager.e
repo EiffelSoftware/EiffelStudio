@@ -152,7 +152,7 @@ feature -- Basic Operation
 			l_list, l_new_list: LIST [STRING]
 		do
 			if not a_entry.is_empty then
-				l_list := a_combo.strings
+				l_list := a_combo.strings_8
 				l_list.compare_objects
 				if not l_list.has (a_entry) then
 					if a_combo.count >= Max_combo_count then
@@ -165,7 +165,7 @@ feature -- Basic Operation
 					if not a_combo.text.is_equal (a_entry) then
 						a_combo.set_text (a_entry)						
 					end
-					if not a_combo.strings.first.is_equal (a_entry) then
+					if not a_combo.strings_8.first.is_equal (a_entry) then
 						create {ARRAYED_LIST [STRING]} l_new_list.make (l_list.count)
 						l_new_list.extend (a_entry)
 						l_list.prune (a_entry)
@@ -177,7 +177,7 @@ feature -- Basic Operation
 				end
 				l_save_routine ?= a_combo.data
 				if l_save_routine /= Void then
-					l_save_routine.call ([a_combo.strings])
+					l_save_routine.call ([a_combo.strings_8])
 				end
 			end
 		end

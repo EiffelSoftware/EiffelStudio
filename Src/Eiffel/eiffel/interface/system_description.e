@@ -18,7 +18,7 @@ feature -- Access
 	name: STRING
 			-- System name
 
-	root_cluster: CLUSTER_I
+	root_cluster: CONF_GROUP
 			-- Root cluster of the system
 
 	root_class_name: STRING;
@@ -78,7 +78,7 @@ feature -- Update
 			name := s
 		end
 
-	set_root_cluster (c: CLUSTER_I) is
+	set_root_cluster (c: like root_cluster) is
 			-- Assign `c' to `root_cluster'.
 		do
 			root_cluster := c

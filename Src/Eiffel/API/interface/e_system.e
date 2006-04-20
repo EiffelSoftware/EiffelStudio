@@ -43,7 +43,7 @@ feature -- Access
 			Result := System.name
 		end;
 
-	root_cluster: CLUSTER_I is
+	root_cluster: CONF_GROUP is
 			-- Root cluster of System
 		do
 			Result := System.root_cluster
@@ -175,8 +175,8 @@ feature -- Access
 	root_class: CLASS_I is
 			-- Root class of the system
 		do
-			Result := root_cluster.classes.item (root_class_name);
-		end;
+			Result ?= root_cluster.classes.item (root_class_name);
+		end
 
 	application_name (workbench_mode: BOOLEAN): FILE_NAME is
 			-- Get the full qualified name of the application

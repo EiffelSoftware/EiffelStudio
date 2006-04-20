@@ -21,7 +21,7 @@ feature -- Miscellaneous
 			-- Append to `text' information about `e_system'.
 		local
 			creation_name: STRING
-			root_cluster: CLUSTER_I
+			root_cluster: CONF_GROUP
 			root_class: CLASS_I
 			cr_f: E_FEATURE
 		do
@@ -55,7 +55,7 @@ feature -- Miscellaneous
 				if root_cluster /= Void then
 					text.add_space
 					text.process_symbol_text (ti_L_parenthesis)
-					text.add_group (root_cluster, root_cluster.cluster_name)
+					text.add_group (root_cluster, root_cluster.name)
 					text.process_symbol_text (ti_R_parenthesis)
 				end
 

@@ -1,0 +1,375 @@
+system
+	"EiffelSoftware.Compiler"
+
+root
+	ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION: make
+
+default
+	assertion (no)
+	disabled_debug (yes)
+	debug (no)
+	line_generation (yes)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+	shared_library_definition ("EiffelSoftware.Compiler.def")
+
+
+cluster
+	all com_generated:		"$EIFFEL_SRC\com_compiler"
+		exclude
+			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
+		visible
+			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
+				end
+			IEIFFEL_PROJECT_IMPL_PROXY
+				end
+			IEIFFEL_COMPILER_IMPL_PROXY
+				end
+			IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY
+				end
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_PROXY
+				end
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY
+				end
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_PROXY
+				end
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_PROXY
+				end
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY
+				end
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_PROXY
+				end
+			ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION
+				end
+			CEIFFEL_PROJECT_COCLASS_IMP
+				end
+			CEIFFEL_COMPILER_COCLASS_IMP
+				end
+			IEIFFEL_PROJECT_IMPL_STUB
+				end
+			IEIFFEL_COMPILER_IMPL_STUB
+				end
+			IEIFFEL_SYSTEM_BROWSER_IMPL_STUB
+				end
+			IEIFFEL_CLUSTER_DESCRIPTOR_IMPL_STUB
+				end
+			IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB
+				end
+			IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB
+				end
+			IEIFFEL_PROJECT_PROPERTIES_IMPL_STUB
+				end
+			IEIFFEL_CLUSTER_PROPERTIES_IMPL_STUB
+				end
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
+				end
+			IEIFFEL_SYSTEM_EXTERNALS_IMPL_STUB
+				end
+			IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_STUB
+				end
+			IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
+				end
+			IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
+				end
+			IEIFFEL_EXCEPTION_IMPL_STUB
+				end
+			IEIFFEL_SUPPORT_IMPL_STUB
+				end
+			DESCRIPTIONS_ENUMERATOR
+				end
+			CLASS_DESCRIPTOR
+				end
+			CLUSTER_DESCRIPTOR
+				end
+			CLUSTER_PROPERTIES
+				end
+			COMPILER
+				end
+			COM_DEGREE_OUTPUT
+				end
+			COM_ERROR_WINDOW
+				end
+			FEATURE_DESCRIPTOR
+				end
+			PROJECT_MANAGER
+				end
+			PROJECT_PROPERTIES
+				end
+			SYSTEM_BROWSER
+				end
+			SYSTEM_CLUSTERS
+				end
+			CLASS_ENUMERATOR
+				end
+			CLUSTER_ENUMERATOR
+				end
+			FEATURE_ENUMERATOR
+				end
+			CLUSTER_PROP_ENUMERATOR
+				end
+			ASSEMBLY_ENUMERATOR
+				end
+			EIFFEL_STRING_ENUMERATOR
+				end
+			SYSTEM_EXTERNALS
+				end
+			SYSTEM_ASSEMBLIES
+				end
+			ASSEMBLY_PROPERTIES
+				end
+			COMPLETION_INFORMATION
+				end
+			HTML_DOC_GENERATOR
+				end
+			IEIFFEL_HTML_DOCUMENTATION_EVENTS_IMPL_STUB
+				end
+			IEIFFEL_HTML_DOCUMENTATION_EVENTS_IMPL_PROXY
+				end
+			IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE
+				end
+			VARIABLE_DESCRIPTOR
+				end
+			PARAMETER_ENUMERATOR
+				end
+			PARAMETER_DESCRIPTOR
+				end
+			COMPLETION_FEATURE
+				end
+			EXCEPTION
+				end
+			IEIFFEL_DEFINITION_RESULT_IMPL_PROXY
+				end
+			IEIFFEL_DEFINITION_FEATURE_RESULT_IMPL_PROXY
+				end
+			DEFINITION_SEARCH_RESULT
+				end
+			DEFINITION_SEARCH_RESULT_FEATURE
+				end
+			COM_COMPILER_SUPPORT
+				end
+		end
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table"; "desc"; "CVS"; 
+		visible
+			INTEGER_REF
+				end
+			CHARACTER_REF
+				end
+			BOOLEAN_REF
+				end
+			REAL_REF
+				end
+			DOUBLE_REF
+				end
+			CELL
+				end
+			STRING
+				end
+			ARRAY
+				end
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"french"; "german"; 
+		visible
+			DATE_TIME
+				end
+		end
+
+	all ecom:		"$EIFFEL_SRC\library\com"
+		visible
+			ECOM_DECIMAL
+				end
+			ECOM_CURRENCY
+				end
+			ECOM_ARRAY
+				end
+			ECOM_VARIANT
+				end
+			ECOM_GUID
+				end
+			ECOM_EXCEP_INFO
+				end
+			ECOM_DISP_PARAMS
+				end
+			ECOM_STATSTG
+				end
+			ECOM_STREAM
+				end
+			ECOM_STORAGE
+				end
+			ECOM_ROOT_STORAGE
+				end
+			ECOM_ENUM_STATSTG
+				end
+			ECOM_HRESULT
+				end
+			ECOM_WIDE_STRING
+				end
+			ECOM_LARGE_INTEGER
+				end
+			ECOM_ULARGE_INTEGER
+				end
+			ECOM_UNKNOWN_INTERFACE
+				end
+			ECOM_AUTOMATION_INTERFACE
+				end
+			ECOM_STUB
+				end
+			ECOM_QUERIABLE
+				end
+		end
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+
+	common:		"$EIFFEL_SRC\Eiffel\common"
+
+	common_parser (common):		"$\parser"
+
+	ast_visitor (common_parser):		"$\AST\visitor"
+
+	common_eiffel_parser (common_parser):		"$\parser"
+
+	old_resources (common):		"$\resources"
+
+	flat_short (common_parser):		"$\flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "EiffelBase"; "EiffelTime"; 
+		end
+
+	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+		exclude
+			"CVS"; 
+		end
+
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+		exclude
+			"CVS"; 
+		end
+
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+		exclude
+			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+		end
+
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+		exclude
+			"CVS"; 
+		end
+
+	all helpers:		"$EIFFEL_SRC/library/helpers"
+		exclude
+			"CVS"; 
+		end
+
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
+
+	interface_switch (switch):		"$\interface\batch_only"
+
+	license_switch (switch):		"$\license\no_license"
+
+	communications (switch):		"$\no_communication"
+
+	status (communications):		"$\status"
+
+	debuging_class (communications):		"$\debug"
+
+	interface:		"$EIFFEL_SRC\Eiffel\interface"
+
+	interface_shared (interface):		"$\shared"
+
+	tty (interface):		"$\tty"
+
+	preference_tool (interface):		"$\graphical\preference_tool"
+		exclude
+			"eb_flat_short_data.e"; 
+		end
+
+	profile_tool (interface):		"$\graphical\profile_tool"
+
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
+		exclude
+			"enterprise"; "command_line"; "unix"; "CVS"; 
+		end
+
+	all keygen:		"$EIFFEL_SRC\library\keygen"
+		exclude
+			"eiffel_studio_52"; "unix"; "CVS"; 
+		end
+
+	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
+		exclude
+			"cache.e"; 
+		end
+
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
+	doc_manager_interface:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Interfaces"
+
+	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Client"
+		exclude
+			"Include"; "Clib"; 
+		visible
+			IDM_DICTIONARY_IMPL_PROXY
+				end
+		end
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\C\platform",
+		"$(EIFFEL_SRC)\com_compiler\Clib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Include",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Include -D_WIN32_DCOM"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
+		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
+		"$(EIFFEL_SRC)\C\bench\compiler.lib",
+		"$(EIFFEL_SRC)\C\platform\platform.lib",
+		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Clib\msc\ecom.lib"
+
+end

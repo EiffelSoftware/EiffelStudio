@@ -71,6 +71,7 @@ feature -- Access
 				if l_consumed_assemblies.item (i) /= Void then
 					if l_path = Void then
 						l_path := l_consumed_assemblies.item (i).format_path (a_path)
+						l_path := {PATH}.get_full_path (l_path)
 					end
 					if l_consumed_assemblies.item (i).has_same_ready_formatted_path (l_path) then
 						Result := l_consumed_assemblies.item (i)

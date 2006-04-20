@@ -924,7 +924,7 @@ end
 			l_target: CONF_TARGET
 			l_classes_i: LIST [CLASS_I]
 			l_root: CONF_ROOT
-			l_cluster: CLUSTER_I
+			l_group: CONF_GROUP
 			vd19: VD19
 			vd20: VD20
 			vd29: VD29
@@ -950,16 +950,16 @@ end
 						Error_handler.insert_error (vd29)
 						Error_handler.raise_error
 					else
-						l_cluster ?= l_classes_i.first.group
+						l_group := l_classes_i.first.group
 					end
 				else
-					l_cluster ?= l_target.clusters.item (l_root.cluster_name)
-					if l_cluster = Void then
+					l_group := l_target.groups.item (l_root.cluster_name)
+					if l_group = Void then
 						create vd19
 						vd19.set_root_cluster_name (l_root.cluster_name)
 						Error_handler.insert_error (vd19)
 						Error_handler.raise_error
-					elseif l_cluster.classes.item (root_class_name) = Void then
+					elseif l_group.classes.item (root_class_name) = Void then
 						create vd20
 						vd20.set_class_name (l_root.class_name.as_upper)
 						Error_handler.insert_error (vd20)
@@ -967,7 +967,7 @@ end
 					end
 				end
 
-				system.set_root_cluster (l_cluster)
+				system.set_root_cluster (l_group)
 				system.set_creation_name (l_root.feature_name)
 			end
 		ensure

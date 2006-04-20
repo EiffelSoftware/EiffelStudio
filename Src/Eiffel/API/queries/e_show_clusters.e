@@ -55,7 +55,7 @@ feature -- Execution
 				text_formatter.add (" (cluster: ");
 				text_formatter.add_group (
 					Eiffel_system.root_cluster,
-					Eiffel_system.root_cluster.cluster_name);
+					Eiffel_system.root_cluster.name);
 				text_formatter.add (")");
 				text_formatter.add_new_line;
 				text_formatter.add_new_line;

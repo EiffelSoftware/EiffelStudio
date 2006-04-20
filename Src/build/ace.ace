@@ -40,7 +40,7 @@ default
 cluster
 	all override:	"$EIFFEL_SRC\Eiffel\override"
 
-	all build2:		"$EIFFEL_SRC\build2"
+	all build:		"$EIFFEL_SRC\build"
 		exclude
 			".svn"; "object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "demo_version"; "gobo_16"; "exml"; 
 		default

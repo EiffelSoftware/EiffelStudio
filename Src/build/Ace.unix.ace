@@ -38,7 +38,7 @@ default
 cluster
 	all override:	"$EIFFEL_SRC/Eiffel/override"
 
-	all build2:		"$EIFFEL_SRC/build2"
+	all build:		"$EIFFEL_SRC/build"
 		exclude
 			".svn"; "object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve"; "base"; "test"; "demo_version"; 
 		end

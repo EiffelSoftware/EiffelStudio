@@ -308,8 +308,9 @@ feature -- Observer pattern
 			refresh
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
 			-- Refresh the tree to display `a_class' in its new folder.
+			-- `old_path' is old relative path in `old_group'
 		do
 			refresh
 		end

@@ -188,18 +188,20 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
 			-- `a_class' has been moved away from `old_cluster'.
+			-- `old_path' is old relative path in `old_group'
 		require
 			a_class_not_void: a_class /= Void
 			old_group_not_void: old_group /= Void
+			old_path_not_void: old_path /= Void
 		do
 			from
 				observer_list.start
 			until
 				observer_list.after
 			loop
-				observer_list.item.on_class_moved (a_class, old_group)
+				observer_list.item.on_class_moved (a_class, old_group, old_path)
 				observer_list.forth
 			end
 		end
@@ -363,6 +365,7 @@ feature -- Element change
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: STRING
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_old_relative_path: STRING
 		do
 			if
 				not retried
@@ -371,6 +374,10 @@ feature -- Element change
 					not new_cluster.is_readonly and then
 					not old_group.is_readonly
 				then
+					l_old_relative_path := a_class.path
+					if l_old_relative_path = Void then
+						create l_old_relative_path.make_empty
+					end
 					l_src_path := old_group.location.build_path (a_class.path, "")
 					l_dst_path := new_cluster.location.build_path (new_path, "")
 					create tdirsrc.make (l_src_path)
@@ -437,7 +444,7 @@ feature -- Element change
 								folder_from_cluster (new_cluster).reinitialize
 
 									-- Notify observers.
-								on_class_moved (a_class, old_group)
+								on_class_moved (a_class, old_group, l_old_relative_path)
 							else
 								create wd.make_with_text (Warning_messages.w_Cannot_move_class)
 								wd.show_modal_to_window (Window_manager.last_focused_window.window)

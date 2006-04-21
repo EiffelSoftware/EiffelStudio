@@ -455,7 +455,7 @@ feature -- Access
 			valid_result_with_rows_with_overdraw_with_fixed_row_height: row_count > 0 and is_row_height_fixed and is_vertical_overscroll_enabled implies
 				Result = viewable_height - row_height
 			valid_result_with_rows_with_overdraw_with_variable_row_height: row_count > 0 and not is_row_height_fixed and is_vertical_overscroll_enabled implies
-				Result = viewable_height - row (row_count).height
+				Result = (viewable_height - row (row_count).height).max (0)
 			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and is_vertical_scrolling_per_item = False and
 				is_vertical_overscroll_enabled = False implies Result = 0
 			valid_result_with_fixed_height_rows_when_per_item_scrolling_and_no_overdraw: row_count > 0 and is_row_height_fixed and is_vertical_scrolling_per_item and
@@ -1420,19 +1420,15 @@ feature -- Status setting
 			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
 		do
+			row_height := a_row_height
 			if is_row_height_fixed or is_tree_enabled then
 				-- Note that if we are not using fixed row heights then
 				-- there is no need to perform anything here. This is because the
 				-- size is dependent on the rows and `row_height' is currently ignored.
-
-				row_height := a_row_height
-				is_item_height_changing := True
-				is_item_height_changing := False
 				set_vertical_computation_required (1)
 				restrict_virtual_y_position_to_maximum
 				redraw_client_area
 			end
-
 		ensure
 			row_height_set: row_height = a_row_height
 		end

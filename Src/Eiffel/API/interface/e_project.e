@@ -106,25 +106,28 @@ feature -- Initialization
 			l_prev_work := Execution_environment.current_working_directory
 			create d.make (temp_eiffel_gen_path)
 			if d.exists then
-				new_name := temp_eiffel_gen_path.twin
-				if new_name.item (new_name.count) = ']' then
-						-- VMS specification. We need to append `_old' before the `]'.
-					new_name.insert_string ("_old", new_name.count - 1)
-				else
-					new_name.append ("_old")
-				end
-					-- Rename the old project
-				d.change_name (new_name)
-				if deletion_requested then
-						-- Rename the old project to EIFGEN so that we can
-						-- delete it.
-					d.change_name (temp_eiffel_gen_path)
-					delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
-					delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
-					delete_generation_directory (Final_generation_path, deletion_agent,
-						cancel_agent)
-					delete_generation_directory (Workbench_generation_path, deletion_agent,
-						cancel_agent)
+				create d.make (temp_target_path)
+				if d.exists then
+					new_name := temp_target_path.twin
+					if new_name.item (new_name.count) = ']' then
+							-- VMS specification. We need to append `_old' before the `]'.
+						new_name.insert_string ("_old", new_name.count - 1)
+					else
+						new_name.append ("_old")
+					end
+						-- Rename the old project
+					d.change_name (new_name)
+					if deletion_requested then
+							-- Rename the old project to EIFGEN so that we can
+							-- delete it.
+						d.change_name (temp_target_path)
+						delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
+						delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
+						delete_generation_directory (Final_generation_path, deletion_agent,
+							cancel_agent)
+						delete_generation_directory (Workbench_generation_path, deletion_agent,
+							cancel_agent)
+					end
 				end
 			end
 			if (cancel_agent = Void) or else (not cancel_agent.item (Void)) then

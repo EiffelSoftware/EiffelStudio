@@ -40,7 +40,7 @@ feature -- Access
 			Result := loc_imagelist.bitmaps_width
 			loc_imagelist.destroy
 		end
-	
+
 	bitmaps_height: INTEGER is
 			-- height of all bitmaps located in this imageList
 		local
@@ -50,7 +50,7 @@ feature -- Access
 			Result := loc_imagelist.bitmaps_height
 			loc_imagelist.destroy
 		end
-	
+
 	buttons_width: INTEGER is
 			-- Width of the buttons in the toolbar.
 		do
@@ -66,30 +66,54 @@ feature -- Access
 feature -- Status report
 
 	find_button (a_x, a_y: INTEGER): INTEGER is
-			-- Determines where a point lies in a toolbar control. 
+			-- Determines where a point lies in a toolbar control.
 			--
 			-- Returns an integer value. If the return value is zero or a positive value,
-			-- it is the zero-based index of the nonseparator item in which the point lies. 
+			-- it is the zero-based index of the nonseparator item in which the point lies.
 			-- If the return value is negative, the point does not lie within a button.
-			-- The absolute value of the return value is the index of a separator item 
-			-- or the nearest nonseparator item. 
+			-- The absolute value of the return value is the index of a separator item
+			-- or the nearest nonseparator item.
 		local
 			coordinates: WEL_POINT
 		do
 			create coordinates.make(a_x, a_y)
 			Result := cwin_send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
-	
+
 	get_max_width: INTEGER is
-			-- Retrieves the total width of all of the visible buttons and separators in the toolbar. 
+			-- Retrieves the total width of all of the visible buttons and separators in the toolbar.
+		local
+			l_rect: WEL_RECT
+			l_count: INTEGER
 		do
-			Result := get_max_size.width
+			-- If there is drop down button which is wider than normal button, we should calculate the max
+			-- Width of tool bar button.
+			-- Use get_max_size is not correct, because it always return the size include text width even
+			-- it is hiding.
+			from
+			until
+				l_count >= button_count
+			loop
+				l_rect := button_rect (l_count)
+				if Result < l_rect.right then
+					Result := l_rect.right
+				end
+				l_count := l_count + 1
+			end
 		end
 
 	get_max_height: INTEGER is
-			-- Retrieves the common height of all of the visible buttons and separators in the toolbar. 
+			-- Retrieves the common height of all of the visible buttons and separators in the toolbar.
+		local
+			l_rect: WEL_RECT
 		do
-			Result := get_max_size.height
+			-- If we use get_max_size here, it'll return a larger size. (Sometimes it's a smaller size.)
+			-- The larger size ( = button_count * max button width) is not correct.
+			-- So we query last button rect instead.
+			if button_count /= 0 then
+				l_rect := button_rect (button_count - 1)
+				Result := l_rect.bottom
+			end
 		end
 
 	get_max_size: WEL_SIZE is

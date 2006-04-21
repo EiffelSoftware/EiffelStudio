@@ -67,7 +67,7 @@ feature -- Access
 		deferred
 		end
 
-	visible: TUPLE [STRING, HASH_TABLE [STRING, STRING]] is
+	visible: TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]] is
 			-- The visible features, "*" = all, mapped to their renamed name (if any).
 		deferred
 		end
@@ -192,7 +192,7 @@ feature -- Access
 			l_feat, l_ren_feat: STRING
 		do
 			if visible /= Void then
-				l_vis ?= visible.item (1)
+				l_vis ?= visible.features
 			end
 			if l_vis /= Void then
 				from

@@ -22,6 +22,8 @@ inherit
 			accessible_classes
 		end
 
+	CONF_VISIBLE
+
 create
 	make
 
@@ -111,41 +113,6 @@ feature -- Access queries
 					Result.merge (parent.options)
 				end
 				Result.merge (target.options)
-			end
-		end
-
-	is_visible (a_feature, a_class: STRING): BOOLEAN is
-			-- Is `a_feature' of `a_class' visible?
-		require
-			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
-			a_feature_lower: a_feature.is_equal (a_feature.as_lower)
-			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_upper: a_class.is_equal (a_class.as_upper)
-		local
-			l_tbl: HASH_TABLE [STRING, STRING]
-		do
-			if visible /= Void then
-				l_tbl ?= visible.item (a_class).item (2)
-				Result := l_tbl.has ("*") or l_tbl.has (a_feature)
-			end
-		end
-
-	renamed_visible (a_feature, a_class: STRING): STRING is
-			-- If `a_feature' of `a_class' is visible, return the (possible renamed) name of the feature?
-		require
-			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
-			a_feature_lower: a_feature.is_equal (a_feature.as_lower)
-			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_upper: a_class.is_equal (a_class.as_upper)
-		local
-			l_tbl: HASH_TABLE [STRING, STRING]
-		do
-			if visible /= Void then
-				l_tbl ?= visible.item (a_class).item (2)
-				Result := l_tbl.item (a_feature)
-				if Result = Void and then l_tbl.has ("*") or l_tbl.has (a_feature) then
-					Result := a_feature
-				end
 			end
 		end
 
@@ -314,7 +281,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_dependencies.has (a_group)
 		end
 
-
 	set_file_rule (a_file_rule: like internal_file_rule) is
 			-- Set `a_file_rule'.
 		require
@@ -325,52 +291,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_set: internal_file_rule = a_file_rule
 		end
 
-	set_visible (a_visible: like visible) is
-			-- Set `a_visible'.
-		do
-			visible := a_visible
-		ensure
-			visible_set: visible = a_visible
-		end
-
-	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING) is
-			-- Add a visible.
-		require
-			a_class_ok: a_class /= Void and then not a_class.is_empty
-			a_class_upper: a_class.is_equal (a_class.as_upper)
-			a_feature_ok: a_feature /= Void and then not a_feature.is_empty
-		local
-			l_v_cl: CONF_HASH_TABLE [STRING, STRING]
-			l_tpl: TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]]
-			l_visible_name: STRING
-		do
-			if visible = Void then
-				create visible.make (1)
-			end
-			if a_class_rename /= Void then
-				l_visible_name := a_class_rename.as_upper
-			else
-				l_visible_name := a_class
-			end
-			l_tpl := visible.item (a_class)
-			if l_tpl = Void then
-				create l_tpl
-				create l_v_cl.make (1)
-				l_tpl.put (l_visible_name, 1)
-				l_tpl.put (l_v_cl, 2)
-			end
-			a_feature.to_lower
-			l_v_cl.force (a_feature_rename, a_feature)
-			visible.force (l_tpl, a_class)
-		end
-
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := Precursor (other) and then equal (dependencies, other.dependencies) and then
-						file_rule.is_equal (other.file_rule)
+						file_rule.is_equal (other.file_rule) and then equal (visible, other.visible)
 		end
 
 feature -- Visit
@@ -389,10 +316,6 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_file_rule: CONF_FILE_RULE
 			-- Rules for files to be included or excluded of this cluster itself.
-
-	visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]
-			-- Table of table of features of classes that are visible (feature name "*" = all features visible).
-			-- Mapped to their rename (if any).
 
 feature {NONE} -- Implementation
 

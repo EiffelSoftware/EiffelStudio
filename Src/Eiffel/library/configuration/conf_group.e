@@ -88,6 +88,15 @@ feature -- Status
 			Result := target.application_target.system /= target.system
 		end
 
+feature -- Status update
+
+	set_error (an_error: CONF_ERROR) is
+			-- Set `an_error'.
+		do
+			is_error := True
+			last_error := an_error
+		end
+
 feature -- Access, stored in configuration file
 
 	name: STRING

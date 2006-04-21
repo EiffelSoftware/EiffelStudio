@@ -11,9 +11,7 @@ class
 inherit
 	CONF_CONDITIONED_ITERATOR
 		redefine
-			process_group,
-			process_cluster,
-			process_override
+			process_group
 		end
 
 	CONF_ACCESS
@@ -63,39 +61,6 @@ feature -- Visit nodes
 					l_c_opt.forth
 				end
 			end
-		end
-
-	process_cluster (a_cluster: CONF_CLUSTER) is
-			-- Visit `a_cluster'.
-		local
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_vis: HASH_TABLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]], STRING]
-		do
-			l_classes := a_cluster.classes
-			check
-				l_classes_not_void: l_classes /= Void
-			end
-
-				-- check visibility
-			l_vis := a_cluster.visible
-			if l_vis /= Void then
-				from
-					l_vis.start
-				until
-					l_vis.after
-				loop
-					if not l_classes.has (l_vis.key_for_iteration) then
-						add_error (create {CONF_ERROR_VISI}.make (l_vis.key_for_iteration))
-					end
-					l_vis.forth
-				end
-			end
-		end
-
-	process_override (an_override: CONF_OVERRIDE) is
-			-- Visit `an_override'.
-		do
-			process_cluster (an_override)
 		end
 
 indexing

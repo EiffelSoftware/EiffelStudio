@@ -13,13 +13,11 @@ inherit
 		redefine
 			process,
 			is_library,
-			is_readonly
+			is_readonly,
+			is_group_equivalent
 		end
 
-	REFACTORING_HELPER
-		undefine
-			is_equal
-		end
+	CONF_VISIBLE
 
 create
 	make
@@ -122,6 +120,14 @@ feature -- Visit
 		do
 			Precursor (a_visitor)
 			a_visitor.process_library (Current)
+		end
+
+feature -- Equality
+
+	is_group_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' and `Current' the same with respect to the group layout?
+		do
+			Result := Precursor (other) and then equal (visible, other.visible)
 		end
 
 feature {NONE} -- Implementation

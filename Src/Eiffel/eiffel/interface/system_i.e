@@ -756,8 +756,9 @@ end
 			l_classes: DS_HASH_SET [CONF_CLASS]
 			l_conf_class: CONF_CLASS
 			l_class_i: CLASS_I
-			l_errors: LIST [CONF_ERROR]
+			l_errors, l_warnings: LIST [CONF_ERROR]
 			vd71: VD71
+			vd80: VD80
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
@@ -818,6 +819,17 @@ end
 					l_errors.forth
 				end
 				Error_handler.raise_error
+			end
+			l_warnings := l_vis_build.last_warnings
+			from
+				l_warnings.start
+			until
+				l_warnings.after
+			loop
+				create vd80
+				vd80.set_warning (l_warnings.item)
+				error_handler.insert_warning (vd80)
+				l_warnings.forth
 			end
 
 				-- modified classes

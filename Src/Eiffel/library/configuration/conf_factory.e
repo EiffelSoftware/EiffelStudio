@@ -103,7 +103,7 @@ feature
 		end
 
 
-	new_external_include (a_location: CONF_LOCATION): CONF_EXTERNAL_INCLUDE is
+	new_external_include (a_location: STRING): CONF_EXTERNAL_INCLUDE is
 			-- Create a `CONF_EXTERNAL_INCLUDE' object.
 		do
 			create Result.make (a_location)
@@ -111,7 +111,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_object (a_location: CONF_LOCATION): CONF_EXTERNAL_OBJECT is
+	new_external_object (a_location: STRING): CONF_EXTERNAL_OBJECT is
 			-- Create a `CONF_EXTERNAL_OBJECT' object.
 		do
 			create Result.make (a_location)
@@ -119,7 +119,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_ressource (a_location: CONF_LOCATION): CONF_EXTERNAL_RESSOURCE is
+	new_external_ressource (a_location: STRING): CONF_EXTERNAL_RESSOURCE is
 			-- Create a `CONF_EXTERNAL_RESSOURCE' object.
 		do
 			create Result.make (a_location)
@@ -127,7 +127,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_make (a_location: CONF_LOCATION): CONF_EXTERNAL_MAKE is
+	new_external_make (a_location: STRING): CONF_EXTERNAL_MAKE is
 			-- Create a `CONF_EXTERNAL_MAKE' object.
 		do
 			create Result.make (a_location)

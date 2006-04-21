@@ -67,8 +67,8 @@ feature -- Access
 		deferred
 		end
 
-	visible: TUPLE [class_renamed: STRING; features: HASH_TABLE [STRING, STRING]] is
-			-- The visible features, "*" = all, mapped to their renamed name (if any).
+	visible: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]] is
+			-- The visible features.
 		deferred
 		end
 
@@ -185,39 +185,39 @@ feature -- Access
 	visible_level: VISIBLE_I is
 			-- Visible level
 		local
-			l_vis: HASH_TABLE [STRING, STRING]
+			l_vis: CONF_HASH_TABLE [STRING, STRING]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]
 			l_feat, l_ren_feat: STRING
 		do
 			if visible /= Void then
-				l_vis ?= visible.features
-			end
-			if l_vis /= Void then
-				from
-					create l_ren.make (l_vis.count)
-					create l_vis_feat.make (l_vis.count)
-					l_vis.start
-				until
-					l_vis.after
-				loop
-					l_feat := l_vis.key_for_iteration
-					if not l_feat.is_equal ("*") then
-						l_ren_feat := l_vis.item_for_iteration
-						l_ren.force (l_ren_feat, l_feat)
-						l_vis_feat.force (l_feat)
-					end
-					l_vis.forth
-				end
-				if l_vis.has ("*") then
+				l_vis := visible.features
+				if l_vis = Void then
 					Result := create {VISIBLE_EXPORT_I}
 				else
+					from
+						create l_ren.make (l_vis.count)
+						create l_vis_feat.make (l_vis.count)
+						l_vis.start
+					until
+						l_vis.after
+					loop
+						l_feat := l_vis.key_for_iteration
+						if l_feat /= Void then
+							l_ren_feat := l_vis.item_for_iteration
+							if l_ren_feat /= Void then
+								l_ren.force (l_ren_feat, l_feat)
+							end
+							l_vis_feat.force (l_feat)
+						end
+						l_vis.forth
+					end
 					l_sel := create {VISIBLE_SELEC_I}
 					l_sel.set_visible_features (l_vis_feat)
 					Result := l_sel
+					Result.set_renamings (l_ren)
 				end
-				Result.set_renamings (l_ren)
 			else
 				create Result
 			end

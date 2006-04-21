@@ -53,9 +53,6 @@ feature {NONE} -- Initialization
 				end
 
 				l_cluster ?= a_group
-				if l_cluster /= Void and then l_cluster.visible /= Void then
-					visible := l_cluster.visible.item (name)
-				end
 			end
 		ensure
 			is_valid: is_valid
@@ -86,8 +83,8 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_not_void: Result /= Void
 		end
 
-	visible: TUPLE [STRING, HASH_TABLE [STRING, STRING]]
-			-- The visible features, "*" = all, mapped to their renamed name (if any).
+	visible: TUPLE [class_renamed: STRING; features: CONF_HASH_TABLE [STRING, STRING]]
+			-- The visible features.
 
 	is_valid: BOOLEAN
 			-- Is `Current' still valid, ie. still part of the system?
@@ -217,6 +214,88 @@ feature -- Status update
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
+	add_visible (a_vis: like visible) is
+			-- Add visible rules to `visible'. Set `is_error' and `last_error' if there is a conflict.
+		require
+			a_vis_not_void: a_vis /= Void
+			a_renamed_not_void: a_vis.class_renamed /= Void
+		local
+			l_vis_check, l_vis_other: CONF_HASH_TABLE [STRING, STRING]
+			l_other: STRING
+			l_error: BOOLEAN
+		do
+				-- easy case first, most of the time this will be the only thing that is needed to do
+			if visible = Void then
+				visible := a_vis
+			else
+					-- check final external class name
+				if visible.class_renamed.is_equal (a_vis.class_renamed) then
+					if equal (a_vis.features, visible.features) then
+						-- done, same features are visible
+					else
+						if visible.features = Void then
+							l_vis_check := a_vis.features
+						elseif a_vis.features = Void then
+							l_vis_check := visible.features
+						end
+						if l_vis_check /= Void then
+								-- check for renamings
+							from
+								l_vis_check.start
+							until
+								l_error or l_vis_check.after
+							loop
+								l_error := not l_vis_check.key_for_iteration.is_equal (l_vis_check.item_for_iteration)
+								l_vis_check.forth
+							end
+							if l_error then
+									-- conflict, all features visible vs some features visible with renaming
+								is_error := True
+								last_error := create {CONF_ERROR_VISI_CONFL01}.make (visible.class_renamed)
+							else
+									-- done, everything is visible and we had no renamings
+									-- twin because we may change something
+								visible := visible.twin
+								visible.features := Void
+							end
+						else
+								-- check if there are no conflicting feature definitions
+							if visible.features.count >= a_vis.features.count then
+								l_vis_check := visible.features
+								l_vis_other := a_vis.features
+							else
+								l_vis_check := a_vis.features
+								l_vis_other := visible.features
+							end
+							from
+								l_vis_check.start
+							until
+								l_error or l_vis_check.after
+							loop
+								l_other := l_vis_other.item (l_vis_check.key_for_iteration)
+								l_error := not (l_other = Void or l_other.is_equal (l_vis_check.item_for_iteration))
+								l_vis_check.forth
+							end
+							if l_error then
+									-- conflict, conflicting feature renamings
+								is_error := True
+								last_error := create {CONF_ERROR_VISI_CONFL02}.make (visible.class_renamed)
+							else
+									-- merge
+									-- twin because we may change something
+								visible.features := visible.features.twin
+								visible.features.merge (a_vis.features)
+							end
+						end
+					end
+				else
+						-- conflict, different final external class name
+					is_error := True
+					last_error := create {CONF_ERROR_VISI_CONFL03}.make (visible.class_renamed, a_vis.class_renamed)
+				end
+			end
+		end
+
 	invalidate is
 			-- Set `is_valid' to False.
 		do
@@ -247,9 +326,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 
 			if not is_error then
 				l_cluster ?= a_group
-				if l_cluster /= Void and then l_cluster.visible /= Void then
-					visible := l_cluster.visible.item (name)
-				end
+				visible := Void
 			end
 
 				-- forget override informations except the one necessary for the

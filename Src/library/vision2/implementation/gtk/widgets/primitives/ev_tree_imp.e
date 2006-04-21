@@ -307,6 +307,19 @@ feature -- Status report
 
 feature -- Implementation
 
+	ensure_item_visible (an_item: EV_TREE_NODE) is
+			-- Ensure `an_item' is visible in `Current'.
+			-- Tree nodes may be expanded to achieve this.
+		local
+			tree_item_imp: EV_TREE_NODE_IMP
+			a_path: POINTER
+		do
+			tree_item_imp ?= an_item.implementation
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (tree_store, tree_item_imp.list_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
+		end
+
 	set_to_drag_and_drop: BOOLEAN is
 		do
 			if pnd_row_imp /= Void then
@@ -546,19 +559,6 @@ feature {EV_TREE_NODE_IMP}
 		end
 
 feature {NONE} -- Implementation
-
-	ensure_item_visible (an_item: EV_TREE_ITEM) is
-			-- Ensure `an_item' is visible in `Current'.
-			-- Tree nodes may be expanded to achieve this.
-		local
-			tree_item_imp: EV_TREE_NODE_IMP
-			a_path: POINTER
-		do
-			tree_item_imp ?= an_item.implementation
-			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (tree_store, tree_item_imp.list_iter.item)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
-		end
 
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.

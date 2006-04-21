@@ -492,11 +492,11 @@ feature -- Basic operation
 			l_file_list: LIST [STRING_32]
 			l_success: BOOLEAN
 		do
-			a_context := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_context (a_event)
-			src_window := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_source_window (a_context)
-			a_selection := {EV_GTK_EXTERNALS}.gdk_drag_get_selection (a_context)
-			a_time := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_time (a_event)
 			from
+				a_context := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_context (a_event)
+				src_window := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_source_window (a_context)
+				a_selection := {EV_GTK_EXTERNALS}.gdk_drag_get_selection (a_context)
+				a_time := {EV_GTK_EXTERNALS}.gdk_event_dnd_struct_time (a_event)
 				a_target_list := {EV_GTK_EXTERNALS}.gdk_drag_context_struct_targets (a_context)
 			until
 				a_target_list = default_pointer
@@ -527,7 +527,6 @@ feature -- Basic operation
 							end
 						end
 					end
-
 				end
 				a_target_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_target_list)
 			end

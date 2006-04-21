@@ -1,12 +1,14 @@
 case $CONFIG in
 '')
-	if test ! -f config.sh; then
-		ln ../config.sh . || \
-		ln ../../config.sh . || \
-		ln ../../../config.sh . || \
-		(echo "Can't find config.sh."; exit 1)
-	fi 2>/dev/null
-	. config.sh
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
 	;;
 esac
 case "$0" in

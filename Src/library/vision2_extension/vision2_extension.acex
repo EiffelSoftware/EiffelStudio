@@ -8,6 +8,9 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
 		<cluster name="independent_gtk" location="independent" recursive="true">
 			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
@@ -19,6 +22,13 @@
 			<file_rule>
 				<exclude>/gtk$</exclude>
 			</file_rule>
+		</cluster>
+		<cluster name="windows_neutral" location="windows/neutral" recursive="true">
+			<condition><platform value="windows"/></condition>
+			<condition><platform value="dotnet"/></condition>
+		</cluster>
+		<cluster name="windows_dotnet" location="windows/dotnet" recursive="true">
+			<condition><platform value="dotnet"/></condition>
 		</cluster>
 	</target>
 </system>

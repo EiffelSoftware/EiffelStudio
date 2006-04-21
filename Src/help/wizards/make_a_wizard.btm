@@ -22,7 +22,7 @@ copy %EIFFEL_SRC%\help\wizards\wizard.rc .
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
-cdd %TEMP%\%3\EIFGEN\F_code
+cdd %TEMP%\%3\EIFGENs\wizard\F_code
 iff not defined WIN64 then
 	upx wizard.exe
 endiff

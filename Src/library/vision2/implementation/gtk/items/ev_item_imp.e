@@ -32,27 +32,8 @@ inherit
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
-		redefine
-			create_pointer_button_press_actions,
-			create_pointer_double_press_actions
-		end
 
 feature {NONE} -- Initialization
-
-	connect_button_press_switch is
-			-- Connect `button_press_switch' to its event sources.
-		local
-			app_imp: like app_implementation
-		do
-			if not button_press_switch_is_connected then
-				app_imp := app_implementation
-				signal_connect (event_widget, App_imp.button_press_event_string, agent (app_imp.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_imp.default_translate, False)
-				button_press_switch_is_connected := True
-			end
-		end
-
-	button_press_switch_is_connected: BOOLEAN
-			-- Is `button_press_switch' connected to its event source.
 
 	button_press_switch (
 			a_type: INTEGER;
@@ -86,20 +67,6 @@ feature -- Access
 			-- May be void.
 		do
 			Result := item_parent_imp
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-		do
-			Result := Precursor {EV_ITEM_ACTION_SEQUENCES_IMP}
-			Result.not_empty_actions.extend (agent connect_button_press_switch)
-		end
-
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
-		do
-			Result := Precursor {EV_ITEM_ACTION_SEQUENCES_IMP}
-			Result.not_empty_actions.extend (agent connect_button_press_switch)
 		end
 
 feature {EV_ANY_IMP} -- Implementation

@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "Dialog properties window of Resource Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DIALOG_PROPERTIES
 
 inherit
@@ -72,12 +72,12 @@ feature -- Initialization
 			current_dialog_set: current_dialog = a_dialog
 		end
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 		local
-			tt1: WEL_TOOLTIP_TEXT 
+			tt1: WEL_TOOLTIP_TEXT
 		do
 			if msg = Wm_notify then
-				!! tt1.make_by_pointer (cwel_integer_to_pointer (lparam))
+				!! tt1.make_by_pointer (lparam)
 				if tt1.hdr.code = Ttn_needtext then
 						-- Set resource string id.
 					tt1.set_text_id (tt1.hdr.id_from)
@@ -135,7 +135,7 @@ feature -- Element change
 			index: INTEGER
 		do
 			current_dialog.set_class_name (dialog_class_name.text)
-			
+
 			if check_code_generation.checked then
 				current_dialog.set_wel_code (true)
 			else
@@ -213,7 +213,7 @@ feature -- Element change
 					current_dialog.statement_list.start
 					index := 0
 					selected_list := control_selection_list.selected_items
-				until 
+				until
 					current_dialog.statement_list.off
 				loop
 					control_list := current_dialog.statement_list.item_for_iteration
@@ -250,7 +250,7 @@ feature -- Element change
 			if current_dialog.options.caption /= Void then
 				idc_dialog_caption.set_text (current_dialog.options.caption)
 			end
-			
+
 			if current_dialog.is_wel_code_on then
 				check_code_generation.set_checked
 				enable_all_controls
@@ -313,19 +313,19 @@ feature -- Element change
 			else
 				idc_main_dialog.set_checked
 			end
-                        			
+
 			if current_dialog.statement_list /= Void then
 				!! control_name.make (20)
 
 				from
 					current_dialog.statement_list.start
 					index := 0
-				until 
+				until
 					current_dialog.statement_list.off
 				loop
 					control_list := current_dialog.statement_list.item_for_iteration
 
-					from 
+					from
 						control_list.start
 					until
 						control_list.after

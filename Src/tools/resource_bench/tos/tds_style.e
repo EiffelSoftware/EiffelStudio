@@ -11,8 +11,8 @@ class
 
 creation
 
-	make 
-	
+	make
+
 feature -- Initialization
 
 	make is
@@ -57,18 +57,14 @@ feature -- Query
 			a_style_not_void: a_style /= Void
 		do
 			Result := (style.is_equal (a_style.style)) and (activate = a_style.activate)
-		ensure
-			Result_not_void: Result /= Void
 		end
-	
+
 	is_style_almost_equal (a_style: TDS_STYLE) : BOOLEAN is
 			-- Is a part of `a_style' contained by `style'?
 		require
 			a_style_not_void: a_style /= Void
 		do
 			Result := (style.substring_index (a_style.style, 1)> 0) AND (activate = a_style.activate)
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 feature -- Code generation
@@ -93,7 +89,7 @@ feature -- Code generation
 
 			a_resource_file.putstring (style)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

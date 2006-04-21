@@ -96,9 +96,8 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER is 768
 			-- Default_style.
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
-			!! result.make (20)
 			result := "Client window"
 		end
 

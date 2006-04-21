@@ -40,7 +40,7 @@ feature -- Output
 				l_ext.assembly.format (a_text_formatter)
 			else
 				a_text_formatter.add ("First file: %"")
-				a_text_formatter.add (first.file_name)
+				a_text_formatter.add (first.full_file_name)
 			end
 			a_text_formatter.add ("%"")
 			a_text_formatter.add_new_line
@@ -57,7 +57,7 @@ feature -- Output
 				l_ext.assembly.format (a_text_formatter)
 			else
 				a_text_formatter.add ("Second file: %"")
-				a_text_formatter.add (second.file_name)
+				a_text_formatter.add (second.full_file_name)
 			end
 			a_text_formatter.add ("%"")
 			a_text_formatter.add_new_line

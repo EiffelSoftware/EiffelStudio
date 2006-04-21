@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="doc_builder" uuid="3E4B15A1-870D-46AF-A500-B1F8DF363DCB">
+	<target name="doc_builder">
+		<root feature="make_and_launch" class="DOC_BUILDER"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="True"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="exception_trace" value="True"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+
+		<external_include location="$(EIFFEL_SRC)\tools\doc_builder\Clib">
+			<condition><platform value="windows"/></condition>
+		</external_include>
+		<external_object location="htmlhelp.lib">
+			<condition><platform value="windows"/></condition>
+		</external_object>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex">
+			<renaming old_name="CONSTANTS" new_name="EDITOR_CONSTANTS"/>
+			<renaming old_name="CONSTANTS_IMP" new_name="EDITOR_CONSTANTS_IMP"/>
+		</library>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
+			<condition><platform value="windows"/></condition>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
+			<condition><platform excluded_value="windows"/></condition>
+		</library>
+
+		<cluster name="compiler_shared" location="$EIFFEL_SRC\Eiffel\eiffel\shared\" recursive="true"/>
+		<cluster name="env" location="$EIFFEL_SRC\Eiffel\library\configuration\lace\" recursive="true"/>
+		<cluster name="compiler_structures" location="$EIFFEL_SRC\Eiffel\eiffel\structures\">
+			<file_rule>
+				<exclude>/names_heap.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+			<file_rule>
+				<exclude>/facade$</exclude>
+				<exclude>/doc_builder.e$</exclude>
+				<exclude>/document_browser.e$</exclude>
+				<exclude>/document_schema.e$</exclude>
+				<exclude>/document_schema_element.e$</exclude>
+				<exclude>/schema_rendering_factory.e$</exclude>
+				<exclude>/spell_checker.e$</exclude>
+				<exclude>/web_browser_widget.e$</exclude>
+				<exclude>/schema_validator.e$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="facade" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+			<file_rule>
+				<exclude>/help_manager.e$</exclude>
+				<exclude>/help_setting_constants.e$</exclude>
+			</file_rule>
+		</cluster>
+
+	</target>
+</system>

@@ -277,7 +277,7 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	if (!(s_flags & EO_REF)) {
 #endif
 		/* Case 1: specials filled with direct instances: block comparison */
-		return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
+		return EIF_TEST(!memcmp (source, target, count * elem_size));
 	}
 
 	if (s_flags & EO_TUPLE) {

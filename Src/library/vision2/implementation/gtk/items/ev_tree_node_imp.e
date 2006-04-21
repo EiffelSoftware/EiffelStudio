@@ -95,6 +95,7 @@ feature -- Status setting
 			if par_tree /= Void then
 				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)
+				par_tree.ensure_item_visible (interface)
 			end
 		end
 

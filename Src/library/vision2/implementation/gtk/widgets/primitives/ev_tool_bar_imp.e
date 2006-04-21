@@ -123,7 +123,7 @@ feature -- Status setting
 		end
 
 	disable_vertical is
-			--
+			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 0)

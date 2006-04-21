@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 				loop
 					l_ext := an_externals.item
 					append_text_indent ("<external_"+a_name)
-					append_text (" location=%""+l_ext.location.original_path+"%">%N")
+					append_text (" location=%""+l_ext.location+"%">%N")
 					indent := indent + 1
 					last_count := text.count
 
@@ -672,6 +672,52 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	append_visible (a_visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]) is
+			-- Append visible rules.
+		require
+			a_visible_not_void: a_visible /= Void
+		local
+			l_vis_feat: CONF_HASH_TABLE [STRING, STRING]
+			l_class: STRING
+			l_feat, l_feat_rename, l_class_rename: STRING
+		do
+			from
+				a_visible.start
+			until
+				a_visible.after
+			loop
+				l_class := a_visible.key_for_iteration
+				l_class_rename ?= a_visible.item_for_iteration.item (1)
+				l_vis_feat ?= a_visible.item_for_iteration.item (2)
+				from
+					l_vis_feat.start
+				until
+					l_vis_feat.after
+				loop
+					l_feat := l_vis_feat.key_for_iteration
+					l_feat_rename := l_vis_feat.item_for_iteration
+					if l_feat.is_equal ("*") then
+						l_feat := Void
+					end
+					append_text_indent ("<visible class=%""+l_class+"%"")
+					if l_feat /= Void then
+						append_text (" feature=%""+l_feat+"%"")
+					end
+					if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
+						append_text (" class_rename=%""+l_class_rename+"%"")
+					end
+					if l_feat_rename /= Void and then not l_feat_rename.is_empty then
+						append_text (" feature_rename=%""+l_feat_rename+"%"")
+					end
+					append_text ("/>%N")
+					l_vis_feat.forth
+				end
+				a_visible.forth
+			end
+
+		end
+
+
 	append_pre_group (a_tag: STRING; a_group: CONF_GROUP) is
 			-- Append the things that start the entry for `a_group'
 		require
@@ -763,10 +809,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: LINKED_SET [CONF_GROUP]
-			l_visible: HASH_TABLE [TUPLE [STRING, HASH_TABLE [STRING, STRING]], STRING]
-			l_vis_feat: HASH_TABLE [STRING, STRING]
-			l_class: STRING
-			l_feat, l_feat_rename, l_class_rename: STRING
+			l_visible: CONF_HASH_TABLE [TUPLE [STRING, CONF_HASH_TABLE [STRING, STRING]], STRING]
 			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cluster: CONF_CLUSTER
 			l_name: STRING
@@ -786,39 +829,7 @@ feature {NONE} -- Implementation
 			end
 			l_visible := a_cluster.visible
 			if l_visible /= Void then
-				from
-					l_visible.start
-				until
-					l_visible.after
-				loop
-					l_class := l_visible.key_for_iteration
-					l_class_rename ?= l_visible.item_for_iteration.item (1)
-					l_vis_feat ?= l_visible.item_for_iteration.item (2)
-					from
-						l_vis_feat.start
-					until
-						l_vis_feat.after
-					loop
-						l_feat := l_vis_feat.key_for_iteration
-						l_feat_rename := l_vis_feat.item_for_iteration
-						if l_feat.is_equal ("*") then
-							l_feat := Void
-						end
-						append_text_indent ("<visible class=%""+l_class+"%"")
-						if l_feat /= Void then
-							append_text (" feature=%""+l_feat+"%"")
-						end
-						if l_class_rename /= Void and then not l_class_rename.is_empty and then not l_class_rename.is_equal (l_class) then
-							append_text (" class_rename=%""+l_class_rename+"%"")
-						end
-						if l_feat_rename /= Void and then not l_feat_rename.is_empty then
-							append_text (" feature_rename=%""+l_feat_rename+"%"")
-						end
-						append_text ("/>%N")
-						l_vis_feat.forth
-					end
-					l_visible.forth
-				end
+				append_visible (l_visible)
 			end
 				-- look for subclusters
 			from

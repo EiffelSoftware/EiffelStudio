@@ -686,7 +686,7 @@ feature -- Generation, External archives and object files.
 				loop
 					l_ext := object_file_names.i_th (i)
 					if l_ext.is_enabled (universe.conf_state) then
-						l_path := l_ext.location.original_path
+						l_path := l_ext.location
 							-- don't add the same object multiple times
 						if not l_added_objects.has (l_path) then
 							l_added_objects.force (l_path)
@@ -724,7 +724,7 @@ feature -- Generation, External archives and object files.
 				loop
 					l_ext := include_paths.i_th (i)
 					if l_ext.is_enabled (universe.conf_state) then
-						l_path := l_ext.location.original_path
+						l_path := l_ext.location
 							-- all remaining $ are by choice so mask them
 						l_path.replace_substring_all ("$", "\$")
 							-- because its possible that they were already masked, correct double masking
@@ -764,7 +764,7 @@ feature -- Generation, External archives and object files.
 			loop
 				l_ext := makefile_names.i_th (i)
 				if l_ext.is_enabled (universe.conf_state) then
-					l_path := l_ext.location.evaluated_path
+					l_path := l_ext.location
 					if not l_added_make.has (l_path) then
 						l_added_make.force (l_path)
 						make_file.put_string (" ")

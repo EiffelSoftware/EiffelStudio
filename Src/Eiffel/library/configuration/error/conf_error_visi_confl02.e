@@ -1,62 +1,34 @@
 indexing
-	description: "Objects that represent an external."
+	description: "Visibility conflict, all features visible vs. some features visible with renamings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_EXTERNAL
+	CONF_ERROR_VISI_CONFL02
 
 inherit
-	CONF_CONDITIONED
+	CONF_ERROR
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_location: like location) is
-			-- Create with `a_location'.
+	make (a_class: STRING) is
+			-- Create.
 		require
-			a_location_not_void: a_location /= Void
+			a_class_not_void: a_class /= Void
 		do
-			location := a_location
-		ensure
-			location_set: location = a_location
+			text := "Visibility conflict (conflicting feature renamings) for class: "+a_class
 		end
 
 
-feature -- Access, stored in configuration file
+feature -- Access
 
-	location: STRING
-			-- The file location.
+	text: STRING;
 
-	description: STRING
-			-- A description about the external.
-
-feature {CONF_ACCESS} -- Update, stored in configuration file
-
-	set_location (a_location: like location) is
-			-- Set `location' to `a_location'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			location := a_location
-		ensure
-			location_set: location = a_location
-		end
-
-	set_description (a_description: like description) is
-			-- Set `description' to `a_description'.
-		do
-			description := a_description
-		ensure
-			description_set: description = a_description
-		end
-
-invariant
-	location_not_void: location /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

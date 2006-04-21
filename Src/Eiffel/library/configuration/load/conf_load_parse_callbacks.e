@@ -510,7 +510,6 @@ feature {NONE} -- Implementation attribute processing
 			current_target_not_void: current_target /= Void
 		local
 			l_location: STRING
-			l_loc: CONF_LOCATION
 			l_inc: CONF_EXTERNAL_INCLUDE
 			l_obj: CONF_EXTERNAL_OBJECT
 			l_res: CONF_EXTERNAL_RESSOURCE
@@ -518,23 +517,22 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_location := current_attributes.item (at_location)
 			if l_location /= Void then
-				l_loc := factory.new_location_from_full_path (l_location, current_target)
 				inspect
 					current_tag.item
 				when t_external_include then
-					l_inc := factory.new_external_include (l_loc)
+					l_inc := factory.new_external_include (l_location)
 					current_target.add_external_include (l_inc)
 					current_external := l_inc
 				when t_external_object then
-					l_obj := factory.new_external_object (l_loc)
+					l_obj := factory.new_external_object (l_location)
 					current_target.add_external_object (l_obj)
 					current_external := l_obj
 				when t_external_ressource then
-					l_res := factory.new_external_ressource (l_loc)
+					l_res := factory.new_external_ressource (l_location)
 					current_target.add_external_ressource (l_res)
 					current_external := l_res
 				when t_external_make then
-					l_make := factory.new_external_make (l_loc)
+					l_make := factory.new_external_make (l_location)
 					current_target.add_external_make (l_make)
 					current_external := l_res
 				else
@@ -944,7 +942,7 @@ feature {NONE} -- Implementation attribute processing
 	process_visible_attributes is
 			-- Process attributes of a visible tag.
 		require
-			cluster: current_cluster /= Void
+			cluster_or_library: current_cluster /= Void or current_library /= Void
 		local
 			l_class, l_feature, l_class_rename, l_feature_rename: STRING
 		do
@@ -955,12 +953,25 @@ feature {NONE} -- Implementation attribute processing
 			if l_class /= Void then
 				l_class.to_upper
 				if l_feature /= Void then
+					l_feature.to_lower
+				end
+				if l_class_rename /= Void then
+					l_class_rename.to_upper
+				end
+				if l_feature_rename /= Void then
+					l_feature_rename.to_lower
+				end
+				if current_cluster /= Void then
 					current_cluster.add_visible (l_class, l_feature, l_class_rename, l_feature_rename)
 				else
-					current_cluster.add_visible (l_class, "*", "", "")
+					current_library.add_visible (l_class, l_feature, l_class_rename, l_feature_rename)
 				end
 			else
-				set_parse_error_message ("Invalid visible tag.")
+				if current_cluster /= Void then
+					set_parse_error_message ("Invalid visible tag on ."+current_cluster.name)
+				else
+					set_parse_error_message ("Invalid visible tag on ."+current_library.name)
+				end
 			end
 		end
 
@@ -1328,7 +1339,7 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_external_ressource)
 			Result.force (l_trans, t_external_make)
 
-				-- library/assembly/precompile
+				-- assembly
 				-- => description
 				-- => option
 				-- => renaming
@@ -1340,19 +1351,22 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_renaming, "renaming")
 			l_trans.force (t_class_option, "class_option")
 			l_trans.force (t_condition, "condition")
-			Result.force (l_trans, t_library)
 			Result.force (l_trans, t_assembly)
+
+				-- library/precompile
+				-- -everything from assembly
+				-- => visible
+			l_trans.force (t_visible, "visible")
+			Result.force (l_trans, t_library)
 			Result.force (l_trans, t_precompile)
 
 				-- cluster
-				-- -everything from library/assembly
+				-- -everything from library/precompile
 				-- => file_rule
 				-- => uses
-				-- => visible
 				-- => cluster
 			l_trans.force (t_file_rule, "file_rule")
 			l_trans.force (t_uses, "uses")
-			l_trans.force (t_visible, "visible")
 			l_trans.force (t_cluster, "cluster")
 			Result.force (l_trans, t_cluster)
 

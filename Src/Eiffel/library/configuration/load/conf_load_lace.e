@@ -331,7 +331,7 @@ feature {NONE} -- Implementation of data retrieval
 						end
 
 						if l_vis.export_restriction = Void then
-							current_cluster.add_visible (l_class, "*", l_class_vis, Void)
+							current_cluster.add_visible (l_class, Void, l_class_vis, Void)
 						else
 							l_vis.export_restriction.do_all (agent current_cluster.add_visible (l_class, {ID_SD}?, l_class_vis, Void))
 						end
@@ -624,7 +624,6 @@ feature {NONE} -- Implementation of data retrieval
 			l_external: LANG_TRIB_SD
 			l_type: LANGUAGE_NAME_SD
 			l_files: LACE_LIST [ID_SD]
-			l_location: CONF_LOCATION
 		do
 			if a_externals /= Void then
 				from
@@ -641,8 +640,7 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_include (factory.new_external_include (l_location))
+							current_target.add_external_include (factory.new_external_include (l_files.item))
 							l_files.forth
 						end
 					elseif l_type.is_object then
@@ -651,8 +649,7 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_object (factory.new_external_object (l_location))
+							current_target.add_external_object (factory.new_external_object (l_files.item))
 							l_files.forth
 						end
 					elseif l_type.is_dotnet_resource then
@@ -661,8 +658,7 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_ressource (factory.new_external_ressource (l_location))
+							current_target.add_external_ressource (factory.new_external_ressource (l_files.item))
 							l_files.forth
 						end
 					elseif l_type.is_make then
@@ -671,8 +667,7 @@ feature {NONE} -- Implementation of data retrieval
 						until
 							l_files.after
 						loop
-							l_location := factory.new_location_from_full_path (l_files.item, current_target)
-							current_target.add_external_make (factory.new_external_make (l_location))
+							current_target.add_external_make (factory.new_external_make (l_files.item))
 							l_files.forth
 						end
 					else

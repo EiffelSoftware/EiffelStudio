@@ -14,8 +14,7 @@ inherit
 			{NONE} process_system
 		redefine
 			process_target,
-			process_group,
-			process_cluster
+			process_group
 		end
 
 	CONF_ACCESS
@@ -78,18 +77,6 @@ feature -- Visit nodes
 				a_group.set_options (new_group.internal_options)
 				a_group.set_class_options (new_group.class_options)
 				a_group.set_readonly (new_group.internal_read_only)
-			end
-		end
-
-	process_cluster (a_cluster: CONF_CLUSTER) is
-			-- Visit `a_cluster'.
-		local
-			l_cl: CONF_CLUSTER
-		do
-			if not is_error then
-				check cluster: new_group.is_cluster end
-				l_cl ?= new_group
-				a_cluster.set_visible (l_cl.visible)
 			end
 		end
 

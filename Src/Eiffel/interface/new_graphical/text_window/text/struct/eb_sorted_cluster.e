@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			until
 				a_group.after
 			loop
-				if a_group.item.is_valid then
+				if a_group.item.is_valid and a_group.item.classes_set then
 					create l_group.make (a_group.item)
 					Result.force_last (l_group)
 					l_group.set_parent (Current)

@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 			create consume_assembly_observer.make (1)
 			create process_group_observer.make (1)
 			create process_directory.make (1)
+			create last_warnings.make
 			application_target := an_application_target
 		end
 
@@ -77,6 +78,9 @@ feature -- Status
 		do
 			Result := assembly_cache_folder /= Void
 		end
+
+	last_warnings: LINKED_LIST [CONF_ERROR]
+			-- Warnings generated during processing.
 
 feature -- Access
 
@@ -360,6 +364,15 @@ feature -- Visit nodes
 					else
 						a_library.set_classes (current_classes)
 					end
+
+						-- update visibility
+					a_library.update_visible
+					if a_library.is_error then
+						add_error (a_library.last_error)
+					end
+					if a_library.last_warnings /= Void then
+						last_warnings.append (a_library.last_warnings)
+					end
 				end
 			end
 		ensure then
@@ -388,6 +401,15 @@ feature -- Visit nodes
 
 				a_cluster.set_classes (current_classes)
 				a_cluster.set_classes_by_filename (current_classes_by_filename)
+
+					-- update visibility
+				a_cluster.update_visible
+				if a_cluster.is_error then
+					add_error (a_cluster.last_error)
+				end
+				if a_cluster.last_warnings /= Void then
+					last_warnings.append (a_cluster.last_warnings)
+				end
 			end
 		ensure then
 			classes_set: not is_error implies a_cluster.classes_set
@@ -1470,6 +1492,7 @@ invariant
 	libraries_no_intersection: not libraries_intersection (libraries, old_libraries)
 	assemblies_no_intersection: not assemblies_intersection (assemblies, old_assemblies)
 	factory_not_void: factory /= Void
+	last_warnings_not_void: last_warnings /= Void
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

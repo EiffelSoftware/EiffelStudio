@@ -92,7 +92,7 @@ feature -- Initialization
 					l_cls.after
 				loop
 					l_cluster := l_cls.item_for_iteration
-					if l_cluster.parent = Void then
+					if l_cluster.parent = Void and l_cluster.classes_set then
 						l_cls_lst.force (l_cluster, l_cluster.name)
 					end
 					l_cls.forth
@@ -100,7 +100,7 @@ feature -- Initialization
 				clusters := create_groups (l_cls_lst)
 				overrides := create_groups (l_target.overrides)
 				l_libs := l_target.libraries
-				if l_target.precompile /= Void then
+				if l_target.precompile /= Void and l_target.precompile.classes_set then
 					l_libs.force (l_target.precompile, l_target.precompile.name)
 				end
 				libraries := create_groups (l_libs)
@@ -578,8 +578,10 @@ feature {NONE} -- Implementation
 			until
 				a_groups.after
 			loop
-				create l_grp.make (a_groups.item_for_iteration)
-				Result.force_last (l_grp)
+				if a_groups.item_for_iteration.classes_set then
+					create l_grp.make (a_groups.item_for_iteration)
+					Result.force_last (l_grp)
+				end
 				a_groups.forth
 			end
 			Result.sort (create {DS_QUICK_SORTER [EB_SORTED_CLUSTER]}.make (create {KL_COMPARABLE_COMPARATOR [EB_SORTED_CLUSTER]}.make))

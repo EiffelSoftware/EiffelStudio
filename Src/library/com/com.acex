@@ -36,6 +36,8 @@
 		</external_object>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
 
 		<cluster name="Constants" location="Constants" recursive="true"/>
 		<cluster name="Interfaces" location="Interfaces" recursive="true"/>

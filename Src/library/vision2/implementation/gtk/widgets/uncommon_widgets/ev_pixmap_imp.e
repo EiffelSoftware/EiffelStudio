@@ -224,7 +224,7 @@ feature -- Element change
 			end
 		end
 
-	set_mask	 (a_mask: EV_BITMAP) is
+	set_mask (a_mask: EV_BITMAP) is
 			-- Set the GdkBitmap used for masking `Current'.
 		local
 			a_mask_imp: EV_BITMAP_IMP
@@ -262,7 +262,7 @@ feature -- Access
 				array_area := Result.area
 				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
 				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.to_character
+				temp_alpha := temp_alpha_int.to_character_8
 			until
 				array_offset = array_size
 			loop
@@ -273,9 +273,9 @@ feature -- Access
 				)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 					-- RGB values of a_color are 16 bit.
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character, array_offset)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character, array_offset + 1)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character, array_offset + 2)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character_8, array_offset)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character_8, array_offset + 1)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character_8, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end

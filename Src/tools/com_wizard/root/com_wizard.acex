@@ -16,49 +16,31 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="True"/>
 
-		<external_include location="$(EIFFEL_SRC)\library\wel\spec\windows\include"/>
-		<external_include location="$(EIFFEL_SRC)\library\vision2\spec\include"/>
-		<external_include location="$(EIFFEL_SRC)\library\com\spec\windows\include"/>
-		<external_object location="$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib"/>
-		<external_object location="$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib"/>
-		<external_object location="$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"/>
-		<external_object location="$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"/>
-		<external_object location="$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib"/>
-		<external_object location="$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib"/>
 		<external_object location="htmlhelp.lib"/>
-		<cluster name="base" location="$EIFFEL_SRC\library\base\" recursive="true">
-			<file_rule>
-				<exclude>/table_eiffel3$</exclude>
-				<exclude>/desc$</exclude>
-				<exclude>/.svn$</exclude>
-			</file_rule>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+
+		<library name="base" location="$EIFFEL_SRC\library\base\base.acex" readonly="true">
 			<visible class="ARRAY"/>
 			<visible class="STRING"/>
-		</cluster>
-		<cluster name="com" location="$EIFFEL_SRC\library\com\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-			</file_rule>
+		</library>
+		<library name="com" location="$EIFFEL_SRC\library\com\com.acex">
 			<visible class="ECOM_CURRENCY"/>
 			<visible class="ECOM_DECIMAL"/>
-		</cluster>
-		<cluster name="date_time" location="$EIFFEL_SRC\library\time\" readonly="true" recursive="true">
-			<file_rule>
-				<exclude>/german$</exclude>
-				<exclude>/french$</exclude>
-				<exclude>/.svn$</exclude>
-			</file_rule>
-		</cluster>
+		</library>
+		<library name="date_time" location="$EIFFEL_SRC\library\time\time.acex" readonly="true"/>
+		<library name="vision2" location="$EIFFEL_SRC\library\vision2\vision2.acex" readonly="true"/>
+		<library name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\vision2_extension.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>
+
 		<cluster name="eclop" location="$EIFFEL_SRC\free_add_ons\eclop\" readonly="true" recursive="true">
 			<file_rule>
 				<exclude>/examples$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="eiffel_to_idl" location="$EIFFEL_SRC\tools\com_wizard\eiffeltoidl\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="eiffel_to_idl" location="$EIFFEL_SRC\tools\com_wizard\eiffeltoidl\" recursive="true"/>
 		<cluster name="help_engine" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\help\" recursive="true">
 			<file_rule>
 				<exclude>/gtk$</exclude>
@@ -69,42 +51,13 @@
 				<exclude>/EIFGEN$</exclude>
 				<exclude>/resources$</exclude>
 				<exclude>/Diagrams$</exclude>
-				<exclude>/.svn$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\com_wizard\root\"/>
-		<cluster name="thread" location="$EIFFEL_SRC\library\thread\" readonly="true" recursive="true"/>
-		<cluster name="vision2" location="$EIFFEL_SRC\library\vision2\" recursive="true">
-			<option>
-				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-			<file_rule>
-				<exclude>/gtk$</exclude>
-				<exclude>/gtk2$</exclude>
-				<exclude>/.svn$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\" recursive="true">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-			<file_rule>
-				<exclude>/gtk$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
-		<cluster name="wel" location="$EIFFEL_SRC\library\wel\" recursive="true">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-			<file_rule>
-				<exclude>/.svn$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="wizard" location="$EIFFEL_SRC\tools\com_wizard\project\" recursive="true">
 			<file_rule>
 				<exclude>/new_gui$</exclude>
-				<exclude>/.svn$</exclude>
 			</file_rule>
 			<visible class="ECOM_CUST_DATA_ITEM"/>
 			<visible class="ECOM_DLL_ENTRY"/>

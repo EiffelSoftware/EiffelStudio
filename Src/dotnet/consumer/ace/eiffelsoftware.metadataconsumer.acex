@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA">
+	<target name="eiffelsoftware.metadataconsumer">
+		<root feature="make" class="EMITTER"/>
+		<version major="5" minor="7" release="414" build="1"/>
+		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
+			<debug name="__unnamed_debug__" enabled="false"/>
+			<debug name="assemblies_are_never_stale" enabled="false"/>
+			<debug name="log_illegal_non_cls_compliancy" enabled="false"/>
+			<debug name="press_enter_to_exit" enabled="false"/>
+			<debug name="press_enter_to_finish" enabled="false"/>
+			<debug name="refactor_fixme" enabled="false"/>
+			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
+		</option>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<setting name="cls_compliant" value="True"/>
+		<setting name="console_application" value="True"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="dotnet_naming_convention" value="False"/>
+		<setting name="il_verifiable" value="True"/>
+		<setting name="line_generation" value="False"/>
+		<setting name="msil_assembly_compatibility" value="None"/>
+		<setting name="msil_generation" value="True"/>
+		<setting name="msil_generation_type" value="dll"/>
+		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
+		<setting name="use_all_cluster_name_as_namespace" value="False"/>
+		<setting name="use_cluster_name_as_namespace" value="False"/>
+
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<cluster name="compliance_checker" location="$EIFFEL_SRC\tools\compliance_checker\engine\" recursive="true">
+			<option namespace="ComplianceChecker"/>
+			<file_rule>
+				<exclude>/reporting$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="emitter" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
+			<file_rule>
+				<exclude>/interop$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="helpers" location="$EIFFEL_SRC\dotnet\helpers\" recursive="true">
+			<file_rule>
+				<exclude>/example$</exclude>
+				<exclude>/classic$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
+			<option namespace="Interop"/>
+			<visible class="COM_CACHE_MANAGER"/>
+		</cluster>
+	</target>
+</system>

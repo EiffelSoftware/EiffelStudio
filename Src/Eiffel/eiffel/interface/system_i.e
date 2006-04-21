@@ -822,6 +822,7 @@ end
 
 				-- modified classes
 			l_classes := l_vis_build.modified_classes
+			create new_classes.make
 			from
 				l_classes.start
 			until
@@ -845,7 +846,6 @@ end
 			end
 				-- added classes
 				-- we don't need them on the first compilation
-			create new_classes.make
 			if not first_compilation or else has_compilation_started or compilation_modes.is_precompiling then
 				l_classes := l_vis_build.added_classes
 				from
@@ -1807,9 +1807,10 @@ end
 			loop
 				a_class := class_array.item (i)
 
-				if a_class /= Void and then
-						a_class.has_visible and then
-							not marked_classes.has (a_class.class_id) then
+				if
+					a_class /= Void and then a_class.lace_class.config_class.is_always_compile and then
+					not marked_classes.has (a_class.class_id)
+				then
 					a_class.mark_class (marked_classes)
 				end
 				i := i + 1
@@ -2634,7 +2635,15 @@ feature -- Final mode generation
 				set_is_precompile_finalized (True)
 
 				if il_generation then
+						-- Build conformance table for CLASS_TYPE instances. This is
+						-- needed for proper processing of computation of `is_polymorphic'
+						-- on polymorphic table and computation of expanded descendants.
+					process_conformance_table_for_type (agent {CLASS_TYPE}.build_conformance_table)
+
+					byte_context.clear_system_data
+					byte_context.compute_expanded_descendants
 					generate_il
+					byte_context.clear_system_data
 					debug ("Timing")
 						create d2.make_now
 						print ("Degree -2/-3 duration: ")

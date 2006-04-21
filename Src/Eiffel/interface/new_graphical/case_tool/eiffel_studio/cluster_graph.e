@@ -161,7 +161,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 
 feature {NONE} -- Cluster manger observer
 
-	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP) is
+	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; a_old_path: STRING) is
 			-- `a_class' has been moved away from `old_cluster'.
 		local
 			old_clus, new_clus: ES_CLUSTER

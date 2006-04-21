@@ -335,6 +335,7 @@ feature -- Visit nodes
 					end
 				end
 				if not is_error then
+					reused_groups.force (a_library)
 					create current_classes.make (Classes_per_cluster)
 					l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
 						-- do renaming prefixing if necessary

@@ -84,7 +84,7 @@ feature -- Behavior
 			bitmap_resource ?= current_resource
 			cursor_resource ?= current_resource
 			icon_resource ?= current_resource
-			
+
 			if bitmap_resource /= Void then
 				!! file.make (bitmap_resource.filename)
 				if file.exists then
@@ -98,7 +98,7 @@ feature -- Behavior
 					error_message.append (bitmap_resource.filename)
 					error_message.extend ('%"')
 					paint_dc.select_font (ansi_font)
-					paint_dc.set_background_transparent 
+					paint_dc.set_background_transparent
 					paint_dc.text_out (1, 3, error_message)
 				end
 			end
@@ -114,8 +114,8 @@ feature -- Behavior
 					error_message.append (cursor_resource.filename)
 					error_message.extend ('%"')
 					paint_dc.select_font (ansi_font)
-					paint_dc.set_background_transparent 
-					paint_dc.text_out (1, 3, error_message)		
+					paint_dc.set_background_transparent
+					paint_dc.text_out (1, 3, error_message)
 				end
 			end
 
@@ -130,8 +130,8 @@ feature -- Behavior
 					error_message.append (icon_resource.filename)
 					error_message.extend ('%"')
 					paint_dc.select_font (ansi_font)
-					paint_dc.set_background_transparent 
-					paint_dc.text_out (1, 3, error_message)		
+					paint_dc.set_background_transparent
+					paint_dc.text_out (1, 3, error_message)
 				end
 			end
 		end
@@ -147,12 +147,11 @@ feature -- Behavior
 			!! Result.make
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
-			!! Result.make (20)
 			Result := "Properties window"
 		end
-	
+
 feature {NONE} -- Implementation
 
 	parent_window: MAIN_WINDOW

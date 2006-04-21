@@ -76,21 +76,6 @@ feature -- Setting
 			base_name_set: base_name = s
 		end
 
-feature {COMPILER_EXPORTER} -- Setting
-
-
-	external_name: STRING is
-			-- Name of the class for the external environment
-		do
-			if visible /= Void then
-				Result ?= visible.item (1)
-			else
-				Result := name
-			end
-		ensure
-			external_name_not_void: Result /= Void
-			external_name_in_upper: Result.as_upper.is_equal (Result)
-		end
 
 feature {NONE} -- Type anchor
 

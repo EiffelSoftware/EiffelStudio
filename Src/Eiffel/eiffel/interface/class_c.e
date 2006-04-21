@@ -2250,7 +2250,7 @@ feature -- Dead code removal
 	has_visible: BOOLEAN is
 			-- Has the class some visible features
 		do
---			Result := visible_level.has_visible
+			Result := visible_level.has_visible
 		end
 
 	visible_table_size: INTEGER

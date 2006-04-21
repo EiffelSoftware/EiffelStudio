@@ -133,8 +133,6 @@ if not "%remove_desc%" == "1" (
 echo cd ..>> make.bat
 call make
 goto end
-:cleand
-set remove_desc=1
 :clean
 del cleanup.bat
 echo del *.err >> cleanup.bat
@@ -161,9 +159,7 @@ echo del cleanup.bat >> cleanup.bat
 
 copy cleanup.bat console\
 copy cleanup.bat bench\
-if not "%remove_desc%" == "1" (
-	copy cleanup.bat desc\
-)
+copy cleanup.bat desc\
 copy cleanup.bat ipc\app\
 copy cleanup.bat ipc\daemon\
 copy cleanup.bat ipc\ewb\
@@ -171,18 +167,16 @@ copy cleanup.bat ipc\shared\
 copy cleanup.bat platform\
 copy cleanup.bat idrs\
 copy cleanup.bat run-time\
-copy cleanup.bat run-time\OBJDIR\
-copy cleanup.bat run-time\LIB\
-copy cleanup.bat run-time\FREELIB\
+if exist run-time\OBJDIR copy cleanup.bat run-time\OBJDIR\
+if exist run-time\LIB copy cleanup.bat run-time\LIB\
+if exist run-time\FREELIB copy cleanup.bat run-time\FREELIB\
 
 cd bench
 call cleanup
 cd ..\console
 call cleanup
-if not "%remove_desc%" == "1" (
-	cd ..\desc
-	call cleanup
-)
+cd ..\desc
+call cleanup
 cd ..\ipc\app
 call cleanup
 cd ..\daemon
@@ -197,13 +191,22 @@ cd ..\idrs
 call cleanup
 cd ..\run-time
 call cleanup
+if exist OBJDIR (
 cd OBJDIR
 call cleanup
-cd ..\LIB
+cd ..
+)
+if exist LIB (
+cd LIB
 call cleanup
-cd ..\FREELIB
+cd ..
+)
+if exist FREELIB (
+cd FREELIB
 call cleanup
-cd ..\..
+cd ..
+)
+cd ..
 
 del run-time\eif_config.h
 del run-time\eif_size.h

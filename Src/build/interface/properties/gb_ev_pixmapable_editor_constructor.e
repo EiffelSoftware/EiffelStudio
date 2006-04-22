@@ -73,7 +73,11 @@ feature {NONE} -- Implementation
 	return_pixmap_path: STRING is
 			-- `Result' is path used to retrieve pixmap.
 		do
-			Result := objects.first.internal_pixmap_path
+				-- Test is required because `internal_pixmap_path' is of type STRING_32
+				-- and conversion to STRING will still try to apply even if it is Void.
+			if objects.first.internal_pixmap_path /= Void then
+				Result := objects.first.internal_pixmap_path
+			end
 		end
 
 indexing

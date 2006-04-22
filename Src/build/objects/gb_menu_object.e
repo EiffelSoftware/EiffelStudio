@@ -14,31 +14,31 @@ inherit
 		redefine
 			object, display_object, accepts_child, is_full
 		end
-		
+
 create
 	make_with_type,
 	make_with_type_and_object
-	
+
 feature -- Access
 
 	object: EV_MENU
 		-- A representation of `Current' used
 		-- in the display_window.
-	
+
 	display_object: EV_MENU
 		-- A representation of `Current' used
 		-- in the builder_window
-		
+
 	is_full: BOOLEAN is
 			-- `Current' is never full.
 			-- Always room for one more menu item.
 		do
 			Result := False
 		end
-		
-		
+
+
 feature {GB_OBJECT_HANDLER} -- Implementation
-		
+
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.
 		local
@@ -58,12 +58,12 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			display_object.put_left (menu_item)
 			if layout_item.data = Void then
 				layout_item.go_i_th (position)
-				layout_item.put_left (an_object.layout_item)			
+				layout_item.put_left (an_object.layout_item)
 			end
 			add_child (an_object, position)
 		end
-		
-feature {NONE} -- Implementation
+
+feature {GB_OBJECT_HANDLER} -- Implementation
 
 	accepts_child (a_type: STRING): BOOLEAN is
 			-- Does `Current' accept `an_object'. By default,

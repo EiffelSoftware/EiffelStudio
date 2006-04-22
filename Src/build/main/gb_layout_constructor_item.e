@@ -63,6 +63,8 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 			text_assigned: text.is_equal (object.type.substring (4, object.type.count))
 		end
 
+feature {EV_ANY} -- Initialization
+
 	initialize is
 			-- Initialize `Current'.
 			-- Assign `Current' to `pebble'.

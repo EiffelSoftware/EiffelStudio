@@ -8,7 +8,7 @@ indexing
 
 class
 	GB_EV_SENSITIVE
-	
+
 	-- The following properties from EV_SENSITIVE are manipulated by `Current'.
 	-- Is_sensitive - Performed on the real object only. Not the display object.
 
@@ -17,7 +17,7 @@ inherit
 		undefine
 			attribute_editor
 		end
-		
+
 	GB_EV_SENSITIVE_EDITOR_CONSTRUCTOR
 
 feature {GB_XML_STORE} -- Output
@@ -27,14 +27,8 @@ feature {GB_XML_STORE} -- Output
 			-- Note that we must query the _I, as there is no way to know
 			-- if the widget was really disabled by the user, or by its
 			-- parent except in the interface.
-		local
-			sensitive_i: EV_SENSITIVE_I
 		do
-			sensitive_i ?= first.implementation
-			check
-				sensitive_i_not_void: sensitive_i /= Void
-			end
-			if sensitive_i.internal_non_sensitive then
+			if first.internal_non_sensitive then
 				add_element_containing_boolean (element, is_sensitive_string, objects.first.is_sensitive)
 			end
 		end
@@ -54,7 +48,7 @@ feature {GB_XML_STORE} -- Output
 				end
 			end
 		end
-		
+
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is

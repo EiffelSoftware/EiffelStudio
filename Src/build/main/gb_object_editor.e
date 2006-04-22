@@ -10,11 +10,7 @@ class
 	GB_OBJECT_EDITOR
 
 inherit
-
 	EV_VERTICAL_BOX
-		export
-			{NONE} all
-			{ANY} destroy, parent, is_destroyed
 		undefine
 			is_in_default_state
 		redefine
@@ -118,7 +114,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-feature -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.

@@ -8,7 +8,7 @@ indexing
 
 class
 	GB_CELL_OBJECT
-	
+
 inherit
 	GB_CONTAINER_OBJECT
 		redefine
@@ -16,21 +16,21 @@ inherit
 			build_display_object, accepts_child,
 			add_child_object
 		end
-	
+
 create
 	make_with_type,
 	make_with_type_and_object
-	
+
 feature -- Access
 
 	object: EV_CELL
 		-- The vision2 object that `Current' represents.
 		-- This is used in the display window.
-	
+
 	display_object: GB_CELL_DISPLAY_OBJECT
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
-		
+
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
@@ -38,7 +38,7 @@ feature -- Access
 		end
 
 feature -- Basic operations
-		
+
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
 		local
@@ -66,18 +66,18 @@ feature -- Basic operations
 			object_not_empty: not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies not object.is_empty
 		end
 
-feature {NONE} -- Access
+feature -- Access
 
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'?
 			-- Only widgets are accepted.
 		do
-			if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_widget_string)) 
+			if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_widget_string))
 			and not type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_window_string)) then
 				Result := True
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	build_display_object is
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			create display_object.make_with_name_and_child (type, container)
 			connect_display_object_events
 		end
-		
+
 invariant
 	--has_no_more_than_one_child: children.count <= 1
 	-- Not true if we are a window with a menu bar inserted.

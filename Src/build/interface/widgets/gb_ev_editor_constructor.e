@@ -12,6 +12,8 @@ deferred class
 inherit
 	EV_ANY_HANDLER
 
+	EV_BUILDER
+
 	GB_CONSTANTS
 
 	INTERNAL

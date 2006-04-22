@@ -8,23 +8,25 @@ indexing
 
 class
 	CONTAINER_EXTENDIBLE_CONTROLS
-	
+
 inherit
 	EXTENDIBLE_CONTROLS
 		redefine
 			current_type
 		end
-		
+
 	INTERNAL
 		undefine
 			copy, is_equal, default_create
 		end
-		
+
 	EV_ANY_HANDLER
 		undefine
 			copy, is_equal, default_create
 		end
-	
+
+	EV_BUILDER
+
 create
 	make_with_combo_control
 
@@ -34,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	help: STRING is "Select %"Extend%", to add a new item to the container, corresponding to the selected type in combo box.%NNote that if the current container is full, no widget will be added.%NSelecting %"Wipe_out%" will clear the container." 
+	help: STRING is "Select %"Extend%", to add a new item to the container, corresponding to the selected type in combo box.%NNote that if the current container is full, no widget will be added.%NSelecting %"Wipe_out%" will clear the container."
 			-- Instructions on how to use the control.
 
 feature -- Status setting
@@ -60,7 +62,7 @@ feature -- Status setting
 				object_editor.set_type (object_editor.test_widget)
 			end
 		end
-		
+
 	wipe_out_item is
 			-- call `wipe_out' on `Current_type'.
 		local
@@ -68,7 +70,7 @@ feature -- Status setting
 		do
 			current_type.wipe_out
 			object_editor.set_type (object_editor.test_widget)
-			
+
 			notebook ?= current_type
 			if notebook /= Void then
 					-- Need to perform special processing here as the notebook keeps

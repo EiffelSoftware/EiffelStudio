@@ -3,13 +3,13 @@
 # Check out the appropriate tag depending on arguments
 if [ $# -eq 0 ]  
 then
-	svntag="svn://anon@svn.ise/ise_svn/trunk"
+	svntag="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk"
 else
 	svntag=$1
 fi
 
 # Check out Build source.
-svn co $svntag/Src/build2 Src/build2
+svn co $svntag/Src/build Src/build
 
 # Check out bitmaps from Build delivery
 svn co $svntag/Delivery/build/bitmaps Delivery/build/bitmaps
@@ -22,14 +22,14 @@ cp -r Delivery/vision2_tour/templates/ ./
 
 
 # Copy constants and eiffel environment to interface.
-cp ./Src/build2/Constants/gb_constants.e ./interface/
-cp ./Src/build2/utilities/eiffel_env.e ./interface/
-cp ./Src/build2/utilities/gb_general_utilities.e ./interface/
-cp ./Src/build2/utilities/gb_widget_utilities.e ./interface/
-cp ./Src/build2/utilities/ordered_string_handler.e ./interface/
-cp ./Src/build2/main/gb_supported_events.e ./interface/
-cp ./Src/build2/utilities/object_default_state_checker.e ./interface/
-cp ./Src/build2/utilities/gb_color_stone.e ./interface/
+cp ./Src/build/Constants/gb_constants.e ./interface/
+cp ./Src/build/utilities/eiffel_env.e ./interface/
+cp ./Src/build/utilities/gb_general_utilities.e ./interface/
+cp ./Src/build/utilities/gb_widget_utilities.e ./interface/
+cp ./Src/build/utilities/ordered_string_handler.e ./interface/
+cp ./Src/build/main/gb_supported_events.e ./interface/
+cp ./Src/build/utilities/object_default_state_checker.e ./interface/
+cp ./Src/build/utilities/gb_color_stone.e ./interface/
 
 
 # Copy icons for different widget types across.
@@ -45,39 +45,34 @@ cp Delivery/vision2_tour/bitmaps/png/image1.png ./bitmaps/png/
 cp Delivery/vision2_tour/bitmaps/png/image2.png ./bitmaps/png/
 
 
-# Copy modified vision2 interface files needed.
-cp -r ./Src/build2/modified_libraries/vision2/ev_pixmap.e ./interface/
-cp -r ./Src/build2/modified_libraries/vision2/ev_pixmapable.e ./interface/
-cp -r ./Src/build2/modified_libraries/vision2/ev_notebook.e ./interface/
-
 # Copy any required dialogs
-cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_fixed_positioner.e ./interface/
-cp -r ./Src/build2/dialogs/gb_fixed_positioner/gb_fixed_positioner_imp.e ./interface/
-cp -r ./Src/build2/dialogs/gb_table_positioner/gb_table_positioner.e ./interface/
-cp -r ./Src/build2/dialogs/gb_table_positioner/gb_table_positioner_imp.e ./interface/
+cp -r ./Src/build/dialogs/gb_fixed_positioner/gb_fixed_positioner.e ./interface/
+cp -r ./Src/build/dialogs/gb_fixed_positioner/gb_fixed_positioner_imp.e ./interface/
+cp -r ./Src/build/dialogs/gb_table_positioner/gb_table_positioner.e ./interface/
+cp -r ./Src/build/dialogs/gb_table_positioner/gb_table_positioner_imp.e ./interface/
 
 
 # Copy all the editor constructor classes into interface.
-cp ./Src/build2/interface/gb_ev_pixmap_handler.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_box_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_container_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_fixed_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_frame_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_notebook_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_table_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/containers/gb_ev_viewport_editor_constructor.e ./interface/
+cp ./Src/build/interface/gb_ev_pixmap_handler.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_box_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_container_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_fixed_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_frame_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_notebook_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_table_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/containers/gb_ev_viewport_editor_constructor.e ./interface/
 
-cp -r ./Src/build2/interface/events ./interface/
+cp -r ./Src/build/interface/events ./interface/
 
 
-cp ./Src/build2/interface/widgets/primitives/gb_ev_gauge_editor_constructor.e ./interface/
-cp ./Src/build2/interface/widgets/primitives/gb_ev_text_component_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/primitives/gb_ev_gauge_editor_constructor.e ./interface/
+cp ./Src/build/interface/widgets/primitives/gb_ev_text_component_editor_constructor.e ./interface/
 
-cp ./Src/build2/interface/properties/gb_ev_deselectable_editor_constructor.e ./interface/
-cp ./Src/build2/interface/properties/gb_ev_sensitive_editor_constructor.e ./interface/
-cp ./Src/build2/interface/properties/gb_ev_text_alignable_editor_constructor.e ./interface/
-cp ./Src/build2/interface/properties/gb_ev_textable_editor_constructor.e ./interface/
-cp ./Src/build2/interface/properties/gb_ev_tooltipable_editor_constructor.e ./interface/
+cp ./Src/build/interface/properties/gb_ev_deselectable_editor_constructor.e ./interface/
+cp ./Src/build/interface/properties/gb_ev_sensitive_editor_constructor.e ./interface/
+cp ./Src/build/interface/properties/gb_ev_text_alignable_editor_constructor.e ./interface/
+cp ./Src/build/interface/properties/gb_ev_textable_editor_constructor.e ./interface/
+cp ./Src/build/interface/properties/gb_ev_tooltipable_editor_constructor.e ./interface/
 
 # Remove all temporary checked out files.
 rm -rf Src

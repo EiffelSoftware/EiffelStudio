@@ -1,7 +1,7 @@
 if .%1. == .. goto no_command_line
 
 REM Check out Build source.
-svn co %1/Src/build2 Src\build2
+svn co %1/Src/build Src\build
 
 REM Check out bitmaps from Build delivery
 svn co %1/Delivery/build/bitmaps Delivery\build\bitmaps
@@ -14,27 +14,27 @@ GOTO files_checked_out
 :no_command_line
 
 REM Check out Build source.
-svn co svn://anon@svn.ise/ise_svn/trunk/Src/build2 Src\build2
+svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Src/build Src\build
 
 REM Check out bitmaps from Build delivery
-svn co svn://anon@svn.ise/ise_svn/trunk/Delivery/build/bitmaps Delivery\build\bitmaps
+svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/build/bitmaps Delivery\build\bitmaps
 
 REM Check out files from vision2_tour
-svn co svn://anon@svn.ise/ise_svn/trunk/Delivery/vision2_tour Delivery\vision2_tour
+svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/vision2_tour Delivery\vision2_tour
 
 :files_checked_out
 REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
 
 REM Copy constants and eiffel environment to interface.
-XCOPY /Y Src\Build2\constants\gb_constants.e .\interface
-XCOPY /Y Src\Build2\utilities\eiffel_env.e .\interface
-XCOPY /Y Src\Build2\utilities\gb_general_utilities.e .\interface
-XCOPY /Y Src\Build2\utilities\gb_widget_utilities.e .\interface
-XCOPY /Y Src\Build2\utilities\ordered_string_handler.e .\interface
-XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
-XCOPY /Y Src\Build2\utilities\gb_color_stone.e .\interface
-XCOPY /Y Src\Build2\utilities\object_default_state_checker.e .\interface
+XCOPY /Y Src\build\constants\gb_constants.e .\interface
+XCOPY /Y Src\build\utilities\eiffel_env.e .\interface
+XCOPY /Y Src\build\utilities\gb_general_utilities.e .\interface
+XCOPY /Y Src\build\utilities\gb_widget_utilities.e .\interface
+XCOPY /Y Src\build\utilities\ordered_string_handler.e .\interface
+XCOPY /Y Src\build\main\gb_supported_events.e .\interface
+XCOPY /Y Src\build\utilities\gb_color_stone.e .\interface
+XCOPY /Y Src\build\utilities\object_default_state_checker.e .\interface
 
 REM Copy icons for different widget types across. The /E option moves the whole directory structure.
 XCOPY /Y /E /I Delivery\build\bitmaps .\bitmaps
@@ -49,39 +49,33 @@ XCOPY /Y Delivery\vision2_tour\bitmaps\png\image1.png .\bitmaps\png\
 XCOPY /Y Delivery\vision2_tour\bitmaps\png\image2.png .\bitmaps\png\
 
 
-REM Copy modified vision2 interface files needed.
-XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface
-XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmapable.e .\interface
-XCOPY /Y Src\Build2\modified_libraries\vision2\ev_notebook.e .\interface
-
-
 REM Copy all the editor constructor classes into interface.
-XCOPY /Y Src\Build2\interface\gb_ev_pixmap_handler.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_box_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_container_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_fixed_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_frame_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_notebook_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_table_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_viewport_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\gb_ev_pixmap_handler.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_box_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_container_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_fixed_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_frame_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_notebook_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_table_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\containers\gb_ev_viewport_editor_constructor.e .\interface
 
 REM Copy any required dialogs
-XCOPY /Y Src\Build2\dialogs\gb_fixed_positioner\gb_fixed_positioner.e .\interface
-XCOPY /Y Src\Build2\dialogs\gb_fixed_positioner\gb_fixed_positioner_imp.e .\interface
-XCOPY /Y Src\Build2\dialogs\gb_table_positioner\gb_table_positioner.e .\interface
-XCOPY /Y Src\Build2\dialogs\gb_table_positioner\gb_table_positioner_imp.e .\interface
+XCOPY /Y Src\build\dialogs\gb_fixed_positioner\gb_fixed_positioner.e .\interface
+XCOPY /Y Src\build\dialogs\gb_fixed_positioner\gb_fixed_positioner_imp.e .\interface
+XCOPY /Y Src\build\dialogs\gb_table_positioner\gb_table_positioner.e .\interface
+XCOPY /Y Src\build\dialogs\gb_table_positioner\gb_table_positioner_imp.e .\interface
 
-XCOPY /E /I /Y Src\Build2\interface\events .\interface\events
+XCOPY /E /I /Y Src\build\interface\events .\interface\events
 
 
-XCOPY /Y Src\Build2\interface\widgets\primitives\gb_ev_gauge_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\widgets\primitives\gb_ev_text_component_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\primitives\gb_ev_gauge_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\widgets\primitives\gb_ev_text_component_editor_constructor.e .\interface
 
-XCOPY /Y Src\Build2\interface\properties\gb_ev_deselectable_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\properties\gb_ev_sensitive_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\properties\gb_ev_text_alignable_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\properties\gb_ev_textable_editor_constructor.e .\interface
-XCOPY /Y Src\Build2\interface\properties\gb_ev_tooltipable_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\properties\gb_ev_deselectable_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\properties\gb_ev_sensitive_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\properties\gb_ev_text_alignable_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\properties\gb_ev_textable_editor_constructor.e .\interface
+XCOPY /Y Src\build\interface\properties\gb_ev_tooltipable_editor_constructor.e .\interface
 
 REM Copy image used for executable icon.
 

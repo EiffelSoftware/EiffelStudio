@@ -1,10 +1,10 @@
 rm -rf /tmp/vision2_precompile
 mkdir /tmp/vision2_precompile
-mv ./linux_root_none.ace /tmp/vision2_precompile
-$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace /tmp/vision2_precompile/linux_root_none.ace -project_path /tmp/vision2_precompile
+mv ./vision2.acex /tmp/vision2_precompile
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -config /tmp/vision2_precompile/vision2.acex -project_path /tmp/vision2_precompile
 
 
-cat flatshort_instructions.txt | $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -project /tmp/vision2_precompile/precomp.epr -loop
+cat flatshort_instructions.txt | $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config /tmp/vision2_precompile/vision2.acex -loop
 
 # copy all flatshorts to flatshort directory
 rm -rf ./flatshort

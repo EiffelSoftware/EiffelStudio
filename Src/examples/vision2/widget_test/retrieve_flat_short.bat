@@ -1,12 +1,12 @@
 rm -rf %TEMP%\vision2_precompile
 mkdir %TEMP%\vision2_precompile
-XCOPY /Y win32_root_none.ace %TEMP%\Vision2_precompile
+XCOPY /Y vision2.acex %TEMP%\Vision2_precompile
 XCOPY /Y flatshort_instructions.txt %TEMP%\Vision2_precompile
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec -precompile -ace %TEMP%\Vision2_precompile\win32_root_none.ace -project_path %TEMP%\vision2_precompile
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec -config %TEMP%\Vision2_precompile\vision2.acex -project_path %TEMP%\vision2_precompile
 
 REM now perform generation based on "flatshort_instructions.txt"
 
-type %TEMP%\Vision2_precompile\flatshort_instructions.txt | %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec -project %TEMP%\Vision2_precompile\precomp.epr -loop
+type %TEMP%\Vision2_precompile\flatshort_instructions.txt | %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec -config %TEMP%\Vision2_precompile\vision2.acex -loop
 
 
 REM copy all flatshorts to flatshort directory

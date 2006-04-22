@@ -66,6 +66,7 @@ feature -- Access
 			all_new_objects: ARRAYED_LIST [GB_OBJECT]
 			id_compressor: GB_ID_COMPRESSOR
 		do
+			create id_compressor.make_with_components (components)
 			current_element := components.xml_handler.xml_element_representing_named_component (name)
 --			id_compressor.shift_all_ids_upwards
 			Result := (new_object (current_element, True))
@@ -81,7 +82,6 @@ feature -- Access
 				components.object_handler.add_object_to_objects (all_new_objects.item)
 				all_new_objects.forth
 			end
-			create id_compressor.make_with_components (components)
 			id_compressor.compress_all_id
 
 --| FIXME Must convert to the new implementation so that linked radio buttons still work correctly. This

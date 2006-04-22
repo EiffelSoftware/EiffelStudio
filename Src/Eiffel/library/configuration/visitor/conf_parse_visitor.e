@@ -124,7 +124,9 @@ feature -- Visit nodes
 			l_libs: like libraries
 		do
 				-- if precompile has all_libraries set, use those
-			l_libs := a_precompile.library_target.all_libraries
+			if a_precompile.library_target /= Void then
+				l_libs := a_precompile.library_target.all_libraries
+			end
 			if l_libs /= Void then
 				libraries.merge (l_libs)
 			end

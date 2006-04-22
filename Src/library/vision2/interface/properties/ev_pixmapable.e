@@ -6,8 +6,8 @@ indexing
 	keywords: "pixmap, bitmap, icon, graphic, image"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_PIXMAPABLE
 
 inherit
@@ -16,7 +16,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 feature -- Access
 
 	pixmap: EV_PIXMAP is
@@ -30,6 +30,11 @@ feature -- Access
 			bridge_ok: (Result = Void and implementation.pixmap = Void) or
 				Result.is_equal (implementation.pixmap)
 		end
+
+feature {EV_BUILDER} -- Access
+
+	internal_pixmap_path: STRING_32
+			-- Path of `pixmap'.
 
 feature -- Element change
 
@@ -57,6 +62,16 @@ feature -- Element change
 			pixmap_removed: pixmap = Void
 		end
 
+feature {EV_BUILDER} -- Element change
+
+	set_internal_pixmap_path (a_path: STRING_GENERAL) is
+			-- Assign `a_path' to `internal_pixmap_path'.
+		do
+			internal_pixmap_path := a_path
+		ensure
+			path_set: a_path /= Void implies internal_pixmap_path.is_equal (a_path)
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -64,7 +79,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_ANY} and pixmap = void
 		end
-		
+
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
 			-- Is `a_pixmap' equal to `pixmap'?
 		do
@@ -72,7 +87,7 @@ feature {NONE} -- Contract support
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_PIXMAPABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 

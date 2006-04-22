@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision sensitive. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "sensitive, input"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_SENSITIVE_I
 
 inherit
@@ -15,7 +15,7 @@ inherit
 		redefine
 			interface
 		end
-	
+
 feature -- Status report
 
 	user_is_sensitive: BOOLEAN is
@@ -25,6 +25,10 @@ feature -- Status report
 				Result := is_sensitive
 			end
 		end
+
+	internal_non_sensitive: BOOLEAN
+		-- Is `Current' not sensitive to input as seen
+		-- from `interface'?
 
 feature -- Status setting
 
@@ -68,10 +72,6 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	internal_non_sensitive: BOOLEAN
-		-- Is `Current' not sensitive to input as seen
-		-- from `interface'?
-		
 	is_sensitive: BOOLEAN is
 			-- Is the object sensitive to user input.
 		deferred

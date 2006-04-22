@@ -6,8 +6,8 @@ indexing
 	keywords: "sensitive, sensitivity, input"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_SENSITIVE
 
 inherit
@@ -16,7 +16,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -27,6 +27,18 @@ feature -- Status report
 			Result := implementation.user_is_sensitive
 		ensure
 			bridge_ok: Result = implementation.user_is_sensitive
+		end
+
+feature {EV_BUILDER} -- Status report
+
+	internal_non_sensitive: BOOLEAN is
+			-- Is object sensitive to user input.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.internal_non_sensitive
+		ensure
+			bridge_ok: Result = implementation.internal_non_sensitive
 		end
 
 feature -- Status setting
@@ -70,7 +82,7 @@ feature {NONE} -- Contract support
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_SENSITIVE_I;
 			-- Responsible for interaction with native graphics toolkit.
 

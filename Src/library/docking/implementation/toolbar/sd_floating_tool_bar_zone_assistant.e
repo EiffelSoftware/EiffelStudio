@@ -44,6 +44,11 @@ feature -- Commands
 			-- To minmum size.
 		do
 			zone.set_size (zone.minimum_width, zone.minimum_height)
+
+			debug ("docking")
+				print ("%N  SD_FLAOTING_TOOL_BAR_ZONE_ASSISTANT Untitled dialog zone set size: " + zone.minimum_width.out + ", " + zone.minimum_height.out)
+				print ("%N                  zone's tool bar minimum size: " + zone.tool_bar.minimum_width.out + ", " + zone.tool_bar.minimum_height.out)
+			end
 		end
 
 feature {NONE} -- Implementation functions

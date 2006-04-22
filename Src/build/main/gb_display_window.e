@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-feature -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Initalize `Current'.

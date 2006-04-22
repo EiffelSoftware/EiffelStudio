@@ -22,8 +22,6 @@ create
 
 feature {NONE} -- Creation
 
-	components: GB_INTERNAL_COMPONENTS
-
 	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' and assign `a_components' to `components'.
 		require
@@ -34,6 +32,10 @@ feature {NONE} -- Creation
 		ensure
 			components_set: components = a_components
 		end
+
+feature -- Access
+
+	components: GB_INTERNAL_COMPONENTS
 
 feature -- Basic operation
 

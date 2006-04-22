@@ -23,17 +23,17 @@ inherit
 			update_representations_for_name_or_type_change,
 			real_display_object
 		end
-		
+
 create
 	make_with_type,
 	make_with_type_and_object
-	
+
 feature -- Access
 
 	object: EV_CONTAINER
 		-- A representation of `Current' used
 		-- in the display_window.
-	
+
 	display_object: GB_DISPLAY_OBJECT
 		-- A representation of `Current' used
 		-- in the builder_window
@@ -55,13 +55,13 @@ feature -- Basic operation
 			not type_conforms_to (dynamic_type (an_object), dynamic_type_from_string ("GB_MENU_BAR_OBJECT")) implies display_object.child.count = old display_object.child.count + 1
 --FIXME			one_item_added_to_layout_item: not old layout_item.has (an_object.layout_item) implies layout_item.count = old layout_item.count + 1
 		end
-		
+
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
 			Result := object.full
 		end
-		
+
 feature {GB_OBJECT} -- Delete
 
 	delete is
@@ -96,9 +96,9 @@ feature {GB_OBJECT} -- Delete
 				end
 			end
 		end
-		
-feature {NONE} -- Access
-		
+
+feature -- Access
+
 	accepts_child (a_type: STRING): BOOLEAN is
 			-- Does `Current' accept `an_object'?
 			-- Only widgets are accepted.
@@ -108,7 +108,7 @@ feature {NONE} -- Access
 				Result := True
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	build_display_object is
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			create display_object.make_with_name_and_child (type, widget)
 			connect_display_object_events
 		end
-		
+
 	connect_display_object_events is
 			-- Connect events to `display_object' to permit interactive building.
 		do
@@ -133,14 +133,14 @@ feature {NONE} -- Implementation
 				-- between a representation and flat, `connect_display_object_events' may be called
 				-- multiple times.
 			display_object.child.drop_actions.wipe_out
-			
+
 				-- Now connect all events.
 			display_object.child.set_pebble_function (agent retrieve_pebble)
 			display_object.child.drop_actions.extend (agent handle_object_drop (?))
 			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 			display_object.child.drop_actions.extend (agent set_color)
 		end
-		
+
 	unconnect_display_object_pick_events is
 			-- Unconnect pick events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			Precursor {GB_PARENT_OBJECT}
 			display_object.child.remove_pebble
 		end
-		
+
 	unconnect_display_object_drop_events is
 			-- Unconnect drop events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			display_object.child.drop_actions.wipe_out
 			display_object.child.drop_actions.set_veto_pebble_function (Void)
 		end
-		
+
 feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_WINDOW_SELECTOR, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
 
 	update_representations_for_name_or_type_change is
@@ -173,7 +173,7 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 				display_object.set_text (type)
 			end
 		end
-		
+
 feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	real_display_object: EV_ANY is

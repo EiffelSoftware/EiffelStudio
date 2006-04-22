@@ -11,9 +11,6 @@ class
 
 inherit
 	EV_DIALOG
-		export
-			{NONE} all
-			{ANY} show_modal_to_window, set_x_position, set_y_position, set_width, set_height
 		redefine
 			show_modal_to_window
 		end

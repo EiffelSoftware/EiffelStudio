@@ -11,6 +11,8 @@ class
 
 inherit
 	GB_PARENT_OBJECT
+		export
+			{ANY} accepts_child
 		redefine
 			object, display_object
 		end
@@ -18,15 +20,15 @@ inherit
 create
 	make_with_type,
 	make_with_type_and_object
-	
+
 feature -- Access
 
 	object: EV_PRIMITIVE
 		-- The vision2 object that `Current' represents.
-	
+
 	display_object: EV_PICK_AND_DROPABLE
 		-- The representation of `object' used in `build_window'.
-		
+
 feature -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is

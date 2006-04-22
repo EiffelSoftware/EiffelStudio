@@ -8,13 +8,15 @@ indexing
 
 class
 	GB_PIXMAP_INPUT_FIELD
-	
+
 inherit
 	GB_INPUT_FIELD
-		
+
+	EV_BUILDER
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]];
@@ -41,7 +43,7 @@ feature {NONE} -- Initialization
 			check
 				object_not_void: object /= Void
 			end
-			set_padding_width (object_editor_vertical_padding_width)	
+			set_padding_width (object_editor_vertical_padding_width)
 			if not label_text.is_empty then
 				create label.make_with_text (label_text)
 				label.align_text_left
@@ -85,7 +87,7 @@ feature {NONE} -- Initialization
 			validate_agent_not_void: validate_agent /= Void
 			internal_gb_ev_any_not_void: internal_gb_ev_any /= Void
 		end
-		
+
 feature -- Access
 
 	type: STRING is
@@ -135,7 +137,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				return_pixmap_agent.call (Void)
 				pixmap := return_pixmap_agent.last_result
 				has_pixmap := pixmap /= Void
-			
+
 				constants_button.select_actions.block
 				constants_button.disable_select
 				disable_constant_mode
@@ -183,7 +185,7 @@ feature {NONE} -- Implementation
 				constants_combo_box.first.enable_select
 			end
 		end
-		
+
 
 	disable_constant_mode is
 			-- Ensure constant entry fields are hidden.
@@ -193,35 +195,35 @@ feature {NONE} -- Implementation
 			constants_combo_box.hide
 			constants_combo_box.remove_selection
 		end
-		
+
 	modify_button: EV_TOOL_BAR_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
-		
+
 	pixmap_path_string: STRING is "Pixmap_path"
-	
+
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
-		
+
 	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
 		-- Agent to execute command associated with value entered into `Current'.
-		
+
 	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
+
 	return_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP]
-	
+
 	pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]
-		
+
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
-		
+
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
 			-- Add `pixmap' to `pixmap_container'.
 		local
@@ -230,7 +232,7 @@ feature {NONE} -- Implementation
 			biggest_ratio: REAL
 			a_pixmap: EV_PIXMAP
 			a_pixmapable: EV_PIXMAPABLE
-			a_path: STRING
+			a_path: STRING_32
 		do
 			a_pixmap ?= first
 			if a_pixmap /= Void then
@@ -246,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
-			if x_ratio > 1 and y_ratio < 1 then 
+			if x_ratio > 1 and y_ratio < 1 then
 				new_x := minimum_width_of_object_editor
 				new_y := (pixmap.height / x_ratio).truncated_to_integer
 			end
@@ -260,7 +262,7 @@ feature {NONE} -- Implementation
 				new_y := (pixmap.height / biggest_ratio).truncated_to_integer
 			end
 			if new_x /= 0 and new_y /= 0 then
-				pixmap.stretch (new_x, new_y)	
+				pixmap.stretch (new_x, new_y)
 			end
 			if pixmap.width < 32 then
 				filler_label.wipe_out
@@ -294,11 +296,11 @@ feature {NONE} -- Implementation
 				list_item.set_data (pixmap_constant)
 				list_item.set_pixmap (pixmap_constant.small_pixmap)
 				add_to_list_alphabetically (constants_combo_box, list_item)
-				
+
 				list_item.deselect_actions.block
 				list_item.disable_select
 				list_item.deselect_actions.resume
-				
+
 				if object.constants.has (lookup_string) and
 					pixmap_constant = object.constants.item (lookup_string).constant then
 					constants_button.select_actions.block
@@ -314,7 +316,7 @@ feature {NONE} -- Implementation
 				add_select_item
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	modify_pixmap is
@@ -358,25 +360,25 @@ feature {NONE} -- Implementation
 				filler_label.wipe_out
 				modify_button.set_text (select_button_text)
 				modify_button.set_tooltip (set_with_named_file_tooltip)
-			end	
+			end
 		end
-		
+
 	execute_agent (new_value: EV_PIXMAP; new_path: STRING) is
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do
 			execution_agent.call ([new_value, new_path])
 		end
-		
+
 	remove_constant is
 			-- Remove constant represented within `Current' from associated properties.
 		do
 			execute_agent (Void, Void)
-		end	
-		
+		end
+
 	filler_label: EV_CELL
 
-		
+
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
@@ -387,7 +389,7 @@ feature {NONE} -- Implementation
 				constant_context.destroy
 			end
 		end
-		
+
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
 --		require
@@ -418,7 +420,7 @@ feature {NONE} -- Implementation
 --				end
 			end
 		end
-		
+
 
 invariant
 	invariant_clause: True -- Your invariant here

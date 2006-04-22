@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="build" uuid="4EEF9ABD-F15C-4C45-9D6F-4FFE128296F7">
+	<target name="build">
+		<root feature="execute" class="GB"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="false">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="exception_trace" value="True"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="10"/>
+		<setting name="syntax_warning" value="False"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex">
+			<condition><platform value="windows"/></condition>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex">
+			<condition><platform excluded_value="windows"/></condition>
+		</library>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+
+		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
+			<cluster name="eiffel_parser_errors" location="$EIFFEL_SRC\Eiffel\API\error\misc\">
+				<file_rule>
+					<exclude>/error_handler.e$</exclude>
+					<exclude>/syntax_error.e$</exclude>
+				</file_rule>
+			</cluster>
+		</cluster>
+		<cluster name="build" location="$EIFFEL_SRC\build\" recursive="true">
+			<option>
+				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+			<file_rule>
+				<exclude>/object_editor$</exclude>
+				<exclude>/eifgen$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/templates$</exclude>
+				<exclude>/Gtk$</exclude>
+				<exclude>/base$</exclude>
+				<exclude>/test$</exclude>
+				<exclude>/demo_version$</exclude>
+				<exclude>/modified_libraries$</exclude>
+				<exclude>/exml$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

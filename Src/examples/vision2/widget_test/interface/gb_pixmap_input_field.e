@@ -12,6 +12,8 @@ class
 inherit
 	EV_VERTICAL_BOX
 
+	EV_BUILDER
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all

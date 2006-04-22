@@ -83,6 +83,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+feature {EV_BUILDER} -- Access
+
+	pixmap_paths: HASH_TABLE [STRING_32, INTEGER] is
+			-- All pixmap paths for pixmaps of tabs.
+		once
+			create Result.make (4)
+		end
+
 feature -- Status report
 
 	selected_item: EV_WIDGET is

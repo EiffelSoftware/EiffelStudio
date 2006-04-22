@@ -122,6 +122,14 @@ feature -- Access
 			bridge_ok: Result = implementation.real_target
 		end
 
+feature {EV_BUILDER} -- Access
+
+	minimum_width_set_by_user: BOOLEAN
+		-- Has `set_minimum_width' been called by the user?
+
+	minimum_height_set_by_user: BOOLEAN
+		-- Has `set_minimum_height' been called by the user?
+
 feature -- Status report
 
 	is_show_requested: BOOLEAN is
@@ -284,8 +292,10 @@ feature -- Element change
 			a_minimum_width_positive: a_minimum_width >= 0
 		do
 			implementation.set_minimum_width (a_minimum_width)
+			minimum_width_set_by_user := True
 		ensure
 			minimum_width_assigned: minimum_width = a_minimum_width
+			minimum_width_set_by_user_set: minimum_width_set_by_user
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
@@ -298,8 +308,10 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height >= 0
 		do
 			implementation.set_minimum_height (a_minimum_height)
+			minimum_height_set_by_user := True
 		ensure
 			minimum_height_assigned: minimum_height = a_minimum_height
+			minimum_height_set_by_user_set: minimum_height_set_by_user
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -314,11 +326,32 @@ feature -- Element change
 			a_minimum_height_positive: a_minimum_height >= 0
 		do
 			implementation.set_minimum_size (a_minimum_width, a_minimum_height)
+			minimum_height_set_by_user := True
+			minimum_width_set_by_user := True
 		ensure
 			minimum_width_assigned: minimum_width = a_minimum_width
 			minimum_height_assigned: minimum_height = a_minimum_height
+			minimum_height_set_by_user_set: minimum_height_set_by_user
+			minimum_width_set_by_user_set: minimum_width_set_by_user
 		end
 
+feature {EV_BUILDER} -- Element change
+
+	reset_minimum_width is
+			-- Reset `minimum_width_set_by_user'.
+		do
+			minimum_width_set_by_user := False
+		ensure
+			minimum_width_set_by_user_reset: not minimum_width_set_by_user
+		end
+
+	reset_minimum_height is
+			-- Reset `minimum_height_set_by_user'.
+		do
+			minimum_height_set_by_user := False
+		ensure
+			minimum_height_set_by_user_reset: not minimum_height_set_by_user
+		end
 
 feature -- Measurement
 

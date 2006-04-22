@@ -85,6 +85,40 @@ feature -- Comparison
 			end
 		end
 
+feature {EV_BUILDER} -- Access
+
+	pixmap_path: STRING_32
+		-- Path of `pixmap'.
+
+	pixmap_exists: BOOLEAN
+		-- Does pixmap `pixmap_path' exist?
+
+feature {EV_BUILDER} -- Status setting
+
+	enable_pixmap_exists is
+			-- Assign `True' to `pixmap_exists'.
+		do
+			pixmap_exists := True
+		ensure
+			pixmap_exists_set: pixmap_exists
+		end
+
+	disable_pixmap_exists is
+			-- Assign `False' to `pixmap_exists'.
+		do
+			pixmap_exists := False
+		ensure
+			pixmap_exists_set: not pixmap_exists
+		end
+
+	set_pixmap_path (path: STRING_GENERAL) is
+			-- Assign `path' to `pixmap_path'.
+		do
+			pixmap_path := path
+		ensure
+			pixmap_path_set: path /= Void implies pixmap_path.is_equal (path)
+		end
+
 feature -- Status setting
 
 	set_with_named_file (file_name: STRING_GENERAL) is

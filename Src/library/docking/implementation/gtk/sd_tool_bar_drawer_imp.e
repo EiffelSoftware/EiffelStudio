@@ -71,7 +71,9 @@ feature -- Redefine
 				l_temp_widget := {EV_GTK_EXTERNALS}.gtk_button_new
 				l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_temp_widget)
 
-				c_gtk_paint_box (l_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+				if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
+					c_gtk_paint_box (l_style, l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+				end
 
 				-- Paint pixmap
 				draw_pixmap (a_arguments, l_tool_bar_imp.c_object)

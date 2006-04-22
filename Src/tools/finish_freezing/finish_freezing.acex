@@ -18,8 +18,8 @@
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
-		<cluster name="finish_freezing" location="$EIFFEL_SRC\Eiffel\extra\finish_freezing\main\"/>
+		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
 		<cluster name="resources" location="$EIFFEL_SRC\Eiffel\interface\tty\resources\"/>
-		<cluster name="spec" location="$EIFFEL_SRC\Eiffel\extra\finish_freezing\spec\windows\"/>
+		<cluster name="spec" location="$EIFFEL_SRC\tools\finish_freezing\spec\windows\"/>
 	</target>
 </system>

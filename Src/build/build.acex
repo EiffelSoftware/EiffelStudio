@@ -16,7 +16,7 @@
 		<setting name="dead_code_removal" value="True"/>
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
-		<setting name="inlining_size" value="10"/>
+		<setting name="inlining_size" value="0"/>
 		<setting name="syntax_warning" value="False"/>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>

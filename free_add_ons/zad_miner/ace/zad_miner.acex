@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="zad_miner" uuid="89BD5624-DB84-488A-8689-243A34529193">
+	<target name="zad_miner">
+		<root feature="make_and_launch" class="ZAD_MINER"/>
+		<option trace="false" profile="false" debug="false">
+			<debug name="__unnamed_debug__" enabled="false"/>
+			<debug name="dlg_dispatcher" enabled="false"/>
+			<debug name="gdi_count" enabled="false"/>
+			<debug name="show_mine" enabled="true"/>
+			<debug name="vision2_windows" enabled="false"/>
+			<debug name="vision2_windows_gdi" enabled="false"/>
+			<debug name="wel" enabled="false"/>
+			<debug name="wel_gdi_count" enabled="false"/>
+			<debug name="wel_gdi_references" enabled="false"/>
+			<debug name="win_dispatcher" enabled="false"/>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="False"/>
+		<setting name="dead_code_removal" value="True"/>
+		<setting name="exception_trace" value="False"/>
+		<setting name="inlining" value="True"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="multithreaded" value="False"/>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
+
+		<cluster name="root_cluster" location="$ISE_LIBRARY\free_add_ons\zad_miner\src\"/>
+	</target>
+</system>

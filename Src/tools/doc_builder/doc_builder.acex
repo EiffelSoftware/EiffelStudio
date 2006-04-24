@@ -9,7 +9,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="true">
+		<option trace="false" profile="false" debug="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="True"/>

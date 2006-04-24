@@ -122,9 +122,9 @@ feature -- Execution
 					True
 				)
 
+				doc.set_all_universe
 				create dir.make (Eiffel_system.document_path)
 				doc.set_directory (dir)
-				doc.set_all_universe
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)
 				doc.set_excluded_indexing_items (preferences.flat_short_data.excluded_indexing_items.linear_representation)

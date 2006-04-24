@@ -116,6 +116,7 @@ feature -- Visit nodes
 			end
 		ensure then
 			uuid_set: not is_error implies a_library.uuid /= Void
+			target_set: not is_error implies a_library.library_target /= Void
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE) is

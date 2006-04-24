@@ -77,6 +77,7 @@ feature -- Redefine
 
 				-- Paint pixmap
 				draw_pixmap (a_arguments, l_tool_bar_imp.c_object)
+
 				-- Paint text
 				draw_text (a_arguments, l_tool_bar_imp.c_object)
 			else
@@ -145,13 +146,28 @@ feature {NONE} -- Implementation
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 			l_position: EV_COORDINATE
+			l_temp_pixmap: EV_PIXMAP
+			l_temp_imp: EV_PIXMAP_IMP
+			l_pixbuf: POINTER
 		do
 			l_button ?= a_arguments.item
 			if l_button /= Void and l_button.pixmap /= Void then
 				-- We should render pixmap by theme.
 
 				l_position := l_button.pixmap_position
-				a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_button.pixmap)
+
+				if a_arguments.item.is_sensitive then
+					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_button.pixmap)
+				else
+					l_temp_pixmap := l_button.pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_button.pixmap.width, l_button.pixmap.height))
+					l_temp_imp ?= l_temp_pixmap.implementation
+					check not_void: l_temp_imp /= Void end
+					c_gdk_desatuate (l_temp_imp.pixbuf_from_drawable, $l_pixbuf)
+					check exist: l_pixbuf /= default_pointer end
+					l_temp_imp.set_pixmap_from_pixbuf (l_pixbuf)
+					{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
+					a_arguments.tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
+				end
 			end
 		end
 
@@ -244,6 +260,27 @@ feature {NONE} -- Externals
 				gtk_paint_layout (l_widget->style, l_widget->window,
 					GTK_STATE_NORMAL, FALSE, &l_rect, l_widget, "label",
 					$a_rect_x, $a_rect_y, l_pango_layout);
+			}
+			]"
+		end
+
+	c_gdk_desatuate (a_pixmap_buf: POINTER; a_result: POINTER) is
+			-- Desatuate `a_pixmap_buf'.
+			-- Result is a desatuated pixmap buf.
+		require
+			exist: a_pixmap_buf /= default_pointer
+		external
+			"C inline use <gdk/gdk.h>"
+		alias
+			"[
+			{
+				GdkPixbuf *pixbuf = (GdkPixbuf *)$a_pixmap_buf;
+				GdkPixbuf *stated;
+
+				stated = gdk_pixbuf_copy (pixbuf);
+				gdk_pixbuf_saturate_and_pixelate (pixbuf, stated, 0.8, TRUE);
+				
+				*((GdkPixbuf **) $a_result) = stated;
 			}
 			]"
 		end

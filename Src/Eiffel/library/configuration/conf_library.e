@@ -160,6 +160,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	library_target_set: classes_set implies library_target /= Void
+	uuid_set: classes_set implies uuid /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

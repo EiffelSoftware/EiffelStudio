@@ -128,7 +128,10 @@ feature {NONE} -- Implementation
 			end
 			current_wel_cursor := wel_cursor
 			l_widget ?= Current
-			if l_widget /= Void then
+				-- Sometime the widget does not exist anymore. It is the case when
+				-- the implementation of a dialog was changed from a modal back to a normal
+				-- window.
+			if l_widget /= Void and then l_widget.exists then
 				if l_widget.is_displayed then
 						-- When the current widget is not yet displayed then
 						-- there is no need to change the cursor and thus

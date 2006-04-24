@@ -174,6 +174,11 @@ feature -- Command
 			is_floating: is_floating
 		do
 			docking_manager.tool_bar_manager.floating_tool_bars.prune_all (floating_tool_bar)
+			-- On windows, following line is not needed,
+			-- But on Gtk, we need first disable_capture then enable capture,
+			-- because it's off-screen widget, it'll not have capture when it show again (in SD_TOOL_BAR_HOT_ZONE).
+			disable_capture
+
 			floating_tool_bar.prune (Current)
 			floating_tool_bar.destroy
 			floating_tool_bar := Void

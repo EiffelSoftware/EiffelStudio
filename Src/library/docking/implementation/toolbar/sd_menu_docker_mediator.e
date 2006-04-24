@@ -93,7 +93,14 @@ feature -- Command
 					if not caller.is_floating then
 						docking_manager.command.lock_update (Void, True)
 						caller.assistant.record_docking_state
+
+						-- On windows, following disable/enable capture lines is not needed,
+						-- But on Gtk, we need first disable_capture then enable capture,
+						-- because it's off-screen widget, it'll not have capture when it show again.
+						caller.disable_capture
 						caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
+						caller.enable_capture
+
 						docking_manager.command.unlock_update
 					end
 					caller.set_position (a_screen_x - offset_x, a_screen_y - offset_y)

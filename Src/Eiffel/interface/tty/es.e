@@ -114,7 +114,7 @@ feature -- Initialization
 						elseif old_ace_file /= Void then
 							l_loader.open_project_file (old_ace_file, Void, Void, is_clean_requested)
 						else
-							l_loader.open_project_file (config_file_name, target_name, project_path_name, is_clean_requested)
+							l_loader.open_project_file (config_file_name, target_name, project_path, is_clean_requested)
 						end
 
 						if not error_occurred and not l_loader.has_error then
@@ -171,10 +171,6 @@ feature -- Initialization
 		end
 
 feature -- Properties
-
-	project_path_name: STRING;
-			-- Path where to look for the EIFGEN directory and the
-			-- project file.
 
 	error_occurred: BOOLEAN;
 			-- Did an error occur during the initialization

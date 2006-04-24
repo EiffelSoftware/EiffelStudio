@@ -317,6 +317,7 @@ feature -- Visit nodes
 				l_target := a_library.library_target
 				check
 					library_target_set: l_target /= Void
+					uuid_set: l_uuid /= Void
 				end
 				if not libraries.has (l_uuid) then
 						-- get and initialize visitor
@@ -660,8 +661,8 @@ feature {NONE} -- Implementation
 						else
 							l_tmp.to_upper
 							l_renamings := current_cluster.renaming
-							if l_renamings /= Void then
-								l_name := l_renamings.item (l_tmp)
+							if l_renamings /= Void and then l_renamings.has (l_tmp) then
+								l_name := l_renamings.found_item
 							else
 								l_name := l_tmp.twin
 							end

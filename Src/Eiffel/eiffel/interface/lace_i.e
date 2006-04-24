@@ -504,7 +504,6 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd75)
 					Error_handler.raise_error
 				end
-				universe.set_conf_system (conf_system)
 			else
 					-- set the new options on the old target
 				create l_option_vis.make (l_new_target)
@@ -542,12 +541,12 @@ feature {NONE} -- Implementation
 
 			update_settings (l_new_target)
 
-				-- set the new target
-			universe.set_new_target (l_new_target)
-
 			if has_group_changed then
 				parse_target (l_new_target)
+				universe.set_conf_system (conf_system)
 			end
+				-- set the new target
+			universe.set_new_target (l_new_target)
 
 			successful := True
 		ensure

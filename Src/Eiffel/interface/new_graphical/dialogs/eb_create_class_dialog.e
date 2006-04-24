@@ -316,6 +316,7 @@ feature {NONE} -- Access
 				else
 					aok := True
 					cluster := clu.actual_cluster
+					path := l_folder.path
 				end
 			end
 		end

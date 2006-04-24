@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="all_libs" uuid="421b5ac5-2bb3-4fcc-b0aa-8fee6c843802">
+	<target name="all_libs">
+		<description>All libraries</description>
+		<root all_classes="true"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
+		<library name="com" location="$ISE_LIBRARY\library\com\com.acex" readonly="true"/>
+		<library name="eiffel2java" location="$ISE_LIBRARY\library\eiffel2java\eiffel2java.acex" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.acex" readonly="true"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.acex" readonly="true"/>
+		<library name="parse" location="$ISE_LIBRARY\library\parse\parse.acex" readonly="true"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.acex" readonly="true">
+			<condition><platform value="windows"/></condition>
+		</library>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.acex" readonly="true">
+			<condition><platform excluded_value="windows"/></condition>
+		</library>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.acex" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.acex" readonly="true"/>		
+		<library name="time" location="$ISE_LIBRARY\library\time\time.acex" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
+		<library name="web" location="$ISE_LIBRARY\library\web\web.acex" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+	</target>
+</system>

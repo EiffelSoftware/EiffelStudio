@@ -374,7 +374,7 @@ feature {NONE} -- User interaction
 			l_list: EV_LIST
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
-			l_button: EV_BUTTON
+			l_select_button, l_button: EV_BUTTON
 			l_item: EV_LIST_ITEM
 		do
 			if a_targets.count = 1 then
@@ -408,10 +408,10 @@ feature {NONE} -- User interaction
 				l_vbox.disable_item_expand (l_hbox)
 
 				l_hbox.extend (create {EV_CELL})
-				create l_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
-				l_button.set_minimum_height (default_button_height)
-				l_hbox.extend (l_button)
-				l_hbox.disable_item_expand (l_button)
+				create l_select_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
+				l_select_button.set_minimum_height (default_button_height)
+				l_hbox.extend (l_select_button)
+				l_hbox.disable_item_expand (l_select_button)
 
 				create l_button.make_with_text_and_action (ev_cancel, agent on_target_cancelled (l_dialog))
 				l_button.set_minimum_height (default_button_height)
@@ -421,6 +421,9 @@ feature {NONE} -- User interaction
 				l_hbox.extend (create {EV_CELL})
 
 				l_dialog.extend (l_vbox)
+
+				l_dialog.set_default_cancel_button (l_button)
+				l_dialog.set_default_push_button (l_select_button)
 
 				l_dialog.show_modal_to_window (parent_window)
 			end

@@ -195,6 +195,11 @@ feature {NONE} -- Implementation functions.
 				internal_box.extend (l_new_row)
 			end
 			l_new_row.extend (internal_dock_mediator.caller)
+			-- On windows, following line is not needed,
+			-- But on Gtk, we need first disable_capture (in SD_TOOL_BAR_ZONE dock) then enable capture,
+			-- because it's off-screen widget, it'll not have capture when it show again.
+			internal_dock_mediator.caller.enable_capture
+			
 			internal_docking_manager.command.resize (True)
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_HOT_ZONE create new row. Docking Manage Resize *****************")

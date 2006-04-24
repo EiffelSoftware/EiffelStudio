@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -31,7 +31,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create file_menu
@@ -185,7 +185,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_9
 			create cursor_line_pos
 			create browser_container
-			
+
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (file_menu)
@@ -339,7 +339,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_6.extend (l_ev_horizontal_box_9)
 			l_ev_horizontal_box_9.extend (cursor_line_pos)
 			l_ev_vertical_split_area_4.extend (browser_container)
-			
+
 			file_menu.set_text ("File")
 			new_menu_item.set_text ("New..")
 			open_menu_item.disable_sensitive
@@ -560,7 +560,7 @@ feature {NONE}-- Initialization
 			set_minimum_width (1024)
 			set_minimum_height (768)
 			set_title ("Document Builder")
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -733,12 +733,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

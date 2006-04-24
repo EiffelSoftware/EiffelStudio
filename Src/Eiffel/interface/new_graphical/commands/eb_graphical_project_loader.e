@@ -403,12 +403,19 @@ feature {NONE} -- User interaction
 				l_vbox.extend (l_list)
 
 				create l_hbox
+				l_hbox.set_padding (default_padding_size)
 				l_vbox.extend (l_hbox)
 				l_vbox.disable_item_expand (l_hbox)
 
 				l_hbox.extend (create {EV_CELL})
 				create l_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
 				l_button.set_minimum_height (default_button_height)
+				l_hbox.extend (l_button)
+				l_hbox.disable_item_expand (l_button)
+
+				create l_button.make_with_text_and_action (ev_cancel, agent on_target_cancelled (l_dialog))
+				l_button.set_minimum_height (default_button_height)
+				l_button.set_minimum_width (default_button_width)
 				l_hbox.extend (l_button)
 				l_hbox.disable_item_expand (l_button)
 				l_hbox.extend (create {EV_CELL})
@@ -565,6 +572,17 @@ feature {NONE} -- Actions
 			target_name := a_item.text
 			a_dlg.destroy
 		end
+
+	on_target_cancelled (a_dlg: EV_DIALOG) is
+			-- Action when user select a target with a double click.
+		require
+			a_dlg_not_void: a_dlg /= Void
+			a_dlg_not_destroyed: not a_dlg.is_destroyed
+		do
+			has_error := True
+			a_dlg.destroy
+		end
+
 
 feature {NONE} -- Implementation / Private constants.
 

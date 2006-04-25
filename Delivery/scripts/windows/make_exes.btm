@@ -151,9 +151,6 @@ else
 		sed -e "s/free/enterprise/g" ec.acex >> newec.acex
 		move newec.acex ec.acex
 
-		cdd %EIFFEL_SRC\Eiffel\library\activation\free
-		sed -e "s/is_evaluating\ := \False/is_evaluating\ :=\ True/g" activation_checker.e >> tmp.e
-		move tmp.e activation_checker.e
 		cdd %EIFFEL_SRC\Eiffel\API\constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e

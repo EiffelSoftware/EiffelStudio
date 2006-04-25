@@ -13,9 +13,9 @@ inherit
 		redefine
 			dispose
 		end
-	
+
 	ECOM_STAT_FLAGS
-	
+
 	ECOM_STREAM_SEEK
 
 	ECOM_LOCK_TYPES
@@ -47,7 +47,7 @@ feature -- Access
 			-- Valid only after `read' ,`update_end_of_stream', `start', or `finish'.
 
 	last_character: CHARACTER
-			-- last read CHARACTER 
+			-- last read CHARACTER
 
 	last_integer: INTEGER
 			-- last read INTEGER
@@ -70,7 +70,7 @@ feature -- Access
 			ptr: POINTER
 		do
 			ptr := ccom_stat (initializer, stat_flag)
-			create Result.make_from_pointer (ptr)
+			create Result.make (ptr)
 		ensure
 			Result /= Void
 		end
@@ -120,7 +120,7 @@ feature -- Basic Operations
 		end
 
 	read (buffer: POINTER; bytes: INTEGER) is
-			-- Reads `bytes' number of bytes from stream 
+			-- Reads `bytes' number of bytes from stream
 			-- into `buffer' starting at current seek pointer.
 		require
 			valid_buffer: buffer /= default_pointer
@@ -139,7 +139,7 @@ feature -- Basic Operations
 				retry
 			end
 		end
-	
+
 	read_character is
 			-- Read character from stream.
 		local
@@ -236,14 +236,14 @@ feature -- Basic Operations
 
 	write_character (character: CHARACTER) is
 			-- Write `character' into stream.
-	
+
 		do
 			ccom_write_character (initializer, character)
 		end
 
 	write_integer (integer: INTEGER) is
 			-- Write `integer' into stream.
-	
+
 		do
 			ccom_write_integer (initializer, integer)
 		end
@@ -256,7 +256,7 @@ feature -- Basic Operations
 
 	write_boolean (boolean: BOOLEAN) is
 			-- Write `boolean' into stream.
-	
+
 		do
 			ccom_write_boolean (initializer, boolean)
 		end
@@ -273,7 +273,7 @@ feature -- Basic Operations
 		end
 
 	seek (displacement: ECOM_LARGE_INTEGER; origin: INTEGER) is
-			-- Move seek pointer by `displacement' 
+			-- Move seek pointer by `displacement'
 			-- relative to `origin'.
 			-- See class ECOM_STREAM_SEEK for `origin' values.
 		require
@@ -281,9 +281,9 @@ feature -- Basic Operations
 			valid_displacement: displacement.exists
 			valid_seek_origin: is_valid_seek(origin)
 		do
-			ccom_seek (initializer, displacement.item, origin)	
+			ccom_seek (initializer, displacement.item, origin)
 		end
-	
+
 	start is
 			-- Set seek pointer to beginning of stream.
 		local
@@ -295,7 +295,7 @@ feature -- Basic Operations
 		ensure
 			not_end: not end_of_stream
 		end
-	
+
 	finish is
 			-- Set seek pointer to end of stream.
 		local
@@ -318,20 +318,20 @@ feature -- Basic Operations
 		ensure
 			size = new_size
 		end
-		
+
 	copy_to (destination: ECOM_STREAM; bytes: ECOM_ULARGE_INTEGER) is
 			-- Copy `bytes' number of bytes from current seek pointer
-			-- in stream to current seek pointer in 
+			-- in stream to current seek pointer in
 			-- `destination'.
 		require
-			valid_destination: destination /= Void 
+			valid_destination: destination /= Void
 					and then destination.exists
 			valid_bytes_number: bytes /= Void and then
 					bytes.exists
 		do
 			ccom_copy_to (initializer, destination.item, bytes.item)
 		end
-	
+
 	lock_region (offset, count: ECOM_ULARGE_INTEGER; lock: INTEGER) is
 			-- Restricts access to range of bytes defined by
 			-- `offset' and `count'.
@@ -342,7 +342,7 @@ feature -- Basic Operations
 		do
 			ccom_lock_region (initializer, offset.item, count.item, lock)
 		end
-	
+
 	unlock_region (offset, count: ECOM_ULARGE_INTEGER; lock: INTEGER) is
 			-- Removes access restriction to range of bytes defined by
 			-- `offset' and `count'.
@@ -467,10 +467,10 @@ feature {NONE} -- Externals
 
 	ccom_copy_to (cpp_obj: POINTER; destination: POINTER; cb: POINTER) is
 		external
-			"C++ [E_IStream %"E_IStream.h%"] (IStream *, EIF_POINTER)"	
+			"C++ [E_IStream %"E_IStream.h%"] (IStream *, EIF_POINTER)"
 		end
 
-	ccom_lock_region (cpp_obj: POINTER; offset, cb: POINTER; 
+	ccom_lock_region (cpp_obj: POINTER; offset, cb: POINTER;
 					lock_type: INTEGER) is
 		external
 			"C++ [E_IStream %"E_IStream.h%"] (EIF_POINTER, EIF_POINTER, EIF_INTEGER)"

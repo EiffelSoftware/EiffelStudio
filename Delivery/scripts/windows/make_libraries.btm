@@ -3,46 +3,46 @@ cdd %INSTALL_DIR
 md library
 cd library
 remtrace base
-exprt %DEFAULT_CVS_TAG/Src/library/base base
+exprt %DEFAULT_ORIGO_SVN/Src/library/base base
 remtrace com
-exprt %DEFAULT_CVS_TAG/Src/library/com com
+exprt %DEFAULT_ORIGO_SVN/Src/library/com com
 remtrace Eiffel2Java
-exprt %DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java
+exprt %DEFAULT_ORIGO_SVN/Src/library/Eiffel2Java Eiffel2Java
 remtrace graph
-exprt %DEFAULT_CVS_TAG/Src/library/graph graph
+exprt %DEFAULT_ORIGO_SVN/Src/library/graph graph
 remtrace lex
-exprt %DEFAULT_CVS_TAG/Src/library/lex lex
+exprt %DEFAULT_ORIGO_SVN/Src/library/lex lex
 remtrace memory_analyzer
-exprt %DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer
+exprt %DEFAULT_ORIGO_SVN/Src/library/memory_analyzer memory_analyzer
 remtrace net
-exprt %DEFAULT_CVS_TAG/Src/library/net net
+exprt %DEFAULT_ORIGO_SVN/Src/library/net net
 remtrace obsolete
-exprt %DEFAULT_CVS_TAG/Src/library/obsolete obsolete
+exprt %DEFAULT_ORIGO_SVN/Src/library/obsolete obsolete
 remtrace parse
-exprt %DEFAULT_CVS_TAG/Src/library/parse parse
+exprt %DEFAULT_ORIGO_SVN/Src/library/parse parse
 remtrace preferences
-exprt %DEFAULT_CVS_TAG/Src/library/preferences preferences
+exprt %DEFAULT_ORIGO_SVN/Src/library/preferences preferences
 remtrace process
-exprt %DEFAULT_CVS_TAG/Src/library/process process
+exprt %DEFAULT_ORIGO_SVN/Src/library/process process
 remtrace store
-exprt %DEFAULT_CVS_TAG/Src/library/store store
+exprt %DEFAULT_ORIGO_SVN/Src/library/store store
 remtrace thread
-exprt %DEFAULT_CVS_TAG/Src/library/thread thread
+exprt %DEFAULT_ORIGO_SVN/Src/library/thread thread
 remtrace time
-exprt %DEFAULT_CVS_TAG/Src/library/time time
+exprt %DEFAULT_ORIGO_SVN/Src/library/time time
 remtrace vision
-exprt %DEFAULT_CVS_TAG/Src/library/vision vision
+exprt %DEFAULT_ORIGO_SVN/Src/library/vision vision
 remtrace vision2
-exprt %DEFAULT_CVS_TAG/Src/library/vision2 vision2
+exprt %DEFAULT_ORIGO_SVN/Src/library/vision2 vision2
 fullrd vision2\implementation\gtk
 remtrace vision2_extension
-exprt %DEFAULT_CVS_TAG/Src/library/vision2_extension vision2_extension
+exprt %DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension
 remtrace uuid
-exprt %DEFAULT_CVS_TAG/Src/library/uuid uuid
+exprt %DEFAULT_ORIGO_SVN/Src/library/uuid uuid
 remtrace web
-exprt %DEFAULT_CVS_TAG/Src/library/web web
+exprt %DEFAULT_ORIGO_SVN/Src/library/web web
 remtrace wel
-exprt %DEFAULT_CVS_TAG/Src/library/wel wel
+exprt %DEFAULT_ORIGO_SVN/Src/library/wel wel
 
 iff not defined NO_COMPILE then
 	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
@@ -52,7 +52,7 @@ iff not defined NO_COMPILE then
 	remtrace Retrieve the header files
 	cdd %EIFFEL_SRC
 	safe_md headers
-	exprtfile %DEFAULT_CVS_TAG/Src/library/headers.tar.gz  > headers\headers.tar.gz
+	exprtfile %DEFAULT_ISE_SVN/Src/library/headers.tar.gz  > headers\headers.tar.gz
 	cd headers
 	tar xvfz headers.tar.gz
 	iff not isdir apps then

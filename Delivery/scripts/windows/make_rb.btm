@@ -1,18 +1,18 @@
 remtrace Update the source files
 REM cdd %EIFFEL_SRC
-REM co %DEFAULT_CVS_TAG/Src/resource_bench resource_bench
+REM co %DEFAULT_ORIGO_SVN/Src/tools/resource_bench resource_bench
 
 remtrace Recompile Resource Bench
-REM cdd %EIFFEL_SRC\resource_bench
+REM cdd %EIFFEL_SRC\tools\resource_bench
 REM clean_project
-REM finalize ace.ace
+REM finalize rb.acex
 REM fff
-REM cleanup_eiffel rb.exe
+REM cleanup_eiffel rb rb.exe
 REM if not exist rb.exe (remtrace Couldnt generate rb.exe & cancel)
 REM move rb.exe %INSTALL_DIR\rb\bin
 quick_move rb\bin\rb.exe
 
 remtrace Retrieve the example
 cdd %INSTALL_DIR\rb
-exprt %DEFAULT_CVS_TAG/Src/resource_bench/RB_documentation/examples example
+exprt %DEFAULT_ORIGO_SVN/Src/tools/resource_bench/RB_documentation/examples example
 

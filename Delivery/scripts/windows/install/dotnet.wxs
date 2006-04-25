@@ -20,34 +20,6 @@
 				<Registry Id="cons_reg9" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32\5.7.414.0" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.7.414.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
 				<Registry Id="cons_reg10" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\InprocServer32\5.7.414.0" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
 				<Registry Id="cons_reg12" Root="HKCR" Key="CLSID\{E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F}\ProgId" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-
-				<!-- Registration information for ISE.VS.FusionSupport.dll -->
-				<Registry Id="fus_reg0" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />
-				<Registry Id="fus_reg1" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" />
-				<Registry Id="fus_reg2" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32" Value="mscoree.dll" Type="string" />
-				<Registry Id="fus_reg3" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
-				<Registry Id="fus_reg4" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32" Name="Class" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />
-				<Registry Id="fus_reg5" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32" Name="Assembly" Value="ISE.VS.FusionSupport, Version=5.4.826.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="fus_reg6" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="fus_reg8" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32\5.4.826.0" Name="Class" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />
-				<Registry Id="fus_reg9" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32\5.4.826.0" Name="Assembly" Value="ISE.VS.FusionSupport, Version=5.4.826.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="fus_reg10" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\InprocServer32\5.4.826.0" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="fus_reg12" Root="HKCR" Key="CLSID\{8D21B190-37B7-4C68-8003-DC3DA41C56AC}\ProgId" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />
-				<Registry Id="fus_reg13" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}" Value="MSjogren.GacTool.FusionNative.Fusion" Type="string" />
-				<Registry Id="fus_reg14" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" />
-				<Registry Id="fus_reg15" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32" Value="mscoree.dll" Type="string" />
-				<Registry Id="fus_reg16" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
-				<Registry Id="fus_reg17" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32" Name="Class" Value="MSjogren.GacTool.FusionNative.Fusion" Type="string" />
-				<Registry Id="fus_reg18" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32" Name="Assembly" Value="ISE.VS.FusionSupport, Version=5.4.826.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="fus_reg19" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="fus_reg21" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32\5.4.826.0" Name="Class" Value="MSjogren.GacTool.FusionNative.Fusion" Type="string" />
-				<Registry Id="fus_reg22" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32\5.4.826.0" Name="Assembly" Value="ISE.VS.FusionSupport, Version=5.4.826.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-				<Registry Id="fus_reg23" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\InprocServer32\5.4.826.0" Name="RuntimeVersion" Value="v1.0.3705" Type="string" />
-				<Registry Id="fus_reg25" Root="HKCR" Key="CLSID\{B7926D82-BC03-3B0E-8029-BD5EBD352B30}\ProgId" Value="MSjogren.GacTool.FusionNative.Fusion" Type="string" />
-				<Registry Id="fus_reg27" Root="HKCR" Key="ISE.VisualStudio.FusionSupport.FusionSupport" Value="ISE.VisualStudio.FusionSupport.FusionSupport" Type="string" />
-				<Registry Id="fus_reg28" Root="HKCR" Key="ISE.VisualStudio.FusionSupport.FusionSupport\CLSID" Value="{8D21B190-37B7-4C68-8003-DC3DA41C56AC}" Type="string" />
-				<Registry Id="fus_reg29" Root="HKCR" Key="MSjogren.GacTool.FusionNative.Fusion" Value="MSjogren.GacTool.FusionNative.Fusion" Type="string" />
-				<Registry Id="fus_reg30" Root="HKCR" Key="MSjogren.GacTool.FusionNative.Fusion\CLSID" Value="{B7926D82-BC03-3B0E-8029-BD5EBD352B30}" Type="string" />
 			</Component>
 			<Directory Id="Application" Name=".">
 				<Directory Id="dotnet" Name="dotnet">
@@ -70,9 +42,6 @@
 								</Component>
 								<Component Id="EiffelSoftware.MetadataConsumer.dll" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
 									<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll" />
-								</Component>
-								<Component Id="ISE.VS.FusionSupport.dll" Guid="74612B43-50C6-4769-828C-AC55E479CB92">
-									<File Id="ISE.VS.FusionSupport.dll" Name="ISEVSF~1.DLL" LongName="ISE.VS.FusionSupport.dll" Checksum="yes" KeyPath="yes" Assembly=".net" AssemblyApplication="ISE.VS.FusionSupport.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\ISE.VS.FusionSupport.dll" />
 								</Component>
 							</Directory>
 						</Directory>

@@ -1,87 +1,20 @@
 remtrace Update the Eiffel libraries source
-iff isdir %EIFFEL_SRC then
-	fullrd %EIFFEL_SRC
-endiff
-safe_md %EIFFEL_SRC
-safe_md %EIFFEL_SRC\library
 
+remtrace free_add_ons
 cdd %EIFFEL_SRC
-co %DEFAULT_CVS_TAG/Src/C_library C_library
+co %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
-cdd %EIFFEL_SRC
-co %DEFAULT_CVS_TAG/free_add_ons/eclop free_add_ons\eclop
-
-cdd %EIFFEL_SRC\library
-remtrace base
-co %DEFAULT_CVS_TAG/Src/library/base base
-remtrace com 
-co %DEFAULT_CVS_TAG/Src/library/com com
-remtrace diff 
-co %DEFAULT_CVS_TAG/Src/library/diff diff
-remtrace Eiffel2Java
-co %DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java
-remtrace encryption
-co %DEFAULT_CVS_TAG/Src/library/encryption encryption
-remtrace editor
-co %DEFAULT_CVS_TAG/Src/library/editor editor
-remtrace event
-co %DEFAULT_CVS_TAG/Src/library/event event
 remtrace gobo
-copy %INSTALL_DIR\free_add_ons\gobo\gobo_34_win.tgz .
+cdd %EIFFEL_SRC\library
+copy %EIFFEL_SRC\free_add_ons\gobo\gobo_34_win.tgz .
 tar xfz gobo_34_win.tgz
 fullrf gobo_34_win.tgz
-remtrace graph
-co %DEFAULT_CVS_TAG/Src/library/graph graph
-remtrace helpers
-co %DEFAULT_CVS_TAG/Src/library/helpers helpers
-remtrace keygen
-co %DEFAULT_CVS_TAG/Src/library/keygen keygen
-remtrace lex
-co %DEFAULT_CVS_TAG/Src/library/lex lex
-remtrace net
-co %DEFAULT_CVS_TAG/Src/library/net net
-remtrace memory_analyzer
-co %DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer
-remtrace obsolete
-co %DEFAULT_CVS_TAG/Src/library/obsolete obsolete
-remtrace parse
-co %DEFAULT_CVS_TAG/Src/library/parse parse
-remtrace process
-co %DEFAULT_CVS_TAG/Src/library/process process
-remtrace store
-co %DEFAULT_CVS_TAG/Src/library/store store
-remtrace patterns
-co %DEFAULT_CVS_TAG/Src/library/patterns patterns
-remtrace preferences
-co %DEFAULT_CVS_TAG/Src/library/preferences preferences
-remtrace thread
-co %DEFAULT_CVS_TAG/Src/library/thread thread
-remtrace time
-co %DEFAULT_CVS_TAG/Src/library/time time
-remtrace uuid
-co %DEFAULT_CVS_TAG/Src/library/uuid uuid
-remtrace web
-co %DEFAULT_CVS_TAG/Src/library/web web
-remtrace wel
-co %DEFAULT_CVS_TAG/Src/library/wel wel
-remtrace vision2
-co %DEFAULT_CVS_TAG/Src/library/vision2 vision2
-fullrd vision2\implementation\gtk
-remtrace vision2_extension
-co %DEFAULT_CVS_TAG/Src/library/vision2_extension vision2_extension
-remtrace wizard
-co %DEFAULT_CVS_TAG/Src/library/wizard wizard
-remtrace Dotnet libraries
-safe_md %EIFFEL_SRC\library.net
-cdd %EIFFEL_SRC\library.net
-remtrace base.net
-co %DEFAULT_CVS_TAG/Src/library.net/base base
-remtrace wel.net
-co %DEFAULT_CVS_TAG/Src/library.net/wel wel
-remtrace vision2.net
-co %DEFAULT_CVS_TAG/Src/library.net/vision2 vision2
 
-cd %EIFFEL_SRC
+remtrace keygen
+cdd %EIFFEL_SRC\library
+co %DEFAULT_ISE_SVN/Src/library/keygen keygen
+
+cdd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com
 cd %EIFFEL_SRC\library\com\Clib
@@ -102,5 +35,3 @@ remtrace vision2
 cd %EIFFEL_SRC\library\vision2\Clib
 default_make
 cd %EIFFEL_SRC
-
-

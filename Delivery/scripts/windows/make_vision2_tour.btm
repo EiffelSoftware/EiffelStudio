@@ -1,21 +1,21 @@
 remtrace Compiling Vision2_Tour
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
-exprt %DEFAULT_CVS_TAG/Src/examples/vision2/widget_test vision2_tour
+exprt %DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_tour
 
 REM Must now call batch files here, to generate the flatshorts and also retrieve the
 REM build files needed by the test
 
 cdd %EIFFEL_SRC\vision2_tour
 
-call retrieve_build_files.bat %DEFAULT_CVS_TAG  >>& %INSTALL_LOG
+call retrieve_build_files.bat %DEFAULT_ORIGO_SVN  >>& %INSTALL_LOG
 call retrieve_flat_short.bat >>& %INSTALL_LOG
 
 cdd %EIFFEL_SRC\vision2_tour
 clean_project
-finalize win32ace.ace
+finalize vision2_tour.acex
 fff
-cleanup_eiffel vision2_tour.exe
+cleanup_eiffel vision2_tour vision2_tour.exe
 iff not exist vision2_tour.exe then
 	remtrace Could not finalize a new vision2_tour
 	CANCEL

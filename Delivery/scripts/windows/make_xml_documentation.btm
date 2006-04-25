@@ -23,7 +23,7 @@ remtrace --------------------------------------------------------
 cdd %DOCUMENT_DIR
 if isdir xmldoc fullrd xmldoc
 if exist xmldoc fullrd xmldoc
-co %DEFAULT_CVS_TAG/Delivery/xmldoc xmldoc
+co %DEFAULT_ORIGO_SVN/Delivery/xmldoc xmldoc
 
 
 remtrace ---------------------------------------------
@@ -31,12 +31,12 @@ remtrace Checkout and compile the Documentation tool |
 remtrace ---------------------------------------------
 
 cdd %EIFFEL_SRC\tools
-co %DEFAULT_CVS_TAG/Src/tools/doc_builder doc_builder
+co %DEFAULT_ORIGO_SVN/Src/tools/doc_builder doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
-finalize docbuilder.mswin.ace
+finalize doc_builder.acex
 fff
-cleanup_eiffel doc_builder.exe
+cleanup_eiffel doc_builder doc_builder.exe
 iff not exist doc_builder.exe then
 	remtrace Couldnt generate doc_builder.exe
 	CANCEL
@@ -50,8 +50,8 @@ remtrace Compile all required libraries and generate XML documentation |
 remtrace ---------------------------------------------------------------
 
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml
-melt all_libs.ace
-ec -flatshort -filter xml -all -project all_libs.epr
+melt all_libs.acex
+ec -flatshort -filter xml -all -config all_libs.acex
 
 remtrace ------------------------------------------------------
 remtrace Copy XML docs into appropriate written docs location |

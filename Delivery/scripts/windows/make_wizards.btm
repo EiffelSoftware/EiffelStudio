@@ -1,15 +1,4 @@
-remtrace Retrieve all source files
-remtrace The wizards...
-cdd %EIFFEL_SRC
-safe_md help
-cd help
-co %DEFAULT_CVS_TAG/Src/help/wizards wizards
-
-remtrace ...and the libraries
-cd %EIFFEL_SRC\library
-co %DEFAULT_CVS_TAG/Src/library/wizard wizard
-
-cd %EIFFEL_SRC\help\wizards
+cdd %EIFFEL_SRC\help\wizards
 set DELIVERY=%INSTALL_DIR
 remtrace Launch the actual wizard compilation
 call make_wizards.btm

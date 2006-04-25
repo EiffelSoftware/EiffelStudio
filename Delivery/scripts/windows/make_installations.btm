@@ -37,41 +37,30 @@ call build.btm vision2_tour
 call build.btm build
 
 remtrace EiffelStudio Enterprise
-%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise_version -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
 %INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
 del ec.wixobj
 
-remtrace EiffelStudio University
-%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
-%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
-del ec.wixobj
-
-remtrace EiffelStudio Free version
-%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
-%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
+remtrace EiffelStudio GPL
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=gpl_version -dISE_MODULE_NAME=ec_gpl -dISE_PRODUCT_NAME="EiffelStudio GPL Edition" ec.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_gpl.msm
 del ec.wixobj
 
 cdd %INSTALL_DIR
 if not exist setups mkdir setups
-if not exist setups\University mkdir setups\University
-if not exist setups\Enterprise mkdir setups\Enterprise
-if not exist setups\Free mkdir setups\Free
+if not exist setups\gpl mkdir setups\gpl
+if not exist setups\enterprise mkdir setups\enterprise
 
 cdd %INIT_DIR\install
 
-remtrace Preparing Free edition
-%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
-%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel57.msi
+remtrace Preparing GPL edition
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="gpl" -dEDITIONNAME="GPL Edition" Eiffel.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\gpl\Eiffel57.msi
 del Eiffel.wixobj
 
-remtrace Preparing University edition
-%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
-%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel57.msi
-del Eiffel.wixobj
-
-remtrace Preparing Enterprise edition
+remtrace Preparing Commercial edition
 %INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
-%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel57.msi
+%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\enterprise\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Your deliveries are now ready

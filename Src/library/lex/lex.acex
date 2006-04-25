@@ -8,10 +8,6 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-		<cluster name="lex" location=".\" recursive="true">
-			<file_rule>
-				<exclude>^/Clib</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="lex" location=".\" recursive="true"/>
 	</target>
 </system>

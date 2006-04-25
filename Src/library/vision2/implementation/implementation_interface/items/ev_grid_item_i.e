@@ -397,7 +397,10 @@ feature -- Element change
 		do
 			tooltip := a_tooltip
 		ensure
-			tooltip_assigned: equal (tooltip, a_tooltip)
+			tooltip_reset: a_tooltip = Void implies tooltip = Void
+			tooltip_set: a_tooltip /= Void implies (
+				(tooltip.same_type (a_tooltip) implies tooltip = a_tooltip) or
+				(not tooltip.same_type (a_tooltip) implies tooltip.is_equal (a_tooltip)))
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

@@ -18,7 +18,7 @@ inherit
 	ECOM_STGM
 
 	ECOM_STGMOVE
-	
+
 	ECOM_STAT_FLAGS
 
 create
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_new_doc_file (filename: FILE_NAME; a_mode: INTEGER) is
-			-- Create new compound file with path `filename' 
+			-- Create new compound file with path `filename'
 			-- and mode `a_mode' in file system.
 			-- See class ECOM_STGM for `mode' values.
 		require
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_open_file (filename: FILE_NAME; a_mode: INTEGER) is
-			-- Open existing root compound file with path `filename' 
+			-- Open existing root compound file with path `filename'
 			-- and mode `mode' in file system.
 			-- excluding block pointed by `exclude' (can be default_pointer)
 			-- See class ECOM_STGM for `a_mode' values.
@@ -79,12 +79,12 @@ feature {NONE} -- Initialization
 		local
 			l_string: WEL_STRING
 		do
-			initializer := ccom_create_c_storage;				
+			initializer := ccom_create_c_storage;
 			create l_string.make (filename)
-			ccom_open_root_storage (initializer, l_string.item, a_mode)	
+			ccom_open_root_storage (initializer, l_string.item, a_mode)
 			item := ccom_item (initializer)
 		ensure
-			compound_file_open: exists			
+			compound_file_open: exists
 		end
 
 feature -- Access
@@ -92,9 +92,9 @@ feature -- Access
 	new_stream (a_name: STRING; a_mode: INTEGER) : ECOM_STREAM is
 			-- Newly created stream with name `a_name'
 			-- and mode `a_mode' nested within Current storage
-			-- Opening the same stream more than once from the 
-			-- same storage is not supported. 
-			-- STGM_SHARE_EXCLUSIVE flag must be specified. 
+			-- Opening the same stream more than once from the
+			-- same storage is not supported.
+			-- STGM_SHARE_EXCLUSIVE flag must be specified.
 		require
 			non_void_storage_name: a_name /= Void
 			valid_storage_name: not a_name.is_empty
@@ -103,7 +103,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			create l_string.make (a_name)
-			create Result.make_from_pointer (ccom_create_stream (initializer, 
+			create Result.make_from_pointer (ccom_create_stream (initializer,
 					l_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
@@ -111,9 +111,9 @@ feature -- Access
 		end
 
 	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM is
-			-- Retrieved nested stream with name `a_name' 
-			-- and mode `a_mode' 
-			-- same storage is not supported. 
+			-- Retrieved nested stream with name `a_name'
+			-- and mode `a_mode'
+			-- same storage is not supported.
 			-- STGM_SHARE_EXCLUSIVE flag must be specified.
 		require
 			non_void_name: a_name /= Void
@@ -123,7 +123,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			create l_string.make (a_name)
-			create Result.make_from_pointer (ccom_open_stream (initializer, 
+			create Result.make_from_pointer (ccom_open_stream (initializer,
 					l_string.item, a_mode))
 		ensure
 			non_void_stream: Result /= Void
@@ -133,7 +133,7 @@ feature -- Access
 	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
 			-- Newly created storage with name `a_name'
 			-- and mode `a_mode'
-			-- nested within Current storage 
+			-- nested within Current storage
 		require
 			non_void_storage_name: a_name /= Void
 			valid_storage_name: not a_name.is_empty
@@ -142,7 +142,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			create l_string.make (a_name)
-			create Result.make_from_pointer (ccom_create_storage (initializer, 
+			create Result.make_from_pointer (ccom_create_storage (initializer,
 					l_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
@@ -150,11 +150,11 @@ feature -- Access
 		end
 
 	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
-			-- Retrieved storage with name `a_name' and mode `a_mode' 
+			-- Retrieved storage with name `a_name' and mode `a_mode'
 			-- nested within Current storage
-			-- Opening the same storage object more than once from the same 
-			-- parent storage is not supported. 
-			-- STGM_SHARE_EXCLUSIVE flag must be specified. 
+			-- Opening the same storage object more than once from the same
+			-- parent storage is not supported.
+			-- STGM_SHARE_EXCLUSIVE flag must be specified.
 		require
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
@@ -163,7 +163,7 @@ feature -- Access
 			l_string: WEL_STRING
 		do
 			create l_string.make (a_name)
-			create Result.make_from_pointer (ccom_open_storage (initializer, 
+			create Result.make_from_pointer (ccom_open_storage (initializer,
 					l_string.item, a_mode))
 		ensure
 			non_void_storage: Result /= Void
@@ -179,18 +179,18 @@ feature -- Access
 			if (ptr /= default_pointer) then
 				create Result.make_from_pointer (ptr)
 			end
-		end 
+		end
 
 	elements: ECOM_ENUM_STATSTG is
 			-- Substorages and substreams enumerator		
 		do
-			create Result.make_from_pointer (ccom_enum_elements (initializer))
+			create Result.make (ccom_enum_elements (initializer))
 		ensure
 			Result /= Void
 		end
 
 	is_valid_name (a_name: STRING): BOOLEAN is
-			-- is object with name `a_name'  
+			-- is object with name `a_name'
 			-- part of Current storage
 		require
 			valid_name: a_name /= Void
@@ -242,7 +242,7 @@ feature -- Access
 
 	element_creation_time (a_name: STRING): WEL_FILE_TIME is
 			-- Creation time of element `a_name'
-		require 
+		require
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
@@ -253,7 +253,7 @@ feature -- Access
 
 	element_access_time (a_name: STRING): WEL_FILE_TIME is
 			-- Access time of element `a_name'
-		require 
+		require
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
@@ -264,7 +264,7 @@ feature -- Access
 
 	element_modification_time (a_name: STRING): WEL_FILE_TIME is
 			-- Modification time of element `a_name'
-		require 
+		require
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		do
@@ -281,7 +281,7 @@ feature -- Basic Operations
 			non_void_destination: dest_storage /= Void
 			valid_destination: dest_storage.exists
 		do
-			ccom_copy_to (initializer, 0, default_pointer, 
+			ccom_copy_to (initializer, 0, default_pointer,
 					dest_storage.item)
 		end
 
@@ -295,21 +295,21 @@ feature -- Basic Operations
 		end
 
 	revert is
-			-- Discard all changes made to storage object 
+			-- Discard all changes made to storage object
 			-- since the last commit
-		do 
+		do
 			ccom_revert (initializer)
 		end
 
 	destroy_element (a_name: STRING) is
-			-- Remove element with name `a_name' from storage. 
+			-- Remove element with name `a_name' from storage.
 		require
 			non_void_name: a_name /= Void
 			valid_name: is_valid_name (a_name)
 		local
 			l_string: WEL_STRING
 		do
-			create l_string.make (a_name)	
+			create l_string.make (a_name)
 			ccom_destroy_element (initializer, l_string.item)
 		ensure
 			element_removed: not is_valid_name (a_name)
@@ -335,14 +335,14 @@ feature -- Basic Operations
 
 feature -- Element Change
 
-	move_element_to (a_element_name: STRING; dest_storage: ECOM_STORAGE; new_name: STRING; 
+	move_element_to (a_element_name: STRING; dest_storage: ECOM_STORAGE; new_name: STRING;
 				a_mode: INTEGER) is
-			-- Copy or move (depending on `mode') element `a_element_name'  
+			-- Copy or move (depending on `mode') element `a_element_name'
 			-- of root storage to `dest_storage'.
 			-- Create new element in `dest_storage' with `new_name'.
 			-- See class ECOM_STGM for `a_mode' values.
-			-- Before calling this method, the element to be moved must 
-			-- be closed, and the destination storage must be open. 
+			-- Before calling this method, the element to be moved must
+			-- be closed, and the destination storage must be open.
 		require
 			non_void_element_name: a_element_name /= Void
 			valid_element_name: is_valid_name (a_element_name)
@@ -356,7 +356,7 @@ feature -- Element Change
 		do
 			create l_string1.make (a_element_name)
 			create l_string2.make (new_name)
-			ccom_move_element_to (initializer, l_string1.item, dest_storage.item, 
+			ccom_move_element_to (initializer, l_string1.item, dest_storage.item,
 							l_string2.item, a_mode)
 		ensure
 			element_moved: dest_storage.is_valid_name (new_name)
@@ -369,7 +369,7 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_creation_time: a_creation_time /= Void
 		local
-			l_string: WEL_STRING	
+			l_string: WEL_STRING
 		do
 			create l_string.make (a_element_name)
 			ccom_set_element_times (initializer, l_string.item, a_creation_time.item,
@@ -385,7 +385,7 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_access_time: an_access_time /= Void
 		local
-			l_string: WEL_STRING	
+			l_string: WEL_STRING
 		do
 			create l_string.make (a_element_name)
 			ccom_set_element_times (initializer, l_string.item, default_pointer,
@@ -401,7 +401,7 @@ feature -- Element Change
 			valid_element_name: is_valid_name (a_element_name)
 			valid_modification_time: a_modification_time /= Void
 		local
-			l_string: WEL_STRING	
+			l_string: WEL_STRING
 		do
 			create l_string.make (a_element_name)
 			ccom_set_element_times (initializer, l_string.item, default_pointer,
@@ -448,7 +448,7 @@ feature -- Element Change
 			-- Associate storage with COM component with class id `a_class-id'
 		require
 			valid_clsid: a_class_id /= default_pointer;
-		do 
+		do
 			ccom_set_class (initializer, a_class_id)
 		end
 
@@ -462,11 +462,11 @@ feature {NONE} -- Implementation
 
 	description (a_flag: INTEGER): ECOM_STATSTG is
 			-- STATSTG structure
-			-- This structure contains statistical information. 
+			-- This structure contains statistical information.
 		require
 			valid_flag: is_valid_stat_flag (a_flag)
 		do
-			create Result.make_from_pointer (ccom_stat (initializer, a_flag))
+			create Result.make (ccom_stat (initializer, a_flag))
 		ensure
 			valid_description: Result /= Void
 		end
@@ -576,7 +576,7 @@ feature {NONE} -- Externals
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (DWORD): EIF_POINTER"
 		end
-	
+
 	ccom_root_storage (cpp_obj: POINTER) : POINTER is
 			-- Pointer to IRootStorage interface
 		external
@@ -588,7 +588,7 @@ feature {NONE} -- Externals
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"]():EIF_POINTER"
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

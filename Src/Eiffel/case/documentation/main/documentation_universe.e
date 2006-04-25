@@ -80,19 +80,21 @@ feature -- Access
 			create Result.make
 			from groups.start until groups.after loop
 				cl := groups.item.classes
-				from
-					cl.start
-				until
-					cl.after
-				loop
-					l_class_i ?= cl.item_for_iteration
-					check
-						l_class_i /= Void
+				if cl /= Void then
+					from
+						cl.start
+					until
+						cl.after
+					loop
+						l_class_i ?= cl.item_for_iteration
+						check
+							l_class_i /= Void
+						end
+						if l_class_i.is_compiled then
+							Result.extend (cl.item_for_iteration)
+						end
+						cl.forth
 					end
-					if l_class_i.is_compiled then
-						Result.extend (cl.item_for_iteration)
-					end
-					cl.forth
 				end
 				groups.forth
 			end
@@ -111,48 +113,50 @@ feature -- Access
 			l_class_i: CLASS_I
 		do
 			create Result.make
-			cl := group.classes
-			from
-				cl.start
-			until
-				cl.after
-			loop
-				l_class_i ?= cl.item_for_iteration
-				check
-					l_class_i_not_void: l_class_i /= Void
-				end
-				if l_class_i.is_compiled then
-					Result.extend (cl.item_for_iteration)
-				end
-				cl.forth
-			end
-			if group.is_cluster then
-				l_cluster ?= group
-				l_subclusters := l_cluster.children
-				if l_subclusters /= Void then
-					from
-						l_subclusters.start
-					until
-						l_subclusters.after
-					loop
-						Result.merge (classes_in_group (l_subclusters.item))
-						l_subclusters.forth
-					end
-				end
-			elseif group.is_library then
-				l_lib ?= group
-				check
-					l_lib_not_void: l_lib /= Void
-					library_target_not_void: l_lib.library_target /= Void
-				end
-				l_lib_clusters := l_lib.library_target.clusters
+			if group.classes_set then
+				cl := group.classes
 				from
-					l_lib_clusters.start
+					cl.start
 				until
-					l_lib_clusters.after
+					cl.after
 				loop
-					Result.merge (classes_in_group (l_lib_clusters.item_for_iteration))
-					l_lib_clusters.forth
+					l_class_i ?= cl.item_for_iteration
+					check
+						l_class_i_not_void: l_class_i /= Void
+					end
+					if l_class_i.is_compiled then
+						Result.extend (cl.item_for_iteration)
+					end
+					cl.forth
+				end
+				if group.is_cluster then
+					l_cluster ?= group
+					l_subclusters := l_cluster.children
+					if l_subclusters /= Void then
+						from
+							l_subclusters.start
+						until
+							l_subclusters.after
+						loop
+							Result.merge (classes_in_group (l_subclusters.item))
+							l_subclusters.forth
+						end
+					end
+				elseif group.is_library then
+					l_lib ?= group
+					check
+						l_lib_not_void: l_lib /= Void
+						library_target_not_void: l_lib.library_target /= Void
+					end
+					l_lib_clusters := l_lib.library_target.clusters
+					from
+						l_lib_clusters.start
+					until
+						l_lib_clusters.after
+					loop
+						Result.merge (classes_in_group (l_lib_clusters.item_for_iteration))
+						l_lib_clusters.forth
+					end
 				end
 			end
 		end

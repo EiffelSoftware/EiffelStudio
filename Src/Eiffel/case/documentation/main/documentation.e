@@ -284,22 +284,35 @@ feature -- Actions
 			if not d.exists then
 				d.create_dir
 			end
-			if a_group.is_cluster then
-				l_cluster ?= a_group
-				if l_cluster.children /= Void then
-					from
-						l_cluster.children.start
-					until
-						l_cluster.children.after
-					loop
-						create_directory_for_group (l_cluster.children.item)
-						l_cluster.children.forth
+			if a_group.classes_set then
+				if a_group.is_cluster then
+					l_cluster ?= a_group
+					if l_cluster.children /= Void then
+						from
+							l_cluster.children.start
+						until
+							l_cluster.children.after
+						loop
+							create_directory_for_group (l_cluster.children.item)
+							l_cluster.children.forth
+						end
 					end
-				end
-			elseif a_group.is_assembly then
-				l_assem ?= a_group
-				if l_assem.target.application_target /= Void then
-					l_clusters := l_assem.target.application_target.clusters
+				elseif a_group.is_assembly then
+					l_assem ?= a_group
+					if l_assem.target.application_target /= Void then
+						l_clusters := l_assem.target.application_target.clusters
+						from
+							l_clusters.start
+						until
+							l_clusters.after
+						loop
+							create_directory_for_group (l_clusters.item_for_iteration)
+							l_clusters.forth
+						end
+					end
+				elseif a_group.is_library then
+					l_lib ?= a_group
+					l_clusters := l_lib.library_target.clusters
 					from
 						l_clusters.start
 					until
@@ -308,17 +321,6 @@ feature -- Actions
 						create_directory_for_group (l_clusters.item_for_iteration)
 						l_clusters.forth
 					end
-				end
-			elseif a_group.is_library then
-				l_lib ?= a_group
-				l_clusters := l_lib.library_target.clusters
-				from
-					l_clusters.start
-				until
-					l_clusters.after
-				loop
-					create_directory_for_group (l_clusters.item_for_iteration)
-					l_clusters.forth
 				end
 			end
 		end

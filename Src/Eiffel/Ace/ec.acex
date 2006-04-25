@@ -246,7 +246,7 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option trace="false" profile="false" debug="true">
+		<option trace="false" profile="false" debug="false">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="_jfiat" enabled="false"/>
 			<debug name="activity" enabled="false"/>

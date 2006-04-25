@@ -127,8 +127,11 @@ feature {NONE} -- Implementation
 
 	is_dotnet_project: BOOLEAN is
 			-- is current loaded ace a .net project
+		local
+			l_value: STRING
 		do
-			Result := system.il_generation
+			l_value := lace.target.settings.item ("msil_generation")
+			Result := l_value /= Void and then l_value.is_case_insensitive_equal ("true")
 		end
 
 indexing

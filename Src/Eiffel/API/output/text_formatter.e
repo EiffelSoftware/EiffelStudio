@@ -496,11 +496,8 @@ feature {NONE} -- Implementation
 	separate_string (s:STRING; for_comment: BOOLEAN) is
 			-- Separate `s' into parts and add them to `Current'.
 			-- Mostly for manifest strings and comments.
-		local
-			l_string: STRING
 		do
-			create l_string.make_from_string (s)
-			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (l_string))
+			comment_scanner.set_input_buffer (create {YY_BUFFER}.make (s))
 			comment_scanner.set_text_formatter (Current)
 			comment_scanner.set_for_comment (for_comment)
 			comment_scanner.set_current_class (comment_context_class)

@@ -1,7 +1,7 @@
 indexing
 
 	description: "Scanners for Eiffel comment"
-	legal: "See notice at end of class."
+	status: "See notice at end of class"
 	status: "See notice at end of class."
 	date: "$date$"
 	revision: "$Revision$"
@@ -44,18 +44,18 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 31 "comment_scanner.l"
+--|#line 34 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 31")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 34")
 end
 
 				add_email_tokens
 				reset_last_type
 			
 else
---|#line 37 "comment_scanner.l"
+--|#line 40 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 37")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 40")
 end
 				
 				add_url_tokens
@@ -64,17 +64,17 @@ end
 end
 else
 if yy_act = 3 then
---|#line 43 "comment_scanner.l"
+--|#line 46 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 43")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 46")
 end
 
 				add_quote_feature
 			
 else
---|#line 48 "comment_scanner.l"
+--|#line 51 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 48")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 51")
 end
 
 				add_class
@@ -85,18 +85,18 @@ end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 54 "comment_scanner.l"
+--|#line 57 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 54")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 57")
 end
 
 				add_cluster
 				reset_last_type
 			
 else
---|#line 60 "comment_scanner.l"
+--|#line 63 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 60")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 63")
 end
 
 				add_text (text)
@@ -104,9 +104,9 @@ end
 			
 end
 else
---|#line 65 "comment_scanner.l"
+--|#line 68 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 65")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 68")
 end
 
 				text_formatter.process_new_line
@@ -118,17 +118,17 @@ else
 if yy_act <= 10 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 70 "comment_scanner.l"
+--|#line 73 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 70")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 73")
 end
 
 				reset_last_type
 			
 else
---|#line 74 "comment_scanner.l"
+--|#line 77 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 74")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 77")
 end
 
 				add_text (text)
@@ -136,9 +136,9 @@ end
 			
 end
 else
---|#line 81 "comment_scanner.l"
+--|#line 84 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 81")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 84")
 end
 
 				add_dot_feature
@@ -147,18 +147,19 @@ end
 else
 if yy_act <= 12 then
 if yy_act = 11 then
---|#line 85 "comment_scanner.l"
+--|#line 87 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 85")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 87")
 end
 
+				less (0)
 				set_start_condition (INITIAL)
 				reset_last_type
 			
 else
---|#line 100 "comment_scanner.l"
+--|#line 102 "comment_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 100")
+	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 102")
 end
 
 				add_text (text)
@@ -170,7 +171,8 @@ else
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line 0")
 end
-default_action
+last_token := yyError_token
+fatal_error ("scanner jammed")
 end
 end
 end
@@ -209,51 +211,61 @@ feature {NONE} -- Table templates
 			    0,    6,    7,    8,    9,   10,    6,    6,   10,   11,
 			   10,   10,   10,   10,   10,    6,    6,   10,   12,   12,
 			   13,    6,    6,   10,   14,   12,   12,   15,   12,   16,
-			   12,   12,   12,   12,   12,   17,   18,    6,   10,   20,
-			   20,   20,   20,   20,   20,   25,   21,   24,  101,   21,
-			   24,   32,   25,  100,   24,   33,   39,   23,   37,   25,
-			   25,   25,   25,   34,   34,   38,   24,   40,   24,   25,
-			   24,   24,   44,   41,  101,   24,   25,   25,   25,   24,
-			   42,   30,   24,   24,   43,   31,   24,   24,   34,   35,
-			   48,   24,   45,   49,   51,   34,   34,   48,   24,   52,
+			   12,   12,   12,   12,   12,   17,   18,    6,   11,   23,
+			   24,   30,   24,   23,   34,  114,   24,   35,   24,   36,
+			   36,   21,   25,   31,   24,   44,  113,   40,   24,   25,
+			   37,   45,   43,   41,   24,   26,   25,   25,   25,   25,
+			   24,   42,   37,   70,   24,   24,   25,   71,   44,   24,
+			   24,   44,   26,   25,   25,   25,   24,   24,   32,   42,
+			   24,  114,   33,   24,   47,   24,   24,   24,   24,   86,
 
-			   34,   35,   24,   54,   48,   48,   48,   24,   38,   53,
-			   59,   24,   60,   40,   61,   46,   40,   24,   38,   37,
-			   62,   24,   73,   38,   24,   86,   38,   40,   24,   57,
-			   63,   48,   24,   67,   69,   40,   24,   58,   48,   70,
-			   24,   71,   63,   40,   24,   48,   48,   48,   24,   74,
-			   78,   64,   24,   57,   24,   48,   70,   68,   24,   24,
-			   24,   24,   48,   24,   24,   24,   81,   98,   91,   48,
-			   48,   48,   57,   38,   48,   70,   24,   77,   40,   38,
-			   24,   48,   38,   40,   92,   38,   82,  100,   48,   48,
-			   48,   54,   85,   75,   40,   24,   96,   97,   38,   24,
+			   42,   24,   24,   48,   24,   24,   49,   36,   24,   50,
+			   54,   81,   56,   90,   36,   36,   44,   54,   60,   36,
+			   55,   42,   24,   98,   54,   54,   54,   42,   24,   42,
+			   24,   58,   24,   24,   51,   59,   24,   62,   24,   24,
+			   24,   42,   40,   24,   24,   44,   61,   73,   24,   29,
+			   75,   44,   24,   95,  113,   24,   80,  111,   24,   24,
+			   29,   44,   24,   66,   24,   54,   44,   44,   31,   42,
+			   24,   67,   54,   91,   24,   87,   29,  110,   29,   54,
+			   54,   54,   69,   74,   31,   94,   82,  101,   40,   69,
+			   76,   24,   42,   44,  105,   24,   69,   69,   69,   44,
 
-			   75,   95,   40,   88,   94,   99,   40,   75,   75,   75,
-			   54,   54,   75,   90,   38,   40,   84,   80,   79,   75,
-			   76,  102,   57,   72,   65,   55,   75,   75,   75,   83,
-			  102,   50,   40,   38,   47,   70,   83,   40,   38,   36,
-			   22,   29,   27,   83,   83,   83,   88,   23,   83,   23,
-			   22,  103,  103,  103,   89,   83,  103,  103,  103,  103,
-			  103,  103,   83,   83,   83,   88,  103,   83,  103,  103,
-			  103,  103,  103,  103,   83,  103,  103,  103,  103,  103,
-			  103,   83,   83,   83,   88,  103,   83,  103,  103,  103,
-			  103,  103,  103,   83,  103,  103,  103,  103,  103,  103,
+			   24,   24,   24,   83,   84,   24,   24,   24,   24,   24,
+			   24,   77,   24,   66,  115,   54,   44,   24,   24,  107,
+			   44,   76,   54,   24,   24,   99,  104,   24,   24,   54,
+			   54,   54,   66,   24,   54,  115,   44,   83,  109,   24,
+			   42,   54,  108,   24,   44,   83,   62,  112,   54,   54,
+			   54,   24,  103,   97,   93,   42,   89,   24,   66,   24,
+			   85,   24,   62,   78,   88,   24,   21,   64,   57,   24,
+			   44,   88,   37,   37,   42,   37,   37,   37,   88,   88,
+			   88,   62,   53,   88,   52,   46,   44,   42,   39,   92,
+			   88,   22,   38,   28,   23,   22,   21,   88,   88,   88,
 
-			   83,   83,   83,   19,   19,   19,   19,   19,   19,   19,
-			   19,   19,   24,  103,  103,   24,   24,   24,   24,   24,
-			   24,   26,  103,   26,   26,   26,   26,   26,   26,   26,
-			   28,  103,   28,   28,   28,   28,   28,   28,   28,   35,
-			   35,   35,   35,   35,   35,   56,  103,   56,   56,   56,
-			   56,   56,   56,   56,   54,  103,   54,   54,   54,   54,
-			   54,   54,   54,   66,  103,  103,   66,   66,   66,   66,
-			   66,   66,   70,  103,   70,   70,   70,   70,   70,   70,
-			   70,   87,  103,   87,   87,   87,   87,   87,   87,   87,
-			   93,  103,   93,   93,   93,   93,   93,   93,   93,    5,
+			   96,  116,   20,   20,  116,  116,   83,   96,  116,  116,
+			  116,  116,  116,  116,   96,   96,   96,  101,  116,   96,
+			  116,  116,  116,  116,  116,  102,   96,  116,  116,  116,
+			  116,  116,  116,   96,   96,   96,  101,  116,   96,  116,
+			  116,  116,  116,  116,  116,   96,  116,  116,  116,  116,
+			  116,  116,   96,   96,   96,  101,  116,   96,  116,  116,
+			  116,  116,  116,  116,   96,  116,  116,  116,  116,  116,
+			  116,   96,   96,   96,   19,   19,   19,   19,   19,   19,
+			   19,   19,   19,   24,  116,  116,   24,   24,   24,   24,
+			   24,   24,   27,  116,   27,   27,   27,   27,   27,   27,
 
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103, yy_Dummy>>)
+			   27,   29,  116,   29,   29,   29,   29,   29,   29,   29,
+			   63,  116,  116,   63,   63,  116,   63,   63,   63,   65,
+			  116,   65,   65,   65,   65,   65,   65,   65,   68,  116,
+			  116,   68,   68,   68,   68,   68,   68,   72,  116,   72,
+			   72,   72,   72,   72,   72,   72,   62,  116,   62,   62,
+			   62,   62,   62,   62,   62,   79,  116,  116,   79,   79,
+			   79,   79,   79,   79,   83,  116,   83,   83,   83,   83,
+			   83,   83,   83,  100,  116,  100,  100,  100,  100,  100,
+			  100,  100,  106,  116,  106,  106,  106,  106,  106,  106,
+			  106,    5,  116,  116,  116,  116,  116,  116,  116,  116,
+
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116, yy_Dummy>>)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER] is
@@ -262,87 +274,101 @@ feature {NONE} -- Table templates
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    3,
-			    3,    3,    4,    4,    4,   12,    3,   16,  101,    4,
-			   17,   16,   12,  100,   17,   17,   27,   18,   25,   12,
-			   12,   12,   15,   18,   18,   27,   24,   29,   32,   15,
-			   24,   25,   32,   29,   98,   25,   15,   15,   15,   30,
-			   30,   15,   31,   30,   31,   15,   31,   33,   34,   35,
-			   37,   33,   33,   39,   42,   34,   34,   37,   42,   43,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,   10,
+			   16,   14,   17,   18,   16,  114,   17,   17,   24,   18,
+			   18,   10,   12,   14,   24,   30,  113,   25,   24,   12,
+			   37,   30,   28,   26,   25,   12,   12,   12,   12,   15,
+			   25,   28,   37,   56,   25,   68,   15,   57,   57,   68,
+			   26,   71,   15,   15,   15,   15,   26,   32,   15,   56,
+			   26,  111,   15,   32,   32,   33,   34,   32,   35,   80,
 
-			   34,   35,   42,   45,   37,   37,   37,   44,   39,   44,
-			   49,   44,   50,   50,   51,   34,   82,   43,   59,   51,
-			   52,   43,   67,   67,   45,   82,   49,   60,   45,   48,
-			   53,   48,   51,   59,   61,   68,   51,   48,   48,   62,
-			   52,   63,   64,   74,   52,   48,   48,   48,   53,   68,
-			   74,   53,   53,   56,   61,   56,   69,   60,   61,   62,
-			   64,   63,   56,   62,   64,   63,   77,   95,   85,   56,
-			   56,   56,   58,   77,   58,   71,   69,   73,   78,   95,
-			   69,   58,   85,   86,   86,   73,   78,   97,   58,   58,
-			   58,   70,   81,   70,   92,   71,   92,   94,   81,   71,
+			   80,   33,   34,   33,   35,   33,   34,   36,   35,   35,
+			   40,   71,   43,   86,   36,   36,   46,   40,   48,   36,
+			   41,   86,   41,   94,   40,   40,   40,   43,   41,   94,
+			   48,   46,   41,   47,   36,   47,   48,   50,   49,   47,
+			   48,   70,   69,   47,   49,   91,   49,   58,   49,   58,
+			   60,   72,   50,   91,  110,   69,   70,  108,   50,   69,
+			   58,   81,   50,   54,   60,   54,   87,   73,   72,  108,
+			   60,   54,   54,   87,   60,   81,   58,  107,   58,   54,
+			   54,   54,   55,   59,   73,   90,   74,  106,   59,   55,
+			   61,   55,   90,   99,   99,   59,   55,   55,   55,  112,
 
-			   70,   91,   96,   93,   90,   96,   99,   70,   70,   70,
-			   75,   88,   75,   84,   91,  102,   80,   76,   75,   75,
-			   72,   99,   66,   65,   55,   47,   75,   75,   75,   79,
-			  102,   41,   40,   38,   36,   79,   79,   28,   26,   23,
-			   22,   14,   13,   79,   79,   79,   83,   11,   83,   10,
-			    7,    5,    0,    0,   83,   83,    0,    0,    0,    0,
-			    0,    0,   83,   83,   83,   87,    0,   87,    0,    0,
-			    0,    0,    0,    0,   87,    0,    0,    0,    0,    0,
-			    0,   87,   87,   87,   89,    0,   89,    0,    0,    0,
-			    0,    0,    0,   89,    0,    0,    0,    0,    0,    0,
+			   74,   59,   61,   75,   76,   59,   74,   55,   61,   55,
+			   74,   61,   61,   65,  112,   65,   95,   75,   76,  103,
+			  115,   77,   65,   75,   76,   95,   98,   75,   76,   65,
+			   65,   65,   67,   77,   67,  115,  105,   82,  105,   77,
+			   98,   67,  104,   77,  109,   84,  101,  109,   67,   67,
+			   67,   82,   97,   93,   89,  104,   85,   82,   79,   84,
+			   78,   82,   83,   64,   83,   84,   63,   53,   45,   84,
+			   44,   83,  121,  121,   42,  121,  121,  121,   83,   83,
+			   83,   88,   39,   88,   38,   31,   29,   27,   23,   88,
+			   88,   22,   21,   13,   11,    7,    6,   88,   88,   88,
 
-			   89,   89,   89,  104,  104,  104,  104,  104,  104,  104,
-			  104,  104,  105,    0,    0,  105,  105,  105,  105,  105,
-			  105,  106,    0,  106,  106,  106,  106,  106,  106,  106,
-			  107,    0,  107,  107,  107,  107,  107,  107,  107,  108,
-			  108,  108,  108,  108,  108,  109,    0,  109,  109,  109,
-			  109,  109,  109,  109,  110,    0,  110,  110,  110,  110,
-			  110,  110,  110,  111,    0,    0,  111,  111,  111,  111,
-			  111,  111,  112,    0,  112,  112,  112,  112,  112,  112,
-			  112,  113,    0,  113,  113,  113,  113,  113,  113,  113,
-			  114,    0,  114,  114,  114,  114,  114,  114,  114,  103,
+			   92,    5,    4,    3,    0,    0,   92,   92,    0,    0,
+			    0,    0,    0,    0,   92,   92,   92,   96,    0,   96,
+			    0,    0,    0,    0,    0,   96,   96,    0,    0,    0,
+			    0,    0,    0,   96,   96,   96,  100,    0,  100,    0,
+			    0,    0,    0,    0,    0,  100,    0,    0,    0,    0,
+			    0,    0,  100,  100,  100,  102,    0,  102,    0,    0,
+			    0,    0,    0,    0,  102,    0,    0,    0,    0,    0,
+			    0,  102,  102,  102,  117,  117,  117,  117,  117,  117,
+			  117,  117,  117,  118,    0,    0,  118,  118,  118,  118,
+			  118,  118,  119,    0,  119,  119,  119,  119,  119,  119,
 
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103,  103,  103,  103, yy_Dummy>>)
+			  119,  120,    0,  120,  120,  120,  120,  120,  120,  120,
+			  122,    0,    0,  122,  122,    0,  122,  122,  122,  123,
+			    0,  123,  123,  123,  123,  123,  123,  123,  124,    0,
+			    0,  124,  124,  124,  124,  124,  124,  125,    0,  125,
+			  125,  125,  125,  125,  125,  125,  126,    0,  126,  126,
+			  126,  126,  126,  126,  126,  127,    0,    0,  127,  127,
+			  127,  127,  127,  127,  128,    0,  128,  128,  128,  128,
+			  128,  128,  128,  129,    0,  129,  129,  129,  129,  129,
+			  129,  129,  130,    0,  130,  130,  130,  130,  130,  130,
+			  130,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116, yy_Dummy>>)
 		end
 
 	yy_base_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   37,   40,  251,  399,  248,  399,  399,
-			  237,  235,   34,  230,  229,   51,   17,   20,   45,  399,
-			  399,    0,  238,  226,   36,   41,  216,   43,  230,   60,
-			   49,   52,   38,   57,   77,   78,  227,   79,  211,   86,
-			  225,  224,   68,   87,   77,   94,  399,  219,  120,  104,
-			  106,  102,  110,  118,    0,  187,  144,    0,  163,   96,
-			  120,  124,  129,  131,  130,  202,  213,  101,  128,  146,
-			  182,  165,  206,  163,  136,  201,  202,  151,  171,  218,
-			  200,  176,  109,  237,  205,  160,  176,  256,  202,  275,
-			  195,  192,  187,  194,  187,  157,  195,  165,   52,  199,
+			    0,    0,    0,  294,  293,  301,  272,  293,  491,  491,
+			   27,  282,   41,  281,   29,   58,   10,   12,   31,  491,
+			    0,  285,  289,  275,   24,   40,   56,  265,   49,  279,
+			   48,  278,   63,   71,   72,   74,   96,   49,  262,  275,
+			   99,   98,  252,  105,  263,  261,  109,  109,  106,  114,
+			  128,  491,    0,  261,  154,  171,   67,   71,  140,  171,
+			  140,  178,    0,  242,  226,  204,    0,  223,   45,  125,
+			  119,   74,  144,  160,  176,  193,  194,  209,  239,  249,
+			   78,  154,  227,  253,  235,  242,   99,  159,  272,  239,
+			  170,  138,  289,  237,  107,  209,  308,  244,  218,  186,
 
-			   31,   26,  208,  399,  302,  311,  320,  329,  335,  344,
-			  353,  362,  371,  380,  389, yy_Dummy>>)
+			  327,  237,  346,  210,  233,  229,  178,  167,  147,  237,
+			  132,   69,  192,   34,   23,  213,  491,  373,  382,  391,
+			  400,  268,  409,  418,  427,  436,  445,  454,  463,  472,
+			  481, yy_Dummy>>)
 		end
 
 	yy_def_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,  103,    1,  104,  104,  103,  103,  103,  103,  103,
-			  103,  103,  105,  106,  107,  105,   15,   15,  103,  103,
-			  103,  108,  103,  103,   15,   15,  106,  106,  107,  107,
-			   15,   15,   15,   15,  103,  108,  103,  105,  106,  106,
-			  107,  107,   15,   15,   15,   15,  103,  103,  109,  106,
-			  107,   15,   15,   15,  110,  103,  109,  111,  109,  106,
-			  107,   15,   15,   15,   15,  103,  111,  106,  107,   15,
-			  112,   15,  103,  106,  107,  112,  103,  106,  107,   75,
-			  103,  106,  107,  113,  103,  106,  107,  113,  114,  113,
-			  103,  106,  107,  114,  103,  106,  107,  103,  106,  107,
+			    0,  116,    1,  117,  117,  116,  116,  116,  116,  116,
+			  116,  116,  118,  119,  120,  118,   15,   15,  116,  116,
+			  121,  116,  116,  116,   15,   15,   15,  119,  119,  120,
+			  120,  120,   15,   15,   15,   15,  116,  121,  116,  116,
+			  118,   15,  119,  119,  120,  120,  120,   15,   15,   15,
+			   15,  116,  122,  116,  123,  124,  119,  120,  125,   15,
+			   15,   15,  126,  116,  116,  123,  127,  123,   15,   15,
+			  119,  120,  120,  120,   15,   15,   15,   15,  116,  127,
+			  119,  120,   15,  128,   15,  116,  119,  120,  128,  116,
+			  119,  120,   88,  116,  119,  120,  129,  116,  119,  120,
 
-			  103,  106,  107,    0,  103,  103,  103,  103,  103,  103,
-			  103,  103,  103,  103,  103, yy_Dummy>>)
+			  129,  130,  129,  116,  119,  120,  130,  116,  119,  120,
+			  116,  119,  120,  116,  119,  120,    0,  116,  116,  116,
+			  116,  116,  116,  116,  116,  116,  116,  116,  116,  116,
+			  116, yy_Dummy>>)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER] is
@@ -383,37 +409,38 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    2,    2,    1,    1,    1,    1,    3,
 			    1,    1,    1,    1,    1,    1,    1,    1,    4,    5,
-			    1,    1,    1,    1,    1,    4,    4,    4,    4,    4,
-			    4,    4,    6,    7,    8,    9,    1,    1,    1, yy_Dummy>>)
+			    6,    1,    1,    1,    1,    4,    4,    4,    4,    4,
+			    4,    7,    4,    8,    9,    4,    6,    1,    6, yy_Dummy>>)
 		end
 
 	yy_accept_template: SPECIAL [INTEGER] is
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,    0,    0,   14,    6,    9,    7,    8,
-			    6,   12,    6,    6,    6,    6,    6,    6,    6,   13,
-			   11,   13,    9,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,   10,    0,    0,    5,    0,
-			    3,    0,    0,    0,    0,    0,    4,    0,    1,    0,
-			    3,    0,    0,    0,    2,    0,    1,    0,    1,    0,
-			    0,    0,    0,    0,    0,    0,    1,    0,    0,    0,
-			    2,    0,    0,    0,    0,    2,    0,    0,    0,    2,
-			    0,    0,    0,    1,    0,    0,    0,    1,    2,    1,
-			    0,    0,    0,    1,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,   14,   12,    9,    7,    8,
+			   12,   12,   12,   12,   12,   12,   12,   12,   12,   11,
+			   11,    0,    9,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,   10,    0,    0,
+			    0,    0,    5,    0,    3,    0,    3,    0,    0,    0,
+			    0,    4,    6,    0,    1,    6,    0,    3,    6,    0,
+			    0,    0,    2,    0,    0,    1,    0,    1,    0,    0,
+			    0,    0,    0,    3,    0,    0,    0,    0,    0,    1,
+			    0,    0,    0,    2,    0,    0,    0,    0,    2,    0,
+			    0,    0,    2,    0,    0,    0,    1,    0,    0,    0,
 
-			    6,    5,    6,    0, yy_Dummy>>)
+			    1,    2,    1,    0,    0,    0,    1,    0,    0,    0,
+			    0,    0,    0,    6,    5,    6,    0, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 399
+	yyJam_base: INTEGER is 491
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 103
+	yyJam_state: INTEGER is 116
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 104
+	yyTemplate_mark: INTEGER is 117
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -452,35 +479,4 @@ feature -- User-defined features
 
 
 
-indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 end -- class COMMENT_SCANNER

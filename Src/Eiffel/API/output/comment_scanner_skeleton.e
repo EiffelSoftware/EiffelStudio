@@ -13,7 +13,7 @@ inherit
 
 	YY_COMPRESSED_SCANNER_SKELETON
 			redefine
-				reset
+				reset, default_action
 			end
 
 	SHARED_EIFFEL_PROJECT
@@ -75,6 +75,13 @@ feature -- Access
 
 	current_class : CLASS_C
 			-- Current class for analyze context.
+
+feature -- Action
+
+	default_action is
+		do
+			-- Nothing to be done
+		end
 
 feature {NONE} -- Implementation
 

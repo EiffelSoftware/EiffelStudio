@@ -787,11 +787,11 @@ end
 
 				-- let the configuration system build "everything"
 			create l_factory
+			create l_state.make (universe.platform, universe.build, has_multithreaded, l_target.variables)
 			if universe.target /= Void then
-				create l_vis_build.make_build_from_old (universe.conf_state,
+				create l_vis_build.make_build_from_old (l_state,
 					l_target, universe.target, l_factory)
 			else
-				create l_state.make (universe.platform, universe.build, has_multithreaded, l_target.variables)
 				create l_vis_build.make_build (l_state, l_target, l_factory)
 			end
 			if il_generation then

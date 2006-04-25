@@ -96,40 +96,42 @@ feature -- Helper
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			create Result.make
-			if a_group.is_cluster then
-				l_cluster ?= a_group
-				l_clu := l_cluster.children
-				if l_clu /= Void then
-					from
-						l_clu.start
-					until
-						l_clu.after
-					loop
-						Result.extend (l_clu.item)
-						l_clu.forth
+			if a_group.classes_set then
+				if a_group.is_cluster then
+					l_cluster ?= a_group
+					l_clu := l_cluster.children
+					if l_clu /= Void then
+						from
+							l_clu.start
+						until
+							l_clu.after
+						loop
+							Result.extend (l_clu.item)
+							l_clu.forth
+						end
 					end
-				end
-			elseif a_group.is_library then
-				l_lib ?= a_group
-				l_clusters := l_lib.library_target.clusters
-				from
-					l_clusters.start
-				until
-					l_clusters.after
-				loop
-					Result.extend (l_clusters.item_for_iteration)
-					l_clusters.forth
-				end
-			elseif a_group.is_assembly then
-				l_assem ?= a_group
-				l_clusters := l_assem.target.application_target.clusters
-				from
-					l_clusters.start
-				until
-					l_clusters.after
-				loop
-					Result.extend (l_clusters.item_for_iteration)
-					l_clusters.forth
+				elseif a_group.is_library then
+					l_lib ?= a_group
+					l_clusters := l_lib.library_target.clusters
+					from
+						l_clusters.start
+					until
+						l_clusters.after
+					loop
+						Result.extend (l_clusters.item_for_iteration)
+						l_clusters.forth
+					end
+				elseif a_group.is_assembly then
+					l_assem ?= a_group
+					l_clusters := l_assem.target.application_target.clusters
+					from
+						l_clusters.start
+					until
+						l_clusters.after
+					loop
+						Result.extend (l_clusters.item_for_iteration)
+						l_clusters.forth
+					end
 				end
 			end
 		ensure

@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			create generated_coclasses.make (10)
 		end
-		
+
 feature -- Initialization
 
 	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
@@ -102,8 +102,6 @@ feature -- Basic Operations
 		require
 			non_void_inherit_clause: inherit_clause /= Void
 			non_void_function_generator: a_function_generator /= Void
-		local
-			tmp_original_name, tmp_changed_name: STRING
 		do
 			if a_function_generator.function_renamed then
 				inherit_clause.add_rename (a_function_generator.original_name, a_function_generator.changed_name)
@@ -122,7 +120,7 @@ feature -- Basic Operations
 				until
 					a_property_generator.changed_names.after
 				loop
-					inherit_clause.add_rename (a_property_generator.changed_names.key_for_iteration, 
+					inherit_clause.add_rename (a_property_generator.changed_names.key_for_iteration,
 							a_property_generator.changed_names.item_for_iteration)
 					a_property_generator.changed_names.forth
 				end

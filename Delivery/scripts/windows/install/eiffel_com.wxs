@@ -151,8 +151,6 @@
 										<File Id="E_bstr.h" Name="E_bstr.h" />
 										<File Id="ecom__large_integer_impl.h" Name="ECOM__~1.H" LongName="ecom__large_integer_impl.h" />
 										<File Id="E_variant.h" Name="E_VARI~1.H" LongName="E_variant.h" />
-										<File Id="E_statstg.h" Name="E_STAT~1.H" LongName="E_statstg.h" />
-										<File Id="E_ITypeLib.h" Name="E_ITYP~3.H" LongName="E_ITypeLib.h" />
 										<File Id="E_Decimal.h" Name="E_DECI~1.H" LongName="E_Decimal.h" />
 										<File Id="ecom_flags.h" Name="ECOM_F~1.H" LongName="ecom_flags.h" />
 										<File Id="E_type_attr.h" Name="E_TYPE~1.H" LongName="E_type_attr.h" />
@@ -164,21 +162,16 @@
 										<File Id="E_paramdesc.h" Name="E_PARA~1.H" LongName="E_paramdesc.h" />
 										<File Id="ecom_ifont20_impl_proxy.h" Name="ECOM_I~2.H" LongName="ecom_ifont20_impl_proxy.h" />
 										<File Id="E_vardesc.h" Name="E_VARD~1.H" LongName="E_vardesc.h" />
-										<File Id="E_ITypeInfo.h" Name="E_ITYP~2.H" LongName="E_ITypeInfo.h" />
 										<File Id="E_IRootStorage.h" Name="E_IROO~1.H" LongName="E_IRootStorage.h" />
 										<File Id="e_arraydesc.h" Name="E_ARRA~1.H" LongName="e_arraydesc.h" />
 										<File Id="ecom_dispparams.h" Name="ECOM_D~1.H" LongName="ecom_dispparams.h" />
-										<File Id="E_ITypeComp.h" Name="E_ITYP~1.H" LongName="E_ITypeComp.h" />
 										<File Id="E_IStream.h" Name="E_ISTR~1.H" LongName="E_IStream.h" />
 										<File Id="E_funcdesc.h" Name="E_FUNC~1.H" LongName="E_funcdesc.h" />
 										<File Id="ecom_server_rt_globals.h" Name="ECOM_S~1.H" LongName="ecom_server_rt_globals.h" />
-										<File Id="ecom_guid.h" Name="ECOM_G~1.H" LongName="ecom_guid.h" />
-										<File Id="E_typedesc.h" Name="E_TYPE~2.H" LongName="E_typedesc.h" />
 										<File Id="E_bindptr.h" Name="E_BIND~1.H" LongName="E_bindptr.h" />
 										<File Id="E_custdata.h" Name="E_CUST~1.H" LongName="E_custdata.h" />
 										<File Id="eif_com.h" Name="eif_com.h" />
 										<File Id="E_tlib_attr.h" Name="E_TLIB~1.H" LongName="E_tlib_attr.h" />
-										<File Id="E_IEnumSTATSTG.h" Name="E_IENU~1.H" LongName="E_IEnumSTATSTG.h" />
 										<File Id="E_Hresult.h" Name="E_HRES~1.H" LongName="E_Hresult.h" />
 										<File Id="ecom_picture23_impl_proxy.h" Name="ECOM_P~2.H" LongName="ecom_picture23_impl_proxy.h" />
 										<File Id="ecom_ifont_x20.h" Name="ECOM_I~3.H" LongName="ecom_ifont_x20.h" />

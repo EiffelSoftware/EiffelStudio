@@ -3,6 +3,7 @@ remtrace Adding Wix to the path.
 set PATH=%PATH;%@EXECSTR[cd]\wix
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
+set OLD_ISE_LIBRARY=%ISE_LIBRARY
 set INIT_DIR=%@EXECSTR[cd]
 set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
@@ -48,6 +49,7 @@ else
 endiff
 
 set EIFFEL_SRC=%TMP_EIFFEL_SRC
+set ISE_LIBRARY=%TMP_EIFFEL_SRC
 cdd %INIT_DIR
 remtrace Approximative starting time:
 remtrace %_TIME
@@ -69,24 +71,22 @@ endiff
 md %INSTALL_DIR
 cdd %INSTALL_DIR
 remtrace studio
-exprt %DEFAULT_CVS_TAG/Delivery/studio studio
+exprt %DEFAULT_ORIGO_SVN/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %INSTALL_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
-cdd %INSTALL_DIR\studio\help\defaults
-if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
 cdd %INSTALL_DIR
 remtrace build
-exprt %DEFAULT_CVS_TAG/Delivery/build build
+exprt %DEFAULT_ORIGO_SVN/Delivery/build build
 remtrace vision2 tour
-exprt %DEFAULT_CVS_TAG/Delivery/vision2_tour vision2_tour
+exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour
 remtrace eifinit
-exprt %DEFAULT_CVS_TAG/Delivery/eifinit eifinit
+exprt %DEFAULT_ORIGO_SVN/Delivery/eifinit eifinit
 remtrace .NET libraries
-exprt %DEFAULT_CVS_TAG/Src/library.net library.net
+exprt %DEFAULT_ORIGO_SVN/Src/library.net library.net
 remtrace examples
-exprt %DEFAULT_CVS_TAG/Src/examples examples
+exprt %DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
 fullrd eiffeltest
 fullrd math
@@ -125,30 +125,31 @@ remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
-exprt %DEFAULT_CVS_TAG/Delivery/precomp/spec/windows %ISE_PLATFORM
-exprt %DEFAULT_CVS_TAG/Delivery/precomp/spec/dotnet dotnet
+exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/windows %ISE_PLATFORM
+exprt %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet dotnet
 cdd %INSTALL_DIR
 remtrace wizards
-exprt %DEFAULT_CVS_TAG/Delivery/wizards wizards
+exprt %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
 fullrf %INSTALL_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %INSTALL_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
-exprt %DEFAULT_CVS_TAG/Src/C_library C_library
+exprt %DEFAULT_ORIGO_SVN/Src/C_library C_library
 fullrd C_library\.libs
 remtrace Free add ons
-exprt %DEFAULT_CVS_TAG/free_add_ons free_add_ons
+exprt %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 remtrace .NET assemblies
-exprt %DEFAULT_CVS_TAG/Delivery/dotnet dotnet
+exprt %DEFAULT_ORIGO_SVN/Delivery/dotnet dotnet
 remtrace root
-exprt -N %DEFAULT_CVS_TAG/Delivery Delivery
+exprt -N %DEFAULT_ORIGO_SVN/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 
 remtrace Borland files
-tar xfz bcc55.tar.gz >>& %INSTALL_LOG
+exprt %DEFAULT_ISE_SVN/Src/tools/BCC55.tar.gz BCC55.tar.gz
+tar xfz BCC55.tar.gz >>& %INSTALL_LOG
 fullrf BCC55\bin\bcc32.cfg
-fullrf bcc55.tar.gz
+fullrf BCC55.tar.gz
 
 remtrace Create documentation directory
 md docs
@@ -187,6 +188,14 @@ iff not defined NO_COMPILE then
 		remtrace Delete %EIFFEL_SRC
 		fullrd %EIFFEL_SRC
 	endiff
+	safe_md %EIFFEL_SRC
+
+	REM Clean up the files
+	remtrace Update all source files.
+	cdd %EIFFEL_SRC\..
+	co %DEFAULT_ORIGO_SVN/Src %EIFFEL_SRC
+
+	cdd %INIT_DIR
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
@@ -225,16 +234,15 @@ iff not defined NO_COMPILE then
 	fullrf gobo\gobo_33_ise.tgz
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
-	sed -e s/ISE_EIFFEL/INSTALL_DIR/g zad_miner.ace >> new_ace.ace
 	clean_project
-	finalize new_ace.ace
+	finalize zad_miner.acex
 	fff
-	cleanup_eiffel zad_miner.exe
+	cleanup_eiffel zad_miner zad_miner.exe
 	iff not exist zad_miner.exe then
 		echo Couldnt finalize zad_miner.exe.
 		CANCEL
 	endiff
-	fullrf new_ace.ace
+	fullrf new_ace.acex
 	cd ..
 	safe_md binaries
 	move ace\zad_miner.exe binaries

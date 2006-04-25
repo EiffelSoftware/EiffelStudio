@@ -108,9 +108,6 @@
 								<File Id="wel.dsc" Name="wel.dsc" />
 							</Component>
 							<Directory Id="dotnet" Name="dotnet">
-								<Component Id="dotnet" Guid="CAFD9E4C-C65B-4351-A7C2-75191DB047A4">
-									<File Id="install.bat" Name="install.bat" KeyPath="yes" />
-								</Component>
 								<Directory Id="pixmaps12" Name="pixmaps">
 									<Component Id="pixmaps12" Guid="D9B73A03-5048-4DC4-A046-C7FCE1B2D770">
 										<File Id="icon_to_eiffel_color.ico" Name="ICON_T~4.ICO" LongName="icon_to_eiffel_color.ico" KeyPath="yes" />
@@ -143,10 +140,8 @@
 								</Directory>
 								<Directory Id="resources" Name="RESOUR~1" LongName="resources">
 									<Component Id="resources" Guid="B94CC7FC-908D-4EEF-8F46-98C803789C73">
-										<File Id="V102" Name="TEMPLA~2.ACE" LongName="template_ace_with_root_class_none.ace" KeyPath="yes" />
 										<File Id="template_application.e" Name="TEMPLA~1.E" LongName="template_application.e" />
-										<File Id="template_ace.ace" Name="TEMPLA~1.ACE" LongName="template_ace.ace" />
-										<File Id="template_callback_filename" Name="TEMPLA~1" LongName="template_callback_filename" />
+										<File Id="template_config.acex" Name="TEMPLA~1.ACE" LongName="template_config.acex" />
 									</Component>
 								</Directory>
 								<Directory Id="spec11" Name="spec">
@@ -158,26 +153,6 @@
 								</Directory>
 							</Directory>
 							<Directory Id="vision2" Name="vision2">
-								<Directory Id="unix_resources" Name="UNIX_R~1" LongName="unix_resources">
-									<Component Id="unix_resources" Guid="F1FE4124-3142-4018-B8E5-83AE2B49CB67">
-										<File Id="interface_names.e" Name="INTERF~1.E" LongName="interface_names.e" KeyPath="yes" />
-										<File Id="about_dialog.e" Name="ABOUT_~1.E" LongName="about_dialog.e" />
-										<File Id="template_toolbar_init.e" Name="TE9412~1.E" LongName="template_toolbar_init.e" />
-										<File Id="template_statusbar_init.e" Name="TE4CBF~1.E" LongName="template_statusbar_init.e" />
-										<File Id="template_aboutdialog_init.e" Name="TEMPLA~2.E" LongName="template_aboutdialog_init.e" />
-										<File Id="template_menubar_init.e" Name="TEMPLA~4.E" LongName="template_menubar_init.e" />
-										<File Id="template_ace.ace115" Name="TEMPLA~3.ACE" LongName="template_ace.ace" />
-										<File Id="template_menubar_add.e118" Name="TEMPLA~6.E" LongName="template_menubar_add.e" />
-										<File Id="open.png119" Name="open.png" />
-										<File Id="template_menu_help_about_add.e" Name="TE890D~1.E" LongName="template_menu_help_about_add.e" />
-										<File Id="template_toolbar_add.e122" Name="TE5CD2~2.E" LongName="template_toolbar_add.e" />
-										<File Id="template_main_window.e126" Name="TEMPLA~8.E" LongName="template_main_window.e" />
-										<File Id="save.png127" Name="save.png" />
-										<File Id="template_statusbar_add.e129" Name="TECB26~2.E" LongName="template_statusbar_add.e" />
-										<File Id="new.png131" Name="new.png" />
-										<File Id="application.e" Name="APPLIC~1.E" LongName="application.e" />
-									</Component>
-								</Directory>
 								<Directory Id="pixmaps16" Name="pixmaps">
 									<Component Id="pixmaps16" Guid="7642B8EE-9D3E-4524-B3DD-1ABBE8AF35DE">
 										<File Id="Image0010.png" Name="IMAGE0~3.PNG" LongName="Image0010.png" KeyPath="yes" />
@@ -207,7 +182,7 @@
 										<File Id="template_menubar_add.e" Name="TEMPLA~3.E" LongName="template_menubar_add.e" />
 										<File Id="template_aboutdialog_init.e116" Name="TEMPLA~5.E" LongName="template_aboutdialog_init.e" />
 										<File Id="open.png117" Name="open.png" />
-										<File Id="template_ace.ace120" Name="TEMPLA~4.ACE" LongName="template_ace.ace" />
+										<File Id="template_config.acex120" Name="TEMPLA~4.ACE" LongName="template_config.acex" />
 										<File Id="template_toolbar_add.e" Name="TE5CD2~1.E" LongName="template_toolbar_add.e" />
 										<File Id="template_statusbar_add.e" Name="TECB26~1.E" LongName="template_statusbar_add.e" />
 										<File Id="interface_names.e121" Name="INTERF~2.E" LongName="interface_names.e" />
@@ -232,7 +207,7 @@
 							<Directory Id="wel" Name="wel">
 								<Directory Id="resources19" Name="RESOUR~3" LongName="resources">
 									<Component Id="resources19" Guid="D0D33C7B-AFA8-47CE-BFFA-9AA87EC62E96">
-										<File Id="ace.ace" Name="ace.ace" KeyPath="yes" />
+										<File Id="templace_config.acex121" Name="TEMPLA~1.ACE" LongName="template_config.acex" />
 										<File Id="dialog_resource.h" Name="DIALOG~1.H" LongName="dialog_resource.h" />
 										<File Id="frame_template.rc" Name="FRAME_~1.RC" LongName="frame_template.rc" />
 										<File Id="frame_main_window.e" Name="FRAME_~2.E" LongName="frame_main_window.e" />
@@ -718,14 +693,12 @@
 							</Directory>
 						</Directory>
 						<Directory Id="defaults" Name="defaults">
-							<Directory Id="windows9" Name="$(env.ISE_PLATFORM)">
-								<Component Id="windows9" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
-									<File Id="full.cls" Name="full.cls" KeyPath="yes" />
-									<File Id="default.cls" Name="default.cls" />
-									<File Id="default.ace" Name="default.ace" />
-									<File Id="empty.cls" Name="empty.cls" />
-								</Component>
-							</Directory>
+							<Component Id="defaults" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
+								<File Id="full.cls" Name="full.cls" KeyPath="yes" />
+								<File Id="default.cls" Name="default.cls" />
+								<File Id="default.acex" Name="DEFAUL~1.ACE" LongName="default.acex" />
+								<File Id="empty.cls" Name="empty.cls" />
+							</Component>
 						</Directory>
 					</Directory>
 					<Directory Id="spec6" Name="spec">

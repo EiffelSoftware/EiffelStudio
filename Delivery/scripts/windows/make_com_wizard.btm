@@ -1,16 +1,12 @@
-remtrace Retrieve all source files
-cdd %EIFFEL_SRC
-co %DEFAULT_CVS_TAG/Src/com_wizard com_wizard
-
 mkdir %INSTALL_DIR\wizards\com\resources
-copy %EIFFEL_SRC\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\resources
+copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\resources
 
 remtrace Compile the COM wizard
-cdd %EIFFEL_SRC\com_wizard\root
+cdd %EIFFEL_SRC\tools\com_wizard\root
 clean_project
-finalize Ace.ace
+finalize com_wizard.acex
 fff
-cleanup_eiffel com_wizard.exe
+cleanup_eiffel com_wizard com_wizard.exe
 iff not exist com_wizard.exe then
 	echo "Couldnt generate the COM wizard"
 	CANCEL
@@ -19,10 +15,10 @@ move com_wizard.exe %INSTALL_DIR\wizards\com
 clean_project
 
 remtrace Compile COM wizard launcher for GUI mode.
-cdd %EIFFEL_SRC\com_wizard\launcher
-finalize ace.ace
+cdd %EIFFEL_SRC\tools\com_wizard\launcher
+finalize com_wizard_launcher.acex
 fff
-cleanup_eiffel com_wizard_launcher.exe
+cleanup_eiffel com_wizard_launcher com_wizard_launcher.exe
 iff not exist com_wizard_launcher.exe then
 	echo "Couldnt compile com_wizard_launcher.exe"
 	CANCEL

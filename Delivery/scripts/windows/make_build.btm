@@ -1,13 +1,13 @@
 remtrace Compiling EiffelBuild
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
-co %DEFAULT_CVS_TAG/Src/build2 build2
+co %DEFAULT_ORIGO_SVN/Src/build build
 
-cdd %EIFFEL_SRC/build2
+cdd %EIFFEL_SRC/build
 clean_project
-finalize ace.ace
+finalize build.acex
 fff
-cleanup_eiffel build.exe
+cleanup_eiffel build build.exe
 iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild
 	CANCEL

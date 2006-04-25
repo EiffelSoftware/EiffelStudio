@@ -11,22 +11,17 @@ copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer\ace
-finalize metadata_consumer.%ISE_PLATFORM%.ace
+iff not defined WIN64 then
+	sed -e "s/^.*setting name=\"msil_generation\".*$/<setting name=\"msil_generation\" value=\"True\"\/><setting name=\"msil_clr_version\" value=\"v1.0.3705\"\/>/" eiffelsoftware.metadataconsumer.acex >> new
+	move new eiffelsoftware.metadataconsumer.acex
+endiff
+finalize eiffelsoftware.metadataconsumer.acex
 fff
-iff not exist EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll then
+iff not exist EIFGENs\eiffelsoftware.metadataconsumer\F_code\EiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
-copy EIFGEN\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
-cdd %INSTALL_DIR\dotnet\assemblies
-fullrf build.bat
-fullrf System.Object.xml
-fullrf types.xml
-
-remtrace Compiling Fusion Support
-cdd %EIFFEL_SRC\dotnet\VisualStudio\EnvSDK\EiffelPkgs\ISE.VS.FusionSupport
-call nmake
-copy ISE.VS.FusionSupport.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGENs\eiffelsoftware.metadataconsumer\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGENs\eiffelsoftware.metadataconsumer\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
 
 cdd %EIFFEL_SRC

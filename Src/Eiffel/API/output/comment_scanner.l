@@ -16,19 +16,22 @@ create
 
 %}
 %x DOT_FEATURE
+%option nodefault
+
 D		[0-9]
 H		([0-9]|[A-F]|[a-f])
 A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
 C		([^ \t\r\n])
-CS		([^ \t\r\n\.])
+CM		([^ \t\r\n\.])
+CS		([^ \t\r\n\.\{\}[]`\'])
 S		(\{[A-Z]([A-Z]|_|{D})*\})
 
 
 %%
 
 -- Email
-{A}{CS}*{H}@{H}{CS}*(\.{CS}+)*	{
+{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*	{
 				add_email_tokens
 				reset_last_type
 			}
@@ -51,13 +54,13 @@ S		(\{[A-Z]([A-Z]|_|{D})*\})
 			}
 
 -- Cluster
-\[{C}+\]		{
+\[{C}+\]	{
 				add_cluster
 				reset_last_type
 			}
 
--- M
-{CS}|[`~!@#$%^&*()_+-={}[]:;\'\"\|\\<>\?,\.\/]+		{
+-- Word
+{CS}+|[`~!@#$%^&*()_+-={}[]:;\'\"\|\\<>\?,\.\/]+		{
 				add_text (text)
 				reset_last_type
 			}
@@ -81,12 +84,11 @@ S		(\{[A-Z]([A-Z]|_|{D})*\})
 \.{A}{X}*	{
 				add_dot_feature
 			}
-
-[ \n\t\r]	{
+.|\n		{
+				less (0)
 				set_start_condition (INITIAL)
 				reset_last_type
 			}
-
 <<EOF>>		{
 				set_start_condition (INITIAL)
 			}

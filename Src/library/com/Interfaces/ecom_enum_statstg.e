@@ -24,11 +24,11 @@ feature -- Access
 			-- Void if there is no next_item item
 		local
 			l_pointer: POINTER
-			l_count: INTEGER
+			l_count: NATURAL_32
 		do
 			l_pointer := l_pointer.memory_alloc (c_sizeof_statstg)
 			if c_next_item (item, l_pointer, $l_count) = 0 and then l_count = 1 then
-				create Result.make_from_pointer (l_pointer)
+				create Result.make (l_pointer)
 			end
 		end
 
@@ -42,11 +42,11 @@ feature -- Access
 			l_statstg: ECOM_STATSTG
 		do
 			from
-				reset	
-				l_statstg := next_item			
+				reset
+				l_statstg := next_item
 			until
 				l_statstg = Void or Result
-			loop				
+			loop
 				Result := l_statstg.is_same_name (name)
 				if not Result then
 					l_statstg := next_item
@@ -64,11 +64,11 @@ feature -- Access
 			l_statstg: ECOM_STATSTG
 		do
 			from
-				reset	
-				l_statstg := next_item			
+				reset
+				l_statstg := next_item
 			until
 				Result /= Void
-			loop				
+			loop
 				if l_statstg.is_same_name (a_name) then
 					Result := l_statstg.creation_time
 				else
@@ -89,11 +89,11 @@ feature -- Access
 			l_statstg: ECOM_STATSTG
 		do
 			from
-				reset	
-				l_statstg := next_item			
+				reset
+				l_statstg := next_item
 			until
 				Result /= Void
-			loop				
+			loop
 				if l_statstg.is_same_name(a_name) then
 					Result := l_statstg.access_time
 				else
@@ -114,11 +114,11 @@ feature -- Access
 			l_statstg: ECOM_STATSTG
 		do
 			from
-				reset	
-				l_statstg := next_item			
+				reset
+				l_statstg := next_item
 			until
 				Result /= Void
-			loop				
+			loop
 				if l_statstg.is_same_name (a_name) then
 					Result := l_statstg.modification_time
 				else
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	skip (n: NATURAL) is
+	skip (n: NATURAL_32) is
 			-- Skips over `n' items in enumeration sequence.
 		do
 			c_skip (item, n)
@@ -144,45 +144,66 @@ feature -- Basic Operations
 		end
 
 	clone_enum: like Current is
-			-- Creates another enumerator that has 
-			-- same enumeration state as `Current'. 
+			-- Creates another enumerator that has
+			-- same enumeration state as `Current'.
 		local
 			l_pointer: POINTER
 		do
 			c_clone (item, $l_pointer)
 			if l_pointer /= default_pointer then
-				create Result.make_from_pointer (l_pointer)
+				create Result.make (l_pointer)
 			end
+		end
+
+	memory_free is
+			-- Free memory pointed by `item'.
+		do
+			c_release (item)
+			item := default_pointer
 		end
 
 feature {NONE} -- Externals
 
-	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL]): NATURAL is
+	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL_32]): NATURAL_32 is
 		external
 			"C inline use <windows.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->Next (1, (STATSTG*)a_res, (ULONG*)$a_count)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Next ((IEnumSTATSTG*)$a_item, 1, (STATSTG*)$a_res, (ULONG*)$a_count)"
 		end
 
-	c_skip (a_item: POINTER; n: NATURAL) is
+	c_skip (a_item: POINTER; n: NATURAL_32) is
 		external
 			"C inline use <windows.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->Skip ((ULONG*)$n)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG*)$n)"
 		end
 
 	c_reset (a_item: POINTER) is
 		external
 			"C inline use <windows.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->Reset()"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Reset((IEnumSTATSTG*)$a_item)"
 		end
 
 	c_clone (a_item, a_res: POINTER) is
 		external
 			"C inline use <windows.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->Clone ((IEnumSTATSTG**)a_res)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Clone ((IEnumSTATSTG*)$a_item, (IEnumSTATSTG**)$a_res)"
+		end
+
+	c_release (a_item: POINTER) is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Release((IEnumSTATSTG*)$a_item)"
+		end
+
+	c_sizeof_statstg: INTEGER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"sizeof(STATSTG)"
 		end
 
 indexing

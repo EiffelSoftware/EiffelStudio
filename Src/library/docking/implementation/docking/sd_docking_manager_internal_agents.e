@@ -68,7 +68,6 @@ feature  -- Agents
 			end
 			internal_docking_manager.command.remove_auto_hide_zones (False)
 			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
-			internal_docking_manager.query.inner_container_main.set_minimum_size (0, 0)
 			if a_width > 0 then
 				internal_docking_manager.internal_viewport.set_item_width (a_width)
 				internal_docking_manager.fixed_area.set_item_width (internal_docking_manager.query.inner_container_main , internal_docking_manager.fixed_area.width)

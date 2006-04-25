@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Initialize instance.
 		do
 			create events_queue.make (20)
-			create mutex
+			create mutex.make
 			create environment
 			done := True
 		end
@@ -80,7 +80,7 @@ feature -- Basic Operation
 				mutex.unlock
 			end
 		end
-	
+
 	post_event (a_event: EV_THREAD_EVENT) is
 			-- Send `a_event' to GUI thread.
 			-- Used by worker thread to post events.
@@ -91,7 +91,7 @@ feature -- Basic Operation
 			events_queue.put (a_event)
 			mutex.unlock
 		end
-		
+
 feature {NONE} -- Implementation
 
 	mutex: MUTEX
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 
 	events_queue: ARRAYED_QUEUE [EV_THREAD_EVENT]
 			-- Events queue
-	
+
 	environment: EV_ENVIRONMENT
 			-- EiffelVision2 environment, used to access application object
 
@@ -110,11 +110,11 @@ feature {NONE} -- Implementation
 		do
 			job.call ([agent post_event])
 		end
-	
+
 	job: PROCEDURE [ANY, TUPLE [ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]]]
 			-- Job to be executed
 			-- Routine's argument is used to call back GUI thread for event processing.
-	
+
 invariant
 	non_void_events_queue: events_queue /= Void
 	non_void_mutex: mutex /= Void

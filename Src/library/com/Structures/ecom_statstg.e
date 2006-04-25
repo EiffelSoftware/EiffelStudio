@@ -15,7 +15,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	ECOM_STGM
 		export
 			{NONE} all
@@ -54,7 +54,7 @@ feature -- Access
 	type: INTEGER is
 			-- Type of object
 			-- Returns one of the values from the STGTY enumeration.
-			-- See class ECOM_STGTY for values 
+			-- See class ECOM_STGTY for values
 		do
 			Result := c_type (item)
 		ensure
@@ -62,7 +62,7 @@ feature -- Access
 		end
 
 	size: ECOM_ULARGE_INTEGER is
-			-- Size in bytes of stream or byte array. 
+			-- Size in bytes of stream or byte array.
 		do
 			create Result.make_from_pointer (c_size (item))
 		ensure
@@ -70,7 +70,7 @@ feature -- Access
 		end
 
 	modification_time: WEL_FILE_TIME is
-			-- Last modification time 
+			-- Last modification time
 		do
 			create Result.make_by_pointer (c_modification_time (item))
 		ensure
@@ -78,7 +78,7 @@ feature -- Access
 		end
 
 	creation_time: WEL_FILE_TIME is
-			-- Creation time  
+			-- Creation time
 		do
 			create Result.make_by_pointer (c_creation_time (item))
 		ensure
@@ -86,7 +86,7 @@ feature -- Access
 		end
 
 	access_time: WEL_FILE_TIME is
-			-- Last access time 
+			-- Last access time
 		do
 			create Result.make_by_pointer (c_access_time (item))
 		ensure
@@ -94,9 +94,9 @@ feature -- Access
 		end
 
 	mode: INTEGER is
-			-- Access mode specified when the 
-			-- object was opened. 
-			-- See class ECOM_STGM for values 
+			-- Access mode specified when the
+			-- object was opened.
+			-- See class ECOM_STGM for values
 		do
 			Result := c_mode (item)
 		ensure
@@ -104,18 +104,18 @@ feature -- Access
 		end
 
 	locks_supported: INTEGER is
-			-- Types of region locking supported 
-			-- by stream or byte array. See the LOCKTYPES 
-			-- enumeration for the values available. This member 
-			-- is not used for storage objects. 
+			-- Types of region locking supported
+			-- by stream or byte array. See the LOCKTYPES
+			-- enumeration for the values available. This member
+			-- is not used for storage objects.
 		do
 			Result := c_locks_supported (item)
 		end
 
 	clsid: POINTER is
-			-- Class identifier for storage object; 
-			-- set to CLSID_NULL for new storage objects. This member 
-			-- is not used for streams or byte arrays. 
+			-- Class identifier for storage object;
+			-- set to CLSID_NULL for new storage objects. This member
+			-- is not used for streams or byte arrays.
 		do
 			Result := c_clsid (item)
 		end
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 				c_co_task_mem_free (l_pointer)
 			end
 			item.memory_free
-			item = default_pointer
+			item := default_pointer
 		end
 
 feature {NONE} -- Externals
@@ -161,20 +161,12 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->cbSize)"
 		end
 
-	c_type (a_item: like item): POINTER is
+	c_type (a_item: like item): INTEGER is
 			-- Retrieve `type' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
 		alias
-			"((STATSTG*)$a_item)->type"
-		end
-
-	c_modification_time (a_item: like item): POINTER is
-			-- Retrieve pointer on `mtime' field of STATSTG structure
-		external
-			"C inline use <windows.h>"
-		alias
-			"&(((STATSTG*)$a_item)->mtime)"
+			"(EIF_INTEGER)((STATSTG*)$a_item)->type"
 		end
 
 	c_modification_time (a_item: like item): POINTER is
@@ -201,20 +193,20 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->atime)"
 		end
 
-	c_mode (a_item: like item): POINTER is
+	c_mode (a_item: like item): INTEGER is
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
 		alias
-			"((STATSTG*)$a_item)->grfMode"
+			"(EIF_INTEGER)((STATSTG*)$a_item)->grfMode"
 		end
 
-	c_locks_supported (a_item: like item): BOOLEAN is
+	c_locks_supported (a_item: like item): INTEGER is
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
 		alias
-			"(EIF_BOOLEAN)(((STATSTG*)$a_item)->grfLocksSupported)"
+			"(EIF_INTEGER)(((STATSTG*)$a_item)->grfLocksSupported)"
 		end
 
 	c_clsid (a_item: like item): POINTER is

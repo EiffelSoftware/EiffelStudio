@@ -501,7 +501,7 @@ feature -- C output pixmap management
 			-- Stop timer to draw pixmap animation on c output panel
 		do
 			c_output_pixmap_timer.set_interval (0)
-			draw_pixmap_on_tab (c_output_panel_tab, Void)
+			draw_pixmap_on_tab (c_output_panel_tab, icon_compiling[icon_compiling.count])
 		end
 
 	c_output_timer_counter: INTEGER

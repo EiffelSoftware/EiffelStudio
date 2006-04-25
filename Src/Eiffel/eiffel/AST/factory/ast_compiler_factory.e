@@ -22,8 +22,7 @@ inherit
 			new_integer_as,
 			new_integer_hexa_as,
 			new_external_lang_as,
-			validate_integer_real_type,
-			new_line_pragma
+			validate_integer_real_type
 		end
 
 	PREDEFINED_NAMES
@@ -272,13 +271,6 @@ feature -- Access
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
 			end
-		end
-
-	new_line_pragma (a_scn: EIFFEL_SCANNER): BREAK_AS is
-			-- New line pragma
-			--| Keep entire line, actual processing will be done later if we need it.
-		do
-			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
 feature {NONE} -- Validation

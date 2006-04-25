@@ -178,10 +178,7 @@ feature -- Access
 			-- New line pragma
 			--| Keep entire line, actual processing will be done later if we need it.
 		do
-			match_list_count := match_list_count + 1
 			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			Result.set_index (match_list_count)
-			extend_match_list (Result)
 		end
 
 feature -- Number AST creation

@@ -4,10 +4,24 @@
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-		<file_rule>
-			<exclude>/\.svn</exclude>
-		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
-		<cluster name="event" location="."/>
+		<cluster name="event" location=".">
+			<condition><platform excluded_value="windows"/></condition>
+		</cluster>
+		<external_include location="$(ISE_LIBRARY)/library/event/Clib">
+			<condition><platform excluded_value="windows"/></condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)/library/event/spec/$(ISE_PLATFORM)/lib/MTio_watcher.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<multithreaded value="True"/>
+			</condition>
+		</external_object>
 	</target>
 </system>

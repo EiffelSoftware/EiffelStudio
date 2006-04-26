@@ -42,7 +42,7 @@ alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
 REM Clean exit
-alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & set ISE_LIBRARY=%OLD_ISE_LIBRARY & set ISE_SRC=%OLD_ISE_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & end iff & *cancel`
+alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & set ISE_LIBRARY=%OLD_ISE_LIBRARY & set ISE_SRC=%OLD_ISE_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
 
 REM CVS Commands: checkout, export
 alias co `call svn co %$ >>& %INSTALL_LOG`

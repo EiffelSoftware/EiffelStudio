@@ -9,8 +9,12 @@
 		</file_rule>
 
     <library name="base" location="$ISE_LIBRARY\library\base\base.acex" readonly="true"/>
-    <library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true"/>
-    <library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true"/>
+    <library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex" readonly="true">
+		<condition><custom name="batch_preferences" excluded_value="true"/></condition>
+	</library>
+    <library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex" readonly="true">
+		<condition><custom name="batch_preferences" excluded_value="true"/></condition>
+	</library>
     <library name="gobo" location="$ISE_LIBRARY\library\gobo.acex" readonly="true"/>
     
     <cluster name="interface" location="interface" recursive="true"/>

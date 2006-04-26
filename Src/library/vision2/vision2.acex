@@ -13,6 +13,10 @@
 			<exclude>/obsolete$</exclude>
 		</file_rule>
 		<external_include location="$(ISE_LIBRARY)\library\vision2\spec\include">
+			<condition><platform value="windows"/></condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/vision2/spec/include">
+			<condition><platform excluded_value="windows"/></condition>
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`">
 			<condition><platform excluded_value="windows"/></condition>

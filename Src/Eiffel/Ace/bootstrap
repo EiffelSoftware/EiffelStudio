@@ -11,7 +11,7 @@
 #           improved the performance of the compiler.
 
 # Remove old compilations
-\rm -rf EIFGEN
+\rm -rf EIFGENs
 \rm -f ec_stage1
 \rm -f ec_stage2
 \rm -f ec_stage3
@@ -19,42 +19,42 @@
 \rm -rf F_code_stage2
 \rm -rf F_code_stage3
 
-#set ace = "batch.unix.ace"
-set ace = "newbench.linux.ace"
+set target = "batch"
+#set target = "bench"
 
 #First stage of bootstrap
-(time ec -finalize -ace $ace -batch >& e_comp1 )>> e_comp1
-cd EIFGEN/F_code
-(time finish_freezing >& ../../c_comp1 )>> ../../c_comp1
+(time ec -finalize -config ec.acex -target $target -batch -clean >& e_comp1 )>> e_comp1
+cd EIFGENs/$target/F_code
+(time finish_freezing >& ../../../c_comp1 )>> ../../../c_comp1
 strip ec
-mv ec ../../ec_stage1
+mv ec ../../../ec_stage1
 cd ..
-mv F_code ../F_code_stage1
-cd ..
+mv F_code ../../F_code_stage1
+cd ../..
 
 #If first stage succeeded, let's go for Second stage of bootstrap
 if ( -e ec_stage1 ) then
-	\rm -rf EIFGEN
-	(time ./ec_stage1 -finalize -ace $ace -batch >& e_comp2 )>> e_comp2
-	cd EIFGEN/F_code
-	(time finish_freezing >& ../../c_comp2)>> ../../c_comp2
+	\rm -rf EIFGENs
+	(time ./ec_stage1 -finalize -config ec.acex -target $target -batch -clean >& e_comp2 )>> e_comp2
+	cd EIFGENs/$target/F_code
+	(time finish_freezing >& ../../../c_comp2)>> ../../../c_comp2
 	strip ec
-	mv ec ../../ec_stage2
+	mv ec ../../../ec_stage2
 	cd ..
-	mv F_code ../F_code_stage2
-	cd ..
+	mv F_code ../../F_code_stage2
+	cd ../..
 
 	#if second stage succeeded, let's go for Third and final stage of bootstrap
-	if ( -e ec_stage2) then
-		\rm -rf EIFGEN
-		(time ./ec_stage2 -finalize -ace $ace -batch >& e_comp3 )>> e_comp3
-		cd EIFGEN/F_code
-		(time finish_freezing >& ../../c_comp3)>> ../../c_comp3
+	if ( -e ec_stage2 ) then
+		\rm -rf EIFGENs
+		(time ./ec_stage2 -finalize -config ec.acex -target $target -batch -clean >& e_comp3 )>> e_comp3
+		cd EIFGENs/$target/F_code
+		(time finish_freezing >& ../../../c_comp3)>> ../../../c_comp3
 		strip ec
-		mv ec ../../ec_stage3
+		mv ec ../../../ec_stage3
 		cd ..
-		mv F_code ../F_code_stage3
-		cd ..
+		mv F_code ../../F_code_stage3
+		cd ../..
 	endif
 
 endif

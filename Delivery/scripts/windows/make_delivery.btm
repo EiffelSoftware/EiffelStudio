@@ -4,6 +4,7 @@ set PATH=%PATH;%@EXECSTR[cd]\wix
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set OLD_ISE_LIBRARY=%ISE_LIBRARY
+set OLD_ISE_SRC=%ISE_SRC
 set INIT_DIR=%@EXECSTR[cd]
 set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
@@ -50,6 +51,7 @@ endiff
 
 set EIFFEL_SRC=%TMP_EIFFEL_SRC
 set ISE_LIBRARY=%TMP_EIFFEL_SRC
+set ISE_SRC=%TMP_EIFFEL_SRC
 cdd %INIT_DIR
 remtrace Approximative starting time:
 remtrace %_TIME

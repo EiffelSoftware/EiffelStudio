@@ -12,7 +12,7 @@
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
 		</file_rule>
-		<external_include location="$ISE_LIBRARY\library\vision2\spec\include">
+		<external_include location="$(ISE_LIBRARY)\library\vision2\spec\include">
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`">
 			<condition><platform excluded_value="windows"/></condition>
@@ -26,16 +26,16 @@
 				<multithreaded value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\vision2.lib">
+		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\vision2.lib">
 			<condition>
 				<platform value="windows"/>
 				<multithreaded value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\zlib.lib">
+		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\zlib.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
-		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib">
+		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\lib\libpng.lib">
 		<condition><platform value="windows"/></condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.acex" readonly="true"/>

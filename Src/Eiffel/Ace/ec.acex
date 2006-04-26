@@ -9,58 +9,46 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<external_include location="$EIFFEL_SRC/C/bench">
+		<external_include location="$(EIFFEL_SRC)/C/bench">
 			<condition><platform excluded_value="windows"/></condition>
 		</external_include>
-		<external_include location="$EIFFEL_SRC/C/platform">
+		<external_include location="$(EIFFEL_SRC)/C/platform">
 			<condition><platform excluded_value="windows"/></condition>
 		</external_include>
-		<external_include location="$EIFFEL_SRC\C\bench">
+		<external_include location="$(EIFFEL_SRC)\C\bench">
 			<condition><platform value="windows"/></condition>
 		</external_include>
-		<external_include location="$EIFFEL_SRC\C\platform">
+		<external_include location="$(EIFFEL_SRC)\C\platform">
 			<condition><platform value="windows"/></condition>
 		</external_include>
-		<external_include location="$EIFFEL_SRC\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+		<external_include location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
 			<condition><platform value="windows"/></condition>
 		</external_include>
-		<external_object location="$EIFFEL_SRC/C/bench/libmtcompiler.a">
+		<external_object location="$(EIFFEL_SRC)/C/bench/libmtcompiler.a">
 			<condition><platform excluded_value="windows"/><build value="finalize"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC/C/bench/libmtwcompiler.a">
+		<external_object location="$(EIFFEL_SRC)/C/bench/libmtwcompiler.a">
 			<condition><platform excluded_value="windows"/><build value="workbench"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC/C/platform/libplatform.a">
+		<external_object location="$(EIFFEL_SRC)/C/platform/libplatform.a">
 			<condition><platform excluded_value="windows"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtcompiler.lib">
+		<external_object location="$(EIFFEL_SRC)\C\bench\mtcompiler.lib">
 			<condition><platform value="windows"/><build value="finalize"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\bench\mtwcompiler.lib">
+		<external_object location="$(EIFFEL_SRC)\C\bench\mtwcompiler.lib">
 			<condition><platform value="windows"/><build value="workbench"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\platform\platform.lib">
+		<external_object location="$(EIFFEL_SRC)\C\platform\platform.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
 
-		<library name="base" location="$ISE_LIBRARY\library\base\base.acex">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-		</library>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-		</library>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-		</library>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo.acex"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.acex"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.acex"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.acex"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.acex"/>
@@ -126,6 +114,7 @@
 			<debug name="xml_parser" enabled="false"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
 		</option>
+		<variable name="batch_preferences" value="true"/>
 		<setting name="address_expression" value="False"/>
 		<setting name="array_optimization" value="False"/>
 		<setting name="check_vape" value="True"/>
@@ -371,33 +360,29 @@
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition><platform excluded_value="windows"/><build value="workbench"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC/C/ipc/ewb/libmtewb.a">
+		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtewb.a">
 			<condition><platform excluded_value="windows"/><build value="finalize"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC/C/ipc/shared/libipc.a">
+		<external_object location="$(EIFFEL_SRC)/C/ipc/shared/libipc.a">
 			<condition><platform excluded_value="windows"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtwewb.lib">
+		<external_object location="$(EIFFEL_SRC)\C\ipc\ewb\mtwewb.lib">
 			<condition><platform value="windows"/><build value="workbench"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\ipc\ewb\mtewb.lib">
+		<external_object location="$(EIFFEL_SRC)\C\ipc\ewb\mtewb.lib">
 			<condition><platform value="windows"/><build value="finalize"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\C\ipc\shared\ipc.lib">
+		<external_object location="$(EIFFEL_SRC)\C\ipc\shared\ipc.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
 		<external_object location="htmlhelp.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
-		<external_object location="$EIFFEL_SRC\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
+		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
 			<condition><platform value="windows"/></condition>
 		</external_object>
 
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex">
-			<option>
-				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
-		</library>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.acex"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.acex"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.acex"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.acex"/>

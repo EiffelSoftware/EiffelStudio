@@ -25,7 +25,8 @@ feature {NONE} -- Initlization
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive := True
 			is_displayed := True
-			description := "SD_TOOL_BAR_SEPARATOR"
+			description := generating_type
+			name := generating_type
 			create l_shared
 			pixmap := l_shared.icons.default_icon
 		end
@@ -52,12 +53,15 @@ feature -- Redefine Agents
 		do
 		end
 
-feature -- Redefine querys
-
-	is_need_redraw: BOOLEAN is
+	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER) is
 			-- Redefine
 		do
+			if rectangle.has_x_y (a_relative_x, a_relative_y) then
+				tool_bar.remove_tooltip
+			end
 		end
+
+feature -- Redefine querys
 
 	width: INTEGER is 6
 			-- Redefine
@@ -78,4 +82,11 @@ feature -- Redefine querys
 			end
 		end
 
+feature {SD_TOOL_BAR} -- Pick and drop issues.
+
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
+			-- Update for pick and drop
+		do
+			-- Separator do nothing.
+		end
 end

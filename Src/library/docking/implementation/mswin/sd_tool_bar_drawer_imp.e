@@ -222,19 +222,30 @@ feature {NONE} -- Implementation
 			l_wel_bitmap, l_mask_bitmap: WEL_BITMAP
 			l_coordinate: EV_COORDINATE
 			l_button: SD_TOOL_BAR_BUTTON
+			l_orignal_pixmap, l_grey_pixmap: EV_PIXMAP
 		do
 			l_button ?= a_arguments.item
 			if l_button /= Void and then l_button.pixmap /= Void then
-				l_pixmap_state ?= l_button.pixmap.implementation
+				if not a_arguments.item.is_sensitive then
+					l_orignal_pixmap := a_arguments.item.pixmap
+					l_grey_pixmap := l_orignal_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal_pixmap.width, l_orignal_pixmap.height))
+					desatuation (l_grey_pixmap, 0.8)
+					l_pixmap_state ?= l_grey_pixmap.implementation
+				else
+					l_pixmap_state ?= l_button.pixmap.implementation
+				end
+
 				check not_void: l_pixmap_state /= Void end
 				l_wel_bitmap := l_pixmap_state.get_bitmap
-				l_wel_bitmap.decrement_reference
+
 				if l_pixmap_state.has_mask then
 					l_mask_bitmap := l_pixmap_state.get_mask_bitmap
 				end
 				l_coordinate := l_button.pixmap_position
-				theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, a_arguments.item.is_sensitive)
 
+				theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
+
+				l_wel_bitmap.decrement_reference
 				if l_mask_bitmap /= Void then
 					l_mask_bitmap.decrement_reference
 				end
@@ -293,6 +304,46 @@ feature {NONE} -- Implementation
 		ensure
 			valid: Result = {WEL_THEME_PART_CONSTANTS}.tp_button or Result = {WEL_THEME_PART_CONSTANTS}.tp_separatorvert
 				or Result = {WEL_THEME_PART_CONSTANTS}.tp_separator
+		end
+
+	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+			-- Desatuation `a_pixmap' with `a_k'.
+		local
+			l_intensity: REAL
+			l_wel_dc: WEL_MEMORY_DC
+			l_bitmap_imp: EV_PIXMAP_IMP_STATE
+			l_width_count, l_height_count, l_width, l_height: INTEGER
+			l_wel_color,l_new_color: WEL_COLOR_REF
+		do
+			l_bitmap_imp ?= a_pixmap.implementation
+			check not_void: l_bitmap_imp /= Void end
+			create l_wel_dc.make
+			l_wel_dc.select_bitmap (l_bitmap_imp.get_bitmap)
+
+			from
+				l_width := a_pixmap.width
+				l_height := a_pixmap.height
+			until
+				l_width_count >= l_width
+			loop
+				from
+					l_height_count := 0
+				until
+					l_height_count >= l_height
+				loop
+					l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
+					l_intensity := 0.3 * l_wel_color.red + 0.59 * l_wel_color.green + 0.11 * l_wel_color.blue
+					create l_new_color.make_rgb (
+										(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
+										(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,
+										(l_intensity * a_k + l_wel_color.blue * (1 - a_k)).rounded)
+					l_wel_dc.set_pixel (l_width_count, l_height_count, l_new_color)
+
+					l_height_count := l_height_count + 1
+				end
+				l_width_count := l_width_count + 1
+			end
+			l_wel_dc.delete
 		end
 
 invariant

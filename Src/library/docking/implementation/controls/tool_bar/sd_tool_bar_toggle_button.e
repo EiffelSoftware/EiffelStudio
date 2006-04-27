@@ -27,12 +27,36 @@ feature {NONE} -- Initlization
 			last_state := state
 		end
 
+feature -- Query
+
+	is_selected: BOOLEAN is
+			-- If current selected?
+		do
+			Result := state = {SD_TOOL_BAR_ITEM_STATE}.checked
+		end
+
+feature -- Command
+
+	enable_select is
+			-- Enable select.
+		do
+			state := {SD_TOOL_BAR_ITEM_STATE}.checked
+			update
+		end
+
+	disable_select is
+			-- Disable select
+		do
+			state := {SD_TOOL_BAR_ITEM_STATE}.normal
+			update
+		end
+
 feature {NONE} -- Agents
 
 	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer press actions.
 		do
-			if has_position (a_relative_x, a_relative_y) then
+			if has_position (a_relative_x, a_relative_y) and is_sensitive then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.hot then
 					last_state := state
 				elseif state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked  then
@@ -66,7 +90,7 @@ feature {NONE} -- Agents
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer motion actions.
 		do
-			if has_position (a_relative_x, a_relative_y) then
+			if has_position (a_relative_x, a_relative_y) and is_sensitive then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.normal then
 					state := {SD_TOOL_BAR_ITEM_STATE}.hot
 					is_need_redraw := True

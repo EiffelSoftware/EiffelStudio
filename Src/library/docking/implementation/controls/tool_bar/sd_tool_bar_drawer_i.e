@@ -39,6 +39,14 @@ feature -- Commands
 			valid: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
 		deferred
 		end
+	
+	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+			-- Desatuation `a_pixmap' with `a_k'.
+		require
+			valid: 0 < a_k  and a_k < 1
+			not_void: a_pixmap /= Void
+		deferred
+		end
 
 feature -- Query
 

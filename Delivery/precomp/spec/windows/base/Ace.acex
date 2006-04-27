@@ -3,7 +3,7 @@
 	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="base" uuid="6d7ff712-bba5-4ac0-aabf-2d9880493a01" library_target="base">
+	 name="base" uuid="365C35FB-5C60-4b6e-A523-B5A163C5DCF8" library_target="base">
 	<target name="base">
 		<description>Base library</description>
 		<root class="ANY" all_classes="false"/>

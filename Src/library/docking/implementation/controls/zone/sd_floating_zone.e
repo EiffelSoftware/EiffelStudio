@@ -374,7 +374,7 @@ feature {NONE} -- Agents
 					internal_docking_manager.property.set_last_focus_content (l_zones.first.content)
 				end
 			else
-				l_last_zone.set_title_bar_selection_color (True)
+				l_last_zone.set_focus_color (True)
 			end
 			internal_title_bar.enable_focus_color
 		end

@@ -17,7 +17,7 @@ inherit
 			on_normal_max_window,
 			is_maximized,
 			set_max,
-			set_title_bar_selection_color,
+			set_focus_color,
 			set_non_focus_selection_color
 		end
 
@@ -192,7 +192,7 @@ feature -- Command
 			internal_title_bar.set_max (a_max)
 		end
 
-	set_title_bar_selection_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN) is
 			-- Redefine
 		do
 			if a_selection then

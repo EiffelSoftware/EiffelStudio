@@ -182,9 +182,9 @@ feature {NONE} -- Implementation
 			l_zone ?= a_widget
 			if l_zone /= Void then
 				if internal_docking_manager.property.last_focus_content /= Void and then l_zone.has (internal_docking_manager.property.last_focus_content) then
-					l_zone.set_title_bar_selection_color (True)
+					l_zone.set_focus_color (True)
 				else
-					l_zone.set_title_bar_selection_color (False)
+					l_zone.set_focus_color (False)
 				end
 			end
 
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			if l_temp_spliter /= Void and l_temp_spliter.full then
 				-- There should by only one, because Postorder, so NO recursive needed.
 				-- The split area must full, because Postorder recursive.
-				
+
 				-- FIXIT: following If cluse if for GTK, on MsWin is not needed.
 					if l_spliter_position < l_temp_spliter.minimum_split_position then
 						l_spliter_position := l_temp_spliter.minimum_split_position

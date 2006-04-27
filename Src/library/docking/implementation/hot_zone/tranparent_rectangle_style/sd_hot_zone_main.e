@@ -80,6 +80,7 @@ feature  -- Redefine
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 			l_caller: SD_ZONE
+			l_left: INTEGER
 		do
 			l_caller := internal_mediator.caller
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
@@ -104,13 +105,25 @@ feature  -- Redefine
 			end
 
 			l_floating_zone ?= l_caller
-			if not Result and  l_floating_zone = Void then
-				debug ("docking")
-					io.put_string ("%N caller: " + l_caller.out)
+--			debug ("docking")
+				print ("%N SD_HOT_ZONE_MAIN apply change Manu. Result: " + Result.out)
+--			end
+			if not Result then
+				l_left := a_screen_x - internal_mediator.offset_x
+				l_left := left_position (a_screen_x, l_left, l_caller.state.last_floating_width)
+				if l_floating_zone = Void then
+					l_caller.state.float (l_left, a_screen_y - internal_mediator.offset_y)
+				else
+					l_floating_zone.set_position (l_left, a_screen_y - internal_mediator.offset_y)
 				end
-				l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
+--				debug ("docking")
+					print ("%N SD_HOT_ZONE_MAIN apply changed l_floating_zone Void?  " + (l_floating_zone = Void).out)
+--				end
 				Result := True
 			end
+--			debug ("docking")
+				print ("%N SD_HOT_ZONE_MAIN apply changed Manu end")
+--			end
 		ensure then
 			must_process: Result = True
 		end
@@ -121,6 +134,7 @@ feature  -- Redefine
 			l_rect: EV_RECTANGLE
 			l_floating_zone: SD_FLOATING_ZONE
 			l_width, l_height: INTEGER
+			l_left: INTEGER
 		do
 			l_rect := internal_docking_manager.query.container_rectangle_screen
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
@@ -136,11 +150,20 @@ feature  -- Redefine
 				if l_floating_zone = Void then
 					l_width := internal_mediator.caller.state.last_floating_width
 					l_height := internal_mediator.caller.state.last_floating_height
+					debug ("docking")
+						print ("%N SD_HOT_ZONE_MAIN update_for_feedback 1 l_width: " + l_width.out)
+					end
 				else
 					l_width := l_floating_zone.width
 					l_height := l_floating_zone.height
+					debug ("docking")
+						print ("%N SD_HOT_ZONE_MAIN update_for_feedback 2 l_width: " + l_width.out)
+					end
 				end
-				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, l_width, l_height)
+
+				l_left := a_screen_x - internal_mediator.offset_x
+				l_left := left_position (a_screen_x, l_left, l_width)
+				internal_shared.feedback.draw_transparency_rectangle (l_left, a_screen_y - internal_mediator.offset_y, l_width, l_height)
 			end
 
 		ensure then
@@ -190,10 +213,18 @@ feature  -- Redefine
 	clear_indicator is
 			-- Redefine
 		do
-			top_indicator.destroy
-			bottom_indicator.destroy
-			left_indicator.destroy
-			right_indicator.destroy
+			if top_indicator.exists then
+				top_indicator.destroy
+			end
+			if bottom_indicator.exists then
+				bottom_indicator.destroy
+			end
+			if left_indicator.exists then
+				left_indicator.destroy
+			end
+			if right_indicator.exists then
+				right_indicator.destroy
+			end
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -205,6 +236,24 @@ feature  -- Redefine
 		end
 
 feature {NONE} -- Implementation
+
+	left_position (a_pointer_screen_x: INTEGER; a_feedback_screen_left: INTEGER; a_feedback_width: INTEGER): INTEGER is
+			-- If pointer dragging position out of feedback rect right side, we recalculate left position.
+		do
+			if a_pointer_screen_x > a_feedback_screen_left + a_feedback_width then
+				if last_offset_x = 0 then
+					last_offset_x := (Result - a_pointer_screen_x) \\ a_feedback_width
+				end
+				Result :=  last_offset_x + a_pointer_screen_x
+			else
+				Result := a_feedback_screen_left
+			end
+		ensure
+			not_out_of_right_side: Result <= a_pointer_screen_x + a_feedback_width
+		end
+
+	last_offset_x: INTEGER
+			-- Last offset position.
 
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- Areas which contain four indicator.

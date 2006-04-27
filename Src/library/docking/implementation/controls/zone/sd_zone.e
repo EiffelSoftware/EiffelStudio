@@ -111,6 +111,26 @@ feature -- Command
 		do
 		end
 
+	set_last_floating_width (a_width: INTEGER) is
+			-- Set `last_floating_width' of zone's state.
+		require
+			vaild: a_width >= 0
+		do
+			content.state.set_last_floating_width (a_width)
+		ensure
+			set: content.state.last_floating_width = a_width
+		end
+
+	set_last_floating_height (a_height: INTEGER) is
+			-- Set `last_floating_height' of a zone's state
+		require
+			valid: a_height >= 0
+		do
+			content.state.set_last_floating_height (a_height)
+		ensure
+			set: content.state.last_floating_height = a_height
+		end
+
 feature -- Query
 
 	state: SD_STATE is

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
 	<target name="base">
-		<description>Base library</description>
+		<description>EiffelBase: Library of reusable components for Eiffel.
+Copyright (c) 1984-2006, Eiffel Software and others.
+Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>

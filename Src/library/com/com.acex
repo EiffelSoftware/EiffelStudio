@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="com" uuid="A74DD1D0-3090-490f-99DC-E791CC31CF30" library_target="com">
 	<target name="com">
-		<description>Com library</description>
+		<description>Com library: Reusing/Creating COM components in Eiffel.
+Copyright (c) 1984-2006, Eiffel Software and others.
+Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>

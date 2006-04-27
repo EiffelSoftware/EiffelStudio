@@ -5,11 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SD_NOTEBOOK_TAB_STYLE_NORMAL
-
-create
-	make
+deferred class
+	SD_NOTEBOOK_TAB_DRAWER_I
 
 feature {NONE} -- Initlization
 
@@ -31,133 +28,18 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	expose_unselected (a_width: INTEGER; a_selected_tab_after: BOOLEAN) is
-			-- Draw current when unselected.
+	expose_unselected (a_width: INTEGER; a_tab_before, a_tab_after: BOOLEAN) is
+			-- Draw tabs when unselected.
 		require
 			setted: pixmap /= Void
-		local
-			l_helper: SD_COLOR_HELPER
-		do
-			internal_drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).default_background_color)
-			-- Draw gap
-			if internal_draw_border_at_top then
-				internal_drawing_area.fill_rectangle (0, 0, width, gap_height)
-			else
-				internal_drawing_area.fill_rectangle (0, height - gap_height - 1, width, gap_height)
-			end
-			internal_drawing_area.set_foreground_color (internal_shared.border_color)
-			create l_helper
-
-			if internal_draw_border_at_top then
-				-- Draw ________
-				internal_drawing_area.draw_segment (0, gap_height, width, gap_height)
-				-- Draw pixmap
-				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				-- Draw end |
-				if a_selected_tab_after then
-					internal_drawing_area.draw_segment (width - 1, gap_height - 1, width - 1, height)
-				else
-					internal_drawing_area.draw_segment (width - 1, gap_height + 1, width - 1, height - 1)
-				end
-				internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_shared.non_focused_color_lightness))
-				internal_drawing_area.draw_text_top_left (start_x_text_internal, gap_height, text)
-			else
-				-- Draw ________
-				internal_drawing_area.draw_segment (0, height - gap_height - 1, width, height - gap_height - 1)
-				-- Draw pixmap
-				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
-				-- Draw end |
-				if a_selected_tab_after then
-					internal_drawing_area.draw_segment (width - 1, 0, width - 1, height - gap_height)
-				else
-					internal_drawing_area.draw_segment (width - 1, 0, width - 1, height - gap_height - 1)
-				end
-				-- Draw text
-				internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_shared.non_focused_color_lightness))
-				internal_drawing_area.draw_text_top_left (start_x_text_internal, 0, text)
-			end
+		deferred
 		end
 
-	expose_selected (a_width: INTEGER) is
-			-- Handle draw selected events.
+	expose_selected (a_width: INTEGER; a_tab_before, a_tab_after: BOOLEAN) is
+			-- Handle tabs when selected.
 		require
 			setted: pixmap /= Void
-		local
-			l_helper: SD_COLOR_HELPER
-			l_rect: EV_RECTANGLE
-			l_start_x: INTEGER
-		do
-			if internal_drawing_area.height > 0 then
-
-				create l_helper
-
-				if internal_draw_border_at_top then
-						l_start_x := a_width - internal_shared.highlight_tail_width
-						if l_start_x < 0 then
-							l_start_x := 0
-						end
-					if internal_drawing_area.width - start_x_tail_internal > 0 then
-
-						create l_rect.make (l_start_x, gap_height - 1, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height + 1)
-					end
-				else
-					if internal_drawing_area.width - start_x_tail_internal > 0  then
-						l_start_x := a_width - internal_shared.highlight_tail_width
-						if l_start_x < 0 then
-							l_start_x := 0
-						end
-						-- FIXIT: On linux, internal_drawing_area.height's value may be only 1 sometime. But actually is not 1 at that time.
-						if internal_drawing_area.height - gap_height >= 0 then
-							create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, internal_drawing_area.height - gap_height)
-						else
-							create l_rect.make (l_start_x, 0, internal_drawing_area.width - start_x_tail_internal, 0)
-						end
-					end
-				end
-				if l_rect /= Void then
-					l_helper.draw_color_change_gradually_in_area (internal_drawing_area, l_rect, internal_drawing_area.background_color, internal_shared.non_focused_color)
-				end
-				internal_drawing_area.set_foreground_color (internal_shared.non_focused_color_lightness)
-				if internal_draw_border_at_top then
-					internal_drawing_area.draw_segment (0, 0, width, 0)
-				else
-					internal_drawing_area.draw_segment (0, height - 1, width, height - 1)
-				end
-
-				internal_drawing_area.set_foreground_color (internal_shared.border_color)
-				-- Draw | at end
-				if internal_draw_border_at_top then
-					internal_drawing_area.draw_segment (a_width - 1, 1, a_width - 1, height)
-				else
-					internal_drawing_area.draw_segment (a_width - 1, 0, a_width - 1, height - 2)
-				end
-
-				if internal_draw_border_at_top then
-					-- Draw top ________
-					internal_drawing_area.draw_segment (0, gap_height - 1, width, gap_height - 1)
-				else
-					internal_drawing_area.draw_segment (0, height - gap_height, width, height - gap_height)
-				end
-
-				-- Draw text
-				internal_drawing_area.set_foreground_color (l_helper.text_color_by (internal_drawing_area.background_color))
-				if a_width - start_x_text_internal >= 0 then
-					if internal_draw_border_at_top then
-						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
-					else
-						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
-					end
-				end
-				-- Draw pixmap
-				if is_draw_pixmap then
-					if internal_draw_border_at_top then
-						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
-					else
-						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
-					end
-				end
-			end
-
+		deferred
 		end
 
 feature -- Properties
@@ -324,6 +206,46 @@ feature -- Size issues
 			-- Start y position of drawing a pixmap.
 
 feature {NONE} -- Implementation
+
+	draw_pixmap_text_unselected (a_width: INTEGER) is
+			-- Draw pixmap and text when unselected.
+		do
+			internal_drawing_area.set_foreground_color (internal_shared.tab_text_color)
+			if internal_draw_border_at_top then
+				-- Draw pixmap
+				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				internal_drawing_area.draw_text_top_left (start_x_text_internal, gap_height, text)
+			else
+				-- Draw pixmap
+				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
+				-- Draw text
+				internal_drawing_area.draw_text_top_left (start_x_text_internal, 0, text)
+			end
+		end
+
+	draw_pixmap_text_selected (a_width: INTEGER) is
+			-- Draw pixmap and text when selected.
+		do
+			if internal_drawing_area.height > 0 then
+				-- Draw text
+				internal_drawing_area.set_foreground_color (internal_shared.tab_text_color)
+				if a_width - start_x_text_internal >= 0 then
+					if internal_draw_border_at_top then
+						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+					else
+						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+					end
+				end
+				-- Draw pixmap
+				if is_draw_pixmap then
+					if internal_draw_border_at_top then
+						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
+					else
+						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
+					end
+				end
+			end
+		end
 
 	internal_draw_border_at_top: BOOLEAN
 			-- If Current draw border at top?

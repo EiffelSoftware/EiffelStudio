@@ -10,7 +10,7 @@ class
 
 inherit
 	SD_HOT_ZONE
-		
+
 		redefine
 			has_x_y,
 			internal_zone
@@ -120,7 +120,9 @@ feature -- Redefine
 	clear_indicator is
 			-- Clear indicators.
 		do
-			internal_indicator.destroy
+			if internal_indicator.exists then
+				internal_indicator.destroy
+			end
 		end
 
 feature {NONE} -- Implementation functions.

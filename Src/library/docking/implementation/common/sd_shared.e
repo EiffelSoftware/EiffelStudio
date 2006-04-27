@@ -8,6 +8,9 @@ indexing
 class
 	SD_SHARED
 
+inherit
+	REFACTORING_HELPER
+
 feature -- Access
 
 	icons: SD_ICONS_SINGLETON is
@@ -195,6 +198,16 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
+	tab_text_color: EV_COLOR is
+			-- Text color
+		local
+			l_sys_color: SD_SYSTEM_COLOR
+		once
+			to_implement ("if theme changed .... We should change color. theme_change actions in EV_APPLICATION")
+			create {SD_SYSTEM_COLOR_IMP} l_sys_color.make
+			Result := l_sys_color.button_text_color
+		end
+
 	tool_tip_color: EV_COLOR is
 			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
 		local
@@ -300,10 +313,10 @@ feature -- Constants
 			Result := 10
 		end
 
-	Default_floating_window_width: INTEGER is 300
+	Default_floating_window_width: INTEGER is 470
 			-- Default floating window width.
 
-	Default_floating_window_height: INTEGER is 300
+	Default_floating_window_height: INTEGER is 280
 			-- Default floating window height.
 
 	Default_docking_height_rate: REAL is 0.25

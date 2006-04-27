@@ -14,7 +14,9 @@ inherit
 			on_focus_in,
 			on_focus_out,
 			is_maximized,
-			set_max
+			set_max,
+			set_focus_color,
+			set_non_focus_selection_color
 		end
 
 create
@@ -104,6 +106,22 @@ feature -- Redefine
 			-- Refedine
 		do
 			Result := internal_notebook.tab_area
+		end
+
+	set_focus_color (a_selection: BOOLEAN) is
+			-- Redefine.
+		do
+			if a_selection then
+				internal_notebook.set_active_color (a_selection)
+			else
+				internal_notebook.set_focus_color (False)
+			end
+		end
+
+	set_non_focus_selection_color is
+			-- Set title bar non-focuse color.
+		do
+			internal_notebook.set_focus_color (False)
 		end
 
 feature {NONE} -- Implementation

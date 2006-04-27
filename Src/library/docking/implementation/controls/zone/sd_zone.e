@@ -101,7 +101,7 @@ feature -- Command
 		do
 		end
 
-	set_title_bar_selection_color (a_focus: BOOLEAN) is
+	set_focus_color (a_focus: BOOLEAN) is
 			-- Set title bar focuse color.
 		do
 		end

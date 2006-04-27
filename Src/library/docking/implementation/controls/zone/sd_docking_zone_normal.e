@@ -13,7 +13,7 @@ inherit
 		redefine
 			set_max,
 			is_maximized,
-			set_title_bar_selection_color,
+			set_focus_color,
 			on_focus_in,
 			on_focus_out,
 			on_normal_max_window,
@@ -96,7 +96,7 @@ feature -- Command
 			window.title_bar.set_max (a_max)
 		end
 
-	set_title_bar_selection_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN) is
 			-- Redefine.
 		do
 			if a_selection then

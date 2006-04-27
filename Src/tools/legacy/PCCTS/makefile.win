@@ -1,0 +1,65 @@
+#
+# Main makefile for PCCTS 1.33
+#
+# Terence Parr
+# Parr Research Corporation
+# September 1995
+#
+
+# verbosity versus silence...
+PSss=
+
+#
+# this can be set to /user/local/bin etc...
+BINDIR=bin
+
+#CC=cc
+
+MAKE= nmake
+MV= move
+ROOT=.
+
+.SILENT:
+
+pccts:
+#	echo
+#	echo "               Welcome to PCCTS 1.33 installation"
+#	echo "                  Released October 5, 1995"
+#	echo
+#	echo "                           Featuring"
+#	echo "         ANTLR  -- ANother Tool for Language Recognition"
+#	echo "         DLG    -- DFA-based Lexical Analyzer Generator"
+#	echo "         [soon, we will merge SORCERER distribution with PCCTS]"
+#	echo
+#	echo "         Please see samples for C++ mode in pccts/testcpp"
+#	echo "         C, C++, and Pascal grammars available in"
+#	echo "             ftp.parr-research.com in pub/pccts/contrib"
+#	echo "         Please see the pre-release of The Book in"
+#	echo "             ftp.parr-research.com in pub/pccts/Book"
+#	echo
+#	echo "         Old tutorials are again at the ftp site at"
+#	echo "             ftp.parr-research.com in pub/pccts/old_tutorials"
+#	echo
+#	echo "         [see manpages target of this makefile]"
+#	echo
+#	echo "         [Trouble reports to parrt@parr-research.com]"
+#	echo
+#
+	echo Making executables...
+	cd $(ROOT)\antlr 
+	$(MAKE) -f antlr.mak
+	cd ..
+	$(MV) $(ROOT)\antlr\WinDebug\antlr.exe $(ROOT)\$(BINDIR)\antlr.exe
+	if exist $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(MV) $(ROOT)\antlr\WinDebug\antlr.exe.manifest $(ROOT)\$(BINDIR)\
+	echo antlr executable now in $(BINDIR)
+
+	cd $(ROOT)\dlg
+	$(MAKE) -f dlg.mak
+	cd ..
+	$(MV) $(ROOT)\dlg\WinDebug\dlg.exe $(ROOT)\$(BINDIR)\dlg.exe
+	if exist $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(MV) $(ROOT)\dlg\WinDebug\dlg.exe.manifest $(ROOT)\$(BINDIR)\
+	echo dlg executable now in $(BINDIR)
+
+	echo
+	echo "       PCCTS 1.33 installation complete (have a nice day)"
+

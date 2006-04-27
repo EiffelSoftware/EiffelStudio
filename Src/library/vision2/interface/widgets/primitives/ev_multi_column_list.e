@@ -259,7 +259,7 @@ feature -- Element change
 		do
 			implementation.set_column_title (a_title, a_column)
 		ensure
-			a_title_assigned: a_title.is_equal (column_title (a_column))
+			a_title_assigned: column_title (a_column).is_equal (a_title)
 			column_count_valid: column_count >= a_column
 			cloned: column_title (a_column) /= a_title
 		end

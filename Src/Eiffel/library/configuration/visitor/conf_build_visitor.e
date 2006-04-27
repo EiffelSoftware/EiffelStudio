@@ -79,9 +79,6 @@ feature -- Status
 			Result := assembly_cache_folder /= Void
 		end
 
-	last_warnings: LINKED_LIST [CONF_ERROR]
-			-- Warnings generated during processing.
-
 feature -- Access
 
 	modified_classes: DS_HASH_SET [CONF_CLASS]
@@ -211,6 +208,7 @@ feature -- Visit nodes
 						old_assemblies := old_target.all_assemblies.twin
 					end
 				end
+
 					-- if it is the library or application target, add the target to the libraries
 				if a_target = a_target.system.library_target or a_target = application_target then
 					libraries.force (a_target, a_target.system.uuid)
@@ -270,6 +268,10 @@ feature -- Visit nodes
 					a_target.set_all_assemblies (assemblies)
 				end
 			end
+				-- at the complete end, if we are dotnet unload emitter
+			if a_target = application_target and state.platform = pf_dotnet and il_emitter /= Void then
+				il_emitter.unload
+			end
 		ensure then
 			all_assemblies_set: not is_error implies a_target.all_assemblies /= Void
 		end
@@ -328,7 +330,6 @@ feature -- Visit nodes
 						old_libraries.remove (l_uuid)
 					end
 					libraries.force (l_target, l_uuid)
-
 					l_target.process (l_vis)
 					if l_vis.is_error then
 						is_error := True
@@ -389,6 +390,9 @@ feature -- Visit nodes
 				current_file_rule := a_cluster.file_rule
 				create current_classes.make (Classes_per_cluster)
 				create current_classes_by_filename.make (Classes_per_cluster)
+				a_cluster.set_classes (current_classes)
+				a_cluster.set_classes_by_filename (current_classes_by_filename)
+
 				process_cluster_recursive ("")
 
 				if partial_classes /= Void then
@@ -400,9 +404,6 @@ feature -- Visit nodes
 				if old_group /= Void then
 					process_removed_classes (old_group.classes)
 				end
-
-				a_cluster.set_classes (current_classes)
-				a_cluster.set_classes_by_filename (current_classes_by_filename)
 
 					-- update visibility
 				a_cluster.update_visible
@@ -683,29 +684,13 @@ feature {NONE} -- Implementation
 								partial_classes.force (l_pc, l_name)
 								-- normal classes
 							else
-								if old_group /= Void then
-									l_class := old_group.classes.item (l_name)
+									-- not found => new class
+								l_class := factory.new_class (a_file, current_cluster, a_path)
+								if l_class.is_error then
+									add_error (l_class.last_error)
 								end
-								if l_class /= Void then
-										-- update class
-									l_class.rebuild (a_file, current_cluster, a_path)
-									if l_class.is_error then
-										add_error (l_class.last_error)
-									end
-									if l_class.is_compiled and l_class.is_modified then
-										modified_classes.force (l_class)
-									end
-										-- add it to `reused_classes'
-									reused_classes.force (l_class)
-								else
-										-- not found => new class
-									l_class := factory.new_class (a_file, current_cluster, a_path)
-									if l_class.is_error then
-										add_error (l_class.last_error)
-									end
-									added_classes.force (l_class)
-									l_class.set_up_to_date
-								end
+								added_classes.force (l_class)
+								l_class.set_up_to_date
 								check
 									name_same: l_name.is_equal (l_class.renamed_name)
 								end
@@ -775,9 +760,13 @@ feature {NONE} -- Implementation
 
 	valid_eiffel_extension (a_file: STRING): BOOLEAN is
 			-- Does `a_file' have a correct eiffel file extension?
+		local
+			l_ext: CHARACTER
 		do
-			valid_eiffel_extension_regexp.match (a_file)
-			Result := valid_eiffel_extension_regexp.has_matched
+			if a_file.item (a_file.count -1 ) = '.' then
+				l_ext := a_file.item (a_file.count)
+				Result := l_ext = 'e' or l_ext = 'E'
+			end
 		end
 
 	process_assembly_implementation (an_assembly: CONF_ASSEMBLY) is
@@ -800,7 +789,6 @@ feature {NONE} -- Implementation
 			l_pos: INTEGER
 			l_p: STRING
 			l_a: CONF_ASSEMBLY
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_emitter: IL_EMITTER
 			l_done: BOOLEAN
 		do
@@ -873,17 +861,8 @@ feature {NONE} -- Implementation
 								-- if it wasn't modified, directly use the old classes.
 							if not old_assembly.is_modified then
 								an_assembly.set_date (old_assembly.date)
-								l_classes := old_assembly.classes
-								an_assembly.set_classes (l_classes)
+								an_assembly.set_classes (old_assembly.classes)
 								an_assembly.set_dotnet_classes (old_assembly.dotnet_classes)
-								from
-									l_classes.start
-								until
-									l_classes.after
-								loop
-									reused_classes.force (l_classes.item_for_iteration)
-									l_classes.forth
-								end
 								l_done := True
 								old_assembly := Void
 								old_group := Void
@@ -938,7 +917,6 @@ feature {NONE} -- Implementation
 
 					end
 				end
-				l_emitter.unload
 			end
 		ensure
 			classes_set: not is_error implies an_assembly.classes_set
@@ -1061,7 +1039,6 @@ feature {NONE} -- Implementation
 						if state.platform /= pf_dotnet then
 							add_error (create {CONF_ERROR_DOTNET})
 						else
-							l_consumed := True
 							l_p := l_a.location.evaluated_path
 								-- named
 							if l_p.is_empty then
@@ -1082,9 +1059,6 @@ feature {NONE} -- Implementation
 				if l_locals.count > 1 then
 					l_locals.remove_tail (1)
 					l_emitter.consume_assembly_from_path (l_locals)
-				end
-				if l_consumed then
-					l_emitter.unload
 				end
 			end
 		end
@@ -1265,10 +1239,12 @@ feature {NONE} -- Implementation
 							old_group_computed: old_group /= Void implies old_group.classes_set
 						end
 						if old_group /= Void then
+							reused_groups.force (old_group)
 							if old_group /= l_group then
 								old_group.invalidate
+							else
+								old_group := old_group.twin
 							end
-							reused_groups.force (old_group)
 						end
 					end
 					l_group.process (Current)
@@ -1374,22 +1350,6 @@ feature {NONE} -- shared instances
 			create Result
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	valid_eiffel_extension_regexp: RX_PCRE_REGULAR_EXPRESSION is
-			-- Valid eiffel extension regexp.
-		once
-			create Result.make
-			Result.compile ("\.[pP]?[eE]$")
-			Result.optimize
-		end
-
-	partial_eiffel_extension_regexp: RX_PCRE_REGULAR_EXPRESSION is
-			-- Valid partial extension regexp.
-		once
-			create Result.make
-			Result.compile ("\.[pP][eE]$")
-			Result.optimize
 		end
 
 	libraries_intersection (a, b: like libraries): BOOLEAN is

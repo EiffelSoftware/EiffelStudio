@@ -440,17 +440,17 @@ feature -- Commands
 			-- Record all the classes in the universe as
 			-- changed (for compilation using `ANY' as root class)
 		local
-			classes: LINKED_LIST [CLASS_I]
+			classes: DS_HASH_SET [CLASS_I]
 			cl: CLASS_I
 		do
 			from
-				classes := system.new_classes
+				classes := universe.all_classes
 				classes.start
 			until
 				classes.after
 			loop
-				cl := classes.item
-				if not cl.is_external_class then
+				cl := classes.item_for_iteration
+				if not cl.is_compiled and not cl.is_external_class then
 					change_class (cl)
 				end
 				classes.forth

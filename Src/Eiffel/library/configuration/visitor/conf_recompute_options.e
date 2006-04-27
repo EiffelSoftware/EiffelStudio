@@ -42,6 +42,7 @@ feature -- Visit nodes
 			l_pre, l_old_pre: CONF_PRECOMPILE
 		do
 			if not is_error then
+				a_target.system.set_name (new_target.system.name)
 				a_target.set_version (new_target.internal_version)
 				a_target.set_settings (new_target.internal_settings)
 				if new_target.internal_options /= Void then

@@ -297,7 +297,8 @@ feature -- Equality
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := Precursor (other) and then equal (dependencies, other.dependencies) and then
-						file_rule.is_equal (other.file_rule) and then equal (visible, other.visible)
+						file_rule.is_equal (other.file_rule) and then equal (visible, other.visible) and then
+						is_recursive = other.is_recursive
 		end
 
 feature -- Visit

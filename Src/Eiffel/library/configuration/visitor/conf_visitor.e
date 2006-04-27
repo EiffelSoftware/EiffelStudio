@@ -14,7 +14,10 @@ feature -- Status
 			-- Was there an error?
 
 	last_errors: LINKED_LIST [CONF_ERROR]
-			-- The last error.
+			-- The last errors.
+
+	last_warnings: LINKED_LIST [CONF_ERROR]
+			-- The last warnings.
 
 feature -- Visit nodes
 
@@ -77,7 +80,7 @@ feature -- Visit nodes
 feature {NONE} -- Implementation
 
 	add_error (an_error: CONF_ERROR) is
-			-- Set `an_error'.
+			-- Add `an_error'.
 		require
 			an_error_not_void: an_error /= Void
 		do
@@ -87,6 +90,18 @@ feature {NONE} -- Implementation
 			end
 			last_errors.extend (an_error)
 		end
+
+	add_warning (a_warning: CONF_ERROR) is
+			-- Add `a_warning'.
+		require
+			a_warning_not_void: a_warning /= Void
+		do
+			if last_warnings = Void  then
+				create last_warnings.make
+			end
+			last_warnings.extend (a_warning)
+		end
+
 
 
 indexing

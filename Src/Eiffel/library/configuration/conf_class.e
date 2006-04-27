@@ -142,6 +142,9 @@ feature -- Access, in compiled only, not stored to configuration file
 	is_modified: BOOLEAN
 			-- Has the class been changed since last recompilation?
 
+	is_removed: BOOLEAN
+			-- Has the class been removed?
+
 	is_renamed: BOOLEAN
 			-- Has the class been renamed since the last recompilation?
 
@@ -207,9 +210,11 @@ feature -- Status update
 		do
 			is_modified := False
 			is_renamed := False
+			is_removed := False
 		ensure
 			not_modified: not is_modified
 			not_renamed: not is_renamed
+			not_removed: not is_removed
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
@@ -352,7 +357,10 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		do
 			l_str := full_file_name.to_c
 			eif_date ($l_str, $l_date)
-			if date /= l_date then
+			if l_date = -1 then
+				is_removed := True
+				date := 0
+			elseif date /= l_date then
 				date := l_date
 				is_modified := True
 
@@ -390,11 +398,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 						end
 						if group.name_prefix /= Void then
 							renamed_name.prepend (group.name_prefix)
-						end
-							-- if applicable, add new entry and remove old
-						if group.classes /= Void and then l_old_name /= Void and then group.classes.has (l_old_name) then
-							group.classes.remove (l_old_name)
-							group.classes.force (Current, renamed_name)
 						end
 					end
 				end

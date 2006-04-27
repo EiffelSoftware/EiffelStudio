@@ -1,41 +1,35 @@
 indexing
-	description: "General configuration warning"
+	description: "Two different configuration files have the same uuid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VD80
+	CONF_ERROR_UUIDFILE
 
 inherit
-	LACE_WARNING
-		redefine
-			build_explain
-		end;
+	CONF_ERROR
 
-feature -- Properties
+create
+	make
 
-	warning: CONF_ERROR;
-			-- Warning
+feature {NONE} -- Initialization
 
-feature -- Output
-
-	build_explain (st: TEXT_FORMATTER) is
+	make (a_first_location, a_second_location: STRING) is
+			-- Create.
+		require
+			a_first_location_not_void: a_first_location /= Void
+			a_second_location_not_void: a_second_location /= Void
 		do
-			st.add_string ("Configuration warning:");
-			st.add_string (warning.out);
-			st.add_new_line;
-		end;
+			text := "Two different configuration files have the same uuid: "+a_first_location+" and "+a_second_location
+		end
 
-feature {SYSTEM_I, LACE_I} -- Setting
 
-	set_warning (s: like warning) is
-			-- Assign `s' to `warning'
-		do
-			warning := s
-		end;
+feature -- Access
+
+	text: STRING;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -68,5 +62,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 end

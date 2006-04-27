@@ -38,8 +38,8 @@ feature {NONE}  -- Initlization
 				drop_actions.extend (agent on_drop_actions)
 			end
 
-			create internal_tool_bar
-			create internal_auto_hide_indicator
+			create internal_tool_bar.make
+			create internal_auto_hide_indicator.make
 
 			create internal_tab_box
 			extend_horizontal_box (internal_tab_box)
@@ -50,6 +50,7 @@ feature {NONE}  -- Initlization
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
 			internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (0))
+			internal_tool_bar.compute_minmum_size
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
 			set_minimum_width (0)
@@ -87,7 +88,7 @@ feature -- Command
 			-- Hide/show tabs base on space.
 		local
 			l_tabs, l_all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
-			l_tab_before_selected: SD_NOTEBOOK_TAB
+			l_tab_before: SD_NOTEBOOK_TAB
 		do
 			if a_width >= 0 then
 				ignore_resize := True
@@ -112,11 +113,16 @@ feature -- Command
 				loop
 					if not l_tabs.has (l_all_tabs.item) then
 						l_all_tabs.item.show
-						if l_all_tabs.item.is_selected and l_tab_before_selected /= Void then
-							l_tab_before_selected.set_selected_tab_after (True)
+						if l_tab_before = Void then
+							l_all_tabs.item.set_tab_before (False)
+							l_all_tabs.item.set_tab_after (False)
+						else
+							l_tab_before.set_tab_after (True)
+							l_all_tabs.item.set_tab_before (True)
+							l_all_tabs.item.set_tab_after (False)
 						end
-						l_all_tabs.item.set_selected_tab_after (False)
-						l_tab_before_selected := l_all_tabs.item
+						l_all_tabs.item.set_tab_after (False)
+						l_tab_before := l_all_tabs.item
 						ignore_resize := True
 					end
 					l_all_tabs.forth
@@ -129,15 +135,13 @@ feature -- Command
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
-		local
---			l_app: EV_ENVIRONMENT
 		do
 			if is_displayed then
 				if not ignore_resize then
---					create l_app
---					l_app.application.idle_actions.extend_kamikaze (agent resize_tabs (a_width))
---FIXIT: Ask Manu about: Actually I like handle resize action not on idle, because it looks better than handle it on idle,
 					resize_tabs (a_width)
+					debug ("docking")
+						print ("%N SD_NOTEBOOK_TAB_AREA on_resize")
+					end
 				end
 			end
 		ensure
@@ -306,6 +310,7 @@ feature {NONE}  -- Implementation functions
 			l_tabs := all_tabs
 			if internal_tabs_not_shown.count > 0 then
 				internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (internal_tabs_not_shown.count))
+				internal_tool_bar.compute_minmum_size
 				internal_tool_bar.show
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then
 					-- Only show one tab now.
@@ -392,10 +397,10 @@ feature {NONE}  -- Implementation attributes
 	ignore_resize: BOOLEAN
 			-- Ignore resize actions when executing `resize_tabs'?
 
-	internal_tool_bar: EV_TOOL_BAR
+	internal_tool_bar: SD_TOOL_BAR
 			-- Tool bar which hold `internal_auto_hide_indicator'.
 
-	internal_auto_hide_indicator: EV_TOOL_BAR_BUTTON
+	internal_auto_hide_indicator: SD_TOOL_BAR_BUTTON
 			-- Auto hide tabs indicator
 
 	internal_tabs_not_shown: ARRAYED_LIST [SD_NOTEBOOK_TAB]

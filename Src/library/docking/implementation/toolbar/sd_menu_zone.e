@@ -17,10 +17,11 @@ inherit
 			{ANY} x_position, y_position, screen_x, screen_y, parent, disable_capture, enable_capture, has_capture, set_pointer_style
 			{SD_TOOL_BAR_DRAGGING_AGENTS} pointer_motion_actions, pointer_button_release_actions
 			{SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ROW} set_minimum_width, set_minimum_height
-			{SD_TOOL_BAR_CONTENT} destroy
+			{SD_TOOL_BAR_CONTENT} destroy, show, hide
 			{SD_TOOL_BAR_ZONE_ASSISTANT} internal_items
 		redefine
-			compute_minmum_size
+			compute_minmum_size,
+			wipe_out
 		end
 
 	HASHABLE
@@ -198,7 +199,7 @@ feature -- Command
 			-- Extend `a_content'.
 		require
 			a_content_not_void: a_content /= Void
-			content_not_set: content = Void or a_content = content
+			content_not_set: content = Void
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
@@ -250,6 +251,13 @@ feature -- Command
 			if row /= Void and row.has (Current) then
 				row.set_item_size (Current, minimum_width, minimum_height)
 			end
+		end
+
+	wipe_out is
+			-- Wipe out
+		do
+			Precursor {SD_TOOL_BAR}
+			content := Void
 		end
 
 feature -- Query

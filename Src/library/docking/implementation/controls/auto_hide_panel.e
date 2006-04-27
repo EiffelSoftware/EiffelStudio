@@ -1,5 +1,8 @@
 indexing
-	description: "Panels that are hold SD_CONTENT's user widgets and be hided."
+	description: "[
+					Panels that are hold SD_ZONE which are hidden at four 
+					side of main window area.
+																			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

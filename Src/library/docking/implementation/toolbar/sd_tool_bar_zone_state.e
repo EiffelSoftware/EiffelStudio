@@ -147,6 +147,22 @@ feature -- Properties which record floating informations.
 			set: floating_group_info = a_group_info
 		end
 
+feature -- Items layout
+
+	set_items_layout (a_layout: like items_layout) is
+			-- Set `a_layout'
+		require
+			not_void: a_layout /= Void
+		do
+			items_layout := a_layout
+		ensure
+			set: items_layout = a_layout
+		end
+
+	items_layout: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
+			-- Items layout, first is item name, second is whether item `is_displayed'
+			-- Order of this list, it's order items displayed.
+
 feature {NONE} -- Implementation
 
 	internal_screen_x, internal_screen_y: INTEGER

@@ -7,16 +7,19 @@ class
 	SD_FEEDBACK_INDICATOR
 
 inherit
-
 	SD_DIALOG
 		rename
 			parent as parent_dialog,
 			make as make_dlg,
-			on_timer as on_timer_wel_dialog
+			on_timer as on_timer_wel_dialog,
+			destroy as real_destroy
 		export
 			{NONE} all
-			{ANY} destroy
+			{ANY} exists
 		end
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -30,6 +33,8 @@ feature {NONE} -- Initlization
 			l_imp: WEL_WINDOW
 			l_composite_window: WEL_COMPOSITE_WINDOW
 		do
+			to_implement ("User timer to show fading effect, has problem: it not have high priority. May use thread instead or improve efficiency of this class?")
+
 			l_composite_window ?= a_parent_window.implementation
 			check not_void: l_composite_window /= Void end
 			make_dlg (l_composite_window)
@@ -42,8 +47,6 @@ feature {NONE} -- Initlization
 			timer.actions.extend (agent on_timer)
 			alpha := alpha_step
 			timer.set_interval (timer_interval)
-
-			resize (300, 300)
 		ensure
 			set: file_name = a_file_name
 		end
@@ -54,7 +57,9 @@ feature -- Command
 			-- Set `file_name'.
 		do
 			file_name := a_filename
-			update_layered_window_rgba (alpha)
+			if exists then
+				update_layered_window_rgba (alpha)
+			end
 		end
 
 	set_position (a_screen_x, a_screen_y: INTEGER) is
@@ -65,20 +70,37 @@ feature -- Command
 			show
 		end
 
+	destroy is
+			-- Redefine with fading effect.
+		require
+			exists: exists
+		do
+			if not timer.is_destroyed then
+				timer.destroy
+			end
+			create timer
+			timer.actions.extend (agent on_timer_for_close)
+			timer.set_interval (timer_interval)
+		end
+
 feature {NONE} -- Implementation
 
 	file_name: STRING
 			-- Pixmap file name.
 
-	load_rgba_dib (a_filaname: STRING; a_width, a_height: INTEGER): POINTER is
+	load_rgba_dib (a_filaname: STRING; a_width, a_height: INTEGER): WEL_BITMAP is
 			-- Load a image which is locate at `a_filename' to RGBA DIB.
 		local
-			l_c_string: WEL_STRING
+			l_pixmap: EV_PIXMAP
+			l_imp: EV_PIXMAP_IMP
 		do
-			create l_c_string.make (a_filaname)
-			c_load_pixmap (l_c_string.item, $a_width, $a_height, $Result)
+			create l_pixmap
+			l_pixmap.set_with_named_file (a_filaname)
+			l_imp ?= l_pixmap.implementation
+			check not_void: l_imp /= Void end
+			Result := l_imp.get_bitmap
 		ensure
-			exists: Result /= Result.default_pointer
+			exists: Result /= Void and then Result.exists
 		end
 
 	update_layered_window_rgba (a_alpha: INTEGER) is
@@ -115,7 +137,7 @@ feature {NONE} -- Implementation
 			create l_size.make (l_pixmap.width, l_pixmap.height)
 
 			create l_dc_src.make_by_dc (l_dc)
-			l_dc_src.select_object (load_rgba_dib (file_name, l_pixmap.width, l_pixmap.height))
+			l_dc_src.select_bitmap (load_rgba_dib (file_name, l_pixmap.width, l_pixmap.height))
 			check l_dc_src.exists end
 
 
@@ -162,10 +184,28 @@ feature {NONE} -- Implementation
 			destroy: alpha >= 255 implies timer.is_destroyed
 		end
 
+	on_timer_for_close is
+			-- Handle `timer' actions for close.
+		do
+			alpha := alpha - alpha_step
+			if not (alpha >= 0) then
+				alpha := 0
+			end
+			if exists then
+				update_layered_window_rgba (alpha)
+			else
+				timer.destroy
+			end
+			if alpha <= 0 then
+				timer.destroy
+				real_destroy
+			end
+		end
+
 	timer: EV_TIMEOUT
 			-- Timer to show gradient effect.		
 
-	timer_interval: INTEGER is 100
+	timer_interval: INTEGER is 50
 			-- Interval for `timer'.
 
 	alpha: INTEGER
@@ -175,61 +215,6 @@ feature {NONE} -- Implementation
 			-- Used by `timer', `alpha' increase step.
 
 feature {NONE} -- Externals
-
-	c_load_pixmap (a_filename: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]; a_result: POINTER) is
-			-- This functions will allow loading paintlib (www.painlib.de) supported images
-			-- into a windows 32-bit RGBA DIB section.
-		require
-			exist: a_filename /= default_pointer
-		external
-			"C++ inline use %"imgdecoder.h%""
-		alias
-			"[
-			{
-				LPVOID pDecoder;
-				LPVOID pImg;
-				LPBYTE pBits;
-				HBITMAP bitmap;
-
-				ImgNewDecoder (&pDecoder);
-				if (!ImgNewDIBFromFile (pDecoder, (LPCTSTR)$a_filename, &pImg)){
-
-					ImgGetHandle (pImg, &bitmap, (LPVOID *)&pBits);
-
-					*(EIF_POINTER*) $a_result = bitmap;
-
-					// PreMultiplyRGBChannels as Windows required
-					int l_width, l_height;
-
-					EIF_INTEGER* l_temp;
-					l_temp = $a_width;
-					l_width = *l_temp;
-
-					l_temp = $a_height;
-					l_height = *l_temp;
-
-					for (int y=0; y<l_height; ++y)
-					{
-						BYTE *pPixel= pBits + l_width * 4 * y;
-
-						for (int x=0; x<l_width ; ++x)
-						{
-							pPixel[0]= pPixel[0]*pPixel[3]/255;
-							pPixel[1]= pPixel[1]*pPixel[3]/255;
-							pPixel[2]= pPixel[2]*pPixel[3]/255;
-
-							pPixel+= 4;
-						}
-					}
-				}else
-				{
-					// Error occured.
-				}
-			}
-			]"
-		ensure
-			exist: a_result /= default_pointer
-		end
 
 	c_updatelayerwindow (a_wnd: POINTER; a_dest_dc: POINTER; a_point: POINTER; a_size: POINTER; a_src_dc: POINTER; a_point_src: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
 			-- Set layered window properties on Windows 2000 and later.
@@ -249,7 +234,7 @@ feature {NONE} -- Externals
 				BLENDFUNCTION blendFunction = {AC_SRC_OVER, 0, $a_alpha, AC_SRC_ALPHA};
 
 				FARPROC update_layered_window = NULL;
-				HMODULE user32_module = LoadLibrary ("user32.dll");
+				HMODULE user32_module = LoadLibrary (L"user32.dll");
 				if (user32_module) {
 					update_layered_window = GetProcAddress (user32_module, "UpdateLayeredWindow");
 					if (update_layered_window) {

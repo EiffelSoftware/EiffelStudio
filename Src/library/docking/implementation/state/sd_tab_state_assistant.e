@@ -237,6 +237,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				end
 			end
 			a_multi_dock_area.extend (l_new_container)
+			state.docking_manager.command.resize (False)
 			if l_new_container.full then
 				l_new_container.set_split_position (state.top_split_position (state.direction, l_new_container))
 			end
@@ -283,7 +284,9 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 				end
 				l_parent := state.tab_zone.parent
 				internal_docking_manager.zones.prune_zone (state.tab_zone)
+
 				create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, l_parent, state.direction)
+
 				if state.zone.is_maximized then
 					l_docking_state.set_widget_main_area (state.zone.main_area_widget , state.zone.main_area, state.zone.internal_parent, state.zone.internal_parent_split_position)
 				end

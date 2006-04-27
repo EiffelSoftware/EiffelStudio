@@ -74,7 +74,7 @@ feature -- Save/Open inner container data.
 			l_config_data ?=  l_facility.retrieved (l_reader, True)
 			check l_config_data /= Void end
 			internal_docking_manager.command.lock_update (Void, True)
-			-- First clear all areas.
+			-- First we clear all areas.
 			clear_up_containers
 			check not internal_docking_manager.query.inner_container_main.full end
 			open_all_inner_containers_data (l_config_data)
@@ -93,6 +93,40 @@ feature -- Save/Open inner container data.
 		end
 
 feature {NONE} -- Implementation for save config.
+
+	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
+			-- Save all SD_MULTI_DOCK_AREA datas, include main dock area in main window and floating zones.
+		require
+			a_config_data_not_void: a_config_data /= Void
+		local
+			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
+			l_data: SD_INNER_CONTAINER_DATA
+			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
+		do
+			l_inner_containers := internal_docking_manager.inner_containers
+			from
+				l_inner_containers.start
+				create l_datas.make (1)
+			until
+				l_inner_containers.after
+			loop
+				if l_inner_containers.item.readable then
+					create l_data
+					save_inner_container_data (l_inner_containers.item.item, l_data)
+					l_data.set_screen_x (l_inner_containers.item.screen_x)
+					l_data.set_screen_y (l_inner_containers.item.screen_y)
+					if l_inner_containers.item.parent_floating_zone /= Void then
+						l_data.set_width (l_inner_containers.item.parent_floating_zone.width)
+						l_data.set_height (l_inner_containers.item.parent_floating_zone.height)
+					end
+				else
+					l_data := Void
+				end
+				l_datas.extend (l_data)
+				l_inner_containers.forth
+			end
+			a_config_data.set_inner_container_datas (l_datas)
+		end
 
 	save_inner_container_data (a_widget: EV_WIDGET; a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- Save one inner container which is SD_MULTI_DOCK_AREA data.
@@ -333,40 +367,6 @@ feature {NONE} -- Implementation for open config.
 			end
 		end
 
-	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
-			-- Save all SD_MULTI_DOCK_AREA datas, include main dock area in main window and floating zones.
-		require
-			a_config_data_not_void: a_config_data /= Void
-		local
-			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
-			l_data: SD_INNER_CONTAINER_DATA
-			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
-		do
-			l_inner_containers := internal_docking_manager.inner_containers
-			from
-				l_inner_containers.start
-				create l_datas.make (1)
-			until
-				l_inner_containers.after
-			loop
-				if l_inner_containers.item.readable then
-					create l_data
-					save_inner_container_data (l_inner_containers.item.item, l_data)
-					l_data.set_screen_x (l_inner_containers.item.screen_x)
-					l_data.set_screen_y (l_inner_containers.item.screen_y)
-					if l_inner_containers.item.parent_floating_zone /= Void then
-						l_data.set_width (l_inner_containers.item.parent_floating_zone.width)
-						l_data.set_height (l_inner_containers.item.parent_floating_zone.height)
-					end
-				else
-					l_data := Void
-				end
-				l_datas.extend (l_data)
-				l_inner_containers.forth
-			end
-			a_config_data.set_inner_container_datas (l_datas)
-		end
-
 	clear_up_containers is
 			-- Wipe out all containers in docking library.
 		local
@@ -448,10 +448,10 @@ feature {NONE} -- Implementation for open config.
 				l_type_id := l_internal.dynamic_type_from_string (a_config_data.state)
 				check a_type_exist: l_type_id /= -1 end
 				l_state ?= l_internal.new_instance_of (l_type_id)
-				l_state.set_last_floating_height (a_config_data.height)
-				l_state.set_last_floating_width (a_config_data.width)
 				l_state.set_docking_manager (internal_docking_manager)
 				l_state.restore (a_config_data.titles, a_container, a_config_data.direction)
+				l_state.set_last_floating_height (a_config_data.height)
+				l_state.set_last_floating_width (a_config_data.width)
 			else	-- If it's a split_area
 				if a_config_data.is_horizontal_split_area then
 					create {SD_HORIZONTAL_SPLIT_AREA} l_temp_spliter
@@ -646,15 +646,18 @@ feature {NONE} -- Implementation for open config.
 					l_content := internal_docking_manager.tool_bar_manager.content_by_title ((l_row.item @ 1).out)
 					check l_content_not_void: l_content /= Void end
 					create l_tool_bar_zone.make (False, internal_docking_manager)
-					l_tool_bar_zone.extend (l_content)
-					l_tool_bar_row.extend (l_tool_bar_zone)
-					l_tool_bar_row.record_state
-					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone, l_row.item.integer_32_item (2))
 
 					l_state ?= l_row.item.item (3)
 					check not_void: l_state /= Void end
 					l_tool_bar_zone.assistant.set_last_state (l_state)
 
+					l_tool_bar_zone.extend (l_content)
+					if l_state.items_layout /= Void then
+						l_tool_bar_zone.assistant.open_items_layout
+					end
+					l_tool_bar_row.extend (l_tool_bar_zone)
+					l_tool_bar_row.record_state
+					l_tool_bar_row.set_item_position_relative (l_tool_bar_zone, l_row.item.integer_32_item (2))
 					l_row.forth
 				end
 				l_tool_bar_row.set_ignore_resize (False)

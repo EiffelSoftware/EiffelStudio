@@ -219,8 +219,6 @@ stick (a_direction: INTEGER) is
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Redefine.
-		local
---			l_floating_zone: SD_FLOATING_ZONE
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			record_state
@@ -234,7 +232,6 @@ stick (a_direction: INTEGER) is
 			internal_docking_manager.command.update_title_bar
 			internal_docking_manager.command.unlock_update
 			internal_docking_manager.command.unlock_update
-
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
 		end
@@ -366,6 +363,10 @@ feature {NONE} -- Implementation
 				 	l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position then
 				l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
 			end
+			-- If we don't resize here and content is in top level,
+			-- content's widget will be minimum size.
+			internal_docking_manager.command.resize (False)
+			
 			l_new_split_area.set_proportion (0.5)
 			set_direction (a_target_zone.state.direction)
 			internal_docking_manager.command.remove_empty_split_area

@@ -42,7 +42,7 @@ inherit
 			set_background_color,
 			background_color
 		redefine
-			set_title_bar_selection_color
+			set_focus_color
 		end
 
 	SD_RESIZE_SOURCE
@@ -188,7 +188,7 @@ feature -- Query
 
 feature -- Command
 
-	set_title_bar_selection_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN) is
 			-- Redefine.
 		do
 			if a_selection then

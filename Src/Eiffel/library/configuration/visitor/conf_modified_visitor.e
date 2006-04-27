@@ -44,25 +44,29 @@ feature -- Visit nodes
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Process `an_assembly'.
-		local
-			l_deps: LINKED_SET [CONF_ASSEMBLY]
+--		local
+--			l_deps: LINKED_SET [CONF_ASSEMBLY]
 		do
-			if not is_error and then not processed_assemblies.has (an_assembly.guid) then
-				processed_assemblies.force (an_assembly.guid)
-				an_assembly.check_changed
-				find_modified (an_assembly.classes)
-				l_deps := an_assembly.dependencies
-				if l_deps /= Void then
-					from
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						l_deps.item.process (Current)
-						l_deps.forth
-					end
-				end
-			end
+--
+--			Patrickr 25/04/2006: To realy check if an assembly has changed we would need to start a consume.
+--								 As the compiler doesn't handle changed assemblies yet anyway we save the time to do this.
+--
+--			if not is_error and then not processed_assemblies.has (an_assembly.guid) then
+--				processed_assemblies.force (an_assembly.guid)
+--				an_assembly.check_changed
+--				find_modified (an_assembly)
+--				l_deps := an_assembly.dependencies
+--				if l_deps /= Void then
+--					from
+--						l_deps.start
+--					until
+--						l_deps.after
+--					loop
+--						l_deps.item.process (Current)
+--						l_deps.forth
+--					end
+--				end
+--			end
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -86,7 +90,7 @@ feature -- Visit nodes
 			-- Process `a_cluster'.
 		do
 			if not is_error then
-				find_modified (a_cluster.classes)
+				find_modified (a_cluster)
 			end
 		end
 
@@ -147,30 +151,45 @@ feature {NONE} -- Implementation
 	processed_assemblies: SEARCH_TABLE [STRING]
 			-- Assemblies that have been processed.
 
-	find_modified (a_classes: HASH_TABLE [CONF_CLASS, STRING]) is
+	find_modified (a_group: CONF_GROUP) is
 			-- Find classes that have been modified and add them to `modified_classes'.
+		require
+			a_group_not_void: a_group /= Void
 		local
 			l_class: CONF_CLASS
+			l_new_classes, l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_name: STRING
 		do
-			if a_classes /= Void then
+			l_classes := a_group.classes
+			if l_classes /= Void then
+				create l_new_classes.make (l_classes.count)
 				from
-					a_classes.start
+					l_classes.start
 				until
-					a_classes.after
+					l_classes.after
 				loop
-					l_class := a_classes.item_for_iteration
+					l_class := l_classes.item_for_iteration
 					if l_class.is_compiled then
 							-- check for changes and update name if necessary
 						l_class.check_changed
 						if l_class.is_error then
 							add_error (l_class.last_error)
 						end
-						if l_class.is_modified then
+						if l_class.is_modified or (l_class.is_removed and l_class.is_compiled) then
 							modified_classes.extend (l_class)
 						end
 					end
-					a_classes.forth
+					if not l_class.is_removed then
+						l_name := l_class.name
+						if not l_new_classes.has (l_name) then
+							l_new_classes.force (l_class, l_name)
+						else
+							add_error (create {CONF_ERROR_CLASSDBL}.make (l_name))
+						end
+					end
+					l_classes.forth
 				end
+				a_group.set_classes (l_new_classes)
 			end
 		end
 

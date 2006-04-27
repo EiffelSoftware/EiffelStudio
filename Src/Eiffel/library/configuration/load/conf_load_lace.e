@@ -605,7 +605,7 @@ feature {NONE} -- Implementation of data retrieval
 					if l_feature /= Void then
 						l_feature.to_lower
 					end
-					if l_class.is_equal ("none") then
+					if l_class.is_equal ("NONE") then
 						l_root := factory.new_root (Void, Void, Void, True)
 					else
 						l_root := factory.new_root (l_cluster, l_class, l_feature, False)

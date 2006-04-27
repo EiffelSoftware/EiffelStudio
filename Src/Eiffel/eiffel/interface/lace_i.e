@@ -540,6 +540,9 @@ feature {NONE} -- Implementation
 			end
 
 			update_settings (l_new_target)
+			if l_new_target.version /= Void then
+				system.set_msil_version (l_new_target.version.version)
+			end
 
 			if has_group_changed then
 				parse_target (l_new_target)
@@ -570,6 +573,7 @@ feature {NONE} -- Implementation
 			l_parse_vis: CONF_PARSE_VISITOR
 			l_state: CONF_STATE
 			vd00: VD00
+			vd80: VD80
 			l_errors: LIST [CONF_ERROR]
 		do
 			create l_factory
@@ -590,6 +594,18 @@ feature {NONE} -- Implementation
 					l_errors.forth
 				end
 				error_handler.raise_error
+			elseif l_parse_vis.last_warnings /= Void then
+				from
+					l_errors := l_parse_vis.last_warnings
+					l_errors.start
+				until
+					l_errors.after
+				loop
+					create vd80
+					vd80.set_warning (l_errors.item)
+					error_handler.insert_warning (vd80)
+					l_errors.forth
+				end
 			end
 		ensure
 			application_target_set: not is_error implies a_target.application_target /= Void

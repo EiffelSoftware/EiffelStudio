@@ -121,6 +121,9 @@ feature {NONE} -- Initialization
 
 				-- Names heap creation
 			create names.make
+
+				-- Real removed classes
+			create real_removed_classes.make (10)
 		end
 
 feature -- Counters
@@ -257,6 +260,10 @@ feature -- Properties
 	removed_classes: SEARCH_TABLE [CLASS_C]
 			-- List of removed classes from system.
 			-- Filled during degree 6, processed after degree 5
+
+	real_removed_classes: SEARCH_TABLE [CLASS_I]
+			-- List of removed classes form configuration system.
+			-- ie. classes that have been removed from disk.
 
 	missing_classes: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
 			-- Table indexed by missing classnames where elements are
@@ -900,6 +907,7 @@ end
 					l_file.put_string (l_class_i.name+": "+l_class_i.group.name+": "+l_class_i.file_name+"%N")
 				end
 				remove_class (l_class_i.compiled_class)
+				real_removed_classes.force (l_class_i)
 				l_classes.forth
 			end
 			if workbench.automatic_backup then
@@ -926,6 +934,8 @@ end
 
 				-- update/check root class
 			update_root_class
+
+			is_force_rebuild := False
 		end
 
 	update_root_class is
@@ -1000,8 +1010,27 @@ end
 			l_vis_check: CONF_CHECKER_VISITOR
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
+			vd71: VD71
+			l_file: PLAIN_TEXT_FILE
+			l_file_name: FILE_NAME
+			l_classdbl: CONF_ERROR_CLASSDBL
 		do
 			degree_output.put_start_degree_6
+
+				-- reset the compiler side removed classes and readd the configuration side removed classes
+			removed_classes := Void
+			from
+				real_removed_classes.start
+			until
+				real_removed_classes.after
+			loop
+				l_class := real_removed_classes.item_for_iteration
+				check
+					class_compiled: l_class.is_compiled
+				end
+				remove_class (l_class.compiled_class)
+				real_removed_classes.forth
+			end
 
 				-- Mark classes to be recompiled.
 			if any_class = Void or else not any_class.is_compiled then
@@ -1017,6 +1046,34 @@ end
 					create l_vis_modified.make (universe.conf_state)
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
+
+						-- removed classes
+					if workbench.automatic_backup then
+						create l_file_name.make_from_string (workbench.backup_subdirectory)
+						l_file_name.set_file_name (backup_info)
+						create l_file.make_open_write (l_file_name)
+					end
+					if l_vis_modified.is_error then
+						if l_vis_modified.last_errors.count = 1 then
+							l_classdbl ?= l_vis_modified.last_errors.first
+							if l_classdbl /= Void then
+								l_rebuild := True
+							end
+						end
+						if not l_rebuild then
+							from
+								l_errors := l_vis_modified.last_errors
+								l_errors.start
+							until
+								l_errors.after
+							loop
+								create vd71.make (l_errors.item)
+								Error_handler.insert_error (vd71)
+								l_errors.forth
+							end
+						end
+					end
+
 					l_classes := l_vis_modified.modified_classes
 					from
 						l_classes.start
@@ -1033,7 +1090,16 @@ end
 						if l_conf_class.is_renamed then
 							l_class.compiled_class.recompile_syntactical_clients
 						end
-						workbench.change_class (l_class)
+						if l_conf_class.is_removed then
+							l_class.compiled_class.recompile_syntactical_clients
+							if workbench.automatic_backup then
+								l_file.put_string (l_class.name+": "+l_class.group.name+": "+l_class.file_name+"%N")
+							end
+							remove_class (l_class.compiled_class)
+							real_removed_classes.force (l_class)
+						else
+							workbench.change_class (l_class)
+						end
 						l_conf_class.set_up_to_date
 						l_classes.forth
 					end
@@ -1206,7 +1272,6 @@ feature -- Recompilation
 		do
 			is_force_rebuild := True
 		end
-
 
 	set_config_changed (b: BOOLEAN) is
 			-- Set `is_config_changed'.
@@ -1444,6 +1509,7 @@ end
 
 					-- Let's get rid of the classes that have been really removed.
 				process_removed_classes
+				real_removed_classes.wipe_out
 
 debug ("ACTIVITY")
 	io.error.put_string ("%Tmoved = ")

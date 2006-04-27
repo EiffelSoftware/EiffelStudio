@@ -85,6 +85,8 @@ feature -- Status report
 			else
 				Result := ""
 			end
+		ensure
+			column_title_not_void: Result /= Void
 		end
 
 	column_width (a_column: INTEGER): INTEGER is
@@ -243,7 +245,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 				expand_column_count_to (column_titles.count)
 			end
 		ensure
-			a_title_assigned: a_title.is_equal (column_title (a_column))
+			a_title_assigned: column_title (a_column).is_equal (a_title)
 		end
 
 	set_column_titles (titles: ARRAY [STRING_GENERAL]) is

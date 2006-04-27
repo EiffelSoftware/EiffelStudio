@@ -10,24 +10,6 @@
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-		<file_rule>
-			<exclude>/\.svn</exclude>
-		</file_rule>
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"/>
-		<cluster name="base" location="$ISE_LIBRARY\library\base" recursive="true">
-			<ifnot platform="dotnet"/>
-		</cluster>
-		<cluster name="dotnet_base" location="$ISE_LIBRARY\library\base" recursive="true">
-			<if platform="dotnet"/>
-			<file_rule>
-				<exclude>classic</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="base_net" location="$ISE_LIBRARY\library.net\base" recursive="true">
-			<if platform="dotnet"/>
-		</cluster>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.acex"/>
 	</target>
 </system>

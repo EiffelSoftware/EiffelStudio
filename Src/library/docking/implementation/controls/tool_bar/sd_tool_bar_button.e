@@ -20,7 +20,8 @@ feature {NONE} -- Initlization
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive := True
 			is_displayed := True
-			description := "SD_TOOL_BAR_BUTTON"
+			description := generating_type
+			name := generating_type
 			create select_actions
 		end
 
@@ -37,12 +38,44 @@ feature -- Properties
 	text: STRING
 			-- Text shown on item.
 
-	set_sensitive (a_sensitive: BOOLEAN) is
-			-- Set `is_sensitive'.
+	set_tooltip (a_tip: like tooltip) is
+			-- Set `a_tooltip' with `a_tip'
+		require
+			not_void: a_tip /= Void
 		do
-			is_sensitive := a_sensitive
+			tooltip := a_tip
 		ensure
-			set: is_sensitive = a_sensitive
+			set: tooltip =  a_tip
+		end
+
+	tooltip: STRING
+			-- Tooltip shown on item.
+feature -- Command
+
+	enable_sensitive is
+			-- Enable sensitive.
+		do
+			is_sensitive := True
+			update
+		ensure
+			set: is_sensitive = True
+		end
+
+	disable_sensitive is
+			-- Disable sensitive.
+		do
+			is_sensitive := False
+			update
+		ensure
+			set: is_sensitive = False
+		end
+
+	remove_tooltip is
+			-- Remove `tooltip'
+		do
+			tooltip := Void
+		ensure
+			set: tooltip = Void
 		end
 
 feature -- Query
@@ -65,6 +98,7 @@ feature -- Query
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to performed when pointer button is pressed then released.
+
 
 feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal issues
 
@@ -98,9 +132,6 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 				Result := True
 			end
 		end
-
-	is_need_redraw: BOOLEAN
-			-- Redefine
 
 	pixmap_position: EV_COORDINATE is
 			-- Pixmap position.
@@ -154,7 +185,7 @@ feature {SD_TOOL_BAR} -- Agents
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
 			-- Redefine
 		do
-			if has_position (a_relative_x, a_relative_y) then
+			if has_position (a_relative_x, a_relative_y) and is_sensitive then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.normal then
 					state := {SD_TOOL_BAR_ITEM_STATE}.hot
 					is_need_redraw := True
@@ -171,23 +202,39 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER) is
 			-- Redefine
 		do
 			if has_position (a_relative_x, a_relative_y) then
-				if state /= {SD_TOOL_BAR_ITEM_STATE}.pressed then
-					state := {SD_TOOL_BAR_ITEM_STATE}.pressed
-					is_need_redraw := True
+				if tooltip /= Void and not tooltip.is_equal (tool_bar.tooltip) then
+					tool_bar.set_tooltip (tooltip)
 				else
-					is_need_redraw := False
+					tool_bar.remove_tooltip
+				end
+			end
+		end
+
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
+			-- Redefine
+		do
+			if is_sensitive then
+				if has_position (a_relative_x, a_relative_y) then
+					if state /= {SD_TOOL_BAR_ITEM_STATE}.pressed then
+						state := {SD_TOOL_BAR_ITEM_STATE}.pressed
+						is_need_redraw := True
+					else
+						is_need_redraw := False
+					end
+				else
+					if state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
+						state := {SD_TOOL_BAR_ITEM_STATE}.normal
+						is_need_redraw := True
+					else
+						is_need_redraw := False
+					end
 				end
 			else
-				if state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
-					state := {SD_TOOL_BAR_ITEM_STATE}.normal
-					is_need_redraw := True
-				else
-					is_need_redraw := False
-				end
+				is_need_redraw := False
 			end
 		end
 
@@ -216,7 +263,29 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-feature {NONE} -- Implementation
+feature{SD_TOOL_BAR} -- Implementation
+
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
+			-- Update for pick and drop
+		do
+			if a_starting then
+				if not drop_actions.accepts_pebble (a_pebble) then
+					internal_sensitive_before := is_sensitive
+					is_sensitive := False
+					if internal_sensitive_before then
+						is_need_redraw := True
+					end
+				end
+			else
+				if internal_sensitive_before then
+					is_sensitive := True
+					is_need_redraw := True
+				end
+			end
+		end
+
+	internal_sensitive_before: BOOLEAN
+			-- Before pick and drop is Current sensitive?
 
 invariant
 	not_void: select_actions /= Void

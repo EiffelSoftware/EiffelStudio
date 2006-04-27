@@ -286,6 +286,61 @@ feature -- Command
 			is_floating: tool_bar.is_floating
 		end
 
+	open_items_layout is
+			-- Open items layout.
+		require
+			not_void: last_state.items_layout /= Void
+			not_void: tool_bar.content /= Void
+		local
+			l_item: SD_TOOL_BAR_ITEM
+			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_name: STRING
+			l_datas: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
+			l_content: SD_TOOL_BAR_CONTENT
+			l_separator: SD_TOOL_BAR_SEPARATOR
+		do
+			from
+				create l_separator.make
+				l_all_items :=  tool_bar.content.items.twin
+				l_content := tool_bar.content
+				l_content.wipe_out
+				l_datas := last_state.items_layout
+				l_datas.start
+			until
+				l_datas.after
+			loop
+				l_name ?= l_datas.item @ 1
+				check not_void: l_name /= Void end
+				l_item := Void
+				if l_name.is_equal (l_separator.name) then
+					-- First check if it's a separator
+					l_content.items.extend (l_separator)
+					create l_separator.make
+				else
+					from
+						l_all_items.start
+					until
+						l_all_items.after or l_item /= Void
+					loop
+						if l_all_items.item.name.is_equal (l_name) then
+							l_item := l_all_items.item
+							if not l_datas.item.boolean_item (2) then
+								l_item.disable_displayed
+							else
+								l_item.enable_displayed
+							end
+						end
+						l_all_items.forth
+					end
+					check must_fount: l_item /= Void end
+					l_content.items.extend (l_item)
+				end
+				l_datas.forth
+			end
+			tool_bar.wipe_out
+			tool_bar.extend (l_content)
+		end
+
 feature {SD_CONFIG_MEDIATOR} -- Special setting.
 
 	set_last_state (a_last_data: SD_TOOL_BAR_ZONE_STATE) is

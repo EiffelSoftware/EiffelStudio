@@ -103,8 +103,10 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_TABULATION
 		do
-			create tok.make (a_indent_depth)
-			last_line.append_token (tok)
+			if a_indent_depth > 0 then
+				create tok.make (a_indent_depth)
+				last_line.append_token (tok)
+			end
 		end
 
 	process_symbol_text (t: STRING) is

@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 		local
 			l_ext: CHARACTER
 		do
-			if a_file.item (a_file.count -1 ) = '.' then
+			if a_file.count > 1 and then a_file.item (a_file.count -1 ) = '.' then
 				l_ext := a_file.item (a_file.count)
 				Result := l_ext = 'e' or l_ext = 'E'
 			end

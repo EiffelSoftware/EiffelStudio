@@ -52,7 +52,7 @@ feature {NONE}  -- Initlization
 	init_drawing_style (a_top: BOOLEAN) is
 			-- Init `internal_tab_style'
 		do
-			create internal_tab_style.make (internal_drawing_area, a_top)
+			create {SD_NOTEBOOK_TAB_DRAWER_IMP}internal_tab_style.make (internal_drawing_area, a_top)
 			internal_tab_style.set_padding_width (internal_shared.padding_width)
 		end
 
@@ -208,16 +208,27 @@ feature -- Properties
 			set: not a_focused implies internal_drawing_area.background_color.is_equal (internal_shared.non_focused_title_color)
 		end
 
-	set_selected_tab_after (a_selected_tab_after: BOOLEAN) is
-			-- Set `is_selected_tab_after'.
+	set_tab_after (a_selected_tab_after: BOOLEAN) is
+			-- Set `is_tab_after'.
 		do
-			is_selected_tab_after := a_selected_tab_after
+			is_tab_after := a_selected_tab_after
 		ensure
-			set: is_selected_tab_after = a_selected_tab_after
+			set: is_tab_after = a_selected_tab_after
 		end
 
-	is_selected_tab_after: BOOLEAN
-			-- If after Current, there is a selected tab?
+	is_tab_after: BOOLEAN
+			-- If after Current, there is a tab?
+
+	set_tab_before (a_bool: BOOLEAN) is
+			-- Set `is_tab_before'
+		do
+			is_tab_before := a_bool
+		ensure
+			set: is_tab_before = a_bool
+		end
+
+	is_tab_before: BOOLEAN
+			-- If after Current, there is a tab?
 
 feature {NONE}  -- Implmentation for drag action
 
@@ -287,9 +298,9 @@ feature {NONE}  -- Implementation agents
 			internal_drawing_area.clear
 			if pixmap /= Void then
 				if is_selected then
-					internal_tab_style.expose_selected (a_width)
+					internal_tab_style.expose_selected (a_width, is_tab_before, is_tab_after)
 				else
-					internal_tab_style.expose_unselected (a_width, is_selected_tab_after)
+					internal_tab_style.expose_unselected (a_width, is_tab_before, is_tab_after)
 				end
 			end
 		end
@@ -297,18 +308,27 @@ feature {NONE}  -- Implementation agents
 feature {NONE}  -- Implementation functions.
 
 	update_minmum_size is
-			-- Update munmum size of Current.
+			-- Update minmum size of Current.
 		local
 			l_size: INTEGER
+			l_orignal_font, l_font: EV_FONT
 		do
 			if enough_space then
+				l_font := internal_drawing_area.font
+				l_orignal_font := l_font.twin
+				l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+				internal_drawing_area.set_font (l_font)
+
 				l_size := internal_tab_style.start_x_tail_internal
-				if is_selected then
-					l_size := l_size + internal_shared.highlight_tail_width
-					l_size := l_size + internal_tab_style.padding_width
+				internal_drawing_area.set_font (l_orignal_font)
+--				if is_selected then
+--					l_size := l_size + internal_shared.highlight_tail_width
+--					l_size := l_size + internal_tab_style.padding_width
+--				end
+				if l_size /= internal_drawing_area.minimum_width or l_size /= minimum_width then
+					internal_drawing_area.set_minimum_width (l_size)
+					set_minimum_width (l_size)
 				end
-				internal_drawing_area.set_minimum_width (l_size)
-				set_minimum_width (l_size)
 			end
 		end
 
@@ -329,7 +349,7 @@ feature {NONE}  -- Implementation attributes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
-	internal_tab_style: SD_NOTEBOOK_TAB_STYLE_NORMAL
+	internal_tab_style: SD_NOTEBOOK_TAB_DRAWER_I
 			-- Drawer of the internal_drawing_area.
 
 invariant

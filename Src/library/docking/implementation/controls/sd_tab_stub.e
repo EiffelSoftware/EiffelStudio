@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 				Result := Result + 1
 			end
 			if is_vertical then
-				Result := Result + padding_width
+				Result := Result + padding_width // 2
 			end
 		end
 

@@ -20,6 +20,7 @@ feature -- Initlization
 		local
 			l_screen: SD_SCREEN
 			l_env: EV_ENVIRONMENT
+			l_imp: SD_SYSTEM_COLOR_IMP
 		do
 			debug ("docking")
 				print ("%NSD_DOCKER_MEDIATOR creating.....")
@@ -27,13 +28,13 @@ feature -- Initlization
 			create internal_shared
 			docking_manager := a_docking_manager
 			docking_manager.command.recover_normal_state
+
+			create l_imp.make
+			internal_shared.set_hot_zone_factory (l_imp.hot_zone_factory)
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			caller := a_caller
 			create l_screen
-
-			-- FIXIT: Only when use SD_HOT_ZONE_TRIANGLE_FACTORY, follow line is needed.
-			orignal_screen := l_screen.sub_pixmap (create {EV_RECTANGLE}.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.width, l_screen.height))
 
 			create cancel_actions
 			internal_key_press_function := agent on_key_press
@@ -49,9 +50,6 @@ feature -- Initlization
 		end
 
 feature -- Query
-
-	orignal_screen: EV_PIXMAP
-			-- Orignal screen used for clear indicator.
 
 	content: SD_CONTENT is
 			-- Content which is dragged by user.
@@ -150,6 +148,9 @@ feature -- Hanlde pointer events
 			loop
 				l_drawed := hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
 				hot_zones.forth
+				debug ("docking")
+					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion")
+				end
 			end
 			debug ("docking")
 				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion step 2")

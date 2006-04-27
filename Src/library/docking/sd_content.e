@@ -386,7 +386,7 @@ feature {NONE}  -- Implemention.
 	internal_pixmap: EV_PIXMAP
 			-- The internal_pixmap at the head of internal_unique_title.
 
-	internal_mini_toolbar: EV_TOOL_BAR
+	internal_mini_toolbar: EV_WIDGET
 			-- Mini toolbar at the titlt bar.
 
 	internal_shared: SD_SHARED

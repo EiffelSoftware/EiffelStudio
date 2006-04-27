@@ -488,7 +488,7 @@ feature {NONE}  -- Implementation
 		end
 
 	notify_tab (a_except: SD_NOTEBOOK_TAB; a_focus: BOOLEAN) is
-			-- Disable all tabs selection except a_except. Select a_except.
+			-- Disable all tabs selection except `a_except'. Select `a_except'.
 		do
 			from
 				internal_tabs.start
@@ -500,7 +500,7 @@ feature {NONE}  -- Implementation
 				else
 					internal_tabs.item.set_selected (False, a_focus)
 				end
-				
+
 				internal_tabs.forth
 			end
 		end

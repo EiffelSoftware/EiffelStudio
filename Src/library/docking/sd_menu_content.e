@@ -9,11 +9,12 @@ class
 	SD_TOOL_BAR_CONTENT
 
 create
+	make_with_items,
 	make_with_tool_bar
 
 feature {NONE} -- Initlization
 
-	make (a_title: STRING; a_items: like items) is
+	make_with_items (a_title: STRING; a_items: like items) is
 			-- Creation method.
 		require
 			a_title_not_void: a_title /= Void
@@ -64,16 +65,16 @@ feature {NONE} -- Initlization
 					a_tool_bar.item.parent.prune (a_tool_bar.item)
 				end
 
-				l_temp_items.extend (convert_to_sd_item (l_item))
+				l_temp_items.extend (convert_to_sd_item (l_item, a_tool_bar.index.out))
 				a_tool_bar.forth
 			end
-			make (a_title, l_temp_items)
+			make_with_items (a_title, l_temp_items)
 		ensure
 			set: a_title = title
 			set: a_tool_bar.count = items.count
 		end
 
-	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM): SD_TOOL_BAR_ITEM is
+	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING): SD_TOOL_BAR_ITEM is
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
 		require
 			not_void: a_ev_item /= Void
@@ -99,20 +100,46 @@ feature {NONE} -- Initlization
 				if l_tool_bar_button.pixmap /= Void then
 					l_sd_button.set_pixmap (l_tool_bar_button.pixmap)
 				end
+				if l_tool_bar_button.select_actions /= Void then
+					l_sd_button.select_actions.append (l_tool_bar_button.select_actions)
+				end
 				Result := l_sd_button
 			else
 				check must_be_separator: l_tool_bar_separator /= Void end
 				create l_sd_separator.make
 				Result := l_sd_separator
 			end
+			Result.set_name (a_name)
 		ensure
 			not_void: Result /= Void
 		end
 
 feature -- Command
 
+	show is
+			-- Show Current.
+		do
+			if zone /= Void then
+				zone.show
+				if zone.is_floating then
+					zone.floating_tool_bar.show
+				end
+			end
+		end
+
+	hide is
+			-- Hide Current
+		do
+			if zone /= Void then
+				zone.hide
+				if zone.is_floating then
+					zone.floating_tool_bar.hide
+				end
+			end
+		end
+
 	close is
-			-- Close current
+			-- Close Current
 		do
 			if zone /= Void then
 				zone.destroy
@@ -236,7 +263,13 @@ feature -- Query
 		end
 
 feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT,
-		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER}  -- Internal issues.
+		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER, SD_CONFIG_MEDIATOR}  -- Internal issues.
+
+	wipe_out is
+			-- Remove all items.
+		do
+			items.wipe_out
+		end
 
 	seperator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
 			-- Separator after `a_item' if exist.

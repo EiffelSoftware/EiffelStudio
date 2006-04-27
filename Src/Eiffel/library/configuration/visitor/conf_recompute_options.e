@@ -43,17 +43,20 @@ feature -- Visit nodes
 		do
 			if not is_error then
 				a_target.system.set_name (new_target.system.name)
+				a_target.system.set_description (new_target.system.description)
 				a_target.set_version (new_target.internal_version)
 				a_target.set_settings (new_target.internal_settings)
 				if new_target.internal_options /= Void then
 					a_target.set_options (new_target.internal_options)
 				end
+				a_target.set_description (new_target.description)
 				a_target.set_external_includes (new_target.internal_external_include)
 				a_target.set_external_objects (new_target.internal_external_object)
 				a_target.set_external_ressources (new_target.internal_external_ressource)
 				a_target.set_external_make (new_target.internal_external_make)
 				a_target.set_pre_compile (new_target.internal_pre_compile_action)
 				a_target.set_post_compile (new_target.internal_post_compile_action)
+				a_target.set_file_rule (new_target.internal_file_rule)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
@@ -73,11 +76,19 @@ feature -- Visit nodes
 
 	process_group (a_group: CONF_GROUP) is
 			-- Visit `a_group'.
+		local
+			l_cluster, l_cluster_new: CONF_CLUSTER
 		do
 			if not is_error then
+				a_group.set_description (new_group.description)
 				a_group.set_options (new_group.internal_options)
 				a_group.set_class_options (new_group.class_options)
 				a_group.set_readonly (new_group.internal_read_only)
+				if a_group.is_cluster then
+					l_cluster ?= a_group
+					l_cluster_new ?= new_group
+					l_cluster.set_file_rule (l_cluster_new.internal_file_rule)
+				end
 			end
 		end
 

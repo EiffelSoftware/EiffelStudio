@@ -66,10 +66,17 @@ feature {NONE} -- Retrieval
 		local
 			l_args: ARRAYED_LIST [STRING]
 			l_user_opts: USER_OPTIONS
+			l_last_found: BOOLEAN
 		do
 			argument_combo.wipe_out
 			l_user_opts := lace.user_options
+			if l_user_opts.last_argument /= Void then
+				current_argument.set_text (l_user_opts.last_argument)
+			else
+				current_argument.remove_text
+			end
 			l_args := l_user_opts.arguments
+			argument_combo.select_actions.block
 			if l_args /= Void then
 				from
 					l_args.start
@@ -78,14 +85,18 @@ feature {NONE} -- Retrieval
 				loop
 						-- Add argument to combo.
 					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_args.item))
+					if l_args.item.is_equal (current_argument.text) then
+						argument_combo.last.enable_select
+						l_last_found := True
+					end
 					l_args.forth
 				end
 			end
-			if l_user_opts.last_argument /= Void then
-				current_argument.set_text (l_user_opts.last_argument)
-			else
-				current_argument.remove_text
+			if not l_last_found then
+				argument_combo.first.disable_select
 			end
+			argument_combo.select_actions.resume
+
 			if l_user_opts.use_arguments then
 				argument_check.enable_select
 			else
@@ -321,6 +332,9 @@ feature {NONE} -- Actions
 					l_argument_dialog.run_and_close_button.set_focus
 				end
 			end
+			if argument_combo.selected_item /= Void then
+				argument_combo.selected_item.disable_select
+			end
 		end
 
 	add_argument is
@@ -364,7 +378,7 @@ feature {NONE} -- Actions
 	argument_selected (a_widget: EV_WIDGET) is
 			-- An argument was chosen in 'a_widget'
 		do
-			if not argument_combo.is_empty and argument_combo.selected_item /= Void then
+			if not argument_combo.is_empty and argument_combo.selected_item /= Void and argument_combo.selected_item.data = Void then
 				current_argument.set_text (argument_combo.selected_item.text)
 			else
 				current_argument.remove_text

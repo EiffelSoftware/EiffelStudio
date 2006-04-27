@@ -539,7 +539,10 @@ feature {NONE} -- Implementation
 			else
 				check should_not_reach: False end
 			end
-
+			l_tmp := data.actual_group.description
+			if l_tmp /= Void then
+				Result.append ("%N"+l_tmp)
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end

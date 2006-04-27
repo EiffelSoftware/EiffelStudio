@@ -52,7 +52,7 @@ feature  -- Agents
 						if l_auto_hide_zone = Void then
 							internal_docking_manager.command.remove_auto_hide_zones (True)
 						else
-							l_auto_hide_zone.set_title_bar_selection_color (True)
+							l_auto_hide_zone.set_focus_color (True)
 						end
 					end
 				end
@@ -133,7 +133,7 @@ feature  -- Agents
 			l_content := internal_docking_manager.property.last_focus_content
 			l_zone := internal_docking_manager.zones.zone_by_content (l_content)
 			if internal_docking_manager.main_container.has_recursive (l_zone) then
-				l_zone.set_title_bar_selection_color (True)
+				l_zone.set_focus_color (True)
 			end
 			debug ("docking")
 				print ("%NSD_DOCKING_MANAGER_AGENTS on_main_window_focus_in ")

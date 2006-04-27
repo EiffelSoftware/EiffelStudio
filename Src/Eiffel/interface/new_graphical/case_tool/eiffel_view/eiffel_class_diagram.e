@@ -34,6 +34,13 @@ inherit
 			on_class_added
 		end
 
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -86,8 +93,7 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			node.put_last (Xml_routines.xml_node (node, "ALL_CLASSES_IN_CLUSTER", model.include_all_classes_of_cluster.out))
 			node.put_last (Xml_routines.xml_node (node, "ONLY_CLASSES_IN_CLUSTER", model.include_only_classes_of_cluster.out))
 			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_NAME", model.center_class.class_i.name_in_upper))
-			conf_todo
---			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_CLUSTER_NAME", model.center_class.class_i.cluster.cluster_name))
+			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_GROUP_ID", model.center_class.group_id))
 
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
@@ -97,8 +103,9 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 		local
 			ccn, cccn: STRING
 			cc: CLASS_I
-			cl: CLUSTER_I
+			cl: CONF_GROUP
 			esc: ES_CLASS
+			l_classes: LINKED_SET [CONF_CLASS]
 		do
 			node.forth
 			model.set_ancestor_depth (xml_routines.xml_integer (node, "ANCESTOR_DEPTH"))
@@ -108,27 +115,50 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			model.set_include_all_classes_of_cluster (xml_routines.xml_boolean (node, "ALL_CLASSES_IN_CLUSTER"))
 			model.set_include_only_classes_of_cluster (xml_routines.xml_boolean (node, "ONLY_CLASSES_IN_CLUSTER"))
 			ccn := xml_routines.xml_string (node, "CENTER_CLASS_NAME")
-			cccn := xml_routines.xml_string (node, "CENTER_CLASS_CLUSTER_NAME")
+			cccn := xml_routines.xml_string (node, "CENTER_CLASS_GROUP_ID")
 
 			Precursor {EIFFEL_WORLD} (node)
 
 				-- Check if cluster still exists
-			cl := universe.cluster_of_name (cccn)
-			if cl /= Void then
-				cc := universe.class_named (ccn, cl)
-					-- Check if class still exists
-				if cc /= Void then
-					esc := model.class_from_interface (cc)
-					if esc = Void then
-						create esc.make (cc)
-						model.add_node (esc)
+			if cccn /= Void and then ccn /= Void then
+				cl := group_of_id (cccn)
+				if cl /= Void then
+					l_classes := cl.class_by_name (ccn, False)
+						-- Check if class still exists
+					if not l_classes.is_empty then
+						cc ?= l_classes.first
+						check
+							cc_not_void: cc /= Void
+						end
+						esc := class_from_interface (cc)
+						if esc = Void then
+							create esc.make (cc)
+							model.add_node (esc)
+							model.add_node_relations (esc)
+						end
+						model.set_center_class (esc)
 					end
-					model.set_center_class (esc)
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
+
+	class_from_interface (a_class: CLASS_I): ES_CLASS is
+			-- Class from interface.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_classes: ARRAYED_LIST [ES_CLASS]
+		do
+			l_classes := model.class_from_interface (a_class)
+			if not l_classes.is_empty then
+				check
+					class_is_unique: l_classes.count = 1
+				end
+				Result := l_classes.first
+			end
+		end
 
 	on_class_drop (a_stone: CLASSI_STONE) is
 			-- `a_stone' was dropped on `Current'
@@ -140,7 +170,7 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 		do
 			if not model.is_empty then
-				cm := model.class_from_interface (a_stone.class_i)
+				cm := class_from_interface (a_stone.class_i)
 				if cm = Void or else not cm.is_needed_on_diagram  then
 					-- add it
 					if cm = Void then
@@ -149,13 +179,9 @@ feature {NONE} -- Implementation
 					else
 						cm.enable_needed_on_diagram
 						enable_all_links (cm)
-						if a_stone.class_i.is_compiled then
-							model.add_ancestor_relations (cm)
-							model.add_descendant_relations (cm)
-							model.add_client_relations (cm)
-							model.add_supplier_relations (cm)
-						end
+
 					end
+					model.add_node_relations (cm)
 					cf ?= figure_from_model (cm)
 					check
 						class_was_inserted: cf /= Void
@@ -197,13 +223,17 @@ feature {NONE} -- Implementation
 		local
 			dial: EB_CREATE_CLASS_DIALOG
 			drop_x, drop_y: INTEGER
+			l_cluster: CONF_CLUSTER
 		do
 			is_new_dropped := True
 			drop_x := context_editor.pointer_position.x
 			drop_y := context_editor.pointer_position.y
 			create dial.make_default (context_editor.development_window)
-			conf_todo
---			dial.preset_cluster (model.center_class.class_i.cluster)
+			l_cluster ?= model.center_class.class_i.group
+			check
+				l_cluster_not_void: l_cluster /= Void
+			end
+			dial.preset_cluster (l_cluster)
 			dial.call_default
 			if not dial.cancelled then
 				include_new_class (dial.class_i, drop_x, drop_y)
@@ -224,20 +254,15 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 		do
 			if a_class /= Void then
-				es_class := model.class_from_interface (a_class)
+				es_class := class_from_interface (a_class)
 				if es_class = Void then
 					create es_class.make (a_class)
 					model.add_node (es_class)
 				else
 					es_class.enable_needed_on_diagram
 					enable_all_links (es_class)
-					if a_class.is_compiled then
-						model.add_ancestor_relations (es_class)
-						model.add_descendant_relations (es_class)
-						model.add_client_relations (es_class)
-						model.add_supplier_relations (es_class)
-					end
 				end
+				model.add_node_relations (es_class)
 				cf ?= figure_from_model (es_class)
 				check cf_not_void: cf /= Void end
 				cf.set_port_position (a_x, a_y)

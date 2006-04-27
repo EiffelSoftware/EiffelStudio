@@ -72,18 +72,28 @@ feature {NONE} -- Implementation
 		local
 			es_cluster: ES_CLUSTER
 			cluster_fig: EG_CLUSTER_FIGURE
+			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 		do
-			es_cluster := tool.graph.cluster_from_interface (a_stone.cluster_i)
-			if es_cluster /= Void then
-				cluster_fig ?= tool.world.figure_from_model (es_cluster)
-				if cluster_fig /= Void then
-					if cluster_fig.is_fixed then
-						cluster_fig.set_is_fixed (False)
-						tool.restart_force_directed
-					else
-						cluster_fig.set_is_fixed (True)
+			l_clusters := tool.graph.cluster_from_interface (a_stone.group)
+			if not l_clusters.is_empty then
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					es_cluster := l_clusters.item
+					cluster_fig ?= tool.world.figure_from_model (es_cluster)
+					if cluster_fig /= Void then
+						if cluster_fig.is_fixed then
+							cluster_fig.set_is_fixed (False)
+							tool.restart_force_directed
+						else
+							cluster_fig.set_is_fixed (True)
+						end
 					end
+					l_clusters.forth
 				end
+
 			end
 		end
 

@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			model := a_model
+			label_pixmap.set_pixmap (pixmap_from_group (model.group))
 			initialize
 
 			disable_rotating

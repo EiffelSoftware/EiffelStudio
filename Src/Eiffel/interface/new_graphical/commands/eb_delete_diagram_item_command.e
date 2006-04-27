@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 	drop_class (st: CLASSI_STONE) is
 			-- Extract the class that should be removed from `st' and erase it.
 		local
-			fs: FEATURE_STONE
+			fs: CLASSI_FIGURE_STONE
 			es_class: ES_CLASS
 			wd: EV_WARNING_DIALOG
 			referenced_classes: STRING
@@ -112,8 +112,8 @@ feature {NONE} -- Implementation
 			l_item: CLASS_C
 		do
 			fs ?= st
-			if fs = Void then
-				es_class := tool.graph.class_from_interface (st.class_i)
+			if fs /= Void then
+				es_class := fs.source.model
 				if es_class /= Void then
 					if es_class.class_c /= Void then
 						create referenced_classes.make_empty
@@ -153,6 +153,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 			retried: BOOLEAN
 			es_class: ES_CLASS
+			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_links: LIST [EG_LINK]
 		do
 			if not retried then
@@ -177,8 +178,13 @@ feature {NONE} -- Implementation
 				create wd.make_with_text (Warning_messages.w_Not_writable (class_i.file_name))
 				wd.show_modal_to_window (window.window)
 			else
-				es_class := tool.graph.class_from_interface (class_i)
-				if es_class /= Void then
+				es_classes := tool.graph.class_from_interface (class_i)
+				from
+					es_classes.start
+				until
+					es_classes.after
+				loop
+					es_class := es_classes.item
 					from
 						l_links := es_class.links
 						l_links.start
@@ -189,6 +195,7 @@ feature {NONE} -- Implementation
 						l_links.forth
 					end
 					tool.graph.remove_node (es_class)
+					es_classes.forth
 				end
 				tool.reset_history
 			end

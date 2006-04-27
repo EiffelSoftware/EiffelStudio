@@ -57,7 +57,7 @@ feature -- Basic operations
 						history.wipe_out
 						cd.model.set_supercluster_depth (dial.supercluster_depth)
 						cd.model.set_subcluster_depth (dial.subcluster_depth)
-						tool.create_cluster_view (cd.model.center_cluster.cluster_i, False)
+						tool.create_cluster_view (cd.model.center_cluster.group, False)
 					end
 				else
 					create dial.make_for_class_view

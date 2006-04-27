@@ -9,10 +9,6 @@ class
 	DOCUMENTATION
 
 inherit
-	SHARED_WORKBENCH
-		rename
-			system as bench_system
-		end
 
 	SHARED_EIFFEL_PROJECT
 
@@ -29,6 +25,11 @@ inherit
 		export
 			{NONE} all
 			{ANY} set_excluded_indexing_items
+		end
+
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
 		end
 
 create
@@ -744,14 +745,13 @@ feature -- Specific Generation
 			check
 				views_exist: diagram_views /= Void
 			end
-			conf_todo_msg ("Diagram generation when generating documentation")
---			view_name := diagram_views.item (cluster.cluster_name)
---			if view_name /= Void then
---				create g.make_for_documentation (cluster, view_name, Current)
---			else
---				create g.make_for_documentation (cluster, Void, Current)
---			end
---			g.execute
+			view_name := diagram_views.item (id_of_group (cluster))
+			if view_name /= Void then
+				create g.make_for_documentation (cluster, view_name, Current)
+			else
+				create g.make_for_documentation (cluster, Void, Current)
+			end
+			g.execute
 		end
 
 	generate_class (a_class: CONF_CLASS; a_format: CLASS_FORMAT) is

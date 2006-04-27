@@ -113,19 +113,14 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
-			conf_todo
---			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.client.class_i.cluster.cluster_name)
---			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.supplier.class_i.cluster.cluster_name)
---			Result.remove_attribute_by_name ("NAME")
---			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
---			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			Result.remove_attribute_by_name ("NAME")
+			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
 
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
-			node.forth
-			node.forth
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
 			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
 				model.enable_needed_on_diagram

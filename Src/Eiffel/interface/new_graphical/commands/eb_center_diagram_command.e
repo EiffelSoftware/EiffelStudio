@@ -15,8 +15,6 @@ inherit
 			new_toolbar_item
 		end
 
-	CONF_REFACTORING
-
 create
 	make
 
@@ -27,19 +25,18 @@ feature -- Basic operations
 		local
 			cla_s: CLASSI_STONE
 			clu_s: CLUSTER_STONE
-			clu: CLUSTER_I
+			clu: CONF_GROUP
 			warned: BOOLEAN
 		do
 			if tool.class_view /= Void then
 				cla_s := tool.class_stone
 				if cla_s /= Void and then cla_s.is_valid then
-					conf_todo
---					clu := cla_s.class_i.cluster
+					clu := cla_s.class_i.group
 				end
 			elseif tool.cluster_view /= Void then
 				clu_s := tool.cluster_stone
 				if clu_s /= Void and then clu_s.is_valid then
-					clu := clu_s.cluster_i.parent_cluster
+					clu := clu_s.group --.parent_cluster
 				end
 			else
 				create explain_dialog.make_with_text (Interface_names.e_Diagram_hole)

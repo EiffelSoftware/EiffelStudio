@@ -51,6 +51,8 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_ID_SOLUTION
+
 create
 	make_with_tool
 
@@ -880,10 +882,10 @@ feature -- Element change
 			retry
 		end
 
-	create_cluster_view (a_cluster: CLUSTER_I; load_when_possible: BOOLEAN) is
+	create_cluster_view (a_group: CONF_GROUP; load_when_possible: BOOLEAN) is
 			-- Initialize diagram centered on `a_cluster', load from file if possible when `load_when_possible'.
 		require
-			a_cluster_exists: a_cluster /= Void
+			a_group_exists: a_group /= Void
 		local
 			cancelled: BOOLEAN
 			l_cluster_view: EIFFEL_CLUSTER_DIAGRAM
@@ -896,9 +898,8 @@ feature -- Element change
 			disable_toolbar
 
 			if not cancelled then
-
 				development_window.status_bar.reset
-				development_window.status_bar.display_message ("Constructing Diagram for " + a_cluster.name_in_upper + " Cluster")
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_group.name)
 
 				graph.wipe_out
 
@@ -955,7 +956,7 @@ feature -- Element change
 				update_excluded_class_figures
 				world_cell.disable_resize
 				world.hide
-				create new_cluster.make (a_cluster)
+				create new_cluster.make (a_group)
 				cluster_graph.set_center_cluster (new_cluster)
 
 				create f.make (diagram_file_name (cluster_graph))
@@ -1159,9 +1160,6 @@ feature -- Memory management
 			if development_window.editor_tool.text_area /= Void then
 				development_window.editor_tool.text_area.remove_observer (Current)
 			end
-			if cluster_graph /= Void then
-				cluster_graph.manager.remove_observer (cluster_graph)
-			end
 			world_cell.recycle
 			world_cell := Void
 		end
@@ -1250,11 +1248,11 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 								is_rebuild_world_needed or else
 								cluster_graph = Void or else
 								cluster_graph.center_cluster = Void or else
-								not cluster_graph.center_cluster.cluster_i.cluster_name.is_equal (cluster_stone.group.name)
+								cluster_graph.center_cluster.group /= cluster_stone.group
 							then
 								is_rebuild_world_needed := False
 								store
-								create_cluster_view (cluster_stone.cluster_i, True)
+								create_cluster_view (cluster_stone.group, True)
 								is_synchronization_needed := False
 							end
 						end
@@ -1682,7 +1680,7 @@ feature {EB_RESET_VIEW_COMMAND} -- Implementation
 			if class_graph /= Void then
 				create_class_view (class_graph.center_class.class_i, False)
 			else
-				create_cluster_view (cluster_graph.center_cluster.cluster_i, False)
+				create_cluster_view (cluster_graph.center_cluster.group, False)
 			end
 		end
 
@@ -1738,7 +1736,7 @@ feature {NONE} -- Implementation
 			elseif cluster_graph /= Void then
 				cluster_graph.set_subcluster_depth (default_subcluster_depth)
 				cluster_graph.set_supercluster_depth (default_supercluster_depth)
-				create_cluster_view (cluster_graph.center_cluster.cluster_i, False)
+				create_cluster_view (cluster_graph.center_cluster.group, False)
 			end
 		end
 
@@ -1962,6 +1960,7 @@ feature {EB_CONTEXT_TOOL, EIFFEL_WORLD} -- XML Output
 		local
 			clg: ES_CLUSTER_GRAPH
 			cg: ES_CLASS_GRAPH
+			l_class: CLASS_I
 		do
 			clg ?= esg
 			if clg = Void then
@@ -1970,10 +1969,11 @@ feature {EB_CONTEXT_TOOL, EIFFEL_WORLD} -- XML Output
 					is_class_graph: cg /= Void
 				end
 				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				Result.extend (cg.center_class.class_i.name)
+				l_class := cg.center_class.class_i
+				Result.extend (id_of_class (l_class.config_class))
 			else
 				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				Result.extend (clg.center_cluster.cluster_i.cluster_name)
+				Result.extend (clg.center_cluster.group_id)
 			end
 			Result.add_extension ("xml")
 		end

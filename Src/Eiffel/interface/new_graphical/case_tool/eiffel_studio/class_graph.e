@@ -15,11 +15,6 @@ inherit
 			synchronize
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create
-		end
-
 create
 	make
 
@@ -146,10 +141,10 @@ feature -- Element change
 			wipe_out
 			add_node (center_class)
 			if include_all_classes_of_cluster then
-				conf_todo
---				include_all_classes (center_class.class_i.cluster)
+				include_all_classes (center_class.class_i.group)
 			end
 			explore_relations
+			add_node_relations (center_class)
 			remove_unneeded_items
 		end
 
@@ -170,12 +165,7 @@ feature -- Element change
 			disable_all_links (center_class.internal_links)
 			center_class := a_center_class
 			center_class.enable_needed_on_diagram
-			if center_class.is_compiled then
-				add_ancestor_relations (center_class)
-				add_descendant_relations (center_class)
-				add_client_relations (center_class)
-				add_supplier_relations (center_class)
-			end
+			add_node_relations (center_class)
 
 			explore_ancestors (center_class.class_i, ancestor_depth, False)
 			explore_descendants (center_class.class_i, descendant_depth, False)
@@ -194,6 +184,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 				if not center_class.is_needed_on_diagram then
 					-- Fake the class is still there but don't show it
 					add_node (center_class)
+					add_node_relations (center_class)
 					disable_all_links (center_class.links)
 --				else
 					-- The class must have been deleted/or renamed and can't be found anymore
@@ -379,6 +370,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+			l_classes: ARRAYED_LIST [ES_CLASS]
 		do
 			if depth > 0 and then a_class.class_i.is_compiled then
 				l := a_class.class_i.compiled_class.syntactical_clients
@@ -396,7 +388,10 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 						added_class := a_class
 					else
 						add_class (ci)
-						added_class := class_from_interface (ci)
+						l_classes := class_from_interface (ci)
+						if not l_classes.is_empty then
+						 	added_class := l_classes.first
+						end
 					end
 					if added_class /= Void then
 						if not added_class.has_supplier (a_class) then
@@ -460,6 +455,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+			l_classes : ARRAYED_LIST [ES_CLASS]
 		do
 			if depth > 0 and then a_class.class_i.compiled then
 				l := a_class.class_i.compiled_class.syntactical_suppliers
@@ -477,7 +473,10 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 						added_class := a_class
 					else
 						add_class (ci)
-						added_class := class_from_interface (ci)
+						l_classes := class_from_interface (ci)
+						if not l_classes.is_empty then
+						 	added_class := l_classes.first
+						end
 					end
 					if added_class /= Void then
 						if not a_class.has_supplier (added_class) then
@@ -509,20 +508,25 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	include_all_classes (cluster_i: CLUSTER_I) is
+	include_all_classes (cluster_i: CONF_GROUP) is
 			-- Include all classes in `cluster_i'.
 		require
 			cluster_i_not_void: cluster_i /= Void
 		local
-			l_classes: LIST [CLASS_I]
+			l_classes:  HASH_TABLE [CONF_CLASS, STRING]
+			l_class: CLASS_I
 		do
-			l_classes := cluster_i.classes.linear_representation
+			l_classes := cluster_i.classes
 			from
 				l_classes.start
 			until
 				l_classes.after
 			loop
-				add_class (l_classes.item)
+				l_class ?= l_classes.item_for_iteration
+				check
+					l_class_not_void: l_class /= Void
+				end
+				add_class (l_class)
 				l_classes.forth
 			end
 		end
@@ -696,34 +700,32 @@ feature {NONE} -- Disable relations
 			a_class_not_void: a_class /= Void
 		local
 			es_class: ES_CLASS
+			es_classes: ARRAYED_LIST [ES_CLASS]
 		do
 			last_added_class := Void
 			if not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
-
-				conf_todo
---				if not include_only_classes_of_cluster or else a_class.cluster = center_class.class_i.cluster then
---					es_class := class_from_interface (a_class)
---					if es_class = Void then
---						create es_class.make (a_class)
---						add_node (es_class)
---						last_added_class := es_class
---						if last_created_classes /= Void then
---							last_created_classes.extend (es_class)
---						end
---					elseif not es_class.is_needed_on_diagram then
---						es_class.enable_needed_on_diagram
---						if es_class.is_compiled then
---							add_ancestor_relations (es_class)
---							add_descendant_relations (es_class)
---							add_client_relations (es_class)
---							add_supplier_relations (es_class)
---						end
---						last_added_class := es_class
---						if last_created_classes /= Void then
---							last_created_classes.extend (es_class)
---						end
---					end
---				end
+				if not include_only_classes_of_cluster or else a_class.group = center_class.class_i.group then
+					es_classes := class_from_interface (a_class)
+					if not es_classes.is_empty then
+						es_class := es_classes.first
+					end
+					if es_class = Void then
+						create es_class.make (a_class)
+						add_node (es_class)
+						add_node_relations (es_class)
+						last_added_class := es_class
+						if last_created_classes /= Void then
+							last_created_classes.extend (es_class)
+						end
+					elseif not es_class.is_needed_on_diagram then
+						es_class.enable_needed_on_diagram
+						add_node_relations (es_class)
+						last_added_class := es_class
+						if last_created_classes /= Void then
+							last_created_classes.extend (es_class)
+						end
+					end
+				end
 			end
 		end
 

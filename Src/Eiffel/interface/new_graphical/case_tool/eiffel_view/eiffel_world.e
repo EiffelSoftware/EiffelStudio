@@ -426,7 +426,7 @@ feature -- Element change.
 			l_item: EIFFEL_LINK_FIGURE
 			i, nb: INTEGER
 		do
-			if context_editor.force_directed_layout.is_stopped then
+			if context_editor = Void or else context_editor.force_directed_layout.is_stopped then
 				update
 				from
 					l_edges := links

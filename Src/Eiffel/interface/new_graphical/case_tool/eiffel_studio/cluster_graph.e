@@ -16,20 +16,7 @@ inherit
 			synchronize
 		end
 
-	EB_CLUSTER_MANAGER_OBSERVER
-		undefine
-			default_create
-		redefine
-			on_class_moved,
-			on_cluster_changed
-		end
-
 	EB_CONSTANTS
-		undefine
-			default_create
-		end
-
-	CONF_REFACTORING
 		undefine
 			default_create
 		end
@@ -47,8 +34,6 @@ feature {NONE} -- Initialization
 
 			subcluster_depth := 1
 			supercluster_depth := 1
-
-			manager.add_observer (Current)
 		end
 
 
@@ -73,6 +58,31 @@ feature -- Access
 
 	center_cluster: ES_CLUSTER
 			-- Center cluster of `Current'.
+
+	cluster_of_id (a_id: STRING): ES_CLUSTER is
+			-- Cluster of cluster_id `a_id'
+		require
+			a_id_not_void: a_id /= Void
+		local
+			l_clusters: ARRAYED_LIST [EG_CLUSTER]
+			l_cluster: ES_CLUSTER
+		do
+			l_clusters := clusters
+			from
+				l_clusters.start
+			until
+				l_clusters.after or Result /= Void
+			loop
+				l_cluster ?= l_clusters.item
+				check
+					l_cluster_not_void: l_cluster /= Void
+				end
+				if l_cluster.cluster_id.is_equal (a_id) then
+					Result := l_cluster
+				end
+				l_clusters.forth
+			end
+		end
 
 feature -- Element change
 
@@ -122,20 +132,33 @@ feature -- Element change
 		require
 			cluster_not_void: cluster /= Void
 		local
-			l_classes: LIST [CLASS_I]
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_class: CLASS_I
 		do
-			l_classes := cluster.cluster_i.classes.linear_representation
-			create {ARRAYED_LIST [EG_LINKABLE]} last_included_classes.make (l_classes.count)
-			from
-				l_classes.start
-			until
-				l_classes.after
-			loop
-				add_class (l_classes.item, cluster)
-				if last_added_class /= Void then
-					last_included_classes.extend (last_added_class)
+			if cluster.group.is_cluster then
+				l_classes := cluster.group.classes
+				if l_classes /= Void then
+					create {ARRAYED_LIST [EG_LINKABLE]} last_included_classes.make (l_classes.count)
+					from
+						l_classes.start
+					until
+						l_classes.after
+					loop
+						l_class ?= l_classes.item_for_iteration
+						check
+							l_class_not_viod: l_class /= Void
+						end
+						add_class (l_class, cluster)
+						if last_added_class /= Void then
+							last_included_classes.extend (last_added_class)
+						end
+						l_classes.forth
+					end
+				else
+					create {ARRAYED_LIST [EG_LINKABLE]} last_included_classes.make (0)
 				end
-				l_classes.forth
+			else
+				create {ARRAYED_LIST [EG_LINKABLE]} last_included_classes.make (0)
 			end
 		ensure
 			last_included_classes_not_void: last_included_classes /= Void
@@ -159,70 +182,6 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			end
 		end
 
-feature {NONE} -- Cluster manger observer
-
-	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; a_old_path: STRING) is
-			-- `a_class' has been moved away from `old_cluster'.
-		local
-			old_clus, new_clus: ES_CLUSTER
-			l_class: ES_CLASS
-		do
-			conf_todo
---			l_class := class_from_interface (a_class)
---			if l_class /= Void and then l_class.is_needed_on_diagram then
---				old_clus := cluster_from_interface (old_cluster)
---				new_clus := cluster_from_interface (a_class.cluster)
---
---				if old_clus /= Void and then old_clus.is_needed_on_diagram and then old_clus.has (l_class) then
---					if new_clus = Void or else not new_clus.is_needed_on_diagram then
---						remove_links (l_class.links)
---						remove_node (l_class)
---						context_editor.history.wipe_out
---						remove_unneeded_items
---					else
---						old_clus.prune_all (l_class)
---						new_clus.extend (l_class)
---						context_editor.history.register_named_undoable (
---							interface_names.t_diagram_move_class_cmd (l_class.name),
---							[<<agent old_clus.prune_all (l_class),
---							   agent new_clus.extend (l_class),
---							   agent manager.move_class (l_class.class_i.config_class, old_clus.cluster_i, new_clus.cluster_i)>>],
---							[<<agent new_clus.prune_all (l_class),
---							   agent old_clus.extend (l_class),
---							   agent manager.move_class (l_class.class_i.config_class, new_clus.cluster_i, old_clus.cluster_i)>>])
---					end
---				elseif new_clus /= Void and then new_clus.is_needed_on_diagram and then not new_clus.has (l_class) then
---				   	if old_clus = Void or else not old_clus.is_needed_on_diagram then
---				   		check
---				   			l_class_is_not_on_diagram: False
---				   		end
---				   	else
---				   		old_clus.prune_all (l_class)
---						new_clus.extend (l_class)
---						context_editor.history.register_named_undoable (
---							interface_names.t_diagram_move_class_cmd (l_class.name),
---							[<<agent old_clus.prune_all (l_class),
---							   agent new_clus.extend (l_class),
---							   agent manager.move_class (l_class.class_i.config_class, old_clus.cluster_i, new_clus.cluster_i)>>],
---							[<<agent new_clus.prune_all (l_class),
---							   agent old_clus.extend (l_class),
---							   agent manager.move_class (l_class.class_i.config_class, new_clus.cluster_i, old_clus.cluster_i)>>])
---				   	end
---				end
---			end
-		end
-
-	on_cluster_changed (a_cluster: CLUSTER_I) is
-			-- `a_cluster' was renamed.
-		local
-			l_cluster: ES_CLUSTER
-		do
-			l_cluster := cluster_from_interface (a_cluster)
-			if l_cluster /= Void then
-				l_cluster.set_name (a_cluster.cluster_name)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	explore_relations is
@@ -231,8 +190,8 @@ feature {NONE} -- Implementation
 			nb_of_items: INTEGER
 		do
 			if context_editor /= Void then
-				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) +
-							   number_of_subclusters (center_cluster.cluster_i, subcluster_depth)
+				nb_of_items := number_of_superclusters (center_cluster.group, supercluster_depth) +
+							   number_of_subclusters (center_cluster.group, subcluster_depth)
 
 				context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 			end
@@ -245,103 +204,220 @@ feature {NONE} -- Implementation
 			if context_editor /= Void then
 				context_editor.development_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
 			end
-			explore_subclusters (center_cluster, subcluster_depth)
+			explore_subclusters (center_cluster, subcluster_depth, True, True)
 		end
 
-	number_of_superclusters (a_cluster: CLUSTER_I; depth: INTEGER): INTEGER is
+	number_of_superclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER is
 			-- Add superclusters of `a_cluster' until `depth' is reached.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
-			new_cluster: CLUSTER_I
+			l_group: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			if depth > 0 then
-				new_cluster := a_cluster.parent_cluster
-				if new_cluster /= Void then
-					Result := Result + number_of_superclusters (new_cluster, depth - 1) + 1
-				end
-			end
-		end
-
-	explore_superclusters (a_cluster: ES_CLUSTER; depth: INTEGER) is
-			-- Add superclusters of `a_cluster' until `depth' is reached.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			new_cluster: CLUSTER_I
-			es_cluster: ES_CLUSTER
-		do
-			if depth > 0 then
-				new_cluster := a_cluster.cluster_i.parent_cluster
-				if new_cluster /= Void then
-					create es_cluster.make (new_cluster)
-					add_cluster (es_cluster)
-					if context_editor /= Void then
-						context_editor.development_window.status_bar.display_progress_value (
-							context_editor.development_window.status_bar.current_progress_value + 1
-						)
+				l_group := a_group
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					if l_cluster.parent /= Void then
+						Result := Result + number_of_superclusters (l_cluster.parent, depth - 1) + 1
 					end
-					include_all_classes (es_cluster)
-					es_cluster.extend (a_cluster)
-					explore_superclusters (es_cluster, depth - 1)
+				elseif l_group.is_library then
+					l_lib ?= l_group
+					if l_lib.target.used_in_libraries /= Void then
+						l_libs := l_lib.target.used_in_libraries.twin
+					end
+					if l_libs /= Void then
+						from
+							l_libs.start
+						until
+							l_libs.after
+						loop
+							Result := Result + number_of_superclusters (l_libs.item, depth - 1) + 1
+							l_libs.forth
+						end
+					end
 				end
 			end
 		end
 
-	number_of_subclusters (a_cluster: CLUSTER_I; depth: INTEGER): INTEGER is
-			-- Add subclusters of `a_cluster' until `depth' is reached.
+	explore_superclusters (a_group: ES_CLUSTER; depth: INTEGER) is
+			-- Add superclusters of `a_group' until `depth' is reached.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
-			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			new_cluster: CLUSTER_I
+			l_group: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
+			es_cluster: ES_CLUSTER
+			l_need_new: BOOLEAN
+			l_cluster_clone: ES_CLUSTER
 		do
 			if depth > 0 then
-				sub_clusters := a_cluster.sub_clusters
-				from
-					sub_clusters.start
-				until
-					sub_clusters.after
-				loop
-					new_cluster := sub_clusters.item
-					Result := Result + number_of_subclusters (new_cluster, depth - 1) + 1
-					sub_clusters.forth
+				l_group := a_group.group
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					if l_cluster.parent /= Void then
+						create es_cluster.make (l_cluster.parent)
+						add_cluster (es_cluster)
+						if context_editor /= Void then
+							context_editor.development_window.status_bar.display_progress_value (
+								context_editor.development_window.status_bar.current_progress_value + 1
+							)
+						end
+						include_all_classes (es_cluster)
+						es_cluster.extend (a_group)
+						explore_superclusters (es_cluster, depth - 1)
+					end
+				elseif l_group.is_library then
+					l_lib ?= l_group
+					if l_lib.target.used_in_libraries /= Void then
+						l_libs := l_lib.target.used_in_libraries.twin
+					end
+					if l_libs /= Void then
+						from
+							l_libs.start
+						until
+							l_libs.after
+						loop
+							create es_cluster.make (l_libs.item)
+							add_cluster (es_cluster)
+							if context_editor /= Void then
+								context_editor.development_window.status_bar.display_progress_value (
+									context_editor.development_window.status_bar.current_progress_value + 1
+								)
+							end
+							include_all_classes (es_cluster)
+							if not l_need_new then
+								es_cluster.extend (a_group)
+								l_need_new := True
+							else
+								create l_cluster_clone.make (a_group.group)
+								es_cluster.extend (l_cluster_clone)
+								explore_subclusters (l_cluster_clone, subcluster_depth, False, False)
+							end
+							explore_superclusters (es_cluster, depth - 1)
+							l_libs.forth
+						end
+					end
 				end
 			end
 		end
 
-	explore_subclusters (a_cluster: ES_CLUSTER; depth: INTEGER) is
-			-- Add subclusters of `a_cluster' until `depth' is reached.
+	number_of_subclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER is
+			-- Add subgroups of `a_group' until `depth' is reached.
 		require
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
-			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			new_cluster: CLUSTER_I
-			es_cluster: ES_CLUSTER
+			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+		do
+			if depth > 0 then
+				if a_group.is_cluster then
+					l_cluster ?= a_group
+					sub_clusters := l_cluster.children
+					if sub_clusters /= Void then
+						from
+							sub_clusters.start
+						until
+							sub_clusters.after
+						loop
+							Result := Result + number_of_subclusters (sub_clusters.item, depth - 1) + 1
+							sub_clusters.forth
+						end
+					end
+				elseif a_group.is_library then
+					l_lib ?= a_group
+					l_groups := l_lib.library_target.groups
+					from
+						l_groups.start
+					until
+						l_groups.after
+					loop
+						if not l_groups.item_for_iteration.is_assembly then
+							Result := Result + number_of_subclusters (l_groups.item_for_iteration, depth - 1) + 1
+						end
+						l_groups.forth
+					end
+				elseif a_group.is_assembly then
+					check error: false end
+				end
+			end
+		end
+
+	explore_subclusters (a_group: ES_CLUSTER; depth: INTEGER; include_class: BOOLEAN; status_bar: BOOLEAN) is
+			-- Add subclusters of `a_group' until `depth' is reached.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			sub_clusters: ARRAYED_LIST [CONF_CLUSTER]
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_groups: HASH_TABLE [CONF_GROUP, STRING]
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+			l_group: CONF_GROUP
+			es_cluster: ES_CLUSTER
 		do
 			if depth > 0 then
-				sub_clusters := a_cluster.cluster_i.sub_clusters
-				from
-					sub_clusters.start
-					if context_editor /= Void then
-						l_status_bar := context_editor.development_window.status_bar
+				if context_editor /= Void then
+					l_status_bar := context_editor.development_window.status_bar
+				end
+				l_group := a_group.group
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					sub_clusters := l_cluster.children
+					if sub_clusters /= Void then
+						from
+							sub_clusters.start
+						until
+							sub_clusters.after
+						loop
+							create es_cluster.make (sub_clusters.item)
+							add_cluster (es_cluster)
+							if l_status_bar /= Void and status_bar then
+								l_status_bar.display_progress_value (
+									l_status_bar.current_progress_value + 1
+								)
+							end
+							if include_class then
+								include_all_classes (es_cluster)
+							end
+							a_group.extend (es_cluster)
+							explore_subclusters (es_cluster, depth - 1, include_class, status_bar)
+							sub_clusters.forth
+						end
 					end
-				until
-					sub_clusters.after
-				loop
-					new_cluster := sub_clusters.item
-					create es_cluster.make (new_cluster)
-					add_cluster (es_cluster)
-					if l_status_bar /= Void then
-						l_status_bar.display_progress_value (
-							l_status_bar.current_progress_value + 1
-						)
+				elseif l_group.is_library then
+					l_lib ?= l_group
+					l_groups := l_lib.library_target.groups
+					from
+						l_groups.start
+					until
+						l_groups.after
+					loop
+						if not l_groups.item_for_iteration.is_assembly then
+							create es_cluster.make (l_groups.item_for_iteration)
+							add_cluster (es_cluster)
+							if l_status_bar /= Void and status_bar then
+								l_status_bar.display_progress_value (
+									l_status_bar.current_progress_value + 1
+								)
+							end
+							if include_class then
+								include_all_classes (es_cluster)
+							end
+							a_group.extend (es_cluster)
+							explore_subclusters (es_cluster, depth - 1, include_class, status_bar)
+						end
+						l_groups.forth
 					end
-					include_all_classes (es_cluster)
-					a_cluster.extend (es_cluster)
-					explore_subclusters (es_cluster, depth - 1)
-					sub_clusters.forth
+				elseif l_group.is_assembly then
+					check error: false end
 				end
 			end
 		end
@@ -357,7 +433,7 @@ feature {NONE} -- Implementation
 		do
 			last_added_class := Void
 			if context_editor = Void or else not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
-				es_class := class_from_interface (a_class)
+				es_class := cluster.node_of (a_class)
 				if es_class = Void then
 					create es_class.make (a_class)
 					add_node (es_class)
@@ -365,17 +441,12 @@ feature {NONE} -- Implementation
 					last_added_class := es_class
 				elseif not es_class.is_needed_on_diagram then
 					es_class.enable_needed_on_diagram
-					if es_class.is_compiled then
-						add_ancestor_relations (es_class)
-						add_descendant_relations (es_class)
-						add_client_relations (es_class)
-						add_supplier_relations (es_class)
-					end
 					if not cluster.has (es_class) then
 						cluster.extend (es_class)
 					end
 					last_added_class := es_class
 				end
+				add_node_relations (es_class)
 			end
 		end
 

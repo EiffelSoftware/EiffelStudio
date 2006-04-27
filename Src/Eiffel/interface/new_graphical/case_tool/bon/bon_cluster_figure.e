@@ -91,8 +91,10 @@ feature {NONE} -- Initialization
 			label_line_start_point := polyline_points.item (2)
 			label_line_end_point := polyline_points.item (3)
 			position_on_line := 0.5
+			prune_all (name_label)
 			label_group.extend (label_rectangle)
 			label_group.extend (name_label)
+			label_group.extend (label_pixmap)
 			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
 			label_move_handle.pointer_double_press_actions.extend (agent on_label_double_press)
 			extend (label_move_handle)
@@ -108,8 +110,6 @@ feature {NONE} -- Initialization
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 
-			name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
-
 			is_shown := True
 		end
 
@@ -120,6 +120,9 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			model := a_model
+			label_pixmap.set_pixmap (pixmap_from_group (model.group))
+			label_pixmap.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
+			name_label.set_point_position (label_group.point_x + label_rectangle_border + label_pixmap.width + pixel_between_pixmap_n_text, label_group.point_y + label_rectangle_border)
 			initialize
 
 			disable_rotating
@@ -262,7 +265,6 @@ feature -- Access
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
 			Result.put_last (Xml_routines.xml_node (Result, is_iconified_string, boolean_representation (is_iconified)))
 			Result.put_last (Xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (model.is_needed_on_diagram)))
-
 			Result := polyline_label_xml_element (node)
 		end
 
@@ -386,13 +388,14 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 				if is_label_shown then
 					label_rectangle.set_point_a_position (label_group.point_x, label_group.point_y)
-					label_rectangle.set_point_b_position (label_group.point_x + name_label.width + 2*label_rectangle_border,
-														  label_group.point_y + name_label.height + 2*label_rectangle_border)
+					label_rectangle.set_point_b_position (label_group.point_x + name_label.width + label_pixmap.width + pixel_between_pixmap_n_text + 2*label_rectangle_border,
+														  label_group.point_y + name_label.height.max (label_pixmap.height) + 2*label_rectangle_border)
 
 					if is_high_quality then
 						update_label
 					else
-						name_label.set_point_position (rectangle.point_a_x, rectangle.point_a_y - name_label.height)
+						label_pixmap.set_point_position (rectangle.point_a_x, rectangle.point_a_y - name_label.height.max (label_pixmap.height))
+						name_label.set_point_position (rectangle.point_a_x + pixel_between_pixmap_n_text, rectangle.point_a_y - name_label.height.max (label_pixmap.height))
 					end
 				end
 				Precursor {EIFFEL_CLUSTER_FIGURE}
@@ -449,6 +452,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			rectangle.disable_sensitive
 			label_rectangle.hide
 			label_rectangle.disable_sensitive
+			label_pixmap.hide
 			name_label.hide
 			resizer_bottom_left.disable_sensitive
 			resizer_bottom_right.disable_sensitive
@@ -465,6 +469,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			rectangle.enable_sensitive
 			label_rectangle.show
 			label_rectangle.enable_sensitive
+			label_pixmap.show
 			name_label.show
 			resizer_bottom_left.enable_sensitive
 			resizer_bottom_right.enable_sensitive
@@ -514,6 +519,12 @@ feature {NONE} -- Implementation
 
 	real_rectangle_border: REAL
 			-- Real value for `rectangle_border'.
+
+	pixel_between_pixmap_n_text: INTEGER is
+			-- Pixel bewteen `label_pixmap' and `name_label'
+		do
+			Result := rectangle_border // 2
+		end
 
 	rectangle_radius: INTEGER is
 			-- Radius for `rectangle'
@@ -671,7 +682,8 @@ feature {NONE} -- Implementation
 				is_high_quality := an_is_high_quality
 				if is_high_quality then
 					prune_all (name_label)
-					name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
+					label_pixmap.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
+					name_label.set_point_position (label_group.point_x + label_pixmap.width + label_rectangle_border + pixel_between_pixmap_n_text, label_group.point_y + label_rectangle_border)
 					name_label.pointer_double_press_actions.prune_all (agent on_label_double_press)
 					label_group.extend (name_label)
 					put_front (label_move_handle)
@@ -712,8 +724,9 @@ feature {NONE} -- Implementation
 					resizer_top_left.disable_sensitive
 					prune_all (label_move_handle)
 					label_move_handle.disable_sensitive
-					put_front (name_label)
 					name_label.pointer_double_press_actions.extend (agent on_label_double_press)
+					label_group.prune_all (name_label)
+					put_front (name_label)
 					send_to_back (rectangle)
 					rectangle.disable_dashed_line_style
 					rectangle.remove_background_color

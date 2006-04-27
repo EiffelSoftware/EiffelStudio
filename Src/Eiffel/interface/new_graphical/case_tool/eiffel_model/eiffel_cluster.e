@@ -12,12 +12,13 @@ class
 inherit
 	EG_CLUSTER
 		redefine
-			default_create
+			default_create,
+			node_type
 		end
 
 create
 	make_with_name
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -36,7 +37,12 @@ feature {NONE} -- Initialization
 		ensure
 			set: name = a_name
 		end
-		
+
+feature -- Node type
+
+	node_type: EM_CLASS;
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

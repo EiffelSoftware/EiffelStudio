@@ -71,41 +71,38 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE) is
 			-- Colorize all classes in `a_stone'.
 		local
 			cf: BON_CLASS_FIGURE
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
 			old_color_table, new_color_table: HASH_TABLE [EV_COLOR, STRING]
-			clus_classes: LIST [CONF_CLASS]
-			l_class: CLASS_I
 			es_class: ES_CLASS
+			l_nodes: ARRAYED_LIST [ES_CLASS]
 		do
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
 			change_color_dialog.show_modal_to_window (tool.development_window.window)
 
+			create class_list.make (1)
+			create old_color_table.make (1)
+			create new_color_table.make (1)
+
+			l_nodes := a_stone.source.model.sub_nodes_recursive
+
 			from
-				create class_list.make (1)
-				create old_color_table.make (1)
-				create new_color_table.make (1)
-				clus_classes := a_stone.group.classes.linear_representation
-				clus_classes.start
+				l_nodes.start
 			until
-				clus_classes.after
+				l_nodes.after
 			loop
-				l_class ?= clus_classes.item
-				check l_class_not_void: l_class /= Void end
-				es_class := tool.graph.class_from_interface (l_class)
-				if es_class /= Void then
-					cf ?= tool.world.figure_from_model (es_class)
-					if cf /= Void then
-						new_color_table.put (change_color_dialog.color, cf.model.name)
-						old_color_table.put (cf.background_color, cf.model.name)
-						class_list.extend (cf)
-					end
+				es_class := l_nodes.item
+				cf ?= tool.world.figure_from_model (es_class)
+				if cf /= Void then
+					new_color_table.put (change_color_dialog.color, cf.model.name)
+					old_color_table.put (cf.background_color, cf.model.name)
+					class_list.extend (cf)
 				end
-				clus_classes.forth
+				l_nodes.forth
 			end
 
 			history.do_named_undoable (
@@ -115,22 +112,14 @@ feature {NONE} -- Implementation
 		end
 
 
-	execute_with_stone (a_stone: CLASSI_STONE) is
+	execute_with_stone (a_stone: CLASSI_FIGURE_STONE) is
 			-- Create a development window and process `a_stone'.
+		require
+			a_stone_not_void: a_stone /= Void
 		local
 			cf: BON_CLASS_FIGURE
-			es_class: ES_CLASS
-			cfs: CLASSI_FIGURE_STONE
 		do
-			cfs ?= a_stone
-			if cfs = Void then
-				es_class := tool.graph.class_from_interface (a_stone.class_i)
-				if es_class /= Void then
-					cf ?= tool.world.figure_from_model (es_class)
-				end
-			else
-				cf ?= cfs.source
-			end
+			cf ?= a_stone.source
 			if cf /= Void then
 				create change_color_dialog
 				change_color_dialog.set_color (cf.background_color)

@@ -19,7 +19,9 @@ inherit
 			world,
 			on_handle_end,
 			on_handle_start,
-			recycle
+			recycle,
+			xml_element,
+			set_with_xml_element
 		end
 
 	EB_CONSTANTS
@@ -43,6 +45,7 @@ feature {NONE} -- Initialization
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 
 			drop_actions.extend (agent on_class_drop)
+			drop_actions.set_veto_pebble_function (agent veto_function)
 
 			start_actions.extend (agent save_position)
 			end_actions.extend (agent extend_history)
@@ -140,6 +143,31 @@ feature -- Element change
 					fade_in
 				end
 			end
+		end
+
+feature -- XML
+
+	id_string: STRING is "CLASS_FIGURE_ID"
+			-- ID string
+
+	group_id_string: STRING is "GROUP_ID"
+			-- Group id
+
+	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+			-- XML element
+		do
+			Result := Precursor {EG_LINKABLE_FIGURE} (node)
+			Result.add_attribute (id_string, xml_namespace, model.es_class_id)
+			Result.add_attribute (group_id_string, xml_namespace, model.group_id)
+		end
+
+	set_with_xml_element (node: XM_ELEMENT) is
+			-- Retrive state from `node'.
+		do
+				-- Discard CLASS_FIGURE_ID and GROUP_ID, since they have been read in factory.
+			node.forth
+			node.forth
+			Precursor {EG_LINKABLE_FIGURE} (node)
 		end
 
 feature {EG_FIGURE_WORLD} -- Element change
@@ -351,32 +379,31 @@ feature {NONE} -- Implementation (adding relations)
 			class_file: PLAIN_TEXT_FILE
 			l_error_window: EV_WARNING_DIALOG
 		do
-			conf_todo
---			create class_file.make (a_stone.class_i.file_name)
---			if not class_file.exists then
---				create l_error_window.make_with_text ("Class is not editable.%N" +
---					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
---				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
---			elseif class_file.is_writable and then not a_stone.class_i.cluster.is_library then
---				if world.context_editor.is_link_inheritance then
---					if drop_allowed (a_stone) then
---						add_inheritance_relation (a_stone.source)
---					else
---						create dial.make_with_text_and_actions (
---							"An inheritance cycle was created.%N%
---								%Do you still want to add this link?",
---								<<agent add_inheritance_relation (a_stone.source)>>)
---						dial.show_modal_to_window (world.context_editor.development_window.window)
---					end
---				elseif world.context_editor.is_link_client then
---					add_client_relation (a_stone.source, False)
---				elseif world.context_editor.is_link_aggregate then
---					add_client_relation (a_stone.source, True)
---				end
---			else
---				create l_error_window.make_with_text ("Class is not editable")
---				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
---			end
+			create class_file.make (a_stone.class_i.file_name)
+			if not class_file.exists then
+				create l_error_window.make_with_text ("Class is not editable.%N" +
+					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
+				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
+			elseif class_file.is_writable and then not a_stone.class_i.group.is_readonly then
+				if world.context_editor.is_link_inheritance then
+					if drop_allowed (a_stone) then
+						add_inheritance_relation (a_stone.source)
+					else
+						create dial.make_with_text_and_actions (
+							"An inheritance cycle was created.%N%
+								%Do you still want to add this link?",
+								<<agent add_inheritance_relation (a_stone.source)>>)
+						dial.show_modal_to_window (world.context_editor.development_window.window)
+					end
+				elseif world.context_editor.is_link_client then
+					add_client_relation (a_stone.source, False)
+				elseif world.context_editor.is_link_aggregate then
+					add_client_relation (a_stone.source, True)
+				end
+			else
+				create l_error_window.make_with_text ("Class is not editable")
+				l_error_window.show_modal_to_window (world.context_editor.development_window.window)
+			end
 		end
 
 	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE) is
@@ -533,6 +560,30 @@ feature {NONE} -- Implementation (adding relations)
 		end
 
 feature {NONE} -- Implementation (move)
+
+	veto_function (a_any: ANY): BOOLEAN is
+			-- Veto function
+		require
+			a_any_not_void: a_any /= Void
+		local
+			l_class_fig_stone: CLASSI_FIGURE_STONE
+			l_world: EIFFEL_CLUSTER_DIAGRAM
+		do
+			if not model.class_i.is_read_only then
+				l_class_fig_stone ?= a_any
+				if l_class_fig_stone /= Void then
+					Result := True
+					l_world ?= world
+					if l_world /= Void then
+						if l_class_fig_stone.source = Current or else
+							not l_world.classes_in_same_scope (l_class_fig_stone.source.model, model)
+						then
+							Result := False
+						end
+					end
+				end
+			end
+		end
 
 	save_position is
 			-- Make a backup of current coordinates.

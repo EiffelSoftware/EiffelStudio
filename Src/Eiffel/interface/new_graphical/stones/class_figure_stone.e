@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make (a_figure: EIFFEL_CLASS_FIGURE) is
 		do
-			make_with_class_i (a_figure.class_i)
+			make_with_class_i (a_figure.model.class_i)
 			source := a_figure
 		end
 

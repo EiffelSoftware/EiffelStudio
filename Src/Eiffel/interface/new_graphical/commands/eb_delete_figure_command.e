@@ -67,7 +67,7 @@ feature -- Access
 			-- Dialog explaining how to use `Current'.
 feature {NONE} -- Implementation
 
-	execute_with_class_stone (a_stone: CLASSI_STONE) is
+	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE) is
 			-- Remove `a_stone' from diagram.
 			-- (And its relations.)
 		local
@@ -79,20 +79,18 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 		do
 			l_world := tool.world
-			es_class := l_world.model.class_from_interface (a_stone.class_i)
-			if es_class /= Void then
-				class_fig ?= l_world.figure_from_model (es_class)
-				if class_fig /= Void then
-					old_x := class_fig.port_x
-					old_y := class_fig.port_y
-					l_projector := tool.projector
-					remove_links := es_class.needed_links
-					tool.restart_force_directed
-					history.do_named_undoable (
-						interface_names.t_diagram_erase_class_cmd (es_class.name),
-						[<<agent l_world.remove_class_virtual (class_fig, remove_links), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
-						[<<agent l_world.reinclude_class (class_fig, remove_links, old_x, old_y), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
-				end
+			class_fig ?= a_stone.source
+			if class_fig /= Void then
+				old_x := class_fig.port_x
+				old_y := class_fig.port_y
+				l_projector := tool.projector
+				es_class := class_fig.model
+				remove_links := es_class.needed_links
+				tool.restart_force_directed
+				history.do_named_undoable (
+					interface_names.t_diagram_erase_class_cmd (es_class.name),
+					[<<agent l_world.remove_class_virtual (class_fig, remove_links), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
+					[<<agent l_world.reinclude_class (class_fig, remove_links, old_x, old_y), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
 		end
 
@@ -180,7 +178,7 @@ feature {NONE} -- Implementation
 			tool.projector.full_project
 		end
 
-	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE) is
 			-- Remove `a_stone' from diagram.
 			-- (And its relations.)
 		local
@@ -191,60 +189,29 @@ feature {NONE} -- Implementation
 			remove_links: LIST [ES_ITEM]
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
 			cf: EIFFEL_CLASS_FIGURE
-
-			l_classes: LIST [CLASS_I]
-			undo_list: ARRAYED_LIST [TUPLE [INTEGER, INTEGER, LIST [ES_ITEM]]]
-			l_c_figs: ARRAYED_LIST [EIFFEL_CLASS_FIGURE]
-			es_class: ES_CLASS
 		do
 			l_world := tool.world
-			es_cluster := l_world.model.cluster_from_interface (a_stone.cluster_i)
-			if es_cluster /= Void then
-				cluster_fig ?= l_world.figure_from_model (es_cluster)
-				if cluster_fig /= Void then
-					l_projector := tool.projector
+			es_cluster := a_stone.source.model
+			cluster_fig := a_stone.source
+			if cluster_fig /= Void then
+				l_projector := tool.projector
 
-					remove_links := es_cluster.needed_links
-					remove_classes := classes_to_remove_in_cluster (es_cluster)
-					from
-						remove_classes.start
-					until
-						remove_classes.after
-					loop
-						cf ?= remove_classes.item.item (1)
-						remove_links.append (cf.model.needed_links)
-						remove_classes.forth
-					end
-
-					history.do_named_undoable (
-							interface_names.t_diagram_erase_cluster_cmd (es_cluster.name),
-							[<<agent l_world.remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
-							[<<agent l_world.reinclude_cluster (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
-				end
-			else
+				remove_links := es_cluster.needed_links
+				remove_classes := classes_to_remove_in_cluster (es_cluster)
 				from
-					l_classes := a_stone.cluster_i.classes.linear_representation
-					create undo_list.make (l_classes.count)
-					create l_c_figs.make (l_classes.count)
-					l_classes.start
+					remove_classes.start
 				until
-					l_classes.after
+					remove_classes.after
 				loop
-					es_class := l_world.model.class_from_interface (l_classes.item)
-					if es_class /= Void then
-						cf ?= l_world.figure_from_model (es_class)
-						if cf /= Void and then cf.model.is_needed_on_diagram then
-							l_c_figs.extend (cf)
-							undo_list.extend ([cf.port_x, cf.port_y, cf.model.needed_links])
-						end
-					end
-					l_classes.forth
+					cf ?= remove_classes.item.item (1)
+					remove_links.append (cf.model.needed_links)
+					remove_classes.forth
 				end
 
 				history.do_named_undoable (
-					interface_names.t_diagram_erase_classes_cmd,
-					[<<agent remove_class_list (l_c_figs), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
-					[<<agent reinclude_class_list (l_c_figs, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
+						interface_names.t_diagram_erase_cluster_cmd (es_cluster.name),
+						[<<agent l_world.remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
+						[<<agent l_world.reinclude_cluster (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
 		end
 

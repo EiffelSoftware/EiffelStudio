@@ -213,6 +213,7 @@ feature -- Access
 					add_point_between (l_edges_count + 1, l_edges_count + 2)
 					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
 					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
+					l_edges_count := edges_count
 					set_i_th_point_position (l_edges_count + 1, ax, ay)
 					l_cursor.forth
 				end

@@ -31,6 +31,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature -- Access
 
 	world: EIFFEL_WORLD
@@ -41,106 +48,80 @@ feature -- Access
 	target_string: STRING is "TARGET"
 	source_cluster_string: STRING is "SOURCE_CLUSTER"
 	target_cluster_string: STRING is "TARGET_CLUSTER"
+	class_id_string: STRING is "CLASS_FIGURE_ID"
+	group_id_string: STRING is "GROUP_ID"
+	cluster_id_string: STRING is "CLUSTER_ID"
 		-- Xml string constants
 
 	model_from_xml (node: XM_ELEMENT): EG_ITEM is
 			-- Create an EG_ITEM from `node' if possible.
 		local
-			node_name, class_name, cluster_name, source_name, target_name, target_cluster_name, source_cluster_name: STRING
-			cluster_found, source_cluster, target_cluster: CLUSTER_I
-			class_found, target_found, source_found: CLASS_I
-			source, target, new_class: ES_CLASS
-			new_cluster: ES_CLUSTER
+			node_name, class_name, source_name, target_name: STRING
+			cluster_id, class_id, group_id: STRING
+			cluster_found: CONF_GROUP
+			class_found: CLASS_I
+			source, target: ES_CLASS
 			l_world: like world
 			l_universe: like universe
+			l_classes: LINKED_SET [CONF_CLASS]
 		do
 			l_world := world
 			l_universe := universe
 			node_name := node.name
 			if node_name.is_equal (xml_class_figure_node_name) then
 				class_name := node.attribute_by_name (name_string).value
-				if class_name /= Void then
-					cluster_name := node.attribute_by_name (cluster_name_string).value
-					if cluster_name /= Void then
-						cluster_found := l_universe.cluster_of_name (cluster_name)
+				class_id := node.attribute_by_name (class_id_string).value
+				if class_name /= Void and class_id /= Void then
+					group_id := node.attribute_by_name (group_id_string).value
+					if group_id /= Void then
+						cluster_found := group_of_id (group_id)
 						if cluster_found /= Void then
-							class_found := l_universe.class_named (class_name, cluster_found)
+							l_classes := cluster_found.class_by_name (class_name, False)
+							if not l_classes.is_empty then
+								class_found ?= l_classes.first
+							end
 							if class_found /= Void then
-								new_class := l_world.model.class_from_interface (class_found)
-								if new_class = Void then
-									create {ES_CLASS} Result.make (class_found)
-								else
-									new_class.links.wipe_out
-								end
+								create {ES_CLASS} Result.make_with_id (class_found, class_id)
 							else
-								put_class_not_exist_warning (class_name)
+								put_class_not_exist_warning (class_name, group_id)
 							end
 						else
-							put_cluster_not_exist_warning (cluster_name)
+							put_cluster_not_exist_warning (group_id)
 						end
 					else
-						xml_routines.display_error_message ("class " + class_name + " CLUSTER_NAME attribute expected")
+						xml_routines.display_error_message ("class " + class_name + " " + group_id_string + " attribute expected")
 					end
 				else
-					xml_routines.display_error_message ("class? NAME attribute expected")
+					xml_routines.display_error_message ("class? " + name_string + ", " + class_id_string + " attributes expected")
 				end
 			elseif node_name.is_equal (xml_cluster_figure_node_name) then
-				cluster_name := node.attribute_by_name (name_string).value
-				if cluster_name /= Void then
-					cluster_found := l_universe.cluster_of_name (cluster_name)
+				group_id := node.attribute_by_name (group_id_string).value
+				cluster_id := node.attribute_by_name (cluster_id_string).value
+				if group_id /= Void and then cluster_id /= Void then
+					cluster_found := group_of_id (group_id)
 					if cluster_found /= Void then
-						new_cluster := l_world.model.cluster_from_interface (cluster_found)
-						if new_cluster = Void then
-							create {ES_CLUSTER} Result.make (cluster_found)
-						else
-							new_cluster.links.wipe_out
-							new_cluster.linkables.wipe_out
-						end
+						create {ES_CLUSTER} Result.make_with_id (cluster_found, cluster_id)
 					else
-						put_cluster_not_exist_warning (cluster_name)
+						put_cluster_not_exist_warning (group_id)
 					end
 				else
-					xml_routines.display_error_message ("cluster? NAME attribute expected")
+					xml_routines.display_error_message ("cluster? " + group_id_string + ", " + cluster_id_string + " attribute expected")
 				end
 			elseif node_name.is_equal (xml_client_supplier_figure_node_name) or else node_name.is_equal (xml_inheritance_figure_node_name) then
 				source_name := node.attribute_by_name (source_string).value
 				if source_name /= Void then
 					target_name := node.attribute_by_name (target_string).value
 					if target_name /= Void then
-						source_cluster_name := node.attribute_by_name (source_cluster_string).value
-						if source_cluster_name /= Void then
-							target_cluster_name := node.attribute_by_name (target_cluster_string).value
-							if target_cluster_name /= Void then
-								source_cluster := l_universe.cluster_of_name (source_cluster_name)
-								target_cluster := l_universe.cluster_of_name (target_cluster_name)
-								if source_cluster /= Void and target_cluster /= Void then
-									source_found := l_universe.class_named (source_name, source_cluster)
-									target_found := l_universe.class_named (target_name, target_cluster)
-									if source_found /= Void and target_found /= Void then
-										source := l_world.model.class_from_interface (source_found)
-										target := l_world.model.class_from_interface (target_found)
-										if source /= Void and then target /= Void then
-											if node_name.is_equal (xml_client_supplier_figure_node_name) then
-												if source.has_supplier (target) then
-													Result := l_world.model.client_supplier_link_connecting (source, target)
-													if Result = Void then
-														create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
-													end
-												end
-											else
-												Result := l_world.model.inheritance_link_connecting (source, target)
-												if Result = Void then
-													create {ES_INHERITANCE_LINK} Result.make_with_classes (source, target)
-												end
-											end
-										end
-									end
+						source := l_world.model.class_of_id (source_name)
+						target := l_world.model.class_of_id (target_name)
+						if source /= Void and target /= Void then
+							if node_name.is_equal (xml_client_supplier_figure_node_name) then
+								if source.has_supplier (target) then
+									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
 								end
 							else
-								xml_routines.display_error_message ("TARGET_CLUSTER name attribute expected")
+								create {ES_INHERITANCE_LINK} Result.make_with_classes (source, target)
 							end
-						else
-							xml_routines.display_error_message ("SOURCE_CLUSTER name attribute expected")
 						end
 					else
 						xml_routines.display_error_message ("TARGET name attribute expected")
@@ -173,7 +154,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	put_class_not_exist_warning (class_name: STRING) is
+	put_class_not_exist_warning (class_name: STRING; group_id: STRING) is
 			-- Put a waring on the screen that class with `class_name' does not exist in the system.
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
@@ -182,7 +163,7 @@ feature {NONE} -- Implementation
 			l_output_manager.add_indexing_string ("Loading diagram:")
 			l_output_manager.add_new_line
 			l_output_manager.add_indent
-			l_output_manager.add_string ("Class " + class_name + " is not in the system anymore.")
+			l_output_manager.add_string ("Class " + class_name + " is not in " + group_id + " anymore.")
 			l_output_manager.add_new_line
 		end
 

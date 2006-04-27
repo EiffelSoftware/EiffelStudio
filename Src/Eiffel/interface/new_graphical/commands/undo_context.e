@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			from
 				i := array.lower
 			until
-				i > array.upper
+				i > array.count
 			loop
 				p ?= array.item (i)
 				check p /= Void end

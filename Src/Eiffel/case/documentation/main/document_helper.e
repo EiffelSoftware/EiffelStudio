@@ -22,8 +22,11 @@ feature -- Helper
 			a_group_not_void: a_group /= Void
 		local
 			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
 			l_name: STRING
 			l_sep: BOOLEAN
+			l_target: CONF_TARGET
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			l_sep := not a_name.is_empty
 			if a_group.is_cluster then
@@ -36,18 +39,72 @@ feature -- Helper
 				if l_cluster.parent /= Void then
 					Result := group_name_presentation (sep, l_name, l_cluster.parent)
 				else
-					Result := l_name
+					l_target := a_group.target
+					l_libs := l_target.used_in_libraries
+					if l_libs /= Void and then not l_libs.empty then
+						l_lib := l_libs.first
+					end
+					if l_lib /= Void then
+						Result := group_name_presentation (sep, l_name, l_lib)
+					else
+						Result := l_name
+					end
 				end
 			elseif a_group.is_library or a_group.is_assembly then
+				l_target := a_group.target
+				l_libs := l_target.used_in_libraries
+				if l_libs /= Void and then not l_libs.empty then
+					l_lib := l_libs.first
+				end
 				if l_sep then
-					Result := a_group.name + sep + a_name
+					l_name := a_group.name + sep + a_name
 				else
-					Result := a_group.name
+					l_name := a_group.name
+				end
+				if l_lib /= Void then
+					Result := group_name_presentation (sep, l_name, l_lib)
+				else
+					Result := l_name
 				end
 			end
 		ensure
 			group_name_presentation_not_void: Result /= Void
 		end
+
+--	group_name_presentation (sep: STRING; a_name: STRING; a_group: CONF_GROUP): STRING is
+--			-- Name presentation of `a_group' + `sep' + `a_name'. i.e. "a.a_name"
+--		require
+--			sep_not_void: sep /= Void
+--			a_name_not_void: a_name /= Void
+--			a_group_not_void: a_group /= Void
+--		local
+--			l_cluster: CONF_CLUSTER
+--			l_name: STRING
+--			l_sep: BOOLEAN
+--		do
+--			l_sep := not a_name.is_empty
+--			if a_group.is_cluster then
+--				l_cluster ?= a_group
+--				if l_sep then
+--					l_name := l_cluster.name + sep + a_name
+--				else
+--					l_name := l_cluster.name
+--				end
+--				if l_cluster.parent /= Void then
+--					Result := group_name_presentation (sep, l_name, l_cluster.parent)
+--				else
+--					Result := l_name
+--				end
+--			elseif a_group.is_library or a_group.is_assembly then
+--				if l_sep then
+--					Result := a_group.name + sep + a_name
+--				else
+--					Result := a_group.name
+--				end
+--			end
+--		ensure
+--			group_name_presentation_not_void: Result /= Void
+--		end
 
 	path_representation (sep: STRING; a_name: STRING; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING is
 			-- Path representation

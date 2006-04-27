@@ -86,8 +86,6 @@ feature {NONE} -- Implementation
 			cfs ?= a_stone
 			if cfs /= Void then
 				src := cfs.source.model
-			else
-				src := tool.graph.class_from_interface (a_stone.class_i)
 			end
 			if src /= Void then
 				create class_file.make (src.class_i.file_name)

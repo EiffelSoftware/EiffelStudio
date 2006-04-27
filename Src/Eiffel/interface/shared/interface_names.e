@@ -822,6 +822,13 @@ feature -- Title part
 			Result := "Include Cluster '" + a_name + "'"
 		end
 
+	t_Diagram_include_library_cmd (a_name: STRING): STRING is
+		require
+			exists: a_name /= Void
+		do
+			Result := "Include Library '" + a_name + "'"
+		end
+
 	t_Diagram_insert_midpoint_cmd: STRING is	"Insert Midpoint"
 	t_Diagram_change_color_cmd: STRING is		"Change Class Color"
 

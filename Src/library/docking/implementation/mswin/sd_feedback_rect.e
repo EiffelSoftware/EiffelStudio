@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			create internal_shared
-			set_transparent (255 // 5 * 3)
+			set_transparent (alpha)
 			disable_user_resize
 			set_color (internal_shared.focused_color)
 		end
@@ -95,6 +95,9 @@ feature -- Command
 		end
 
 feature {NONE} -- Implementation
+
+	alpha: INTEGER is 153
+			-- Transparent alpha value.
 
 	set_area_internal (a_rect: EV_RECTANGLE) is
 			-- Set feedback area, not destroy `internal_extra_area'.

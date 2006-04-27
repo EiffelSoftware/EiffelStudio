@@ -106,32 +106,43 @@ feature {NONE} -- Implementation
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			debug
-				print ("%N SD_TOOL_BAR_HIDDEN_ITEM_DIALOG on_customize 1")
-			end
 			create l_dialog.make
 			l_items := parent_tool_bar.content.items
 			l_dialog.set_size (300, 300)
 			l_dialog.customize_toolbar (parent_tool_bar.docking_manager.main_window, True, True, l_items)
-			debug
-				print ("%N SD_TOOL_BAR_HIDDEN_ITEM_DIALOG on_customize 2")
-			end
+
 			if l_dialog.valid_data then
-				parent_tool_bar.wipe_out
-				l_items := l_dialog.final_toolbar
-				from
-					l_items.start
-				until
-					l_items.after
-				loop
-					parent_tool_bar.extend_one_item (l_items.item)
-					l_items.forth
-				end
+				save_items_layout (l_dialog.final_toolbar)
+
+				parent_tool_bar.assistant.open_items_layout
+
 				if not parent_tool_bar.is_floating then
 					parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
 				end
+				save_items_layout (l_dialog.final_toolbar)
 				parent_tool_bar.compute_minmum_size
 			end
+		end
+
+	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+			-- Save `a_tool_bar' items layout to it's data.
+		require
+			not_void: a_items /= Void
+		local
+			l_datas: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
+		do
+			from
+				create l_datas.make (a_items.count)
+				a_items.start
+			until
+				a_items.after
+			loop
+				l_datas.extend ([a_items.item.name, a_items.item.is_displayed])
+				a_items.forth
+			end
+			parent_tool_bar.assistant.last_state.set_items_layout (l_datas)
+		ensure
+			saved: parent_tool_bar.assistant.last_state.items_layout /= Void
 		end
 
 	parent_tool_bar: SD_TOOL_BAR_ZONE

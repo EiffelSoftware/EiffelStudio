@@ -54,6 +54,8 @@ feature {NONE} -- Initlization
 			auto_hide_panel.tab_stubs.extend (tab_stub)
 
 			create internal_animation.make (Current, internal_docking_manager)
+			last_floating_height := a_content.state.last_floating_height
+			last_floating_width := a_content.state.last_floating_width
 		ensure
 			set: internal_content = a_content
 			set: direction = a_direction
@@ -240,7 +242,7 @@ feature {NONE} -- Implementation functions.
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, direction, width_height)
 					l_docking_state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
-					l_content.change_state (l_docking_state)
+					l_content.state.change_state (l_docking_state)
 				else
 					if l_content.user_widget.parent /= Void then
 						l_content.user_widget.parent.prune (l_content.user_widget)

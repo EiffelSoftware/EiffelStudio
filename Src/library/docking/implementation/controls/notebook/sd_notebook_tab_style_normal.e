@@ -28,17 +28,27 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	expose_unselected (a_width: INTEGER; a_tab_before, a_tab_after: BOOLEAN) is
-			-- Draw tabs when unselected.
+	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+			-- Draw unselected tab.
 		require
 			setted: pixmap /= Void
+			not_void: a_tab_info /= Void
 		deferred
 		end
 
-	expose_selected (a_width: INTEGER; a_tab_before, a_tab_after: BOOLEAN) is
-			-- Handle tabs when selected.
+	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+			-- Draw selected tab.
 		require
 			setted: pixmap /= Void
+			not_void: a_tab_info /= Void
+		deferred
+		end
+
+	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+			-- Draw hot tab.
+		require
+			setted: pixmap /= Void
+			not_void: a_tab_info /= Void
 		deferred
 		end
 
@@ -207,41 +217,70 @@ feature -- Size issues
 
 feature {NONE} -- Implementation
 
+	start_draw is
+			-- We make a buffer pixmap
+			-- Should call `end_draw' after every thing is done.
+		require
+			not_called: buffer_pixmap = Void
+			size_valid: internal_drawing_area.width > 0 and internal_drawing_area.height > 0
+		do
+			create buffer_pixmap.make_with_size (internal_drawing_area.width, internal_drawing_area.height)
+			buffer_pixmap.set_font (internal_drawing_area.font)
+		ensure
+			created: buffer_pixmap /= Void
+		end
+
+	end_draw is
+			-- Draw `buffer_pixmap' to `internal_drawing_area'
+			-- Call `start_draw' before call this function.
+		require
+			not_void: buffer_pixmap /= Void
+		do
+			internal_drawing_area.draw_pixmap (0, 0, buffer_pixmap)
+			buffer_pixmap := Void
+		ensure
+			cleared: buffer_pixmap = Void
+		end
+
 	draw_pixmap_text_unselected (a_width: INTEGER) is
 			-- Draw pixmap and text when unselected.
+		require
+			not_void: buffer_pixmap /= Void
 		do
-			internal_drawing_area.set_foreground_color (internal_shared.tab_text_color)
+			buffer_pixmap.set_foreground_color (internal_shared.tab_text_color)
 			if internal_draw_border_at_top then
 				-- Draw pixmap
-				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				internal_drawing_area.draw_text_top_left (start_x_text_internal, gap_height, text)
+				buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				buffer_pixmap.draw_text_top_left (start_x_text_internal, gap_height, text)
 			else
 				-- Draw pixmap
-				internal_drawing_area.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
+				buffer_pixmap.draw_pixmap (start_x_pixmap_internal, 0, pixmap)
 				-- Draw text
-				internal_drawing_area.draw_text_top_left (start_x_text_internal, 0, text)
+				buffer_pixmap.draw_text_top_left (start_x_text_internal, 0, text)
 			end
 		end
 
 	draw_pixmap_text_selected (a_width: INTEGER) is
 			-- Draw pixmap and text when selected.
+		require
+			not_void: buffer_pixmap /= Void
 		do
-			if internal_drawing_area.height > 0 then
+			if buffer_pixmap.height > 0 then
 				-- Draw text
-				internal_drawing_area.set_foreground_color (internal_shared.tab_text_color)
+				buffer_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
 					if internal_draw_border_at_top then
-						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						buffer_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					else
-						internal_drawing_area.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						buffer_pixmap.draw_ellipsed_text_top_left (start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
 					end
 				end
 				-- Draw pixmap
 				if is_draw_pixmap then
 					if internal_draw_border_at_top then
-						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
+						buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position + gap_height, pixmap)
 					else
-						internal_drawing_area.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
+						buffer_pixmap.draw_pixmap (start_x_pixmap_internal, start_y_position, pixmap)
 					end
 				end
 			end
@@ -255,6 +294,9 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- ALl singletons.
+
+	buffer_pixmap: EV_PIXMAP
+			-- Buffer pixmap
 
 invariant
 

@@ -21,10 +21,9 @@ feature {NONE} -- Initialization
 			a_container_not_full: not a_container.full
 			a_widnow_valid: window_valid (a_window)
 			a_container_valid: container_valid (a_container, a_window)
-		local
-			l_system_imp: SD_SYSTEM_COLOR_IMP
 		do
 			create internal_shared
+			internal_shared.set_show_all_feedback_indicator (True)
 			create tab_drop_actions
 
 			top_container := a_container
@@ -39,9 +38,6 @@ feature {NONE} -- Initialization
 			internal_shared.add_docking_manager (Current)
 
 			init_inner_container
-
-			create l_system_imp.make
-			internal_shared.set_hot_zone_factory (l_system_imp.hot_zone_factory)
 
 			create tool_bar_manager.make (Current)
 

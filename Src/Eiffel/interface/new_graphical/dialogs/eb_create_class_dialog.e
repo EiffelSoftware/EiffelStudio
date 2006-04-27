@@ -567,13 +567,11 @@ feature {NONE} -- Implementation
 		require
 			current_state_is_valid: aok
 		local
-			cn: STRING
 			wd: EV_WARNING_DIALOG
 		do
-			cn := class_name
-			if not Eiffel_universe.classes_with_name (cn).is_empty then
+			if cluster.classes.has (class_name) then
 				aok := False
-				create wd.make_with_text (Warning_messages.w_class_already_exists (cn))
+				create wd.make_with_text (Warning_messages.w_class_already_exists (class_name))
 				wd.show_modal_to_window (Current)
 			end
 		end

@@ -643,6 +643,7 @@
 									<File Id="VQMC57" Name="VQMC" />
 									<File Id="VREG2" Name="VREG" />
 									<File Id="VRFA78" Name="VRFA" />
+									<File Id="VRFT" Name="VRFT" />
 									<File Id="VRLE1" Name="VRLE1" />
 									<File Id="VRLE2" Name="VRLE2" />
 									<File Id="VRRR2" Name="VRRR2" />
@@ -831,7 +832,7 @@
 							</Directory>
 							<Directory Id="basemt" Name="base-mt">
 								<Component Id="basemt" Guid="DD937DAD-9136-4553-8E64-CCDFE8519EE0">
-									<File Id="Ace.ace144" Name="Ace.ace" KeyPath="yes" />
+									<File Id="ace_acex144" Name="ACE~1.ACE" LongName="Ace.acex"/>
 								</Component>
 							</Directory>
 							<Directory Id="welmt" Name="wel-mt">
@@ -846,7 +847,7 @@
 							</Directory>
 							<Directory Id="base" Name="base">
 								<Component Id="base" Guid="3E24F992-00C3-4EAD-A6D9-7290FE36B408">
-									<File Id="Ace.ace143" Name="Ace.ace" KeyPath="yes" />
+									<File Id="ace_acex143" Name="ACE~1.ACE" LongName="Ace.acex"/>
 								</Component>
 							</Directory>
 						</Directory>
@@ -863,7 +864,7 @@
 							</Directory>
 							<Directory Id="base4" Name="base">
 								<Component Id="base4" Guid="23CFD01E-AE9F-40DE-96E5-2005039047B6">
-									<File Id="ace.ace4" Name="ace.ace" KeyPath="yes" />
+									<File Id="ace.acex4" Name="ACE~1.ACE" LongName="ace.acex"/>
 								</Component>
 							</Directory>
 						</Directory>

@@ -725,6 +725,9 @@
 				</Directory>
 				<Directory Id="library" Name="library">
 					<Directory Id="graph" Name="graph">
+						<Component Id="graph" Guid="ECC40DF0-80C3-41d1-87AF-E2A4371BE46D">
+							<File Id="graph_acex" Name="GRAPH~1.ACE" LongName="graph.acex" />
+						</Component>
 						<Directory Id="events3" Name="events">
 							<Component Id="events3" Guid="9A183898-3FC2-40bb-9030-BC10B9E1575E">
 								<File Id="eg_cluster_action.e" Name="EG_CLU~1.E" LongName="eg_cluster_action.e" />
@@ -1412,7 +1415,7 @@
 					</Directory>
 					<Directory Id="vision2" Name="vision2">
 						<Component Id="indexing.txt" Guid="247C4F86-8D26-4770-93DF-33905208053C">
-							<File Id="indexing.txt" Name="indexing.txt" KeyPath="yes" />
+							<File Id="vision2_acex" Name="VISION~2.ACE" LongName="vision2.acex"/>
 						</Component>
 						<Directory Id="contrib" Name="contrib">
 							<Component Id="ev_add_remove_list.e" Guid="9D057B9A-218A-4CEE-9276-F7B9EBB793AD">
@@ -1470,6 +1473,7 @@
 						<Directory Id="interface" Name="INTERF~1" LongName="interface">
 							<Directory Id="support18" Name="support">
 								<Component Id="ev_raw_image_data.e" Guid="6F468936-3B65-4C03-9535-684C501DBF17">
+									<File Id="ev_builder.e" Name="EV_BUI~1.E" LongName="ev_builder.e" />
 									<File Id="ev_grid_label_item_layout_e" Name="EV_GRI~1.E" LongName="ev_grid_label_item_layout.e" />
 									<File Id="ev_grid_types_e" Name="EV_GRI~2.E" LongName="ev_grid_types.e" />
 									<File Id="ev_raw_image_data.e" Name="EV_RAW~1.E" LongName="ev_raw_image_data.e" />
@@ -1891,6 +1895,7 @@
 										<File Id="ev_notebook_tab_imp.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab_imp.e" />
 										<File Id="ev_classic_theme_drawer_imp_e" Name="EV_CLA~1.E" LongName="ev_classic_theme_drawer_imp.e" />
 										<File Id="ev_theme_drawer_imp_e" Name="EV_THE~1.E" LongName="ev_theme_drawer_imp.e" />
+										<File Id="ev_theme_window_e" Name="EV_THE~2.E" LongName="ev_theme_window.e" />
 										<File Id="ev_xp_theme_drawer_imp_e" Name="EV_XP_~1.E" LongName="ev_xp_theme_drawer_imp.e" />
 									</Component>
 								</Directory>
@@ -2311,6 +2316,7 @@
 									<Component Id="ilvision2.lib" Guid="155D0956-74EF-4636-B9C6-3B2B4BDBE519">
 										<File Id="ilvision2.lib" Name="ILVISI~1.LIB" LongName="ilvision2.lib" KeyPath="yes" />
 										<File Id="vision2.lib91" Name="vision2.lib" />
+										<File Id="mtvision2.lib91" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
 										<File Id="zlib.lib104" Name="zlib.lib" />
 										<File Id="libpng.lib" Name="libpng.lib" />
 									</Component>
@@ -2322,6 +2328,7 @@
 										<File Id="zlib.lib" Name="zlib.lib" KeyPath="yes" />
 										<File Id="vision2.lib" Name="vision2.lib" />
 										<File Id="ilvision2.lib92" Name="ILVISI~2.LIB" LongName="ilvision2.lib" />
+										<File Id="mtvision2.lib92" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
 										<File Id="libpng.lib116" Name="libpng.lib" />
 									</Component>
 								</Directory>
@@ -2332,7 +2339,7 @@
 						<Component Id="wel.txt" Guid="04739DAA-907E-4E10-A03D-53CF217BEE78">
 							<File Id="wel.txt" Name="wel.txt" KeyPath="yes" />
 							<File Id="version.txt" Name="version.txt" />
-							<File Id="indexing.txt141" Name="indexing.txt" />
+							<File Id="wel_acex" Name="WEL~2.ACE" LongName="wel.acex" />
 						</Component>
 						<Directory Id="windows45" Name="windows">
 							<Component Id="wel_frame_window.e" Guid="F231F443-B8DE-4B0A-B2FB-BB68859C5968">
@@ -2463,6 +2470,7 @@
 								<File Id="wel_doc_info.e" Name="WEL_DO~1.E" LongName="wel_doc_info.e" />
 								<File Id="wel_window_placement.e" Name="WEL_WI~9.E" LongName="wel_window_placement.e" />
 								<File Id="wel_string.e" Name="WEL_ST~9.E" LongName="wel_string.e" />
+								<File Id="wel_string_array.e" Name="WEL_ST~1.E" LongName="wel_string_array.e" />
 								<File Id="wel_paragraph_format.e" Name="WEL_PA~3.E" LongName="wel_paragraph_format.e" />
 								<File Id="wel_nm_combo_box_ex.e" Name="WEL_NM~1.E" LongName="wel_nm_combo_box_ex.e" />
 								<File Id="wel_lv_keydown.e" Name="WEL_LV~3.E" LongName="wel_lv_keydown.e" />
@@ -2904,7 +2912,7 @@
 								<File Id="prcmpw32.ace" Name="prcmpw32.ace" />
 								<File Id="h2e.txt" Name="h2e.txt" />
 								<File Id="h2e.e" Name="h2e.e" />
-								<File Id="h2e.acex" Name="h2e.acex" />
+								<File Id="h2e_acex" Name="H2E~2.ACE" LongName="h2e.acex" />
 								<File Id="h2e1.ico" Name="h2e1.ico" />
 								<File Id="h2e2.ico" Name="h2e2.ico" />
 								<File Id="h2e.ico" Name="h2e.ico" />
@@ -3070,6 +3078,9 @@
 						</Directory>
 					</Directory>
 					<Directory Id="vision2_extension" Name="VISION~1" LongName="vision2_extension">
+						<Component Id="vision2_extension" Guid="347C0C69-FCE2-45aa-89E9-B78B052163C9">
+							<File Id="vision2_extension_acex" Name="VISION~2.ACE" LongName="vision2_extension.acex" />
+						</Component>
 						<Directory Id="independent" Name="INDEPE~1" LongName="independent">
 							<Directory Id="thread" Name="thread">
 								<Component Id="thread" Guid="4B80F600-6D13-4253-887A-C096AFF4E6E6">
@@ -3078,9 +3089,14 @@
 									<File Id="ev_thread_severity_constants_e" Name="EV_THR~3.E" LongName="ev_thread_severity_constants.e" />
 									<File Id="ev_thread_worker_e" Name="EV_THR~4.E" LongName="ev_thread_worker.e" />
 								</Component>
+								<Directory Id="gtk2" Name="gtk">
+									<Component Id="gtk2" Guid="8F6ACC3B-A849-45af-86DA-F633C2B9F5DC">
+										<File Id="ev_thread_application_imp_e" Name="EV_THR~1.E" LongName="ev_thread_application_imp.e" />
+									</Component>
+								</Directory>
 								<Directory Id="mswin4" Name="mswin">
 									<Component Id="mswin5" Guid="9A0AA568-A438-4e73-BFE2-7403E0405A6F">
-										<File Id="ev_thread_application_imp_e" Name="EV_THR~1.E" LongName="ev_thread_application_imp.e" />
+										<File Id="ev_thread_application_imp_e2" Name="EV_THR~1.E" LongName="ev_thread_application_imp.e" />
 									</Component>
 								</Directory>
 							</Directory>

@@ -30,6 +30,9 @@
 			<Directory Id="Application" Name=".">
 				<Directory Id="library" Name="library">
 					<Directory Id="com" Name="com">
+						<Component Id="com" Guid="9EA22E42-B7D6-4819-ABE6-0226E3D8AE25">
+							<File Id="com_acex" Name="com.acex"/>
+						</Component>
 						<Directory Id="Support" Name="Support">
 							<Component Id="Support" Guid="30F7852F-D092-43F3-8643-DFFF0AE3BCE6">
 								<File Id="ecom_cookie_generator.e" Name="ECOM_C~2.E" LongName="ecom_cookie_generator.e" />
@@ -83,6 +86,7 @@
 								<File Id="fontname_alias.e" Name="FONTNA~1.E" LongName="fontname_alias.e" />
 								<File Id="ecom_large_integer.e" Name="ECOM_L~3.E" LongName="ecom_large_integer.e" />
 								<File Id="ecom_wide_string.e" Name="ECOM_W~2.E" LongName="ecom_wide_string.e" />
+								<File Id="ecom_bstr_e" Name="ECOM_B~1.E" LongName="ecom_bstr.e" />
 							</Component>
 						</Directory>
 						<Directory Id="Constants" Name="CONSTA~1" LongName="Constants">

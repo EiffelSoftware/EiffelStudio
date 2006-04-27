@@ -50,6 +50,13 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	button_text_color: EV_COLOR is
+			-- Text color of buttons.
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 feature -- Hot zone factory
 
 	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is

@@ -473,8 +473,8 @@ feature {NONE} -- Agents
 				l_zone ?= internal_inner_container.item
 			end
 			if l_zone /= Void then
-				l_zone.content.state.set_last_floating_height (a_height)
-				l_zone.content.state.set_last_floating_width (a_width)
+				l_zone.set_last_floating_height (a_height)
+				l_zone.set_last_floating_width (a_width)
 			end
 		end
 

@@ -14,7 +14,9 @@ inherit
 			internal_shared as internal_shared_not_used,
 			prune as prune_widget
 		redefine
-			extend
+			extend,
+			set_last_floating_width,
+			set_last_floating_height
 		end
 
 feature -- Query
@@ -103,6 +105,38 @@ feature -- Command
 			pruned: not internal_notebook.has (a_content)
 		end
 
+	set_last_floating_width (a_width: INTEGER) is
+			-- Redefine
+		local
+			l_content: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_content := contents
+				l_content.start
+			until
+				l_content.after
+			loop
+				l_content.item.state.set_last_floating_width (a_width)
+				l_content.forth
+			end
+		end
+
+	set_last_floating_height (a_height: INTEGER) is
+			-- Redefine
+		local
+			l_content: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_content := contents
+				l_content.start
+			until
+				l_content.after
+			loop
+				l_content.item.state.set_last_floating_height (a_height)
+				l_content.forth
+			end
+		end
+
 feature {SD_CONFIG_MEDIATOR} -- Save config
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
@@ -120,24 +154,6 @@ feature {SD_CONFIG_MEDIATOR} -- Save config
 				l_contents.forth
 			end
 		end
-
-feature {SD_STATE} -- Handle select tab.
-
---	disable_on_select_tab is
---			-- If `Current' pruning a zone, disable handle select tab events.
---		do
---			internal_diable_on_select_tab := True
---		ensure
---			set: internal_diable_on_select_tab = True
---		end
-
---	enable_on_select_tab is
---			--If `Current' not pruning a zone, enable handle select tab events.
---		do
---			internal_diable_on_select_tab := False
---		ensure
---			set: internal_diable_on_select_tab = False
---		end
 
 feature -- States report
 

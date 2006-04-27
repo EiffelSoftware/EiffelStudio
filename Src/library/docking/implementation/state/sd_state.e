@@ -239,6 +239,20 @@ feature {SD_CONTENT} -- SD_CONTENT called functions.
 		do
 		end
 
+feature {SD_AUTO_HIDE_STATE} -- Internal calls
+
+	change_state (a_state: SD_STATE) is
+			-- Changed `content' state to `a_state'.
+		require
+			a_state_not_void: a_state /= Void
+		do
+			internal_content.change_state (a_state)
+			a_state.set_last_floating_height (last_floating_height)
+			a_state.set_last_floating_width (last_floating_width)
+		ensure
+			changed: internal_content.state = a_state
+		end
+
 feature  -- States report
 
 	has (a_content: SD_CONTENT): BOOLEAN is
@@ -278,18 +292,6 @@ feature  -- States report
 		end
 
 feature {NONE} -- Implementation
-
-	change_state (a_state: SD_STATE) is
-			-- Changed `content' state to `a_state'.
-		require
-			a_state_not_void: a_state /= Void
-		do
-			internal_content.change_state (a_state)
-			a_state.set_last_floating_height (last_floating_height)
-			a_state.set_last_floating_width (last_floating_width)
-		ensure
-			changed: internal_content.state = a_state
-		end
 
 	top_split_position (a_direction: INTEGER; a_spliter: EV_SPLIT_AREA): INTEGER is
 			-- Calculate top split position  when dock at top.

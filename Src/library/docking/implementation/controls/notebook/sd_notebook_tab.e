@@ -28,12 +28,15 @@ feature {NONE}  -- Initlization
 			default_create
 			create internal_shared
 			create internal_drawing_area
+			create info
 			extend (internal_drawing_area)
 			disable_item_expand (internal_drawing_area)
 
 			set_minimum_height (internal_shared.title_bar_height)
 
 			internal_drawing_area.expose_actions.force_extend (agent on_expose)
+			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
+			internal_drawing_area.pointer_leave_actions.extend (agent on_pointer_leave)
 
 			create select_actions
 			create drag_actions
@@ -44,6 +47,7 @@ feature {NONE}  -- Initlization
 
 			init_drawing_style (a_top)
 			set_enough_space
+
 		ensure
 			set: internal_notebook = a_notebook
 			set: internal_docking_manager = a_docking_manager
@@ -208,27 +212,8 @@ feature -- Properties
 			set: not a_focused implies internal_drawing_area.background_color.is_equal (internal_shared.non_focused_title_color)
 		end
 
-	set_tab_after (a_selected_tab_after: BOOLEAN) is
-			-- Set `is_tab_after'.
-		do
-			is_tab_after := a_selected_tab_after
-		ensure
-			set: is_tab_after = a_selected_tab_after
-		end
-
-	is_tab_after: BOOLEAN
-			-- If after Current, there is a tab?
-
-	set_tab_before (a_bool: BOOLEAN) is
-			-- Set `is_tab_before'
-		do
-			is_tab_before := a_bool
-		ensure
-			set: is_tab_before = a_bool
-		end
-
-	is_tab_before: BOOLEAN
-			-- If after Current, there is a tab?
+	info: SD_NOTEBOOK_TAB_INFO
+			-- Information used for draw tabs.
 
 feature {NONE}  -- Implmentation for drag action
 
@@ -290,6 +275,24 @@ feature {NONE}  -- Implementation agents
 			on_expose_with_width (width)
 		end
 
+	on_pointer_enter is
+			-- Handle pointer enter actions.
+		do
+			is_hot := True
+			on_expose_with_width (width)
+		ensure
+			set: is_hot = True
+		end
+
+	on_pointer_leave is
+			-- Handle pointer leave actions.
+		do
+			is_hot := False
+			on_expose_with_width (width)
+		ensure
+			set: is_hot = False
+		end
+
 	on_expose_with_width (a_width: INTEGER) is
 			-- Handle expose with a_width. a_width is total width current should be.
 		require
@@ -297,10 +300,16 @@ feature {NONE}  -- Implementation agents
 		do
 			internal_drawing_area.clear
 			if pixmap /= Void then
-				if is_selected then
-					internal_tab_style.expose_selected (a_width, is_tab_before, is_tab_after)
-				else
-					internal_tab_style.expose_unselected (a_width, is_tab_before, is_tab_after)
+				if internal_drawing_area.width > 0 and internal_drawing_area.height >0 then
+					if is_selected then
+						internal_tab_style.expose_selected (a_width, info)
+					else
+						if is_hot then
+							internal_tab_style.expose_hot (a_width, info)
+						else
+							internal_tab_style.expose_unselected (a_width, info)
+						end
+					end
 				end
 			end
 		end
@@ -352,6 +361,9 @@ feature {NONE}  -- Implementation attributes
 	internal_tab_style: SD_NOTEBOOK_TAB_DRAWER_I
 			-- Drawer of the internal_drawing_area.
 
+	is_hot: BOOLEAN
+			-- If Current hot?
+
 invariant
 
 	internal_docking_manager_not_void: internal_docking_manager /= Void
@@ -360,6 +372,7 @@ invariant
 	drag_actions_not_void: drag_actions /= Void
 	internal_drawing_area_not_void: internal_drawing_area /= Void
 	not_void: internal_tab_style /= Void
+	not_void: info /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

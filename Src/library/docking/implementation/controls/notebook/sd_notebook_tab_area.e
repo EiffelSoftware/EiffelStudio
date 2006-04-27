@@ -114,14 +114,24 @@ feature -- Command
 					if not l_tabs.has (l_all_tabs.item) then
 						l_all_tabs.item.show
 						if l_tab_before = Void then
-							l_all_tabs.item.set_tab_before (False)
-							l_all_tabs.item.set_tab_after (False)
+							l_all_tabs.item.info.set_tab_before (False)
+							l_all_tabs.item.info.set_tab_after (False)
 						else
-							l_tab_before.set_tab_after (True)
-							l_all_tabs.item.set_tab_before (True)
-							l_all_tabs.item.set_tab_after (False)
+							l_tab_before.info.set_tab_after (True)
+							if l_all_tabs.item.is_selected then
+								l_tab_before.info.set_tab_after_selected (True)
+							else
+								l_tab_before.info.set_tab_after_selected (False)
+							end
+							l_all_tabs.item.info.set_tab_before (True)
+							if l_tab_before.is_selected then
+								l_all_tabs.item.info.set_tab_before_selected (True)
+							else
+								l_all_tabs.item.info.set_tab_before_selected (False)
+							end
+							l_all_tabs.item.info.set_tab_after (False)
 						end
-						l_all_tabs.item.set_tab_after (False)
+						l_all_tabs.item.info.set_tab_after (False)
 						l_tab_before := l_all_tabs.item
 						ignore_resize := True
 					end

@@ -60,6 +60,13 @@ inherit
 			default_create, copy
 		end
 
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {EV_ANY} -- Initialization
 
 	initialize is
@@ -712,9 +719,10 @@ feature {NONE} -- Implementation
 			right_vb: EV_VERTICAL_BOX
 			main_hb, button_hb: EV_HORIZONTAL_BOX
 			cluster_list: EV_LIST
-			ci: CLUSTER_I
+			ci: CONF_GROUP
 			g: EB_DIAGRAM_HTML_GENERATOR
 			views: LINKED_LIST [STRING]
+			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
 		do
 			vb.wipe_out
 			create diagram_views.make (10)
@@ -736,15 +744,16 @@ feature {NONE} -- Implementation
 				if ci /= Void then
 					create g.make_for_wizard (ci)
 					create cluster_row
-					cluster_row.extend (ci.cluster_name)
+					cluster_row.extend (ci.name)
 					cluster_row.extend ("DEFAULT")
 					views := g.available_views
-					cluster_row.set_data (views)
+					l_data := [id_of_group (ci), views]
+					cluster_row.set_data (l_data)
 					cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
 					view_mcl.extend (cluster_row)
 
 					if not views.is_empty then
-						diagram_views.put ("DEFAULT", ci.cluster_name)
+						diagram_views.put ("DEFAULT", id_of_group (ci))
 					end
 				end
 				cluster_list.forth
@@ -772,10 +781,12 @@ feature {NONE} -- Implementation
 			-- Display available views for corresponding cluster in `view_list'.
 			-- Update `view_label'.
 		local
+			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
 			views: LINKED_LIST [STRING]
 			view_name: STRING
 		do
-			views ?= row.data
+			l_data ?= row.data
+			views ?= l_data.item (2)
 			if views /= Void then
 				view_list.wipe_out
 				from
@@ -801,16 +812,18 @@ feature {NONE} -- Implementation
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
 		local
-			cluster_name: STRING
+			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
 			selected_row: EV_MULTI_COLUMN_LIST_ROW
+			l_group_id: STRING
 		do
 			if view_list.selected_item /= Void then
 				selected_row := view_mcl.selected_item
-				cluster_name := selected_row.first
+				l_data ?= selected_row.data
+				l_group_id ?= l_data.item (1)
 				selected_row.finish
 				selected_row.remove
 				selected_row.extend (view_list.selected_item.text)
-				diagram_views.replace (view_list.selected_item.text, cluster_name)
+				diagram_views.replace (view_list.selected_item.text, l_group_id)
 			end
 		end
 

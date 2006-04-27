@@ -63,18 +63,13 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
-			conf_todo
---			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.descendant.class_i.cluster.cluster_name)
---			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.ancestor.class_i.cluster.cluster_name)
---			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
---			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
 
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
-			node.forth
-			node.forth
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
 			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
 				model.enable_needed_on_diagram

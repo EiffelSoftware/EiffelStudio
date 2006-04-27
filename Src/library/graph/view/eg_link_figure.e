@@ -18,7 +18,7 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			Precursor {EG_FIGURE}
 			model.is_directed_change_actions.extend (agent on_is_directed_change)
 		end
-		
+
 feature -- Status report
 
 	is_reflexive: BOOLEAN is
@@ -35,19 +35,19 @@ feature -- Status report
 		do
 			Result := source /= Void and then source = target
 		end
-		
+
 
 feature -- Access
 
 	source: EG_LINKABLE_FIGURE
 			-- source of `Current'.
-			
+
 	target: like source
 			-- target of `Current'.
-			
+
 	model: EG_LINK
 			-- The model for `Current'.
-			
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		local
@@ -55,11 +55,11 @@ feature -- Access
 		do
 			l_model := model
 			Result := Precursor {EG_FIGURE} (node)
-			Result.add_attribute (once "SOURCE", xml_namespace, l_model.source.name)
-			Result.add_attribute (once "TARGET", xml_namespace, l_model.target.name)
+			Result.add_attribute (once "SOURCE", xml_namespace, l_model.source.link_name)
+			Result.add_attribute (once "TARGET", xml_namespace, l_model.target.link_name)
 			Result.put_last (Xml_routines.xml_node (Result, is_directed_string, boolean_representation (l_model.is_directed)))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -70,13 +70,13 @@ feature -- Access
 		end
 
 	is_directed_string: STRING is "IS_DIRECTED"
-		
+
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := once "EG_LINK_FIGURE"
 		end
-		
+
 feature -- Element change
 
 	recycle is
@@ -87,7 +87,7 @@ feature -- Element change
 				model.is_directed_change_actions.extend (agent on_is_directed_change)
 			end
 		end
-			
+
 feature {EG_FIGURE_WORLD} -- Element change.
 
 	set_source (a_source: like source) is
@@ -100,7 +100,7 @@ feature {EG_FIGURE_WORLD} -- Element change.
 		ensure
 			set: a_source = source
 		end
-		
+
 	set_target (a_target: like target) is
 			-- Set `target' to `a_target'.
 		require
@@ -111,7 +111,7 @@ feature {EG_FIGURE_WORLD} -- Element change.
 		ensure
 			set: a_target = target
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_is_directed_change is

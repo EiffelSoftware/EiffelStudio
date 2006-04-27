@@ -127,46 +127,56 @@ feature -- Basic operations
 			l_class_graph: ES_CLASS_GRAPH
 			l_added_class: ES_CLASS
 			l_class_added: BOOLEAN
+			l_cluster: ES_CLUSTER
+			l_classes: ARRAYED_LIST [ES_CLASS]
 		do
-			from
-				create l_added_class_relations_list_list.make (5)
-				l_class_graph := tool.class_graph
-				a_classes.start
-			until
-				a_classes.after
-			loop
-				l_relations_list := relations_list_from_class_c (a_classes.item.class_i.compiled_class)
-				if l_relations_list /= Void then
-					create l_added_class_relations_list.make (5)
-					from
-						l_relations_list.start
-					until
-						l_relations_list.after
-					loop
-						l_added_class := l_class_graph.class_from_interface (l_relations_list.item.lace_class)
-						if l_added_class = Void then
-								-- Class has not been generated on to the diagram so we need to add it.
-							create l_added_class.make (l_relations_list.item.lace_class)
-							l_class_graph.add_node (l_added_class)
-							l_added_class.disable_needed_on_diagram
-						end
+			l_class_graph := tool.class_graph
+			if l_class_graph /= Void then
+				from
+					create l_added_class_relations_list_list.make (5)
+					a_classes.start
+				until
+					a_classes.after
+				loop
+					l_cluster := a_classes.item.cluster
+					l_relations_list := relations_list_from_class_c (a_classes.item.class_i.compiled_class)
+					if l_relations_list /= Void then
+						create l_added_class_relations_list.make (5)
+						from
+							l_relations_list.start
+						until
+							l_relations_list.after
+						loop
+							l_classes := l_class_graph.class_from_interface (l_relations_list.item.lace_class)
+							l_added_class := Void
+							if not l_classes.is_empty then
+								l_added_class := l_classes.first
+							end
+							if l_added_class = Void then
+									-- Class has not been generated on to the diagram so we need to add it.
+								create l_added_class.make (l_relations_list.item.lace_class)
+								l_class_graph.add_node (l_added_class)
+								l_class_graph.add_node_relations (l_added_class)
+								l_added_class.disable_needed_on_diagram
+							end
 
-						if not l_added_class.is_needed_on_diagram then
-								-- Class has been generated but is not presently shown
-							l_added_class_relations_list.extend (l_added_class)
-							l_class_added := True
-						else
-							-- Class is already present and shown on the diagram
-							-- Links from current may need to be added
+							if not l_added_class.is_needed_on_diagram then
+									-- Class has been generated but is not presently shown
+								l_added_class_relations_list.extend (l_added_class)
+								l_class_added := True
+							else
+								-- Class is already present and shown on the diagram
+								-- Links from current may need to be added
+							end
+							l_relations_list.forth
 						end
-						l_relations_list.forth
+						l_added_class_relations_list_list.extend (l_added_class_relations_list)
 					end
-					l_added_class_relations_list_list.extend (l_added_class_relations_list)
+					a_classes.forth
 				end
-				a_classes.forth
-			end
-			if l_class_added then
-				tool.history.do_named_undoable (undo_name, agent add_and_position_classes (a_classes, l_added_class_relations_list_list), agent hide_classes_from_diagram (l_added_class_relations_list_list))
+				if l_class_added then
+					tool.history.do_named_undoable (undo_name, agent add_and_position_classes (a_classes, l_added_class_relations_list_list), agent hide_classes_from_diagram (l_added_class_relations_list_list))
+				end
 			end
 		end
 
@@ -238,7 +248,7 @@ feature -- Basic operations
 				l_x_offset := tool.layout.horizontal_spacing
 				l_y_offset := tool.layout.vertical_spacing
 			until
-				a_class_list.after
+				a_class_list.after or l_class_graph = Void
 			loop
 				from
 					l_class_figure ?= tool.world.figure_from_model (a_class_list.item)
@@ -292,8 +302,12 @@ feature -- Basic operations
 		local
 			a_class_list: ARRAYED_LIST [ES_CLASS]
 			es_class: ES_CLASS
+			cf: CLASSI_FIGURE_STONE
 		do
-			es_class := tool.world.model.class_from_interface (a_stone.class_i)
+			cf ?= a_stone
+			if cf /= Void then
+				es_class := cf.source.model
+			end
 			if es_class /= Void then
 				if es_class.is_compiled then
 					create a_class_list.make (1)

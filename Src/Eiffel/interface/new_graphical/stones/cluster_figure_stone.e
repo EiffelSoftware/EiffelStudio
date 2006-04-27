@@ -13,21 +13,21 @@ inherit
 		rename
 			make as make_with_cluster
 		end
-		
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_figure: CLUSTER_FIGURE) is
+	make (a_figure: EIFFEL_CLUSTER_FIGURE) is
 		do
-			make_with_cluster (a_figure.model.cluster_i)
+			make_with_cluster (a_figure.model.group)
 			source := a_figure
 		end
 
 feature -- Access
 
-	source: CLUSTER_FIGURE;
+	source: EIFFEL_CLUSTER_FIGURE;
 			-- Source this stone was picked from.
 
 indexing

@@ -20,8 +20,6 @@ inherit
 
 	EV_SHARED_APPLICATION
 
-	CONF_REFACTORING
-
 feature -- Search and replace
 
 	global_class_name_replace (a_search_string, a_replace_string: STRING; compiled_classes_only: BOOLEAN; a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR) is
@@ -32,51 +30,32 @@ feature -- Search and replace
 			a_search_string_not_void: a_search_string /= Void
 			a_replace_string_not_void: a_replace_string /= Void
 		local
-			cur: CURSOR
-			classes: HASH_TABLE [CLASS_I, STRING]
-			clusters: LIST [CLUSTER_I]
-			cl: LINKED_LIST [CLASS_I]
+			cl: DS_HASH_SET [CLASS_I]
 			l_changed_count: INTEGER
 			l_ctm: CLASS_TEXT_MODIFIER
+			l_index: INTEGER
+			l_class: CLASS_I
 		do
-			create cl.make
-			conf_todo
---			clusters := Eiffel_universe.clusters
-			cur := clusters.cursor
-			from
-				clusters.start
-			until
-				clusters.after
-			loop
-				classes := clusters.item.classes
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					if not compiled_classes_only or else classes.item_for_iteration.compiled then
-						cl.extend (classes.item_for_iteration)
-					end
-					classes.forth
-				end
-				process_events_and_idle
-				clusters.forth
-			end
-			clusters.go_to (cur)
+			cl := eiffel_universe.all_classes
 			a_status_bar.reset_progress_bar_with_range (0 |..| cl.count)
 
 			from
 				cl.start
+				l_index := 0
 			until
 				cl.after
 			loop
-				a_status_bar.display_progress_value (cl.index)
-				l_ctm := search_replace_modifier (cl.item, a_search_string, a_replace_string)
-				if l_ctm /= Void then
-					l_ctm.commit_modification
-					a_status_bar.display_message (cl.item.name_in_upper + " updated, continuing search and replace")
-					l_changed_count := l_changed_count + 1
+				l_class := cl.item_for_iteration
+				a_status_bar.display_progress_value (l_index)
+				if not l_class.is_read_only and then (not compiled_classes_only or else l_class.compiled) then
+					l_ctm := search_replace_modifier (l_class, a_search_string, a_replace_string)
+					if l_ctm /= Void then
+						l_ctm.commit_modification
+						a_status_bar.display_message (l_class.name_in_upper + " updated, continuing search and replace")
+						l_changed_count := l_changed_count + 1
+					end
 				end
+				l_index := l_index + 1
 				cl.forth
 				process_events_and_idle
 			end
@@ -126,13 +105,17 @@ feature {NONE} -- Implementation
 			pr_type_as: PRECURSOR_AS
 			st, en: INTEGER
 			l_es_class: ES_CLASS
+			l_classes: ARRAYED_LIST [ES_CLASS]
 		do
 				-- Even though we could have more than one development window open with a diagram in it,
 				-- we assume there is actually only one doing the diagraming. If there were more than one,
 				-- and that `a_class' is in the two window, then the undo/redo might not work properly
 				-- since we would have 2 CLASS_TEXT_MODIFIER instance.
 			if window_manager.a_development_window /= Void then
-				l_es_class := window_manager.a_development_window.context_tool.editor.world.model.class_from_interface (a_class)
+				l_classes := window_manager.a_development_window.context_tool.editor.world.model.class_from_interface (a_class)
+				if not l_classes.is_empty then
+				 	l_es_class := l_classes.first
+				end
 			end
 			if l_es_class /= Void then
 				ctm := l_es_class.code_generator

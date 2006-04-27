@@ -213,8 +213,7 @@ feature {NONE} -- Implementation
 			cluster_name: STRING
 			colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]
 		do
-			conf_todo
---			cluster_name := a_class.model.class_i.cluster.cluster_name
+			cluster_name := a_class.model.class_i.group.name
 			colors := cluster_color_table.item (cluster_name)
 			if colors = Void then
 				create colors.make (1)
@@ -323,17 +322,16 @@ feature {NONE} -- Implementation
 				loop
 					bcf ?= l_nodes.item
 					if bcf /= Void then
-						conf_todo
---						colors := cluster_color_table.item (bcf.model.class_i.cluster.cluster_name)
---						if colors = Void then
---							new_color := color_with_number (color_nr)
---							create colors.make (1)
---							colors.extend ([new_color, 1])
---							cluster_color_table.put (colors, bcf.model.class_i.cluster.cluster_name)
---							color_nr := color_nr + 1
---						else
---							new_color ?= colors.first.item (1)
---						end
+						colors := cluster_color_table.item (bcf.model.class_i.group.name)
+						if colors = Void then
+							new_color := color_with_number (color_nr)
+							create colors.make (1)
+							colors.extend ([new_color, 1])
+							cluster_color_table.put (colors, bcf.model.class_i.group.name)
+							color_nr := color_nr + 1
+						else
+							new_color ?= colors.first.item (1)
+						end
 						check
 							new_color_not_void: new_color /= Void
 						end

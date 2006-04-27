@@ -207,8 +207,7 @@ feature -- Access
 			l_xml_routines := xml_routines
 			l_model := model
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
-			conf_todo
---			Result.add_attribute (cluster_name_string, xml_namespace, l_model.class_i.cluster.cluster_name)
+			Result.add_attribute (cluster_name_string, xml_namespace, l_model.class_i.group.name)
 			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, boolean_representation (is_default_background_color_used)))
 			if not is_default_background_color_used then
 				l_color := background_color

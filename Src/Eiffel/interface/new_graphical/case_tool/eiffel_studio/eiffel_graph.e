@@ -30,6 +30,11 @@ inherit
 			default_create
 		end
 
+	SHARED_WORKBENCH
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -51,57 +56,209 @@ feature -- Access
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
 
-	class_from_interface (class_i: CLASS_I): ES_CLASS is
+	class_of_id (a_id: STRING): ES_CLASS is
+			-- Class of `a_id'
+		require
+			a_id_not_void: a_id /= Void
+		local
+			l_nodes: like nodes
+			l_class: ES_CLASS
+		do
+			from
+				l_nodes := nodes
+				l_nodes.start
+			until
+				l_nodes.after or Result /= Void
+			loop
+				l_class ?= l_nodes.item
+				if l_class /= Void and then l_class.es_class_id.is_equal (a_id) then
+					Result := l_class
+				end
+				l_nodes.forth
+			end
+		end
+
+	class_from_interface (class_i: CLASS_I): ARRAYED_LIST [ES_CLASS] is
 			-- Representation of `class_i', Void if none exists.
 		require
 			class_i_not_void: class_i /= Void
 		local
 			l_nodes: like nodes
-			es_class: ES_CLASS
+			l_class: ES_CLASS
 		do
-			Result := class_name_to_node_lookup.item (class_i.name)
-			if Result /= Void and then Result.class_i /= class_i then
-				-- should not happen.
-				Result := Void
-				from
-					l_nodes := nodes
-					l_nodes.start
-				until
-					Result /= Void or else l_nodes.after
-				loop
-					es_class ?= l_nodes.item
-					if es_class /= Void then
-						if es_class.class_i = class_i then
-							Result := es_class
-						end
+			create Result.make (5)
+			l_nodes := nodes
+			from
+				l_nodes.start
+			until
+				l_nodes.after
+			loop
+				l_class ?= l_nodes.item
+				if l_class /= Void then
+					if l_class.class_i = class_i then
+						Result.extend (l_class)
 					end
-					l_nodes.forth
 				end
+				l_nodes.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-	cluster_from_interface (cluster_i: CLUSTER_I): ES_CLUSTER is
-			-- Representation of `cluster_i', Void if none exists.
-		require
-			cluster_i_not_void: cluster_i /= Void
+	top_level_clusters : ARRAYED_LIST [ES_CLUSTER] is
+			-- Top level clusters.
 		local
-			l_clusters: like clusters
+			l_clusters : like clusters
 			es_cluster: ES_CLUSTER
 		do
+			create Result.make (5)
 			from
 				l_clusters := clusters
 				l_clusters.start
 			until
-				Result /= Void or else l_clusters.after
+				l_clusters.after
 			loop
 				es_cluster ?= l_clusters.item
 				if es_cluster /= Void then
-					if es_cluster.cluster_i = cluster_i then
-						Result := es_cluster
+					if es_cluster.cluster = Void then
+						Result.extend (es_cluster)
 					end
 				end
 				l_clusters.forth
 			end
+		ensure
+			top_level_clusters_not_void: Result /= Void
+		end
+
+	top_level_classes : ARRAYED_LIST [ES_CLASS] is
+			-- Top level classes.
+		local
+			l_classes: like nodes
+			l_class: ES_CLASS
+		do
+			create Result.make (50)
+			from
+				l_classes := nodes
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_class ?= l_classes.item
+				if l_class /= Void then
+					if l_class.cluster = Void then
+						Result.extend (l_class)
+					end
+				end
+				l_classes.forth
+			end
+		ensure
+			top_level_classes_not_void: Result /= Void
+		end
+
+	possible_linkable_node (a_class: ES_CLASS): ARRAYED_LIST [ES_CLASS] is
+			-- Possible linkable node within `a_cluster'
+			-- Top level nodes of `a_cluster' and top level nodes of its libraries.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_clusters: ARRAYED_LIST [ES_CLUSTER]
+			l_cluster, l_a_class_cluster : ES_CLUSTER
+			sub_clusters: ARRAYED_LIST [ES_CLUSTER]
+			l_target: CONF_TARGET
+			l_nodes: like nodes
+			l_group: CONF_GROUP
+			top_most_cluster: ES_CLUSTER
+			l_lib: CONF_LIBRARY
+		do
+			l_a_class_cluster := a_class.cluster
+			l_group := a_class.class_i.group
+			create Result.make (100)
+			if l_a_class_cluster = Void then
+				l_target := a_class.class_i.group.target
+				from
+					l_nodes := nodes
+					l_nodes.start
+				until
+					l_nodes.after
+				loop
+					if not l_group.class_by_name (l_nodes.item.class_i.name_in_upper, True).is_empty then
+						Result.extend (l_nodes.item)
+					end
+					l_nodes.forth
+				end
+			else
+				if l_a_class_cluster.group.target = universe.target then
+					l_clusters := top_level_clusters
+					l_target := universe.target
+				else
+					top_most_cluster := top_most_scope (l_a_class_cluster)
+					if top_most_cluster.group.is_library then
+						l_lib ?= top_most_cluster.group
+						l_target := l_lib.library_target
+						l_clusters := top_most_cluster.sub_clusters
+					else
+						l_target := top_most_cluster.group.target
+						create l_clusters.make (1)
+						l_clusters.extend (top_most_cluster)
+					end
+				end
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					l_cluster := l_clusters.item
+					if l_cluster.group.is_cluster then
+						if l_cluster.group.target = l_target then
+							Result.append (l_cluster.sub_nodes_recursive)
+						end
+					elseif l_cluster.group.is_library then
+						if l_cluster.group.target = l_target then
+							sub_clusters := l_cluster.sub_clusters
+							from
+								sub_clusters.start
+							until
+								sub_clusters.after
+							loop
+								if sub_clusters.item.group.is_cluster then
+									Result.append (sub_clusters.item.sub_nodes_recursive)
+								end
+								sub_clusters.forth
+							end
+						end
+					end
+					l_clusters.forth
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	cluster_from_interface (a_group: CONF_GROUP): ARRAYED_LIST [ES_CLUSTER] is
+			-- Representation of `a_group', Void if none exists.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_clusters: like clusters
+			es_cluster: ES_CLUSTER
+		do
+			create Result.make (5)
+			from
+				l_clusters := clusters
+				l_clusters.start
+			until
+				l_clusters.after
+			loop
+				es_cluster ?= l_clusters.item
+				if es_cluster /= Void then
+					if es_cluster.group = a_group then
+						Result.extend (es_cluster)
+					end
+				end
+				l_clusters.forth
+			end
+		ensure
+			cluster_from_interface_not_void: Result /= Void
 		end
 
 	inheritance_link_connecting (a_descendant, an_ancestor: EG_LINKABLE): ES_INHERITANCE_LINK is
@@ -138,22 +295,32 @@ feature -- Element change
 
 	add_node (a_node: ES_CLASS) is
 			-- Add `a_node' to the model.
+		local
+			class_i: CLASS_I
 		do
 			Precursor {EG_GRAPH} (a_node)
+			class_i := a_node.class_i
+			class_name_to_node_lookup.put (a_node, lookup_name_of_class (class_i))
+		end
+
+	add_node_relations (a_node: ES_CLASS) is
+			-- Add relations of `a_node'
+		require
+			a_node_not_void: a_node /= Void
+		do
 			if a_node.class_i.compiled then
 				add_ancestor_relations (a_node)
 				add_descendant_relations (a_node)
 				add_client_relations (a_node)
 				add_supplier_relations (a_node)
 			end
-			class_name_to_node_lookup.put (a_node, a_node.class_i.name)
 		end
 
 	remove_node (a_node: ES_CLASS) is
 			-- Remove `a_node' from the model.
 		do
 			Precursor {EG_GRAPH} (a_node)
-			class_name_to_node_lookup.remove (a_node.class_i.name)
+			class_name_to_node_lookup.remove (lookup_name_of_class (a_node.class_i))
 		end
 
 	add_link (a_link: EG_LINK) is
@@ -188,15 +355,6 @@ feature -- Element change
 			if ecsl /= Void then
 				client_supplier_links_lookup.remove ([ecsl.client, ecsl.supplier])
 			end
-		end
-
-	insert_cluster (a_cluster: ES_CLUSTER) is
-			-- Add `a_cluster' to the model and add all childrens in the graph
-			-- and put it into its parent (if any in the graph).
-		do
-			add_cluster (a_cluster)
-			add_children_relations (a_cluster)
-			add_parent_relations (a_cluster)
 		end
 
 feature {EB_CONTEXT_EDITOR} -- Synchronization
@@ -292,51 +450,123 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			loop
 				es_cluster ?= l_clusters.i_th (i)
 				if es_cluster /= Void then
-					add_children_relations (es_cluster)
-					add_parent_relations (es_cluster)
+					add_children_relations (es_cluster, es_cluster.cluster)
+					add_parent_relations (es_cluster, es_cluster.cluster)
 				end
 				i := i + 1
 			end
 		end
 
-	add_children_relations (a_cluster: ES_CLUSTER) is
-			-- Add all childrens of `a_cluster' to `a_cluster' if in the graph.
+	add_children_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER) is
+			-- Add all `a_cluster''s childrens appear in top level of `a_parent'.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_clusters: like flat_clusters
+			l_top_possibles: ARRAYED_LIST [ES_CLUSTER]
 			l_child: ES_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_lib_a: CONF_LIBRARY
+			l_cluster: CONF_CLUSTER
+			l_chuster_a: CONF_CLUSTER
 		do
-			from
-				l_clusters := flat_clusters
-				l_clusters.start
-			until
-				l_clusters.after
-			loop
-				l_child ?= l_clusters.item
-				if l_child /= Void and then l_child.is_needed_on_diagram and then l_child.cluster_i.parent_cluster = a_cluster.cluster_i then
-					if not a_cluster.has (l_child) then
-						a_cluster.extend (l_child)
+			l_top_possibles := top_level_clusters
+			if a_parent /= Void then
+				l_clusters := l_top_possibles
+				l_clusters.append (a_parent.sub_clusters)
+			else
+				l_clusters := l_top_possibles
+			end
+			if a_cluster.group.is_cluster then
+				l_cluster ?= a_cluster.group
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					l_child ?= l_clusters.item
+					if l_child /= Void and then l_child.cluster = Void and then l_child.is_needed_on_diagram and then l_child.group.is_cluster then
+						l_chuster_a ?= l_child.group
+						if l_cluster.children /= Void and then l_cluster.children.has (l_chuster_a) then
+							a_cluster.extend (l_child)
+						end
 					end
+					l_clusters.forth
 				end
-				l_clusters.forth
+			elseif a_cluster.group.is_library then
+				l_lib ?= a_cluster.group
+				from
+					l_clusters.start
+				until
+					l_clusters.after
+				loop
+					l_child ?= l_clusters.item
+					if l_child /= Void and then l_child.cluster = Void and then l_child.is_needed_on_diagram then
+						if l_child.group.is_cluster then
+							if l_lib.library_target.clusters.has (l_child.group.name) then
+								a_cluster.extend (l_child)
+							end
+						elseif l_child.group.is_library then
+							l_lib_a ?= l_child.group
+							if l_lib.library_target.libraries.has_item (l_lib_a) then
+								a_cluster.extend (l_child)
+							end
+						end
+					end
+					l_clusters.forth
+				end
 			end
 		end
 
-	add_parent_relations (a_cluster: ES_CLUSTER) is
-			-- Add `a_cluster' to the parent of `a_cluster' if any and if in graph.
+	add_parent_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER) is
+			-- Add `a_cluster' to possible `a_parent'.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			parent: CLUSTER_I
 			parent_cluster: ES_CLUSTER
+			l_group: CONF_GROUP
+			l_cluster: CONF_CLUSTER
+			l_lib: CONF_LIBRARY
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
+			l_libs_tar: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_parent_found: BOOLEAN
 		do
-			parent := a_cluster.cluster_i.parent_cluster
-			if parent /= Void then
-				parent_cluster := cluster_from_interface (parent)
-				if parent_cluster /= Void and then parent_cluster.is_needed_on_diagram then
-					if not parent_cluster.has (a_cluster) then
-						parent_cluster.extend (a_cluster)
+			if a_parent /= Void then
+				l_group := a_cluster.group
+				if l_group.is_cluster then
+					l_cluster ?= l_group
+					if l_cluster.parent = a_parent.group then
+						a_parent.extend (a_cluster)
+						l_parent_found := True
+					end
+					if not l_parent_found then
+						if l_cluster.target.used_in_libraries /= Void then
+							l_libs := l_cluster.target.used_in_libraries.twin
+						end
+						if l_libs /= Void then
+							from
+								l_libs.start
+							until
+								l_libs.after or l_parent_found
+							loop
+								parent_cluster := a_parent
+								if a_parent.group = l_libs.item then
+									a_parent.extend (a_cluster)
+									l_parent_found := True
+								end
+								l_libs.forth
+							end
+						end
+					end
+				elseif l_group.is_library then
+					if a_parent.group.is_library then
+						l_lib ?= a_parent.group
+						l_libs_tar := l_lib.library_target.libraries
+						if l_libs_tar.has (l_group.name) then
+							if l_libs_tar.found_item = l_group then
+								a_parent.extend (a_cluster)
+							end
+						end
 					end
 				end
 			end
@@ -351,6 +581,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			l: FIXED_LIST [CL_TYPE_A]
 			cl: CLASS_I
 			es_class: ES_CLASS
+			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_link: ES_INHERITANCE_LINK
 		do
 			l := a_class.class_i.compiled_class.parents
@@ -358,15 +589,23 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				from l.start until l.after loop
 					cl := l.item.associated_class.lace_class
 					if cl /= Void then
-						es_class := class_from_interface (cl)
-						if es_class /= Void and then es_class.is_needed_on_diagram then
-							l_link := inheritance_link_connecting (a_class, es_class)
-							if l_link = Void then
-								create {ES_INHERITANCE_LINK} l_link.make_with_classes (a_class, es_class)
-								add_link (l_link)
-							elseif not l_link.is_needed_on_diagram then
-								l_link.enable_needed_on_diagram
+						es_classes := possible_linkable_node (a_class)
+						from
+							es_classes.start
+						until
+							es_classes.after
+						loop
+							es_class := es_classes.item
+							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
+								l_link := inheritance_link_connecting (a_class, es_class)
+								if l_link = Void then
+									create {ES_INHERITANCE_LINK} l_link.make_with_classes (a_class, es_class)
+									add_link (l_link)
+								elseif not l_link.is_needed_on_diagram then
+									l_link.enable_needed_on_diagram
+								end
 							end
+							es_classes.forth
 						end
 					end
 					l.forth
@@ -383,6 +622,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			l: LINEAR [CLASS_C]
 			cl: CLASS_I
 			es_class: ES_CLASS
+			es_classes: ARRAYED_LIST [ES_CLASS]
 			l_link: ES_INHERITANCE_LINK
 		do
 			l := a_class.class_i.compiled_class.descendants
@@ -390,15 +630,23 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 				from l.start until l.after loop
 					cl := l.item.lace_class
 					if cl /= Void then
-						es_class := class_from_interface (cl)
-						if es_class /= Void and then es_class.is_needed_on_diagram then
-							l_link := inheritance_link_connecting (es_class, a_class)
-							if l_link = Void then
-								create {ES_INHERITANCE_LINK} l_link.make_with_classes (es_class, a_class)
-								add_link (l_link)
-							elseif not l_link.is_needed_on_diagram then
-								l_link.enable_needed_on_diagram
+						es_classes := possible_linkable_node (a_class)
+						from
+							es_classes.start
+						until
+							es_classes.after
+						loop
+							es_class := es_classes.item
+							if es_class.class_i = cl and then es_class.is_needed_on_diagram then
+								l_link := inheritance_link_connecting (es_class, a_class)
+								if l_link = Void then
+									create {ES_INHERITANCE_LINK} l_link.make_with_classes (es_class, a_class)
+									add_link (l_link)
+								elseif not l_link.is_needed_on_diagram then
+									l_link.enable_needed_on_diagram
+								end
 							end
+							es_classes.forth
 						end
 					end
 					l.forth
@@ -417,7 +665,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			cs_link: ES_CLIENT_SUPPLIER_LINK
 		do
 			from
-				l_nodes := nodes
+				l_nodes := possible_linkable_node (a_class)
 				l_nodes.start
 			until
 				l_nodes.after
@@ -444,7 +692,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			cs_link: ES_CLIENT_SUPPLIER_LINK
 		do
 			from
-				l_nodes := nodes
+				l_nodes := possible_linkable_node (a_class)
 				l_nodes.start
 			until
 				l_nodes.after
@@ -476,6 +724,16 @@ feature {CLASS_TEXT_MODIFIER} -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	lookup_name_of_class (a_class: CLASS_I): STRING is
+			-- Unique lookup name of `a_class'
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := a_class.group.target.name + "." + a_class.name
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	remove_unneeded_items is
 			-- Remove all EIFFEL_ITEMS in `Current' with is_needed_on_diagram False.
@@ -614,6 +872,22 @@ feature {NONE} -- Implementation
 	explore_relations is
 			-- Explore relations.
 		deferred
+		end
+
+	top_most_scope (a_cluster: ES_CLUSTER): ES_CLUSTER is
+			-- Possible top most cluster in the graph that contains dependent relations among classes in `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			if a_cluster.cluster = Void then
+				Result := a_cluster
+			elseif a_cluster.cluster.group.is_cluster then
+				Result := top_most_scope (a_cluster.cluster)
+			elseif a_cluster.cluster.group.is_library then
+				Result := a_cluster.cluster
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	feature_name_number: INTEGER

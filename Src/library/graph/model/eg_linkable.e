@@ -13,7 +13,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -25,6 +25,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	link_name: STRING is
+			-- Name for linking
+		do
+			Result := name
+		end
+
 	cluster: EG_CLUSTER
 			-- cluster `Current' is part of.
 
@@ -33,7 +39,7 @@ feature -- Access
 		do
 			Result := internal_links.twin
 		end
-	
+
 feature {EG_LINK} -- Element change
 
 	add_link (a_link: EG_LINK) is
@@ -47,7 +53,7 @@ feature {EG_LINK} -- Element change
 		ensure
 			links_has_a_link: links.has (a_link)
 		end
-			
+
 feature {EG_CLUSTER} -- Element change
 
 	set_cluster (a_cluster: like cluster) is
@@ -61,7 +67,7 @@ feature {EG_CLUSTER} -- Element change
 		ensure
 			set: cluster = a_cluster
 		end
-		
+
 	remove_cluster is
 			-- Set `cluster' to Void.
 		do
@@ -69,8 +75,8 @@ feature {EG_CLUSTER} -- Element change
 		ensure
 			set: cluster = Void
 		end
-		
-		
+
+
 feature {EG_GRAPH} -- Element change
 
 	remove_link (a_link: EG_LINK) is
@@ -88,7 +94,7 @@ feature {EG_FIGURE_WORLD, EG_GRAPH} -- Access
 
 	internal_links: ARRAYED_LIST [EG_LINK]
 			-- Links to other EG_LINKABLEs.
-			
+
 invariant
 	internal_links_not_void: internal_links /= Void
 

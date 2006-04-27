@@ -8,7 +8,7 @@ indexing
 
 deferred class
 	EIFFEL_CLUSTER_FIGURE
-	
+
 inherit
 	EG_RESIZABLE_CLUSTER_FIGURE
 		redefine
@@ -19,10 +19,17 @@ inherit
 			on_linkable_add,
 			on_handle_start,
 			on_handle_end,
-			recycle
+			recycle,
+			xml_element,
+			set_with_xml_element
 		end
-		
+
 	EB_CONSTANTS
+		undefine
+			default_create
+		end
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create
 		end
@@ -33,15 +40,16 @@ feature {NONE} -- Initialization
 			-- Create an CLUSTER_FIGURE.
 		do
 			Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
-			
+
 			set_accept_cursor (cursors.cur_cluster)
 			set_deny_cursor (cursors.cur_x_cluster)
-			
+
 			start_actions.extend (agent save_position)
 			end_actions.extend (agent extend_history)
 			move_actions.extend (agent on_move)
+			create label_pixmap
 		end
-		
+
 	initialize is
 			-- Initialize `Current' with `model'.
 		do
@@ -54,18 +62,21 @@ feature -- Status report
 
 	is_iconified: BOOLEAN
 			-- Is `Current' iconified.
-		
+
 feature -- Access
 
 	model: ES_CLUSTER
 			-- Model for `Current'.
-			
+
 	world: EIFFEL_WORLD is
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
 		end
-		
+
+	label_pixmap: EV_MODEL_PICTURE
+			-- The pixmap for the label.
+
 feature -- Element change
 
 	recycle is
@@ -79,8 +90,8 @@ feature -- Element change
 				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
 			end
 		end
-		
-		
+
+
 	apply_right_angles is
 			-- Apply right angles to all links in `links' and all elements in `Current'.
 		local
@@ -121,13 +132,38 @@ feature -- Element change
 			end
 		end
 
+feature -- XML
+
+	group_id_string: STRING is "GROUP_ID"
+			-- Group id
+
+	cluster_id_string: STRING is "CLUSTER_ID"
+			-- ES_CLUSTER id string
+
+	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+			-- Xml element representing `Current's state.
+		do
+			Result := Precursor {EG_RESIZABLE_CLUSTER_FIGURE} (node)
+			node.add_attribute (group_id_string, xml_namespace, model.group_id)
+			node.add_attribute (cluster_id_string, xml_namespace, model.cluster_id)
+		end
+
+	set_with_xml_element (node: XM_ELEMENT) is
+			-- Retrive state from `node'.
+		do
+			node.forth
+			node.forth
+			Precursor {EG_RESIZABLE_CLUSTER_FIGURE} (node)
+				-- Discard "CLUSTER_ID" and "GROUP_ID", since they have been read in factory.
+		end
+
 feature {EG_LAYOUT} -- Layouting
 
 	set_to_minimum_size is
 			-- Set `Current's to `minimum_size'.
 		deferred
 		end
-		
+
 feature {EIFFEL_WORLD} -- Show/Hide
 
 	disable_shown is
@@ -136,17 +172,17 @@ feature {EIFFEL_WORLD} -- Show/Hide
 		ensure
 			set: not is_shown
 		end
-		
+
 	enable_shown is
 			-- Show `Current'.
 		deferred
 		ensure
 			set: is_shown
 		end
-		
+
 	is_shown: BOOLEAN
 			-- Is `Current' shown?
-		
+
 feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 
 	collapse is
@@ -163,7 +199,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			until
 				after
 			loop
-				linkable_figure ?= item			
+				linkable_figure ?= item
 				if linkable_figure /= Void then
 					if linkable_figure.is_show_requested then
 						linkable_figure.hide
@@ -193,7 +229,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			resizer_bottom_right.disable_sensitive
 			resizer_bottom_left.disable_sensitive
 		end
-		
+
 	expand is
 			-- Show all not iconified elements in `Current'.
 		local
@@ -248,7 +284,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			resizer_bottom_right.enable_sensitive
 			resizer_bottom_left.enable_sensitive
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_needed_on_diagram_changed is
@@ -269,12 +305,12 @@ feature {NONE} -- Implementation
 		do
 			saved_x := port_x
 			saved_y := port_y
-			
+
 		end
-		
+
 	saved_x, saved_y: INTEGER
 			-- Saved positions.
-			
+
 	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Cluster is moving.
 		do
@@ -298,7 +334,7 @@ feature {NONE} -- Implementation
 				set_is_fixed (True)
 			end
 		end
-		
+
 	on_linkable_add (a_linkable: EG_LINKABLE) is
 			-- `a_linkable' was added to the cluster.
 		local
@@ -319,7 +355,7 @@ feature {NONE} -- Implementation
 				end
 				extend (linkable_fig)
 				linkable_fig.set_cluster (Current)
-				
+
 				from
 					l_world.links.start
 				until
@@ -356,7 +392,7 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
 	on_handle_start is
 			-- User started to move `Current'.
 		do
@@ -365,7 +401,7 @@ feature {NONE} -- Implementation
 				set_is_fixed (True)
 			end
 		end
-		
+
 	on_handle_end is
 			-- User ended to move `Current'.
 		do
@@ -390,12 +426,12 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
-	on_pebble_request: CLUSTER_STONE is
+
+	on_pebble_request: CLUSTER_FIGURE_STONE is
 			-- Pebble request.
 		do
 			if model /= Void then
-				create Result.make (model.cluster_i)
+				create Result.make (Current)
 			end
 		end
 

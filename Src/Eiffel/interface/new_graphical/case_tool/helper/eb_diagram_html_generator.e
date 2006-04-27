@@ -26,7 +26,9 @@ inherit
 			default_create
 		end
 
-	CONF_REFACTORING
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -37,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_documentation (a_cluster: CLUSTER_I; a_view: STRING; doc: DOCUMENTATION) is
+	make_for_documentation (a_cluster: CONF_GROUP; a_view: STRING; doc: DOCUMENTATION) is
 			-- Initialize for `a_cluster' and `doc'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -57,7 +59,7 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
-	make_for_wizard (a_cluster: CLUSTER_I) is
+	make_for_wizard (a_cluster: CONF_GROUP) is
 			-- Initialize for `a_cluster'.
 			-- Does not allow calls to `execute'.
 		require
@@ -163,7 +165,7 @@ feature {DOCUMENTATION} -- Basic operations
 
 			create ptf.make_open_write (target_file_name)
 			str := "<HTML><HEAD>%
-						%<TITLE>Cluster " + cluster.cluster_name + "</TITLE>%N"
+						%<TITLE>Cluster " + cluster.name + "</TITLE>%N"
 			if documentation.filter_name.is_equal ("html-stylesheet") then
 				str.append ("<LINK REL=%"stylesheet%" HREF=%"" +
 					base_path +
@@ -196,7 +198,7 @@ feature {DOCUMENTATION} -- Basic operations
 
 			minimum_pixmap := projector.world_as_pixmap (border)
 			if projector.is_world_too_large then
-				create wd.make_with_text (Warning_messages.W_cannot_generate_png+"%N"+cluster.cluster_name)
+				create wd.make_with_text (Warning_messages.W_cannot_generate_png+"%N"+cluster.name)
 				create minimum_pixmap.make_with_size (1, 1)
 			end
 			minimum_pixmap.save_to_named_file (png_format, png_file)
@@ -213,7 +215,7 @@ feature {DOCUMENTATION} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	cluster: CLUSTER_I
+	cluster: CONF_GROUP
 			-- Center of generated diagram.
 
 	diagram: EIFFEL_CLUSTER_DIAGRAM
@@ -238,7 +240,7 @@ feature {NONE} -- Implementation
 			-- Where views for `diagram' are stored.	
 		do
 			create Result.make_from_string (Eiffel_system.context_diagram_path)
-			Result.extend (cluster.cluster_name)
+			Result.extend (id_of_group (cluster))
 			Result.add_extension ("xml")
 		end
 
@@ -307,9 +309,7 @@ feature {NONE} -- Implementation
 				cf ?= class_figures.item
 				if cf.model.class_i.compiled and documentation.doc_universe.is_class_generated (cf.model.class_i) then
 					item_file := base_path.twin
-					conf_todo
 					path := documentation.relative_path (cf.model.class_i.group)
---					path := cf.model.class_i.group.location.evaluated_directory
 					if path /= Void then
 						item_file.append_character ('/')
 						item_file.append (path)
@@ -376,25 +376,24 @@ feature {NONE} -- Implementation
 					local_cluster_figures.after
 				loop
 					clf ?= local_cluster_figures.item
-					conf_todo
---					if documentation.doc_universe.is_cluster_generated (clf.model.cluster_i) then
---						item_file := base_path.twin
---						path := documentation.relative_path (clf.model.cluster_i)
---						if path /= Void then
---							item_file.append_character ('/')
---							item_file.append (path)
---						end
---						item_file.append ("/index.html")
---						bbox := clf.bounding_box
---						Result.append ("<area shape=rect coords=%""
---							+ (bbox.left - bounds.x).out + ","
---							+ (bbox.top - bounds.y).out + ","
---							+ (bbox.right - bounds.x).out + ","
---							+ (bbox.bottom - bounds.y).out + "%"%
---							% href=%""
---							+ item_file
---							+ "%">%N")
---					end
+					if documentation.doc_universe.is_group_generated (clf.model.group) then
+						item_file := base_path.twin
+						path := documentation.relative_path (clf.model.group)
+						if path /= Void then
+							item_file.append_character ('/')
+							item_file.append (path)
+						end
+						item_file.append ("/index.html")
+						bbox := clf.bounding_box
+						Result.append ("<area shape=rect coords=%""
+							+ (bbox.left - bounds.x).out + ","
+							+ (bbox.top - bounds.y).out + ","
+							+ (bbox.right - bounds.x).out + ","
+							+ (bbox.bottom - bounds.y).out + "%"%
+							% href=%""
+							+ item_file
+							+ "%">%N")
+					end
 					local_cluster_figures.remove
 					if clf.cluster /= Void and then
 						not local_cluster_figures.has (clf.cluster) then

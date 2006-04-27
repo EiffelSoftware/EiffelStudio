@@ -13,7 +13,8 @@ inherit
 	EM_CLASS
 		redefine
 			graph,
-			cluster
+			cluster,
+			link_name
 		end
 
 	ES_ITEM
@@ -36,13 +37,17 @@ inherit
 			default_create
 		end
 
-	CONF_REFACTORING
+	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
 		undefine
-			default_create
+			default_create,
+			is_equal
 		end
 
 create
-	make
+	make,
+	make_with_id
 
 feature {NONE} -- Initialization
 
@@ -52,6 +57,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			default_create
+			if es_class_id = Void then
+				es_class_id := generate_uuid
+			end
 			name := a_class.name.twin
 			class_i := a_class
 
@@ -67,6 +75,15 @@ feature {NONE} -- Initialization
 			create feature_clause_list_changed_actions
 
 			synchronize
+		end
+
+	make_with_id (a_class: CLASS_I; a_id: like es_class_id) is
+			-- Create an ES_CLASS with `a_class' and `identifier'
+		require
+			a_class_not_void: a_class /= Void
+		do
+			es_class_id := a_id
+			make (a_class)
 		end
 
 feature -- Status report
@@ -223,6 +240,17 @@ feature -- Access
 			compiled_implies_Result_not_void: class_i.is_compiled implies Result /= Void
 		end
 
+	es_class_id: STRING
+			-- Identifier
+
+	group_id: STRING is
+			-- Group id
+		do
+			Result := id_of_group (class_i.group)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	queries: LIST [FEATURE_AS]
 			-- All written queries in `Current'.
 
@@ -274,6 +302,12 @@ feature -- Access
 
 	feature_clause_list_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `feature_clause_list' changed.
+
+	link_name : STRING is
+			-- Name for link
+		do
+			Result := es_class_id
+		end
 
 feature -- Element change
 
@@ -362,176 +396,150 @@ feature -- Element change
 			s: STRING
 			f: LIST [E_FEATURE]
 			l: EIFFEL_LIST [PARENT_AS]
-			l_cluster: ES_CLUSTER
 			is_properties_changed: BOOLEAN
 			b: BOOLEAN
-			cwn: LIST [CLASS_I]
 			l_persistent_str: STRING
 			l_feature_clause_list: like feature_clause_list
 		do
 			l_persistent_str := "persistent"
-			cwn := universe.classes_with_name (name)
-			if cwn.count = 1 and then cwn.first /= class_i then
-				class_i := cwn.first
+			if not class_i.is_valid or else (cluster /= Void and then class_i.group /= cluster.group) then
+				graph.remove_links (links)
+				graph.remove_node (Current)
+			else
+				if not class_i.name_in_upper.is_equal (name) then
+					-- should never happen (see above)
+					set_name (class_i.name_in_upper)
+				end
+				set_is_root_class (class_i.name.is_equal (class_i.System.root_class_name))
+				c := class_c
+				if c /= Void then
+					if c.ast /= Void then
+						if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
+							set_generics (Void)
+						else
+							set_generics (c.ast.generics_as_string)
+						end
+					end
+					b := c.is_deferred
+					if b /= is_deferred then
+						is_deferred := b
+						is_properties_changed := True
+					end
+					b := c.is_used_as_expanded
+					if b /= is_expanded then
+						is_expanded := b
+						is_properties_changed := True
+					end
+					b := c.is_precompiled or else c.group.is_library
+					if b /= is_reused then
+						is_reused := b
+						is_properties_changed := True
+					end
+					-- is_interfaced
+					if c.has_feature_table then
+						f := c.written_in_features
+						from
+							f.start
+							b := False
+						until
+							b or f.after
+						loop
+							b := f.item.is_external
+							f.forth
+						end
+						if b /= is_interfaced then
+							is_interfaced := b
+							is_properties_changed := True
+						end
+					end
+					-- is_persistent
+					st := Storable_class
+					b := False
+					if st /= Void then
+						b := c.conform_to (storable_class)
+					end
+					if not b then
+						i := c.ast.top_indexes
+						if i /= Void then
+							from
+								i.start
+							until
+								b or i.after
+							loop
+								s := i.item.tag
+								b := s /= Void and then s.is_equal (l_persistent_str)
+								i.forth
+							end
+						end
+						i := c.ast.bottom_indexes
+						if i /= Void then
+							from
+								i.start
+							until
+								b or i.after
+							loop
+								s := i.item.tag
+								b := s /= Void and then s.is_equal (l_persistent_str)
+								i.forth
+							end
+						end
+					end
+					if b /= is_persistent then
+						is_persistent := b
+						is_properties_changed := True
+					end
+					-- is_effective
+					if not c.is_deferred then
+						b := False
+						if c.ast /= Void then
+							l := c.ast.parents
+							if l /= Void then
+								from
+									l.start
+								until
+									b or l.after
+								loop
+									l_class := clickable_info.associated_eiffel_class (c.lace_class, l.item.type)
+									b := (l_class /= Void and then l_class.is_compiled and then
+										l_class.compiled_class.is_deferred) or else l.item.is_effecting
+									l.forth
+								end
+							end
+						end
+					end
+					if b /= is_effective then
+						is_effective := b
+						is_properties_changed := True
+					end
+					-- features
+					l_feature_clause_list := class_c.ast.features
+					if l_feature_clause_list = Void then
+						create l_feature_clause_list.make (0)
+					end
+					l_feature_clause_list.compare_objects
+					if not l_feature_clause_list.is_equal (feature_clause_list) then
+						feature_clause_list := l_feature_clause_list
+						feature_clause_list_changed_actions.call (Void)
+					end
+				end
+				b := class_i.compiled
+				if b /= is_compiled then
+					is_compiled := b
+					is_properties_changed := True
+				end
+				build_queries
+				if cluster /= Void then
+					if cluster.group /= class_i.group then
+						cluster.prune_all (Current)
+					end
+				end
+				if is_properties_changed then
+					properties_changed_actions.call (Void)
+				end
+				if internal_code_generator /= Void then
+					internal_code_generator.reset_date
+				end
 			end
-			conf_todo
---			if not universe.classes_with_name (class_i.name).has (class_i) then
---				if graph /= Void then
---						-- class was renamed, eather outside Eiffel Studio
---						-- or without the renaming tool. The result is a new
---						-- class_i object. Since we have no idea what the new
---						-- class name is we can't find the new class_i.
---					graph.remove_links (links)
---					graph.remove_node (Current)
---				end
---			elseif cluster /= Void and then cluster.cluster_i /= class_i.cluster then
---				if graph /= Void then
---						-- This class was moved to another cluster without
---						-- using Eiffel Studio.
---					graph.remove_links (links)
---					graph.remove_node (Current)
---				end
---			else
---				if not class_i.name_in_upper.is_equal (name) then
---					-- should never happen (see above)
---					set_name (class_i.name_in_upper)
---				end
---				set_is_root_class (class_i.name.is_equal (class_i.System.root_class_name))
---				c := class_c
---				if c /= Void then
---					if c.ast /= Void then
---						if c.ast.generics_as_string = Void or else c.ast.generics_as_string.is_empty then
---							set_generics (Void)
---						else
---							set_generics (c.ast.generics_as_string)
---						end
---					end
---					b := c.is_deferred
---					if b /= is_deferred then
---						is_deferred := b
---						is_properties_changed := True
---					end
---					b := c.is_used_as_expanded
---					if b /= is_expanded then
---						is_expanded := b
---						is_properties_changed := True
---					end
---					b := c.is_precompiled or else c.cluster.is_library
---					if b /= is_reused then
---						is_reused := b
---						is_properties_changed := True
---					end
---					-- is_interfaced
---					if c.has_feature_table then
---						f := c.written_in_features
---						from
---							f.start
---							b := False
---						until
---							b or f.after
---						loop
---							b := f.item.is_external
---							f.forth
---						end
---						if b /= is_interfaced then
---							is_interfaced := b
---							is_properties_changed := True
---						end
---					end
---					-- is_persistent
---					st := Storable_class
---					b := False
---					if st /= Void then
---						b := c.conform_to (storable_class)
---					end
---					if not b then
---						i := c.ast.top_indexes
---						if i /= Void then
---							from
---								i.start
---							until
---								b or i.after
---							loop
---								s := i.item.tag
---								b := s /= Void and then s.is_equal (l_persistent_str)
---								i.forth
---							end
---						end
---						i := c.ast.bottom_indexes
---						if i /= Void then
---							from
---								i.start
---							until
---								b or i.after
---							loop
---								s := i.item.tag
---								b := s /= Void and then s.is_equal (l_persistent_str)
---								i.forth
---							end
---						end
---					end
---					if b /= is_persistent then
---						is_persistent := b
---						is_properties_changed := True
---					end
---					-- is_effective
---					if not c.is_deferred then
---						b := False
---						if c.ast /= Void then
---							l := c.ast.parents
---							if l /= Void then
---								from
---									l.start
---								until
---									b or l.after
---								loop
---									l_class := clickable_info.associated_eiffel_class (c.lace_class, l.item.type)
---									b := (l_class /= Void and then l_class.is_compiled and then
---										l_class.compiled_class.is_deferred) or else l.item.is_effecting
---									l.forth
---								end
---							end
---						end
---					end
---					if b /= is_effective then
---						is_effective := b
---						is_properties_changed := True
---					end
---					-- features
---					l_feature_clause_list := class_c.ast.features
---					if l_feature_clause_list = Void then
---						create l_feature_clause_list.make (0)
---					end
---					l_feature_clause_list.compare_objects
---					if not l_feature_clause_list.is_equal (feature_clause_list) then
---						feature_clause_list := l_feature_clause_list
---						feature_clause_list_changed_actions.call (Void)
---					end
---				end
---				b := class_i.compiled
---				if b /= is_compiled then
---					is_compiled := b
---					is_properties_changed := True
---				end
---				build_queries
---				if cluster /= Void then
---					if cluster.cluster_i /= class_i.cluster then
---						cluster.prune_all (Current)
---					end
---				end
---				if graph /= Void then
---					l_cluster := graph.cluster_from_interface (class_i.cluster)
---					if l_cluster /= Void and then not l_cluster.has (Current) then
---						l_cluster.extend (Current)
---					end
---				end
---				if is_properties_changed then
---					properties_changed_actions.call (Void)
---				end
---				if internal_code_generator /= Void then
---					internal_code_generator.reset_date
---				end
---			end
 		end
 
 feature {NONE} -- Implementation

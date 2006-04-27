@@ -50,14 +50,30 @@ feature -- Basic operations
 		local
 			es_cluster: ES_CLUSTER
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
+			l_clusters: ARRAYED_LIST [ES_CLUSTER]
+			fig_stone: CLUSTER_FIGURE_STONE
 		do
 			check
 				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
 			end
-			es_cluster := tool.cluster_graph.cluster_from_interface (a_stone.cluster_i)
-			if es_cluster /= Void then
-				cluster_fig ?= tool.cluster_view.figure_from_model (es_cluster)
-				include_all_classes (cluster_fig)
+			fig_stone ?= a_stone
+			if fig_stone /= Void then
+				include_all_classes (fig_stone.source)
+			else
+				l_clusters := tool.cluster_graph.cluster_from_interface (a_stone.group)
+				if l_clusters /= Void then
+					from
+						l_clusters.start
+					until
+						l_clusters.after
+					loop
+						es_cluster := l_clusters.item
+						cluster_fig ?= tool.cluster_view.figure_from_model (es_cluster)
+						include_all_classes (cluster_fig)
+						l_clusters.forth
+					end
+
+				end
 			end
 		end
 

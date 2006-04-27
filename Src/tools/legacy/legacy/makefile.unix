@@ -1,0 +1,84 @@
+#
+TOKENS = tokens.h
+#
+# The following filenames must be consistent with ANTLR/DLG flags
+DLG_FILE = parser.dlg
+ERR = err
+HDR_FILE =
+SCAN = DLGLexer
+PCCTS = ../PCCTS
+ANTLR_H = $(PCCTS)/h
+BIN = $(PCCTS)/bin
+ANTLR = $(BIN)/antlr
+DLG = $(BIN)/dlg
+LIB=/usr/include/CC
+#CFLAGS = -I. -I$(ANTLR_H) -DDBG_TBUF -DDBG_REFCOUNTTOKEN
+CFLAGS = -I. -I$(ANTLR_H) 
+
+AFLAGS = -CC -k 2 -gd -prc on -rl 150000
+DFLAGS = -C2 -i -CC 
+GRM =cplusplus.g stat.g expr.g
+SRC=main.cpp support.cpp Dictionary.cpp \
+      cplusplus.cpp stat.cpp expr.cpp \
+      CPPParser.cpp \
+      $(ANTLR_H)/AParser.cpp $(ANTLR_H)/DLexerBase.cpp $(ANTLR_H)/ATokenBuffer.cpp $(SCAN).cpp
+OBJ=main.o support.o Dictionary.o \
+	cplusplus.o stat.o expr.o \
+	CPPParser.o \
+	AParser.o DLexerBase.o ATokenBuffer.o $(SCAN).o
+ANTLR_SPAWN=cplusplus.cpp stat.cpp expr.cpp CPPParser.cpp \
+              CPPParser.h $(DLG_FILE) $(TOKENS)
+DLG_SPAWN = $(SCAN).cpp $(SCAN).h
+CC=gcc
+
+
+
+legacy: $(OBJ) $(SRC)
+	$(CC) -o legacy $(CFLAGS) $(OBJ)
+ 
+main.o: main.cpp $(ANTLR_SPAWN) $(SCAN).h Constructor.h Field.h
+	$(CC) -c $(CFLAGS) main.cpp 
+ 
+support.o: support.cpp $(ANTLR_SPAWN) $(SCAN).h
+	$(CC) -c $(CFLAGS) support.cpp
+ 
+cplusplus.o: $(TOKENS) $(SCAN).h cplusplus.cpp
+	$(CC) -c $(CFLAGS) -o cplusplus.o cplusplus.cpp
+
+ 
+stat.o: $(TOKENS) $(SCAN).h stat.cpp
+	$(CC) -c $(CFLAGS) -o stat.o stat.cpp
+ 
+expr.o: $(TOKENS) $(SCAN).h expr.cpp
+	$(CC) -c $(CFLAGS) -o expr.o expr.cpp
+ 
+CPPParser.o: $(TOKENS) $(SCAN).h CPPParser.cpp CPPParser.h
+	$(CC) -c $(CFLAGS) -o CPPParser.o CPPParser.cpp
+ 
+Dictionary.o: Dictionary.cpp
+	$(CC) -c $(CFLAGS) Dictionary.cpp
+ 
+$(SCAN).o : $(SCAN).cpp $(TOKENS)
+	$(CC) -c $(CFLAGS) -o $(SCAN).o $(SCAN).cpp
+
+$(ANTLR_SPAWN) : $(GRM)
+	$(ANTLR) $(AFLAGS) $(GRM)
+
+$(DLG_SPAWN) : $(DLG_FILE)
+	$(DLG) $(DFLAGS) $(DLG_FILE)
+
+AParser.o : $(ANTLR_H)/AParser.cpp
+	$(CC) -c $(CFLAGS) -o AParser.o $(ANTLR_H)/AParser.cpp
+
+ATokenBuffer.o : $(ANTLR_H)/ATokenBuffer.cpp
+	$(CC) -c $(CFLAGS) -o ATokenBuffer.o $(ANTLR_H)/ATokenBuffer.cpp
+
+DLexerBase.o : $(ANTLR_H)/DLexerBase.cpp
+	$(CC) -c $(CFLAGS) -o DLexerBase.o $(ANTLR_H)/DLexerBase.cpp
+
+clean:
+	rm -f *.o core t
+	rm -f cplusplus.cpp stat.cpp expr.cpp
+
+scrub:
+	rm -f *.o core t $(ANTLR_SPAWN) $(DLG_SPAWN)

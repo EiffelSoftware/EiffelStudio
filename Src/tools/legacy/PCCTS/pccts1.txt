@@ -1,0 +1,132 @@
+
+
+
+PCCTS(1)                PCCTS Manual Pages               PCCTS(1)
+
+
+NNAAMMEE
+       PCCTS - The Purdue Compiler Construction Tool Set
+
+DDEESSCCRRIIPPTTIIOONN
+       PCCTS is a set of public domain software tools designed to
+       facilitate  the  implementation  of  compilers  and  other
+       translation systems.  These tools currently include _a_n_t_l_r,
+       _d_l_g and support code.  In many ways, PCCTS is similar to a
+       highly integrated version of YACC [Joh78] and LEX [Les75];
+       where _a_n_t_l_r (ANother Tool for Language Recognition) corre-
+       sponds to YACC and _d_l_g (DFA-based Lexical analyzer Genera-
+       tor) functions like LEX.  However, PCCTS  has  many  addi-
+       tional  features  which  make it easier to use for a wider
+       range of translation problems.
+
+       PCCTS grammars contain specifications for lexical and syn-
+       tactic  analysis, intermediate-form construction and error
+       reporting.  Rules may employ  Extended  Backus  Naur  Form
+       (EBNF)  grammar  constructs  and  may  define  parameters,
+       return values and local variables.  Languages described in
+       PCCTS  are recognized via Strong LL(k) parsers constructed
+       in pure, human-readable, C code.  As  a  result,  standard
+       debugging  tools  can  be  used  to  trace and debug PCCTS
+       parsers.  Breakpoints can be set so that parser  execution
+       stops  before  or after grammar fragments of interest have
+       been recognized.
+
+       PCCTS grammars may contain predicates which allow  parsing
+       to  be  a  function of semantics as well as syntax -- con-
+       text-sensitive grammars.  Backtracking can also be  speci-
+       fied  to  recognized non-LL(k) and non-LALR(k) constructs.
+       In addition, PCCTS  supports  intermediate-form  (such  as
+       expression-trees)  construction  via  a flexible Abstract-
+       Syntax Tree (AST) mechanism which allows trees to be built
+       explicitly  or automatically.  The user explicitly creates
+       trees via a LISP-like  tree  constructor  or  directs  the
+       automatic  tree  construction  facility via simple grammar
+       directives.  AST nodes are user-defined and are  generally
+       a  function  of attributes.  A default transformation from
+       attributes ($$-variables) to AST nodes  can  be  specified.
+       Alternatively,  each  tree  node can be defined explicitly
+       via an AST node constructor.
+
+IINNSSTTAALLLLAATTIIOONN
+       PCCTS includes a number of different programs and examples
+       in  the  software  release  package--most of which like to
+       live in their own directories.  The  install  script  will
+       build a standard hierarchy.  The PCCTS executables (_a_n_t_l_r,
+       _d_l_g) may be  placed  anywhere  the  user  wishes  but  the
+       install  script  places  them in the bin directory created
+       during installation.
+
+       To begin installation, place the pccts.tar file  into  the
+       directory  where  you  want to place a pccts subdirectory.
+
+
+
+PCCTS                       April 1994                          1
+
+
+
+
+
+PCCTS(1)                PCCTS Manual Pages               PCCTS(1)
+
+
+       Untar the file with
+
+            tar xvf pccts.tar
+
+       and cd into it.  To install PCCTS, simply type
+
+            make
+
+       which will build the standard  PCCTS  directory  hierarchy
+       (under the directory where you ran the install script) and
+       build executable versions of antlr and dlg.
+
+       The examples associated with PCCTS have makefile variables
+       called  AANNTTLLRR,  DDLLGG  etc... which must be set according to
+       your personal directory structure before  _m_a_k_e'ing.   Some
+       variables point to the PCCTS executables if the PPAATTHH envi-
+       ronment variable does  not  include  your  bbiinn  directory.
+       Also,  there  are  variables  that  point to PCCTS include
+       directories and must be changed if you  deviate  from  the
+       standard  PCCTS installation hierarchy.  _a_n_t_l_r and _d_l_g can
+       be built without executable versions of themselves  (_a_n_t_l_r
+       and _d_l_g are written in themselves).
+
+GGEETTTTIINNGG SSTTAARRTTEEDD
+       A  C  program  called  ggeennmmkk..cc  is  available  in the ssuupp--
+       ppoorrtt//ggeennmmkk directory of the PCCTS release.
+
+SSEEEE AALLSSOO
+       dlg(1), antlr(1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PCCTS                       April 1994                          2
+
+

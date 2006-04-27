@@ -1,0 +1,998 @@
+<<
+/* parser.dlg -- DLG Description of scanner
+ *
+ * Generated from: cplusplus.g stat.g expr.g
+ *
+ * Terence Parr, Will Cohen, and Hank Dietz: 1989-1994
+ * Purdue University Electrical Engineering
+ * With AHPCRC, University of Minnesota
+ * ANTLR Version 1.33
+ */
+
+#include "tokens.h"
+#include "AToken.h"
+
+#include "CPPDictionary.h"
+#include "AToken.h"
+typedef ANTLRCommonToken ANTLRToken;
+>>
+
+
+%%START
+
+@
+	<<
+		return Eof;
+	>>
+
+\{
+	<<
+		return LCURLYBRACE;
+	>>
+
+\}
+	<<
+		return RCURLYBRACE;
+	>>
+
+\[
+	<<
+		return LSQUAREBRACKET;
+	>>
+
+\]
+	<<
+		return RSQUAREBRACKET;
+	>>
+
+\(
+	<<
+		return LPARENTHESIS;
+	>>
+
+\)
+	<<
+		return RPARENTHESIS;
+	>>
+
+:
+	<<
+		return COLON;
+	>>
+
+;
+	<<
+		return SEMICOLON;
+	>>
+
+,
+	<<
+		return COMMA;
+	>>
+
+?
+	<<
+		return QUESTIONMARK;
+	>>
+
+...
+	<<
+		return ELLIPSIS;
+	>>
+
+=
+	<<
+		return ASSIGNEQUAL;
+	>>
+
+\*=
+	<<
+		return TIMESEQUAL;
+	>>
+
+/=
+	<<
+		return DIVIDEEQUAL;
+	>>
+
+%=
+	<<
+		return MODEQUAL;
+	>>
+
+\+=
+	<<
+		return PLUSEQUAL;
+	>>
+
+\-=
+	<<
+		return MINUSEQUAL;
+	>>
+
+\<\<=
+	<<
+		return SHIFTLEFTEQUAL;
+	>>
+
+\>\>=
+	<<
+		return SHIFTRIGHTEQUAL;
+	>>
+
+&=
+	<<
+		return BITWISEANDEQUAL;
+	>>
+
+^=
+	<<
+		return BITWISEXOREQUAL;
+	>>
+
+\|=
+	<<
+		return BITWISEOREQUAL;
+	>>
+
+\|\|
+	<<
+		return OR;
+	>>
+
+&&
+	<<
+		return AND;
+	>>
+
+\|
+	<<
+		return BITWISEOR;
+	>>
+
+^
+	<<
+		return BITWISEXOR;
+	>>
+
+&
+	<<
+		return AMPERSAND;
+	>>
+
+==
+	<<
+		return EQUAL;
+	>>
+
+!=
+	<<
+		return NOTEQUAL;
+	>>
+
+<
+	<<
+		return LESSTHAN;
+	>>
+
+>
+	<<
+		return GREATERTHAN;
+	>>
+
+<=
+	<<
+		return LESSTHANOREQUALTO;
+	>>
+
+>=
+	<<
+		return GREATERTHANOREQUALTO;
+	>>
+
+\<\<
+	<<
+		return SHIFTLEFT;
+	>>
+
+\>\>
+	<<
+		return SHIFTRIGHT;
+	>>
+
+\+
+	<<
+		return PLUS;
+	>>
+
+\-
+	<<
+		return MINUS;
+	>>
+
+\*
+	<<
+		return STAR;
+	>>
+
+/
+	<<
+		return DIVIDE;
+	>>
+
+%
+	<<
+		return MOD;
+	>>
+
+\+\+
+	<<
+		return PLUSPLUS;
+	>>
+
+\-\-
+	<<
+		return MINUSMINUS;
+	>>
+
+\~
+	<<
+		return TILDE;
+	>>
+
+!
+	<<
+		return NOT;
+	>>
+
+.
+	<<
+		return DOT;
+	>>
+
+\->
+	<<
+		return POINTERTO;
+	>>
+
+auto
+	<<
+		return AUTO;
+	>>
+
+break
+	<<
+		return BREAK;
+	>>
+
+case
+	<<
+		return CASE;
+	>>
+
+char
+	<<
+		return CHAR;
+	>>
+
+const
+	<<
+		return (ANTLRTokenType)53;
+	>>
+
+__const
+	<<
+		return (ANTLRTokenType)54;
+	>>
+
+continue
+	<<
+		return CONTINUE;
+	>>
+
+default
+	<<
+		return DEFAULT;
+	>>
+
+do
+	<<
+		return DO;
+	>>
+
+double
+	<<
+		return DOUBLE;
+	>>
+
+else
+	<<
+		return ELSE;
+	>>
+
+enum
+	<<
+		return ENUM;
+	>>
+
+extern
+	<<
+		return EXTERN;
+	>>
+
+float
+	<<
+		return FLOAT;
+	>>
+
+for
+	<<
+		return FOR;
+	>>
+
+goto
+	<<
+		return GOTO;
+	>>
+
+if
+	<<
+		return IF;
+	>>
+
+int
+	<<
+		return INT;
+	>>
+
+long
+	<<
+		return LONG;
+	>>
+
+register
+	<<
+		return REGISTER;
+	>>
+
+return
+	<<
+		return RETURN;
+	>>
+
+short
+	<<
+		return SHORT;
+	>>
+
+signed
+	<<
+		return SIGNED;
+	>>
+
+sizeof
+	<<
+		return SIZEOF;
+	>>
+
+static
+	<<
+		return STATIC;
+	>>
+
+struct
+	<<
+		return STRUCT;
+	>>
+
+class
+	<<
+		return CLASS;
+	>>
+
+switch
+	<<
+		return SWITCH;
+	>>
+
+typedef
+	<<
+		return TYPEDEF;
+	>>
+
+union
+	<<
+		return UNION;
+	>>
+
+unsigned
+	<<
+		return UNSIGNED;
+	>>
+
+void
+	<<
+		return VOID;
+	>>
+
+volatile
+	<<
+		return VOLATILE;
+	>>
+
+while
+	<<
+		return WHILE;
+	>>
+
+::
+	<<
+		return SCOPE;
+	>>
+
+operator
+	<<
+		return OPERATOR;
+	>>
+
+bool
+	<<
+		return BOOL;
+	>>
+
+__int64
+	<<
+		return INT64;
+	>>
+
+__int32
+	<<
+		return INT32;
+	>>
+
+__int16
+	<<
+		return INT16;
+	>>
+
+__int8
+	<<
+		return INT8;
+	>>
+
+using
+	<<
+		return USING;
+	>>
+
+namespace
+	<<
+		return NAMESPACE;
+	>>
+
+explicit
+	<<
+		return EXPLICIT;
+	>>
+
+mutable
+	<<
+		return MUTABLE;
+	>>
+
+__declspec
+	<<
+		return DECLSPEC;
+	>>
+
+throw
+	<<
+		return (ANTLRTokenType)99;
+	>>
+
+_THROW0
+	<<
+		return (ANTLRTokenType)100;
+	>>
+
+
+	<<
+		skip();   
+		return (ANTLRTokenType)102;
+	>>
+
+__stdcall
+	<<
+		skip ();   
+		return (ANTLRTokenType)103;
+	>>
+
+__cdecl
+	<<
+		skip ();   
+		return (ANTLRTokenType)104;
+	>>
+
+_cdecl
+	<<
+		skip ();   
+		return (ANTLRTokenType)105;
+	>>
+
+__fastcall
+	<<
+		skip ();   
+		return (ANTLRTokenType)106;
+	>>
+
+__inline
+	<<
+		skip ();   
+		return (ANTLRTokenType)107;
+	>>
+
+_inline
+	<<
+		skip ();   
+		return (ANTLRTokenType)108;
+	>>
+
+_STD_BEGIN
+	<<
+		skip ();   
+		return (ANTLRTokenType)109;
+	>>
+
+_STD_END
+	<<
+		skip ();   
+		return (ANTLRTokenType)110;
+	>>
+
+afx_msg
+	<<
+		skip ();   
+		return (ANTLRTokenType)111;
+	>>
+
+/\*
+	<<
+		mode (COMMENT); skip ();   
+		return (ANTLRTokenType)112;
+	>>
+
+[\t\ ]+
+	<<
+		skip ();   
+		return (ANTLRTokenType)113;
+	>>
+
+[\n\r]
+	<<
+		newline(); skip();   
+		return (ANTLRTokenType)114;
+	>>
+
+// ~[\n]* \n
+	<<
+		newline(); skip();   
+		return (ANTLRTokenType)115;
+	>>
+
+#pragma ~[\n]* \n
+	<<
+		newline(); skip();   
+		return (ANTLRTokenType)116;
+	>>
+
+#[\ \t]* [0-9]+ {[\ \t]* \"~[\"]+\" [\ \t]* [0-9]* [\ \t]* [0-9]*} \n
+	<<
+		_line = atoi(begexpr()+1); skip();   
+		return (ANTLRTokenType)117;
+	>>
+
+__attribute__
+	<<
+		return (ANTLRTokenType)158;
+	>>
+
+inline
+	<<
+		return (ANTLRTokenType)159;
+	>>
+
+virtual
+	<<
+		return (ANTLRTokenType)160;
+	>>
+
+friend
+	<<
+		return (ANTLRTokenType)161;
+	>>
+
+public
+	<<
+		return (ANTLRTokenType)162;
+	>>
+
+protected
+	<<
+		return (ANTLRTokenType)163;
+	>>
+
+private
+	<<
+		return (ANTLRTokenType)164;
+	>>
+
+template
+	<<
+		return (ANTLRTokenType)165;
+	>>
+
+try
+	<<
+		return (ANTLRTokenType)166;
+	>>
+
+catch
+	<<
+		return (ANTLRTokenType)167;
+	>>
+
+__asm
+	<<
+		return (ANTLRTokenType)168;
+	>>
+
+asm
+	<<
+		return (ANTLRTokenType)169;
+	>>
+
+.\*
+	<<
+		return (ANTLRTokenType)170;
+	>>
+
+\->\*
+	<<
+		return (ANTLRTokenType)171;
+	>>
+
+new
+	<<
+		return (ANTLRTokenType)172;
+	>>
+
+delete
+	<<
+		return (ANTLRTokenType)173;
+	>>
+
+this
+	<<
+		return (ANTLRTokenType)174;
+	>>
+
+[0-9]+
+	<<
+		return (ANTLRTokenType)180;
+	>>
+
+[a-zA-Z_][a-zA-Z0-9_]*
+	<<
+		return ID;
+	>>
+
+0[0-7]*{[uUlL]}
+	<<
+		return OCTALINT;
+	>>
+
+[1-9][0-9]*{[uUlL]}
+	<<
+		return DECIMALINT;
+	>>
+
+(0x|0X)[0-9a-fA-F]+{[uUlL]}
+	<<
+		return HEXADECIMALINT;
+	>>
+
+'
+	<<
+		mode (CHARACTERS); more ();   
+		return (ANTLRTokenType)181;
+	>>
+
+\"
+	<<
+		mode (STRINGS); more ();   
+		return (ANTLRTokenType)182;
+	>>
+
+([0-9]+.[0-9]* | [0-9]*.[0-9]+) {[eE]{[\-\+]}[0-9]+} {[fFlL]}
+	<<
+		return FLOATONE;
+	>>
+
+[0-9]+ [eE]{[\-\+]}[0-9]+ {[fFlL]}
+	<<
+		return FLOATTWO;
+	>>
+
+
+%%COMMENT
+
+@
+	<<
+		return Eof;
+	>>
+
+[\n\r]
+	<<
+		skip(); newline();   
+		return (ANTLRTokenType)118;
+	>>
+
+\*/
+	<<
+		mode (START); skip ();   
+		return (ANTLRTokenType)119;
+	>>
+
+\*~[/]
+	<<
+		skip ();   
+		return (ANTLRTokenType)120;
+	>>
+
+~[\*\n\r]+
+	<<
+		skip ();   
+		return (ANTLRTokenType)121;
+	>>
+
+
+%%STRINGS
+
+@
+	<<
+		return Eof;
+	>>
+
+\"
+	<<
+		mode (START);   
+		return STRING;
+	>>
+
+\\x
+	<<
+		replchar ((char) 0x0E); more ();   
+		return (ANTLRTokenType)123;
+	>>
+
+\\n
+	<<
+		replchar ((char) 0x0A); more ();   
+		return (ANTLRTokenType)124;
+	>>
+
+\\t
+	<<
+		replchar ((char) 0x09); more ();   
+		return (ANTLRTokenType)125;
+	>>
+
+\\v
+	<<
+		replchar ((char) 0x0B); more ();   
+		return (ANTLRTokenType)126;
+	>>
+
+\\b
+	<<
+		replchar ((char) 0x08); more ();   
+		return (ANTLRTokenType)127;
+	>>
+
+\\r
+	<<
+		replchar ((char) 0x0D); more ();   
+		return (ANTLRTokenType)128;
+	>>
+
+\\f
+	<<
+		replchar ((char) 0x0C); more ();   
+		return (ANTLRTokenType)129;
+	>>
+
+\\a
+	<<
+		replchar ((char) 0x07); more ();   
+		return (ANTLRTokenType)130;
+	>>
+
+\\\\
+	<<
+		replchar ((char) 0x5C); more ();   
+		return (ANTLRTokenType)131;
+	>>
+
+\\?
+	<<
+		replchar ((char) 0x3F); more ();   
+		return (ANTLRTokenType)132;
+	>>
+
+\\'
+	<<
+		replchar ((char) 0x27); more ();   
+		return (ANTLRTokenType)133;
+	>>
+
+\\\"
+	<<
+		replchar ((char) 0x22); more ();   
+		return (ANTLRTokenType)134;
+	>>
+
+\\0[0-7]*
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 8)); more ();   
+		return (ANTLRTokenType)135;
+	>>
+
+\\[1-9][0-9]*
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 10)); more ();   
+		return (ANTLRTokenType)136;
+	>>
+
+\\(0x|0X)[0-9a-fA-F]+
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 16)); more ();   
+		return (ANTLRTokenType)137;
+	>>
+
+[\n\r]
+	<<
+		newline(); more ();   
+		return (ANTLRTokenType)138;
+	>>
+
+~[\"\n\r\\]+
+	<<
+		more ();   
+		return (ANTLRTokenType)139;
+	>>
+
+
+%%CHARACTERS
+
+@
+	<<
+		return Eof;
+	>>
+
+'
+	<<
+		mode (START);   
+		return CHARACTER;
+	>>
+
+\\n
+	<<
+		replchar ((char) 0x0A); more (); mode (DONE);   
+		return (ANTLRTokenType)141;
+	>>
+
+\\t
+	<<
+		replchar ((char) 0x09); more (); mode (DONE);   
+		return (ANTLRTokenType)142;
+	>>
+
+\\v
+	<<
+		replchar ((char) 0x0B); more (); mode (DONE);   
+		return (ANTLRTokenType)143;
+	>>
+
+\\b
+	<<
+		replchar ((char) 0x08); more (); mode (DONE);   
+		return (ANTLRTokenType)144;
+	>>
+
+\\r
+	<<
+		replchar ((char) 0x0D); more (); mode (DONE);   
+		return (ANTLRTokenType)145;
+	>>
+
+\\f
+	<<
+		replchar ((char) 0x0C); more (); mode (DONE);   
+		return (ANTLRTokenType)146;
+	>>
+
+\\a
+	<<
+		replchar ((char) 0x07); more (); mode (DONE);   
+		return (ANTLRTokenType)147;
+	>>
+
+\\\\
+	<<
+		replchar ((char) 0x5C); more (); mode (DONE);   
+		return (ANTLRTokenType)148;
+	>>
+
+\\?
+	<<
+		replchar ((char) 0x3F); more (); mode (DONE);   
+		return (ANTLRTokenType)149;
+	>>
+
+\\'
+	<<
+		replchar ((char) 0x27); more (); mode (DONE);   
+		return (ANTLRTokenType)150;
+	>>
+
+\\\"
+	<<
+		replchar ((char) 0x22); more (); mode (DONE);   
+		return (ANTLRTokenType)151;
+	>>
+
+\\0[0-7]*
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 8)); more (); mode (DONE);   
+		return (ANTLRTokenType)152;
+	>>
+
+\\[1-9][0-9]*
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 10)); more (); mode (DONE);   
+		return (ANTLRTokenType)153;
+	>>
+
+\\(0x|0X)[0-9a-fA-F]+
+	<<
+		replchar ((char) strtol (begexpr(), NULL, 16)); more (); mode (DONE);   
+		return (ANTLRTokenType)154;
+	>>
+
+[\n\r]
+	<<
+		newline(); more ();   
+		return (ANTLRTokenType)155;
+	>>
+
+~['\n\r\\]
+	<<
+		more (); mode (DONE);   
+		return (ANTLRTokenType)156;
+	>>
+
+
+%%DONE
+
+@
+	<<
+		return Eof;
+	>>
+
+'
+	<<
+		mode (START);   
+		return CHARACTER;
+	>>
+
+%%

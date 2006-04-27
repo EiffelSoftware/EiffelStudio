@@ -1,0 +1,80 @@
+# Note: this script assumes that your MPW and PCCTS directories are
+#       of a standard configuration.
+
+# To install PCCTS: 'Set Directory' to the directory containing this
+# file (should be the main PCCTS directory) and execute this script.
+#
+# By default, it will install ANTLR and DLG in your {MPW}Tools folder.
+#
+# ANTLR and DLG have Commando interfaces, check them out.
+#
+# Report MPW-Specific problems to Scott Haney at haney@random.llnl.gov.
+
+Echo "# `Date -t` ----- Building PCCTS v1.33 for MPW."
+
+# Make 'Macintosh' folders to hold object files.
+
+Echo "# `Date -t` -----   Making Object File Folders."
+If (!`exists :dlg:Macintosh:`)
+  NewFolder :dlg:Macintosh:
+End
+If (!`exists :antlr:Macintosh:`)
+  NewFolder :antlr:Macintosh:
+End
+If (!`exists :support:set:Macintosh:`)
+  NewFolder :support:set:Macintosh:
+End
+If (!`exists :support:sym:Macintosh:`)
+  NewFolder :support:sym:Macintosh:
+End
+
+Echo "# `Date -t` -----   Done."
+Echo "#"
+
+# DLG build commands
+
+Echo "# `Date -t` -----   Building DLG."
+Echo "# `Date -t` -----     Analyzing dependencies."
+Directory :dlg:
+Begin
+	If (!`exists dlg.make`)
+		Move -y makefile.mpw dlg.make
+	End
+	If (!`exists dlg.r`)
+		Move -y dlg.mpw.r dlg.r
+	End
+	Echo "Set Echo 1"
+	Make Install -f dlg.make
+End > dlg.makeout
+Echo "# `Date -t` -----     Executing build commands."
+dlg.makeout
+Delete dlg.makeout
+Echo "# `Date -t` -----   Done."
+Echo "#"
+Directory ::
+
+# ANTLR build commands
+
+Echo "# `Date -t` -----   Building ANTLR."
+Echo "# `Date -t` -----     Analyzing dependencies."
+Directory :antlr:
+Begin
+	If (!`exists antlr.make`)
+		Move -y makefile.mpw antlr.make
+	End
+	If (!`exists antlr.r`)
+		Move -y antlr.mpw.r antlr.r
+	End
+	Echo "Set Echo 1"
+	Make Install -f antlr.make
+End > antlr.makeout
+Echo "# `Date -t` -----     Executing build commands."
+antlr.makeout
+Delete antlr.makeout
+Echo "# `Date -t` -----   Done."
+Echo "#"
+Directory ::
+
+# Done
+
+Echo "# `Date -t` ----- Done Building PCCTS v1.33. Have a nice day."

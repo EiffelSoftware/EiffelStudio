@@ -1,0 +1,22 @@
+--------------------Configuration: legaproj - Win32 Debug--------------------
+
+
+Microsoft (R) Program Maintenance Utility   Version 1.62.7022
+Copyright (C) Microsoft Corp 1988-1997. All rights reserved.
+
+ cl /c /I. /I..\PCCTS\h /DCPP_DEBUG /DW32MSC  /nologo main.cpp
+main.cpp
+ echo -OUT:legacy.exe -subsystem:CONSOLE > legacy.lnk
+ echo main.obj support.obj Dictionary.obj  cplusplus.obj stat.obj expr.obj  CPPParser.obj  AParser.obj DLexerBase.obj ATokenBuffer.obj DLGLexer.obj >> legacy.lnk
+ del legacy.exe
+ link @legacy.lnk
+Microsoft (R) 32-Bit Incremental Linker Version 5.00.7022
+Copyright (C) Microsoft Corp 1992-1997. All rights reserved.
+
+-OUT:legacy.exe -subsystem:CONSOLE 
+main.obj support.obj Dictionary.obj cplusplus.obj stat.obj expr.obj CPPParser.obj AParser.obj DLexerBase.obj ATokenBuffer.obj DLGLexer.obj 
+ del legacy.lnk
+
+
+
+legacy.exe - 0 error(s), 0 warning(s)

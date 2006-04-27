@@ -1,0 +1,86 @@
+October 2, 1995
+
+                        Services Provided
+
+                                By
+
+                      Parr Research Corporation
+                       parrt@parr-research.com
+                  http://www.parr-research.com/~parrt/prc
+
+ ``Thorough Research, Business Integrity, and really cool software tools''
+
+Programming language and data translation can be difficult and
+frustrating tasks.  Parr Research Corporation, the primary developer
+and distributor of the public domain language toolkit PCCTS (ANTLR,
+DLG, SORCERER), has extensive experience and expertise that can be
+applied to your projects to successfully:
+
+o	Reduce translator design and development time
+
+	We help you avoid unnecessary delays in your overall project
+	due to difficult translation tasks.
+
+o	Reduce development cost
+
+	Odds are that we have seen something similar to your project
+	and can produce an excellent and quick solution.
+
+o	Reduce risk
+
+	We resolve crucial technical questions or development problems
+	that hamper your efforts on time-critical projects.
+
+Parr Research accomplishes these goals by providing the following
+services:
+
+o	Design consultations (fixed price or per hour)
+
+	Parr Research designs ``front-end''s and translators.
+
+o	Development (fixed price or per hour)
+
+o	Retainers / Maintenance / Support agreements
+
+	PCCTS and translator-implementation questions answered
+	Special modifications to PCCTS
+	Bug fixes
+	Maintenance agreements are insurance policies against
+		unforeseen development problems
+
+o	Installation support
+
+o	Tutorials
+
+	ANTLR/DLG
+	SORCERER, intermediate-representations
+	Translation techniques
+	On-site or off-site tutorials
+
+Parr Research Corporation has a proven record of superior service with
+research labs and corporations such as the Army Research Lab, Tandem,
+NeXT, Berkeley Systems, Computing Devices International, and Pencom.
+In addition, we have informal relationships with Apple, Sun Labs,
+Intel, and Motorola as well as numerous academic institutions.
+
+To discuss how Parr Research can save your project time and money
+please contact:
+
+Terence Parr, Ph.D.
+Parr Research Corporation
+1535 Francisco Street Suite 9
+San Francisco, California 94123
+(415) 346 1070
+parrt@parr-research.com
+
+
+For a summary of the ANTLR parser generator as published in the July
+issue of Software Practice and Experience see:
+
+	ftp://ftp.parr-research.com/pub/pccts/papers/antlr.ps
+
+A pre-release version of the upcoming book by Terence Parr entitled
+``Language Translation Using PCCTS and C++ (A Reference Guide)'' is
+available at 
+
+	ftp://ftp.parr-research.com/pub/pccts/Book/reference.ps

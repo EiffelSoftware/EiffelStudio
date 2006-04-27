@@ -270,10 +270,11 @@ feature -- Command
 			-- Extend `custom_area' with a_widget
 		do
 			internal_custom_widget := a_widget
-
+			custom_area.wipe_out
 			custom_area.extend (a_widget)
 		ensure
 			set: internal_custom_widget = a_widget
+			added: custom_area.has (a_widget)
 		end
 
 	wipe_out_custom_area is
@@ -363,7 +364,7 @@ feature -- Actions
 feature {NONE} -- Agents
 
 	on_mini_tool_bar_indicator_clicked is
-			--
+			-- Handle `mini_tool_bar_indicator' select actions.
 		local
 			l_dialog: SD_MINI_TOOL_BAR_DIALOG
 			l_helper: SD_POSITION_HELPER
@@ -376,20 +377,20 @@ feature {NONE} -- Agents
 		end
 
 	on_zero_size_container_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-			--
+			-- Handle `l_zero_size_container' resize actions.
 		do
 			if not ignore_resize and then internal_custom_widget /= Void then
 				ignore_resize := True
 				if a_width >= internal_highlight_area_before.minimum_width + internal_drawing_area.minimum_width + internal_highlight_area_after.minimum_width + internal_custom_widget.minimum_width then
 					if internal_tool_bar.has (mini_tool_bar_indicator) then
 						internal_tool_bar.prune (mini_tool_bar_indicator)
-						if not custom_area.has (internal_custom_widget) then
-							custom_area.wipe_out
-							if internal_custom_widget.parent /= Void then
-								internal_custom_widget.parent.prune (internal_custom_widget)
-							end
-							custom_area.extend (internal_custom_widget)
+					end
+					if not custom_area.has (internal_custom_widget) then
+						custom_area.wipe_out
+						if internal_custom_widget.parent /= Void then
+							internal_custom_widget.parent.prune (internal_custom_widget)
 						end
+						custom_area.extend (internal_custom_widget)
 					end
 				else
 						-- Remove `internal_custom_widget' , add `mini_tool_bar_indicator' to `internal_tool_bar'.
@@ -403,21 +404,20 @@ feature {NONE} -- Agents
 
 					--FIXIT: who set parent?
 					--FIXIT: Why prune/add tool bar item here there'll be problems?
---					if mini_tool_bar_indicator.parent /= Void then
---						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
---					end
---
-----					internal_tool_bar.start
-----					check not_before: not internal_tool_bar.before end
-----					internal_tool_bar.put_left (mini_tool_bar_indicator)
---
---					internal_tool_bar.put_i_th (mini_tool_bar_indicator, 1)
+					if mini_tool_bar_indicator.parent /= Void then
+						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
+					end
+
+					internal_tool_bar.start
+					check not_before: not internal_tool_bar.before end
+					internal_tool_bar.put_left (mini_tool_bar_indicator)
 				end
 				ignore_resize := False
 			end
 		end
 
 	ignore_resize: BOOLEAN
+			-- If ignore resize actions?
 
 	on_stick_select is
 			-- Notify clients when user click stick button.
@@ -524,12 +524,16 @@ feature {NONE} -- Implementation
 
 	internal_tool_bar: EV_TOOL_BAR
 			-- Tool bar which hold `stick', `normal_max', `close' buttons.
+
 	stick: EV_TOOL_BAR_BUTTON
 			-- Sitck button
+
 	normal_max: EV_TOOL_BAR_BUTTON
 			-- Minimize and maxmize button
+
 	close: EV_TOOL_BAR_BUTTON
 			-- Close button
+
 	mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON
 			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'.
 
@@ -540,8 +544,10 @@ feature {NONE} -- Implementation
 
 	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer double press actions.
+
 	internal_stick_select_actions, internal_close_request_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Title bar actions.
+
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag actions.
 

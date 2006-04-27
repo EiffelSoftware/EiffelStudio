@@ -677,7 +677,7 @@
 				<Directory Id="library" Name="library">
 					<Directory Id="base" Name="base">
 						<Component Id="base" Guid="7417F67F-4937-4A3D-A969-FB60478E6FE7">
-							<File Id="indexing.txt" Name="indexing.txt" KeyPath="yes" />
+							<File Id="base_acex" Name="BASE~2.ACE" LongName="base.acex"/>
 						</Component>
 						<Directory Id="refactoring" Name="REFACT~1" LongName="refactoring">
 							<Component Id="refactoring" Guid="21FD325C-93F0-458f-8918-D3E3D9B59FF0">
@@ -1057,6 +1057,7 @@
 					</Directory>
 					<Directory Id="Eiffel2Java" Name="EIFFEL~1" LongName="Eiffel2Java">
 						<Component Id="Eiffel2Java" Guid="D8E10D8D-A82F-4D95-BD01-40D16FE11949">
+							<File Id="Eiffel2Java_acex" Name="EIFFEL~1.ACE" LongName="Eiffel2Java.acex" />
 							<File Id="java_double_array.e" Name="JAVA_D~1.E" LongName="java_double_array.e" KeyPath="yes" />
 							<File Id="java_int_array.e" Name="JAVA_I~1.E" LongName="java_int_array.e" />
 							<File Id="java_short_array.e" Name="JAVA_S~1.E" LongName="java_short_array.e" />
@@ -1096,7 +1097,8 @@
 					</Directory>
 					<Directory Id="lex" Name="lex">
 						<Component Id="lex" Guid="0FB26E97-8DEF-4E67-93EE-2AB49546C6D9">
-							<File Id="fixed_integer_set.e" Name="FIXED_~3.E" LongName="fixed_integer_set.e" KeyPath="yes" />
+							<File Id="lex_acex" Name="LEX~2.ACE" LongName="lex.acex"/>
+							<File Id="fixed_integer_set.e" Name="FIXED_~3.E" LongName="fixed_integer_set.e"/>
 							<File Id="text_filler.e" Name="TEXT_F~1.E" LongName="text_filler.e" />
 							<File Id="ndfa.e" Name="ndfa.e" />
 							<File Id="linked_dfa.e" Name="LINKED~B.E" LongName="linked_dfa.e" />
@@ -1120,6 +1122,7 @@
 					</Directory>
 					<Directory Id="memory_analyzer" LongName="memory_analyzer" Name="MEMORY~1">
 						<Component Id="ma_component0" Guid="77f68fd0-b582-4e17-abb8-758aac73bb8c">
+							<File Id="memory_analyzer_acex" LongName="memory_analyzer.acex" Name="MEMORY~1.ACE"/>
 							<File Id="ma_file0" LongName="ma_arrayed_list_storable.e" Name="MA_ARR~1.E"/>
 							<File Id="ma_file1" LongName="ma_draw_histogram.e" Name="MA_DRA~1.E"/>
 							<File Id="ma_file2" LongName="ma_draw_history.e" Name="MA_DRA~2.E"/>
@@ -1173,6 +1176,7 @@
 					</Directory>
 					<Directory Id="parse" Name="parse">
 						<Component Id="parse" Guid="64EF9957-9011-43B6-8CBE-878082BF1A04">
+							<File Id="parse_acex" Name="PARSE~1.ACE" LongName="parse.acex"/>
 							<File Id="input.e" Name="input.e" KeyPath="yes" />
 							<File Id="construct.e" Name="CONSTR~1.E" LongName="construct.e" />
 							<File Id="repetition.e" Name="REPETI~1.E" LongName="repetition.e" />
@@ -1185,6 +1189,8 @@
 					</Directory>
 					<Directory Id="preferences1" Name="PREFER~1" LongName="preferences" >
 						<Component Id="preferences1" Guid="a8c545dc-7dc0-4e7f-8664-99a0dcf08495" >
+							<File Id="preferences_reg_acex" LongName="preferences_reg.acex" Name="PREFER~2.ACE" />
+							<File Id="preferences_xml_acex" LongName="preferences_xml.acex" Name="PREFER~3.ACE" />
 							<File Id="preferences_e" LongName="preferences.e" Name="PREFER~1.E" />
 							<File Id="preference_manager_e" LongName="preference_manager.e" Name="PREFER~2.E" />
 						</Component>
@@ -1271,6 +1277,7 @@
 					</Directory>
 					<Directory Id="process" Name="process">
 						<Component Id="process_component0" Guid="e0912e13-943a-4823-95d0-d7792ae678be">
+							<File Id="process_acex" LongName="process.acex" Name="PROCES~1.ACE"/>
 							<File Id="process_file0" Name="process.e"/>
 							<File Id="process_file2" LongName="process_factory.e" Name="PROCES~2.E"/>
 							<File Id="process_file3" LongName="process_io_listener_thread.e" Name="PROCES~3.E"/>
@@ -1344,7 +1351,7 @@
 					<Directory Id="store" Name="store">
 						<Component Id="store" Guid="AFEBEED9-7EF8-461D-A54D-5691F6EE9DB8">
 							<File Id="Readme" Name="Readme" KeyPath="yes" />
-							<File Id="Version" Name="Version" />
+							<File Id="store_acex" Name="STORE~2.ACE" LongName="store.acex" />
 						</Component>
 						<Directory Id="interface" Name="INTERF~1" LongName="interface">
 							<Component Id="interface" Guid="74F4D0C6-A08B-4584-85BF-8EB2F43FE148">
@@ -1651,6 +1658,7 @@
 					</Directory>
 					<Directory Id="thread" Name="thread">
 						<Component Id="thread" Guid="7B320094-02FD-41FD-8807-0FAA49BA1F33">
+							<File Id="thread_acex" Name="STORE~2.ACE" LongName="thread.acex" />
 							<File Id="worker_thread.e" Name="WORKER~1.E" LongName="worker_thread.e" />
 						</Component>
 						<Directory Id="classic2" Name="classic">
@@ -1667,6 +1675,7 @@
 					</Directory>
 					<Directory Id="time" Name="time">
 						<Component Id="time" Guid="FEFB58F4-B488-4948-BCF3-2F669FBC88C5">
+							<File Id="time_acex" Name="TIME~1.ACE" LongName="time.acex" />
 							<File Id="time_duration.e" Name="TIME_D~1.E" LongName="time_duration.e" KeyPath="yes" />
 							<File Id="date_validity_checker.e" Name="DATE_V~1.E" LongName="date_validity_checker.e" />
 							<File Id="date_time_value.e" Name="DACEE1~1.E" LongName="date_time_value.e" />
@@ -1724,6 +1733,9 @@
 						</Directory>
 					</Directory>
 					<Directory Id="net" Name="net">
+						<Component Id="net" Guid="6E6FC65A-2EBE-49da-8404-76960CF18B32">
+							<File Id="net_acex" Name="NET~1.ACE" LongName="net.acex"/>
+						</Component>
 						<Directory Id="mail" Name="mail">
 							<Component Id="mail" Guid="7BEDC3C6-6A21-4509-B031-7260172FAD85">
 								<File Id="transfer_error.e" Name="TRANSF~1.E" LongName="transfer_error.e" KeyPath="yes" />
@@ -1898,6 +1910,9 @@
 						</Directory>
 					</Directory>
 					<Directory Id="web" Name="web">
+						<Component Id="web" Guid="C1E743F0-764A-4cea-BE30-1F4BE77CB8F8">
+							<File Id="web_acex" Name="WEB~1.ACE" LongName="web.acex" />
+						</Component>
 						<Directory Id="stdio" Name="stdio">
 							<Component Id="stdio" Guid="52352DD5-5956-4E3D-A8FF-B5FA29713D1A">
 								<File Id="stdin.e" Name="stdin.e" KeyPath="yes" />
@@ -1949,6 +1964,7 @@
 					</Directory>
 					<Directory Id="uuid" Name="uuid">
 						<Component Id="uuid" Guid="F7692E65-2673-47ae-9624-D4BD9C496DCD">
+							<File Id="uuid_acex" Name="UUID~1.ACE" LongName="uuid.acex" />
 							<File Id="uuid_generator_e" Name="UUID_G~1.E" LongName="uuid_generator.e" />
 							<File Id="uuid_e" Name="uuid.e" />
 						</Component>

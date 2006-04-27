@@ -11,13 +11,19 @@ inherit
 		redefine
 			pixmap,
 			set_pixmap,
-			is_destroyed
+			is_destroyed,
+			drop_actions
 		end
 
 feature -- Agents
 
 	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
 			-- Handle pointer motion.
+		deferred
+		end
+
+	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER) is
+			-- Handle pointer motion for tooltip setting.
 		deferred
 		end
 
@@ -38,10 +44,8 @@ feature -- Agents
 
 feature -- Query
 
-	is_need_redraw: BOOLEAN is
-			-- Do Current need redraw?
-		deferred
-		end
+	is_need_redraw: BOOLEAN
+			-- Redefine
 
 	width: INTEGER is
 			-- Width of Current item.
@@ -70,20 +74,19 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	drop_actions: EV_PND_ACTION_SEQUENCE is
+			-- Redefine
+		do
+			if internal_drop_actions = Void then
+				create internal_drop_actions
+			end
+			Result := internal_drop_actions
+		end
+
 feature -- Properties
 
 	tool_bar: SD_TOOL_BAR
 			-- Tool bar which Current button belong to.
-
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
-			-- Set `tool_bar'.
-		require
-			not_void: a_tool_bar /= Void
-		do
-			tool_bar := a_tool_bar
-		ensure
-			set: tool_bar = a_tool_bar
-		end
 
 	set_wrap (a_wrap: BOOLEAN) is
 			-- Set `wrap'
@@ -138,11 +141,65 @@ feature -- Properties
 			pixmap := a_pixmap
 		end
 
+	name: STRING
+			-- Name which is used for store configuration
+
+	set_name (a_name: STRING) is
+			-- Set `name'
+		require
+			not_void: a_name /= Void
+		do
+			name := a_name
+		ensure
+			set: name = a_name
+		end
+
 feature {NONE} -- Implementation
+
+	update is
+			-- Redraw Current
+		do
+			is_need_redraw := True
+			if tool_bar /= Void then
+--				check has: tool_bar.has (Current) end
+				tool_bar.update
+			end
+		end
+
+feature {SD_TOOL_BAR} -- Internal issues
+
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
+			--  Update for pick and drop.
+		require
+			not_void: a_starting implies a_pebble /= Void
+		deferred
+		end
 
 	create_implementation is
 			-- Fack function.
 		do
 		end
+
+	disable_redraw is
+			-- Set `is_need_redraw' False.
+		do
+			is_need_redraw := False
+		end
+
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+			-- Set `tool_bar'.
+		do
+			tool_bar := a_tool_bar
+		ensure
+			set: tool_bar = a_tool_bar
+		end
+
+feature {NONE} -- Implementation
+
+	internal_drop_actions: EV_PND_ACTION_SEQUENCE
+			-- Drop actions.
+
+invariant
+	not_void: name /= Void
 
 end

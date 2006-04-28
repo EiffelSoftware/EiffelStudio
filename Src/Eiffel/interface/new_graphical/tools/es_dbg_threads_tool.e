@@ -221,6 +221,7 @@ feature -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
+			reset_update_on_idle
 			if explorer_bar_item /= Void then
 				explorer_bar_item.recycle
 			end

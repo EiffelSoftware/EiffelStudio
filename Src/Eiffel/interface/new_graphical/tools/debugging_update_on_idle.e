@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 feature -- update
 
 	request_update is
-			-- Request an update, this should call update only 
+			-- Request an update, this should call update only
 			-- once per debugging "operation"
 			-- This is to avoid computing twice the data
 			-- on specific cases
@@ -56,6 +56,11 @@ feature -- update
 		end
 
 feature {NONE} -- real_update
+
+	reset_update_on_idle is
+		do
+			last_real_update_id := 0
+		end
 
 	last_real_update_id: NATURAL_32
 

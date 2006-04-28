@@ -68,6 +68,8 @@ feature -- Reset
 				--| Evaluation Exception |--			
 			reset_last_evaluation_icd_exception
 
+				--| Last thread id
+			last_icd_thread_id := 0
 
 				--| StepComplete |--
 			last_step_complete_reason   := 0

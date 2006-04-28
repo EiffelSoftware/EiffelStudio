@@ -596,6 +596,7 @@ feature -- Memory management
 		local
 			g: like objects_grid
 		do
+			reset_update_on_idle
 			preferences.debug_tool_data.min_slice_preference.set_value (min_slice_ref.item)
 			preferences.debug_tool_data.max_slice_preference.set_value (max_slice_ref.item)
 			displayed_objects.wipe_out

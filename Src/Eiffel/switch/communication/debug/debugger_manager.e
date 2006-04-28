@@ -170,6 +170,7 @@ feature -- Debugging events
 
 	on_application_launched is
 		do
+			debugging_operation_id := debugging_operation_id + 1
 		end
 
 	on_application_before_stopped is
@@ -198,6 +199,7 @@ feature -- Debugging events
 
 	on_application_quit is
 		do
+			debugging_operation_id := debugging_operation_id + 1
 		end
 
 invariant

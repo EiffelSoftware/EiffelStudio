@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
-	 name="memory_analyzer" uuid="bf699013-e4a2-4c7f-aa12-4376bea92d93" library_target="memory_analyzer">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="memory_analyzer" uuid="bf699013-e4a2-4c7f-aa12-4376bea92d93" library_target="memory_analyzer">
 	<target name="memory_analyzer">
 		<description>Memory analyzer library: Track down your memory usage within your application.
 Copyright (c) 1984-2006, Eiffel Software and others.

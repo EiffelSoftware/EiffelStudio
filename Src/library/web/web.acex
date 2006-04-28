@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="web" uuid="d728e3d6-b7ed-4153-b2d5-d1c9b91d9fe3" library_target="web">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="web" uuid="d728e3d6-b7ed-4153-b2d5-d1c9b91d9fe3" library_target="web">
 	<target name="web">
 		<description>EiffelWeb: CGI handling in Eiffel.
 Copyright (c) 1984-2006, Eiffel Software and others.

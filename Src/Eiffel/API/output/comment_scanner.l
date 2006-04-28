@@ -16,6 +16,8 @@ create
 
 %}
 %x DOT_FEATURE
+%x NOT_BREAK_TOKEN
+%x BREAK_TOKEN
 %option nodefault
 
 D		[0-9]
@@ -26,83 +28,129 @@ C		([^ \t\r\n])
 CM		([^ \t\r\n\.])
 CS		([^ \t\r\n\.\{\}\[\]`\'])
 S		(\{[A-Z]([A-Z]|_|{D})*\})
-
+EMAIL	{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*
+URL		((www\.)|(https{0,1}:\/\/)|(ftp:\/\/)|(file:\/\/)){C}*
+FEATURE	`{C}+\'
+CLASS	\{[A-Z]([A-Z]|{D}|_)*\}
+CLUSTER \[{C}+\]
 
 %%
+.|\n		{
+				if seperate_comment then
+					set_start_condition (BREAK_TOKEN)
+				else
+					set_start_condition (NOT_BREAK_TOKEN)
+				end
+				less (0)
+			}
+<<EOF>>		{
+				append_buffer
+				terminate
+			}
 
+<NOT_BREAK_TOKEN>{
 -- Email
-{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*	{
+{EMAIL}		{
+				append_buffer
 				add_email_tokens
-				reset_last_type
 			}
 
 -- URL
-((www\.)|(https{0,1}:\/\/)|(ftp:\/\/)|(file:\/\/)){C}*		{				
-				add_url_tokens
-				reset_last_type				
+{URL}		{	
+				append_buffer
+				add_url_tokens				
 			}
 
 -- Quoted feature
-`{C}+\'		{
+{FEATURE}	{
+				append_buffer
 				add_quote_feature
 			}
 
 -- Braced class
-\{[A-Z]([A-Z]|{D}|_)*\}	{
+{CLASS}		{
+				append_buffer
 				add_class
+				last_condition := NOT_BREAK_TOKEN
 				set_start_condition (DOT_FEATURE)
 			}
 
 -- Cluster
-\[{C}+\]	{
+{CLUSTER}	{
+				append_buffer
 				add_cluster
-				reset_last_type
+			}
+
+\n			{
+				append_buffer
+				text_formatter.process_new_line
+			}
+
+.			{
+				buffer_token
+			}
+}
+
+<BREAK_TOKEN>{
+-- Email
+{EMAIL}		{
+				add_email_tokens
+			}
+
+-- URL
+{URL}		{				
+				add_url_tokens				
+			}
+
+-- Quoted feature
+{FEATURE}	{
+				add_quote_feature
+			}
+
+-- Braced class
+{CLASS}	{
+				add_class
+				last_condition := BREAK_TOKEN
+				set_start_condition (DOT_FEATURE)
+			}
+
+-- Cluster
+{CLUSTER}	{
+				add_cluster
+			}
+
+\n			{
+				text_formatter.process_new_line
 			}
 
 -- Word
 {CS}+|[`~!@#$%^&*()_+-={}[]:;\'\"\|\\<>\?,\.\/]+		{
 				add_text (text)
-				reset_last_type
-			}
-
-\n			{
-				text_formatter.process_new_line
-				reset_last_type
 			}
 
 \r			{
-				reset_last_type
 			}
 
 [ \t]+		{
 				add_text (text)
-				reset_last_type
-			}			
+			}
 
-<DOT_FEATURE>
-{
+-- End			
+.			{
+				add_text (text)	
+			}
+}
+
+<DOT_FEATURE>{
 \.{A}{X}*	{
 				add_dot_feature
 			}
 .|\n		{
 				less (0)
-				set_start_condition (INITIAL)
+				set_start_condition (last_condition)
 				reset_last_type
 			}
-<<EOF>>		{
-				set_start_condition (INITIAL)
-			}
 }
-
--- End
-<<EOF>>		{
-				terminate
-			}
-			
-.			{
-				add_text (text)
-				reset_last_type	
-			}
 						
 %%
 

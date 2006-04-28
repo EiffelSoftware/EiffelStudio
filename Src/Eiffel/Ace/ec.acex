@@ -232,6 +232,10 @@
 		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 
+	<target name="ecdpc" extends="batch">
+		<setting name="executable_name" value="ecdpc"/>
+	</target>
+
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>

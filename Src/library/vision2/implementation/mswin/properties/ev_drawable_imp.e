@@ -599,7 +599,7 @@ feature -- Drawing operations
 					if source_drawable /= Void then
 							-- If the dc's are already available then we use them without reffing
 						source_bitmap_dc := source_drawable.dc
-						source_mask_dc := source_drawable.mask_dc
+						source_mask_bitmap := source_drawable.mask_dc.bitmap
 					else
 							-- Retrieve Source bitmap
 						source_bitmap := pixmap_imp.get_bitmap
@@ -611,7 +611,9 @@ feature -- Drawing operations
 							-- Retrieve Mask bitmap
 						source_mask_bitmap := pixmap_imp.get_mask_bitmap
 					end
+
 					dest_dc.mask_blt (x, y, source_width, source_height, source_bitmap_dc, 0, 0, source_mask_bitmap, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.maskcopy)
+
 						-- Free newly created GDI Objects if source isn't a pixmap drawable
 					if source_drawable = Void then
 						source_bitmap_dc.unselect_bitmap

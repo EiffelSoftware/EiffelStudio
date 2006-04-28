@@ -1018,7 +1018,6 @@ feature {NONE} -- Implementation
 			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_p, l_locals: STRING
 			l_a: CONF_ASSEMBLY
-			l_consumed: BOOLEAN
 			l_emitter: IL_EMITTER
 		do
 			on_consume_assemblies (a_target)
